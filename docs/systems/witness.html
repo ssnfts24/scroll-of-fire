@@ -17,6 +17,7 @@
   <script>if(location.hostname==="ssnfts24.github.io"){const base=document.querySelector("base");if(base)base.setAttribute("href","/scroll-of-fire/");}</script>
   <meta charset="utf-8"><title>Remnant Witness Ledger — Scroll of Fire</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="A local SHA-256 witness utility for turning chosen testimony into a reproducible integrity hash without uploading the testimony.">
   <link rel="stylesheet" href="assets/css/codex.css">
     <link rel="stylesheet" href="assets/css/navigation.css">
 <style>textarea{width:100%;min-height:140px;margin-top:8px}</style>
@@ -126,6 +127,11 @@
   <aside class="notice"><strong>🔥 Design Mode:</strong> Hash export being refined.</aside>
 
   <main id="main" style="padding:16px">
+    <section class="page-intro" aria-labelledby="witness-hash-page-title">
+      <p class="eyebrow">Local Integrity · SHA-256</p>
+      <h1 id="witness-hash-page-title">Remnant Witness Hash</h1>
+      <p>Create a reproducible SHA-256 seal for testimony you choose. The text and resulting hash remain in this page unless you explicitly copy or record them.</p>
+    </section>
     <label>Testimony:</label>
     <textarea id="input"></textarea>
     <button id="hashBtn">Compute SHA-256</button>

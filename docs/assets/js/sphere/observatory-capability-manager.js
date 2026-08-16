@@ -21,6 +21,8 @@
   const FALLBACK_REASONS = Object.freeze({
     /** WebGL is completely unavailable in this browser/environment. */
     WEBGL_UNSUPPORTED:    "WEBGL_UNSUPPORTED",
+    /** Three.js r167 requires WebGL2; only a legacy WebGL1 context was available. */
+    WEBGL2_REQUIRED:      "WEBGL2_REQUIRED",
     /** Dynamic import() of the Three.js vendor bundle failed. */
     THREE_IMPORT_FAILED:  "THREE_IMPORT_FAILED",
     /** Canvas element could not be created or inserted into the DOM. */
@@ -75,6 +77,13 @@
     [PERFORMANCE_TIERS.MINIMAL]:  1.0,
   });
 
+  // A capability probe creates a real graphics context. Repeating that probe
+  // from diagnostics can exhaust the browser's small per-page WebGL context
+  // budget and evict the Observatory's active renderer on mobile. Cache the
+  // result for the lifetime of the page and explicitly release the temporary
+  // probe context as soon as its result is known.
+  let _webGlProbeCache = null;
+
   // ── Device capability detection ───────────────────────────────────
 
   /**
@@ -82,14 +91,19 @@
    * Returns { webgl: boolean, webgl2: boolean }.
    * Safe to call before the renderer is initialised.
    */
-  function probeWebGl() {
+  function probeWebGl({ force = false } = {}) {
+    if (!force && _webGlProbeCache) return _webGlProbeCache;
     try {
       const c = document.createElement("canvas");
-      const webgl2 = !!(c.getContext("webgl2"));
-      const webgl  = webgl2 || !!(c.getContext("webgl") || c.getContext("experimental-webgl"));
-      return { webgl, webgl2 };
+      const context = c.getContext("webgl2") || c.getContext("webgl") || c.getContext("experimental-webgl");
+      const webgl2 = !!context && typeof WebGL2RenderingContext !== "undefined" && context instanceof WebGL2RenderingContext;
+      const result = Object.freeze({ webgl: !!context, webgl2 });
+      try { context?.getExtension?.("WEBGL_lose_context")?.loseContext?.(); } catch { /* best-effort probe cleanup */ }
+      _webGlProbeCache = result;
+      return result;
     } catch {
-      return { webgl: false, webgl2: false };
+      _webGlProbeCache = Object.freeze({ webgl: false, webgl2: false });
+      return _webGlProbeCache;
     }
   }
 
@@ -149,23 +163,30 @@
    *
    * @param {object} [options]
    * @param {string} [options.override]   Force a specific tier key from PERFORMANCE_TIERS.
-   * @param {boolean} [options.webglAvailable]  Pre-computed WebGL probe result (avoids duplicate canvas).
+   * @param {boolean} [options.webglAvailable]  Pre-computed WebGL2 probe result (avoids duplicate canvas).
    * @returns {string}  One of the PERFORMANCE_TIERS values.
    */
   function selectTier({ override, webglAvailable } = {}) {
-    // 1. Explicit override
+    // 1. Validate an explicit override, but do not let it bypass hard
+    //    renderer requirements or genuine device-safety guards.
     const tierValues = new Set(Object.values(PERFORMANCE_TIERS));
-    if (override && tierValues.has(override)) return override;
+    const validOverride = override && tierValues.has(override) ? override : null;
 
-    // 2. WebGL unavailable
-    const webgl = webglAvailable ?? probeWebGl().webgl;
-    if (!webgl) return PERFORMANCE_TIERS.MINIMAL;
+    // 2. Three.js r167 creates WebGL2 renderers. A WebGL1-only browser must
+    //    stay on the fully functional SVG renderer instead of entering a
+    //    doomed 3D initialization path.
+    const webgl2 = webglAvailable ?? probeWebGl().webgl2;
+    if (!webgl2) return PERFORMANCE_TIERS.MINIMAL;
 
     // 2b. Genuine memory refusal — device memory is so low that 3D is
     //     intentionally refused.  Callers should emit DEVICE_MEMORY_GUARD.
     //     Devices above this but below 2 GiB receive LOWPOWER (functional 3D).
     const mem = _deviceMemoryGib();
     if (mem !== null && mem < GENUINE_3D_REFUSAL_MEMORY_GIB) return PERFORMANCE_TIERS.MINIMAL;
+
+    // 2c. A valid manual choice can lower quality, but hardware constraints
+    //     below still cap choices that would be unsafe on this device.
+    if (validOverride === PERFORMANCE_TIERS.MINIMAL) return validOverride;
 
     // 3. Low-memory → LOWPOWER (functional 3D with reduced cost)
     if (isLowMemoryDevice()) return PERFORMANCE_TIERS.LOWPOWER;
@@ -179,11 +200,13 @@
 
     // 5. Balanced — moderate hardware (≤ 4 GB or ≤ 4 CPUs)
     if ((mem !== null && mem <= 4) || (typeof cpuCount === "number" && cpuCount <= 4)) {
-      return PERFORMANCE_TIERS.BALANCED;
+      return validOverride === PERFORMANCE_TIERS.LOWPOWER
+        ? PERFORMANCE_TIERS.LOWPOWER
+        : PERFORMANCE_TIERS.BALANCED;
     }
 
-    // 6. Default: high
-    return PERFORMANCE_TIERS.HIGH;
+    // 6. Capable hardware may use the requested tier or default to high.
+    return validOverride || PERFORMANCE_TIERS.HIGH;
   }
 
   // ── Pixel-ratio cap ───────────────────────────────────────────────
@@ -216,6 +239,7 @@
   function mapLegacyReason(legacyReason) {
     const map = {
       "webgl-unavailable":    FALLBACK_REASONS.WEBGL_UNSUPPORTED,
+      "webgl2-required":      FALLBACK_REASONS.WEBGL2_REQUIRED,
       "webgl-context-failed": FALLBACK_REASONS.CANVAS_INIT_FAILED,
       "three-load-failed":    FALLBACK_REASONS.THREE_IMPORT_FAILED,
       "quality-svgonly":      FALLBACK_REASONS.QUALITY_SVGONLY,
@@ -235,6 +259,7 @@
   function describeReason(reasonCode) {
     const descriptions = {
       [FALLBACK_REASONS.WEBGL_UNSUPPORTED]:   "WebGL is not available in this browser or device.",
+      [FALLBACK_REASONS.WEBGL2_REQUIRED]:     "This browser exposes only WebGL1; the 3D renderer requires WebGL2.",
       [FALLBACK_REASONS.THREE_IMPORT_FAILED]: "The 3D library (Three.js) could not be loaded.",
       [FALLBACK_REASONS.CANVAS_INIT_FAILED]:  "A WebGL rendering context could not be created.",
       [FALLBACK_REASONS.CONTEXT_LOST]:        "The WebGL context was lost after initialisation.",
@@ -355,15 +380,15 @@
    * @param {object} profile  Performance profile from sof:performance-profile event.
    * @param {object} [options]
    * @param {string} [options.override]  Explicit tier override.
-   * @param {boolean} [options.webglAvailable]  Pre-probed WebGL result.
+   * @param {boolean} [options.webglAvailable]  Pre-probed WebGL2 result.
    * @returns {string}  One of PERFORMANCE_TIERS values.
    */
   function selectTierFromProfile(profile, { override, webglAvailable } = {}) {
     const tierValues = new Set(Object.values(PERFORMANCE_TIERS));
-    if (override && tierValues.has(override)) return override;
+    const validOverride = override && tierValues.has(override) ? override : null;
 
-    const webgl = webglAvailable ?? probeWebGl().webgl;
-    if (!webgl) return PERFORMANCE_TIERS.MINIMAL;
+    const webgl2 = webglAvailable ?? probeWebGl().webgl2;
+    if (!webgl2) return PERFORMANCE_TIERS.MINIMAL;
 
     const mem = _deviceMemoryGib();
     if (mem !== null && mem < GENUINE_3D_REFUSAL_MEMORY_GIB) return PERFORMANCE_TIERS.MINIMAL;
@@ -371,8 +396,12 @@
     if (profile?.lowMemory || isLowMemoryDevice()) return PERFORMANCE_TIERS.LOWPOWER;
     if (profile?.reducedData || isReducedDataMode()) return PERFORMANCE_TIERS.LOWPOWER;
     if (profile?.lowCpu) return PERFORMANCE_TIERS.LOWPOWER;
-    if (profile?.constrained) return PERFORMANCE_TIERS.BALANCED;
-    return selectTier({ webglAvailable: webgl });
+    if (profile?.constrained) {
+      return validOverride === PERFORMANCE_TIERS.LOWPOWER
+        ? PERFORMANCE_TIERS.LOWPOWER
+        : PERFORMANCE_TIERS.BALANCED;
+    }
+    return selectTier({ override: validOverride, webglAvailable: webgl2 });
   }
 
   // ── Public API ────────────────────────────────────────────────────

@@ -62,7 +62,7 @@
     dock.setAttribute("aria-label", "Living Time app navigation");
     dock.innerHTML = `
       <a href="./moons.html#todayPanel" data-app-tab="today">Today</a>
-      <a href="./living-time-sphere.html?view=today" data-app-tab="sphere">Sphere</a>
+      <a href="./living-time-sphere.html?view=today&marker=today" data-app-tab="sphere">Sphere</a>
       <button type="button" data-app-tab="weather">Weather</button>
       <button type="button" data-app-tab="layers">Layers</button>
       <a href="./ledger.html" data-app-tab="records">Records</a>`;

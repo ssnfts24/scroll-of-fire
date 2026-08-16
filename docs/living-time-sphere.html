@@ -25,10 +25,13 @@
   <link rel="apple-touch-icon" href="assets/img/shared/branding/favicon.png">
   <link rel="stylesheet" href="assets/css/codex.css">
   <link rel="stylesheet" href="assets/css/navigation.css">
-  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260729-luxury-1">
+  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260815-6">
   <link rel="stylesheet" href="assets/css/living-time-sphere-metrics.css?v=20260814-1">
+  <link rel="stylesheet" href="assets/css/observatory-workspace.css?v=20260815-6">
+  <link rel="stylesheet" href="assets/css/living-time-calendar-workbench.css?v=20260815-6">
 
   <!-- Core engines -->
+  <script defer src="assets/js/moons-version.js?v=20260815-6"></script>
   <script defer src="assets/js/site.js"></script>
   <script defer src="assets/js/codex-memory.js"></script>
   <script defer src="assets/js/codex-witness.js"></script>
@@ -61,33 +64,36 @@
   <script defer src="assets/js/alignment/alignment-export.js"></script>
   <script defer src="assets/js/alignment/alignment-url-state.js"></script>
    <!-- Sphere modules — Phase 03: 3D renderer modules (lazy) -->
-   <script defer src="assets/js/sphere/living-time-sphere-version.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-version.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-model.js"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-state.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-temporal.js?v=20260815-6"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-state.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-semantic-zoom.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-layout.js"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-connections.js"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-renderer-svg.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-connections.js?v=20260815-6"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-renderer-svg.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-renderer-canvas.js"></script>
-   <script defer src="assets/js/sphere/observatory-capability-manager.js"></script>
+   <script defer src="assets/js/sphere/observatory-capability-manager.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-materials.js"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-effects.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-effects.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-camera.js"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-animation.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-animation.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-label-manager.js"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-renderer-3d.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260815-6"></script>
    <script defer src="assets/js/environment/environment-state.js"></script>
    <script defer src="assets/js/environment/providers/open-meteo-forecast.js"></script>
-   <script defer src="assets/js/environment/open-meteo-adapter.js"></script>
+   <script defer src="assets/js/environment/open-meteo-adapter.js?v=20260815-6"></script>
    <script defer src="assets/js/environment/location-command.js"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-live-data.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-live-data.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-interaction.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-accessibility.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-export.js"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-url-state.js"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-mount.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-url-state.js?v=20260815-6"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-mount.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-today.js"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-ui.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-ui.js?v=20260815-6"></script>
+   <script defer src="assets/js/sphere/living-time-calendar-workbench.js?v=20260815-6"></script>
+   <script defer src="assets/js/sphere/living-time-observatory-workspace.js?v=20260815-6"></script>
    <script defer>
      document.addEventListener("DOMContentLoaded", () => {
        const container = document.getElementById("sphere-container");
@@ -108,6 +114,7 @@
        } else {
          container.innerHTML = '<p class="sphere-load-error">The Living Time Sphere could not initialize. Reload the page or use the text view.</p>';
        }
+       requestAnimationFrame(() => globalThis.LivingTimeCalendarWorkbench?.init?.());
      }, { once: true });
    </script>
 </head>
@@ -284,6 +291,114 @@
         <p id="sphere-what-am-i-seeing-body" class="sphere-what-body">This view places the current Pattern Day inside the fixed 13 × 28 calendar.</p>
       </details>
 
+      <section id="calendar-workbench" class="calendar-workbench" aria-labelledby="calendar-workbench-title" tabindex="0">
+        <header class="calendar-workbench-head">
+          <div>
+            <p class="calendar-workbench-kicker">Synchronized Calendar Atlas</p>
+            <h2 id="calendar-workbench-title">Civil time and Pattern time, held together</h2>
+            <p>Jump by civil date or exact Pattern coordinate, move through Day, Week, Moon, and Year scales, keep private notes, pin comparisons, and change the visible lens without changing the calendar truth. The boundary clock follows the configured calendar timezone; a weather location never silently changes it.</p>
+          </div>
+          <div id="calendar-boundary-clock" class="calendar-boundary-clock" aria-live="polite">
+            <strong>—:—</strong><span>America/Los_Angeles</span><small>Resolving the configured day boundary…</small>
+          </div>
+        </header>
+
+        <div class="calendar-command-row" aria-label="Calendar navigation commands">
+          <div class="calendar-jump-group">
+            <label for="calendar-civil-date">Civil date</label>
+            <input id="calendar-civil-date" type="date" inputmode="numeric">
+            <button id="calendar-jump-civil" type="button">Map Civil Date</button>
+          </div>
+          <div class="calendar-jump-group">
+            <label for="calendar-pattern-moon">Pattern Moon</label>
+            <select id="calendar-pattern-moon" aria-label="Pattern Moon"></select>
+            <label for="calendar-pattern-day">Pattern Day</label>
+            <select id="calendar-pattern-day" aria-label="Pattern Day"></select>
+            <button id="calendar-jump-pattern" type="button">Go to Pattern Day</button>
+          </div>
+          <div class="calendar-today-group">
+            <button id="calendar-return-today" type="button">Live Today</button>
+            <button id="calendar-pin-selected" type="button">Pin Date</button>
+          </div>
+        </div>
+
+        <div id="calendar-selected-summary" class="calendar-selected-summary" aria-live="polite">
+          <span>ALIGNING</span><strong>Resolving selected day…</strong><small>Calendar state will appear after the baseline renderer starts.</small>
+        </div>
+
+        <div class="calendar-atlas-toolbar">
+          <h3 id="calendar-atlas-title">Pattern Calendar</h3>
+          <div class="calendar-scale-controls" role="group" aria-label="Calendar scale">
+            <button type="button" data-calendar-scale="day" aria-pressed="false">Day</button>
+            <button type="button" data-calendar-scale="week" aria-pressed="false">Week</button>
+            <button type="button" data-calendar-scale="moon" aria-pressed="true">Moon</button>
+            <button type="button" data-calendar-scale="year" aria-pressed="false">Year</button>
+          </div>
+        </div>
+        <div id="calendar-atlas-grid" class="calendar-atlas-grid" role="grid" aria-labelledby="calendar-atlas-title"></div>
+
+        <section class="calendar-lens-panel" aria-labelledby="calendar-lens-title">
+          <div class="calendar-panel-title">
+            <h3 id="calendar-lens-title">Focused lenses</h3>
+            <p>Each lens is a truthful layer preset. Unavailable provider data stays unavailable instead of appearing active.</p>
+          </div>
+          <div class="calendar-preset-grid" role="group" aria-label="Calendar and Sphere lens presets">
+            <button type="button" data-calendar-preset="cleanPattern" aria-pressed="false">Pattern</button>
+            <button type="button" data-calendar-preset="livingSky" aria-pressed="false">Living Sky</button>
+            <button type="button" data-calendar-preset="weatherField" aria-pressed="false">Environment</button>
+            <button type="button" data-calendar-preset="passage" aria-pressed="false">Passage</button>
+            <button type="button" data-calendar-preset="witnessMap" aria-pressed="false">Witness</button>
+            <button type="button" data-calendar-preset="historicalField" aria-pressed="false">Deep Time</button>
+            <button type="button" data-calendar-preset="lowPower" aria-pressed="false">Low Power</button>
+            <button type="button" data-calendar-preset="fullObservatory" aria-pressed="false">All Available</button>
+          </div>
+        </section>
+
+        <section class="calendar-journal-panel" aria-labelledby="calendar-journal-title">
+          <div class="calendar-panel-title">
+            <div>
+              <h3 id="calendar-journal-title">Private day journal &amp; agenda</h3>
+              <p id="calendar-note-context">Select a counted Pattern day to attach a private local note.</p>
+            </div>
+            <p class="calendar-privacy-note">Stored only in this browser. Notes never enter shared links.</p>
+          </div>
+          <div class="calendar-note-editor">
+            <label for="calendar-note-title">Title</label>
+            <input id="calendar-note-title" type="text" maxlength="120" autocomplete="off" placeholder="Day title or event">
+            <label for="calendar-note-body">Note</label>
+            <textarea id="calendar-note-body" maxlength="2000" rows="3" placeholder="Reflection, event, task, or observation…"></textarea>
+            <div class="calendar-note-actions">
+              <button id="calendar-save-note" type="button">Save Private Note</button>
+              <button id="calendar-export-ics" type="button">Export .ics</button>
+              <label class="calendar-import-button" for="calendar-import-ics">Import .ics</label>
+              <input id="calendar-import-ics" class="calendar-file-input" type="file" accept=".ics,text/calendar">
+            </div>
+          </div>
+          <div id="calendar-local-agenda" class="calendar-local-agenda" aria-live="polite">
+            <p class="calendar-empty">No private notes in this alignment year yet.</p>
+          </div>
+        </section>
+
+        <section class="calendar-compare-panel" aria-labelledby="calendar-compare-title">
+          <div class="calendar-panel-title">
+            <h3 id="calendar-compare-title">Pinned comparison</h3>
+            <p>Compare positions descriptively—distance and shared context are not prediction or causation.</p>
+            <div class="calendar-compare-actions"><button id="calendar-clear-pins" type="button">Clear Pins</button></div>
+          </div>
+          <div id="calendar-compare-tray" class="calendar-compare-tray" aria-live="polite">
+            <p class="calendar-empty">Pin a selected day to begin a comparison.</p>
+          </div>
+        </section>
+
+        <footer class="calendar-workbench-foot">
+          <p id="calendar-workbench-status" class="calendar-workbench-status" role="status" aria-live="polite">Calendar Atlas ready. Focus this panel to use keyboard navigation.</p>
+          <details class="calendar-shortcuts">
+            <summary>Keyboard controls</summary>
+            <p>←/→ day · Shift+←/→ week · Page Up/Down Moon · D/W/M/Y scale · T Today · P pin. Controls work without WebGL.</p>
+          </details>
+        </footer>
+      </section>
+
       <!-- 3. Interactive sphere + sidebar -->
       <div class="sphere-wrapper">
         <div class="sphere-canvas-wrap">
@@ -442,6 +557,52 @@
               <button id="sphere-next-day" class="sphere-btn sphere-btn-sm" type="button">Next Day →</button>
               <button id="sphere-next-moon" class="sphere-btn sphere-btn-sm" type="button">Next Moon →</button>
             </div>
+            <section class="sphere-temporal-lens" aria-labelledby="sphere-temporal-lens-title">
+              <header class="sphere-temporal-lens-head">
+                <div>
+                  <p class="sphere-temporal-kicker">Temporal Lens</p>
+                  <h3 id="sphere-temporal-lens-title">Navigate the living year</h3>
+                </div>
+                <span id="sphere-temporal-status" class="sphere-temporal-status" data-state="live">Live Today</span>
+              </header>
+              <button id="sphere-return-today" class="sphere-btn sphere-btn-primary sphere-return-today" type="button">
+                Return to Live Today
+              </button>
+              <div class="sphere-temporal-scrubber">
+                <div class="sphere-temporal-scrubber-labels">
+                  <label for="sphere-day-scrubber">Pattern day</label>
+                  <output id="sphere-day-scrubber-output" for="sphere-day-scrubber">Day 1 / 364</output>
+                </div>
+                <input id="sphere-day-scrubber" type="range" min="1" max="364" step="1" value="1" aria-describedby="sphere-temporal-comparison">
+                <div class="sphere-temporal-scale" aria-hidden="true"><span>Moon 1</span><span>Moon 7</span><span>Moon 13</span></div>
+              </div>
+              <div class="sphere-temporal-step-grid" role="group" aria-label="Move through Pattern time">
+                <button class="sphere-chip-btn" type="button" data-temporal-step="-28" aria-label="Previous Pattern Moon">− Moon</button>
+                <button class="sphere-chip-btn" type="button" data-temporal-step="-7" aria-label="Previous Pattern week">− Week</button>
+                <button class="sphere-chip-btn" type="button" data-temporal-step="-1" aria-label="Previous Pattern day">− Day</button>
+                <button id="sphere-temporal-play" class="sphere-chip-btn sphere-temporal-play" type="button" aria-pressed="false">Play</button>
+                <button class="sphere-chip-btn" type="button" data-temporal-step="1" aria-label="Next Pattern day">+ Day</button>
+                <button class="sphere-chip-btn" type="button" data-temporal-step="7" aria-label="Next Pattern week">+ Week</button>
+                <button class="sphere-chip-btn" type="button" data-temporal-step="28" aria-label="Next Pattern Moon">+ Moon</button>
+              </div>
+              <div class="sphere-temporal-playback-settings">
+                <label for="sphere-temporal-speed">Playback</label>
+                <select id="sphere-temporal-speed" class="sphere-control-select">
+                  <option value="1400">Contemplative</option>
+                  <option value="700" selected>Steady</option>
+                  <option value="280">Swift</option>
+                </select>
+                <label for="sphere-temporal-scope">Cycle</label>
+                <select id="sphere-temporal-scope" class="sphere-control-select">
+                  <option value="pattern-year" selected>Pattern Year</option>
+                  <option value="pattern-moon">Selected Moon</option>
+                  <option value="pattern-week">Selected Week</option>
+                </select>
+              </div>
+              <div id="sphere-temporal-comparison" class="sphere-temporal-comparison" role="status" aria-live="polite">
+                <p class="sphere-temporal-comparison-lead">Synchronizing with live Pattern time…</p>
+              </div>
+            </section>
             <div id="sphere-details" class="sphere-details">
               <p class="sphere-methods">Select a marker to see details.</p>
             </div>

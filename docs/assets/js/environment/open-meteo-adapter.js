@@ -6,10 +6,14 @@
   const UNITS_KEY = "sof.environment.units.v1";
   const LEGACY_COORDS_KEY = "sof.environment.location.v1";
   const SNAPSHOT_KEY = "sof.environment.snapshot.v2";
+  const DEFAULT_CURRENT_TTL_MS = 15 * 60 * 1000;
+  const SEARCH_TIMEOUT_MS = 12000;
 
   let _lastResult = null;
   let _inFlight = null;
   let _inFlightKey = "";
+  let _inFlightController = null;
+  let _refreshGeneration = 0;
   let _sessionActivePlace = null;
   const _memoryStore = new Map();
 
@@ -53,6 +57,12 @@
     }
   }
 
+  function safeRemove(key) {
+    try { globalThis.localStorage?.removeItem?.(key); } catch {}
+    try { globalThis.sessionStorage?.removeItem?.(key); } catch {}
+    _memoryStore.delete(key);
+  }
+
   function clamp(n, min, max) {
     return Math.min(max, Math.max(min, n));
   }
@@ -89,6 +99,21 @@
     const bits = [place.name, place.region, place.country].filter(Boolean);
     if (bits.length) return bits.join(", ");
     return `${place.latitude.toFixed(3)}, ${place.longitude.toFixed(3)}`;
+  }
+
+  function placeKey(place) {
+    if (!place || !Number.isFinite(Number(place.latitude)) || !Number.isFinite(Number(place.longitude))) return "none";
+    return `${Number(place.latitude).toFixed(4)},${Number(place.longitude).toFixed(4)}`;
+  }
+
+  function freshCachedSnapshot(place) {
+    const cached = safeRead(SNAPSHOT_KEY);
+    if (!cached?.current || !cached?.place || placeKey(cached.place) !== placeKey(place) || cached.stale) return null;
+    const updatedAt = new Date(cached.updatedAt || cached.fetchedAt || 0).getTime();
+    if (!Number.isFinite(updatedAt)) return null;
+    const providerTtl = Number(globalThis.OpenMeteoForecastProvider?.CURRENT_TTL_MS);
+    const ttl = Number.isFinite(providerTtl) && providerTtl > 0 ? providerTtl : DEFAULT_CURRENT_TTL_MS;
+    return Date.now() - updatedAt <= ttl ? cached : null;
   }
 
   function readPlaces() {
@@ -154,7 +179,7 @@
     return safeRead(UNITS_KEY) || { temperature: "celsius", wind: "kmh" };
   }
 
-  function mapSnapshot(result, place) {
+  function mapSnapshot(result, place, { persist = true } = {}) {
     const classifications = globalThis.SofEnvironmentState?.CLASSIFICATIONS;
     const offline = typeof navigator !== "undefined" && navigator.onLine === false;
     if (!result?.snapshot) {
@@ -249,14 +274,14 @@
       provenance: "open-meteo-adapter"
     };
 
-    safeWrite(SNAPSHOT_KEY, mapped);
+    if (persist) safeWrite(SNAPSHOT_KEY, mapped);
     return mapped;
   }
 
-  async function requestRefresh(options = {}) {
+  function requestRefresh(options = {}) {
     const provider = globalThis.OpenMeteoForecastProvider;
     if (!provider?.getForecastSnapshot) {
-      return mapSnapshot({ errorMessage: "Open-Meteo provider module unavailable." }, readActivePlace());
+      return Promise.resolve(mapSnapshot({ errorMessage: "Open-Meteo provider module unavailable." }, readActivePlace()));
     }
 
     const override = normalizePlace(options.coords || options.place);
@@ -264,50 +289,100 @@
     if (!place) {
       const empty = mapSnapshot({ errorMessage: "Location required." }, null);
       globalThis.SofEnvironmentState?.setEnvironmentState?.(empty);
-      return empty;
+      return Promise.resolve(empty);
     }
 
-    globalThis.SofEnvironmentState?.setEnvironmentState?.({
-      status: "loading",
-      reason: "request-refresh",
-      classification: globalThis.SofEnvironmentState?.CLASSIFICATIONS?.LOADING_WEATHER || "LOADING WEATHER",
-      providerConfigured: true,
-      place,
-      current: null,
-      hourly: [],
-      daily: [],
-      airQuality: null,
-      spaceWeather: null,
-      fetchedAt: null,
-      stale: false,
-      provenance: "open-meteo-adapter",
+    const requestKey = placeKey(place);
+    if (_inFlight && _inFlightKey === requestKey) return _inFlight;
+
+    if (!options.force) {
+      const cached = freshCachedSnapshot(place);
+      if (cached) return Promise.resolve(cached);
+    }
+
+    // Force and background requests for the same coordinates deliberately share
+    // one operation. The in-flight promise is installed before LOADING_WEATHER is
+    // announced so a synchronous environment-change listener cannot recursively
+    // start the same request and lock the main thread.
+    const generation = ++_refreshGeneration;
+    if (_inFlightController && _inFlightKey !== requestKey) {
+      try { _inFlightController.abort(); } catch {}
+    }
+    const controller = new AbortController();
+    const externalSignal = options.signal;
+    const onExternalAbort = () => controller.abort();
+    if (externalSignal?.aborted) controller.abort();
+    else externalSignal?.addEventListener?.("abort", onExternalAbort, { once: true });
+
+    _inFlightKey = requestKey;
+    _inFlightController = controller;
+
+    const task = Promise.resolve().then(async () => {
+      if (generation === _refreshGeneration) {
+        globalThis.SofEnvironmentState?.setEnvironmentState?.({
+          status: "loading",
+          reason: "request-refresh",
+          classification: globalThis.SofEnvironmentState?.CLASSIFICATIONS?.LOADING_WEATHER || "LOADING WEATHER",
+          providerConfigured: true,
+          place,
+          current: null,
+          hourly: [],
+          daily: [],
+          airQuality: null,
+          spaceWeather: null,
+          fetchedAt: null,
+          stale: false,
+          provenance: "open-meteo-adapter",
+        });
+      }
+
+      const result = await provider.getForecastSnapshot({
+        place,
+        force: !!options.force,
+        signal: controller.signal
+      });
+      const isCurrent = generation === _refreshGeneration;
+      if (isCurrent) _lastResult = result;
+      const mapped = mapSnapshot(result, place, { persist: isCurrent });
+      if (isCurrent) {
+        globalThis.SofEnvironmentState?.setEnvironmentState?.(mapped);
+      }
+      return mapped;
+    }).catch(error => {
+      const isCurrent = generation === _refreshGeneration;
+      const mapped = mapSnapshot(
+        { errorMessage: String(error?.message || error || "Environmental request failed.") },
+        place,
+        { persist: isCurrent }
+      );
+      if (isCurrent) {
+        globalThis.SofEnvironmentState?.setEnvironmentState?.(mapped);
+      }
+      return mapped;
+    }).finally(() => {
+      externalSignal?.removeEventListener?.("abort", onExternalAbort);
+      if (generation === _refreshGeneration) {
+        _inFlight = null;
+        _inFlightKey = "";
+        _inFlightController = null;
+      }
     });
 
-    const requestKey = `${place.latitude.toFixed(4)},${place.longitude.toFixed(4)}:${options.force ? "force" : "normal"}`;
-    if (_inFlight && _inFlightKey === requestKey) return _inFlight;
-    _inFlightKey = requestKey;
-    _inFlight = provider.getForecastSnapshot({
-      place,
-      force: !!options.force,
-      signal: options.signal
-    });
-    let result;
-    try { result = await _inFlight; }
-    finally { _inFlight = null; _inFlightKey = ""; }
-    _lastResult = result;
-    const mapped = mapSnapshot(result, place);
-    globalThis.SofEnvironmentState?.setEnvironmentState?.(mapped);
-    return mapped;
+    _inFlight = task;
+    return task;
   }
 
   function getSnapshot() {
-    return safeRead(SNAPSHOT_KEY) || mapSnapshot(_lastResult, readActivePlace());
+    const place = readActivePlace();
+    const cached = safeRead(SNAPSHOT_KEY);
+    if (place && cached?.place && placeKey(cached.place) === placeKey(place)) return cached;
+    return mapSnapshot(place ? _lastResult : null, place);
   }
 
-  function bootstrapEnvironmentState({ refresh = false } = {}) {
+  function bootstrapEnvironmentState({ refresh = true } = {}) {
     const cached = safeRead(SNAPSHOT_KEY);
     const place = readActivePlace();
-    if (cached && place) {
+    if (cached && place && cached?.place && placeKey(cached.place) === placeKey(place)) {
       const hydrated = { ...cached, place, providerConfigured: true };
       globalThis.SofEnvironmentState?.setEnvironmentState?.(hydrated);
       if (refresh) requestRefresh({ force: false }).catch(() => {});
@@ -374,10 +449,21 @@
       language: "en",
       format: "json"
     });
-    const response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?${params.toString()}`, {
-      cache: "no-store",
-      signal
-    });
+    const controller = new AbortController();
+    const onAbort = () => controller.abort();
+    if (signal?.aborted) controller.abort();
+    else signal?.addEventListener?.("abort", onAbort, { once: true });
+    const timer = setTimeout(() => controller.abort(), SEARCH_TIMEOUT_MS);
+    let response;
+    try {
+      response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?${params.toString()}`, {
+        cache: "no-store",
+        signal: controller.signal
+      });
+    } finally {
+      clearTimeout(timer);
+      signal?.removeEventListener?.("abort", onAbort);
+    }
     if (!response.ok) {
       throw new Error(`Place search failed (${response.status}).`);
     }
@@ -395,8 +481,14 @@
   }
 
   function continueWithoutLocation() {
-    try { globalThis.sessionStorage?.removeItem?.(ACTIVE_PLACE_KEY); } catch {}
-    _memoryStore.delete(ACTIVE_PLACE_KEY);
+    ++_refreshGeneration;
+    try { _inFlightController?.abort?.(); } catch {}
+    _inFlight = null;
+    _inFlightKey = "";
+    _inFlightController = null;
+    safeRemove(ACTIVE_PLACE_KEY);
+    safeRemove(LEGACY_COORDS_KEY);
+    safeRemove(SNAPSHOT_KEY);
     _sessionActivePlace = null;
     globalThis.SofEnvironmentState?.setEnvironmentState?.({
       status: "unavailable",

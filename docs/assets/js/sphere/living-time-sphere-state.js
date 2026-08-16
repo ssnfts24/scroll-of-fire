@@ -149,8 +149,8 @@
     }),
     connections: Object.freeze({
       id: "connections",
-      dataSource: ["LivingTimeSphereConnections"],
-      geometry: ["day-to-core", "day-to-solar", "day-to-lunar", "passage-links"],
+      dataSource: ["LivingTimeSphereConnections", "LivingTimeSphereTemporal"],
+      geometry: ["day-to-core", "selected-to-today", "day-to-solar", "day-to-lunar", "passage-links"],
       selectionMetadataType: "connection",
       semanticZoom: Object.freeze({ far: "selected-only", medium: "contextual", near: "focused-graph", detail: "expanded-local" }),
       performance: Object.freeze({ high: "more concurrent links", balanced: "contextual subset", lowpower: "selected subset", minimal: "off" }),

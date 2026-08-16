@@ -176,9 +176,10 @@ test("camera matrix: reset/top/tilted/edge controls map to distinct camera prese
   assert.ok(html.includes("sphere-cam-pattern"));
   assert.ok(html.includes("sphere-cam-passage"));
   assert.ok(html.includes("sphere-cam-years"));
-  assert.ok(ui.includes("case \"pattern\": globalThis.LivingTimeSphereRenderer3d?.setMode(\"pattern\")"));
-  assert.ok(ui.includes("case \"passage\": globalThis.LivingTimeSphereRenderer3d?.setMode(\"passage\")"));
-  assert.ok(ui.includes("case \"years\":   globalThis.LivingTimeSphereRenderer3d?.setMode(\"years\")"));
+  assert.ok(ui.includes("case \"pattern\": globalThis.LivingTimeSphereCamera?.setMode?.(\"pattern\""));
+  assert.ok(ui.includes("case \"passage\": globalThis.LivingTimeSphereCamera?.setMode?.(\"passage\""));
+  assert.ok(ui.includes("case \"years\":   globalThis.LivingTimeSphereCamera?.setMode?.(\"years\""));
+  assert.equal(ui.includes("case \"pattern\": globalThis.LivingTimeSphereRenderer3d?.setMode"), false, "camera presets must not mutate semantic view mode");
   const p = ctx.LivingTimeSphereCamera.MODE_POSITIONS.pattern;
   const pa = ctx.LivingTimeSphereCamera.MODE_POSITIONS.passage;
   const y = ctx.LivingTimeSphereCamera.MODE_POSITIONS.years;
@@ -207,7 +208,7 @@ test("spiral + connection controls: UI toggles are wired through state to render
   assert.ok(ui.includes("requestAnimationFrame(_flushLayerStateUpdates)"));
   assert.ok(renderer.includes("_objects.spiralGroup.visible"));
   assert.ok(renderer.includes("_objects.connectionGroup.visible"));
-  assert.ok(renderer.includes("while (_objects.connectionGroup.children.length)"), "connection rebuild clears duplicates");
+  assert.ok(renderer.includes("_disposeGroupChildren(_objects.connectionGroup)"), "connection rebuild disposes and clears duplicates");
 });
 
 test("field + astronomy + degree semantics: explanatory provenance is present", () => {

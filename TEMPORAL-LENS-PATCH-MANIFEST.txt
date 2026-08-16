@@ -1,0 +1,48 @@
+SCROLL OF FIRE TEMPORAL LENS OVERLAY
+Release: 2026.08.15.4
+Target branch: codex/advanced-living-time-observatory-pr72-2026-08-15
+
+Apply this overlay only after the renderer and location-refresh overlays. Copy the
+contents of its top-level folder into the repository root, preserving paths.
+
+RELEASE AND REVIEW
+ADVANCED-REBUILD-HANDOFF.md
+COPILOT-PR-DIRECTIVE.md
+PATCH-MANIFEST.txt
+TEMPORAL-LENS-PHASE-HANDOFF.md
+TEMPORAL-LENS-PATCH-MANIFEST.txt
+
+APPLICATION SHELL
+docs/index.html
+docs/living-time-sphere.html
+docs/service-worker.js
+docs/assets/css/living-time-sphere.css
+docs/assets/js/moons-version.js
+
+TEMPORAL AND SPHERE ENGINE
+docs/assets/js/sphere/living-time-sphere-temporal.js
+docs/assets/js/sphere/living-time-sphere-state.js
+docs/assets/js/sphere/living-time-sphere-connections.js
+docs/assets/js/sphere/living-time-sphere-live-data.js
+docs/assets/js/sphere/living-time-sphere-ui.js
+docs/assets/js/sphere/living-time-sphere-renderer-3d.js
+docs/assets/js/sphere/living-time-sphere-renderer-svg.js
+docs/assets/js/sphere/living-time-sphere-version.js
+
+AUDIT REPORTS
+docs/reports/current-build-defect-inventory.md
+docs/reports/current-feature-matrix.md
+docs/reports/site-advanced-rebuild-2026-08-15.md
+
+REGRESSION TESTS
+tests/living-time-sphere-temporal-navigation.test.js
+tests/pr3-completion-pass.test.js
+tests/pr3-final-repair.test.js
+tests/pwa-resilience.test.js
+
+EXPECTED VALIDATION
+630 tests passing
+69 HTML pages audited
+34 stylesheets audited
+4,092 local references resolved
+No trailing-whitespace errors in overlay files

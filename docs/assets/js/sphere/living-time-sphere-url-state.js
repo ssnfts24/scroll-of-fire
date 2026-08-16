@@ -18,7 +18,12 @@
 
   function normalizeTz(value) {
     const s = String(value || "").trim();
-    return s.length > 0 && s.length <= 64 ? s : null;
+    if (!s || s.length > 64) return null;
+    try {
+      return new Intl.DateTimeFormat("en-US", { timeZone: s }).resolvedOptions().timeZone || null;
+    } catch {
+      return null;
+    }
   }
 
   function normalizeBoundary(value) {
@@ -28,7 +33,9 @@
 
   function normalizeClock(value) {
     const s = String(value || "").trim();
-    return /^\d{2}:\d{2}$/.test(s) ? s : null;
+    const match = /^(\d{2}):(\d{2})$/.exec(s);
+    if (!match) return null;
+    return Number(match[1]) <= 23 && Number(match[2]) <= 59 ? s : null;
   }
 
   function normalizeRenderer(value) {

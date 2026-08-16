@@ -56,13 +56,18 @@
     retryCount: 0,
     lastRenderTimestamp: 0,
     _autoRetryTimer: 0,
+    _locationChangeRaf: 0,
     _recoveryHooksBound: false,
     _resizeObserver: null,
     _spiralCacheKey: "",
     _spiralCache: null,
+    _liveSnapshotCacheKey: "",
+    _liveSnapshotCache: null,
+    _liveSnapshotCacheAt: 0,
     selectedUpdateStatus: "idle",
     selectedUpdateRevision: 0,
     pendingSelectedDay: null,
+    pendingSelectedIntent: null,
     selectedUpdateInFlight: false,
     fullRenderCount: 0,
     selectedLightweightUpdateCount: 0,
@@ -71,6 +76,15 @@
     selectedUpdateLastWatchdog: null,
     lastNavActionAt: 0,
     lastNavActionId: "",
+    temporalPlaybackActive: false,
+    temporalPlaybackTimer: 0,
+    temporalPlaybackSpeed: 700,
+    temporalPlaybackScope: "pattern-year",
+    temporalPlaybackStepCount: 0,
+    temporalScrubRaf: 0,
+    temporalScrubPendingDay: null,
+    lastTodayResetSource: null,
+    lastTodayResetAt: 0,
     _selectedLongTaskObserver: null,
     layerStateSource: "default",
     userCustomizedLayers: false,
@@ -80,6 +94,8 @@
       layerUpdateCount: 0,
       environmentFocusCount: 0,
       environmentDataUpdateCount: 0,
+      todayResetCount: 0,
+      temporalPlaybackStepCount: 0,
     },
     actionTrace: [],
     lastEnvironmentFocusDiagnostics: null,
@@ -92,7 +108,22 @@
     firstRenderSurfaceFailure: null,
     initTimeline: [],
     renderSurfaceCanvasTrace: [],
+    _applyingHistoryState: false,
   };
+  const URL_STATE_DEFAULTS = Object.freeze({
+    year: 2026,
+    viewMode: "today",
+    timeZone: "America/Los_Angeles",
+    boundaryMode: "sunset",
+    manualSunset: "18:00",
+    requestedRendererMode: "auto",
+    quality: "auto",
+    connectionMode: "contextual",
+    motionMode: "still",
+    moonLabelDistance: "standard",
+    dayLabelMode: "key",
+    visibleLayers: Object.freeze({ ..._state.visibleLayers }),
+  });
   const MOON_LABEL_MODE_KEY = "lts-moon-label-mode";
   const SELECTED_STATE_KEY = "lts-selected-pattern-state.v1";
   const LAYER_PREFERENCES_KEY = "sof.sphere.layerPreferences.v2";
@@ -115,6 +146,7 @@
     historical: "Historical comparison",
   });
   let _brokenResourceGuardInstalled = false;
+  let _uiInitialized = false;
   const LAYER_PRESET_OPTIONS = Object.freeze(["fullObservatory", "cleanPattern", "livingSky", "weatherField", "passage", "witnessMap", "historicalField", "lowPower"]);
 
   let _urlHasExplicitLayers = false;
@@ -262,6 +294,60 @@
 
   // ── URL state ──────────────────────────────────────────────────────
 
+  function _applyParsedUrlState(parsed = {}, { initial = false } = {}) {
+    const previousBoundaryKey = `${_state.timeZone}|${_state.boundaryMode}|${_state.manualSunset}`;
+    const value = (key, fallback) => parsed[key] != null ? parsed[key] : (initial ? null : fallback);
+    const nextYear = value("year", URL_STATE_DEFAULTS.year);
+    const nextViewMode = value("viewMode", URL_STATE_DEFAULTS.viewMode);
+    if (nextYear) _state.year = nextYear;
+    if (nextViewMode) {
+      _state.requestedViewMode = nextViewMode;
+      if (initial) {
+        _state.viewMode = nextViewMode;
+        _state.activeViewMode = nextViewMode;
+      }
+    }
+    _state.timeZone = value("timeZone", URL_STATE_DEFAULTS.timeZone) || _state.timeZone;
+    _state.boundaryMode = value("boundaryMode", URL_STATE_DEFAULTS.boundaryMode) || _state.boundaryMode;
+    _state.manualSunset = value("manualSunset", URL_STATE_DEFAULTS.manualSunset) || _state.manualSunset;
+    if (Object.prototype.hasOwnProperty.call(parsed, "marker")) _state.selectedMarker = parsed.marker || null;
+    if (initial) {
+      if (parsed.source) _state.source = parsed.source;
+      if (parsed.datasetVersion) _state.datasetVersion = parsed.datasetVersion;
+    } else {
+      _state.source = parsed.source || null;
+      _state.datasetVersion = parsed.datasetVersion || null;
+    }
+    const markerDay = _selectedDayFromMarker(parsed.marker);
+    if (markerDay != null) _state.selectedDayOfYear = markerDay;
+    else if (!initial) _state.selectedDayOfYear = null;
+    _state.requestedRendererMode = value("renderer", URL_STATE_DEFAULTS.requestedRendererMode) || _state.requestedRendererMode;
+    _state.quality = value("quality", URL_STATE_DEFAULTS.quality) || _state.quality;
+    _state.connectionMode = value("connectionMode", URL_STATE_DEFAULTS.connectionMode) || _state.connectionMode;
+    _state.motionMode = value("motionMode", URL_STATE_DEFAULTS.motionMode) || _state.motionMode;
+    _state.moonLabelDistance = value("moonLabelDistance", URL_STATE_DEFAULTS.moonLabelDistance) || _state.moonLabelDistance;
+    _state.dayLabelMode = value("dayLabelMode", URL_STATE_DEFAULTS.dayLabelMode) || _state.dayLabelMode;
+    if (parsed.hasExplicitLayers) {
+      _urlHasExplicitLayers = true;
+      _state.layerStateSource = "url-explicit";
+      for (const key of Object.keys(_state.visibleLayers)) _state.visibleLayers[key] = false;
+      for (const layer of (parsed.layers || [])) _state.visibleLayers[layer] = true;
+    } else if (!initial) {
+      _urlHasExplicitLayers = false;
+      _state.layerStateSource = "url-default";
+      Object.keys(_state.visibleLayers).forEach(layer => {
+        _state.visibleLayers[layer] = !!URL_STATE_DEFAULTS.visibleLayers[layer];
+      });
+    }
+    if ((parsed.cameraTheta != null || parsed.cameraDist != null) && globalThis.LivingTimeSphereCamera) {
+      globalThis.LivingTimeSphereCamera.setState({ theta: parsed.cameraTheta, dist: parsed.cameraDist });
+    }
+    if (`${_state.timeZone}|${_state.boundaryMode}|${_state.manualSunset}` !== previousBoundaryKey) {
+      _invalidateLiveSnapshotCache();
+    }
+    return markerDay;
+  }
+
   function applyUrlState() {
     if (typeof location === "undefined") return;
     _urlHasExplicitLayers = false;
@@ -270,39 +356,9 @@
     try { parsedUrl = new URL(location.href); } catch { parsedUrl = null; }
     if (parsedUrl?.searchParams?.has("moon_label_distance")) _urlHasExplicitMoonLabelDistance = true;
     const parsed = globalThis.LivingTimeSphereUrlState.parseSphereUrl(location.href);
-    if (parsed.year)         _state.year         = parsed.year;
-    if (parsed.viewMode)     _state.viewMode     = parsed.viewMode;
+    _applyParsedUrlState(parsed, { initial: true });
     _state.requestedViewMode = _state.viewMode;
     _state.activeViewMode = _state.viewMode;
-    if (parsed.timeZone)     _state.timeZone     = parsed.timeZone;
-    if (parsed.boundaryMode) _state.boundaryMode = parsed.boundaryMode;
-    if (parsed.manualSunset) _state.manualSunset = parsed.manualSunset;
-    if (parsed.marker)       _state.selectedMarker = parsed.marker;
-    if (parsed.source)       _state.source = parsed.source;
-    if (parsed.datasetVersion) _state.datasetVersion = parsed.datasetVersion;
-    const markerDay = _selectedDayFromMarker(parsed.marker);
-    if (markerDay != null) _state.selectedDayOfYear = markerDay;
-    if (parsed.renderer)     _state.requestedRendererMode = parsed.renderer;
-    if (parsed.quality)      _state.quality      = parsed.quality;
-    if (parsed.connectionMode) _state.connectionMode = parsed.connectionMode;
-    if (parsed.motionMode)     _state.motionMode = parsed.motionMode;
-    if (parsed.moonLabelDistance) _state.moonLabelDistance = parsed.moonLabelDistance;
-    if (parsed.dayLabelMode)   _state.dayLabelMode = parsed.dayLabelMode;
-    if (parsed.hasExplicitLayers) {
-      _urlHasExplicitLayers = true;
-      _state.layerStateSource = "url-explicit";
-      for (const k of Object.keys(_state.visibleLayers)) _state.visibleLayers[k] = false;
-      for (const l of (parsed.layers || [])) _state.visibleLayers[l] = true;
-    }
-    if (parsed.moonLabelMode) _state.moonLabelMode = parsed.moonLabelMode;
-    // Restore camera from URL (validated in url-state module)
-    if ((parsed.cameraTheta != null || parsed.cameraDist != null) &&
-        globalThis.LivingTimeSphereCamera) {
-      globalThis.LivingTimeSphereCamera.setState({
-        theta: parsed.cameraTheta,
-        dist:  parsed.cameraDist
-      });
-    }
 
   }
 
@@ -591,7 +647,10 @@
       return { healthy: false, reason: "CONTAINER_MISSING", failures: ["CONTAINER_MISSING"], checks: {}, centerStack: { point: null, stack: [] }, brokenResources: [] };
     }
     const canvases = Array.from(host.querySelectorAll(":scope > canvas.living-time-sphere-3d-canvas"));
-    const canvas = canvases[0] || null;
+    const rendererCanvas = renderer?.getCanvas?.() || null;
+    const canvas = rendererCanvas?.parentElement === host && canvases.includes(rendererCanvas)
+      ? rendererCanvas
+      : (canvases[0] || null);
     const hostRect = host.getBoundingClientRect?.() || { left: 0, top: 0, width: 0, height: 0 };
     const canvasRect = canvas?.getBoundingClientRect?.() || { left: 0, top: 0, width: 0, height: 0 };
     const canvasStyle = canvas ? getComputedStyle(canvas) : null;
@@ -1000,18 +1059,57 @@
     }
   }
 
+  function _disposeRendererForRetry(container, reason = "renderer-retry") {
+    const renderer = globalThis.LivingTimeSphereRenderer3d;
+    if (renderer?.isInitializing?.()) return false;
+    try { renderer?.teardown?.(); } catch (error) {
+      console.warn(`[LivingTimeSphere] Renderer cleanup failed before ${reason}.`, error);
+    }
+    const ownedCanvases = Array.from(container?.querySelectorAll?.(":scope > canvas.living-time-sphere-3d-canvas") || []);
+    ownedCanvases.forEach(canvas => {
+      try { canvas.remove(); } catch { /* best-effort orphan cleanup */ }
+    });
+    _state.active3d = false;
+    _state._pending3dPayload = null;
+    _markInitTimeline("renderer-surface-reset", { reason, removedCanvases: ownedCanvases.length });
+    _markRenderSurfaceCanvasTrace("after-renderer-surface-reset");
+    return true;
+  }
+
   function _scheduleRetry(container, reason) {
     if (!container || _state.retryCount >= 2 || _state._autoRetryTimer) return;
     if (_state.requestedRendererMode === "svg" || _state.requestedRendererMode === "canvas" || _state.requestedRendererMode === "table" || _state.requestedRendererMode === "text") return;
-    const delay = _state.retryCount === 0 ? 180 : 900;
+    const contextRecovery = /context/i.test(String(reason || ""));
+    const delay = contextRecovery
+      ? (_state.retryCount === 0 ? 750 : 1800)
+      : (_state.retryCount === 0 ? 180 : 900);
     _state.retryCount += 1;
     _setRendererLifecycle("recovering");
     _state.activeRendererMode = "recovering";
-    _state._autoRetryTimer = setTimeout(() => {
+    const retryStartedAt = Date.now();
+    let pollCount = 0;
+    const attempt = () => {
+      pollCount += 1;
+      if (!_disposeRendererForRetry(container, reason)) {
+        if (pollCount >= 24 || Date.now() - retryStartedAt >= 6000) {
+          try { globalThis.LivingTimeSphereRenderer3d?.cancelInitialization?.(`retry-cap:${reason}`); } catch { /* best-effort cancellation */ }
+          _state._autoRetryTimer = 0;
+          _state._3dInitInProgress = false;
+          _state.active3d = false;
+          _state.activeRendererMode = "svg";
+          _setRendererLifecycle("fallback");
+          _updateRendererLabel("SVG fallback — 3D initialization did not settle");
+          _markInitTimeline("renderer-retry-cap-reached", { reason, pollCount, elapsedMs: Date.now() - retryStartedAt });
+          return;
+        }
+        _state._autoRetryTimer = setTimeout(attempt, 250);
+        return;
+      }
       _state._autoRetryTimer = 0;
       _state._3dInitInProgress = false;
       renderSphere(container);
-    }, delay);
+    };
+    _state._autoRetryTimer = setTimeout(attempt, delay);
     console.warn(`[LivingTimeSphere] Scheduled renderer retry #${_state.retryCount} (${reason}) in ${delay}ms.`);
   }
 
@@ -1070,14 +1168,18 @@
     if (q === "svgonly" || _state.requestedRendererMode === "svg" ||
         _state.requestedRendererMode === "canvas" ||
         _state.requestedRendererMode === "table" || _state.requestedRendererMode === "text") return null;
-    if (q !== "auto" && mat.QUALITY_PRESETS[q]) return mat.QUALITY_PRESETS[q];
-    // Auto: detect capabilities
+    const webgl2Available = !!globalThis.LivingTimeSphereEffects?.detectWebGl2?.();
+    if (!webgl2Available) return null;
     const reducedMotion = typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    const webglAvailable = !!(globalThis.LivingTimeSphereEffects?.detectWebGl?.());
-    const mem  = (typeof navigator !== "undefined" && navigator.deviceMemory) || 4;
-    const sw   = typeof window !== "undefined" ? window.innerWidth : 1024;
-    return mat.resolveAutoPreset({ reducedMotion, deviceMemoryGb: mem, screenWidth: sw, webglAvailable });
+    const tier = globalThis.ObservatoryCapabilityManager?.selectTier?.({
+      override: q === "auto" ? undefined : q,
+      webglAvailable: webgl2Available,
+    }) || (q === "auto" ? "balanced" : q);
+    if (tier === "svgonly") return null;
+    const preset = mat.QUALITY_PRESETS[tier] || mat.QUALITY_PRESETS.balanced;
+    if (!reducedMotion) return preset;
+    return Object.freeze({ ...preset, idleDrift: false, breathing: false, passageFlow: false, glow: false });
   }
 
   // ── Renderer mode resolution ───────────────────────────────────────
@@ -1086,7 +1188,7 @@
     if (_state.requestedRendererMode === "svg" || _state.requestedRendererMode === "canvas" || _state.requestedRendererMode === "table" || _state.requestedRendererMode === "text") return false;
     if (_state.quality === "svgonly") return false;
     if (!globalThis.LivingTimeSphereRenderer3d || !globalThis.LivingTimeSphereM || !globalThis.LivingTimeSphereEffects) return false;
-    if (!globalThis.LivingTimeSphereEffects.detectWebGl()) return false;
+    if (!globalThis.LivingTimeSphereEffects.detectWebGl2?.()) return false;
     return _state.requestedRendererMode === "3d" || _state.requestedRendererMode === "auto";
   }
 
@@ -1130,14 +1232,17 @@
     });
   }
 
-  function _withTimeout(promise, timeoutMs, timeoutReason = "INIT_TIMEOUT") {
+  function _withTimeout(promise, timeoutMs, timeoutReason = "INIT_TIMEOUT", onTimeout = null) {
     let timer = null;
     const timeoutPromise = new Promise(resolve => {
-      timer = setTimeout(() => resolve({
-        success: false,
-        reason: timeoutReason,
-        detail: `3D initialization exceeded ${timeoutMs}ms`,
-      }), timeoutMs);
+      timer = setTimeout(() => {
+        try { onTimeout?.(); } catch { /* best-effort timeout cancellation */ }
+        resolve({
+          success: false,
+          reason: timeoutReason,
+          detail: `3D initialization exceeded ${timeoutMs}ms`,
+        });
+      }, timeoutMs);
     });
     return Promise.race([
       promise,
@@ -1267,7 +1372,7 @@
       _state.previousViewMode = previousMode;
       _state.viewMode = targetMode;
       _state.activeViewMode = targetMode;
-      _setModeDefaultSelectedMarker(targetMode);
+      _setModeDefaultSelectedMarker(targetMode, model);
       _syncModeButtons();
       if (_state.active3d) globalThis.LivingTimeSphereRenderer3d?.setMode(targetMode);
       renderSphere(container);
@@ -1373,12 +1478,62 @@
     return new Date(epoch.getTime() + (Math.max(1, Math.min(364, dayOfYear || 1)) - 1) * DAY_MS);
   }
 
-  function _currentSnapshot() {
-    return globalThis.LivingTimeSphereLiveData?.getSnapshot?.({
+  function _invalidateLiveSnapshotCache() {
+    _state._liveSnapshotCacheKey = "";
+    _state._liveSnapshotCache = null;
+    _state._liveSnapshotCacheAt = 0;
+  }
+
+  function _currentSnapshot({ fresh = false } = {}) {
+    const key = `${_state.timeZone}|${_state.boundaryMode}|${_state.manualSunset}`;
+    const now = Date.now();
+    if (!fresh
+        && _state._liveSnapshotCache
+        && _state._liveSnapshotCacheKey === key
+        && now - Number(_state._liveSnapshotCacheAt || 0) < 1000) {
+      return _state._liveSnapshotCache;
+    }
+    const snapshot = globalThis.LivingTimeSphereLiveData?.getSnapshot?.({
       timeZone: _state.timeZone,
       boundaryMode: _state.boundaryMode,
       manualSunset: _state.manualSunset,
     }) || null;
+    _state._liveSnapshotCacheKey = key;
+    _state._liveSnapshotCache = snapshot;
+    _state._liveSnapshotCacheAt = now;
+    return snapshot;
+  }
+
+  function _supportedAlignmentYears() {
+    const years = globalThis.AlignmentLedgerData?.listSupportedYears?.();
+    return Array.isArray(years) ? years.map(Number).filter(Number.isFinite) : [];
+  }
+
+  function _resolveLiveTodayTarget(baseModel = null) {
+    const live = _currentSnapshot({ fresh: true });
+    const fallbackPosition = baseModel?.todayPatternPosition || live?.todayModel?.todayPatternPosition || null;
+    const temporal = globalThis.LivingTimeSphereTemporal;
+    if (temporal?.resolveTodayTarget) {
+      return temporal.resolveTodayTarget({
+        snapshot: live,
+        fallbackPosition,
+        supportedYears: _supportedAlignmentYears(),
+        fallbackYear: _state.year,
+      });
+    }
+    const day = Number(live?.pattern?.dayOfPatternYear ?? fallbackPosition?.dayOfPatternYear);
+    if (!Number.isFinite(day) || day < 1 || day > 364) return null;
+    const patternYear = Number(live?.pattern?.patternYear ?? fallbackPosition?.patternYear ?? live?.year ?? _state.year);
+    const supported = _supportedAlignmentYears();
+    const year = supported.includes(patternYear) ? patternYear : (supported.includes(Number(live?.year)) ? Number(live.year) : _state.year);
+    return Object.freeze({
+      dayOfPatternYear: Math.max(1, Math.min(364, Math.round(day))),
+      patternYear,
+      year,
+      marker: "today",
+      effectiveDate: live?.pattern?.effectiveDate || fallbackPosition?.effectiveDate || "",
+      civilDate: live?.pattern?.civilDate || fallbackPosition?.civilDate || "",
+    });
   }
 
   function _resolveSelectedDayOfYear(baseModel) {
@@ -1397,7 +1552,15 @@
 
   function _resolveSelectedPatternPosition(baseModel) {
     const dayOfYear = _resolveSelectedDayOfYear(baseModel);
-    const effectiveDate = _patternDateFromDayOfYear(_state.year, dayOfYear);
+    const live = _currentSnapshot();
+    const liveDate = _state.selectedMarker === "today"
+      && Number(live?.pattern?.dayOfPatternYear) === dayOfYear
+      && (live?.pattern?.effectiveDate || live?.pattern?.civilDate)
+      ? new Date(`${live.pattern.effectiveDate || live.pattern.civilDate}T12:00:00Z`)
+      : null;
+    const effectiveDate = liveDate && !Number.isNaN(liveDate.getTime())
+      ? liveDate
+      : _patternDateFromDayOfYear(_state.year, dayOfYear);
     let selected = null;
     if (effectiveDate && globalThis.PatternCalendar?.convertEffectiveDate) {
       const conversion = globalThis.PatternCalendar.convertEffectiveDate(effectiveDate);
@@ -1435,16 +1598,15 @@
     const lunarCyclePosition = typeof phase?.age === "number"
       ? Number((((phase.age % 29.530588853) + 29.530588853) % 29.530588853 / 29.530588853).toFixed(6))
       : null;
-    const live = _currentSnapshot();
     const isToday = selected?.patternYear === live?.pattern?.patternYear
       && selected?.dayOfPatternYear != null
       && selected.dayOfPatternYear === live?.pattern?.dayOfPatternYear;
-    const solar = globalThis.LivingTimeSphereLiveData?.getSnapshot?.({
+    const solar = globalThis.LivingTimeSphereLiveData?.getSolarSnapshot?.({
       asOf: effectiveDate,
       timeZone: _state.timeZone,
       boundaryMode: _state.boundaryMode,
       manualSunset: _state.manualSunset,
-    })?.solar || live?.solar || null;
+    }) || live?.solar || null;
 
     return selected ? {
       ...selected,
@@ -1479,12 +1641,15 @@
     const live = _currentSnapshot();
     const environmentState = globalThis.SofEnvironmentState?.getEnvironmentState?.() || null;
     const selected = _resolveSelectedPatternPosition(baseModel);
+    const todayPosition = live?.todayModel?.todayPatternPosition || baseModel?.todayPatternPosition || live?.pattern || null;
+    const temporalComparison = globalThis.LivingTimeSphereTemporal?.compareToToday?.(selected, todayPosition) || null;
     const activeMoon = selected?.moon ?? live?.pattern?.moon ?? baseModel?.todayPatternPosition?.moon ?? baseModel?.sourceRecord?.equinox?.patternPosition?.moon ?? 1;
     return {
       ...baseModel,
       selectedPatternPosition: selected,
       environmentSnapshot: environmentState,
-      todayPatternPosition: live?.todayModel?.todayPatternPosition || baseModel?.todayPatternPosition || null,
+      todayPatternPosition: todayPosition,
+      temporalComparison,
       moonSectors: Array.isArray(baseModel?.moonSectors)
         ? baseModel.moonSectors.map(sector => ({ ...sector, active: sector.moonNumber === activeMoon }))
         : [],
@@ -1583,6 +1748,9 @@
 
   function _restoreSelectedStateIfNeeded() {
     if (_state.selectedDayOfYear != null) return;
+    // An explicit semantic Today marker outranks an older locally remembered
+    // exploration. The live day is resolved after dependencies initialize.
+    if (_state.selectedMarker === "today") return;
     const saved = _readSelectedState();
     if (!saved || typeof saved !== "object") return;
     const day = Number(saved.selectedDayOfYear);
@@ -1666,9 +1834,12 @@
 
   function _updateSphereUrlFromModel(model, { replace = true } = {}) {
     if (typeof window === "undefined" || !globalThis.LivingTimeSphereUrlState?.buildSphereUrl) return;
+    if (_state._applyingHistoryState) return;
     const selected = model?.selectedPatternPosition || null;
     const cameraState = globalThis.LivingTimeSphereCamera?.getState?.() || {};
-    const marker = selected?.dayOfPatternYear ? `day-${selected.dayOfPatternYear}` : (_state.selectedMarker || null);
+    const marker = _state.selectedMarker === "today" && selected?.isToday
+      ? "today"
+      : (selected?.dayOfPatternYear ? `day-${selected.dayOfPatternYear}` : (_state.selectedMarker || null));
     const url = globalThis.LivingTimeSphereUrlState.buildSphereUrl({
       baseUrl: location.href,
       year: _state.year,
@@ -1720,7 +1891,7 @@
     switch (_state.fieldRange) {
       case "today":
       case "now":
-        if (live?.pattern?.patternYear === _state.year && live?.pattern?.dayOfPatternYear) {
+        if (Number(live?.year) === Number(_state.year) && live?.pattern?.dayOfPatternYear) {
           _state.selectedDayOfYear = live.pattern.dayOfPatternYear;
           _state.selectedMarker = "today";
         }
@@ -1973,16 +2144,14 @@
         hierarchy: "Always available",
       },
       {
-        id: "sunset",
-        label: _state.manualSunset === "18:00" ? "Sunset boundary" : "Local sunset",
-        value: weather?.daily?.sunset
-          ? _formatLocalInstant(weather.daily.sunset)
-          : (_state.manualSunset === "18:00" ? `Manual fallback · ${_state.manualSunset}` : `${_state.manualSunset || "18:00"}`),
-        status: "Calculated",
-        source: weather?.daily?.sunset ? environmentSource : (_state.manualSunset === "18:00" ? "Manual fallback" : "Configured boundary"),
-        timestamp: weather?.daily?.sunset ? weatherTimestamp : (live?.instant || ""),
-        freshness: weather?.daily?.sunset ? weatherFreshness : "Current calculation",
-        availability: "Always available from the current boundary configuration.",
+        id: "calendar-boundary",
+        label: "Calendar day boundary",
+        value: _state.boundaryMode === "midnight" ? "Configured · midnight" : `Configured · ${_state.manualSunset || "18:00"}`,
+        status: "Configured",
+        source: _state.boundaryMode === "midnight" ? "Calendar configuration" : "Manual wall-clock boundary",
+        timestamp: live?.instant || "",
+        freshness: "Current configuration",
+        availability: "Always available. Forecast sunset is shown separately and does not silently change the calendar boundary.",
         relation: selected?.afterBoundary
           ? "The selected Pattern Day has already crossed the configured boundary."
           : "The selected Pattern Day has not yet crossed the configured boundary.",
@@ -2345,14 +2514,14 @@
     if (!_state.requestedViewMode) _state.requestedViewMode = _state.viewMode;
     _state.activeViewMode = _state.viewMode;
 
-    // Show/hide data table and text summary views
-    _updateAlternateViews();
     _syncModeButtons();
     _syncFieldRangeButtons();
     _syncLayerCheckboxes();
 
     const model    = buildCurrentModel();
     const spiral   = _getCachedSpiral();
+    // Show/hide and populate non-visual views from the same canonical model.
+    _updateAlternateViews(model, spiral);
     const effective = _resolveEffectiveRenderState(model, spiral, container);
     const semanticZoom = effective.semanticZoom;
     const effectiveLayers = effective.effectiveLayers;
@@ -2370,6 +2539,7 @@
       _updateRendererLabel(_state.requestedRendererMode === "table" ? "Data Table" : "Text Summary");
       updateAccessibleText(model, spiral);
       updateDetails(model);
+      _updateTemporalLens(model);
       _updateTodayDiagnostics(model);
       _updateModeSummary(model);
       _updateWhatAmISeeing(_state.viewMode);
@@ -2404,6 +2574,7 @@
 
     updateAccessibleText(model, spiral);
     updateDetails(model);
+    _updateTemporalLens(model);
     _updateTodayDiagnostics(model);
     _updateModeSummary(model);
     _updateWhatAmISeeing(_state.viewMode);
@@ -2464,9 +2635,13 @@
           quality:       preset,
           tier: _state.quality === "auto"
             ? globalThis.ObservatoryCapabilityManager?.selectTier?.({
-                webglAvailable: globalThis.ObservatoryCapabilityManager?.probeWebGl?.().webgl ?? true
+                webglAvailable: globalThis.ObservatoryCapabilityManager?.probeWebGl?.().webgl2 ?? false
               })
-            : _state.quality,
+            : globalThis.ObservatoryCapabilityManager?.selectTier?.({
+                override: _state.quality,
+                webglAvailable: globalThis.ObservatoryCapabilityManager?.probeWebGl?.().webgl2 ?? false,
+              }) || _state.quality,
+          generation: initGeneration,
           selectedYear:  _state.year,
           visibleLayers: effectiveLayers,
           viewMode:      _state.viewMode,
@@ -2480,13 +2655,24 @@
           reducedMotion,
           onContextLost: () => {
             if (initGeneration !== _state._3dInitGeneration) return;
+            // Invalidate the interrupted generation before rendering the SVG
+            // baseline. Calling renderSphere() here would immediately start a
+            // second WebGL renderer while the lost canvas is still attached.
+            _state._3dInitGeneration += 1;
             _state.active3d = false;
             _state.activeRendererMode = "recovering";
-            _setRendererLifecycle("failed");
+            _setRendererLifecycle("recovering");
             _updateRendererLabel("3D context lost — falling back");
             _showRendererFallbackWarning("WEBGL_CONTEXT_LOST", "WebGL context was lost after initialization.");
+            _disposeRendererForRetry(container, "context-lost");
+            const fallbackLayout = globalThis.LivingTimeSphereLayout.resolveLayout({
+              containerWidth: container.offsetWidth || 320,
+              containerHeight: container.offsetHeight || 320,
+              devicePixelRatio: (typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1)
+            });
+            _renderSvgFallback(container, model, spiral, fallbackLayout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode);
             _setSphereLoaderVisibility(container, false);
-            renderSphere(container);
+            _scheduleRetry(container, "context-lost");
           },
           onContextRestored: () => {
             if (initGeneration !== _state._3dInitGeneration) return;
@@ -2497,6 +2683,7 @@
             _scheduleRetry(container, "context-restored");
           },
           onYearSelect: year => {
+            _stopTemporalPlayback("sphere-year-marker");
             _state.year = year;
             _syncYearSelect(year);
             globalThis.LivingTimeSphereAccessibility?.announce?.(`Year ${year} selected. Passage view.`);
@@ -2504,6 +2691,7 @@
           },
           onMarkerSelect: marker => {
             if (!marker) return;
+            _stopTemporalPlayback("sphere-marker-select");
             if (marker.type === "day" && marker.dayOfPatternYear) {
               globalThis.LivingTimeSphereAccessibility?.announce?.(`Selected Pattern Moon ${marker.moon}, Day ${marker.day}, Day ${marker.dayOfPatternYear} of 364.`);
               if (_state.viewMode === "years") {
@@ -2521,7 +2709,7 @@
             _state.selectedMarker = marker?.type === "year" ? `eq-${marker.year}` : (marker?.type || null);
             renderSphere(container);
           }
-          }), 25000);
+          }), 25000, "INIT_TIMEOUT", () => renderer.cancelInitialization?.("ui-init-timeout"));
           _markInitTimeline("3d-initialization-complete", { generation: initGeneration, success: !!result?.success, reason: result?.reason || null });
         }
       } catch (err) {
@@ -2530,7 +2718,10 @@
         _state._3dInitInProgress = false;
       }
 
-      if (initGeneration !== _state._3dInitGeneration) return;
+      if (initGeneration !== _state._3dInitGeneration) {
+        _disposeRendererForRetry(container, "stale-init-generation");
+        return;
+      }
 
       if (!result || !result.success) {
         // Fall back to SVG.
@@ -2677,9 +2868,8 @@
   }
 
   function _teardown3d() {
-    if (_state.active3d && globalThis.LivingTimeSphereRenderer3d?.isInitialized?.()) {
-      globalThis.LivingTimeSphereRenderer3d.teardown();
-    }
+    _state._3dInitGeneration += 1;
+    _disposeRendererForRetry(document.getElementById("sphere-container"), "renderer-mode-teardown");
     _state.active3d = false;
     _state._3dInitInProgress = false;
     _state._pending3dPayload = null;
@@ -2752,7 +2942,7 @@
     if (hintOn)      hintOn.style.display      = "none";
   }
 
-  function _updateAlternateViews() {
+  function _updateAlternateViews(model, spiral) {
     // Reveal data table section
     const tableSection = document.getElementById("sphere-data-table-section");
     if (tableSection) tableSection.style.display = _state.requestedRendererMode === "table" ? "" : "none";
@@ -2760,6 +2950,60 @@
     // Reveal text summary section
     const textSection  = document.getElementById("sphere-text-summary-section");
     if (textSection)  textSection.style.display  = _state.requestedRendererMode === "text"  ? "" : "none";
+
+    if (!model) return;
+    const selected = model.selectedPatternPosition || null;
+    const today = model.todayPatternPosition || null;
+    const selectedYearPoint = Array.isArray(spiral?.years)
+      ? spiral.years.find(item => Number(item?.year) === Number(_state.year)) || null
+      : null;
+    const patternAngle = selected?.dayOfPatternYear != null
+      ? globalThis.LivingTimeSphereModel?.patternAngleForDayOfYear?.(selected.dayOfPatternYear)
+      : null;
+    const todayAngle = today?.dayOfPatternYear != null
+      ? globalThis.LivingTimeSphereModel?.patternAngleForDayOfYear?.(today.dayOfPatternYear)
+      : null;
+    const rows = [
+      ["Selected year", _state.year, "Alignment Ledger"],
+      ["Viewing mode", _state.viewMode, "Sphere state"],
+      ["Selected Pattern day", selected?.dayOfPatternYear != null ? `${selected.dayOfPatternYear} / 364` : "Outside counted year", "Pattern Calendar"],
+      ["Selected Moon / Day", selected?.moon != null ? `Moon ${selected.moon} · Day ${selected.day}` : "Unavailable", "Pattern Calendar"],
+      ["Selected effective date", selected?.effectiveDate || "Unavailable", "Pattern Calendar boundary"],
+      ["Selected Pattern angle", Number.isFinite(patternAngle) ? `${Number(patternAngle).toFixed(3)}°` : "Unavailable", "364-day coordinate engine"],
+      ["Today Pattern day", today?.dayOfPatternYear != null ? `${today.dayOfPatternYear} / 364` : "Outside counted year", "Live Pattern snapshot"],
+      ["Today Pattern angle", Number.isFinite(todayAngle) ? `${Number(todayAngle).toFixed(3)}°` : "Unavailable", "364-day coordinate engine"],
+      ["Lunar state", selected?.lunarPhase || model?.markers?.lunarMarker?.label || "Unavailable", "Astronomy layer"],
+      ["Lunar cycle position", selected?.lunarCyclePosition != null ? `${(Number(selected.lunarCyclePosition) * 360).toFixed(3)}°` : (model?.lunarAngle != null ? `${Number(model.lunarAngle).toFixed(3)}°` : "Unavailable"), "Lunar coordinate"],
+      ["Solar gate", selected?.solar?.gate ? `${selected.solar.gate} · ${selected.solar.element || "—"}` : "Unavailable", "Solar context"],
+      ["Seasonal progress angle", selected?.solar?.angle != null ? `${Number(selected.solar.angle).toFixed(3)}°` : "Unavailable", "Seasonal anchor interpolation"],
+      ["Passage start", model?.passage?.startAngle != null ? `${Number(model.passage.startAngle).toFixed(3)}°` : "Unavailable", "Alignment record"],
+      ["Passage end", model?.passage?.endAngle != null ? `${Number(model.passage.endAngle).toFixed(3)}°` : "Unavailable", "Year Gate"],
+      ["Year spiral angle", selectedYearPoint?.yearSpiralAngle != null ? `${Number(selectedYearPoint.yearSpiralAngle).toFixed(3)}°` : "Unavailable", "13-year study window"],
+      ["Year spiral radius", selectedYearPoint?.yearSpiralRadius != null ? Number(selectedYearPoint.yearSpiralRadius).toFixed(4) : "Unavailable", "Normalized 0–1"],
+    ];
+
+    const table = document.getElementById("sphere-data-table");
+    if (table) {
+      table.innerHTML = `<caption class="visually-hidden">Canonical Living Time Sphere coordinates</caption>
+        <thead><tr><th scope="col">Field</th><th scope="col">Value</th><th scope="col">Source</th></tr></thead>
+        <tbody>${rows.map(([field, value, source]) => `<tr><th scope="row">${_escapeHtml(field)}</th><td>${_escapeHtml(value)}</td><td>${_escapeHtml(source)}</td></tr>`).join("")}</tbody>`;
+    }
+
+    const text = document.getElementById("sphere-text-summary-content");
+    if (text) {
+      const comparison = model.temporalComparison;
+      text.textContent = [
+        `Living Time Sphere — ${_titleCaseWords(_state.viewMode)} view`,
+        `Selected: ${selected?.moon != null ? `Moon ${selected.moon}, Day ${selected.day}, Pattern day ${selected.dayOfPatternYear} of 364` : "outside the counted Pattern year"}`,
+        `Effective date: ${selected?.effectiveDate || "unavailable"}`,
+        `Today: ${today?.moon != null ? `Moon ${today.moon}, Day ${today.day}, Pattern day ${today.dayOfPatternYear} of 364` : "outside the counted Pattern year"}`,
+        `Relationship to Today: ${comparison?.relationshipLabel || "unavailable"}`,
+        `Lunar: ${selected?.lunarPhase || model?.markers?.lunarMarker?.label || "unavailable"}${selected?.lunarIllumination != null ? `, ${selected.lunarIllumination}% illuminated` : ""}`,
+        `Solar: ${selected?.solar?.gate || "unavailable"}${selected?.solar?.element ? `, ${selected.solar.element}` : ""}`,
+        `Passage: ${model?.passage?.startAngle != null ? `${Number(model.passage.startAngle).toFixed(1)} degrees to the Year Gate` : "unavailable"}`,
+        "Coordinates use the canonical 13 by 28 Pattern engine and are measured clockwise from Moon 1 Day 1.",
+      ].join("\n");
+    }
   }
 
   // ── Renderer status label ──────────────────────────────────────────
@@ -3154,11 +3398,18 @@
     bridge.classList.toggle("is-off", !layerVisible);
   }
 
-  function _setModeDefaultSelectedMarker(mode) {
-    if (mode === "today") _state.selectedMarker = "today";
+  function _setModeDefaultSelectedMarker(mode, model = null) {
+    if (mode === "today") {
+      const selected = model?.selectedPatternPosition || null;
+      _state.selectedMarker = selected?.isToday
+        ? "today"
+        : (selected?.dayOfPatternYear != null ? `day-${_clampPatternDay(selected.dayOfPatternYear)}` : "today");
+    }
     else if (mode === "passage") _state.selectedMarker = `eq-${_state.year}`;
     else if (mode === "years") _state.selectedMarker = `year-${_state.year}`;
-    else if (mode === "pattern") _state.selectedMarker = "today";
+    else if (mode === "pattern") {
+      _state.selectedMarker = _state.selectedDayOfYear != null ? `day-${_clampPatternDay(_state.selectedDayOfYear)}` : "today";
+    }
   }
 
   function _syncModeButtons() {
@@ -3405,6 +3656,196 @@
     }
   }
 
+  function _updateTemporalLens(model) {
+    const selected = model?.selectedPatternPosition || null;
+    const today = model?.todayPatternPosition || _currentSnapshot()?.todayModel?.todayPatternPosition || null;
+    const temporal = globalThis.LivingTimeSphereTemporal;
+    const comparison = model?.temporalComparison || temporal?.compareToToday?.(selected, today) || null;
+    const day = _clampPatternDay(selected?.dayOfPatternYear || _state.selectedDayOfYear || 1);
+    const position = temporal?.moonDayForPatternDay?.(day) || {
+      moon: Math.floor((day - 1) / 28) + 1,
+      day: ((day - 1) % 28) + 1,
+      week: Math.floor(((day - 1) % 28) / 7) + 1,
+    };
+    const scrubber = document.getElementById("sphere-day-scrubber");
+    const output = document.getElementById("sphere-day-scrubber-output");
+    const status = document.getElementById("sphere-temporal-status");
+    const comparisonEl = document.getElementById("sphere-temporal-comparison");
+    const returnButton = document.getElementById("sphere-return-today");
+    const playButton = document.getElementById("sphere-temporal-play");
+
+    if (scrubber) {
+      scrubber.value = String(day);
+      scrubber.setAttribute("aria-valuetext", `Moon ${position.moon}, Day ${position.day}, Pattern day ${day} of 364`);
+    }
+    if (output) output.textContent = `Moon ${position.moon} · Day ${position.day} · ${day}/364`;
+
+    const isLive = !!comparison?.isLiveToday;
+    const statusState = _state.temporalPlaybackActive ? "playing" : (isLive ? "live" : "exploring");
+    if (status) {
+      status.dataset.state = statusState;
+      status.textContent = statusState === "playing" ? "Time in Motion" : (isLive ? "Live Today" : "Exploring");
+    }
+    if (returnButton) {
+      const alreadyLiveView = isLive && _state.viewMode === "today";
+      returnButton.disabled = alreadyLiveView;
+      returnButton.textContent = alreadyLiveView ? "Live Today Selected" : "Return to Live Today";
+    }
+    if (playButton) {
+      playButton.setAttribute("aria-pressed", _state.temporalPlaybackActive ? "true" : "false");
+      playButton.textContent = _state.temporalPlaybackActive ? "Pause" : "Play";
+    }
+    if (!comparisonEl) return;
+    comparisonEl.setAttribute("aria-live", _state.temporalPlaybackActive ? "off" : "polite");
+
+    if (!comparison) {
+      comparisonEl.innerHTML = '<p class="sphere-temporal-comparison-lead">Live comparison is unavailable for this outside day.</p>';
+      return;
+    }
+    const civilDelta = comparison.civilDayDelta;
+    const civilLabel = civilDelta == null
+      ? "Not available"
+      : civilDelta === 0
+        ? "Same civil day"
+        : `${civilDelta > 0 ? "+" : ""}${civilDelta} days`;
+    const shortestLabel = comparison.shortestSignedDays === 0
+      ? "Aligned"
+      : `${comparison.shortestSignedDays > 0 ? "+" : ""}${comparison.shortestSignedDays} days`;
+    const arcLabel = comparison.forwardDays === 0 ? "0 days" : `${comparison.forwardDays} days forward`;
+    const relation = comparison.isLiveToday
+      ? "The selected marker is synchronized with the canonical live Pattern day."
+      : `${comparison.relationshipLabel}. The Sphere keeps Today visible while you inspect this position.`;
+    comparisonEl.innerHTML = `
+      <p class="sphere-temporal-comparison-lead">${_escapeHtml(relation)}</p>
+      <div class="sphere-temporal-metrics" aria-label="Selected day compared with Today">
+        <span class="sphere-temporal-metric"><span>Shortest arc</span><strong>${_escapeHtml(shortestLabel)}</strong></span>
+        <span class="sphere-temporal-metric"><span>Forward cycle</span><strong>${_escapeHtml(arcLabel)}</strong></span>
+        <span class="sphere-temporal-metric"><span>Civil offset</span><strong>${_escapeHtml(civilLabel)}</strong></span>
+        <span class="sphere-temporal-metric"><span>Angular offset</span><strong>${_escapeHtml(`${comparison.angleDelta > 0 ? "+" : ""}${comparison.angleDelta.toFixed(1)}°`)}</strong></span>
+        <span class="sphere-temporal-metric"><span>Moon relation</span><strong>${comparison.sameMoon ? "Same Moon" : `Moon ${comparison.todayMoon} → ${comparison.selectedMoon}`}</strong></span>
+        <span class="sphere-temporal-metric"><span>Week relation</span><strong>${comparison.sameWeek ? "Same Week Gate" : `Week ${position.week}`}</strong></span>
+      </div>`;
+  }
+
+  function _clearTemporalPlaybackTimer() {
+    if (_state.temporalPlaybackTimer) clearTimeout(_state.temporalPlaybackTimer);
+    _state.temporalPlaybackTimer = 0;
+  }
+
+  function _stopTemporalPlayback(reason = "manual", { announce = false } = {}) {
+    const wasActive = _state.temporalPlaybackActive;
+    _clearTemporalPlaybackTimer();
+    _state.temporalPlaybackActive = false;
+    if (wasActive) {
+      _recordActionTrace("TEMPORAL_PLAYBACK_STOP", { reason }, ["temporal-lens"]);
+      if (announce) globalThis.LivingTimeSphereAccessibility?.announce?.("Pattern time playback paused.");
+      try { _updateTemporalLens(buildCurrentModel()); } catch { /* UI may be tearing down */ }
+    }
+  }
+
+  function _temporalPlaybackDelay() {
+    const requested = Math.max(180, Math.min(3000, Number(_state.temporalPlaybackSpeed) || 700));
+    const reduced = typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+    return reduced ? Math.max(1400, requested) : requested;
+  }
+
+  function _scheduleTemporalPlayback(container) {
+    _clearTemporalPlaybackTimer();
+    if (!_state.temporalPlaybackActive || !container) return;
+    _state.temporalPlaybackTimer = setTimeout(() => {
+      _state.temporalPlaybackTimer = 0;
+      if (typeof document !== "undefined" && document.hidden) {
+        _stopTemporalPlayback("document-hidden");
+        return;
+      }
+      const temporal = globalThis.LivingTimeSphereTemporal;
+      const current = _clampPatternDay(_state.selectedDayOfYear || _resolveSelectedDayOfYear(buildCurrentModel()));
+      const next = temporal?.stepWithinScope
+        ? temporal.stepWithinScope(current, 1, _state.temporalPlaybackScope)
+        : (current >= 364 ? 1 : current + 1);
+      _state.temporalPlaybackStepCount += 1;
+      _incrementActionCounter("temporalPlaybackStepCount");
+      _requestSelectedDayUpdate(container, next, {
+        source: "temporal-playback",
+        action: "TEMPORAL_PLAYBACK_STEP",
+      });
+      _scheduleTemporalPlayback(container);
+    }, _temporalPlaybackDelay());
+  }
+
+  function _toggleTemporalPlayback(container) {
+    if (_state.temporalPlaybackActive) {
+      _stopTemporalPlayback("play-button", { announce: true });
+      return;
+    }
+    _state.temporalPlaybackActive = true;
+    _recordActionTrace("TEMPORAL_PLAYBACK_START", {
+      speedMs: _temporalPlaybackDelay(),
+      scope: _state.temporalPlaybackScope,
+    }, ["temporal-lens", "selected-state"]);
+    globalThis.LivingTimeSphereAccessibility?.announce?.("Pattern time playback started.");
+    _updateTemporalLens(buildCurrentModel());
+    _scheduleTemporalPlayback(container);
+  }
+
+  function _buildTodaySelectionPatch(target, { fieldRange = "now", switchViewMode = true, currentViewMode = _state.viewMode } = {}) {
+    if (!target || !Number.isFinite(Number(target.dayOfPatternYear))) return null;
+    return Object.freeze({
+      selectedDayOfYear: _clampPatternDay(target.dayOfPatternYear),
+      year: Number(target.year) || _state.year,
+      selectedMarker: "today",
+      fieldRange: fieldRange === "today" ? "today" : "now",
+      requestedViewMode: switchViewMode ? "today" : currentViewMode,
+    });
+  }
+
+  function _returnToLiveToday(container, { fieldRange = "now", switchViewMode = true, source = "today-control" } = {}) {
+    if (!container) return false;
+    const target = _resolveLiveTodayTarget();
+    if (!target) {
+      globalThis.LivingTimeSphereAccessibility?.announce?.("The live Pattern day is outside the counted 364-day year.");
+      return false;
+    }
+    _stopTemporalPlayback("return-to-today");
+    const patch = _buildTodaySelectionPatch(target, { fieldRange, switchViewMode });
+    if (!patch) return false;
+    const resolvedRange = patch.fieldRange;
+    _state.year = patch.year;
+    _state.selectedDayOfYear = patch.selectedDayOfYear;
+    _state.selectedMarker = patch.selectedMarker;
+    _state.fieldRange = patch.fieldRange;
+    _state.lastTodayResetSource = source;
+    _state.lastTodayResetAt = Date.now();
+    _persistSelectedState();
+    _syncYearSelect(_state.year);
+    _syncFieldRangeButtons();
+    const preparedModel = buildCurrentModel();
+    _syncDaySelectorsFromModel(preparedModel);
+
+    if (switchViewMode && _state.viewMode !== "today") {
+      _requestViewModeTransition(container, "today");
+    } else {
+      _requestSelectedDayUpdate(container, target.dayOfPatternYear, {
+        marker: "today",
+        year: target.year,
+        fieldRange: resolvedRange,
+        source,
+        action: "RETURN_TO_LIVE_TODAY",
+      });
+    }
+    _incrementActionCounter("todayResetCount");
+    _recordActionTrace("RETURN_TO_LIVE_TODAY", {
+      source,
+      selectedDayOfYear: target.dayOfPatternYear,
+      patternYear: target.patternYear,
+      selectedYear: target.year,
+      fieldRange: resolvedRange,
+      viewMode: switchViewMode ? "today" : _state.viewMode,
+    }, ["selected-state", "mode", "url", "details", "renderer"]);
+    globalThis.LivingTimeSphereAccessibility?.announce?.(`Returned to Today: Moon ${target.moon || Math.floor((target.dayOfPatternYear - 1) / 28) + 1}, Day ${target.day || ((target.dayOfPatternYear - 1) % 28) + 1}.`);
+    return true;
+  }
+
   function _recordSelectedUpdateMetric(metric) {
     _state.selectedUpdateMetrics.push(metric);
     if (_state.selectedUpdateMetrics.length > 120) _state.selectedUpdateMetrics.shift();
@@ -3446,6 +3887,8 @@
       spiral,
       state: {
         ..._state,
+        mode: _state.viewMode,
+        selectedYear: _state.year,
         visibleLayers: effectiveLayers,
         connectionMode: effectiveConnectionMode,
         moonLabelMode: effectiveMoonLabelMode,
@@ -3466,7 +3909,9 @@
     _state.selectedUpdateInFlight = true;
     while (_state.pendingSelectedDay != null) {
       const nextDay = _clampPatternDay(_state.pendingSelectedDay);
+      const intent = _state.pendingSelectedIntent || {};
       _state.pendingSelectedDay = null;
+      _state.pendingSelectedIntent = null;
       const revision = ++_state.selectedUpdateRevision;
       const startedAt = performance.now();
       _state.selectedUpdateStatus = "updating";
@@ -3488,14 +3933,26 @@
       const previous = {
         selectedDayOfYear: _state.selectedDayOfYear,
         selectedMarker: _state.selectedMarker,
+        year: _state.year,
+        fieldRange: _state.fieldRange,
       };
       try {
+        if (Number.isFinite(Number(intent.year))) {
+          _state.year = Number(intent.year);
+        }
+        if (intent.fieldRange && FIELD_RANGE_LABELS[intent.fieldRange]) {
+          _state.fieldRange = intent.fieldRange;
+        }
         _state.selectedDayOfYear = nextDay;
-        _state.selectedMarker = `day-${nextDay}`;
+        _state.selectedMarker = typeof intent.marker === "string" && intent.marker
+          ? intent.marker
+          : `day-${nextDay}`;
         _persistSelectedState();
         const stateAppliedAt = performance.now();
 
         const model = buildCurrentModel();
+        _syncYearSelect(_state.year);
+        _syncFieldRangeButtons();
         _syncDaySelectorsFromModel(model);
         const selectorsSyncedAt = performance.now();
         _updateSphereUrlFromModel(model, { replace: true });
@@ -3527,6 +3984,7 @@
           _state.selectedLightweightUpdateCount += 1;
           updateAccessibleText(model, spiral);
           updateDetails(model);
+          _updateTemporalLens(model);
           _updateTodayDiagnostics(model);
           _updateModeSummary(model);
           _updateWhatAmISeeing(_state.viewMode);
@@ -3535,7 +3993,14 @@
           _updateRendererDiagnostics();
         }
         _incrementActionCounter("selectedDayUpdateCount");
-        _recordActionTrace("SELECTED_DAY_CHANGE", { selectedDayOfYear: nextDay }, incrementalUsed ? ["selected-state", "incremental-render"] : ["selected-state", "full-render"]);
+        _recordActionTrace(intent.action || "SELECTED_DAY_CHANGE", {
+          selectedDayOfYear: nextDay,
+          marker: _state.selectedMarker,
+          source: intent.source || "calendar-control",
+        }, incrementalUsed ? ["selected-state", "incremental-render"] : ["selected-state", "full-render"]);
+        _emitCalendarWorkbenchEvent("livingtime:selectionchange", model, {
+          source: intent.source || "calendar-control",
+        });
         const completeAt = performance.now();
         _recordSelectedUpdateMetric({
           revision,
@@ -3547,10 +4012,13 @@
           renderMs: Number((renderAppliedAt - urlSyncedAt).toFixed(2)),
           settleMs: Number((completeAt - renderAppliedAt).toFixed(2)),
           incrementalUsed,
+          source: intent.source || "calendar-control",
         });
       } catch (error) {
         _state.selectedDayOfYear = previous.selectedDayOfYear;
         _state.selectedMarker = previous.selectedMarker;
+        _state.year = previous.year;
+        _state.fieldRange = previous.fieldRange;
         _persistSelectedState();
         renderSphere(container);
         console.warn("[LivingTimeSphere] Selected-day update failed; reverted to previous state.", error);
@@ -3565,20 +4033,69 @@
     _state.selectedUpdateInFlight = false;
   }
 
-  function _requestSelectedDayUpdate(container, day) {
+  function _requestSelectedDayUpdate(container, day, intent = {}) {
     _state.pendingSelectedDay = _clampPatternDay(day);
+    _state.pendingSelectedIntent = { ...intent };
     _flushSelectedDayUpdates(container);
+  }
+
+  function _emitCalendarWorkbenchEvent(type, model = null, extra = {}) {
+    if (typeof window === "undefined" || typeof CustomEvent === "undefined") return;
+    const currentModel = model || (() => {
+      try { return buildCurrentModel(); } catch { return null; }
+    })();
+    const selected = currentModel?.selectedPatternPosition || null;
+    window.dispatchEvent(new CustomEvent(type, {
+      detail: Object.freeze({
+        year: Number(_state.year || 0) || null,
+        selectedDayOfYear: Number(_state.selectedDayOfYear || selected?.dayOfPatternYear || 0) || null,
+        selectedMarker: _state.selectedMarker || null,
+        viewMode: _state.viewMode,
+        fieldRange: _state.fieldRange,
+        visibleLayers: { ..._state.visibleLayers },
+        selected,
+        today: currentModel?.todayPatternPosition || null,
+        ...extra,
+      }),
+    }));
+  }
+
+  function _applyLayerPreset(container, presetName) {
+    const stateApi = globalThis.LivingTimeSphereState;
+    if (!container || !stateApi?.presetLayers || !stateApi?.LAYER_PRESETS?.[presetName]) return false;
+    const environment = globalThis.SofEnvironmentState?.getEnvironmentState?.() || null;
+    const witnessAvailable = !!globalThis.CodexWitness || !!globalThis.CodexMemory;
+    const nextLayers = stateApi.presetLayers(presetName, {
+      compact: false,
+      environmentAvailable: !!environment?.providerConfigured,
+      witnessAvailable,
+    });
+    Object.keys(_state.visibleLayers).forEach(layer => {
+      _state.visibleLayers[layer] = !!nextLayers[layer];
+    });
+    _state.userCustomizedLayers = true;
+    _state.layerStateSource = `calendar-preset:${presetName}`;
+    _syncLayerCheckboxes();
+    _incrementActionCounter("layerUpdateCount");
+    _recordActionTrace("CALENDAR_LAYER_PRESET", { presetName }, ["layers", "calendar-workbench"]);
+    renderSphere(container);
+    _emitCalendarWorkbenchEvent("livingtime:layerschange", null, { presetName });
+    return true;
   }
 
   // ── Control wiring ─────────────────────────────────────────────────
 
   function wireControls(container) {
     const shiftSelectedDay = delta => {
+      _stopTemporalPlayback("manual-day-navigation");
       const baseDay = _state.selectedDayOfYear ?? _resolveSelectedDayOfYear(buildCurrentModel());
-      _requestSelectedDayUpdate(container, baseDay + delta);
+      const nextDay = globalThis.LivingTimeSphereTemporal?.stepDay?.(baseDay, delta, { wrap: true })
+        ?? _clampPatternDay(baseDay + delta);
+      _requestSelectedDayUpdate(container, nextDay);
     };
 
     const shiftSelectedMoon = delta => {
+      _stopTemporalPlayback("manual-moon-navigation");
       const model = buildCurrentModel();
       const selected = model.selectedPatternPosition || _resolveSelectedPatternPosition(model);
       const currentMoon = selected?.moon || 1;
@@ -3600,6 +4117,11 @@
       const btn = document.getElementById(`sphere-mode-${mode}`);
       if (!btn) return;
       btn.addEventListener("click", () => {
+        if (mode === "today") {
+          _returnToLiveToday(container, { fieldRange: "now", switchViewMode: true, source: "view-mode-today" });
+          return;
+        }
+        _stopTemporalPlayback("view-mode-change");
         _requestViewModeTransition(container, mode);
       });
     });
@@ -3614,10 +4136,15 @@
       yearSelect.addEventListener("change", () => {
         const y = Number(yearSelect.value);
         if (y) {
+          _stopTemporalPlayback("year-select");
           _state.year = y;
-          if (_state.viewMode === "today" && _currentSnapshot()?.pattern?.patternYear !== y) {
-            _state.selectedDayOfYear = 1;
+          const selectedDay = _clampPatternDay(_state.selectedDayOfYear || _resolveLiveTodayTarget()?.dayOfPatternYear || 1);
+          _state.selectedDayOfYear = selectedDay;
+          _state.selectedMarker = `day-${selectedDay}`;
+          if (["now", "today"].includes(_state.fieldRange) && Number(_currentSnapshot()?.year) !== y) {
+            _state.fieldRange = "historical";
           }
+          _persistSelectedState();
           renderSphere(container);
         }
       });
@@ -3627,6 +4154,11 @@
       const btn = document.getElementById(`sphere-field-range-${range}`);
       if (!btn) return;
       btn.addEventListener("click", () => {
+        if (range === "now" || range === "today") {
+          _returnToLiveToday(container, { fieldRange: range, switchViewMode: false, source: `field-range-${range}` });
+          return;
+        }
+        _stopTemporalPlayback("field-range-change");
         _applyFieldRangePreset(range);
         _syncFieldRangeButtons();
         _syncModeButtons();
@@ -3650,6 +4182,7 @@
     const daySelect = document.getElementById("sphere-select-day");
     if (moonSelect) {
       moonSelect.addEventListener("change", () => {
+        _stopTemporalPlayback("moon-select");
         const moon = Math.max(1, Math.min(13, Number(moonSelect.value) || 1));
         const day = Math.max(1, Math.min(28, Number(daySelect?.value) || 1));
         _requestSelectedDayUpdate(container, (moon - 1) * 28 + day);
@@ -3657,12 +4190,87 @@
     }
     if (daySelect) {
       daySelect.addEventListener("change", () => {
+        _stopTemporalPlayback("day-select");
         const moon = Math.max(1, Math.min(13, Number(moonSelect?.value) || 1));
         const day = Math.max(1, Math.min(28, Number(daySelect.value) || 1));
         _requestSelectedDayUpdate(container, (moon - 1) * 28 + day);
       });
     }
     _syncDaySelectorsFromModel(buildCurrentModel());
+
+    // Temporal Lens: one canonical Today action plus scrub, step, and playback.
+    const returnTodayButton = document.getElementById("sphere-return-today");
+    if (returnTodayButton) {
+      returnTodayButton.addEventListener("click", () => {
+        _returnToLiveToday(container, { fieldRange: "now", switchViewMode: true, source: "temporal-lens" });
+      });
+    }
+
+    document.querySelectorAll("[data-temporal-step]").forEach(button => {
+      button.addEventListener("click", () => {
+        _stopTemporalPlayback("temporal-step");
+        const delta = Number(button.getAttribute("data-temporal-step")) || 0;
+        const current = _clampPatternDay(_state.selectedDayOfYear || _resolveSelectedDayOfYear(buildCurrentModel()));
+        const next = globalThis.LivingTimeSphereTemporal?.stepDay?.(current, delta, { wrap: true })
+          ?? _clampPatternDay(current + delta);
+        _requestSelectedDayUpdate(container, next, {
+          source: "temporal-step",
+          action: "TEMPORAL_STEP",
+        });
+      });
+    });
+
+    const scrubber = document.getElementById("sphere-day-scrubber");
+    if (scrubber) {
+      scrubber.addEventListener("input", () => {
+        const pendingDay = _clampPatternDay(scrubber.value);
+        _stopTemporalPlayback("temporal-scrub");
+        _state.temporalScrubPendingDay = pendingDay;
+        const position = globalThis.LivingTimeSphereTemporal?.moonDayForPatternDay?.(pendingDay);
+        const output = document.getElementById("sphere-day-scrubber-output");
+        if (output) output.textContent = position
+          ? `Moon ${position.moon} · Day ${position.day} · ${pendingDay}/364`
+          : `Day ${pendingDay} / 364`;
+        if (_state.temporalScrubRaf) return;
+        const schedule = typeof requestAnimationFrame === "function"
+          ? requestAnimationFrame
+          : callback => setTimeout(callback, 16);
+        _state.temporalScrubRaf = schedule(() => {
+          _state.temporalScrubRaf = 0;
+          const day = _state.temporalScrubPendingDay;
+          _state.temporalScrubPendingDay = null;
+          if (day == null) return;
+          _requestSelectedDayUpdate(container, day, {
+            source: "temporal-scrubber",
+            action: "TEMPORAL_SCRUB",
+          });
+        });
+      });
+    }
+
+    const playButton = document.getElementById("sphere-temporal-play");
+    if (playButton) playButton.addEventListener("click", () => _toggleTemporalPlayback(container));
+    const speedSelect = document.getElementById("sphere-temporal-speed");
+    if (speedSelect) {
+      speedSelect.value = String(_state.temporalPlaybackSpeed);
+      speedSelect.addEventListener("change", () => {
+        _state.temporalPlaybackSpeed = Math.max(180, Math.min(3000, Number(speedSelect.value) || 700));
+        if (_state.temporalPlaybackActive) _scheduleTemporalPlayback(container);
+      });
+    }
+    const scopeSelect = document.getElementById("sphere-temporal-scope");
+    if (scopeSelect) {
+      scopeSelect.value = _state.temporalPlaybackScope;
+      scopeSelect.addEventListener("change", () => {
+        _state.temporalPlaybackScope = ["pattern-year", "pattern-moon", "pattern-week"].includes(scopeSelect.value)
+          ? scopeSelect.value
+          : "pattern-year";
+      });
+    }
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) _stopTemporalPlayback("document-hidden");
+    });
+    window.addEventListener("pagehide", () => _stopTemporalPlayback("page-hide"), { once: true });
 
     // Layer toggles.
     Object.keys(_state.visibleLayers).forEach(layer => {
@@ -3704,18 +4312,24 @@
     // Copy link.
     const copyBtn = document.getElementById("sphere-copy-link");
     if (copyBtn) {
-      copyBtn.addEventListener("click", () => {
+      copyBtn.addEventListener("click", async () => {
         const camState = globalThis.LivingTimeSphereCamera?.getState?.() || {};
+        const shareModel = buildCurrentModel();
+        const selected = shareModel?.selectedPatternPosition || null;
+        const marker = _state.selectedMarker === "today" && selected?.isToday
+          ? "today"
+          : (selected?.dayOfPatternYear ? `day-${selected.dayOfPatternYear}` : _state.selectedMarker);
         const link = globalThis.LivingTimeSphereUrlState.buildSphereUrl({
           year:          _state.year,
           viewMode:      _state.viewMode,
+          marker,
           layers:        Object.entries(_state.visibleLayers).filter(([, v]) => v).map(([k]) => k),
           timeZone:      _state.timeZone,
           boundaryMode:  _state.boundaryMode,
           manualSunset:  _state.manualSunset,
           datasetVersion: globalThis.LivingTimeSphereVersion?.version,
           source: _state.source || undefined,
-          renderer:      _state.active3d ? "3d" : "svg",
+          renderer:      _state.requestedRendererMode || "auto",
           quality:       _state.quality,
           connectionMode:_state.connectionMode,
           motionMode:    _state.motionMode,
@@ -3724,8 +4338,21 @@
           cameraTheta:   camState.theta,
           cameraDist:    camState.dist,
         });
-        navigator.clipboard?.writeText(link).catch(() => {});
-        copyBtn.textContent = "Link copied";
+        let copied = false;
+        try {
+          if (globalThis.ScrollOfFire?.copyText) {
+            await globalThis.ScrollOfFire.copyText(link);
+            copied = true;
+          } else if (globalThis.RemnantShare?.copyPermanentLink) {
+            copied = await globalThis.RemnantShare.copyPermanentLink(link);
+          } else if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(link);
+            copied = true;
+          }
+        } catch {
+          copied = false;
+        }
+        copyBtn.textContent = copied ? "Link copied" : "Copy unavailable";
         setTimeout(() => { copyBtn.textContent = "Copy Link"; }, 2000);
       });
     }
@@ -3894,12 +4521,13 @@
         if (!_state.active3d) return;
         switch (cmd) {
           case "reset":   globalThis.LivingTimeSphereRenderer3d?.resetView(); break;
-          case "pattern": globalThis.LivingTimeSphereRenderer3d?.setMode("pattern"); break;
-          case "passage": globalThis.LivingTimeSphereRenderer3d?.setMode("passage"); break;
-          case "years":   globalThis.LivingTimeSphereRenderer3d?.setMode("years"); break;
+          case "pattern": globalThis.LivingTimeSphereCamera?.setMode?.("pattern", performance.now(), true); break;
+          case "passage": globalThis.LivingTimeSphereCamera?.setMode?.("passage", performance.now(), true); break;
+          case "years":   globalThis.LivingTimeSphereCamera?.setMode?.("years", performance.now(), true); break;
           default: break;
         }
         globalThis.LivingTimeSphereAnimation?.markDirty?.();
+        _recordActionTrace("CAMERA_PRESET_CHANGE", { preset: cmd }, ["camera"]);
       });
     });
 
@@ -3907,6 +4535,7 @@
     container.addEventListener("sphere:year-select", e => {
       const y = e.detail?.year;
       if (!y) return;
+      _stopTemporalPlayback("sphere-year-event");
       _state.year = y;
       _syncYearSelect(y);
       globalThis.LivingTimeSphereAccessibility.announce(`Year ${y} selected. Switching to Passage view.`);
@@ -3916,6 +4545,7 @@
     container.addEventListener("sphere:marker-select", e => {
       const marker = e.detail;
       if (!marker) return;
+      _stopTemporalPlayback("sphere-marker-event");
       if (marker.type === "day" && marker.dayOfPatternYear) {
         globalThis.LivingTimeSphereAccessibility?.announce?.(`Selected Pattern Moon ${marker.moon}, Day ${marker.day}, Day ${marker.dayOfPatternYear} of 364.`);
         _requestSelectedDayUpdate(container, marker.dayOfPatternYear);
@@ -3931,9 +4561,7 @@
     if (retry3dBtn) {
       retry3dBtn.addEventListener("click", async () => {
         // Dispose any partial state, reset renderer mode, attempt fresh init.
-        if (globalThis.LivingTimeSphereRenderer3d?.isInitialized?.()) {
-          globalThis.LivingTimeSphereRenderer3d.teardown();
-        }
+        _disposeRendererForRetry(container, "manual-retry");
         _state.active3d = false;
         _state._3dInitInProgress = false;
         _state.requestedRendererMode = "3d";
@@ -3990,9 +4618,7 @@
     const switchSvgBtn = document.getElementById("sphere-switch-svg");
     if (switchSvgBtn) {
       switchSvgBtn.addEventListener("click", () => {
-        if (globalThis.LivingTimeSphereRenderer3d?.isInitialized?.()) {
-          globalThis.LivingTimeSphereRenderer3d.teardown();
-        }
+        _disposeRendererForRetry(container, "manual-svg-switch");
         _state.active3d = false;
         _state._3dInitInProgress = false;
         _state.requestedRendererMode = "svg";
@@ -4101,6 +4727,13 @@
       console.warn("LivingTimeSphereUi: not all dependencies available");
       return;
     }
+    const container = document.getElementById("sphere-container");
+    if (!container) return;
+    if (_uiInitialized) {
+      _markInitTimeline("duplicate-ui-init-suppressed", { href: typeof location !== "undefined" ? location.href : "" });
+      return;
+    }
+    _uiInitialized = true;
     _state.initialUrl = typeof location !== "undefined" ? String(location.href || "") : "";
     _state.currentUrl = _state.initialUrl;
     _state.urlIntegrity = "preserved";
@@ -4112,8 +4745,6 @@
       _state.moonLabelDistance = _resolveMoonLabelDistance();
     }
 
-    const container = document.getElementById("sphere-container");
-    if (!container) return;
     _markInitTimeline("DOMContentLoaded", { href: typeof location !== "undefined" ? location.href : "" });
     _markInitTimeline("sphere-component-mount", {
       width: Number(container.clientWidth || 0),
@@ -4150,12 +4781,16 @@
       environmentApi.setEnvironmentState(environmentApi.EMPTY_STATE);
     }
     window.addEventListener("sof:location-changed", () => {
-      _recordActionTrace("LOCATION_CHANGE", null, ["environment-provider-refresh"]);
-      Promise.resolve(globalThis.OpenMeteoAdapter?.requestRefresh?.({ force: true }))
-        .catch(() => null)
-        .finally(() => renderSphere(container));
+      _invalidateLiveSnapshotCache();
+      _recordActionTrace("LOCATION_CHANGE", null, ["location-state", "coalesced-render"]);
+      if (_state._locationChangeRaf) cancelAnimationFrame(_state._locationChangeRaf);
+      _state._locationChangeRaf = requestAnimationFrame(() => {
+        _state._locationChangeRaf = 0;
+        renderSphere(container);
+      });
     });
     window.addEventListener(globalThis.SofEnvironmentState?.EVENT_NAME || "sof:environment-change", event => {
+      _invalidateLiveSnapshotCache();
       const nextState = event?.detail?.state || globalThis.SofEnvironmentState?.getEnvironmentState?.() || null;
       _state.environmentLifecycle = _resolveEnvironmentLifecycle(nextState);
       _incrementActionCounter("environmentDataUpdateCount");
@@ -4175,19 +4810,44 @@
       }
     });
     window.addEventListener("popstate", () => {
-      _state.currentUrl = typeof location !== "undefined" ? String(location.href || "") : _state.currentUrl;
-      _state.urlIntegrity = _evaluateDeepLinkIntegrity(_state.initialUrl, _state.currentUrl);
-      const parsed = globalThis.LivingTimeSphereUrlState?.parseSphereUrl?.(location.href) || {};
-      if (parsed.year) _state.year = parsed.year;
-      if (parsed.viewMode) _state.requestedViewMode = parsed.viewMode;
-      if (parsed.marker) _state.selectedMarker = parsed.marker;
-      const markerDay = _selectedDayFromMarker(parsed.marker);
-      if (markerDay != null) {
-        _requestSelectedDayUpdate(container, markerDay);
-      } else if (parsed.viewMode && parsed.viewMode !== _state.viewMode) {
-        _requestViewModeTransition(container, parsed.viewMode);
-      } else {
-        renderSphere(container);
+      _state._applyingHistoryState = true;
+      try {
+        _state.currentUrl = typeof location !== "undefined" ? String(location.href || "") : _state.currentUrl;
+        _state.urlIntegrity = _evaluateDeepLinkIntegrity(_state.initialUrl, _state.currentUrl);
+        const parsed = globalThis.LivingTimeSphereUrlState?.parseSphereUrl?.(location.href) || {};
+        const markerDay = _applyParsedUrlState(parsed, { initial: false });
+        const historyViewMode = parsed.viewMode || URL_STATE_DEFAULTS.viewMode;
+        _syncYearSelect(_state.year);
+        _syncLayerCheckboxes();
+        const urlControlValues = {
+          "sphere-renderer-select": _state.requestedRendererMode,
+          "sphere-quality-select": _state.quality,
+          "sphere-connection-mode": _state.connectionMode,
+          "sphere-motion-mode": _state.motionMode,
+          "sphere-moon-label-distance": _state.moonLabelDistance,
+          "sphere-day-label-mode": _state.dayLabelMode,
+        };
+        Object.entries(urlControlValues).forEach(([id, value]) => {
+          const control = document.getElementById(id);
+          if (control && value != null) control.value = value;
+        });
+        if (parsed.marker === "today" || (!parsed.marker && historyViewMode === "today")) {
+          _returnToLiveToday(container, { fieldRange: "now", switchViewMode: false, source: "browser-history" });
+          if (historyViewMode !== _state.viewMode) {
+            _requestViewModeTransition(container, historyViewMode);
+          }
+        } else if (markerDay != null) {
+          _requestSelectedDayUpdate(container, markerDay);
+          if (historyViewMode !== _state.viewMode) {
+            _requestViewModeTransition(container, historyViewMode);
+          }
+        } else if (historyViewMode !== _state.viewMode) {
+          _requestViewModeTransition(container, historyViewMode);
+        } else {
+          renderSphere(container);
+        }
+      } finally {
+        _state._applyingHistoryState = false;
       }
     });
 
@@ -4199,16 +4859,30 @@
         height: Number(container.clientHeight || 0),
       });
       renderSphere(container);
+      _emitCalendarWorkbenchEvent("livingtime:ready");
     });
 
     // Re-render on resize (debounced).
     let resizeTimer;
+    let observedWidth = Math.round(Number(container.getBoundingClientRect?.().width || container.clientWidth || 0));
+    let observedHeight = Math.round(Number(container.getBoundingClientRect?.().height || container.clientHeight || 0));
     if (typeof ResizeObserver !== "undefined") {
       _state._resizeObserver?.disconnect?.();
       _state._resizeObserver = new ResizeObserver(() => {
+        const rect = container.getBoundingClientRect?.() || { width: container.clientWidth, height: container.clientHeight };
+        const width = Math.round(Number(rect.width || 0));
+        const height = Math.round(Number(rect.height || 0));
+        if (width === observedWidth && height === observedHeight) return;
+        observedWidth = width;
+        observedHeight = height;
+        _state._latestContainerSize = { w: width, h: height };
         // Skip resize re-renders while 3D is still initializing — a
         // mid-init resize would start a second concurrent init call.
         if (_state._3dInitInProgress) return;
+        if (_state.active3d && globalThis.LivingTimeSphereRenderer3d?.isInitialized?.()) {
+          globalThis.LivingTimeSphereRenderer3d.requestSingleRender?.();
+          return;
+        }
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
           renderSphere(container);
@@ -4274,6 +4948,18 @@
       selectedUpdateMetrics: (_state.selectedUpdateMetrics || []).slice(-20),
       selectedUpdateLongTasks: (_state.selectedUpdateLongTasks || []).slice(-20),
       selectedUpdateLastWatchdog: _state.selectedUpdateLastWatchdog || null,
+      selectedMarker: _state.selectedMarker || null,
+      selectedYear: Number(_state.year || 0) || null,
+      fieldRange: _state.fieldRange,
+      todayResetCount: Number(_state.actionCounters?.todayResetCount || 0),
+      lastTodayResetSource: _state.lastTodayResetSource || null,
+      lastTodayResetAt: Number(_state.lastTodayResetAt || 0),
+      temporalPlaybackActive: !!_state.temporalPlaybackActive,
+      temporalPlaybackScope: _state.temporalPlaybackScope,
+      temporalPlaybackSpeed: Number(_state.temporalPlaybackSpeed || 0),
+      temporalPlaybackStepCount: Number(_state.temporalPlaybackStepCount || 0),
+      temporalEngineVersion: globalThis.LivingTimeSphereTemporal?.version || null,
+      liveSnapshotCacheAgeMs: _state._liveSnapshotCacheAt ? Math.max(0, Date.now() - Number(_state._liveSnapshotCacheAt)) : null,
       renderSurfaceVerification: _state.lastRenderSurfaceVerification || _verifyRenderSurface(container, { requireVisibleCenter: false }),
       firstRenderSurfaceFailure: _state.firstRenderSurfaceFailure || null,
       renderSurfaceCanvasTrace: (_state.renderSurfaceCanvasTrace || []).slice(-40),
@@ -4298,8 +4984,31 @@
   globalThis.LivingTimeSphereUi = Object.freeze({
     init,
     getState: () => Object.assign({}, _state),
+    getCurrentModel: () => buildCurrentModel(),
     renderSphere: (container) => renderSphere(container || document.getElementById("sphere-container")),
+    returnToToday: options => _returnToLiveToday(document.getElementById("sphere-container"), options),
+    selectDay: (day, options = {}) => {
+      const container = document.getElementById("sphere-container");
+      if (!container) return false;
+      _stopTemporalPlayback("public-day-selection");
+      _requestSelectedDayUpdate(container, day, {
+        source: options.source || "public-api",
+        action: options.action || "PUBLIC_DAY_SELECTION",
+        marker: options.marker,
+        year: options.year,
+        fieldRange: options.fieldRange,
+      });
+      return true;
+    },
+    applyLayerPreset: presetName => _applyLayerPreset(document.getElementById("sphere-container"), presetName),
+    pauseTemporalPlayback: () => _stopTemporalPlayback("public-api", { announce: true }),
     getSphereDiagnostics,
+    _internals: Object.freeze({
+      resolveLiveTodayTarget: _resolveLiveTodayTarget,
+      selectedDayFromMarker: _selectedDayFromMarker,
+      buildTodaySelectionPatch: _buildTodaySelectionPatch,
+      decorateModel: _decorateModel,
+    }),
   });
   globalThis.getSphereDiagnostics = getSphereDiagnostics;
 })();

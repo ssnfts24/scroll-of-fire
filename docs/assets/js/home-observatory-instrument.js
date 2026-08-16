@@ -1,6 +1,8 @@
 (() => {
   "use strict";
 
+  // The homepage uses the same model and renderer stack as the full Observatory.
+  // Dependencies are lazy but execute in strict order so dependants never race.
   const REQUIRED_DEPENDENCIES = [
     "assets/js/astronomy/astronomy-version.js",
     "assets/js/astronomy/astronomy-sources.js",
@@ -19,11 +21,6 @@
     "assets/js/alignment/alignment-offsets.js",
     "assets/js/alignment/alignment-signature.js",
     "assets/js/sphere/living-time-sphere-version.js",
-    // observatory-capability-manager must load before mount so that
-    // selectTier() / clampPixelRatio() / initTimeout() are available when
-    // LivingTimeSphere.mount() calls activate3d().  This also ensures the
-    // same capability path is used for the homepage preview and the full
-    // Observatory page — there is no separate reliability implementation.
     "assets/js/sphere/observatory-capability-manager.js",
     "assets/js/sphere/living-time-sphere-model.js",
     "assets/js/sphere/living-time-sphere-state.js",
@@ -32,24 +29,32 @@
     "assets/js/sphere/living-time-sphere-connections.js",
     "assets/js/sphere/living-time-sphere-renderer-svg.js",
     "assets/js/sphere/living-time-sphere-renderer-canvas.js",
+    "assets/js/sphere/living-time-sphere-materials.js",
+    "assets/js/sphere/living-time-sphere-effects.js",
+    "assets/js/sphere/living-time-sphere-camera.js",
+    "assets/js/sphere/living-time-sphere-animation.js",
+    "assets/js/sphere/living-time-sphere-label-manager.js",
+    "assets/js/sphere/living-time-sphere-renderer-3d.js",
     "assets/js/sphere/living-time-sphere-live-data.js",
     "assets/js/sphere/living-time-sphere-mount.js",
     "assets/js/sphere/living-time-sphere-today.js"
   ];
 
   const OPTIONAL_ENVIRONMENT_DEPENDENCIES = [
+    "assets/js/environment/environment-state.js",
     "assets/js/environment/providers/open-meteo-forecast.js",
-    "assets/js/environment/open-meteo-adapter.js",
-    "assets/js/environment/location-command.js"
+    "assets/js/environment/open-meteo-adapter.js"
   ];
 
   let loadingPromise = null;
+  let bootPromise = null;
   let activeRoot = null;
   let activeMount = null;
+  let viewportObserver = null;
   let fxRaf = 0;
   let fxVisible = false;
-  let observer = null;
-  let refreshTimer = 0;
+  let listenersWired = false;
+  let lastStatus = Object.freeze({ phase: "idle", renderer: null, detail: "Waiting to enter view" });
 
   function resolveUrl(path) {
     try { return new URL(path, document.baseURI).toString(); }
@@ -59,146 +64,114 @@
   function loadScript(path) {
     const src = resolveUrl(path);
     const existing = Array.from(document.scripts).find(script => script.src === src);
+    if (existing?.dataset.loaded === "true") return Promise.resolve();
+    if (existing && document.readyState !== "loading") {
+      existing.dataset.loaded = "true";
+      return Promise.resolve();
+    }
     if (existing) {
-      // A parser/defer script may have completed before this loader starts. Waiting for a
-      // second load event would deadlock the Observatory, so treat completed documents or
-      // known-ready modules as loaded immediately.
-      if (existing.dataset.loaded === "true" || document.readyState !== "loading") {
-        existing.dataset.loaded = "true";
-        return Promise.resolve();
-      }
       return new Promise((resolve, reject) => {
-        existing.addEventListener("load", () => { existing.dataset.loaded = "true"; resolve(); }, { once: true });
+        existing.addEventListener("load", () => {
+          existing.dataset.loaded = "true";
+          resolve();
+        }, { once: true });
         existing.addEventListener("error", () => reject(new Error(`Failed loading ${path}`)), { once: true });
       });
     }
     return new Promise((resolve, reject) => {
       const script = document.createElement("script");
-      // Dynamic scripts default to async. async=false preserves dependency execution order
-      // while allowing the browser to fetch the full chain in parallel.
       script.async = false;
       script.src = src;
-      script.onload = () => { script.dataset.loaded = "true"; resolve(); };
-      script.onerror = () => reject(new Error(`Failed loading ${path}`));
+      script.dataset.homeSphereDependency = "true";
+      script.addEventListener("load", () => {
+        script.dataset.loaded = "true";
+        resolve();
+      }, { once: true });
+      script.addEventListener("error", () => reject(new Error(`Failed loading ${path}`)), { once: true });
       document.head.appendChild(script);
     });
   }
 
   async function ensureDependencies() {
     if (loadingPromise) return loadingPromise;
-    loadingPromise = Promise.all(REQUIRED_DEPENDENCIES.map(loadScript))
-      .then(async () => {
-        const optional = await Promise.allSettled(OPTIONAL_ENVIRONMENT_DEPENDENCIES.map(loadScript));
-        optional
-          .filter(result => result.status === "rejected")
-          .forEach(result => {
-            console.warn("[HomeObservatoryInstrument] Optional environment dependency failed:", result.reason);
-          });
+    loadingPromise = (async () => {
+      for (const path of REQUIRED_DEPENDENCIES) await loadScript(path);
+      const optional = await Promise.allSettled(OPTIONAL_ENVIRONMENT_DEPENDENCIES.map(loadScript));
+      optional.filter(result => result.status === "rejected").forEach(result => {
+        console.warn("[HomeObservatoryInstrument] Optional environment dependency failed:", result.reason);
       });
+      if (!globalThis.LivingTimeSphere?.mount || !globalThis.LivingTimeSphereLiveData?.getSnapshot) {
+        throw new Error("The canonical Sphere mount did not become available.");
+      }
+    })().catch(error => {
+      loadingPromise = null;
+      throw error;
+    });
     return loadingPromise;
   }
 
   function setText(id, value) {
-    const el = document.getElementById(id);
-    if (el) el.textContent = value;
+    const node = document.getElementById(id);
+    if (node) node.textContent = value == null || value === "" ? "—" : String(value);
   }
 
-  function readQuestCount() {
-    const keys = [
-      "sof.question-quests.v1",
-      "sof_question_quests_v1",
-      "sof.questionQuests.v1"
-    ];
-    for (const key of keys) {
-      try {
-        const raw = localStorage.getItem(key);
-        if (!raw) continue;
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed)) return parsed.filter(item => item && item.paused !== true).length;
-      } catch {
-        // ignore
-      }
+  function setStatus(root, phase, renderer, detail) {
+    lastStatus = Object.freeze({ phase, renderer: renderer || null, detail: detail || "" });
+    const stage = root?.querySelector("[data-home-sphere-stage]");
+    const status = root?.querySelector("#home-sphere-render-state");
+    stage?.classList.toggle("has-renderer-3d", renderer === "3d");
+    stage?.classList.toggle("has-renderer-fallback", renderer === "svg" && phase !== "loading");
+    if (status) status.textContent = detail || (renderer === "3d" ? "Live 3D sphere" : "Accessible sphere");
+  }
+
+  function formatPassage(snapshot) {
+    const passage = snapshot?.passage;
+    if (!passage) return "Passage unavailable";
+    if (passage.active) {
+      if (Number.isFinite(passage.progress)) return `Active · ${Math.round(passage.progress * 100)}%`;
+      return "Passage active";
     }
-    return 0;
+    return "Passage at rest";
   }
 
-  function formatTime(iso) {
-    if (!iso) return "—";
-    const d = new Date(iso);
-    if (Number.isNaN(d.getTime())) return "—";
-    return d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
-  }
-
-  function formatDaylight(seconds) {
-    if (typeof seconds !== "number" || !Number.isFinite(seconds) || seconds <= 0) return "—";
-    const h = Math.floor(seconds / 3600);
-    const m = Math.round((seconds % 3600) / 60);
-    return `${h}h ${String(m).padStart(2, "0")}m`;
-  }
-
-  function weatherSummary(weather) {
-    if (!weather) return "Unavailable";
-    if (!weather.providerConfigured) return "Set location";
-    if (!weather.current) return weather.statusLabel || "Unavailable";
-    const temp = typeof weather.current.temperature === "number" ? `${Math.round(weather.current.temperature)}°C` : null;
-    const cloud = typeof weather.current.cloudCover === "number" ? `${Math.round(weather.current.cloudCover)}% cloud` : null;
-    const wind = typeof weather.current.windSpeed === "number" ? `${Math.round(weather.current.windSpeed)} km/h` : null;
-    return [temp, cloud, wind].filter(Boolean).join(" · ") || weather.statusLabel || "Unavailable";
-  }
-
-  function updateExtraTelemetry(root) {
-    const snapshot = globalThis.LivingTimeSphereLiveData?.getSnapshot?.() || null;
+  function updateTelemetry(root, suppliedSnapshot) {
+    const snapshot = suppliedSnapshot || globalThis.LivingTimeSphereLiveData?.getSnapshot?.() || null;
     if (!snapshot) return;
-    setText("home-sphere-civil-date", snapshot.pattern?.civilDate || "—");
-    setText("home-sphere-selected-day", snapshot.pattern?.dayOfPatternYear ? `Day ${snapshot.pattern.dayOfPatternYear}/364` : "Outside count");
-    setText("home-sphere-boundary", snapshot.boundaryMode === "sunset" ? "Sunset boundary" : (snapshot.boundaryMode || "—"));
-    setText("home-sphere-time-zone", snapshot.timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone || "Local");
-    setText("home-sphere-lunar-illumination", typeof snapshot.lunar?.illumination === "number" ? `${Math.round(snapshot.lunar.illumination * 100)}%` : "—");
-    setText("home-sphere-recurrence", Array.isArray(snapshot.history?.recurrences) && snapshot.history.recurrences[0]
-      ? `${snapshot.history.recurrences[0].year} · ${Math.round(snapshot.history.recurrences[0].overallSimilarityScore * 100)}%`
-      : "No close match");
-    setText("home-sphere-quest-count", String(readQuestCount()));
-    setText("home-sphere-today-witness", String(snapshot.witness?.count ?? 0));
+    const pattern = snapshot.pattern || {};
+    const lunar = snapshot.lunar || {};
+    const solar = snapshot.solar || {};
+    const patternText = pattern.moon != null
+      ? `Moon ${pattern.moon} · Day ${pattern.day} · ${pattern.dayOfPatternYear}/364`
+      : "Outside counted Pattern";
+    const lunarText = lunar.phaseName
+      ? `${lunar.phaseName}${Number.isFinite(lunar.illumination) ? ` · ${Math.round(lunar.illumination * 100)}%` : ""}`
+      : "Lunar state unavailable";
+    const solarText = solar.gate
+      ? `${solar.gate}${solar.element ? ` · ${solar.element}` : ""}`
+      : (solar.season?.label || "Solar state unavailable");
+    const passageText = formatPassage(snapshot);
 
-    const weather = globalThis.SofEnvironmentState?.getEnvironmentState?.()
-      || globalThis.OpenMeteoAdapter?.getSnapshot?.()
-      || snapshot.weather
-      || null;
-    setText("home-sphere-weather", weatherSummary(weather));
-    setText("home-sphere-sunrise", formatTime(weather?.daily?.sunrise));
-    setText("home-sphere-sunset", formatTime(weather?.daily?.sunset));
-    setText("home-sphere-daylight", formatDaylight(weather?.daily?.daylightDurationSeconds));
+    setText("home-sphere-today-pattern", patternText);
+    setText("home-sphere-today-lunar", lunarText);
+    setText("home-sphere-today-solar", solarText);
+    setText("home-sphere-today-passage", passageText);
+    setText("home-sphere-today-witness", snapshot.witness?.label || "Witness data remains private in this browser.");
 
-    const pattern = snapshot.pattern?.moon != null
-      ? `Moon ${snapshot.pattern.moon} Day ${snapshot.pattern.day} · ${snapshot.lunar?.phaseName || "Lunar state"}`
-      : "Outside counted year";
-    const history = Array.isArray(snapshot.history?.recurrences) && snapshot.history.recurrences[0]
-      ? `Closest recurrence ${snapshot.history.recurrences[0].year} · ${Math.round(snapshot.history.recurrences[0].overallSimilarityScore * 100)}%`
-      : "No close recurrence in supported range";
-    const passage = snapshot.passage?.active
-      ? `Passage active · ${snapshot.passage.elapsed != null ? `${Number((snapshot.passage.elapsed * 24).toFixed(1))} h elapsed` : "in progress"}`
-      : "Passage inactive";
+    const accessible = root.querySelector("#home-sphere-today-accessible");
+    if (accessible) accessible.textContent = [patternText, lunarText, solarText, passageText].join(". ");
+    const preview = root.querySelector("#home-sphere-today-preview");
+    preview?.setAttribute("aria-label", `Living Time Sphere. ${patternText}. ${lunarText}. ${solarText}. ${passageText}.`);
 
-    setText("home-sphere-drawer-pattern", `${pattern}. Solar: ${snapshot.solar?.gate || "—"} (${snapshot.solar?.element || "—"}).`);
-    setText("home-sphere-drawer-history", `${passage}. ${history}.`);
-
-    if (weather?.providerConfigured && weather?.freshness?.stale) {
-      const weatherNode = document.getElementById("home-sphere-weather");
-      if (weatherNode && !/stale/i.test(weatherNode.textContent || "")) {
-        weatherNode.textContent = `${weatherNode.textContent} · stale`;
-      }
-    }
-
-    const openLink = document.getElementById("home-sphere-today-open-link");
-    if (openLink && globalThis.LivingTimeSphereTodayCard?.buildLink) {
-      openLink.href = globalThis.LivingTimeSphereTodayCard.buildLink({
+    const link = root.querySelector("#home-sphere-today-open-link");
+    if (link && globalThis.LivingTimeSphereTodayCard?.buildLink) {
+      link.href = globalThis.LivingTimeSphereTodayCard.buildLink({
         year: snapshot.year,
         timeZone: snapshot.timeZone,
         boundaryMode: snapshot.boundaryMode,
         manualSunset: snapshot.manualSunset,
         source: "home",
         viewMode: "today",
-        layers: ["pattern", "lunar", "solar", "passage", "markers"]
+        layers: ["pattern", "lunar", "solar", "passage", "markers", "spiral", "recurrence", "connections"]
       });
     }
   }
@@ -210,205 +183,158 @@
 
   function drawFx(canvas) {
     if (!canvas || !fxVisible) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+    const context = canvas.getContext("2d");
+    if (!context) return;
     const rect = canvas.getBoundingClientRect();
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const w = Math.max(1, Math.floor(rect.width));
-    const h = Math.max(1, Math.floor(rect.height));
-    if (canvas.width !== Math.floor(w * dpr) || canvas.height !== Math.floor(h * dpr)) {
-      canvas.width = Math.floor(w * dpr);
-      canvas.height = Math.floor(h * dpr);
+    const width = Math.max(1, Math.round(rect.width));
+    const height = Math.max(1, Math.round(rect.height));
+    const dpr = Math.min(1.5, window.devicePixelRatio || 1);
+    const pixelWidth = Math.round(width * dpr);
+    const pixelHeight = Math.round(height * dpr);
+    if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
+      canvas.width = pixelWidth;
+      canvas.height = pixelHeight;
     }
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, w, h);
-
-    const t = performance.now() * (reduced ? 0 : 0.0002);
-    const g = ctx.createRadialGradient(w * 0.5, h * 0.5, 8, w * 0.5, h * 0.5, Math.max(w, h) * 0.55);
-    g.addColorStop(0, "rgba(20, 220, 255, 0.12)");
-    g.addColorStop(0.55, "rgba(251, 191, 36, 0.05)");
-    g.addColorStop(1, "rgba(0, 0, 0, 0)");
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, w, h);
-
-    if (!reduced) {
-      ctx.strokeStyle = "rgba(122,243,255,0.2)";
-      ctx.lineWidth = 1;
-      for (let i = 0; i < 5; i += 1) {
-        const r = ((Math.min(w, h) * 0.2) + (i * 24) + (Math.sin(t * 8 + i) * 2));
-        ctx.beginPath();
-        ctx.arc(w / 2, h / 2, r, 0, Math.PI * 2);
-        ctx.stroke();
-      }
-    }
-
-    fxRaf = requestAnimationFrame(() => drawFx(canvas));
-  }
-
-  async function refreshWeather(force = false) {
-    try {
-      if (!globalThis.OpenMeteoAdapter?.requestRefresh) return;
-      globalThis.OpenMeteoAdapter.bootstrapEnvironmentState?.();
-      const place = globalThis.OpenMeteoAdapter.getActivePlace?.();
-      if (!place) return;
-      await globalThis.OpenMeteoAdapter.requestRefresh({ force });
-    } catch {
-      // Keep the last successful cached snapshot visible.
+    context.setTransform(dpr, 0, 0, dpr, 0, 0);
+    context.clearRect(0, 0, width, height);
+    const glow = context.createRadialGradient(width / 2, height / 2, width * 0.04, width / 2, height / 2, width * 0.52);
+    glow.addColorStop(0, "rgba(122,243,255,.1)");
+    glow.addColorStop(0.55, "rgba(251,191,36,.035)");
+    glow.addColorStop(1, "rgba(0,0,0,0)");
+    context.fillStyle = glow;
+    context.fillRect(0, 0, width, height);
+    if (!window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches) {
+      fxRaf = requestAnimationFrame(() => drawFx(canvas));
     }
   }
 
-  function wireTelemetryCards(root) {
-    const cards = Array.from(root.querySelectorAll(".home-living-sphere__telemetry li"));
-    cards.forEach(card => {
-      card.tabIndex = 0;
-      card.setAttribute("role", "button");
-      card.setAttribute("aria-expanded", "false");
-      const toggle = () => {
-        const next = !card.classList.contains("is-expanded");
-        cards.forEach(other => { other.classList.remove("is-expanded"); other.setAttribute("aria-expanded", "false"); });
-        if (next) { card.classList.add("is-expanded"); card.setAttribute("aria-expanded", "true"); }
-      };
-      card.addEventListener("click", toggle);
-      card.addEventListener("keydown", event => {
-        if (event.key === "Enter" || event.key === " ") { event.preventDefault(); toggle(); }
-      });
-    });
+  function rendererChanged(root, event) {
+    const renderer = event?.activeRenderer || event?.renderer || null;
+    const phase = event?.phase || (renderer === "3d" ? "ready" : "fallback");
+    if (renderer === "3d") {
+      setStatus(root, phase, "3d", "Live 3D sphere");
+    } else if (phase === "loading" || phase === "upgrading") {
+      setStatus(root, "loading", "svg", "Accessible sphere · upgrading to 3D");
+    } else {
+      const reason = event?.reason === "WEBGL_UNAVAILABLE" ? "WebGL unavailable" : "Device-safe renderer";
+      setStatus(root, "ready", "svg", `Accessible sphere · ${reason}`);
+    }
+    root.querySelector("#home-sphere-today-preview")?.setAttribute("aria-busy", "false");
   }
 
-  async function initInstrument(root) {
+  async function mountInstrument(root) {
+    if (activeMount) return activeMount;
+    setStatus(root, "loading", null, "Loading sphere engine");
     await ensureDependencies();
-    globalThis.OpenMeteoAdapter?.bootstrapEnvironmentState?.();
-    wireTelemetryCards(root);
-    await refreshWeather(false);
-
     const preview = root.querySelector("#home-sphere-today-preview");
-    if (preview && globalThis.LivingTimeSphere?.mount && !preview.__livingTimeSphereMount) {
-      preview.__livingTimeSphereMount = globalThis.LivingTimeSphere.mount({
-        container: preview,
-        compact: true,
-        renderer: "auto",
-        mode: "today",
-        visibleLayers: {
-          pattern: true,
-          exactDays: true,
-          weekGates: true,
-          outsideDays: false,
-          lunar: true,
-          solar: true,
-          passage: false,
-          markers: false,
-          spiral: false,
-          recurrence: false,
-          environment: false,
-          witness: false,
-          personal: false,
-          connections: true,
-        },
-        state: {
-          dayLabelMode: "selected",
-          moonLabelMode: "essential",
-          connectionMode: "selected",
-        }
-      });
-      activeMount = preview.__livingTimeSphereMount;
-    }
+    if (!preview) throw new Error("Homepage Sphere container is missing.");
 
-    window.addEventListener(globalThis.SofEnvironmentState?.EVENT_NAME || "sof:environment-change", () => {
-      updateExtraTelemetry(root);
-      activeMount?.refresh?.({});
+    const mounted = globalThis.LivingTimeSphere.mount({
+      container: preview,
+      compact: true,
+      renderer: "auto",
+      quality: "auto",
+      mode: "today",
+      initTimeoutMs: 10000,
+      visibleLayers: {
+        pattern: true,
+        exactDays: true,
+        weekGates: true,
+        outsideDays: true,
+        lunar: true,
+        solar: true,
+        passage: true,
+        markers: true,
+        spiral: true,
+        recurrence: true,
+        environment: false,
+        witness: false,
+        personal: false,
+        connections: true
+      },
+      state: {
+        dayLabelMode: "selected",
+        moonLabelMode: "essential",
+        connectionMode: "selected",
+        motionMode: window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ? "reduced" : "full"
+      },
+      onStateChange(payload) { updateTelemetry(root, payload?.snapshot); },
+      onRendererChange(payload) { rendererChanged(root, payload); }
     });
-
-    if (globalThis.LivingTimeSphereTodayCard?.renderInteractive) {
-      globalThis.LivingTimeSphereTodayCard.renderInteractive(root, {
-        idPrefix: "home-",
-        source: "home",
-        viewMode: "today",
-        render: "interactive"
-      });
-      globalThis.LivingTimeSphereTodayCard.wireInteractive(root, {
-        idPrefix: "home-",
-        source: "home",
-        viewMode: "today",
-      });
-      globalThis.LivingTimeSphereTodayCard.attachAutoUpdate(root, {
-        idPrefix: "home-",
-        source: "home",
-        viewMode: "today",
-        render: "interactive"
-      });
-    }
-
-    updateExtraTelemetry(root);
-
-    const canvas = root.querySelector("#home-sphere-fx");
-    if (canvas) {
-      fxVisible = true;
-      drawFx(canvas);
-    }
-
-    if (!refreshTimer) {
-      refreshTimer = window.setInterval(async () => {
-        if (!fxVisible) return;
-        await refreshWeather(false);
-        updateExtraTelemetry(root);
-      }, 300000);
-    }
+    if (!mounted) throw new Error("The shared Sphere mount rejected the homepage container.");
+    activeMount = mounted;
+    preview.__livingTimeSphereMount = mounted;
+    preview.setAttribute("aria-busy", "false");
+    updateTelemetry(root);
+    setStatus(root, "upgrading", "svg", "Accessible sphere · upgrading to 3D");
+    mounted.activate?.();
+    return mounted;
   }
 
-  function deactivateInstrument() {
-    fxVisible = false;
-    stopFx();
-    if (activeMount?.teardown) activeMount.teardown();
-    activeMount = null;
-  }
-
-  async function activateInstrument(root) {
-    activeRoot = root;
-    await initInstrument(root);
-    if (document.hidden) {
-      fxVisible = false;
+  function wireListeners(root) {
+    if (listenersWired) return;
+    listenersWired = true;
+    const refresh = () => {
+      if (!activeMount) return;
+      activeMount.refresh?.({});
+      updateTelemetry(root);
+    };
+    window.addEventListener(globalThis.SofEnvironmentState?.EVENT_NAME || "sof:environment-change", refresh);
+    document.addEventListener("visibilitychange", () => {
+      fxVisible = !document.hidden && !!activeRoot;
+      if (fxVisible) drawFx(root.querySelector("#home-sphere-fx"));
+      else stopFx();
+    });
+    window.addEventListener("pagehide", () => {
       stopFx();
+      viewportObserver?.disconnect?.();
+      activeMount?.teardown?.();
+      activeMount = null;
+    }, { once: true });
+  }
+
+  async function activate(root) {
+    activeRoot = root;
+    fxVisible = !document.hidden;
+    if (fxVisible && !fxRaf) drawFx(root.querySelector("#home-sphere-fx"));
+    if (!bootPromise) {
+      bootPromise = mountInstrument(root).catch(error => {
+        bootPromise = null;
+        setStatus(root, "error", "svg", "Sphere unavailable · open Observatory");
+        root.querySelector("#home-sphere-today-preview")?.setAttribute("aria-busy", "false");
+        console.error("[HomeObservatoryInstrument]", error);
+        throw error;
+      });
     }
+    return bootPromise;
   }
 
   function bootstrap() {
     const root = document.querySelector("[data-home-sphere-root]");
-    if (!root) return;
-
-    const onVisibility = () => {
-      if (document.hidden) {
-        fxVisible = false;
-        stopFx();
-      } else if (activeRoot) {
-        fxVisible = true;
-        drawFx(activeRoot.querySelector("#home-sphere-fx"));
-      }
-    };
-    document.addEventListener("visibilitychange", onVisibility);
-    window.addEventListener("sof:location-changed", () => {
-      if (!activeRoot) return;
-      refreshWeather(true).finally(() => updateExtraTelemetry(activeRoot));
-    });
-
+    if (!root || viewportObserver) return;
+    wireListeners(root);
     if (!("IntersectionObserver" in window)) {
-      activateInstrument(root);
+      activate(root).catch(() => {});
       return;
     }
-
-    observer = new IntersectionObserver(async (entries) => {
-      const visible = entries[0]?.isIntersecting;
+    viewportObserver = new IntersectionObserver(entries => {
+      const visible = entries.some(entry => entry.isIntersecting);
       if (visible) {
-        await activateInstrument(root);
+        activate(root).catch(() => {});
       } else {
-        deactivateInstrument();
+        fxVisible = false;
+        stopFx();
       }
-    }, { rootMargin: "180px", threshold: 0.12 });
-
-    observer.observe(root);
+    }, { rootMargin: "320px 0px", threshold: 0.01 });
+    viewportObserver.observe(root);
   }
 
   globalThis.HomeObservatoryInstrument = Object.freeze({
     bootstrap,
+    retry() {
+      const root = activeRoot || document.querySelector("[data-home-sphere-root]");
+      return root ? activate(root) : Promise.resolve(null);
+    },
+    getStatus() { return lastStatus; }
   });
 })();

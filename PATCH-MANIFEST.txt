@@ -1,0 +1,82 @@
+SCROLL OF FIRE ADVANCED REBUILD — BRANCH OVERLAY
+Release: 2026.08.15.4
+
+Extract this overlay into the root of the existing repository. Paths are relative
+to that root. Read ADVANCED-REBUILD-HANDOFF.md before committing.
+
+RELEASE / REVIEW
+ADVANCED-REBUILD-HANDOFF.md
+RENDERER-HOTFIX-HANDOFF.md
+LOCATION-REFRESH-HOTFIX-HANDOFF.md
+TEMPORAL-LENS-PHASE-HANDOFF.md
+TEMPORAL-LENS-PATCH-MANIFEST.txt
+COPILOT-PR-DIRECTIVE.md
+PATCH-MANIFEST.txt
+package.json
+netlify.toml
+scripts/audit-site.mjs
+tests/advanced-observatory-rebuild.test.js
+tests/pwa-resilience.test.js
+tests/sphere-renderer-lifecycle-hotfix.test.js
+tests/environmental-sphere-workflow.test.js
+tests/living-time-sphere-temporal-navigation.test.js
+tests/pr3-completion-pass.test.js
+tests/pr3-final-repair.test.js
+
+CORE DEPLOYMENT AND SPHERE
+docs/index.html
+docs/living-time-sphere.html
+docs/service-worker.js
+docs/sitemap.xml
+docs/assets/js/moons-version.js
+docs/assets/js/home-observatory-instrument.js
+docs/assets/js/site.js
+docs/assets/js/codex-memory.js
+docs/assets/js/sphere/**
+docs/assets/js/environment/**
+docs/assets/vendor/three/**
+docs/assets/css/codex.css
+docs/assets/css/fonts.css
+docs/assets/css/living-time-sphere.css
+docs/assets/css/observatory-workspace.css
+
+PAGE-SPECIFIC REPAIRS
+docs/404.html
+docs/13-moon-whitepaper.html
+docs/scroll-of-fire-codex-of-reality-remnant-whitepaper.html
+docs/ab.html
+docs/caravan.html
+docs/circle.html
+docs/covenant-caravan.html
+docs/ethics.html
+docs/genesis-oracle.html
+docs/glyphs.html
+docs/hub.html
+docs/invoke.html
+docs/micro.html
+docs/offline.html
+docs/teach.html
+docs/systems/archive.html
+docs/systems/frequencies.html
+docs/systems/mind-renewal.html
+docs/systems/recoder.html
+docs/systems/t-7.html
+docs/systems/witness.html
+docs/theory/ethics.html
+docs/theory/glossary.html
+
+REPORTS
+docs/reports/current-build-defect-inventory.md
+docs/reports/current-feature-matrix.md
+docs/reports/site-advanced-rebuild-2026-08-15.md
+
+DEPLOYMENT-CRITICAL MEDIA INCLUDED TO REPAIR THE OBSERVED LIVE ARTIFACT MISMATCH
+docs/assets/img/home/**
+docs/assets/img/artifacts/registry/**
+docs/assets/img/shared/placeholders/artifact-placeholder.jpg
+
+VALIDATION BASELINE
+630 tests passing
+69 HTML pages audited
+34 stylesheets audited
+4,092 local references resolved

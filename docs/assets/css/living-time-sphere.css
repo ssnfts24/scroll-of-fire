@@ -1180,10 +1180,9 @@ details[open] > .sphere-settings-summary::before { content: "▾ "; }
   padding: 0.5rem 0 0;
 }
 
-/* On larger screens, keep settings expanded and hide summary text */
-@media (min-width: 640px) {
-  .sphere-settings-group[open] .sphere-settings-summary { display: none; }
-  .sphere-settings-group { display: contents; }
+/* Advanced controls stay explicitly collapsible at every viewport width. */
+.sphere-settings-group[open] .sphere-settings-summary {
+  color: rgba(251, 191, 36, 0.9);
 }
 
 /* Fallback warning banner */
@@ -1483,6 +1482,240 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
   justify-content: center;
 }
 
+/* ── Temporal Lens: authoritative Today + high-resolution navigation ── */
+.sphere-temporal-lens {
+  position: relative;
+  display: grid;
+  gap: 0.8rem;
+  margin: 0 0 1rem;
+  padding: 0.9rem;
+  overflow: hidden;
+  border: 1px solid rgba(100, 220, 190, 0.24);
+  border-radius: 0.8rem;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(73, 226, 184, 0.12), transparent 42%),
+    linear-gradient(155deg, rgba(8, 22, 29, 0.96), rgba(8, 11, 21, 0.92));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 14px 30px rgba(0, 0, 0, 0.22);
+}
+
+.sphere-temporal-lens::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 2px;
+  background: linear-gradient(180deg, #64e3bd, rgba(251, 191, 36, 0.72), transparent);
+}
+
+.sphere-temporal-lens-head,
+.sphere-temporal-scrubber-labels,
+.sphere-temporal-playback-settings {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+}
+
+.sphere-temporal-kicker {
+  margin: 0 0 0.12rem;
+  color: rgba(100, 227, 189, 0.86);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.sphere-temporal-lens h3 {
+  margin: 0;
+  color: #eef8f5;
+  font-size: 0.96rem;
+  line-height: 1.25;
+}
+
+.sphere-temporal-status {
+  flex: 0 0 auto;
+  padding: 0.32rem 0.58rem;
+  border: 1px solid rgba(100, 227, 189, 0.36);
+  border-radius: 999px;
+  background: rgba(35, 143, 111, 0.18);
+  color: #88f0cf;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.sphere-temporal-status[data-state="exploring"] {
+  border-color: rgba(251, 191, 36, 0.4);
+  background: rgba(146, 95, 13, 0.18);
+  color: #ffd77a;
+}
+
+.sphere-temporal-status[data-state="playing"] {
+  border-color: rgba(125, 211, 252, 0.46);
+  background: rgba(14, 116, 144, 0.2);
+  color: #a5e8ff;
+}
+
+.sphere-return-today {
+  width: 100%;
+  min-height: 2.55rem;
+  justify-content: center;
+}
+
+.sphere-return-today[disabled] {
+  border-color: rgba(100, 227, 189, 0.18);
+  background: rgba(100, 227, 189, 0.08);
+  color: rgba(167, 240, 218, 0.66);
+  cursor: default;
+}
+
+.sphere-temporal-scrubber {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.sphere-temporal-scrubber-labels {
+  color: rgba(227, 239, 240, 0.78);
+  font-size: 0.74rem;
+}
+
+.sphere-temporal-scrubber output {
+  color: #fff0bd;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+#sphere-day-scrubber {
+  width: 100%;
+  min-height: 1.8rem;
+  margin: 0;
+  accent-color: #64e3bd;
+  cursor: ew-resize;
+}
+
+.sphere-temporal-scale {
+  display: flex;
+  justify-content: space-between;
+  color: rgba(206, 222, 226, 0.45);
+  font-size: 0.6rem;
+  letter-spacing: 0.03em;
+}
+
+.sphere-temporal-step-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.32rem;
+}
+
+.sphere-temporal-step-grid .sphere-chip-btn {
+  min-width: 0;
+  min-height: 2.25rem;
+  padding: 0.35rem 0.25rem;
+  border-radius: 0.55rem;
+  font-size: 0.65rem;
+  white-space: nowrap;
+}
+
+.sphere-temporal-play {
+  border-color: rgba(100, 227, 189, 0.36);
+  color: #a7f0da;
+}
+
+.sphere-temporal-play[aria-pressed="true"] {
+  border-color: rgba(125, 211, 252, 0.56);
+  background: rgba(14, 116, 144, 0.25);
+  color: #c8f2ff;
+}
+
+.sphere-temporal-playback-settings {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr);
+}
+
+.sphere-temporal-playback-settings label {
+  color: rgba(221, 234, 237, 0.58);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.sphere-temporal-playback-settings .sphere-control-select {
+  min-width: 0;
+  padding-block: 0.42rem;
+  font-size: 0.72rem;
+}
+
+.sphere-temporal-comparison {
+  padding: 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 0.6rem;
+  background: rgba(2, 8, 14, 0.5);
+}
+
+.sphere-temporal-comparison-lead {
+  margin: 0;
+  color: rgba(240, 246, 246, 0.86);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.sphere-temporal-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.4rem;
+  margin-top: 0.58rem;
+}
+
+.sphere-temporal-metric {
+  display: grid;
+  gap: 0.12rem;
+  min-width: 0;
+  padding: 0.42rem;
+  border-radius: 0.45rem;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.sphere-temporal-metric span {
+  color: rgba(213, 228, 231, 0.48);
+  font-size: 0.58rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.sphere-temporal-metric strong {
+  overflow: hidden;
+  color: #eff8f5;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .sphere-temporal-step-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .sphere-temporal-play {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  .sphere-temporal-playback-settings {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .sphere-temporal-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sphere-temporal-lens::before {
+    background: #64e3bd;
+  }
+}
+
 .sphere-field-note {
   font-size: 0.78rem;
   line-height: 1.5;
@@ -1717,6 +1950,11 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
     padding-right: 0.2rem;
   }
 }
+
+/* Broken-resource classes are shared with site.js and intentionally exact so
+   failed media can never leave an invisible fixed/sticky obstruction. */
+.sphere-broken-resource-hidden { display:none !important; }
+.sphere-broken-resource-shell-hidden { display:none !important; }
 
 @media (min-width: 1360px) {
   #sphere-container {

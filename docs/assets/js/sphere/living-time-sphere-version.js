@@ -19,7 +19,7 @@
   const BUILD_METADATA = Object.freeze({
     commitSha: globalThis.__SOF_COMMIT_SHA__ || null,
     buildTimestamp: globalThis.__SOF_BUILD_TIMESTAMP__ || (typeof document !== "undefined" && document ? document.lastModified || null : null),
-    rendererVersion: "living-time-sphere-renderer-3d/rc9",
+    rendererVersion: "living-time-sphere-renderer-3d/rc14",
     datasetVersion: DATASET_VERSION,
     buildContext: _resolveBuildContext(),
   });

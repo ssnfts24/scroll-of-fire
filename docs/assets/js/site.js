@@ -553,7 +553,7 @@
       if (isImg && (!image.complete || image.naturalWidth > 0 || image.naturalHeight > 0)) return;
       recordFailedMedia(image, "collapse-broken-media");
       image.dataset.imageFallbackFailed = "true";
-      image.classList.add("image-fallback-failed");
+      image.classList.add("image-fallback-failed", "sphere-broken-resource-hidden");
       image.hidden = true;
       image.setAttribute("aria-hidden", "true");
       if (image.style) {
@@ -567,7 +567,7 @@
       const shell = image.closest("picture,figure,[data-home-product-media],[data-home-media-card],.home-product-slide");
       if (shell) shell.hidden = true;
       if (shell) {
-        shell.classList.add("image-fallback-shell-hidden");
+        shell.classList.add("image-fallback-shell-hidden", "sphere-broken-resource-shell-hidden");
       }
       let parent = image.parentElement;
       while (parent && parent !== document.body) {
@@ -577,7 +577,7 @@
           const nearBottom = rect ? rect.bottom >= (window.innerHeight - 220) : false;
           if ((style?.position === "fixed" || style?.position === "sticky") && nearBottom) {
             parent.hidden = true;
-            parent.classList?.add?.("image-fallback-shell-hidden");
+            parent.classList?.add?.("image-fallback-shell-hidden", "sphere-broken-resource-shell-hidden");
           }
         } catch (_) { /* best effort */ }
         parent = parent.parentElement;

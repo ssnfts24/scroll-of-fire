@@ -32,6 +32,26 @@
   --header-h:72px;
 }
 
+/* Shared page introduction for legacy tools upgraded in the 2026-08 pass. */
+.page-intro {
+  max-width: 900px;
+  margin: clamp(1.2rem, 4vw, 2.8rem) auto;
+  padding: clamp(1rem, 3vw, 1.6rem);
+  text-align: center;
+}
+.page-intro h1 {
+  margin: 0.2rem 0 0.7rem;
+  font-size: clamp(2rem, 6vw, 4.4rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+.page-intro > p:last-child {
+  max-width: 68ch;
+  margin: 0 auto;
+  color: var(--muted, #aab3c2);
+  line-height: 1.7;
+}
+
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth;color-scheme:dark;overflow-x:hidden}
 

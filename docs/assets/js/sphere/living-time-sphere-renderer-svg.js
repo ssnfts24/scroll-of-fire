@@ -336,6 +336,11 @@
     const pointForId = (id) => {
       if (!id) return null;
       if (id === "core" || id === "passageMidpoint") return { x: cx, y: cy };
+      if (id === "today") {
+        const dayOfPatternYear = Number(model?.todayPatternPosition?.dayOfPatternYear);
+        if (!Number.isFinite(dayOfPatternYear)) return null;
+        return polarToXY(globalThis.LivingTimeSphereModel.patternAngleForDayOfYear(dayOfPatternYear), rings.patternRing, cx, cy);
+      }
       if (id === "yearGate") return polarToXY(model?.markers?.yearGate?.angle || 0, rings.patternRing, cx, cy);
       if (id === "equinox") return polarToXY(model?.markers?.equinoxGate?.angle || model?.passageStartAngle || 0, rings.patternRing, cx, cy);
       if (id === "lunar") return polarToXY(model?.lunarAngle || 0, rings.lunarOrbit, cx, cy);
@@ -373,6 +378,20 @@
       const to = pointForId(connection.targetMarkerId);
       if (!from || !to) return "";
       const style = connection.style || {};
+      if (/^selected-today-/.test(String(connection.id || ""))) {
+        const selectedDay = Number(/^day-(\d+)$/.exec(String(connection.sourceMarkerId || ""))?.[1]);
+        const todayDay = Number(model?.todayPatternPosition?.dayOfPatternYear);
+        const arc = globalThis.LivingTimeSphereTemporal?.comparisonArcSamples?.(selectedDay, todayDay);
+        if (Array.isArray(arc?.samples) && arc.samples.length > 1) {
+          const path = arc.samples.map((sample, index) => {
+            const point = polarToXY(sample.angle, rings.patternRing * sample.radiusScale, cx, cy);
+            return `${index === 0 ? "M" : "L"}${point.x.toFixed(2)} ${point.y.toFixed(2)}`;
+          }).join(" ");
+          return `<path class="sphere-connection-line sphere-connection-${esc(connection.type)} is-selected sphere-temporal-comparison-arc" d="${path}" fill="none" stroke="rgba(255,240,184,0.88)" stroke-width="${(style.thickness || 1.6) + 0.8}" stroke-dasharray="${style.strokeDasharray || ""}" stroke-linecap="round" stroke-linejoin="round" pointer-events="none">
+            <title>${esc(connection.label || connection.relationship || connection.id)}</title>
+          </path>`;
+        }
+      }
       return `<line class="sphere-connection-line sphere-connection-${esc(connection.type)}${connection.selected ? " is-selected" : ""}" x1="${from.x}" y1="${from.y}" x2="${to.x}" y2="${to.y}" stroke="rgba(255,240,184,${connection.selected ? 0.88 : style.opacity || 0.5})" stroke-width="${connection.selected ? (style.thickness || 1.6) + 0.8 : style.thickness || 1.6}" stroke-dasharray="${style.strokeDasharray || ""}" pointer-events="none">
         <title>${esc(connection.label || connection.relationship || connection.id)}</title>
       </line>`;

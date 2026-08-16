@@ -50,10 +50,11 @@ test("selected-day updates use lightweight renderer path and diagnostics counter
 
 test("day navigation routes through selected-day transaction pipeline", () => {
   const ui = read("docs/assets/js/sphere/living-time-sphere-ui.js");
-  assert.ok(ui.includes("function _requestSelectedDayUpdate(container, day)"), "selected-day request API should exist");
+  assert.ok(ui.includes("function _requestSelectedDayUpdate(container, day, intent = {})"), "selected-day request API should accept transaction intent");
   assert.ok(ui.includes("function _flushSelectedDayUpdates(container)"), "selected-day queue/coalescing pipeline should exist");
   assert.ok(ui.includes("shiftSelectedDay = delta =>"), "day shift control should exist");
-  assert.ok(ui.includes("_requestSelectedDayUpdate(container, baseDay + delta)"), "Next/Previous day should use selected-day transaction path");
+  assert.ok(ui.includes("LivingTimeSphereTemporal?.stepDay?.(baseDay, delta, { wrap: true })"), "Next/Previous day should use canonical circular Pattern-day math");
+  assert.ok(ui.includes("_requestSelectedDayUpdate(container, nextDay)"), "Next/Previous day should use selected-day transaction path");
   assert.ok(ui.includes("window.addEventListener(\"popstate\""), "history back/forward should route through same selected-day update path");
 });
 

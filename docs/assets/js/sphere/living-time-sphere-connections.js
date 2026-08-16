@@ -74,6 +74,26 @@
       }));
     }
 
+    if (today?.dayOfPatternYear != null
+        && selected?.dayOfPatternYear != null
+        && Number(today.dayOfPatternYear) !== Number(selected.dayOfPatternYear)) {
+      const comparison = model.temporalComparison || globalThis.LivingTimeSphereTemporal?.compareToToday?.(selected, today) || null;
+      items.push(_connection(`selected-today-${selected.dayOfPatternYear}`, {
+        type: "pattern",
+        sourceMarkerId: `day-${selected.dayOfPatternYear}`,
+        targetMarkerId: "today",
+        relationship: "Selected day compared with Today",
+        direction: "bidirectional",
+        label: comparison
+          ? `Selected ↔ Today · ${comparison.relationshipLabel} · ${Math.abs(comparison.angleDelta).toFixed(1)}°`
+          : "Selected day ↔ Today",
+        style: "progression",
+        selected: true,
+        priority: 120,
+        semanticBands: ["far", "medium", "near", "detail"],
+      }));
+    }
+
     if (selected?.dayOfPatternYear != null) {
       const selectedWeekBoundaryDay = (selected.weekOfMoon || Math.ceil((selected.day || 1) / 7)) * 7;
       const selectedWeekBoundaryDayOfYear = ((selected.moon - 1) * 28) + selectedWeekBoundaryDay;

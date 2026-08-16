@@ -189,6 +189,26 @@
     let mounted = true;       // set false on teardown to suppress callbacks
     let restoreAttempts = 0;  // counts context-restoration retries (capped to prevent looping)
     let pendingSizeObserver = null;
+    let activating3d = false;
+    let rendererState = Object.freeze({
+      phase: "baseline",
+      requestedRenderer: state.renderer,
+      activeRenderer: "svg",
+      reason: null,
+      detail: "Accessible SVG baseline is active.",
+      tier: null,
+    });
+
+    function emitRenderer(patch = {}) {
+      rendererState = Object.freeze({ ...rendererState, ...patch });
+      container.dataset.activeRenderer = rendererState.activeRenderer || "svg";
+      container.dataset.rendererPhase = rendererState.phase || "baseline";
+      if (typeof options.onRendererChange === "function") {
+        try { options.onRendererChange(rendererState); }
+        catch (error) { console.warn("[LivingTimeSphere] Renderer observer failed.", error); }
+      }
+      return rendererState;
+    }
 
     function _containerHasUsableSize() {
       if (!container) return false;
@@ -276,15 +296,21 @@
     }
 
     async function activate3d() {
-      if (active3d || state.renderer === "svg" || !globalThis.LivingTimeSphereRenderer3d || !globalThis.LivingTimeSphereM) return;
+      if (active3d || activating3d) return rendererState;
+      if (state.renderer === "svg") {
+        return emitRenderer({ phase: "ready", activeRenderer: "svg", reason: "SVG_REQUESTED", detail: "SVG renderer was requested." });
+      }
+      if (!globalThis.LivingTimeSphereRenderer3d || !globalThis.LivingTimeSphereM) {
+        return emitRenderer({ phase: "fallback", activeRenderer: "svg", reason: "THREE_STACK_UNAVAILABLE", detail: "The 3D renderer stack is unavailable." });
+      }
       if (_awaitUsableContainerSize()) return;
 
       const capMgr = globalThis.ObservatoryCapabilityManager;
 
       // ── Authoritative tier selection via ObservatoryCapabilityManager ──
       const webglAvailable = capMgr
-        ? capMgr.probeWebGl().webgl
-        : !!globalThis.LivingTimeSphereEffects?.detectWebGl?.();
+        ? capMgr.probeWebGl().webgl2
+        : !!globalThis.LivingTimeSphereEffects?.detectWebGl2?.();
 
       const tierOverride = _qualityStateToTierOverride(state.quality, capMgr);
       const tier = capMgr
@@ -293,10 +319,17 @@
 
       // MINIMAL → capability manager decided 3D is inappropriate; stay on SVG
       const minimalTier = capMgr?.PERFORMANCE_TIERS?.MINIMAL ?? "svgonly";
-      if (tier === minimalTier) return;
+      if (tier === minimalTier) {
+        return emitRenderer({ phase: "fallback", activeRenderer: "svg", reason: webglAvailable ? "MINIMAL_TIER" : "WEBGL2_REQUIRED", detail: webglAvailable ? "Device-safe SVG tier selected." : "WebGL2 is unavailable; accessible SVG remains active.", tier });
+      }
 
       const preset = _tierToQualityPreset(tier, capMgr);
-      if (!preset) return; // MINIMAL resolves to no preset
+      if (!preset) {
+        return emitRenderer({ phase: "fallback", activeRenderer: "svg", reason: "NO_QUALITY_PRESET", detail: "No safe 3D quality preset was available.", tier });
+      }
+
+      activating3d = true;
+      emitRenderer({ phase: "upgrading", activeRenderer: "svg", reason: null, detail: "Accessible SVG is active while 3D initializes.", tier });
 
       // Generation token — prevents a stale init from replacing an active renderer
       const thisGen = ++initGen;
@@ -309,9 +342,11 @@
       const onContextLost = () => {
         if (!mounted) return;
         active3d = false;
+        activating3d = false;
         // Re-render SVG with the preserved observatory state.
         buildScene();
         renderSvg();
+        emitRenderer({ phase: "fallback", activeRenderer: "svg", reason: "WEBGL_CONTEXT_LOST", detail: "The WebGL context was lost; SVG restored the Sphere." });
         notify();
       };
 
@@ -333,7 +368,7 @@
       // ── Race init against timeout ─────────────────────────────────────
       // Prevents indefinite hang on slow/frozen Three.js import or renderer
       // creation.  On timeout, SVG fallback remains active.
-      const timeoutMs = 15000;
+      const timeoutMs = Math.max(3000, Math.min(30000, Number(options.initTimeoutMs) || 15000));
       const timeoutPromise = capMgr
         ? capMgr.initTimeout(timeoutMs)
         : new Promise((_, reject) =>
@@ -390,14 +425,15 @@
       } catch (err) {
         // Timeout rejects with { reason, detail }; unexpected errors may also arrive here.
         // In all cases, SVG fallback is already visible — no additional action needed.
-        if (initGen !== thisGen) return; // stale init — discard silently
+        if (initGen !== thisGen) return rendererState; // stale init — discard silently
+        activating3d = false;
         const reason = err?.reason ?? "INIT_EXCEPTION";
         if (reason === "INIT_TIMEOUT") {
           console.warn(`[LivingTimeSphere] 3D init timed out after ${timeoutMs}ms (INIT_TIMEOUT). SVG fallback remains active.`);
         } else {
           console.warn(`[LivingTimeSphere] 3D init failed (${reason}). SVG fallback remains active.`);
         }
-        return;
+        return emitRenderer({ phase: "fallback", activeRenderer: "svg", reason, detail: err?.detail || "3D initialization failed; SVG remains active.", tier });
       }
 
       // Guard: if a newer generation started while we were awaiting init, discard this result.
@@ -405,10 +441,16 @@
         if (result?.success) {
           try { globalThis.LivingTimeSphereRenderer3d?.teardown?.(); } catch { /* best-effort */ }
         }
-        return;
+        activating3d = false;
+        return rendererState;
       }
 
       active3d = !!result?.success;
+      activating3d = false;
+      if (active3d) {
+        return emitRenderer({ phase: "ready", activeRenderer: "3d", reason: null, detail: "The 3D Sphere rendered its first verified frame.", tier });
+      }
+      return emitRenderer({ phase: "fallback", activeRenderer: "svg", reason: result?.reason || "INIT_FAILED", detail: result?.detail || "The 3D renderer did not pass readiness checks; SVG remains active.", tier });
     }
 
     function refresh(patch = {}) {
@@ -425,6 +467,7 @@
 
     buildScene();
     renderSvg();
+    emitRenderer();
     notify();
     _observeOnce(container, () => { activate3d(); });
 
@@ -433,6 +476,8 @@
       refresh,
       teardown() {
         mounted = false;
+        activating3d = false;
+        initGen += 1;
         if (pendingSizeObserver) {
           pendingSizeObserver.disconnect();
           pendingSizeObserver = null;
@@ -441,8 +486,10 @@
           globalThis.LivingTimeSphereRenderer3d.teardown();
         }
         active3d = false;
+        emitRenderer({ phase: "stopped", activeRenderer: "svg", reason: "TEARDOWN", detail: "Sphere mount stopped." });
       },
       getState() { return state; },
+      getRendererState() { return rendererState; },
     };
   }
 
