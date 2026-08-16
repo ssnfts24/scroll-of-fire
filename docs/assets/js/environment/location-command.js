@@ -2,6 +2,7 @@
   "use strict";
 
   const SEARCH_ABORTS = new WeakMap();
+  const ATTACHED_ROOTS = new WeakSet();
 
   function setText(root, selector, value) {
     const el = root.querySelector(selector);
@@ -20,7 +21,8 @@
 
   function attach(root) {
     const adapter = globalThis.OpenMeteoAdapter;
-    if (!adapter) return;
+    if (!adapter || !root || ATTACHED_ROOTS.has(root)) return;
+    ATTACHED_ROOTS.add(root);
 
     const stateEl = root.querySelector("[data-location-state]");
     const statusEl = root.querySelector("[data-location-status]");
@@ -72,8 +74,11 @@
       if (statusEl) statusEl.textContent = "Requesting permission…";
       try {
         await adapter.requestDeviceLocation();
-        await adapter.requestRefresh?.({ force: true });
-        if (statusEl) statusEl.textContent = "Location set from device.";
+        if (statusEl) statusEl.textContent = "Location found. Loading weather…";
+        const result = await adapter.requestRefresh?.({ force: true });
+        if (statusEl) statusEl.textContent = result?.current
+          ? "Location set from device. Live weather is ready."
+          : "Location saved. Weather is temporarily unavailable.";
         refreshState();
         broadcast();
       } catch (error) {
@@ -123,11 +128,21 @@
           button.className = "sphere-location-result";
           button.textContent = `${place.name}${place.region ? `, ${place.region}` : ""}${place.country ? `, ${place.country}` : ""} · ${place.latitude.toFixed(3)}, ${place.longitude.toFixed(3)} · ${place.timezone || "timezone unknown"}`;
           button.addEventListener("click", async () => {
-            adapter.setActivePlace(place);
-            await adapter.requestRefresh?.({ force: true });
-            if (statusEl) statusEl.textContent = "Location selected.";
-            refreshState();
-            broadcast();
+            const doneSelecting = setBusy(button, "Loading…");
+            try {
+              adapter.setActivePlace(place);
+              if (statusEl) statusEl.textContent = "Location selected. Loading weather…";
+              const result = await adapter.requestRefresh?.({ force: true });
+              if (statusEl) statusEl.textContent = result?.current
+                ? "Location selected. Live weather is ready."
+                : "Location saved. Weather is temporarily unavailable.";
+              refreshState();
+              broadcast();
+            } catch {
+              if (statusEl) statusEl.textContent = "Location saved, but weather could not be loaded. Please retry.";
+            } finally {
+              doneSelecting();
+            }
           });
           resultsEl?.appendChild(button);
         });
@@ -140,7 +155,7 @@
       }
     });
 
-    root.querySelector("[data-location-coords-submit]")?.addEventListener("click", async () => {
+    root.querySelector("[data-location-coords-submit]")?.addEventListener("click", async event => {
       const lat = Number(latInput?.value);
       const lon = Number(lonInput?.value);
       const name = String(nameInput?.value || "Manual coordinates").trim();
@@ -157,10 +172,20 @@
         if (statusEl) statusEl.textContent = "Invalid coordinates.";
         return;
       }
-      await adapter.requestRefresh?.({ force: true });
-      if (statusEl) statusEl.textContent = "Manual coordinates saved.";
-      refreshState();
-      broadcast();
+      const done = setBusy(event.currentTarget, "Loading…");
+      try {
+        if (statusEl) statusEl.textContent = "Coordinates saved. Loading weather…";
+        const result = await adapter.requestRefresh?.({ force: true });
+        if (statusEl) statusEl.textContent = result?.current
+          ? "Manual coordinates saved. Live weather is ready."
+          : "Coordinates saved. Weather is temporarily unavailable.";
+        refreshState();
+        broadcast();
+      } catch {
+        if (statusEl) statusEl.textContent = "Coordinates saved, but weather could not be loaded. Please retry.";
+      } finally {
+        done();
+      }
     });
 
     refreshState();

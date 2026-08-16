@@ -1,0 +1,14 @@
+{
+  "name": "scroll-of-fire-static-site",
+  "version": "2026.8.15",
+  "private": true,
+  "description": "Validation commands for the Scroll of Fire static deployment.",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "audit": "node scripts/audit-site.mjs",
+    "validate": "npm run test && npm run audit"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

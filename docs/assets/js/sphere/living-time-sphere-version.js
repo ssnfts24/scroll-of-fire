@@ -2,6 +2,27 @@
   "use strict";
 
   const SPHERE_VERSION = "living-time-sphere/1.0.0";
+  const DATASET_VERSION = globalThis.SOF_13_MOONS?.APP_VERSION || null;
+
+  function _resolveBuildContext() {
+    if (typeof globalThis.__SOF_BUILD_CONTEXT__ === "string" && globalThis.__SOF_BUILD_CONTEXT__.trim()) {
+      return globalThis.__SOF_BUILD_CONTEXT__.trim().toLowerCase();
+    }
+    const hostname = typeof location !== "undefined" ? String(location.hostname || "").toLowerCase() : "";
+    if (!hostname) return "unknown";
+    if (hostname === "localhost" || hostname === "127.0.0.1") return "development";
+    if (hostname.includes("deploy-preview-") && hostname.includes(".netlify.app")) return "preview";
+    if (hostname.includes(".netlify.app")) return "netlify";
+    return "production";
+  }
+
+  const BUILD_METADATA = Object.freeze({
+    commitSha: globalThis.__SOF_COMMIT_SHA__ || null,
+    buildTimestamp: globalThis.__SOF_BUILD_TIMESTAMP__ || (typeof document !== "undefined" && document ? document.lastModified || null : null),
+    rendererVersion: "living-time-sphere-renderer-3d/rc14",
+    datasetVersion: DATASET_VERSION,
+    buildContext: _resolveBuildContext(),
+  });
 
   // Coordinate conventions:
   //   - All angles are in degrees, measured clockwise from the top (12 o'clock = 0°).
@@ -29,6 +50,7 @@
 
   globalThis.LivingTimeSphereVersion = Object.freeze({
     version: SPHERE_VERSION,
-    coordinateConventions: COORDINATE_CONVENTIONS
+    coordinateConventions: COORDINATE_CONVENTIONS,
+    buildMetadata: BUILD_METADATA,
   });
 })();

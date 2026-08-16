@@ -19,19 +19,37 @@ function storage() {
 }
 
 function loadEnvContext(fetchImpl) {
+  const listeners = new Map();
   const ctx = {
     Date,
     URL,
     URLSearchParams,
     console,
     AbortController,
+    setTimeout,
+    clearTimeout,
     localStorage: storage(),
     sessionStorage: storage(),
     navigator: { onLine: true },
     fetch: fetchImpl,
+    CustomEvent: class {
+      constructor(type, init = {}) { this.type = type; this.detail = init.detail; }
+    },
+    addEventListener(type, listener) {
+      if (!listeners.has(type)) listeners.set(type, new Set());
+      listeners.get(type).add(listener);
+    },
+    removeEventListener(type, listener) {
+      listeners.get(type)?.delete(listener);
+    },
+    dispatchEvent(event) {
+      for (const listener of listeners.get(event.type) || []) listener.call(ctx, event);
+      return true;
+    },
   };
   ctx.globalThis = ctx;
   ctx.window = ctx;
+  vm.runInNewContext(read("docs/assets/js/environment/environment-state.js"), ctx);
   vm.runInNewContext(read("docs/assets/js/environment/providers/open-meteo-forecast.js"), ctx);
   vm.runInNewContext(read("docs/assets/js/environment/open-meteo-adapter.js"), ctx);
   return ctx;
@@ -128,6 +146,54 @@ test("provider normalization maps condition and day values", async () => {
   assert.equal(result.current.condition, "Partly cloudy");
   assert.equal(result.daily.sunrise, "2026-07-31T05:42");
   assert.equal(result.daily.sunset, "2026-07-31T20:45");
+});
+
+test("weather refresh is re-entry safe and performs one request per location", async () => {
+  let fetchCount = 0;
+  const ctx = loadEnvContext(async () => {
+    fetchCount += 1;
+    return { ok: true, json: async () => samplePayload() };
+  });
+  ctx.OpenMeteoAdapter.setManualCoordinates(47.61, -122.33, "Seattle");
+
+  let reentrantRefresh = null;
+  let loadingEvents = 0;
+  ctx.addEventListener(ctx.SofEnvironmentState.EVENT_NAME, event => {
+    if (event.detail?.state?.status !== "loading") return;
+    loadingEvents += 1;
+    if (!reentrantRefresh) {
+      reentrantRefresh = ctx.OpenMeteoAdapter.requestRefresh({ force: false });
+    }
+  });
+
+  const primaryRefresh = ctx.OpenMeteoAdapter.requestRefresh({ force: true });
+  const result = await primaryRefresh;
+  await reentrantRefresh;
+
+  assert.equal(fetchCount, 1, "a synchronous environment listener must share the active request");
+  assert.equal(loadingEvents, 1, "loading must be announced once without recursive dispatch");
+  assert.equal(result.current.condition, "Partly cloudy");
+  assert.equal(ctx.SofEnvironmentState.getEnvironmentState().status, "available");
+});
+
+test("live snapshot construction is pure and cannot start weather requests", () => {
+  const code = read("docs/assets/js/sphere/living-time-sphere-live-data.js");
+  const body = code.match(/function resolveWeather\(options\) \{([\s\S]*?)\n  \}\n\n  function resolveHistory/)?.[1] || "";
+  assert.ok(body, "resolveWeather body should be discoverable");
+  assert.doesNotMatch(body, /requestRefresh\s*\(/, "model reads must not initiate provider updates");
+});
+
+test("continue without weather clears persistent active location and snapshot", async () => {
+  const ctx = loadEnvContext(async () => ({ ok: true, json: async () => samplePayload() }));
+  ctx.OpenMeteoAdapter.setManualCoordinates(47.61, -122.33, "Seattle");
+  await ctx.OpenMeteoAdapter.requestRefresh({ force: true });
+  assert.equal(ctx.OpenMeteoAdapter.getActivePlace().name, "Seattle");
+
+  ctx.OpenMeteoAdapter.continueWithoutLocation();
+
+  assert.equal(ctx.OpenMeteoAdapter.getActivePlace(), null);
+  assert.equal(ctx.localStorage.getItem(ctx.OpenMeteoAdapter.keys.activePlace), null);
+  assert.equal(ctx.OpenMeteoAdapter.getSnapshot().providerConfigured, false);
 });
 
 test("stale fallback returns last successful snapshot when provider fails", async () => {

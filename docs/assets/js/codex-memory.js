@@ -304,13 +304,18 @@
   /* Internal helpers                                                     */
   /* ------------------------------------------------------------------ */
 
-  function todayISO() {
-    var now = new Date();
+  function localDateISO(value) {
+    var now = value instanceof Date ? new Date(value.getTime()) : new Date(value || Date.now());
+    if (isNaN(now.getTime())) now = new Date();
     return [
       now.getFullYear(),
       String(now.getMonth() + 1).padStart(2, "0"),
       String(now.getDate()).padStart(2, "0")
     ].join("-");
+  }
+
+  function todayISO() {
+    return localDateISO(new Date());
   }
 
   function generateId() {
@@ -673,7 +678,7 @@
       _state.recentWitness = witness;
 
       /* Mark day as witnessed in cycle */
-      var isoDate = data.date.split("T")[0] || todayISO();
+      var isoDate = localDateISO(data.date);
       if (_state.currentCycle.witnessedDays.indexOf(isoDate) === -1) {
         _state.currentCycle.witnessedDays.push(isoDate);
         _state.currentCycle.witnessedDays = _state.currentCycle.witnessedDays.slice(-365);
@@ -754,7 +759,7 @@
         ].join("-");
 
         var dayActions = actions.filter(function (a) {
-          return a.timestamp && a.timestamp.slice(0, 10) === iso;
+          return a.timestamp && localDateISO(a.timestamp) === iso;
         });
 
         summary.push({

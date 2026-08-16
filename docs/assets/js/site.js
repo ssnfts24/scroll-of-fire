@@ -506,41 +506,203 @@
   }
 
   function enableImageFallbacks() {
-    document
-      .querySelectorAll("img[data-fallbacks]")
-      .forEach(function (image) {
-        const fallbackString =
-          image.getAttribute("data-fallbacks") || "";
+    function isSphereRenderSurfaceNode(node) {
+      return !!node?.closest?.("#sphere-container, #sphere-moon-labels");
+    }
 
-        const fallbacks = fallbackString
-          .split(",")
-          .map(function (item) {
-            return item.trim();
-          })
-          .filter(Boolean);
-
-        let fallbackIndex = 0;
-
-        function tryNextFallback() {
-          if (fallbackIndex >= fallbacks.length) {
-            image.removeEventListener(
-              "error",
-              tryNextFallback
-            );
-
-            image.classList.add("image-fallback-failed");
-            image.hidden = true;
-            return;
-          }
-
-          const nextSource = fallbacks[fallbackIndex];
-          fallbackIndex += 1;
-
-          image.src = nextSource;
-        }
-
-        image.addEventListener("error", tryNextFallback);
+    function recordFailedMedia(node, reason) {
+      if (!(node instanceof Element)) return;
+      if (isSphereRenderSurfaceNode(node)) return;
+      const log = window.__SOF_FAILED_MEDIA_LOG__ = window.__SOF_FAILED_MEDIA_LOG__ || [];
+      const src = node.currentSrc || node.src || node.getAttribute?.("src") || node.getAttribute?.("data") || null;
+      let absoluteUrl = src;
+      try { if (src) absoluteUrl = new URL(src, window.location.href).href; } catch (_) { /* keep original */ }
+      const rect = node.getBoundingClientRect?.() || null;
+      log.push({
+        reason: reason || "resource-failed",
+        tagName: String(node.tagName || "").toUpperCase(),
+        id: node.id || null,
+        className: node.className || "",
+        src,
+        absoluteUrl,
+        page: window.location.pathname,
+        parentTagName: node.parentElement?.tagName || null,
+        timestamp: Date.now(),
+        rect: rect ? { width: Number(rect.width || 0), height: Number(rect.height || 0), top: Number(rect.top || 0), left: Number(rect.left || 0) } : null,
       });
+      if (log.length > 200) log.shift();
+    }
+
+    function sanitizeImageSource(value) {
+      const candidate = String(value || "").trim();
+      if (!candidate) return "";
+      try {
+        const url = new URL(candidate, document.baseURI);
+        const allowed = new Set(["http:", "https:", "data:", "blob:"]);
+        return allowed.has(url.protocol) ? url.href : "";
+      } catch (_) {
+        return "";
+      }
+    }
+
+    function collapseBrokenMedia(image) {
+      if (!image || image.dataset.imageFallbackFailed === "true") return;
+      if (isSphereRenderSurfaceNode(image)) return;
+      const tagName = String(image.tagName || "").toUpperCase();
+      const isImg = tagName === "IMG";
+      if (isImg && (!image.complete || image.naturalWidth > 0 || image.naturalHeight > 0)) return;
+      recordFailedMedia(image, "collapse-broken-media");
+      image.dataset.imageFallbackFailed = "true";
+      image.classList.add("image-fallback-failed", "sphere-broken-resource-hidden");
+      image.hidden = true;
+      image.setAttribute("aria-hidden", "true");
+      if (image.style) {
+        image.style.display = "none";
+        image.style.width = "0";
+        image.style.height = "0";
+        image.style.minHeight = "0";
+        image.style.minWidth = "0";
+        image.style.overflow = "hidden";
+      }
+      const shell = image.closest("picture,figure,[data-home-product-media],[data-home-media-card],.home-product-slide");
+      if (shell) shell.hidden = true;
+      if (shell) {
+        shell.classList.add("image-fallback-shell-hidden", "sphere-broken-resource-shell-hidden");
+      }
+      let parent = image.parentElement;
+      while (parent && parent !== document.body) {
+        try {
+          const style = window.getComputedStyle(parent);
+          const rect = parent.getBoundingClientRect?.() || null;
+          const nearBottom = rect ? rect.bottom >= (window.innerHeight - 220) : false;
+          if ((style?.position === "fixed" || style?.position === "sticky") && nearBottom) {
+            parent.hidden = true;
+            parent.classList?.add?.("image-fallback-shell-hidden", "sphere-broken-resource-shell-hidden");
+          }
+        } catch (_) { /* best effort */ }
+        parent = parent.parentElement;
+      }
+    }
+
+    function wireBrokenMediaNode(node) {
+      if (!node || node.dataset.imageFallbackWired === "true") return;
+      if (isSphereRenderSurfaceNode(node)) return;
+      node.dataset.imageFallbackWired = "true";
+      node.addEventListener("error", function () {
+        recordFailedMedia(node, "broken-media-node-error");
+        collapseBrokenMedia(node);
+      }, { once: true });
+    }
+
+    function wireImage(image) {
+      if (!image || image.dataset.imageFallbackWired === "true") return;
+      if (isSphereRenderSurfaceNode(image)) return;
+      image.dataset.imageFallbackWired = "true";
+      const fallbackString = image.getAttribute("data-fallbacks") || "";
+      const fallbacks = fallbackString
+        .split(",")
+        .map(function (item) {
+          return item.trim();
+        })
+        .filter(Boolean);
+      let fallbackIndex = 0;
+
+      function tryNextFallback() {
+        if (fallbackIndex >= fallbacks.length) {
+          image.removeEventListener("error", tryNextFallback);
+          collapseBrokenMedia(image);
+          return;
+        }
+        const nextSource = fallbacks[fallbackIndex];
+        fallbackIndex += 1;
+        const safeSource = sanitizeImageSource(nextSource);
+        if (!safeSource) {
+          collapseBrokenMedia(image);
+          return;
+        }
+        image.src = safeSource;
+      }
+
+      if (fallbacks.length) image.addEventListener("error", tryNextFallback);
+      image.addEventListener("error", function () {
+        if (!fallbacks.length) collapseBrokenMedia(image);
+      });
+
+      if (image.complete && image.naturalWidth === 0) {
+        if (fallbacks.length) tryNextFallback();
+        else collapseBrokenMedia(image);
+      }
+    }
+
+    document.querySelectorAll("img").forEach(wireImage);
+    document.querySelectorAll("object,iframe,embed,video,source,picture,svg image").forEach(wireBrokenMediaNode);
+    window.addEventListener("error", event => {
+      const target = event?.target;
+      if (!(target instanceof Element)) return;
+      if (isSphereRenderSurfaceNode(target)) return;
+      const tag = String(target.tagName || "").toUpperCase();
+      if (tag === "IMG") {
+        collapseBrokenMedia(target);
+        return;
+      }
+      if (["OBJECT", "IFRAME", "EMBED", "VIDEO", "SOURCE", "PICTURE", "IMAGE"].includes(tag)) {
+        collapseBrokenMedia(target);
+      }
+    }, true);
+    if ("MutationObserver" in window) {
+      const observer = new MutationObserver(records => {
+        records.forEach(record => {
+          record.addedNodes.forEach(node => {
+            if (!(node instanceof Element)) return;
+            if (isSphereRenderSurfaceNode(node)) return;
+            if (node.tagName === "IMG") wireImage(node);
+            node.querySelectorAll?.("img").forEach(wireImage);
+            if (["OBJECT", "IFRAME", "EMBED", "VIDEO", "SOURCE", "PICTURE"].includes(String(node.tagName || "").toUpperCase())) {
+              wireBrokenMediaNode(node);
+            }
+            node.querySelectorAll?.("object,iframe,embed,video,source,picture,svg image").forEach(wireBrokenMediaNode);
+          });
+          if (record.type === "attributes" && record.target?.tagName === "IMG") {
+            if (isSphereRenderSurfaceNode(record.target)) return;
+            wireImage(record.target);
+            if (record.attributeName === "src") collapseBrokenMedia(record.target);
+          } else if (record.type === "attributes") {
+            if (isSphereRenderSurfaceNode(record.target)) return;
+            const targetTag = String(record.target?.tagName || "").toUpperCase();
+            if (["OBJECT", "IFRAME", "EMBED", "VIDEO", "SOURCE", "PICTURE", "IMAGE"].includes(targetTag)) {
+              wireBrokenMediaNode(record.target);
+            }
+          }
+        });
+      });
+      observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["src", "data"] });
+    }
+
+    function collapseBottomFailedMediaSweep() {
+      const viewportBottom = window.innerHeight || 0;
+      if (!viewportBottom) return;
+      const nodes = document.querySelectorAll("img,object,iframe,embed,video,source,picture,svg image");
+      nodes.forEach(node => {
+        if (!(node instanceof Element)) return;
+        const rect = node.getBoundingClientRect?.() || null;
+        if (!rect || rect.bottom < (viewportBottom - 220)) return;
+        const tag = String(node.tagName || "").toUpperCase();
+        if (tag === "IMG") {
+          if (node.complete && node.naturalWidth === 0) collapseBrokenMedia(node);
+          return;
+        }
+        const failed = node.dataset?.imageFallbackFailed === "true" || node.getAttribute?.("aria-hidden") === "true";
+        if (failed) collapseBrokenMedia(node);
+      });
+    }
+
+    window.addEventListener("load", () => {
+      collapseBottomFailedMediaSweep();
+      setTimeout(collapseBottomFailedMediaSweep, 350);
+      setTimeout(collapseBottomFailedMediaSweep, 1200);
+    }, { once: true });
+    window.addEventListener("pageshow", collapseBottomFailedMediaSweep);
+    window.addEventListener("resize", collapseBottomFailedMediaSweep);
   }
 
   function enhanceMediaLoading() {

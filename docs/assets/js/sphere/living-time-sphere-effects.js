@@ -13,19 +13,51 @@
 
   // ── WebGL support detection ───────────────────────────────────────
 
+  let _webGlSupport = null;
+  let _webGl2Support = null;
+
   function detectWebGl() {
+    if (typeof _webGlSupport === "boolean") return _webGlSupport;
+    const managedProbe = globalThis.ObservatoryCapabilityManager?.probeWebGl?.();
+    if (managedProbe && typeof managedProbe.webgl === "boolean") {
+      _webGlSupport = managedProbe.webgl;
+      return _webGlSupport;
+    }
     try {
       const canvas = document.createElement("canvas");
       const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
-      if (!gl) return false;
+      if (!gl) {
+        _webGlSupport = false;
+        return _webGlSupport;
+      }
       // Basic sanity — check for key extensions used in the renderer
       const ok = typeof gl.drawArrays === "function";
-      const ctx = gl;
-      if (ctx && typeof ctx.getExtension === "function") {
-        // OK if we can at least create the context
-      }
-      return ok;
-    } catch { return false; }
+      try { gl.getExtension?.("WEBGL_lose_context")?.loseContext?.(); } catch { /* best-effort probe cleanup */ }
+      _webGlSupport = ok;
+      return _webGlSupport;
+    } catch {
+      _webGlSupport = false;
+      return _webGlSupport;
+    }
+  }
+
+  function detectWebGl2() {
+    if (typeof _webGl2Support === "boolean") return _webGl2Support;
+    const managedProbe = globalThis.ObservatoryCapabilityManager?.probeWebGl?.();
+    if (managedProbe && typeof managedProbe.webgl2 === "boolean") {
+      _webGl2Support = managedProbe.webgl2;
+      return _webGl2Support;
+    }
+    try {
+      const canvas = document.createElement("canvas");
+      const gl = canvas.getContext("webgl2");
+      _webGl2Support = !!gl && typeof gl.drawArrays === "function";
+      try { gl?.getExtension?.("WEBGL_lose_context")?.loseContext?.(); } catch { /* best-effort probe cleanup */ }
+      return _webGl2Support;
+    } catch {
+      _webGl2Support = false;
+      return _webGl2Support;
+    }
   }
 
   // ── Star field ────────────────────────────────────────────────────
@@ -35,7 +67,7 @@
     if (!globalThis.LivingTimeSphereM) throw new Error("LivingTimeSphereEffects: LivingTimeSphereM unavailable");
     const mat = globalThis.LivingTimeSphereM;
     const starPositions = mat.STAR_POSITIONS;
-    const actualCount = Math.min(count || mat.QUALITY_PRESETS.high.starCount, Math.floor(starPositions.length / 3));
+    const actualCount = Math.max(0, Math.min(count ?? mat.QUALITY_PRESETS.high.starCount, Math.floor(starPositions.length / 3)));
 
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(actualCount * 3);
@@ -182,6 +214,7 @@
 
   globalThis.LivingTimeSphereEffects = Object.freeze({
     detectWebGl,
+    detectWebGl2,
     buildStarField,
     buildHazeShell,
     buildCoreGlow,

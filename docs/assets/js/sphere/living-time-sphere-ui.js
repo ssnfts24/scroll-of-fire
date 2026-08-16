@@ -9,6 +9,16 @@
   let _state = {
     year:          2026,
     viewMode:      "today",
+    requestedViewMode: "today",
+    activeViewMode: "today",
+    previousViewMode: "today",
+    latestRequestedMode: null,
+    modeTransitionState: "idle",
+    modeTransitionRevision: 0,
+    modeTransitionInFlight: false,
+    modeTransitionFailure: null,
+    lastModeTransitionDuration: 0,
+    modeTransitionMetrics: [],
     timeZone:      "America/Los_Angeles",
     boundaryMode:  "sunset",
     manualSunset:  "18:00",
@@ -16,10 +26,13 @@
     fieldRange:    "now",
     visibleLayers: { pattern: true, exactDays: true, weekGates: true, outsideDays: true, passage: true, lunar: true, solar: true, markers: true, recurrence: true, spiral: true, environment: true, witness: false, personal: false, connections: true },
     selectedMarker: null,
+    source: null,
+    datasetVersion: null,
     useCanvas:     false,
     lowPower:      false,
     // Phase 03 additions
-    rendererMode:  "auto",   // "auto" | "3d" | "svg" | "table" | "text"
+    requestedRendererMode: "auto", // user preference: "auto" | "3d" | "svg" | "canvas" | "table" | "text"
+    activeRendererMode: "svg",     // runtime mode: "svg" | "3d" | "initializing-3d" | "recovering" | "table" | "text"
     quality:       "auto",   // "auto" | "high" | "balanced" | "lowpower" | "svgonly"
     moonLabelMode: "balanced", // "essential" | "balanced" | "all" | "none"
     moonLabelDistance: "standard",
@@ -35,8 +48,82 @@
     introShown:    false,
     _3dInitInProgress: false, // guard against concurrent 3D init calls
     _3dInitGeneration: 0,
+    _pending3dPayload: null,
+    _latestContainerSize: { w: 0, h: 0 },
     restoreAttempts: 0,
+    rendererLifecycle: "not-started",
+    environmentLifecycle: "idle",
+    retryCount: 0,
+    lastRenderTimestamp: 0,
+    _autoRetryTimer: 0,
+    _locationChangeRaf: 0,
+    _recoveryHooksBound: false,
+    _resizeObserver: null,
+    _spiralCacheKey: "",
+    _spiralCache: null,
+    _liveSnapshotCacheKey: "",
+    _liveSnapshotCache: null,
+    _liveSnapshotCacheAt: 0,
+    selectedUpdateStatus: "idle",
+    selectedUpdateRevision: 0,
+    pendingSelectedDay: null,
+    pendingSelectedIntent: null,
+    selectedUpdateInFlight: false,
+    fullRenderCount: 0,
+    selectedLightweightUpdateCount: 0,
+    selectedUpdateMetrics: [],
+    selectedUpdateLongTasks: [],
+    selectedUpdateLastWatchdog: null,
+    lastNavActionAt: 0,
+    lastNavActionId: "",
+    temporalPlaybackActive: false,
+    temporalPlaybackTimer: 0,
+    temporalPlaybackSpeed: 700,
+    temporalPlaybackScope: "pattern-year",
+    temporalPlaybackStepCount: 0,
+    temporalScrubRaf: 0,
+    temporalScrubPendingDay: null,
+    lastTodayResetSource: null,
+    lastTodayResetAt: 0,
+    _selectedLongTaskObserver: null,
+    layerStateSource: "default",
+    userCustomizedLayers: false,
+    actionCounters: {
+      modeUpdateCount: 0,
+      selectedDayUpdateCount: 0,
+      layerUpdateCount: 0,
+      environmentFocusCount: 0,
+      environmentDataUpdateCount: 0,
+      todayResetCount: 0,
+      temporalPlaybackStepCount: 0,
+    },
+    actionTrace: [],
+    lastEnvironmentFocusDiagnostics: null,
+    initialUrl: "",
+    currentUrl: "",
+    urlIntegrity: "unknown",
+    buildLogEmitted: false,
+    coldBootDiagnostics: null,
+    lastRenderSurfaceVerification: null,
+    firstRenderSurfaceFailure: null,
+    initTimeline: [],
+    renderSurfaceCanvasTrace: [],
+    _applyingHistoryState: false,
   };
+  const URL_STATE_DEFAULTS = Object.freeze({
+    year: 2026,
+    viewMode: "today",
+    timeZone: "America/Los_Angeles",
+    boundaryMode: "sunset",
+    manualSunset: "18:00",
+    requestedRendererMode: "auto",
+    quality: "auto",
+    connectionMode: "contextual",
+    motionMode: "still",
+    moonLabelDistance: "standard",
+    dayLabelMode: "key",
+    visibleLayers: Object.freeze({ ..._state.visibleLayers }),
+  });
   const MOON_LABEL_MODE_KEY = "lts-moon-label-mode";
   const SELECTED_STATE_KEY = "lts-selected-pattern-state.v1";
   const LAYER_PREFERENCES_KEY = "sof.sphere.layerPreferences.v2";
@@ -49,6 +136,7 @@
   );
   const MOON_LOG_KEY = "sof_moon_logs_v3";
   const LEGACY_MOON_LOG_KEY = "sof_moon_logs_v2";
+  const SPHERE_STORAGE_PREFIXES = Object.freeze(["lts-", "sof.sphere.", "sof_moon_logs"]);
   const FIELD_RANGE_LABELS = Object.freeze({
     now: "Now",
     today: "Today",
@@ -57,9 +145,43 @@
     "pattern-year": "Pattern Year",
     historical: "Historical comparison",
   });
+  let _brokenResourceGuardInstalled = false;
+  let _uiInitialized = false;
   const LAYER_PRESET_OPTIONS = Object.freeze(["fullObservatory", "cleanPattern", "livingSky", "weatherField", "passage", "witnessMap", "historicalField", "lowPower"]);
 
   let _urlHasExplicitLayers = false;
+  let _urlHasExplicitMoonLabelDistance = false;
+  let _syncingLayerControls = false;
+  let _pendingLayerState = null;
+  let _layerStateFlushRaf = 0;
+  let _layerStateFlushContainer = null;
+  let _resourceTrackerInstalled = false;
+  const _resourceFailureLog = [];
+  const SPHERE_MEDIA_TAGS = new Set(["IMG", "PICTURE", "SOURCE", "OBJECT", "IFRAME", "EMBED", "VIDEO", "SVG", "CANVAS"]);
+  const RENDER_SURFACE_REASON = Object.freeze({
+    CANVAS_MISSING: "CANVAS_MISSING",
+    CANVAS_NOT_CONNECTED: "CANVAS_NOT_CONNECTED",
+    CANVAS_WRONG_PARENT: "CANVAS_WRONG_PARENT",
+    CANVAS_ZERO_WIDTH: "CANVAS_ZERO_WIDTH",
+    CANVAS_ZERO_HEIGHT: "CANVAS_ZERO_HEIGHT",
+    CANVAS_DISPLAY_NONE: "CANVAS_DISPLAY_NONE",
+    CANVAS_VISIBILITY_HIDDEN: "CANVAS_VISIBILITY_HIDDEN",
+    CANVAS_ZERO_OPACITY: "CANVAS_ZERO_OPACITY",
+    CONTAINER_ZERO_WIDTH: "CONTAINER_ZERO_WIDTH",
+    CONTAINER_ZERO_HEIGHT: "CONTAINER_ZERO_HEIGHT",
+    WEBGL_CONTEXT_MISSING: "WEBGL_CONTEXT_MISSING",
+    WEBGL_CONTEXT_LOST: "WEBGL_CONTEXT_LOST",
+    FIRST_FRAME_MISSING: "FIRST_FRAME_MISSING",
+    DUPLICATE_CANVAS: "DUPLICATE_CANVAS",
+    STALE_RENDER_GENERATION: "STALE_RENDER_GENERATION",
+    RENDERER_DISPOSED: "RENDERER_DISPOSED",
+    DRAWING_BUFFER_ZERO: "DRAWING_BUFFER_ZERO",
+    SCENE_EMPTY: "SCENE_EMPTY",
+    CAMERA_INVALID: "CAMERA_INVALID",
+    CANVAS_COVERED: "CANVAS_COVERED",
+    BROKEN_MEDIA_IN_SURFACE: "BROKEN_MEDIA_IN_SURFACE",
+  });
+  const ENV_FOCUS_PULSE_CLASS = "sphere-location-command-focus-pulse";
 
   // ── Dependency check ───────────────────────────────────────────────
 
@@ -67,46 +189,974 @@
     const required = [
       "LivingTimeSphereModel", "LivingTimeSphereLayout",
       "LivingTimeSphereRendererSvg", "LivingTimeSphereInteraction",
-      "LivingTimeSphereAccessibility", "LivingTimeSphereUrlState",
-      "AlignmentLedgerData"
+      "LivingTimeSphereAccessibility", "LivingTimeSphereUrlState"
     ];
     return required.every(d => !!globalThis[d]);
   }
 
+  function _resolveBuildIdentityLine() {
+    const meta = globalThis.LivingTimeSphereVersion?.buildMetadata || {};
+    const commit = meta.commitSha || "unknown-sha";
+    const stamp = meta.buildTimestamp || "unknown-time";
+    const context = meta.buildContext || "unknown-context";
+    const renderer = meta.rendererVersion || globalThis.LivingTimeSphereVersion?.version || "unknown-renderer";
+    const dataset = meta.datasetVersion || _state.datasetVersion || globalThis.LivingTimeSphereVersion?.version || "unknown-dataset";
+    return `Build: ${commit} · ${stamp} · ${context} · renderer=${renderer} · dataset=${dataset}`;
+  }
+
+  function _readStorageDiagnostics() {
+    const collectMatches = storage => {
+      if (!storage) return [];
+      try {
+        const matches = [];
+        for (let i = 0; i < storage.length; i++) {
+          const key = storage.key(i);
+          if (!key) continue;
+          if (SPHERE_STORAGE_PREFIXES.some(prefix => key.startsWith(prefix))) {
+            matches.push(key);
+          }
+        }
+        return matches;
+      } catch {
+        return [];
+      }
+    };
+    const localKeys = collectMatches(globalThis.localStorage);
+    const sessionKeys = collectMatches(globalThis.sessionStorage);
+    const selectedState = _readSelectedState();
+    return {
+      localKeys,
+      sessionKeys,
+      selectedStatePresent: !!selectedState,
+      selectedMarker: typeof selectedState?.selectedMarker === "string" ? selectedState.selectedMarker : null,
+      selectedDayOfYear: Number.isFinite(Number(selectedState?.selectedDayOfYear)) ? Number(selectedState.selectedDayOfYear) : null,
+    };
+  }
+
+  async function _probeColdBootDiagnostics() {
+    const probe = {
+      at: new Date().toISOString(),
+      locationHref: typeof location !== "undefined" ? location.href : "",
+      serviceWorker: "unsupported",
+      serviceWorkerScript: null,
+      cacheKeyCount: 0,
+      cacheKeys: [],
+      sphereCacheKeys: [],
+      ..._readStorageDiagnostics(),
+    };
+    if ("serviceWorker" in navigator) {
+      try {
+        const controller = navigator.serviceWorker.controller;
+        const registration = await navigator.serviceWorker.getRegistration();
+        probe.serviceWorker = controller ? "controlled" : (registration ? "registered-no-controller" : "unregistered");
+        probe.serviceWorkerScript = registration?.active?.scriptURL || registration?.waiting?.scriptURL || registration?.installing?.scriptURL || null;
+      } catch {
+        probe.serviceWorker = "error";
+      }
+    }
+    if (typeof caches !== "undefined") {
+      try {
+        const keys = await caches.keys();
+        probe.cacheKeyCount = keys.length;
+        probe.cacheKeys = keys.slice(0, 20);
+        probe.sphereCacheKeys = keys.filter(key => /sphere|sof-|moon|codex/i.test(String(key))).slice(0, 12);
+      } catch {
+        probe.cacheKeyCount = -1;
+      }
+    }
+    _state.coldBootDiagnostics = Object.freeze(probe);
+    _updateRendererDiagnostics();
+  }
+
+  function _logBuildIdentityOnce() {
+    if (_state.buildLogEmitted) return;
+    const meta = globalThis.LivingTimeSphereVersion?.buildMetadata || {};
+    const context = meta.buildContext || "";
+    if (!["preview", "development"].includes(context)) return;
+    console.info(`[LivingTimeSphere] build=${meta.commitSha || "unknown-sha"} ts=${meta.buildTimestamp || "unknown-time"} context=${context} renderer=${meta.rendererVersion || "unknown-renderer"} dataset=${meta.datasetVersion || _state.datasetVersion || "unknown-dataset"}`);
+    _state.buildLogEmitted = true;
+  }
+
+  function _evaluateDeepLinkIntegrity(initialUrl, currentUrl) {
+    if (!initialUrl || !currentUrl) return "unknown";
+    try {
+      const initial = new URL(initialUrl, location.href);
+      const current = new URL(currentUrl, location.href);
+      if (initial.hash !== current.hash) return "hash-changed";
+      for (const [key, value] of initial.searchParams.entries()) {
+        if (current.searchParams.get(key) !== value) return `param-changed:${key}`;
+      }
+      return "preserved";
+    } catch {
+      return "unknown";
+    }
+  }
+
   // ── URL state ──────────────────────────────────────────────────────
+
+  function _applyParsedUrlState(parsed = {}, { initial = false } = {}) {
+    const previousBoundaryKey = `${_state.timeZone}|${_state.boundaryMode}|${_state.manualSunset}`;
+    const value = (key, fallback) => parsed[key] != null ? parsed[key] : (initial ? null : fallback);
+    const nextYear = value("year", URL_STATE_DEFAULTS.year);
+    const nextViewMode = value("viewMode", URL_STATE_DEFAULTS.viewMode);
+    if (nextYear) _state.year = nextYear;
+    if (nextViewMode) {
+      _state.requestedViewMode = nextViewMode;
+      if (initial) {
+        _state.viewMode = nextViewMode;
+        _state.activeViewMode = nextViewMode;
+      }
+    }
+    _state.timeZone = value("timeZone", URL_STATE_DEFAULTS.timeZone) || _state.timeZone;
+    _state.boundaryMode = value("boundaryMode", URL_STATE_DEFAULTS.boundaryMode) || _state.boundaryMode;
+    _state.manualSunset = value("manualSunset", URL_STATE_DEFAULTS.manualSunset) || _state.manualSunset;
+    if (Object.prototype.hasOwnProperty.call(parsed, "marker")) _state.selectedMarker = parsed.marker || null;
+    if (initial) {
+      if (parsed.source) _state.source = parsed.source;
+      if (parsed.datasetVersion) _state.datasetVersion = parsed.datasetVersion;
+    } else {
+      _state.source = parsed.source || null;
+      _state.datasetVersion = parsed.datasetVersion || null;
+    }
+    const markerDay = _selectedDayFromMarker(parsed.marker);
+    if (markerDay != null) _state.selectedDayOfYear = markerDay;
+    else if (!initial) _state.selectedDayOfYear = null;
+    _state.requestedRendererMode = value("renderer", URL_STATE_DEFAULTS.requestedRendererMode) || _state.requestedRendererMode;
+    _state.quality = value("quality", URL_STATE_DEFAULTS.quality) || _state.quality;
+    _state.connectionMode = value("connectionMode", URL_STATE_DEFAULTS.connectionMode) || _state.connectionMode;
+    _state.motionMode = value("motionMode", URL_STATE_DEFAULTS.motionMode) || _state.motionMode;
+    _state.moonLabelDistance = value("moonLabelDistance", URL_STATE_DEFAULTS.moonLabelDistance) || _state.moonLabelDistance;
+    _state.dayLabelMode = value("dayLabelMode", URL_STATE_DEFAULTS.dayLabelMode) || _state.dayLabelMode;
+    if (parsed.hasExplicitLayers) {
+      _urlHasExplicitLayers = true;
+      _state.layerStateSource = "url-explicit";
+      for (const key of Object.keys(_state.visibleLayers)) _state.visibleLayers[key] = false;
+      for (const layer of (parsed.layers || [])) _state.visibleLayers[layer] = true;
+    } else if (!initial) {
+      _urlHasExplicitLayers = false;
+      _state.layerStateSource = "url-default";
+      Object.keys(_state.visibleLayers).forEach(layer => {
+        _state.visibleLayers[layer] = !!URL_STATE_DEFAULTS.visibleLayers[layer];
+      });
+    }
+    if ((parsed.cameraTheta != null || parsed.cameraDist != null) && globalThis.LivingTimeSphereCamera) {
+      globalThis.LivingTimeSphereCamera.setState({ theta: parsed.cameraTheta, dist: parsed.cameraDist });
+    }
+    if (`${_state.timeZone}|${_state.boundaryMode}|${_state.manualSunset}` !== previousBoundaryKey) {
+      _invalidateLiveSnapshotCache();
+    }
+    return markerDay;
+  }
 
   function applyUrlState() {
     if (typeof location === "undefined") return;
     _urlHasExplicitLayers = false;
+    _urlHasExplicitMoonLabelDistance = false;
+    let parsedUrl = null;
+    try { parsedUrl = new URL(location.href); } catch { parsedUrl = null; }
+    if (parsedUrl?.searchParams?.has("moon_label_distance")) _urlHasExplicitMoonLabelDistance = true;
     const parsed = globalThis.LivingTimeSphereUrlState.parseSphereUrl(location.href);
-    if (parsed.year)         _state.year         = parsed.year;
-    if (parsed.viewMode)     _state.viewMode     = parsed.viewMode;
-    if (parsed.timeZone)     _state.timeZone     = parsed.timeZone;
-    if (parsed.boundaryMode) _state.boundaryMode = parsed.boundaryMode;
-    if (parsed.manualSunset) _state.manualSunset = parsed.manualSunset;
-    if (parsed.marker)       _state.selectedMarker = parsed.marker;
-    const markerDay = _selectedDayFromMarker(parsed.marker);
-    if (markerDay != null) _state.selectedDayOfYear = markerDay;
-    if (parsed.renderer)     _state.rendererMode = parsed.renderer;
-    if (parsed.quality)      _state.quality      = parsed.quality;
-    if (parsed.connectionMode) _state.connectionMode = parsed.connectionMode;
-    if (parsed.motionMode)     _state.motionMode = parsed.motionMode;
-    if (parsed.moonLabelDistance) _state.moonLabelDistance = parsed.moonLabelDistance;
-    if (parsed.dayLabelMode)   _state.dayLabelMode = parsed.dayLabelMode;
-    if (parsed.layers) {
-      _urlHasExplicitLayers = parsed.layers.length > 0;
-      for (const k of Object.keys(_state.visibleLayers)) _state.visibleLayers[k] = false;
-      for (const l of parsed.layers) _state.visibleLayers[l] = true;
+    _applyParsedUrlState(parsed, { initial: true });
+    _state.requestedViewMode = _state.viewMode;
+    _state.activeViewMode = _state.viewMode;
+
+  }
+
+  function _installBrokenResourceGuard() {
+    if (_brokenResourceGuardInstalled) return;
+    _brokenResourceGuardInstalled = true;
+  }
+
+  function _flushLayerStateUpdates() {
+    _layerStateFlushRaf = 0;
+    const container = _layerStateFlushContainer;
+    const pending = _pendingLayerState;
+    _layerStateFlushContainer = null;
+    _pendingLayerState = null;
+    if (!container || !pending) return;
+    const renderer = globalThis.LivingTimeSphereRenderer3d;
+    if (_state.active3d && renderer?.isInitialized?.() && typeof renderer.setLayerStates === "function") {
+      const updated = renderer.setLayerStates(pending);
+      if (!updated) renderSphere(container);
+      _updateRendererDiagnostics();
+      return;
     }
-    if (parsed.moonLabelMode) _state.moonLabelMode = parsed.moonLabelMode;
-    // Restore camera from URL (validated in url-state module)
-    if ((parsed.cameraTheta != null || parsed.cameraDist != null) &&
-        globalThis.LivingTimeSphereCamera) {
-      globalThis.LivingTimeSphereCamera.setState({
-        theta: parsed.cameraTheta,
-        dist:  parsed.cameraDist
+    renderSphere(container);
+  }
+
+  function _requestLayerStateUpdate(container, layer, enabled) {
+    if (!container || !layer) return;
+    _pendingLayerState = { ...(_pendingLayerState || {}), [layer]: !!enabled };
+    _layerStateFlushContainer = container;
+    if (_layerStateFlushRaf) return;
+    _layerStateFlushRaf = requestAnimationFrame(_flushLayerStateUpdates);
+  }
+
+  function _resourceUrlForElement(el) {
+    if (!el) return null;
+    return el.currentSrc || el.src || el.data || el.href || null;
+  }
+
+  function _resolveAbsoluteResourceUrl(url) {
+    if (!url) return null;
+    try { return new URL(url, location.href).href; } catch { return url; }
+  }
+
+  function _isInvalidResourceUrl(url) {
+    const value = String(url || "").trim();
+    if (!value) return true;
+    const lowered = value.toLowerCase();
+    return lowered === "#" || lowered === "null" || lowered === "undefined" || lowered === "[object object]";
+  }
+
+  function _isSphereScopedElement(el) {
+    if (!el || el.nodeType !== 1) return false;
+    return !!(el.closest?.("#sphere-container") || el.closest?.("#sphere-moon-labels"));
+  }
+
+  function _resolveElementOwner(el) {
+    if (!el || el.nodeType !== 1) return "unknown";
+    if (el.closest?.("#sphere-container")) return "living-time-sphere-render-surface";
+    if (el.closest?.("#sphere-moon-labels")) return "living-time-sphere-moon-labels";
+    if (el.closest?.("[data-home-sphere-root]")) return "home-observatory-instrument";
+    if (el.closest?.("main")) return "site-main";
+    return "document";
+  }
+
+  function _captureResourceFailure(el, reason = "resource-error") {
+    if (!el || el.nodeType !== 1) return;
+    const entry = {
+      reason,
+      tagName: String(el.tagName || "").toUpperCase(),
+      id: el.id || null,
+      className: el.className || "",
+      src: _resourceUrlForElement(el),
+      currentSrc: el.currentSrc || null,
+      absoluteUrl: _resolveAbsoluteResourceUrl(_resourceUrlForElement(el)),
+      page: typeof location !== "undefined" ? String(location.pathname || "") : "",
+      owner: _resolveElementOwner(el),
+      parent: el.parentElement ? {
+        tagName: String(el.parentElement.tagName || "").toUpperCase(),
+        id: el.parentElement.id || null,
+        className: el.parentElement.className || "",
+      } : null,
+      timestamp: Date.now(),
+    };
+    _resourceFailureLog.push(entry);
+    if (_resourceFailureLog.length > 120) _resourceFailureLog.shift();
+  }
+
+  function _pruneInvalidSphereMedia(container, reason = "invalid-sphere-media") {
+    if (!container?.querySelectorAll) return [];
+    const removed = [];
+    const nodes = Array.from(container.querySelectorAll("img,object,iframe,embed,video,picture,source,svg image"));
+    nodes.forEach(node => {
+      if (!node || node.nodeType !== 1) return;
+      const tag = String(node.tagName || "").toUpperCase();
+      const src = _resourceUrlForElement(node);
+      const failedImage = tag === "IMG" && node.complete === true && Number(node.naturalWidth || 0) === 0;
+      if (!_isInvalidResourceUrl(src) && !failedImage) return;
+      _captureResourceFailure(node, reason);
+      const inspected = _inspectElementNode(node);
+      if (inspected) removed.push(inspected);
+      try { node.remove(); } catch { /* best effort */ }
+      const shell = node.closest?.("picture,figure,[data-home-product-media],[data-home-media-card],.home-product-slide");
+      if (shell) shell.remove?.();
+    });
+    return removed;
+  }
+
+  function _installResourceFailureTracker() {
+    if (_resourceTrackerInstalled) return;
+    _resourceTrackerInstalled = true;
+    window.addEventListener("error", event => {
+      const el = event?.target;
+      if (!el || el.nodeType !== 1) return;
+      const tag = String(el.tagName || "").toUpperCase();
+      if (!["IMG", "PICTURE", "SOURCE", "OBJECT", "IFRAME", "EMBED", "VIDEO", "SVG", "CANVAS"].includes(tag)) return;
+      if (!_isSphereScopedElement(el)) return;
+      _captureResourceFailure(el, "resource-load-failed");
+    }, true);
+  }
+
+  function _inspectElementNode(node) {
+    if (!node || node.nodeType !== 1) return null;
+    const rect = node.getBoundingClientRect?.() || null;
+    const style = window.getComputedStyle?.(node) || null;
+    return {
+      tagName: String(node.tagName || "").toLowerCase(),
+      id: node.id || "",
+      className: node.className || "",
+      isConnected: !!node.isConnected,
+      hidden: !!node.hidden,
+      rect: rect ? {
+        top: Number(rect.top || 0),
+        left: Number(rect.left || 0),
+        bottom: Number(rect.bottom || 0),
+        right: Number(rect.right || 0),
+        width: Number(rect.width || 0),
+        height: Number(rect.height || 0),
+      } : null,
+      position: style?.position || "",
+      zIndex: style?.zIndex || "",
+      pointerEvents: style?.pointerEvents || "",
+      display: style?.display || "",
+      visibility: style?.visibility || "",
+      opacity: style?.opacity || "",
+      overflow: style?.overflow || "",
+      src: _resourceUrlForElement(node),
+      currentSrc: node.currentSrc || "",
+      absoluteUrl: _resolveAbsoluteResourceUrl(_resourceUrlForElement(node)),
+      complete: typeof node.complete === "boolean" ? node.complete : null,
+      naturalWidth: Number(node.naturalWidth || 0) || null,
+      naturalHeight: Number(node.naturalHeight || 0) || null,
+      parentTagName: node.parentElement?.tagName?.toLowerCase?.() || null,
+    };
+  }
+
+  function _collectBottomViewportDiagnostics(depthPx = 190) {
+    const width = window.innerWidth || 0;
+    const height = window.innerHeight || 0;
+    if (!width || !height) return { viewport: { width, height }, bandTop: 0, matches: [], points: [] };
+    const bandTop = Math.max(0, height - depthPx);
+    const all = Array.from(document.querySelectorAll("*"));
+    const matches = all
+      .map(_inspectElementNode)
+      .filter(Boolean)
+      .filter(item => item.rect && item.rect.bottom >= bandTop && item.rect.top <= height && item.display !== "none" && item.visibility !== "hidden");
+    const points = [0.25, 0.5, 0.75].flatMap(frac => {
+      const x = Math.max(0, Math.min(width - 1, Math.round(width * frac)));
+      return [20, 50].map(offset => {
+        const y = Math.max(0, height - offset);
+        const stack = (document.elementsFromPoint?.(x, y) || []).map(_inspectElementNode).filter(Boolean).slice(0, 10);
+        return { x, y, stack };
+      });
+    });
+    return { viewport: { width, height }, bandTop, matches: matches.slice(0, 240), points };
+  }
+
+  function _collectAncestorIdentity(node, limit = 12) {
+    const list = [];
+    let cur = node;
+    while (cur && cur.nodeType === 1 && list.length < limit) {
+      list.push({
+        tagName: String(cur.tagName || "").toUpperCase(),
+        id: cur.id || "",
+        className: cur.className || "",
+      });
+      if (cur.id || cur.getAttribute?.("data-home-sphere-root") || cur.getAttribute?.("data-luxury-instrument")) break;
+      cur = cur.parentElement;
+    }
+    return list;
+  }
+
+  function _probeBottomBrokenResource() {
+    const viewport = { width: Number(window.innerWidth || 0), height: Number(window.innerHeight || 0) };
+    if (!viewport.width || !viewport.height) return null;
+    const point = { x: Math.max(0, Math.round(viewport.width / 2)), y: Math.max(0, Math.round(viewport.height - 32)) };
+    const stack = Array.from(document.elementsFromPoint?.(point.x, point.y) || []);
+    const target = stack.find(node => {
+      if (!node || node.nodeType !== 1) return false;
+      const tag = String(node.tagName || "").toUpperCase();
+      return tag === "IMG" || tag === "OBJECT" || tag === "IFRAME" || tag === "EMBED" || tag === "VIDEO" || tag === "IMAGE" || tag === "PICTURE" || tag === "SOURCE";
+    }) || null;
+    if (!target) return null;
+    const style = window.getComputedStyle?.(target) || null;
+    return {
+      probePoint: point,
+      element: _inspectElementNode(target),
+      tagName: String(target.tagName || "").toUpperCase(),
+      id: target.id || "",
+      className: target.className || "",
+      originalSrc: target.getAttribute?.("src") || target.getAttribute?.("data") || target.getAttribute?.("href") || null,
+      absoluteUrl: _resolveAbsoluteResourceUrl(_resourceUrlForElement(target)),
+      parent: target.parentElement ? _inspectElementNode(target.parentElement) : null,
+      grandparent: target.parentElement?.parentElement ? _inspectElementNode(target.parentElement.parentElement) : null,
+      ancestors: _collectAncestorIdentity(target),
+      computed: style ? {
+        display: style.display || "",
+        visibility: style.visibility || "",
+        opacity: style.opacity || "",
+        position: style.position || "",
+        zIndex: style.zIndex || "",
+      } : null,
+      ancestors: _collectAncestorIdentity(target),
+    };
+  }
+
+  function _collectMediaDiagnostics(root = document) {
+    const selectors = "img,picture source,object,iframe,embed,video,svg image";
+    const nodes = Array.from(root.querySelectorAll?.(selectors) || []);
+    return nodes.map(node => {
+      const base = _inspectElementNode(node) || {};
+      const failedImage = base.tagName === "img" && base.complete === true && Number(base.naturalWidth || 0) === 0;
+      return { ...base, failedImage };
+    });
+  }
+
+  function _collectFixedStickyDiagnostics() {
+    const nodes = Array.from(document.querySelectorAll("*"));
+    return nodes
+      .map(node => _inspectElementNode(node))
+      .filter(Boolean)
+      .filter(item => item.position === "fixed" || item.position === "sticky")
+      .slice(0, 240);
+  }
+
+  function _inspectSphereHostChildren() {
+    const host = document.getElementById("sphere-container");
+    if (!host) return { directChildren: [], nestedChildren: [] };
+    const directChildren = Array.from(host.children || []).map(_inspectElementNode).filter(Boolean);
+    const nestedChildren = Array.from(host.querySelectorAll?.("*") || []).map(_inspectElementNode).filter(Boolean);
+    return { directChildren, nestedChildren };
+  }
+
+  function _collectSphereCenterStack(container) {
+    if (!container?.getBoundingClientRect) return { point: null, stack: [] };
+    const rect = container.getBoundingClientRect();
+    const center = {
+      x: Number(rect.left + (rect.width / 2) || 0),
+      y: Number(rect.top + (rect.height / 2) || 0),
+    };
+    const stack = (document.elementsFromPoint?.(center.x, center.y) || [])
+      .map(_inspectElementNode)
+      .filter(Boolean)
+      .slice(0, 16);
+    return { point: center, stack };
+  }
+
+  function _setSphereLoaderVisibility(container, visible) {
+    const loader = container?.querySelector?.(":scope > .sphere-luxury-loader");
+    if (container?.setAttribute) container.setAttribute("aria-busy", visible ? "true" : "false");
+    if (!loader) return;
+    loader.hidden = !visible;
+    loader.style.display = visible ? "" : "none";
+    if (visible) {
+      loader.setAttribute("data-sphere-renderer-owned", "true");
+      loader.setAttribute("data-sphere-loader-state", "visible");
+    } else {
+      loader.setAttribute("data-sphere-loader-state", "hidden");
+    }
+  }
+
+  function _verifyRenderSurface(container, { requireVisibleCenter = true, expectedGeneration = null } = {}) {
+    const renderer = globalThis.LivingTimeSphereRenderer3d;
+    const rendererDiag = renderer?.getDiagnostics?.() || {};
+    const host = container || document.getElementById("sphere-container");
+    if (!host) {
+      return { healthy: false, reason: "CONTAINER_MISSING", failures: ["CONTAINER_MISSING"], checks: {}, centerStack: { point: null, stack: [] }, brokenResources: [] };
+    }
+    const canvases = Array.from(host.querySelectorAll(":scope > canvas.living-time-sphere-3d-canvas"));
+    const rendererCanvas = renderer?.getCanvas?.() || null;
+    const canvas = rendererCanvas?.parentElement === host && canvases.includes(rendererCanvas)
+      ? rendererCanvas
+      : (canvases[0] || null);
+    const hostRect = host.getBoundingClientRect?.() || { left: 0, top: 0, width: 0, height: 0 };
+    const canvasRect = canvas?.getBoundingClientRect?.() || { left: 0, top: 0, width: 0, height: 0 };
+    const canvasStyle = canvas ? getComputedStyle(canvas) : null;
+    const containerStyle = host ? getComputedStyle(host) : null;
+    const centerStack = _collectSphereCenterStack(host);
+    const viewportW = window.innerWidth || 0;
+    const viewportH = window.innerHeight || 0;
+    const centerInViewport = centerStack?.point
+      ? centerStack.point.x >= 0 && centerStack.point.x <= viewportW && centerStack.point.y >= 0 && centerStack.point.y <= viewportH
+      : false;
+    const stackItems = Array.isArray(centerStack.stack) ? centerStack.stack : [];
+    const top = stackItems[0] || null;
+    const canvasInStack = stackItems.find(item => item.tagName === "canvas" && String(item.className || "").includes("living-time-sphere-3d-canvas")) || null;
+    const coveringMedia = stackItems.find(item => {
+      const tag = String(item.tagName || "").toUpperCase();
+      if (!SPHERE_MEDIA_TAGS.has(tag)) return false;
+      if (tag === "CANVAS" && String(item.className || "").includes("living-time-sphere-3d-canvas")) return false;
+      if (tag === "SVG" && String(item.className || "").includes("living-time-sphere-svg")) return false;
+      return true;
+    }) || null;
+    const sphereMedia = _collectMediaDiagnostics(host);
+    const sphereFailureLog = _resourceFailureLog.filter(item => String(item.owner || "").startsWith("living-time-sphere"));
+    const brokenResources = sphereMedia.filter(item =>
+      item &&
+      item.rect &&
+      Number(item.rect.width || 0) > 20 &&
+      Number(item.rect.height || 0) > 20 &&
+      item.failedImage
+    );
+    const camera = rendererDiag.cameraPosition || null;
+    const cameraValid = !!camera && Number.isFinite(Number(rendererDiag.cameraNear || 0)) && Number.isFinite(Number(rendererDiag.cameraFar || 0)) && Number(rendererDiag.cameraFar || 0) > Number(rendererDiag.cameraNear || 0);
+    const glContext = renderer?.getRenderer?.()?.getContext?.() || null;
+    const contextExists = !!(glContext || rendererDiag.webglAvailable);
+    const contextLost = rendererDiag.stageState?.context === "lost" || rendererDiag.contextLost === true || !!glContext?.isContextLost?.();
+    const currentGeneration = Number(_state._3dInitGeneration || 0);
+    const diagnostics = {
+      container: {
+        clientWidth: Number(host.clientWidth || 0),
+        clientHeight: Number(host.clientHeight || 0),
+        rect: {
+          left: Number(hostRect.left || 0),
+          top: Number(hostRect.top || 0),
+          width: Number(hostRect.width || 0),
+          height: Number(hostRect.height || 0),
+          right: Number(hostRect.right || 0),
+          bottom: Number(hostRect.bottom || 0),
+        },
+        style: {
+          display: containerStyle?.display || "",
+          visibility: containerStyle?.visibility || "",
+          opacity: containerStyle?.opacity || "",
+          position: containerStyle?.position || "",
+          zIndex: containerStyle?.zIndex || "",
+          overflow: containerStyle?.overflow || "",
+          transform: containerStyle?.transform || "",
+          contain: containerStyle?.contain || "",
+          contentVisibility: containerStyle?.contentVisibility || "",
+        },
+      },
+      canvas: {
+        width: Number(canvas?.width || 0),
+        height: Number(canvas?.height || 0),
+        clientWidth: Number(canvas?.clientWidth || 0),
+        clientHeight: Number(canvas?.clientHeight || 0),
+        rect: {
+          left: Number(canvasRect.left || 0),
+          top: Number(canvasRect.top || 0),
+          width: Number(canvasRect.width || 0),
+          height: Number(canvasRect.height || 0),
+          right: Number(canvasRect.right || 0),
+          bottom: Number(canvasRect.bottom || 0),
+        },
+        isConnected: !!canvas?.isConnected,
+        parentElement: canvas?.parentElement ? {
+          tagName: String(canvas.parentElement.tagName || "").toUpperCase(),
+          id: canvas.parentElement.id || null,
+          className: canvas.parentElement.className || "",
+        } : null,
+        ownerDocumentIsCurrent: canvas ? canvas.ownerDocument === document : false,
+        style: {
+          display: canvasStyle?.display || "",
+          visibility: canvasStyle?.visibility || "",
+          opacity: canvasStyle?.opacity || "",
+          position: canvasStyle?.position || "",
+          zIndex: canvasStyle?.zIndex || "",
+          pointerEvents: canvasStyle?.pointerEvents || "",
+        },
+      },
+      renderer: {
+        reportedSize: {
+          width: Math.round(Number(rendererDiag.rendererSizeWidth || rendererDiag.canvasClientWidth || 0)),
+          height: Math.round(Number(rendererDiag.rendererSizeHeight || rendererDiag.canvasClientHeight || 0)),
+        },
+        drawingBuffer: {
+          width: Math.round(Number(rendererDiag.drawingBufferWidth || 0)),
+          height: Math.round(Number(rendererDiag.drawingBufferHeight || 0)),
+        },
+        contextExists,
+        contextLost,
+      },
+      scene: {
+        objectCount: Number(rendererDiag.sceneObjectCount || 0),
+      },
+      camera: {
+        position: camera,
+        aspect: Number(rendererDiag.cameraAspect || 0) || null,
+        near: Number(rendererDiag.cameraNear || 0),
+        far: Number(rendererDiag.cameraFar || 0),
+      },
+      devicePixelRatio: Number(window.devicePixelRatio || 1),
+      firstFrameComplete: rendererDiag.stageState?.firstFrame === "rendered",
+      generation: {
+        expected: Number(expectedGeneration || currentGeneration),
+        current: currentGeneration,
+      },
+      canvasCount: canvases.length,
+      centerStack,
+      coveringMedia,
+      brokenResources,
+      resourceFailureLog: sphereFailureLog.slice(0, 80),
+    };
+    const failures = [];
+    if (!(typeof HTMLCanvasElement !== "undefined" && canvas instanceof HTMLCanvasElement)) failures.push(RENDER_SURFACE_REASON.CANVAS_MISSING);
+    if (canvas && !canvas.isConnected) failures.push(RENDER_SURFACE_REASON.CANVAS_NOT_CONNECTED);
+    if (canvas && canvas.parentElement !== host) failures.push(RENDER_SURFACE_REASON.CANVAS_WRONG_PARENT);
+    if (Number(canvas?.width || 0) <= 0 || Number(canvasRect.width || 0) <= 0) failures.push(RENDER_SURFACE_REASON.CANVAS_ZERO_WIDTH);
+    if (Number(canvas?.height || 0) <= 0 || Number(canvasRect.height || 0) <= 0) failures.push(RENDER_SURFACE_REASON.CANVAS_ZERO_HEIGHT);
+    if (canvasStyle?.display === "none") failures.push(RENDER_SURFACE_REASON.CANVAS_DISPLAY_NONE);
+    if (canvasStyle?.visibility === "hidden") failures.push(RENDER_SURFACE_REASON.CANVAS_VISIBILITY_HIDDEN);
+    if (Number(canvasStyle?.opacity || 1) <= 0) failures.push(RENDER_SURFACE_REASON.CANVAS_ZERO_OPACITY);
+    if (Number(hostRect.width || 0) <= 0) failures.push(RENDER_SURFACE_REASON.CONTAINER_ZERO_WIDTH);
+    if (Number(hostRect.height || 0) <= 0) failures.push(RENDER_SURFACE_REASON.CONTAINER_ZERO_HEIGHT);
+    if (!contextExists) failures.push(RENDER_SURFACE_REASON.WEBGL_CONTEXT_MISSING);
+    if (contextLost) failures.push(RENDER_SURFACE_REASON.WEBGL_CONTEXT_LOST);
+    if (rendererDiag.stageState?.firstFrame !== "rendered") failures.push(RENDER_SURFACE_REASON.FIRST_FRAME_MISSING);
+    if (Number(canvases.length || 0) !== 1) failures.push(RENDER_SURFACE_REASON.DUPLICATE_CANVAS);
+    if (expectedGeneration != null && Number(expectedGeneration) !== currentGeneration) failures.push(RENDER_SURFACE_REASON.STALE_RENDER_GENERATION);
+    if (rendererDiag.initialized === false && _state._3dInitInProgress === false) failures.push(RENDER_SURFACE_REASON.RENDERER_DISPOSED);
+    if (Number(rendererDiag.drawingBufferWidth || 0) <= 0 || Number(rendererDiag.drawingBufferHeight || 0) <= 0) failures.push(RENDER_SURFACE_REASON.DRAWING_BUFFER_ZERO);
+    if (Number(rendererDiag.sceneObjectCount || 0) <= 0) failures.push(RENDER_SURFACE_REASON.SCENE_EMPTY);
+    if (!cameraValid) failures.push(RENDER_SURFACE_REASON.CAMERA_INVALID);
+    if (requireVisibleCenter && centerInViewport && (!canvasInStack || (top && !(top.tagName === "canvas" && String(top.className || "").includes("living-time-sphere-3d-canvas"))))) {
+      failures.push(RENDER_SURFACE_REASON.CANVAS_COVERED);
+    }
+    if (coveringMedia) failures.push(RENDER_SURFACE_REASON.CANVAS_COVERED);
+    if (brokenResources.length > 0) failures.push(RENDER_SURFACE_REASON.BROKEN_MEDIA_IN_SURFACE);
+    const uniqueFailures = Array.from(new Set(failures));
+    const healthy = uniqueFailures.length === 0;
+    const checks = {
+      canvasConnected: !!canvas?.isConnected,
+      canvasVisible: !!(canvasStyle && canvasStyle.display !== "none" && canvasStyle.visibility !== "hidden" && Number(canvasStyle.opacity || 0) > 0 && !canvas?.hidden),
+      centerInViewport,
+      centerHitsCanvas: !!canvasInStack,
+      canvasTopAtCenter: !!(top && top.tagName === "canvas" && String(top.className || "").includes("living-time-sphere-3d-canvas")),
+      firstFrameRendered: rendererDiag.stageState?.firstFrame === "rendered",
+      contextHealthy: !contextLost,
+    };
+    const result = {
+      healthy,
+      reason: uniqueFailures[0] || null,
+      failures: uniqueFailures,
+      checks,
+      centerStack,
+      coveringMedia,
+      canvasCount: canvases.length,
+      sphereHostChildren: _inspectSphereHostChildren(),
+      brokenResources,
+      resourceFailureLog: sphereFailureLog.slice(0, 80),
+      rendererDiagnostics: {
+        firstFrameTimestamp: Number(rendererDiag.firstFrameTimestamp || 0),
+        sceneObjectCount: Number(rendererDiag.sceneObjectCount || 0),
+        visibleObjectCount: Number(rendererDiag.visibleObjectCount || 0),
+        drawingBufferWidth: Number(rendererDiag.drawingBufferWidth || 0),
+        drawingBufferHeight: Number(rendererDiag.drawingBufferHeight || 0),
+        contextLost,
+      },
+      diagnostics,
+    };
+    if (!healthy && !_state.firstRenderSurfaceFailure) {
+      _state.firstRenderSurfaceFailure = Object.freeze({
+        capturedAt: Date.now(),
+        reason: result.reason,
+        failures: result.failures.slice(0, 20),
+        diagnostics: result.diagnostics,
       });
     }
+    _markRenderSurfaceCanvasTrace("after-validation", canvas);
+    _state.lastRenderSurfaceVerification = result;
+    return result;
+  }
+
+  function _collectRuntimeDebugSnapshot() {
+    return {
+      capturedAt: Date.now(),
+      bottomViewport: _collectBottomViewportDiagnostics(190),
+      fixedSticky: _collectFixedStickyDiagnostics(),
+      media: _collectMediaDiagnostics(document),
+      sphereHostChildren: _inspectSphereHostChildren(),
+      sphereCenterStack: _collectSphereCenterStack(document.getElementById("sphere-container")),
+      renderSurfaceVerification: _verifyRenderSurface(document.getElementById("sphere-container"), { requireVisibleCenter: false }),
+      bottomBrokenResourceProbe: _probeBottomBrokenResource(),
+      failedResources: _resourceFailureLog.slice(0, 120),
+    };
+  }
+
+  function _runRenderSurfaceVerification() {
+    const container = document.getElementById("sphere-container");
+    const verification = _verifyRenderSurface(container, { requireVisibleCenter: true });
+    const rendererDiag = globalThis.LivingTimeSphereRenderer3d?.getDiagnostics?.() || {};
+    const viewport = { width: Number(window.innerWidth || 0), height: Number(window.innerHeight || 0) };
+    const probePoint = { x: Math.max(0, Math.round(viewport.width / 2)), y: Math.max(0, Math.round(viewport.height - 32)) };
+    const bottomStack = (document.elementsFromPoint?.(probePoint.x, probePoint.y) || []).map(_inspectElementNode).filter(Boolean).slice(0, 10);
+    const bottomProbe = _probeBottomBrokenResource();
+    const lines = [
+      `Requested renderer: ${_state.requestedRendererMode === "auto" ? "3D" : String(_state.requestedRendererMode || "auto").toUpperCase()}`,
+      `Active renderer: ${_state.activeRendererMode || "unknown"}`,
+      `Lifecycle: ${_state.rendererLifecycle || "unknown"}`,
+      `Validation: ${verification.healthy ? "PASS" : `FAIL (${verification.reason || "unknown"})`}`,
+      `All failures: ${(verification.failures || []).join(", ") || "none"}`,
+      `Container: ${Math.round(Number(_state._latestContainerSize?.w || 0))} × ${Math.round(Number(_state._latestContainerSize?.h || 0))}`,
+      `Container client: ${Math.round(Number(verification.diagnostics?.container?.clientWidth || 0))} × ${Math.round(Number(verification.diagnostics?.container?.clientHeight || 0))}`,
+      `Container rect: ${JSON.stringify(verification.diagnostics?.container?.rect || {})}`,
+      `Container style: ${JSON.stringify(verification.diagnostics?.container?.style || {})}`,
+      `Canvas connected: ${verification.checks?.canvasConnected ? "yes" : "no"}`,
+      `Canvas parent: ${verification.diagnostics?.canvas?.parentElement?.tagName || "none"}#${verification.diagnostics?.canvas?.parentElement?.id || ""}`,
+      `Canvas ownerDocument === document: ${verification.diagnostics?.canvas?.ownerDocumentIsCurrent ? "yes" : "no"}`,
+      `Canvas CSS size: ${Math.round(Number(rendererDiag.canvasClientWidth || 0))} × ${Math.round(Number(rendererDiag.canvasClientHeight || 0))}`,
+      `Canvas attr size: ${Math.round(Number(verification.diagnostics?.canvas?.width || 0))} × ${Math.round(Number(verification.diagnostics?.canvas?.height || 0))}`,
+      `Canvas rect: ${JSON.stringify(verification.diagnostics?.canvas?.rect || {})}`,
+      `Canvas style: ${JSON.stringify(verification.diagnostics?.canvas?.style || {})}`,
+      `Drawing buffer: ${Math.round(Number(rendererDiag.drawingBufferWidth || 0))} × ${Math.round(Number(rendererDiag.drawingBufferHeight || 0))}`,
+      `WebGL context exists: ${verification.diagnostics?.renderer?.contextExists ? "yes" : "no"}`,
+      `WebGL context lost: ${verification.diagnostics?.renderer?.contextLost ? "yes" : "no"}`,
+      `Renderer generation: ${verification.diagnostics?.generation?.expected || 0} / current ${verification.diagnostics?.generation?.current || 0}`,
+      `Canvas visible: ${verification.checks?.canvasVisible ? "yes" : "no"}`,
+      `Canvas count: ${Number(verification.canvasCount || 0)}`,
+      `Elements over center:`,
+      ...(verification.centerStack?.stack?.slice(0, 8).map(item => `  ${String(item.tagName || "").toUpperCase()}${item.id ? `#${item.id}` : ""}${item.className ? `.${String(item.className).split(/\s+/).filter(Boolean).join(".")}` : ""}`) || ["  (none)"]),
+      `First frame: ${rendererDiag.stageState?.firstFrame === "rendered" ? "yes" : "no"}`,
+      `Scene objects: ${Number(rendererDiag.sceneObjectCount || 0)}`,
+      `Broken resources in sphere: ${Array.isArray(verification.brokenResources) ? verification.brokenResources.length : 0}`,
+      `White-bar probe point: ${probePoint.x},${probePoint.y}`,
+      `White-bar stack:`,
+      ...(bottomStack.map(item => `  ${String(item.tagName || "").toUpperCase()}${item.id ? `#${item.id}` : ""}${item.className ? `.${String(item.className).split(/\s+/).filter(Boolean).join(".")}` : ""} src=${item.absoluteUrl || item.src || "N/A"}`) || ["  (none)"]),
+      `White-bar media element: ${bottomProbe?.element ? `${String(bottomProbe.element.tagName || "").toUpperCase()}#${bottomProbe.element.id || ""}.${String(bottomProbe.element.className || "").split(/\s+/).filter(Boolean).join(".")}` : "none"}`,
+      `White-bar media source: ${bottomProbe?.absoluteUrl || bottomProbe?.originalSrc || "N/A"}`,
+      `White-bar media parent: ${bottomProbe?.parent ? `${String(bottomProbe.parent.tagName || "").toUpperCase()}#${bottomProbe.parent.id || ""}.${String(bottomProbe.parent.className || "").split(/\s+/).filter(Boolean).join(".")}` : "N/A"}`,
+      `White-bar media grandparent: ${bottomProbe?.grandparent ? `${String(bottomProbe.grandparent.tagName || "").toUpperCase()}#${bottomProbe.grandparent.id || ""}.${String(bottomProbe.grandparent.className || "").split(/\s+/).filter(Boolean).join(".")}` : "N/A"}`,
+      `White-bar media computed: ${JSON.stringify(bottomProbe?.computed || {})}`,
+      `White-bar media ancestors: ${(bottomProbe?.ancestors || []).map(item => `${item.tagName}${item.id ? `#${item.id}` : ""}${item.className ? `.${String(item.className).split(/\s+/).filter(Boolean).join(".")}` : ""}`).join(" → ") || "none"}`,
+      `Canvas connectivity trace: ${(Array.isArray(_state.renderSurfaceCanvasTrace) ? _state.renderSurfaceCanvasTrace.map(item => `${item.stage}:${item.connected ? "connected" : "detached"}`).join(" | ") : "none") || "none"}`,
+      `Duplicate canvases: ${Math.max(0, Number(verification.canvasCount || 0) - 1)}`,
+      `Surface healthy: ${verification.healthy ? "yes" : `no (${verification.reason || "unknown"})`}`,
+    ];
+    const output = document.getElementById("sphere-render-surface-verify-output");
+    if (output) output.textContent = lines.join("\n");
+    return verification;
+  }
+
+  function _resolveEnvironmentLifecycle(state) {
+    if (!state) return "idle";
+    if (state.status === "loading") return "loading";
+    if (state.reason === "location-not-set" || state.providerConfigured === false) return "location-needed";
+    if (state.status === "cached") return "cached";
+    if (state.stale) return "stale";
+    if (state.status === "available") return "ready";
+    if (state.status === "unavailable") return "unavailable";
+    if (state.status === "error" || state.reason === "provider-error") return "error";
+    return "idle";
+  }
+
+  function _incrementActionCounter(counterKey, amount = 1) {
+    if (!_state.actionCounters || typeof _state.actionCounters !== "object") {
+      _state.actionCounters = {};
+    }
+    _state.actionCounters[counterKey] = Number(_state.actionCounters[counterKey] || 0) + amount;
+    return _state.actionCounters[counterKey];
+  }
+
+  function _recordActionTrace(action, statePatch, subsystemsUpdated) {
+    const entry = Object.freeze({
+      at: Date.now(),
+      action: String(action || "unknown"),
+      statePatch: statePatch && typeof statePatch === "object" ? Object.assign({}, statePatch) : null,
+      subsystemsUpdated: Array.isArray(subsystemsUpdated) ? subsystemsUpdated.slice(0, 12) : [],
+    });
+    _state.actionTrace.push(entry);
+    if (_state.actionTrace.length > 200) _state.actionTrace.shift();
+    if (globalThis.__SOF_DEBUG_ACTION_TRACE__) {
+      console.debug("[LivingTimeSphere][TRACE]", `${entry.action} ->`, entry.statePatch || "no state patch", "->", entry.subsystemsUpdated.join(", "));
+    }
+  }
+
+  function _markInitTimeline(stage, payload = null) {
+    _state.initTimeline.push({
+      at: Date.now(),
+      stage: String(stage || "unknown"),
+      payload: payload && typeof payload === "object" ? { ...payload } : payload,
+      generation: Number(_state._3dInitGeneration || 0),
+    });
+    if (_state.initTimeline.length > 80) _state.initTimeline.shift();
+  }
+
+  function _markRenderSurfaceCanvasTrace(stage, canvas) {
+    const node = canvas || document.querySelector?.("#sphere-container > canvas.living-time-sphere-3d-canvas");
+    _state.renderSurfaceCanvasTrace.push({
+      at: Date.now(),
+      stage: String(stage || "unknown"),
+      connected: !!node?.isConnected,
+      parentTag: node?.parentElement ? String(node.parentElement.tagName || "").toUpperCase() : null,
+      parentId: node?.parentElement?.id || null,
+      centerStack: !node?.isConnected ? _collectSphereCenterStack(document.getElementById("sphere-container")) : null,
+    });
+    if (_state.renderSurfaceCanvasTrace.length > 40) _state.renderSurfaceCanvasTrace.shift();
+  }
+
+  function _captureClassListSnapshot() {
+    const classList = node => (node?.classList ? Array.from(node.classList).sort() : []);
+    return {
+      body: classList(document.body),
+      html: classList(document.documentElement),
+      observatory: classList(document.querySelector(".sphere-stage")),
+      sphereContainer: classList(document.getElementById("sphere-container")),
+      overlays: Array.from(document.querySelectorAll("[class*='overlay'],[class*='backdrop'],[class*='modal'],[class*='dim']"))
+        .map(node => ({
+          tagName: String(node.tagName || "").toLowerCase(),
+          id: node.id || "",
+          className: node.className || "",
+        }))
+        .slice(0, 20),
+    };
+  }
+
+  function _captureComputedStyleSnapshot() {
+    const pick = node => {
+      if (!node || !window.getComputedStyle) return null;
+      const style = window.getComputedStyle(node);
+      return {
+        opacity: style.opacity,
+        filter: style.filter,
+        backdropFilter: style.backdropFilter,
+        visibility: style.visibility,
+        pointerEvents: style.pointerEvents,
+        zIndex: style.zIndex,
+        background: style.background,
+        mixBlendMode: style.mixBlendMode,
+      };
+    };
+    return {
+      body: pick(document.body),
+      main: pick(document.querySelector("main")),
+      observatoryWrapper: pick(document.querySelector(".sphere-stage")),
+      sphereContainer: pick(document.getElementById("sphere-container")),
+      rendererHost: pick(document.querySelector(".sphere-visual-shell")),
+    };
+  }
+
+  function _findFirstEnvironmentFocusable(locationPanel) {
+    if (!locationPanel) return null;
+    return locationPanel.querySelector(
+      "[data-location-use-device], [data-location-search-input], [data-location-search-submit], [data-location-lat], [data-location-lon], [data-location-continue-without], button, input, select, textarea, a[href]"
+    );
+  }
+
+  function _focusEnvironmentControls() {
+    const locationPanel = document.querySelector("[data-sof-location-command]");
+    if (!locationPanel) return;
+    const beforeClasses = _captureClassListSnapshot();
+    const beforeStyles = _captureComputedStyleSnapshot();
+    locationPanel.open = true;
+    locationPanel.classList?.add?.(ENV_FOCUS_PULSE_CLASS);
+    if (locationPanel?.scrollIntoView) {
+      locationPanel.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+    }
+    const firstControl = _findFirstEnvironmentFocusable(locationPanel);
+    if (firstControl?.focus) firstControl.focus({ preventScroll: true });
+    setTimeout(() => {
+      locationPanel.classList?.remove?.(ENV_FOCUS_PULSE_CLASS);
+    }, 900);
+    _incrementActionCounter("environmentFocusCount");
+    const afterClasses = _captureClassListSnapshot();
+    const afterStyles = _captureComputedStyleSnapshot();
+    _state.lastEnvironmentFocusDiagnostics = Object.freeze({
+      at: Date.now(),
+      beforeClasses,
+      afterClasses,
+      beforeStyles,
+      afterStyles,
+      focusedElement: document.activeElement ? {
+        tagName: String(document.activeElement.tagName || "").toLowerCase(),
+        id: document.activeElement.id || "",
+        className: document.activeElement.className || "",
+      } : null,
+    });
+    _recordActionTrace("FOCUS_ENVIRONMENT", null, ["dom-scroll", "dom-focus"]);
+  }
+
+  function _setRendererLifecycle(next) {
+    _state.rendererLifecycle = next;
+  }
+
+  function _clearAutoRetry() {
+    if (_state._autoRetryTimer) {
+      clearTimeout(_state._autoRetryTimer);
+      _state._autoRetryTimer = 0;
+    }
+  }
+
+  function _disposeRendererForRetry(container, reason = "renderer-retry") {
+    const renderer = globalThis.LivingTimeSphereRenderer3d;
+    if (renderer?.isInitializing?.()) return false;
+    try { renderer?.teardown?.(); } catch (error) {
+      console.warn(`[LivingTimeSphere] Renderer cleanup failed before ${reason}.`, error);
+    }
+    const ownedCanvases = Array.from(container?.querySelectorAll?.(":scope > canvas.living-time-sphere-3d-canvas") || []);
+    ownedCanvases.forEach(canvas => {
+      try { canvas.remove(); } catch { /* best-effort orphan cleanup */ }
+    });
+    _state.active3d = false;
+    _state._pending3dPayload = null;
+    _markInitTimeline("renderer-surface-reset", { reason, removedCanvases: ownedCanvases.length });
+    _markRenderSurfaceCanvasTrace("after-renderer-surface-reset");
+    return true;
+  }
+
+  function _scheduleRetry(container, reason) {
+    if (!container || _state.retryCount >= 2 || _state._autoRetryTimer) return;
+    if (_state.requestedRendererMode === "svg" || _state.requestedRendererMode === "canvas" || _state.requestedRendererMode === "table" || _state.requestedRendererMode === "text") return;
+    const contextRecovery = /context/i.test(String(reason || ""));
+    const delay = contextRecovery
+      ? (_state.retryCount === 0 ? 750 : 1800)
+      : (_state.retryCount === 0 ? 180 : 900);
+    _state.retryCount += 1;
+    _setRendererLifecycle("recovering");
+    _state.activeRendererMode = "recovering";
+    const retryStartedAt = Date.now();
+    let pollCount = 0;
+    const attempt = () => {
+      pollCount += 1;
+      if (!_disposeRendererForRetry(container, reason)) {
+        if (pollCount >= 24 || Date.now() - retryStartedAt >= 6000) {
+          try { globalThis.LivingTimeSphereRenderer3d?.cancelInitialization?.(`retry-cap:${reason}`); } catch { /* best-effort cancellation */ }
+          _state._autoRetryTimer = 0;
+          _state._3dInitInProgress = false;
+          _state.active3d = false;
+          _state.activeRendererMode = "svg";
+          _setRendererLifecycle("fallback");
+          _updateRendererLabel("SVG fallback — 3D initialization did not settle");
+          _markInitTimeline("renderer-retry-cap-reached", { reason, pollCount, elapsedMs: Date.now() - retryStartedAt });
+          return;
+        }
+        _state._autoRetryTimer = setTimeout(attempt, 250);
+        return;
+      }
+      _state._autoRetryTimer = 0;
+      _state._3dInitInProgress = false;
+      renderSphere(container);
+    };
+    _state._autoRetryTimer = setTimeout(attempt, delay);
+    console.warn(`[LivingTimeSphere] Scheduled renderer retry #${_state.retryCount} (${reason}) in ${delay}ms.`);
+  }
+
+  function _updateLastRenderTimestamp() {
+    const ts = Number(globalThis.LivingTimeSphereRenderer3d?.getDiagnostics?.()?.lastRenderTimestamp || 0);
+    if (ts > 0) _state.lastRenderTimestamp = ts;
+  }
+
+  function _watchForBlankCanvas(container) {
+    setTimeout(() => {
+      if (!container || _state.requestedRendererMode === "svg" || _state.rendererLifecycle === "failed") return;
+      const renderer = globalThis.LivingTimeSphereRenderer3d;
+      if (!renderer?.isInitialized?.()) return;
+      const diag = renderer.getDiagnostics?.() || {};
+      const hasCanvas = Number(diag.canvasWidth || 0) > 0 && Number(diag.canvasHeight || 0) > 0;
+      const firstFrame = diag.stageState?.firstFrame === "rendered";
+      const surface = _verifyRenderSurface(container, { requireVisibleCenter: false });
+      if ((hasCanvas && !firstFrame) || !surface.healthy) {
+        _state.active3d = false;
+        _setRendererLifecycle("recovering");
+        renderer.requestSingleRender?.();
+        _scheduleRetry(container, "blank-canvas-watchdog");
+      }
+    }, 1200);
+  }
+
+  function _bindRecoveryHooks(container) {
+    if (_state._recoveryHooksBound) return;
+    _state._recoveryHooksBound = true;
+    window.addEventListener("pageshow", event => {
+      if (!container?.isConnected) return;
+      if (event?.persisted) _setRendererLifecycle("recovering");
+      renderSphere(container);
+    });
+    window.addEventListener("pagehide", () => {
+      _clearAutoRetry();
+    });
+    document.addEventListener("visibilitychange", () => {
+      if (!container?.isConnected || document.hidden) return;
+      const renderer = globalThis.LivingTimeSphereRenderer3d;
+      if (_state.active3d && renderer?.isInitialized?.()) renderer.requestSingleRender?.();
+      renderSphere(container);
+    });
+    window.addEventListener("orientationchange", () => {
+      if (!container?.isConnected) return;
+      setTimeout(() => renderSphere(container), 120);
+    });
   }
 
   // ── Quality resolution ─────────────────────────────────────────────
@@ -115,26 +1165,31 @@
     const mat = globalThis.LivingTimeSphereM;
     if (!mat) return null;
     const q = _state.quality;
-    if (q === "svgonly" || _state.rendererMode === "svg" ||
-        _state.rendererMode === "table" || _state.rendererMode === "text") return null;
-    if (q !== "auto" && mat.QUALITY_PRESETS[q]) return mat.QUALITY_PRESETS[q];
-    // Auto: detect capabilities
+    if (q === "svgonly" || _state.requestedRendererMode === "svg" ||
+        _state.requestedRendererMode === "canvas" ||
+        _state.requestedRendererMode === "table" || _state.requestedRendererMode === "text") return null;
+    const webgl2Available = !!globalThis.LivingTimeSphereEffects?.detectWebGl2?.();
+    if (!webgl2Available) return null;
     const reducedMotion = typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    const webglAvailable = !!(globalThis.LivingTimeSphereEffects?.detectWebGl?.());
-    const mem  = (typeof navigator !== "undefined" && navigator.deviceMemory) || 4;
-    const sw   = typeof window !== "undefined" ? window.innerWidth : 1024;
-    return mat.resolveAutoPreset({ reducedMotion, deviceMemoryGb: mem, screenWidth: sw, webglAvailable });
+    const tier = globalThis.ObservatoryCapabilityManager?.selectTier?.({
+      override: q === "auto" ? undefined : q,
+      webglAvailable: webgl2Available,
+    }) || (q === "auto" ? "balanced" : q);
+    if (tier === "svgonly") return null;
+    const preset = mat.QUALITY_PRESETS[tier] || mat.QUALITY_PRESETS.balanced;
+    if (!reducedMotion) return preset;
+    return Object.freeze({ ...preset, idleDrift: false, breathing: false, passageFlow: false, glow: false });
   }
 
   // ── Renderer mode resolution ───────────────────────────────────────
 
   function shouldUse3d() {
-    if (_state.rendererMode === "svg" || _state.rendererMode === "table" || _state.rendererMode === "text") return false;
+    if (_state.requestedRendererMode === "svg" || _state.requestedRendererMode === "canvas" || _state.requestedRendererMode === "table" || _state.requestedRendererMode === "text") return false;
     if (_state.quality === "svgonly") return false;
     if (!globalThis.LivingTimeSphereRenderer3d || !globalThis.LivingTimeSphereM || !globalThis.LivingTimeSphereEffects) return false;
-    if (!globalThis.LivingTimeSphereEffects.detectWebGl()) return false;
-    return _state.rendererMode === "3d" || _state.rendererMode === "auto";
+    if (!globalThis.LivingTimeSphereEffects.detectWebGl2?.()) return false;
+    return _state.requestedRendererMode === "3d" || _state.requestedRendererMode === "auto";
   }
 
   // ── Container helpers ──────────────────────────────────────────────
@@ -147,26 +1202,47 @@
 
   async function _waitForValidContainer(container, { minWidth = 180, minHeight = 180, timeoutMs = 2500 } = {}) {
     const valid = () => {
+      if (!container?.isConnected) return false;
+      const style = typeof getComputedStyle === "function" ? getComputedStyle(container) : null;
+      if (style && (style.display === "none" || style.visibility === "hidden")) return false;
       const rect = container?.getBoundingClientRect?.() || {};
       return Number(rect.width) >= minWidth && Number(rect.height) >= minHeight;
     };
     if (valid()) return true;
-    const started = Date.now();
-    while (Date.now() - started < timeoutMs) {
-      await new Promise(resolve => requestAnimationFrame(resolve));
-      if (valid()) return true;
-    }
-    return false;
+    if (typeof ResizeObserver === "undefined") return false;
+    return new Promise(resolve => {
+      let settled = false;
+      const finish = value => {
+        if (settled) return;
+        settled = true;
+        observer?.disconnect?.();
+        clearTimeout(timer);
+        resolve(!!value);
+      };
+      const observer = new ResizeObserver(() => {
+        if (valid()) finish(true);
+      });
+      try { observer.observe(container); } catch { finish(false); return; }
+      const timer = setTimeout(() => finish(valid()), timeoutMs);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (valid()) finish(true);
+        });
+      });
+    });
   }
 
-  function _withTimeout(promise, timeoutMs, timeoutReason = "INIT_TIMEOUT") {
+  function _withTimeout(promise, timeoutMs, timeoutReason = "INIT_TIMEOUT", onTimeout = null) {
     let timer = null;
     const timeoutPromise = new Promise(resolve => {
-      timer = setTimeout(() => resolve({
-        success: false,
-        reason: timeoutReason,
-        detail: `3D initialization exceeded ${timeoutMs}ms`,
-      }), timeoutMs);
+      timer = setTimeout(() => {
+        try { onTimeout?.(); } catch { /* best-effort timeout cancellation */ }
+        resolve({
+          success: false,
+          reason: timeoutReason,
+          detail: `3D initialization exceeded ${timeoutMs}ms`,
+        });
+      }, timeoutMs);
     });
     return Promise.race([
       promise,
@@ -177,11 +1253,152 @@
   }
 
   function buildCurrentModel() {
+    return _buildModelForMode(_state.viewMode);
+  }
+
+  function _buildModelForMode(mode) {
     const opts = { year: _state.year, timeZone: _state.timeZone, boundaryMode: _state.boundaryMode, manualSunset: _state.manualSunset };
-    const baseModel = (_state.viewMode === "today" || _state.viewMode === "pattern")
-      ? globalThis.LivingTimeSphereModel.buildTodayModel(opts)
-      : globalThis.LivingTimeSphereModel.buildYearModel(opts);
-    return _decorateModel(baseModel);
+    const baseModel = globalThis.LivingTimeSphereModel.buildYearModel(opts);
+    const model = _decorateModel(baseModel);
+    const selected = model?.selectedPatternPosition || null;
+    const today = model?.todayPatternPosition || null;
+    const dayOfYear = selected?.dayOfPatternYear ?? today?.dayOfPatternYear ?? null;
+    if (dayOfYear != null) {
+      model.currentPatternAngle = globalThis.LivingTimeSphereModel.patternAngleForDayOfYear(dayOfYear);
+    }
+    model.viewMode = mode || _state.viewMode;
+    return model;
+  }
+
+  function _spiralCacheKey() {
+    return `${_state.timeZone}|${_state.boundaryMode}|${_state.manualSunset}|${_state.year}`;
+  }
+
+  function _getCachedSpiral() {
+    const key = _spiralCacheKey();
+    if (!_state._spiralCache || _state._spiralCacheKey !== key) {
+      _state._spiralCache = globalThis.LivingTimeSphereModel.buildSpiral({
+        timeZone: _state.timeZone,
+        boundaryMode: _state.boundaryMode,
+        manualSunset: _state.manualSunset,
+      });
+      _state._spiralCacheKey = key;
+    }
+    return _state._spiralCache;
+  }
+
+  function _modeReadiness(mode, model, spiral) {
+    const patternReady = !!(model?.moonSectors?.length >= 13);
+    const spiralReady = !!(spiral?.years?.length);
+    const passageReady = !!(model?.passage && Number.isFinite(Number(model.passage.startAngle)) && Number.isFinite(Number(model.passage.endAngle)));
+    const cameraFitReady = !!globalThis.LivingTimeSphereCamera?.MODE_POSITIONS?.[mode || "today"];
+    let ready = patternReady && cameraFitReady;
+    if (mode === "years") ready = ready && spiralReady;
+    if (mode === "passage") ready = ready && passageReady;
+    return {
+      ready: !!ready,
+      patternReady,
+      spiralReady,
+      passageReady,
+      cameraFitReady,
+    };
+  }
+
+  function _recordModeTransitionMetric(metric) {
+    _state.modeTransitionMetrics.push(metric);
+    if (_state.modeTransitionMetrics.length > 120) _state.modeTransitionMetrics.shift();
+  }
+
+  function _flushViewModeTransitions(container) {
+    if (!container || _state.modeTransitionInFlight) return;
+    _state.modeTransitionInFlight = true;
+    while (_state.latestRequestedMode) {
+      const targetMode = _state.latestRequestedMode;
+      _state.latestRequestedMode = null;
+      const revision = ++_state.modeTransitionRevision;
+      const startedAt = performance.now();
+      const previousMode = _state.viewMode;
+      _state.modeTransitionState = "preparing";
+      _state.requestedViewMode = targetMode;
+      _state.modeTransitionFailure = null;
+
+      let model = null;
+      let spiral = null;
+      let readiness = null;
+      try {
+        model = _buildModelForMode(targetMode);
+        spiral = _getCachedSpiral();
+        readiness = _modeReadiness(targetMode, model, spiral);
+      } catch (error) {
+        readiness = { ready: false, patternReady: false, spiralReady: false, passageReady: false, cameraFitReady: false, error: String(error?.message || error || "mode-prepare-failed") };
+      }
+
+      if (_state.latestRequestedMode && _state.latestRequestedMode !== targetMode) {
+        _recordModeTransitionMetric({
+          revision,
+          requestedViewMode: targetMode,
+          previousViewMode: previousMode,
+          activeViewMode: _state.viewMode,
+          modeTransitionState: "stale-discarded",
+          durationMs: Number((performance.now() - startedAt).toFixed(2)),
+          readiness: readiness || null,
+        });
+        continue;
+      }
+
+      if (!readiness?.ready) {
+        _state.modeTransitionState = "failed";
+        _state.modeTransitionFailure = Object.freeze({
+          revision,
+          requestedViewMode: targetMode,
+          activeViewMode: _state.viewMode,
+          readiness: readiness || null,
+          at: Date.now(),
+        });
+        _state.lastModeTransitionDuration = Number((performance.now() - startedAt).toFixed(2));
+        _recordModeTransitionMetric({
+          revision,
+          requestedViewMode: targetMode,
+          previousViewMode: previousMode,
+          activeViewMode: _state.viewMode,
+          modeTransitionState: "failed-readiness",
+          durationMs: _state.lastModeTransitionDuration,
+          readiness: readiness || null,
+        });
+        continue;
+      }
+
+      _state.modeTransitionState = "committing";
+      _state.previousViewMode = previousMode;
+      _state.viewMode = targetMode;
+      _state.activeViewMode = targetMode;
+      _setModeDefaultSelectedMarker(targetMode, model);
+      _syncModeButtons();
+      if (_state.active3d) globalThis.LivingTimeSphereRenderer3d?.setMode(targetMode);
+      renderSphere(container);
+      _incrementActionCounter("modeUpdateCount");
+      _recordActionTrace("VIEW_MODE_CHANGE", { viewMode: targetMode }, ["mode", "camera", "render"]);
+      _state.modeTransitionState = "active";
+      _state.lastModeTransitionDuration = Number((performance.now() - startedAt).toFixed(2));
+      _recordModeTransitionMetric({
+        revision,
+        requestedViewMode: targetMode,
+        previousViewMode: previousMode,
+        activeViewMode: _state.viewMode,
+        modeTransitionState: "applied",
+        durationMs: _state.lastModeTransitionDuration,
+        readiness,
+      });
+    }
+    _state.modeTransitionInFlight = false;
+    if (_state.modeTransitionState !== "failed") _state.modeTransitionState = "idle";
+  }
+
+  function _requestViewModeTransition(container, mode) {
+    const normalized = ["today", "pattern", "years", "passage"].includes(mode) ? mode : "today";
+    _state.requestedViewMode = normalized;
+    _state.latestRequestedMode = normalized;
+    _flushViewModeTransitions(container);
   }
 
   function _readLocalSetting(key) {
@@ -261,12 +1478,62 @@
     return new Date(epoch.getTime() + (Math.max(1, Math.min(364, dayOfYear || 1)) - 1) * DAY_MS);
   }
 
-  function _currentSnapshot() {
-    return globalThis.LivingTimeSphereLiveData?.getSnapshot?.({
+  function _invalidateLiveSnapshotCache() {
+    _state._liveSnapshotCacheKey = "";
+    _state._liveSnapshotCache = null;
+    _state._liveSnapshotCacheAt = 0;
+  }
+
+  function _currentSnapshot({ fresh = false } = {}) {
+    const key = `${_state.timeZone}|${_state.boundaryMode}|${_state.manualSunset}`;
+    const now = Date.now();
+    if (!fresh
+        && _state._liveSnapshotCache
+        && _state._liveSnapshotCacheKey === key
+        && now - Number(_state._liveSnapshotCacheAt || 0) < 1000) {
+      return _state._liveSnapshotCache;
+    }
+    const snapshot = globalThis.LivingTimeSphereLiveData?.getSnapshot?.({
       timeZone: _state.timeZone,
       boundaryMode: _state.boundaryMode,
       manualSunset: _state.manualSunset,
     }) || null;
+    _state._liveSnapshotCacheKey = key;
+    _state._liveSnapshotCache = snapshot;
+    _state._liveSnapshotCacheAt = now;
+    return snapshot;
+  }
+
+  function _supportedAlignmentYears() {
+    const years = globalThis.AlignmentLedgerData?.listSupportedYears?.();
+    return Array.isArray(years) ? years.map(Number).filter(Number.isFinite) : [];
+  }
+
+  function _resolveLiveTodayTarget(baseModel = null) {
+    const live = _currentSnapshot({ fresh: true });
+    const fallbackPosition = baseModel?.todayPatternPosition || live?.todayModel?.todayPatternPosition || null;
+    const temporal = globalThis.LivingTimeSphereTemporal;
+    if (temporal?.resolveTodayTarget) {
+      return temporal.resolveTodayTarget({
+        snapshot: live,
+        fallbackPosition,
+        supportedYears: _supportedAlignmentYears(),
+        fallbackYear: _state.year,
+      });
+    }
+    const day = Number(live?.pattern?.dayOfPatternYear ?? fallbackPosition?.dayOfPatternYear);
+    if (!Number.isFinite(day) || day < 1 || day > 364) return null;
+    const patternYear = Number(live?.pattern?.patternYear ?? fallbackPosition?.patternYear ?? live?.year ?? _state.year);
+    const supported = _supportedAlignmentYears();
+    const year = supported.includes(patternYear) ? patternYear : (supported.includes(Number(live?.year)) ? Number(live.year) : _state.year);
+    return Object.freeze({
+      dayOfPatternYear: Math.max(1, Math.min(364, Math.round(day))),
+      patternYear,
+      year,
+      marker: "today",
+      effectiveDate: live?.pattern?.effectiveDate || fallbackPosition?.effectiveDate || "",
+      civilDate: live?.pattern?.civilDate || fallbackPosition?.civilDate || "",
+    });
   }
 
   function _resolveSelectedDayOfYear(baseModel) {
@@ -285,15 +1552,41 @@
 
   function _resolveSelectedPatternPosition(baseModel) {
     const dayOfYear = _resolveSelectedDayOfYear(baseModel);
-    const effectiveDate = _patternDateFromDayOfYear(_state.year, dayOfYear);
-    const selected = effectiveDate && globalThis.PatternCalendar?.fromCivilDate
-      ? globalThis.PatternCalendar.fromCivilDate({
-          date: _toIso(effectiveDate),
-          timeZone: _state.timeZone,
-          boundaryMode: _state.boundaryMode,
-          sunsetTime: _state.manualSunset,
-        })
+    const live = _currentSnapshot();
+    const liveDate = _state.selectedMarker === "today"
+      && Number(live?.pattern?.dayOfPatternYear) === dayOfYear
+      && (live?.pattern?.effectiveDate || live?.pattern?.civilDate)
+      ? new Date(`${live.pattern.effectiveDate || live.pattern.civilDate}T12:00:00Z`)
       : null;
+    const effectiveDate = liveDate && !Number.isNaN(liveDate.getTime())
+      ? liveDate
+      : _patternDateFromDayOfYear(_state.year, dayOfYear);
+    let selected = null;
+    if (effectiveDate && globalThis.PatternCalendar?.convertEffectiveDate) {
+      const conversion = globalThis.PatternCalendar.convertEffectiveDate(effectiveDate);
+      if (conversion?.inside) {
+        selected = {
+          ...conversion,
+          moonName: conversion.moonName || null,
+          civilDate: _toIso(effectiveDate),
+          effectiveDate: _toIso(effectiveDate),
+          civilDateObject: new Date(effectiveDate),
+          effectiveDateObject: new Date(effectiveDate),
+          boundaryMode: _state.boundaryMode,
+          timeZone: _state.timeZone,
+          sunsetTime: _state.manualSunset,
+          afterBoundary: false,
+          conversionMode: "fixed-epoch-arithmetic",
+        };
+      }
+    } else if (effectiveDate && globalThis.PatternCalendar?.fromCivilDate) {
+      selected = globalThis.PatternCalendar.fromCivilDate({
+        date: effectiveDate,
+        timeZone: _state.timeZone,
+        boundaryMode: _state.boundaryMode,
+        sunsetTime: _state.manualSunset,
+      });
+    }
     const dayArchetype = Array.isArray(selected?.dayArchetype) ? selected.dayArchetype : [selected?.dayArchetype || null, ""];
     const weekGate = selected?.weekOfMoon
       ? globalThis.PatternCalendarData?.weekGates?.[selected.weekOfMoon - 1] || null
@@ -305,16 +1598,15 @@
     const lunarCyclePosition = typeof phase?.age === "number"
       ? Number((((phase.age % 29.530588853) + 29.530588853) % 29.530588853 / 29.530588853).toFixed(6))
       : null;
-    const live = _currentSnapshot();
     const isToday = selected?.patternYear === live?.pattern?.patternYear
       && selected?.dayOfPatternYear != null
       && selected.dayOfPatternYear === live?.pattern?.dayOfPatternYear;
-    const solar = globalThis.LivingTimeSphereLiveData?.getSnapshot?.({
+    const solar = globalThis.LivingTimeSphereLiveData?.getSolarSnapshot?.({
       asOf: effectiveDate,
       timeZone: _state.timeZone,
       boundaryMode: _state.boundaryMode,
       manualSunset: _state.manualSunset,
-    })?.solar || live?.solar || null;
+    }) || live?.solar || null;
 
     return selected ? {
       ...selected,
@@ -349,12 +1641,15 @@
     const live = _currentSnapshot();
     const environmentState = globalThis.SofEnvironmentState?.getEnvironmentState?.() || null;
     const selected = _resolveSelectedPatternPosition(baseModel);
+    const todayPosition = live?.todayModel?.todayPatternPosition || baseModel?.todayPatternPosition || live?.pattern || null;
+    const temporalComparison = globalThis.LivingTimeSphereTemporal?.compareToToday?.(selected, todayPosition) || null;
     const activeMoon = selected?.moon ?? live?.pattern?.moon ?? baseModel?.todayPatternPosition?.moon ?? baseModel?.sourceRecord?.equinox?.patternPosition?.moon ?? 1;
     return {
       ...baseModel,
       selectedPatternPosition: selected,
       environmentSnapshot: environmentState,
-      todayPatternPosition: live?.todayModel?.todayPatternPosition || baseModel?.todayPatternPosition || null,
+      todayPatternPosition: todayPosition,
+      temporalComparison,
       moonSectors: Array.isArray(baseModel?.moonSectors)
         ? baseModel.moonSectors.map(sector => ({ ...sector, active: sector.moonNumber === activeMoon }))
         : [],
@@ -453,6 +1748,9 @@
 
   function _restoreSelectedStateIfNeeded() {
     if (_state.selectedDayOfYear != null) return;
+    // An explicit semantic Today marker outranks an older locally remembered
+    // exploration. The live day is resolved after dependencies initialize.
+    if (_state.selectedMarker === "today") return;
     const saved = _readSelectedState();
     if (!saved || typeof saved !== "object") return;
     const day = Number(saved.selectedDayOfYear);
@@ -493,17 +1791,81 @@
         boundaryMode: _state.boundaryMode,
         manualSunset: _state.manualSunset,
         mode,
-        datasetVersion: globalThis.LivingTimeSphereVersion?.version,
+        datasetVersion: _state.datasetVersion || globalThis.LivingTimeSphereVersion?.version,
       });
     }
     return `alignment-ledger.html?year=${encodeURIComponent(_state.year)}&mode=${encodeURIComponent(mode)}`;
   }
 
   function _syncLayerCheckboxes() {
+    _syncingLayerControls = true;
     Object.keys(_state.visibleLayers).forEach(layer => {
       const cb = document.getElementById(`sphere-layer-${layer}`);
       if (cb) cb.checked = !!_state.visibleLayers[layer];
     });
+    _syncingLayerControls = false;
+  }
+
+  function _clampPatternDay(day) {
+    return Math.max(1, Math.min(364, Number(day) || 1));
+  }
+
+  function _syncDaySelectorsFromModel(model) {
+    const moonSel = document.getElementById("sphere-select-moon");
+    const daySel = document.getElementById("sphere-select-day");
+    if (!moonSel || !daySel) return;
+    if (!moonSel.options.length) {
+      moonSel.innerHTML = Array.from({ length: 13 }, (_, index) => `<option value="${index + 1}">Moon ${index + 1}</option>`).join("");
+    }
+    if (!daySel.options.length) {
+      daySel.innerHTML = Array.from({ length: 28 }, (_, index) => `<option value="${index + 1}">Day ${index + 1}</option>`).join("");
+    }
+    const selected = model?.selectedPatternPosition || _resolveSelectedPatternPosition(model || buildCurrentModel());
+    moonSel.value = String(selected?.moon || 1);
+    daySel.value = String(selected?.day || 1);
+  }
+
+  function _setDayNavDisabled(disabled) {
+    ["sphere-prev-day", "sphere-next-day"].forEach(id => {
+      const btn = document.getElementById(id);
+      if (btn) btn.setAttribute("aria-busy", disabled ? "true" : "false");
+    });
+  }
+
+  function _updateSphereUrlFromModel(model, { replace = true } = {}) {
+    if (typeof window === "undefined" || !globalThis.LivingTimeSphereUrlState?.buildSphereUrl) return;
+    if (_state._applyingHistoryState) return;
+    const selected = model?.selectedPatternPosition || null;
+    const cameraState = globalThis.LivingTimeSphereCamera?.getState?.() || {};
+    const marker = _state.selectedMarker === "today" && selected?.isToday
+      ? "today"
+      : (selected?.dayOfPatternYear ? `day-${selected.dayOfPatternYear}` : (_state.selectedMarker || null));
+    const url = globalThis.LivingTimeSphereUrlState.buildSphereUrl({
+      baseUrl: location.href,
+      year: _state.year,
+      viewMode: _state.viewMode,
+      layers: Object.keys(_state.visibleLayers).filter(key => _state.visibleLayers[key]),
+      marker,
+      timeZone: _state.timeZone,
+      boundaryMode: _state.boundaryMode,
+      manualSunset: _state.manualSunset,
+      datasetVersion: _state.datasetVersion || globalThis.LivingTimeSphereVersion?.version || null,
+      source: _state.source || null,
+      renderer: _state.requestedRendererMode === "auto" ? null : _state.requestedRendererMode,
+      quality: _state.quality === "auto" ? null : _state.quality,
+      cameraTheta: Number.isFinite(Number(cameraState.theta)) ? Number(cameraState.theta) : null,
+      cameraDist: Number.isFinite(Number(cameraState.dist)) ? Number(cameraState.dist) : null,
+      connectionMode: _state.connectionMode,
+      motionMode: _state.motionMode,
+      moonLabelDistance: _state.moonLabelDistance,
+      dayLabelMode: _state.dayLabelMode,
+      preserveUnknownParams: true,
+      hash: location.hash || "",
+    });
+    if (replace) window.history.replaceState({ marker, day: selected?.dayOfPatternYear || null }, "", url);
+    else window.history.pushState({ marker, day: selected?.dayOfPatternYear || null }, "", url);
+    _state.currentUrl = String(url || location.href || "");
+    _state.urlIntegrity = _evaluateDeepLinkIntegrity(_state.initialUrl, _state.currentUrl);
   }
 
   function _mappedLayerVisible(layerId) {
@@ -529,51 +1891,29 @@
     switch (_state.fieldRange) {
       case "today":
       case "now":
-        _state.viewMode = "today";
-        if (live?.pattern?.patternYear === _state.year && live?.pattern?.dayOfPatternYear) {
+        if (Number(live?.year) === Number(_state.year) && live?.pattern?.dayOfPatternYear) {
           _state.selectedDayOfYear = live.pattern.dayOfPatternYear;
           _state.selectedMarker = "today";
         }
-        _state.visibleLayers.pattern = true;
-        _state.visibleLayers.exactDays = true;
-        _state.visibleLayers.weekGates = true;
-        _state.visibleLayers.passage = true;
-        _state.visibleLayers.lunar = true;
-        _state.visibleLayers.connections = true;
         break;
       case "pattern-week":
-        _state.viewMode = "pattern";
-        _state.visibleLayers.pattern = true;
-        _state.visibleLayers.weekGates = true;
-        _state.visibleLayers.exactDays = true;
-        _state.visibleLayers.connections = true;
+        _state.selectedMarker = _state.selectedMarker || "today";
         break;
       case "pattern-moon":
-        _state.viewMode = "pattern";
-        _state.visibleLayers.pattern = true;
-        _state.visibleLayers.exactDays = true;
-        _state.visibleLayers.lunar = true;
-        _state.visibleLayers.markers = true;
+        _state.selectedMarker = _state.selectedMarker || "today";
         break;
       case "pattern-year":
-        _state.viewMode = "years";
-        _state.visibleLayers.pattern = true;
-        _state.visibleLayers.passage = true;
-        _state.visibleLayers.lunar = true;
-        _state.visibleLayers.spiral = true;
+        _state.selectedMarker = _state.selectedMarker || `year-${_state.year}`;
         break;
       case "historical":
-        _state.viewMode = "years";
-        _state.visibleLayers.pattern = true;
-        _state.visibleLayers.passage = true;
-        _state.visibleLayers.lunar = true;
-        _state.visibleLayers.recurrence = true;
-        _state.visibleLayers.spiral = true;
-        _state.visibleLayers.connections = true;
+        _state.selectedMarker = _state.selectedMarker || `year-${_state.year}`;
         break;
       default:
         break;
     }
+    _recordActionTrace("SELECTED_SCOPE_CHANGE", { fieldRange: _state.fieldRange }, ["selected-scope"]);
+    _state.layerStateSource = "user-customized";
+    _state.userCustomizedLayers = true;
   }
 
   function _syncFieldRangeButtons() {
@@ -804,16 +2144,14 @@
         hierarchy: "Always available",
       },
       {
-        id: "sunset",
-        label: _state.manualSunset === "18:00" ? "Sunset boundary" : "Local sunset",
-        value: weather?.daily?.sunset
-          ? _formatLocalInstant(weather.daily.sunset)
-          : (_state.manualSunset === "18:00" ? `Manual fallback · ${_state.manualSunset}` : `${_state.manualSunset || "18:00"}`),
-        status: "Calculated",
-        source: weather?.daily?.sunset ? environmentSource : (_state.manualSunset === "18:00" ? "Manual fallback" : "Configured boundary"),
-        timestamp: weather?.daily?.sunset ? weatherTimestamp : (live?.instant || ""),
-        freshness: weather?.daily?.sunset ? weatherFreshness : "Current calculation",
-        availability: "Always available from the current boundary configuration.",
+        id: "calendar-boundary",
+        label: "Calendar day boundary",
+        value: _state.boundaryMode === "midnight" ? "Configured · midnight" : `Configured · ${_state.manualSunset || "18:00"}`,
+        status: "Configured",
+        source: _state.boundaryMode === "midnight" ? "Calendar configuration" : "Manual wall-clock boundary",
+        timestamp: live?.instant || "",
+        freshness: "Current configuration",
+        availability: "Always available. Forecast sunset is shown separately and does not silently change the calendar boundary.",
         relation: selected?.afterBoundary
           ? "The selected Pattern Day has already crossed the configured boundary."
           : "The selected Pattern Day has not yet crossed the configured boundary.",
@@ -1172,44 +2510,42 @@
 
   function renderSphere(container) {
     if (!container) return;
+    _state.fullRenderCount += 1;
+    if (!_state.requestedViewMode) _state.requestedViewMode = _state.viewMode;
+    _state.activeViewMode = _state.viewMode;
 
-    // Show/hide data table and text summary views
-    _updateAlternateViews();
     _syncModeButtons();
     _syncFieldRangeButtons();
     _syncLayerCheckboxes();
 
     const model    = buildCurrentModel();
-    const spiral   = globalThis.LivingTimeSphereModel.buildSpiral({ timeZone: _state.timeZone, boundaryMode: _state.boundaryMode, manualSunset: _state.manualSunset });
-    const semanticZoom = _resolveSemanticZoomState(container);
-    _state.semanticZoom = semanticZoom;
-    const effectiveLayers = semanticZoom?.visibility ? { ..._state.visibleLayers, ...semanticZoom.visibility } : { ..._state.visibleLayers };
-    const effectiveMoonLabelMode = semanticZoom?.moonLabelMode || _state.moonLabelMode;
-    const effectiveDayLabelMode = semanticZoom?.dayLabelMode || _state.dayLabelMode;
-    const effectiveConnectionMode = semanticZoom?.connectionMode || _state.connectionMode;
-    const connectionRegistry = globalThis.LivingTimeSphereConnections?.buildRegistry?.({
-      model,
-      spiral,
-      state: {
-        ..._state,
-        visibleLayers: effectiveLayers,
-        connectionMode: effectiveConnectionMode,
-        moonLabelMode: effectiveMoonLabelMode,
-        dayLabelMode: effectiveDayLabelMode,
-      },
-    }) || [];
+    const spiral   = _getCachedSpiral();
+    // Show/hide and populate non-visual views from the same canonical model.
+    _updateAlternateViews(model, spiral);
+    const effective = _resolveEffectiveRenderState(model, spiral, container);
+    const semanticZoom = effective.semanticZoom;
+    const effectiveLayers = effective.effectiveLayers;
+    const effectiveMoonLabelMode = effective.effectiveMoonLabelMode;
+    const effectiveDayLabelMode = effective.effectiveDayLabelMode;
+    const connectionRegistry = effective.connectionRegistry;
 
-    if (_state.rendererMode === "table" || _state.rendererMode === "text") {
+    if (_state.requestedRendererMode === "table" || _state.requestedRendererMode === "text") {
       // Hide 3D / SVG canvas; show alternate view
       _teardown3d();
+      _setRendererLifecycle("ready");
+      _state.activeRendererMode = _state.requestedRendererMode;
       container.style.display = "none";
-      _updateRendererLabel(_state.rendererMode === "table" ? "Data Table" : "Text Summary");
+      _setSphereLoaderVisibility(container, false);
+      _updateRendererLabel(_state.requestedRendererMode === "table" ? "Data Table" : "Text Summary");
       updateAccessibleText(model, spiral);
       updateDetails(model);
+      _updateTemporalLens(model);
       _updateTodayDiagnostics(model);
       _updateModeSummary(model);
       _updateWhatAmISeeing(_state.viewMode);
       _updateStateStrip(_state.viewMode, model);
+      _updateEnvironmentBridge(model);
+      _updateSphereUrlFromModel(model, { replace: true });
       return;
     }
     container.style.display = "";
@@ -1218,38 +2554,58 @@
     const dpr      = typeof window !== "undefined" ? (window.devicePixelRatio || 1) : 1;
     const layout   = globalThis.LivingTimeSphereLayout.resolveLayout({ containerWidth: w, containerHeight: h, devicePixelRatio: dpr });
 
+    _state._latestContainerSize = { w, h };
     if (shouldUse3d()) {
-      _render3d(container, model, spiral, effectiveLayers, connectionRegistry, semanticZoom, effectiveMoonLabelMode, effectiveDayLabelMode);
+      if (_state.active3d && globalThis.LivingTimeSphereRenderer3d?.isInitialized?.()) {
+        _render3d(container, model, spiral, effectiveLayers, connectionRegistry, semanticZoom, effectiveMoonLabelMode, effectiveDayLabelMode);
+      } else {
+        _state.activeRendererMode = _state._3dInitInProgress ? "initializing-3d" : "svg";
+        _renderSvgFallback(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoom, effectiveMoonLabelMode, effectiveDayLabelMode);
+        _setSphereLoaderVisibility(container, true);
+        _render3d(container, model, spiral, effectiveLayers, connectionRegistry, semanticZoom, effectiveMoonLabelMode, effectiveDayLabelMode);
+      }
     } else {
       _teardown3d();
+      _setRendererLifecycle("fallback");
+      _state.activeRendererMode = "svg";
       _renderSvgFallback(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoom, effectiveMoonLabelMode, effectiveDayLabelMode);
+      _setSphereLoaderVisibility(container, false);
     }
 
     updateAccessibleText(model, spiral);
     updateDetails(model);
+    _updateTemporalLens(model);
     _updateTodayDiagnostics(model);
     _updateModeSummary(model);
     _updateWhatAmISeeing(_state.viewMode);
     _updateStateStrip(_state.viewMode, model);
+    _updateEnvironmentBridge(model);
     _updateRendererDiagnostics();
+    _updateSphereUrlFromModel(model, { replace: true });
   }
 
   async function _render3d(container, model, spiral, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode) {
     const preset = resolveQualityPreset();
-    if (!preset) { _teardown3d(); return; }
+    if (!preset) { _setRendererLifecycle("fallback"); _teardown3d(); return; }
 
     const renderer = globalThis.LivingTimeSphereRenderer3d;
 
     if (!renderer.isInitialized()) {
       // Prevent concurrent init: if one is already in progress (either in this module
       // or inside the renderer itself), skip and leave the in-progress call to finish.
-      if (_state._3dInitInProgress || renderer.isInitializing?.()) return;
+      if (_state._3dInitInProgress || renderer.isInitializing?.()) {
+        _state._pending3dPayload = {
+          container, model, spiral, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode
+        };
+        return;
+      }
       _state._3dInitInProgress = true;
       const initGeneration = ++_state._3dInitGeneration;
-
-      // Remove any existing SVG / canvas content before inserting 3D canvas.
-      container.innerHTML = "";
+      _markInitTimeline("3d-initialization-requested", { generation: initGeneration });
+      _setRendererLifecycle("initializing");
+      _state.activeRendererMode = "initializing-3d";
       _updateRendererLabel("Loading 3D renderer…");
+      _setSphereLoaderVisibility(container, true);
 
       const reducedMotion = typeof window !== "undefined" &&
         window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -1257,13 +2613,21 @@
       let result;
       try {
         const hasStableSize = await _waitForValidContainer(container);
+        _markInitTimeline("container-first-measurable-size", {
+          generation: initGeneration,
+          width: Number(container?.clientWidth || 0),
+          height: Number(container?.clientHeight || 0),
+          hasStableSize,
+        });
         if (!hasStableSize) {
+          _setRendererLifecycle("waiting-for-size");
           result = {
             success: false,
             reason: "CONTAINER_SIZE_INVALID",
             detail: "Renderer container did not reach a valid layout size in time.",
           };
         } else {
+          _markInitTimeline("3d-initialization-start", { generation: initGeneration });
           result = await _withTimeout(renderer.init({
           container,
           model,
@@ -1271,9 +2635,13 @@
           quality:       preset,
           tier: _state.quality === "auto"
             ? globalThis.ObservatoryCapabilityManager?.selectTier?.({
-                webglAvailable: globalThis.ObservatoryCapabilityManager?.probeWebGl?.().webgl ?? true
+                webglAvailable: globalThis.ObservatoryCapabilityManager?.probeWebGl?.().webgl2 ?? false
               })
-            : _state.quality,
+            : globalThis.ObservatoryCapabilityManager?.selectTier?.({
+                override: _state.quality,
+                webglAvailable: globalThis.ObservatoryCapabilityManager?.probeWebGl?.().webgl2 ?? false,
+              }) || _state.quality,
+          generation: initGeneration,
           selectedYear:  _state.year,
           visibleLayers: effectiveLayers,
           viewMode:      _state.viewMode,
@@ -1285,42 +2653,64 @@
           semanticZoomState,
           environmentState: globalThis.SofEnvironmentState?.getEnvironmentState?.() || null,
           reducedMotion,
+          onContextLost: () => {
+            if (initGeneration !== _state._3dInitGeneration) return;
+            // Invalidate the interrupted generation before rendering the SVG
+            // baseline. Calling renderSphere() here would immediately start a
+            // second WebGL renderer while the lost canvas is still attached.
+            _state._3dInitGeneration += 1;
+            _state.active3d = false;
+            _state.activeRendererMode = "recovering";
+            _setRendererLifecycle("recovering");
+            _updateRendererLabel("3D context lost — falling back");
+            _showRendererFallbackWarning("WEBGL_CONTEXT_LOST", "WebGL context was lost after initialization.");
+            _disposeRendererForRetry(container, "context-lost");
+            const fallbackLayout = globalThis.LivingTimeSphereLayout.resolveLayout({
+              containerWidth: container.offsetWidth || 320,
+              containerHeight: container.offsetHeight || 320,
+              devicePixelRatio: (typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1)
+            });
+            _renderSvgFallback(container, model, spiral, fallbackLayout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode);
+            _setSphereLoaderVisibility(container, false);
+            _scheduleRetry(container, "context-lost");
+          },
+          onContextRestored: () => {
+            if (initGeneration !== _state._3dInitGeneration) return;
+            _state.active3d = false;
+            _state.activeRendererMode = "recovering";
+            _setRendererLifecycle("recovering");
+            _setSphereLoaderVisibility(container, true);
+            _scheduleRetry(container, "context-restored");
+          },
           onYearSelect: year => {
+            _stopTemporalPlayback("sphere-year-marker");
             _state.year = year;
-            _state.viewMode = "passage";
-            _setModeDefaultLayers("passage");
-            _setModeDefaultSelectedMarker("passage");
-            _syncModeButtons();
             _syncYearSelect(year);
             globalThis.LivingTimeSphereAccessibility?.announce?.(`Year ${year} selected. Passage view.`);
-            renderSphere(container);
+            _requestViewModeTransition(container, "passage");
           },
           onMarkerSelect: marker => {
             if (!marker) return;
+            _stopTemporalPlayback("sphere-marker-select");
             if (marker.type === "day" && marker.dayOfPatternYear) {
-              _state.selectedDayOfYear = marker.dayOfPatternYear;
-              _state.selectedMarker = `day-${marker.dayOfPatternYear}`;
               globalThis.LivingTimeSphereAccessibility?.announce?.(`Selected Pattern Moon ${marker.moon}, Day ${marker.day}, Day ${marker.dayOfPatternYear} of 364.`);
               if (_state.viewMode === "years") {
-                _state.viewMode = "pattern";
-                _setModeDefaultLayers("pattern");
-                _syncModeButtons();
+                _requestViewModeTransition(container, "pattern");
               }
-              renderSphere(container);
+              _requestSelectedDayUpdate(container, marker.dayOfPatternYear);
               return;
             }
             if (marker.type === "moon" && marker.moon) {
               const day = Math.max(1, Math.min(28, marker.day || 1));
-              _state.selectedDayOfYear = (marker.moon - 1) * 28 + day;
-              _state.selectedMarker = `moon-${marker.moon}`;
               globalThis.LivingTimeSphereAccessibility?.announce?.(`Selected Pattern Moon ${marker.moon}, Day ${day}.`);
-              renderSphere(container);
+              _requestSelectedDayUpdate(container, (marker.moon - 1) * 28 + day);
               return;
             }
             _state.selectedMarker = marker?.type === "year" ? `eq-${marker.year}` : (marker?.type || null);
             renderSphere(container);
           }
-          }), 25000);
+          }), 25000, "INIT_TIMEOUT", () => renderer.cancelInitialization?.("ui-init-timeout"));
+          _markInitTimeline("3d-initialization-complete", { generation: initGeneration, success: !!result?.success, reason: result?.reason || null });
         }
       } catch (err) {
         result = { success: false, reason: "init-exception", detail: String(err) };
@@ -1328,16 +2718,20 @@
         _state._3dInitInProgress = false;
       }
 
-      if (initGeneration !== _state._3dInitGeneration) return;
+      if (initGeneration !== _state._3dInitGeneration) {
+        _disposeRendererForRetry(container, "stale-init-generation");
+        return;
+      }
 
       if (!result || !result.success) {
         // Fall back to SVG.
         _state.active3d = false;
+        _state.activeRendererMode = _state.requestedRendererMode === "svg" ? "svg" : "recovering";
         const reason = result?.reason || "WebGL unavailable";
+        const transient = reason === "CONTAINER_SIZE_INVALID" || reason === "INIT_TIMEOUT" || reason === "init-exception";
+        _setRendererLifecycle(reason === "CONTAINER_SIZE_INVALID" ? "waiting-for-size" : (transient ? "fallback" : "failed"));
         const statusText = `SVG fallback — ${reason}`;
         _updateRendererLabel(statusText);
-        // Sync the renderer selector so it accurately reflects the active renderer.
-        _syncRendererSelect("svg");
         // Show the fallback warning row with Retry button.
         _showRendererFallbackWarning(reason, result?.detail || "");
         // Remove any stale canvas element left by a failed init.
@@ -1348,27 +2742,75 @@
           containerHeight: container.offsetHeight || 320,
           devicePixelRatio: (typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1)
         });
-        _renderSvgFallback(
-          container,
-          model,
-          spiral,
-          layout,
-          effectiveLayers,
-          connectionRegistry,
-          semanticZoomState,
-          effectiveMoonLabelMode,
-          effectiveDayLabelMode
-        );
+        _renderSvgFallback(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode);
+        _setSphereLoaderVisibility(container, false);
         _updateInteractBar();
         _updateTodayDiagnostics(model);
+        if (transient && _state.requestedRendererMode !== "svg") {
+          _scheduleRetry(container, reason);
+        }
+        return;
+      }
+      container.querySelectorAll(".living-time-sphere-svg,.living-time-sphere-canvas").forEach(node => node.remove());
+      _pruneInvalidSphereMedia(container, "svg-handoff-invalid-media");
+      _markRenderSurfaceCanvasTrace("after-svg-cleanup");
+      _setSphereLoaderVisibility(container, false);
+      _markInitTimeline("svg-removed", { generation: initGeneration });
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      _markInitTimeline("post-layout-raf", { generation: initGeneration });
+      globalThis.LivingTimeSphereRenderer3d?.requestSingleRender?.();
+      _markInitTimeline("first-frame-acknowledged", { generation: initGeneration });
+      const surfaceCheck = _verifyRenderSurface(container, { requireVisibleCenter: false, expectedGeneration: initGeneration });
+      _markRenderSurfaceCanvasTrace("after-validation");
+      _markInitTimeline("surface-validation", { generation: initGeneration, healthy: !!surfaceCheck?.healthy, reason: surfaceCheck?.reason || null });
+      if (!surfaceCheck.healthy) {
+        _state.active3d = false;
+        _state.activeRendererMode = "recovering";
+        _setRendererLifecycle("failed");
+        _updateRendererLabel(`SVG fallback — render surface invalid (${surfaceCheck.reason || "unknown"})`);
+        _showRendererFallbackWarning(surfaceCheck.reason || (surfaceCheck.failures || [])[0] || "CANVAS_MISSING", (surfaceCheck.failures || []).join(", ") || "render-surface-check-failed");
+        const layout = globalThis.LivingTimeSphereLayout.resolveLayout({
+          containerWidth:  container.offsetWidth  || 320,
+          containerHeight: container.offsetHeight || 320,
+          devicePixelRatio: (typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1)
+        });
+        _renderSvgFallback(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode);
+        _pruneInvalidSphereMedia(container, "svg-fallback-invalid-media");
+        _setSphereLoaderVisibility(container, false);
+        _updateInteractBar();
+        _scheduleRetry(container, "render-surface-invalid");
         return;
       }
       _state.active3d = true;
+      _state.activeRendererMode = "3d";
+      _state.firstRenderSurfaceFailure = null;
       _state.restoreAttempts = 0;
+      _state.retryCount = 0;
+      _clearAutoRetry();
+      _setRendererLifecycle("rendered");
+      _markInitTimeline("3d-marked-active", { generation: initGeneration });
+      _markRenderSurfaceCanvasTrace("after-lifecycle-transition");
       _updateRendererLabel("WebGL 3D active");
       _hideRendererFallbackWarning();
+      _setSphereLoaderVisibility(container, false);
       _updateInteractBar();
+      _updateLastRenderTimestamp();
+      _watchForBlankCanvas(container);
       _updateRendererDiagnostics();
+      if (_state._pending3dPayload) {
+        const pending = _state._pending3dPayload;
+        _state._pending3dPayload = null;
+        _render3d(
+          pending.container,
+          pending.model,
+          pending.spiral,
+          pending.effectiveLayers,
+          pending.connectionRegistry,
+          pending.semanticZoomState,
+          pending.effectiveMoonLabelMode,
+          pending.effectiveDayLabelMode
+        );
+      }
     } else {
       renderer.refresh(
         model,
@@ -1383,28 +2825,78 @@
         _state.motionMode,
         semanticZoomState
       );
+      const readiness = renderer.getDiagnostics?.().sceneReadiness || { ready: true, reasons: [] };
+      const surfaceCheck = _verifyRenderSurface(container, { requireVisibleCenter: false });
+      if (!readiness.ready) {
+        _state.active3d = false;
+        _state.activeRendererMode = "recovering";
+        _setRendererLifecycle("recovering");
+        _updateRendererLabel(`Recovering 3D scene… (${(readiness.reasons || []).slice(0, 2).join(", ") || "scene-not-ready"})`);
+        const layout = globalThis.LivingTimeSphereLayout.resolveLayout({
+          containerWidth:  container.offsetWidth  || 320,
+          containerHeight: container.offsetHeight || 320,
+          devicePixelRatio: (typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1)
+        });
+        _renderSvgFallback(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode);
+        _pruneInvalidSphereMedia(container, "refresh-fallback-invalid-media");
+        _setSphereLoaderVisibility(container, false);
+        _scheduleRetry(container, "scene-readiness-refresh");
+        return;
+      }
+      if (!surfaceCheck.healthy) {
+        _state.active3d = false;
+        _state.activeRendererMode = "recovering";
+        _setRendererLifecycle("recovering");
+        _updateRendererLabel(`Recovering 3D surface… (${surfaceCheck.reason || "surface-unhealthy"})`);
+        const layout = globalThis.LivingTimeSphereLayout.resolveLayout({
+          containerWidth:  container.offsetWidth  || 320,
+          containerHeight: container.offsetHeight || 320,
+          devicePixelRatio: (typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1)
+        });
+        _renderSvgFallback(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode);
+        _pruneInvalidSphereMedia(container, "surface-refresh-invalid-media");
+        _setSphereLoaderVisibility(container, false);
+        _scheduleRetry(container, "surface-health-refresh");
+        return;
+      }
       renderer.updateEnvironment?.(globalThis.SofEnvironmentState?.getEnvironmentState?.() || null);
       renderer.setMode(_state.viewMode);
+      _updateLastRenderTimestamp();
+      _setRendererLifecycle("ready");
+      _state.activeRendererMode = "3d";
     }
   }
 
   function _teardown3d() {
-    if (_state.active3d && globalThis.LivingTimeSphereRenderer3d?.isInitialized?.()) {
-      globalThis.LivingTimeSphereRenderer3d.teardown();
-    }
+    _state._3dInitGeneration += 1;
+    _disposeRendererForRetry(document.getElementById("sphere-container"), "renderer-mode-teardown");
     _state.active3d = false;
     _state._3dInitInProgress = false;
+    _state._pending3dPayload = null;
+    if (_state.requestedRendererMode === "svg" || _state.requestedRendererMode === "canvas" || _state.requestedRendererMode === "table" || _state.requestedRendererMode === "text") {
+      _setRendererLifecycle("fallback");
+    } else {
+      _setRendererLifecycle("not-started");
+    }
+    if (_state.requestedRendererMode === "table" || _state.requestedRendererMode === "text") {
+      _state.activeRendererMode = _state.requestedRendererMode;
+    } else {
+      _state.activeRendererMode = "svg";
+    }
+    _setSphereLoaderVisibility(document.getElementById("sphere-container"), false);
     _updateInteractBar();
   }
 
   function _renderSvgFallback(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode) {
+    _markInitTimeline("svg-fallback-mount", { generation: Number(_state._3dInitGeneration || 0) });
+    _setSphereLoaderVisibility(container, false);
     // Canvas fallback
     if (_state.useCanvas && globalThis.LivingTimeSphereRendererCanvas?.isCanvasSupported?.()) {
       let canvas = container.querySelector(".living-time-sphere-canvas");
       if (!canvas) {
         canvas = document.createElement("canvas");
         canvas.className = "living-time-sphere-canvas";
-        container.innerHTML = "";
+        container.querySelectorAll(".living-time-sphere-svg,.living-time-sphere-canvas").forEach(node => node.remove());
         container.appendChild(canvas);
       }
       const ok = globalThis.LivingTimeSphereRendererCanvas.renderCanvas({ canvas, model, spiral, layout, visibleLayers: effectiveLayers, selectedYear: _state.year });
@@ -1413,10 +2905,11 @@
     } else {
       _renderSvgOnly(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode);
     }
+    _pruneInvalidSphereMedia(container, "svg-render-invalid-media");
   }
 
   function _renderSvgOnly(container, model, spiral, layout, effectiveLayers, connectionRegistry, semanticZoomState, effectiveMoonLabelMode, effectiveDayLabelMode) {
-    _updateRendererLabel(_state.rendererMode === "svg" ? "Accessible SVG" : "SVG fallback");
+    _updateRendererLabel(_state.requestedRendererMode === "svg" ? "Accessible SVG" : "SVG fallback");
     globalThis.LivingTimeSphereRendererSvg.renderInto(container, {
       model, spiral, layout,
       visibleLayers: effectiveLayers,
@@ -1449,14 +2942,68 @@
     if (hintOn)      hintOn.style.display      = "none";
   }
 
-  function _updateAlternateViews() {
+  function _updateAlternateViews(model, spiral) {
     // Reveal data table section
     const tableSection = document.getElementById("sphere-data-table-section");
-    if (tableSection) tableSection.style.display = _state.rendererMode === "table" ? "" : "none";
+    if (tableSection) tableSection.style.display = _state.requestedRendererMode === "table" ? "" : "none";
 
     // Reveal text summary section
     const textSection  = document.getElementById("sphere-text-summary-section");
-    if (textSection)  textSection.style.display  = _state.rendererMode === "text"  ? "" : "none";
+    if (textSection)  textSection.style.display  = _state.requestedRendererMode === "text"  ? "" : "none";
+
+    if (!model) return;
+    const selected = model.selectedPatternPosition || null;
+    const today = model.todayPatternPosition || null;
+    const selectedYearPoint = Array.isArray(spiral?.years)
+      ? spiral.years.find(item => Number(item?.year) === Number(_state.year)) || null
+      : null;
+    const patternAngle = selected?.dayOfPatternYear != null
+      ? globalThis.LivingTimeSphereModel?.patternAngleForDayOfYear?.(selected.dayOfPatternYear)
+      : null;
+    const todayAngle = today?.dayOfPatternYear != null
+      ? globalThis.LivingTimeSphereModel?.patternAngleForDayOfYear?.(today.dayOfPatternYear)
+      : null;
+    const rows = [
+      ["Selected year", _state.year, "Alignment Ledger"],
+      ["Viewing mode", _state.viewMode, "Sphere state"],
+      ["Selected Pattern day", selected?.dayOfPatternYear != null ? `${selected.dayOfPatternYear} / 364` : "Outside counted year", "Pattern Calendar"],
+      ["Selected Moon / Day", selected?.moon != null ? `Moon ${selected.moon} · Day ${selected.day}` : "Unavailable", "Pattern Calendar"],
+      ["Selected effective date", selected?.effectiveDate || "Unavailable", "Pattern Calendar boundary"],
+      ["Selected Pattern angle", Number.isFinite(patternAngle) ? `${Number(patternAngle).toFixed(3)}°` : "Unavailable", "364-day coordinate engine"],
+      ["Today Pattern day", today?.dayOfPatternYear != null ? `${today.dayOfPatternYear} / 364` : "Outside counted year", "Live Pattern snapshot"],
+      ["Today Pattern angle", Number.isFinite(todayAngle) ? `${Number(todayAngle).toFixed(3)}°` : "Unavailable", "364-day coordinate engine"],
+      ["Lunar state", selected?.lunarPhase || model?.markers?.lunarMarker?.label || "Unavailable", "Astronomy layer"],
+      ["Lunar cycle position", selected?.lunarCyclePosition != null ? `${(Number(selected.lunarCyclePosition) * 360).toFixed(3)}°` : (model?.lunarAngle != null ? `${Number(model.lunarAngle).toFixed(3)}°` : "Unavailable"), "Lunar coordinate"],
+      ["Solar gate", selected?.solar?.gate ? `${selected.solar.gate} · ${selected.solar.element || "—"}` : "Unavailable", "Solar context"],
+      ["Seasonal progress angle", selected?.solar?.angle != null ? `${Number(selected.solar.angle).toFixed(3)}°` : "Unavailable", "Seasonal anchor interpolation"],
+      ["Passage start", model?.passage?.startAngle != null ? `${Number(model.passage.startAngle).toFixed(3)}°` : "Unavailable", "Alignment record"],
+      ["Passage end", model?.passage?.endAngle != null ? `${Number(model.passage.endAngle).toFixed(3)}°` : "Unavailable", "Year Gate"],
+      ["Year spiral angle", selectedYearPoint?.yearSpiralAngle != null ? `${Number(selectedYearPoint.yearSpiralAngle).toFixed(3)}°` : "Unavailable", "13-year study window"],
+      ["Year spiral radius", selectedYearPoint?.yearSpiralRadius != null ? Number(selectedYearPoint.yearSpiralRadius).toFixed(4) : "Unavailable", "Normalized 0–1"],
+    ];
+
+    const table = document.getElementById("sphere-data-table");
+    if (table) {
+      table.innerHTML = `<caption class="visually-hidden">Canonical Living Time Sphere coordinates</caption>
+        <thead><tr><th scope="col">Field</th><th scope="col">Value</th><th scope="col">Source</th></tr></thead>
+        <tbody>${rows.map(([field, value, source]) => `<tr><th scope="row">${_escapeHtml(field)}</th><td>${_escapeHtml(value)}</td><td>${_escapeHtml(source)}</td></tr>`).join("")}</tbody>`;
+    }
+
+    const text = document.getElementById("sphere-text-summary-content");
+    if (text) {
+      const comparison = model.temporalComparison;
+      text.textContent = [
+        `Living Time Sphere — ${_titleCaseWords(_state.viewMode)} view`,
+        `Selected: ${selected?.moon != null ? `Moon ${selected.moon}, Day ${selected.day}, Pattern day ${selected.dayOfPatternYear} of 364` : "outside the counted Pattern year"}`,
+        `Effective date: ${selected?.effectiveDate || "unavailable"}`,
+        `Today: ${today?.moon != null ? `Moon ${today.moon}, Day ${today.day}, Pattern day ${today.dayOfPatternYear} of 364` : "outside the counted Pattern year"}`,
+        `Relationship to Today: ${comparison?.relationshipLabel || "unavailable"}`,
+        `Lunar: ${selected?.lunarPhase || model?.markers?.lunarMarker?.label || "unavailable"}${selected?.lunarIllumination != null ? `, ${selected.lunarIllumination}% illuminated` : ""}`,
+        `Solar: ${selected?.solar?.gate || "unavailable"}${selected?.solar?.element ? `, ${selected.solar.element}` : ""}`,
+        `Passage: ${model?.passage?.startAngle != null ? `${Number(model.passage.startAngle).toFixed(1)} degrees to the Year Gate` : "unavailable"}`,
+        "Coordinates use the canonical 13 by 28 Pattern engine and are measured clockwise from Moon 1 Day 1.",
+      ].join("\n");
+    }
   }
 
   // ── Renderer status label ──────────────────────────────────────────
@@ -1469,8 +3016,7 @@
   // Sync the renderer <select> to reflect the actual active renderer.
   function _syncRendererSelect(activeRenderer) {
     const sel = document.getElementById("sphere-renderer-select");
-    if (sel) sel.value = activeRenderer;
-    _state.rendererMode = activeRenderer;
+    if (sel) sel.value = activeRenderer || _state.requestedRendererMode;
   }
 
   // Show the fallback warning banner with Retry / Switch-to-SVG buttons.
@@ -1486,6 +3032,7 @@
     // Populate inline diagnostics inside the collapsible details block.
     const r3d = globalThis.LivingTimeSphereRenderer3d;
     const diag = r3d?.getDiagnostics?.() || {};
+    const surface = _state.lastRenderSurfaceVerification || _verifyRenderSurface(document.getElementById("sphere-container"), { requireVisibleCenter: false });
     const _set = (id, val) => { const e = document.getElementById(id); if (e) e.textContent = val || "—"; };
     _set("sphere-diag-local-url-warn",      diag.localModuleUrl || r3d?.THREE_LOCAL_REL || "—");
     _set("sphere-diag-last-error-warn",     diag.lastInitError ? `${diag.lastInitError.reason}: ${diag.lastInitError.detail || ""}` : `${reason}${detail ? `: ${detail}` : ""}`);
@@ -1502,6 +3049,32 @@
     _set("sphere-diag-cpu-warn",            diag.hardwareConcurrency != null ? String(diag.hardwareConcurrency) : "unknown");
     _set("sphere-diag-reduced-warn",        `${diag.reducedMotion ? "motion:reduce" : "motion:normal"} · ${diag.reducedData ? "data:reduce" : "data:normal"}`);
     _set("sphere-diag-fallback-warn",       reasonCode || "none");
+    _set("sphere-diag-surface-failure-code-warn", surface?.reason || "none");
+    _set("sphere-diag-surface-failures-warn", Array.isArray(surface?.failures) && surface.failures.length ? surface.failures.join(", ") : "none");
+    _set("sphere-diag-surface-container-warn", JSON.stringify({
+      clientWidth: Math.round(Number(surface?.diagnostics?.container?.clientWidth || 0)),
+      clientHeight: Math.round(Number(surface?.diagnostics?.container?.clientHeight || 0)),
+      rect: surface?.diagnostics?.container?.rect || {},
+      style: surface?.diagnostics?.container?.style || {},
+    }));
+    _set("sphere-diag-surface-canvas-warn", JSON.stringify({
+      width: Math.round(Number(surface?.diagnostics?.canvas?.width || 0)),
+      height: Math.round(Number(surface?.diagnostics?.canvas?.height || 0)),
+      clientWidth: Math.round(Number(surface?.diagnostics?.canvas?.clientWidth || 0)),
+      clientHeight: Math.round(Number(surface?.diagnostics?.canvas?.clientHeight || 0)),
+      rect: surface?.diagnostics?.canvas?.rect || {},
+      isConnected: !!surface?.diagnostics?.canvas?.isConnected,
+      parent: surface?.diagnostics?.canvas?.parentElement || null,
+      style: surface?.diagnostics?.canvas?.style || {},
+      rendererSize: surface?.diagnostics?.renderer?.reportedSize || null,
+      drawingBuffer: surface?.diagnostics?.renderer?.drawingBuffer || null,
+      dpr: Number(surface?.diagnostics?.devicePixelRatio || 1),
+      firstFrameComplete: !!surface?.diagnostics?.firstFrameComplete,
+      sceneObjects: Number(surface?.diagnostics?.scene?.objectCount || 0),
+      camera: surface?.diagnostics?.camera || null,
+      canvasCount: Number(surface?.diagnostics?.canvasCount || surface?.canvasCount || 0),
+    }));
+    _set("sphere-diag-surface-generation-warn", `${Number(surface?.diagnostics?.generation?.expected || 0)} / current ${Number(surface?.diagnostics?.generation?.current || 0)}`);
     _set("sphere-diag-init-duration-warn",  diag.initDurationMs != null ? `${diag.initDurationMs}ms` : "—");
     _set("sphere-diag-restore-attempts-warn", String(diag.restoreAttempts || 0));
     el.hidden = false;
@@ -1529,6 +3102,11 @@
       "sphere-diag-cpu-warn",
       "sphere-diag-reduced-warn",
       "sphere-diag-fallback-warn",
+      "sphere-diag-surface-failure-code-warn",
+      "sphere-diag-surface-failures-warn",
+      "sphere-diag-surface-container-warn",
+      "sphere-diag-surface-canvas-warn",
+      "sphere-diag-surface-generation-warn",
       "sphere-diag-last-error-warn",
       "sphere-diag-init-duration-warn",
       "sphere-diag-restore-attempts-warn",
@@ -1551,18 +3129,50 @@
     if (pill) pill.hidden = false;
   }
 
+  function containerHasSvg() {
+    const container = document.getElementById("sphere-container");
+    return !!container?.querySelector?.(".living-time-sphere-svg");
+  }
+
   // Update the renderer diagnostics panel (hidden by default; shown in Technical view).
   function _updateRendererDiagnostics() {
     const panel = document.getElementById("sphere-renderer-diagnostics");
     if (!panel) return;
     const r3d = globalThis.LivingTimeSphereRenderer3d;
-    if (!r3d) return;
-    const diag = r3d.getDiagnostics?.() || {};
+    const diag = r3d?.getDiagnostics?.() || {};
     const semantic = diag.semanticZoom || {};
+    const stageState = diag.stageState || {};
+    const container = document.getElementById("sphere-container");
+    const surface = _verifyRenderSurface(container, { requireVisibleCenter: false });
+    const buildIdentity = _resolveBuildIdentityLine();
+    const coldBoot = _state.coldBootDiagnostics || null;
+    const swText = coldBoot
+      ? `${coldBoot.serviceWorker}${coldBoot.serviceWorkerScript ? ` · ${coldBoot.serviceWorkerScript}` : ""}`
+      : "pending";
+    const storageText = coldBoot
+      ? `cacheKeys=${coldBoot.cacheKeyCount} · sphereCaches=${(coldBoot.sphereCacheKeys || []).join(",") || "none"} · local=${(coldBoot.localKeys || []).length} · session=${(coldBoot.sessionKeys || []).length} · selectedState=${coldBoot.selectedStatePresent ? "yes" : "no"}`
+      : "pending";
+    const deepLinkText = `integrity=${_state.urlIntegrity || "unknown"} · initial=${_state.initialUrl || "n/a"} · current=${_state.currentUrl || (typeof location !== "undefined" ? location.href : "n/a")}`;
+    const bootstrapStage = _state.active3d
+      ? "rendered"
+      : (diag.lastInitError?.reason || stageState.firstFrame || stageState.renderer || _state.rendererLifecycle || "not-started");
+    const stageTrace = [
+      `capability:${stageState.capability || "idle"}`,
+      `module:${stageState.module || "idle"}`,
+      `dimensions:${stageState.dimensions || "idle"}`,
+      `renderer:${stageState.renderer || "idle"}`,
+      `context:${stageState.context || "idle"}`,
+      `camera:${stageState.camera || "idle"}`,
+      `scene:${stageState.scene || "idle"}`,
+      `geometry:${stageState.geometry || "idle"}`,
+      `listeners:${stageState.listeners || "idle"}`,
+      `semanticZoom:${stageState.semanticZoom || "idle"}`,
+      `firstFrame:${stageState.firstFrame || "idle"}`,
+    ].join(" · ");
     const rows = {
-      "sphere-diag-requested":    "3d",
-      "sphere-diag-active":       _state.active3d ? "WebGL 3D active" : (_state.rendererMode === "svg" ? "Accessible SVG" : "SVG fallback"),
-      "sphere-diag-fallback":     _state.active3d ? "none" : (diag.lastInitError?.reason || "none"),
+      "sphere-diag-requested":    _state.requestedRendererMode || "auto",
+      "sphere-diag-active":       _state.activeRendererMode || (_state.active3d ? "3d" : "svg"),
+      "sphere-diag-fallback":     _state.active3d ? "none" : (diag.lastInitError?.reason || _state.rendererLifecycle || "none"),
       "sphere-diag-webgl":        diag.webglAvailable ? "available" : "unavailable",
       "sphere-diag-webgl2":       diag.webgl2Available ? "available" : "unavailable",
       "sphere-diag-lib-version":  diag.threeVersion || r3d.THREE_VERSION || "—",
@@ -1572,6 +3182,8 @@
       "sphere-diag-dpr":          `${diag.requestedDevicePixelRatio || "—"} → ${diag.appliedDevicePixelRatio || "—"}`,
       "sphere-diag-quality":      _state.quality,
       "sphere-diag-last-error":   diag.lastInitError ? `${diag.lastInitError.reason}: ${diag.lastInitError.detail || ""}` : "none",
+      "sphere-diag-init-duration-warn": diag.initDurationMs != null ? `${diag.initDurationMs}ms` : "—",
+      "sphere-diag-restore-attempts-warn": String(diag.restoreAttempts || 0),
       "sphere-diag-camera-distance": semantic.distance != null ? `${Number(semantic.distance).toFixed(3)}` : "—",
       "sphere-diag-semantic-band": semantic.band || "—",
       "sphere-diag-semantic-prev-band": semantic.previousBand || "—",
@@ -1583,6 +3195,49 @@
       "sphere-diag-visible-day-nodes": semantic.visibleDayNodes != null ? String(semantic.visibleDayNodes) : "—",
       "sphere-diag-visible-moon-labels": semantic.visibleMoonLabels != null ? String(semantic.visibleMoonLabels) : "—",
       "sphere-diag-visible-connections": semantic.visibleConnections != null ? String(semantic.visibleConnections) : "—",
+      "sphere-diag-svg-visible":  containerHasSvg() ? "yes" : "no",
+      "sphere-diag-3d-inflight":  _state._3dInitInProgress ? "yes" : "no",
+      "sphere-diag-3d-attempt":   String(Number(_state._3dInitGeneration || 0)),
+      "sphere-diag-3d-ready":     _state.active3d ? "yes" : "no",
+      "sphere-diag-first-frame-ts": Number(diag.firstFrameTimestamp || 0) > 0 ? String(Number(diag.firstFrameTimestamp)) : "—",
+      "sphere-diag-last-render-ts": Number(diag.lastRenderTimestamp || _state.lastRenderTimestamp || 0) > 0 ? String(Number(diag.lastRenderTimestamp || _state.lastRenderTimestamp || 0)) : "—",
+      "sphere-diag-current-layers": Object.entries(_state.visibleLayers || {}).filter(([, enabled]) => !!enabled).map(([key]) => key).join(",") || "none",
+      "sphere-diag-explicit-layers": _urlHasExplicitLayers ? "yes" : "no",
+      "sphere-diag-env-state": _state.environmentLifecycle || "idle",
+      "sphere-diag-container-size": `${Math.round(Number(_state._latestContainerSize?.w || 0))} × ${Math.round(Number(_state._latestContainerSize?.h || 0))}`,
+      "sphere-diag-view-requested": _state.requestedViewMode || _state.viewMode || "today",
+      "sphere-diag-view-active": _state.activeViewMode || _state.viewMode || "today",
+      "sphere-diag-view-previous": _state.previousViewMode || "today",
+      "sphere-diag-view-transition-state": _state.modeTransitionState || "idle",
+      "sphere-diag-view-transition-rev": String(Number(_state.modeTransitionRevision || 0)),
+      "sphere-diag-view-transition-ms": Number(_state.lastModeTransitionDuration || 0) > 0 ? `${Number(_state.lastModeTransitionDuration).toFixed(2)}ms` : "—",
+      "sphere-diag-layer-state-source": _state.layerStateSource || "default",
+      "sphere-diag-bootstrap-stage": bootstrapStage,
+      "sphere-diag-stage-trace": stageTrace,
+      "sphere-diag-build-identity": buildIdentity,
+      "sphere-diag-sw": swText,
+      "sphere-diag-cache-storage": storageText,
+      "sphere-diag-deep-link": deepLinkText,
+      "sphere-diag-surface-health": surface.healthy ? "healthy" : `unhealthy (${surface.reason || "unknown"})`,
+      "sphere-diag-surface-canvas-connected": surface.checks?.canvasConnected ? "yes" : "no",
+      "sphere-diag-surface-css-size": `${Math.round(Number(diag.canvasClientWidth || 0))} × ${Math.round(Number(diag.canvasClientHeight || 0))}`,
+      "sphere-diag-surface-drawing-buffer": `${Math.round(Number(diag.drawingBufferWidth || 0))} × ${Math.round(Number(diag.drawingBufferHeight || 0))}`,
+      "sphere-diag-surface-context-lost": diag.stageState?.context === "lost" ? "yes" : "no",
+      "sphere-diag-surface-first-frame": diag.stageState?.firstFrame === "rendered" ? "yes" : "no",
+      "sphere-diag-surface-scene-objects": String(Number(diag.sceneObjectCount || 0)),
+      "sphere-diag-surface-broken-resources": String((Array.isArray(surface.brokenResources) ? surface.brokenResources.length : 0) + (Array.isArray(surface.resourceFailureLog) ? surface.resourceFailureLog.length : 0)),
+      "sphere-diag-surface-duplicate-canvases": String(Math.max(0, Number(surface.canvasCount || 0) - 1)),
+      "sphere-diag-surface-center-stack": Array.isArray(surface.centerStack?.stack) && surface.centerStack.stack.length
+        ? surface.centerStack.stack.slice(0, 4).map(item => `${String(item.tagName || "").toUpperCase()}${item.className ? `.${String(item.className).split(/\s+/).filter(Boolean).join(".")}` : ""}`).join(" → ")
+        : "none",
+      "sphere-diag-surface-init-timeline": [
+        ...((_state.initTimeline || []).slice(-8).map(item => `${item.stage}@${item.generation}`)),
+        ...((diag.initTimeline || []).slice(-12).map(item => item.stage)),
+        ...((_state.renderSurfaceCanvasTrace || []).slice(-8).map(item => `${item.stage}:${item.connected ? "ok" : "lost"}`)),
+      ].join(" → ") || "none",
+      "sphere-diag-surface-first-failure": _state.firstRenderSurfaceFailure
+        ? `${_state.firstRenderSurfaceFailure.reason} · ${(Array.isArray(_state.firstRenderSurfaceFailure.failures) ? _state.firstRenderSurfaceFailure.failures.join(", ") : "none")}`
+        : "none",
     };
     for (const [id, val] of Object.entries(rows)) {
       const el = document.getElementById(id);
@@ -1624,6 +3279,9 @@
   }
 
   function _setModeDefaultLayers(mode) {
+    if (_urlHasExplicitLayers) return;
+    if (_state.userCustomizedLayers) return;
+    _state.layerStateSource = "mode-default";
     if (mode === "today") {
       _state.visibleLayers.exactDays = true;
       _state.visibleLayers.weekGates = true;
@@ -1709,16 +3367,54 @@
     strips.forEach(strip => { strip.textContent = text; });
   }
 
-  function _setModeDefaultSelectedMarker(mode) {
-    if (mode === "today") _state.selectedMarker = "today";
+  function _updateEnvironmentBridge(model) {
+    const bridge = document.getElementById("sphere-environment-bridge");
+    const textEl = document.getElementById("sphere-environment-bridge-text");
+    if (!bridge || !textEl) return;
+    const selected = model?.selectedPatternPosition || _resolveSelectedPatternPosition(model);
+    const envState = globalThis.SofEnvironmentState?.getEnvironmentState?.() || null;
+    _state.environmentLifecycle = _resolveEnvironmentLifecycle(envState);
+    const layerVisible = !!_state.visibleLayers.environment;
+    const place = envState?.place?.name || envState?.place?.label || "Location not set";
+    const providerState = _state.environmentLifecycle || "idle";
+    const providerLabel = providerState === "loading"
+      ? "Weather loading in background"
+      : providerState === "ready"
+        ? "Weather ready"
+        : providerState === "cached"
+          ? "Weather cached"
+          : providerState === "stale"
+            ? "Weather stale"
+            : providerState === "error"
+              ? "Environment unavailable"
+              : providerState === "location-needed"
+                ? "Location required"
+                : "Environment idle";
+    const selectedLabel = selected?.moon != null
+      ? `Moon ${selected.moon} Day ${selected.day}`
+      : "Selected day unavailable";
+    const layerLabel = layerVisible ? "Environment layer ON" : "Environment layer OFF";
+    textEl.textContent = `${layerLabel} · ${providerLabel}${providerState === "loading" || providerState === "ready" || providerState === "cached" ? ` · ${place}` : ""} · mapped around ${selectedLabel}.`;
+    bridge.classList.toggle("is-off", !layerVisible);
+  }
+
+  function _setModeDefaultSelectedMarker(mode, model = null) {
+    if (mode === "today") {
+      const selected = model?.selectedPatternPosition || null;
+      _state.selectedMarker = selected?.isToday
+        ? "today"
+        : (selected?.dayOfPatternYear != null ? `day-${_clampPatternDay(selected.dayOfPatternYear)}` : "today");
+    }
     else if (mode === "passage") _state.selectedMarker = `eq-${_state.year}`;
     else if (mode === "years") _state.selectedMarker = `year-${_state.year}`;
-    else if (mode === "pattern") _state.selectedMarker = "today";
+    else if (mode === "pattern") {
+      _state.selectedMarker = _state.selectedDayOfYear != null ? `day-${_clampPatternDay(_state.selectedDayOfYear)}` : "today";
+    }
   }
 
   function _syncModeButtons() {
     document.querySelectorAll("[id^='sphere-mode-']").forEach(b => b.setAttribute("aria-pressed", "false"));
-    const active = document.getElementById(`sphere-mode-${_state.viewMode}`);
+    const active = document.getElementById(`sphere-mode-${_state.activeViewMode || _state.viewMode}`);
     if (active) active.setAttribute("aria-pressed", "true");
   }
 
@@ -1892,11 +3588,6 @@
             <p class="sphere-field-summary-label">Active Fields</p>
             <div class="sphere-field-summary-list">${field.summaryItems.map(item => `<span class="sphere-field-summary-pill">${_escapeHtml(item)}</span>`).join("")}</div>
           </div>
-          <div class="sphere-actions sphere-actions-compact">
-            <button class="sphere-btn sphere-btn-sm" type="button" data-sphere-action="open-field-map">Open Field Map</button>
-            <button class="sphere-btn sphere-btn-sm" type="button" data-sphere-action="show-fields">Show on Sphere</button>
-            <a class="sphere-btn sphere-btn-sm" href="${_escapeHtml(_buildAlignmentLink("recurrence"))}">Compare Fields</a>
-          </div>
         </div>
         <details class="sphere-field-disclosure">
           <summary>Expanded field details</summary>
@@ -1927,6 +3618,8 @@
         const id = button.getAttribute("data-field-layer");
         const item = field.fields.find(entry => entry.id === id);
         if (!item?.layerId) return;
+        _state.userCustomizedLayers = true;
+        _state.layerStateSource = "user-customized";
         _setMappedLayer(item.layerId, !_mappedLayerVisible(item.layerId));
         _syncLayerCheckboxes();
         renderSphere(document.getElementById("sphere-container"));
@@ -1937,6 +3630,8 @@
       button.addEventListener("click", () => {
         const action = button.getAttribute("data-sphere-action");
         if (action === "show-fields") {
+          _state.userCustomizedLayers = true;
+          _state.layerStateSource = "user-customized";
           field.fields.forEach(item => {
             if (item.layerId && item.status !== "Unavailable" && item.status !== "Not checked") {
               _setMappedLayer(item.layerId, true);
@@ -1961,42 +3656,460 @@
     }
   }
 
+  function _updateTemporalLens(model) {
+    const selected = model?.selectedPatternPosition || null;
+    const today = model?.todayPatternPosition || _currentSnapshot()?.todayModel?.todayPatternPosition || null;
+    const temporal = globalThis.LivingTimeSphereTemporal;
+    const comparison = model?.temporalComparison || temporal?.compareToToday?.(selected, today) || null;
+    const day = _clampPatternDay(selected?.dayOfPatternYear || _state.selectedDayOfYear || 1);
+    const position = temporal?.moonDayForPatternDay?.(day) || {
+      moon: Math.floor((day - 1) / 28) + 1,
+      day: ((day - 1) % 28) + 1,
+      week: Math.floor(((day - 1) % 28) / 7) + 1,
+    };
+    const scrubber = document.getElementById("sphere-day-scrubber");
+    const output = document.getElementById("sphere-day-scrubber-output");
+    const status = document.getElementById("sphere-temporal-status");
+    const comparisonEl = document.getElementById("sphere-temporal-comparison");
+    const returnButton = document.getElementById("sphere-return-today");
+    const playButton = document.getElementById("sphere-temporal-play");
+
+    if (scrubber) {
+      scrubber.value = String(day);
+      scrubber.setAttribute("aria-valuetext", `Moon ${position.moon}, Day ${position.day}, Pattern day ${day} of 364`);
+    }
+    if (output) output.textContent = `Moon ${position.moon} · Day ${position.day} · ${day}/364`;
+
+    const isLive = !!comparison?.isLiveToday;
+    const statusState = _state.temporalPlaybackActive ? "playing" : (isLive ? "live" : "exploring");
+    if (status) {
+      status.dataset.state = statusState;
+      status.textContent = statusState === "playing" ? "Time in Motion" : (isLive ? "Live Today" : "Exploring");
+    }
+    if (returnButton) {
+      const alreadyLiveView = isLive && _state.viewMode === "today";
+      returnButton.disabled = alreadyLiveView;
+      returnButton.textContent = alreadyLiveView ? "Live Today Selected" : "Return to Live Today";
+    }
+    if (playButton) {
+      playButton.setAttribute("aria-pressed", _state.temporalPlaybackActive ? "true" : "false");
+      playButton.textContent = _state.temporalPlaybackActive ? "Pause" : "Play";
+    }
+    if (!comparisonEl) return;
+    comparisonEl.setAttribute("aria-live", _state.temporalPlaybackActive ? "off" : "polite");
+
+    if (!comparison) {
+      comparisonEl.innerHTML = '<p class="sphere-temporal-comparison-lead">Live comparison is unavailable for this outside day.</p>';
+      return;
+    }
+    const civilDelta = comparison.civilDayDelta;
+    const civilLabel = civilDelta == null
+      ? "Not available"
+      : civilDelta === 0
+        ? "Same civil day"
+        : `${civilDelta > 0 ? "+" : ""}${civilDelta} days`;
+    const shortestLabel = comparison.shortestSignedDays === 0
+      ? "Aligned"
+      : `${comparison.shortestSignedDays > 0 ? "+" : ""}${comparison.shortestSignedDays} days`;
+    const arcLabel = comparison.forwardDays === 0 ? "0 days" : `${comparison.forwardDays} days forward`;
+    const relation = comparison.isLiveToday
+      ? "The selected marker is synchronized with the canonical live Pattern day."
+      : `${comparison.relationshipLabel}. The Sphere keeps Today visible while you inspect this position.`;
+    comparisonEl.innerHTML = `
+      <p class="sphere-temporal-comparison-lead">${_escapeHtml(relation)}</p>
+      <div class="sphere-temporal-metrics" aria-label="Selected day compared with Today">
+        <span class="sphere-temporal-metric"><span>Shortest arc</span><strong>${_escapeHtml(shortestLabel)}</strong></span>
+        <span class="sphere-temporal-metric"><span>Forward cycle</span><strong>${_escapeHtml(arcLabel)}</strong></span>
+        <span class="sphere-temporal-metric"><span>Civil offset</span><strong>${_escapeHtml(civilLabel)}</strong></span>
+        <span class="sphere-temporal-metric"><span>Angular offset</span><strong>${_escapeHtml(`${comparison.angleDelta > 0 ? "+" : ""}${comparison.angleDelta.toFixed(1)}°`)}</strong></span>
+        <span class="sphere-temporal-metric"><span>Moon relation</span><strong>${comparison.sameMoon ? "Same Moon" : `Moon ${comparison.todayMoon} → ${comparison.selectedMoon}`}</strong></span>
+        <span class="sphere-temporal-metric"><span>Week relation</span><strong>${comparison.sameWeek ? "Same Week Gate" : `Week ${position.week}`}</strong></span>
+      </div>`;
+  }
+
+  function _clearTemporalPlaybackTimer() {
+    if (_state.temporalPlaybackTimer) clearTimeout(_state.temporalPlaybackTimer);
+    _state.temporalPlaybackTimer = 0;
+  }
+
+  function _stopTemporalPlayback(reason = "manual", { announce = false } = {}) {
+    const wasActive = _state.temporalPlaybackActive;
+    _clearTemporalPlaybackTimer();
+    _state.temporalPlaybackActive = false;
+    if (wasActive) {
+      _recordActionTrace("TEMPORAL_PLAYBACK_STOP", { reason }, ["temporal-lens"]);
+      if (announce) globalThis.LivingTimeSphereAccessibility?.announce?.("Pattern time playback paused.");
+      try { _updateTemporalLens(buildCurrentModel()); } catch { /* UI may be tearing down */ }
+    }
+  }
+
+  function _temporalPlaybackDelay() {
+    const requested = Math.max(180, Math.min(3000, Number(_state.temporalPlaybackSpeed) || 700));
+    const reduced = typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+    return reduced ? Math.max(1400, requested) : requested;
+  }
+
+  function _scheduleTemporalPlayback(container) {
+    _clearTemporalPlaybackTimer();
+    if (!_state.temporalPlaybackActive || !container) return;
+    _state.temporalPlaybackTimer = setTimeout(() => {
+      _state.temporalPlaybackTimer = 0;
+      if (typeof document !== "undefined" && document.hidden) {
+        _stopTemporalPlayback("document-hidden");
+        return;
+      }
+      const temporal = globalThis.LivingTimeSphereTemporal;
+      const current = _clampPatternDay(_state.selectedDayOfYear || _resolveSelectedDayOfYear(buildCurrentModel()));
+      const next = temporal?.stepWithinScope
+        ? temporal.stepWithinScope(current, 1, _state.temporalPlaybackScope)
+        : (current >= 364 ? 1 : current + 1);
+      _state.temporalPlaybackStepCount += 1;
+      _incrementActionCounter("temporalPlaybackStepCount");
+      _requestSelectedDayUpdate(container, next, {
+        source: "temporal-playback",
+        action: "TEMPORAL_PLAYBACK_STEP",
+      });
+      _scheduleTemporalPlayback(container);
+    }, _temporalPlaybackDelay());
+  }
+
+  function _toggleTemporalPlayback(container) {
+    if (_state.temporalPlaybackActive) {
+      _stopTemporalPlayback("play-button", { announce: true });
+      return;
+    }
+    _state.temporalPlaybackActive = true;
+    _recordActionTrace("TEMPORAL_PLAYBACK_START", {
+      speedMs: _temporalPlaybackDelay(),
+      scope: _state.temporalPlaybackScope,
+    }, ["temporal-lens", "selected-state"]);
+    globalThis.LivingTimeSphereAccessibility?.announce?.("Pattern time playback started.");
+    _updateTemporalLens(buildCurrentModel());
+    _scheduleTemporalPlayback(container);
+  }
+
+  function _buildTodaySelectionPatch(target, { fieldRange = "now", switchViewMode = true, currentViewMode = _state.viewMode } = {}) {
+    if (!target || !Number.isFinite(Number(target.dayOfPatternYear))) return null;
+    return Object.freeze({
+      selectedDayOfYear: _clampPatternDay(target.dayOfPatternYear),
+      year: Number(target.year) || _state.year,
+      selectedMarker: "today",
+      fieldRange: fieldRange === "today" ? "today" : "now",
+      requestedViewMode: switchViewMode ? "today" : currentViewMode,
+    });
+  }
+
+  function _returnToLiveToday(container, { fieldRange = "now", switchViewMode = true, source = "today-control" } = {}) {
+    if (!container) return false;
+    const target = _resolveLiveTodayTarget();
+    if (!target) {
+      globalThis.LivingTimeSphereAccessibility?.announce?.("The live Pattern day is outside the counted 364-day year.");
+      return false;
+    }
+    _stopTemporalPlayback("return-to-today");
+    const patch = _buildTodaySelectionPatch(target, { fieldRange, switchViewMode });
+    if (!patch) return false;
+    const resolvedRange = patch.fieldRange;
+    _state.year = patch.year;
+    _state.selectedDayOfYear = patch.selectedDayOfYear;
+    _state.selectedMarker = patch.selectedMarker;
+    _state.fieldRange = patch.fieldRange;
+    _state.lastTodayResetSource = source;
+    _state.lastTodayResetAt = Date.now();
+    _persistSelectedState();
+    _syncYearSelect(_state.year);
+    _syncFieldRangeButtons();
+    const preparedModel = buildCurrentModel();
+    _syncDaySelectorsFromModel(preparedModel);
+
+    if (switchViewMode && _state.viewMode !== "today") {
+      _requestViewModeTransition(container, "today");
+    } else {
+      _requestSelectedDayUpdate(container, target.dayOfPatternYear, {
+        marker: "today",
+        year: target.year,
+        fieldRange: resolvedRange,
+        source,
+        action: "RETURN_TO_LIVE_TODAY",
+      });
+    }
+    _incrementActionCounter("todayResetCount");
+    _recordActionTrace("RETURN_TO_LIVE_TODAY", {
+      source,
+      selectedDayOfYear: target.dayOfPatternYear,
+      patternYear: target.patternYear,
+      selectedYear: target.year,
+      fieldRange: resolvedRange,
+      viewMode: switchViewMode ? "today" : _state.viewMode,
+    }, ["selected-state", "mode", "url", "details", "renderer"]);
+    globalThis.LivingTimeSphereAccessibility?.announce?.(`Returned to Today: Moon ${target.moon || Math.floor((target.dayOfPatternYear - 1) / 28) + 1}, Day ${target.day || ((target.dayOfPatternYear - 1) % 28) + 1}.`);
+    return true;
+  }
+
+  function _recordSelectedUpdateMetric(metric) {
+    _state.selectedUpdateMetrics.push(metric);
+    if (_state.selectedUpdateMetrics.length > 120) _state.selectedUpdateMetrics.shift();
+  }
+
+  function _installSelectedDayLongTaskObserver() {
+    if (_state._selectedLongTaskObserver) return;
+    if (typeof PerformanceObserver === "undefined") return;
+    if (!PerformanceObserver.supportedEntryTypes?.includes?.("longtask")) return;
+    try {
+      _state._selectedLongTaskObserver = new PerformanceObserver(list => {
+        list.getEntries().forEach(entry => {
+          if (_state.selectedUpdateStatus !== "updating") return;
+          _state.selectedUpdateLongTasks.push({
+            at: Date.now(),
+            duration: Number(entry.duration || 0),
+            name: entry.name || "longtask",
+          });
+          if (_state.selectedUpdateLongTasks.length > 80) _state.selectedUpdateLongTasks.shift();
+        });
+      });
+      _state._selectedLongTaskObserver.observe({ entryTypes: ["longtask"] });
+    } catch {
+      _state._selectedLongTaskObserver = null;
+    }
+  }
+
+  function _resolveEffectiveRenderState(model, spiral, container) {
+    const semanticZoom = _resolveSemanticZoomState(container);
+    _state.semanticZoom = semanticZoom;
+    const effectiveLayers = semanticZoom?.visibility ? { ..._state.visibleLayers, ...semanticZoom.visibility } : { ..._state.visibleLayers };
+    const moonLabelExplicit = _state.moonLabelMode === "all" || _state.moonLabelMode === "selected" || _state.moonLabelMode === "hidden";
+    const dayLabelExplicit = _state.dayLabelMode === "all" || _state.dayLabelMode === "selected" || _state.dayLabelMode === "hidden";
+    const effectiveMoonLabelMode = moonLabelExplicit ? _state.moonLabelMode : (semanticZoom?.moonLabelMode || _state.moonLabelMode);
+    const effectiveDayLabelMode = dayLabelExplicit ? _state.dayLabelMode : (semanticZoom?.dayLabelMode || _state.dayLabelMode);
+    const effectiveConnectionMode = semanticZoom?.connectionMode || _state.connectionMode;
+    const connectionRegistry = globalThis.LivingTimeSphereConnections?.buildRegistry?.({
+      model,
+      spiral,
+      state: {
+        ..._state,
+        mode: _state.viewMode,
+        selectedYear: _state.year,
+        visibleLayers: effectiveLayers,
+        connectionMode: effectiveConnectionMode,
+        moonLabelMode: effectiveMoonLabelMode,
+        dayLabelMode: effectiveDayLabelMode,
+      },
+    }) || [];
+    return {
+      semanticZoom,
+      effectiveLayers,
+      effectiveMoonLabelMode,
+      effectiveDayLabelMode,
+      connectionRegistry,
+    };
+  }
+
+  async function _flushSelectedDayUpdates(container) {
+    if (_state.selectedUpdateInFlight || !container) return;
+    _state.selectedUpdateInFlight = true;
+    while (_state.pendingSelectedDay != null) {
+      const nextDay = _clampPatternDay(_state.pendingSelectedDay);
+      const intent = _state.pendingSelectedIntent || {};
+      _state.pendingSelectedDay = null;
+      _state.pendingSelectedIntent = null;
+      const revision = ++_state.selectedUpdateRevision;
+      const startedAt = performance.now();
+      _state.selectedUpdateStatus = "updating";
+      _setDayNavDisabled(true);
+      const watchdog = setTimeout(() => {
+        if (_state.selectedUpdateStatus !== "updating" || _state.selectedUpdateRevision !== revision) return;
+        const rendererDiag = globalThis.LivingTimeSphereRenderer3d?.getDiagnostics?.() || {};
+        _state.selectedUpdateLastWatchdog = {
+          revision,
+          selectedDay: _state.selectedDayOfYear,
+          pendingSelectedDay: _state.pendingSelectedDay,
+          rendererState: _state.rendererLifecycle,
+          sceneObjectCount: Number(rendererDiag.sceneObjectCount || 0),
+          lastFrameTime: Number(rendererDiag.lastRenderTimestamp || 0),
+          firedAt: Date.now(),
+        };
+      }, 1400);
+
+      const previous = {
+        selectedDayOfYear: _state.selectedDayOfYear,
+        selectedMarker: _state.selectedMarker,
+        year: _state.year,
+        fieldRange: _state.fieldRange,
+      };
+      try {
+        if (Number.isFinite(Number(intent.year))) {
+          _state.year = Number(intent.year);
+        }
+        if (intent.fieldRange && FIELD_RANGE_LABELS[intent.fieldRange]) {
+          _state.fieldRange = intent.fieldRange;
+        }
+        _state.selectedDayOfYear = nextDay;
+        _state.selectedMarker = typeof intent.marker === "string" && intent.marker
+          ? intent.marker
+          : `day-${nextDay}`;
+        _persistSelectedState();
+        const stateAppliedAt = performance.now();
+
+        const model = buildCurrentModel();
+        _syncYearSelect(_state.year);
+        _syncFieldRangeButtons();
+        _syncDaySelectorsFromModel(model);
+        const selectorsSyncedAt = performance.now();
+        _updateSphereUrlFromModel(model, { replace: true });
+        const urlSyncedAt = performance.now();
+
+        const spiral = _getCachedSpiral();
+        const effective = _resolveEffectiveRenderState(model, spiral, container);
+        let incrementalUsed = false;
+        const renderer = globalThis.LivingTimeSphereRenderer3d;
+        if (_state.active3d && renderer?.isInitialized?.() && typeof renderer.updateSelectedState === "function") {
+          incrementalUsed = renderer.updateSelectedState({
+            model,
+            selectedYear: _state.year,
+            visibleLayers: effective.effectiveLayers,
+            viewMode: _state.viewMode,
+            moonLabelMode: effective.effectiveMoonLabelMode,
+            moonLabelDistance: _state.moonLabelDistance,
+            dayLabelMode: effective.effectiveDayLabelMode,
+            connectionRegistry: effective.connectionRegistry,
+            motionMode: _state.motionMode,
+            semanticZoomState: effective.semanticZoom,
+            skipCameraFocus: true,
+          });
+        }
+        const renderAppliedAt = performance.now();
+        if (!incrementalUsed) {
+          renderSphere(container);
+        } else {
+          _state.selectedLightweightUpdateCount += 1;
+          updateAccessibleText(model, spiral);
+          updateDetails(model);
+          _updateTemporalLens(model);
+          _updateTodayDiagnostics(model);
+          _updateModeSummary(model);
+          _updateWhatAmISeeing(_state.viewMode);
+          _updateStateStrip(_state.viewMode, model);
+          _updateEnvironmentBridge(model);
+          _updateRendererDiagnostics();
+        }
+        _incrementActionCounter("selectedDayUpdateCount");
+        _recordActionTrace(intent.action || "SELECTED_DAY_CHANGE", {
+          selectedDayOfYear: nextDay,
+          marker: _state.selectedMarker,
+          source: intent.source || "calendar-control",
+        }, incrementalUsed ? ["selected-state", "incremental-render"] : ["selected-state", "full-render"]);
+        _emitCalendarWorkbenchEvent("livingtime:selectionchange", model, {
+          source: intent.source || "calendar-control",
+        });
+        const completeAt = performance.now();
+        _recordSelectedUpdateMetric({
+          revision,
+          day: nextDay,
+          totalMs: Number((completeAt - startedAt).toFixed(2)),
+          stateMs: Number((stateAppliedAt - startedAt).toFixed(2)),
+          selectorSyncMs: Number((selectorsSyncedAt - stateAppliedAt).toFixed(2)),
+          urlMs: Number((urlSyncedAt - selectorsSyncedAt).toFixed(2)),
+          renderMs: Number((renderAppliedAt - urlSyncedAt).toFixed(2)),
+          settleMs: Number((completeAt - renderAppliedAt).toFixed(2)),
+          incrementalUsed,
+          source: intent.source || "calendar-control",
+        });
+      } catch (error) {
+        _state.selectedDayOfYear = previous.selectedDayOfYear;
+        _state.selectedMarker = previous.selectedMarker;
+        _state.year = previous.year;
+        _state.fieldRange = previous.fieldRange;
+        _persistSelectedState();
+        renderSphere(container);
+        console.warn("[LivingTimeSphere] Selected-day update failed; reverted to previous state.", error);
+      } finally {
+        clearTimeout(watchdog);
+        if (_state.selectedUpdateRevision === revision) {
+          _state.selectedUpdateStatus = "idle";
+          _setDayNavDisabled(false);
+        }
+      }
+    }
+    _state.selectedUpdateInFlight = false;
+  }
+
+  function _requestSelectedDayUpdate(container, day, intent = {}) {
+    _state.pendingSelectedDay = _clampPatternDay(day);
+    _state.pendingSelectedIntent = { ...intent };
+    _flushSelectedDayUpdates(container);
+  }
+
+  function _emitCalendarWorkbenchEvent(type, model = null, extra = {}) {
+    if (typeof window === "undefined" || typeof CustomEvent === "undefined") return;
+    const currentModel = model || (() => {
+      try { return buildCurrentModel(); } catch { return null; }
+    })();
+    const selected = currentModel?.selectedPatternPosition || null;
+    window.dispatchEvent(new CustomEvent(type, {
+      detail: Object.freeze({
+        year: Number(_state.year || 0) || null,
+        selectedDayOfYear: Number(_state.selectedDayOfYear || selected?.dayOfPatternYear || 0) || null,
+        selectedMarker: _state.selectedMarker || null,
+        viewMode: _state.viewMode,
+        fieldRange: _state.fieldRange,
+        visibleLayers: { ..._state.visibleLayers },
+        selected,
+        today: currentModel?.todayPatternPosition || null,
+        ...extra,
+      }),
+    }));
+  }
+
+  function _applyLayerPreset(container, presetName) {
+    const stateApi = globalThis.LivingTimeSphereState;
+    if (!container || !stateApi?.presetLayers || !stateApi?.LAYER_PRESETS?.[presetName]) return false;
+    const environment = globalThis.SofEnvironmentState?.getEnvironmentState?.() || null;
+    const witnessAvailable = !!globalThis.CodexWitness || !!globalThis.CodexMemory;
+    const nextLayers = stateApi.presetLayers(presetName, {
+      compact: false,
+      environmentAvailable: !!environment?.providerConfigured,
+      witnessAvailable,
+    });
+    Object.keys(_state.visibleLayers).forEach(layer => {
+      _state.visibleLayers[layer] = !!nextLayers[layer];
+    });
+    _state.userCustomizedLayers = true;
+    _state.layerStateSource = `calendar-preset:${presetName}`;
+    _syncLayerCheckboxes();
+    _incrementActionCounter("layerUpdateCount");
+    _recordActionTrace("CALENDAR_LAYER_PRESET", { presetName }, ["layers", "calendar-workbench"]);
+    renderSphere(container);
+    _emitCalendarWorkbenchEvent("livingtime:layerschange", null, { presetName });
+    return true;
+  }
+
   // ── Control wiring ─────────────────────────────────────────────────
 
   function wireControls(container) {
-    const syncDaySelectors = () => {
-      const moonSel = document.getElementById("sphere-select-moon");
-      const daySel = document.getElementById("sphere-select-day");
-      if (!moonSel || !daySel) return;
-      if (!moonSel.options.length) {
-        moonSel.innerHTML = Array.from({ length: 13 }, (_, index) => `<option value="${index + 1}">Moon ${index + 1}</option>`).join("");
-      }
-      if (!daySel.options.length) {
-        daySel.innerHTML = Array.from({ length: 28 }, (_, index) => `<option value="${index + 1}">Day ${index + 1}</option>`).join("");
-      }
-      const model = buildCurrentModel();
-      const selected = model.selectedPatternPosition || _resolveSelectedPatternPosition(model);
-      moonSel.value = String(selected?.moon || 1);
-      daySel.value = String(selected?.day || 1);
-    };
-
     const shiftSelectedDay = delta => {
-      _state.selectedDayOfYear = Math.max(1, Math.min(364, (_state.selectedDayOfYear ?? _resolveSelectedDayOfYear(buildCurrentModel())) + delta));
-      _state.selectedMarker = `day-${_state.selectedDayOfYear}`;
-      renderSphere(container);
-      syncDaySelectors();
+      _stopTemporalPlayback("manual-day-navigation");
+      const baseDay = _state.selectedDayOfYear ?? _resolveSelectedDayOfYear(buildCurrentModel());
+      const nextDay = globalThis.LivingTimeSphereTemporal?.stepDay?.(baseDay, delta, { wrap: true })
+        ?? _clampPatternDay(baseDay + delta);
+      _requestSelectedDayUpdate(container, nextDay);
     };
 
     const shiftSelectedMoon = delta => {
+      _stopTemporalPlayback("manual-moon-navigation");
       const model = buildCurrentModel();
       const selected = model.selectedPatternPosition || _resolveSelectedPatternPosition(model);
       const currentMoon = selected?.moon || 1;
       const currentDay = selected?.day || 1;
       const nextMoon = ((currentMoon - 1 + delta + 13) % 13) + 1;
-      _state.selectedDayOfYear = (nextMoon - 1) * 28 + currentDay;
-      _state.selectedMarker = `moon-${nextMoon}`;
-      renderSphere(container);
-      syncDaySelectors();
+      _requestSelectedDayUpdate(container, (nextMoon - 1) * 28 + currentDay);
+    };
+
+    const runGuardedNavAction = (actionId, handler) => () => {
+      const now = Date.now();
+      if (_state.lastNavActionId === actionId && now - Number(_state.lastNavActionAt || 0) < 24) return;
+      _state.lastNavActionId = actionId;
+      _state.lastNavActionAt = now;
+      handler();
     };
 
     // View mode buttons.
@@ -2004,27 +4117,34 @@
       const btn = document.getElementById(`sphere-mode-${mode}`);
       if (!btn) return;
       btn.addEventListener("click", () => {
-        _state.viewMode = mode;
-        _setModeDefaultLayers(mode);
-        _setModeDefaultSelectedMarker(mode);
-        _syncModeButtons();
-        if (_state.active3d) globalThis.LivingTimeSphereRenderer3d?.setMode(mode);
-        renderSphere(container);
+        if (mode === "today") {
+          _returnToLiveToday(container, { fieldRange: "now", switchViewMode: true, source: "view-mode-today" });
+          return;
+        }
+        _stopTemporalPlayback("view-mode-change");
+        _requestViewModeTransition(container, mode);
       });
     });
 
     // Year select.
     const yearSelect = document.getElementById("sphere-year-select");
     if (yearSelect) {
-      const years = globalThis.AlignmentLedgerData.listSupportedYears();
+      const years = typeof globalThis.AlignmentLedgerData?.listSupportedYears === "function"
+        ? globalThis.AlignmentLedgerData.listSupportedYears()
+        : Array.from({ length: 13 }, (_, i) => 2014 + i);
       yearSelect.innerHTML = years.map(y => `<option value="${y}"${y === _state.year ? " selected" : ""}>${y}</option>`).join("");
       yearSelect.addEventListener("change", () => {
         const y = Number(yearSelect.value);
         if (y) {
+          _stopTemporalPlayback("year-select");
           _state.year = y;
-          if (_state.viewMode === "today" && _currentSnapshot()?.pattern?.patternYear !== y) {
-            _state.selectedDayOfYear = 1;
+          const selectedDay = _clampPatternDay(_state.selectedDayOfYear || _resolveLiveTodayTarget()?.dayOfPatternYear || 1);
+          _state.selectedDayOfYear = selectedDay;
+          _state.selectedMarker = `day-${selectedDay}`;
+          if (["now", "today"].includes(_state.fieldRange) && Number(_currentSnapshot()?.year) !== y) {
+            _state.fieldRange = "historical";
           }
+          _persistSelectedState();
           renderSphere(container);
         }
       });
@@ -2034,6 +4154,11 @@
       const btn = document.getElementById(`sphere-field-range-${range}`);
       if (!btn) return;
       btn.addEventListener("click", () => {
+        if (range === "now" || range === "today") {
+          _returnToLiveToday(container, { fieldRange: range, switchViewMode: false, source: `field-range-${range}` });
+          return;
+        }
+        _stopTemporalPlayback("field-range-change");
         _applyFieldRangePreset(range);
         _syncFieldRangeButtons();
         _syncModeButtons();
@@ -2044,10 +4169,10 @@
     _syncFieldRangeButtons();
 
     [
-      ["sphere-prev-day", () => shiftSelectedDay(-1)],
-      ["sphere-next-day", () => shiftSelectedDay(1)],
-      ["sphere-prev-moon", () => shiftSelectedMoon(-1)],
-      ["sphere-next-moon", () => shiftSelectedMoon(1)],
+      ["sphere-prev-day", runGuardedNavAction("prev-day", () => shiftSelectedDay(-1))],
+      ["sphere-next-day", runGuardedNavAction("next-day", () => shiftSelectedDay(1))],
+      ["sphere-prev-moon", runGuardedNavAction("prev-moon", () => shiftSelectedMoon(-1))],
+      ["sphere-next-moon", runGuardedNavAction("next-moon", () => shiftSelectedMoon(1))],
     ].forEach(([id, handler]) => {
       const btn = document.getElementById(id);
       if (btn) btn.addEventListener("click", handler);
@@ -2057,23 +4182,95 @@
     const daySelect = document.getElementById("sphere-select-day");
     if (moonSelect) {
       moonSelect.addEventListener("change", () => {
+        _stopTemporalPlayback("moon-select");
         const moon = Math.max(1, Math.min(13, Number(moonSelect.value) || 1));
         const day = Math.max(1, Math.min(28, Number(daySelect?.value) || 1));
-        _state.selectedDayOfYear = (moon - 1) * 28 + day;
-        _state.selectedMarker = `moon-${moon}`;
-        renderSphere(container);
+        _requestSelectedDayUpdate(container, (moon - 1) * 28 + day);
       });
     }
     if (daySelect) {
       daySelect.addEventListener("change", () => {
+        _stopTemporalPlayback("day-select");
         const moon = Math.max(1, Math.min(13, Number(moonSelect?.value) || 1));
         const day = Math.max(1, Math.min(28, Number(daySelect.value) || 1));
-        _state.selectedDayOfYear = (moon - 1) * 28 + day;
-        _state.selectedMarker = `day-${_state.selectedDayOfYear}`;
-        renderSphere(container);
+        _requestSelectedDayUpdate(container, (moon - 1) * 28 + day);
       });
     }
-    syncDaySelectors();
+    _syncDaySelectorsFromModel(buildCurrentModel());
+
+    // Temporal Lens: one canonical Today action plus scrub, step, and playback.
+    const returnTodayButton = document.getElementById("sphere-return-today");
+    if (returnTodayButton) {
+      returnTodayButton.addEventListener("click", () => {
+        _returnToLiveToday(container, { fieldRange: "now", switchViewMode: true, source: "temporal-lens" });
+      });
+    }
+
+    document.querySelectorAll("[data-temporal-step]").forEach(button => {
+      button.addEventListener("click", () => {
+        _stopTemporalPlayback("temporal-step");
+        const delta = Number(button.getAttribute("data-temporal-step")) || 0;
+        const current = _clampPatternDay(_state.selectedDayOfYear || _resolveSelectedDayOfYear(buildCurrentModel()));
+        const next = globalThis.LivingTimeSphereTemporal?.stepDay?.(current, delta, { wrap: true })
+          ?? _clampPatternDay(current + delta);
+        _requestSelectedDayUpdate(container, next, {
+          source: "temporal-step",
+          action: "TEMPORAL_STEP",
+        });
+      });
+    });
+
+    const scrubber = document.getElementById("sphere-day-scrubber");
+    if (scrubber) {
+      scrubber.addEventListener("input", () => {
+        const pendingDay = _clampPatternDay(scrubber.value);
+        _stopTemporalPlayback("temporal-scrub");
+        _state.temporalScrubPendingDay = pendingDay;
+        const position = globalThis.LivingTimeSphereTemporal?.moonDayForPatternDay?.(pendingDay);
+        const output = document.getElementById("sphere-day-scrubber-output");
+        if (output) output.textContent = position
+          ? `Moon ${position.moon} · Day ${position.day} · ${pendingDay}/364`
+          : `Day ${pendingDay} / 364`;
+        if (_state.temporalScrubRaf) return;
+        const schedule = typeof requestAnimationFrame === "function"
+          ? requestAnimationFrame
+          : callback => setTimeout(callback, 16);
+        _state.temporalScrubRaf = schedule(() => {
+          _state.temporalScrubRaf = 0;
+          const day = _state.temporalScrubPendingDay;
+          _state.temporalScrubPendingDay = null;
+          if (day == null) return;
+          _requestSelectedDayUpdate(container, day, {
+            source: "temporal-scrubber",
+            action: "TEMPORAL_SCRUB",
+          });
+        });
+      });
+    }
+
+    const playButton = document.getElementById("sphere-temporal-play");
+    if (playButton) playButton.addEventListener("click", () => _toggleTemporalPlayback(container));
+    const speedSelect = document.getElementById("sphere-temporal-speed");
+    if (speedSelect) {
+      speedSelect.value = String(_state.temporalPlaybackSpeed);
+      speedSelect.addEventListener("change", () => {
+        _state.temporalPlaybackSpeed = Math.max(180, Math.min(3000, Number(speedSelect.value) || 700));
+        if (_state.temporalPlaybackActive) _scheduleTemporalPlayback(container);
+      });
+    }
+    const scopeSelect = document.getElementById("sphere-temporal-scope");
+    if (scopeSelect) {
+      scopeSelect.value = _state.temporalPlaybackScope;
+      scopeSelect.addEventListener("change", () => {
+        _state.temporalPlaybackScope = ["pattern-year", "pattern-moon", "pattern-week"].includes(scopeSelect.value)
+          ? scopeSelect.value
+          : "pattern-year";
+      });
+    }
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) _stopTemporalPlayback("document-hidden");
+    });
+    window.addEventListener("pagehide", () => _stopTemporalPlayback("page-hide"), { once: true });
 
     // Layer toggles.
     Object.keys(_state.visibleLayers).forEach(layer => {
@@ -2081,10 +4278,22 @@
       if (!cb) return;
       cb.checked = _state.visibleLayers[layer];
       cb.addEventListener("change", () => {
-        _state.visibleLayers[layer] = cb.checked;
-        renderSphere(container);
+        if (_syncingLayerControls) return;
+        const next = !!cb.checked;
+        _state.visibleLayers[layer] = next;
+        _state.userCustomizedLayers = true;
+        _state.layerStateSource = "user-customized";
+        _incrementActionCounter("layerUpdateCount");
+        _recordActionTrace("LAYER_VISIBILITY_CHANGE", { layer, enabled: next }, ["layers"]);
+        _requestLayerStateUpdate(container, layer, next);
       });
     });
+    const focusEnvironmentBtn = document.getElementById("sphere-environment-focus");
+    if (focusEnvironmentBtn) {
+      focusEnvironmentBtn.addEventListener("click", () => {
+        _focusEnvironmentControls();
+      });
+    }
 
     // Reset view.
     const resetBtn = document.getElementById("sphere-reset");
@@ -2103,17 +4312,24 @@
     // Copy link.
     const copyBtn = document.getElementById("sphere-copy-link");
     if (copyBtn) {
-      copyBtn.addEventListener("click", () => {
+      copyBtn.addEventListener("click", async () => {
         const camState = globalThis.LivingTimeSphereCamera?.getState?.() || {};
+        const shareModel = buildCurrentModel();
+        const selected = shareModel?.selectedPatternPosition || null;
+        const marker = _state.selectedMarker === "today" && selected?.isToday
+          ? "today"
+          : (selected?.dayOfPatternYear ? `day-${selected.dayOfPatternYear}` : _state.selectedMarker);
         const link = globalThis.LivingTimeSphereUrlState.buildSphereUrl({
           year:          _state.year,
           viewMode:      _state.viewMode,
+          marker,
           layers:        Object.entries(_state.visibleLayers).filter(([, v]) => v).map(([k]) => k),
           timeZone:      _state.timeZone,
           boundaryMode:  _state.boundaryMode,
           manualSunset:  _state.manualSunset,
           datasetVersion: globalThis.LivingTimeSphereVersion?.version,
-          renderer:      _state.active3d ? "3d" : "svg",
+          source: _state.source || undefined,
+          renderer:      _state.requestedRendererMode || "auto",
           quality:       _state.quality,
           connectionMode:_state.connectionMode,
           motionMode:    _state.motionMode,
@@ -2122,8 +4338,21 @@
           cameraTheta:   camState.theta,
           cameraDist:    camState.dist,
         });
-        navigator.clipboard?.writeText(link).catch(() => {});
-        copyBtn.textContent = "Link copied";
+        let copied = false;
+        try {
+          if (globalThis.ScrollOfFire?.copyText) {
+            await globalThis.ScrollOfFire.copyText(link);
+            copied = true;
+          } else if (globalThis.RemnantShare?.copyPermanentLink) {
+            copied = await globalThis.RemnantShare.copyPermanentLink(link);
+          } else if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(link);
+            copied = true;
+          }
+        } catch {
+          copied = false;
+        }
+        copyBtn.textContent = copied ? "Link copied" : "Copy unavailable";
         setTimeout(() => { copyBtn.textContent = "Copy Link"; }, 2000);
       });
     }
@@ -2149,13 +4378,15 @@
     // Renderer selector (3D / SVG / Table / Text)
     const rendererSelect = document.getElementById("sphere-renderer-select");
     if (rendererSelect) {
-      rendererSelect.value = _state.rendererMode;
+      rendererSelect.value = _state.requestedRendererMode;
       rendererSelect.addEventListener("change", () => {
-        const prev = _state.rendererMode;
-        _state.rendererMode = rendererSelect.value || "auto";
-        if (prev !== _state.rendererMode && (prev === "3d" || prev === "auto") && _state.active3d) {
+        const prev = _state.requestedRendererMode;
+        _state.requestedRendererMode = rendererSelect.value || "auto";
+        if (prev !== _state.requestedRendererMode && (prev === "3d" || prev === "auto") && _state.active3d) {
           _teardown3d();
         }
+        if (_state.requestedRendererMode === "svg") _clearAutoRetry();
+        _state.retryCount = 0;
         renderSphere(container);
       });
     }
@@ -2261,11 +4492,12 @@
       interactBtn.addEventListener("click", () => {
         if (!_state.active3d) return;
         _setInteractOn();
+        container.dispatchEvent(new CustomEvent("sphere:interact-request-start", { bubbles: false }));
       });
       if (endBtn) {
         endBtn.addEventListener("click", () => {
           _setInteractOff();
-          container.dispatchEvent(new CustomEvent("sphere:interact-end", { bubbles: false }));
+          container.dispatchEvent(new CustomEvent("sphere:interact-request-end", { bubbles: false }));
         });
       }
       // Listen for interact events from 3D renderer.
@@ -2289,12 +4521,13 @@
         if (!_state.active3d) return;
         switch (cmd) {
           case "reset":   globalThis.LivingTimeSphereRenderer3d?.resetView(); break;
-          case "pattern": globalThis.LivingTimeSphereRenderer3d?.setMode("pattern"); break;
-          case "passage": globalThis.LivingTimeSphereRenderer3d?.setMode("passage"); break;
-          case "years":   globalThis.LivingTimeSphereRenderer3d?.setMode("years"); break;
+          case "pattern": globalThis.LivingTimeSphereCamera?.setMode?.("pattern", performance.now(), true); break;
+          case "passage": globalThis.LivingTimeSphereCamera?.setMode?.("passage", performance.now(), true); break;
+          case "years":   globalThis.LivingTimeSphereCamera?.setMode?.("years", performance.now(), true); break;
           default: break;
         }
         globalThis.LivingTimeSphereAnimation?.markDirty?.();
+        _recordActionTrace("CAMERA_PRESET_CHANGE", { preset: cmd }, ["camera"]);
       });
     });
 
@@ -2302,34 +4535,23 @@
     container.addEventListener("sphere:year-select", e => {
       const y = e.detail?.year;
       if (!y) return;
+      _stopTemporalPlayback("sphere-year-event");
       _state.year = y;
-      _state.viewMode = "passage";
       _syncYearSelect(y);
       globalThis.LivingTimeSphereAccessibility.announce(`Year ${y} selected. Switching to Passage view.`);
-      renderSphere(container);
+      _requestViewModeTransition(container, "passage");
     });
 
     container.addEventListener("sphere:marker-select", e => {
       const marker = e.detail;
       if (!marker) return;
+      _stopTemporalPlayback("sphere-marker-event");
       if (marker.type === "day" && marker.dayOfPatternYear) {
-        _state.selectedDayOfYear = marker.dayOfPatternYear;
-        _state.selectedMarker = `day-${marker.dayOfPatternYear}`;
         globalThis.LivingTimeSphereAccessibility?.announce?.(`Selected Pattern Moon ${marker.moon}, Day ${marker.day}, Day ${marker.dayOfPatternYear} of 364.`);
-        const moonSelect = document.getElementById("sphere-select-moon");
-        const daySelect = document.getElementById("sphere-select-day");
-        if (moonSelect) moonSelect.value = String(marker.moon || 1);
-        if (daySelect) daySelect.value = String(marker.day || 1);
-        renderSphere(container);
+        _requestSelectedDayUpdate(container, marker.dayOfPatternYear);
       } else if (marker.type === "moon" && marker.moon) {
-        _state.selectedDayOfYear = (marker.moon - 1) * 28 + Math.max(1, Math.min(28, marker.day || 1));
-        _state.selectedMarker = `moon-${marker.moon}`;
         globalThis.LivingTimeSphereAccessibility?.announce?.(`Selected Pattern Moon ${marker.moon}, Day ${Math.max(1, Math.min(28, marker.day || 1))}.`);
-        const moonSelect = document.getElementById("sphere-select-moon");
-        const daySelect = document.getElementById("sphere-select-day");
-        if (moonSelect) moonSelect.value = String(marker.moon);
-        if (daySelect) daySelect.value = String(Math.max(1, Math.min(28, marker.day || 1)));
-        renderSphere(container);
+        _requestSelectedDayUpdate(container, (marker.moon - 1) * 28 + Math.max(1, Math.min(28, marker.day || 1)));
       }
     });
 
@@ -2339,12 +4561,13 @@
     if (retry3dBtn) {
       retry3dBtn.addEventListener("click", async () => {
         // Dispose any partial state, reset renderer mode, attempt fresh init.
-        if (globalThis.LivingTimeSphereRenderer3d?.isInitialized?.()) {
-          globalThis.LivingTimeSphereRenderer3d.teardown();
-        }
+        _disposeRendererForRetry(container, "manual-retry");
         _state.active3d = false;
         _state._3dInitInProgress = false;
-        _state.rendererMode = "3d";
+        _state.requestedRendererMode = "3d";
+        _state.activeRendererMode = "recovering";
+        _state.retryCount = 0;
+        _clearAutoRetry();
         _state._3dInitGeneration++;
         const sel = document.getElementById("sphere-renderer-select");
         if (sel) sel.value = "3d";
@@ -2360,23 +4583,47 @@
         if (typeof caches !== "undefined") {
           const keys = await caches.keys();
           for (const k of keys) await caches.delete(k);
-          clearCacheBtn.textContent = "Cache cleared — reloading…";
-          setTimeout(() => location.reload(), 800);
-        } else {
-          clearCacheBtn.textContent = "No cache API";
         }
+        for (const storage of [globalThis.localStorage, globalThis.sessionStorage]) {
+          if (!storage) continue;
+          try {
+            const toDelete = [];
+            for (let i = 0; i < storage.length; i++) {
+              const key = storage.key(i);
+              if (key && SPHERE_STORAGE_PREFIXES.some(prefix => key.startsWith(prefix))) {
+                toDelete.push(key);
+              }
+            }
+            toDelete.forEach(key => storage.removeItem(key));
+          } catch { /* ignore */ }
+        }
+        if ("serviceWorker" in navigator) {
+          try {
+            const regs = await navigator.serviceWorker.getRegistrations();
+            await Promise.all(regs.map(reg => reg.unregister()));
+          } catch { /* ignore */ }
+        }
+        clearCacheBtn.textContent = "Cache/state cleared — reloading…";
+        setTimeout(() => location.reload(), 800);
+      });
+    }
+
+    const verifySurfaceBtn = document.getElementById("sphere-verify-render-surface");
+    if (verifySurfaceBtn) {
+      verifySurfaceBtn.addEventListener("click", () => {
+        _runRenderSurfaceVerification();
       });
     }
 
     const switchSvgBtn = document.getElementById("sphere-switch-svg");
     if (switchSvgBtn) {
       switchSvgBtn.addEventListener("click", () => {
-        if (globalThis.LivingTimeSphereRenderer3d?.isInitialized?.()) {
-          globalThis.LivingTimeSphereRenderer3d.teardown();
-        }
+        _disposeRendererForRetry(container, "manual-svg-switch");
         _state.active3d = false;
         _state._3dInitInProgress = false;
-        _state.rendererMode = "svg";
+        _state.requestedRendererMode = "svg";
+        _state.activeRendererMode = "svg";
+        _clearAutoRetry();
         const sel = document.getElementById("sphere-renderer-select");
         if (sel) sel.value = "svg";
         _minimizeRendererFallbackWarning();
@@ -2480,13 +4727,36 @@
       console.warn("LivingTimeSphereUi: not all dependencies available");
       return;
     }
+    const container = document.getElementById("sphere-container");
+    if (!container) return;
+    if (_uiInitialized) {
+      _markInitTimeline("duplicate-ui-init-suppressed", { href: typeof location !== "undefined" ? location.href : "" });
+      return;
+    }
+    _uiInitialized = true;
+    _state.initialUrl = typeof location !== "undefined" ? String(location.href || "") : "";
+    _state.currentUrl = _state.initialUrl;
+    _state.urlIntegrity = "preserved";
+    _logBuildIdentityOnce();
     applyUrlState();
     _restoreSelectedStateIfNeeded();
     _state.moonLabelMode = _resolveMoonLabelMode();
-    _state.moonLabelDistance = _resolveMoonLabelDistance();
+    if (!_urlHasExplicitMoonLabelDistance) {
+      _state.moonLabelDistance = _resolveMoonLabelDistance();
+    }
 
-    const container = document.getElementById("sphere-container");
-    if (!container) return;
+    _markInitTimeline("DOMContentLoaded", { href: typeof location !== "undefined" ? location.href : "" });
+    _markInitTimeline("sphere-component-mount", {
+      width: Number(container.clientWidth || 0),
+      height: Number(container.clientHeight || 0),
+    });
+    _setRendererLifecycle("not-started");
+    _installBrokenResourceGuard();
+    _installResourceFailureTracker();
+    _bindRecoveryHooks(container);
+    _probeColdBootDiagnostics();
+    globalThis.getSphereRuntimeDebugSnapshot = _collectRuntimeDebugSnapshot;
+    _installSelectedDayLongTaskObserver();
 
     // Auto-open Sphere Settings panel on non-mobile viewports.
     const settingsGroup = document.querySelector(".sphere-settings-group");
@@ -2495,6 +4765,9 @@
     }
     _setModeDefaultLayers(_state.viewMode);
     if (!_state.selectedMarker) _setModeDefaultSelectedMarker(_state.viewMode);
+    _state.requestedViewMode = _state.viewMode;
+    _state.activeViewMode = _state.viewMode;
+    _state.previousViewMode = _state.viewMode;
     _syncModeButtons();
 
     // Hide the interact bar immediately — it will be shown only after
@@ -2508,44 +4781,234 @@
       environmentApi.setEnvironmentState(environmentApi.EMPTY_STATE);
     }
     window.addEventListener("sof:location-changed", () => {
-      Promise.resolve(globalThis.OpenMeteoAdapter?.requestRefresh?.({ force: true }))
-        .catch(() => null)
-        .finally(() => renderSphere(container));
+      _invalidateLiveSnapshotCache();
+      _recordActionTrace("LOCATION_CHANGE", null, ["location-state", "coalesced-render"]);
+      if (_state._locationChangeRaf) cancelAnimationFrame(_state._locationChangeRaf);
+      _state._locationChangeRaf = requestAnimationFrame(() => {
+        _state._locationChangeRaf = 0;
+        renderSphere(container);
+      });
     });
     window.addEventListener(globalThis.SofEnvironmentState?.EVENT_NAME || "sof:environment-change", event => {
+      _invalidateLiveSnapshotCache();
       const nextState = event?.detail?.state || globalThis.SofEnvironmentState?.getEnvironmentState?.() || null;
+      _state.environmentLifecycle = _resolveEnvironmentLifecycle(nextState);
+      _incrementActionCounter("environmentDataUpdateCount");
       const renderer = globalThis.LivingTimeSphereRenderer3d;
       if (_state.active3d && renderer?.isInitialized?.()) {
         renderer.updateEnvironment?.(nextState);
-      } else {
+        _updateEnvironmentBridge(buildCurrentModel());
+        _updateRendererDiagnostics();
+        _recordActionTrace("ENVIRONMENT_DATA_CHANGE", { environmentLifecycle: _state.environmentLifecycle }, ["environment-data", "renderer-environment"]);
+      } else if (_state.visibleLayers.environment) {
         renderSphere(container);
+        _recordActionTrace("ENVIRONMENT_DATA_CHANGE", { environmentLifecycle: _state.environmentLifecycle }, ["environment-data", "full-render"]);
+      } else {
+        _updateEnvironmentBridge(buildCurrentModel());
+        _updateRendererDiagnostics();
+        _recordActionTrace("ENVIRONMENT_DATA_CHANGE", { environmentLifecycle: _state.environmentLifecycle }, ["environment-data", "ui-bridge-only"]);
+      }
+    });
+    window.addEventListener("popstate", () => {
+      _state._applyingHistoryState = true;
+      try {
+        _state.currentUrl = typeof location !== "undefined" ? String(location.href || "") : _state.currentUrl;
+        _state.urlIntegrity = _evaluateDeepLinkIntegrity(_state.initialUrl, _state.currentUrl);
+        const parsed = globalThis.LivingTimeSphereUrlState?.parseSphereUrl?.(location.href) || {};
+        const markerDay = _applyParsedUrlState(parsed, { initial: false });
+        const historyViewMode = parsed.viewMode || URL_STATE_DEFAULTS.viewMode;
+        _syncYearSelect(_state.year);
+        _syncLayerCheckboxes();
+        const urlControlValues = {
+          "sphere-renderer-select": _state.requestedRendererMode,
+          "sphere-quality-select": _state.quality,
+          "sphere-connection-mode": _state.connectionMode,
+          "sphere-motion-mode": _state.motionMode,
+          "sphere-moon-label-distance": _state.moonLabelDistance,
+          "sphere-day-label-mode": _state.dayLabelMode,
+        };
+        Object.entries(urlControlValues).forEach(([id, value]) => {
+          const control = document.getElementById(id);
+          if (control && value != null) control.value = value;
+        });
+        if (parsed.marker === "today" || (!parsed.marker && historyViewMode === "today")) {
+          _returnToLiveToday(container, { fieldRange: "now", switchViewMode: false, source: "browser-history" });
+          if (historyViewMode !== _state.viewMode) {
+            _requestViewModeTransition(container, historyViewMode);
+          }
+        } else if (markerDay != null) {
+          _requestSelectedDayUpdate(container, markerDay);
+          if (historyViewMode !== _state.viewMode) {
+            _requestViewModeTransition(container, historyViewMode);
+          }
+        } else if (historyViewMode !== _state.viewMode) {
+          _requestViewModeTransition(container, historyViewMode);
+        } else {
+          renderSphere(container);
+        }
+      } finally {
+        _state._applyingHistoryState = false;
       }
     });
 
     // Defer first render by one animation frame so the container has a
     // stable, non-zero bounding rect before 3D dimensions are measured.
     requestAnimationFrame(() => {
+      _markInitTimeline("first-request-animation-frame", {
+        width: Number(container.clientWidth || 0),
+        height: Number(container.clientHeight || 0),
+      });
       renderSphere(container);
+      _emitCalendarWorkbenchEvent("livingtime:ready");
     });
 
     // Re-render on resize (debounced).
     let resizeTimer;
+    let observedWidth = Math.round(Number(container.getBoundingClientRect?.().width || container.clientWidth || 0));
+    let observedHeight = Math.round(Number(container.getBoundingClientRect?.().height || container.clientHeight || 0));
     if (typeof ResizeObserver !== "undefined") {
-      new ResizeObserver(() => {
+      _state._resizeObserver?.disconnect?.();
+      _state._resizeObserver = new ResizeObserver(() => {
+        const rect = container.getBoundingClientRect?.() || { width: container.clientWidth, height: container.clientHeight };
+        const width = Math.round(Number(rect.width || 0));
+        const height = Math.round(Number(rect.height || 0));
+        if (width === observedWidth && height === observedHeight) return;
+        observedWidth = width;
+        observedHeight = height;
+        _state._latestContainerSize = { w: width, h: height };
         // Skip resize re-renders while 3D is still initializing — a
         // mid-init resize would start a second concurrent init call.
         if (_state._3dInitInProgress) return;
+        if (_state.active3d && globalThis.LivingTimeSphereRenderer3d?.isInitialized?.()) {
+          globalThis.LivingTimeSphereRenderer3d.requestSingleRender?.();
+          return;
+        }
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
-          if (!_state.active3d) renderSphere(container);
+          renderSphere(container);
         }, 150);
-      }).observe(container);
+      });
+      _state._resizeObserver.observe(container);
     }
+  }
+
+  function getSphereDiagnostics() {
+    const container = document.getElementById("sphere-container");
+    const rendererDiag = globalThis.LivingTimeSphereRenderer3d?.getDiagnostics?.() || {};
+    const rect = container?.getBoundingClientRect?.() || { width: 0, height: 0 };
+    const envState = globalThis.SofEnvironmentState?.getEnvironmentState?.() || null;
+    let modelReady = false;
+    try { modelReady = !!buildCurrentModel(); } catch { modelReady = false; }
+    return {
+      rendererState: _state.rendererLifecycle,
+      requestedRendererMode: _state.requestedRendererMode,
+      activeRendererMode: _state.activeRendererMode,
+      modelReady,
+      selectedDay: _state.selectedDayOfYear,
+      requestedViewMode: _state.requestedViewMode || _state.viewMode,
+      activeViewMode: _state.activeViewMode || _state.viewMode,
+      previousViewMode: _state.previousViewMode || _state.viewMode,
+      modeTransitionState: _state.modeTransitionState || "idle",
+      modeTransitionRevision: Number(_state.modeTransitionRevision || 0),
+      latestRequestedMode: _state.latestRequestedMode || null,
+      lastModeTransitionDuration: Number(_state.lastModeTransitionDuration || 0),
+      modeTransitionFailure: _state.modeTransitionFailure || null,
+      modeTransitionMetrics: (_state.modeTransitionMetrics || []).slice(-20),
+      baselineSvgVisible: !!container?.querySelector?.(".living-time-sphere-svg"),
+      threeDInitInProgress: !!_state._3dInitInProgress,
+      threeDInitAttempt: Number(_state._3dInitGeneration || 0),
+      threeDReady: !!_state.active3d,
+      canvasPresent: !!container?.querySelector?.("canvas"),
+      canvasWidth: Number(rendererDiag.canvasWidth || 0),
+      canvasHeight: Number(rendererDiag.canvasHeight || 0),
+      containerWidth: Number(rect.width || 0),
+      containerHeight: Number(rect.height || 0),
+      webglAvailable: !!rendererDiag.webglAvailable,
+      contextLost: rendererDiag.stageState?.context === "lost",
+      lastRenderTimestamp: Number(rendererDiag.lastRenderTimestamp || _state.lastRenderTimestamp || 0),
+      rafActive: !!rendererDiag.rafActive,
+      first3dFrameTimestamp: Number(rendererDiag.firstFrameTimestamp || 0),
+      environmentState: _resolveEnvironmentLifecycle(envState),
+      currentLayerSet: Object.entries(_state.visibleLayers || {}).filter(([, enabled]) => !!enabled).map(([key]) => key),
+      explicitUrlLayers: !!_urlHasExplicitLayers,
+      locationState: envState?.providerConfigured ? "configured" : "location-needed",
+      retryCount: Number(_state.retryCount || 0),
+      fullRenderCount: Number(_state.fullRenderCount || 0),
+      selectedLightweightUpdateCount: Number(_state.selectedLightweightUpdateCount || 0),
+      modeUpdateCount: Number(_state.actionCounters?.modeUpdateCount || 0),
+      selectedDayUpdateCount: Number(_state.actionCounters?.selectedDayUpdateCount || 0),
+      layerUpdateCount: Number(_state.actionCounters?.layerUpdateCount || 0),
+      environmentFocusCount: Number(_state.actionCounters?.environmentFocusCount || 0),
+      environmentDataUpdateCount: Number(_state.actionCounters?.environmentDataUpdateCount || 0),
+      rendererInitCount: Number(rendererDiag.rendererInitCount || 0),
+      fullSceneBuildCount: Number(rendererDiag.sceneBuildCount || rendererDiag.sceneRootBuildCount || 0),
+      fullModelBuildCount: Number(rendererDiag.modelBuildCount || 0),
+      selectedUpdateRevision: Number(_state.selectedUpdateRevision || 0),
+      selectedUpdateStatus: _state.selectedUpdateStatus,
+      selectedUpdateMetrics: (_state.selectedUpdateMetrics || []).slice(-20),
+      selectedUpdateLongTasks: (_state.selectedUpdateLongTasks || []).slice(-20),
+      selectedUpdateLastWatchdog: _state.selectedUpdateLastWatchdog || null,
+      selectedMarker: _state.selectedMarker || null,
+      selectedYear: Number(_state.year || 0) || null,
+      fieldRange: _state.fieldRange,
+      todayResetCount: Number(_state.actionCounters?.todayResetCount || 0),
+      lastTodayResetSource: _state.lastTodayResetSource || null,
+      lastTodayResetAt: Number(_state.lastTodayResetAt || 0),
+      temporalPlaybackActive: !!_state.temporalPlaybackActive,
+      temporalPlaybackScope: _state.temporalPlaybackScope,
+      temporalPlaybackSpeed: Number(_state.temporalPlaybackSpeed || 0),
+      temporalPlaybackStepCount: Number(_state.temporalPlaybackStepCount || 0),
+      temporalEngineVersion: globalThis.LivingTimeSphereTemporal?.version || null,
+      liveSnapshotCacheAgeMs: _state._liveSnapshotCacheAt ? Math.max(0, Date.now() - Number(_state._liveSnapshotCacheAt)) : null,
+      renderSurfaceVerification: _state.lastRenderSurfaceVerification || _verifyRenderSurface(container, { requireVisibleCenter: false }),
+      firstRenderSurfaceFailure: _state.firstRenderSurfaceFailure || null,
+      renderSurfaceCanvasTrace: (_state.renderSurfaceCanvasTrace || []).slice(-40),
+      initTimeline: (_state.initTimeline || []).slice(-80),
+      runtimeDebug: _collectRuntimeDebugSnapshot(),
+      actionTrace: (_state.actionTrace || []).slice(-60),
+      environmentFocusDiagnostics: _state.lastEnvironmentFocusDiagnostics || null,
+      layerStateSource: _state.layerStateSource || "default",
+      userCustomizedLayers: !!_state.userCustomizedLayers,
+      buildVersion: globalThis.LivingTimeSphereVersion?.buildMetadata || null,
+      sphereRendererVersion: globalThis.LivingTimeSphereVersion?.version || null,
+      buildIdentityLine: _resolveBuildIdentityLine(),
+      deepLink: {
+        initialUrl: _state.initialUrl || null,
+        currentUrl: _state.currentUrl || (typeof location !== "undefined" ? location.href : null),
+        integrity: _state.urlIntegrity || "unknown",
+      },
+      coldBootDiagnostics: _state.coldBootDiagnostics || null,
+    };
   }
 
   globalThis.LivingTimeSphereUi = Object.freeze({
     init,
     getState: () => Object.assign({}, _state),
+    getCurrentModel: () => buildCurrentModel(),
     renderSphere: (container) => renderSphere(container || document.getElementById("sphere-container")),
+    returnToToday: options => _returnToLiveToday(document.getElementById("sphere-container"), options),
+    selectDay: (day, options = {}) => {
+      const container = document.getElementById("sphere-container");
+      if (!container) return false;
+      _stopTemporalPlayback("public-day-selection");
+      _requestSelectedDayUpdate(container, day, {
+        source: options.source || "public-api",
+        action: options.action || "PUBLIC_DAY_SELECTION",
+        marker: options.marker,
+        year: options.year,
+        fieldRange: options.fieldRange,
+      });
+      return true;
+    },
+    applyLayerPreset: presetName => _applyLayerPreset(document.getElementById("sphere-container"), presetName),
+    pauseTemporalPlayback: () => _stopTemporalPlayback("public-api", { announce: true }),
+    getSphereDiagnostics,
+    _internals: Object.freeze({
+      resolveLiveTodayTarget: _resolveLiveTodayTarget,
+      selectedDayFromMarker: _selectedDayFromMarker,
+      buildTodaySelectionPatch: _buildTodaySelectionPatch,
+      decorateModel: _decorateModel,
+    }),
   });
+  globalThis.getSphereDiagnostics = getSphereDiagnostics;
 })();

@@ -1,0 +1,86 @@
+/* Living Time Sphere metric detail affordances (standalone-safe) */
+
+[data-app-expandable="true"] {
+  cursor: pointer;
+  position: relative;
+  transition: color 0.15s;
+}
+
+[data-app-expandable="true"]:hover,
+[data-app-expandable="true"]:focus-visible {
+  color: var(--color-accent, #fbbf24);
+  outline: none;
+}
+
+[data-app-expandable="true"]:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 4px;
+  outline: 2px solid var(--color-accent, #fbbf24);
+  pointer-events: none;
+}
+
+.living-metric-detail {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  width: max(220px, 55vw);
+  max-width: 320px;
+  padding: 0.55rem 0.85rem;
+  background: rgba(10, 12, 22, 0.97);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  border-radius: 0.5rem;
+  color: rgba(232, 228, 217, 0.9);
+  font-size: 0.8rem;
+  line-height: 1.55;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+  white-space: normal;
+}
+
+[data-app-expandable="true"].is-expanded .living-metric-detail {
+  display: block;
+}
+
+.living-metric-detail::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: rgba(251, 191, 36, 0.3);
+}
+
+@media (max-height: 480px) {
+  .living-metric-detail {
+    bottom: auto;
+    top: calc(100% + 6px);
+  }
+  .living-metric-detail::after {
+    top: auto;
+    bottom: 100%;
+    border-top-color: transparent;
+    border-bottom-color: rgba(251, 191, 36, 0.3);
+  }
+}
+
+@media (max-width: 480px) {
+  .living-metric-detail {
+    position: static;
+    transform: none;
+    width: 100%;
+    max-width: none;
+    margin-top: 0.4rem;
+    bottom: auto;
+    left: auto;
+  }
+  .living-metric-detail::after {
+    display: none;
+  }
+}
+

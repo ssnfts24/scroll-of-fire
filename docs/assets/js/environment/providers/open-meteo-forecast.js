@@ -4,6 +4,7 @@
   const CURRENT_TTL_MS = 15 * 60 * 1000;
   const HOURLY_TTL_MS = 30 * 60 * 1000;
   const DAILY_TTL_MS = 2 * 60 * 60 * 1000;
+  const REQUEST_TIMEOUT_MS = 15000;
   const CACHE_KEY = "sof.environment.openmeteo.forecast.cache.v1";
   const LAST_SUCCESS_KEY = "sof.environment.openmeteo.last-success.v1";
 
@@ -273,13 +274,15 @@
       const controller = new AbortController();
       const onAbort = () => controller.abort();
       signal?.addEventListener?.("abort", onAbort, { once: true });
+      const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
       try {
         const fresh = await fetchForecast(normalizedPlace, controller.signal);
         writeCache(normalizedPlace, fresh);
         safeWrite(LAST_SUCCESS_KEY, fresh);
         return buildResult(fresh);
       } catch (error) {
-        const staleCache = cache || safeRead(LAST_SUCCESS_KEY);
+        const lastSuccess = safeRead(LAST_SUCCESS_KEY);
+        const staleCache = cache || (placeKey(lastSuccess?.place) === key ? lastSuccess : null);
         if (staleCache) {
           return buildResult(staleCache, {
             stale: true,
@@ -289,6 +292,7 @@
         }
         return buildResult(null, { error });
       } finally {
+        clearTimeout(timeout);
         signal?.removeEventListener?.("abort", onAbort);
       }
     })();
@@ -304,7 +308,8 @@
   function getCachedForecastSnapshot(place) {
     const normalizedPlace = normalizePlace(place);
     if (!normalizedPlace) return buildResult(null, { error: new Error("Location is not set.") });
-    const cache = readCache(normalizedPlace) || safeRead(LAST_SUCCESS_KEY);
+    const lastSuccess = safeRead(LAST_SUCCESS_KEY);
+    const cache = readCache(normalizedPlace) || (placeKey(lastSuccess?.place) === placeKey(normalizedPlace) ? lastSuccess : null);
     if (!cache) return buildResult(null, { error: new Error("No cached environmental snapshot.") });
     const fresh = segmentFreshness(cache);
     return buildResult(cache, {
@@ -317,6 +322,7 @@
     CURRENT_TTL_MS,
     HOURLY_TTL_MS,
     DAILY_TTL_MS,
+    REQUEST_TIMEOUT_MS,
     CURRENT_FIELDS,
     HOURLY_FIELDS,
     DAILY_FIELDS,

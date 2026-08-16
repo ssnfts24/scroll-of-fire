@@ -16,5 +16,22 @@
 [[headers]]
   for = "/assets/*"
   [headers.values]
-    # Cache is keyed by ?v= query string; use a long but revalidatable max-age
-    Cache-Control = "public, max-age=31536000"
+    # Source filenames are intentionally stable, so every deploy must revalidate.
+    # The service worker supplies the offline copy after the network check.
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/service-worker.js"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+    Service-Worker-Allowed = "/"
+
+[[headers]]
+  for = "/assets/img/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800, stale-while-revalidate=86400"

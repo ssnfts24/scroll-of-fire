@@ -16,6 +16,15 @@ function fileExists(relativePath) {
   return fs.existsSync(path.join(root, relativePath));
 }
 
+function localDateISO(value = new Date()) {
+  const date = value instanceof Date ? value : new Date(value);
+  return [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, "0"),
+    String(date.getDate()).padStart(2, "0")
+  ].join("-");
+}
+
 /* ------------------------------------------------------------------ */
 /* Minimal browser-environment stub for evaluating codex-memory.js    */
 /* ------------------------------------------------------------------ */
@@ -310,7 +319,7 @@ test("getIntention returns isPriorDay:true for previous day", () => {
     dailyIntention: {
       value: "ground",
       selectedAt: yesterday.toISOString(),
-      calendarDate: yesterday.toISOString().slice(0, 10),
+      calendarDate: localDateISO(yesterday),
       moonNumber: 4,
       moonDay: 5
     },
@@ -447,7 +456,7 @@ test("getSevenDaySummary returns exactly 7 entries", () => {
 test("getSevenDaySummary last entry is today", () => {
   const { CodexMemory } = evalCodexMemory();
   const summary = CodexMemory.getSevenDaySummary();
-  const todayISO = new Date().toISOString().slice(0, 10);
+  const todayISO = localDateISO();
   assert.equal(summary[6].isoDate, todayISO, "last entry should be today");
 });
 

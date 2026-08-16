@@ -10,7 +10,7 @@
 
   gtag('config', 'G-2TBMEK502C');
 </script>
-  
+
   <base href="/">
   <script>
     if (location.hostname === "ssnfts24.github.io") {
@@ -68,7 +68,7 @@
   <link rel="stylesheet" href="assets/css/living-day.css?v=1">
   <link rel="stylesheet" href="assets/css/codex-memory.css?v=1">
   <link rel="stylesheet" href="assets/css/share-day.css?v=1">
-  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260729-luxury-1">
+  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260815-6">
   <link rel="stylesheet" href="assets/css/living-time-app-enhancements.css?v=20260730-1">
   <link rel="stylesheet" href="assets/css/performance-runtime.css?v=20260731-1">
 
@@ -170,7 +170,7 @@
   <script defer src="assets/js/environment/providers/open-meteo-forecast.js?v=20260731-1"></script>
   <script defer src="assets/js/environment/open-meteo-adapter.js?v=20260731-1"></script>
   <script defer src="assets/js/environment/location-command.js?v=20260731-1"></script>
-  <script defer src="assets/js/home-observatory-instrument.js?v=20260731-1"></script>
+  <script defer src="assets/js/home-observatory-instrument.js?v=20260815-6"></script>
   <script>
     window.__homeSphereBoot = {
       mode: "IntersectionObserver",
@@ -180,8 +180,8 @@
       window.HomeObservatoryInstrument?.bootstrap?.();
     });
   </script>
-  <!-- Homepage-only layout repair: authoritative Living Time Sphere embed + stable participation flow -->
-  <style id="home-perfect-layout-v20260729">
+  <!-- Homepage Observatory: a sphere-first, progressive 3D instrument. -->
+  <style id="home-sphere-focus-v20260815">
     .home-living-sphere {
       position: relative;
       min-height: 0 !important;
@@ -189,77 +189,49 @@
     }
 
     .home-living-sphere__inner {
-      width: min(100%, 1240px);
+      width: min(100%, 1180px);
       margin-inline: auto;
       display: grid;
-      gap: 1rem;
+      gap: clamp(1.1rem, 2vw, 1.7rem);
     }
 
     .home-living-sphere__header {
-      max-width: 860px;
+      max-width: 760px;
       margin: 0 auto;
       text-align: center;
     }
 
+    .home-living-sphere__header > p:last-child {
+      max-width: 62ch;
+      margin-inline: auto;
+      color: var(--muted, #b9c1c7);
+    }
+
     .home-living-sphere__stage {
       position: relative;
-      border: 1px solid rgba(255, 177, 112, 0.24);
-      border-radius: clamp(1rem, 2vw, 1.4rem);
-      background: radial-gradient(circle at 50% 0%, rgba(122, 243, 255, 0.12), transparent 55%), #05070d;
-      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4);
+      width: min(100%, 860px);
+      margin-inline: auto;
+      border: 1px solid rgba(122, 243, 255, 0.22);
+      border-radius: clamp(1rem, 2.6vw, 2rem);
+      background:
+        radial-gradient(circle at 50% 44%, rgba(29, 88, 112, 0.2), transparent 38%),
+        radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.08), transparent 68%),
+        linear-gradient(160deg, #070b16, #02040a 72%);
+      box-shadow: 0 32px 110px rgba(0, 0, 0, 0.58), inset 0 0 80px rgba(122, 243, 255, 0.035);
       overflow: clip;
-      padding: clamp(0.8rem, 1.4vw, 1.2rem);
-      display: grid;
-      gap: 0.8rem;
-    }
-
-    .home-living-sphere__telemetry {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
-      gap: 0.45rem;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      font-size: 0.78rem;
-    }
-
-    .home-living-sphere__telemetry li {
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(10, 16, 28, 0.64);
-      border-radius: 0.6rem;
-      padding: 0.5rem 0.55rem;
-      min-height: 52px;
-    }
-
-    .home-living-sphere__telemetry strong {
-      display: block;
-      color: var(--gold, #f3c97a);
-      font-size: 0.68rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      margin-bottom: 0.2rem;
-    }
-
-    .home-living-sphere__mode-controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.45rem;
-    }
-
-    .home-living-sphere__mode-controls .sphere-chip-btn {
-      min-height: 34px;
+      isolation: isolate;
     }
 
     .home-living-sphere__viewport {
       position: relative;
       width: 100%;
-      height: clamp(320px, 56vw, 520px);
-      min-height: 320px;
-      max-height: 520px;
-      border-radius: 0.9rem;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: #060913;
+      aspect-ratio: 1 / 1;
+      min-height: 300px;
+      max-height: min(82vh, 860px);
+      border-radius: inherit;
+      background: transparent;
       overflow: hidden;
+      contain: layout paint;
     }
 
     .home-living-sphere__preview,
@@ -270,64 +242,86 @@
       height: 100%;
     }
 
-    .home-living-sphere__preview { z-index: 1; }
-    .home-living-sphere__fx-canvas { z-index: 0; pointer-events: none; }
+    .home-living-sphere__preview { z-index: 2; }
+    .home-living-sphere__fx-canvas { z-index: 1; pointer-events: none; }
+    .home-living-sphere__preview > svg,
+    .home-living-sphere__preview > canvas { width: 100% !important; height: 100% !important; }
 
-    .home-living-sphere__summary {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.45rem;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 0.82rem;
-      color: var(--muted, #b9c1c7);
-    }
-
-    .home-living-sphere__drawers {
+    .home-living-sphere__hud {
+      position: absolute;
+      inset: clamp(0.65rem, 2vw, 1.2rem);
+      z-index: 4;
+      pointer-events: none;
       display: grid;
-      gap: 0.5rem;
+      grid-template-columns: 1fr 1fr;
+      align-content: space-between;
+      gap: 1rem;
+    }
+    .home-living-sphere__hud p { margin: 0; max-width: 15rem; }
+    .home-living-sphere__hud p:nth-child(even) { justify-self: end; text-align: right; }
+    .home-living-sphere__hud-label {
+      display: block;
+      margin-bottom: 0.2rem;
+      color: rgba(197, 220, 232, 0.62);
+      font-size: clamp(0.55rem, 1.1vw, 0.68rem);
+      font-weight: 700;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+    .home-living-sphere__hud strong {
+      display: block;
+      color: rgba(244, 240, 222, 0.94);
+      font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+      text-shadow: 0 2px 12px #000;
     }
 
-    .home-living-sphere__drawers details {
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 0.7rem;
-      background: rgba(10, 16, 28, 0.58);
-      padding: 0.35rem 0.6rem;
+    .home-living-sphere__render-state {
+      position: absolute;
+      z-index: 5;
+      left: 50%;
+      bottom: clamp(0.7rem, 2vw, 1.15rem);
+      transform: translateX(-50%);
+      margin: 0;
+      padding: 0.36rem 0.72rem;
+      border: 1px solid rgba(122, 243, 255, 0.28);
+      border-radius: 999px;
+      background: rgba(3, 7, 14, 0.78);
+      color: rgba(205, 229, 238, 0.86);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      backdrop-filter: blur(12px);
+      pointer-events: none;
     }
-
-    .home-living-sphere__drawers summary {
-      cursor: pointer;
-      color: var(--gold, #f3c97a);
-      font-weight: 600;
-      min-height: 36px;
-      display: flex;
-      align-items: center;
+    .home-living-sphere__stage.has-renderer-3d .home-living-sphere__render-state {
+      border-color: rgba(100, 255, 180, 0.42);
+      color: rgba(165, 255, 212, 0.96);
     }
-
-    .home-living-sphere__drawers p {
-      margin: 0.35rem 0 0.5rem;
-      color: var(--muted, #b9c1c7);
-      font-size: 0.84rem;
-      line-height: 1.55;
+    .home-living-sphere__stage.has-renderer-fallback .home-living-sphere__render-state {
+      border-color: rgba(251, 191, 36, 0.42);
+      color: rgba(255, 221, 143, 0.96);
     }
 
     .home-living-sphere__actions {
       justify-content: center;
-      margin-top: 0.1rem;
+      justify-content: center;
+      margin-top: 0;
+    }
+
+    .home-living-sphere__caption {
+      max-width: 62ch;
+      margin: 0 auto;
+      color: var(--muted, #b9c1c7);
+      font-size: 0.9rem;
+      line-height: 1.65;
+      text-align: center;
     }
 
     @media (max-width: 760px) {
-      .home-living-sphere__stage { padding: 0.7rem; }
-      .home-living-sphere__telemetry { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .home-living-sphere__viewport { height: min(78vw, 400px); min-height: 280px; }
-      .home-living-sphere__summary { flex-direction: column; align-items: flex-start; }
+      .home-living-sphere__viewport { min-height: min(88vw, 360px); }
+      .home-living-sphere__hud { inset: 0.7rem; }
+      .home-living-sphere__actions .btn:not(.primary) { display: none; }
     }
-  
-    .home-living-sphere__telemetry li { cursor:pointer; position:relative; transition:border-color .18s ease, background .18s ease, transform .18s ease; }
-    .home-living-sphere__telemetry li:hover, .home-living-sphere__telemetry li:focus-visible, .home-living-sphere__telemetry li.is-expanded { border-color:rgba(251,191,36,.62); background:rgba(16,25,38,.96); transform:translateY(-1px); }
-    .home-living-sphere__telemetry li::after { content:"Tap for details"; display:block; max-height:0; overflow:hidden; opacity:0; color:rgba(203,220,230,.72); font-size:.72rem; transition:max-height .18s ease, opacity .18s ease, margin .18s ease; }
-    .home-living-sphere__telemetry li:hover::after, .home-living-sphere__telemetry li:focus-visible::after, .home-living-sphere__telemetry li.is-expanded::after { max-height:2rem; opacity:1; margin-top:.35rem; }
-    .home-living-sphere__viewport { aspect-ratio:1/1; height:auto!important; max-height:min(88vw,560px); contain:layout paint size; }
     .home-living-sphere__preview .sphere-moon-labels { overflow:hidden; }
 </style>
   <style id="participation-vision-styles-v20260729">
@@ -525,97 +519,34 @@
       class="section-shell home-living-sphere"
       id="home-sphere-observatory"
       aria-labelledby="home-sphere-title">
-      <div class="home-living-sphere__inner" id="home-sphere-instrument" data-home-sphere-root>
+      <div class="home-living-sphere__inner" id="home-sphere-instrument" data-home-sphere-root data-sphere-mode="pattern" data-home-sphere-reset>
         <header class="home-living-sphere__header">
           <p class="eyebrow">The 13 Moons Remnant Living Time Observatory</p>
           <h2 id="home-sphere-title">Today in the Living Time Sphere</h2>
           <p>
-            A bounded mission instrument for Pattern, Sky, Passage, and History. It shares one active state with the full Observatory and opens directly into the full command deck.
+            The same living 3D model used by the full Observatory—shown here without a control deck so the Pattern, lunar, solar, Passage, and recurrence layers can speak for themselves.
           </p>
         </header>
 
-        <div class="home-living-sphere__stage">
-          <ul class="home-living-sphere__telemetry" aria-label="Current living telemetry">
-            <li><strong>Moon</strong><span id="home-sphere-today-moon">—</span></li>
-            <li><strong>Moon Day</strong><span id="home-sphere-today-moon-day">—</span></li>
-            <li><strong>Day of 364</strong><span id="home-sphere-today-day-of-year">—</span></li>
-            <li><strong>Pattern Year</strong><span id="home-sphere-today-year">—</span></li>
-            <li><strong>Civil Date</strong><span id="home-sphere-civil-date">—</span></li>
-            <li><strong>Lunar Phase</strong><span id="home-sphere-today-lunar">—</span></li>
-            <li><strong>Solar</strong><span id="home-sphere-today-solar">—</span></li>
-            <li><strong>Seasonal Gate</strong><span id="home-sphere-today-season">—</span></li>
-            <li><strong>Passage</strong><span id="home-sphere-today-passage">—</span></li>
-            <li><strong>Sunrise</strong><span id="home-sphere-sunrise">—</span></li>
-            <li><strong>Sunset</strong><span id="home-sphere-sunset">—</span></li>
-            <li><strong>Daylight</strong><span id="home-sphere-daylight">—</span></li>
-            <li><strong>Weather</strong><span id="home-sphere-weather">—</span></li>
-            <li><strong>Witness Count</strong><span id="home-sphere-today-witness">—</span></li>
-            <li><strong>Active Quests</strong><span id="home-sphere-quest-count">—</span></li>
-            <li><strong>Selected Day</strong><span id="home-sphere-selected-day">Today</span></li>
-            <li><strong>Day Boundary</strong><span id="home-sphere-boundary">—</span></li>
-            <li><strong>Time Zone</strong><span id="home-sphere-time-zone">—</span></li>
-            <li><strong>Moon Light</strong><span id="home-sphere-lunar-illumination">—</span></li>
-            <li><strong>Closest Recurrence</strong><span id="home-sphere-recurrence">—</span></li>
-          </ul>
-
-          <section class="sphere-location-command sphere-location-command-compact" data-sof-location-command aria-label="Homepage location command">
-            <p class="sphere-location-state" data-location-state>LOCATION NOT SET</p>
-            <div class="sphere-location-actions">
-              <button class="sphere-chip-btn" type="button" data-location-use-device>Use My Location</button>
-              <button class="sphere-chip-btn" type="button" data-location-search-submit>Search Place</button>
-              <button class="sphere-chip-btn" type="button" data-location-coords-submit>Enter Coordinates</button>
-              <button class="sphere-chip-btn" type="button" data-location-continue-without>Continue Without Weather</button>
-            </div>
-            <div class="sphere-location-inputs">
-              <input data-location-search-input type="text" placeholder="Search place">
-              <div class="sphere-location-coords">
-                <input data-location-lat type="number" min="-90" max="90" step="0.0001" placeholder="Latitude">
-                <input data-location-lon type="number" min="-180" max="180" step="0.0001" placeholder="Longitude">
-                <input data-location-name type="text" placeholder="Optional place name">
-              </div>
-            </div>
-            <div class="sphere-location-results" data-location-results></div>
-            <p class="sphere-field-note" data-location-status>Choose a location to enable weather and daylight telemetry.</p>
-          </section>
-
-          <div class="home-living-sphere__mode-controls" role="group" aria-label="Homepage instrument controls">
-            <button class="sphere-chip-btn" type="button" data-sphere-mode="today" aria-pressed="true">Today</button>
-            <button class="sphere-chip-btn" type="button" data-sphere-mode="pattern" aria-pressed="false">Pattern</button>
-            <button class="sphere-chip-btn" type="button" data-sphere-layer="solar" aria-pressed="false">Sky</button>
-            <button class="sphere-chip-btn" type="button" data-sphere-mode="passage" aria-pressed="false">Passage</button>
-            <button class="sphere-chip-btn" type="button" data-sphere-mode="years" aria-pressed="false">History</button>
-            <button class="sphere-chip-btn" type="button" data-home-sphere-reset aria-pressed="false">Reset</button>
-          </div>
-
+        <div class="home-living-sphere__stage" data-home-sphere-stage>
           <div class="home-living-sphere__viewport">
             <canvas id="home-sphere-fx" class="home-living-sphere__fx-canvas" aria-hidden="true"></canvas>
-            <div id="home-sphere-today-preview" class="home-living-sphere__preview" data-sphere-interactive-preview role="img" aria-label="Living Time Sphere preview"></div>
+            <div id="home-sphere-today-preview" class="home-living-sphere__preview" data-sphere-interactive-preview role="img" aria-label="Interactive 3D Living Time Sphere showing the current Pattern, lunar, solar, Passage, and recurrence layers" aria-busy="true"></div>
+            <div class="home-living-sphere__hud" aria-hidden="true">
+              <p><span class="home-living-sphere__hud-label">Pattern</span><strong id="home-sphere-today-pattern">Aligning…</strong></p>
+              <p><span class="home-living-sphere__hud-label">Lunar</span><strong id="home-sphere-today-lunar">Aligning…</strong></p>
+              <p><span class="home-living-sphere__hud-label">Solar</span><strong id="home-sphere-today-solar">Aligning…</strong></p>
+              <p><span class="home-living-sphere__hud-label">Passage</span><strong id="home-sphere-today-passage">Aligning…</strong></p>
+            </div>
+            <p class="home-living-sphere__render-state" id="home-sphere-render-state" role="status" aria-live="polite">Loading sphere engine</p>
           </div>
-
-          <div class="home-living-sphere__summary">
-            <p id="home-sphere-today-orientation">Today orientation loads when this instrument enters view.</p>
-            <p data-sphere-mode-summary>Today mode</p>
-          </div>
-
-          <div class="home-living-sphere__drawers" aria-label="Expanded context drawers">
-            <details>
-              <summary>Pattern + Sky</summary>
-              <p id="home-sphere-drawer-pattern">Pattern and sky context appears here after load.</p>
-            </details>
-            <details>
-              <summary>Passage + History</summary>
-              <p id="home-sphere-drawer-history">Passage and historical recurrence context appears here after load.</p>
-            </details>
-          </div>
-
-          <p id="home-sphere-today-accessible" class="visually-hidden" aria-live="polite"></p>
-
-          <div class="hero-actions home-living-sphere__actions">
-            <a class="btn primary" id="home-sphere-today-open-link" href="./living-time-sphere.html?view=today&amp;source=home">Open Observatory</a>
-            <a class="btn" href="./living-time-sphere.html?view=today&amp;source=home">Enter Today's Sphere</a>
-            <a class="btn" id="home-sphere-today-witness-link" href="./ledger.html">Record Witness</a>
-            <a class="btn" id="home-sphere-today-ledger-link" href="./alignment-ledger.html">Alignment Ledger</a>
-          </div>
+        </div>
+        <p class="home-living-sphere__caption" id="home-sphere-today-orientation">The fixed 13 × 28 Pattern remains centered while astronomical time moves around it. Drag the sphere to inspect the living field.</p>
+        <p id="home-sphere-today-accessible" class="visually-hidden" aria-live="polite"></p>
+        <span id="home-sphere-today-witness" class="visually-hidden">Witness data remains private in this browser.</span>
+        <div class="hero-actions home-living-sphere__actions">
+          <a class="btn primary" id="home-sphere-today-open-link" href="./living-time-sphere.html?view=today&amp;marker=today&amp;source=home">Enter Today's Sphere</a>
+          <a class="btn" href="./living-time-sphere.html#observatory-console">Open Local Observatory</a>
         </div>
       </div>
     </section>
@@ -1732,7 +1663,7 @@
 
       </div>
   </section>
-    
+
     <section class="section-shell" aria-labelledby="foundational-whitepapers-title">
       <div class="section-heading">
         <p class="eyebrow">Foundations of the Codex</p>

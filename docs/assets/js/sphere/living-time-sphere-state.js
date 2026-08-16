@@ -15,7 +15,7 @@
   const DEFAULT_DAY_LABEL_MODE = "key";
 
   const VALID_MODES = Object.freeze(["today", "pattern", "passage", "years"]);
-  const VALID_RENDERERS = Object.freeze(["auto", "3d", "svg", "table", "text"]);
+  const VALID_RENDERERS = Object.freeze(["auto", "3d", "svg", "canvas", "table", "text"]);
   const VALID_CONNECTION_MODES = Object.freeze(["off", "selected", "contextual", "full", "custom"]);
   const VALID_MOTION_MODES = Object.freeze(["still", "drift", "reduced"]);
   const VALID_CAMERA_PRESETS = Object.freeze(["reset", "top", "tilted", "edge", "focus", "overview", "detail", "spiral"]);
@@ -149,8 +149,8 @@
     }),
     connections: Object.freeze({
       id: "connections",
-      dataSource: ["LivingTimeSphereConnections"],
-      geometry: ["day-to-core", "day-to-solar", "day-to-lunar", "passage-links"],
+      dataSource: ["LivingTimeSphereConnections", "LivingTimeSphereTemporal"],
+      geometry: ["day-to-core", "selected-to-today", "day-to-solar", "day-to-lunar", "passage-links"],
       selectionMetadataType: "connection",
       semanticZoom: Object.freeze({ far: "selected-only", medium: "contextual", near: "focused-graph", detail: "expanded-local" }),
       performance: Object.freeze({ high: "more concurrent links", balanced: "contextual subset", lowpower: "selected subset", minimal: "off" }),

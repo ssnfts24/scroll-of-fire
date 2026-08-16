@@ -62,6 +62,44 @@
     }
   }
 
+  function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+
+  function _disposeObjectTree(root, shared = null) {
+    if (!root) return;
+    const seen = shared || { geometries: new Set(), materials: new Set(), textures: new Set() };
+    const disposeMaterial = material => {
+      if (!material || seen.materials.has(material)) return;
+      seen.materials.add(material);
+      Object.values(material).forEach(value => {
+        if (!value?.isTexture || seen.textures.has(value)) return;
+        seen.textures.add(value);
+        try { value.dispose?.(); } catch { /* best-effort GPU cleanup */ }
+      });
+      try { material.dispose?.(); } catch { /* best-effort GPU cleanup */ }
+    };
+    const disposeNode = node => {
+      if (node?.geometry && !seen.geometries.has(node.geometry)) {
+        seen.geometries.add(node.geometry);
+        try { node.geometry.dispose?.(); } catch { /* best-effort GPU cleanup */ }
+      }
+      if (Array.isArray(node?.material)) node.material.forEach(disposeMaterial);
+      else disposeMaterial(node?.material);
+    };
+    if (typeof root.traverse === "function") root.traverse(disposeNode);
+    else disposeNode(root);
+  }
+
+  function _disposeGroupChildren(group) {
+    if (!group?.children) return;
+    const seen = { geometries: new Set(), materials: new Set(), textures: new Set() };
+    Array.from(group.children).forEach(child => {
+      _disposeObjectTree(child, seen);
+      try { group.remove(child); } catch { /* best-effort scene cleanup */ }
+    });
+  }
+
   // ── Scene state ───────────────────────────────────────────────────
 
   let _THREE        = null;   // Three.js namespace (set after lazy import)
@@ -73,6 +111,12 @@
   let _container    = null;
   let _initialized  = false;
   let _initializing = false;  // Guard against concurrent init calls
+  let _renderGeneration = 0;  // Identifies the single authoritative canvas
+  let _initEpoch = 0;         // Invalidates late async work after timeout/teardown
+  let _activeWebGlContext = null;
+  let _pointerEventDisposers = [];
+  let _lastResizeWidth = 0;
+  let _lastResizeHeight = 0;
   let _quality      = null;   // current resolved preset object
   let _model        = null;   // current year model
   let _spiral       = null;   // 13-year spiral model
@@ -87,6 +131,17 @@
   let _appliedDpr = null;
   let _activeTier = null;
   let _restoreAttempts = 0;
+  let _lastRenderTimestamp = 0;
+  let _firstFrameTimestamp = 0;
+  let _firstFramePixelProbe = null;
+  let _lastSceneBuildTimestamp = 0;
+  let _geometryBuildRevision = 0;
+  let _lastSceneReadiness = null;
+  let _contextLostAt = 0;
+  let _contextRestoredAt = 0;
+  let _contextLossCount = 0;
+  let _contextRestoreCount = 0;
+  const _initTimeline = [];
   const _stageState = {
     capability: "idle",
     module: "idle",
@@ -100,6 +155,194 @@
     semanticZoom: "idle",
     firstFrame: "idle",
   };
+  const _lifecycleCounters = {
+    rendererInitCount: 0,
+    sceneRootBuildCount: 0,
+    modelBuildCount: 0,
+    selectedStateUpdateCount: 0,
+    layerVisibilityUpdateCount: 0,
+    cameraCreateCount: 0,
+    canvasCreateCount: 0,
+    orphanCanvasPruneCount: 0,
+    rafLoopStartCount: 0,
+    resizeObserverCreateCount: 0,
+  };
+  const _geometryBuildCountByLayer = {};
+  const _layerBuildMetrics = {};
+  const _layerToggleMetrics = {};
+  const _hostContractIssues = [];
+  let _lastLayerUpdateType = "data-update";
+  let _lastLayerUpdateMs = 0;
+  let _hostContractCheckedAt = 0;
+  let _sceneRepairQueued = false;
+  let _sceneRepairRaf = 0;
+
+  function _countLifecycle(key, amount = 1) {
+    if (!Object.prototype.hasOwnProperty.call(_lifecycleCounters, key)) return;
+    _lifecycleCounters[key] += amount;
+  }
+
+  function _pushInitTimeline(stage, payload = null) {
+    _initTimeline.push({
+      at: Date.now(),
+      stage: String(stage || "unknown"),
+      payload: payload && typeof payload === "object" ? { ...payload } : payload,
+      canvasConnected: !!_canvas?.isConnected,
+    });
+    if (_initTimeline.length > 120) _initTimeline.shift();
+  }
+
+  function _recordCanvasConnection(stage) {
+    _pushInitTimeline(`canvas-${stage}`, {
+      connected: !!_canvas?.isConnected,
+      parentTag: _canvas?.parentElement ? String(_canvas.parentElement.tagName || "").toUpperCase() : null,
+      parentId: _canvas?.parentElement?.id || null,
+      ownerDocumentIsCurrent: _canvas ? _canvas.ownerDocument === document : false,
+    });
+  }
+
+  function _markLayerBuild(layer, durationMs) {
+    if (!layer) return;
+    _geometryBuildCountByLayer[layer] = Number(_geometryBuildCountByLayer[layer] || 0) + 1;
+    _layerBuildMetrics[layer] = Number(durationMs || 0);
+  }
+
+  function _markLayerToggle(layer, durationMs) {
+    if (!layer) return;
+    _layerToggleMetrics[layer] = Number(durationMs || 0);
+  }
+
+  function _isUnexpectedHostMedia(node) {
+    if (!node || node.nodeType !== 1) return false;
+    const tag = String(node.tagName || "").toUpperCase();
+    if (tag === "CANVAS") return false;
+    if (tag === "SVG") return false;
+    if (tag === "DIV" && node.classList?.contains("sphere-luxury-loader")) return false;
+    return tag === "IMG" || tag === "PICTURE" || tag === "SOURCE" || tag === "OBJECT" || tag === "IFRAME" || tag === "EMBED" || tag === "VIDEO";
+  }
+
+  function _collapseFailedHostResource(node, reason = "foreign-media-node") {
+    if (!node || node.nodeType !== 1) return false;
+    const entry = {
+      tagName: String(node.tagName || "").toUpperCase(),
+      id: node.id || null,
+      className: node.className || "",
+      reason,
+      src: node.currentSrc || node.src || node.data || null,
+      parentTag: node.parentElement ? String(node.parentElement.tagName || "").toUpperCase() : null,
+      parentId: node.parentElement?.id || null,
+      timestamp: Date.now(),
+    };
+    _hostContractIssues.push(entry);
+    if (_hostContractIssues.length > 80) _hostContractIssues.shift();
+    try {
+      node.hidden = true;
+      node.setAttribute?.("aria-hidden", "true");
+      node.style.display = "none";
+      node.style.width = "0";
+      node.style.height = "0";
+      node.style.minHeight = "0";
+      node.style.minWidth = "0";
+      node.style.overflow = "hidden";
+      node.remove?.();
+    } catch { /* best-effort collapse */ }
+    return true;
+  }
+
+  function _pruneRendererOwnedCanvases(container = _container, keep = _canvas, reason = "duplicate-render-surface") {
+    if (!container?.querySelectorAll) return 0;
+    let removed = 0;
+    const canvases = Array.from(container.querySelectorAll(":scope > canvas.living-time-sphere-3d-canvas"));
+    canvases.forEach(node => {
+      if (!node || node === keep) return;
+      _hostContractIssues.push({
+        tagName: "CANVAS",
+        id: node.id || null,
+        className: node.className || "",
+        reason,
+        generation: node.dataset?.sphereRenderGeneration || null,
+        parentTag: node.parentElement ? String(node.parentElement.tagName || "").toUpperCase() : null,
+        parentId: node.parentElement?.id || null,
+        timestamp: Date.now(),
+      });
+      if (node.dataset?.sphereContextActive === "true") {
+        try { node.getContext?.("webgl2")?.getExtension?.("WEBGL_lose_context")?.loseContext?.(); } catch { /* best-effort orphan GPU cleanup */ }
+        try { node.dataset.sphereContextActive = "false"; } catch { /* ignore */ }
+      }
+      try { node.remove(); } catch { /* best-effort lifecycle cleanup */ }
+      removed += 1;
+    });
+    if (removed > 0) {
+      _countLifecycle("orphanCanvasPruneCount", removed);
+      if (_hostContractIssues.length > 80) _hostContractIssues.splice(0, _hostContractIssues.length - 80);
+    }
+    return removed;
+  }
+
+  function _enforceRendererHostContract(container = _container) {
+    if (!container?.querySelectorAll) return;
+    _hostContractCheckedAt = Date.now();
+    _pruneRendererOwnedCanvases(container, _canvas, "renderer-host-contract");
+    const direct = Array.from(container.children || []);
+    const nested = Array.from(container.querySelectorAll("img,picture,source,object,iframe,embed,video"));
+    const seen = new Set();
+    [...direct, ...nested].forEach(child => {
+      if (!child || seen.has(child)) return;
+      seen.add(child);
+      if (_isUnexpectedHostMedia(child)) _collapseFailedHostResource(child, "unexpected-host-media");
+    });
+  }
+
+  function _countUnexpectedHostChildren(container = _container) {
+    if (!container?.querySelectorAll) return 0;
+    let count = 0;
+    const direct = Array.from(container.children || []);
+    const nested = Array.from(container.querySelectorAll("img,picture,source,object,iframe,embed,video"));
+    const seen = new Set();
+    [...direct, ...nested].forEach(child => {
+      if (!child || seen.has(child)) return;
+      seen.add(child);
+      if (_isUnexpectedHostMedia(child)) count += 1;
+    });
+    return count;
+  }
+
+  function _probeFirstFramePixelHealth() {
+    if (!_renderer || !_canvas) return null;
+    const result = {
+      checkedAt: Date.now(),
+      ok: false,
+      centerPixel: null,
+      reason: null,
+    };
+    try {
+      const gl = _renderer.getContext?.();
+      if (!gl || typeof gl.readPixels !== "function") {
+        result.reason = "gl-context-unavailable";
+        _firstFramePixelProbe = result;
+        return result;
+      }
+      const width = Number(_canvas.width || 0);
+      const height = Number(_canvas.height || 0);
+      if (width <= 0 || height <= 0) {
+        result.reason = "canvas-size-invalid";
+        _firstFramePixelProbe = result;
+        return result;
+      }
+      const px = new Uint8Array(4);
+      const x = Math.max(0, Math.min(width - 1, Math.floor(width / 2)));
+      const y = Math.max(0, Math.min(height - 1, Math.floor(height / 2)));
+      gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+      result.centerPixel = [Number(px[0]), Number(px[1]), Number(px[2]), Number(px[3])];
+      const nearWhite = px[0] >= 248 && px[1] >= 248 && px[2] >= 248 && px[3] >= 248;
+      result.ok = !nearWhite;
+      result.reason = nearWhite ? "center-pixel-near-white" : null;
+    } catch (err) {
+      result.reason = `pixel-probe-failed:${String(err)}`;
+    }
+    _firstFramePixelProbe = result;
+    return result;
+  }
 
   function _markStage(stage, state) {
     if (!stage || !_stageState[stage]) return;
@@ -139,6 +382,9 @@
   let _resizeObserver = null;
   const _moonAnchors = [];    // { moon, angle, radius, worldVec } for each of 13 moons
   let _lastCameraFocusKey = null;
+  let _lastSpiralGeometryKey = "";
+  let _lastPassageGeometryKey = "";
+  let _spiralMarkerAnchors = [];
   const _environmentLayerEnabled = {
     atmosphere: true,
     clouds: true,
@@ -174,20 +420,21 @@
     if (_THREE) return Promise.resolve(_THREE);
     if (_loadPromise) return _loadPromise;
     const localUrl = _localThreeUrl();
-    _loadPromise = import(localUrl).then(module => {
+    const pending = import(localUrl).then(module => {
       // ES module namespace — contains all named Three.js exports.
       // Verify it is a real Three.js module by checking a core class.
       if (!module || typeof module.WebGLRenderer !== "function") {
-        _loadPromise = null;
+        if (_loadPromise === pending) _loadPromise = null;
         throw new Error(`Local Three.js module at ${localUrl} did not export expected Three.js classes.`);
       }
       _THREE = module;
       _threeSource = "local";
       return module;
     }).catch(err => {
-      _loadPromise = null; // allow retry
+      if (_loadPromise === pending) _loadPromise = null; // allow retry without clobbering a newer import
       throw new Error(`3D module failed to load from this installation. URL: ${localUrl} — ${err?.message || err}`);
     });
+    _loadPromise = pending;
     return _loadPromise;
   }
 
@@ -343,7 +590,25 @@
         labelEls: _moonLabelEls,
         connectorEl: _moonLabelConnectorEl
       });
+      _moonLabelManager.markDirty?.();
     }
+  }
+
+  function _moonLabelProtectedRects() {
+    const shell = _container?.closest?.(".sphere-instrument-shell") || null;
+    if (!shell) return [];
+    const protectedEls = [
+      shell.querySelector(".sphere-instrument-topline"),
+      shell.querySelector(".sphere-instrument-footer")
+    ].filter(Boolean);
+    const rects = [];
+    for (const el of protectedEls) {
+      const rect = el.getBoundingClientRect?.();
+      if (rect && Number.isFinite(rect.width) && Number.isFinite(rect.height) && rect.width > 0 && rect.height > 0) {
+        rects.push(rect);
+      }
+    }
+    return rects;
   }
 
   function _adjacentMoons(moon) {
@@ -405,12 +670,16 @@
       labelMode: _moonLabelMode,
       selectedPatternPosition: _model?.selectedPatternPosition || _model?.todayPatternPosition || null,
       showAllMobileLabels: _moonLabelMode === "all",
+      selectedMarkerPosition: _objects.selectedDayMarker?.position
+        ? { x: _objects.selectedDayMarker.position.x, y: _objects.selectedDayMarker.position.y, z: _objects.selectedDayMarker.position.z }
+        : null,
       todayMarkerPosition: _objects.todayMarker?.position
         ? { x: _objects.todayMarker.position.x, y: _objects.todayMarker.position.y, z: _objects.todayMarker.position.z }
         : null,
       viewMode,
       stageEl: _container,
-      visibleLayersKey: JSON.stringify(_visibleLayers || {})
+      visibleLayersKey: JSON.stringify(_visibleLayers || {}),
+      protectedRects: _moonLabelProtectedRects()
     });
   }
 
@@ -419,6 +688,7 @@
   function buildScene() {
     const THREE = _THREE;
     const mat   = globalThis.LivingTimeSphereM;
+    _countLifecycle("sceneRootBuildCount");
     _scene = new THREE.Scene();
     _scene.background = new THREE.Color(mat.COLORS.bg);
 
@@ -949,7 +1219,7 @@
       _scene.add(haze);
       _objects.hazeShell = haze;
 
-      const stars = globalThis.LivingTimeSphereEffects.buildStarField(THREE, _quality?.starCount || 150);
+      const stars = globalThis.LivingTimeSphereEffects.buildStarField(THREE, _quality?.starCount ?? 150);
       _scene.add(stars);
       _objects.starField = stars;
     }
@@ -1050,7 +1320,7 @@
       new THREE.MeshBasicMaterial({
         color: 0x8fd3ff,
         transparent: true,
-        opacity: 0.08,
+        opacity: 0.04,
         depthWrite: false,
         side: THREE.DoubleSide
       })
@@ -1062,7 +1332,7 @@
     [-0.18, 0, 0.18].forEach((y, index) => {
       const band = new THREE.Mesh(
         new THREE.TorusGeometry(1.14 + index * 0.015, 0.014, 10, 96),
-        new THREE.MeshBasicMaterial({ color: 0xcfe8ff, transparent: true, opacity: 0.06, depthWrite: false })
+        new THREE.MeshBasicMaterial({ color: 0xcfe8ff, transparent: true, opacity: 0.04, depthWrite: false })
       );
       band.rotation.x = Math.PI / 2;
       band.position.y = y;
@@ -1085,7 +1355,7 @@
 
     const tempArc = new THREE.Mesh(
       new THREE.TorusGeometry(1.08, 0.018, 12, 120, Math.PI * 1.15),
-      new THREE.MeshBasicMaterial({ color: 0xf5cd72, transparent: true, opacity: 0.72, depthWrite: false })
+      new THREE.MeshBasicMaterial({ color: 0xf5cd72, transparent: true, opacity: 0.44, depthWrite: false })
     );
     tempArc.name = "environment-temperature-arc";
     tempArc.rotation.x = Math.PI / 2;
@@ -1094,7 +1364,7 @@
 
     const pressureRing = new THREE.Mesh(
       new THREE.TorusGeometry(1.03, 0.008, 10, 96),
-      new THREE.MeshBasicMaterial({ color: 0x9dc1ff, transparent: true, opacity: 0.58, depthWrite: false })
+      new THREE.MeshBasicMaterial({ color: 0x9dc1ff, transparent: true, opacity: 0.34, depthWrite: false })
     );
     pressureRing.rotation.x = Math.PI / 2;
     pressureRing.name = "environment-pressure-ring";
@@ -1102,14 +1372,14 @@
 
     const precip = new THREE.Mesh(
       new THREE.SphereGeometry(1.16, 6, 6),
-      new THREE.MeshBasicMaterial({ color: 0x84d8ff, transparent: true, opacity: 0.04, wireframe: true, depthWrite: false })
+      new THREE.MeshBasicMaterial({ color: 0x84d8ff, transparent: true, opacity: 0.025, wireframe: true, depthWrite: false })
     );
     precip.name = "environment-precip-particles";
     group.add(precip);
 
     const terminator = new THREE.Mesh(
       new THREE.TorusGeometry(1.0, 0.004, 8, 120),
-      new THREE.MeshBasicMaterial({ color: 0xffd47a, transparent: true, opacity: 0.48, depthWrite: false })
+      new THREE.MeshBasicMaterial({ color: 0xffd47a, transparent: true, opacity: 0.36, depthWrite: false })
     );
     terminator.rotation.x = Math.PI / 2;
     terminator.name = "environment-day-night-terminator";
@@ -1424,8 +1694,10 @@
     _semanticZoomState = next;
     _activeSemanticBand = next.band;
     _lastSemanticTransitionThreshold = next.transitionThreshold ?? null;
-    _moonLabelMode = next.moonLabelMode || _moonLabelMode;
-    _dayLabelMode = next.dayLabelMode || _dayLabelMode;
+    const explicitMoonLabelMode = _moonLabelMode === "all" || _moonLabelMode === "selected";
+    const explicitDayLabelMode = _dayLabelMode === "all" || _dayLabelMode === "selected";
+    if (!explicitMoonLabelMode) _moonLabelMode = next.moonLabelMode || _moonLabelMode;
+    if (!explicitDayLabelMode) _dayLabelMode = next.dayLabelMode || _dayLabelMode;
     _applySemanticVisibility(_visibleLayers || {}, next);
     _buildConnections();
     _moonLabelManager?.markDirty();
@@ -1585,13 +1857,36 @@
     return "unknown";
   }
 
+  function _temporalComparisonArcPoints(connection, from, to) {
+    if (!/^selected-today-/.test(String(connection?.id || ""))) return [from, to];
+    const selectedDay = Number(/^day-(\d+)$/.exec(String(connection.sourceMarkerId || ""))?.[1]);
+    const todayDay = Number(_model?.todayPatternPosition?.dayOfPatternYear);
+    if (!Number.isFinite(selectedDay) || !Number.isFinite(todayDay)) return [from, to];
+    const temporalArc = globalThis.LivingTimeSphereTemporal?.comparisonArcSamples?.(selectedDay, todayDay);
+    const startDeg = globalThis.LivingTimeSphereModel.patternAngleForDayOfYear(selectedDay);
+    const endDeg = globalThis.LivingTimeSphereModel.patternAngleForDayOfYear(todayDay);
+    const deltaDeg = ((endDeg - startDeg + 540) % 360) - 180;
+    const baseRadius = globalThis.LivingTimeSphereM.SIZES.patternRing;
+    const fallbackSegments = Math.max(18, Math.min(64, Math.ceil(Math.abs(deltaDeg) / 4)));
+    const samples = temporalArc?.samples || Array.from({ length: fallbackSegments + 1 }, (_, index) => {
+      const progress = index / fallbackSegments;
+      const lift = Math.sin(progress * Math.PI);
+      return { angle: startDeg + deltaDeg * progress, radiusScale: 1.012 + lift * 0.045, lift };
+    });
+    return samples.map(sample => {
+      const point = angleToXZ(sample.angle, baseRadius * sample.radiusScale);
+      return new _THREE.Vector3(point.x, 0.012 + sample.lift * 0.11, point.z);
+    });
+  }
+
   function _buildConnections() {
     if (!_objects.connectionGroup) return;
     _connectionDiagnostics = [];
     _connectionVisibleCount = 0;
-    while (_objects.connectionGroup.children.length) {
-      _objects.connectionGroup.remove(_objects.connectionGroup.children[0]);
-    }
+    _lastSpiralGeometryKey = "";
+    _lastPassageGeometryKey = "";
+    _spiralMarkerAnchors = [];
+    _disposeGroupChildren(_objects.connectionGroup);
     if (!Array.isArray(_connectionRegistry) || !_connectionRegistry.length) return;
     if (!_visibleLayers.connections) {
       _connectionDiagnostics = _connectionRegistry.map(connection => ({
@@ -1671,7 +1966,7 @@
         });
         return;
       }
-      const points = [from, to];
+      const points = _temporalComparisonArcPoints(connection, from, to);
       const geometry = new _THREE.BufferGeometry().setFromPoints(points);
       const material = new _THREE.LineDashedMaterial({
         color: connection.selected ? mat.COLORS.todayHalo : 0xe7e1c8,
@@ -1699,30 +1994,11 @@
     });
   }
 
-  function updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode = _moonLabelMode, moonLabelDistance = _moonLabelDistance, dayLabelMode = _dayLabelMode, connectionRegistry = _connectionRegistry, motionMode = _motionMode, semanticZoomState = _semanticZoomState) {
-    if (!_THREE || !_scene || !model) return;
-    const mat = globalThis.LivingTimeSphereM;
-
-    _model        = model;
-    _spiral       = spiral;
-    _selectedYear = selectedYear;
-    _visibleLayers = visibleLayers || {};
-    _viewMode     = viewMode || "today";
-    _moonLabelMode = moonLabelMode || "contextual";
-    _moonLabelDistance = moonLabelDistance || "standard";
-    _dayLabelMode = dayLabelMode || "key";
-    _connectionRegistry = Array.isArray(connectionRegistry) ? connectionRegistry : [];
-    _motionMode = motionMode || "still";
-    _semanticZoomState = semanticZoomState || _semanticZoomState || null;
-    _buildMoonAnchors(_viewMode);
-    _moonLabelManager?.markDirty();
-
-    // ── Layer visibility ────────────────────────────────────────────
-    const vl = _visibleLayers;
-
+  function _applyLayerVisibility(vl, semanticState = _semanticZoomState) {
+    if (!_objects || !vl) return;
     if (_objects.patternRing)  _objects.patternRing.visible  = !!vl.pattern;
     if (_objects.moonDividers) _objects.moonDividers.visible = !!vl.pattern;
-    _applySemanticVisibility(vl, _semanticZoomState || { band: "medium", visibility: {} });
+    _applySemanticVisibility(vl, semanticState || { band: "medium", visibility: {} });
     if (_objects.yearGate)     _objects.yearGate.visible     = !!vl.pattern;
     if (_objects.todayLineGroup) _objects.todayLineGroup.visible = true;
     if (_objects.lunarOrbit)   _objects.lunarOrbit.visible   = !!vl.lunar;
@@ -1737,6 +2013,154 @@
     if (_objects.connectionGroup) _objects.connectionGroup.visible = !!vl.connections;
     _environmentController.setLayerVisibility("environment", !!vl.environment);
     _environmentController.update(_environmentState);
+  }
+
+  function _queueSceneRepair(reason = "scene-repair-requested") {
+    if (_sceneRepairQueued) return;
+    if (!_initialized || !_scene || !_model) return;
+    _sceneRepairQueued = true;
+    _sceneRepairRaf = requestAnimationFrame(() => {
+      _sceneRepairRaf = 0;
+      _sceneRepairQueued = false;
+      if (!_initialized || !_scene || !_model) return;
+      const readiness = _validateSceneReadiness({ requireFirstFrame: true });
+      if (readiness?.ready) return;
+      try {
+        updateScene(_model, _spiral, _selectedYear, _visibleLayers, _viewMode, _moonLabelMode, _moonLabelDistance, _dayLabelMode, _connectionRegistry, _motionMode, _semanticZoomState);
+        globalThis.LivingTimeSphereAnimation.markDirty();
+      } catch (error) {
+        console.warn(`[LivingTimeSphere] Deferred scene repair failed (${reason}).`, error);
+      }
+    });
+  }
+
+  function _applyModeVisibilityOverrides(vl = _visibleLayers) {
+    if (_viewMode === "today") {
+      if (_objects.spiralPath) _objects.spiralPath.visible = false;
+      if (_objects.recurrenceGroup) _objects.recurrenceGroup.visible = false;
+    } else if (_viewMode === "passage") {
+      if (_objects.spiralPath) _objects.spiralPath.visible = false;
+    } else if (_viewMode === "pattern") {
+      if (_objects.lunarMarker) _objects.lunarMarker.visible = false;
+      if (_objects.lunarSelectedMarker) _objects.lunarSelectedMarker.visible = false;
+      if (_objects.solarAxis) _objects.solarAxis.visible = false;
+      if (_objects.solarSelectedMarker) _objects.solarSelectedMarker.visible = false;
+      if (_objects.solarTodayMarker) _objects.solarTodayMarker.visible = false;
+      if (_objects.solarProgressGroup) _objects.solarProgressGroup.visible = false;
+      if (_objects.seasonMarkers) _objects.seasonMarkers.visible = false;
+      if (_objects.spiralPath) _objects.spiralPath.visible = false;
+    }
+
+  }
+
+  function setLayerVisibility(layerName, visible) {
+    if (!_initialized || !_scene || !_model) return false;
+    if (!layerName || !Object.prototype.hasOwnProperty.call(_visibleLayers, layerName)) return false;
+    const t0 = performance.now();
+    const nextVisible = !!visible;
+    if (_visibleLayers[layerName] === nextVisible) return true;
+    _visibleLayers = { ..._visibleLayers, [layerName]: nextVisible };
+    _countLifecycle("layerVisibilityUpdateCount");
+    _lastLayerUpdateType = "layer-visibility-update";
+    _applyLayerVisibility(_visibleLayers, _semanticZoomState);
+    _applyModeVisibilityOverrides(_visibleLayers);
+    const readiness = _validateSceneReadiness({ requireFirstFrame: true });
+    if (!readiness?.ready) {
+      _queueSceneRepair("layer-visibility");
+    }
+    _lastLayerUpdateMs = Math.max(0, performance.now() - t0);
+    _markLayerToggle(layerName, _lastLayerUpdateMs);
+    globalThis.LivingTimeSphereAnimation.markDirty();
+    return true;
+  }
+
+  function setLayerStates(nextLayerState) {
+    if (!_initialized || !_scene || !_model || !nextLayerState || typeof nextLayerState !== "object") return false;
+    const t0 = performance.now();
+    const merged = { ..._visibleLayers };
+    let changed = false;
+    Object.keys(nextLayerState).forEach(layerName => {
+      if (!Object.prototype.hasOwnProperty.call(merged, layerName)) return;
+      const value = !!nextLayerState[layerName];
+      if (merged[layerName] !== value) {
+        merged[layerName] = value;
+        changed = true;
+      }
+    });
+    if (!changed) return true;
+    _visibleLayers = merged;
+    _countLifecycle("layerVisibilityUpdateCount");
+    _lastLayerUpdateType = "layer-visibility-batch-update";
+    _applyLayerVisibility(_visibleLayers, _semanticZoomState);
+    _applyModeVisibilityOverrides(_visibleLayers);
+    const readiness = _validateSceneReadiness({ requireFirstFrame: true });
+    if (!readiness?.ready) {
+      _queueSceneRepair("layer-batch-visibility");
+    }
+    _lastLayerUpdateMs = Math.max(0, performance.now() - t0);
+    _markLayerToggle("batch", _lastLayerUpdateMs);
+    globalThis.LivingTimeSphereAnimation.markDirty();
+    return true;
+  }
+
+  function _spiralGeometrySignature(spiral) {
+    const years = Array.isArray(spiral?.years) ? spiral.years : [];
+    if (!years.length) return "";
+    return years.map(item => `${item.year}:${Number(item.yearSpiralAngle || 0).toFixed(4)}:${Number(item.yearSpiralRadius || 0).toFixed(4)}`).join("|");
+  }
+
+  function _passageGeometrySignature(model) {
+    if (!model?.passage) return "";
+    return `${Number(model.passage.startAngle || 0).toFixed(6)}:${Number(model.passage.endAngle || 0).toFixed(6)}`;
+  }
+
+  function _positionSelectionRingForYear(selectedYear) {
+    if (!_objects.selectionRing || !Array.isArray(_spiralMarkerAnchors) || !_spiralMarkerAnchors.length) return;
+    const hit = _spiralMarkerAnchors.find(entry => Number(entry.year) === Number(selectedYear));
+    if (!hit) return;
+    _objects.selectionRing.position.set(hit.x, hit.y, hit.z);
+    _objects.selectionRing.visible = true;
+    _objects.selectionRing.rotation.x = Math.PI / 2;
+  }
+
+  function updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode = _moonLabelMode, moonLabelDistance = _moonLabelDistance, dayLabelMode = _dayLabelMode, connectionRegistry = _connectionRegistry, motionMode = _motionMode, semanticZoomState = _semanticZoomState) {
+    if (!_THREE || !_scene || !model) return;
+    const mat = globalThis.LivingTimeSphereM;
+    const updateStartedAt = performance.now();
+    const previousViewMode = _viewMode;
+    const previousSelectedYear = _selectedYear;
+    _lastSceneBuildTimestamp = Date.now();
+    _geometryBuildRevision += 1;
+    _countLifecycle("modelBuildCount");
+    _lastLayerUpdateType = "data-update";
+
+    _model        = model;
+    _spiral       = spiral;
+    _selectedYear = selectedYear;
+    _visibleLayers = visibleLayers || {};
+    _viewMode     = viewMode || "today";
+    _moonLabelMode = moonLabelMode || "contextual";
+    _moonLabelDistance = moonLabelDistance || "standard";
+    _dayLabelMode = dayLabelMode || "key";
+    _connectionRegistry = Array.isArray(connectionRegistry) ? connectionRegistry : [];
+    _motionMode = motionMode || "still";
+    globalThis.LivingTimeSphereAnimation?.setLowPower?.(
+      _motionMode === "still" || _activeTier === "lowpower" || Number(_quality?.starCount) === 0
+    );
+    if (_motionMode === "drift" && _quality?.idleDrift && !_prefersReducedMotion()) {
+      if (!globalThis.LivingTimeSphereCamera?.isDrifting?.()) {
+        globalThis.LivingTimeSphereCamera?.startDrift?.(performance.now());
+      }
+    } else {
+      globalThis.LivingTimeSphereCamera?.stopDrift?.();
+    }
+    _semanticZoomState = semanticZoomState || _semanticZoomState || null;
+    _buildMoonAnchors(_viewMode);
+    _moonLabelManager?.markDirty();
+
+    // ── Layer visibility ────────────────────────────────────────────
+    const vl = _visibleLayers;
+    _applyLayerVisibility(vl, _semanticZoomState || { band: "medium", visibility: {} });
 
     // ── Equinox gate position ───────────────────────────────────────
     if (_objects.equinoxGate && model.passageStartAngle != null) {
@@ -1746,18 +2170,23 @@
 
     // ── Passage arc ─────────────────────────────────────────────────
     if (_objects.passageGroup) {
-      // Remove old passage arc
-      while (_objects.passageGroup.children.length) {
-        _objects.passageGroup.remove(_objects.passageGroup.children[0]);
-      }
-      if (vl.passage && model.passage) {
-        const tube = buildPassageTube(model.passage.startAngle, model.passage.endAngle);
-        if (tube) {
-          tube.name = "passageArc";
-          _objects.passageGroup.add(tube);
-          _objects.passageArc = tube;
+      const layerStart = performance.now();
+      const passageSig = _passageGeometrySignature(model);
+      if (_lastPassageGeometryKey !== passageSig) {
+        _disposeGroupChildren(_objects.passageGroup);
+        _objects.passageArc = null;
+        if (model.passage) {
+          const tube = buildPassageTube(model.passage.startAngle, model.passage.endAngle);
+          if (tube) {
+            tube.name = "passageArc";
+            _objects.passageGroup.add(tube);
+            _objects.passageArc = tube;
+          }
         }
+        _lastPassageGeometryKey = passageSig;
       }
+      _objects.passageGroup.visible = !!vl.passage;
+      _markLayerBuild("passage", performance.now() - layerStart);
     }
 
     const band = _semanticZoomState?.band || "medium";
@@ -1816,9 +2245,8 @@
       };
     }
     if (_objects.solarProgressGroup) {
-      while (_objects.solarProgressGroup.children.length) {
-        _objects.solarProgressGroup.remove(_objects.solarProgressGroup.children[0]);
-      }
+      const layerStart = performance.now();
+      _disposeGroupChildren(_objects.solarProgressGroup);
       const arc = buildSolarProgressArc(todaySolarAngle, selectedSolarAngle);
       if (arc) {
         arc.name = "solarProgressArc";
@@ -1826,65 +2254,62 @@
         arc.visible = !!vl.solar && band !== "far";
         _objects.solarProgressGroup.add(arc);
       }
+      _markLayerBuild("solar", performance.now() - layerStart);
     }
 
     // ── 13-year spiral markers ──────────────────────────────────────
     if (_objects.spiralGroup && spiral?.years) {
-      // Clear existing markers
-      while (_objects.spiralGroup.children.length) {
-        _objects.spiralGroup.remove(_objects.spiralGroup.children[0]);
-      }
-      _objects.spiralMarkers = [];
+      const layerStart = performance.now();
+      const spiralSig = _spiralGeometrySignature(spiral);
+      if (_lastSpiralGeometryKey !== spiralSig) {
+        _disposeGroupChildren(_objects.spiralGroup);
+        _objects.spiralMarkers = [];
+        _spiralMarkerAnchors = [];
 
-      for (const y of spiral.years) {
-        const isSelected = y.year === selectedYear;
-        const r  = mat.SIZES.spiralInner + (mat.SIZES.spiralOuter - mat.SIZES.spiralInner) * y.yearSpiralRadius;
-        const { x, z } = angleToXZ(y.yearSpiralAngle % 360, r);
-        const yOff = (y.yearSpiralRadius - 0.5) * 0.25;
-
-        const geo = new _THREE.SphereGeometry(
-          isSelected ? mat.SIZES.markerDotSelected : mat.SIZES.markerDot, 8, 8);
-        const m   = new _THREE.MeshStandardMaterial({
-          color:    isSelected ? mat.COLORS.annualSelected : mat.COLORS.annual,
-          emissive: isSelected ? mat.COLORS.annualSelected : 0x000000,
-          emissiveIntensity: isSelected ? mat.EMISSIVE.annualSelected : 0,
-          roughness: 0.5,
-        });
-        const mesh = new _THREE.Mesh(geo, m);
-        mesh.position.set(x, yOff, z);
-        mesh.name = `year-${y.year}`;
-        mesh.userData.year = y.year;
-        mesh.visible = !!vl.markers;
-        _objects.spiralGroup.add(mesh);
-        _objects.spiralMarkers.push(mesh);
-
-        // Move selection ring to selected marker
-        if (isSelected && _objects.selectionRing) {
-          _objects.selectionRing.position.set(x, yOff, z);
-          _objects.selectionRing.visible = true;
-          _objects.selectionRing.rotation.x = Math.PI / 2;
+        for (const y of spiral.years) {
+          const r  = mat.SIZES.spiralInner + (mat.SIZES.spiralOuter - mat.SIZES.spiralInner) * y.yearSpiralRadius;
+          const { x, z } = angleToXZ(y.yearSpiralAngle % 360, r);
+          const yOff = (y.yearSpiralRadius - 0.5) * 0.25;
+          const geo = new _THREE.SphereGeometry(mat.SIZES.markerDot, 8, 8);
+          const m   = new _THREE.MeshStandardMaterial({
+            color: mat.COLORS.annual,
+            emissive: 0x000000,
+            emissiveIntensity: 0,
+            roughness: 0.5,
+          });
+          const mesh = new _THREE.Mesh(geo, m);
+          mesh.position.set(x, yOff, z);
+          mesh.name = `year-${y.year}`;
+          mesh.userData.year = y.year;
+          mesh.visible = !!vl.markers;
+          _objects.spiralGroup.add(mesh);
+          _objects.spiralMarkers.push(mesh);
+          _spiralMarkerAnchors.push({ year: y.year, x, y: yOff, z });
         }
-      }
 
-      // Rebuild spiral path
-      if (_objects.spiralPath) {
-        _objects.spiralGroup.remove(_objects.spiralPath);
-      }
-      if (vl.spiral) {
         _objects.spiralPath = buildSpiralPath(spiral.years);
         if (_objects.spiralPath) {
           _objects.spiralPath.visible = !!vl.spiral;
           _objects.spiralGroup.add(_objects.spiralPath);
         }
+        _lastSpiralGeometryKey = spiralSig;
       }
+      if (_objects.spiralPath) _objects.spiralPath.visible = !!vl.spiral;
+      _objects.spiralMarkers?.forEach(marker => {
+        if (marker) marker.visible = !!vl.markers;
+      });
+      _positionSelectionRingForYear(selectedYear);
+      _markLayerBuild("spiral", performance.now() - layerStart);
     }
 
     // ── Recurrence links ────────────────────────────────────────────
     if (_objects.recurrenceGroup) {
+      const layerStart = performance.now();
       _objects.recurrenceGroup.visible = !!(vl.recurrence && !_isMobileWidth());
       if (vl.recurrence && !_isMobileWidth()) {
         _buildRecurrenceLinks(spiral);
       }
+      _markLayerBuild("recurrence", performance.now() - layerStart);
     }
 
     // ── Today marker positioning ────────────────────────────────────
@@ -1906,9 +2331,7 @@
       }
 
       if (_objects.todayLineGroup) {
-        while (_objects.todayLineGroup.children.length) {
-          _objects.todayLineGroup.remove(_objects.todayLineGroup.children[0]);
-        }
+        _disposeGroupChildren(_objects.todayLineGroup);
 
         if (showToday) {
           const pts = [new _THREE.Vector3(0, 0, 0), new _THREE.Vector3(x, 0.005, z)];
@@ -1976,9 +2399,8 @@
     );
 
     // ── Mode-specific layer overrides ───────────────────────────────
+    _applyModeVisibilityOverrides(vl);
     if (_viewMode === "today") {
-      if (_objects.spiralPath)        _objects.spiralPath.visible = false;
-      if (_objects.recurrenceGroup)   _objects.recurrenceGroup.visible = false;
       // Boost Today halo and marker for emphasis
       if (_objects.todayHalo?.material) {
         _objects.todayHalo.material.emissiveIntensity = 0.8;
@@ -1992,24 +2414,12 @@
           if (c.material) { c.material.opacity = 0.85; c.material.dashSize = 0.06; }
         });
       }
-    } else if (_viewMode === "passage") {
-      if (_objects.spiralPath)        _objects.spiralPath.visible = false;
-    } else if (_viewMode === "pattern") {
-      if (_objects.lunarMarker) _objects.lunarMarker.visible = false;
-      if (_objects.lunarSelectedMarker) _objects.lunarSelectedMarker.visible = false;
-      if (_objects.solarAxis)   _objects.solarAxis.visible   = false;
-      if (_objects.solarSelectedMarker) _objects.solarSelectedMarker.visible = false;
-      if (_objects.solarTodayMarker) _objects.solarTodayMarker.visible = false;
-      if (_objects.solarProgressGroup) _objects.solarProgressGroup.visible = false;
-      if (_objects.seasonMarkers) _objects.seasonMarkers.visible = false;
-      if (_objects.spiralPath) _objects.spiralPath.visible = false;
     }
 
     // ── Active Moon sector highlight ────────────────────────────────
     if (_objects.activeMoonGroup) {
-      while (_objects.activeMoonGroup.children.length) {
-        _objects.activeMoonGroup.remove(_objects.activeMoonGroup.children[0]);
-      }
+      const layerStart = performance.now();
+      _disposeGroupChildren(_objects.activeMoonGroup);
       const tp = model.selectedPatternPosition || model.todayPatternPosition;
       const activeMoon = tp ? (tp.moon || 1) - 1 : (model.sourceRecord?.equinox?.patternPosition?.moon || 1) - 1;
       const r = mat.SIZES.patternRing;
@@ -2059,6 +2469,7 @@
       }));
       boundary.name = "activeMoonBoundary";
       _objects.activeMoonGroup.add(boundary);
+      _markLayerBuild("pattern", performance.now() - layerStart);
     }
 
     // ── Active day node highlight ───────────────────────────────────
@@ -2086,9 +2497,18 @@
       _objects.selectionRing.rotation.x = Math.PI / 2;
     }
 
-    _buildConnections();
-    _syncCameraFocus(model, spiral, selectedYear, true);
     _syncSemanticZoomFromCamera(true);
+    if (!_connectionDiagnostics.length && _connectionRegistry.length) {
+      const layerStart = performance.now();
+      _buildConnections();
+      _markLayerBuild("connections", performance.now() - layerStart);
+    }
+    const shouldRefocus = previousViewMode !== _viewMode
+      || (_viewMode === "years" && Number(previousSelectedYear) !== Number(_selectedYear));
+    if (shouldRefocus) _syncCameraFocus(model, spiral, selectedYear, true);
+    _enforceRendererHostContract();
+    _validateSceneReadiness({ requireFirstFrame: false });
+    _lastLayerUpdateMs = Math.max(0, performance.now() - updateStartedAt);
 
     globalThis.LivingTimeSphereAnimation.markDirty();
   }
@@ -2103,9 +2523,7 @@
     const mat   = globalThis.LivingTimeSphereM;
 
     // Clear old links
-    while (_objects.recurrenceGroup.children.length) {
-      _objects.recurrenceGroup.remove(_objects.recurrenceGroup.children[0]);
-    }
+    _disposeGroupChildren(_objects.recurrenceGroup);
 
     // Inspect recurrence values from source records
     for (let i = 0; i < spiral.years.length; i++) {
@@ -2166,16 +2584,201 @@
     _updateMoonLabels(_viewMode);
 
     _renderer.render(_scene, _camera);
+    _lastRenderTimestamp = Date.now();
+  }
+
+  function _isFiniteVec3(vec) {
+    if (!vec) return false;
+    return Number.isFinite(Number(vec.x)) && Number.isFinite(Number(vec.y)) && Number.isFinite(Number(vec.z));
+  }
+
+  function _materialHasVisibleOpacity(material) {
+    if (!material) return false;
+    if (Array.isArray(material)) return material.some(_materialHasVisibleOpacity);
+    const transparent = material.transparent === true;
+    const opacity = Number(material.opacity);
+    if (!Number.isFinite(opacity)) return true;
+    if (!transparent) return opacity > 0;
+    return opacity > 0.01;
+  }
+
+  function _countObjectPresence(entry) {
+    if (!entry) return 0;
+    const count = Number(entry.children?.length || 0);
+    return count > 0 ? count : 1;
+  }
+
+  function _collectSceneStats() {
+    const stats = {
+      sceneObjectCount: 0,
+      visibleObjectCount: 0,
+      meshCount: 0,
+      lineCount: 0,
+      patternGroupChildren: 0,
+      lunarGroupChildren: 0,
+      solarGroupChildren: 0,
+      passageGroupChildren: 0,
+      markerGroupChildren: 0,
+      connectionGroupChildren: 0,
+      spiralGroupChildren: 0,
+      environmentGroupChildren: 0,
+      astronomyGroupChildren: 0,
+      selectedGroupChildren: 0,
+      patternGroupVisible: false,
+      activeLayerSet: Object.entries(_visibleLayers || {}).filter(([, enabled]) => !!enabled).map(([key]) => key),
+      sceneBounds: null,
+      sceneBoundsFinite: false,
+      cameraPosition: _camera?.position ? {
+        x: Number(_camera.position.x || 0),
+        y: Number(_camera.position.y || 0),
+        z: Number(_camera.position.z || 0),
+      } : null,
+      cameraTarget: (() => {
+        const st = globalThis.LivingTimeSphereCamera?.getState?.() || null;
+        const t = st?.target || null;
+        return t ? { x: Number(t.x || 0), y: Number(t.y || 0), z: Number(t.z || 0) } : null;
+      })(),
+      cameraNear: Number(_camera?.near || 0),
+      cameraFar: Number(_camera?.far || 0),
+      canvasWidth: Number(_canvas?.width || 0),
+      canvasHeight: Number(_canvas?.height || 0),
+      sceneIntersectsFrustum: false,
+    };
+
+    if (_scene) {
+      _scene.traverse?.(obj => {
+        if (!obj) return;
+        stats.sceneObjectCount += 1;
+        if (obj.visible !== false) stats.visibleObjectCount += 1;
+        const kind = String(obj.type || "").toLowerCase();
+        if (kind.includes("mesh")) stats.meshCount += 1;
+        if (kind.includes("line")) stats.lineCount += 1;
+      });
+    }
+
+    const patternEntries = [
+      _objects.patternRing,
+      _objects.moonDividers,
+      _objects.dayNodes,
+      _objects.weekGates,
+      _objects.weekDividers,
+      _objects.activeMoonGroup,
+      _objects.activeDayNode,
+      _objects.todayMarker,
+      _objects.selectedDayMarker,
+    ];
+    const astronomyEntries = [
+      _objects.lunarOrbit,
+      _objects.lunarMarker,
+      _objects.lunarSelectedMarker,
+      _objects.solarAxis,
+      _objects.seasonMarkers,
+      _objects.solarProgressGroup,
+      _objects.passageGroup,
+      _objects.equinoxGate,
+    ];
+    const selectedEntries = [
+      _objects.selectedDayMarker,
+      _objects.selectedDayHalo,
+      _objects.selectionRing,
+      _objects.activeDayNode,
+    ];
+    stats.patternGroupChildren = patternEntries.reduce((sum, entry) => sum + _countObjectPresence(entry), 0);
+    stats.astronomyGroupChildren = astronomyEntries.reduce((sum, entry) => sum + _countObjectPresence(entry), 0);
+    stats.selectedGroupChildren = selectedEntries.reduce((sum, entry) => sum + _countObjectPresence(entry), 0);
+    stats.lunarGroupChildren = [_objects.lunarOrbit, _objects.lunarMarker, _objects.lunarSelectedMarker].reduce((sum, entry) => sum + _countObjectPresence(entry), 0);
+    stats.solarGroupChildren = [_objects.solarAxis, _objects.seasonMarkers, _objects.solarProgressGroup, _objects.solarTodayMarker, _objects.solarSelectedMarker].reduce((sum, entry) => sum + _countObjectPresence(entry), 0);
+    stats.passageGroupChildren = [_objects.passageGroup, _objects.equinoxGate].reduce((sum, entry) => sum + _countObjectPresence(entry), 0);
+    stats.markerGroupChildren = [_objects.todayMarker, _objects.selectedDayMarker, _objects.activeDayNode, _objects.activeMoonGroup].reduce((sum, entry) => sum + _countObjectPresence(entry), 0);
+    stats.connectionGroupChildren = _countObjectPresence(_objects.connectionGroup);
+    stats.spiralGroupChildren = _countObjectPresence(_objects.spiralGroup);
+    stats.environmentGroupChildren = _countObjectPresence(_objects.environmentGroup);
+    stats.patternGroupVisible = patternEntries.some(entry => entry?.visible !== false);
+
+    if (_THREE && _scene && _camera) {
+      const box = new _THREE.Box3().setFromObject(_scene);
+      const min = box?.min;
+      const max = box?.max;
+      const finite = _isFiniteVec3(min) && _isFiniteVec3(max);
+      if (finite) {
+        stats.sceneBoundsFinite = true;
+        stats.sceneBounds = {
+          min: { x: Number(min.x), y: Number(min.y), z: Number(min.z) },
+          max: { x: Number(max.x), y: Number(max.y), z: Number(max.z) },
+        };
+        const proj = new _THREE.Matrix4().multiplyMatrices(_camera.projectionMatrix, _camera.matrixWorldInverse);
+        const frustum = new _THREE.Frustum();
+        frustum.setFromProjectionMatrix(proj);
+        stats.sceneIntersectsFrustum = frustum.intersectsBox(box);
+      }
+    }
+
+    return stats;
+  }
+
+  function _validateSceneReadiness({ requireFirstFrame = false } = {}) {
+    _enforceRendererHostContract();
+    const stats = _collectSceneStats();
+    const reasons = [];
+    const expectedPattern = _visibleLayers?.pattern !== false;
+    const expectedLunar = !!_visibleLayers?.lunar;
+    const cameraValid = _camera
+      && Number.isFinite(Number(_camera.near))
+      && Number.isFinite(Number(_camera.far))
+      && Number(_camera.near) > 0
+      && Number(_camera.far) > Number(_camera.near)
+      && _isFiniteVec3(_camera.position);
+
+    if (!cameraValid) reasons.push("camera-invalid");
+    if (stats.canvasWidth <= 0 || stats.canvasHeight <= 0) reasons.push("canvas-size-invalid");
+    if (stats.sceneObjectCount <= 0) reasons.push("scene-empty");
+    if (stats.visibleObjectCount < 6) reasons.push("visible-object-count-low");
+    if ((stats.meshCount + stats.lineCount) < 6) reasons.push("renderable-count-low");
+    if (expectedPattern && !_materialHasVisibleOpacity([_objects.patternRing?.material, _objects.dayNodes?.material])) reasons.push("pattern-material-opacity-invalid");
+    if (expectedPattern && stats.patternGroupChildren < 3) reasons.push("pattern-geometry-missing");
+    if (expectedLunar && stats.astronomyGroupChildren < 2) reasons.push("astronomy-geometry-missing");
+    if (!stats.sceneBoundsFinite) reasons.push("scene-bounds-invalid");
+    if (stats.sceneBoundsFinite && !stats.sceneIntersectsFrustum) reasons.push("scene-outside-frustum");
+    if (requireFirstFrame && !_firstFrameTimestamp) reasons.push("first-frame-missing");
+    if (_countUnexpectedHostChildren() > 0) reasons.push("renderer-host-contains-foreign-media");
+
+    _lastSceneReadiness = {
+      ready: reasons.length === 0,
+      reasons: reasons.slice(0, 12),
+      timestamp: Date.now(),
+      stats,
+    };
+    return _lastSceneReadiness;
   }
 
   // ── Init / teardown ────────────────────────────────────────────────
 
-  async function init({ container, model, spiral, quality, tier, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, semanticZoomState, environmentState, reducedMotion, onYearSelect, onMarkerSelect, onContextLost: _onContextLostCb, onContextRestored: _onContextRestoredCb }) {
+  async function init({ container, model, spiral, quality, tier, generation, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, semanticZoomState, environmentState, reducedMotion, onYearSelect, onMarkerSelect, onContextLost: _onContextLostCb, onContextRestored: _onContextRestoredCb }) {
     // Guard against concurrent or duplicate init calls.
     if (_initializing || _initialized) {
       return { success: false, reason: "already-running" };
     }
+    // A context-loss callback intentionally marks the renderer uninitialised,
+    // but its prior canvas and GPU objects may still exist. Dispose that stale
+    // generation before allocating another context, then remove any orphaned
+    // renderer-owned canvases that are no longer reachable through `_canvas`.
+    if (_canvas || _renderer || _scene || _camera) {
+      try { teardown(); } catch { /* best-effort pre-init cleanup */ }
+    }
+    _pruneRendererOwnedCanvases(container, null, "pre-init-orphan-cleanup");
+    _renderGeneration = Number.isFinite(Number(generation))
+      ? Number(generation)
+      : _renderGeneration + 1;
+    const initEpoch = ++_initEpoch;
+    const initGeneration = _renderGeneration;
+    const initWasCancelled = () => initEpoch !== _initEpoch;
+    const cancelledResult = () => ({
+      success: false,
+      reason: "INIT_CANCELLED",
+      detail: `3D initialization generation ${initGeneration} was superseded.`,
+    });
     _initializing = true;
+    _countLifecycle("rendererInitCount");
     _resetStages();
     _initStartedAt = performance.now();
     _initEndedAt = null;
@@ -2183,14 +2786,25 @@
     _appliedDpr = null;
     _activeTier = tier || null;
     _restoreAttempts = 0;
+    _firstFrameTimestamp = 0;
+    _firstFramePixelProbe = null;
+    _contextLostAt = 0;
+    _contextRestoredAt = 0;
+    _contextLossCount = 0;
+    _contextRestoreCount = 0;
+    _initTimeline.length = 0;
+    _pushInitTimeline("renderer-init-requested", { containerConnected: !!container?.isConnected });
 
     try {
       assertDeps();
       _markStage("capability", "running");
 
-      if (!globalThis.LivingTimeSphereEffects.detectWebGl()) {
-        const reason = globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.WEBGL_UNSUPPORTED ?? "webgl-unavailable";
-        _lastInitError = { reason, detail: "WebGL context creation failed in this environment." };
+      if (!globalThis.LivingTimeSphereEffects.detectWebGl2?.()) {
+        const capability = globalThis.ObservatoryCapabilityManager?.probeWebGl?.() || { webgl: false, webgl2: false };
+        const reason = capability.webgl
+          ? (globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.WEBGL2_REQUIRED ?? "webgl2-required")
+          : (globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.WEBGL_UNSUPPORTED ?? "webgl-unavailable");
+        _lastInitError = { reason, detail: capability.webgl ? "Three.js r167 requires WebGL2; only WebGL1 is available." : "WebGL context creation failed in this environment." };
         _markStage("capability", "failed");
         _initEndedAt = performance.now();
         return { success: false, reason, detail: _lastInitError.detail };
@@ -2207,6 +2821,7 @@
       try {
         _markStage("module", "running");
         await loadThreeJs();
+        if (initWasCancelled()) return cancelledResult();
         _markStage("module", "ok");
       } catch (err) {
         const reason = globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.THREE_IMPORT_FAILED ?? "three-load-failed";
@@ -2218,17 +2833,45 @@
 
       const THREE = _THREE;
       _container = container;
+      _enforceRendererHostContract(container);
 
       // ── Canvas ────────────────────────────────────────────────────
       _canvas = document.createElement("canvas");
+      _countLifecycle("canvasCreateCount");
       _canvas.className = "living-time-sphere-3d-canvas";
+      _canvas.dataset.sphereRenderSurface = "webgl3d";
+      _canvas.dataset.sphereRendererOwned = "true";
+      _canvas.dataset.sphereRenderGeneration = String(_renderGeneration);
       _canvas.setAttribute("role", "img");
       _canvas.setAttribute("aria-label", "Living Time Sphere 3D view");
       _canvas.setAttribute("aria-describedby", "sphere-text-model");
       // touch-action: pan-y by default — vertical page scroll preserved.
       _canvas.style.touchAction = "pan-y";
       container.appendChild(_canvas);
+      _pruneRendererOwnedCanvases(container, _canvas, "post-append-orphan-cleanup");
+      _recordCanvasConnection("after-append");
+      _enforceRendererHostContract(container);
       _ensureFloatingLabel(container);
+      _pushInitTimeline("canvas-appended");
+
+      await new Promise(resolve => requestAnimationFrame(resolve));
+      if (initWasCancelled()) return cancelledResult();
+      const rect = container.getBoundingClientRect();
+      const rawW = Number(rect.width || 0);
+      const rawH = Number(rect.height || 0);
+      _pushInitTimeline("container-first-measurable-size", { width: rawW, height: rawH });
+      if (rawW <= 0 || rawH <= 0) {
+        const reason = rawW <= 0 ? "CONTAINER_ZERO_WIDTH" : "CONTAINER_ZERO_HEIGHT";
+        _lastInitError = { reason, detail: `Container measured as ${rawW}x${rawH} before renderer creation.` };
+        if (_canvas && _canvas.parentNode) _canvas.parentNode.removeChild(_canvas);
+        _canvas = null;
+        _markStage("dimensions", "invalid");
+        _initEndedAt = performance.now();
+        return { success: false, reason, detail: _lastInitError.detail };
+      }
+      const w = Math.max(1, Math.round(rawW));
+      const h = Math.max(1, Math.round(rawH));
+      _markStage("dimensions", `${w}x${h}`);
 
       // ── Renderer ──────────────────────────────────────────────────
       // Use ObservatoryCapabilityManager.clampPixelRatio if a tier is known;
@@ -2240,32 +2883,56 @@
         if (presets && quality === presets.lowpower)  return "lowpower";
         return "balanced";
       })();
-      const pixelRatio = globalThis.ObservatoryCapabilityManager
+      const rawDpr = typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1;
+      const tierCappedDpr = globalThis.ObservatoryCapabilityManager
         ? globalThis.ObservatoryCapabilityManager.clampPixelRatio(
             _dprTier,
-            typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1
+            rawDpr
           )
-        : Math.min(
-            quality.pixelRatioMax || 2,
-            typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1
-          );
+        : rawDpr;
+      const pixelRatio = Math.min(tierCappedDpr, Number(quality.pixelRatioMax ?? tierCappedDpr), rawDpr);
       try {
         _markStage("renderer", "running");
+        _pushInitTimeline("three-webgl-renderer-create-requested");
+        const powerPreference = quality === globalThis.LivingTimeSphereM?.QUALITY_PRESETS?.lowpower ? "low-power" : "default";
+        _activeWebGlContext = _canvas.getContext("webgl2", {
+          alpha: false,
+          antialias: quality.antialias !== false,
+          depth: true,
+          stencil: false,
+          powerPreference,
+          preserveDrawingBuffer: false,
+        });
+        if (!_activeWebGlContext) {
+          const error = new Error("Authoritative WebGL2 context creation failed.");
+          error.code = "WEBGL2_REQUIRED";
+          throw error;
+        }
+        _canvas.dataset.sphereContextActive = "true";
         _renderer = new THREE.WebGLRenderer({
           canvas:    _canvas,
+          context:   _activeWebGlContext,
           antialias: quality.antialias !== false,
           alpha:     false,
-          powerPreference: quality === globalThis.LivingTimeSphereM?.QUALITY_PRESETS?.lowpower ? "low-power" : "default",
+          powerPreference,
         });
       } catch (err) {
         // WebGLRenderer constructor can throw if context creation fails.
-        const reason = globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.CANVAS_INIT_FAILED ?? "webgl-context-failed";
+        const reason = err?.code === "WEBGL2_REQUIRED"
+          ? (globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.WEBGL2_REQUIRED ?? "webgl2-required")
+          : (globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.CANVAS_INIT_FAILED ?? "webgl-context-failed");
         _lastInitError = { reason, detail: String(err) };
+        try { _activeWebGlContext?.getExtension?.("WEBGL_lose_context")?.loseContext?.(); } catch { /* best-effort cleanup */ }
+        _activeWebGlContext = null;
+        if (_canvas?.dataset) _canvas.dataset.sphereContextActive = "false";
+        if (_canvas && _canvas.parentNode) _canvas.parentNode.removeChild(_canvas);
+        _canvas = null;
         _markStage("renderer", "failed");
         _initEndedAt = performance.now();
         return { success: false, reason, detail: String(err) };
       }
       _markStage("renderer", "created");
+      _pushInitTimeline("three-webgl-renderer-created");
 
       // Attach WebGL context-loss guard via ObservatoryCapabilityManager.
       // On context loss: stop the animation loop, mark renderer as not
@@ -2278,6 +2945,8 @@
           const reason = globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.CONTEXT_LOST ?? "CONTEXT_LOST";
           _lastInitError = { reason, detail: "WebGL context was lost." };
           _markStage("context", "lost");
+          _contextLostAt = Date.now();
+          _contextLossCount += 1;
           _initialized = false;
           // Stop the animation loop so we don't render with a lost context.
           try { globalThis.LivingTimeSphereAnimation?.stop?.(); } catch { /* best-effort */ }
@@ -2288,6 +2957,8 @@
         onRestored() {
           _restoreAttempts += 1;
           _markStage("context", "restored");
+          _contextRestoredAt = Date.now();
+          _contextRestoreCount += 1;
           console.info("[LivingTimeSphere] WebGL context restored — notifying mount for reinit.");
           // Notify mount layer — mount will teardown stale resources and reinit.
           try { _onContextRestoredCb?.(); } catch { /* mount notification is best-effort */ }
@@ -2298,18 +2969,16 @@
       _appliedDpr = pixelRatio;
       _quality = quality;
 
-      // ── Camera ────────────────────────────────────────────────────
-      // Wait one rAF to ensure the container has stable layout dimensions.
-      await new Promise(resolve => requestAnimationFrame(resolve));
-      const rect = container.getBoundingClientRect();
-      const w    = Math.max(rect.width  || 320, 100);
-      const h    = Math.max(rect.height || 320, 100);
-      _markStage("dimensions", (w > 0 && h > 0) ? `${w}x${h}` : "invalid");
       _renderer.setSize(w, h);
+      _recordCanvasConnection("after-setsize");
+      _pushInitTimeline("renderer-set-size", { width: w, height: h });
 
+      // ── Camera ────────────────────────────────────────────────────
       _markStage("camera", "running");
       _camera = globalThis.LivingTimeSphereCamera.create(THREE, w, h);
+      _countLifecycle("cameraCreateCount");
       _markStage("camera", "created");
+      _pushInitTimeline("camera-aspect-updated", { aspect: Number(_camera?.aspect || 0) });
       globalThis.LivingTimeSphereCamera.onChangeCallback(() => {
         _syncSemanticZoomFromCamera(false);
         _moonLabelManager?.markDirty();
@@ -2331,6 +3000,7 @@
       // ── Animation ─────────────────────────────────────────────────
       globalThis.LivingTimeSphereAnimation.applyPreset(quality);
       globalThis.LivingTimeSphereAnimation.setReducedMotion(reducedMotion || _prefersReducedMotion());
+      globalThis.LivingTimeSphereAnimation.setLowPower(_motionMode === "still" || _dprTier === "lowpower");
       globalThis.LivingTimeSphereAnimation.attachPageVisibility();
       globalThis.LivingTimeSphereAnimation.attachIntersection(_canvas);
 
@@ -2339,7 +3009,15 @@
         globalThis.LivingTimeSphereCamera.startDrift(performance.now());
       }
 
-      globalThis.LivingTimeSphereAnimation.start(render);
+      globalThis.LivingTimeSphereAnimation.start(render, error => {
+        _lastInitError = {
+          reason: globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.INIT_EXCEPTION ?? "init-exception",
+          detail: `Animation frame failed: ${String(error)}`,
+        };
+        _initialized = false;
+        try { _onContextLostCb?.(); } catch { /* mount notification is best-effort */ }
+      });
+      _countLifecycle("rafLoopStartCount");
       globalThis.LivingTimeSphereAnimation.markDirty();
 
       // ── Pointer interaction ────────────────────────────────────────
@@ -2359,7 +3037,10 @@
       try {
         await new Promise((resolve, reject) => {
           requestAnimationFrame(() => {
+            if (initWasCancelled()) { resolve(); return; }
+            _pushInitTimeline("first-request-animation-frame");
             try {
+              _pushInitTimeline("first-render-call");
               render(performance.now());
               resolve();
             } catch (e) {
@@ -2367,40 +3048,59 @@
             }
           });
         });
+        if (initWasCancelled()) return cancelledResult();
         _markStage("firstFrame", "rendered");
+        _firstFrameTimestamp = Date.now();
+        _recordCanvasConnection("after-first-frame");
+        _pushInitTimeline("first-frame-completed");
+        _probeFirstFramePixelHealth();
       } catch (err) {
         _markStage("firstFrame", "failed");
         _lastInitError = {
           reason: globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.INIT_EXCEPTION ?? "init-exception",
           detail: `First-frame render failed: ${String(err)}`,
         };
+        teardown();
+        _initEndedAt = performance.now();
+        return { success: false, reason: _lastInitError.reason, detail: _lastInitError.detail };
+      }
+
+      let readiness = _validateSceneReadiness({ requireFirstFrame: true });
+      if (!readiness?.ready) {
+        try {
+          updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, semanticZoomState);
+          render(performance.now());
+        } catch { /* best-effort recovery pass */ }
+        readiness = _validateSceneReadiness({ requireFirstFrame: true });
+      }
+      if (!readiness?.ready) {
+        _markStage("geometry", "failed");
+        _lastInitError = {
+          reason: "SCENE_CONTENT_INCOMPLETE",
+          detail: `3D scene readiness gate failed: ${(readiness?.reasons || []).join(", ") || "unknown"}`,
+        };
+        teardown();
         _initEndedAt = performance.now();
         return { success: false, reason: _lastInitError.reason, detail: _lastInitError.detail };
       }
 
       _initialized = true;
       _lastInitError = null;
+      _recordCanvasConnection("lifecycle-transition-ready");
       _initEndedAt = performance.now();
       return { success: true };
 
     } catch (err) {
-      // Unexpected error: clean up any partially-created canvas so it does
-      // not appear as a broken/blank element in the DOM.
-      if (_canvas && _canvas.parentNode) {
-        _canvas.parentNode.removeChild(_canvas);
-      }
-      _canvas    = null;
-      _renderer  = null;
-      _scene     = null;
-      _camera    = null;
-      _environmentController.dispose();
-      _initialized = false;
-      _lastInitError = { reason: globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.INIT_EXCEPTION ?? "init-exception", detail: String(err) };
+      if (initWasCancelled()) return cancelledResult();
+      const failure = { reason: globalThis.ObservatoryCapabilityManager?.FALLBACK_REASONS.INIT_EXCEPTION ?? "init-exception", detail: String(err) };
+      _lastInitError = failure;
       _markStage("renderer", "failed");
       _initEndedAt = performance.now();
-      return { success: false, reason: _lastInitError.reason, detail: String(err) };
+      teardown();
+      _lastInitError = failure;
+      return { success: false, reason: failure.reason, detail: failure.detail };
     } finally {
-      _initializing = false;
+      if (initEpoch === _initEpoch) _initializing = false;
     }
   }
 
@@ -2408,12 +3108,35 @@
     try { return window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch { return false; }
   }
 
+  function _detachPointerEvents() {
+    _pointerEventDisposers.splice(0).forEach(dispose => {
+      try { dispose(); } catch { /* best-effort listener cleanup */ }
+    });
+  }
+
   function _wirePointerEvents(container, onYearSelect, onMarkerSelect) {
+    _detachPointerEvents();
+    const listen = (target, type, handler, options) => {
+      if (!target?.addEventListener) return;
+      target.addEventListener(type, handler, options);
+      _pointerEventDisposers.push(() => target.removeEventListener(type, handler, options));
+    };
     let pinchActive   = false;
     let pinchDist0    = 0;
+    let pinchAngle0   = 0;
+    let twistTheta0   = 0;
+    let twistActive   = false;
     let pointerCache  = new Map();
     let panCentroid0  = null;
     let interactMode  = false;    // on small screens, require explicit engage
+    const TWIST_DEADZONE = 0.09;
+
+    function _angleDelta(now, start) {
+      let delta = now - start;
+      while (delta > Math.PI) delta -= Math.PI * 2;
+      while (delta < -Math.PI) delta += Math.PI * 2;
+      return delta;
+    }
 
     function enterInteractMode() {
       interactMode = true;
@@ -2427,14 +3150,27 @@
       container.dispatchEvent(new CustomEvent("sphere:interact-end", { bubbles: true }));
     }
 
-    _canvas.addEventListener("pointerdown", e => {
+    listen(container, "sphere:interact-request-start", () => {
+      enterInteractMode();
+    });
+    listen(container, "sphere:interact-request-end", () => {
+      exitInteractMode();
+    });
+
+    listen(_canvas, "pointerdown", e => {
       _hideFloatingLabel();
       pointerCache.set(e.pointerId, e);
 
       if (pointerCache.size === 2) {
         // Pinch start
         const pts = [...pointerCache.values()];
+        const dx = pts[1].clientX - pts[0].clientX;
+        const dy = pts[1].clientY - pts[0].clientY;
         const d = Math.hypot(pts[0].clientX - pts[1].clientX, pts[0].clientY - pts[1].clientY);
+        pinchDist0 = d;
+        pinchAngle0 = Math.atan2(dy, dx);
+        twistTheta0 = Number(globalThis.LivingTimeSphereCamera?.getState?.().theta) || 0;
+        twistActive = false;
         globalThis.LivingTimeSphereCamera.onPinchStart(d);
         panCentroid0 = { x: (pts[0].clientX + pts[1].clientX) / 2, y: (pts[0].clientY + pts[1].clientY) / 2 };
         globalThis.LivingTimeSphereCamera.onPanStart?.(panCentroid0.x, panCentroid0.y);
@@ -2454,12 +3190,20 @@
       e.preventDefault();
     });
 
-    _canvas.addEventListener("pointermove", e => {
+    listen(_canvas, "pointermove", e => {
       pointerCache.set(e.pointerId, e);
 
       if (pointerCache.size === 2) {
         const pts = [...pointerCache.values()];
         const d = Math.hypot(pts[0].clientX - pts[1].clientX, pts[0].clientY - pts[1].clientY);
+        const dx = pts[1].clientX - pts[0].clientX;
+        const dy = pts[1].clientY - pts[0].clientY;
+        const angle = Math.atan2(dy, dx);
+        const twistDelta = _angleDelta(angle, pinchAngle0);
+        if (Math.abs(twistDelta) > TWIST_DEADZONE || twistActive) {
+          twistActive = true;
+          globalThis.LivingTimeSphereCamera.setState?.({ theta: twistTheta0 - twistDelta });
+        }
         globalThis.LivingTimeSphereCamera.onPinchMove(d);
         const cx = (pts[0].clientX + pts[1].clientX) / 2;
         const cy = (pts[0].clientY + pts[1].clientY) / 2;
@@ -2478,13 +3222,20 @@
       }
     }, { passive: false });
 
-    _canvas.addEventListener("pointerup", e => {
+    listen(_canvas, "pointerup", e => {
       pointerCache.delete(e.pointerId);
       if (pinchActive && pointerCache.size < 2) {
         globalThis.LivingTimeSphereCamera.onPinchEnd();
         globalThis.LivingTimeSphereCamera.onPanEnd?.();
         panCentroid0 = null;
         pinchActive = false;
+        pinchDist0 = 0;
+        pinchAngle0 = 0;
+        twistActive = false;
+        if (pointerCache.size === 1) {
+          const [remaining] = pointerCache.values();
+          if (remaining) globalThis.LivingTimeSphereCamera.onPointerDown(remaining.clientX, remaining.clientY);
+        }
       }
       if (pointerCache.size === 0 && interactMode) {
         globalThis.LivingTimeSphereCamera.onPointerUp();
@@ -2497,15 +3248,20 @@
       }
     });
 
-    _canvas.addEventListener("pointercancel", e => {
+    listen(_canvas, "pointercancel", e => {
       pointerCache.delete(e.pointerId);
       globalThis.LivingTimeSphereCamera.onPointerUp();
       globalThis.LivingTimeSphereCamera.onPanEnd?.();
+      globalThis.LivingTimeSphereCamera.onPinchEnd();
+      pinchActive = false;
+      pinchDist0 = 0;
+      pinchAngle0 = 0;
+      twistActive = false;
       if (window.innerWidth < 480) exitInteractMode();
     });
 
     // Wheel zoom (desktop)
-    _canvas.addEventListener("wheel", e => {
+    listen(_canvas, "wheel", e => {
       globalThis.LivingTimeSphereCamera.onWheel(e);
       globalThis.LivingTimeSphereAnimation.markDirty();
       e.preventDefault();
@@ -2513,10 +3269,10 @@
 
     // Raycasting for marker selection on click
     let _clickStart = { x: 0, y: 0 };
-    _canvas.addEventListener("pointerdown", e => {
+    listen(_canvas, "pointerdown", e => {
       if (pointerCache.size === 1) { _clickStart = { x: e.clientX, y: e.clientY }; }
     });
-    _canvas.addEventListener("pointerup", e => {
+    listen(_canvas, "pointerup", e => {
       const dx = Math.abs(e.clientX - _clickStart.x);
       const dy = Math.abs(e.clientY - _clickStart.y);
       if (dx < 6 && dy < 6) _handleClick(e, onYearSelect, onMarkerSelect);
@@ -2681,11 +3437,17 @@
   function _wireResize(container) {
     if (typeof ResizeObserver === "undefined") return;
     _resizeObserver?.disconnect?.();
+    _lastResizeWidth = 0;
+    _lastResizeHeight = 0;
+    _countLifecycle("resizeObserverCreateCount");
     _resizeObserver = new ResizeObserver(() => {
       if (!_renderer || !_canvas || !_camera) return;
       const rect = container.getBoundingClientRect();
-      const w    = Math.max(rect.width  || 320, 100);
-      const h    = Math.max(rect.height || 320, 100);
+      const w    = Math.round(Math.max(rect.width  || 320, 100));
+      const h    = Math.round(Math.max(rect.height || 320, 100));
+      if (w === _lastResizeWidth && h === _lastResizeHeight) return;
+      _lastResizeWidth = w;
+      _lastResizeHeight = h;
       _renderer.setSize(w, h);
       globalThis.LivingTimeSphereCamera.resize(w, h);
       _moonLabelManager?.markDirty();
@@ -2699,7 +3461,205 @@
   function refresh(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, semanticZoomState) {
     if (!_initialized) return;
     updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, semanticZoomState);
+    const readiness = _validateSceneReadiness({ requireFirstFrame: true });
+    if (!readiness?.ready) {
+      _lastInitError = {
+        reason: "SCENE_CONTENT_INCOMPLETE",
+        detail: `Refresh readiness failed: ${(readiness.reasons || []).join(", ") || "unknown"}`,
+      };
+    }
     globalThis.LivingTimeSphereAnimation.markDirty();
+  }
+
+  function updateSelectedState({
+    model,
+    selectedYear = _selectedYear,
+    visibleLayers = _visibleLayers,
+    viewMode = _viewMode,
+    moonLabelMode = _moonLabelMode,
+    moonLabelDistance = _moonLabelDistance,
+    dayLabelMode = _dayLabelMode,
+    connectionRegistry = _connectionRegistry,
+    motionMode = _motionMode,
+    semanticZoomState = _semanticZoomState,
+    skipCameraFocus = true,
+  } = {}) {
+    if (!_initialized || !_scene || !model) return false;
+    const mat = globalThis.LivingTimeSphereM;
+    const updateStartedAt = performance.now();
+    _countLifecycle("selectedStateUpdateCount");
+    _lastLayerUpdateType = "selected-state-update";
+    _lastSceneBuildTimestamp = Date.now();
+
+    _model = model;
+    _selectedYear = selectedYear;
+    _visibleLayers = visibleLayers || _visibleLayers || {};
+    _viewMode = viewMode || _viewMode || "today";
+    _moonLabelMode = moonLabelMode || _moonLabelMode || "contextual";
+    _moonLabelDistance = moonLabelDistance || _moonLabelDistance || "standard";
+    _dayLabelMode = dayLabelMode || _dayLabelMode || "key";
+    _connectionRegistry = Array.isArray(connectionRegistry) ? connectionRegistry : (_connectionRegistry || []);
+    _motionMode = motionMode || _motionMode || "still";
+    _semanticZoomState = semanticZoomState || _semanticZoomState || null;
+    _buildMoonAnchors(_viewMode);
+    _moonLabelManager?.markDirty();
+
+    const vl = _visibleLayers;
+    _applyLayerVisibility(vl, _semanticZoomState || { band: "medium", visibility: {} });
+    const band = _semanticZoomState?.band || "medium";
+
+    const selected = model.selectedPatternPosition || model.todayPatternPosition || null;
+    const todayLunarAngle = Number(model.lunarAngle ?? 0);
+    const selectedLunarAngle = _resolveLunarAngleForSelected(selected, todayLunarAngle);
+    if (_objects.lunarMarker && Number.isFinite(todayLunarAngle)) {
+      const p = _positionOnLunarOrbit(todayLunarAngle, mat.SIZES.lunarOrbit);
+      _objects.lunarMarker.position.set(p.x, p.y, p.z);
+      _objects.lunarMarker.userData = {
+        type: "lunar-position",
+        role: "today",
+        phase: model.todayPatternPosition?.lunarPhase || null,
+        illumination: model.todayPatternPosition?.lunarIllumination ?? null,
+      };
+    }
+    if (_objects.lunarSelectedMarker && Number.isFinite(selectedLunarAngle)) {
+      const p = _positionOnLunarOrbit(selectedLunarAngle, mat.SIZES.lunarOrbit);
+      _objects.lunarSelectedMarker.position.set(p.x, p.y, p.z);
+      _objects.lunarSelectedMarker.userData = {
+        type: "lunar-position",
+        role: "selected",
+        phase: selected?.lunarPhase || null,
+        illumination: selected?.lunarIllumination ?? null,
+      };
+      _objects.lunarSelectedMarker.visible = !!vl.lunar && band !== "far" && !!selected;
+    }
+
+    const todaySolarAngle = Number(model.currentSolarSeasonAngle ?? model.solarSeasonAngle ?? 0);
+    const selectedSolarAngle = Number(selected?.solar?.angle ?? todaySolarAngle);
+    if (_objects.solarTodayMarker && Number.isFinite(todaySolarAngle)) {
+      const p = _positionOnSolarAxis(todaySolarAngle, mat.SIZES.solarAxis);
+      _objects.solarTodayMarker.position.set(p.x, p.y, p.z);
+      _objects.solarTodayMarker.visible = !!vl.solar && band !== "far";
+    }
+    if (_objects.solarSelectedMarker && Number.isFinite(selectedSolarAngle)) {
+      const p = _positionOnSolarAxis(selectedSolarAngle, mat.SIZES.solarAxis);
+      _objects.solarSelectedMarker.position.set(p.x, p.y, p.z);
+      _objects.solarSelectedMarker.visible = !!vl.solar && band !== "far" && !!selected;
+      _objects.solarSelectedMarker.userData = {
+        type: "solar-position",
+        role: "selected",
+        gate: selected?.solar?.gate || null,
+        angle: selectedSolarAngle,
+      };
+    }
+    if (_objects.solarProgressGroup) {
+      _disposeGroupChildren(_objects.solarProgressGroup);
+      const arc = buildSolarProgressArc(todaySolarAngle, selectedSolarAngle);
+      if (arc) {
+        arc.name = "solarProgressArc";
+        arc.computeLineDistances?.();
+        arc.visible = !!vl.solar && band !== "far";
+        _objects.solarProgressGroup.add(arc);
+      }
+    }
+
+    if (_objects.selectedDayMarker) {
+      const showSelected = !!(selected?.dayOfPatternYear != null);
+      if (showSelected) {
+        const selectedAngle = globalThis.LivingTimeSphereModel.patternAngleForDayOfYear(selected.dayOfPatternYear);
+        const { x, z } = angleToXZ(selectedAngle, mat.SIZES.patternRing);
+        _objects.selectedDayMarker.position.set(x, 0.01, z);
+        _objects.selectedDayMarker.visible = true;
+        if (_objects.selectedDayHalo) {
+          _objects.selectedDayHalo.position.set(x, 0.004, z);
+          _objects.selectedDayHalo.visible = true;
+        }
+        _objects.selectedDayMarker.userData = {
+          ...selected,
+          type: "living-day",
+          role: "selected",
+        };
+      } else {
+        _objects.selectedDayMarker.visible = false;
+        if (_objects.selectedDayHalo) _objects.selectedDayHalo.visible = false;
+      }
+    }
+
+    _applyDayNodeVisibility(
+      band,
+      selected?.dayOfPatternYear ?? model.selectedPatternPosition?.dayOfPatternYear ?? null,
+      model.todayPatternPosition?.dayOfPatternYear ?? null
+    );
+
+    if (_objects.activeMoonGroup) {
+      _disposeGroupChildren(_objects.activeMoonGroup);
+      const tp = model.selectedPatternPosition || model.todayPatternPosition;
+      const activeMoon = tp ? (tp.moon || 1) - 1 : (model.sourceRecord?.equinox?.patternPosition?.moon || 1) - 1;
+      const r = mat.SIZES.patternRing;
+      const sectorStart = (activeMoon / 13) * 360;
+      const sectorEnd   = ((activeMoon + 1) / 13) * 360;
+      const steps = 32;
+      const innerR = r * 0.82;
+      const outerR = r * 0.98;
+      const shape = new _THREE.Shape();
+      for (let i = 0; i <= steps; i++) {
+        const a = sectorStart + (i / steps) * (sectorEnd - sectorStart);
+        const { x, z } = angleToXZ(a, outerR);
+        if (i === 0) shape.moveTo(x, z);
+        else shape.lineTo(x, z);
+      }
+      for (let i = steps; i >= 0; i--) {
+        const a = sectorStart + (i / steps) * (sectorEnd - sectorStart);
+        const { x, z } = angleToXZ(a, innerR);
+        shape.lineTo(x, z);
+      }
+      shape.closePath();
+      const geo = new _THREE.ShapeGeometry(shape);
+      geo.rotateX(Math.PI / 2);
+      const sector = new _THREE.Mesh(geo, new _THREE.MeshBasicMaterial({
+        color: mat.COLORS.moonHighlight,
+        transparent: true,
+        opacity: _viewMode === "today" ? 0.42 : mat.OPACITY.moonHighlight,
+        depthWrite: false,
+        side: _THREE.DoubleSide,
+      }));
+      sector.name = "activeMoonSector";
+      _objects.activeMoonGroup.add(sector);
+    }
+
+    if (_objects.activeDayNode) {
+      const tp = model.selectedPatternPosition || model.todayPatternPosition;
+      if (vl.pattern && tp && tp.moon != null && tp.day != null) {
+        const moonIdx = tp.moon - 1;
+        const dayIdx  = tp.day  - 1;
+        const angle = globalThis.LivingTimeSphereModel.dayAngleWithinMoon(moonIdx, dayIdx);
+        const { x, z } = angleToXZ(angle, mat.SIZES.patternRing);
+        _objects.activeDayNode.position.set(x, 0.008, z);
+        _objects.activeDayNode.visible = true;
+        if (_objects.selectionRing && _viewMode !== "years") {
+          _objects.selectionRing.position.set(x, 0.01, z);
+          _objects.selectionRing.visible = true;
+          _objects.selectionRing.rotation.x = Math.PI / 2;
+        }
+      } else {
+        _objects.activeDayNode.visible = false;
+      }
+    }
+
+    if (_objects.connectionGroup && Array.isArray(_connectionRegistry)) {
+      _disposeGroupChildren(_objects.connectionGroup);
+      _connectionDiagnostics = [];
+      _connectionVisibleCount = 0;
+      if (vl.connections && _connectionRegistry.length) _buildConnections();
+    }
+
+    _applyModeVisibilityOverrides(vl);
+    _syncSemanticZoomFromCamera(true);
+    if (!skipCameraFocus) _syncCameraFocus(_model, _spiral, _selectedYear, false);
+    _enforceRendererHostContract();
+    _validateSceneReadiness({ requireFirstFrame: false });
+    _lastLayerUpdateMs = Math.max(0, performance.now() - updateStartedAt);
+    globalThis.LivingTimeSphereAnimation.markDirty();
+    return true;
   }
 
   function updateEnvironment(environmentState) {
@@ -2711,7 +3671,16 @@
     if (!_initialized || !preset) return;
     _quality = preset;
     globalThis.LivingTimeSphereAnimation.applyPreset(preset);
-    if (_renderer) _renderer.setPixelRatio(Math.min(preset.pixelRatioMax || 2, devicePixelRatio || 1));
+    globalThis.LivingTimeSphereAnimation.setLowPower(
+      _motionMode === "still" || _activeTier === "lowpower" || Number(preset.starCount) === 0
+    );
+    if (_renderer) {
+      const rawDpr = typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1;
+      const tierCap = globalThis.ObservatoryCapabilityManager?.clampPixelRatio?.(_activeTier || "balanced", rawDpr) ?? rawDpr;
+      const nextDpr = Math.min(rawDpr, tierCap, Number(preset.pixelRatioMax ?? tierCap));
+      _renderer.setPixelRatio(nextDpr);
+      _appliedDpr = nextDpr;
+    }
     if (_motionMode === "drift" && preset.idleDrift && !_prefersReducedMotion()) {
       globalThis.LivingTimeSphereCamera.startDrift(performance.now());
     } else {
@@ -2733,6 +3702,7 @@
   }
 
   function setMode(mode) {
+    if (!mode || mode === _viewMode) return;
     _viewMode = mode;
     _lastCameraFocusKey = null;
     _syncCameraFocus(_model, _spiral, _selectedYear, true);
@@ -2740,11 +3710,39 @@
   }
 
   function teardown() {
+    _initEpoch += 1;
+    const teardownContainer = _container;
+    if (_sceneRepairRaf) cancelAnimationFrame(_sceneRepairRaf);
+    _sceneRepairRaf = 0;
+    _sceneRepairQueued = false;
     globalThis.LivingTimeSphereAnimation.stop();
     globalThis.LivingTimeSphereAnimation.detachIntersection();
-    if (_renderer) { _renderer.dispose(); _renderer = null; }
+    globalThis.LivingTimeSphereAnimation.detachPageVisibility?.();
+    _detachPointerEvents();
+    _resizeObserver?.disconnect?.();
+    _resizeObserver = null;
+    _lastResizeWidth = 0;
+    _lastResizeHeight = 0;
+    _contextLossDispose?.();
+    _contextLossDispose = null;
+    _environmentController.dispose();
+    _disposeObjectTree(_scene);
+    if (_renderer) {
+      const renderer = _renderer;
+      try { renderer.dispose(); } catch { /* best-effort GPU cleanup */ }
+      try {
+        const contextAlreadyLost = renderer.getContext?.().isContextLost?.() === true;
+        if (!contextAlreadyLost) renderer.forceContextLoss?.();
+      } catch { /* best-effort GPU context release */ }
+      _renderer = null;
+    } else {
+      try { _activeWebGlContext?.getExtension?.("WEBGL_lose_context")?.loseContext?.(); } catch { /* best-effort GPU context release */ }
+    }
+    _activeWebGlContext = null;
+    if (_canvas?.dataset) _canvas.dataset.sphereContextActive = "false";
     if (_canvas && _canvas.parentNode) _canvas.parentNode.removeChild(_canvas);
     _canvas = null;
+    _pruneRendererOwnedCanvases(teardownContainer, null, "renderer-teardown");
     _hideFloatingLabel();
     if (_floatingLabelEl && _floatingLabelEl.parentNode) _floatingLabelEl.parentNode.removeChild(_floatingLabelEl);
     _floatingLabelEl = null;
@@ -2763,36 +3761,72 @@
     _lastSemanticSourceType = "unknown";
     _previousSemanticBand = null;
     _lastSemanticTransitionThreshold = null;
-    _environmentController.dispose();
-    _resizeObserver?.disconnect?.();
-    _resizeObserver = null;
-    _contextLossDispose?.();
-    _contextLossDispose = null;
     _scene = null;
     _camera = null;
     _initialized  = false;
     _initializing = false;
+    _lastRenderTimestamp = 0;
+    _firstFrameTimestamp = 0;
+    _firstFramePixelProbe = null;
+    _lastSceneBuildTimestamp = 0;
+    _geometryBuildRevision = 0;
+    _lastSceneReadiness = null;
+    _contextLostAt = 0;
+    _contextRestoredAt = 0;
+    _contextLossCount = 0;
+    _contextRestoreCount = 0;
     _loadPromise  = null; // allow Three.js reload after teardown
     _THREE        = null;
     _threeSource  = null;
+    _container    = null;
+    _initTimeline.length = 0;
     for (const key of Object.keys(_objects)) delete _objects[key];
+  }
+
+  function cancelInitialization(reason = "initialization-cancelled") {
+    if (!_initializing) return false;
+    _lastInitError = {
+      reason: "INIT_CANCELLED",
+      detail: `3D initialization cancelled (${reason}).`,
+    };
+    teardown();
+    return true;
   }
 
   function isInitialized() { return _initialized; }
   function isInitializing() { return _initializing; }
+  function getCanvas() { return _canvas; }
+  function getRenderer() { return _renderer; }
 
   function getLastInitError() { return _lastInitError; }
 
   function getDiagnostics() {
-    let webglAvail = false;
-    let webgl2Avail = false;
-    try {
-      const c = document.createElement("canvas");
-      webglAvail  = !!(c.getContext("webgl") || c.getContext("experimental-webgl"));
-      webgl2Avail = !!(c.getContext("webgl2"));
-    } catch { /* ignore */ }
+    // Diagnostics must never create probe contexts. Repeated diagnostics are
+    // common during initialization and can otherwise evict the active WebGL
+    // context on Android. Reuse the capability manager's cached result and the
+    // renderer's existing context instead.
+    let activeContext = null;
+    try { activeContext = _renderer?.getContext?.() || null; } catch { /* ignore */ }
+    const cachedCapability = globalThis.ObservatoryCapabilityManager?.probeWebGl?.() || null;
+    const webglAvail = !!activeContext || !!cachedCapability?.webgl;
+    const webgl2Avail = !!cachedCapability?.webgl2 || (
+      !!activeContext &&
+      typeof WebGL2RenderingContext !== "undefined" &&
+      activeContext instanceof WebGL2RenderingContext
+    );
     const canvasW = _canvas ? (_canvas.width  || 0) : 0;
     const canvasH = _canvas ? (_canvas.height || 0) : 0;
+    const canvasRect = _canvas?.getBoundingClientRect?.() || null;
+    const drawingBufferSize = (() => {
+      if (!_renderer?.getDrawingBufferSize || !_THREE?.Vector2) return { width: 0, height: 0 };
+      const size = _renderer.getDrawingBufferSize(new _THREE.Vector2());
+      return { width: Number(size?.x || 0), height: Number(size?.y || 0) };
+    })();
+    const rendererSize = (() => {
+      if (!_renderer?.getSize || !_THREE?.Vector2) return { width: 0, height: 0 };
+      const size = _renderer.getSize(new _THREE.Vector2());
+      return { width: Number(size?.x || 0), height: Number(size?.y || 0) };
+    })();
     const conn = typeof navigator !== "undefined"
       ? (navigator.connection || navigator.mozConnection || navigator.webkitConnection || null)
       : null;
@@ -2803,6 +3837,10 @@
     const visibleMoonLabels = Array.isArray(_moonLabelEls)
       ? _moonLabelEls.filter(el => el && el.style.display !== "none").length
       : 0;
+    const rendererState = !_initialized
+      ? (_initializing ? "initializing" : (_stageState?.renderer === "failed" ? "failed" : "not-started"))
+      : (_stageState?.firstFrame === "rendered" ? "rendered" : "ready");
+    const readiness = _lastSceneReadiness || _validateSceneReadiness({ requireFirstFrame: false });
     return {
       requestedRenderer: "3d",
       activeRenderer:    _initialized ? "webgl" : "none",
@@ -2816,6 +3854,20 @@
       localModuleUrl:    _localThreeUrl(),
       canvasWidth:       canvasW,
       canvasHeight:      canvasH,
+      canvasClientWidth: Number(_canvas?.clientWidth || 0),
+      canvasClientHeight: Number(_canvas?.clientHeight || 0),
+      canvasConnected: !!_canvas?.isConnected,
+      renderGeneration: Number(_renderGeneration || 0),
+      canvasRect: canvasRect ? {
+        left: Number(canvasRect.left || 0),
+        top: Number(canvasRect.top || 0),
+        width: Number(canvasRect.width || 0),
+        height: Number(canvasRect.height || 0),
+      } : null,
+      drawingBufferWidth: drawingBufferSize.width,
+      drawingBufferHeight: drawingBufferSize.height,
+      rendererSizeWidth: rendererSize.width,
+      rendererSizeHeight: rendererSize.height,
       devicePixelRatio:  typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1,
       requestedDevicePixelRatio: _requestedDpr,
       appliedDevicePixelRatio: _appliedDpr,
@@ -2827,6 +3879,70 @@
       reducedMotion:     (() => { try { return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true; } catch { return false; } })(),
       reducedData,
       restoreAttempts:   _restoreAttempts,
+      rendererState,
+      lastRenderTimestamp: _lastRenderTimestamp,
+      firstFrameTimestamp: _firstFrameTimestamp,
+      sceneObjectCount: Number(readiness?.stats?.sceneObjectCount || 0),
+      visibleObjectCount: Number(readiness?.stats?.visibleObjectCount || 0),
+      meshCount: Number(readiness?.stats?.meshCount || 0),
+      lineCount: Number(readiness?.stats?.lineCount || 0),
+      patternGroupChildren: Number(readiness?.stats?.patternGroupChildren || 0),
+      lunarGroupChildren: Number(readiness?.stats?.lunarGroupChildren || 0),
+      solarGroupChildren: Number(readiness?.stats?.solarGroupChildren || 0),
+      passageGroupChildren: Number(readiness?.stats?.passageGroupChildren || 0),
+      markerGroupChildren: Number(readiness?.stats?.markerGroupChildren || 0),
+      connectionGroupChildren: Number(readiness?.stats?.connectionGroupChildren || 0),
+      spiralGroupChildren: Number(readiness?.stats?.spiralGroupChildren || 0),
+      environmentGroupChildren: Number(readiness?.stats?.environmentGroupChildren || 0),
+      astronomyGroupChildren: Number(readiness?.stats?.astronomyGroupChildren || 0),
+      selectedGroupChildren: Number(readiness?.stats?.selectedGroupChildren || 0),
+      patternGroupVisible: !!readiness?.stats?.patternGroupVisible,
+      activeLayerSet: Array.isArray(readiness?.stats?.activeLayerSet) ? readiness.stats.activeLayerSet.slice(0, 24) : [],
+      sceneBounds: readiness?.stats?.sceneBounds || null,
+      sceneReadiness: {
+        ready: !!readiness?.ready,
+        reasons: Array.isArray(readiness?.reasons) ? readiness.reasons.slice(0, 12) : [],
+      },
+      cameraPosition: readiness?.stats?.cameraPosition || null,
+      cameraTarget: readiness?.stats?.cameraTarget || null,
+      cameraNear: Number(readiness?.stats?.cameraNear || 0),
+      cameraFar: Number(readiness?.stats?.cameraFar || 0),
+      cameraAspect: Number(_camera?.aspect || 0),
+      lastSceneBuildTimestamp: _lastSceneBuildTimestamp,
+      geometryBuildRevision: _geometryBuildRevision,
+      geometryBuildCountByLayer: { ..._geometryBuildCountByLayer },
+      layerBuildMsByLayer: { ..._layerBuildMetrics },
+      cachedToggleMsByLayer: { ..._layerToggleMetrics },
+      lastLayerUpdateType: _lastLayerUpdateType,
+      lastLayerUpdateMs: Number(_lastLayerUpdateMs || 0),
+      lifecycleCounters: { ..._lifecycleCounters },
+      rendererInitCount: Number(_lifecycleCounters.rendererInitCount || 0),
+      sceneRootBuildCount: Number(_lifecycleCounters.sceneRootBuildCount || 0),
+      sceneBuildCount: Number(_lifecycleCounters.sceneRootBuildCount || 0),
+      modelBuildCount: Number(_lifecycleCounters.modelBuildCount || 0),
+      spiralReady: !!_lastSpiralGeometryKey,
+      passageReady: !!_lastPassageGeometryKey,
+      patternReady: Number(readiness?.stats?.patternGroupChildren || 0) > 0,
+      cameraFitReady: Number(readiness?.stats?.cameraNear || 0) > 0 && Number(readiness?.stats?.cameraFar || 0) > Number(readiness?.stats?.cameraNear || 0),
+      selectedStateUpdateCount: Number(_lifecycleCounters.selectedStateUpdateCount || 0),
+      layerVisibilityUpdateCount: Number(_lifecycleCounters.layerVisibilityUpdateCount || 0),
+      cameraCreateCount: Number(_lifecycleCounters.cameraCreateCount || 0),
+      canvasCreateCount: Number(_lifecycleCounters.canvasCreateCount || 0),
+      rafLoopStartCount: Number(_lifecycleCounters.rafLoopStartCount || 0),
+      resizeObserverCreateCount: Number(_lifecycleCounters.resizeObserverCreateCount || 0),
+      hostContract: {
+        checkedAt: Number(_hostContractCheckedAt || 0),
+        issueCount: Number(_hostContractIssues.length || 0),
+        issues: _hostContractIssues.slice(0, 40),
+      },
+      rafActive: !!globalThis.LivingTimeSphereAnimation?.isRunning?.(),
+      contextLost: _stageState.context === "lost",
+      contextLostAt: Number(_contextLostAt || 0),
+      contextRestoredAt: Number(_contextRestoredAt || 0),
+      contextLossCount: Number(_contextLossCount || 0),
+      contextRestoreCount: Number(_contextRestoreCount || 0),
+      initTimeline: _initTimeline.slice(0, 120),
+      firstFramePixelProbe: _firstFramePixelProbe ? { ..._firstFramePixelProbe } : null,
       lastInitError:     _lastInitError,
       semanticZoom: {
         band: _semanticZoomState?.band || "medium",
@@ -2856,14 +3972,21 @@
   globalThis.LivingTimeSphereRenderer3d = Object.freeze({
     init,
     refresh,
+    updateSelectedState,
+    setLayerVisibility,
+    setLayerStates,
     updateEnvironment,
     setQuality,
     requestSingleRender,
+    markDirty: requestSingleRender,
     resetView,
     setMode,
+    cancelInitialization,
     teardown,
     isInitialized,
     isInitializing,
+    getCanvas,
+    getRenderer,
     getLastInitError,
     getDiagnostics,
     exportPng,

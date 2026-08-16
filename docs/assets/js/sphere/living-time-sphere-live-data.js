@@ -184,6 +184,26 @@
     };
   }
 
+  function getSolarSnapshot(opts = {}) {
+    const options = resolveOptions(opts);
+    const gate = resolveSolarGate(options.asOf);
+    const season = resolveSeason(options.asOf);
+    const seasonalProgressAngle = globalThis.LivingTimeSphereModel?.seasonalProgressAngleForDate?.(options.asOf) ?? null;
+    return Object.freeze({
+      gate: gate.name,
+      element: gate.element,
+      copy: gate.copy,
+      season,
+      angle: seasonalProgressAngle,
+      seasonalProgressAngle,
+      provenance: Object.freeze({
+        sourceType: "seasonal-approximation",
+        source: "seasonal-anchor interpolation",
+        precision: "anchor-interpolation",
+      }),
+    });
+  }
+
   function resolvePassageStatus(options, selectedYear) {
     if (!globalThis.EquinoxPassageEngine?.buildRecord) return null;
     try {
@@ -249,13 +269,11 @@
     const locationState = adapter.getLocationState?.() || null;
     const providerConfigured = Number.isFinite(locationState?.latitude) && Number.isFinite(locationState?.longitude);
     const adapterSnapshot = adapter.getSnapshot() || {};
-    const asOf = options?.asOf instanceof Date ? options.asOf : new Date(options?.asOf || Date.now());
-    const nearNow = Math.abs(Date.now() - asOf.getTime()) <= 36 * 60 * 60 * 1000;
 
-    if (providerConfigured && nearNow && adapter.requestRefresh) {
-      Promise.resolve(adapter.requestRefresh({ force: false })).catch(() => {});
-    }
-
+    // Snapshot construction must stay pure. Refreshes are started by the
+    // adapter bootstrap or an explicit location/refresh command; initiating a
+    // fetch here would let an environment-change render synchronously trigger
+    // another environment-change and can lock mobile browsers.
     const snapshot = {
       ...adapterSnapshot,
       providerConfigured,
@@ -316,7 +334,7 @@
   function buildMiniLinks(snapshot) {
     const year = snapshot?.year || resolveSelectedYear(new Date());
     return Object.freeze({
-      sphere: `./living-time-sphere.html?view=today&year=${year}`,
+      sphere: `./living-time-sphere.html?view=today&marker=today&year=${year}`,
       alignment: `./alignment-ledger.html?year=${year}`,
       moons: "./moons.html",
       mirror: "./moons.html",
@@ -332,8 +350,7 @@
     const yearModel = resolveYearModel(options, selectedYear);
     const pattern = resolvePatternPosition(todayModel);
     const effectiveDate = pattern.effectiveDate ? new Date(`${pattern.effectiveDate}T12:00:00Z`) : options.asOf;
-    const solarGate = resolveSolarGate(effectiveDate);
-    const season = resolveSeason(effectiveDate);
+    const solarSnapshot = getSolarSnapshot({ ...options, asOf: effectiveDate });
     const passageStatus = resolvePassageStatus(options, selectedYear);
     const witness = resolveWitnessSummary();
     const environment = resolveEnvironment();
@@ -358,17 +375,9 @@
       pattern,
       lunar: resolveLunarState(todayModel, pattern),
       solar: {
-        gate: solarGate.name,
-        element: solarGate.element,
-        copy: solarGate.copy,
-        season,
-        angle: todayModel?.solarSeasonAngle ?? null,
-        seasonalProgressAngle: todayModel?.currentSeasonalProgressAngle ?? todayModel?.currentSolarSeasonAngle ?? null,
-        provenance: {
-          sourceType: "seasonal-approximation",
-          source: "seasonal-anchor interpolation",
-          precision: "anchor-interpolation",
-        },
+        ...solarSnapshot,
+        angle: solarSnapshot.angle ?? todayModel?.currentSeasonalProgressAngle ?? todayModel?.currentSolarSeasonAngle ?? null,
+        seasonalProgressAngle: solarSnapshot.seasonalProgressAngle ?? todayModel?.currentSeasonalProgressAngle ?? todayModel?.currentSolarSeasonAngle ?? null,
         sunrise: weather?.daily?.sunrise || null,
         sunset: weather?.daily?.sunset || null,
         daylightDurationSeconds: weather?.daily?.daylightDurationSeconds ?? null,
@@ -401,6 +410,7 @@
 
   globalThis.LivingTimeSphereLiveData = Object.freeze({
     getSnapshot,
+    getSolarSnapshot,
     buildMiniLinks,
     buildWitnessLink,
   });

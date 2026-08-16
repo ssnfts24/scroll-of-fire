@@ -1,6 +1,6 @@
 "use strict";
 
-importScripts("./assets/js/moons-version.js");
+importScripts("./assets/js/moons-version.js?v=20260815-6");
 
 const { APP_VERSION: VERSION, CACHE_PREFIX, SERVICE_WORKER_BUILD } = self.SOF_13_MOONS;
 if (SERVICE_WORKER_BUILD !== VERSION) {
@@ -59,6 +59,7 @@ const mandatoryPaths = [
   "./assets/js/alignment/alignment-ui.js",
   "./assets/js/sphere/living-time-sphere-version.js",
   "./assets/js/sphere/living-time-sphere-model.js",
+  "./assets/js/sphere/living-time-sphere-temporal.js",
   "./assets/js/sphere/living-time-sphere-state.js",
   "./assets/js/sphere/living-time-sphere-semantic-zoom.js",
   "./assets/js/sphere/living-time-sphere-layout.js",
@@ -79,6 +80,8 @@ const mandatoryPaths = [
   "./assets/js/sphere/living-time-sphere-mount.js",
   "./assets/js/sphere/living-time-sphere-today.js",
   "./assets/js/sphere/living-time-sphere-ui.js",
+  "./assets/js/sphere/living-time-calendar-workbench.js",
+  "./assets/css/living-time-calendar-workbench.css",
   "./assets/css/alignment-ledger.css",
   "./assets/css/living-time-sphere.css",
   "./alignment-ledger.html",
@@ -106,10 +109,14 @@ const mandatoryPaths = [
   "./assets/img/moons/app/icon-maskable-512.png"
 ];
 const optionalPaths = [
+  "./assets/js/sphere/living-time-observatory-workspace.js",
+  "./assets/css/observatory-workspace.css",
   "./assets/css/living-time-app-enhancements.css",
+  "./assets/css/living-time-sphere-metrics.css",
   "./assets/css/performance-runtime.css",
   "./assets/js/performance-runtime.js",
   "./assets/js/living-time-app-enhancements.js",
+  "./assets/js/sphere/living-time-sphere-metrics.js",
   "./genesis-oracle.html",
   "./assets/css/genesis-oracle.css",
   "./assets/js/genesis-oracle.js",
@@ -316,6 +323,21 @@ async function staleWhileRevalidate(request, cacheName = CORE_CACHE) {
   return cached || update || Response.error();
 }
 
+async function networkFirstAsset(request) {
+  const runtimeCache = await caches.open(RUNTIME_CACHE);
+  const coreCache = await caches.open(CORE_CACHE);
+  try {
+    const response = await fetch(request, { cache: "no-cache" });
+    if (response.ok) await runtimeCache.put(request, response.clone());
+    return response;
+  } catch {
+    return (await runtimeCache.match(request)) ||
+      (await coreCache.match(request)) ||
+      (await coreCache.match(request, { ignoreSearch: true })) ||
+      Response.error();
+  }
+}
+
 async function cacheImage(request) {
   const cache = await caches.open(IMAGE_CACHE);
   const cached = await cache.match(request, { ignoreSearch: true });
@@ -340,6 +362,6 @@ self.addEventListener("fetch", event => {
   }
   if (coreUrls.includes(url.toString()) ||
       ["script", "style", "manifest"].includes(event.request.destination)) {
-    event.respondWith(staleWhileRevalidate(event.request));
+    event.respondWith(networkFirstAsset(event.request));
   }
 });
