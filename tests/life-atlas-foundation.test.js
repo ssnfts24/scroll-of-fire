@@ -1037,3 +1037,457 @@ test("network projection preserves canonical relation edges", () => {
     "created"
   );
 });
+
+const TemporalBridge = require(
+  "../docs/assets/js/life-atlas/life-atlas-temporal-bridge.js"
+);
+
+test("temporal bridge converts cursor coordinate into Life Atlas selection", () => {
+  const selection =
+    TemporalBridge.coordinateSelection(
+      {
+        remnant13Moons: {
+          patternYear: 2026,
+          patternDay: 122,
+          moon: 5,
+          moonDay: 10,
+          week: 2,
+          civilDate: "2026-08-16"
+        }
+      }
+    );
+
+  assert.equal(
+    selection.civilDate,
+    "2026-08-16"
+  );
+
+  assert.equal(
+    selection.patternYear,
+    2026
+  );
+
+  assert.equal(
+    selection.patternDay,
+    122
+  );
+
+  assert.equal(selection.moon, 5);
+  assert.equal(selection.moonDay, 10);
+  assert.equal(selection.week, 2);
+});
+
+test("temporal bridge reads existing SOF cursor contract", () => {
+  const cursor = {
+    getState() {
+      return {
+        source: "test",
+        revision: 7
+      };
+    },
+
+    getDate() {
+      return new Date(
+        "2026-08-16T12:00:00Z"
+      );
+    },
+
+    getCoordinate() {
+      return {
+        remnant13Moons: {
+          patternYear: 2026,
+          patternDay: 122,
+          moon: 5,
+          moonDay: 10
+        }
+      };
+    }
+  };
+
+  const snapshot =
+    TemporalBridge.cursorSnapshot(
+      cursor
+    );
+
+  assert.equal(
+    snapshot.selection.civilDate,
+    "2026-08-16"
+  );
+
+  assert.equal(
+    snapshot.selection.patternDay,
+    122
+  );
+
+  assert.equal(
+    snapshot.state.revision,
+    7
+  );
+});
+
+test("temporal bridge queries canonical records for selected cursor coordinate", async () => {
+  const repository =
+    Repository.createRepository();
+
+  const relations =
+    Relations.createRelationRepository();
+
+  await repository.put({
+    id: "witness:selected",
+    type: "witness",
+    title: "Selected witness",
+    temporal: {
+      civilDate: "2026-08-16",
+      patternYear: 2026,
+      patternDay: 122,
+      moon: 5,
+      moonDay: 10,
+      week: 2
+    }
+  });
+
+  await repository.put({
+    id: "witness:other",
+    type: "witness",
+    title: "Other witness",
+    temporal: {
+      civilDate: "2026-08-17",
+      patternYear: 2026,
+      patternDay: 123,
+      moon: 5,
+      moonDay: 11,
+      week: 2
+    }
+  });
+
+  const cursor = {
+    getState() {
+      return {
+        revision: 1
+      };
+    },
+
+    getDate() {
+      return new Date(
+        "2026-08-16T12:00:00Z"
+      );
+    },
+
+    getCoordinate() {
+      return {
+        remnant13Moons: {
+          civilDate: "2026-08-16",
+          patternYear: 2026,
+          patternDay: 122,
+          moon: 5,
+          moonDay: 10,
+          week: 2
+        }
+      };
+    }
+  };
+
+  const bridge =
+    TemporalBridge.createTemporalBridge({
+      repository,
+      relations,
+      cursor
+    });
+
+  const context =
+    await bridge.context();
+
+  assert.equal(
+    context.records.length,
+    1
+  );
+
+  assert.equal(
+    context.records[0].id,
+    "witness:selected"
+  );
+});
+
+test("temporal bridge projects selected records without owning renderer state", async () => {
+  const repository =
+    Repository.createRepository();
+
+  const relations =
+    Relations.createRelationRepository();
+
+  await repository.put({
+    id: "event:selected",
+    type: "event",
+    temporal: {
+      civilDate: "2026-08-16",
+      patternYear: 2026,
+      patternDay: 122,
+      moon: 5,
+      moonDay: 10,
+      week: 2
+    }
+  });
+
+  await repository.put({
+    id: "witness:selected",
+    type: "witness",
+    temporal: {
+      civilDate: "2026-08-16",
+      patternYear: 2026,
+      patternDay: 122,
+      moon: 5,
+      moonDay: 10,
+      week: 2
+    }
+  });
+
+  const cursor = {
+    getState() {
+      return {};
+    },
+
+    getDate() {
+      return new Date(
+        "2026-08-16T12:00:00Z"
+      );
+    },
+
+    getCoordinate() {
+      return {
+        civilDate: "2026-08-16"
+      };
+    }
+  };
+
+  const bridge =
+    TemporalBridge.createTemporalBridge({
+      repository,
+      relations,
+      cursor
+    });
+
+  const result =
+    await bridge.projection(
+      "calendar"
+    );
+
+  assert.equal(
+    result.records.length,
+    2
+  );
+
+  assert.equal(
+    result.projection.length,
+    1
+  );
+
+  assert.equal(
+    result.projection[0].count,
+    2
+  );
+});
+
+test("temporal bridge subscriber receives refreshed canonical context", async () => {
+  const repository =
+    Repository.createRepository();
+
+  const relations =
+    Relations.createRelationRepository();
+
+  await repository.put({
+    id: "event:refresh",
+    type: "event",
+    temporal: {
+      civilDate: "2026-08-16",
+      patternYear: 2026,
+      patternDay: 122,
+      moon: 5,
+      moonDay: 10,
+      week: 2
+    }
+  });
+
+  const cursor = {
+    getState() {
+      return {};
+    },
+
+    getDate() {
+      return new Date(
+        "2026-08-16T12:00:00Z"
+      );
+    },
+
+    getCoordinate() {
+      return {
+        civilDate: "2026-08-16"
+      };
+    }
+  };
+
+  const bridge =
+    TemporalBridge.createTemporalBridge({
+      repository,
+      relations,
+      cursor
+    });
+
+  let received = null;
+
+  const unsubscribe =
+    bridge.subscribe(detail => {
+      received = detail;
+    });
+
+  const result =
+    await bridge.refresh(
+      "test-refresh"
+    );
+
+  assert.equal(
+    result.reason,
+    "test-refresh"
+  );
+
+  assert.equal(
+    received.reason,
+    "test-refresh"
+  );
+
+  assert.equal(
+    received.context.records.length,
+    1
+  );
+
+  unsubscribe();
+});
+
+test("temporal bridge start and stop use canonical cursor events", () => {
+  const repository =
+    Repository.createRepository();
+
+  const relations =
+    Relations.createRelationRepository();
+
+  const added = [];
+  const removed = [];
+
+  const eventTarget = {
+    addEventListener(name) {
+      added.push(name);
+    },
+
+    removeEventListener(name) {
+      removed.push(name);
+    }
+  };
+
+  const cursor = {
+    getState() {
+      return {};
+    },
+
+    getDate() {
+      return new Date(
+        "2026-08-16T12:00:00Z"
+      );
+    },
+
+    getCoordinate() {
+      return {
+        civilDate: "2026-08-16"
+      };
+    }
+  };
+
+  const bridge =
+    TemporalBridge.createTemporalBridge({
+      repository,
+      relations,
+      cursor,
+      eventTarget
+    });
+
+  assert.equal(
+    bridge.start(),
+    true
+  );
+
+  assert.equal(
+    bridge.isListening(),
+    true
+  );
+
+  assert.deepEqual(
+    added.sort(),
+    [
+      "sof:temporal-cursor-change",
+      "sof:temporal-cursor-ready"
+    ].sort()
+  );
+
+  assert.equal(
+    bridge.stop(),
+    true
+  );
+
+  assert.equal(
+    bridge.isListening(),
+    false
+  );
+
+  assert.deepEqual(
+    removed.sort(),
+    [
+      "sof:temporal-cursor-change",
+      "sof:temporal-cursor-ready"
+    ].sort()
+  );
+});
+
+test("temporal query normalization preserves missing numeric coordinates as null", () => {
+  const once =
+    Query.normalizeTemporalSelection({
+      civilDate: "2026-08-16"
+    });
+
+  const twice =
+    Query.normalizeTemporalSelection(
+      once
+    );
+
+  assert.equal(
+    twice.civilDate,
+    "2026-08-16"
+  );
+
+  assert.equal(
+    twice.patternYear,
+    null
+  );
+
+  assert.equal(
+    twice.patternDay,
+    null
+  );
+
+  assert.equal(
+    twice.moon,
+    null
+  );
+
+  assert.equal(
+    twice.moonDay,
+    null
+  );
+
+  assert.equal(
+    twice.week,
+    null
+  );
+
+  assert.deepEqual(
+    twice,
+    once
+  );
+});

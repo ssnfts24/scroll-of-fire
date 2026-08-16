@@ -49,6 +49,22 @@
     return String(value).trim();
   }
 
+  function nullableNumber(value) {
+    if (
+      value === null ||
+      value === undefined ||
+      value === ""
+    ) {
+      return null;
+    }
+
+    const number = Number(value);
+
+    return Number.isFinite(number)
+      ? number
+      : null;
+  }
+
   function normalizeTemporalSelection(input = {}) {
     const source =
       input && typeof input === "object"
@@ -63,51 +79,31 @@
         ) || null,
 
       patternYear:
-        Number.isFinite(
-          Number(source.patternYear)
-        )
-          ? Number(source.patternYear)
-          : null,
+        nullableNumber(
+          source.patternYear
+        ),
 
       patternDay:
-        Number.isFinite(
-          Number(
-            source.patternDay ??
-            source.dayOfPatternYear
-          )
-        )
-          ? Number(
-              source.patternDay ??
-              source.dayOfPatternYear
-            )
-          : null,
+        nullableNumber(
+          source.patternDay ??
+          source.dayOfPatternYear
+        ),
 
       moon:
-        Number.isFinite(
-          Number(source.moon)
-        )
-          ? Number(source.moon)
-          : null,
+        nullableNumber(
+          source.moon
+        ),
 
       moonDay:
-        Number.isFinite(
-          Number(
-            source.moonDay ??
-            source.day
-          )
-        )
-          ? Number(
-              source.moonDay ??
-              source.day
-            )
-          : null,
+        nullableNumber(
+          source.moonDay ??
+          source.day
+        ),
 
       week:
-        Number.isFinite(
-          Number(source.week)
+        nullableNumber(
+          source.week
         )
-          ? Number(source.week)
-          : null
     };
   }
 
