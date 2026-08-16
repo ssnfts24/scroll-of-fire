@@ -4083,15 +4083,243 @@
     return true;
   }
 
+  // ── Canonical temporal cursor bridge ───────────────────────────────
+  function _alignmentYearForCursorCoordinate(coordinate) {
+    const requestedYear = Number(
+      coordinate?.remnant13Moons?.patternYear
+    );
+
+    const supported =
+      _supportedAlignmentYears();
+
+    if (
+      Number.isFinite(requestedYear) &&
+      supported.includes(requestedYear)
+    ) {
+      return requestedYear;
+    }
+
+    if (
+      Number.isFinite(requestedYear) &&
+      supported.length
+    ) {
+      return supported.reduce(
+        (best, year) =>
+          Math.abs(year - requestedYear) <
+          Math.abs(best - requestedYear)
+            ? year
+            : best,
+        supported[0]
+      );
+    }
+
+    return _state.year;
+  }
+
+  function _setCursorFromPatternDay(
+    container,
+    day,
+    options = {}
+  ) {
+    const targetDay =
+      _clampPatternDay(day);
+
+    const targetYear =
+      Number(options.year || _state.year);
+
+    const targetDate =
+      _patternDateFromDayOfYear(
+        targetYear,
+        targetDay
+      );
+
+    const cursor =
+      globalThis.SOFTemporalCursor;
+
+    if (
+      cursor?.setDate &&
+      targetDate instanceof Date &&
+      !Number.isNaN(targetDate.getTime())
+    ) {
+      cursor.setDate(
+        targetDate,
+        {
+          source:
+            options.source ||
+            "sphere-pattern-navigation",
+
+          reason:
+            options.reason ||
+            "sphere-pattern-day",
+
+          force: true
+        }
+      );
+
+      return true;
+    }
+
+    // Safe fallback if the temporal cursor is unavailable.
+    _requestSelectedDayUpdate(
+      container,
+      targetDay,
+      {
+        source:
+          options.source ||
+          "sphere-pattern-navigation"
+      }
+    );
+
+    return false;
+  }
+
+  function _applyTemporalCursorToSphere(
+    container,
+    event
+  ) {
+    const detail =
+      event?.detail || {};
+
+    const coordinate =
+      detail.coordinate ||
+      globalThis.SOFTemporalCursor
+        ?.getCoordinate?.();
+
+    const remnant =
+      coordinate?.remnant13Moons;
+
+    if (!remnant) {
+      return;
+    }
+
+    /*
+      Intercalary / Year Gate dates do not have
+      a counted Pattern Day. Keep the current
+      visual day until outside-day rendering gets
+      its dedicated cursor treatment.
+    */
+    if (
+      remnant.isYearGate ||
+      !Number.isFinite(
+        Number(remnant.patternDay)
+      )
+    ) {
+      return;
+    }
+
+    const targetDay =
+      _clampPatternDay(
+        remnant.patternDay
+      );
+
+    const targetYear =
+      _alignmentYearForCursorCoordinate(
+        coordinate
+      );
+
+    const alreadySelected =
+      Number(_state.selectedDayOfYear) ===
+        targetDay &&
+      Number(_state.year) ===
+        Number(targetYear);
+
+    _state.year =
+      targetYear;
+
+    _state.selectedMarker =
+      detail.source === "cursor-today" ||
+      detail.reason === "today" ||
+      detail.source === "today-button"
+        ? "today"
+        : `day-${targetDay}`;
+
+    if (alreadySelected) {
+      _persistSelectedState();
+
+      const model =
+        buildCurrentModel();
+
+      _syncDaySelectorsFromModel(
+        model
+      );
+
+      _updateSphereUrlFromModel(
+        model,
+        { replace: true }
+      );
+
+      return;
+    }
+
+    _requestSelectedDayUpdate(
+      container,
+      targetDay,
+      {
+        source:
+          detail.source ||
+          "temporal-cursor",
+
+        action:
+          "TEMPORAL_CURSOR_SELECT"
+      }
+    );
+  }
+
+  function _wireTemporalCursorBridge(
+    container
+  ) {
+    if (
+      !container ||
+      container.dataset
+        .temporalCursorBridge === "ready"
+    ) {
+      return;
+    }
+
+    container.dataset
+      .temporalCursorBridge = "ready";
+
+    window.addEventListener(
+      "sof:temporal-cursor-change",
+      event =>
+        _applyTemporalCursorToSphere(
+          container,
+          event
+        )
+    );
+
+    window.addEventListener(
+      "sof:temporal-cursor-ready",
+      event =>
+        _applyTemporalCursorToSphere(
+          container,
+          event
+        )
+    );
+  }
+
   // ── Control wiring ─────────────────────────────────────────────────
 
   function wireControls(container) {
+    _wireTemporalCursorBridge(container);
     const shiftSelectedDay = delta => {
       _stopTemporalPlayback("manual-day-navigation");
       const baseDay = _state.selectedDayOfYear ?? _resolveSelectedDayOfYear(buildCurrentModel());
       const nextDay = globalThis.LivingTimeSphereTemporal?.stepDay?.(baseDay, delta, { wrap: true })
         ?? _clampPatternDay(baseDay + delta);
-      _requestSelectedDayUpdate(container, nextDay);
+      _setCursorFromPatternDay(
+        container,
+        nextDay,
+        {
+          source:
+            delta < 0
+              ? "sphere-prev-day"
+              : "sphere-next-day",
+
+          reason:
+            "sphere-day-navigation"
+        }
+      );
     };
 
     const shiftSelectedMoon = delta => {
@@ -4101,7 +4329,19 @@
       const currentMoon = selected?.moon || 1;
       const currentDay = selected?.day || 1;
       const nextMoon = ((currentMoon - 1 + delta + 13) % 13) + 1;
-      _requestSelectedDayUpdate(container, (nextMoon - 1) * 28 + currentDay);
+      _setCursorFromPatternDay(
+        container,
+        (nextMoon - 1) * 28 + currentDay,
+        {
+          source:
+            delta < 0
+              ? "sphere-prev-moon"
+              : "sphere-next-moon",
+
+          reason:
+            "sphere-moon-navigation"
+        }
+      );
     };
 
     const runGuardedNavAction = (actionId, handler) => () => {
@@ -4185,7 +4425,17 @@
         _stopTemporalPlayback("moon-select");
         const moon = Math.max(1, Math.min(13, Number(moonSelect.value) || 1));
         const day = Math.max(1, Math.min(28, Number(daySelect?.value) || 1));
-        _requestSelectedDayUpdate(container, (moon - 1) * 28 + day);
+        _setCursorFromPatternDay(
+          container,
+          (moon - 1) * 28 + day,
+          {
+            source:
+              "sphere-moon-select",
+
+            reason:
+              "sphere-coordinate-select"
+          }
+        );
       });
     }
     if (daySelect) {
@@ -4193,7 +4443,17 @@
         _stopTemporalPlayback("day-select");
         const moon = Math.max(1, Math.min(13, Number(moonSelect?.value) || 1));
         const day = Math.max(1, Math.min(28, Number(daySelect.value) || 1));
-        _requestSelectedDayUpdate(container, (moon - 1) * 28 + day);
+        _setCursorFromPatternDay(
+          container,
+          (moon - 1) * 28 + day,
+          {
+            source:
+              "sphere-day-select",
+
+            reason:
+              "sphere-coordinate-select"
+          }
+        );
       });
     }
     _syncDaySelectorsFromModel(buildCurrentModel());
@@ -4213,10 +4473,17 @@
         const current = _clampPatternDay(_state.selectedDayOfYear || _resolveSelectedDayOfYear(buildCurrentModel()));
         const next = globalThis.LivingTimeSphereTemporal?.stepDay?.(current, delta, { wrap: true })
           ?? _clampPatternDay(current + delta);
-        _requestSelectedDayUpdate(container, next, {
-          source: "temporal-step",
-          action: "TEMPORAL_STEP",
-        });
+        _setCursorFromPatternDay(
+          container,
+          next,
+          {
+            source:
+              "temporal-step",
+
+            reason:
+              "temporal-lens-step"
+          }
+        );
       });
     });
 
@@ -4240,10 +4507,17 @@
           const day = _state.temporalScrubPendingDay;
           _state.temporalScrubPendingDay = null;
           if (day == null) return;
-          _requestSelectedDayUpdate(container, day, {
-            source: "temporal-scrubber",
-            action: "TEMPORAL_SCRUB",
-          });
+          _setCursorFromPatternDay(
+            container,
+            day,
+            {
+              source:
+                "temporal-scrubber",
+
+              reason:
+                "temporal-lens-scrub"
+            }
+          );
         });
       });
     }

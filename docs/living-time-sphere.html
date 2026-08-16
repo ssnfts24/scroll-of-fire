@@ -28,7 +28,8 @@
   <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260815-6">
   <link rel="stylesheet" href="assets/css/living-time-sphere-metrics.css?v=20260814-1">
   <link rel="stylesheet" href="assets/css/observatory-workspace.css?v=20260815-6">
-  <link rel="stylesheet" href="assets/css/living-time-calendar-workbench.css?v=20260815-6">
+  <link rel="stylesheet" href="assets/css/living-time-calendar-workbench.css?v=20260816-3">
+<link rel="stylesheet" href="assets/css/temporal-coordinate-ui.css?v=20260816-1">
 
   <!-- Core engines -->
   <script defer src="assets/js/moons-version.js?v=20260815-6"></script>
@@ -91,8 +92,12 @@
    <script defer src="assets/js/sphere/living-time-sphere-url-state.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-mount.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-today.js"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-ui.js?v=20260815-6"></script>
-   <script defer src="assets/js/sphere/living-time-calendar-workbench.js?v=20260815-6"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-ui.js?v=20260816-2"></script>
+   <script defer src="assets/js/environment/unit-preferences.js?v=20260816-1"></script>
+<script defer src="assets/js/calendar/temporal-coordinate-engine.js?v=20260816-2"></script>
+<script defer src="assets/js/calendar/temporal-cursor-controller.js?v=20260816-2"></script>
+<script defer src="assets/js/calendar/temporal-coordinate-ui.js?v=20260816-2"></script>
+<script defer src="assets/js/sphere/living-time-calendar-workbench.js?v=20260816-3"></script>
    <script defer src="assets/js/sphere/living-time-observatory-workspace.js?v=20260815-6"></script>
    <script defer>
      document.addEventListener("DOMContentLoaded", () => {
@@ -296,7 +301,7 @@
           <div>
             <p class="calendar-workbench-kicker">Synchronized Calendar Atlas</p>
             <h2 id="calendar-workbench-title">Civil time and Pattern time, held together</h2>
-            <p>Jump by civil date or exact Pattern coordinate, move through Day, Week, Moon, and Year scales, keep private notes, pin comparisons, and change the visible lens without changing the calendar truth. The boundary clock follows the configured calendar timezone; a weather location never silently changes it.</p>
+            <p>Jump by civil date or exact Pattern coordinate, move through Day, Week, Gregorian Month, Pattern Moon, and Year scales, keep private notes, pin comparisons, and change the visible lens without changing the calendar truth. The boundary clock follows the configured calendar timezone; a weather location never silently changes it.</p>
           </div>
           <div id="calendar-boundary-clock" class="calendar-boundary-clock" aria-live="polite">
             <strong>—:—</strong><span>America/Los_Angeles</span><small>Resolving the configured day boundary…</small>
@@ -331,6 +336,7 @@
           <div class="calendar-scale-controls" role="group" aria-label="Calendar scale">
             <button type="button" data-calendar-scale="day" aria-pressed="false">Day</button>
             <button type="button" data-calendar-scale="week" aria-pressed="false">Week</button>
+            <button type="button" data-calendar-scale="month" aria-pressed="false">Month</button>
             <button type="button" data-calendar-scale="moon" aria-pressed="true">Moon</button>
             <button type="button" data-calendar-scale="year" aria-pressed="false">Year</button>
           </div>
@@ -394,7 +400,7 @@
           <p id="calendar-workbench-status" class="calendar-workbench-status" role="status" aria-live="polite">Calendar Atlas ready. Focus this panel to use keyboard navigation.</p>
           <details class="calendar-shortcuts">
             <summary>Keyboard controls</summary>
-            <p>←/→ day · Shift+←/→ week · Page Up/Down Moon · D/W/M/Y scale · T Today · P pin. Controls work without WebGL.</p>
+            <p>←/→ day · Shift+←/→ week · Page Up/Down Pattern Moon · D Day · W Week · G Gregorian Month · M Pattern Moon · Y Year · T Today · P pin. Controls work without WebGL.</p>
           </details>
         </footer>
       </section>
