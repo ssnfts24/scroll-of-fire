@@ -54,7 +54,17 @@ test("day navigation routes through selected-day transaction pipeline", () => {
   assert.ok(ui.includes("function _flushSelectedDayUpdates(container)"), "selected-day queue/coalescing pipeline should exist");
   assert.ok(ui.includes("shiftSelectedDay = delta =>"), "day shift control should exist");
   assert.ok(ui.includes("LivingTimeSphereTemporal?.stepDay?.(baseDay, delta, { wrap: true })"), "Next/Previous day should use canonical circular Pattern-day math");
-  assert.ok(ui.includes("_requestSelectedDayUpdate(container, nextDay)"), "Next/Previous day should use selected-day transaction path");
+  assert.ok(
+    ui.includes("_setCursorFromPatternDay(") &&
+    ui.includes('"sphere-day-navigation"'),
+    "Next/Previous day should route through the canonical temporal cursor"
+  );
+
+  assert.ok(
+    ui.includes("function _applyTemporalCursorToSphere(") &&
+    ui.includes("_requestSelectedDayUpdate("),
+    "Temporal cursor selections should feed the selected-day transaction path"
+  );
   assert.ok(ui.includes("window.addEventListener(\"popstate\""), "history back/forward should route through same selected-day update path");
 });
 

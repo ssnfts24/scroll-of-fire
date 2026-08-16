@@ -11,7 +11,7 @@
   const NOTE_KEY = "sof.calendar-workbench.notes.v1";
   const MAX_PINS = 4;
   const MAX_NOTES = 200;
-  const VALID_SCALES = Object.freeze(["day", "week", "moon", "year"]);
+  const VALID_SCALES = Object.freeze(["day", "week", "month", "moon", "year"]);
   const PRESET_LABELS = Object.freeze({
     fullObservatory: "All Available",
     cleanPattern: "Pattern",
@@ -176,6 +176,413 @@
       sameWeek: a.moon === b.moon && a.week === b.week,
       angleDelta: Number((signed * (360 / PATTERN_DAYS)).toFixed(2)),
     });
+  }
+
+
+  function _safeCivilDate(value) {
+    const iso = String(value || "");
+
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) {
+      return null;
+    }
+
+    const date = new Date(`${iso}T12:00:00`);
+
+    if (Number.isNaN(date.getTime())) {
+      return null;
+    }
+
+    return date;
+  }
+
+  function _selectedCivilDate(state, model) {
+    const selected =
+      model?.selectedPatternPosition || null;
+
+    const iso =
+      selected?.effectiveDate ||
+      selected?.civilDate ||
+      civilDateForPatternDay(
+        state.year,
+        clampDay(
+          selected?.dayOfPatternYear ||
+          state.selectedDayOfYear ||
+          1
+        )
+      );
+
+    return _safeCivilDate(iso);
+  }
+
+  function _gregorianMonthDays(state, model) {
+    const selectedDate =
+      _selectedCivilDate(state, model) ||
+      new Date();
+
+    const engine =
+      globalThis.SOFTemporalCoordinate;
+
+    const year =
+      selectedDate.getFullYear();
+
+    const monthIndex =
+      selectedDate.getMonth();
+
+    const monthNumber =
+      monthIndex + 1;
+
+    const totalDays =
+      engine?.daysInMonth
+        ? engine.daysInMonth(year, monthNumber)
+        : new Date(year, monthNumber, 0).getDate();
+
+    const firstDay =
+      new Date(
+        year,
+        monthIndex,
+        1,
+        12,
+        0,
+        0,
+        0
+      );
+
+    const result = [];
+
+    for (
+      let day = 1;
+      day <= totalDays;
+      day += 1
+    ) {
+      const date =
+        new Date(
+          year,
+          monthIndex,
+          day,
+          12,
+          0,
+          0,
+          0
+        );
+
+      const coordinate =
+        engine?.buildTemporalCoordinate?.(
+          date,
+          {
+            timezone:
+              globalThis.SOFTemporalCursor
+                ?.getState?.()
+                ?.timezone ||
+              Intl.DateTimeFormat()
+                .resolvedOptions()
+                .timeZone,
+
+            boundary:
+              globalThis.SOFTemporalCursor
+                ?.getState?.()
+                ?.boundary ||
+              "sunset"
+          }
+        ) || null;
+
+      result.push(
+        Object.freeze({
+          date,
+          iso:
+            coordinate?.gregorian?.isoDate ||
+            date.toISOString().slice(0, 10),
+
+          year,
+          month:
+            monthNumber,
+
+          monthIndex,
+          day,
+
+          weekday:
+            date.getDay(),
+
+          weekdayName:
+            coordinate?.gregorian
+              ?.weekdayName ||
+            date.toLocaleDateString(
+              "en-US",
+              { weekday: "long" }
+            ),
+
+          coordinate
+        })
+      );
+    }
+
+    return Object.freeze({
+      year,
+      month:
+        monthNumber,
+
+      monthIndex,
+
+      monthName:
+        engine?.constants
+          ?.MONTH_NAMES
+          ?.[monthIndex] ||
+        selectedDate.toLocaleDateString(
+          "en-US",
+          { month: "long" }
+        ),
+
+      firstWeekday:
+        firstDay.getDay(),
+
+      days:
+        Object.freeze(result)
+    });
+  }
+
+  function _setTemporalCursorDate(
+    date,
+    source,
+    reason = "calendar-atlas-selection"
+  ) {
+    const cursor =
+      globalThis.SOFTemporalCursor;
+
+    if (
+      cursor?.setDate &&
+      date instanceof Date &&
+      !Number.isNaN(date.getTime())
+    ) {
+      cursor.setDate(
+        date,
+        {
+          source:
+            source ||
+            "calendar-atlas",
+
+          reason,
+
+          force: true
+        }
+      );
+
+      return true;
+    }
+
+    return false;
+  }
+
+  function _selectCivilAtlasDate(
+    iso,
+    source = "calendar-gregorian-month"
+  ) {
+    const date =
+      _safeCivilDate(iso);
+
+    if (!date) {
+      _announce(
+        "That Gregorian date could not be resolved.",
+        "warning"
+      );
+
+      return false;
+    }
+
+    if (
+      _setTemporalCursorDate(
+        date,
+        source,
+        "gregorian-calendar-selection"
+      )
+    ) {
+      _scheduleRefresh();
+
+      return true;
+    }
+
+    const resolved =
+      resolveCivilDate(iso);
+
+    if (
+      resolved?.inside &&
+      resolved.dayOfPatternYear
+    ) {
+      _selectDay(
+        resolved.dayOfPatternYear,
+        source
+      );
+
+      return true;
+    }
+
+    _announce(
+      "The temporal cursor is still loading. Try the date again in a moment.",
+      "warning"
+    );
+
+    return false;
+  }
+
+  function _gregorianDayButton(
+    item,
+    state,
+    model
+  ) {
+    const coordinate =
+      item.coordinate;
+
+    const gregorian =
+      coordinate?.gregorian;
+
+    const remnant =
+      coordinate?.remnant13Moons;
+
+    const selectedCivil =
+      _selectedCivilDate(state, model);
+
+    const selectedIso =
+      selectedCivil
+        ? [
+            selectedCivil.getFullYear(),
+            String(
+              selectedCivil.getMonth() + 1
+            ).padStart(2, "0"),
+            String(
+              selectedCivil.getDate()
+            ).padStart(2, "0")
+          ].join("-")
+        : "";
+
+    const today = new Date();
+
+    const todayIso =
+      [
+        today.getFullYear(),
+        String(
+          today.getMonth() + 1
+        ).padStart(2, "0"),
+        String(
+          today.getDate()
+        ).padStart(2, "0")
+      ].join("-");
+
+    const classes = [
+      "calendar-day-cell",
+      "calendar-gregorian-cell"
+    ];
+
+    if (item.iso === selectedIso) {
+      classes.push("is-selected");
+    }
+
+    if (item.iso === todayIso) {
+      classes.push("is-today");
+    }
+
+    if (remnant?.moonDay) {
+      const patternWeekday =
+        ((remnant.moonDay - 1) % 7) + 1;
+
+      if (patternWeekday === 7) {
+        classes.push("is-shabbat");
+      } else if (patternWeekday === 6) {
+        classes.push("is-preparation");
+      } else if (patternWeekday === 1) {
+        classes.push("is-return");
+      }
+    }
+
+    const patternPrimary =
+      remnant?.isYearGate
+        ? "Year Gate"
+        : (
+            remnant?.moon &&
+            remnant?.moonDay
+          )
+          ? `M${remnant.moon} · D${remnant.moonDay}`
+          : "Outside";
+
+    const patternSecondary =
+      remnant?.patternDay
+        ? `${remnant.patternDay}/364`
+        : "Outside pattern";
+
+    const title =
+      [
+        gregorian?.labels?.full ||
+          item.iso,
+
+        remnant?.labels?.full ||
+          "Outside counted Pattern Year"
+      ].join(" · ");
+
+    return `
+      <button
+        class="${classes.join(" ")}"
+        type="button"
+        data-calendar-civil="${_escape(item.iso)}"
+        role="gridcell"
+        aria-label="${_escape(title)}"
+      >
+        <span>
+          ${_escape(
+            gregorian?.weekdayShort ||
+            item.weekdayName.slice(0, 3)
+          )}
+        </span>
+
+        <strong>
+          ${item.day}
+        </strong>
+
+        <small>
+          ${_escape(patternPrimary)}
+        </small>
+
+        <em>
+          ${_escape(patternSecondary)}
+        </em>
+
+        <i aria-hidden="true"></i>
+      </button>
+    `;
+  }
+
+  function _renderGregorianMonth(
+    state,
+    model
+  ) {
+    const month =
+      _gregorianMonthDays(
+        state,
+        model
+      );
+
+    const blanks =
+      Array.from(
+        {
+          length:
+            month.firstWeekday
+        },
+        () => (
+          '<span class="calendar-month-blank" aria-hidden="true"></span>'
+        )
+      ).join("");
+
+    return {
+      month,
+      html:
+        blanks +
+        month.days
+          .map(
+            day =>
+              _gregorianDayButton(
+                day,
+                state,
+                model
+              )
+          )
+          .join("")
+    };
   }
 
   function scaleDays(scale, selectedDay) {
@@ -463,28 +870,121 @@
   }
 
   function _renderAtlas(state, model) {
-    const grid = document.getElementById("calendar-atlas-grid");
+    const grid =
+      document.getElementById(
+        "calendar-atlas-grid"
+      );
+
     if (!grid) return;
-    const selectedDay = clampDay(model?.selectedPatternPosition?.dayOfPatternYear || state.selectedDayOfYear || 1);
-    const position = moonDayForPatternDay(selectedDay);
-    grid.dataset.scale = _scale;
-    grid.setAttribute("aria-label", `${_scale} calendar view`);
-    grid.innerHTML = _scale === "year"
-      ? scaleDays("year", selectedDay).map(moon => _moonButton(moon, state, model)).join("")
-      : scaleDays(_scale, selectedDay).map(day => _dayButton(day, state, model, _scale)).join("");
-    const heading = document.getElementById("calendar-atlas-title");
-    if (heading) {
-      heading.textContent = _scale === "year"
-        ? `${state.year || "—"} · 13 Moon Pattern Year`
-        : _scale === "moon"
+
+    const selectedDay =
+      clampDay(
+        model?.selectedPatternPosition
+          ?.dayOfPatternYear ||
+        state.selectedDayOfYear ||
+        1
+      );
+
+    const position =
+      moonDayForPatternDay(
+        selectedDay
+      );
+
+    grid.dataset.scale =
+      _scale;
+
+    grid.classList.toggle(
+      "is-gregorian-month",
+      _scale === "month"
+    );
+
+    grid.setAttribute(
+      "aria-label",
+      `${_scale} calendar view`
+    );
+
+    let headingText = "";
+
+    if (_scale === "month") {
+      const result =
+        _renderGregorianMonth(
+          state,
+          model
+        );
+
+      grid.innerHTML =
+        result.html;
+
+      headingText =
+        `${result.month.monthName} ${result.month.year} · Gregorian Month`;
+    } else if (_scale === "year") {
+      grid.innerHTML =
+        scaleDays(
+          "year",
+          selectedDay
+        )
+          .map(
+            moon =>
+              _moonButton(
+                moon,
+                state,
+                model
+              )
+          )
+          .join("");
+
+      headingText =
+        `Pattern Year ${state.year} · 13 Moons`;
+    } else {
+      grid.innerHTML =
+        scaleDays(
+          _scale,
+          selectedDay
+        )
+          .map(
+            day =>
+              _dayButton(
+                day,
+                state,
+                model,
+                _scale
+              )
+          )
+          .join("");
+
+      headingText =
+        _scale === "moon"
           ? `Moon ${position.moon} · ${_moonData(position.moon).name}`
+
           : _scale === "week"
             ? `Moon ${position.moon} · Week ${position.week}`
+
             : `Selected Day · Moon ${position.moon} Day ${position.day}`;
     }
-    document.querySelectorAll("[data-calendar-scale]").forEach(button => {
-      button.setAttribute("aria-pressed", button.dataset.calendarScale === _scale ? "true" : "false");
-    });
+
+    const heading =
+      document.getElementById(
+        "calendar-atlas-title"
+      );
+
+    if (heading) {
+      heading.textContent =
+        headingText;
+    }
+
+    document
+      .querySelectorAll(
+        "[data-calendar-scale]"
+      )
+      .forEach(button => {
+        button.setAttribute(
+          "aria-pressed",
+          button.dataset.calendarScale ===
+            _scale
+            ? "true"
+            : "false"
+        );
+      });
   }
 
   function _renderPins(state, model) {
@@ -589,12 +1089,37 @@
       _announce(`${resolved.civilDate} is ${label}, outside the counted 13 × 28 year. It remains a visible outside day and is not forced into a Moon.`, "outside");
       return;
     }
-    globalThis.LivingTimeSphereUi?.selectDay?.(resolved.dayOfPatternYear, {
-      year: resolved.selectedYear,
-      marker: `day-${resolved.dayOfPatternYear}`,
-      source: "calendar-civil-jump",
-      action: "CALENDAR_CIVIL_DATE_JUMP",
-    });
+    const civilDate =
+      _safeCivilDate(
+        resolved.civilDate
+      );
+
+    if (
+      !civilDate ||
+      !_setTemporalCursorDate(
+        civilDate,
+        "calendar-civil-jump",
+        "civil-calendar-jump"
+      )
+    ) {
+      globalThis.LivingTimeSphereUi
+        ?.selectDay?.(
+          resolved.dayOfPatternYear,
+          {
+            year:
+              resolved.selectedYear,
+
+            marker:
+              `day-${resolved.dayOfPatternYear}`,
+
+            source:
+              "calendar-civil-jump",
+
+            action:
+              "CALENDAR_CIVIL_DATE_JUMP"
+          }
+        );
+    }
     const supportNote = resolved.exactYearMatch ? "" : ` Detailed alignment data uses nearest supported year ${resolved.selectedYear}.`;
     _announce(`${resolved.civilDate} maps to Moon ${resolved.moon}, Day ${resolved.day}, Day ${resolved.dayOfPatternYear}/364.${supportNote}`, resolved.exactYearMatch ? "success" : "warning");
     _scheduleRefresh();
@@ -744,8 +1269,16 @@
     _root.addEventListener("click", event => {
       const target = event.target.closest?.("button");
       if (!target) return;
-      if (target.dataset.calendarDay) {
-        _selectDay(target.dataset.calendarDay, "calendar-atlas-grid");
+      if (target.dataset.calendarCivil) {
+        _selectCivilAtlasDate(
+          target.dataset.calendarCivil,
+          "calendar-gregorian-month"
+        );
+      } else if (target.dataset.calendarDay) {
+        _selectDay(
+          target.dataset.calendarDay,
+          "calendar-atlas-grid"
+        );
       } else if (target.dataset.calendarScale) {
         _scale = VALID_SCALES.includes(target.dataset.calendarScale) ? target.dataset.calendarScale : "moon";
         _writeJson(SCALE_KEY, _scale);
@@ -796,10 +1329,31 @@
       else if (event.key === "PageDown") _selectDay(wrapDay(selected + 28), "calendar-keyboard");
       else if (event.key.toLowerCase() === "t") globalThis.LivingTimeSphereUi?.returnToToday?.({ fieldRange: "now", switchViewMode: true, source: "calendar-keyboard" });
       else if (event.key.toLowerCase() === "p") _pinSelected();
-      else if (["d", "w", "m", "y"].includes(event.key.toLowerCase())) {
-        _scale = ({ d: "day", w: "week", m: "moon", y: "year" })[event.key.toLowerCase()];
-        _writeJson(SCALE_KEY, _scale);
-        _renderAtlas(state, _currentModel());
+      else if (
+        ["d", "w", "g", "m", "y"]
+          .includes(
+            event.key.toLowerCase()
+          )
+      ) {
+        _scale = ({
+          d: "day",
+          w: "week",
+          g: "month",
+          m: "moon",
+          y: "year"
+        })[
+          event.key.toLowerCase()
+        ];
+
+        _writeJson(
+          SCALE_KEY,
+          _scale
+        );
+
+        _renderAtlas(
+          state,
+          _currentModel()
+        );
       } else handled = false;
       if (handled) event.preventDefault();
     });

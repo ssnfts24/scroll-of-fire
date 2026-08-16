@@ -1,0 +1,187 @@
+.temporal-coordinate-root {
+  width: 100%;
+  margin: 0 0 1.25rem;
+}
+
+.temporal-coordinate-panel {
+  position: relative;
+  overflow: hidden;
+  padding: 1rem;
+  border: 1px solid rgba(104, 208, 181, 0.22);
+  border-radius: 1.35rem;
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(80, 205, 176, 0.08),
+      transparent 38%
+    ),
+    rgba(8, 12, 18, 0.78);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.2),
+    inset 0 1px rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(18px);
+}
+
+.temporal-coordinate-panel__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.temporal-coordinate-panel__eyebrow {
+  margin-bottom: 0.35rem;
+  color: rgba(158, 186, 202, 0.78);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.temporal-coordinate-panel__title {
+  margin: 0;
+  color: #f3f6f7;
+  font-size: clamp(1rem, 4vw, 1.35rem);
+  line-height: 1.25;
+}
+
+.temporal-coordinate-panel__paired {
+  margin-top: 0.4rem;
+  color: rgba(209, 220, 224, 0.76);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.temporal-coordinate-panel__status {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.4rem;
+  color: #66dfb7;
+  font-size: 0.68rem;
+  font-weight: 850;
+  letter-spacing: 0.11em;
+}
+
+.temporal-coordinate-panel__status-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 14px currentColor;
+}
+
+.temporal-coordinate-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.temporal-coordinate-metric {
+  min-width: 0;
+  padding: 0.78rem 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 0.9rem;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.temporal-coordinate-metric--primary {
+  border-color: rgba(229, 191, 75, 0.22);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(229, 191, 75, 0.07),
+      rgba(82, 190, 178, 0.035)
+    );
+}
+
+.temporal-coordinate-metric__label {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: rgba(167, 183, 195, 0.66);
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.temporal-coordinate-metric__value {
+  display: block;
+  overflow: hidden;
+  color: #edf2f3;
+  font-size: 0.86rem;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+}
+
+.temporal-progress-stack {
+  display: grid;
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+
+.temporal-progress__label {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.32rem;
+  color: rgba(201, 212, 218, 0.72);
+  font-size: 0.72rem;
+}
+
+.temporal-progress__track {
+  height: 0.32rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.temporal-progress__fill {
+  width: var(--temporal-progress, 0%);
+  height: 100%;
+  border-radius: inherit;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(84, 213, 181, 0.8),
+      rgba(231, 193, 74, 0.9)
+    );
+  transition: width 280ms ease;
+}
+
+.temporal-coordinate-details {
+  margin-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  padding-top: 0.8rem;
+  color: rgba(198, 209, 216, 0.76);
+  font-size: 0.78rem;
+}
+
+.temporal-coordinate-details summary {
+  cursor: pointer;
+  color: rgba(217, 226, 231, 0.88);
+  font-weight: 700;
+}
+
+.temporal-coordinate-details__body {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 0.75rem;
+  line-height: 1.5;
+}
+
+.temporal-coordinate-panel--waiting {
+  color: rgba(205, 215, 221, 0.7);
+}
+
+@media (min-width: 760px) {
+  .temporal-coordinate-grid {
+    grid-template-columns:
+      repeat(4, minmax(0, 1fr));
+  }
+
+  .temporal-coordinate-panel {
+    padding: 1.25rem;
+  }
+}
