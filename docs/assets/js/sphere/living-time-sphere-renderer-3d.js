@@ -111,6 +111,7 @@
   let _container    = null;
   let _initialized  = false;
   let _initializing = false;  // Guard against concurrent init calls
+  let _pendingRefresh = null; // Latest UI state received while async 3D init is still settling.
   let _renderGeneration = 0;  // Identifies the single authoritative canvas
   let _initEpoch = 0;         // Invalidates late async work after timeout/teardown
   let _activeWebGlContext = null;
@@ -3059,6 +3060,19 @@
         if (initWasCancelled()) {
           return cancelledResult();
         }
+
+        // Initial-scene contract: optional geometry must be synchronized before
+        // playback, dragging, or any other user interaction is required.
+        if (globalThis.LivingTimeSphereExtensionHost?.updateAll) {
+          await globalThis.LivingTimeSphereExtensionHost.updateAll(
+            _extensionContext({
+              lifecycle: "initial-sync"
+            })
+          );
+        }
+        _pushInitTimeline("extensions-initial-sync");
+        render(performance.now());
+        _pushInitTimeline("extensions-initial-render");
       }
 
       // ── Animation ─────────────────────────────────────────────────
@@ -3150,6 +3164,33 @@
 
       _initialized = true;
       _lastInitError = null;
+
+      // Apply the newest state that arrived while Three.js was loading. Without
+      // this handoff a fast first temporal sync can be dropped and only become
+      // visible after Play or another later interaction forces a refresh.
+      const pendingRefresh = _pendingRefresh;
+      _pendingRefresh = null;
+      if (pendingRefresh?.model) {
+        _pushInitTimeline("pending-refresh-commit", {
+          selectedYear: Number(pendingRefresh.selectedYear || 0),
+          viewMode: pendingRefresh.viewMode || "today"
+        });
+        refresh(
+          pendingRefresh.model,
+          pendingRefresh.spiral,
+          pendingRefresh.selectedYear,
+          pendingRefresh.visibleLayers,
+          pendingRefresh.viewMode,
+          pendingRefresh.moonLabelMode,
+          pendingRefresh.moonLabelDistance,
+          pendingRefresh.dayLabelMode,
+          pendingRefresh.connectionRegistry,
+          pendingRefresh.motionMode,
+          pendingRefresh.semanticZoomState
+        );
+        render(performance.now());
+      }
+
       _recordCanvasConnection("lifecycle-transition-ready");
       _initEndedAt = performance.now();
       return { success: true };
@@ -3587,7 +3628,20 @@
   // ── Public API ────────────────────────────────────────────────────
 
   function refresh(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, semanticZoomState) {
-    if (!_initialized) return;
+    if (!_initialized) {
+      if (_initializing) {
+        _pendingRefresh = {
+          model, spiral, selectedYear, visibleLayers, viewMode,
+          moonLabelMode, moonLabelDistance, dayLabelMode,
+          connectionRegistry, motionMode, semanticZoomState
+        };
+        _pushInitTimeline("refresh-queued-during-init", {
+          selectedYear: Number(selectedYear || 0),
+          viewMode: viewMode || "today"
+        });
+      }
+      return;
+    }
     updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, semanticZoomState);
 
     if (
@@ -3930,6 +3984,7 @@
     _camera = null;
     _initialized  = false;
     _initializing = false;
+    _pendingRefresh = null;
     _lastRenderTimestamp = 0;
     _firstFrameTimestamp = 0;
     _firstFramePixelProbe = null;

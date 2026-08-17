@@ -25,7 +25,7 @@
   <link rel="apple-touch-icon" href="assets/img/shared/branding/favicon.png">
   <link rel="stylesheet" href="assets/css/codex.css">
   <link rel="stylesheet" href="assets/css/navigation.css">
-  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260815-6">
+  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260817-4">
   <link rel="stylesheet" href="assets/css/living-time-sphere-metrics.css?v=20260814-1">
   <link rel="stylesheet" href="assets/css/observatory-workspace.css?v=20260815-6">
   <link rel="stylesheet" href="assets/css/living-time-calendar-workbench.css?v=20260816-3">
@@ -44,6 +44,14 @@
   <script defer src="assets/js/calendar/pattern-calendar-boundary.js"></script>
   <script defer src="assets/js/calendar/pattern-calendar.js"></script>
   <script defer src="assets/js/calendar-cor.js"></script>
+  <!-- Life Atlas local-first data plane -->
+  <script defer src="assets/js/life-atlas/life-atlas-schema.js?v=20260817-1"></script>
+  <script defer src="assets/js/life-atlas/life-atlas-repository.js?v=20260817-1"></script>
+  <script defer src="assets/js/life-atlas/life-atlas-indexeddb.js?v=20260817-1"></script>
+  <script defer src="assets/js/life-atlas/life-atlas-zip.js?v=20260817-2"></script>
+  <script defer src="assets/js/life-atlas/life-atlas-importers.js?v=20260817-2"></script>
+  <script defer src="assets/js/life-atlas/life-atlas-ingestion.js?v=20260817-2"></script>
+  <script defer src="assets/js/life-atlas/life-atlas-runtime.js?v=20260817-1"></script>
   <script defer src="assets/js/codex-state.js"></script>
   <script defer src="assets/js/astronomy/astronomy-version.js"></script>
   <script defer src="assets/js/astronomy/astronomy-sources.js"></script>
@@ -86,8 +94,10 @@
    <script defer src="assets/js/life-atlas/life-atlas-world-navigation.js?v=20260816-1"></script>
    <script defer src="assets/js/life-atlas/life-atlas-render-projection.js?v=20260816-1"></script>
    <script defer src="assets/js/sphere/living-time-sphere-extension-host.js?v=20260816-1"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-temporal-strata.js?v=20260817-5"></script>
+   <script defer src="assets/js/sphere/life-atlas-record-sphere-extension.js?v=20260817-1"></script>
    <!-- Life Atlas visual world projection temporarily disabled for recursive-sphere refactor -->
-   <script defer src="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260815-6"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260817-4"></script>
    <script defer src="assets/js/environment/environment-state.js"></script>
    <script defer src="assets/js/environment/providers/open-meteo-forecast.js"></script>
    <script defer src="assets/js/environment/open-meteo-adapter.js?v=20260815-6"></script>
@@ -99,7 +109,8 @@
    <script defer src="assets/js/sphere/living-time-sphere-url-state.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-mount.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-today.js"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-ui.js?v=20260816-2"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-ui.js?v=20260817-4"></script>
+   <script defer src="assets/js/life-atlas/life-atlas-import-ui.js?v=20260817-2"></script>
    <script defer src="assets/js/environment/unit-preferences.js?v=20260816-1"></script>
 <script defer src="assets/js/calendar/temporal-coordinate-engine.js?v=20260816-2"></script>
 <script defer src="assets/js/calendar/temporal-cursor-controller.js?v=20260816-2"></script>
@@ -615,6 +626,71 @@
               <div id="sphere-temporal-comparison" class="sphere-temporal-comparison" role="status" aria-live="polite">
                 <p class="sphere-temporal-comparison-lead">Synchronizing with live Pattern time…</p>
               </div>
+              <div id="sphere-reality-state" class="sphere-reality-state" aria-live="polite">
+                <div class="sphere-reality-state-head"><span>Reality State</span><strong>Synchronizing…</strong></div>
+                <div class="sphere-reality-axis" aria-label="Past present and future state model">
+                  <span data-reality-phase="past"><b>Past</b><small>record · memory · history</small></span>
+                  <span data-reality-phase="present"><b>Present</b><small>live · selected · witnessed</small></span>
+                  <span data-reality-phase="future"><b>Future</b><small>plan · possibility · intention</small></span>
+                </div>
+                <p class="sphere-reality-note">The future layer is planning space, not prediction. The Observatory distinguishes what is recorded, what is present, and what is possible.</p>
+              </div>
+            </section>
+            <section class="sphere-temporal-strata-panel sphere-living-onion-panel" aria-labelledby="sphere-strata-title">
+              <header class="sphere-temporal-lens-head"><div><p class="sphere-temporal-kicker">Living Strata</p><h3 id="sphere-strata-title">Temporal Onion</h3></div><span id="sphere-strata-status" class="sphere-temporal-status">Off</span></header>
+              <p class="sphere-strata-intro">Keep the 13 Moons as the stable inner anatomy. Wrap each year around it as a thin temporal membrane, then connect recurring phenomena through those membranes as living trajectories.</p>
+              <label class="sphere-layer-row sphere-strata-master"><input id="sphere-strata-enabled" type="checkbox" checked> Enable nested year membranes</label>
+              <div class="sphere-strata-grid">
+                <label>Year span<select id="sphere-strata-span" class="sphere-control-select"><option value="13">13 years</option><option value="25" selected>25 years</option><option value="50">50 years</option><option value="100">100 years</option><option value="200">200 years</option></select></label>
+                <label>Time direction<select id="sphere-strata-direction" class="sphere-control-select"><option value="history">History inward</option><option value="balanced" selected>Past + future</option><option value="future">Future outward</option></select></label>
+                <label>Shell view<select id="sphere-strata-mode" class="sphere-control-select"><option value="onion" selected>Living onion</option><option value="cutaway">Onion cutaway</option></select></label>
+                <label>Temporal depth<input id="sphere-strata-depth" type="range" min="0.12" max="0.36" step="0.01" value="0.22"></label>
+              </div>
+              <div class="sphere-strata-options sphere-strata-options-3">
+                <label class="sphere-layer-row"><input id="sphere-strata-chronology" type="checkbox" checked> Living chronology filament</label>
+                <label class="sphere-layer-row"><input id="sphere-strata-year-gate" type="checkbox" checked> Year Gate reference spine</label>
+                <label class="sphere-layer-row"><input id="sphere-strata-trajectory" type="checkbox" checked> Equinox evidence trajectory</label>
+                <label class="sphere-layer-row"><input id="sphere-strata-evidence-only" type="checkbox"> Evidence shells only</label>
+              </div>
+              <p id="sphere-strata-detail" class="sphere-strata-detail">Enable Living Strata to wrap year membranes around the unchanged 13-Moon core.</p>
+              <div class="sphere-strata-key" aria-label="Living Strata visual key">
+                <span><i class="sphere-strata-swatch shell"></i>Past / record</span>
+                <span><i class="sphere-strata-swatch selected"></i>Present / selected</span>
+                <span><i class="sphere-strata-swatch future"></i>Future / planning</span>
+                <span><i class="sphere-strata-swatch corridor"></i>Pattern corridor</span>
+                <span><i class="sphere-strata-swatch chronology"></i>Chronology</span>
+                <span><i class="sphere-strata-swatch evidence"></i>Evidence</span>
+              </div>
+              <p class="sphere-methods">Every year stays represented as a lightweight contour membrane around the unchanged 13-Moon anatomy. Past years move inward as record strata; future years move outward as planning and possibility strata, never as prediction. The selected Pattern day now cuts a gold corridor through every visible shell, with its Moon bounded in green, so the same coordinate can be compared across time. The chronology filament is structural navigation, not evidence. Gold equinox points and paths use only supported Alignment Ledger records, so unsupported years are never presented as measured astronomy.</p>
+            </section>
+
+            <section class="sphere-temporal-strata-panel life-atlas-import-panel" aria-labelledby="life-atlas-import-title">
+              <header class="sphere-temporal-lens-head">
+                <div><p class="sphere-temporal-kicker">Personal Reality Layer</p><h3 id="life-atlas-import-title">Build My Life Atlas</h3></div>
+                <span class="sphere-temporal-status"><b id="life-atlas-record-count">0</b> records</span>
+              </header>
+              <p class="sphere-strata-intro">Bring your own history into the same temporal coordinate system. Import calendar files and exported social/location archives locally; nothing is uploaded by this page and every imported record starts private.</p>
+              <div class="life-atlas-import-safety" role="note">
+                <strong>Evidence before inference.</strong> Imported timestamps and coordinates retain their source. Guessed places, inferred events, symbolic interpretation, forecasts, and future plans must remain visibly distinct from observed records.
+              </div>
+              <label class="life-atlas-file-picker" id="life-atlas-file-dropzone">
+                <span>Choose exports or ZIP archives</span>
+                <input id="life-atlas-import-files" type="file" multiple>
+                <small>Android-safe picker: any file may be selected. Codex identifies .ics, JSON/JS, CSV and supported ZIP contents after selection. Files stay on this device.</small>
+              </label>
+              <div class="life-atlas-import-quickkey" aria-label="Import flow">
+                <span><b>1</b> Select</span><i>→</i><span><b>2</b> Analyze</span><i>→</i><span><b>3</b> Review</span><i>→</i><span><b>4</b> Import private</span>
+              </div>
+              <div id="life-atlas-import-preview" class="life-atlas-import-preview" aria-live="polite"></div>
+              <p id="life-atlas-import-status" class="life-atlas-import-status">No files staged.</p>
+              <div class="sphere-detail-actions">
+                <button id="life-atlas-import-commit" class="sphere-btn sphere-btn-primary" type="button" disabled>Import as Private Records</button>
+                <button id="life-atlas-import-clear" class="sphere-btn" type="button">Clear Staging</button>
+              </div>
+              <details class="life-atlas-import-methods">
+                <summary>What happens to imported history?</summary>
+                <p>Each record is normalized once into the Life Atlas with time, place, source, confidence, privacy, and Pattern coordinates. The Sphere then projects dated records onto the corresponding year membrane and Pattern-day angle. Duplicate fingerprints are skipped. Imported records are marked unreviewed so later reconciliation can confirm people, places, journeys, and merged events without silently rewriting source evidence.</p>
+              </details>
             </section>
             <div id="sphere-details" class="sphere-details">
               <p class="sphere-methods">Select a marker to see details.</p>

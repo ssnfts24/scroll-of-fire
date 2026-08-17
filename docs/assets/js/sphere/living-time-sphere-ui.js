@@ -3671,6 +3671,7 @@
     const output = document.getElementById("sphere-day-scrubber-output");
     const status = document.getElementById("sphere-temporal-status");
     const comparisonEl = document.getElementById("sphere-temporal-comparison");
+    const realityStateEl = document.getElementById("sphere-reality-state");
     const returnButton = document.getElementById("sphere-return-today");
     const playButton = document.getElementById("sphere-temporal-play");
 
@@ -3695,6 +3696,29 @@
       playButton.setAttribute("aria-pressed", _state.temporalPlaybackActive ? "true" : "false");
       playButton.textContent = _state.temporalPlaybackActive ? "Pause" : "Play";
     }
+
+    if (realityStateEl) {
+      const selectedYear = Number(selected?.patternYear ?? _state.year ?? 0);
+      const todayYear = Number(today?.patternYear ?? _currentSnapshot()?.year ?? 0);
+      const selectedOrdinal = selectedYear * 364 + day;
+      const todayDay = _clampPatternDay(today?.dayOfPatternYear || day);
+      const todayOrdinal = todayYear * 364 + todayDay;
+      const phase = selectedOrdinal < todayOrdinal ? "past" : selectedOrdinal > todayOrdinal ? "future" : "present";
+      const phaseCopy = {
+        past: { title: "Past · Record", note: "Inspect what has already happened: measurements, witness records, events, media, relationships, and historical pattern positions." },
+        present: { title: "Present · Being", note: "The selected coordinate is synchronized with the current Pattern position. Live fields describe what can be observed now." },
+        future: { title: "Future · Possibility", note: "Use this space for schedules, intentions, tasks, scenarios, and planned events. Future geometry is not a prediction." }
+      };
+      realityStateEl.dataset.phase = phase;
+      realityStateEl.querySelectorAll("[data-reality-phase]").forEach(node => {
+        node.classList.toggle("is-active", node.getAttribute("data-reality-phase") === phase);
+      });
+      const head = realityStateEl.querySelector(".sphere-reality-state-head strong");
+      const note = realityStateEl.querySelector(".sphere-reality-note");
+      if (head) head.textContent = phaseCopy[phase].title;
+      if (note) note.textContent = phaseCopy[phase].note;
+    }
+
     if (!comparisonEl) return;
     comparisonEl.setAttribute("aria-live", _state.temporalPlaybackActive ? "off" : "polite");
 
