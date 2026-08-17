@@ -3459,6 +3459,70 @@
       return;
     }
 
+    const extensionHit =
+      globalThis
+        .LivingTimeSphereExtensionHost
+        ?.pickAll?.(
+          _extensionContext({
+            lifecycle:
+              "pointer-select",
+
+            raycaster,
+
+            pointer: {
+              clientX:
+                e.clientX,
+              clientY:
+                e.clientY
+            }
+          })
+        );
+
+    if (
+      extensionHit?.handled
+    ) {
+      const worldPosition =
+        extensionHit.position || {
+          x: 0,
+          y: 0,
+          z: 0
+        };
+
+      _showFloatingLabel(
+        new THREE.Vector3(
+          Number(worldPosition.x) || 0,
+          Number(worldPosition.y) || 0,
+          Number(worldPosition.z) || 0
+        ),
+        extensionHit.label ||
+          "Life Atlas",
+        e.clientX,
+        e.clientY
+      );
+
+      onMarkerSelect?.({
+        type:
+          extensionHit.type ||
+          "life-atlas-world",
+
+        year:
+          extensionHit.temporal
+            ?.patternYear ??
+          extensionHit.temporal
+            ?.year ??
+          _model?.year,
+
+        metadata:
+          extensionHit
+      });
+
+      globalThis
+        .LivingTimeSphereAnimation
+        ?.markDirty?.();
+
+      return;
+    }
+
     const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
     const point = new THREE.Vector3();
     if (!raycaster.ray.intersectPlane(plane, point)) {

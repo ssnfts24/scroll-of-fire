@@ -164,6 +164,12 @@
             ? extension.render
             : null,
 
+        pick:
+          typeof extension.pick ===
+          "function"
+            ? extension.pick
+            : null,
+
         dispose:
           typeof extension.dispose ===
           "function"
@@ -442,6 +448,67 @@
       }
     }
 
+    function pickAll(
+      context = {}
+    ) {
+      for (
+        const extension
+        of extensions.values()
+      ) {
+        if (
+          !mounted.has(
+            extension.id
+          )
+        ) {
+          continue;
+        }
+
+        if (
+          !isEnabled(
+            extension,
+            context
+          )
+        ) {
+          continue;
+        }
+
+        if (!extension.pick) {
+          continue;
+        }
+
+        try {
+          const result =
+            extension.pick(
+              context
+            );
+
+          if (
+            result &&
+            result.handled !== false
+          ) {
+            lifecycleRevision += 1;
+
+            return {
+              extensionId:
+                extension.id,
+
+              ...result,
+
+              handled: true
+            };
+          }
+        } catch (error) {
+          recordError(
+            extension.id,
+            "pick",
+            error
+          );
+        }
+      }
+
+      return null;
+    }
+
     async function disposeAll(
       context = {}
     ) {
@@ -572,6 +639,7 @@
       mountAll,
       updateAll,
       renderAll,
+      pickAll,
       disposeAll,
 
       diagnostics,
