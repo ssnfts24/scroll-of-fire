@@ -207,6 +207,47 @@
     _layerBuildMetrics[layer] = Number(durationMs || 0);
   }
 
+  function _extensionContext(extra = {}) {
+    return {
+      THREE: _THREE,
+      renderer: _renderer,
+      scene: _scene,
+      camera: _camera,
+      canvas: _canvas,
+      container: _container,
+
+      model: _model,
+      spiral: _spiral,
+      selectedYear: _selectedYear,
+      viewMode: _viewMode,
+
+      visibleLayers: {
+        ...(_visibleLayers || {})
+      },
+
+      semanticZoomState:
+        _semanticZoomState || null,
+
+      motionMode:
+        _motionMode || "still",
+
+      quality:
+        _quality || null,
+
+      generation:
+        _renderGeneration,
+
+      cameraState:
+        globalThis.LivingTimeSphereCamera?.getState?.() || null,
+
+      requestRender() {
+        globalThis.LivingTimeSphereAnimation?.markDirty?.();
+      },
+
+      ...extra
+    };
+  }
+
   function _markLayerToggle(layer, durationMs) {
     if (!layer) return;
     _layerToggleMetrics[layer] = Number(durationMs || 0);
@@ -2583,6 +2624,15 @@
     _syncSemanticZoomFromCamera(false);
     _updateMoonLabels(_viewMode);
 
+    globalThis.LivingTimeSphereExtensionHost?.renderAll?.(
+      _extensionContext({
+        lifecycle: "render",
+        nowMs,
+        breathValue: breathVal,
+        flowValue: flowVal
+      })
+    );
+
     _renderer.render(_scene, _camera);
     _lastRenderTimestamp = Date.now();
   }
@@ -2997,6 +3047,20 @@
       _markStage("geometry", "created");
       _syncCameraFocus(model, spiral, selectedYear, false);
 
+      if (
+        globalThis.LivingTimeSphereExtensionHost?.mountAll
+      ) {
+        await globalThis.LivingTimeSphereExtensionHost.mountAll(
+          _extensionContext({
+            lifecycle: "mount"
+          })
+        );
+
+        if (initWasCancelled()) {
+          return cancelledResult();
+        }
+      }
+
       // ── Animation ─────────────────────────────────────────────────
       globalThis.LivingTimeSphereAnimation.applyPreset(quality);
       globalThis.LivingTimeSphereAnimation.setReducedMotion(reducedMotion || _prefersReducedMotion());
@@ -3395,6 +3459,70 @@
       return;
     }
 
+    const extensionHit =
+      globalThis
+        .LivingTimeSphereExtensionHost
+        ?.pickAll?.(
+          _extensionContext({
+            lifecycle:
+              "pointer-select",
+
+            raycaster,
+
+            pointer: {
+              clientX:
+                e.clientX,
+              clientY:
+                e.clientY
+            }
+          })
+        );
+
+    if (
+      extensionHit?.handled
+    ) {
+      const worldPosition =
+        extensionHit.position || {
+          x: 0,
+          y: 0,
+          z: 0
+        };
+
+      _showFloatingLabel(
+        new THREE.Vector3(
+          Number(worldPosition.x) || 0,
+          Number(worldPosition.y) || 0,
+          Number(worldPosition.z) || 0
+        ),
+        extensionHit.label ||
+          "Life Atlas",
+        e.clientX,
+        e.clientY
+      );
+
+      onMarkerSelect?.({
+        type:
+          extensionHit.type ||
+          "life-atlas-world",
+
+        year:
+          extensionHit.temporal
+            ?.patternYear ??
+          extensionHit.temporal
+            ?.year ??
+          _model?.year,
+
+        metadata:
+          extensionHit
+      });
+
+      globalThis
+        .LivingTimeSphereAnimation
+        ?.markDirty?.();
+
+      return;
+    }
+
     const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
     const point = new THREE.Vector3();
     if (!raycaster.ray.intersectPlane(plane, point)) {
@@ -3461,6 +3589,17 @@
   function refresh(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, semanticZoomState) {
     if (!_initialized) return;
     updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, semanticZoomState);
+
+    if (
+      globalThis.LivingTimeSphereExtensionHost?.updateAll
+    ) {
+      void globalThis.LivingTimeSphereExtensionHost.updateAll(
+        _extensionContext({
+          lifecycle: "refresh"
+        })
+      );
+    }
+
     const readiness = _validateSceneReadiness({ requireFirstFrame: true });
     if (!readiness?.ready) {
       _lastInitError = {
@@ -3658,6 +3797,21 @@
     _enforceRendererHostContract();
     _validateSceneReadiness({ requireFirstFrame: false });
     _lastLayerUpdateMs = Math.max(0, performance.now() - updateStartedAt);
+
+    if (
+      globalThis.LivingTimeSphereExtensionHost?.updateAll
+    ) {
+      void globalThis.LivingTimeSphereExtensionHost.updateAll(
+        _extensionContext({
+          lifecycle: "selected-state-update",
+          selected:
+            model.selectedPatternPosition ||
+            model.todayPatternPosition ||
+            null
+        })
+      );
+    }
+
     globalThis.LivingTimeSphereAnimation.markDirty();
     return true;
   }
@@ -3725,6 +3879,17 @@
     _lastResizeHeight = 0;
     _contextLossDispose?.();
     _contextLossDispose = null;
+
+    if (
+      globalThis.LivingTimeSphereExtensionHost?.disposeAll
+    ) {
+      void globalThis.LivingTimeSphereExtensionHost.disposeAll(
+        _extensionContext({
+          lifecycle: "dispose"
+        })
+      );
+    }
+
     _environmentController.dispose();
     _disposeObjectTree(_scene);
     if (_renderer) {
@@ -3958,7 +4123,13 @@
         visibleConnections: Number(_connectionVisibleCount || 0),
       },
       connectionDiagnostics: _connectionDiagnostics.slice(0, 80),
-      environment:       _environmentController.diagnostics(),
+
+      extensions:
+        globalThis.LivingTimeSphereExtensionHost?.diagnostics?.() ||
+        null,
+
+      environment:
+        _environmentController.diagnostics(),
     };
   }
 
