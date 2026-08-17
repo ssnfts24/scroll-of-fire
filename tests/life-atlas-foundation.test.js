@@ -3724,3 +3724,201 @@ test("Render Projection safely ignores edges whose visible endpoint is absent", 
     0
   );
 });
+
+const SphereExtensionHost = require(
+  "../docs/assets/js/sphere/living-time-sphere-extension-host.js"
+);
+
+test("Sphere extension host registers isolated renderer extensions", () => {
+  SphereExtensionHost._internals.clearRegistry();
+
+  const result =
+    SphereExtensionHost.register({
+      id:
+        "test-extension"
+    });
+
+  assert.equal(
+    result,
+    true
+  );
+
+  assert.equal(
+    SphereExtensionHost.has(
+      "test-extension"
+    ),
+    true
+  );
+
+  assert.equal(
+    SphereExtensionHost.register({
+      id:
+        "test-extension"
+    }),
+    false
+  );
+});
+
+test("Sphere extension host mounts updates renders and disposes an extension", async () => {
+  SphereExtensionHost._internals.clearRegistry();
+
+  const calls = [];
+
+  SphereExtensionHost.register({
+    id:
+      "lifecycle-test",
+
+    mount(context) {
+      calls.push([
+        "mount",
+        context.token
+      ]);
+    },
+
+    update(context) {
+      calls.push([
+        "update",
+        context.token
+      ]);
+    },
+
+    render(
+      context,
+      nowMs
+    ) {
+      calls.push([
+        "render",
+        context.token,
+        nowMs
+      ]);
+    },
+
+    dispose(context) {
+      calls.push([
+        "dispose",
+        context.token
+      ]);
+    }
+  });
+
+  await SphereExtensionHost.mountAll({
+    token: "atlas"
+  });
+
+  await SphereExtensionHost.updateAll({
+    token: "atlas"
+  });
+
+  SphereExtensionHost.renderAll(
+    {
+      token: "atlas"
+    },
+    123
+  );
+
+  await SphereExtensionHost.disposeAll({
+    token: "atlas"
+  });
+
+  assert.deepEqual(
+    calls,
+    [
+      [
+        "mount",
+        "atlas"
+      ],
+      [
+        "update",
+        "atlas"
+      ],
+      [
+        "render",
+        "atlas",
+        123
+      ],
+      [
+        "dispose",
+        "atlas"
+      ]
+    ]
+  );
+
+  assert.equal(
+    SphereExtensionHost.isMounted(
+      "lifecycle-test"
+    ),
+    false
+  );
+});
+
+test("Sphere extension host contains extension failures instead of breaking renderer lifecycle", async () => {
+  SphereExtensionHost._internals.clearRegistry();
+
+  SphereExtensionHost.register({
+    id:
+      "broken-extension",
+
+    mount() {
+      throw new Error(
+        "synthetic extension failure"
+      );
+    }
+  });
+
+  const result =
+    await SphereExtensionHost.mountAll({});
+
+  assert.equal(
+    result[0].mounted,
+    false
+  );
+
+  assert.equal(
+    SphereExtensionHost
+      .diagnostics()
+      .errors.length,
+    1
+  );
+});
+
+test("Sphere extension host supports feature-gated extensions", async () => {
+  SphereExtensionHost._internals.clearRegistry();
+
+  let mounted = 0;
+
+  SphereExtensionHost.register({
+    id:
+      "guarded-world",
+
+    enabled(context) {
+      return (
+        context.lifeAtlasEnabled ===
+        true
+      );
+    },
+
+    mount() {
+      mounted += 1;
+    }
+  });
+
+  await SphereExtensionHost.mountAll({
+    lifeAtlasEnabled:
+      false
+  });
+
+  assert.equal(
+    mounted,
+    0
+  );
+
+  await SphereExtensionHost.mountAll({
+    lifeAtlasEnabled:
+      true
+  });
+
+  assert.equal(
+    mounted,
+    1
+  );
+});
