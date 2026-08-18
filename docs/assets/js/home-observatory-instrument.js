@@ -231,6 +231,7 @@
 
     const mounted = globalThis.LivingTimeSphere.mount({
       container: preview,
+      runtimeProfile: "instrument",
       compact: true,
       renderer: "auto",
       quality: "auto",
@@ -320,10 +321,12 @@
     viewportObserver = new IntersectionObserver(entries => {
       const visible = entries.some(entry => entry.isIntersecting);
       if (visible) {
+        activeMount?.activate?.();
         activate(root).catch(() => {});
       } else {
         fxVisible = false;
         stopFx();
+        activeMount?.suspend?.();
       }
     }, { rootMargin: "320px 0px", threshold: 0.01 });
     viewportObserver.observe(root);

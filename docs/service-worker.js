@@ -23,6 +23,7 @@ const mandatoryPaths = [
   "./assets/css/codex.css",
   "./assets/css/navigation.css",
   "./assets/css/moons.css",
+  "./assets/css/moons-interface.css",
   "./assets/css/equinox-passage.css",
   "./assets/css/astrology.css",
   "./assets/css/animations.css",

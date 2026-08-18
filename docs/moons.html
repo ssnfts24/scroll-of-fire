@@ -142,6 +142,7 @@
 
   <link rel="stylesheet" href="assets/css/animations.css">
   <link rel="stylesheet" href="assets/css/share-day.css?v=1">
+  <link rel="stylesheet" href="assets/css/moons-interface.css?v=20260818-1">
 
   <script>
     window.SOF_MOONS_CONFIG = Object.freeze({
@@ -545,7 +546,7 @@
       <!-- TODAY -->
       <section
         id="todayPanel"
-        class="tabPanel active"
+        class="tabPanel active today-command-surface"
       >
         <!-- Today artwork is inserted by moons-images.js. -->
 
@@ -593,12 +594,37 @@
             </article>
           </div>
 
-          <div
-            id="todaySummaryMoonGrid"
-            class="today-summary-grid"
-            role="grid"
-            aria-label="Moon days 1 through 28"
-          ></div>
+          <section class="moon-map" aria-labelledby="todayMoonMapTitle">
+            <div class="moon-map-head">
+              <div>
+                <p class="eyebrow">Moon Navigation</p>
+                <h3 id="todayMoonMapTitle">28-Day Moon Map</h3>
+              </div>
+              <p class="moon-map-help">
+                Select any day in this Moon. The Today view and Living Sphere follow the same temporal selection.
+              </p>
+            </div>
+
+            <div class="moon-map-week-labels" aria-hidden="true">
+              <span>Week 1</span>
+              <span>Week 2</span>
+              <span>Week 3</span>
+              <span>Week 4</span>
+            </div>
+
+            <div
+              id="todaySummaryMoonGrid"
+              class="today-summary-grid moon-map-grid"
+              role="grid"
+              aria-label="Select Moon day 1 through 28"
+            ></div>
+
+            <div class="moon-map-key" aria-label="Moon map key">
+              <span><i class="moon-map-key-dot is-selected"></i>Selected</span>
+              <span><i class="moon-map-key-dot is-today"></i>Today</span>
+              <span><i class="moon-map-key-dot is-shabbat"></i>Shabbat / gate</span>
+            </div>
+          </section>
         </section>
 
         <section class="card today-hero-actions" aria-labelledby="todayHeroHeading">
@@ -648,7 +674,7 @@
         </section>
 
         <!-- Phase 3: Living Time Sphere — Today card -->
-        <section id="moons-sphere-today-card" class="card sphere-today-card" aria-labelledby="moonsSphereTitle">
+        <section id="moons-sphere-today-card" class="card sphere-today-card moons-ambient-stage" aria-labelledby="moonsSphereTitle">
           <p class="eyebrow">Observatory Layer</p>
           <h2 id="moonsSphereTitle" class="sphere-compact-card-title">Living Time Sphere — Today</h2>
 
@@ -852,14 +878,9 @@
             <p id="yearSpan" class="meta">—</p>
             <p id="moonPractice" class="meta">—</p>
 
-            <div class="weekrow">
-              <span class="pill">Moon Days</span>
-
-              <div
-                id="weekDots"
-                class="week"
-                aria-label="28 moon-day dots"
-              ></div>
+            <!-- Phase IVC-3: canonical 28-Day Moon Map lives in Today Calendar. -->
+            <div class="weekrow legacy-moon-days" hidden aria-hidden="true">
+              <div id="weekDots" class="week"></div>
             </div>
           </div>
         </section>
@@ -1019,17 +1040,10 @@
           </div>
         </section>
 
-        <section id="sphereCompactCard" class="card sphere-compact-card" aria-labelledby="sphereCompactTitle">
-          <p class="eyebrow">Observatory Layer</p>
-          <h2 id="sphereCompactTitle" class="sphere-compact-card-title">Living Time Sphere</h2>
-          <p id="sphereCompactDate" class="meta">—</p>
-          <p id="sphereCompactPassage" class="meta">—</p>
-          <div id="sphere-compact-preview" class="sphere-compact-preview" aria-hidden="true"></div>
-          <div class="btnrow">
-            <a class="lab-btn ghost sphere-compact-open" href="./living-time-sphere.html?source=moons" id="sphereCompactLink">Open Living Time Sphere</a>
-            <a class="lab-btn ghost" href="./alignment-ledger.html?source=moons">Alignment Ledger</a>
-          </div>
-        </section>
+        <!-- Phase IVC:
+        Secondary duplicate Living Time Sphere card removed.
+        The canonical ambient Today Sphere above is now the
+        single embedded temporal observatory for this panel. -->
 
         <section class="card command" aria-labelledby="commandMoon">
           <div>
@@ -3586,68 +3600,8 @@ Let the next step be firm.`;
     (function() {
       "use strict";
 
-      // ── Compact sphere card (existing, secondary position) ─────────
-      function initCompactSphere() {
-        var preview = document.getElementById("sphere-compact-preview");
-        var dateEl  = document.getElementById("sphereCompactDate");
-        var passageEl = document.getElementById("sphereCompactPassage");
-        var linkEl  = document.getElementById("sphereCompactLink");
-
-        if (!preview || !globalThis.LivingTimeSphereModel || !globalThis.AlignmentLedgerData) return;
-
-        try {
-          var year = new Date().getUTCFullYear();
-          var supported = globalThis.AlignmentLedgerData.listSupportedYears();
-          if (!supported.includes(year)) year = supported[supported.length - 1];
-
-          if (globalThis.LivingTimeSphere && !preview.__livingTimeSphereMount) {
-            preview.dataset.ltsManagedMount = "true";
-            preview.__livingTimeSphereMount = globalThis.LivingTimeSphere.mount({
-              container: preview,
-              compact: true,
-              mode: "today",
-              renderer: "auto",
-              state: { selectedYear: year },
-              visibleLayers: {
-                pattern: true,
-                exactDays: true,
-                weekGates: true,
-                passage: true,
-                lunar: true,
-                solar: false,
-                markers: true,
-                spiral: false,
-                recurrence: false,
-                environment: false,
-                connections: true
-              }
-            });
-          }
-
-          var model  = globalThis.LivingTimeSphereModel.buildYearModel({ year: year });
-          var spiral = globalThis.LivingTimeSphereModel.buildSpiral({});
-
-          var w = preview.clientWidth  || 160;
-          var h = preview.clientHeight || 160;
-          if (w < 40) w = 160;
-          if (h < 40) h = 160;
-          var layout = globalThis.LivingTimeSphereLayout.resolveLayout({ containerWidth: w, containerHeight: h });
-          globalThis.LivingTimeSphereRendererSvg.renderInto(preview, {
-            model: model, spiral: spiral, layout: layout,
-            visibleLayers: { pattern: true, passage: true, lunar: false, solar: false, markers: false, recurrence: false, spiral: false },
-            selectedYear: year
-          });
-
-          var rec = globalThis.AlignmentLedgerData.getRecord({ year: year });
-          var pos = rec.equinox && rec.equinox.patternPosition ? rec.equinox.patternPosition : {};
-          if (dateEl) dateEl.textContent = pos.moonName ? "Moon " + pos.moon + " · Day " + pos.day : "—";
-          var offs = rec.offsets || {};
-          if (passageEl) passageEl.textContent = "Passage: " + Number(((offs.equinoxToYearGateDays || 0) * 24).toFixed(1)) + " h";
-          if (linkEl) linkEl.href = "./living-time-sphere.html?year=" + year + "&source=moons";
-        } catch (e) {
-          if (preview) preview.innerHTML = "<p class='sphere-error'>Sphere unavailable</p>";
-        }
-      }
+      // Phase IVC — duplicate compact Sphere retired.
+      // The Today Sphere is the canonical ambient embedded instrument.
 
       // ── Today Sphere card (Phase 03 — Today tab, prominent placement) ──
       function initTodaySphereCard() {
@@ -3658,22 +3612,7 @@ Let the next step be firm.`;
           preview.dataset.ltsManagedMount = "true";
           preview.__livingTimeSphereMount = globalThis.LivingTimeSphere.mount({
             container: preview,
-            compact: true,
-            mode: "today",
-            renderer: "auto",
-            visibleLayers: {
-              pattern: true,
-              exactDays: true,
-              weekGates: true,
-              passage: true,
-              lunar: true,
-              solar: false,
-              markers: true,
-              spiral: false,
-              recurrence: false,
-              environment: false,
-              connections: true
-            }
+            runtimeProfile: "ambient"
           });
         }
 
@@ -3685,17 +3624,61 @@ Let the next step be firm.`;
           return { timeZone: tz, boundaryMode: bnd, manualSunset: sun, idPrefix: "moons-", source: "moons" };
         }
 
+        function syncTodaySphereSelection() {
+          if (!preview || !preview.__livingTimeSphereMount?.refresh) return false;
+          if (!globalThis.ScrollOfFireMoons?.selectedCivilDate) return false;
+          if (!globalThis.PatternCalendar?.fromCivilDate) return false;
+
+          var opts = currentOpts();
+          var selectedCivil = globalThis.ScrollOfFireMoons.selectedCivilDate();
+          if (!(selectedCivil instanceof Date) || Number.isNaN(selectedCivil.getTime())) return false;
+
+          var mapped = globalThis.PatternCalendar.fromCivilDate({
+            date: selectedCivil,
+            timeZone: opts.timeZone,
+            boundaryMode: opts.boundaryMode,
+            sunsetTime: opts.manualSunset
+          });
+
+          if (!mapped || mapped.dayOfPatternYear == null) return false;
+
+          preview.__livingTimeSphereMount.refresh({
+            timeZone: opts.timeZone,
+            boundaryMode: opts.boundaryMode,
+            manualSunset: opts.manualSunset,
+            selectedYear: mapped.patternYear || selectedCivil.getFullYear(),
+            selectedDay: mapped.dayOfPatternYear,
+            selectedMoon: mapped.moon || null,
+            selectedMarker: "day-" + mapped.dayOfPatternYear,
+            mode: "today"
+          });
+
+          preview.dataset.ltsSelectedPatternDay = String(mapped.dayOfPatternYear);
+          preview.dataset.ltsSelectedMoon = String(mapped.moon || "");
+          return true;
+        }
+
         globalThis.LivingTimeSphereTodayCard.render(root, currentOpts());
         globalThis.LivingTimeSphereTodayCard.attachAutoUpdate(root, currentOpts());
 
-        // Re-render when moons.js changes boundary/timezone
+        // Re-render + synchronize when Moons changes boundary/timezone.
         document.addEventListener("moons:state-change", function() {
           globalThis.LivingTimeSphereTodayCard.render(root, currentOpts());
+          syncTodaySphereSelection();
         });
+
+        // sof:moon-render is emitted after the canonical Moons render
+        // pipeline changes the selected civil/Pattern day. This covers
+        // Previous, Next, Today, date picker, and Moon-grid selection.
+        document.addEventListener("sof:moon-render", function() {
+          syncTodaySphereSelection();
+        });
+
+        // Initial synchronization after moons.js has established state.
+        syncTodaySphereSelection();
       }
 
       function init() {
-        initCompactSphere();
         initTodaySphereCard();
       }
 

@@ -5,8 +5,366 @@
   const MAX_OFFSET = 16;
   const STAGE_PADDING = 10;
   const SEMANTIC_TARGET_CAP = 96;
+
+  /*
+   * Absolute emergency ceilings retained for compatibility and safety.
+   * Actual visible budgets are now resolved by runtime profile + semantic
+   * zoom band below.
+   */
   const SEMANTIC_DESKTOP_LABEL_CAP = 12;
   const SEMANTIC_MOBILE_LABEL_CAP = 6;
+
+  /*
+   * Semantic composition policy
+   *
+   * ambient:
+   *   background context only — no floating semantic cards
+   *
+   * instrument:
+   *   concise embedded instrument — selected state + one/few useful anchors
+   *
+   * observatory:
+   *   analytical workspace — progressively reveals more information as the
+   *   camera approaches the geometry
+   */
+  const SEMANTIC_PROFILE_BUDGETS = Object.freeze({
+    ambient: Object.freeze({
+      mobile: Object.freeze({
+        far: 0,
+        medium: 0,
+        near: 0,
+        detail: 0
+      }),
+      desktop: Object.freeze({
+        far: 0,
+        medium: 0,
+        near: 0,
+        detail: 0
+      })
+    }),
+
+    instrument: Object.freeze({
+      mobile: Object.freeze({
+        far: 1,
+        medium: 2,
+        near: 2,
+        detail: 2
+      }),
+      desktop: Object.freeze({
+        far: 2,
+        medium: 3,
+        near: 4,
+        detail: 4
+      })
+    }),
+
+    observatory: Object.freeze({
+      mobile: Object.freeze({
+        far: 1,
+        medium: 2,
+        near: 3,
+        detail: 3
+      }),
+      desktop: Object.freeze({
+        far: 2,
+        medium: 4,
+        near: 6,
+        detail: 8
+      })
+    })
+  });
+
+  function normalizeRuntimeProfile(value) {
+    const profile =
+      String(
+        value
+        || ""
+      )
+        .trim()
+        .toLowerCase();
+
+    if (
+      profile === "ambient"
+      || profile === "instrument"
+      || profile === "observatory"
+    ) {
+      return profile;
+    }
+
+    return "observatory";
+  }
+
+  function runtimeProfileFromStage(stage) {
+    const direct =
+      stage?.dataset
+        ?.ltsRuntimeProfile;
+
+    if (direct) {
+      return normalizeRuntimeProfile(
+        direct
+      );
+    }
+
+    const owner =
+      stage?.closest?.(
+        "[data-lts-runtime-profile]"
+      );
+
+    return normalizeRuntimeProfile(
+      owner?.dataset
+        ?.ltsRuntimeProfile
+    );
+  }
+
+  function isCompactSurface() {
+    const narrow =
+      typeof window !== "undefined"
+      && Number(
+        window.innerWidth
+      ) < 600;
+
+    let coarse = false;
+
+    try {
+      coarse =
+        typeof window !== "undefined"
+        && (
+          window.matchMedia?.(
+            "(pointer: coarse)"
+          )?.matches
+          || window.matchMedia?.(
+            "(hover: none)"
+          )?.matches
+        );
+    } catch {
+      coarse = false;
+    }
+
+    return !!(
+      narrow
+      || coarse
+    );
+  }
+
+  function resolveSemanticBudget({
+    runtimeProfile = "observatory",
+    mobile = false,
+    semanticBand = "medium"
+  } = {}) {
+    const profile =
+      normalizeRuntimeProfile(
+        runtimeProfile
+      );
+
+    const mode =
+      mobile
+        ? "mobile"
+        : "desktop";
+
+    const requestedBand =
+      String(
+        semanticBand
+        || "medium"
+      )
+        .trim()
+        .toLowerCase();
+
+    const band =
+      [
+        "far",
+        "medium",
+        "near",
+        "detail"
+      ].includes(
+        requestedBand
+      )
+        ? requestedBand
+        : "medium";
+
+    const configured =
+      SEMANTIC_PROFILE_BUDGETS[
+        profile
+      ][
+        mode
+      ][
+        band
+      ];
+
+    const absoluteCap =
+      mobile
+        ? SEMANTIC_MOBILE_LABEL_CAP
+        : SEMANTIC_DESKTOP_LABEL_CAP;
+
+    return Math.max(
+      0,
+      Math.min(
+        absoluteCap,
+        Number(
+          configured
+        )
+        || 0
+      )
+    );
+  }
+
+  function semanticTargetGroup(
+    target
+  ) {
+    const kind =
+      String(
+        target?.kind
+        || ""
+      ).toLowerCase();
+
+    if (
+      kind === "pattern-day"
+      || kind === "selected-day"
+    ) {
+      return "temporal-selection";
+    }
+
+    if (
+      kind === "year"
+    ) {
+      return "historical";
+    }
+
+    if (
+      kind === "astronomy"
+      || kind === "gate"
+      || kind === "passage"
+      || kind === "week-gate"
+    ) {
+      return "alignment";
+    }
+
+    if (
+      kind === "lunar"
+      || kind === "solar"
+      || kind === "solar-anchor"
+    ) {
+      return "celestial";
+    }
+
+    if (
+      kind === "moon"
+    ) {
+      return "calendar";
+    }
+
+    if (
+      kind.includes(
+        "record"
+      )
+      || kind.includes(
+        "life"
+      )
+      || kind.includes(
+        "atlas"
+      )
+    ) {
+      return "records";
+    }
+
+    return kind
+      || "other";
+  }
+
+  /*
+   * Select semantic cards for information diversity instead of simply taking
+   * the first N candidates.
+   *
+   * Candidates have already been sorted by pinned, selected, priority,
+   * distance and stable id. This compositor preserves that ordering while
+   * preferring a different semantic information class until the useful
+   * classes are exhausted.
+   */
+  function composeSemanticCandidates(
+    candidates,
+    {
+      budget = 0
+    } = {}
+  ) {
+    const limit =
+      Math.max(
+        0,
+        Math.trunc(
+          Number(
+            budget
+          )
+          || 0
+        )
+      );
+
+    if (
+      !Array.isArray(
+        candidates
+      )
+      || !limit
+    ) {
+      return [];
+    }
+
+    const remaining =
+      candidates.slice();
+
+    const chosen = [];
+    const representedGroups =
+      new Set();
+
+    while (
+      remaining.length
+      && chosen.length < limit
+    ) {
+      let index =
+        remaining.findIndex(
+          candidate => {
+            const group =
+              semanticTargetGroup(
+                candidate?.target
+              );
+
+            return (
+              !representedGroups.has(
+                group
+              )
+            );
+          }
+        );
+
+      if (
+        index < 0
+      ) {
+        index = 0;
+      }
+
+      const [
+        candidate
+      ] =
+        remaining.splice(
+          index,
+          1
+        );
+
+      if (
+        !candidate
+      ) {
+        continue;
+      }
+
+      chosen.push(
+        candidate
+      );
+
+      representedGroups.add(
+        semanticTargetGroup(
+          candidate.target
+        )
+      );
+    }
+
+    return chosen;
+  }
 
   /*
    * Calibrate camera-to-object proximity against the existing semantic zoom.
@@ -167,14 +525,118 @@
     ].join("|");
   }
 
-  function buildLabelSet({ labelMode, selectedMoon, todayMoon, equinoxMoon, mobile, showAllMobileLabels }) {
-    if (labelMode === "none" || labelMode === "hidden") return new Set();
-    if (mobile && !showAllMobileLabels) {
-      return new Set([todayMoon, selectedMoon, 1, 13, equinoxMoon].filter(Boolean));
+  function buildLabelSet({
+    labelMode,
+    selectedMoon,
+    todayMoon,
+    equinoxMoon,
+    mobile,
+    showAllMobileLabels,
+    runtimeProfile = "observatory"
+  }) {
+    const profile =
+      normalizeRuntimeProfile(
+        runtimeProfile
+      );
+
+    if (
+      labelMode === "none"
+      || labelMode === "hidden"
+      || profile === "ambient"
+    ) {
+      return new Set();
     }
-    if (labelMode === "essential" || labelMode === "selected") return new Set(selectedMoon ? [selectedMoon] : []);
-    if (labelMode === "all") return new Set(Array.from({ length: 13 }, (_, i) => i + 1));
-    return new Set([selectedMoon, todayMoon, equinoxMoon, 1, 13].filter(Boolean));
+
+    if (
+      labelMode === "all"
+    ) {
+      return new Set(
+        Array.from(
+          {
+            length: 13
+          },
+          (
+            _,
+            i
+          ) =>
+            i + 1
+        )
+      );
+    }
+
+    /*
+     * Embedded instruments should never begin with the Moon 1 / Moon 13
+     * pile-up seen on physical phones requesting Desktop site.
+     */
+    if (
+      profile === "instrument"
+      && mobile
+      && !showAllMobileLabels
+    ) {
+      return new Set(
+        [
+          selectedMoon
+          || todayMoon
+        ].filter(
+          Boolean
+        )
+      );
+    }
+
+    if (
+      mobile
+      && !showAllMobileLabels
+    ) {
+      return new Set(
+        [
+          selectedMoon,
+          todayMoon,
+          equinoxMoon,
+          1,
+          13
+        ].filter(
+          Boolean
+        )
+      );
+    }
+
+    if (
+      labelMode === "essential"
+      || labelMode === "selected"
+    ) {
+      return new Set(
+        selectedMoon
+          ? [
+              selectedMoon
+            ]
+          : []
+      );
+    }
+
+    if (
+      profile === "instrument"
+    ) {
+      return new Set(
+        [
+          selectedMoon,
+          todayMoon
+        ].filter(
+          Boolean
+        )
+      );
+    }
+
+    return new Set(
+      [
+        selectedMoon,
+        todayMoon,
+        equinoxMoon,
+        1,
+        13
+      ].filter(
+        Boolean
+      )
+    );
   }
 
   function priorityForMoon(moon, { selectedMoon, todayMoon, selectedDayMoon, equinoxMoon }) {
@@ -265,8 +727,27 @@
       const selectedMoon = selectedPatternPosition?.moon || todayMoon || model?.sourceRecord?.equinox?.patternPosition?.moon || 1;
       const selectedDayMoon = selectedPatternPosition?.moon || null;
       const equinoxMoon = model?.sourceRecord?.equinox?.patternPosition?.moon || null;
-      const mobile = typeof window !== "undefined" ? window.innerWidth < 600 : false;
-      const showSet = buildLabelSet({ labelMode, selectedMoon, todayMoon, equinoxMoon, mobile, showAllMobileLabels: !!showAllMobileLabels || labelMode === "all" });
+      const mobile =
+        isCompactSurface();
+
+      const runtimeProfile =
+        runtimeProfileFromStage(
+          stage
+        );
+
+      const showSet =
+        buildLabelSet({
+          labelMode,
+          selectedMoon,
+          todayMoon,
+          equinoxMoon,
+          mobile,
+          showAllMobileLabels:
+            !!showAllMobileLabels
+            || labelMode === "all",
+          runtimeProfile
+        });
+
       const signature = [
         stageRect.width,
         stageRect.height,
@@ -277,6 +758,7 @@
         todayMoon,
         equinoxMoon,
         mobile ? "m" : "d",
+        runtimeProfile,
         showAllMobileLabels ? "show" : "compact",
         visibleLayersKey || "",
         Array.isArray(semanticTargets) ? semanticTargets.length : 0,
@@ -300,6 +782,54 @@
       const camSpace = new THREE.Vector3();
       const placedRects = [];
       const candidates = [];
+
+      /*
+       * Semantic cards should orbit the instrument rather than carpet its
+       * central inspection zone. Selected/pinned targets can still fall back
+       * into this region if there is genuinely nowhere else to place them.
+       */
+      const semanticBlockedRects =
+        blockedRects.slice();
+
+      const coreWidth =
+        stageRect.width
+        * (
+          mobile
+            ? 0.44
+            : 0.36
+        );
+
+      const coreHeight =
+        stageRect.height
+        * (
+          mobile
+            ? 0.42
+            : 0.36
+        );
+
+      semanticBlockedRects.push({
+        x:
+          offsetX
+          + (
+            stageRect.width
+            - coreWidth
+          )
+          / 2,
+
+        y:
+          offsetY
+          + (
+            stageRect.height
+            - coreHeight
+          )
+          / 2,
+
+        w:
+          coreWidth,
+
+        h:
+          coreHeight
+      });
 
       _hideConnector();
       _labelEls.forEach(_hideLabel);
@@ -468,9 +998,29 @@
         || a.distance - b.distance
         || a.target.id.localeCompare(b.target.id)
       );
-      const semanticBudget = mobile ? SEMANTIC_MOBILE_LABEL_CAP : SEMANTIC_DESKTOP_LABEL_CAP;
-      const activeSemanticIds = new Set();
-      for (const candidate of semanticCandidates.slice(0, semanticBudget)) {
+      const semanticBudget =
+        resolveSemanticBudget({
+          runtimeProfile,
+          mobile,
+          semanticBand
+        });
+
+      const composedSemanticCandidates =
+        composeSemanticCandidates(
+          semanticCandidates,
+          {
+            budget:
+              semanticBudget
+          }
+        );
+
+      const activeSemanticIds =
+        new Set();
+
+      for (
+        const candidate
+        of composedSemanticCandidates
+      ) {
         const target = candidate.target;
         let el = _semanticEls.get(target.id) || null;
         if (!el && _semanticContainer && typeof document !== "undefined") {
@@ -517,18 +1067,116 @@
         el.style.display = "";
         const w = el.offsetWidth || 132;
         const h = el.offsetHeight || 40;
+        const radialX =
+          candidate.anchorX
+          - centerX;
+
+        const radialY =
+          candidate.anchorY
+          - centerY;
+
+        const radialLength =
+          Math.hypot(
+            radialX,
+            radialY
+          )
+          || 1;
+
+        const radialUnitX =
+          radialX
+          / radialLength;
+
+        const radialUnitY =
+          radialY
+          / radialLength;
+
+        const semanticOutward =
+          mobile
+            ? 62
+            : 82;
+
+        const outwardX =
+          candidate.anchorX
+          + radialUnitX
+          * semanticOutward;
+
+        const outwardY =
+          candidate.anchorY
+          + radialUnitY
+          * semanticOutward;
+
         const attempts = [
-          { x: candidate.anchorX + 16, y: candidate.anchorY - h - 12 },
-          { x: candidate.anchorX + 16, y: candidate.anchorY + 12 },
-          { x: candidate.anchorX - w - 16, y: candidate.anchorY - h - 12 },
-          { x: candidate.anchorX - w - 16, y: candidate.anchorY + 12 },
+          {
+            x:
+              outwardX
+              - w
+              / 2,
+            y:
+              outwardY
+              - h
+              / 2
+          },
+
+          {
+            x:
+              candidate.anchorX
+              + 16,
+            y:
+              candidate.anchorY
+              - h
+              - 12
+          },
+
+          {
+            x:
+              candidate.anchorX
+              + 16,
+            y:
+              candidate.anchorY
+              + 12
+          },
+
+          {
+            x:
+              candidate.anchorX
+              - w
+              - 16,
+            y:
+              candidate.anchorY
+              - h
+              - 12
+          },
+
+          {
+            x:
+              candidate.anchorX
+              - w
+              - 16,
+            y:
+              candidate.anchorY
+              + 12
+          }
         ];
         let chosen = null;
         for (const attempt of attempts) {
           const left = clamp(attempt.x, offsetX + STAGE_PADDING, Math.max(offsetX + STAGE_PADDING, offsetX + stageRect.width - w - STAGE_PADDING));
           const top = clamp(attempt.y, offsetY + STAGE_PADDING, Math.max(offsetY + STAGE_PADDING, offsetY + stageRect.height - h - STAGE_PADDING));
           const box = { x: left, y: top, w, h };
-          const collides = placedRects.some(prev => rectsOverlap(box, prev)) || blockedRects.some(prev => rectsOverlap(box, prev));
+          const collides =
+            placedRects.some(
+              prev =>
+                rectsOverlap(
+                  box,
+                  prev
+                )
+            )
+            || semanticBlockedRects.some(
+              prev =>
+                rectsOverlap(
+                  box,
+                  prev
+                )
+            );
           if (!collides) { chosen = { left, top, box }; break; }
         }
         if (!chosen && !(target.pinned || target.selected)) {
@@ -605,6 +1253,7 @@
       SEMANTIC_TARGET_CAP,
       SEMANTIC_DESKTOP_LABEL_CAP,
       SEMANTIC_MOBILE_LABEL_CAP,
+      SEMANTIC_PROFILE_BUDGETS,
       SEMANTIC_BAND_DISTANCE_MULTIPLIERS,
       SEMANTIC_MOBILE_DISTANCE_MULTIPLIER
     }),
@@ -615,7 +1264,13 @@
       clamp,
       normalizeSemanticTarget,
       resolveProximityEnvelope,
-      createProximityState
+      createProximityState,
+      normalizeRuntimeProfile,
+      runtimeProfileFromStage,
+      isCompactSurface,
+      resolveSemanticBudget,
+      semanticTargetGroup,
+      composeSemanticCandidates
     })
   });
 })();

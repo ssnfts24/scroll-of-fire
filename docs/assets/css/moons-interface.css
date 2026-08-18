@@ -1,0 +1,937 @@
+/*
+ * Remnant 13 Moons — Interface Refinement
+ * Phase IVC-2
+ *
+ * Purpose:
+ * - make Today read as one coherent temporal command surface
+ * - let the canonical ambient Sphere provide visual depth
+ * - improve mobile density, touch targets, and tab navigation
+ * - avoid changing calendar or astronomy authority
+ */
+
+:root {
+  --moons-surface-gap: clamp(0.72rem, 1.5vw, 1.15rem);
+  --moons-panel-radius: clamp(18px, 2.4vw, 28px);
+  --moons-touch-min: 44px;
+  --moons-readable: 74ch;
+}
+
+/* ------------------------------------------------------------
+ * TAB RAIL
+ * ------------------------------------------------------------ */
+
+.tabs[aria-label="Calendar tools"] {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  padding-block: 0.45rem 0.6rem;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tabs[aria-label="Calendar tools"] .tab {
+  flex: 0 0 auto;
+  min-height: var(--moons-touch-min);
+  scroll-snap-align: start;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------
+ * TODAY COMMAND SURFACE
+ * ------------------------------------------------------------ */
+
+#todayPanel.today-command-surface.active {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--moons-surface-gap);
+  align-items: start;
+}
+
+#todayPanel.today-command-surface > * {
+  min-width: 0;
+}
+
+#todayPanel.today-command-surface > .today-calendar-summary,
+#todayPanel.today-command-surface > .today-hero-actions,
+#todayPanel.today-command-surface > .command,
+#todayPanel.today-command-surface > .shabbat-summary,
+#todayPanel.today-command-surface > .grid {
+  grid-column: 1 / -1;
+}
+
+#todayPanel.today-command-surface > .sphere-location-command {
+  grid-column: span 4;
+}
+
+#todayPanel.today-command-surface > #moons-sphere-today-card {
+  grid-column: span 8;
+}
+
+#todayPanel.today-command-surface > .codex-memory-today-card {
+  grid-column: span 4;
+}
+
+#todayPanel.today-command-surface > .moon-badge {
+  grid-column: span 8;
+}
+
+#todayPanel.today-command-surface > #equinoxCompactCard {
+  grid-column: span 4;
+}
+
+/*
+ * Cards remain visually related but no longer need enormous vertical
+ * separation when Today is being used as an instrument.
+ */
+#todayPanel.today-command-surface > .card,
+#todayPanel.today-command-surface > .grid {
+  margin-block: 0;
+}
+
+#todayPanel.today-command-surface .card {
+  border-radius: var(--moons-panel-radius);
+}
+
+#todayPanel.today-command-surface .subtitle,
+#todayPanel.today-command-surface .fine,
+#todayPanel.today-command-surface .meta {
+  max-width: var(--moons-readable);
+}
+
+/* ------------------------------------------------------------
+ * PRIMARY TODAY SUMMARY
+ * ------------------------------------------------------------ */
+
+.today-calendar-summary {
+  overflow: clip;
+}
+
+.today-summary-head {
+  gap: clamp(0.8rem, 2vw, 1.5rem);
+}
+
+.today-summary-controls {
+  align-items: center;
+}
+
+.today-summary-controls .lab-btn {
+  min-height: var(--moons-touch-min);
+}
+
+.today-summary-stats {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: clamp(0.45rem, 1vw, 0.8rem);
+}
+
+.today-summary-stat {
+  min-width: 0;
+}
+
+.today-summary-grid {
+  contain: layout paint;
+}
+
+/* ------------------------------------------------------------
+ * AMBIENT SPHERE STAGE
+ * ------------------------------------------------------------ */
+
+#moons-sphere-today-card.moons-ambient-stage {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  min-height: clamp(30rem, 56vw, 43rem);
+  background:
+    radial-gradient(
+      circle at 50% 40%,
+      rgba(95, 175, 255, 0.12),
+      rgba(8, 12, 22, 0.78) 48%,
+      rgba(4, 6, 12, 0.96) 100%
+    );
+}
+
+/*
+ * The ambient renderer is a visual depth layer here, not another
+ * interaction surface. The full Observatory owns deep interaction.
+ */
+#moons-sphere-today-preview {
+  position: absolute;
+  z-index: 0;
+  inset: 3.2rem -7% 0;
+  width: auto;
+  height: auto;
+  min-height: 28rem;
+  pointer-events: none;
+  opacity: 0.72;
+  transform: scale(1.08);
+  transform-origin: 50% 45%;
+  filter: saturate(0.95) contrast(1.04);
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.96) 0%,
+    rgba(0, 0, 0, 0.92) 62%,
+    rgba(0, 0, 0, 0.28) 90%,
+    transparent 100%
+  );
+}
+
+#moons-sphere-today-card.moons-ambient-stage > .eyebrow,
+#moons-sphere-today-card.moons-ambient-stage > h2,
+#moons-sphere-today-card.moons-ambient-stage > details,
+#moons-sphere-today-card.moons-ambient-stage > .btnrow {
+  position: relative;
+  z-index: 3;
+}
+
+#moons-sphere-today-card .sphere-today-layout {
+  position: relative;
+  z-index: 2;
+  min-height: clamp(23rem, 43vw, 34rem);
+  display: block;
+}
+
+#moons-sphere-today-card .sphere-today-data {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: min(28rem, 58%);
+  max-height: calc(100% - 1rem);
+  overflow: auto;
+  padding: clamp(0.8rem, 1.8vw, 1.15rem);
+  border: 1px solid rgba(170, 213, 255, 0.16);
+  border-radius: 18px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(7, 11, 20, 0.78),
+      rgba(7, 11, 20, 0.52)
+    );
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+#moons-sphere-today-card .sphere-today-grid {
+  margin: 0;
+}
+
+#moons-sphere-today-card .sphere-today-orientation {
+  margin-bottom: 0;
+}
+
+#moons-sphere-today-card .sphere-today-accessible-wrap {
+  margin-top: 0.65rem;
+}
+
+/* ------------------------------------------------------------
+ * LOCATION — COMPACT UNTIL NEEDED
+ * ------------------------------------------------------------ */
+
+#todayPanel .sphere-location-command-compact {
+  align-self: stretch;
+}
+
+#todayPanel .sphere-location-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.48rem;
+}
+
+#todayPanel .sphere-location-actions .lab-btn {
+  width: 100%;
+  min-height: var(--moons-touch-min);
+}
+
+#todayPanel .sphere-location-inputs {
+  gap: 0.5rem;
+}
+
+#todayPanel .sphere-location-command .field {
+  width: 100%;
+  min-height: var(--moons-touch-min);
+}
+
+/* ------------------------------------------------------------
+ * COMMAND / INFORMATION DENSITY
+ * ------------------------------------------------------------ */
+
+#todayPanel .command-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+#todayPanel .command-grid .stat {
+  min-width: 0;
+}
+
+#todayPanel .grid {
+  gap: var(--moons-surface-gap);
+}
+
+#todayPanel .btnrow .lab-btn,
+#todayPanel .btnrow a.lab-btn {
+  min-height: var(--moons-touch-min);
+}
+
+/* ------------------------------------------------------------
+ * TABLET
+ * ------------------------------------------------------------ */
+
+@media (max-width: 900px) {
+  #todayPanel.today-command-surface.active {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
+  #todayPanel.today-command-surface > .sphere-location-command {
+    grid-column: span 3;
+  }
+
+  #todayPanel.today-command-surface > #moons-sphere-today-card {
+    grid-column: span 5;
+  }
+
+  #todayPanel.today-command-surface > .codex-memory-today-card,
+  #todayPanel.today-command-surface > #equinoxCompactCard {
+    grid-column: span 4;
+  }
+
+  #todayPanel.today-command-surface > .moon-badge {
+    grid-column: 1 / -1;
+  }
+
+  .today-summary-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  #todayPanel .command-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ------------------------------------------------------------
+ * PHONE
+ * ------------------------------------------------------------ */
+
+@media (max-width: 640px) {
+  #todayPanel.today-command-surface.active {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.72rem;
+  }
+
+  #todayPanel.today-command-surface > * {
+    grid-column: 1 !important;
+  }
+
+  #todayPanel.today-command-surface > .card,
+  #todayPanel.today-command-surface > .grid {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .today-summary-head {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .today-summary-controls {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .today-summary-controls .lab-btn {
+    width: 100%;
+    padding-inline: 0.55rem;
+  }
+
+  .today-summary-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #moons-sphere-today-card.moons-ambient-stage {
+    min-height: 34rem;
+  }
+
+  #moons-sphere-today-preview {
+    inset: 3.8rem -18% 8rem;
+    min-height: 25rem;
+    opacity: 0.62;
+    transform: scale(1.18);
+  }
+
+  #moons-sphere-today-card .sphere-today-layout {
+    min-height: 26rem;
+  }
+
+  #moons-sphere-today-card .sphere-today-data {
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: auto;
+    max-height: 12.5rem;
+    padding: 0.72rem;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  #moons-sphere-today-card .sphere-today-grid {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 0.7rem;
+    row-gap: 0.24rem;
+    font-size: 0.82rem;
+  }
+
+  #moons-sphere-today-card > .btnrow {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  #moons-sphere-today-card > .btnrow .lab-btn {
+    width: 100%;
+  }
+
+  #todayPanel .sphere-location-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #todayPanel .command-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #todayPanel .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  #todayPanel .grid > * {
+    grid-column: 1 !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .today-summary-controls {
+    grid-template-columns: 1fr;
+  }
+
+  #todayPanel .sphere-location-actions {
+    grid-template-columns: 1fr;
+  }
+
+  #todayPanel .command-grid,
+  .today-summary-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ------------------------------------------------------------
+ * ACCESSIBILITY / MOTION
+ * ------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  #moons-sphere-today-preview {
+    transform: none;
+  }
+
+  .tabs[aria-label="Calendar tools"] {
+    scroll-behavior: auto;
+  }
+}
+
+/* ============================================================
+ * PHASE IVC-3 — 28-DAY MOON MAP + RESPONSIVE OBSERVATORY
+ * ============================================================ */
+
+.moon-map {
+  margin-top: clamp(0.85rem, 1.8vw, 1.25rem);
+  padding-top: clamp(0.8rem, 1.5vw, 1rem);
+  border-top: 1px solid rgba(224, 188, 111, 0.12);
+}
+
+.moon-map-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(14rem, 28rem);
+  gap: 1rem;
+  align-items: end;
+  margin-bottom: 0.75rem;
+}
+
+.moon-map-head h3 {
+  margin: 0.12rem 0 0;
+  font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+  line-height: 1.1;
+}
+
+.moon-map-help {
+  margin: 0;
+  color: rgba(232, 228, 217, 0.62);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.moon-map-week-labels {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin-bottom: 0.38rem;
+}
+
+.moon-map-week-labels span {
+  text-align: center;
+  color: rgba(224, 188, 111, 0.66);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.moon-map-grid.today-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: clamp(0.28rem, 0.7vw, 0.48rem);
+}
+
+.moon-map-grid > * {
+  min-width: 0;
+  min-height: 3.3rem;
+  border-radius: 12px;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background-color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.moon-map-grid > button,
+.moon-map-grid > [role="gridcell"] {
+  touch-action: manipulation;
+}
+
+.moon-map-grid > button:focus-visible,
+.moon-map-grid > [role="gridcell"]:focus-visible {
+  outline: 2px solid rgba(239, 197, 91, 0.88);
+  outline-offset: 2px;
+}
+
+.moon-map-grid > :nth-child(7n + 1):not(:first-child) {
+  box-shadow: -0.38rem 0 0 -0.32rem rgba(224, 188, 111, 0.3);
+}
+
+.moon-map-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 1rem;
+  margin-top: 0.65rem;
+  color: rgba(232, 228, 217, 0.58);
+  font-size: 0.72rem;
+}
+
+.moon-map-key span {
+  display: inline-flex;
+  gap: 0.38rem;
+  align-items: center;
+}
+
+.moon-map-key-dot {
+  width: 0.58rem;
+  height: 0.58rem;
+  border: 1px solid rgba(255,255,255,0.28);
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.moon-map-key-dot.is-selected {
+  background: rgba(232, 188, 79, 0.95);
+}
+
+.moon-map-key-dot.is-today {
+  background: rgba(94, 220, 183, 0.85);
+}
+
+.moon-map-key-dot.is-shabbat {
+  background: rgba(164, 145, 219, 0.82);
+}
+
+.legacy-moon-days {
+  display: none !important;
+}
+
+@media (min-width: 1180px) {
+  #todayPanel.today-command-surface.active {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: clamp(1rem, 1.4vw, 1.35rem);
+  }
+
+  #todayPanel.today-command-surface > .today-calendar-summary,
+  #todayPanel.today-command-surface > .today-hero-actions,
+  #todayPanel.today-command-surface > .command,
+  #todayPanel.today-command-surface > .shabbat-summary,
+  #todayPanel.today-command-surface > .grid {
+    grid-column: 1 / -1;
+  }
+
+  #todayPanel.today-command-surface > .sphere-location-command {
+    grid-column: span 4;
+  }
+
+  #todayPanel.today-command-surface > #moons-sphere-today-card {
+    grid-column: span 8;
+  }
+
+  #todayPanel.today-command-surface > .moon-badge {
+    grid-column: span 7;
+  }
+
+  #todayPanel.today-command-surface > .codex-memory-today-card,
+  #todayPanel.today-command-surface > #equinoxCompactCard {
+    grid-column: span 5;
+  }
+
+  #moons-sphere-today-card .sphere-today-layout {
+    min-height: clamp(27rem, 38vw, 36rem);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(15rem, 22rem);
+    gap: 1rem;
+    align-items: end;
+  }
+
+  #moons-sphere-today-card .sphere-today-data {
+    position: relative;
+    inset: auto;
+    width: auto;
+    max-height: none;
+    align-self: end;
+  }
+
+  #moons-sphere-today-preview {
+    inset: 3.3rem 24% 3.8rem -8%;
+    transform: scale(1.08);
+  }
+}
+
+@media (min-width: 700px) and (max-width: 1179px) {
+  #todayPanel.today-command-surface.active {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+  }
+
+  #todayPanel.today-command-surface > .today-calendar-summary,
+  #todayPanel.today-command-surface > .today-hero-actions,
+  #todayPanel.today-command-surface > #moons-sphere-today-card,
+  #todayPanel.today-command-surface > .command,
+  #todayPanel.today-command-surface > .shabbat-summary,
+  #todayPanel.today-command-surface > .grid {
+    grid-column: 1 / -1;
+  }
+
+  #todayPanel.today-command-surface > .sphere-location-command,
+  #todayPanel.today-command-surface > .moon-badge,
+  #todayPanel.today-command-surface > .codex-memory-today-card,
+  #todayPanel.today-command-surface > #equinoxCompactCard {
+    grid-column: span 1;
+  }
+
+  #moons-sphere-today-card .sphere-today-layout {
+    min-height: 30rem;
+  }
+
+  #moons-sphere-today-card .sphere-today-data {
+    width: min(24rem, 48%);
+  }
+}
+
+@media (max-width: 699px) {
+  #todayPanel.today-command-surface.active {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.78rem;
+  }
+
+  #todayPanel.today-command-surface > * {
+    grid-column: 1 !important;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .moon-map-head {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+  }
+
+  .moon-map-week-labels {
+    display: none;
+  }
+
+  .moon-map-grid.today-summary-grid {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 0.22rem;
+  }
+
+  .moon-map-grid > * {
+    min-height: 3rem;
+    border-radius: 9px;
+  }
+
+  #moons-sphere-today-card.moons-ambient-stage {
+    min-height: auto;
+    overflow: hidden;
+  }
+
+  #moons-sphere-today-card .sphere-today-layout {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  #moons-sphere-today-preview {
+    position: relative !important;
+    inset: auto !important;
+    width: calc(100% + 1rem);
+    height: clamp(18rem, 78vw, 27rem);
+    min-height: 18rem;
+    margin-inline: -0.5rem;
+    opacity: 0.86;
+    transform: none !important;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  #moons-sphere-today-card .sphere-today-data {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    max-height: none;
+    overflow: visible;
+    padding: 0.8rem;
+    border-radius: 14px;
+    background: rgba(7, 11, 20, 0.62);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  #moons-sphere-today-card .sphere-today-grid {
+    grid-template-columns: minmax(5.8rem, auto) minmax(0, 1fr);
+    font-size: 0.8rem;
+  }
+
+  #moons-sphere-today-card > .btnrow {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  .moon-map-grid.today-summary-grid {
+    gap: 0.16rem;
+  }
+
+  .moon-map-grid > * {
+    min-height: 2.75rem;
+    padding-inline: 0.12rem;
+  }
+
+  .moon-map-help {
+    font-size: 0.76rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .moon-map-grid > * {
+    transition: none;
+  }
+}
+
+/* ============================================================
+ * PHASE IVC-4 — PHONE DESKTOP-SITE / WEB-VIEW HARDENING
+ *
+ * A mobile browser's "Desktop site" mode can report a ~980px+
+ * layout viewport, bypassing normal phone max-width media queries.
+ * Coarse pointer / hover-none remains a better indication that the
+ * page is physically being used on a touch phone.
+ * ============================================================ */
+
+@media (pointer: coarse), (hover: none) {
+  /* Prevent faux-desktop two-column arrangements on a physical phone. */
+  #todayPanel.today-command-surface.active {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 0.82rem !important;
+  }
+
+  #todayPanel.today-command-surface > * {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  /* Hero/tab artwork must never become a narrow left rail. */
+  #todayPanel .card,
+  #todayPanel .moon-badge,
+  #todayPanel .command,
+  #todayPanel .grid,
+  #todayPanel .today-calendar-summary,
+  #todayPanel .today-hero-actions,
+  #todayPanel .sphere-location-command,
+  #todayPanel #moons-sphere-today-card,
+  #todayPanel .codex-memory-today-card,
+  #todayPanel #equinoxCompactCard {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  /* Common image/card wrappers used by tab artwork. */
+  #todayPanel img,
+  .tabPanel.active > img,
+  .tabPanel.active picture,
+  .tabPanel.active picture img,
+  .tabPanel.active .panel-art,
+  .tabPanel.active .hero-art,
+  .tabPanel.active .moon-art,
+  .tabPanel.active .tab-art,
+  .tabPanel.active [class*="artwork"],
+  .tabPanel.active [class*="hero-image"] {
+    max-width: 100% !important;
+  }
+
+  .tabPanel.active > img,
+  .tabPanel.active picture,
+  .tabPanel.active picture img,
+  .tabPanel.active .panel-art,
+  .tabPanel.active .hero-art,
+  .tabPanel.active .moon-art,
+  .tabPanel.active .tab-art,
+  .tabPanel.active [class*="artwork"],
+  .tabPanel.active [class*="hero-image"] {
+    width: 100% !important;
+  }
+
+  /* Preserve aspect ratio instead of stretching generated art. */
+  .tabPanel.active img {
+    height: auto !important;
+    object-fit: contain;
+  }
+
+  /* Canonical 28-day map remains a readable 7-column calendar. */
+  .moon-map-head {
+    grid-template-columns: 1fr !important;
+    gap: 0.4rem;
+  }
+
+  .moon-map-week-labels {
+    display: none;
+  }
+
+  .moon-map-grid.today-summary-grid {
+    grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+    gap: 0.22rem;
+  }
+
+  .moon-map-grid > * {
+    min-width: 0;
+    min-height: 3rem;
+  }
+
+  /* Summary stat cards: desktop-site mode should not make them too cramped. */
+  .today-summary-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  /* Embedded Sphere gets a full visual stage. */
+  #moons-sphere-today-card.moons-ambient-stage {
+    min-height: auto !important;
+    overflow: hidden;
+  }
+
+  #moons-sphere-today-card .sphere-today-layout {
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.7rem !important;
+  }
+
+  #moons-sphere-today-preview {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: clamp(20rem, 76vw, 31rem) !important;
+    min-height: 20rem !important;
+    margin: 0 !important;
+    opacity: 0.9 !important;
+    transform: none !important;
+    border-radius: 18px;
+    overflow: hidden;
+  }
+
+  #moons-sphere-today-card .sphere-today-data {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0.8rem !important;
+    border-radius: 14px;
+  }
+
+  #moons-sphere-today-card .sphere-today-grid {
+    grid-template-columns: minmax(6rem, auto) minmax(0, 1fr) !important;
+  }
+
+  #moons-sphere-today-card > .btnrow {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.45rem !important;
+  }
+
+  /* Lower dashboard areas should stack instead of creating skinny rails. */
+  #todayPanel > .grid,
+  #todayPanel .grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  #todayPanel .col-4,
+  #todayPanel .col-5,
+  #todayPanel .col-6,
+  #todayPanel .col-7,
+  #todayPanel .col-8,
+  #todayPanel .col-12 {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+  }
+
+  /* Tabs remain scrollable; never squeeze to microscopic widths. */
+  .tabs[aria-label="Calendar tools"] {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    flex-wrap: nowrap !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .tabs[aria-label="Calendar tools"] .tab {
+    flex: 0 0 auto !important;
+    min-width: max-content;
+  }
+}
+
+@media (pointer: coarse) and (max-height: 1200px) {
+  #moons-sphere-today-preview {
+    height: clamp(19rem, 72vw, 28rem) !important;
+  }
+
+  .today-summary-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (pointer: coarse) and (prefers-reduced-motion: reduce),
+       (hover: none) and (prefers-reduced-motion: reduce) {
+  #todayPanel *,
+  #moons-sphere-today-card * {
+    scroll-behavior: auto !important;
+  }
+}

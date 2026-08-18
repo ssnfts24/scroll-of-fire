@@ -12,6 +12,144 @@
     return required.every(name => !!globalThis[name]);
   }
 
+
+  // ── Shared surface lifecycle ─────────────────────────────────────
+  //
+  // Every Sphere surface has the same high-level lifecycle even when
+  // the underlying renderer differs:
+  //
+  //   activate()   — surface is visible/needed
+  //   deactivate() — surface may sleep without losing state
+  //   refresh()    — temporal/state update
+  //   teardown()   — permanent disposal
+  //
+  // Ambient surfaces are intentionally cheap. Interactive instruments
+  // and the full Observatory may delegate activation to the 3D renderer
+  // and animation system when those capabilities exist.
+
+  function _createSurfaceLifecycle({
+    container,
+    runtimeProfile,
+    getRenderer,
+    onActivate,
+    onDeactivate,
+    onTeardown
+  }) {
+    let active = true;
+    let destroyed = false;
+
+    function publish() {
+      if (!container?.dataset) return;
+
+      container.dataset.ltsSurfaceActive =
+        active && !destroyed
+          ? "true"
+          : "false";
+
+      container.dataset.ltsSurfaceLifecycle =
+        destroyed
+          ? "destroyed"
+          : active
+            ? "active"
+            : "suspended";
+    }
+
+    function activate() {
+      if (destroyed) return false;
+
+      active = true;
+      publish();
+
+      try {
+        onActivate?.();
+      } catch (error) {
+        console.warn(
+          "[LivingTimeSphere] surface activation callback failed.",
+          error
+        );
+      }
+
+      return true;
+    }
+
+    function deactivate() {
+      if (destroyed) return false;
+
+      active = false;
+      publish();
+
+      try {
+        onDeactivate?.();
+      } catch (error) {
+        console.warn(
+          "[LivingTimeSphere] surface suspension callback failed.",
+          error
+        );
+      }
+
+      return true;
+    }
+
+    function teardown() {
+      if (destroyed) return false;
+
+      active = false;
+      destroyed = true;
+      publish();
+
+      try {
+        onTeardown?.();
+      } catch (error) {
+        console.warn(
+          "[LivingTimeSphere] surface teardown callback failed.",
+          error
+        );
+      }
+
+      return true;
+    }
+
+    function status() {
+      return Object.freeze({
+        active:
+          active
+          && !destroyed,
+
+        destroyed,
+
+        lifecycle:
+          destroyed
+            ? "destroyed"
+            : active
+              ? "active"
+              : "suspended",
+
+        profile:
+          runtimeProfile?.id
+          || "observatory",
+
+        renderer:
+          getRenderer?.()
+          || "unknown"
+      });
+    }
+
+    publish();
+
+    return Object.freeze({
+      activate,
+      deactivate,
+      suspend:
+        deactivate,
+      teardown,
+      status,
+
+      isActive() {
+        return active && !destroyed;
+      }
+    });
+  }
+
   function _observeOnce(target, callback) {
     if (!target || typeof IntersectionObserver === "undefined") {
       callback();
@@ -158,29 +296,194 @@
     return LTS.QUALITY_PRESETS.balanced;
   }
 
+  // ── Canonical runtime profiles ─────────────────────────────────────
+  //
+  // The Sphere is used in three materially different contexts:
+  //
+  //   observatory — the complete analytical instrument
+  //   instrument  — an embedded interactive Sphere
+  //   ambient     — a low-cost temporal background
+  //
+  // Ambient deliberately defaults to SVG.  The Three.js renderer is a
+  // singleton renderer today, so a background must not silently create a
+  // second competing WebGL lifecycle beside an interactive instrument.
+  //
+  const RUNTIME_PROFILES = Object.freeze({
+    observatory: Object.freeze({
+      id: "observatory",
+      compact: false,
+      renderer: "auto",
+      quality: "auto",
+    }),
+
+    instrument: Object.freeze({
+      id: "instrument",
+      compact: true,
+      renderer: "auto",
+      quality: "auto",
+    }),
+
+    ambient: Object.freeze({
+      id: "ambient",
+      compact: true,
+      renderer: "svg",
+      quality: "lowpower",
+      mode: "today",
+
+      visibleLayers: Object.freeze({
+        pattern: true,
+        exactDays: false,
+        weekGates: true,
+        outsideDays: true,
+        lunar: true,
+        solar: true,
+        passage: true,
+        markers: true,
+        spiral: false,
+        recurrence: false,
+        environment: false,
+        witness: false,
+        personal: false,
+        connections: false,
+      }),
+
+      state: Object.freeze({
+        dayLabelMode: "selected",
+        moonLabelMode: "essential",
+        connectionMode: "selected",
+        motionMode: "still",
+      }),
+    }),
+  });
+
+  function resolveRuntimeProfile(value) {
+    const key = String(value || "").trim().toLowerCase();
+
+    if (Object.prototype.hasOwnProperty.call(RUNTIME_PROFILES, key)) {
+      return RUNTIME_PROFILES[key];
+    }
+
+    return RUNTIME_PROFILES.instrument;
+  }
+
   function mount(options = {}) {
     if (!assertDeps()) return null;
+
+    const runtimeProfile = resolveRuntimeProfile(
+      options.runtimeProfile
+      || (options.fullPage ? "observatory" : "instrument")
+    );
+
     if (options.fullPage && globalThis.LivingTimeSphereUi) {
       globalThis.LivingTimeSphereUi.init();
+      let fullPageActive = true;
+      let fullPageDestroyed = false;
+
       return {
-        getState() { return globalThis.LivingTimeSphereUi.getState(); },
-        refresh() { return globalThis.LivingTimeSphereUi.renderSphere(options.container || document.getElementById("sphere-container")); },
-        teardown() {},
+        activate() {
+          if (fullPageDestroyed) return false;
+          fullPageActive = true;
+          return true;
+        },
+
+        deactivate() {
+          if (fullPageDestroyed) return false;
+          fullPageActive = false;
+          return true;
+        },
+
+        suspend() {
+          if (fullPageDestroyed) return false;
+          fullPageActive = false;
+          return true;
+        },
+
+        getLifecycleState() {
+          return Object.freeze({
+            active:
+              fullPageActive
+              && !fullPageDestroyed,
+            destroyed:
+              fullPageDestroyed,
+            lifecycle:
+              fullPageDestroyed
+                ? "destroyed"
+                : fullPageActive
+                  ? "active"
+                  : "suspended",
+            profile:
+              runtimeProfile.id,
+            renderer:
+              "ui-managed"
+          });
+        },
+
+        getState() {
+          return globalThis.LivingTimeSphereUi.getState();
+        },
+
+        refresh() {
+          if (fullPageDestroyed) return null;
+
+          return globalThis.LivingTimeSphereUi.renderSphere(
+            options.container
+            || document.getElementById("sphere-container")
+          );
+        },
+
+        teardown() {
+          fullPageActive = false;
+          fullPageDestroyed = true;
+        },
       };
     }
 
     const container = options.container;
     if (!container) return null;
+
     _ensureOverlay(container);
+
     container.dataset.ltsManagedMount = "true";
+    container.dataset.ltsRuntimeProfile = runtimeProfile.id;
+
+    const profileState = {
+      ...(runtimeProfile.state || {}),
+      ...(options.state || {}),
+    };
+
+    const profileLayers = {
+      ...(runtimeProfile.visibleLayers || {}),
+      ...(options.state?.visibleLayers || {}),
+      ...(options.visibleLayers || {}),
+    };
 
     let state = globalThis.LivingTimeSphereState.createState({
-      ...options.state,
-      compact: !!options.compact,
-      mode: options.mode || options.state?.mode,
-      renderer: options.renderer || options.state?.renderer,
-      quality: options.quality || options.state?.quality,
-      visibleLayers: options.visibleLayers || options.state?.visibleLayers,
+      ...profileState,
+
+      compact:
+        options.compact
+        ?? runtimeProfile.compact
+        ?? !!profileState.compact,
+
+      mode:
+        options.mode
+        || profileState.mode
+        || runtimeProfile.mode,
+
+      renderer:
+        options.renderer
+        || profileState.renderer
+        || runtimeProfile.renderer,
+
+      quality:
+        options.quality
+        || profileState.quality
+        || runtimeProfile.quality,
+
+      visibleLayers:
+        Object.keys(profileLayers).length
+          ? profileLayers
+          : undefined,
     });
 
     let sceneData = null;
@@ -469,29 +772,130 @@
     renderSvg();
     emitRenderer();
     notify();
-    _observeOnce(container, () => { activate3d(); });
+    const activationObserver =
+      _observeOnce(
+        container,
+        () => {
+          if (runtimeProfile.id !== "ambient") {
+            activate3d();
+          }
+        }
+      );
+
+    const surfaceLifecycle =
+      _createSurfaceLifecycle({
+        container,
+
+        runtimeProfile,
+
+        getRenderer() {
+          return rendererState.activeRenderer;
+        },
+
+        onActivate() {
+          if (!mounted) return;
+
+          /*
+           * Ambient is intentionally SVG-only.
+           * Instrument/Observatory surfaces may request the 3D upgrade.
+           */
+          if (runtimeProfile.id !== "ambient") {
+            activate3d();
+          }
+        },
+
+        onDeactivate() {
+          /*
+           * Do not destroy renderer state here.
+           *
+           * The 3D renderer owns its IntersectionObserver/page-visibility
+           * RAF suspension. This high-level lifecycle only declares that
+           * the surface is currently not required.
+           */
+        },
+
+        onTeardown() {
+          activationObserver?.disconnect?.();
+        }
+      });
 
     return {
-      activate: activate3d,
-      refresh,
+      activate() {
+        return surfaceLifecycle.activate();
+      },
+
+      deactivate() {
+        return surfaceLifecycle.deactivate();
+      },
+
+      suspend() {
+        return surfaceLifecycle.suspend();
+      },
+
+      refresh(patch = {}) {
+        if (!surfaceLifecycle.isActive()) {
+          /*
+           * State still updates while suspended so a surface wakes with
+           * the newest canonical temporal coordinate.
+           */
+          return refresh(patch);
+        }
+
+        return refresh(patch);
+      },
+
       teardown() {
+        if (!surfaceLifecycle.teardown()) {
+          return;
+        }
+
         mounted = false;
         activating3d = false;
         initGen += 1;
+
         if (pendingSizeObserver) {
           pendingSizeObserver.disconnect();
           pendingSizeObserver = null;
         }
-        if (active3d && globalThis.LivingTimeSphereRenderer3d?.isInitialized?.()) {
+
+        if (
+          active3d
+          && globalThis.LivingTimeSphereRenderer3d?.isInitialized?.()
+        ) {
           globalThis.LivingTimeSphereRenderer3d.teardown();
         }
+
         active3d = false;
-        emitRenderer({ phase: "stopped", activeRenderer: "svg", reason: "TEARDOWN", detail: "Sphere mount stopped." });
+
+        emitRenderer({
+          phase: "stopped",
+          activeRenderer: "svg",
+          reason: "TEARDOWN",
+          detail: "Sphere mount stopped."
+        });
       },
-      getState() { return state; },
-      getRendererState() { return rendererState; },
+
+      getState() {
+        return state;
+      },
+
+      getRendererState() {
+        return rendererState;
+      },
+
+      getLifecycleState() {
+        return surfaceLifecycle.status();
+      },
+
+      isActive() {
+        return surfaceLifecycle.isActive();
+      }
     };
   }
 
-  globalThis.LivingTimeSphere = Object.freeze({ mount });
+  globalThis.LivingTimeSphere = Object.freeze({
+    mount,
+    RUNTIME_PROFILES,
+    resolveRuntimeProfile,
+  });
 })();
