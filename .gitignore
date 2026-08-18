@@ -1,2 +1,17 @@
 # Local Netlify folder
 .netlify
+
+# Local development / patch artifacts
+*.bak
+*.backup
+*.tmp
+*.orig
+*.rej
+*pre-label-emergence*
+APPLY-IN-TERMUX.txt
+
+# Editor / OS noise
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
