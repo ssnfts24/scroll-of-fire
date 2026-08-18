@@ -263,7 +263,14 @@
       state.trajectory,
       state.yearGate,
       selectedPatternDay(context),
-      context.tier || context.quality?.tier || "high"
+      context.tier || context.quality?.tier || "high",
+
+      /*
+       * Semantic camera depth changes which analytical years
+       * are visually emphasized. It must therefore participate
+       * in the geometry cache key.
+       */
+      context.semanticZoomState?.band || "medium"
     ].join("|");
   }
 
@@ -314,6 +321,341 @@
     return line;
   }
 
+  function resolveTemporalLegibility(
+    context,
+    window,
+    evidenceYears = []
+  ) {
+    const policy =
+      root.LivingTimeSphereTemporalLegibility;
+
+    const band =
+      context.semanticZoomState?.band
+      || "medium";
+
+    const tier =
+      context.tier
+      || context.quality?.tier
+      || "high";
+
+    if (
+      !policy
+      || typeof policy.resolve !== "function"
+    ) {
+      return Object.freeze({
+        band,
+        tier,
+        analyticalYearCount:
+          window.count,
+        visibleYearCount:
+          window.count,
+        hiddenYearCount:
+          0,
+        interval:
+          1,
+        visibleYears:
+          Object.freeze(
+            window.years.slice()
+          )
+      });
+    }
+
+    return policy.resolve({
+      window,
+      selectedYear:
+        window.reference,
+      band,
+      tier,
+      evidenceYears
+    });
+  }
+
+
+  /*
+   * Phase IIIC — semantic membrane picking.
+   *
+   * The analytical year window may contain as many as 200 years,
+   * but only membranes admitted by temporal legibility are eligible
+   * for direct interaction.
+   *
+   * Picking is mathematical rather than geometry-heavy:
+   * a renderer ray is compared with the concentric year radii.
+   * No duplicate invisible SphereGeometry is created.
+   */
+  function pickableYears(context) {
+    const window =
+      yearWindow(
+        context?.selectedYear,
+        state.span,
+        state.direction
+      );
+
+    const evidence =
+      supportedEvidenceYears();
+
+    const plan =
+      resolveTemporalLegibility(
+        context || {},
+        window,
+        evidence
+      );
+
+    const visible =
+      new Set(
+        plan?.visibleYears
+        || window.years
+      );
+
+    return window.years.filter(year => {
+      if (!visible.has(year)) {
+        return false;
+      }
+
+      if (
+        state.evidenceOnly
+        && !evidence.includes(year)
+        && year !== window.reference
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+  }
+
+  function raySphereDistance(
+    origin,
+    direction,
+    radius
+  ) {
+    if (
+      !origin
+      || !direction
+      || !Number.isFinite(radius)
+      || radius <= 0
+    ) {
+      return null;
+    }
+
+    const ox = Number(origin.x);
+    const oy = Number(origin.y);
+    const oz = Number(origin.z);
+
+    const dx = Number(direction.x);
+    const dy = Number(direction.y);
+    const dz = Number(direction.z);
+
+    if (
+      ![
+        ox, oy, oz,
+        dx, dy, dz
+      ].every(Number.isFinite)
+    ) {
+      return null;
+    }
+
+    const a =
+      dx * dx
+      + dy * dy
+      + dz * dz;
+
+    if (a <= 0) {
+      return null;
+    }
+
+    const b =
+      2 * (
+        ox * dx
+        + oy * dy
+        + oz * dz
+      );
+
+    const c =
+      ox * ox
+      + oy * oy
+      + oz * oz
+      - radius * radius;
+
+    const discriminant =
+      b * b
+      - 4 * a * c;
+
+    if (discriminant < 0) {
+      return null;
+    }
+
+    const root =
+      Math.sqrt(discriminant);
+
+    const t0 =
+      (-b - root)
+      / (2 * a);
+
+    const t1 =
+      (-b + root)
+      / (2 * a);
+
+    if (t0 >= 0) {
+      return t0;
+    }
+
+    if (t1 >= 0) {
+      return t1;
+    }
+
+    return null;
+  }
+
+  function resolveYearPick(
+    context,
+    ray
+  ) {
+    if (
+      !state.enabled
+      || !ray?.origin
+      || !ray?.direction
+    ) {
+      return null;
+    }
+
+    const window =
+      yearWindow(
+        context?.selectedYear,
+        state.span,
+        state.direction
+      );
+
+    const years =
+      pickableYears(context);
+
+    if (!years.length) {
+      return null;
+    }
+
+    /*
+     * The shells are close together at large spans.
+     * We therefore compare ray intersection depth rather than
+     * allocating 200 independent raycast meshes.
+     */
+    const candidates =
+      years
+        .map(year => {
+          const radius =
+            radiusForYear(
+              year,
+              window,
+              state.depth
+            );
+
+          const distance =
+            raySphereDistance(
+              ray.origin,
+              ray.direction,
+              radius
+            );
+
+          return {
+            year,
+            radius,
+            distance
+          };
+        })
+        .filter(item =>
+          Number.isFinite(
+            item.distance
+          )
+        )
+        .sort((a, b) => {
+          /*
+           * Front-most shell wins.
+           * Year is the deterministic tie-breaker.
+           */
+          const delta =
+            a.distance
+            - b.distance;
+
+          if (
+            Math.abs(delta)
+            > 1e-7
+          ) {
+            return delta;
+          }
+
+          return a.year - b.year;
+        });
+
+    if (!candidates.length) {
+      return null;
+    }
+
+    const winner =
+      candidates[0];
+
+    return Object.freeze({
+      handled: true,
+      type: "year",
+      semanticRole:
+        "temporal-year-membrane",
+      year:
+        winner.year,
+      selectedYear:
+        winner.year,
+      patternDay:
+        selectedPatternDay(context),
+      radius:
+        winner.radius,
+      distance:
+        winner.distance,
+      analyticalYearCount:
+        window.count,
+      pickableYearCount:
+        years.length
+    });
+  }
+
+  function pick(context) {
+    const ray =
+      context?.ray
+      || context?.pointerRay
+      || null;
+
+    const result =
+      resolveYearPick(
+        context,
+        ray
+      );
+
+    return result || {
+      handled: false
+    };
+  }
+
+  function semanticTargets(context) {
+    if (!state.enabled) return [];
+    const window = yearWindow(context?.selectedYear, state.span, state.direction);
+    const selectedDay = selectedPatternDay(context);
+    const years = pickableYears(context);
+    return years.map(year => {
+      const radius = radiusForYear(year, window, state.depth) + 0.018;
+      const point = pointAtPatternAngle(selectedDay, radius, 0.012);
+      const selected = year === window.reference;
+      return {
+        id: `strata-year-${year}`,
+        label: selected ? `Selected year ${year}` : `Year ${year}`,
+        detail: `Pattern day ${selectedDay} · temporal membrane`,
+        kind: "temporal-year",
+        worldX: point.x,
+        worldY: point.y,
+        worldZ: point.z,
+        priority: selected ? 93 : (isMajorYear(year, window, context?.tier || "high") ? 56 : 34),
+        showDistance: selected ? 2.8 : 2.55,
+        resetDistance: selected ? 3.25 : 3.0,
+        pinned: selected,
+        selected
+      };
+    });
+  }
+
   function build(context) {
     disposeObjects();
     if (!state.enabled || !context.THREE || !context.scene) return;
@@ -322,6 +664,30 @@
     const tier = context.tier || context.quality?.tier || "high";
     const window = yearWindow(context.selectedYear, state.span, state.direction);
     const evidence = new Set(supportedEvidenceYears());
+
+    /*
+     * Analytical chronology and visual chronology are deliberately
+     * separate.
+     *
+     * window.years always remains the complete requested time range.
+     * Semantic legibility only decides which membranes should be
+     * emphasized at the current camera distance.
+     */
+    const legibilityPlan =
+      resolveTemporalLegibility(
+        context,
+        window,
+        Array.from(
+          evidence
+        )
+      );
+
+    const visibleYearSet =
+      new Set(
+        legibilityPlan.visibleYears
+        || window.years
+      );
+
     const segments = radialSegments(tier, window.count);
     const cutaway = state.mode === "cutaway";
 
@@ -333,7 +699,53 @@
       semanticRole: "temporal-onion",
       window,
       shellBounds: shellBounds(window, state.depth),
-      renderedYearCount: window.count,
+
+      /*
+       * Full chronology remains analytically present even where
+       * semantic zoom suppresses intermediate membranes.
+       */
+      analyticalYearCount:
+        window.count,
+
+      renderedYearCount:
+        legibilityPlan.visibleYearCount
+        ?? window.count,
+
+      visibleYearCount:
+        legibilityPlan.visibleYearCount
+        ?? window.count,
+
+      hiddenYearCount:
+        legibilityPlan.hiddenYearCount
+        ?? 0,
+
+      semanticBand:
+        legibilityPlan.band
+        || context.semanticZoomState?.band
+        || "medium",
+
+      legibility: {
+        band:
+          legibilityPlan.band
+          || "medium",
+
+        interval:
+          legibilityPlan.interval
+          || 1,
+
+        analyticalYearCount:
+          legibilityPlan.analyticalYearCount
+          ?? window.count,
+
+        visibleYearCount:
+          legibilityPlan.visibleYearCount
+          ?? window.count,
+
+        hiddenYearCount:
+          legibilityPlan.hiddenYearCount
+          ?? 0
+      },
+
       selectedYear: window.reference,
       direction: window.direction,
       selectedPatternDay: selectedPatternDay(context),
@@ -346,7 +758,30 @@
     const majorPositions = [];
 
     window.years.forEach((year) => {
-      if (state.evidenceOnly && !evidence.has(year) && year !== window.reference) return;
+
+      /*
+       * Keep all years analytically available while rendering only
+       * the membranes chosen by semantic temporal legibility.
+       *
+       * The selected/reference year, boundaries, near years, and
+       * evidence years are already protected by the policy.
+       */
+      if (
+        !visibleYearSet.has(
+          year
+        )
+      ) {
+        return;
+      }
+
+      if (
+        state.evidenceOnly
+        && !evidence.has(year)
+        && year !== window.reference
+      ) {
+        return;
+      }
+
       if (year === window.reference) return;
       const r = radiusForYear(year, window, state.depth);
       const target = year < window.reference ? pastPositions : futurePositions;
@@ -385,7 +820,28 @@
     ];
     selectedShell = makeLineSegments(THREE, selectedPositions, 0xf2c45d, 0.52, "temporal-onion-selected-year", -3);
     if (selectedShell) {
-      selectedShell.userData = { semanticRole: "present-selected-stratum", temporalState: "present" };
+      selectedShell.userData = {
+        semanticRole:
+          "present-selected-stratum",
+
+        temporalState:
+          "present",
+
+        year:
+          window.reference,
+
+        selectedYear:
+          window.reference,
+
+        patternDay:
+          selectedPatternDay(context),
+
+        radius:
+          REFERENCE_RADIUS,
+
+        interactive:
+          true
+      };
       group.add(selectedShell);
     }
 
@@ -506,13 +962,43 @@
     const tier = context.tier || context.quality?.tier || "high";
     const bounds = shellBounds(window, state.depth);
 
-    if (status) status.textContent = state.enabled ? `${window.start}–${window.end} · ${window.count} shells` : "Off";
+    const evidence =
+      supportedEvidenceYears();
+
+    const legibilityPlan =
+      resolveTemporalLegibility(
+        context,
+        window,
+        evidence
+      );
+
+    if (status) {
+      if (!state.enabled) {
+        status.textContent = "Off";
+      } else {
+        const analytical =
+          window.count;
+
+        const emphasized =
+          legibilityPlan.visibleYearCount
+          ?? analytical;
+
+        status.textContent =
+          `${window.start}–${window.end}`
+          + ` · ${analytical} years`
+          + (
+              emphasized < analytical
+                ? ` · ${emphasized} emphasized`
+                : ` · full resolution`
+            );
+      }
+    }
     if (detail) {
       const directionLabel = state.direction === "history" ? "history inward" : state.direction === "future" ? "future outward" : "history inward · future outward";
       const day = selectedPatternDay(context);
       const moon = moonBoundsForPatternDay(day).moon;
       detail.textContent = state.enabled
-        ? `${state.mode === "cutaway" ? "Cutaway onion" : "Living onion"} · ${directionLabel} · Moon ${moon} / Day ${day} corridor · ${tier} tier · shell band ${bounds.inner.toFixed(2)}–${bounds.outer.toFixed(2)}R`
+        ? `${state.mode === "cutaway" ? "Cutaway onion" : "Living onion"} · ${directionLabel} · Moon ${moon} / Day ${day} corridor · ${tier} tier · ${legibilityPlan.band || "medium"} semantic depth · shell band ${bounds.inner.toFixed(2)}–${bounds.outer.toFixed(2)}R`
         : "Enable Living Strata to wrap year membranes around the unchanged 13-Moon core.";
     }
   }
@@ -584,6 +1070,12 @@
       }
       syncUi(context);
     },
+    pick(context) {
+      return pick(context);
+    },
+    semanticTargets(context) {
+      return semanticTargets(context);
+    },
     dispose() {
       disposeObjects();
       lastKey = "";
@@ -618,6 +1110,11 @@
     patternAngleRadians,
     pointAtPatternAngle,
     moonBoundsForPatternDay,
+    pickableYears,
+    raySphereDistance,
+    resolveYearPick,
+    pick,
+    semanticTargets,
     register
   });
 });

@@ -94,7 +94,8 @@
    <script defer src="assets/js/life-atlas/life-atlas-world-navigation.js?v=20260816-1"></script>
    <script defer src="assets/js/life-atlas/life-atlas-render-projection.js?v=20260816-1"></script>
    <script defer src="assets/js/sphere/living-time-sphere-extension-host.js?v=20260816-1"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-temporal-strata.js?v=20260817-5"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-temporal-legibility.js?v=20260817-1"></script>
+  <script defer src="assets/js/sphere/living-time-sphere-temporal-strata.js?v=20260817-5"></script>
    <script defer src="assets/js/sphere/life-atlas-record-sphere-extension.js?v=20260817-1"></script>
    <!-- Life Atlas visual world projection temporarily disabled for recursive-sphere refactor -->
    <script defer src="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260817-4"></script>
@@ -472,7 +473,7 @@
             </div>
           </div>
 
-          <div class="sphere-moon-labels" id="sphere-moon-labels" aria-hidden="true">
+          <div class="sphere-moon-labels" id="sphere-moon-labels" aria-label="Sphere labels">
             <span class="sphere-moon-label" data-moon="1"  style="display:none">Moon 1</span>
             <span class="sphere-moon-label" data-moon="2"  style="display:none">Moon 2</span>
             <span class="sphere-moon-label" data-moon="3"  style="display:none">Moon 3</span>
@@ -653,6 +654,67 @@
                 <label class="sphere-layer-row"><input id="sphere-strata-evidence-only" type="checkbox"> Evidence shells only</label>
               </div>
               <p id="sphere-strata-detail" class="sphere-strata-detail">Enable Living Strata to wrap year membranes around the unchanged 13-Moon core.</p>
+
+              <section
+                id="sphere-strata-year-inspector"
+                class="sphere-strata-year-inspector"
+                aria-labelledby="sphere-strata-year-inspector-title"
+                aria-live="polite"
+              >
+                <div class="sphere-strata-year-inspector-head">
+                  <div>
+                    <p class="sphere-temporal-kicker">Selected Membrane</p>
+                    <h4 id="sphere-strata-year-inspector-title">Year —</h4>
+                  </div>
+
+                  <span
+                    id="sphere-strata-year-evidence"
+                    class="sphere-strata-year-evidence"
+                  >
+                    Loading…
+                  </span>
+                </div>
+
+                <dl class="sphere-strata-year-grid">
+                  <div>
+                    <dt>Pattern coordinate</dt>
+                    <dd id="sphere-strata-year-pattern">—</dd>
+                  </div>
+
+                  <div>
+                    <dt>Day of 364</dt>
+                    <dd id="sphere-strata-year-day">—</dd>
+                  </div>
+
+                  <div>
+                    <dt>Equinox Gate</dt>
+                    <dd id="sphere-strata-year-equinox">—</dd>
+                  </div>
+
+                  <div>
+                    <dt>Equinox → Year Gate</dt>
+                    <dd id="sphere-strata-year-passage">—</dd>
+                  </div>
+
+                  <div>
+                    <dt>Equinox angle</dt>
+                    <dd id="sphere-strata-year-angle">—</dd>
+                  </div>
+
+                  <div>
+                    <dt>Temporal relation</dt>
+                    <dd id="sphere-strata-year-relation">—</dd>
+                  </div>
+                </dl>
+
+                <p
+                  id="sphere-strata-year-note"
+                  class="sphere-strata-year-note"
+                >
+                  Tap a visible year membrane to move the same Pattern coordinate through time.
+                </p>
+              </section>
+
               <div class="sphere-strata-key" aria-label="Living Strata visual key">
                 <span><i class="sphere-strata-swatch shell"></i>Past / record</span>
                 <span><i class="sphere-strata-swatch selected"></i>Present / selected</span>

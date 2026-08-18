@@ -18,8 +18,81 @@
     const group = new THREE.Group(); group.name = "life-atlas-records"; state.group = group;
     const window = yearWindow(context); const T = root.LivingTimeSphereTemporalStrata; const refYear = Number(window.reference);
     const selectedDay = Number(context.model?.selectedPatternPosition?.dayOfPatternYear || context.model?.todayPatternPosition?.dayOfPatternYear);
-    const visible = state.records.filter(r => { const y = Number(r.temporal?.patternYear); return Number.isFinite(y) && y >= window.start && y <= window.end && Number.isFinite(Number(r.temporal?.patternDay)); });
-    const limit = context.tier === "low" ? 220 : context.tier === "medium" ? 500 : 900;
+
+    /*
+     * Share the same semantic temporal resolution as the
+     * Living Onion.
+     *
+     * Records should never appear to float against a year
+     * membrane that semantic zoom has intentionally suppressed.
+     */
+    const legibility =
+      root.LivingTimeSphereTemporalLegibility;
+
+    const semanticBand =
+      context.semanticZoomState?.band
+      || "medium";
+
+    const legibilityPlan =
+      legibility?.resolve
+        ? legibility.resolve({
+            window,
+            selectedYear:
+              refYear,
+            band:
+              semanticBand,
+            tier:
+              context.tier
+              || "high"
+          })
+        : null;
+
+    const visibleYears =
+      legibilityPlan
+        ? new Set(
+            legibilityPlan.visibleYears
+          )
+        : null;
+
+    const visible = state.records.filter(r => {
+      const y =
+        Number(
+          r.temporal?.patternYear
+        );
+
+      const day =
+        Number(
+          r.temporal?.patternDay
+        );
+
+      return (
+        Number.isFinite(y)
+        && y >= window.start
+        && y <= window.end
+        && Number.isFinite(day)
+        && (
+          !visibleYears
+          || visibleYears.has(y)
+        )
+      );
+    });
+
+    const limit =
+      legibility?.recordBudget
+        ? legibility.recordBudget({
+            tier:
+              context.tier
+              || "high",
+            band:
+              semanticBand
+          })
+        : (
+            context.tier === "low"
+              ? 220
+              : context.tier === "medium"
+                ? 500
+                : 900
+          );
     visible.slice(-limit).forEach(record => {
       const angle = patternAngle(record); const year = Number(record.temporal.patternYear); if (angle == null) return;
       const radius = T?.radiusForYear ? T.radiusForYear(year, window, T.state.depth) : 1.24;
@@ -35,6 +108,29 @@
     });
     context.scene.add(group);
   }
+  function semanticTargets() {
+    if (!state.group) return [];
+    return (state.group.children || []).slice(-24).map(object => {
+      const data = object?.userData || {};
+      const record = state.records.find(item => item.id === data.recordId);
+      if (!record || !object?.position) return null;
+      const privacy = String(record.privacy?.visibility || record.privacy?.scope || "private").toLowerCase();
+      const privateRecord = privacy !== "public" && privacy !== "shared";
+      return {
+        id: `life-atlas-${record.id}`,
+        label: privateRecord ? "Private Life Atlas record" : (record.title || `${record.type} record`),
+        detail: `${record.type || "record"} · ${record.temporal?.patternYear || "year unavailable"}`,
+        kind: "life-atlas-record",
+        worldX: object.position.x,
+        worldY: object.position.y,
+        worldZ: object.position.z,
+        priority: 64,
+        showDistance: 1.95,
+        resetDistance: 2.35
+      };
+    }).filter(Boolean);
+  }
+
   async function load(context) {
     if (state.loading || !root.CodexLifeAtlasRuntime) return; state.loading = true;
     try { state.records = await root.CodexLifeAtlasRuntime.records(); state.key = ""; build(context); context.requestRender?.(); } catch (_) {} finally { state.loading = false; }
@@ -43,7 +139,8 @@
     id: ID,
     metadata: { version: "1.0.0", purpose: "project private Life Atlas records into temporal year membranes" },
     mount(context) { state.context = context; void load(context); root.addEventListener?.("sof:life-atlas-records-changed", () => state.context && load(state.context)); },
-    update(context) { state.context = context; const T = root.LivingTimeSphereTemporalStrata; const key = [context.selectedYear, context.model?.selectedPatternPosition?.dayOfPatternYear, T?.state?.span, T?.state?.direction, T?.state?.depth, state.records.length, context.tier].join("|"); if (key !== state.key) { state.key = key; build(context); } },
+    update(context) { state.context = context; const T = root.LivingTimeSphereTemporalStrata; const key = [context.selectedYear, context.model?.selectedPatternPosition?.dayOfPatternYear, T?.state?.span, T?.state?.direction, T?.state?.depth, state.records.length, context.tier, context.semanticZoomState?.band || "medium"].join("|"); if (key !== state.key) { state.key = key; build(context); } },
+    semanticTargets() { return semanticTargets(); },
     pick(context) {
       if (!state.group || !context.raycaster) return null;
       const hits = context.raycaster.intersectObjects(state.group.children || [], false);

@@ -2691,6 +2691,27 @@
           },
           onMarkerSelect: marker => {
             if (!marker) return;
+
+            if (
+              marker.type ===
+                "temporal-year"
+              && Number.isFinite(
+                Number(marker.year)
+              )
+            ) {
+              _selectTemporalYear(
+                container,
+                marker.year,
+                {
+                  source:
+                    marker.source
+                    || "temporal-strata"
+                }
+              );
+
+              return;
+            }
+
             _stopTemporalPlayback("sphere-marker-select");
             if (marker.type === "day" && marker.dayOfPatternYear) {
               globalThis.LivingTimeSphereAccessibility?.announce?.(`Selected Pattern Moon ${marker.moon}, Day ${marker.day}, Day ${marker.dayOfPatternYear} of 364.`);
@@ -3418,10 +3439,322 @@
     if (active) active.setAttribute("aria-pressed", "true");
   }
 
+  function _selectTemporalYear(
+    container,
+    year,
+    {
+      source =
+        "temporal-strata"
+    } = {}
+  ) {
+    const nextYear =
+      Math.trunc(
+        Number(year)
+      );
+
+    if (
+      !Number.isFinite(nextYear)
+    ) {
+      return false;
+    }
+
+    const model =
+      buildCurrentModel();
+
+    const patternDay =
+      _clampPatternDay(
+        _state.selectedDayOfYear
+        || model
+          ?.selectedPatternPosition
+          ?.dayOfPatternYear
+        || _resolveLiveTodayTarget()
+          ?.dayOfPatternYear
+        || 1
+      );
+
+    const previousYear =
+      _state.year;
+
+    /*
+     * Year is one dimension of the temporal coordinate.
+     * Changing it must not silently change Pattern position
+     * or semantic view mode.
+     */
+    _stopTemporalPlayback(
+      "temporal-year-select"
+    );
+
+    _state.year =
+      nextYear;
+
+    _state.selectedDayOfYear =
+      patternDay;
+
+    _state.selectedMarker =
+      `year-${nextYear}`;
+
+    _syncYearSelect(
+      nextYear
+    );
+
+    globalThis
+      .LivingTimeSphereAccessibility
+      ?.announce?.(
+        `Year ${nextYear} selected. Pattern Day ${patternDay} preserved.`
+      );
+
+    try {
+      container?.dispatchEvent?.(
+        new CustomEvent(
+          "living-time:temporal-year-selected",
+          {
+            bubbles: true,
+            detail: {
+              previousYear,
+              year:
+                nextYear,
+              selectedDayOfYear:
+                patternDay,
+              source,
+              viewMode:
+                _state.viewMode
+            }
+          }
+        )
+      );
+    } catch (_) {
+      /* optional semantic event */
+    }
+
+    render(container);
+
+    return true;
+  }
+
   function _syncYearSelect(year) {
     const sel = document.getElementById("sphere-year-select");
     if (sel) sel.value = String(year);
   }
+
+
+  /*
+   * Phase IIID — selected temporal membrane inspector.
+   *
+   * This is presentation only.
+   *
+   * It does not calculate astronomy or calendar coordinates.
+   * Values come from the canonical selected-year model and its
+   * Alignment Ledger source record.
+   */
+  function _syncTemporalYearInspector(
+    model
+  ) {
+    if (!model) {
+      return;
+    }
+
+    const title =
+      document.getElementById(
+        "sphere-strata-year-inspector-title"
+      );
+
+    if (!title) {
+      return;
+    }
+
+    const setText = (
+      id,
+      value
+    ) => {
+      const el =
+        document.getElementById(
+          id
+        );
+
+      if (el) {
+        el.textContent =
+          value == null
+            || value === ""
+              ? "—"
+              : String(value);
+      }
+    };
+
+    const year =
+      Math.trunc(
+        Number(
+          _state.year
+          ?? model.year
+        )
+      );
+
+    const selected =
+      model.selectedPatternPosition
+      || _resolveSelectedPatternPosition(
+        model
+      )
+      || {};
+
+    const record =
+      model.sourceRecord
+      || null;
+
+    const equinox =
+      record
+        ?.equinox
+        ?.patternPosition
+      || {};
+
+    const offsets =
+      record
+        ?.offsets
+      || {};
+
+    const day =
+      selected.dayOfPatternYear;
+
+    const moon =
+      selected.moon;
+
+    const moonDay =
+      selected.day;
+
+    const angle =
+      Number(
+        model.passageStartAngle
+      );
+
+    const passageDays =
+      Number(
+        offsets.equinoxToYearGateDays
+      );
+
+    const liveYear =
+      Number(
+        _resolveLiveTodayTarget()
+          ?.patternYear
+      );
+
+    let relation =
+      "Selected reference";
+
+    if (
+      Number.isFinite(liveYear)
+      && Number.isFinite(year)
+    ) {
+      const delta =
+        year - liveYear;
+
+      relation =
+        delta === 0
+          ? "Live Pattern year"
+          : delta < 0
+            ? `${Math.abs(delta)} year${Math.abs(delta) === 1 ? "" : "s"} before Live Today`
+            : `${delta} year${delta === 1 ? "" : "s"} after Live Today`;
+    }
+
+    title.textContent =
+      Number.isFinite(year)
+        ? `Year ${year}`
+        : "Year —";
+
+    setText(
+      "sphere-strata-year-pattern",
+      (
+        moon != null
+        && moonDay != null
+      )
+        ? `Moon ${moon} · Day ${moonDay}`
+        : "Pattern coordinate unavailable"
+    );
+
+    setText(
+      "sphere-strata-year-day",
+      day != null
+        ? `${day} / 364`
+        : "Outside counted Pattern year"
+    );
+
+    setText(
+      "sphere-strata-year-equinox",
+      (
+        equinox.moon != null
+        && equinox.day != null
+      )
+        ? `Moon ${equinox.moon} · Day ${equinox.day}`
+        : "No supported Alignment Ledger record"
+    );
+
+    setText(
+      "sphere-strata-year-passage",
+      Number.isFinite(
+        passageDays
+      )
+        ? `${(
+            passageDays * 24
+          ).toFixed(1)} hours`
+        : "Unavailable"
+    );
+
+    setText(
+      "sphere-strata-year-angle",
+      Number.isFinite(angle)
+        ? `${angle.toFixed(1)}°`
+        : "Unavailable"
+    );
+
+    setText(
+      "sphere-strata-year-relation",
+      relation
+    );
+
+    const evidence =
+      document.getElementById(
+        "sphere-strata-year-evidence"
+      );
+
+    if (evidence) {
+      if (record) {
+        evidence.textContent =
+          "Alignment record";
+
+        evidence.classList.remove(
+          "is-unavailable"
+        );
+      } else {
+        evidence.textContent =
+          "No measured record";
+
+        evidence.classList.add(
+          "is-unavailable"
+        );
+      }
+    }
+
+    const note =
+      document.getElementById(
+        "sphere-strata-year-note"
+      );
+
+    if (note) {
+      note.textContent =
+        (
+          Number.isFinite(year)
+          && Number.isFinite(liveYear)
+          && year !== liveYear
+        )
+          ? (
+              `Pattern Day ${
+                day ?? "—"
+              } is preserved while the selected year changes. `
+              + "Historical astronomy is shown only where canonical Alignment Ledger evidence exists."
+            )
+          : (
+              "Tap a visible year membrane to move this same Pattern coordinate through time."
+            );
+    }
+  }
+
 
   // ── Accessible text ────────────────────────────────────────────────
 
@@ -3438,6 +3771,14 @@
   function updateDetails(model) {
     const el = document.getElementById("sphere-details");
     if (!el || !model) return;
+
+    /*
+     * The membrane inspector and the large detail panel consume
+     * the exact same canonical model.
+     */
+    _syncTemporalYearInspector(
+      model
+    );
     const selected = model.selectedPatternPosition || _resolveSelectedPatternPosition(model);
     const yearRecord = model.sourceRecord || {};
     const yearPos = yearRecord?.equinox?.patternPosition || {};
@@ -3463,7 +3804,17 @@
     const seasonLabel = selected?.solar?.season?.label
       ? `${selected.solar.season.label} · ${Math.round((selected.solar.season.progress || 0) * 100)}%`
       : "Unavailable — seasonal progress not loaded.";
-    const yearSummary = _state.viewMode === "years"
+    const strataEnabled =
+      globalThis
+        .LivingTimeSphereTemporalStrata
+        ?.state
+        ?.enabled
+      === true;
+
+    const yearSummary = (
+      _state.viewMode === "years"
+      || strataEnabled
+    )
       ? `<div class="sphere-details-section">
           <h4 class="sphere-details-subheading">Year layer</h4>
           <dl class="sphere-details-grid">

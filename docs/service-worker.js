@@ -117,6 +117,7 @@ const optionalPaths = [
   "./assets/js/life-atlas/life-atlas-runtime.js",
   "./assets/js/life-atlas/life-atlas-import-ui.js",
   "./assets/js/sphere/life-atlas-record-sphere-extension.js",
+  "./assets/js/sphere/living-time-sphere-temporal-legibility.js",
   "./assets/js/sphere/living-time-sphere-temporal-strata.js",
   "./assets/js/sphere/living-time-observatory-workspace.js",
   "./assets/css/observatory-workspace.css",
