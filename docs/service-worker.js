@@ -110,6 +110,8 @@ const mandatoryPaths = [
   "./assets/img/moons/app/icon-maskable-512.png"
 ];
 const optionalPaths = [
+  "./assets/css/home-living-interface.css",
+  "./assets/js/home-living-interface.js",
   "./assets/js/life-atlas/life-atlas-schema.js",
   "./assets/js/life-atlas/life-atlas-repository.js",
   "./assets/js/life-atlas/life-atlas-indexeddb.js",
