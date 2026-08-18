@@ -1,0 +1,21 @@
+From ~/scroll-of-fire, after downloading the patch ZIP:
+
+PATCH="$(ls -t ~/storage/downloads/scroll-of-fire-phase3e-proximity-labels-PATCH-20260817*.zip | head -n 1)"
+unzip -tq "$PATCH" || exit 1
+TMP="$HOME/.sof-phase3e-apply"
+rm -rf "$TMP"
+mkdir -p "$TMP"
+unzip -q "$PATCH" -d "$TMP"
+cp -a "$TMP/scroll-of-fire-phase3e-proximity-labels-PATCH-20260817/." ~/scroll-of-fire/
+cd ~/scroll-of-fire || exit 1
+
+node --check docs/assets/js/sphere/living-time-sphere-label-manager.js
+node --check docs/assets/js/sphere/living-time-sphere-extension-host.js
+node --check docs/assets/js/sphere/living-time-sphere-renderer-3d.js
+node --check docs/assets/js/sphere/living-time-sphere-temporal-strata.js
+node --check docs/assets/js/sphere/life-atlas-record-sphere-extension.js
+node --test tests/living-time-sphere-proximity-labels.test.js
+npm test
+npm run audit
+
+echo "DO NOT COMMIT YET — preview the sphere on the phone first."

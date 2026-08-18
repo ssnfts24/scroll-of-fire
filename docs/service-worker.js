@@ -109,6 +109,16 @@ const mandatoryPaths = [
   "./assets/img/moons/app/icon-maskable-512.png"
 ];
 const optionalPaths = [
+  "./assets/js/life-atlas/life-atlas-schema.js",
+  "./assets/js/life-atlas/life-atlas-repository.js",
+  "./assets/js/life-atlas/life-atlas-indexeddb.js",
+  "./assets/js/life-atlas/life-atlas-importers.js",
+  "./assets/js/life-atlas/life-atlas-ingestion.js",
+  "./assets/js/life-atlas/life-atlas-runtime.js",
+  "./assets/js/life-atlas/life-atlas-import-ui.js",
+  "./assets/js/sphere/life-atlas-record-sphere-extension.js",
+  "./assets/js/sphere/living-time-sphere-temporal-legibility.js",
+  "./assets/js/sphere/living-time-sphere-temporal-strata.js",
   "./assets/js/sphere/living-time-observatory-workspace.js",
   "./assets/css/observatory-workspace.css",
   "./assets/css/living-time-app-enhancements.css",

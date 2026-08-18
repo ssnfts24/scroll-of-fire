@@ -1,0 +1,20 @@
+Advanced Temporal Strata patch — 2026-08-17
+Baseline: user-provided scroll-of-fire-main (5).zip
+
+Changed/new files:
+- docs/living-time-sphere.html
+- docs/assets/css/living-time-sphere.css
+- docs/assets/js/sphere/living-time-sphere-temporal-strata.js (new)
+- tests/living-time-sphere-temporal-strata.test.js (new)
+
+Features:
+- selectable 13/25/50/100/200-year sphere shells
+- concentric stack and temporal helix geometry
+- adjustable layer spacing
+- evidence-only mode
+- supported Alignment Ledger equinox evidence markers
+- adaptive shell density for lower-capability rendering tiers
+- explicit distinction between structural deep-time shells and measured astronomy
+
+Validation on baseline:
+- npm test: 752/752 passed

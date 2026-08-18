@@ -1,0 +1,23 @@
+Scroll of Fire — Reality State / First-Frame Patch — 2026-08-17
+
+Runtime files:
+docs/assets/js/sphere/living-time-sphere-renderer-3d.js
+docs/assets/js/sphere/living-time-sphere-temporal-strata.js
+docs/assets/js/sphere/living-time-sphere-ui.js
+docs/assets/css/living-time-sphere.css
+docs/living-time-sphere.html
+docs/index.html
+
+Tests:
+tests/living-time-sphere-temporal-strata.test.js
+tests/living-time-sphere-initial-scene-contract.test.js
+
+Architecture / handoff:
+REALITY-ATLAS-SITE-MASTER-PLAN-2026-08-17.md
+PATCH-HANDOFF-2026-08-17-REALITY-STATE.md
+PATCH-MANIFEST-REALITY-STATE-2026-08-17.txt
+
+Validation before packaging:
+npm run validate
+764 tests passed, 0 failed.
+Site audit PASS: 69 HTML pages, 36 stylesheets, 4109 local references.

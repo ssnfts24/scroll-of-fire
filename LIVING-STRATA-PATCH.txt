@@ -1,0 +1,30 @@
+LIVING STRATA / TEMPORAL ONION PATCH
+Version: temporal-strata/2.0.0-living-onion
+Date: 2026-08-17
+
+PURPOSE
+Replace the old "more rings = more years" Temporal Strata visual model with a readable nested-time model:
+
+- Existing 13-Moon sphere geometry remains unchanged as the stable inner anatomy.
+- Every year is represented as a lightweight onion-like temporal membrane.
+- History moves inward toward the core.
+- Optional future years move outward.
+- Selected/reference year is a brighter membrane.
+- A structural chronology filament spirals through the year membranes to show temporal direction.
+- Year Gate is a fixed reference spine.
+- Equinox evidence points/trajectory use only supported Alignment Ledger records.
+- 200-year mode keeps all analytical years represented while lowering contour resolution on lower capability devices.
+- No opaque SphereGeometry is used for year strata, preventing the giant shell/wall failure mode.
+- Cutaway mode opens the membranes so the 13-Moon core remains readable.
+
+FILES
+- docs/assets/js/sphere/living-time-sphere-temporal-strata.js
+- docs/living-time-sphere.html
+- docs/assets/css/living-time-sphere.css
+- tests/living-time-sphere-temporal-strata.test.js
+
+FOCUSED TESTS
+10/10 passing when packaged.
+
+IMPORTANT
+This patch intentionally does not change the main 13-Moon renderer, camera renderer, environment renderer, label manager, or astronomy engine. It is an extension-layer replacement for Temporal Strata. Once visually validated, the next build should connect shell selection, year peeling/scrubbing, Moon-sector temporal corridors, richer astronomical trajectories, recurrence highlighting, and Life Atlas events into this shell model.

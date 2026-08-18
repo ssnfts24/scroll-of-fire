@@ -29,6 +29,8 @@
  *   mount?(context),
  *   update?(context),
  *   render?(context, nowMs),
+ *   pick?(context),
+ *   semanticTargets?(context),
  *   dispose?(context)
  * }
  */
@@ -168,6 +170,12 @@
           typeof extension.pick ===
           "function"
             ? extension.pick
+            : null,
+
+        semanticTargets:
+          typeof extension.semanticTargets ===
+          "function"
+            ? extension.semanticTargets
             : null,
 
         dispose:
@@ -509,6 +517,21 @@
       return null;
     }
 
+    function semanticTargetsAll(context = {}) {
+      const targets = [];
+      for (const extension of extensions.values()) {
+        if (!mounted.has(extension.id) || !isEnabled(extension, context) || !extension.semanticTargets) continue;
+        try {
+          const result = extension.semanticTargets(context);
+          if (Array.isArray(result)) targets.push(...result);
+        } catch (error) {
+          recordError(extension.id, "semanticTargets", error);
+        }
+        if (targets.length >= 96) break;
+      }
+      return targets.slice(0, 96);
+    }
+
     async function disposeAll(
       context = {}
     ) {
@@ -640,6 +663,7 @@
       updateAll,
       renderAll,
       pickAll,
+      semanticTargetsAll,
       disposeAll,
 
       diagnostics,

@@ -839,11 +839,7 @@
       stageEl: _container,
       visibleLayersKey: JSON.stringify(_visibleLayers || {}),
       protectedRects: _moonLabelProtectedRects(),
-      semanticTargets: _buildSemanticTargets(),
-      semanticBand:
-        _semanticZoomState?.band
-        || _activeSemanticBand
-        || "medium"
+      semanticTargets: _buildSemanticTargets()
     });
   }
 

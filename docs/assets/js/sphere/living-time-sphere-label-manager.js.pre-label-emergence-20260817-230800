@@ -8,19 +8,6 @@
   const SEMANTIC_DESKTOP_LABEL_CAP = 12;
   const SEMANTIC_MOBILE_LABEL_CAP = 6;
 
-  /*
-   * Calibrate camera-to-object proximity against the existing semantic zoom.
-   * The original Phase IIIE distances were too conservative on phones: an
-   * object could look close without crossing the raw Euclidean threshold.
-   */
-  const SEMANTIC_BAND_DISTANCE_MULTIPLIERS = Object.freeze({
-    far: 0.95,
-    medium: 1.25,
-    near: 1.60,
-    detail: 2.15
-  });
-  const SEMANTIC_MOBILE_DISTANCE_MULTIPLIER = 1.10;
-
   function normalizeSemanticTarget(target) {
     if (!target || typeof target !== "object") return null;
     const id = String(target.id || "").trim();
@@ -45,60 +32,6 @@
       selected: !!target.selected,
       moon: Number.isFinite(Number(target.moon)) ? Number(target.moon) : null,
       enabled: target.enabled !== false
-    });
-  }
-
-  function resolveProximityEnvelope(
-    target,
-    {
-      band = "medium",
-      mobile = false
-    } = {}
-  ) {
-    const normalized = normalizeSemanticTarget(target);
-    if (!normalized) return null;
-
-    const requestedBand = String(band || "").toLowerCase();
-    const bandKey = Object.prototype.hasOwnProperty.call(
-      SEMANTIC_BAND_DISTANCE_MULTIPLIERS,
-      requestedBand
-    )
-      ? requestedBand
-      : "medium";
-
-    const multiplier =
-      SEMANTIC_BAND_DISTANCE_MULTIPLIERS[bandKey]
-      * (mobile ? SEMANTIC_MOBILE_DISTANCE_MULTIPLIER : 1);
-
-    let showDistance = normalized.showDistance * multiplier;
-
-    if (normalized.pinned || normalized.selected) {
-      showDistance = Math.max(
-        showDistance,
-        mobile ? 3.25 : 3.0
-      );
-    }
-
-    const resetDistance = Math.max(
-      normalized.resetDistance * multiplier,
-      showDistance + 0.42
-    );
-
-    const detailDistance = Math.min(
-      showDistance,
-      Math.max(
-        0.05,
-        normalized.detailDistance * multiplier
-      )
-    );
-
-    return Object.freeze({
-      ...normalized,
-      showDistance,
-      resetDistance,
-      detailDistance,
-      semanticBand: bandKey,
-      proximityMultiplier: multiplier
     });
   }
 
@@ -246,8 +179,7 @@
       stageEl,
       visibleLayersKey,
       protectedRects,
-      semanticTargets = [],
-      semanticBand = "medium"
+      semanticTargets = []
     }) {
       const stage = stageEl || _stageEl;
       if (!stage || !_labelEls?.length || !camera || !three || !Array.isArray(anchors)) return false;
@@ -280,7 +212,6 @@
         showAllMobileLabels ? "show" : "compact",
         visibleLayersKey || "",
         Array.isArray(semanticTargets) ? semanticTargets.length : 0,
-        String(semanticBand || "medium"),
         cameraSignature(camera)
       ].join("::");
 
@@ -425,28 +356,9 @@
         .filter(Boolean);
       const semanticCandidates = [];
       for (const target of normalizedTargets) {
-        const effectiveTarget = resolveProximityEnvelope(
-          target,
-          {
-            band: semanticBand,
-            mobile
-          }
-        );
-
-        if (!effectiveTarget) continue;
-
-        worldVec.set(
-          effectiveTarget.worldX,
-          effectiveTarget.worldY,
-          effectiveTarget.worldZ
-        );
-
+        worldVec.set(target.worldX, target.worldY, target.worldZ);
         const distance = worldVec.distanceTo(camPos);
-        const state = _proximityState.resolve(
-          effectiveTarget,
-          distance
-        );
-
+        const state = _proximityState.resolve(target, distance);
         if (!state.visible) continue;
         projVec.copy(worldVec).project(camera);
         camSpace.copy(worldVec).applyMatrix4(camera.matrixWorldInverse);
@@ -454,12 +366,7 @@
         const anchorX = offsetX + (((projVec.x + 1) / 2) * stageRect.width);
         const anchorY = offsetY + (((-projVec.y + 1) / 2) * stageRect.height);
         if (anchorX < offsetX - 36 || anchorY < offsetY - 36 || anchorX > offsetX + stageRect.width + 36 || anchorY > offsetY + stageRect.height + 36) continue;
-        semanticCandidates.push({
-          target: effectiveTarget,
-          distance,
-          anchorX,
-          anchorY
-        });
+        semanticCandidates.push({ target, distance, anchorX, anchorY });
       }
       semanticCandidates.sort((a, b) =>
         Number(b.target.pinned) - Number(a.target.pinned)
@@ -598,24 +505,7 @@
 
   globalThis.LivingTimeSphereLabelManager = Object.freeze({
     createManager,
-    constants: Object.freeze({
-      MIN_OFFSET,
-      MAX_OFFSET,
-      STAGE_PADDING,
-      SEMANTIC_TARGET_CAP,
-      SEMANTIC_DESKTOP_LABEL_CAP,
-      SEMANTIC_MOBILE_LABEL_CAP,
-      SEMANTIC_BAND_DISTANCE_MULTIPLIERS,
-      SEMANTIC_MOBILE_DISTANCE_MULTIPLIER
-    }),
-    _internals: Object.freeze({
-      buildLabelSet,
-      priorityForMoon,
-      rectsOverlap,
-      clamp,
-      normalizeSemanticTarget,
-      resolveProximityEnvelope,
-      createProximityState
-    })
+    constants: Object.freeze({ MIN_OFFSET, MAX_OFFSET, STAGE_PADDING, SEMANTIC_TARGET_CAP, SEMANTIC_DESKTOP_LABEL_CAP, SEMANTIC_MOBILE_LABEL_CAP }),
+    _internals: Object.freeze({ buildLabelSet, priorityForMoon, rectsOverlap, clamp, normalizeSemanticTarget, createProximityState })
   });
 })();
