@@ -422,6 +422,10 @@
   let _lastSemanticSourceType = "unknown";
   let _resizeObserver = null;
   const _moonAnchors = [];    // { moon, angle, radius, worldVec } for each of 13 moons
+  const _semanticTargetRegistry = new Map();
+  const _semanticBandRank = Object.freeze({ far: 0, medium: 1, near: 2, detail: 3 });
+  const _semanticTargetLimit = 96;
+  let _selectedSemanticMarker = null;
   let _lastCameraFocusKey = null;
   let _lastSpiralGeometryKey = "";
   let _lastPassageGeometryKey = "";
@@ -437,6 +441,192 @@
     airQuality: true,
     spaceWeather: true,
   };
+
+  function _cloneWorldPosition(position) {
+    if (!position) return null;
+    const x = Number(position.x);
+    const y = Number(position.y);
+    const z = Number(position.z);
+    if (!Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(z)) return null;
+    return { x, y, z };
+  }
+
+  function _semanticBandAllows(currentBand, minBand = "detail") {
+    const current = _semanticBandRank[String(currentBand || "medium").toLowerCase()] ?? _semanticBandRank.medium;
+    const minimum = _semanticBandRank[String(minBand || "detail").toLowerCase()] ?? _semanticBandRank.detail;
+    return current >= minimum;
+  }
+
+  function _clearSemanticTargetsByPrefix(prefix) {
+    if (!prefix) return 0;
+    let removed = 0;
+    Array.from(_semanticTargetRegistry.keys()).forEach(id => {
+      if (!String(id).startsWith(prefix)) return;
+      _semanticTargetRegistry.delete(id);
+      removed += 1;
+    });
+    if (removed > 0) _moonLabelManager?.markDirty?.();
+    return removed;
+  }
+
+  function _registerSemanticTarget(object, descriptor = {}) {
+    const id = String(descriptor.id || object?.name || "").trim();
+    if (!id) return null;
+    if (!_semanticTargetRegistry.has(id) && _semanticTargetRegistry.size >= _semanticTargetLimit) {
+      const oldestId = _semanticTargetRegistry.keys().next().value;
+      if (oldestId) _semanticTargetRegistry.delete(oldestId);
+    }
+    const current = _semanticTargetRegistry.get(id) || {};
+    const next = {
+      ...current,
+      ...descriptor,
+      id,
+      sourceObject: object || descriptor.sourceObject || current.sourceObject || null,
+      metadata: descriptor.metadata && typeof descriptor.metadata === "object"
+        ? { ...(current.metadata || {}), ...descriptor.metadata }
+        : (current.metadata || {}),
+      worldPosition: descriptor.worldPosition || current.worldPosition || null,
+    };
+    _semanticTargetRegistry.set(id, next);
+    _moonLabelManager?.markDirty?.();
+    return next;
+  }
+
+  function _unregisterSemanticTarget(id) {
+    const removed = _semanticTargetRegistry.delete(String(id || ""));
+    if (removed) _moonLabelManager?.markDirty?.();
+    return removed;
+  }
+
+  function _clearSemanticTargets() {
+    if (_semanticTargetRegistry.size < 1) return 0;
+    const count = _semanticTargetRegistry.size;
+    _semanticTargetRegistry.clear();
+    _moonLabelManager?.markDirty?.();
+    return count;
+  }
+
+  function _selectedSemanticTargetIds({
+    selectedMarker = _selectedSemanticMarker,
+    model = _model,
+    selectedYear = _selectedYear,
+  } = {}) {
+    const ids = new Set();
+    const year = Number(model?.year || selectedYear || 0);
+    const selected = model?.selectedPatternPosition || null;
+    const today = model?.todayPatternPosition || null;
+    if (Number.isFinite(year) && year > 0 && selected?.dayOfPatternYear != null) {
+      ids.add(`pattern-day:${year}:${Number(selected.dayOfPatternYear)}`);
+    }
+    if (Number.isFinite(selectedYear)) ids.add(`year:${Number(selectedYear)}`);
+    const marker = String(selectedMarker || "");
+    let match = /^day-(\d+)$/.exec(marker);
+    if (match && Number.isFinite(year) && year > 0) ids.add(`pattern-day:${year}:${Number(match[1])}`);
+    match = /^year-(\d+)$/.exec(marker);
+    if (match) ids.add(`year:${Number(match[1])}`);
+    match = /^eq-(\d+)$/.exec(marker);
+    if (match) ids.add(`equinox:${Number(match[1])}`);
+    if (marker === "today" && Number.isFinite(year) && year > 0 && today?.dayOfPatternYear != null) {
+      ids.add(`pattern-day:${year}:${Number(today.dayOfPatternYear)}`);
+    }
+    if (marker === "equinox" && Number.isFinite(year) && year > 0) ids.add(`equinox:${year}`);
+    if (marker === "yearGate" && Number.isFinite(year) && year > 0) ids.add(`year-gate:${year}`);
+    return ids;
+  }
+
+  function _resolveSemanticTargetWorldPosition(target) {
+    if (!target) return null;
+    if (typeof target.worldPosition === "function") {
+      try {
+        return _cloneWorldPosition(target.worldPosition());
+      } catch {
+        return null;
+      }
+    }
+    const direct = _cloneWorldPosition(target.worldPosition);
+    if (direct) return direct;
+    const object = target.sourceObject || null;
+    if (object?.position) return _cloneWorldPosition(object.position);
+    return null;
+  }
+
+  function _deriveSemanticTargetState(target, {
+    selectedIds = new Set(),
+    semanticZoomState = _semanticZoomState,
+    camera = _camera,
+    worldPosition = null,
+  } = {}) {
+    if (!target) return null;
+    if (target.enableSemanticLabel === false) return null;
+    if (Array.isArray(target.layers) && target.layers.length > 0) {
+      const layerVisible = target.layers.some(layer => !!_visibleLayers?.[layer]);
+      if (!layerVisible) return null;
+    }
+    const currentBand = semanticZoomState?.band || "medium";
+    const explicitPinned = !!target.pinned || selectedIds.has(target.id);
+    if (explicitPinned) return "pinned";
+    if (_semanticBandAllows(currentBand, target.proximityBand || "near")) {
+      const threshold = Number(target.proximityDistance);
+      const cameraPos = camera?.position || null;
+      if (worldPosition && cameraPos && Number.isFinite(threshold)) {
+        const dx = Number(worldPosition.x) - Number(cameraPos.x || 0);
+        const dy = Number(worldPosition.y) - Number(cameraPos.y || 0);
+        const dz = Number(worldPosition.z) - Number(cameraPos.z || 0);
+        if (Math.hypot(dx, dy, dz) <= threshold) return "proximity";
+      } else if (!Number.isFinite(threshold) && _semanticBandAllows(currentBand, "detail")) {
+        return "proximity";
+      }
+    }
+    if (_semanticBandAllows(currentBand, target.ambientBand || "detail")) return "ambient";
+    return null;
+  }
+
+  function _collectProximityCandidates() {
+    const candidates = [];
+    const selectedIds = _selectedSemanticTargetIds();
+    const band = _semanticZoomState?.band || "medium";
+    for (const target of _semanticTargetRegistry.values()) {
+      const worldPosition = _resolveSemanticTargetWorldPosition(target);
+      if (!worldPosition) continue;
+      const state = _deriveSemanticTargetState(target, {
+        selectedIds,
+        semanticZoomState: _semanticZoomState,
+        camera: _camera,
+        worldPosition,
+      });
+      if (!state) continue;
+      const priority = Number(target.priority || 0);
+      const year = Number(target.metadata?.year || _model?.year || _selectedYear || 0);
+      const title = String(target.title || target.label || target.id || "").trim();
+      if (!title) continue;
+      candidates.push({
+        id: target.id,
+        type: target.type || "semantic",
+        semanticRole: target.semanticRole || target.type || "semantic",
+        title,
+        subtitle: target.subtitle == null ? "" : String(target.subtitle),
+        detail: target.detail == null ? "" : String(target.detail),
+        worldPosition,
+        priority,
+        state,
+        pinned: !!target.pinned || selectedIds.has(target.id),
+        selected: selectedIds.has(target.id),
+        dismissible: !!target.dismissible,
+        sourceObject: target.sourceObject || null,
+        metadata: {
+          ...target.metadata,
+          year: Number.isFinite(year) && year > 0 ? year : target.metadata?.year,
+          semanticBand: band,
+        },
+      });
+    }
+    candidates.sort((a, b) =>
+      (a.state === "pinned" ? 3 : a.state === "proximity" ? 2 : 1) !== (b.state === "pinned" ? 3 : b.state === "proximity" ? 2 : 1)
+        ? (b.state === "pinned" ? 3 : b.state === "proximity" ? 2 : 1) - (a.state === "pinned" ? 3 : a.state === "proximity" ? 2 : 1)
+        : b.priority - a.priority
+    );
+    return candidates.slice(0, 18);
+  }
   let _environmentLayerVisible = true;
   let _environmentDiagnostics = [];
   const EMPTY_ENVIRONMENT_STATE = Object.freeze({
@@ -571,19 +761,36 @@
     const mat = globalThis.LivingTimeSphereM;
     const r   = mat.SIZES.patternRing * _moonLabelRadiusMultiplier(viewMode, _moonLabelDistance);
     _moonAnchors.length = 0;
+    _clearSemanticTargetsByPrefix("moon:");
     _activeSemanticBand = null;
     _previousSemanticBand = null;
     _lastSemanticTransitionThreshold = null;
     for (let i = 0; i < 13; i++) {
       const angle = _moonSectorCenterAngle(i);
       const { x, z } = angleToXZ(angle, r);
-      _moonAnchors.push({
+      const moon = i + 1;
+      const anchor = {
         moon:  i + 1,
         angle,
         radius: r,
         worldX: x,
         worldY: mat.SIZES.ringTube * 1.5,
         worldZ: z,
+      };
+      _moonAnchors.push(anchor);
+      _registerSemanticTarget(null, {
+        id: `moon:${moon}`,
+        type: "moon",
+        semanticRole: "moon",
+        title: `Moon ${moon}`,
+        subtitle: viewMode === "today" ? "Pattern ring" : "",
+        priority: 10,
+        worldPosition: { x, y: mat.SIZES.ringTube * 1.5, z },
+        ambientBand: "detail",
+        proximityBand: "near",
+        proximityDistance: 1.8,
+        enableSemanticLabel: false,
+        metadata: { moon, viewMode },
       });
     }
   }
@@ -724,12 +931,128 @@
     });
   }
 
+  function _updateSemanticLabels() {
+    if (!_moonLabelManager || !_camera || !_canvas || !_THREE) return;
+    _moonLabelManager.updateSemantic?.({
+      camera: _camera,
+      three: _THREE,
+      candidates: _collectProximityCandidates(),
+      stageEl: _container,
+      protectedRects: _moonLabelProtectedRects(),
+    });
+  }
+
+  function _syncGateSemanticTargets(model) {
+    _clearSemanticTargetsByPrefix("equinox:");
+    _clearSemanticTargetsByPrefix("year-gate:");
+    const year = Number(model?.year || _selectedYear || 0);
+    if (!Number.isFinite(year) || year <= 0) return;
+    if (_objects.equinoxGate) {
+      _registerSemanticTarget(_objects.equinoxGate, {
+        id: `equinox:${year}`,
+        type: "gate",
+        semanticRole: "equinox",
+        title: `${year} Equinox Gate`,
+        subtitle: "March equinox",
+        detail: model?.sourceRecord?.equinox?.utcInstant || "",
+        priority: 92,
+        proximityBand: "near",
+        proximityDistance: 2.25,
+        ambientBand: "detail",
+        layers: ["passage", "markers"],
+        metadata: { year, marker: "equinox" },
+      });
+    }
+    if (_objects.yearGate) {
+      _registerSemanticTarget(_objects.yearGate, {
+        id: `year-gate:${year}`,
+        type: "gate",
+        semanticRole: "year-gate",
+        title: `${year} Year Gate`,
+        subtitle: "Moon 1 · Day 1",
+        detail: model?.sourceRecord?.yearGate?.instant || "",
+        priority: 88,
+        proximityBand: "near",
+        proximityDistance: 2.2,
+        ambientBand: "detail",
+        layers: ["pattern", "markers"],
+        metadata: { year, marker: "yearGate" },
+      });
+    }
+  }
+
+  function _syncPatternDaySemanticTargets(model) {
+    _clearSemanticTargetsByPrefix("pattern-day:");
+    const year = Number(model?.year || _selectedYear || 0);
+    if (!Number.isFinite(year) || year <= 0) return;
+    const today = model?.todayPatternPosition || null;
+    if (_objects.todayMarker && _objects.todayMarker.visible && today?.dayOfPatternYear != null) {
+      _registerSemanticTarget(_objects.todayMarker, {
+        id: `pattern-day:${year}:${Number(today.dayOfPatternYear)}`,
+        type: "pattern-day",
+        semanticRole: "today",
+        title: `Moon ${today.moon} · Day ${today.day}`,
+        subtitle: "Today",
+        detail: `Day ${today.dayOfPatternYear}/364`,
+        priority: 96,
+        proximityBand: "near",
+        proximityDistance: 2.1,
+        ambientBand: "detail",
+        layers: ["pattern", "markers"],
+        pinned: String(_selectedSemanticMarker || "") === "today",
+        metadata: { year, dayOfPatternYear: Number(today.dayOfPatternYear), moon: Number(today.moon), day: Number(today.day), marker: "today" },
+      });
+    }
+    const selected = model?.selectedPatternPosition || null;
+    if (_objects.selectedDayMarker && _objects.selectedDayMarker.visible && selected?.dayOfPatternYear != null) {
+      _registerSemanticTarget(_objects.selectedDayMarker, {
+        id: `pattern-day:${year}:${Number(selected.dayOfPatternYear)}`,
+        type: "pattern-day",
+        semanticRole: "selected-day",
+        title: `Moon ${selected.moon} · Day ${selected.day}`,
+        subtitle: "Selected day",
+        detail: `Day ${selected.dayOfPatternYear}/364`,
+        priority: 100,
+        proximityBand: "near",
+        proximityDistance: 2.3,
+        ambientBand: "detail",
+        layers: ["pattern", "markers"],
+        pinned: true,
+        metadata: { year, dayOfPatternYear: Number(selected.dayOfPatternYear), moon: Number(selected.moon), day: Number(selected.day), marker: "selected-day" },
+      });
+    }
+  }
+
+  function _syncYearSemanticTargets(spiral, vl = _visibleLayers) {
+    _clearSemanticTargetsByPrefix("year:");
+    if (!spiral?.years?.length) return;
+    spiral.years.forEach((entry, index) => {
+      const marker = _objects.spiralMarkers?.[index] || null;
+      _registerSemanticTarget(marker, {
+        id: `year:${Number(entry.year)}`,
+        type: "year",
+        semanticRole: "year",
+        title: `${entry.year}`,
+        subtitle: "13-year spiral",
+        detail: "Annual marker",
+        priority: Number(entry.year) === Number(_selectedYear) ? 94 : 54,
+        proximityBand: "near",
+        proximityDistance: 2.65,
+        ambientBand: "detail",
+        layers: ["spiral", "markers"],
+        pinned: Number(entry.year) === Number(_selectedYear) && !!vl?.markers,
+        metadata: { year: Number(entry.year) },
+      });
+    });
+  }
+
   // ── Scene construction ────────────────────────────────────────────
 
   function buildScene() {
     const THREE = _THREE;
     const mat   = globalThis.LivingTimeSphereM;
     _countLifecycle("sceneRootBuildCount");
+    _clearSemanticTargets();
     _scene = new THREE.Scene();
     _scene.background = new THREE.Color(mat.COLORS.bg);
 
@@ -2339,6 +2662,7 @@
       _objects.spiralMarkers?.forEach(marker => {
         if (marker) marker.visible = !!vl.markers;
       });
+      _syncYearSemanticTargets(spiral, vl);
       _positionSelectionRingForYear(selectedYear);
       _markLayerBuild("spiral", performance.now() - layerStart);
     }
@@ -2420,6 +2744,8 @@
         if (_objects.selectedDayHalo) _objects.selectedDayHalo.visible = false;
       }
     }
+    _syncGateSemanticTargets(model);
+    _syncPatternDaySemanticTargets(model);
     if (_objects.todayMarker?.material) {
       _objects.todayMarker.material.emissiveIntensity = Math.max(0.45, mat.EMISSIVE.today * 0.72);
     }
@@ -2623,6 +2949,7 @@
     // Update sphere-anchored Moon labels
     _syncSemanticZoomFromCamera(false);
     _updateMoonLabels(_viewMode);
+    _updateSemanticLabels();
 
     globalThis.LivingTimeSphereExtensionHost?.renderAll?.(
       _extensionContext({
@@ -2803,7 +3130,7 @@
 
   // ── Init / teardown ────────────────────────────────────────────────
 
-  async function init({ container, model, spiral, quality, tier, generation, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, semanticZoomState, environmentState, reducedMotion, onYearSelect, onMarkerSelect, onContextLost: _onContextLostCb, onContextRestored: _onContextRestoredCb }) {
+  async function init({ container, model, spiral, quality, tier, generation, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, semanticZoomState, selectedMarker = null, environmentState, reducedMotion, onYearSelect, onMarkerSelect, onContextLost: _onContextLostCb, onContextRestored: _onContextRestoredCb }) {
     // Guard against concurrent or duplicate init calls.
     if (_initializing || _initialized) {
       return { success: false, reason: "already-running" };
@@ -2843,6 +3170,7 @@
     _contextLossCount = 0;
     _contextRestoreCount = 0;
     _initTimeline.length = 0;
+    _selectedSemanticMarker = selectedMarker || null;
     _pushInitTimeline("renderer-init-requested", { containerConnected: !!container?.isConnected });
 
     try {
@@ -3586,8 +3914,9 @@
 
   // ── Public API ────────────────────────────────────────────────────
 
-  function refresh(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, semanticZoomState) {
+  function refresh(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, semanticZoomState, selectedMarker = _selectedSemanticMarker) {
     if (!_initialized) return;
+    _selectedSemanticMarker = selectedMarker || null;
     updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, semanticZoomState);
 
     if (
@@ -3621,6 +3950,7 @@
     connectionRegistry = _connectionRegistry,
     motionMode = _motionMode,
     semanticZoomState = _semanticZoomState,
+    selectedMarker = _selectedSemanticMarker,
     skipCameraFocus = true,
   } = {}) {
     if (!_initialized || !_scene || !model) return false;
@@ -3640,6 +3970,7 @@
     _connectionRegistry = Array.isArray(connectionRegistry) ? connectionRegistry : (_connectionRegistry || []);
     _motionMode = motionMode || _motionMode || "still";
     _semanticZoomState = semanticZoomState || _semanticZoomState || null;
+    _selectedSemanticMarker = selectedMarker || null;
     _buildMoonAnchors(_viewMode);
     _moonLabelManager?.markDirty();
 
@@ -3722,6 +4053,9 @@
         if (_objects.selectedDayHalo) _objects.selectedDayHalo.visible = false;
       }
     }
+    _syncYearSemanticTargets(_spiral, vl);
+    _syncGateSemanticTargets(model);
+    _syncPatternDaySemanticTargets(model);
 
     _applyDayNodeVisibility(
       band,
@@ -3944,6 +4278,8 @@
     _THREE        = null;
     _threeSource  = null;
     _container    = null;
+    _selectedSemanticMarker = null;
+    _clearSemanticTargets();
     _initTimeline.length = 0;
     for (const key of Object.keys(_objects)) delete _objects[key];
   }
@@ -4122,6 +4458,11 @@
         visibleMoonLabels,
         visibleConnections: Number(_connectionVisibleCount || 0),
       },
+      semanticLabels: {
+        selectedMarker: _selectedSemanticMarker || null,
+        registrySize: _semanticTargetRegistry.size,
+        visibleCandidateCount: _collectProximityCandidates().length,
+      },
       connectionDiagnostics: _connectionDiagnostics.slice(0, 80),
 
       extensions:
@@ -4148,6 +4489,14 @@
     setLayerStates,
     updateEnvironment,
     setQuality,
+    _registerSemanticTarget,
+    _unregisterSemanticTarget,
+    _clearSemanticTargets,
+    _collectProximityCandidates,
+    registerSemanticTarget: _registerSemanticTarget,
+    unregisterSemanticTarget: _unregisterSemanticTarget,
+    clearSemanticTargets: _clearSemanticTargets,
+    collectProximityCandidates: _collectProximityCandidates,
     requestSingleRender,
     markDirty: requestSingleRender,
     resetView,
@@ -4172,6 +4521,9 @@
     _internals: Object.freeze({
       semanticThresholds: _semanticThresholds,
       stabilizeBand: _stabilizeBand,
+      semanticBandAllows: _semanticBandAllows,
+      selectedSemanticTargetIds: _selectedSemanticTargetIds,
+      deriveSemanticTargetState: _deriveSemanticTargetState,
       buildSolarProgressArc,
       smokeBuildSolarProgressArcForTests(startAngle, endAngle, threeOverride) {
         const previous = _THREE;

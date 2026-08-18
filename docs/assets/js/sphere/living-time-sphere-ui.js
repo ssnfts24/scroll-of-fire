@@ -2651,6 +2651,7 @@
           connectionRegistry,
           motionMode: _state.motionMode,
           semanticZoomState,
+          selectedMarker: _state.selectedMarker,
           environmentState: globalThis.SofEnvironmentState?.getEnvironmentState?.() || null,
           reducedMotion,
           onContextLost: () => {
@@ -2823,7 +2824,8 @@
         effectiveDayLabelMode,
         connectionRegistry,
         _state.motionMode,
-        semanticZoomState
+        semanticZoomState,
+        _state.selectedMarker
       );
       const readiness = renderer.getDiagnostics?.().sceneReadiness || { ready: true, reasons: [] };
       const surfaceCheck = _verifyRenderSurface(container, { requireVisibleCenter: false });
@@ -3974,6 +3976,7 @@
             connectionRegistry: effective.connectionRegistry,
             motionMode: _state.motionMode,
             semanticZoomState: effective.semanticZoom,
+            selectedMarker: _state.selectedMarker,
             skipCameraFocus: true,
           });
         }
