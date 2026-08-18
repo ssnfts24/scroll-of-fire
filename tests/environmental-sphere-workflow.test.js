@@ -241,3 +241,31 @@ test("label manager priority gives selected moon highest precedence", () => {
   assert.ok(priority(6, { selectedMoon: 6, todayMoon: 5, selectedDayMoon: 5, equinoxMoon: 13 }) >
             priority(5, { selectedMoon: 6, todayMoon: 5, selectedDayMoon: 5, equinoxMoon: 13 }));
 });
+
+test("label manager semantic candidate normalization preserves pinned semantic labels", () => {
+  const context = { globalThis: null, window: {}, console };
+  context.globalThis = context;
+  vm.runInNewContext(read("docs/assets/js/sphere/living-time-sphere-label-manager.js"), context);
+  const { normalizeSemanticCandidate, semanticStatePriority } = context.LivingTimeSphereLabelManager._internals;
+  const normalized = normalizeSemanticCandidate({
+    id: "year:2026",
+    type: "year",
+    semanticRole: "year",
+    title: "2026",
+    subtitle: "13-year spiral",
+    detail: "Annual marker",
+    worldPosition: { x: 1, y: 0.25, z: -0.3 },
+    priority: 88,
+    state: "pinned",
+    pinned: true,
+    selected: true,
+    metadata: { year: 2026 },
+  });
+  assert.equal(normalized.id, "year:2026");
+  assert.equal(normalized.state, "pinned");
+  assert.equal(normalized.pinned, true);
+  assert.equal(normalized.selected, true);
+  assert.equal(normalized.metadata.year, 2026);
+  assert.ok(semanticStatePriority("pinned") > semanticStatePriority("proximity"));
+  assert.ok(semanticStatePriority("proximity") > semanticStatePriority("ambient"));
+});

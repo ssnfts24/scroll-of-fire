@@ -630,6 +630,41 @@ test("LivingTimeSphereRenderer3d: semantic band hysteresis stabilizes near thres
   assert.equal(nearDetailThreshold, "near", "band should not flicker from NEAR to DETAIL at threshold edge");
 });
 
+test("LivingTimeSphereRenderer3d: semantic registry API and selected semantic target mapping are exported", () => {
+  const ctx  = loadSphereContext();
+  const code = read("docs/assets/js/sphere/living-time-sphere-renderer-3d.js");
+  vm.runInNewContext(code, ctx);
+  assert.equal(typeof ctx.LivingTimeSphereRenderer3d.registerSemanticTarget, "function");
+  assert.equal(typeof ctx.LivingTimeSphereRenderer3d.unregisterSemanticTarget, "function");
+  assert.equal(typeof ctx.LivingTimeSphereRenderer3d.clearSemanticTargets, "function");
+  assert.equal(typeof ctx.LivingTimeSphereRenderer3d.collectProximityCandidates, "function");
+  const ids = ctx.LivingTimeSphereRenderer3d._internals.selectedSemanticTargetIds({
+    selectedMarker: "eq-2026",
+    model: { year: 2026, selectedPatternPosition: { dayOfPatternYear: 110 } },
+    selectedYear: 2025,
+  });
+  assert.ok(ids.has("equinox:2026"));
+  assert.ok(ids.has("pattern-day:2026:110"));
+  assert.ok(ids.has("year:2025"));
+});
+
+test("LivingTimeSphereRenderer3d: pinned semantic targets outrank zoom-gated proximity state", () => {
+  const ctx  = loadSphereContext();
+  const code = read("docs/assets/js/sphere/living-time-sphere-renderer-3d.js");
+  vm.runInNewContext(code, ctx);
+  const derive = ctx.LivingTimeSphereRenderer3d._internals.deriveSemanticTargetState;
+  const pinned = derive(
+    { id: "year:2026", proximityBand: "near", proximityDistance: 2.4, ambientBand: "detail" },
+    {
+      selectedIds: new Set(["year:2026"]),
+      semanticZoomState: { band: "far" },
+      camera: { position: { x: 0, y: 0, z: 4 } },
+      worldPosition: { x: 0, y: 0, z: 0 },
+    }
+  );
+  assert.equal(pinned, "pinned");
+});
+
 test("Sphere page: quality and renderer controls present", () => {
   const html = read("docs/living-time-sphere.html");
   assert.ok(html.includes("sphere-quality-select"),   "quality selector present");
