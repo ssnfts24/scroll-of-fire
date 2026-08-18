@@ -63,6 +63,7 @@
   <link rel="stylesheet" href="assets/css/components.css?v=20260715-10">
   <link rel="stylesheet" href="assets/css/animations.css?v=20260715-10">
   <link rel="stylesheet" href="assets/css/home.css?v=20260715-10">
+  <link rel="stylesheet" href="assets/css/home-living-interface.css?v=20260818-1">
   <link rel="stylesheet" href="assets/css/artifact-mobile.css?v=20260715-10">
   <link rel="stylesheet" href="assets/css/themes.moons.css?v=20260715-10">
   <link rel="stylesheet" href="assets/css/living-day.css?v=1">
@@ -171,6 +172,7 @@
   <script defer src="assets/js/environment/open-meteo-adapter.js?v=20260731-1"></script>
   <script defer src="assets/js/environment/location-command.js?v=20260731-1"></script>
   <script defer src="assets/js/home-observatory-instrument.js?v=20260815-6"></script>
+  <script defer src="assets/js/home-living-interface.js?v=20260818-1"></script>
   <script>
     window.__homeSphereBoot = {
       mode: "IntersectionObserver",
@@ -178,6 +180,7 @@
     };
     document.addEventListener("DOMContentLoaded", function () {
       window.HomeObservatoryInstrument?.bootstrap?.();
+      window.HomeLivingInterface?.bootstrap?.();
     });
   </script>
   <!-- Homepage Observatory: a sphere-first, progressive 3D instrument. -->
@@ -334,6 +337,85 @@
     .participation-outcome{margin-top:4rem;padding:clamp(1.7rem,5vw,3.5rem);border:1px solid rgba(255,173,112,.25);border-radius:1.6rem;background:radial-gradient(circle at 50% 0%,rgba(255,160,88,.13),transparent 65%),rgba(255,255,255,.025);text-align:center}.participation-outcome h3{max-width:820px;margin:0 auto 1.2rem;font-size:clamp(1.8rem,4vw,3.2rem)}.participation-outcome>p{max-width:830px;margin:0 auto;color:rgba(255,255,255,.74);line-height:1.75}.participation-outcome-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.85rem;margin-top:2rem}.participation-outcome-card{padding:1.2rem .85rem;border:1px solid rgba(255,255,255,.1);border-radius:1rem;background:rgba(0,0,0,.16)}.participation-outcome-card strong,.participation-outcome-card span{display:block}.participation-outcome-card strong{color:#ffc18e}.participation-outcome-card span{margin-top:.35rem;color:rgba(255,255,255,.59);font-size:.82rem}.participation-final-word{max-width:900px;margin:3rem auto 0;text-align:center}.participation-final-word p{margin:0;font-size:clamp(1.22rem,3vw,1.8rem);line-height:1.55}.participation-final-word strong{color:#ffb67e}.participation-actions{justify-content:center;margin-top:2rem}
     @media(max-width:980px){.participation-process{grid-template-columns:repeat(4,minmax(0,1fr))}.participation-article{grid-template-columns:1fr}.participation-rail{position:static}.participation-rail ol{grid-template-columns:repeat(2,minmax(0,1fr))}.participation-outcome-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media(max-width:620px){.participation-process{grid-template-columns:repeat(2,minmax(0,1fr))}.participation-process-step:last-child{grid-column:1/-1}.participation-rail{display:none}.participation-chapter-heading{grid-template-columns:1fr}.participation-outcome-grid{grid-template-columns:1fr}}
+  </style>
+
+
+  <!-- Mobile/flow repair: prevent Participation Vision from occupying invisible space -->
+  <style id="homepage-participation-flow-fix-v20260818">
+    /*
+     * Participation is a real content section between Core Gates and
+     * Governing Documents. Never allow animation/runtime state to leave
+     * the section invisible while it continues occupying document flow.
+     */
+    .home-page .participation-vision {
+      position: relative !important;
+      display: block !important;
+      width: min(1180px, calc(100% - 2rem)) !important;
+      height: auto !important;
+      min-height: 0 !important;
+      max-height: none !important;
+      margin-inline: auto !important;
+      overflow: visible !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: none !important;
+      content-visibility: visible !important;
+    }
+
+    .home-page .participation-vision-inner,
+    .home-page .participation-hero,
+    .home-page .participation-process,
+    .home-page .participation-article,
+    .home-page .participation-chapters,
+    .home-page .participation-chapter,
+    .home-page .participation-outcome,
+    .home-page .participation-final-word {
+      height: auto !important;
+      min-height: 0 !important;
+      max-height: none !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: none !important;
+    }
+
+    /*
+     * Keep the intentional compact mobile layout.
+     * The navigation rail can disappear, but the actual chapters cannot.
+     */
+    @media (max-width: 620px) {
+      .home-page .participation-vision {
+        width: min(100% - .75rem, 1180px) !important;
+        padding-block: 2.7rem !important;
+      }
+
+      .home-page .participation-rail {
+        display: none !important;
+      }
+
+      .home-page .participation-chapters,
+      .home-page .participation-chapter,
+      .home-page .participation-outcome,
+      .home-page .participation-final-word {
+        display: block;
+      }
+
+      .home-page .participation-chapter + .participation-chapter {
+        margin-top: 1.2rem;
+      }
+
+      .home-page .participation-outcome,
+      .home-page .participation-final-word {
+        margin-top: 2rem;
+      }
+    }
+
+    /*
+     * Governing Documents follows Participation naturally.
+     * No viewport-sized spacer or artificial offset.
+     */
+    .home-page #participation + .section-shell {
+      margin-top: 0 !important;
+    }
   </style>
 
 </head>
@@ -519,7 +601,7 @@
       class="section-shell home-living-sphere"
       id="home-sphere-observatory"
       aria-labelledby="home-sphere-title">
-      <div class="home-living-sphere__inner" id="home-sphere-instrument" data-home-sphere-root data-sphere-mode="pattern" data-home-sphere-reset>
+      <div class="home-living-sphere__inner" id="home-sphere-instrument" data-home-sphere-root data-home-live-root data-sphere-mode="pattern" data-home-sphere-reset>
         <header class="home-living-sphere__header">
           <p class="eyebrow">The 13 Moons Remnant Living Time Observatory</p>
           <h2 id="home-sphere-title">Today in the Living Time Sphere</h2>
@@ -527,6 +609,84 @@
             A calendar can do more than name the date. This living model holds Pattern Time steady while astronomical motion, historical record, present conditions, and future intention can be read as layers of one changing field.
           </p>
         </header>
+
+        <section class="home-temporal-console" aria-label="Current temporal coordinate">
+          <div class="home-temporal-console__now">
+            <p class="home-temporal-console__label">Now</p>
+            <strong id="home-live-clock">Reading local time…</strong>
+            <small id="home-live-renderer-detail">Preparing the shared temporal instrument.</small>
+          </div>
+
+          <div class="home-temporal-console__cell">
+            <p class="home-temporal-console__label">Pattern</p>
+            <strong id="home-live-pattern">Aligning…</strong>
+            <small id="home-live-pattern-sub">Canonical 13 × 28 coordinate</small>
+          </div>
+
+          <div class="home-temporal-console__cell">
+            <p class="home-temporal-console__label">Solar Gate</p>
+            <strong id="home-live-gate">Aligning…</strong>
+            <small id="home-live-gate-sub">Seasonal position</small>
+          </div>
+
+          <div class="home-temporal-console__cell">
+            <p class="home-temporal-console__label">Lunar</p>
+            <strong id="home-live-lunar">Aligning…</strong>
+            <small id="home-live-lunar-sub">Current phase</small>
+          </div>
+
+          <div class="home-temporal-console__cell">
+            <p class="home-temporal-console__label">Boundary</p>
+            <strong id="home-live-boundary">Local boundary</strong>
+            <small id="home-live-boundary-sub">Local timezone</small>
+          </div>
+        </section>
+
+        <section class="home-time-navigation" aria-label="Move through Pattern time">
+          <div class="home-time-navigation__controls">
+            <button
+              class="home-time-nav-btn"
+              type="button"
+              data-home-time-shift="-1"
+              aria-label="Previous Pattern day"
+            >←</button>
+
+            <button
+              class="home-time-nav-btn home-time-nav-btn--today"
+              type="button"
+              data-home-time-today
+            >Today</button>
+
+            <button
+              class="home-time-nav-btn"
+              type="button"
+              data-home-time-shift="1"
+              aria-label="Next Pattern day"
+            >→</button>
+          </div>
+
+          <div class="home-time-navigation__scrubber">
+            <label for="home-pattern-day-scrubber">
+              <span id="home-time-navigation-label">Live Pattern coordinate</span>
+              <strong id="home-time-navigation-value">Today</strong>
+            </label>
+
+            <input
+              id="home-pattern-day-scrubber"
+              type="range"
+              min="1"
+              max="364"
+              step="1"
+              value="1"
+              data-home-pattern-scrubber
+              aria-describedby="home-time-navigation-hint"
+            >
+
+            <p id="home-time-navigation-hint">
+              Move through the 364 counted Pattern days without changing the underlying calendar authority.
+            </p>
+          </div>
+        </section>
 
         <div class="home-living-sphere__stage" data-home-sphere-stage>
           <div class="home-living-sphere__viewport">
@@ -541,13 +701,150 @@
             <p class="home-living-sphere__render-state" id="home-sphere-render-state" role="status" aria-live="polite">Loading sphere engine</p>
           </div>
         </div>
-        <p class="home-living-sphere__caption" id="home-sphere-today-orientation">The fixed 13 × 28 Pattern remains centered while moving time gathers around it. Enter the Observatory to compare record, present state, recurring structure, and planning space without treating possibility as prediction.</p>
+        <div class="home-sphere-command-rail" aria-label="Living Sphere status and actions">
+          <div class="home-sphere-command-rail__status">
+            <p><strong id="home-live-field-status">Pattern field stable</strong></p>
+            <small id="home-live-field-detail">Reading the current Pattern coordinate.</small>
+          </div>
+
+          <div class="home-sphere-command-rail__actions">
+            <a class="home-live-mini-btn" href="./moons.html?source=home">13 Moons</a>
+            <a class="home-live-mini-btn" id="home-sphere-today-open-link" href="./living-time-sphere.html?view=today&amp;marker=today&amp;source=home">Full Sphere</a>
+          </div>
+        </div>
+
+        <p class="home-living-sphere__caption" id="home-sphere-today-orientation">The fixed 13 × 28 Pattern remains centered while moving time gathers around it. Move from this live coordinate into calendar, record, history, relationships, and deeper Observatory views without changing temporal authority.</p>
         <p id="home-sphere-today-accessible" class="visually-hidden" aria-live="polite"></p>
         <span id="home-sphere-today-witness" class="visually-hidden">Witness data remains private in this browser.</span>
-        <div class="hero-actions home-living-sphere__actions">
-          <a class="btn primary" id="home-sphere-today-open-link" href="./living-time-sphere.html?view=today&amp;marker=today&amp;source=home">Enter Today's Sphere</a>
-          <a class="btn" href="./living-time-sphere.html#observatory-console">Open Local Observatory</a>
-        </div>
+
+        <section class="home-continuity-grid" aria-label="Local Codex continuity">
+          <article class="home-continuity-panel">
+            <p class="eyebrow">Continue Your Path</p>
+            <h3 id="home-continuity-title">Your local path is ready.</h3>
+            <p id="home-continuity-summary">Stored only in this browser.</p>
+
+            <div class="home-continuity-panel__metrics" aria-label="Recent local activity">
+              <div class="home-continuity-metric">
+                <strong id="home-continuity-witnesses">0</strong>
+                <span>Recent witnessed days</span>
+              </div>
+
+              <div class="home-continuity-metric">
+                <strong id="home-continuity-actions">0</strong>
+                <span>Recent actions</span>
+              </div>
+
+              <div class="home-continuity-metric">
+                <strong id="home-continuity-changes">0</strong>
+                <span>Changes since visit</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="home-continuity-panel">
+            <p class="eyebrow">Instrument State</p>
+            <h3 id="home-live-renderer">Preparing</h3>
+            <p>The homepage remains a lightweight instrument. Full analytical controls, historical strata, Life Atlas layers, and deep inspection remain in the Observatory.</p>
+          </article>
+        </section>
+
+        <section class="home-context-surface" aria-label="Selected temporal context">
+          <article class="home-context-card home-context-card--coordinate">
+            <p class="eyebrow">Selected Coordinate</p>
+            <strong id="home-context-coordinate">Live Today</strong>
+            <span id="home-context-coordinate-detail">The Sphere is aligned to the current Pattern day.</span>
+          </article>
+
+          <article class="home-context-card">
+            <p class="eyebrow">View Depth</p>
+            <strong id="home-context-depth">Instrument</strong>
+            <span id="home-context-depth-detail">Approach the Sphere to reveal more temporal structure.</span>
+          </article>
+
+          <article class="home-context-card home-context-card--atlas" data-home-life-atlas>
+            <p class="eyebrow">Life Atlas Context</p>
+
+            <strong id="home-context-records">
+              Local-first
+            </strong>
+
+            <span id="home-context-records-detail">
+              Life Atlas loads only when this context surface becomes relevant.
+            </span>
+
+            <div
+              class="home-life-atlas-state"
+              aria-label="Life Atlas temporal record state"
+            >
+              <span data-home-atlas-state="past">
+                <b id="home-atlas-past-count">0</b>
+                Past
+              </span>
+
+              <span data-home-atlas-state="selected">
+                <b id="home-atlas-selected-count">0</b>
+                Selected
+              </span>
+
+              <span data-home-atlas-state="future">
+                <b id="home-atlas-future-count">0</b>
+                Future
+              </span>
+            </div>
+
+            <div
+              class="home-life-atlas-nearby"
+              id="home-life-atlas-nearby"
+              hidden
+            >
+              <p class="home-life-atlas-nearby__title">
+                Nearby records
+              </p>
+
+              <div
+                id="home-life-atlas-nearby-list"
+                class="home-life-atlas-nearby__list"
+              ></div>
+            </div>
+
+            <a
+              id="home-context-atlas-link"
+              href="./living-time-sphere.html#observatory-console"
+            >Open selected context →</a>
+          </article>
+        </section>
+
+        <nav class="home-projection-dock" aria-label="Temporal projections">
+          <a href="./moons.html?source=home" data-home-projection="calendar">
+            <span class="home-projection-dock__glyph" aria-hidden="true">☾</span>
+            <span class="home-projection-dock__name">Calendar</span>
+          </a>
+
+          <a href="./living-time-sphere.html?view=today&amp;marker=today&amp;source=home" aria-current="page" data-home-projection="sphere">
+            <span class="home-projection-dock__glyph" aria-hidden="true">◎</span>
+            <span class="home-projection-dock__name">Sphere</span>
+          </a>
+
+          <a href="./living-time-sphere.html#calendar-atlas" data-home-projection="timeline">
+            <span class="home-projection-dock__glyph" aria-hidden="true">≋</span>
+            <span class="home-projection-dock__name">Timeline</span>
+          </a>
+
+          <a href="./living-time-sphere.html#observatory-console" data-home-projection="atlas">
+            <span class="home-projection-dock__glyph" aria-hidden="true">⌖</span>
+            <span class="home-projection-dock__name">Atlas</span>
+          </a>
+
+          <a href="./ledger.html?source=home" data-home-projection="ledger">
+            <span class="home-projection-dock__glyph" aria-hidden="true">Ξ</span>
+            <span class="home-projection-dock__name">Ledger</span>
+          </a>
+
+          <a href="./living-time-sphere.html#observatory-console" data-home-projection="network">
+            <span class="home-projection-dock__glyph" aria-hidden="true">⟷</span>
+            <span class="home-projection-dock__name">Network</span>
+          </a>
+        </nav>
       </div>
     </section>
 
@@ -667,17 +964,17 @@
         <div class="section-heading section-heading--split codex-activity-heading">
           <div>
             <p class="eyebrow">Recent Codex Activity</p>
-            <h2>Visible growth in the archive</h2>
-            <p>Recent updates are authored manually in the local Codex feed.</p>
+            <h2>Visible Growth in the Archive</h2>
+            <p class="codex-activity-prologue">The work continueth. These records mark the greater works made visible in the building of the Codex.</p>
           </div>
           <button class="codex-activity-toggle" type="button"
-                  aria-expanded="true" aria-controls="codex-activity-content"
+                  aria-expanded="false" aria-controls="codex-activity-content"
                   data-codex-activity-toggle>
-            <span class="visually-hidden">Toggle activity feed</span>
+            <span class="codex-activity-toggle-label" data-codex-activity-toggle-label>Open the Record</span>
             <span class="codex-activity-chevron" aria-hidden="true">▾</span>
           </button>
         </div>
-        <div id="codex-activity-content" class="codex-activity-content" data-codex-activity-content>
+        <div id="codex-activity-content" class="codex-activity-content" data-codex-activity-content hidden>
           <ul class="codex-activity-list" data-codex-activity-list></ul>
           <p class="codex-activity-empty" data-codex-activity-empty>Codex updates load from the local activity feed when entries are available.</p>
         </div>

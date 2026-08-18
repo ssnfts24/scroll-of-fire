@@ -1,42 +1,122 @@
 [
   {
+    "date": "2026-08-18",
+    "type": "system",
+    "title": "The Living Sphere and the House of Time are joined",
+    "summary": "The Observatory and the 13 Moons reckoning now draw increasingly from a common temporal foundation. Year, Moon, gate, day, place, pattern, environment, and recorded life may dwell within one living coordinate.",
+    "url": "./living-time-sphere.html",
+    "symbol": "◉"
+  },
+  {
+    "date": "2026-08-18",
+    "type": "observatory",
+    "title": "The strata of years have begun to take form",
+    "summary": "Time hath gained depth. The Living Time Sphere advances toward layered temporal strata, that years may be beheld one about another and long spans compared across equinoxes, solstices, Year Gates, passages, and recurring patterns.",
+    "url": "./living-time-sphere.html",
+    "symbol": "◎"
+  },
+  {
+    "date": "2026-08-18",
+    "type": "interface",
+    "title": "The Sphere hath learned nearness",
+    "summary": "The Observatory now bears a language of proximity: from afar, behold the pattern; draw near, behold the record. Temporal information may reveal greater resolution as the witness approacheth its place.",
+    "url": "./living-time-sphere.html",
+    "symbol": "◇"
+  },
+  {
+    "date": "2026-08-17",
+    "type": "temporal engine",
+    "title": "Spheres within spheres",
+    "summary": "A deeper architecture hath been laid beneath the Observatory: Year to Moon, Moon to week and gate, gate to day, day to hours, and thence unto events, records, media, and relations. The yearly sphere remaineth the great reference body, but no longer the final depth.",
+    "url": "./living-time-sphere.html",
+    "symbol": "⊙"
+  },
+  {
+    "date": "2026-08-17",
+    "type": "life atlas",
+    "title": "The record of a life entereth the temporal world",
+    "summary": "The foundations of the Codex Life Atlas now join events, entities, media, relations, temporal coordinates, environment, and provenance so lived history may inhabit the same temporal world as the calendar.",
+    "url": "./living-time-sphere.html",
+    "symbol": "✦"
+  },
+  {
+    "date": "2026-08-16",
+    "type": "calendar",
+    "title": "The calendar became an instrument of traversal",
+    "summary": "A shared temporal cursor, date navigation, day scrubbing, return to Today, historical movement, and multiple projections began binding the Calendar Atlas and Living Observatory together. Different windows; one temporal world.",
+    "url": "./moons.html",
+    "symbol": "☾"
+  },
+  {
+    "date": "2026-08-16",
+    "type": "observatory",
+    "title": "Pattern became visible",
+    "summary": "The 13 Moons, exact days, week gates, passages, lunar and astronomical layers, connections, environmental context, historical comparison, camera movement, and temporal lenses began inhabiting a common three-dimensional field.",
+    "url": "./living-time-sphere.html",
+    "symbol": "✧"
+  },
+  {
+    "date": "2026-08-15",
+    "type": "navigation",
+    "title": "The Observatory learned to move through time",
+    "summary": "Previous and next movement, a living Today state, date scrubbing, selected-time persistence, camera states, and URL-carried temporal coordinates began forming a navigable chronology. A moment may increasingly become a place unto which one may return.",
+    "url": "./living-time-sphere.html",
+    "symbol": "↟"
+  },
+  {
+    "date": "2026-08-15",
+    "type": "earth and sky",
+    "title": "The reckoning received its surroundings",
+    "summary": "Location, astronomical context, and environmental state began joining the temporal engine while provenance and uncertainty remain part of the record: what is observed, calculated, reported, interpreted, symbolic, and yet unknown.",
+    "url": "./living-time-sphere.html",
+    "symbol": "⊕"
+  },
+  {
+    "date": "2026-08-14",
+    "type": "foundation",
+    "title": "The Sphere was made sturdier",
+    "summary": "A broad stabilization strengthened rendering, layer interaction, mobile behavior, temporal state, mounting, and fallback paths as the Observatory moved from isolated demonstrations toward a shared living engine.",
+    "url": "./living-time-sphere.html",
+    "symbol": "△"
+  },
+  {
+    "date": "2026-07-30",
+    "type": "system",
+    "title": "One Sphere began serving many gates",
+    "summary": "The homepage began drawing upon the shared Living Time Sphere runtime, joining responsive rendering, temporal controls, progressive initialization, environmental provenance, and stronger mobile behavior beneath one visible instrument.",
+    "url": "./index.html",
+    "symbol": "◌"
+  },
+  {
     "date": "2026-07-17",
     "type": "system",
-    "title": "Living Codex Phase 1 — The Living Day",
-    "summary": "The homepage now carries a live daily state layer: current Moon, day within Moon, week gate, Shabbat status, daily movement, and suggested gate and frequency — all resolved automatically from the Remnant 13 Moons calendar without page rebuilds.",
+    "title": "Living Codex Phase I — The Living Day",
+    "summary": "The homepage received its living daily state. Moon, day within Moon, week gate, Shabbat state, daily movement, suggested gate, and frequency could be resolved from the Remnant 13 Moons reckoning without rebuilding the page. The Codex had begun to know when it was.",
     "url": "./index.html",
     "symbol": "☾"
   },
   {
     "date": "2026-07-13",
     "type": "system",
-    "title": "Living Codex layer activated across the main gates",
-    "summary": "The homepage and shared gateways now surface local time, saved witness records, return paths, and recent Codex updates.",
+    "title": "The Living Codex awakened across the gates",
+    "summary": "Shared living-state architecture began passing through the principal instruments of the Codex. What had existed as separate pages began the longer work of becoming one system.",
     "url": "./index.html",
     "symbol": "☲"
   },
   {
     "date": "2026-07-13",
     "type": "calendar",
-    "title": "Today in the Codex now opens the current moon directly",
-    "summary": "The daily panel now links the present day into 13 Moons and the Witness Ledger without fabricating readings.",
+    "title": "Today in the Codex opened the current Moon",
+    "summary": "The daily panel joined the present day unto 13 Moons and the Witness Ledger without fabricating readings, establishing an early bridge between reckoning and witness.",
     "url": "./moons.html",
     "symbol": "☾"
   },
   {
     "date": "2026-07-13",
     "type": "artifact",
-    "title": "Artifact Registry mobile card layout normalized",
-    "summary": "Shop page mobile rendering was tuned so registry cards and media frames hold their portrait layout more cleanly.",
+    "title": "The Artifact Registry was strengthened for the small screen",
+    "summary": "Mobile rendering of the Registry was refined so cards, portraits, and media frames might hold their intended form across smaller devices.",
     "url": "./shop.html",
     "symbol": "☲"
-  },
-  {
-    "date": "2026-07-13",
-    "type": "build log",
-    "title": "Portrait image fill restored for key shop media panels",
-    "summary": "The Tensor media and hero portrait surfaces were adjusted to preserve consistent image fill on small screens.",
-    "url": "./shop.html",
-    "symbol": "▲"
   }
 ]

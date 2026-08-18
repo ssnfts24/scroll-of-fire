@@ -1024,13 +1024,18 @@
 
     if (empty) empty.hidden = true;
 
-    list.innerHTML = updates.slice(0, 5).map(function (item) {
+    const visibleCount = 5;
+
+    const entries = updates.map(function (item, index) {
       const href = item.url || "./hub.html";
       const symbol = item.symbol || "☲";
       const type = item.type || "update";
       const summary = item.summary || "";
+      const isDeep = index >= visibleCount;
+
       return [
-        '<li class="codex-activity-item">',
+        '<li class="codex-activity-item' + (isDeep ? ' codex-activity-item--deep' : '') + '"' +
+          (isDeep ? ' data-codex-activity-deep hidden' : '') + '>',
         '  <a class="codex-activity-link" href="' + escapeAttribute(href) + '">',
         '    <span class="codex-activity-symbol" aria-hidden="true">' + escapeHTML(symbol) + "</span>",
         '    <span class="codex-activity-body">',
@@ -1042,6 +1047,23 @@
         "</li>"
       ].join("");
     }).join("");
+
+    const deeperControl = updates.length > visibleCount
+      ? [
+          '<li class="codex-activity-depth-control">',
+          '  <button type="button"',
+          '          class="codex-activity-depth-toggle"',
+          '          aria-expanded="false"',
+          '          data-codex-activity-depth-toggle>',
+          '    <span data-codex-activity-depth-label>Enter the Deeper Archive</span>',
+          '    <span class="codex-activity-depth-mark" aria-hidden="true">↓</span>',
+          "  </button>",
+          '  <p class="codex-activity-depth-note">Older records remain here beneath the present works.</p>',
+          "</li>"
+        ].join("")
+      : "";
+
+    list.innerHTML = entries + deeperControl;
   }
 
   function formatUpdateDate(date) {
@@ -1285,6 +1307,42 @@
       const willExpand = !isExpanded;
       toggle.setAttribute("aria-expanded", String(willExpand));
       content.hidden = !willExpand;
+
+      const label = toggle.querySelector("[data-codex-activity-toggle-label]");
+      if (label) {
+        label.textContent = willExpand ? "Close the Record" : "Open the Record";
+      }
+    });
+  }
+
+  function setupActivityDepthToggle() {
+    document.addEventListener("click", function (event) {
+      const toggle = event.target.closest("[data-codex-activity-depth-toggle]");
+      if (!toggle) return;
+
+      const items = document.querySelectorAll("[data-codex-activity-deep]");
+      if (!items.length) return;
+
+      const isExpanded = toggle.getAttribute("aria-expanded") === "true";
+      const willExpand = !isExpanded;
+
+      toggle.setAttribute("aria-expanded", String(willExpand));
+
+      items.forEach(function (item) {
+        item.hidden = !willExpand;
+      });
+
+      const label = toggle.querySelector("[data-codex-activity-depth-label]");
+      if (label) {
+        label.textContent = willExpand
+          ? "Seal the Deeper Archive"
+          : "Enter the Deeper Archive";
+      }
+
+      const mark = toggle.querySelector(".codex-activity-depth-mark");
+      if (mark) {
+        mark.textContent = willExpand ? "↑" : "↓";
+      }
     });
   }
 
@@ -1296,6 +1354,7 @@
     setupLifecycle();
     setupLivingDayPanel();
     setupActivityToggle();
+    setupActivityDepthToggle();
     setupPhase2IntentionPicker(); /* Phase 2 */
 
     /* Phase 2 — re-render on memory changes */

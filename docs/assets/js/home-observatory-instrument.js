@@ -332,12 +332,315 @@
     viewportObserver.observe(root);
   }
 
+  function getMountState() {
+    try {
+      return activeMount?.getState?.() || null;
+    } catch {
+      return null;
+    }
+  }
+
+  function getRendererDiagnostics() {
+    try {
+      return globalThis
+        .LivingTimeSphereRenderer3d
+        ?.getDiagnostics?.()
+        || null;
+    } catch {
+      return null;
+    }
+  }
+
+  function liveSnapshot() {
+    try {
+      return globalThis
+        .LivingTimeSphereLiveData
+        ?.getSnapshot?.()
+        || null;
+    } catch {
+      return null;
+    }
+  }
+
+  function normalizePatternDay(value) {
+    const day =
+      Math.trunc(
+        Number(value)
+      );
+
+    if (!Number.isFinite(day)) {
+      return null;
+    }
+
+    return Math.max(
+      1,
+      Math.min(
+        364,
+        day
+      )
+    );
+  }
+
+  function moonForPatternDay(day) {
+    const normalized =
+      normalizePatternDay(day);
+
+    if (!normalized) {
+      return null;
+    }
+
+    return Math.floor(
+      (
+        normalized
+        - 1
+      )
+      / 28
+    )
+    + 1;
+  }
+
+  function emitTemporalSelection(
+    detail
+  ) {
+    try {
+      document.dispatchEvent(
+        new CustomEvent(
+          "sof:home-temporal-selection",
+          {
+            detail:
+              Object.freeze(
+                {
+                  ...detail
+                }
+              )
+          }
+        )
+      );
+    } catch {}
+  }
+
+  function selectPatternDay(
+    requestedDay,
+    {
+      source =
+        "home-control"
+    } = {}
+  ) {
+    if (!activeMount) {
+      return false;
+    }
+
+    const selectedDay =
+      normalizePatternDay(
+        requestedDay
+      );
+
+    if (!selectedDay) {
+      return false;
+    }
+
+    const current =
+      getMountState()
+      || {};
+
+    const snap =
+      liveSnapshot();
+
+    const selectedYear =
+      Number(
+        current.selectedYear
+        || snap?.year
+        || new Date().getFullYear()
+      );
+
+    const selectedMoon =
+      moonForPatternDay(
+        selectedDay
+      );
+
+    activeMount.refresh?.({
+      selectedYear,
+      selectedDay,
+      selectedMoon,
+      selectedMarker:
+        `day-${selectedDay}`
+    });
+
+    updateTelemetry(
+      activeRoot
+      || document.querySelector(
+        "[data-home-sphere-root]"
+      )
+    );
+
+    emitTemporalSelection({
+      selectedYear,
+      selectedDay,
+      selectedMoon,
+      source,
+      live:
+        Number(
+          snap?.pattern
+            ?.dayOfPatternYear
+        )
+        === selectedDay
+    });
+
+    return true;
+  }
+
+  function shiftPatternDay(
+    delta
+  ) {
+    if (!activeMount) {
+      return false;
+    }
+
+    const current =
+      getMountState()
+      || {};
+
+    const snap =
+      liveSnapshot();
+
+    const startingDay =
+      normalizePatternDay(
+        current.selectedDay
+        || snap?.pattern
+          ?.dayOfPatternYear
+        || 1
+      )
+      || 1;
+
+    const shift =
+      Math.trunc(
+        Number(delta)
+        || 0
+      );
+
+    const selectedDay =
+      (
+        (
+          startingDay
+          - 1
+          + shift
+        )
+        % 364
+        + 364
+      )
+      % 364
+      + 1;
+
+    return selectPatternDay(
+      selectedDay,
+      {
+        source:
+          shift < 0
+            ? "home-previous"
+            : "home-next"
+      }
+    );
+  }
+
+  function returnToday() {
+    if (!activeMount) {
+      return false;
+    }
+
+    const snap =
+      liveSnapshot();
+
+    const selectedDay =
+      normalizePatternDay(
+        snap?.pattern
+          ?.dayOfPatternYear
+      );
+
+    if (!selectedDay) {
+      activeMount.refresh?.({
+        mode:
+          "today"
+      });
+
+      emitTemporalSelection({
+        source:
+          "home-today",
+        live:
+          true
+      });
+
+      return true;
+    }
+
+    const selectedYear =
+      Number(
+        snap?.year
+        || new Date().getFullYear()
+      );
+
+    const selectedMoon =
+      moonForPatternDay(
+        selectedDay
+      );
+
+    activeMount.refresh?.({
+      mode:
+        "today",
+      selectedYear,
+      selectedDay,
+      selectedMoon,
+      selectedMarker:
+        `day-${selectedDay}`
+    });
+
+    updateTelemetry(
+      activeRoot
+      || document.querySelector(
+        "[data-home-sphere-root]"
+      ),
+      snap
+    );
+
+    emitTemporalSelection({
+      selectedYear,
+      selectedDay,
+      selectedMoon,
+      source:
+        "home-today",
+      live:
+        true
+    });
+
+    return true;
+  }
+
   globalThis.HomeObservatoryInstrument = Object.freeze({
     bootstrap,
+
     retry() {
-      const root = activeRoot || document.querySelector("[data-home-sphere-root]");
-      return root ? activate(root) : Promise.resolve(null);
+      const root =
+        activeRoot
+        || document.querySelector(
+          "[data-home-sphere-root]"
+        );
+
+      return root
+        ? activate(root)
+        : Promise.resolve(null);
     },
-    getStatus() { return lastStatus; }
+
+    getStatus() {
+      return lastStatus;
+    },
+
+    getMountState,
+
+    getRendererDiagnostics,
+
+    selectPatternDay,
+
+    shiftPatternDay,
+
+    returnToday
   });
 })();
