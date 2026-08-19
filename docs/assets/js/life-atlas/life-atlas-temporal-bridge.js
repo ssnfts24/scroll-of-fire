@@ -181,6 +181,7 @@
       let activeTarget = eventTarget;
       let listening = false;
       let revision = 0;
+      let refreshGeneration = 0;
       let lastContext = null;
       const listeners = new Set();
 
@@ -210,7 +211,10 @@
         return null;
       }
 
-      async function context() {
+      async function context({
+        expectedGeneration = null,
+        expectedRevision = revision
+      } = {}) {
         const currentCursor =
           resolveCursor();
 
@@ -219,7 +223,7 @@
 
         if (!snapshot) {
           return {
-            revision,
+            revision: expectedRevision,
             cursor: null,
             selection: {},
             records: []
@@ -231,8 +235,8 @@
             snapshot.selection
           );
 
-        lastContext = {
-          revision,
+        const current = {
+          revision: expectedRevision,
           cursor: snapshot,
           selection:
             clone(snapshot.selection),
@@ -240,7 +244,14 @@
             clone(records)
         };
 
-        return clone(lastContext);
+        if (
+          expectedGeneration === null ||
+          expectedGeneration === refreshGeneration
+        ) {
+          lastContext = current;
+        }
+
+        return clone(current);
       }
 
       async function projection(
@@ -286,14 +297,34 @@
       async function refresh(reason = "manual") {
         revision += 1;
 
+        const refreshRevision =
+          revision;
+
+        const generation =
+          ++refreshGeneration;
+
         const current =
-          await context();
+          await context({
+            expectedGeneration: generation,
+            expectedRevision: refreshRevision
+          });
+
+        if (generation !== refreshGeneration) {
+          return {
+            reason,
+            revision: refreshRevision,
+            context:
+              clone(current),
+            stale: true
+          };
+        }
 
         const detail = {
           reason,
-          revision,
+          revision: refreshRevision,
           context:
-            clone(current)
+            clone(current),
+          stale: false
         };
 
         for (const listener of listeners) {

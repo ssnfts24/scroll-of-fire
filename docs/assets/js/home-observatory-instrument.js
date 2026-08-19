@@ -4,6 +4,13 @@
   // The homepage uses the same model and renderer stack as the full Observatory.
   // Dependencies are lazy but execute in strict order so dependants never race.
   const REQUIRED_DEPENDENCIES = [
+    "assets/js/calendar/pattern-calendar-version.js",
+    "assets/js/calendar/pattern-calendar-data.js",
+    "assets/js/calendar/pattern-calendar-format.js",
+    "assets/js/calendar/pattern-calendar-boundary.js",
+    "assets/js/calendar/pattern-calendar.js",
+    "assets/js/calendar/temporal-coordinate-engine.js",
+    "assets/js/calendar/temporal-cursor-controller.js",
     "assets/js/astronomy/astronomy-version.js",
     "assets/js/astronomy/astronomy-sources.js",
     "assets/js/astronomy/timezone-tools.js",
@@ -399,6 +406,73 @@
     + 1;
   }
 
+  function patternDateForSelection(
+    year,
+    day
+  ) {
+    const selectedDay =
+      normalizePatternDay(day);
+
+    const epoch =
+      globalThis.PatternCalendar
+        ?.epochForYear?.(
+          Number(year)
+        );
+
+    if (
+      !selectedDay ||
+      !(epoch instanceof Date) ||
+      Number.isNaN(epoch.getTime())
+    ) {
+      return null;
+    }
+
+    return new Date(
+      epoch.getTime()
+      + (selectedDay - 1) * 86400000
+    );
+  }
+
+  function canonicalSelection(
+    snapshot,
+    fallback = {}
+  ) {
+    const remnant =
+      snapshot?.coordinate
+        ?.remnant13Moons;
+
+    const selectedDay =
+      normalizePatternDay(
+        remnant?.patternDay
+        || fallback.selectedDay
+      );
+
+    const selectedYear =
+      Number(
+        remnant?.patternYear
+        || fallback.selectedYear
+      );
+
+    const selectedMoon =
+      Number(
+        remnant?.moon
+        || fallback.selectedMoon
+        || moonForPatternDay(
+          selectedDay
+        )
+      );
+
+    return {
+      selectedDay,
+      selectedYear,
+      selectedMoon,
+      cursorRevision:
+        Number(snapshot?.revision) || 0,
+      canonicalIso:
+        snapshot?.iso || null
+    };
+  }
+
   function emitTemporalSelection(
     detail
   ) {
@@ -446,24 +520,74 @@
     const snap =
       liveSnapshot();
 
-    const selectedYear =
+    const requestedYear =
       Number(
         current.selectedYear
         || snap?.year
         || new Date().getFullYear()
       );
 
-    const selectedMoon =
+    const requestedMoon =
       moonForPatternDay(
         selectedDay
       );
 
-    activeMount.refresh?.({
-      selectedYear,
+    const targetDate =
+      patternDateForSelection(
+        requestedYear,
+        selectedDay
+      );
+
+    const cursor =
+      globalThis.SOFTemporalCursor;
+
+    let resolved = {
+      selectedYear:
+        requestedYear,
       selectedDay,
-      selectedMoon,
+      selectedMoon:
+        requestedMoon,
+      cursorRevision: 0,
+      canonicalIso: null
+    };
+
+    if (
+      cursor?.setDate &&
+      targetDate instanceof Date &&
+      !Number.isNaN(
+        targetDate.getTime()
+      )
+    ) {
+      const cursorSnapshot =
+        cursor.setDate(
+          targetDate,
+          {
+            source,
+            reason:
+              "home-pattern-day"
+          }
+        );
+
+      resolved =
+        canonicalSelection(
+          cursorSnapshot,
+          resolved
+        );
+    }
+
+    if (!resolved.selectedDay) {
+      return false;
+    }
+
+    activeMount.refresh?.({
+      selectedYear:
+        resolved.selectedYear,
+      selectedDay:
+        resolved.selectedDay,
+      selectedMoon:
+        resolved.selectedMoon,
       selectedMarker:
-        `day-${selectedDay}`
+        `day-${resolved.selectedDay}`
     });
 
     updateTelemetry(
@@ -474,16 +598,22 @@
     );
 
     emitTemporalSelection({
-      selectedYear,
-      selectedDay,
-      selectedMoon,
+      ...resolved,
       source,
       live:
         Number(
           snap?.pattern
             ?.dayOfPatternYear
         )
-        === selectedDay
+        === resolved.selectedDay
+        &&
+        Number(
+          snap?.pattern?.patternYear
+          || snap?.year
+        )
+        === Number(
+          resolved.selectedYear
+        )
     });
 
     return true;
@@ -550,13 +680,46 @@
     const snap =
       liveSnapshot();
 
-    const selectedDay =
+    const cursor =
+      globalThis.SOFTemporalCursor;
+
+    const cursorSnapshot =
+      cursor?.today?.({
+        source:
+          "home-today",
+        reason:
+          "home-today"
+      })
+      || null;
+
+    const fallbackDay =
       normalizePatternDay(
         snap?.pattern
           ?.dayOfPatternYear
       );
 
-    if (!selectedDay) {
+    const fallback = {
+      selectedDay:
+        fallbackDay,
+      selectedYear:
+        Number(
+          snap?.pattern?.patternYear
+          || snap?.year
+          || new Date().getFullYear()
+        ),
+      selectedMoon:
+        moonForPatternDay(
+          fallbackDay
+        )
+    };
+
+    const resolved =
+      canonicalSelection(
+        cursorSnapshot,
+        fallback
+      );
+
+    if (!resolved.selectedDay) {
       activeMount.refresh?.({
         mode:
           "today"
@@ -566,31 +729,27 @@
         source:
           "home-today",
         live:
-          true
+          true,
+        cursorRevision:
+          resolved.cursorRevision,
+        canonicalIso:
+          resolved.canonicalIso
       });
 
       return true;
     }
 
-    const selectedYear =
-      Number(
-        snap?.year
-        || new Date().getFullYear()
-      );
-
-    const selectedMoon =
-      moonForPatternDay(
-        selectedDay
-      );
-
     activeMount.refresh?.({
       mode:
         "today",
-      selectedYear,
-      selectedDay,
-      selectedMoon,
+      selectedYear:
+        resolved.selectedYear,
+      selectedDay:
+        resolved.selectedDay,
+      selectedMoon:
+        resolved.selectedMoon,
       selectedMarker:
-        `day-${selectedDay}`
+        `day-${resolved.selectedDay}`
     });
 
     updateTelemetry(
@@ -602,9 +761,7 @@
     );
 
     emitTemporalSelection({
-      selectedYear,
-      selectedDay,
-      selectedMoon,
+      ...resolved,
       source:
         "home-today",
       live:
