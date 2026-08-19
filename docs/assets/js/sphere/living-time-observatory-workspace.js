@@ -507,16 +507,46 @@
     setText("obs-question-reason", preferences.showReason ? question.reason : "");
     const answer = byId("obs-question-answer");
     if (answer) answer.value = "";
+    shell.__returnFocus =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+
     shell.hidden = false;
-    shell.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
-    answer?.focus?.({ preventScroll: true });
+    shell.setAttribute("aria-hidden", "false");
+    document.body.classList.add("obs-question-modal-open");
+
+    requestAnimationFrame(() => {
+      answer?.focus?.({ preventScroll: true });
+    });
     preferences.lastPromptAt = new Date().toISOString();
     writeJson(KEYS.preferences, preferences);
   }
 
   function hideQuestion() {
     const shell = byId("obs-question-shell");
-    if (shell) shell.hidden = true;
+
+    if (shell) {
+      const returnFocus = shell.__returnFocus;
+
+      shell.hidden = true;
+      shell.setAttribute("aria-hidden", "true");
+      document.body.classList.remove(
+        "obs-question-modal-open"
+      );
+
+      shell.__returnFocus = null;
+
+      if (
+        returnFocus &&
+        document.contains(returnFocus)
+      ) {
+        returnFocus.focus?.({
+          preventScroll: true
+        });
+      }
+    }
+
     currentQuestion = null;
   }
 
@@ -892,6 +922,16 @@
     loadPreferenceControls();
     byId("obs-question-ask-now")?.addEventListener("click", () => showQuestion());
     byId("obs-question-close")?.addEventListener("click", hideQuestion);
+
+    document.addEventListener("keydown", event => {
+      if (
+        event.key === "Escape" &&
+        !byId("obs-question-shell")?.hidden
+      ) {
+        event.preventDefault();
+        hideQuestion();
+      }
+    });
     byId("obs-question-skip")?.addEventListener("click", () => { hideQuestion(); showToast("Question skipped. No answer was stored."); });
     byId("obs-question-snooze")?.addEventListener("click", () => {
       preferences.snoozedUntil = new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString();

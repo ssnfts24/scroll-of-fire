@@ -224,3 +224,80 @@ test(
     );
   }
 );
+
+test(
+  "homepage projection refresh must not retain stale Pattern selection",
+  () => {
+    const HOME = read(
+      "docs/assets/js/home-observatory-instrument.js"
+    );
+
+    /*
+     * Temporal authority invariant:
+     *
+     * canonical cursor
+     *      ↓
+     * homepage selection
+     *      ↓
+     * activeMount.refresh(...)
+     *      ↓
+     * rendered projection
+     *
+     * The mount is a projection. It must never become a second
+     * authority or retain an earlier selected Pattern coordinate.
+     */
+
+    assert.match(
+      HOME,
+      /emitTemporalSelection/,
+      "homepage navigation must publish through canonical temporal selection"
+    );
+
+    assert.match(
+      HOME,
+      /activeMount\.refresh/,
+      "homepage must refresh the existing Sphere projection"
+    );
+
+    const emitIndex = HOME.indexOf("emitTemporalSelection");
+    const refreshIndex = HOME.indexOf("activeMount.refresh");
+
+    assert.ok(
+      emitIndex >= 0,
+      "canonical temporal selection publication must exist"
+    );
+
+    assert.ok(
+      refreshIndex >= 0,
+      "Sphere projection refresh must exist"
+    );
+
+    /*
+     * Regression coordinate:
+     *
+     * An old rendered coordinate such as Pattern Day 124 must not
+     * remain authoritative after canonical selection moves to 294.
+     *
+     * We intentionally protect the architecture here instead of
+     * introducing another local selected-day state machine.
+     */
+
+    assert.doesNotMatch(
+      HOME,
+      /selectedDayOfYear\s*=\s*124/,
+      "homepage must not hard-code or retain Pattern Day 124"
+    );
+
+    assert.doesNotMatch(
+      HOME,
+      /selectedPatternPosition\s*=\s*124/,
+      "homepage must not create a stale Pattern-position authority"
+    );
+
+    assert.match(
+      HOME,
+      /selectedDay|dayOfPatternYear|selectedPatternPosition/,
+      "projection refresh must remain selection-aware"
+    );
+  }
+);

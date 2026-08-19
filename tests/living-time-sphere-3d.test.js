@@ -531,7 +531,10 @@ test("Homepage: 3D renderer JS not in critical load path", () => {
 test("Homepage: observatory section exists with expected elements", () => {
   const html = read("docs/index.html");
   assert.ok(html.includes("home-sphere-observatory"),     "observatory section ID present");
-  assert.ok(html.includes("Enter Today's Sphere"),        "CTA link present");
+  assert.ok(
+    html.includes('id="home-sphere-today-open-link"'),
+    "canonical Sphere deep link present"
+  );
   assert.ok(html.includes("home-sphere-today-preview"),   "preview element present");
   assert.ok(html.includes("home-sphere-today-open-link"), "open link element present");
   assert.ok(html.includes("data-sphere-mode=\"pattern\""),  "interactive pattern mode present");

@@ -560,3 +560,69 @@
 @media (prefers-reduced-motion: reduce) {
   .obs-toast { scroll-behavior: auto; }
 }
+
+/* Pre-Phase-B: Observatory question dialog */
+body.obs-question-modal-open {
+  overflow: hidden;
+}
+
+.obs-question-shell:not([hidden]) {
+  position: fixed;
+  z-index: 10020;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  width: min(92vw, 640px);
+  max-height: min(82dvh, 760px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  margin: 0;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  border-radius: 1.4rem;
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, .72),
+    0 0 0 100vmax rgba(0, 4, 12, .72);
+}
+
+.obs-question-close {
+  position: sticky;
+  top: 0;
+  float: right;
+  z-index: 2;
+}
+
+.obs-question-more-cue {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: .55rem;
+  margin: .85rem 0 .35rem;
+  color: var(--muted, #b9c1c7);
+  font-size: .9rem;
+  text-align: center;
+}
+
+.obs-question-more-cue b {
+  display: inline-block;
+  font-size: 1.25rem;
+  animation: obs-question-cue 850ms ease-in-out 3;
+}
+
+@keyframes obs-question-cue {
+  0%, 100% { transform: translateY(0); opacity: .55; }
+  50% { transform: translateY(.38rem); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .obs-question-more-cue b {
+    animation: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .obs-question-shell:not([hidden]) {
+    width: calc(100vw - 1.25rem);
+    max-height: calc(100dvh - 2rem);
+    padding: 1.15rem;
+    border-radius: 1.2rem;
+  }
+}

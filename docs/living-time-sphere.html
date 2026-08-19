@@ -822,8 +822,20 @@
               <div><p class="eyebrow">Gentle Guidance</p><h3 id="obs-question-system-title">Questions &amp; Personal Quests</h3><p>The Observatory may offer one relevant question when you arrive. You can answer, skip, snooze, reduce the frequency, or turn it off completely. Everything stays local unless you choose otherwise.</p></div>
               <button class="obs-luxury-btn" id="obs-question-ask-now" type="button">Ask Me a Question</button>
             </header>
+            <p class="obs-question-more-cue" aria-hidden="true">
+              <span>More question settings below</span>
+              <b>↓</b>
+            </p>
 
-            <article id="obs-question-shell" class="obs-question-shell" hidden aria-live="polite">
+            <article
+              id="obs-question-shell"
+              class="obs-question-shell"
+              hidden
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="obs-question-text"
+              aria-live="polite"
+              tabindex="-1">
               <button id="obs-question-close" class="obs-question-close" type="button" aria-label="Close question">×</button>
               <span id="obs-question-category" class="obs-question-category">Check-in</span>
               <h4 id="obs-question-text">What stands out right now?</h4>

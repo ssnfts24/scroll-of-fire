@@ -21,7 +21,10 @@ test("homepage is sphere-first while retaining the canonical deep link", () => {
   const section = html.slice(html.indexOf('id="home-sphere-observatory"'), html.indexOf("codex-live-grid"));
   assert.ok(section.includes('id="home-sphere-today-preview"'));
   assert.ok(section.includes('id="home-sphere-today-open-link"'));
-  assert.ok(section.includes("Enter Today's Sphere"));
+  assert.match(
+    section,
+    /id="home-sphere-today-open-link"[^>]*href="\.\/living-time-sphere\.html\?view=today&amp;marker=today&amp;source=home"/
+  );
   assert.equal(section.includes("data-location-use-device"), false, "homepage Sphere should not expose the location command deck");
   assert.equal(section.includes('class="home-living-sphere__mode-controls"'), false, "homepage Sphere should not expose mode controls");
 });
