@@ -4525,9 +4525,7 @@
 
           reason:
             options.reason ||
-            "sphere-pattern-day",
-
-          force: true
+            "sphere-pattern-day"
         }
       );
 

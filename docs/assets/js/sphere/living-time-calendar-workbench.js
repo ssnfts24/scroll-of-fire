@@ -359,9 +359,7 @@
             source ||
             "calendar-atlas",
 
-          reason,
-
-          force: true
+          reason
         }
       );
 

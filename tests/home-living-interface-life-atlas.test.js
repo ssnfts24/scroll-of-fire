@@ -112,7 +112,7 @@ test(
 
     assert.match(
       JS,
-      /record\.temporal/
+      /record\?\.temporal/
     );
 
     assert.match(

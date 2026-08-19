@@ -3922,3 +3922,44 @@ test("Sphere extension host supports feature-gated extensions", async () => {
     1
   );
 });
+
+test("temporal bridge suppresses stale overlapping refresh publication", async () => {
+  const repository = Repository.createRepository();
+  const relations = Relations.createRelationRepository();
+
+  const cursor = {
+    getState() { return {}; },
+    getDate() { return new Date("2026-08-16T12:00:00Z"); },
+    getCoordinate() { return { civilDate: "2026-08-16" }; }
+  };
+
+  const bridge = TemporalBridge.createTemporalBridge({
+    repository,
+    relations,
+    cursor
+  });
+
+  const original = bridge.engine.forTemporalSelection.bind(bridge.engine);
+  let call = 0;
+
+  bridge.engine.forTemporalSelection = async selection => {
+    call += 1;
+    const delay = call === 1 ? 40 : 0;
+    await new Promise(resolve => setTimeout(resolve, delay));
+    return original(selection);
+  };
+
+  const published = [];
+  bridge.subscribe(detail => published.push(detail.reason));
+
+  const first = bridge.refresh("older");
+  const second = bridge.refresh("newer");
+
+  const [older, newer] = await Promise.all([first, second]);
+
+  assert.equal(older.stale, true);
+  assert.equal(newer.stale, false);
+  assert.deepEqual(published, ["newer"]);
+  assert.equal(bridge.getRevision(), 2);
+  assert.equal(bridge.getLastContext().revision, 2);
+});
