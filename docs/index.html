@@ -69,7 +69,7 @@
   <link rel="stylesheet" href="assets/css/living-day.css?v=1">
   <link rel="stylesheet" href="assets/css/codex-memory.css?v=1">
   <link rel="stylesheet" href="assets/css/share-day.css?v=1">
-  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260815-6">
+  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260819-b743">
   <link rel="stylesheet" href="assets/css/living-time-app-enhancements.css?v=20260730-1">
   <link rel="stylesheet" href="assets/css/performance-runtime.css?v=20260731-1">
 
@@ -639,6 +639,20 @@
             <p class="home-temporal-console__label">Boundary</p>
             <strong id="home-live-boundary">Local boundary</strong>
             <small id="home-live-boundary-sub">Local timezone</small>
+          </div>
+        </section>
+
+        <section class="home-temporal-selection" data-home-temporal-selection aria-live="polite">
+          <div class="home-temporal-selection__live">
+            <span class="home-temporal-selection__label">Live Today</span>
+            <strong id="home-temporal-live-coordinate">Reading today…</strong>
+            <small id="home-temporal-live-detail">Canonical live temporal coordinate</small>
+          </div>
+
+          <div class="home-temporal-selection__selected" data-home-selected-card hidden>
+            <span class="home-temporal-selection__label">Selected</span>
+            <strong id="home-temporal-selected-coordinate">—</strong>
+            <small id="home-temporal-selected-detail">Exploring another Pattern coordinate</small>
           </div>
         </section>
 

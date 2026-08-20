@@ -166,6 +166,16 @@
    * @param {boolean} [options.webglAvailable]  Pre-computed WebGL2 probe result (avoids duplicate canvas).
    * @returns {string}  One of the PERFORMANCE_TIERS values.
    */
+
+  function _isMobileInteractiveSurface() {
+    try {
+      if (typeof window !== "undefined" && Number(window.innerWidth || 0) > 0 && window.innerWidth <= 720) return true;
+      return !!globalThis.matchMedia?.("(pointer: coarse)")?.matches;
+    } catch {
+      return false;
+    }
+  }
+
   function selectTier({ override, webglAvailable } = {}) {
     // 1. Validate an explicit override, but do not let it bypass hard
     //    renderer requirements or genuine device-safety guards.
@@ -197,6 +207,10 @@
     // 4b. Low CPU count (≤ 2 threads)
     const cpuCount = typeof navigator !== "undefined" ? navigator.hardwareConcurrency : undefined;
     if (typeof cpuCount === "number" && cpuCount <= 2) return PERFORMANCE_TIERS.LOWPOWER;
+
+    // B7.48 — Auto on a phone is capped at Balanced even when the phone reports
+    // desktop-class memory/CPU. Explicit user overrides remain respected.
+    if (!validOverride && _isMobileInteractiveSurface()) return PERFORMANCE_TIERS.BALANCED;
 
     // 5. Balanced — moderate hardware (≤ 4 GB or ≤ 4 CPUs)
     if ((mem !== null && mem <= 4) || (typeof cpuCount === "number" && cpuCount <= 4)) {

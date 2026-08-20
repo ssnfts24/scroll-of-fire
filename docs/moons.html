@@ -137,12 +137,12 @@
   <link rel="stylesheet" href="assets/css/pwa.css?v=20260722-4">
   <link rel="stylesheet" href="assets/css/performance-runtime.css?v=20260731-1">
   <link rel="stylesheet" href="assets/css/equinox-passage.css?v=20260722-4">
-  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260723-1">
+  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260819-b752">
   <link rel="stylesheet" href="assets/css/living-time-app-enhancements.css?v=20260730-1">
 
   <link rel="stylesheet" href="assets/css/animations.css">
   <link rel="stylesheet" href="assets/css/share-day.css?v=1">
-  <link rel="stylesheet" href="assets/css/moons-interface.css?v=20260818-1">
+  <link rel="stylesheet" href="assets/css/moons-interface.css?v=20260818-b6">
 
   <script>
     window.SOF_MOONS_CONFIG = Object.freeze({
@@ -700,6 +700,12 @@
                 <dt>Lunar phase</dt>
                 <dd id="moons-sphere-today-lunar">—</dd>
 
+                <dt>Solar gate</dt>
+                <dd id="moons-sphere-today-solar">—</dd>
+
+                <dt>Season</dt>
+                <dd id="moons-sphere-today-season">—</dd>
+
                 <dt>Passage</dt>
                 <dd id="moons-sphere-today-passage">—</dd>
 
@@ -724,6 +730,7 @@
               Enter Today's Sphere ↗
             </a>
             <a class="lab-btn ghost" href="./alignment-ledger.html?source=moons">Alignment Ledger</a>
+            <button class="lab-btn ghost" type="button" data-calendar-backup-export>Backup Calendar</button>
           </div>
         </section>
 
@@ -2517,7 +2524,10 @@
             <h2>Data Protection</h2>
             <p class="fine">Records, settings, imported backups, and optional location stay in this browser. Witness text, readings, notes, precise location, and backups are not sent to analytics. Location is optional and is used only to calculate sunset; manual sunset works without it.</p>
             <div class="btnrow">
-              <button id="exportAllData" class="lab-btn" type="button">Export All Data</button>
+              <button id="exportAllData" class="lab-btn" type="button">Export 13 Moons Data</button>
+              <button class="lab-btn" type="button" data-calendar-backup-export>Download Full Calendar Backup</button>
+              <button class="lab-btn ghost" type="button" data-calendar-backup-import>Restore Full Calendar Backup</button>
+              <button class="lab-btn ghost" type="button" data-calendar-storage-persist>Protect Browser Storage</button>
               <button id="downloadBackup" class="lab-btn ghost" type="button">Download Backup</button>
               <button id="exportCurrentWitness" class="lab-btn ghost" type="button">Export Current Witness</button>
               <button id="copyCurrentReading" class="lab-btn ghost" type="button">Copy Current Reading</button>
@@ -2529,7 +2539,19 @@
             </select>
             <input id="importDataFile" type="file" accept="application/json" hidden>
             <button id="importAllData" class="lab-btn ghost" type="button">Import Data</button>
-            <p class="fine">Import validates the backup, reports record counts, and creates a local rollback backup before making changes.</p>
+            <p class="fine">Import validates the 13 Moons backup, reports record counts, and creates a local rollback backup before making changes.</p>
+            <hr>
+            <h3>Whole Calendar Safety</h3>
+            <p data-calendar-safety-status class="fine">Checking calendar storage…</p>
+            <p data-calendar-safety-reminder class="warning" hidden>Your calendar has local records but no recent portable backup.</p>
+            <label>Full backup restore behavior
+              <select data-calendar-backup-mode>
+                <option value="merge">Merge with this device</option>
+                <option value="replace">Replace calendar data</option>
+              </select>
+            </label>
+            <input data-calendar-backup-file type="file" accept="application/json" hidden>
+            <p class="fine">Full Calendar Backup includes 13 Moons settings/logs, Calendar Atlas notes and pins, Observatory records/preferences, location/unit settings, and Life Atlas planner records. Downloaded files are the portable copy that survives browser data clearing or moving devices.</p>
           </article>
 
           <article class="card col-6">
@@ -2615,7 +2637,7 @@
 
   <p id="appStatusLive" class="visually-hidden" role="status" aria-live="polite"></p>
 
-  <script src="assets/js/moons-version.js?v=20260722-4"></script>
+  <script src="assets/js/moons-version.js?v=20260819-b752"></script>
   <script src="assets/js/moons-migrations.js?v=20260722-4"></script>
   <script src="assets/js/moons-storage.js?v=20260722-4"></script>
 
@@ -2643,31 +2665,37 @@
   <script src="assets/js/alignment/alignment-version.js?v=20260723-1"></script>
   <script src="assets/js/alignment/alignment-ledger-engine.js?v=20260723-1"></script>
   <script src="assets/js/alignment/alignment-ledger-data.js?v=20260723-1"></script>
-  <script src="assets/js/sphere/living-time-sphere-state.js?v=20260724-1"></script>
+  <script src="assets/js/sphere/living-time-sphere-state.js?v=20260819-b731"></script>
   <script src="assets/js/environment/environment-state.js?v=20260731-2"></script>
   <script src="assets/js/environment/providers/open-meteo-forecast.js?v=20260731-1"></script>
   <script src="assets/js/environment/open-meteo-adapter.js?v=20260731-1"></script>
   <script src="assets/js/environment/location-command.js?v=20260731-1"></script>
+  <!-- B7.52 AMBIENT FAST PATH: the Moons Today card is explicitly SVG-only.
+       Do not parse/compile the full WebGL renderer, camera, animation, labels,
+       historical extensions, or record-sphere projection on this page. -->
   <script src="assets/js/sphere/living-time-sphere-version.js?v=20260723-2"></script>
   <script src="assets/js/sphere/living-time-sphere-model.js?v=20260723-2"></script>
+  <script src="assets/js/sphere/living-time-sphere-calendar-geometry.js?v=20260819-b727"></script>
   <script src="assets/js/sphere/living-time-sphere-layout.js?v=20260723-2"></script>
-  <script src="assets/js/sphere/living-time-sphere-connections.js?v=20260724-1"></script>
   <script src="assets/js/sphere/living-time-sphere-renderer-svg.js?v=20260723-2"></script>
-  <script src="assets/js/sphere/living-time-sphere-materials.js?v=20260724-1"></script>
-  <script src="assets/js/sphere/living-time-sphere-effects.js?v=20260724-1"></script>
-  <script src="assets/js/sphere/living-time-sphere-camera.js?v=20260724-1"></script>
-  <script src="assets/js/sphere/living-time-sphere-animation.js?v=20260724-1"></script>
-  <script src="assets/js/sphere/living-time-sphere-label-manager.js?v=20260731-1"></script>
-  <script src="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260724-1"></script>
-  <script src="assets/js/sphere/living-time-sphere-interaction.js?v=20260724-1"></script>
-  <script src="assets/js/sphere/living-time-sphere-accessibility.js?v=20260723-2"></script>
   <script src="assets/js/sphere/living-time-sphere-live-data.js?v=20260724-1"></script>
   <script src="assets/js/sphere/living-time-sphere-url-state.js?v=20260724-1"></script>
   <script src="assets/js/sphere/living-time-sphere-mount.js?v=20260724-1"></script>
   <script src="assets/js/sphere/living-time-sphere-today.js?v=20260724-1"></script>
 
+  <!-- Canonical Life Atlas planner data plane: shared with Living Time Sphere. -->
+  <script src="assets/js/life-atlas/life-atlas-schema.js?v=20260817-1"></script>
+  <script src="assets/js/life-atlas/life-atlas-repository.js?v=20260819-b750"></script>
+  <script src="assets/js/life-atlas/life-atlas-indexeddb.js?v=20260819-b750"></script>
+  <script src="assets/js/life-atlas/life-atlas-scheduling.js?v=20260818-1"></script>
+  <script src="assets/js/life-atlas/life-atlas-planner.js?v=20260819-b750"></script>
+  <script src="assets/js/calendar/calendar-data-safety.js?v=20260819-b731"></script>
+
+  <!-- B7.2: same Life Atlas event projection used by the full Observatory sphere. -->
+
   <!-- Main calendar app -->
-  <script src="assets/js/moons.js?v=20260722-4"></script>
+  <script src="assets/js/moons.js?v=20260818-b6"></script>
+  <script src="assets/js/life-atlas/life-atlas-calendar-projection.js?v=20260819-b750"></script>
 
   <!-- Astrology and planetary mirror -->
   <script src="assets/js/astrology.js?v=20260722-4"></script>

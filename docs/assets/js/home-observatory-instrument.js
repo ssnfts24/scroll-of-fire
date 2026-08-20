@@ -580,6 +580,11 @@
     }
 
     activeMount.refresh?.({
+      instant:
+        targetDate instanceof Date &&
+        !Number.isNaN(targetDate.getTime())
+          ? targetDate
+          : undefined,
       selectedYear:
         resolved.selectedYear,
       selectedDay:
@@ -800,4 +805,133 @@
 
     returnToday
   });
+})();
+
+/* Phase B1.1 — presentation-only Live Today / Selected identity.
+ * Temporal authority remains with SOFTemporalCursor and the Sphere mount.
+ */
+(() => {
+  "use strict";
+
+  function patternLabel(day) {
+    const value = Number(day);
+    if (!Number.isFinite(value) || value < 1 || value > 364) return "—";
+
+    const moon = Math.floor((value - 1) / 28) + 1;
+    const moonDay = ((value - 1) % 28) + 1;
+
+    return `Moon ${moon} · Day ${moonDay} · ${value}/364`;
+  }
+
+  function liveCoordinate() {
+    const snapshot =
+      globalThis.LivingTimeSphereLiveData?.getSnapshot?.();
+
+    const day =
+      Number(snapshot?.pattern?.dayOfPatternYear);
+
+    return {
+      day,
+      year: Number(
+        snapshot?.pattern?.patternYear ||
+        snapshot?.year
+      )
+    };
+  }
+
+  function renderSelection(detail = null) {
+    const root =
+      document.querySelector("[data-home-live-root]");
+
+    if (!root) return;
+
+    const live = liveCoordinate();
+
+    const liveNode =
+      document.getElementById("home-temporal-live-coordinate");
+
+    const liveDetail =
+      document.getElementById("home-temporal-live-detail");
+
+    const selectedCard =
+      root.querySelector("[data-home-selected-card]");
+
+    const selectedNode =
+      document.getElementById("home-temporal-selected-coordinate");
+
+    const selectedDetail =
+      document.getElementById("home-temporal-selected-detail");
+
+    if (liveNode)
+      liveNode.textContent = patternLabel(live.day);
+
+    if (liveDetail)
+      liveDetail.textContent =
+        Number.isFinite(live.year)
+          ? `Pattern Year ${live.year} · live temporal anchor`
+          : "Canonical live temporal coordinate";
+
+    if (!detail || detail.live === true) {
+      root.dataset.homeTemporalMode = "live";
+
+      if (selectedCard)
+        selectedCard.hidden = true;
+
+      return;
+    }
+
+    const selectedDay =
+      Number(detail.selectedDay);
+
+    const selectedYear =
+      Number(detail.selectedYear);
+
+    root.dataset.homeTemporalMode = "exploring";
+
+    if (selectedCard)
+      selectedCard.hidden = false;
+
+    if (selectedNode)
+      selectedNode.textContent =
+        patternLabel(selectedDay);
+
+    if (selectedDetail) {
+      let relation = "Exploring another Pattern coordinate";
+
+      if (
+        Number.isFinite(live.day) &&
+        Number.isFinite(selectedDay)
+      ) {
+        const delta = selectedDay - live.day;
+
+        if (delta === 0 && selectedYear !== live.year) {
+          relation =
+            `Same Pattern day · Pattern Year ${selectedYear}`;
+        } else if (delta > 0) {
+          relation =
+            `${delta} Pattern day${delta === 1 ? "" : "s"} ahead`;
+        } else if (delta < 0) {
+          relation =
+            `${Math.abs(delta)} Pattern day${delta === -1 ? "" : "s"} behind`;
+        }
+      }
+
+      selectedDetail.textContent = relation;
+    }
+  }
+
+  document.addEventListener(
+    "sof:home-temporal-selection",
+    event => renderSelection(event.detail)
+  );
+
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => renderSelection(),
+      { once: true }
+    );
+  } else {
+    renderSelection();
+  }
 })();

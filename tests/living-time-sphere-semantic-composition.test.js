@@ -352,13 +352,13 @@ test(
     assert.equal(
       api.constants
         .SEMANTIC_MOBILE_LABEL_CAP,
-      6
+      5
     );
 
     assert.equal(
       api.constants
         .SEMANTIC_DESKTOP_LABEL_CAP,
-      12
+      10
     );
   }
 );

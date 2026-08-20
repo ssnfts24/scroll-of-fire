@@ -24,7 +24,7 @@
     manualSunset:  "18:00",
     selectedDayOfYear: null,
     fieldRange:    "now",
-    visibleLayers: { pattern: true, exactDays: true, weekGates: true, outsideDays: true, passage: true, lunar: true, solar: true, markers: true, recurrence: true, spiral: true, environment: true, witness: false, personal: false, connections: true },
+    visibleLayers: { pattern: true, exactDays: true, weekGates: true, outsideDays: true, passage: true, lunar: true, solar: true, planets: true, markers: true, recurrence: true, spiral: true, environment: true, witness: false, personal: false, connections: true },
     selectedMarker: null,
     source: null,
     datasetVersion: null,
@@ -1862,7 +1862,7 @@
       preserveUnknownParams: true,
       hash: location.hash || "",
     });
-    if (replace) window.history.replaceState({ marker, day: selected?.dayOfPatternYear || null }, "", url);
+    if (replace) window.history.replaceState({ marker, day: selected?.dayOfPatternYear || null, sofInternalTemporal: true }, "", url);
     else window.history.pushState({ marker, day: selected?.dayOfPatternYear || null }, "", url);
     _state.currentUrl = String(url || location.href || "");
     _state.urlIntegrity = _evaluateDeepLinkIntegrity(_state.initialUrl, _state.currentUrl);
@@ -2545,6 +2545,8 @@
       _updateWhatAmISeeing(_state.viewMode);
       _updateStateStrip(_state.viewMode, model);
       _updateEnvironmentBridge(model);
+    _updateLocationSeasonStrip(model);
+      void _refreshScheduleNavigator(model);
       _updateSphereUrlFromModel(model, { replace: true });
       return;
     }
@@ -2580,6 +2582,14 @@
     _updateWhatAmISeeing(_state.viewMode);
     _updateStateStrip(_state.viewMode, model);
     _updateEnvironmentBridge(model);
+    _updateLocationSeasonStrip(model);
+    // B7.52 — do not race an IndexedDB planner query against the first WebGL
+    // shader/geometry compile. Keep only the latest model until 3D is active.
+    if (_state.active3d || !shouldUse3d()) {
+      void _refreshScheduleNavigator(model);
+    } else {
+      _state._pendingScheduleNavigatorModel = model;
+    }
     _updateRendererDiagnostics();
     _updateSphereUrlFromModel(model, { replace: true });
   }
@@ -2692,6 +2702,85 @@
           onMarkerSelect: marker => {
             if (!marker) return;
 
+            const extensionMeta =
+              marker?.metadata || {};
+
+            if (
+              extensionMeta?.planner === true
+              || extensionMeta?.type === "living-plan"
+            ) {
+              const recordId =
+                extensionMeta?.recordId || null;
+
+              const patternDay =
+                Number(
+                  extensionMeta?.temporal?.patternDay
+                  ?? extensionMeta?.patternDay
+                );
+
+              const patternYear =
+                Number(
+                  extensionMeta?.temporal?.patternYear
+                  ?? marker?.year
+                );
+
+              if (
+                Number.isFinite(patternDay)
+              ) {
+                _state.selectedDayOfYear =
+                  _clampPatternDay(patternDay);
+
+                _state.selectedMarker =
+                  `day-${_state.selectedDayOfYear}`;
+              }
+
+              if (
+                Number.isFinite(patternYear)
+              ) {
+                _state.year = patternYear;
+                _syncYearSelect(patternYear);
+              }
+
+              document.dispatchEvent(
+                new CustomEvent(
+                  "sof:living-plan-selected",
+                  {
+                    detail: {
+                      recordId,
+                      title:
+                        extensionMeta?.title
+                        || null,
+                      category:
+                        extensionMeta?.plannerCategory
+                        || null,
+                      temporal:
+                        extensionMeta?.temporal
+                        || null,
+                      schedule:
+                        extensionMeta?.schedule
+                        || null,
+                      source:
+                        "sphere",
+                      // B7.14: selecting a scheduled marker inspects it first.
+                      // Editing requires the explicit Edit action in its halo.
+                      edit: false
+                    }
+                  }
+                )
+              );
+
+              globalThis
+                .LivingTimeSphereAccessibility
+                ?.announce?.(
+                  extensionMeta?.title
+                    ? `Plan selected: ${extensionMeta.title}.`
+                    : "Living plan selected."
+                );
+
+              renderSphere(container);
+              return;
+            }
+
             if (
               marker.type ===
                 "temporal-year"
@@ -2767,6 +2856,7 @@
         _setSphereLoaderVisibility(container, false);
         _updateInteractBar();
         _updateTodayDiagnostics(model);
+        void _refreshScheduleNavigator(model);
         if (transient && _state.requestedRendererMode !== "svg") {
           _scheduleRetry(container, reason);
         }
@@ -2805,6 +2895,20 @@
       _state.active3d = true;
       _state.activeRendererMode = "3d";
       _state.firstRenderSurfaceFailure = null;
+
+      // B7.52 — the schedule navigator is useful, but its IndexedDB read does
+      // not belong on the critical path. Hydrate it only after the first real
+      // 3D surface has been accepted.
+      const pendingScheduleModel = _state._pendingScheduleNavigatorModel || model;
+      _state._pendingScheduleNavigatorModel = null;
+      const hydrateScheduleNavigator = () => {
+        if (_state.active3d) void _refreshScheduleNavigator(pendingScheduleModel);
+      };
+      if (typeof requestIdleCallback === "function") {
+        requestIdleCallback(hydrateScheduleNavigator, { timeout: 1000 });
+      } else {
+        setTimeout(hydrateScheduleNavigator, 120);
+      }
       _state.restoreAttempts = 0;
       _state.retryCount = 0;
       _clearAutoRetry();
@@ -2956,23 +3060,30 @@
     if (!bar) return;
     // Show/hide the whole bar based on whether 3D is active.
     bar.style.display = _state.active3d ? "" : "none";
-    // Always reset to the "Interact" state when the bar is re-shown.
-    if (interactBtn) interactBtn.style.display = "";
-    if (endBtn)      endBtn.style.display      = "none";
-    if (hintOff)     hintOff.style.display     = "";
-    if (hintOn)      hintOn.style.display      = "none";
+    // B7.3: render refreshes must not silently disarm an interaction session.
+    // The renderer owns the start/end events; this function only guarantees a
+    // sane initial state when 3D first appears.
+    if (!bar.dataset.interactionInitialized) {
+      if (interactBtn) interactBtn.style.display = "";
+      if (endBtn)      endBtn.style.display      = "none";
+      if (hintOff)     hintOff.style.display     = "";
+      if (hintOn)      hintOn.style.display      = "none";
+      bar.dataset.interactionInitialized = "true";
+    }
   }
 
   function _updateAlternateViews(model, spiral) {
-    // Reveal data table section
+    // Reveal data table / text sections only for the renderer that actually
+    // needs them. B7.52 avoids rebuilding two hidden DOM projections on every
+    // ordinary WebGL/SVG calendar refresh.
     const tableSection = document.getElementById("sphere-data-table-section");
-    if (tableSection) tableSection.style.display = _state.requestedRendererMode === "table" ? "" : "none";
-
-    // Reveal text summary section
     const textSection  = document.getElementById("sphere-text-summary-section");
-    if (textSection)  textSection.style.display  = _state.requestedRendererMode === "text"  ? "" : "none";
+    const tableMode = _state.requestedRendererMode === "table";
+    const textMode = _state.requestedRendererMode === "text";
+    if (tableSection) tableSection.style.display = tableMode ? "" : "none";
+    if (textSection) textSection.style.display = textMode ? "" : "none";
 
-    if (!model) return;
+    if (!model || (!tableMode && !textMode)) return;
     const selected = model.selectedPatternPosition || null;
     const today = model.todayPatternPosition || null;
     const selectedYearPoint = Array.isArray(spiral?.years)
@@ -3003,14 +3114,14 @@
       ["Year spiral radius", selectedYearPoint?.yearSpiralRadius != null ? Number(selectedYearPoint.yearSpiralRadius).toFixed(4) : "Unavailable", "Normalized 0–1"],
     ];
 
-    const table = document.getElementById("sphere-data-table");
+    const table = tableMode ? document.getElementById("sphere-data-table") : null;
     if (table) {
       table.innerHTML = `<caption class="visually-hidden">Canonical Living Time Sphere coordinates</caption>
         <thead><tr><th scope="col">Field</th><th scope="col">Value</th><th scope="col">Source</th></tr></thead>
         <tbody>${rows.map(([field, value, source]) => `<tr><th scope="row">${_escapeHtml(field)}</th><td>${_escapeHtml(value)}</td><td>${_escapeHtml(source)}</td></tr>`).join("")}</tbody>`;
     }
 
-    const text = document.getElementById("sphere-text-summary-content");
+    const text = textMode ? document.getElementById("sphere-text-summary-content") : null;
     if (text) {
       const comparison = model.temporalComparison;
       text.textContent = [
@@ -3419,6 +3530,113 @@
     bridge.classList.toggle("is-off", !layerVisible);
   }
 
+  function _seasonContextForLocation(model) {
+    const envState = globalThis.SofEnvironmentState?.getEnvironmentState?.() || null;
+    const place = envState?.place || null;
+    const lat = Number(place?.latitude);
+    const selected = model?.selectedPatternPosition || _resolveSelectedPatternPosition(model) || null;
+    const angleRaw = Number(selected?.solar?.angle ?? model?.currentSolarSeasonAngle ?? model?.solarSeasonAngle ?? NaN);
+    const angle = Number.isFinite(angleRaw) ? ((angleRaw % 360) + 360) % 360 : null;
+    const quarter = angle == null ? null : Math.floor(angle / 90) % 4;
+    const progress = angle == null ? null : (angle % 90) / 90;
+    const north = ["Spring", "Summer", "Autumn", "Winter"];
+    const south = ["Autumn", "Winter", "Spring", "Summer"];
+    let hemisphere = "Location required";
+    let label = "Seasonal field unavailable";
+    if (Number.isFinite(lat)) {
+      if (Math.abs(lat) < 10) {
+        hemisphere = "Equatorial";
+        label = quarter == null ? "Solar quarter" : `Solar quarter ${quarter + 1}`;
+      } else {
+        const isNorth = lat > 0;
+        hemisphere = isNorth ? "Northern" : "Southern";
+        label = quarter == null ? "Season unavailable" : (isNorth ? north : south)[quarter];
+      }
+    }
+    const gateNames = ["March Equinox", "June Solstice", "September Equinox", "December Solstice"];
+    const nextGateIndex = quarter == null ? null : (quarter + 1) % 4;
+    const daysToGate = progress == null ? null : Math.max(0, Math.round((1 - progress) * (365.2422 / 4)));
+    return {
+      place,
+      latitude: Number.isFinite(lat) ? lat : null,
+      hemisphere,
+      season: label,
+      progress: progress == null ? null : Math.max(0, Math.min(1, progress)),
+      angle,
+      nextGate: nextGateIndex == null ? null : gateNames[nextGateIndex],
+      daysToGate,
+    };
+  }
+
+  function _selectedDaylightEstimate(model) {
+    const envState = globalThis.SofEnvironmentState?.getEnvironmentState?.() || null;
+    const lat = Number(envState?.place?.latitude);
+    if (!Number.isFinite(lat)) return null;
+    const selected = model?.selectedPatternPosition || _resolveSelectedPatternPosition(model) || null;
+    const patternDay = Math.max(1, Math.min(364, Number(selected?.dayOfPatternYear || _state.selectedDayOfYear || 1)));
+    const year = Number(_state.year || selected?.patternYear || new Date().getFullYear());
+    let date = null;
+    try {
+      const epoch = globalThis.PatternCalendar?.epochForYear?.(year);
+      if (epoch instanceof Date && !Number.isNaN(epoch.getTime())) date = new Date(epoch.getTime() + (patternDay - 1) * 86400000);
+    } catch (_) {}
+    if (!date) date = new Date(Date.UTC(year, 3, 17 + patternDay - 1));
+    const start = Date.UTC(date.getUTCFullYear(), 0, 0);
+    const doy = Math.floor((Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()) - start) / 86400000);
+    const phi = lat * Math.PI / 180;
+    const decl = (23.44 * Math.PI / 180) * Math.sin((2 * Math.PI / 365) * (doy - 80));
+    const x = -Math.tan(phi) * Math.tan(decl);
+    const hours = x <= -1 ? 24 : x >= 1 ? 0 : (24 / Math.PI) * Math.acos(x);
+    return Number.isFinite(hours) ? Math.max(0, Math.min(24, hours)) : null;
+  }
+
+  function _historicalClimateSummary(model) {
+    const envState = globalThis.SofEnvironmentState?.getEnvironmentState?.() || null;
+    const source = envState?.historicalClimate || envState?.climate || null;
+    const monthly = Array.isArray(source?.monthly) ? source.monthly : null;
+    if (!monthly || !monthly.length) return "";
+    const selected = model?.selectedPatternPosition || _resolveSelectedPatternPosition(model) || null;
+    const patternDay = Math.max(1, Math.min(364, Number(selected?.dayOfPatternYear || 1)));
+    const year = Number(_state.year || new Date().getFullYear());
+    let date = null;
+    try {
+      const epoch = globalThis.PatternCalendar?.epochForYear?.(year);
+      if (epoch instanceof Date && !Number.isNaN(epoch.getTime())) date = new Date(epoch.getTime() + (patternDay - 1) * 86400000);
+    } catch (_) {}
+    const month = date ? date.getUTCMonth() : Math.max(0, Math.min(11, Math.floor(((patternDay - 1) / 364) * 12)));
+    const entry = monthly[month] || null;
+    if (!entry) return "";
+    const low = Number(entry.low ?? entry.min ?? entry.temperatureMin);
+    const high = Number(entry.high ?? entry.max ?? entry.temperatureMax);
+    if (!Number.isFinite(low) || !Number.isFinite(high)) return "";
+    const unit = String(source.unit || source.temperatureUnit || "°");
+    return ` · climate ${Math.round(low)}–${Math.round(high)}${unit}`;
+  }
+
+  function _updateLocationSeasonStrip(model) {
+    const root = document.getElementById("sphere-location-season-strip");
+    const placeEl = document.getElementById("sphere-location-season-place");
+    const seasonEl = document.getElementById("sphere-location-season-value");
+    const action = document.getElementById("sphere-location-season-action");
+    if (!root || !placeEl || !seasonEl || !action) return;
+    const ctx = _seasonContextForLocation(model);
+    const placeLabel = ctx.place?.name || ctx.place?.label || "Location not set";
+    placeEl.textContent = placeLabel;
+    const pct = ctx.progress == null ? "" : ` · ${Math.round(ctx.progress * 100)}% through`;
+    const daylight = _selectedDaylightEstimate(model);
+    const daylightLabel = daylight == null ? "" : ` · ≈${daylight.toFixed(1)}h daylight`;
+    const climateLabel = _historicalClimateSummary(model);
+    const nextGateLabel = ctx.nextGate
+      ? ` · next ${ctx.nextGate}${Number.isFinite(ctx.daysToGate) ? ` ≈${ctx.daysToGate}d` : ""}`
+      : "";
+    seasonEl.textContent = ctx.latitude == null
+      ? "Set location to orient seasons around the Sphere"
+      : `${ctx.hemisphere} · ${ctx.season}${pct}${daylightLabel}${nextGateLabel}${climateLabel}`;
+    action.textContent = ctx.latitude == null ? "Set location" : "Change";
+    root.dataset.configured = ctx.latitude == null ? "false" : "true";
+    root.dataset.hemisphere = ctx.hemisphere.toLowerCase();
+  }
+
   function _setModeDefaultSelectedMarker(mode, model = null) {
     if (mode === "today") {
       const selected = model?.selectedPatternPosition || null;
@@ -3532,8 +3750,18 @@
   }
 
   function _syncYearSelect(year) {
-    const sel = document.getElementById("sphere-year-select");
-    if (sel) sel.value = String(year);
+    ["sphere-year-select", "sphere-year-nav-select"].forEach(id => {
+      const sel = document.getElementById(id);
+      if (sel) sel.value = String(year);
+    });
+    const liveYear = Number(_resolveLiveTodayTarget()?.year || _currentSnapshot()?.year || year);
+    const liveBtn = document.getElementById("sphere-year-live");
+    if (liveBtn) {
+      const isLive = Number(year) === liveYear;
+      liveBtn.dataset.live = isLive ? "true" : "false";
+      liveBtn.textContent = isLive ? `Live ${liveYear}` : `Go to ${liveYear}`;
+      liveBtn.setAttribute("aria-label", isLive ? `Viewing live year ${liveYear}` : `Go to live year ${liveYear}`);
+    }
   }
 
 
@@ -4253,9 +4481,13 @@
     _state.semanticZoom = semanticZoom;
     const effectiveLayers = semanticZoom?.visibility ? { ..._state.visibleLayers, ...semanticZoom.visibility } : { ..._state.visibleLayers };
     const moonLabelExplicit = _state.moonLabelMode === "all" || _state.moonLabelMode === "selected" || _state.moonLabelMode === "hidden";
-    const dayLabelExplicit = _state.dayLabelMode === "all" || _state.dayLabelMode === "selected" || _state.dayLabelMode === "hidden";
+    // B7.30 — day label mode is user-authoritative. "key" means the
+    // camera-aware progressive reveal, not "let semantic zoom silently change
+    // me to all". This prevents unrelated layer toggles (environment, planets,
+    // etc.) or a near/detail zoom refresh from exposing all 364 numerals while
+    // Reveal all days is OFF.
     const effectiveMoonLabelMode = moonLabelExplicit ? _state.moonLabelMode : (semanticZoom?.moonLabelMode || _state.moonLabelMode);
-    const effectiveDayLabelMode = dayLabelExplicit ? _state.dayLabelMode : (semanticZoom?.dayLabelMode || _state.dayLabelMode);
+    const effectiveDayLabelMode = _state.dayLabelMode || "key";
     const effectiveConnectionMode = semanticZoom?.connectionMode || _state.connectionMode;
     const connectionRegistry = globalThis.LivingTimeSphereConnections?.buildRegistry?.({
       model,
@@ -4365,6 +4597,7 @@
           _updateWhatAmISeeing(_state.viewMode);
           _updateStateStrip(_state.viewMode, model);
           _updateEnvironmentBridge(model);
+    _updateLocationSeasonStrip(model);
           _updateRendererDiagnostics();
         }
         _incrementActionCounter("selectedDayUpdateCount");
@@ -4725,6 +4958,10 @@
       handler();
     };
 
+    document.getElementById("sphere-location-season-action")?.addEventListener("click", () => {
+      _focusEnvironmentControls();
+    });
+
     // View mode buttons.
     ["today", "passage", "years", "pattern"].forEach(mode => {
       const btn = document.getElementById(`sphere-mode-${mode}`);
@@ -4739,29 +4976,203 @@
       });
     });
 
-    // Year select.
-    const yearSelect = document.getElementById("sphere-year-select");
-    if (yearSelect) {
-      const years = typeof globalThis.AlignmentLedgerData?.listSupportedYears === "function"
-        ? globalThis.AlignmentLedgerData.listSupportedYears()
-        : Array.from({ length: 13 }, (_, i) => 2014 + i);
-      yearSelect.innerHTML = years.map(y => `<option value="${y}"${y === _state.year ? " selected" : ""}>${y}</option>`).join("");
-      yearSelect.addEventListener("change", () => {
-        const y = Number(yearSelect.value);
-        if (y) {
-          _stopTemporalPlayback("year-select");
-          _state.year = y;
-          const selectedDay = _clampPatternDay(_state.selectedDayOfYear || _resolveLiveTodayTarget()?.dayOfPatternYear || 1);
-          _state.selectedDayOfYear = selectedDay;
-          _state.selectedMarker = `day-${selectedDay}`;
-          if (["now", "today"].includes(_state.fieldRange) && Number(_currentSnapshot()?.year) !== y) {
-            _state.fieldRange = "historical";
-          }
-          _persistSelectedState();
-          renderSphere(container);
+    // B7.25 — year navigation lives above the instrument. Keep the advanced
+    // controls selector synchronized, but do not force the user into that panel.
+    const years = typeof globalThis.AlignmentLedgerData?.listSupportedYears === "function"
+      ? globalThis.AlignmentLedgerData.listSupportedYears()
+      : Array.from({ length: 13 }, (_, i) => 2014 + i);
+    const normalizedYears = years.map(Number).filter(Number.isFinite).sort((a, b) => a - b);
+
+    const applyYear = (y, source = "year-navigator") => {
+      y = Number(y);
+      if (!Number.isFinite(y) || !normalizedYears.includes(y)) return;
+      _stopTemporalPlayback(source);
+      _state.year = y;
+      const selectedDay = _clampPatternDay(_state.selectedDayOfYear || _resolveLiveTodayTarget()?.dayOfPatternYear || 1);
+      _state.selectedDayOfYear = selectedDay;
+      _state.selectedMarker = `day-${selectedDay}`;
+      if (["now", "today"].includes(_state.fieldRange) && Number(_currentSnapshot()?.year) !== y) {
+        _state.fieldRange = "historical";
+      }
+      _syncYearSelect(y);
+      _persistSelectedState();
+      renderSphere(container);
+    };
+
+    ["sphere-year-select", "sphere-year-nav-select"].forEach(id => {
+      const select = document.getElementById(id);
+      if (!select) return;
+      select.innerHTML = normalizedYears.map(y => `<option value="${y}"${y === _state.year ? " selected" : ""}>${y}</option>`).join("");
+      select.addEventListener("change", () => applyYear(select.value, id));
+    });
+
+    const stepYear = delta => {
+      const index = normalizedYears.indexOf(Number(_state.year));
+      const nextIndex = Math.max(0, Math.min(normalizedYears.length - 1, (index < 0 ? 0 : index) + delta));
+      applyYear(normalizedYears[nextIndex], delta < 0 ? "year-prev" : "year-next");
+    };
+    document.getElementById("sphere-year-prev")?.addEventListener("click", () => stepYear(-1));
+    document.getElementById("sphere-year-next")?.addEventListener("click", () => stepYear(1));
+    document.getElementById("sphere-year-live")?.addEventListener("click", () => {
+      const live = _resolveLiveTodayTarget();
+      if (live?.year) {
+        _returnToLiveToday(container, { fieldRange: "now", switchViewMode: false, source: "year-live" });
+      }
+    });
+    _syncYearSelect(_state.year);
+
+    // B7.27 — one compact quick navigator replaces hunting through multiple
+    // panels. Queries resolve to the same canonical year/day state used by the
+    // Sphere, then rotate the camera toward that coordinate.
+    const quickInput = document.getElementById("sphere-quick-jump-input");
+    const quickStatus = document.getElementById("sphere-quick-jump-status");
+    const centerSelectedButton = document.getElementById("sphere-center-selected");
+    const revealAllDaysButton = document.getElementById("sphere-reveal-all-days");
+    const announceQuick = (message, ok = true) => {
+      if (quickStatus) {
+        quickStatus.textContent = message;
+        quickStatus.dataset.state = ok ? "ok" : "warning";
+      }
+    };
+    const focusDay = (day, distance = 1.82) => {
+      const target = _clampPatternDay(day);
+      const run = () => globalThis.LivingTimeSphereRenderer3d?.focusPatternDay?.(target, { distance, animated: true });
+      // Run after the selection update and once more after its lightweight DOM
+      // settle. focusPatternDay is idempotent and the second call protects
+      // against a delayed renderer refresh from stealing the camera transition.
+      window.setTimeout(run, 40);
+      window.setTimeout(run, 180);
+    };
+
+    centerSelectedButton?.addEventListener("click", () => {
+      const day = _clampPatternDay(_state.selectedDayOfYear || _resolveLiveTodayTarget()?.dayOfPatternYear || 1);
+      focusDay(day, 1.78);
+      announceQuick(`Centered Moon ${Math.floor((day - 1) / 28) + 1} Day ${((day - 1) % 28) + 1}.`);
+    });
+
+    const syncRevealAllDaysButton = () => {
+      if (!revealAllDaysButton) return;
+      const all = _state.dayLabelMode === "all";
+      revealAllDaysButton.setAttribute("aria-pressed", all ? "true" : "false");
+      revealAllDaysButton.textContent = all ? "Auto day reveal" : "Reveal all days";
+      revealAllDaysButton.dataset.active = all ? "true" : "false";
+    };
+    syncRevealAllDaysButton();
+    revealAllDaysButton?.addEventListener("click", () => {
+      _state.dayLabelMode = _state.dayLabelMode === "all" ? "key" : "all";
+      const advancedDayMode = document.getElementById("sphere-day-label-mode");
+      if (advancedDayMode) advancedDayMode.value = _state.dayLabelMode;
+      syncRevealAllDaysButton();
+      renderSphere(container);
+      announceQuick(_state.dayLabelMode === "all"
+        ? "All 364 Pattern-day numerals revealed. Use Auto day reveal for the camera-aware view."
+        : "Camera-aware day reveal restored.");
+    });
+    const runQuickJump = async () => {
+      const raw = String(quickInput?.value || "").trim();
+      if (!raw) return announceQuick("Enter Moon 5 Day 23, Day 135, a year, or a civil date.", false);
+      const q = raw.toLowerCase().replace(/[·,]/g, " ").replace(/\s+/g, " ");
+      if (/^(today|live|now)$/.test(q)) {
+        _returnToLiveToday(container, { fieldRange: "now", switchViewMode: false, source: "quick-jump-today" });
+        const liveDay = Number(_resolveLiveTodayTarget()?.dayOfPatternYear || 1);
+        focusDay(liveDay, 1.9);
+        return announceQuick("Returned to Live Today.");
+      }
+      const civil = /^(\d{4}-\d{2}-\d{2})$/.exec(q);
+      if (civil) {
+        const resolved = globalThis.LivingTimeCalendarWorkbench?.resolveCivilDate?.(civil[1]);
+        if (!resolved?.valid) return announceQuick("That civil date could not be mapped.", false);
+        if (!resolved.inside) return announceQuick(`${civil[1]} is outside the counted 13 × 28 days. Open Calendar Atlas for the Year Gate day.`, false);
+        if (resolved.patternYear && normalizedYears.includes(Number(resolved.patternYear))) applyYear(Number(resolved.patternYear), "quick-jump-civil-year");
+        _setCursorFromPatternDay(container, resolved.dayOfPatternYear, { year: Number(resolved.patternYear || _state.year), source: "quick-jump-civil" });
+        focusDay(resolved.dayOfPatternYear, 1.78);
+        return announceQuick(`${civil[1]} → Moon ${resolved.moon} Day ${resolved.day}.`);
+      }
+      const moonDay = /^(?:m|moon)\s*(\d{1,2})(?:\s*(?:d|day)\s*(\d{1,2}))?$/.exec(q);
+      if (moonDay) {
+        const moon = Math.max(1, Math.min(13, Number(moonDay[1])));
+        const day = Math.max(1, Math.min(28, Number(moonDay[2] || 1)));
+        const patternDay = (moon - 1) * 28 + day;
+        _setCursorFromPatternDay(container, patternDay, { source: "quick-jump-moon-day" });
+        focusDay(patternDay, moonDay[2] ? 1.72 : 2.05);
+        return announceQuick(`Moon ${moon} Day ${day} selected.`);
+      }
+      const pattern = /^(?:p|pattern\s*day|day)\s*(\d{1,3})$/.exec(q);
+      if (pattern) {
+        const day = _clampPatternDay(Number(pattern[1]));
+        _setCursorFromPatternDay(container, day, { source: "quick-jump-pattern-day" });
+        focusDay(day, 1.74);
+        return announceQuick(`Pattern Day ${day} selected.`);
+      }
+      const locationQuery = /^(?:location|place)\s+(.+)$/.exec(q);
+      if (locationQuery) {
+        const locationInput = document.querySelector("[data-location-search-input]");
+        if (locationInput) locationInput.value = locationQuery[1];
+        _focusEnvironmentControls();
+        locationInput?.focus?.({ preventScroll: true });
+        return announceQuick(`Location search ready for ${locationQuery[1]}.`);
+      }
+      const yearOnly = /^(?:year\s*)?(\d{4})$/.exec(q);
+      if (yearOnly) {
+        const year = Number(yearOnly[1]);
+        if (!normalizedYears.includes(year)) return announceQuick(`Year ${year} is outside the supported alignment range.`, false);
+        applyYear(year, "quick-jump-year");
+        globalThis.LivingTimeSphereCamera?.moveTo?.({ dist: 3.15, animated: true, durationMs: 520, nowMs: performance.now() });
+        return announceQuick(`Viewing year ${year}.`);
+      }
+      // Last resort: search the local planner by title/summary. This keeps the
+      // quick navigator useful for human memory ("dentist", "school", project
+      // name) without creating a second schedule database.
+      try {
+        const plans = await globalThis.CodexLivingPlanner?.allPlans?.();
+        const needle = q.toLowerCase();
+        const hit = (plans || []).find(plan => {
+          const haystack = [plan?.title, plan?.summary, plan?.notes, plan?.type].filter(Boolean).join(" ").toLowerCase();
+          return haystack.includes(needle);
+        });
+        const pd = Number(hit?.temporal?.patternDay || hit?.temporal?.dayOfPatternYear);
+        const py = Number(hit?.temporal?.patternYear || hit?.temporal?.year);
+        if (hit && Number.isFinite(pd) && pd >= 1 && pd <= 364) {
+          if (Number.isFinite(py) && normalizedYears.includes(py)) applyYear(py, "quick-jump-plan-year");
+          _setCursorFromPatternDay(container, pd, { year: Number.isFinite(py) ? py : _state.year, source: "quick-jump-plan" });
+          focusDay(pd, 1.56);
+          return announceQuick(`Found “${hit.title || raw}” on Pattern Day ${pd}.`);
+        }
+      } catch (_) {}
+      announceQuick("No calendar coordinate or scheduled item matched that search.", false);
+    };
+    document.getElementById("sphere-quick-jump-submit")?.addEventListener("click", runQuickJump);
+    quickInput?.addEventListener("keydown", event => { if (event.key === "Enter") { event.preventDefault(); runQuickJump(); } });
+
+    document.querySelectorAll("[data-sphere-time-scale]").forEach(button => {
+      button.addEventListener("click", () => {
+        const scale = button.dataset.sphereTimeScale;
+        const model = buildCurrentModel();
+        const selected = model?.selectedPatternPosition || _resolveSelectedPatternPosition(model) || {};
+        const day = _clampPatternDay(selected.dayOfPatternYear || _state.selectedDayOfYear || 1);
+        document.querySelectorAll("[data-sphere-time-scale]").forEach(b => b.setAttribute("aria-pressed", b === button ? "true" : "false"));
+        if (scale === "year") {
+          globalThis.LivingTimeSphereCamera?.moveTo?.({ dist: 3.15, animated: true, durationMs: 540, nowMs: performance.now(), targetX: 0, targetY: 0, targetZ: 0 });
+          announceQuick(`Year ${_state.year} overview.`);
+        } else if (scale === "moon") {
+          const center = (Math.max(1, Number(selected.moon || 1)) - 1) * 28 + 14;
+          focusDay(center, 2.08);
+          announceQuick(`Moon ${selected.moon || 1} view.`);
+        } else if (scale === "week") {
+          const weekStart = day - ((Math.max(1, Number(selected.day || 1)) - 1) % 7);
+          focusDay(weekStart + 3, 1.58);
+          announceQuick(`Week ${Math.ceil(Number(selected.day || 1) / 7)} of Moon ${selected.moon || 1}.`);
+        } else if (scale === "agenda") {
+          focusDay(day, 1.30);
+          const plannerOpen = document.getElementById("living-planner-open");
+          window.setTimeout(() => plannerOpen?.click?.(), 140);
+          announceQuick(`Agenda for Moon ${selected.moon || 1} Day ${selected.day || 1}.`);
+        } else {
+          focusDay(day, 1.34);
+          announceQuick(`Moon ${selected.moon || 1} Day ${selected.day || 1}.`);
         }
       });
-    }
+    });
 
     Object.keys(FIELD_RANGE_LABELS).forEach(range => {
       const btn = document.getElementById(`sphere-field-range-${range}`);
@@ -5386,7 +5797,84 @@
     _state.urlIntegrity = "preserved";
     _logBuildIdentityOnce();
     applyUrlState();
-    _restoreSelectedStateIfNeeded();
+
+    /*
+     * B3 temporal startup authority:
+     *
+     * - Explicit deep links retain their requested temporal target.
+     * - Ordinary page entry always starts from canonical Live Today.
+     * - Previously explored local state must never silently replace Today.
+     */
+    let explicitTemporalTarget = false;
+
+    try {
+      const startupUrl =
+        new URL(
+          location.href,
+          document.baseURI
+        );
+
+      const marker =
+        startupUrl.searchParams.get("marker");
+
+      const view =
+        startupUrl.searchParams.get("view");
+
+      const internalTemporalUrl = Boolean(globalThis.history?.state?.sofInternalTemporal);
+      const explicitMarker = Boolean(marker && marker !== "today");
+      /*
+       * B7.24 startup authority: URL state written by this page is navigation
+       * history, not a user-requested deep link. Reloading that history must
+       * return to Live Today instead of resurrecting an old explored day.
+       * External/copied links still have no internal history marker and retain
+       * their explicit day/view target.
+       */
+      explicitTemporalTarget = !internalTemporalUrl && (
+        explicitMarker
+        || Boolean(view && view !== "today")
+      );
+    } catch {
+      explicitTemporalTarget = false;
+    }
+
+    if (explicitTemporalTarget) {
+      _restoreSelectedStateIfNeeded();
+    } else {
+      const liveTarget =
+        _resolveLiveTodayTarget();
+
+      _state.viewMode = "today";
+      _state.requestedViewMode = "today";
+      _state.activeViewMode = "today";
+      _state.fieldRange = "now";
+      _state.selectedMarker = "today";
+
+      if (
+        liveTarget &&
+        Number.isFinite(
+          Number(liveTarget.dayOfPatternYear)
+        )
+      ) {
+        _state.selectedDayOfYear =
+          _clampPatternDay(
+            liveTarget.dayOfPatternYear
+          );
+
+        if (
+          Number.isFinite(
+            Number(liveTarget.year)
+          )
+        ) {
+          _state.year =
+            Number(liveTarget.year);
+        }
+      } else {
+        _state.selectedDayOfYear = null;
+      }
+
+      _persistSelectedState();
+    }
+
     _state.moonLabelMode = _resolveMoonLabelMode();
     if (!_urlHasExplicitMoonLabelDistance) {
       _state.moonLabelDistance = _resolveMoonLabelDistance();
@@ -5444,14 +5932,18 @@
       const renderer = globalThis.LivingTimeSphereRenderer3d;
       if (_state.active3d && renderer?.isInitialized?.()) {
         renderer.updateEnvironment?.(nextState);
-        _updateEnvironmentBridge(buildCurrentModel());
+        const envModel = buildCurrentModel();
+        _updateEnvironmentBridge(envModel);
+        _updateLocationSeasonStrip(envModel);
         _updateRendererDiagnostics();
         _recordActionTrace("ENVIRONMENT_DATA_CHANGE", { environmentLifecycle: _state.environmentLifecycle }, ["environment-data", "renderer-environment"]);
       } else if (_state.visibleLayers.environment) {
         renderSphere(container);
         _recordActionTrace("ENVIRONMENT_DATA_CHANGE", { environmentLifecycle: _state.environmentLifecycle }, ["environment-data", "full-render"]);
       } else {
-        _updateEnvironmentBridge(buildCurrentModel());
+        const envModel = buildCurrentModel();
+        _updateEnvironmentBridge(envModel);
+        _updateLocationSeasonStrip(envModel);
         _updateRendererDiagnostics();
         _recordActionTrace("ENVIRONMENT_DATA_CHANGE", { environmentLifecycle: _state.environmentLifecycle }, ["environment-data", "ui-bridge-only"]);
       }
@@ -5498,16 +5990,22 @@
       }
     });
 
-    // Defer first render by one animation frame so the container has a
-    // stable, non-zero bounding rect before 3D dimensions are measured.
-    requestAnimationFrame(() => {
-      _markInitTimeline("first-request-animation-frame", {
+    // B7.52 — start immediately when layout already produced a real instrument
+    // size. Only spend a RAF when CSS/layout genuinely has not measured it yet.
+    const startInitialRender = () => {
+      _markInitTimeline("first-render-request", {
         width: Number(container.clientWidth || 0),
         height: Number(container.clientHeight || 0),
       });
       renderSphere(container);
       _emitCalendarWorkbenchEvent("livingtime:ready");
-    });
+    };
+    const initialRect = container.getBoundingClientRect?.() || {};
+    if (Number(initialRect.width) >= 180 && Number(initialRect.height) >= 180) {
+      startInitialRender();
+    } else {
+      requestAnimationFrame(startInitialRender);
+    }
 
     // Re-render on resize (debounced).
     let resizeTimer;
@@ -5628,6 +6126,141 @@
     };
   }
 
+
+  // B7.33 — Living Schedule navigator. This is intentionally fixed page chrome,
+  // not another floating sphere label. It lets a dense imported work calendar
+  // remain navigable without exposing hundreds of plan cards at once.
+  let _scheduleNavigatorWired = false;
+  let _scheduleNavigatorLoading = false;
+  let _scheduleNavigatorLoadedAt = 0;
+  let _scheduleNavigatorRecords = [];
+  let _scheduleNavigatorPrev = null;
+  let _scheduleNavigatorNext = null;
+
+  function _scheduleCoordinate(record) {
+    const year = Number(record?.temporal?.patternYear);
+    const day = Number(record?.temporal?.patternDay);
+    if (!Number.isFinite(year) || !Number.isFinite(day)) return null;
+    return {
+      year: Math.trunc(year),
+      day: _clampPatternDay(day),
+      key: Math.trunc(year) * 1000 + _clampPatternDay(day),
+      record
+    };
+  }
+
+  function _scheduleDateLabel(record) {
+    const schedule = globalThis.CodexLifeAtlasScheduling?.getSchedule?.(record) || record?.payload?.schedule || null;
+    const civil = schedule?.startDate || schedule?.start?.slice?.(0, 10) || record?.temporal?.civilDate || "";
+    const moon = Number(record?.temporal?.moon);
+    const moonDay = Number(record?.temporal?.moonDay);
+    const pattern = Number(record?.temporal?.patternDay);
+    const patternLabel = Number.isFinite(moon) && Number.isFinite(moonDay)
+      ? `Moon ${moon} Day ${moonDay}`
+      : (Number.isFinite(pattern) ? `Pattern Day ${pattern}` : "Scheduled day");
+    return civil ? `${patternLabel} · ${civil}` : patternLabel;
+  }
+
+  function _wireScheduleNavigator() {
+    if (_scheduleNavigatorWired || typeof document === "undefined") return;
+    _scheduleNavigatorWired = true;
+
+    const navigate = record => {
+      const coordinate = _scheduleCoordinate(record);
+      if (!coordinate) return;
+      globalThis.LivingTimeSphereUi?.selectDay?.(coordinate.day, {
+        year: coordinate.year,
+        focus: true,
+        focusDistance: 1.58,
+        source: "schedule-navigator",
+        action: "SCHEDULE_NAVIGATION"
+      });
+      globalThis.LivingTimeSphereAccessibility?.announce?.(
+        `Scheduled day selected: ${record?.title || "Living plan"}. ${_scheduleDateLabel(record)}.`
+      );
+    };
+
+    document.getElementById("sphere-schedule-prev")?.addEventListener("click", () => navigate(_scheduleNavigatorPrev));
+    document.getElementById("sphere-schedule-next")?.addEventListener("click", () => navigate(_scheduleNavigatorNext));
+    const openAgenda = () => globalThis.LivingCommandWindow?.open?.("upcoming");
+    document.getElementById("sphere-schedule-summary")?.addEventListener("click", openAgenda);
+    document.getElementById("sphere-schedule-agenda")?.addEventListener("click", openAgenda);
+
+    document.addEventListener("sof:life-atlas-records-changed", () => {
+      _scheduleNavigatorLoadedAt = 0;
+      _scheduleNavigatorRecords = [];
+      void _refreshScheduleNavigator(buildCurrentModel(), { force: true });
+    });
+  }
+
+  async function _refreshScheduleNavigator(model = null, { force = false } = {}) {
+    if (typeof document === "undefined") return;
+    _wireScheduleNavigator();
+    const prevButton = document.getElementById("sphere-schedule-prev");
+    const nextButton = document.getElementById("sphere-schedule-next");
+    const titleEl = document.getElementById("sphere-schedule-summary-title");
+    const metaEl = document.getElementById("sphere-schedule-summary-meta");
+    const countEl = document.getElementById("sphere-schedule-count");
+    if (!prevButton || !nextButton || !titleEl || !metaEl || !countEl) return;
+
+    const now = Date.now();
+    const planner = globalThis.CodexLivingPlanner;
+    const currentModel = model || buildCurrentModel();
+    const selected = currentModel?.selectedPatternPosition || null;
+    const year = Number(_state.year || selected?.patternYear || currentModel?.year || new Date().getFullYear());
+    if ((!_scheduleNavigatorRecords.length || force || now - _scheduleNavigatorLoadedAt > 4000) && (planner?.plansForYears || planner?.allPlans) && !_scheduleNavigatorLoading) {
+      _scheduleNavigatorLoading = true;
+      try {
+        const records = planner?.plansForYears
+          ? await planner.plansForYears([year - 1, year, year + 1])
+          : await planner.allPlans();
+        const scheduling = globalThis.CodexLifeAtlasScheduling;
+        _scheduleNavigatorRecords = (records || [])
+          .filter(record => !scheduling?.isCompleted?.(record))
+          .map(record => _scheduleCoordinate(record))
+          .filter(Boolean)
+          .sort((a, b) => a.key - b.key || String(a.record?.title || "").localeCompare(String(b.record?.title || "")));
+        _scheduleNavigatorLoadedAt = Date.now();
+      } catch (_) {
+        _scheduleNavigatorRecords = [];
+      } finally {
+        _scheduleNavigatorLoading = false;
+      }
+    }
+
+    const day = _clampPatternDay(selected?.dayOfPatternYear || _state.selectedDayOfYear || 1);
+    const currentKey = Math.trunc(year) * 1000 + day;
+    const records = _scheduleNavigatorRecords;
+    const sameDay = records.filter(item => item.key === currentKey);
+    _scheduleNavigatorPrev = (previousRecords => previousRecords.length ? previousRecords[previousRecords.length - 1].record : null)(records.filter(item => item.key < currentKey));
+    _scheduleNavigatorNext = records.find(item => item.key > currentKey)?.record || null;
+
+    prevButton.disabled = !_scheduleNavigatorPrev;
+    nextButton.disabled = !_scheduleNavigatorNext;
+
+    if (!records.length) {
+      titleEl.textContent = "No scheduled work yet";
+      metaEl.textContent = "Create or import calendar entries to populate the Living Schedule.";
+      countEl.textContent = "0 active plans";
+      return;
+    }
+
+    const primary = sameDay[0]?.record || _scheduleNavigatorNext || _scheduleNavigatorPrev || records[0].record;
+    if (sameDay.length) {
+      titleEl.textContent = sameDay.length === 1
+        ? (primary?.title || "Scheduled plan")
+        : `${sameDay.length} plans on this day`;
+      metaEl.textContent = `${_scheduleDateLabel(primary)}${sameDay.length > 1 ? ` · first: ${primary?.title || "plan"}` : ""}`;
+    } else if (_scheduleNavigatorNext) {
+      titleEl.textContent = `Next: ${_scheduleNavigatorNext.title || "Scheduled plan"}`;
+      metaEl.textContent = _scheduleDateLabel(_scheduleNavigatorNext);
+    } else {
+      titleEl.textContent = `Previous: ${primary?.title || "Scheduled plan"}`;
+      metaEl.textContent = _scheduleDateLabel(primary);
+    }
+    countEl.textContent = `${records.length} active plan${records.length === 1 ? "" : "s"}${sameDay.length ? ` · ${sameDay.length} here` : ""}`;
+  }
+
   globalThis.LivingTimeSphereUi = Object.freeze({
     init,
     getState: () => Object.assign({}, _state),
@@ -5638,13 +6271,20 @@
       const container = document.getElementById("sphere-container");
       if (!container) return false;
       _stopTemporalPlayback("public-day-selection");
-      _requestSelectedDayUpdate(container, day, {
+      const targetDay = _clampPatternDay(day);
+      _requestSelectedDayUpdate(container, targetDay, {
         source: options.source || "public-api",
         action: options.action || "PUBLIC_DAY_SELECTION",
         marker: options.marker,
         year: options.year,
         fieldRange: options.fieldRange,
       });
+      if (options.focus === true) {
+        const distance = Number(options.focusDistance) || 1.78;
+        const run = () => globalThis.LivingTimeSphereRenderer3d?.focusPatternDay?.(targetDay, { distance, animated: true });
+        window.setTimeout(run, 45);
+        window.setTimeout(run, 190);
+      }
       return true;
     },
     applyLayerPreset: presetName => _applyLayerPreset(document.getElementById("sphere-container"), presetName),

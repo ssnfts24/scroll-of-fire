@@ -41,6 +41,10 @@
   let _lastFps    = 0;
   let _frameIntervalMs = 1000 / 60;
   let _lastProcessedFrameMs = 0;
+  // B7.35 — stable interaction cadence is preferable to a saturated 60fps
+  // loop on phones. This cap is enabled only while a touch gesture is active.
+  let _interactionActive = false;
+  let _interactionFpsCap = 30;
 
   // IntersectionObserver handle
   let _ioDisconnect = null;
@@ -78,7 +82,10 @@
   function _frame(nowMs) {
     _rafId = null;
     if (_paused || !_running) return;
-    if (_lastProcessedFrameMs > 0 && nowMs - _lastProcessedFrameMs < _frameIntervalMs) {
+    const effectiveFrameIntervalMs = _interactionActive
+      ? Math.max(_frameIntervalMs, 1000 / Math.max(20, _interactionFpsCap || 30))
+      : _frameIntervalMs;
+    if (_lastProcessedFrameMs > 0 && nowMs - _lastProcessedFrameMs < effectiveFrameIntervalMs) {
       if (_dirty || _needsContinuousFrames()) _scheduleFrame();
       return;
     }
@@ -252,6 +259,14 @@
     if (_needsContinuousFrames()) _scheduleFrame();
   }
 
+  function setInteractionActive(active, fpsCap = 30) {
+    _interactionActive = !!active;
+    if (Number.isFinite(Number(fpsCap))) {
+      _interactionFpsCap = Math.max(20, Math.min(60, Number(fpsCap)));
+    }
+    if (_interactionActive) _scheduleFrame();
+  }
+
   // ── Effect registration ───────────────────────────────────────────
 
   function addEffect(id, onFrame) {
@@ -316,6 +331,7 @@
     applyPreset,
     setReducedMotion,
     setLowPower,
+    setInteractionActive,
     addEffect,
     removeEffect,
     breathValue,

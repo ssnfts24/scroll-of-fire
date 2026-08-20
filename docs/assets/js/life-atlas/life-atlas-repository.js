@@ -26,6 +26,16 @@
   }
 
   function normalizeQuery(query = {}) {
+    // Query normalization must be idempotent because B7.49 can pass a
+    // normalized query through an indexed adapter and then through the
+    // repository matcher again. Number(null) === 0, so treating null as a
+    // numeric value silently turned omitted coordinates into moon/day 0.
+    function optionalNumber(value) {
+      if (value === null || value === undefined || value === "") return null;
+      const number = Number(value);
+      return Number.isFinite(number) ? number : null;
+    }
+
     return {
       type: query.type || null,
       subtype: query.subtype || null,
@@ -34,28 +44,13 @@
         typeof query.text === "string"
           ? query.text.trim().toLowerCase()
           : "",
-      moon:
-        Number.isFinite(Number(query.moon))
-          ? Number(query.moon)
-          : null,
-      moonDay:
-        Number.isFinite(Number(query.moonDay))
-          ? Number(query.moonDay)
-          : null,
-      patternYear:
-        Number.isFinite(Number(query.patternYear))
-          ? Number(query.patternYear)
-          : null,
-      patternDay:
-        Number.isFinite(Number(query.patternDay))
-          ? Number(query.patternDay)
-          : null,
-      week:
-        Number.isFinite(Number(query.week))
-          ? Number(query.week)
-          : null,
+      moon: optionalNumber(query.moon),
+      moonDay: optionalNumber(query.moonDay),
+      patternYear: optionalNumber(query.patternYear),
+      patternDay: optionalNumber(query.patternDay),
+      week: optionalNumber(query.week),
       civilDate:
-        typeof query.civilDate === "string"
+        typeof query.civilDate === "string" && query.civilDate.trim()
           ? query.civilDate.trim()
           : null,
       placeId: query.placeId || null,
@@ -178,6 +173,10 @@
         return [...records.values()].map(clone);
       },
 
+      async query(criteria = {}) {
+        return [...records.values()].filter(record => matches(record, criteria)).map(clone);
+      },
+
       async clear() {
         records.clear();
       },
@@ -228,7 +227,12 @@
     }
 
     async function query(criteria = {}) {
-      const records = await adapter.values();
+      // B7.49: persistent adapters can use an existing IndexedDB index to narrow
+      // the candidate set. Repository matching remains authoritative for all
+      // remaining criteria, so storage optimization never changes semantics.
+      const records = typeof adapter.query === "function"
+        ? await adapter.query(normalizeQuery(criteria))
+        : await adapter.values();
 
       return records
         .filter(record => matches(record, criteria))

@@ -569,6 +569,18 @@ body.obs-question-modal-open {
 .obs-question-shell:not([hidden]) {
   position: fixed;
   z-index: 10020;
+
+  /* Modal surface must be visually independent from the
+     Observatory content beneath it. */
+  background:
+    linear-gradient(
+      145deg,
+      rgba(31, 31, 22, 0.995),
+      rgba(7, 17, 22, 0.995)
+    );
+  isolation: isolate;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   inset: 50% auto auto 50%;
   transform: translate(-50%, -50%);
   width: min(92vw, 640px);
@@ -621,8 +633,25 @@ body.obs-question-modal-open {
 @media (max-width: 600px) {
   .obs-question-shell:not([hidden]) {
     width: calc(100vw - 1.25rem);
+    max-width: calc(100vw - 1.25rem);
     max-height: calc(100dvh - 2rem);
     padding: 1.15rem;
     border-radius: 1.2rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    box-sizing: border-box;
+  }
+
+  .obs-question-shell:not([hidden]) textarea,
+  .obs-question-shell:not([hidden]) input,
+  .obs-question-shell:not([hidden]) select,
+  .obs-question-shell:not([hidden]) button {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .obs-question-shell:not([hidden]) .obs-question-actions {
+    display: grid;
+    grid-template-columns: 1fr;
   }
 }

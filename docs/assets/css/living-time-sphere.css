@@ -1806,6 +1806,28 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
   text-shadow: 0 1px 4px rgba(0,0,0,0.96), 0 0 12px rgba(100,200,180,0.12);
 }
 
+.sphere-semantic-leader-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 4;
+  overflow: visible;
+}
+.sphere-semantic-leader {
+  fill: none;
+  stroke: rgba(246, 213, 106, .78);
+  stroke-width: 1.35;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 3px rgba(246, 213, 106, .28));
+}
+.sphere-semantic-leader[data-semantic-kind="living-plan"] {
+  stroke-dasharray: 2 2;
+}
+
 .sphere-semantic-label-layer {
   position: absolute;
   inset: 0;
@@ -1836,6 +1858,26 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
   color: #fff3ca;
 }
 .sphere-semantic-label-body { display: grid; gap: .12rem; min-width: 0; }
+.sphere-semantic-label.is-interactive .sphere-semantic-label-body { cursor: pointer; touch-action: manipulation; }
+.sphere-semantic-label[data-semantic-kind="living-plan"] {
+  border-color: rgba(246, 213, 106, .52);
+  background: linear-gradient(135deg, rgba(48, 34, 8, .94), rgba(5, 12, 20, .92));
+  box-shadow: 0 8px 24px rgba(0,0,0,.34), 0 0 0 1px rgba(246,213,106,.08);
+}
+.sphere-semantic-label[data-semantic-kind="living-plan"]::before {
+  content: "";
+  width: .42rem;
+  height: .42rem;
+  flex: 0 0 .42rem;
+  margin-top: .22rem;
+  border-radius: 999px;
+  background: #f6d56a;
+  box-shadow: 0 0 8px rgba(246,213,106,.7);
+}
+.sphere-semantic-label[data-planner-category="task"]::before { background: #7fd7ff; box-shadow: 0 0 8px rgba(127,215,255,.68); }
+.sphere-semantic-label[data-planner-category="reminder"]::before { background: #ff9f80; box-shadow: 0 0 8px rgba(255,159,128,.68); }
+.sphere-semantic-label[data-planner-category="project"]::before,
+.sphere-semantic-label[data-planner-category="growing"]::before { background: #65d7c5; box-shadow: 0 0 8px rgba(101,215,197,.68); }
 .sphere-semantic-label-title { font-size: .72rem; font-weight: 750; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sphere-semantic-label-detail { font-size: .62rem; color: rgba(211, 231, 228, .72); white-space: normal; }
 .sphere-semantic-label-close {
@@ -2345,3 +2387,1348 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
   }
 }
 
+
+
+/* B6 — definitive Living Agenda cards + progressive day-number labels. */
+.sphere-semantic-label-status {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  padding: .08rem .28rem;
+  border-radius: 999px;
+  background: rgba(246, 213, 106, .14);
+  border: 1px solid rgba(246, 213, 106, .34);
+  color: #f6d56a;
+  font-size: .5rem;
+  font-weight: 900;
+  letter-spacing: .085em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+.sphere-semantic-label[data-planner-category="task"] .sphere-semantic-label-status { color: #9ee4ff; border-color: rgba(127,215,255,.48); background: rgba(127,215,255,.12); }
+.sphere-semantic-label[data-planner-category="reminder"] .sphere-semantic-label-status { color: #ffb39d; border-color: rgba(255,159,128,.48); background: rgba(255,159,128,.12); }
+.sphere-semantic-label[data-planner-category="project"] .sphere-semantic-label-status,
+.sphere-semantic-label[data-planner-category="growing"] .sphere-semantic-label-status { color: #89e9dc; border-color: rgba(101,215,197,.48); background: rgba(101,215,197,.11); }
+.sphere-semantic-label[data-semantic-kind="living-plan"] {
+  border-width: 1.5px;
+  box-shadow: 0 7px 22px rgba(0,0,0,.42), 0 0 0 1px rgba(246,213,106,.08);
+}
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"] {
+  min-width: 1.55rem;
+  max-width: 4.8rem;
+  padding: .16rem .28rem;
+  border-radius: 999px;
+  background: rgba(5, 12, 19, .76);
+  border-color: rgba(137, 190, 201, .26);
+  text-align: center;
+  box-shadow: none;
+}
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"] .sphere-semantic-label-title {
+  font-size: .65rem;
+  font-variant-numeric: tabular-nums;
+}
+/* B7.10 — make the 7-day skeleton of every 28-day Moon read as one
+   organized calendar rather than a cloud of equal-weight numerals. */
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-gate-day="true"] {
+  border-color: rgba(154, 215, 226, .5);
+  background: rgba(5, 15, 23, .92);
+}
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-gate-day="true"] .sphere-semantic-label-title {
+  font-weight: 850;
+}
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"] .sphere-semantic-label-detail,
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"] .sphere-semantic-label-close {
+  display: none !important;
+}
+.sphere-semantic-leader[data-semantic-kind="living-plan"] {
+  stroke-width: 1.65;
+  opacity: .92;
+}
+
+
+/* B7 — outer calendar halo: keep human calendar information outside dense sphere geometry. */
+.sphere-semantic-label[data-halo-lane="day"] {
+  z-index: 4;
+  min-width: 1.45rem;
+  background: rgba(4, 13, 20, .90);
+  border-color: rgba(134, 194, 207, .42);
+  box-shadow: 0 0 0 1px rgba(81, 150, 165, .08), 0 4px 12px rgba(0,0,0,.28);
+}
+.sphere-semantic-label[data-halo-lane="day"].is-selected {
+  border-color: rgba(255, 218, 102, .88);
+  box-shadow: 0 0 0 2px rgba(255,218,102,.16), 0 0 18px rgba(255,218,102,.16);
+}
+.sphere-semantic-label[data-halo-lane="agenda"] {
+  z-index: 7;
+  min-width: 8.75rem;
+  max-width: min(14rem, 48vw);
+  background: rgba(11, 13, 18, .95);
+  border-color: rgba(246, 213, 106, .52);
+  box-shadow: 0 8px 24px rgba(0,0,0,.48), 0 0 0 1px rgba(246,213,106,.08);
+}
+.sphere-semantic-label[data-halo-lane="agenda"] .sphere-semantic-label-status {
+  letter-spacing: .11em;
+}
+.sphere-semantic-leader[data-semantic-kind="living-plan"] {
+  stroke-dasharray: 2.2 2.2;
+  stroke-linecap: round;
+}
+@media (max-width: 720px) {
+  .sphere-semantic-label[data-halo-lane="agenda"] {
+    min-width: 7.25rem;
+    max-width: min(11.5rem, 43vw);
+  }
+  .sphere-semantic-label[data-halo-lane="day"] {
+    min-width: 1.35rem;
+    padding: .13rem .22rem;
+  }
+}
+
+
+/* B7.2 — fixed day rail + quiet agenda annotations. */
+.sphere-semantic-label[data-halo-lane="day"] {
+  min-width: 1.16rem;
+  width: 1.16rem;
+  height: 1.16rem;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(4, 12, 18, .82);
+  border-color: rgba(132, 190, 202, .34);
+  box-shadow: none;
+  pointer-events: none;
+}
+.sphere-semantic-label[data-halo-lane="day"] .sphere-semantic-label-body { display: block; }
+.sphere-semantic-label[data-halo-lane="day"] .sphere-semantic-label-title {
+  font-size: .56rem;
+  line-height: 1;
+  font-weight: 760;
+}
+.sphere-semantic-label[data-halo-lane="day"].is-selected,
+.sphere-semantic-label[data-halo-lane="day"].is-pinned {
+  width: 1.32rem;
+  height: 1.32rem;
+  border-color: rgba(255, 218, 102, .9);
+  background: rgba(35, 27, 8, .92);
+  box-shadow: 0 0 0 1px rgba(255,218,102,.18), 0 0 10px rgba(255,218,102,.16);
+}
+.sphere-semantic-label[data-halo-lane="agenda"] {
+  min-width: 0;
+  max-width: min(9.2rem, 36vw);
+  padding: .24rem .32rem .24rem .42rem;
+  gap: .24rem;
+  border-radius: .5rem;
+  background: rgba(8, 11, 16, .91);
+  box-shadow: 0 4px 12px rgba(0,0,0,.34);
+}
+.sphere-semantic-label[data-halo-lane="agenda"]::before {
+  width: .3rem; height: .3rem; flex-basis: .3rem; margin-top: .2rem; box-shadow: none;
+}
+.sphere-semantic-label[data-halo-lane="agenda"] .sphere-semantic-label-title { font-size: .63rem; }
+.sphere-semantic-label[data-halo-lane="agenda"] .sphere-semantic-label-status {
+  padding: .04rem .2rem;
+  font-size: .42rem;
+  letter-spacing: .06em;
+}
+.sphere-semantic-label[data-halo-lane="agenda"]:not(.is-selected):not(.is-pinned) .sphere-semantic-label-detail { display: none !important; }
+.sphere-semantic-label[data-halo-lane="agenda"]:not(.is-selected):not(.is-pinned) .sphere-semantic-label-close { display: none; }
+@media (max-width: 720px) {
+  .sphere-semantic-label[data-halo-lane="agenda"] { max-width: min(8.2rem, 34vw); }
+  .sphere-semantic-label[data-halo-lane="day"] { min-width: 1.08rem; width: 1.08rem; height: 1.08rem; }
+  .sphere-semantic-label[data-halo-lane="day"] .sphere-semantic-label-title { font-size: .52rem; }
+}
+
+
+/* B7.6 — canonical fixed day rail. Numbers are labels, never pills/cards. */
+.sphere-semantic-label[data-quiet-rail="true"] {
+  min-width: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  color: rgba(218, 236, 240, .76);
+  pointer-events: none !important;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0,0,0,.98), 0 0 3px rgba(7,17,24,.88);
+  will-change: left, top;
+}
+.sphere-semantic-label[data-quiet-rail="true"] .sphere-semantic-label-body { display: block !important; }
+.sphere-semantic-label[data-quiet-rail="true"] .sphere-semantic-label-status,
+.sphere-semantic-label[data-quiet-rail="true"] .sphere-semantic-label-detail,
+.sphere-semantic-label[data-quiet-rail="true"] .sphere-semantic-label-close { display: none !important; }
+.sphere-semantic-label[data-quiet-rail="true"] .sphere-semantic-label-title {
+  display: block !important;
+  font-size: .50rem !important;
+  line-height: 1 !important;
+  font-weight: 650 !important;
+  letter-spacing: -.015em;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+.sphere-semantic-label[data-quiet-rail="true"][data-gate-day="true"] { color: rgba(237, 247, 249, .92); }
+.sphere-semantic-label[data-quiet-rail="true"].is-selected,
+.sphere-semantic-label[data-quiet-rail="true"].is-pinned {
+  color: #ffe38a !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,.98), 0 0 7px rgba(255,218,102,.58);
+}
+.sphere-semantic-label[data-intercalary="true"] {
+  color: #ffd080 !important;
+}
+.sphere-semantic-label[data-intercalary="true"] .sphere-semantic-label-title {
+  font-size: .52rem !important;
+  font-weight: 850 !important;
+  letter-spacing: .01em;
+}
+.sphere-semantic-label[data-leap-intercalary="true"] { color: #c9b8ff !important; }
+@media (max-width: 720px) {
+  .sphere-semantic-label[data-quiet-rail="true"] .sphere-semantic-label-title { font-size: .46rem !important; }
+  .sphere-semantic-label[data-intercalary="true"] .sphere-semantic-label-title { font-size: .49rem !important; }
+}
+
+
+/* B7.7 — definitive Moon sectors + responsive rail numerals. */
+.sphere-moon-label {
+  font-weight: 650;
+  border-color: rgba(122, 211, 196, .28);
+  background: rgba(4, 11, 18, .72);
+}
+.sphere-moon-label::before {
+  content: "";
+  display: inline-block;
+  width: .28rem;
+  height: .28rem;
+  margin-right: .28rem;
+  border-radius: 50%;
+  background: rgba(125, 220, 201, .72);
+  box-shadow: 0 0 6px rgba(125, 220, 201, .30);
+  vertical-align: .06rem;
+}
+.sphere-moon-label.is-selected::before {
+  background: #ffe27a;
+  box-shadow: 0 0 8px rgba(255, 226, 122, .56);
+}
+.sphere-semantic-label[data-quiet-rail="true"] {
+  z-index: 6;
+}
+@media (max-width: 720px) {
+  .sphere-moon-label {
+    font-size: .60rem !important;
+    padding: .13rem .34rem;
+  }
+  .sphere-semantic-label[data-quiet-rail="true"] .sphere-semantic-label-title {
+    font-size: .54rem !important;
+  }
+}
+
+
+/* B7.8 — readable day numerals + compact astronomy annotations on phones. */
+@media (max-width: 720px) {
+  .sphere-semantic-label[data-semantic-kind="lunar"],
+  .sphere-semantic-label[data-semantic-kind="solar"] {
+    max-width: min(7.4rem, 31vw);
+    padding: .20rem .28rem;
+    border-radius: .46rem;
+  }
+  .sphere-semantic-label[data-semantic-kind="lunar"] .sphere-semantic-label-title,
+  .sphere-semantic-label[data-semantic-kind="solar"] .sphere-semantic-label-title {
+    font-size: .60rem;
+  }
+  .sphere-semantic-label[data-semantic-kind="lunar"] .sphere-semantic-label-detail,
+  .sphere-semantic-label[data-semantic-kind="solar"] .sphere-semantic-label-detail {
+    display: none !important;
+  }
+  .sphere-semantic-label[data-semantic-kind="lunar"] .sphere-semantic-label-close,
+  .sphere-semantic-label[data-semantic-kind="solar"] .sphere-semantic-label-close {
+    width: 1.15rem;
+    height: 1.15rem;
+    font-size: .70rem;
+  }
+}
+
+
+/* B7.11 — 4-week × 7-day Moon calendar faces. */
+.sphere-semantic-label[data-calendar-face="true"] {
+  z-index: 8;
+  font-variant-numeric: tabular-nums;
+}
+.sphere-semantic-label[data-calendar-face="true"] .sphere-semantic-label-title {
+  min-width: .72rem;
+  text-align: center;
+}
+.sphere-semantic-label[data-calendar-face="true"].is-selected,
+.sphere-semantic-label[data-calendar-face="true"].is-pinned {
+  z-index: 12;
+}
+@media (max-width: 720px) {
+  .sphere-semantic-label[data-calendar-face="true"] .sphere-semantic-label-title {
+    font-size: .50rem !important;
+    min-width: .62rem;
+  }
+}
+
+/* B7.13 — structural calendar rail. Day numerals are annotations on top of
+   permanent 13 × 28 × 4-week geometry; Year Gate days are named, not numbered
+   as ordinary Pattern days. */
+.sphere-semantic-label[data-semantic-kind="intercalary-day-number"] {
+  color: #ffd56f !important;
+  font-weight: 800 !important;
+  letter-spacing: .02em;
+  text-shadow: 0 1px 2px rgba(0,0,0,.98), 0 0 8px rgba(255,208,96,.42);
+}
+.sphere-semantic-label[data-semantic-kind="intercalary-day-number"] .sphere-semantic-label-title {
+  font-size: .56rem !important;
+  white-space: nowrap;
+}
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] .sphere-semantic-label-title {
+  font-size: .58rem !important;
+  font-weight: 760 !important;
+}
+@media (max-width: 720px) {
+  .sphere-semantic-label[data-semantic-kind="pattern-day-number"] .sphere-semantic-label-title {
+    font-size: .47rem !important;
+  }
+  .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] .sphere-semantic-label-title {
+    font-size: .52rem !important;
+  }
+  .sphere-semantic-label[data-semantic-kind="intercalary-day-number"] .sphere-semantic-label-title {
+    font-size: .50rem !important;
+  }
+}
+
+/* B7.14 explicit planner action: inspecting a plan never opens the editor. */
+.sphere-semantic-label-action {
+  appearance: none;
+  border: 1px solid rgba(236, 194, 91, .58);
+  border-radius: 999px;
+  background: rgba(35, 28, 12, .92);
+  color: #f2ce72;
+  font: inherit;
+  font-size: .72rem;
+  font-weight: 700;
+  line-height: 1;
+  padding: .38rem .58rem;
+  margin-inline-start: .3rem;
+  cursor: pointer;
+}
+
+
+/* B7.15 — 13 × 4 × 7 polar calendar matrix. */
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] {
+  pointer-events: auto !important;
+  cursor: pointer;
+  touch-action: manipulation;
+  z-index: 8;
+  min-width: 1.15rem !important;
+  min-height: 1.15rem !important;
+  display: grid !important;
+  place-items: center;
+  border-radius: 999px !important;
+}
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] .sphere-semantic-label-body {
+  width: 100%;
+  height: 100%;
+  display: grid !important;
+  place-items: center;
+}
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] .sphere-semantic-label-title {
+  font-size: .50rem !important;
+  font-weight: 720 !important;
+}
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"]:active,
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"]:focus-visible {
+  color: #ffe38a !important;
+  text-shadow: 0 0 7px rgba(255,218,102,.72);
+  outline: 1px solid rgba(255,218,102,.72);
+  outline-offset: 2px;
+}
+@media (max-width: 720px) {
+  .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] {
+    min-width: 1.02rem !important;
+    min-height: 1.02rem !important;
+  }
+  .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] .sphere-semantic-label-title {
+    font-size: .46rem !important;
+  }
+}
+
+/* B7.16 — every visible day is a robust touch target, and scheduled days
+   advertise occupancy without replacing the day numeral. */
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] {
+  min-width: 1.20rem !important;
+  min-height: 1.20rem !important;
+  isolation: isolate;
+}
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"][data-has-schedule="true"]::after {
+  content: attr(data-schedule-count);
+  position: absolute;
+  inset-inline-end: -.26rem;
+  inset-block-start: -.28rem;
+  min-width: .72rem;
+  height: .72rem;
+  padding: 0 .12rem;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(17, 20, 28, .96);
+  border: 1px solid rgba(247, 205, 91, .88);
+  color: #ffe08a;
+  font-size: .43rem;
+  font-weight: 850;
+  line-height: 1;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.65), 0 0 7px rgba(247,205,91,.34);
+  pointer-events: none;
+  z-index: 2;
+}
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"][data-has-schedule="true"] {
+  box-shadow: inset 0 0 0 1px rgba(247,205,91,.30), 0 0 5px rgba(247,205,91,.16);
+}
+@media (max-width: 720px) {
+  .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] {
+    min-width: 1.10rem !important;
+    min-height: 1.10rem !important;
+  }
+}
+
+
+/* B7.17 — semantic occlusion + calendar label hierarchy.
+   Calendar numerals are the lowest DOM annotation layer. Moon names, selected
+   cards and scheduled-item cards are opaque enough to occlude numerals below
+   them, so dates never print through information panels. */
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] {
+  z-index: 3 !important;
+  background: rgba(3, 10, 16, .84) !important;
+  border: 1px solid rgba(112, 170, 181, .20) !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,.38) !important;
+}
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"][data-depth-side="far"] {
+  filter: saturate(.72);
+}
+.sphere-moon-label {
+  z-index: 9 !important;
+  background: rgba(3, 11, 17, .96) !important;
+  border-color: rgba(119, 208, 194, .42) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,.36), 0 0 0 1px rgba(68,130,124,.10);
+  backdrop-filter: blur(3px);
+}
+.sphere-semantic-label:not([data-semantic-kind="pattern-day-number"]):not([data-semantic-kind="intercalary-day-number"]) {
+  z-index: 12 !important;
+  background-color: rgba(7, 10, 15, .975) !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,.56), 0 0 0 1px rgba(255,255,255,.035);
+  backdrop-filter: blur(5px);
+}
+.sphere-semantic-label.is-selected:not([data-semantic-kind="pattern-day-number"]),
+.sphere-semantic-label.is-pinned:not([data-semantic-kind="pattern-day-number"]) {
+  z-index: 15 !important;
+  background-color: rgba(12, 13, 17, .99) !important;
+}
+.sphere-semantic-label[data-semantic-kind="living-plan"] {
+  z-index: 16 !important;
+  background: rgba(12, 13, 17, .99) !important;
+}
+.sphere-semantic-leader-layer { z-index: 10 !important; }
+.sphere-semantic-label-layer { z-index: 11 !important; }
+
+/* Selected/scheduled calendar cells remain obvious without making all 364
+   numerals equally loud. */
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"].is-selected,
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"].is-pinned {
+  z-index: 6 !important;
+  background: rgba(41, 31, 8, .96) !important;
+  border-color: rgba(255, 222, 116, .86) !important;
+}
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"][data-has-schedule="true"] {
+  z-index: 5 !important;
+  background: rgba(16, 18, 23, .94) !important;
+  border-color: rgba(247, 205, 91, .58) !important;
+}
+@media (max-width: 720px) {
+  .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] {
+    min-width: 1.14rem !important;
+    min-height: 1.14rem !important;
+  }
+  .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] .sphere-semantic-label-title {
+    font-size: .49rem !important;
+  }
+}
+
+
+/* B7.19 — strict visual layer order. Calendar numerals are part of the
+   instrument face, never foreground cards. Moon labels and semantic cards must
+   occlude day text completely instead of allowing digits to print through. */
+.sphere-semantic-label[data-quiet-rail="true"] {
+  z-index: 2 !important;
+}
+.sphere-moon-label {
+  z-index: 5 !important;
+  background: rgba(4, 11, 18, .94) !important;
+  box-shadow: 0 3px 10px rgba(0,0,0,.42);
+}
+.sphere-semantic-label:not([data-quiet-rail="true"]) {
+  z-index: 6;
+}
+.sphere-semantic-label[data-halo-lane="agenda"],
+.sphere-semantic-label.is-selected,
+.sphere-semantic-label.is-pinned {
+  z-index: 8 !important;
+  background-color: rgba(7, 10, 15, .975);
+}
+
+/* B7.20 — camera-local numeral reveal. Day labels are ephemeral instrument
+   annotations: they fade as their Moon leaves the camera focus cone instead of
+   remaining as stale touch pills. The selected day may remain as one anchor. */
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"],
+.sphere-semantic-label[data-semantic-kind="intercalary-day-number"] {
+  transition: opacity 150ms ease-out, filter 150ms ease-out !important;
+  will-change: opacity;
+}
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"].is-dissipating,
+.sphere-semantic-label[data-semantic-kind="intercalary-day-number"].is-dissipating {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  filter: saturate(.55) brightness(.74);
+}
+
+/* B7.22 — persistent Pattern Moon identities + progressive disclosure.
+   Every Moon sector keeps one small numbered lunar disc visible. Labels expand
+   only as their sector approaches the camera, preserving the clean day reveal. */
+.sphere-moon-label {
+  display: inline-flex;
+  align-items: center;
+  gap: .34rem;
+  min-width: 0;
+  max-width: 11.5rem;
+  padding: .24rem .46rem .24rem .28rem;
+  border-radius: .72rem;
+  pointer-events: none;
+  overflow: hidden;
+  transition: opacity 160ms ease, transform 160ms ease, max-width 180ms ease, background-color 160ms ease;
+}
+.sphere-moon-label::before { display: none !important; }
+.sphere-moon-label .sphere-moon-icon {
+  position: relative;
+  flex: 0 0 auto;
+  width: 1.26rem;
+  height: 1.26rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: rgba(224, 248, 241, .96);
+  background:
+    radial-gradient(circle at 34% 34%, rgba(231,255,248,.36), transparent 36%),
+    rgba(88, 170, 158, .24);
+  border: 1px solid rgba(143, 231, 216, .62);
+  box-shadow: inset -.28rem 0 .3rem rgba(2,8,13,.62), 0 0 .48rem rgba(102,211,193,.18);
+}
+.sphere-moon-label .sphere-moon-icon-number {
+  position: relative;
+  z-index: 1;
+  font-size: .54rem;
+  line-height: 1;
+  font-weight: 800;
+  text-shadow: 0 1px 2px rgba(0,0,0,.95);
+}
+.sphere-moon-label .sphere-moon-copy {
+  min-width: 0;
+  display: grid;
+  gap: .02rem;
+}
+.sphere-moon-label .sphere-moon-title {
+  font-size: .62rem;
+  line-height: 1.05;
+  font-weight: 760;
+  white-space: nowrap;
+}
+.sphere-moon-label .sphere-moon-name {
+  color: rgba(230, 244, 239, .94);
+  font-size: .56rem;
+  line-height: 1.08;
+  font-weight: 620;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sphere-moon-label .sphere-moon-meta {
+  color: rgba(164, 196, 190, .9);
+  font-size: .47rem;
+  line-height: 1.05;
+  white-space: nowrap;
+}
+.sphere-moon-label.is-compact {
+  width: 1.58rem;
+  height: 1.58rem;
+  min-width: 1.58rem;
+  max-width: 1.58rem;
+  padding: .15rem;
+  border-radius: 50%;
+  justify-content: center;
+  background: rgba(4, 11, 18, .82) !important;
+  border-color: rgba(119, 208, 194, .32) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.44) !important;
+}
+.sphere-moon-label.is-compact .sphere-moon-icon {
+  width: 1.16rem;
+  height: 1.16rem;
+}
+.sphere-moon-label.is-compact .sphere-moon-copy { display: none; }
+.sphere-moon-label.is-expanded {
+  background: rgba(3, 11, 17, .975) !important;
+  border-color: rgba(119, 208, 194, .5) !important;
+}
+.sphere-moon-label.is-selected .sphere-moon-icon {
+  color: #fff2b8;
+  border-color: rgba(255, 224, 112, .92);
+  background: rgba(151, 111, 23, .34);
+  box-shadow: inset -.28rem 0 .3rem rgba(20,12,0,.48), 0 0 .64rem rgba(255,220,101,.42);
+}
+.sphere-moon-label.is-selected .sphere-moon-name { color: #fff0ba; }
+@media (max-width: 720px) {
+  .sphere-moon-label.is-expanded {
+    max-width: 9.6rem;
+    padding: .22rem .38rem .22rem .24rem;
+  }
+  .sphere-moon-label .sphere-moon-title { font-size: .58rem; }
+  .sphere-moon-label .sphere-moon-name { font-size: .52rem; }
+  .sphere-moon-label .sphere-moon-meta { font-size: .44rem; }
+}
+
+
+/* B7.23 — calmer label surface. Keep labels crisp without letting every
+   annotation compete at full visual weight. */
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"] {
+  box-shadow: none !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,.92);
+}
+.sphere-moon-label.is-compact:not(.is-selected):not(.is-front) {
+  opacity: .72 !important;
+  transform: translateZ(0) scale(.92) !important;
+}
+.sphere-moon-label.is-expanded {
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+.sphere-semantic-label:not([data-quiet-rail="true"]):not(.is-selected):not(.is-pinned) {
+  max-width: min(12.5rem, 42vw);
+}
+@media (max-width: 720px) {
+  .sphere-semantic-label:not([data-quiet-rail="true"]):not(.is-selected):not(.is-pinned) {
+    max-width: 9.75rem;
+  }
+}
+
+/* B7.31 — release-candidate everyday calendar controls + data safety */
+.sphere-everyday-toolbar,
+.sphere-data-safety {
+  margin: .7rem 0;
+  border: 1px solid rgba(126, 220, 191, .2);
+  border-radius: 16px;
+  background: rgba(8, 18, 24, .72);
+}
+.sphere-everyday-toolbar { padding: .7rem; }
+.sphere-step-nav,
+.sphere-emphasis-modes,
+.sphere-data-safety-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+  align-items: center;
+}
+.sphere-step-nav button,
+.sphere-emphasis-modes button,
+.sphere-data-safety button {
+  min-height: 40px;
+  border: 1px solid rgba(154, 211, 222, .24);
+  border-radius: 11px;
+  background: rgba(16, 31, 39, .88);
+  color: inherit;
+  padding: .48rem .72rem;
+  font: inherit;
+}
+.sphere-step-nav button { flex: 1 1 auto; }
+.sphere-emphasis-modes { margin-top: .55rem; }
+.sphere-emphasis-label {
+  color: rgba(220, 235, 238, .68);
+  font-size: .82rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.sphere-emphasis-modes button.is-active,
+.sphere-emphasis-modes button[aria-pressed="true"] {
+  border-color: rgba(244, 215, 112, .62);
+  background: rgba(80, 63, 22, .42);
+  color: #fff0b2;
+}
+.sphere-emphasis-status {
+  margin: .5rem 0 0;
+  color: rgba(220, 235, 238, .68);
+  font-size: .83rem;
+}
+.sphere-data-safety > summary {
+  cursor: pointer;
+  padding: .72rem .85rem;
+  font-weight: 700;
+}
+.sphere-data-safety-body { padding: 0 .85rem .85rem; }
+.sphere-data-safety-body p { margin: .45rem 0; }
+.sphere-backup-reminder { color: #ffd98c; }
+.sphere-backup-mode { display: grid; gap: .3rem; margin-top: .65rem; }
+.sphere-backup-mode select {
+  width: 100%;
+  min-height: 42px;
+  border-radius: 10px;
+  border: 1px solid rgba(154, 211, 222, .24);
+  background: rgba(6, 13, 18, .95);
+  color: inherit;
+  padding: .45rem .55rem;
+}
+.sphere-data-safety-note {
+  color: rgba(220, 235, 238, .64);
+  font-size: .8rem;
+}
+@media (max-width: 560px) {
+  .sphere-step-nav button { flex-basis: calc(33.333% - .45rem); }
+  .sphere-emphasis-modes button { flex: 1 1 calc(50% - .45rem); }
+  .sphere-emphasis-label { flex-basis: 100%; }
+}
+
+
+/* B7.33 — schedule navigator + explicit inspect/edit hierarchy */
+.sphere-schedule-navigator {
+  margin: .7rem 0;
+  padding: .7rem;
+  border: 1px solid rgba(102, 213, 185, .2);
+  border-radius: 16px;
+  background: rgba(7, 17, 23, .78);
+}
+.sphere-schedule-nav-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: .45rem;
+  align-items: stretch;
+}
+.sphere-schedule-nav-row > button,
+.sphere-schedule-nav-actions > button {
+  min-height: 42px;
+  border: 1px solid rgba(154, 211, 222, .24);
+  border-radius: 11px;
+  background: rgba(16, 31, 39, .9);
+  color: inherit;
+  padding: .48rem .7rem;
+  font: inherit;
+}
+.sphere-schedule-nav-row > button:disabled { opacity: .42; }
+.sphere-schedule-summary {
+  min-width: 0;
+  display: grid;
+  gap: .12rem;
+  text-align: left;
+}
+.sphere-schedule-summary-kicker {
+  color: rgba(120, 226, 196, .8);
+  font-size: .69rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.sphere-schedule-summary strong,
+.sphere-schedule-summary small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sphere-schedule-summary small { color: rgba(220,235,238,.66); }
+.sphere-schedule-nav-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .65rem;
+  margin-top: .5rem;
+}
+.sphere-schedule-nav-actions span {
+  color: rgba(220,235,238,.66);
+  font-size: .78rem;
+  text-align: right;
+}
+.sphere-semantic-label-edit {
+  align-self: center;
+  min-height: 30px;
+  border: 1px solid rgba(244, 215, 112, .42);
+  border-radius: 9px;
+  background: rgba(65, 49, 17, .78);
+  color: #ffe9a6;
+  padding: .25rem .55rem;
+  font: inherit;
+  font-size: .74rem;
+  cursor: pointer;
+}
+@media (max-width: 560px) {
+  .sphere-schedule-nav-row { grid-template-columns: 1fr 1fr; }
+  .sphere-schedule-summary { grid-column: 1 / -1; grid-row: 1; }
+  #sphere-schedule-prev { grid-column: 1; }
+  #sphere-schedule-next { grid-column: 2; }
+  .sphere-schedule-nav-actions { align-items: flex-start; }
+}
+
+
+/* B7.36 — gesture fast path: preserve geometry but remove costly DOM
+   compositing while the camera is actively moving. Labels return after the
+   90ms settle pass. */
+.is-camera-gesture-active .sphere-semantic-label,
+.is-camera-gesture-active .living-time-sphere-moon-label {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: none !important;
+}
+
+
+
+/* B7.38 — camera-local schedule summaries. These are intentionally lighter
+   than full planner cards so they can follow Moon-to-Moon rotation smoothly. */
+.sphere-semantic-label[data-semantic-kind="living-plan-summary"] {
+  max-width: min(9.5rem, 38vw);
+  padding: .24rem .32rem;
+  border-color: rgba(101, 215, 197, .30);
+  background: rgba(7, 15, 22, .90);
+  box-shadow: 0 3px 12px rgba(0,0,0,.22);
+}
+.sphere-semantic-label[data-semantic-kind="living-plan-summary"] .sphere-semantic-label-title {
+  font-size: .62rem;
+}
+.sphere-semantic-label[data-semantic-kind="living-plan-summary"] .sphere-semantic-label-status {
+  font-size: .54rem;
+  padding: .08rem .24rem;
+}
+.sphere-semantic-label[data-semantic-kind="living-plan-summary"]:not(.is-selected) .sphere-semantic-label-detail,
+.sphere-semantic-label[data-semantic-kind="living-plan-summary"]:not(.is-selected) .sphere-semantic-label-close,
+.sphere-semantic-label[data-semantic-kind="living-plan-summary"] .sphere-semantic-label-edit {
+  display: none !important;
+}
+.sphere-instrument-shell.is-camera-gesture-active .sphere-semantic-label[data-semantic-kind="living-plan-summary"] {
+  transition: opacity 70ms linear, transform 70ms linear;
+}
+
+/* === B7.41 INSTRUMENT POLISH START === */
+
+/*
+ * Keep projected calendar information physically inside the instrument.
+ * We hide at the viewport edge rather than moving canonical calendar cells.
+ */
+.sphere-semantic-label-layer {
+  overflow: hidden;
+  contain: paint;
+}
+
+/*
+ * Pattern days become engraved instrument numerals.
+ * Geometry remains authoritative; this is presentation only.
+ */
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-quiet-rail="true"] {
+  color: rgba(218, 237, 240, .84) !important;
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, .98),
+    0 0 4px rgba(67, 157, 169, .22) !important;
+}
+
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-quiet-rail="true"]
+.sphere-semantic-label-title {
+  min-width: 1.02rem;
+  padding: .075rem .11rem;
+  border: 1px solid rgba(125, 189, 197, .16);
+  border-radius: .28rem;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(13, 28, 35, .56),
+      rgba(5, 12, 18, .24)
+    );
+  color: inherit;
+  font-family:
+    ui-monospace,
+    "SFMono-Regular",
+    Menlo,
+    Consolas,
+    monospace;
+  font-size: .52rem !important;
+  font-weight: 790 !important;
+  line-height: 1 !important;
+  letter-spacing: -.055em !important;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  box-shadow:
+    inset 0 1px 0 rgba(221, 247, 247, .045),
+    0 1px 2px rgba(0, 0, 0, .32);
+}
+
+/* 1 · 7 · 14 · 21 · 28 establish the four-week skeleton. */
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-gate-day="true"]
+.sphere-semantic-label-title {
+  color: rgba(226, 250, 247, .97);
+  border-color: rgba(116, 220, 207, .34);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(14, 43, 45, .76),
+      rgba(5, 17, 22, .45)
+    );
+  font-weight: 900 !important;
+  text-shadow:
+    0 1px 2px rgba(0,0,0,.96),
+    0 0 5px rgba(96,216,201,.24);
+}
+
+/* Scheduled days receive a quiet warm trace. */
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-schedule-count]
+.sphere-semantic-label-title {
+  border-color: rgba(244, 202, 93, .38);
+  box-shadow:
+    inset 0 -2px 0 rgba(244, 202, 93, .34),
+    0 1px 2px rgba(0,0,0,.34);
+}
+
+/* Selected day remains the strongest calendar numeral. */
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"].is-selected
+.sphere-semantic-label-title,
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"].is-pinned
+.sphere-semantic-label-title {
+  color: #ffe792 !important;
+  border-color: rgba(255, 220, 105, .74);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(67, 50, 12, .88),
+      rgba(26, 19, 4, .62)
+    );
+  text-shadow:
+    0 1px 2px rgba(0,0,0,.98),
+    0 0 7px rgba(255,218,102,.46) !important;
+}
+
+/*
+ * Astronomy text annotations stay secondary to the calendar.
+ * The actual 3D glyph/halo size is reduced in the renderer above.
+ */
+.sphere-semantic-label[data-semantic-kind="planet"],
+.sphere-semantic-label[data-semantic-kind="astronomy"],
+.sphere-semantic-label[data-semantic-kind="lunar"],
+.sphere-semantic-label[data-semantic-kind="solar"] {
+  max-width: min(7.2rem, 32vw);
+  padding: .18rem .28rem;
+  border-radius: .48rem;
+}
+
+.sphere-semantic-label[data-semantic-kind="planet"] .sphere-semantic-label-title,
+.sphere-semantic-label[data-semantic-kind="astronomy"] .sphere-semantic-label-title,
+.sphere-semantic-label[data-semantic-kind="lunar"] .sphere-semantic-label-title,
+.sphere-semantic-label[data-semantic-kind="solar"] .sphere-semantic-label-title {
+  font-size: .60rem;
+}
+
+.sphere-semantic-label[data-semantic-kind="planet"] .sphere-semantic-label-close,
+.sphere-semantic-label[data-semantic-kind="astronomy"] .sphere-semantic-label-close,
+.sphere-semantic-label[data-semantic-kind="lunar"] .sphere-semantic-label-close,
+.sphere-semantic-label[data-semantic-kind="solar"] .sphere-semantic-label-close {
+  width: 1.08rem;
+  height: 1.08rem;
+  flex-basis: 1.08rem;
+  font-size: .66rem;
+}
+
+/*
+ * Gesture mode: preserve information but remove expensive paint effects
+ * while the finger is actively moving the instrument.
+ */
+.is-camera-gesture-active .sphere-moon-label,
+.is-camera-gesture-active .sphere-semantic-label {
+  transition: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.is-camera-gesture-active .sphere-semantic-leader-layer {
+  opacity: 0 !important;
+}
+
+/* Slightly tighter phone typography without making days unreadable. */
+@media (max-width: 720px) {
+  .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-quiet-rail="true"]
+  .sphere-semantic-label-title {
+    min-width: .92rem;
+    padding: .06rem .085rem;
+    font-size: .48rem !important;
+  }
+
+  .sphere-semantic-label[data-semantic-kind="planet"],
+  .sphere-semantic-label[data-semantic-kind="astronomy"],
+  .sphere-semantic-label[data-semantic-kind="lunar"],
+  .sphere-semantic-label[data-semantic-kind="solar"] {
+    max-width: min(6.7rem, 29vw);
+  }
+}
+
+/* === B7.41 INSTRUMENT POLISH END === */
+
+/* === B7.42 TEMPORAL GLIDE START === */
+
+/*
+ * Calendar numerals are luminous instrument markings.
+ * Keep the glow light enough that 30–50 visible numbers do not turn
+ * the calendar into a neon cloud.
+ */
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+][data-quiet-rail="true"] {
+  color: rgba(224, 244, 245, .91) !important;
+
+  text-shadow:
+    0 0 3px rgba(128, 226, 226, .42),
+    0 1px 2px rgba(0, 0, 0, .98) !important;
+
+  transition:
+    opacity 260ms cubic-bezier(.2,.72,.2,1),
+    color 220ms ease,
+    text-shadow 220ms ease !important;
+}
+
+/*
+ * Small etched/glass dial around each numeral.
+ */
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+][data-quiet-rail="true"]
+.sphere-semantic-label-title {
+  border-color:
+    rgba(132, 215, 213, .22) !important;
+
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      rgba(85, 196, 195, .12),
+      rgba(5, 14, 20, .54) 72%
+    ) !important;
+
+  box-shadow:
+    inset 0 0 4px rgba(112, 222, 218, .08),
+    0 0 3px rgba(90, 192, 193, .10) !important;
+}
+
+/*
+ * The 7-day skeleton glows just a little brighter.
+ */
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+][data-gate-day="true"]
+.sphere-semantic-label-title {
+  color: rgba(239, 255, 251, .98) !important;
+
+  border-color:
+    rgba(111, 232, 216, .44) !important;
+
+  text-shadow:
+    0 0 4px rgba(108, 236, 218, .48),
+    0 1px 2px rgba(0,0,0,.98) !important;
+
+  box-shadow:
+    inset 0 0 5px rgba(93, 225, 209, .12),
+    0 0 4px rgba(91, 210, 202, .14) !important;
+}
+
+/*
+ * Scheduled days get a restrained amber underside rather than
+ * another floating bubble.
+ */
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+][data-schedule-count]
+.sphere-semantic-label-title {
+  color: rgba(255, 238, 180, .98) !important;
+
+  border-color:
+    rgba(247, 205, 91, .48) !important;
+
+  text-shadow:
+    0 0 4px rgba(247,205,91,.36),
+    0 1px 2px rgba(0,0,0,.98) !important;
+}
+
+/*
+ * Selected day is unmistakable but still part of the same dial.
+ */
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+].is-selected
+.sphere-semantic-label-title,
+
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+].is-pinned
+.sphere-semantic-label-title {
+  color: #fff0a8 !important;
+
+  border-color:
+    rgba(255, 224, 118, .88) !important;
+
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      rgba(255, 219, 93, .25),
+      rgba(38, 27, 5, .76) 72%
+    ) !important;
+
+  text-shadow:
+    0 0 5px rgba(255,221,108,.72),
+    0 1px 2px rgba(0,0,0,.99) !important;
+
+  box-shadow:
+    inset 0 0 6px rgba(255,224,116,.16),
+    0 0 5px rgba(255,214,81,.22) !important;
+}
+
+/*
+ * A disappearing Moon should dissolve rather than blink.
+ */
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+].is-dissipating,
+
+.sphere-semantic-label[
+  data-semantic-kind="intercalary-day-number"
+].is-dissipating {
+  opacity: 0 !important;
+
+  filter:
+    saturate(.72)
+    brightness(.80);
+
+  pointer-events: none !important;
+}
+
+/*
+ * Inspection cards are foreground surfaces.
+ * Their background must be opaque enough that calendar numbers never
+ * visually print through a selected-day/event card.
+ */
+.sphere-semantic-label:not(
+  [data-semantic-kind="pattern-day-number"]
+):not(
+  [data-semantic-kind="intercalary-day-number"]
+) {
+  background-color:
+    rgba(5, 9, 14, .985) !important;
+
+  isolation: isolate;
+
+  box-shadow:
+    0 9px 28px rgba(0,0,0,.68),
+    0 0 0 1px rgba(255,255,255,.04) !important;
+}
+
+/*
+ * Interaction is intentionally cheaper:
+ * retain the luminous numerals, but don't animate expensive card shadows.
+ */
+.is-camera-gesture-active
+.sphere-semantic-label:not(
+  [data-semantic-kind="pattern-day-number"]
+) {
+  box-shadow: none !important;
+}
+
+/* === B7.42 TEMPORAL GLIDE END === */
+
+/* === B7.43 GLIDE HIERARCHY START === */
+
+/*
+ * One visual field, three-Moon aperture.
+ * Center is the readable calendar.
+ * Neighbors are temporal context.
+ */
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+][data-glide-role="center"] {
+  opacity: .98 !important;
+}
+
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+][data-glide-role="neighbor"] {
+  opacity: .61 !important;
+  filter: saturate(.82) brightness(.90);
+}
+
+/*
+ * Neighbor dates remain luminous, but with a smaller halo.
+ */
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+][data-glide-role="neighbor"]
+.sphere-semantic-label-title {
+  border-color:
+    rgba(120, 197, 198, .14) !important;
+
+  text-shadow:
+    0 0 2px rgba(113, 213, 211, .24),
+    0 1px 2px rgba(0,0,0,.98) !important;
+
+  box-shadow:
+    inset 0 0 3px rgba(99, 205, 201, .045)
+    !important;
+}
+
+/*
+ * Center calendar gets the soft instrument glow.
+ */
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+][data-glide-role="center"]
+.sphere-semantic-label-title {
+  color: rgba(229, 249, 248, .96) !important;
+
+  text-shadow:
+    0 0 4px rgba(117, 229, 222, .46),
+    0 1px 2px rgba(0,0,0,.99) !important;
+
+  box-shadow:
+    inset 0 0 5px rgba(110, 222, 216, .09),
+    0 0 3px rgba(83, 197, 194, .10)
+    !important;
+}
+
+/*
+ * Selected and scheduled states override aperture dimming.
+ */
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+].is-selected,
+
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+].is-pinned,
+
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+][data-schedule-count] {
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/*
+ * Glide, don't blink.
+ */
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+] {
+  transition:
+    opacity 280ms cubic-bezier(.22,.72,.18,1),
+    filter 280ms ease,
+    color 220ms ease !important;
+}
+
+/*
+ * A Moon identity should always outrank its underlying day coordinates.
+ */
+.sphere-moon-label {
+  z-index: 14 !important;
+}
+
+/*
+ * Selected-day/plan cards are foreground glass, never translucent overlays.
+ */
+.sphere-semantic-label:not(
+  [data-semantic-kind="pattern-day-number"]
+):not(
+  [data-semantic-kind="intercalary-day-number"]
+) {
+  background:
+    linear-gradient(
+      150deg,
+      rgba(7, 11, 16, .995),
+      rgba(4, 8, 13, .992)
+    ) !important;
+
+  backdrop-filter: none !important;
+
+  box-shadow:
+    0 10px 28px rgba(0,0,0,.72),
+    0 0 0 1px rgba(255,255,255,.045)
+    !important;
+}
+
+/* === B7.43 GLIDE HIERARCHY END === */
+
+
+
+
+/* === B7.48 HIGH-PERFORMANCE SYMBOL FIELD START === */
+/* The large scheduled glyph is now drawn by one GPU atlas field. Day numerals
+   retain schedule metadata for accessibility but never draw a duplicate glyph. */
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-plan-symbol]::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Gesture fast path: keep the calendar readable while stripping paint work that
+   adds no information during motion. Full visual polish returns on settle. */
+.is-camera-gesture-active
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"] {
+  filter: none !important;
+  transition: none !important;
+}
+.is-camera-gesture-active
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"]
+.sphere-semantic-label-title {
+  background: rgba(4, 12, 18, .66) !important;
+  box-shadow: none !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,.98) !important;
+  transition: none !important;
+}
+/* === B7.48 HIGH-PERFORMANCE SYMBOL FIELD END === */
+
+/* === B7.52 WHOLE-INSTRUMENT PERFORMANCE + CONTAINMENT START === */
+/*
+ * The projected label field now lives inside .sphere-instrument-shell. Keep it
+ * paint-contained so calendar/date cards cannot spill into Camera controls or
+ * the Legend, and so label repaints do not invalidate the surrounding page.
+ */
+.sphere-instrument-shell > .sphere-moon-labels {
+  inset: 0;
+  overflow: hidden;
+  contain: layout paint style;
+  isolation: isolate;
+}
+
+/* Phone GPUs pay heavily for backdrop-filter on several moving pills. The
+ * opaque instrument backgrounds already provide enough separation, so coarse
+ * pointers use a zero-blur paint path without changing hierarchy or content. */
+@media (pointer: coarse), (max-width: 720px) {
+  .sphere-moon-label,
+  .sphere-semantic-label,
+  .sphere-semantic-label:not([data-semantic-kind="pattern-day-number"]) {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .sphere-moon-label {
+    box-shadow: none;
+  }
+
+  .sphere-moon-label.is-selected {
+    box-shadow: 0 0 0 1px rgba(251, 191, 36, .10) !important;
+  }
+
+  /* Below-fold Observatory panels should not participate in the first layout
+     pass on phones. Browser intrinsic sizing preserves scroll geometry. */
+  .sphere-sidebar-section,
+  .sphere-temporal-strata-panel,
+  .life-atlas-import-panel {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 240px;
+  }
+}
+/* === B7.52 WHOLE-INSTRUMENT PERFORMANCE + CONTAINMENT END === */

@@ -7,9 +7,12 @@ const renderer = fs.readFileSync(path.resolve(__dirname, "../docs/assets/js/sphe
 const html = fs.readFileSync(path.resolve(__dirname, "../docs/living-time-sphere.html"), "utf8");
 const ui = fs.readFileSync(path.resolve(__dirname, "../docs/assets/js/sphere/living-time-sphere-ui.js"), "utf8");
 
-test("3D extensions receive an initial sync and render before interaction", () => {
-  assert.match(renderer, /lifecycle:\s*"initial-sync"/);
-  assert.match(renderer, /extensions-initial-render/);
+test("3D extensions hydrate after the core first frame without blocking interaction", () => {
+  assert.match(renderer, /B7\.50: extension hydration no longer blocks first paint/);
+  assert.match(renderer, /function _scheduleDeferredExtensionHydration\(\)/);
+  assert.match(renderer, /lifecycle: "deferred-mount"/);
+  assert.match(renderer, /lifecycle: "deferred-initial-sync"/);
+  assert.match(renderer, /extensions-deferred-ready/);
 });
 
 test("refreshes arriving during async init are queued and committed", () => {

@@ -971,3 +971,76 @@
     padding-inline: 0.3rem;
   }
 }
+
+/* =====================================================================
+ * Phase B1.1 — Live Today / Selected temporal identity
+ * ===================================================================== */
+
+.home-temporal-selection {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.55rem;
+  width: min(100%, 920px);
+  margin: 1rem auto -0.7rem;
+}
+
+.home-temporal-selection__live,
+.home-temporal-selection__selected {
+  display: grid;
+  gap: 0.12rem;
+  padding: 0.72rem 0.9rem;
+  border-radius: 15px;
+}
+
+.home-temporal-selection__live {
+  border: 1px solid rgba(104, 240, 182, 0.16);
+  background: rgba(104, 240, 182, 0.035);
+}
+
+.home-temporal-selection__selected {
+  border: 1px solid rgba(243, 201, 122, 0.24);
+  background:
+    radial-gradient(
+      circle at 100% 0,
+      rgba(243, 201, 122, 0.08),
+      transparent 58%
+    ),
+    rgba(243, 201, 122, 0.035);
+}
+
+.home-temporal-selection__label {
+  color: rgba(194, 210, 218, 0.58);
+  font-size: 0.6rem;
+  font-weight: 850;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.home-temporal-selection__live strong {
+  color: #68f0b6;
+}
+
+.home-temporal-selection__selected strong {
+  color: var(--home-live-gold);
+}
+
+.home-temporal-selection small {
+  color: rgba(190, 204, 212, 0.52);
+  font-size: 0.66rem;
+}
+
+.home-temporal-selection [hidden] {
+  display: none !important;
+}
+
+[data-home-live-root][data-home-temporal-mode="exploring"]
+.home-temporal-selection {
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 760px), (pointer: coarse), (hover: none) {
+  [data-home-live-root][data-home-temporal-mode="exploring"]
+  .home-temporal-selection {
+    grid-template-columns: 1fr;
+  }
+}

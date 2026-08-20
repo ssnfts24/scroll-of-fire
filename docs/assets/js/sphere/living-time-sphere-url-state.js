@@ -2,7 +2,7 @@
   "use strict";
 
   const VALID_VIEW_MODES  = new Set(["today", "passage", "years", "pattern"]);
-  const VALID_LAYERS      = new Set(["pattern", "exactDays", "weekGates", "outsideDays", "passage", "lunar", "solar", "markers", "recurrence", "spiral", "environment", "connections"]);
+  const VALID_LAYERS      = new Set(["pattern", "exactDays", "weekGates", "outsideDays", "passage", "lunar", "solar", "planets", "markers", "recurrence", "spiral", "environment", "connections"]);
   const VALID_YEARS       = new Set(Array.from({ length: 13 }, (_, i) => String(2014 + i)));
   const VALID_RENDERERS   = new Set(["auto", "3d", "svg", "canvas", "table", "text"]);
   const VALID_QUALITIES   = new Set(["auto", "high", "balanced", "lowpower", "svgonly"]);

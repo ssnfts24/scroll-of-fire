@@ -329,6 +329,42 @@
       );
     }
 
+    // B7.49 — use the v1 temporal/type indexes that already exist instead of
+    // getAll() when a projection asks for one year/day/moon. No database-version
+    // migration is required, so this is safe for existing local Life Atlas data.
+    async function query(criteria = {}) {
+      const candidates = [
+        ["patternYear", criteria.patternYear],
+        ["civilDate", criteria.civilDate],
+        ["patternDay", criteria.patternDay],
+        ["moonDay", criteria.moonDay],
+        ["moon", criteria.moon],
+        ["type", criteria.type]
+      ];
+      const selected = candidates.find(([, value]) => value !== null && value !== undefined && value !== "");
+      if (!selected) return values();
+      const [indexName, value] = selected;
+      return withStore("readonly", async store => {
+        if (!store.indexNames?.contains?.(indexName)) return [];
+        const index = store.index(indexName);
+        if (typeof index.getAll === "function") {
+          return clone((await requestToPromise(index.getAll(value))) || []);
+        }
+        const records = [];
+        await new Promise((resolve, reject) => {
+          const request = index.openCursor(value);
+          request.onsuccess = () => {
+            const cursor = request.result;
+            if (!cursor) { resolve(); return; }
+            records.push(clone(cursor.value));
+            cursor.continue();
+          };
+          request.onerror = () => reject(request.error || new Error("Life Atlas indexed cursor failed."));
+        });
+        return records;
+      });
+    }
+
     async function clear() {
       await withStore(
         "readwrite",
@@ -372,6 +408,7 @@
       set,
       delete: deleteRecord,
       values,
+      query,
       clear,
       size,
       close

@@ -919,7 +919,10 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
               : logDays.has(day) ? "Log"
                 : "";
 
-      return `<button type="button" class="${classes.join(" ")}" data-moon-day="${day}" aria-label="${labels.join(" · ")}" ${selectedDay === day ? 'aria-current="date"' : ""}>
+      const patternDay = info.inside ? ((info.moon.idx - 1) * 28) + day : null;
+      const patternYear = info.anchor?.getFullYear?.() || context.civilDate?.getFullYear?.() || new Date().getFullYear();
+
+      return `<button type="button" class="${classes.join(" ")}" data-moon-day="${day}" data-pattern-year="${patternYear}" data-pattern-day="${patternDay || ""}" aria-label="${labels.join(" · ")}" ${selectedDay === day ? 'aria-current="date"' : ""}>
         <strong>${day}</strong>
         <small>${note || "Moon Day"}</small>
       </button>`;
@@ -942,7 +945,7 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       if (shabbatDays.has(number)) classes.push("shabbat");
       if ([1, 8, 15, 22].includes(number)) classes.push("preparation");
 
-      return `<div class="${classes.join(" ")}">
+      return `<div class="${classes.join(" ")}" data-pattern-year="${info.anchor.getFullYear()}" data-pattern-day="${info.inside ? ((info.moon.idx - 1) * 28 + number) : number}" data-moon-day="${number}">
         <strong>${number}</strong>
         <span>${archetype[0]}</span>
         ${shabbatDays.has(number) ? `<span class="shabbat-mark">שבת</span>` : ""}
@@ -978,7 +981,7 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       if (current.getDay() === 6) classes.push("shabbat");
       if (current.getDay() === 5) classes.push("preparation");
 
-      html += `<div class="${classes.join(" ")}">
+      html += `<div class="${classes.join(" ")}" data-civil-date="${toISO(current)}" data-pattern-year="${info.anchor.getFullYear()}" data-pattern-day="${info.inside ? info.dayOfYear : ""}">
         <strong>${day}</strong>
         <span>${info.inside ? `M${info.moon.idx} · D${info.dayInMoon}` : "Outside"}</span>
         ${current.getDay() === 6 ? `<span class="shabbat-mark">שבת</span>` : ""}

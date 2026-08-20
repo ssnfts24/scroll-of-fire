@@ -9,7 +9,7 @@
 })(typeof globalThis !== "undefined" ? globalThis : this, function () {
   "use strict";
 
-  const VERSION = "1.1.0";
+  const VERSION = "1.2.0";
   const MAX_TEXT_BYTES = 24 * 1024 * 1024;
 
   function clean(value) { return value == null ? "" : String(value).trim(); }
@@ -143,6 +143,21 @@
   function unescapeIcs(value) {
     return clean(value).replace(/\\n/gi, "\n").replace(/\\,/g, ",").replace(/\\;/g, ";").replace(/\\\\/g, "\\");
   }
+  function icsInteger(value, min, max) {
+    const n = Number(clean(value));
+    return Number.isFinite(n) && n >= min && n <= max ? Math.trunc(n) : null;
+  }
+  function firstGrapheme(value) {
+    const text = clean(value);
+    if (!text) return null;
+    try {
+      if (typeof Intl !== "undefined" && typeof Intl.Segmenter === "function") {
+        const segment = new Intl.Segmenter(undefined, { granularity: "grapheme" }).segment(text)[Symbol.iterator]().next().value;
+        return segment?.segment || null;
+      }
+    } catch (_) {}
+    return Array.from(text)[0] || null;
+  }
   function icsDate(value) {
     const v = clean(value);
     if (/^\d{8}T\d{6}Z$/.test(v)) return `${v.slice(0,4)}-${v.slice(4,6)}-${v.slice(6,8)}T${v.slice(9,11)}:${v.slice(11,13)}:${v.slice(13,15)}Z`;
@@ -160,14 +175,36 @@
         const key = line.slice(0, colon).split(";")[0].toUpperCase();
         fields[key] = line.slice(colon + 1);
       });
-      const instant = iso(icsDate(fields.DTSTART));
+      const rawStart = clean(fields.DTSTART);
+      const rawEnd = clean(fields.DTEND);
+      const allDay = /^\d{8}$/.test(rawStart);
+      const instant = iso(icsDate(rawStart));
       if (!instant) return null;
+      const startDate = allDay ? `${rawStart.slice(0,4)}-${rawStart.slice(4,6)}-${rawStart.slice(6,8)}` : null;
+      const endDate = allDay && /^\d{8}$/.test(rawEnd)
+        ? `${rawEnd.slice(0,4)}-${rawEnd.slice(4,6)}-${rawEnd.slice(6,8)}`
+        : null;
       return {
         sourceType: "calendar-ics", sourcePath: `VEVENT[${index}]`, sourceId: clean(fields.UID) || null,
         type: "event", title: unescapeIcs(fields.SUMMARY) || "Calendar event",
         summary: unescapeIcs(fields.DESCRIPTION), instant,
-        end: iso(icsDate(fields.DTEND)), placeLabel: unescapeIcs(fields.LOCATION) || null,
-        latitude: null, longitude: null, payload: { status: clean(fields.STATUS) || null }, confidence: 0.99
+        end: allDay ? null : iso(icsDate(rawEnd)), placeLabel: unescapeIcs(fields.LOCATION) || null,
+        latitude: null, longitude: null,
+        payload: {
+          status: clean(fields.STATUS) || null,
+          allDay,
+          startDate,
+          endDate,
+          categories: unescapeIcs(fields.CATEGORIES) || null,
+          workflow: clean(fields["X-SOF-WORKFLOW"]) || null,
+          workflowKind: clean(fields["X-SOF-WORKFLOW-KIND"]) || null,
+          category: clean(fields["X-SOF-CATEGORY"]) || null,
+          symbol: unescapeIcs(fields["X-SOF-SYMBOL"]) || firstGrapheme(unescapeIcs(fields.SUMMARY)) || null,
+          patternMoon: icsInteger(fields["X-SOF-PATTERN-MOON"], 1, 13),
+          patternMoonDay: icsInteger(fields["X-SOF-PATTERN-DAY"], 1, 28),
+          rrule: clean(fields.RRULE) || null
+        },
+        confidence: 0.99
       };
     }).filter(Boolean);
     return { sourceType: "calendar-ics", candidates, rawCount: candidates.length };

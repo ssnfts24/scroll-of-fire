@@ -24,13 +24,13 @@ test(
   "Sphere extension host loads before Three renderer",
   () => {
     const host =
-      spherePage.indexOf(
-        "living-time-sphere-extension-host.js"
+      spherePage.search(
+        /<script[^>]+src="assets\/js\/sphere\/living-time-sphere-extension-host\.js[^"]*"[^>]*><\/script>/
       );
 
     const rendererScript =
-      spherePage.indexOf(
-        "living-time-sphere-renderer-3d.js"
+      spherePage.search(
+        /<script[^>]+src="assets\/js\/sphere\/living-time-sphere-renderer-3d\.js[^"]*"[^>]*><\/script>/
       );
 
     assert.ok(host >= 0);
@@ -55,16 +55,26 @@ test(
 );
 
 test(
-  "renderer mounts extensions after base geometry",
+  "renderer defers extension hydration until after core scene readiness",
   () => {
     assert.match(
       renderer,
-      /LivingTimeSphereExtensionHost\?\.mountAll/
+      /function _scheduleDeferredExtensionHydration\(\)/
     );
 
     assert.match(
       renderer,
-      /lifecycle: "mount"/
+      /host\.mountAll\(_extensionContext\(\{ lifecycle: "deferred-mount" \}\)\)/
+    );
+
+    assert.match(
+      renderer,
+      /host\.updateAll\(_extensionContext\(\{ lifecycle: "deferred-initial-sync" \}\)\)/
+    );
+
+    assert.match(
+      renderer,
+      /_scheduleDeferredExtensionHydration\(\)/
     );
   }
 );

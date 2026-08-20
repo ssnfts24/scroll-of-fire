@@ -378,3 +378,91 @@ test("solar-only snapshots do not require environment, history, or renderer stat
   assert.equal(solar.angle, 144.5);
   assert.equal(solar.provenance.precision, "anchor-interpolation");
 });
+
+test("selection authority keeps Live Today distinct from explicit Selected", () => {
+  const ui = read("docs/assets/js/sphere/living-time-sphere-ui.js");
+
+  /*
+   * Temporal authority contract:
+   *
+   * Today    = live temporal coordinate.
+   * Selected = explicit navigation coordinate.
+   *
+   * Merely rendering Today must not require manufacturing an
+   * independent selected-day authority from the live coordinate.
+   *
+   * Explicit navigation may select the same coordinate as Today,
+   * but that equality must not collapse the two semantic roles.
+   */
+
+  assert.ok(
+    ui.includes("todayPatternPosition"),
+    "UI must retain canonical Today position"
+  );
+
+  assert.ok(
+    ui.includes("selectedPatternPosition"),
+    "UI must retain an independently represented selected position"
+  );
+
+  assert.ok(
+    ui.includes("_requestSelectedDayUpdate("),
+    "explicit selections must use the selected-day transaction"
+  );
+
+  assert.ok(
+    ui.includes("_returnToLiveToday("),
+    "returning to Today must remain an explicit semantic transaction"
+  );
+});
+
+test("selection authority preserves selected coordinate across temporal exploration", () => {
+  const ui = read("docs/assets/js/sphere/living-time-sphere-ui.js");
+
+  const start = ui.indexOf("function _selectTemporalYear(");
+  const end = ui.indexOf("function _syncYearSelect", start);
+  const section = start >= 0 && end > start
+    ? ui.slice(start, end)
+    : "";
+
+  assert.ok(section.length > 0, "temporal-year selection handler must exist");
+
+  assert.ok(
+    section.includes("_state.selectedDayOfYear"),
+    "year exploration must preserve or deliberately map the selected Pattern day"
+  );
+
+  assert.equal(
+    section.includes("_returnToLiveToday("),
+    false,
+    "year exploration must not silently collapse Selected back into Today"
+  );
+});
+
+test("Today and Selected may share a Pattern day without sharing semantic identity", () => {
+  const temporal = loadTemporal();
+
+  const comparison = temporal.compareToToday(
+    {
+      dayOfPatternYear: 122,
+      effectiveDate: "2025-08-16",
+      isToday: false
+    },
+    {
+      dayOfPatternYear: 122,
+      effectiveDate: "2026-08-16"
+    }
+  );
+
+  assert.equal(
+    comparison.samePatternDay,
+    true,
+    "same Pattern coordinate should be recognized"
+  );
+
+  assert.equal(
+    comparison.isLiveToday,
+    false,
+    "same Pattern coordinate in another temporal context must not become Live Today"
+  );
+});

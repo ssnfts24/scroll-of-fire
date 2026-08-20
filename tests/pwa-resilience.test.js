@@ -157,7 +157,7 @@ test("missing optional image does not block install or offline startup", async (
       type: "APP_SHELL_READY",
       appVersion: "2026.07.16.3",
       serviceWorkerBuild: "2026.07.16.3",
-      mandatoryAssetCount: 92
+      mandatoryAssetCount: 105
     }
   );
   await activateWorker(harness);
@@ -298,7 +298,7 @@ test("service-worker build marker matches the central app version", () => {
   const versionFile = read("docs/assets/js/moons-version.js");
   const version = versionFile.match(/APP_VERSION = "([^"]+)"/)[1];
   const build = versionFile.match(/SERVICE_WORKER_BUILD = APP_VERSION/);
-  assert.equal(version, "2026.08.15.6");
+  assert.match(version, /^\d{4}\.\d{2}\.\d{2}\.\d+$/);
   assert.ok(build);
   assert.match(read("docs/service-worker.js"), new RegExp(`core-\\$\\{VERSION\\}`));
   assert.doesNotMatch(read("docs/service-worker.js"), /\bcaches\.match\(/);

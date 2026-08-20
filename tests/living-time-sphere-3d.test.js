@@ -186,7 +186,7 @@ test("LivingTimeSphereM: STAR_POSITIONS has 900 floats (300 stars × 3)", () => 
 test("LivingTimeSphereCamera: MIN_ZOOM and MAX_ZOOM are reasonable", () => {
   const ctx = loadSphereContext();
   const cam = ctx.LivingTimeSphereCamera;
-  assert.ok(cam.MIN_ZOOM >= 1.0,  "MIN_ZOOM should be at least 1");
+  assert.ok(cam.MIN_ZOOM >= 0.65, "MIN_ZOOM should preserve a safe deep-focus floor");
   assert.ok(cam.MAX_ZOOM <= 12.0, "MAX_ZOOM should be at most 12");
   assert.ok(cam.MIN_ZOOM < cam.MAX_ZOOM, "MIN < MAX");
 });

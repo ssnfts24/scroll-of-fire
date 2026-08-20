@@ -11,8 +11,8 @@
    * Actual visible budgets are now resolved by runtime profile + semantic
    * zoom band below.
    */
-  const SEMANTIC_DESKTOP_LABEL_CAP = 12;
-  const SEMANTIC_MOBILE_LABEL_CAP = 6;
+  const SEMANTIC_DESKTOP_LABEL_CAP = 10;
+  const SEMANTIC_MOBILE_LABEL_CAP = 5;
 
   /*
    * Semantic composition policy
@@ -63,7 +63,7 @@
         far: 1,
         medium: 2,
         near: 3,
-        detail: 3
+        detail: 4
       }),
       desktop: Object.freeze({
         far: 2,
@@ -253,7 +253,8 @@
     }
 
     if (
-      kind.includes(
+      kind.startsWith("living-plan")
+      || kind.includes(
         "record"
       )
       || kind.includes(
@@ -379,8 +380,21 @@
   });
   const SEMANTIC_MOBILE_DISTANCE_MULTIPLIER = 1.10;
 
+  // B7.38 — semantic targets are stable objects while the camera moves. Cache
+  // normalization so a 260-day imported work calendar does not rebuild the same
+  // frozen metadata objects 15 times per second during rotation.
+  const _semanticNormalizeCache = new WeakMap();
+
+  // B7.42 — temporal glide Moon aperture.
+  // Hold the readable calendar neighborhood until another Moon becomes
+  // decisively more camera-facing. This prevents early label popping.
+  let _calendarGlideFrontMoon = null;
+
+
   function normalizeSemanticTarget(target) {
     if (!target || typeof target !== "object") return null;
+    const cached = _semanticNormalizeCache.get(target);
+    if (cached) return cached;
     const id = String(target.id || "").trim();
     const label = String(target.label || "").trim();
     const worldX = Number(target.worldX ?? target.position?.x);
@@ -389,7 +403,7 @@
     if (!id || !label || ![worldX, worldY, worldZ].every(Number.isFinite)) return null;
     const showDistance = Math.max(0.05, Number(target.showDistance) || 2.2);
     const resetDistance = Math.max(showDistance + 0.08, Number(target.resetDistance) || (showDistance + 0.42));
-    return Object.freeze({
+    const normalized = Object.freeze({
       id,
       label,
       detail: target.detail == null ? "" : String(target.detail),
@@ -402,8 +416,41 @@
       pinned: !!target.pinned,
       selected: !!target.selected,
       moon: Number.isFinite(Number(target.moon)) ? Number(target.moon) : null,
-      enabled: target.enabled !== false
+      enabled: target.enabled !== false,
+      leader: target.leader === true || String(target.kind || "").toLowerCase().startsWith("living-plan"),
+      interactive: target.interactive === true,
+      symbol: target.symbol == null ? null : String(target.symbol).slice(0, 4),
+      workflow: target.workflow == null ? null : String(target.workflow),
+      // B7.47.1 — day numerals historically exposed `scheduleCount` while
+      // planner summaries exposed `dayScheduleCount`. Normalize both into one
+      // field so scheduled dates retain their symbol/count after normalization.
+      dayScheduleCount: Number.isFinite(Number(target.dayScheduleCount ?? target.scheduleCount))
+        ? Math.max(0, Number(target.dayScheduleCount ?? target.scheduleCount))
+        : 0,
+      recordId: target.recordId == null ? null : String(target.recordId),
+      patternYear: Number.isFinite(Number(target.patternYear)) ? Number(target.patternYear) : null,
+      patternDay: Number.isFinite(Number(target.patternDay)) ? Number(target.patternDay) : null,
+      category: target.category == null ? null : String(target.category),
+      schedule: target.schedule && typeof target.schedule === "object" ? target.schedule : null,
+      patternSignature: target.patternSignature == null ? null : String(target.patternSignature),
+      statusLabel: target.statusLabel == null ? null : String(target.statusLabel),
+      haloOffset: Number.isFinite(Number(target.haloOffset)) ? Math.max(8, Number(target.haloOffset)) : null,
+      haloLane: target.haloLane == null ? null : String(target.haloLane),
+      haloRank: Number.isFinite(Number(target.haloRank)) ? Math.max(0, Number(target.haloRank)) : null,
+      railLocked: target.railLocked === true,
+      // B7.8 — preserve canonical calendar-rail metadata through normalization.
+      // B7.7 created these fields in the renderer but normalizeSemanticTarget
+      // dropped them, so railLabelVisible() saw moonDay=0 and hid every
+      // numeral. These are display/identity fields only; they never own math.
+      moonDay: Number.isFinite(Number(target.moonDay)) ? Number(target.moonDay) : null,
+      dayOfPatternYear: Number.isFinite(Number(target.dayOfPatternYear)) ? Number(target.dayOfPatternYear) : null,
+      quietRail: target.quietRail === true,
+      gateDay: target.gateDay === true,
+      intercalary: target.intercalary === true,
+      leapIntercalary: target.leapIntercalary === true
     });
+    _semanticNormalizeCache.set(target, normalized);
+    return normalized;
   }
 
   function resolveProximityEnvelope(
@@ -655,7 +702,9 @@
     let _dirty = true;
     let _lastSignature = "";
     let _semanticContainer = null;
+    let _semanticLeaderSvg = null;
     const _semanticEls = new Map();
+    const _semanticLeaderEls = new Map();
     const _proximityState = createProximityState();
 
     function _hideLabel(el) {
@@ -687,11 +736,56 @@
           _semanticContainer.setAttribute("aria-label", "Nearby sphere information");
           _labelContainer.appendChild(_semanticContainer);
         }
+        _semanticLeaderSvg = _labelContainer.querySelector?.(".sphere-semantic-leader-layer") || null;
+        if (!_semanticLeaderSvg) {
+          _semanticLeaderSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+          _semanticLeaderSvg.setAttribute("class", "sphere-semantic-leader-layer");
+          _semanticLeaderSvg.setAttribute("aria-hidden", "true");
+          _labelContainer.insertBefore(_semanticLeaderSvg, _semanticContainer);
+        }
       }
     }
 
     function markDirty() {
       _dirty = true;
+    }
+
+    function _hideSemanticLeader(id) {
+      const path = _semanticLeaderEls.get(id);
+      if (path) path.style.display = "none";
+    }
+
+    function _updateSemanticLeader(target, candidate, chosen) {
+      if (!_semanticLeaderSvg || !target?.leader || !chosen) {
+        _hideSemanticLeader(target?.id);
+        return;
+      }
+      let path = _semanticLeaderEls.get(target.id) || null;
+      if (!path && typeof document !== "undefined") {
+        path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("class", "sphere-semantic-leader");
+        path.dataset.semanticId = target.id;
+        _semanticLeaderSvg.appendChild(path);
+        _semanticLeaderEls.set(target.id, path);
+      }
+      if (!path) return;
+      const ax = candidate.anchorX;
+      const ay = candidate.anchorY;
+      const cx = chosen.left + chosen.box.w / 2;
+      const cy = chosen.top + chosen.box.h / 2;
+      const vx = cx - ax;
+      const vy = cy - ay;
+      const len = Math.hypot(vx, vy) || 1;
+      const ux = vx / len;
+      const uy = vy / len;
+      const elbowDistance = Math.min(Math.max(len * 0.42, 18), 58);
+      const ex = ax + ux * elbowDistance;
+      const ey = ay + uy * elbowDistance;
+      const edgeX = cx - ux * Math.min(chosen.box.w * 0.34, 28);
+      const edgeY = cy - uy * Math.min(chosen.box.h * 0.34, 16);
+      path.setAttribute("d", `M ${ax.toFixed(1)} ${ay.toFixed(1)} L ${ex.toFixed(1)} ${ey.toFixed(1)} L ${edgeX.toFixed(1)} ${edgeY.toFixed(1)}`);
+      path.dataset.semanticKind = target.kind;
+      path.style.display = "";
     }
 
     function update({
@@ -709,7 +803,14 @@
       visibleLayersKey,
       protectedRects,
       semanticTargets = [],
-      semanticBand = "medium"
+      // B7.42.1 — explicit disclosure mode from renderer.
+      dayLabelMode = "key",
+
+      // B7.45 — same camera window used by schedule symbols.
+      calendarDisclosure = null,
+
+      semanticBand = "medium",
+      interactionLite = false
     }) {
       const stage = stageEl || _stageEl;
       if (!stage || !_labelEls?.length || !camera || !three || !Array.isArray(anchors)) return false;
@@ -949,10 +1050,31 @@
 
       // Semantic proximity labels share the same projected overlay and collision
       // budget as Moon labels. Camera movement drives them; no hover loop is used.
-      const normalizedTargets = (Array.isArray(semanticTargets) ? semanticTargets : [])
-        .slice(0, SEMANTIC_TARGET_CAP)
-        .map(normalizeSemanticTarget)
-        .filter(Boolean);
+      // B7.7 — never apply the floating semantic-card ceiling to the
+      // canonical calendar rail. The old pre-normalization slice truncated the
+      // 364-day rail after roughly the first quarter of the year, which is why
+      // day numerals bunched into one arc in the mobile view. Rail annotations
+      // are normalized in full; only non-rail semantic cards are capped.
+      const rawSemanticTargets = Array.isArray(semanticTargets) ? semanticTargets : [];
+      const rawRailTargets = rawSemanticTargets.filter(target =>
+        (target?.kind === "pattern-day-number" || target?.kind === "intercalary-day-number")
+        && target?.railLocked === true
+      );
+      const rawScheduleTargets = rawSemanticTargets.filter(target =>
+        target?.kind === "living-plan-summary"
+      );
+      const rawCardTargets = rawSemanticTargets.filter(target =>
+        target?.kind !== "living-plan-summary"
+        && !((target?.kind === "pattern-day-number" || target?.kind === "intercalary-day-number")
+          && target?.railLocked === true)
+      );
+      const normalizedTargets = [
+        ...rawRailTargets.map(normalizeSemanticTarget).filter(Boolean),
+        // Schedule summaries are one-per-day (max 364), not one-per-record. Keep
+        // the complete year eligible so every Moon can reveal its own schedule.
+        ...rawScheduleTargets.map(normalizeSemanticTarget).filter(Boolean),
+        ...rawCardTargets.slice(0, SEMANTIC_TARGET_CAP).map(normalizeSemanticTarget).filter(Boolean)
+      ];
       const semanticCandidates = [];
       for (const target of normalizedTargets) {
         const effectiveTarget = resolveProximityEnvelope(
@@ -972,10 +1094,13 @@
         );
 
         const distance = worldVec.distanceTo(camPos);
-        const state = _proximityState.resolve(
-          effectiveTarget,
-          distance
-        );
+        const isDayRail = (effectiveTarget.kind === "pattern-day-number" || effectiveTarget.kind === "intercalary-day-number") && effectiveTarget.railLocked;
+        const state = isDayRail
+          ? { visible: true }
+          : _proximityState.resolve(
+              effectiveTarget,
+              distance
+            );
 
         if (!state.visible) continue;
         projVec.copy(worldVec).project(camera);
@@ -984,11 +1109,14 @@
         const anchorX = offsetX + (((projVec.x + 1) / 2) * stageRect.width);
         const anchorY = offsetY + (((-projVec.y + 1) / 2) * stageRect.height);
         if (anchorX < offsetX - 36 || anchorY < offsetY - 36 || anchorX > offsetX + stageRect.width + 36 || anchorY > offsetY + stageRect.height + 36) continue;
+        const centerCamSpace = new THREE.Vector3(0, 0, 0).applyMatrix4(camera.matrixWorldInverse);
         semanticCandidates.push({
           target: effectiveTarget,
           distance,
           anchorX,
-          anchorY
+          anchorY,
+          cameraZ: camSpace.z,
+          frontDepth: camSpace.z - centerCamSpace.z
         });
       }
       semanticCandidates.sort((a, b) =>
@@ -1005,14 +1133,218 @@
           semanticBand
         });
 
-      const composedSemanticCandidates =
-        composeSemanticCandidates(
-          semanticCandidates,
-          {
-            budget:
-              semanticBudget
+      // B7.45 — dates consume the renderer's SAME camera calendar
+      // window as scheduled symbols. There is no second Moon-selection system.
+      const suppliedMoons =
+        Array.isArray(
+          calendarDisclosure?.moons
+        )
+          ? calendarDisclosure.moons
+              .map(Number)
+              .filter(
+                moon =>
+                  moon >= 1
+                  && moon <= 13
+              )
+          : [];
+
+      let frontMoon =
+        Number(
+          calendarDisclosure
+            ?.centerMoon
+        )
+        || null;
+
+      /*
+       * Defensive fallback only.
+       * Normal 3D operation always receives renderer calendarDisclosure.
+       */
+      if (!frontMoon) {
+        let bestDepth =
+          -Infinity;
+
+        for (
+          const candidate
+          of semanticCandidates
+        ) {
+          if (
+            candidate?.target?.kind !==
+            "pattern-day-number"
+          ) {
+            continue;
           }
+
+          const depth =
+            Number(
+              candidate.frontDepth
+            );
+
+          if (
+            Number.isFinite(depth)
+            && depth > bestDepth
+          ) {
+            bestDepth = depth;
+            frontMoon =
+              Number(
+                candidate.target.moon
+                || 0
+              )
+              || null;
+          }
+        }
+      }
+
+      const sharedMoonWindow =
+        new Set(
+          suppliedMoons.length
+            ? suppliedMoons
+            : (
+                frontMoon
+                  ? [frontMoon]
+                  : []
+              )
         );
+
+      const railLabelVisible =
+        target => {
+
+          const band =
+            String(
+              semanticBand
+              || "medium"
+            ).toLowerCase();
+
+          const revealAll =
+            String(
+              dayLabelMode
+              || "key"
+            )
+              .toLowerCase()
+            === "all";
+
+          if (
+            target?.kind ===
+            "intercalary-day-number"
+          ) {
+            return (
+              revealAll
+              || (
+                sharedMoonWindow
+                  .has(13)
+                && (
+                  band === "near"
+                  || band === "detail"
+                )
+              )
+            );
+          }
+
+          if (
+            target?.kind !==
+            "pattern-day-number"
+          ) {
+            return false;
+          }
+
+          const moon =
+            Number(
+              target.moon
+              || 0
+            );
+
+          const moonDay =
+            Number(
+              target.moonDay
+              || 0
+            );
+
+          if (
+            !moon
+            || !moonDay
+          ) {
+            return false;
+          }
+
+          /*
+           * Selected/pinned dates remain authoritative even if the camera
+           * has not yet rotated them into the disclosure window.
+           */
+          if (
+            target.selected
+            || target.pinned
+          ) {
+            return true;
+          }
+
+          if (revealAll) {
+            return true;
+          }
+
+          if (
+            !sharedMoonWindow
+              .has(moon)
+          ) {
+            return false;
+          }
+
+          const scheduled =
+            Number(
+              target.dayScheduleCount
+              || target.scheduleCount
+              || 0
+            ) > 0;
+
+          const weekAnchor =
+            moonDay === 1
+            || moonDay === 7
+            || moonDay === 14
+            || moonDay === 21
+            || moonDay === 28;
+
+          /*
+           * Far view stays structural.
+           * Once the user is actually approaching the sphere, the whole
+           * shared red-line-to-red-line calendar band is populated.
+           */
+          if (band === "far") {
+            return (
+              weekAnchor
+              || scheduled
+            );
+          }
+
+          return true;
+        };
+
+      const dayRailCandidates =
+        semanticCandidates.filter(
+          candidate =>
+            (
+              candidate?.target?.kind ===
+                "pattern-day-number"
+              || candidate?.target?.kind ===
+                "intercalary-day-number"
+            )
+            && candidate?.target?.railLocked
+            && railLabelVisible(
+              candidate.target
+            )
+        );
+
+      const nonRailSemanticCandidates = semanticCandidates.filter(candidate =>
+        !((candidate?.target?.kind === "pattern-day-number" || candidate?.target?.kind === "intercalary-day-number") && candidate?.target?.railLocked)
+      );
+      // B7.48 — no floating semantic-card composition while the camera is moving.
+      // Dates remain DOM annotations and scheduled symbols remain in the single GPU
+      // atlas; cards return once the 90 ms settle pass runs.
+      const cardCandidates = interactionLite ? [] : nonRailSemanticCandidates;
+      const composedSemanticCandidates = [
+        ...dayRailCandidates,
+        ...composeSemanticCandidates(
+          cardCandidates,
+          { budget: semanticBudget }
+        )
+      ];
 
       const activeSemanticIds =
         new Set();
@@ -1029,11 +1361,35 @@
           el.dataset.semanticId = target.id;
           const body = document.createElement("span");
           body.className = "sphere-semantic-label-body";
+          const status = document.createElement("span");
+          status.className = "sphere-semantic-label-status";
           const title = document.createElement("strong");
           title.className = "sphere-semantic-label-title";
           const detail = document.createElement("small");
           detail.className = "sphere-semantic-label-detail";
-          body.append(title, detail);
+          body.append(status, title, detail);
+          const edit = document.createElement("button");
+          edit.type = "button";
+          edit.className = "sphere-semantic-label-edit";
+          edit.textContent = "Edit";
+          edit.hidden = true;
+          edit.addEventListener("click", event => {
+            const current = el?._semanticTarget || null;
+            if (current?.kind !== "living-plan" || !current.recordId) return;
+            event.preventDefault();
+            event.stopPropagation();
+            document.dispatchEvent(new CustomEvent("sof:living-plan-selected", {
+              detail: {
+                recordId: current.recordId,
+                title: current.label,
+                category: current.category,
+                temporal: { patternYear: current.patternYear, patternDay: current.patternDay },
+                schedule: current.schedule,
+                source: "sphere-halo-edit",
+                edit: true
+              }
+            }));
+          });
           const close = document.createElement("button");
           close.type = "button";
           close.className = "sphere-semantic-label-close";
@@ -1046,14 +1402,45 @@
             el.style.display = "none";
             _dirty = true;
           });
-          el.append(body, close);
+          body.addEventListener("click", event => {
+            const current = el?._semanticTarget || null;
+            if (!current?.interactive) return;
+            event.preventDefault();
+            event.stopPropagation();
+            if ((current.kind === "living-plan" || current.kind === "living-plan-summary") && current.recordId) {
+              document.dispatchEvent(new CustomEvent("sof:living-plan-selected", {
+                detail: {
+                  recordId: current.recordId,
+                  title: current.label,
+                  category: current.category,
+                  temporal: {
+                    patternYear: current.patternYear,
+                    patternDay: current.patternDay
+                  },
+                  schedule: current.schedule,
+                  source: "sphere-halo",
+                  edit: false
+                }
+              }));
+            }
+          });
+          el.append(body, edit, close);
           _semanticContainer.appendChild(el);
           _semanticEls.set(target.id, el);
         }
         if (!el) continue;
         activeSemanticIds.add(target.id);
+        el._semanticTarget = target;
+        const editEl = el.querySelector?.(".sphere-semantic-label-edit");
+        if (editEl) editEl.hidden = !(target.kind === "living-plan" && target.recordId);
+        const statusEl = el.querySelector?.(".sphere-semantic-label-status");
         const titleEl = el.querySelector?.(".sphere-semantic-label-title");
         const detailEl = el.querySelector?.(".sphere-semantic-label-detail");
+        if (statusEl) {
+          const statusText = target.statusLabel || "";
+          statusEl.textContent = `${target.symbol ? `${target.symbol} ` : ""}${statusText}`.trim();
+          statusEl.style.display = statusText || target.symbol ? "" : "none";
+        }
         if (titleEl) titleEl.textContent = target.label;
         if (detailEl) {
           detailEl.textContent = target.detail;
@@ -1063,7 +1450,21 @@
         closeEl?.setAttribute?.("aria-label", `Hide ${target.label} label until you move away`);
         el.classList.toggle("is-pinned", target.pinned);
         el.classList.toggle("is-selected", target.selected);
+        el.classList.toggle("is-interactive", target.interactive);
         el.dataset.semanticKind = target.kind;
+        if (target.quietRail) el.dataset.quietRail = "true"; else delete el.dataset.quietRail;
+        if (target.gateDay) el.dataset.gateDay = "true"; else delete el.dataset.gateDay;
+        if (target.intercalary) el.dataset.intercalary = "true"; else delete el.dataset.intercalary;
+        if (target.leapIntercalary) el.dataset.leapIntercalary = "true"; else delete el.dataset.leapIntercalary;
+        if (target.haloLane) el.dataset.haloLane = target.haloLane;
+        else delete el.dataset.haloLane;
+        if (target.haloRank != null) el.dataset.haloRank = String(target.haloRank);
+        else delete el.dataset.haloRank;
+        if (target.category) el.dataset.plannerCategory = target.category;
+        if (target.symbol) el.dataset.planSymbol = target.symbol; else delete el.dataset.planSymbol;
+        if (target.workflow) el.dataset.planWorkflow = target.workflow; else delete el.dataset.planWorkflow;
+        if (target.dayScheduleCount) el.dataset.scheduleCount = String(target.dayScheduleCount); else delete el.dataset.scheduleCount;
+        if (target.patternSignature) el.dataset.patternSignature = target.patternSignature;
         el.style.display = "";
         const w = el.offsetWidth || 132;
         const h = el.offsetHeight || 40;
@@ -1090,10 +1491,48 @@
           radialY
           / radialLength;
 
+        // B7.6: a rail numeral is already anchored at its final world-space
+        // radius. Do not add a second screen-space radial offset and do not
+        // clamp it to the viewport — either operation changes the apparent
+        // calendar angle and makes numbers bunch at the edges.
+        const fixedRail =
+          (target.kind === "pattern-day-number" || target.kind === "intercalary-day-number")
+          && target.railLocked;
+
+        if (fixedRail) {
+          if (target.kind === "pattern-day-number") {
+            const targetMoon = Number(target.moon || 0);
+
+            if (targetMoon === frontMoon) {
+              el.dataset.glideRole = "center";
+            } else if (sharedMoonWindow.has(targetMoon)) {
+              el.dataset.glideRole = "neighbor";
+            } else {
+              delete el.dataset.glideRole;
+            }
+          } else {
+            delete el.dataset.glideRole;
+          }
+
+          el.style.left = `${candidate.anchorX}px`;
+          el.style.top = `${candidate.anchorY}px`;
+          el.style.transform = "translate(-50%, -50%)";
+          el.style.opacity = target.selected || target.pinned ? "1" : ".88";
+          _hideSemanticLeader(target.id);
+          continue;
+        }
+
+        // Floating semantic cards may move outward and participate in collision
+        // placement. Calendar rail numerals never enter this path.
+        el.style.transform = "";
         const semanticOutward =
-          mobile
-            ? 62
-            : 82;
+          target.haloOffset != null
+            ? target.haloOffset
+            : (
+                mobile
+                  ? 62
+                  : 82
+              );
 
         const outwardX =
           candidate.anchorX
@@ -1170,7 +1609,7 @@
                   prev
                 )
             )
-            || semanticBlockedRects.some(
+            || (target.kind === "living-plan" ? blockedRects : semanticBlockedRects).some(
               prev =>
                 rectsOverlap(
                   box,
@@ -1193,10 +1632,14 @@
         el.style.left = `${chosen.left}px`;
         el.style.top = `${chosen.top}px`;
         el.style.opacity = "1";
+        _updateSemanticLeader(target, candidate, chosen);
         if (target.moon && _labelEls[target.moon - 1]) _hideLabel(_labelEls[target.moon - 1]);
       }
       for (const [id, el] of _semanticEls.entries()) {
-        if (!activeSemanticIds.has(id)) el.style.display = "none";
+        if (!activeSemanticIds.has(id)) {
+          el.style.display = "none";
+          _hideSemanticLeader(id);
+        }
       }
 
       const marker = todayMarkerPosition;
@@ -1231,6 +1674,10 @@
       _proximityState.clear();
       for (const el of _semanticEls.values()) el?.remove?.();
       _semanticEls.clear();
+      for (const path of _semanticLeaderEls.values()) path?.remove?.();
+      _semanticLeaderEls.clear();
+      _semanticLeaderSvg?.remove?.();
+      _semanticLeaderSvg = null;
       _semanticContainer?.remove?.();
       _semanticContainer = null;
       _stageEl = null;

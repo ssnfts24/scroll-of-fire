@@ -287,7 +287,7 @@
 
 @media (max-width: 980px) {
   .calendar-command-row { grid-template-columns: 1fr; }
-  .calendar-preset-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .calendar-preset-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
   .calendar-note-editor { grid-template-columns: 1fr 1fr; }
   .calendar-note-actions { grid-column: 1 / -1; grid-template-columns: repeat(3, 1fr); }
   .calendar-local-agenda { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -510,3 +510,534 @@
   }
 }
 
+
+/* ==========================================================
+   B3 — Canonical Living Planner projection
+   ========================================================== */
+
+.calendar-day-cell.has-living-plans,
+.calendar-moon-cell.has-living-plans {
+  overflow: visible;
+}
+
+.calendar-plan-markers {
+  position: absolute;
+  left: 0.42rem;
+  bottom: 0.38rem;
+
+  display: flex;
+  align-items: center;
+  gap: 0.18rem;
+
+  max-width: calc(100% - 0.84rem);
+  pointer-events: none;
+}
+
+.calendar-plan-marker {
+  display: grid;
+  place-items: center;
+
+  min-width: 0.58rem;
+  height: 0.58rem;
+
+  font-size: 0.52rem;
+  font-style: normal;
+  font-weight: 900;
+  line-height: 1;
+
+  color: rgba(232, 240, 241, 0.92);
+}
+
+.calendar-plan-marker--task {
+  color: #7fd7ff;
+}
+
+.calendar-plan-marker--event,
+.calendar-plan-marker--milestone {
+  color: #f6d56a;
+}
+
+.calendar-plan-marker--reminder {
+  color: #ff9f80;
+}
+
+.calendar-plan-marker--growing {
+  color: #78e08f;
+}
+
+.calendar-plan-marker--seasonal {
+  color: #b9df72;
+}
+
+.calendar-plan-marker--practice {
+  color: #c4a7ff;
+}
+
+.calendar-plan-marker--project {
+  color: #65d7c5;
+}
+
+.calendar-plan-marker--travel {
+  color: #80b8ff;
+}
+
+.calendar-plan-marker--observation {
+  color: #d6d6d6;
+}
+
+.calendar-plan-marker--more {
+  min-width: auto;
+  font-size: 0.48rem;
+  color: rgba(232,240,241,0.65);
+}
+
+.calendar-plan-count {
+  position: absolute;
+  right: 0.42rem;
+  bottom: 0.42rem;
+
+  display: grid;
+  place-items: center;
+
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding-inline: 0.24rem;
+
+  border: 1px solid rgba(104,240,182,0.28);
+  border-radius: 999px;
+
+  background: rgba(5,17,18,0.92);
+  color: #68f0b6;
+
+  font-size: 0.56rem;
+  font-weight: 900;
+}
+
+.calendar-day-cell.has-living-plans {
+  box-shadow:
+    inset 0 -2px 0 rgba(104,240,182,0.22);
+}
+
+.calendar-plan-native-group {
+  position: absolute;
+  left: 0.4rem;
+  bottom: 0.35rem;
+
+  display: flex;
+  gap: 0.16rem;
+  align-items: center;
+
+  pointer-events: none;
+}
+
+.calendar-plan-native {
+  font-size: 0.58rem;
+  font-style: normal;
+  line-height: 1;
+}
+
+.calendar-plan-native--task { color: #7fd7ff; }
+.calendar-plan-native--event { color: #f6d56a; }
+.calendar-plan-native--reminder { color: #ff9f80; }
+.calendar-plan-native--growing { color: #78e08f; }
+.calendar-plan-native--seasonal { color: #b9df72; }
+.calendar-plan-native--practice { color: #c4a7ff; }
+.calendar-plan-native--project { color: #65d7c5; }
+.calendar-plan-native--travel { color: #80b8ff; }
+.calendar-plan-native--milestone { color: #ffcf6e; }
+.calendar-plan-native--observation { color: #d6d6d6; }
+.calendar-plan-native--more {
+  color: rgba(220,232,235,.65);
+  font-size: .5rem;
+}
+
+.calendar-day-cell.has-living-plans {
+  border-bottom-color: rgba(104,240,182,.5) !important;
+}
+
+
+/* B4.1 — planned life must be readable inside the calendar, not only encoded as dots. */
+.calendar-plan-native-group {
+  right: 0.35rem;
+  bottom: 0.28rem;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.28rem;
+  align-items: center;
+}
+
+.calendar-plan-native-glyphs {
+  display: flex;
+  gap: 0.12rem;
+  align-items: center;
+}
+
+.calendar-plan-native-label {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0.12rem 0.28rem;
+  border: 1px solid rgba(104,240,182,.22);
+  border-radius: 0.35rem;
+  background: rgba(3,12,14,.84);
+  color: rgba(238,248,245,.94);
+  font-size: clamp(.48rem, 1.5vw, .62rem);
+  font-weight: 700;
+  line-height: 1.15;
+  text-align: left;
+}
+
+.calendar-plan-native-label i {
+  color: #68f0b6;
+  font-style: normal;
+}
+
+.calendar-day-cell.has-living-plans {
+  min-height: 5.25rem;
+  padding-bottom: 1.45rem;
+  background-image: linear-gradient(to top, rgba(104,240,182,.075), transparent 42%);
+}
+
+.calendar-moon-cell .calendar-plan-native-label {
+  max-width: 8rem;
+}
+
+@media (max-width: 640px) {
+  .calendar-plan-native-group {
+    left: .22rem;
+    right: .22rem;
+    bottom: .2rem;
+    gap: .18rem;
+  }
+  .calendar-plan-native-label {
+    padding: .1rem .2rem;
+    font-size: .48rem;
+  }
+  .calendar-day-cell.has-living-plans {
+    min-height: 5.45rem;
+    padding-bottom: 1.35rem;
+  }
+}
+
+/* B7.24 — Calendar Atlas is a focused tool, not a permanently expanded wall. */
+.calendar-atlas-launcher {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid rgba(116, 219, 190, 0.2);
+  border-radius: 1.1rem;
+  background: rgba(7, 20, 22, 0.72);
+}
+.calendar-atlas-launcher h2,
+.calendar-atlas-launcher p { margin: 0; }
+.calendar-atlas-launcher h2 { margin-top: 0.2rem; font-size: clamp(1.05rem, 3.6vw, 1.35rem); }
+.calendar-atlas-launcher > div > p:last-child { margin-top: 0.45rem; color: rgba(224, 234, 236, 0.72); }
+.calendar-atlas-launcher button {
+  min-height: 3rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid rgba(116, 219, 190, 0.34);
+  border-radius: 0.9rem;
+  background: rgba(19, 67, 60, 0.62);
+  color: #f4fbf8;
+  font: inherit;
+  font-weight: 800;
+}
+
+.calendar-atlas-modal:not([hidden]) {
+  position: fixed;
+  inset: 0;
+  z-index: 12950;
+  display: grid;
+  place-items: center;
+  padding: 0.8rem;
+  background: rgba(1, 5, 8, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+body.calendar-atlas-modal-open { overflow: hidden; }
+.calendar-atlas-dialog {
+  position: relative;
+  width: min(820px, calc(100vw - 1.6rem));
+  max-height: calc(100dvh - 1.6rem);
+  overflow: auto;
+  border: 1px solid rgba(116, 219, 190, 0.24);
+  border-radius: 1.35rem;
+  background: rgb(7, 15, 19);
+  box-shadow: 0 24px 90px rgba(0,0,0,0.72);
+}
+.calendar-atlas-dialog .calendar-workbench {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.calendar-atlas-close {
+  position: sticky;
+  top: 0.7rem;
+  z-index: 5;
+  float: right;
+  width: 2.6rem;
+  height: 2.6rem;
+  margin: 0.7rem 0.7rem -3.3rem 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  color: white;
+  font-size: 1.45rem;
+}
+.calendar-atlas-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin: 0.9rem 0 1rem;
+  padding: 0.35rem;
+  border-radius: 0.9rem;
+  background: rgba(255,255,255,0.035);
+}
+.calendar-atlas-tabs button {
+  min-height: 2.7rem;
+  padding: 0.55rem 0.45rem;
+  border-radius: 0.7rem;
+  font-size: 0.88rem;
+}
+.calendar-atlas-tabs button[aria-pressed="true"] {
+  border-color: rgba(116, 219, 190, 0.48);
+  background: rgba(30, 98, 84, 0.45);
+}
+.calendar-workbench [hidden] { display: none !important; }
+
+@media (max-width: 640px) {
+  .calendar-atlas-launcher { grid-template-columns: 1fr; }
+  .calendar-atlas-launcher button { width: 100%; }
+  .calendar-atlas-modal:not([hidden]) { align-items: end; padding: 0; }
+  .calendar-atlas-dialog {
+    width: 100%;
+    max-height: 88dvh;
+    border-radius: 1.3rem 1.3rem 0 0;
+    border-bottom: 0;
+  }
+  .calendar-atlas-tabs { position: sticky; top: 0; z-index: 4; background: rgba(7,15,19,0.96); }
+}
+
+/* B7.25 — year navigation belongs to the instrument chrome, not the 3D label field. */
+.sphere-year-navigator {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px auto;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0 12px;
+  padding: 9px;
+  border: 1px solid rgba(108, 214, 185, 0.24);
+  border-radius: 18px;
+  background: rgba(5, 14, 19, 0.88);
+  backdrop-filter: blur(12px);
+}
+.sphere-year-nav-center {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sphere-year-nav-kicker {
+  color: rgba(219, 234, 238, 0.62);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.sphere-year-nav-select {
+  min-width: 0;
+  width: 100%;
+  appearance: auto;
+  border: 0;
+  background: transparent;
+  color: #eef7f5;
+  font: inherit;
+  font-weight: 700;
+  font-size: 1rem;
+}
+.sphere-year-nav-btn,
+.sphere-year-live-btn {
+  min-height: 44px;
+  border: 1px solid rgba(127, 209, 188, 0.26);
+  border-radius: 13px;
+  background: rgba(17, 31, 37, 0.92);
+  color: #eef7f5;
+  font: inherit;
+  font-weight: 700;
+}
+.sphere-year-nav-btn { font-size: 1.65rem; line-height: 1; }
+.sphere-year-live-btn { padding: 0 13px; white-space: nowrap; }
+.sphere-year-live-btn[data-live="true"] {
+  border-color: rgba(86, 226, 174, 0.55);
+  background: rgba(28, 104, 79, 0.42);
+}
+@media (max-width: 520px) {
+  .sphere-year-navigator { grid-template-columns: 42px minmax(0, 1fr) 42px; }
+  .sphere-year-live-btn { grid-column: 1 / -1; min-height: 38px; }
+  .sphere-year-nav-center { justify-content: center; }
+}
+
+
+/* B7.26 — location + seasonal context is instrument chrome, never a floating 3D label. */
+.sphere-location-season-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: -4px 0 12px;
+  padding: 9px 11px;
+  border: 1px solid rgba(101, 190, 167, 0.18);
+  border-radius: 15px;
+  background: rgba(7, 16, 21, 0.72);
+  color: #e9f5f2;
+}
+.sphere-location-season-main {
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  overflow: hidden;
+}
+.sphere-location-season-place {
+  min-width: 0;
+  max-width: 48%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 700;
+}
+.sphere-location-season-dot { color: rgba(214, 235, 230, 0.38); }
+.sphere-location-season-value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgba(213, 235, 230, 0.72);
+  font-size: 0.86rem;
+}
+.sphere-location-season-action {
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid rgba(127, 209, 188, 0.24);
+  border-radius: 11px;
+  background: rgba(15, 31, 36, 0.86);
+  color: #eaf6f3;
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+@media (max-width: 520px) {
+  .sphere-location-season-strip { align-items: stretch; }
+  .sphere-location-season-main { flex-wrap: wrap; gap: 2px 6px; }
+  .sphere-location-season-place { max-width: calc(100% - 14px); flex: 1 1 auto; }
+  .sphere-location-season-value { flex-basis: 100%; }
+  .sphere-location-season-dot { display: none; }
+}
+
+/* B7.27 — compact temporal search + semantic scale controls. */
+.sphere-quick-nav {
+  display: grid;
+  gap: 8px;
+  margin: -4px 0 12px;
+  padding: 10px;
+  border: 1px solid rgba(105, 192, 173, 0.18);
+  border-radius: 16px;
+  background: rgba(6, 15, 20, 0.76);
+}
+.sphere-quick-nav-search {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+.sphere-quick-nav-search label {
+  color: rgba(225, 241, 237, 0.7);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.sphere-quick-nav-search input {
+  min-width: 0;
+  width: 100%;
+  min-height: 40px;
+  padding: 0 11px;
+  border: 1px solid rgba(125, 207, 187, 0.22);
+  border-radius: 11px;
+  background: rgba(13, 27, 33, 0.88);
+  color: #eef7f5;
+  font: inherit;
+}
+.sphere-quick-nav-search button,
+.sphere-time-scale button {
+  min-height: 40px;
+  border: 1px solid rgba(125, 207, 187, 0.22);
+  border-radius: 11px;
+  background: rgba(15, 31, 37, 0.9);
+  color: #eef7f5;
+  font: inherit;
+  font-weight: 700;
+}
+.sphere-quick-nav-search button { padding: 0 14px; }
+.sphere-time-scale {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+.sphere-time-scale button[aria-pressed="true"] {
+  border-color: rgba(239, 207, 105, 0.62);
+  background: rgba(103, 82, 27, 0.38);
+  color: #fff4c8;
+}
+.sphere-quick-jump-status {
+  margin: 0;
+  min-height: 1.1em;
+  color: rgba(213, 235, 230, 0.62);
+  font-size: 0.78rem;
+}
+.sphere-quick-jump-status[data-state="warning"] { color: rgba(246, 198, 144, 0.9); }
+.sphere-quick-jump-status[data-state="ok"] { color: rgba(157, 224, 201, 0.85); }
+@media (max-width: 520px) {
+  .sphere-quick-nav-search { grid-template-columns: minmax(0, 1fr) auto; }
+  .sphere-quick-nav-search label { grid-column: 1 / -1; }
+  .sphere-time-scale button { min-height: 36px; font-size: 0.84rem; }
+}
+
+
+/* B7.28 — immediate sphere view tools: keep common calendar actions outside
+   advanced controls and close to the instrument they affect. */
+.sphere-view-tools {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .55rem;
+  margin: .6rem 0 .8rem;
+}
+.sphere-view-tool {
+  min-height: 2.65rem;
+  border: 1px solid rgba(128, 205, 198, .30);
+  border-radius: .8rem;
+  background: rgba(8, 23, 30, .86);
+  color: rgba(237, 247, 249, .92);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.sphere-view-tool[aria-pressed="true"],
+.sphere-view-tool[data-active="true"] {
+  border-color: rgba(245, 198, 92, .62);
+  background: rgba(103, 75, 17, .26);
+  color: #ffe5a1;
+}
+.sphere-view-tool:focus-visible { outline: 2px solid #7be0c8; outline-offset: 2px; }
+@media (max-width: 480px) {
+  .sphere-view-tools { gap: .42rem; }
+  .sphere-view-tool { min-height: 2.5rem; font-size: .86rem; }
+}

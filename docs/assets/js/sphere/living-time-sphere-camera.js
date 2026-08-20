@@ -5,7 +5,7 @@
   // Works with THREE.PerspectiveCamera.
   // Does not import THREE directly; receives camera + renderer from renderer-3d.
 
-  const MIN_ZOOM = 1.05;   // closest allowed distance from origin
+  const MIN_ZOOM = 0.72;   // B7.37 deep-focus: allows controlled inspection inside the calendar membrane
   const MAX_ZOOM = 8.0;   // furthest allowed
   const FOV      = 55;    // field-of-view degrees
 
@@ -57,10 +57,15 @@
   // Notification callbacks
   let _onChange      = null;      // () => void — called when camera position changes
 
+  // B7.35 — camera transactions collapse multi-touch twist + pinch + pan into
+  // one matrix/projection update per animation frame instead of three or four.
+  let _batchDepth = 0;
+  let _batchDirty = false;
+
   // ── Lifecycle ──────────────────────────────────────────────────────
 
   function create(THREE, containerWidth, containerHeight) {
-    _cam = new THREE.PerspectiveCamera(FOV, containerWidth / containerHeight, 0.1, 50);
+    _cam = new THREE.PerspectiveCamera(FOV, containerWidth / containerHeight, 0.035, 50);
     _apply();
     return _cam;
   }
@@ -103,6 +108,10 @@
 
   function _apply() {
     if (!_cam) return;
+    if (_batchDepth > 0) {
+      _batchDirty = true;
+      return;
+    }
     // Spherical → Cartesian
     const x = _dist * Math.cos(_phi) * Math.sin(_theta);
     const y = _dist * Math.sin(_phi);
@@ -111,6 +120,19 @@
     _cam.lookAt(_target.x, _target.y, _target.z);
     _cam.updateProjectionMatrix();
     if (_onChange) _onChange();
+  }
+
+  function batch(fn) {
+    _batchDepth++;
+    try {
+      return typeof fn === "function" ? fn() : undefined;
+    } finally {
+      _batchDepth = Math.max(0, _batchDepth - 1);
+      if (_batchDepth === 0 && _batchDirty) {
+        _batchDirty = false;
+        _apply();
+      }
+    }
   }
 
   // ── Smooth transition ────────────────────────────────────────────
@@ -356,6 +378,7 @@
     onChangeCallback,
     getState,
     setState,
+    batch,
     isAnimating,
     MODE_POSITIONS,
     MIN_ZOOM,

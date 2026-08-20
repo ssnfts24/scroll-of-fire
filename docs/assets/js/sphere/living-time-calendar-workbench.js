@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const VERSION = "living-time-calendar-workbench/1.0.0";
+  const VERSION = "living-time-calendar-workbench/1.1.0-b724";
   const PATTERN_DAYS = 364;
   const DAYS_PER_MOON = 28;
   const MOONS = 13;
@@ -28,6 +28,10 @@
   let _scale = "moon";
   let _pins = [];
   let _notes = [];
+  let _plannerRecords = [];
+  let _atlasTab = "navigate";
+  let _atlasOpener = null;
+
   let _clockTimer = 0;
   let _refreshFrame = 0;
 
@@ -816,12 +820,145 @@
     if (summary) {
       summary.innerHTML = `<span>${selected?.isToday ? "LIVE TODAY" : "SELECTED"}</span><strong>Moon ${position.moon} · ${_escape(moon.name)} · Day ${position.day}</strong><small>${_escape(civilDate)} · Day ${dayOfYear}/364 · ${_escape(day[0])}</small>`;
     }
+    const launcherStatus = document.getElementById("calendar-atlas-launcher-status");
+    if (launcherStatus) {
+      launcherStatus.textContent = selected?.isToday
+        ? `Live Today · Moon ${position.moon} · ${moon.name} · Day ${position.day}. Open the Atlas only when you want to navigate or compare.`
+        : `Selected · Moon ${position.moon} · ${moon.name} · Day ${position.day} · ${civilDate}. Open the Atlas to navigate, inspect, or return to Today.`;
+    }
     const civilInput = document.getElementById("calendar-civil-date");
     if (civilInput && document.activeElement !== civilInput) civilInput.value = civilDate || "";
     const moonSelect = document.getElementById("calendar-pattern-moon");
     const daySelect = document.getElementById("calendar-pattern-day");
     if (moonSelect) moonSelect.value = String(position.moon);
     if (daySelect) daySelect.value = String(position.day);
+  }
+
+  function _plannerCategory(record) {
+    return String(
+      record?.payload?.planner?.category
+      || record?.subtype
+      || "event"
+    ).toLowerCase();
+  }
+
+  function _plannerGlyph(record) {
+    const glyphs = {
+      task: "■",
+      event: "○",
+      reminder: "!",
+      growing: "✦",
+      seasonal: "◒",
+      practice: "•",
+      project: "◆",
+      travel: "↗",
+      milestone: "◇",
+      observation: "·"
+    };
+
+    return (
+      glyphs[_plannerCategory(record)]
+      || "•"
+    );
+  }
+
+  function _plansForDay(year, day) {
+    return _plannerRecords.filter(
+      record =>
+        Number(
+          record?.temporal?.patternYear
+        ) === Number(year)
+        &&
+        Number(
+          record?.temporal?.patternDay
+        ) === Number(day)
+    );
+  }
+
+  function _plansForMoon(year, moon) {
+    return _plannerRecords.filter(
+      record => {
+        if (
+          Number(
+            record?.temporal?.patternYear
+          ) !== Number(year)
+        ) {
+          return false;
+        }
+
+        const day =
+          Number(
+            record?.temporal?.patternDay
+          );
+
+        return (
+          Number.isFinite(day)
+          &&
+          Math.floor(
+            (day - 1) / 28
+          ) + 1 === Number(moon)
+        );
+      }
+    );
+  }
+
+  function _planMarkers(records) {
+    if (!records.length)
+      return "";
+
+    const primary = records[0];
+    const markers =
+      records
+        .slice(0, 3)
+        .map(
+          record =>
+            `<b class="calendar-plan-native calendar-plan-native--${_escape(_plannerCategory(record))}" title="${_escape(record.title || "Planned item")}">${_escape(_plannerGlyph(record))}</b>`
+        )
+        .join("");
+
+    const more =
+      records.length > 3
+        ? `<b class="calendar-plan-native calendar-plan-native--more">+${records.length - 3}</b>`
+        : "";
+
+    const label =
+      `<span class="calendar-plan-native-label" title="${_escape(primary.title || "Planned item")}">${_escape(primary.title || "Planned item")}${records.length > 1 ? ` <i>+${records.length - 1}</i>` : ""}</span>`;
+
+    return (
+      `<span class="calendar-plan-native-group">`
+      + `<span class="calendar-plan-native-glyphs" aria-hidden="true">${markers}${more}</span>`
+      + label
+      + `</span>`
+    );
+  }
+
+  async function _refreshPlannerRecords() {
+    const api =
+      globalThis.CodexLivingPlanner;
+
+    if (!api?.allPlans && !api?.plansForYear)
+      return false;
+
+    try {
+      const year = Number(_currentState()?.year) || new Date().getFullYear();
+      const records = api?.plansForYear
+        ? await api.plansForYear(year)
+        : await api.allPlans();
+
+      _plannerRecords =
+        Array.isArray(records)
+          ? records
+          : [];
+
+      return true;
+    } catch (error) {
+      console.warn(
+        "[CalendarWorkbench] Planner records unavailable.",
+        error
+      );
+
+      return false;
+    }
   }
 
   function _dayButton(dayOfYear, state, model, scale) {
@@ -831,6 +968,7 @@
     const selectedDay = clampDay(model?.selectedPatternPosition?.dayOfPatternYear || state.selectedDayOfYear || 1);
     const todayDay = Number(model?.todayPatternPosition?.dayOfPatternYear || 0);
     const localNote = _noteFor(state.year, dayOfYear);
+    const planned = _plansForDay(state.year, dayOfYear);
     const classes = ["calendar-day-cell"];
     if (dayOfYear === selectedDay) classes.push("is-selected");
     if (dayOfYear === todayDay) classes.push("is-today");
@@ -838,6 +976,7 @@
     if (position.dayOfWeek === 6) classes.push("is-preparation");
     if (position.dayOfWeek === 1) classes.push("is-return");
     if (localNote) classes.push("has-note");
+    if (planned.length) classes.push("has-living-plans");
     const current = dayOfYear === selectedDay ? ' aria-current="date"' : "";
     const expanded = scale === "day" || scale === "week";
     return `<button class="${classes.join(" ")}" type="button" data-calendar-day="${dayOfYear}"${current} aria-label="${_escape(`Moon ${position.moon}, Day ${position.day}, ${civilDate}, ${dayData[0]}, ${_gateLabel(position)}${localNote ? `, local note: ${localNote.title || "saved"}` : ""}`)}">
@@ -846,6 +985,7 @@
       <small>${_escape(_formatShortCivil(civilDate))}</small>
       ${expanded ? `<em>${_escape(dayData[0])} · ${_escape(_gateLabel(position))}</em>` : `<i aria-hidden="true"></i>`}
       ${localNote ? '<b class="calendar-note-dot" aria-hidden="true"></b>' : ""}
+      ${_planMarkers(planned)}
     </button>`;
   }
 
@@ -858,12 +998,15 @@
     const start = civilDateForPatternDay(state.year, (moonNumber - 1) * DAYS_PER_MOON + 1);
     const end = civilDateForPatternDay(state.year, moonNumber * DAYS_PER_MOON);
     const noteCount = _notes.filter(note => note.year === Number(state.year) && moonDayForPatternDay(note.dayOfPatternYear).moon === moonNumber).length;
+    const planned = _plansForMoon(state.year, moonNumber);
     const classes = ["calendar-moon-cell"];
     if (moonNumber === selectedPosition.moon) classes.push("is-selected");
     if (moonNumber === todayPosition.moon) classes.push("is-today");
+    if (planned.length) classes.push("has-living-plans");
     const current = moonNumber === selectedPosition.moon ? ' aria-current="date"' : "";
     return `<button class="${classes.join(" ")}" type="button" data-calendar-day="${targetDay}"${current} aria-label="${_escape(`Moon ${moonNumber}, ${moon.name}, ${start} through ${end}${noteCount ? `, ${noteCount} local notes` : ""}`)}">
-      <span>Moon ${moonNumber}</span><strong>${_escape(moon.name)}</strong><small>${_escape(_formatShortCivil(start))} – ${_escape(_formatShortCivil(end))}</small><em>${_escape(moon.element || "Pattern")}${noteCount ? ` · ${noteCount} notes` : ""}</em>
+      <span>Moon ${moonNumber}</span><strong>${_escape(moon.name)}</strong><small>${_escape(_formatShortCivil(start))} – ${_escape(_formatShortCivil(end))}</small><em>${_escape(moon.element || "Pattern")}${noteCount ? ` · ${noteCount} notes` : ""}${planned.length ? ` · ${planned.length} planned` : ""}</em>
+      ${_planMarkers(planned)}
     </button>`;
   }
 
@@ -1070,6 +1213,8 @@
       marker: `day-${clampDay(day)}`,
       source,
       action: "CALENDAR_ATLAS_SELECTION",
+      focus: true,
+      focusDistance: 1.78,
     });
     if (!selected) _announce("The Sphere selection engine is not ready yet. Try again after the baseline appears.", "warning");
     else _scheduleRefresh();
@@ -1114,19 +1259,24 @@
               "calendar-civil-jump",
 
             action:
-              "CALENDAR_CIVIL_DATE_JUMP"
+              "CALENDAR_CIVIL_DATE_JUMP",
+
+            focus: true,
+            focusDistance: 1.78
           }
         );
     }
     const supportNote = resolved.exactYearMatch ? "" : ` Detailed alignment data uses nearest supported year ${resolved.selectedYear}.`;
     _announce(`${resolved.civilDate} maps to Moon ${resolved.moon}, Day ${resolved.day}, Day ${resolved.dayOfPatternYear}/364.${supportNote}`, resolved.exactYearMatch ? "success" : "warning");
     _scheduleRefresh();
+    window.setTimeout(_closeAtlas, 90);
   }
 
   function _jumpPatternDate() {
     const moon = Math.max(1, Math.min(MOONS, Number(document.getElementById("calendar-pattern-moon")?.value) || 1));
     const day = Math.max(1, Math.min(DAYS_PER_MOON, Number(document.getElementById("calendar-pattern-day")?.value) || 1));
     _selectDay((moon - 1) * DAYS_PER_MOON + day, "calendar-pattern-jump");
+    window.setTimeout(_closeAtlas, 90);
   }
 
   function _pinSelected() {
@@ -1305,6 +1455,7 @@
       globalThis.LivingTimeSphereUi?.returnToToday?.({ fieldRange: "now", switchViewMode: true, source: "calendar-atlas" });
       _announce("Returned every calendar view to the live boundary-aware Today.", "success");
       _scheduleRefresh();
+      window.setTimeout(_closeAtlas, 90);
     });
     document.getElementById("calendar-pin-selected")?.addEventListener("click", _pinSelected);
     document.getElementById("calendar-save-note")?.addEventListener("click", _saveSelectedNote);
@@ -1357,6 +1508,73 @@
     });
   }
 
+  function _setAtlasTab(tab) {
+    const next = ["navigate", "calendar", "notes"].includes(String(tab)) ? String(tab) : "navigate";
+    _atlasTab = next;
+    document.querySelectorAll("[data-calendar-atlas-tab]").forEach(button => {
+      button.setAttribute("aria-pressed", button.dataset.calendarAtlasTab === next ? "true" : "false");
+    });
+    const groups = {
+      navigate: [".calendar-command-row", "#calendar-selected-summary"],
+      calendar: ["#calendar-atlas", "#calendar-atlas-grid", ".calendar-lens-panel"],
+      notes: [".calendar-journal-panel", ".calendar-compare-panel"]
+    };
+    Object.entries(groups).forEach(([name, selectors]) => {
+      selectors.forEach(selector => {
+        _root?.querySelectorAll?.(selector)?.forEach?.(element => {
+          element.hidden = name !== next;
+        });
+      });
+    });
+  }
+
+  function _openAtlas(source = null) {
+    const modal = document.getElementById("calendar-atlas-modal");
+    if (!modal) return false;
+    _atlasOpener = source || document.activeElement || null;
+    modal.hidden = false;
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("calendar-atlas-modal-open");
+    _setAtlasTab(_atlasTab);
+    refresh();
+    requestAnimationFrame(() => {
+      document.querySelector('[data-calendar-atlas-tab][aria-pressed="true"]')?.focus?.();
+    });
+    return true;
+  }
+
+  function _closeAtlas() {
+    const modal = document.getElementById("calendar-atlas-modal");
+    if (!modal || modal.hidden) return false;
+    modal.hidden = true;
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("calendar-atlas-modal-open");
+    _atlasOpener?.focus?.();
+    _atlasOpener = null;
+    return true;
+  }
+
+  function _wireAtlasModal() {
+    const modal = document.getElementById("calendar-atlas-modal");
+    const open = document.getElementById("calendar-atlas-open");
+    const close = document.getElementById("calendar-atlas-close");
+    open?.addEventListener("click", () => _openAtlas(open));
+    close?.addEventListener("click", _closeAtlas);
+    modal?.addEventListener("pointerdown", event => {
+      if (event.target === modal) _closeAtlas();
+    });
+    document.querySelectorAll("[data-calendar-atlas-tab]").forEach(button => {
+      button.addEventListener("click", () => _setAtlasTab(button.dataset.calendarAtlasTab));
+    });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && modal && !modal.hidden) {
+        event.preventDefault();
+        _closeAtlas();
+      }
+    });
+    _setAtlasTab("navigate");
+  }
+
   function _populateSelects() {
     const moonSelect = document.getElementById("calendar-pattern-moon");
     const daySelect = document.getElementById("calendar-pattern-day");
@@ -1386,6 +1604,18 @@
     _notes = normalizeNotes(_readJson(NOTE_KEY, []));
     _populateSelects();
     _wireControls();
+    _wireAtlasModal();
+
+    void _refreshPlannerRecords()
+      .then(() => refresh());
+
+    document.addEventListener(
+      "sof:life-atlas-records-changed",
+      async () => {
+        await _refreshPlannerRecords();
+        refresh();
+      }
+    );
     window.addEventListener("livingtime:ready", _scheduleRefresh);
     window.addEventListener("livingtime:selectionchange", _scheduleRefresh);
     window.addEventListener("livingtime:layerschange", _scheduleRefresh);

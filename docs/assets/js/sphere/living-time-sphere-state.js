@@ -30,6 +30,7 @@
     outsideDays: Object.freeze({ id: "outsideDays", group: "Pattern",     label: "Outside days",      public: true,  compactDefault: false }),
     lunar:       Object.freeze({ id: "lunar",       group: "Lunar",       label: "Lunar Position",    public: true,  compactDefault: true }),
     solar:       Object.freeze({ id: "solar",       group: "Solar",       label: "Solar",             public: true,  compactDefault: true }),
+    planets:     Object.freeze({ id: "planets",     group: "Solar",       label: "Planetary positions", public: true,  compactDefault: true }),
     passage:     Object.freeze({ id: "passage",     group: "Passage",     label: "Passage",           public: true,  compactDefault: true }),
     markers:     Object.freeze({ id: "markers",     group: "Historical",  label: "Annual markers",    public: true,  compactDefault: true }),
     spiral:      Object.freeze({ id: "spiral",      group: "Historical",  label: "Alignment Spiral",  public: true,  compactDefault: false }),
@@ -47,6 +48,7 @@
     outsideDays: true,
     lunar: true,
     solar: true,
+    planets: true,
     passage: true,
     markers: true,
     spiral: true,
@@ -64,6 +66,7 @@
     outsideDays: false,
     lunar: true,
     solar: true,
+    planets: true,
     passage: true,
     markers: true,
     spiral: false,
@@ -87,38 +90,58 @@
     fullObservatory: Object.freeze({ ...FULL_OBSERVATORY_LAYERS }),
     cleanPattern: Object.freeze({
       pattern: true, exactDays: true, weekGates: true, outsideDays: true,
-      lunar: false, solar: false, passage: false, markers: true,
+      lunar: false, solar: false, planets: false, passage: false, markers: true,
       spiral: false, recurrence: false, environment: false, witness: false, personal: false, connections: false
     }),
     livingSky: Object.freeze({
       pattern: true, exactDays: false, weekGates: false, outsideDays: false,
-      lunar: true, solar: true, passage: true, markers: true,
+      lunar: true, solar: true, planets: true, passage: true, markers: true,
       spiral: false, recurrence: false, environment: true, witness: false, personal: false, connections: true
     }),
     weatherField: Object.freeze({
       pattern: true, exactDays: false, weekGates: false, outsideDays: false,
-      lunar: false, solar: true, passage: false, markers: false,
+      lunar: false, solar: true, planets: false, passage: false, markers: false,
       spiral: false, recurrence: false, environment: true, witness: false, personal: false, connections: false
     }),
     passage: Object.freeze({
       pattern: true, exactDays: true, weekGates: true, outsideDays: false,
-      lunar: true, solar: true, passage: true, markers: true,
+      lunar: true, solar: true, planets: true, passage: true, markers: true,
       spiral: false, recurrence: false, environment: true, witness: false, personal: false, connections: true
     }),
     witnessMap: Object.freeze({
       pattern: true, exactDays: true, weekGates: false, outsideDays: false,
-      lunar: true, solar: false, passage: false, markers: true,
+      lunar: true, solar: false, planets: false, passage: false, markers: true,
       spiral: false, recurrence: true, environment: false, witness: true, personal: false, connections: true
     }),
     historicalField: Object.freeze({
       pattern: true, exactDays: false, weekGates: false, outsideDays: false,
-      lunar: true, solar: true, passage: true, markers: true,
+      lunar: true, solar: true, planets: true, passage: true, markers: true,
       spiral: true, recurrence: true, environment: true, witness: true, personal: false, connections: true
     }),
     lowPower: Object.freeze({
       pattern: true, exactDays: true, weekGates: true, outsideDays: false,
-      lunar: true, solar: true, passage: true, markers: true,
+      lunar: true, solar: true, planets: true, passage: true, markers: true,
       spiral: false, recurrence: false, environment: false, witness: false, personal: false, connections: true
+    }),
+    everydayCalendar: Object.freeze({
+      pattern: true, exactDays: true, weekGates: true, outsideDays: true,
+      lunar: true, solar: false, planets: false, passage: true, markers: true,
+      spiral: false, recurrence: false, environment: false, witness: false, personal: false, connections: false
+    }),
+    planningFocus: Object.freeze({
+      pattern: true, exactDays: true, weekGates: true, outsideDays: true,
+      lunar: false, solar: false, planets: false, passage: false, markers: true,
+      spiral: false, recurrence: true, environment: false, witness: false, personal: false, connections: false
+    }),
+    celestialContext: Object.freeze({
+      pattern: true, exactDays: true, weekGates: false, outsideDays: true,
+      lunar: true, solar: true, planets: true, passage: true, markers: true,
+      spiral: false, recurrence: false, environment: false, witness: false, personal: false, connections: true
+    }),
+    seasonalEnvironment: Object.freeze({
+      pattern: true, exactDays: false, weekGates: true, outsideDays: true,
+      lunar: false, solar: true, planets: false, passage: true, markers: true,
+      spiral: false, recurrence: false, environment: true, witness: false, personal: false, connections: false
     }),
   });
 

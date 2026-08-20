@@ -208,6 +208,180 @@
     _layerBuildMetrics[layer] = Number(durationMs || 0);
   }
 
+
+  // B7.45 — unified camera calendar disclosure authority.
+  //
+  // Both canonical day numerals and scheduled-plan symbols consume this
+  // exact same camera-facing Moon window.
+  //
+  // B7.51 — mobile calendar disclosure is adaptive instead of permanently
+  // materializing five Moons. While the finger is moving we expose only the
+  // camera-front Moon; after settle, phones expose the front Moon plus one
+  // neighbor on either side. Desktop retains the wider five-Moon context.
+  // Dates and schedule symbols still consume this exact same authority.
+  const CAMERA_CALENDAR_HALF_WINDOW_DESKTOP = 2;
+  function _calendarDisclosureHalfWindow() {
+    if (!_isMobileWidth()) return CAMERA_CALENDAR_HALF_WINDOW_DESKTOP;
+    return _cameraGestureActive ? 0 : 1;
+  }
+  let _calendarDisclosureDirty = true;
+  let _calendarDisclosureCache = Object.freeze({ centerMoon: null, moons: [], halfWindow: CAMERA_CALENDAR_HALF_WINDOW_DESKTOP, key: "" });
+
+  function _wrapCalendarMoon(value) {
+    return (
+      (
+        (
+          Number(value || 1)
+          - 1
+        )
+        % 13
+        + 13
+      )
+      % 13
+    ) + 1;
+  }
+
+  function _cameraCalendarDisclosure() {
+    if (!_calendarDisclosureDirty && _calendarDisclosureCache) return _calendarDisclosureCache;
+    const THREE = _THREE;
+    const camera = _camera;
+
+    if (
+      !THREE
+      || !camera
+    ) {
+      _calendarDisclosureCache = Object.freeze({
+        centerMoon: null, moons: [], halfWindow: _calendarDisclosureHalfWindow(), key: ""
+      });
+      _calendarDisclosureDirty = false;
+      return _calendarDisclosureCache;
+    }
+
+    camera.updateMatrixWorld?.(
+      true
+    );
+
+    const calendar =
+      globalThis
+        .LivingTimeSphereCalendarGeometry;
+
+    const patternRingRadius =
+      Number(
+        globalThis
+          .LivingTimeSphereM
+          ?.SIZES
+          ?.patternRing
+        || 1
+      );
+
+    const center =
+      new THREE.Vector3(
+        0,
+        0,
+        0
+      ).applyMatrix4(
+        camera.matrixWorldInverse
+      );
+
+    const point =
+      new THREE.Vector3();
+
+    let bestMoon = null;
+    let bestDepth = -Infinity;
+
+    /*
+     * Same physical rule the working schedule-symbol framework used:
+     * project each Moon midpoint into camera space and choose the
+     * strongest camera-facing Moon.
+     */
+    for (
+      let moon = 1;
+      moon <= 13;
+      moon += 1
+    ) {
+      const midDay =
+        ((moon - 1) * 28)
+        + 14.5;
+
+      const cell =
+        calendar?.calendarCell?.(
+          Math.max(
+            1,
+            Math.min(
+              364,
+              Math.round(midDay)
+            )
+          )
+        );
+
+      if (!cell) continue;
+
+      const angle =
+        Number(cell.angle)
+        * Math.PI
+        / 180;
+
+      const radius =
+        patternRingRadius
+        * Number(
+          cell.radialFactor
+          || 1
+        );
+
+      point
+        .set(
+          Math.sin(angle) * radius,
+          0.02,
+          -Math.cos(angle) * radius
+        )
+        .applyMatrix4(
+          camera.matrixWorldInverse
+        );
+
+      const depth =
+        point.z
+        - center.z;
+
+      if (depth > bestDepth) {
+        bestDepth = depth;
+        bestMoon = moon;
+      }
+    }
+
+    if (!bestMoon) {
+      _calendarDisclosureCache = Object.freeze({
+        centerMoon: null, moons: [], halfWindow: _calendarDisclosureHalfWindow(), key: ""
+      });
+      _calendarDisclosureDirty = false;
+      return _calendarDisclosureCache;
+    }
+
+    const moons = [];
+    const halfWindow = _calendarDisclosureHalfWindow();
+
+    for (
+      let offset = -halfWindow;
+      offset <= halfWindow;
+      offset += 1
+    ) {
+      moons.push(
+        _wrapCalendarMoon(
+          bestMoon + offset
+        )
+      );
+    }
+
+    _calendarDisclosureCache = Object.freeze({
+      centerMoon: bestMoon,
+      moons: Object.freeze(moons.slice()),
+      halfWindow,
+      key: `${bestMoon}:${halfWindow}:${moons.join(",")}`
+    });
+    _syncMoonNumberDisclosure(_calendarDisclosureCache);
+    _calendarDisclosureDirty = false;
+    return _calendarDisclosureCache;
+  }
+
   function _extensionContext(extra = {}) {
     return {
       THREE: _THREE,
@@ -229,8 +403,20 @@
       semanticZoomState:
         _semanticZoomState || null,
 
+      calendarDisclosure:
+        extra?.calendarDisclosure || _cameraCalendarDisclosure(),
+
+      // B7.39: extensions use the same explicit day disclosure preference as
+      // the calendar labels. In Auto mode schedule symbols follow camera focus;
+      // Reveal All intentionally exposes the complete schedule surface.
+      dayLabelMode:
+        _dayLabelMode || "key",
+
       motionMode:
         _motionMode || "still",
+
+      interactionActive:
+        !!_cameraGestureActive,
 
       quality:
         _quality || null,
@@ -422,6 +608,46 @@
   let _lastSemanticDistance = null;
   let _lastSemanticSourceType = "unknown";
   let _resizeObserver = null;
+
+  // B7.23 — label projection governor. The WebGL instrument may animate at a
+  // higher cadence for subtle breathing/flow effects, but DOM label projection
+  // should update only when the camera/selection actually changes (plus a slow
+  // safety refresh for extension data). This removes hundreds of unnecessary
+  // getBoundingClientRect/projection/DOM passes during an otherwise static view.
+  let _lastLabelProjectionKey = "";
+  let _lastLabelProjectionAt = 0;
+  let _cameraGestureActive = false;
+  let _gestureRestoreDpr = null;
+  let _labelSettleTimer = null;
+
+  // B7.52 — mobile fast-path constants. These caps are intentionally applied
+  // at renderer authority level so a later quality preset cannot silently
+  // inflate the phone back to desktop-like fill-rate.
+  const MOBILE_SETTLED_DPR_CAP = 1.10;
+  const MOBILE_GESTURE_DPR_CAP = 0.70;
+  const MOBILE_GESTURE_DPR_LOWPOWER = 0.60;
+  const MOBILE_INTERACTION_FPS = 30;
+  const MOBILE_INTERACTION_FPS_LOWPOWER = 24;
+
+  // B7.52 — progressive visual hydration. Core Pattern/Lunar/Solar/Passage
+  // geometry owns first paint. Historical spiral/connections join on an idle
+  // slice after the instrument is already usable.
+  let _progressiveVisualsReady = false;
+  let _progressiveVisualsScheduled = false;
+  let _progressiveVisualsHandle = null;
+
+  // Geometry signatures for objects that previously rebuilt on every state
+  // update even when their coordinates had not changed.
+  let _lastSolarProgressGeometryKey = "";
+  let _lastTodayLineGeometryKey = "";
+  let _lastActiveMoonGeometryKey = "";
+
+  // B7.50 — first paint is now independent from Life Atlas / temporal extension
+  // hydration. The core calendar can become interactive immediately while the
+  // richer extensions join on the first idle slice.
+  let _extensionsHydrated = false;
+  let _extensionsHydrationScheduled = false;
+  let _extensionsHydrationHandle = null;
   const _moonAnchors = [];    // { moon, angle, radius, worldVec } for each of 13 moons
   let _lastCameraFocusKey = null;
   let _lastSpiralGeometryKey = "";
@@ -453,6 +679,11 @@
     stale: false,
   });
   let _environmentState = EMPTY_ENVIRONMENT_STATE;
+  let _selectedSeasonAngle = 0;
+  let _scheduleDensityKey = "";
+  let _scheduleDensityBuiltAt = 0;
+  let _daylightCurveKey = "";
+  let _planetaryKey = "";
 
   // ── Three.js lazy loader ──────────────────────────────────────────
 
@@ -488,8 +719,167 @@
     return { x: radius * Math.cos(rad), z: radius * Math.sin(rad) };
   }
 
+  // B7.6 — one geometry authority for the counted calendar rail.
+  // Every visual attached to a Pattern day derives from the same canonical
+  // angle. Radius multipliers only control radial hierarchy; label layout must
+  // never change the day angle or collision-shift a rail numeral.
+  const CALENDAR_RAIL = Object.freeze({
+    plannerMarker: 1.105,
+    connectorStart: 1.072,
+    dayTickEnd: 1.215,
+    weekTickEnd: 1.235,
+    moonTickEnd: 1.255,
+    weekArc: 1.247,
+    weekLabel: 1.272,
+    moonLabel: 1.322,
+    plannerLaneStep: 0.027,
+    yearGateLane: 1.385,
+    // B7.10: the label rail uses deterministic radial lanes at Moon seams.
+    // Day 28 sits slightly inward and Day 1 slightly outward so neighboring
+    // Moon boundary numerals never print on top of one another. The angle is
+    // still canonical; only radial hierarchy changes.
+    dayNumber: 1.295,
+    dayNumberMoonEnd: 1.285,
+    dayNumberMoonStart: 1.345,
+    calendarMatrixWeek1: 1.32,
+    calendarMatrixWeekStep: 0.092,
+    calendarMatrixMoonLabel: 1.565,
+    intercalaryTickStart: 1.185,
+    intercalaryTickEnd: 1.255
+  });
+
+  function _calendarRailGeometry() {
+    return CALENDAR_RAIL;
+  }
+
+  // B7.14 — selected-Moon emphasis stays on the canonical annual rail.
+  // Earlier revisions projected 1..28 into an interior 4x7 face; under a
+  // tilted camera that collapsed into a block beside one Moon. The calendar
+  // now remains one continuous 364-day circumference. Selection only adds a
+  // quiet sector bracket and week arcs; it never relocates a day.
+  function _decorateActiveMoonCalendarGrid(group, moonIndex, ringRadius, mat) {
+    if (!group || !_THREE || !Number.isFinite(Number(moonIndex))) return;
+    const sectorSweep = 360 / 13;
+    const sectorStart = moonIndex * sectorSweep;
+    const sectorEnd = sectorStart + sectorSweep;
+    const innerR = ringRadius * 1.205;
+    const outerR = ringRadius * 1.365;
+    const pts = [];
+
+    // Moon boundaries.
+    for (const angle of [sectorStart, sectorEnd]) {
+      const p0 = angleToXZ(angle, innerR);
+      const p1 = angleToXZ(angle, outerR);
+      pts.push(new _THREE.Vector3(p0.x, 0.020, p0.z));
+      pts.push(new _THREE.Vector3(p1.x, 0.020, p1.z));
+    }
+
+    // Four week arcs at their true angular spans.
+    const calendar = globalThis.LivingTimeSphereCalendarGeometry;
+    const weeks = calendar?.moonAddress?.(moonIndex + 1)?.weeks || [];
+    for (let w = 0; w < 4; w += 1) {
+      const startA = weeks[w]?.startAngle ?? (sectorStart + w * sectorSweep / 4);
+      let endA = weeks[w]?.endAngle ?? (sectorStart + (w + 1) * sectorSweep / 4);
+      if (endA <= startA) endA += 360;
+      const radius = ringRadius * (1.235 + w * 0.018);
+      const steps = 12;
+      for (let i = 0; i < steps; i += 1) {
+        const a0 = startA + (i / steps) * (endA - startA);
+        const a1 = startA + ((i + 1) / steps) * (endA - startA);
+        const p0 = angleToXZ(a0, radius);
+        const p1 = angleToXZ(a1, radius);
+        pts.push(new _THREE.Vector3(p0.x, 0.019, p0.z));
+        pts.push(new _THREE.Vector3(p1.x, 0.019, p1.z));
+      }
+    }
+
+    // B7.27 — the selected week is an explicit sub-territory inside the Moon.
+    // This makes the four-week rhythm readable without adding another label.
+    const selectedWeek = Number(_model?.selectedPatternPosition?.moon) === moonIndex + 1
+      ? Math.max(1, Math.min(4, Math.ceil(Number(_model?.selectedPatternPosition?.day || 1) / 7)))
+      : null;
+    if (selectedWeek) {
+      const meta = weeks[selectedWeek - 1] || {};
+      const startA = Number(meta.startAngle ?? (sectorStart + (selectedWeek - 1) * sectorSweep / 4));
+      let endA = Number(meta.endAngle ?? (sectorStart + selectedWeek * sectorSweep / 4));
+      if (endA <= startA) endA += 360;
+      const radius = ringRadius * (1.235 + (selectedWeek - 1) * 0.018);
+      const focusPts = [];
+      for (let i = 0; i < 18; i += 1) {
+        const p0 = angleToXZ(startA + (i / 18) * (endA - startA), radius);
+        const p1 = angleToXZ(startA + ((i + 1) / 18) * (endA - startA), radius);
+        focusPts.push(new _THREE.Vector3(p0.x, 0.025, p0.z), new _THREE.Vector3(p1.x, 0.025, p1.z));
+      }
+      const focusLine = new _THREE.LineSegments(
+        new _THREE.BufferGeometry().setFromPoints(focusPts),
+        new _THREE.LineBasicMaterial({ color: mat.COLORS.todayHalo || mat.COLORS.moonStroke, transparent: true, opacity: 0.92, depthWrite: false })
+      );
+      focusLine.name = "activeCalendarWeek";
+      focusLine.userData = { type: "active-calendar-week", week: selectedWeek };
+      group.add(focusLine);
+    }
+
+    // B7.24 — a restrained active-Moon membrane makes the current calendar
+    // territory legible without hiding astronomy beneath it. It uses the same
+    // sector boundaries as the 13 × 28 calendar and adds no new temporal math.
+    const wedgeVertices = [];
+    const wedgeSegments = 24;
+    for (let i = 0; i < wedgeSegments; i += 1) {
+      const a0 = sectorStart + (i / wedgeSegments) * sectorSweep;
+      const a1 = sectorStart + ((i + 1) / wedgeSegments) * sectorSweep;
+      const i0 = angleToXZ(a0, innerR);
+      const i1 = angleToXZ(a1, innerR);
+      const o0 = angleToXZ(a0, outerR);
+      const o1 = angleToXZ(a1, outerR);
+      wedgeVertices.push(
+        i0.x, 0.010, i0.z, o0.x, 0.010, o0.z, o1.x, 0.010, o1.z,
+        i0.x, 0.010, i0.z, o1.x, 0.010, o1.z, i1.x, 0.010, i1.z
+      );
+    }
+    const wedgeGeometry = new _THREE.BufferGeometry();
+    wedgeGeometry.setAttribute("position", new _THREE.Float32BufferAttribute(wedgeVertices, 3));
+    const wedgeMaterial = new _THREE.MeshBasicMaterial({
+      color: mat.COLORS.moonStroke,
+      transparent: true,
+      opacity: _viewMode === "today" ? 0.055 : 0.04,
+      side: _THREE.DoubleSide,
+      depthWrite: false
+    });
+    const wedge = new _THREE.Mesh(wedgeGeometry, wedgeMaterial);
+    wedge.name = "activeMoonCalendarMembrane";
+    wedge.userData.type = "active-moon-calendar-membrane";
+    group.add(wedge);
+
+    const material = new _THREE.LineBasicMaterial({
+      color: mat.COLORS.moonStroke,
+      transparent: true,
+      opacity: _viewMode === "today" ? 0.76 : 0.60,
+      depthWrite: false
+    });
+    const lines = new _THREE.LineSegments(new _THREE.BufferGeometry().setFromPoints(pts), material);
+    lines.name = "activeMoonCanonicalCalendarSector";
+    lines.userData.type = "moon-calendar-canonical-sector";
+    group.add(lines);
+  }
+
   // Build canonical world-space anchor for Moon m (1-based) on the pattern ring.
   // Angle = center of the moon's sector (each sector = 360/13 degrees, Moon 1 starts at 0°).
+  const MOON_IDENTITIES = Object.freeze([
+    Object.freeze({ moon: 1,  name: "Seed Flame" }),
+    Object.freeze({ moon: 2,  name: "Root Waters" }),
+    Object.freeze({ moon: 3,  name: "Breath Gate" }),
+    Object.freeze({ moon: 4,  name: "Stone Witness" }),
+    Object.freeze({ moon: 5,  name: "Living Word" }),
+    Object.freeze({ moon: 6,  name: "Fire Trial" }),
+    Object.freeze({ moon: 7,  name: "Crown Balance" }),
+    Object.freeze({ moon: 8,  name: "Deep Mirror" }),
+    Object.freeze({ moon: 9,  name: "Return Path" }),
+    Object.freeze({ moon: 10, name: "Builder’s Hand" }),
+    Object.freeze({ moon: 11, name: "Star Remembrance" }),
+    Object.freeze({ moon: 12, name: "River of Signs" }),
+    Object.freeze({ moon: 13, name: "Completion Seal" })
+  ]);
+
   function _moonSectorCenterAngle(moonIndex) {
     // moonIndex is 0-based (0 = Moon 1, 12 = Moon 13)
     return ((moonIndex + 0.5) / 13) * 360;
@@ -568,9 +958,350 @@
     });
   }
 
+  // B7.51 — distinct numbered Pattern Moons. The Pattern-Moon identity lane is
+  // deliberately inside the 28-day rail so the selected/today day marker can
+  // never sit inside a Moon body and create the accidental "ringed planet"
+  // appearance. Bodies remain one InstancedMesh draw call; the 1..13 faces are
+  // a second single GPU point field backed by one tiny atlas texture.
+  const MOON_IDENTITY_COLORS = Object.freeze([
+    0x35e0c4, 0x58c8ff, 0xa678ff, 0xe7d36f, 0xffc13d,
+    0xff755f, 0x65df7a, 0x48d9e7, 0x8d7aff, 0xf0a34f,
+    0x72b9ff, 0x35c9a3, 0xffa65c
+  ]);
+  const MOON_IDENTITY_SHAPES = Object.freeze([
+    [1.00, 1.00, 1.00], [1.12, .91, 1.00], [.92, 1.12, 1.00], [1.06, 1.04, .92],
+    [1.15, .90, .96], [.91, 1.13, .98], [1.08, .96, 1.08], [.95, 1.07, 1.12],
+    [1.13, .94, .93], [.94, 1.12, 1.03], [1.05, .93, 1.14], [1.11, 1.03, .91],
+    [1.00, 1.14, .92]
+  ]);
+  // B7.52.3 — moon-only detail/contrast tuning. Keep the same identity lane
+  // and bounded GPU architecture, but make every Pattern Moon unmistakable on
+  // phone screens: brighter body colour, stronger silhouette, unique rotation,
+  // a numbered medallion, and one shared 13-Moon signature/halo line field.
+  const MOON_IDENTITY_LANE_FACTOR = 0.80;
+  const MOON_IDENTITY_BODY_FACTOR = 0.105;
+  const MOON_IDENTITY_BODY_MIN = 0.058;
+  const MOON_IDENTITY_HALO_FACTOR = 1.27;
+
+  function _moonIdentityAtlasTexture() {
+    if (!_THREE || typeof document === "undefined") return null;
+    if (_objects.moonIdentityNumberTexture) return _objects.moonIdentityNumberTexture;
+    const grid = 4;
+    const tile = 128;
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = grid * tile;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return null;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    for (let i = 0; i < 13; i += 1) {
+      const col = i % grid;
+      const row = Math.floor(i / grid);
+      const cx = col * tile + tile / 2;
+      const cy = row * tile + tile / 2;
+      const n = i + 1;
+      const css = `#${Number(MOON_IDENTITY_COLORS[i] || 0x8fd8d0).toString(16).padStart(6, "0")}`;
+
+      // A dark medallion with the Moon's own colour keeps 1..13 readable
+      // against bright geometry, dark space, labels, and day rails alike.
+      ctx.beginPath();
+      ctx.arc(cx, cy, 43, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(2,8,13,.82)";
+      ctx.fill();
+      ctx.lineWidth = 7;
+      ctx.strokeStyle = css;
+      ctx.stroke();
+
+      const notch = -Math.PI / 2 + (i / 13) * Math.PI * 2;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 49, notch - .27, notch + .27);
+      ctx.lineWidth = 6;
+      ctx.strokeStyle = "rgba(255,246,210,.94)";
+      ctx.stroke();
+
+      ctx.font = `900 ${n >= 10 ? 48 : 57}px system-ui, sans-serif`;
+      ctx.lineWidth = 10;
+      ctx.strokeStyle = "rgba(0,0,0,.98)";
+      ctx.strokeText(String(n), cx, cy + 1);
+      ctx.fillStyle = "#fff8dc";
+      ctx.fillText(String(n), cx, cy + 1);
+    }
+    const texture = new _THREE.CanvasTexture(canvas);
+    texture.needsUpdate = true;
+    texture.minFilter = _THREE.LinearFilter;
+    texture.magFilter = _THREE.LinearFilter;
+    texture.generateMipmaps = false;
+    if ("colorSpace" in texture && _THREE.SRGBColorSpace) texture.colorSpace = _THREE.SRGBColorSpace;
+    _objects.moonIdentityNumberTexture = texture;
+    return texture;
+  }
+
+  function _syncMoonNumberPositions() {
+    const points = _objects.moonIdentityNumbers;
+    if (!points || _moonAnchors.length !== 13) return;
+    const attr = points.geometry?.getAttribute?.("position");
+    if (!attr) return;
+    for (let i = 0; i < 13; i += 1) {
+      const a = _moonAnchors[i];
+      attr.setXYZ(i, Number(a?.worldX || 0), Number(a?.worldY || 0) + 0.008, Number(a?.worldZ || 0));
+    }
+    attr.needsUpdate = true;
+  }
+
+  function _syncMoonNumberDisclosure(disclosure = null) {
+    const points = _objects.moonIdentityNumbers;
+    if (!points) return;
+    const visible = points.geometry?.getAttribute?.("aVisible");
+    const scale = points.geometry?.getAttribute?.("aScale");
+    if (!visible || !scale) return;
+    const moons = new Set((disclosure?.moons || []).map(Number));
+    const center = Number(disclosure?.centerMoon || 0);
+    const selected = Number(_model?.selectedPatternPosition?.moon || 0);
+    const today = Number(_model?.todayPatternPosition?.moon || 0);
+    for (let i = 0; i < 13; i += 1) {
+      const moon = i + 1;
+      // Every Pattern Moon owns its number permanently. Calendar disclosure
+      // may change emphasis, but it must never make the Moon identity vanish.
+      visible.setX(i, 1);
+      scale.setX(i, moon === center ? 1.40 : moon === selected ? 1.34 : moon === today ? 1.26 : 1.10);
+    }
+    visible.needsUpdate = true;
+    scale.needsUpdate = true;
+  }
+
+  function _buildMoonNumberField() {
+    if (!_THREE || !_scene || _objects.moonIdentityNumbers) return;
+    const texture = _moonIdentityAtlasTexture();
+    if (!texture) return;
+    const geometry = new _THREE.BufferGeometry();
+    geometry.setAttribute("position", new _THREE.BufferAttribute(new Float32Array(13 * 3), 3));
+    geometry.setAttribute("aTile", new _THREE.BufferAttribute(new Float32Array(Array.from({ length: 13 }, (_, i) => i)), 1));
+    geometry.setAttribute("aVisible", new _THREE.BufferAttribute(new Float32Array(13), 1));
+    geometry.setAttribute("aScale", new _THREE.BufferAttribute(new Float32Array(13).fill(1), 1));
+    const material = new _THREE.ShaderMaterial({
+      uniforms: {
+        uAtlas: { value: texture },
+        uPointSize: { value: _isMobileWidth() ? 44 : 50 }
+      },
+      vertexShader: `
+        attribute float aTile;
+        attribute float aVisible;
+        attribute float aScale;
+        varying float vTile;
+        varying float vVisible;
+        void main() {
+          vTile = aTile;
+          vVisible = aVisible;
+          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+          gl_Position = projectionMatrix * mvPosition;
+          gl_PointSize = uPointSize * aScale * aVisible;
+        }
+      `,
+      fragmentShader: `
+        uniform sampler2D uAtlas;
+        varying float vTile;
+        varying float vVisible;
+        void main() {
+          if (vVisible < 0.5) discard;
+          float grid = 4.0;
+          float col = mod(vTile, grid);
+          float row = floor(vTile / grid);
+          // Correct CanvasTexture atlas addressing for gl_PointCoord. The old
+          // row reversal could sample transparent tiles on Android.
+          vec2 localUv = vec2(gl_PointCoord.x, 1.0 - gl_PointCoord.y);
+          vec2 uv = (localUv + vec2(col, row)) / grid;
+          vec4 texel = texture2D(uAtlas, uv);
+          if (texel.a < 0.08) discard;
+          gl_FragColor = vec4(texel.rgb, texel.a * vVisible);
+        }
+      `,
+      transparent: true,
+      depthWrite: false,
+      depthTest: false,
+      toneMapped: false
+    });
+    const points = new _THREE.Points(geometry, material);
+    points.name = "moonIdentityNumbers";
+    points.userData.type = "moon-identity-numbers";
+    points.renderOrder = 20;
+    points.frustumCulled = false;
+    _scene.add(points);
+    _objects.moonIdentityNumbers = points;
+    _syncMoonNumberPositions();
+    _syncMoonNumberDisclosure(_calendarDisclosureCache);
+  }
+
+  function _moonIdentityBodyRadius() {
+    const mat = globalThis.LivingTimeSphereM;
+    return Math.max(
+      MOON_IDENTITY_BODY_MIN,
+      Number(mat?.SIZES?.patternRing || 0.7) * MOON_IDENTITY_BODY_FACTOR
+    );
+  }
+
+  function _syncMoonIdentityDetails() {
+    const detail = _objects.moonIdentityDetails;
+    if (!detail || !_THREE || _moonAnchors.length !== 13) return;
+    const pos = detail.geometry?.getAttribute?.("position");
+    const color = detail.geometry?.getAttribute?.("color");
+    const segments = Number(detail.userData?.segments || 28);
+    if (!pos || !color || !segments) return;
+
+    const selectedMoon = Number(_model?.selectedPatternPosition?.moon || 0);
+    const todayMoon = Number(_model?.todayPatternPosition?.moon || 0);
+    const bodyRadius = _moonIdentityBodyRadius();
+    const white = new _THREE.Color(0xffffff);
+    let cursor = 0;
+
+    for (let i = 0; i < 13; i += 1) {
+      const anchor = _moonAnchors[i];
+      if (!anchor) continue;
+      const moon = i + 1;
+      const emphasis = moon === selectedMoon ? 1.22 : moon === todayMoon ? 1.13 : 1;
+      const ringRadius = bodyRadius * MOON_IDENTITY_HALO_FACTOR * emphasis;
+      const radialLen = Math.hypot(anchor.worldX, anchor.worldZ) || 1;
+      const rx = anchor.worldX / radialLen;
+      const rz = anchor.worldZ / radialLen;
+      const tx = -rz;
+      const tz = rx;
+      const baseColor = new _THREE.Color(MOON_IDENTITY_COLORS[i] || 0x8fd8d0).lerp(white, .16);
+
+      // Full halo: the body stays separated from the day rail even when dark
+      // scene geometry crosses behind it.
+      for (let seg = 0; seg < segments; seg += 1) {
+        const a0 = (seg / segments) * Math.PI * 2;
+        const a1 = ((seg + 1) / segments) * Math.PI * 2;
+        for (const angle of [a0, a1]) {
+          const lateral = Math.cos(angle) * ringRadius;
+          const vertical = Math.sin(angle) * ringRadius;
+          pos.setXYZ(cursor, anchor.worldX + tx * lateral, anchor.worldY + vertical, anchor.worldZ + tz * lateral);
+          color.setXYZ(cursor, baseColor.r, baseColor.g, baseColor.b);
+          cursor += 1;
+        }
+      }
+
+      // Unique signature arc for each Moon. Its angular position is tied to
+      // Moon number, so the 13 bodies remain distinguishable beyond colour.
+      const signatureRadius = bodyRadius * 1.08 * emphasis;
+      const signatureStart = -Math.PI * .72 + (i / 13) * Math.PI * 1.44;
+      const signatureSpan = .44 + (i % 4) * .09;
+      const signatureColor = baseColor.clone().lerp(white, .36);
+      for (let seg = 0; seg < segments; seg += 1) {
+        const t0 = seg / segments;
+        const t1 = (seg + 1) / segments;
+        const a0 = signatureStart + t0 * signatureSpan;
+        const a1 = signatureStart + t1 * signatureSpan;
+        for (const angle of [a0, a1]) {
+          const lateral = Math.cos(angle) * signatureRadius;
+          const vertical = Math.sin(angle) * signatureRadius;
+          pos.setXYZ(cursor, anchor.worldX + tx * lateral, anchor.worldY + vertical, anchor.worldZ + tz * lateral);
+          color.setXYZ(cursor, signatureColor.r, signatureColor.g, signatureColor.b);
+          cursor += 1;
+        }
+      }
+    }
+    pos.needsUpdate = true;
+    color.needsUpdate = true;
+  }
+
+  function _buildMoonIdentityDetails() {
+    if (!_THREE || !_scene || _objects.moonIdentityDetails) return;
+    const segments = _isMobileWidth() ? 24 : 32;
+    // Two ring sets per Moon: full halo + unique signature arc.
+    const vertices = 13 * segments * 2 * 2;
+    const geometry = new _THREE.BufferGeometry();
+    geometry.setAttribute("position", new _THREE.BufferAttribute(new Float32Array(vertices * 3), 3));
+    geometry.setAttribute("color", new _THREE.BufferAttribute(new Float32Array(vertices * 3), 3));
+    const material = new _THREE.LineBasicMaterial({
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.86,
+      depthWrite: false,
+      depthTest: true,
+      toneMapped: false
+    });
+    const detail = new _THREE.LineSegments(geometry, material);
+    detail.name = "moonIdentityDetails";
+    detail.userData.type = "moon-identity-details";
+    detail.userData.segments = segments;
+    detail.renderOrder = 7;
+    detail.frustumCulled = false;
+    _scene.add(detail);
+    _objects.moonIdentityDetails = detail;
+    _syncMoonIdentityDetails();
+  }
+
+  function _syncMoonIdentityMarkers() {
+    const mesh = _objects.moonIdentityMarkers;
+    if (!mesh || !_THREE || _moonAnchors.length !== 13) return;
+    const dummy = new _THREE.Object3D();
+    const selectedMoon = Number(_model?.selectedPatternPosition?.moon || 0);
+    const todayMoon = Number(_model?.todayPatternPosition?.moon || 0);
+    for (let i = 0; i < 13; i += 1) {
+      const anchor = _moonAnchors[i];
+      if (!anchor) continue;
+      const moon = i + 1;
+      const emphasis = moon === selectedMoon ? 1.28 : moon === todayMoon ? 1.18 : 1;
+      const shape = MOON_IDENTITY_SHAPES[i] || [1, 1, 1];
+      dummy.position.set(anchor.worldX, anchor.worldY, anchor.worldZ);
+      dummy.scale.set(shape[0] * emphasis, shape[1] * emphasis, shape[2] * emphasis);
+      // A small deterministic rotation makes each non-spherical identity
+      // silhouette visibly distinct as the user orbits the instrument.
+      dummy.rotation.set((i % 3) * .16, (i / 13) * Math.PI * 1.7, ((i % 5) - 2) * .11);
+      dummy.updateMatrix();
+      mesh.setMatrixAt(i, dummy.matrix);
+    }
+    mesh.instanceMatrix.needsUpdate = true;
+    _syncMoonIdentityDetails();
+    _syncMoonNumberPositions();
+    _syncMoonNumberDisclosure(_calendarDisclosureCache);
+  }
+
+  function _buildMoonIdentityMarkers() {
+    if (!_THREE || !_scene || _objects.moonIdentityMarkers) return;
+    const mat = globalThis.LivingTimeSphereM;
+    const radius = Math.max(
+      MOON_IDENTITY_BODY_MIN,
+      Number(mat?.SIZES?.patternRing || 0.7) * MOON_IDENTITY_BODY_FACTOR
+    );
+    const geometry = new _THREE.SphereGeometry(radius, _isMobileWidth() ? 14 : 18, _isMobileWidth() ? 10 : 13);
+    // Three.js multiplies instanceColor by vertex colour. Supplying an explicit
+    // white vertex-colour attribute avoids the nearly-black InstancedMesh seen
+    // on the user's Android/WebGL path while retaining one body draw call.
+    const vertexCount = geometry.getAttribute("position")?.count || 0;
+    geometry.setAttribute("color", new _THREE.BufferAttribute(new Float32Array(vertexCount * 3).fill(1), 3));
+    const material = new _THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      vertexColors: true,
+      transparent: false,
+      opacity: 1.0,
+      depthWrite: true,
+      depthTest: true,
+      toneMapped: false
+    });
+    const mesh = new _THREE.InstancedMesh(geometry, material, 13);
+    mesh.name = "moonIdentityMarkers";
+    mesh.userData.type = "moon-identity-markers";
+    mesh.renderOrder = 5;
+    mesh.frustumCulled = false;
+    for (let i = 0; i < 13; i += 1) {
+      mesh.setColorAt(i, new _THREE.Color(MOON_IDENTITY_COLORS[i] || 0x8fd8d0));
+    }
+    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+    _scene.add(mesh);
+    _objects.moonIdentityMarkers = mesh;
+    _buildMoonIdentityDetails();
+    _syncMoonIdentityMarkers();
+    _buildMoonNumberField();
+  }
+
   function _buildMoonAnchors(viewMode = _viewMode) {
     const mat = globalThis.LivingTimeSphereM;
-    const r   = mat.SIZES.patternRing * _moonLabelRadiusMultiplier(viewMode, _moonLabelDistance);
+    // B7.51: Pattern-Moon bodies/names live on their own inner identity lane.
+    // The day/calendar rail remains at patternRing, so Today/Selected markers
+    // cannot geometrically intersect the Moon bodies.
+    const r = mat.SIZES.patternRing * MOON_IDENTITY_LANE_FACTOR;
     _moonAnchors.length = 0;
     _activeSemanticBand = null;
     _previousSemanticBand = null;
@@ -580,6 +1311,7 @@
       const { x, z } = angleToXZ(angle, r);
       _moonAnchors.push({
         moon:  i + 1,
+        name: MOON_IDENTITIES[i]?.name || `Moon ${i + 1}`,
         angle,
         radius: r,
         worldX: x,
@@ -587,6 +1319,7 @@
         worldZ: z,
       });
     }
+    _syncMoonIdentityMarkers();
   }
 
   function _setupMoonLabelEls(container) {
@@ -715,12 +1448,22 @@
       resetDistance: options.resetDistance ?? ((options.showDistance ?? 2.2) + 0.42),
       pinned: !!options.pinned,
       selected: !!options.selected,
-      moon: options.moon || null
+      moon: options.moon || null,
+      // Preserve optional placement hints used by the semantic overlay.
+      haloOffset: Number.isFinite(Number(options.haloOffset)) ? Number(options.haloOffset) : null,
+      haloLane: options.haloLane || null
     };
   }
 
-  function _buildSemanticTargets() {
+  function _buildSemanticTargets(options = {}) {
     const targets = [];
+    const calendarDisclosure = options?.calendarDisclosure || null;
+    const interactionLite = !!options?.interactionLite;
+    const dayAperture = String(_dayLabelMode || "key") !== "all"
+      && Array.isArray(calendarDisclosure?.moons)
+      && calendarDisclosure.moons.length
+      ? new Set(calendarDisclosure.moons.map(Number))
+      : null;
     const selected = _model?.selectedPatternPosition || _model?.todayPatternPosition || null;
     const today = _model?.todayPatternPosition || null;
     const selectedMoon = Number(selected?.moon || 0);
@@ -739,17 +1482,39 @@
     }
     const todayDetail = today ? `Moon ${today.moon} · Day ${today.day} · ${today.dayOfPatternYear}/364` : "Current Pattern position";
     const selectedDetail = selected ? `Moon ${selected.moon} · Day ${selected.day} · ${selected.dayOfPatternYear}/364` : "Selected Pattern position";
+    const selectedMatchesToday = !!(selected && today
+      && Number(selected.dayOfPatternYear) === Number(today.dayOfPatternYear)
+      && Number(selected.moon) === Number(today.moon)
+      && Number(selected.day) === Number(today.day));
+    // B7.29 — keep the sphere readable. Selection/year/lunar/solar state is
+    // already available in the fixed instrument UI and should not become a
+    // swarm of floating cards. Only landmarks whose position itself matters
+    // remain semantic labels here.
     const simple = [
-      _semanticTargetFromObject("live-today", "Live Today", _objects.todayMarker, { kind: "pattern-day", priority: 97, showDistance: 2.1, resetDistance: 2.48, detail: todayDetail }),
-      _semanticTargetFromObject("selected-day", "Selected day", _objects.selectedDayMarker, { kind: "pattern-day", priority: 100, showDistance: 2.3, resetDistance: 2.7, detail: selectedDetail, pinned: true, selected: true }),
-      _semanticTargetFromObject("year-gate", "Year Gate", _objects.yearGate, { kind: "gate", priority: 86, showDistance: 2.2, resetDistance: 2.62, detail: "Moon 1 · Day 1 · fixed Pattern seam" }),
-      _semanticTargetFromObject("march-equinox", "March Equinox", _objects.equinoxGate, { kind: "astronomy", priority: 87, showDistance: 2.25, resetDistance: 2.68, detail: "Astronomical alignment marker" }),
-      _semanticTargetFromObject("lunar-today", "Lunar position", _objects.lunarMarker, { kind: "lunar", priority: 66, showDistance: 1.95, resetDistance: 2.35, detail: _objects.lunarMarker?.userData?.phase || "Lunar marker" }),
-      _semanticTargetFromObject("lunar-selected", "Selected lunar position", _objects.lunarSelectedMarker, { kind: "lunar", priority: 72, showDistance: 1.95, resetDistance: 2.35, detail: _objects.lunarSelectedMarker?.userData?.phase || "Selected lunar marker", selected: true }),
-      _semanticTargetFromObject("solar-today", "Solar position", _objects.solarTodayMarker, { kind: "solar", priority: 64, showDistance: 2.0, resetDistance: 2.4, detail: "Seasonal position" }),
-      _semanticTargetFromObject("solar-selected", "Selected solar position", _objects.solarSelectedMarker, { kind: "solar", priority: 70, showDistance: 2.0, resetDistance: 2.4, detail: _objects.solarSelectedMarker?.userData?.gate || "Selected seasonal position", selected: true })
+      _semanticTargetFromObject("live-today", "Today", _objects.todayMarker, { kind: "pattern-day", priority: 97, showDistance: 1.50, resetDistance: 1.82, detail: todayDetail }),
+      _semanticTargetFromObject("year-gate", "Year Gate", _objects.yearGate, { kind: "gate", priority: 86, showDistance: 1.58, resetDistance: 1.90, detail: "Moon 1 · Day 1 · fixed Pattern seam" }),
+      _semanticTargetFromObject("march-equinox", "March Equinox", _objects.equinoxGate, { kind: "astronomy", priority: 87, showDistance: 1.58, resetDistance: 1.92, detail: "Astronomical alignment marker" })
     ].filter(Boolean);
     targets.push(...simple);
+
+    // Planet labels are proximity-only. The markers stay in the geometry; text
+    // appears only when that part of the ecliptic rail is actually approached.
+    for (const marker of (_objects.planetMarkers || [])) {
+      const data = marker?.userData || {};
+      if (!marker?.visible || !data.planetId) continue;
+      targets.push(_semanticTargetFromObject(
+        `planet-${data.planetId}`,
+        `${data.glyph || ""} ${data.name || data.planetId}`.trim(),
+        marker,
+        {
+          kind: "planet",
+          priority: 72,
+          showDistance: 1.82,
+          resetDistance: 2.16,
+          detail: `${Number(data.longitude || 0).toFixed(1)}° ecliptic longitude · approximate`
+        }
+      ));
+    }
 
     // Passage midpoint is derived from the canonical passage angles already in
     // the model; no independent astronomy is calculated here.
@@ -761,7 +1526,106 @@
       const pp = angleToXZ(mid, globalThis.LivingTimeSphereM.SIZES.passageArc);
       targets.push({
         id: "passage-midpoint", label: "Equinox Passage", detail: "Passage midpoint", kind: "passage",
-        worldX: pp.x, worldY: 0.018, worldZ: pp.z, priority: 82, showDistance: 2.25, resetDistance: 2.68
+        worldX: pp.x, worldY: 0.018, worldZ: pp.z, priority: 82, showDistance: 1.62, resetDistance: 1.94
+      });
+    }
+
+    // B7.11 — canonical 13 × 28 calendar faces. Every Pattern day still owns
+    // its exact annual angle on the physical ring/ticks. The numeral is placed
+    // into its Moon's deterministic 4-week × 7-day reading grid so each Moon
+    // is visibly and unambiguously Days 1..28 instead of a compressed string.
+    {
+      const selectedPatternDay = Number(selected?.dayOfPatternYear || 0);
+      const todayPatternDay = Number(today?.dayOfPatternYear || 0);
+      const ring = globalThis.LivingTimeSphereM.SIZES.patternRing;
+      for (let dayOfYear = 1; dayOfYear <= 364; dayOfYear += 1) {
+        const calendar = globalThis.LivingTimeSphereCalendarGeometry;
+        const address = calendar?.dayAddress?.(dayOfYear);
+        const moon = address?.moon || Math.floor((dayOfYear - 1) / 28) + 1;
+        const moonDay = address?.moonDay || ((dayOfYear - 1) % 28) + 1;
+        if (dayAperture && !dayAperture.has(Number(moon))
+          && dayOfYear !== selectedPatternDay && dayOfYear !== todayPatternDay) continue;
+        const canonicalAngle = address?.angle ?? globalThis.LivingTimeSphereModel.patternAngleForDayOfYear(dayOfYear);
+        // B7.19: chronology and readable calendar are separate coordinate
+        // layers. canonicalAngle remains authoritative for astronomy/history;
+        // the visible/selectable number uses the 13 × 4 × 7 Moon matrix.
+        const calendarCell = calendar?.calendarCell?.(dayOfYear) || null;
+        const readingAngle = calendarCell?.angle ?? canonicalAngle;
+        const readingRadius = ring * (calendarCell?.radialFactor
+          ?? (CALENDAR_RAIL.calendarMatrixWeek1 + (Math.floor((moonDay - 1) / 7)) * CALENDAR_RAIL.calendarMatrixWeekStep));
+        const canonicalPoint = angleToXZ(readingAngle, readingRadius);
+        const isSelectedDay = dayOfYear === selectedPatternDay;
+        const isTodayDay = dayOfYear === todayPatternDay;
+        const weekStart = moonDay === 1 || ((moonDay - 1) % 7 === 0);
+        const weekEnd = moonDay % 7 === 0;
+        const gateDay = weekStart || weekEnd;
+        const selectedPatternYear = Number(_selectedYear || _model?.sourceRecord?.year || _model?.year || new Date().getFullYear());
+        const plannerSummary = globalThis.LifeAtlasRecordSphereExtension?.plannerDaySummary?.(selectedPatternYear, dayOfYear)
+          || { count: 0, recordIds: [], categories: [] };
+        targets.push({
+          id: `pattern-day-number-${dayOfYear}`,
+          label: String(moonDay),
+          detail: `Moon ${moon} · Day ${moonDay} · Pattern ${dayOfYear}/364${plannerSummary.count ? ` · ${plannerSummary.primarySymbol || "●"} ${plannerSummary.count} scheduled` : ""}`,
+          kind: "pattern-day-number",
+          moon,
+          moonDay,
+          dayOfPatternYear: dayOfYear,
+          canonicalAngle,
+          readingAngle,
+          calendarFace: true,
+          calendarWeek: Math.floor((moonDay - 1) / 7) + 1,
+          calendarColumn: ((moonDay - 1) % 7) + 1,
+          worldX: canonicalPoint.x,
+          worldY: 0.022,
+          worldZ: canonicalPoint.z,
+          priority: isSelectedDay ? 100 : isTodayDay ? 98 : gateDay ? 72 : 44,
+          showDistance: 99,
+          resetDistance: 99,
+          detailDistance: 0,
+          haloOffset: 0,
+          haloLane: "day",
+          railLocked: true,
+          quietRail: true,
+          interactive: true,
+          // B7.48 — keep schedule metadata on the canonical day for inspection
+          // and accessibility. The visible glyph is rendered once in the GPU atlas.
+          dayScheduleCount: Number(plannerSummary.count) || 0,
+          scheduleCount: Number(plannerSummary.count) || 0,
+          symbol: plannerSummary.primarySymbol || null,
+          recordId: plannerSummary.primaryRecordId || null,
+          category: plannerSummary.categories?.[0] || null,
+          workflow: plannerSummary.primaryWorkflow || null,
+          scheduledRecordIds: plannerSummary.recordIds || [],
+          gateDay,
+          pinned: isSelectedDay,
+          selected: isSelectedDay
+        });
+      }
+    }
+
+    // B7.13 — explicit Year Gate bridge. Intercalary days are named nodes,
+    // not ordinary day 365/366 numerals. They live outside Moon/week counting
+    // and never alter the 13 × 28 Pattern geometry.
+    {
+      const selectedYear = Number(_selectedYear || _model?.sourceRecord?.year || new Date().getUTCFullYear());
+      const calendar = globalThis.LivingTimeSphereCalendarGeometry;
+      const gate = calendar?.yearGate?.(selectedYear);
+      const specialRadius = globalThis.LivingTimeSphereM.SIZES.patternRing * CALENDAR_RAIL.yearGateLane;
+      const slots = gate?.intercalary || [{ id: "day-out-of-time", shortLabel: "OOT", label: "Day Out of Time", angle: 359.35, leap: false }];
+      slots.forEach((slot) => {
+        const point = angleToXZ(slot.angle, specialRadius);
+        targets.push({
+          id: `${slot.id}-rail`,
+          label: slot.shortLabel || slot.label,
+          detail: `${slot.label} · Year Gate · outside the 364-day week count`,
+          kind: "intercalary-day-number",
+          worldX: point.x, worldY: 0.018, worldZ: point.z,
+          priority: slot.leap ? 97 : 98,
+          showDistance: 99, resetDistance: 99, detailDistance: 0,
+          haloOffset: 0, haloLane: "day", railLocked: true, quietRail: true,
+          intercalary: true, leapIntercalary: !!slot.leap,
+          pinned: false, selected: false
+        });
       });
     }
 
@@ -792,35 +1656,64 @@
       });
     }
 
-    for (const anchor of _spiralMarkerAnchors.slice(-24)) {
-      targets.push({
-        id: `spiral-year-${anchor.year}`,
-        label: Number(anchor.year) === Number(_selectedYear) ? `Selected year ${anchor.year}` : `Year ${anchor.year}`,
-        detail: "Historical spiral marker",
-        kind: "year",
-        worldX: anchor.x, worldY: anchor.y, worldZ: anchor.z,
-        priority: Number(anchor.year) === Number(_selectedYear) ? 92 : 42,
-        showDistance: 2.65, resetDistance: 3.08,
-        pinned: Number(anchor.year) === Number(_selectedYear),
-        selected: Number(anchor.year) === Number(_selectedYear)
-      });
-    }
+    // B7.30 — historical year geometry may remain visible for comparison, but
+    // year identity/navigation belongs to the fixed year navigator above the
+    // sphere. Do not create floating year bubbles for any spiral year.
     const extensionTargets = globalThis.LivingTimeSphereExtensionHost?.semanticTargetsAll?.(
-      _extensionContext({ lifecycle: "semantic-labels" })
+      _extensionContext({
+        lifecycle: "semantic-labels",
+        calendarDisclosure,
+        interactionLite
+      })
     ) || [];
     targets.push(...extensionTargets);
     const seen = new Set();
+    // B7.9 — never truncate the canonical 364-day rail here. The label
+    // manager owns the semantic-card budget and calendar LOD separately.
+    // A renderer-level slice cut the rail off around Moon 3/4 on phones,
+    // making the surviving 1/7/14/21/28 numerals look randomly clustered.
     return targets.filter(target => {
       const id = String(target?.id || "");
       if (!id || seen.has(id)) return false;
       seen.add(id);
       return true;
-    }).slice(0, 96);
+    });
   }
 
-  // Called every frame to project 3D moon anchors to screen space and update labels.
-  function _updateMoonLabels(viewMode) {
+  function _labelProjectionKey(viewMode) {
+    const p = _camera?.position;
+    const q = _camera?.quaternion;
+    const selected = _model?.selectedPatternPosition || _model?.todayPatternPosition || {};
+    const round = value => Math.round(Number(value || 0) * 1000) / 1000;
+    return [
+      round(p?.x), round(p?.y), round(p?.z),
+      round(q?.x), round(q?.y), round(q?.z), round(q?.w),
+      selected?.moon || 0, selected?.day || 0,
+      _moonLabelMode, _dayLabelMode, viewMode,
+      _semanticZoomState?.band || _activeSemanticBand || "medium",
+      JSON.stringify(_visibleLayers || {})
+    ].join("|");
+  }
+
+  // B7.23 — project DOM labels on semantic/camera change, not on every subtle
+  // WebGL animation frame. A 500ms safety refresh keeps extension-driven labels
+  // current without making the mobile browser continuously lay out 364 labels.
+  function _updateMoonLabels(viewMode, nowMs = 0, force = false) {
     if (!_moonLabelManager || !_camera || !_canvas || !_THREE) return;
+    // B7.37 — do not freeze the calendar while rotating. That made the old Moon's
+    // day numerals look "sticky" until pointer-up. During a gesture we perform a
+    // lightweight, throttled projection pass so the camera-facing Moon follows the
+    // user's finger; full card/collision work resumes after the gesture settles.
+    const stamp = Number(nowMs || globalThis.performance?.now?.() || Date.now());
+    const interactionLite = _cameraGestureActive && !force;
+    const minInterval = interactionLite ? 96 : 500;
+    const key = _labelProjectionKey(viewMode);
+    if (!force && stamp - _lastLabelProjectionAt < minInterval) return;
+    if (!interactionLite && !force && key === _lastLabelProjectionKey && stamp - _lastLabelProjectionAt < 500) return;
+    _lastLabelProjectionKey = key;
+    _lastLabelProjectionAt = stamp;
+    const calendarDisclosure = _cameraCalendarDisclosure();
+    const semanticTargets = _buildSemanticTargets({ calendarDisclosure, interactionLite });
     _moonLabelManager.update({
       camera: _camera,
       three: _THREE,
@@ -829,6 +1722,8 @@
       labelMode: _moonLabelMode,
       selectedPatternPosition: _model?.selectedPatternPosition || _model?.todayPatternPosition || null,
       showAllMobileLabels: _moonLabelMode === "all",
+      dayLabelMode: _dayLabelMode,
+      calendarDisclosure,
       selectedMarkerPosition: _objects.selectedDayMarker?.position
         ? { x: _objects.selectedDayMarker.position.x, y: _objects.selectedDayMarker.position.y, z: _objects.selectedDayMarker.position.z }
         : null,
@@ -839,7 +1734,13 @@
       stageEl: _container,
       visibleLayersKey: JSON.stringify(_visibleLayers || {}),
       protectedRects: _moonLabelProtectedRects(),
-      semanticTargets: _buildSemanticTargets(),
+      semanticTargets: interactionLite
+        ? semanticTargets.filter(target =>
+            target?.kind === "pattern-day-number"
+            || target?.kind === "intercalary-day-number"
+          )
+        : semanticTargets,
+      interactionLite,
       semanticBand:
         _semanticZoomState?.band
         || _activeSemanticBand
@@ -904,7 +1805,7 @@
     // ── Pattern ring (XZ plane, radius = SIZES.patternRing) ─────────
     {
       const r   = mat.SIZES.patternRing;
-      const geo = new THREE.TorusGeometry(r, mat.SIZES.ringTube, 8, 256);
+      const geo = new THREE.TorusGeometry(r, mat.SIZES.ringTube, 8, _isMobileWidth() ? 128 : 224);
       const m   = new THREE.MeshStandardMaterial({
         color:       mat.COLORS.patternRing,
         transparent: true,
@@ -918,55 +1819,206 @@
       _objects.patternRing = mesh;
     }
 
-    // ── Moon sector dividers (13 lines from center to ring) ─────────
+    // ── B7.7 definitive Moon sectors ─────────────────────────────────
+    // The old dividers ran from the center to an inner radius, so dense orbital
+    // geometry visually swallowed the 13-Moon structure. Boundaries now cross
+    // the calendar rail itself, and a segmented outer sector rail makes every
+    // Moon's 1..28 territory readable as a distinct arc.
     {
-      const r  = mat.SIZES.moonSectors;
+      const ring = mat.SIZES.patternRing;
+      const innerR = ring * 0.80;
+      const outerR = ring * 1.285;
+      const calendarOuterR = Math.max(outerR, ring * 1.355);
       const pts = [];
       for (let i = 0; i < 13; i++) {
         const angle = (i / 13) * 360;
-        const { x, z } = angleToXZ(angle, r);
-        pts.push(new _THREE.Vector3(0, 0, 0));
-        pts.push(new _THREE.Vector3(x, 0, z));
+        const a = angleToXZ(angle, innerR);
+        const b = angleToXZ(angle, calendarOuterR);
+        pts.push(new _THREE.Vector3(a.x, 0.0032, a.z));
+        pts.push(new _THREE.Vector3(b.x, 0.0032, b.z));
       }
       const geo = new THREE.BufferGeometry().setFromPoints(pts);
       const m   = new THREE.LineBasicMaterial({
         color:       mat.COLORS.moonStroke,
         transparent: true,
-        opacity:     Math.max(mat.OPACITY.moonStroke || 0.4, 0.72),
+        opacity:     Math.max(mat.OPACITY.moonStroke || 0.4, 0.86),
         depthWrite:  false,
       });
       const lines = new THREE.LineSegments(geo, m);
       lines.name = "moonDividers";
+      lines.userData.type = "moon-sector-boundaries";
       _scene.add(lines);
       _objects.moonDividers = lines;
+
+      const arcPts = [];
+      const sectorRadius = ring * 1.105;
+      const sectorSweep = 360 / 13;
+      const gap = sectorSweep * 0.055;
+      const subdivisions = 10;
+      for (let moon = 0; moon < 13; moon += 1) {
+        const start = moon * sectorSweep + gap;
+        const end = (moon + 1) * sectorSweep - gap;
+        for (let step = 0; step < subdivisions; step += 1) {
+          const t0 = step / subdivisions;
+          const t1 = (step + 1) / subdivisions;
+          const p0 = angleToXZ(start + (end - start) * t0, sectorRadius);
+          const p1 = angleToXZ(start + (end - start) * t1, sectorRadius);
+          arcPts.push(new _THREE.Vector3(p0.x, 0.0028, p0.z));
+          arcPts.push(new _THREE.Vector3(p1.x, 0.0028, p1.z));
+        }
+      }
+      const arcGeo = new THREE.BufferGeometry().setFromPoints(arcPts);
+      const arcMat = new THREE.LineBasicMaterial({
+        color: mat.COLORS.moonStroke,
+        transparent: true,
+        opacity: 0.48,
+        depthWrite: false,
+      });
+      const sectorRails = new THREE.LineSegments(arcGeo, arcMat);
+      sectorRails.name = "moonSectorRails";
+      sectorRails.userData.type = "moon-sector-rails";
+      _scene.add(sectorRails);
+      _objects.moonSectorRails = sectorRails;
+
+      // B7.10 — a second segmented rail sits directly beneath the number
+      // labels. This visually brackets each Moon's 28-day territory without
+      // moving any canonical day angle.
+      const outerArcPts = [];
+      const outerSectorRadius = ring * 1.255;
+      for (let moon = 0; moon < 13; moon += 1) {
+        const start = moon * sectorSweep + gap;
+        const end = (moon + 1) * sectorSweep - gap;
+        for (let step = 0; step < subdivisions; step += 1) {
+          const t0 = step / subdivisions;
+          const t1 = (step + 1) / subdivisions;
+          const p0 = angleToXZ(start + (end - start) * t0, outerSectorRadius);
+          const p1 = angleToXZ(start + (end - start) * t1, outerSectorRadius);
+          outerArcPts.push(new _THREE.Vector3(p0.x, 0.003, p0.z));
+          outerArcPts.push(new _THREE.Vector3(p1.x, 0.003, p1.z));
+        }
+      }
+      const outerArcGeo = new THREE.BufferGeometry().setFromPoints(outerArcPts);
+      const outerArcMat = new THREE.LineBasicMaterial({
+        color: mat.COLORS.moonStroke,
+        transparent: true,
+        opacity: 0.62,
+        depthWrite: false,
+      });
+      const outerSectorRails = new THREE.LineSegments(outerArcGeo, outerArcMat);
+      outerSectorRails.name = "moonOuterSectorRails";
+      outerSectorRails.userData.type = "moon-calendar-sector-rails";
+      _scene.add(outerSectorRails);
+      _objects.moonOuterSectorRails = outerSectorRails;
     }
 
-    // ── Week dividers (3 interior week boundaries per moon) ───────────
+    // B7.50 — one cheap physical body for each calendar Moon, exactly under
+    // its projected label anchor.
+    _buildMoonIdentityMarkers();
+
+    // ── B7.19 authoritative readable 13 × 4 × 7 Moon matrix ───────
+    // Four week rails and seven weekday columns are the human calendar surface.
+    // The canonical 364-day chronology remains underneath for astronomy and
+    // historical comparisons; readable numbers/picking use these Moon cells.
     {
+      const calendar = globalThis.LivingTimeSphereCalendarGeometry;
       const pts = [];
-      const innerR = mat.SIZES.patternRing * 0.86;
-      const outerR = mat.SIZES.patternRing * 1.02;
-      for (let moon = 0; moon < 13; moon += 1) {
-        [7, 14, 21].forEach(dayBoundary => {
-          const dayOfYear = moon * 28 + dayBoundary;
-          const boundaryAngle = (dayOfYear / 364) * 360;
-          const start = angleToXZ(boundaryAngle, innerR);
-          const end = angleToXZ(boundaryAngle, outerR);
-          pts.push(new _THREE.Vector3(start.x, 0.002, start.z));
-          pts.push(new _THREE.Vector3(end.x, 0.002, end.z));
-        });
+      const subdivisions = 12;
+      for (let moon = 1; moon <= 13; moon += 1) {
+        const meta = calendar?.moonAddress?.(moon);
+        if (!meta) continue;
+        const sectorSweep = 360 / 13;
+        const margin = sectorSweep * 0.075;
+        const startA = meta.sectorStart + margin;
+        const endA = meta.sectorEnd - margin;
+        for (let week = 1; week <= 4; week += 1) {
+          const sample = calendar?.calendarMatrixCell?.((moon - 1) * 28 + (week - 1) * 7 + 1);
+          const r = mat.SIZES.patternRing * Number(sample?.radialFactor || (CALENDAR_RAIL.calendarMatrixWeek1 + (week - 1) * CALENDAR_RAIL.calendarMatrixWeekStep));
+          for (let i = 0; i < subdivisions; i += 1) {
+            const a0 = startA + (i / subdivisions) * (endA - startA);
+            const a1 = startA + ((i + 1) / subdivisions) * (endA - startA);
+            const p0 = angleToXZ(a0, r);
+            const p1 = angleToXZ(a1, r);
+            pts.push(new THREE.Vector3(p0.x, 0.004, p0.z));
+            pts.push(new THREE.Vector3(p1.x, 0.004, p1.z));
+          }
+        }
       }
       const geo = new THREE.BufferGeometry().setFromPoints(pts);
       const m = new THREE.LineBasicMaterial({
-        color: 0x8dc0cf,
+        color: 0x92c7d0,
         transparent: true,
-        opacity: 0.55,
+        opacity: _isMobileWidth() ? 0.50 : 0.46,
+        depthWrite: false,
+      });
+      const lines = new THREE.LineSegments(geo, m);
+      lines.name = "calendarWeekArcs";
+      lines.userData.type = "calendar-polar-week-rails";
+      _scene.add(lines);
+      _objects.calendarWeekArcs = lines;
+    }
+
+    // Seven weekday columns per Moon, shared across all four week lanes.
+    {
+      const calendar = globalThis.LivingTimeSphereCalendarGeometry;
+      const pts = [];
+      for (let moon = 1; moon <= 13; moon += 1) {
+        const meta = calendar?.moonAddress?.(moon);
+        if (!meta) continue;
+        const sectorSweep = 360 / 13;
+        const margin = sectorSweep * 0.075;
+        const usable = sectorSweep - margin * 2;
+        const innerR = mat.SIZES.patternRing * (CALENDAR_RAIL.calendarMatrixWeek1 - 0.035);
+        const outerR = mat.SIZES.patternRing * (CALENDAR_RAIL.calendarMatrixWeek1 + 3 * CALENDAR_RAIL.calendarMatrixWeekStep + 0.035);
+        for (let column = 0; column <= 7; column += 1) {
+          const angle = meta.sectorStart + margin + usable * (column / 7);
+          const a = angleToXZ(angle, innerR);
+          const b = angleToXZ(angle, outerR);
+          pts.push(new THREE.Vector3(a.x, 0.003, a.z));
+          pts.push(new THREE.Vector3(b.x, 0.003, b.z));
+        }
+      }
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+      const m = new THREE.LineBasicMaterial({
+        color: 0x78aeb9,
+        transparent: true,
+        opacity: _isMobileWidth() ? 0.28 : 0.24,
         depthWrite: false,
       });
       const lines = new THREE.LineSegments(geo, m);
       lines.name = "weekDividers";
+      lines.userData.type = "calendar-polar-weekday-columns";
       _scene.add(lines);
       _objects.weekDividers = lines;
+    }
+
+    // ── Day ticks (364 readable temporal divisions) ──────────────────
+    {
+      const pts = [];
+      const ring = mat.SIZES.patternRing;
+      for (let day = 1; day <= 364; day += 1) {
+        const angle = globalThis.LivingTimeSphereModel.patternAngleForDayOfYear(day);
+        const moonDay = ((day - 1) % 28) + 1;
+        const moonBoundary = moonDay === 1;
+        const weekBoundary = moonBoundary || moonDay % 7 === 0;
+        const innerR = ring * (moonBoundary ? 0.93 : weekBoundary ? 0.952 : 0.97);
+        const outerR = ring * (moonBoundary ? CALENDAR_RAIL.moonTickEnd : weekBoundary ? CALENDAR_RAIL.weekTickEnd : CALENDAR_RAIL.dayTickEnd);
+        const a = angleToXZ(angle, innerR);
+        const b = angleToXZ(angle, outerR);
+        pts.push(new THREE.Vector3(a.x, 0.0015, a.z));
+        pts.push(new THREE.Vector3(b.x, 0.0015, b.z));
+      }
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+      const material = new THREE.LineBasicMaterial({
+        color: 0x78aebb,
+        transparent: true,
+        opacity: _isMobileWidth() ? 0.34 : 0.28,
+        depthWrite: false
+      });
+      const ticks = new THREE.LineSegments(geo, material);
+      ticks.name = "dayTicks";
+      ticks.userData.type = "living-day-ticks";
+      _scene.add(ticks);
+      _objects.dayTicks = ticks;
     }
 
     // ── Day nodes on pattern ring (364 small points) ─────────────────
@@ -1180,18 +2232,47 @@
       _objects.weekGates = wgPts;
     }
 
-    // ── Day Out of Time marker (position 365 equivalent) ─────────────
+    // ── B7.13 Year Gate bridge ───────────────────────────────────────
     {
-      const angle = (364.5 / 364) * 360;  // just past Moon 13 Day 28
-      const { x, z } = angleToXZ(angle, mat.SIZES.patternRing);
-      const geo = new THREE.SphereGeometry(0.018, 8, 8);
-      const m   = new THREE.MeshBasicMaterial({ color: 0xffd080, transparent: true, opacity: 0.6 });
-      const mesh = new THREE.Mesh(geo, m);
-      mesh.position.set(x, 0, z);
-      mesh.name = "dayOutOfTime";
-      mesh.visible = false;  // shown only when relevant
-      _scene.add(mesh);
-      _objects.dayOutOfTime = mesh;
+      const calendar = globalThis.LivingTimeSphereCalendarGeometry;
+      const selectedYear = Number(_selectedYear || _model?.sourceRecord?.year || new Date().getUTCFullYear());
+      const gate = calendar?.yearGate?.(selectedYear);
+      const innerR = mat.SIZES.patternRing * 1.255;
+      const outerR = mat.SIZES.patternRing * CALENDAR_RAIL.yearGateLane;
+      const pts = [];
+      (gate?.intercalary || [{ angle: 359.35 }]).forEach((slot) => {
+        const a = angleToXZ(slot.angle, innerR);
+        const b = angleToXZ(slot.angle, outerR);
+        pts.push(new THREE.Vector3(a.x, 0.012, a.z));
+        pts.push(new THREE.Vector3(b.x, 0.012, b.z));
+      });
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+      const matGate = new THREE.LineBasicMaterial({ color: 0xf0c45a, transparent: true, opacity: 0.88, depthWrite: false });
+      const bridge = new THREE.LineSegments(geo, matGate);
+      bridge.name = "yearGateIntercalaryBridge";
+      bridge.userData.type = "year-gate-intercalary-bridge";
+      _scene.add(bridge);
+      _objects.yearGateIntercalaryBridge = bridge;
+    }
+
+    // ── Intercalary seam markers (outside the 364-day week count) ─────
+    {
+      const pts = [];
+      const innerR = mat.SIZES.patternRing * CALENDAR_RAIL.intercalaryTickStart;
+      const outerR = mat.SIZES.patternRing * CALENDAR_RAIL.intercalaryTickEnd;
+      [359.72, 0.28].forEach((angle) => {
+        const a = angleToXZ(angle, innerR);
+        const b = angleToXZ(angle, outerR);
+        pts.push(new THREE.Vector3(a.x, 0.004, a.z));
+        pts.push(new THREE.Vector3(b.x, 0.004, b.z));
+      });
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+      const m = new THREE.LineBasicMaterial({ color: 0xffd080, transparent: true, opacity: 0.7, depthWrite: false });
+      const lines = new THREE.LineSegments(geo, m);
+      lines.name = "intercalarySeamTicks";
+      lines.userData.type = "intercalary-seam";
+      _scene.add(lines);
+      _objects.dayOutOfTime = lines;
     }
 
     // ── Lunar orbit (tilted ring) ────────────────────────────────────
@@ -1383,7 +2464,10 @@
       _scene.add(haze);
       _objects.hazeShell = haze;
 
-      const stars = globalThis.LivingTimeSphereEffects.buildStarField(THREE, _quality?.starCount ?? 150);
+      const starBudget = _isMobileWidth()
+        ? Math.min(Number(_quality?.starCount ?? 150), 56)
+        : Number(_quality?.starCount ?? 150);
+      const stars = globalThis.LivingTimeSphereEffects.buildStarField(THREE, starBudget);
       _scene.add(stars);
       _objects.starField = stars;
     }
@@ -1471,6 +2555,485 @@
       return;
     }
   }
+
+  function _seasonNamesForLatitude(latitude) {
+    if (!Number.isFinite(latitude)) return ["Spring", "Summer", "Autumn", "Winter"];
+    if (Math.abs(latitude) < 10) return ["Solar Q1", "Solar Q2", "Solar Q3", "Solar Q4"];
+    return latitude >= 0
+      ? ["Spring", "Summer", "Autumn", "Winter"]
+      : ["Autumn", "Winter", "Spring", "Summer"];
+  }
+
+  function _seasonColorHex(label) {
+    if (/spring/i.test(label)) return 0x79d7a8;
+    if (/summer/i.test(label)) return 0xf0cd72;
+    if (/autumn|fall/i.test(label)) return 0xd69b62;
+    if (/winter/i.test(label)) return 0x8eb8d8;
+    return 0x81cbb8;
+  }
+
+  function _buildLocationSeasonRing() {
+    if (!_THREE || _objects.locationSeasonGroup) return;
+    const THREE = _THREE;
+    const group = new THREE.Group();
+    group.name = "location-season-ring";
+    group.visible = false;
+    const radius = 1.315;
+    const gap = 0.035;
+    const sweep = Math.PI / 2 - gap;
+    const arcs = [];
+    for (let quarter = 0; quarter < 4; quarter += 1) {
+      const mesh = new THREE.Mesh(
+        new THREE.TorusGeometry(radius, 0.008, 6, 42, sweep),
+        new THREE.MeshBasicMaterial({
+          color: 0x81cbb8,
+          transparent: true,
+          opacity: 0.14,
+          depthWrite: false,
+        })
+      );
+      mesh.rotation.x = Math.PI / 2;
+      mesh.rotation.z = quarter * Math.PI / 2 + gap / 2;
+      mesh.name = `location-season-quarter-${quarter + 1}`;
+      mesh.userData = { type: "location-season-quarter", quarter };
+      group.add(mesh);
+      arcs.push(mesh);
+    }
+    // B7.31 — four permanent seasonal gates. These are geometry-first
+    // equinox/solstice anchors, not floating labels, so they remain readable
+    // without competing with day or Moon text.
+    const gateLabels = ["March Equinox", "June Solstice", "September Equinox", "December Solstice"];
+    const gates = [];
+    gateLabels.forEach((label, quarter) => {
+      const gate = new THREE.Mesh(
+        new THREE.OctahedronGeometry(0.018, 0),
+        new THREE.MeshBasicMaterial({ color: 0xc8e8dc, transparent: true, opacity: 0.72, depthWrite: false })
+      );
+      const gatePos = angleToXZ(quarter * 90, radius);
+      gate.position.set(gatePos.x, 0.016, gatePos.z);
+      gate.rotation.y = Math.PI / 4;
+      gate.name = `location-season-gate-${quarter + 1}`;
+      gate.userData = { type: "season-gate", quarter, label };
+      group.add(gate);
+      gates.push(gate);
+    });
+
+    const marker = new THREE.Mesh(
+      new THREE.SphereGeometry(0.018, 8, 8),
+      new THREE.MeshBasicMaterial({ color: 0xf4dc8a, transparent: true, opacity: 0.82, depthWrite: false })
+    );
+    marker.name = "location-season-selected";
+    marker.position.y = 0.015;
+    group.add(marker);
+    _scene.add(group);
+    _objects.locationSeasonGroup = group;
+    _objects.locationSeasonArcs = arcs;
+    _objects.locationSeasonGates = gates;
+    _objects.locationSeasonSelected = marker;
+  }
+
+  function _updateLocationSeasonRing(selectedAngle = _selectedSeasonAngle) {
+    const snapshot = _normalizedEnvironmentState(_environmentState);
+    const latitude = Number(snapshot?.place?.latitude);
+    const hasLocation = Number.isFinite(latitude);
+
+    // B7.52 — no location means no seasonal geometry allocation. Previously
+    // the full ring was built during startup even when the UI explicitly said
+    // “Location required”.
+    if (!hasLocation) {
+      if (_objects.locationSeasonGroup) _objects.locationSeasonGroup.visible = false;
+      return;
+    }
+
+    _buildLocationSeasonRing();
+    const group = _objects.locationSeasonGroup;
+    if (!group) return;
+    group.visible = true;
+    const names = _seasonNamesForLatitude(latitude);
+    const angle = Number.isFinite(Number(selectedAngle)) ? ((Number(selectedAngle) % 360) + 360) % 360 : 0;
+    const activeQuarter = Math.floor(angle / 90) % 4;
+    (_objects.locationSeasonArcs || []).forEach((arc, quarter) => {
+      const name = names[quarter] || `Quarter ${quarter + 1}`;
+      arc.material.color.setHex(_seasonColorHex(name));
+      arc.material.opacity = quarter === activeQuarter ? 0.42 : 0.13;
+      arc.scale.setScalar(quarter === activeQuarter ? 1.008 : 1);
+      arc.userData = {
+        ...(arc.userData || {}),
+        label: name,
+        latitude,
+        hemisphere: Math.abs(latitude) < 10 ? "equatorial" : latitude > 0 ? "northern" : "southern",
+        active: quarter === activeQuarter,
+      };
+    });
+    const astronomicalGates = ["March Equinox", "June Solstice", "September Equinox", "December Solstice"];
+    (_objects.locationSeasonGates || []).forEach((gate, quarter) => {
+      gate.material.opacity = quarter === ((activeQuarter + 1) % 4) ? 0.95 : 0.5;
+      gate.scale.setScalar(quarter === ((activeQuarter + 1) % 4) ? 1.32 : 1);
+      gate.userData = {
+        ...(gate.userData || {}),
+        type: "season-gate",
+        label: astronomicalGates[quarter],
+        seasonAfterGate: names[quarter],
+        latitude,
+        next: quarter === ((activeQuarter + 1) % 4),
+      };
+    });
+    if (_objects.locationSeasonSelected) {
+      const pos = angleToXZ(angle, 1.315);
+      _objects.locationSeasonSelected.position.set(pos.x, 0.018, pos.z);
+      _objects.locationSeasonSelected.userData = {
+        type: "location-season-selected",
+        season: names[activeQuarter],
+        latitude,
+        angle,
+      };
+    }
+  }
+
+  // B7.27 — instrument context rails. These are geometry-first overlays:
+  // they never create floating labels and therefore cannot compete with the
+  // 13×28 calendar text surface.
+  function _patternDateForDay(year, patternDay) {
+    try {
+      const epoch = globalThis.PatternCalendar?.epochForYear?.(Number(year));
+      if (epoch instanceof Date && !Number.isNaN(epoch.getTime())) {
+        return new Date(epoch.getTime() + (Math.max(1, Math.min(364, Number(patternDay) || 1)) - 1) * 86400000);
+      }
+    } catch (_) {}
+    const d = new Date(Date.UTC(Number(year) || new Date().getUTCFullYear(), 3, 17));
+    d.setUTCDate(d.getUTCDate() + Math.max(0, (Number(patternDay) || 1) - 1));
+    return d;
+  }
+
+  function _daylightHours(latitude, date) {
+    const lat = Number(latitude);
+    if (!Number.isFinite(lat) || !(date instanceof Date)) return null;
+    const start = Date.UTC(date.getUTCFullYear(), 0, 0);
+    const doy = Math.floor((Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()) - start) / 86400000);
+    const phi = lat * Math.PI / 180;
+    const decl = (23.44 * Math.PI / 180) * Math.sin((2 * Math.PI / 365) * (doy - 80));
+    const x = -Math.tan(phi) * Math.tan(decl);
+    if (x <= -1) return 24;
+    if (x >= 1) return 0;
+    return (24 / Math.PI) * Math.acos(x);
+  }
+
+  function _buildTodayCompass() {
+    if (!_THREE || !_scene || _objects.todayCompassGroup) return;
+    const THREE = _THREE;
+    const group = new THREE.Group();
+    group.name = "today-compass";
+    const material = new THREE.LineBasicMaterial({ color: 0xf0d46d, transparent: true, opacity: 0.64, depthWrite: false });
+    const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
+    const line = new THREE.Line(geo, material);
+    line.name = "today-compass-ray";
+    group.add(line);
+    const cap = new THREE.Mesh(
+      new THREE.SphereGeometry(0.017, 8, 8),
+      new THREE.MeshBasicMaterial({ color: 0xf5dd7f, transparent: true, opacity: 0.9, depthWrite: false })
+    );
+    cap.name = "today-compass-cap";
+    group.add(cap);
+    _scene.add(group);
+    _objects.todayCompassGroup = group;
+    _objects.todayCompassLine = line;
+    _objects.todayCompassCap = cap;
+  }
+
+  function _updateTodayCompass() {
+    _buildTodayCompass();
+    const day = Number(_model?.todayPatternPosition?.dayOfPatternYear);
+    if (!_objects.todayCompassGroup || !Number.isFinite(day)) return;
+    const ring = globalThis.LivingTimeSphereM?.SIZES?.patternRing || 1;
+    const angle = globalThis.LivingTimeSphereModel?.patternAngleForDayOfYear?.(day) ?? ((day - 1) / 364) * 360;
+    const a = angleToXZ(angle, ring * 0.18);
+    const b = angleToXZ(angle, ring * 1.72);
+    const attr = _objects.todayCompassLine.geometry.getAttribute("position");
+    attr.setXYZ(0, a.x, 0.012, a.z);
+    attr.setXYZ(1, b.x, 0.012, b.z);
+    attr.needsUpdate = true;
+    _objects.todayCompassCap.position.set(b.x, 0.015, b.z);
+    _objects.todayCompassGroup.visible = !!_visibleLayers?.pattern;
+  }
+
+  function _buildScheduleDensityRail() {
+    if (!_THREE || !_scene) return;
+    const summaryFn = globalThis.LifeAtlasRecordSphereExtension?.plannerDaySummary;
+    if (typeof summaryFn !== "function") return;
+    const THREE = _THREE;
+    const year = Number(_selectedYear || _model?.year || new Date().getFullYear());
+    const now = Date.now();
+    const nextKey = String(year);
+    if (_objects.scheduleDensityRail && _scheduleDensityKey === nextKey && now - _scheduleDensityBuiltAt < 1600) return;
+    if (_objects.scheduleDensityRail) {
+      _objects.scheduleDensityRail.geometry?.dispose?.();
+      _scene.remove(_objects.scheduleDensityRail);
+      _objects.scheduleDensityRail = null;
+    }
+    _scheduleDensityKey = nextKey;
+    _scheduleDensityBuiltAt = now;
+    const ring = globalThis.LivingTimeSphereM?.SIZES?.patternRing || 1;
+    const calendar = globalThis.LivingTimeSphereCalendarGeometry;
+    const pts = [];
+    let occupied = 0;
+    for (let day = 1; day <= 364; day += 1) {
+      const count = Math.max(0, Number(summaryFn(year, day)?.count) || 0);
+      if (!count) continue;
+      occupied += 1;
+      const cell = calendar?.calendarCell?.(day);
+      const angle = Number(cell?.angle ?? globalThis.LivingTimeSphereModel?.patternAngleForDayOfYear?.(day));
+      if (!Number.isFinite(angle)) continue;
+      // B7.34: occupancy is drawn immediately beside the readable day cell,
+      // not on one detached annual ring. This makes the activity mark read as
+      // part of that exact day across all four week lanes.
+      const radialFactor = Number(cell?.radialFactor || 1.32);
+      const endR = ring * (radialFactor - 0.050);
+      const baseR = endR - ring * Math.min(0.052, 0.015 + Math.log2(count + 1) * 0.010);
+      const a = angleToXZ(angle, baseR);
+      const b = angleToXZ(angle, endR);
+      pts.push(new THREE.Vector3(a.x, 0.008, a.z), new THREE.Vector3(b.x, 0.008, b.z));
+    }
+    if (!pts.length) return;
+    const rail = new THREE.LineSegments(
+      new THREE.BufferGeometry().setFromPoints(pts),
+      new THREE.LineBasicMaterial({ color: 0xe7c56b, transparent: true, opacity: 0.72, depthWrite: false })
+    );
+    rail.name = "schedule-density-rail";
+    rail.userData = { type: "schedule-density-rail", year, occupiedDays: occupied };
+    _scene.add(rail);
+    _objects.scheduleDensityRail = rail;
+  }
+
+  function _buildDaylightCurve() {
+    if (!_THREE || !_scene) return;
+    const snapshot = _normalizedEnvironmentState(_environmentState);
+    const latitude = Number(snapshot?.place?.latitude);
+    if (!Number.isFinite(latitude)) return;
+    const THREE = _THREE;
+    const year = Number(_selectedYear || _model?.year || new Date().getFullYear());
+    const nextKey = `${year}:${latitude.toFixed(4)}`;
+    if (_objects.daylightCurve && _daylightCurveKey === nextKey) return;
+    if (_objects.daylightCurve) {
+      _objects.daylightCurve.geometry?.dispose?.();
+      _scene.remove(_objects.daylightCurve);
+      _objects.daylightCurve = null;
+    }
+    _daylightCurveKey = nextKey;
+    const ring = globalThis.LivingTimeSphereM?.SIZES?.patternRing || 1;
+    const pts = [];
+    const samples = 104;
+    for (let i = 0; i <= samples; i += 1) {
+      const day = Math.max(1, Math.min(364, Math.round(1 + (i / samples) * 363)));
+      const date = _patternDateForDay(year, day);
+      const hours = _daylightHours(latitude, date);
+      const angle = globalThis.LivingTimeSphereModel?.patternAngleForDayOfYear?.(day) ?? ((day - 1) / 364) * 360;
+      const radius = ring * (1.745 + ((Number(hours) || 12) - 12) * 0.0085);
+      const p = angleToXZ(angle, radius);
+      pts.push(new THREE.Vector3(p.x, 0.006, p.z));
+    }
+    const curve = new THREE.Line(
+      new THREE.BufferGeometry().setFromPoints(pts),
+      new THREE.LineBasicMaterial({ color: 0x8fcad0, transparent: true, opacity: 0.38, depthWrite: false })
+    );
+    curve.name = "location-daylight-annual-curve";
+    curve.userData = { type: "daylight-annual-curve", latitude, year, approximation: true };
+    _scene.add(curve);
+    _objects.daylightCurve = curve;
+  }
+
+  const PLANETARY_RAIL_FACTOR = 1.66;
+
+  function _makePlanetGlyphSprite(planet) {
+    if (!_THREE || typeof document === "undefined") return null;
+    const canvas = document.createElement("canvas");
+    canvas.width = 96;
+    canvas.height = 96;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return null;
+    ctx.clearRect(0, 0, 96, 96);
+    ctx.beginPath();
+    ctx.arc(48, 48, 38, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(5, 15, 28, 0.88)";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(200, 222, 255, 0.92)";
+    ctx.lineWidth = 4;
+    ctx.stroke();
+    ctx.fillStyle = "rgba(242, 248, 255, 0.98)";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = "600 50px serif";
+    ctx.fillText(String(planet?.glyph || "•"), 48, 49);
+    const texture = new _THREE.CanvasTexture(canvas);
+    texture.minFilter = _THREE.LinearFilter;
+    texture.magFilter = _THREE.LinearFilter;
+    const sprite = new _THREE.Sprite(new _THREE.SpriteMaterial({
+      map: texture,
+      transparent: true,
+      depthWrite: false,
+      depthTest: false,
+      opacity: 0.96,
+    }));
+    sprite.scale.set(0.078, 0.078, 0.078);
+    sprite.position.set(0, 0.060, 0);
+    sprite.renderOrder = 40;
+    sprite.userData = { type: "planet-glyph", planetId: planet?.id, texture };
+    return sprite;
+  }
+
+  function _buildPlanetaryRail() {
+    if (!_THREE || !_scene || _objects.planetaryGroup) return;
+    const THREE = _THREE;
+    const group = new THREE.Group();
+    group.name = "planetary-ecliptic-layer";
+
+    const ring = globalThis.LivingTimeSphereM?.SIZES?.patternRing || 1;
+    const radius = ring * PLANETARY_RAIL_FACTOR;
+    const rail = new THREE.Mesh(
+      new THREE.TorusGeometry(radius, 0.0065, 6, 220),
+      new THREE.MeshBasicMaterial({ color: 0xaec7ea, transparent: true, opacity: 0.30, depthWrite: false })
+    );
+    rail.rotation.x = Math.PI / 2;
+    rail.name = "planetary-ecliptic-rail";
+    rail.userData = { type: "planetary-ecliptic-rail", approximate: true };
+    group.add(rail);
+
+    const markerDefs = globalThis.LivingTimePlanetaryPositions?.planets || [];
+    const markers = [];
+    markerDefs.forEach((planet, index) => {
+      const marker = new THREE.Mesh(
+        new THREE.SphereGeometry(Math.min(Math.max(Number(planet.size) || 0.016, 0.017), 0.022), 9, 9),
+        new THREE.MeshStandardMaterial({
+          color: 0xe2ecff,
+          emissive: 0x9bbcff,
+          emissiveIntensity: 0.88,
+          roughness: 0.28,
+          metalness: 0.12,
+          transparent: true,
+          opacity: 0.98,
+          depthWrite: false,
+        })
+      );
+      marker.name = `planet-${planet.id}`;
+      marker.userData = { type: "planet", planetId: planet.id, name: planet.name, glyph: planet.glyph, index };
+
+      // A quiet always-visible symbol distinguishes the seven planets without
+      // requiring seven full text cards. Text remains proximity-driven.
+      const glyph = _makePlanetGlyphSprite(planet);
+      if (glyph) marker.add(glyph);
+
+      const halo = new THREE.Mesh(
+        new THREE.TorusGeometry(0.030, 0.0020, 4, 18),
+        new THREE.MeshBasicMaterial({ color: 0xb9d4ff, transparent: true, opacity: 0.56, depthWrite: false })
+      );
+      halo.rotation.x = Math.PI / 2;
+      halo.userData = { type: "planet-halo", planetId: planet.id };
+      marker.add(halo);
+
+      group.add(marker);
+      markers.push(marker);
+    });
+
+    _scene.add(group);
+    _objects.planetaryGroup = group;
+    _objects.planetaryRail = rail;
+    _objects.planetMarkers = markers;
+  }
+
+  function _updatePlanetaryRail() {
+    const enabled = _visibleLayers?.planets !== false;
+    if (!enabled) {
+      if (_objects.planetaryGroup) _objects.planetaryGroup.visible = false;
+      return;
+    }
+    _buildPlanetaryRail();
+    const group = _objects.planetaryGroup;
+    if (!group) return;
+    group.visible = true;
+
+    const selected = _model?.selectedPatternPosition || _model?.todayPatternPosition || null;
+    const year = Number(_selectedYear || _model?.year || new Date().getUTCFullYear());
+    const day = Number(selected?.dayOfPatternYear || 1);
+    const date = _patternDateForDay(year, day);
+    const key = `${date.toISOString().slice(0, 10)}:${globalThis.__EPHEMERIS__ ? "override" : "approx"}`;
+    if (_planetaryKey === key) return;
+    _planetaryKey = key;
+
+    const placements = globalThis.LivingTimePlanetaryPositions?.calculate?.(date) || [];
+    const byId = new Map(placements.map(item => [item.id, item]));
+    const ring = globalThis.LivingTimeSphereM?.SIZES?.patternRing || 1;
+    const radius = ring * PLANETARY_RAIL_FACTOR;
+    (_objects.planetMarkers || []).forEach((marker, index) => {
+      const placement = byId.get(marker.userData?.planetId);
+      marker.visible = !!placement;
+      if (!placement) return;
+      const p = angleToXZ(Number(placement.longitude) || 0, radius);
+      const latitude = Math.max(-12, Math.min(12, Number(placement.latitude) || 0));
+      // Ecliptic latitude is expressed as a small vertical displacement while
+      // longitude remains exact on the shared outer rail.
+      marker.position.set(p.x, Math.sin(latitude * Math.PI / 180) * ring * 0.22 + 0.012, p.z);
+      marker.userData = {
+        ...marker.userData,
+        longitude: placement.longitude,
+        latitude: placement.latitude,
+        distanceAu: placement.distance,
+        source: placement.source,
+        date: placement.date,
+        approximate: placement.source !== "ephemeris-override",
+      };
+    });
+  }
+
+
+  // B7.42 — staged instrument boot.
+  // Calendar/Today geometry wins the first-paint race. Dense contextual
+  // rails hydrate once the browser has breathing room.
+  let _contextRailsReady = false;
+  let _contextRailsScheduled = false;
+
+  function _hydrateDeferredContextRails() {
+    if (_contextRailsReady || _contextRailsScheduled) return;
+
+    _contextRailsScheduled = true;
+
+    const hydrate = () => {
+      _contextRailsScheduled = false;
+
+      if (!_scene || !_initialized) {
+        return;
+      }
+
+      _contextRailsReady = true;
+
+      _buildScheduleDensityRail();
+      _buildDaylightCurve();
+      _updatePlanetaryRail();
+
+      globalThis.LivingTimeSphereAnimation?.markDirty?.();
+    };
+
+    if (typeof globalThis.requestIdleCallback === "function") {
+      globalThis.requestIdleCallback(
+        hydrate,
+        { timeout: 420 }
+      );
+    } else {
+      setTimeout(hydrate, 140);
+    }
+  }
+
+  function _updateInstrumentContextRails() {
+    _updateTodayCompass();
+
+    if (!_contextRailsReady) {
+      _hydrateDeferredContextRails();
+      return;
+    }
+
+    _buildScheduleDensityRail();
+    _buildDaylightCurve();
+    _updatePlanetaryRail();
+  }
+
 
   function _buildEnvironmentLayerObjects() {
     if (!_THREE || _objects.environmentGroup) return;
@@ -1573,15 +3136,23 @@
   }
 
   function _applyEnvironmentState() {
-    _buildEnvironmentLayerObjects();
-    if (!_objects.environmentGroup) return;
     const snapshot = _normalizedEnvironmentState(_environmentState);
     const current = snapshot?.current || null;
     const hourly = snapshot?.hourly || [];
     const daily = snapshot?.daily || {};
     const hasData = !!(_environmentLayerVisible && snapshot && current);
-    _objects.environmentGroup.visible = hasData;
-    if (!hasData) return;
+
+    // B7.52 — environment is truly demand-built. The old path allocated a
+    // 44×44 shell, three 96-segment cloud tori, wind vectors and multiple
+    // additional meshes even when no weather/location data existed.
+    if (!hasData) {
+      if (_objects.environmentGroup) _objects.environmentGroup.visible = false;
+      return;
+    }
+
+    _buildEnvironmentLayerObjects();
+    if (!_objects.environmentGroup) return;
+    _objects.environmentGroup.visible = true;
 
     const cloud = _clamp(_num(current.cloudCover ?? current.cloud_cover, 0), 0, 100);
     const humidity = _clamp(_num(current.humidity ?? current.relative_humidity_2m, 0), 0, 100);
@@ -1654,10 +3225,12 @@
       _environmentState = _normalizedEnvironmentState(environmentState || EMPTY_ENVIRONMENT_STATE);
       _environmentDiagnostics = [];
       _applyEnvironmentState();
+      _updateLocationSeasonRing(_selectedSeasonAngle);
     },
     update(environmentState) {
       _environmentState = _normalizedEnvironmentState(environmentState || EMPTY_ENVIRONMENT_STATE);
       _applyEnvironmentState();
+      _updateLocationSeasonRing(_selectedSeasonAngle);
     },
     setLayerVisibility(layerName, visible) {
       if (layerName === "environment") {
@@ -1828,9 +3401,17 @@
     const band = semanticState?.band || "medium";
     const semanticVisibility = semanticState?.visibility || {};
     if (_objects.dayNodes) _objects.dayNodes.visible = !!vl.pattern && vl.exactDays !== false && semanticVisibility.exactDays !== false;
+    if (_objects.dayTicks) {
+      _objects.dayTicks.visible = !!vl.pattern && vl.exactDays !== false;
+      if (_objects.dayTicks.material) {
+        _objects.dayTicks.material.opacity = band === "far" ? 0.30 : band === "medium" ? 0.52 : band === "near" ? 0.68 : 0.82;
+      }
+    }
     if (_objects.shabbatNodes) _objects.shabbatNodes.visible = !!vl.pattern && band !== "far";
     if (_objects.weekGates) _objects.weekGates.visible = !!vl.pattern && vl.weekGates !== false && semanticVisibility.weekGates !== false;
     if (_objects.weekDividers) _objects.weekDividers.visible = !!vl.pattern && vl.weekGates !== false && semanticVisibility.weekGates !== false;
+    if (_objects.calendarWeekArcs) _objects.calendarWeekArcs.visible = !!vl.pattern;
+    if (_objects.yearGateIntercalaryBridge) _objects.yearGateIntercalaryBridge.visible = !!vl.pattern;
     if (_objects.dayNodes?.material && semanticState?.dayNodeOpacity != null) {
       _objects.dayNodes.material.opacity = semanticState.dayNodeOpacity;
     }
@@ -2162,11 +3743,16 @@
     if (!_objects || !vl) return;
     if (_objects.patternRing)  _objects.patternRing.visible  = !!vl.pattern;
     if (_objects.moonDividers) _objects.moonDividers.visible = !!vl.pattern;
+    if (_objects.moonSectorRails) _objects.moonSectorRails.visible = !!vl.pattern;
+    if (_objects.moonIdentityMarkers) _objects.moonIdentityMarkers.visible = !!vl.pattern;
+    if (_objects.moonIdentityDetails) _objects.moonIdentityDetails.visible = !!vl.pattern;
+    if (_objects.moonIdentityNumbers) _objects.moonIdentityNumbers.visible = !!vl.pattern;
     _applySemanticVisibility(vl, semanticState || { band: "medium", visibility: {} });
     if (_objects.yearGate)     _objects.yearGate.visible     = !!vl.pattern;
     if (_objects.todayLineGroup) _objects.todayLineGroup.visible = true;
     if (_objects.lunarOrbit)   _objects.lunarOrbit.visible   = !!vl.lunar;
     if (_objects.lunarMarker)  _objects.lunarMarker.visible  = !!vl.lunar;
+    if (_objects.planetaryGroup) _objects.planetaryGroup.visible = vl.planets !== false;
     if (_objects.solarAxis)    _objects.solarAxis.visible    = !!vl.solar;
     if (_objects.seasonMarkers)_objects.seasonMarkers.visible = !!vl.solar;
     if (_objects.solarProgressGroup) _objects.solarProgressGroup.visible = !!vl.solar;
@@ -2383,6 +3969,9 @@
 
     const todaySolarAngle = Number(model.currentSolarSeasonAngle ?? model.solarSeasonAngle ?? 0);
     const selectedSolarAngle = Number(selected?.solar?.angle ?? todaySolarAngle);
+    _selectedSeasonAngle = Number.isFinite(selectedSolarAngle) ? selectedSolarAngle : 0;
+    _updateLocationSeasonRing(_selectedSeasonAngle);
+    _updateInstrumentContextRails();
     if (_objects.solarTodayMarker && Number.isFinite(todaySolarAngle)) {
       const p = _positionOnSolarAxis(todaySolarAngle, mat.SIZES.solarAxis);
       _objects.solarTodayMarker.position.set(p.x, p.y, p.z);
@@ -2410,19 +3999,28 @@
     }
     if (_objects.solarProgressGroup) {
       const layerStart = performance.now();
-      _disposeGroupChildren(_objects.solarProgressGroup);
-      const arc = buildSolarProgressArc(todaySolarAngle, selectedSolarAngle);
-      if (arc) {
-        arc.name = "solarProgressArc";
-        arc.computeLineDistances?.();
-        arc.visible = !!vl.solar && band !== "far";
-        _objects.solarProgressGroup.add(arc);
+      const solarProgressKey = `${Number(todaySolarAngle).toFixed(3)}:${Number(selectedSolarAngle).toFixed(3)}`;
+      if (_lastSolarProgressGeometryKey !== solarProgressKey) {
+        _disposeGroupChildren(_objects.solarProgressGroup);
+        const arc = buildSolarProgressArc(todaySolarAngle, selectedSolarAngle);
+        if (arc) {
+          arc.name = "solarProgressArc";
+          arc.computeLineDistances?.();
+          _objects.solarProgressGroup.add(arc);
+        }
+        _lastSolarProgressGeometryKey = solarProgressKey;
       }
+      _objects.solarProgressGroup.children.forEach(child => {
+        child.visible = !!vl.solar && band !== "far";
+      });
       _markLayerBuild("solar", performance.now() - layerStart);
     }
 
-    // ── 13-year spiral markers ──────────────────────────────────────
-    if (_objects.spiralGroup && spiral?.years) {
+    // ── Historical spiral markers ──────────────────────────────────
+    // B7.52 — historical geometry is not part of the first interactive paint.
+    // It joins on the deferred visual-hydration slice unless Years mode was
+    // explicitly requested.
+    if (_objects.spiralGroup && spiral?.years && (_progressiveVisualsReady || _viewMode === "years")) {
       const layerStart = performance.now();
       const spiralSig = _spiralGeometrySignature(spiral);
       if (_lastSpiralGeometryKey !== spiralSig) {
@@ -2469,8 +4067,9 @@
     // ── Recurrence links ────────────────────────────────────────────
     if (_objects.recurrenceGroup) {
       const layerStart = performance.now();
-      _objects.recurrenceGroup.visible = !!(vl.recurrence && !_isMobileWidth());
-      if (vl.recurrence && !_isMobileWidth()) {
+      const recurrenceReady = _progressiveVisualsReady || _viewMode === "years";
+      _objects.recurrenceGroup.visible = !!(recurrenceReady && vl.recurrence && !_isMobileWidth());
+      if (recurrenceReady && vl.recurrence && !_isMobileWidth()) {
         _buildRecurrenceLinks(spiral);
       }
       _markLayerBuild("recurrence", performance.now() - layerStart);
@@ -2495,23 +4094,26 @@
       }
 
       if (_objects.todayLineGroup) {
-        _disposeGroupChildren(_objects.todayLineGroup);
-
-        if (showToday) {
-          const pts = [new _THREE.Vector3(0, 0, 0), new _THREE.Vector3(x, 0.005, z)];
-          const geo = new _THREE.BufferGeometry().setFromPoints(pts);
-          const lineMat = new _THREE.LineDashedMaterial({
-            color:       mat.COLORS.todayLine,
-            transparent: true,
-            opacity:     mat.OPACITY.todayLine,
-            dashSize:    0.04,
-            gapSize:     0.025,
-            depthWrite:  false,
-          });
-          const line = new _THREE.Line(geo, lineMat);
-          line.computeLineDistances();
-          line.name = "todayCenterLine";
-          _objects.todayLineGroup.add(line);
+        const todayLineKey = showToday ? `${Number(x).toFixed(4)}:${Number(z).toFixed(4)}` : "hidden";
+        if (_lastTodayLineGeometryKey !== todayLineKey) {
+          _disposeGroupChildren(_objects.todayLineGroup);
+          if (showToday) {
+            const pts = [new _THREE.Vector3(0, 0, 0), new _THREE.Vector3(x, 0.005, z)];
+            const geo = new _THREE.BufferGeometry().setFromPoints(pts);
+            const lineMat = new _THREE.LineDashedMaterial({
+              color:       mat.COLORS.todayLine,
+              transparent: true,
+              opacity:     mat.OPACITY.todayLine,
+              dashSize:    0.04,
+              gapSize:     0.025,
+              depthWrite:  false,
+            });
+            const line = new _THREE.Line(geo, lineMat);
+            line.computeLineDistances();
+            line.name = "todayCenterLine";
+            _objects.todayLineGroup.add(line);
+          }
+          _lastTodayLineGeometryKey = todayLineKey;
         }
       }
     }
@@ -2583,16 +4185,20 @@
     // ── Active Moon sector highlight ────────────────────────────────
     if (_objects.activeMoonGroup) {
       const layerStart = performance.now();
-      _disposeGroupChildren(_objects.activeMoonGroup);
       const tp = model.selectedPatternPosition || model.todayPatternPosition;
       const activeMoon = tp ? (tp.moon || 1) - 1 : (model.sourceRecord?.equinox?.patternPosition?.moon || 1) - 1;
       const r = mat.SIZES.patternRing;
-      const sectorStart = (activeMoon / 13) * 360;
-      const sectorEnd   = ((activeMoon + 1) / 13) * 360;
-      const steps = 32;
-      const innerR = r * 0.82;
-      const outerR = r * 0.98;
-      const shape = new _THREE.Shape();
+      const activeCalendarBand = String(_semanticZoomState?.band || "medium").toLowerCase();
+      const activeMoonGeometryKey = `${activeMoon}:${activeCalendarBand}:${_viewMode}`;
+
+      if (_lastActiveMoonGeometryKey !== activeMoonGeometryKey) {
+        _disposeGroupChildren(_objects.activeMoonGroup);
+        const sectorStart = (activeMoon / 13) * 360;
+        const sectorEnd   = ((activeMoon + 1) / 13) * 360;
+        const steps = 32;
+        const innerR = r * ((activeCalendarBand === "near" || activeCalendarBand === "detail") ? 0.64 : 0.82);
+        const outerR = r * 0.98;
+        const shape = new _THREE.Shape();
       for (let i = 0; i <= steps; i++) {
         const a = sectorStart + (i / steps) * (sectorEnd - sectorStart);
         const { x, z } = angleToXZ(a, outerR);
@@ -2617,6 +4223,7 @@
       const sector = new _THREE.Mesh(geo, sectorMat);
       sector.name = "activeMoonSector";
       _objects.activeMoonGroup.add(sector);
+      _decorateActiveMoonCalendarGrid(_objects.activeMoonGroup, activeMoon, r, mat);
 
       const linePts = [];
       for (let i = 0; i <= steps; i++) {
@@ -2631,8 +4238,10 @@
         opacity: _viewMode === "today" ? 0.95 : 0.72,
         depthWrite: false,
       }));
-      boundary.name = "activeMoonBoundary";
-      _objects.activeMoonGroup.add(boundary);
+        boundary.name = "activeMoonBoundary";
+        _objects.activeMoonGroup.add(boundary);
+        _lastActiveMoonGeometryKey = activeMoonGeometryKey;
+      }
       _markLayerBuild("pattern", performance.now() - layerStart);
     }
 
@@ -2662,7 +4271,7 @@
     }
 
     _syncSemanticZoomFromCamera(true);
-    if (!_connectionDiagnostics.length && _connectionRegistry.length) {
+    if (_progressiveVisualsReady && !_connectionDiagnostics.length && _connectionRegistry.length) {
       const layerStart = performance.now();
       _buildConnections();
       _markLayerBuild("connections", performance.now() - layerStart);
@@ -2745,7 +4354,7 @@
 
     // Update sphere-anchored Moon labels
     _syncSemanticZoomFromCamera(false);
-    _updateMoonLabels(_viewMode);
+    _updateMoonLabels(_viewMode, nowMs);
 
     globalThis.LivingTimeSphereExtensionHost?.renderAll?.(
       _extensionContext({
@@ -2861,6 +4470,7 @@
     stats.selectedGroupChildren = selectedEntries.reduce((sum, entry) => sum + _countObjectPresence(entry), 0);
     stats.lunarGroupChildren = [_objects.lunarOrbit, _objects.lunarMarker, _objects.lunarSelectedMarker].reduce((sum, entry) => sum + _countObjectPresence(entry), 0);
     stats.solarGroupChildren = [_objects.solarAxis, _objects.seasonMarkers, _objects.solarProgressGroup, _objects.solarTodayMarker, _objects.solarSelectedMarker].reduce((sum, entry) => sum + _countObjectPresence(entry), 0);
+    stats.planetaryGroupChildren = [_objects.planetaryGroup, ...(_objects.planetMarkers || [])].reduce((sum, entry) => sum + _countObjectPresence(entry), 0);
     stats.passageGroupChildren = [_objects.passageGroup, _objects.equinoxGate].reduce((sum, entry) => sum + _countObjectPresence(entry), 0);
     stats.markerGroupChildren = [_objects.todayMarker, _objects.selectedDayMarker, _objects.activeDayNode, _objects.activeMoonGroup].reduce((sum, entry) => sum + _countObjectPresence(entry), 0);
     stats.connectionGroupChildren = _countObjectPresence(_objects.connectionGroup);
@@ -2924,6 +4534,96 @@
     return _lastSceneReadiness;
   }
 
+  // B7.52 — stage historical/connection geometry after first paint. This keeps
+  // the initial WebGL compile/build set small while preserving every layer once
+  // the browser reaches an idle slice.
+  function _scheduleDeferredVisualHydration() {
+    if (_progressiveVisualsReady || _progressiveVisualsScheduled) return;
+    _progressiveVisualsScheduled = true;
+    const epoch = _initEpoch;
+
+    const hydrate = () => {
+      _progressiveVisualsScheduled = false;
+      _progressiveVisualsHandle = null;
+      if (!_initialized || epoch !== _initEpoch || !_scene) return;
+      // Never land a historical geometry build in the middle of a finger drag.
+      if (_cameraGestureActive) {
+        setTimeout(() => _scheduleDeferredVisualHydration(), 180);
+        return;
+      }
+
+      _progressiveVisualsReady = true;
+      _lastSpiralGeometryKey = "";
+      _connectionDiagnostics = [];
+      try {
+        updateScene(
+          _model, _spiral, _selectedYear, _visibleLayers, _viewMode,
+          _moonLabelMode, _moonLabelDistance, _dayLabelMode,
+          _connectionRegistry, _motionMode, _semanticZoomState
+        );
+        render(performance.now());
+        _pushInitTimeline("progressive-visuals-ready");
+      } catch (error) {
+        console.warn("[LivingTimeSphere] Progressive visual hydration failed.", error);
+      }
+      globalThis.LivingTimeSphereAnimation?.markDirty?.();
+    };
+
+    if (typeof globalThis.requestIdleCallback === "function") {
+      _progressiveVisualsHandle = globalThis.requestIdleCallback(hydrate, { timeout: 700 });
+    } else {
+      _progressiveVisualsHandle = setTimeout(hydrate, 180);
+    }
+  }
+
+  // B7.50 — progressive extension hydration. Life Atlas, historical strata and
+  // other extension work may involve IndexedDB and geometry construction. None
+  // of that is required to draw the core calendar, so it must never block the
+  // first interactive frame.
+  function _scheduleDeferredExtensionHydration() {
+    if (_extensionsHydrated || _extensionsHydrationScheduled) return;
+    const host = globalThis.LivingTimeSphereExtensionHost;
+    if (!host?.mountAll) {
+      _extensionsHydrated = true;
+      return;
+    }
+    _extensionsHydrationScheduled = true;
+    const epoch = _initEpoch;
+    const hydrate = async () => {
+      _extensionsHydrationScheduled = false;
+      _extensionsHydrationHandle = null;
+      if (!_initialized || epoch !== _initEpoch || !_scene) return;
+      // Let the core + deferred visual field settle first, and never start an
+      // IndexedDB/extension mount while the user is actively rotating.
+      if (_cameraGestureActive || !_progressiveVisualsReady) {
+        setTimeout(() => _scheduleDeferredExtensionHydration(), 220);
+        return;
+      }
+      try {
+        await host.mountAll(_extensionContext({ lifecycle: "deferred-mount" }));
+        if (!_initialized || epoch !== _initEpoch) return;
+        if (host.updateAll) {
+          await host.updateAll(_extensionContext({ lifecycle: "deferred-initial-sync" }));
+        }
+        if (!_initialized || epoch !== _initEpoch) return;
+        _extensionsHydrated = true;
+        _pushInitTimeline("extensions-deferred-ready");
+        render(performance.now());
+        globalThis.LivingTimeSphereAnimation?.markDirty?.();
+      } catch (error) {
+        console.warn("[LivingTimeSphere] Deferred extension hydration failed.", error);
+      }
+    };
+    if (typeof globalThis.requestIdleCallback === "function") {
+      _extensionsHydrationHandle = globalThis.requestIdleCallback(
+        () => { void hydrate(); },
+        { timeout: _isTouchOptimizedSurface() ? 1400 : 650 }
+      );
+    } else {
+      _extensionsHydrationHandle = setTimeout(() => { void hydrate(); }, 64);
+    }
+  }
+
   // ── Init / teardown ────────────────────────────────────────────────
 
   async function init({ container, model, spiral, quality, tier, generation, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, semanticZoomState, environmentState, reducedMotion, onYearSelect, onMarkerSelect, onContextLost: _onContextLostCb, onContextRestored: _onContextRestoredCb }) {
@@ -2961,6 +4661,16 @@
     _restoreAttempts = 0;
     _firstFrameTimestamp = 0;
     _firstFramePixelProbe = null;
+    _progressiveVisualsReady = false;
+    _progressiveVisualsScheduled = false;
+    if (_progressiveVisualsHandle != null) {
+      try { globalThis.cancelIdleCallback?.(_progressiveVisualsHandle); } catch {}
+      try { clearTimeout(_progressiveVisualsHandle); } catch {}
+      _progressiveVisualsHandle = null;
+    }
+    _lastSolarProgressGeometryKey = "";
+    _lastTodayLineGeometryKey = "";
+    _lastActiveMoonGeometryKey = "";
     _contextLostAt = 0;
     _contextRestoredAt = 0;
     _contextLossCount = 0;
@@ -3027,9 +4737,15 @@
       _ensureFloatingLabel(container);
       _pushInitTimeline("canvas-appended");
 
-      await new Promise(resolve => requestAnimationFrame(resolve));
-      if (initWasCancelled()) return cancelledResult();
-      const rect = container.getBoundingClientRect();
+      // B7.52 — do not burn a guaranteed frame merely to measure a container
+      // that is already laid out. Only yield when the first synchronous measure
+      // is genuinely zero-sized.
+      let rect = container.getBoundingClientRect();
+      if (!(Number(rect.width) > 0 && Number(rect.height) > 0)) {
+        await new Promise(resolve => requestAnimationFrame(resolve));
+        if (initWasCancelled()) return cancelledResult();
+        rect = container.getBoundingClientRect();
+      }
       const rawW = Number(rect.width || 0);
       const rawH = Number(rect.height || 0);
       _pushInitTimeline("container-first-measurable-size", { width: rawW, height: rawH });
@@ -3063,14 +4779,25 @@
             rawDpr
           )
         : rawDpr;
-      const pixelRatio = Math.min(tierCappedDpr, Number(quality.pixelRatioMax ?? tierCappedDpr), rawDpr);
+      // B7.50 — a 600px phone instrument at DPR 2 renders ~1.4M pixels per
+      // frame before post-processing. Cap settled mobile DPR as well as gesture
+      // DPR; 1.25 remains crisp at this physical size and cuts fragment work by
+      // more than half versus DPR 2.
+      const mobileFastPath = _isTouchOptimizedSurface();
+      const mobileSettledDprCap = mobileFastPath ? MOBILE_SETTLED_DPR_CAP : Infinity;
+      const pixelRatio = Math.min(tierCappedDpr, Number(quality.pixelRatioMax ?? tierCappedDpr), rawDpr, mobileSettledDprCap);
       try {
         _markStage("renderer", "running");
         _pushInitTimeline("three-webgl-renderer-create-requested");
-        const powerPreference = quality === globalThis.LivingTimeSphereM?.QUALITY_PRESETS?.lowpower ? "low-power" : "default";
+        const lowPowerRenderer = quality === globalThis.LivingTimeSphereM?.QUALITY_PRESETS?.lowpower;
+        const powerPreference = lowPowerRenderer ? "low-power" : "high-performance";
+        // MSAA is disproportionately expensive on dense phone canvases and the
+        // instrument already uses line/point geometry that remains readable at
+        // the adaptive DPR. Desktop keeps the authored quality preset.
+        const antialias = mobileFastPath ? false : quality.antialias !== false;
         _activeWebGlContext = _canvas.getContext("webgl2", {
           alpha: false,
-          antialias: quality.antialias !== false,
+          antialias,
           depth: true,
           stencil: false,
           powerPreference,
@@ -3085,7 +4812,7 @@
         _renderer = new THREE.WebGLRenderer({
           canvas:    _canvas,
           context:   _activeWebGlContext,
-          antialias: quality.antialias !== false,
+          antialias,
           alpha:     false,
           powerPreference,
         });
@@ -3148,11 +4875,13 @@
 
       // ── Camera ────────────────────────────────────────────────────
       _markStage("camera", "running");
+      _calendarDisclosureDirty = true;
       _camera = globalThis.LivingTimeSphereCamera.create(THREE, w, h);
       _countLifecycle("cameraCreateCount");
       _markStage("camera", "created");
       _pushInitTimeline("camera-aspect-updated", { aspect: Number(_camera?.aspect || 0) });
       globalThis.LivingTimeSphereCamera.onChangeCallback(() => {
+        _calendarDisclosureDirty = true;
         _syncSemanticZoomFromCamera(false);
         _moonLabelManager?.markDirty();
         globalThis.LivingTimeSphereAnimation.markDirty();
@@ -3170,32 +4899,8 @@
       _markStage("geometry", "created");
       _syncCameraFocus(model, spiral, selectedYear, false);
 
-      if (
-        globalThis.LivingTimeSphereExtensionHost?.mountAll
-      ) {
-        await globalThis.LivingTimeSphereExtensionHost.mountAll(
-          _extensionContext({
-            lifecycle: "mount"
-          })
-        );
-
-        if (initWasCancelled()) {
-          return cancelledResult();
-        }
-
-        // Initial-scene contract: optional geometry must be synchronized before
-        // playback, dragging, or any other user interaction is required.
-        if (globalThis.LivingTimeSphereExtensionHost?.updateAll) {
-          await globalThis.LivingTimeSphereExtensionHost.updateAll(
-            _extensionContext({
-              lifecycle: "initial-sync"
-            })
-          );
-        }
-        _pushInitTimeline("extensions-initial-sync");
-        render(performance.now());
-        _pushInitTimeline("extensions-initial-render");
-      }
+      // B7.50: extension hydration no longer blocks first paint. The scheduler is
+      // armed only after the core scene has passed readiness and become interactive.
 
       // ── Animation ─────────────────────────────────────────────────
       globalThis.LivingTimeSphereAnimation.applyPreset(quality);
@@ -3253,6 +4958,12 @@
         _firstFrameTimestamp = Date.now();
         _recordCanvasConnection("after-first-frame");
         _pushInitTimeline("first-frame-completed");
+        // B7.51 — non-critical UI/import tooling begins only after the core
+        // WebGL calendar is already visible and interactive.
+        container.dispatchEvent?.(new CustomEvent("sof:sphere-first-frame", {
+          bubbles: true,
+          detail: { timestamp: _firstFrameTimestamp }
+        }));
         _probeFirstFramePixelHealth();
       } catch (err) {
         _markStage("firstFrame", "failed");
@@ -3286,6 +4997,8 @@
 
       _initialized = true;
       _lastInitError = null;
+      _scheduleDeferredVisualHydration();
+      _scheduleDeferredExtensionHydration();
 
       // Apply the newest state that arrived while Three.js was loading. Without
       // this handoff a fast first temporal sync can be dropped and only become
@@ -3331,6 +5044,18 @@
     }
   }
 
+  // B7.52.1 — shared mobile/touch capability helper. B7.52 accidentally
+  // scoped this inside _wirePointerEvents even though init, deferred hydration,
+  // DPR governance and quality paths all call it. Keep one module-level
+  // authority so first-frame initialization cannot fail before a canvas exists.
+  function _isTouchOptimizedSurface() {
+    try {
+      return window.innerWidth < 900 || window.matchMedia?.("(pointer: coarse)")?.matches;
+    } catch {
+      return typeof window !== "undefined" ? window.innerWidth < 900 : false;
+    }
+  }
+
   function _prefersReducedMotion() {
     try { return window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch { return false; }
   }
@@ -3358,6 +5083,59 @@
     let interactMode  = false;    // on small screens, require explicit engage
     const TWIST_DEADZONE = 0.09;
 
+    // B7.35 — pointer events can arrive much faster than the display refresh
+    // rate. Coalesce camera mutations to one transaction per animation frame so
+    // a two-finger gesture does one projection update instead of twist+pinch+pan
+    // each independently forcing layout/render work.
+    let gestureRaf = null;
+    let pendingSinglePointer = null;
+
+    function _flushGestureFrame() {
+      if (gestureRaf != null) {
+        cancelAnimationFrame(gestureRaf);
+        gestureRaf = null;
+      }
+      const Camera = globalThis.LivingTimeSphereCamera;
+      if (!Camera) return;
+
+      if (pointerCache.size === 2) {
+        const pts = [...pointerCache.values()];
+        const d = Math.hypot(pts[0].clientX - pts[1].clientX, pts[0].clientY - pts[1].clientY);
+        const dx = pts[1].clientX - pts[0].clientX;
+        const dy = pts[1].clientY - pts[0].clientY;
+        const angle = Math.atan2(dy, dx);
+        const twistDelta = _angleDelta(angle, pinchAngle0);
+        const cx = (pts[0].clientX + pts[1].clientX) / 2;
+        const cy = (pts[0].clientY + pts[1].clientY) / 2;
+        Camera.batch?.(() => {
+          if (Math.abs(twistDelta) > TWIST_DEADZONE || twistActive) {
+            twistActive = true;
+            Camera.setState?.({ theta: twistTheta0 - twistDelta });
+          }
+          Camera.onPinchMove(d);
+          Camera.onPanMove?.(cx, cy);
+        });
+        panCentroid0 = { x: cx, y: cy };
+        globalThis.LivingTimeSphereAnimation.markDirty();
+        return;
+      }
+
+      if (pendingSinglePointer && interactMode) {
+        const { x, y } = pendingSinglePointer;
+        pendingSinglePointer = null;
+        const moved = Camera.onPointerMove(x, y);
+        if (moved) globalThis.LivingTimeSphereAnimation.markDirty();
+      }
+    }
+
+    function _scheduleGestureFrame() {
+      if (gestureRaf != null) return;
+      gestureRaf = requestAnimationFrame(() => {
+        gestureRaf = null;
+        _flushGestureFrame();
+      });
+    }
+
     function _angleDelta(now, start) {
       let delta = now - start;
       while (delta > Math.PI) delta -= Math.PI * 2;
@@ -3365,15 +5143,87 @@
       return delta;
     }
 
+    function _applyGestureVisualBudget(active) {
+      if (!_objects) return;
+      if (active) {
+        // B7.48: while the finger is moving, keep the calendar, Today, lunar/solar
+        // reference and schedule atlas; suspend decorative/high-overdraw layers.
+        for (const object of [
+          _objects.starField, _objects.hazeShell, _objects.planetaryGroup,
+          _objects.environmentGroup, _objects.connectionGroup, _objects.recurrenceGroup,
+          _objects.spiralGroup
+        ]) {
+          if (object) object.visible = false;
+        }
+      } else {
+        _applyLayerVisibility(_visibleLayers, _semanticZoomState || { band: "medium", visibility: {} });
+        _applyModeVisibilityOverrides(_visibleLayers);
+        if (_objects.starField) _objects.starField.visible = Number(_quality?.starCount || 0) > 0;
+        if (_objects.hazeShell) _objects.hazeShell.visible = _quality?.glow !== false;
+      }
+    }
+
+    function setCameraGestureActive(active) {
+      _cameraGestureActive = !!active;
+      // B7.51: interaction changes the mobile disclosure aperture (1 Moon while
+      // moving, 3 after settle), so dates + symbols + Moon numbers update once.
+      _calendarDisclosureDirty = true;
+      if (_labelSettleTimer) { clearTimeout(_labelSettleTimer); _labelSettleTimer = null; }
+      container.classList?.toggle?.("is-camera-gesture-active", _cameraGestureActive);
+      _applyGestureVisualBudget(_cameraGestureActive);
+
+      // B7.48 — interaction resolution scaling. On touch devices, rendering at a
+      // high device DPR while the camera is moving wastes fill-rate on pixels the
+      // eye cannot inspect. Temporarily render near 1× during the gesture, then
+      // restore full quality once motion settles. This changes no geometry/state.
+      if (_renderer && _isTouchOptimizedSurface()) {
+        if (_cameraGestureActive) {
+          if (_gestureRestoreDpr == null) _gestureRestoreDpr = Number(_appliedDpr || 1);
+          const gestureDpr = Math.min(
+            Number(_gestureRestoreDpr || 1),
+            _activeTier === "lowpower" ? MOBILE_GESTURE_DPR_LOWPOWER : MOBILE_GESTURE_DPR_CAP
+          );
+          if (Math.abs(Number(_appliedDpr || 1) - gestureDpr) > 0.01) {
+            _renderer.setPixelRatio(gestureDpr);
+            _appliedDpr = gestureDpr;
+          }
+        } else if (_gestureRestoreDpr != null) {
+          const restoreDpr = _gestureRestoreDpr;
+          _gestureRestoreDpr = null;
+          _renderer.setPixelRatio(restoreDpr);
+          _appliedDpr = restoreDpr;
+        }
+      }
+
+      if (!_cameraGestureActive) {
+        _labelSettleTimer = setTimeout(() => {
+          _lastLabelProjectionKey = "";
+          _updateMoonLabels(_viewMode, performance.now(), true);
+          globalThis.LivingTimeSphereAnimation?.markDirty?.();
+        }, 90);
+      }
+    }
+
     function enterInteractMode() {
       interactMode = true;
       if (_canvas) _canvas.style.touchAction = "none";
+      if (_isTouchOptimizedSurface()) {
+        const interactionFps = _activeTier === "lowpower"
+          ? MOBILE_INTERACTION_FPS_LOWPOWER
+          : MOBILE_INTERACTION_FPS;
+        globalThis.LivingTimeSphereAnimation?.setInteractionActive?.(true, interactionFps);
+      }
       container.dispatchEvent(new CustomEvent("sphere:interact-start", { bubbles: true }));
     }
     function exitInteractMode() {
       interactMode = false;
       if (_canvas) _canvas.style.touchAction = "pan-y";
       globalThis.LivingTimeSphereCamera.onPointerUp();
+      globalThis.LivingTimeSphereCamera.onPanEnd?.();
+      globalThis.LivingTimeSphereAnimation?.setInteractionActive?.(false);
+      if (_motionMode === "drift" && _quality?.idleDrift && !_prefersReducedMotion()) {
+        globalThis.LivingTimeSphereCamera.startDrift(performance.now());
+      }
       container.dispatchEvent(new CustomEvent("sphere:interact-end", { bubbles: true }));
     }
 
@@ -3387,6 +5237,7 @@
     listen(_canvas, "pointerdown", e => {
       _hideFloatingLabel();
       pointerCache.set(e.pointerId, e);
+      setCameraGestureActive(true);
 
       if (pointerCache.size === 2) {
         // Pinch start
@@ -3421,35 +5272,19 @@
       pointerCache.set(e.pointerId, e);
 
       if (pointerCache.size === 2) {
-        const pts = [...pointerCache.values()];
-        const d = Math.hypot(pts[0].clientX - pts[1].clientX, pts[0].clientY - pts[1].clientY);
-        const dx = pts[1].clientX - pts[0].clientX;
-        const dy = pts[1].clientY - pts[0].clientY;
-        const angle = Math.atan2(dy, dx);
-        const twistDelta = _angleDelta(angle, pinchAngle0);
-        if (Math.abs(twistDelta) > TWIST_DEADZONE || twistActive) {
-          twistActive = true;
-          globalThis.LivingTimeSphereCamera.setState?.({ theta: twistTheta0 - twistDelta });
-        }
-        globalThis.LivingTimeSphereCamera.onPinchMove(d);
-        const cx = (pts[0].clientX + pts[1].clientX) / 2;
-        const cy = (pts[0].clientY + pts[1].clientY) / 2;
-        globalThis.LivingTimeSphereCamera.onPanMove?.(cx, cy);
-        panCentroid0 = { x: cx, y: cy };
-        globalThis.LivingTimeSphereAnimation.markDirty();
+        _scheduleGestureFrame();
         e.preventDefault();
         return;
       }
 
       if (!interactMode) return;
-      const moved = globalThis.LivingTimeSphereCamera.onPointerMove(e.clientX, e.clientY);
-      if (moved) {
-        globalThis.LivingTimeSphereAnimation.markDirty();
-        e.preventDefault();
-      }
+      pendingSinglePointer = { x: e.clientX, y: e.clientY };
+      _scheduleGestureFrame();
+      e.preventDefault();
     }, { passive: false });
 
     listen(_canvas, "pointerup", e => {
+      _flushGestureFrame();
       pointerCache.delete(e.pointerId);
       if (pinchActive && pointerCache.size < 2) {
         globalThis.LivingTimeSphereCamera.onPinchEnd();
@@ -3465,26 +5300,36 @@
         }
       }
       if (pointerCache.size === 0 && interactMode) {
+        setCameraGestureActive(false);
+        // B7.3: releasing the finger ends camera motion, not interaction mode.
+        // The explicit Exit button returns page scrolling. This keeps the
+        // sphere controllable across repeated gestures without re-arming it.
         globalThis.LivingTimeSphereCamera.onPointerUp();
-        // On narrow screens, exit interact mode on finger up (re-enables page scroll)
-        if (window.innerWidth < 480) exitInteractMode();
+        globalThis.LivingTimeSphereCamera.onPanEnd?.();
+        globalThis.LivingTimeSphereCamera.stopDrift?.();
+        globalThis.LivingTimeSphereAnimation?.setInteractionActive?.(false);
       }
-      // Restart drift after interaction ends
-      if (_quality?.idleDrift && !_prefersReducedMotion()) {
+      // While interaction mode is armed the camera must stop when the user
+      // stops. Idle drift may resume only after explicit Exit Interaction.
+      if (!interactMode && _motionMode === "drift" && _quality?.idleDrift && !_prefersReducedMotion()) {
         globalThis.LivingTimeSphereCamera.startDrift(performance.now());
       }
     });
 
     listen(_canvas, "pointercancel", e => {
       pointerCache.delete(e.pointerId);
+      if (pointerCache.size === 0) setCameraGestureActive(false);
       globalThis.LivingTimeSphereCamera.onPointerUp();
       globalThis.LivingTimeSphereCamera.onPanEnd?.();
       globalThis.LivingTimeSphereCamera.onPinchEnd();
+      globalThis.LivingTimeSphereAnimation?.setInteractionActive?.(false);
       pinchActive = false;
       pinchDist0 = 0;
       pinchAngle0 = 0;
       twistActive = false;
-      if (window.innerWidth < 480) exitInteractMode();
+      // Cancellation stops movement but preserves the explicitly armed mode.
+      // Only the Exit Interaction control leaves interaction mode.
+      globalThis.LivingTimeSphereCamera.stopDrift?.();
     });
 
     // Wheel zoom (desktop)
@@ -3546,7 +5391,7 @@
     if (!_floatingLabelEl) {
       _floatingLabelEl = document.createElement("div");
       _floatingLabelEl.className = "sphere-floating-label";
-      _floatingLabelEl.style.cssText = "position:absolute;pointer-events:none;display:none;z-index:10;";
+      _floatingLabelEl.style.cssText = "position:absolute;pointer-events:none;display:none;z-index:40;background:rgba(4,8,13,.985);border:1px solid rgba(163,211,211,.30);border-radius:.72rem;box-shadow:0 10px 30px rgba(0,0,0,.72);padding:.42rem .58rem;color:#edf9f6;isolation:isolate;";
       container.style.position = "relative";
       container.appendChild(_floatingLabelEl);
     }
@@ -3761,20 +5606,9 @@
   }
 
   function _handleClick(e, onYearSelect, onMarkerSelect) {
-    /*
-     * Extension picking runs only after the existing pointer
-     * lifecycle has classified the gesture as a click/tap.
-     * Drags therefore never become temporal selections.
-     */
-    if (
-      _handleExtensionPick(
-        e,
-        onMarkerSelect
-      )
-    ) {
-      return;
-    }
-
+    /* B7.14: base calendar picking owns empty sphere taps. Scheduled/Life
+     * Atlas extensions are consulted only after explicit marker raycasts, so
+     * transparent schedule hit targets can never hijack an arbitrary day tap. */
     if (!_renderer || !_scene || !_camera || !_THREE) return;
     const THREE = _THREE;
     const rect  = _canvas.getBoundingClientRect();
@@ -3792,7 +5626,9 @@
       _objects.yearGate,
       _objects.lunarMarker,
       _objects.solarSelectedMarker,
-      _objects.lunarSelectedMarker
+      _objects.lunarSelectedMarker,
+      ...(_objects.planetMarkers || []),
+      ...(_objects.locationSeasonGates || [])
     ].filter(Boolean).filter(m => m.visible);
     const namedHits = raycaster.intersectObjects(namedMarkers);
     if (namedHits.length > 0) {
@@ -3804,8 +5640,15 @@
                  : obj.name === "lunarMarker" ? "lunar"
                  : obj.name === "solarSelectedMarker" ? "solar-selected"
                  : obj.name === "lunarSelectedMarker" ? "lunar-selected"
+                 : obj.userData?.type === "planet" ? "planet"
+                 : obj.userData?.type === "season-gate" ? "season-gate"
                  : "unknown";
-      _showFloatingLabel(obj.position, _getMarkerLabel(type), e.clientX, e.clientY);
+      const markerText = type === "planet"
+        ? `${obj.userData?.glyph || ""} ${obj.userData?.name || "Planet"}\n${Number(obj.userData?.longitude || 0).toFixed(1)}° ecliptic longitude${Number.isFinite(Number(obj.userData?.latitude)) ? ` · ${Number(obj.userData.latitude).toFixed(1)}° latitude` : ""}\n${obj.userData?.approximate ? "Approximate low-precision position" : "Ephemeris position"}`
+        : type === "season-gate"
+          ? `${obj.userData?.label || "Seasonal gate"}\n${obj.userData?.seasonAfterGate ? `Begins ${obj.userData.seasonAfterGate} for this location` : "Seasonal boundary"}`
+          : _getMarkerLabel(type);
+      _showFloatingLabel(obj.position, markerText, e.clientX, e.clientY);
       if (onMarkerSelect) onMarkerSelect({ type, year: _model?.year, metadata: obj.userData || null });
       return;
     }
@@ -3816,7 +5659,9 @@
       const year = hits[0].object.userData.year;
       if (year && onYearSelect) onYearSelect(year);
       if (year && onMarkerSelect) onMarkerSelect({ type: "year", year });
-      _showFloatingLabel(hits[0].object.position, `${year}`, e.clientX, e.clientY);
+      // B7.30 — selecting historical geometry is allowed, but no floating
+      // year bubble is drawn over the calendar. The navigator above the sphere
+      // is the authoritative year readout/control.
       return;
     }
 
@@ -3894,6 +5739,42 @@
     const patternRadius = globalThis.LivingTimeSphereM?.SIZES?.patternRing || 1;
     const angle = ((Math.atan2(point.z, point.x) * 180) / Math.PI + 90 + 360) % 360;
 
+    // B7.19: the readable 13 × 4 × 7 matrix is a first-class pick surface. A
+    // tap near any calendar cell resolves to that exact Pattern day even when
+    // the numeral is hidden by LOD. Scheduled markers are raycast first.
+    const calendarGeometry = globalThis.LivingTimeSphereCalendarGeometry;
+    const matrixHit = calendarGeometry?.nearestCalendarCell?.(
+      angle,
+      radius / patternRadius,
+      { maxDistance: 0.12 }
+    );
+    if (matrixHit) {
+      const dayOfPatternYear = Number(matrixHit.dayOfPatternYear);
+      const moon = Number(matrixHit.moon);
+      const day = Number(matrixHit.moonDay);
+      const summary = globalThis.LifeAtlasRecordSphereExtension?.plannerDaySummary?.(
+        Number(_selectedYear || _model?.year || new Date().getFullYear()),
+        dayOfPatternYear
+      ) || { count: 0 };
+      globalThis.LivingTimeSphereUi?.selectDay?.(dayOfPatternYear, {
+        source: "sphere-calendar-matrix",
+        marker: `day-${dayOfPatternYear}`
+      });
+      if (onMarkerSelect) onMarkerSelect({
+        type: "day", moon, day, dayOfPatternYear,
+        metadata: { ...matrixHit, scheduleCount: Number(summary.count) || 0 }
+      });
+      const scheduleLine = summary.count
+        ? `\n${summary.count} scheduled${summary.primaryTitle ? ` · ${summary.primaryTitle}` : ""}`
+        : "";
+      _showFloatingLabel(
+        point,
+        `Selected Day\nMoon ${moon} · Day ${day}\nDay ${dayOfPatternYear}/364${scheduleLine}`,
+        e.clientX, e.clientY
+      );
+      return;
+    }
+
     if (radius >= patternRadius * 0.82 && radius <= patternRadius * 1.12) {
       const dayOfPatternYear = globalThis.LivingTimeSphereModel?.dayOfYearForPatternAngle
         ? globalThis.LivingTimeSphereModel.dayOfYearForPatternAngle(angle)
@@ -3963,6 +5844,27 @@
       return;
     }
     updateScene(model, spiral, selectedYear, visibleLayers, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, motionMode, semanticZoomState);
+
+    // A general model refresh must also synchronize selection-dependent
+    // geometry. The canonical model may have a new selectedPatternPosition
+    // even when the scene topology itself has not changed.
+    //
+    // Keep Today and Selected Day independent:
+    // - updateScene() maintains the general/live scene
+    // - updateSelectedState() moves selection-specific markers/highlights
+    updateSelectedState({
+      model,
+      selectedYear,
+      visibleLayers,
+      viewMode,
+      moonLabelMode,
+      moonLabelDistance,
+      dayLabelMode,
+      connectionRegistry,
+      motionMode,
+      semanticZoomState,
+      skipCameraFocus: true,
+    });
 
     if (
       globalThis.LivingTimeSphereExtensionHost?.updateAll
@@ -4048,6 +5950,8 @@
 
     const todaySolarAngle = Number(model.currentSolarSeasonAngle ?? model.solarSeasonAngle ?? 0);
     const selectedSolarAngle = Number(selected?.solar?.angle ?? todaySolarAngle);
+    _selectedSeasonAngle = Number.isFinite(selectedSolarAngle) ? selectedSolarAngle : 0;
+    _updateLocationSeasonRing(_selectedSeasonAngle);
     if (_objects.solarTodayMarker && Number.isFinite(todaySolarAngle)) {
       const p = _positionOnSolarAxis(todaySolarAngle, mat.SIZES.solarAxis);
       _objects.solarTodayMarker.position.set(p.x, p.y, p.z);
@@ -4111,7 +6015,8 @@
       const sectorStart = (activeMoon / 13) * 360;
       const sectorEnd   = ((activeMoon + 1) / 13) * 360;
       const steps = 32;
-      const innerR = r * 0.82;
+      const activeCalendarBand = String(_semanticZoomState?.band || "medium").toLowerCase();
+      const innerR = r * ((activeCalendarBand === "near" || activeCalendarBand === "detail") ? 0.64 : 0.82);
       const outerR = r * 0.98;
       const shape = new _THREE.Shape();
       for (let i = 0; i <= steps; i++) {
@@ -4137,6 +6042,7 @@
       }));
       sector.name = "activeMoonSector";
       _objects.activeMoonGroup.add(sector);
+      _decorateActiveMoonCalendarGrid(_objects.activeMoonGroup, activeMoon, r, mat);
     }
 
     if (_objects.activeDayNode) {
@@ -4205,7 +6111,8 @@
     if (_renderer) {
       const rawDpr = typeof devicePixelRatio !== "undefined" ? devicePixelRatio : 1;
       const tierCap = globalThis.ObservatoryCapabilityManager?.clampPixelRatio?.(_activeTier || "balanced", rawDpr) ?? rawDpr;
-      const nextDpr = Math.min(rawDpr, tierCap, Number(preset.pixelRatioMax ?? tierCap));
+      const mobileCap = _isTouchOptimizedSurface() ? MOBILE_SETTLED_DPR_CAP : Infinity;
+      const nextDpr = Math.min(rawDpr, tierCap, Number(preset.pixelRatioMax ?? tierCap), mobileCap);
       _renderer.setPixelRatio(nextDpr);
       _appliedDpr = nextDpr;
     }
@@ -4239,6 +6146,23 @@
 
   function teardown() {
     _initEpoch += 1;
+    if (_progressiveVisualsHandle != null) {
+      try { globalThis.cancelIdleCallback?.(_progressiveVisualsHandle); } catch {}
+      try { clearTimeout(_progressiveVisualsHandle); } catch {}
+      _progressiveVisualsHandle = null;
+    }
+    _progressiveVisualsScheduled = false;
+    _progressiveVisualsReady = false;
+
+    if (_extensionsHydrationHandle != null) {
+      try {
+        if (typeof globalThis.cancelIdleCallback === "function") globalThis.cancelIdleCallback(_extensionsHydrationHandle);
+        else clearTimeout(_extensionsHydrationHandle);
+      } catch { /* best-effort deferred-hydration cleanup */ }
+    }
+    _extensionsHydrationHandle = null;
+    _extensionsHydrationScheduled = false;
+    _extensionsHydrated = false;
     const teardownContainer = _container;
     if (_sceneRepairRaf) cancelAnimationFrame(_sceneRepairRaf);
     _sceneRepairRaf = 0;
@@ -4291,6 +6215,10 @@
     _moonLabelContainer = null;
     _moonLabelConnectorEl = null;
     _moonLabelManager = null;
+    if (_objects.moonIdentityNumberTexture?.dispose) {
+      _objects.moonIdentityNumberTexture.dispose();
+      _objects.moonIdentityNumberTexture = null;
+    }
     _moonAnchors.length = 0;
     _dayNodeBasePositions = null;
     _dayNodeVisibleKey = "";
@@ -4513,6 +6441,51 @@
     };
   }
 
+  function focusPatternDay(dayOfPatternYear, { distance = 1.82, animated = true } = {}) {
+    const day = Math.max(1, Math.min(364, Math.round(Number(dayOfPatternYear) || 1)));
+    const calendar = globalThis.LivingTimeSphereCalendarGeometry;
+    const cell = calendar?.calendarCell?.(day);
+    const angle = Number(cell?.angle ?? globalThis.LivingTimeSphereModel?.patternAngleForDayOfYear?.(day));
+    if (!Number.isFinite(angle)) return false;
+
+    /*
+     * B7.28 — camera/day coordinate agreement.
+     *
+     * angleToXZ() maps a calendar angle A to the XZ direction
+     *   (sin A, -cos A).
+     * LivingTimeSphereCamera maps theta T to the camera XZ direction
+     *   (sin T,  cos T).
+     * Therefore the camera that physically faces the selected calendar cell is
+     *   T = PI - A,
+     * not -A. The earlier sign-only mapping put the camera on the opposite side
+     * of the transparent wheel, which made Go To select the correct date but
+     * visually rotate toward the wrong Moon.
+     */
+    const rawTheta = Math.PI - (angle * Math.PI / 180);
+    const cameraState = globalThis.LivingTimeSphereCamera?.getState?.() || {};
+    const currentTheta = Number(cameraState.theta);
+    let theta = rawTheta;
+    if (Number.isFinite(currentTheta)) {
+      // Choose the equivalent turn nearest the current camera so a jump never
+      // spins almost a full revolution when a short rotation is available.
+      const tau = Math.PI * 2;
+      theta = rawTheta + Math.round((currentTheta - rawTheta) / tau) * tau;
+    }
+
+    globalThis.LivingTimeSphereCamera?.moveTo?.({
+      theta,
+      dist: Number(distance) || 1.82,
+      targetX: 0, targetY: 0, targetZ: 0,
+      animated: animated !== false,
+      durationMs: 620,
+      nowMs: performance.now(),
+    });
+    globalThis.LivingTimeSphereCamera?.stopDrift?.();
+    _moonLabelManager?.markDirty?.();
+    globalThis.LivingTimeSphereAnimation?.markDirty?.();
+    return true;
+  }
+
   function exportPng({ format } = {}) {
     if (!_renderer) return null;
     // Force a render first
@@ -4531,6 +6504,7 @@
     requestSingleRender,
     markDirty: requestSingleRender,
     resetView,
+    focusPatternDay,
     setMode,
     cancelInitialization,
     teardown,
@@ -4541,6 +6515,7 @@
     getLastInitError,
     getDiagnostics,
     exportPng,
+    getCalendarRailGeometry: _calendarRailGeometry,
     THREE_VERSION,
     THREE_LOCAL_REL,
     environment: Object.freeze({

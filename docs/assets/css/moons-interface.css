@@ -935,3 +935,133 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* B4 — canonical Living Planner projection in both 13-Moon and civil calendars. */
+#remCal .calDay,
+#gregCal .gregDay { position: relative; }
+#remCal .calDay.has-living-plans,
+#gregCal .gregDay.has-living-plans {
+  box-shadow: inset 0 -3px 0 rgba(104, 240, 182, .55), 0 0 0 1px rgba(104, 240, 182, .16);
+}
+#remCal .calendar-plan-markers,
+#gregCal .calendar-plan-markers {
+  position: absolute; left: .28rem; bottom: .2rem; display: flex; gap: .16rem;
+  max-width: calc(100% - .56rem); align-items: center; pointer-events: none; z-index: 3;
+}
+#remCal .calendar-plan-marker,
+#gregCal .calendar-plan-marker {
+  display: inline-grid; place-items: center; min-width: .72rem; height: .72rem;
+  font-size: .62rem; font-weight: 900; line-height: 1; color: #e8f0f1;
+  text-shadow: 0 1px 3px #000;
+}
+#remCal .calendar-plan-marker--task, #gregCal .calendar-plan-marker--task { color: #7fd7ff; }
+#remCal .calendar-plan-marker--event, #gregCal .calendar-plan-marker--event,
+#remCal .calendar-plan-marker--milestone, #gregCal .calendar-plan-marker--milestone { color: #f6d56a; }
+#remCal .calendar-plan-marker--reminder, #gregCal .calendar-plan-marker--reminder { color: #ff9f80; }
+#remCal .calendar-plan-marker--growing, #gregCal .calendar-plan-marker--growing { color: #78e08f; }
+#remCal .calendar-plan-marker--seasonal, #gregCal .calendar-plan-marker--seasonal { color: #b9df72; }
+#remCal .calendar-plan-marker--practice, #gregCal .calendar-plan-marker--practice { color: #c4a7ff; }
+#remCal .calendar-plan-marker--project, #gregCal .calendar-plan-marker--project { color: #65d7c5; }
+#remCal .calendar-plan-marker--travel, #gregCal .calendar-plan-marker--travel { color: #80b8ff; }
+#remCal .calendar-plan-marker--more, #gregCal .calendar-plan-marker--more { color: rgba(232,240,241,.7); }
+
+/* B5.1 — planned life must be readable directly in the main 13-Moon calendars. */
+#remCal .calDay.has-living-plans,
+#gregCal .gregDay.has-living-plans {
+  padding-bottom: 2.65rem;
+  border-color: rgba(104, 240, 182, .42);
+  background-image: linear-gradient(180deg, transparent 55%, rgba(7, 37, 33, .32));
+}
+#remCal .calendar-plan-inline-list,
+#gregCal .calendar-plan-inline-list {
+  position: absolute;
+  left: .28rem;
+  right: .28rem;
+  bottom: .92rem;
+  display: grid;
+  gap: .14rem;
+  z-index: 4;
+  pointer-events: none;
+}
+#remCal .calendar-plan-inline,
+#gregCal .calendar-plan-inline {
+  display: block;
+  min-width: 0;
+  padding: .16rem .28rem;
+  overflow: hidden;
+  border: 1px solid rgba(246, 213, 106, .26);
+  border-radius: .36rem;
+  background: rgba(4, 12, 18, .9);
+  color: rgba(245, 244, 226, .96);
+  font-size: clamp(.54rem, 1.85vw, .66rem);
+  font-weight: 760;
+  line-height: 1.12;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,.24);
+}
+#remCal .calendar-plan-inline--task, #gregCal .calendar-plan-inline--task { border-color: rgba(127,215,255,.48); }
+#remCal .calendar-plan-inline--reminder, #gregCal .calendar-plan-inline--reminder { border-color: rgba(255,159,128,.48); }
+#remCal .calendar-plan-inline--project, #gregCal .calendar-plan-inline--project,
+#remCal .calendar-plan-inline--growing, #gregCal .calendar-plan-inline--growing { border-color: rgba(101,215,197,.48); }
+#remCal .calendar-plan-inline--more, #gregCal .calendar-plan-inline--more { color: rgba(225,235,235,.68); font-weight: 650; }
+
+
+/* B6 — Unified agenda projection in the Today 28-Day Moon Map. */
+#todaySummaryMoonGrid .today-summary-grid-day {
+  position: relative;
+  min-height: 6.6rem;
+  align-content: start;
+}
+#todaySummaryMoonGrid .today-summary-grid-day.has-living-plans {
+  border-color: rgba(246, 213, 106, .7);
+  box-shadow: inset 0 -3px 0 rgba(246, 213, 106, .68), 0 0 0 1px rgba(246, 213, 106, .18);
+  background-image: linear-gradient(180deg, rgba(246,213,106,.055), rgba(6,20,24,.2));
+}
+#todaySummaryMoonGrid .calendar-plan-markers {
+  position: absolute;
+  top: .38rem;
+  right: .38rem;
+  display: flex;
+  gap: .1rem;
+  pointer-events: none;
+}
+#todaySummaryMoonGrid .calendar-plan-marker {
+  font-size: .58rem;
+  color: #f6d56a;
+}
+#todaySummaryMoonGrid .calendar-plan-inline-list {
+  width: 100%;
+  display: grid;
+  gap: .16rem;
+  margin-top: .32rem;
+  pointer-events: none;
+}
+#todaySummaryMoonGrid .calendar-plan-inline {
+  display: block;
+  max-width: 100%;
+  padding: .17rem .28rem;
+  overflow: hidden;
+  border: 1px solid rgba(246,213,106,.4);
+  border-radius: .36rem;
+  background: rgba(4,12,18,.9);
+  color: rgba(250,246,225,.97);
+  font-size: clamp(.52rem, 1.75vw, .64rem);
+  font-weight: 760;
+  line-height: 1.14;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#todaySummaryMoonGrid .calendar-plan-inline::before {
+  content: "SCHEDULED · ";
+  color: rgba(246,213,106,.88);
+  font-size: .82em;
+  letter-spacing: .04em;
+}
+#todaySummaryMoonGrid .calendar-plan-inline--task::before { content: "TASK · "; color: #7fd7ff; }
+#todaySummaryMoonGrid .calendar-plan-inline--reminder::before { content: "REMINDER · "; color: #ff9f80; }
+#todaySummaryMoonGrid .calendar-plan-inline--more::before { content: ""; }
+
+@media (max-width: 720px) {
+  #todaySummaryMoonGrid .today-summary-grid-day { min-height: 6rem; }
+}

@@ -316,8 +316,8 @@ test("Sphere page includes observatory-capability-manager.js script", () => {
 
 test("Sphere page: capability manager loads before renderer-3d", () => {
   const html = read("docs/living-time-sphere.html");
-  const iCap = html.indexOf("observatory-capability-manager.js");
-  const i3d  = html.indexOf("living-time-sphere-renderer-3d.js");
+  const iCap = html.search(/<script[^>]+src="assets\/js\/sphere\/observatory-capability-manager\.js[^"]*"[^>]*><\/script>/);
+  const i3d  = html.search(/<script[^>]+src="assets\/js\/sphere\/living-time-sphere-renderer-3d\.js[^"]*"[^>]*><\/script>/);
   assert.ok(iCap >= 0, "observatory-capability-manager.js must be in HTML");
   assert.ok(i3d  >= 0, "living-time-sphere-renderer-3d.js must be in HTML");
   assert.ok(iCap < i3d, "capability manager must appear before renderer-3d in HTML");

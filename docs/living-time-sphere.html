@@ -1,12 +1,21 @@
 <!doctype html>
 <html lang="en" dir="ltr" class="sof living-time-sphere-page" data-day-boundary="sunset">
 <head>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2TBMEK502C"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){ dataLayer.push(arguments); }
-    gtag("js", new Date());
-    gtag("config", "G-2TBMEK502C");
+    // B7.52 — local Observatory development should never spend startup network
+    // work on analytics. Production keeps the same tracker, loaded asynchronously.
+    (() => {
+      const local = /^(127\.0\.0\.1|localhost|0\.0\.0\.0)$/.test(location.hostname);
+      if (local) return;
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = window.gtag || function(){ dataLayer.push(arguments); };
+      gtag("js", new Date());
+      gtag("config", "G-2TBMEK502C");
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = "https://www.googletagmanager.com/gtag/js?id=G-2TBMEK502C";
+      document.head.appendChild(script);
+    })();
   </script>
   <base href="/">
   <script>
@@ -25,14 +34,19 @@
   <link rel="apple-touch-icon" href="assets/img/shared/branding/favicon.png">
   <link rel="stylesheet" href="assets/css/codex.css">
   <link rel="stylesheet" href="assets/css/navigation.css">
-  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260817-4">
+  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260819-b752">
+  <!-- B7.52 FAST BOOT: Three.js is a dynamic import, so advertise it before
+       the renderer reaches init instead of discovering the module late. -->
+  <link rel="modulepreload" href="assets/vendor/three/three.module.min.js" fetchpriority="high">
+  <link rel="preload" href="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260819-b7523" as="script" fetchpriority="high">
   <link rel="stylesheet" href="assets/css/living-time-sphere-metrics.css?v=20260814-1">
   <link rel="stylesheet" href="assets/css/observatory-workspace.css?v=20260815-6">
-  <link rel="stylesheet" href="assets/css/living-time-calendar-workbench.css?v=20260816-3">
+  <link rel="stylesheet" href="assets/css/living-planner.css?v=20260818-1">
+  <link rel="stylesheet" href="assets/css/living-time-calendar-workbench.css?v=20260819-b728">
 <link rel="stylesheet" href="assets/css/temporal-coordinate-ui.css?v=20260816-1">
 
   <!-- Core engines -->
-  <script defer src="assets/js/moons-version.js?v=20260815-6"></script>
+  <script defer src="assets/js/moons-version.js?v=20260819-b752"></script>
   <script defer src="assets/js/site.js"></script>
   <script defer src="assets/js/codex-memory.js"></script>
   <script defer src="assets/js/codex-witness.js"></script>
@@ -46,12 +60,113 @@
   <script defer src="assets/js/calendar-cor.js"></script>
   <!-- Life Atlas local-first data plane -->
   <script defer src="assets/js/life-atlas/life-atlas-schema.js?v=20260817-1"></script>
-  <script defer src="assets/js/life-atlas/life-atlas-repository.js?v=20260817-1"></script>
-  <script defer src="assets/js/life-atlas/life-atlas-indexeddb.js?v=20260817-1"></script>
-  <script defer src="assets/js/life-atlas/life-atlas-zip.js?v=20260817-2"></script>
-  <script defer src="assets/js/life-atlas/life-atlas-importers.js?v=20260817-2"></script>
-  <script defer src="assets/js/life-atlas/life-atlas-ingestion.js?v=20260817-2"></script>
-  <script defer src="assets/js/life-atlas/life-atlas-runtime.js?v=20260817-1"></script>
+  <script defer src="assets/js/life-atlas/life-atlas-repository.js?v=20260819-b750"></script>
+  <script defer src="assets/js/life-atlas/life-atlas-indexeddb.js?v=20260819-b750"></script>
+  <script defer src="assets/js/life-atlas/life-atlas-scheduling.js?v=20260818-1"></script>
+  <script defer src="assets/js/life-atlas/life-atlas-planner.js?v=20260819-b750"></script>
+  <!-- B7.52 CORE-FIRST BOOT: keep the interactive instrument ahead of
+       planner/import/workspace parsing. Small planner controls join first;
+       import/runtime/workspace tools are spread across later idle slices. -->
+  <script>
+  (() => {
+    "use strict";
+    const phaseOne = [
+      "assets/js/life-atlas/life-atlas-planner-ui.js?v=20260819-b750",
+      "assets/js/life-atlas/living-command-window.js?v=20260819-b750"
+    ];
+    const phaseTwo = [
+      "assets/js/life-atlas/life-atlas-zip.js?v=20260817-2",
+      "assets/js/life-atlas/life-atlas-importers.js?v=20260819-b750",
+      "assets/js/life-atlas/life-atlas-ingestion.js?v=20260819-b750",
+      "assets/js/life-atlas/life-atlas-runtime.js?v=20260819-b750",
+      "assets/js/life-atlas/life-atlas-import-ui.js?v=20260817-2",
+      "assets/js/sphere/living-time-observatory-workspace.js?v=20260815-6"
+    ];
+    const phaseThree = [
+      // Environment and below-the-instrument tools are useful, but they do not
+      // get to compete with first WebGL paint or the first user gesture.
+      "assets/js/environment/environment-state.js",
+      "assets/js/environment/providers/open-meteo-forecast.js",
+      "assets/js/environment/open-meteo-adapter.js?v=20260815-6",
+      "assets/js/environment/location-command.js",
+      "assets/js/environment/unit-preferences.js?v=20260816-1",
+      "assets/js/sphere/living-time-sphere-everyday.js?v=20260819-b731",
+      "assets/js/calendar/calendar-data-safety.js?v=20260819-b731",
+      "assets/js/calendar/temporal-coordinate-engine.js?v=20260816-2",
+      "assets/js/calendar/temporal-cursor-controller.js?v=20260816-2",
+      "assets/js/calendar/temporal-coordinate-ui.js?v=20260816-2",
+      "assets/js/sphere/living-time-calendar-workbench.js?v=20260819-b750"
+    ];
+    let scheduled = false;
+    let loading = false;
+
+    const sphereBusy = () =>
+      !!document.querySelector(".sphere-instrument-shell.is-camera-gesture-active") ||
+      !!navigator?.scheduling?.isInputPending?.();
+
+    const yieldMain = () =>
+      globalThis.scheduler?.yield
+        ? globalThis.scheduler.yield()
+        : new Promise(resolve => setTimeout(resolve, 0));
+
+    async function waitForQuiet(maxWait = 1800) {
+      const started = performance.now();
+      while (sphereBusy() && performance.now() - started < maxWait) {
+        await new Promise(resolve => setTimeout(resolve, 120));
+      }
+    }
+
+    async function loadScripts(list) {
+      for (const src of list) {
+        if (document.querySelector(`script[data-sof-deferred-src="${src}"]`)) continue;
+        await waitForQuiet();
+        await new Promise(resolve => {
+          const script = document.createElement("script");
+          script.src = src;
+          script.async = false;
+          script.dataset.sofDeferredSrc = src;
+          script.onload = script.onerror = () => resolve();
+          document.head.appendChild(script);
+        });
+        await yieldMain();
+      }
+    }
+
+    async function loadDeferredSphereTools() {
+      if (loading || globalThis.__SOF_SPHERE_DEFERRED_TOOLS_READY__) return;
+      loading = true;
+      await loadScripts(phaseOne);
+      // Give the calendar another quiet window before heavy import/runtime code.
+      await new Promise(resolve => setTimeout(resolve, 900));
+      await loadScripts(phaseTwo);
+      await new Promise(resolve => setTimeout(resolve, 1100));
+      await loadScripts(phaseThree);
+      // Scripts loaded after DOMContentLoaded cannot rely on their original
+      // one-shot DOMContentLoaded hooks, so explicitly complete their mounts.
+      globalThis.SofLocationCommand?.mountAll?.();
+      globalThis.LivingTimeCalendarWorkbench?.init?.();
+      globalThis.SOFTemporalCoordinateUI?.refresh?.();
+      globalThis.__SOF_SPHERE_DEFERRED_TOOLS_READY__ = true;
+      document.dispatchEvent(new CustomEvent("sof:sphere-deferred-tools-ready"));
+    }
+
+    function scheduleDeferredTools() {
+      if (scheduled) return;
+      scheduled = true;
+      const start = () => void loadDeferredSphereTools();
+      if (typeof requestIdleCallback === "function") {
+        requestIdleCallback(start, { timeout: 2600 });
+      } else {
+        setTimeout(start, 1200);
+      }
+    }
+
+    document.addEventListener("sof:sphere-first-frame", () => {
+      setTimeout(scheduleDeferredTools, 850);
+    }, { once: true });
+    window.addEventListener("load", () => setTimeout(scheduleDeferredTools, 2600), { once: true });
+  })();
+  </script>
   <script defer src="assets/js/codex-state.js"></script>
   <script defer src="assets/js/astronomy/astronomy-version.js"></script>
   <script defer src="assets/js/astronomy/astronomy-sources.js"></script>
@@ -75,49 +190,35 @@
    <!-- Sphere modules — Phase 03: 3D renderer modules (lazy) -->
    <script defer src="assets/js/sphere/living-time-sphere-version.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-model.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-calendar-geometry.js?v=20260819-b727"></script>
    <script defer src="assets/js/sphere/living-time-sphere-temporal.js?v=20260815-6"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-state.js?v=20260815-6"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-state.js?v=20260819-b731"></script>
    <script defer src="assets/js/sphere/living-time-sphere-semantic-zoom.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-layout.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-connections.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-renderer-svg.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-renderer-canvas.js"></script>
-   <script defer src="assets/js/sphere/observatory-capability-manager.js?v=20260815-6"></script>
+   <script defer src="assets/js/sphere/observatory-capability-manager.js?v=20260819-b750"></script>
    <script defer src="assets/js/sphere/living-time-sphere-materials.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-effects.js?v=20260815-6"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-camera.js"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-animation.js?v=20260815-6"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-label-manager.js"></script>
-   <script defer src="assets/js/life-atlas/life-atlas-world-model.js?v=20260816-1"></script>
-   <script defer src="assets/js/life-atlas/life-atlas-scene-graph.js?v=20260816-1"></script>
-   <script defer src="assets/js/life-atlas/life-atlas-world-builder.js?v=20260816-1"></script>
-   <script defer src="assets/js/life-atlas/life-atlas-world-navigation.js?v=20260816-1"></script>
-   <script defer src="assets/js/life-atlas/life-atlas-render-projection.js?v=20260816-1"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-extension-host.js?v=20260816-1"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-camera.js?v=20260819-b740"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-animation.js?v=20260819-b740"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-planetary-positions.js?v=20260819-b730"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-label-manager.js?v=20260819-b750"></script>
+<script defer src="assets/js/sphere/living-time-sphere-extension-host.js?v=20260816-1"></script>
    <script defer src="assets/js/sphere/living-time-sphere-temporal-legibility.js?v=20260817-1"></script>
   <script defer src="assets/js/sphere/living-time-sphere-temporal-strata.js?v=20260817-5"></script>
-   <script defer src="assets/js/sphere/life-atlas-record-sphere-extension.js?v=20260817-1"></script>
+   <script defer src="assets/js/sphere/life-atlas-record-sphere-extension.js?v=20260819-b750"></script>
    <!-- Life Atlas visual world projection temporarily disabled for recursive-sphere refactor -->
-   <script defer src="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260817-4"></script>
-   <script defer src="assets/js/environment/environment-state.js"></script>
-   <script defer src="assets/js/environment/providers/open-meteo-forecast.js"></script>
-   <script defer src="assets/js/environment/open-meteo-adapter.js?v=20260815-6"></script>
-   <script defer src="assets/js/environment/location-command.js"></script>
+   <script defer fetchpriority="high" src="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260819-b7523"></script>
    <script defer src="assets/js/sphere/living-time-sphere-live-data.js?v=20260815-6"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-interaction.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-interaction.js?v=20260818-b73"></script>
    <script defer src="assets/js/sphere/living-time-sphere-accessibility.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-export.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-url-state.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-mount.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-today.js"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-ui.js?v=20260817-4"></script>
-   <script defer src="assets/js/life-atlas/life-atlas-import-ui.js?v=20260817-2"></script>
-   <script defer src="assets/js/environment/unit-preferences.js?v=20260816-1"></script>
-<script defer src="assets/js/calendar/temporal-coordinate-engine.js?v=20260816-2"></script>
-<script defer src="assets/js/calendar/temporal-cursor-controller.js?v=20260816-2"></script>
-<script defer src="assets/js/calendar/temporal-coordinate-ui.js?v=20260816-2"></script>
-<script defer src="assets/js/sphere/living-time-calendar-workbench.js?v=20260816-3"></script>
-   <script defer src="assets/js/sphere/living-time-observatory-workspace.js?v=20260815-6"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-ui.js?v=20260819-b752"></script>
    <script defer>
      document.addEventListener("DOMContentLoaded", () => {
        const container = document.getElementById("sphere-container");
@@ -138,7 +239,6 @@
        } else {
          container.innerHTML = '<p class="sphere-load-error">The Living Time Sphere could not initialize. Reload the page or use the text view.</p>';
        }
-       requestAnimationFrame(() => globalThis.LivingTimeCalendarWorkbench?.init?.());
      }, { once: true });
    </script>
 </head>
@@ -315,17 +415,35 @@
         <p id="sphere-what-am-i-seeing-body" class="sphere-what-body">This view places the current Pattern Day inside the fixed 13 × 28 calendar.</p>
       </details>
 
+      <section class="calendar-atlas-launcher" aria-labelledby="calendar-atlas-launcher-title">
+        <div>
+          <p class="calendar-workbench-kicker">Calendar Atlas</p>
+          <h2 id="calendar-atlas-launcher-title">Navigate the whole year without leaving the Sphere</h2>
+          <p id="calendar-atlas-launcher-status">Live Today is the default. Open the Atlas to jump to a civil date, Pattern Moon/day, notes, lenses, or comparisons.</p>
+        </div>
+        <button id="calendar-atlas-open" type="button">Open Calendar Atlas</button>
+      </section>
+
+      <div class="calendar-atlas-modal" id="calendar-atlas-modal" hidden aria-hidden="true">
+        <div class="calendar-atlas-dialog" role="dialog" aria-modal="true" aria-labelledby="calendar-workbench-title">
+          <button class="calendar-atlas-close" id="calendar-atlas-close" type="button" aria-label="Close Calendar Atlas">×</button>
       <section id="calendar-workbench" class="calendar-workbench" aria-labelledby="calendar-workbench-title" tabindex="0">
         <header class="calendar-workbench-head">
           <div>
             <p class="calendar-workbench-kicker">Synchronized Calendar Atlas</p>
-            <h2 id="calendar-workbench-title">Civil time and Pattern time, held together</h2>
-            <p>Jump by civil date or exact Pattern coordinate, move through Day, Week, Gregorian Month, Pattern Moon, and Year scales, keep private notes, pin comparisons, and change the visible lens without changing the calendar truth. The boundary clock follows the configured calendar timezone; a weather location never silently changes it.</p>
+            <h2 id="calendar-workbench-title">Calendar Atlas</h2>
+            <p>Choose a civil date or a 13-Moon Pattern day. Both point to the same day on the Sphere. Start with Today, then open the calendar, lenses, or notes only when you need them.</p>
           </div>
           <div id="calendar-boundary-clock" class="calendar-boundary-clock" aria-live="polite">
             <strong>—:—</strong><span>America/Los_Angeles</span><small>Resolving the configured day boundary…</small>
           </div>
         </header>
+
+        <nav class="calendar-atlas-tabs" aria-label="Calendar Atlas sections">
+          <button type="button" data-calendar-atlas-tab="navigate" aria-pressed="true">Navigate</button>
+          <button type="button" data-calendar-atlas-tab="calendar" aria-pressed="false">Calendar</button>
+          <button type="button" data-calendar-atlas-tab="notes" aria-pressed="false">Notes & Compare</button>
+        </nav>
 
         <div class="calendar-command-row" aria-label="Calendar navigation commands">
           <div class="calendar-jump-group">
@@ -350,7 +468,7 @@
           <span>ALIGNING</span><strong>Resolving selected day…</strong><small>Calendar state will appear after the baseline renderer starts.</small>
         </div>
 
-        <div class="calendar-atlas-toolbar">
+        <div id="calendar-atlas" class="calendar-atlas-toolbar">
           <h3 id="calendar-atlas-title">Pattern Calendar</h3>
           <div class="calendar-scale-controls" role="group" aria-label="Calendar scale">
             <button type="button" data-calendar-scale="day" aria-pressed="false">Day</button>
@@ -424,16 +542,106 @@
         </footer>
       </section>
 
+        </div>
+      </div>
+
       <!-- 3. Interactive sphere + sidebar -->
       <div class="sphere-wrapper">
         <div class="sphere-canvas-wrap">
-          <!-- Mobile "Interact" toggle -->
-          <div class="sphere-interact-bar" aria-live="polite">
-            <button id="sphere-interact-btn"     class="sphere-interact-toggle" type="button">Interact with Sphere</button>
-            <button id="sphere-interact-end-btn" class="sphere-interact-toggle sphere-interact-end" type="button" style="display:none">Exit Sphere Interaction</button>
-            <p class="sphere-interact-hint" id="sphere-hint-off">Tap to enable rotation and zoom</p>
-            <p class="sphere-interact-hint" id="sphere-hint-on" style="display:none">Drag to rotate · Pinch to zoom · Twist to roll</p>
+          <nav class="sphere-year-navigator" aria-label="Year navigation">
+            <button id="sphere-year-prev" class="sphere-year-nav-btn" type="button" aria-label="Previous year">‹</button>
+            <div class="sphere-year-nav-center">
+              <span class="sphere-year-nav-kicker">Viewing year</span>
+              <select id="sphere-year-nav-select" class="sphere-year-nav-select" aria-label="Viewing year"></select>
+            </div>
+            <button id="sphere-year-next" class="sphere-year-nav-btn" type="button" aria-label="Next year">›</button>
+            <button id="sphere-year-live" class="sphere-year-live-btn" type="button">Live Today</button>
+          </nav>
+
+          <div class="sphere-location-season-strip" id="sphere-location-season-strip" role="status" aria-live="polite">
+            <div class="sphere-location-season-main">
+              <span class="sphere-location-season-place" id="sphere-location-season-place">Location not set</span>
+              <span class="sphere-location-season-dot" aria-hidden="true">·</span>
+              <span class="sphere-location-season-value" id="sphere-location-season-value">Seasonal field unavailable</span>
+            </div>
+            <button id="sphere-location-season-action" class="sphere-location-season-action" type="button">Set location</button>
           </div>
+
+          <div class="sphere-quick-nav" aria-label="Quick temporal navigation">
+            <div class="sphere-quick-nav-search">
+              <label for="sphere-quick-jump-input">Go to</label>
+              <input id="sphere-quick-jump-input" type="search" placeholder="Moon 5 Day 23, Day 135, 2027-04-14…" autocomplete="off" spellcheck="false">
+              <button id="sphere-quick-jump-submit" type="button">Go</button>
+            </div>
+            <div class="sphere-time-scale" role="group" aria-label="Temporal zoom scale">
+              <button type="button" data-sphere-time-scale="year">Year</button>
+              <button type="button" data-sphere-time-scale="moon">Moon</button>
+              <button type="button" data-sphere-time-scale="week">Week</button>
+              <button type="button" data-sphere-time-scale="day">Day</button>
+              <button type="button" data-sphere-time-scale="agenda">Agenda</button>
+            </div>
+            <p id="sphere-quick-jump-status" class="sphere-quick-jump-status" role="status" aria-live="polite">Move through the Sphere or jump directly to a calendar coordinate.</p>
+          </div>
+
+          <div class="sphere-view-tools" role="group" aria-label="Sphere calendar view">
+            <button id="sphere-center-selected" class="sphere-view-tool" type="button">Center selected</button>
+            <button id="sphere-reveal-all-days" class="sphere-view-tool" type="button" aria-pressed="false">Reveal all days</button>
+          </div>
+
+          <section class="sphere-everyday-toolbar" aria-label="Everyday calendar controls">
+            <div class="sphere-step-nav" role="group" aria-label="Move through calendar">
+              <button id="sphere-moon-prev" type="button" aria-label="Previous Moon">‹ Moon</button>
+              <button id="sphere-day-prev" type="button" aria-label="Previous day">‹ Day</button>
+              <button id="sphere-everyday-today" type="button">Today</button>
+              <button id="sphere-day-next" type="button" aria-label="Next day">Day ›</button>
+              <button id="sphere-moon-next" type="button" aria-label="Next Moon">Moon ›</button>
+            </div>
+            <div class="sphere-emphasis-modes" role="group" aria-label="Sphere emphasis">
+              <span class="sphere-emphasis-label">Emphasis</span>
+              <button type="button" data-sphere-emphasis="calendar" aria-pressed="true">Calendar</button>
+              <button type="button" data-sphere-emphasis="planning" aria-pressed="false">Planning</button>
+              <button type="button" data-sphere-emphasis="celestial" aria-pressed="false">Celestial</button>
+              <button type="button" data-sphere-emphasis="seasons" aria-pressed="false">Seasons</button>
+            </div>
+            <p id="sphere-emphasis-status" class="sphere-emphasis-status" role="status" aria-live="polite">Calendar emphasis keeps everyday navigation clear while deeper context remains one tap away.</p>
+          </section>
+
+          <section class="sphere-schedule-navigator" aria-label="Scheduled work navigation">
+            <div class="sphere-schedule-nav-row">
+              <button id="sphere-schedule-prev" type="button" aria-label="Previous scheduled item">‹ Scheduled</button>
+              <button id="sphere-schedule-summary" class="sphere-schedule-summary" type="button" aria-label="Open agenda">
+                <span class="sphere-schedule-summary-kicker">Living schedule</span>
+                <strong id="sphere-schedule-summary-title">Loading scheduled work…</strong>
+                <small id="sphere-schedule-summary-meta">Finding the nearest scheduled day.</small>
+              </button>
+              <button id="sphere-schedule-next" type="button" aria-label="Next scheduled item">Scheduled ›</button>
+            </div>
+            <div class="sphere-schedule-nav-actions">
+              <button id="sphere-schedule-agenda" type="button">Open agenda</button>
+              <span id="sphere-schedule-count" role="status" aria-live="polite">Schedule loading…</span>
+            </div>
+          </section>
+
+          <details class="sphere-data-safety">
+            <summary>Calendar backup &amp; storage safety</summary>
+            <div class="sphere-data-safety-body">
+              <p data-calendar-safety-status>Checking local calendar storage…</p>
+              <p data-calendar-safety-reminder class="sphere-backup-reminder" hidden>Your calendar has local records but no recent portable backup.</p>
+              <div class="sphere-data-safety-actions">
+                <button type="button" data-calendar-backup-export>Download full calendar backup</button>
+                <button type="button" data-calendar-backup-import>Restore backup</button>
+                <button type="button" data-calendar-storage-persist>Protect browser storage</button>
+              </div>
+              <label class="sphere-backup-mode">Restore behavior
+                <select data-calendar-backup-mode>
+                  <option value="merge">Merge with this device</option>
+                  <option value="replace">Replace calendar data</option>
+                </select>
+              </label>
+              <input data-calendar-backup-file type="file" accept="application/json" hidden>
+              <p class="sphere-data-safety-note">Schedules and Life Atlas records use IndexedDB and normally survive reloads. Browser storage can still be cleared by the user, private browsing, device cleanup, or browser eviction. A downloaded backup is the portable recovery copy.</p>
+            </div>
+          </details>
 
           <div id="sphere-state-strip" class="sphere-state-strip" aria-live="polite" aria-atomic="true"></div>
           <div id="sphere-environment-bridge" class="sphere-environment-bridge" role="status" aria-live="polite">
@@ -452,6 +660,14 @@
               </div>
             </div>
           </aside>
+          <!-- Mobile "Interact" toggle -->
+          <div class="sphere-interact-bar" aria-live="polite">
+            <button id="sphere-interact-btn"     class="sphere-interact-toggle" type="button">Interact with Sphere</button>
+            <button id="sphere-interact-end-btn" class="sphere-interact-toggle sphere-interact-end" type="button" style="display:none">Exit Sphere Interaction</button>
+            <p class="sphere-interact-hint" id="sphere-hint-off">Tap to enable rotation and zoom</p>
+            <p class="sphere-interact-hint" id="sphere-hint-on" style="display:none">Drag to rotate · Pinch to zoom · Twist to roll</p>
+          </div>
+
           <div class="sphere-instrument-shell" data-luxury-instrument>
             <div class="sphere-instrument-topline" aria-hidden="true">
               <p class="sphere-instrument-topline-primary">REMNANT LIVING TIME OBSERVATORY</p>
@@ -466,13 +682,7 @@
                 <small>Pattern · Lunar · Solar · Passage</small>
               </div>
             </div>
-            <div class="sphere-instrument-corners" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-            <div class="sphere-instrument-footer" aria-hidden="true">
-              <p class="sphere-instrument-footer-line">FIXED PATTERN CENTRE</p>
-              <p class="sphere-instrument-footer-line">MOVING ASTRONOMICAL LAYERS</p>
-            </div>
-          </div>
-
+          <!-- B7.52 INSTRUMENT-LOCAL LABEL OVERLAY -->
           <div class="sphere-moon-labels" id="sphere-moon-labels" aria-label="Sphere labels">
             <span class="sphere-moon-label" data-moon="1"  style="display:none">Moon 1</span>
             <span class="sphere-moon-label" data-moon="2"  style="display:none">Moon 2</span>
@@ -488,6 +698,13 @@
             <span class="sphere-moon-label" data-moon="12" style="display:none">Moon 12</span>
             <span class="sphere-moon-label" data-moon="13" style="display:none">Moon 13</span>
           </div>
+            <div class="sphere-instrument-corners" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+            <div class="sphere-instrument-footer" aria-hidden="true">
+              <p class="sphere-instrument-footer-line">FIXED PATTERN CENTRE</p>
+              <p class="sphere-instrument-footer-line">MOVING ASTRONOMICAL LAYERS</p>
+            </div>
+          </div>
+
 
           <!-- Camera controls (visible only when 3D is active) -->
           <div class="sphere-camera-controls" aria-label="Camera view presets" role="group">
@@ -775,6 +992,7 @@
               <label class="sphere-layer-row"><input id="sphere-layer-passage"    type="checkbox" checked> Equinox Passage</label>
               <label class="sphere-layer-row"><input id="sphere-layer-lunar"      type="checkbox" checked> Lunar orbit</label>
               <label class="sphere-layer-row"><input id="sphere-layer-solar"      type="checkbox"> Solar axis</label>
+              <label class="sphere-layer-row"><input id="sphere-layer-planets"    type="checkbox" checked> Planetary positions</label>
               <label class="sphere-layer-row"><input id="sphere-layer-markers"    type="checkbox" checked> Annual markers</label>
               <label class="sphere-layer-row"><input id="sphere-layer-recurrence" type="checkbox"> Recurrence links</label>
               <label class="sphere-layer-row"><input id="sphere-layer-spiral"     type="checkbox"> 13-year spiral</label>
@@ -797,6 +1015,391 @@
             <button id="sphere-intro-replay" class="sphere-btn" type="button">Replay Sphere Introduction</button>
           </div>
         </aside>
+      </div>
+
+
+
+      <!-- Living Planner -->
+      <section
+        class="living-planner-shell living-command-source"
+        id="living-planner"
+        aria-labelledby="living-planner-title"
+        data-living-command-panel="planner"
+      >
+        <header class="living-planner-head">
+          <div>
+            <p class="eyebrow">Plan in Living Time</p>
+            <h2 id="living-planner-title">Living Planner</h2>
+            <p>
+              Place tasks, events, practices, growing windows, projects,
+              reminders, and seasonal intentions into the same temporal
+              system used by the 13 Moons Calendar and Life Atlas.
+            </p>
+          </div>
+
+          <button
+            class="living-planner-open"
+            id="living-planner-open"
+            type="button"
+          >
+            ＋ Plan in Living Time
+          </button>
+        </header>
+
+        <div class="living-planner-summary">
+          <article>
+            <small>Upcoming</small>
+            <strong id="living-planner-upcoming-count">0</strong>
+          </article>
+
+          <article>
+            <small>Next Plan</small>
+            <strong id="living-planner-next">Nothing planned yet</strong>
+          </article>
+
+          <article>
+            <small>Temporal Context</small>
+            <strong id="living-planner-context">Reading current Pattern…</strong>
+          </article>
+        </div>
+
+        <div
+          class="living-planner-list"
+          id="living-planner-list"
+          aria-live="polite"
+        ></div>
+
+        <details class="living-planner-reflection">
+          <summary>Reflection & Personal Quests</summary>
+          <p>
+            Questions remain available as optional reflective intelligence.
+            Planner items are actions and intentions; questions help examine
+            what happened and what may need attention.
+          </p>
+        </details>
+      </section>
+
+      <!-- Living Planner Modal -->
+      <div
+        class="living-planner-modal"
+        id="living-planner-modal"
+        hidden
+        aria-hidden="true"
+      >
+        <div
+          class="living-planner-dialog"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="living-planner-dialog-title"
+        >
+          <button
+            class="living-planner-close"
+            id="living-planner-close"
+            type="button"
+            aria-label="Close Living Planner"
+          >
+            ×
+          </button>
+
+          <header class="living-planner-dialog-head">
+            <p class="eyebrow">Living Planner</p>
+            <h2 id="living-planner-dialog-title">Plan in Living Time</h2>
+            <p>
+              Start simple. Advanced timing can be added only when needed.
+            </p>
+          </header>
+
+          <form id="living-planner-form">
+            <div class="living-planner-grid">
+
+              <label class="living-planner-field living-planner-field--wide">
+                <span>What are you planning?</span>
+                <input
+                  name="title"
+                  id="living-planner-title-input"
+                  type="text"
+                  maxlength="160"
+                  placeholder="Plant tomatoes, service truck, finish project…"
+                  required
+                >
+              </label>
+
+              <label class="living-planner-field">
+                <span>Type</span>
+                <select name="category">
+                  <option value="task">Task</option>
+                  <option value="event">Event</option>
+                  <option value="reminder">Reminder</option>
+                  <option value="growing">Growing</option>
+                  <option value="farming">Farming</option>
+                  <option value="planting">Planting</option>
+                  <option value="harvest">Harvest</option>
+                  <option value="watering">Watering</option>
+                  <option value="livestock">Livestock</option>
+                  <option value="maintenance">Maintenance</option>
+                  <option value="seasonal">Seasonal</option>
+                  <option value="practice">Practice</option>
+                  <option value="project">Project</option>
+                  <option value="meeting">Meeting</option>
+                  <option value="school">School / Learning</option>
+                  <option value="health">Health</option>
+                  <option value="finance">Finance</option>
+                  <option value="travel">Travel</option>
+                  <option value="milestone">Milestone</option>
+                  <option value="observation">Observation</option>
+                  <option value="home">Home</option>
+                  <option value="family">Family</option>
+                  <option value="pets">Animal / Pet Care</option>
+                  <option value="food">Food / Meal</option>
+                  <option value="shopping">Shopping / Errand</option>
+                  <option value="vehicle">Vehicle</option>
+                  <option value="construction">Build / Construction</option>
+                  <option value="coding">Coding / Computer</option>
+                  <option value="writing">Writing</option>
+                  <option value="research">Research</option>
+                  <option value="creative">Creative Work</option>
+                  <option value="cleaning">Cleaning / Household</option>
+                  <option value="appointment">Appointment</option>
+                  <option value="community">Community</option>
+                  <option value="camping">Camping</option>
+                  <option value="fieldwork">Fieldwork</option>
+                </select>
+              </label>
+
+              <label class="living-planner-field">
+                <span>Symbol</span>
+                <select name="symbol" aria-label="Schedule symbol">
+                  <option value="auto">Auto by type</option>
+                  <option value="●">● Dot</option>
+                  <option value="◆">◆ Diamond</option>
+                  <option value="★">★ Star</option>
+                  <option value="✓">✓ Check</option>
+                  <option value="⚑">⚑ Flag</option>
+                  <option value="✦">✦ Spark</option>
+                  <option value="☀">☀ Sun</option>
+                  <option value="☾">☾ Moon</option>
+                  <option value="⌂">⌂ Home</option>
+                  <option value="⚒">⚒ Work / Tools</option>
+                  <option value="🌱">🌱 Plant / Seedling</option>
+                  <option value="🌾">🌾 Farm / Harvest</option>
+                  <option value="🪴">🪴 Garden / Grow</option>
+                  <option value="💧">💧 Water / Irrigate</option>
+                  <option value="🍎">🍎 Produce / Food</option>
+                  <option value="🐄">🐄 Livestock</option>
+                  <option value="🐓">🐓 Poultry</option>
+                  <option value="🐝">🐝 Bees / Pollination</option>
+                  <option value="♻">♻ Compost / Recycle</option>
+                  <option value="🔧">🔧 Repair / Maintenance</option>
+                  <option value="🏗">🏗 Build / Construction</option>
+                  <option value="🚗">🚗 Vehicle / Errand</option>
+                  <option value="⛽">⛽ Fuel</option>
+                  <option value="🛒">🛒 Shopping</option>
+                  <option value="🍽">🍽 Meal / Food</option>
+                  <option value="❤">❤ Health / Care</option>
+                  <option value="💰">💰 Money / Finance</option>
+                  <option value="🎓">🎓 School / Learning</option>
+                  <option value="👥">👥 Meeting / People</option>
+                  <option value="💻">💻 Computer / Coding</option>
+                  <option value="🔬">🔬 Research</option>
+                  <option value="☎">☎ Phone</option>
+                  <option value="✎">✎ Writing</option>
+                  <option value="✈">✈ Travel</option>
+                  <option value="⛺">⛺ Camping</option>
+                  <option value="🥾">🥾 Hiking / Fieldwork</option>
+                  <option value="🎣">🎣 Fishing</option>
+                  <option value="🌦">🌦 Weather</option>
+                  <option value="🌳">🌳 Tree / Orchard</option>
+                  <option value="🐾">🐾 Animal Care</option>
+                  <option value="🧹">🧹 Cleaning</option>
+                  <option value="🍳">🍳 Cooking</option>
+                  <option value="📦">📦 Delivery / Package</option>
+                  <option value="✉">✉ Mail / Message</option>
+                  <option value="📷">📷 Photo / Documentation</option>
+                  <option value="🎥">🎥 Video</option>
+                  <option value="🎨">🎨 Art / Creative</option>
+                  <option value="🎵">🎵 Music</option>
+                  <option value="📖">📖 Reading</option>
+                  <option value="⚡">⚡ Energy / Urgent</option>
+                  <option value="🎂">🎂 Birthday</option>
+                  <option value="🎉">🎉 Celebration</option>
+                  <option value="🕯">🕯 Reflection / Memorial</option>
+                </select>
+              </label>
+
+              <label class="living-planner-field">
+                <span>Priority</span>
+                <select name="priority">
+                  <option value="normal">Normal</option>
+                  <option value="low">Low</option>
+                  <option value="high">High</option>
+                  <option value="critical">Critical</option>
+                </select>
+              </label>
+
+              <label class="living-planner-field">
+                <span>Date</span>
+                <input
+                  name="date"
+                  id="living-planner-date"
+                  type="date"
+                  required
+                >
+              </label>
+
+              <label class="living-planner-field">
+                <span>Time</span>
+                <input
+                  name="time"
+                  id="living-planner-time"
+                  type="time"
+                >
+              </label>
+
+              <label class="living-planner-check">
+                <input
+                  name="allDay"
+                  id="living-planner-all-day"
+                  type="checkbox"
+                  checked
+                >
+                <span>All day</span>
+              </label>
+
+              <label class="living-planner-field">
+                <span>Repeat</span>
+                <select name="frequency">
+                  <option value="none">Once</option>
+                  <option value="daily">Daily</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly">Monthly</option>
+                  <option value="yearly">Yearly</option>
+                  <option value="custom">Custom interval</option>
+                </select>
+              </label>
+
+              <label class="living-planner-field">
+                <span>Every</span>
+                <input
+                  name="interval"
+                  type="number"
+                  min="1"
+                  max="365"
+                  value="1"
+                >
+              </label>
+
+              <label class="living-planner-field">
+                <span>Reminder</span>
+                <select name="reminderMinutes">
+                  <option value="">None</option>
+                  <option value="15">15 minutes before</option>
+                  <option value="60">1 hour before</option>
+                  <option value="1440">1 day before</option>
+                  <option value="10080">1 week before</option>
+                </select>
+              </label>
+
+              <label class="living-planner-field living-planner-field--wide">
+                <span>Place</span>
+                <input
+                  name="location"
+                  type="text"
+                  maxlength="180"
+                  placeholder="Garden, home, Spokane, campsite…"
+                >
+              </label>
+
+              <label class="living-planner-field living-planner-field--wide">
+                <span>Notes</span>
+                <textarea
+                  name="notes"
+                  rows="3"
+                  maxlength="4000"
+                  placeholder="Details, preparation, materials, conditions…"
+                ></textarea>
+              </label>
+
+              <label class="living-planner-field living-planner-field--wide">
+                <span>Intention / desired outcome</span>
+                <textarea
+                  name="intention"
+                  rows="2"
+                  maxlength="1000"
+                  placeholder="What are you trying to accomplish?"
+                ></textarea>
+              </label>
+
+              <label class="living-planner-field living-planner-field--wide">
+                <span>Tags</span>
+                <input
+                  name="tags"
+                  type="text"
+                  placeholder="garden, tomatoes, spring"
+                >
+              </label>
+            </div>
+
+            <details class="living-planner-advanced">
+              <summary>Advanced Timing</summary>
+
+              <div class="living-planner-advanced-grid">
+
+                <label class="living-planner-field">
+                  <span>Seasonal window</span>
+                  <input
+                    name="seasonalWindow"
+                    type="text"
+                    maxlength="180"
+                    placeholder="Early spring, after frost risk…"
+                  >
+                </label>
+
+                <label class="living-planner-field">
+                  <span>Repeat until</span>
+                  <input
+                    name="until"
+                    type="date"
+                  >
+                </label>
+
+                <label class="living-planner-field">
+                  <span>Occurrences</span>
+                  <input
+                    name="count"
+                    type="number"
+                    min="1"
+                    max="10000"
+                    placeholder="Optional"
+                  >
+                </label>
+
+                <div class="living-planner-pattern-readout">
+                  <small>Current Pattern Context</small>
+                  <strong id="living-planner-pattern-readout">
+                    Reading…
+                  </strong>
+                </div>
+              </div>
+            </details>
+
+            <div class="living-planner-actions">
+              <button
+                class="sphere-btn"
+                id="living-planner-cancel"
+                type="button"
+              >
+                Cancel
+              </button>
+
+              <button
+                class="sphere-btn sphere-btn-primary"
+                type="submit"
+              >
+                Save Plan
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
 
 
@@ -1023,6 +1626,7 @@
               <tr><td>patternAngle</td><td>Moon 1 Day 1 (Year Gate)</td><td>0–360°</td><td>Clockwise</td></tr>
               <tr><td>lunarAngle</td><td>New moon</td><td>0–360°</td><td>Clockwise</td></tr>
               <tr><td>solarSeasonAngle</td><td>March equinox</td><td>0–360°</td><td>Clockwise</td></tr>
+                  <tr><td>planetary longitude</td><td>Ecliptic 0° reference</td><td>0–360°</td><td>Approximate geocentric ecliptic longitude; precision context only</td></tr>
               <tr><td>passageStartAngle</td><td>Equinox position on pattern ring</td><td>0–360°</td><td>Clockwise</td></tr>
               <tr><td>passageEndAngle</td><td>Year Gate = 0°</td><td>0–360°</td><td>Clockwise</td></tr>
               <tr><td>yearSpiralAngle</td><td>First study year (2014)</td><td>0–360°+</td><td>Clockwise per revolution</td></tr>
@@ -1045,6 +1649,243 @@
 
     </main>
   </div>
+
+  <button
+    id="living-command-trigger"
+    class="living-command-trigger"
+    type="button"
+    aria-controls="living-command-window"
+    aria-expanded="false"
+  >
+    <span aria-hidden="true">◈</span>
+    <strong>Living</strong>
+    <small id="living-command-badge">0</small>
+  </button>
+
+  <div
+    id="living-command-window"
+    class="living-command-window"
+    hidden
+    aria-hidden="true"
+  >
+    <section
+      class="living-command-sheet"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="living-command-title"
+    >
+      <header class="living-command-head">
+        <div>
+          <p class="eyebrow">Living Time</p>
+          <h2 id="living-command-title">Living Command</h2>
+          <small id="living-command-coordinate">Reading temporal context…</small>
+        </div>
+
+        <button
+          id="living-command-close"
+          class="living-command-close"
+          type="button"
+          aria-label="Close Living Command"
+        >×</button>
+      </header>
+
+      <nav
+        class="living-command-tabs"
+        aria-label="Living Command sections"
+      >
+        <button type="button" data-living-command-tab="today" aria-selected="true">
+          Today
+        </button>
+        <button type="button" data-living-command-tab="plan">
+          ＋ Plan
+        </button>
+        <button type="button" data-living-command-tab="upcoming">
+          Upcoming
+        </button>
+        <button type="button" data-living-command-tab="questions">
+          Questions
+        </button>
+      </nav>
+
+      <div class="living-command-body">
+
+        <section
+          class="living-command-panel"
+          data-living-command-view="today"
+        >
+          <div class="living-command-today">
+            <small>Current Pattern</small>
+            <strong id="living-command-pattern">—</strong>
+            <p id="living-command-next-plan">No upcoming plans.</p>
+          </div>
+
+          <div class="living-command-quick-actions">
+            <button
+              type="button"
+              class="sphere-btn sphere-btn-primary"
+              data-living-command-action="plan"
+            >
+              ＋ Plan something
+            </button>
+
+            <button
+              type="button"
+              class="sphere-btn"
+              data-living-command-action="question"
+            >
+              Ask a question
+            </button>
+          </div>
+        </section>
+
+        <section
+          class="living-command-panel"
+          data-living-command-view="plan"
+          hidden
+        >
+          <div id="living-command-plan-host"></div>
+        </section>
+
+        <section
+          class="living-command-panel"
+          data-living-command-view="upcoming"
+          hidden
+        >
+          <div id="living-command-upcoming"></div>
+        </section>
+
+        <section
+          class="living-command-panel"
+          data-living-command-view="questions"
+          hidden
+        >
+          <div class="living-command-question-actions">
+            <button
+              type="button"
+              class="sphere-btn sphere-btn-primary"
+              data-living-command-action="question"
+            >
+              Ask Me a Question
+            </button>
+
+            <button
+              type="button"
+              class="sphere-btn"
+              data-living-command-action="question-settings"
+            >
+              Question Settings
+            </button>
+
+            <button
+              type="button"
+              class="sphere-btn"
+              data-living-command-action="quests"
+            >
+              Personal Quests
+            </button>
+          </div>
+        </section>
+
+      </div>
+    </section>
+  </div>
+
   <script defer src="assets/js/sphere/living-time-sphere-metrics.js?v=20260814-1"></script>
+
+<!-- B7.42 OPTIONAL LIFE ATLAS WORLD BOOT START -->
+<script>
+(() => {
+  "use strict";
+
+  const optionalWorldScripts = [
+    "assets/js/life-atlas/life-atlas-world-model.js?v=20260816-1",
+    "assets/js/life-atlas/life-atlas-scene-graph.js?v=20260816-1",
+    "assets/js/life-atlas/life-atlas-world-builder.js?v=20260816-1",
+    "assets/js/life-atlas/life-atlas-world-navigation.js?v=20260816-1",
+    "assets/js/life-atlas/life-atlas-render-projection.js?v=20260816-1"
+  ];
+
+  async function loadOptionalWorld() {
+    if (globalThis.__SOF_OPTIONAL_WORLD_LOADING__) {
+      return;
+    }
+
+    globalThis.__SOF_OPTIONAL_WORLD_LOADING__ = true;
+
+    for (const src of optionalWorldScripts) {
+      if (
+        document.querySelector(
+          `script[src="${src}"]`
+        )
+      ) {
+        continue;
+      }
+
+      await new Promise(resolve => {
+        const script =
+          document.createElement("script");
+
+        script.src = src;
+        script.async = false;
+
+        script.onload =
+          () => resolve();
+
+        script.onerror =
+          () => resolve();
+
+        document.body.appendChild(
+          script
+        );
+      });
+    }
+
+    globalThis.__SOF_OPTIONAL_WORLD_READY__ =
+      true;
+  }
+
+  function scheduleOptionalWorld() {
+    const start = () => {
+      if (
+        typeof requestIdleCallback ===
+        "function"
+      ) {
+        requestIdleCallback(
+          () => loadOptionalWorld(),
+          { timeout: 4200 }
+        );
+      } else {
+        setTimeout(
+          loadOptionalWorld,
+          2200
+        );
+      }
+    };
+
+    /*
+     * Never compete with the initial calendar/WebGL boot.
+     */
+    setTimeout(
+      start,
+      1800
+    );
+  }
+
+  if (
+    document.readyState ===
+    "complete"
+  ) {
+    scheduleOptionalWorld();
+  } else {
+    window.addEventListener(
+      "load",
+      scheduleOptionalWorld,
+      { once: true }
+    );
+  }
+})();
+</script>
+<!-- B7.42 OPTIONAL LIFE ATLAS WORLD BOOT END -->
+
 </body>
                 </html>

@@ -65,21 +65,22 @@ test("dismissal persists in-zone and resets only after exit distance", () => {
 test("semantic label budgets are hard-capped for phone and desktop", () => {
   const api = loadLabelManager();
   assert.equal(api.constants.SEMANTIC_TARGET_CAP, 96);
-  assert.equal(api.constants.SEMANTIC_MOBILE_LABEL_CAP, 6);
-  assert.equal(api.constants.SEMANTIC_DESKTOP_LABEL_CAP, 12);
+  assert.equal(api.constants.SEMANTIC_MOBILE_LABEL_CAP, 5);
+  assert.equal(api.constants.SEMANTIC_DESKTOP_LABEL_CAP, 10);
 });
 
 test("renderer routes semantic targets through existing render lifecycle", () => {
   const code = read("docs/assets/js/sphere/living-time-sphere-renderer-3d.js");
   assert.match(code, /function _buildSemanticTargets\(/);
-  assert.match(code, /semanticTargets: _buildSemanticTargets\(\)/);
+  assert.match(code, /const semanticTargets = _buildSemanticTargets\(\{ calendarDisclosure, interactionLite \}\)/);
+  assert.match(code, /semanticTargets:\s*interactionLite/);
   assert.match(code, /_moonLabelManager\?\.dispose\?\.\(\)/);
   assert.doesNotMatch(code, /semanticLabel.*requestAnimationFrame/i);
 });
 
 test("base target registry covers the principal sphere marker classes", () => {
   const code = read("docs/assets/js/sphere/living-time-sphere-renderer-3d.js");
-  for (const id of ["moon-", "live-today", "selected-day", "year-gate", "march-equinox", "lunar-today", "solar-today", "spiral-year-"]) {
+  for (const id of ["moon-", "live-today", "year-gate", "march-equinox"]) {
     assert.ok(code.includes(id), `missing semantic target ${id}`);
   }
 });

@@ -1,6 +1,6 @@
 "use strict";
 
-importScripts("./assets/js/moons-version.js?v=20260815-6");
+importScripts("./assets/js/moons-version.js?v=20260819-b752");
 
 const { APP_VERSION: VERSION, CACHE_PREFIX, SERVICE_WORKER_BUILD } = self.SOF_13_MOONS;
 if (SERVICE_WORKER_BUILD !== VERSION) {
@@ -35,6 +35,16 @@ const mandatoryPaths = [
   "./assets/js/calendar/pattern-calendar-format.js",
   "./assets/js/calendar/pattern-calendar-boundary.js",
   "./assets/js/calendar/pattern-calendar.js",
+  "./assets/js/calendar/calendar-data-safety.js",
+  "./assets/js/life-atlas/life-atlas-schema.js",
+  "./assets/js/life-atlas/life-atlas-repository.js",
+  "./assets/js/life-atlas/life-atlas-indexeddb.js",
+  "./assets/js/life-atlas/life-atlas-scheduling.js",
+  "./assets/js/life-atlas/life-atlas-planner.js",
+  "./assets/js/life-atlas/life-atlas-planner-ui.js",
+  "./assets/js/life-atlas/life-atlas-calendar-projection.js",
+  "./assets/js/life-atlas/life-atlas-runtime.js",
+  "./assets/js/sphere/life-atlas-record-sphere-extension.js",
   "./assets/js/astronomy/astronomy-version.js",
   "./assets/js/astronomy/astronomy-sources.js",
   "./assets/js/astronomy/timezone-tools.js",
@@ -60,6 +70,7 @@ const mandatoryPaths = [
   "./assets/js/alignment/alignment-ui.js",
   "./assets/js/sphere/living-time-sphere-version.js",
   "./assets/js/sphere/living-time-sphere-model.js",
+  "./assets/js/sphere/living-time-sphere-calendar-geometry.js",
   "./assets/js/sphere/living-time-sphere-temporal.js",
   "./assets/js/sphere/living-time-sphere-state.js",
   "./assets/js/sphere/living-time-sphere-semantic-zoom.js",
@@ -72,6 +83,7 @@ const mandatoryPaths = [
   "./assets/js/sphere/living-time-sphere-effects.js",
   "./assets/js/sphere/living-time-sphere-camera.js",
   "./assets/js/sphere/living-time-sphere-animation.js",
+  "./assets/js/sphere/living-time-sphere-planetary-positions.js",
   "./assets/js/sphere/living-time-sphere-label-manager.js",
   "./assets/js/sphere/living-time-sphere-renderer-3d.js",
   "./assets/js/sphere/living-time-sphere-interaction.js",
@@ -81,6 +93,7 @@ const mandatoryPaths = [
   "./assets/js/sphere/living-time-sphere-mount.js",
   "./assets/js/sphere/living-time-sphere-today.js",
   "./assets/js/sphere/living-time-sphere-ui.js",
+  "./assets/js/sphere/living-time-sphere-everyday.js",
   "./assets/js/sphere/living-time-calendar-workbench.js",
   "./assets/css/living-time-calendar-workbench.css",
   "./assets/css/alignment-ledger.css",
@@ -112,14 +125,9 @@ const mandatoryPaths = [
 const optionalPaths = [
   "./assets/css/home-living-interface.css",
   "./assets/js/home-living-interface.js",
-  "./assets/js/life-atlas/life-atlas-schema.js",
-  "./assets/js/life-atlas/life-atlas-repository.js",
-  "./assets/js/life-atlas/life-atlas-indexeddb.js",
   "./assets/js/life-atlas/life-atlas-importers.js",
   "./assets/js/life-atlas/life-atlas-ingestion.js",
-  "./assets/js/life-atlas/life-atlas-runtime.js",
   "./assets/js/life-atlas/life-atlas-import-ui.js",
-  "./assets/js/sphere/life-atlas-record-sphere-extension.js",
   "./assets/js/sphere/living-time-sphere-temporal-legibility.js",
   "./assets/js/sphere/living-time-sphere-temporal-strata.js",
   "./assets/js/sphere/living-time-observatory-workspace.js",
@@ -175,11 +183,24 @@ const offlineUrl = new URL("./offline.html", ROOT).toString();
 const appUrl = new URL("./moons.html", ROOT).toString();
 const development = ["localhost", "127.0.0.1"].includes(self.location.hostname);
 
+// B7.51 — a local Termux preview should not refetch the entire production PWA
+// shell every time the Sphere build token changes. Local development installs a
+// tiny recovery shell and lets normal requests populate the runtime cache.
+// Production retains the verified mandatory shell, while optional assets are now
+// cache-on-use instead of competing with the first page load during install.
+const developmentMandatoryUrls = [
+  "./moons.html",
+  "./living-time-sphere.html",
+  "./offline.html",
+  "./manifest.webmanifest"
+].map(path => new URL(path, ROOT).toString());
+const requiredInstallUrls = development ? developmentMandatoryUrls : mandatoryUrls;
+
 const readyMessage = type => ({
   type,
   appVersion: VERSION,
   serviceWorkerBuild: SERVICE_WORKER_BUILD,
-  mandatoryAssetCount: mandatoryUrls.length
+  mandatoryAssetCount: requiredInstallUrls.length
 });
 
 async function notifyClients(message) {
@@ -190,7 +211,7 @@ async function notifyClients(message) {
 async function mandatoryCacheReady() {
   for (const cacheName of [INSTALL_CACHE, CORE_CACHE]) {
     const cache = await caches.open(cacheName);
-    const matches = await Promise.all(mandatoryUrls.map(url => cache.match(url)));
+    const matches = await Promise.all(requiredInstallUrls.map(url => cache.match(url)));
     if (matches.every(Boolean)) return true;
   }
   return false;
@@ -221,7 +242,7 @@ self.addEventListener("install", event => {
     await caches.delete(INSTALL_CACHE);
     const cache = await caches.open(INSTALL_CACHE);
     try {
-      await Promise.all(mandatoryUrls.map(async url => {
+      await Promise.all(requiredInstallUrls.map(async url => {
         const response = await fetch(url, { cache: "reload" });
         if (!response.ok) throw new Error(`${response.status} ${response.statusText}`.trim());
         await cache.put(url, response);
@@ -233,19 +254,9 @@ self.addEventListener("install", event => {
       throw error;
     }
 
-    const optionalResults = await Promise.allSettled(optionalUrls.map(async url => {
-      const response = await fetch(url, { cache: "reload" });
-      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`.trim());
-      await cache.put(url, response);
-      return url;
-    }));
-    if (development) {
-      optionalResults.forEach((result, index) => {
-        if (result.status === "rejected") {
-          console.warn(`Optional 13 Moons asset was not cached: ${optionalUrls[index]}`, result.reason);
-        }
-      });
-    }
+    // B7.51: optional assets are intentionally not prefetched during install.
+    // The fetch handler caches scripts/styles/images on first use, avoiding a
+    // large background download/compile storm beside the Sphere's first frame.
     await notifyClients(readyMessage("APP_SHELL_READY"));
   })());
 });
@@ -258,7 +269,7 @@ self.addEventListener("activate", event => {
       const response = await installCache.match(url);
       if (response) await coreCache.put(url, response);
     }));
-    const promoted = await Promise.all(mandatoryUrls.map(url => coreCache.match(url)));
+    const promoted = await Promise.all(requiredInstallUrls.map(url => coreCache.match(url)));
     if (!promoted.every(Boolean)) {
       throw new Error("Current app-shell cache promotion was incomplete.");
     }
