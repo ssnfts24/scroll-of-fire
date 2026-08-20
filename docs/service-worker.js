@@ -1,6 +1,6 @@
 "use strict";
 
-importScripts("./assets/js/moons-version.js?v=20260819-b752&r=20260820-b757");
+importScripts("./assets/js/moons-version.js?v=20260819-b752&r=20260820-b758");
 
 const { APP_VERSION: VERSION, CACHE_PREFIX, SERVICE_WORKER_BUILD } = self.SOF_13_MOONS;
 if (SERVICE_WORKER_BUILD !== VERSION) {

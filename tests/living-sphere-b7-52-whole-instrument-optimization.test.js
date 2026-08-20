@@ -60,7 +60,7 @@ test('B7.52/B7.55 avoids a guaranteed measurement RAF and preloads dynamic Three
 
   assert.match(
     sphere,
-    /rel="preload" href="assets\/js\/sphere\/living-time-sphere-renderer-3d\.js\?v=20260819-b752(?:1|2|3)?(?:&r=20260820-b757)?"/
+    /rel="preload" href="assets\/js\/sphere\/living-time-sphere-renderer-3d\.js\?v=20260819-b752(?:1|2|3)?(?:&r=20260820-b75[3-8])?"/
   );
 });
 
@@ -158,5 +158,5 @@ test('B7.52 cache identity reaches CSS, renderer and service worker', () => {
   assert.match(sphere, /living-time-sphere-renderer-3d\.js\?v=20260819-b752(?:1|2|3)?/);
   assert.match(sphere, /living-time-sphere-ui\.js\?v=20260819-b752/);
   assert.match(sw, /moons-version\.js\?v=20260819-b752/);
-  assert.match(version, /APP_VERSION = "2026\.(?:08\.19\.52|08\.20\.(?:53|54|55|56|57))"/);
+  assert.match(version, /APP_VERSION = "2026\.(?:08\.19\.52|08\.20\.(?:53|54|55|56|57|58))"/);
 });

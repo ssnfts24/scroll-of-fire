@@ -99,5 +99,5 @@ test('B7.51/B7.52 cache-busts the full Sphere while Moons remains ambient-only',
   assert.doesNotMatch(moons, /living-time-sphere-renderer-3d\.js/);
   assert.match(moons, /B7\.52 AMBIENT FAST PATH/);
   assert.match(sw, /moons-version\.js\?v=20260819-b75(?:1|2)/);
-  assert.match(version, /APP_VERSION = "2026\.(?:08\.19\.(?:51|52)|08\.20\.(?:53|54|55|56|57))"/);
+  assert.match(version, /APP_VERSION = "2026\.(?:08\.19\.(?:51|52)|08\.20\.(?:53|54|55|56|57|58))"/);
 });

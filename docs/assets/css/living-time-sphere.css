@@ -4205,3 +4205,54 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
   }
 }
 /* === B7.57 LIVE ENVIRONMENT TELEMETRY END === */
+
+
+/* === B7.58 SELECTED DAY SCHEDULE START === */
+
+.sphere-semantic-label-schedule {
+  align-self: center;
+  min-height: 1.72rem;
+  margin: 0 .08rem 0 .20rem;
+  padding: .25rem .48rem;
+  border: 1px solid rgba(244, 202, 83, .58);
+  border-radius: 999px;
+  background: rgba(38, 28, 7, .90);
+  color: rgba(255, 232, 150, .99);
+  font: inherit;
+  font-size: .58rem;
+  font-weight: 760;
+  letter-spacing: .012em;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+  box-shadow:
+    inset 0 0 5px rgba(255, 219, 103, .07);
+}
+
+.sphere-semantic-label-schedule:hover,
+.sphere-semantic-label-schedule:focus-visible {
+  border-color: rgba(255, 220, 112, .92);
+  background: rgba(55, 40, 8, .97);
+  color: #fff0ad;
+  outline: none;
+}
+
+.sphere-semantic-label-schedule:active {
+  transform: translateY(1px);
+}
+
+.sphere-semantic-label-schedule[hidden] {
+  display: none !important;
+}
+
+@media (pointer: coarse), (max-width: 720px) {
+  .sphere-semantic-label-schedule {
+    min-height: 1.82rem;
+    padding: .28rem .46rem;
+    font-size: .57rem;
+  }
+}
+
+/* === B7.58 SELECTED DAY SCHEDULE END === */

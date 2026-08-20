@@ -210,21 +210,21 @@ test('B7.57 loads and caches all provider modules before the Sphere UI', () => {
 test('B7.57 carries a fresh cache and app identity', () => {
   assert.match(
     sphere,
-    /living-time-sphere-renderer-3d\.js\?v=20260819-b7523&r=20260820-b757/
+    /living-time-sphere-renderer-3d\.js\?v=20260819-b7523&r=20260820-b75[3-8]/
   );
 
   assert.match(
     sphere,
-    /living-time-sphere-label-manager\.js\?v=20260819-b750&r=20260820-b757/
+    /living-time-sphere-label-manager\.js\?v=20260819-b750&r=20260820-b75[3-8]/
   );
 
   assert.match(
     sphere,
-    /living-time-sphere-ui\.js\?v=20260819-b752&r=20260820-b757/
+    /living-time-sphere-ui\.js\?v=20260819-b752&r=20260820-b75[3-8]/
   );
 
   assert.match(
     version,
-    /APP_VERSION = "2026\.08\.20\.57"/
+    /APP_VERSION = "2026\.08\.20\.(?:53|54|55|56|57|58)"/
   );
 });

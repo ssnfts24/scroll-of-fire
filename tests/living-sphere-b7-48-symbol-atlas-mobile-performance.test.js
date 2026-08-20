@@ -125,5 +125,5 @@ test('B7.48/B7.52 removes the duplicate pseudo-glyph and keeps current surface c
   assert.match(moons, /living-time-sphere\.css\?v=20260819-b752/);
   assert.doesNotMatch(moons, /living-time-sphere-renderer-3d\.js/);
   assert.doesNotMatch(moons, /life-atlas-record-sphere-extension\.js/);
-  assert.match(version, /APP_VERSION = "2026\.(?:08\.19\.52|08\.20\.(?:53|54|55|56|57))"/);
+  assert.match(version, /APP_VERSION = "2026\.(?:08\.19\.52|08\.20\.(?:53|54|55|56|57|58))"/);
 });

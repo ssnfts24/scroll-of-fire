@@ -1573,6 +1573,239 @@
               }
             }));
           });
+          /*
+           * B7.58 — explicit selected-day scheduling.
+           * Reuse the existing Living Planner; do not duplicate planner logic.
+           */
+          const scheduleDay =
+            document.createElement("button");
+
+          scheduleDay.type =
+            "button";
+
+          scheduleDay.className =
+            "sphere-semantic-label-schedule";
+
+          scheduleDay.textContent =
+            "+ Schedule";
+
+          scheduleDay.hidden =
+            true;
+
+          scheduleDay.setAttribute(
+            "aria-label",
+            "Schedule something on selected day"
+          );
+
+          scheduleDay.addEventListener(
+            "click",
+            event => {
+              const current =
+                el?._semanticTarget
+                || null;
+
+              const scheduleable =
+                current?.id ===
+                  "selected-day"
+                || (
+                  current?.kind ===
+                    "moon"
+                  && current?.selected
+                );
+
+              if (!scheduleable) {
+                return;
+              }
+
+              event.preventDefault();
+              event.stopPropagation();
+
+              const cursor =
+                globalThis
+                  .SOFTemporalCursor
+                || null;
+
+              const selectedDate =
+                cursor?.getDate?.()
+                || null;
+
+              const coordinate =
+                cursor
+                  ?.getCoordinate?.()
+                  ?.remnant13Moons
+                || null;
+
+              const selectedCivilDate =
+                selectedDate
+                  instanceof Date
+                && !Number.isNaN(
+                  selectedDate.getTime()
+                )
+                  ? [
+                      String(
+                        selectedDate
+                          .getFullYear()
+                      ).padStart(4, "0"),
+                      String(
+                        selectedDate
+                          .getMonth()
+                        + 1
+                      ).padStart(2, "0"),
+                      String(
+                        selectedDate
+                          .getDate()
+                      ).padStart(2, "0")
+                    ].join("-")
+                  : null;
+
+              const moon =
+                Number(
+                  coordinate?.moon
+                  ?? current?.moon
+                )
+                || null;
+
+              const moonDay =
+                Number(
+                  coordinate?.moonDay
+                  ?? current?.moonDay
+                )
+                || null;
+
+              const patternDay =
+                Number(
+                  coordinate?.patternDay
+                  ?? current?.dayOfPatternYear
+                  ?? current?.patternDay
+                )
+                || null;
+
+              const request = {
+                source:
+                  "sphere-selected-day-card",
+                selectedCivilDate,
+                pattern: {
+                  moon,
+                  day:
+                    moonDay,
+                  dayOfPatternYear:
+                    patternDay
+                }
+              };
+
+              globalThis
+                .__SOF_PENDING_SCHEDULE_DAY__ =
+                  request;
+
+              document.dispatchEvent(
+                new CustomEvent(
+                  "sof:sphere-schedule-selected-day",
+                  {
+                    detail:
+                      request
+                  }
+                )
+              );
+
+              const plannerOpen =
+                document.getElementById(
+                  "living-planner-open"
+                );
+
+              if (!plannerOpen) {
+                return;
+              }
+
+              plannerOpen.click();
+
+              const applySelectedDay =
+                () => {
+                  const dateInput =
+                    document.getElementById(
+                      "living-planner-date"
+                    );
+
+                  if (
+                    dateInput
+                    && selectedCivilDate
+                  ) {
+                    dateInput.value =
+                      selectedCivilDate;
+
+                    dateInput.dispatchEvent(
+                      new Event(
+                        "input",
+                        {
+                          bubbles:
+                            true
+                        }
+                      )
+                    );
+
+                    dateInput.dispatchEvent(
+                      new Event(
+                        "change",
+                        {
+                          bubbles:
+                            true
+                        }
+                      )
+                    );
+                  }
+
+                  const patternText =
+                    [
+                      moon
+                        ? `Moon ${moon}`
+                        : null,
+                      moonDay
+                        ? `Day ${moonDay}`
+                        : null,
+                      patternDay
+                        ? `${patternDay}/364`
+                        : null
+                    ]
+                      .filter(Boolean)
+                      .join(" · ");
+
+                  if (patternText) {
+                    const context =
+                      document
+                        .getElementById(
+                          "living-planner-context"
+                        );
+
+                    const readout =
+                      document
+                        .getElementById(
+                          "living-planner-pattern-readout"
+                        );
+
+                    if (context) {
+                      context.textContent =
+                        patternText;
+                    }
+
+                    if (readout) {
+                      readout.textContent =
+                        patternText;
+                    }
+                  }
+                };
+
+              applySelectedDay();
+
+              requestAnimationFrame(
+                applySelectedDay
+              );
+
+              setTimeout(
+                applySelectedDay,
+                48
+              );
+            }
+          );
+
           const close = document.createElement("button");
           close.type = "button";
           close.className = "sphere-semantic-label-close";
@@ -1607,13 +1840,39 @@
               }));
             }
           });
-          el.append(body, edit, close);
+          el.append(body, edit, scheduleDay, close);
           _semanticContainer.appendChild(el);
           _semanticEls.set(target.id, el);
         }
         if (!el) continue;
         activeSemanticIds.add(target.id);
         el._semanticTarget = target;
+        const scheduleDayEl =
+          el.querySelector?.(
+            ".sphere-semantic-label-schedule"
+          );
+
+        if (scheduleDayEl) {
+          const scheduleableSelectedDay =
+            target.id ===
+              "selected-day"
+            || (
+              target.kind ===
+                "moon"
+              && target.selected
+            );
+
+          scheduleDayEl.hidden =
+            !scheduleableSelectedDay;
+
+          scheduleDayEl.setAttribute(
+            "aria-label",
+            target.moon
+              ? `Schedule something on Moon ${target.moon} selected day`
+              : "Schedule something on selected day"
+          );
+        }
+
         const editEl = el.querySelector?.(".sphere-semantic-label-edit");
         if (editEl) editEl.hidden = !(target.kind === "living-plan" && target.recordId);
         const statusEl = el.querySelector?.(".sphere-semantic-label-status");

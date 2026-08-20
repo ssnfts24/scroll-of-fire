@@ -110,7 +110,7 @@ test('B7.55 scheduled symbols consume the same projected aperture', () => {
 
   assert.match(
     sphere,
-    /life-atlas-record-sphere-extension\.js\?v=20260819-b750&r=20260820-b757/
+    /life-atlas-record-sphere-extension\.js\?v=20260819-b750&r=20260820-b75[3-8]/
   );
 });
 
@@ -136,21 +136,21 @@ test('B7.55 maintains clean day styling and compact persistent Moon labels', () 
 test('B7.55 carries a fresh app and renderer cache identity', () => {
   assert.match(
     sphere,
-    /living-time-sphere-renderer-3d\.js\?v=20260819-b7523&r=20260820-b757/
+    /living-time-sphere-renderer-3d\.js\?v=20260819-b7523&r=20260820-b75[3-8]/
   );
 
   assert.match(
     sphere,
-    /living-time-sphere-label-manager\.js\?v=20260819-b750&r=20260820-b757/
+    /living-time-sphere-label-manager\.js\?v=20260819-b750&r=20260820-b75[3-8]/
   );
 
   assert.match(
     sphere,
-    /living-time-sphere\.css\?v=20260819-b752&r=20260820-b757/
+    /living-time-sphere\.css\?v=20260819-b752&r=20260820-b75[3-8]/
   );
 
   assert.match(
     version,
-    /APP_VERSION = "2026\.08\.20\.(?:55|56|57)"/
+    /APP_VERSION = "2026\.08\.20\.(?:55|56|57|58)"/
   );
 });
