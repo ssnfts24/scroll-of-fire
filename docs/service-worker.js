@@ -1,3 +1,4 @@
+/* B7.58.1 label-glass hotfix: force service-worker script refresh. */
 "use strict";
 
 importScripts("./assets/js/moons-version.js?v=20260819-b752&r=20260820-b758");

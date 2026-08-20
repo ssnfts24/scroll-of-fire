@@ -4256,3 +4256,104 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
 }
 
 /* === B7.58 SELECTED DAY SCHEDULE END === */
+
+
+/* === B7.58.1 LABEL GLASS + OCCLUSION START === */
+
+/*
+ * Final presentation polish:
+ * - Moon identity pills live below semantic inspection cards.
+ * - Floating cards are only barely transparent, so labels behind them cannot
+ *   visually print through.
+ * - Calendar day numerals keep their existing transparent etched treatment.
+ * - No geometry, temporal mapping, scheduling, or camera behavior changes.
+ */
+
+/* Explicit stacking contexts: Moon identities below semantic cards. */
+.living-time-sphere-page .sphere-moon-labels {
+  z-index: 12 !important;
+  isolation: isolate;
+}
+
+.living-time-sphere-page .sphere-semantic-leader-layer {
+  z-index: 18 !important;
+}
+
+.living-time-sphere-page .sphere-semantic-label-layer {
+  z-index: 20 !important;
+  isolation: isolate;
+}
+
+/*
+ * Moon identity labels remain glass-like, but only about 3–4.5% transparent.
+ * This preserves the field behind them without letting nearby text compete.
+ */
+.living-time-sphere-page .sphere-moon-label {
+  background: rgba(3, 12, 16, .965) !important;
+  border-color: rgba(101, 210, 199, .32) !important;
+  box-shadow:
+    0 2px 7px rgba(0, 0, 0, .48) !important;
+  mix-blend-mode: normal !important;
+}
+
+.living-time-sphere-page .sphere-moon-label.is-quiet {
+  background: rgba(3, 12, 16, .955) !important;
+  border-color: rgba(91, 184, 178, .25) !important;
+}
+
+.living-time-sphere-page .sphere-moon-label.is-selected {
+  background: rgba(25, 19, 6, .982) !important;
+  border-color: rgba(239, 194, 76, .62) !important;
+}
+
+/*
+ * Semantic information cards (Selected Moon, Today, Selected Year, plans, etc.)
+ * are the foreground authority. Keep a hint of the Sphere, but make the card
+ * body visually solid enough to occlude Moon pills beneath it.
+ */
+.living-time-sphere-page
+.sphere-semantic-label:not(
+  [data-semantic-kind="pattern-day-number"]
+):not(
+  [data-semantic-kind="intercalary-day-number"]
+) {
+  background: rgba(7, 10, 15, .985) !important;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, .58),
+    0 0 0 1px rgba(255, 255, 255, .035) !important;
+  mix-blend-mode: normal !important;
+}
+
+.living-time-sphere-page
+.sphere-semantic-label.is-selected:not(
+  [data-semantic-kind="pattern-day-number"]
+),
+.living-time-sphere-page
+.sphere-semantic-label.is-pinned:not(
+  [data-semantic-kind="pattern-day-number"]
+) {
+  background: rgba(24, 19, 7, .993) !important;
+}
+
+.living-time-sphere-page
+.sphere-semantic-label[data-semantic-kind="living-plan"] {
+  background: rgba(10, 12, 16, .992) !important;
+}
+
+/* The B7.58 Schedule action gets the same nearly-solid glass treatment. */
+.living-time-sphere-page .sphere-semantic-label-schedule {
+  background: rgba(38, 28, 7, .975) !important;
+}
+
+/* Legacy tap/floating callouts use the same visual language. */
+.living-time-sphere-page .sphere-floating-label {
+  background: rgba(5, 7, 13, .97) !important;
+  mix-blend-mode: normal !important;
+}
+
+/*
+ * Do not force element opacity here. The label manager still owns proximity
+ * fading and camera disclosure; only the panel fill becomes near-opaque.
+ */
+
+/* === B7.58.1 LABEL GLASS + OCCLUSION END === */
