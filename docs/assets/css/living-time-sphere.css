@@ -3732,3 +3732,476 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
   }
 }
 /* === B7.52 WHOLE-INSTRUMENT PERFORMANCE + CONTAINMENT END === */
+
+/* === B7.53 LUNAR REFINEMENT START === */
+@media (pointer: coarse), (max-width: 720px) {
+  .living-time-sphere-page .sphere-moon-label {
+    padding: .18rem .34rem .18rem .22rem;
+    gap: .26rem;
+    border-radius: .62rem;
+  }
+
+  .living-time-sphere-page .sphere-moon-label.is-expanded {
+    max-width: 8.35rem;
+  }
+
+  .living-time-sphere-page .sphere-moon-label .sphere-moon-title { font-size: .54rem; }
+  .living-time-sphere-page .sphere-moon-label .sphere-moon-name { font-size: .49rem; }
+  .living-time-sphere-page .sphere-moon-label .sphere-moon-meta { font-size: .41rem; }
+
+  .living-time-sphere-page .sphere-moon-label.is-compact {
+    width: 1.34rem;
+    height: 1.34rem;
+    min-width: 1.34rem;
+    max-width: 1.34rem;
+    padding: .10rem;
+    opacity: .66 !important;
+  }
+
+  .living-time-sphere-page .sphere-moon-label.is-compact .sphere-moon-icon {
+    width: 1.02rem;
+    height: 1.02rem;
+  }
+}
+/* === B7.53 LUNAR REFINEMENT END === */
+
+
+/* === B7.54 CLEAN CALENDAR RAIL START === */
+/*
+ * Ordinary Pattern dates are engraved numerals, not 28 separate pills.
+ * Week anchors, scheduled dates and the selected date retain instrument dials.
+ */
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+][data-quiet-rail="true"]
+.sphere-semantic-label-title {
+  min-width: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  padding: .025rem .035rem !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: rgba(218, 239, 239, .86) !important;
+  font-size: .46rem !important;
+  font-weight: 720 !important;
+  letter-spacing: -.025em !important;
+  line-height: 1 !important;
+  text-shadow:
+    0 1px 2px rgba(0,0,0,.98),
+    0 0 2px rgba(91,193,190,.20) !important;
+}
+
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+][data-glide-role="center"]
+.sphere-semantic-label-title {
+  color: rgba(232,249,247,.96) !important;
+  font-size: .49rem !important;
+  text-shadow:
+    0 1px 2px rgba(0,0,0,.99),
+    0 0 3px rgba(104,214,207,.28) !important;
+}
+
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+][data-glide-role="neighbor"]
+.sphere-semantic-label-title {
+  color: rgba(190,215,217,.68) !important;
+  font-size: .42rem !important;
+  text-shadow:
+    0 1px 2px rgba(0,0,0,.98) !important;
+}
+
+/* Week skeleton. */
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+][data-gate-day="true"]
+.sphere-semantic-label-title {
+  display: inline-grid !important;
+  place-items: center;
+  min-width: .92rem !important;
+  width: .92rem !important;
+  height: .92rem !important;
+  padding: 0 !important;
+  border:
+    1px solid rgba(111,220,207,.42)
+    !important;
+  border-radius: 50% !important;
+  background: rgba(4,15,19,.72) !important;
+  color: rgba(235,252,248,.98) !important;
+  font-size: .45rem !important;
+  box-shadow:
+    inset 0 0 4px rgba(92,210,201,.08)
+    !important;
+}
+
+/* Scheduled date. */
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+][data-schedule-count]
+.sphere-semantic-label-title {
+  display: inline-grid !important;
+  place-items: center;
+  min-width: .92rem !important;
+  width: .92rem !important;
+  height: .92rem !important;
+  padding: 0 !important;
+  border:
+    1px solid rgba(242,202,94,.55)
+    !important;
+  border-radius: 50% !important;
+  background: rgba(27,20,5,.68) !important;
+  color: rgba(255,238,183,.98) !important;
+  box-shadow:
+    inset 0 -1px 0 rgba(244,204,92,.30)
+    !important;
+}
+
+/* Selected date remains the strongest number. */
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+].is-selected
+.sphere-semantic-label-title,
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+].is-pinned
+.sphere-semantic-label-title {
+  display: inline-grid !important;
+  place-items: center;
+  min-width: 1rem !important;
+  width: 1rem !important;
+  height: 1rem !important;
+  padding: 0 !important;
+  border:
+    1px solid rgba(255,223,112,.86)
+    !important;
+  border-radius: 50% !important;
+  background: rgba(40,30,7,.78) !important;
+  color: #fff0a8 !important;
+  box-shadow:
+    inset 0 0 5px rgba(255,224,116,.12),
+    0 0 4px rgba(255,214,81,.18)
+    !important;
+}
+
+/* Moving dates stay lightweight instead of becoming dark rectangles. */
+.is-camera-gesture-active
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+]
+.sphere-semantic-label-title {
+  background: transparent !important;
+}
+
+.is-camera-gesture-active
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+][data-gate-day="true"]
+.sphere-semantic-label-title,
+.is-camera-gesture-active
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+][data-schedule-count]
+.sphere-semantic-label-title,
+.is-camera-gesture-active
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+].is-selected
+.sphere-semantic-label-title {
+  background: rgba(4,15,19,.78) !important;
+}
+
+@media (pointer: coarse), (max-width: 720px) {
+  .sphere-semantic-label[
+    data-semantic-kind="pattern-day-number"
+  ][data-quiet-rail="true"]
+  .sphere-semantic-label-title {
+    font-size: .44rem !important;
+  }
+
+  .sphere-semantic-label[
+    data-semantic-kind="pattern-day-number"
+  ][data-glide-role="neighbor"]
+  .sphere-semantic-label-title {
+    font-size: .40rem !important;
+  }
+}
+/* === B7.54 CLEAN CALENDAR RAIL END === */
+
+
+/* === B7.55 CALENDAR APERTURE + MOON LABELS START === */
+
+/*
+ * All physically visible Pattern Moons retain a compact identity label.
+ * The selected Moon can still be stronger, but ordinary Moon labels no longer
+ * appear/disappear merely because selection changed.
+ */
+.living-time-sphere-page
+.sphere-moon-label {
+  padding:
+    .16rem
+    .34rem !important;
+
+  border-radius:
+    .58rem !important;
+
+  font-size:
+    .58rem !important;
+
+  font-weight:
+    650 !important;
+
+  letter-spacing:
+    .01em !important;
+
+  background:
+    rgba(3,14,18,.78) !important;
+
+  border:
+    1px solid
+    rgba(101,210,199,.28) !important;
+
+  box-shadow:
+    0 1px 4px
+    rgba(0,0,0,.34) !important;
+
+  backdrop-filter:
+    blur(2px);
+
+  white-space:
+    nowrap;
+}
+
+.living-time-sphere-page
+.sphere-moon-label.is-quiet {
+  color:
+    rgba(199,231,227,.82) !important;
+
+  border-color:
+    rgba(91,184,178,.22) !important;
+}
+
+.living-time-sphere-page
+.sphere-moon-label.is-selected {
+  color:
+    rgba(255,239,183,.98) !important;
+
+  border-color:
+    rgba(239,194,76,.54) !important;
+
+  background:
+    rgba(24,18,5,.84) !important;
+}
+
+/*
+ * Camera movement updates actual projected positions continuously. A very short
+ * opacity/scale easing makes dates dissipate instead of blinking at the edge.
+ */
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+],
+.sphere-semantic-label[
+  data-semantic-kind="intercalary-day-number"
+] {
+  transition:
+    opacity 72ms linear,
+    transform 72ms linear;
+}
+
+/*
+ * Keep normal calendar dates light. B7.54's week/scheduled/selected dials remain
+ * stronger; this rule simply improves readability of the populated aperture.
+ */
+.sphere-semantic-label[
+  data-semantic-kind="pattern-day-number"
+][data-quiet-rail="true"]
+.sphere-semantic-label-title {
+  color:
+    rgba(225,244,242,.90) !important;
+
+  font-size:
+    .47rem !important;
+}
+
+@media (pointer: coarse), (max-width: 720px) {
+  .living-time-sphere-page
+  .sphere-moon-label {
+    font-size:
+      .55rem !important;
+
+    padding:
+      .14rem
+      .29rem !important;
+  }
+
+  .sphere-semantic-label[
+    data-semantic-kind="pattern-day-number"
+  ][data-quiet-rail="true"]
+  .sphere-semantic-label-title {
+    font-size:
+      .46rem !important;
+  }
+}
+
+/* === B7.55 CALENDAR APERTURE + MOON LABELS END === */
+
+
+/* === B7.56 ENVIRONMENT FIELD START === */
+
+.sphere-environment-bridge {
+  position: relative;
+  overflow: hidden;
+  gap: .55rem .7rem;
+  padding: .72rem .78rem;
+  border-color: rgba(111, 211, 193, .26);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(7, 23, 25, .82),
+      rgba(7, 15, 20, .68)
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(214, 255, 245, .025);
+}
+
+.sphere-environment-bridge::before {
+  content: "ENV";
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  min-width: 2.15rem;
+  min-height: 1.25rem;
+  padding: .12rem .30rem;
+  border: 1px solid rgba(105, 218, 197, .30);
+  border-radius: 999px;
+  color: rgba(150, 232, 215, .88);
+  background: rgba(6, 29, 29, .62);
+  font-size: .54rem;
+  font-weight: 820;
+  letter-spacing: .09em;
+  line-height: 1;
+}
+
+.sphere-environment-bridge[data-layer-state="on"] {
+  border-color: rgba(96, 230, 188, .42);
+  box-shadow:
+    inset 0 1px 0 rgba(214, 255, 245, .035),
+    0 0 18px rgba(58, 175, 148, .045);
+}
+
+.sphere-environment-bridge[data-layer-state="on"]::before {
+  color: rgba(201, 255, 229, .98);
+  border-color: rgba(91, 230, 181, .52);
+  background: rgba(6, 47, 37, .72);
+}
+
+.sphere-environment-bridge-text {
+  flex: 1 1 19rem;
+  min-width: 0;
+  line-height: 1.48;
+  font-size: .77rem;
+  color: rgba(220, 244, 238, .92);
+}
+
+.sphere-environment-bridge.is-off
+.sphere-environment-bridge-text {
+  color: rgba(207, 222, 217, .78);
+}
+
+#sphere-environment-focus {
+  flex: 0 0 auto;
+  min-height: 2.1rem;
+}
+
+@media (pointer: coarse), (max-width: 720px) {
+  .sphere-environment-bridge {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    padding: .68rem .72rem;
+  }
+
+  .sphere-environment-bridge-text {
+    font-size: .72rem;
+    line-height: 1.48;
+  }
+
+  #sphere-environment-focus {
+    grid-column: 1 / -1;
+    justify-self: start;
+    margin-top: .08rem;
+  }
+}
+
+/* === B7.56 ENVIRONMENT FIELD END === */
+
+
+/* === B7.57 LIVE ENVIRONMENT TELEMETRY START === */
+.sphere-live-environment-telemetry {
+  position: relative;
+  z-index: 8;
+  display: grid;
+  gap: .12rem;
+  margin: .08rem .58rem .24rem;
+  padding: .32rem .48rem .36rem;
+  border: 1px solid rgba(104, 218, 199, .18);
+  border-radius: .62rem;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(4, 17, 20, .78),
+      rgba(5, 13, 18, .62)
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(220,255,247,.025);
+  pointer-events: none;
+  backdrop-filter: blur(2px);
+}
+
+.sphere-live-environment-primary {
+  color: rgba(235, 251, 245, .96);
+  font-size: .64rem;
+  font-weight: 760;
+  letter-spacing: .018em;
+  line-height: 1.25;
+}
+
+.sphere-live-environment-secondary {
+  color: rgba(180, 220, 213, .78);
+  font-size: .50rem;
+  font-weight: 620;
+  line-height: 1.25;
+}
+
+.sphere-live-environment-selected {
+  margin-top: .08rem;
+  padding-top: .16rem;
+  border-top: 1px solid rgba(123, 211, 198, .12);
+  color: rgba(242, 213, 133, .90);
+  font-size: .48rem;
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+.sphere-live-environment-selected[hidden] {
+  display: none !important;
+}
+
+@media (pointer: coarse), (max-width: 720px) {
+  .sphere-live-environment-telemetry {
+    margin: .06rem .44rem .18rem;
+    padding: .28rem .40rem .31rem;
+  }
+
+  .sphere-live-environment-primary {
+    font-size: .59rem;
+  }
+
+  .sphere-live-environment-secondary,
+  .sphere-live-environment-selected {
+    font-size: .46rem;
+  }
+}
+/* === B7.57 LIVE ENVIRONMENT TELEMETRY END === */

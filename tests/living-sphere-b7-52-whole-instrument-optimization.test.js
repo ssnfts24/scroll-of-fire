@@ -34,22 +34,34 @@ test('B7.52 caches repeated solar, Today-line and active-Moon geometry', () => {
   assert.match(src, /activeMoonGeometryKey/);
 });
 
-test('B7.52 phone renderer uses bounded settled/gesture DPR and disables MSAA on touch', () => {
+test('B7.52/B7.53 phone renderer preserves gesture bounds while restoring settled clarity', () => {
   const src = read('docs/assets/js/sphere/living-time-sphere-renderer-3d.js');
-  assert.match(src, /MOBILE_SETTLED_DPR_CAP = 1\.10/);
-  assert.match(src, /MOBILE_GESTURE_DPR_CAP = 0\.70/);
-  assert.match(src, /MOBILE_GESTURE_DPR_LOWPOWER = 0\.60/);
-  assert.match(src, /const antialias = mobileFastPath \? false : quality\.antialias !== false/);
+  assert.match(src, /MOBILE_SETTLED_DPR_CAP = 1\.25/);
+  assert.match(src, /MOBILE_GESTURE_DPR_CAP = 1\.00/);
+  assert.match(src, /MOBILE_GESTURE_DPR_LOWPOWER = 0\.72/);
+  assert.match(src, /const antialias = mobileFastPath \? !lowPowerRenderer : quality\.antialias !== false/);
   assert.match(src, /powerPreference = lowPowerRenderer \? "low-power" : "high-performance"/);
   assert.match(src, /const mobileCap = _isTouchOptimizedSurface\(\) \? MOBILE_SETTLED_DPR_CAP : Infinity/);
 });
 
-test('B7.52 avoids a guaranteed measurement RAF and preloads dynamic Three.js', () => {
+test('B7.52/B7.55 avoids a guaranteed measurement RAF and preloads dynamic Three.js', () => {
   const src = read('docs/assets/js/sphere/living-time-sphere-renderer-3d.js');
   const sphere = read('docs/living-time-sphere.html');
-  assert.match(src, /let rect = container\.getBoundingClientRect\(\);[\s\S]*if \(!\(Number\(rect\.width\) > 0/);
-  assert.match(sphere, /rel="modulepreload" href="assets\/vendor\/three\/three\.module\.min\.js" fetchpriority="high"/);
-  assert.match(sphere, /rel="preload" href="assets\/js\/sphere\/living-time-sphere-renderer-3d\.js\?v=20260819-b752(?:1|2|3)?"/);
+
+  assert.match(
+    src,
+    /let rect = container\.getBoundingClientRect\(\);[\s\S]*if \(!\(Number\(rect\.width\) > 0/
+  );
+
+  assert.match(
+    sphere,
+    /rel="modulepreload" href="assets\/vendor\/three\/three\.module\.min\.js" fetchpriority="high"/
+  );
+
+  assert.match(
+    sphere,
+    /rel="preload" href="assets\/js\/sphere\/living-time-sphere-renderer-3d\.js\?v=20260819-b752(?:1|2|3)?(?:&r=20260820-b757)?"/
+  );
 });
 
 test('B7.52 label overlay is instrument-local and cannot spill into camera controls', () => {
@@ -146,5 +158,5 @@ test('B7.52 cache identity reaches CSS, renderer and service worker', () => {
   assert.match(sphere, /living-time-sphere-renderer-3d\.js\?v=20260819-b752(?:1|2|3)?/);
   assert.match(sphere, /living-time-sphere-ui\.js\?v=20260819-b752/);
   assert.match(sw, /moons-version\.js\?v=20260819-b752/);
-  assert.match(version, /APP_VERSION = "2026\.08\.19\.52"/);
+  assert.match(version, /APP_VERSION = "2026\.(?:08\.19\.52|08\.20\.(?:53|54|55|56|57))"/);
 });

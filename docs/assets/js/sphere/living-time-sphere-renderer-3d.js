@@ -222,7 +222,13 @@
   const CAMERA_CALENDAR_HALF_WINDOW_DESKTOP = 2;
   function _calendarDisclosureHalfWindow() {
     if (!_isMobileWidth()) return CAMERA_CALENDAR_HALF_WINDOW_DESKTOP;
-    return _cameraGestureActive ? 0 : 1;
+
+    /*
+     * B7.55 — keep one adjacent Moon on either side available while moving.
+     * The day/symbol aperture now performs continuous screen-space fading,
+     * so the next Moon can enter before the previous Moon disappears.
+     */
+    return 1;
   }
   let _calendarDisclosureDirty = true;
   let _calendarDisclosureCache = Object.freeze({ centerMoon: null, moons: [], halfWindow: CAMERA_CALENDAR_HALF_WINDOW_DESKTOP, key: "" });
@@ -623,9 +629,9 @@
   // B7.52 — mobile fast-path constants. These caps are intentionally applied
   // at renderer authority level so a later quality preset cannot silently
   // inflate the phone back to desktop-like fill-rate.
-  const MOBILE_SETTLED_DPR_CAP = 1.10;
-  const MOBILE_GESTURE_DPR_CAP = 0.70;
-  const MOBILE_GESTURE_DPR_LOWPOWER = 0.60;
+  const MOBILE_SETTLED_DPR_CAP = 1.25;
+  const MOBILE_GESTURE_DPR_CAP = 1.00;
+  const MOBILE_GESTURE_DPR_LOWPOWER = 0.72;
   const MOBILE_INTERACTION_FPS = 30;
   const MOBILE_INTERACTION_FPS_LOWPOWER = 24;
 
@@ -963,77 +969,192 @@
   // never sit inside a Moon body and create the accidental "ringed planet"
   // appearance. Bodies remain one InstancedMesh draw call; the 1..13 faces are
   // a second single GPU point field backed by one tiny atlas texture.
+  // B7.53 — lunar refinement. Keep one instanced 13-Moon field, but move away
+  // from saturated "planet" colours toward mineral lunar tints. Each Moon keeps
+  // a subtly different silhouette/orientation while remaining recognizably lunar.
   const MOON_IDENTITY_COLORS = Object.freeze([
-    0x35e0c4, 0x58c8ff, 0xa678ff, 0xe7d36f, 0xffc13d,
-    0xff755f, 0x65df7a, 0x48d9e7, 0x8d7aff, 0xf0a34f,
-    0x72b9ff, 0x35c9a3, 0xffa65c
+    0x89a7a1, 0x879fb2, 0x978da8, 0xaaa486, 0xb8a77d,
+    0xae8378, 0x8ca087, 0x82a3a4, 0x918ba4, 0xad9276,
+    0x859cad, 0x809b92, 0xad907e
   ]);
   const MOON_IDENTITY_SHAPES = Object.freeze([
-    [1.00, 1.00, 1.00], [1.12, .91, 1.00], [.92, 1.12, 1.00], [1.06, 1.04, .92],
-    [1.15, .90, .96], [.91, 1.13, .98], [1.08, .96, 1.08], [.95, 1.07, 1.12],
-    [1.13, .94, .93], [.94, 1.12, 1.03], [1.05, .93, 1.14], [1.11, 1.03, .91],
-    [1.00, 1.14, .92]
+    [1.00, 1.00, 1.00], [1.035, .978, 1.00], [.982, 1.035, 1.00], [1.025, 1.012, .982],
+    [1.045, .972, .990], [.978, 1.038, .992], [1.028, .986, 1.026], [.986, 1.022, 1.032],
+    [1.038, .982, .985], [.985, 1.034, 1.010], [1.020, .982, 1.034], [1.032, 1.016, .982],
+    [1.00, 1.038, .984]
   ]);
-  // B7.52.3 — moon-only detail/contrast tuning. Keep the same identity lane
-  // and bounded GPU architecture, but make every Pattern Moon unmistakable on
-  // phone screens: brighter body colour, stronger silhouette, unique rotation,
-  // a numbered medallion, and one shared 13-Moon signature/halo line field.
   const MOON_IDENTITY_LANE_FACTOR = 0.80;
-  const MOON_IDENTITY_BODY_FACTOR = 0.105;
-  const MOON_IDENTITY_BODY_MIN = 0.058;
-  const MOON_IDENTITY_HALO_FACTOR = 1.27;
+  const MOON_IDENTITY_BODY_FACTOR = 0.078;
+  const MOON_IDENTITY_BODY_MIN = 0.044;
+  const MOON_IDENTITY_HALO_FACTOR = 1.14;
+  // B7.55 — labels identify Moons; the separate GPU numeral field is disabled.
+  const MOON_NUMBER_FIELD_ENABLED = false;
 
   function _moonIdentityAtlasTexture() {
     if (!_THREE || typeof document === "undefined") return null;
     if (_objects.moonIdentityNumberTexture) return _objects.moonIdentityNumberTexture;
+
     const grid = 4;
     const tile = 128;
     const canvas = document.createElement("canvas");
     canvas.width = canvas.height = grid * tile;
+
     const ctx = canvas.getContext("2d");
     if (!ctx) return null;
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
+
     for (let i = 0; i < 13; i += 1) {
       const col = i % grid;
       const row = Math.floor(i / grid);
       const cx = col * tile + tile / 2;
       const cy = row * tile + tile / 2;
       const n = i + 1;
-      const css = `#${Number(MOON_IDENTITY_COLORS[i] || 0x8fd8d0).toString(16).padStart(6, "0")}`;
+      const css =
+        `#${Number(MOON_IDENTITY_COLORS[i] || 0x8fd8d0)
+          .toString(16)
+          .padStart(6, "0")}`;
 
-      // A dark medallion with the Moon's own colour keeps 1..13 readable
-      // against bright geometry, dark space, labels, and day rails alike.
+      // B7.54 — etched lunar identity rather than a second dark bubble.
+      // The Moon surface remains visible underneath the numeral.
+      const halo =
+        ctx.createRadialGradient(
+          cx,
+          cy,
+          4,
+          cx,
+          cy,
+          39
+        );
+
+      halo.addColorStop(
+        0,
+        "rgba(2,7,10,.34)"
+      );
+
+      halo.addColorStop(
+        .72,
+        "rgba(2,7,10,.26)"
+      );
+
+      halo.addColorStop(
+        1,
+        "rgba(2,7,10,0)"
+      );
+
+      ctx.fillStyle = halo;
       ctx.beginPath();
-      ctx.arc(cx, cy, 43, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(2,8,13,.82)";
+      ctx.arc(
+        cx,
+        cy,
+        39,
+        0,
+        Math.PI * 2
+      );
       ctx.fill();
-      ctx.lineWidth = 7;
+
+      // Thin mineral identity ring.
+      ctx.beginPath();
+      ctx.arc(
+        cx,
+        cy,
+        31.5,
+        0,
+        Math.PI * 2
+      );
+      ctx.lineWidth = 2.2;
+      ctx.strokeStyle = css;
+      ctx.globalAlpha = .72;
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+
+      // One orbit notch rotates around the medallion for Moon 1..13.
+      const notch =
+        -Math.PI / 2
+        + (i / 13)
+        * Math.PI
+        * 2;
+
+      ctx.beginPath();
+      ctx.arc(
+        cx,
+        cy,
+        36,
+        notch - .20,
+        notch + .20
+      );
+      ctx.lineWidth = 3.4;
+      ctx.strokeStyle =
+        "rgba(255,239,190,.94)";
+      ctx.stroke();
+
+      // A second signature tick follows a different 13-step sequence.
+      const signature =
+        -Math.PI / 2
+        + (((i * 5) % 13) / 13)
+        * Math.PI
+        * 2;
+
+      ctx.beginPath();
+      ctx.arc(
+        cx,
+        cy,
+        27,
+        signature - .08,
+        signature + .08
+      );
+      ctx.lineWidth = 2.2;
       ctx.strokeStyle = css;
       ctx.stroke();
 
-      const notch = -Math.PI / 2 + (i / 13) * Math.PI * 2;
-      ctx.beginPath();
-      ctx.arc(cx, cy, 49, notch - .27, notch + .27);
-      ctx.lineWidth = 6;
-      ctx.strokeStyle = "rgba(255,246,210,.94)";
-      ctx.stroke();
+      ctx.font =
+        `700 ${n >= 10 ? 39 : 47}px Georgia, "Times New Roman", serif`;
 
-      ctx.font = `900 ${n >= 10 ? 48 : 57}px system-ui, sans-serif`;
-      ctx.lineWidth = 10;
-      ctx.strokeStyle = "rgba(0,0,0,.98)";
-      ctx.strokeText(String(n), cx, cy + 1);
-      ctx.fillStyle = "#fff8dc";
-      ctx.fillText(String(n), cx, cy + 1);
+      ctx.lineWidth = 4.5;
+      ctx.strokeStyle =
+        "rgba(0,0,0,.92)";
+
+      ctx.strokeText(
+        String(n),
+        cx,
+        cy + 1
+      );
+
+      ctx.fillStyle =
+        "rgba(255,246,219,.98)";
+
+      ctx.fillText(
+        String(n),
+        cx,
+        cy + 1
+      );
     }
-    const texture = new _THREE.CanvasTexture(canvas);
+
+    const texture =
+      new _THREE.CanvasTexture(canvas);
+
+    // Explicit because the shader below addresses canvas rows intentionally.
+    texture.flipY = true;
     texture.needsUpdate = true;
-    texture.minFilter = _THREE.LinearFilter;
-    texture.magFilter = _THREE.LinearFilter;
+    texture.minFilter =
+      _THREE.LinearFilter;
+    texture.magFilter =
+      _THREE.LinearFilter;
     texture.generateMipmaps = false;
-    if ("colorSpace" in texture && _THREE.SRGBColorSpace) texture.colorSpace = _THREE.SRGBColorSpace;
-    _objects.moonIdentityNumberTexture = texture;
+
+    if (
+      "colorSpace" in texture
+      && _THREE.SRGBColorSpace
+    ) {
+      texture.colorSpace =
+        _THREE.SRGBColorSpace;
+    }
+
+    _objects.moonIdentityNumberTexture =
+      texture;
+
     return texture;
   }
 
@@ -1064,13 +1185,14 @@
       // Every Pattern Moon owns its number permanently. Calendar disclosure
       // may change emphasis, but it must never make the Moon identity vanish.
       visible.setX(i, 1);
-      scale.setX(i, moon === center ? 1.40 : moon === selected ? 1.34 : moon === today ? 1.26 : 1.10);
+      scale.setX(i, moon === center ? 1.08 : moon === selected ? 1.06 : moon === today ? 1.04 : .98);
     }
     visible.needsUpdate = true;
     scale.needsUpdate = true;
   }
 
   function _buildMoonNumberField() {
+    if (!MOON_NUMBER_FIELD_ENABLED) return;
     if (!_THREE || !_scene || _objects.moonIdentityNumbers) return;
     const texture = _moonIdentityAtlasTexture();
     if (!texture) return;
@@ -1082,7 +1204,7 @@
     const material = new _THREE.ShaderMaterial({
       uniforms: {
         uAtlas: { value: texture },
-        uPointSize: { value: _isMobileWidth() ? 44 : 50 }
+        uPointSize: { value: _isMobileWidth() ? 36 : 40 }
       },
       vertexShader: `
         attribute float aTile;
@@ -1107,10 +1229,20 @@
           float grid = 4.0;
           float col = mod(vTile, grid);
           float row = floor(vTile / grid);
-          // Correct CanvasTexture atlas addressing for gl_PointCoord. The old
-          // row reversal could sample transparent tiles on Android.
-          vec2 localUv = vec2(gl_PointCoord.x, 1.0 - gl_PointCoord.y);
-          vec2 uv = (localUv + vec2(col, row)) / grid;
+
+          // B7.54 — CanvasTexture rows originate at the top, while the
+          // uploaded texture and point-sprite coordinate systems use opposite
+          // vertical conventions. Reverse the tile row AND the point-local Y.
+          float atlasRow = (grid - 1.0) - row;
+          vec2 localUv =
+            vec2(
+              gl_PointCoord.x,
+              1.0 - gl_PointCoord.y
+            );
+          vec2 uv =
+            (localUv + vec2(col, atlasRow))
+            / grid;
+
           vec4 texel = texture2D(uAtlas, uv);
           if (texel.a < 0.08) discard;
           gl_FragColor = vec4(texel.rgb, texel.a * vVisible);
@@ -1158,14 +1290,14 @@
       const anchor = _moonAnchors[i];
       if (!anchor) continue;
       const moon = i + 1;
-      const emphasis = moon === selectedMoon ? 1.22 : moon === todayMoon ? 1.13 : 1;
+      const emphasis = moon === selectedMoon ? 1.10 : moon === todayMoon ? 1.05 : 1;
       const ringRadius = bodyRadius * MOON_IDENTITY_HALO_FACTOR * emphasis;
       const radialLen = Math.hypot(anchor.worldX, anchor.worldZ) || 1;
       const rx = anchor.worldX / radialLen;
       const rz = anchor.worldZ / radialLen;
       const tx = -rz;
       const tz = rx;
-      const baseColor = new _THREE.Color(MOON_IDENTITY_COLORS[i] || 0x8fd8d0).lerp(white, .16);
+      const baseColor = new _THREE.Color(MOON_IDENTITY_COLORS[i] || 0x8fd8d0).lerp(white, moon === selectedMoon ? .18 : .07);
 
       // Full halo: the body stays separated from the day rail even when dark
       // scene geometry crosses behind it.
@@ -1216,7 +1348,7 @@
     const material = new _THREE.LineBasicMaterial({
       vertexColors: true,
       transparent: true,
-      opacity: 0.86,
+      opacity: 0.38,
       depthWrite: false,
       depthTest: true,
       toneMapped: false
@@ -1242,7 +1374,7 @@
       const anchor = _moonAnchors[i];
       if (!anchor) continue;
       const moon = i + 1;
-      const emphasis = moon === selectedMoon ? 1.28 : moon === todayMoon ? 1.18 : 1;
+      const emphasis = moon === selectedMoon ? 1.12 : moon === todayMoon ? 1.06 : 1;
       const shape = MOON_IDENTITY_SHAPES[i] || [1, 1, 1];
       dummy.position.set(anchor.worldX, anchor.worldY, anchor.worldZ);
       dummy.scale.set(shape[0] * emphasis, shape[1] * emphasis, shape[2] * emphasis);
@@ -1258,6 +1390,78 @@
     _syncMoonNumberDisclosure(_calendarDisclosureCache);
   }
 
+  function _moonIdentitySurfaceTexture() {
+    if (!_THREE || typeof document === "undefined") return null;
+    if (_objects.moonIdentitySurfaceTexture) return _objects.moonIdentitySurfaceTexture;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = 512;
+    canvas.height = 256;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return null;
+
+    ctx.fillStyle = "#d7d5cf";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    let seed = 0x75313;
+    const rnd = () => {
+      seed = (seed * 1664525 + 1013904223) >>> 0;
+      return seed / 4294967296;
+    };
+
+    // Broad maria / mineral fields.
+    for (let i = 0; i < 26; i += 1) {
+      const x = rnd() * canvas.width;
+      const y = rnd() * canvas.height;
+      const rx = 18 + rnd() * 58;
+      const ry = 8 + rnd() * 30;
+      const shade = Math.round(92 + rnd() * 54);
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate((rnd() - .5) * .8);
+      ctx.scale(1, ry / rx);
+      ctx.beginPath();
+      ctx.arc(0, 0, rx, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${shade},${shade},${shade},${.055 + rnd() * .10})`;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // Crater bowls with a dark floor and a restrained lit rim.
+    for (let i = 0; i < 72; i += 1) {
+      const x = rnd() * canvas.width;
+      const y = rnd() * canvas.height;
+      const r = 2.5 + Math.pow(rnd(), 2) * 15;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(32,34,35,${.04 + rnd() * .10})`;
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(x - r * .14, y - r * .14, r * .90, Math.PI * 1.05, Math.PI * 1.78);
+      ctx.lineWidth = Math.max(.7, r * .13);
+      ctx.strokeStyle = `rgba(255,255,248,${.06 + rnd() * .11})`;
+      ctx.stroke();
+    }
+
+    // Fine regolith grain.
+    for (let i = 0; i < 1800; i += 1) {
+      const v = rnd() > .5 ? 255 : 28;
+      ctx.fillStyle = `rgba(${v},${v},${v},${.012 + rnd() * .026})`;
+      ctx.fillRect(rnd() * canvas.width, rnd() * canvas.height, 1, 1);
+    }
+
+    const texture = new _THREE.CanvasTexture(canvas);
+    texture.wrapS = _THREE.RepeatWrapping;
+    texture.wrapT = _THREE.ClampToEdgeWrapping;
+    texture.minFilter = _THREE.LinearMipmapLinearFilter;
+    texture.magFilter = _THREE.LinearFilter;
+    texture.generateMipmaps = true;
+    if ("colorSpace" in texture && _THREE.SRGBColorSpace) texture.colorSpace = _THREE.SRGBColorSpace;
+    _objects.moonIdentitySurfaceTexture = texture;
+    return texture;
+  }
+
   function _buildMoonIdentityMarkers() {
     if (!_THREE || !_scene || _objects.moonIdentityMarkers) return;
     const mat = globalThis.LivingTimeSphereM;
@@ -1265,20 +1469,27 @@
       MOON_IDENTITY_BODY_MIN,
       Number(mat?.SIZES?.patternRing || 0.7) * MOON_IDENTITY_BODY_FACTOR
     );
-    const geometry = new _THREE.SphereGeometry(radius, _isMobileWidth() ? 14 : 18, _isMobileWidth() ? 10 : 13);
-    // Three.js multiplies instanceColor by vertex colour. Supplying an explicit
-    // white vertex-colour attribute avoids the nearly-black InstancedMesh seen
-    // on the user's Android/WebGL path while retaining one body draw call.
+    // B7.53: smaller bodies, smoother shared geometry, one lunar surface.
+    const geometry = new _THREE.SphereGeometry(radius, _isMobileWidth() ? 20 : 24, _isMobileWidth() ? 14 : 18);
     const vertexCount = geometry.getAttribute("position")?.count || 0;
     geometry.setAttribute("color", new _THREE.BufferAttribute(new Float32Array(vertexCount * 3).fill(1), 3));
-    const material = new _THREE.MeshBasicMaterial({
+
+    const lunarSurface = _moonIdentitySurfaceTexture();
+    const material = new _THREE.MeshStandardMaterial({
       color: 0xffffff,
       vertexColors: true,
+      map: lunarSurface,
+      bumpMap: lunarSurface,
+      bumpScale: 0.010,
+      roughness: 0.94,
+      metalness: 0.0,
+      emissive: 0x080a0b,
+      emissiveIntensity: 0.10,
       transparent: false,
       opacity: 1.0,
       depthWrite: true,
       depthTest: true,
-      toneMapped: false
+      toneMapped: true
     });
     const mesh = new _THREE.InstancedMesh(geometry, material, 13);
     mesh.name = "moonIdentityMarkers";
@@ -1393,22 +1604,26 @@
 
   function _moonLabelSet(viewMode, labelMode, selectedMoon, todayMoon, equinoxMoon) {
     if (labelMode === "hidden") return new Set();
-    if (labelMode === "selected") return new Set(selectedMoon ? [selectedMoon] : []);
-    if (labelMode === "all") return new Set(Array.from({ length: 13 }, (_, i) => i + 1));
 
-    if (viewMode === "today") {
-      return new Set([selectedMoon, ..._adjacentMoons(selectedMoon), 1, 13].filter(Boolean));
+    if (labelMode === "selected") {
+      return new Set(
+        selectedMoon
+          ? [selectedMoon]
+          : []
+      );
     }
-    if (viewMode === "passage") {
-      return new Set([selectedMoon, equinoxMoon, ..._adjacentMoons(selectedMoon), 1, todayMoon].filter(Boolean));
-    }
-    if (viewMode === "pattern") {
-      if (_isMobileWidth()) {
-        return new Set([selectedMoon, ..._adjacentMoons(selectedMoon), 1, todayMoon].filter(Boolean));
-      }
-      return new Set(Array.from({ length: 13 }, (_, i) => i + 1));
-    }
-    return new Set([1, 4, 7, 10, selectedMoon].filter(Boolean));
+
+    /*
+     * B7.55 — the Moon body itself no longer carries a separate 1..13 point
+     * atlas. In the full Observatory every physically visible Moon therefore
+     * keeps its plain "Moon N" identity label available at all times.
+     */
+    return new Set(
+      Array.from(
+        { length: 13 },
+        (_, i) => i + 1
+      )
+    );
   }
 
   function _moonLabelPriority(moon, { selectedMoon, todayMoon, equinoxMoon, viewMode }) {
@@ -2528,6 +2743,7 @@
   function _setEnvironmentObjectVisible(layer, visible) {
     if (layer === "atmosphere") {
       if (_objects.environmentShell) _objects.environmentShell.visible = visible;
+      if (_objects.environmentCompass) _objects.environmentCompass.visible = visible;
       return;
     }
     if (layer === "clouds") {
@@ -2544,6 +2760,7 @@
     }
     if (layer === "temperature") {
       if (_objects.environmentTemperatureArc) _objects.environmentTemperatureArc.visible = visible;
+      if (_objects.environmentTemperatureMarker) _objects.environmentTemperatureMarker.visible = visible;
       return;
     }
     if (layer === "pressure") {
@@ -3037,91 +3254,461 @@
 
   function _buildEnvironmentLayerObjects() {
     if (!_THREE || _objects.environmentGroup) return;
+
     const THREE = _THREE;
     const group = new THREE.Group();
+
     group.name = "environmentGroup";
     group.visible = false;
+    group.renderOrder = 1;
 
+    /*
+     * B7.56 ENVIRONMENT FIELD
+     *
+     * One subtle atmosphere shell establishes that the field is local to the
+     * sphere. It deliberately stays low-opacity so live weather never becomes
+     * a full-screen blue wash.
+     */
     const shell = new THREE.Mesh(
-      new THREE.SphereGeometry(1.18, 44, 44),
+      new THREE.SphereGeometry(
+        1.18,
+        _isMobileWidth() ? 24 : 34,
+        _isMobileWidth() ? 16 : 24
+      ),
       new THREE.MeshBasicMaterial({
-        color: 0x8fd3ff,
+        color: 0x7db4c1,
         transparent: true,
-        opacity: 0.04,
+        opacity: 0.035,
         depthWrite: false,
-        side: THREE.DoubleSide
+        depthTest: true,
+        side: THREE.BackSide,
+        blending: THREE.AdditiveBlending
       })
     );
+
     shell.name = "environment-shell";
+    shell.renderOrder = 0;
     group.add(shell);
 
-    const cloudBands = new THREE.Group();
-    [-0.18, 0, 0.18].forEach((y, index) => {
-      const band = new THREE.Mesh(
-        new THREE.TorusGeometry(1.14 + index * 0.015, 0.014, 10, 96),
-        new THREE.MeshBasicMaterial({ color: 0xcfe8ff, transparent: true, opacity: 0.04, depthWrite: false })
+    /*
+     * A thin reference ring makes the weather geometry read as a coherent
+     * instrument rather than several unrelated effects.
+     */
+    const compassGroup = new THREE.Group();
+    compassGroup.name = "environment-compass";
+
+    const compassRing = new THREE.Mesh(
+      new THREE.TorusGeometry(
+        1.115,
+        0.0035,
+        5,
+        96
+      ),
+      new THREE.MeshBasicMaterial({
+        color: 0x8cd9cf,
+        transparent: true,
+        opacity: 0.18,
+        depthWrite: false
+      })
+    );
+
+    compassRing.rotation.x = Math.PI / 2;
+    compassGroup.add(compassRing);
+
+    const compassPoints = [];
+
+    [0, 90, 180, 270].forEach(deg => {
+      const rad = deg * Math.PI / 180;
+      const inner = 1.085;
+      const outer = 1.145;
+
+      compassPoints.push(
+        new THREE.Vector3(
+          Math.cos(rad) * inner,
+          0.012,
+          Math.sin(rad) * inner
+        ),
+        new THREE.Vector3(
+          Math.cos(rad) * outer,
+          0.012,
+          Math.sin(rad) * outer
+        )
       );
-      band.rotation.x = Math.PI / 2;
-      band.position.y = y;
+    });
+
+    const compassTicks = new THREE.LineSegments(
+      new THREE.BufferGeometry().setFromPoints(compassPoints),
+      new THREE.LineBasicMaterial({
+        color: 0xb8eee7,
+        transparent: true,
+        opacity: 0.34,
+        depthWrite: false
+      })
+    );
+
+    compassTicks.name = "environment-cardinal-ticks";
+    compassGroup.add(compassTicks);
+    group.add(compassGroup);
+
+    /*
+     * Three cloud belts correspond to low / mid / high cloud fields.
+     * They are deliberately thin; cloud COVER changes opacity rather than
+     * covering the entire sphere.
+     */
+    const cloudBands = new THREE.Group();
+
+    [
+      { y: -0.17, radius: 1.105, tilt: -0.08 },
+      { y:  0.00, radius: 1.135, tilt:  0.04 },
+      { y:  0.17, radius: 1.165, tilt:  0.10 }
+    ].forEach((spec, index) => {
+      const band = new THREE.Mesh(
+        new THREE.TorusGeometry(
+          spec.radius,
+          0.006,
+          6,
+          72
+        ),
+        new THREE.MeshBasicMaterial({
+          color: 0xd4edf0,
+          transparent: true,
+          opacity: 0.025,
+          depthWrite: false
+        })
+      );
+
+      band.rotation.x = Math.PI / 2 + spec.tilt;
+      band.position.y = spec.y;
+      band.name = `environment-cloud-band-${index + 1}`;
       cloudBands.add(band);
     });
+
     cloudBands.name = "environment-cloud-bands";
     group.add(cloudBands);
 
-    const windGroup = new THREE.Group();
-    for (let i = 0; i < 8; i += 1) {
-      const geo = new THREE.BufferGeometry().setFromPoints([
-        new THREE.Vector3(0.86, -0.12 + i * 0.035, 0),
-        new THREE.Vector3(1.1, -0.12 + i * 0.035, 0)
-      ]);
-      const line = new THREE.Line(geo, new THREE.LineBasicMaterial({ color: 0xa7f3d0, transparent: true, opacity: 0.56 }));
-      windGroup.add(line);
+    /*
+     * Wind is a directional stream with real arrowheads.
+     * All arrows live in one LineSegments object and rotate together according
+     * to the live wind bearing.
+     */
+    const windPoints = [];
+
+    for (let i = 0; i < 6; i += 1) {
+      const y = -0.125 + i * 0.05;
+      const x0 = 0.81;
+      const x1 = 1.09;
+      const head = 0.045;
+
+      windPoints.push(
+        new THREE.Vector3(x0, y, 0),
+        new THREE.Vector3(x1, y, 0),
+
+        new THREE.Vector3(x1, y, 0),
+        new THREE.Vector3(x1 - head, y + head * 0.55, 0),
+
+        new THREE.Vector3(x1, y, 0),
+        new THREE.Vector3(x1 - head, y - head * 0.55, 0)
+      );
     }
+
+    const windGroup = new THREE.Group();
+
+    const windArrows = new THREE.LineSegments(
+      new THREE.BufferGeometry().setFromPoints(windPoints),
+      new THREE.LineBasicMaterial({
+        color: 0x86e0c6,
+        transparent: true,
+        opacity: 0.46,
+        depthWrite: false
+      })
+    );
+
+    windArrows.name = "environment-wind-arrows";
+    windGroup.add(windArrows);
     windGroup.name = "environment-wind-vectors";
     group.add(windGroup);
 
+    /*
+     * Temperature is a coloured arc plus one marker.
+     * The marker position maps roughly from -10C to 40C.
+     */
     const tempArc = new THREE.Mesh(
-      new THREE.TorusGeometry(1.08, 0.018, 12, 120, Math.PI * 1.15),
-      new THREE.MeshBasicMaterial({ color: 0xf5cd72, transparent: true, opacity: 0.44, depthWrite: false })
+      new THREE.TorusGeometry(
+        1.075,
+        0.010,
+        8,
+        96,
+        Math.PI * 1.15
+      ),
+      new THREE.MeshBasicMaterial({
+        color: 0xf5cd72,
+        transparent: true,
+        opacity: 0.34,
+        depthWrite: false
+      })
     );
+
     tempArc.name = "environment-temperature-arc";
     tempArc.rotation.x = Math.PI / 2;
     tempArc.rotation.z = Math.PI * 0.25;
     group.add(tempArc);
 
-    const pressureRing = new THREE.Mesh(
-      new THREE.TorusGeometry(1.03, 0.008, 10, 96),
-      new THREE.MeshBasicMaterial({ color: 0x9dc1ff, transparent: true, opacity: 0.34, depthWrite: false })
+    const tempMarker = new THREE.Mesh(
+      new THREE.SphereGeometry(
+        0.017,
+        8,
+        8
+      ),
+      new THREE.MeshBasicMaterial({
+        color: 0xf5cd72,
+        transparent: true,
+        opacity: 0.90,
+        depthWrite: false
+      })
     );
+
+    tempMarker.name = "environment-temperature-marker";
+    group.add(tempMarker);
+
+    /*
+     * Pressure remains a full ring: pressure above/below standard changes its
+     * radius slightly. That gives it one unambiguous visual meaning.
+     */
+    const pressureRing = new THREE.Mesh(
+      new THREE.TorusGeometry(
+        1.025,
+        0.005,
+        6,
+        88
+      ),
+      new THREE.MeshBasicMaterial({
+        color: 0x9dbde5,
+        transparent: true,
+        opacity: 0.28,
+        depthWrite: false
+      })
+    );
+
     pressureRing.rotation.x = Math.PI / 2;
     pressureRing.name = "environment-pressure-ring";
     group.add(pressureRing);
 
-    const precip = new THREE.Mesh(
-      new THREE.SphereGeometry(1.16, 6, 6),
-      new THREE.MeshBasicMaterial({ color: 0x84d8ff, transparent: true, opacity: 0.025, wireframe: true, depthWrite: false })
+    /*
+     * Precipitation is a sparse point field rather than a wireframe globe.
+     * It is only visible when actual precipitation exists.
+     */
+    const precipPositions = [];
+    const precipCount = _isMobileWidth() ? 48 : 72;
+    const golden = Math.PI * (3 - Math.sqrt(5));
+
+    for (let i = 0; i < precipCount; i += 1) {
+      const t = (i + 0.5) / precipCount;
+      const y = 0.54 - t * 1.08;
+      const ringRadius = Math.sqrt(
+        Math.max(
+          0,
+          1 - Math.pow(y / 0.60, 2)
+        )
+      ) * 1.12;
+      const angle = i * golden;
+
+      precipPositions.push(
+        Math.cos(angle) * ringRadius,
+        y,
+        Math.sin(angle) * ringRadius
+      );
+    }
+
+    const precipGeometry = new THREE.BufferGeometry();
+    precipGeometry.setAttribute(
+      "position",
+      new THREE.Float32BufferAttribute(
+        precipPositions,
+        3
+      )
     );
+
+    const precip = new THREE.Points(
+      precipGeometry,
+      new THREE.PointsMaterial({
+        color: 0x8ddcff,
+        size: _isMobileWidth() ? 0.014 : 0.012,
+        transparent: true,
+        opacity: 0,
+        depthWrite: false,
+        sizeAttenuation: true
+      })
+    );
+
     precip.name = "environment-precip-particles";
     group.add(precip);
 
+    /*
+     * Gold terminator = local daylight position. This is intentionally
+     * separate from weather so the viewer can read atmospheric conditions
+     * against the current solar phase.
+     */
     const terminator = new THREE.Mesh(
-      new THREE.TorusGeometry(1.0, 0.004, 8, 120),
-      new THREE.MeshBasicMaterial({ color: 0xffd47a, transparent: true, opacity: 0.36, depthWrite: false })
+      new THREE.TorusGeometry(
+        1.00,
+        0.003,
+        5,
+        96
+      ),
+      new THREE.MeshBasicMaterial({
+        color: 0xffd47a,
+        transparent: true,
+        opacity: 0.28,
+        depthWrite: false
+      })
     );
+
     terminator.rotation.x = Math.PI / 2;
     terminator.name = "environment-day-night-terminator";
     group.add(terminator);
 
     _scene.add(group);
+
     _objects.environmentGroup = group;
     _objects.environmentShell = shell;
+    _objects.environmentCompass = compassGroup;
     _objects.environmentCloudBands = cloudBands;
     _objects.environmentWindVectors = windGroup;
+    _objects.environmentWindArrows = windArrows;
     _objects.environmentTemperatureArc = tempArc;
+    _objects.environmentTemperatureMarker = tempMarker;
     _objects.environmentPressureRing = pressureRing;
     _objects.environmentPrecip = precip;
     _objects.environmentTerminator = terminator;
   }
+
+
+  function _buildSpaceWeatherField() {
+    if (
+      !_THREE
+      || !_objects?.environmentGroup
+      || _objects.spaceWeatherGroup
+    ) {
+      return;
+    }
+
+    const THREE = _THREE;
+    const group = new THREE.Group();
+    group.name = "environment-space-weather";
+    group.visible = false;
+
+    const specs = [
+      { radius: 1.205, tiltX: Math.PI / 2, tiltZ: 0.00 },
+      { radius: 1.238, tiltX: Math.PI / 2 + .08, tiltZ: .12 },
+      { radius: 1.272, tiltX: Math.PI / 2 - .07, tiltZ: -.10 }
+    ];
+
+    specs.forEach((spec, index) => {
+      const ring = new THREE.Mesh(
+        new THREE.TorusGeometry(
+          spec.radius,
+          index === 0 ? .0045 : .003,
+          5,
+          96
+        ),
+        new THREE.MeshBasicMaterial({
+          color: 0x68d8c7,
+          transparent: true,
+          opacity: 0.08,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending
+        })
+      );
+
+      ring.rotation.x = spec.tiltX;
+      ring.rotation.z = spec.tiltZ;
+      ring.name = `environment-kp-ring-${index + 1}`;
+      group.add(ring);
+    });
+
+    _objects.environmentGroup.add(group);
+    _objects.spaceWeatherGroup = group;
+  }
+
+  function _spaceWeatherColor(kp) {
+    const value = Number(kp);
+
+    if (!Number.isFinite(value)) return 0x68d8c7;
+    if (value < 3) return 0x68d8c7;
+    if (value < 4) return 0x9fd477;
+    if (value < 5) return 0xe3cc68;
+    if (value < 6) return 0xf3a94f;
+    if (value < 7) return 0xf0784d;
+    if (value < 8) return 0xe95465;
+    return 0xd86fe8;
+  }
+
+  function _applySpaceWeatherField(spaceWeather) {
+    _buildSpaceWeatherField();
+
+    const group =
+      _objects?.spaceWeatherGroup
+      || null;
+
+    if (!group) return;
+
+    const kp = Number(
+      spaceWeather?.kp
+      ?? spaceWeather?.kpMax
+    );
+
+    if (!Number.isFinite(kp)) {
+      group.visible = false;
+      return;
+    }
+
+    group.visible = true;
+
+    const color =
+      _spaceWeatherColor(kp);
+
+    const strength =
+      Math.max(
+        0,
+        Math.min(
+          1,
+          kp / 9
+        )
+      );
+
+    group.children.forEach(
+      (ring, index) => {
+        ring.material.color.setHex(color);
+
+        ring.material.opacity =
+          0.055
+          + strength
+            * (
+                index === 0
+                  ? .24
+                  : .15
+              );
+
+        const expansion =
+          1
+          + strength
+            * (
+                .012
+                + index * .010
+              );
+
+        ring.scale.setScalar(expansion);
+      }
+    );
+
+    group.userData = {
+      type: "geomagnetic-kp-field",
+      kp,
+      level: spaceWeather?.level || "unknown",
+      provider: spaceWeather?.provider || "NOAA SWPC / GFZ"
+    };
+  }
+
 
   function _runEnvironmentLayer(layer, fn) {
     if (_environmentLayerEnabled[layer] === false) return;
@@ -3151,6 +3738,11 @@
     }
 
     _buildEnvironmentLayerObjects();
+
+    _applySpaceWeatherField(
+      snapshot?.spaceWeather
+      || null
+    );
     if (!_objects.environmentGroup) return;
     _objects.environmentGroup.visible = true;
 
@@ -3165,40 +3757,244 @@
     const tempC = _num(current.temperature ?? current.temperature_2m, 0);
 
     _runEnvironmentLayer("atmosphere", () => {
-      _objects.environmentShell.material.opacity = 0.06 + (cloud / 100) * 0.24 + (humidity / 100) * 0.16;
+      const shellColor = new _THREE.Color(
+        _temperatureColorHex(tempC)
+      );
+
+      shellColor.lerp(
+        new _THREE.Color(0x82b9c5),
+        0.72
+      );
+
+      _objects.environmentShell.material.color.copy(
+        shellColor
+      );
+
+      /*
+       * The shell is context, not fog. Even 100% cloud + humidity now stays
+       * below ~0.11 opacity instead of washing the calendar blue.
+       */
+      _objects.environmentShell.material.opacity =
+        0.025
+        + (cloud / 100) * 0.045
+        + (humidity / 100) * 0.035;
+
+      if (_objects.environmentCompass) {
+        _objects.environmentCompass.visible = true;
+      }
     });
 
     _runEnvironmentLayer("clouds", () => {
-      const low = _num(hourly?.cloud_cover_low?.[0], cloud);
-      const mid = _num(hourly?.cloud_cover_mid?.[0], cloud);
-      const high = _num(hourly?.cloud_cover_high?.[0], cloud);
-      const bands = _objects.environmentCloudBands?.children || [];
-      [low, mid, high].forEach((value, index) => {
-        const band = bands[index];
-        if (!band) return;
-        band.material.opacity = 0.04 + _clamp(value, 0, 100) / 100 * 0.42;
-      });
+      const low = _num(
+        hourly?.cloud_cover_low?.[0],
+        cloud
+      );
+
+      const mid = _num(
+        hourly?.cloud_cover_mid?.[0],
+        cloud
+      );
+
+      const high = _num(
+        hourly?.cloud_cover_high?.[0],
+        cloud
+      );
+
+      const bands =
+        _objects.environmentCloudBands?.children
+        || [];
+
+      [low, mid, high].forEach(
+        (value, index) => {
+          const band = bands[index];
+          if (!band) return;
+
+          band.material.opacity =
+            0.018
+            + _clamp(
+                value,
+                0,
+                100
+              )
+              / 100
+              * 0.16;
+
+          band.userData = {
+            ...(band.userData || {}),
+            cloudLevel:
+              ["low", "mid", "high"][index],
+            cover:
+              Math.round(
+                _clamp(value, 0, 100)
+              )
+          };
+        }
+      );
     });
 
     _runEnvironmentLayer("wind", () => {
-      _objects.environmentWindVectors.rotation.y = (windDirection * Math.PI) / 180;
-      const windScale = 0.8 + Math.min(2.2, windSpeed / 12);
-      _objects.environmentWindVectors.scale.set(windScale, 1, 1 + Math.min(1.8, gusts / 22));
+      _objects.environmentWindVectors.rotation.y =
+        (windDirection * Math.PI)
+        / 180;
+
+      const windScale =
+        0.92
+        + Math.min(
+            1.25,
+            windSpeed / 22
+          );
+
+      const gustStretch =
+        1
+        + Math.min(
+            0.55,
+            Math.max(
+              0,
+              gusts - windSpeed
+            )
+            / 28
+          );
+
+      _objects.environmentWindVectors.scale.set(
+        windScale,
+        1,
+        gustStretch
+      );
+
+      if (
+        _objects.environmentWindArrows?.material
+      ) {
+        _objects.environmentWindArrows.material.opacity =
+          0.30
+          + Math.min(
+              0.42,
+              windSpeed / 32
+            );
+      }
+
+      _objects.environmentWindVectors.userData = {
+        type: "environment-wind-field",
+        speed: windSpeed,
+        gusts,
+        direction: windDirection
+      };
     });
 
     _runEnvironmentLayer("temperature", () => {
-      _objects.environmentTemperatureArc.material.color.setHex(_temperatureColorHex(tempC));
-      _objects.environmentTemperatureArc.material.opacity = 0.36 + Math.min(0.46, Math.abs(tempC - 16) / 40);
+      const color =
+        _temperatureColorHex(tempC);
+
+      _objects.environmentTemperatureArc.material.color.setHex(
+        color
+      );
+
+      _objects.environmentTemperatureArc.material.opacity =
+        0.30
+        + Math.min(
+            0.24,
+            Math.abs(tempC - 16) / 65
+          );
+
+      const normalizedTemp =
+        _clamp(
+          (tempC + 10) / 50,
+          0,
+          1
+        );
+
+      const tempAngle =
+        45
+        + normalizedTemp
+        * (Math.PI * 1.15 * 180 / Math.PI);
+
+      const markerPosition =
+        angleToXZ(
+          tempAngle,
+          1.075
+        );
+
+      if (
+        _objects.environmentTemperatureMarker
+      ) {
+        _objects.environmentTemperatureMarker.position.set(
+          markerPosition.x,
+          0.018,
+          markerPosition.z
+        );
+
+        _objects.environmentTemperatureMarker.material.color.setHex(
+          color
+        );
+
+        _objects.environmentTemperatureMarker.userData = {
+          type: "environment-temperature",
+          temperatureC: tempC,
+          normalized: normalizedTemp
+        };
+      }
     });
 
     _runEnvironmentLayer("pressure", () => {
-      _objects.environmentPressureRing.scale.setScalar(1 + _clamp((pressure - 1013) / 500, -0.05, 0.05));
-      _objects.environmentPressureRing.material.opacity = 0.42 + Math.min(0.32, Math.abs(pressure - 1013) / 45);
+      const pressureOffset =
+        _clamp(
+          (pressure - 1013) / 360,
+          -0.045,
+          0.045
+        );
+
+      _objects.environmentPressureRing.scale.setScalar(
+        1 + pressureOffset
+      );
+
+      _objects.environmentPressureRing.material.opacity =
+        0.24
+        + Math.min(
+            0.24,
+            Math.abs(pressure - 1013) / 70
+          );
+
+      _objects.environmentPressureRing.userData = {
+        type: "environment-pressure",
+        pressure
+      };
     });
 
     _runEnvironmentLayer("precipitation", () => {
-      _objects.environmentPrecip.material.opacity = 0.02 + Math.min(0.32, precipitation / 6);
+      const active =
+        precipitation > 0.02;
+
+      _objects.environmentPrecip.visible =
+        active;
+
+      _objects.environmentPrecip.material.opacity =
+        active
+          ? (
+              0.12
+              + Math.min(
+                  0.50,
+                  precipitation / 8
+                )
+            )
+          : 0;
+
+      _objects.environmentPrecip.userData = {
+        type: "environment-precipitation",
+        precipitation
+      };
     });
+
+    _objects.environmentGroup.userData = {
+      type: "environment-field",
+      cloudCover: cloud,
+      humidity,
+      windSpeed,
+      windDirection,
+      gusts,
+      precipitation,
+      pressure,
+      temperatureC: tempC,
+      solarRadiation: shortwave
+    };
 
     _runEnvironmentLayer("radiation", () => {
       const dayStart = daily?.sunrise ? new Date(daily.sunrise).getTime() : NaN;
@@ -3209,8 +4005,26 @@
         dayAngle = progress * Math.PI * 2;
       }
       _objects.environmentTerminator.rotation.z = dayAngle;
-      if (_objects.pointLight) _objects.pointLight.intensity = 0.85 + Math.min(1.35, shortwave / 360);
-      if (_objects.hazeShell) _objects.hazeShell.material.opacity = Math.max(_objects.hazeShell.material.opacity, 0.08 + Math.min(0.28, shortwave / 1200));
+      _objects.environmentTerminator.material.opacity =
+        0.18
+        + Math.min(
+            0.28,
+            shortwave / 1800
+          );
+
+      if (_objects.pointLight) {
+        _objects.pointLight.intensity =
+          0.82
+          + Math.min(
+              0.92,
+              shortwave / 620
+            );
+      }
+
+      /*
+       * Do not make the global haze carry weather state. The Environment Field
+       * has its own shell now, which keeps the rest of the Observatory clean.
+       */
     });
 
     _runEnvironmentLayer("airQuality", () => {});
@@ -4794,7 +5608,7 @@
         // MSAA is disproportionately expensive on dense phone canvases and the
         // instrument already uses line/point geometry that remains readable at
         // the adaptive DPR. Desktop keeps the authored quality preset.
-        const antialias = mobileFastPath ? false : quality.antialias !== false;
+        const antialias = mobileFastPath ? !lowPowerRenderer : quality.antialias !== false;
         _activeWebGlContext = _canvas.getContext("webgl2", {
           alpha: false,
           antialias,
@@ -5143,6 +5957,106 @@
       return delta;
     }
 
+    function _applyEnvironmentGestureBudget(active) {
+      const group =
+        _objects?.environmentGroup
+        || null;
+
+      if (!group) return;
+
+      const snapshot =
+        _normalizedEnvironmentState(
+          _environmentState
+        );
+
+      const hasData =
+        !!(
+          _environmentLayerVisible
+          && snapshot?.current
+        );
+
+      if (!hasData) {
+        group.visible = false;
+        return;
+      }
+
+      /*
+       * B7.56 — environment never disappears during camera motion.
+       *
+       * Only the two highest-overdraw details (cloud belts and precipitation
+       * particles) pause while the finger is down. Atmosphere, compass, wind,
+       * temperature, pressure and daylight remain physically attached to the
+       * rotating sphere.
+       */
+      group.visible = true;
+
+      if (_objects.environmentShell) {
+        _objects.environmentShell.visible =
+          _environmentLayerEnabled.atmosphere
+          !== false;
+      }
+
+      if (_objects.environmentCompass) {
+        _objects.environmentCompass.visible =
+          _environmentLayerEnabled.atmosphere
+          !== false;
+      }
+
+      if (_objects.environmentWindVectors) {
+        _objects.environmentWindVectors.visible =
+          _environmentLayerEnabled.wind
+          !== false;
+      }
+
+      if (_objects.environmentTemperatureArc) {
+        _objects.environmentTemperatureArc.visible =
+          _environmentLayerEnabled.temperature
+          !== false;
+      }
+
+      if (_objects.environmentTemperatureMarker) {
+        _objects.environmentTemperatureMarker.visible =
+          _environmentLayerEnabled.temperature
+          !== false;
+      }
+
+      if (_objects.environmentPressureRing) {
+        _objects.environmentPressureRing.visible =
+          _environmentLayerEnabled.pressure
+          !== false;
+      }
+
+      if (_objects.environmentTerminator) {
+        _objects.environmentTerminator.visible =
+          _environmentLayerEnabled.radiation
+          !== false;
+      }
+
+      if (_objects.environmentCloudBands) {
+        _objects.environmentCloudBands.visible =
+          !active
+          && _environmentLayerEnabled.clouds
+             !== false;
+      }
+
+      if (_objects.environmentPrecip) {
+        const precipitation =
+          Math.max(
+            0,
+            _num(
+              snapshot?.current?.precipitation,
+              0
+            )
+          );
+
+        _objects.environmentPrecip.visible =
+          !active
+          && precipitation > 0.02
+          && _environmentLayerEnabled.precipitation
+             !== false;
+      }
+    }
+
     function _applyGestureVisualBudget(active) {
       if (!_objects) return;
       if (active) {
@@ -5150,16 +6064,19 @@
         // reference and schedule atlas; suspend decorative/high-overdraw layers.
         for (const object of [
           _objects.starField, _objects.hazeShell, _objects.planetaryGroup,
-          _objects.environmentGroup, _objects.connectionGroup, _objects.recurrenceGroup,
+          _objects.connectionGroup, _objects.recurrenceGroup,
           _objects.spiralGroup
         ]) {
           if (object) object.visible = false;
         }
+
+        _applyEnvironmentGestureBudget(true);
       } else {
         _applyLayerVisibility(_visibleLayers, _semanticZoomState || { band: "medium", visibility: {} });
         _applyModeVisibilityOverrides(_visibleLayers);
         if (_objects.starField) _objects.starField.visible = Number(_quality?.starCount || 0) > 0;
         if (_objects.hazeShell) _objects.hazeShell.visible = _quality?.glow !== false;
+        _applyEnvironmentGestureBudget(false);
       }
     }
 

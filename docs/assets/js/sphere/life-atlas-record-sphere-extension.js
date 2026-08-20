@@ -412,14 +412,79 @@
               ? 0.82
               : (moonDistance < 0.5 ? 1.28 : (moonDistance < 1.5 ? 0.98 : 0.82));
             emphasis = mix(emphasis, 1.52, selected);
-            vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-            gl_Position = projectionMatrix * mvPosition;
-            gl_PointSize = disclosed > 0.5
-              ? max(1.0, uPointSize * uPixelRatio * emphasis * uGestureScale)
-              : 0.0;
+
+            vec4 mvPosition =
+              modelViewMatrix
+              * vec4(
+                  position,
+                  1.0
+                );
+
+            vec4 clipPosition =
+              projectionMatrix
+              * mvPosition;
+
+            gl_Position =
+              clipPosition;
+
+            /*
+             * B7.55 — same visual aperture as day numerals.
+             * NDC +/-0.54 is fully visible; +/-0.78 is the dissipating edge.
+             */
+            float ndcX =
+              clipPosition.x
+              / max(
+                  0.0001,
+                  abs(
+                    clipPosition.w
+                  )
+                );
+
+            float aperture =
+              1.0
+              - smoothstep(
+                  0.54,
+                  0.78,
+                  abs(
+                    ndcX
+                  )
+                );
+
+            disclosed *=
+              aperture;
+
+            float apertureScale =
+              mix(
+                0.76,
+                1.0,
+                aperture
+              );
+
+            gl_PointSize =
+              disclosed > 0.025
+                ? max(
+                    1.0,
+                    uPointSize
+                      * uPixelRatio
+                      * emphasis
+                      * uGestureScale
+                      * apertureScale
+                  )
+                : 0.0;
+
             vColor = aColor;
             vSymbolIndex = aSymbolIndex;
-            vOpacity = disclosed * (selected > 0.5 ? 1.0 : (moonDistance < 0.5 ? 0.98 : 0.78));
+            vOpacity =
+              disclosed
+              * (
+                  selected > 0.5
+                    ? 1.0
+                    : (
+                        moonDistance < 0.5
+                          ? 0.98
+                          : 0.84
+                      )
+                );
           }
         `,
         fragmentShader: `

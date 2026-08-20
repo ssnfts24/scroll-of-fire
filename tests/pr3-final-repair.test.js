@@ -86,16 +86,79 @@ test("broken bottom resource handling is centralized and diagnostics remain avai
   assert.ok(site.includes("if (shell) shell.hidden = true;"), "global image fallback should hide failed media shells");
 });
 
-test("focus environment control is DOM-only and does not force layer/render state mutation", () => {
+test("environment bridge uses a lightweight show action while retaining DOM-only controls focus", () => {
   const ui = read("docs/assets/js/sphere/living-time-sphere-ui.js");
-  assert.ok(ui.includes("function _focusEnvironmentControls()"), "focus helper should exist");
-  assert.ok(ui.includes("_focusEnvironmentControls();"), "focus button should route through focus helper");
-  const focusStart = ui.indexOf("focusEnvironmentBtn.addEventListener(\"click\", () => {");
-  const focusEnd = focusStart >= 0 ? ui.indexOf("});", focusStart) : -1;
-  const focusSection = focusStart >= 0 && focusEnd > focusStart ? ui.slice(focusStart, focusEnd + 3) : "";
-  assert.ok(focusSection.includes("_focusEnvironmentControls();"), "focus click should invoke DOM focus helper");
-  assert.equal(focusSection.includes("renderSphere(container)"), false, "focus click should not trigger full render");
-  assert.equal(focusSection.includes("sphere-layer-environment"), false, "focus click should not toggle environment layer");
+
+  assert.ok(
+    ui.includes("function _focusEnvironmentControls()"),
+    "focus helper should still exist"
+  );
+
+  const focusStart =
+    ui.indexOf(
+      'focusEnvironmentBtn.addEventListener("click", () => {'
+    );
+
+  const nextSection =
+    focusStart >= 0
+      ? ui.indexOf(
+          "\n    const",
+          focusStart + 20
+        )
+      : -1;
+
+  const focusSection =
+    focusStart >= 0
+      ? ui.slice(
+          focusStart,
+          nextSection > focusStart
+            ? nextSection
+            : focusStart + 7000
+        )
+      : "";
+
+  assert.ok(
+    focusSection.includes(
+      'focusEnvironmentBtn.dataset.environmentAction'
+    ),
+    "bridge action should distinguish show vs controls"
+  );
+
+  assert.ok(
+    focusSection.includes(
+      '=== "show"'
+    ),
+    "ready environment should expose a lightweight show action"
+  );
+
+  assert.ok(
+    focusSection.includes(
+      '_state.visibleLayers.environment = true'
+    ),
+    "show action should update canonical environment visibility"
+  );
+
+  assert.ok(
+    focusSection.includes(
+      '_requestLayerStateUpdate('
+    ),
+    "show action should use the lightweight renderer layer-update path"
+  );
+
+  assert.ok(
+    focusSection.includes(
+      "_focusEnvironmentControls();"
+    ),
+    "non-show action should still route through the DOM focus helper"
+  );
+
+  assert.equal(
+    focusSection.includes(
+      "renderSphere(container)"
+    ),
+    false,
+    "environment bridge action must not trigger a full render"
+  );
 });
 
 test("selected-scope controls are decoupled from top view-mode mutations", () => {

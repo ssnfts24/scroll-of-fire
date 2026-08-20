@@ -29,11 +29,50 @@ test("renderer caches spiral and passage geometry between mode toggles", () => {
   assert.ok(renderer.includes("_positionSelectionRingForYear"), "selected year ring should reuse cached spiral anchors");
 });
 
-test("environment bridge copy is decoupled from layer visibility and provider lifecycle", () => {
+test("environment bridge keeps provider lifecycle decoupled from layer visibility with explicit state", () => {
   const ui = read("docs/assets/js/sphere/living-time-sphere-ui.js");
-  assert.ok(ui.includes("Weather loading in background"), "environment text should distinguish provider loading");
-  assert.ok(ui.includes("Environment layer OFF"), "environment text should preserve layer OFF semantics");
-  assert.ok(ui.includes("else if (_state.visibleLayers.environment)"), "environment change handler should avoid full rerender when layer is off");
+
+  assert.ok(
+    ui.includes(
+      'const stateLabel ='
+    ),
+    "environment bridge should derive readable copy from explicit state"
+  );
+
+  assert.ok(
+    ui.includes(
+      '"Environment ON"'
+    ),
+    "bridge should identify active environment layer state"
+  );
+
+  assert.ok(
+    ui.includes(
+      '"Environment ready"'
+    ),
+    "bridge should distinguish provider-ready from layer-on"
+  );
+
+  assert.ok(
+    ui.includes(
+      'bridge.dataset.environmentState ='
+    ),
+    "provider lifecycle should be exposed independently"
+  );
+
+  assert.ok(
+    ui.includes(
+      'bridge.dataset.layerState ='
+    ),
+    "layer visibility should be exposed independently"
+  );
+
+  assert.ok(
+    ui.includes(
+      'else if (_state.visibleLayers.environment)'
+    ),
+    "environment change handler should still avoid full rerender when layer is off"
+  );
 });
 
 test("global broken-media fallback collapses non-image failed resources", () => {

@@ -596,7 +596,13 @@
 
     if (
       labelMode === "all"
+      || profile === "observatory"
     ) {
+      /*
+       * B7.55 — Moon identity is persistent in the full Observatory.
+       * Back-facing/off-screen anchors are still naturally rejected later,
+       * but selection no longer decides which Moon names exist.
+       */
       return new Set(
         Array.from(
           {
@@ -1013,9 +1019,52 @@
             break;
           }
         }
-        if (collides && !selected) {
+        if (
+          collides
+          && !selected
+          && runtimeProfile !== "observatory"
+        ) {
           _hideLabel(el);
           continue;
+        }
+
+        if (
+          collides
+          && !selected
+          && runtimeProfile === "observatory"
+        ) {
+          left = clamp(
+            targetX - w / 2,
+            offsetX + STAGE_PADDING,
+            Math.max(
+              offsetX + STAGE_PADDING,
+              offsetX
+                + stageRect.width
+                - w
+                - STAGE_PADDING
+            )
+          );
+
+          top = clamp(
+            targetY - h / 2,
+            offsetY + STAGE_PADDING,
+            Math.max(
+              offsetY + STAGE_PADDING,
+              offsetY
+                + stageRect.height
+                - h
+                - STAGE_PADDING
+            )
+          );
+
+          rectBox = {
+            x: left,
+            y: top,
+            w,
+            h
+          };
+
+          collides = false;
         }
         if (left == null || top == null || !rectBox) {
           left = clamp(targetX - w / 2, offsetX + STAGE_PADDING, Math.max(offsetX + STAGE_PADDING, offsetX + stageRect.width - w - STAGE_PADDING));
@@ -1205,8 +1254,162 @@
               )
         );
 
+      /*
+       * B7.55 — CAMERA CALENDAR APERTURE
+       *
+       * The user's red-line concept is a screen-space window rather than a
+       * hard Moon switch. The center ~54% of the instrument is fully readable;
+       * days fade through the next ~24% and disappear before the side walls.
+       *
+       * Because renderer calendarDisclosure keeps the adjacent Moon available,
+       * rotating left/right makes the leaving dates dissipate while dates from
+       * the incoming Moon progressively appear through this same aperture.
+       */
+      const railApertureOpacity =
+        candidate => {
+          const target =
+            candidate?.target
+            || null;
+
+          if (
+            target?.selected
+            || target?.pinned
+          ) {
+            return 1;
+          }
+
+          const anchorX =
+            Number(
+              candidate?.anchorX
+            );
+
+          if (
+            !Number.isFinite(
+              anchorX
+            )
+          ) {
+            return 0;
+          }
+
+          const distanceFromCenter =
+            Math.abs(
+              anchorX
+              - centerX
+            );
+
+          const fullRadius =
+            stageRect.width
+            * 0.27;
+
+          const outerRadius =
+            stageRect.width
+            * 0.39;
+
+          if (
+            distanceFromCenter
+            <= fullRadius
+          ) {
+            return 1;
+          }
+
+          if (
+            distanceFromCenter
+            >= outerRadius
+          ) {
+            return 0;
+          }
+
+          const t =
+            clamp(
+              (
+                outerRadius
+                - distanceFromCenter
+              )
+              / Math.max(
+                  1,
+                  outerRadius
+                    - fullRadius
+                ),
+              0,
+              1
+            );
+
+          // smoothstep: no hard "pop" at either red-line boundary.
+          return (
+            t
+            * t
+            * (
+              3
+              - 2
+              * t
+            )
+          );
+        };
+
+      /*
+       * B7.57 — semantic zoom LOD for calendar numerals.
+       */
+      const railZoomOpacity =
+        candidate => {
+          const target =
+            candidate?.target
+            || null;
+
+          if (
+            target?.selected
+            || target?.pinned
+          ) {
+            return 1;
+          }
+
+          const band =
+            String(
+              semanticBand
+              || "medium"
+            ).toLowerCase();
+
+          const scheduled =
+            Number(
+              target?.dayScheduleCount
+              ?? target?.scheduleCount
+              ?? 0
+            ) > 0
+            || !!target?.symbol;
+
+          if (band === "far") {
+            return scheduled
+              ? 0.34
+              : 0;
+          }
+
+          if (band === "medium") {
+            return scheduled
+              ? 1
+              : 0.72;
+          }
+
+          return 1;
+        };
+
       const railLabelVisible =
-        target => {
+        candidate => {
+          const target =
+            candidate?.target
+            || null;
+
+          const zoomOpacity =
+            railZoomOpacity(
+              candidate
+            );
+
+          if (
+            zoomOpacity
+            <= 0.025
+            && !target?.selected
+            && !target?.pinned
+          ) {
+            return false;
+          }
 
           const band =
             String(
@@ -1222,20 +1425,23 @@
               .toLowerCase()
             === "all";
 
+          const apertureOpacity =
+            railApertureOpacity(
+              candidate
+            );
+
           if (
             target?.kind ===
             "intercalary-day-number"
           ) {
+            if (revealAll) return true;
+
             return (
-              revealAll
-              || (
-                sharedMoonWindow
-                  .has(13)
-                && (
-                  band === "near"
-                  || band === "detail"
-                )
-              )
+              sharedMoonWindow
+                .has(13)
+              && apertureOpacity
+                > 0.025
+              && band !== "far"
             );
           }
 
@@ -1265,10 +1471,6 @@
             return false;
           }
 
-          /*
-           * Selected/pinned dates remain authoritative even if the camera
-           * has not yet rotated them into the disclosure window.
-           */
           if (
             target.selected
             || target.pinned
@@ -1287,33 +1489,14 @@
             return false;
           }
 
-          const scheduled =
-            Number(
-              target.dayScheduleCount
-              || target.scheduleCount
-              || 0
-            ) > 0;
-
-          const weekAnchor =
-            moonDay === 1
-            || moonDay === 7
-            || moonDay === 14
-            || moonDay === 21
-            || moonDay === 28;
-
           /*
-           * Far view stays structural.
-           * Once the user is actually approaching the sphere, the whole
-           * shared red-line-to-red-line calendar band is populated.
+           * Populate ALL canonical days which physically enter the aperture.
+           * No selected-Moon gate, no week-anchor-only gate.
            */
-          if (band === "far") {
-            return (
-              weekAnchor
-              || scheduled
-            );
-          }
-
-          return true;
+          return (
+            apertureOpacity
+            > 0.025
+          );
         };
 
       const dayRailCandidates =
@@ -1327,7 +1510,7 @@
             )
             && candidate?.target?.railLocked
             && railLabelVisible(
-              candidate.target
+              candidate
             )
         );
 
@@ -1514,10 +1697,83 @@
             delete el.dataset.glideRole;
           }
 
-          el.style.left = `${candidate.anchorX}px`;
-          el.style.top = `${candidate.anchorY}px`;
-          el.style.transform = "translate(-50%, -50%)";
-          el.style.opacity = target.selected || target.pinned ? "1" : ".88";
+          const railX =
+            interactionLite
+              ? Math.round(
+                  candidate.anchorX * 2
+                ) / 2
+              : candidate.anchorX;
+
+          const railY =
+            interactionLite
+              ? Math.round(
+                  candidate.anchorY * 2
+                ) / 2
+              : candidate.anchorY;
+
+          el.style.left =
+            `${railX}px`;
+
+          el.style.top =
+            `${railY}px`;
+          const apertureOpacity =
+            railApertureOpacity(
+              candidate
+            );
+
+          const isCenterRail =
+            Number(
+              target.moon
+              || 0
+            )
+            === Number(
+              frontMoon
+              || 0
+            );
+
+          const baseOpacity =
+            isCenterRail
+              ? 0.98
+              : 0.84;
+
+          const visualOpacity =
+            target.selected
+            || target.pinned
+              ? 1
+              : Math.max(
+                  0.04,
+                  apertureOpacity
+                    * railZoomOpacity(
+                        candidate
+                      )
+                    * baseOpacity
+                );
+
+          const apertureScale =
+            target.selected
+            || target.pinned
+              ? 1
+              : (
+                  0.86
+                  + apertureOpacity
+                  * 0.07
+                  + railZoomOpacity(
+                      candidate
+                    )
+                  * 0.07
+                );
+
+          el.style.transform =
+            `translate(-50%, -50%) scale(${apertureScale.toFixed(3)})`;
+
+          el.style.opacity =
+            String(
+              visualOpacity
+            );
+
+          el.dataset.apertureOpacity =
+            apertureOpacity.toFixed(3);
+
           _hideSemanticLeader(target.id);
           continue;
         }

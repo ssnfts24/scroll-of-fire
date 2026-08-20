@@ -1,6 +1,6 @@
 "use strict";
 
-importScripts("./assets/js/moons-version.js?v=20260819-b752");
+importScripts("./assets/js/moons-version.js?v=20260819-b752&r=20260820-b757");
 
 const { APP_VERSION: VERSION, CACHE_PREFIX, SERVICE_WORKER_BUILD } = self.SOF_13_MOONS;
 if (SERVICE_WORKER_BUILD !== VERSION) {
@@ -112,7 +112,11 @@ const mandatoryPaths = [
   "./assets/js/codex-witness.js",
   "./assets/js/motion.js",
   "./assets/js/environment/providers/open-meteo-forecast.js",
+  "./assets/js/environment/providers/open-meteo-history.js",
+  "./assets/js/environment/providers/open-meteo-air-quality.js",
+  "./assets/js/environment/providers/space-weather-provider.js",
   "./assets/js/environment/open-meteo-adapter.js",
+  "./assets/js/environment/environment-authority.js",
   "./assets/js/environment/location-command.js",
   "./assets/js/sphere/living-time-sphere-live-data.js",
   "./assets/data/moons.json",

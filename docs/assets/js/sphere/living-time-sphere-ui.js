@@ -2020,7 +2020,7 @@
         timestamp: weatherTimestamp,
         freshness: weatherFreshness,
         availability: "Temperature requires a live environment provider.",
-        relation: canUseLiveWeather ? "Live temperature sampled for the selected Pattern Day now." : "No historical environment provider is configured.",
+        relation: canUseLiveWeather ? "Live temperature sampled for the selected Pattern Day now." : "Historical weather provider available for supported dates (Open-Meteo, 1940+).",
         layerId: "environment",
         sphereLabel: "Environmental intensity",
         visibleOnSphere: _mappedLayerVisible("environment"),
@@ -2038,7 +2038,7 @@
         timestamp: weatherTimestamp,
         freshness: weatherFreshness,
         availability: "Wind requires a live environment provider.",
-        relation: canUseLiveWeather ? "Live wind vector sampled for the selected Pattern Day now." : "No historical environment provider is configured.",
+        relation: canUseLiveWeather ? "Live wind vector sampled for the selected Pattern Day now." : "Historical weather provider available for supported dates (Open-Meteo, 1940+).",
         layerId: "environment",
         sphereLabel: "Directional stream",
         visibleOnSphere: _mappedLayerVisible("environment"),
@@ -2056,7 +2056,7 @@
         timestamp: weatherTimestamp,
         freshness: weatherFreshness,
         availability: "Cloud cover requires a live environment provider.",
-        relation: canUseLiveWeather ? "Live cloud field sampled for the selected Pattern Day now." : "No historical environment provider is configured.",
+        relation: canUseLiveWeather ? "Live cloud field sampled for the selected Pattern Day now." : "Historical weather provider available for supported dates (Open-Meteo, 1940+).",
         layerId: "environment",
         sphereLabel: "Atmospheric veil",
         visibleOnSphere: _mappedLayerVisible("environment"),
@@ -2280,11 +2280,11 @@
         label: "Kp",
         value: "Unavailable",
         status: "Unavailable",
-        source: "No geomagnetic provider configured",
+        source: "NOAA SWPC live / GFZ historical Kp",
         timestamp: "",
         freshness: "Not checked",
-        availability: "Kp is conditional on a geomagnetic provider.",
-        relation: selected?.isToday ? "Would apply to the current selected Pattern Day." : "Historical Kp is not available in this Observatory.",
+        availability: "Kp uses NOAA SWPC live/forecast and GFZ historical data from 1932.",
+        relation: selected?.isToday ? "Would apply to the current selected Pattern Day." : "Historical Kp is available from GFZ for supported dates from 1932.",
         layerId: "environment",
         sphereLabel: "Geomagnetic shell",
         visibleOnSphere: _mappedLayerVisible("environment"),
@@ -3499,35 +3499,538 @@
     strips.forEach(strip => { strip.textContent = text; });
   }
 
+  function _environmentSelectedIsoDate(model) {
+    const candidates = [
+      model?.selectedDate,
+      model?.selectedGregorianDate,
+      model?.date,
+      model?.selected?.date,
+      model?.temporal?.selectedDate,
+      _state?.selectedDate
+    ];
+
+    for (const value of candidates) {
+      const text =
+        value instanceof Date
+          ? value.toISOString().slice(0, 10)
+          : String(value || "").slice(0, 10);
+
+      if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
+        return text;
+      }
+    }
+
+    return null;
+  }
+
+  function _dualTemperature(value, unitHint = "celsius") {
+    const n = Number(value);
+
+    if (!Number.isFinite(n)) {
+      return "—°C / —°F";
+    }
+
+    const source =
+      String(unitHint || "celsius").toLowerCase();
+
+    const c =
+      source.startsWith("f")
+        ? (n - 32) * 5 / 9
+        : n;
+
+    const f =
+      c * 9 / 5 + 32;
+
+    return `${Math.round(c)}°C / ${Math.round(f)}°F`;
+  }
+
+  function _formatKp(spaceWeather) {
+    const kp = Number(spaceWeather?.kp);
+
+    if (!Number.isFinite(kp)) return "Kp —";
+
+    return `Kp ${kp.toFixed(1).replace(/\.0$/, "")}`;
+  }
+
+  function _formatAqi(airQuality) {
+    const aqi = Number(
+      airQuality?.current?.usAqi
+      ?? airQuality?.usAqi
+    );
+
+    return Number.isFinite(aqi)
+      ? `AQI ${Math.round(aqi)}`
+      : "AQI —";
+  }
+
+  function _ensureLiveEnvironmentTelemetry() {
+    let el =
+      document.getElementById(
+        "sphere-live-environment-telemetry"
+      );
+
+    if (el) return el;
+
+    const stage =
+      document.getElementById("sphere-stage")
+      || document.querySelector("[data-sphere-stage]")
+      || document.querySelector(".sphere-stage")
+      || document.querySelector(".living-time-sphere-stage")
+      || document.querySelector(".sphere-render-stage")
+      || document.querySelector("canvas")?.parentElement
+      || null;
+
+    if (!stage) return null;
+
+    el = document.createElement("div");
+    el.id = "sphere-live-environment-telemetry";
+    el.className = "sphere-live-environment-telemetry";
+    el.setAttribute("aria-live", "polite");
+
+    const primary = document.createElement("div");
+    primary.className = "sphere-live-environment-primary";
+
+    const secondary = document.createElement("div");
+    secondary.className = "sphere-live-environment-secondary";
+
+    const selected = document.createElement("div");
+    selected.className = "sphere-live-environment-selected";
+
+    el.append(primary, secondary, selected);
+
+    const header =
+      stage.querySelector(
+        ".sphere-stage-header, .sphere-stage-head, .sphere-instrument-header"
+      )
+      || Array.from(
+          stage.querySelectorAll("div,header")
+        ).find(node =>
+          /REMNANT LIVING TIME OBSERVATORY/i
+            .test(node.textContent || "")
+          && /LIVE FIELD/i
+            .test(node.textContent || "")
+        );
+
+    if (header?.parentElement) {
+      header.insertAdjacentElement(
+        "afterend",
+        el
+      );
+    } else {
+      stage.prepend(el);
+    }
+
+    return el;
+  }
+
+  function _updateLiveEnvironmentTelemetry(
+    model,
+    environmentState = null
+  ) {
+    const el =
+      _ensureLiveEnvironmentTelemetry();
+
+    if (!el) return;
+
+    const env =
+      environmentState
+      || globalThis.SofEnvironmentState
+          ?.getEnvironmentState?.()
+      || {};
+
+    const current =
+      env?.current
+      || {};
+
+    const unitHint =
+      globalThis.OpenMeteoAdapter
+        ?.getUnits?.()
+        ?.temperature
+      || "celsius";
+
+    const primary =
+      el.querySelector(
+        ".sphere-live-environment-primary"
+      );
+
+    const secondary =
+      el.querySelector(
+        ".sphere-live-environment-secondary"
+      );
+
+    const selectedEl =
+      el.querySelector(
+        ".sphere-live-environment-selected"
+      );
+
+    if (primary) {
+      primary.textContent = [
+        "NOW",
+        _dualTemperature(
+          current.temperature,
+          unitHint
+        ),
+        _formatKp(env.spaceWeather),
+        _formatAqi(env.airQuality)
+      ].join(" · ");
+    }
+
+    if (secondary) {
+      const wind = Number(current.windSpeed);
+      const humidity = Number(current.humidity);
+      const pressure = Number(current.pressure);
+      const uv = Number(
+        env?.airQuality?.current?.uvIndex
+        ?? env?.daily?.uvMax
+      );
+
+      const bits = [];
+
+      if (Number.isFinite(wind)) {
+        bits.push(`Wind ${Math.round(wind)} km/h`);
+      }
+
+      if (Number.isFinite(humidity)) {
+        bits.push(`Hum ${Math.round(humidity)}%`);
+      }
+
+      if (Number.isFinite(uv)) {
+        bits.push(`UV ${uv.toFixed(1).replace(/\.0$/, "")}`);
+      }
+
+      if (Number.isFinite(pressure)) {
+        bits.push(`${Math.round(pressure)} hPa`);
+      }
+
+      const scales =
+        env?.spaceWeather?.scales
+        || {};
+
+      if (
+        ["G", "S", "R"].some(
+          key => Number.isFinite(Number(scales[key]))
+        )
+      ) {
+        bits.push(
+          ["G", "S", "R"]
+            .map(key =>
+              `${key}${Number.isFinite(Number(scales[key]))
+                ? Math.round(Number(scales[key]))
+                : "—"}`
+            )
+            .join(" ")
+        );
+      }
+
+      secondary.textContent =
+        bits.length
+          ? bits.join(" · ")
+          : "Live environment providers loading";
+    }
+
+    const selectedDate =
+      _environmentSelectedIsoDate(model);
+
+    const selectedSnapshot =
+      globalThis.SofEnvironmentAuthority
+        ?.getSelectedSnapshot?.(
+          selectedDate
+        )
+      || null;
+
+    const today =
+      new Date()
+        .toISOString()
+        .slice(0, 10);
+
+    if (
+      selectedEl
+      && selectedDate
+      && selectedDate !== today
+      && selectedSnapshot
+    ) {
+      const weather =
+        selectedSnapshot.weather
+        || {};
+
+      const selectedTemp =
+        weather?.current?.temperature;
+
+      const selectedUnit =
+        weather?.units?.temperature
+        || "celsius";
+
+      const kp =
+        selectedSnapshot
+          ?.spaceWeather
+          ?.kpMax
+        ?? selectedSnapshot
+          ?.spaceWeather
+          ?.kp;
+
+      const provider =
+        weather?.provider
+        || weather?.reason
+        || "historical environment";
+
+      selectedEl.textContent = [
+        `SELECTED ${selectedDate}`,
+        _dualTemperature(
+          selectedTemp,
+          selectedUnit
+        ),
+        Number.isFinite(Number(kp))
+          ? `Kp ${Number(kp).toFixed(1).replace(/\.0$/, "")}`
+          : "Kp —",
+        provider
+      ].join(" · ");
+
+      selectedEl.hidden = false;
+    } else if (selectedEl) {
+      selectedEl.hidden = true;
+      selectedEl.textContent = "";
+    }
+  }
+
   function _updateEnvironmentBridge(model) {
-    const bridge = document.getElementById("sphere-environment-bridge");
-    const textEl = document.getElementById("sphere-environment-bridge-text");
+    const bridge =
+      document.getElementById(
+        "sphere-environment-bridge"
+      );
+
+    const textEl =
+      document.getElementById(
+        "sphere-environment-bridge-text"
+      );
+
+    const action =
+      document.getElementById(
+        "sphere-environment-focus"
+      );
+
     if (!bridge || !textEl) return;
-    const selected = model?.selectedPatternPosition || _resolveSelectedPatternPosition(model);
-    const envState = globalThis.SofEnvironmentState?.getEnvironmentState?.() || null;
-    _state.environmentLifecycle = _resolveEnvironmentLifecycle(envState);
-    const layerVisible = !!_state.visibleLayers.environment;
-    const place = envState?.place?.name || envState?.place?.label || "Location not set";
-    const providerState = _state.environmentLifecycle || "idle";
-    const providerLabel = providerState === "loading"
-      ? "Weather loading in background"
-      : providerState === "ready"
-        ? "Weather ready"
-        : providerState === "cached"
-          ? "Weather cached"
-          : providerState === "stale"
-            ? "Weather stale"
-            : providerState === "error"
-              ? "Environment unavailable"
-              : providerState === "location-needed"
-                ? "Location required"
+
+    const selected =
+      model?.selectedPatternPosition
+      || _resolveSelectedPatternPosition(model);
+
+    const envState =
+      globalThis.SofEnvironmentState
+        ?.getEnvironmentState?.()
+      || null;
+
+    _updateLiveEnvironmentTelemetry(
+      model,
+      envState
+    );
+
+    globalThis.SofEnvironmentAuthority
+      ?.refreshCurrent?.()
+      ?.catch?.(() => {});
+
+    const selectedIsoDate =
+      _environmentSelectedIsoDate(model);
+
+    if (selectedIsoDate) {
+      globalThis.SofEnvironmentAuthority
+        ?.requestSelected?.({
+          date: selectedIsoDate
+        })
+        ?.then?.(() => {
+          _updateLiveEnvironmentTelemetry(
+            model,
+            globalThis.SofEnvironmentState
+              ?.getEnvironmentState?.()
+              || envState
+          );
+        })
+        ?.catch?.(() => {});
+    }
+
+    _state.environmentLifecycle =
+      _resolveEnvironmentLifecycle(
+        envState
+      );
+
+    const layerVisible =
+      !!_state.visibleLayers.environment;
+
+    const place =
+      envState?.place?.name
+      || envState?.place?.label
+      || "Location not set";
+
+    const providerState =
+      _state.environmentLifecycle
+      || "idle";
+
+    const current =
+      envState?.current
+      || {};
+
+    const selectedLabel =
+      selected?.moon != null
+        ? `Moon ${selected.moon} Day ${selected.day}`
+        : "Selected day unavailable";
+
+    const temperature =
+      Number(
+        current.temperature
+        ?? current.temperature_2m
+      );
+
+    const cloud =
+      Number(
+        current.cloudCover
+        ?? current.cloud_cover
+      );
+
+    const humidity =
+      Number(
+        current.humidity
+        ?? current.relative_humidity_2m
+      );
+
+    const windSpeed =
+      Number(
+        current.windSpeed
+        ?? current.wind_speed_10m
+      );
+
+    const windDirection =
+      Number(
+        current.windDirection
+        ?? current.wind_direction_10m
+      );
+
+    const condition =
+      String(
+        current.condition
+        || ""
+      ).trim();
+
+    const liveReady =
+      providerState === "ready"
+      || providerState === "cached"
+      || providerState === "stale";
+
+    const bits = [];
+
+    if (condition) {
+      bits.push(condition);
+    }
+
+    if (
+      Number.isFinite(temperature)
+    ) {
+      const unit =
+        globalThis.OpenMeteoAdapter
+          ?.getUnits?.()
+          ?.temperature
+        || "fahrenheit";
+
+      bits.push(
+        _formatTemperature(
+          temperature,
+          unit
+        )
+      );
+    }
+
+    if (
+      Number.isFinite(cloud)
+    ) {
+      bits.push(
+        `Cloud ${Math.round(cloud)}%`
+      );
+    }
+
+    if (
+      Number.isFinite(windSpeed)
+    ) {
+      const bearing =
+        Number.isFinite(windDirection)
+          ? ` ${_windBearingLabel(windDirection)}`
+          : "";
+
+      bits.push(
+        `Wind ${Math.round(windSpeed)} km/h${bearing}`
+      );
+    }
+
+    if (
+      Number.isFinite(humidity)
+    ) {
+      bits.push(
+        `Humidity ${Math.round(humidity)}%`
+      );
+    }
+
+    const stateLabel =
+      layerVisible
+        ? "Environment ON"
+        : liveReady
+          ? "Environment ready"
+          : providerState === "loading"
+            ? "Environment loading"
+            : providerState === "location-needed"
+              ? "Location required"
+              : providerState === "error"
+                ? "Environment unavailable"
                 : "Environment idle";
-    const selectedLabel = selected?.moon != null
-      ? `Moon ${selected.moon} Day ${selected.day}`
-      : "Selected day unavailable";
-    const layerLabel = layerVisible ? "Environment layer ON" : "Environment layer OFF";
-    textEl.textContent = `${layerLabel} · ${providerLabel}${providerState === "loading" || providerState === "ready" || providerState === "cached" ? ` · ${place}` : ""} · mapped around ${selectedLabel}.`;
-    bridge.classList.toggle("is-off", !layerVisible);
+
+    const contextBits = [
+      ...bits,
+      (
+        providerState === "loading"
+        || liveReady
+      )
+        ? place
+        : "",
+      selectedLabel
+    ].filter(Boolean);
+
+    textEl.textContent =
+      `${stateLabel}`
+      + (
+          contextBits.length
+            ? ` · ${contextBits.join(" · ")}`
+            : ""
+        );
+
+    bridge.classList.toggle(
+      "is-off",
+      !layerVisible
+    );
+
+    bridge.dataset.environmentState =
+      providerState;
+
+    bridge.dataset.layerState =
+      layerVisible
+        ? "on"
+        : "off";
+
+    if (action) {
+      if (
+        liveReady
+        && !layerVisible
+      ) {
+        action.textContent =
+          "Show Environment";
+
+        action.dataset.environmentAction =
+          "show";
+      } else {
+        action.textContent =
+          layerVisible
+            ? "Environment Controls"
+            : "Set Environment";
+
+        action.dataset.environmentAction =
+          "controls";
+      }
+    }
   }
 
   function _seasonContextForLocation(model) {
@@ -5349,6 +5852,62 @@
     const focusEnvironmentBtn = document.getElementById("sphere-environment-focus");
     if (focusEnvironmentBtn) {
       focusEnvironmentBtn.addEventListener("click", () => {
+        if (
+          focusEnvironmentBtn.dataset.environmentAction
+          === "show"
+        ) {
+          _state.visibleLayers.environment = true;
+          _state.userCustomizedLayers = true;
+          _state.layerStateSource = "user-customized";
+
+          const environmentToggle =
+            document.getElementById(
+              "sphere-layer-environment"
+            );
+
+          if (environmentToggle) {
+            environmentToggle.checked = true;
+          }
+
+          _incrementActionCounter(
+            "layerUpdateCount"
+          );
+
+          _recordActionTrace(
+            "ENVIRONMENT_SHOW_FROM_BRIDGE",
+            {
+              layer: "environment",
+              enabled: true
+            },
+            [
+              "environment",
+              "layers",
+              "renderer-environment"
+            ]
+          );
+
+          _requestLayerStateUpdate(
+            container,
+            "environment",
+            true
+          );
+
+          focusEnvironmentBtn.dataset.environmentAction =
+            "controls";
+
+          focusEnvironmentBtn.textContent =
+            "Environment Controls";
+
+          _updateEnvironmentBridge(
+            buildCurrentModel()
+          );
+
+          globalThis.LivingTimeSphereAnimation
+            ?.markDirty?.();
+
+          return;
+        }
+
         _focusEnvironmentControls();
       });
     }

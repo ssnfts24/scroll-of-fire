@@ -34,11 +34,11 @@
   <link rel="apple-touch-icon" href="assets/img/shared/branding/favicon.png">
   <link rel="stylesheet" href="assets/css/codex.css">
   <link rel="stylesheet" href="assets/css/navigation.css">
-  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260819-b752">
+  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260819-b752&r=20260820-b757">
   <!-- B7.52 FAST BOOT: Three.js is a dynamic import, so advertise it before
        the renderer reaches init instead of discovering the module late. -->
   <link rel="modulepreload" href="assets/vendor/three/three.module.min.js" fetchpriority="high">
-  <link rel="preload" href="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260819-b7523" as="script" fetchpriority="high">
+  <link rel="preload" href="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260819-b7523&r=20260820-b757" as="script" fetchpriority="high">
   <link rel="stylesheet" href="assets/css/living-time-sphere-metrics.css?v=20260814-1">
   <link rel="stylesheet" href="assets/css/observatory-workspace.css?v=20260815-6">
   <link rel="stylesheet" href="assets/css/living-planner.css?v=20260818-1">
@@ -46,7 +46,7 @@
 <link rel="stylesheet" href="assets/css/temporal-coordinate-ui.css?v=20260816-1">
 
   <!-- Core engines -->
-  <script defer src="assets/js/moons-version.js?v=20260819-b752"></script>
+  <script defer src="assets/js/moons-version.js?v=20260819-b752&r=20260820-b757"></script>
   <script defer src="assets/js/site.js"></script>
   <script defer src="assets/js/codex-memory.js"></script>
   <script defer src="assets/js/codex-witness.js"></script>
@@ -87,7 +87,11 @@
       // get to compete with first WebGL paint or the first user gesture.
       "assets/js/environment/environment-state.js",
       "assets/js/environment/providers/open-meteo-forecast.js",
+      "assets/js/environment/providers/open-meteo-history.js?v=20260820-b757",
+      "assets/js/environment/providers/open-meteo-air-quality.js?v=20260820-b757",
+      "assets/js/environment/providers/space-weather-provider.js?v=20260820-b757",
       "assets/js/environment/open-meteo-adapter.js?v=20260815-6",
+      "assets/js/environment/environment-authority.js?v=20260820-b757",
       "assets/js/environment/location-command.js",
       "assets/js/environment/unit-preferences.js?v=20260816-1",
       "assets/js/sphere/living-time-sphere-everyday.js?v=20260819-b731",
@@ -204,13 +208,13 @@
    <script defer src="assets/js/sphere/living-time-sphere-camera.js?v=20260819-b740"></script>
    <script defer src="assets/js/sphere/living-time-sphere-animation.js?v=20260819-b740"></script>
    <script defer src="assets/js/sphere/living-time-sphere-planetary-positions.js?v=20260819-b730"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-label-manager.js?v=20260819-b750"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-label-manager.js?v=20260819-b750&r=20260820-b757"></script>
 <script defer src="assets/js/sphere/living-time-sphere-extension-host.js?v=20260816-1"></script>
    <script defer src="assets/js/sphere/living-time-sphere-temporal-legibility.js?v=20260817-1"></script>
   <script defer src="assets/js/sphere/living-time-sphere-temporal-strata.js?v=20260817-5"></script>
-   <script defer src="assets/js/sphere/life-atlas-record-sphere-extension.js?v=20260819-b750"></script>
+   <script defer src="assets/js/sphere/life-atlas-record-sphere-extension.js?v=20260819-b750&r=20260820-b757"></script>
    <!-- Life Atlas visual world projection temporarily disabled for recursive-sphere refactor -->
-   <script defer fetchpriority="high" src="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260819-b7523"></script>
+   <script defer fetchpriority="high" src="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260819-b7523&r=20260820-b757"></script>
    <script defer src="assets/js/sphere/living-time-sphere-live-data.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-interaction.js?v=20260818-b73"></script>
    <script defer src="assets/js/sphere/living-time-sphere-accessibility.js"></script>
@@ -218,7 +222,7 @@
    <script defer src="assets/js/sphere/living-time-sphere-url-state.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-mount.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-today.js"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-ui.js?v=20260819-b752"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-ui.js?v=20260819-b752&r=20260820-b757"></script>
    <script defer>
      document.addEventListener("DOMContentLoaded", () => {
        const container = document.getElementById("sphere-container");

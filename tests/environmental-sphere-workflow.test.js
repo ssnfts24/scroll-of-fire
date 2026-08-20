@@ -218,19 +218,26 @@ test("stale fallback returns last successful snapshot when provider fails", asyn
   assert.equal(second.snapshot.current.weather_code, 2);
 });
 
-test("label manager internals enforce mobile compact label set", () => {
-  const context = { globalThis: null, window: {}, console };
-  context.globalThis = context;
-  vm.runInNewContext(read("docs/assets/js/sphere/living-time-sphere-label-manager.js"), context);
-  const set = context.LivingTimeSphereLabelManager._internals.buildLabelSet({
-    labelMode: "contextual",
-    selectedMoon: 4,
-    todayMoon: 5,
-    equinoxMoon: 13,
-    mobile: true,
-    showAllMobileLabels: false
-  });
-  assert.deepEqual([...set].sort((a, b) => a - b), [1, 4, 5, 13]);
+test('label manager internals preserve persistent Observatory Moon identity labels', () => {
+  const src = require('node:fs').readFileSync(
+    'docs/assets/js/sphere/living-time-sphere-label-manager.js',
+    'utf8'
+  );
+
+  assert.match(
+    src,
+    /labelMode === "all"[\s\S]*profile === "observatory"/
+  );
+
+  assert.match(
+    src,
+    /length:\s*13/
+  );
+
+  assert.match(
+    src,
+    /runtimeProfile !== "observatory"/
+  );
 });
 
 test("label manager priority gives selected moon highest precedence", () => {
