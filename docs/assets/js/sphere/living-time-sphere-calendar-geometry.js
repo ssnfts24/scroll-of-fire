@@ -135,7 +135,10 @@
       angle,
       canonicalAngle: address.angle,
       radialLane: address.week,
-      radialFactor: 1.30 + (address.week - 1) * 0.085,
+      // B7.58.4 — rail-adjacent readable calendar band.
+      // The outer Moon-sector rail is ~1.285. Keep all four 7-day rows
+      // immediately above it instead of spreading them out toward ~1.555.
+      radialFactor: 1.298 + (address.week - 1) * 0.030,
       sectorStart: moonMeta.sectorStart,
       sectorEnd: moonMeta.sectorEnd,
     });
@@ -145,6 +148,40 @@
   // one address again. Astronomy continues to use canonicalAngle/dayAddress.
   function calendarMatrixCell(dayNumber) {
     return calendarCell(dayNumber);
+  }
+
+  /*
+   * B7.59.2D — UNIFIED CALENDAR DISPLAY CELL
+   *
+   * calendarCell() remains the canonical selectable identity. This helper only
+   * derives presentation lanes from that immutable cell so the visible numeral,
+   * schedule glyph, semantic card and tether cannot drift into separate math.
+   */
+  function calendarDisplayCell(dayNumber, options = {}) {
+    const cell = calendarCell(dayNumber);
+    const dayNumberWeek1 = Number.isFinite(Number(options.dayNumberWeek1))
+      ? Number(options.dayNumberWeek1)
+      : 1.320;
+    const dayNumberWeekStep = Number.isFinite(Number(options.dayNumberWeekStep))
+      ? Number(options.dayNumberWeekStep)
+      : 0.092;
+    const scheduleInset = Number.isFinite(Number(options.scheduleInset))
+      ? Math.max(0.018, Math.min(0.080, Number(options.scheduleInset)))
+      : 0.046;
+    const dayNumberRadialFactor =
+      dayNumberWeek1 + (cell.week - 1) * dayNumberWeekStep;
+    const scheduleRadialFactor = Math.max(
+      cell.radialFactor,
+      dayNumberRadialFactor - scheduleInset
+    );
+
+    return Object.freeze({
+      ...cell,
+      dayNumberRadialFactor,
+      scheduleRadialFactor,
+      connectorStartRadialFactor: scheduleRadialFactor,
+      connectorEndRadialFactor: dayNumberRadialFactor,
+    });
   }
 
   // Deterministic pointer selection for the readable polar matrix. The entire
@@ -218,7 +255,15 @@
       ? (score == null ? isFront : score <= (depth === "medium" ? 0.70 : depth === "near" ? 0.82 : 0.92))
       : !!focusEligible;
 
-    if (depth === "far" || depth === "overview") return isSelectedDay;
+    if (depth === "far" || depth === "overview") {
+      // B7.59.2A — a distant Sphere must still read as a calendar.
+      // Keep only structural anchors; never move or duplicate canonical cells.
+      const farFrontAnchor = anchors;
+      const farNeighborAnchor = d === 1 || d === 14 || d === 28;
+      return isSelectedDay
+        || (eligible && isFront && farFrontAnchor)
+        || (eligible && isNeighbor && farNeighborAnchor);
+    }
     if (!eligible) return isSelectedDay;
     /*
      * B7.24 — begin disclosing the calendar sooner. At medium distance the
@@ -278,6 +323,7 @@
     yearGate,
     calendarCell,
     calendarMatrixCell,
+    calendarDisplayCell,
     nearestCalendarCell,
     numeralPolicy,
     dayBoundary,

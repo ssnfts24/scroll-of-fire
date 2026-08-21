@@ -60,7 +60,7 @@ test('B7.52/B7.55 avoids a guaranteed measurement RAF and preloads dynamic Three
 
   assert.match(
     sphere,
-    /rel="preload" href="assets\/js\/sphere\/living-time-sphere-renderer-3d\.js\?v=20260819-b752(?:1|2|3)?(?:&r=20260820-b75[3-8])?"/
+    /rel="preload" href="assets\/js\/sphere\/living-time-sphere-renderer-3d\.js\?v=20260819-b752(?:1|2|3)?(?:&[A-Za-z0-9_-]+=[^"& ]+)*"/
   );
 });
 

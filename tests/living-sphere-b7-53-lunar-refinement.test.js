@@ -39,7 +39,7 @@ test('B7.53/B7.55 keeps lunar labels compact while restoring persistent Moon ide
 });
 
 test('B7.53 has a fresh cache/app identity', () => {
-  assert.match(sphere, /living-time-sphere-renderer-3d\.js\?v=20260819-b7523&r=20260820-b75[3-8]/);
+  assert.match(sphere, /living-time-sphere-renderer-3d\.js\?v=20260819-b7523[^"' ]*&r=20260820-b75[3-8]/);
   assert.match(sphere, /living-time-sphere\.css\?v=20260819-b752&r=20260820-b75[3-8]/);
   assert.match(version, /APP_VERSION = "2026\.08\.20\.(?:53|54|55|56|57|58)"/);
 });

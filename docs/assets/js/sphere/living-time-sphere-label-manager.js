@@ -1349,18 +1349,19 @@
       /*
        * B7.57 — semantic zoom LOD for calendar numerals.
        */
+      /*
+       * B7.58.2 — TRUE SEMANTIC-ZOOM CALENDAR DISCLOSURE
+       *
+       * Far: no raw day numerals. Selection survives as cards/markers and
+       * scheduled information survives as compact schedule symbols.
+       * Medium: scheduled/selected context stays stronger; ordinary days soften.
+       * Near/detail: full canonical rail.
+       */
       const railZoomOpacity =
         candidate => {
           const target =
             candidate?.target
             || null;
-
-          if (
-            target?.selected
-            || target?.pinned
-          ) {
-            return 1;
-          }
 
           const band =
             String(
@@ -1376,16 +1377,29 @@
             ) > 0
             || !!target?.symbol;
 
+          if (
+            target?.selected
+            || target?.pinned
+          ) {
+            return 1;
+          }
+
+          /*
+           * B7.59.2A — FAR CALENDAR SKELETON
+           * A distant Sphere keeps enough date structure to remain legible.
+           * railLabelVisible performs the sparse 1/7/14/21/28 gate; this
+           * function only supplies the softer distance opacity.
+           */
           if (band === "far") {
             return scheduled
-              ? 0.34
-              : 0;
+              ? 0.84
+              : 0.58;
           }
 
           if (band === "medium") {
             return scheduled
-              ? 1
-              : 0.72;
+              ? 0.84
+              : 0.56;
           }
 
           return 1;
@@ -1405,8 +1419,6 @@
           if (
             zoomOpacity
             <= 0.025
-            && !target?.selected
-            && !target?.pinned
           ) {
             return false;
           }
@@ -1480,6 +1492,75 @@
 
           if (revealAll) {
             return true;
+          }
+
+          /*
+           * B7.59.2A — keep a readable four-week skeleton at far distance.
+           * Front Moon: 1, 7, 14, 21, 28.
+           * Immediate neighbor Moon(s): 1, 14, 28.
+           * Scheduled days also survive. The physical calendarCell never moves.
+           */
+          if (band === "far") {
+            const centerMoon =
+              Number(
+                calendarDisclosure?.centerMoon
+                || 0
+              );
+
+            const rawMoonDistance =
+              centerMoon
+                ? Math.abs(moon - centerMoon)
+                : 0;
+
+            const moonDistance =
+              centerMoon
+                ? Math.min(
+                    rawMoonDistance,
+                    13 - rawMoonDistance
+                  )
+                : 0;
+
+            const farFrontAnchor =
+              moonDay === 1
+              || moonDay === 7
+              || moonDay === 14
+              || moonDay === 21
+              || moonDay === 28;
+
+            const farNeighborAnchor =
+              moonDay === 1
+              || moonDay === 14
+              || moonDay === 28;
+
+            const scheduled =
+              Number(
+                target?.dayScheduleCount
+                ?? target?.scheduleCount
+                ?? 0
+              ) > 0
+              || !!target?.symbol;
+
+            const structural =
+              !centerMoon
+                ? farFrontAnchor
+                : (
+                    moonDistance === 0
+                      ? farFrontAnchor
+                      : moonDistance === 1
+                        ? farNeighborAnchor
+                        : false
+                  );
+
+            return (
+              sharedMoonWindow
+                .has(moon)
+              && apertureOpacity
+                > 0.025
+              && (
+                structural
+                || scheduled
+              )
+            );
           }
 
           if (
@@ -1906,6 +1987,7 @@
         if (target.symbol) el.dataset.planSymbol = target.symbol; else delete el.dataset.planSymbol;
         if (target.workflow) el.dataset.planWorkflow = target.workflow; else delete el.dataset.planWorkflow;
         if (target.dayScheduleCount) el.dataset.scheduleCount = String(target.dayScheduleCount); else delete el.dataset.scheduleCount;
+        if (target.dayScheduleCount) el.dataset.hasSchedule = "true"; else delete el.dataset.hasSchedule;
         if (target.patternSignature) el.dataset.patternSignature = target.patternSignature;
         el.style.display = "";
         const w = el.offsetWidth || 132;
@@ -2033,6 +2115,19 @@
           el.dataset.apertureOpacity =
             apertureOpacity.toFixed(3);
 
+          if (
+            String(
+              semanticBand
+              || "medium"
+            ).toLowerCase()
+            === "far"
+          ) {
+            el.dataset.farSkeleton =
+              "true";
+          } else {
+            delete el.dataset.farSkeleton;
+          }
+
           _hideSemanticLeader(target.id);
           continue;
         }
@@ -2040,13 +2135,25 @@
         // Floating semantic cards may move outward and participate in collision
         // placement. Calendar rail numerals never enter this path.
         el.style.transform = "";
+        const selectedMoonCard =
+          target.kind === "moon"
+          && target.selected;
+
         const semanticOutward =
-          target.haloOffset != null
-            ? target.haloOffset
-            : (
+          selectedMoonCard
+            ? (
                 mobile
-                  ? 62
-                  : 82
+                  ? 34
+                  : 46
+              )
+            : (
+                target.haloOffset != null
+                  ? target.haloOffset
+                  : (
+                      mobile
+                        ? 62
+                        : 82
+                    )
               );
 
         const outwardX =

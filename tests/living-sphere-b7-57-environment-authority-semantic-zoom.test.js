@@ -160,28 +160,20 @@ test('B7.57 adds a low-overdraw geomagnetic Kp field to the environment group', 
 });
 
 
-test('B7.57 days dissipate at far semantic zoom while selected/scheduled information survives longer', () => {
+test("B7.57/B7.59.2A uses zoom-aware disclosure with a readable far calendar skeleton", () => {
   assert.match(
     labels,
-    /const railZoomOpacity =/
+    /B7\.59\.2A — FAR CALENDAR SKELETON/
   );
-
   assert.match(
     labels,
-    /if \(band === "far"\)/
+    /if \(band === "far"\) \{[\s\S]*?return scheduled[\s\S]*?0\.84[\s\S]*?0\.58/
   );
-
   assert.match(
     labels,
-    /scheduled[\s\S]*\? 0\.34[\s\S]*: 0/
-  );
-
-  assert.match(
-    labels,
-    /railZoomOpacity\([\s\S]*candidate/
+    /farFrontAnchor[\s\S]*?moonDay === 7[\s\S]*?moonDay === 21/
   );
 });
-
 
 test('B7.57 loads and caches all provider modules before the Sphere UI', () => {
   for (const token of [
@@ -210,7 +202,7 @@ test('B7.57 loads and caches all provider modules before the Sphere UI', () => {
 test('B7.57 carries a fresh cache and app identity', () => {
   assert.match(
     sphere,
-    /living-time-sphere-renderer-3d\.js\?v=20260819-b7523&r=20260820-b75[3-8]/
+    /living-time-sphere-renderer-3d\.js\?v=20260819-b7523[^"\' ]*&r=20260820-b7584-rootrail[^"\' ]*&b=20260820-b7592a-farskeleton/
   );
 
   assert.match(

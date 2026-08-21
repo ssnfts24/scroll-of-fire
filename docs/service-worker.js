@@ -1,3 +1,4 @@
+/* B7.58.2 calendar-rail alignment hotfix: refresh changed Sphere assets. */
 /* B7.58.1 label-glass hotfix: force service-worker script refresh. */
 "use strict";
 

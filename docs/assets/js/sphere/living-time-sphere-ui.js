@@ -2657,7 +2657,8 @@
           viewMode:      _state.viewMode,
           moonLabelMode: effectiveMoonLabelMode,
           moonLabelDistance: _state.moonLabelDistance,
-          dayLabelMode: effectiveDayLabelMode,
+          // B7.58.5 — 3D receives user preference; semanticZoomState carries LOD.
+          dayLabelMode: _state.dayLabelMode || "key",
           connectionRegistry,
           motionMode: _state.motionMode,
           semanticZoomState,
@@ -2945,7 +2946,7 @@
         _state.viewMode,
         effectiveMoonLabelMode,
         _state.moonLabelDistance,
-        effectiveDayLabelMode,
+        _state.dayLabelMode || "key",
         connectionRegistry,
         _state.motionMode,
         semanticZoomState
@@ -5080,7 +5081,7 @@
             viewMode: _state.viewMode,
             moonLabelMode: effective.effectiveMoonLabelMode,
             moonLabelDistance: _state.moonLabelDistance,
-            dayLabelMode: effective.effectiveDayLabelMode,
+            dayLabelMode: _state.dayLabelMode || "key",
             connectionRegistry: effective.connectionRegistry,
             motionMode: _state.motionMode,
             semanticZoomState: effective.semanticZoom,
@@ -5408,6 +5409,99 @@
   }
 
   // ── Control wiring ─────────────────────────────────────────────────
+
+
+  // === B7.58.5 — DAY DISCLOSURE QUICK CONTROL START ===
+  function _syncDayDisclosureButton() {
+    const button =
+      document.getElementById(
+        "sphere-reveal-all-days"
+      );
+
+    if (!button) return;
+
+    const revealAll =
+      String(
+        _state.dayLabelMode || "key"
+      ).toLowerCase() === "all";
+
+    button.setAttribute(
+      "aria-pressed",
+      revealAll ? "true" : "false"
+    );
+
+    button.dataset.dayDisclosureMode =
+      revealAll ? "all" : "auto";
+
+    button.textContent =
+      revealAll
+        ? "Return to Auto"
+        : "Reveal all days";
+
+    button.setAttribute(
+      "aria-label",
+      revealAll
+        ? "Return day labels to camera-aware Auto"
+        : "Reveal all day labels"
+    );
+
+    button.title =
+      revealAll
+        ? "Return to camera-aware date disclosure."
+        : "Show every day label until Auto is restored.";
+  }
+
+  function _wireDayDisclosureButton(container) {
+    const button =
+      document.getElementById(
+        "sphere-reveal-all-days"
+      );
+
+    if (!button) return;
+
+    if (
+      button.dataset
+        .b7585DisclosureWired !== "true"
+    ) {
+      button.dataset
+        .b7585DisclosureWired = "true";
+
+      button.addEventListener(
+        "click",
+        event => {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+
+          const revealAll =
+            String(
+              _state.dayLabelMode || "key"
+            ).toLowerCase() === "all";
+
+          _state.dayLabelMode =
+            revealAll
+              ? "key"
+              : "all";
+
+          const selector =
+            document.getElementById(
+              "sphere-day-label-mode"
+            );
+
+          if (selector) {
+            selector.value =
+              _state.dayLabelMode;
+          }
+
+          _syncDayDisclosureButton();
+          renderSphere(container);
+        },
+        true
+      );
+    }
+
+    _syncDayDisclosureButton();
+  }
+  // === B7.58.5 — DAY DISCLOSURE QUICK CONTROL END ===
 
   function wireControls(container) {
     _wireTemporalCursorBridge(container);
@@ -6057,9 +6151,12 @@
       dayLabelMode.value = _state.dayLabelMode;
       dayLabelMode.addEventListener("change", () => {
         _state.dayLabelMode = dayLabelMode.value || "key";
+        _syncDayDisclosureButton();
         renderSphere(container);
       });
     }
+
+    _wireDayDisclosureButton(container);
 
     const connectionMode = document.getElementById("sphere-connection-mode");
     if (connectionMode) {

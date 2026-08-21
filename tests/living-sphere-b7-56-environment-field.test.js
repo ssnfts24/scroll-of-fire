@@ -162,7 +162,7 @@ test('B7.56 bridge exposes real live values and can show the environment', () =>
 test('B7.56 carries a fresh cache and app identity', () => {
   assert.match(
     sphere,
-    /living-time-sphere-renderer-3d\.js\?v=20260819-b7523&r=20260820-b75[3-8]/
+    /living-time-sphere-renderer-3d\.js\?v=20260819-b7523[^"' ]*&r=20260820-b75[3-8]/
   );
 
   assert.match(

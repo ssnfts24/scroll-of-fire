@@ -294,14 +294,30 @@
 
   function _plannerPointSizeForBand(band, tier) {
     const key = String(band || "medium").toLowerCase();
-    const base = key === "detail" ? 34 : key === "near" ? 31 : 27;
-    return tier === "lowpower" || tier === "low" ? Math.max(23, base - 4) : base;
+    // B7.59.2D — schedule is a calendar annotation, not a foreground object.
+    const base =
+      key === "detail" ? 24
+      : key === "near" ? 22
+      : key === "far" ? 18
+      : 20;
+    return tier === "lowpower" || tier === "low"
+      ? Math.max(16, base - 2)
+      : base;
   }
 
   function _buildPlannerSummaryPoints(context, group, refYear) {
     const THREE = context.THREE;
     if (!THREE || !group) return;
     const patternRingRadius = Number(root.LivingTimeSphereM?.SIZES?.patternRing || 1);
+    const presentationRail =
+      root.LivingTimeSphereRenderer3d?.getCalendarRailGeometry?.()
+      || {
+        dayNumberPresentationWeek1: 1.320,
+        dayNumberPresentationWeekStep: 0.092,
+        scheduleSymbolPresentationOffset: 0.000,
+        scheduleSymbolInset: 0.046,
+        scheduleStackStep: 0.018
+      };
     const entries = [];
     const symbols = [];
     const connectorPositions = [];
@@ -314,13 +330,38 @@
       if (year !== refYear || !summary?.count || !Number.isFinite(patternDay)) continue;
       const cell = root.LivingTimeSphereCalendarGeometry?.calendarCell?.(patternDay);
       if (!cell) continue;
-      const angle = Number(cell.angle) * Math.PI / 180;
+      const displayCell =
+        root.LivingTimeSphereCalendarGeometry?.calendarDisplayCell?.(patternDay, {
+          dayNumberWeek1: presentationRail.dayNumberPresentationWeek1,
+          dayNumberWeekStep: presentationRail.dayNumberPresentationWeekStep,
+          scheduleInset: presentationRail.scheduleSymbolInset
+        }) || null;
+      const angle = Number(displayCell?.angle ?? cell.angle) * Math.PI / 180;
       const cellRadius = patternRingRadius * Number(cell.radialFactor || 1);
-      const markerRadius = cellRadius - patternRingRadius * 0.050;
+      // B7.59.2D — numeral + glyph are one visual packet. Keep the legacy
+      // presentation-offset term for compatibility, then derive the rest from
+      // calendarDisplayCell instead of inventing a second coordinate authority.
+      const markerRadius =
+        cellRadius
+        + patternRingRadius
+          * Number(
+            presentationRail.scheduleSymbolPresentationOffset
+            ?? 0
+          )
+        + patternRingRadius
+          * Number(
+              (displayCell?.scheduleRadialFactor ?? cell.radialFactor)
+              - Number(cell.radialFactor || 1)
+            );
       const record = state.recordById.get(summary.primaryRecordId) || null;
       const color = colorFor(record?.type, "present", THREE, record);
       const symbol = String(summary.primarySymbol || plannerSymbol(record) || "●").slice(0, 4);
-      symbols.push(symbol);
+      const countLabel =
+        summary.count > 9
+          ? "9+"
+          : (summary.count > 1 ? String(summary.count) : "");
+      const glyph = `${symbol}${countLabel}`.slice(0, 4);
+      symbols.push(glyph);
       const entry = {
         patternDay,
         moon: Number(cell.moon),
@@ -328,6 +369,7 @@
         recordId: summary.primaryRecordId,
         count: summary.count,
         symbol,
+        glyph,
         x: Math.sin(angle) * markerRadius,
         y: 0.031,
         z: -Math.cos(angle) * markerRadius,
@@ -335,7 +377,30 @@
       };
       entries.push(entry);
 
-      const endRadius = cellRadius - patternRingRadius * 0.010;
+      const presentationWeek =
+        Math.max(
+          1,
+          Math.min(
+            4,
+            Number(cell?.week || 1)
+          )
+        );
+      const endRadius =
+        patternRingRadius
+        * Number(
+            displayCell?.dayNumberRadialFactor
+            ?? (
+              Number(
+                presentationRail.dayNumberPresentationWeek1
+                ?? 1.320
+              )
+              + (presentationWeek - 1)
+                * Number(
+                    presentationRail.dayNumberPresentationWeekStep
+                    ?? 0.092
+                  )
+            )
+          );
       connectorPositions.push(
         entry.x, 0.010, entry.z,
         Math.sin(angle) * endRadius, 0.010, -Math.cos(angle) * endRadius
@@ -359,7 +424,7 @@
         colors[index * 3] = entry.color.r;
         colors[index * 3 + 1] = entry.color.g;
         colors[index * 3 + 2] = entry.color.b;
-        symbolIndices[index] = Number(atlas?.indexBySymbol?.get(entry.symbol) || 0);
+        symbolIndices[index] = Number(atlas?.indexBySymbol?.get(entry.glyph || entry.symbol) || 0);
         moons[index] = entry.moon;
         patternDays[index] = entry.patternDay;
       });
@@ -469,6 +534,8 @@
                       * emphasis
                       * uGestureScale
                       * apertureScale
+                      // B7.58.2 schedule symbol scale
+                      * 0.90
                   )
                 : 0.0;
 
@@ -590,7 +657,7 @@
       if (data.type !== "living-plan-day-points") continue;
       const uniforms = object?.material?.uniforms;
       if (!uniforms) continue;
-      const visible = band !== "far" && (revealAll || !!frontMoon);
+      const visible = revealAll || !!frontMoon;
       object.visible = visible;
       uniforms.uCenterMoon.value = Number(frontMoon || 1);
       uniforms.uHalfWindow.value = Math.max(0, Number(context?.calendarDisclosure?.halfWindow ?? 2));
@@ -609,7 +676,8 @@
   function _plannerEntryVisible(entry, context) {
     if (!entry) return false;
     const band = String(context?.semanticZoomState?.band || "medium").toLowerCase();
-    if (band === "far") return false;
+    // B7.59.2D — a schedule glyph that survives semantic zoom stays pickable.
+    void band;
     if (String(context?.dayLabelMode || "key") === "all") return true;
     const moons = Array.isArray(context?.calendarDisclosure?.moons) ? context.calendarDisclosure.moons : [];
     if (moons.length) return moons.includes(Number(entry.moon));
@@ -794,6 +862,11 @@
       const dayNumberRadius = patternRingRadius * rail.dayNumber;
       const planner = isPlannerRecord(record);
       const patternDay = Number(record.temporal?.patternDay);
+      if (planner && year === refYear) {
+        // B7.59.2D — current-year plans are represented once by the batched
+        // occupied-day summary field built above, not by duplicate giant sprites.
+        return;
+      }
       const calendarCell = planner && year === refYear
         ? root.LivingTimeSphereCalendarGeometry?.calendarCell?.(patternDay) || null
         : null;
@@ -808,7 +881,15 @@
       const stackKey = planner && year === refYear ? `${year}:${patternDay}` : null;
       const stackIndex = stackKey ? (plannerStackByDay.get(stackKey) || 0) : 0;
       if (stackKey) plannerStackByDay.set(stackKey, stackIndex + 1);
-      const scheduleMarkerRadius = cellRadius - patternRingRadius * (0.042 + Math.min(3, stackIndex) * 0.018);
+      // B7.59.2B — primary schedule marker takes the former numeral lane.
+      // Additional same-day records stack gently inward without changing the
+      // calendar angle or the canonical calendarCell used for selection.
+      const scheduleMarkerRadius =
+        cellRadius
+        + patternRingRadius * Number(rail.scheduleSymbolPresentationOffset ?? 0)
+        - patternRingRadius
+          * Math.min(3, stackIndex)
+          * Number(rail.scheduleStackStep ?? 0.018);
       const radius = planner && year === refYear ? scheduleMarkerRadius : strataRadius;
       const phase = year < refYear ? "past" : year > refYear ? "future" : "present";
       const sameDay = patternDay === selectedDay;
@@ -953,11 +1034,32 @@
         group.add(hitTarget);
       }
 
-      // B7.34: a short local stem binds the schedule bead to the exact readable
-      // day cell. It no longer stretches across unrelated calendar lanes.
+      // B7.59.2B: a short local stem now connects the schedule-symbol lane
+      // to the numeral presentation lane. The canonical cell itself does not move.
       if (planner && year === refYear) {
-        const startRadius = radius + patternRingRadius * 0.006;
-        const endRadius = cellRadius - patternRingRadius * 0.006;
+        const presentationWeek =
+          Math.max(
+            1,
+            Math.min(
+              4,
+              Number(calendarCell?.week || 1)
+            )
+          );
+        const dayPresentationRadius =
+          patternRingRadius
+          * (
+              Number(
+                rail.dayNumberPresentationWeek1
+                ?? 1.320
+              )
+              + (presentationWeek - 1)
+                * Number(
+                    rail.dayNumberPresentationWeekStep
+                    ?? 0.092
+                  )
+            );
+        const startRadius = radius;
+        const endRadius = dayPresentationRadius;
         const start = new THREE.Vector3(
           Math.sin(displayAngle) * startRadius,
           .008,
@@ -1023,11 +1125,22 @@
     const selectedDay = Number(context.model?.selectedPatternPosition?.dayOfPatternYear || context.model?.todayPatternPosition?.dayOfPatternYear || 1);
     const disclosureKey = String(context?.calendarDisclosure?.key || "");
     const dayMode = String(context?.dayLabelMode || "key");
-    const cacheKey = `${state.revision}|${selectedYear}|${selectedDay}|${dayMode}|${disclosureKey}`;
+    const band = String(context?.semanticZoomState?.band || "medium").toLowerCase();
+    const cacheKey =
+      `${state.revision}|${selectedYear}|${selectedDay}|${dayMode}|${band}|${disclosureKey}`;
     if (cacheKey === state.semanticTargetCacheKey) return state.semanticTargetCache.slice();
 
     const targets = [];
     const patternRingRadius = Number(root.LivingTimeSphereM?.SIZES?.patternRing || 1);
+    const presentationRail =
+      root.LivingTimeSphereRenderer3d?.getCalendarRailGeometry?.()
+      || {
+        dayNumberPresentationWeek1: 1.320,
+        dayNumberPresentationWeekStep: 0.092,
+        scheduleSymbolPresentationOffset: 0.000,
+        scheduleSymbolInset: 0.046,
+        scheduleStackStep: 0.018
+      };
 
     // B7.38 — schedule disclosure is day-scoped and camera-driven, just like the
     // day numerals. One summary target per occupied day replaces hundreds of
@@ -1040,14 +1153,34 @@
       const record = state.recordById.get(summary.primaryRecordId) || null;
       const cell = root.LivingTimeSphereCalendarGeometry?.calendarCell?.(patternDay);
       if (!cell) continue;
+      const displayCell =
+        root.LivingTimeSphereCalendarGeometry?.calendarDisplayCell?.(patternDay, {
+          dayNumberWeek1: presentationRail.dayNumberPresentationWeek1,
+          dayNumberWeekStep: presentationRail.dayNumberPresentationWeekStep,
+          scheduleInset: presentationRail.scheduleSymbolInset
+        }) || null;
       const revealAll = dayMode === "all";
       const disclosedMoons = Array.isArray(context?.calendarDisclosure?.moons)
         ? context.calendarDisclosure.moons
         : [];
       if (!revealAll && patternDay !== selectedDay && disclosedMoons.length && !disclosedMoons.includes(Number(cell.moon))) continue;
-      const angle = Number(cell.angle) * Math.PI / 180;
+      const summarySelected = patternDay === selectedDay;
+      if (!summarySelected && band !== "detail") continue;
+      const angle = Number(displayCell?.angle ?? cell.angle) * Math.PI / 180;
       const cellRadius = patternRingRadius * Number(cell.radialFactor || 1);
-      const markerRadius = cellRadius - patternRingRadius * 0.050;
+      // B7.59.2D — inspection card shares the same derived schedule/day packet.
+      const markerRadius =
+        cellRadius
+        + patternRingRadius
+          * Number(
+            presentationRail.scheduleSymbolPresentationOffset
+            ?? 0
+          )
+        + patternRingRadius
+          * Number(
+              (displayCell?.scheduleRadialFactor ?? cell.radialFactor)
+              - Number(cell.radialFactor || 1)
+            );
       const scheduleInfo = record ? formatPlanSchedule(record) : null;
       const selected = patternDay === selectedDay;
       const title = summary.primaryTitle || (summary.count > 1 ? `${summary.count} scheduled` : "Living Plan");

@@ -402,6 +402,11 @@
       selectedYear: _selectedYear,
       viewMode: _viewMode,
 
+      // B7.58.5 — raw preference tells extensions whether Reveal All was
+      // explicitly requested. effectiveDayLabelMode is camera presentation only.
+      dayLabelMode: _dayLabelMode || "key",
+      effectiveDayLabelMode: _effectiveDayLabelMode(),
+
       visibleLayers: {
         ...(_visibleLayers || {})
       },
@@ -747,8 +752,19 @@
     dayNumber: 1.295,
     dayNumberMoonEnd: 1.285,
     dayNumberMoonStart: 1.345,
-    calendarMatrixWeek1: 1.32,
-    calendarMatrixWeekStep: 0.092,
+    calendarMatrixWeek1: 1.298,
+    calendarMatrixWeekStep: 0.030,
+
+    // B7.59.2C — restored broad 4×7 visual face.
+    // calendarCell() remains the compact canonical selectable authority.
+    // Only the visible number face uses the older, spacious 4-week geometry
+    // that was visually clearer on the phone.
+    dayNumberPresentationWeek1: 1.320,
+    dayNumberPresentationWeekStep: 0.092,
+    scheduleSymbolPresentationOffset: 0.000,
+    scheduleSymbolInset: 0.046,
+    scheduleStackStep: 0.018,
+
     calendarMatrixMoonLabel: 1.565,
     intercalaryTickStart: 1.185,
     intercalaryTickEnd: 1.255
@@ -1765,10 +1781,43 @@
         // layers. canonicalAngle remains authoritative for astronomy/history;
         // the visible/selectable number uses the 13 × 4 × 7 Moon matrix.
         const calendarCell = calendar?.calendarCell?.(dayOfYear) || null;
-        const readingAngle = calendarCell?.angle ?? canonicalAngle;
+        const displayCell = calendar?.calendarDisplayCell?.(dayOfYear, {
+          dayNumberWeek1: CALENDAR_RAIL.dayNumberPresentationWeek1,
+          dayNumberWeekStep: CALENDAR_RAIL.dayNumberPresentationWeekStep,
+          scheduleInset: CALENDAR_RAIL.scheduleSymbolInset
+        }) || null;
+        const readingAngle = displayCell?.angle ?? calendarCell?.angle ?? canonicalAngle;
         const readingRadius = ring * (calendarCell?.radialFactor
           ?? (CALENDAR_RAIL.calendarMatrixWeek1 + (Math.floor((moonDay - 1) / 7)) * CALENDAR_RAIL.calendarMatrixWeekStep));
-        const canonicalPoint = angleToXZ(readingAngle, readingRadius);
+
+        // B7.59.2C — restore the older broad 4×7 number face without
+        // changing calendarCell(), pointer selection, or the canonical angle.
+        const presentationWeek =
+          Math.max(
+            1,
+            Math.min(
+              4,
+              Number(
+                calendarCell?.week
+                ?? (Math.floor((moonDay - 1) / 7) + 1)
+              )
+            )
+          );
+        const dayPresentationRadius =
+          ring
+          * Number(
+              displayCell?.dayNumberRadialFactor
+              ?? (
+                CALENDAR_RAIL.dayNumberPresentationWeek1
+                + (presentationWeek - 1)
+                  * CALENDAR_RAIL.dayNumberPresentationWeekStep
+              )
+            );
+        const presentationPoint =
+          angleToXZ(
+            readingAngle,
+            dayPresentationRadius
+          );
         const isSelectedDay = dayOfYear === selectedPatternDay;
         const isTodayDay = dayOfYear === todayPatternDay;
         const weekStart = moonDay === 1 || ((moonDay - 1) % 7 === 0);
@@ -1790,9 +1839,9 @@
           calendarFace: true,
           calendarWeek: Math.floor((moonDay - 1) / 7) + 1,
           calendarColumn: ((moonDay - 1) % 7) + 1,
-          worldX: canonicalPoint.x,
-          worldY: 0.022,
-          worldZ: canonicalPoint.z,
+          worldX: presentationPoint.x,
+          worldY: 0.010,
+          worldZ: presentationPoint.z,
           priority: isSelectedDay ? 100 : isTodayDay ? 98 : gateDay ? 72 : 44,
           showDistance: 99,
           resetDistance: 99,
@@ -1834,7 +1883,7 @@
           label: slot.shortLabel || slot.label,
           detail: `${slot.label} · Year Gate · outside the 364-day week count`,
           kind: "intercalary-day-number",
-          worldX: point.x, worldY: 0.018, worldZ: point.z,
+          worldX: point.x, worldY: 0.008, worldZ: point.z,
           priority: slot.leap ? 97 : 98,
           showDistance: 99, resetDistance: 99, detailDistance: 0,
           haloOffset: 0, haloLane: "day", railLocked: true, quietRail: true,
@@ -1904,7 +1953,7 @@
       round(p?.x), round(p?.y), round(p?.z),
       round(q?.x), round(q?.y), round(q?.z), round(q?.w),
       selected?.moon || 0, selected?.day || 0,
-      _moonLabelMode, _dayLabelMode, viewMode,
+      _moonLabelMode, _dayLabelMode, _effectiveDayLabelMode(), viewMode,
       _semanticZoomState?.band || _activeSemanticBand || "medium",
       JSON.stringify(_visibleLayers || {})
     ].join("|");
@@ -1937,7 +1986,7 @@
       labelMode: _moonLabelMode,
       selectedPatternPosition: _model?.selectedPatternPosition || _model?.todayPatternPosition || null,
       showAllMobileLabels: _moonLabelMode === "all",
-      dayLabelMode: _dayLabelMode,
+      dayLabelMode: _effectiveDayLabelMode(),
       calendarDisclosure,
       selectedMarkerPosition: _objects.selectedDayMarker?.position
         ? { x: _objects.selectedDayMarker.position.x, y: _objects.selectedDayMarker.position.y, z: _objects.selectedDayMarker.position.z }
@@ -2182,8 +2231,8 @@
         const sectorSweep = 360 / 13;
         const margin = sectorSweep * 0.075;
         const usable = sectorSweep - margin * 2;
-        const innerR = mat.SIZES.patternRing * (CALENDAR_RAIL.calendarMatrixWeek1 - 0.035);
-        const outerR = mat.SIZES.patternRing * (CALENDAR_RAIL.calendarMatrixWeek1 + 3 * CALENDAR_RAIL.calendarMatrixWeekStep + 0.035);
+        const innerR = mat.SIZES.patternRing * (CALENDAR_RAIL.calendarMatrixWeek1 - 0.012);
+        const outerR = mat.SIZES.patternRing * (CALENDAR_RAIL.calendarMatrixWeek1 + 3 * CALENDAR_RAIL.calendarMatrixWeekStep + 0.012);
         for (let column = 0; column <= 7; column += 1) {
           const angle = meta.sectorStart + margin + usable * (column / 7);
           const a = angleToXZ(angle, innerR);
@@ -4234,6 +4283,74 @@
     if (_objects.lunarSelectedMarker && band === "far") _objects.lunarSelectedMarker.visible = false;
   }
 
+
+  // === B7.58.5 — AUTO DISCLOSURE OWNERSHIP START ===
+  // Raw preference:
+  //   key      = camera-aware Auto
+  //   all      = explicit Reveal All
+  //   selected = explicit selected-only
+  //   hidden   = explicit hidden
+  //
+  // Camera semantic zoom may change the EFFECTIVE day presentation, but it
+  // must never write that transient result back into _dayLabelMode.
+  function _normalizeDayLabelPreference(value, fallback = "key") {
+    const mode = String(value || "").trim().toLowerCase();
+    return ["key", "all", "selected", "hidden"].includes(mode)
+      ? mode
+      : fallback;
+  }
+
+  function _resolveDayLabelPreference(candidate = "key") {
+    let uiPreference = null;
+    try {
+      uiPreference =
+        globalThis.LivingTimeSphereUi
+          ?.getState?.()
+          ?.dayLabelMode;
+    } catch {
+      uiPreference = null;
+    }
+
+    return _normalizeDayLabelPreference(
+      uiPreference
+      || candidate
+      || _dayLabelMode
+      || "key"
+    );
+  }
+
+  function _effectiveDayLabelMode() {
+    const preference =
+      _normalizeDayLabelPreference(
+        _dayLabelMode,
+        "key"
+      );
+
+    if (
+      preference === "all"
+      || preference === "selected"
+      || preference === "hidden"
+    ) {
+      return preference;
+    }
+
+    /*
+     * Cold-start protection:
+     * Before the real 3D camera has produced a semantic distance, UI-level
+     * camera state may still be provisional. Auto starts in the lightweight
+     * key-day presentation instead of materializing the complete 364 labels.
+     */
+    if (_lastSemanticDistance == null) {
+      return "key";
+    }
+
+    return _normalizeDayLabelPreference(
+      _semanticZoomState?.dayLabelMode,
+      "key"
+    );
+  }
+  // === B7.58.5 — AUTO DISCLOSURE OWNERSHIP END ===
+
   function _syncSemanticZoomFromCamera(force = false) {
     const next = _resolveSemanticZoomFromCamera();
     if (!next) return false;
@@ -4254,9 +4371,9 @@
     _activeSemanticBand = next.band;
     _lastSemanticTransitionThreshold = next.transitionThreshold ?? null;
     const explicitMoonLabelMode = _moonLabelMode === "all" || _moonLabelMode === "selected";
-    const explicitDayLabelMode = _dayLabelMode === "all" || _dayLabelMode === "selected";
     if (!explicitMoonLabelMode) _moonLabelMode = next.moonLabelMode || _moonLabelMode;
-    if (!explicitDayLabelMode) _dayLabelMode = next.dayLabelMode || _dayLabelMode;
+    // B7.58.5 — do not mutate _dayLabelMode here.
+    // next.dayLabelMode is an effective camera LOD decision, not user intent.
     _applySemanticVisibility(_visibleLayers || {}, next);
     _buildConnections();
     _moonLabelManager?.markDirty();
@@ -4705,7 +4822,7 @@
     _viewMode     = viewMode || "today";
     _moonLabelMode = moonLabelMode || "contextual";
     _moonLabelDistance = moonLabelDistance || "standard";
-    _dayLabelMode = dayLabelMode || "key";
+    _dayLabelMode = _resolveDayLabelPreference(dayLabelMode);
     _connectionRegistry = Array.isArray(connectionRegistry) ? connectionRegistry : [];
     _motionMode = motionMode || "still";
     globalThis.LivingTimeSphereAnimation?.setLowPower?.(
@@ -6829,7 +6946,7 @@
     _viewMode = viewMode || _viewMode || "today";
     _moonLabelMode = moonLabelMode || _moonLabelMode || "contextual";
     _moonLabelDistance = moonLabelDistance || _moonLabelDistance || "standard";
-    _dayLabelMode = dayLabelMode || _dayLabelMode || "key";
+    _dayLabelMode = _resolveDayLabelPreference(dayLabelMode);
     _connectionRegistry = Array.isArray(connectionRegistry) ? connectionRegistry : (_connectionRegistry || []);
     _motionMode = motionMode || _motionMode || "still";
     _semanticZoomState = semanticZoomState || _semanticZoomState || null;
@@ -7336,7 +7453,8 @@
         distance: _lastSemanticDistance,
         transitionThreshold: _lastSemanticTransitionThreshold,
         sourceType: _lastSemanticSourceType,
-        dayLabelMode: _semanticZoomState?.dayLabelMode || _dayLabelMode,
+        dayLabelMode: _effectiveDayLabelMode(),
+        dayLabelPreference: _dayLabelMode,
         moonLabelMode: _semanticZoomState?.moonLabelMode || _moonLabelMode,
         maxConnections: Number(_semanticZoomState?.maxConnections || 0),
         visibleDayNodes: Number(_dayNodeVisibleCount || 0),

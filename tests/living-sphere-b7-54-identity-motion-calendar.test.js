@@ -125,7 +125,7 @@ test(
   () => {
     assert.match(
       sphere,
-      /living-time-sphere-renderer-3d\.js\?v=20260819-b7523&r=20260820-b75[3-8]/
+      /living-time-sphere-renderer-3d\.js\?v=20260819-b7523[^"' ]*&r=20260820-b75[3-8]/
     );
 
     assert.match(

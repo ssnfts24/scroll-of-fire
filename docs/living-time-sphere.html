@@ -34,11 +34,11 @@
   <link rel="apple-touch-icon" href="assets/img/shared/branding/favicon.png">
   <link rel="stylesheet" href="assets/css/codex.css">
   <link rel="stylesheet" href="assets/css/navigation.css">
-  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260819-b752&r=20260820-b758&p=20260820-b7581-labelglass">
+  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260819-b752&r=20260820-b758&p=20260820-b7581-labelglass&u=20260820-b7582-railalign&b=20260820-b7592a-farskeleton&d=20260821-b7592d7-unified">
   <!-- B7.52 FAST BOOT: Three.js is a dynamic import, so advertise it before
        the renderer reaches init instead of discovering the module late. -->
   <link rel="modulepreload" href="assets/vendor/three/three.module.min.js" fetchpriority="high">
-  <link rel="preload" href="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260819-b7523&r=20260820-b757" as="script" fetchpriority="high">
+  <link rel="preload" href="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260819-b7523&u=20260820-b7582-railalign&r=20260820-b7584-rootrail&a=20260820-b7585v3-auto&b=20260820-b7592a-farskeleton&s=20260820-b7592b-laneswap&f=20260820-b7592c-face&d=20260821-b7592d7-unified" as="script" fetchpriority="high">
   <link rel="stylesheet" href="assets/css/living-time-sphere-metrics.css?v=20260814-1">
   <link rel="stylesheet" href="assets/css/observatory-workspace.css?v=20260815-6">
   <link rel="stylesheet" href="assets/css/living-planner.css?v=20260818-1">
@@ -194,7 +194,7 @@
    <!-- Sphere modules — Phase 03: 3D renderer modules (lazy) -->
    <script defer src="assets/js/sphere/living-time-sphere-version.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-model.js"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-calendar-geometry.js?v=20260819-b727"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-calendar-geometry.js?v=20260819-b727&r=20260820-b7584-rootrail&b=20260820-b7592a-farskeleton&d=20260821-b7592d7-unified"></script>
    <script defer src="assets/js/sphere/living-time-sphere-temporal.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-state.js?v=20260819-b731"></script>
    <script defer src="assets/js/sphere/living-time-sphere-semantic-zoom.js"></script>
@@ -208,13 +208,13 @@
    <script defer src="assets/js/sphere/living-time-sphere-camera.js?v=20260819-b740"></script>
    <script defer src="assets/js/sphere/living-time-sphere-animation.js?v=20260819-b740"></script>
    <script defer src="assets/js/sphere/living-time-sphere-planetary-positions.js?v=20260819-b730"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-label-manager.js?v=20260819-b750&r=20260820-b758"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-label-manager.js?v=20260819-b750&r=20260820-b758&u=20260820-b7582-railalign&b=20260820-b7592a-farskeleton&d=20260821-b7592d7-unified"></script>
 <script defer src="assets/js/sphere/living-time-sphere-extension-host.js?v=20260816-1"></script>
    <script defer src="assets/js/sphere/living-time-sphere-temporal-legibility.js?v=20260817-1"></script>
   <script defer src="assets/js/sphere/living-time-sphere-temporal-strata.js?v=20260817-5"></script>
-   <script defer src="assets/js/sphere/life-atlas-record-sphere-extension.js?v=20260819-b750&r=20260820-b757"></script>
+   <script defer src="assets/js/sphere/life-atlas-record-sphere-extension.js?v=20260819-b750&r=20260820-b757&u=20260820-b7582-railalign&s=20260820-b7592b-laneswap&f=20260820-b7592c-face&d=20260821-b7592d7-unified"></script>
    <!-- Life Atlas visual world projection temporarily disabled for recursive-sphere refactor -->
-   <script defer fetchpriority="high" src="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260819-b7523&r=20260820-b757"></script>
+   <script defer fetchpriority="high" src="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260819-b7523&u=20260820-b7582-railalign&r=20260820-b7584-rootrail&a=20260820-b7585v3-auto&b=20260820-b7592a-farskeleton&s=20260820-b7592b-laneswap&f=20260820-b7592c-face&d=20260821-b7592d7-unified"></script>
    <script defer src="assets/js/sphere/living-time-sphere-live-data.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-interaction.js?v=20260818-b73"></script>
    <script defer src="assets/js/sphere/living-time-sphere-accessibility.js"></script>
@@ -222,7 +222,7 @@
    <script defer src="assets/js/sphere/living-time-sphere-url-state.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-mount.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-today.js"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-ui.js?v=20260819-b752&r=20260820-b757"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-ui.js?v=20260819-b752&r=20260820-b757&a=20260820-b7585v3-auto"></script>
    <script defer>
      document.addEventListener("DOMContentLoaded", () => {
        const container = document.getElementById("sphere-container");
@@ -336,7 +336,7 @@
 
               <label for="sphere-day-label-mode" class="sphere-control-label">Day labels</label>
               <select id="sphere-day-label-mode" class="sphere-control-select" aria-label="Day label visibility">
-                <option value="key" selected>Key days</option>
+                <option value="key" selected>Auto · camera-aware</option>
                 <option value="all">All 28</option>
                 <option value="selected">Selected only</option>
                 <option value="hidden">Hidden</option>

@@ -4357,3 +4357,82 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
  */
 
 /* === B7.58.1 LABEL GLASS + OCCLUSION END === */
+
+
+/* === B7.58.2 SCHEDULE COMPACTNESS START === */
+
+.living-time-sphere-page
+.sphere-semantic-label[data-semantic-kind="living-plan-summary"] {
+  max-width: min(9rem, 36vw) !important;
+  padding: .21rem .29rem !important;
+}
+
+.living-time-sphere-page
+.sphere-semantic-label[data-semantic-kind="living-plan-summary"]
+.sphere-semantic-label-title {
+  font-size: .59rem !important;
+}
+
+.living-time-sphere-page
+.sphere-semantic-label[data-semantic-kind="living-plan-summary"]
+.sphere-semantic-label-status {
+  font-size: .51rem !important;
+  padding: .07rem .21rem !important;
+}
+
+/* === B7.58.2 SCHEDULE COMPACTNESS END === */
+
+
+/* B7.59.2A — readable far-day calendar skeleton
+   Keep the DOM hit area, but make distant structural dates read like engraved
+   instrument marks rather than a row of heavy bubbles. */
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-far-skeleton="true"] {
+  background: rgba(3, 10, 16, .42) !important;
+  border-color: rgba(150, 209, 211, .24) !important;
+  box-shadow: 0 1px 1px rgba(0,0,0,.26) !important;
+  backdrop-filter: none !important;
+}
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-far-skeleton="true"] .sphere-semantic-label-title {
+  color: rgba(233, 247, 244, .92) !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,.82);
+  font-weight: 650 !important;
+}
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-far-skeleton="true"][data-has-schedule="true"] {
+  border-color: rgba(246, 213, 106, .42) !important;
+}
+
+/* === B7.59.2D UNIFIED DAY + SCHEDULE PACKET START === */
+/*
+ * Occupied dates remain unmistakable without becoming giant bubbles. The GPU
+ * schedule glyph sits immediately inward of the same derived display cell.
+ */
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-has-schedule="true"] .sphere-semantic-label-title,
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-schedule-count] .sphere-semantic-label-title {
+  position: relative;
+  border-color: rgba(246, 213, 106, .62) !important;
+  color: rgba(255, 240, 190, .99) !important;
+  box-shadow:
+    inset 0 0 4px rgba(246, 213, 106, .10),
+    0 0 3px rgba(246, 213, 106, .12) !important;
+}
+
+/* Tiny notch: day number and inward schedule glyph read as one calendar packet. */
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-has-schedule="true"] .sphere-semantic-label-title::after,
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-schedule-count] .sphere-semantic-label-title::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -.22rem;
+  width: 1px;
+  height: .20rem;
+  transform: translateX(-50%);
+  background: rgba(246, 213, 106, .58);
+  box-shadow: 0 0 2px rgba(246, 213, 106, .22);
+  pointer-events: none;
+}
+
+.is-camera-gesture-active
+.sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-has-schedule="true"] .sphere-semantic-label-title::after {
+  box-shadow: none;
+}
+/* === B7.59.2D UNIFIED DAY + SCHEDULE PACKET END === */
