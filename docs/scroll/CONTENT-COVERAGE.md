@@ -45,13 +45,17 @@ Search is a custom offline sharded index (`scripts/build-scroll-search.mjs`) rat
 |---|---|
 | Indexed segments / sections | 1,609 / 817 |
 | Unique / total tokens | 9,291 / 92,231 |
-| Artifacts | 802 files, about 2.58 MB raw, about 704 KB gzipped |
-| Index shards | 723, keyed by the first two characters of a token, loaded only when a query needs them |
-| Segment text | 41 chunks of 40 segments, fetched only for displayed results |
+| Artifacts | 802 files, about 3.04 MB raw, about 854 KB gzipped |
+| Index shards | 723, keyed by the first two characters of a token, loaded only when a query needs them; postings include token positions for exact phrase checks |
+| Segment text | 41 chunks of 40 segments; only chunks needed for the visible result page are fetched, with later pages loaded on request |
 | Lexicon | 911 forms (645 with author notes), 22 detail buckets |
 | Atlas | 196 scripture references, 46 entities, 232 repeated heading groups, 214 repeated text groups |
 
-Opening a chapter downloads none of the index. A first search downloads `sections.json` (138 KB) plus the shards for the query words and the text chunks of the visible results.
+Opening a chapter downloads none of the index. Ordinary keyword queries are ranked from postings and fetch text only for the first 10 displayed results. The index carries delta-encoded token positions; quoted multiword phrases intersect exact-token postings and verify consecutive positions across the complete eligible set, without fetching candidate text or truncating phrase results. `Show more` fetches the next page's text chunks on demand.
+
+**Measured broad-query load** (fresh browser origin, local `http.server`, `the`, query assets only): before the correction, the first page loaded 45 search artifacts / 942,437 transferred bytes, including all 41 text chunks. After the correction it loaded 8 artifacts / 456,738 transferred bytes, including only 4 text chunks for the first 10 displayed results (about 51% fewer bytes and 82% fewer requests). Subsequent pages load only additional required chunks; paging through all 965 prefix-expanded results eventually accesses all 41 chunks. The exact `the` posting contains 925 segments; existing prefix matching adds 40 segments whose tokens begin with `the`.
+
+The position index increased committed search artifacts from about 2.58 MB to 3.04 MB raw (gzip from about 704 KB to 854 KB). This is a deliberate static-index size tradeoff to provide complete phrase matching without eager candidate-text downloads.
 
 **Normalization** (`assets/search-normalize.js`, shared by browser and build): Unicode NFKD, removal of combining marks (niqqud and cantillation), Hebrew final-letter folding, maqaf and punctuation as word separators, apostrophes dropped, lower-casing. Hebrew queries also match the common prefix particles (ה ו ב כ ל מ ש). Normalization is used for matching only; displayed text is the original.
 

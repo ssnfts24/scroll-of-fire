@@ -14,7 +14,6 @@
   const chips = [...document.querySelectorAll("[data-shelf]")];
   const PAGE_SIZE = 10;
   const CHUNK_SIZE = 40;
-  const CANDIDATE_LIMIT = 400;
 
   const state = { q: "", shelf: "", page: "", shown: PAGE_SIZE };
   let runId = 0;
@@ -78,8 +77,51 @@
     return found;
   }
 
+  async function exactTokenPostings(token) {
+    const key = [...token].slice(0, 2).join("");
+    if (!data.shards.includes(key)) return new Map();
+    const shard = await C.loadJson(shardUrl(key));
+    const posting = shard[token];
+    if (!posting) return new Map();
+    const found = new Map();
+    let ordinal = 0;
+    posting.d.forEach((delta, index) => {
+      ordinal += delta;
+      let position = 0;
+      const positions = posting.p[index].map(positionDelta => {
+        position += positionDelta;
+        return position;
+      });
+      found.set(ordinal, { positions, frequency: posting.f[index] });
+    });
+    return found;
+  }
+
+  async function exactPhrasePostings(query) {
+    const perToken = await Promise.all(query.tokens.map(exactTokenPostings));
+    if (perToken.some(posting => !posting.size)) return new Map();
+    const idfs = perToken.map(posting => Math.log(1 + data.segIds.length / posting.size));
+    const result = new Map();
+    const positionsByToken = perToken.map(posting => new Map(
+      [...posting].map(([ordinal, value]) => [ordinal, new Set(value.positions)])
+    ));
+    for (const [ordinal, first] of perToken[0]) {
+      if (perToken.slice(1).some(posting => !posting.has(ordinal))) continue;
+      const positionSets = positionsByToken.slice(1).map(posting => posting.get(ordinal));
+      const phraseHit = first.positions.some(position =>
+        positionSets.every((positions, offset) => positions.has(position + offset + 1))
+      );
+      if (!phraseHit) continue;
+      const score = perToken.reduce((total, posting, index) =>
+        total + (1 + Math.log(posting.get(ordinal).frequency)) * idfs[index], 0);
+      result.set(ordinal, score * 2.5);
+    }
+    return result;
+  }
+
   async function runSearch(query) {
     await loadSections();
+    if (query.phrase) return { combined: await exactPhrasePostings(query), partial: false };
     const perToken = await Promise.all(query.tokens.map(postingsFor));
     let combined = new Map();
     let partial = false;
@@ -102,6 +144,14 @@
     const chunks = [...new Set(ordinals.map(ordinal => Math.floor(ordinal / CHUNK_SIZE)))];
     const loaded = new Map(await Promise.all(chunks.map(async chunk => [chunk, await C.loadJson(textUrl(chunk))])));
     return ordinal => loaded.get(Math.floor(ordinal / CHUNK_SIZE))[ordinal % CHUNK_SIZE];
+  }
+
+  async function loadPage(from, to, id) {
+    const entries = current.results.slice(from, to);
+    if (!entries.length) return;
+    const textOf = await fetchTexts(entries.map(entry => entry.ordinal));
+    if (id !== runId || !current || current.id !== id) return;
+    for (const entry of entries) entry.text = textOf(entry.ordinal);
   }
 
   function wordsOf(text) {
@@ -168,6 +218,7 @@
 
   function renderResults() {
     resultsEl.replaceChildren();
+    moreButton.disabled = false;
     if (!current) return;
     for (const entry of current.results.slice(0, state.shown)) resultsEl.append(resultItem(entry, current.query));
     moreButton.hidden = current.results.length <= state.shown;
@@ -199,6 +250,7 @@
   }
 
   function reset() {
+    runId += 1;
     current = null;
     resultsEl.replaceChildren();
     quickEl.hidden = true;
@@ -230,26 +282,20 @@
       }
       if (state.shelf) candidates = candidates.filter(c => shelfIds[shelfOf(c.ordinal)] === state.shelf);
       if (state.page) candidates = candidates.filter(c => pageIdOf(c.ordinal) === state.page);
-      candidates.sort((a, b) => b.score - a.score || a.ordinal - b.ordinal);
-      candidates = candidates.slice(0, CANDIDATE_LIMIT);
-      const textOf = await fetchTexts(candidates.map(c => c.ordinal));
-      if (id !== runId) return;
       const qn = query.normalized;
-      let results = candidates.map(candidate => {
-        const text = textOf(candidate.ordinal);
-        const normalizedText = N.normalize(text);
-        const phraseHit = query.tokens.length > 1 && normalizedText.includes(qn);
+      candidates = candidates.map(candidate => {
         const section = data.sections[data.segSection[candidate.ordinal]];
         const titleHit = N.normalize(section[1]).includes(qn);
-        return { ...candidate, text, phrase: phraseHit, score: candidate.score * (phraseHit ? 2.5 : 1) * (titleHit ? 1.3 : 1) };
+        return { ...candidate, phrase: query.phrase, score: candidate.score * (titleHit ? 1.3 : 1) };
       });
-      if (query.phrase) results = results.filter(result => result.phrase);
-      results.sort((a, b) => b.score - a.score || a.ordinal - b.ordinal);
-      current = { query, results, partial };
-      state.shown = Math.max(PAGE_SIZE, Math.min(state.shown, results.length));
+      candidates.sort((a, b) => b.score - a.score || a.ordinal - b.ordinal);
+      current = { id, query, results: candidates, partial, counts };
+      state.shown = Math.min(PAGE_SIZE, candidates.length);
+      await loadPage(0, state.shown, id);
+      if (id !== runId) return;
       updateChips(query.phrase ? null : counts);
       renderResults();
-      describeStatus(query, results, partial, counts);
+      describeStatus(query, candidates, partial, counts);
       renderQuick(query, id);
     } catch (error) {
       if (id !== runId) return;
@@ -280,7 +326,7 @@
     }
     const shown = Math.min(state.shown, results.length);
     const lead = partial ? "No passage contains every word; showing passages with some of them. " : "";
-    statusEl.replaceChildren(`${lead}${results.length}${results.length >= CANDIDATE_LIMIT ? "+" : ""} passage${results.length === 1 ? "" : "s"} match “${query.raw}”${scope ? ` in ${scope}` : ""}. Showing ${shown}.`);
+    statusEl.replaceChildren(`${lead}${results.length} passage${results.length === 1 ? "" : "s"} match “${query.raw}”${scope ? ` in ${scope}` : ""}. Showing ${shown}.`);
   }
 
   /* ---------- related quick matches: Genesis, scripture, subjects, Hebrew lexicon ---------- */
@@ -373,12 +419,14 @@
   /* ---------- controls ---------- */
   form.addEventListener("submit", event => {
     event.preventDefault();
+    clearTimeout(timer);
     state.q = input.value;
     state.shown = PAGE_SIZE;
     execute({ push: true });
   });
   let timer = null;
   input.addEventListener("input", () => {
+    runId += 1;
     clearButton.hidden = !input.value;
     clearTimeout(timer);
     timer = setTimeout(() => {
@@ -389,6 +437,8 @@
     }, 300);
   });
   clearButton.addEventListener("click", () => {
+    clearTimeout(timer);
+    runId += 1;
     input.value = "";
     state.q = "";
     state.page = "";
@@ -405,12 +455,28 @@
       execute({ push: true });
     });
   }
-  moreButton.addEventListener("click", () => {
+  moreButton.addEventListener("click", async () => {
     const previous = state.shown;
-    state.shown += PAGE_SIZE;
-    renderResults();
-    describeStatus(current.query, current.results, current.partial, new Map());
-    resultsEl.children[previous]?.querySelector("a")?.focus();
+    const next = Math.min(current.results.length, state.shown + PAGE_SIZE);
+    const id = current.id;
+    moreButton.disabled = true;
+    moreButton.textContent = "Loading more results…";
+    try {
+      await loadPage(previous, next, id);
+      if (!current || current.id !== id || id !== runId) return;
+      state.shown = next;
+      renderResults();
+      describeStatus(current.query, current.results, current.partial, current.counts);
+      resultsEl.children[previous]?.querySelector("a")?.focus();
+    } catch (error) {
+      if (!current || current.id !== id || id !== runId) return;
+      console.error("Could not load additional search results:", error);
+      statusEl.classList.add("is-error");
+      statusEl.textContent = "More results could not be loaded. Activate “Retry loading more results” to try again.";
+      moreButton.textContent = "Retry loading more results";
+    } finally {
+      if (current?.id === id && id === runId) moreButton.disabled = false;
+    }
   });
   input.addEventListener("keydown", event => {
     if (event.key === "ArrowDown") {

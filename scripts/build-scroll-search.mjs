@@ -80,11 +80,14 @@ const postings = new Map();
 let totalTokens = 0;
 segments.forEach((segment, ordinal) => {
   const counts = new Map();
-  for (const token of tokenize(segment.text)) counts.set(token, (counts.get(token) ?? 0) + 1);
-  for (const [token, count] of counts) {
-    totalTokens += count;
+  tokenize(segment.text).forEach((token, position) => {
+    if (!counts.has(token)) counts.set(token, []);
+    counts.get(token).push(position);
+    totalTokens += 1;
+  });
+  for (const [token, positions] of counts) {
     if (!postings.has(token)) postings.set(token, []);
-    postings.get(token).push([ordinal, count]);
+    postings.get(token).push([ordinal, positions]);
   }
 });
 const shards = new Map();
@@ -94,12 +97,19 @@ for (const token of [...postings.keys()].sort()) {
   let previous = 0;
   const d = [];
   const f = [];
-  for (const [ordinal, count] of postings.get(token)) {
+  const p = [];
+  for (const [ordinal, positions] of postings.get(token)) {
     d.push(ordinal - previous);
-    f.push(count);
+    f.push(positions.length);
+    let previousPosition = 0;
+    p.push(positions.map((position, index) => {
+      const delta = index === 0 ? position : position - previousPosition;
+      previousPosition = position;
+      return delta;
+    }));
     previous = ordinal;
   }
-  shards.get(key)[token] = { d, f };
+  shards.get(key)[token] = { d, f, p };
 }
 const shardKeys = [...shards.keys()].sort();
 for (const key of shardKeys) emit(`search/index/ix-${hex(key)}.json`, shards.get(key));

@@ -38,6 +38,34 @@ function lookup(query) {
   return posting.d.map(delta => (ordinal += delta));
 }
 
+function positionalLookup(query) {
+  const [token] = N.tokenize(query);
+  const key = [...token].slice(0, 2).join("");
+  const posting = read(searchRoot, "index", `ix-${hex(key)}.json`)[token];
+  if (!posting) return new Map();
+  const found = new Map();
+  let ordinal = 0;
+  posting.d.forEach((delta, index) => {
+    ordinal += delta;
+    let position = 0;
+    found.set(ordinal, posting.p[index].map(value => (position += value)));
+  });
+  return found;
+}
+
+function phraseLookup(query) {
+  const tokens = N.tokenize(query);
+  const postings = tokens.map(positionalLookup);
+  if (postings.some(posting => !posting.size)) return [];
+  const positions = postings.slice(1).map(posting => new Map(
+    [...posting].map(([ordinal, values]) => [ordinal, new Set(values)])
+  ));
+  return [...postings[0]].filter(([ordinal, first]) =>
+    positions.every(posting => posting.has(ordinal)) &&
+    first.some(position => positions.every((posting, offset) => posting.get(ordinal).has(position + offset + 1)))
+  ).map(([ordinal]) => ordinal);
+}
+
 test("search artifacts are pinned to the frozen source and count every segment", () => {
   assert.equal(manifest.sourceSha256, "81a015fb937f1664c2383fa38fddf956d281c6309a9584382c6dbc9d8b691400");
   assert.equal(manifest.sourceCommit, "980b1f56fdc9974ed57e1c12ccedb0819d39e6b6");
@@ -102,6 +130,54 @@ test("English phrases, Genesis chapters, and Hebrew with and without niqqud find
   assert.ok(phrase.length >= 1);
   const genesis3 = sections.genesis.find(entry => entry.chapter === 3);
   assert.equal(segmentData.segments.find(segment => segment.id === genesis3.segmentId).genesisChapter, 3);
+});
+
+test("positional postings verify exact phrases beyond the former 400-candidate cap", () => {
+  const query = "and the";
+  const tokens = N.tokenize(query);
+  const postings = tokens.map(positionalLookup);
+  for (const token of tokens) {
+    const index = read(searchRoot, "index", `ix-${hex([...token].slice(0, 2).join(""))}.json`)[token];
+    assert.equal(index.p.length, index.d.length);
+    index.p.forEach((positions, indexOrdinal) => assert.equal(positions.length, index.f[indexOrdinal]));
+  }
+  const rankedCandidates = [];
+  for (const [ordinal, frequency] of postings[0]) {
+    if (!postings.every(posting => posting.has(ordinal))) continue;
+    const score = postings.reduce((total, posting) =>
+      total + (1 + Math.log(posting.get(ordinal).length)) *
+        Math.log(1 + sections.segIds.length / posting.size), 0);
+    rankedCandidates.push({ ordinal, score });
+  }
+  rankedCandidates.sort((a, b) => b.score - a.score || a.ordinal - b.ordinal);
+  const exact = phraseLookup(query);
+  const sourceMatches = segmentData.segments.map((segment, ordinal) => {
+    const words = N.tokenize(segment.text);
+    const hasPhrase = words.some((word, index) =>
+      tokens.every((token, offset) => words[index + offset] === token)
+    );
+    return hasPhrase ? ordinal : -1;
+  }).filter(ordinal => ordinal >= 0);
+  assert.deepEqual(exact.sort((a, b) => a - b), sourceMatches);
+  assert.equal(exact.length, 109);
+  assert.ok(exact.some(ordinal => rankedCandidates.findIndex(candidate => candidate.ordinal === ordinal) >= 400));
+});
+
+test("ordinary search keeps every posting candidate and fetches text in visible pages", () => {
+  const script = fs.readFileSync(path.join(scrollRoot, "assets", "search.js"), "utf8");
+  assert.equal(lookup("the").length, 925);
+  assert.doesNotMatch(script, /CANDIDATE_LIMIT/);
+  assert.match(script, /async function loadPage\(from, to, id\)/);
+  assert.match(script, /current\.results\.slice\(from, to\)/);
+  assert.match(script, /await loadPage\(previous, next, id\)/);
+  assert.match(script, /const PAGE_SIZE = 10/);
+});
+
+test("clearing or replacing a search invalidates stale asynchronous results", () => {
+  const script = fs.readFileSync(path.join(scrollRoot, "assets", "search.js"), "utf8");
+  assert.match(script, /if \(id !== runId\) return/);
+  assert.match(script, /clearTimeout\(timer\);\s*runId \+= 1;\s*input\.value = ""/);
+  assert.match(script, /function reset\(\) \{\s*runId \+= 1;/);
 });
 
 test("all 50 Genesis chapters remain addressable from the search tables", () => {
