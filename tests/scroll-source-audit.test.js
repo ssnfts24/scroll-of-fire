@@ -6,6 +6,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { execFileSync } = require("node:child_process");
 const test = require("node:test");
+const { showPinnedFile } = require("../scripts/lib/pinned-git-source.cjs");
 
 const root = path.resolve(__dirname, "..");
 const archive = path.join(root, "archive", "Full_Scroll_Unsealed", "1.0.0");
@@ -29,7 +30,7 @@ function decodeLines(bytes) {
 test("the archival edition is byte-identical to the source at the recorded main commit", () => {
   const original = fs.readFileSync(originalPath);
   const frozen = fs.readFileSync(frozenPath);
-  const committed = execFileSync("git", ["show", `${manifest.sourceCommit}:Full_Scroll_Unsealed`], { cwd: root });
+  const committed = showPinnedFile(root, manifest.sourceCommit, "Full_Scroll_Unsealed");
 
   assert.deepEqual(frozen, original);
   assert.deepEqual(frozen, committed);

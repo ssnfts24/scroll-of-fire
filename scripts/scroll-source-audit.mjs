@@ -3,8 +3,10 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { execFileSync } from "node:child_process";
+import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 
+const { showPinnedFile } = createRequire(import.meta.url)("./lib/pinned-git-source.cjs");
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const sourcePath = path.join(root, "Full_Scroll_Unsealed");
 const archiveDir = path.join(root, "archive", "Full_Scroll_Unsealed", "1.0.0");
@@ -358,7 +360,7 @@ function audit(write) {
   if (!Buffer.from(sourceText, "utf8").equals(sourceBytes)) {
     throw new Error("Frozen source is not valid UTF-8; refusing to create a lossy map.");
   }
-  const frozenCommitBytes = execFileSync("git", ["show", `${manifest.sourceCommit}:Full_Scroll_Unsealed`], { cwd: root });
+  const frozenCommitBytes = showPinnedFile(root, manifest.sourceCommit, "Full_Scroll_Unsealed");
   if (!sourceBytes.equals(frozenCommitBytes)) {
     throw new Error("Frozen source does not match Full_Scroll_Unsealed at the recorded source commit.");
   }
