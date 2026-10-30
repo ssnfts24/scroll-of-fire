@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Read a source-linked passage from the preserved Scroll of Fire manuscript.">
+  <meta name="theme-color" content="#101a2b">
+  <title>Reading the Scroll — Unsealed Library</title>
+  <link rel="canonical" href="https://codexofreality.org/scroll/reader.html">
+  <link rel="stylesheet" href="assets/library.css">
+  <script defer src="../assets/js/site.js"></script>
+  <script defer src="assets/reader.js"></script>
+</head>
+<body class="reader-page">
+  <a class="skip-link" href="#reading">Skip to passage</a>
+  <header class="reader-masthead">
+    <a class="wordmark" href="./"><span class="wordmark-mark" aria-hidden="true">✦</span><span><strong>SCROLL OF FIRE</strong><small>UNSEALED LIBRARY</small></span></a>
+    <div class="reader-actions" aria-label="Reading settings">
+      <button type="button" data-font="smaller" aria-label="Decrease reading text size">A−</button><button type="button" data-font="larger" aria-label="Increase reading text size">A+</button>
+      <button type="button" data-theme-toggle aria-label="Switch reading theme">Light theme</button>
+      <a class="archive-link" href="archive/Full_Scroll_Unsealed.txt">Original edition <span aria-hidden="true">↗</span></a>
+    </div>
+  </header>
+  <div class="reader-crumbs"><a href="./">Library</a><span aria-hidden="true">/</span><a data-shelf-link href="./#shelves">Shelf</a><span aria-hidden="true">/</span><span data-current-title>Loading passage</span></div>
+  <main class="reader-layout">
+    <details class="toc-panel" data-toc>
+      <summary><span>Contents</span><span class="toc-count" data-toc-count></span></summary>
+      <nav data-toc-nav aria-label="Reading table of contents"><p>Preparing table of contents…</p></nav>
+    </details>
+    <article class="reading-column" id="reading" data-reading aria-live="polite">
+      <p class="eyebrow">The preserved source</p><h1 class="reader-title">Loading passage…</h1>
+      <p class="reader-lede">The reader is opening this passage from the archival manuscript.</p>
+      <div data-passage></div>
+    </article>
+  </main>
+  <div class="reader-bottom">
+    <a data-previous href="./">← Previous passage</a>
+    <a href="./">Return to the library</a>
+    <a data-next href="./">Next passage →</a>
+  </div>
+  <footer class="reader-footer"><p>Words are presented as preserved. Contextual grouping does not independently verify historical or scientific claims.</p><a href="archive/edition.json">Edition 1.0.0 provenance ↗</a></footer>
+</body>
+</html>
