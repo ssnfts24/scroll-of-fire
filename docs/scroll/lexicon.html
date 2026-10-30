@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Browse every Hebrew form in the Scroll of Fire manuscript, with spelling, the author&#39;s notes, and links to each original occurrence.">
+  <meta name="theme-color" content="#101a2b">
+  <title>Hebrew lexicon — Scroll of Fire Library</title>
+  <link rel="canonical" href="https://codexofreality.org/scroll/lexicon.html">
+  <link rel="stylesheet" href="assets/library.css">
+  <script defer src="../assets/js/site.js"></script>
+  <script defer src="assets/search-normalize.js"></script>
+  <script defer src="assets/scroll-common.js"></script>
+  <script defer src="assets/lexicon.js"></script>
+</head>
+<body class="tool-body lexicon-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="reader-masthead">
+    <a class="wordmark" href="./"><span class="wordmark-mark" aria-hidden="true">✦</span><span><strong>SCROLL OF FIRE</strong><small>UNSEALED LIBRARY</small></span></a>
+    <div class="reader-actions" aria-label="Reading settings">
+      <button type="button" data-theme-toggle aria-label="Switch reading theme">Light theme</button>
+      <a class="archive-link" href="archive/Full_Scroll_Unsealed.txt">Original edition <span aria-hidden="true">↗</span></a>
+    </div>
+  </header>
+  <nav class="library-tabs" aria-label="Library sections"><a href="./">Library</a><a href="search.html">Search</a><a href="lexicon.html" aria-current="page">Hebrew lexicon</a><a href="atlas.html">Reference atlas</a><a href="../glossary.html">Codex glossary</a></nav>
+  <main id="main" class="tool-main">
+    <section class="tool-intro"><p class="eyebrow">Hebrew reference · 911 forms indexed</p><h1>Hebrew lexicon of the manuscript</h1>
+    <p>Every Hebrew form that appears in the original, searchable with or without vowel marks. Each entry separates the literal spelling, the author’s own transliteration, the author’s stated root or gloss, and where the form occurs. No definitions have been added beyond what the manuscript itself says.</p></section>
+    <section class="search-panel" aria-label="Lexicon search">
+      <form class="search-form" role="search" data-lex-form>
+        <label for="lex-input">Find a Hebrew form</label>
+        <div class="search-row"><input id="lex-input" type="search" autocomplete="off" spellcheck="false" placeholder="Hebrew letters (with or without vowels) or an English spelling" data-lex-input><button type="submit" class="primary-button">Find</button><button type="button" class="ghost-button" data-lex-clear hidden>Clear</button></div>
+      </form>
+      <fieldset class="shelf-filters" data-letters><legend>First letter</legend></fieldset>
+      <p class="scope-note" data-lex-scope hidden></p>
+      <p class="search-status" role="status" aria-live="polite" data-lex-status></p>
+    </section>
+    <div class="lexicon-layout">
+      <ol class="lexicon-list" data-lex-list aria-label="Hebrew forms"></ol>
+      <article class="lexicon-detail" data-lex-detail aria-live="polite" tabindex="-1"><p class="empty-passage">Choose a Hebrew form to see its spelling, the author’s notes, and every occurrence.</p></article>
+    </div>
+    <p class="more-row"><button type="button" class="ghost-button" data-lex-more hidden>Show more forms</button></p>
+    <section class="search-help" aria-label="Method"><h2>Method and limits</h2>
+      <ul><li><strong>Literal spelling</strong> is the pointed form exactly as written in the manuscript; the consonantal skeleton removes vowel marks and folds final letters.</li>
+      <li><strong>Transliteration</strong> is shown as the author wrote it where the manuscript gives one. The vowel-less romanization is automatic and is not a pronunciation guide.</li>
+      <li><strong>Grammatical root</strong> and <strong>definition</strong> are shown only where the manuscript states them, quoted verbatim and labelled as the author’s. This phase adds no independent morphology or definitions.</li>
+      <li><strong>Interpretation</strong> in the manuscript is the author’s theological reading, not a lexicon ruling. Repeated boilerplate root notes are not attached to individual entries.</li>
+      <li>Related: the existing <a href="../glossary.html">Codex glossary</a>.</li></ul></section>
+  </main>
+  <footer class="reader-footer"><p>Search and references are generated from the frozen manuscript, edition 1.0.0. Matches show where words appear; they do not verify claims.</p><a href="archive/edition.json">Edition provenance ↗</a></footer>
+</body>
+</html>

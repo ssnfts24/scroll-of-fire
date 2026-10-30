@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Search every reading segment of the preserved Scroll of Fire manuscript, including Hebrew, with results linked to the original lines.">
+  <meta name="theme-color" content="#101a2b">
+  <title>Search the Scroll — Scroll of Fire Library</title>
+  <link rel="canonical" href="https://codexofreality.org/scroll/search.html">
+  <link rel="stylesheet" href="assets/library.css">
+  <script defer src="../assets/js/site.js"></script>
+  <script defer src="assets/search-normalize.js"></script>
+  <script defer src="assets/scroll-common.js"></script>
+  <script defer src="assets/search.js"></script>
+</head>
+<body class="tool-body search-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="reader-masthead">
+    <a class="wordmark" href="./"><span class="wordmark-mark" aria-hidden="true">✦</span><span><strong>SCROLL OF FIRE</strong><small>UNSEALED LIBRARY</small></span></a>
+    <div class="reader-actions" aria-label="Reading settings">
+      <button type="button" data-theme-toggle aria-label="Switch reading theme">Light theme</button>
+      <a class="archive-link" href="archive/Full_Scroll_Unsealed.txt">Original edition <span aria-hidden="true">↗</span></a>
+    </div>
+  </header>
+  <nav class="library-tabs" aria-label="Library sections"><a href="./">Library</a><a href="search.html" aria-current="page">Search</a><a href="lexicon.html">Hebrew lexicon</a><a href="atlas.html">Reference atlas</a><a href="../glossary.html">Codex glossary</a></nav>
+  <main id="main" class="tool-main">
+    <section class="tool-intro"><p class="eyebrow">Full-text search · local to this site</p><h1>Search the preserved manuscript</h1>
+    <p>Searches the actual text of all 1,609 reading segments, not only headings. Hebrew matches with or without vowel marks. Quote a phrase to require it exactly.</p></section>
+    <section class="search-panel" aria-label="Search">
+      <form class="search-form" role="search" data-search-form>
+        <label for="search-input">Search the manuscript</label>
+        <div class="search-row">
+          <input id="search-input" type="search" name="q" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Try Nachash, בראשית, Genesis 24, orphan train" data-search-input>
+          <button type="submit" class="primary-button">Search</button>
+          <button type="button" class="ghost-button" data-search-clear hidden>Clear</button>
+        </div>
+      </form>
+      <fieldset class="shelf-filters"><legend>Filter by shelf</legend><button type="button" class="chip" data-shelf="" aria-pressed="true">All shelves</button><button type="button" class="chip" data-shelf="foundations" aria-pressed="false">Foundations</button><button type="button" class="chip" data-shelf="scripture" aria-pressed="false">Scripture</button><button type="button" class="chip" data-shelf="history" aria-pressed="false">History</button><button type="button" class="chip" data-shelf="evidence" aria-pressed="false">Evidence</button><button type="button" class="chip" data-shelf="technology" aria-pressed="false">Technology</button><button type="button" class="chip" data-shelf="prophecy" aria-pressed="false">Prophecy</button><button type="button" class="chip" data-shelf="witness" aria-pressed="false">Witness</button><button type="button" class="chip" data-shelf="reference" aria-pressed="false">Reference</button></fieldset>
+      <p class="scope-note" data-scope hidden></p>
+      <p class="search-status" role="status" aria-live="polite" data-status>Enter a word or phrase to search. Press / to focus the search box.</p>
+    </section>
+    <section class="quick-results" data-quick aria-label="Related matches" hidden></section>
+    <ol class="search-results" data-results></ol>
+    <p class="more-row"><button type="button" class="ghost-button" data-more hidden>Show more results</button></p>
+    <noscript><p class="notice">Search needs JavaScript. You can still <a href="./#full-index">browse every source section</a>.</p></noscript>
+    <section class="search-help" aria-label="Search tips"><h2>Search tips</h2>
+      <ul><li><strong>Phrases:</strong> put words in quotation marks to require them together.</li>
+      <li><strong>Hebrew:</strong> vowel marks are optional; final letters and prefixes such as ו ה ב ל are matched.</li>
+      <li><strong>English spellings:</strong> Hebrew lexicon matches also follow documented transliteration variants (for example Nachash, Nahash).</li>
+      <li><strong>Genesis:</strong> type “Genesis 24” to open that chapter directly.</li></ul>
+      <p>Try: <a href="search.html?q=Nachash">Nachash</a> · <a href="search.html?q=%D7%91%D7%A8%D7%90%D7%A9%D7%99%D7%AA">בראשית</a> · <a href="search.html?q=Genesis+24">Genesis 24</a> · <a href="search.html?q=orphan+train">orphan train</a> · <a href="search.html?q=Revelation+18%3A23">Revelation 18:23</a></p></section>
+  </main>
+  <footer class="reader-footer"><p>Search and references are generated from the frozen manuscript, edition 1.0.0. Matches show where words appear; they do not verify claims.</p><a href="archive/edition.json">Edition provenance ↗</a></footer>
+</body>
+</html>

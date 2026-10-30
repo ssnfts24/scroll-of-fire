@@ -204,8 +204,8 @@ const homepage = `<!doctype html>
   <a class="skip-link" href="#main">Skip to library</a>
   <header class="masthead">
     <a class="wordmark" href="./" aria-label="Scroll of Fire Unsealed Library home"><span class="wordmark-mark" aria-hidden="true">✦</span><span><strong>SCROLL OF FIRE</strong><small>UNSEALED LIBRARY</small></span></a>
-    <nav class="masthead-links" aria-label="Library navigation"><a href="#shelves">The shelves</a><a href="#genesis">Genesis 1–50</a><a href="#full-index">Full index</a></nav>
-    <details class="mobile-menu"><summary>Browse</summary><nav aria-label="Library navigation"><a href="#shelves">The shelves</a><a href="#genesis">Genesis 1–50</a><a href="#full-index">Full index</a><a href="archive/Full_Scroll_Unsealed.txt">Original edition</a></nav></details>
+    <nav class="masthead-links" aria-label="Library navigation"><a href="#shelves">The shelves</a><a href="#genesis">Genesis 1–50</a><a href="search.html">Search</a><a href="lexicon.html">Hebrew lexicon</a><a href="atlas.html">Atlas</a><a href="#full-index">Full index</a></nav>
+    <details class="mobile-menu"><summary>Browse</summary><nav aria-label="Library navigation"><a href="search.html">Search</a><a href="lexicon.html">Hebrew lexicon</a><a href="atlas.html">Reference atlas</a><a href="#shelves">The shelves</a><a href="#genesis">Genesis 1–50</a><a href="#full-index">Full index</a><a href="archive/Full_Scroll_Unsealed.txt">Original edition</a></nav></details>
     <a class="archive-link" href="archive/Full_Scroll_Unsealed.txt">Original edition <span aria-hidden="true">↗</span></a>
   </header>
   <main id="main">
@@ -215,6 +215,7 @@ const homepage = `<!doctype html>
         <h1>A scroll kept<br><em>whole.</em></h1>
         <p class="hero-description">Enter the author’s complete manuscript through a quieter reading room. Every passage remains in its original words, with a path back to the source.</p>
         <a class="primary-link" href="${sectionReaderHref(sections[0])}">Begin reading <span aria-hidden="true">→</span></a>
+        <form class="hero-search" role="search" action="search.html" method="get"><label for="hero-q">Search the whole manuscript</label><div><input id="hero-q" type="search" name="q" autocomplete="off" placeholder="A word, phrase, Hebrew term, or Genesis 24"><button type="submit">Search</button></div></form>
         <p class="hero-caption">Written by Aaron Paul Laird · A spiritual and prophetic work</p>
       </div>
       <div class="hero-art" role="img" aria-label="A gold-ink illuminated scroll motif">
@@ -236,9 +237,15 @@ const homepage = `<!doctype html>
       <div class="section-heading"><div><p class="eyebrow">Scripture · 50 chapters represented</p><h2>Walk through Genesis</h2></div><a class="text-link" href="${sectionReaderHref(sectionById.get(data.coverage.genesisChapters[0].sectionIds[0]))}">Open the reader <span aria-hidden="true">→</span></a></div>
       <div class="chapter-grid">${genesisLinks}</div>
     </section>
-    <section class="future-section">
-      <p class="eyebrow">The library will grow in stages</p><h2>More paths are being prepared.</h2>
-      <div class="future-links"><span><b>⌕</b> Full-text search <small>Planned for Phase 3</small></span><span><b>◇</b> Evidence register <small>Planned for Phase 3</small></span><span><b>◷</b> Historical atlas <small>Later phase</small></span><span><b>א</b> Hebrew lexicon <small>Planned for Phase 3</small></span></div>
+    <section class="research-section" id="research">
+      <div class="section-heading"><div><p class="eyebrow">Research tools · every result traces to the original</p><h2>Search, lexicon, and connections</h2></div><p>All tools run locally from this site. Each result links to its reading passage and to the exact original manuscript line.</p></div>
+      <div class="research-grid">
+        <a class="research-card" href="search.html"><b aria-hidden="true">⌕</b><strong>Full-text search</strong><span>Find any phrase across all ${segments.length.toLocaleString("en-US")} reading segments, filtered by shelf.</span></a>
+        <a class="research-card" href="lexicon.html"><b aria-hidden="true">א</b><strong>Hebrew lexicon</strong><span>${audit.hebrewTerms.length} Hebrew forms, with and without vowel marks, linked to every occurrence.</span></a>
+        <a class="research-card" href="atlas.html"><b aria-hidden="true">◈</b><strong>Reference atlas</strong><span>Scripture citations, repeated passages, people, places, and subjects, each labelled by relationship.</span></a>
+        <a class="research-card" href="../glossary.html"><b aria-hidden="true">✧</b><strong>Codex glossary</strong><span>The existing Codex glossary of symbols and terms.</span></a>
+      </div>
+      <p class="future-note">Later phases: evidence register and historical atlas are not part of this release.</p>
     </section>
     <section class="full-index" id="full-index">
       <div class="section-heading"><div><p class="eyebrow">Nothing left behind</p><h2>Browse every source section</h2></div><p>${sections.length} indexed section entries · repeated headings link to every occurrence</p></div>
@@ -261,6 +268,7 @@ const reader = `<!doctype html>
   <link rel="canonical" href="https://codexofreality.org/scroll/reader.html">
   <link rel="stylesheet" href="assets/library.css">
   <script defer src="../assets/js/site.js"></script>
+  <script defer src="assets/search-normalize.js"></script>
   <script defer src="assets/reader.js"></script>
 </head>
 <body class="reader-page">
@@ -268,6 +276,7 @@ const reader = `<!doctype html>
   <header class="reader-masthead">
     <a class="wordmark" href="./"><span class="wordmark-mark" aria-hidden="true">✦</span><span><strong>SCROLL OF FIRE</strong><small>UNSEALED LIBRARY</small></span></a>
     <div class="reader-actions" aria-label="Reading settings">
+      <a class="search-link" href="search.html" aria-label="Search the manuscript">⌕ <span>Search</span></a>
       <button type="button" data-font="smaller" aria-label="Decrease reading text size">A−</button><button type="button" data-font="larger" aria-label="Increase reading text size">A+</button>
       <button type="button" data-theme-toggle aria-label="Switch reading theme">Light theme</button>
       <a class="archive-link" href="archive/Full_Scroll_Unsealed.txt">Original edition <span aria-hidden="true">↗</span></a>
@@ -283,11 +292,13 @@ const reader = `<!doctype html>
       <p class="eyebrow">The preserved source</p><h1 class="reader-title">Loading passage…</h1>
       <p class="reader-lede">The reader is opening this passage from the archival manuscript.</p>
       <div data-passage></div>
+      <aside class="related-panel" data-related hidden aria-labelledby="related-title"></aside>
     </article>
   </main>
   <div class="reader-bottom">
     <a data-previous href="./">← Previous passage</a>
     <a href="./">Return to the library</a>
+    <a href="search.html">Search</a>
     <a data-next href="./">Next passage →</a>
   </div>
   <footer class="reader-footer"><p>Words are presented as preserved. Contextual grouping does not independently verify historical or scientific claims.</p><a href="archive/edition.json">Edition ${escapeHtml(edition.editionVersion)} provenance ↗</a></footer>
@@ -295,6 +306,142 @@ const reader = `<!doctype html>
 </html>
 `;
 
+
+function toolPage({ file, title, description, bodyClass, current, intro, body, scripts }) {
+  const tab = (href, label, id) => `<a href="${href}"${current === id ? ' aria-current="page"' : ""}>${label}</a>`;
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="${escapeHtml(description)}">
+  <meta name="theme-color" content="#101a2b">
+  <title>${escapeHtml(title)} — Scroll of Fire Library</title>
+  <link rel="canonical" href="https://codexofreality.org/scroll/${file}">
+  <link rel="stylesheet" href="assets/library.css">
+  <script defer src="../assets/js/site.js"></script>
+  <script defer src="assets/search-normalize.js"></script>
+  <script defer src="assets/scroll-common.js"></script>
+${scripts.map(script => `  <script defer src="assets/${script}"></script>`).join("\n")}
+</head>
+<body class="tool-body ${bodyClass}">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="reader-masthead">
+    <a class="wordmark" href="./"><span class="wordmark-mark" aria-hidden="true">✦</span><span><strong>SCROLL OF FIRE</strong><small>UNSEALED LIBRARY</small></span></a>
+    <div class="reader-actions" aria-label="Reading settings">
+      <button type="button" data-theme-toggle aria-label="Switch reading theme">Light theme</button>
+      <a class="archive-link" href="archive/Full_Scroll_Unsealed.txt">Original edition <span aria-hidden="true">↗</span></a>
+    </div>
+  </header>
+  <nav class="library-tabs" aria-label="Library sections">${tab("./", "Library", "library")}${tab("search.html", "Search", "search")}${tab("lexicon.html", "Hebrew lexicon", "lexicon")}${tab("atlas.html", "Reference atlas", "atlas")}${tab("../glossary.html", "Codex glossary", "glossary")}</nav>
+  <main id="main" class="tool-main">
+    <section class="tool-intro">${intro}</section>
+${body}
+  </main>
+  <footer class="reader-footer"><p>Search and references are generated from the frozen manuscript, edition ${escapeHtml(edition.editionVersion)}. Matches show where words appear; they do not verify claims.</p><a href="archive/edition.json">Edition provenance ↗</a></footer>
+</body>
+</html>
+`;
+}
+
+const shelfChips = shelves.map(shelf => `<button type="button" class="chip" data-shelf="${shelf.id}" aria-pressed="false">${escapeHtml(shelf.title)}</button>`).join("");
+const searchPage = toolPage({
+  file: "search.html",
+  title: "Search the Scroll",
+  description: "Search every reading segment of the preserved Scroll of Fire manuscript, including Hebrew, with results linked to the original lines.",
+  bodyClass: "search-page",
+  current: "search",
+  scripts: ["search.js"],
+  intro: `<p class="eyebrow">Full-text search · local to this site</p><h1>Search the preserved manuscript</h1>
+    <p>Searches the actual text of all ${segments.length.toLocaleString("en-US")} reading segments, not only headings. Hebrew matches with or without vowel marks. Quote a phrase to require it exactly.</p>`,
+  body: `    <section class="search-panel" aria-label="Search">
+      <form class="search-form" role="search" data-search-form>
+        <label for="search-input">Search the manuscript</label>
+        <div class="search-row">
+          <input id="search-input" type="search" name="q" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Try Nachash, בראשית, Genesis 24, orphan train" data-search-input>
+          <button type="submit" class="primary-button">Search</button>
+          <button type="button" class="ghost-button" data-search-clear hidden>Clear</button>
+        </div>
+      </form>
+      <fieldset class="shelf-filters"><legend>Filter by shelf</legend><button type="button" class="chip" data-shelf="" aria-pressed="true">All shelves</button>${shelfChips}</fieldset>
+      <p class="scope-note" data-scope hidden></p>
+      <p class="search-status" role="status" aria-live="polite" data-status>Enter a word or phrase to search. Press / to focus the search box.</p>
+    </section>
+    <section class="quick-results" data-quick aria-label="Related matches" hidden></section>
+    <ol class="search-results" data-results></ol>
+    <p class="more-row"><button type="button" class="ghost-button" data-more hidden>Show more results</button></p>
+    <noscript><p class="notice">Search needs JavaScript. You can still <a href="./#full-index">browse every source section</a>.</p></noscript>
+    <section class="search-help" aria-label="Search tips"><h2>Search tips</h2>
+      <ul><li><strong>Phrases:</strong> put words in quotation marks to require them together.</li>
+      <li><strong>Hebrew:</strong> vowel marks are optional; final letters and prefixes such as ו ה ב ל are matched.</li>
+      <li><strong>English spellings:</strong> Hebrew lexicon matches also follow documented transliteration variants (for example Nachash, Nahash).</li>
+      <li><strong>Genesis:</strong> type “Genesis 24” to open that chapter directly.</li></ul>
+      <p>Try: <a href="search.html?q=Nachash">Nachash</a> · <a href="search.html?q=%D7%91%D7%A8%D7%90%D7%A9%D7%99%D7%AA">בראשית</a> · <a href="search.html?q=Genesis+24">Genesis 24</a> · <a href="search.html?q=orphan+train">orphan train</a> · <a href="search.html?q=Revelation+18%3A23">Revelation 18:23</a></p></section>`
+});
+
+const lexiconPage = toolPage({
+  file: "lexicon.html",
+  title: "Hebrew lexicon",
+  description: "Browse every Hebrew form in the Scroll of Fire manuscript, with spelling, the author's notes, and links to each original occurrence.",
+  bodyClass: "lexicon-page",
+  current: "lexicon",
+  scripts: ["lexicon.js"],
+  intro: `<p class="eyebrow">Hebrew reference · ${audit.hebrewTerms.length} forms indexed</p><h1>Hebrew lexicon of the manuscript</h1>
+    <p>Every Hebrew form that appears in the original, searchable with or without vowel marks. Each entry separates the literal spelling, the author’s own transliteration, the author’s stated root or gloss, and where the form occurs. No definitions have been added beyond what the manuscript itself says.</p>`,
+  body: `    <section class="search-panel" aria-label="Lexicon search">
+      <form class="search-form" role="search" data-lex-form>
+        <label for="lex-input">Find a Hebrew form</label>
+        <div class="search-row"><input id="lex-input" type="search" autocomplete="off" spellcheck="false" placeholder="Hebrew letters (with or without vowels) or an English spelling" data-lex-input><button type="submit" class="primary-button">Find</button><button type="button" class="ghost-button" data-lex-clear hidden>Clear</button></div>
+      </form>
+      <fieldset class="shelf-filters" data-letters><legend>First letter</legend></fieldset>
+      <p class="scope-note" data-lex-scope hidden></p>
+      <p class="search-status" role="status" aria-live="polite" data-lex-status></p>
+    </section>
+    <div class="lexicon-layout">
+      <ol class="lexicon-list" data-lex-list aria-label="Hebrew forms"></ol>
+      <article class="lexicon-detail" data-lex-detail aria-live="polite" tabindex="-1"><p class="empty-passage">Choose a Hebrew form to see its spelling, the author’s notes, and every occurrence.</p></article>
+    </div>
+    <p class="more-row"><button type="button" class="ghost-button" data-lex-more hidden>Show more forms</button></p>
+    <section class="search-help" aria-label="Method"><h2>Method and limits</h2>
+      <ul><li><strong>Literal spelling</strong> is the pointed form exactly as written in the manuscript; the consonantal skeleton removes vowel marks and folds final letters.</li>
+      <li><strong>Transliteration</strong> is shown as the author wrote it where the manuscript gives one. The vowel-less romanization is automatic and is not a pronunciation guide.</li>
+      <li><strong>Grammatical root</strong> and <strong>definition</strong> are shown only where the manuscript states them, quoted verbatim and labelled as the author’s. This phase adds no independent morphology or definitions.</li>
+      <li><strong>Interpretation</strong> in the manuscript is the author’s theological reading, not a lexicon ruling. Repeated boilerplate root notes are not attached to individual entries.</li>
+      <li>Related: the existing <a href="../glossary.html">Codex glossary</a>.</li></ul></section>`
+});
+
+const atlasPage = toolPage({
+  file: "atlas.html",
+  title: "Reference atlas",
+  description: "Connected references in the Scroll of Fire manuscript: scripture citations, repeated passages, people, places, subjects and years, each labelled by relationship.",
+  bodyClass: "atlas-page",
+  current: "atlas",
+  scripts: ["atlas.js"],
+  intro: `<p class="eyebrow">Connected references</p><h1>Reference atlas</h1>
+    <p>Follow scriptures, repeated passages, names, places, subjects, and years across the manuscript. Every link states <em>how</em> two things are related. A shared subject is a navigation aid, not proof of a historical or causal connection.</p>`,
+  body: `    <section class="relationship-legend" aria-label="Relationship types"><h2>Relationship types</h2><dl>
+      <div><dt><span class="badge badge-citation">Direct citation</span></dt><dd>The manuscript names a scripture reference.</dd></div>
+      <div><dt><span class="badge badge-subject">Shared subject</span></dt><dd>A name, place, subject or year is mentioned. Not evidence of a causal link.</dd></div>
+      <div><dt><span class="badge badge-lexical">Lexical connection</span></dt><dd>The same Hebrew form appears. See the <a href="lexicon.html">lexicon</a>.</dd></div>
+      <div><dt><span class="badge badge-repeat">Repeated passage</span></dt><dd>The original repeats the same heading or text. Every occurrence is kept.</dd></div>
+      <div><dt><span class="badge badge-author">Author interpretation</span></dt><dd>The author’s own gloss or root note, quoted in the lexicon.</dd></div></dl></section>
+    <div class="atlas-tabs" role="tablist" aria-label="Atlas views">
+      <button type="button" role="tab" id="tab-scriptures" aria-controls="panel-scriptures" data-tab="scriptures" aria-selected="true">Scripture</button>
+      <button type="button" role="tab" id="tab-entities" aria-controls="panel-entities" data-tab="entities" aria-selected="false" tabindex="-1">People, places &amp; subjects</button>
+      <button type="button" role="tab" id="tab-repeated" aria-controls="panel-repeated" data-tab="repeated" aria-selected="false" tabindex="-1">Repeated passages</button>
+      <button type="button" role="tab" id="tab-years" aria-controls="panel-years" data-tab="years" aria-selected="false" tabindex="-1">Years</button>
+    </div>
+    <p class="search-status" role="status" aria-live="polite" data-atlas-status></p>
+    <section role="tabpanel" id="panel-scriptures" aria-labelledby="tab-scriptures" data-panel="scriptures"></section>
+    <section role="tabpanel" id="panel-entities" aria-labelledby="tab-entities" data-panel="entities" hidden></section>
+    <section role="tabpanel" id="panel-repeated" aria-labelledby="tab-repeated" data-panel="repeated" hidden></section>
+    <section role="tabpanel" id="panel-years" aria-labelledby="tab-years" data-panel="years" hidden></section>
+    <noscript><p class="notice">The atlas needs JavaScript. You can still <a href="./#full-index">browse every source section</a>.</p></noscript>`
+});
+
 fs.writeFileSync(path.join(outputRoot, "index.html"), homepage);
+fs.writeFileSync(path.join(outputRoot, "search.html"), searchPage);
+fs.writeFileSync(path.join(outputRoot, "lexicon.html"), lexiconPage);
+fs.writeFileSync(path.join(outputRoot, "atlas.html"), atlasPage);
 fs.writeFileSync(path.join(outputRoot, "reader.html"), reader);
 console.log(`Built Scroll of Fire Library: ${sections.length} sections, ${map.paragraphCount} paragraphs, 50 Genesis chapters.`);

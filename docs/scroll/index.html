@@ -15,8 +15,8 @@
   <a class="skip-link" href="#main">Skip to library</a>
   <header class="masthead">
     <a class="wordmark" href="./" aria-label="Scroll of Fire Unsealed Library home"><span class="wordmark-mark" aria-hidden="true">✦</span><span><strong>SCROLL OF FIRE</strong><small>UNSEALED LIBRARY</small></span></a>
-    <nav class="masthead-links" aria-label="Library navigation"><a href="#shelves">The shelves</a><a href="#genesis">Genesis 1–50</a><a href="#full-index">Full index</a></nav>
-    <details class="mobile-menu"><summary>Browse</summary><nav aria-label="Library navigation"><a href="#shelves">The shelves</a><a href="#genesis">Genesis 1–50</a><a href="#full-index">Full index</a><a href="archive/Full_Scroll_Unsealed.txt">Original edition</a></nav></details>
+    <nav class="masthead-links" aria-label="Library navigation"><a href="#shelves">The shelves</a><a href="#genesis">Genesis 1–50</a><a href="search.html">Search</a><a href="lexicon.html">Hebrew lexicon</a><a href="atlas.html">Atlas</a><a href="#full-index">Full index</a></nav>
+    <details class="mobile-menu"><summary>Browse</summary><nav aria-label="Library navigation"><a href="search.html">Search</a><a href="lexicon.html">Hebrew lexicon</a><a href="atlas.html">Reference atlas</a><a href="#shelves">The shelves</a><a href="#genesis">Genesis 1–50</a><a href="#full-index">Full index</a><a href="archive/Full_Scroll_Unsealed.txt">Original edition</a></nav></details>
     <a class="archive-link" href="archive/Full_Scroll_Unsealed.txt">Original edition <span aria-hidden="true">↗</span></a>
   </header>
   <main id="main">
@@ -26,6 +26,7 @@
         <h1>A scroll kept<br><em>whole.</em></h1>
         <p class="hero-description">Enter the author’s complete manuscript through a quieter reading room. Every passage remains in its original words, with a path back to the source.</p>
         <a class="primary-link" href="reader.html?section=section-opening-matter#reading">Begin reading <span aria-hidden="true">→</span></a>
+        <form class="hero-search" role="search" action="search.html" method="get"><label for="hero-q">Search the whole manuscript</label><div><input id="hero-q" type="search" name="q" autocomplete="off" placeholder="A word, phrase, Hebrew term, or Genesis 24"><button type="submit">Search</button></div></form>
         <p class="hero-caption">Written by Aaron Paul Laird · A spiritual and prophetic work</p>
       </div>
       <div class="hero-art" role="img" aria-label="A gold-ink illuminated scroll motif">
@@ -103,9 +104,15 @@
 <a class="chapter-link" href="reader.html?section=section-line-010633#reading"><span>Genesis</span><strong>49</strong><span aria-hidden="true">↗</span></a>
 <a class="chapter-link" href="reader.html?section=section-line-010797#reading"><span>Genesis</span><strong>50</strong><span aria-hidden="true">↗</span></a></div>
     </section>
-    <section class="future-section">
-      <p class="eyebrow">The library will grow in stages</p><h2>More paths are being prepared.</h2>
-      <div class="future-links"><span><b>⌕</b> Full-text search <small>Planned for Phase 3</small></span><span><b>◇</b> Evidence register <small>Planned for Phase 3</small></span><span><b>◷</b> Historical atlas <small>Later phase</small></span><span><b>א</b> Hebrew lexicon <small>Planned for Phase 3</small></span></div>
+    <section class="research-section" id="research">
+      <div class="section-heading"><div><p class="eyebrow">Research tools · every result traces to the original</p><h2>Search, lexicon, and connections</h2></div><p>All tools run locally from this site. Each result links to its reading passage and to the exact original manuscript line.</p></div>
+      <div class="research-grid">
+        <a class="research-card" href="search.html"><b aria-hidden="true">⌕</b><strong>Full-text search</strong><span>Find any phrase across all 1,609 reading segments, filtered by shelf.</span></a>
+        <a class="research-card" href="lexicon.html"><b aria-hidden="true">א</b><strong>Hebrew lexicon</strong><span>911 Hebrew forms, with and without vowel marks, linked to every occurrence.</span></a>
+        <a class="research-card" href="atlas.html"><b aria-hidden="true">◈</b><strong>Reference atlas</strong><span>Scripture citations, repeated passages, people, places, and subjects, each labelled by relationship.</span></a>
+        <a class="research-card" href="../glossary.html"><b aria-hidden="true">✧</b><strong>Codex glossary</strong><span>The existing Codex glossary of symbols and terms.</span></a>
+      </div>
+      <p class="future-note">Later phases: evidence register and historical atlas are not part of this release.</p>
     </section>
     <section class="full-index" id="full-index">
       <div class="section-heading"><div><p class="eyebrow">Nothing left behind</p><h2>Browse every source section</h2></div><p>817 indexed section entries · repeated headings link to every occurrence</p></div>
