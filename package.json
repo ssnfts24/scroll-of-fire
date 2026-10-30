@@ -9,6 +9,8 @@
     "scroll:freeze": "node scripts/scroll-source-audit.mjs freeze",
     "scroll:audit": "node scripts/scroll-source-audit.mjs audit --write",
     "scroll:build": "node scripts/build-scroll-library.mjs",
+    "scroll:search": "node scripts/build-scroll-search.mjs",
+    "scroll:search:check": "node scripts/build-scroll-search.mjs --check",
     "validate": "npm run test && npm run audit"
   },
   "engines": {

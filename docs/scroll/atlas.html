@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Connected references in the Scroll of Fire manuscript: scripture citations, repeated passages, people, places, subjects and years, each labelled by relationship.">
+  <meta name="theme-color" content="#101a2b">
+  <title>Reference atlas — Scroll of Fire Library</title>
+  <link rel="canonical" href="https://codexofreality.org/scroll/atlas.html">
+  <link rel="stylesheet" href="assets/library.css">
+  <script defer src="../assets/js/site.js"></script>
+  <script defer src="assets/search-normalize.js"></script>
+  <script defer src="assets/scroll-common.js"></script>
+  <script defer src="assets/atlas.js"></script>
+</head>
+<body class="tool-body atlas-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="reader-masthead">
+    <a class="wordmark" href="./"><span class="wordmark-mark" aria-hidden="true">✦</span><span><strong>SCROLL OF FIRE</strong><small>UNSEALED LIBRARY</small></span></a>
+    <div class="reader-actions" aria-label="Reading settings">
+      <button type="button" data-theme-toggle aria-label="Switch reading theme">Light theme</button>
+      <a class="archive-link" href="archive/Full_Scroll_Unsealed.txt">Original edition <span aria-hidden="true">↗</span></a>
+    </div>
+  </header>
+  <nav class="library-tabs" aria-label="Library sections"><a href="./">Library</a><a href="search.html">Search</a><a href="lexicon.html">Hebrew lexicon</a><a href="atlas.html" aria-current="page">Reference atlas</a><a href="../glossary.html">Codex glossary</a></nav>
+  <main id="main" class="tool-main">
+    <section class="tool-intro"><p class="eyebrow">Connected references</p><h1>Reference atlas</h1>
+    <p>Follow scriptures, repeated passages, names, places, subjects, and years across the manuscript. Every link states <em>how</em> two things are related. A shared subject is a navigation aid, not proof of a historical or causal connection.</p></section>
+    <section class="relationship-legend" aria-label="Relationship types"><h2>Relationship types</h2><dl>
+      <div><dt><span class="badge badge-citation">Direct citation</span></dt><dd>The manuscript names a scripture reference.</dd></div>
+      <div><dt><span class="badge badge-subject">Shared subject</span></dt><dd>A name, place, subject or year is mentioned. Not evidence of a causal link.</dd></div>
+      <div><dt><span class="badge badge-lexical">Lexical connection</span></dt><dd>The same Hebrew form appears. See the <a href="lexicon.html">lexicon</a>.</dd></div>
+      <div><dt><span class="badge badge-repeat">Repeated passage</span></dt><dd>The original repeats the same heading or text. Every occurrence is kept.</dd></div>
+      <div><dt><span class="badge badge-author">Author interpretation</span></dt><dd>The author’s own gloss or root note, quoted in the lexicon.</dd></div></dl></section>
+    <div class="atlas-tabs" role="tablist" aria-label="Atlas views">
+      <button type="button" role="tab" id="tab-scriptures" aria-controls="panel-scriptures" data-tab="scriptures" aria-selected="true">Scripture</button>
+      <button type="button" role="tab" id="tab-entities" aria-controls="panel-entities" data-tab="entities" aria-selected="false" tabindex="-1">People, places &amp; subjects</button>
+      <button type="button" role="tab" id="tab-repeated" aria-controls="panel-repeated" data-tab="repeated" aria-selected="false" tabindex="-1">Repeated passages</button>
+      <button type="button" role="tab" id="tab-years" aria-controls="panel-years" data-tab="years" aria-selected="false" tabindex="-1">Years</button>
+    </div>
+    <p class="search-status" role="status" aria-live="polite" data-atlas-status></p>
+    <section role="tabpanel" id="panel-scriptures" aria-labelledby="tab-scriptures" data-panel="scriptures"></section>
+    <section role="tabpanel" id="panel-entities" aria-labelledby="tab-entities" data-panel="entities" hidden></section>
+    <section role="tabpanel" id="panel-repeated" aria-labelledby="tab-repeated" data-panel="repeated" hidden></section>
+    <section role="tabpanel" id="panel-years" aria-labelledby="tab-years" data-panel="years" hidden></section>
+    <noscript><p class="notice">The atlas needs JavaScript. You can still <a href="./#full-index">browse every source section</a>.</p></noscript>
+  </main>
+  <footer class="reader-footer"><p>Search and references are generated from the frozen manuscript, edition 1.0.0. Matches show where words appear; they do not verify claims.</p><a href="archive/edition.json">Edition provenance ↗</a></footer>
+</body>
+</html>

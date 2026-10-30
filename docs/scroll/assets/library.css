@@ -507,3 +507,172 @@ button { color: inherit; }
   .source-link { color: #444; font-size: 8pt; }
   a { text-decoration: none; }
 }
+
+/* ===== Phase 3: search, lexicon, atlas, related references ===== */
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.hero-search { max-width: 30rem; margin: 1.6rem 0 0; }
+.hero-search label { display: block; margin-bottom: .4rem; color: var(--gold-bright); font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; }
+.hero-search div { display: flex; gap: .4rem; }
+.hero-search input { flex: 1; min-width: 0; padding: .7rem .85rem; border: 1px solid rgba(223, 194, 126, .4); background: rgba(255, 255, 255, .06); color: inherit; font: inherit; }
+.hero-search button, .primary-button { padding: .7rem 1.1rem; border: 1px solid var(--gold); background: var(--gold); color: #101a2b; font: inherit; font-weight: 600; cursor: pointer; }
+.research-section { padding: 4rem 2rem 3rem; max-width: 1180px; margin: 0 auto; }
+.research-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; margin-top: 1.6rem; }
+.research-card { display: grid; gap: .4rem; padding: 1.2rem 1.1rem; border: 1px solid var(--rule); background: var(--panel); color: var(--ink); text-decoration: none; }
+.research-card:hover, .research-card:focus-visible { border-color: var(--gold); }
+.research-card b { color: var(--gold); font-family: var(--serif); font-size: 1.6rem; font-weight: 400; }
+.research-card strong { font-family: var(--serif); font-size: 1.15rem; font-weight: 500; }
+.research-card span { color: var(--ink-soft); font-size: .85rem; line-height: 1.5; }
+.future-note { margin: 1.4rem 0 0; color: var(--ink-soft); font-size: .78rem; text-align: center; }
+
+.reader-actions .search-link { display: inline-flex; align-items: center; gap: .3rem; min-height: 38px; padding: 0 .65rem; border: 1px solid rgba(223, 194, 126, .32); color: #f4eddd; font-size: .72rem; text-decoration: none; }
+.reader-actions .search-link:hover { border-color: var(--gold-bright); }
+.library-tabs { display: flex; flex-wrap: wrap; gap: .25rem 1.2rem; padding: .6rem max(5vw, calc((100vw - 1280px) / 2)); background: var(--night-deep); border-bottom: 1px solid rgba(223, 194, 126, .16); }
+.library-tabs a { padding: .35rem 0; color: #e8dfcf; font-size: .78rem; letter-spacing: .04em; text-decoration: none; border-bottom: 2px solid transparent; }
+.library-tabs a:hover { color: var(--gold-bright); }
+.library-tabs a[aria-current="page"] { color: var(--gold-bright); border-bottom-color: var(--gold-bright); }
+
+.tool-main { max-width: 980px; margin: 0 auto; padding: 2.4rem 1.2rem 4rem; }
+.tool-intro h1 { margin: .2rem 0 .8rem; font-family: var(--serif); font-size: clamp(2rem, 5vw, 3rem); font-weight: 400; line-height: 1.15; }
+.tool-intro p { max-width: 42rem; color: var(--ink-soft); font-family: var(--serif); font-size: 1.05rem; }
+.search-panel { margin: 1.6rem 0 1rem; }
+.search-form label { display: block; margin-bottom: .4rem; color: var(--ink-soft); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; }
+.search-row { display: flex; gap: .5rem; }
+.search-row input[type="search"], .atlas-filter input { flex: 1; min-width: 0; padding: .8rem .9rem; border: 1px solid var(--rule); background: var(--panel); color: var(--ink); font: inherit; font-size: 1rem; }
+.search-row input:focus-visible, .atlas-filter input:focus-visible, .related-search input:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.ghost-button { padding: .55rem .9rem; border: 1px solid var(--gold); background: transparent; color: var(--ink); font: inherit; font-size: .85rem; cursor: pointer; }
+.ghost-button:hover { background: rgba(194, 161, 92, .16); }
+.shelf-filters { display: flex; flex-wrap: wrap; gap: .4rem; margin: 1rem 0 0; padding: 0; border: 0; }
+.shelf-filters legend { margin-bottom: .4rem; padding: 0; color: var(--ink-soft); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; }
+.chip { padding: .4rem .8rem; border: 1px solid var(--rule); border-radius: 999px; background: transparent; color: var(--ink); font: inherit; font-size: .8rem; cursor: pointer; text-decoration: none; }
+.chip[aria-pressed="true"] { border-color: var(--gold); background: rgba(194, 161, 92, .2); }
+.chip-hebrew { min-width: 2.3rem; font-size: 1rem; }
+.chip-small { padding: .15rem .55rem; font-size: .75rem; }
+.search-status { min-height: 1.6rem; margin: .9rem 0; color: var(--ink-soft); font-size: .9rem; }
+.search-status.is-error { color: #b3402f; }
+:root[data-theme="dark"] .search-status.is-error { color: #f0a090; }
+.scope-note { margin: .8rem 0 0; padding: .5rem .8rem; border-left: 3px solid var(--gold); background: var(--panel); font-size: .85rem; }
+.search-results { display: grid; gap: 1rem; margin: 0; padding: 0; list-style: none; }
+.result { padding: 1.1rem 1.2rem; border: 1px solid var(--rule); background: var(--panel); }
+.result-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-bottom: .4rem; font-size: .72rem; color: var(--ink-soft); }
+.result-heading { margin: 0 0 .5rem; font-family: var(--serif); font-size: 1.2rem; font-weight: 500; }
+.result-title { color: var(--ink); text-decoration-color: var(--gold); text-underline-offset: 3px; }
+.result-title:focus-visible, .lexicon-link:focus-visible, .research-card:focus-visible, .chip:focus-visible, .ghost-button:focus-visible, .atlas-details > summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.result-excerpt { margin: 0 0 .6rem; font-family: var(--serif); font-size: 1.02rem; line-height: 1.65; overflow-wrap: anywhere; }
+.result-excerpt mark, .passage mark { background: rgba(223, 194, 126, .4); color: inherit; padding: 0 .1em; }
+.result-source { display: flex; flex-wrap: wrap; gap: .3rem 1rem; margin: 0; color: var(--ink-soft); font-size: .75rem; }
+.more-row { margin: 1.2rem 0; text-align: center; }
+.badge { display: inline-block; padding: .12rem .55rem; border: 1px solid currentColor; border-radius: 999px; font-size: .66rem; letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; }
+.badge-shelf, .badge-citation { color: #7a5a1c; }
+.badge-subject { color: #3a5f8f; }
+.badge-lexical { color: #6a4a8f; }
+.badge-repeat { color: #2f7a6a; }
+.badge-author { color: #8f4a3a; }
+:root[data-theme="dark"] .badge-shelf, :root[data-theme="dark"] .badge-citation { color: #e4ca8e; }
+:root[data-theme="dark"] .badge-subject { color: #9dc0f0; }
+:root[data-theme="dark"] .badge-lexical { color: #c8aef0; }
+:root[data-theme="dark"] .badge-repeat { color: #7fd6c2; }
+:root[data-theme="dark"] .badge-author { color: #f0b3a3; }
+.quick-results { display: grid; gap: 1rem; margin: 0 0 1.4rem; }
+.quick-card { padding: 1rem 1.2rem; border: 1px solid var(--gold); background: var(--panel); }
+.quick-card h3 { margin: .2rem 0 .5rem; font-family: var(--serif); font-size: 1.1rem; font-weight: 500; }
+.quick-card p { margin: .3rem 0; color: var(--ink-soft); font-size: .85rem; }
+.quick-list { margin: .4rem 0 0; padding-left: 1.1rem; font-size: .9rem; }
+.hebrew-inline, .hebrew-form { font-family: "SBL Hebrew", "Ezra SIL", "Frank Ruehl CLM", "Noto Serif Hebrew", "Times New Roman", serif; }
+.hebrew-form { font-size: 1.5rem; line-height: 1.5; }
+.search-help { margin-top: 2.5rem; padding-top: 1.2rem; border-top: 1px solid var(--rule); font-size: .88rem; color: var(--ink-soft); }
+.search-help h2 { font-family: var(--serif); font-size: 1.2rem; font-weight: 500; color: var(--ink); }
+.search-help li { margin: .35rem 0; }
+.notice { padding: .8rem 1rem; border: 1px solid var(--gold); }
+
+.lexicon-layout { display: grid; grid-template-columns: minmax(0, 320px) minmax(0, 1fr); gap: 1.6rem; align-items: start; }
+.lexicon-list { display: grid; gap: .3rem; max-height: 70vh; margin: 0; padding: 0; overflow: auto; list-style: none; }
+.lexicon-link { display: grid; gap: .1rem; padding: .55rem .8rem; border: 1px solid var(--rule); color: var(--ink); text-decoration: none; }
+.lexicon-link[aria-current="true"], .lexicon-link:hover { border-color: var(--gold); background: rgba(194, 161, 92, .12); }
+.lexicon-link .hebrew-form { font-size: 1.35rem; }
+.lexicon-meta { color: var(--ink-soft); font-size: .72rem; }
+.lexicon-detail { min-width: 0; padding: 1.2rem 1.4rem; border: 1px solid var(--rule); background: var(--panel); }
+.lex-title { margin: 0 0 .6rem; font-size: 2.4rem; font-weight: 400; line-height: 1.3; font-family: "SBL Hebrew", "Ezra SIL", "Noto Serif Hebrew", "Times New Roman", serif; }
+.lex-section { margin-top: 1.4rem; padding-top: 1rem; border-top: 1px solid var(--rule); }
+.lex-section h3 { margin: 0 0 .5rem; font-family: var(--serif); font-size: 1.05rem; font-weight: 500; color: var(--gold); }
+.lex-section p { margin: .4rem 0; font-size: .92rem; }
+.lex-fact { color: var(--ink-soft); font-size: .82rem !important; }
+.lex-forms { display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; margin: .4rem 0; padding: 0; list-style: none; }
+.lex-note { margin: .8rem 0; padding: .7rem 1rem; border-left: 3px solid var(--gold); background: rgba(194, 161, 92, .08); }
+.lex-quote { margin: .5rem 0; font-family: var(--serif); font-size: 1rem; overflow-wrap: anywhere; }
+.lex-note small { display: block; color: var(--ink-soft); }
+.lex-links { margin: .4rem 0 0; font-size: .78rem; }
+.lex-occurrences { margin: .6rem 0; padding-left: 1.2rem; font-size: .85rem; }
+.lex-occurrences li { margin: .25rem 0; }
+.lex-chapters { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; }
+
+.relationship-legend { margin: 1.6rem 0; padding: 1rem 1.2rem; border: 1px solid var(--rule); background: var(--panel); }
+.relationship-legend h2 { margin: 0 0 .6rem; font-family: var(--serif); font-size: 1.1rem; font-weight: 500; }
+.relationship-legend dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: .8rem; margin: 0; }
+.relationship-legend dd { margin: .3rem 0 0; color: var(--ink-soft); font-size: .82rem; }
+.atlas-tabs { display: flex; flex-wrap: wrap; gap: .3rem; border-bottom: 1px solid var(--rule); }
+.atlas-tabs button { padding: .6rem 1rem; border: 0; border-bottom: 3px solid transparent; background: transparent; color: var(--ink); font: inherit; font-size: .9rem; cursor: pointer; }
+.atlas-tabs button[aria-selected="true"] { border-bottom-color: var(--gold); color: var(--gold); }
+.atlas-tabs button:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+[data-panel] { padding-top: 1rem; }
+.atlas-note { color: var(--ink-soft); font-size: .88rem; }
+.atlas-block { margin: 1.6rem 0; }
+.atlas-block h2 { font-family: var(--serif); font-size: 1.3rem; font-weight: 500; }
+.atlas-chapters { grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); }
+.atlas-chapters .chapter-link { display: grid; place-items: center; min-height: 46px; padding: .3rem; color: var(--ink); font-family: var(--serif); text-decoration: none; }
+.atlas-filter { display: grid; gap: .3rem; margin: .8rem 0; }
+.atlas-filter label { color: var(--ink-soft); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; }
+.atlas-groups { display: grid; gap: .5rem; }
+.atlas-details { border: 1px solid var(--rule); background: var(--panel); }
+.atlas-details > summary { display: flex; flex-wrap: wrap; align-items: baseline; gap: .3rem .5rem; padding: .7rem .9rem; cursor: pointer; }
+.atlas-details .atlas-details { margin: .4rem; }
+.atlas-inner { display: grid; gap: .4rem; padding: .4rem .6rem .8rem; }
+.atlas-details > .atlas-list, .atlas-details > .atlas-inner, .atlas-details > .atlas-note { margin-inline: .9rem; }
+.atlas-list { margin: 0 0 .8rem; padding-left: 1.2rem; font-size: .88rem; }
+.atlas-list li { margin: .3rem 0; overflow-wrap: anywhere; }
+.atlas-count { color: var(--ink-soft); font-size: .78rem; }
+.atlas-excerpt { font-family: var(--serif); font-size: .9rem; overflow-wrap: anywhere; }
+
+.related-panel { margin-top: 3rem; padding: 1.4rem 0 0; border-top: 1px solid var(--rule); font-family: var(--sans); }
+.related-panel h2 { margin: 0 0 .4rem; font-family: var(--serif); font-size: 1.3rem; font-weight: 500; }
+.related-lede, .related-note { color: var(--ink-soft); font-size: .82rem; margin: .3rem 0; }
+.related-group { margin: 1.2rem 0; }
+.related-group h3 { display: inline; margin: 0 .5rem 0 0; font-size: .95rem; font-weight: 600; }
+.related-chips { display: flex; flex-wrap: wrap; gap: .35rem; margin: .5rem 0; padding: 0; list-style: none; }
+.related-chips a { display: inline-block; padding: .25rem .7rem; border: 1px solid var(--rule); border-radius: 999px; color: var(--ink); font-size: .85rem; text-decoration: none; }
+.related-chips a:hover, .related-chips a:focus-visible { border-color: var(--gold); }
+.related-chips .hebrew-inline { font-size: 1.1rem; }
+.related-list { margin: .5rem 0; padding-left: 1.1rem; font-size: .88rem; }
+.related-search { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin: .8rem 0; }
+.related-search label { flex: 1 0 100%; color: var(--ink-soft); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; }
+.related-search input[type="search"] { flex: 1; min-width: 0; padding: .55rem .7rem; border: 1px solid var(--rule); background: var(--panel); color: var(--ink); font: inherit; }
+.passage-arrived { outline: 2px solid var(--gold); outline-offset: .5rem; background: rgba(194, 161, 92, .08); }
+
+@media (max-width: 860px) {
+  .research-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lexicon-layout { grid-template-columns: minmax(0, 1fr); }
+  .lexicon-detail { order: -1; }
+  .lexicon-list { max-height: 50vh; }
+}
+@media (max-width: 520px) {
+  .research-grid { grid-template-columns: minmax(0, 1fr); }
+  .research-section { padding: 2.5rem 1rem; }
+  .tool-main { padding-inline: .9rem; }
+  .search-row { flex-wrap: wrap; }
+  .search-row input[type="search"] { flex: 1 0 100%; }
+  .search-row button { flex: 1; }
+  .result { padding: .9rem; }
+  .lexicon-detail { padding: 1rem; }
+  .lex-title { font-size: 2rem; }
+  .reader-actions .search-link span { display: none; }
+  .library-tabs { gap: .1rem .9rem; padding-inline: .9rem; }
+  .atlas-tabs button { flex: 1 1 45%; padding: .55rem .5rem; font-size: .82rem; }
+}
+@media print {
+  .library-tabs, .related-search, .hero-search, .research-section, .search-panel, .atlas-tabs { display: none !important; }
+  .related-panel { break-inside: avoid; font-size: 10pt; }
+  .passage-arrived { outline: 0; background: none; }
+}
+@media (max-width: 520px) {
+  .reader-masthead { flex-wrap: wrap; row-gap: .4rem; }
+  .reader-actions { flex-wrap: wrap; }
+}

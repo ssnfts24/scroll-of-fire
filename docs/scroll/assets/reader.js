@@ -55,6 +55,106 @@
     return link;
   }
 
+  function relatedGroup(title, relationship, label, description, body) {
+    const group = node("section", "related-group");
+    const heading = node("h3", "", title);
+    group.append(heading);
+    const badge = node("span", `badge badge-${relationship}`, label);
+    group.append(badge, node("p", "related-note", description), body);
+    return group;
+  }
+
+  async function renderRelated(selected, shelves, visibleSegments) {
+    const panel = document.querySelector("[data-related]");
+    if (!panel) return;
+    try {
+      const response = await fetch(new URL(`search/atlas/pages-${selected.shelf}.json`, document.baseURI));
+      if (!response.ok) throw new Error(String(response.status));
+      const record = (await response.json())[selected.id];
+      if (!record) return;
+      panel.replaceChildren();
+      panel.append(node("h2", "", "Connected passages and references"));
+      panel.lastChild.id = "related-title";
+      panel.append(node("p", "related-lede", "Each link states how it is related. A shared subject is a way to navigate, not proof of a historical or causal connection."));
+
+      const searchForm = node("form", "related-search");
+      searchForm.action = "search.html";
+      searchForm.method = "get";
+      searchForm.setAttribute("role", "search");
+      const label = node("label", "", "Search within this passage");
+      label.htmlFor = "passage-search";
+      const field = node("input");
+      field.type = "search";
+      field.name = "q";
+      field.id = "passage-search";
+      field.autocomplete = "off";
+      const hidden = node("input");
+      hidden.type = "hidden";
+      hidden.name = "page";
+      hidden.value = selected.id;
+      const submit = node("button", "ghost-button", "Search");
+      submit.type = "submit";
+      searchForm.append(label, field, hidden, submit);
+      panel.append(searchForm);
+
+      if (record.refs.length) {
+        const list = node("ul", "related-chips");
+        for (const ref of record.refs) {
+          const li = node("li");
+          const link = node("a", "", ref);
+          link.href = `atlas.html?ref=${encodeURIComponent(ref)}#scriptures`;
+          li.append(link);
+          list.append(li);
+        }
+        panel.append(relatedGroup("Scripture named in this passage", "citation", "Direct citation", "The text names these references.", list));
+      }
+      if (record.repeats.length) {
+        const list = node("ul", "related-list");
+        for (const item of record.repeats.slice(0, 12)) {
+          const li = node("li");
+          const link = node("a", "", `${item.title} · original line ${item.line}`);
+          link.href = `reader.html?section=${encodeURIComponent(item.sectionId)}#${encodeURIComponent(item.segmentId ?? "reading")}`;
+          li.append(link);
+          list.append(li);
+        }
+        if (record.repeats.length > 12) list.append(node("li", "related-more", `${record.repeats.length - 12} more occurrences are listed in the atlas.`));
+        const atlas = node("a", "", "All repeated passages in the atlas");
+        atlas.href = "atlas.html#repeated";
+        panel.append(relatedGroup("Also appears elsewhere in the original", "repeat", "Repeated passage", "The original repeats this heading or text. No occurrence is removed.", list), atlas);
+      }
+      if (record.entities.length) {
+        const list = node("ul", "related-chips");
+        for (const [id, name, type] of record.entities) {
+          const li = node("li");
+          const link = node("a", "", name);
+          link.href = `atlas.html?entity=${encodeURIComponent(id)}#entities`;
+          link.title = type;
+          li.append(link);
+          list.append(li);
+        }
+        panel.append(relatedGroup("Names, places and subjects mentioned", "subject", "Shared subject", "Mentioned by name. This is a navigation aid, not evidence of a connection.", list));
+      }
+      if (record.hebrewCount) {
+        const list = node("ul", "related-chips");
+        for (const [id, form] of record.hebrew) {
+          const li = node("li");
+          const link = node("a", "hebrew-inline", form);
+          link.lang = "he";
+          link.dir = "rtl";
+          link.href = `lexicon.html?term=${encodeURIComponent(id)}`;
+          li.append(link);
+          list.append(li);
+        }
+        const all = node("a", "", `All ${record.hebrewCount} Hebrew forms in this passage`);
+        all.href = `lexicon.html?page=${encodeURIComponent(selected.id)}`;
+        panel.append(relatedGroup("Hebrew forms in this passage", "lexical", "Lexical connection", "The same Hebrew form appears elsewhere in the manuscript; the author’s own glosses are labelled in the lexicon.", list), all);
+      }
+      panel.hidden = false;
+    } catch (error) {
+      console.warn("Related references unavailable:", error);
+    }
+  }
+
   function setting(key, fallback, min, max, next) {
     const stored = Number(localStorage.getItem(key));
     const current = Number.isFinite(stored) && stored >= min && stored <= max ? stored : fallback;
@@ -201,11 +301,16 @@
       requestAnimationFrame(() => {
         const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
         if (!target) return;
+        const block = target.closest(".passage-block");
+        if (block) block.classList.add("passage-arrived");
+        target.focus({ preventScroll: true });
         const mastheadHeight = document.querySelector(".reader-masthead")?.getBoundingClientRect().height ?? 0;
         const top = target.getBoundingClientRect().top + window.scrollY - mastheadHeight - 16;
         window.scrollTo(0, Math.max(0, top));
       });
     }
+
+    renderRelated(selected, data.shelves, visibleSegments);
 
     function sectionLinkUrl(section) {
       const anchor = section.segmentIds[0] ?? "reading";
