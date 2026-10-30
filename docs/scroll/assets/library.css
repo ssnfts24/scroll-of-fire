@@ -386,7 +386,7 @@ button { color: inherit; }
 .toc-link { display: flex; align-items: start; justify-content: space-between; gap: .4rem; padding: .32rem .45rem; border-left: 2px solid transparent; color: var(--ink-soft); text-decoration: none; font-size: .69rem; line-height: 1.35; }
 .toc-link small { flex: 0 0 auto; color: var(--ink-soft); font-size: .58rem; }
 .toc-link[aria-current="location"] { border-color: var(--gold); color: var(--ink); background: var(--panel); }
-.reading-column { min-width: 0; max-width: 760px; padding: 1.6rem clamp(1.2rem, 4vw, 3.6rem) 2.5rem; border: 1px solid var(--rule); background: var(--panel); box-shadow: 0 22px 70px rgba(29, 34, 43, .06); }
+.reading-column { min-width: 0; max-width: 760px; padding: 1.6rem clamp(1.2rem, 4vw, 3.6rem) 2.5rem; border: 1px solid var(--rule); background: var(--panel); box-shadow: 0 22px 70px rgba(29, 34, 43, .06); scroll-margin-top: 90px; }
 .reading-column > .eyebrow { margin-bottom: .85rem; }
 .reader-title { margin: 0 0 1rem; color: var(--ink); font-family: var(--serif); font-size: clamp(2.2rem, 5vw, 3.55rem); font-weight: 400; letter-spacing: -.04em; line-height: 1.08; overflow-wrap: anywhere; }
 .source-context { display: flex; flex-wrap: wrap; gap: .5rem 1rem; padding: .8rem 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }

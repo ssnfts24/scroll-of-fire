@@ -2,6 +2,7 @@
 
 (() => {
   const dataUrl = new URL("data/library.json", document.baseURI);
+  const segmentUrl = new URL("data/reader-segments.json", document.baseURI);
   const page = document.querySelector("[data-reading]");
   const passageTarget = document.querySelector("[data-passage]");
   const params = new URLSearchParams(location.search);
@@ -25,23 +26,29 @@
     return link;
   }
 
-  function renderParagraph(paragraph, section) {
-    const isHeading = paragraph.kind === "heading";
+  function renderSegment(segment) {
+    const isHeading = segment.kind === "heading";
     const content = node(isHeading ? "h2" : "p", isHeading ? "passage-heading" : "passage-text");
-    content.id = paragraph.id;
+    content.id = segment.id;
     content.tabIndex = -1;
     content.dir = "auto";
     content.classList.add("passage");
-    content.textContent = paragraph.text;
+    content.textContent = segment.text;
     const wrapper = node("div", `passage-block${isHeading ? " passage-block-heading" : ""}`);
-    wrapper.dataset.sectionId = section.id;
-    wrapper.append(content, sourceLink(paragraph.sourceUrl, paragraph.lineStart));
+    wrapper.dataset.sectionId = segment.sectionId;
+    wrapper.dataset.lineStart = segment.lineStart;
+    wrapper.dataset.lineEnd = segment.lineEnd;
+    const sourceLabel = segment.lineStart === segment.lineEnd
+      ? `Original line ${segment.lineStart}`
+      : `Original lines ${segment.lineStart}–${segment.lineEnd}`;
+    wrapper.append(content, sourceLink(segment.sourceUrl, segment.lineStart, sourceLabel));
     return wrapper;
   }
 
   function sectionLink(section, label = section.title) {
+    const anchor = section.segmentIds[0] ?? "reading";
     const link = node("a", "toc-link");
-    link.href = `reader.html?section=${encodeURIComponent(section.id)}#reading`;
+    link.href = `reader.html?section=${encodeURIComponent(section.id)}#${encodeURIComponent(anchor)}`;
     const title = node("span", "", label);
     const line = node("small", "", `Line ${section.line}`);
     link.append(title, line);
@@ -64,21 +71,29 @@
     if (button) button.textContent = document.documentElement.dataset.theme === "dark" ? "Light theme" : "Dark theme";
   }
 
-  function render(data) {
+  function render(data, segmentData) {
     const sections = data.sections;
-    const selected = sections.find(section => section.id === selectedId) ?? sections[0];
+    const requested = sections.find(section => section.id === selectedId) ?? sections[0];
+    const selected = sections.find(section => section.id === requested.readerTargetId) ?? requested;
     if (!selected) throw new Error("The reading edition has no sections.");
     const shelf = data.shelves.find(item => item.id === selected.shelf);
-    const paragraphs = data.paragraphs.filter(paragraph => paragraph.sectionId === selected.id);
-    const duplicateGroup = data.duplicateGroups.find(group => group.sectionIds.includes(selected.id));
-    const currentIndex = sections.findIndex(section => section.id === selected.id);
+    const duplicateGroup = data.duplicateGroups.find(group => group.sectionIds.includes(requested.id));
+    const navigableSections = sections.filter(section => section.readerTargetId === section.id);
+    const currentIndex = navigableSections.findIndex(section => section.id === selected.id);
+    const chapterPage = selected.type === "genesis-chapter";
+    const visibleSectionIds = new Set([
+      selected.id,
+      ...sections.filter(section => section.readerTargetId === selected.id).map(section => section.id)
+    ]);
+    const visibleSegments = segmentData.segments.filter(segment =>
+      chapterPage ? segment.genesisChapter === selected.label : visibleSectionIds.has(segment.sectionId));
 
-    document.title = `${selected.title} — Scroll of Fire Library`;
-    document.querySelector("[data-current-title]").textContent = selected.title;
+    document.title = `${requested.title} — Scroll of Fire Library`;
+    document.querySelector("[data-current-title]").textContent = requested.title;
     const shelfLink = document.querySelector("[data-shelf-link]");
-    shelfLink.href = `./#shelf-${selected.shelf}`;
+    shelfLink.href = `./#shelf-${requested.shelf}`;
     shelfLink.textContent = shelf?.title ?? "Library";
-    document.querySelector("[data-toc-count]").textContent = `${sections.length} passages`;
+    document.querySelector("[data-toc-count]").textContent = `${navigableSections.length} passages`;
 
     const navigation = document.querySelector("[data-toc-nav]");
     navigation.replaceChildren();
@@ -91,17 +106,21 @@
       const list = node("div", "toc-list");
       for (const section of sectionGroup) {
         const link = sectionLink(section);
-        if (section.id === selected.id) link.setAttribute("aria-current", "location");
+        if (section.id === requested.id || section.id === selected.id) link.setAttribute("aria-current", "location");
         list.append(link);
       }
       group.append(summary, list);
       navigation.append(group);
     }
 
-    const heading = node("h1", "reader-title", selected.title);
-    heading.id = "passage-title";
+    const heading = node("h1", "reader-title", requested.title);
+    const titleSegment = segmentData.segments.find(segment =>
+      segment.id === requested.segmentIds[0] &&
+      segment.kind === "heading" &&
+      segment.text.trim() === requested.title.trim());
+    heading.id = titleSegment?.id ?? "passage-title";
     const eyebrow = node("p", "eyebrow", `${shelf?.title ?? "Library"} · Source passage`);
-    const topSource = sourceLink(selected.sourceUrl, selected.line, `View original at line ${selected.line} ↗`);
+    const topSource = sourceLink(requested.sourceUrl, requested.line, `View original at line ${requested.line} ↗`);
     const sourceMeta = node("div", "source-context");
     sourceMeta.append(topSource);
     if (duplicateGroup) {
@@ -111,7 +130,7 @@
       duplicateGroup.sectionIds.forEach((id, index) => {
         const section = sections.find(item => item.id === id);
         const link = sectionLink(section, `Occurrence ${index + 1} · line ${section.line}`);
-        if (id === selected.id) link.setAttribute("aria-current", "location");
+        if (id === requested.id) link.setAttribute("aria-current", "location");
         links.append(link);
       });
       occurrences.append(links);
@@ -128,22 +147,13 @@
     page.insertBefore(sourceMeta, passageTarget);
     page.insertBefore(lede, passageTarget);
 
-    const headingParagraph = paragraphs.find(paragraph => paragraph.kind === "heading");
-    for (const paragraph of paragraphs) {
-      if (paragraph === headingParagraph && paragraph.text.trim() === selected.title.trim()) {
-        const provenance = node("div", "passage-block passage-block-heading");
-        provenance.id = paragraph.id;
-        const structuralHeading = node("p", "passage-heading", paragraph.text);
-        structuralHeading.dir = "auto";
-        structuralHeading.tabIndex = -1;
-        provenance.append(structuralHeading, sourceLink(paragraph.sourceUrl, paragraph.lineStart));
-        passageTarget.append(provenance);
-      } else {
-        passageTarget.append(renderParagraph(paragraph, selected));
-      }
+    for (const segment of visibleSegments) {
+      if (segment.sectionId === requested.id && segment.kind === "heading" &&
+          segment.text.trim() === requested.title.trim()) continue;
+      passageTarget.append(renderSegment(segment));
     }
-    if (!paragraphs.length) {
-      const message = node("p", "empty-passage", "No text is mapped to this heading. Consult the original source at the line above.");
+    if (!visibleSegments.some(segment => segment.text.trim())) {
+      const message = node("p", "empty-passage", "This structural heading has no independent text. Its source location remains available above.");
       passageTarget.append(message);
     }
 
@@ -156,14 +166,14 @@
 
     function setAdjacent(selector, index, label) {
       const link = document.querySelector(selector);
-      const adjacent = sections[index];
+      const adjacent = navigableSections[index];
       if (!adjacent) {
         link.textContent = label;
         link.removeAttribute("href");
         link.setAttribute("aria-disabled", "true");
         return;
       }
-      link.href = `reader.html?section=${encodeURIComponent(adjacent.id)}#reading`;
+      link.href = sectionLinkUrl(adjacent);
       link.textContent = label.includes("Previous") ? `← ${adjacent.title}` : `${adjacent.title} →`;
       link.setAttribute("aria-label", `${label.replace(/[←→]/g, "").trim()}: ${adjacent.title}`);
     }
@@ -188,16 +198,27 @@
     applyTheme();
 
     if (location.hash) {
-      requestAnimationFrame(() => document.getElementById(decodeURIComponent(location.hash.slice(1)))?.scrollIntoView());
+      requestAnimationFrame(() => {
+        const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+        if (!target) return;
+        const mastheadHeight = document.querySelector(".reader-masthead")?.getBoundingClientRect().height ?? 0;
+        const top = target.getBoundingClientRect().top + window.scrollY - mastheadHeight - 16;
+        window.scrollTo(0, Math.max(0, top));
+      });
+    }
+
+    function sectionLinkUrl(section) {
+      const anchor = section.segmentIds[0] ?? "reading";
+      return `reader.html?section=${encodeURIComponent(section.id)}#${encodeURIComponent(anchor)}`;
     }
   }
 
-  fetch(dataUrl)
-    .then(response => {
-      if (!response.ok) throw new Error(`Reader data request failed (${response.status}).`);
+  Promise.all([dataUrl, segmentUrl].map(url =>
+    fetch(url).then(response => {
+      if (!response.ok) throw new Error(`Reader data request failed for ${url.pathname} (${response.status}).`);
       return response.json();
-    })
-    .then(render)
+    })))
+    .then(([data, segmentData]) => render(data, segmentData))
     .catch(error => {
       const heading = page.querySelector("h1");
       if (heading) heading.textContent = "This passage could not be opened.";

@@ -3,6 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
+import { buildReaderSegments } from "./lib/reader-segments.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const editionRoot = path.join(root, "archive", "Full_Scroll_Unsealed", "1.0.0");
@@ -11,6 +12,10 @@ const map = JSON.parse(fs.readFileSync(path.join(editionRoot, "paragraph-map.jso
 const audit = JSON.parse(fs.readFileSync(path.join(editionRoot, "content-audit.json"), "utf8"));
 const edition = JSON.parse(fs.readFileSync(path.join(editionRoot, "edition.json"), "utf8"));
 const sourcePath = path.join(editionRoot, "Full_Scroll_Unsealed");
+const sourceBytes = fs.readFileSync(sourcePath);
+const sourceText = sourceBytes.toString("utf8");
+const sourceLines = sourceText.split(/\r\n|\n|\r/);
+if (/(?:\r\n|\n|\r)$/.test(sourceText)) sourceLines.pop();
 const shelves = [
   { id: "foundations", title: "Foundations", note: "Opening declarations, purpose, and the manuscript’s first movements.", icon: "01" },
   { id: "scripture", title: "Scripture", note: "Genesis and other scripture-rooted passages in the original sequence.", icon: "02" },
@@ -44,37 +49,23 @@ function classify(section) {
   return "reference";
 }
 
-const paragraphBySection = new Map();
-for (const paragraph of map.paragraphs) {
-  const key = paragraph.sectionId ?? "section-opening-matter";
-  const group = paragraphBySection.get(key) ?? [];
-  group.push(paragraph);
-  paragraphBySection.set(key, group);
-}
-
-const sections = map.sections.map(section => ({
+const segmented = buildReaderSegments({
+  lines: sourceLines,
+  sections: map.sections,
+  paragraphs: map.paragraphs,
+  sourceCommit: edition.sourceCommit
+});
+const sections = segmented.sections.map(section => ({
   ...section,
   shelf: classify(section),
-  paragraphIds: (paragraphBySection.get(section.id) ?? []).map(paragraph => paragraph.id),
   originalUrl: section.sourceUrl
 }));
-if (paragraphBySection.has("section-opening-matter")) {
-  const openingParagraphs = paragraphBySection.get("section-opening-matter");
-  sections.unshift({
-    id: "section-opening-matter",
-    type: "opening-matter",
-    label: null,
-    title: "Opening matter",
-    normalizedTitle: "opening matter",
-    line: openingParagraphs[0].lineStart,
-    sourceUrl: `https://github.com/ssnfts24/scroll-of-fire/blob/${edition.sourceCommit}/Full_Scroll_Unsealed#L${openingParagraphs[0].lineStart}`,
-    originalUrl: `https://github.com/ssnfts24/scroll-of-fire/blob/${edition.sourceCommit}/Full_Scroll_Unsealed#L${openingParagraphs[0].lineStart}`,
-    shelf: "foundations",
-    paragraphIds: openingParagraphs.map(paragraph => paragraph.id)
-  });
-}
+const segments = segmented.segments;
 const sectionById = new Map(sections.map(section => [section.id, section]));
 const shelfSections = Object.fromEntries(shelves.map(shelf => [shelf.id, sections.filter(section => section.shelf === shelf.id)]));
+function sectionReaderHref(section) {
+  return `reader.html?section=${encodeURIComponent(section.id)}#reading`;
+}
 const groupedDuplicateSections = new Map();
 for (const group of audit.duplicateHeadings) {
   const ids = group.sectionIds.filter(id => sectionById.has(id));
@@ -85,7 +76,7 @@ for (const [key, ids] of groupedDuplicateSections) {
   for (const id of ids) duplicateBySection.set(id, { key, sectionIds: ids });
 }
 const data = {
-  schemaVersion: 1,
+  schemaVersion: 2,
   edition: {
     title: edition.title,
     version: edition.editionVersion,
@@ -117,17 +108,42 @@ const data = {
   coverage: {
     paragraphCount: map.paragraphCount,
     sectionCount: sections.length,
-    genesisChapters: audit.genesisChapters.map(chapter => ({
-      chapter: chapter.chapter,
-      sectionIds: chapter.occurrences.map(occurrence => occurrence.sectionId)
-    })),
+    contentBearingSections: segmented.coverage.contentBearingSections,
+    sectionsWithoutDirectBody: segmented.coverage.sectionsWithoutDirectBody,
+    trueEmptyStructuralHeadings: segmented.coverage.trueEmptyStructuralHeadings,
+    chapterContextSections: segmented.coverage.chapterContextSections,
+    segmentCount: segmented.coverage.segmentCount,
+    sourceLineCount: segmented.coverage.sourceLineCount,
+    sourceNonblankLineCount: segmented.coverage.sourceNonblankLineCount,
+    maximumRenderedSegmentLength: segmented.coverage.maximumRenderedSegmentLength,
+    maximumSegmentLineCount: segmented.coverage.maximumSegmentLineCount,
+    genesisChapters: segmented.genesisChapters,
     duplicateSectionCount: [...duplicateBySection.keys()].length,
     allSourceParagraphsIncluded: map.paragraphs.length === audit.summary.paragraphs
   }
 };
+const segmentData = {
+  schemaVersion: 1,
+  editionVersion: edition.editionVersion,
+  sourceCommit: edition.sourceCommit,
+  sourceSha256: edition.sha256,
+  sourceUrl: audit.sourceUrl,
+  sections: sections.map(section => ({
+    sectionId: section.id,
+    lineStart: section.lineStart,
+    lineEnd: section.lineEnd,
+    readerTargetId: section.readerTargetId,
+    contentBearing: section.contentBearing,
+    genesisChapter: section.genesisChapter,
+    segmentIds: section.segmentIds
+  })),
+  segments,
+  coverage: segmented.coverage
+};
 
 const dataBytes = Buffer.from(`${JSON.stringify(data)}\n`, "utf8");
-if (hash(fs.readFileSync(sourcePath)) !== edition.sha256) {
+const segmentBytes = Buffer.from(`${JSON.stringify(segmentData)}\n`, "utf8");
+if (hash(sourceBytes) !== edition.sha256) {
   throw new Error("The frozen source does not match the edition SHA-256.");
 }
 if (data.paragraphs.length !== map.paragraphs.length || !data.coverage.allSourceParagraphsIncluded) {
@@ -136,21 +152,25 @@ if (data.paragraphs.length !== map.paragraphs.length || !data.coverage.allSource
 if (data.coverage.genesisChapters.length !== 50 || data.coverage.genesisChapters.some(chapter => !chapter.sectionIds.length)) {
   throw new Error("Reader data does not include every Genesis chapter.");
 }
+if (data.coverage.genesisChapters.some(chapter => !chapter.segmentCount)) {
+  throw new Error("A Genesis chapter has no line-based reading segments.");
+}
 
 fs.mkdirSync(path.join(outputRoot, "data"), { recursive: true });
 fs.mkdirSync(path.join(outputRoot, "archive"), { recursive: true });
 fs.writeFileSync(path.join(outputRoot, "data", "library.json"), dataBytes);
+fs.writeFileSync(path.join(outputRoot, "data", "reader-segments.json"), segmentBytes);
 fs.copyFileSync(sourcePath, path.join(outputRoot, "archive", "Full_Scroll_Unsealed.txt"));
 fs.copyFileSync(path.join(editionRoot, "edition.json"), path.join(outputRoot, "archive", "edition.json"));
 
 const shelfCards = shelves.map(shelf => {
   const count = shelfSections[shelf.id].length;
   const first = shelfSections[shelf.id][0];
-  return `<a class="shelf-card" href="reader.html?section=${encodeURIComponent(first?.id ?? "section-opening-matter")}#reading"><span class="shelf-number">${shelf.icon}</span><span class="shelf-card-copy"><strong>${escapeHtml(shelf.title)}</strong><small>${escapeHtml(shelf.note)}</small></span><span class="shelf-count">${count} ${count === 1 ? "passage" : "passages"} <span aria-hidden="true">↗</span></span></a>`;
+  return `<a class="shelf-card" href="${sectionReaderHref(first ?? sections[0])}"><span class="shelf-number">${shelf.icon}</span><span class="shelf-card-copy"><strong>${escapeHtml(shelf.title)}</strong><small>${escapeHtml(shelf.note)}</small></span><span class="shelf-count">${count} ${count === 1 ? "passage" : "passages"} <span aria-hidden="true">↗</span></span></a>`;
 }).join("\n");
 const genesisLinks = data.coverage.genesisChapters.map(chapter => {
   const section = sectionById.get(chapter.sectionIds[0]);
-  return `<a class="chapter-link" href="reader.html?section=${encodeURIComponent(section.id)}#reading"><span>Genesis</span><strong>${String(chapter.chapter).padStart(2, "0")}</strong><span aria-hidden="true">↗</span></a>`;
+  return `<a class="chapter-link" href="${sectionReaderHref(section)}"><span>Genesis</span><strong>${String(chapter.chapter).padStart(2, "0")}</strong><span aria-hidden="true">↗</span></a>`;
 }).join("\n");
 const shelfIndex = shelves.map(shelf => {
   const links = shelfSections[shelf.id].map(section => {
@@ -158,10 +178,11 @@ const shelfIndex = shelves.map(shelf => {
     const duplicateLinks = duplicate && duplicate.sectionIds.length > 1
       ? `<span class="occurrence-links">All ${duplicate.sectionIds.length} occurrences: ${duplicate.sectionIds.map((id, index) => {
         const occurrence = sectionById.get(id);
-        return `<a href="reader.html?section=${encodeURIComponent(id)}#reading" aria-label="Occurrence ${index + 1}, original line ${occurrence.line}">#${index + 1}</a>`;
+        return `<a href="${sectionReaderHref(occurrence)}" aria-label="Occurrence ${index + 1}, original line ${occurrence.line}">#${index + 1}</a>`;
       }).join(" ")}</span>`
       : "";
-    return `<li><a href="reader.html?section=${encodeURIComponent(section.id)}#reading"><span>${escapeHtml(section.title)}</span><small>Original line ${section.line}</small></a>${duplicateLinks}</li>`;
+    const structuralNote = section.contentBearing ? "" : `<small>Structural heading · opens in its reading context</small>`;
+    return `<li><a href="${sectionReaderHref(section)}"><span>${escapeHtml(section.title)}</span><small>Original line ${section.line}</small>${structuralNote}</a>${duplicateLinks}</li>`;
   }).join("\n");
   return `<details class="index-shelf" id="shelf-${shelf.id}"><summary><span class="shelf-number">${shelf.icon}</span><span><strong>${escapeHtml(shelf.title)}</strong><small>${shelfSections[shelf.id].length} original sections</small></span></summary><ol>${links}</ol></details>`;
 }).join("\n");
@@ -193,7 +214,7 @@ const homepage = `<!doctype html>
         <p class="eyebrow"><span aria-hidden="true">✦</span> Preserved manuscript · Edition ${escapeHtml(edition.editionVersion)}</p>
         <h1>A scroll kept<br><em>whole.</em></h1>
         <p class="hero-description">Enter the author’s complete manuscript through a quieter reading room. Every passage remains in its original words, with a path back to the source.</p>
-        <a class="primary-link" href="reader.html?section=${encodeURIComponent(sections[0].id)}#reading">Begin reading <span aria-hidden="true">→</span></a>
+        <a class="primary-link" href="${sectionReaderHref(sections[0])}">Begin reading <span aria-hidden="true">→</span></a>
         <p class="hero-caption">Written by Aaron Paul Laird · A spiritual and prophetic work</p>
       </div>
       <div class="hero-art" role="img" aria-label="A gold-ink illuminated scroll motif">
@@ -212,7 +233,7 @@ const homepage = `<!doctype html>
       <div class="shelf-grid">${shelfCards}</div>
     </section>
     <section class="genesis-section" id="genesis">
-      <div class="section-heading"><div><p class="eyebrow">Scripture · 50 chapters represented</p><h2>Walk through Genesis</h2></div><a class="text-link" href="reader.html?section=${encodeURIComponent(data.coverage.genesisChapters[0].sectionIds[0])}#reading">Open the reader <span aria-hidden="true">→</span></a></div>
+      <div class="section-heading"><div><p class="eyebrow">Scripture · 50 chapters represented</p><h2>Walk through Genesis</h2></div><a class="text-link" href="${sectionReaderHref(sectionById.get(data.coverage.genesisChapters[0].sectionIds[0]))}">Open the reader <span aria-hidden="true">→</span></a></div>
       <div class="chapter-grid">${genesisLinks}</div>
     </section>
     <section class="future-section">
