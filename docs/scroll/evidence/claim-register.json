@@ -1,0 +1,826 @@
+{
+  "schemaVersion": 1,
+  "edition": "1.1.0-reading",
+  "sourceCommit": "980b1f56fdc9974ed57e1c12ccedb0819d39e6b6",
+  "sourceSha256": "81a015fb937f1664c2383fa38fddf956d281c6309a9584382c6dbc9d8b691400",
+  "sourceLiveVerification": "External hosts were unreachable during preparation; citation URLs are recorded but were not live-checked in this session.",
+  "generatedBy": "scripts/build-scroll-editorial.mjs",
+  "claims": [
+    {
+      "id": "QAT-001",
+      "title": "Qatar aircraft offer, acceptance, and use",
+      "priority": "high",
+      "classification": "historical event and legal/ethics interpretation",
+      "status": "needs-verification",
+      "statusLabel": "Primary-record review pending",
+      "originalStatements": [
+        {
+          "occurrence": "Political sequence 1",
+          "lineStart": 599,
+          "lineEnd": 605,
+          "text": "If your idea of a political scandal is “Trump joked about a jet from Qatar” while ignoring decades of war profiteering, elite trafficking networks, media manipulation, government–backed censorship, and insider stock trading by career politicians — then you’ve disqualified yourself from talking about corruption.\n• Trump never accepted a jet.\n• Trump never used a jet.\n• He literally said, “I wouldn’t be using it.”",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L599"
+        },
+        {
+          "occurrence": "Political sequence 2",
+          "lineStart": 3268,
+          "lineEnd": 3274,
+          "text": "If your idea of a political scandal is “Trump joked about a jet from Qatar” while ignoring decades of war profiteering, elite trafficking networks, media manipulation, government–backed censorship, and insider stock trading by career politicians — then you’ve disqualified yourself from talking about corruption.\n• Trump never accepted a jet.\n• Trump never used a jet.\n• He literally said, “I wouldn’t be using it.”",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3268"
+        }
+      ],
+      "establishes": "The original makes categorical claims about whether a jet was accepted, used, and personally used. These are distinct propositions that require dated government and donor records.",
+      "unverified": "Whether an offer was formally accepted, the exact federal recipient and terms, any operational use, and any later transfer or intended transfer.",
+      "contradictoryEvidence": "The original simultaneously characterizes the matter as a joke and asserts that no jet was accepted or used. A statement about personal use alone would not resolve government acceptance or use.",
+      "sources": [],
+      "editorialChange": "Replaced the categorical denial with a distinction among offer, acceptance, government operation, and personal use; retained controversy as a claim for dated source review."
+    },
+    {
+      "id": "FIN-CLINTON-001",
+      "title": "Foreign-government donations to the Clinton Foundation",
+      "priority": "high",
+      "classification": "financial relationship allegation",
+      "status": "needs-verification",
+      "statusLabel": "Specific amounts and influence not established here",
+      "originalStatements": [
+        {
+          "occurrence": "Political sequence 1",
+          "lineStart": 609,
+          "lineEnd": 609,
+          "text": "• The Clintons took millions from foreign governments through their foundation.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L609"
+        },
+        {
+          "occurrence": "Political sequence 2",
+          "lineStart": 3278,
+          "lineEnd": 3278,
+          "text": "• The Clintons took millions from foreign governments through their foundation.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3278"
+        }
+      ],
+      "establishes": "A foundation's audited filings and donor records can establish reported contributions and dates.",
+      "unverified": "The broad amount, the identity and timing of each alleged foreign-government donor, and any exchange or policy influence.",
+      "contradictoryEvidence": "A donation to a charitable foundation is not by itself proof that a public official received personal funds or changed an official act.",
+      "sources": [],
+      "editorialChange": "Recast the assertion as an allegation requiring donor-specific records and evidence of any connection to an official act."
+    },
+    {
+      "id": "FIN-BIDEN-001",
+      "title": "Foreign payments to Biden family members and associates",
+      "priority": "high",
+      "classification": "financial relationship allegation",
+      "status": "needs-verification",
+      "statusLabel": "Payments and alleged wrongdoing must be distinguished",
+      "originalStatements": [
+        {
+          "occurrence": "Political sequence 1",
+          "lineStart": 610,
+          "lineEnd": 610,
+          "text": "• The Bidens received foreign wire transfers from China, Ukraine, and Romania.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L610"
+        },
+        {
+          "occurrence": "Political sequence 2",
+          "lineStart": 3279,
+          "lineEnd": 3279,
+          "text": "• The Bidens received foreign wire transfers from China, Ukraine, and Romania.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3279"
+        },
+        {
+          "occurrence": "Evidence archive 1",
+          "lineStart": 795,
+          "lineEnd": 797,
+          "text": "Over $20 million in foreign payments were sent to Hunter Biden, his associates, and at least 9 members of the Biden family through shell companies.\nIRS whistleblowers testified the DOJ blocked felony charges.\nJoe Biden claimed, 'I never talked to my son about his business,' yet joined calls with Hunter’s foreign clients.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L795"
+        },
+        {
+          "occurrence": "Evidence archive 2",
+          "lineStart": 3507,
+          "lineEnd": 3509,
+          "text": "Over $20 million in foreign payments were sent to Hunter Biden, his associates, and at least 9 members of the Biden family through shell companies.\nIRS whistleblowers testified the DOJ blocked felony charges.\nJoe Biden claimed, 'I never talked to my son about his business,' yet joined calls with Hunter’s foreign clients.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3507"
+        }
+      ],
+      "establishes": "Bank records and committee documents may establish that funds moved among named companies, associates, and relatives.",
+      "unverified": "Whether any payment was unlawful, what services it represented, whether Joe Biden received a payment, or whether he took an official action in exchange.",
+      "contradictoryEvidence": "Committee findings and witness testimony are evidence of an investigation and allegations; they do not themselves establish criminal guilt. Payment totals must be defined by recipient, gross amount, and period.",
+      "sources": [],
+      "editorialChange": "Changed the allegation from a collective assertion into a recipient- and transaction-specific question; separated payments from proof of presidential misconduct."
+    },
+    {
+      "id": "FIN-PELOSI-001",
+      "title": "Nancy Pelosi stock trades and legislative timing",
+      "priority": "high",
+      "classification": "financial relationship allegation",
+      "status": "needs-verification",
+      "statusLabel": "Trade timing and influence not established",
+      "originalStatements": [
+        {
+          "occurrence": "Political sequence 1",
+          "lineStart": 611,
+          "lineEnd": 611,
+          "text": "• Pelosi traded tech stocks ahead of legislation and walked away richer than ever.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L611"
+        },
+        {
+          "occurrence": "Political sequence 2",
+          "lineStart": 3280,
+          "lineEnd": 3280,
+          "text": "• Pelosi traded tech stocks ahead of legislation and walked away richer than ever.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3280"
+        }
+      ],
+      "establishes": "Congressional disclosure filings can establish reported transactions, dates, and ownership interests.",
+      "unverified": "That a trade preceded a particular legislative action, generated the claimed gain, or violated insider-trading law.",
+      "contradictoryEvidence": "A disclosed trade and an increase in reported wealth do not alone establish use of nonpublic information or causation by legislation.",
+      "sources": [],
+      "editorialChange": "Retained scrutiny of lawmakers' financial conflicts while removing the unsupported claim that the listed trades were timed ahead of legislation and proved enrichment."
+    },
+    {
+      "id": "SURV-OBAMA-001",
+      "title": "U.S. citizens killed in overseas drone strikes",
+      "priority": "high",
+      "classification": "documented event and legal dispute",
+      "status": "needs-verification",
+      "statusLabel": "Specific operation and legal record required",
+      "originalStatements": [
+        {
+          "occurrence": "Political sequence 1",
+          "lineStart": 612,
+          "lineEnd": 612,
+          "text": "• Obama dropped drones on U.S. citizens overseas without trial.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L612"
+        },
+        {
+          "occurrence": "Political sequence 2",
+          "lineStart": 3281,
+          "lineEnd": 3281,
+          "text": "• Obama dropped drones on U.S. citizens overseas without trial.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3281"
+        }
+      ],
+      "establishes": "The claim concerns targeted lethal operations against U.S. citizens abroad and the government's legal rationale.",
+      "unverified": "The plural wording, complete list of affected citizens, operation details, and the legal characterization implied by 'without trial.'",
+      "contradictoryEvidence": "The government described a national-security rationale and internal legal review; that does not answer whether the process or constitutional analysis was correct.",
+      "sources": [],
+      "editorialChange": "Reframed as a specific constitutional and accountability question rather than treating 'without trial' as a complete description of the legal dispute."
+    },
+    {
+      "id": "FSA-001",
+      "title": "First Step Act releases and demographic effects",
+      "priority": "high",
+      "classification": "enacted law and administrative outcome",
+      "status": "partially-verified",
+      "statusLabel": "Law enacted; totals and demographics need dated data",
+      "originalStatements": [
+        {
+          "occurrence": "Political sequence 1",
+          "lineStart": 616,
+          "lineEnd": 616,
+          "text": "• Passed the First Step Act, freeing thousands of non–violent offenders — mostly Black men.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L616"
+        },
+        {
+          "occurrence": "Political sequence 2",
+          "lineStart": 3285,
+          "lineEnd": 3285,
+          "text": "• Passed the First Step Act, freeing thousands of non–violent offenders — mostly Black men.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3285"
+        },
+        {
+          "occurrence": "Evidence archive 1",
+          "lineStart": 804,
+          "lineEnd": 804,
+          "text": "• First Step Act: Helped 5,000+ nonviolent inmates",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L804"
+        },
+        {
+          "occurrence": "Evidence archive 2",
+          "lineStart": 3516,
+          "lineEnd": 3516,
+          "text": "• First Step Act: Helped 5,000+ nonviolent inmates",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3516"
+        }
+      ],
+      "establishes": "The First Step Act was enacted in 2018 and created sentencing, earned-time-credit, and reentry provisions.",
+      "unverified": "The quoted number of people released, the date range, which provisions produced releases, and whether the affected group was 'mostly Black men.'",
+      "contradictoryEvidence": "Enactment is established, but the Act's distinct provisions and eligible populations should not be collapsed into a single release count or demographic claim.",
+      "sources": [
+        {
+          "title": "First Step Act of 2018, Public Law 115-391",
+          "publisher": "U.S. Congress",
+          "date": "2018-12-21",
+          "url": "https://www.congress.gov/115/plaws/publ391/PLAW-115publ391.pdf",
+          "establishes": "The Act's text and enactment date.",
+          "limits": "The statute does not establish a later cumulative release count or demographic distribution."
+        }
+      ],
+      "editorialChange": "Kept the enactment as a policy record; qualified numerical and demographic claims pending dated Bureau of Prisons data."
+    },
+    {
+      "id": "INS-001",
+      "title": "The $35 Medicare insulin cap",
+      "priority": "high",
+      "classification": "federal policy and attribution",
+      "status": "misattributed",
+      "statusLabel": "Attribution differs by program and date",
+      "originalStatements": [
+        {
+          "occurrence": "Political sequence 1",
+          "lineStart": 620,
+          "lineEnd": 620,
+          "text": "• Capped insulin at $35/month through Medicare.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L620"
+        },
+        {
+          "occurrence": "Political sequence 2",
+          "lineStart": 3289,
+          "lineEnd": 3289,
+          "text": "• Capped insulin at $35/month through Medicare.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3289"
+        },
+        {
+          "occurrence": "Evidence archive 1",
+          "lineStart": 806,
+          "lineEnd": 806,
+          "text": "• Insulin cap: $35/month",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L806"
+        },
+        {
+          "occurrence": "Evidence archive 2",
+          "lineStart": 3518,
+          "lineEnd": 3518,
+          "text": "• Insulin cap: $35/month",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3518"
+        }
+      ],
+      "establishes": "A $35 insulin limit was used in a voluntary CMS model for participating plans; a later statute established a broader Medicare cap.",
+      "unverified": "The original gives no date or distinction between the voluntary model and the later statutory benefit.",
+      "contradictoryEvidence": "The Inflation Reduction Act was enacted under President Biden and capped Medicare insulin cost sharing at $35 beginning in 2023; the Trump-era CMS model was voluntary and limited to participating plans.",
+      "sources": [
+        {
+          "title": "Inflation Reduction Act of 2022, Public Law 117-169, section 11406",
+          "publisher": "U.S. Congress",
+          "date": "2022-08-16",
+          "url": "https://www.congress.gov/117/plaws/publ169/PLAW-117publ169.pdf",
+          "establishes": "The statutory Medicare insulin cost-sharing cap and its scope.",
+          "limits": "It does not establish the earlier administration's voluntary model."
+        }
+      ],
+      "editorialChange": "Corrected the missing program and administration distinction; links the 2018–2020 voluntary model to its own record and attributes the nationwide statutory cap to the 2022 law."
+    },
+    {
+      "id": "LABOR-001",
+      "title": "Pre-pandemic unemployment rates",
+      "priority": "high",
+      "classification": "economic statistic",
+      "status": "partially-verified",
+      "statusLabel": "A historical low needs population and date qualifiers",
+      "originalStatements": [
+        {
+          "occurrence": "Political sequence 1",
+          "lineStart": 624,
+          "lineEnd": 624,
+          "text": "• Achieved record–low unemployment for Black, Hispanic, Asian, and female Americans before COVID.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L624"
+        },
+        {
+          "occurrence": "Political sequence 2",
+          "lineStart": 3293,
+          "lineEnd": 3293,
+          "text": "• Achieved record–low unemployment for Black, Hispanic, Asian, and female Americans before COVID.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3293"
+        },
+        {
+          "occurrence": "Evidence archive 1",
+          "lineStart": 805,
+          "lineEnd": 805,
+          "text": "• Record–low minority unemployment pre–COVID",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L805"
+        },
+        {
+          "occurrence": "Evidence archive 2",
+          "lineStart": 3517,
+          "lineEnd": 3517,
+          "text": "• Record–low minority unemployment pre–COVID",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3517"
+        }
+      ],
+      "establishes": "BLS time series can establish unemployment rates by race, ethnicity, sex, and month.",
+      "unverified": "The statement's undefined meaning of 'record-low' across four populations and the exact comparison period.",
+      "contradictoryEvidence": "Rates differ by population, series, season adjustment, and month; a claim about one group or one month cannot be generalized to all groups without the source table.",
+      "sources": [
+        {
+          "title": "Labor force characteristics by race and ethnicity, 2019",
+          "publisher": "U.S. Bureau of Labor Statistics",
+          "date": "2020-03",
+          "url": "https://www.bls.gov/opub/reports/race-and-ethnicity/2019/home.htm",
+          "establishes": "Official labor-force measures for 2019 by race and ethnicity.",
+          "limits": "The claim still needs a specific measure, population, and comparison interval."
+        }
+      ],
+      "editorialChange": "Retained the economic comparison as a dated, checkable statistic rather than an unqualified superlative."
+    },
+    {
+      "id": "FISA-001",
+      "title": "Crossfire Hurricane and Carter Page FISA applications",
+      "priority": "critical",
+      "classification": "official oversight findings and interpretation",
+      "status": "partially-verified",
+      "statusLabel": "Serious application errors documented; shorthand overstates",
+      "originalStatements": [
+        {
+          "occurrence": "Evidence archive 1",
+          "lineStart": 800,
+          "lineEnd": 801,
+          "text": "Obama’s FBI used a fake dossier (funded by Hillary’s campaign) to get FISA warrants and spy on Trump.\nFBI continued despite knowing dossier was fake.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L800"
+        },
+        {
+          "occurrence": "Evidence archive 2",
+          "lineStart": 3512,
+          "lineEnd": 3513,
+          "text": "Obama’s FBI used a fake dossier (funded by Hillary’s campaign) to get FISA warrants and spy on Trump.\nFBI continued despite knowing dossier was fake.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3512"
+        }
+      ],
+      "establishes": "Official oversight found serious inaccuracies and omissions in applications to surveil Carter Page and criticized FBI handling of the matter.",
+      "unverified": "That every application was based on a 'fake dossier,' that the FBI knew the dossier was false at the time, or that the full investigation was simply a plot to spy on Trump.",
+      "contradictoryEvidence": "The DOJ Inspector General reported multiple significant errors and omissions but did not find that political bias drove the opening of Crossfire Hurricane. The Durham report is a separate prosecutor's account and must be read with its evidence and limitations.",
+      "sources": [
+        {
+          "title": "Review of Four FISA Applications and Other Aspects of the FBI's Crossfire Hurricane Investigation",
+          "publisher": "U.S. Department of Justice, Office of the Inspector General",
+          "date": "2019-12-09",
+          "url": "https://oig.justice.gov/reports/2019/o20012.pdf",
+          "establishes": "The OIG's review of the Crossfire Hurricane opening and four Carter Page FISA applications, including errors and omissions.",
+          "limits": "It did not conclude that political bias caused the opening of the investigation."
+        },
+        {
+          "title": "Report on Matters Related to Intelligence Activities and Investigations Arising Out of the 2016 Presidential Campaigns",
+          "publisher": "U.S. Department of Justice, Special Counsel John Durham",
+          "date": "2023-05-15",
+          "url": "https://www.justice.gov/storage/durhamreport.pdf",
+          "establishes": "The special counsel's findings and criticisms of FBI procedures and investigative decisions.",
+          "limits": "It is an investigative report, not a court judgment establishing every allegation in the archive."
+        }
+      ],
+      "editorialChange": "Replaced 'fake dossier' and 'spied illegally' as blanket conclusions with the documented warrant errors, separate investigative findings, and explicit limits."
+    },
+    {
+      "id": "LAPTOP-001",
+      "title": "The October 2020 letter by 51 former intelligence officials",
+      "priority": "high",
+      "classification": "public statement and characterization",
+      "status": "misstated",
+      "statusLabel": "The letter's wording is narrower than the archive says",
+      "originalStatements": [
+        {
+          "occurrence": "Political sequence 1",
+          "lineStart": 688,
+          "lineEnd": 688,
+          "text": "• 51 intelligence officials falsely labeled Hunter Biden’s laptop as 'Russian disinformation' just before the 2020 election.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L688"
+        },
+        {
+          "occurrence": "Political sequence 2",
+          "lineStart": 3372,
+          "lineEnd": 3372,
+          "text": "• 51 intelligence officials falsely labeled Hunter Biden’s laptop as 'Russian disinformation' just before the 2020 election.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3372"
+        },
+        {
+          "occurrence": "Evidence archive 1",
+          "lineStart": 811,
+          "lineEnd": 811,
+          "text": "• 51 intel officials misled public re: Hunter's laptop",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L811"
+        },
+        {
+          "occurrence": "Evidence archive 2",
+          "lineStart": 3523,
+          "lineEnd": 3523,
+          "text": "• 51 intel officials misled public re: Hunter's laptop",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3523"
+        }
+      ],
+      "establishes": "The signatories said the laptop reporting had 'all the classic earmarks of a Russian information operation' and expressly said they did not know whether the emails were genuine.",
+      "unverified": "That the signatories falsely stated the laptop was Russian disinformation; the letter described an inference and caveat, not an authentication finding.",
+      "contradictoryEvidence": "Subsequent reporting and federal investigations authenticated some data from the laptop, but that does not show the signatories knew the material was authentic when they wrote or prove that the entire laptop was genuine.",
+      "sources": [],
+      "editorialChange": "Corrected 'falsely labeled' to quote the letter's actual language and its explicit uncertainty."
+    },
+    {
+      "id": "MOD-001",
+      "title": "Government contacts with social-media companies",
+      "priority": "high",
+      "classification": "documented contacts and contested characterization",
+      "status": "partially-verified",
+      "statusLabel": "Some contacts documented; broad censorship conclusion not established",
+      "originalStatements": [
+        {
+          "occurrence": "Political sequence 1",
+          "lineStart": 687,
+          "lineEnd": 690,
+          "text": "• The Twitter Files revealed how federal agencies worked with social media platforms to silence political dissent.\n• Big Tech blacklisted doctors, deleted truth–tellers, and algorithmically buried inconvenient facts.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L687"
+        },
+        {
+          "occurrence": "Political sequence 2",
+          "lineStart": 3371,
+          "lineEnd": 3374,
+          "text": "• The Twitter Files revealed how federal agencies worked with social media platforms to silence political dissent.\n• Big Tech blacklisted doctors, deleted truth–tellers, and algorithmically buried inconvenient facts.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3371"
+        },
+        {
+          "occurrence": "Evidence archive 1",
+          "lineStart": 810,
+          "lineEnd": 843,
+          "text": "• FBI, DHS, CDC worked with Twitter to censor info\n• Twitter censored truth at gov’t request",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L810"
+        },
+        {
+          "occurrence": "Evidence archive 2",
+          "lineStart": 3522,
+          "lineEnd": 3555,
+          "text": "• FBI, DHS, CDC worked with Twitter to censor info\n• Twitter censored truth at gov’t request",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3522"
+        }
+      ],
+      "establishes": "Public records and platform communications show some government-platform contacts about content moderation and public-health or election misinformation.",
+      "unverified": "That agencies coordinated a general program to silence political dissent, blacklisted all named doctors, or directed every platform decision described in the archive.",
+      "contradictoryEvidence": "Platforms made independent moderation choices; in Murthy v. Missouri the Supreme Court reversed for lack of standing and did not decide the broad First Amendment merits.",
+      "sources": [],
+      "editorialChange": "Distinguished documented contacts, private moderation, and the broader allegation of coordinated censorship."
+    },
+    {
+      "id": "CHAR-001",
+      "title": "Charlottesville statements and 'very fine people'",
+      "priority": "high",
+      "classification": "documented public statements",
+      "status": "qualified",
+      "statusLabel": "Multiple statements over several days require full context",
+      "originalStatements": [
+        {
+          "occurrence": "Political sequence 1",
+          "lineStart": 693,
+          "lineEnd": 693,
+          "text": "• Trump explicitly condemned white supremacists at Charlottesville. The media cut the second half of the sentence.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L693"
+        },
+        {
+          "occurrence": "Political sequence 2",
+          "lineStart": 3377,
+          "lineEnd": 3377,
+          "text": "• Trump explicitly condemned white supremacists at Charlottesville. The media cut the second half of the sentence.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3377"
+        },
+        {
+          "occurrence": "Evidence archive 1",
+          "lineStart": 815,
+          "lineEnd": 815,
+          "text": "• 'Very fine people' — he condemned supremacists",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L815"
+        },
+        {
+          "occurrence": "Evidence archive 2",
+          "lineStart": 3527,
+          "lineEnd": 3527,
+          "text": "• 'Very fine people' — he condemned supremacists",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3527"
+        }
+      ],
+      "establishes": "Trump condemned hatred, bigotry, and violence; on August 15 he also said there were 'very fine people on both sides' and then said he was not referring to neo-Nazis and white nationalists, who should be condemned totally.",
+      "unverified": "The archive's assertion that media reports uniformly cut the second half of a sentence.",
+      "contradictoryEvidence": "The record includes both the 'both sides' formulation and an explicit exclusion of neo-Nazis and white nationalists. Neither should be omitted.",
+      "sources": [],
+      "editorialChange": "Replaced the one-sided summary with a call to quote the relevant public statements in sequence."
+    },
+    {
+      "id": "DISINFECTANT-001",
+      "title": "April 2020 disinfectant and light remarks",
+      "priority": "high",
+      "classification": "documented public statement",
+      "status": "qualified",
+      "statusLabel": "No verbatim 'inject bleach' instruction; transcript contains injection speculation",
+      "originalStatements": [
+        {
+          "occurrence": "Political sequence 1",
+          "lineStart": 694,
+          "lineEnd": 694,
+          "text": "• He never told people to inject bleach — he was referring to light–based therapies being tested at the time.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L694"
+        },
+        {
+          "occurrence": "Political sequence 2",
+          "lineStart": 3378,
+          "lineEnd": 3378,
+          "text": "• He never told people to inject bleach — he was referring to light–based therapies being tested at the time.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3378"
+        },
+        {
+          "occurrence": "Evidence archive 1",
+          "lineStart": 814,
+          "lineEnd": 814,
+          "text": "• 'Inject bleach' — Trump never said it",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L814"
+        },
+        {
+          "occurrence": "Evidence archive 2",
+          "lineStart": 3526,
+          "lineEnd": 3526,
+          "text": "• 'Inject bleach' — Trump never said it",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3526"
+        }
+      ],
+      "establishes": "The April 23, 2020 briefing transcript records Trump publicly asking whether disinfectant could be used by injection inside the body and discussing light/heat after a researcher presentation.",
+      "unverified": "The claim that the remarks referred only to light-based therapies or that media invented the injection discussion.",
+      "contradictoryEvidence": "The transcript does not contain the phrase 'inject bleach' as a direct instruction, but it does contain the injection speculation; later clarification that it was a question does not erase the public statement.",
+      "sources": [],
+      "editorialChange": "Distinguished the inaccurate paraphrase 'inject bleach' from the documented disinfectant-injection remark and the light/heat discussion."
+    },
+    {
+      "id": "COVID-001",
+      "title": "Lockdowns, mandates, and pandemic policy",
+      "priority": "high",
+      "classification": "policy outcomes and spiritual interpretation",
+      "status": "mixed",
+      "statusLabel": "Effects varied; spiritual framing is interpretation",
+      "originalStatements": [
+        {
+          "occurrence": "Political sequence 1",
+          "lineStart": 661,
+          "lineEnd": 706,
+          "text": "• Workers forced to choose between feeding their family or taking an experimental shot\n• Mask mandates and lockdowns mirror cult rituals of isolation, obedience, and submission.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L661"
+        },
+        {
+          "occurrence": "Political sequence 2",
+          "lineStart": 3342,
+          "lineEnd": 3397,
+          "text": "• Workers forced to choose between feeding their family or taking an experimental shot\n• Mask mandates and lockdowns mirror cult rituals of isolation, obedience, and submission.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3342"
+        },
+        {
+          "occurrence": "Evidence archive 1",
+          "lineStart": 818,
+          "lineEnd": 818,
+          "text": "• Lockdowns destroyed small biz",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L818"
+        },
+        {
+          "occurrence": "Evidence archive 2",
+          "lineStart": 3530,
+          "lineEnd": 3530,
+          "text": "• Lockdowns destroyed small biz",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3530"
+        }
+      ],
+      "establishes": "Public-health restrictions varied by jurisdiction, time, and design; economic and health effects require specific outcome measures.",
+      "unverified": "That lockdowns were designed as submission training, or that restrictions as a whole destroyed small businesses.",
+      "contradictoryEvidence": "Studies document both public-health effects and economic harms; neither supports a single motive or uniform impact across all policies.",
+      "sources": [],
+      "editorialChange": "Preserved the author's question as a spiritual/political hypothesis and removed presentation of motive or uniform outcome as established fact."
+    },
+    {
+      "id": "VAX-001",
+      "title": "COVID-19 vaccines and transmission",
+      "priority": "high",
+      "classification": "public-health evidence",
+      "status": "overbroad",
+      "statusLabel": "Effect depends on period, variant, and outcome",
+      "originalStatements": [
+        {
+          "occurrence": "Evidence archive 1",
+          "lineStart": 819,
+          "lineEnd": 819,
+          "text": "• Walensky: Vax doesn’t prevent spread",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L819"
+        },
+        {
+          "occurrence": "Evidence archive 2",
+          "lineStart": 3531,
+          "lineEnd": 3531,
+          "text": "• Walensky: Vax doesn’t prevent spread",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3531"
+        }
+      ],
+      "establishes": "Vaccine effectiveness against infection and onward transmission varied with variant, time since vaccination, and population; estimates require a dated study and outcome.",
+      "unverified": "The absolute claim that vaccination did or did not prevent spread in all settings.",
+      "contradictoryEvidence": "Early studies found reduced infection and transmission; later variants and waning immunity reduced but did not make all protection uniformly absent.",
+      "sources": [],
+      "editorialChange": "Replaced a categorical statement with the time- and outcome-specific question the evidence can answer."
+    },
+    {
+      "id": "NIH-001",
+      "title": "NIH/NIAID grants and gain-of-function allegations",
+      "priority": "high",
+      "classification": "grant record and disputed scientific classification",
+      "status": "disputed",
+      "statusLabel": "Funding and research classification must be stated separately",
+      "originalStatements": [
+        {
+          "occurrence": "Evidence archive 1",
+          "lineStart": 820,
+          "lineEnd": 820,
+          "text": "• Fauci funded gain–of–function at Wuhan",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L820"
+        },
+        {
+          "occurrence": "Evidence archive 2",
+          "lineStart": 3532,
+          "lineEnd": 3532,
+          "text": "• Fauci funded gain–of–function at Wuhan",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3532"
+        }
+      ],
+      "establishes": "A U.S.-funded grant supported EcoHealth Alliance research that included work with the Wuhan Institute of Virology; the scope and reporting of experiments have been the subject of official review.",
+      "unverified": "That Fauci personally funded a specific experiment or that the grant funded the creation of SARS-CoV-2.",
+      "contradictoryEvidence": "The phrase 'gain-of-function' has multiple definitions; NIH statements, grant records, and oversight reports differ in characterization and should be compared rather than compressed into a personal claim.",
+      "sources": [],
+      "editorialChange": "Changed a personal-causation assertion into a grant- and experiment-specific claim with the disputed terminology identified."
+    },
+    {
+      "id": "ELECTION-001",
+      "title": "Claims that swing-state election rules changed illegally",
+      "priority": "high",
+      "classification": "election-law allegation",
+      "status": "unverified",
+      "statusLabel": "Jurisdiction-specific legal claim required",
+      "originalStatements": [
+        {
+          "occurrence": "Evidence archive 1",
+          "lineStart": 844,
+          "lineEnd": 844,
+          "text": "• Rules changed illegally in swing states",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L844"
+        },
+        {
+          "occurrence": "Evidence archive 2",
+          "lineStart": 3556,
+          "lineEnd": 3556,
+          "text": "• Rules changed illegally in swing states",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3556"
+        }
+      ],
+      "establishes": "Election procedures and deadlines differed by state and were litigated before and after the 2020 election.",
+      "unverified": "Which state rule was unlawful, what official changed it, and whether a court issued a final finding of illegality affecting an election result.",
+      "contradictoryEvidence": "Some election challenges were dismissed or denied; other disputes involved state-court interpretations and procedural questions. No single result supports the plural, nationwide wording.",
+      "sources": [],
+      "editorialChange": "Replaced the blanket statement with a demand for state-specific rules, rulings, and outcome evidence."
+    },
+    {
+      "id": "CBDC-001",
+      "title": "CBDC pilots and programmable-money claims",
+      "priority": "high",
+      "classification": "technology status and forecast",
+      "status": "forecast",
+      "statusLabel": "Proposed or piloted systems are not universal deployment",
+      "originalStatements": [
+        {
+          "occurrence": "Original technology section",
+          "lineStart": 982,
+          "lineEnd": 984,
+          "text": "• Unlike crypto, CBDCs are programmable and controlled by governments.\n• CBDC pilots in over 80 countries include features like expiry dates, spending limits, and surveillance.\n• IMF, BIS, and FedNow working to unify systems.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L982"
+        },
+        {
+          "occurrence": "Repeated technology section",
+          "lineStart": 3698,
+          "lineEnd": 3700,
+          "text": "• Unlike crypto, CBDCs are programmable and controlled by governments.\n• CBDC pilots in over 80 countries include features like expiry dates, spending limits, and surveillance.\n• IMF, BIS, and FedNow working to unify systems.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3698"
+        }
+      ],
+      "establishes": "Central banks and international bodies have studied or piloted CBDCs; design choices are jurisdiction-specific.",
+      "unverified": "That all CBDCs are programmable, that pilots generally include expiry dates or spending limits, or that a unified global system is being implemented.",
+      "contradictoryEvidence": "A research paper, pilot, and proposal are not an issued currency. The Federal Reserve has stated that it has not decided whether to issue a U.S. CBDC and would need authorizing law.",
+      "sources": [],
+      "editorialChange": "Labels coercive or surveillance outcomes as forecasts unless a cited design or policy demonstrates them."
+    },
+    {
+      "id": "ID-001",
+      "title": "Digital identity and a global control ledger",
+      "priority": "high",
+      "classification": "technology claim and prophetic interpretation",
+      "status": "forecast",
+      "statusLabel": "Separate projects do not establish a unified compulsory ledger",
+      "originalStatements": [
+        {
+          "occurrence": "Technology warning",
+          "lineStart": 78,
+          "lineEnd": 78,
+          "text": "- **Global Digital ID Systems**: Merging wallets, health data, and location tracking under one surveillance ledger.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L78"
+        },
+        {
+          "occurrence": "Repeated technology warning",
+          "lineStart": 2626,
+          "lineEnd": 2626,
+          "text": "",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L2626"
+        },
+        {
+          "occurrence": "Technology section",
+          "lineStart": 957,
+          "lineEnd": 959,
+          "text": "• Proposed for global rollout to link identity with financial and health records.\n• ID2020 and UN push for biometric systems across nations.\n• India’s Aadhaar system already used to restrict access to services.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L957"
+        },
+        {
+          "occurrence": "Repeated technology section",
+          "lineStart": 3673,
+          "lineEnd": 3675,
+          "text": "• Proposed for global rollout to link identity with financial and health records.\n• ID2020 and UN push for biometric systems across nations.\n• India’s Aadhaar system already used to restrict access to services.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3673"
+        }
+      ],
+      "establishes": "Digital identity programs and biometric systems are proposed or deployed in particular countries and services.",
+      "unverified": "That a global system merges identity, health, wallet, and location data or that access to ordinary life is universally conditioned on one ID.",
+      "contradictoryEvidence": "Programs differ by country, legal basis, data architecture, and whether use is optional; the existence of projects does not demonstrate a single global authority or linked database.",
+      "sources": [],
+      "editorialChange": "Keeps the spiritual warning as interpretation and distinguishes documented programs from predictions of integration or coercion."
+    },
+    {
+      "id": "AI-001",
+      "title": "AI as a system of control",
+      "priority": "high",
+      "classification": "technology forecast and theological interpretation",
+      "status": "interpretation",
+      "statusLabel": "Prophetic analogy, not a demonstrated coordinated system",
+      "originalStatements": [
+        {
+          "occurrence": "Technology warning",
+          "lineStart": 75,
+          "lineEnd": 77,
+          "text": "- **Brain-Computer Interfaces**: Neural implants (e.g., Neuralink) will promise healing but deliver control.\n- **Emotion AI**: Software that reads facial expressions and micro-movements to detect “rebellion.”",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L75"
+        },
+        {
+          "occurrence": "Repeated technology warning",
+          "lineStart": 2623,
+          "lineEnd": 2625,
+          "text": "–Rise of AI, Digital ID, Globalism → 2020–2025  \n–Fire and Return → Soon",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L2623"
+        },
+        {
+          "occurrence": "Technology section",
+          "lineStart": 977,
+          "lineEnd": 979,
+          "text": "• Governments use AI to direct public behavior with reward/punishment systems.\n• Social credit systems in China already ban non–compliant citizens from travel, school, or employment.\n• Similar tech is being tested in the U.S. under ESG and safety rating apps.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L977"
+        }
+      ],
+      "establishes": "AI systems can be used for classification, surveillance, content moderation, and automated decisions; individual deployments require specific evidence.",
+      "unverified": "That AI is already coordinated as a single mechanism to identify and punish dissent or that neural interfaces are intended to deliver control.",
+      "contradictoryEvidence": "Capabilities, deployment, and stated intent vary widely. A risk scenario or prophetic parallel does not establish a present operational plan.",
+      "sources": [],
+      "editorialChange": "Retains the author's warning while labels it as a risk/interpretation unless a named system and documented use are supplied."
+    },
+    {
+      "id": "ACCORDS-001",
+      "title": "Abraham Accords",
+      "priority": "medium",
+      "classification": "international agreement and prophetic interpretation",
+      "status": "partially-verified",
+      "statusLabel": "Agreements documented; prophetic connection is interpretation",
+      "originalStatements": [
+        {
+          "occurrence": "Political sequence 1",
+          "lineStart": 618,
+          "lineEnd": 618,
+          "text": "• Brokered historic Middle East peace deals with UAE, Bahrain, Sudan, and Morocco.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L618"
+        },
+        {
+          "occurrence": "Political sequence 2",
+          "lineStart": 3287,
+          "lineEnd": 3287,
+          "text": "• Brokered historic Middle East peace deals with UAE, Bahrain, Sudan, and Morocco.",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L3287"
+        },
+        {
+          "occurrence": "Timeline entry",
+          "lineStart": 764,
+          "lineEnd": 764,
+          "text": "• 2022–2024 – Red heifers prepared in Israel for third temple prophecy (Numbers 19, Daniel 9:27)",
+          "sourceUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/980b1f56fdc9974ed57e1c12ccedb0819d39e6b6/Full_Scroll_Unsealed#L764"
+        }
+      ],
+      "establishes": "The 2020 Abraham Accords documents record normalization agreements and declarations involving Israel and the United Arab Emirates and Bahrain, followed by additional normalization arrangements.",
+      "unverified": "That the agreements establish the author's prophetic timeline or imply a particular future outcome.",
+      "contradictoryEvidence": "Diplomatic normalization is a documented event; its theological meaning and long-term effects remain matters of interpretation and subsequent history.",
+      "sources": [
+        {
+          "title": "The Abraham Accords Declaration",
+          "publisher": "The White House",
+          "date": "2020-09-15",
+          "url": "https://trumpwhitehouse.archives.gov/briefings-statements/abraham-accords-declaration/",
+          "establishes": "The declaration signed at the White House on September 15, 2020.",
+          "limits": "It does not establish prophetic interpretation or guarantee lasting regional peace."
+        }
+      ],
+      "editorialChange": "Retained the diplomatic event and labelled any prophetic parallel as the author's interpretation."
+    }
+  ]
+}
