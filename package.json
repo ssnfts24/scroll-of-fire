@@ -11,6 +11,8 @@
     "scroll:build": "node scripts/build-scroll-library.mjs",
     "scroll:search": "node scripts/build-scroll-search.mjs",
     "scroll:search:check": "node scripts/build-scroll-search.mjs --check",
+    "scroll:editorial": "node scripts/build-scroll-editorial.mjs",
+    "scroll:editorial:check": "node scripts/build-scroll-editorial.mjs --check",
     "validate": "npm run test && npm run audit"
   },
   "engines": {

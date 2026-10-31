@@ -275,6 +275,7 @@ test("the archive and protected runtime files are unchanged by the search phase"
     assert.doesNotMatch(file, /^archive\//, file);
     assert.doesNotMatch(file, /^docs\/service-worker\.js$/, file);
     assert.doesNotMatch(file, /observatory|calendar|renderer/i, file);
-    assert.doesNotMatch(file, /^docs\/scroll\/data\//, file);
+    assert.notEqual(file, "docs/scroll/data/library.json", file);
+    assert.notEqual(file, "docs/scroll/data/reader-segments.json", file);
   }
 });

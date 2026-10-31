@@ -1,0 +1,462 @@
+{
+  "sourceSha256": "81a015fb937f1664c2383fa38fddf956d281c6309a9584382c6dbc9d8b691400",
+  "evidenceStatusGuide": {
+    "documented-event-with-cited-record": "A discrete event is linked to a dated record; this does not prove claims beyond the record's stated scope.",
+    "documented-allegation-or-testimony": "A named allegation or testimony is recorded as having been made; the allegation is not thereby proven true.",
+    "disputed-interpretation": "The underlying record or event exists, but its characterization, meaning, causation, or legal significance is contested.",
+    "author-hypothesis-or-prophetic-interpretation": "A forecast, spiritual reading, or author interpretation, not a finding of present fact.",
+    "unverified-claim-requiring-additional-evidence": "The available register does not establish the assertion; further specific records are needed."
+  },
+  "sourceReviewStatusGuide": {
+    "cited-not-independently-inspected": "A citation is recorded, but its page or document could not be inspected during this session.",
+    "unavailable-awaiting-inspection": "The relevant record is identifiable, but a usable citation or its contents remain unavailable for inspection.",
+    "not-yet-identified": "No specific source record has yet been identified for this assertion."
+  },
+  "evidenceStatuses": {
+    "QAT-001": "documented-event-with-cited-record",
+    "FIN-CLINTON-001": "unverified-claim-requiring-additional-evidence",
+    "FIN-BIDEN-001": "documented-allegation-or-testimony",
+    "FIN-PELOSI-001": "unverified-claim-requiring-additional-evidence",
+    "SURV-OBAMA-001": "disputed-interpretation",
+    "FSA-001": "documented-event-with-cited-record",
+    "INS-001": "documented-event-with-cited-record",
+    "LABOR-001": "documented-event-with-cited-record",
+    "FISA-001": "documented-event-with-cited-record",
+    "LAPTOP-001": "documented-allegation-or-testimony",
+    "MOD-001": "disputed-interpretation",
+    "CHAR-001": "disputed-interpretation",
+    "DISINFECTANT-001": "documented-event-with-cited-record",
+    "COVID-001": "author-hypothesis-or-prophetic-interpretation",
+    "VAX-001": "unverified-claim-requiring-additional-evidence",
+    "NIH-001": "disputed-interpretation",
+    "ELECTION-001": "unverified-claim-requiring-additional-evidence",
+    "CBDC-001": "author-hypothesis-or-prophetic-interpretation",
+    "ID-001": "author-hypothesis-or-prophetic-interpretation",
+    "AI-001": "author-hypothesis-or-prophetic-interpretation",
+    "ACCORDS-001": "documented-event-with-cited-record"
+  },
+  "sourceReviewStatuses": {
+    "QAT-001": "cited-not-independently-inspected",
+    "FIN-CLINTON-001": "not-yet-identified",
+    "FIN-BIDEN-001": "unavailable-awaiting-inspection",
+    "FIN-PELOSI-001": "unavailable-awaiting-inspection",
+    "SURV-OBAMA-001": "unavailable-awaiting-inspection",
+    "FSA-001": "cited-not-independently-inspected",
+    "INS-001": "cited-not-independently-inspected",
+    "LABOR-001": "cited-not-independently-inspected",
+    "FISA-001": "cited-not-independently-inspected",
+    "LAPTOP-001": "cited-not-independently-inspected",
+    "MOD-001": "cited-not-independently-inspected",
+    "CHAR-001": "unavailable-awaiting-inspection",
+    "DISINFECTANT-001": "unavailable-awaiting-inspection",
+    "COVID-001": "not-yet-identified",
+    "VAX-001": "cited-not-independently-inspected",
+    "NIH-001": "unavailable-awaiting-inspection",
+    "ELECTION-001": "unavailable-awaiting-inspection",
+    "CBDC-001": "unavailable-awaiting-inspection",
+    "ID-001": "unavailable-awaiting-inspection",
+    "AI-001": "not-yet-identified",
+    "ACCORDS-001": "cited-not-independently-inspected"
+  },
+  "claims": [
+    {
+      "id": "QAT-001",
+      "title": "Qatar aircraft offer, acceptance, and use",
+      "priority": "high",
+      "classification": "historical event and legal/ethics interpretation",
+      "status": "documented",
+      "statusLabel": "Pentagon acceptance reported May 21, 2025; operations and disposition remain open",
+      "originalStatements": [
+        {"occurrence": "Political sequence 1", "lines": [599, 603, 604, 605]},
+        {"occurrence": "Political sequence 2", "lines": [3268, 3272, 3273, 3274]}
+      ],
+      "establishes": "The two supplied contemporaneous reports say Pentagon spokesman Sean Parnell confirmed on May 21, 2025, that the Defense Department accepted a Boeing 747 from Qatar for Air Force One use. This supports federal acceptance as a documented event; their page contents were not independently inspected in this session.",
+      "unverified": "Whether and when the aircraft was modified, certified, or operated; whether Donald Trump personally flew on it; the final ownership and disposition; and the full legal, security, cost, and ethics analysis.",
+      "contradictoryEvidence": "The original categorical statement that no jet was accepted conflicts with the reported Pentagon confirmation. The separate statement about personal use does not establish that the government did not accept the aircraft or operate it.",
+      "sources": [
+        {"title": "Defense Department accepts luxury jet from Qatar for Trump's use", "publisher": "PBS NewsHour", "date": "2025-05-21", "url": "https://www.pbs.org/newshour/politics/defense-department-accepts-luxury-jet-from-qatar-for-trumps-use", "sourceType": "Contemporaneous reporting of a Pentagon spokesman's confirmation", "establishes": "Reports that Pentagon spokesman Sean Parnell confirmed federal acceptance of a Boeing 747 from Qatar for presidential-aircraft use.", "limits": "The article was not retrievable in this session; it does not, by title alone, establish flight operations, Trump's personal use, final disposition, or the legal and ethics resolution."},
+        {"title": "Pentagon accepts Qatari jet for Air Force One", "publisher": "Defense News", "date": "2025-05-21", "url": "https://www.defensenews.com/pentagon/2025/05/21/pentagon-accepts-qatari-jet-for-air-force-one/", "sourceType": "Contemporaneous defense reporting of a Pentagon spokesman's confirmation", "establishes": "Reports the Pentagon's acceptance of the Qatari aircraft for Air Force One use.", "limits": "The article was not retrievable in this session; it does not alone establish subsequent operations, personal use, transfer, or the full legal and ethics analysis."}
+      ],
+      "editorialChange": "Corrected the false categorical denial of federal acceptance based on the two supplied May 21, 2025 reports; separated acceptance from operational use, personal use, disposition, and unresolved legal and ethics questions."
+    },
+    {
+      "id": "FIN-CLINTON-001",
+      "title": "Foreign-government donations to the Clinton Foundation",
+      "priority": "high",
+      "classification": "financial relationship allegation",
+      "status": "needs-verification",
+      "statusLabel": "Specific amounts and influence not established here",
+      "originalStatements": [
+        {"occurrence": "Political sequence 1", "lines": [609]},
+        {"occurrence": "Political sequence 2", "lines": [3278]}
+      ],
+      "establishes": "A foundation's audited filings and donor records can establish reported contributions and dates.",
+      "unverified": "The broad amount, the identity and timing of each alleged foreign-government donor, and any exchange or policy influence.",
+      "contradictoryEvidence": "A donation to a charitable foundation is not by itself proof that a public official received personal funds or changed an official act.",
+      "sources": [],
+      "editorialChange": "Recast the assertion as an allegation requiring donor-specific records and evidence of any connection to an official act."
+    },
+    {
+      "id": "FIN-BIDEN-001",
+      "title": "Foreign payments to Biden family members and associates",
+      "priority": "high",
+      "classification": "financial relationship allegation",
+      "status": "needs-verification",
+      "statusLabel": "Payments and alleged wrongdoing must be distinguished",
+      "originalStatements": [
+        {"occurrence": "Political sequence 1", "lines": [610]},
+        {"occurrence": "Political sequence 2", "lines": [3279]},
+        {"occurrence": "Evidence archive 1", "lines": [795, 796, 797]},
+        {"occurrence": "Evidence archive 2", "lines": [3507, 3508, 3509]}
+      ],
+      "establishes": "Bank records and committee documents may establish that funds moved among named companies, associates, and relatives.",
+      "unverified": "Whether any payment was unlawful, what services it represented, whether Joe Biden received a payment, or whether he took an official action in exchange.",
+      "contradictoryEvidence": "Committee findings and witness testimony are evidence of an investigation and allegations; they do not themselves establish criminal guilt. Payment totals must be defined by recipient, gross amount, and period.",
+      "sources": [],
+      "editorialChange": "Changed the allegation from a collective assertion into a recipient- and transaction-specific question; separated payments from proof of presidential misconduct."
+    },
+    {
+      "id": "FIN-PELOSI-001",
+      "title": "Nancy Pelosi stock trades and legislative timing",
+      "priority": "high",
+      "classification": "financial relationship allegation",
+      "status": "needs-verification",
+      "statusLabel": "Trade timing and influence not established",
+      "originalStatements": [
+        {"occurrence": "Political sequence 1", "lines": [611]},
+        {"occurrence": "Political sequence 2", "lines": [3280]}
+      ],
+      "establishes": "Congressional disclosure filings can establish reported transactions, dates, and ownership interests.",
+      "unverified": "That a trade preceded a particular legislative action, generated the claimed gain, or violated insider-trading law.",
+      "contradictoryEvidence": "A disclosed trade and an increase in reported wealth do not alone establish use of nonpublic information or causation by legislation.",
+      "sources": [],
+      "editorialChange": "Retained scrutiny of lawmakers' financial conflicts while removing the unsupported claim that the listed trades were timed ahead of legislation and proved enrichment."
+    },
+    {
+      "id": "SURV-OBAMA-001",
+      "title": "U.S. citizens killed in overseas drone strikes",
+      "priority": "high",
+      "classification": "documented event and legal dispute",
+      "status": "needs-verification",
+      "statusLabel": "Specific operation and legal record required",
+      "originalStatements": [
+        {"occurrence": "Political sequence 1", "lines": [612]},
+        {"occurrence": "Political sequence 2", "lines": [3281]}
+      ],
+      "establishes": "The claim concerns targeted lethal operations against U.S. citizens abroad and the government's legal rationale.",
+      "unverified": "The plural wording, complete list of affected citizens, operation details, and the legal characterization implied by 'without trial.'",
+      "contradictoryEvidence": "The government described a national-security rationale and internal legal review; that does not answer whether the process or constitutional analysis was correct.",
+      "sources": [],
+      "editorialChange": "Reframed as a specific constitutional and accountability question rather than treating 'without trial' as a complete description of the legal dispute."
+    },
+    {
+      "id": "FSA-001",
+      "title": "First Step Act releases and demographic effects",
+      "priority": "high",
+      "classification": "enacted law and administrative outcome",
+      "status": "partially-verified",
+      "statusLabel": "Law enacted; totals and demographics need dated data",
+      "originalStatements": [
+        {"occurrence": "Political sequence 1", "lines": [616]},
+        {"occurrence": "Political sequence 2", "lines": [3285]},
+        {"occurrence": "Evidence archive 1", "lines": [804]},
+        {"occurrence": "Evidence archive 2", "lines": [3516]}
+      ],
+      "establishes": "The First Step Act was enacted in 2018 and created sentencing, earned-time-credit, and reentry provisions.",
+      "unverified": "The quoted number of people released, the date range, which provisions produced releases, and whether the affected group was 'mostly Black men.'",
+      "contradictoryEvidence": "Enactment is established, but the Act's distinct provisions and eligible populations should not be collapsed into a single release count or demographic claim.",
+      "sources": [
+        {"title": "First Step Act of 2018, Public Law 115-391", "publisher": "U.S. Congress", "date": "2018-12-21", "url": "https://www.congress.gov/115/plaws/publ391/PLAW-115publ391.pdf", "establishes": "The Act's text and enactment date.", "limits": "The statute does not establish a later cumulative release count or demographic distribution."}
+      ],
+      "editorialChange": "Kept the enactment as a policy record; qualified numerical and demographic claims pending dated Bureau of Prisons data."
+    },
+    {
+      "id": "INS-001",
+      "title": "The $35 Medicare insulin cap",
+      "priority": "high",
+      "classification": "federal policy and attribution",
+      "status": "misattributed",
+      "statusLabel": "Attribution differs by program and date",
+      "originalStatements": [
+        {"occurrence": "Political sequence 1", "lines": [620]},
+        {"occurrence": "Political sequence 2", "lines": [3289]},
+        {"occurrence": "Evidence archive 1", "lines": [806]},
+        {"occurrence": "Evidence archive 2", "lines": [3518]}
+      ],
+      "establishes": "A $35 insulin limit was used in a voluntary CMS model for participating plans; a later statute established a broader Medicare cap.",
+      "unverified": "The original gives no date or distinction between the voluntary model and the later statutory benefit.",
+      "contradictoryEvidence": "The Inflation Reduction Act was enacted under President Biden and capped Medicare insulin cost sharing at $35 beginning in 2023; the Trump-era CMS model was voluntary and limited to participating plans.",
+      "sources": [
+        {"title": "Inflation Reduction Act of 2022, Public Law 117-169, section 11406", "publisher": "U.S. Congress", "date": "2022-08-16", "url": "https://www.congress.gov/117/plaws/publ169/PLAW-117publ169.pdf", "establishes": "The statutory Medicare insulin cost-sharing cap and its scope.", "limits": "It does not establish the earlier administration's voluntary model."}
+      ],
+      "editorialChange": "Corrected the missing program and administration distinction; links the 2018–2020 voluntary model to its own record and attributes the nationwide statutory cap to the 2022 law."
+    },
+    {
+      "id": "LABOR-001",
+      "title": "Pre-pandemic unemployment rates",
+      "priority": "high",
+      "classification": "economic statistic",
+      "status": "partially-verified",
+      "statusLabel": "A historical low needs population and date qualifiers",
+      "originalStatements": [
+        {"occurrence": "Political sequence 1", "lines": [624]},
+        {"occurrence": "Political sequence 2", "lines": [3293]},
+        {"occurrence": "Evidence archive 1", "lines": [805]},
+        {"occurrence": "Evidence archive 2", "lines": [3517]}
+      ],
+      "establishes": "BLS time series can establish unemployment rates by race, ethnicity, sex, and month.",
+      "unverified": "The statement's undefined meaning of 'record-low' across four populations and the exact comparison period.",
+      "contradictoryEvidence": "Rates differ by population, series, season adjustment, and month; a claim about one group or one month cannot be generalized to all groups without the source table.",
+      "sources": [
+        {"title": "Labor force characteristics by race and ethnicity, 2019", "publisher": "U.S. Bureau of Labor Statistics", "date": "2020-03", "url": "https://www.bls.gov/opub/reports/race-and-ethnicity/2019/home.htm", "establishes": "Official labor-force measures for 2019 by race and ethnicity.", "limits": "The claim still needs a specific measure, population, and comparison interval."}
+      ],
+      "editorialChange": "Retained the economic comparison as a dated, checkable statistic rather than an unqualified superlative."
+    },
+    {
+      "id": "FISA-001",
+      "title": "Crossfire Hurricane and Carter Page FISA applications",
+      "priority": "critical",
+      "classification": "official oversight findings and interpretation",
+      "status": "partially-verified",
+      "statusLabel": "Serious application errors documented; shorthand overstates",
+      "originalStatements": [
+        {"occurrence": "Evidence archive 1", "lines": [800, 801]},
+        {"occurrence": "Evidence archive 2", "lines": [3512, 3513]}
+      ],
+      "establishes": "Official oversight found serious inaccuracies and omissions in applications to surveil Carter Page and criticized FBI handling of the matter.",
+      "unverified": "That every application was based on a 'fake dossier,' that the FBI knew the dossier was false at the time, or that the full investigation was simply a plot to spy on Trump.",
+      "contradictoryEvidence": "The DOJ Inspector General reported multiple significant errors and omissions but did not find that political bias drove the opening of Crossfire Hurricane. The Durham report is a separate prosecutor's account and must be read with its evidence and limitations.",
+      "sources": [
+        {"title": "Review of Four FISA Applications and Other Aspects of the FBI's Crossfire Hurricane Investigation", "publisher": "U.S. Department of Justice, Office of the Inspector General", "date": "2019-12-09", "url": "https://oig.justice.gov/reports/2019/o20012.pdf", "establishes": "The OIG's review of the Crossfire Hurricane opening and four Carter Page FISA applications, including errors and omissions.", "limits": "It did not conclude that political bias caused the opening of the investigation."},
+        {"title": "Report on Matters Related to Intelligence Activities and Investigations Arising Out of the 2016 Presidential Campaigns", "publisher": "U.S. Department of Justice, Special Counsel John Durham", "date": "2023-05-15", "url": "https://www.justice.gov/storage/durhamreport.pdf", "establishes": "The special counsel's findings and criticisms of FBI procedures and investigative decisions.", "limits": "It is an investigative report, not a court judgment establishing every allegation in the archive."}
+      ],
+      "editorialChange": "Replaced 'fake dossier' and 'spied illegally' as blanket conclusions with the documented warrant errors, separate investigative findings, and explicit limits."
+    },
+    {
+      "id": "LAPTOP-001",
+      "title": "The October 2020 letter by 51 former intelligence officials",
+      "priority": "high",
+      "classification": "public statement and characterization",
+      "status": "misstated",
+      "statusLabel": "The letter's wording is narrower than the archive says",
+      "originalStatements": [
+        {"occurrence": "Political sequence 1", "lines": [688]},
+        {"occurrence": "Political sequence 2", "lines": [3372]},
+        {"occurrence": "Evidence archive 1", "lines": [811]},
+        {"occurrence": "Evidence archive 2", "lines": [3523]}
+      ],
+      "establishes": "The signatories said the laptop reporting had 'all the classic earmarks of a Russian information operation' and expressly said they did not know whether the emails were genuine.",
+      "unverified": "That the signatories falsely stated the laptop was Russian disinformation; the letter described an inference and caveat, not an authentication finding.",
+      "contradictoryEvidence": "Subsequent reporting and federal investigations authenticated some data from the laptop, but that does not show the signatories knew the material was authentic when they wrote or prove that the entire laptop was genuine.",
+      "sources": [
+        {"title": "Hunter Biden story is Russian disinfo, dozens of former intel officials say", "publisher": "POLITICO", "date": "2020-10-19", "url": "https://www.politico.com/news/2020/10/19/hunter-biden-story-russian-disinfo-430276", "sourceType": "Contemporaneous article reproducing and describing the former officials' letter", "establishes": "The letter's wording, including its qualified 'classic earmarks' assessment and stated lack of evidence about the emails' authenticity.", "limits": "The letter expressed an inference; it did not authenticate the device or establish that the reporting was false, nor does the text establish the signatories' intent."}
+      ],
+      "editorialChange": "Corrected 'falsely labeled' to quote the letter's actual language and its explicit uncertainty."
+    },
+    {
+      "id": "MOD-001",
+      "title": "Government contacts with social-media companies",
+      "priority": "high",
+      "classification": "documented contacts and contested characterization",
+      "status": "partially-verified",
+      "statusLabel": "Some contacts documented; broad censorship conclusion not established",
+      "originalStatements": [
+        {"occurrence": "Political sequence 1", "lines": [687, 690]},
+        {"occurrence": "Political sequence 2", "lines": [3371, 3374]},
+        {"occurrence": "Evidence archive 1", "lines": [810, 843]},
+        {"occurrence": "Evidence archive 2", "lines": [3522, 3555]}
+      ],
+      "establishes": "Public records and platform communications show some government-platform contacts about content moderation and public-health or election misinformation.",
+      "unverified": "That agencies coordinated a general program to silence political dissent, blacklisted all named doctors, or directed every platform decision described in the archive.",
+      "contradictoryEvidence": "Platforms made independent moderation choices; in Murthy v. Missouri the Supreme Court reversed for lack of standing and did not decide the broad First Amendment merits.",
+      "sources": [
+        {"title": "Murthy v. Missouri, 603 U.S. 43", "publisher": "Supreme Court of the United States", "date": "2024-06-26", "url": "https://www.supremecourt.gov/opinions/23pdf/23-411_3dq3.pdf", "sourceType": "Supreme Court opinion", "establishes": "The Court reversed the injunction because the plaintiffs lacked standing to seek it.", "limits": "The Court did not decide the broad First Amendment merits of every government-platform contact or establish that all moderation was coerced."}
+      ],
+      "editorialChange": "Distinguished documented contacts, private moderation, and the broader allegation of coordinated censorship."
+    },
+    {
+      "id": "CHAR-001",
+      "title": "Charlottesville statements and 'very fine people'",
+      "priority": "high",
+      "classification": "documented public statements",
+      "status": "qualified",
+      "statusLabel": "Multiple statements over several days require full context",
+      "originalStatements": [
+        {"occurrence": "Political sequence 1", "lines": [693]},
+        {"occurrence": "Political sequence 2", "lines": [3377]},
+        {"occurrence": "Evidence archive 1", "lines": [815]},
+        {"occurrence": "Evidence archive 2", "lines": [3527]}
+      ],
+      "establishes": "Trump condemned hatred, bigotry, and violence; on August 15 he also said there were 'very fine people on both sides' and then said he was not referring to neo-Nazis and white nationalists, who should be condemned totally.",
+      "unverified": "The archive's assertion that media reports uniformly cut the second half of a sentence.",
+      "contradictoryEvidence": "The record includes both the 'both sides' formulation and an explicit exclusion of neo-Nazis and white nationalists. Neither should be omitted.",
+      "sources": [],
+      "editorialChange": "Replaced the one-sided summary with a call to quote the relevant public statements in sequence."
+    },
+    {
+      "id": "DISINFECTANT-001",
+      "title": "April 2020 disinfectant and light remarks",
+      "priority": "high",
+      "classification": "documented public statement",
+      "status": "qualified",
+      "statusLabel": "No verbatim 'inject bleach' instruction; transcript contains injection speculation",
+      "originalStatements": [
+        {"occurrence": "Political sequence 1", "lines": [694]},
+        {"occurrence": "Political sequence 2", "lines": [3378]},
+        {"occurrence": "Evidence archive 1", "lines": [814]},
+        {"occurrence": "Evidence archive 2", "lines": [3526]}
+      ],
+      "establishes": "The April 23, 2020 briefing transcript records Trump publicly asking whether disinfectant could be used by injection inside the body and discussing light/heat after a researcher presentation.",
+      "unverified": "The claim that the remarks referred only to light-based therapies or that media invented the injection discussion.",
+      "contradictoryEvidence": "The transcript does not contain the phrase 'inject bleach' as a direct instruction, but it does contain the injection speculation; later clarification that it was a question does not erase the public statement.",
+      "sources": [],
+      "editorialChange": "Distinguished the inaccurate paraphrase 'inject bleach' from the documented disinfectant-injection remark and the light/heat discussion."
+    },
+    {
+      "id": "COVID-001",
+      "title": "Lockdowns, mandates, and pandemic policy",
+      "priority": "high",
+      "classification": "policy outcomes and spiritual interpretation",
+      "status": "mixed",
+      "statusLabel": "Effects varied; spiritual framing is interpretation",
+      "originalStatements": [
+        {"occurrence": "Political sequence 1", "lines": [661, 706]},
+        {"occurrence": "Political sequence 2", "lines": [3342, 3397]},
+        {"occurrence": "Evidence archive 1", "lines": [818]},
+        {"occurrence": "Evidence archive 2", "lines": [3530]}
+      ],
+      "establishes": "Public-health restrictions varied by jurisdiction, time, and design; economic and health effects require specific outcome measures.",
+      "unverified": "That lockdowns were designed as submission training, or that restrictions as a whole destroyed small businesses.",
+      "contradictoryEvidence": "Studies document both public-health effects and economic harms; neither supports a single motive or uniform impact across all policies.",
+      "sources": [],
+      "editorialChange": "Preserved the author's question as a spiritual/political hypothesis and removed presentation of motive or uniform outcome as established fact."
+    },
+    {
+      "id": "VAX-001",
+      "title": "COVID-19 vaccines and transmission",
+      "priority": "high",
+      "classification": "public-health evidence",
+      "status": "overbroad",
+      "statusLabel": "Effect depends on period, variant, and outcome",
+      "originalStatements": [
+        {"occurrence": "Evidence archive 1", "lines": [819]},
+        {"occurrence": "Evidence archive 2", "lines": [3531]}
+      ],
+      "establishes": "Vaccine effectiveness against infection and onward transmission varied with variant, time since vaccination, and population; estimates require a dated study and outcome.",
+      "unverified": "The absolute claim that vaccination did or did not prevent spread in all settings.",
+      "contradictoryEvidence": "Early studies found reduced infection and transmission; later variants and waning immunity reduced but did not make all protection uniformly absent.",
+      "sources": [
+        {"title": "Outbreak of SARS-CoV-2 Infections, Including COVID-19 Vaccine Breakthrough Infections, Associated with Large Public Gatherings — Barnstable County, Massachusetts, July 2021", "publisher": "U.S. Centers for Disease Control and Prevention, MMWR", "date": "2021-07-30", "url": "https://www.cdc.gov/mmwr/volumes/70/wr/mm7031e2.htm", "sourceType": "Public-health surveillance report", "establishes": "The investigation documented infections among vaccinated and unvaccinated people during a Delta-variant outbreak and informed guidance on transmission.", "limits": "A local outbreak investigation does not establish that vaccines never reduced transmission or quantify effectiveness across all variants, dates, and populations."}
+      ],
+      "editorialChange": "Replaced a categorical statement with the time- and outcome-specific question the evidence can answer."
+    },
+    {
+      "id": "NIH-001",
+      "title": "NIH/NIAID grants and gain-of-function allegations",
+      "priority": "high",
+      "classification": "grant record and disputed scientific classification",
+      "status": "disputed",
+      "statusLabel": "Funding and research classification must be stated separately",
+      "originalStatements": [
+        {"occurrence": "Evidence archive 1", "lines": [820]},
+        {"occurrence": "Evidence archive 2", "lines": [3532]}
+      ],
+      "establishes": "A U.S.-funded grant supported EcoHealth Alliance research that included work with the Wuhan Institute of Virology; the scope and reporting of experiments have been the subject of official review.",
+      "unverified": "That Fauci personally funded a specific experiment or that the grant funded the creation of SARS-CoV-2.",
+      "contradictoryEvidence": "The phrase 'gain-of-function' has multiple definitions; NIH statements, grant records, and oversight reports differ in characterization and should be compared rather than compressed into a personal claim.",
+      "sources": [],
+      "editorialChange": "Changed a personal-causation assertion into a grant- and experiment-specific claim with the disputed terminology identified."
+    },
+    {
+      "id": "ELECTION-001",
+      "title": "Claims that swing-state election rules changed illegally",
+      "priority": "high",
+      "classification": "election-law allegation",
+      "status": "unverified",
+      "statusLabel": "Jurisdiction-specific legal claim required",
+      "originalStatements": [
+        {"occurrence": "Evidence archive 1", "lines": [844]},
+        {"occurrence": "Evidence archive 2", "lines": [3556]}
+      ],
+      "establishes": "Election procedures and deadlines differed by state and were litigated before and after the 2020 election.",
+      "unverified": "Which state rule was unlawful, what official changed it, and whether a court issued a final finding of illegality affecting an election result.",
+      "contradictoryEvidence": "Some election challenges were dismissed or denied; other disputes involved state-court interpretations and procedural questions. No single result supports the plural, nationwide wording.",
+      "sources": [],
+      "editorialChange": "Replaced the blanket statement with a demand for state-specific rules, rulings, and outcome evidence."
+    },
+    {
+      "id": "CBDC-001",
+      "title": "CBDC pilots and programmable-money claims",
+      "priority": "high",
+      "classification": "technology status and forecast",
+      "status": "forecast",
+      "statusLabel": "Proposed or piloted systems are not universal deployment",
+      "originalStatements": [
+        {"occurrence": "Original technology section", "lines": [982, 983, 984]},
+        {"occurrence": "Repeated technology section", "lines": [3698, 3699, 3700]}
+      ],
+      "establishes": "Central banks and international bodies have studied or piloted CBDCs; design choices are jurisdiction-specific.",
+      "unverified": "That all CBDCs are programmable, that pilots generally include expiry dates or spending limits, or that a unified global system is being implemented.",
+      "contradictoryEvidence": "A research paper, pilot, and proposal are not an issued currency. The Federal Reserve has stated that it has not decided whether to issue a U.S. CBDC and would need authorizing law.",
+      "sources": [],
+      "editorialChange": "Labels coercive or surveillance outcomes as forecasts unless a cited design or policy demonstrates them."
+    },
+    {
+      "id": "ID-001",
+      "title": "Digital identity and a global control ledger",
+      "priority": "high",
+      "classification": "technology claim and prophetic interpretation",
+      "status": "forecast",
+      "statusLabel": "Separate projects do not establish a unified compulsory ledger",
+      "originalStatements": [
+        {"occurrence": "Technology warning", "lines": [78]},
+        {"occurrence": "Repeated technology warning", "lines": [2623]},
+        {"occurrence": "Technology section", "lines": [957, 958, 959]},
+        {"occurrence": "Repeated technology section", "lines": [3673, 3674, 3675]}
+      ],
+      "establishes": "Digital identity programs and biometric systems are proposed or deployed in particular countries and services.",
+      "unverified": "That a global system merges identity, health, wallet, and location data or that access to ordinary life is universally conditioned on one ID.",
+      "contradictoryEvidence": "Programs differ by country, legal basis, data architecture, and whether use is optional; the existence of projects does not demonstrate a single global authority or linked database.",
+      "sources": [],
+      "editorialChange": "Keeps the spiritual warning as interpretation and distinguishes documented programs from predictions of integration or coercion."
+    },
+    {
+      "id": "AI-001",
+      "title": "AI as a system of control",
+      "priority": "high",
+      "classification": "technology forecast and theological interpretation",
+      "status": "interpretation",
+      "statusLabel": "Prophetic analogy, not a demonstrated coordinated system",
+      "originalStatements": [
+        {"occurrence": "Technology warning", "lines": [75, 77]},
+        {"occurrence": "Repeated technology warning", "lines": [2623, 2625]},
+        {"occurrence": "Technology section", "lines": [977, 978, 979]}
+      ],
+      "establishes": "AI systems can be used for classification, surveillance, content moderation, and automated decisions; individual deployments require specific evidence.",
+      "unverified": "That AI is already coordinated as a single mechanism to identify and punish dissent or that neural interfaces are intended to deliver control.",
+      "contradictoryEvidence": "Capabilities, deployment, and stated intent vary widely. A risk scenario or prophetic parallel does not establish a present operational plan.",
+      "sources": [],
+      "editorialChange": "Retains the author's warning while labels it as a risk/interpretation unless a named system and documented use are supplied."
+    },
+    {
+      "id": "ACCORDS-001",
+      "title": "Abraham Accords",
+      "priority": "medium",
+      "classification": "international agreement and prophetic interpretation",
+      "status": "partially-verified",
+      "statusLabel": "Agreements documented; prophetic connection is interpretation",
+      "originalStatements": [
+        {"occurrence": "Political sequence 1", "lines": [618]},
+        {"occurrence": "Political sequence 2", "lines": [3287]},
+        {"occurrence": "Timeline entry", "lines": [764]}
+      ],
+      "establishes": "The 2020 Abraham Accords documents record normalization agreements and declarations involving Israel and the United Arab Emirates and Bahrain, followed by additional normalization arrangements.",
+      "unverified": "That the agreements establish the author's prophetic timeline or imply a particular future outcome.",
+      "contradictoryEvidence": "Diplomatic normalization is a documented event; its theological meaning and long-term effects remain matters of interpretation and subsequent history.",
+      "sources": [
+        {"title": "The Abraham Accords Declaration", "publisher": "The White House", "date": "2020-09-15", "url": "https://trumpwhitehouse.archives.gov/briefings-statements/abraham-accords-declaration/", "establishes": "The declaration signed at the White House on September 15, 2020.", "limits": "It does not establish prophetic interpretation or guarantee lasting regional peace."}
+      ],
+      "editorialChange": "Retained the diplomatic event and labelled any prophetic parallel as the author's interpretation."
+    }
+  ]
+}

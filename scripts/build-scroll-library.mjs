@@ -204,8 +204,8 @@ const homepage = `<!doctype html>
   <a class="skip-link" href="#main">Skip to library</a>
   <header class="masthead">
     <a class="wordmark" href="./" aria-label="Scroll of Fire Unsealed Library home"><span class="wordmark-mark" aria-hidden="true">✦</span><span><strong>SCROLL OF FIRE</strong><small>UNSEALED LIBRARY</small></span></a>
-    <nav class="masthead-links" aria-label="Library navigation"><a href="#shelves">The shelves</a><a href="#genesis">Genesis 1–50</a><a href="search.html">Search</a><a href="lexicon.html">Hebrew lexicon</a><a href="atlas.html">Atlas</a><a href="#full-index">Full index</a></nav>
-    <details class="mobile-menu"><summary>Browse</summary><nav aria-label="Library navigation"><a href="search.html">Search</a><a href="lexicon.html">Hebrew lexicon</a><a href="atlas.html">Reference atlas</a><a href="#shelves">The shelves</a><a href="#genesis">Genesis 1–50</a><a href="#full-index">Full index</a><a href="archive/Full_Scroll_Unsealed.txt">Original edition</a></nav></details>
+    <nav class="masthead-links" aria-label="Library navigation"><a href="#shelves">The shelves</a><a href="#genesis">Genesis 1–50</a><a href="search.html">Search</a><a href="lexicon.html">Hebrew lexicon</a><a href="atlas.html">Atlas</a><a href="editorial.html">Editorial edition</a><a href="#full-index">Full index</a></nav>
+    <details class="mobile-menu"><summary>Browse</summary><nav aria-label="Library navigation"><a href="search.html">Search</a><a href="lexicon.html">Hebrew lexicon</a><a href="atlas.html">Reference atlas</a><a href="editorial.html">Editorial edition &amp; evidence</a><a href="#shelves">The shelves</a><a href="#genesis">Genesis 1–50</a><a href="#full-index">Full index</a><a href="archive/Full_Scroll_Unsealed.txt">Original edition</a></nav></details>
     <a class="archive-link" href="archive/Full_Scroll_Unsealed.txt">Original edition <span aria-hidden="true">↗</span></a>
   </header>
   <main id="main">
@@ -243,9 +243,10 @@ const homepage = `<!doctype html>
         <a class="research-card" href="search.html"><b aria-hidden="true">⌕</b><strong>Full-text search</strong><span>Find any phrase across all ${segments.length.toLocaleString("en-US")} reading segments, filtered by shelf.</span></a>
         <a class="research-card" href="lexicon.html"><b aria-hidden="true">א</b><strong>Hebrew lexicon</strong><span>${audit.hebrewTerms.length} Hebrew forms, with and without vowel marks, linked to every occurrence.</span></a>
         <a class="research-card" href="atlas.html"><b aria-hidden="true">◈</b><strong>Reference atlas</strong><span>Scripture citations, repeated passages, people, places, and subjects, each labelled by relationship.</span></a>
+        <a class="research-card" href="editorial.html"><b aria-hidden="true">§</b><strong>Editorial reading &amp; evidence</strong><span>A separately revised political reading with source-linked claims, original comparisons, and transparent limits.</span></a>
         <a class="research-card" href="../glossary.html"><b aria-hidden="true">✧</b><strong>Codex glossary</strong><span>The existing Codex glossary of symbols and terms.</span></a>
       </div>
-      <p class="future-note">Later phases: evidence register and historical atlas are not part of this release.</p>
+      <p class="future-note">The editorial reading is a separate layer; the frozen manuscript and archival reader remain unchanged.</p>
     </section>
     <section class="full-index" id="full-index">
       <div class="section-heading"><div><p class="eyebrow">Nothing left behind</p><h2>Browse every source section</h2></div><p>${sections.length} indexed section entries · repeated headings link to every occurrence</p></div>
@@ -276,7 +277,7 @@ const reader = `<!doctype html>
   <header class="reader-masthead">
     <a class="wordmark" href="./"><span class="wordmark-mark" aria-hidden="true">✦</span><span><strong>SCROLL OF FIRE</strong><small>UNSEALED LIBRARY</small></span></a>
     <div class="reader-actions" aria-label="Reading settings">
-      <a class="search-link" href="search.html" aria-label="Search the manuscript">⌕ <span>Search</span></a>
+      <a class="search-link" href="search.html" aria-label="Search the manuscript">⌕ <span>Search</span></a><a class="search-link" href="editorial.html" aria-label="Editorial reading and evidence">§ <span>Evidence</span></a>
       <button type="button" data-font="smaller" aria-label="Decrease reading text size">A−</button><button type="button" data-font="larger" aria-label="Increase reading text size">A+</button>
       <button type="button" data-theme-toggle aria-label="Switch reading theme">Light theme</button>
       <a class="archive-link" href="archive/Full_Scroll_Unsealed.txt">Original edition <span aria-hidden="true">↗</span></a>
@@ -299,6 +300,7 @@ const reader = `<!doctype html>
     <a data-previous href="./">← Previous passage</a>
     <a href="./">Return to the library</a>
     <a href="search.html">Search</a>
+    <a href="editorial.html">Editorial reading &amp; evidence</a>
     <a data-next href="./">Next passage →</a>
   </div>
   <footer class="reader-footer"><p>Words are presented as preserved. Contextual grouping does not independently verify historical or scientific claims.</p><a href="archive/edition.json">Edition ${escapeHtml(edition.editionVersion)} provenance ↗</a></footer>
@@ -333,7 +335,7 @@ ${scripts.map(script => `  <script defer src="assets/${script}"></script>`).join
       <a class="archive-link" href="archive/Full_Scroll_Unsealed.txt">Original edition <span aria-hidden="true">↗</span></a>
     </div>
   </header>
-  <nav class="library-tabs" aria-label="Library sections">${tab("./", "Library", "library")}${tab("search.html", "Search", "search")}${tab("lexicon.html", "Hebrew lexicon", "lexicon")}${tab("atlas.html", "Reference atlas", "atlas")}${tab("../glossary.html", "Codex glossary", "glossary")}</nav>
+  <nav class="library-tabs" aria-label="Library sections">${tab("./", "Library", "library")}${tab("search.html", "Search", "search")}${tab("lexicon.html", "Hebrew lexicon", "lexicon")}${tab("atlas.html", "Reference atlas", "atlas")}${tab("editorial.html", "Editorial edition", "editorial")}${tab("../glossary.html", "Codex glossary", "glossary")}</nav>
   <main id="main" class="tool-main">
     <section class="tool-intro">${intro}</section>
 ${body}
@@ -439,9 +441,28 @@ const atlasPage = toolPage({
     <noscript><p class="notice">The atlas needs JavaScript. You can still <a href="./#full-index">browse every source section</a>.</p></noscript>`
 });
 
+const editorialPage = toolPage({
+  file: "editorial.html",
+  title: "Editorial reading and evidence",
+  description: "A distinct, source-linked editorial reading of prioritized political claims, preserving the original Scroll of Fire manuscript and its spiritual voice.",
+  bodyClass: "editorial-page",
+  current: "editorial",
+  scripts: ["editorial-navigation.js", "editorial.js"],
+  intro: `<p class="eyebrow">A separate reading edition · evidence linked</p><h1>Politics under equal scrutiny</h1>
+    <p>This expanded reading preserves the author’s spiritual warning and investigative concerns while distinguishing documented events, allegations, forecasts, scripture, and interpretation. It does not replace the frozen original.</p>`,
+  body: `      <p class="notice editorial-notice">The original political sequences repeat. This edition presents one canonical revision and links both complete original occurrences. No archival passage, prayer, or source wording is deleted. Citation links could not be inspected from this environment; source-review status is shown for every claim.</p>
+    <p class="editorial-links"><a href="evidence/register.md">Read the complete evidence register (Markdown)</a> · <a href="evidence/claim-register.json">Machine-readable claim register (JSON)</a> · <a href="archive/Full_Scroll_Unsealed.txt">Frozen original</a></p>
+    <section class="editorial-originals" data-editorial-originals aria-labelledby="editorial-originals-title"><h2 id="editorial-originals-title">Original occurrences</h2></section>
+    <section class="editorial-coverage" data-editorial-coverage aria-labelledby="coverage-title"><h2 id="coverage-title">What this edition covers</h2></section>
+    <article class="editorial-reading" data-editorial-reading aria-live="polite"></article>
+    <section class="editorial-claims" aria-labelledby="claims-title"><h2 id="claims-title">Claim register</h2><p>Each record quotes the exact original wording and separates the claim’s evidence status from whether its cited sources could be inspected in this session.</p><div data-claim-list></div></section>
+    <noscript><p class="notice">The interactive register needs JavaScript. The complete register is available in <a href="evidence/register.md">EVIDENCE_REGISTER.md</a> and <a href="evidence/claim-register.json">JSON</a>.</p></noscript>`
+});
+
 fs.writeFileSync(path.join(outputRoot, "index.html"), homepage);
 fs.writeFileSync(path.join(outputRoot, "search.html"), searchPage);
 fs.writeFileSync(path.join(outputRoot, "lexicon.html"), lexiconPage);
 fs.writeFileSync(path.join(outputRoot, "atlas.html"), atlasPage);
+fs.writeFileSync(path.join(outputRoot, "editorial.html"), editorialPage);
 fs.writeFileSync(path.join(outputRoot, "reader.html"), reader);
 console.log(`Built Scroll of Fire Library: ${sections.length} sections, ${map.paragraphCount} paragraphs, 50 Genesis chapters.`);
