@@ -447,14 +447,15 @@ const editorialPage = toolPage({
   description: "A distinct, source-linked editorial reading of prioritized political claims, preserving the original Scroll of Fire manuscript and its spiritual voice.",
   bodyClass: "editorial-page",
   current: "editorial",
-  scripts: ["editorial.js"],
+  scripts: ["editorial-navigation.js", "editorial.js"],
   intro: `<p class="eyebrow">A separate reading edition · evidence linked</p><h1>Politics under equal scrutiny</h1>
-    <p>This edited reading preserves the author’s spiritual warning and substantive concerns while distinguishing documented events, allegations, forecasts, scripture, and interpretation. It does not replace the frozen original.</p>`,
-  body: `      <p class="notice editorial-notice">The original political sequences repeat. This edition presents one canonical revision and links both complete original occurrences. No archival passage, prayer, or source wording is deleted. External source links were not live-checked during this pass; claim statuses identify the remaining verification work.</p>
+    <p>This expanded reading preserves the author’s spiritual warning and investigative concerns while distinguishing documented events, allegations, forecasts, scripture, and interpretation. It does not replace the frozen original.</p>`,
+  body: `      <p class="notice editorial-notice">The original political sequences repeat. This edition presents one canonical revision and links both complete original occurrences. No archival passage, prayer, or source wording is deleted. Citation links could not be inspected from this environment; source-review status is shown for every claim.</p>
     <p class="editorial-links"><a href="evidence/register.md">Read the complete evidence register (Markdown)</a> · <a href="evidence/claim-register.json">Machine-readable claim register (JSON)</a> · <a href="archive/Full_Scroll_Unsealed.txt">Frozen original</a></p>
     <section class="editorial-originals" data-editorial-originals aria-labelledby="editorial-originals-title"><h2 id="editorial-originals-title">Original occurrences</h2></section>
+    <section class="editorial-coverage" data-editorial-coverage aria-labelledby="coverage-title"><h2 id="coverage-title">What this edition covers</h2></section>
     <article class="editorial-reading" data-editorial-reading aria-live="polite"></article>
-    <section class="editorial-claims" aria-labelledby="claims-title"><h2 id="claims-title">Claim register</h2><p>Each record quotes the exact original wording and identifies what the cited records do—and do not—establish.</p><div data-claim-list></div></section>
+    <section class="editorial-claims" aria-labelledby="claims-title"><h2 id="claims-title">Claim register</h2><p>Each record quotes the exact original wording and separates the claim’s evidence status from whether its cited sources could be inspected in this session.</p><div data-claim-list></div></section>
     <noscript><p class="notice">The interactive register needs JavaScript. The complete register is available in <a href="evidence/register.md">EVIDENCE_REGISTER.md</a> and <a href="evidence/claim-register.json">JSON</a>.</p></noscript>`
 });
 

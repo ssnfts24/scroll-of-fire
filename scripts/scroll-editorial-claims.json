@@ -1,22 +1,83 @@
 {
   "sourceSha256": "81a015fb937f1664c2383fa38fddf956d281c6309a9584382c6dbc9d8b691400",
+  "evidenceStatusGuide": {
+    "documented-event-with-cited-record": "A discrete event is linked to a dated record; this does not prove claims beyond the record's stated scope.",
+    "documented-allegation-or-testimony": "A named allegation or testimony is recorded as having been made; the allegation is not thereby proven true.",
+    "disputed-interpretation": "The underlying record or event exists, but its characterization, meaning, causation, or legal significance is contested.",
+    "author-hypothesis-or-prophetic-interpretation": "A forecast, spiritual reading, or author interpretation, not a finding of present fact.",
+    "unverified-claim-requiring-additional-evidence": "The available register does not establish the assertion; further specific records are needed."
+  },
+  "sourceReviewStatusGuide": {
+    "cited-not-independently-inspected": "A citation is recorded, but its page or document could not be inspected during this session.",
+    "unavailable-awaiting-inspection": "The relevant record is identifiable, but a usable citation or its contents remain unavailable for inspection.",
+    "not-yet-identified": "No specific source record has yet been identified for this assertion."
+  },
+  "evidenceStatuses": {
+    "QAT-001": "documented-event-with-cited-record",
+    "FIN-CLINTON-001": "unverified-claim-requiring-additional-evidence",
+    "FIN-BIDEN-001": "documented-allegation-or-testimony",
+    "FIN-PELOSI-001": "unverified-claim-requiring-additional-evidence",
+    "SURV-OBAMA-001": "disputed-interpretation",
+    "FSA-001": "documented-event-with-cited-record",
+    "INS-001": "documented-event-with-cited-record",
+    "LABOR-001": "documented-event-with-cited-record",
+    "FISA-001": "documented-event-with-cited-record",
+    "LAPTOP-001": "documented-allegation-or-testimony",
+    "MOD-001": "disputed-interpretation",
+    "CHAR-001": "disputed-interpretation",
+    "DISINFECTANT-001": "documented-event-with-cited-record",
+    "COVID-001": "author-hypothesis-or-prophetic-interpretation",
+    "VAX-001": "unverified-claim-requiring-additional-evidence",
+    "NIH-001": "disputed-interpretation",
+    "ELECTION-001": "unverified-claim-requiring-additional-evidence",
+    "CBDC-001": "author-hypothesis-or-prophetic-interpretation",
+    "ID-001": "author-hypothesis-or-prophetic-interpretation",
+    "AI-001": "author-hypothesis-or-prophetic-interpretation",
+    "ACCORDS-001": "documented-event-with-cited-record"
+  },
+  "sourceReviewStatuses": {
+    "QAT-001": "cited-not-independently-inspected",
+    "FIN-CLINTON-001": "not-yet-identified",
+    "FIN-BIDEN-001": "unavailable-awaiting-inspection",
+    "FIN-PELOSI-001": "unavailable-awaiting-inspection",
+    "SURV-OBAMA-001": "unavailable-awaiting-inspection",
+    "FSA-001": "cited-not-independently-inspected",
+    "INS-001": "cited-not-independently-inspected",
+    "LABOR-001": "cited-not-independently-inspected",
+    "FISA-001": "cited-not-independently-inspected",
+    "LAPTOP-001": "cited-not-independently-inspected",
+    "MOD-001": "cited-not-independently-inspected",
+    "CHAR-001": "unavailable-awaiting-inspection",
+    "DISINFECTANT-001": "unavailable-awaiting-inspection",
+    "COVID-001": "not-yet-identified",
+    "VAX-001": "cited-not-independently-inspected",
+    "NIH-001": "unavailable-awaiting-inspection",
+    "ELECTION-001": "unavailable-awaiting-inspection",
+    "CBDC-001": "unavailable-awaiting-inspection",
+    "ID-001": "unavailable-awaiting-inspection",
+    "AI-001": "not-yet-identified",
+    "ACCORDS-001": "cited-not-independently-inspected"
+  },
   "claims": [
     {
       "id": "QAT-001",
       "title": "Qatar aircraft offer, acceptance, and use",
       "priority": "high",
       "classification": "historical event and legal/ethics interpretation",
-      "status": "needs-verification",
-      "statusLabel": "Primary-record review pending",
+      "status": "documented",
+      "statusLabel": "Pentagon acceptance reported May 21, 2025; operations and disposition remain open",
       "originalStatements": [
         {"occurrence": "Political sequence 1", "lines": [599, 603, 604, 605]},
         {"occurrence": "Political sequence 2", "lines": [3268, 3272, 3273, 3274]}
       ],
-      "establishes": "The original makes categorical claims about whether a jet was accepted, used, and personally used. These are distinct propositions that require dated government and donor records.",
-      "unverified": "Whether an offer was formally accepted, the exact federal recipient and terms, any operational use, and any later transfer or intended transfer.",
-      "contradictoryEvidence": "The original simultaneously characterizes the matter as a joke and asserts that no jet was accepted or used. A statement about personal use alone would not resolve government acceptance or use.",
-      "sources": [],
-      "editorialChange": "Replaced the categorical denial with a distinction among offer, acceptance, government operation, and personal use; retained controversy as a claim for dated source review."
+      "establishes": "The two supplied contemporaneous reports say Pentagon spokesman Sean Parnell confirmed on May 21, 2025, that the Defense Department accepted a Boeing 747 from Qatar for Air Force One use. This supports federal acceptance as a documented event; their page contents were not independently inspected in this session.",
+      "unverified": "Whether and when the aircraft was modified, certified, or operated; whether Donald Trump personally flew on it; the final ownership and disposition; and the full legal, security, cost, and ethics analysis.",
+      "contradictoryEvidence": "The original categorical statement that no jet was accepted conflicts with the reported Pentagon confirmation. The separate statement about personal use does not establish that the government did not accept the aircraft or operate it.",
+      "sources": [
+        {"title": "Defense Department accepts luxury jet from Qatar for Trump's use", "publisher": "PBS NewsHour", "date": "2025-05-21", "url": "https://www.pbs.org/newshour/politics/defense-department-accepts-luxury-jet-from-qatar-for-trumps-use", "sourceType": "Contemporaneous reporting of a Pentagon spokesman's confirmation", "establishes": "Reports that Pentagon spokesman Sean Parnell confirmed federal acceptance of a Boeing 747 from Qatar for presidential-aircraft use.", "limits": "The article was not retrievable in this session; it does not, by title alone, establish flight operations, Trump's personal use, final disposition, or the legal and ethics resolution."},
+        {"title": "Pentagon accepts Qatari jet for Air Force One", "publisher": "Defense News", "date": "2025-05-21", "url": "https://www.defensenews.com/pentagon/2025/05/21/pentagon-accepts-qatari-jet-for-air-force-one/", "sourceType": "Contemporaneous defense reporting of a Pentagon spokesman's confirmation", "establishes": "Reports the Pentagon's acceptance of the Qatari aircraft for Air Force One use.", "limits": "The article was not retrievable in this session; it does not alone establish subsequent operations, personal use, transfer, or the full legal and ethics analysis."}
+      ],
+      "editorialChange": "Corrected the false categorical denial of federal acceptance based on the two supplied May 21, 2025 reports; separated acceptance from operational use, personal use, disposition, and unresolved legal and ethics questions."
     },
     {
       "id": "FIN-CLINTON-001",
@@ -187,7 +248,9 @@
       "establishes": "The signatories said the laptop reporting had 'all the classic earmarks of a Russian information operation' and expressly said they did not know whether the emails were genuine.",
       "unverified": "That the signatories falsely stated the laptop was Russian disinformation; the letter described an inference and caveat, not an authentication finding.",
       "contradictoryEvidence": "Subsequent reporting and federal investigations authenticated some data from the laptop, but that does not show the signatories knew the material was authentic when they wrote or prove that the entire laptop was genuine.",
-      "sources": [],
+      "sources": [
+        {"title": "Hunter Biden story is Russian disinfo, dozens of former intel officials say", "publisher": "POLITICO", "date": "2020-10-19", "url": "https://www.politico.com/news/2020/10/19/hunter-biden-story-russian-disinfo-430276", "sourceType": "Contemporaneous article reproducing and describing the former officials' letter", "establishes": "The letter's wording, including its qualified 'classic earmarks' assessment and stated lack of evidence about the emails' authenticity.", "limits": "The letter expressed an inference; it did not authenticate the device or establish that the reporting was false, nor does the text establish the signatories' intent."}
+      ],
       "editorialChange": "Corrected 'falsely labeled' to quote the letter's actual language and its explicit uncertainty."
     },
     {
@@ -206,7 +269,9 @@
       "establishes": "Public records and platform communications show some government-platform contacts about content moderation and public-health or election misinformation.",
       "unverified": "That agencies coordinated a general program to silence political dissent, blacklisted all named doctors, or directed every platform decision described in the archive.",
       "contradictoryEvidence": "Platforms made independent moderation choices; in Murthy v. Missouri the Supreme Court reversed for lack of standing and did not decide the broad First Amendment merits.",
-      "sources": [],
+      "sources": [
+        {"title": "Murthy v. Missouri, 603 U.S. 43", "publisher": "Supreme Court of the United States", "date": "2024-06-26", "url": "https://www.supremecourt.gov/opinions/23pdf/23-411_3dq3.pdf", "sourceType": "Supreme Court opinion", "establishes": "The Court reversed the injunction because the plaintiffs lacked standing to seek it.", "limits": "The Court did not decide the broad First Amendment merits of every government-platform contact or establish that all moderation was coerced."}
+      ],
       "editorialChange": "Distinguished documented contacts, private moderation, and the broader allegation of coordinated censorship."
     },
     {
@@ -280,7 +345,9 @@
       "establishes": "Vaccine effectiveness against infection and onward transmission varied with variant, time since vaccination, and population; estimates require a dated study and outcome.",
       "unverified": "The absolute claim that vaccination did or did not prevent spread in all settings.",
       "contradictoryEvidence": "Early studies found reduced infection and transmission; later variants and waning immunity reduced but did not make all protection uniformly absent.",
-      "sources": [],
+      "sources": [
+        {"title": "Outbreak of SARS-CoV-2 Infections, Including COVID-19 Vaccine Breakthrough Infections, Associated with Large Public Gatherings — Barnstable County, Massachusetts, July 2021", "publisher": "U.S. Centers for Disease Control and Prevention, MMWR", "date": "2021-07-30", "url": "https://www.cdc.gov/mmwr/volumes/70/wr/mm7031e2.htm", "sourceType": "Public-health surveillance report", "establishes": "The investigation documented infections among vaccinated and unvaccinated people during a Delta-variant outbreak and informed guidance on transmission.", "limits": "A local outbreak investigation does not establish that vaccines never reduced transmission or quantify effectiveness across all variants, dates, and populations."}
+      ],
       "editorialChange": "Replaced a categorical statement with the time- and outcome-specific question the evidence can answer."
     },
     {
@@ -343,7 +410,7 @@
       "statusLabel": "Separate projects do not establish a unified compulsory ledger",
       "originalStatements": [
         {"occurrence": "Technology warning", "lines": [78]},
-        {"occurrence": "Repeated technology warning", "lines": [2626]},
+        {"occurrence": "Repeated technology warning", "lines": [2623]},
         {"occurrence": "Technology section", "lines": [957, 958, 959]},
         {"occurrence": "Repeated technology section", "lines": [3673, 3674, 3675]}
       ],

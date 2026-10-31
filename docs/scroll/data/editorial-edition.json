@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "edition": "1.1.0-reading",
+  "edition": "1.2.0-reading",
   "sourceCommit": "980b1f56fdc9974ed57e1c12ccedb0819d39e6b6",
   "sourceSha256": "81a015fb937f1664c2383fa38fddf956d281c6309a9584382c6dbc9d8b691400",
   "title": "Politics under equal scrutiny",
@@ -27,13 +27,42 @@
     }
   ],
   "editorialNote": "These political sequences and their evidence archives repeat substantially. This reading edition presents one canonical revised passage and links all complete political and evidence-archive occurrences. The archived source and source-linked reader remain unchanged; this editorial consolidation does not remove any occurrence.",
+  "coverageInventory": {
+    "addressedTopics": [
+      {"topic":"Political framing, corruption, and equal scrutiny","sectionId":"politics-truth-and-power","sourceLines":[596,647,3326]},
+      {"topic":"Qatar aircraft offer and federal acceptance","sectionId":"qatar-aircraft","sourceLines":[599,603,604,605,3268,3272,3273,3274]},
+      {"topic":"Clinton Foundation donations and Biden-family payments","sectionId":"financial-claims","sourceLines":[609,610,3278,3279,795,796,797,3507,3508,3509]},
+      {"topic":"Congressional trades and conflicts of interest","sectionId":"financial-claims","sourceLines":[611,3280]},
+      {"topic":"Targeted killing of U.S. citizens and legal accountability","sectionId":"targeted-killing","sourceLines":[612,3281]},
+      {"topic":"First Step Act, insulin, employment statistics, Abraham Accords","sectionId":"policy-records","sourceLines":[616,618,620,624,3285,3287,3289,3293]},
+      {"topic":"Crossfire Hurricane and Carter Page FISA applications","sectionId":"fisa-investigations","sourceLines":[800,801,3512,3513]},
+      {"topic":"Platform moderation, federal contacts, laptop letter","sectionId":"speech-moderation","sourceLines":[687,688,689,690,3371,3372,3373,3374,810,811,3522,3523]},
+      {"topic":"Charlottesville statements and April 2020 disinfectant remarks","sectionId":"charlottesville","sourceLines":[693,3377,694,3378]},
+      {"topic":"Pandemic restrictions, vaccine transmission, NIH/Wuhan research","sectionId":"pandemic-claims","sourceLines":[661,706,808,809,818,819,820,3342,3397,3530,3531,3532]},
+      {"topic":"Election administration, surveillance, and the Obama drone-strike claim","sectionId":"elections-and-surveillance","sourceLines":[612,665,799,844,3281,3511,3556]},
+      {"topic":"Digital identity, CBDCs, AI, and prophetic interpretation","sectionId":"digital-systems","sourceLines":[75,77,78,957,958,959,977,978,979,982,983,984,2623,2625,3673,3674,3675,3698,3699,3700]}
+    ],
+    "archiveOnlyTopics": [
+      {"topic":"Border-crossing totals, energy prices, Ukraine aid, Afghanistan withdrawal, and service-member deaths","lineStart":816,"lineEnd":834},
+      {"topic":"Education, school-board disputes, race, gun policy, party history, and cultural claims","lineStart":835,"lineEnd":858},
+      {"topic":"Pharmaceutical safety, FDA data-release claims, climate, mining, and energy infrastructure","lineStart":859,"lineEnd":872},
+      {"topic":"WHO treaty and sovereignty claims; global governance and World Economic Forum allegations","lineStart":873,"lineEnd":882},
+      {"topic":"Broad surveillance, intelligence, media, psychological-operations, and transhumanism allegations","lineStart":883,"lineEnd":938}
+    ],
+    "archiveOnlyNote": "Archive-only items remain available in the linked original political sequences and evidence-archive occurrences. They are inventoried here but are not strengthened or adjudicated by this edition."
+  },
   "sections": [
     {
       "id": "politics-truth-and-power",
       "heading": "The truth must be tested in every direction",
       "classification": "editorial framing",
+      "claimIds": [],
       "sourceLines": [596, 647, 3326],
-      "text": "“The sword is truth. The shield is faith.” That is the author’s spiritual charge. Applied to public life, it calls for scrutiny of power without making any officeholder a vessel of truth or any critic a vessel of falsehood. The Scroll’s warning about corruption, censorship, surveillance, political money, and institutional secrecy remains forceful; each factual assertion must still be examined against dated records, including records that complicate the author’s preferred interpretation."
+      "paragraphs": [
+        "“The sword is truth. The shield is faith.” That is the author’s spiritual charge, and it gives this political witness its urgency: speak plainly, refuse intimidation, and do not surrender conscience to institutions that demand silence. The pages that follow retain the Scroll’s alarm about corruption, censorship, surveillance, political money, and institutional secrecy. They do not ask the reader to exchange one political allegiance for another.",
+        "The original moves rapidly from a Qatar aircraft story to foreign donations, congressional trades, drone strikes, criminal-justice reform, insulin prices, unemployment, speech moderation, and spiritual conflict. These are not one evidentiary case. They are separate questions about records, decisions, power, and accountability. A transfer is not proof of a bribe; a government contact is not automatically coercion; a policy enactment is not proof of every claimed outcome; an official report is not a verdict on every allegation around it.",
+        "The method here is to keep the investigation alive while making its steps visible: identify the actor and date, state the strongest available record, distinguish what the record says from what a witness alleges, and leave the author’s interpretation recognizable as interpretation. The same discipline applies to Trump, Biden, Obama, Clinton, Congress, intelligence agencies, corporations, donors, media organizations, and movements on every side. The spiritual warning is not weakened by refusing to call any politician a savior."
+      ]
     },
     {
       "id": "qatar-aircraft",
@@ -41,15 +70,34 @@
       "classification": "historical event and disputed interpretation",
       "claimIds": ["QAT-001"],
       "sourceLines": [599, 603, 604, 605, 3268, 3272, 3273, 3274],
-      "text": "The original calls the Qatar aircraft story a joke and says the aircraft was neither accepted nor used. Those are separate, testable propositions. A public offer, the federal government’s acceptance, operation as a government aircraft, and a former president’s personal use are not interchangeable. The record and the administration’s own stated terms must be described precisely; a statement that a president would not personally use an aircraft does not, by itself, settle whether the government accepted or used it. See the register for dated primary records and unresolved legal and ethics questions."
+      "paragraphs": [
+        "The archive calls the story a joke and says the aircraft was never accepted or used. The categorical denial of acceptance is contradicted by contemporaneous reporting: on May 21, 2025, PBS NewsHour and Defense News reported that Pentagon spokesman Sean Parnell confirmed the Defense Department had accepted a Boeing 747 from Qatar for use as Air Force One. That is a documented federal acceptance, not merely a joke or an unaccepted offer.",
+        "Acceptance does not settle every question raised by the story. It must be kept distinct from when and whether the aircraft was modified, certified, or actually operated for presidential transport; whether Donald Trump personally flew on it; who owns or controls it during and after government service; and what the intended later disposition is. The supplied reports support the reported Pentagon confirmation and described purpose. They do not by themselves establish flight history, final transfer, gift-law compliance, security costs, or the resolution of constitutional and ethics objections.",
+        "The original line “I wouldn’t be using it” addresses personal use as the author understood the remark; it does not rebut the department’s separate act of accepting the aircraft for government use. A fair account must therefore correct the first proposition while preserving the unresolved questions. The same test would apply if a different president accepted a valuable foreign gift: identify the recipient, legal authority, conditions, operational use, oversight, and public benefit, then examine the record without partisan exemption."
+      ]
     },
     {
       "id": "financial-claims",
       "heading": "Financial relationships are evidence questions, not party labels",
       "classification": "attributed allegations",
-      "claimIds": ["FIN-CLINTON-001", "FIN-BIDEN-001", "FIN-PELOSI-001", "FIN-OBAMA-001"],
+      "claimIds": ["FIN-CLINTON-001", "FIN-BIDEN-001", "FIN-PELOSI-001"],
       "sourceLines": [608, 609, 610, 611, 3277, 3278, 3279, 3280],
-      "text": "The archive raises allegations about the Clinton Foundation, Biden-family payments, congressional stock trades, and U.S. citizens targeted by drone strikes. These allegations should not be treated as interchangeable or proven by juxtaposition. For each, the reading edition asks what the underlying record establishes: who paid whom, when, under what legal or contractual arrangement, whether a named public official participated in a relevant decision, and what evidence supports or contradicts an inference of influence or wrongdoing. The same test applies to all parties, administrations, agencies, donors, and corporations."
+      "paragraphs": [
+        "The original places several serious allegations side by side: foreign-government donations to the Clinton Foundation; payments to Hunter Biden, associates, and relatives; Nancy Pelosi’s stock trades; and the Obama administration’s lethal drone operations against U.S. citizens abroad. Their political direction differs, but the evidentiary questions should not. For a payment, trace the sender, recipient, date, amount, purpose, and any official act alleged to follow. For a stock trade, identify the account owner, transaction date, disclosure, relevant legislative event, and evidence of nonpublic information. For a foundation donation, distinguish a charitable contribution from money personally received by an official.",
+        "The archived Biden-family passage reports a figure exceeding $20 million and says IRS whistleblowers testified that prosecutors blocked charges. The reading edition preserves that allegation as an allegation, not a finding of guilt. Committee records, bank records, testimony, and any prosecutorial decision each answer different questions; none should be paraphrased as proof of a quid pro quo unless the evidence establishes the payment, the public official’s involvement, and the exchange. Likewise, the Clinton Foundation allegation requires donor-specific records and a defined period before a total or inference of influence can be assessed.",
+        "The Pelosi claim that trades came ahead of legislation and produced enrichment requires transaction-level evidence, not merely a wealth estimate or temporal coincidence. Disclosure filings can show reported holdings and trades; they do not alone prove insider trading, legislative causation, or unlawful conduct. This edition does not exempt congressional leaders or wealthy donors from scrutiny. It refuses to turn suspicion into a conclusion before the record is identified, while retaining the author’s underlying concern about private financial interests and public power."
+      ]
+    },
+    {
+      "id": "targeted-killing",
+      "heading": "Targeted killing: the constitutional question does not disappear",
+      "classification": "documented event and disputed legal interpretation",
+      "claimIds": ["SURV-OBAMA-001"],
+      "sourceLines": [612, 3281],
+      "paragraphs": [
+        "The archived sentence that Obama “dropped drones on U.S. citizens overseas without trial” compresses a documented use of lethal force and a live constitutional dispute into a slogan. The killing of U.S. citizens Anwar al-Awlaki and Samir Khan in Yemen in 2011, and the later killing of al-Awlaki’s sixteen-year-old son Abdulrahman, require separate descriptions: target, operation, asserted legal basis, citizenship, and the government’s account of the threat. The phrase “without trial” captures the absence of a criminal trial before lethal force, but it does not alone resolve the legal question of whether the operation was lawful under the government’s asserted armed-conflict and national-security rationale.",
+        "The important investigation is not to excuse the state because it invoked secrecy, nor to declare every legal issue settled by the phrase “assassination.” Ask what the executive branch knew, what process it used, what judicial review was available, and whether the public rationale withstands constitutional scrutiny. A serious criticism of executive power should name the victims and the legal memorandum or official explanation on which the government relied. The rule must remain consistent when administrations change: a president’s party does not make secret lethal authority self-justifying."
+      ]
     },
     {
       "id": "fisa-investigations",
@@ -57,7 +105,11 @@
       "classification": "official findings and disputed interpretation",
       "claimIds": ["FISA-001"],
       "sourceLines": [800, 801, 3512, 3513],
-      "text": "The archive says the FBI used a fake dossier to obtain FISA warrants and continued despite knowing it was false. Official reviews document serious errors and omissions in applications concerning Carter Page, and later findings criticize aspects of the investigation. That record warrants accountability. It does not make every shorthand in the archive accurate: the investigation, the warrant applications, the Steele reporting, and what officials knew at each date must be distinguished. The register summarizes both findings and limits; it does not turn an inspector general’s criticism into proof of a broader conspiracy."
+      "paragraphs": [
+        "The evidence archive says the FBI used a “fake dossier” to obtain warrants against Carter Page and continued despite knowing the dossier was false. The underlying record is serious, but the timeline matters. The FBI opened Crossfire Hurricane in July 2016 after receiving information from an Australian official about George Papadopoulos; the Steele reporting came later and was not the basis for opening the investigation. The DOJ Inspector General’s December 9, 2019 review found sufficient factual predication for opening the investigation and no evidence that political bias drove that opening.",
+        "The same Inspector General review found grave problems in the four FISA applications for Carter Page: 17 significant inaccuracies or omissions were identified across the applications, including failures to include information that cut against reliance on Steele reporting and an altered email in a renewal application. Those failures were not harmless paperwork. The FISA Court’s December 17, 2019 order called the applications “not accurate and complete” and directed the FBI to report remedial measures. These are concrete institutional failures and merit accountability.",
+        "Special Counsel John Durham’s May 15, 2023 report criticized investigative judgment and the FBI’s use of unverified information. It is a separate prosecutor’s report, not a court judgment that every claim in the archive was proven. The useful distinction is exact: the dossier contained material that was not verified; errors tainted the Page applications; an FBI employee altered information in a renewal; the investigation’s opening had a different stated factual predicate; and neither report establishes the archive’s broad assertion that agents knew the entire dossier was false and used it as the sole basis to spy on Trump. Scrutiny should neither erase the errors nor inflate them into findings the reports did not make."
+      ]
     },
     {
       "id": "policy-records",
@@ -65,7 +117,12 @@
       "classification": "documented policy and statistical claims",
       "claimIds": ["FSA-001", "INS-001", "LABOR-001", "ACCORDS-001"],
       "sourceLines": [616, 620, 624, 3285, 3289, 3293],
-      "text": "The First Step Act was enacted during the Trump administration; its sentencing changes and releases should be described using Bureau of Prisons and Sentencing Commission data, with eligibility, timing, and demographic limits made clear. The Medicare insulin claim also needs an attribution correction: the Trump administration launched a voluntary model for participating plans, while the later statutory $35 cap came through the Inflation Reduction Act. Employment rates and diplomatic agreements are real policy topics, but a record or agreement does not establish every superlative attached to it. The evidence register gives dates and scope rather than treating a policy list as a verdict on a presidency."
+      "paragraphs": [
+        "The First Step Act became Public Law 115-391 on December 21, 2018. It changed federal sentencing rules and created earned-time credits and other reentry provisions. “Thousands freed” is a real policy subject, but counts depend on the provision and cutoff date: people released under retroactive sentencing reductions are not the same population as people transferred to prerelease custody through earned credits. The phrase “mostly Black men” also needs the relevant Bureau of Prisons or Sentencing Commission table and its defined population. The statute establishes the law; it does not, by itself, establish every cumulative count or demographic description.",
+        "The $35 Medicare insulin claim needs a direct attribution correction. The Trump administration’s Part D Senior Savings Model was a voluntary program available through participating plans. The statutory cap for Medicare beneficiaries was enacted later in section 11406 of the Inflation Reduction Act, Public Law 117-169, signed August 16, 2022, with the cap taking effect in 2023. A precursor model and a later nationwide statutory benefit are not the same policy. Credit and criticism should follow the actual program, its date, and its scope.",
+        "The claim of record-low unemployment for Black, Hispanic, Asian, and female workers must name the series, month, seasonal adjustment, and comparison period. BLS data can establish rates; the broad phrase “record-low” may be true for selected series and dates but is not a single statistic covering all groups identically. Nor did one president create a long economic expansion alone. Report the measurable outcome and acknowledge the inherited trajectory rather than using a statistic as a complete moral verdict.",
+        "The Abraham Accords Declaration was signed September 15, 2020, and records normalization commitments involving Israel and the United Arab Emirates; Bahrain joined through a separate declaration and treaty process, with later normalization arrangements involving Morocco and Sudan. Those agreements are significant diplomatic events, and the administration that brokered them deserves factual credit. “Historic” is an editorial judgment; durable peace, implementation, and consequences must be assessed over time. The prophetic timeline’s reading of “peace and safety” remains the author’s scriptural interpretation, not a conclusion contained in the diplomatic documents."
+      ]
     },
     {
       "id": "speech-moderation",
@@ -73,7 +130,11 @@
       "classification": "documented events and contested characterization",
       "claimIds": ["MOD-001", "LAPTOP-001"],
       "sourceLines": [687, 688, 689, 690, 3371, 3372, 3373, 3374],
-      "text": "Government contacts with platforms, private moderation decisions, and the public debate over the Hunter Biden laptop are related but distinct records. The so-called Twitter Files are a collection of selected internal communications published by journalists; they document particular contacts and decisions, not by themselves a complete measure of government censorship or a finding that every moderation action was directed by an agency. The October 2020 letter from former intelligence officials described the laptop reporting as having ‘all the classic earmarks’ of a Russian information operation; it did not claim to have authenticated the laptop or establish that the material was false. Claims about suppression, intent, and coordination should name the actor, content, date, and evidence."
+      "paragraphs": [
+        "The Scroll’s charge that government agencies and large platforms worked together to suppress dissent raises a consequential First Amendment question. The Twitter Files published selected internal communications showing that federal agencies and platform staff had contacts about particular content, including election and public-health material. Those records deserve examination: who sent a request, whether it was a request or a threat, what platform policy applied, who made the moderation decision, and whether government pressure changed the outcome. A documented contact is not automatically coercion; a private moderation action is not automatically independent merely because a company clicked the button.",
+        "In Murthy v. Missouri, decided June 26, 2024, the Supreme Court reversed the injunction because the plaintiffs lacked standing to obtain the relief they sought; it did not decide the broad First Amendment merits of every government-platform interaction. That procedural outcome is neither proof of a coordinated censorship program nor a clean bill of health for every agency contact. The author’s criticism remains worth investigating, but it should be tied to specific messages, officials, platform actions, and effects rather than a blanket claim that all dissent was silenced.",
+        "The October 2020 letter signed by 51 former intelligence officials said the laptop reporting had “all the classic earmarks of a Russian information operation,” while expressly saying the signatories did not have evidence that the emails were genuine and were not claiming to. That wording was a consequential public inference, not an authentication finding and not the literal assertion that the laptop was Russian disinformation. Later authentication of some laptop data does not prove that the signatories knowingly lied in 2020; it does make the distinction between evidence and inference essential. Public officials and former officials should be held to the same standard as journalists and platforms: quote the full statement, preserve its caveats, and examine its effect."
+      ]
     },
     {
       "id": "charlottesville",
@@ -81,7 +142,10 @@
       "classification": "documented public statements",
       "claimIds": ["CHAR-001"],
       "sourceLines": [692, 693, 3376, 3377],
-      "text": "The archive says that Trump explicitly condemned white supremacists and that media reports cut the second half of his sentence. The record includes multiple statements over several days: condemnation of hatred and violence, the ‘very fine people on both sides’ remark, and an explicit exclusion of neo-Nazis and white nationalists from the people he meant. A fair account should quote the relevant passages in sequence and avoid using one sentence to erase the others."
+      "paragraphs": [
+        "The archive argues that reporting on Charlottesville omitted Trump’s condemnation of white supremacists. The public record contains both the remarks critics cite and the explicit exclusion defenders cite. On August 15, 2017, Trump said there were “very fine people on both sides,” then said he was not referring to neo-Nazis and white nationalists, who “should be condemned totally.” On other occasions he condemned hatred, bigotry, and violence. Those words should be presented in sequence rather than edited into a single exculpatory or condemnatory fragment.",
+        "The disagreement is principally about context and interpretation: what “both sides” referred to in the exchange about the rally and monument removal, and whether the later exclusion adequately defines the earlier praise. It is not accurate to say the qualifying exclusion did not exist; it is also incomplete to cite the exclusion as though it erases the “very fine people” sentence. Political neutrality means preserving the full transcript and allowing readers to weigh the context themselves."
+      ]
     },
     {
       "id": "pandemic-claims",
@@ -89,23 +153,36 @@
       "classification": "public-health record, allegations, and interpretation",
       "claimIds": ["COVID-001", "VAX-001", "NIH-001", "DISINFECTANT-001"],
       "sourceLines": [661, 706, 694, 808, 809, 810, 3378],
-      "text": "The archive’s questions about lockdowns, mandates, vaccines, and institutional trust are retained as questions and criticism, not converted into medical findings. The phrase ‘inject bleach’ is not a verbatim instruction in the April 2020 briefing transcript, but the transcript does record the president publicly speculating about injecting disinfectant and discussing light and heat after a researcher’s presentation. Vaccine effects on infection and transmission varied by product, variant, time since vaccination, and outcome; a categorical statement that vaccines either did or did not prevent spread is misleading without those qualifications. Claims about NIH funding and ‘gain-of-function’ require the grant record, the experiments actually funded, and the disputed definitions to be stated separately."
+      "paragraphs": [
+        "The author asks whether lockdowns served safety or “submission training,” and compares mandates to rituals of isolation and obedience. The spiritual analogy belongs to the author; motive is a separate historical claim. Restrictions varied across jurisdictions and months, as did their economic effects. Small businesses experienced severe losses and closures, while public-health interventions were adopted to reduce transmission and protect health systems. Neither fact proves a single motive or a uniform result. The meaningful inquiry compares the actual order, duration, exemptions, health outcomes, economic effects, and who bore the cost.",
+        "On April 23, 2020, during a White House coronavirus briefing, Trump discussed a researcher’s presentation about light and disinfectants and publicly asked whether disinfectant could be brought inside the body “by injection inside, or almost a cleaning.” He did not literally say “inject bleach” or issue a direct instruction to the public to ingest a product. But the record also does not support saying the controversy was invented from a light-only proposal: the injection speculation is in the transcript. Both the inaccurate paraphrase and the actual words matter.",
+        "Vaccine protection against infection and onward transmission changed by product, variant, time since vaccination, and outcome. Early evidence showed reductions in infection and transmission; Delta and later Omicron-era evidence showed diminished and waning effects, while protection against severe disease remained an important distinct outcome. A statement that vaccines simply “didn’t prevent spread” erases that time course, just as a claim that they stopped transmission categorically would. Rochelle Walensky’s July 2021 comments about breakthrough infections need to be read with the contemporaneous CDC data and the exact question she answered.",
+        "The claim that Fauci personally funded gain-of-function work at Wuhan compresses a U.S. grant, an EcoHealth Alliance subaward to the Wuhan Institute of Virology, specific experiments, and a contested regulatory term into one sentence. NIH funding records and the October 2021 letter from NIH Principal Deputy Director Lawrence Tabak are central records; NIH described an unexpected experimental result and a reporting failure, while officials and critics disputed whether the work met the applicable definition of gain-of-function research of concern. The underlying grant, report, and framework must be compared. Funding a grant is not the same as personally directing an experiment, and a disputed classification is not proof that the work caused the pandemic."
+      ]
     },
     {
       "id": "elections-and-surveillance",
       "heading": "Election administration and surveillance",
       "classification": "documented process, allegations, and unresolved claims",
-      "claimIds": ["ELECTION-001", "SURV-001"],
+      "claimIds": ["ELECTION-001", "SURV-OBAMA-001"],
       "sourceLines": [665, 799, 800, 814, 3511, 3512],
-      "text": "The archive challenges election rules and government surveillance. Those challenges deserve specific records: the jurisdiction and rule, the official who changed or applied it, the court decision or audit, and the date. A lawsuit, a declined appeal, an audit, and a final finding are not the same thing. Surveillance claims likewise require the statute, order, target, and oversight finding to be identified. Where a claim lacks that level of evidence, it remains an allegation for further investigation rather than a settled fact."
+      "paragraphs": [
+        "The evidence archive says election rules changed illegally in swing states. To assess that charge, a reader needs the state, the rule, the official or court that changed it, the date, the authority invoked, and the final disposition of any case. Election administration was challenged through many lawsuits and state procedures; a filing, dismissal for standing, merits ruling, audit, and finding of outcome-changing fraud are not interchangeable. A nationwide plural claim cannot be established by pointing to an unspecified dispute. The original accusation remains available in the archive; this edition asks that it be tested case by case.",
+        "The Scroll also warns that intelligence and law-enforcement powers can be used against citizens and political opponents. The FISA record provides a concrete example of why oversight matters: the DOJ Inspector General identified serious inaccuracies and omissions in the Carter Page applications, and the Foreign Intelligence Surveillance Court later required remedial measures. That is documented institutional failure. It does not by itself establish that every surveillance decision was politically ordered or that every target was unlawfully surveilled. The record must specify the application, the omitted fact, the responsible reviewer, and what the court or oversight body actually concluded.",
+        "The Obama drone-strike claim is linked separately because targeted lethal force abroad and domestic surveillance are distinct exercises of state power. Both raise the same underlying question of who can restrain executive action when secrecy blocks ordinary accountability. The reading edition does not make a party-based exception: surveillance, censorship, lethal force, and emergency authority deserve scrutiny under every administration."
+      ]
     },
     {
       "id": "digital-systems",
       "heading": "Digital identity, CBDCs, and AI: distinguish capability from forecast",
       "classification": "documented technology and prophetic interpretation",
       "claimIds": ["ID-001", "CBDC-001", "AI-001"],
-      "sourceLines": [78, 957, 958, 959, 977, 978, 979, 983, 1087, 3693, 3694, 3695, 3698, 3699],
-      "text": "The Scroll’s image of a ‘Beast system’ joining identity, money, surveillance, and machine authority is a prophetic interpretation and remains visible as such. Digital identity systems, central-bank digital currencies, biometric tools, and artificial intelligence are not one system simply because they can be discussed together. A proposal, pilot, commercial product, enacted policy, and compulsory nationwide infrastructure have different evidentiary status. The register identifies what public institutions have actually proposed or tested and what remains a forecast or theological parallel; symbolic resemblance is not proof of a coordinated plan."
+      "sourceLines": [78, 957, 958, 959, 977, 978, 979, 983, 1087, 2623, 3693, 3694, 3695, 3698, 3699],
+      "paragraphs": [
+        "The warning that digital identity, centralized money, biometric monitoring, and machine authority could converge into a system of coercive control is one of the Scroll’s prophetic interpretations. It is retained as a warning about what power might become, not flattened into a claim that every technology project is already coordinated. The spiritual question—who may buy, sell, speak, travel, or worship under systems of control—can be asked with urgency while the factual claims remain specific.",
+        "A digital identity credential, a central-bank digital currency, an existing commercial payment rail, and an artificial-intelligence decision system are separate technologies with different operators and laws. A proposal is not an implemented service; a pilot does not establish nationwide compulsion; technical programmability does not prove a government has imposed spending conditions. The Federal Reserve’s January 2022 discussion paper said it had not decided to issue a U.S. CBDC; Executive Order 14067 directed study, not issuance. The 2025 executive order on digital financial technology later prohibited federal agencies from establishing or promoting a U.S. CBDC. Dates and administrations matter in both directions.",
+        "Digital identity programs likewise differ by country, legal safeguards, data architecture, and whether access is optional or mandatory. China’s social-credit policies, India’s Aadhaar identity system, private biometric products, and international proposals should not be merged into one global ledger without evidence of shared control or linked data. AI can classify, monitor, recommend, or automate decisions; that capability is real, while the prediction that a named system will identify dissenters and punish them requires a documented deployment. The author’s prophetic connection to Revelation remains an interpretation and is labeled accordingly."
+      ]
     },
     {
       "id": "equal-standard",
@@ -113,7 +190,12 @@
       "classification": "editorial principle",
       "claimIds": [],
       "sourceLines": [648, 653, 673, 683, 3329, 3334, 3354, 3364],
-      "text": "The original’s image of Trump as the ‘first firewall’ and ‘battering ram’ gives one political leader a uniquely protective role. This reading edition removes that endorsement without dismissing the author’s concerns about censorship, surveillance, political influence, or selective reporting. No president, party, agency, media organization, corporation, or donor is beyond examination. Judge each by the same measures: primary records, transparent methods, corrections when evidence changes, and room for both support and contradiction."
+      "paragraphs": [
+        "The original calls Trump the “first firewall” and a “battering ram,” and urges support for leaders who “take bullets” for the reader. These images turn a political figure into a uniquely protective actor. This reading edition removes that endorsement, not the underlying anger at censorship, surveillance, political influence, selective reporting, and officials who use public trust for private or institutional gain.",
+        "The original’s examples—parents accused of extremism, Christians described as threats, veterans investigated for wrongthink, workers facing employment conditions, and citizens punished for speech—are retained as subjects of inquiry, not silently discarded. Each requires a named case, policy, agency, employer, date, and record. The experience of a person harmed by a decision is real testimony; a claim about a coordinated national policy requires further documentation. Both deserve to be heard without treating one anecdote as proof of every larger claim.",
+        "“Question elections? You’re a threat to democracy” and “support free speech? You’re dangerous” express the author’s fear that dissent is stigmatized. The strongest version of that critique identifies who used the label, in what setting, and with what consequence. It also examines conduct by political allies: speech restrictions, surveillance, selective prosecution, and financial conflicts do not become righteous because they are defended by a preferred party.",
+        "The practical charge remains: speak boldly, share verifiable facts, protect family and community, and do not wait for a savior. The difference is that political leaders are accountable participants, not shields against accountability. A political movement can expose abuses and still require evidence, correction, and internal scrutiny."
+      ]
     },
     {
       "id": "spiritual-reading",
@@ -121,7 +203,11 @@
       "classification": "author interpretation",
       "claimIds": [],
       "sourceLines": [696, 699, 700, 702, 704],
-      "text": "The author reads political conflict as part of a spiritual struggle and invokes Ephesians 6:12. That conviction is part of the Scroll’s voice, not a claim that a named political opponent is literally an agent of evil. The warning remains: keep faith, speak truthfully, protect one another, and refuse fear. In this reading edition, documented events, attributed allegations, forecasts, scripture, and theological interpretation are marked so readers can see where one kind of statement becomes another."
+      "paragraphs": [
+        "The author reads political conflict as part of a spiritual struggle and invokes Ephesians 6:12: “We wrestle not against flesh and blood, but against principalities, powers, rulers of darkness…” That scripture and its prophetic force remain the author’s voice. The reading does not recast spiritual language as proof that a named opponent is literally evil or that a political victory fulfills prophecy.",
+        "The spiritual checkpoint asks readers to examine their own participation, strengthen their households, and consider what Yahweh calls them to leave. The blueprint urges local action, protection of children, stewardship of finances and information, and real community. Its call to courage and solidarity remains; its call not to wait for a savior becomes a principle applied to every leader.",
+        "The archive-only inventory identifies the many allegations in the repeated evidence chapters that this edition does not yet investigate in depth: border and energy statistics, Ukraine and Afghanistan, education and cultural disputes, pharmaceutical claims, the WHO treaty, climate and mining, gun policy, party history, mass surveillance, and broader intelligence allegations. Those passages remain available at their exact original lines in both repeated archives. Their omission from this reading edition is not a retraction or a finding that they are true; it marks the boundary of this editorial pass."
+      ]
     }
   ]
 }

@@ -677,6 +677,12 @@ button { color: inherit; }
 .editorial-links { display: flex; flex-wrap: wrap; gap: .3rem 1rem; margin: 1rem 0 2rem; font-size: .86rem; }
 .editorial-originals { margin: 1.5rem 0 2rem; padding: 1rem 1.2rem; border: 1px solid var(--rule); background: var(--panel); }
 .editorial-originals h2, .editorial-claims > h2 { margin: 0 0 .6rem; font-family: var(--serif); font-size: 1.45rem; font-weight: 400; }
+.editorial-coverage { margin: 1.5rem 0 2rem; padding: 1.2rem; border: 1px solid var(--rule); background: var(--panel); }
+.editorial-coverage h2 { margin: 0 0 .6rem; font-family: var(--serif); font-size: 1.45rem; font-weight: 400; }
+.editorial-coverage h3 { margin: 1rem 0 .4rem; font-family: var(--serif); font-size: 1.05rem; font-weight: 600; }
+.editorial-coverage > p { color: var(--ink-soft); font-size: .86rem; line-height: 1.6; }
+.editorial-coverage-list { display: grid; gap: .35rem; margin: .4rem 0; padding-left: 1.2rem; color: var(--ink-soft); font-size: .8rem; line-height: 1.55; }
+.editorial-coverage-list a { color: var(--ink-soft); }
 .editorial-occurrence-list { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; margin: .8rem 0 0; padding-left: 1.2rem; font-size: .84rem; }
 .editorial-reading { max-width: 760px; margin: 2rem auto 3rem; padding: clamp(1.1rem, 3vw, 2.4rem); border: 1px solid var(--rule); background: var(--panel); box-shadow: 0 12px 40px rgba(16, 26, 43, .06); }
 .editorial-section { padding: 1.2rem 0 1.7rem; border-bottom: 1px solid var(--rule); }
@@ -696,6 +702,11 @@ button { color: inherit; }
 .evidence-record > summary strong { flex: 1 1 18rem; font-family: var(--serif); font-size: 1.02rem; font-weight: 500; }
 .claim-status { padding: .12rem .5rem; border: 1px solid currentColor; border-radius: 999px; font-size: .65rem; letter-spacing: .05em; text-transform: uppercase; }
 .status-verified { color: #26734f; }
+.status-documented-event-with-cited-record { color: #26734f; }
+.status-documented-allegation-or-testimony { color: #8a641c; }
+.status-disputed-interpretation { color: #96553c; }
+.status-author-hypothesis-or-prophetic-interpretation { color: #4b638d; }
+.status-unverified-claim-requiring-additional-evidence { color: #6b6177; }
 .status-partially-verified, .status-partially_verified { color: #8a641c; }
 .status-disputed { color: #96553c; }
 .status-unverified, .status-needs-verification { color: #6b6177; }
@@ -703,6 +714,9 @@ button { color: inherit; }
 .evidence-record-body { padding: .3rem 1.2rem 1.2rem; }
 .evidence-record-body h3 { margin: 1.2rem 0 .35rem; font-family: var(--serif); font-size: 1rem; font-weight: 600; }
 .evidence-record-body p, .evidence-source-list { margin: .25rem 0; color: var(--ink-soft); font-size: .86rem; line-height: 1.65; }
+.source-review-status, .source-inspection { color: var(--ink-soft); font-size: .77rem !important; }
+.evidence-record:target { scroll-margin-top: 1rem; }
+.evidence-record:target > summary { outline: 2px solid var(--gold); outline-offset: 2px; }
 .evidence-source-list { padding-left: 1.2rem; }
 .evidence-source-list li { margin: .4rem 0; }
 .original-quote { margin: .5rem 0 .2rem; padding: .65rem .85rem; border-left: 3px solid var(--gold); background: rgba(194, 161, 92, .08); color: var(--ink); font-family: var(--serif); font-size: .94rem; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
@@ -712,6 +726,7 @@ button { color: inherit; }
   .editorial-reading { padding: 1rem; }
   .evidence-record > summary { gap: .3rem .5rem; }
   .evidence-record-body { padding-inline: .8rem; }
+  .editorial-coverage { padding: 1rem; }
 }
 @media print {
   .editorial-links, .library-tabs, .reader-masthead { display: none !important; }
