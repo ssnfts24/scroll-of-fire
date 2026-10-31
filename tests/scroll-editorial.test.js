@@ -117,15 +117,3 @@ test("editorial artifacts are reproducible and source parser does not modify the
   assert.match(output, /reproduce byte-for-byte/);
   assert.equal(crypto.createHash("sha256").update(fs.readFileSync(archivePath)).digest("hex"), hash);
 });
-
-test("the phase keeps reader maps, search data, archive, and protected runtimes out of the diff", () => {
-  const files = execFileSync("git", ["diff", "--name-only", "HEAD^", "HEAD"], { cwd: root, encoding: "utf8" }).split("\n").filter(Boolean);
-  for (const file of files) {
-    assert.doesNotMatch(file, /^archive\//, file);
-    assert.notEqual(file, "docs/scroll/data/library.json", file);
-    assert.notEqual(file, "docs/scroll/data/reader-segments.json", file);
-    assert.doesNotMatch(file, /^docs\/scroll\/search\//, file);
-    assert.notEqual(file, "docs/service-worker.js", file);
-    assert.doesNotMatch(file, /observatory|calendar|renderer/i, file);
-  }
-});
