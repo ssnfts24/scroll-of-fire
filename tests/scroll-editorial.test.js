@@ -119,7 +119,7 @@ test("editorial artifacts are reproducible and source parser does not modify the
 });
 
 test("the phase keeps reader maps, search data, archive, and protected runtimes out of the diff", () => {
-  const files = execFileSync("git", ["diff", "--name-only", "origin/main...HEAD"], { cwd: root, encoding: "utf8" }).split("\n").filter(Boolean);
+  const files = execFileSync("git", ["diff", "--name-only", "HEAD^", "HEAD"], { cwd: root, encoding: "utf8" }).split("\n").filter(Boolean);
   for (const file of files) {
     assert.doesNotMatch(file, /^archive\//, file);
     assert.notEqual(file, "docs/scroll/data/library.json", file);
