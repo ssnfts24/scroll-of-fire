@@ -334,12 +334,20 @@ function parseDownloads() {
 }
 
 function trackedFiles() {
+  let files;
   try {
-    return execFileSync("git", ["ls-files", "-z"], { cwd: root, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 })
-      .split("\0").filter(Boolean).sort();
+    files = execFileSync("git", ["ls-files", "-z", "--cached", "--others", "--exclude-standard"], {
+      cwd: root,
+      encoding: "utf8",
+      maxBuffer: 64 * 1024 * 1024
+    }).split("\0").filter(Boolean);
   } catch {
-    return walk(root, (f, e) => e.isDirectory() && [".git", "node_modules"].includes(e.name)).map(f => path.relative(root, f).split(path.sep).join("/"));
+    files = walk(root, (f, e) => e.isDirectory() && [".git", "node_modules"].includes(e.name))
+      .map(f => path.relative(root, f).split(path.sep).join("/"));
   }
+  return [...new Set(files)]
+    .filter(f => f !== "site-audit/pr5a-body.md" && !f.startsWith("site-audit/screenshots/"))
+    .sort();
 }
 
 function reconcileDownloads(files) {

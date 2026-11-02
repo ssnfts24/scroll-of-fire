@@ -3,7 +3,7 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 366,
+    "resources": 367,
     "publicHtmlPages": 76,
     "catalogEntries": 63,
     "issueCounts": {
@@ -4676,7 +4676,7 @@
     },
     {
       "id": "repo-folder:scripts",
-      "title": "scripts/ (12 files)",
+      "title": "scripts/ (14 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -4709,8 +4709,25 @@
       "issues": []
     },
     {
+      "id": "repo-folder:site-audit",
+      "title": "site-audit/ (6 files)",
+      "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
+      "category": "Repository folder",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "site-audit",
+      "publicUrl": null,
+      "publicationStatus": "source-only",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "development-only",
+      "discoverability": null,
+      "issues": []
+    },
+    {
       "id": "repo-folder:tests",
-      "title": "tests/ (81 files)",
+      "title": "tests/ (82 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,

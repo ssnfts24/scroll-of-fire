@@ -178,6 +178,7 @@ Everything under `docs/` is served by Netlify. These Markdown files are fetchabl
 - `project-files`
 - `scripts`
 - `Site`
+- `site-audit`
 - `tests`
 - `.gitignore` — not-published-in-catalog
 - `ADVANCED-REBUILD-HANDOFF.md` — not-published-in-catalog
