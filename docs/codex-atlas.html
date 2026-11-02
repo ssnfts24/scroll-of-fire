@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963">
+<head>
+  <base href="/">
+  <script>
+    if (location.hostname === "ssnfts24.github.io") {
+      const base = document.querySelector("base");
+      if (base) base.setAttribute("href", "/scroll-of-fire/");
+    }
+  </script>
+  <meta charset="utf-8">
+  <title>Codex Atlas — Scroll of Fire | Codex of Reality</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#05070d">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="The Codex Atlas: one searchable map of the Scroll Library, Living Time Observatory, systems, evidence, artifacts and archive, with filters by area, type and status.">
+  <meta name="author" content="Aaron Paul Laird">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://codexofreality.org/codex-atlas.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Codex of Reality">
+  <meta property="og:title" content="Codex Atlas — Scroll of Fire">
+  <meta property="og:description" content="Find every published part of the Codex: Scroll, Living Time, systems, evidence, artifacts and archive.">
+  <meta property="og:url" content="https://codexofreality.org/codex-atlas.html">
+  <link rel="icon" type="image/png" href="assets/img/shared/branding/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/shared/branding/favicon.png">
+  <link rel="stylesheet" href="assets/css/codex.css">
+  <link rel="stylesheet" href="assets/css/navigation.css">
+  <link rel="stylesheet" href="assets/css/site-atlas.css">
+  <script defer src="assets/js/site.js"></script>
+  <script defer src="assets/js/codex-atlas.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" data-sof-header>
+    <a class="brand" href="./" aria-label="Scroll of Fire home">
+      <span class="brand-mark" aria-hidden="true">☲</span>
+      <span>
+        <strong>Scroll of Fire</strong>
+        <small>Codex of Reality</small>
+      </span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle>
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
+      <!-- site-nav:global:start -->
+      <a class="is-featured" href="./scroll/">Scroll Library</a>
+      <a href="./codex-atlas.html">Atlas</a>
+      <!-- site-nav:global:end -->
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-today" data-dropdown-toggle>
+          Today <span aria-hidden="true">▾</span>
+        </button>
+        <div id="nav-today" class="nav-drop-menu">
+          <a href="./moons.html">13 Moons</a>
+          <a href="./ledger.html">Witness Ledger</a>
+          <a href="./hub.html">Year Map</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-explore" data-dropdown-toggle>
+          Explore <span aria-hidden="true">▾</span>
+        </button>
+        <div id="nav-explore" class="nav-drop-menu">
+          <!-- site-nav:explore:start -->
+          <a href="./scroll/search.html">Scroll Search</a>
+          <a href="./scroll/lexicon.html">Hebrew Lexicon</a>
+          <a href="./scroll/atlas.html">Reference Atlas</a>
+          <a href="./scroll/editorial.html">Evidence Edition</a>
+          <!-- site-nav:explore:end -->
+          <a href="./theory.html">Theory</a>
+          <a href="./theory/canon.html">Canon</a>
+          <a href="./genesis-oracle.html">Genesis Oracle</a>
+          <a href="./glossary.html">Glossary</a>
+          <a href="./systems/archive.html">Systems Archive</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-build" data-dropdown-toggle>
+          Build <span aria-hidden="true">▾</span>
+        </button>
+        <div id="nav-build" class="nav-drop-menu">
+          <a href="./systems/frequencies.html">Frequency Governance</a>
+          <a href="./systems/t-7.html">T-7 Conduit</a>
+          <a href="./systems/recoder.html">Reality Recoder</a>
+          <a href="./systems/mind-renewal.html">Mind Renewal</a>
+          <a href="./lab.html">Remnant Lab</a>
+          <a href="./invoke.html">Invoke</a>
+          <a href="./systems/witness.html">Witness System</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-artifacts" data-dropdown-toggle>
+          Artifacts <span aria-hidden="true">▾</span>
+        </button>
+        <div id="nav-artifacts" class="nav-drop-menu">
+          <a href="./shop.html">Artifact Registry</a>
+          <a href="./circle.html">Covenant Circle</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-about" data-dropdown-toggle>
+          About <span aria-hidden="true">▾</span>
+        </button>
+        <div id="nav-about" class="nav-drop-menu">
+          <a href="./start.html">Start Here</a>
+          <a href="./covenant-caravan.html">Covenant Caravan</a>
+          <a href="./teach.html">Manifest</a>
+          <a href="./ethics.html">Ethics</a>
+          <a href="./downloads.html">Downloads</a>
+          <a href="./scroll-of-fire-codex-of-reality-remnant-whitepaper.html">Remnant Whitepaper</a>
+          <a href="./13-moon-whitepaper.html">13 Moons Whitepaper</a>
+          <a href="./about-aaron.html">About Aaron</a>
+        </div>
+      </div>
+
+    </nav>
+  </header>
+
+  <main id="main" class="atlas-main">
+    <section class="atlas-intro" aria-labelledby="atlas-title">
+      <p class="eyebrow">One map · Six areas</p>
+      <h1 id="atlas-title">Codex Atlas</h1>
+      <p>Every published part of the Codex in one place: the Scroll and its library, Living Time, systems, evidence, artifacts and the archive. Entries come from one shared catalog, so this page, the homepage and the hub never disagree.</p>
+      <p class="atlas-note" id="local-data-note"><strong>About saved data.</strong> Witness records, readings and settings are stored only in the browser you used. They do not synchronize between devices; use each page's Export to carry them across.</p>
+    </section>
+
+<!-- site-catalog:atlas:start -->
+    <nav class="atlas-jump" aria-label="Jump to an area">
+      <a href="#area-scroll-scripture">Scroll and Scripture</a>
+      <a href="#area-living-time">Living Time and Observatory</a>
+      <a href="#area-systems">Systems and Living Technology</a>
+      <a href="#area-evidence">Evidence and Research</a>
+      <a href="#area-artifacts">Artifacts and Creative Works</a>
+      <a href="#area-archive">Archive and Downloads</a>
+    </nav>
+    <form class="atlas-filters" data-atlas-filters hidden aria-label="Filter the Codex Atlas">
+      <label>Search <input type="search" name="q" autocomplete="off" placeholder="Title or description"></label>
+      <label>Area <select name="area"><option value="">All areas</option><option value="scroll-scripture">Scroll and Scripture</option><option value="living-time">Living Time and Observatory</option><option value="systems">Systems and Living Technology</option><option value="evidence">Evidence and Research</option><option value="artifacts">Artifacts and Creative Works</option><option value="archive">Archive and Downloads</option></select></label>
+      <label>Category <select name="category"><option value="">All categories</option><option value="Archive">Archive</option><option value="Artifacts">Artifacts</option><option value="Author">Author</option><option value="Calendar">Calendar</option><option value="Community">Community</option><option value="Creative works">Creative works</option><option value="Discovery">Discovery</option><option value="Documentation">Documentation</option><option value="Downloads">Downloads</option><option value="Ethics">Ethics</option><option value="Evidence">Evidence</option><option value="Hebrew research">Hebrew research</option><option value="Hub">Hub</option><option value="Observatory">Observatory</option><option value="Orientation">Orientation</option><option value="Practice">Practice</option><option value="Practice tools">Practice tools</option><option value="Preserved original">Preserved original</option><option value="Preserved source">Preserved source</option><option value="Reading">Reading</option><option value="Reference">Reference</option><option value="Search">Search</option><option value="Systems">Systems</option><option value="Theory">Theory</option><option value="Whitepaper">Whitepaper</option><option value="Witness records">Witness records</option></select></label>
+      <label>Resource type <select name="type"><option value="">All types</option><option value="collection">collection</option><option value="dataset">dataset</option><option value="document">document</option><option value="page">page</option><option value="tool">tool</option></select></label>
+      <label>Status <select name="status"><option value="">All statuses</option><option value="live">Live</option><option value="source-only">Source only</option><option value="prototype">Prototype</option><option value="archived">Archived</option><option value="planned">Planned</option></select></label>
+      <button type="reset" class="btn">Clear filters</button>
+    </form>
+    <p class="atlas-count" role="status" aria-live="polite" data-atlas-count>63 resources in 6 areas</p>
+    <p class="atlas-empty" data-atlas-empty hidden>No resources match these filters. Clear a filter or search for a different word.</p>
+    <section class="atlas-area" id="area-scroll-scripture" data-atlas-area="scroll-scripture" aria-labelledby="area-scroll-scripture-title">
+      <header>
+        <h2 id="area-scroll-scripture-title">Scroll and Scripture</h2>
+        <p>Read the Scroll, search its text, study Hebrew roots and follow Genesis 1–50.</p>
+        <p class="atlas-area-entry"><a href="scroll/">Begin with Scroll Library <span aria-hidden="true">→</span></a></p>
+      </header>
+      <ul class="atlas-list">
+        <li class="atlas-card" data-atlas-card data-id="start" data-area="scroll-scripture" data-category="Orientation" data-type="page" data-status="live">
+          <h3><a class="atlas-card-title" href="start.html">Start Here</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>page</span><span>Orientation</span></p>
+          <p>A guided first doorway into the Codex, the 13 Moons calendar and the daily practice.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="guide.html">Field Guide</a> · <a href="scroll/">Scroll Library</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="scroll-library" data-area="scroll-scripture" data-category="Reading" data-type="collection" data-status="live">
+          <h3><a class="atlas-card-title" href="scroll/">Scroll Library</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>collection</span><span>Reading</span></p>
+          <p>The Scroll of Fire Unsealed: reading edition, eight shelves, Genesis 1–50 and a link to every original line.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="scroll/search.html">Scroll Search</a> · <a href="scroll/lexicon.html">Hebrew Lexicon</a> · <a href="scroll/atlas.html">Scroll Reference Atlas</a> · <a href="scroll/editorial.html">Editorial Evidence Edition</a> · <a href="scroll/archive/Full_Scroll_Unsealed.txt">Original Scroll (archival edition)</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="scroll-reader" data-area="scroll-scripture" data-category="Reading" data-type="tool" data-status="live">
+          <h3><a class="atlas-card-title" href="scroll/reader.html">Scroll Reader</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>tool</span><span>Reading</span></p>
+          <p>The long-form reader with chapter navigation, source-line provenance and deep links.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="scroll/">Scroll Library</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="scroll-search" data-area="scroll-scripture" data-category="Search" data-type="tool" data-status="live">
+          <h3><a class="atlas-card-title" href="scroll/search.html">Scroll Search</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>tool</span><span>Search</span></p>
+          <p>Local full-text search across all 1,609 reader segments, with shelf filters and Hebrew normalisation.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="scroll/">Scroll Library</a> · <a href="scroll/lexicon.html">Hebrew Lexicon</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="scroll-lexicon" data-area="scroll-scripture" data-category="Hebrew research" data-type="tool" data-status="live">
+          <h3><a class="atlas-card-title" href="scroll/lexicon.html">Hebrew Lexicon</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>tool</span><span>Hebrew research</span></p>
+          <p>911 indexed Hebrew forms with occurrences, transliteration variants and clear separation of spelling, root and interpretation.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="scroll/search.html">Scroll Search</a> · <a href="glossary.html">Codex Glossary</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="scroll-atlas" data-area="scroll-scripture" data-category="Reference" data-type="tool" data-status="live">
+          <h3><a class="atlas-card-title" href="scroll/atlas.html">Scroll Reference Atlas</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>tool</span><span>Reference</span></p>
+          <p>Typed cross-references among scriptures, repeated terms, people, places and manuscript passages.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="scroll/">Scroll Library</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="scroll-original" data-area="scroll-scripture" data-category="Preserved original" data-type="document" data-status="archived">
+          <h3><a class="atlas-card-title" href="scroll/archive/Full_Scroll_Unsealed.txt">Original Scroll (archival edition)</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--archived">Archived</span><span>document</span><span>Preserved original</span></p>
+          <p>The unchanged Full_Scroll_Unsealed text, frozen with a published SHA-256.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="scroll/">Scroll Library</a> · <a href="downloads.html">Downloads &amp; Integrity</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="genesis-oracle" data-area="scroll-scripture" data-category="Reading" data-type="tool" data-status="live">
+          <h3><a class="atlas-card-title" href="genesis-oracle.html">Genesis Oracle</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>tool</span><span>Reading</span></p>
+          <p>Deterministic layered Genesis readings driven by the shared Pattern Calendar engine.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="scroll/">Scroll Library</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="glossary" data-area="scroll-scripture" data-category="Reference" data-type="page" data-status="live">
+          <h3><a class="atlas-card-title" href="glossary.html">Codex Glossary</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>page</span><span>Reference</span></p>
+          <p>Symbols, equations and living-technology terms of the Codex.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="scroll/lexicon.html">Hebrew Lexicon</a> · <a href="theory/glossary.html">Theory Glossary</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="whitepaper-remnant" data-area="scroll-scripture" data-category="Whitepaper" data-type="document" data-status="live">
+          <h3><a class="atlas-card-title" href="scroll-of-fire-codex-of-reality-remnant-whitepaper.html">Remnant Whitepaper</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>document</span><span>Whitepaper</span></p>
+          <p>The foundational whitepaper for Scroll of Fire and the Codex of Reality.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="theory.html">Theory Hub</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="genesis-restored" data-area="scroll-scripture" data-category="Preserved source" data-type="document" data-status="source-only">
+          <h3><a class="atlas-card-title" href="https://github.com/ssnfts24/scroll-of-fire/blob/main/Genesis-Restored.md" target="_blank" rel="noopener noreferrer">Genesis Restored <span class="atlas-external" aria-label="(opens GitHub)">↗</span></a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--source-only">Source only</span><span>document</span><span>Preserved source</span></p>
+          <p>Root-level restored Genesis text, published through the Downloads catalog.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="scroll/">Scroll Library</a> · <a href="downloads.html">Downloads &amp; Integrity</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="exodus-restored" data-area="scroll-scripture" data-category="Preserved source" data-type="document" data-status="source-only">
+          <h3><a class="atlas-card-title" href="https://github.com/ssnfts24/scroll-of-fire/blob/main/Exodus-Restored.md" target="_blank" rel="noopener noreferrer">Exodus Restored <span class="atlas-external" aria-label="(opens GitHub)">↗</span></a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--source-only">Source only</span><span>document</span><span>Preserved source</span></p>
+          <p>Root-level restored Exodus text, published through the Downloads catalog.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="downloads.html">Downloads &amp; Integrity</a></p>
+        </li>
+      </ul>
+    </section>
+    <section class="atlas-area" id="area-living-time" data-atlas-area="living-time" aria-labelledby="area-living-time-title">
+      <header>
+        <h2 id="area-living-time-title">Living Time and Observatory</h2>
+        <p>The Pattern Calendar, 13 Moons, Living Time Sphere and witnessed days.</p>
+        <p class="atlas-area-entry"><a href="living-time-sphere.html">Begin with Living Time Sphere <span aria-hidden="true">→</span></a></p>
+      </header>
+      <ul class="atlas-list">
+        <li class="atlas-card" data-atlas-card data-id="living-time-sphere" data-area="living-time" data-category="Observatory" data-type="tool" data-status="live">
+          <h3><a class="atlas-card-title" href="living-time-sphere.html">Living Time Sphere</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>tool</span><span>Observatory</span></p>
+          <p>The Observatory: fixed Pattern Time at the centre, astronomical cycles in motion around it.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="moons.html">13 Moons</a> · <a href="alignment-ledger.html">Alignment Ledger</a> · <a href="equinox-passage.html">Equinox Passage</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="moons" data-area="living-time" data-category="Calendar" data-type="tool" data-status="live">
+          <h3><a class="atlas-card-title" href="moons.html">13 Moons</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>tool</span><span>Calendar</span></p>
+          <p>The Remnant 13×28 living calendar.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="living-time-sphere.html">Living Time Sphere</a> · <a href="theory/thirteen-moons.html">13 Moons Theory</a> · <a href="13-moon-whitepaper.html">13 Moons Rollout Whitepaper</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="alignment-ledger" data-area="living-time" data-category="Observatory" data-type="page" data-status="live">
+          <h3><a class="atlas-card-title" href="alignment-ledger.html">Alignment Ledger</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>page</span><span>Observatory</span></p>
+          <p>Year-by-year record of moving astronomical gates against the fixed Pattern Calendar.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="equinox-passage.html">Equinox Passage</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="equinox-passage" data-area="living-time" data-category="Observatory" data-type="page" data-status="live">
+          <h3><a class="atlas-card-title" href="equinox-passage.html">Equinox Passage</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>page</span><span>Observatory</span></p>
+          <p>Measures the moving March equinox against the fixed Pattern Calendar.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="alignment-ledger.html">Alignment Ledger</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="whitepaper-13-moons" data-area="living-time" data-category="Whitepaper" data-type="document" data-status="live">
+          <h3><a class="atlas-card-title" href="13-moon-whitepaper.html">13 Moons Rollout Whitepaper</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>document</span><span>Whitepaper</span></p>
+          <p>Phased rollout plan for the 13 Moons Living Time Observatory.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="moons.html">13 Moons</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="ledger" data-area="living-time" data-category="Witness records" data-type="tool" data-status="live">
+          <h3><a class="atlas-card-title" href="ledger.html">Witness Ledger</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>tool</span><span>Witness records</span></p>
+          <p>Browser-local record of witnessed days and SHA-256 hashes. Entries stay on this device and do not sync.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="systems/witness.html">Witness System</a> · <a href="moons.html">13 Moons</a></p>
+        </li>
+      </ul>
+    </section>
+    <section class="atlas-area" id="area-systems" data-atlas-area="systems" aria-labelledby="area-systems-title">
+      <header>
+        <h2 id="area-systems-title">Systems and Living Technology</h2>
+        <p>Practice tools, frequency systems and the Codex hub for building.</p>
+        <p class="atlas-area-entry"><a href="hub.html">Begin with Systems Hub <span aria-hidden="true">→</span></a></p>
+      </header>
+      <ul class="atlas-list">
+        <li class="atlas-card" data-atlas-card data-id="hub" data-area="systems" data-category="Hub" data-type="collection" data-status="live">
+          <h3><a class="atlas-card-title" href="hub.html">Systems Hub</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>collection</span><span>Hub</span></p>
+          <p>Entry point for T-7, Frequency Governance, Mind-Renewal, Witness, Recoder and the Interactive Archive.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="systems/t-7.html">T-7 Resonant Engine</a> · <a href="systems/frequencies.html">Frequency Governance</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="t7" data-area="systems" data-category="Systems" data-type="tool" data-status="live">
+          <h3><a class="atlas-card-title" href="systems/t-7.html">T-7 Resonant Engine</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>tool</span><span>Systems</span></p>
+          <p>Carrier-mixing console for phase, coherence and resonance.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="systems/frequencies.html">Frequency Governance</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="frequencies" data-area="systems" data-category="Systems" data-type="tool" data-status="live">
+          <h3><a class="atlas-card-title" href="systems/frequencies.html">Frequency Governance</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>tool</span><span>Systems</span></p>
+          <p>Sound observatory with intent paths and harmonic fields.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="systems/t-7.html">T-7 Resonant Engine</a> · <a href="theory/frequency-governance.html">Frequency Governance (theory)</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="mind-renewal" data-area="systems" data-category="Systems" data-type="tool" data-status="live">
+          <h3><a class="atlas-card-title" href="systems/mind-renewal.html">Mind-Renewal Protocol</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>tool</span><span>Systems</span></p>
+          <p>A seven-day local-first practice for stillness, alignment and gratitude.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="guide.html">Field Guide</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="recoder" data-area="systems" data-category="Systems" data-type="tool" data-status="live">
+          <h3><a class="atlas-card-title" href="systems/recoder.html">Reality Recoder</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>tool</span><span>Systems</span></p>
+          <p>Living Dictionary of Reality: recode old terms into covenant speech.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="glossary.html">Codex Glossary</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="witness-system" data-area="systems" data-category="Systems" data-type="tool" data-status="live">
+          <h3><a class="atlas-card-title" href="systems/witness.html">Witness System</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>tool</span><span>Systems</span></p>
+          <p>Local SHA-256 utility for reproducible hashes of chosen testimony without upload.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="ledger.html">Witness Ledger</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="lab" data-area="systems" data-category="Practice tools" data-type="collection" data-status="live">
+          <h3><a class="atlas-card-title" href="lab.html">Remnant Lab</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>collection</span><span>Practice tools</span></p>
+          <p>Experimental practice tools: micro-runs, A/B tests, glyph synth and invocation.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="micro.html">90-Second Micro-Run</a> · <a href="ab.html">A/B Carrier Protocol</a> · <a href="glyphs.html">Voice-Glyph Synth</a> · <a href="invoke.html">Invocation Lab</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="micro" data-area="systems" data-category="Practice tools" data-type="tool" data-status="live">
+          <h3><a class="atlas-card-title" href="micro.html">90-Second Micro-Run</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>tool</span><span>Practice tools</span></p>
+          <p>A compact breath-paced loop that logs one witness.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="lab.html">Remnant Lab</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="ab" data-area="systems" data-category="Practice tools" data-type="tool" data-status="live">
+          <h3><a class="atlas-card-title" href="ab.html">A/B Carrier Protocol</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>tool</span><span>Practice tools</span></p>
+          <p>Blind carrier test with a stop rule.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="lab.html">Remnant Lab</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="glyphs" data-area="systems" data-category="Practice tools" data-type="tool" data-status="live">
+          <h3><a class="atlas-card-title" href="glyphs.html">Voice-Glyph Synth</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>tool</span><span>Practice tools</span></p>
+          <p>Turn a tuned phrase into a resonance glyph.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="lab.html">Remnant Lab</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="invoke" data-area="systems" data-category="Practice tools" data-type="tool" data-status="live">
+          <h3><a class="atlas-card-title" href="invoke.html">Invocation Lab</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>tool</span><span>Practice tools</span></p>
+          <p>Guided run space for the Codex equations with carriers, ethics and witnesses.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="lab.html">Remnant Lab</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="guide" data-area="systems" data-category="Practice" data-type="page" data-status="live">
+          <h3><a class="atlas-card-title" href="guide.html">Field Guide</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>page</span><span>Practice</span></p>
+          <p>Daily and weekly practice, troubleshooting and ethics.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="start.html">Start Here</a> · <a href="systems/mind-renewal.html">Mind-Renewal Protocol</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="manifest" data-area="systems" data-category="Practice" data-type="tool" data-status="live">
+          <h3><a class="atlas-card-title" href="teach.html">Manifest</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>tool</span><span>Practice</span></p>
+          <p>Remnant visual exercise: carrier frequency engine, harmonic sequences and breath.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="guide.html">Field Guide</a></p>
+        </li>
+      </ul>
+    </section>
+    <section class="atlas-area" id="area-evidence" data-atlas-area="evidence" aria-labelledby="area-evidence-title">
+      <header>
+        <h2 id="area-evidence-title">Evidence and Research</h2>
+        <p>Theory chapters, the claim register and the editorial evidence edition.</p>
+        <p class="atlas-area-entry"><a href="theory.html">Begin with Theory Hub <span aria-hidden="true">→</span></a></p>
+      </header>
+      <ul class="atlas-list">
+        <li class="atlas-card" data-atlas-card data-id="scroll-editorial" data-area="evidence" data-category="Evidence" data-type="document" data-status="live">
+          <h3><a class="atlas-card-title" href="scroll/editorial.html">Editorial Evidence Edition</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>document</span><span>Evidence</span></p>
+          <p>Reading edition of the political chapters with a claim register, evidence statuses and original-line links.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="scroll/">Scroll Library</a> · <a href="scroll/evidence/claim-register.json">Claim Register</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="claim-register" data-area="evidence" data-category="Evidence" data-type="dataset" data-status="live">
+          <h3><a class="atlas-card-title" href="scroll/evidence/claim-register.json">Claim Register</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>dataset</span><span>Evidence</span></p>
+          <p>Machine-readable register of 21 prioritised claims with sources and review status.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="scroll/editorial.html">Editorial Evidence Edition</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="evidence-register" data-area="evidence" data-category="Evidence" data-type="document" data-status="live">
+          <h3><a class="atlas-card-title" href="scroll/evidence/register.md">Evidence Register (readable)</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>document</span><span>Evidence</span></p>
+          <p>Human-readable evidence register with exact quotes and line references.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="scroll/evidence/claim-register.json">Claim Register</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="theory-hub" data-area="evidence" data-category="Theory" data-type="collection" data-status="live">
+          <h3><a class="atlas-card-title" href="theory.html">Theory Hub</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>collection</span><span>Theory</span></p>
+          <p>Master Equation, Unified Field, Canon 0–17, operators and the Δ framework.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="theory/canon.html">Canon 0–17</a> · <a href="theory/equations/eq00.html">Equations 0–17</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="theory-canon" data-area="evidence" data-category="Theory" data-type="page" data-status="live">
+          <h3><a class="atlas-card-title" href="theory/canon.html">Canon 0–17</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>page</span><span>Theory</span></p>
+          <p>Index of the Codex theory canon.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="theory.html">Theory Hub</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="theory-equations" data-area="evidence" data-category="Theory" data-type="collection" data-status="live">
+          <h3><a class="atlas-card-title" href="theory/equations/eq00.html">Equations 0–17</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>collection</span><span>Theory</span></p>
+          <p>Eighteen equation pages of the Codex theory system.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="theory/master-equation.html">The Master Equation</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="theory-master-equation" data-area="evidence" data-category="Theory" data-type="page" data-status="live">
+          <h3><a class="atlas-card-title" href="theory/master-equation.html">The Master Equation</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>page</span><span>Theory</span></p>
+          <p>Reality = Energy × Information × Intention × …</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="theory/equations/eq00.html">Equations 0–17</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="theory-unified-field" data-area="evidence" data-category="Theory" data-type="page" data-status="live">
+          <h3><a class="atlas-card-title" href="theory/unified-field.html">Unified Field</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>page</span><span>Theory</span></p>
+          <p>Expanded symbolic architecture connecting the foundations.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="theory.html">Theory Hub</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="theory-operators" data-area="evidence" data-category="Theory" data-type="page" data-status="live">
+          <h3><a class="atlas-card-title" href="theory/operators.html">Living Operators</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>page</span><span>Theory</span></p>
+          <p>Intention, Language, Coherence and Source (ILCS).</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="theory.html">Theory Hub</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="theory-delta" data-area="evidence" data-category="Theory" data-type="page" data-status="live">
+          <h3><a class="atlas-card-title" href="theory/delta-framework.html">Δ0–Δ7 Framework</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>page</span><span>Theory</span></p>
+          <p>Eight stages from frame and source through witness and gate.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="theory.html">Theory Hub</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="theory-witness" data-area="evidence" data-category="Theory" data-type="page" data-status="live">
+          <h3><a class="atlas-card-title" href="theory/witness.html">Witness (theory)</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>page</span><span>Theory</span></p>
+          <p>How awareness, intention and memory become record.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="theory.html">Theory Hub</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="theory-memory" data-area="evidence" data-category="Theory" data-type="page" data-status="live">
+          <h3><a class="atlas-card-title" href="theory/memory.html">Memory (theory)</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>page</span><span>Theory</span></p>
+          <p>Equation 16 and the Memory Window.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="theory.html">Theory Hub</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="theory-thirteen-moons" data-area="evidence" data-category="Theory" data-type="page" data-status="live">
+          <h3><a class="atlas-card-title" href="theory/thirteen-moons.html">13 Moons Theory</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>page</span><span>Theory</span></p>
+          <p>The 13×28 symbolic calendar as a theory chapter.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="moons.html">13 Moons</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="theory-frequency-governance" data-area="evidence" data-category="Theory" data-type="page" data-status="live">
+          <h3><a class="atlas-card-title" href="theory/frequency-governance.html">Frequency Governance (theory)</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>page</span><span>Theory</span></p>
+          <p>Carriers, amplitude, phase and harmonic gates.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="systems/frequencies.html">Frequency Governance</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="theory-living-technology" data-area="evidence" data-category="Theory" data-type="page" data-status="live">
+          <h3><a class="atlas-card-title" href="theory/living-technology.html">Living Technology (theory)</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>page</span><span>Theory</span></p>
+          <p>Craft, material, operator, environment and witness.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="theory.html">Theory Hub</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="theory-artifact" data-area="evidence" data-category="Theory" data-type="page" data-status="live">
+          <h3><a class="atlas-card-title" href="theory/artifact-theory.html">Artifact Theory</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>page</span><span>Theory</span></p>
+          <p>Naming, classification, provenance and materials.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="shop.html">Artifact Registry</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="theory-ethics" data-area="evidence" data-category="Theory" data-type="page" data-status="live">
+          <h3><a class="atlas-card-title" href="theory/ethics.html">Ethical Law (theory)</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>page</span><span>Theory</span></p>
+          <p>Equation 9, the stop rule, consent and dignity.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="ethics.html">Ethics &amp; Coherence Law</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="theory-notation" data-area="evidence" data-category="Theory" data-type="page" data-status="live">
+          <h3><a class="atlas-card-title" href="theory/notation.html">Notation Guide</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>page</span><span>Theory</span></p>
+          <p>Symbol families, equation numbering and operators.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="theory/glossary.html">Theory Glossary</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="theory-glossary" data-area="evidence" data-category="Theory" data-type="page" data-status="live">
+          <h3><a class="atlas-card-title" href="theory/glossary.html">Theory Glossary</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>page</span><span>Theory</span></p>
+          <p>Symbols, operators and witness terms of the theory system.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="glossary.html">Codex Glossary</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="theory-bibliography" data-area="evidence" data-category="Theory" data-type="page" data-status="live">
+          <h3><a class="atlas-card-title" href="theory/bibliography.html">Bibliography</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>page</span><span>Theory</span></p>
+          <p>Source architecture: project records, scientific and technical references.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="theory.html">Theory Hub</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="ethics" data-area="evidence" data-category="Ethics" data-type="page" data-status="live">
+          <h3><a class="atlas-card-title" href="ethics.html">Ethics &amp; Coherence Law</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>page</span><span>Ethics</span></p>
+          <p>The living laws of the Codex: consent, non-harm, accountability and the stop rule.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="theory/ethics.html">Ethical Law (theory)</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="planned-timeline" data-area="evidence" data-category="Evidence" data-type="tool" data-status="planned">
+          <h3><span class="atlas-card-title">Historical timeline and claims atlas</span></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--planned">Planned</span><span>tool</span><span>Evidence</span></p>
+          <p>Planned fifth stage of the Scroll Library: timeline and wider claims atlas.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="scroll/editorial.html">Editorial Evidence Edition</a></p>
+        </li>
+      </ul>
+    </section>
+    <section class="atlas-area" id="area-artifacts" data-atlas-area="artifacts" aria-labelledby="area-artifacts-title">
+      <header>
+        <h2 id="area-artifacts-title">Artifacts and Creative Works</h2>
+        <p>Artifact registry, covenant works, circles and author pages.</p>
+        <p class="atlas-area-entry"><a href="shop.html">Begin with Artifact Registry <span aria-hidden="true">→</span></a></p>
+      </header>
+      <ul class="atlas-list">
+        <li class="atlas-card" data-atlas-card data-id="shop" data-area="artifacts" data-category="Artifacts" data-type="collection" data-status="live">
+          <h3><a class="atlas-card-title" href="shop.html">Artifact Registry</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>collection</span><span>Artifacts</span></p>
+          <p>Registry of artifacts and creative works.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="theory/artifact-theory.html">Artifact Theory</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="circle" data-area="artifacts" data-category="Community" data-type="page" data-status="live">
+          <h3><a class="atlas-card-title" href="circle.html">Covenant Circle</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>page</span><span>Community</span></p>
+          <p>Circle protocol: shared cadence and a single closing seal.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="covenant-caravan.html">The Covenant Caravan</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="covenant-caravan" data-area="artifacts" data-category="Creative works" data-type="document" data-status="live">
+          <h3><a class="atlas-card-title" href="covenant-caravan.html">The Covenant Caravan</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>document</span><span>Creative works</span></p>
+          <p>A living blueprint for resilience, craftsmanship, family and travel.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="circle.html">Covenant Circle</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="about-aaron" data-area="artifacts" data-category="Author" data-type="page" data-status="live">
+          <h3><a class="atlas-card-title" href="about-aaron.html">About Aaron</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>page</span><span>Author</span></p>
+          <p>Author, craftsman and independent researcher behind the Codex.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="start.html">Start Here</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="journey-scroll" data-area="artifacts" data-category="Creative works" data-type="document" data-status="source-only">
+          <h3><a class="atlas-card-title" href="https://github.com/ssnfts24/scroll-of-fire/blob/main/The-Journey-Scroll.md" target="_blank" rel="noopener noreferrer">The Journey Scroll <span class="atlas-external" aria-label="(opens GitHub)">↗</span></a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--source-only">Source only</span><span>document</span><span>Creative works</span></p>
+          <p>Root-level narrative scroll available in the repository.</p>
+
+        </li>
+      </ul>
+    </section>
+    <section class="atlas-area" id="area-archive" data-atlas-area="archive" aria-labelledby="area-archive-title">
+      <header>
+        <h2 id="area-archive-title">Archive and Downloads</h2>
+        <p>Integrity-sealed downloads, preserved originals and the interactive archive.</p>
+        <p class="atlas-area-entry"><a href="downloads.html">Begin with Downloads &amp; Integrity <span aria-hidden="true">→</span></a></p>
+      </header>
+      <ul class="atlas-list">
+        <li class="atlas-card" data-atlas-card data-id="downloads" data-area="archive" data-category="Downloads" data-type="collection" data-status="live">
+          <h3><a class="atlas-card-title" href="downloads.html">Downloads &amp; Integrity</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>collection</span><span>Downloads</span></p>
+          <p>Integrity-sealed downloads of the root archive and numbered folders 1–7, with SHA-256 seals.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="systems/archive.html">Interactive Archive</a> · <a href="scroll/archive/Full_Scroll_Unsealed.txt">Original Scroll (archival edition)</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="systems-archive" data-area="archive" data-category="Archive" data-type="tool" data-status="live">
+          <h3><a class="atlas-card-title" href="systems/archive.html">Interactive Archive</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>tool</span><span>Archive</span></p>
+          <p>Filterable index of every Scroll page and system.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="downloads.html">Downloads &amp; Integrity</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="repo-readme" data-area="archive" data-category="Documentation" data-type="document" data-status="source-only">
+          <h3><a class="atlas-card-title" href="https://github.com/ssnfts24/scroll-of-fire/blob/main/README.md" target="_blank" rel="noopener noreferrer">Repository README <span class="atlas-external" aria-label="(opens GitHub)">↗</span></a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--source-only">Source only</span><span>document</span><span>Documentation</span></p>
+          <p>Project overview and contribution context on GitHub.</p>
+
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="codex-atlas" data-area="archive" data-category="Discovery" data-type="collection" data-status="live">
+          <h3><a class="atlas-card-title" href="codex-atlas.html">Codex Atlas</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>collection</span><span>Discovery</span></p>
+          <p>A unified discovery page for the Scroll Library, Living Time, systems, research, artifacts and archive.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="scroll/">Scroll Library</a> · <a href="living-time-sphere.html">Living Time Sphere</a> · <a href="hub.html">Systems Hub</a> · <a href="theory.html">Theory Hub</a> · <a href="shop.html">Artifact Registry</a> · <a href="downloads.html">Downloads &amp; Integrity</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="planned-sitewide-search" data-area="archive" data-category="Discovery" data-type="tool" data-status="planned">
+          <h3><span class="atlas-card-title">Site-wide search</span></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--planned">Planned</span><span>tool</span><span>Discovery</span></p>
+          <p>A future site-wide index that links to, and does not replace, Scroll Search.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="scroll/search.html">Scroll Search</a></p>
+        </li>
+      </ul>
+    </section>
+<!-- site-catalog:atlas:end -->
+
+    <section class="atlas-future" aria-labelledby="atlas-future-title">
+      <h2 id="atlas-future-title">Search across the whole site</h2>
+      <p>A site-wide index is planned. Until then, <a href="scroll/search.html">Scroll Search</a> covers the full manuscript text, and the filter above covers this catalog.</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <nav aria-label="Footer navigation">
+      <a href="./">Home</a>
+      <a href="./scroll/">Scroll Library</a>
+      <a href="./start.html">Start</a>
+      <a href="./hub.html">Systems</a>
+      <a href="./theory.html">Theory</a>
+      <a href="./downloads.html">Downloads</a>
+    </nav>
+    <p>© <span id="year">2026</span> Aaron Paul Laird — Scroll of Fire · Codex of Reality · Scribe of Circuits</p>
+  </footer>
+</body>
+</html>

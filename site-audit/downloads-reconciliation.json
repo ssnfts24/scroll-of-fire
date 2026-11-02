@@ -1,0 +1,51 @@
+{
+  "note": "Report only. downloads.html and its integrity history were not modified.",
+  "snapshot": {
+    "commit": "af3078a5fc2cc7969733ad9df1fcffd6754d974c",
+    "declaredFiles": 167,
+    "declaredSize": "208.44 MB",
+    "parsedRows": 167
+  },
+  "current": {
+    "files": 194,
+    "sizeMB": 230.6
+  },
+  "counts": {
+    "added": 27,
+    "removed": 0,
+    "changed": 0,
+    "unchanged": 167
+  },
+  "added": [
+    "ADVANCED-REBUILD-HANDOFF.md",
+    "CITATION.cff",
+    "CODEX-FINAL-UPLOAD-PART-01-OF-06.zip",
+    "CODEX-LIFE-ATLAS-ARCHITECTURE.md",
+    "CONTRIBUTION.md",
+    "COPILOT-PR-DIRECTIVE.md",
+    "EDITORIAL_CHANGELOG.md",
+    "EVIDENCE_REGISTER.md",
+    "LICENSE.md",
+    "LIFE-ATLAS-ANDROID-ZIP-IMPORT-HANDOFF.md",
+    "LIFE-ATLAS-INGESTION-PHASE-2026-08-17.md",
+    "LIVING-STRATA-NEXT-BUILD.md",
+    "LIVING-STRATA-PATCH.txt",
+    "LOCATION-REFRESH-HOTFIX-HANDOFF.md",
+    "PATCH-HANDOFF-2026-08-17-REALITY-STATE.md",
+    "PATCH-HANDOFF-LIFE-ATLAS-INGESTION-2026-08-17.md",
+    "PATCH-MANIFEST-LIFE-ATLAS-INGESTION-2026-08-17.txt",
+    "PATCH-MANIFEST-REALITY-STATE-2026-08-17.txt",
+    "PATCH-MANIFEST.txt",
+    "PHASE3E-PATCH-MANIFEST.md",
+    "README.md",
+    "REALITY-ATLAS-SITE-MASTER-PLAN-2026-08-17.md",
+    "RENDERER-HOTFIX-HANDOFF.md",
+    "TEMPORAL-LENS-PATCH-MANIFEST.txt",
+    "TEMPORAL-LENS-PHASE-HANDOFF.md",
+    "TEMPORAL-STRATA-PATCH.txt",
+    "index.md"
+  ],
+  "removed": [],
+  "changed": [],
+  "outsideSnapshotScope": 5
+}

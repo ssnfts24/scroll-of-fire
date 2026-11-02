@@ -1,5 +1,37 @@
 [
   {
+    "date": "2026-11-01",
+    "type": "library",
+    "title": "The editorial evidence edition joins the Scroll Library",
+    "summary": "The political reading edition now links its claims to a machine-readable evidence register, distinguishes evidence status, and preserves references back to the original manuscript.",
+    "url": "./scroll/editorial.html",
+    "symbol": "§"
+  },
+  {
+    "date": "2026-10-30",
+    "type": "library",
+    "title": "Local search, Hebrew lexicon, and reference atlas are connected",
+    "summary": "The Scroll Library now includes local manuscript search, 911 indexed Hebrew forms, and typed cross-references across the source-linked reading edition.",
+    "url": "./scroll/search.html",
+    "symbol": "⌕"
+  },
+  {
+    "date": "2026-10-30",
+    "type": "library",
+    "title": "The source-linked Scroll reader opens",
+    "summary": "The reading edition brings chapter navigation and source-line links to the preserved manuscript, with Genesis 1–50 accessible from the library.",
+    "url": "./scroll/",
+    "symbol": "✦"
+  },
+  {
+    "date": "2026-10-30",
+    "type": "archive",
+    "title": "The original Scroll is frozen as a provenance-linked archival edition",
+    "summary": "The unchanged Full_Scroll_Unsealed manuscript is preserved with stable version metadata and paragraph-to-source-line provenance.",
+    "url": "./scroll/archive/Full_Scroll_Unsealed.txt",
+    "symbol": "◇"
+  },
+  {
     "date": "2026-08-18",
     "type": "system",
     "title": "The Living Sphere and the House of Time are joined",
