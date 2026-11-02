@@ -1,7 +1,6 @@
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
-const { execFileSync } = require("node:child_process");
 const test = require("node:test");
 
 const root = path.resolve(__dirname, "..");
@@ -10,13 +9,6 @@ const catalog = JSON.parse(read("docs/data/site-catalog.json"));
 const inventory = JSON.parse(read("site-audit/site-master-inventory.json"));
 const reconciliation = JSON.parse(read("site-audit/downloads-reconciliation.json"));
 const curation = JSON.parse(read("scripts/site-catalog-curation.json"));
-
-test("site catalog, generated atlas and reports reproduce", () => {
-  execFileSync(process.execPath, ["scripts/build-site-catalog.mjs", "--check"], {
-    cwd: root,
-    stdio: "pipe"
-  });
-});
 
 test("public catalog has six areas, usable routes, and only explicit publication entries", () => {
   assert.equal(catalog.areas.length, 6);

@@ -56,4 +56,7 @@ jobs:
         run: node --test tests/pwa-resilience.test.js
 
       - name: Full Remnant Phase 1 test suite
-        run: node --test tests/*.test.js
+        run: |
+          node --test tests/*.test.js
+          npm run site:catalog:check
+          npm run r2:inventory:check

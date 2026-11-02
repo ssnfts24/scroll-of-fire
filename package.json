@@ -15,7 +15,9 @@
     "scroll:editorial:check": "node scripts/build-scroll-editorial.mjs --check",
     "site:catalog": "node scripts/build-site-catalog.mjs",
     "site:catalog:check": "node scripts/build-site-catalog.mjs --check",
-    "validate": "npm run test && npm run audit"
+    "r2:inventory": "node scripts/build-r2-inventory.mjs",
+    "r2:inventory:check": "node scripts/build-r2-inventory.mjs --check",
+    "validate": "npm run test && npm run site:catalog:check && npm run r2:inventory:check && npm run audit"
   },
   "engines": {
     "node": ">=20"

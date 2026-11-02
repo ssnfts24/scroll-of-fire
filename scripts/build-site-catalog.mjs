@@ -3,6 +3,7 @@
 // Usage: node scripts/build-site-catalog.mjs [--check] [--baseline <docs-root>]
 import crypto from "node:crypto";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -231,6 +232,7 @@ ${e.related.length ? `          <p class="atlas-related"><strong>Related pages:<
   return `    <nav class="atlas-jump" aria-label="Jump to an area">
 ${curation.areas.map(a => `      <a href="#area-${a.id}">${esc(a.title)}</a>`).join("\n")}
     </nav>
+    <noscript><p class="atlas-noscript">Filtering needs JavaScript. Every page is listed below by area, so you can browse or use your browser's find command.</p></noscript>
     <form class="atlas-filters" data-atlas-filters hidden aria-label="Filter the Codex Atlas">
       <label>Search <input type="search" name="q" autocomplete="off" placeholder="Title or description"></label>
       <label>Area <select name="area"><option value="">All areas</option>${areaOpts}</select></label>
@@ -334,17 +336,12 @@ function parseDownloads() {
 }
 
 function trackedFiles() {
-  let files;
-  try {
-    files = execFileSync("git", ["ls-files", "-z", "--cached", "--others", "--exclude-standard"], {
-      cwd: root,
-      encoding: "utf8",
-      maxBuffer: 64 * 1024 * 1024
-    }).split("\0").filter(Boolean);
-  } catch {
-    files = walk(root, (f, e) => e.isDirectory() && [".git", "node_modules"].includes(e.name))
-      .map(f => path.relative(root, f).split(path.sep).join("/"));
-  }
+  // Stage intentional new files before generation; workspace and test artifacts are excluded.
+  const files = execFileSync("git", ["ls-files", "-z", "--cached"], {
+    cwd: root,
+    encoding: "utf8",
+    maxBuffer: 64 * 1024 * 1024
+  }).split("\0").filter(Boolean);
   return [...new Set(files)]
     .filter(f => f !== "site-audit/pr5a-body.md" && !f.startsWith("site-audit/screenshots/"))
     .sort();
@@ -692,7 +689,7 @@ for (const [file, html] of edited) put(file, html);
 const errors = validateCatalog(scanPages(docs));
 // scan the edited state, not the on-disk one, so --check and write agree
 const pagesFinal = (() => {
-  const tmp = fs.mkdtempSync(path.join(root, ".site-scan-"));
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "codex-site-scan-"));
   try {
     for (const file of pageFiles) {
       const target = path.join(tmp, rel(file));
