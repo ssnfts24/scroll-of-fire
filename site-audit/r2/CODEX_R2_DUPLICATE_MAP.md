@@ -1,0 +1,155 @@
+# CODEX R2 — Duplicate Map
+
+Nothing is deleted or merged by this report.
+
+## Byte-identical files (35 groups)
+
+- `9b20b4c3430d…`
+  - `6_Images_and_Symbols/Living_Technology/20251015_154838.jpg`
+  - `6_Images_and_Symbols/synchronicities/20251015_154838.jpg`
+- `b3cbf9065d22…`
+  - `6_Images_and_Symbols/Living_Technology/20251015_171552.jpg`
+  - `6_Images_and_Symbols/synchronicities/20251015_171552.jpg`
+- `6f2b414475e5…`
+  - `CODEX-FINAL-UPLOAD-PART-01-OF-06.zip`
+  - `docs/codex_final_upload/CODEX-FINAL-UPLOAD-PART-01-OF-06.zip`
+- `968de4eb9324…`
+  - `EVIDENCE_REGISTER.md`
+  - `docs/scroll/evidence/register.md`
+- `81a015fb937f…`
+  - `Full_Scroll_Unsealed`
+  - `archive/Full_Scroll_Unsealed/1.0.0/Full_Scroll_Unsealed`
+  - `docs/scroll/archive/Full_Scroll_Unsealed.txt`
+- `07be1d6a6929…`
+  - `archive/Full_Scroll_Unsealed/1.0.0/edition.json`
+  - `docs/scroll/archive/edition.json`
+- `a1408ad28ea7…`
+  - `docs/assets/css/performance-runtime.css`
+  - `docs/assets/css/performance-runtine.css`
+- `05db1403f023…`
+  - `docs/assets/img/archive/duplicates/CB02GreenTide2-docs-root.png`
+  - `docs/assets/img/artifacts/registry/cb-02-green-tide.png`
+- `8b79dc2d3f93…`
+  - `docs/assets/img/archive/duplicates/EmberNode7-docs-root.png`
+  - `docs/assets/img/artifacts/registry/en-007-ember-node-7.png`
+- `da3aad1fc193…`
+  - `docs/assets/img/archive/duplicates/HaLevanah-docs-root.png`
+  - `docs/assets/img/artifacts/registry/hl-001-ha-levanah.png`
+- `0244a0250d5a…`
+  - `docs/assets/img/archive/duplicates/T7-docs-root.png`
+  - `docs/assets/img/artifacts/registry/t7-resonant-conduit.png`
+- `c2011ef1c94b…`
+  - `docs/assets/img/archive/duplicates/TigerNodeRing-docs-root.png`
+  - `docs/assets/img/artifacts/registry/tn-001-tiger-node-ring.png`
+- `279eaed4eb69…`
+  - `docs/assets/img/archive/duplicates/TimeShardRing-docs-root.jpg`
+  - `docs/assets/img/artifacts/registry/ts-001-time-shard-ring.jpg`
+- `1a177ca83898…`
+  - `docs/assets/img/archive/duplicates/home-hero-app-bg-dark.webp`
+  - `docs/assets/img/archive/duplicates/shared-app-bg-dark.webp`
+  - `docs/assets/img/moons/app/app-bg-dark.webp`
+- `4acedf74373f…`
+  - `docs/assets/img/archive/duplicates/home-hero-empty-state.webp`
+  - `docs/assets/img/archive/duplicates/shared-empty-state.webp`
+  - `docs/assets/img/moons/app/empty-state.webp`
+- `39035f68ee3f…`
+  - `docs/assets/img/archive/duplicates/home-hero-home-codex-living-system.webp`
+  - `docs/assets/img/archive/duplicates/shared-home-codex-living-system.webp`
+- `d87643332ae3…`
+  - `docs/assets/img/archive/duplicates/home-hero-icon-1024.png`
+  - `docs/assets/img/archive/duplicates/shared-icon-1024.png`
+  - `docs/assets/img/archive/unused/moons/app/icon-1024.png`
+  - `docs/assets/img/shared/branding/icon-1024.png`
+- `fe3616dd6c86…`
+  - `docs/assets/img/archive/duplicates/home-hero-icon-512.webp`
+  - `docs/assets/img/archive/duplicates/shared-icon-512.webp`
+  - `docs/assets/img/moons/app/icon-512.webp`
+- `a23035200099…`
+  - `docs/assets/img/archive/duplicates/home-hero-nav-gold-ring.webp`
+  - `docs/assets/img/archive/duplicates/shared-nav-gold-ring.webp`
+  - `docs/assets/img/archive/unused/moons/app/nav-gold-ring.webp`
+- `ae257312f493…`
+  - `docs/assets/img/archive/duplicates/home-hero-og-image-1200x630.webp`
+  - `docs/assets/img/archive/duplicates/shared-og-image-1200x630.webp`
+  - `docs/assets/img/moons/app/og-image-1200x630.webp`
+- `59daa586a65c…`
+  - `docs/assets/img/archive/duplicates/home-hero-splash-2732.webp`
+  - `docs/assets/img/archive/duplicates/shared-splash-2732.webp`
+  - `docs/assets/img/moons/app/splash-2732.webp`
+- `bbf6a2502290…`
+  - `docs/assets/img/archive/duplicates/moon-01-seed-flame.webp`
+  - `docs/assets/img/moons/moons/moon-01-seed-flame.webp`
+- `fd90c9c04eba…`
+  - `docs/assets/img/archive/duplicates/moon-02-root-waters.webp`
+  - `docs/assets/img/moons/moons/moon-02-root-waters.webp`
+- `d6e94fa014a1…`
+  - `docs/assets/img/archive/duplicates/moon-03-breath-gate.webp`
+  - `docs/assets/img/moons/moons/moon-03-breath-gate.webp`
+- `28b9add249f8…`
+  - `docs/assets/img/archive/duplicates/moon-04-stone-witness.webp`
+  - `docs/assets/img/moons/moons/moon-04-stone-witness.webp`
+- `76325e6d0a88…`
+  - `docs/assets/img/archive/duplicates/moon-05-living-word.webp`
+  - `docs/assets/img/moons/moons/moon-05-living-word.webp`
+- `516c1ed0060b…`
+  - `docs/assets/img/archive/duplicates/moon-06-fire-trial.webp`
+  - `docs/assets/img/moons/moons/moon-06-fire-trial.webp`
+- `0dbfe73edb9a…`
+  - `docs/assets/img/archive/duplicates/moon-07-crown-balance.webp`
+  - `docs/assets/img/moons/moons/moon-07-crown-balance.webp`
+- `ef97f650927d…`
+  - `docs/assets/img/archive/duplicates/moon-08-deep-mirror.webp`
+  - `docs/assets/img/moons/moons/moon-08-deep-mirror.webp`
+- `a1ccd8a21aee…`
+  - `docs/assets/img/archive/duplicates/moon-09-return-path.webp`
+  - `docs/assets/img/moons/moons/moon-09-return-path.webp`
+- `29cf55e8d008…`
+  - `docs/assets/img/archive/duplicates/moon-10-builders-hand.webp`
+  - `docs/assets/img/moons/moons/moon-10-builders-hand.webp`
+- `7f08767d36f2…`
+  - `docs/assets/img/archive/duplicates/moon-11-star-remembrance.webp`
+  - `docs/assets/img/moons/moons/moon-11-star-remembrance.webp`
+- `77e691b0447c…`
+  - `docs/assets/img/archive/duplicates/moon-12-river-of-signs.webp`
+  - `docs/assets/img/moons/moons/moon-12-river-of-signs.webp`
+- `fdcc5a388d8e…`
+  - `docs/assets/img/archive/duplicates/moon-13-completion-seal.webp`
+  - `docs/assets/img/moons/moons/moon-13-completion-seal.webp`
+- `6108b2507d45…`
+  - `docs/assets/img/archive/duplicates/moons-sections-transmission-social-filename.webp`
+  - `docs/assets/img/moons/sections/transmission.webp`
+
+## Probable variants (same title stem, different format or copy)
+
+These are candidates for manual comparison. A shared name does not prove identical content.
+
+- **codex of life scroll full**
+  - `1_Codex_of_Reality/Codex_of_Life_Scroll_FULL.docx`
+  - `1_Codex_of_Reality/Codex_of_Life_Scroll_FULL.pdf`
+- **living laws**
+  - `1_Codex_of_Reality/Living Laws.docx`
+  - `1_Codex_of_Reality/Living Laws.pdf`
+- **master proof scroll updated**
+  - `2_Witness_Scrolls/Master_Proof_Scroll_Updated.docx`
+  - `2_Witness_Scrolls/Master_Proof_Scroll_Updated.pdf`
+- **scroll of convergence**
+  - `2_Witness_Scrolls/Scroll_of_Convergence.docx`
+  - `2_Witness_Scrolls/Scroll_of_Convergence.pdf`
+- **the journey scroll**
+  - `2_Witness_Scrolls/The_Journey_Scroll.docx`
+  - `2_Witness_Scrolls/The_Journey_Scroll.pdf`
+  - `The-Journey-Scroll.md`
+- **ahmein the final seal becoming will**
+  - `2_Witness_Scrolls/🌌 Ahmein — The Final Seal, Becoming Will.docx`
+  - `2_Witness_Scrolls/🌌 Ahmein — The Final Seal, Becoming Will.pdf`
+- **888 the architect of becoming**
+  - `2_Witness_Scrolls/🜂 888 — The Architect of Becoming.docx`
+  - `2_Witness_Scrolls/🜂 888 — The Architect of Becoming.pdf`
+- **ainos the witness of echoes**
+  - `2_Witness_Scrolls/🜄 Ainos — The Witness of Echoes.docx`
+  - `2_Witness_Scrolls/🜄 Ainos — The Witness of Echoes.pdf`
+
+## Known intentional duplicates
+
+- `Full_Scroll_Unsealed`, `archive/Full_Scroll_Unsealed/1.0.0/Full_Scroll_Unsealed` and `docs/scroll/archive/Full_Scroll_Unsealed.txt` are required byte copies of one original (hash proof in the master inventory).
+- `CODEX-FINAL-UPLOAD-PART-01-OF-06.zip` exists at the root and under `docs/codex_final_upload/`; the table above shows whether the two copies are identical.

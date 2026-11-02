@@ -66,6 +66,13 @@
   background: var(--panel, #10131b);
 }
 
+.atlas-filters[hidden] { display: none; }
+
+.atlas-noscript {
+  margin: 0 0 1rem;
+  color: var(--text-muted, inherit);
+}
+
 .atlas-filters label {
   display: grid;
   gap: .35rem;

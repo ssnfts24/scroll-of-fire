@@ -231,6 +231,7 @@ ${e.related.length ? `          <p class="atlas-related"><strong>Related pages:<
   return `    <nav class="atlas-jump" aria-label="Jump to an area">
 ${curation.areas.map(a => `      <a href="#area-${a.id}">${esc(a.title)}</a>`).join("\n")}
     </nav>
+    <noscript><p class="atlas-noscript">Filtering needs JavaScript. Every page is listed below by area, so you can browse or use your browser's find command.</p></noscript>
     <form class="atlas-filters" data-atlas-filters hidden aria-label="Filter the Codex Atlas">
       <label>Search <input type="search" name="q" autocomplete="off" placeholder="Title or description"></label>
       <label>Area <select name="area"><option value="">All areas</option>${areaOpts}</select></label>
