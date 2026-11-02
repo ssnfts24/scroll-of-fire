@@ -204,8 +204,8 @@ const homepage = `<!doctype html>
   <a class="skip-link" href="#main">Skip to library</a>
   <header class="masthead">
     <a class="wordmark" href="./" aria-label="Scroll of Fire Unsealed Library home"><span class="wordmark-mark" aria-hidden="true">✦</span><span><strong>SCROLL OF FIRE</strong><small>UNSEALED LIBRARY</small></span></a>
-    <nav class="masthead-links" aria-label="Library navigation"><a href="#shelves">The shelves</a><a href="#genesis">Genesis 1–50</a><a href="search.html">Search</a><a href="lexicon.html">Hebrew lexicon</a><a href="atlas.html">Atlas</a><a href="editorial.html">Editorial edition</a><a href="#full-index">Full index</a></nav>
-    <details class="mobile-menu"><summary>Browse</summary><nav aria-label="Library navigation"><a href="search.html">Search</a><a href="lexicon.html">Hebrew lexicon</a><a href="atlas.html">Reference atlas</a><a href="editorial.html">Editorial edition &amp; evidence</a><a href="#shelves">The shelves</a><a href="#genesis">Genesis 1–50</a><a href="#full-index">Full index</a><a href="archive/Full_Scroll_Unsealed.txt">Original edition</a></nav></details>
+    <nav class="masthead-links" aria-label="Library navigation"><a href="#shelves">The shelves</a><a href="#genesis">Genesis 1–50</a><a href="search.html">Search</a><a href="lexicon.html">Hebrew lexicon</a><a href="atlas.html">Atlas</a><a href="editorial.html">Editorial edition</a><a href="../codex-atlas.html">Codex Atlas</a><a href="../index.html">Codex home</a><a href="#full-index">Full index</a></nav>
+    <details class="mobile-menu"><summary>Browse</summary><nav aria-label="Library navigation"><a href="search.html">Search</a><a href="lexicon.html">Hebrew lexicon</a><a href="atlas.html">Reference atlas</a><a href="editorial.html">Editorial edition &amp; evidence</a><a href="../codex-atlas.html">Codex Atlas</a><a href="../index.html">Codex home</a><a href="#shelves">The shelves</a><a href="#genesis">Genesis 1–50</a><a href="#full-index">Full index</a><a href="archive/Full_Scroll_Unsealed.txt">Original edition</a></nav></details>
     <a class="archive-link" href="archive/Full_Scroll_Unsealed.txt">Original edition <span aria-hidden="true">↗</span></a>
   </header>
   <main id="main">
@@ -278,6 +278,8 @@ const reader = `<!doctype html>
     <a class="wordmark" href="./"><span class="wordmark-mark" aria-hidden="true">✦</span><span><strong>SCROLL OF FIRE</strong><small>UNSEALED LIBRARY</small></span></a>
     <div class="reader-actions" aria-label="Reading settings">
       <a class="search-link" href="search.html" aria-label="Search the manuscript">⌕ <span>Search</span></a><a class="search-link" href="editorial.html" aria-label="Editorial reading and evidence">§ <span>Evidence</span></a>
+      <a class="search-link" href="../codex-atlas.html" aria-label="Explore the Codex Atlas">⌂ <span>Codex Atlas</span></a>
+      <a class="search-link" href="../index.html" aria-label="Return to the Codex home">⌂ <span>Codex home</span></a>
       <button type="button" data-font="smaller" aria-label="Decrease reading text size">A−</button><button type="button" data-font="larger" aria-label="Increase reading text size">A+</button>
       <button type="button" data-theme-toggle aria-label="Switch reading theme">Light theme</button>
       <a class="archive-link" href="archive/Full_Scroll_Unsealed.txt">Original edition <span aria-hidden="true">↗</span></a>
@@ -331,6 +333,8 @@ ${scripts.map(script => `  <script defer src="assets/${script}"></script>`).join
   <header class="reader-masthead">
     <a class="wordmark" href="./"><span class="wordmark-mark" aria-hidden="true">✦</span><span><strong>SCROLL OF FIRE</strong><small>UNSEALED LIBRARY</small></span></a>
     <div class="reader-actions" aria-label="Reading settings">
+      <a class="search-link" href="../codex-atlas.html" aria-label="Explore the Codex Atlas">⌂ <span>Codex Atlas</span></a>
+      <a class="search-link" href="../index.html" aria-label="Return to the Codex home">⌂ <span>Codex home</span></a>
       <button type="button" data-theme-toggle aria-label="Switch reading theme">Light theme</button>
       <a class="archive-link" href="archive/Full_Scroll_Unsealed.txt">Original edition <span aria-hidden="true">↗</span></a>
     </div>

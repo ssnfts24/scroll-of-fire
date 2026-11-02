@@ -60,6 +60,7 @@
   <link rel="preload" href="assets/css/codex.css?v=20260715-10" as="style">
   <link rel="stylesheet" href="assets/css/codex.css?v=20260715-10">
   <link rel="stylesheet" href="assets/css/navigation.css?v=20260715-10">
+  <link rel="stylesheet" href="assets/css/site-atlas.css?v=20261102-1">
   <link rel="stylesheet" href="assets/css/components.css?v=20260715-10">
   <link rel="stylesheet" href="assets/css/animations.css?v=20260715-10">
   <link rel="stylesheet" href="assets/css/home.css?v=20260715-10">
@@ -438,6 +439,10 @@
     </button>
 
     <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
+      <!-- site-nav:global:start -->
+      <a class="is-featured" href="./scroll/">Scroll Library</a>
+      <a href="./codex-atlas.html">Atlas</a>
+      <!-- site-nav:global:end -->
 
       <div class="nav-dropdown" data-dropdown>
         <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-today" data-dropdown-toggle>
@@ -455,6 +460,12 @@
           Explore <span aria-hidden="true">▾</span>
         </button>
         <div id="nav-explore" class="nav-drop-menu">
+          <!-- site-nav:explore:start -->
+          <a href="./scroll/search.html">Scroll Search</a>
+          <a href="./scroll/lexicon.html">Hebrew Lexicon</a>
+          <a href="./scroll/atlas.html">Reference Atlas</a>
+          <a href="./scroll/editorial.html">Evidence Edition</a>
+          <!-- site-nav:explore:end -->
           <a href="./theory.html">Theory</a>
           <a href="./theory/canon.html">Canon</a>
           <a href="./genesis-oracle.html">Genesis Oracle</a>
@@ -595,6 +606,49 @@
         </aside>
       </div>
     </section>
+
+    <!-- site-catalog:front-door:start -->
+    <section class="section-shell front-door" id="front-door" aria-labelledby="front-door-title">
+      <p class="eyebrow">The Codex, from the front door</p>
+      <h2 id="front-door-title">Where would you like to begin?</h2>
+      <ul class="front-door-paths">
+        <li><a class="front-door-card" href="scroll/"><strong>Read</strong><span>Open the Scroll Library and read the Unsealed Scroll.</span></a></li>
+        <li><a class="front-door-card" href="theory.html"><strong>Explore</strong><span>Theory, evidence and the Codex Atlas.</span></a></li>
+        <li><a class="front-door-card" href="hub.html"><strong>Build</strong><span>Systems, practice tools and the Remnant Lab.</span></a></li>
+        <li><a class="front-door-card" href="living-time-sphere.html"><strong>Living Time</strong><span>The Observatory and the 13 Moons.</span></a></li>
+        <li><a class="front-door-card" href="downloads.html"><strong>Archive</strong><span>Sealed downloads and preserved originals.</span></a></li>
+      </ul>
+      <div class="front-door-grid">
+        <section aria-labelledby="front-door-featured">
+          <h3 id="front-door-featured">Featured</h3>
+          <ul class="front-door-list">
+            <li><a href="scroll/">Scroll Library</a> <span>The Scroll of Fire Unsealed: reading edition, eight shelves, Genesis 1–50 and a link to every original line.</span></li>
+            <li><a href="scroll/search.html">Scroll Search</a> <span>Local full-text search across all 1,609 reader segments, with shelf filters and Hebrew normalisation.</span></li>
+            <li><a href="scroll/lexicon.html">Hebrew Lexicon</a> <span>911 indexed Hebrew forms with occurrences, transliteration variants and clear separation of spelling, root and interpretation.</span></li>
+            <li><a href="living-time-sphere.html">Living Time Sphere</a> <span>The Observatory: fixed Pattern Time at the centre, astronomical cycles in motion around it.</span></li>
+            <li><a href="moons.html">13 Moons</a> <span>The Remnant 13×28 living calendar.</span></li>
+            <li><a href="hub.html">Systems Hub</a> <span>Entry point for T-7, Frequency Governance, Mind-Renewal, Witness, Recoder and the Interactive Archive.</span></li>
+            <li><a href="systems/frequencies.html">Frequency Governance</a> <span>Sound observatory with intent paths and harmonic fields.</span></li>
+            <li><a href="scroll/editorial.html">Editorial Evidence Edition</a> <span>Reading edition of the political chapters with a claim register, evidence statuses and original-line links.</span></li>
+            <li><a href="theory.html">Theory Hub</a> <span>Master Equation, Unified Field, Canon 0–17, operators and the Δ framework.</span></li>
+            <li><a href="downloads.html">Downloads &amp; Integrity</a> <span>Integrity-sealed downloads of the root archive and numbered folders 1–7, with SHA-256 seals.</span></li>
+            <li><a href="codex-atlas.html">Codex Atlas</a> <span>A unified discovery page for the Scroll Library, Living Time, systems, research, artifacts and archive.</span></li>
+          </ul>
+        </section>
+        <section aria-labelledby="front-door-recent">
+          <h3 id="front-door-recent">Recent additions</h3>
+          <ul class="front-door-list">
+            <li><time datetime="2026-11-01">2026-11-01</time> <a href="./scroll/editorial.html">The editorial evidence edition joins the Scroll Library</a></li>
+            <li><time datetime="2026-10-30">2026-10-30</time> <a href="./scroll/search.html">Local search, Hebrew lexicon, and reference atlas are connected</a></li>
+            <li><time datetime="2026-10-30">2026-10-30</time> <a href="./scroll/">The source-linked Scroll reader opens</a></li>
+            <li><time datetime="2026-10-30">2026-10-30</time> <a href="./scroll/archive/Full_Scroll_Unsealed.txt">The original Scroll is frozen as a provenance-linked archival edition</a></li>
+          </ul>
+        </section>
+      </div>
+      <p class="front-door-actions"><a class="btn primary" href="codex-atlas.html">Open the full Codex Atlas</a> <a class="btn" href="scroll/">Enter the Scroll Library</a></p>
+      <p class="atlas-note">Saved witness records, readings and settings live only in this browser. They do not synchronize between devices.</p>
+    </section>
+    <!-- site-catalog:front-door:end -->
 
     <!-- Authoritative Living Time Sphere: the homepage now displays the same route being developed. -->
     <section

@@ -1,0 +1,1001 @@
+{
+ "schemaVersion": 1,
+ "baseRevision": "548e858",
+ "baseUrl": "https://codexofreality.org/",
+ "repoUrl": "https://github.com/ssnfts24/scroll-of-fire",
+ "areas": [
+  {
+   "id": "scroll-scripture",
+   "title": "Scroll and Scripture",
+   "description": "Read the Scroll, search its text, study Hebrew roots and follow Genesis 1–50.",
+   "entryPoint": "scroll-library"
+  },
+  {
+   "id": "living-time",
+   "title": "Living Time and Observatory",
+   "description": "The Pattern Calendar, 13 Moons, Living Time Sphere and witnessed days.",
+   "entryPoint": "living-time-sphere"
+  },
+  {
+   "id": "systems",
+   "title": "Systems and Living Technology",
+   "description": "Practice tools, frequency systems and the Codex hub for building.",
+   "entryPoint": "hub"
+  },
+  {
+   "id": "evidence",
+   "title": "Evidence and Research",
+   "description": "Theory chapters, the claim register and the editorial evidence edition.",
+   "entryPoint": "theory-hub"
+  },
+  {
+   "id": "artifacts",
+   "title": "Artifacts and Creative Works",
+   "description": "Artifact registry, covenant works, circles and author pages.",
+   "entryPoint": "shop"
+  },
+  {
+   "id": "archive",
+   "title": "Archive and Downloads",
+   "description": "Integrity-sealed downloads, preserved originals and the interactive archive.",
+   "entryPoint": "downloads"
+  }
+ ],
+ "frontDoor": [
+  {
+   "id": "read",
+   "label": "Read",
+   "description": "Open the Scroll Library and read the Unsealed Scroll.",
+   "target": "scroll-library"
+  },
+  {
+   "id": "explore",
+   "label": "Explore",
+   "description": "Theory, evidence and the Codex Atlas.",
+   "target": "theory-hub"
+  },
+  {
+   "id": "build",
+   "label": "Build",
+   "description": "Systems, practice tools and the Remnant Lab.",
+   "target": "hub"
+  },
+  {
+   "id": "living-time",
+   "label": "Living Time",
+   "description": "The Observatory and the 13 Moons.",
+   "target": "living-time-sphere"
+  },
+  {
+   "id": "archive",
+   "label": "Archive",
+   "description": "Sealed downloads and preserved originals.",
+   "target": "downloads"
+  }
+ ],
+ "collections": [
+  {
+   "pathPrefix": "theory/equations/",
+   "entry": "theory-equations"
+  }
+ ],
+ "utilityPages": {
+  "404.html": "Error page",
+  "offline.html": "Offline recovery page",
+  "caravan.html": "Redirect to covenant-caravan.html",
+  "index.html": "Homepage"
+ },
+ "entries": [
+  {
+   "id": "start",
+   "title": "Start Here",
+   "description": "A guided first doorway into the Codex, the 13 Moons calendar and the daily practice.",
+   "area": "scroll-scripture",
+   "category": "Orientation",
+   "resourceType": "page",
+   "status": "live",
+   "path": "start.html",
+   "related": [
+    "guide",
+    "scroll-library"
+   ],
+   "featured": false
+  },
+  {
+   "id": "scroll-library",
+   "title": "Scroll Library",
+   "description": "The Scroll of Fire Unsealed: reading edition, eight shelves, Genesis 1–50 and a link to every original line.",
+   "area": "scroll-scripture",
+   "category": "Reading",
+   "resourceType": "collection",
+   "status": "live",
+   "path": "scroll/index.html",
+   "related": [
+    "scroll-search",
+    "scroll-lexicon",
+    "scroll-atlas",
+    "scroll-editorial",
+    "scroll-original"
+   ],
+   "featured": true
+  },
+  {
+   "id": "scroll-reader",
+   "title": "Scroll Reader",
+   "description": "The long-form reader with chapter navigation, source-line provenance and deep links.",
+   "area": "scroll-scripture",
+   "category": "Reading",
+   "resourceType": "tool",
+   "status": "live",
+   "path": "scroll/reader.html",
+   "related": [
+    "scroll-library"
+   ],
+   "featured": false
+  },
+  {
+   "id": "scroll-search",
+   "title": "Scroll Search",
+   "description": "Local full-text search across all 1,609 reader segments, with shelf filters and Hebrew normalisation.",
+   "area": "scroll-scripture",
+   "category": "Search",
+   "resourceType": "tool",
+   "status": "live",
+   "path": "scroll/search.html",
+   "related": [
+    "scroll-library",
+    "scroll-lexicon"
+   ],
+   "featured": true
+  },
+  {
+   "id": "scroll-lexicon",
+   "title": "Hebrew Lexicon",
+   "description": "911 indexed Hebrew forms with occurrences, transliteration variants and clear separation of spelling, root and interpretation.",
+   "area": "scroll-scripture",
+   "category": "Hebrew research",
+   "resourceType": "tool",
+   "status": "live",
+   "path": "scroll/lexicon.html",
+   "related": [
+    "scroll-search",
+    "glossary"
+   ],
+   "featured": true
+  },
+  {
+   "id": "scroll-atlas",
+   "title": "Scroll Reference Atlas",
+   "description": "Typed cross-references among scriptures, repeated terms, people, places and manuscript passages.",
+   "area": "scroll-scripture",
+   "category": "Reference",
+   "resourceType": "tool",
+   "status": "live",
+   "path": "scroll/atlas.html",
+   "related": [
+    "scroll-library"
+   ],
+   "featured": false
+  },
+  {
+   "id": "scroll-original",
+   "title": "Original Scroll (archival edition)",
+   "description": "The unchanged Full_Scroll_Unsealed text, frozen with a published SHA-256.",
+   "area": "scroll-scripture",
+   "category": "Preserved original",
+   "resourceType": "document",
+   "status": "archived",
+   "path": "scroll/archive/Full_Scroll_Unsealed.txt",
+   "related": [
+    "scroll-library",
+    "downloads"
+   ],
+   "featured": false
+  },
+  {
+   "id": "genesis-oracle",
+   "title": "Genesis Oracle",
+   "description": "Deterministic layered Genesis readings driven by the shared Pattern Calendar engine.",
+   "area": "scroll-scripture",
+   "category": "Reading",
+   "resourceType": "tool",
+   "status": "live",
+   "path": "genesis-oracle.html",
+   "related": [
+    "scroll-library"
+   ],
+   "featured": false
+  },
+  {
+   "id": "glossary",
+   "title": "Codex Glossary",
+   "description": "Symbols, equations and living-technology terms of the Codex.",
+   "area": "scroll-scripture",
+   "category": "Reference",
+   "resourceType": "page",
+   "status": "live",
+   "path": "glossary.html",
+   "related": [
+    "scroll-lexicon",
+    "theory-glossary"
+   ],
+   "featured": false
+  },
+  {
+   "id": "whitepaper-remnant",
+   "title": "Remnant Whitepaper",
+   "description": "The foundational whitepaper for Scroll of Fire and the Codex of Reality.",
+   "area": "scroll-scripture",
+   "category": "Whitepaper",
+   "resourceType": "document",
+   "status": "live",
+   "path": "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
+   "related": [
+    "theory-hub"
+   ],
+   "featured": false
+  },
+  {
+   "id": "genesis-restored",
+   "title": "Genesis Restored",
+   "description": "Root-level restored Genesis text, published through the Downloads catalog.",
+   "area": "scroll-scripture",
+   "category": "Preserved source",
+   "resourceType": "document",
+   "status": "source-only",
+   "path": "Genesis-Restored.md",
+   "related": [
+    "scroll-library",
+    "downloads"
+   ],
+   "featured": false,
+   "pathKind": "repo"
+  },
+  {
+   "id": "exodus-restored",
+   "title": "Exodus Restored",
+   "description": "Root-level restored Exodus text, published through the Downloads catalog.",
+   "area": "scroll-scripture",
+   "category": "Preserved source",
+   "resourceType": "document",
+   "status": "source-only",
+   "path": "Exodus-Restored.md",
+   "related": [
+    "downloads"
+   ],
+   "featured": false,
+   "pathKind": "repo"
+  },
+  {
+   "id": "living-time-sphere",
+   "title": "Living Time Sphere",
+   "description": "The Observatory: fixed Pattern Time at the centre, astronomical cycles in motion around it.",
+   "area": "living-time",
+   "category": "Observatory",
+   "resourceType": "tool",
+   "status": "live",
+   "path": "living-time-sphere.html",
+   "related": [
+    "moons",
+    "alignment-ledger",
+    "equinox-passage"
+   ],
+   "featured": true
+  },
+  {
+   "id": "moons",
+   "title": "13 Moons",
+   "description": "The Remnant 13×28 living calendar.",
+   "area": "living-time",
+   "category": "Calendar",
+   "resourceType": "tool",
+   "status": "live",
+   "path": "moons.html",
+   "related": [
+    "living-time-sphere",
+    "theory-thirteen-moons",
+    "whitepaper-13-moons"
+   ],
+   "featured": true
+  },
+  {
+   "id": "alignment-ledger",
+   "title": "Alignment Ledger",
+   "description": "Year-by-year record of moving astronomical gates against the fixed Pattern Calendar.",
+   "area": "living-time",
+   "category": "Observatory",
+   "resourceType": "page",
+   "status": "live",
+   "path": "alignment-ledger.html",
+   "related": [
+    "equinox-passage"
+   ],
+   "featured": false
+  },
+  {
+   "id": "equinox-passage",
+   "title": "Equinox Passage",
+   "description": "Measures the moving March equinox against the fixed Pattern Calendar.",
+   "area": "living-time",
+   "category": "Observatory",
+   "resourceType": "page",
+   "status": "live",
+   "path": "equinox-passage.html",
+   "related": [
+    "alignment-ledger"
+   ],
+   "featured": false
+  },
+  {
+   "id": "whitepaper-13-moons",
+   "title": "13 Moons Rollout Whitepaper",
+   "description": "Phased rollout plan for the 13 Moons Living Time Observatory.",
+   "area": "living-time",
+   "category": "Whitepaper",
+   "resourceType": "document",
+   "status": "live",
+   "path": "13-moon-whitepaper.html",
+   "related": [
+    "moons"
+   ],
+   "featured": false
+  },
+  {
+   "id": "ledger",
+   "title": "Witness Ledger",
+   "description": "Browser-local record of witnessed days and SHA-256 hashes. Entries stay on this device and do not sync.",
+   "area": "living-time",
+   "category": "Witness records",
+   "resourceType": "tool",
+   "status": "live",
+   "path": "ledger.html",
+   "related": [
+    "witness-system",
+    "moons"
+   ],
+   "featured": false
+  },
+  {
+   "id": "hub",
+   "title": "Systems Hub",
+   "description": "Entry point for T-7, Frequency Governance, Mind-Renewal, Witness, Recoder and the Interactive Archive.",
+   "area": "systems",
+   "category": "Hub",
+   "resourceType": "collection",
+   "status": "live",
+   "path": "hub.html",
+   "related": [
+    "t7",
+    "frequencies"
+   ],
+   "featured": true
+  },
+  {
+   "id": "t7",
+   "title": "T-7 Resonant Engine",
+   "description": "Carrier-mixing console for phase, coherence and resonance.",
+   "area": "systems",
+   "category": "Systems",
+   "resourceType": "tool",
+   "status": "live",
+   "path": "systems/t-7.html",
+   "related": [
+    "frequencies"
+   ],
+   "featured": false
+  },
+  {
+   "id": "frequencies",
+   "title": "Frequency Governance",
+   "description": "Sound observatory with intent paths and harmonic fields.",
+   "area": "systems",
+   "category": "Systems",
+   "resourceType": "tool",
+   "status": "live",
+   "path": "systems/frequencies.html",
+   "related": [
+    "t7",
+    "theory-frequency-governance"
+   ],
+   "featured": true
+  },
+  {
+   "id": "mind-renewal",
+   "title": "Mind-Renewal Protocol",
+   "description": "A seven-day local-first practice for stillness, alignment and gratitude.",
+   "area": "systems",
+   "category": "Systems",
+   "resourceType": "tool",
+   "status": "live",
+   "path": "systems/mind-renewal.html",
+   "related": [
+    "guide"
+   ],
+   "featured": false
+  },
+  {
+   "id": "recoder",
+   "title": "Reality Recoder",
+   "description": "Living Dictionary of Reality: recode old terms into covenant speech.",
+   "area": "systems",
+   "category": "Systems",
+   "resourceType": "tool",
+   "status": "live",
+   "path": "systems/recoder.html",
+   "related": [
+    "glossary"
+   ],
+   "featured": false
+  },
+  {
+   "id": "witness-system",
+   "title": "Witness System",
+   "description": "Local SHA-256 utility for reproducible hashes of chosen testimony without upload.",
+   "area": "systems",
+   "category": "Systems",
+   "resourceType": "tool",
+   "status": "live",
+   "path": "systems/witness.html",
+   "related": [
+    "ledger"
+   ],
+   "featured": false
+  },
+  {
+   "id": "lab",
+   "title": "Remnant Lab",
+   "description": "Experimental practice tools: micro-runs, A/B tests, glyph synth and invocation.",
+   "area": "systems",
+   "category": "Practice tools",
+   "resourceType": "collection",
+   "status": "live",
+   "path": "lab.html",
+   "related": [
+    "micro",
+    "ab",
+    "glyphs",
+    "invoke"
+   ],
+   "featured": false
+  },
+  {
+   "id": "micro",
+   "title": "90-Second Micro-Run",
+   "description": "A compact breath-paced loop that logs one witness.",
+   "area": "systems",
+   "category": "Practice tools",
+   "resourceType": "tool",
+   "status": "live",
+   "path": "micro.html",
+   "related": [
+    "lab"
+   ],
+   "featured": false
+  },
+  {
+   "id": "ab",
+   "title": "A/B Carrier Protocol",
+   "description": "Blind carrier test with a stop rule.",
+   "area": "systems",
+   "category": "Practice tools",
+   "resourceType": "tool",
+   "status": "live",
+   "path": "ab.html",
+   "related": [
+    "lab"
+   ],
+   "featured": false
+  },
+  {
+   "id": "glyphs",
+   "title": "Voice-Glyph Synth",
+   "description": "Turn a tuned phrase into a resonance glyph.",
+   "area": "systems",
+   "category": "Practice tools",
+   "resourceType": "tool",
+   "status": "live",
+   "path": "glyphs.html",
+   "related": [
+    "lab"
+   ],
+   "featured": false
+  },
+  {
+   "id": "invoke",
+   "title": "Invocation Lab",
+   "description": "Guided run space for the Codex equations with carriers, ethics and witnesses.",
+   "area": "systems",
+   "category": "Practice tools",
+   "resourceType": "tool",
+   "status": "live",
+   "path": "invoke.html",
+   "related": [
+    "lab"
+   ],
+   "featured": false
+  },
+  {
+   "id": "guide",
+   "title": "Field Guide",
+   "description": "Daily and weekly practice, troubleshooting and ethics.",
+   "area": "systems",
+   "category": "Practice",
+   "resourceType": "page",
+   "status": "live",
+   "path": "guide.html",
+   "related": [
+    "start",
+    "mind-renewal"
+   ],
+   "featured": false
+  },
+  {
+   "id": "manifest",
+   "title": "Manifest",
+   "description": "Remnant visual exercise: carrier frequency engine, harmonic sequences and breath.",
+   "area": "systems",
+   "category": "Practice",
+   "resourceType": "tool",
+   "status": "live",
+   "path": "teach.html",
+   "related": [
+    "guide"
+   ],
+   "featured": false
+  },
+  {
+   "id": "scroll-editorial",
+   "title": "Editorial Evidence Edition",
+   "description": "Reading edition of the political chapters with a claim register, evidence statuses and original-line links.",
+   "area": "evidence",
+   "category": "Evidence",
+   "resourceType": "document",
+   "status": "live",
+   "path": "scroll/editorial.html",
+   "related": [
+    "scroll-library",
+    "claim-register"
+   ],
+   "featured": true
+  },
+  {
+   "id": "claim-register",
+   "title": "Claim Register",
+   "description": "Machine-readable register of 21 prioritised claims with sources and review status.",
+   "area": "evidence",
+   "category": "Evidence",
+   "resourceType": "dataset",
+   "status": "live",
+   "path": "scroll/evidence/claim-register.json",
+   "related": [
+    "scroll-editorial"
+   ],
+   "featured": false
+  },
+  {
+   "id": "evidence-register",
+   "title": "Evidence Register (readable)",
+   "description": "Human-readable evidence register with exact quotes and line references.",
+   "area": "evidence",
+   "category": "Evidence",
+   "resourceType": "document",
+   "status": "live",
+   "path": "scroll/evidence/register.md",
+   "related": [
+    "claim-register"
+   ],
+   "featured": false
+  },
+  {
+   "id": "theory-hub",
+   "title": "Theory Hub",
+   "description": "Master Equation, Unified Field, Canon 0–17, operators and the Δ framework.",
+   "area": "evidence",
+   "category": "Theory",
+   "resourceType": "collection",
+   "status": "live",
+   "path": "theory.html",
+   "related": [
+    "theory-canon",
+    "theory-equations"
+   ],
+   "featured": true
+  },
+  {
+   "id": "theory-canon",
+   "title": "Canon 0–17",
+   "description": "Index of the Codex theory canon.",
+   "area": "evidence",
+   "category": "Theory",
+   "resourceType": "page",
+   "status": "live",
+   "path": "theory/canon.html",
+   "related": [
+    "theory-hub"
+   ],
+   "featured": false
+  },
+  {
+   "id": "theory-equations",
+   "title": "Equations 0–17",
+   "description": "Eighteen equation pages of the Codex theory system.",
+   "area": "evidence",
+   "category": "Theory",
+   "resourceType": "collection",
+   "status": "live",
+   "path": "theory/equations/eq00.html",
+   "related": [
+    "theory-master-equation"
+   ],
+   "featured": false
+  },
+  {
+   "id": "theory-master-equation",
+   "title": "The Master Equation",
+   "description": "Reality = Energy × Information × Intention × …",
+   "area": "evidence",
+   "category": "Theory",
+   "resourceType": "page",
+   "status": "live",
+   "path": "theory/master-equation.html",
+   "related": [
+    "theory-equations"
+   ],
+   "featured": false
+  },
+  {
+   "id": "theory-unified-field",
+   "title": "Unified Field",
+   "description": "Expanded symbolic architecture connecting the foundations.",
+   "area": "evidence",
+   "category": "Theory",
+   "resourceType": "page",
+   "status": "live",
+   "path": "theory/unified-field.html",
+   "related": [
+    "theory-hub"
+   ],
+   "featured": false
+  },
+  {
+   "id": "theory-operators",
+   "title": "Living Operators",
+   "description": "Intention, Language, Coherence and Source (ILCS).",
+   "area": "evidence",
+   "category": "Theory",
+   "resourceType": "page",
+   "status": "live",
+   "path": "theory/operators.html",
+   "related": [
+    "theory-hub"
+   ],
+   "featured": false
+  },
+  {
+   "id": "theory-delta",
+   "title": "Δ0–Δ7 Framework",
+   "description": "Eight stages from frame and source through witness and gate.",
+   "area": "evidence",
+   "category": "Theory",
+   "resourceType": "page",
+   "status": "live",
+   "path": "theory/delta-framework.html",
+   "related": [
+    "theory-hub"
+   ],
+   "featured": false
+  },
+  {
+   "id": "theory-witness",
+   "title": "Witness (theory)",
+   "description": "How awareness, intention and memory become record.",
+   "area": "evidence",
+   "category": "Theory",
+   "resourceType": "page",
+   "status": "live",
+   "path": "theory/witness.html",
+   "related": [
+    "theory-hub"
+   ],
+   "featured": false
+  },
+  {
+   "id": "theory-memory",
+   "title": "Memory (theory)",
+   "description": "Equation 16 and the Memory Window.",
+   "area": "evidence",
+   "category": "Theory",
+   "resourceType": "page",
+   "status": "live",
+   "path": "theory/memory.html",
+   "related": [
+    "theory-hub"
+   ],
+   "featured": false
+  },
+  {
+   "id": "theory-thirteen-moons",
+   "title": "13 Moons Theory",
+   "description": "The 13×28 symbolic calendar as a theory chapter.",
+   "area": "evidence",
+   "category": "Theory",
+   "resourceType": "page",
+   "status": "live",
+   "path": "theory/thirteen-moons.html",
+   "related": [
+    "moons"
+   ],
+   "featured": false
+  },
+  {
+   "id": "theory-frequency-governance",
+   "title": "Frequency Governance (theory)",
+   "description": "Carriers, amplitude, phase and harmonic gates.",
+   "area": "evidence",
+   "category": "Theory",
+   "resourceType": "page",
+   "status": "live",
+   "path": "theory/frequency-governance.html",
+   "related": [
+    "frequencies"
+   ],
+   "featured": false
+  },
+  {
+   "id": "theory-living-technology",
+   "title": "Living Technology (theory)",
+   "description": "Craft, material, operator, environment and witness.",
+   "area": "evidence",
+   "category": "Theory",
+   "resourceType": "page",
+   "status": "live",
+   "path": "theory/living-technology.html",
+   "related": [
+    "theory-hub"
+   ],
+   "featured": false
+  },
+  {
+   "id": "theory-artifact",
+   "title": "Artifact Theory",
+   "description": "Naming, classification, provenance and materials.",
+   "area": "evidence",
+   "category": "Theory",
+   "resourceType": "page",
+   "status": "live",
+   "path": "theory/artifact-theory.html",
+   "related": [
+    "shop"
+   ],
+   "featured": false
+  },
+  {
+   "id": "theory-ethics",
+   "title": "Ethical Law (theory)",
+   "description": "Equation 9, the stop rule, consent and dignity.",
+   "area": "evidence",
+   "category": "Theory",
+   "resourceType": "page",
+   "status": "live",
+   "path": "theory/ethics.html",
+   "related": [
+    "ethics"
+   ],
+   "featured": false
+  },
+  {
+   "id": "theory-notation",
+   "title": "Notation Guide",
+   "description": "Symbol families, equation numbering and operators.",
+   "area": "evidence",
+   "category": "Theory",
+   "resourceType": "page",
+   "status": "live",
+   "path": "theory/notation.html",
+   "related": [
+    "theory-glossary"
+   ],
+   "featured": false
+  },
+  {
+   "id": "theory-glossary",
+   "title": "Theory Glossary",
+   "description": "Symbols, operators and witness terms of the theory system.",
+   "area": "evidence",
+   "category": "Theory",
+   "resourceType": "page",
+   "status": "live",
+   "path": "theory/glossary.html",
+   "related": [
+    "glossary"
+   ],
+   "featured": false
+  },
+  {
+   "id": "theory-bibliography",
+   "title": "Bibliography",
+   "description": "Source architecture: project records, scientific and technical references.",
+   "area": "evidence",
+   "category": "Theory",
+   "resourceType": "page",
+   "status": "live",
+   "path": "theory/bibliography.html",
+   "related": [
+    "theory-hub"
+   ],
+   "featured": false
+  },
+  {
+   "id": "ethics",
+   "title": "Ethics & Coherence Law",
+   "description": "The living laws of the Codex: consent, non-harm, accountability and the stop rule.",
+   "area": "evidence",
+   "category": "Ethics",
+   "resourceType": "page",
+   "status": "live",
+   "path": "ethics.html",
+   "related": [
+    "theory-ethics"
+   ],
+   "featured": false
+  },
+  {
+   "id": "shop",
+   "title": "Artifact Registry",
+   "description": "Registry of artifacts and creative works.",
+   "area": "artifacts",
+   "category": "Artifacts",
+   "resourceType": "collection",
+   "status": "live",
+   "path": "shop.html",
+   "related": [
+    "theory-artifact"
+   ],
+   "featured": false
+  },
+  {
+   "id": "circle",
+   "title": "Covenant Circle",
+   "description": "Circle protocol: shared cadence and a single closing seal.",
+   "area": "artifacts",
+   "category": "Community",
+   "resourceType": "page",
+   "status": "live",
+   "path": "circle.html",
+   "related": [
+    "covenant-caravan"
+   ],
+   "featured": false
+  },
+  {
+   "id": "covenant-caravan",
+   "title": "The Covenant Caravan",
+   "description": "A living blueprint for resilience, craftsmanship, family and travel.",
+   "area": "artifacts",
+   "category": "Creative works",
+   "resourceType": "document",
+   "status": "live",
+   "path": "covenant-caravan.html",
+   "related": [
+    "circle"
+   ],
+   "featured": false
+  },
+  {
+   "id": "about-aaron",
+   "title": "About Aaron",
+   "description": "Author, craftsman and independent researcher behind the Codex.",
+   "area": "artifacts",
+   "category": "Author",
+   "resourceType": "page",
+   "status": "live",
+   "path": "about-aaron.html",
+   "related": [
+    "start"
+   ],
+   "featured": false
+  },
+  {
+   "id": "journey-scroll",
+   "title": "The Journey Scroll",
+   "description": "Root-level narrative scroll available in the repository.",
+   "area": "artifacts",
+   "category": "Creative works",
+   "resourceType": "document",
+   "status": "source-only",
+   "path": "The-Journey-Scroll.md",
+   "related": [],
+   "featured": false,
+   "pathKind": "repo"
+  },
+  {
+   "id": "downloads",
+   "title": "Downloads & Integrity",
+   "description": "Integrity-sealed downloads of the root archive and numbered folders 1–7, with SHA-256 seals.",
+   "area": "archive",
+   "category": "Downloads",
+   "resourceType": "collection",
+   "status": "live",
+   "path": "downloads.html",
+   "related": [
+    "systems-archive",
+    "scroll-original"
+   ],
+   "featured": true
+  },
+  {
+   "id": "systems-archive",
+   "title": "Interactive Archive",
+   "description": "Filterable index of every Scroll page and system.",
+   "area": "archive",
+   "category": "Archive",
+   "resourceType": "tool",
+   "status": "live",
+   "path": "systems/archive.html",
+   "related": [
+    "downloads"
+   ],
+   "featured": false
+  },
+  {
+   "id": "repo-readme",
+   "title": "Repository README",
+   "description": "Project overview and contribution context on GitHub.",
+   "area": "archive",
+   "category": "Documentation",
+   "resourceType": "document",
+   "status": "source-only",
+   "path": "README.md",
+   "related": [],
+   "featured": false,
+   "pathKind": "repo"
+  },
+  {
+   "id": "codex-atlas",
+   "title": "Codex Atlas",
+   "description": "A unified discovery page for the Scroll Library, Living Time, systems, research, artifacts and archive.",
+   "area": "archive",
+   "category": "Discovery",
+   "resourceType": "collection",
+   "status": "live",
+   "path": "codex-atlas.html",
+   "related": [
+    "scroll-library",
+    "living-time-sphere",
+    "hub",
+    "theory-hub",
+    "shop",
+    "downloads"
+   ],
+   "featured": true
+  },
+  {
+   "id": "planned-sitewide-search",
+   "title": "Site-wide search",
+   "description": "A future site-wide index that links to, and does not replace, Scroll Search.",
+   "area": "archive",
+   "category": "Discovery",
+   "resourceType": "tool",
+   "status": "planned",
+   "path": null,
+   "related": [
+    "scroll-search"
+   ],
+   "featured": false
+  },
+  {
+   "id": "planned-timeline",
+   "title": "Historical timeline and claims atlas",
+   "description": "Planned fifth stage of the Scroll Library: timeline and wider claims atlas.",
+   "area": "evidence",
+   "category": "Evidence",
+   "resourceType": "tool",
+   "status": "planned",
+   "path": null,
+   "related": [
+    "scroll-editorial"
+   ],
+   "featured": false
+  }
+ ]
+}

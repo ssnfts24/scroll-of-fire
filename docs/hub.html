@@ -42,6 +42,7 @@
   <link rel="apple-touch-icon" href="assets/img/shared/branding/favicon.png">
   <link rel="stylesheet" href="assets/css/codex.css">
   <link rel="stylesheet" href="assets/css/navigation.css">
+  <link rel="stylesheet" href="assets/css/site-atlas.css?v=20261102-1">
   <link rel="stylesheet" href="assets/css/animations.css">
   <link rel="stylesheet" href="assets/css/hub.css">
 
@@ -81,6 +82,10 @@
     </button>
 
     <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
+      <!-- site-nav:global:start -->
+      <a class="is-featured" href="./scroll/">Scroll Library</a>
+      <a href="./codex-atlas.html">Atlas</a>
+      <!-- site-nav:global:end -->
 
       <div class="nav-dropdown" data-dropdown>
         <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-today" data-dropdown-toggle>
@@ -98,6 +103,12 @@
           Explore <span aria-hidden="true">▾</span>
         </button>
         <div id="nav-explore" class="nav-drop-menu">
+          <!-- site-nav:explore:start -->
+          <a href="./scroll/search.html">Scroll Search</a>
+          <a href="./scroll/lexicon.html">Hebrew Lexicon</a>
+          <a href="./scroll/atlas.html">Reference Atlas</a>
+          <a href="./scroll/editorial.html">Evidence Edition</a>
+          <!-- site-nav:explore:end -->
           <a href="./theory.html">Theory</a>
           <a href="./theory/canon.html">Canon</a>
           <a href="./genesis-oracle.html">Genesis Oracle</a>
@@ -281,7 +292,14 @@
         <div class="hub-row"><a class="btn" href="ledger.html">Open</a></div>
       </article>
     </section>
-  </main>
+  <!-- site-catalog:hub-strip:start -->
+    <section class="hub-atlas-strip" aria-labelledby="hub-atlas-title">
+      <h2 id="hub-atlas-title">Beyond the systems</h2>
+      <p>The Codex also holds the Scroll Library, evidence research, artifacts and the archive. <a href="codex-atlas.html">Open the Codex Atlas</a> or <a href="scroll/">enter the Scroll Library</a>.</p>
+    </section>
+    <!-- site-catalog:hub-strip:end -->
+
+    </main>
 
   <footer class="site-footer hub-footer">
     <nav aria-label="Footer navigation">
