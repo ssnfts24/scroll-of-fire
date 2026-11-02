@@ -17,7 +17,7 @@
     "site:catalog:check": "node scripts/build-site-catalog.mjs --check",
     "r2:inventory": "node scripts/build-r2-inventory.mjs",
     "r2:inventory:check": "node scripts/build-r2-inventory.mjs --check",
-    "validate": "npm run test && npm run audit"
+    "validate": "npm run test && npm run site:catalog:check && npm run r2:inventory:check && npm run audit"
   },
   "engines": {
     "node": ">=20"

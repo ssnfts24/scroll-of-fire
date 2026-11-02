@@ -14,8 +14,25 @@ const FROZEN = "81a015fb937f1664c2383fa38fddf956d281c6309a9584382c6dbc9d8b691400
 const VOCAB = new Set(registry.statusVocabulary);
 const sha = f => crypto.createHash("sha256").update(fs.readFileSync(path.join(root, f))).digest("hex");
 
-test("R2 reports are current", () => {
-  execFileSync("node", ["scripts/build-r2-inventory.mjs", "--check"], { cwd: root, stdio: "pipe" });
+test("inventory generators use only index-listed paths, excluding untracked artifacts", () => {
+  const inventoryBuilder = fs.readFileSync(path.join(root, "scripts/build-r2-inventory.mjs"), "utf8");
+  const catalogBuilder = fs.readFileSync(path.join(root, "scripts/build-site-catalog.mjs"), "utf8");
+  assert.match(inventoryBuilder, /"ls-files", "-z", "--cached"/);
+  assert.doesNotMatch(inventoryBuilder, /"--others"/);
+  assert.match(catalogBuilder, /"ls-files", "-z", "--cached"/);
+  assert.doesNotMatch(catalogBuilder, /"--others"/);
+
+  const dir = path.join(root, `.site-scan-race-probe-${process.pid}`);
+  const probe = path.join(dir, "page.html");
+  fs.mkdirSync(dir);
+  fs.writeFileSync(probe, "<html>temporary test artifact</html>\n");
+  try {
+    const indexedPaths = execFileSync("git", ["ls-files", "-z", "--cached"], { cwd: root }).toString("utf8").split("\0");
+    assert.ok(!indexedPaths.includes(path.relative(root, probe)), "temporary probe must not be in the index");
+  } finally {
+    fs.unlinkSync(probe);
+    fs.rmdirSync(dir);
+  }
 });
 
 test("every file in the registry exists, is hashed, and is classified", () => {
@@ -89,5 +106,5 @@ test("Atlas filter form stays hidden without JavaScript", () => {
   const html = fs.readFileSync(path.join(root, "docs/codex-atlas.html"), "utf8");
   assert.match(css, /\.atlas-filters\[hidden\]\s*\{\s*display:\s*none/);
   assert.match(html, /<noscript>[\s\S]*Filtering needs JavaScript/);
-  assert.ok((html.match(/class="atlas-card/g) || []).length >= 63);
+  assert.equal((html.match(/data-atlas-card(?:[ >])/g) || []).length, 63);
 });

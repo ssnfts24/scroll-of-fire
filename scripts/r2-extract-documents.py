@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Extract text statistics and metadata from tracked PDF, DOCX, TXT and ZIP files.
+"""Extract text statistics and metadata from index-listed PDF, DOCX, TXT and ZIP files.
 
 Writes site-audit/r2/document-extracts.json. The extract records only measurable facts
 (page count, character and word counts, embedded metadata, Hebrew/Greek presence, a
 short opening excerpt, extraction status). A PDF with no text layer is recorded as
 "no-text-layer" and flagged for visual review rather than treated as reviewed.
+Stage intentional new source files before extraction; untracked files are excluded.
 
 Usage: python3 scripts/r2-extract-documents.py   (needs: pypdf)
 """
@@ -30,7 +31,7 @@ except ImportError:
 
 def tracked():
     out = subprocess.check_output(
-        ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard"], cwd=ROOT
+        ["git", "ls-files", "-z", "--cached"], cwd=ROOT
     ).decode("utf8")
     return sorted(p for p in out.split("\0") if p and Path(p).suffix.lower() in EXTS and (ROOT / p).is_file())
 

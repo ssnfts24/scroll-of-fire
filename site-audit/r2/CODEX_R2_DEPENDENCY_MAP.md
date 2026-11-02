@@ -17,7 +17,7 @@
 | `site:catalog:check` | `node scripts/build-site-catalog.mjs --check` |
 | `r2:inventory` | `node scripts/build-r2-inventory.mjs` |
 | `r2:inventory:check` | `node scripts/build-r2-inventory.mjs --check` |
-| `validate` | `npm run test && npm run audit` |
+| `validate` | `npm run test && npm run site:catalog:check && npm run r2:inventory:check && npm run audit` |
 
 ## Workflows
 
@@ -32,16 +32,16 @@
   - `|`
   - `|`
   - `node --test tests/pwa-resilience.test.js`
-  - `node --test tests/*.test.js`
+  - `|`
 - **remnant-phase-2-equinox-tests.yml** (push, pull_request)
   - `|`
   - `node --test tests/equinox-passage.test.js`
-  - `node --test tests/*.test.js`
+  - `|`
 - **remnant-phase-3-alignment-sphere-tests.yml** (push, pull_request)
   - `|`
   - `node --test tests/alignment-ledger.test.js`
   - `node --test tests/living-time-sphere.test.js`
-  - `node --test tests/*.test.js`
+  - `|`
   - `|`
   - `node --test tests/equinox-passage.test.js`
   - `node --test tests/pwa-resilience.test.js`
@@ -109,3 +109,18 @@
 
 - Netlify: `publish = "docs"`, no build step, so every generated artifact must be committed.
 - GitHub Pages mirror/redirect status: **undetermined**; to be decided and documented in the deployment audit (R2-08). Pages use a `<base href>` switch for `ssnfts24.github.io/scroll-of-fire/`.
+
+## Reproducible generation order
+
+Stage any intentional new files before generation. Then run:
+
+```sh
+npm run site:catalog
+python3 scripts/r2-extract-documents.py  # requires pypdf
+npm run r2:inventory
+npm run site:catalog:check
+npm run r2:inventory:check
+npm run validate
+```
+
+The two `--check` commands are read-only. Catalog scanning uses an OS temporary directory, and both inventories use only index-listed paths. Run checks after the full test suite: the Scroll reader reproducibility test rebuilds tracked `docs/scroll/` outputs, which the R2 registry hashes.

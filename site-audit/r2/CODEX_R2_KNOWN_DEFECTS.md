@@ -55,5 +55,5 @@ Full per-chapter data: `scripture-preliminary-scan.json`.
 
 ## Navigation / experience (carried from PR 5A report)
 
-- Fixed in R2-01: the Atlas filter form (`hidden` attribute) was displayed with JavaScript off because author CSS overrode `hidden`, leaving inert controls. Now `.atlas-filters[hidden]` is hidden and the full card list remains readable (screenshot: `screenshots/atlas-no-javascript-390.png`).
+- Fixed in R2-01: the Atlas filter form (`hidden` attribute) was displayed with JavaScript off because author CSS overrode `hidden`, leaving inert controls. Now `.atlas-filters[hidden]` is hidden and the full 63-entry catalog remains readable (screenshot: `screenshots/atlas-no-javascript-390.png`).
 - Some nav labels differ from page titles; some pages are not directly linked from the homepage; `404`, `offline` and the caravan redirect are intentionally unreachable from navigation.

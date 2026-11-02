@@ -3,6 +3,7 @@
 // Usage: node scripts/build-site-catalog.mjs [--check] [--baseline <docs-root>]
 import crypto from "node:crypto";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -335,17 +336,12 @@ function parseDownloads() {
 }
 
 function trackedFiles() {
-  let files;
-  try {
-    files = execFileSync("git", ["ls-files", "-z", "--cached", "--others", "--exclude-standard"], {
-      cwd: root,
-      encoding: "utf8",
-      maxBuffer: 64 * 1024 * 1024
-    }).split("\0").filter(Boolean);
-  } catch {
-    files = walk(root, (f, e) => e.isDirectory() && [".git", "node_modules"].includes(e.name))
-      .map(f => path.relative(root, f).split(path.sep).join("/"));
-  }
+  // Stage intentional new files before generation; workspace and test artifacts are excluded.
+  const files = execFileSync("git", ["ls-files", "-z", "--cached"], {
+    cwd: root,
+    encoding: "utf8",
+    maxBuffer: 64 * 1024 * 1024
+  }).split("\0").filter(Boolean);
   return [...new Set(files)]
     .filter(f => f !== "site-audit/pr5a-body.md" && !f.startsWith("site-audit/screenshots/"))
     .sort();
@@ -693,7 +689,7 @@ for (const [file, html] of edited) put(file, html);
 const errors = validateCatalog(scanPages(docs));
 // scan the edited state, not the on-disk one, so --check and write agree
 const pagesFinal = (() => {
-  const tmp = fs.mkdtempSync(path.join(root, ".site-scan-"));
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "codex-site-scan-"));
   try {
     for (const file of pageFiles) {
       const target = path.join(tmp, rel(file));
