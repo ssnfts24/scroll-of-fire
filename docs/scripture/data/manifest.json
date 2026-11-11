@@ -1,0 +1,1057 @@
+{
+  "books": [
+    {
+      "chapters": 50,
+      "name": "Genesis",
+      "osis": "Gen",
+      "slug": "genesis",
+      "verseCounts": [
+        31,
+        25,
+        24,
+        26,
+        32,
+        22,
+        24,
+        22,
+        29,
+        32,
+        32,
+        20,
+        18,
+        24,
+        21,
+        16,
+        27,
+        33,
+        38,
+        18,
+        34,
+        24,
+        20,
+        67,
+        34,
+        35,
+        46,
+        22,
+        35,
+        43,
+        54,
+        33,
+        20,
+        31,
+        29,
+        43,
+        36,
+        30,
+        23,
+        23,
+        57,
+        38,
+        34,
+        34,
+        28,
+        34,
+        31,
+        22,
+        33,
+        26
+      ]
+    },
+    {
+      "chapters": 40,
+      "name": "Exodus",
+      "osis": "Exod",
+      "slug": "exodus",
+      "verseCounts": [
+        22,
+        25,
+        22,
+        31,
+        23,
+        30,
+        29,
+        28,
+        35,
+        29,
+        10,
+        51,
+        22,
+        31,
+        27,
+        36,
+        16,
+        27,
+        25,
+        26,
+        37,
+        30,
+        33,
+        18,
+        40,
+        37,
+        21,
+        43,
+        46,
+        38,
+        18,
+        35,
+        23,
+        35,
+        35,
+        38,
+        29,
+        31,
+        43,
+        38
+      ]
+    }
+  ],
+  "chapters": {
+    "Exod.1": {
+      "lemmaParts": 235,
+      "partsWithBdbSenses": 235,
+      "partsWithDraftContext": 1,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/01.html",
+      "verses": 22,
+      "words": 240
+    },
+    "Exod.10": {
+      "lemmaParts": 489,
+      "partsWithBdbSenses": 489,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/10.html",
+      "verses": 29,
+      "words": 497
+    },
+    "Exod.11": {
+      "lemmaParts": 173,
+      "partsWithBdbSenses": 173,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/11.html",
+      "verses": 10,
+      "words": 174
+    },
+    "Exod.12": {
+      "lemmaParts": 728,
+      "partsWithBdbSenses": 728,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/12.html",
+      "verses": 51,
+      "words": 751
+    },
+    "Exod.13": {
+      "lemmaParts": 314,
+      "partsWithBdbSenses": 314,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/13.html",
+      "verses": 22,
+      "words": 325
+    },
+    "Exod.14": {
+      "lemmaParts": 466,
+      "partsWithBdbSenses": 466,
+      "partsWithDraftContext": 1,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/14.html",
+      "verses": 31,
+      "words": 474
+    },
+    "Exod.15": {
+      "lemmaParts": 318,
+      "partsWithBdbSenses": 318,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/15.html",
+      "verses": 27,
+      "words": 321
+    },
+    "Exod.16": {
+      "lemmaParts": 540,
+      "partsWithBdbSenses": 540,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/16.html",
+      "verses": 36,
+      "words": 548
+    },
+    "Exod.17": {
+      "lemmaParts": 241,
+      "partsWithBdbSenses": 241,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/17.html",
+      "verses": 16,
+      "words": 246
+    },
+    "Exod.18": {
+      "lemmaParts": 413,
+      "partsWithBdbSenses": 413,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/18.html",
+      "verses": 27,
+      "words": 418
+    },
+    "Exod.19": {
+      "lemmaParts": 366,
+      "partsWithBdbSenses": 366,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/19.html",
+      "verses": 25,
+      "words": 375
+    },
+    "Exod.2": {
+      "lemmaParts": 329,
+      "partsWithBdbSenses": 329,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/02.html",
+      "verses": 25,
+      "words": 340
+    },
+    "Exod.20": {
+      "lemmaParts": 304,
+      "partsWithBdbSenses": 304,
+      "partsWithDraftContext": 6,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/20.html",
+      "verses": 26,
+      "words": 312
+    },
+    "Exod.21": {
+      "lemmaParts": 441,
+      "partsWithBdbSenses": 441,
+      "partsWithDraftContext": 1,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/21.html",
+      "verses": 37,
+      "words": 451
+    },
+    "Exod.22": {
+      "lemmaParts": 351,
+      "partsWithBdbSenses": 351,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/22.html",
+      "verses": 30,
+      "words": 361
+    },
+    "Exod.23": {
+      "lemmaParts": 389,
+      "partsWithBdbSenses": 389,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/23.html",
+      "verses": 33,
+      "words": 398
+    },
+    "Exod.24": {
+      "lemmaParts": 250,
+      "partsWithBdbSenses": 250,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/24.html",
+      "verses": 18,
+      "words": 252
+    },
+    "Exod.25": {
+      "lemmaParts": 431,
+      "partsWithBdbSenses": 431,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/25.html",
+      "verses": 40,
+      "words": 440
+    },
+    "Exod.26": {
+      "lemmaParts": 478,
+      "partsWithBdbSenses": 478,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/26.html",
+      "verses": 37,
+      "words": 480
+    },
+    "Exod.27": {
+      "lemmaParts": 261,
+      "partsWithBdbSenses": 261,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/27.html",
+      "verses": 21,
+      "words": 262
+    },
+    "Exod.28": {
+      "lemmaParts": 583,
+      "partsWithBdbSenses": 583,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/28.html",
+      "verses": 43,
+      "words": 595
+    },
+    "Exod.29": {
+      "lemmaParts": 636,
+      "partsWithBdbSenses": 636,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/29.html",
+      "verses": 46,
+      "words": 649
+    },
+    "Exod.3": {
+      "lemmaParts": 391,
+      "partsWithBdbSenses": 391,
+      "partsWithDraftContext": 5,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/03.html",
+      "verses": 22,
+      "words": 395
+    },
+    "Exod.30": {
+      "lemmaParts": 450,
+      "partsWithBdbSenses": 450,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/30.html",
+      "verses": 38,
+      "words": 468
+    },
+    "Exod.31": {
+      "lemmaParts": 227,
+      "partsWithBdbSenses": 227,
+      "partsWithDraftContext": 2,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/31.html",
+      "verses": 18,
+      "words": 229
+    },
+    "Exod.32": {
+      "lemmaParts": 525,
+      "partsWithBdbSenses": 525,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/32.html",
+      "verses": 35,
+      "words": 544
+    },
+    "Exod.33": {
+      "lemmaParts": 350,
+      "partsWithBdbSenses": 350,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/33.html",
+      "verses": 23,
+      "words": 354
+    },
+    "Exod.34": {
+      "lemmaParts": 529,
+      "partsWithBdbSenses": 529,
+      "partsWithDraftContext": 3,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/34.html",
+      "verses": 35,
+      "words": 538
+    },
+    "Exod.35": {
+      "lemmaParts": 436,
+      "partsWithBdbSenses": 436,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/35.html",
+      "verses": 35,
+      "words": 440
+    },
+    "Exod.36": {
+      "lemmaParts": 512,
+      "partsWithBdbSenses": 512,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/36.html",
+      "verses": 38,
+      "words": 514
+    },
+    "Exod.37": {
+      "lemmaParts": 358,
+      "partsWithBdbSenses": 358,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/37.html",
+      "verses": 29,
+      "words": 366
+    },
+    "Exod.38": {
+      "lemmaParts": 409,
+      "partsWithBdbSenses": 409,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/38.html",
+      "verses": 31,
+      "words": 412
+    },
+    "Exod.39": {
+      "lemmaParts": 565,
+      "partsWithBdbSenses": 565,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/39.html",
+      "verses": 43,
+      "words": 568
+    },
+    "Exod.4": {
+      "lemmaParts": 442,
+      "partsWithBdbSenses": 442,
+      "partsWithDraftContext": 1,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/04.html",
+      "verses": 31,
+      "words": 453
+    },
+    "Exod.40": {
+      "lemmaParts": 435,
+      "partsWithBdbSenses": 435,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/40.html",
+      "verses": 38,
+      "words": 440
+    },
+    "Exod.5": {
+      "lemmaParts": 311,
+      "partsWithBdbSenses": 311,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/05.html",
+      "verses": 23,
+      "words": 318
+    },
+    "Exod.6": {
+      "lemmaParts": 390,
+      "partsWithBdbSenses": 390,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/06.html",
+      "verses": 30,
+      "words": 404
+    },
+    "Exod.7": {
+      "lemmaParts": 416,
+      "partsWithBdbSenses": 416,
+      "partsWithDraftContext": 1,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/07.html",
+      "verses": 29,
+      "words": 418
+    },
+    "Exod.8": {
+      "lemmaParts": 420,
+      "partsWithBdbSenses": 420,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/08.html",
+      "verses": 28,
+      "words": 422
+    },
+    "Exod.9": {
+      "lemmaParts": 518,
+      "partsWithBdbSenses": 518,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "exodus/09.html",
+      "verses": 35,
+      "words": 521
+    },
+    "Gen.1": {
+      "lemmaParts": 427,
+      "partsWithBdbSenses": 427,
+      "partsWithDraftContext": 7,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/01.html",
+      "verses": 31,
+      "words": 434
+    },
+    "Gen.10": {
+      "lemmaParts": 286,
+      "partsWithBdbSenses": 286,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/10.html",
+      "verses": 32,
+      "words": 287
+    },
+    "Gen.11": {
+      "lemmaParts": 385,
+      "partsWithBdbSenses": 385,
+      "partsWithDraftContext": 1,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/11.html",
+      "verses": 32,
+      "words": 392
+    },
+    "Gen.12": {
+      "lemmaParts": 260,
+      "partsWithBdbSenses": 260,
+      "partsWithDraftContext": 2,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/12.html",
+      "verses": 20,
+      "words": 268
+    },
+    "Gen.13": {
+      "lemmaParts": 237,
+      "partsWithBdbSenses": 237,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/13.html",
+      "verses": 18,
+      "words": 241
+    },
+    "Gen.14": {
+      "lemmaParts": 337,
+      "partsWithBdbSenses": 337,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/14.html",
+      "verses": 24,
+      "words": 341
+    },
+    "Gen.15": {
+      "lemmaParts": 249,
+      "partsWithBdbSenses": 249,
+      "partsWithDraftContext": 2,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/15.html",
+      "verses": 21,
+      "words": 258
+    },
+    "Gen.16": {
+      "lemmaParts": 215,
+      "partsWithBdbSenses": 215,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/16.html",
+      "verses": 16,
+      "words": 223
+    },
+    "Gen.17": {
+      "lemmaParts": 347,
+      "partsWithBdbSenses": 347,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/17.html",
+      "verses": 27,
+      "words": 355
+    },
+    "Gen.18": {
+      "lemmaParts": 433,
+      "partsWithBdbSenses": 433,
+      "partsWithDraftContext": 1,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/18.html",
+      "verses": 33,
+      "words": 437
+    },
+    "Gen.19": {
+      "lemmaParts": 554,
+      "partsWithBdbSenses": 554,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/19.html",
+      "verses": 38,
+      "words": 563
+    },
+    "Gen.2": {
+      "lemmaParts": 324,
+      "partsWithBdbSenses": 324,
+      "partsWithDraftContext": 7,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/02.html",
+      "verses": 25,
+      "words": 328
+    },
+    "Gen.20": {
+      "lemmaParts": 270,
+      "partsWithBdbSenses": 270,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/20.html",
+      "verses": 18,
+      "words": 282
+    },
+    "Gen.21": {
+      "lemmaParts": 420,
+      "partsWithBdbSenses": 420,
+      "partsWithDraftContext": 1,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/21.html",
+      "verses": 34,
+      "words": 436
+    },
+    "Gen.22": {
+      "lemmaParts": 360,
+      "partsWithBdbSenses": 360,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/22.html",
+      "verses": 24,
+      "words": 367
+    },
+    "Gen.23": {
+      "lemmaParts": 262,
+      "partsWithBdbSenses": 262,
+      "partsWithDraftContext": 1,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/23.html",
+      "verses": 20,
+      "words": 275
+    },
+    "Gen.24": {
+      "lemmaParts": 900,
+      "partsWithBdbSenses": 900,
+      "partsWithDraftContext": 1,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/24.html",
+      "verses": 67,
+      "words": 918
+    },
+    "Gen.25": {
+      "lemmaParts": 396,
+      "partsWithBdbSenses": 396,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/25.html",
+      "verses": 34,
+      "words": 405
+    },
+    "Gen.26": {
+      "lemmaParts": 455,
+      "partsWithBdbSenses": 455,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/26.html",
+      "verses": 35,
+      "words": 466
+    },
+    "Gen.27": {
+      "lemmaParts": 611,
+      "partsWithBdbSenses": 611,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/27.html",
+      "verses": 46,
+      "words": 638
+    },
+    "Gen.28": {
+      "lemmaParts": 309,
+      "partsWithBdbSenses": 309,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/28.html",
+      "verses": 22,
+      "words": 323
+    },
+    "Gen.29": {
+      "lemmaParts": 454,
+      "partsWithBdbSenses": 454,
+      "partsWithDraftContext": 1,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/29.html",
+      "verses": 35,
+      "words": 471
+    },
+    "Gen.3": {
+      "lemmaParts": 340,
+      "partsWithBdbSenses": 340,
+      "partsWithDraftContext": 5,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/03.html",
+      "verses": 24,
+      "words": 347
+    },
+    "Gen.30": {
+      "lemmaParts": 543,
+      "partsWithBdbSenses": 543,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/30.html",
+      "verses": 43,
+      "words": 560
+    },
+    "Gen.31": {
+      "lemmaParts": 745,
+      "partsWithBdbSenses": 745,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/31.html",
+      "verses": 54,
+      "words": 768
+    },
+    "Gen.32": {
+      "lemmaParts": 447,
+      "partsWithBdbSenses": 447,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/32.html",
+      "verses": 33,
+      "words": 453
+    },
+    "Gen.33": {
+      "lemmaParts": 258,
+      "partsWithBdbSenses": 258,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/33.html",
+      "verses": 20,
+      "words": 268
+    },
+    "Gen.34": {
+      "lemmaParts": 402,
+      "partsWithBdbSenses": 402,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/34.html",
+      "verses": 31,
+      "words": 421
+    },
+    "Gen.35": {
+      "lemmaParts": 371,
+      "partsWithBdbSenses": 371,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/35.html",
+      "verses": 29,
+      "words": 378
+    },
+    "Gen.36": {
+      "lemmaParts": 486,
+      "partsWithBdbSenses": 486,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/36.html",
+      "verses": 43,
+      "words": 487
+    },
+    "Gen.37": {
+      "lemmaParts": 479,
+      "partsWithBdbSenses": 479,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/37.html",
+      "verses": 36,
+      "words": 494
+    },
+    "Gen.38": {
+      "lemmaParts": 397,
+      "partsWithBdbSenses": 397,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/38.html",
+      "verses": 30,
+      "words": 405
+    },
+    "Gen.39": {
+      "lemmaParts": 336,
+      "partsWithBdbSenses": 336,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/39.html",
+      "verses": 23,
+      "words": 347
+    },
+    "Gen.4": {
+      "lemmaParts": 335,
+      "partsWithBdbSenses": 335,
+      "partsWithDraftContext": 2,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/04.html",
+      "verses": 26,
+      "words": 341
+    },
+    "Gen.40": {
+      "lemmaParts": 307,
+      "partsWithBdbSenses": 307,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/40.html",
+      "verses": 23,
+      "words": 312
+    },
+    "Gen.41": {
+      "lemmaParts": 765,
+      "partsWithBdbSenses": 765,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/41.html",
+      "verses": 57,
+      "words": 776
+    },
+    "Gen.42": {
+      "lemmaParts": 519,
+      "partsWithBdbSenses": 519,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/42.html",
+      "verses": 38,
+      "words": 528
+    },
+    "Gen.43": {
+      "lemmaParts": 467,
+      "partsWithBdbSenses": 467,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/43.html",
+      "verses": 34,
+      "words": 485
+    },
+    "Gen.44": {
+      "lemmaParts": 444,
+      "partsWithBdbSenses": 444,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/44.html",
+      "verses": 34,
+      "words": 455
+    },
+    "Gen.45": {
+      "lemmaParts": 386,
+      "partsWithBdbSenses": 386,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/45.html",
+      "verses": 28,
+      "words": 397
+    },
+    "Gen.46": {
+      "lemmaParts": 409,
+      "partsWithBdbSenses": 409,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/46.html",
+      "verses": 34,
+      "words": 414
+    },
+    "Gen.47": {
+      "lemmaParts": 497,
+      "partsWithBdbSenses": 497,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/47.html",
+      "verses": 31,
+      "words": 512
+    },
+    "Gen.48": {
+      "lemmaParts": 340,
+      "partsWithBdbSenses": 340,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/48.html",
+      "verses": 22,
+      "words": 350
+    },
+    "Gen.49": {
+      "lemmaParts": 363,
+      "partsWithBdbSenses": 363,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/49.html",
+      "verses": 33,
+      "words": 368
+    },
+    "Gen.5": {
+      "lemmaParts": 365,
+      "partsWithBdbSenses": 365,
+      "partsWithDraftContext": 2,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/05.html",
+      "verses": 32,
+      "words": 365
+    },
+    "Gen.50": {
+      "lemmaParts": 369,
+      "partsWithBdbSenses": 369,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/50.html",
+      "verses": 26,
+      "words": 375
+    },
+    "Gen.6": {
+      "lemmaParts": 297,
+      "partsWithBdbSenses": 297,
+      "partsWithDraftContext": 2,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/06.html",
+      "verses": 22,
+      "words": 305
+    },
+    "Gen.7": {
+      "lemmaParts": 330,
+      "partsWithBdbSenses": 330,
+      "partsWithDraftContext": 0,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/07.html",
+      "verses": 24,
+      "words": 332
+    },
+    "Gen.8": {
+      "lemmaParts": 308,
+      "partsWithBdbSenses": 308,
+      "partsWithDraftContext": 1,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/08.html",
+      "verses": 22,
+      "words": 308
+    },
+    "Gen.9": {
+      "lemmaParts": 346,
+      "partsWithBdbSenses": 346,
+      "partsWithDraftContext": 3,
+      "partsWithReviewedContext": 0,
+      "path": "genesis/09.html",
+      "verses": 29,
+      "words": 353
+    }
+  },
+  "completeness": {
+    "level1_originalWordAndMorphology": {
+      "note": "Imported from OSHB. OSHB marks per-word verification status in its own project; this edition does not claim the morphology is verified.",
+      "status": "imported",
+      "wordParts": 57818
+    },
+    "level2_lexicalSenses": {
+      "lemmasWithSenses": 2460,
+      "lemmasWithoutSenses": [],
+      "note": "Sense completeness is relative to the OSHB BDB file, which is a work-in-progress digitisation.",
+      "status": "imported-from-dataset"
+    },
+    "level3_reviewedContext": {
+      "draftSelections": 54,
+      "note": "All contextual selections are drafts with no scholarly reviewer; no chapter is labelled linguistically verified.",
+      "reviewedSelections": 0,
+      "status": "not-started-for-review"
+    }
+  },
+  "derivedOccurrenceIndex": {
+    "bytes": 2448865,
+    "method": "scripts/r2_02_build.py --occurrences from all 39 SHA-256-verified WLC files at the pinned morphhb commit",
+    "sha256": "7246b5c4acf94e3d269c9e92408fceb7740afb8fe94afc7a93dadc5f1700bdc8"
+  },
+  "edition": {
+    "hebrew": "Westminster Leningrad Codex via Open Scriptures Hebrew Bible (OSHB), repository commit pinned in SOURCES.json",
+    "id": "scroll-scripture-r2-02",
+    "status": "draft-pending-review",
+    "translation": "World English Bible (public domain), unmodified",
+    "versification": "WLC (Hebrew) numbering with English cross-reference from OSHB VerseMap.xml",
+    "version": "0.1.0-draft"
+  },
+  "licenses": {
+    "bdbText": "Public domain (Brown–Driver–Briggs, 1906)",
+    "oshbLemmaMorphology": "CC BY 4.0 (attribute: Original work of the Open Scriptures Hebrew Bible available at https://github.com/openscriptures/morphhb)",
+    "oshbLexiconMapping": "CC BY 4.0 (attribute OSHB)",
+    "scrollCommentary": "Original Scroll text remains under the repository's own licence terms and is not relicensed here",
+    "strongs": "Public domain text (Strong's, 1890); OSHB layer CC BY 4.0",
+    "web": "Public domain (eBible.org); the name 'World English Bible' is a trademark of eBible.org",
+    "wlcText": "Public domain"
+  },
+  "repos": {
+    "hebrewlexicon": {
+      "commit": "21c9add13bc727d3a951361778e97e3ff7afd1ce",
+      "repo": "openscriptures/HebrewLexicon"
+    },
+    "morphhb": {
+      "commit": "3d15126fb1ef74867fc1434be1942e837932691f",
+      "repo": "openscriptures/morphhb"
+    },
+    "web": {
+      "commit": "68669ba3be9719ae4d1135b19d9e0b6587b7c356",
+      "repo": "TehShrike/world-english-bible"
+    }
+  },
+  "sources": {
+    "hebrewlexicon/AugIndex.xml": {
+      "bytes": 213975,
+      "sha256": "e7217ca8ff8ff3f21f9cf1bbe87411adf55f6aa88bcf5ed9ddc886cc6b160c5d",
+      "url": "https://raw.githubusercontent.com/openscriptures/HebrewLexicon/21c9add13bc727d3a951361778e97e3ff7afd1ce/AugIndex.xml"
+    },
+    "hebrewlexicon/BrownDriverBriggs.xml": {
+      "bytes": 2911253,
+      "sha256": "2b52658a4323d91674cda4090ab8b3ebddfff640f4f18143c28300e80b2c38f8",
+      "url": "https://raw.githubusercontent.com/openscriptures/HebrewLexicon/21c9add13bc727d3a951361778e97e3ff7afd1ce/BrownDriverBriggs.xml"
+    },
+    "hebrewlexicon/HebrewStrong.xml": {
+      "bytes": 2749042,
+      "sha256": "a628f4f89f8bdaf2483fd3faf1abc8653cc6717758dfc9f24beb7571d9bdd0c4",
+      "url": "https://raw.githubusercontent.com/openscriptures/HebrewLexicon/21c9add13bc727d3a951361778e97e3ff7afd1ce/HebrewStrong.xml"
+    },
+    "hebrewlexicon/LexicalIndex.xml": {
+      "bytes": 1782592,
+      "sha256": "8f7a605c58899d2f44430149c143c00903976e1e91232476677972a69e5bc85f",
+      "url": "https://raw.githubusercontent.com/openscriptures/HebrewLexicon/21c9add13bc727d3a951361778e97e3ff7afd1ce/LexicalIndex.xml"
+    },
+    "hebrewlexicon/readme.md": {
+      "bytes": 2503,
+      "sha256": "9a129c25674387c494571c3828aa3a8eb78459c165e275c313ae26994ce8ff22",
+      "url": "https://raw.githubusercontent.com/openscriptures/HebrewLexicon/21c9add13bc727d3a951361778e97e3ff7afd1ce/readme.md"
+    },
+    "morphhb/LICENSE.md": {
+      "bytes": 1476,
+      "sha256": "9bf4a2890c25372e4c1dc750d550bfb4eacfbfcb63c53123b0628159370d1878",
+      "url": "https://raw.githubusercontent.com/openscriptures/morphhb/3d15126fb1ef74867fc1434be1942e837932691f/LICENSE.md"
+    },
+    "morphhb/README.md": {
+      "bytes": 5027,
+      "sha256": "2da25acf89375558b843dab582bdf00833137baf1c8afe2b32cf09e251179999",
+      "url": "https://raw.githubusercontent.com/openscriptures/morphhb/3d15126fb1ef74867fc1434be1942e837932691f/README.md"
+    },
+    "morphhb/wlc/Exod.xml": {
+      "bytes": 1524391,
+      "sha256": "04868367cdacb6ccdc61488e923e20f918172042e6437842a0621f63ac5b847f",
+      "url": "https://raw.githubusercontent.com/openscriptures/morphhb/3d15126fb1ef74867fc1434be1942e837932691f/wlc/Exod.xml"
+    },
+    "morphhb/wlc/Gen.xml": {
+      "bytes": 1859928,
+      "sha256": "0526e5c9a5fb4d907847645f954ed3d1268fa69decbd872056cedd2668d86449",
+      "url": "https://raw.githubusercontent.com/openscriptures/morphhb/3d15126fb1ef74867fc1434be1942e837932691f/wlc/Gen.xml"
+    },
+    "morphhb/wlc/VerseMap.xml": {
+      "bytes": 106885,
+      "sha256": "6cd269ca3dccef2cb944b9d9dd8afc950f929dab53a534f1268d23affa983163",
+      "url": "https://raw.githubusercontent.com/openscriptures/morphhb/3d15126fb1ef74867fc1434be1942e837932691f/wlc/VerseMap.xml"
+    },
+    "web/html/copyright.htm": {
+      "bytes": 3894,
+      "sha256": "e9d894db0efdd382024bbdbd56a995f80e68d5d7627a5e456f1968c3e66d02a1",
+      "url": "https://raw.githubusercontent.com/TehShrike/world-english-bible/68669ba3be9719ae4d1135b19d9e0b6587b7c356/html/copyright.htm"
+    },
+    "web/json/exodus.json": {
+      "bytes": 332596,
+      "sha256": "769be0aa95e970cf32293206993c4fe2c23eade5588345a9e0c459066b6b3f29",
+      "url": "https://raw.githubusercontent.com/TehShrike/world-english-bible/68669ba3be9719ae4d1135b19d9e0b6587b7c356/json/exodus.json"
+    },
+    "web/json/genesis.json": {
+      "bytes": 426501,
+      "sha256": "0209391b0e9b411a93e902bf249b5d560bd122365f123b67e7248c507886f63b",
+      "url": "https://raw.githubusercontent.com/TehShrike/world-english-bible/68669ba3be9719ae4d1135b19d9e0b6587b7c356/json/genesis.json"
+    }
+  },
+  "totals": {
+    "chapters": 90,
+    "distinctLemmasInEdition": 2460,
+    "ketivQere": 28,
+    "lemmasWithBdbSenses": 2460,
+    "senseRecords": 7251,
+    "verses": 2746,
+    "versificationDifferences": 96,
+    "wordParts": 57818,
+    "wordPartsWithBdbSenses": 36562,
+    "wordPartsWithLemma": 36562,
+    "wordTokens": 37325
+  }
+}

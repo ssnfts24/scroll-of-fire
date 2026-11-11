@@ -112,7 +112,26 @@
         "scroll-lexicon",
         "scroll-atlas",
         "scroll-editorial",
-        "scroll-original"
+        "scroll-original",
+        "scripture-library"
+      ],
+      "featured": true,
+      "publicationEligibility": "approved-public"
+    },
+    {
+      "id": "scripture-library",
+      "title": "Genesis & Exodus Scripture",
+      "description": "A source-attributed Hebrew reader for Genesis 1–50 and Exodus 1–40, with word studies, morphology, lexical senses and separate interpretive layers.",
+      "area": "scroll-scripture",
+      "category": "Scripture",
+      "resourceType": "collection",
+      "status": "live",
+      "path": "scripture/index.html",
+      "url": "https://codexofreality.org/scripture/index.html",
+      "related": [
+        "scroll-library",
+        "genesis-oracle",
+        "scroll-lexicon"
       ],
       "featured": true,
       "publicationEligibility": "approved-public"
