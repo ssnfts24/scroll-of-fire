@@ -40,6 +40,12 @@ test("public catalog has six areas, usable routes, and only explicit publication
   }
   assert.equal(catalog.entries.some(entry => entry.path === "EVIDENCE_REGISTER.md"), false);
   assert.ok(catalog.entries.some(entry =>
+    entry.id === "scripture-library" && entry.path === "scripture/index.html"
+  ));
+  assert.ok(curation.collections.some(collection =>
+    collection.pathPrefix === "scripture/" && collection.entry === "scripture-library"
+  ));
+  assert.ok(catalog.entries.some(entry =>
     entry.path === "README.md" && entry.publicationEligibility === "approved-public"
   ));
 });
@@ -53,6 +59,8 @@ test("master inventory covers every deployed page and numbered archive file with
   assert.ok(htmlPages.some(resource => resource.sourcePath === "docs/scroll/lexicon.html"));
   assert.ok(htmlPages.some(resource => resource.sourcePath === "docs/scroll/search.html"));
   assert.ok(htmlPages.some(resource => resource.sourcePath === "docs/scroll/atlas.html"));
+  assert.ok(htmlPages.some(resource => resource.sourcePath === "docs/scripture/index.html"));
+  assert.ok(htmlPages.some(resource => resource.sourcePath === "docs/scripture/genesis/01.html"));
 
   for (const resource of inventory.resources) {
     for (const key of ["id", "title", "description", "category", "sourcePath",
@@ -90,11 +98,31 @@ test("global navigation, Scroll entry points, filters and local-data disclosure 
   for (const file of htmlFiles) {
     const source = fs.readFileSync(file, "utf8");
     if (!source.includes('data-site-nav')) continue;
-    assert.match(source, /site-nav:global:start[\s\S]*?Scroll Library[\s\S]*?codex-atlas\.html/);
+    if (file.includes(`${path.sep}scripture${path.sep}`)) {
+      assert.match(source, /data-site-nav[\s\S]*?Codex Atlas/);
+    } else {
+      assert.match(source, /site-nav:global:start[\s\S]*?Scroll Library[\s\S]*?codex-atlas\.html/);
+    }
     for (const route of ["scroll/search.html", "scroll/lexicon.html", "scroll/atlas.html", "scroll/editorial.html"]) {
       assert.ok(source.includes(route), `${file} misses ${route} in its navigation`);
     }
+
   }
+
+  for (const book of ["genesis", "exodus"]) {
+    const chapters = book === "genesis" ? 50 : 40;
+    for (let chapter = 1; chapter <= chapters; chapter++) {
+      const file = path.join(root, "docs/scripture", book, `${String(chapter).padStart(2, "0")}.html`);
+      assert.ok(fs.existsSync(file), `missing ${book} chapter ${chapter}`);
+      const source = fs.readFileSync(file, "utf8");
+      assert.match(source, /data-site-nav/);
+      assert.match(source, /scripture\.js/);
+      assert.match(source, /id="main"/);
+    }
+  }
+  const sitemap = read("docs/sitemap.xml");
+  const scriptureSitemap = [...sitemap.matchAll(/<loc>https:\/\/codexofreality\.org\/scripture\/[^<]+<\/loc>/g)];
+  assert.equal(scriptureSitemap.length, 93);
 
   const homepage = read("docs/index.html");
   for (const label of ["Read", "Explore", "Build", "Living Time", "Archive"]) {

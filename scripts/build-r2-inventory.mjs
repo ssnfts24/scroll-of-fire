@@ -43,6 +43,7 @@ const RULES = [
   [/^docs\/scroll\/archive\//, { group: "scroll-library", role: "Public byte copy of the frozen original", eligibility: "approved-public", status: "archived", editorial: "not-applicable", next: "Keep hash-locked." }],
   [/^docs\/scroll\/evidence\//, { group: "scroll-library", role: "PR4 evidence register (21 claims) and editorial edition data", eligibility: "approved-public", status: "partially-reviewed", editorial: "reviewed-pr4", evidence: "partially-reviewed", next: "Extend with dated sources in R2-05." }],
   [/^docs\/scroll\//, { group: "scroll-library", role: "Scroll Library reader, generated data, search index or lexicon", eligibility: "approved-public", status: "operational", editorial: "generated", next: "Regenerate via npm run scroll:build." }],
+  [/^docs\/scripture\//, { group: "scripture", role: "Generated Genesis and Exodus Hebrew reader, lexical data or source notes", eligibility: "approved-public", status: "partially-reviewed", scripture: "source-imported-context-unreviewed", next: "Continue verse, source and contextual review in R2-02." }],
   [/^docs\/assets\/vendor\//, { group: "vendor", role: "Third-party library bundled for runtime use", eligibility: "approved-public", status: "operational", next: "Record licence and version in R2-03." }],
   [/^docs\/assets\/img\/.*\.md$/, { group: "deployed-dev-doc", role: "Image pipeline note stored under the publish tree", eligibility: "restricted-review", status: "unverified", next: "Decide: move out of docs/ or mark intentionally public." }],
   [/^docs\/assets\/.*\.md$/, { group: "deployed-dev-doc", role: "Asset folder README stored under the publish tree", eligibility: "restricted-review", status: "unverified", next: "Decide: move out of docs/ or mark intentionally public." }],
@@ -67,6 +68,7 @@ const RULES = [
   [/^tests\//, { group: "tooling", role: "Automated test", eligibility: "development-only", status: "operational", next: "Keep green." }],
   [/^scripts\//, { group: "tooling", role: "Build or audit script", eligibility: "development-only", status: "operational", next: "Keep green." }],
   [/^site-audit\//, { group: "tooling", role: "Generated audit report", eligibility: "development-only", status: "operational", next: "Regenerate when sources change." }],
+  [/^sources\/r2-02\//, { group: "scripture-source", role: "Pinned source dataset and provenance metadata for the R2-02 derived edition", eligibility: "development-only", status: "source-pinned", next: "Retain source hashes and licensing notices." }],
   [/^\.github\//, { group: "tooling", role: "CI workflow or repository template", eligibility: "development-only", status: "operational", next: "Keep green." }],
   [/^(EVIDENCE_REGISTER|EDITORIAL_CHANGELOG)\.md$/, { group: "editorial", role: "PR4 evidence register or editorial changelog", eligibility: "development-only", status: "partially-reviewed", next: "Extend in R2-05." }],
   [/^(Genesis-Restored|Exodus-Restored)\.md$/, { group: "scripture", role: "Restored Scripture manuscript (original-language and paraphrase mix)", eligibility: "pending-publication-review", status: "unverified", scripture: "not-verified", next: "Verse-level audit (R2-02)." }],
@@ -231,7 +233,7 @@ const registry = {
   purpose: "Development-only registry of every tracked or intended repository file. Not a publication list.",
   generatedFrom: "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   totals: { files: recs.length, bytes: recs.reduce((s, r) => s + r.bytes, 0), byGroup, byPublicationEligibility: byElig, byExamination: byExam },
-  statusVocabulary: ["original", "edited", "verified", "partially-reviewed", "unverified", "prototype", "operational", "archived", "deprecated", "restricted-review"],
+  statusVocabulary: ["original", "edited", "verified", "partially-reviewed", "unverified", "prototype", "operational", "archived", "deprecated", "restricted-review", "source-pinned"],
   integrityProof: { ...proofs, allMatch: proofOk },
   resources: recs,
 };
@@ -421,7 +423,7 @@ Full per-chapter data: \`scripture-preliminary-scan.json\`.
 
 ## Navigation / experience (carried from PR 5A report)
 
-- Fixed in R2-01: the Atlas filter form (\`hidden\` attribute) was displayed with JavaScript off because author CSS overrode \`hidden\`, leaving inert controls. Now \`.atlas-filters[hidden]\` is hidden and the full 63-entry catalog remains readable (screenshot: \`screenshots/atlas-no-javascript-390.png\`).
+- Fixed in R2-01: the Atlas filter form (\`hidden\` attribute) was displayed with JavaScript off because author CSS overrode \`hidden\`, leaving inert controls. Now \`.atlas-filters[hidden]\` is hidden and the full 64-entry catalog remains readable (screenshot: \`screenshots/atlas-no-javascript-390.png\`).
 - Some nav labels differ from page titles; some pages are not directly linked from the homepage; \`404\`, \`offline\` and the caravan redirect are intentionally unreachable from navigation.
 `;
 
