@@ -3,10 +3,10 @@
   "purpose": "Development-only registry of every tracked or intended repository file. Not a publication list.",
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
-    "files": 1643,
-    "bytes": 485616579,
+    "files": 1645,
+    "bytes": 485654344,
     "byGroup": {
-      "tooling": 117,
+      "tooling": 118,
       "manuscript": 17,
       "unlabelled-image": 21,
       "witness-record": 20,
@@ -25,7 +25,7 @@
       "legacy-asset": 1,
       "site-page": 41,
       "deployed-dev-doc": 55,
-      "site-asset": 347,
+      "site-asset": 348,
       "vendor": 3,
       "site-data": 5,
       "scroll-library": 826,
@@ -34,15 +34,15 @@
       "project-file": 1
     },
     "byPublicationEligibility": {
-      "development-only": 145,
+      "development-only": 146,
       "pending-publication-review": 42,
       "restricted-review": 179,
       "protected-immutable": 21,
       "public-unreviewed": 5,
-      "approved-public": 1251
+      "approved-public": 1252
     },
     "byExamination": {
-      "inventoried-only": 1519,
+      "inventoried-only": 1521,
       "text-extracted": 55,
       "no-text-layer-needs-visual-review": 1,
       "archive-listed": 8,
@@ -1508,7 +1508,7 @@
       "extract": {
         "status": "text-extracted",
         "pages": 333,
-        "words": 82980,
+        "words": 82978,
         "hebrew": true,
         "greek": true,
         "metadata": {
@@ -1581,7 +1581,7 @@
       "extract": {
         "status": "text-extracted",
         "pages": 266,
-        "words": 56294,
+        "words": 56295,
         "hebrew": true,
         "greek": true,
         "metadata": {
@@ -1654,7 +1654,7 @@
       "extract": {
         "status": "text-extracted",
         "pages": 256,
-        "words": 56916,
+        "words": 56914,
         "hebrew": true,
         "greek": true,
         "metadata": {
@@ -1775,7 +1775,7 @@
       "extract": {
         "status": "text-extracted",
         "pages": 5,
-        "words": 718,
+        "words": 712,
         "hebrew": false,
         "greek": true,
         "metadata": {
@@ -6335,8 +6335,8 @@
       "path": "docs/assets/css/living-time-sphere.css",
       "title": "living-time-sphere.css",
       "format": "css",
-      "bytes": 124722,
-      "sha256": "2e9ed429c8ef406a76b9f2bcc45a2f8e6a9ba8fbbdbeee4e7d9bd20a9bd3464b",
+      "bytes": 126082,
+      "sha256": "0b26310649235f4109322f09e8e809c6781f536a36b0715c5134f8154d30ed89",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -14379,6 +14379,30 @@
       "nextAction": "Functionality audit in R2-03/R2-06."
     },
     {
+      "id": "r2:docs-assets-js-sphere-living-time-sphere-day-zoom-js-40a0b1",
+      "path": "docs/assets/js/sphere/living-time-sphere-day-zoom.js",
+      "title": "living-time-sphere-day-zoom.js",
+      "format": "js",
+      "bytes": 24004,
+      "sha256": "bdad516a73cbf13ad9aba0c03d6582c59b1671bd797279a93e11bee3d7da514a",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/js/sphere/living-time-sphere-day-zoom.js",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
       "id": "r2:docs-assets-js-sphere-living-time-sphere-effects-js-ca62d1",
       "path": "docs/assets/js/sphere/living-time-sphere-effects.js",
       "title": "living-time-sphere-effects.js",
@@ -15916,8 +15940,8 @@
       "path": "docs/living-time-sphere.html",
       "title": "Living Time Sphere",
       "format": "html",
-      "bytes": 118301,
-      "sha256": "f57e01fff35bb6e7a844f78e0cad5e5806bc4c119d2357c82c4bbc62e3eddc3f",
+      "bytes": 120394,
+      "sha256": "ede4adffa225aa49dfa28b8b292bdbcb74efd67c9160715c6486b7b58f649541",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -38311,7 +38335,7 @@
       "title": "site-master-inventory.json",
       "format": "json",
       "bytes": 401762,
-      "sha256": "abe9470a422fee213b625a44ca8ed85330c401725a888d34167ab321ee063db1",
+      "sha256": "a43c9dbe005e41c5aceecdeae4f8332aafa48d51fa97fb1e01d767f346325ceb",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -39176,6 +39200,30 @@
       "format": "js",
       "bytes": 40868,
       "sha256": "e8754bae3c5f20bfabb47c94500536931f70f53e7f2c07cb417983c382a98065",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-living-time-sphere-day-zoom-test-js-1fa4f3",
+      "path": "tests/living-time-sphere-day-zoom.test.js",
+      "title": "living-time-sphere-day-zoom.test.js",
+      "format": "js",
+      "bytes": 10308,
+      "sha256": "a890d855d00c66ef773370bf2eec3bc27570ad338c719a83f4373804e3ce4c65",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,

@@ -4436,3 +4436,87 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
   box-shadow: none;
 }
 /* === B7.59.2D UNIFIED DAY + SCHEDULE PACKET END === */
+
+/* Day Zoom — Living Strata day-depth panel (living-time-sphere-day-zoom.js) */
+.sphere-day-zoom-date {
+  margin: 0.35rem 0 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.sphere-day-zoom-coords {
+  margin: 0.2rem 0 0.6rem;
+  opacity: 0.85;
+}
+
+.sphere-day-zoom-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+
+.sphere-day-zoom-jump {
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.sphere-day-zoom-jump input {
+  width: 4.5rem;
+  padding: 0.3rem 0.4rem;
+}
+
+.sphere-day-zoom-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.sphere-day-zoom-item {
+  display: flex;
+  gap: 0.6rem;
+  align-items: baseline;
+  padding: 0.45rem 0.55rem;
+  border: 1px solid rgba(128, 128, 128, 0.35);
+  border-radius: 0.5rem;
+}
+
+.sphere-day-zoom-item.is-completed {
+  opacity: 0.65;
+}
+
+.sphere-day-zoom-time {
+  flex: 0 0 5.2rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.sphere-day-zoom-body {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.sphere-day-zoom-body small {
+  opacity: 0.75;
+  text-transform: capitalize;
+}
+
+.sphere-day-zoom-summary {
+  opacity: 0.85;
+}
+
+.sphere-day-zoom-empty {
+  margin: 0.4rem 0;
+  opacity: 0.85;
+}
+
+.sphere-day-zoom-status {
+  margin: 0.4rem 0 0;
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
