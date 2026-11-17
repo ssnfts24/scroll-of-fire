@@ -79,6 +79,7 @@
       "assets/js/life-atlas/life-atlas-importers.js?v=20260819-b750",
       "assets/js/life-atlas/life-atlas-ingestion.js?v=20260819-b750",
       "assets/js/life-atlas/life-atlas-runtime.js?v=20260819-b750",
+      "assets/js/life-atlas/life-atlas-export.js?v=20260819-b750",
       "assets/js/life-atlas/life-atlas-import-ui.js?v=20260817-2",
       "assets/js/sphere/living-time-observatory-workspace.js?v=20260815-6"
     ];
@@ -982,7 +983,9 @@
               <div class="sphere-detail-actions">
                 <button id="life-atlas-import-commit" class="sphere-btn sphere-btn-primary" type="button" disabled>Import as Private Records</button>
                 <button id="life-atlas-import-clear" class="sphere-btn" type="button">Clear Staging</button>
+                <button id="life-atlas-export-backup" class="sphere-btn" type="button">Download Backup (JSON)</button>
               </div>
+              <p class="sphere-methods">Backup: downloads every Life Atlas record stored in this browser as one JSON file. <strong>This file contains your private records</strong> — store it somewhere safe and do not share it. Restore it at any time by selecting it with the file picker above; backup records come back with their original ids, alongside anything already here.</p>
               <details class="life-atlas-import-methods">
                 <summary>What happens to imported history?</summary>
                 <p>Each record is normalized once into the Life Atlas with time, place, source, confidence, privacy, and Pattern coordinates. The Sphere then projects dated records onto the corresponding year membrane and Pattern-day angle. Duplicate fingerprints are skipped. Imported records are marked unreviewed so later reconciliation can confirm people, places, journeys, and merged events without silently rewriting source evidence.</p>

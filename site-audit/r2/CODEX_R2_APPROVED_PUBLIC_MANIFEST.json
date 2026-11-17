@@ -1606,8 +1606,14 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/js/life-atlas/life-atlas-export.js",
+      "sha256": "d467fed21dd9ad966d65e6bab441b0cf4e087a75476b242fd6cdd69dd56007ce",
+      "publicUrl": "https://codexofreality.org/assets/js/life-atlas/life-atlas-export.js",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/js/life-atlas/life-atlas-import-ui.js",
-      "sha256": "b1700f1cdcc3d52a690520cdf4a45233f412318b7c3c27d26013bdabb07a6ffb",
+      "sha256": "c8581522d385773084956b0daa4b3736e2b761f25fb56e0a1d412970e705693f",
       "publicUrl": "https://codexofreality.org/assets/js/life-atlas/life-atlas-import-ui.js",
       "status": "operational"
     },
@@ -2261,7 +2267,7 @@
     },
     {
       "path": "docs/living-time-sphere.html",
-      "sha256": "f57e01fff35bb6e7a844f78e0cad5e5806bc4c119d2357c82c4bbc62e3eddc3f",
+      "sha256": "a87941881d1bf887257bddab1baf6f22faf4451560f5a8126b8ba0040f9fc456",
       "publicUrl": "https://codexofreality.org/living-time-sphere.html",
       "status": "operational"
     },
