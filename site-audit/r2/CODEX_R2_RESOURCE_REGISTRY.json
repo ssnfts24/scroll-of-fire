@@ -3,8 +3,8 @@
   "purpose": "Development-only registry of every tracked or intended repository file. Not a publication list.",
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
-    "files": 1643,
-    "bytes": 485616579,
+    "files": 1644,
+    "bytes": 485622063,
     "byGroup": {
       "tooling": 117,
       "manuscript": 17,
@@ -24,7 +24,7 @@
       "legacy-site": 3,
       "legacy-asset": 1,
       "site-page": 41,
-      "deployed-dev-doc": 55,
+      "deployed-dev-doc": 56,
       "site-asset": 347,
       "vendor": 3,
       "site-data": 5,
@@ -36,13 +36,13 @@
     "byPublicationEligibility": {
       "development-only": 145,
       "pending-publication-review": 42,
-      "restricted-review": 179,
+      "restricted-review": 180,
       "protected-immutable": 21,
       "public-unreviewed": 5,
       "approved-public": 1251
     },
     "byExamination": {
-      "inventoried-only": 1519,
+      "inventoried-only": 1520,
       "text-extracted": 55,
       "no-text-layer-needs-visual-review": 1,
       "archive-listed": 8,
@@ -1508,7 +1508,7 @@
       "extract": {
         "status": "text-extracted",
         "pages": 333,
-        "words": 82980,
+        "words": 82978,
         "hebrew": true,
         "greek": true,
         "metadata": {
@@ -1581,7 +1581,7 @@
       "extract": {
         "status": "text-extracted",
         "pages": 266,
-        "words": 56294,
+        "words": 56295,
         "hebrew": true,
         "greek": true,
         "metadata": {
@@ -1654,7 +1654,7 @@
       "extract": {
         "status": "text-extracted",
         "pages": 256,
-        "words": 56916,
+        "words": 56914,
         "hebrew": true,
         "greek": true,
         "metadata": {
@@ -1775,7 +1775,7 @@
       "extract": {
         "status": "text-extracted",
         "pages": 5,
-        "words": 718,
+        "words": 712,
         "hebrew": false,
         "greek": true,
         "metadata": {
@@ -15586,6 +15586,30 @@
       "role": "Engineering report or specification under the publish tree",
       "deployed": true,
       "publicUrl": "https://codexofreality.org/development/LIVING-INTERFACE-ARCHITECTURE-V4-PLAN.md",
+      "publicationEligibility": "restricted-review",
+      "status": "partially-reviewed",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Decide public technical-record status; specs may belong in Build journey."
+    },
+    {
+      "id": "r2:docs-development-r1-7-protected-manifest-md-c67cf0",
+      "path": "docs/development/R1.7-PROTECTED-MANIFEST.md",
+      "title": "R1.7-PROTECTED-MANIFEST.md",
+      "format": "md",
+      "bytes": 4598,
+      "sha256": "ce12b01cc4c2077ad60d21eb0ac0a675b6362451dbce4ddbfdd2eff7f352c5b4",
+      "group": "deployed-dev-doc",
+      "role": "Engineering report or specification under the publish tree",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/development/R1.7-PROTECTED-MANIFEST.md",
       "publicationEligibility": "restricted-review",
       "status": "partially-reviewed",
       "catalogId": null,
@@ -38215,7 +38239,7 @@
       "title": "CONTENT-COVERAGE.md",
       "format": "md",
       "bytes": 9443,
-      "sha256": "d28c5671a5edfe856521d8008230784468763c9183db4d8aa784a495c239c299",
+      "sha256": "beb9cbbdb434f5050a6421c122bfb1430ba9b784c927b103f0527a08d6d6ded1",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -38238,8 +38262,8 @@
       "path": "site-audit/DISCOVERABILITY_REPORT.md",
       "title": "DISCOVERABILITY_REPORT.md",
       "format": "md",
-      "bytes": 14517,
-      "sha256": "27cdd66200c1f3cd356d88042192d3174b01e06612e9c44a1bd719d05888de92",
+      "bytes": 14604,
+      "sha256": "73697306daeb4ced583d69d2a0e245a2b42ff1f9a1af8ae5b8d6a287deda626c",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -38310,8 +38334,8 @@
       "path": "site-audit/site-master-inventory.json",
       "title": "site-master-inventory.json",
       "format": "json",
-      "bytes": 401762,
-      "sha256": "abe9470a422fee213b625a44ca8ed85330c401725a888d34167ab321ee063db1",
+      "bytes": 402561,
+      "sha256": "270e8db82ca73a6e11e07b3d79f1af2eddd17cd6c8a02d6f40d2462e0b59830e",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
