@@ -816,6 +816,9 @@
       calendarDisclosure = null,
 
       semanticBand = "medium",
+
+      // B7.60 — overhead (top-view) gate from renderer camera elevation.
+      cameraOverhead = false,
       interactionLite = false
     }) {
       const stage = stageEl || _stageEl;
@@ -870,6 +873,7 @@
         visibleLayersKey || "",
         Array.isArray(semanticTargets) ? semanticTargets.length : 0,
         String(semanticBand || "medium"),
+        cameraOverhead ? "overhead" : "tilted",
         cameraSignature(camera)
       ].join("::");
 
@@ -1437,6 +1441,11 @@
               .toLowerCase()
             === "all";
 
+          // B7.60 — overhead reuses the far skeleton gate below: the
+          // X-only aperture is a tilted-view window and cannot thin the
+          // rail once the camera is near top-down.
+          const overhead = !!cameraOverhead;
+
           const apertureOpacity =
             railApertureOpacity(
               candidate
@@ -1446,7 +1455,7 @@
             target?.kind ===
             "intercalary-day-number"
           ) {
-            if (revealAll) return true;
+            if (revealAll && !overhead) return true;
 
             return (
               sharedMoonWindow
@@ -1454,6 +1463,7 @@
               && apertureOpacity
                 > 0.025
               && band !== "far"
+              && !overhead
             );
           }
 
@@ -1490,7 +1500,7 @@
             return true;
           }
 
-          if (revealAll) {
+          if (revealAll && !overhead) {
             return true;
           }
 
@@ -1499,8 +1509,13 @@
            * Front Moon: 1, 7, 14, 21, 28.
            * Immediate neighbor Moon(s): 1, 14, 28.
            * Scheduled days also survive. The physical calendarCell never moves.
+           *
+           * B7.60 — the same skeleton is the overhead rule: near top-down,
+           * day numerals collapse to these week anchors of the disclosure
+           * Moons, plus selected/pinned days (already returned above).
+           * No label moves; only visibility is governed.
            */
-          if (band === "far") {
+          if (band === "far" || overhead) {
             const centerMoon =
               Number(
                 calendarDisclosure?.centerMoon
@@ -2121,6 +2136,7 @@
               || "medium"
             ).toLowerCase()
             === "far"
+            || cameraOverhead
           ) {
             el.dataset.farSkeleton =
               "true";

@@ -963,6 +963,15 @@
     const fallbackDist = globalThis.LivingTimeSphereCamera?.MODE_POSITIONS?.[_viewMode]?.distance || 2.35;
     const rawDistance = Number(cameraState.dist);
     const distance = Number.isFinite(rawDistance) ? rawDistance : fallbackDist;
+    // B7.60 — elevation is part of the semantic state: the day rail is a
+    // tilted-view composition, so overhead disclosure gates on phi even
+    // though the distance band itself stays phi-free.
+    const phi = Number(cameraState.phi);
+    const overhead = Number.isFinite(phi)
+      ? (typeof zoom.isOverheadPhi === "function"
+          ? !!zoom.isOverheadPhi(phi)
+          : Math.abs(phi - Math.PI / 2) <= 0.35)
+      : false;
     const candidateBand = zoom.resolveBand({ distance, screenWidth });
     const stabilization = _stabilizeBandWithMeta({ candidateBand, distance, screenWidth, previousBand: _activeSemanticBand });
     const band = stabilization.band;
@@ -975,6 +984,8 @@
       ...resolved,
       sourceType: Number.isFinite(rawDistance) ? "camera-distance-live" : "camera-distance-fallback",
       distance,
+      phi: Number.isFinite(phi) ? phi : null,
+      overhead,
       previousBand: _activeSemanticBand || null,
       transitionThreshold: stabilization.transitionThreshold,
     });
@@ -1987,6 +1998,7 @@
       selectedPatternPosition: _model?.selectedPatternPosition || _model?.todayPatternPosition || null,
       showAllMobileLabels: _moonLabelMode === "all",
       dayLabelMode: _effectiveDayLabelMode(),
+      cameraOverhead: _cameraOverhead(),
       calendarDisclosure,
       selectedMarkerPosition: _objects.selectedDayMarker?.position
         ? { x: _objects.selectedDayMarker.position.x, y: _objects.selectedDayMarker.position.y, z: _objects.selectedDayMarker.position.z }
@@ -4284,6 +4296,18 @@
   }
 
 
+  // B7.60 — overhead (top-view) detection from the live camera elevation.
+  // The tilted-view day rail collapses overhead, so the effective day-label
+  // mode and the label manager both gate on this. It only ever reads camera
+  // state; preference state is never written back (B7.58.5 ownership holds).
+  function _cameraOverhead() {
+    const phi = Number(globalThis.LivingTimeSphereCamera?.getState?.()?.phi);
+    if (!Number.isFinite(phi)) return false;
+    const zoom = globalThis.LivingTimeSphereSemanticZoom;
+    if (typeof zoom?.isOverheadPhi === "function") return !!zoom.isOverheadPhi(phi);
+    return Math.abs(phi - Math.PI / 2) <= 0.35;
+  }
+
   // === B7.58.5 — AUTO DISCLOSURE OWNERSHIP START ===
   // Raw preference:
   //   key      = camera-aware Auto
@@ -4326,28 +4350,41 @@
         "key"
       );
 
+    let mode;
+
     if (
       preference === "all"
       || preference === "selected"
       || preference === "hidden"
     ) {
-      return preference;
+      mode = preference;
+    } else if (_lastSemanticDistance == null) {
+      /*
+       * Cold-start protection:
+       * Before the real 3D camera has produced a semantic distance, UI-level
+       * camera state may still be provisional. Auto starts in the lightweight
+       * key-day presentation instead of materializing the complete 364 labels.
+       */
+      mode = "key";
+    } else {
+      mode = _normalizeDayLabelPreference(
+        _semanticZoomState?.dayLabelMode,
+        "key"
+      );
     }
 
     /*
-     * Cold-start protection:
-     * Before the real 3D camera has produced a semantic distance, UI-level
-     * camera state may still be provisional. Auto starts in the lightweight
-     * key-day presentation instead of materializing the complete 364 labels.
+     * B7.60 — overhead cap: near top-down the canonical rail compresses
+     * into unreadable piles, so an "all" presentation (DETAIL band or
+     * explicit Reveal All) collapses to the key presentation while the
+     * camera is overhead. The stored preference is untouched; tilting
+     * away from the top view restores it.
      */
-    if (_lastSemanticDistance == null) {
+    if (mode === "all" && _cameraOverhead()) {
       return "key";
     }
 
-    return _normalizeDayLabelPreference(
-      _semanticZoomState?.dayLabelMode,
-      "key"
-    );
+    return mode;
   }
   // === B7.58.5 — AUTO DISCLOSURE OWNERSHIP END ===
 
@@ -4359,6 +4396,7 @@
     const changed = force
       || !_semanticZoomState
       || next.band !== _semanticZoomState.band
+      || !!next.overhead !== !!_semanticZoomState.overhead
       || next.dayLabelMode !== _semanticZoomState.dayLabelMode
       || next.moonLabelMode !== _semanticZoomState.moonLabelMode
       || next.maxConnections !== _semanticZoomState.maxConnections
