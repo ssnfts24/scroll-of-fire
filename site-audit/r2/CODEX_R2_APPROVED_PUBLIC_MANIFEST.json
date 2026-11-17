@@ -1648,6 +1648,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/js/life-atlas/life-atlas-platform-bridge.js",
+      "sha256": "eb96ffd402d75e757ca874dad2599639b5c8533e98739ca47236c48541dcd203",
+      "publicUrl": "https://codexofreality.org/assets/js/life-atlas/life-atlas-platform-bridge.js",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/js/life-atlas/life-atlas-projections.js",
       "sha256": "4fb435d28c24131d6045d65d2b4577a70d05db45491f11b5c97973a1d05c1f52",
       "publicUrl": "https://codexofreality.org/assets/js/life-atlas/life-atlas-projections.js",
@@ -1735,6 +1741,18 @@
       "path": "docs/assets/js/life-atlas/living-command-window.js",
       "sha256": "1d05b1ca0cf780323d8ae54435f7907a63b3e458d75b85a176a1637c3255418a",
       "publicUrl": "https://codexofreality.org/assets/js/life-atlas/living-command-window.js",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/js/life-atlas/living-platform-contract.js",
+      "sha256": "c333fd014abaf973f7b718f61500401106db6e1d487388a117ec02b714e6027e",
+      "publicUrl": "https://codexofreality.org/assets/js/life-atlas/living-platform-contract.js",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/js/life-atlas/living-platform-sphere-receiver.js",
+      "sha256": "5f353401fc32048ec2b2b9aa13bf21b6011c5a762dec878ef338352a40c1773d",
+      "publicUrl": "https://codexofreality.org/assets/js/life-atlas/living-platform-sphere-receiver.js",
       "status": "operational"
     },
     {

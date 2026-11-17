@@ -3,8 +3,8 @@
   "purpose": "Development-only registry of every tracked or intended repository file. Not a publication list.",
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
-    "files": 1643,
-    "bytes": 485616579,
+    "files": 1646,
+    "bytes": 485634770,
     "byGroup": {
       "tooling": 117,
       "manuscript": 17,
@@ -25,7 +25,7 @@
       "legacy-asset": 1,
       "site-page": 41,
       "deployed-dev-doc": 55,
-      "site-asset": 347,
+      "site-asset": 350,
       "vendor": 3,
       "site-data": 5,
       "scroll-library": 826,
@@ -39,10 +39,10 @@
       "restricted-review": 179,
       "protected-immutable": 21,
       "public-unreviewed": 5,
-      "approved-public": 1251
+      "approved-public": 1254
     },
     "byExamination": {
-      "inventoried-only": 1519,
+      "inventoried-only": 1522,
       "text-extracted": 55,
       "no-text-layer-needs-visual-review": 1,
       "archive-listed": 8,
@@ -1508,7 +1508,7 @@
       "extract": {
         "status": "text-extracted",
         "pages": 333,
-        "words": 82980,
+        "words": 82978,
         "hebrew": true,
         "greek": true,
         "metadata": {
@@ -1581,7 +1581,7 @@
       "extract": {
         "status": "text-extracted",
         "pages": 266,
-        "words": 56294,
+        "words": 56295,
         "hebrew": true,
         "greek": true,
         "metadata": {
@@ -1654,7 +1654,7 @@
       "extract": {
         "status": "text-extracted",
         "pages": 256,
-        "words": 56916,
+        "words": 56914,
         "hebrew": true,
         "greek": true,
         "metadata": {
@@ -1775,7 +1775,7 @@
       "extract": {
         "status": "text-extracted",
         "pages": 5,
-        "words": 718,
+        "words": 712,
         "hebrew": false,
         "greek": true,
         "metadata": {
@@ -13179,6 +13179,30 @@
       "nextAction": "Functionality audit in R2-03/R2-06."
     },
     {
+      "id": "r2:docs-assets-js-life-atlas-life-atlas-platform-bridge-js-367c02",
+      "path": "docs/assets/js/life-atlas/life-atlas-platform-bridge.js",
+      "title": "life-atlas-platform-bridge.js",
+      "format": "js",
+      "bytes": 4444,
+      "sha256": "eb96ffd402d75e757ca874dad2599639b5c8533e98739ca47236c48541dcd203",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/js/life-atlas/life-atlas-platform-bridge.js",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
       "id": "r2:docs-assets-js-life-atlas-life-atlas-projections-js-4c3816",
       "path": "docs/assets/js/life-atlas/life-atlas-projections.js",
       "title": "life-atlas-projections.js",
@@ -13525,6 +13549,54 @@
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
       "publicUrl": "https://codexofreality.org/assets/js/life-atlas/living-command-window.js",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-js-life-atlas-living-platform-contract-js-5f9708",
+      "path": "docs/assets/js/life-atlas/living-platform-contract.js",
+      "title": "living-platform-contract.js",
+      "format": "js",
+      "bytes": 3516,
+      "sha256": "c333fd014abaf973f7b718f61500401106db6e1d487388a117ec02b714e6027e",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/js/life-atlas/living-platform-contract.js",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-js-life-atlas-living-platform-sphere-receiver-js-e3b38e",
+      "path": "docs/assets/js/life-atlas/living-platform-sphere-receiver.js",
+      "title": "living-platform-sphere-receiver.js",
+      "format": "js",
+      "bytes": 10231,
+      "sha256": "5f353401fc32048ec2b2b9aa13bf21b6011c5a762dec878ef338352a40c1773d",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/js/life-atlas/living-platform-sphere-receiver.js",
       "publicationEligibility": "approved-public",
       "status": "operational",
       "catalogId": null,
@@ -38311,7 +38383,7 @@
       "title": "site-master-inventory.json",
       "format": "json",
       "bytes": 401762,
-      "sha256": "abe9470a422fee213b625a44ca8ed85330c401725a888d34167ab321ee063db1",
+      "sha256": "6e9b30fdded45d47b4cf2c0423318eb2ac088246ba82b27420f9ce93818cd0cf",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
