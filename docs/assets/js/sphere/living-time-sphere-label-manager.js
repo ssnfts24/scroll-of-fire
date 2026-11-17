@@ -1566,6 +1566,31 @@
                         : false
                   );
 
+            /*
+             * B7.60.1 — overhead window. Near top-down, the shared Moon
+             * window and the X-only aperture are both derived from
+             * tilted-view disclosure geometry and degenerate together:
+             * the window can name Moons whose anchors the aperture then
+             * zeroes, so the skeleton came out empty and no day numeral
+             * rendered overhead at all. Overhead, the window is the
+             * disclosure centerMoon's circular neighborhood instead —
+             * front Moon plus immediate neighbors, the same Moons
+             * `structural` already grades — and the aperture passes for
+             * the structural/scheduled candidates inside it. (With no
+             * centerMoon, moonDistance is 0 throughout and `structural`
+             * keeps its every-Moon front-anchor fallback.) Tilted and
+             * far-band behavior below is exactly as before.
+             */
+            if (overhead) {
+              return (
+                moonDistance <= 1
+                && (
+                  structural
+                  || scheduled
+                )
+              );
+            }
+
             return (
               sharedMoonWindow
                 .has(moon)
@@ -2072,10 +2097,19 @@
 
           el.style.top =
             `${railY}px`;
+          /*
+           * B7.60.1 — overhead, the X-only aperture passes for rail
+           * numerals just as it does in railLabelVisible: every numeral
+           * that reaches this pass top-down is a skeleton survivor or a
+           * selected/pinned day (already aperture-exempt), so the tilted
+           * window must not fade it back to the 0.04 opacity floor.
+           */
           const apertureOpacity =
-            railApertureOpacity(
-              candidate
-            );
+            cameraOverhead
+              ? 1
+              : railApertureOpacity(
+                  candidate
+                );
 
           const isCenterRail =
             Number(

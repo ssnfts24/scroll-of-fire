@@ -111,6 +111,158 @@ test("B7.60 renderer feeds camera phi into semantic state and caps all overhead"
   assert.match(renderer, /_dayLabelMode = _resolveDayLabelPreference\(dayLabelMode\)/);
 });
 
+/*
+ * B7.60.1 — behavioral harness: railLabelVisible is a closure inside the
+ * label manager, so extract its source and bind stub closure dependencies.
+ * The stubs deliberately simulate the degenerate top-down case: the shared
+ * Moon window names an unrelated Moon and the X-only aperture is shut.
+ */
+function loadRailLabelVisible(overrides = {}) {
+  const start = labels.indexOf("const railLabelVisible");
+  assert.ok(start > -1, "railLabelVisible declaration present");
+  const end = labels.indexOf("const dayRailCandidates", start);
+  assert.ok(end > start, "railLabelVisible slice is bounded");
+  const chunk = labels.slice(start, end);
+  const deps = {
+    railZoomOpacity: () => 1,
+    railApertureOpacity: () => 0,
+    sharedMoonWindow: new Set([3]),
+    semanticBand: "detail",
+    dayLabelMode: "key",
+    cameraOverhead: true,
+    calendarDisclosure: { centerMoon: 8, moons: [8] },
+    ...overrides
+  };
+  const names = [
+    "railZoomOpacity",
+    "railApertureOpacity",
+    "sharedMoonWindow",
+    "semanticBand",
+    "dayLabelMode",
+    "cameraOverhead",
+    "calendarDisclosure"
+  ];
+  const factory = new Function(...names, `${chunk}\nreturn railLabelVisible;`);
+  return factory(...names.map(name => deps[name]));
+}
+
+const dayCandidate = (moon, moonDay, extra = {}) => ({
+  target: {
+    kind: "pattern-day-number",
+    moon,
+    moonDay,
+    railLocked: true,
+    ...extra
+  }
+});
+
+test("B7.60.1 overhead skeleton derives its window from centerMoon distance", () => {
+  const visible = loadRailLabelVisible();
+  // Front Moon (8): week anchors survive, non-anchors do not.
+  for (const day of [1, 7, 14, 21, 28]) {
+    assert.equal(visible(dayCandidate(8, day)), true, `front anchor ${day}`);
+  }
+  for (const day of [2, 13, 27]) {
+    assert.equal(visible(dayCandidate(8, day)), false, `front non-anchor ${day}`);
+  }
+  // Neighbor Moons (7 and 9): sparse anchors only.
+  for (const moon of [7, 9]) {
+    for (const day of [1, 14, 28]) {
+      assert.equal(visible(dayCandidate(moon, day)), true, `neighbor ${moon}/${day}`);
+    }
+    for (const day of [7, 21]) {
+      assert.equal(visible(dayCandidate(moon, day)), false, `neighbor ${moon}/${day}`);
+    }
+  }
+  // Far Moons: no anchors at any week position.
+  for (const moon of [5, 11]) {
+    for (const day of [1, 14, 28]) {
+      assert.equal(visible(dayCandidate(moon, day)), false, `far ${moon}/${day}`);
+    }
+  }
+  // Scheduled days survive inside the window, not outside it.
+  assert.equal(visible(dayCandidate(7, 3, { dayScheduleCount: 2 })), true);
+  assert.equal(visible(dayCandidate(9, 20, { symbol: "*" })), true);
+  assert.equal(visible(dayCandidate(11, 3, { dayScheduleCount: 2 })), false);
+  // Selected/pinned still short-circuit, even on a far Moon.
+  assert.equal(visible(dayCandidate(11, 5, { selected: true })), true);
+  assert.equal(visible(dayCandidate(11, 5, { pinned: true })), true);
+});
+
+test("B7.60.1 overhead window wraps around the Moon circle", () => {
+  const visible = loadRailLabelVisible({
+    calendarDisclosure: { centerMoon: 1, moons: [1] }
+  });
+  assert.equal(visible(dayCandidate(1, 21)), true); // front anchor
+  assert.equal(visible(dayCandidate(13, 14)), true); // wrapped neighbor anchor
+  assert.equal(visible(dayCandidate(13, 7)), false); // wrapped neighbor non-anchor
+  assert.equal(visible(dayCandidate(2, 28)), true); // neighbor anchor
+  assert.equal(visible(dayCandidate(12, 1)), false); // distance 2 stays hidden
+});
+
+test("B7.60.1 tilted far skeleton still answers to window and aperture", () => {
+  const base = {
+    cameraOverhead: false,
+    semanticBand: "far",
+    calendarDisclosure: { centerMoon: 8, moons: [7, 8, 9] },
+    sharedMoonWindow: new Set([7, 8, 9])
+  };
+  const open = loadRailLabelVisible({ ...base, railApertureOpacity: () => 1 });
+  assert.equal(open(dayCandidate(8, 1)), true);
+  assert.equal(open(dayCandidate(7, 14)), true);
+  assert.equal(open(dayCandidate(8, 2)), false);
+  assert.equal(open(dayCandidate(11, 1)), false); // outside the window
+  const shut = loadRailLabelVisible({ ...base, railApertureOpacity: () => 0 });
+  assert.equal(shut(dayCandidate(8, 1)), false); // aperture still governs tilted
+  const narrow = loadRailLabelVisible({
+    ...base,
+    railApertureOpacity: () => 1,
+    sharedMoonWindow: new Set([8])
+  });
+  assert.equal(narrow(dayCandidate(7, 14)), false); // window still governs tilted
+});
+
+test("B7.60.1 tilted full rail still answers to window and aperture", () => {
+  const base = {
+    cameraOverhead: false,
+    semanticBand: "medium",
+    calendarDisclosure: { centerMoon: 8, moons: [8] },
+    sharedMoonWindow: new Set([8])
+  };
+  const open = loadRailLabelVisible({ ...base, railApertureOpacity: () => 0.5 });
+  assert.equal(open(dayCandidate(8, 2)), true); // every in-window day shows
+  assert.equal(open(dayCandidate(9, 2)), false); // window still applies
+  const shut = loadRailLabelVisible({ ...base, railApertureOpacity: () => 0 });
+  assert.equal(shut(dayCandidate(8, 2)), false); // aperture still applies
+});
+
+test("B7.60.1 render pass treats the aperture as passing overhead", () => {
+  assert.match(
+    labels,
+    /cameraOverhead\s*\n\s*\? 1\s*\n\s*: railApertureOpacity\(/
+  );
+  // The overhead skeleton branch keys on circular centerMoon distance and
+  // never consults the tilted window or aperture.
+  const branchStart = labels.indexOf("B7.60.1 — overhead window");
+  assert.ok(branchStart > -1);
+  const overheadIdx = labels.indexOf("if (overhead)", branchStart);
+  assert.ok(overheadIdx > branchStart);
+  const blockEnd = labels.indexOf(");\n            }", overheadIdx);
+  assert.ok(blockEnd > overheadIdx);
+  const branch = labels.slice(branchStart, blockEnd);
+  assert.match(branch, /if \(overhead\)/);
+  assert.match(branch, /moonDistance <= 1/);
+  assert.doesNotMatch(branch, /sharedMoonWindow/);
+  assert.doesNotMatch(branch, /apertureOpacity/);
+});
+
+test("B7.60.1 label manager carries the overhead-skeleton cache identity", () => {
+  const labelUrls = [...sphere.matchAll(/assets\/js\/sphere\/living-time-sphere-label-manager\.js\?[^"' ]+/g)].map(m => m[0]);
+  assert.equal(labelUrls.length, 1);
+  assert.match(labelUrls[0], /t=20261117-b760-topviewgate/);
+  assert.match(labelUrls[0], /s=20261117-b7601-overheadskeleton/);
+});
+
 test("B7.60 changed modules carry a fresh shared cache identity", () => {
   const rendererUrls = [...sphere.matchAll(/assets\/js\/sphere\/living-time-sphere-renderer-3d\.js\?[^"' ]+/g)].map(m => m[0]);
   assert.equal(rendererUrls.length, 2);
