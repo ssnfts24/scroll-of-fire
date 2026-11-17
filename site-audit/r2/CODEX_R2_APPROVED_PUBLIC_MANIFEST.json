@@ -161,7 +161,7 @@
     },
     {
       "path": "docs/assets/css/living-time-sphere.css",
-      "sha256": "2e9ed429c8ef406a76b9f2bcc45a2f8e6a9ba8fbbdbeee4e7d9bd20a9bd3464b",
+      "sha256": "0b26310649235f4109322f09e8e809c6781f536a36b0715c5134f8154d30ed89",
       "publicUrl": "https://codexofreality.org/assets/css/living-time-sphere.css",
       "status": "operational"
     },
@@ -1954,6 +1954,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/js/sphere/living-time-sphere-day-zoom.js",
+      "sha256": "bdad516a73cbf13ad9aba0c03d6582c59b1671bd797279a93e11bee3d7da514a",
+      "publicUrl": "https://codexofreality.org/assets/js/sphere/living-time-sphere-day-zoom.js",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/js/sphere/living-time-sphere-effects.js",
       "sha256": "a210603af108ccec6aa6b52fd276950ba2addf6a85002672f378d2522c3399e0",
       "publicUrl": "https://codexofreality.org/assets/js/sphere/living-time-sphere-effects.js",
@@ -2267,7 +2273,7 @@
     },
     {
       "path": "docs/living-time-sphere.html",
-      "sha256": "a87941881d1bf887257bddab1baf6f22faf4451560f5a8126b8ba0040f9fc456",
+      "sha256": "f2b353e3d2be55ec418b1075f990b1d3bf33fc5bfe4bd0c3ae94a12463fc64c7",
       "publicUrl": "https://codexofreality.org/living-time-sphere.html",
       "status": "operational"
     },
