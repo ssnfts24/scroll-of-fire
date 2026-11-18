@@ -5,7 +5,7 @@
   "approved": [
     {
       "path": "docs/13-moon-whitepaper.html",
-      "sha256": "8c76b2c189a6964b5f7c5a0ed8d46160778b63fd6cc91ca00c7ada614955115e",
+      "sha256": "463ec4d7c77429868bd0ca8e6c77bdcfa6ed1c51f72cf54d6922aaa19fd430db",
       "publicUrl": "https://codexofreality.org/13-moon-whitepaper.html",
       "status": "operational"
     },
@@ -317,7 +317,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "7f4009410cc0007ee5335dfa29bb6537d5fc64424da03231923d1075438947c4",
+      "sha256": "4aada52f42e7968bf2d5d11f6a7838b95ffb3f3e1a7fa0aa9b220c04b0f9446e",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -2260,6 +2260,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/media/covenant-caravan-explainer.mp4",
+      "sha256": "5b84c2f3cb92685d84bcf5b97c901637b80245be54bdfe01efe11bfaacf9ca07",
+      "publicUrl": "https://codexofreality.org/assets/media/covenant-caravan-explainer.mp4",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/media/downloads-explainer.mp4",
       "sha256": "81d21105b24b74457d0a602605b69fc8b7e12e10a78fe03e1471cac0853fded8",
       "publicUrl": "https://codexofreality.org/assets/media/downloads-explainer.mp4",
@@ -2275,6 +2281,12 @@
       "path": "docs/assets/media/evidence-edition-explainer.mp4",
       "sha256": "4c70689be79fd80cc74f89c591790f57e38d834b76a215e8d624c80f46c897ee",
       "publicUrl": "https://codexofreality.org/assets/media/evidence-edition-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/genesis-oracle-explainer.mp4",
+      "sha256": "2166f9d2cc0266566ac17138615a9f1ad730726ac746bc450cccfd439bc6a2bf",
+      "publicUrl": "https://codexofreality.org/assets/media/genesis-oracle-explainer.mp4",
       "status": "operational"
     },
     {
@@ -2311,6 +2323,18 @@
       "path": "docs/assets/media/moons-explainer.mp4",
       "sha256": "ec1adafada5ac33e8500a492911754722acf5ee15e811b87a18d988c2c90cd20",
       "publicUrl": "https://codexofreality.org/assets/media/moons-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/moons-whitepaper-explainer.mp4",
+      "sha256": "4023ae059a8950fec64ee0fab78b41bc68e6bcd97cdc10e20aaf4bce8c355a62",
+      "publicUrl": "https://codexofreality.org/assets/media/moons-whitepaper-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/remnant-whitepaper-explainer.mp4",
+      "sha256": "41ce24a4545b38b53e94c9b67c70de167b501129dbf4aa592e036bbdcd47dc9d",
+      "publicUrl": "https://codexofreality.org/assets/media/remnant-whitepaper-explainer.mp4",
       "status": "operational"
     },
     {
@@ -2369,13 +2393,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "a13b8f20b8bc846806018c3596441f2a5f86eb2467fc5b5e0cb1985839461698",
+      "sha256": "a82327d9086b441f16baeeca52658c6c9e12ae5f595b635a936ba5dbd724ff71",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "3ce634c046af0846c8e955bf65c258e56c75fb2320736de9784cc763a0669ecf",
+      "sha256": "daf9fdf1e60623f196666a8ee6b4a332b9ab1cb260d2440c4993e778ce442f1c",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -2423,7 +2447,7 @@
     },
     {
       "path": "docs/covenant-caravan.html",
-      "sha256": "ea4044aedd425cc244f07e5684561fd81b3fe17d5c66aec8d72812b9ea0212f3",
+      "sha256": "86b7e3f9ae74d3886a3691f546aed80f17282d33493d1251e39047355e5dd9d1",
       "publicUrl": "https://codexofreality.org/covenant-caravan.html",
       "status": "operational"
     },
@@ -2477,7 +2501,7 @@
     },
     {
       "path": "docs/genesis-oracle.html",
-      "sha256": "43378ab873a7a71bc650e77e85e755e166ad70f2ea688ecdc06db7d6a8b66649",
+      "sha256": "473157410cc10bc348ebdec449f2e877095122cf7cf90414ca0ad70345a56649",
       "publicUrl": "https://codexofreality.org/genesis-oracle.html",
       "status": "operational"
     },
@@ -2507,7 +2531,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "ead8caf0f38b8b18f05094a7e9d832e882fb7dc749d6619d0899ce35b96ae1d9",
+      "sha256": "5b6e32263ba4b094e523a4a325fa957fd9664250e7be09ffea9b25535445d166",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
@@ -2519,7 +2543,7 @@
     },
     {
       "path": "docs/lab.html",
-      "sha256": "95cd21abe00492bd581e98a148099c67782aeaf707f06c72e19ea682a1c799be",
+      "sha256": "0a39382e112e992f994384d703e352060bcb8156f1cad6d7d50c62bc609c5514",
       "publicUrl": "https://codexofreality.org/lab.html",
       "status": "operational"
     },
@@ -3869,7 +3893,7 @@
     },
     {
       "path": "docs/scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
-      "sha256": "cc87876a330dbf67082bd87e890b51fdba2ec6a2a7ba01edc04f2c93111547ff",
+      "sha256": "35f26596d87eb3f56a96bbd789b7c4b86a51e652f42d8099f78a387e10ca8529",
       "publicUrl": "https://codexofreality.org/scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
       "status": "operational"
     },
@@ -8885,7 +8909,7 @@
     },
     {
       "path": "docs/teach.html",
-      "sha256": "66d33e4f94b3090b5fca74f77efc4e8f00344e7d907c9dcb4f4e24e99a4998c5",
+      "sha256": "a5a3fd37a073adfd722a5726c953f21425dc1a17c810c8dc5930b75e1412d076",
       "publicUrl": "https://codexofreality.org/teach.html",
       "status": "operational"
     },
