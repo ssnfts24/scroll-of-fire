@@ -2,6 +2,30 @@
   {
     "date": "2026-11-17",
     "type": "system",
+    "title": "The site learned to breathe",
+    "summary": "A living entry now opens the site — cracked stone, gold seams, the spiral eye — the homepage guides you along the path instead of an endless scroll, and The Codex Today panel shows the day as it stands.",
+    "url": "./index.html",
+    "symbol": "◎"
+  },
+  {
+    "date": "2026-11-17",
+    "type": "system",
+    "title": "Today learned to keep one time",
+    "summary": "Today on the homepage, the Sphere, and the 13 Moons page now all read through the single temporal cursor, so the day is the same day on every surface.",
+    "url": "./living-time-sphere.html",
+    "symbol": "◑"
+  },
+  {
+    "date": "2026-11-17",
+    "type": "library",
+    "title": "The Scripture reader opened — Genesis and Exodus in five layers",
+    "summary": "The reader stands at /scripture/ with Genesis and Exodus — 2,746 verses across five layers, Read, Words, Context, Connections, and Remnant — and a word finder spanning both books.",
+    "url": "./scripture/index.html",
+    "symbol": "א"
+  },
+  {
+    "date": "2026-11-17",
+    "type": "system",
     "title": "The Sphere learned to open a single day",
     "summary": "Zoom Into This Day opens a Pattern Day to show its civil date, Moon, day and Pattern Day together with that day's Life Atlas schedule.",
     "url": "./living-time-sphere.html",

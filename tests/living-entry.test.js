@@ -197,7 +197,7 @@ test("existing homepage hooks survive the restructure", () => {
     "<!-- site-catalog:front-door:start -->",
     "<!-- site-catalog:front-door:end -->",
     'id="front-door-recent"',
-    '<time datetime="2026-11-01">',
+    'class="front-door-list"',
     'id="home-sphere-observatory"',
     'id="home-title"',
     'id="participation"',
