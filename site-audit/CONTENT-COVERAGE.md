@@ -95,12 +95,12 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 - **Interactive Archive** — Live; Filterable index of every Scroll page and system.
 - **Repository README** — Source only; Project overview and contribution context on GitHub.
 - **Codex Atlas** — Live; A unified discovery page for the Scroll Library, Living Time, systems, research, artifacts and archive.
-- **Site-wide search** — Planned; A future site-wide index that links to, and does not replace, Scroll Search.
+- **Site-wide Search** — Live; Living Search: one generated index across every page, the Scroll Library, the Hebrew Lexicon, the Atlas and the Claim Register, with a memory that stays on the reader's device. It links to, and does not replace, Scroll Search.
 
 ## Repository and deployed-content coverage
 
-- Public HTML pages inspected: **76**.
-- Total master-inventory records: **368**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
+- Public HTML pages inspected: **77**.
+- Total master-inventory records: **369**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
 - Public-facing catalog entries: **63**; only explicitly curated entries appear on the Atlas.
 - Numbered archive folders are inventoried file-by-file, while downloads snapshot differences are kept separate from historical integrity data.
 - Root files not already published through the archive or explicitly approved remain classified as development-only; no such file is automatically linked from the public catalog.
@@ -117,11 +117,10 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 ## Current resource-type counts
 
 - Deployed Markdown documents: 58
-- Discovery: 1
 - Evidence: 1
-- HTML pages: 76
+- HTML pages: 77
 - Numbered archive file: 140
 - Numbered archive folder: 7
 - Repository folder: 8
 - Repository root file: 57
-- Static assets: 20
+- Static assets: 21
