@@ -305,7 +305,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "e80370f03141af42cc8f5424ab3b2170df3734cd16466ce1c52fd32880fff4e6",
+      "sha256": "1dbb32f543eb9804f5fdb910fb02b6b55c920ba1ba3304859eead8de1616f52e",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -2218,6 +2218,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/media/moons-explainer.mp4",
+      "sha256": "ec1adafada5ac33e8500a492911754722acf5ee15e811b87a18d988c2c90cd20",
+      "publicUrl": "https://codexofreality.org/assets/media/moons-explainer.mp4",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/media/theory-hub-explainer.mp4",
       "sha256": "7fd39c10fdfad8fbf19110e14ae68a5b1f83d3263c49be865671f44274f2bc82",
       "publicUrl": "https://codexofreality.org/assets/media/theory-hub-explainer.mp4",
@@ -2243,13 +2249,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "2e348a84236afac1318053034b8f96ff47fc38352a9c3ad2e6808b1c09c7d55d",
+      "sha256": "1edb81957a92d5e05422b8ee271b407ca9cba23f3895705e21e7352cc10377fc",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "2d32066bac11bea8711285c8c2f98217733b66b486e28006fb666d1efe5cfbf7",
+      "sha256": "5e490ca77ca17e3f3818e0b86195c55a447c069249c09a8a1fa77f8b18a08f7f",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -2381,7 +2387,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "5b74488f1be062740ca55b717d915501e9e78908a67252889d71fa6b9b654e93",
+      "sha256": "ebae3618cee7d3d0f79f85cb9b1b5ae444d449ba532646f86d0d6bd761a10925",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
@@ -2417,7 +2423,7 @@
     },
     {
       "path": "docs/moons.html",
-      "sha256": "fd23cb419ad1d34eddd2325918d7d11b3e495d4f94e09ea38066c7d991d016b8",
+      "sha256": "4d78f3af5276fca290369b1ccfa8ede84e5987f683ea81214b9c2a142b899812",
       "publicUrl": "https://codexofreality.org/moons.html",
       "status": "operational"
     },
