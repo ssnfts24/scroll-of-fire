@@ -305,7 +305,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "e65c62fc44d2a806b67f68ec0d481a9fcb044b4e1e298c30bc7e1d14604b0bac",
+      "sha256": "a61972720dde436b9d333220e5695bf9d638b7c3240bc58aa2b8c8958623d4f4",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -2212,6 +2212,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/media/codex-of-reality-rap.mp4",
+      "sha256": "bb23cb19072c3aa5774e6f98864221fcb66985c7eeb6bdb8e8a67287aac2a87f",
+      "publicUrl": "https://codexofreality.org/assets/media/codex-of-reality-rap.mp4",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/search/atlas.json",
       "sha256": "d705771da8d1ce8662fab76ab2bec6f40da12077a888e34fb748fc347ffed40f",
       "publicUrl": "https://codexofreality.org/assets/search/atlas.json",
@@ -2231,13 +2237,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "1977dbe0df75786f520cca0d9eb0de20a653886933e3f4fc3f4dd5abff6915d2",
+      "sha256": "13b26f5c2df43f89ccd632bb61e30efc26095359de5924c417b9c4eec5726a07",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "9f06c46703d3c4e8b9f2e743492017eb6c976137c4ff528993ac132fd26e4b22",
+      "sha256": "b8b370b287da9a413ae07c44087322673037e4a11d6f4e981a14acb092fc511b",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -2369,7 +2375,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "a84d2bffb2e789ccc955ad277317af20ddb62760348f34906b3daef6d1f1fe4f",
+      "sha256": "7db8c0cdfa0a1846714f59640de014217c97c7b930832ead6dc6045fd459a266",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
