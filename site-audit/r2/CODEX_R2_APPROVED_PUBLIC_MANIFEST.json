@@ -29,7 +29,7 @@
     },
     {
       "path": "docs/alignment-ledger.html",
-      "sha256": "a25747245377fe323feebc2ad4a828361359da18ee36321304eb7f0a6ab790e7",
+      "sha256": "6d984f1e2dc7a18bc554d31d8db5c6d1ba84a770e4b32ff2de064a56af3c8b8b",
       "publicUrl": "https://codexofreality.org/alignment-ledger.html",
       "status": "operational"
     },
@@ -305,7 +305,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "1dbb32f543eb9804f5fdb910fb02b6b55c920ba1ba3304859eead8de1616f52e",
+      "sha256": "52422df4198e76590964bf02db0bb478f312a7df8c6c4046f46007e1bb1a0023",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -1343,7 +1343,7 @@
     },
     {
       "path": "docs/assets/js/alignment/alignment-ui.js",
-      "sha256": "87c606fe9cb5b4da6eeca4173d9186d8afd21d00c8e8486df7bcdd703f31b0f2",
+      "sha256": "73880c77c681d6b62b069248d8e27ad1269a6d1ea6517f9589adf4cd8e62b438",
       "publicUrl": "https://codexofreality.org/assets/js/alignment/alignment-ui.js",
       "status": "operational"
     },
@@ -1355,7 +1355,7 @@
     },
     {
       "path": "docs/assets/js/alignment/alignment-version.js",
-      "sha256": "f6acb598c457629a8eaebc5bb49eb3f1743db989be5bdd1aae6bcfeae37c0453",
+      "sha256": "bde28d670bf9d35ec07d612bff1f78c2cef526a2229431b914b8b867b90c78dd",
       "publicUrl": "https://codexofreality.org/assets/js/alignment/alignment-version.js",
       "status": "operational"
     },
@@ -1373,7 +1373,7 @@
     },
     {
       "path": "docs/assets/js/astronomy/astronomy-sources.js",
-      "sha256": "f39ad56182638f042a244616ab1078fdab9d4986a559ee04de2a0579cd95a487",
+      "sha256": "5cc9a55a4c01a67363c870cf2cec9ba61b05f2a9b68ec8196fb5fa6271239c71",
       "publicUrl": "https://codexofreality.org/assets/js/astronomy/astronomy-sources.js",
       "status": "operational"
     },
@@ -1391,7 +1391,7 @@
     },
     {
       "path": "docs/assets/js/astronomy/equinox-reference-data.js",
-      "sha256": "c020d090f398f3aca0f044b06e2529b2ca8eed21f5b5df7fcc16fcf9ee44d859",
+      "sha256": "466362f7230161a6972acb3f1b1d318fd3ebfeb57fc8b4405944b0b1df19d64e",
       "publicUrl": "https://codexofreality.org/assets/js/astronomy/equinox-reference-data.js",
       "status": "operational"
     },
@@ -1583,7 +1583,7 @@
     },
     {
       "path": "docs/assets/js/equinox/equinox-passage-ui.js",
-      "sha256": "8deaea050525bab265acb4b14b2ac8edbf69c03d504c231dc24e6ce30fee8d88",
+      "sha256": "0f3dd309b14a3959f64dc257613a3aee0cb4549e546aa6dfb84510e7864f8f58",
       "publicUrl": "https://codexofreality.org/assets/js/equinox/equinox-passage-ui.js",
       "status": "operational"
     },
@@ -2249,13 +2249,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "1edb81957a92d5e05422b8ee271b407ca9cba23f3895705e21e7352cc10377fc",
+      "sha256": "4b3803dd72903166b749f5e9515a79fb36888f2fe566252d8577f04601e5fa39",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "5e490ca77ca17e3f3818e0b86195c55a447c069249c09a8a1fa77f8b18a08f7f",
+      "sha256": "fa1943f901ef431064d12bf910a7d98fe54eb48135d5b8df57313451dac5cca3",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -2308,26 +2308,26 @@
       "status": "operational"
     },
     {
-      "path": "docs/data/equinox-passage/equinox-passage-2014-2026.csv",
-      "sha256": "89e0844b94769ed0b2d07598d1d358623b3df2e76418203ff63a54b949d8b3a0",
-      "publicUrl": "https://codexofreality.org/data/equinox-passage/equinox-passage-2014-2026.csv",
+      "path": "docs/data/equinox-passage/equinox-passage-2014-2027.csv",
+      "sha256": "32fe953a7d01a58093f4ce95a6c9bb9092382323a60a5fbff8d3cca650cb797c",
+      "publicUrl": "https://codexofreality.org/data/equinox-passage/equinox-passage-2014-2027.csv",
       "status": "operational"
     },
     {
-      "path": "docs/data/equinox-passage/equinox-passage-2014-2026.json",
-      "sha256": "0a6199aacc6c349fea21369db9d106e66b2d7ae39b972aed073b0c2337cdc844",
-      "publicUrl": "https://codexofreality.org/data/equinox-passage/equinox-passage-2014-2026.json",
+      "path": "docs/data/equinox-passage/equinox-passage-2014-2027.json",
+      "sha256": "4f92284ac5e1d6aca5844792e2a2a81726a93d15bdb188d61ea7b95ca8b69f23",
+      "publicUrl": "https://codexofreality.org/data/equinox-passage/equinox-passage-2014-2027.json",
       "status": "operational"
     },
     {
-      "path": "docs/data/equinox-passage/equinox-reference-2014-2026.json",
-      "sha256": "32f019a238e7df897eb0ff9407cc4c20bd88a40dbd2b1555af082e3989a68681",
-      "publicUrl": "https://codexofreality.org/data/equinox-passage/equinox-reference-2014-2026.json",
+      "path": "docs/data/equinox-passage/equinox-reference-2014-2027.json",
+      "sha256": "93a49d78528a222942fe8733993d1ecf37aed4dc3369d942cc086165bc7fa611",
+      "publicUrl": "https://codexofreality.org/data/equinox-passage/equinox-reference-2014-2027.json",
       "status": "operational"
     },
     {
       "path": "docs/data/equinox-passage/equinox-source-metadata.json",
-      "sha256": "60d457e04e1d04170f82cd88a18872e2de12fba50ba2f85ee0523799b4ddb7f2",
+      "sha256": "58a44866247c1adfcdab1b68c1c9c95bf1fae066944c296d7cadd1d361d6bd0e",
       "publicUrl": "https://codexofreality.org/data/equinox-passage/equinox-source-metadata.json",
       "status": "operational"
     },
@@ -2345,7 +2345,7 @@
     },
     {
       "path": "docs/equinox-passage.html",
-      "sha256": "9ff907c8a50da83820312f3e1ab5edd3226dda7be5b076551d2c4d1b4098be87",
+      "sha256": "f49a5b0e658bf03f1627e18f31e020507e1e2a290ba9571f11086a1b43dc1e83",
       "publicUrl": "https://codexofreality.org/equinox-passage.html",
       "status": "operational"
     },
@@ -2387,7 +2387,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "ebae3618cee7d3d0f79f85cb9b1b5ae444d449ba532646f86d0d6bd761a10925",
+      "sha256": "f717570ff1b27b68a00cf1d34e9c63396506f61f459eb3476bfcb96c0b10a438",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },

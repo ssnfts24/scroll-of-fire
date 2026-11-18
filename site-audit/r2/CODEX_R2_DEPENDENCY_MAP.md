@@ -65,7 +65,7 @@
 | `scripts/build-search-index.mjs` | `docs/data/site-catalog.json`, `docs/scroll/data/library.json`, `docs/scroll/data/reader-segments.json`, `docs/scroll/search/lexicon/lexicon-index.json`, `docs/scroll/evidence/claim-register.json` |
 | `scripts/build-site-catalog.mjs` | `site-audit/pr5a-body.md`, `docs/downloads.html`, `docs/data/site-catalog.json` |
 | `scripts/free_all_circuits.py` | — |
-| `scripts/generate-equinox-passage-data.mjs` | `docs/data/equinox-passage/equinox-source-metadata.json`, `docs/data/equinox-passage/equinox-reference-2014-2026.json`, `docs/data/equinox-passage/equinox-passage-2014-2026.json` |
+| `scripts/generate-equinox-passage-data.mjs` | `docs/data/equinox-passage/equinox-source-metadata.json`, `docs/data/equinox-passage/equinox-reference-2014-2027.json`, `docs/data/equinox-passage/equinox-passage-2014-2027.json` |
 | `scripts/generate-pattern-calendar-vectors.mjs` | — |
 | `scripts/r2-extract-documents.py` | `site-audit/r2/document-extracts.json` |
 | `scripts/r2_02_acquire_sources.py` | — |

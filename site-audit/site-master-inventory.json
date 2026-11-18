@@ -7,7 +7,7 @@
     "publicHtmlPages": 171,
     "catalogEntries": 65,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 20,
+      "not-linked-directly-from-homepage": 19,
       "nav-label-differs-from-title": 24,
       "deployed-but-unlinked": 57,
       "unreachable-from-homepage": 3,
@@ -1660,6 +1660,7 @@
         "codex-atlas.html",
         "covenant-caravan.html",
         "downloads.html",
+        "equinox-passage.html",
         "ethics.html",
         "genesis-oracle.html",
         "glossary.html",
@@ -11754,15 +11755,13 @@
         "path": "equinox-passage.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 6,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 7,
         "pagesWithNavLinkToIt": 2
       },
-      "issues": [
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "ethics",
