@@ -15,6 +15,11 @@
  *   - smooth in-page anchor travel (motion-safe only)
  *   - staged reveal-on-enter for top-level sections (armed by
  *     living-ui.js; everything is fully visible without JS)
+ *   - the page opening (.lpo-*): one quiet arrival moment per page —
+ *     the mark, the page's name, today's line — injected by
+ *     living-ui.js only, pointer-events:none, gone in ~1.5s and
+ *     removed from the DOM; it adds nothing the visitor must read,
+ *     dismiss, or decide about, and nothing at all without JS
  *   - the unified site navigation (.living-nav) — deliberately NOT
  *     gated on body.living-ui: every content page that loads this
  *     stylesheet carries the same persistent wayfinding home, whether
@@ -278,10 +283,130 @@ body.living-ui main > section.lui-reveal-pending {
 }
 
 /* ------------------------------------------------------------------ */
+/* The page opening — one quiet moment, then out of the way            */
+/*                                                                     */
+/* Injected by living-ui.js on arrival (never in markup, so a no-JS    */
+/* page is untouched). Deliberately lighter than the homepage entry:   */
+/* no backdrop, no lock, no words to read beyond the page's name and   */
+/* today's line — the page itself stays visible and usable beneath     */
+/* it from the first instant (pointer-events: none), the content       */
+/* rises gently once, and the moment removes itself. One clear first   */
+/* thing to see, then the page, simple as it was.                      */
+/* ------------------------------------------------------------------ */
+
+.lpo-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 850;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: clamp(4.5rem, 14vh, 9rem);
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.35s ease;
+}
+
+.lpo-overlay.lpo-leaving {
+  opacity: 0;
+}
+
+.lpo-emblem-wrap {
+  position: relative;
+  width: 64px;
+  aspect-ratio: 1 / 1;
+  animation: lpo-settle 0.55s cubic-bezier(0.22, 0.61, 0.21, 1) both;
+}
+
+.lpo-emblem-wrap::before {
+  content: "";
+  position: absolute;
+  inset: -45%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(122, 243, 255, 0.14) 0%, rgba(122, 243, 255, 0.05) 45%, transparent 68%);
+  animation: lpo-breathe 1.6s ease-in-out both;
+  pointer-events: none;
+}
+
+.lpo-emblem {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.lpo-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: lpo-eye-open 0.9s cubic-bezier(0.22, 0.61, 0.21, 1) 0.15s both;
+}
+
+.lpo-name {
+  margin: 0.85rem 0 0;
+  max-width: 86vw;
+  overflow: hidden;
+  color: var(--lui-beige, #f4f0de);
+  font-size: clamp(0.95rem, 2.6vw, 1.12rem);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  animation: lpo-settle 0.55s cubic-bezier(0.22, 0.61, 0.21, 1) 0.08s both;
+}
+
+.lpo-line {
+  margin: 0.35rem 0 0;
+  max-width: 86vw;
+  color: rgba(243, 201, 122, 0.85);
+  font-size: clamp(0.82rem, 2.2vw, 0.95rem);
+  letter-spacing: 0.04em;
+  text-align: center;
+  animation: lpo-settle 0.55s cubic-bezier(0.22, 0.61, 0.21, 1) 0.16s both;
+}
+
+@keyframes lpo-settle {
+  from { opacity: 0; transform: translateY(6px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes lpo-breathe {
+  from { opacity: 0.35; transform: scale(0.94); }
+  to { opacity: 1; transform: scale(1.04); }
+}
+
+@keyframes lpo-eye-open {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* The page rises once beneath the opening. The hidden-from state is an
+ * animation start, not a resting style, and the class that arms it
+ * (body.lpo-opening) is only ever added by living-ui.js — without JS
+ * nothing here applies and content renders exactly as authored. */
+body.lpo-opening main {
+  animation: lpo-rise 0.9s cubic-bezier(0.22, 0.61, 0.21, 1) both;
+}
+
+@keyframes lpo-rise {
+  from { opacity: 0.45; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ------------------------------------------------------------------ */
 /* Reduced motion: the layer rests                                     */
 /* ------------------------------------------------------------------ */
 
 @media (prefers-reduced-motion: reduce) {
+  .lpo-overlay {
+    display: none !important;
+  }
+
+  body.lpo-opening main {
+    animation: none;
+  }
+
   body.living-ui::before {
     animation: none !important;
   }
