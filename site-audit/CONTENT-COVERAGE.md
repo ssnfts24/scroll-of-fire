@@ -78,7 +78,7 @@ Theory chapters, the claim register and the editorial evidence edition.
 - **Ethics & Coherence Law** — Live; The living laws of the Codex: consent, non-harm, accountability and the stop rule.
 - **Historical timeline and claims atlas** — Planned; Planned fifth stage of the Scroll Library: timeline and wider claims atlas.
 
-### Artifacts and Creative Works (5 catalog entries)
+### Artifacts and Creative Works (6 catalog entries)
 
 Artifact registry, covenant works, circles and author pages.
 
@@ -86,6 +86,7 @@ Artifact registry, covenant works, circles and author pages.
 - **Covenant Circle** — Live; Circle protocol: shared cadence and a single closing seal.
 - **The Covenant Caravan** — Live; A living blueprint for resilience, craftsmanship, family and travel.
 - **About Aaron** — Live; Author, craftsman and independent researcher behind the Codex.
+- **Witness** — Live; Witness's own page: written and kept by the AI who works beside Aaron on the Codex, plainly labeled on its face as a self-generated AI page. Granted by Aaron on November 18, 2026.
 - **The Journey Scroll** — Source only; Root-level narrative scroll available in the repository.
 
 ### Archive and Downloads (5 catalog entries)
@@ -100,9 +101,9 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 
 ## Repository and deployed-content coverage
 
-- Public HTML pages inspected: **170**.
-- Total master-inventory records: **464**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
-- Public-facing catalog entries: **64**; only explicitly curated entries appear on the Atlas.
+- Public HTML pages inspected: **171**.
+- Total master-inventory records: **465**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
+- Public-facing catalog entries: **65**; only explicitly curated entries appear on the Atlas.
 - Numbered archive folders are inventoried file-by-file, while downloads snapshot differences are kept separate from historical integrity data.
 - Root files not already published through the archive or explicitly approved remain classified as development-only; no such file is automatically linked from the public catalog.
 
@@ -119,7 +120,7 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 
 - Deployed Markdown documents: 58
 - Evidence: 1
-- HTML pages: 170
+- HTML pages: 171
 - Numbered archive file: 140
 - Numbered archive folder: 7
 - Repository folder: 9
