@@ -60,8 +60,21 @@
     if (currentInFlight) return currentInFlight;
 
     currentInFlight = (async () => {
-      const [airResult, spaceResult] =
+      // B7.61 — the forecast itself joins the refresh cycle. Before this,
+      // the 10-minute cycle refreshed only air quality + space weather, so
+      // the Open-Meteo forecast (cloud cover, precipitation, wind, is_day)
+      // was fetched solely by hand or on a location change and the sphere's
+      // sky went stale. The adapter writes the fresh snapshot into
+      // SofEnvironmentState itself; `base` is read after these awaits, so
+      // the augmentation write below preserves the fresh forecast fields.
+      // The forecast result itself is intentionally not destructured into
+      // the augmentation below: the adapter has already written the fresh
+      // snapshot into SofEnvironmentState, and `base` (read after this
+      // await) carries it. Only AQ + space weather augment the state here.
+      const [, airResult, spaceResult] =
         await Promise.allSettled([
+          globalThis.OpenMeteoAdapter
+            ?.requestRefresh?.({ force }),
           globalThis.OpenMeteoAirQualityProvider
             ?.getCurrent?.({
               place: activePlace,
@@ -278,6 +291,10 @@
           && (
             !current.airQuality
             || !current.spaceWeather
+            // B7.61 — a state carrying a place but no forecast current
+            // (e.g. an augmentation landed before the first forecast)
+            // must also pull the forecast in.
+            || !current.current
           )
         ) {
           schedule();
