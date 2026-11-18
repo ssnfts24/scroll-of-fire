@@ -20,6 +20,13 @@
  *   - docs/404.html, docs/offline.html — utility pages.
  *   - docs/caravan.html — meta-refresh redirect stub.
  *
+ * Generator-owned pages are never hand-edited here either: the Scroll
+ * library pages (docs/scroll/) are emitted by build-scroll-library.mjs
+ * and the Scripture reader (docs/scripture/) by r2_02_pages.py — both
+ * generators emit this same nav themselves, and a rebuild (the reader
+ * test suite rebuilds the library pages) would wipe a hand edit. This
+ * script only verifies those pages carry the nav and reports them.
+ *
  * The script is idempotent: pages already carrying data-living-nav are
  * skipped, and the stylesheet link is only added when missing.
  *
@@ -129,6 +136,13 @@ function buildNav(baseDir, currentArea) {
   ].join("\n");
 }
 
+/* Pages whose nav is emitted by their own generator (see header). */
+function generatorFor(rel) {
+  if (rel.startsWith("scripture/")) return "r2_02_pages.py";
+  if (rel.startsWith("scroll/")) return "build-scroll-library.mjs";
+  return null;
+}
+
 const report = [];
 
 for (const full of [...walk(docsDir)].sort()) {
@@ -138,6 +152,16 @@ for (const full of [...walk(docsDir)].sort()) {
     continue;
   }
   let html = fs.readFileSync(full, "utf8");
+  const gen = generatorFor(rel);
+  if (gen) {
+    report.push({
+      rel,
+      action: html.includes("data-living-nav")
+        ? "generator-owned"
+        : `MISSING NAV (regenerate: ${gen})`
+    });
+    continue;
+  }
   if (html.includes("data-living-nav")) {
     report.push({ rel, action: "already has nav" });
     continue;
@@ -191,5 +215,5 @@ for (const row of report) {
     `${row.rel.padEnd(58)} ${String(row.action).padEnd(16)} base=${row.base ?? ""} area=${row.area ?? ""}`
   );
 }
-const changed = report.filter((r) => r.action.includes("nav")).length;
+const changed = report.filter((r) => ["css", "nav", "css+nav"].includes(r.action)).length;
 console.log(`\n${dryRun ? "[dry-run] " : ""}${changed} pages ${dryRun ? "would gain" : "gained"} the unified nav; ${report.length} pages examined.`);

@@ -54,6 +54,7 @@
 
 | Script | Referenced output paths (first 8) |
 | --- | --- |
+| `scripts/apply-living-nav.mjs` | `docs/living-time-sphere.html`, `docs/404.html`, `docs/offline.html`, `docs/caravan.html` |
 | `scripts/audit-site.mjs` | — |
 | `scripts/build-r2-inventory.mjs` | `site-audit/r2/document-extracts.json`, `docs/scroll/archive/Full_Scroll_Unsealed.txt`, `docs/development/TEMPORAL-AUTHORITY-CONTRACT.md` |
 | `scripts/build-scroll-editorial.mjs` | `docs/scroll/data/editorial-edition.json`, `docs/scroll/evidence/claim-register.json`, `docs/scroll/evidence/register.md` |
@@ -63,6 +64,12 @@
 | `scripts/free_all_circuits.py` | — |
 | `scripts/generate-equinox-passage-data.mjs` | `docs/data/equinox-passage/equinox-source-metadata.json`, `docs/data/equinox-passage/equinox-reference-2014-2026.json`, `docs/data/equinox-passage/equinox-passage-2014-2026.json` |
 | `scripts/r2-extract-documents.py` | `site-audit/r2/document-extracts.json` |
+| `scripts/r2_02_acquire_sources.py` | — |
+| `scripts/r2_02_build.py` | `docs/scripture/data/lemma-index.json`, `docs/scripture/data/context.json`, `docs/scripture/data/manifest.json` |
+| `scripts/r2_02_lib.py` | — |
+| `scripts/r2_02_pages.py` | `docs/scripture/index.html`, `docs/scripture/about.html`, `docs/scripture/lemma.html` |
+| `scripts/r2_02_reports.py` | — |
+| `scripts/r2_02_verify.py` | `docs/scripture/data/manifest.json`, `docs/scroll/archive/Full_Scroll_Unsealed.txt`, `site-audit/r2-02/original-to-derived-comparison.json` |
 | `scripts/scroll-source-audit.mjs` | — |
 | `scripts/scroll_signal.py` | — |
 | `scripts/validate-codex-data.js` | `docs/assets/data/codex-updates.json`, `docs/assets/data/moons.json`, `docs/assets/data/field-notes.json`, `docs/assets/data/artifacts.json` |
@@ -71,22 +78,23 @@
 
 | Stylesheet | Pages |
 | --- | --- |
+| `docs/assets/css/living-ui.css` | 125 |
+| `docs/scripture/assets/scripture.css` | 93 |
 | `docs/assets/css/codex.css` | 35 |
 | `docs/assets/css/navigation.css` | 29 |
-| `docs/assets/css/living-ui.css` | 26 |
 | `docs/theory/equations/assets/css/codex.css` | 19 |
 | `docs/theory/equations/assets/css/navigation.css` | 19 |
 | `docs/theory/equations/assets/css/theory.css` | 19 |
+| `docs/theory/equations/assets/css/living-ui.css` | 19 |
 | `docs/assets/css/animations.css` | 18 |
 | `docs/theory/assets/css/codex.css` | 15 |
 | `docs/theory/assets/css/navigation.css` | 15 |
 | `docs/theory/assets/css/theory.css` | 15 |
-| `docs/scroll/assets/library.css` | 6 |
-| `docs/systems/assets/css/codex.css` | 6 |
 
 | Script | Pages |
 | --- | --- |
-| `docs/assets/js/site.js` | 35 |
+| `docs/assets/js/site.js` | 128 |
+| `docs/scripture/assets/scripture.js` | 93 |
 | `docs/assets/js/living-ui.js` | 26 |
 | `docs/theory/equations/https:/cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js` | 19 |
 | `docs/theory/equations/assets/js/site.js` | 19 |
@@ -97,7 +105,6 @@
 | `docs/theory/assets/js/site.js` | 15 |
 | `docs/theory/assets/js/theory.js` | 15 |
 | `docs/assets/js/codex-witness.js` | 8 |
-| `docs/assets/js/share/remnant-share-url.js` | 6 |
 
 ## Protected systems (do not modify)
 
