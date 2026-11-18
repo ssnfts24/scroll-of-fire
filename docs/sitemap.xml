@@ -179,6 +179,12 @@
   </url>
 
   <url>
+    <loc>https://codexofreality.org/sending-test.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
     <loc>https://codexofreality.org/invoke.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
