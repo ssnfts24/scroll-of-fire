@@ -2,7 +2,7 @@
  * Living nav + homepage activity (part 2 of the living site update).
  *
  * The unified navigation: every content page carries one living nav
- * (Home · Scroll · Atlas · Lexicon · Scripture · Sphere · Shop) with
+ * (Home · Scroll · Atlas · Lexicon · Scripture · Sphere · Shop · Witness · Living Search) with
  * the current area marked, plus one external Support door last
  * (Aaron's Cash App, decided Nov 17, 2026 — never a local target,
  * never the current area), and Home resolves to the site homepage
@@ -45,7 +45,8 @@ const AREAS = [
   { id: "scripture", label: "Scripture", target: "scripture/index.html" },
   { id: "sphere", label: "Sphere", target: "living-time-sphere.html" },
   { id: "shop", label: "Shop", target: "shop.html" },
-  { id: "witness", label: "Witness", target: "witness.html" }
+  { id: "witness", label: "Witness", target: "witness.html" },
+  { id: "search", label: "Living Search", target: "search.html" }
 ];
 
 /* The one external door, always last in the bar. */
@@ -123,6 +124,7 @@ function areaOf(rel) {
   if (rel.startsWith("scripture/")) return "scripture";
   if (rel === "shop.html") return "shop";
   if (rel === "witness.html") return "witness";
+  if (rel === "search.html") return "search";
   return null;
 }
 
@@ -165,7 +167,7 @@ test("every content page carries exactly one unified living nav", () => {
   }
 });
 
-test("the Support door is emitted by all three nav emission paths", () => {
+test("the Support door and the Living Search door are emitted by all three nav emission paths", () => {
   /* The census above proves the pages; this proves a regeneration
    * cannot wipe the door: every source that emits the nav carries it. */
   for (const source of [
@@ -174,6 +176,8 @@ test("the Support door is emitted by all three nav emission paths", () => {
     "scripts/r2_02_pages.py"
   ]) {
     assert.ok(read(source).includes(SUPPORT.href), `${source} emits the Support door`);
+    assert.ok(read(source).includes("Living Search"), `${source} emits the Living Search door`);
+    assert.ok(read(source).includes("search.html"), `${source} links the Living Search door to search.html`);
   }
   const css = read("docs/assets/css/living-ui.css");
   assert.match(css, /\.living-nav-links a\.living-nav-support\s*\{[^}]*color:\s*var\(--lnav-gold\)/,
