@@ -73,6 +73,7 @@
 | --- | --- |
 | `docs/assets/css/codex.css` | 35 |
 | `docs/assets/css/navigation.css` | 29 |
+| `docs/assets/css/living-ui.css` | 26 |
 | `docs/theory/equations/assets/css/codex.css` | 19 |
 | `docs/theory/equations/assets/css/navigation.css` | 19 |
 | `docs/theory/equations/assets/css/theory.css` | 19 |
@@ -82,11 +83,11 @@
 | `docs/theory/assets/css/theory.css` | 15 |
 | `docs/scroll/assets/library.css` | 6 |
 | `docs/systems/assets/css/codex.css` | 6 |
-| `docs/systems/assets/css/navigation.css` | 6 |
 
 | Script | Pages |
 | --- | --- |
 | `docs/assets/js/site.js` | 35 |
+| `docs/assets/js/living-ui.js` | 26 |
 | `docs/theory/equations/https:/cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js` | 19 |
 | `docs/theory/equations/assets/js/site.js` | 19 |
 | `docs/theory/equations/assets/js/theory.js` | 19 |
@@ -97,7 +98,6 @@
 | `docs/theory/assets/js/theory.js` | 15 |
 | `docs/assets/js/codex-witness.js` | 8 |
 | `docs/assets/js/share/remnant-share-url.js` | 6 |
-| `docs/assets/js/share/remnant-share.js` | 6 |
 
 ## Protected systems (do not modify)
 
