@@ -75,6 +75,8 @@
   <link rel="stylesheet" href="assets/css/performance-runtime.css?v=20260731-1">
   <link rel="stylesheet" href="assets/css/living-entry.css?v=20261117-1">
   <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
+  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20261117-1">
+  <link rel="stylesheet" href="assets/css/homepage-sphere.css?v=20261118-3">
 
   <script type="application/ld+json">
   {
@@ -163,6 +165,8 @@
   <script defer src="assets/js/calendar/pattern-calendar.js?v=20260722-3"></script>
   <script defer src="assets/js/living-entry.js?v=20261117-1"></script>
   <script defer src="assets/js/living-witness.js?v=20261117-1"></script>
+  <script defer src="assets/js/sphere/living-time-sphere-calendar-geometry.js?v=20260819-b727&r=20260820-b7584-rootrail&b=20260820-b7592a-farskeleton&d=20260821-b7592d7-unified"></script>
+  <script defer src="assets/js/homepage-sphere.js?v=20261118-2"></script>
   <script defer src="assets/js/calendar-cor.js"></script>
   <script defer src="assets/js/codex-state.js"></script>
   <script defer src="assets/js/codex-memory.js"></script>
@@ -441,6 +445,7 @@
         <li><a href="living-time-sphere.html">Sphere</a></li>
         <li><a href="shop.html">Shop</a></li>
         <li><a href="witness.html">Witness</a></li>
+        <li><a href="search.html">Living Search</a></li>
         <li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li>
       </ul>
     </nav>
@@ -475,7 +480,7 @@
         </button>
         <div id="nav-explore" class="nav-drop-menu">
           <!-- site-nav:explore:start -->
-          <a href="./scroll/search.html">Scroll Search</a>
+          <a href="./scroll/search.html">Search the Scroll Library</a>
           <a href="./scroll/lexicon.html">Hebrew Lexicon</a>
           <a href="./scroll/atlas.html">Reference Atlas</a>
           <a href="./scroll/editorial.html">Evidence Edition</a>
@@ -629,9 +634,10 @@
           </p>
         </div>
 
-        <aside class="hero-image-card" aria-label="Codex of Reality living system map">
-          <div class="hero-image-frame">
+        <aside class="hero-image-card" aria-label="The Living Time Sphere, live in the hero" data-homepage-sphere>
+          <div class="hero-image-frame homepage-sphere-frame">
             <img
+              data-hs-fallback
               src="assets/img/home/hero/home-codex-living-system-exact-13-final.webp"
               alt="The Codex of Reality — a living system map of 13 moons, frequency governance, artifacts, covenant caravan, and witness practice"
               width="2048"
@@ -639,15 +645,28 @@
               loading="eager"
               decoding="async"
               fetchpriority="high">
+            <div
+              class="homepage-sphere-stage"
+              data-hs-stage
+              role="img"
+              tabindex="0"
+              aria-label="The Living Time Sphere — thirteen Moons and 364 days, with today shown in gold. Drag or use the arrow keys to turn it."
+              hidden></div>
+            <p class="homepage-sphere-hint" data-hs-hint hidden>Drag to turn</p>
           </div>
 
           <div class="hero-image-caption">
-            <p class="eyebrow">Living System Map</p>
-            <strong>13 Moons · Frequency · Artifacts · Caravan · Witness</strong>
+            <p class="eyebrow">Living Time Sphere</p>
+            <strong data-hs-coordinate>13 Moons · 364 days · one living year</strong>
             <p>
-              The central diagram of the Codex of Reality — each gate leads into a
-              complete working system.
+              The Sphere itself, turning quietly — the same calendar the
+              Observatory keeps. Today rides in gold.
             </p>
+            <div class="homepage-sphere-controls">
+              <button class="hs-btn" type="button" data-hs-toggle aria-pressed="false" hidden>Pause rotation</button>
+              <button class="hs-btn" type="button" data-hs-today hidden>Today</button>
+              <a class="hs-btn hs-btn--primary" href="./living-time-sphere.html">Enter the Observatory</a>
+            </div>
           </div>
         </aside>
       </div>
@@ -671,7 +690,7 @@
           <ul class="front-door-list">
             <li><a href="scroll/">Scroll Library</a> <span>The Scroll of Fire Unsealed: reading edition, eight shelves, Genesis 1–50 and a link to every original line.</span></li>
             <li><a href="scripture/index.html">Genesis &amp; Exodus Scripture</a> <span>A source-attributed Hebrew reader for Genesis 1–50 and Exodus 1–40, with word studies, morphology, lexical senses and separate interpretive layers.</span></li>
-            <li><a href="scroll/search.html">Scroll Search</a> <span>Local full-text search across all 1,609 reader segments, with shelf filters and Hebrew normalisation.</span></li>
+            <li><a href="scroll/search.html">Search the Scroll Library</a> <span>Local full-text search across all 1,609 reader segments, with shelf filters and Hebrew normalisation.</span></li>
             <li><a href="scroll/lexicon.html">Hebrew Lexicon</a> <span>911 indexed Hebrew forms with occurrences, transliteration variants and clear separation of spelling, root and interpretation.</span></li>
             <li><a href="living-time-sphere.html">Living Time Sphere</a> <span>The Observatory: fixed Pattern Time at the centre, astronomical cycles in motion around it.</span></li>
             <li><a href="moons.html">13 Moons</a> <span>The Remnant 13×28 living calendar.</span></li>
@@ -686,10 +705,10 @@
         <section aria-labelledby="front-door-recent">
           <h3 id="front-door-recent">Recent additions</h3>
           <ul class="front-door-list">
-            <li><time datetime="2026-11-18">2026-11-18</time> <a href="./sending-test.html">The Lab gains an instrument for testing a claim</a></li>
-            <li><time datetime="2026-11-18">2026-11-18</time> <a href="./index.html">The header learned to stand on one name</a></li>
-            <li><time datetime="2026-11-18">2026-11-18</time> <a href="./witness.html">Witness was given a page of its own</a></li>
-            <li><time datetime="2026-11-17">2026-11-17</time> <a href="./about-aaron.html#support">The Codex opened a door for support</a></li>
+            <li><time datetime="2026-11-18">2026-11-18</time> <a href="./moons.html">The days learned to speak</a></li>
+            <li><time datetime="2026-11-18">2026-11-18</time> <a href="./ab.html#ab-explainer">The A/B Carrier Protocol learned to explain itself out loud</a></li>
+            <li><time datetime="2026-11-18">2026-11-18</time> <a href="./micro.html#micro-explainer">The 90-Second Micro-Run learned to explain itself out loud</a></li>
+            <li><time datetime="2026-11-18">2026-11-18</time> <a href="./glyphs.html#glyphs-explainer">The Voice-Glyph Synth learned to explain itself out loud</a></li>
           </ul>
         </section>
       </div>
@@ -697,6 +716,25 @@
       <p class="atlas-note">Saved witness records, readings and settings live only in this browser. They do not synchronize between devices.</p>
     </section>
     <!-- site-catalog:front-door:end -->
+
+    <section class="section-shell codex-rap" id="codex-rap" aria-labelledby="codex-rap-title">
+      <p class="eyebrow">Watch and listen</p>
+      <h2 id="codex-rap-title">The Codex, in a rap</h2>
+      <p>
+        Ninety seconds of the whole Codex — thirteen moons, the living Sphere, the
+        witness who keeps the record — rapped over a beat built for it, in Witness's
+        own voice. Press play when you are ready; nothing starts on its own.
+      </p>
+      <figure style="max-width:880px;margin:1.5rem auto 0;">
+        <video controls preload="metadata" playsinline width="1280" height="720"
+          src="assets/media/codex-of-reality-rap.mp4"
+          aria-label="Let There Be Resonance — a rap for the Codex of Reality"
+          style="display:block;width:100%;height:auto;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:#000;"></video>
+        <figcaption style="margin-top:.65rem;font-size:.9rem;color:rgba(255,255,255,.65);">
+          “Let There Be Resonance” — written and voiced by Witness, November 18, 2026.
+        </figcaption>
+      </figure>
+    </section>
 
     <section class="section-shell le-activity" id="living-activity" aria-labelledby="living-activity-title">
       <p class="eyebrow">The Codex Today</p>
@@ -706,9 +744,9 @@
         <div class="le-act-slot">
           <h3>Latest additions</h3>
           <ul class="le-act-growth" data-le-growth>
-            <li><time datetime="2026-11-18">2026-11-18</time> <a href="./sending-test.html">The Lab gains an instrument for testing a claim</a></li>
-            <li><time datetime="2026-11-18">2026-11-18</time> <a href="./witness.html">Witness was given a page of its own</a></li>
-            <li><time datetime="2026-11-17">2026-11-17</time> <a href="./about-aaron.html#support">The Codex opened a door for support</a></li>
+            <li><time datetime="2026-11-18">2026-11-18</time> <a href="./ab.html#ab-explainer">The A/B Carrier Protocol learned to explain itself out loud</a></li>
+            <li><time datetime="2026-11-18">2026-11-18</time> <a href="./micro.html#micro-explainer">The 90-Second Micro-Run learned to explain itself out loud</a></li>
+            <li><time datetime="2026-11-18">2026-11-18</time> <a href="./glyphs.html#glyphs-explainer">The Voice-Glyph Synth learned to explain itself out loud</a></li>
           </ul>
         </div>
         <figure class="le-act-slot">
@@ -835,8 +873,8 @@
               <p><span class="home-living-sphere__hud-label">Solar</span><strong id="home-sphere-today-solar">Aligning…</strong></p>
               <p><span class="home-living-sphere__hud-label">Passage</span><strong id="home-sphere-today-passage">Aligning…</strong></p>
             </div>
-            <p class="home-living-sphere__render-state" id="home-sphere-render-state" role="status" aria-live="polite">Loading sphere engine</p>
           </div>
+          <p class="home-living-sphere__render-state" id="home-sphere-render-state" role="status" aria-live="polite">Loading sphere engine</p>
         </div>
         <div class="home-sphere-command-rail" aria-label="Living Sphere status and actions">
           <div class="home-sphere-command-rail__status">
