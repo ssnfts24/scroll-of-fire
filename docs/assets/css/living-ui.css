@@ -163,3 +163,43 @@ body.living-ui main > section.lui-reveal-pending {
     transform: none;
   }
 }
+
+/* ---- Unified living navigation ------------------------------------ */
+/* One slim bar at the top of every content page: Home + the main      */
+/* areas, identical in spirit across every page family. Static (never  */
+/* fixed) so it can never cover content or fight a page's own chrome.  */
+body.living-ui .lui-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem 0.9rem;
+  padding: 0.5rem 1rem;
+  background: rgba(5, 7, 13, 0.94);
+  border-bottom: 1px solid rgba(243, 201, 122, 0.28);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+}
+body.living-ui .lui-nav a {
+  color: #7af3ff;
+  text-decoration: none;
+  padding: 0.15rem 0;
+}
+body.living-ui .lui-nav a:hover,
+body.living-ui .lui-nav a:focus-visible {
+  color: #f3c97a;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+body.living-ui .lui-nav .lui-nav-home {
+  color: #f3c97a;
+  font-weight: 600;
+  margin-right: 0.35rem;
+}
+@media (max-width: 560px) {
+  body.living-ui .lui-nav {
+    gap: 0.1rem 0.6rem;
+    font-size: 0.78rem;
+    padding: 0.45rem 0.7rem;
+  }
+}
