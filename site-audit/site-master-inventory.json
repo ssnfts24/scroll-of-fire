@@ -7,15 +7,14 @@
     "publicHtmlPages": 170,
     "catalogEntries": 64,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 20,
+      "not-linked-directly-from-homepage": 19,
       "nav-label-differs-from-title": 24,
       "deployed-but-unlinked": 57,
       "unreachable-from-homepage": 3,
       "compatibility-redirect-page": 1,
       "no-public-url-yet": 1,
       "not-published-in-catalog": 29,
-      "unnamed-image-needs-descriptive-title": 21,
-      "reachable-only-through-atlas": 1
+      "unnamed-image-needs-descriptive-title": 21
     }
   },
   "resources": [
@@ -1654,6 +1653,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -17444,16 +17444,13 @@
         "path": "search.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": null,
-        "inboundPages": 1,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 2,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "reachable-only-through-atlas",
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "start",
