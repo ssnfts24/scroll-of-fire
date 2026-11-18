@@ -48,6 +48,11 @@
     const moon = Number(result.patternPosition.moonNumber || 13);
     const day = Number(result.patternPosition.dayInMoon || 28);
     const tone = Number(result.coreSignature.tone || 13);
+    const outside = !result.patternPosition.moonNumber || !result.patternPosition.dayInMoon;
+    const sealLabel = outside ? `Outside · T${tone}` : `M${moon} · D${day} · T${tone}`;
+    const sealAria = outside
+      ? `Seal of Becoming derived from a day outside the counted 364-day year, Tone ${tone}`
+      : `Seal of Becoming derived from Moon ${moon}, Day ${day}, Tone ${tone}`;
     const carrier = Number(result.coreSignature.carrier.hz || 432);
     const reduction = Number(result.nameSignature.fullNameReduction || 1);
     const center = size / 2;
@@ -66,7 +71,7 @@
     const hue = (carrier + day * 7 + moon * 11) % 360;
 
     return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" role="img" aria-label="Seal of Becoming derived from Moon ${moon}, Day ${day}, Tone ${tone}">
+<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" role="img" aria-label="${sealAria}">
   <defs>
     <radialGradient id="g" cx="50%" cy="50%" r="50%">
       <stop offset="0%" stop-color="hsl(${hue}, 95%, 75%)" stop-opacity="0.95" />
@@ -77,7 +82,7 @@
   <circle cx="${center}" cy="${center}" r="${radius + 8}" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1" />
   <polygon points="${points.join(" ")}" fill="url(#g)" stroke="hsl(${hue}, 95%, 75%)" stroke-width="${stroke}" />
   <circle cx="${center}" cy="${center}" r="${Math.max(8, day)}" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" />
-  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#f5f1e8" font-family="Inter, sans-serif" font-size="14">M${moon} · D${day} · T${tone}</text>
+  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#f5f1e8" font-family="Inter, sans-serif" font-size="14">${sealLabel}</text>
 </svg>`;
   }
 
@@ -104,7 +109,7 @@
   }
 
   function exportReadingJson() {
-    if (!lastResult) return;
+    if (!lastResult) { setStatus("Run a reading first — this exports the current reading."); return; }
     if (!confirmPersonalExport()) return;
     download(
       `genesis-reading-${lastResult.input.birthDate}.json`,
@@ -115,7 +120,7 @@
   }
 
   function exportReadingText() {
-    if (!lastResult) return;
+    if (!lastResult) { setStatus("Run a reading first — this exports the current reading."); return; }
     if (!confirmPersonalExport()) return;
     const lines = [
       "GENESIS ORACLE 2.0",
@@ -141,14 +146,14 @@
   }
 
   function exportSealSvg() {
-    if (!lastResult) return;
+    if (!lastResult) { setStatus("Run a reading first — this exports the current reading."); return; }
     const svg = buildSealSvg(lastResult);
     download(`genesis-seal-${lastResult.input.birthDate}.svg`, svg, "image/svg+xml;charset=utf-8");
     setStatus("Seal SVG exported.");
   }
 
   function exportSealPng() {
-    if (!lastResult) return;
+    if (!lastResult) { setStatus("Run a reading first — this exports the current reading."); return; }
     const svg = buildSealSvg(lastResult, 800);
     const blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -888,7 +893,7 @@
     if (!grid || !mirrorThroughMySeal) return;
 
     renderList("mirrorSealGrid", [
-      { label: "Birth Moon × Current Moon", value: mirrorThroughMySeal.support || "—" },
+      { label: "Birth Moon × Current Moon", value: mirrorThroughMySeal.birthMoonVsCurrentMoon || "—" },
       { label: "Support", value: mirrorThroughMySeal.support || "—" },
       { label: "Friction", value: mirrorThroughMySeal.friction || "—" },
       { label: "Present Emphasis", value: mirrorThroughMySeal.presentEmphasis || "—" },
