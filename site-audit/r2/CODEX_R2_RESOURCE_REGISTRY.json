@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 1907,
-    "bytes": 537926671,
+    "bytes": 537925680,
     "byGroup": {
       "tooling": 144,
       "manuscript": 17,
@@ -15894,8 +15894,8 @@
       "path": "docs/index.html",
       "title": "Homepage",
       "format": "html",
-      "bytes": 109554,
-      "sha256": "b990043a4fe6760fdff695c99dcb00698f8601c0e89e61f8ee117284b9f85800",
+      "bytes": 108563,
+      "sha256": "552e832f6bb450e61c127f0536ee8a6905f7d77059656ac2b7084cabde5a19a6",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
