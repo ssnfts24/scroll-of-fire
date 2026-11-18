@@ -600,6 +600,21 @@
    "featured": false
   },
   {
+   "id": "claims-atlas",
+   "title": "Documentation Hub",
+   "description": "Documented claims and facts in one hub: government, corporations, the Epstein record, Tesla, orphan trains, the Old World, and the Codex's own 21-claim register — each entry tied to a named source and graded by the state of its evidence.",
+   "area": "evidence",
+   "category": "Evidence",
+   "resourceType": "tool",
+   "status": "live",
+   "path": "claims-atlas.html",
+   "related": [
+    "scroll-editorial",
+    "claim-register"
+   ],
+   "featured": true
+  },
+  {
    "id": "evidence-register",
    "title": "Evidence Register (readable)",
    "description": "Human-readable evidence register with exact quotes and line references.",
@@ -1027,15 +1042,16 @@
   },
   {
    "id": "planned-timeline",
-   "title": "Historical timeline and claims atlas",
-   "description": "Planned fifth stage of the Scroll Library: timeline and wider claims atlas.",
+   "title": "Historical timeline",
+   "description": "Planned fifth stage of the Scroll Library: the historical timeline. The claims half now stands as the Documentation Hub.",
    "area": "evidence",
    "category": "Evidence",
    "resourceType": "tool",
    "status": "planned",
    "path": null,
    "related": [
-    "scroll-editorial"
+    "scroll-editorial",
+    "claims-atlas"
    ],
    "featured": false
   }

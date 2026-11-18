@@ -51,12 +51,13 @@ Practice tools, frequency systems and the Codex hub for building.
 - **Field Guide** — Live; Daily and weekly practice, troubleshooting and ethics.
 - **Manifest** — Live; Remnant visual exercise: carrier frequency engine, harmonic sequences and breath.
 
-### Evidence and Research (22 catalog entries)
+### Evidence and Research (23 catalog entries)
 
 Theory chapters, the claim register and the editorial evidence edition.
 
 - **Editorial Evidence Edition** — Live; Reading edition of the political chapters with a claim register, evidence statuses and original-line links.
 - **Claim Register** — Live; Machine-readable register of 21 prioritised claims with sources and review status.
+- **Documentation Hub** — Live; Documented claims and facts in one hub: government, corporations, the Epstein record, Tesla, orphan trains, the Old World, and the Codex's own 21-claim register — each entry tied to a named source and graded by the state of its evidence.
 - **Evidence Register (readable)** — Live; Human-readable evidence register with exact quotes and line references.
 - **Theory Hub** — Live; Master Equation, Unified Field, Canon 0–17, operators and the Δ framework.
 - **Canon 0–17** — Live; Index of the Codex theory canon.
@@ -76,7 +77,7 @@ Theory chapters, the claim register and the editorial evidence edition.
 - **Theory Glossary** — Live; Symbols, operators and witness terms of the theory system.
 - **Bibliography** — Live; Source architecture: project records, scientific and technical references.
 - **Ethics & Coherence Law** — Live; The living laws of the Codex: consent, non-harm, accountability and the stop rule.
-- **Historical timeline and claims atlas** — Planned; Planned fifth stage of the Scroll Library: timeline and wider claims atlas.
+- **Historical timeline** — Planned; Planned fifth stage of the Scroll Library: the historical timeline. The claims half now stands as the Documentation Hub.
 
 ### Artifacts and Creative Works (6 catalog entries)
 
@@ -101,9 +102,9 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 
 ## Repository and deployed-content coverage
 
-- Public HTML pages inspected: **171**.
-- Total master-inventory records: **466**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
-- Public-facing catalog entries: **65**; only explicitly curated entries appear on the Atlas.
+- Public HTML pages inspected: **172**.
+- Total master-inventory records: **467**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
+- Public-facing catalog entries: **66**; only explicitly curated entries appear on the Atlas.
 - Numbered archive folders are inventoried file-by-file, while downloads snapshot differences are kept separate from historical integrity data.
 - Root files not already published through the archive or explicitly approved remain classified as development-only; no such file is automatically linked from the public catalog.
 
@@ -120,7 +121,7 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 
 - Deployed Markdown documents: 58
 - Evidence: 1
-- HTML pages: 171
+- HTML pages: 172
 - Numbered archive file: 140
 - Numbered archive folder: 7
 - Repository folder: 9
