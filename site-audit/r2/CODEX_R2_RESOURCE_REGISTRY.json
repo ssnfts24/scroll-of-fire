@@ -3,10 +3,10 @@
   "purpose": "Development-only registry of every tracked or intended repository file. Not a publication list.",
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
-    "files": 1992,
-    "bytes": 748274244,
+    "files": 1993,
+    "bytes": 748278081,
     "byGroup": {
-      "tooling": 161,
+      "tooling": 162,
       "manuscript": 17,
       "unlabelled-image": 21,
       "witness-record": 20,
@@ -35,7 +35,7 @@
       "scripture-source": 15
     },
     "byPublicationEligibility": {
-      "development-only": 204,
+      "development-only": 205,
       "pending-publication-review": 42,
       "restricted-review": 180,
       "protected-immutable": 21,
@@ -43,7 +43,7 @@
       "approved-public": 1539
     },
     "byExamination": {
-      "inventoried-only": 1864,
+      "inventoried-only": 1865,
       "parser-unavailable": 16,
       "text-extracted": 40,
       "archive-listed": 8,
@@ -13687,8 +13687,8 @@
       "path": "docs/assets/js/living-codex.js",
       "title": "living-codex.js",
       "format": "js",
-      "bytes": 49892,
-      "sha256": "7f105a82ced28840c54bffdf7b78450ab0000395c588b8138c0778a3528b0244",
+      "bytes": 50202,
+      "sha256": "016c545ca698493bb9034d8c72c9fe8b4460b8a014c2e896dd278f1de4e72c8d",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -45655,7 +45655,7 @@
       "title": "site-master-inventory.json",
       "format": "json",
       "bytes": 713920,
-      "sha256": "f9fcc5625f7e3730170d92d2b60c2a8fe44047377f5cc814f220df069a022e4c",
+      "sha256": "44ae8066d50ea8e993358e324403a28d442d71724fb2fc37133f7b1055aadaf2",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -46424,6 +46424,30 @@
       "format": "js",
       "bytes": 32136,
       "sha256": "7e36a48b424cd15479026c0730433ec17245968f991cb2619f5e888211435530",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-living-codex-signal-bar-test-js-d89c32",
+      "path": "tests/living-codex-signal-bar.test.js",
+      "title": "living-codex-signal-bar.test.js",
+      "format": "js",
+      "bytes": 3527,
+      "sha256": "71a879d9c140040e1ead7a5c3f95289f24f9d46908b9ebe9a65c92a67f39022b",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
