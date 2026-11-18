@@ -305,7 +305,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "593e18ec1e720ed90822e263b0327fd9c824d1de2cb32d7e5bc375007e8d5d7f",
+      "sha256": "29cf8f23f9672fc6da9f5f412516b3097171f639b47723cea4cca25a89874f47",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -2069,7 +2069,7 @@
     },
     {
       "path": "docs/assets/js/sphere/living-time-sphere-label-manager.js",
-      "sha256": "3a8be0e851831e97ca9f00b51302c139c4b65b5baf683717a9f3a0882e3ded8e",
+      "sha256": "e051b10ca7c1a5bbb4a3517094f21a321c07191573b16d557347273a74a3170c",
       "publicUrl": "https://codexofreality.org/assets/js/sphere/living-time-sphere-label-manager.js",
       "status": "operational"
     },
@@ -2117,7 +2117,7 @@
     },
     {
       "path": "docs/assets/js/sphere/living-time-sphere-renderer-3d.js",
-      "sha256": "8e60da7bff55b55c8132c9479dcb0d0d843fb6924c39b84025ffafff0fe24cc6",
+      "sha256": "ac4f4127dd5c5a124f2c6e2292aa7cc4dbf222cdaf4bfb8ae31a9f65643af1b6",
       "publicUrl": "https://codexofreality.org/assets/js/sphere/living-time-sphere-renderer-3d.js",
       "status": "operational"
     },
@@ -2135,7 +2135,7 @@
     },
     {
       "path": "docs/assets/js/sphere/living-time-sphere-semantic-zoom.js",
-      "sha256": "e38130d0a086097c7e76414ba5d2d8146d4018feecfa75b868afa4d4de525fd4",
+      "sha256": "7b1613ba2ef0fad4d7f5d4673f9701fa264fc9143fc2d763642bce5b60a47560",
       "publicUrl": "https://codexofreality.org/assets/js/sphere/living-time-sphere-semantic-zoom.js",
       "status": "operational"
     },
@@ -2224,6 +2224,18 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/media/downloads-explainer.mp4",
+      "sha256": "81d21105b24b74457d0a602605b69fc8b7e12e10a78fe03e1471cac0853fded8",
+      "publicUrl": "https://codexofreality.org/assets/media/downloads-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/ethics-explainer.mp4",
+      "sha256": "7326b47a32969681f936527b8d119d625b3c889158988585e3e37692214a9acc",
+      "publicUrl": "https://codexofreality.org/assets/media/ethics-explainer.mp4",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/media/evidence-edition-explainer.mp4",
       "sha256": "4c70689be79fd80cc74f89c591790f57e38d834b76a215e8d624c80f46c897ee",
       "publicUrl": "https://codexofreality.org/assets/media/evidence-edition-explainer.mp4",
@@ -2233,6 +2245,18 @@
       "path": "docs/assets/media/hebrew-lexicon-explainer.mp4",
       "sha256": "80c0fc419fb35b721161999a7307c0516b2ac62091ff2d05070dd24bfe851f28",
       "publicUrl": "https://codexofreality.org/assets/media/hebrew-lexicon-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/hub-explainer.mp4",
+      "sha256": "ae62e07fcfae30421d7e14338ed338f952950e93758cd4461aefa7158a7c42b0",
+      "publicUrl": "https://codexofreality.org/assets/media/hub-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/lab-explainer.mp4",
+      "sha256": "62d666fc04db777b66953780b7b8c2c5399b553eed4062dac42bcc25ad65fc80",
+      "publicUrl": "https://codexofreality.org/assets/media/lab-explainer.mp4",
       "status": "operational"
     },
     {
@@ -2291,13 +2315,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "52756ef2099209513c1fd39cb9f8674393a4d7236a57107bda18a26bbd370a2d",
+      "sha256": "cb07cb2befd394e4628db35b89e9287fa0d2f5d3532a74f8869827272a4f9b77",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "d1edb5dc294910dd1425f09bcafc1dda543f2e17856f279d32f2765b70827a45",
+      "sha256": "1a0d5bb7537e117bbdf2652744999b40c3d1871a97eaf7630960a8a8a25c48f6",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -2381,7 +2405,7 @@
     },
     {
       "path": "docs/downloads.html",
-      "sha256": "cba32621905efb78b94f5874721aa76770f8853e99754ca0cafd8fed8e619597",
+      "sha256": "58343ba126dbffdd78d1025e72f846e704b007c62eb203f4c5d50a5a86c04277",
       "publicUrl": "https://codexofreality.org/downloads.html",
       "status": "operational"
     },
@@ -2393,7 +2417,7 @@
     },
     {
       "path": "docs/ethics.html",
-      "sha256": "a2e1bcf4c26c1b2929030cc7b8dee9c0a1f91978dd749129e12f2fe4e9e16f3d",
+      "sha256": "eb5e014239ce9bb0f9d0b546c64e3e0441f5502989171c7ac48319421bdbd0bb",
       "publicUrl": "https://codexofreality.org/ethics.html",
       "status": "operational"
     },
@@ -2423,13 +2447,13 @@
     },
     {
       "path": "docs/hub.html",
-      "sha256": "5456766ee0b932766b6332d8cdec4f0c9d6a576e562b46f8ff0233320cdf698e",
+      "sha256": "5696c99707742dd40e79dddcfad57e5ca5fdef903715b668de9349c72a04e723",
       "publicUrl": "https://codexofreality.org/hub.html",
       "status": "operational"
     },
     {
       "path": "docs/index.html",
-      "sha256": "0a798698c900ee0cbe0c55f062887ae807b1abe09148b889c889306115e9ad66",
+      "sha256": "3a33b7872b118805dc5cae483428dcdeec39d10bd0950a978ef9f6561cd5f6a8",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
@@ -2441,7 +2465,7 @@
     },
     {
       "path": "docs/lab.html",
-      "sha256": "080e84717ce6d0c46c1382e5c7c0ca27b6569168581e4c71930d40cb032edf3c",
+      "sha256": "0a39382e112e992f994384d703e352060bcb8156f1cad6d7d50c62bc609c5514",
       "publicUrl": "https://codexofreality.org/lab.html",
       "status": "operational"
     },
@@ -2453,7 +2477,7 @@
     },
     {
       "path": "docs/living-time-sphere.html",
-      "sha256": "cef2517e7c7921186df19a19041661bb11d9c2bbcc1baea416126fc12a2d9b70",
+      "sha256": "45715791227379735204a480564a0e47b11c255e51a64c668b3aaa8e0f8475de",
       "publicUrl": "https://codexofreality.org/living-time-sphere.html",
       "status": "operational"
     },
@@ -8807,7 +8831,7 @@
     },
     {
       "path": "docs/teach.html",
-      "sha256": "66d33e4f94b3090b5fca74f77efc4e8f00344e7d907c9dcb4f4e24e99a4998c5",
+      "sha256": "a5a3fd37a073adfd722a5726c953f21425dc1a17c810c8dc5930b75e1412d076",
       "publicUrl": "https://codexofreality.org/teach.html",
       "status": "operational"
     },
