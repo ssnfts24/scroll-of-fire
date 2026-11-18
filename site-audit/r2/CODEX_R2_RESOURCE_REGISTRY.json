@@ -3,8 +3,8 @@
   "purpose": "Development-only registry of every tracked or intended repository file. Not a publication list.",
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
-    "files": 1932,
-    "bytes": 540710464,
+    "files": 1935,
+    "bytes": 540732438,
     "byGroup": {
       "tooling": 150,
       "manuscript": 17,
@@ -23,9 +23,9 @@
       "frozen-archive": 6,
       "legacy-site": 3,
       "legacy-asset": 1,
-      "site-page": 42,
+      "site-page": 43,
       "deployed-dev-doc": 56,
-      "site-asset": 367,
+      "site-asset": 369,
       "vendor": 3,
       "site-data": 5,
       "scroll-library": 826,
@@ -40,14 +40,14 @@
       "restricted-review": 180,
       "protected-immutable": 21,
       "public-unreviewed": 5,
-      "approved-public": 1491
+      "approved-public": 1494
     },
     "byExamination": {
-      "inventoried-only": 1806,
+      "inventoried-only": 1808,
       "text-extracted": 55,
       "no-text-layer-needs-visual-review": 1,
       "archive-listed": 8,
-      "structurally-audited": 62
+      "structurally-audited": 63
     }
   },
   "statusVocabulary": [
@@ -6877,6 +6877,30 @@
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
       "publicUrl": "https://codexofreality.org/assets/css/tokens.css",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-css-witness-css-c52797",
+      "path": "docs/assets/css/witness.css",
+      "title": "witness.css",
+      "format": "css",
+      "bytes": 2684,
+      "sha256": "62ff27ce90dd337ea808e9470e877e5bcfdee3a901d33df9de5ed5019a92cb49",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/css/witness.css",
       "publicationEligibility": "approved-public",
       "status": "operational",
       "catalogId": null,
@@ -15389,6 +15413,30 @@
       "nextAction": "Functionality audit in R2-03/R2-06."
     },
     {
+      "id": "r2:docs-assets-js-witness-js-f05e12",
+      "path": "docs/assets/js/witness.js",
+      "title": "witness.js",
+      "format": "js",
+      "bytes": 2264,
+      "sha256": "104a322ab07bea2799d3e046f38372f1e0198f3a945a0e07bbf4d4a3e939029f",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/js/witness.js",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
       "id": "r2:docs-assets-search-atlas-json-149bc9",
       "path": "docs/assets/search/atlas.json",
       "title": "atlas.json",
@@ -16086,8 +16134,8 @@
       "path": "docs/development/R1.7-PROTECTED-MANIFEST.md",
       "title": "R1.7-PROTECTED-MANIFEST.md",
       "format": "md",
-      "bytes": 4598,
-      "sha256": "ce12b01cc4c2077ad60d21eb0ac0a675b6362451dbce4ddbfdd2eff7f352c5b4",
+      "bytes": 4701,
+      "sha256": "5bdb67d9df66ee8d33e56bd2f1f6940a7c88d8e5e23c7ab3335fec20cd2a2f0f",
       "group": "deployed-dev-doc",
       "role": "Engineering report or specification under the publish tree",
       "deployed": true,
@@ -43248,6 +43296,30 @@
       "nextAction": "Evidence classification in R2-05."
     },
     {
+      "id": "r2:docs-witness-html-02fdda",
+      "path": "docs/witness.html",
+      "title": "Witness",
+      "format": "html",
+      "bytes": 16923,
+      "sha256": "50c87bdd05decda3ab30a320174935efb3688af9d2861d84cf57d839ac4ae702",
+      "group": "site-page",
+      "role": "Site page or support file",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/witness.html",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": "witness",
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "structurally-audited"
+      },
+      "examination": "structurally-audited",
+      "nextAction": "Functionality review."
+    },
+    {
       "id": "r2:file-0000000019f461f982fb8b4984a00188-png-237af7",
       "path": "file_0000000019f461f982fb8b4984a00188.png",
       "title": "file_0000000019f461f982fb8b4984a00188.png",
@@ -46857,7 +46929,7 @@
       "title": "r2-inventory.test.js",
       "format": "js",
       "bytes": 5573,
-      "sha256": "493644b5c64aca6f95607c3394d71d0ae5adf409087d372de761a2979e6c315e",
+      "sha256": "1d215bcbf505ea8db0600bf934401df357fa68473500b52167b5abc78706d86b",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,

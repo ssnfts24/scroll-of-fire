@@ -298,6 +298,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/css/witness.css",
+      "sha256": "62ff27ce90dd337ea808e9470e877e5bcfdee3a901d33df9de5ed5019a92cb49",
+      "publicUrl": "https://codexofreality.org/assets/css/witness.css",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/data/codex-updates.json",
       "sha256": "ec8dee5bf17d4751f961d58b34d216938bce0f5f886deb1474bcb094d4727939",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
@@ -2197,6 +2203,12 @@
       "path": "docs/assets/js/theory.js",
       "sha256": "60a2395e5ae0bd64b3713afe3340c314789891cd052155078ba480f26bb1e3df",
       "publicUrl": "https://codexofreality.org/assets/js/theory.js",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/js/witness.js",
+      "sha256": "104a322ab07bea2799d3e046f38372f1e0198f3a945a0e07bbf4d4a3e939029f",
+      "publicUrl": "https://codexofreality.org/assets/js/witness.js",
       "status": "operational"
     },
     {
@@ -8947,6 +8959,12 @@
       "path": "docs/theory/witness.html",
       "sha256": "e3e487ae60f050946ee582a72cf6e5bfba7042f4b1ebbd89001bbb0fc608fb11",
       "publicUrl": "https://codexofreality.org/theory/witness.html",
+      "status": "operational"
+    },
+    {
+      "path": "docs/witness.html",
+      "sha256": "50c87bdd05decda3ab30a320174935efb3688af9d2861d84cf57d839ac4ae702",
+      "publicUrl": "https://codexofreality.org/witness.html",
       "status": "operational"
     }
   ],
