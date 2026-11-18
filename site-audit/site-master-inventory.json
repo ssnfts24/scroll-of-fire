@@ -7,11 +7,12 @@
     "publicHtmlPages": 172,
     "catalogEntries": 65,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 17,
+      "not-linked-directly-from-homepage": 18,
       "nav-label-differs-from-title": 24,
       "deployed-but-unlinked": 57,
       "unreachable-from-homepage": 3,
       "compatibility-redirect-page": 1,
+      "reachable-only-through-atlas": 1,
       "not-published-in-catalog": 29,
       "unnamed-image-needs-descriptive-title": 21
     }
@@ -1710,7 +1711,6 @@
         "teach.html",
         "theory.html",
         "theory/canon.html",
-        "timeline.html",
         "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/",
@@ -12919,13 +12919,16 @@
         "path": "timeline.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 2,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": null,
+        "inboundPages": 1,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": []
+      "issues": [
+        "reachable-only-through-atlas",
+        "not-linked-directly-from-homepage"
+      ]
     },
     {
       "id": "recoder",
