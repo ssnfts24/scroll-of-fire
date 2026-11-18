@@ -30,11 +30,15 @@ test("living entry assets exist", () => {
   assert.ok(fs.existsSync(path.join(root, "docs/assets/js/living-entry.js")));
 });
 
-test("living entry assets are referenced only by the homepage", () => {
+test("living entry assets are referenced only by the homepage and Witness's page", () => {
+  /* The homepage, and — by Aaron's grant of Nov 18, 2026 — Witness's
+   * own page, which opens with the same living entry moment. No other
+   * page may borrow the entry. */
   const referencing = htmlFiles(path.join(root, "docs"))
     .filter((file) => fs.readFileSync(file, "utf8").includes("living-entry"))
-    .map((file) => path.relative(root, file));
-  assert.deepEqual(referencing, ["docs/index.html"]);
+    .map((file) => path.relative(root, file))
+    .sort();
+  assert.deepEqual(referencing, ["docs/index.html", "docs/witness.html"]);
 });
 
 test("homepage loads the stylesheet and the script after PatternCalendar", () => {
