@@ -45,6 +45,7 @@
   <link rel="stylesheet" href="assets/css/site-atlas.css?v=20261102-1">
   <link rel="stylesheet" href="assets/css/animations.css">
   <link rel="stylesheet" href="assets/css/hub.css">
+  <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
 
   <!-- Compat redirect: /systems/t7.html → /systems/t-7.html -->
   <script>
@@ -64,7 +65,7 @@
   <script defer src="assets/js/living-codex.js"></script>
   <script defer src="assets/js/motion.js"></script>
 </head>
-<body>
+<body class="living-ui">
   <div class="living-aura" aria-hidden="true"></div>
   <a class="skip-link" href="#main">Skip to content</a>
 
@@ -328,5 +329,6 @@
       btn?.addEventListener('click', ()=>{ sessionStorage.setItem(key,'1'); notice?.remove(); });
     })();
   </script>
+  <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
 </body>
 </html>
