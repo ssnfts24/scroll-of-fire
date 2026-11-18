@@ -305,7 +305,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "1dbb32f543eb9804f5fdb910fb02b6b55c920ba1ba3304859eead8de1616f52e",
+      "sha256": "f04298be1eb004876902db84ff641b542e8960d9d6edda5b69ec0574e69cb30b",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -2218,9 +2218,27 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/media/evidence-edition-explainer.mp4",
+      "sha256": "4c70689be79fd80cc74f89c591790f57e38d834b76a215e8d624c80f46c897ee",
+      "publicUrl": "https://codexofreality.org/assets/media/evidence-edition-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/hebrew-lexicon-explainer.mp4",
+      "sha256": "80c0fc419fb35b721161999a7307c0516b2ac62091ff2d05070dd24bfe851f28",
+      "publicUrl": "https://codexofreality.org/assets/media/hebrew-lexicon-explainer.mp4",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/media/moons-explainer.mp4",
       "sha256": "ec1adafada5ac33e8500a492911754722acf5ee15e811b87a18d988c2c90cd20",
       "publicUrl": "https://codexofreality.org/assets/media/moons-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/scroll-library-explainer.mp4",
+      "sha256": "cb46891f685d0a1d7cca21e4c044ec3e1fff0f5aff3f90ef899b11d971cd348a",
+      "publicUrl": "https://codexofreality.org/assets/media/scroll-library-explainer.mp4",
       "status": "operational"
     },
     {
@@ -2249,13 +2267,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "1edb81957a92d5e05422b8ee271b407ca9cba23f3895705e21e7352cc10377fc",
+      "sha256": "edd5094f784e15126f2ebb131f30238bcd2e44b3f235812de57cf5d99b479437",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "5e490ca77ca17e3f3818e0b86195c55a447c069249c09a8a1fa77f8b18a08f7f",
+      "sha256": "ab7f0664397b47b230bcd2fcc66413a6f3a9675fdc44aeac6e0ac6189aee2fd8",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -2387,7 +2405,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "ebae3618cee7d3d0f79f85cb9b1b5ae444d449ba532646f86d0d6bd761a10925",
+      "sha256": "d89c7c5aa90a0a0ac19326e83db84ee149a9ef5e45062454dc7e0586160c2d61",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
@@ -3857,7 +3875,7 @@
     },
     {
       "path": "docs/scroll/editorial.html",
-      "sha256": "67bc63d5ee92502185c3849167b493a8025033d5fc74128d7bbd433dd371c4cc",
+      "sha256": "bdaaf0879e9684c5ed104a117f844a074bfacc60b973005c2ea39bafa5d2b6fa",
       "publicUrl": "https://codexofreality.org/scroll/editorial.html",
       "status": "operational"
     },
@@ -3875,13 +3893,13 @@
     },
     {
       "path": "docs/scroll/index.html",
-      "sha256": "76c31fa93015be31998f2c2b7851d4e72a381bd881a3e0afd4079361ff0d1e22",
+      "sha256": "a31ef368fb4aa9f4a5d5ba47bd317d388417a54c1ac3d8ab69bd1c163e73d284",
       "publicUrl": "https://codexofreality.org/scroll/",
       "status": "operational"
     },
     {
       "path": "docs/scroll/lexicon.html",
-      "sha256": "fc7caea2e3c49be1fe5767c12e4d9976edd0682ae41dcee9a954a4042602b12a",
+      "sha256": "578cd18dbafb255a2ab620d702197818fbab77afe7a1fbf36e546a6dc52f3035",
       "publicUrl": "https://codexofreality.org/scroll/lexicon.html",
       "status": "operational"
     },
