@@ -187,6 +187,17 @@ const shelfIndex = shelves.map(shelf => {
   return `<details class="index-shelf" id="shelf-${shelf.id}"><summary><span class="shelf-number">${shelf.icon}</span><span><strong>${escapeHtml(shelf.title)}</strong><small>${shelfSections[shelf.id].length} original sections</small></span></summary><ol>${links}</ol></details>`;
 }).join("\n");
 
+// The unified site navigation — the same markup scripts/apply-living-nav.mjs
+// inserts into the hand-maintained pages and scripts/r2_02_pages.py emits for
+// the Scripture reader. It is emitted here because these library pages are
+// generated (the reader test suite rebuilds them), so hand edits would be
+// wiped. Home is one tap away from every library page.
+function livingNav(area) {
+  const link = (href, label, key) =>
+    `<a${key === area ? ' class="is-current" aria-current="page"' : ""} href="${href}">${label}</a>`;
+  return `<div class="living-nav" data-living-nav><nav class="living-nav-inner" aria-label="Site navigation"><a class="living-nav-brand" href="../index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a><ul class="living-nav-links"><li>${link("../index.html", "Home", "home")}</li><li>${link("index.html", "Scroll", "scroll")}</li><li>${link("../codex-atlas.html", "Atlas", "atlas")}</li><li>${link("lexicon.html", "Lexicon", "lexicon")}</li><li>${link("../scripture/index.html", "Scripture", "scripture")}</li><li>${link("../living-time-sphere.html", "Sphere", "sphere")}</li><li>${link("../shop.html", "Shop", "shop")}</li></ul></nav></div>`;
+}
+
 const homepage = `<!doctype html>
 <html lang="en">
 <head>
@@ -203,7 +214,7 @@ const homepage = `<!doctype html>
 </head>
 <body class="library-home living-ui">
   <a class="skip-link" href="#main">Skip to library</a>
-  <nav class="lui-nav" aria-label="Codex"><a class="lui-nav-home" href="../index.html">⌂ Home</a><a href="../codex-atlas.html">Atlas</a><a href="index.html">Scroll Library</a><a href="lexicon.html">Lexicon</a><a href="../living-time-sphere.html">Sphere</a><a href="../scripture/index.html">Scripture</a><a href="../shop.html">Shop</a></nav>
+  ${livingNav("scroll")}
   <header class="masthead">
     <a class="wordmark" href="./" aria-label="Scroll of Fire Unsealed Library home"><span class="wordmark-mark" aria-hidden="true">✦</span><span><strong>SCROLL OF FIRE</strong><small>UNSEALED LIBRARY</small></span></a>
     <nav class="masthead-links" aria-label="Library navigation"><a href="#shelves">The shelves</a><a href="#genesis">Genesis 1–50</a><a href="search.html">Search</a><a href="lexicon.html">Hebrew lexicon</a><a href="atlas.html">Atlas</a><a href="editorial.html">Editorial edition</a><a href="../codex-atlas.html">Codex Atlas</a><a href="../index.html">Codex home</a><a href="#full-index">Full index</a></nav>
@@ -278,7 +289,7 @@ const reader = `<!doctype html>
 </head>
 <body class="reader-page living-ui">
   <a class="skip-link" href="#reading">Skip to passage</a>
-  <nav class="lui-nav" aria-label="Codex"><a class="lui-nav-home" href="../index.html">⌂ Home</a><a href="../codex-atlas.html">Atlas</a><a href="index.html">Scroll Library</a><a href="lexicon.html">Lexicon</a><a href="../living-time-sphere.html">Sphere</a><a href="../scripture/index.html">Scripture</a><a href="../shop.html">Shop</a></nav>
+  ${livingNav("scroll")}
   <header class="reader-masthead">
     <a class="wordmark" href="./"><span class="wordmark-mark" aria-hidden="true">✦</span><span><strong>SCROLL OF FIRE</strong><small>UNSEALED LIBRARY</small></span></a>
     <div class="reader-actions" aria-label="Reading settings">
@@ -337,7 +348,7 @@ ${scripts.map(script => `  <script defer src="assets/${script}"></script>`).join
 </head>
 <body class="tool-body ${bodyClass} living-ui">
   <a class="skip-link" href="#main">Skip to content</a>
-  <nav class="lui-nav" aria-label="Codex"><a class="lui-nav-home" href="../index.html">⌂ Home</a><a href="../codex-atlas.html">Atlas</a><a href="index.html">Scroll Library</a><a href="lexicon.html">Lexicon</a><a href="../living-time-sphere.html">Sphere</a><a href="../scripture/index.html">Scripture</a><a href="../shop.html">Shop</a></nav>
+  ${livingNav(current === "lexicon" ? "lexicon" : "scroll")}
   <header class="reader-masthead">
     <a class="wordmark" href="./"><span class="wordmark-mark" aria-hidden="true">✦</span><span><strong>SCROLL OF FIRE</strong><small>UNSEALED LIBRARY</small></span></a>
     <div class="reader-actions" aria-label="Reading settings">

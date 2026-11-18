@@ -15,6 +15,10 @@
  *   - smooth in-page anchor travel (motion-safe only)
  *   - staged reveal-on-enter for top-level sections (armed by
  *     living-ui.js; everything is fully visible without JS)
+ *   - the unified site navigation (.living-nav) — deliberately NOT
+ *     gated on body.living-ui: every content page that loads this
+ *     stylesheet carries the same persistent wayfinding home, whether
+ *     or not its body opts into the ambience above.
  *
  * Motion uses transform/opacity only. Under prefers-reduced-motion the
  * layer is present but still: no breathing, no reveals, no gliding.
@@ -145,6 +149,135 @@ body.living-ui main > section.lui-reveal-pending {
 }
 
 /* ------------------------------------------------------------------ */
+/* Unified site navigation — one persistent bar on every content page  */
+/*                                                                     */
+/* Inserted by scripts/apply-living-nav.mjs right after each page's    */
+/* skip link. Sticky, so Home is one tap away from anywhere on the     */
+/* page — including deep inside the Scroll Library, whose own          */
+/* mastheads scroll away. Styles stand alone (own variables, no        */
+/* body.living-ui gate) so pages that load this stylesheet only for    */
+/* the nav still render it fully. The R1.7 sphere page is excluded     */
+/* and keeps its own chrome.                                           */
+/* ------------------------------------------------------------------ */
+
+.living-nav {
+  --lnav-gold: #f3c97a;
+  --lnav-gold-deep: #d99545;
+  --lnav-beige: #f4f0de;
+  --lnav-hairline: rgba(243, 201, 122, 0.28);
+  position: sticky;
+  top: 0;
+  z-index: 800;
+  background: rgba(7, 10, 17, 0.94);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--lnav-hairline);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  font-family: inherit;
+}
+
+.living-nav-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  align-items: stretch;
+  gap: 0.75rem;
+}
+
+.living-nav-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.72rem 0.25rem;
+  color: var(--lnav-beige);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.living-nav-mark {
+  color: var(--lnav-gold);
+  font-size: 1.15em;
+  line-height: 1;
+}
+
+.living-nav-links {
+  margin: 0 0 0 auto;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  align-items: stretch;
+  gap: 0.1rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.living-nav-links::-webkit-scrollbar {
+  display: none;
+}
+
+.living-nav-links li {
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.living-nav-links a {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.72rem 0.78rem;
+  min-height: 44px;
+  color: rgba(244, 240, 222, 0.82);
+  font-size: 0.94rem;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: inset 0 -2px 0 transparent;
+  transition: color 0.3s ease, box-shadow 0.3s ease, text-shadow 0.3s ease;
+}
+
+.living-nav-links a:hover,
+.living-nav-links a:focus-visible {
+  color: var(--lnav-gold);
+  text-shadow: 0 0 14px rgba(243, 201, 122, 0.35);
+}
+
+.living-nav-links a.is-current {
+  color: var(--lnav-gold);
+  box-shadow: inset 0 -2px 0 var(--lnav-gold-deep);
+}
+
+.living-nav a:focus-visible {
+  outline: 2px solid var(--lnav-gold);
+  outline-offset: -2px;
+}
+
+@media (max-width: 620px) {
+  .living-nav-inner {
+    padding: 0 0.6rem;
+    gap: 0.4rem;
+  }
+
+  .living-nav-brand {
+    font-size: 0.92rem;
+    padding: 0.72rem 0.1rem;
+  }
+
+  .living-nav-links a {
+    padding: 0.72rem 0.6rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .living-nav-links a {
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------------------------ */
 /* Reduced motion: the layer rests                                     */
 /* ------------------------------------------------------------------ */
 
@@ -161,45 +294,5 @@ body.living-ui main > section.lui-reveal-pending {
   body.living-ui main > section.lui-reveal-pending {
     opacity: 1;
     transform: none;
-  }
-}
-
-/* ---- Unified living navigation ------------------------------------ */
-/* One slim bar at the top of every content page: Home + the main      */
-/* areas, identical in spirit across every page family. Static (never  */
-/* fixed) so it can never cover content or fight a page's own chrome.  */
-body.living-ui .lui-nav {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.15rem 0.9rem;
-  padding: 0.5rem 1rem;
-  background: rgba(5, 7, 13, 0.94);
-  border-bottom: 1px solid rgba(243, 201, 122, 0.28);
-  font-size: 0.82rem;
-  letter-spacing: 0.04em;
-  line-height: 1.5;
-}
-body.living-ui .lui-nav a {
-  color: #7af3ff;
-  text-decoration: none;
-  padding: 0.15rem 0;
-}
-body.living-ui .lui-nav a:hover,
-body.living-ui .lui-nav a:focus-visible {
-  color: #f3c97a;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-body.living-ui .lui-nav .lui-nav-home {
-  color: #f3c97a;
-  font-weight: 600;
-  margin-right: 0.35rem;
-}
-@media (max-width: 560px) {
-  body.living-ui .lui-nav {
-    gap: 0.1rem 0.6rem;
-    font-size: 0.78rem;
-    padding: 0.45rem 0.7rem;
   }
 }
