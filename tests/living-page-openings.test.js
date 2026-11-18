@@ -122,8 +122,8 @@ test("reduced motion: the opening never appears and never animates", () => {
   const js = read("docs/assets/js/living-ui.js");
   const css = read("docs/assets/css/living-ui.css");
   assert.match(js, /matchMedia\("\(prefers-reduced-motion: reduce\)"\)/);
-  assert.match(js, /if \(reducedMotion\) return;\s*\n\s*const overlay = document\.createElement/s,
-    "the opening builder must be gated on the reduced-motion check");
+  assert.match(js, /if \(reducedMotion\) return;\s*\n\s*if \(lpoSeenThisSession\(\)\) return;\s*\n\s*const overlay = document\.createElement/s,
+    "the opening builder must be gated on the reduced-motion check (and the once-per-session memory) before anything is built");
   const reduceBlock = css.slice(css.indexOf("@media (prefers-reduced-motion: reduce)"));
   assert.match(reduceBlock, /\.lpo-overlay\s*\{\s*display:\s*none/);
   assert.match(reduceBlock, /body\.lpo-opening main\s*\{\s*animation:\s*none/);
@@ -196,6 +196,44 @@ test("the opening's pacing is at least the homepage entry's, and CSS agrees with
   assert.ok(transition, "the overlay's fade must be a CSS opacity transition");
   assert.equal(Number(transition[1]) * 1000, fadeMs,
     "the CSS fade duration must equal LPO_FADE_MS in living-ui.js");
+});
+
+test("the opening plays once per session, never on every page", () => {
+  const js = read("docs/assets/js/living-ui.js");
+  // Remembered in sessionStorage: read before building, written when shown.
+  assert.match(js, /sessionStorage\.getItem\(LPO_SEEN_KEY\)/,
+    "the opening must check the session memory before playing");
+  assert.match(js, /sessionStorage\.setItem\(LPO_SEEN_KEY, "1"\)/,
+    "the opening must record that it has played this session");
+  assert.match(js, /if \(lpoSeenThisSession\(\)\) return;/,
+    "a page load later in the same session must skip the opening entirely");
+  assert.match(js, /lpoMarkSeen\(\);/,
+    "showing the opening is what marks the session");
+  // Storage refusal fails open (the catch returns false = not seen),
+  // so private-mode visitors simply get the opening as before.
+  assert.match(js, /catch \(error\) \{\s*return false;/,
+    "a storage refusal must fail open, never break the page");
+  // The homepage entry is a separate, deliberate behaviour — Aaron
+  // chose every-visit there (PR #98) — and this memory must not leak
+  // into it.
+  const entryJs = read("docs/assets/js/living-entry.js");
+  assert.ok(!/sessionStorage|LPO_SEEN_KEY/.test(entryJs),
+    "the homepage entry must keep its every-visit behaviour, untouched by the page opening's memory");
+});
+
+test("late in the hold, one quiet line shows the way forward", () => {
+  const js = read("docs/assets/js/living-ui.js");
+  const css = read("docs/assets/css/living-ui.css");
+  assert.match(js, /hintEl\.className = "lpo-hint"/,
+    "the opening must build its way-forward line");
+  assert.match(js, /hintEl\.textContent = "Tap anywhere to continue"/,
+    "the way forward is stated in plain words");
+  const hintRule = css.match(/\.lpo-hint\s*\{[^}]*\}/);
+  assert.ok(hintRule, "the way-forward line must be styled");
+  // It settles in late (1.8s), like a cue near the end of the hold —
+  // never competing with the mark's own settle at the start.
+  assert.match(hintRule[0], /animation:\s*lpo-settle 0\.8s[^;]*1\.8s both/,
+    "the way-forward line must settle in late in the hold (1.8s delay)");
 });
 
 test("the opening adds no controls and asks for no decisions", () => {

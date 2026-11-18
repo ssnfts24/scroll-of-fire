@@ -15,8 +15,9 @@
  *   - smooth in-page anchor travel (motion-safe only)
  *   - staged reveal-on-enter for top-level sections (armed by
  *     living-ui.js; everything is fully visible without JS)
- *   - the page opening (.lpo-*): one quiet arrival moment per page —
- *     the mark, the page's name, today's line — injected by
+ *   - the page opening (.lpo-*): one quiet arrival moment, once per
+ *     session — the mark, the page's name, today's line, and a quiet
+ *     way-forward line late in the hold — injected by
  *     living-ui.js only, standing apart on the same opaque deep-stone
  *     ground as the homepage entry while it plays (the page beneath
  *     is neither visible nor interactive), gone in ~4.2s or at the
@@ -305,12 +306,12 @@ body.living-ui main > section.lui-reveal-pending {
 /*                                                                     */
 /* Injected by living-ui.js on arrival (never in markup, so a no-JS    */
 /* page is untouched). Lighter than the homepage entry only in what   */
-/* it says — no status cycle, no hint line, just the page's name and  */
-/* today's line — never in how it stands: it uses the entry's own     */
-/* opaque deep-stone ground (the same recipe as .le-overlay in        */
-/* living-entry.css), covers the full viewport above everything, and */
-/* takes every tap while it plays, so the page beneath is neither     */
-/* visible nor interactive until the opening finishes or is           */
+/* it says — no status cycle, just the page's name, today's line, and */
+/* one quiet way-forward line late in the hold — never in how it      */
+/* stands: it uses the entry's own opaque deep-stone ground (the      */
+/* same recipe as .le-overlay in living-entry.css), covers the full   */
+/* viewport above everything, and takes every tap while it plays, so  */
+/* the page beneath is neither visible nor interactive until the      */
 /* dismissed. The first gesture dismisses it in the same instant      */
 /* (living-ui.js), and the page is scroll-locked meanwhile            */
 /* (body.lpo-opening below — the entry's le-lock behaviour). One      */
@@ -394,6 +395,20 @@ body.living-ui main > section.lui-reveal-pending {
   letter-spacing: 0.04em;
   text-align: center;
   animation: lpo-settle 0.8s cubic-bezier(0.22, 0.61, 0.21, 1) 0.3s both;
+}
+
+/* The way-forward line: settles in at 1.8s, late in the hold, small
+ * and quiet — present before the fade so a first-time visitor is
+ * never left wondering how to get through, gone with the overlay. */
+.lpo-hint {
+  margin: 1.15rem 0 0;
+  max-width: 86vw;
+  color: rgba(244, 240, 222, 0.62);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-align: center;
+  text-transform: uppercase;
+  animation: lpo-settle 0.8s cubic-bezier(0.22, 0.61, 0.21, 1) 1.8s both;
 }
 
 @keyframes lpo-settle {

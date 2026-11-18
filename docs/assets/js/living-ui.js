@@ -9,11 +9,18 @@
  *    deep-stone ground as the homepage entry, with the page's own name
  *    and today's living line — the civil date, plus the 13 Moons
  *    coordinate ONLY where the site's PatternCalendar is already loaded
- *    on that page (never an invented coordinate). While it plays, the
+ *    on that page (never an invented coordinate). It plays ONCE per
+ *    session (sessionStorage): the first content page a visitor lands
+ *    on opens; moving on to further pages in the same sitting does not
+ *    replay it — a fresh visit gets it again. The homepage entry is
+ *    untouched by this and still wakes on every visit, as chosen.
+ *    While it plays, the
  *    page beneath is neither visible nor interactive: the ground is
  *    opaque, the overlay takes the taps, and the page is scroll-locked
  *    (body.lpo-opening), exactly as the homepage entry locks. It adds
- *    no panels, no controls and no decisions, and leaves nothing
+ *    no panels, no controls and no decisions — only, late in the hold,
+ *    one quiet line telling the visitor a tap takes them through,
+ *    the homepage entry's own courtesy — and leaves nothing
  *    behind: any click, tap or keypress dismisses it in the same
  *    instant (never trapped by the fade), it fades on its own at
  *    ~3.4s over 0.75s — pacing at or beyond the homepage entry's — and
@@ -56,6 +63,32 @@
    * living-ui.css; tests/living-page-openings.test.js pins the pair. */
   const LPO_FADE_AT_MS = 3400;
   const LPO_FADE_MS = 750;
+
+  /* Once per session. The opening is a welcome, not a toll: it plays
+   * on the first content page of a sitting and is remembered in
+   * sessionStorage, so following a link never replays it. A new
+   * sitting (new tab, browser restarted) is a fresh visit and opens
+   * again. Storage that refuses (private modes, sandboxed frames)
+   * fails open — the opening simply plays, exactly as before. The
+   * homepage entry keeps its own every-visit behaviour; this memory
+   * belongs to the per-page opening only. */
+  const LPO_SEEN_KEY = "sof-lpo-seen";
+
+  function lpoSeenThisSession() {
+    try {
+      return window.sessionStorage.getItem(LPO_SEEN_KEY) === "1";
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function lpoMarkSeen() {
+    try {
+      window.sessionStorage.setItem(LPO_SEEN_KEY, "1");
+    } catch (error) {
+      /* Storage refused: nothing to remember with; play on. */
+    }
+  }
 
   const LPO_EMBLEM = [
     '<svg class="lpo-emblem" viewBox="0 0 200 200" aria-hidden="true" focusable="false">',
@@ -153,6 +186,7 @@
 
   function initPageOpening() {
     if (reducedMotion) return;
+    if (lpoSeenThisSession()) return;
 
     const overlay = document.createElement("div");
     overlay.className = "lpo-overlay";
@@ -176,8 +210,18 @@
     lineEl.textContent = lpoLivingLine();
     overlay.appendChild(lineEl);
 
+    /* The way forward, in plain words, settling in late in the hold —
+     * the homepage entry's hint, in this layer's quieter weight. A
+     * first-time visitor should never have to wonder how to get past
+     * the welcome. It is text only: no control, no decision. */
+    const hintEl = document.createElement("p");
+    hintEl.className = "lpo-hint";
+    hintEl.textContent = "Tap anywhere to continue";
+    overlay.appendChild(hintEl);
+
     document.body.appendChild(overlay);
     document.body.classList.add("lpo-opening");
+    lpoMarkSeen();
 
     /* Dismissal is the homepage entry's model: tap or key only.
      * Scroll is deliberately absent — the page is scroll-locked while
