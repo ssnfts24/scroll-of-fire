@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 1932,
-    "bytes": 540687936,
+    "bytes": 540688039,
     "byGroup": {
       "tooling": 150,
       "manuscript": 17,
@@ -16086,8 +16086,8 @@
       "path": "docs/development/R1.7-PROTECTED-MANIFEST.md",
       "title": "R1.7-PROTECTED-MANIFEST.md",
       "format": "md",
-      "bytes": 4598,
-      "sha256": "ce12b01cc4c2077ad60d21eb0ac0a675b6362451dbce4ddbfdd2eff7f352c5b4",
+      "bytes": 4701,
+      "sha256": "5bdb67d9df66ee8d33e56bd2f1f6940a7c88d8e5e23c7ab3335fec20cd2a2f0f",
       "group": "deployed-dev-doc",
       "role": "Engineering report or specification under the publish tree",
       "deployed": true,
