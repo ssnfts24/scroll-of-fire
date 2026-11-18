@@ -541,6 +541,8 @@
 
   let depthTimer = 0;
   let navigationWired = false;
+  let explorerTouched = false;
+  let todaySettled = false;
 
   function api() {
     return globalThis
@@ -1116,6 +1118,9 @@
             );
 
         if (shift) {
+          explorerTouched =
+            true;
+
           const delta =
             Number(
               shift.getAttribute(
@@ -1142,6 +1147,9 @@
             );
 
         if (today) {
+          explorerTouched =
+            true;
+
           api()
             ?.returnToday?.();
 
@@ -1160,6 +1168,9 @@
     scrubber?.addEventListener(
       "input",
       () => {
+        explorerTouched =
+          true;
+
         const day =
           normalizeDay(
             scrubber.value
@@ -1192,6 +1203,9 @@
     scrubber?.addEventListener(
       "change",
       () => {
+        explorerTouched =
+          true;
+
         navigateTo(
           scrubber.value
         );
@@ -1200,11 +1214,86 @@
 
     document.addEventListener(
       "sof:home-temporal-selection",
-      () => {
+      event => {
+        const source =
+          event?.detail?.source;
+
+        if (
+          source
+          && source !== "home-today"
+        ) {
+          explorerTouched =
+            true;
+        }
+
         renderSelection();
         renderDepth();
       }
     );
+  }
+
+  /*
+   * The explorer opens at TODAY, in sync with the Sphere.
+   *
+   * The mount's selection defaults to Pattern Day 1 until something
+   * drives it; left alone, the navigation panel opens on
+   * "Moon 1 · Day 1" while the Sphere itself rides today. Ask the
+   * instrument to return to the canonical today coordinate once its
+   * mount is live (activation waits for the section to approach the
+   * viewport, so retry briefly), and never override a coordinate the
+   * visitor chose themselves.
+   */
+  function openExplorerAtToday() {
+    if (
+      explorerTouched
+      || todaySettled
+    ) {
+      return;
+    }
+
+    let attempts = 0;
+
+    const tryOnce =
+      () => {
+        if (
+          explorerTouched
+          || todaySettled
+        ) {
+          return;
+        }
+
+        attempts += 1;
+
+        let settled =
+          false;
+
+        try {
+          settled =
+            !!api()
+              ?.returnToday?.();
+        } catch {
+          settled =
+            false;
+        }
+
+        if (settled) {
+          todaySettled =
+            true;
+
+          renderSelection();
+
+          return;
+        }
+
+        if (attempts < 45) {
+          window.setTimeout(
+            tryOnce,
+            700
+          );
+        }
+      };
+
+    tryOnce();
   }
 
   function bootstrapDepth() {
@@ -1212,6 +1301,43 @@
 
     renderSelection();
     renderDepth();
+
+    openExplorerAtToday();
+
+    const stage =
+      document.querySelector(
+        "[data-home-sphere-stage]"
+      );
+
+    if (
+      stage
+      && typeof IntersectionObserver
+        !== "undefined"
+    ) {
+      const stageObserver =
+        new IntersectionObserver(
+          entries => {
+            if (
+              entries.some(
+                entry =>
+                  entry.isIntersecting
+              )
+            ) {
+              stageObserver.disconnect();
+
+              openExplorerAtToday();
+            }
+          },
+          {
+            rootMargin:
+              "320px 0px"
+          }
+        );
+
+      stageObserver.observe(
+        stage
+      );
+    }
 
     if (
       depthTimer

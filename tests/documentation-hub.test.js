@@ -70,7 +70,7 @@ test("hub data: every entry is documented, graded in the register scheme, and so
   assert.ok(domainIds.has("register"), "hub domains lost the register domain");
 });
 
-test("catalog carries the documentation hub live and the timeline stays planned", () => {
+test("catalog carries the documentation hub live and the timeline stands live beside it", () => {
   const atlas = catalog.entries.find(entry => entry.id === "claims-atlas");
   assert.ok(atlas, "catalog has no claims-atlas entry");
   assert.equal(atlas.status, "live");
@@ -83,8 +83,8 @@ test("catalog carries the documentation hub live and the timeline stays planned"
   assert.equal(curated.area, "evidence");
   const timeline = catalog.entries.find(entry => entry.id === "planned-timeline");
   assert.ok(timeline, "catalog lost the planned-timeline entry");
-  assert.equal(timeline.status, "planned");
-  assert.equal(timeline.url, null);
+  assert.equal(timeline.status, "live");
+  assert.ok(timeline.url && timeline.url.endsWith("timeline.html"), "timeline has no public URL");
   assert.ok(timeline.related.includes("claims-atlas"), "timeline does not point at the hub");
 });
 

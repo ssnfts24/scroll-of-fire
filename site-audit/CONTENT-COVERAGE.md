@@ -12,7 +12,7 @@ Read the Scroll, search its text, study Hebrew roots and follow Genesis 1–50.
 - **Scroll Library** — Live; The Scroll of Fire Unsealed: reading edition, eight shelves, Genesis 1–50 and a link to every original line.
 - **Genesis & Exodus Scripture** — Live; A source-attributed Hebrew reader for Genesis 1–50 and Exodus 1–40, with word studies, morphology, lexical senses and separate interpretive layers.
 - **Scroll Reader** — Live; The long-form reader with chapter navigation, source-line provenance and deep links.
-- **Scroll Search** — Live; Local full-text search across all 1,609 reader segments, with shelf filters and Hebrew normalisation.
+- **Search the Scroll Library** — Live; Local full-text search across all 1,609 reader segments, with shelf filters and Hebrew normalisation.
 - **Hebrew Lexicon** — Live; 911 indexed Hebrew forms with occurrences, transliteration variants and clear separation of spelling, root and interpretation.
 - **Scroll Reference Atlas** — Live; Typed cross-references among scriptures, repeated terms, people, places and manuscript passages.
 - **Original Scroll (archival edition)** — Archived; The unchanged Full_Scroll_Unsealed text, frozen with a published SHA-256.
@@ -77,7 +77,7 @@ Theory chapters, the claim register and the editorial evidence edition.
 - **Theory Glossary** — Live; Symbols, operators and witness terms of the theory system.
 - **Bibliography** — Live; Source architecture: project records, scientific and technical references.
 - **Ethics & Coherence Law** — Live; The living laws of the Codex: consent, non-harm, accountability and the stop rule.
-- **Historical timeline** — Planned; Planned fifth stage of the Scroll Library: the historical timeline. The claims half now stands as the Documentation Hub.
+- **Historical timeline** — Live; Two dated records, kept separate: the publication dates of the sources cited in the claim register, each entry linking to its claim in the Evidence Edition, and the Codex's own growth record.
 
 ### Artifacts and Creative Works (6 catalog entries)
 
@@ -98,12 +98,12 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 - **Interactive Archive** — Live; Filterable index of every Scroll page and system.
 - **Repository README** — Source only; Project overview and contribution context on GitHub.
 - **Codex Atlas** — Live; A unified discovery page for the Scroll Library, Living Time, systems, research, artifacts and archive.
-- **Site-wide Search** — Live; Living Search: one generated index across every page, the Scroll Library, the Hebrew Lexicon, the Atlas and the Claim Register, with a memory that stays on the reader's device. It links to, and does not replace, Scroll Search.
+- **Site-wide Search** — Live; Living Search: one generated index across every page, the Scroll Library, the Hebrew Lexicon, the Atlas and the Claim Register, with a memory that stays on the reader's device. It links to, and does not replace, the search inside the Scroll Library.
 
 ## Repository and deployed-content coverage
 
-- Public HTML pages inspected: **172**.
-- Total master-inventory records: **467**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
+- Public HTML pages inspected: **173**.
+- Total master-inventory records: **468**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
 - Public-facing catalog entries: **66**; only explicitly curated entries appear on the Atlas.
 - Numbered archive folders are inventoried file-by-file, while downloads snapshot differences are kept separate from historical integrity data.
 - Root files not already published through the archive or explicitly approved remain classified as development-only; no such file is automatically linked from the public catalog.
@@ -120,10 +120,9 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 ## Current resource-type counts
 
 - Deployed Markdown documents: 58
-- Evidence: 1
-- HTML pages: 172
+- HTML pages: 173
 - Numbered archive file: 140
 - Numbered archive folder: 7
 - Repository folder: 9
 - Repository root file: 57
-- Static assets: 23
+- Static assets: 24

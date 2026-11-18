@@ -25,7 +25,7 @@
   const AREA_ORDER = ["pages", "scrolls", "atlas", "lexicon", "claims"];
   const PATHWAYS = [
     { t: "Enter the Scroll Library", u: "scroll/", d: "The full manuscript, in eight shelves" },
-    { t: "Search the Scroll text", u: "scroll/search.html", d: "The dedicated full-text Scroll Search" },
+    { t: "Search the Scroll text", u: "scroll/search.html", d: "The dedicated full-text search inside the Scroll Library" },
     { t: "Hebrew Lexicon", u: "scroll/lexicon.html", d: "911 Hebrew forms and where they occur" },
     { t: "The Claim Register", u: "scroll/editorial.html", d: "21 claims, each with its evidence status" },
     { t: "13 Moons", u: "moons.html", d: "The Pattern Calendar year" },
@@ -274,7 +274,7 @@
     });
 
     loadInitial(() => { statusLine(); if (!input.value.trim()) renderHome(); }).catch(() => {
-      status.textContent = "The search index could not be loaded. The Atlas and Scroll Search remain available from the navigation.";
+      status.textContent = "The search index could not be loaded. The Atlas and Search the Scroll Library remain available from the navigation.";
     });
     renderHome();
     return { input, run, focus: () => input.focus() };
