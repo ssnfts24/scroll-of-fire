@@ -163,6 +163,13 @@ def render_all(OUT, emit_text, books_meta, chapters, manifest, remnant, curated,
 <h1>Genesis &amp; Exodus, in the original Hebrew</h1>
 <p class="lede">Complete Westminster Leningrad Codex text for Genesis 1–50 and Exodus 1–40 with a public-domain English translation, a word-by-word study of every Hebrew word, and the Scroll’s own commentary kept visibly apart from the Scripture.</p>
 <p class="draft">Draft checkpoint: Hebrew text, lemma and morphology are imported from OSHB; contextual interpretations are unreviewed drafts. See <a href="about.html">Sources &amp; method</a>.</p>
+<section id="scripture-explainer" style="max-width:880px;margin:2rem auto;">
+<h2>Genesis and Exodus, word by word.</h2>
+<p>A short spoken tour of the Scripture reader: the complete Hebrew text of Genesis and Exodus, a study opened for every single word, the five layers kept visibly apart, and the page’s own stated limits. Press play and let the page explain itself.</p>
+<video controls preload="metadata" width="1280" height="720" style="width:100%;height:auto;display:block" src="../assets/media/scripture-explainer.mp4" aria-label="Video: the Scripture reader for Genesis and Exodus, explained in plain words">
+Your browser does not support the video element. The same tour is written out across this page.
+</video>
+</section>
 <div class="books">{cards}</div>
 <section id="lemma-finder" class="finder" aria-labelledby="lf-h"><h2 id="lf-h">Word finder</h2>
 <p>Search lemmas that occur in Genesis or Exodus by Hebrew (with or without vowels), transliteration, Strong’s number or English gloss. Needs JavaScript.</p>
