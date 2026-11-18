@@ -204,6 +204,21 @@ body.ls-open { overflow: hidden; }
 }
 .ls-how { color: var(--muted, #b8b3a6); line-height: 1.6; margin-top: 1.4rem; }
 .ls-how strong { color: var(--ink, #eae7df); }
+.ls-page .ls-counts { color: var(--muted, #b8b3a6); line-height: 1.55; margin: 0.2rem 0 0.9rem; }
+.ls-surprise { display: flex; align-items: center; gap: 0.9rem; flex-wrap: wrap; margin-top: 1.1rem; }
+.ls-surprise-btn {
+  font: inherit;
+  cursor: pointer;
+  min-height: 44px;
+  color: var(--ink, #eae7df);
+  background: color-mix(in srgb, var(--gold, #f3c97a) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--gold, #f3c97a) 45%, transparent);
+  border-radius: 999px;
+  padding: 0.55rem 1.2rem;
+}
+.ls-surprise-btn:hover { background: color-mix(in srgb, var(--gold, #f3c97a) 22%, transparent); }
+.ls-surprise-btn[disabled] { opacity: 0.55; cursor: wait; }
+.ls-surprise-note { color: var(--muted, #b8b3a6); line-height: 1.55; margin: 0; flex: 1 1 240px; }
 
 @media (max-width: 560px) {
   .ls-overlay { padding: 0; }
