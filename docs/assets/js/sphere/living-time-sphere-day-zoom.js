@@ -15,7 +15,14 @@
  * from the Remnant Visual Exercise — see manifest-practice.js) are not
  * planner records, so refresh() also reads them straight from the Life
  * Atlas repository and merges them in; they render with a special
- * placement marker (gold glyph + kind label). This module is a
+ * placement marker (gold glyph + kind label). Refresh() also reads the
+ * whole Atlas record set for the selection straight from the
+ * repository, so this view shows the day's FULL schedule: imported
+ * records, notes, observations, and day-stamped records of every other
+ * kind the Atlas holds for the day — grouped (timed / all day / on
+ * this day) and rendered with each record's recorded depth (time
+ * range, place, intention, symbol, practice detail), not just its
+ * title and summary. This module is a
  * projection: it never owns temporal truth, never mutates records, and
  * requests selection changes only through the cursor
  * (setPatternDay / moveDays / today).
@@ -44,7 +51,7 @@
     "use strict";
 
     const VERSION =
-      "living-time-sphere-day-zoom/1.0.0";
+      "living-time-sphere-day-zoom/1.1.0";
 
     const EMPTY_MESSAGE =
       "No Life Atlas records for this day yet. Import or plan something for this date and it will appear here.";
@@ -316,6 +323,55 @@
       });
     }
 
+    /**
+     * Every Life Atlas record for the selection, read straight from
+     * the repository through the Atlas runtime — the same door the
+     * practice-session read uses. The planner path returns only
+     * records tagged "living-planner" that carry a schedule, and the
+     * practice read returns only Manifest sessions; the Atlas also
+     * holds imported records, notes, observations, and day-stamped
+     * records of other kinds, and the full day schedule means all of
+     * them. Keyed by patternYear when the selection carries one; days
+     * outside the count (Year Gate, Day Out of Time) carry no pattern
+     * year, so those read by civilDate instead.
+     */
+    async function defaultDayRecords(selection = {}) {
+      const runtime =
+        typeof globalThis !== "undefined"
+          ? globalThis.CodexLifeAtlasRuntime
+          : null;
+
+      if (!runtime?.ready) {
+        return [];
+      }
+
+      const repository =
+        await runtime.ready;
+
+      if (!repository?.query) {
+        return [];
+      }
+
+      const patternYear =
+        selection.patternYear === null ||
+        selection.patternYear === undefined
+          ? null
+          : finite(selection.patternYear);
+
+      if (patternYear !== null) {
+        return repository.query({ patternYear });
+      }
+
+      const civilDate =
+        cleanString(selection.civilDate);
+
+      if (civilDate) {
+        return repository.query({ civilDate });
+      }
+
+      return [];
+    }
+
     function mergeRecords(primary = [], extra = []) {
       const seen = new Set();
       const merged = [];
@@ -355,6 +411,161 @@
       }
     }
 
+    function formatDuration(seconds) {
+      const total =
+        finite(seconds);
+
+      if (total === null || total <= 0) {
+        return null;
+      }
+
+      const minutes =
+        Math.round(total / 60);
+
+      if (minutes < 1) return "under a minute";
+      if (minutes < 60) return `${minutes} min`;
+
+      const hours =
+        Math.floor(minutes / 60);
+
+      const rest =
+        minutes % 60;
+
+      return rest
+        ? `${hours} hr ${rest} min`
+        : `${hours} hr`;
+    }
+
+    /**
+     * The recorded depth of one record, as label/value pairs in the
+     * order a reader wants them: where it happens, what was intended,
+     * then the detail the writer actually stored. Only fields the
+     * record really carries appear — nothing is invented to fill the
+     * panel, and a value already shown as the entry's summary is not
+     * repeated.
+     */
+    function detailsForRecord(record, schedule, practice) {
+      const details = [];
+
+      const push = (label, value) => {
+        const text =
+          cleanString(value);
+
+        if (text) {
+          details.push({ label, value: text });
+        }
+      };
+
+      push(
+        "Location",
+        cleanString(schedule?.locationLabel) ||
+        cleanString(record.spatial?.placeId)
+      );
+
+      const planner =
+        record.payload?.planner || {};
+
+      push("Intention", planner.intention);
+      push("Symbol", planner.symbol);
+      push("Season", planner.seasonalWindow);
+
+      if (
+        schedule?.priority &&
+        schedule.priority !== "normal"
+      ) {
+        push("Priority", schedule.priority);
+      }
+
+      const freq =
+        cleanString(schedule?.recurrence?.freq);
+
+      if (freq && freq !== "none") {
+        const interval =
+          finite(schedule.recurrence.interval);
+
+        push(
+          "Repeats",
+          interval && interval > 1
+            ? `every ${interval} · ${freq}`
+            : freq
+        );
+      }
+
+      if (practice) {
+        const session =
+          record.payload?.manifestPractice || {};
+
+        if (!cleanString(planner.intention)) {
+          push("Intention", session.intention);
+        }
+
+        const carriers =
+          (Array.isArray(session.carriersHz)
+            ? session.carriersHz
+            : []
+          ).filter(value => finite(value) !== null);
+
+        if (carriers.length) {
+          push(
+            "Carriers",
+            carriers.map(hz => `${hz} Hz`).join(" · ")
+          );
+        }
+
+        push("Sequence", session.sequencePath);
+
+        const visual =
+          cleanString(session.visualMode?.label) ||
+          cleanString(session.visualMode?.value);
+
+        if (visual) {
+          push(
+            "Visual mode",
+            session.seed !== null &&
+            session.seed !== undefined
+              ? `${visual} · seed ${session.seed}`
+              : visual
+          );
+        }
+
+        push("Breath", session.breathPattern);
+        push("Duration", formatDuration(session.durationSeconds));
+
+        const xi =
+          finite(session.xi?.value);
+
+        if (xi !== null) {
+          push(
+            "Coherence Ξ",
+            `${Math.round(xi * 100) / 100} — ${
+              cleanString(session.xi?.label) ||
+              "the console's own estimate"
+            }`
+          );
+        }
+
+        push("Materials", session.materials);
+
+        if (
+          cleanString(session.witnessNote) &&
+          cleanString(session.witnessNote) !==
+            cleanString(record.summary)
+        ) {
+          push("Witness note", session.witnessNote);
+        }
+      }
+
+      const body =
+        cleanString(record.body) ||
+        cleanString(record.notes);
+
+      if (body && body !== cleanString(record.summary)) {
+        push("Notes", body);
+      }
+
+      return details;
+    }
+
     function entryForRecord(record, scheduling) {
       const schedule =
         scheduleOf(record, scheduling);
@@ -375,6 +586,21 @@
         practice
           ? practiceKindOf(record)
           : null;
+
+      const end =
+        !allDay
+          ? cleanString(schedule?.end)
+          : null;
+
+      const startLabel =
+        start
+          ? formatTime(start)
+          : "";
+
+      const endLabel =
+        end
+          ? formatTime(end)
+          : "";
 
       return {
         id:
@@ -409,15 +635,28 @@
 
         allDay,
         start,
-        end:
-          !allDay
-            ? cleanString(schedule?.end)
-            : null,
+        end,
 
         timeLabel:
           allDay
             ? "All day"
-            : formatTime(start),
+            : (
+              endLabel && endLabel !== startLabel
+                ? `${startLabel} – ${endLabel}`
+                : startLabel
+            ),
+
+        group:
+          practice || !schedule
+            ? "day"
+            : (
+              allDay
+                ? "allday"
+                : "timed"
+            ),
+
+        details:
+          detailsForRecord(record, schedule, practice),
 
         status:
           cleanString(schedule?.status) || null,
@@ -447,6 +686,30 @@
 
         return a.title.localeCompare(b.title);
       });
+    }
+
+    /**
+     * The day's reading order: the timed schedule first (the spine of
+     * the day), then all-day entries, then everything stamped onto the
+     * day without a time of its own — sealed sessions, notes, and
+     * other day records. Groups with nothing in them are omitted.
+     */
+    const GROUP_DEFS =
+      Object.freeze([
+        { id: "timed", label: "Timed" },
+        { id: "allday", label: "All day" },
+        { id: "day", label: "On this day" }
+      ]);
+
+    function groupEntries(entries = []) {
+      return GROUP_DEFS
+        .map(def => ({
+          id: def.id,
+          label: def.label,
+          entries:
+            entries.filter(entry => entry.group === def.id)
+        }))
+        .filter(group => group.entries.length > 0);
     }
 
     /**
@@ -515,7 +778,10 @@
         emptyMessage:
           EMPTY_MESSAGE,
 
-        entries
+        entries,
+
+        groups:
+          groupEntries(entries)
       };
     }
 
@@ -529,6 +795,7 @@
       planner = null,
       scheduling = null,
       practiceRecordsProvider = null,
+      dayRecordsProvider = null,
       eventTarget = null,
       onRender = null
     } = {}) {
@@ -569,6 +836,14 @@
         }
 
         return defaultPracticeRecords(patternYear);
+      }
+
+      async function resolveDayRecords(selection) {
+        if (typeof dayRecordsProvider === "function") {
+          return dayRecordsProvider(selection);
+        }
+
+        return defaultDayRecords(selection);
       }
 
       function resolveScheduling() {
@@ -702,9 +977,27 @@
           }
         }
 
+        let dayRecords = [];
+
+        try {
+          dayRecords =
+            (await resolveDayRecords(selection)) || [];
+        } catch (error) {
+          console.warn(
+            "[LivingTimeSphereDayZoom] Unable to read the full Life Atlas record set.",
+            error
+          );
+
+          dayRecords = [];
+        }
+
         const view = buildDayView({
           selection,
-          records: mergeRecords(records || [], practiceRecords),
+          records:
+            mergeRecords(
+              mergeRecords(records || [], practiceRecords),
+              dayRecords
+            ),
           scheduling: resolveScheduling()
         });
 
@@ -1006,89 +1299,142 @@
 
       listEl.replaceChildren();
 
-      for (const entry of view.entries) {
-        const item =
-          document.createElement("li");
+      const renderGroups =
+        Array.isArray(view.groups) && view.groups.length
+          ? view.groups
+          : [{ id: "all", label: null, entries: view.entries }];
 
-        item.className =
-          "sphere-day-zoom-item";
+      const showHeadings =
+        renderGroups.length > 1;
 
-        if (entry.completed) {
-          item.classList.add("is-completed");
+      for (const group of renderGroups) {
+        if (showHeadings && group.label) {
+          const heading =
+            document.createElement("li");
+
+          heading.className =
+            "sphere-day-zoom-group";
+
+          heading.textContent =
+            group.label;
+
+          listEl.appendChild(heading);
         }
 
-        if (entry.practice) {
-          item.classList.add("is-practice");
+        for (const entry of group.entries) {
+          const item =
+            document.createElement("li");
 
-          const marker =
+          item.className =
+            "sphere-day-zoom-item";
+
+          if (entry.completed) {
+            item.classList.add("is-completed");
+          }
+
+          if (entry.practice) {
+            item.classList.add("is-practice");
+
+            const marker =
+              document.createElement("span");
+
+            marker.className =
+              "sphere-day-zoom-marker";
+
+            marker.textContent =
+              entry.markerGlyph || "🜚";
+
+            marker.title =
+              `Manifest ${entry.sessionKind || "practice"} session — sealed from the Remnant Visual Exercise`;
+
+            marker.setAttribute(
+              "aria-hidden",
+              "true"
+            );
+
+            item.appendChild(marker);
+          }
+
+          const time =
             document.createElement("span");
 
-          marker.className =
-            "sphere-day-zoom-marker";
+          time.className =
+            "sphere-day-zoom-time";
 
-          marker.textContent =
-            entry.markerGlyph || "🜚";
+          time.textContent =
+            entry.timeLabel;
 
-          marker.title =
-            `Manifest ${entry.sessionKind || "practice"} session — sealed from the Remnant Visual Exercise`;
-
-          marker.setAttribute(
-            "aria-hidden",
-            "true"
-          );
-
-          item.appendChild(marker);
-        }
-
-        const time =
-          document.createElement("span");
-
-        time.className =
-          "sphere-day-zoom-time";
-
-        time.textContent =
-          entry.timeLabel;
-
-        const body =
-          document.createElement("span");
-
-        body.className =
-          "sphere-day-zoom-body";
-
-        const title =
-          document.createElement("strong");
-
-        title.textContent =
-          entry.title;
-
-        body.appendChild(title);
-
-        const meta =
-          document.createElement("small");
-
-        meta.textContent =
-          entry.status && entry.status !== "planned"
-            ? `${entry.type} · ${entry.status}`
-            : entry.type;
-
-        body.appendChild(meta);
-
-        if (entry.summary) {
-          const summary =
+          const body =
             document.createElement("span");
 
-          summary.className =
-            "sphere-day-zoom-summary";
+          body.className =
+            "sphere-day-zoom-body";
 
-          summary.textContent =
-            entry.summary;
+          const title =
+            document.createElement("strong");
 
-          body.appendChild(summary);
+          title.textContent =
+            entry.title;
+
+          body.appendChild(title);
+
+          const meta =
+            document.createElement("small");
+
+          meta.textContent =
+            entry.status && entry.status !== "planned"
+              ? `${entry.type} · ${entry.status}`
+              : entry.type;
+
+          body.appendChild(meta);
+
+          if (entry.summary) {
+            const summary =
+              document.createElement("span");
+
+            summary.className =
+              "sphere-day-zoom-summary";
+
+            summary.textContent =
+              entry.summary;
+
+            body.appendChild(summary);
+          }
+
+          if (
+            Array.isArray(entry.details) &&
+            entry.details.length
+          ) {
+            const details =
+              document.createElement("dl");
+
+            details.className =
+              "sphere-day-zoom-details";
+
+            for (const pair of entry.details) {
+              const term =
+                document.createElement("dt");
+
+              term.textContent =
+                pair.label;
+
+              const value =
+                document.createElement("dd");
+
+              value.textContent =
+                pair.value;
+
+              details.appendChild(term);
+              details.appendChild(value);
+            }
+
+            body.appendChild(details);
+          }
+
+          item.appendChild(time);
+          item.appendChild(body);
+          listEl.appendChild(item);
         }
-
-        item.appendChild(time);
-        item.appendChild(body);
-        listEl.appendChild(item);
       }
 
       if (emptyEl) {
@@ -1199,10 +1545,14 @@
       selectionFromCursor,
       recordsForDay,
       entryForRecord,
+      detailsForRecord,
+      groupEntries,
+      GROUP_DEFS,
       buildDayView,
       isPracticeRecord,
       practiceKindOf,
       mergeRecords,
+      defaultDayRecords,
       PRACTICE_SUBTYPE,
       PRACTICE_KIND_GLYPHS,
 

@@ -463,3 +463,267 @@ test(
     assert.match(source, /sof:temporal-cursor-change/);
   }
 );
+
+function detailValue(entry, label) {
+  const pair =
+    (entry.details || []).find(item => item.label === label);
+
+  return pair ? pair.value : null;
+}
+
+test(
+  "entries carry the record's recorded depth: time range, place, intention, symbol",
+  () => {
+    const selection =
+      api.selectionFromCoordinate(COORDINATE);
+
+    const scheduling = fakeScheduling({
+      timed: {
+        kind: "event",
+        status: "planned",
+        allDay: false,
+        start: "2026-11-17T15:30:00.000Z",
+        end: "2026-11-17T16:30:00.000Z",
+        locationLabel: "The bench",
+        priority: "high",
+        recurrence: { freq: "weekly", interval: 1 }
+      }
+    });
+
+    const view = api.buildDayView({
+      selection,
+      scheduling,
+      records: [
+        record({
+          id: "timed",
+          title: "Afternoon work",
+          payload: {
+            planner: {
+              category: "work",
+              intention: "Finish the conduit",
+              symbol: "T7",
+              seasonalWindow: "Moon 8"
+            }
+          }
+        })
+      ]
+    });
+
+    const entry = view.entries[0];
+
+    assert.match(entry.timeLabel, /–/);
+    assert.equal(entry.end, "2026-11-17T16:30:00.000Z");
+    assert.equal(entry.group, "timed");
+    assert.equal(detailValue(entry, "Location"), "The bench");
+    assert.equal(detailValue(entry, "Intention"), "Finish the conduit");
+    assert.equal(detailValue(entry, "Symbol"), "T7");
+    assert.equal(detailValue(entry, "Season"), "Moon 8");
+    assert.equal(detailValue(entry, "Priority"), "high");
+    assert.equal(detailValue(entry, "Repeats"), "weekly");
+  }
+);
+
+test(
+  "practice sessions carry their sealed depth and sit in the on-this-day group",
+  () => {
+    const selection =
+      api.selectionFromCoordinate(COORDINATE);
+
+    const view = api.buildDayView({
+      selection,
+      scheduling: fakeScheduling(),
+      records: [
+        record({
+          id: "session",
+          type: "event",
+          subtype: "practice-session",
+          title: "Evening sealing",
+          summary: "Materials: copper, quartz",
+          tags: ["manifest-practice", "craft"],
+          payload: {
+            manifestPractice: {
+              version: 1,
+              intention: "Hold the tone steady",
+              sessionKind: "craft",
+              carriersHz: [144, 432],
+              sequencePath: "144 → 432",
+              visualMode: { value: "field", label: "Field" },
+              seed: 216,
+              breathPattern: "4 · 2 · 6",
+              durationSeconds: 1500,
+              xi: { value: 0.7, label: "console estimate" },
+              materials: "copper, quartz",
+              witnessNote: "The tone held."
+            }
+          }
+        })
+      ]
+    });
+
+    const entry = view.entries[0];
+
+    assert.equal(entry.practice, true);
+    assert.equal(entry.sessionKind, "craft");
+    assert.equal(entry.markerGlyph, "◆");
+    assert.equal(entry.group, "day");
+    assert.equal(detailValue(entry, "Intention"), "Hold the tone steady");
+    assert.equal(detailValue(entry, "Carriers"), "144 Hz · 432 Hz");
+    assert.equal(detailValue(entry, "Sequence"), "144 → 432");
+    assert.equal(detailValue(entry, "Visual mode"), "Field · seed 216");
+    assert.equal(detailValue(entry, "Breath"), "4 · 2 · 6");
+    assert.equal(detailValue(entry, "Duration"), "25 min");
+    assert.equal(detailValue(entry, "Coherence Ξ"), "0.7 — console estimate");
+    assert.equal(detailValue(entry, "Materials"), "copper, quartz");
+    assert.equal(detailValue(entry, "Witness note"), "The tone held.");
+
+    assert.deepEqual(
+      view.groups.map(group => group.id),
+      ["day"]
+    );
+  }
+);
+
+test(
+  "buildDayView groups the full day: timed, all day, on this day",
+  () => {
+    const selection =
+      api.selectionFromCoordinate(COORDINATE);
+
+    const scheduling = fakeScheduling({
+      timed: {
+        kind: "event",
+        status: "planned",
+        allDay: false,
+        start: "2026-11-17T08:00:00.000Z",
+        end: null
+      },
+      allday: {
+        kind: "event",
+        status: "planned",
+        allDay: true,
+        start: null,
+        startDate: "2026-11-17"
+      }
+    });
+
+    const view = api.buildDayView({
+      selection,
+      scheduling,
+      records: [
+        record({ id: "timed", title: "Morning task" }),
+        record({ id: "allday", title: "All day observance" }),
+        record({
+          id: "note",
+          type: "note",
+          subtype: "note",
+          title: "Field note",
+          tags: []
+        })
+      ]
+    });
+
+    assert.equal(view.count, 3);
+
+    assert.deepEqual(
+      view.groups.map(group => [group.id, group.entries.map(e => e.id)]),
+      [
+        ["timed", ["timed"]],
+        ["allday", ["allday"]],
+        ["day", ["note"]]
+      ]
+    );
+  }
+);
+
+test(
+  "controller merges the full Atlas record set for the day, deduped by id",
+  async () => {
+    const cursor =
+      fakeCursor(
+        COORDINATE,
+        new Date("2026-11-17T12:00:00Z")
+      );
+
+    const planner = {
+      async plansForYear() {
+        return [record({ id: "a", title: "Planned" })];
+      }
+    };
+
+    const zoom = api.createDayZoom({
+      cursor,
+      planner,
+      scheduling: fakeScheduling(),
+      practiceRecordsProvider: async () => [],
+      dayRecordsProvider: async selection => {
+        assert.equal(selection.patternYear, 2026);
+        assert.equal(selection.patternDay, 215);
+
+        return [
+          record({ id: "a", title: "Planned (repository copy)" }),
+          record({
+            id: "note",
+            type: "note",
+            subtype: "note",
+            title: "Field note",
+            tags: []
+          }),
+          record({
+            id: "imported",
+            type: "event",
+            subtype: "event",
+            title: "Imported calendar entry",
+            tags: ["import"]
+          })
+        ];
+      },
+      onRender() {}
+    });
+
+    const result =
+      await zoom.refresh("test");
+
+    assert.equal(result.view.count, 3);
+    assert.deepEqual(
+      result.view.entries.map(entry => entry.id).sort(),
+      ["a", "imported", "note"]
+    );
+
+    const planned =
+      result.view.entries.find(entry => entry.id === "a");
+
+    assert.equal(planned.title, "Planned");
+  }
+);
+
+test(
+  "default day-records read keys by pattern year, or by civil date outside the count",
+  async () => {
+    const queries = [];
+
+    globalThis.CodexLifeAtlasRuntime = {
+      ready: Promise.resolve({
+        async query(criteria) {
+          queries.push(criteria);
+          return [];
+        }
+      })
+    };
+
+    try {
+      await api.defaultDayRecords({ patternYear: 2026 });
+      await api.defaultDayRecords({
+        patternYear: null,
+        civilDate: "2027-04-17"
+      });
+      await api.defaultDayRecords({ patternYear: null, civilDate: null });
+    } finally {
+      delete globalThis.CodexLifeAtlasRuntime;
+    }
+
+    assert.deepEqual(queries, [
+      { patternYear: 2026 },
+      { civilDate: "2027-04-17" }
+    ]);
+  }
+);
