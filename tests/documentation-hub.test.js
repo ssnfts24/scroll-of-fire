@@ -11,6 +11,7 @@ const register = JSON.parse(read("docs/scroll/evidence/claim-register.json"));
 const hub = JSON.parse(read("docs/assets/data/documentation-hub.json"));
 const page = read("docs/claims-atlas.html");
 const script = read("docs/assets/js/documentation-hub.js");
+const patternScript = read("docs/assets/js/documentation-hub-patterns.js");
 
 test("documentation hub page carries the unified nav, the hub mounts, and a no-JS fallback", () => {
   assert.match(page, /data-site-nav/);
@@ -85,6 +86,49 @@ test("catalog carries the documentation hub live and the timeline stays planned"
   assert.equal(timeline.status, "planned");
   assert.equal(timeline.url, null);
   assert.ok(timeline.related.includes("claims-atlas"), "timeline does not point at the hub");
+});
+
+test("the Tartaria / Old World investigation entries are folded into the hub data", () => {
+  const ids = new Set(hub.entries.map(entry => entry.id));
+  assert.ok(hub.entries.length >= 86, `hub should carry the folded-in entries: ${hub.entries.length}`);
+  for (const id of ["GOV-CIA-TARTARIA-001", "OLD-TARTARY-MAP-001", "OLD-FIRE-PESHTIGO-CLUSTER-001", "OLD-FIRE-SF-001",
+    "OLD-FAIR-SF-001", "OLD-STARFORT-BOURTANGE-001", "OLD-STARFORT-MCHENRY-001", "OLD-TUNNEL-SEATTLE-001",
+    "OLD-TUNNEL-CAPPADOCIA-001", "OLD-ANCIENT-GOBEKLI-001", "ORP-CANADA-HOME-001", "ORP-AUSTRALIA-001", "ORP-RESIDENTIAL-001"]) {
+    assert.ok(ids.has(id), `hub is missing folded-in entry ${id}`);
+  }
+  /* discrepancies stay flagged, never smoothed: the SF entry must keep both magnitudes in view */
+  const sf = hub.entries.find(entry => entry.id === "OLD-FIRE-SF-001");
+  assert.ok(sf && /7\.8/.test(sf.statement + sf.shows) && /7\.9/.test(sf.statement + sf.shows),
+    "SF fire entry lost its magnitude discrepancy flag");
+});
+
+test("checked patterns are in the data, labeled as not holding, and tied to real entries", () => {
+  assert.ok(Array.isArray(hub.checkedPatterns), "hub data has no checkedPatterns list");
+  assert.ok(hub.checkedPatterns.length >= 3, "checked patterns are thin");
+  const ids = new Set(hub.entries.map(entry => entry.id));
+  for (const pattern of hub.checkedPatterns) {
+    assert.ok(pattern.name && pattern.verdict && pattern.note, "checked pattern missing name, verdict, or note");
+    assert.match(pattern.verdict, /did not hold|Unproven/i, `checked pattern verdict is not honest: ${pattern.verdict}`);
+    assert.ok(Array.isArray(pattern.entryIds) && pattern.entryIds.length >= 1, "checked pattern names no entries");
+    for (const id of pattern.entryIds) assert.ok(ids.has(id), `checked pattern points at unknown entry ${id}`);
+  }
+});
+
+test("pattern view: the page leads with symbols, a legend, and honest labels; the script derives everything", () => {
+  for (const mount of ["data-hubp-chart", "data-hubp-legend", "data-hubp-stacks", "data-hubp-threads", "data-hubp-checked", "data-hubp-detail", "data-hubp-chip"]) {
+    assert.ok(page.includes(mount), `page has no pattern mount ${mount}`);
+  }
+  assert.ok(page.includes("assets/js/documentation-hub-patterns.js"), "page does not load the pattern script");
+  assert.ok(page.includes("assets/css/documentation-hub.css"), "page does not load the pattern styles");
+  assert.ok(page.includes("can never look like a pattern built on documents"), "page lost the symbol/shading separation");
+  assert.ok(page.includes("documented correlation"), "page lost the honest correlation label");
+  assert.ok(page.indexOf("data-hubp-chart") < page.indexOf("data-hub-filters"), "pattern view is not the lead surface");
+  assert.ok(patternScript.includes("assets/data/documentation-hub.json"), "pattern script does not read the hub data");
+  assert.ok(patternScript.includes("checkedPatterns"), "pattern script does not render the checked patterns");
+  for (const id of ["OLD-FIRE-SF-001", "GOV-CIA-TARTARIA-001", "OLD-ANCIENT-GOBEKLI-001", "EPS-NPA-001"]) {
+    assert.ok(!patternScript.includes(id), `pattern script must not hard-code entry content (${id})`);
+  }
+  assert.ok(script.includes("SOFHubEntryFilter"), "list script lost the pattern filter hook");
 });
 
 test("register backs the hub: every claim is linkable and has the fields the page shows", () => {

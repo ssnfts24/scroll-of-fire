@@ -112,11 +112,15 @@
     const query = (filters.q.value || "").trim().toLowerCase();
     const wantedDomain = filters.domain.value || "";
     const wantedGrade = filters.grade.value || "";
+    /* The pattern view (documentation-hub-patterns.js) can narrow the list
+       to one exact set of entries: a stack, a thread, a checked pattern. */
+    const idFilter = window.SOFHubEntryFilter instanceof Set ? window.SOFHubEntryFilter : null;
     const entries = [...hubEntries(hub), ...registerEntries(register)];
     let shown = 0;
     sections.replaceChildren();
     for (const domain of hub.domains) {
       const inDomain = entries.filter(entry => {
+        if (idFilter && !idFilter.has(entry.id)) return false;
         if (entry.domain !== domain.id) return false;
         if (wantedDomain && entry.domain !== wantedDomain) return false;
         if (wantedGrade && entry.grade !== wantedGrade) return false;

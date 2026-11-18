@@ -27,10 +27,12 @@
   <link rel="stylesheet" href="assets/css/codex.css">
   <link rel="stylesheet" href="assets/css/navigation.css">
   <link rel="stylesheet" href="assets/css/site-atlas.css">
+  <link rel="stylesheet" href="assets/css/documentation-hub.css">
   <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
   <script defer src="assets/js/site.js"></script>
   <script defer src="assets/js/living-search-launcher.js"></script>
   <script defer src="assets/js/documentation-hub.js"></script>
+  <script defer src="assets/js/documentation-hub-patterns.js"></script>
 </head>
 <body class="living-ui">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -144,7 +146,29 @@
       <p class="atlas-note"><strong>The bar for this page.</strong> Nothing stands here without a named, checkable source that was opened and read. Every entry carries its evidence grade. An allegation in a court filing is labeled as exactly that — it is never upgraded to a fact. What was observed is kept apart from what it might mean, and where a common reading outruns the document, the entry says so.</p>
     </section>
     <noscript><p class="atlas-noscript">Filtering needs JavaScript. The Codex's own register is available on the <a href="scroll/editorial.html">Evidence Edition</a>, as <a href="scroll/evidence/register.md">readable Markdown</a> and as <a href="scroll/evidence/claim-register.json">JSON</a>. The hub's documented entries are kept as <a href="assets/data/documentation-hub.json">JSON</a>.</p></noscript>
-    <form class="atlas-filters" data-hub-filters hidden aria-label="Filter the Documentation Hub">
+    <section class="hubp" aria-labelledby="hubp-title">
+      <h2 id="hubp-title">The pattern in the record</h2>
+      <p class="hubp-lede">Before the list, the shape of it. Every entry in this hub stands on the chart below as a <strong>symbol</strong> — the symbol says what kind of thing it is: a fire, a fair, a star fort, children moved, a court record. The <strong>shading</strong> around it says how well it is proven. The two never merge: a pattern built on allegations can never look like a pattern built on documents.</p>
+      <p class="hubp-lede">Travel sideways through the years. Tap any symbol to stand at that entry. Open a stack or a thread and it reads <strong>in order</strong> — what came first, what followed, what stood at the end — because a pattern is a sequence, not just a pile. And the labels stay honest: a <strong>documented correlation</strong> means the records overlap or share a name, and that is all it means. Where the record shows only overlap and no order, the reading says exactly that. Patterns that were checked and did not hold are kept at the bottom, labeled — the checking is part of the record.</p>
+      <p class="hubp-count" data-hubp-count>Loading the pattern view…</p>
+      <div data-hubp-legend></div>
+      <div class="hubp-chartwrap"><div data-hubp-chart></div></div>
+      <div class="hubp-detail" data-hubp-detail aria-live="polite">
+        <p>Tap any symbol on the chart, or open a stack, a thread, or a checked pattern below. The reading appears here.</p>
+      </div>
+      <h3>Where the record stacks</h3>
+      <p class="hubp-lede">Years and decades where dated entries pile up — computed from the entries' own dates, not arranged by hand.</p>
+      <div class="hubp-cards" data-hubp-stacks></div>
+      <h3>Threads through the record</h3>
+      <p class="hubp-lede">One name — an institution, a place, a legal shape — running through many records. Open one and read it in order.</p>
+      <div class="hubp-cards" data-hubp-threads></div>
+      <h3>Checked — and it did not hold</h3>
+      <p class="hubp-lede">Patterns this hub's own sources were asked to carry, and could not. They stay here, labeled, next to the entries they were checked against.</p>
+      <div class="hubp-cards" data-hubp-checked></div>
+      <p class="hubp-tolist">The 21 claims of the Codex's own register carry no dates in the register, so they are not placed on the chart — they stand in the list. Everything on this view can be checked against <a href="#hub-list">the full list below</a>, where every entry names its source.</p>
+    </section>
+    <p class="hubp-chip" data-hubp-chip hidden>Showing only the entries in <strong data-hubp-chip-label></strong>, chosen from the pattern view. <button type="button" data-hubp-chip-clear>Show everything</button></p>
+    <form class="atlas-filters" id="hub-list" data-hub-filters hidden aria-label="Filter the Documentation Hub">
       <label>Search <input type="search" name="q" placeholder="Filter by title, id or subject" autocomplete="off"></label>
       <label>Domain <select name="domain"><option value="">All domains</option></select></label>
       <label>Evidence grade <select name="grade"><option value="">All grades</option></select></label>
@@ -159,7 +183,7 @@
     </section>
     <section class="atlas-future" aria-labelledby="hub-next-title">
       <h2 id="hub-next-title">Still to come</h2>
-      <p>The historical timeline — the other half of this hub's planned fifth stage of the Scroll Library — is still planned. The documentation now stands here on its own; the timeline follows when its groundwork is ready.</p>
+      <p>The historical timeline — the Codex's claims dated by when their sources were published — is still planned. The pattern view above is a different instrument: it is built from this hub's dated entries, and it stands now. The fuller timeline follows when its groundwork is ready.</p>
     </section>
   </main>
   <footer class="site-footer">
