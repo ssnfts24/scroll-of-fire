@@ -1,0 +1,131 @@
+/*
+ * Homepage Live Sphere — hero presentation.
+ *
+ * The sphere stage lives inside the existing hero image card. Until the
+ * module proves WebGL and builds the scene, the static hero art shows
+ * exactly as before; the stage, hint and motion controls only appear in
+ * the live state. Nothing here touches the Observatory's own styles.
+ */
+
+/* The module drives visibility with the hidden attribute; the site's
+   display rules for images and these controls would otherwise win. */
+[data-homepage-sphere] [hidden] {
+  display: none !important;
+}
+
+.homepage-sphere-frame {
+  aspect-ratio: 16 / 11;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(100, 200, 180, 0.07), transparent 62%),
+    #03050a;
+}
+
+.homepage-sphere-frame [data-hs-fallback] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.homepage-sphere-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.homepage-sphere-stage:focus-visible {
+  outline: 2px solid var(--gold, #f3c97a);
+  outline-offset: -2px;
+}
+
+.homepage-sphere-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+
+.homepage-sphere-canvas:active {
+  cursor: grabbing;
+}
+
+.homepage-sphere-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 0.65rem;
+  z-index: 2;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(3, 5, 10, 0.55);
+  color: rgba(233, 238, 244, 0.75);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.homepage-sphere-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 0.85rem;
+}
+
+.hs-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.55rem 1rem;
+  border: 1px solid rgba(243, 201, 122, 0.35);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink, #eef2f5);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 650;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.25s ease, background 0.25s ease, color 0.25s ease;
+}
+
+.hs-btn:hover {
+  border-color: rgba(243, 201, 122, 0.75);
+  background: rgba(243, 201, 122, 0.1);
+}
+
+.hs-btn:focus-visible {
+  outline: 2px solid var(--gold, #f3c97a);
+  outline-offset: 2px;
+}
+
+.hs-btn[aria-pressed="true"] {
+  background: rgba(100, 200, 180, 0.14);
+  border-color: rgba(100, 200, 180, 0.55);
+}
+
+.hs-btn--primary {
+  background: rgba(243, 201, 122, 0.14);
+  color: var(--gold, #f3c97a);
+}
+
+@media (max-width: 640px) {
+  .homepage-sphere-frame {
+    aspect-ratio: 1 / 1;
+  }
+
+  .homepage-sphere-hint {
+    font-size: 0.66rem;
+    bottom: 0.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hs-btn {
+    transition: none;
+  }
+}

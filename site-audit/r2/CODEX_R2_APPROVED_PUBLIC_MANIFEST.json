@@ -124,6 +124,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/css/homepage-sphere.css",
+      "sha256": "c1bb294d3156e71327cfc987283237eb045da0be73cb664025def5580ab203d4",
+      "publicUrl": "https://codexofreality.org/assets/css/homepage-sphere.css",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/css/hub.css",
       "sha256": "601ba1c54d844c478ac1a9b094f50e87a948ae895e9401094ff70ffbb6792403",
       "publicUrl": "https://codexofreality.org/assets/css/hub.css",
@@ -1612,6 +1618,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/js/homepage-sphere.js",
+      "sha256": "3b037db68dc1ed5009a10b4630a14b0a8abc587fd4d5e87e1cb518f85ffa302f",
+      "publicUrl": "https://codexofreality.org/assets/js/homepage-sphere.js",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/js/life-atlas/life-atlas-calendar-projection.js",
       "sha256": "04b2f53878c85cd79e7f3c5862a0d48b0073e221384917638f463c3379c4dd0e",
       "publicUrl": "https://codexofreality.org/assets/js/life-atlas/life-atlas-calendar-projection.js",
@@ -2279,7 +2291,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "6ed65329d2ea52b8731ccf65f3fbaf8eee2d70c755d91a2e4297945ea9aeb8b9",
+      "sha256": "7b732e5813457a61a5583f4fe5f46db3cde51ec684b6f823e35796536349a730",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
