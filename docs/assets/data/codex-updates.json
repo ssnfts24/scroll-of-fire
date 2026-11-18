@@ -1,6 +1,14 @@
 [
  {
   "date": "2026-11-18",
+  "type": "library",
+  "title": "The historical timeline opens",
+  "summary": "One page now holds two dated records, kept separate: the publication dates of the sources cited in the claim register — each entry linking to its claim in the Evidence Edition — and the growth record of the Codex itself. Claims with no dated source are named but not placed.",
+  "url": "./timeline.html",
+  "symbol": "☰"
+ },
+ {
+  "date": "2026-11-18",
   "type": "system",
   "title": "Every page got simpler to use",
   "summary": "Buttons, links and controls across the site were raised to a full finger-height on phones: footer links, library tabs and letter chips, the practice console's sliders and buttons, and the shop's record link. Same words, same pages — less clutter to fight.",
