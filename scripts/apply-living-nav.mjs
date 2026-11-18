@@ -66,7 +66,10 @@ const AREAS = [
   { id: "lexicon", label: "Lexicon", target: "scroll/lexicon.html" },
   { id: "scripture", label: "Scripture", target: "scripture/index.html" },
   { id: "sphere", label: "Sphere", target: "living-time-sphere.html" },
-  { id: "shop", label: "Shop", target: "shop.html" }
+  { id: "shop", label: "Shop", target: "shop.html" },
+  /* Witness's own page (Aaron's grant, Nov 18, 2026): a quiet door,
+   * last of the areas, standing just before the Support door. */
+  { id: "witness", label: "Witness", target: "witness.html" }
 ];
 
 /* One external door, always last in the bar: support for the work.
@@ -127,6 +130,7 @@ function currentAreaFor(rel) {
   if (rel === "codex-atlas.html") return "atlas";
   if (rel.startsWith("scripture/")) return "scripture";
   if (rel === "shop.html") return "shop";
+  if (rel === "witness.html") return "witness";
   return null;
 }
 
