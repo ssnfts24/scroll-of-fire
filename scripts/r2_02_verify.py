@@ -54,7 +54,7 @@ def verify_scripture():
             page = os.path.join(ROOT, "docs/scripture", slug, f"{chapter_number:02d}.html")
             with open(page, encoding="utf8") as handle:
                 html = handle.read()
-            assert f'<body class="sf-chapter" data-book="{osis}" data-chapter="{chapter_number}"' in html
+            assert f'<body class="sf-chapter living-ui" data-book="{osis}" data-chapter="{chapter_number}"' in html
             assert f'id="{osis}.{chapter_number}.1"' in html
             totals["chapters"] += 1
     expected = load_json("docs/scripture/data/manifest.json")["totals"]
