@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 1936,
-    "bytes": 540732670,
+    "bytes": 540732428,
     "byGroup": {
       "tooling": 151,
       "manuscript": 17,
@@ -43300,8 +43300,8 @@
       "path": "docs/witness.html",
       "title": "Witness",
       "format": "html",
-      "bytes": 21666,
-      "sha256": "261727bc9e4c535c205d9c3bf281e6a6f8a7c0a8f9ca7213c29fa5c8676922c6",
+      "bytes": 21424,
+      "sha256": "bbb56bb735963c7a707184d8c0cd090d79a37a3033151ffc11c07626c8019149",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
