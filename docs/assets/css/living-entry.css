@@ -684,6 +684,7 @@ body.le-lock {
   font-size: 0.92rem;
 }
 .le-act-growth li { margin: 0.28rem 0; }
+.le-act-growth a { display: inline-flex; align-items: center; min-height: 44px; }
 .le-act-growth time { color: #8fa3bf; font-size: 0.82rem; margin-right: 0.3rem; }
 .le-act-teaching { margin: 0; }
 .le-act-teaching p {

@@ -2,7 +2,7 @@
 
 Nothing is deleted or merged by this report.
 
-## Byte-identical files (35 groups)
+## Byte-identical files (38 groups)
 
 - `9b20b4c3430d…`
   - `6_Images_and_Symbols/Living_Technology/20251015_154838.jpg`
@@ -118,6 +118,18 @@ Nothing is deleted or merged by this report.
 - `6108b2507d45…`
   - `docs/assets/img/archive/duplicates/moons-sections-transmission-social-filename.webp`
   - `docs/assets/img/moons/sections/transmission.webp`
+- `3756dbd26274…`
+  - `docs/assets/search/manifest.json`
+  - `docs/assets/search/manifest.json`
+  - `docs/assets/search/manifest.json`
+- `39e61bf48eae…`
+  - `docs/assets/search/pages.json`
+  - `docs/assets/search/pages.json`
+  - `docs/assets/search/pages.json`
+- `b6d66f6c206f…`
+  - `docs/index.html`
+  - `docs/index.html`
+  - `docs/index.html`
 
 ## Probable variants (same title stem, different format or copy)
 
