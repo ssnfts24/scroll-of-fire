@@ -54,6 +54,7 @@
     <link rel="stylesheet" href="assets/css/navigation.css">
 <link rel="stylesheet" href="assets/css/theory.css">
   <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
 
   <script>
     window.MathJax = {
@@ -67,6 +68,7 @@
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
   <script defer src="assets/js/site.js"></script>
+  <script defer src="assets/js/living-search-launcher.js"></script>
   <script defer src="assets/js/calendar-cor.js"></script>
   <script defer src="assets/js/living-codex.js"></script>
   <script defer src="assets/js/codex-witness.js"></script>
@@ -117,20 +119,29 @@
   </script>
 </head>
 
-<body data-reading-mode="explorer">
+<body class="living-ui" data-reading-mode="explorer">
   <div class="theory-aura" aria-hidden="true"></div>
   <div class="theory-stars" aria-hidden="true"></div>
 
   <a class="skip-link" href="#main">Skip to content</a>
+  <div class="living-nav" data-living-nav>
+    <nav class="living-nav-inner" aria-label="Site navigation">
+      <a class="living-nav-brand" href="index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a>
+      <ul class="living-nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="scroll/index.html">Scroll</a></li>
+        <li><a href="codex-atlas.html">Atlas</a></li>
+        <li><a href="scroll/lexicon.html">Lexicon</a></li>
+        <li><a href="scripture/index.html">Scripture</a></li>
+        <li><a href="living-time-sphere.html">Sphere</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="witness.html">Witness</a></li>
+        <li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li>
+      </ul>
+    </nav>
+  </div>
 
     <header class="site-header theory-header" data-sof-header>
-    <a class="brand" href="./" aria-label="Scroll of Fire home">
-      <span class="brand-mark" aria-hidden="true">☲</span>
-      <span>
-        <strong>Scroll of Fire</strong>
-        <small>Codex of Reality</small>
-      </span>
-    </a>
 
     <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle>
       <span></span><span></span><span></span>
@@ -311,6 +322,28 @@
           <a class="text-link" href="#canon">Open Canon →</a>
         </article>
       </div>
+    </section>
+
+    <section class="section-shell" id="theory-explainer">
+      <div class="section-heading">
+        <p class="eyebrow">Watch · The Explainer</p>
+        <h2>The theory behind the Codex, in plain words.</h2>
+        <p>
+          A two-minute spoken tour of the whole framework: the master line —
+          Reality as Resonance, Intention, Light, Consciousness, and Source —
+          the witness discipline that keeps observation and interpretation
+          separate, and Living Time, the thirteen-moon year. Press play and
+          let the page explain itself.
+        </p>
+      </div>
+
+      <video controls preload="metadata" width="1280" height="720"
+        style="width:100%;height:auto;display:block"
+        src="assets/media/theory-hub-explainer.mp4"
+        aria-label="Video: the theory behind the Codex of Reality, explained in plain words">
+        Your browser does not support the video element. The same tour is
+        written out across this page, starting with the Master Equation below.
+      </video>
     </section>
 
     <section class="section-shell" id="reading-controls">
@@ -828,5 +861,6 @@
       </div>
     </div>
   </main>
+  <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
 </body>
 </html>

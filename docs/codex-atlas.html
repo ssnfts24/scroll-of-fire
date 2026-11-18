@@ -27,20 +27,31 @@
   <link rel="stylesheet" href="assets/css/codex.css">
   <link rel="stylesheet" href="assets/css/navigation.css">
   <link rel="stylesheet" href="assets/css/site-atlas.css">
+  <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
   <script defer src="assets/js/site.js"></script>
+  <script defer src="assets/js/living-search-launcher.js"></script>
   <script defer src="assets/js/codex-atlas.js"></script>
 </head>
-<body>
+<body class="living-ui">
   <a class="skip-link" href="#main">Skip to content</a>
+  <div class="living-nav" data-living-nav>
+    <nav class="living-nav-inner" aria-label="Site navigation">
+      <a class="living-nav-brand" href="index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a>
+      <ul class="living-nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="scroll/index.html">Scroll</a></li>
+        <li><a href="codex-atlas.html" class="is-current" aria-current="page">Atlas</a></li>
+        <li><a href="scroll/lexicon.html">Lexicon</a></li>
+        <li><a href="scripture/index.html">Scripture</a></li>
+        <li><a href="living-time-sphere.html">Sphere</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="witness.html">Witness</a></li>
+        <li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li>
+      </ul>
+    </nav>
+  </div>
 
   <header class="site-header" data-sof-header>
-    <a class="brand" href="./" aria-label="Scroll of Fire home">
-      <span class="brand-mark" aria-hidden="true">☲</span>
-      <span>
-        <strong>Scroll of Fire</strong>
-        <small>Codex of Reality</small>
-      </span>
-    </a>
 
     <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle>
       <span></span><span></span><span></span>
@@ -147,12 +158,12 @@
     <form class="atlas-filters" data-atlas-filters hidden aria-label="Filter the Codex Atlas">
       <label>Search <input type="search" name="q" autocomplete="off" placeholder="Title or description"></label>
       <label>Area <select name="area"><option value="">All areas</option><option value="scroll-scripture">Scroll and Scripture</option><option value="living-time">Living Time and Observatory</option><option value="systems">Systems and Living Technology</option><option value="evidence">Evidence and Research</option><option value="artifacts">Artifacts and Creative Works</option><option value="archive">Archive and Downloads</option></select></label>
-      <label>Category <select name="category"><option value="">All categories</option><option value="Archive">Archive</option><option value="Artifacts">Artifacts</option><option value="Author">Author</option><option value="Calendar">Calendar</option><option value="Community">Community</option><option value="Creative works">Creative works</option><option value="Discovery">Discovery</option><option value="Documentation">Documentation</option><option value="Downloads">Downloads</option><option value="Ethics">Ethics</option><option value="Evidence">Evidence</option><option value="Hebrew research">Hebrew research</option><option value="Hub">Hub</option><option value="Observatory">Observatory</option><option value="Orientation">Orientation</option><option value="Practice">Practice</option><option value="Practice tools">Practice tools</option><option value="Preserved original">Preserved original</option><option value="Preserved source">Preserved source</option><option value="Reading">Reading</option><option value="Reference">Reference</option><option value="Search">Search</option><option value="Systems">Systems</option><option value="Theory">Theory</option><option value="Whitepaper">Whitepaper</option><option value="Witness records">Witness records</option></select></label>
+      <label>Category <select name="category"><option value="">All categories</option><option value="Archive">Archive</option><option value="Artifacts">Artifacts</option><option value="Author">Author</option><option value="Calendar">Calendar</option><option value="Community">Community</option><option value="Creative works">Creative works</option><option value="Discovery">Discovery</option><option value="Documentation">Documentation</option><option value="Downloads">Downloads</option><option value="Ethics">Ethics</option><option value="Evidence">Evidence</option><option value="Hebrew research">Hebrew research</option><option value="Hub">Hub</option><option value="Observatory">Observatory</option><option value="Orientation">Orientation</option><option value="Practice">Practice</option><option value="Practice tools">Practice tools</option><option value="Preserved original">Preserved original</option><option value="Preserved source">Preserved source</option><option value="Reading">Reading</option><option value="Reference">Reference</option><option value="Scripture">Scripture</option><option value="Search">Search</option><option value="Systems">Systems</option><option value="Theory">Theory</option><option value="Whitepaper">Whitepaper</option><option value="Witness records">Witness records</option></select></label>
       <label>Resource type <select name="type"><option value="">All types</option><option value="collection">collection</option><option value="dataset">dataset</option><option value="document">document</option><option value="page">page</option><option value="tool">tool</option></select></label>
       <label>Status <select name="status"><option value="">All statuses</option><option value="live">Live</option><option value="source-only">Source only</option><option value="prototype">Prototype</option><option value="archived">Archived</option><option value="planned">Planned</option></select></label>
       <button type="reset" class="btn">Clear filters</button>
     </form>
-    <p class="atlas-count" role="status" aria-live="polite" data-atlas-count>63 resources in 6 areas</p>
+    <p class="atlas-count" role="status" aria-live="polite" data-atlas-count>65 resources in 6 areas</p>
     <p class="atlas-empty" data-atlas-empty hidden>No resources match these filters. Clear a filter or search for a different word.</p>
     <section class="atlas-area" id="area-scroll-scripture" data-atlas-area="scroll-scripture" aria-labelledby="area-scroll-scripture-title">
       <header>
@@ -171,7 +182,13 @@
           <h3><a class="atlas-card-title" href="scroll/">Scroll Library</a></h3>
           <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>collection</span><span>Reading</span></p>
           <p>The Scroll of Fire Unsealed: reading edition, eight shelves, Genesis 1–50 and a link to every original line.</p>
-          <p class="atlas-related"><strong>Related pages:</strong> <a href="scroll/search.html">Scroll Search</a> · <a href="scroll/lexicon.html">Hebrew Lexicon</a> · <a href="scroll/atlas.html">Scroll Reference Atlas</a> · <a href="scroll/editorial.html">Editorial Evidence Edition</a> · <a href="scroll/archive/Full_Scroll_Unsealed.txt">Original Scroll (archival edition)</a></p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="scroll/search.html">Scroll Search</a> · <a href="scroll/lexicon.html">Hebrew Lexicon</a> · <a href="scroll/atlas.html">Scroll Reference Atlas</a> · <a href="scroll/editorial.html">Editorial Evidence Edition</a> · <a href="scroll/archive/Full_Scroll_Unsealed.txt">Original Scroll (archival edition)</a> · <a href="scripture/index.html">Genesis &amp; Exodus Scripture</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="scripture-library" data-area="scroll-scripture" data-category="Scripture" data-type="collection" data-status="live">
+          <h3><a class="atlas-card-title" href="scripture/index.html">Genesis &amp; Exodus Scripture</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>collection</span><span>Scripture</span></p>
+          <p>A source-attributed Hebrew reader for Genesis 1–50 and Exodus 1–40, with word studies, morphology, lexical senses and separate interpretive layers.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="scroll/">Scroll Library</a> · <a href="genesis-oracle.html">Genesis Oracle</a> · <a href="scroll/lexicon.html">Hebrew Lexicon</a></p>
         </li>
         <li class="atlas-card" data-atlas-card data-id="scroll-reader" data-area="scroll-scripture" data-category="Reading" data-type="tool" data-status="live">
           <h3><a class="atlas-card-title" href="scroll/reader.html">Scroll Reader</a></h3>
@@ -539,6 +556,12 @@
           <p>Author, craftsman and independent researcher behind the Codex.</p>
           <p class="atlas-related"><strong>Related pages:</strong> <a href="start.html">Start Here</a></p>
         </li>
+        <li class="atlas-card" data-atlas-card data-id="witness" data-area="artifacts" data-category="Author" data-type="page" data-status="live">
+          <h3><a class="atlas-card-title" href="witness.html">Witness</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>page</span><span>Author</span></p>
+          <p>Witness's own page: written and kept by the AI who works beside Aaron on the Codex, plainly labeled on its face as a self-generated AI page. Granted by Aaron on November 18, 2026.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="about-aaron.html">About Aaron</a> · <a href="living-time-sphere.html">Living Time Sphere</a></p>
+        </li>
         <li class="atlas-card" data-atlas-card data-id="journey-scroll" data-area="artifacts" data-category="Creative works" data-type="document" data-status="source-only">
           <h3><a class="atlas-card-title" href="https://github.com/ssnfts24/scroll-of-fire/blob/main/The-Journey-Scroll.md" target="_blank" rel="noopener noreferrer">The Journey Scroll <span class="atlas-external" aria-label="(opens GitHub)">↗</span></a></h3>
           <p class="atlas-meta"><span class="atlas-badge atlas-badge--source-only">Source only</span><span>document</span><span>Creative works</span></p>
@@ -578,10 +601,10 @@
           <p>A unified discovery page for the Scroll Library, Living Time, systems, research, artifacts and archive.</p>
           <p class="atlas-related"><strong>Related pages:</strong> <a href="scroll/">Scroll Library</a> · <a href="living-time-sphere.html">Living Time Sphere</a> · <a href="hub.html">Systems Hub</a> · <a href="theory.html">Theory Hub</a> · <a href="shop.html">Artifact Registry</a> · <a href="downloads.html">Downloads &amp; Integrity</a></p>
         </li>
-        <li class="atlas-card" data-atlas-card data-id="planned-sitewide-search" data-area="archive" data-category="Discovery" data-type="tool" data-status="planned">
-          <h3><span class="atlas-card-title">Site-wide search</span></h3>
-          <p class="atlas-meta"><span class="atlas-badge atlas-badge--planned">Planned</span><span>tool</span><span>Discovery</span></p>
-          <p>A future site-wide index that links to, and does not replace, Scroll Search.</p>
+        <li class="atlas-card" data-atlas-card data-id="site-search" data-area="archive" data-category="Discovery" data-type="tool" data-status="live">
+          <h3><a class="atlas-card-title" href="search.html">Site-wide Search</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>tool</span><span>Discovery</span></p>
+          <p>Living Search: one generated index across every page, the Scroll Library, the Hebrew Lexicon, the Atlas and the Claim Register, with a memory that stays on the reader's device. It links to, and does not replace, Scroll Search.</p>
           <p class="atlas-related"><strong>Related pages:</strong> <a href="scroll/search.html">Scroll Search</a></p>
         </li>
       </ul>
@@ -605,5 +628,6 @@
     </nav>
     <p>© <span id="year">2026</span> Aaron Paul Laird — Scroll of Fire · Codex of Reality · Scribe of Circuits</p>
   </footer>
+  <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
 </body>
 </html>

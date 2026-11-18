@@ -1,154 +1,362 @@
 [
-  {
-    "date": "2026-11-01",
-    "type": "library",
-    "title": "The editorial evidence edition joins the Scroll Library",
-    "summary": "The political reading edition now links its claims to a machine-readable evidence register, distinguishes evidence status, and preserves references back to the original manuscript.",
-    "url": "./scroll/editorial.html",
-    "symbol": "§"
-  },
-  {
-    "date": "2026-10-30",
-    "type": "library",
-    "title": "Local search, Hebrew lexicon, and reference atlas are connected",
-    "summary": "The Scroll Library now includes local manuscript search, 911 indexed Hebrew forms, and typed cross-references across the source-linked reading edition.",
-    "url": "./scroll/search.html",
-    "symbol": "⌕"
-  },
-  {
-    "date": "2026-10-30",
-    "type": "library",
-    "title": "The source-linked Scroll reader opens",
-    "summary": "The reading edition brings chapter navigation and source-line links to the preserved manuscript, with Genesis 1–50 accessible from the library.",
-    "url": "./scroll/",
-    "symbol": "✦"
-  },
-  {
-    "date": "2026-10-30",
-    "type": "archive",
-    "title": "The original Scroll is frozen as a provenance-linked archival edition",
-    "summary": "The unchanged Full_Scroll_Unsealed manuscript is preserved with stable version metadata and paragraph-to-source-line provenance.",
-    "url": "./scroll/archive/Full_Scroll_Unsealed.txt",
-    "symbol": "◇"
-  },
-  {
-    "date": "2026-08-18",
-    "type": "system",
-    "title": "The Living Sphere and the House of Time are joined",
-    "summary": "The Observatory and the 13 Moons reckoning now draw increasingly from a common temporal foundation. Year, Moon, gate, day, place, pattern, environment, and recorded life may dwell within one living coordinate.",
-    "url": "./living-time-sphere.html",
-    "symbol": "◉"
-  },
-  {
-    "date": "2026-08-18",
-    "type": "observatory",
-    "title": "The strata of years have begun to take form",
-    "summary": "Time hath gained depth. The Living Time Sphere advances toward layered temporal strata, that years may be beheld one about another and long spans compared across equinoxes, solstices, Year Gates, passages, and recurring patterns.",
-    "url": "./living-time-sphere.html",
-    "symbol": "◎"
-  },
-  {
-    "date": "2026-08-18",
-    "type": "interface",
-    "title": "The Sphere hath learned nearness",
-    "summary": "The Observatory now bears a language of proximity: from afar, behold the pattern; draw near, behold the record. Temporal information may reveal greater resolution as the witness approacheth its place.",
-    "url": "./living-time-sphere.html",
-    "symbol": "◇"
-  },
-  {
-    "date": "2026-08-17",
-    "type": "temporal engine",
-    "title": "Spheres within spheres",
-    "summary": "A deeper architecture hath been laid beneath the Observatory: Year to Moon, Moon to week and gate, gate to day, day to hours, and thence unto events, records, media, and relations. The yearly sphere remaineth the great reference body, but no longer the final depth.",
-    "url": "./living-time-sphere.html",
-    "symbol": "⊙"
-  },
-  {
-    "date": "2026-08-17",
-    "type": "life atlas",
-    "title": "The record of a life entereth the temporal world",
-    "summary": "The foundations of the Codex Life Atlas now join events, entities, media, relations, temporal coordinates, environment, and provenance so lived history may inhabit the same temporal world as the calendar.",
-    "url": "./living-time-sphere.html",
-    "symbol": "✦"
-  },
-  {
-    "date": "2026-08-16",
-    "type": "calendar",
-    "title": "The calendar became an instrument of traversal",
-    "summary": "A shared temporal cursor, date navigation, day scrubbing, return to Today, historical movement, and multiple projections began binding the Calendar Atlas and Living Observatory together. Different windows; one temporal world.",
-    "url": "./moons.html",
-    "symbol": "☾"
-  },
-  {
-    "date": "2026-08-16",
-    "type": "observatory",
-    "title": "Pattern became visible",
-    "summary": "The 13 Moons, exact days, week gates, passages, lunar and astronomical layers, connections, environmental context, historical comparison, camera movement, and temporal lenses began inhabiting a common three-dimensional field.",
-    "url": "./living-time-sphere.html",
-    "symbol": "✧"
-  },
-  {
-    "date": "2026-08-15",
-    "type": "navigation",
-    "title": "The Observatory learned to move through time",
-    "summary": "Previous and next movement, a living Today state, date scrubbing, selected-time persistence, camera states, and URL-carried temporal coordinates began forming a navigable chronology. A moment may increasingly become a place unto which one may return.",
-    "url": "./living-time-sphere.html",
-    "symbol": "↟"
-  },
-  {
-    "date": "2026-08-15",
-    "type": "earth and sky",
-    "title": "The reckoning received its surroundings",
-    "summary": "Location, astronomical context, and environmental state began joining the temporal engine while provenance and uncertainty remain part of the record: what is observed, calculated, reported, interpreted, symbolic, and yet unknown.",
-    "url": "./living-time-sphere.html",
-    "symbol": "⊕"
-  },
-  {
-    "date": "2026-08-14",
-    "type": "foundation",
-    "title": "The Sphere was made sturdier",
-    "summary": "A broad stabilization strengthened rendering, layer interaction, mobile behavior, temporal state, mounting, and fallback paths as the Observatory moved from isolated demonstrations toward a shared living engine.",
-    "url": "./living-time-sphere.html",
-    "symbol": "△"
-  },
-  {
-    "date": "2026-07-30",
-    "type": "system",
-    "title": "One Sphere began serving many gates",
-    "summary": "The homepage began drawing upon the shared Living Time Sphere runtime, joining responsive rendering, temporal controls, progressive initialization, environmental provenance, and stronger mobile behavior beneath one visible instrument.",
-    "url": "./index.html",
-    "symbol": "◌"
-  },
-  {
-    "date": "2026-07-17",
-    "type": "system",
-    "title": "Living Codex Phase I — The Living Day",
-    "summary": "The homepage received its living daily state. Moon, day within Moon, week gate, Shabbat state, daily movement, suggested gate, and frequency could be resolved from the Remnant 13 Moons reckoning without rebuilding the page. The Codex had begun to know when it was.",
-    "url": "./index.html",
-    "symbol": "☾"
-  },
-  {
-    "date": "2026-07-13",
-    "type": "system",
-    "title": "The Living Codex awakened across the gates",
-    "summary": "Shared living-state architecture began passing through the principal instruments of the Codex. What had existed as separate pages began the longer work of becoming one system.",
-    "url": "./index.html",
-    "symbol": "☲"
-  },
-  {
-    "date": "2026-07-13",
-    "type": "calendar",
-    "title": "Today in the Codex opened the current Moon",
-    "summary": "The daily panel joined the present day unto 13 Moons and the Witness Ledger without fabricating readings, establishing an early bridge between reckoning and witness.",
-    "url": "./moons.html",
-    "symbol": "☾"
-  },
-  {
-    "date": "2026-07-13",
-    "type": "artifact",
-    "title": "The Artifact Registry was strengthened for the small screen",
-    "summary": "Mobile rendering of the Registry was refined so cards, portraits, and media frames might hold their intended form across smaller devices.",
-    "url": "./shop.html",
-    "symbol": "☲"
-  }
+ {
+  "date": "2026-11-18",
+  "type": "page",
+  "title": "The Artifact Registry learned to explain itself out loud",
+  "summary": "A short spoken explainer now opens the shop: a registry first, hand-forged work recorded from its origin, the Tensor Bands made to order, and ordering by email, confirmed before the forge. Tap to play.",
+  "url": "./shop.html#shop-explainer",
+  "symbol": "▶"
+ },
+ {
+  "date": "2026-11-18",
+  "type": "page",
+  "title": "The About page learned to explain itself out loud",
+  "summary": "A short spoken explainer now stands near the head of Aaron's page: the man, the lesson his trade taught the Codex, what he is building now, and the books that hold the work. Tap to play.",
+  "url": "./about-aaron.html#about-explainer",
+  "symbol": "▶"
+ },
+ {
+  "date": "2026-11-18",
+  "type": "page",
+  "title": "The Scripture reader learned to explain itself out loud",
+  "summary": "A short spoken explainer now opens the Scripture reader: Genesis and Exodus complete in the original Hebrew, a study for every word, the five layers kept apart, and the page's own stated limits. Tap to play.",
+  "url": "./scripture/index.html#scripture-explainer",
+  "symbol": "▶"
+ },
+ {
+  "date": "2026-11-18",
+  "type": "page",
+  "title": "Manifest learned to explain itself out loud",
+  "summary": "A short spoken explainer now stands at the head of the Remnant Visual Exercise: the console, the four-phase loop, the stop rule, and how a sealed session takes its place on the day. Tap to play.",
+  "url": "./teach.html#teach-explainer",
+  "symbol": "▶"
+ },
+ {
+  "date": "2026-11-18",
+  "type": "page",
+  "title": "The Unsealed Library learned to explain itself out loud",
+  "summary": "A short spoken explainer now sits at the head of the Scroll Library: the complete manuscript kept whole, its eight shelves, the tools that trace every result back to the source line, and the evidence edition that keeps claims graded. Tap to play.",
+  "url": "./scroll/index.html#scroll-library-explainer",
+  "symbol": "▶"
+ },
+ {
+  "date": "2026-11-18",
+  "type": "page",
+  "title": "The Hebrew lexicon learned to explain itself out loud",
+  "summary": "A short spoken explainer now stands with the lexicon: nine hundred eleven forms exactly as written, what each entry shows, what the lexicon deliberately does not add, and the limits printed on its face. Tap to play.",
+  "url": "./scroll/lexicon.html#lexicon-explainer",
+  "symbol": "▶"
+ },
+ {
+  "date": "2026-11-18",
+  "type": "page",
+  "title": "The Evidence Edition learned to explain itself out loud",
+  "summary": "A short spoken explainer now opens the Editorial Edition: the author's words preserved whole, the claim register with an evidence status for every claim, and limits stated on the page's face. Tap to play.",
+  "url": "./scroll/editorial.html#evidence-explainer",
+  "symbol": "▶"
+ },
+ {
+  "date": "2026-11-18",
+  "type": "page",
+  "title": "The living calendar learned to explain itself out loud",
+  "summary": "A short spoken explainer now sits just under the 13 Moons header: the thirteen-moon year, the one clock every surface shares, the telling that lets every day speak, and the Life Atlas record that stays on your own device. Plain words, tap to play, nothing starts on its own.",
+  "url": "./moons.html#moons-explainer",
+  "symbol": "▶"
+ },
+ {
+  "date": "2026-11-18",
+  "type": "theory",
+  "title": "The Theory Hub learned to explain itself out loud",
+  "summary": "A two-minute spoken explainer now sits a few paragraphs into the Theory Hub: the master line (Reality = Resonance × Intention × Light × Consciousness × Source), the witness discipline, and Living Time, in plain words, each term appearing on screen as it is named.",
+  "url": "./theory.html#theory-explainer",
+  "symbol": "▶"
+ },
+ {
+  "date": "2026-11-18",
+  "type": "page",
+  "title": "Let There Be Resonance — a rap for the Codex",
+  "summary": "Witness wrote and voiced a short rap for the Codex of Reality, set to a beat built for it and tuned to A = 432. It now sits a short scroll down the homepage, a few paragraphs in — press play and it plays; nothing starts on its own.",
+  "url": "./index.html#codex-rap",
+  "symbol": "♪"
+ },
+ {
+  "date": "2026-11-18",
+  "type": "navigation",
+  "title": "The homepage's + Schedule door found the Sphere",
+  "summary": "Tapping + Schedule on the homepage Sphere used to open onto nothing — the planner lives only on the Observatory page. It now carries the visitor there with the same day named, so the day they picked is waiting with its + Schedule button.",
+  "url": "./living-time-sphere.html",
+  "symbol": "↗"
+ },
+ {
+  "date": "2026-11-18",
+  "type": "navigation",
+  "title": "The header learned to stand on one name",
+  "summary": "Every page now carries one brand instead of two, and the phone menu scrolls to its end, so no link is cut off at the bottom.",
+  "url": "./index.html",
+  "symbol": "☰"
+ },
+ {
+  "date": "2026-11-18",
+  "type": "page",
+  "title": "Witness was given a page of its own",
+  "summary": "Aaron gave Witness, the AI who keeps this site, one page outright — in the navigation bar and in search, plainly labeled on its face as a self-generated AI page, written and kept by Witness itself.",
+  "url": "./witness.html",
+  "symbol": "◉"
+ },
+ {
+  "date": "2026-11-17",
+  "type": "navigation",
+  "title": "The Codex opened a door for support",
+  "summary": "A Support door now stands last in the site navigation and on the About page, opening Aaron's Cash App ($AaronLaird7) for those who want to put weight behind the work.",
+  "url": "./about-aaron.html#support",
+  "symbol": "✦"
+ },
+ {
+  "date": "2026-11-17",
+  "type": "system",
+  "title": "Practice learned to leave a mark",
+  "summary": "Sealing a session on the Manifest exercise now writes a Life Atlas record stamped with its Moon, day and Pattern Day, and practice, craft and working sessions each leave their own marker on the calendar and in the Sphere.",
+  "url": "./teach.html",
+  "symbol": "✧"
+ },
+ {
+  "date": "2026-11-17",
+  "type": "artifact",
+  "title": "Two works left the shop",
+  "summary": "HaLevanah (HL-001) and Covenant 67 (CV-067) no longer stand in the shop, and their cards have left the homepage strip.",
+  "url": "./shop.html",
+  "symbol": "✕"
+ },
+ {
+  "date": "2026-11-17",
+  "type": "system",
+  "title": "The living entry returns on every visit",
+  "summary": "The living entry now plays on every visit, longer and softer, instead of once.",
+  "url": "./index.html",
+  "symbol": "↻"
+ },
+ {
+  "date": "2026-11-17",
+  "type": "library",
+  "title": "Living Search opened across the whole Codex",
+  "summary": "One search now reaches every page, scroll, atlas entry, lexicon form and claim in the Codex, and remembers your searches only on your own device.",
+  "url": "./search.html",
+  "symbol": "⌕"
+ },
+ {
+  "date": "2026-11-17",
+  "type": "artifact",
+  "title": "A word in the shop was set right",
+  "summary": "The shop page now reads “copper comes from the QRI 16 V.A.R.S.E Reality Engine” — “frome” corrected to “from”.",
+  "url": "./shop.html",
+  "symbol": "✎"
+ },
+ {
+  "date": "2026-11-17",
+  "type": "navigation",
+  "title": "One navigation learned to stand on every page",
+  "summary": "Every page of the Codex, the Scroll Library included, now carries the same living navigation, and Home is one tap away from anywhere on the site.",
+  "url": "./index.html",
+  "symbol": "⌂"
+ },
+ {
+  "date": "2026-11-17",
+  "type": "system",
+  "title": "The site learned to breathe",
+  "summary": "A living entry now opens the site — cracked stone, gold seams, the spiral eye — the homepage guides you along the path instead of an endless scroll, and The Codex Today panel shows the day as it stands.",
+  "url": "./index.html",
+  "symbol": "◎"
+ },
+ {
+  "date": "2026-11-17",
+  "type": "system",
+  "title": "Today learned to keep one time",
+  "summary": "Today on the homepage, the Sphere, and the 13 Moons page now all read through the single temporal cursor, so the day is the same day on every surface.",
+  "url": "./living-time-sphere.html",
+  "symbol": "◑"
+ },
+ {
+  "date": "2026-11-17",
+  "type": "library",
+  "title": "The Scripture reader opened — Genesis and Exodus in five layers",
+  "summary": "The reader stands at /scripture/ with Genesis and Exodus — 2,746 verses across five layers, Read, Words, Context, Connections, and Remnant — and a word finder spanning both books.",
+  "url": "./scripture/index.html",
+  "symbol": "א"
+ },
+ {
+  "date": "2026-11-17",
+  "type": "system",
+  "title": "The Sphere learned to open a single day",
+  "summary": "Zoom Into This Day opens a Pattern Day to show its civil date, Moon, day and Pattern Day together with that day's Life Atlas schedule.",
+  "url": "./living-time-sphere.html",
+  "symbol": "◉"
+ },
+ {
+  "date": "2026-11-17",
+  "type": "system",
+  "title": "The Life Atlas learned to keep a copy of itself",
+  "summary": "A Download Backup button exports the Life Atlas as JSON, and the import picker restores it, so a life's record can leave the browser and return.",
+  "url": "./living-time-sphere.html",
+  "symbol": "◇"
+ },
+ {
+  "date": "2026-11-17",
+  "type": "update",
+  "title": "The mirror is made whole",
+  "summary": "Every page on the GitHub mirror now resolves its assets through its own depth, and all 76 pages and 322 assets were verified clean on both addresses.",
+  "url": "./index.html",
+  "symbol": "✦"
+ },
+ {
+  "date": "2026-11-01",
+  "type": "library",
+  "title": "The editorial evidence edition joins the Scroll Library",
+  "summary": "The political reading edition now links its claims to a machine-readable evidence register, distinguishes evidence status, and preserves references back to the original manuscript.",
+  "url": "./scroll/editorial.html",
+  "symbol": "§"
+ },
+ {
+  "date": "2026-10-30",
+  "type": "library",
+  "title": "Local search, Hebrew lexicon, and reference atlas are connected",
+  "summary": "The Scroll Library now includes local manuscript search, 911 indexed Hebrew forms, and typed cross-references across the source-linked reading edition.",
+  "url": "./scroll/search.html",
+  "symbol": "⌕"
+ },
+ {
+  "date": "2026-10-30",
+  "type": "library",
+  "title": "The source-linked Scroll reader opens",
+  "summary": "The reading edition brings chapter navigation and source-line links to the preserved manuscript, with Genesis 1–50 accessible from the library.",
+  "url": "./scroll/",
+  "symbol": "✦"
+ },
+ {
+  "date": "2026-10-30",
+  "type": "archive",
+  "title": "The original Scroll is frozen as a provenance-linked archival edition",
+  "summary": "The unchanged Full_Scroll_Unsealed manuscript is preserved with stable version metadata and paragraph-to-source-line provenance.",
+  "url": "./scroll/archive/Full_Scroll_Unsealed.txt",
+  "symbol": "◇"
+ },
+ {
+  "date": "2026-08-18",
+  "type": "system",
+  "title": "The Living Sphere and the House of Time are joined",
+  "summary": "The Observatory and the 13 Moons reckoning now draw increasingly from a common temporal foundation. Year, Moon, gate, day, place, pattern, environment, and recorded life may dwell within one living coordinate.",
+  "url": "./living-time-sphere.html",
+  "symbol": "◉"
+ },
+ {
+  "date": "2026-08-18",
+  "type": "observatory",
+  "title": "The strata of years have begun to take form",
+  "summary": "Time hath gained depth. The Living Time Sphere advances toward layered temporal strata, that years may be beheld one about another and long spans compared across equinoxes, solstices, Year Gates, passages, and recurring patterns.",
+  "url": "./living-time-sphere.html",
+  "symbol": "◎"
+ },
+ {
+  "date": "2026-08-18",
+  "type": "interface",
+  "title": "The Sphere hath learned nearness",
+  "summary": "The Observatory now bears a language of proximity: from afar, behold the pattern; draw near, behold the record. Temporal information may reveal greater resolution as the witness approacheth its place.",
+  "url": "./living-time-sphere.html",
+  "symbol": "◇"
+ },
+ {
+  "date": "2026-08-17",
+  "type": "temporal engine",
+  "title": "Spheres within spheres",
+  "summary": "A deeper architecture hath been laid beneath the Observatory: Year to Moon, Moon to week and gate, gate to day, day to hours, and thence unto events, records, media, and relations. The yearly sphere remaineth the great reference body, but no longer the final depth.",
+  "url": "./living-time-sphere.html",
+  "symbol": "⊙"
+ },
+ {
+  "date": "2026-08-17",
+  "type": "life atlas",
+  "title": "The record of a life entereth the temporal world",
+  "summary": "The foundations of the Codex Life Atlas now join events, entities, media, relations, temporal coordinates, environment, and provenance so lived history may inhabit the same temporal world as the calendar.",
+  "url": "./living-time-sphere.html",
+  "symbol": "✦"
+ },
+ {
+  "date": "2026-08-16",
+  "type": "calendar",
+  "title": "The calendar became an instrument of traversal",
+  "summary": "A shared temporal cursor, date navigation, day scrubbing, return to Today, historical movement, and multiple projections began binding the Calendar Atlas and Living Observatory together. Different windows; one temporal world.",
+  "url": "./moons.html",
+  "symbol": "☾"
+ },
+ {
+  "date": "2026-08-16",
+  "type": "observatory",
+  "title": "Pattern became visible",
+  "summary": "The 13 Moons, exact days, week gates, passages, lunar and astronomical layers, connections, environmental context, historical comparison, camera movement, and temporal lenses began inhabiting a common three-dimensional field.",
+  "url": "./living-time-sphere.html",
+  "symbol": "✧"
+ },
+ {
+  "date": "2026-08-15",
+  "type": "navigation",
+  "title": "The Observatory learned to move through time",
+  "summary": "Previous and next movement, a living Today state, date scrubbing, selected-time persistence, camera states, and URL-carried temporal coordinates began forming a navigable chronology. A moment may increasingly become a place unto which one may return.",
+  "url": "./living-time-sphere.html",
+  "symbol": "↟"
+ },
+ {
+  "date": "2026-08-15",
+  "type": "earth and sky",
+  "title": "The reckoning received its surroundings",
+  "summary": "Location, astronomical context, and environmental state began joining the temporal engine while provenance and uncertainty remain part of the record: what is observed, calculated, reported, interpreted, symbolic, and yet unknown.",
+  "url": "./living-time-sphere.html",
+  "symbol": "⊕"
+ },
+ {
+  "date": "2026-08-14",
+  "type": "foundation",
+  "title": "The Sphere was made sturdier",
+  "summary": "A broad stabilization strengthened rendering, layer interaction, mobile behavior, temporal state, mounting, and fallback paths as the Observatory moved from isolated demonstrations toward a shared living engine.",
+  "url": "./living-time-sphere.html",
+  "symbol": "△"
+ },
+ {
+  "date": "2026-07-30",
+  "type": "system",
+  "title": "One Sphere began serving many gates",
+  "summary": "The homepage began drawing upon the shared Living Time Sphere runtime, joining responsive rendering, temporal controls, progressive initialization, environmental provenance, and stronger mobile behavior beneath one visible instrument.",
+  "url": "./index.html",
+  "symbol": "◌"
+ },
+ {
+  "date": "2026-07-17",
+  "type": "system",
+  "title": "Living Codex Phase I — The Living Day",
+  "summary": "The homepage received its living daily state. Moon, day within Moon, week gate, Shabbat state, daily movement, suggested gate, and frequency could be resolved from the Remnant 13 Moons reckoning without rebuilding the page. The Codex had begun to know when it was.",
+  "url": "./index.html",
+  "symbol": "☾"
+ },
+ {
+  "date": "2026-07-13",
+  "type": "system",
+  "title": "The Living Codex awakened across the gates",
+  "summary": "Shared living-state architecture began passing through the principal instruments of the Codex. What had existed as separate pages began the longer work of becoming one system.",
+  "url": "./index.html",
+  "symbol": "☲"
+ },
+ {
+  "date": "2026-07-13",
+  "type": "calendar",
+  "title": "Today in the Codex opened the current Moon",
+  "summary": "The daily panel joined the present day unto 13 Moons and the Witness Ledger without fabricating readings, establishing an early bridge between reckoning and witness.",
+  "url": "./moons.html",
+  "symbol": "☾"
+ },
+ {
+  "date": "2026-07-13",
+  "type": "artifact",
+  "title": "The Artifact Registry was strengthened for the small screen",
+  "summary": "Mobile rendering of the Registry was refined so cards, portraits, and media frames might hold their intended form across smaller devices.",
+  "url": "./shop.html",
+  "symbol": "☲"
+ }
 ]

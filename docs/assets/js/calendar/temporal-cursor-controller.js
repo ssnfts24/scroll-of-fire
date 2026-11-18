@@ -64,6 +64,54 @@
     );
   }
 
+  /*
+   * Read-only Pattern position resolution through the canonical
+   * pipeline (docs/development/TEMPORAL-AUTHORITY-CONTRACT.md).
+   *
+   * The cursor is the gateway projections use to convert an instant
+   * into its PatternCalendar position, so no projection needs to call
+   * PatternCalendar directly and become a second authority. This never
+   * moves the selection, never mutates state, and never emits cursor
+   * events — it only resolves the position for the instant given.
+   */
+  function resolvePosition(input, options = {}) {
+    const date = normalizeDate(
+      input || new Date()
+    );
+
+    if (!date) {
+      return null;
+    }
+
+    const calendar = window.PatternCalendar;
+
+    if (!calendar?.fromCivilDate) {
+      return null;
+    }
+
+    try {
+      return calendar.fromCivilDate({
+        date,
+
+        timeZone:
+          options.timeZone ||
+          getTimezone(),
+
+        boundaryMode:
+          options.boundaryMode ||
+          options.boundary ||
+          getBoundary(),
+
+        sunsetTime:
+          options.sunsetTime ||
+          options.manualSunset ||
+          '18:00'
+      });
+    } catch {
+      return null;
+    }
+  }
+
   const state = {
     version: VERSION,
 
@@ -561,6 +609,8 @@
     getCoordinate() {
       return state.coordinate;
     },
+
+    resolvePosition,
 
     getHistory() {
       return state.history.map(

@@ -56,6 +56,7 @@
   <link rel="stylesheet" href="assets/css/navigation.css">
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
 
   <script type="application/ld+json">
   {
@@ -156,6 +157,7 @@
   </script>
 
   <script defer src="assets/js/site.js"></script>
+  <script defer src="assets/js/living-search-launcher.js"></script>
   <script defer src="assets/js/living-codex.js"></script>
 
   <style>
@@ -921,18 +923,27 @@
   </style>
 </head>
 
-<body>
+<body class="living-ui">
   <div class="living-aura" aria-hidden="true"></div>
   <a class="skip-link" href="./about-aaron.html#main">Skip to content</a>
+  <div class="living-nav" data-living-nav>
+    <nav class="living-nav-inner" aria-label="Site navigation">
+      <a class="living-nav-brand" href="index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a>
+      <ul class="living-nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="scroll/index.html">Scroll</a></li>
+        <li><a href="codex-atlas.html">Atlas</a></li>
+        <li><a href="scroll/lexicon.html">Lexicon</a></li>
+        <li><a href="scripture/index.html">Scripture</a></li>
+        <li><a href="living-time-sphere.html">Sphere</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="witness.html">Witness</a></li>
+        <li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li>
+      </ul>
+    </nav>
+  </div>
 
   <header class="site-header" data-sof-header>
-    <a class="brand" href="./" aria-label="Scroll of Fire home">
-      <span class="brand-mark" aria-hidden="true">☲</span>
-      <span>
-        <strong>Scroll of Fire</strong>
-        <small>Codex of Reality</small>
-      </span>
-    </a>
 
     <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle>
       <span></span><span></span><span></span>
@@ -1072,6 +1083,24 @@
           <span class="aa-hero-image-caption" aria-hidden="true">Codex of Reality · Living Public Archive</span>
         </div>
       </div>
+    </section>
+
+        <section class="section-shell" id="about-explainer">
+      <div class="section-heading">
+        <p class="eyebrow">Watch · The Explainer</p>
+        <h2>The man behind the Codex.</h2>
+        <p>
+          A short spoken tour of this page: who Aaron Paul Laird is, the lesson his trade taught the whole Codex, what he is building now, and the books that hold the work. Press play and let the page explain itself.
+        </p>
+      </div>
+
+      <video controls preload="metadata" width="1280" height="720"
+        style="width:100%;height:auto;display:block"
+        src="assets/media/about-aaron-explainer.mp4"
+        aria-label="Video: about Aaron Paul Laird, explained in plain words">
+        Your browser does not support the video element. The same tour is
+        written out across this page.
+      </video>
     </section>
 
     <section id="current-focus" class="section-shell" aria-labelledby="focus-title">
@@ -1475,6 +1504,17 @@
       </div>
     </section>
 
+    <section id="support" class="section-shell" aria-labelledby="support-title">
+      <p class="eyebrow">Support</p>
+      <h2 id="support-title">Support the Work</h2>
+      <p>
+        The Codex is free to read and free to use — that does not change. If the work has
+        served you and you want to put weight behind it, you can support it directly through
+        Cash App: <a href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">$AaronLaird7</a>.
+        No tiers, no gates — what is given is given freely, and the record keeps growing either way.
+      </p>
+    </section>
+
     <section class="section-shell" aria-label="Continue exploring">
       <p class="eyebrow">Where to Next</p>
       <h2>Keep Exploring</h2>
@@ -1529,5 +1569,6 @@
       });
     });
   </script>
+  <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
 </body>
   </html>

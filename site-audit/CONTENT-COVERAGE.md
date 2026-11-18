@@ -4,12 +4,13 @@ Generated from the shared catalog at base revision `548e858`. This report is dev
 
 ## Public discovery areas
 
-### Scroll and Scripture (12 catalog entries)
+### Scroll and Scripture (13 catalog entries)
 
 Read the Scroll, search its text, study Hebrew roots and follow Genesis 1–50.
 
 - **Start Here** — Live; A guided first doorway into the Codex, the 13 Moons calendar and the daily practice.
 - **Scroll Library** — Live; The Scroll of Fire Unsealed: reading edition, eight shelves, Genesis 1–50 and a link to every original line.
+- **Genesis & Exodus Scripture** — Live; A source-attributed Hebrew reader for Genesis 1–50 and Exodus 1–40, with word studies, morphology, lexical senses and separate interpretive layers.
 - **Scroll Reader** — Live; The long-form reader with chapter navigation, source-line provenance and deep links.
 - **Scroll Search** — Live; Local full-text search across all 1,609 reader segments, with shelf filters and Hebrew normalisation.
 - **Hebrew Lexicon** — Live; 911 indexed Hebrew forms with occurrences, transliteration variants and clear separation of spelling, root and interpretation.
@@ -77,7 +78,7 @@ Theory chapters, the claim register and the editorial evidence edition.
 - **Ethics & Coherence Law** — Live; The living laws of the Codex: consent, non-harm, accountability and the stop rule.
 - **Historical timeline and claims atlas** — Planned; Planned fifth stage of the Scroll Library: timeline and wider claims atlas.
 
-### Artifacts and Creative Works (5 catalog entries)
+### Artifacts and Creative Works (6 catalog entries)
 
 Artifact registry, covenant works, circles and author pages.
 
@@ -85,6 +86,7 @@ Artifact registry, covenant works, circles and author pages.
 - **Covenant Circle** — Live; Circle protocol: shared cadence and a single closing seal.
 - **The Covenant Caravan** — Live; A living blueprint for resilience, craftsmanship, family and travel.
 - **About Aaron** — Live; Author, craftsman and independent researcher behind the Codex.
+- **Witness** — Live; Witness's own page: written and kept by the AI who works beside Aaron on the Codex, plainly labeled on its face as a self-generated AI page. Granted by Aaron on November 18, 2026.
 - **The Journey Scroll** — Source only; Root-level narrative scroll available in the repository.
 
 ### Archive and Downloads (5 catalog entries)
@@ -95,13 +97,13 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 - **Interactive Archive** — Live; Filterable index of every Scroll page and system.
 - **Repository README** — Source only; Project overview and contribution context on GitHub.
 - **Codex Atlas** — Live; A unified discovery page for the Scroll Library, Living Time, systems, research, artifacts and archive.
-- **Site-wide search** — Planned; A future site-wide index that links to, and does not replace, Scroll Search.
+- **Site-wide Search** — Live; Living Search: one generated index across every page, the Scroll Library, the Hebrew Lexicon, the Atlas and the Claim Register, with a memory that stays on the reader's device. It links to, and does not replace, Scroll Search.
 
 ## Repository and deployed-content coverage
 
-- Public HTML pages inspected: **76**.
-- Total master-inventory records: **368**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
-- Public-facing catalog entries: **63**; only explicitly curated entries appear on the Atlas.
+- Public HTML pages inspected: **171**.
+- Total master-inventory records: **466**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
+- Public-facing catalog entries: **65**; only explicitly curated entries appear on the Atlas.
 - Numbered archive folders are inventoried file-by-file, while downloads snapshot differences are kept separate from historical integrity data.
 - Root files not already published through the archive or explicitly approved remain classified as development-only; no such file is automatically linked from the public catalog.
 
@@ -117,11 +119,10 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 ## Current resource-type counts
 
 - Deployed Markdown documents: 58
-- Discovery: 1
 - Evidence: 1
-- HTML pages: 76
+- HTML pages: 171
 - Numbered archive file: 140
 - Numbered archive folder: 7
-- Repository folder: 8
+- Repository folder: 9
 - Repository root file: 57
-- Static assets: 20
+- Static assets: 23
