@@ -1,6 +1,38 @@
 [
  {
   "date": "2026-11-18",
+  "type": "page",
+  "title": "The Start page learned to explain itself out loud",
+  "summary": "A short spoken explainer now stands at the head of Start Here: what the Codex is for, the sixty-second first practice, and the order the doors open in. Tap to play.",
+  "url": "./start.html#start-explainer",
+  "symbol": "▶"
+ },
+ {
+  "date": "2026-11-18",
+  "type": "page",
+  "title": "The Field Guide learned to explain itself out loud",
+  "summary": "A short spoken explainer now opens the Field Guide: the daily run, the weekly rhythm, troubleshooting, and the ethics stop rule that bounds the practice. Tap to play.",
+  "url": "./guide.html#guide-explainer",
+  "symbol": "▶"
+ },
+ {
+  "date": "2026-11-18",
+  "type": "page",
+  "title": "The Codex Atlas learned to explain itself out loud",
+  "summary": "A short spoken explainer now stands at the head of the Atlas: one map of the whole Codex in six areas, drawn from one shared catalog, with the plain note about where saved records live. Tap to play.",
+  "url": "./codex-atlas.html#codex-atlas-explainer",
+  "symbol": "▶"
+ },
+ {
+  "date": "2026-11-18",
+  "type": "page",
+  "title": "The Glossary learned to explain itself out loud",
+  "summary": "A short spoken explainer now opens the Glossary of the Codex: the living language in clear definitions, with the limits kept attached to the words. Tap to play.",
+  "url": "./glossary.html#glossary-explainer",
+  "symbol": "▶"
+ },
+ {
+  "date": "2026-11-18",
   "type": "system",
   "title": "The real Sphere came to the homepage",
   "summary": "The homepage's still picture is gone: the Sphere itself now turns at the head of the page, today marked in gold, with drag, pause and play — the same instrument as the Observatory page, not a copy of it.",
