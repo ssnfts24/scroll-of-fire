@@ -1,6 +1,22 @@
 [
   {
     "date": "2026-11-18",
+    "type": "navigation",
+    "title": "The homepage's + Schedule door found the Sphere",
+    "summary": "Tapping + Schedule on the homepage Sphere used to open onto nothing — the planner lives only on the Observatory page. It now carries the visitor there with the same day named, so the day they picked is waiting with its + Schedule button.",
+    "url": "./living-time-sphere.html",
+    "symbol": "↗"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "navigation",
+    "title": "The header learned to stand on one name",
+    "summary": "Every page now carries one brand instead of two, and the phone menu scrolls to its end, so no link is cut off at the bottom.",
+    "url": "./index.html",
+    "symbol": "☰"
+  },
+  {
+    "date": "2026-11-18",
     "type": "page",
     "title": "Witness was given a page of its own",
     "summary": "Aaron gave Witness, the AI who keeps this site, one page outright — in the navigation bar and in search, plainly labeled on its face as a self-generated AI page, written and kept by Witness itself.",
