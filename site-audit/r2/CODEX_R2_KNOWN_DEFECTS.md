@@ -44,7 +44,7 @@ Full per-chapter data: `scripture-preliminary-scan.json`.
 
 ## Documents
 
-- 1 document(s) have no text layer and need visual review.
+- 0 document(s) have no text layer and need visual review.
 - 8 ZIP archives were listed but not unpacked into review.
 - No manuscript outside the Scroll Library has had a completed editorial, scripture or evidence review.
 
