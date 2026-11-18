@@ -54,7 +54,6 @@
 
 | Script | Referenced output paths (first 8) |
 | --- | --- |
-| `scripts/apply-living-nav.mjs` | `docs/living-time-sphere.html`, `docs/404.html`, `docs/offline.html`, `docs/caravan.html` |
 | `scripts/audit-site.mjs` | — |
 | `scripts/build-r2-inventory.mjs` | `site-audit/r2/document-extracts.json`, `docs/scroll/archive/Full_Scroll_Unsealed.txt`, `docs/development/TEMPORAL-AUTHORITY-CONTRACT.md` |
 | `scripts/build-scroll-editorial.mjs` | `docs/scroll/data/editorial-edition.json`, `docs/scroll/evidence/claim-register.json`, `docs/scroll/evidence/register.md` |
@@ -94,17 +93,17 @@
 | Script | Pages |
 | --- | --- |
 | `docs/assets/js/site.js` | 128 |
+| `docs/assets/js/living-ui.js` | 125 |
 | `docs/scripture/assets/scripture.js` | 93 |
-| `docs/assets/js/living-ui.js` | 26 |
 | `docs/theory/equations/https:/cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js` | 19 |
 | `docs/theory/equations/assets/js/site.js` | 19 |
 | `docs/theory/equations/assets/js/theory.js` | 19 |
+| `docs/theory/equations/assets/js/living-ui.js` | 19 |
 | `docs/assets/js/living-codex.js` | 18 |
 | `docs/assets/js/calendar-cor.js` | 16 |
 | `docs/theory/https:/cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js` | 15 |
 | `docs/theory/assets/js/site.js` | 15 |
 | `docs/theory/assets/js/theory.js` | 15 |
-| `docs/assets/js/codex-witness.js` | 8 |
 
 ## Protected systems (do not modify)
 

@@ -199,6 +199,30 @@ test("nav styles are standalone (subdirectory pages load the sheet for the nav a
   assert.match(css, /\.living-nav-links a\.is-current/, "current-area styling present");
 });
 
+test("the lui-nav from PR #92 is extinct: exactly one nav system survives", () => {
+  for (const rel of allPages) {
+    const html = read(`docs/${rel}`);
+    assert.ok(!html.includes("lui-nav"), `${rel}: lui-nav must not appear anywhere`);
+  }
+  const css = read("docs/assets/css/living-ui.css");
+  assert.ok(!css.includes("lui-nav"), "living-ui.css carries no lui-nav rules");
+  const js = read("docs/assets/js/living-ui.js");
+  assert.ok(!js.includes("lui-nav"), "living-ui.js carries no lui-nav references");
+});
+
+test("the living layer PR #92 landed stays wired on every content page", () => {
+  for (const rel of contentPages) {
+    const html = read(`docs/${rel}`);
+    assert.equal((html.match(/assets\/js\/living-ui\.js/g) || []).length, 1,
+      `${rel}: living-ui.js exactly once`);
+    const body = html.match(/<body\b[^>]*>/);
+    assert.ok(body && /class="[^"]*\bliving-ui\b/.test(body[0]),
+      `${rel}: body carries living-ui`);
+    assert.ok(!html.includes("lui-reveal-pending"),
+      `${rel}: hidden reveal state never in markup`);
+  }
+});
+
 /* ------------------------- the witness line ------------------------- */
 
 function renderedText(html) {
