@@ -8,7 +8,7 @@
     "catalogEntries": 65,
     "issueCounts": {
       "nav-label-differs-from-title": 24,
-      "not-linked-directly-from-homepage": 17,
+      "not-linked-directly-from-homepage": 18,
       "deployed-but-unlinked": 57,
       "unreachable-from-homepage": 3,
       "compatibility-redirect-page": 1,
@@ -1684,7 +1684,6 @@
         "ethics.html",
         "genesis-oracle.html",
         "glossary.html",
-        "glyphs.html",
         "guide.html",
         "hub.html",
         "invoke.html",
@@ -12206,13 +12205,15 @@
         "path": "glyphs.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 4,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 3,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": []
+      "issues": [
+        "not-linked-directly-from-homepage"
+      ]
     },
     {
       "id": "guide",
