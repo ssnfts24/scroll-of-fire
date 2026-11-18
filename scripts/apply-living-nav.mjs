@@ -7,9 +7,11 @@
  *   1. ensures the shared living layer stylesheet (living-ui.css) is
  *      referenced exactly once — the nav's styles live there;
  *   2. inserts the unified nav bar (Home · Scroll · Atlas · Lexicon ·
- *      Scripture · Sphere · Shop, current area marked) immediately
- *      after the page's skip link, or right after <body> when the page
- *      has no skip link;
+ *      Scripture · Sphere · Shop, current area marked, plus the
+ *      external Support door last) immediately after the page's skip
+ *      link, or right after <body> when the page has no skip link.
+ *      Pages that already carry the nav get their emitted block
+ *      refreshed in place, so emission changes reach them too;
  *   3. removes the legacy site-header brand anchor (the "Scroll of
  *      Fire / Codex of Reality" home button inside <header
  *      class="site-header" data-sof-header>) from every page it
@@ -66,6 +68,11 @@ const AREAS = [
   { id: "sphere", label: "Sphere", target: "living-time-sphere.html" },
   { id: "shop", label: "Shop", target: "shop.html" }
 ];
+
+/* One external door, always last in the bar: support for the work.
+ * Not an area — it is never the current page and never resolves to a
+ * local file. Aaron's Cash App, decided Nov 17, 2026. */
+const SUPPORT = { label: "Support", href: "https://cash.app/$AaronLaird7" };
 
 const LAYER_CSS_TARGET = "assets/css/living-ui.css";
 
@@ -133,12 +140,14 @@ function buildNav(baseDir, currentArea) {
         : "";
     return `        <li><a href="${href}"${current}>${area.label}</a></li>`;
   }).join("\n");
+  const support = `        <li><a class="living-nav-support" href="${SUPPORT.href}" target="_blank" rel="noopener">${SUPPORT.label}</a></li>`;
   return [
     `  <div class="living-nav" data-living-nav>`,
     `    <nav class="living-nav-inner" aria-label="Site navigation">`,
     `      <a class="living-nav-brand" href="${home}"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a>`,
     `      <ul class="living-nav-links">`,
     items,
+    support,
     `      </ul>`,
     `    </nav>`,
     `  </div>`
@@ -201,7 +210,6 @@ for (const full of [...walk(docsDir)].sort()) {
     });
     continue;
   }
-
   const changes = [];
 
   /* 3. One brand per page: with the unified nav in place (or about
@@ -214,19 +222,32 @@ for (const full of [...walk(docsDir)].sort()) {
     changes.push("brand-stripped");
   }
 
+  const pageDir = posixDirname(rel);
+  const baseMatch = html.match(/<base\b[^>]*\bhref="([^"]*)"/i);
+  const baseDir = baseMatch ? resolveDir(pageDir, baseMatch[1]) : pageDir;
+
   if (html.includes("data-living-nav")) {
+    /* Refresh the emitted block in place so emission changes (the
+     * Support door) reach pages that already carry the nav. The block
+     * holds no nested <div>, so its first </div> is its own close.
+     * A brand strip above lands in the same single write. */
+    const fresh = buildNav(baseDir, currentAreaFor(rel));
+    const navRe = /^[ \t]*<div class="living-nav" data-living-nav>[\s\S]*?<\/div>/m;
+    const next = html.replace(navRe, () => fresh);
+    if (next !== html) {
+      html = next;
+      changes.push("nav refreshed");
+    }
     if (changes.length && !dryRun) fs.writeFileSync(full, html);
     report.push({
       rel,
       action: changes.length ? changes.join("+") : "already has nav",
-      changed: changes.length > 0
+      changed: changes.length > 0,
+      base: baseMatch ? baseMatch[1] : "(none)",
+      area: currentAreaFor(rel) || "—"
     });
     continue;
   }
-
-  const pageDir = posixDirname(rel);
-  const baseMatch = html.match(/<base\b[^>]*\bhref="([^"]*)"/i);
-  const baseDir = baseMatch ? resolveDir(pageDir, baseMatch[1]) : pageDir;
 
   /* 1. Stylesheet wiring for the shared living layer. */
   if (!/assets\/css\/living-ui\.css/.test(html)) {
@@ -272,5 +293,5 @@ for (const row of report) {
   );
 }
 const changed = report.filter((r) => r.changed).length;
-const gained = report.filter((r) => String(r.action).includes("nav") && r.changed).length;
+const gained = report.filter((r) => r.changed && String(r.action).split("+").includes("nav")).length;
 console.log(`\n${dryRun ? "[dry-run] " : ""}${changed} pages changed (${gained} gained the unified nav); ${report.length} pages examined.`);

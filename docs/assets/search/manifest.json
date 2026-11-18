@@ -4,7 +4,7 @@
   "engine": "living-search-bm25-v1",
   "note": "Generated from the sealed catalog and Scroll data. The index Netlify and GitHub Pages serve is this committed artifact; regenerate with npm run search:index after site:catalog.",
   "sources": {
-    "docs/data/site-catalog.json": "083e7b93d327cd74186db7ca9dd571a6fe11aa6715a930bc292f324010915432",
+    "docs/data/site-catalog.json": "c0d439ea989a15d10214353b2a412a98cd0ce3b3c3b4a8d52f8da2cadbdec53f",
     "docs/scroll/data/library.json": "86370223f9bffe5fc30afc4c13767cb283f2f0cd2499321d84d166279ef24588",
     "docs/scroll/data/reader-segments.json": "2624fe5640fd4abcf63499b32f28e36a532c8253f9a7cd2983833a1aa33297dc",
     "docs/scroll/search/lexicon/lexicon-index.json": "92e4169f9a75bfa5467ab5bb57d77cca990a11cd2ab8ba8248685561a571b879",
@@ -51,8 +51,8 @@
     "pages": {
       "file": "pages.json",
       "count": 160,
-      "bytes": 730483,
-      "sha256": "6a7b920832750b2537fd0fddf19c74305bbefac531e03494483c8cd05092ff1d"
+      "bytes": 730527,
+      "sha256": "d646d4254e74a87499e86d281eba891843fd9521952694852af6923b676caf3e"
     },
     "scrolls": {
       "file": "scrolls.json",

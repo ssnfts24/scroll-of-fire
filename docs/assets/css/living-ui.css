@@ -258,6 +258,12 @@ body.living-ui main > section.lui-reveal-pending {
   box-shadow: inset 0 -2px 0 var(--lnav-gold-deep);
 }
 
+/* The Support door: external, always last, quietly gold — same size
+ * and tap target as every other link in the bar. */
+.living-nav-links a.living-nav-support {
+  color: var(--lnav-gold);
+}
+
 .living-nav a:focus-visible {
   outline: 2px solid var(--lnav-gold);
   outline-offset: -2px;
