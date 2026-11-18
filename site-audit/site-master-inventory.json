@@ -3,7 +3,7 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 465,
+    "resources": 466,
     "publicHtmlPages": 171,
     "catalogEntries": 65,
     "issueCounts": {
@@ -531,6 +531,23 @@
       "relatedProjects": [],
       "sourcePath": "docs/assets/js",
       "publicUrl": "https://codexofreality.org/assets/js",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "supporting-asset",
+      "discoverability": null,
+      "issues": []
+    },
+    {
+      "id": "docs-assets:assets/media",
+      "title": "docs/assets/media (1 files)",
+      "description": "Static assets, data and generated artifacts served from docs/.",
+      "category": "Static assets",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/assets/media",
+      "publicUrl": "https://codexofreality.org/assets/media",
       "publicationStatus": "live",
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [],
