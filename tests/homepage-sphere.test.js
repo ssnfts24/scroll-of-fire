@@ -96,6 +96,23 @@ test("fallbacks are structural: reduced motion, WebGL probe, protected three.js 
   assert.match(CSS, /\[data-homepage-sphere\] \[hidden\] \{\s*display: none !important;/);
 });
 
+test("the opening view is the Observatory's settled view on phone widths too", () => {
+  // The shared camera module trims its "today" distance to 1.9 on
+  // phone-width viewports, cropping the disc in the hero frame. The
+  // hero therefore hears the mount's renderer reports and, once the
+  // 3D renderer is live, eases the camera to the settled framing —
+  // distance 2.25, phi 0.78 — the same framing the Today button
+  // restores. A first 3D attempt that fell back to the flat SVG face
+  // (the page's 3D renderer is a singleton; a slow phone can also
+  // time the init out) is retried as the hero re-enters view.
+  assert.match(JS, /onRendererChange: onHeroRendererChange/);
+  assert.match(JS, /const SETTLED_DISTANCE = 2\.25/);
+  assert.match(JS, /const SETTLED_PHI = 0\.78/);
+  assert.match(JS, /moveTo\(\{\s*dist: SETTLED_DISTANCE,\s*phi: SETTLED_PHI,/);
+  assert.match(JS, /mountHandle\.activate\(\)/);
+  assert.match(JS, /const stackPromise = loadSphereStack\(\)/);
+});
+
 test("the module carries no calendar math of its own", () => {
   assert.doesNotMatch(JS, /EPOCH_YEAR|epochForYear|Date\.UTC\(2026, 3, 17/);
   assert.match(JS, /PatternCalendar/);

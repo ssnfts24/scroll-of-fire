@@ -31,6 +31,20 @@
  * live the static hero art shows exactly as before, and it stays for
  * no-JS, reduced-motion, and no-WebGL visitors.
  *
+ * The opening view is the Observatory's settled view — distance 2.25,
+ * phi 0.78, today in front. The shared camera module trims the
+ * distance to 1.9 on phone-width viewports, which crops the disc
+ * inside the hero frame, so when this mount reports the 3D renderer
+ * live the hero eases the camera to 2.25 / 0.78, the same framing
+ * the Today button restores. And because the page's 3D renderer is
+ * a singleton shared with the homepage's instrument mount lower
+ * down, a hero whose first 3D attempt loses that race (or times out
+ * on a slow phone) retries the upgrade whenever the hero comes back
+ * into view, instead of keeping the flat SVG face for the whole
+ * visit. The stack load starts immediately for the same reason:
+ * on a slow phone the load is the long pole, and the renderer goes
+ * to whichever homepage mount asks first.
+ *
  * The pure calendar core below (HomepageSphereCore) is pure math over
  * PatternCalendar + LivingTimeSphereCalendarGeometry — no DOM, no
  * WebGL — and stays exported for the test suite.
@@ -382,12 +396,66 @@
     }
   }
 
+  // Start loading the stack now, not when the hero is first seen:
+  // the hero asks for the page's single 3D renderer from the top of
+  // the page, and the instrument mount lower down loads the same
+  // modules, skipping whatever is already present.
+  const stackPromise = loadSphereStack();
+
   // ── Mounting the real Sphere ──────────────────────────────────────
 
   let booted = false;
   let mountHandle = null;
   let rotationOn = true;
   let mountedPatternDay = summary.dayOfPatternYear;
+
+  // ── The opening view ──────────────────────────────────────────────
+  //
+  // The Observatory's settled opening is distance 2.25 at phi 0.78
+  // (LivingTimeSphereCamera's "today" position). Its phone rule trims
+  // the distance to 1.9 on narrow viewports, which crops the disc
+  // inside the hero frame — so once this mount holds the 3D renderer,
+  // the hero eases the camera to the settled framing, unless the
+  // visitor has already taken the camera themselves.
+  const SETTLED_DISTANCE = 2.25;
+  const SETTLED_PHI = 0.78;
+  let heroRenderer = null; // last renderer this mount reported
+  let openingSettled = false;
+  let visitorTookCamera = false;
+  let fallbackRetries = 0;
+
+  if (stage) {
+    stage.addEventListener("pointerdown", () => { visitorTookCamera = true; }, { passive: true });
+    stage.addEventListener("keydown", () => { visitorTookCamera = true; });
+  }
+
+  function settleOpeningView() {
+    if (openingSettled || visitorTookCamera) return;
+    const cam = globalThis.LivingTimeSphereCamera;
+    if (!cam || typeof cam.moveTo !== "function") return;
+    openingSettled = true;
+    try {
+      cam.moveTo({
+        dist: SETTLED_DISTANCE,
+        phi: SETTLED_PHI,
+        animated: true,
+        durationMs: 900,
+        nowMs: performance.now()
+      });
+    } catch {
+      /* the sphere keeps the mount's own framing */
+    }
+  }
+
+  function onHeroRendererChange(payload) {
+    if (!payload) return;
+    if (payload.activeRenderer) heroRenderer = payload.activeRenderer;
+    if (payload.activeRenderer === "3d") {
+      // Settle a frame later, from the live camera, so the ease
+      // starts wherever the mount's own opening transition reached.
+      requestAnimationFrame(() => settleOpeningView());
+    }
+  }
 
   function stayFallback() {
     root.dataset.state = "fallback";
@@ -411,7 +479,7 @@
     if (booted) return;
     booted = true;
     try {
-      const ready = await loadSphereStack();
+      const ready = await stackPromise;
       if (!ready) {
         stayFallback();
         return;
@@ -436,7 +504,8 @@
           dayLabelMode: "key",
           connectionMode: "selected"
         },
-        visibleLayers: { ...HERO_VISIBLE_LAYERS }
+        visibleLayers: { ...HERO_VISIBLE_LAYERS },
+        onRendererChange: onHeroRendererChange
       });
       if (!mountHandle) stayFallback();
     } catch {
@@ -517,6 +586,34 @@
       { rootMargin: "240px" }
     );
     io.observe(root);
+
+    // If the first 3D attempt fell back to the flat SVG face — the
+    // page's single 3D renderer was busy with the instrument mount,
+    // or the init timed out on a slow phone — retry the upgrade each
+    // time the hero comes back into view, a few times at most. The
+    // mount guards repeat attempts itself; this only re-asks.
+    const retryIo = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        if (heroRenderer === "3d") {
+          retryIo.disconnect();
+          return;
+        }
+        if (!mountHandle) return;
+        if (fallbackRetries >= 6) {
+          retryIo.disconnect();
+          return;
+        }
+        fallbackRetries += 1;
+        try {
+          mountHandle.activate();
+        } catch {
+          /* the mount keeps its SVG face */
+        }
+      },
+      { rootMargin: "240px" }
+    );
+    retryIo.observe(root);
   } else {
     void boot();
   }
