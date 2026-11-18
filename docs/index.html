@@ -75,6 +75,8 @@
   <link rel="stylesheet" href="assets/css/performance-runtime.css?v=20260731-1">
   <link rel="stylesheet" href="assets/css/living-entry.css?v=20261117-1">
   <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
+  <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20261117-1">
+  <link rel="stylesheet" href="assets/css/homepage-sphere.css?v=20261118-3">
 
   <script type="application/ld+json">
   {
@@ -163,6 +165,8 @@
   <script defer src="assets/js/calendar/pattern-calendar.js?v=20260722-3"></script>
   <script defer src="assets/js/living-entry.js?v=20261117-1"></script>
   <script defer src="assets/js/living-witness.js?v=20261117-1"></script>
+  <script defer src="assets/js/sphere/living-time-sphere-calendar-geometry.js?v=20260819-b727&r=20260820-b7584-rootrail&b=20260820-b7592a-farskeleton&d=20260821-b7592d7-unified"></script>
+  <script defer src="assets/js/homepage-sphere.js?v=20261118-2"></script>
   <script defer src="assets/js/calendar-cor.js"></script>
   <script defer src="assets/js/codex-state.js"></script>
   <script defer src="assets/js/codex-memory.js"></script>
@@ -630,9 +634,10 @@
           </p>
         </div>
 
-        <aside class="hero-image-card" aria-label="Codex of Reality living system map">
-          <div class="hero-image-frame">
+        <aside class="hero-image-card" aria-label="The Living Time Sphere, live in the hero" data-homepage-sphere>
+          <div class="hero-image-frame homepage-sphere-frame">
             <img
+              data-hs-fallback
               src="assets/img/home/hero/home-codex-living-system-exact-13-final.webp"
               alt="The Codex of Reality — a living system map of 13 moons, frequency governance, artifacts, covenant caravan, and witness practice"
               width="2048"
@@ -640,15 +645,28 @@
               loading="eager"
               decoding="async"
               fetchpriority="high">
+            <div
+              class="homepage-sphere-stage"
+              data-hs-stage
+              role="img"
+              tabindex="0"
+              aria-label="The Living Time Sphere — thirteen Moons and 364 days, with today shown in gold. Drag or use the arrow keys to turn it."
+              hidden></div>
+            <p class="homepage-sphere-hint" data-hs-hint hidden>Drag to turn</p>
           </div>
 
           <div class="hero-image-caption">
-            <p class="eyebrow">Living System Map</p>
-            <strong>13 Moons · Frequency · Artifacts · Caravan · Witness</strong>
+            <p class="eyebrow">Living Time Sphere</p>
+            <strong data-hs-coordinate>13 Moons · 364 days · one living year</strong>
             <p>
-              The central diagram of the Codex of Reality — each gate leads into a
-              complete working system.
+              The Sphere itself, turning quietly — the same calendar the
+              Observatory keeps. Today rides in gold.
             </p>
+            <div class="homepage-sphere-controls">
+              <button class="hs-btn" type="button" data-hs-toggle aria-pressed="false" hidden>Pause rotation</button>
+              <button class="hs-btn" type="button" data-hs-today hidden>Today</button>
+              <a class="hs-btn hs-btn--primary" href="./living-time-sphere.html">Enter the Observatory</a>
+            </div>
           </div>
         </aside>
       </div>
@@ -855,8 +873,8 @@
               <p><span class="home-living-sphere__hud-label">Solar</span><strong id="home-sphere-today-solar">Aligning…</strong></p>
               <p><span class="home-living-sphere__hud-label">Passage</span><strong id="home-sphere-today-passage">Aligning…</strong></p>
             </div>
-            <p class="home-living-sphere__render-state" id="home-sphere-render-state" role="status" aria-live="polite">Loading sphere engine</p>
           </div>
+          <p class="home-living-sphere__render-state" id="home-sphere-render-state" role="status" aria-live="polite">Loading sphere engine</p>
         </div>
         <div class="home-sphere-command-rail" aria-label="Living Sphere status and actions">
           <div class="home-sphere-command-rail__status">
