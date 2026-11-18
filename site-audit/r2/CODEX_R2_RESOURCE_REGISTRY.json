@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 1947,
-    "bytes": 576989391,
+    "bytes": 576994490,
     "byGroup": {
       "tooling": 153,
       "manuscript": 17,
@@ -6943,8 +6943,8 @@
       "path": "docs/assets/data/documentation-hub.json",
       "title": "documentation-hub.json",
       "format": "json",
-      "bytes": 81727,
-      "sha256": "8fd47a880c33da78d0d358610afb4bc1d47106945febfcdd983ff02aa3e23cc8",
+      "bytes": 86826,
+      "sha256": "119576df05c5b14ddc1d2225aba6d3a0d887ec3e6d14f5beef5cf9b7949ab20e",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,

@@ -475,6 +475,55 @@
    "shows": "The convicted counts involved wire transfers totaling more than $140 million, and trial evidence showed Holmes knew the Theranos analyzer could perform only a few basic tests. The jury acquitted Holmes on the patient-related conspiracy count and three patient fraud counts. The conviction therefore documents investor fraud; it is not a conviction for defrauding patients."
   },
   {
+   "id": "CORP-GOOGLE-001",
+   "domain": "corporations",
+   "title": "Google search antitrust liability ruling — U.S. v. Google LLC, 2024",
+   "statement": "A federal court held that Google violated Section 2 of the Sherman Act by unlawfully maintaining monopolies in general search services and general search text advertising through exclusive default distribution agreements.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Suit filed October 20, 2020 (Case 1:20-cv-03010-APM, D.D.C.); liability memorandum opinion August 5, 2024 (747 F. Supp. 3d 1)",
+   "sources": [
+    {
+     "name": "U.S. District Court for the District of Columbia — Memorandum Opinion, Judge Amit P. Mehta, Document 1033 filed August 5, 2024 (opinion text, Wikisource)",
+     "url": "https://en.wikisource.org/wiki/Page:United_States_v_Google_20240805.pdf/8"
+    },
+    {
+     "name": "U.S. Department of Justice, Office of Public Affairs — Justice Department Statements on the U.S. v. Google decision, August 5, 2024",
+     "url": "https://www.justice.gov/archives/opa/pr/justice-department-statements-us-district-court-district-columbias-decision-us-v-google"
+    }
+   ],
+   "shows": "Judge Mehta's conclusion: \"Google is a monopolist, and it has acted as one to maintain its monopoly,\" including charging supracompetitive prices for general search text ads. The ruling was not across the board: the court found Google lacked monopoly power in the broader search advertising market, found no product market for general search advertising, held Google not liable for its SA360 advertising platform conduct, and declined to sanction Google over unpreserved employee chat messages. This entry documents the 2024 liability ruling only; remedies were decided in a separate later phase, described in DOJ's 2025 remedies release."
+  },
+  {
+   "id": "CORP-BP-CIVIL-001",
+   "domain": "corporations",
+   "title": "BP $20.8 billion civil settlement — Deepwater Horizon consent decree, 2015",
+   "statement": "The United States and five Gulf states settled the governments' civil claims against BP over the Deepwater Horizon spill for $20.8 billion, the largest settlement with a single entity in Justice Department history.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Announced and consent decree lodged October 5, 2015 (E.D. La.); spill April 20, 2010",
+   "sources": [
+    {
+     "name": "U.S. Department of Justice, Office of Public Affairs — U.S. and Five Gulf States Reach Historic Settlement with BP, October 5, 2015",
+     "url": "https://www.justice.gov/opa/pr/us-and-five-gulf-states-reach-historic-settlement-bp-resolve-civil-lawsuit-over-deepwater"
+    }
+   ],
+   "shows": "The consent decree terms: a $5.5 billion Clean Water Act penalty, plus interest — described by DOJ as the largest civil penalty in the history of environmental law, 80 percent directed to Gulf restoration under the RESTORE Act — $8.1 billion in natural resource damages plus up to $700 million for later-discovered conditions, and $600 million for other claims, alongside separate agreements of $4.9 billion to the five Gulf states and up to $1 billion to local governments for economic damages, all paid over time. DOJ records that the civil case had established the spill was caused by BP's gross negligence. The $20.8 billion is a settlement total that includes amounts BP had already committed, not a single fine; BP's 2013 criminal plea is a separate record (CORP-BP-001)."
+  },
+  {
+   "id": "CORP-MANVILLE-001",
+   "domain": "corporations",
+   "title": "Johns-Manville Chapter 11 filing — asbestos liability, 1982",
+   "statement": "Johns-Manville Corporation, then the world's largest manufacturer of asbestos, filed a voluntary Chapter 11 petition facing claims from current and future victims of asbestos-related deaths and injuries estimated to total $2 billion.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Voluntary petition filed August 26, 1982 (Bankr. S.D.N.Y.); Second Amended Plan of Reorganization confirmed 1986",
+   "sources": [
+    {
+     "name": "U.S. Court of Appeals for the Second Circuit — In re Joint Eastern & Southern District Asbestos Litigation, 982 F.2d 721 (2d Cir. 1992) (Justia)",
+     "url": "https://law.justia.com/cases/federal/appellate-courts/F2/982/721/137057/"
+    }
+   ],
+   "shows": "The Second Circuit's account records that the confirmed 1986 plan made the Manville Personal Injury Settlement Trust its cornerstone — funded by insurer settlements, cash, stock, long-term notes, and up to 20 percent of Manville's yearly profits — and that a channeling injunction required all asbestos health claimants, present and future, to proceed only against the Trust. The record shows a reorganization that kept Manville operating under a confirmed plan, not a liquidation. The same opinion records the Trust's strain: by March 30, 1990 it had received more than 150,000 claims, 50 percent above the highest number estimated when the plan was approved, and was effectively out of money to pay its current obligations."
+  },
+  {
    "id": "EPS-NPA-001",
    "domain": "epstein",
    "title": "The 2008 Florida plea and the federal Non-Prosecution Agreement — documented terms",
