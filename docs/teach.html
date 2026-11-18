@@ -285,7 +285,9 @@
     label > input,
     label > select { margin-top: 5px; }
 
-    input[type="range"].lab-input { padding: .35rem; }
+    input[type="range"].lab-input { min-height: 44px; padding: .35rem; }
+
+    input[type="checkbox"] { width: 1.15rem; height: 1.15rem; }
 
     .control-grid {
       display: grid;
@@ -398,6 +400,9 @@
     }
 
     .chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
       font-size: .82rem;
       padding: .29rem .58rem;
       border-radius: 999px;
