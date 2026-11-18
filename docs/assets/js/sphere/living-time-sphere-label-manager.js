@@ -1620,19 +1620,49 @@
           );
         };
 
+      /*
+       * B7.60.2 — record the gate's verdict per candidate in this update.
+       * The render pass below consults this map — never the camera flag
+       * alone — before granting a rail numeral the overhead aperture
+       * exemption. B7.60.1 keyed that exemption on cameraOverhead only,
+       * on the assumption that every numeral reaching the render pass
+       * had passed railLabelVisible. The composed pipeline does not
+       * guarantee that: the render pass paints the composed set of the
+       * most recent evaluation, evaluations are throttled, and a
+       * mid-transition evaluation (camera not yet overhead) composes
+       * the full tilted rail through this same path. A verdict recorded
+       * here is the only exemption ticket the render pass honors.
+       */
+      const railGateVerdicts =
+        new Map();
+
       const dayRailCandidates =
         semanticCandidates.filter(
-          candidate =>
-            (
-              candidate?.target?.kind ===
-                "pattern-day-number"
-              || candidate?.target?.kind ===
-                "intercalary-day-number"
-            )
-            && candidate?.target?.railLocked
-            && railLabelVisible(
-              candidate
-            )
+          candidate => {
+            if (
+              !(
+                candidate?.target?.kind ===
+                  "pattern-day-number"
+                || candidate?.target?.kind ===
+                  "intercalary-day-number"
+              )
+              || !candidate?.target?.railLocked
+            ) {
+              return false;
+            }
+
+            const gateVisible =
+              railLabelVisible(
+                candidate
+              );
+
+            railGateVerdicts.set(
+              candidate,
+              gateVisible
+            );
+
+            return gateVisible;
+          }
         );
 
       const nonRailSemanticCandidates = semanticCandidates.filter(candidate =>
@@ -2098,14 +2128,21 @@
           el.style.top =
             `${railY}px`;
           /*
-           * B7.60.1 — overhead, the X-only aperture passes for rail
-           * numerals just as it does in railLabelVisible: every numeral
-           * that reaches this pass top-down is a skeleton survivor or a
-           * selected/pinned day (already aperture-exempt), so the tilted
-           * window must not fade it back to the 0.04 opacity floor.
+           * B7.60.2 — overhead, the X-only aperture passes ONLY for a
+           * numeral the gate itself passed in this update (recorded in
+           * railGateVerdicts where the rail filter ran). B7.60.1 granted
+           * the exemption from cameraOverhead alone, asserting every
+           * numeral reaching this pass was a skeleton survivor or a
+           * selected/pinned day; that invariant belongs to the gate, not
+           * to this pass, and a stale or ungated composition must never
+           * be able to spend it. A candidate without a passing verdict
+           * keeps the real aperture, exactly as tilted.
            */
           const apertureOpacity =
             cameraOverhead
+            && railGateVerdicts.get(
+              candidate
+            ) === true
               ? 1
               : railApertureOpacity(
                   candidate

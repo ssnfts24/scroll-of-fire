@@ -236,10 +236,23 @@ test("B7.60.1 tilted full rail still answers to window and aperture", () => {
   assert.equal(shut(dayCandidate(8, 2)), false); // aperture still applies
 });
 
-test("B7.60.1 render pass treats the aperture as passing overhead", () => {
-  assert.match(
+test("B7.60.2 render-pass overhead exemption is tied to the gate verdict", () => {
+  // The B7.60.1 blanket exemption (camera flag alone -> aperture 1) is gone:
+  // it asserted, without checking, that every numeral reaching the render
+  // pass had passed the gate — the composed pipeline does not guarantee
+  // that (throttled, possibly mid-transition evaluations paint through
+  // this same branch), and the deploy-preview recheck showed the full
+  // tilted rail overhead. The exemption now spends only a recorded
+  // per-candidate verdict from this update's gate run.
+  assert.doesNotMatch(
     labels,
     /cameraOverhead\s*\n\s*\? 1\s*\n\s*: railApertureOpacity\(/
+  );
+  assert.match(labels, /const railGateVerdicts =\s*\n\s*new Map\(\)/);
+  assert.match(labels, /railGateVerdicts\.set\(/);
+  assert.match(
+    labels,
+    /cameraOverhead\s*\n\s*&& railGateVerdicts\.get\(/
   );
   // The overhead skeleton branch keys on circular centerMoon distance and
   // never consults the tilted window or aperture.
@@ -256,11 +269,25 @@ test("B7.60.1 render pass treats the aperture as passing overhead", () => {
   assert.doesNotMatch(branch, /apertureOpacity/);
 });
 
+test("B7.60.2 renderer re-runs the gate when the overhead state flips", () => {
+  // A mid-transition label evaluation must not persist over the settled
+  // top-down scene: when the semantic-zoom overhead flag flips, the
+  // renderer schedules the same forced settle refresh the gesture path
+  // uses, so the gate re-evaluates against the settled camera.
+  assert.match(renderer, /const overheadFlipped =/);
+  assert.match(renderer, /if \(overheadFlipped\) \{/);
+  const flipIdx = renderer.indexOf("if (overheadFlipped) {");
+  assert.ok(flipIdx > -1);
+  const settleBlock = renderer.slice(flipIdx, flipIdx + 1400);
+  assert.match(settleBlock, /_labelSettleTimer = setTimeout\(/);
+  assert.match(settleBlock, /_updateMoonLabels\(_viewMode, performance\.now\(\), true\)/);
+});
+
 test("B7.60.1 label manager carries the overhead-skeleton cache identity", () => {
   const labelUrls = [...sphere.matchAll(/assets\/js\/sphere\/living-time-sphere-label-manager\.js\?[^"' ]+/g)].map(m => m[0]);
   assert.equal(labelUrls.length, 1);
   assert.match(labelUrls[0], /t=20261117-b760-topviewgate/);
-  assert.match(labelUrls[0], /s=20261117-b7601-overheadskeleton/);
+  assert.match(labelUrls[0], /s=20261117-b7602-gatetied/);
 });
 
 test("B7.60 changed modules carry a fresh shared cache identity", () => {
@@ -268,6 +295,7 @@ test("B7.60 changed modules carry a fresh shared cache identity", () => {
   assert.equal(rendererUrls.length, 2);
   assert.equal(rendererUrls[0], rendererUrls[1]);
   assert.match(rendererUrls[0], /t=20261117-b760-topviewgate/);
+  assert.match(rendererUrls[0], /s=20261117-b7602-gatetied/);
   const labelUrls = [...sphere.matchAll(/assets\/js\/sphere\/living-time-sphere-label-manager\.js\?[^"' ]+/g)].map(m => m[0]);
   assert.equal(labelUrls.length, 1);
   assert.match(labelUrls[0], /t=20261117-b760-topviewgate/);

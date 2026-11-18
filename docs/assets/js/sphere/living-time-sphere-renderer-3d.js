@@ -4403,6 +4403,9 @@
       || next.dayNodeOpacity !== _semanticZoomState.dayNodeOpacity
       || !!next.visibility?.exactDays !== !!_semanticZoomState.visibility?.exactDays
       || !!next.visibility?.weekGates !== !!_semanticZoomState.visibility?.weekGates;
+    const overheadFlipped =
+      !!_semanticZoomState
+      && !!next.overhead !== !!_semanticZoomState.overhead;
     if (!changed) return false;
     _previousSemanticBand = _activeSemanticBand || _semanticZoomState?.band || null;
     _semanticZoomState = next;
@@ -4416,6 +4419,24 @@
     _buildConnections();
     _moonLabelManager?.markDirty();
     globalThis.LivingTimeSphereAnimation.markDirty();
+    if (overheadFlipped) {
+      /*
+       * B7.60.2 — re-run the day-numeral gate against the settled
+       * overhead state. Label updates are throttled to 500 ms and the
+       * preset tween crosses the overhead threshold only near its end;
+       * on surfaces where frames stop when the tween stops, the last
+       * executed evaluation can be a mid-transition one whose tilted
+       * rail would otherwise persist over the top-down scene. Schedule
+       * the same forced settle refresh the gesture path uses.
+       * Visibility governance only: no camera, geometry or label moves.
+       */
+      if (_labelSettleTimer) { clearTimeout(_labelSettleTimer); _labelSettleTimer = null; }
+      _labelSettleTimer = setTimeout(() => {
+        _lastLabelProjectionKey = "";
+        _updateMoonLabels(_viewMode, performance.now(), true);
+        globalThis.LivingTimeSphereAnimation?.markDirty?.();
+      }, 90);
+    }
     return true;
   }
 
