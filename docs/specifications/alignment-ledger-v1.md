@@ -10,7 +10,7 @@ The Alignment Ledger records how the moving March equinox meets the fixed Patter
 
 ## Study range
 
-Initial range: 2014–2026 (13 years). The architecture supports extension without rewriting the engine.
+Initial range: 2014–2026 (13 years). The architecture supports extension without rewriting the engine. Extended to 2014–2027 (14 years) in November 2026, on the equinox dataset's 2027 record.
 
 ## Data model
 
@@ -101,7 +101,7 @@ Tolerances are configurable. The score and its components are fully exposed. No 
 
 ## Source data precision
 
-- Equinox instants: whole-second UTC from janmr.com, validated against bazica.
+- Equinox instants: whole-second UTC from janmr.com, validated against bazica (2014–2026). The 2027 instant follows the equinox dataset's own provenance: USNO Earth's Seasons primary, whole-second value computed with Skyfield + JPL DE421, validated against Skyfield + JPL DE440s.
 - Maximum measured deviation: 2.057 seconds (2022).
 - Lunar phase: approximate synodic calculation (known new moon 2000-01-06T18:14:00Z, period 29.530588853 days).
 - Year Gate: defined date (April 17 00:00 UTC), not measured.

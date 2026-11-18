@@ -361,7 +361,7 @@
     const saveBtn = byId("equinoxSaveLocal");
 
     if (jsonBtn) jsonBtn.addEventListener("click", () => globalThis.EquinoxPassageExport.downloadText(`equinox-passage-${state.currentRecord.canonicalRecord.selectedYear}.json`, globalThis.EquinoxPassageExport.annualJson(state.currentRecord), "application/json"));
-    if (csvBtn) csvBtn.addEventListener("click", () => globalThis.EquinoxPassageExport.downloadText("equinox-passage-2014-2026.csv", globalThis.EquinoxPassageExport.historicalCsv(state.currentDataset), "text/csv"));
+    if (csvBtn) csvBtn.addEventListener("click", () => globalThis.EquinoxPassageExport.downloadText("equinox-passage-2014-2027.csv", globalThis.EquinoxPassageExport.historicalCsv(state.currentDataset), "text/csv"));
     if (textBtn) textBtn.addEventListener("click", () => globalThis.EquinoxPassageExport.downloadText(`equinox-passage-${state.currentRecord.canonicalRecord.selectedYear}.txt`, globalThis.EquinoxPassageExport.readableText(state.currentRecord)));
     if (imageBtn) imageBtn.addEventListener("click", () => {
       const canvas = globalThis.EquinoxPassageExport.renderShareImageCanvas(state.currentRecord);
