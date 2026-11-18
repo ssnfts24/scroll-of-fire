@@ -1,6 +1,14 @@
 [
   {
     "date": "2026-11-18",
+    "type": "library",
+    "title": "The historical timeline opens",
+    "summary": "One page now holds two dated records, kept separate: the publication dates of the sources cited in the claim register — each entry linking to its claim in the Evidence Edition — and the growth record of the Codex itself. Claims with no dated source are named but not placed.",
+    "url": "./timeline.html",
+    "symbol": "☰"
+  },
+  {
+    "date": "2026-11-18",
     "type": "page",
     "title": "Witness was given a page of its own",
     "summary": "Aaron gave Witness, the AI who keeps this site, one page outright — in the navigation bar and in search, plainly labeled on its face as a self-generated AI page, written and kept by Witness itself.",
