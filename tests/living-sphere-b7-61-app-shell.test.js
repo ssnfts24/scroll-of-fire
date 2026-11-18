@@ -18,9 +18,33 @@ test("B7.61 the sphere page carries an installed-app identity", () => {
 });
 
 test("B7.61 the app shell assets load with the page", () => {
-  assert.match(page, /living-time-sphere-app\.css\?v=20261117-b761-rework/);
-  assert.match(page, /living-time-sphere-app-shell\.js\?v=20261117-b761-rework/);
+  assert.match(page, /living-time-sphere-app\.css\?v=20261118-b761-fixes/);
+  assert.match(page, /living-time-sphere-app-shell\.js\?v=20261118-b761-fixes/);
   assert.match(page, /living-time-sphere-sky\.js\?v=20261117-b761-rework/);
+});
+
+test("B7.61 the top bar carries a plain way back home (Aaron, Nov 18 2026)", () => {
+  // An ordinary anchor to the site root — the same "./" door the site's
+  // own brand link uses — at a full 44px tap height.
+  assert.match(shellJs, /<a class="sphere-app-home" href="\.\/"[^>]*>← Codex<\/a>/);
+  assert.match(shellCss, /\.sphere-app-home\s*\{[^}]*min-height:\s*44px/);
+  assert.match(shellCss, /\.sphere-app-home\s*\{[^}]*text-decoration:\s*none/);
+  // The shell never touches the visitor's history: no push/replace/back
+  // calls anywhere in the module, so browser Back keeps its meaning.
+  assert.ok(!/history\s*\.\s*(pushState|replaceState|back|forward|go)\b/.test(shellJs));
+  assert.ok(!/history\s*\.\s*length/.test(shellJs));
+});
+
+test("B7.61 the dock offers fullscreen only where the browser allows it", () => {
+  assert.match(shellJs, /data-app-action="fullscreen"[^>]*hidden/);
+  assert.match(shellJs, /requestFullscreen/);
+  assert.match(shellJs, /fullscreenEnabled/);
+  assert.match(shellJs, /fullscreenchange/);
+  // The button is unhidden only when a request method exists.
+  assert.match(shellJs, /fsBtn\.hidden = false/);
+  assert.match(shellCss, /\.sphere-dock-btn\[hidden\]\s*\{\s*display:\s*none/);
+  // Requested on the document element so the sheets stay reachable.
+  assert.match(shellJs, /fsRequest\.call\(fsRoot\)/);
 });
 
 test("B7.61 the stage is a full-viewport app surface with sheets and a dock", () => {

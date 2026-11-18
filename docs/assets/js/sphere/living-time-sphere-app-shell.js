@@ -22,7 +22,14 @@
    *     behaviour stays owned by the existing modules (selection still
    *     flows through SOFTemporalCursor only);
    *   - mirrors the app's own state strip into the selected-day bar, so
-   *     the bar can never disagree with the instrument.
+   *     the bar can never disagree with the instrument;
+   *   - keeps a plain "← Codex" door in the top bar — an ordinary link
+   *     home, because the app hides the site header and Aaron found no
+   *     way back (Nov 18, 2026). The shell never touches history: Back
+   *     belongs to the visitor;
+   *   - offers a fullscreen toggle in the dock where the browser allows
+   *     it (requested on the document element so the sheets, which live
+   *     outside the wrapper, stay reachable in fullscreen).
    *
    * Without this script (or without JS) the page is exactly the classic
    * document it was before.
@@ -62,6 +69,7 @@
   const topbar = document.createElement("div");
   topbar.className = "sphere-app-topbar";
   topbar.innerHTML = `
+    <a class="sphere-app-home" href="./" aria-label="Back to the Codex home page">← Codex</a>
     <div class="sphere-app-identity">
       <span class="sphere-app-sigil" aria-hidden="true">13×28</span>
       <span class="sphere-app-name">Living Time Sphere</span>
@@ -94,7 +102,8 @@
     <button type="button" class="sphere-dock-btn" data-app-action="open-day"><span aria-hidden="true">▤</span>Day</button>
     <button type="button" class="sphere-dock-btn" data-app-action="open-atlas"><span aria-hidden="true">▦</span>Atlas</button>
     <button type="button" class="sphere-dock-btn" data-app-action="open-planner"><span aria-hidden="true">✎</span>Plan</button>
-    <button type="button" class="sphere-dock-btn" data-app-action="open-settings"><span aria-hidden="true">⚙</span>Settings</button>`;
+    <button type="button" class="sphere-dock-btn" data-app-action="open-settings"><span aria-hidden="true">⚙</span>Settings</button>
+    <button type="button" class="sphere-dock-btn" data-app-action="fullscreen" aria-pressed="false" hidden><span aria-hidden="true">⛶</span>Full</button>`;
 
   const scrim = document.createElement("div");
   scrim.className = "sphere-app-scrim";
@@ -223,6 +232,49 @@
     syncRotate();
   }
 
+  // ── Fullscreen ───────────────────────────────────────────────────────
+  // Requested on the document element, not the wrapper alone: the
+  // sheets (Settings, Atlas, Planner) and the scrim live outside the
+  // wrapper in the DOM, and a wrapper-only fullscreen would leave their
+  // dock buttons opening panels nobody can see. The stage is already
+  // fixed inset-0, so the whole app goes full-bleed identically — and
+  // the sphere refits itself through its own container ResizeObservers
+  // (renderer + UI), which is why picking stays true after a toggle.
+  // Where the API does not exist (iPhone Safari) the button never
+  // appears; exiting is the same button, the browser's own Esc, or the
+  // platform back gesture — fullscreenchange keeps the label honest.
+  const fsBtn = dock.querySelector('[data-app-action="fullscreen"]');
+  const fsRoot = document.documentElement;
+  const fsRequest = fsRoot.requestFullscreen || fsRoot.webkitRequestFullscreen;
+  const fsElement = () => document.fullscreenElement || document.webkitFullscreenElement || null;
+  function syncFullscreen() {
+    if (!fsBtn) return;
+    const active = !!fsElement();
+    fsBtn.setAttribute("aria-pressed", active ? "true" : "false");
+    fsBtn.lastChild.textContent = active ? "Exit" : "Full";
+    // Nudge window-resize listeners once the transition has settled;
+    // the ResizeObservers do the real refit work.
+    requestAnimationFrame(() => window.dispatchEvent(new Event("resize")));
+  }
+  function toggleFullscreen() {
+    try {
+      if (fsElement()) {
+        const exit = document.exitFullscreen || document.webkitExitFullscreen;
+        if (exit) exit.call(document);
+      } else if (fsRequest) {
+        const result = fsRequest.call(fsRoot);
+        if (result && typeof result.catch === "function") result.catch(() => {});
+      }
+    } catch {
+      // Unsupported or blocked by the browser: fullscreenchange (or its
+      // absence) leaves the button state exactly as it was.
+    }
+    syncFullscreen();
+  }
+  if (fsBtn && fsRequest && document.fullscreenEnabled !== false) fsBtn.hidden = false;
+  document.addEventListener("fullscreenchange", syncFullscreen);
+  document.addEventListener("webkitfullscreenchange", syncFullscreen);
+
   const actions = {
     "today": () => click("sphere-everyday-today") || click("calendar-return-today"),
     "fullpage": () => exitApp(),
@@ -236,6 +288,7 @@
     "open-atlas": () => openSheet("atlas"),
     "open-planner": () => openSheet("planner"),
     "open-settings": () => openSheet("settings"),
+    "fullscreen": () => toggleFullscreen(),
   };
 
   document.addEventListener("click", (event) => {
