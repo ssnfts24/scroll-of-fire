@@ -14,12 +14,16 @@
  *    opaque, the overlay takes the taps, and the page is scroll-locked
  *    (body.lpo-opening), exactly as the homepage entry locks. It adds
  *    no panels, no controls and no decisions, and leaves nothing
- *    behind: any click, tap, keypress or scroll dismisses it in the
- *    same instant (never trapped by the fade), it fades on its own at
+ *    behind: any click, tap or keypress dismisses it in the same
+ *    instant (never trapped by the fade), it fades on its own at
  *    ~3.4s over 0.75s — pacing at or beyond the homepage entry's — and
- *    it removes itself from the DOM when done. It is injected from
- *    here, never hard-coded in markup, so no-JS pages render fully
- *    normal — and it never appears under prefers-reduced-motion.
+ *    it removes itself from the DOM when done. Scrolling does not
+ *    dismiss it: the page is locked still beneath it (some pages
+ *    scroll themselves on arrival, and their opening must not be
+ *    killed by their own machinery), exactly as the homepage entry
+ *    is dismissed only by tap or key. It is injected from here, never
+ *    hard-coded in markup, so no-JS pages render fully normal — and
+ *    it never appears under prefers-reduced-motion.
  *
  * 2. STAGED REVEALS — reveal-on-enter for top-level sections on pages
  *    that carry the layer (body.living-ui). Sections are visible by
@@ -175,6 +179,12 @@
     document.body.appendChild(overlay);
     document.body.classList.add("lpo-opening");
 
+    /* Dismissal is the homepage entry's model: tap or key only.
+     * Scroll is deliberately absent — the page is scroll-locked while
+     * the opening plays, and pages that scroll themselves on arrival
+     * (the 13 Moons page does) must not kill their own opening. */
+    const LPO_DISMISS_EVENTS = ["pointerdown", "keydown"];
+
     let dismissed = false;
     const fadeTimer = window.setTimeout(() => dismiss(false), LPO_FADE_AT_MS);
 
@@ -186,7 +196,7 @@
       if (dismissed) return;
       dismissed = true;
       window.clearTimeout(fadeTimer);
-      for (const type of ["pointerdown", "keydown", "wheel", "touchmove", "scroll"]) {
+      for (const type of LPO_DISMISS_EVENTS) {
         window.removeEventListener(type, onFirstGesture, { capture: true });
       }
       if (instant) {
@@ -205,7 +215,7 @@
       }, LPO_FADE_MS);
     }
 
-    for (const type of ["pointerdown", "keydown", "wheel", "touchmove", "scroll"]) {
+    for (const type of LPO_DISMISS_EVENTS) {
       window.addEventListener(type, onFirstGesture, { capture: true, passive: true });
     }
   }

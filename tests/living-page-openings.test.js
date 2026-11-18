@@ -166,9 +166,12 @@ test("while it plays, the opening stands apart from the page", () => {
   assert.match(css, /body\.lpo-opening\s*\{\s*overflow:\s*hidden/,
     "the page must be scroll-locked while the opening plays");
   const js = read("docs/assets/js/living-ui.js");
-  for (const type of ["pointerdown", "keydown", "wheel", "touchmove", "scroll"]) {
-    assert.ok(js.includes(`"${type}"`), `opening must dismiss on ${type}`);
-  }
+  // Dismissal is the homepage entry's model — tap or key, instantly.
+  // Scroll must NOT dismiss: the page is locked still beneath the
+  // opening, and pages that scroll themselves on arrival (the 13
+  // Moons page does) must not kill their own opening.
+  assert.match(js, /LPO_DISMISS_EVENTS = \["pointerdown", "keydown"\]/,
+    "the opening must dismiss on tap or key only, like the homepage entry");
   assert.match(js, /dismiss\(true\)/,
     "a visitor's gesture must take the instant-dismissal path, never the fade");
   assert.match(js, /overlay\.remove\(\)/, "the overlay must remove itself, leaving nothing behind");
