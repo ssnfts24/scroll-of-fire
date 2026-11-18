@@ -7,7 +7,7 @@
     "publicHtmlPages": 172,
     "catalogEntries": 65,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 18,
+      "not-linked-directly-from-homepage": 20,
       "nav-label-differs-from-title": 24,
       "deployed-but-unlinked": 57,
       "unreachable-from-homepage": 3,
@@ -189,13 +189,15 @@
         "path": "alignment-ledger.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 5,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 4,
         "pagesWithNavLinkToIt": 1
       },
-      "issues": []
+      "issues": [
+        "not-linked-directly-from-homepage"
+      ]
     },
     {
       "id": "circle",
@@ -544,7 +546,7 @@
     },
     {
       "id": "docs-assets:assets/media",
-      "title": "docs/assets/media (26 files)",
+      "title": "docs/assets/media (30 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1676,12 +1678,10 @@
       "relatedPages": [
         "13-moon-whitepaper.html",
         "about-aaron.html",
-        "alignment-ledger.html",
         "circle.html",
         "codex-atlas.html",
         "covenant-caravan.html",
         "downloads.html",
-        "equinox-passage.html",
         "ethics.html",
         "genesis-oracle.html",
         "glossary.html",
@@ -11889,13 +11889,15 @@
         "path": "equinox-passage.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 7,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 6,
         "pagesWithNavLinkToIt": 2
       },
-      "issues": []
+      "issues": [
+        "not-linked-directly-from-homepage"
+      ]
     },
     {
       "id": "ethics",
