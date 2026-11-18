@@ -7,11 +7,12 @@
     "publicHtmlPages": 172,
     "catalogEntries": 65,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 19,
+      "not-linked-directly-from-homepage": 18,
       "nav-label-differs-from-title": 24,
       "deployed-but-unlinked": 57,
       "unreachable-from-homepage": 3,
       "compatibility-redirect-page": 1,
+      "reachable-only-through-atlas": 1,
       "not-published-in-catalog": 29,
       "unnamed-image-needs-descriptive-title": 21
     }
@@ -188,15 +189,13 @@
         "path": "alignment-ledger.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 4,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 5,
         "pagesWithNavLinkToIt": 1
       },
-      "issues": [
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "circle",
@@ -545,7 +544,7 @@
     },
     {
       "id": "docs-assets:assets/media",
-      "title": "docs/assets/media (22 files)",
+      "title": "docs/assets/media (26 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1677,10 +1676,12 @@
       "relatedPages": [
         "13-moon-whitepaper.html",
         "about-aaron.html",
+        "alignment-ledger.html",
         "circle.html",
         "codex-atlas.html",
         "covenant-caravan.html",
         "downloads.html",
+        "equinox-passage.html",
         "ethics.html",
         "genesis-oracle.html",
         "glossary.html",
@@ -1710,7 +1711,6 @@
         "teach.html",
         "theory.html",
         "theory/canon.html",
-        "timeline.html",
         "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/",
@@ -11889,15 +11889,13 @@
         "path": "equinox-passage.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 6,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 7,
         "pagesWithNavLinkToIt": 2
       },
-      "issues": [
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "ethics",
@@ -12921,13 +12919,16 @@
         "path": "timeline.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 2,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": null,
+        "inboundPages": 1,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": []
+      "issues": [
+        "reachable-only-through-atlas",
+        "not-linked-directly-from-homepage"
+      ]
     },
     {
       "id": "recoder",
