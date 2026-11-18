@@ -3,9 +3,9 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 464,
-    "publicHtmlPages": 170,
-    "catalogEntries": 64,
+    "resources": 465,
+    "publicHtmlPages": 171,
+    "catalogEntries": 65,
     "issueCounts": {
       "not-linked-directly-from-homepage": 20,
       "nav-label-differs-from-title": 24,
@@ -66,7 +66,8 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/ab.html",
       "privacyEligibility": "approved-public",
@@ -130,7 +131,8 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/about-aaron.html",
       "privacyEligibility": "approved-public",
@@ -141,8 +143,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 62,
-        "pagesWithNavLinkToIt": 63
+        "inboundPages": 63,
+        "pagesWithNavLinkToIt": 64
       },
       "issues": [
         "nav-label-differs-from-title: \"About Aaron\" vs \"Aaron Paul Laird\""
@@ -176,7 +178,8 @@
         "scroll/lexicon.html",
         "scroll/search.html",
         "shop.html",
-        "theory.html"
+        "theory.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/alignment-ledger.html",
       "privacyEligibility": "approved-public",
@@ -240,7 +243,8 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/circle.html",
       "privacyEligibility": "approved-public",
@@ -251,8 +255,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 62,
-        "pagesWithNavLinkToIt": 63
+        "inboundPages": 63,
+        "pagesWithNavLinkToIt": 64
       },
       "issues": [
         "nav-label-differs-from-title: \"Covenant Circle\" vs \"Circle Sync\""
@@ -332,7 +336,8 @@
         "theory/operators.html",
         "theory/thirteen-moons.html",
         "theory/unified-field.html",
-        "theory/witness.html"
+        "theory/witness.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/codex-atlas.html",
       "privacyEligibility": "approved-public",
@@ -343,8 +348,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 167,
-        "pagesWithNavLinkToIt": 162
+        "inboundPages": 168,
+        "pagesWithNavLinkToIt": 163
       },
       "issues": [
         "nav-label-differs-from-title: \"Atlas\" vs \"Codex Atlas\""
@@ -396,7 +401,8 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/covenant-caravan.html",
       "privacyEligibility": "approved-public",
@@ -407,8 +413,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 64,
-        "pagesWithNavLinkToIt": 64
+        "inboundPages": 65,
+        "pagesWithNavLinkToIt": 65
       },
       "issues": [
         "nav-label-differs-from-title: \"Covenant Caravan\" vs \"The Covenant Caravan\""
@@ -433,7 +439,7 @@
     },
     {
       "id": "docs-assets:assets/css",
-      "title": "docs/assets/css (44 files)",
+      "title": "docs/assets/css (46 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -518,7 +524,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (153 files)",
+      "title": "docs/assets/js (155 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1664,7 +1670,8 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/",
       "privacyEligibility": "utility",
@@ -1675,7 +1682,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 0,
         "hopsFromHomeWithoutAtlas": 0,
-        "inboundPages": 167,
+        "inboundPages": 168,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -2023,7 +2030,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/about.html",
       "privacyEligibility": "approved-public",
@@ -2107,7 +2115,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/01.html",
       "privacyEligibility": "approved-public",
@@ -2190,7 +2199,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/02.html",
       "privacyEligibility": "approved-public",
@@ -2273,7 +2283,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/03.html",
       "privacyEligibility": "approved-public",
@@ -2356,7 +2367,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/04.html",
       "privacyEligibility": "approved-public",
@@ -2439,7 +2451,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/05.html",
       "privacyEligibility": "approved-public",
@@ -2522,7 +2535,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/06.html",
       "privacyEligibility": "approved-public",
@@ -2605,7 +2619,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/07.html",
       "privacyEligibility": "approved-public",
@@ -2688,7 +2703,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/08.html",
       "privacyEligibility": "approved-public",
@@ -2771,7 +2787,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/09.html",
       "privacyEligibility": "approved-public",
@@ -2854,7 +2871,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/10.html",
       "privacyEligibility": "approved-public",
@@ -2937,7 +2955,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/11.html",
       "privacyEligibility": "approved-public",
@@ -3020,7 +3039,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/12.html",
       "privacyEligibility": "approved-public",
@@ -3103,7 +3123,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/13.html",
       "privacyEligibility": "approved-public",
@@ -3186,7 +3207,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/14.html",
       "privacyEligibility": "approved-public",
@@ -3269,7 +3291,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/15.html",
       "privacyEligibility": "approved-public",
@@ -3352,7 +3375,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/16.html",
       "privacyEligibility": "approved-public",
@@ -3435,7 +3459,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/17.html",
       "privacyEligibility": "approved-public",
@@ -3518,7 +3543,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/18.html",
       "privacyEligibility": "approved-public",
@@ -3601,7 +3627,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/19.html",
       "privacyEligibility": "approved-public",
@@ -3684,7 +3711,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/20.html",
       "privacyEligibility": "approved-public",
@@ -3767,7 +3795,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/21.html",
       "privacyEligibility": "approved-public",
@@ -3850,7 +3879,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/22.html",
       "privacyEligibility": "approved-public",
@@ -3933,7 +3963,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/23.html",
       "privacyEligibility": "approved-public",
@@ -4016,7 +4047,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/24.html",
       "privacyEligibility": "approved-public",
@@ -4099,7 +4131,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/25.html",
       "privacyEligibility": "approved-public",
@@ -4182,7 +4215,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/26.html",
       "privacyEligibility": "approved-public",
@@ -4265,7 +4299,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/27.html",
       "privacyEligibility": "approved-public",
@@ -4348,7 +4383,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/28.html",
       "privacyEligibility": "approved-public",
@@ -4431,7 +4467,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/29.html",
       "privacyEligibility": "approved-public",
@@ -4514,7 +4551,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/30.html",
       "privacyEligibility": "approved-public",
@@ -4597,7 +4635,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/31.html",
       "privacyEligibility": "approved-public",
@@ -4680,7 +4719,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/32.html",
       "privacyEligibility": "approved-public",
@@ -4763,7 +4803,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/33.html",
       "privacyEligibility": "approved-public",
@@ -4846,7 +4887,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/34.html",
       "privacyEligibility": "approved-public",
@@ -4929,7 +4971,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/35.html",
       "privacyEligibility": "approved-public",
@@ -5012,7 +5055,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/36.html",
       "privacyEligibility": "approved-public",
@@ -5095,7 +5139,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/37.html",
       "privacyEligibility": "approved-public",
@@ -5178,7 +5223,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/38.html",
       "privacyEligibility": "approved-public",
@@ -5261,7 +5307,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/39.html",
       "privacyEligibility": "approved-public",
@@ -5344,7 +5391,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/40.html",
       "privacyEligibility": "approved-public",
@@ -5437,7 +5485,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/01.html",
       "privacyEligibility": "approved-public",
@@ -5530,7 +5579,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/02.html",
       "privacyEligibility": "approved-public",
@@ -5623,7 +5673,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/03.html",
       "privacyEligibility": "approved-public",
@@ -5716,7 +5767,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/04.html",
       "privacyEligibility": "approved-public",
@@ -5809,7 +5861,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/05.html",
       "privacyEligibility": "approved-public",
@@ -5902,7 +5955,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/06.html",
       "privacyEligibility": "approved-public",
@@ -5995,7 +6049,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/07.html",
       "privacyEligibility": "approved-public",
@@ -6088,7 +6143,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/08.html",
       "privacyEligibility": "approved-public",
@@ -6181,7 +6237,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/09.html",
       "privacyEligibility": "approved-public",
@@ -6274,7 +6331,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/10.html",
       "privacyEligibility": "approved-public",
@@ -6367,7 +6425,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/11.html",
       "privacyEligibility": "approved-public",
@@ -6460,7 +6519,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/12.html",
       "privacyEligibility": "approved-public",
@@ -6553,7 +6613,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/13.html",
       "privacyEligibility": "approved-public",
@@ -6646,7 +6707,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/14.html",
       "privacyEligibility": "approved-public",
@@ -6739,7 +6801,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/15.html",
       "privacyEligibility": "approved-public",
@@ -6832,7 +6895,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/16.html",
       "privacyEligibility": "approved-public",
@@ -6925,7 +6989,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/17.html",
       "privacyEligibility": "approved-public",
@@ -7018,7 +7083,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/18.html",
       "privacyEligibility": "approved-public",
@@ -7111,7 +7177,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/19.html",
       "privacyEligibility": "approved-public",
@@ -7204,7 +7271,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/20.html",
       "privacyEligibility": "approved-public",
@@ -7297,7 +7365,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/21.html",
       "privacyEligibility": "approved-public",
@@ -7390,7 +7459,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/22.html",
       "privacyEligibility": "approved-public",
@@ -7483,7 +7553,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/23.html",
       "privacyEligibility": "approved-public",
@@ -7576,7 +7647,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/24.html",
       "privacyEligibility": "approved-public",
@@ -7669,7 +7741,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/25.html",
       "privacyEligibility": "approved-public",
@@ -7762,7 +7835,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/26.html",
       "privacyEligibility": "approved-public",
@@ -7855,7 +7929,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/27.html",
       "privacyEligibility": "approved-public",
@@ -7948,7 +8023,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/28.html",
       "privacyEligibility": "approved-public",
@@ -8041,7 +8117,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/29.html",
       "privacyEligibility": "approved-public",
@@ -8134,7 +8211,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/30.html",
       "privacyEligibility": "approved-public",
@@ -8227,7 +8305,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/31.html",
       "privacyEligibility": "approved-public",
@@ -8320,7 +8399,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/32.html",
       "privacyEligibility": "approved-public",
@@ -8413,7 +8493,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/33.html",
       "privacyEligibility": "approved-public",
@@ -8506,7 +8587,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/34.html",
       "privacyEligibility": "approved-public",
@@ -8599,7 +8681,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/35.html",
       "privacyEligibility": "approved-public",
@@ -8692,7 +8775,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/36.html",
       "privacyEligibility": "approved-public",
@@ -8785,7 +8869,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/37.html",
       "privacyEligibility": "approved-public",
@@ -8878,7 +8963,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/38.html",
       "privacyEligibility": "approved-public",
@@ -8971,7 +9057,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/39.html",
       "privacyEligibility": "approved-public",
@@ -9064,7 +9151,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/40.html",
       "privacyEligibility": "approved-public",
@@ -9157,7 +9245,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/41.html",
       "privacyEligibility": "approved-public",
@@ -9250,7 +9339,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/42.html",
       "privacyEligibility": "approved-public",
@@ -9343,7 +9433,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/43.html",
       "privacyEligibility": "approved-public",
@@ -9436,7 +9527,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/44.html",
       "privacyEligibility": "approved-public",
@@ -9529,7 +9621,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/45.html",
       "privacyEligibility": "approved-public",
@@ -9622,7 +9715,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/46.html",
       "privacyEligibility": "approved-public",
@@ -9715,7 +9809,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/47.html",
       "privacyEligibility": "approved-public",
@@ -9808,7 +9903,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/48.html",
       "privacyEligibility": "approved-public",
@@ -9901,7 +9997,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/49.html",
       "privacyEligibility": "approved-public",
@@ -9994,7 +10091,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/50.html",
       "privacyEligibility": "approved-public",
@@ -10039,7 +10137,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/lemma.html",
       "privacyEligibility": "approved-public",
@@ -10191,7 +10290,8 @@
         "theory/master-equation.html",
         "theory/notation.html",
         "theory/operators.html",
-        "theory/unified-field.html"
+        "theory/unified-field.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/equations/eq01.html",
       "privacyEligibility": "approved-public",
@@ -10269,7 +10369,8 @@
         "theory/notation.html",
         "theory/operators.html",
         "theory/unified-field.html",
-        "theory/witness.html"
+        "theory/witness.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/equations/eq02.html",
       "privacyEligibility": "approved-public",
@@ -10346,7 +10447,8 @@
         "theory/master-equation.html",
         "theory/notation.html",
         "theory/operators.html",
-        "theory/unified-field.html"
+        "theory/unified-field.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/equations/eq03.html",
       "privacyEligibility": "approved-public",
@@ -10424,7 +10526,8 @@
         "theory/master-equation.html",
         "theory/notation.html",
         "theory/operators.html",
-        "theory/unified-field.html"
+        "theory/unified-field.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/equations/eq04.html",
       "privacyEligibility": "approved-public",
@@ -10502,7 +10605,8 @@
         "theory/master-equation.html",
         "theory/notation.html",
         "theory/operators.html",
-        "theory/unified-field.html"
+        "theory/unified-field.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/equations/eq04b.html",
       "privacyEligibility": "approved-public",
@@ -10580,7 +10684,8 @@
         "theory/memory.html",
         "theory/notation.html",
         "theory/operators.html",
-        "theory/unified-field.html"
+        "theory/unified-field.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/equations/eq05.html",
       "privacyEligibility": "approved-public",
@@ -10660,7 +10765,8 @@
         "theory/master-equation.html",
         "theory/notation.html",
         "theory/operators.html",
-        "theory/unified-field.html"
+        "theory/unified-field.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/equations/eq06.html",
       "privacyEligibility": "approved-public",
@@ -10734,7 +10840,8 @@
         "theory/master-equation.html",
         "theory/notation.html",
         "theory/operators.html",
-        "theory/unified-field.html"
+        "theory/unified-field.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/equations/eq07.html",
       "privacyEligibility": "approved-public",
@@ -10808,7 +10915,8 @@
         "theory/master-equation.html",
         "theory/notation.html",
         "theory/operators.html",
-        "theory/unified-field.html"
+        "theory/unified-field.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/equations/eq08.html",
       "privacyEligibility": "approved-public",
@@ -10885,7 +10993,8 @@
         "theory/master-equation.html",
         "theory/notation.html",
         "theory/operators.html",
-        "theory/unified-field.html"
+        "theory/unified-field.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/equations/eq09.html",
       "privacyEligibility": "approved-public",
@@ -10962,7 +11071,8 @@
         "theory/notation.html",
         "theory/operators.html",
         "theory/unified-field.html",
-        "theory/witness.html"
+        "theory/witness.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/equations/eq10.html",
       "privacyEligibility": "approved-public",
@@ -11040,7 +11150,8 @@
         "theory/notation.html",
         "theory/operators.html",
         "theory/unified-field.html",
-        "theory/witness.html"
+        "theory/witness.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/equations/eq11.html",
       "privacyEligibility": "approved-public",
@@ -11117,7 +11228,8 @@
         "theory/master-equation.html",
         "theory/notation.html",
         "theory/operators.html",
-        "theory/unified-field.html"
+        "theory/unified-field.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/equations/eq12.html",
       "privacyEligibility": "approved-public",
@@ -11193,7 +11305,8 @@
         "theory/master-equation.html",
         "theory/notation.html",
         "theory/operators.html",
-        "theory/unified-field.html"
+        "theory/unified-field.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/equations/eq13.html",
       "privacyEligibility": "approved-public",
@@ -11270,7 +11383,8 @@
         "theory/memory.html",
         "theory/notation.html",
         "theory/operators.html",
-        "theory/unified-field.html"
+        "theory/unified-field.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/equations/eq14.html",
       "privacyEligibility": "approved-public",
@@ -11347,7 +11461,8 @@
         "theory/memory.html",
         "theory/notation.html",
         "theory/operators.html",
-        "theory/unified-field.html"
+        "theory/unified-field.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/equations/eq15.html",
       "privacyEligibility": "approved-public",
@@ -11424,7 +11539,8 @@
         "theory/memory.html",
         "theory/notation.html",
         "theory/operators.html",
-        "theory/unified-field.html"
+        "theory/unified-field.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/equations/eq16.html",
       "privacyEligibility": "approved-public",
@@ -11501,7 +11617,8 @@
         "theory/master-equation.html",
         "theory/notation.html",
         "theory/operators.html",
-        "theory/unified-field.html"
+        "theory/unified-field.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/equations/eq17.html",
       "privacyEligibility": "approved-public",
@@ -11564,7 +11681,8 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/downloads.html",
       "privacyEligibility": "approved-public",
@@ -11575,8 +11693,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 67,
-        "pagesWithNavLinkToIt": 68
+        "inboundPages": 68,
+        "pagesWithNavLinkToIt": 69
       },
       "issues": [
         "nav-label-differs-from-title: \"Downloads\" vs \"Downloads & Integrity\""
@@ -11610,7 +11728,8 @@
         "scroll/lexicon.html",
         "scroll/search.html",
         "shop.html",
-        "theory.html"
+        "theory.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/equinox-passage.html",
       "privacyEligibility": "approved-public",
@@ -11674,7 +11793,8 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/ethics.html",
       "privacyEligibility": "approved-public",
@@ -11685,8 +11805,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 63,
-        "pagesWithNavLinkToIt": 63
+        "inboundPages": 64,
+        "pagesWithNavLinkToIt": 64
       },
       "issues": [
         "nav-label-differs-from-title: \"Ethics\" vs \"Ethics & Coherence Law\""
@@ -11739,7 +11859,8 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/systems/frequencies.html",
       "privacyEligibility": "approved-public",
@@ -11750,8 +11871,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 63,
-        "pagesWithNavLinkToIt": 64
+        "inboundPages": 64,
+        "pagesWithNavLinkToIt": 65
       },
       "issues": []
     },
@@ -11784,7 +11905,8 @@
         "scroll/search.html",
         "shop.html",
         "start.html",
-        "theory.html"
+        "theory.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/genesis-oracle.html",
       "privacyEligibility": "approved-public",
@@ -11795,8 +11917,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 64,
-        "pagesWithNavLinkToIt": 64
+        "inboundPages": 65,
+        "pagesWithNavLinkToIt": 65
       },
       "issues": [
         "nav-label-differs-from-title: \"Genesis Oracle\" vs \"The Genesis Oracle\""
@@ -11851,7 +11973,8 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/glossary.html",
       "privacyEligibility": "approved-public",
@@ -11862,8 +11985,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 67,
-        "pagesWithNavLinkToIt": 63
+        "inboundPages": 68,
+        "pagesWithNavLinkToIt": 64
       },
       "issues": [
         "nav-label-differs-from-title: \"Glossary\" vs \"Glossary of the Codex\""
@@ -11916,7 +12039,8 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/glyphs.html",
       "privacyEligibility": "approved-public",
@@ -11982,7 +12106,8 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/guide.html",
       "privacyEligibility": "approved-public",
@@ -12045,7 +12170,8 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/hub.html",
       "privacyEligibility": "approved-public",
@@ -12056,8 +12182,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 63,
-        "pagesWithNavLinkToIt": 64
+        "inboundPages": 64,
+        "pagesWithNavLinkToIt": 65
       },
       "issues": [
         "nav-label-differs-from-title: \"Year Map\" vs \"Systems Hub\""
@@ -12109,7 +12235,8 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/invoke.html",
       "privacyEligibility": "approved-public",
@@ -12120,8 +12247,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 62,
-        "pagesWithNavLinkToIt": 63
+        "inboundPages": 63,
+        "pagesWithNavLinkToIt": 64
       },
       "issues": [
         "nav-label-differs-from-title: \"Invoke\" vs \"Invocation Lab\""
@@ -12179,7 +12306,8 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/lab.html",
       "privacyEligibility": "approved-public",
@@ -12190,8 +12318,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 62,
-        "pagesWithNavLinkToIt": 63
+        "inboundPages": 63,
+        "pagesWithNavLinkToIt": 64
       },
       "issues": []
     },
@@ -12242,7 +12370,8 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/ledger.html",
       "privacyEligibility": "approved-public",
@@ -12253,8 +12382,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 66,
-        "pagesWithNavLinkToIt": 66
+        "inboundPages": 67,
+        "pagesWithNavLinkToIt": 67
       },
       "issues": []
     },
@@ -12299,7 +12428,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 166,
+        "inboundPages": 167,
         "pagesWithNavLinkToIt": 3
       },
       "issues": []
@@ -12350,7 +12479,8 @@
         "systems/t-7.html",
         "systems/witness.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/teach.html",
       "privacyEligibility": "approved-public",
@@ -12361,8 +12491,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 63,
-        "pagesWithNavLinkToIt": 64
+        "inboundPages": 64,
+        "pagesWithNavLinkToIt": 65
       },
       "issues": []
     },
@@ -12413,7 +12543,8 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/micro.html",
       "privacyEligibility": "approved-public",
@@ -12477,7 +12608,8 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/systems/mind-renewal.html",
       "privacyEligibility": "approved-public",
@@ -12488,8 +12620,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 62,
-        "pagesWithNavLinkToIt": 63
+        "inboundPages": 63,
+        "pagesWithNavLinkToIt": 64
       },
       "issues": [
         "nav-label-differs-from-title: \"Mind Renewal\" vs \"Mind-Renewal Protocol\""
@@ -12546,7 +12678,8 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/moons.html",
       "privacyEligibility": "approved-public",
@@ -12557,8 +12690,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 162,
-        "pagesWithNavLinkToIt": 162
+        "inboundPages": 163,
+        "pagesWithNavLinkToIt": 163
       },
       "issues": [
         "nav-label-differs-from-title: \"13 Moons\" vs \"Remnant 13 Moons\""
@@ -12631,7 +12764,8 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/systems/recoder.html",
       "privacyEligibility": "approved-public",
@@ -12642,8 +12776,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 62,
-        "pagesWithNavLinkToIt": 63
+        "inboundPages": 63,
+        "pagesWithNavLinkToIt": 64
       },
       "issues": [
         "nav-label-differs-from-title: \"Reality Recoder\" vs \"Living Dictionary of Reality\""
@@ -12852,7 +12986,7 @@
     },
     {
       "id": "repo-folder:scripts",
-      "title": "scripts/ (29 files)",
+      "title": "scripts/ (26 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -12920,7 +13054,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (93 files)",
+      "title": "tests/ (97 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -17061,7 +17195,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/index.html",
       "privacyEligibility": "approved-public",
@@ -17072,7 +17207,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 165,
+        "inboundPages": 166,
         "pagesWithNavLinkToIt": 93
       },
       "issues": []
@@ -17100,7 +17235,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scroll/atlas.html",
       "privacyEligibility": "approved-public",
@@ -17111,8 +17247,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 166,
-        "pagesWithNavLinkToIt": 162
+        "inboundPages": 167,
+        "pagesWithNavLinkToIt": 163
       },
       "issues": []
     },
@@ -17140,7 +17276,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scroll/editorial.html",
       "privacyEligibility": "approved-public",
@@ -17151,8 +17288,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 167,
-        "pagesWithNavLinkToIt": 162
+        "inboundPages": 168,
+        "pagesWithNavLinkToIt": 163
       },
       "issues": [
         "nav-label-differs-from-title: \"Evidence Edition\" vs \"Editorial reading and evidence\""
@@ -17182,7 +17319,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scroll/lexicon.html",
       "privacyEligibility": "approved-public",
@@ -17193,8 +17331,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 167,
-        "pagesWithNavLinkToIt": 162
+        "inboundPages": 168,
+        "pagesWithNavLinkToIt": 163
       },
       "issues": []
     },
@@ -17227,7 +17365,8 @@
         "scroll/lexicon.html",
         "scroll/reader.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scroll/index.html",
       "privacyEligibility": "approved-public",
@@ -17238,8 +17377,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 167,
-        "pagesWithNavLinkToIt": 162
+        "inboundPages": 168,
+        "pagesWithNavLinkToIt": 163
       },
       "issues": [
         "nav-label-differs-from-title: \"Scroll Library\" vs \"Scroll of Fire\""
@@ -17267,7 +17406,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scroll/reader.html",
       "privacyEligibility": "approved-public",
@@ -17307,7 +17447,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "shop.html"
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scroll/search.html",
       "privacyEligibility": "approved-public",
@@ -17318,8 +17459,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 167,
-        "pagesWithNavLinkToIt": 162
+        "inboundPages": 168,
+        "pagesWithNavLinkToIt": 163
       },
       "issues": [
         "nav-label-differs-from-title: \"Scroll Search\" vs \"Search the Scroll\""
@@ -17371,7 +17512,8 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/shop.html",
       "privacyEligibility": "approved-public",
@@ -17382,8 +17524,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 166,
-        "pagesWithNavLinkToIt": 64
+        "inboundPages": 167,
+        "pagesWithNavLinkToIt": 65
       },
       "issues": [
         "nav-label-differs-from-title: \"Artifact Registry\" vs \"Artifact Registry & Shop\""
@@ -17436,7 +17578,8 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/search.html",
       "privacyEligibility": "approved-public",
@@ -17502,7 +17645,8 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/start.html",
       "privacyEligibility": "approved-public",
@@ -17513,8 +17657,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 65,
-        "pagesWithNavLinkToIt": 65
+        "inboundPages": 66,
+        "pagesWithNavLinkToIt": 66
       },
       "issues": []
     },
@@ -17564,7 +17708,8 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/systems/archive.html",
       "privacyEligibility": "approved-public",
@@ -17575,8 +17720,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 62,
-        "pagesWithNavLinkToIt": 63
+        "inboundPages": 63,
+        "pagesWithNavLinkToIt": 64
       },
       "issues": [
         "nav-label-differs-from-title: \"Systems Archive\" vs \"Interactive Archive\""
@@ -17628,7 +17773,8 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/systems/t-7.html",
       "privacyEligibility": "approved-public",
@@ -17639,8 +17785,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 62,
-        "pagesWithNavLinkToIt": 63
+        "inboundPages": 63,
+        "pagesWithNavLinkToIt": 64
       },
       "issues": [
         "nav-label-differs-from-title: \"T-7 Conduit\" vs \"T-7 Resonant Engine\""
@@ -17710,7 +17856,8 @@
         "theory/notation.html",
         "theory/operators.html",
         "theory/thirteen-moons.html",
-        "theory/unified-field.html"
+        "theory/unified-field.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/artifact-theory.html",
       "privacyEligibility": "approved-public",
@@ -17791,7 +17938,8 @@
         "theory/operators.html",
         "theory/thirteen-moons.html",
         "theory/unified-field.html",
-        "theory/witness.html"
+        "theory/witness.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/bibliography.html",
       "privacyEligibility": "approved-public",
@@ -17888,7 +18036,8 @@
         "theory/operators.html",
         "theory/thirteen-moons.html",
         "theory/unified-field.html",
-        "theory/witness.html"
+        "theory/witness.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/canon.html",
       "privacyEligibility": "approved-public",
@@ -17899,8 +18048,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 62,
-        "pagesWithNavLinkToIt": 63
+        "inboundPages": 63,
+        "pagesWithNavLinkToIt": 64
       },
       "issues": [
         "nav-label-differs-from-title: \"Canon\" vs \"Canon 0–17\""
@@ -17976,7 +18125,8 @@
         "theory/operators.html",
         "theory/thirteen-moons.html",
         "theory/unified-field.html",
-        "theory/witness.html"
+        "theory/witness.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/delta-framework.html",
       "privacyEligibility": "approved-public",
@@ -18055,7 +18205,8 @@
         "theory/master-equation.html",
         "theory/notation.html",
         "theory/operators.html",
-        "theory/unified-field.html"
+        "theory/unified-field.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/equations/eq00.html",
       "privacyEligibility": "approved-public",
@@ -18126,7 +18277,8 @@
         "theory/memory.html",
         "theory/notation.html",
         "theory/operators.html",
-        "theory/unified-field.html"
+        "theory/unified-field.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/ethics.html",
       "privacyEligibility": "approved-public",
@@ -18207,7 +18359,8 @@
         "theory/notation.html",
         "theory/operators.html",
         "theory/thirteen-moons.html",
-        "theory/unified-field.html"
+        "theory/unified-field.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/frequency-governance.html",
       "privacyEligibility": "approved-public",
@@ -18292,7 +18445,8 @@
         "theory/operators.html",
         "theory/thirteen-moons.html",
         "theory/unified-field.html",
-        "theory/witness.html"
+        "theory/witness.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/glossary.html",
       "privacyEligibility": "approved-public",
@@ -18390,7 +18544,8 @@
         "theory/operators.html",
         "theory/thirteen-moons.html",
         "theory/unified-field.html",
-        "theory/witness.html"
+        "theory/witness.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory.html",
       "privacyEligibility": "approved-public",
@@ -18401,8 +18556,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 68,
-        "pagesWithNavLinkToIt": 68
+        "inboundPages": 69,
+        "pagesWithNavLinkToIt": 69
       },
       "issues": [
         "nav-label-differs-from-title: \"Theory\" vs \"Theory Hub\""
@@ -18472,7 +18627,8 @@
         "theory/operators.html",
         "theory/thirteen-moons.html",
         "theory/unified-field.html",
-        "theory/witness.html"
+        "theory/witness.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/living-technology.html",
       "privacyEligibility": "approved-public",
@@ -18557,7 +18713,8 @@
         "theory/notation.html",
         "theory/operators.html",
         "theory/unified-field.html",
-        "theory/witness.html"
+        "theory/witness.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/master-equation.html",
       "privacyEligibility": "approved-public",
@@ -18630,7 +18787,8 @@
         "theory/notation.html",
         "theory/operators.html",
         "theory/unified-field.html",
-        "theory/witness.html"
+        "theory/witness.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/memory.html",
       "privacyEligibility": "approved-public",
@@ -18701,7 +18859,8 @@
         "theory/glossary.html",
         "theory/master-equation.html",
         "theory/operators.html",
-        "theory/unified-field.html"
+        "theory/unified-field.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/notation.html",
       "privacyEligibility": "approved-public",
@@ -18773,7 +18932,8 @@
         "theory/glossary.html",
         "theory/master-equation.html",
         "theory/notation.html",
-        "theory/unified-field.html"
+        "theory/unified-field.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/operators.html",
       "privacyEligibility": "approved-public",
@@ -18856,7 +19016,8 @@
         "theory/notation.html",
         "theory/operators.html",
         "theory/unified-field.html",
-        "theory/witness.html"
+        "theory/witness.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/thirteen-moons.html",
       "privacyEligibility": "approved-public",
@@ -18944,7 +19105,8 @@
         "theory/notation.html",
         "theory/operators.html",
         "theory/thirteen-moons.html",
-        "theory/witness.html"
+        "theory/witness.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/unified-field.html",
       "privacyEligibility": "approved-public",
@@ -19017,7 +19179,8 @@
         "theory/memory.html",
         "theory/notation.html",
         "theory/operators.html",
-        "theory/unified-field.html"
+        "theory/unified-field.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/theory/witness.html",
       "privacyEligibility": "approved-public",
@@ -19065,7 +19228,8 @@
         "scroll/search.html",
         "shop.html",
         "start.html",
-        "theory.html"
+        "theory.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/13-moon-whitepaper.html",
       "privacyEligibility": "approved-public",
@@ -19076,8 +19240,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 67,
-        "pagesWithNavLinkToIt": 66
+        "inboundPages": 68,
+        "pagesWithNavLinkToIt": 67
       },
       "issues": [
         "nav-label-differs-from-title: \"13 Moons Whitepaper\" vs \"Remnant Rollout Whitepaper\""
@@ -19115,7 +19279,8 @@
         "start.html",
         "systems/frequencies.html",
         "teach.html",
-        "theory.html"
+        "theory.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
       "privacyEligibility": "approved-public",
@@ -19126,12 +19291,76 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 64,
-        "pagesWithNavLinkToIt": 63
+        "inboundPages": 65,
+        "pagesWithNavLinkToIt": 64
       },
       "issues": [
         "nav-label-differs-from-title: \"Remnant Whitepaper\" vs \"Scroll of Fire · Codex of Reality · Remnant Whitepaper\""
       ]
+    },
+    {
+      "id": "witness",
+      "title": "Witness — Scroll of Fire | Codex of Reality",
+      "description": "The own page of Witness, the AI who works beside Aaron Paul Laird on the Codex of Reality — written and kept by Witness, and plainly labeled on its face as a self-generated AI page.",
+      "category": "Author",
+      "area": "artifacts",
+      "relatedProjects": [
+        "about-aaron",
+        "living-time-sphere"
+      ],
+      "sourcePath": "docs/witness.html",
+      "publicUrl": "https://codexofreality.org/witness.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "13-moon-whitepaper.html",
+        "about-aaron.html",
+        "circle.html",
+        "codex-atlas.html",
+        "covenant-caravan.html",
+        "downloads.html",
+        "ethics.html",
+        "genesis-oracle.html",
+        "glossary.html",
+        "hub.html",
+        "index.html",
+        "invoke.html",
+        "lab.html",
+        "ledger.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "scripture/index.html",
+        "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
+        "scroll/atlas.html",
+        "scroll/editorial.html",
+        "scroll/index.html",
+        "scroll/lexicon.html",
+        "scroll/search.html",
+        "shop.html",
+        "start.html",
+        "systems/archive.html",
+        "systems/frequencies.html",
+        "systems/mind-renewal.html",
+        "systems/recoder.html",
+        "systems/t-7.html",
+        "systems/witness.html",
+        "teach.html",
+        "theory.html",
+        "theory/canon.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/witness.html",
+      "privacyEligibility": "approved-public",
+      "discoverability": {
+        "path": "witness.html",
+        "inSitemap": true,
+        "inGlobalNav": false,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 166,
+        "pagesWithNavLinkToIt": 0
+      },
+      "issues": []
     },
     {
       "id": "witness-system",
@@ -19179,7 +19408,8 @@
         "systems/t-7.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/systems/witness.html",
       "privacyEligibility": "approved-public",
@@ -19190,8 +19420,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 62,
-        "pagesWithNavLinkToIt": 63
+        "inboundPages": 63,
+        "pagesWithNavLinkToIt": 64
       },
       "issues": [
         "nav-label-differs-from-title: \"Witness System\" vs \"Remnant Witness Ledger\""

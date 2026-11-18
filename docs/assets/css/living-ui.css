@@ -160,6 +160,15 @@ body.living-ui main > section.lui-reveal-pending {
 /* and keeps its own chrome.                                           */
 /* ------------------------------------------------------------------ */
 
+/* The rendered height of the bar below (one link row: 0.72rem of
+ * brand padding above and below the line, plus its bottom border).
+ * The legacy mobile menu panel in navigation.css subtracts this so
+ * the panel ends at the visible viewport bottom on pages that carry
+ * both bars, instead of overshooting it by the height of this one. */
+:root {
+  --living-nav-h: 49px;
+}
+
 .living-nav {
   --lnav-gold: #f3c97a;
   --lnav-gold-deep: #d99545;
@@ -247,6 +256,12 @@ body.living-ui main > section.lui-reveal-pending {
 .living-nav-links a.is-current {
   color: var(--lnav-gold);
   box-shadow: inset 0 -2px 0 var(--lnav-gold-deep);
+}
+
+/* The Support door: external, always last, quietly gold — same size
+ * and tap target as every other link in the bar. */
+.living-nav-links a.living-nav-support {
+  color: var(--lnav-gold);
 }
 
 .living-nav a:focus-visible {
