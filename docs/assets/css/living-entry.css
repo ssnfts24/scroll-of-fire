@@ -686,6 +686,36 @@ body.le-lock {
 .le-act-growth li { margin: 0.28rem 0; }
 .le-act-growth a { display: inline-flex; align-items: center; min-height: 44px; }
 .le-act-growth time { color: #8fa3bf; font-size: 0.82rem; margin-right: 0.3rem; }
+.le-act-telling {
+  margin: 0 0 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(122, 243, 255, 0.22);
+  border-radius: 10px;
+  background: rgba(10, 16, 28, 0.5);
+}
+.le-act-telling h3 {
+  margin: 0 0 0.45rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #d99545;
+}
+.le-act-telling-main {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: #f4f0de;
+}
+.le-act-telling-practice { margin: 0.45rem 0 0; color: #cfd6e4; line-height: 1.5; }
+.le-act-telling-note { margin: 0.55rem 0 0; font-size: 0.82rem; color: #8fa3bf; }
+.le-act-telling-note a { color: #7af3ff; }
+@media (prefers-reduced-motion: no-preference) {
+  .le-act-telling { animation: le-telling-breathe 7s ease-in-out infinite; }
+  @keyframes le-telling-breathe {
+    0%, 100% { border-color: rgba(122, 243, 255, 0.16); }
+    50% { border-color: rgba(243, 201, 122, 0.38); }
+  }
+}
 .le-act-teaching { margin: 0; }
 .le-act-teaching p {
   margin: 0;
