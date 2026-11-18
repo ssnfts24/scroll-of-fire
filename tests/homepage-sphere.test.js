@@ -237,10 +237,15 @@ test("no R1.7 protected file is touched by this branch", () => {
   const git = (args) => execFileSync("git", args, { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] })
     .split("\n").filter(Boolean);
   const changed = new Set();
-  try {
-    for (const f of git(["diff", "--name-only", "origin/feature/living-nav-activity...HEAD"])) changed.add(f);
-  } catch {
-    /* shallow checkout without the base ref: working tree only */
+  // The branch was built stacked on PR #95 and refreshed onto main when
+  // the stack landed; diff against the first base ref that exists.
+  for (const base of ["origin/main", "origin/feature/living-nav-activity"]) {
+    try {
+      for (const f of git(["diff", "--name-only", `${base}...HEAD`])) changed.add(f);
+      break;
+    } catch {
+      /* ref unavailable in this checkout: try the next base */
+    }
   }
   try {
     for (const line of git(["status", "--porcelain"])) changed.add(line.slice(3));
