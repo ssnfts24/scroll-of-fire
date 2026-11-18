@@ -102,4 +102,4 @@ Automated scan of deployed Markdown, TXT, HTML, JSON and JS (excluding Scroll Li
 
 ## Image-only or non-text documents
 
-- `6_Images_and_Symbols/The_Mirror_of_the_Tongues_YHWH.pdf` — no extractable text; visual review required.
+None.
