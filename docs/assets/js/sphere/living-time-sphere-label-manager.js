@@ -1582,10 +1582,55 @@
              * far-band behavior below is exactly as before.
              */
             if (overhead) {
+              /*
+               * B7.60.3 — the overhead skeleton is keyed to the SELECTED
+               * Moon, not the camera-azimuth disclosure center. Measured
+               * in a real browser (Playwright/Chromium lab, PR #89): in
+               * settled Top View the disclosure center follows the camera
+               * azimuth (theta = π faces Moon 1), so the B7.60.1 window
+               * painted Moon 1 + Moon 2 anchors while the selected Moon
+               * showed no anchors at all — a skeleton, but on the wrong
+               * Moon. Overhead the whole ring is visible and the day
+               * structure the viewer needs is the selected Moon's: its
+               * week anchors, its circular neighbors' sparse anchors,
+               * selected/pinned days (returned above), and scheduled
+               * days inside that window. The far-band branch below keeps
+               * the disclosure center; tilted behavior is unchanged.
+               */
+              const selectedCenter =
+                Number(
+                  selectedMoon
+                  || 0
+                );
+
+              const selectedRawDistance =
+                selectedCenter
+                  ? Math.abs(moon - selectedCenter)
+                  : 0;
+
+              const selectedDistance =
+                selectedCenter
+                  ? Math.min(
+                      selectedRawDistance,
+                      13 - selectedRawDistance
+                    )
+                  : 0;
+
+              const selectedStructural =
+                !selectedCenter
+                  ? farFrontAnchor
+                  : (
+                      selectedDistance === 0
+                        ? farFrontAnchor
+                        : selectedDistance === 1
+                          ? farNeighborAnchor
+                          : false
+                    );
+
               return (
-                moonDistance <= 1
+                selectedDistance <= 1
                 && (
-                  structural
+                  selectedStructural
                   || scheduled
                 )
               );

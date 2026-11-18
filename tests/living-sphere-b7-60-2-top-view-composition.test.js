@@ -98,7 +98,7 @@ function ringPoint(angleDeg, radius = RING) {
   return { x: Math.sin(a) * radius, z: -Math.cos(a) * radius };
 }
 
-function buildTargets() {
+function buildTargets(dayMoons = [7, 8, 9]) {
   const targets = [];
   for (let m = 1; m <= 13; m++) {
     const p = ringPoint(((m - 0.5) / 13) * 360, RING * 1.28);
@@ -111,7 +111,7 @@ function buildTargets() {
   }
   // The renderer builds day targets only for the disclosure Moons
   // (dayAperture), plus selected/today — here the window is 7, 8, 9.
-  for (const moon of [7, 8, 9]) {
+  for (const moon of dayMoons) {
     for (let moonDay = 1; moonDay <= 28; moonDay++) {
       const dayOfYear = (moon - 1) * 28 + moonDay;
       const week = Math.floor((moonDay - 1) / 7);
@@ -163,7 +163,7 @@ function makeStage() {
   return { stageEl, labelContainer, labelEls, connectorEl, anchors };
 }
 
-function updateArgs(stage, camera, cameraOverhead) {
+function updateArgs(stage, camera, cameraOverhead, overrides = {}) {
   return {
     camera,
     three: { Vector3 },
@@ -187,7 +187,8 @@ function updateArgs(stage, camera, cameraOverhead) {
     protectedRects: [],
     semanticTargets: buildTargets(),
     interactionLite: false,
-    semanticBand: "medium"
+    semanticBand: "medium",
+    ...overrides
   };
 }
 
@@ -215,6 +216,33 @@ test("B7.60.2 composed overhead pipeline shows exactly the skeleton set", () => 
   const manager = LM.createManager();
   manager.init(stage);
   const ok = manager.update(updateArgs(stage, makeCamera(), true));
+  assert.equal(ok, true);
+  const visible = visibleNumerals(stage.labelContainer);
+  assert.deepEqual(visible.map(v => v.day), SKELETON_DAYS);
+  for (const v of visible) {
+    assert.ok(v.opacity >= 0.25, `skeleton numeral ${v.day} readable (opacity ${v.opacity})`);
+  }
+});
+
+test("B7.60.3 composed overhead pipeline keys the skeleton to the selected Moon when the camera faces another Moon", () => {
+  // The divergence the B7.60.1/B7.60.2 harnesses never modeled — and
+  // the one the real page actually has: in settled Top View the
+  // renderer's disclosure window follows the camera azimuth (here
+  // Moons 13/1/2, center Moon 1, as measured in a real browser at
+  // theta = π), while the selection stays on Moon 8. With B7.60.3 the
+  // renderer builds the selected Moon's neighborhood into the target
+  // aperture overhead and the gate keys the skeleton to it, so the
+  // composed visible set is the selected Moon's skeleton — and none
+  // of the camera-center Moons' anchors.
+  const LM = loadManager();
+  const stage = makeStage();
+  const manager = LM.createManager();
+  manager.init(stage);
+  const args = updateArgs(stage, makeCamera(), true, {
+    calendarDisclosure: { centerMoon: 1, moons: [13, 1, 2], halfWindow: 1, key: "1:1:13,1,2" },
+    semanticTargets: buildTargets([13, 1, 2, 7, 8, 9])
+  });
+  const ok = manager.update(args);
   assert.equal(ok, true);
   const visible = visibleNumerals(stage.labelContainer);
   assert.deepEqual(visible.map(v => v.day), SKELETON_DAYS);

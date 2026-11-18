@@ -1709,6 +1709,18 @@
     const selected = _model?.selectedPatternPosition || _model?.todayPatternPosition || null;
     const today = _model?.todayPatternPosition || null;
     const selectedMoon = Number(selected?.moon || 0);
+    // B7.60.3 — overhead, the day-target aperture also carries the
+    // selected Moon's circular neighborhood. The label gate keys the
+    // Top View skeleton to the selected Moon (B7.60.3), and a target
+    // that is never built can never be gated in: at the Top View
+    // azimuth the camera disclosure window faces an unrelated Moon,
+    // so without this the selected Moon's anchors do not exist as
+    // candidates. Tilted composition is unchanged (overhead only).
+    if (dayAperture && selectedMoon && _cameraOverhead()) {
+      for (const m of [selectedMoon - 1, selectedMoon, selectedMoon + 1]) {
+        dayAperture.add(((m - 1 + 13) % 13) + 1);
+      }
+    }
     for (const anchor of _moonAnchors) {
       targets.push({
         id: `moon-${anchor.moon}`,
