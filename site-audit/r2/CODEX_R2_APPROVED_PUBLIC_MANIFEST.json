@@ -305,7 +305,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "ec8dee5bf17d4751f961d58b34d216938bce0f5f886deb1474bcb094d4727939",
+      "sha256": "97f6568f9e6de735336b448a385c45cecb3ff3228f00552959aac6a28c1657c6",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -2231,13 +2231,37 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "2421b8fafa8fb059548e84d3a527bd7d444d4b75f8409786fc4df7960fb18a11",
+      "sha256": "7310d21c58feeec6b5a61eb5ef515ecb7406e2a74ef20a616f792694c5713f8c",
+      "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/search/manifest.json",
+      "sha256": "7310d21c58feeec6b5a61eb5ef515ecb7406e2a74ef20a616f792694c5713f8c",
+      "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/search/manifest.json",
+      "sha256": "7310d21c58feeec6b5a61eb5ef515ecb7406e2a74ef20a616f792694c5713f8c",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "7d8e416a2ece98ed13c11d92f1b6c4ea0b31787f9ad32531383f5e2140c20297",
+      "sha256": "a47fe151df218e7ecd418bc111cd3c4e835c2be11ff7f6952315d36edef81502",
+      "publicUrl": "https://codexofreality.org/assets/search/pages.json",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/search/pages.json",
+      "sha256": "a47fe151df218e7ecd418bc111cd3c4e835c2be11ff7f6952315d36edef81502",
+      "publicUrl": "https://codexofreality.org/assets/search/pages.json",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/search/pages.json",
+      "sha256": "a47fe151df218e7ecd418bc111cd3c4e835c2be11ff7f6952315d36edef81502",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -2369,7 +2393,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "4175390cc6a69af8d60a9fe544bd0cdcdb47af489c284f09153d2bc5e27b1d58",
+      "sha256": "bd15e9caefad9c2aa4db519bb9b26bd8aa8bec278851ec113d60a69b1e1c9302",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
