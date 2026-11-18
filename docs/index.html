@@ -73,6 +73,8 @@
   <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260819-b743&p=20260820-b7581-labelglass&u=20260820-b7582-railalign&b=20260820-b7592a-farskeleton&d=20260821-b7592d7-unified">
   <link rel="stylesheet" href="assets/css/living-time-app-enhancements.css?v=20260730-1">
   <link rel="stylesheet" href="assets/css/performance-runtime.css?v=20260731-1">
+  <link rel="stylesheet" href="assets/css/living-entry.css?v=20261117-1">
+  <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
 
   <script type="application/ld+json">
   {
@@ -152,12 +154,15 @@
   }
   </script>
   <script defer src="assets/js/site.js"></script>
+  <script defer src="assets/js/living-search-launcher.js"></script>
   <script defer src="assets/js/performance-runtime.js?v=20260731-1"></script>
   <script defer src="assets/js/calendar/pattern-calendar-version.js?v=20260722-3"></script>
   <script defer src="assets/js/calendar/pattern-calendar-data.js?v=20260722-3"></script>
   <script defer src="assets/js/calendar/pattern-calendar-format.js?v=20260722-3"></script>
   <script defer src="assets/js/calendar/pattern-calendar-boundary.js?v=20260722-3"></script>
   <script defer src="assets/js/calendar/pattern-calendar.js?v=20260722-3"></script>
+  <script defer src="assets/js/living-entry.js?v=20261117-1"></script>
+  <script defer src="assets/js/living-witness.js?v=20261117-1"></script>
   <script defer src="assets/js/calendar-cor.js"></script>
   <script defer src="assets/js/codex-state.js"></script>
   <script defer src="assets/js/codex-memory.js"></script>
@@ -421,9 +426,23 @@
 
 </head>
 
-<body>
+<body class="living-ui">
   <div class="living-aura" aria-hidden="true"></div>
   <a class="skip-link" href="#main">Skip to content</a>
+  <div class="living-nav" data-living-nav>
+    <nav class="living-nav-inner" aria-label="Site navigation">
+      <a class="living-nav-brand" href="index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a>
+      <ul class="living-nav-links">
+        <li><a href="index.html" class="is-current" aria-current="page">Home</a></li>
+        <li><a href="scroll/index.html">Scroll</a></li>
+        <li><a href="codex-atlas.html">Atlas</a></li>
+        <li><a href="scroll/lexicon.html">Lexicon</a></li>
+        <li><a href="scripture/index.html">Scripture</a></li>
+        <li><a href="living-time-sphere.html">Sphere</a></li>
+        <li><a href="shop.html">Shop</a></li>
+      </ul>
+    </nav>
+  </div>
 
     <header class="site-header" data-sof-header>
     <a class="brand" href="./" aria-label="Scroll of Fire home">
@@ -540,8 +559,27 @@
     </div>
   </section>
 
+  <nav class="le-rail" aria-label="The Codex path">
+    <a href="#step-witness"><span class="le-rail-dot" aria-hidden="true"></span>Witness</a>
+    <a href="#step-encode"><span class="le-rail-dot" aria-hidden="true"></span>Encode</a>
+    <a href="#step-resonate"><span class="le-rail-dot" aria-hidden="true"></span>Resonate</a>
+    <a href="#step-integrate"><span class="le-rail-dot" aria-hidden="true"></span>Integrate</a>
+    <a href="#step-illuminate"><span class="le-rail-dot" aria-hidden="true"></span>Illuminate</a>
+  </nav>
 
   <main id="main">
+    <section class="section-shell le-path-head" id="step-witness" aria-labelledby="step-witness-title">
+      <div class="le-path-head-inner">
+        <span class="le-step-badge" aria-hidden="true">1</span>
+        <div>
+          <p class="eyebrow">The Path · Step One</p>
+          <h2 id="step-witness-title">Witness</h2>
+          <p class="le-path-idea">See the day as it is before you touch it — today's coordinate, the living sphere, and what has grown in the archive.</p>
+          <p class="le-seq"><span class="le-seq-on">Witness</span> · Encode · Resonate · Integrate · Illuminate</p>
+        </div>
+      </div>
+    </section>
+
     <section class="section-shell home-hero" aria-labelledby="home-title">
       <div class="home-hero-grid">
         <div class="hero-copy-stack">
@@ -553,6 +591,19 @@
             Use this site to run a short daily reflection, track what you notice, and
             explore the deeper theory, tools, and handcrafted artifacts behind the work.
           </p>
+
+          <div class="living-witness" data-living-witness>
+            <p class="living-witness-kicker" aria-hidden="true">Witness lines from the work</p>
+            <div class="living-witness-stage">
+              <p class="living-witness-line is-active" data-source="docs/start.html">The Scroll does not begin with belief.</p>
+              <p class="living-witness-line" data-source="docs/start.html">Begin by becoming present enough to notice what is already here.</p>
+              <p class="living-witness-line" data-source="docs/teach.html">Use the ledger as a witness, not proof.</p>
+              <p class="living-witness-line" data-source="docs/teach.html">Return to observation over assumption.</p>
+              <p class="living-witness-line" data-source="docs/guide.html">Not every seed opens the same day.</p>
+              <p class="living-witness-line" data-source="docs/about-aaron.html">A structure either holds or reveals where it does not.</p>
+              <p class="living-witness-line" data-source="docs/start.html">The Codex is not finished because the witness is still alive.</p>
+            </div>
+          </div>
 
           <div class="hero-seal-row" aria-label="Core systems">
             <span class="hero-seal"><strong>☾</strong> 13 Moons</span>
@@ -650,6 +701,27 @@
       <p class="atlas-note">Saved witness records, readings and settings live only in this browser. They do not synchronize between devices.</p>
     </section>
     <!-- site-catalog:front-door:end -->
+
+    <section class="section-shell le-activity" id="living-activity" aria-labelledby="living-activity-title">
+      <p class="eyebrow">The Codex Today</p>
+      <h2 id="living-activity-title">The Codex is alive</h2>
+      <p class="le-act-today"><span class="le-act-label">Today</span> <span data-le-today>The Codex is alive — witness, encode, resonate, integrate, illuminate.</span></p>
+      <div class="le-act-grid">
+        <div class="le-act-slot">
+          <h3>Latest additions</h3>
+          <ul class="le-act-growth" data-le-growth>
+            <li><time datetime="2026-11-17">2026-11-17</time> <a href="./living-time-sphere.html">The Sphere learned to open a single day</a></li>
+            <li><time datetime="2026-11-17">2026-11-17</time> <a href="./living-time-sphere.html">The Life Atlas learned to keep a copy of itself</a></li>
+            <li><time datetime="2026-11-17">2026-11-17</time> <a href="./index.html">The mirror is made whole</a></li>
+          </ul>
+        </div>
+        <figure class="le-act-slot">
+          <h3>Line for the day</h3>
+          <blockquote class="le-act-teaching"><p data-le-teaching>Look at what is happening before rushing to name it.</p></blockquote>
+          <figcaption data-le-teaching-source>The Daily Return</figcaption>
+        </figure>
+      </div>
+    </section>
 
     <!-- Authoritative Living Time Sphere: the homepage now displays the same route being developed. -->
     <section
@@ -1085,6 +1157,27 @@
       </article>
     </section>
 
+    <div class="section-shell le-path-lead">
+      <a class="le-lead-link" href="#step-encode">
+        <span class="le-lead-kicker">Continue · Step Two</span>
+        <span class="le-lead-text">Encode — give the day a record</span>
+        <span class="le-lead-note">You have seen today. Now write it down.</span>
+        <span class="le-lead-arrow" aria-hidden="true">↓</span>
+      </a>
+    </div>
+
+    <section class="section-shell le-path-head" id="step-encode" aria-labelledby="step-encode-title">
+      <div class="le-path-head-inner">
+        <span class="le-step-badge" aria-hidden="true">2</span>
+        <div>
+          <p class="eyebrow">The Path · Step Two</p>
+          <h2 id="step-encode-title">Encode</h2>
+          <p class="le-path-idea">Give what you saw a form — the practices of this place, the language of the Codex, and a sixty-second entry that makes seeing into record.</p>
+          <p class="le-seq">Witness · <span class="le-seq-on">Encode</span> · Resonate · Integrate · Illuminate</p>
+        </div>
+      </div>
+    </section>
+
     <section class="section-shell" aria-labelledby="what-title">
       <div class="section-heading">
         <p class="eyebrow">What This Is</p>
@@ -1149,6 +1242,27 @@
         <div class="exercise-canvas-wrap" aria-label="Animated Codex breath field">
           <canvas id="codexExerciseCanvas" width="900" height="520" aria-hidden="true"></canvas>
           <noscript><p>Enable JavaScript to view the animated Codex breath field.</p></noscript>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-shell le-path-lead">
+      <a class="le-lead-link" href="#step-resonate">
+        <span class="le-lead-kicker">Continue · Step Three</span>
+        <span class="le-lead-text">Resonate — enter the rhythm</span>
+        <span class="le-lead-note">The record is made. Now feel how it moves.</span>
+        <span class="le-lead-arrow" aria-hidden="true">↓</span>
+      </a>
+    </div>
+
+    <section class="section-shell le-path-head" id="step-resonate" aria-labelledby="step-resonate-title">
+      <div class="le-path-head-inner">
+        <span class="le-step-badge" aria-hidden="true">3</span>
+        <div>
+          <p class="eyebrow">The Path · Step Three</p>
+          <h2 id="step-resonate-title">Resonate</h2>
+          <p class="le-path-idea">Let the pattern move — the calendar's rhythm, resonant artifacts, the road, and the daily return that brings you back to yourself.</p>
+          <p class="le-seq">Witness · Encode · <span class="le-seq-on">Resonate</span> · Integrate · Illuminate</p>
         </div>
       </div>
     </section>
@@ -1289,6 +1403,27 @@
           <a class="btn primary" href="./theory.html">Read Theory / Canon</a>
           <a class="btn" href="./genesis-oracle.html">Open Genesis Oracle</a>
           <a class="btn" href="./hub.html">Systems Hub</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-shell le-path-lead">
+      <a class="le-lead-link" href="#step-integrate">
+        <span class="le-lead-kicker">Continue · Step Four</span>
+        <span class="le-lead-text">Integrate — enter the systems</span>
+        <span class="le-lead-note">The rhythm is in you. Now build with it.</span>
+        <span class="le-lead-arrow" aria-hidden="true">↓</span>
+      </a>
+    </div>
+
+    <section class="section-shell le-path-head" id="step-integrate" aria-labelledby="step-integrate-title">
+      <div class="le-path-head-inner">
+        <span class="le-step-badge" aria-hidden="true">4</span>
+        <div>
+          <p class="eyebrow">The Path · Step Four</p>
+          <h2 id="step-integrate-title">Integrate</h2>
+          <p class="le-path-idea">Bring the pieces together — the main systems of the Codex, and the shared work of building a life around them.</p>
+          <p class="le-seq">Witness · Encode · Resonate · <span class="le-seq-on">Integrate</span> · Illuminate</p>
         </div>
       </div>
     </section>
@@ -2020,6 +2155,27 @@
       </div>
   </section>
 
+    <div class="section-shell le-path-lead">
+      <a class="le-lead-link" href="#step-illuminate">
+        <span class="le-lead-kicker">Continue · Step Five</span>
+        <span class="le-lead-text">Illuminate — read the foundations</span>
+        <span class="le-lead-note">Built things stand on documents. Read what governs them.</span>
+        <span class="le-lead-arrow" aria-hidden="true">↓</span>
+      </a>
+    </div>
+
+    <section class="section-shell le-path-head" id="step-illuminate" aria-labelledby="step-illuminate-title">
+      <div class="le-path-head-inner">
+        <span class="le-step-badge" aria-hidden="true">5</span>
+        <div>
+          <p class="eyebrow">The Path · Step Five</p>
+          <h2 id="step-illuminate-title">Illuminate</h2>
+          <p class="le-path-idea">Stand on what governs it all — the founding documents beneath every system, and the way onward from here.</p>
+          <p class="le-seq">Witness · Encode · Resonate · Integrate · <span class="le-seq-on">Illuminate</span></p>
+        </div>
+      </div>
+    </section>
+
     <section class="section-shell" aria-labelledby="foundational-whitepapers-title">
       <div class="section-heading">
         <p class="eyebrow">Foundations of the Codex</p>
@@ -2054,6 +2210,64 @@
           <a class="btn" href="https://linktr.ee/AaronPaulLairdScrollOfFire" target="_blank" rel="noopener noreferrer">Linktree</a>
         </div>
       </div>
+    </section>
+
+    <div class="section-shell le-path-lead">
+      <a class="le-lead-link" href="#doors">
+        <span class="le-lead-kicker">Continue · The Doors</span>
+        <span class="le-lead-text">Choose a door — go deep</span>
+        <span class="le-lead-note">The path is walked. Now choose where to go deep.</span>
+        <span class="le-lead-arrow" aria-hidden="true">↓</span>
+      </a>
+    </div>
+
+    <section class="section-shell le-doors" id="doors" aria-labelledby="doors-title">
+      <div class="section-heading">
+        <p class="eyebrow">The Doors</p>
+        <h2 id="doors-title">Choose Where to Go Deep</h2>
+        <p>Five steps brought you here. Six doors lead onward — each one a complete area of the Codex, entered on its own terms.</p>
+      </div>
+
+      <div class="le-doors-grid">
+        <a class="le-door" href="./codex-atlas.html">
+          <span class="le-door-glyph" aria-hidden="true">◎</span>
+          <strong>Codex Atlas</strong>
+          <p>The whole Codex on one map — the Scroll Library, Living Time, systems, research, artifacts, and archive.</p>
+          <span class="le-door-enter">Enter →</span>
+        </a>
+        <a class="le-door" href="scroll/">
+          <span class="le-door-glyph" aria-hidden="true">☰</span>
+          <strong>Scroll Library</strong>
+          <p>The Scroll of Fire Unsealed — eight shelves of reading, with every original line preserved.</p>
+          <span class="le-door-enter">Enter →</span>
+        </a>
+        <a class="le-door" href="scroll/lexicon.html">
+          <span class="le-door-glyph" aria-hidden="true">א</span>
+          <strong>Hebrew Lexicon</strong>
+          <p>911 indexed Hebrew forms — spelling, root, and interpretation kept carefully separate.</p>
+          <span class="le-door-enter">Enter →</span>
+        </a>
+        <a class="le-door" href="./living-time-sphere.html">
+          <span class="le-door-glyph" aria-hidden="true">☉</span>
+          <strong>Living Time Sphere</strong>
+          <p>The Observatory — Pattern Time held at the centre, the living cycles in motion around it.</p>
+          <span class="le-door-enter">Enter →</span>
+        </a>
+        <a class="le-door" href="./shop.html">
+          <span class="le-door-glyph" aria-hidden="true">☲</span>
+          <strong>Artifact Registry · Shop</strong>
+          <p>Handcrafted copper, stone, and glass — where the Scroll becomes physical.</p>
+          <span class="le-door-enter">Enter →</span>
+        </a>
+        <a class="le-door" href="./downloads.html">
+          <span class="le-door-glyph" aria-hidden="true">↓</span>
+          <strong>Downloads</strong>
+          <p>Integrity-sealed downloads of the archive, each carrying its SHA-256 seal.</p>
+          <span class="le-door-enter">Enter →</span>
+        </a>
+      </div>
+
+      <p class="le-doors-close">Every door stays open. For the guided version of all of this, begin at <a href="./start.html">Start Here</a>.</p>
     </section>
   </main>
 
@@ -2102,5 +2316,6 @@
     <p>© <span id="year">2026</span> Aaron Paul Laird — Scroll of Fire · Codex of Reality · Scribe of Circuits</p>
   </footer>
   <script defer src="assets/js/living-time-app-enhancements.js?v=20260730-1"></script>
+  <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
 </body>
               </html>

@@ -27,15 +27,25 @@ def head(title, desc, base, canonical_path, extra=""):
 <meta name="theme-color" content="#0b0b0f">
 <title>{E(title)}</title>
 <link rel="stylesheet" href="{base}assets/scripture.css">
+<link rel="stylesheet" href="{base}../assets/css/living-ui.css?v=20261117-1">
 <script defer src="{base}../assets/js/site.js"></script>
 <script defer src="{base}assets/scripture.js"></script>
 {extra}</head>
 """
 
 
+def living_nav(base):
+    # The unified site navigation (same markup as scripts/apply-living-nav.mjs
+    # inserts into the hand-maintained pages): Home is one tap away from every
+    # page, Scripture is the current area here. Emitted by the generator so the
+    # deterministic build keeps it; never hand-edit the generated pages.
+    return f"""<div class="living-nav" data-living-nav><nav class="living-nav-inner" aria-label="Site navigation"><a class="living-nav-brand" href="{base}../index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a><ul class="living-nav-links"><li><a href="{base}../index.html">Home</a></li><li><a href="{base}../scroll/index.html">Scroll</a></li><li><a href="{base}../codex-atlas.html">Atlas</a></li><li><a href="{base}../scroll/lexicon.html">Lexicon</a></li><li><a class="is-current" aria-current="page" href="{base}index.html">Scripture</a></li><li><a href="{base}../living-time-sphere.html">Sphere</a></li><li><a href="{base}../shop.html">Shop</a></li></ul></nav></div>
+"""
+
+
 def masthead(base):
     return f"""<a class="skip-link" href="#main">Skip to content</a>
-<header class="sf-mast">
+{living_nav(base)}<header class="sf-mast">
 <a class="sf-brand" href="{base}index.html"><span aria-hidden="true">✦</span> Scripture · Genesis &amp; Exodus</a>
 <nav data-site-nav aria-label="Scripture navigation"><a href="{base}genesis/01.html">Genesis</a><a href="{base}exodus/01.html">Exodus</a><a href="{base}index.html#lemma-finder">Word finder</a><a href="{base}about.html">Sources &amp; method</a><a href="{base}../scroll/search.html">Scroll Search</a><a href="{base}../scroll/lexicon.html">Hebrew Lexicon</a><a href="{base}../scroll/atlas.html">Reference Atlas</a><a href="{base}../scroll/editorial.html">Evidence Edition</a><a href="{base}../moons.html">13 Moons</a><a href="{base}../codex-atlas.html">Codex Atlas</a><a href="{base}../scroll/index.html">Unsealed Library</a></nav>
 </header>
@@ -43,6 +53,7 @@ def masthead(base):
 
 
 FOOT = """<footer class="sf-foot"><p>Hebrew: Westminster Leningrad Codex via the Open Scriptures Hebrew Bible. Lemma and morphology: OSHB, CC BY 4.0. Lexicon: Brown–Driver–Briggs (1906) as digitised by OSHB. English: World English Bible (public domain). Interpretive layers are drafts and are labelled. <a href="{b}about.html">Sources, licences and limits</a>.</p><p>Reading position and preferences are stored only in this browser (localStorage); nothing is sent anywhere.</p></footer>
+<script defer src="{b}../assets/js/living-ui.js?v=20261117-1"></script>
 """
 
 
@@ -119,7 +130,7 @@ def render_all(OUT, emit_text, books_meta, chapters, manifest, remnant, curated,
             pn = ('<nav class="pn" aria-label="Chapter navigation">' + (f'<a rel="prev" href="{prev}">← Previous chapter</a>' if prev else "<span></span>") + (f'<a rel="next" href="{nxt}">Next chapter →</a>' if nxt else "<span></span>") + "</nav>")
             body = "".join(verse_block(v, remnant[o].get(v["id"]), ctx_by_verse, trad_by_verse) for v in vs)
             page = head(f"{bm['name']} {ci} — Scripture · Scroll of Fire", f"{bm['name']} chapter {ci}: Hebrew (WLC), English (WEB), word study, context and the Scroll's own commentary kept separate.", "../", f"scripture/{slug}/{ci:02d}.html")
-            page += f"""<body class="sf-chapter" data-book="{o}" data-chapter="{ci}" data-chapters="{n}" data-base="../">
+            page += f"""<body class="sf-chapter living-ui" data-book="{o}" data-chapter="{ci}" data-chapters="{n}" data-base="../">
 {masthead('../')}
 <main id="main">
 <h1>{bm['name']} {ci}</h1>
@@ -146,7 +157,7 @@ def render_all(OUT, emit_text, books_meta, chapters, manifest, remnant, curated,
         chips = "".join(f'<a href="{bm["slug"]}/{i:02d}.html">{i}</a>' for i in range(1, bm["chapters"] + 1))
         cards += f'<section class="bookcard" id="{bm["slug"]}"><h2>{bm["name"]}</h2><p>{bm["chapters"]} chapters · {sum(bm["verseCounts"])} verses</p><nav class="chips" aria-label="{bm["name"]} chapters">{chips}</nav></section>'
     index = head("Genesis & Exodus Scripture — Scroll of Fire", "Read Genesis 1–50 and Exodus 1–40 in Hebrew with word study, context and the Scroll's commentary kept separate.", "", "scripture/index.html")
-    index += f"""<body class="sf-index" data-base="">
+    index += f"""<body class="sf-index living-ui" data-base="">
 {masthead('')}
 <main id="main">
 <h1>Genesis &amp; Exodus, in the original Hebrew</h1>
@@ -172,7 +183,7 @@ def render_all(OUT, emit_text, books_meta, chapters, manifest, remnant, curated,
 
     lex = c["level2_lexicalSenses"]
     about = head("Sources, licences and limits — Scripture · Scroll of Fire", "Pinned sources, licences, versification, completeness levels and limits of the Genesis & Exodus Scripture edition.", "", "scripture/about.html")
-    about += f"""<body class="sf-about" data-base="">
+    about += f"""<body class="sf-about living-ui" data-base="">
 {masthead('')}
 <main id="main">
 <h1>Sources, licences and limits</h1>
@@ -202,7 +213,7 @@ def render_all(OUT, emit_text, books_meta, chapters, manifest, remnant, curated,
     emit_text("docs/scripture/about.html", about)
 
     lem = head("Lemma study — Scripture · Scroll of Fire", "Every documented sense, occurrence and homonym for a Hebrew lemma found in Genesis or Exodus.", "", "scripture/lemma.html")
-    lem += f"""<body class="sf-lemma" data-base="">
+    lem += f"""<body class="sf-lemma living-ui" data-base="">
 {masthead('')}
 <main id="main">
 <h1>Lemma study</h1>

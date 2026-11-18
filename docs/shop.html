@@ -78,6 +78,7 @@
   <link rel="stylesheet" href="assets/css/components.css?v=20260713-2">
   <link rel="stylesheet" href="assets/css/shop.css?v=20260713-3">
   <link rel="stylesheet" href="assets/css/artifact-mobile.css?v=20260713-3">
+  <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
 
   <script type="application/ld+json">
   {
@@ -142,16 +143,31 @@
   </script>
 
   <script defer src="assets/js/site.js?v=20260713-2"></script>
+  <script defer src="assets/js/living-search-launcher.js"></script>
   <script defer src="assets/js/calendar-cor.js"></script>
   <script defer src="assets/js/living-codex.js"></script>
   <script defer src="assets/js/codex-witness.js"></script>
   <script defer src="assets/js/motion.js"></script>
 </head>
 
-<body>
+<body class="living-ui">
   <div class="living-aura" aria-hidden="true"></div>
 
   <a class="skip-link" href="#main">Skip to content</a>
+  <div class="living-nav" data-living-nav>
+    <nav class="living-nav-inner" aria-label="Site navigation">
+      <a class="living-nav-brand" href="index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a>
+      <ul class="living-nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="scroll/index.html">Scroll</a></li>
+        <li><a href="codex-atlas.html">Atlas</a></li>
+        <li><a href="scroll/lexicon.html">Lexicon</a></li>
+        <li><a href="scripture/index.html">Scripture</a></li>
+        <li><a href="living-time-sphere.html">Sphere</a></li>
+        <li><a href="shop.html" class="is-current" aria-current="page">Shop</a></li>
+      </ul>
+    </nav>
+  </div>
 
   <header class="site-header" data-sof-header>
     <a class="brand" href="./" aria-label="Scroll of Fire home">
@@ -758,7 +774,7 @@
         asymmetry are part of the artifact’s identity.
 
         Repeatable series such as TB remain recognizable, but no two
-        hand-forged pieces are exact machine copies. While supplies last copper comes frome the QRI 16 V.A.R.S.E Reality Engine.
+        hand-forged pieces are exact machine copies. While supplies last copper comes from the QRI 16 V.A.R.S.E Reality Engine.
         If you are new here. Welcome to Living Technology. 
       </div>
     </section>
@@ -1037,5 +1053,6 @@
       Aaron Paul Laird — Scroll of Fire · Codex of Reality · Scribe of Circuits
     </p>
   </footer>
+  <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
 </body>
 </html>
