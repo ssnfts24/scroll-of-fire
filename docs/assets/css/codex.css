@@ -175,6 +175,8 @@ p{line-height:1.75;text-wrap:pretty}
 
 .text-link{
   display:inline-flex;
+  align-items:center;
+  min-height:44px;
   margin-top:.4rem;
   color:var(--gold);
   font-weight:900;
@@ -211,6 +213,10 @@ p{line-height:1.75;text-wrap:pretty}
 
 .site-footer nav a,
 .footer nav a{
+  display:inline-flex;
+  align-items:center;
+  min-height:44px;
+  padding-inline:.3rem;
   color:var(--muted);
   text-decoration:none;
   font-size:.88rem;
@@ -239,6 +245,9 @@ p{line-height:1.75;text-wrap:pretty}
 }
 
 .backline a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--muted);
   text-underline-offset: 0.22em;
 }

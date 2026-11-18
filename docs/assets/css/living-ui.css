@@ -15,6 +15,15 @@
  *   - smooth in-page anchor travel (motion-safe only)
  *   - staged reveal-on-enter for top-level sections (armed by
  *     living-ui.js; everything is fully visible without JS)
+ *   - the page opening (.lpo-*): one quiet arrival moment, once per
+ *     session — the mark, the page's name, today's line, and a quiet
+ *     way-forward line late in the hold — injected by
+ *     living-ui.js only, standing apart on the same opaque deep-stone
+ *     ground as the homepage entry while it plays (the page beneath
+ *     is neither visible nor interactive), gone in ~4.2s or at the
+ *     visitor's first gesture, and removed from the DOM; it adds
+ *     nothing the visitor must read, dismiss, or decide about, and
+ *     nothing at all without JS
  *   - the unified site navigation (.living-nav) — deliberately NOT
  *     gated on body.living-ui: every content page that loads this
  *     stylesheet carries the same persistent wayfinding home, whether
@@ -293,10 +302,166 @@ body.living-ui main > section.lui-reveal-pending {
 }
 
 /* ------------------------------------------------------------------ */
+/* The page opening — one quiet moment, then out of the way            */
+/*                                                                     */
+/* Injected by living-ui.js on arrival (never in markup, so a no-JS    */
+/* page is untouched). Lighter than the homepage entry only in what   */
+/* it says — no status cycle, just the page's name, today's line, and */
+/* one quiet way-forward line late in the hold — never in how it      */
+/* stands: it uses the entry's own opaque deep-stone ground (the      */
+/* same recipe as .le-overlay in living-entry.css), covers the full   */
+/* viewport above everything, and takes every tap while it plays, so  */
+/* the page beneath is neither visible nor interactive until the      */
+/* dismissed. The first gesture dismisses it in the same instant      */
+/* (living-ui.js), and the page is scroll-locked meanwhile            */
+/* (body.lpo-opening below — the entry's le-lock behaviour). One      */
+/* system, two weights.                                               */
+/* ------------------------------------------------------------------ */
+
+.lpo-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(45, 212, 191, 0.07), transparent 55%),
+    radial-gradient(circle at 50% 62%, rgba(243, 201, 122, 0.05), transparent 60%),
+    linear-gradient(170deg, #0a0e18 0%, #05070d 70%);
+  pointer-events: auto;
+  opacity: 1;
+  transition: opacity 0.75s ease-in-out;
+  cursor: pointer;
+}
+
+.lpo-overlay.lpo-leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.lpo-emblem-wrap {
+  position: relative;
+  width: min(34vw, 128px);
+  aspect-ratio: 1 / 1;
+  animation: lpo-settle 0.8s cubic-bezier(0.22, 0.61, 0.21, 1) both;
+}
+
+.lpo-emblem-wrap::before {
+  content: "";
+  position: absolute;
+  inset: -45%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(122, 243, 255, 0.14) 0%, rgba(122, 243, 255, 0.05) 45%, transparent 68%);
+  animation: lpo-breathe 4.6s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+.lpo-emblem {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.lpo-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: lpo-eye-open 1.3s cubic-bezier(0.22, 0.61, 0.21, 1) 0.25s both;
+}
+
+.lpo-name {
+  margin: 0.85rem 0 0;
+  max-width: 86vw;
+  overflow: hidden;
+  color: var(--lui-beige, #f4f0de);
+  font-size: clamp(0.95rem, 2.6vw, 1.12rem);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  animation: lpo-settle 0.8s cubic-bezier(0.22, 0.61, 0.21, 1) 0.15s both;
+}
+
+.lpo-line {
+  margin: 0.35rem 0 0;
+  max-width: 86vw;
+  color: rgba(243, 201, 122, 0.85);
+  font-size: clamp(0.82rem, 2.2vw, 0.95rem);
+  letter-spacing: 0.04em;
+  text-align: center;
+  animation: lpo-settle 0.8s cubic-bezier(0.22, 0.61, 0.21, 1) 0.3s both;
+}
+
+/* The way-forward line: settles in at 1.8s, late in the hold, small
+ * and quiet — present before the fade so a first-time visitor is
+ * never left wondering how to get through, gone with the overlay. */
+.lpo-hint {
+  margin: 1.15rem 0 0;
+  max-width: 86vw;
+  color: rgba(244, 240, 222, 0.62);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-align: center;
+  text-transform: uppercase;
+  animation: lpo-settle 0.8s cubic-bezier(0.22, 0.61, 0.21, 1) 1.8s both;
+}
+
+@keyframes lpo-settle {
+  from { opacity: 0; transform: translateY(6px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes lpo-breathe {
+  from { opacity: 0.35; transform: scale(0.94); }
+  to { opacity: 1; transform: scale(1.04); }
+}
+
+@keyframes lpo-eye-open {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* While the opening plays, the page is scroll-locked beneath it — the
+ * homepage entry's le-lock behaviour under this layer's own class.
+ * The class is only ever added by living-ui.js, so without JS nothing
+ * here applies. */
+body.lpo-opening {
+  overflow: hidden;
+}
+
+/* The page rises once beneath the opening — behind the opaque ground,
+ * where it settles long before the fade, so the page is still when
+ * the veil lifts. The hidden-from state is an animation start, not a
+ * resting style, and the class that arms it (body.lpo-opening) is
+ * only ever added by living-ui.js — without JS nothing here applies
+ * and content renders exactly as authored. */
+body.lpo-opening main {
+  animation: lpo-rise 0.9s cubic-bezier(0.22, 0.61, 0.21, 1) both;
+}
+
+@keyframes lpo-rise {
+  from { opacity: 0.45; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ------------------------------------------------------------------ */
 /* Reduced motion: the layer rests                                     */
 /* ------------------------------------------------------------------ */
 
 @media (prefers-reduced-motion: reduce) {
+  .lpo-overlay {
+    display: none !important;
+  }
+
+  body.lpo-opening main {
+    animation: none;
+  }
+
   body.living-ui::before {
     animation: none !important;
   }
