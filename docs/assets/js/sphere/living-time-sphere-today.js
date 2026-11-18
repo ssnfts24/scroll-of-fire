@@ -16,6 +16,12 @@
   // DEPENDENCIES (loaded before this module; gracefully absent = no-op)
   //   LivingTimeSphereModel, LivingTimeSphereLayout, LivingTimeSphereRendererSvg,
   //   AlignmentLedgerData, EquinoxPassageEngine, LivingTimeSphereVersion
+  //
+  // TEMPORAL AUTHORITY
+  //   The rendered Pattern position comes through SOFTemporalCursor, the
+  //   single temporal authority (docs/development/TEMPORAL-AUTHORITY-CONTRACT.md).
+  //   This module never calls PatternCalendar directly for its standing
+  //   position; see _resolveCursorPosition and the bootstrap note below.
 
   const MODULE = "LivingTimeSphereTodayCard";
 
@@ -33,6 +39,67 @@
   // ── Canonical data fetch ──────────────────────────────────────────
   // All values come from existing engines; no independent calculation.
 
+  // Maps a PatternCalendar result onto the position shape this card renders.
+  function _mapPosition(tp) {
+    return {
+      moon:            tp.moon,
+      moonName:        tp.moonName,
+      day:             tp.day,
+      dayOfPatternYear: tp.dayOfPatternYear,
+      weekGate:        tp.dayArchetype || null,
+      isDayOutOfTime:  tp.isDayOutOfTime,
+      isDeepTimeDay:   tp.isDeepTimeDay,
+      civilDate:       tp.civilDate,
+      effectiveDate:   tp.effectiveDate,
+      afterBoundary:   tp.afterBoundary,
+      sunsetTime:      tp.sunsetTime,
+      patternYear:     tp.patternYear,
+    };
+  }
+
+  // Canonical position for an instant, resolved through SOFTemporalCursor —
+  // the single temporal authority (TEMPORAL-AUTHORITY-CONTRACT). The cursor
+  // resolves the position without moving its selection. Returns null when
+  // the cursor has not initialized in this session yet.
+  function _resolveCursorPosition(instant, { timeZone, boundaryMode, manualSunset } = {}) {
+    const cursor = globalThis.SOFTemporalCursor;
+    if (!cursor?.resolvePosition) return null;
+    try {
+      const tp = cursor.resolvePosition(instant, {
+        timeZone,
+        boundaryMode,
+        sunsetTime: manualSunset,
+      });
+      return tp ? _mapPosition(tp) : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  // BOOTSTRAP-ONLY position, used solely when the canonical cursor has not
+  // initialized yet (e.g. the sphere page loads the cursor through its
+  // deferred stack, after this card's first paint). The model's stored
+  // position is the same PatternCalendar result the cursor resolves; the
+  // direct call is the last resort when the model could not store one.
+  // Either way the value is superseded by the cursor-resolved position on
+  // the next render — attachAutoUpdate re-renders on
+  // 'sof:temporal-cursor-ready' — so this path never stands as a second
+  // authority.
+  function _bootstrapPosition(todayModel, now, { timeZone, boundaryMode, manualSunset }) {
+    if (todayModel?.todayPatternPosition) {
+      return _mapPosition(todayModel.todayPatternPosition);
+    }
+    if (globalThis.PatternCalendar) {
+      try {
+        const tp = globalThis.PatternCalendar.fromCivilDate({
+          date: now, timeZone, boundaryMode, sunsetTime: manualSunset,
+        });
+        return _mapPosition(tp);
+      } catch (_) { /* leave empty */ }
+    }
+    return {};
+  }
+
   function _getData(opts) {
     if (globalThis.LivingTimeSphereLiveData?.getSnapshot) {
       const snapshot = globalThis.LivingTimeSphereLiveData.getSnapshot(opts);
@@ -42,7 +109,11 @@
         todayModel: snapshot.todayModel,
         yearModel: snapshot.yearModel,
         record,
-        pos: snapshot.pattern,
+        pos: _resolveCursorPosition(new Date(snapshot.instant), {
+          timeZone: snapshot.timeZone,
+          boundaryMode: snapshot.boundaryMode,
+          manualSunset: snapshot.manualSunset,
+        }) || snapshot.pattern,
         lunar: snapshot.lunar,
         solar: snapshot.solar,
         offs: record?.offsets || {},
@@ -79,45 +150,12 @@
       timeZone: tz, boundaryMode: bm, manualSunset: ss, asOf: now
     });
 
-    // TODAY position: use the canonical result stored on todayModel if available,
-    // otherwise call PatternCalendar directly. Never use the Equinox year record's
-    // patternPosition here — that carries the Equinox-moment position, not today's.
-    let pos = {};
-    if (todayModel.todayPatternPosition) {
-      const tp = todayModel.todayPatternPosition;
-      pos = {
-        moon:            tp.moon,
-        moonName:        tp.moonName,
-        day:             tp.day,
-        dayOfPatternYear: tp.dayOfPatternYear,
-        weekGate:        tp.dayArchetype || null,
-        isDayOutOfTime:  tp.isDayOutOfTime,
-        isDeepTimeDay:   tp.isDeepTimeDay,
-        civilDate:       tp.civilDate,
-        effectiveDate:   tp.effectiveDate,
-        afterBoundary:   tp.afterBoundary,
-        sunsetTime:      tp.sunsetTime,
-        patternYear:     tp.patternYear,
-      };
-    } else if (globalThis.PatternCalendar) {
-      try {
-        const tp = globalThis.PatternCalendar.fromCivilDate({ date: now, timeZone: tz, boundaryMode: bm, sunsetTime: ss });
-        pos = {
-          moon:            tp.moon,
-          moonName:        tp.moonName,
-          day:             tp.day,
-          dayOfPatternYear: tp.dayOfPatternYear,
-          weekGate:        tp.dayArchetype || null,
-          isDayOutOfTime:  tp.isDayOutOfTime,
-          isDeepTimeDay:   tp.isDeepTimeDay,
-          civilDate:       tp.civilDate,
-          effectiveDate:   tp.effectiveDate,
-          afterBoundary:   tp.afterBoundary,
-          sunsetTime:      tp.sunsetTime,
-          patternYear:     tp.patternYear,
-        };
-      } catch (_) { /* leave empty */ }
-    }
+    // TODAY position: resolved through the canonical temporal cursor.
+    // Never use the Equinox year record's patternPosition here — that
+    // carries the Equinox-moment position, not today's.
+    const pos =
+      _resolveCursorPosition(now, { timeZone: tz, boundaryMode: bm, manualSunset: ss })
+      || _bootstrapPosition(todayModel, now, { timeZone: tz, boundaryMode: bm, manualSunset: ss });
 
     // Alignment record for auxiliary fields (lunar, passage offsets).
     const record = globalThis.AlignmentLedgerData.getRecord({ year: selectedYear, timeZone: tz, boundaryMode: bm, manualSunset: ss });
@@ -363,9 +401,22 @@
     };
     document.addEventListener("moons:state-change", handler);
     document.addEventListener("sphere:settings-change", handler);
+    // Temporal Authority Contract: if the first paint used the bootstrap
+    // position because the canonical cursor had not initialized yet, the
+    // cursor-ready event re-renders so the cursor-resolved position
+    // supersedes it. (Same ready-event pattern the day-zoom uses.)
+    const onCursorReady = () => rerender(rootEl, Object.assign({}, opts));
+    const canListenWindow =
+      typeof window !== "undefined" && typeof window.addEventListener === "function";
+    if (canListenWindow) {
+      window.addEventListener("sof:temporal-cursor-ready", onCursorReady);
+    }
     return () => {
       document.removeEventListener("moons:state-change", handler);
       document.removeEventListener("sphere:settings-change", handler);
+      if (canListenWindow && typeof window.removeEventListener === "function") {
+        window.removeEventListener("sof:temporal-cursor-ready", onCursorReady);
+      }
     };
   }
 
