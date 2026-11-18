@@ -27,11 +27,27 @@
   <link rel="stylesheet" href="assets/css/codex.css">
   <link rel="stylesheet" href="assets/css/navigation.css">
   <link rel="stylesheet" href="assets/css/site-atlas.css">
+  <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
   <script defer src="assets/js/site.js"></script>
+  <script defer src="assets/js/living-search-launcher.js"></script>
   <script defer src="assets/js/codex-atlas.js"></script>
 </head>
-<body>
+<body class="living-ui">
   <a class="skip-link" href="#main">Skip to content</a>
+  <div class="living-nav" data-living-nav>
+    <nav class="living-nav-inner" aria-label="Site navigation">
+      <a class="living-nav-brand" href="index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a>
+      <ul class="living-nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="scroll/index.html">Scroll</a></li>
+        <li><a href="codex-atlas.html" class="is-current" aria-current="page">Atlas</a></li>
+        <li><a href="scroll/lexicon.html">Lexicon</a></li>
+        <li><a href="scripture/index.html">Scripture</a></li>
+        <li><a href="living-time-sphere.html">Sphere</a></li>
+        <li><a href="shop.html">Shop</a></li>
+      </ul>
+    </nav>
+  </div>
 
   <header class="site-header" data-sof-header>
     <a class="brand" href="./" aria-label="Scroll of Fire home">
@@ -584,10 +600,10 @@
           <p>A unified discovery page for the Scroll Library, Living Time, systems, research, artifacts and archive.</p>
           <p class="atlas-related"><strong>Related pages:</strong> <a href="scroll/">Scroll Library</a> · <a href="living-time-sphere.html">Living Time Sphere</a> · <a href="hub.html">Systems Hub</a> · <a href="theory.html">Theory Hub</a> · <a href="shop.html">Artifact Registry</a> · <a href="downloads.html">Downloads &amp; Integrity</a></p>
         </li>
-        <li class="atlas-card" data-atlas-card data-id="planned-sitewide-search" data-area="archive" data-category="Discovery" data-type="tool" data-status="planned">
-          <h3><span class="atlas-card-title">Site-wide search</span></h3>
-          <p class="atlas-meta"><span class="atlas-badge atlas-badge--planned">Planned</span><span>tool</span><span>Discovery</span></p>
-          <p>A future site-wide index that links to, and does not replace, Scroll Search.</p>
+        <li class="atlas-card" data-atlas-card data-id="site-search" data-area="archive" data-category="Discovery" data-type="tool" data-status="live">
+          <h3><a class="atlas-card-title" href="search.html">Site-wide Search</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>tool</span><span>Discovery</span></p>
+          <p>Living Search: one generated index across every page, the Scroll Library, the Hebrew Lexicon, the Atlas and the Claim Register, with a memory that stays on the reader's device. It links to, and does not replace, Scroll Search.</p>
           <p class="atlas-related"><strong>Related pages:</strong> <a href="scroll/search.html">Scroll Search</a></p>
         </li>
       </ul>
@@ -611,5 +627,6 @@
     </nav>
     <p>© <span id="year">2026</span> Aaron Paul Laird — Scroll of Fire · Codex of Reality · Scribe of Circuits</p>
   </footer>
+  <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
 </body>
 </html>
