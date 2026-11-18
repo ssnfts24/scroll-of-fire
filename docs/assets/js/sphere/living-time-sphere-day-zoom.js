@@ -10,7 +10,12 @@
  * Records come from the same data path the Life Atlas calendar
  * projection already uses: CodexLivingPlanner.plansForYear(patternYear)
  * filtered to the selected patternDay, with times resolved through
- * CodexLifeAtlasScheduling.getSchedule(record). This module is a
+ * CodexLifeAtlasScheduling.getSchedule(record). Manifest practice
+ * sessions (Life Atlas records with subtype "practice-session", sealed
+ * from the Remnant Visual Exercise — see manifest-practice.js) are not
+ * planner records, so refresh() also reads them straight from the Life
+ * Atlas repository and merges them in; they render with a special
+ * placement marker (gold glyph + kind label). This module is a
  * projection: it never owns temporal truth, never mutates records, and
  * requests selection changes only through the cursor
  * (setPatternDay / moveDays / today).
@@ -43,6 +48,38 @@
 
     const EMPTY_MESSAGE =
       "No Life Atlas records for this day yet. Import or plan something for this date and it will appear here.";
+
+    /**
+     * Manifest practice sessions — the special placement marker.
+     * manifest-practice.js is the source of truth for the record shape
+     * (subtype "practice-session"); the glyph map is mirrored here so
+     * this panel does not depend on that module being loaded.
+     */
+    const PRACTICE_SUBTYPE =
+      "practice-session";
+
+    const PRACTICE_KIND_GLYPHS = Object.freeze({
+      practice: "🜚",
+      craft: "◆",
+      working: "✦"
+    });
+
+    function practiceKindOf(record) {
+      const kind =
+        record?.payload?.manifestPractice?.sessionKind;
+
+      return Object.hasOwn(PRACTICE_KIND_GLYPHS, kind)
+        ? kind
+        : "practice";
+    }
+
+    function isPracticeRecord(record) {
+      return Boolean(
+        record &&
+        record.subtype === PRACTICE_SUBTYPE &&
+        record.payload?.manifestPractice
+      );
+    }
 
     function finite(value) {
       const number = Number(value);
@@ -251,6 +288,52 @@
         });
     }
 
+    /**
+     * Practice sessions live in the Atlas repository but are not
+     * planner records, so plansForYear never returns them. Read them
+     * directly, keyed by the same patternYear the panel is showing.
+     */
+    async function defaultPracticeRecords(patternYear) {
+      const runtime =
+        typeof globalThis !== "undefined"
+          ? globalThis.CodexLifeAtlasRuntime
+          : null;
+
+      if (!runtime?.ready) {
+        return [];
+      }
+
+      const repository =
+        await runtime.ready;
+
+      if (!repository?.query) {
+        return [];
+      }
+
+      return repository.query({
+        subtype: PRACTICE_SUBTYPE,
+        patternYear
+      });
+    }
+
+    function mergeRecords(primary = [], extra = []) {
+      const seen = new Set();
+      const merged = [];
+
+      for (const record of [...primary, ...extra]) {
+        if (!record) continue;
+
+        const id = record.id || null;
+
+        if (id && seen.has(id)) continue;
+        if (id) seen.add(id);
+
+        merged.push(record);
+      }
+
+      return merged;
+    }
+
     function scheduleOf(record, scheduling) {
       try {
         return scheduling?.getSchedule?.(record) || null;
@@ -285,6 +368,14 @@
           ? cleanString(schedule.start)
           : null;
 
+      const practice =
+        isPracticeRecord(record);
+
+      const sessionKind =
+        practice
+          ? practiceKindOf(record)
+          : null;
+
       return {
         id:
           record.id || "",
@@ -296,11 +387,22 @@
           "Untitled record",
 
         type:
-          cleanString(
-            record.payload?.planner?.category ||
-            record.subtype ||
-            record.type
-          ) || "event",
+          practice
+            ? `Manifest · ${sessionKind} session`
+            : cleanString(
+                record.payload?.planner?.category ||
+                record.subtype ||
+                record.type
+              ) || "event",
+
+        practice,
+
+        sessionKind,
+
+        markerGlyph:
+          practice
+            ? PRACTICE_KIND_GLYPHS[sessionKind]
+            : null,
 
         summary:
           cleanString(record.summary) || "",
@@ -426,6 +528,7 @@
       cursor = null,
       planner = null,
       scheduling = null,
+      practiceRecordsProvider = null,
       eventTarget = null,
       onRender = null
     } = {}) {
@@ -458,6 +561,14 @@
           ) ||
           null
         );
+      }
+
+      async function resolvePracticeRecords(patternYear) {
+        if (typeof practiceRecordsProvider === "function") {
+          return practiceRecordsProvider(patternYear);
+        }
+
+        return defaultPracticeRecords(patternYear);
       }
 
       function resolveScheduling() {
@@ -570,9 +681,30 @@
           }
         }
 
+        let practiceRecords = [];
+
+        if (
+          selection.patternYear !== null &&
+          selection.patternYear !== undefined
+        ) {
+          try {
+            practiceRecords =
+              (await resolvePracticeRecords(
+                selection.patternYear
+              )) || [];
+          } catch (error) {
+            console.warn(
+              "[LivingTimeSphereDayZoom] Unable to read practice session records.",
+              error
+            );
+
+            practiceRecords = [];
+          }
+        }
+
         const view = buildDayView({
           selection,
-          records: records || [],
+          records: mergeRecords(records || [], practiceRecords),
           scheduling: resolveScheduling()
         });
 
@@ -885,6 +1017,29 @@
           item.classList.add("is-completed");
         }
 
+        if (entry.practice) {
+          item.classList.add("is-practice");
+
+          const marker =
+            document.createElement("span");
+
+          marker.className =
+            "sphere-day-zoom-marker";
+
+          marker.textContent =
+            entry.markerGlyph || "🜚";
+
+          marker.title =
+            `Manifest ${entry.sessionKind || "practice"} session — sealed from the Remnant Visual Exercise`;
+
+          marker.setAttribute(
+            "aria-hidden",
+            "true"
+          );
+
+          item.appendChild(marker);
+        }
+
         const time =
           document.createElement("span");
 
@@ -1045,6 +1200,11 @@
       recordsForDay,
       entryForRecord,
       buildDayView,
+      isPracticeRecord,
+      practiceKindOf,
+      mergeRecords,
+      PRACTICE_SUBTYPE,
+      PRACTICE_KIND_GLYPHS,
 
       createDayZoom,
 
