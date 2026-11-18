@@ -139,10 +139,12 @@
   <link rel="stylesheet" href="assets/css/equinox-passage.css?v=20260722-4">
   <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260819-b752&r=20260820-b758&p=20260820-b7581-labelglass&u=20260820-b7582-railalign&b=20260820-b7592a-farskeleton&d=20260821-b7592d7-unified">
   <link rel="stylesheet" href="assets/css/living-time-app-enhancements.css?v=20260730-1">
+  <link rel="stylesheet" href="assets/css/manifest-practice.css?v=20261117-mp1">
 
   <link rel="stylesheet" href="assets/css/animations.css">
   <link rel="stylesheet" href="assets/css/share-day.css?v=1">
   <link rel="stylesheet" href="assets/css/moons-interface.css?v=20260818-b6">
+  <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
 
   <script>
     window.SOF_MOONS_CONFIG = Object.freeze({
@@ -219,6 +221,7 @@
   </script>
 
   <script defer src="assets/js/site.js"></script>
+  <script defer src="assets/js/living-search-launcher.js"></script>
   <script defer src="assets/js/codex-memory.js"></script>
   <script defer src="assets/js/living-codex.js"></script>
   <script defer src="assets/js/share/remnant-share-url.js"></script>
@@ -229,24 +232,29 @@
   <script defer src="assets/js/motion.js"></script>
 </head>
 
-<body data-remnant-boundary="sunset">
+<body class="living-ui" data-remnant-boundary="sunset">
   <canvas id="skyBg" aria-hidden="true"></canvas>
   <a class="skip-link" href="#main">Skip to content</a>
+  <div class="living-nav" data-living-nav>
+    <nav class="living-nav-inner" aria-label="Site navigation">
+      <a class="living-nav-brand" href="index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a>
+      <ul class="living-nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="scroll/index.html">Scroll</a></li>
+        <li><a href="codex-atlas.html">Atlas</a></li>
+        <li><a href="scroll/lexicon.html">Lexicon</a></li>
+        <li><a href="scripture/index.html">Scripture</a></li>
+        <li><a href="living-time-sphere.html">Sphere</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="witness.html">Witness</a></li>
+        <li><a href="search.html">Living Search</a></li>
+        <li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li>
+      </ul>
+    </nav>
+  </div>
 
   <div class="wrap">
     <header class="site-header" data-sof-header>
-      <a
-        class="brand"
-        href="./"
-        aria-label="Scroll of Fire home"
-      >
-        <span class="brand-mark" aria-hidden="true">☲</span>
-
-        <span>
-          <strong>Scroll of Fire</strong>
-          <small>Codex of Reality</small>
-        </span>
-      </a>
 
       <button
         class="nav-toggle"
@@ -284,7 +292,7 @@
         </button>
         <div id="nav-explore" class="nav-drop-menu">
           <!-- site-nav:explore:start -->
-          <a href="./scroll/search.html">Scroll Search</a>
+          <a href="./scroll/search.html">Search the Scroll Library</a>
           <a href="./scroll/lexicon.html">Hebrew Lexicon</a>
           <a href="./scroll/atlas.html">Reference Atlas</a>
           <a href="./scroll/editorial.html">Evidence Edition</a>
@@ -444,6 +452,25 @@
         >iPhone / iPad Instructions</button>
       </div>
     </header>
+
+    <section class="section-shell" id="moons-explainer">
+      <div class="section-heading">
+        <p class="eyebrow">Watch · The Explainer</p>
+        <h2>The living calendar, in plain words.</h2>
+        <p>
+          A short spoken tour of this page: the thirteen-moon year, the one clock every surface shares, the telling that lets every day speak, and the Life Atlas record that stays on your own device. Press play and let the page explain itself.
+        </p>
+      </div>
+
+      <video controls preload="metadata" width="1280" height="720"
+        style="width:100%;height:auto;display:block"
+        src="assets/media/moons-explainer.mp4"
+        aria-label="Video: the 13 Moons living calendar, explained in plain words">
+        Your browser does not support the video element. The same tour is
+        written out across this page.
+      </video>
+    </section>
+
 
     <div class="tabs" aria-label="Calendar tools">
       <button
@@ -635,6 +662,12 @@
               <span><i class="moon-map-key-dot is-shabbat"></i>Shabbat / gate</span>
             </div>
           </section>
+        </section>
+
+        <section class="manifest-today" data-manifest-today aria-label="Today in the practice loop">
+          <span class="manifest-today-glyph" aria-hidden="true">🜚</span>
+          <p class="manifest-today-line">Manifest practice — Today: <strong data-manifest-today-coords>—</strong> · <span data-manifest-today-count>—</span></p>
+          <a class="manifest-today-link" href="./teach.html#manifest">Seal a session</a>
         </section>
 
         <section class="card today-hero-actions" aria-labelledby="todayHeroHeading">
@@ -2691,7 +2724,7 @@
   <script src="assets/js/sphere/living-time-sphere-live-data.js?v=20260724-1"></script>
   <script src="assets/js/sphere/living-time-sphere-url-state.js?v=20260724-1"></script>
   <script src="assets/js/sphere/living-time-sphere-mount.js?v=20260724-1"></script>
-  <script src="assets/js/sphere/living-time-sphere-today.js?v=20260724-1"></script>
+  <script src="assets/js/sphere/living-time-sphere-today.js?v=20261117-1"></script>
 
   <!-- Canonical Life Atlas planner data plane: shared with Living Time Sphere. -->
   <script src="assets/js/life-atlas/life-atlas-schema.js?v=20260817-1"></script>
@@ -2706,6 +2739,8 @@
   <!-- Main calendar app -->
   <script src="assets/js/moons.js?v=20260818-b6"></script>
   <script src="assets/js/life-atlas/life-atlas-calendar-projection.js?v=20260819-b750"></script>
+  <!-- Manifest practice loop: gold day markers for sealed sessions. -->
+  <script src="assets/js/manifest-practice.js?v=20261117-mp1"></script>
 
   <!-- Astrology and planetary mirror -->
   <script src="assets/js/astrology.js?v=20260722-4"></script>
@@ -3731,5 +3766,7 @@ Let the next step be firm.`;
   <script defer src="assets/js/performance-runtime.js?v=20260731-1"></script>
 <script defer src="assets/js/environment/unit-preferences.js?v=20260816-1"></script>
 <script defer src="assets/js/calendar/temporal-coordinate-engine.js?v=20260816-1"></script>
+<script defer src="assets/js/calendar/temporal-cursor-controller.js?v=20260816-2"></script>
+  <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
 </body>
   </html>

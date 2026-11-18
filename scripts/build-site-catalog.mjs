@@ -79,9 +79,24 @@ function resolveHref(page, baseHref, href) {
 }
 
 function sitemapPaths() {
-  const xml = read(path.join(docs, "sitemap.xml"));
+  const file = path.join(docs, "sitemap.xml");
+  const xml = outputs.get(file) ?? read(file);
   return new Set([...xml.matchAll(/<loc>\s*https:\/\/codexofreality\.org\/([^<]*)<\/loc>/g)]
     .map(m => (m[1] === "" || m[1].endsWith("/") ? m[1] + "index.html" : m[1])));
+}
+
+function syncScriptureSitemap(xml) {
+  const start = "<!-- R2-02 scripture sitemap:start -->";
+  const end = "<!-- R2-02 scripture sitemap:end -->";
+  const routes = walk(docs)
+    .map(file => rel(file))
+    .filter(file => file.startsWith("scripture/") && file.endsWith(".html"))
+    .map(file => `  <url>\n    <loc>${curation.baseUrl}${file}</loc>\n  </url>`)
+    .join("\n");
+  const block = `${start}\n${routes}\n${end}`;
+  const existing = new RegExp(`${start}[\\s\\S]*?${end}`);
+  if (existing.test(xml)) return xml.replace(existing, () => block);
+  return xml.replace("</urlset>", `\n${block}\n</urlset>`);
 }
 
 function reach(pages, start, skipFrom = new Set()) {
@@ -301,8 +316,8 @@ function syncNav(html, file) {
   const prefix = hasRootBase ? "./" : html.match(/href="((?:\.\.?\/)*)moons\.html"/)?.[1];
   if (!prefix) return { html, status: "no-prefix" };
   const global = `${GLOBAL_START}\n      <a class="is-featured" href="${prefix}scroll/">Scroll Library</a>\n      <a href="${prefix}codex-atlas.html">Atlas</a>\n      ${GLOBAL_END}`;
-  const explore = `${EXPLORE_START}\n          <a href="${prefix}scroll/search.html">Scroll Search</a>\n          <a href="${prefix}scroll/lexicon.html">Hebrew Lexicon</a>\n          <a href="${prefix}scroll/atlas.html">Reference Atlas</a>\n          <a href="${prefix}scroll/editorial.html">Evidence Edition</a>\n          ${EXPLORE_END}`;
-  const libraryMenu = `<div class="nav-dropdown" data-dropdown>\n        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-scroll-library" data-dropdown-toggle>Library <span aria-hidden="true">▾</span></button>\n        <div id="nav-scroll-library" class="nav-drop-menu">\n          <a href="${prefix}scroll/search.html">Scroll Search</a>\n          <a href="${prefix}scroll/lexicon.html">Hebrew Lexicon</a>\n          <a href="${prefix}scroll/atlas.html">Reference Atlas</a>\n          <a href="${prefix}scroll/editorial.html">Evidence Edition</a>\n        </div>\n      </div>`;
+  const explore = `${EXPLORE_START}\n          <a href="${prefix}scroll/search.html">Search the Scroll Library</a>\n          <a href="${prefix}scroll/lexicon.html">Hebrew Lexicon</a>\n          <a href="${prefix}scroll/atlas.html">Reference Atlas</a>\n          <a href="${prefix}scroll/editorial.html">Evidence Edition</a>\n          ${EXPLORE_END}`;
+  const libraryMenu = `<div class="nav-dropdown" data-dropdown>\n        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-scroll-library" data-dropdown-toggle>Library <span aria-hidden="true">▾</span></button>\n        <div id="nav-scroll-library" class="nav-drop-menu">\n          <a href="${prefix}scroll/search.html">Search the Scroll Library</a>\n          <a href="${prefix}scroll/lexicon.html">Hebrew Lexicon</a>\n          <a href="${prefix}scroll/atlas.html">Reference Atlas</a>\n          <a href="${prefix}scroll/editorial.html">Evidence Edition</a>\n        </div>\n      </div>`;
   let out = html;
   out = out.includes(GLOBAL_START)
     ? out.replace(new RegExp(`${GLOBAL_START}[\\s\\S]*?${GLOBAL_END}`), () => global)
@@ -343,7 +358,7 @@ function trackedFiles() {
     maxBuffer: 64 * 1024 * 1024
   }).split("\0").filter(Boolean);
   return [...new Set(files)]
-    .filter(f => f !== "site-audit/pr5a-body.md" && !f.startsWith("site-audit/screenshots/"))
+    .filter(f => f !== "site-audit/pr5a-body.md" && !f.startsWith("site-audit/screenshots/") && !f.startsWith("site-audit/r2/"))
     .sort();
 }
 
@@ -407,7 +422,7 @@ function buildMaster(pages, disc, files, reconcile) {
     if (!page.hasNav && !utility && !page.path.startsWith("scroll/")) issues.push("no-global-navigation");
     if (d.hopsFromHome === null) issues.push("unreachable-from-homepage");
     else if (d.hopsFromHomeWithoutAtlas === null) issues.push("reachable-only-through-atlas");
-    if (!utility && !homepageLinks.has(page.path) && !page.path.startsWith("theory/equations/") && !page.path.startsWith("scroll/")) issues.push("not-linked-directly-from-homepage");
+    if (!utility && !homepageLinks.has(page.path) && !page.path.startsWith("theory/equations/") && !page.path.startsWith("scroll/") && !page.path.startsWith("scripture/")) issues.push("not-linked-directly-from-homepage");
     if (page.path === "caravan.html") issues.push("compatibility-redirect-page");
     const label = navLabels.get(page.path);
     const shortTitle = page.title.split(/ [—|] /)[0].replace(/&amp;/g, "&").trim();
@@ -667,6 +682,7 @@ if (baselineIndex >= 0) {
 }
 
 // pages are edited in memory first so the reports describe the final state
+put(path.join(docs, "sitemap.xml"), syncScriptureSitemap(read(path.join(docs, "sitemap.xml"))));
 const pageFiles = walk(docs).filter(f => f.endsWith(".html"));
 const edited = new Map();
 const navStatus = {};
@@ -674,7 +690,7 @@ for (const file of pageFiles) {
   let html = read(file);
   const original = html;
   const p = rel(file);
-  if (!p.startsWith("scroll/")) {
+  if (!p.startsWith("scroll/") && !p.startsWith("scripture/")) {
     const synced = syncNav(html, file);
     html = synced.html;
     navStatus[p] = synced.status;
@@ -696,7 +712,7 @@ const pagesFinal = (() => {
       fs.mkdirSync(path.dirname(target), { recursive: true });
       fs.writeFileSync(target, edited.get(file) ?? read(file));
     }
-    fs.copyFileSync(path.join(docs, "sitemap.xml"), path.join(tmp, "sitemap.xml"));
+    fs.writeFileSync(path.join(tmp, "sitemap.xml"), outputs.get(path.join(docs, "sitemap.xml")) ?? read(path.join(docs, "sitemap.xml")));
     return scanPages(tmp);
   } finally { fs.rmSync(tmp, { recursive: true, force: true }); }
 })();

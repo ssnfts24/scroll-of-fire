@@ -52,6 +52,7 @@
   <link rel="stylesheet" href="assets/css/codex.css">
     <link rel="stylesheet" href="assets/css/navigation.css">
 <link rel="stylesheet" href="assets/css/theory.css">
+  <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
 
   <script>
     window.MathJax = {
@@ -65,6 +66,7 @@
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
   <script defer src="assets/js/site.js"></script>
+  <script defer src="assets/js/living-search-launcher.js"></script>
   <script defer src="assets/js/theory.js"></script>
 
   <script type="application/ld+json">
@@ -109,19 +111,29 @@
   </script>
 </head>
 
-<body data-reading-mode="equation">
+<body class="living-ui" data-reading-mode="equation">
   <div class="theory-aura" aria-hidden="true"></div>
   <div class="theory-stars" aria-hidden="true"></div>
   <a class="skip-link" href="#main">Skip to content</a>
+  <div class="living-nav" data-living-nav>
+    <nav class="living-nav-inner" aria-label="Site navigation">
+      <a class="living-nav-brand" href="index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a>
+      <ul class="living-nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="scroll/index.html">Scroll</a></li>
+        <li><a href="codex-atlas.html">Atlas</a></li>
+        <li><a href="scroll/lexicon.html">Lexicon</a></li>
+        <li><a href="scripture/index.html">Scripture</a></li>
+        <li><a href="living-time-sphere.html">Sphere</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="witness.html">Witness</a></li>
+        <li><a href="search.html">Living Search</a></li>
+        <li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li>
+      </ul>
+    </nav>
+  </div>
 
     <header class="site-header theory-header" data-sof-header>
-    <a class="brand" href="./" aria-label="Scroll of Fire home">
-      <span class="brand-mark" aria-hidden="true">☲</span>
-      <span>
-        <strong>Scroll of Fire</strong>
-        <small>Codex of Reality</small>
-      </span>
-    </a>
 
     <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle>
       <span></span><span></span><span></span>
@@ -150,7 +162,7 @@
         </button>
         <div id="nav-explore" class="nav-drop-menu">
           <!-- site-nav:explore:start -->
-          <a href="../scroll/search.html">Scroll Search</a>
+          <a href="../scroll/search.html">Search the Scroll Library</a>
           <a href="../scroll/lexicon.html">Hebrew Lexicon</a>
           <a href="../scroll/atlas.html">Reference Atlas</a>
           <a href="../scroll/editorial.html">Evidence Edition</a>
@@ -1191,5 +1203,6 @@
       <p>© <span id="year"></span> Aaron Paul Laird</p>
     </div>
   </footer>
+  <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
 </body>
       </html>

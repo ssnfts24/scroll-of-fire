@@ -52,24 +52,36 @@
     }
   </style>
   <script defer src="assets/js/site.js"></script>
+  <script defer src="assets/js/living-search-launcher.js"></script>
   <script defer src="assets/js/calendar-cor.js"></script>
   <script defer src="assets/js/living-codex.js"></script>
   <script defer src="assets/js/codex-witness.js"></script>
   <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
 </head>
 
-<body>
+<body class="living-ui">
   <div class="living-aura" aria-hidden="true"></div>
   <a class="skip-link" href="#main">Skip to content</a>
+  <div class="living-nav" data-living-nav>
+    <nav class="living-nav-inner" aria-label="Site navigation">
+      <a class="living-nav-brand" href="index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a>
+      <ul class="living-nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="scroll/index.html">Scroll</a></li>
+        <li><a href="codex-atlas.html">Atlas</a></li>
+        <li><a href="scroll/lexicon.html">Lexicon</a></li>
+        <li><a href="scripture/index.html">Scripture</a></li>
+        <li><a href="living-time-sphere.html">Sphere</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="witness.html">Witness</a></li>
+        <li><a href="search.html">Living Search</a></li>
+        <li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li>
+      </ul>
+    </nav>
+  </div>
 
     <header class="site-header" data-sof-header>
-    <a class="brand" href="./" aria-label="Scroll of Fire home">
-      <span class="brand-mark" aria-hidden="true">☲</span>
-      <span>
-        <strong>Scroll of Fire</strong>
-        <small>Codex of Reality</small>
-      </span>
-    </a>
 
     <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle>
       <span></span><span></span><span></span>
@@ -98,7 +110,7 @@
         </button>
         <div id="nav-explore" class="nav-drop-menu">
           <!-- site-nav:explore:start -->
-          <a href="./scroll/search.html">Scroll Search</a>
+          <a href="./scroll/search.html">Search the Scroll Library</a>
           <a href="./scroll/lexicon.html">Hebrew Lexicon</a>
           <a href="./scroll/atlas.html">Reference Atlas</a>
           <a href="./scroll/editorial.html">Evidence Edition</a>
@@ -226,6 +238,24 @@
       </div>
     </section>
 
+        <section class="section-shell" id="lab-explainer">
+      <div class="section-heading">
+        <p class="eyebrow">Watch · The Explainer</p>
+        <h2>The working bench of the Scroll.</h2>
+        <p>
+          A short spoken tour of this page: the Remnant Lab as a bench for short, self-contained practices, its five tools from a ninety-second micro-run to a group circle, and its simple method of run, observe, and record. Press play and let the page explain itself.
+        </p>
+      </div>
+
+      <video controls preload="metadata" width="1280" height="720"
+        style="width:100%;height:auto;display:block"
+        src="assets/media/lab-explainer.mp4"
+        aria-label="Video: the Remnant Lab, explained in plain words">
+        Your browser does not support the video element. The same tour is
+        written out across this page.
+      </video>
+    </section>
+
     <section class="section-shell split" aria-label="Lab method and grounding">
       <article class="card glow">
         <p class="eyebrow">Method</p>
@@ -279,5 +309,6 @@
     </nav>
     <p>© <span id="year">2026</span> Aaron Paul Laird — Scroll of Fire · Codex of Reality · Scribe of Circuits</p>
   </footer>
+  <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
 </body>
 </html>

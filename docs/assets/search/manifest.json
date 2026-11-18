@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "generator": "scripts/build-search-index.mjs",
+  "engine": "living-search-bm25-v1",
+  "note": "Generated from the sealed catalog and Scroll data. The index Netlify and GitHub Pages serve is this committed artifact; regenerate with npm run search:index after site:catalog.",
+  "sources": {
+    "docs/data/site-catalog.json": "ace5ead95f2fd127a59241e4a3460a677896f1bb00ca2f5f7eac05596c6e961c",
+    "docs/scroll/data/library.json": "86370223f9bffe5fc30afc4c13767cb283f2f0cd2499321d84d166279ef24588",
+    "docs/scroll/data/reader-segments.json": "2624fe5640fd4abcf63499b32f28e36a532c8253f9a7cd2983833a1aa33297dc",
+    "docs/scroll/search/lexicon/lexicon-index.json": "92e4169f9a75bfa5467ab5bb57d77cca990a11cd2ab8ba8248685561a571b879",
+    "docs/scroll/evidence/claim-register.json": "3a29b4cd46eff77001e8c6d95d72f572f380a020179c3bd3a91e5201f707ac8e"
+  },
+  "areas": [
+    {
+      "id": "pages",
+      "title": "Pages",
+      "shard": "pages.json"
+    },
+    {
+      "id": "scrolls",
+      "title": "Scrolls",
+      "shard": "scrolls.json"
+    },
+    {
+      "id": "atlas",
+      "title": "Atlas",
+      "shard": "atlas.json"
+    },
+    {
+      "id": "lexicon",
+      "title": "Lexicon",
+      "shard": "lexicon.json"
+    },
+    {
+      "id": "claims",
+      "title": "Claims",
+      "shard": "claims.json"
+    }
+  ],
+  "counts": {
+    "pages": 161,
+    "scrollSections": 817,
+    "scrollSegments": 1609,
+    "scrolls": 2426,
+    "atlas": 65,
+    "lexicon": 911,
+    "claims": 21,
+    "total": 3584
+  },
+  "shards": {
+    "pages": {
+      "file": "pages.json",
+      "count": 161,
+      "bytes": 737232,
+      "sha256": "1a0d5bb7537e117bbdf2652744999b40c3d1871a97eaf7630960a8a8a25c48f6"
+    },
+    "scrolls": {
+      "file": "scrolls.json",
+      "count": 2426,
+      "bytes": 1115619,
+      "sha256": "ad7fcf8d603623eda03a36f85ff85ba0077207076ae3e5f93a0a6ba18e7f659d"
+    },
+    "atlas": {
+      "file": "atlas.json",
+      "count": 65,
+      "bytes": 15125,
+      "sha256": "ddcbef9212154a2bd8972e10aa3d2c36d01f58e48edda48e93429eaeffebc622"
+    },
+    "lexicon": {
+      "file": "lexicon.json",
+      "count": 911,
+      "bytes": 195940,
+      "sha256": "8b516ed50d03261582bb60ba24a8d50ecb2b7cd1d48cda7fe82f86e91569bd5d"
+    },
+    "claims": {
+      "file": "claims.json",
+      "count": 21,
+      "bytes": 12523,
+      "sha256": "3346d7acf76726d0d71f8e951601d41ba7c1c1f7ef3c8c3ad1ff7822d7ac1156"
+    }
+  },
+  "pageExclusions": {
+    "prefixes": [
+      "scroll/"
+    ],
+    "files": [
+      "404.html",
+      "offline.html",
+      "caravan.html",
+      "search.html"
+    ]
+  }
+}

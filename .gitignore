@@ -15,3 +15,7 @@ APPLY-IN-TERMUX.txt
 Thumbs.db
 *.swp
 *.swo
+
+# Python bytecode — regenerated on every run, never tracked
+__pycache__/
+*.pyc

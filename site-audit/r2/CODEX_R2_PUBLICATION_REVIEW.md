@@ -89,6 +89,7 @@ Automated scan of deployed Markdown, TXT, HTML, JSON and JS (excluding Scroll Li
 | Path | E-mail addresses | Phone-pattern hits |
 | --- | --- | --- |
 | `docs/about-aaron.html` | codexofrealityshop@gmail.com | — |
+| `docs/assets/search/pages.json` | — | 1 |
 | `docs/index.html` | codexofrealityshop@gmail.com | — |
 | `docs/invoke.html` | friend@node.org, team@example.com | — |
 | `docs/shop.html` | codexofrealityshop@gmail.com | — |

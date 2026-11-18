@@ -4541,6 +4541,22 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
   opacity: 0.65;
 }
 
+/* Manifest practice sessions carry a special placement marker:
+   a gold glyph rail distinguishing them from ordinary schedule entries. */
+.sphere-day-zoom-item.is-practice {
+  border-color: rgba(212, 175, 55, 0.6);
+  background: rgba(212, 175, 55, 0.06);
+}
+
+.sphere-day-zoom-marker {
+  flex: 0 0 auto;
+  align-self: center;
+  color: #e8c766;
+  font-size: 1.05rem;
+  line-height: 1;
+  text-shadow: 0 0 8px rgba(232, 199, 102, 0.55);
+}
+
 .sphere-day-zoom-time {
   flex: 0 0 5.2rem;
   font-variant-numeric: tabular-nums;
