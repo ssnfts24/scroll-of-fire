@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 1916,
-    "bytes": 538177023,
+    "bytes": 538177022,
     "byGroup": {
       "tooling": 148,
       "manuscript": 17,
@@ -41668,8 +41668,8 @@
       "path": "docs/shop.html",
       "title": "Artifact Registry",
       "format": "html",
-      "bytes": 39142,
-      "sha256": "41b08b416b329d5275ca6e5bbd331e048df6d65efa7cfd3201ecbb65cb2f989e",
+      "bytes": 39141,
+      "sha256": "5b76b74a71d1bfc3833d39e1e9f12bf7dfdcc0843afe2a65cc9d39131e86c082",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
