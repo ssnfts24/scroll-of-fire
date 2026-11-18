@@ -29,16 +29,26 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="The Living Time Sphere places fixed Pattern Time at the center and lets moving astronomical cycles travel around it. Select a day, Passage, or year to witness how the layers meet.">
   <meta name="theme-color" content="#05070d">
+  <!-- B7.61 — installed-app identity for the Sphere: standalone display so
+       "add to home screen" opens the instrument like an app. The existing
+       service worker already serves scripts/styles network-first, so no
+       cache-contract change is needed; the moons manifest is untouched. -->
+  <link rel="manifest" href="manifest-sphere.webmanifest">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Sphere">
   <link rel="canonical" href="https://codexofreality.org/living-time-sphere.html">
   <link rel="icon" type="image/png" href="assets/img/shared/branding/favicon.png">
   <link rel="apple-touch-icon" href="assets/img/shared/branding/favicon.png">
   <link rel="stylesheet" href="assets/css/codex.css">
   <link rel="stylesheet" href="assets/css/navigation.css">
   <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260819-b752&r=20260820-b758&p=20260820-b7581-labelglass&u=20260820-b7582-railalign&b=20260820-b7592a-farskeleton&d=20260821-b7592d7-unified">
+  <link rel="stylesheet" href="assets/css/living-time-sphere-app.css?v=20261117-b761-rework">
   <!-- B7.52 FAST BOOT: Three.js is a dynamic import, so advertise it before
        the renderer reaches init instead of discovering the module late. -->
   <link rel="modulepreload" href="assets/vendor/three/three.module.min.js" fetchpriority="high">
-  <link rel="preload" href="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260819-b7523&u=20260820-b7582-railalign&r=20260820-b7584-rootrail&a=20260820-b7585v3-auto&b=20260820-b7592a-farskeleton&s=20260820-b7592b-laneswap&f=20260820-b7592c-face&d=20260821-b7592d7-unified&t=20261117-b760-topviewgate&s=20261117-b7602-gatetied&u=20261117-b7603-selectedskeleton" as="script" fetchpriority="high">
+  <link rel="preload" href="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260819-b7523&u=20260820-b7582-railalign&r=20260820-b7584-rootrail&a=20260820-b7585v3-auto&b=20260820-b7592a-farskeleton&s=20260820-b7592b-laneswap&f=20260820-b7592c-face&d=20260821-b7592d7-unified&t=20261117-b760-topviewgate&s=20261117-b7602-gatetied&u=20261117-b7603-selectedskeleton&w=20261117-b761-rework" as="script" fetchpriority="high">
   <link rel="stylesheet" href="assets/css/living-time-sphere-metrics.css?v=20260814-1">
   <link rel="stylesheet" href="assets/css/observatory-workspace.css?v=20260815-6">
   <link rel="stylesheet" href="assets/css/living-planner.css?v=20260818-1">
@@ -195,14 +205,15 @@
    <!-- Sphere modules — Phase 03: 3D renderer modules (lazy) -->
    <script defer src="assets/js/sphere/living-time-sphere-version.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-model.js"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-calendar-geometry.js?v=20260819-b727&r=20260820-b7584-rootrail&b=20260820-b7592a-farskeleton&d=20260821-b7592d7-unified"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-calendar-geometry.js?v=20260819-b727&r=20260820-b7584-rootrail&b=20260820-b7592a-farskeleton&d=20260821-b7592d7-unified&w=20261117-b761-rework"></script>
    <script defer src="assets/js/sphere/living-time-sphere-temporal.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-state.js?v=20260819-b731"></script>
    <script defer src="assets/js/sphere/living-time-sphere-semantic-zoom.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-day-zoom.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-layout.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-connections.js?v=20260815-6"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-renderer-svg.js?v=20260815-6"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-sky.js?v=20261117-b761-rework"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-renderer-svg.js?v=20261117-b761-rework"></script>
    <script defer src="assets/js/sphere/living-time-sphere-renderer-canvas.js"></script>
    <script defer src="assets/js/sphere/observatory-capability-manager.js?v=20260819-b750"></script>
    <script defer src="assets/js/sphere/living-time-sphere-materials.js"></script>
@@ -216,7 +227,7 @@
   <script defer src="assets/js/sphere/living-time-sphere-temporal-strata.js?v=20260817-5"></script>
    <script defer src="assets/js/sphere/life-atlas-record-sphere-extension.js?v=20260819-b750&r=20260820-b757&u=20260820-b7582-railalign&s=20260820-b7592b-laneswap&f=20260820-b7592c-face&d=20260821-b7592d7-unified"></script>
    <!-- Life Atlas visual world projection temporarily disabled for recursive-sphere refactor -->
-   <script defer fetchpriority="high" src="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260819-b7523&u=20260820-b7582-railalign&r=20260820-b7584-rootrail&a=20260820-b7585v3-auto&b=20260820-b7592a-farskeleton&s=20260820-b7592b-laneswap&f=20260820-b7592c-face&d=20260821-b7592d7-unified&t=20261117-b760-topviewgate&s=20261117-b7602-gatetied&u=20261117-b7603-selectedskeleton"></script>
+   <script defer fetchpriority="high" src="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260819-b7523&u=20260820-b7582-railalign&r=20260820-b7584-rootrail&a=20260820-b7585v3-auto&b=20260820-b7592a-farskeleton&s=20260820-b7592b-laneswap&f=20260820-b7592c-face&d=20260821-b7592d7-unified&t=20261117-b760-topviewgate&s=20261117-b7602-gatetied&u=20261117-b7603-selectedskeleton&w=20261117-b761-rework"></script>
    <script defer src="assets/js/sphere/living-time-sphere-live-data.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-interaction.js?v=20260818-b73"></script>
    <script defer src="assets/js/sphere/living-time-sphere-accessibility.js"></script>
@@ -225,6 +236,7 @@
    <script defer src="assets/js/sphere/living-time-sphere-mount.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-today.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-ui.js?v=20260819-b752&r=20260820-b757&a=20260820-b7585v3-auto"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-app-shell.js?v=20261117-b761-rework"></script>
    <script defer>
      document.addEventListener("DOMContentLoaded", () => {
        const container = document.getElementById("sphere-container");
@@ -884,10 +896,10 @@
                 <label>Temporal depth<input id="sphere-strata-depth" type="range" min="0.12" max="0.36" step="0.01" value="0.22"></label>
               </div>
               <div class="sphere-strata-options sphere-strata-options-3">
-                <label class="sphere-layer-row"><input id="sphere-strata-chronology" type="checkbox" checked> Living chronology filament</label>
-                <label class="sphere-layer-row"><input id="sphere-strata-year-gate" type="checkbox" checked> Year Gate reference spine</label>
-                <label class="sphere-layer-row"><input id="sphere-strata-trajectory" type="checkbox" checked> Equinox evidence trajectory</label>
-                <label class="sphere-layer-row"><input id="sphere-strata-evidence-only" type="checkbox"> Evidence shells only</label>
+                <label class="sphere-layer-row" data-layer-slot="strataChronology"><input id="sphere-strata-chronology" type="checkbox" checked> Living chronology filament</label>
+                <label class="sphere-layer-row" data-layer-slot="strataYearGate"><input id="sphere-strata-year-gate" type="checkbox" checked> Year Gate reference spine</label>
+                <label class="sphere-layer-row" data-layer-slot="strataTrajectory"><input id="sphere-strata-trajectory" type="checkbox" checked> Equinox evidence trajectory</label>
+                <label class="sphere-layer-row" data-layer-slot="strataEvidenceOnly"><input id="sphere-strata-evidence-only" type="checkbox"> Evidence shells only</label>
               </div>
               <p id="sphere-strata-detail" class="sphere-strata-detail">Enable Living Strata to wrap year membranes around the unchanged 13-Moon core.</p>
 
@@ -1026,20 +1038,23 @@
           <!-- 5. Layer controls -->
           <div class="sphere-sidebar-section">
             <h2 class="sphere-sidebar-heading">Layers</h2>
-            <div class="sphere-layers" role="group" aria-label="Visible layers">
-              <label class="sphere-layer-row"><input id="sphere-layer-pattern"    type="checkbox" checked> Pattern structure</label>
-              <label class="sphere-layer-row"><input id="sphere-layer-exactDays"  type="checkbox" checked> Exact days</label>
-              <label class="sphere-layer-row"><input id="sphere-layer-weekGates"  type="checkbox" checked> Week Gates</label>
-              <label class="sphere-layer-row"><input id="sphere-layer-outsideDays" type="checkbox"> Outside days</label>
-              <label class="sphere-layer-row"><input id="sphere-layer-passage"    type="checkbox" checked> Equinox Passage</label>
-              <label class="sphere-layer-row"><input id="sphere-layer-lunar"      type="checkbox" checked> Lunar orbit</label>
-              <label class="sphere-layer-row"><input id="sphere-layer-solar"      type="checkbox"> Solar axis</label>
-              <label class="sphere-layer-row"><input id="sphere-layer-planets"    type="checkbox" checked> Planetary positions</label>
-              <label class="sphere-layer-row"><input id="sphere-layer-markers"    type="checkbox" checked> Annual markers</label>
-              <label class="sphere-layer-row"><input id="sphere-layer-recurrence" type="checkbox"> Recurrence links</label>
-              <label class="sphere-layer-row"><input id="sphere-layer-spiral"     type="checkbox"> 13-year spiral</label>
-              <label class="sphere-layer-row"><input id="sphere-layer-environment" type="checkbox"> Environment</label>
-              <label class="sphere-layer-row"><input id="sphere-layer-connections" type="checkbox" checked> Connections</label>
+            <!-- Layer slots: each row carries a stable data-layer-slot key.
+                 Future layers (e.g. the planned Earth layer) join this same
+                 list as a new row with their own slot key — no fake toggles. -->
+            <div class="sphere-layers" data-layer-slots role="group" aria-label="Visible layers">
+              <label class="sphere-layer-row" data-layer-slot="pattern"><input id="sphere-layer-pattern"    type="checkbox" checked> Pattern structure</label>
+              <label class="sphere-layer-row" data-layer-slot="exactDays"><input id="sphere-layer-exactDays"  type="checkbox" checked> Exact days</label>
+              <label class="sphere-layer-row" data-layer-slot="weekGates"><input id="sphere-layer-weekGates"  type="checkbox" checked> Week Gates</label>
+              <label class="sphere-layer-row" data-layer-slot="outsideDays"><input id="sphere-layer-outsideDays" type="checkbox"> Outside days</label>
+              <label class="sphere-layer-row" data-layer-slot="passage"><input id="sphere-layer-passage"    type="checkbox" checked> Equinox Passage</label>
+              <label class="sphere-layer-row" data-layer-slot="lunar"><input id="sphere-layer-lunar"      type="checkbox" checked> Lunar orbit</label>
+              <label class="sphere-layer-row" data-layer-slot="solar"><input id="sphere-layer-solar"      type="checkbox"> Solar axis</label>
+              <label class="sphere-layer-row" data-layer-slot="planets"><input id="sphere-layer-planets"    type="checkbox" checked> Planetary positions</label>
+              <label class="sphere-layer-row" data-layer-slot="markers"><input id="sphere-layer-markers"    type="checkbox" checked> Annual markers</label>
+              <label class="sphere-layer-row" data-layer-slot="recurrence"><input id="sphere-layer-recurrence" type="checkbox"> Recurrence links</label>
+              <label class="sphere-layer-row" data-layer-slot="spiral"><input id="sphere-layer-spiral"     type="checkbox"> 13-year spiral</label>
+              <label class="sphere-layer-row" data-layer-slot="environment"><input id="sphere-layer-environment" type="checkbox"> Environment</label>
+              <label class="sphere-layer-row" data-layer-slot="connections"><input id="sphere-layer-connections" type="checkbox" checked> Connections</label>
             </div>
           </div>
 

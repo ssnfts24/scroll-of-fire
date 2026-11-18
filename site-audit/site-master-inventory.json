@@ -3,7 +3,7 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 368,
+    "resources": 369,
     "publicHtmlPages": 76,
     "catalogEntries": 63,
     "issueCounts": {
@@ -420,7 +420,7 @@
     },
     {
       "id": "docs-assets:assets/css",
-      "title": "docs/assets/css (40 files)",
+      "title": "docs/assets/css (41 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -505,7 +505,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (145 files)",
+      "title": "docs/assets/js (147 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -563,6 +563,23 @@
       "relatedProjects": [],
       "sourcePath": "docs/data",
       "publicUrl": "https://codexofreality.org/data",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "supporting-asset",
+      "discoverability": null,
+      "issues": []
+    },
+    {
+      "id": "docs-assets:manifest-sphere.webmanifest",
+      "title": "docs/manifest-sphere.webmanifest (1 files)",
+      "description": "Static assets, data and generated artifacts served from docs/.",
+      "category": "Static assets",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/manifest-sphere.webmanifest",
+      "publicUrl": "https://codexofreality.org/manifest-sphere.webmanifest",
       "publicationStatus": "live",
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [],
@@ -4746,7 +4763,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (88 files)",
+      "title": "tests/ (92 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,

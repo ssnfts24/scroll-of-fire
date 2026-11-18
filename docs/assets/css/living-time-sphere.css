@@ -1851,6 +1851,32 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
   line-height: 1.18;
   transform: translateZ(0);
 }
+/* B7.61: expanded semantic cards (selected day, strata year, today, planets)
+   are readouts that float over the stage. As full click targets they sat on
+   top of the day-numeral clusters — worst in Top View on phone, where the
+   selected-year card covered the whole cluster and every real tap landed on
+   the card instead of the sphere (synthetic canvas dispatches masked this).
+   Cards are now click-through; only their real controls (buttons, links)
+   and the living-plan body (whose click dispatches plan selection) take
+   pointer events. Sphere taps reach the canvas pick path everywhere. */
+.sphere-semantic-label {
+  pointer-events: none;
+}
+.sphere-semantic-label[data-semantic-kind="living-plan"] .sphere-semantic-label-body,
+.sphere-semantic-label[data-semantic-kind="living-plan-summary"] .sphere-semantic-label-body {
+  pointer-events: auto;
+}
+/* Buttons on readout cards (Moon, year, today, planet cards) stay
+   click-through too: the expanded Moon card's "+ Schedule" button landed
+   exactly on the day-numeral cluster in Top View on phone and opened the
+   planner over the sphere on a stray tap. Only the selected-day card and
+   living-plan cards — where scheduling/editing is the point — keep live
+   buttons. */
+.sphere-semantic-label[data-semantic-id="selected-day"] button,
+.sphere-semantic-label[data-semantic-kind="living-plan"] button,
+.sphere-semantic-label[data-semantic-kind="living-plan-summary"] button {
+  pointer-events: auto;
+}
 .sphere-semantic-label.is-selected,
 .sphere-semantic-label.is-pinned {
   border-color: rgba(251, 191, 36, .58);
@@ -4139,8 +4165,19 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
 
 
 /* === B7.57 LIVE ENVIRONMENT TELEMETRY START === */
+/* B7.61: the telemetry bar is an OVERLAY on the stage (pointer-events: none,
+   translucent, backdrop blur). It must be position:absolute — as an in-flow
+   box it inserted itself above the WebGL canvas inside #sphere-container
+   and pushed the canvas down by its own height, while the label manager
+   kept projecting day chips against the container's unmoved rect. Every
+   pick after the bar appeared was offset by the bar height (the wrong-day
+   picking warp). Absolute positioning restores the invariant the picking
+   path assumes: canvas rect === container rect. */
 .sphere-live-environment-telemetry {
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 8;
   display: grid;
   gap: .12rem;
@@ -4245,6 +4282,20 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
 
 .sphere-semantic-label-schedule[hidden] {
   display: none !important;
+}
+
+/* B7.61: the base rule above grants every schedule button pointer-events:
+   auto, which made readout cards' buttons (notably the expanded Moon
+   card's) swallow sphere taps in dense clusters. Readout cards are
+   click-through (see the B7.61 card rule); only the selected-day card and
+   living-plan cards keep a live schedule button. */
+.sphere-semantic-label .sphere-semantic-label-schedule {
+  pointer-events: none;
+}
+.sphere-semantic-label[data-semantic-id="selected-day"] .sphere-semantic-label-schedule,
+.sphere-semantic-label[data-semantic-kind="living-plan"] .sphere-semantic-label-schedule,
+.sphere-semantic-label[data-semantic-kind="living-plan-summary"] .sphere-semantic-label-schedule {
+  pointer-events: auto;
 }
 
 @media (pointer: coarse), (max-width: 720px) {

@@ -154,6 +154,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/css/living-time-sphere-app.css",
+      "sha256": "5973508911736f888d2c46bcb3d81e2e6346c97539e7c7e9852be0dbef95536a",
+      "publicUrl": "https://codexofreality.org/assets/css/living-time-sphere-app.css",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/css/living-time-sphere-metrics.css",
       "sha256": "a72be264a33f23f0f46838c2d5dde098f4e50e86d78c480378671270435a8086",
       "publicUrl": "https://codexofreality.org/assets/css/living-time-sphere-metrics.css",
@@ -161,7 +167,7 @@
     },
     {
       "path": "docs/assets/css/living-time-sphere.css",
-      "sha256": "0b26310649235f4109322f09e8e809c6781f536a36b0715c5134f8154d30ed89",
+      "sha256": "ae23445a772cc0f7e7d30fdb89ff4eb67d7437b8101cf9e05b7c1027665f76fb",
       "publicUrl": "https://codexofreality.org/assets/css/living-time-sphere.css",
       "status": "operational"
     },
@@ -1469,13 +1475,13 @@
     },
     {
       "path": "docs/assets/js/environment/environment-authority.js",
-      "sha256": "7f61944dcb0e6dc42420f037035ce6a2f5d9cdaa6f4d523c6af27ea25774050b",
+      "sha256": "a4283364f24c40260029bbc31c260a9e7dce018f4350735ac59109448cddbb5b",
       "publicUrl": "https://codexofreality.org/assets/js/environment/environment-authority.js",
       "status": "operational"
     },
     {
       "path": "docs/assets/js/environment/environment-state.js",
-      "sha256": "229c88239c8e46a656747d58e657071cab5dc0f00ab65cd496810f240edc0f69",
+      "sha256": "bc285cd89b7f5bd43e42fee8471a7cd9dc5695821b4b2541137493cc620c3ed1",
       "publicUrl": "https://codexofreality.org/assets/js/environment/environment-state.js",
       "status": "operational"
     },
@@ -1936,8 +1942,14 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/js/sphere/living-time-sphere-app-shell.js",
+      "sha256": "611744b153f2f9b43f8b1dcc3fb39006904bf0bd4864c8e819444665c7a73180",
+      "publicUrl": "https://codexofreality.org/assets/js/sphere/living-time-sphere-app-shell.js",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/js/sphere/living-time-sphere-calendar-geometry.js",
-      "sha256": "83a23bdd3e0c8d2a065108c035478385f2ca61827e753e01a1c765f0c56e088c",
+      "sha256": "95dd2d2e42576154aae0bb8e8e5463f5e15e7bd1f47414e2208af39f023d52c3",
       "publicUrl": "https://codexofreality.org/assets/js/sphere/living-time-sphere-calendar-geometry.js",
       "status": "operational"
     },
@@ -2039,7 +2051,7 @@
     },
     {
       "path": "docs/assets/js/sphere/living-time-sphere-renderer-3d.js",
-      "sha256": "ac4f4127dd5c5a124f2c6e2292aa7cc4dbf222cdaf4bfb8ae31a9f65643af1b6",
+      "sha256": "2957eb4afbf6e465311d56bb1fff19d58637e1fe2885fe4c4a07c33e3b364ed8",
       "publicUrl": "https://codexofreality.org/assets/js/sphere/living-time-sphere-renderer-3d.js",
       "status": "operational"
     },
@@ -2051,7 +2063,7 @@
     },
     {
       "path": "docs/assets/js/sphere/living-time-sphere-renderer-svg.js",
-      "sha256": "2afb3fcc12be5b00323d4ca5520c8d5b80f53977d01c83e2b71f4163de90646c",
+      "sha256": "c77873568191f346c03df9599b508f692be92d36d1fd9e994200ebc10d8c1331",
       "publicUrl": "https://codexofreality.org/assets/js/sphere/living-time-sphere-renderer-svg.js",
       "status": "operational"
     },
@@ -2059,6 +2071,12 @@
       "path": "docs/assets/js/sphere/living-time-sphere-semantic-zoom.js",
       "sha256": "7b1613ba2ef0fad4d7f5d4673f9701fa264fc9143fc2d763642bce5b60a47560",
       "publicUrl": "https://codexofreality.org/assets/js/sphere/living-time-sphere-semantic-zoom.js",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/js/sphere/living-time-sphere-sky.js",
+      "sha256": "9806764864101fffdf46a7be89af21367bcf3331dd15d2d4c029a786db0c8820",
+      "publicUrl": "https://codexofreality.org/assets/js/sphere/living-time-sphere-sky.js",
       "status": "operational"
     },
     {
@@ -2273,7 +2291,7 @@
     },
     {
       "path": "docs/living-time-sphere.html",
-      "sha256": "d70f6c4baee965ca0a8916134016c587539c4b41b8e80b949873ecfd7b9a7929",
+      "sha256": "7a50d21a0c43cc5528165b901fe973e444d1628273d9a31b2418c843a8b67669",
       "publicUrl": "https://codexofreality.org/living-time-sphere.html",
       "status": "operational"
     },
@@ -7822,6 +7840,12 @@
       "publicUrl": "https://codexofreality.org/development/TEMPORAL-AUTHORITY-CONTRACT.md",
       "eligibility": "restricted-review",
       "reason": "Engineering report or specification under the publish tree"
+    },
+    {
+      "path": "docs/manifest-sphere.webmanifest",
+      "publicUrl": "https://codexofreality.org/manifest-sphere.webmanifest",
+      "eligibility": "public-unreviewed",
+      "reason": "Site page or support file"
     },
     {
       "path": "docs/manifest.webmanifest",
