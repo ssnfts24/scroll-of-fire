@@ -1,6 +1,14 @@
 [
  {
   "date": "2026-11-18",
+  "type": "system",
+  "title": "The Sphere page was rebuilt, top to bottom",
+  "summary": "Tapping a day now lands on the day you touched, real weather drives the sky above it, and the page stands full-screen like an app — with a door back to the Codex, a fullscreen view, and panels that slide away. In Top View the day numerals thin to a readable skeleton around the Moon you have selected.",
+  "url": "./living-time-sphere.html",
+  "symbol": "◉"
+ },
+ {
+  "date": "2026-11-18",
   "type": "page",
   "title": "The Systems Hub learned to explain itself out loud",
   "summary": "A short spoken explainer now stands at the head of the Systems Hub, the bench where the Codex's tools and systems gather. Tap to play.",
