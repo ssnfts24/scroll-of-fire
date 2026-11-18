@@ -11,7 +11,15 @@
  *      external Support door last) immediately after the page's skip
  *      link, or right after <body> when the page has no skip link.
  *      Pages that already carry the nav get their emitted block
- *      refreshed in place, so emission changes reach them too.
+ *      refreshed in place, so emission changes reach them too;
+ *   3. removes the legacy site-header brand anchor (the "Scroll of
+ *      Fire / Codex of Reality" home button inside <header
+ *      class="site-header" data-sof-header>) from every page it
+ *      processes. Once the unified nav is present, its brand is the
+ *      one brand/home element on the page; the legacy header keeps
+ *      its menu toggle and its deep navigation, but no second brand.
+ *      Pages this script never touches (the exclusions below, and
+ *      the R1.7 sphere page above all) keep their header as-is.
  *
  * Link hrefs are computed the way a browser resolves them: against the
  * page's <base href> when one is present, otherwise against the page's
@@ -29,8 +37,9 @@
  * test suite rebuilds the library pages) would wipe a hand edit. This
  * script only verifies those pages carry the nav and reports them.
  *
- * The script is idempotent: pages already carrying data-living-nav are
- * skipped, and the stylesheet link is only added when missing.
+ * The script is idempotent: the stylesheet link is only added when
+ * missing, the nav only when absent, and the legacy brand strip is a
+ * no-op once the brand is gone.
  *
  * Usage: node scripts/apply-living-nav.mjs [--dry-run]
  */
@@ -156,6 +165,33 @@ function generatorFor(rel) {
   return null;
 }
 
+/* The legacy brand anchor inside the shared site header: one anchor
+ * with class "brand" (its tag may span lines, and its markup may be
+ * one line or several). It never nests another anchor, so a lazy
+ * match to its own </a> is exact. */
+const LEGACY_BRAND_RE = /[ \t]*<a\b[^>]*\bclass="brand"[^>]*>[\s\S]*?<\/a>[ \t]*\r?\n?/;
+
+/* Remove the legacy brand from the page's site header, if present.
+ * Scoped to the <header class="site-header" data-sof-header> block
+ * so a "brand" class anywhere else on the page is never touched.
+ * Returns { html, stripped }. */
+function stripLegacyBrand(html) {
+  const header = html.match(/<header\b[^>]*\bdata-sof-header[^>]*>[\s\S]*?<\/header>/);
+  if (!header || !LEGACY_BRAND_RE.test(header[0])) return { html, stripped: false };
+  const cleaned = header[0].replace(LEGACY_BRAND_RE, "");
+  /* Splice by index: String.replace would read $ sequences in the
+   * header markup as replacement patterns. */
+  return {
+    html: html.slice(0, header.index) + cleaned + html.slice(header.index + header[0].length),
+    stripped: true
+  };
+}
+
+function hasLegacyBrand(html) {
+  const header = html.match(/<header\b[^>]*\bdata-sof-header[^>]*>[\s\S]*?<\/header>/);
+  return Boolean(header && LEGACY_BRAND_RE.test(header[0]));
+}
+
 const report = [];
 
 for (const full of [...walk(docsDir)].sort()) {
@@ -171,10 +207,25 @@ for (const full of [...walk(docsDir)].sort()) {
       rel,
       action: html.includes("data-living-nav")
         ? "generator-owned"
-        : `MISSING NAV (regenerate: ${gen})`
+        : `MISSING NAV (regenerate: ${gen})`,
+      warn: hasLegacyBrand(html)
+        ? "LEGACY BRAND PRESENT (generator-owned: strip in the generator)"
+        : ""
     });
     continue;
   }
+  const changes = [];
+
+  /* 3. One brand per page: with the unified nav in place (or about
+   * to be inserted below), the legacy site-header brand is a second
+   * home button — strip it. The header's menu and deep navigation
+   * are untouched. */
+  const strip = stripLegacyBrand(html);
+  if (strip.stripped) {
+    html = strip.html;
+    changes.push("brand-stripped");
+  }
+
   const pageDir = posixDirname(rel);
   const baseMatch = html.match(/<base\b[^>]*\bhref="([^"]*)"/i);
   const baseDir = baseMatch ? resolveDir(pageDir, baseMatch[1]) : pageDir;
@@ -182,25 +233,25 @@ for (const full of [...walk(docsDir)].sort()) {
   if (html.includes("data-living-nav")) {
     /* Refresh the emitted block in place so emission changes (the
      * Support door) reach pages that already carry the nav. The block
-     * holds no nested <div>, so its first </div> is its own close. */
+     * holds no nested <div>, so its first </div> is its own close.
+     * A brand strip above lands in the same single write. */
     const fresh = buildNav(baseDir, currentAreaFor(rel));
     const navRe = /^[ \t]*<div class="living-nav" data-living-nav>[\s\S]*?<\/div>/m;
     const next = html.replace(navRe, () => fresh);
     if (next !== html) {
-      if (!dryRun) fs.writeFileSync(full, next);
-      report.push({
-        rel,
-        action: "nav refreshed",
-        base: baseMatch ? baseMatch[1] : "(none)",
-        area: currentAreaFor(rel) || "—"
-      });
-    } else {
-      report.push({ rel, action: "already has nav" });
+      html = next;
+      changes.push("nav refreshed");
     }
+    if (changes.length && !dryRun) fs.writeFileSync(full, html);
+    report.push({
+      rel,
+      action: changes.length ? changes.join("+") : "already has nav",
+      changed: changes.length > 0,
+      base: baseMatch ? baseMatch[1] : "(none)",
+      area: currentAreaFor(rel) || "—"
+    });
     continue;
   }
-
-  const changes = [];
 
   /* 1. Stylesheet wiring for the shared living layer. */
   if (!/assets\/css\/living-ui\.css/.test(html)) {
@@ -234,6 +285,7 @@ for (const full of [...walk(docsDir)].sort()) {
   report.push({
     rel,
     action: changes.join("+"),
+    changed: changes.length > 0,
     base: baseMatch ? baseMatch[1] : "(none)",
     area: currentAreaFor(rel) || "—"
   });
@@ -241,8 +293,9 @@ for (const full of [...walk(docsDir)].sort()) {
 
 for (const row of report) {
   console.log(
-    `${row.rel.padEnd(58)} ${String(row.action).padEnd(16)} base=${row.base ?? ""} area=${row.area ?? ""}`
+    `${row.rel.padEnd(58)} ${String(row.action).padEnd(16)} base=${row.base ?? ""} area=${row.area ?? ""}${row.warn ? "  " + row.warn : ""}`
   );
 }
-const changed = report.filter((r) => ["css", "nav", "css+nav", "nav refreshed"].includes(r.action)).length;
-console.log(`\n${dryRun ? "[dry-run] " : ""}${changed} pages ${dryRun ? "would gain" : "gained"} the unified nav; ${report.length} pages examined.`);
+const changed = report.filter((r) => r.changed).length;
+const gained = report.filter((r) => r.changed && String(r.action).split("+").includes("nav")).length;
+console.log(`\n${dryRun ? "[dry-run] " : ""}${changed} pages changed (${gained} gained the unified nav); ${report.length} pages examined.`);
