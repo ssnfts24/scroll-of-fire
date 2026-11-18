@@ -8,6 +8,8 @@
  * 4. Staged reveals. Sections are VISIBLE by default — the hidden state
  *    (.le-reveal-pending) is only ever applied by living-entry.js at runtime,
  *    so no-JS and reduced-motion visitors lose nothing.
+ * 5. The witness line: a calm crossfade of teachings drawn verbatim from
+ *    the site's own pages (rotation itself lives in living-witness.js).
  *
  * Motion uses transform/opacity only. Everything here is disabled or
  * neutralised under prefers-reduced-motion.
@@ -531,6 +533,56 @@ body.le-lock {
 }
 
 /* ------------------------------------------------------------------ */
+/* 7. The witness line — the hero keeps moving, calmly                 */
+/*                                                                     */
+/* Teachings and observations harvested verbatim from the site's own   */
+/* pages (each line names its source in data-source). All lines are    */
+/* stacked in one grid cell, so the block's height is set by the       */
+/* longest line and never changes as they crossfade — zero layout      */
+/* shift. The first line carries .is-active in the markup: without     */
+/* JS, and under reduced motion, it simply stands there. Rotation      */
+/* itself lives in living-witness.js.                                  */
+/* ------------------------------------------------------------------ */
+
+.living-witness {
+  margin: 1.5rem 0 0.25rem;
+  padding: 1rem 1.15rem 1.1rem;
+  border: 1px solid rgba(243, 201, 122, 0.22);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0 1px 0 rgba(244, 240, 222, 0.05);
+}
+
+.living-witness-kicker {
+  margin: 0 0 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-deep, #d99545);
+}
+
+.living-witness-stage {
+  display: grid;
+}
+
+.living-witness-line {
+  grid-area: 1 / 1;
+  margin: 0;
+  font-size: 1.06rem;
+  line-height: 1.55;
+  color: rgba(244, 240, 222, 0.92);
+  opacity: 0;
+  transition: opacity 1.1s ease;
+  pointer-events: none;
+}
+
+.living-witness-line.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ------------------------------------------------------------------ */
 /* Reduced motion: nothing breathes, nothing hides, nothing glides     */
 /* ------------------------------------------------------------------ */
 
@@ -569,6 +621,10 @@ body.le-lock {
 
   .le-lead-link,
   .le-door {
+    transition: none;
+  }
+
+  .living-witness-line {
     transition: none;
   }
 
