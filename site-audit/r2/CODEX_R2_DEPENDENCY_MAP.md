@@ -63,6 +63,12 @@
 | `scripts/free_all_circuits.py` | — |
 | `scripts/generate-equinox-passage-data.mjs` | `docs/data/equinox-passage/equinox-source-metadata.json`, `docs/data/equinox-passage/equinox-reference-2014-2026.json`, `docs/data/equinox-passage/equinox-passage-2014-2026.json` |
 | `scripts/r2-extract-documents.py` | `site-audit/r2/document-extracts.json` |
+| `scripts/r2_02_acquire_sources.py` | — |
+| `scripts/r2_02_build.py` | `docs/scripture/data/lemma-index.json`, `docs/scripture/data/context.json`, `docs/scripture/data/manifest.json` |
+| `scripts/r2_02_lib.py` | — |
+| `scripts/r2_02_pages.py` | `docs/scripture/index.html`, `docs/scripture/about.html`, `docs/scripture/lemma.html` |
+| `scripts/r2_02_reports.py` | — |
+| `scripts/r2_02_verify.py` | `docs/scripture/data/manifest.json`, `docs/scroll/archive/Full_Scroll_Unsealed.txt`, `site-audit/r2-02/original-to-derived-comparison.json` |
 | `scripts/scroll-source-audit.mjs` | — |
 | `scripts/scroll_signal.py` | — |
 | `scripts/validate-codex-data.js` | `docs/assets/data/codex-updates.json`, `docs/assets/data/moons.json`, `docs/assets/data/field-notes.json`, `docs/assets/data/artifacts.json` |
@@ -71,9 +77,9 @@
 
 | Stylesheet | Pages |
 | --- | --- |
+| `docs/scripture/assets/scripture.css` | 93 |
 | `docs/assets/css/codex.css` | 35 |
 | `docs/assets/css/navigation.css` | 29 |
-| `docs/assets/css/living-ui.css` | 26 |
 | `docs/theory/equations/assets/css/codex.css` | 19 |
 | `docs/theory/equations/assets/css/navigation.css` | 19 |
 | `docs/theory/equations/assets/css/theory.css` | 19 |
@@ -86,8 +92,8 @@
 
 | Script | Pages |
 | --- | --- |
-| `docs/assets/js/site.js` | 35 |
-| `docs/assets/js/living-ui.js` | 26 |
+| `docs/assets/js/site.js` | 128 |
+| `docs/scripture/assets/scripture.js` | 93 |
 | `docs/theory/equations/https:/cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js` | 19 |
 | `docs/theory/equations/assets/js/site.js` | 19 |
 | `docs/theory/equations/assets/js/theory.js` | 19 |

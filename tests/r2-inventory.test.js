@@ -106,5 +106,5 @@ test("Atlas filter form stays hidden without JavaScript", () => {
   const html = fs.readFileSync(path.join(root, "docs/codex-atlas.html"), "utf8");
   assert.match(css, /\.atlas-filters\[hidden\]\s*\{\s*display:\s*none/);
   assert.match(html, /<noscript>[\s\S]*Filtering needs JavaScript/);
-  assert.equal((html.match(/data-atlas-card(?:[ >])/g) || []).length, 63);
+  assert.equal((html.match(/data-atlas-card(?:[ >])/g) || []).length, 64);
 });
