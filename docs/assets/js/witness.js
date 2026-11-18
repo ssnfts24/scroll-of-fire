@@ -1,5 +1,6 @@
 /*
- * Witness's page — the live day line.
+ * Witness's page — the live day line, wherever it stands on the page
+ * (the hero line, and the same line woven into the letter that changes).
  *
  * Today's 13 Moons coordinate, resolved through SOFTemporalCursor
  * (the site's single temporal authority, per the temporal-authority
@@ -14,8 +15,8 @@
   "use strict";
 
   function fillDayLine() {
-    const el = document.querySelector("[data-witness-today]");
-    if (!el) return;
+    const els = document.querySelectorAll("[data-witness-today]");
+    if (!els.length) return;
 
     const civil = new Date().toLocaleDateString("en-US", {
       weekday: "long",
@@ -63,7 +64,10 @@
       coordinate = null;
     }
 
-    el.textContent = coordinate ? civil + " · " + coordinate : civil;
+    const line = coordinate ? civil + " · " + coordinate : civil;
+    els.forEach((el) => {
+      el.textContent = line;
+    });
   }
 
   if (document.readyState === "loading") {

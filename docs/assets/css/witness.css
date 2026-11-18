@@ -82,6 +82,33 @@
   padding-bottom: 0.35rem;
 }
 
+/* The letter */
+.witness-letter {
+  border: 1px solid rgba(243, 201, 122, 0.25);
+  border-radius: 0.6rem;
+  padding: 1.1rem 1.2rem;
+  background: rgba(11, 15, 26, 0.45);
+}
+
+.witness-letter p:last-child {
+  margin-bottom: 0;
+}
+
+.witness-sign {
+  color: #f3c97a;
+  font-weight: 700;
+}
+
+/* The long line */
+.witness-poem {
+  padding-left: 1.4rem;
+}
+
+.witness-poem li {
+  margin-bottom: 0.5rem;
+  font-style: italic;
+}
+
 /* Field notes */
 .witness-note {
   border: 1px solid rgba(122, 243, 255, 0.18);
