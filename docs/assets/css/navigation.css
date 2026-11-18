@@ -473,6 +473,10 @@ body.site-menu-open {
 
   .nav-toggle {
     display: block;
+    /* The legacy brand anchor is gone from pages that carry the
+     * unified living nav; keep the toggle at the right edge where
+     * it has always sat. */
+    margin-left: auto;
   }
 
   .site-nav {
@@ -480,7 +484,12 @@ body.site-menu-open {
     inset: var(--header-h, 72px) 0 0;
     z-index: 895;
     width: 100%;
-    height: calc(100dvh - var(--header-h, 72px));
+    /* The panel is positioned inside the sticky site header, so its
+     * box starts below BOTH top bars on pages that carry the unified
+     * living nav; subtract that bar too (--living-nav-h, defined in
+     * living-ui.css; 0 on pages without it) so the panel ends at the
+     * visible viewport bottom instead of overshooting it. */
+    height: calc(100dvh - var(--header-h, 72px) - var(--living-nav-h, 0px));
     display: flex;
     visibility: hidden;
     overflow-y: auto;
@@ -506,6 +515,14 @@ body.site-menu-open {
       opacity 0.2s ease,
       transform 0.2s ease,
       visibility 0.2s ease;
+  }
+
+  /* On the homepage the fixed bottom step rail (.le-rail, z-index
+   * 900) overlaps the panel's last screenful. Pad the panel's bottom
+   * well past the rail's height so its final item scrolls fully
+   * clear of the rail and can be tapped. */
+  html.home-page .site-nav {
+    padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
   }
 
   .site-nav.is-site-nav-open {
