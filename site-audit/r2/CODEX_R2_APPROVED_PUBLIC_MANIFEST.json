@@ -1468,6 +1468,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/js/claims-atlas.js",
+      "sha256": "6d95d1545dc9bb3d86a4230eb9276378599e2e43cbeb7ee2c409415200a67b21",
+      "publicUrl": "https://codexofreality.org/assets/js/claims-atlas.js",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/js/codex-atlas.js",
       "sha256": "dee603422904c55539dbb9f8d5ba6195c80d22ee751eff4fa2b4299f17556ba9",
       "publicUrl": "https://codexofreality.org/assets/js/codex-atlas.js",
@@ -2263,6 +2269,12 @@
       "path": "docs/circle.html",
       "sha256": "16b0052e9ca6573580f884c96e28ea96e6aaedb70cc56e30b2c1d79ba939644d",
       "publicUrl": "https://codexofreality.org/circle.html",
+      "status": "operational"
+    },
+    {
+      "path": "docs/claims-atlas.html",
+      "sha256": "7d299aa6e1f85be75f9e1c68c2acb511b2fc5fe8c5e39ce3a5b1db7081a1e095",
+      "publicUrl": "https://codexofreality.org/claims-atlas.html",
       "status": "operational"
     },
     {
