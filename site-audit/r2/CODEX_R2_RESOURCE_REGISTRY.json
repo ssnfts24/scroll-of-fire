@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 1984,
-    "bytes": 716314487,
+    "bytes": 716315247,
     "byGroup": {
       "tooling": 160,
       "manuscript": 17,
@@ -6869,8 +6869,8 @@
       "path": "docs/assets/data/codex-updates.json",
       "title": "codex-updates.json",
       "format": "json",
-      "bytes": 26852,
-      "sha256": "1a5348d1ab609682cf43dd750e7104690bb6ddd2c7aea972e40fee157096ac5c",
+      "bytes": 27612,
+      "sha256": "78639cc2774489aed815d840135530de9ad90fb2511a45f24d42879248f5849e",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
