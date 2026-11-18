@@ -442,8 +442,58 @@
     return `<circle class="sphere-center" cx="${cx}" cy="${cy}" r="4" fill="var(--sphere-center, rgba(255,255,255,0.6))" aria-hidden="true" />`;
   }
 
+  function _hexToRgb(hex) {
+    const n = Number(hex) || 0;
+    return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+  }
+
+  /*
+   * B7.61 — DATA-BOUND CLOUD VEIL (SVG fallback).
+   *
+   * The fallback renderer used to be cloud-blind. It now draws the same
+   * data-bound sky the 3D renderer draws, in a flat dignified form: three
+   * concentric bands whose opacity is the low/mid/high cover, a grey veil
+   * when cover is heavy, and precipitation marks whose kind follows the
+   * WMO weather_code (rain streaks / snow motes). The sky comes from the
+   * same SofEnvironmentState snapshot as the ENV strip; with no snapshot
+   * there is no veil — the honest unset state. Scatter positions are
+   * deterministic (golden-angle), never random, so renders are stable.
+   */
+  function renderCloudVeil(rings, cx, cy, sky) {
+    if (!sky?.hasData) return "";
+    const { r, g, b } = _hexToRgb(sky.light.cloudColor);
+    const colour = `rgba(${r},${g},${b},A)`;
+    const parts = [`<g class="sphere-svg-clouds" data-light-mode="${esc(sky.light.mode)}" data-total-cover="${Math.round(sky.totalCover)}">`];
+    if (sky.veilOpacity > 0.01) {
+      parts.push(`<circle class="sphere-svg-cloud-veil" cx="${cx}" cy="${cy}" r="${rings.patternRing * 1.21}" fill="${colour.replace("A", String(sky.veilOpacity.toFixed(3)))}" />`);
+    }
+    const bandRadii = [1.1, 1.14, 1.18];
+    sky.bands.forEach((band, index) => {
+      if (!(band.cover > 0)) return;
+      parts.push(`<circle class="sphere-svg-cloud-band sphere-svg-cloud-${band.level}" cx="${cx}" cy="${cy}" r="${(rings.patternRing * bandRadii[index]).toFixed(1)}" fill="none" stroke="${colour.replace("A", String((band.opacity * 0.55).toFixed(3)))}" stroke-width="${(4 + band.opacity * 14).toFixed(1)}" />`);
+    });
+    const precip = sky.precipitation;
+    if (precip && precip.mode !== "none") {
+      const count = Math.round(6 + precip.intensity * 22);
+      const golden = Math.PI * (3 - Math.sqrt(5));
+      for (let i = 0; i < count; i += 1) {
+        const angle = i * golden;
+        const radius = rings.patternRing * (1.02 + ((i * 37) % 20) / 100);
+        const x = cx + Math.cos(angle) * radius;
+        const y = cy + Math.sin(angle) * radius;
+        if (precip.mode === "snow") {
+          parts.push(`<circle class="sphere-svg-precip-mote" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.4" fill="rgba(244,248,255,0.75)" />`);
+        } else {
+          parts.push(`<line class="sphere-svg-precip-streak" x1="${x.toFixed(1)}" y1="${y.toFixed(1)}" x2="${(x + 1.2).toFixed(1)}" y2="${(y + 4.2).toFixed(1)}" stroke="rgba(141,220,255,0.7)" stroke-width="1" />`);
+        }
+      }
+    }
+    parts.push(`</g>`);
+    return parts.join("\n");
+  }
+
   // Build the complete SVG string for the sphere.
-  function buildSvgString({ model, spiral, layout, visibleLayers, selectedYear, viewMode, moonLabelMode = "contextual", moonLabelDistance = "standard", dayLabelMode = "key", connectionRegistry = [], semanticZoomState = null } = {}) {
+  function buildSvgString({ model, spiral, layout, visibleLayers, selectedYear, viewMode, moonLabelMode = "contextual", moonLabelDistance = "standard", dayLabelMode = "key", connectionRegistry = [], semanticZoomState = null, environmentSky = undefined } = {}) {
     assertDeps();
 
     const { w, h, cx, cy, rings } = layout;
@@ -475,6 +525,10 @@
       vl.markers  ? renderYearLabels(spiral, rings, cx, cy, selectedYear, vl.markers, viewMode) : "",
       model        ? renderEquinoxGate(model, rings, cx, cy) : "",
       model        ? renderYearGate(model, rings, cx, cy) : "",
+      vl.environment !== false ? renderCloudVeil(rings, cx, cy,
+        environmentSky !== undefined
+          ? environmentSky
+          : globalThis.LivingTimeSphereSky?.skyFromSnapshot?.(globalThis.SofEnvironmentState?.getEnvironmentState?.())) : "",
       renderCenterPoint(cx, cy),
       `</svg>`
     ];
@@ -483,10 +537,10 @@
   }
 
   // Render into a container DOM element.
-  function renderInto(container, { model, spiral, layout, visibleLayers, selectedYear, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, semanticZoomState } = {}) {
+  function renderInto(container, { model, spiral, layout, visibleLayers, selectedYear, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, semanticZoomState, environmentSky } = {}) {
     assertDeps();
     if (!container) return;
-    const svg = buildSvgString({ model, spiral, layout, visibleLayers, selectedYear, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, semanticZoomState });
+    const svg = buildSvgString({ model, spiral, layout, visibleLayers, selectedYear, viewMode, moonLabelMode, moonLabelDistance, dayLabelMode, connectionRegistry, semanticZoomState, environmentSky });
     const holder = document.createElement("div");
     holder.innerHTML = svg;
     const nextSvg = holder.querySelector("svg");
@@ -559,5 +613,5 @@
     });
   }
 
-  globalThis.LivingTimeSphereRendererSvg = Object.freeze({ buildSvgString, renderInto });
+  globalThis.LivingTimeSphereRendererSvg = Object.freeze({ buildSvgString, renderInto, renderCloudVeil });
 })();

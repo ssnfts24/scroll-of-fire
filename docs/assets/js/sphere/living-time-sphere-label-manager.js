@@ -816,6 +816,9 @@
       calendarDisclosure = null,
 
       semanticBand = "medium",
+
+      // B7.60 — overhead (top-view) gate from renderer camera elevation.
+      cameraOverhead = false,
       interactionLite = false
     }) {
       const stage = stageEl || _stageEl;
@@ -870,6 +873,7 @@
         visibleLayersKey || "",
         Array.isArray(semanticTargets) ? semanticTargets.length : 0,
         String(semanticBand || "medium"),
+        cameraOverhead ? "overhead" : "tilted",
         cameraSignature(camera)
       ].join("::");
 
@@ -1437,6 +1441,11 @@
               .toLowerCase()
             === "all";
 
+          // B7.60 — overhead reuses the far skeleton gate below: the
+          // X-only aperture is a tilted-view window and cannot thin the
+          // rail once the camera is near top-down.
+          const overhead = !!cameraOverhead;
+
           const apertureOpacity =
             railApertureOpacity(
               candidate
@@ -1446,7 +1455,7 @@
             target?.kind ===
             "intercalary-day-number"
           ) {
-            if (revealAll) return true;
+            if (revealAll && !overhead) return true;
 
             return (
               sharedMoonWindow
@@ -1454,6 +1463,7 @@
               && apertureOpacity
                 > 0.025
               && band !== "far"
+              && !overhead
             );
           }
 
@@ -1490,7 +1500,7 @@
             return true;
           }
 
-          if (revealAll) {
+          if (revealAll && !overhead) {
             return true;
           }
 
@@ -1499,8 +1509,13 @@
            * Front Moon: 1, 7, 14, 21, 28.
            * Immediate neighbor Moon(s): 1, 14, 28.
            * Scheduled days also survive. The physical calendarCell never moves.
+           *
+           * B7.60 — the same skeleton is the overhead rule: near top-down,
+           * day numerals collapse to these week anchors of the disclosure
+           * Moons, plus selected/pinned days (already returned above).
+           * No label moves; only visibility is governed.
            */
-          if (band === "far") {
+          if (band === "far" || overhead) {
             const centerMoon =
               Number(
                 calendarDisclosure?.centerMoon
@@ -1551,6 +1566,76 @@
                         : false
                   );
 
+            /*
+             * B7.60.1 — overhead window. Near top-down, the shared Moon
+             * window and the X-only aperture are both derived from
+             * tilted-view disclosure geometry and degenerate together:
+             * the window can name Moons whose anchors the aperture then
+             * zeroes, so the skeleton came out empty and no day numeral
+             * rendered overhead at all. Overhead, the window is the
+             * disclosure centerMoon's circular neighborhood instead —
+             * front Moon plus immediate neighbors, the same Moons
+             * `structural` already grades — and the aperture passes for
+             * the structural/scheduled candidates inside it. (With no
+             * centerMoon, moonDistance is 0 throughout and `structural`
+             * keeps its every-Moon front-anchor fallback.) Tilted and
+             * far-band behavior below is exactly as before.
+             */
+            if (overhead) {
+              /*
+               * B7.60.3 — the overhead skeleton is keyed to the SELECTED
+               * Moon, not the camera-azimuth disclosure center. Measured
+               * in a real browser (Playwright/Chromium lab, PR #89): in
+               * settled Top View the disclosure center follows the camera
+               * azimuth (theta = π faces Moon 1), so the B7.60.1 window
+               * painted Moon 1 + Moon 2 anchors while the selected Moon
+               * showed no anchors at all — a skeleton, but on the wrong
+               * Moon. Overhead the whole ring is visible and the day
+               * structure the viewer needs is the selected Moon's: its
+               * week anchors, its circular neighbors' sparse anchors,
+               * selected/pinned days (returned above), and scheduled
+               * days inside that window. The far-band branch below keeps
+               * the disclosure center; tilted behavior is unchanged.
+               */
+              const selectedCenter =
+                Number(
+                  selectedMoon
+                  || 0
+                );
+
+              const selectedRawDistance =
+                selectedCenter
+                  ? Math.abs(moon - selectedCenter)
+                  : 0;
+
+              const selectedDistance =
+                selectedCenter
+                  ? Math.min(
+                      selectedRawDistance,
+                      13 - selectedRawDistance
+                    )
+                  : 0;
+
+              const selectedStructural =
+                !selectedCenter
+                  ? farFrontAnchor
+                  : (
+                      selectedDistance === 0
+                        ? farFrontAnchor
+                        : selectedDistance === 1
+                          ? farNeighborAnchor
+                          : false
+                    );
+
+              return (
+                selectedDistance <= 1
+                && (
+                  selectedStructural
+                  || scheduled
+                )
+              );
+            }
+
             return (
               sharedMoonWindow
                 .has(moon)
@@ -1580,19 +1665,49 @@
           );
         };
 
+      /*
+       * B7.60.2 — record the gate's verdict per candidate in this update.
+       * The render pass below consults this map — never the camera flag
+       * alone — before granting a rail numeral the overhead aperture
+       * exemption. B7.60.1 keyed that exemption on cameraOverhead only,
+       * on the assumption that every numeral reaching the render pass
+       * had passed railLabelVisible. The composed pipeline does not
+       * guarantee that: the render pass paints the composed set of the
+       * most recent evaluation, evaluations are throttled, and a
+       * mid-transition evaluation (camera not yet overhead) composes
+       * the full tilted rail through this same path. A verdict recorded
+       * here is the only exemption ticket the render pass honors.
+       */
+      const railGateVerdicts =
+        new Map();
+
       const dayRailCandidates =
         semanticCandidates.filter(
-          candidate =>
-            (
-              candidate?.target?.kind ===
-                "pattern-day-number"
-              || candidate?.target?.kind ===
-                "intercalary-day-number"
-            )
-            && candidate?.target?.railLocked
-            && railLabelVisible(
-              candidate
-            )
+          candidate => {
+            if (
+              !(
+                candidate?.target?.kind ===
+                  "pattern-day-number"
+                || candidate?.target?.kind ===
+                  "intercalary-day-number"
+              )
+              || !candidate?.target?.railLocked
+            ) {
+              return false;
+            }
+
+            const gateVisible =
+              railLabelVisible(
+                candidate
+              );
+
+            railGateVerdicts.set(
+              candidate,
+              gateVisible
+            );
+
+            return gateVisible;
+          }
         );
 
       const nonRailSemanticCandidates = semanticCandidates.filter(candidate =>
@@ -2057,10 +2172,26 @@
 
           el.style.top =
             `${railY}px`;
+          /*
+           * B7.60.2 — overhead, the X-only aperture passes ONLY for a
+           * numeral the gate itself passed in this update (recorded in
+           * railGateVerdicts where the rail filter ran). B7.60.1 granted
+           * the exemption from cameraOverhead alone, asserting every
+           * numeral reaching this pass was a skeleton survivor or a
+           * selected/pinned day; that invariant belongs to the gate, not
+           * to this pass, and a stale or ungated composition must never
+           * be able to spend it. A candidate without a passing verdict
+           * keeps the real aperture, exactly as tilted.
+           */
           const apertureOpacity =
-            railApertureOpacity(
+            cameraOverhead
+            && railGateVerdicts.get(
               candidate
-            );
+            ) === true
+              ? 1
+              : railApertureOpacity(
+                  candidate
+                );
 
           const isCenterRail =
             Number(
@@ -2121,6 +2252,7 @@
               || "medium"
             ).toLowerCase()
             === "far"
+            || cameraOverhead
           ) {
             el.dataset.farSkeleton =
               "true";
