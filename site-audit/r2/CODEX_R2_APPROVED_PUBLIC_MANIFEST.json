@@ -305,7 +305,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "a61972720dde436b9d333220e5695bf9d638b7c3240bc58aa2b8c8958623d4f4",
+      "sha256": "e80370f03141af42cc8f5424ab3b2170df3734cd16466ce1c52fd32880fff4e6",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -2218,6 +2218,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/media/theory-hub-explainer.mp4",
+      "sha256": "7fd39c10fdfad8fbf19110e14ae68a5b1f83d3263c49be865671f44274f2bc82",
+      "publicUrl": "https://codexofreality.org/assets/media/theory-hub-explainer.mp4",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/search/atlas.json",
       "sha256": "d705771da8d1ce8662fab76ab2bec6f40da12077a888e34fb748fc347ffed40f",
       "publicUrl": "https://codexofreality.org/assets/search/atlas.json",
@@ -2237,13 +2243,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "13b26f5c2df43f89ccd632bb61e30efc26095359de5924c417b9c4eec5726a07",
+      "sha256": "2e348a84236afac1318053034b8f96ff47fc38352a9c3ad2e6808b1c09c7d55d",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "b8b370b287da9a413ae07c44087322673037e4a11d6f4e981a14acb092fc511b",
+      "sha256": "2d32066bac11bea8711285c8c2f98217733b66b486e28006fb666d1efe5cfbf7",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -2375,7 +2381,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "7db8c0cdfa0a1846714f59640de014217c97c7b930832ead6dc6045fd459a266",
+      "sha256": "5b74488f1be062740ca55b717d915501e9e78908a67252889d71fa6b9b654e93",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
@@ -8759,7 +8765,7 @@
     },
     {
       "path": "docs/theory.html",
-      "sha256": "fa1df4e518770377d754042a0d0d32f8e88b1787a5b16186c944f8a1eb690386",
+      "sha256": "29bf20220355495b571a2a36024aafc38c7e5bd523ba09713ab97862ee3a60b0",
       "publicUrl": "https://codexofreality.org/theory.html",
       "status": "operational"
     },
