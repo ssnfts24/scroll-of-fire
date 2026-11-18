@@ -59,7 +59,7 @@ test("every content page family is covered", () => {
     const fam = rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/")) : "(top-level)";
     families[fam] = (families[fam] || 0) + 1;
   }
-  assert.equal(families["(top-level)"], 26);
+  assert.equal(families["(top-level)"], 27);
   assert.equal(families["scroll"], 6);
   assert.equal(families["scripture"], 3);
   assert.equal(families["scripture/genesis"], 50);
@@ -67,7 +67,7 @@ test("every content page family is covered", () => {
   assert.equal(families["theory"], 15);
   assert.equal(families["theory/equations"], 19);
   assert.equal(families["systems"], 6);
-  assert.equal(wiredPages.length, 165);
+  assert.equal(wiredPages.length, 166);
 });
 
 test("every wired page carries the living layer and the unified nav", () => {
