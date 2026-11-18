@@ -1123,9 +1123,27 @@
       "publicationEligibility": "approved-public"
     },
     {
+      "id": "claims-atlas",
+      "title": "Claims Atlas",
+      "description": "Every claim in the Claim Register in one place, filterable by the state of its evidence, each opening its full record on the Evidence Edition.",
+      "area": "evidence",
+      "category": "Evidence",
+      "resourceType": "tool",
+      "status": "live",
+      "path": "claims-atlas.html",
+      "url": "https://codexofreality.org/claims-atlas.html",
+      "related": [
+        "claim-register",
+        "scroll-editorial",
+        "site-search"
+      ],
+      "featured": false,
+      "publicationEligibility": "approved-public"
+    },
+    {
       "id": "planned-timeline",
-      "title": "Historical timeline and claims atlas",
-      "description": "Planned fifth stage of the Scroll Library: timeline and wider claims atlas.",
+      "title": "Historical timeline",
+      "description": "Planned fifth stage of the Scroll Library: a historical timeline. The claims atlas now stands on its own page.",
       "area": "evidence",
       "category": "Evidence",
       "resourceType": "tool",
@@ -1133,6 +1151,7 @@
       "path": null,
       "url": null,
       "related": [
+        "claims-atlas",
         "scroll-editorial"
       ],
       "featured": false,

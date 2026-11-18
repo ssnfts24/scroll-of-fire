@@ -104,7 +104,8 @@ test("scripture scan covers all 50 Genesis and 40 Exodus chapters", () => {
 test("Atlas filter form stays hidden without JavaScript", () => {
   const css = fs.readFileSync(path.join(root, "docs/assets/css/site-atlas.css"), "utf8");
   const html = fs.readFileSync(path.join(root, "docs/codex-atlas.html"), "utf8");
+  const catalog = JSON.parse(fs.readFileSync(path.join(root, "docs/data/site-catalog.json"), "utf8"));
   assert.match(css, /\.atlas-filters\[hidden\]\s*\{\s*display:\s*none/);
   assert.match(html, /<noscript>[\s\S]*Filtering needs JavaScript/);
-  assert.equal((html.match(/data-atlas-card(?:[ >])/g) || []).length, 64);
+  assert.equal((html.match(/data-atlas-card(?:[ >])/g) || []).length, catalog.entries.length);
 });
