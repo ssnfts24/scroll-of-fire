@@ -17,7 +17,7 @@
       document.head.appendChild(script);
     })();
   </script>
-  <base href="/">
+  <base href="./">
   <script>
     if (location.hostname === "ssnfts24.github.io") {
       const base = document.querySelector("base");
@@ -79,6 +79,7 @@
       "assets/js/life-atlas/life-atlas-importers.js?v=20260819-b750",
       "assets/js/life-atlas/life-atlas-ingestion.js?v=20260819-b750",
       "assets/js/life-atlas/life-atlas-runtime.js?v=20260819-b750",
+      "assets/js/life-atlas/life-atlas-export.js?v=20260819-b750",
       "assets/js/life-atlas/life-atlas-import-ui.js?v=20260817-2",
       "assets/js/sphere/living-time-observatory-workspace.js?v=20260815-6"
     ];
@@ -198,6 +199,7 @@
    <script defer src="assets/js/sphere/living-time-sphere-temporal.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-state.js?v=20260819-b731"></script>
    <script defer src="assets/js/sphere/living-time-sphere-semantic-zoom.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-day-zoom.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-layout.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-connections.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-renderer-svg.js?v=20260815-6"></script>
@@ -982,11 +984,34 @@
               <div class="sphere-detail-actions">
                 <button id="life-atlas-import-commit" class="sphere-btn sphere-btn-primary" type="button" disabled>Import as Private Records</button>
                 <button id="life-atlas-import-clear" class="sphere-btn" type="button">Clear Staging</button>
+                <button id="life-atlas-export-backup" class="sphere-btn" type="button">Download Backup (JSON)</button>
               </div>
+              <p class="sphere-methods">Backup: downloads every Life Atlas record stored in this browser as one JSON file. <strong>This file contains your private records</strong> — store it somewhere safe and do not share it. Restore it at any time by selecting it with the file picker above; backup records come back with their original ids, alongside anything already here.</p>
               <details class="life-atlas-import-methods">
                 <summary>What happens to imported history?</summary>
                 <p>Each record is normalized once into the Life Atlas with time, place, source, confidence, privacy, and Pattern coordinates. The Sphere then projects dated records onto the corresponding year membrane and Pattern-day angle. Duplicate fingerprints are skipped. Imported records are marked unreviewed so later reconciliation can confirm people, places, journeys, and merged events without silently rewriting source evidence.</p>
               </details>
+            </section>
+            <section id="sphere-day-zoom-panel" class="sphere-temporal-strata-panel sphere-day-zoom-panel" aria-labelledby="sphere-day-zoom-title">
+              <header class="sphere-temporal-lens-head">
+                <div><p class="sphere-temporal-kicker">Day Depth · Living Strata</p><h3 id="sphere-day-zoom-title">Zoom Into This Day</h3></div>
+                <span class="sphere-temporal-status"><b id="sphere-day-zoom-count">0</b> records</span>
+              </header>
+              <p class="sphere-strata-intro">The selected Pattern Day in depth — its civil date, Moon position, and the Life Atlas schedule recorded for it. Selection follows the canonical temporal cursor; choosing a day here moves that cursor, never a private copy of it.</p>
+              <p id="sphere-day-zoom-date" class="sphere-day-zoom-date">Select a day to dive in.</p>
+              <p id="sphere-day-zoom-coords" class="sphere-day-zoom-coords" aria-live="polite"></p>
+              <div class="sphere-day-zoom-controls">
+                <button id="sphere-day-zoom-prev" class="sphere-btn" type="button">‹ Previous day</button>
+                <button id="sphere-day-zoom-today" class="sphere-btn" type="button">Today</button>
+                <button id="sphere-day-zoom-next" class="sphere-btn" type="button">Next day ›</button>
+                <label class="sphere-day-zoom-jump">Pattern Day
+                  <input id="sphere-day-zoom-pattern-day" type="number" min="1" max="364" step="1" inputmode="numeric" aria-label="Pattern Day to dive into">
+                </label>
+                <button id="sphere-day-zoom-go" class="sphere-btn sphere-btn-primary" type="button">Dive in</button>
+              </div>
+              <ul id="sphere-day-zoom-list" class="sphere-day-zoom-list"></ul>
+              <p id="sphere-day-zoom-empty" class="sphere-day-zoom-empty" hidden></p>
+              <p id="sphere-day-zoom-status" class="sphere-day-zoom-status" role="status" aria-live="polite"></p>
             </section>
             <div id="sphere-details" class="sphere-details">
               <p class="sphere-methods">Select a marker to see details.</p>

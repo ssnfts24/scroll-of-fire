@@ -5060,11 +5060,28 @@
       if (showSelected) {
         const selectedAngle = globalThis.LivingTimeSphereModel.patternAngleForDayOfYear(selected.dayOfPatternYear);
         const { x, z } = angleToXZ(selectedAngle, mat.SIZES.patternRing);
+        // B7.60 — never stack the selected pair on the today pair. When
+        // both mark the same Pattern Day the selected pair is suppressed
+        // (today wins); when the two sit close enough for their halos to
+        // overlap, only the selected halo yields, so the two ring
+        // systems cannot interlock into the "ringed planet" silhouette.
+        const todayPosition = _objects.todayMarker?.position;
+        const markerDistance = todayPosition
+          ? Math.hypot(todayPosition.x - x, todayPosition.z - z)
+          : Number.POSITIVE_INFINITY;
+        const separation = mat.markerSeparation({
+          todayDay: model.todayPatternPosition?.dayOfPatternYear,
+          todayYear: model.todayPatternPosition?.patternYear,
+          selectedDay: selected.dayOfPatternYear,
+          selectedYear: selected.patternYear,
+          distance: markerDistance,
+        });
+        const showSelectedPair = separation !== "coincide";
         _objects.selectedDayMarker.position.set(x, 0.01, z);
-        _objects.selectedDayMarker.visible = true;
+        _objects.selectedDayMarker.visible = showSelectedPair;
         if (_objects.selectedDayHalo) {
           _objects.selectedDayHalo.position.set(x, 0.004, z);
-          _objects.selectedDayHalo.visible = true;
+          _objects.selectedDayHalo.visible = showSelectedPair && separation === "apart";
         }
         _objects.selectedDayMarker.userData = {
           ...selected,
@@ -7018,11 +7035,25 @@
       if (showSelected) {
         const selectedAngle = globalThis.LivingTimeSphereModel.patternAngleForDayOfYear(selected.dayOfPatternYear);
         const { x, z } = angleToXZ(selectedAngle, mat.SIZES.patternRing);
+        // B7.60 — same separation rule as updateScene: never stack the
+        // selected pair on the today pair (see markerSeparation).
+        const todayPosition = _objects.todayMarker?.position;
+        const markerDistance = todayPosition
+          ? Math.hypot(todayPosition.x - x, todayPosition.z - z)
+          : Number.POSITIVE_INFINITY;
+        const separation = mat.markerSeparation({
+          todayDay: model.todayPatternPosition?.dayOfPatternYear,
+          todayYear: model.todayPatternPosition?.patternYear,
+          selectedDay: selected.dayOfPatternYear,
+          selectedYear: selected.patternYear,
+          distance: markerDistance,
+        });
+        const showSelectedPair = separation !== "coincide";
         _objects.selectedDayMarker.position.set(x, 0.01, z);
-        _objects.selectedDayMarker.visible = true;
+        _objects.selectedDayMarker.visible = showSelectedPair;
         if (_objects.selectedDayHalo) {
           _objects.selectedDayHalo.position.set(x, 0.004, z);
-          _objects.selectedDayHalo.visible = true;
+          _objects.selectedDayHalo.visible = showSelectedPair && separation === "apart";
         }
         _objects.selectedDayMarker.userData = {
           ...selected,

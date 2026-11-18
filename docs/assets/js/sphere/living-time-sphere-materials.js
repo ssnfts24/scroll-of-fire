@@ -93,7 +93,7 @@
     markerDot:     0.025,
     markerDotSelected: 0.038,
     todayRadius:   0.038,
-    todayHalo:     0.068,
+    todayHalo:     0.0513,  // capped at 1.35 × todayRadius — wider reads as a ringed planet
     todayHaloTube: 0.005,
     todayLine:     0.003,
     lunarMarker:   0.035,
@@ -102,6 +102,29 @@
     ringTube:      0.006,  // pattern ring tube
     solarTube:     0.003,
   });
+
+  // ── Day-marker separation ────────────────────────────────────────
+  // Today and the selected day both ride the Pattern ring as a sphere
+  // with an equatorial halo. When the two markers coincide, or sit
+  // close enough for their halos to overlap, the pair reads as one
+  // ringed planet (see the B7.51 note in the renderer). This pure
+  // decision is what the renderer applies in updateScene:
+  //   "coincide" — same Pattern Day: suppress the selected pair (today wins)
+  //   "near"     — ring positions closer than MARKER_HALO_CLEARANCE:
+  //                suppress the selected halo only; its sphere stays
+  //   "apart"    — render both pairs in full
+  const MARKER_HALO_CLEARANCE = 0.15;
+
+  function markerSeparation({ todayDay, todayYear, selectedDay, selectedYear, distance } = {}) {
+    const sameDay =
+      todayDay != null &&
+      selectedDay != null &&
+      Number(todayDay) === Number(selectedDay) &&
+      (todayYear == null || selectedYear == null || Number(todayYear) === Number(selectedYear));
+    if (sameDay) return "coincide";
+    if (Number.isFinite(distance) && distance < MARKER_HALO_CLEARANCE) return "near";
+    return "apart";
+  }
 
   // ── Bloom / glow parameters ────────────────────────────────────────
 
@@ -210,6 +233,8 @@
     OPACITY,
     EMISSIVE,
     SIZES,
+    MARKER_HALO_CLEARANCE,
+    markerSeparation,
     GLOW,
     STAR_POSITIONS,
     QUALITY_PRESETS,

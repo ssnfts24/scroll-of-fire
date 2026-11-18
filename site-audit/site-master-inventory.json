@@ -3,13 +3,13 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 462,
+    "resources": 463,
     "publicHtmlPages": 169,
     "catalogEntries": 64,
     "issueCounts": {
       "not-linked-directly-from-homepage": 19,
       "nav-label-differs-from-title": 24,
-      "deployed-but-unlinked": 56,
+      "deployed-but-unlinked": 57,
       "unreachable-from-homepage": 3,
       "compatibility-redirect-page": 1,
       "no-public-url-yet": 2,
@@ -506,7 +506,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (143 files)",
+      "title": "docs/assets/js (145 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1542,6 +1542,25 @@
       "relatedProjects": [],
       "sourcePath": "docs/development/LIVING-INTERFACE-ARCHITECTURE-V4-PLAN.md",
       "publicUrl": "https://codexofreality.org/development/LIVING-INTERFACE-ARCHITECTURE-V4-PLAN.md",
+      "publicationStatus": "source-only",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "development-only-deployed-publicly",
+      "discoverability": null,
+      "issues": [
+        "deployed-but-unlinked"
+      ]
+    },
+    {
+      "id": "docs:development/R1.7-PROTECTED-MANIFEST.md",
+      "title": "development/R1.7-PROTECTED-MANIFEST.md",
+      "description": "Markdown document deployed inside docs/ and therefore publicly fetchable, but not linked from the site.",
+      "category": "Development document",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/development/R1.7-PROTECTED-MANIFEST.md",
+      "publicUrl": "https://codexofreality.org/development/R1.7-PROTECTED-MANIFEST.md",
       "publicationStatus": "source-only",
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [],
@@ -12479,7 +12498,7 @@
     },
     {
       "id": "repo-folder:scripts",
-      "title": "scripts/ (23 files)",
+      "title": "scripts/ (27 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -12547,7 +12566,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (84 files)",
+      "title": "tests/ (87 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
