@@ -51,8 +51,13 @@
     "pages": {
       "file": "pages.json",
       "count": 161,
+<<<<<<< HEAD
       "bytes": 737680,
       "sha256": "5627a6b8d6093818465692a542f9fe65aae13d6ce7541543531fba474b0b53c4"
+=======
+      "bytes": 737232,
+      "sha256": "8a4ade630c69512d4f81278a76f6f7c38acc0bc39e9c7665486d4608ca06cce0"
+>>>>>>> origin/main
     },
     "scrolls": {
       "file": "scrolls.json",

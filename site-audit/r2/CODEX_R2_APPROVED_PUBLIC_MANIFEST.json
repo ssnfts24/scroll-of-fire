@@ -311,7 +311,11 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
+<<<<<<< HEAD
       "sha256": "5675e3bccdd48b155993f44a37ab407c2709c55fc5bf8832dce4bd5bc25264a6",
+=======
+      "sha256": "eaae881a7f7ef6474e4c46caa592b4a2ef6737744b822eaa2efc0a9de88ec4a5",
+>>>>>>> origin/main
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -2357,13 +2361,21 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
+<<<<<<< HEAD
       "sha256": "5b6eb6a619e36a8631aefea0505e6e13a0e5513a31f3820db0ff2de89d444d60",
+=======
+      "sha256": "f623ba8d1a6ddc9633d48e637b22ff28d649b53315f0d14d2a91032eff0bce07",
+>>>>>>> origin/main
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
+<<<<<<< HEAD
       "sha256": "5627a6b8d6093818465692a542f9fe65aae13d6ce7541543531fba474b0b53c4",
+=======
+      "sha256": "8a4ade630c69512d4f81278a76f6f7c38acc0bc39e9c7665486d4608ca06cce0",
+>>>>>>> origin/main
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -2495,7 +2507,11 @@
     },
     {
       "path": "docs/index.html",
+<<<<<<< HEAD
       "sha256": "c03adf2847b22bb1dabaf56019803d40573194a26165080ce943d42fc0f5690d",
+=======
+      "sha256": "6838cb57cc36e5781fa131a64b62961bbb648c27a663d5b408ac33fcaf15d2c3",
+>>>>>>> origin/main
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
