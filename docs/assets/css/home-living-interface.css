@@ -272,7 +272,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 42px;
+  min-height: 44px;
   padding: 0.55rem 0.78rem;
   border: 1px solid rgba(122, 243, 255, 0.17);
   border-radius: 12px;
@@ -1042,5 +1042,82 @@
   [data-home-live-root][data-home-temporal-mode="exploring"]
   .home-temporal-selection {
     grid-template-columns: 1fr;
+  }
+}
+
+/* =====================================================================
+ * Homepage sphere embed — layer stacking, status pill, phone cards
+ *
+ * The mount layers its SVG baseline and its 3D canvas inside the
+ * preview. Stack them the way the hero embed does — both filling the
+ * preview, the canvas above the baseline it replaces. Once the 3D
+ * renderer is the active one (the mount publishes that on the
+ * preview), the baseline steps aside; if 3D ever falls back, the
+ * attribute flips back and the baseline returns on its own. Without
+ * this, the flat SVG diagram (including its "Selected · M/D"
+ * annotation) stays painted over the live 3D scene and the label
+ * layer that belongs to it.
+ * ===================================================================== */
+
+.home-page .home-living-sphere__preview > svg,
+.home-page .home-living-sphere__preview > canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.home-page
+.home-living-sphere__preview[data-active-renderer="3d"] > svg {
+  display: none;
+}
+
+/* The renderer status pill ("LIVE 3D SPHERE") lives below the stage's
+ * disc, in the stage's own flow — never on top of the day numerals
+ * that ride the disc's rim. (Its element moved out of the viewport in
+ * index.html; these rules take it out of absolute positioning.) */
+.home-page .home-living-sphere__render-state {
+  position: static;
+  transform: none;
+  display: block;
+  width: fit-content;
+  max-width: calc(100% - 1.5rem);
+  margin: 0.6rem auto 0.7rem;
+}
+
+/* ---------------------------------------------------------------------
+ * Phone widths: one sphere card at a time, docked off the center.
+ *
+ * The label layer may compose the live Today card and a selected-day
+ * card together; on a phone the two overlap each other and the
+ * sphere's center. While any other card is open, the Today card steps
+ * aside; closing the open card brings it back. The open card docks to
+ * the bottom of the stage instead of floating over the middle.
+ * --------------------------------------------------------------------- */
+
+@media (max-width: 760px) {
+  .home-page
+  .home-living-sphere__stage:has(
+    .sphere-semantic-label:not([data-semantic-id="live-today"]):not([style*="display: none"])
+  )
+  .sphere-semantic-label[data-semantic-id="live-today"],
+  .home-page
+  .homepage-sphere-frame:has(
+    .sphere-semantic-label:not([data-semantic-id="live-today"]):not([style*="display: none"])
+  )
+  .sphere-semantic-label[data-semantic-id="live-today"] {
+    display: none !important;
+  }
+
+  /* The renderer parks its label layer in the mount's parent surface
+   * (the section viewport / the hero frame), not inside the preview —
+   * dock from those ancestors. */
+  .home-page .home-living-sphere__viewport .sphere-semantic-label,
+  .home-page .homepage-sphere-frame .sphere-semantic-label {
+    left: 50% !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: 0.55rem !important;
+    transform: translateX(-50%) !important;
   }
 }

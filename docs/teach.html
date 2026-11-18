@@ -285,7 +285,9 @@
     label > input,
     label > select { margin-top: 5px; }
 
-    input[type="range"].lab-input { padding: .35rem; }
+    input[type="range"].lab-input { min-height: 44px; padding: .35rem; }
+
+    input[type="checkbox"] { width: 1.15rem; height: 1.15rem; }
 
     .control-grid {
       display: grid;
@@ -398,6 +400,9 @@
     }
 
     .chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
       font-size: .82rem;
       padding: .29rem .58rem;
       border-radius: 999px;
@@ -628,6 +633,11 @@
   </style>
   <script defer src="assets/js/site.js"></script>
   <script defer src="assets/js/living-search-launcher.js"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-version.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-data.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-format.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-boundary.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar.js?v=20260722-4"></script>
   <script defer src="assets/js/calendar-cor.js"></script>
   <script defer src="assets/js/living-codex.js"></script>
   <link rel="icon" type="image/png" href="assets/img/shared/branding/favicon.png">
@@ -648,6 +658,7 @@
         <li><a href="living-time-sphere.html">Sphere</a></li>
         <li><a href="shop.html">Shop</a></li>
         <li><a href="witness.html">Witness</a></li>
+        <li><a href="search.html">Living Search</a></li>
         <li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li>
       </ul>
     </nav>
@@ -699,7 +710,7 @@
         </button>
         <div id="nav-explore" class="nav-drop-menu">
           <!-- site-nav:explore:start -->
-          <a href="./scroll/search.html">Scroll Search</a>
+          <a href="./scroll/search.html">Search the Scroll Library</a>
           <a href="./scroll/lexicon.html">Hebrew Lexicon</a>
           <a href="./scroll/atlas.html">Reference Atlas</a>
           <a href="./scroll/editorial.html">Evidence Edition</a>
@@ -775,6 +786,43 @@
       <p class="manifest-today-line">Today: <strong data-manifest-today-coords>—</strong> · <span data-manifest-today-count>—</span></p>
       <a class="manifest-today-link" href="#manifest">Open the exercise</a>
     </section>
+
+        <section class="section-shell" id="teach-explainer">
+      <div class="section-heading">
+        <p class="eyebrow">Watch · The Explainer</p>
+        <h2>The practice console, explained.</h2>
+        <p>
+          A short spoken tour of Manifest, the Remnant Visual Exercise: the visual field and carrier tones, the four-phase loop, the stop rule that bounds it all, and how a sealed session takes its place on the day. Press play and let the page explain itself.
+        </p>
+      </div>
+
+      <video controls preload="metadata" width="1280" height="720"
+        style="width:100%;height:auto;display:block"
+        src="assets/media/teach-explainer.mp4"
+        aria-label="Video: Manifest, the Remnant Visual Exercise, explained in plain words">
+        Your browser does not support the video element. The same tour is
+        written out across this page.
+      </video>
+    </section>
+
+    <div class="tabs-wrap">
+      <button id="tabsPrev" class="chev left" type="button" aria-label="Scroll section tabs back">‹</button>
+      <div id="pillRail" class="pill-rail" role="tablist" aria-label="Manifest sections">
+        <button class="pill active" data-tab="remnant" role="tab" aria-selected="true" tabindex="0" type="button">Remnant</button>
+        <button class="pill" data-tab="carrier" role="tab" aria-selected="false" tabindex="-1" type="button">Carrier</button>
+        <button class="pill" data-tab="observer" role="tab" aria-selected="false" tabindex="-1" type="button">Observer</button>
+        <button class="pill" data-tab="phrase" role="tab" aria-selected="false" tabindex="-1" type="button">Phrase</button>
+        <button class="pill" data-tab="breath" role="tab" aria-selected="false" tabindex="-1" type="button">Breath</button>
+        <button class="pill" data-tab="coherence" role="tab" aria-selected="false" tabindex="-1" type="button">Coherence</button>
+        <button class="pill" data-tab="drills" role="tab" aria-selected="false" tabindex="-1" type="button">Drills</button>
+        <button class="pill" data-tab="timer" role="tab" aria-selected="false" tabindex="-1" type="button">Timer</button>
+        <button class="pill" data-tab="deck" role="tab" aria-selected="false" tabindex="-1" type="button">Deck</button>
+        <button class="pill" data-tab="ledger" role="tab" aria-selected="false" tabindex="-1" type="button">Ledger</button>
+        <button class="pill" data-tab="ethics" role="tab" aria-selected="false" tabindex="-1" type="button">Ethics</button>
+        <button class="pill" data-tab="maps" role="tab" aria-selected="false" tabindex="-1" type="button">Maps</button>
+      </div>
+      <button id="tabsNext" class="chev right" type="button" aria-label="Scroll section tabs forward">›</button>
+    </div>
 
     <section id="tab-remnant" class="tab active" role="tabpanel">
       <article class="grid">
@@ -1653,11 +1701,12 @@
       };
 
       const SEQUENCES = {
-        calm: [432, 396, 417, 432],
-        focus: [144, 369, 432, 528],
-        clarity: [432, 528, 741, 963],
-        restore: [396, 432, 528, 639],
-        ascent: [144, 288, 432, 528, 963],
+        ground: [144, 432],
+        heart: [432, 528],
+        clear: [369, 741],
+        ascend: [432, 528, 741, 963],
+        trinity: [369, 432, 963],
+        solar: [144, 369, 528],
         remnant: [144, 369, 432, 528, 963, 432]
       };
 
@@ -1695,7 +1744,7 @@
         clearInterval(seqTimer);
         seqTimer = null;
         sequenceRunning = false;
-        $("#seqState") && ($("#seqState").textContent = "sequence stopped");
+        $("#seqReadout") && ($("#seqReadout").textContent = "Sequence: stopped");
       }
 
       function playTone(freq = activeFreq) {
@@ -1864,14 +1913,20 @@
         stopSequence();
         sequenceRunning = true;
 
-        const stepSeconds = Math.max(2, Math.min(60, Number($("#seqSeconds")?.value || 8)));
+        const stepSeconds = Math.max(2, Math.min(60, Number($("#seqStep")?.value || 8)));
+        const loops = Math.max(1, Math.min(20, Number($("#seqLoops")?.value || 1)));
+        const totalSteps = seq.length * loops;
 
         function step() {
           const f = seq[i % seq.length];
           setFrequencyOnly(f);
           playTone(f);
-          $("#seqState") && ($("#seqState").textContent = name + " · " + f + " Hz");
+          $("#seqReadout") && ($("#seqReadout").textContent = "Sequence: " + name + " · " + f + " Hz");
           i++;
+          if (i >= totalSteps) {
+            stopSequence();
+            $("#seqReadout") && ($("#seqReadout").textContent = "Sequence: " + name + " complete");
+          }
         }
 
         step();
@@ -1882,7 +1937,7 @@
         on(btn, "click", () => runSequence(btn.dataset.seq));
       });
 
-      on($("#seqStop"), "click", () => {
+      on($("#stopSeq"), "click", () => {
         stopSequence();
         stopTone();
       });
@@ -2914,13 +2969,9 @@
   </script>
   <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
 
-  <!-- Manifest practice loop: canonical temporal converter + Life Atlas
-       repository, then the seal → Atlas → markers module. -->
-  <script src="assets/js/calendar/pattern-calendar-version.js?v=20260722-4"></script>
-  <script src="assets/js/calendar/pattern-calendar-data.js?v=20260722-4"></script>
-  <script src="assets/js/calendar/pattern-calendar-format.js?v=20260722-4"></script>
-  <script src="assets/js/calendar/pattern-calendar-boundary.js?v=20260722-4"></script>
-  <script src="assets/js/calendar/pattern-calendar.js?v=20260722-4"></script>
+  <!-- Manifest practice loop: Life Atlas repository, then the
+       seal → Atlas → markers module. The canonical temporal converter
+       (Pattern Calendar) loads with the head scripts above. -->
   <script src="assets/js/life-atlas/life-atlas-schema.js?v=20260817-1"></script>
   <script src="assets/js/life-atlas/life-atlas-repository.js?v=20260819-b750"></script>
   <script src="assets/js/life-atlas/life-atlas-indexeddb.js?v=20260819-b750"></script>

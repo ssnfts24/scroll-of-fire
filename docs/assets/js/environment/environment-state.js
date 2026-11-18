@@ -50,7 +50,14 @@
       providerConfigured: !!source.providerConfigured,
       place: source.place && typeof source.place === "object" ? { ...source.place } : null,
       current,
-      hourly: _toArray(source.hourly),
+      // B7.61 — the forecast provider's hourly is an object of parallel
+      // arrays (cloud_cover_low/mid/high, ...), not a list. _toArray()
+      // silently destroyed it, which starved the sphere's low/mid/high
+      // cloud bands of their data. Preserve both shapes.
+      hourly: (Array.isArray(source.hourly)
+        || (source.hourly && typeof source.hourly === "object"))
+        ? source.hourly
+        : [],
       daily: daily && typeof daily === "object" ? daily : {},
       airQuality: source.airQuality && typeof source.airQuality === "object" ? { ...source.airQuality } : null,
       spaceWeather: source.spaceWeather && typeof source.spaceWeather === "object" ? { ...source.spaceWeather } : null,

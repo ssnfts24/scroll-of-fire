@@ -162,7 +162,7 @@
   },
   {
    "id": "scroll-search",
-   "title": "Scroll Search",
+   "title": "Search the Scroll Library",
    "description": "Local full-text search across all 1,609 reader segments, with shelf filters and Hebrew normalisation.",
    "area": "scroll-scripture",
    "category": "Search",
@@ -1014,7 +1014,7 @@
   {
    "id": "site-search",
    "title": "Site-wide Search",
-   "description": "Living Search: one generated index across every page, the Scroll Library, the Hebrew Lexicon, the Atlas and the Claim Register, with a memory that stays on the reader's device. It links to, and does not replace, Scroll Search.",
+   "description": "Living Search: one generated index across every page, the Scroll Library, the Hebrew Lexicon, the Atlas and the Claim Register, with a memory that stays on the reader's device. It links to, and does not replace, the search inside the Scroll Library.",
    "area": "archive",
    "category": "Discovery",
    "resourceType": "tool",
@@ -1027,15 +1027,16 @@
   },
   {
    "id": "planned-timeline",
-   "title": "Historical timeline and claims atlas",
-   "description": "Planned fifth stage of the Scroll Library: timeline and wider claims atlas.",
+   "title": "Historical timeline",
+   "description": "Two dated records, kept separate: the publication dates of the sources cited in the claim register, each entry linking to its claim in the Evidence Edition, and the Codex's own growth record.",
    "area": "evidence",
    "category": "Evidence",
    "resourceType": "tool",
-   "status": "planned",
-   "path": null,
+   "status": "live",
+   "path": "timeline.html",
    "related": [
-    "scroll-editorial"
+    "scroll-editorial",
+    "scroll-library"
    ],
    "featured": false
   }

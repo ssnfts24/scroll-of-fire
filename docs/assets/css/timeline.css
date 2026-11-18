@@ -1,0 +1,184 @@
+/* Historical timeline (docs/timeline.html).
+ * Two dated records — claim-register source dates and the Codex
+ * growth record — in the site's living design language:
+ * stone, gold seams, teal light. Phone-first, kept plain. */
+
+.timeline-page {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 1.25rem 1.1rem 3rem;
+  line-height: 1.65;
+}
+
+.timeline-page h1 {
+  margin-bottom: 0.25rem;
+}
+
+.timeline-tagline {
+  color: #9aa4be;
+  margin-top: 0;
+  font-size: 1.05rem;
+}
+
+/* The honesty panel: first content on the page, impossible to miss. */
+.timeline-intro {
+  border: 1px solid rgba(122, 243, 255, 0.35);
+  border-left: 4px solid #7af3ff;
+  background: linear-gradient(170deg, rgba(122, 243, 255, 0.06), rgba(11, 15, 26, 0.6));
+  border-radius: 0.6rem;
+  padding: 1rem 1.1rem;
+  margin: 1.5rem 0 2.5rem;
+}
+
+.timeline-intro p {
+  margin: 0.4rem 0;
+}
+
+.timeline-intro strong {
+  color: #f3c97a;
+}
+
+.timeline-page section {
+  margin-bottom: 2.75rem;
+}
+
+.timeline-count {
+  color: #f3c97a;
+  font-weight: 600;
+  margin: 0.25rem 0;
+}
+
+.timeline-note {
+  color: #9aa4be;
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+}
+
+/* The lane: a spine with an entry per dated record. */
+.timeline-lane {
+  border-left: 2px solid rgba(122, 243, 255, 0.25);
+  margin: 1.25rem 0 0 0.45rem;
+  padding-left: 1.35rem;
+}
+
+.timeline-group {
+  color: #f3c97a;
+  font-size: 1.35rem;
+  margin: 1.6rem 0 0.4rem;
+}
+
+.timeline-group:first-child {
+  margin-top: 0.2rem;
+}
+
+.timeline-entry {
+  position: relative;
+  padding: 0.55rem 0 0.85rem;
+}
+
+.timeline-entry::before {
+  content: "";
+  position: absolute;
+  left: calc(-1.35rem - 5.5px);
+  top: 1.05rem;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #05070d;
+  border: 2px solid #f3c97a;
+}
+
+.timeline-entry-head {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.timeline-date {
+  font-weight: 700;
+  color: #f4f1e8;
+}
+
+.timeline-symbol {
+  color: #7af3ff;
+  font-size: 1.05rem;
+}
+
+.timeline-type {
+  color: #9aa4be;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.timeline-claim {
+  margin: 0.2rem 0;
+  font-size: 1.05rem;
+}
+
+.timeline-claim-id {
+  color: #9aa4be;
+  font-size: 0.85rem;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+.timeline-source,
+.timeline-summary {
+  margin: 0.15rem 0;
+  color: #c9cede;
+  font-size: 0.97rem;
+}
+
+/* Evidence labels: the register's own statuses, colored by kind. */
+.timeline-status {
+  display: inline-block;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  padding: 0.05rem 0.55rem;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: #9aa4be;
+  white-space: nowrap;
+}
+
+.timeline-status.status-documented {
+  border-color: rgba(158, 255, 193, 0.55);
+  color: #9effc1;
+}
+
+.timeline-status.status-partially-verified,
+.timeline-status.status-qualified,
+.timeline-status.status-mixed {
+  border-color: rgba(255, 226, 138, 0.55);
+  color: #ffe28a;
+}
+
+.timeline-status.status-misattributed,
+.timeline-status.status-misstated,
+.timeline-status.status-overbroad,
+.timeline-status.status-disputed {
+  border-color: rgba(255, 127, 145, 0.55);
+  color: #ff7f91;
+}
+
+/* Not-yet-dated claims: named plainly, given no date. */
+.timeline-undated {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+}
+
+.timeline-undated-item {
+  padding: 0.45rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.timeline-error {
+  color: #ff7f91;
+}
