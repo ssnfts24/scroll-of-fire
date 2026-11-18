@@ -1,27 +1,40 @@
 (() => {
   "use strict";
 
-  /*
-   * Homepage Live Sphere — the actual Living Time Sphere in the homepage
-   * hero. Just the sphere: no observatory panels, no readouts, no label
-   * flood. Calm rotation, drag to turn, pause/play, a Today swing, and a
-   * door into the full Observatory.
-   *
-   * Data honesty: this module contains NO calendar math of its own.
-   * Today's coordinate comes from PatternCalendar.fromCivilDate — the
-   * same call the entry overlay makes (visitor timezone, midnight
-   * boundary). Every day and Moon position comes from the Observatory's
-   * own LivingTimeSphereCalendarGeometry (calendarCell / moonAddress /
-   * yearGate), loaded read-only. The rendering below is new, lightweight
-   * code written for the hero; the geometry, sizes and colours it draws
-   * are the Observatory's own (LivingTimeSphereM SIZES/COLORS and the
-   * renderer's moon identity lane, mirrored as constants here because
-   * the materials module is part of the protected sphere stack and is
-   * not loaded on the homepage).
-   *
-   * R1.7: no protected file is edited by this feature. The calendar
-   * geometry module is loaded, never modified.
-   */
+/*
+ * Homepage Live Sphere — the actual Living Time Sphere, in the hero.
+ *
+ * Aaron's ask was simple: the real Sphere on the homepage, with easy
+ * controls. So this module does not draw a sphere of its own. When the
+ * hero approaches the viewport it loads the Observatory's own sphere
+ * stack — the same modules, in the same order, that
+ * docs/living-time-sphere.html loads — and mounts the genuine Living
+ * Time Sphere into the hero stage through LivingTimeSphere.mount(),
+ * the same public mount the Moons page uses for its embedded sphere.
+ * No Observatory file is edited; the stack is only read.
+ *
+ * What the visitor gets is the Sphere itself: the 364 day numerals as
+ * the surface, the thirteen Moons with their glass labels, the week
+ * gates, and today held in gold — rendered by the Observatory's own
+ * renderer, lit by its own materials, turning at its own drift.
+ *
+ * The hero keeps the small control set from the first build: drag to
+ * turn (the renderer's own pointer handling), a Pause/Resume rotation
+ * button (the mount's motion mode, the same switch the Observatory's
+ * motion control flips), a Today button (the renderer's own
+ * focusPatternDay, called the way the Observatory's Today control
+ * calls it), and the door into the Observatory.
+ *
+ * Honesty rules, unchanged: the caption coordinate and the sphere's
+ * today both resolve from PatternCalendar.fromCivilDate at the
+ * midnight boundary in the visitor's own timezone. Until the mount is
+ * live the static hero art shows exactly as before, and it stays for
+ * no-JS, reduced-motion, and no-WebGL visitors.
+ *
+ * The pure calendar core below (HomepageSphereCore) is pure math over
+ * PatternCalendar + LivingTimeSphereCalendarGeometry — no DOM, no
+ * WebGL — and stays exported for the test suite.
+ */
 
   // ── Observatory constants (mirrored data, see header) ─────────────
   const PATTERN_RING = 0.7; // LivingTimeSphereM.SIZES.patternRing
@@ -215,8 +228,6 @@
   const reduceMotion =
     typeof window.matchMedia === "function" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const geometry = globalThis.LivingTimeSphereCalendarGeometry;
-  const model = buildModel(geometry, summary);
 
   function webglAvailable() {
     try {
@@ -230,379 +241,283 @@
     }
   }
 
-  if (!stage || !model || reduceMotion || !webglAvailable()) {
+  if (!stage || !summary || reduceMotion || !webglAvailable()) {
     // Static art stays. No error text, no broken canvas — the hero is
     // exactly what it was before this module existed.
     return;
   }
 
-  const threeUrl = new URL(
-    "assets/vendor/three/three.module.min.js",
-    document.baseURI
-  ).href;
+  // ── The Observatory stack, loaded read-only ───────────────────────
+  //
+  // The 3D renderer imports its own three.js from the vendored path
+  // below; the homepage never loads it directly.
+  const THREE_MODULE_PATH = "assets/vendor/three/three.module.min.js";
+  void THREE_MODULE_PATH;
 
-  import(threeUrl)
-    .then((THREE) => {
+  // [script, global it defines] — the sphere page's own load order,
+  // minus its page chrome (site.js, the Observatory UI, the share
+  // tools) and the Life Atlas record extensions the hero does not use.
+  // The astronomy, equinox and alignment groups are not decoration:
+  // the sphere's model builds its year records from the alignment
+  // ledger, which runs on the equinox engines. Entries whose global
+  // the homepage already has are skipped.
+  const SPHERE_STACK = [
+    ["assets/js/calendar/pattern-calendar-version.js", "PatternCalendarVersion"],
+    ["assets/js/calendar/pattern-calendar-data.js", "PatternCalendarData"],
+    ["assets/js/calendar/pattern-calendar-format.js", "PatternCalendarFormat"],
+    ["assets/js/calendar/pattern-calendar-boundary.js", "PatternCalendarBoundary"],
+    ["assets/js/calendar/pattern-calendar.js", "PatternCalendar"],
+    ["assets/js/codex-state.js", "CodexStateModule"],
+    ["assets/js/astronomy/astronomy-version.js", "AstronomyVersion"],
+    ["assets/js/astronomy/astronomy-sources.js", "AstronomySources"],
+    ["assets/js/astronomy/timezone-tools.js", "TimeZoneTools"],
+    ["assets/js/astronomy/equinox-reference-data.js", "EquinoxReferenceData"],
+    ["assets/js/astronomy/lunar-at-equinox.js", "LunarAtEquinox"],
+    ["assets/js/astronomy/equinox-engine.js", "EquinoxEngine"],
+    ["assets/js/equinox/equinox-passage-format.js", "EquinoxPassageFormat"],
+    ["assets/js/equinox/equinox-passage-engine.js", "EquinoxPassageEngine"],
+    ["assets/js/equinox/equinox-passage-data.js", "EquinoxPassageData"],
+    ["assets/js/alignment/alignment-version.js", "AlignmentVersion"],
+    ["assets/js/alignment/alignment-ledger-engine.js", "AlignmentLedgerEngine"],
+    ["assets/js/alignment/alignment-ledger-data.js", "AlignmentLedgerData"],
+    ["assets/js/alignment/alignment-comparison.js", "AlignmentComparison"],
+    ["assets/js/alignment/alignment-recurrence.js", "AlignmentRecurrence"],
+    ["assets/js/alignment/alignment-offsets.js", "AlignmentOffsets"],
+    ["assets/js/alignment/alignment-signature.js", "AlignmentSignature"],
+    ["assets/js/alignment/alignment-export.js", "AlignmentExport"],
+    ["assets/js/alignment/alignment-url-state.js", "AlignmentUrlState"],
+    ["assets/js/sphere/living-time-sphere-version.js", "LivingTimeSphereVersion"],
+    ["assets/js/sphere/living-time-sphere-model.js", "LivingTimeSphereModel"],
+    ["assets/js/sphere/living-time-sphere-calendar-geometry.js", "LivingTimeSphereCalendarGeometry"],
+    ["assets/js/sphere/living-time-sphere-temporal.js", "LivingTimeSphereTemporal"],
+    ["assets/js/sphere/living-time-sphere-state.js", "LivingTimeSphereState"],
+    ["assets/js/sphere/living-time-sphere-semantic-zoom.js", "LivingTimeSphereSemanticZoom"],
+    ["assets/js/sphere/living-time-sphere-day-zoom.js", "LivingTimeSphereDayZoom"],
+    ["assets/js/sphere/living-time-sphere-layout.js", "LivingTimeSphereLayout"],
+    ["assets/js/sphere/living-time-sphere-connections.js", "LivingTimeSphereConnections"],
+    ["assets/js/sphere/living-time-sphere-renderer-svg.js", "LivingTimeSphereRendererSvg"],
+    ["assets/js/sphere/living-time-sphere-renderer-canvas.js", "LivingTimeSphereRendererCanvas"],
+    ["assets/js/sphere/observatory-capability-manager.js", "ObservatoryCapabilityManager"],
+    ["assets/js/sphere/living-time-sphere-materials.js", "LivingTimeSphereM"],
+    ["assets/js/sphere/living-time-sphere-effects.js", "LivingTimeSphereEffects"],
+    ["assets/js/sphere/living-time-sphere-camera.js", "LivingTimeSphereCamera"],
+    ["assets/js/sphere/living-time-sphere-animation.js", "LivingTimeSphereAnimation"],
+    ["assets/js/sphere/living-time-sphere-planetary-positions.js", "LivingTimePlanetaryPositions"],
+    ["assets/js/sphere/living-time-sphere-label-manager.js", "LivingTimeSphereLabelManager"],
+    ["assets/js/sphere/living-time-sphere-extension-host.js", "LivingTimeSphereExtensionHost"],
+    ["assets/js/sphere/living-time-sphere-temporal-legibility.js", "LivingTimeSphereTemporalLegibility"],
+    ["assets/js/sphere/living-time-sphere-temporal-strata.js", "LivingTimeSphereTemporalStrata"],
+    ["assets/js/sphere/living-time-sphere-renderer-3d.js", "LivingTimeSphereRenderer3d"],
+    ["assets/js/sphere/living-time-sphere-live-data.js", "LivingTimeSphereLiveData"],
+    ["assets/js/sphere/living-time-sphere-interaction.js", "LivingTimeSphereInteraction"],
+    ["assets/js/sphere/living-time-sphere-accessibility.js", "LivingTimeSphereAccessibility"],
+    ["assets/js/sphere/living-time-sphere-export.js", "LivingTimeSphereExport"],
+    ["assets/js/environment/environment-state.js", "SofEnvironmentState"],
+    ["assets/js/sphere/living-time-sphere-mount.js", "LivingTimeSphere"],
+    ["assets/js/sphere/living-time-sphere-today.js", "LivingTimeSphereTodayCard"],
+    ["assets/js/sphere/living-time-sphere-metrics.js", "LivingTimeSphereMetrics"]
+  ];
+
+  // Just the sphere: the calendar disc, its Moons, week gates, and the
+  // solar/lunar markers — none of the Observatory's panels or layers
+  // that need the full instrument around them.
+  const HERO_VISIBLE_LAYERS = Object.freeze({
+    pattern: true,
+    exactDays: true,
+    weekGates: true,
+    lunar: true,
+    solar: true,
+    markers: true,
+    outsideDays: false,
+    planets: false,
+    passage: false,
+    connections: false,
+    environment: false,
+    spiral: false,
+    recurrence: false,
+    witness: false,
+    personal: false
+  });
+
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      const el = document.createElement("script");
+      el.src = src;
+      el.async = false;
+      el.onload = () => resolve();
+      el.onerror = () => reject(new Error(`Failed to load ${src}`));
+      document.head.appendChild(el);
+    });
+  }
+
+  async function loadSphereStack() {
+    for (const [src, globalName] of SPHERE_STACK) {
+      if (globalName && globalThis[globalName]) continue;
       try {
-        init(THREE);
+        await loadScript(src);
       } catch {
-        stayFallback();
+        /* One missing module must not sink the rest — the sphere
+           page's own deferred tags behave the same way. The readiness
+           check below and the mount's own dependency assertions
+           decide whether the sphere can run. */
       }
-    })
-    .catch(stayFallback);
+    }
+    return !!(
+      globalThis.LivingTimeSphere &&
+      typeof globalThis.LivingTimeSphere.mount === "function" &&
+      globalThis.LivingTimeSphereModel &&
+      globalThis.LivingTimeSphereLayout &&
+      globalThis.LivingTimeSphereRendererSvg &&
+      globalThis.LivingTimeSphereLiveData &&
+      globalThis.LivingTimeSphereState &&
+      globalThis.AlignmentLedgerData
+    );
+  }
+
+  function visitorTimeZone() {
+    try {
+      return Intl.DateTimeFormat().resolvedOptions().timeZone || "America/Los_Angeles";
+    } catch {
+      return "America/Los_Angeles";
+    }
+  }
+
+  // ── Mounting the real Sphere ──────────────────────────────────────
+
+  let booted = false;
+  let mountHandle = null;
+  let rotationOn = true;
+  let mountedPatternDay = summary.dayOfPatternYear;
 
   function stayFallback() {
     root.dataset.state = "fallback";
     if (stage) stage.hidden = true;
     if (fallbackArt) fallbackArt.hidden = false;
+    if (hintEl) hintEl.hidden = true;
+    if (toggleBtn) toggleBtn.hidden = true;
+    if (todayBtn) todayBtn.hidden = true;
   }
 
-  function init(THREE) {
-    const canvas = document.createElement("canvas");
-    canvas.className = "homepage-sphere-canvas";
-    canvas.setAttribute("aria-hidden", "true");
-    stage.appendChild(canvas);
-
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      antialias: true,
-      alpha: true,
-      powerPreference: "low-power"
-    });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 60);
-
-    const world = new THREE.Group();
-    scene.add(world);
-
-    // The stone globe — quiet, teal-rimmed, lit warm from above.
-    const globe = new THREE.Mesh(
-      new THREE.SphereGeometry(0.86, 48, 32),
-      new THREE.ShaderMaterial({
-        uniforms: {
-          cStone: { value: new THREE.Color(0x131c28) },
-          cStoneLight: { value: new THREE.Color(0x2b3f52) },
-          cRim: { value: new THREE.Color(0x64c8b4) },
-          cWarm: { value: new THREE.Color(0xf3c97a) }
-        },
-        vertexShader: `
-          varying vec3 vNormal;
-          varying vec3 vView;
-          void main() {
-            vec4 mv = modelViewMatrix * vec4(position, 1.0);
-            vNormal = normalize(normalMatrix * normal);
-            vView = normalize(-mv.xyz);
-            gl_Position = projectionMatrix * mv;
-          }`,
-        fragmentShader: `
-          uniform vec3 cStone;
-          uniform vec3 cStoneLight;
-          uniform vec3 cRim;
-          uniform vec3 cWarm;
-          varying vec3 vNormal;
-          varying vec3 vView;
-          void main() {
-            vec3 n = normalize(vNormal);
-            float ndv = abs(dot(n, vView));
-            float fres = pow(1.0 - ndv, 2.8);
-            vec3 lightDir = normalize(vec3(0.45, 0.75, 0.6));
-            float diffuse = max(dot(n, lightDir), 0.0);
-            vec3 col = mix(cStone, cStoneLight, diffuse * 0.85);
-            col += cWarm * pow(max(dot(n, normalize(vec3(-0.3, 0.9, 0.35))), 0.0), 3.0) * 0.10;
-            col += cRim * fres * 0.55;
-            gl_FragColor = vec4(col, 1.0);
-          }`
-      })
-    );
-    world.add(globe);
-
-    // A breath of atmosphere just outside the stone.
-    const atmosphere = new THREE.Mesh(
-      new THREE.SphereGeometry(0.9, 48, 32),
-      new THREE.ShaderMaterial({
-        transparent: true,
-        blending: THREE.AdditiveBlending,
-        side: THREE.BackSide,
-        depthWrite: false,
-        uniforms: { cRim: { value: new THREE.Color(0x3d8f83) } },
-        vertexShader: `
-          varying vec3 vNormal;
-          varying vec3 vView;
-          void main() {
-            vec4 mv = modelViewMatrix * vec4(position, 1.0);
-            vNormal = normalize(normalMatrix * normal);
-            vView = normalize(-mv.xyz);
-            gl_Position = projectionMatrix * mv;
-          }`,
-        fragmentShader: `
-          uniform vec3 cRim;
-          varying vec3 vNormal;
-          varying vec3 vView;
-          void main() {
-            float rim = pow(1.0 - abs(dot(normalize(vNormal), normalize(vView))), 3.5);
-            gl_FragColor = vec4(cRim, rim * 0.35);
-          }`
-      })
-    );
-    world.add(atmosphere);
-
-    // Calendar band rings — the inner and outer edges of the readable
-    // calendar face, at the Observatory's own radial factors.
-    function ringLine(radius, color, opacity) {
-      const pts = [];
-      for (let i = 0; i <= 128; i += 1) {
-        const a = (i / 128) * Math.PI * 2;
-        pts.push(new THREE.Vector3(radius * Math.cos(a), 0, radius * Math.sin(a)));
-      }
-      const line = new THREE.Line(
-        new THREE.BufferGeometry().setFromPoints(pts),
-        new THREE.LineBasicMaterial({ color, transparent: true, opacity, depthWrite: false })
-      );
-      return line;
-    }
-    world.add(ringLine(PATTERN_RING * 1.298, COLOR_RING, 0.55));
-    world.add(ringLine(PATTERN_RING * 1.44, COLOR_RING, 0.35));
-    world.add(ringLine(PATTERN_RING * MOON_LANE_FACTOR, 0x2a3050, 0.6));
-
-    // The 364 days — one point field, from calendarCell positions.
-    const todayDay = model.today ? model.today.day : -1;
-    const dayPositions = [];
-    const dayColors = [];
-    const anchorPositions = [];
-    const cDay = new THREE.Color(DAY_COLOR);
-    const cEdge = new THREE.Color(DAY_EDGE_COLOR);
-    const cGate = new THREE.Color(COLOR_WEEK_GATE);
-    for (const d of model.days) {
-      if (d.day === todayDay) continue; // today is drawn as the gold marker
-      if (d.anchor) {
-        anchorPositions.push(d.x, d.y, d.z);
-      } else {
-        dayPositions.push(d.x, d.y, d.z);
-        const c = d.moonEdge ? cEdge : cDay;
-        dayColors.push(c.r, c.g, c.b);
-      }
-    }
-    const dayGeo = new THREE.BufferGeometry();
-    dayGeo.setAttribute("position", new THREE.Float32BufferAttribute(dayPositions, 3));
-    dayGeo.setAttribute("color", new THREE.Float32BufferAttribute(dayColors, 3));
-    world.add(new THREE.Points(dayGeo, new THREE.PointsMaterial({
-      size: 0.02, vertexColors: true, sizeAttenuation: true,
-      transparent: true, opacity: 0.9, depthWrite: false
-    })));
-    const anchorGeo = new THREE.BufferGeometry();
-    anchorGeo.setAttribute("position", new THREE.Float32BufferAttribute(anchorPositions, 3));
-    world.add(new THREE.Points(anchorGeo, new THREE.PointsMaterial({
-      color: COLOR_WEEK_GATE, size: 0.034, sizeAttenuation: true,
-      transparent: true, opacity: 0.95, depthWrite: false
-    })));
-
-    // The 13 Moons — mineral bodies on their identity lane.
-    const moonGeo = new THREE.SphereGeometry(MOON_BODY, 20, 14);
-    for (const m of model.moons) {
-      const isTodayMoon = model.today && m.moon === model.today.moon;
-      const mesh = new THREE.Mesh(moonGeo, new THREE.MeshStandardMaterial({
-        color: m.color,
-        roughness: 0.85,
-        metalness: 0.05,
-        emissive: isTodayMoon ? 0x4a3010 : 0x000000,
-        emissiveIntensity: isTodayMoon ? 0.9 : 0
-      }));
-      mesh.position.set(m.x, m.y, m.z);
-      world.add(mesh);
-    }
-    scene.add(new THREE.AmbientLight(0x8fa3b8, 0.85));
-    const keyLight = new THREE.DirectionalLight(0xffe2b0, 1.6);
-    keyLight.position.set(2.5, 3.5, 2.0);
-    scene.add(keyLight);
-    const fillLight = new THREE.DirectionalLight(0x64c8b4, 0.5);
-    fillLight.position.set(-3, -1, -2);
-    scene.add(fillLight);
-
-    // Today — gold body, one slim halo, a soft glow. The Observatory's
-    // own marker sizes, so the pair can never read as a ringed planet.
-    let glow = null;
-    if (model.today) {
-      const t = model.today;
-      const body = new THREE.Mesh(
-        new THREE.SphereGeometry(TODAY_RADIUS, 18, 14),
-        new THREE.MeshBasicMaterial({ color: COLOR_TODAY })
-      );
-      body.position.set(t.x, t.y, t.z);
-      world.add(body);
-      const halo = new THREE.Mesh(
-        new THREE.TorusGeometry(TODAY_HALO, TODAY_HALO_TUBE, 10, 40),
-        new THREE.MeshBasicMaterial({ color: COLOR_TODAY })
-      );
-      halo.rotation.x = Math.PI / 2;
-      halo.position.copy(body.position);
-      world.add(halo);
-      glow = new THREE.Mesh(
-        new THREE.SphereGeometry(TODAY_RADIUS * 1.8, 18, 14),
-        new THREE.MeshBasicMaterial({
-          color: 0xffe060, transparent: true, opacity: 0.13,
-          blending: THREE.AdditiveBlending, depthWrite: false
-        })
-      );
-      glow.position.copy(body.position);
-      world.add(glow);
-    }
-
-    // The Year Gate seam — a small green diamond where the year turns.
-    if (model.gate) {
-      const gateMesh = new THREE.Mesh(
-        new THREE.OctahedronGeometry(0.03),
-        new THREE.MeshBasicMaterial({ color: COLOR_YEAR_GATE })
-      );
-      gateMesh.position.set(model.gate.x, model.gate.y, model.gate.z);
-      world.add(gateMesh);
-    }
-
-    // A quiet star field, standing still behind the turning sphere.
-    const starPositions = [];
-    let seed = 1234567;
-    const rand = () => {
-      seed = (seed * 1103515245 + 12345) % 2147483648;
-      return seed / 2147483648;
-    };
-    for (let i = 0; i < 420; i += 1) {
-      const u = rand() * 2 - 1;
-      const a = rand() * Math.PI * 2;
-      const r = 5.0 * Math.sqrt(1 - u * u);
-      starPositions.push(r * Math.cos(a), 5.0 * u, r * Math.sin(a));
-    }
-    const starGeo = new THREE.BufferGeometry();
-    starGeo.setAttribute("position", new THREE.Float32BufferAttribute(starPositions, 3));
-    scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({
-      color: 0xffffff, size: 0.035, sizeAttenuation: true,
-      transparent: true, opacity: 0.5, depthWrite: false
-    })));
-
-    // ── State, controls, motion ─────────────────────────────────────
-    let spinning = true;
-    let dragging = false;
-    let swing = null;
-    let phi = PHI_DEFAULT;
-    let phiTarget = PHI_DEFAULT;
-    const startOffset = model.today ? -0.32 : 0;
-    let rotY = model.today ? facingRotationY(model.today.angle) + startOffset : 0;
-    let rotYTarget = rotY;
-
-    function swingToToday() {
-      if (!model.today) return;
-      const dest = facingRotationY(model.today.angle);
-      const turns = Math.round((rotY - dest) / (Math.PI * 2));
-      swing = { from: rotY, to: dest + turns * Math.PI * 2, t: 0 };
-    }
-
-    if (toggleBtn) {
-      toggleBtn.hidden = false;
-      toggleBtn.addEventListener("click", () => {
-        spinning = !spinning;
-        toggleBtn.textContent = spinning ? "Pause rotation" : "Play rotation";
-        toggleBtn.setAttribute("aria-pressed", spinning ? "false" : "true");
-      });
-    }
-    if (todayBtn) {
-      todayBtn.hidden = !model.today;
-      todayBtn.addEventListener("click", swingToToday);
-    }
-    if (hintEl) hintEl.hidden = false;
-
-    let lastX = 0;
-    let lastY = 0;
-    canvas.style.touchAction = "pan-y";
-    canvas.addEventListener("pointerdown", (event) => {
-      dragging = true;
-      swing = null;
-      lastX = event.clientX;
-      lastY = event.clientY;
-      canvas.setPointerCapture(event.pointerId);
-    });
-    canvas.addEventListener("pointermove", (event) => {
-      if (!dragging) return;
-      const dx = event.clientX - lastX;
-      const dy = event.clientY - lastY;
-      lastX = event.clientX;
-      lastY = event.clientY;
-      rotYTarget += dx * 0.0055;
-      phiTarget = Math.max(PHI_MIN, Math.min(PHI_MAX, phiTarget + dy * 0.0035));
-    });
-    const endDrag = () => { dragging = false; };
-    canvas.addEventListener("pointerup", endDrag);
-    canvas.addEventListener("pointercancel", endDrag);
-
-    stage.addEventListener("keydown", (event) => {
-      if (event.key === "ArrowLeft") { rotYTarget -= 0.3; swing = null; event.preventDefault(); }
-      else if (event.key === "ArrowRight") { rotYTarget += 0.3; swing = null; event.preventDefault(); }
-      else if (event.key === "ArrowUp") { phiTarget = Math.max(PHI_MIN, phiTarget - 0.08); event.preventDefault(); }
-      else if (event.key === "ArrowDown") { phiTarget = Math.min(PHI_MAX, phiTarget + 0.08); event.preventDefault(); }
-    });
-
-    // Go live: swap the static art for the sphere.
+  function showLive() {
     root.dataset.state = "live";
-    stage.hidden = false;
     if (fallbackArt) fallbackArt.hidden = true;
+    if (stage) stage.hidden = false;
+    if (hintEl) hintEl.hidden = false;
+    if (toggleBtn) toggleBtn.hidden = false;
+    if (todayBtn) todayBtn.hidden = false;
+  }
 
-    let visible = true;
-    let tabVisible = !document.hidden;
-    if (typeof IntersectionObserver === "function") {
-      new IntersectionObserver((entries) => {
-        visible = entries.some((e) => e.isIntersecting);
-      }, { threshold: 0.05 }).observe(stage);
+  async function boot() {
+    if (booted) return;
+    booted = true;
+    try {
+      const ready = await loadSphereStack();
+      if (!ready) {
+        stayFallback();
+        return;
+      }
+      // The stage must have its size before the mount measures it, so
+      // the live state is shown first; the mount draws its own SVG
+      // baseline into the stage immediately, then brings up the 3D
+      // renderer — the same sequence the Observatory page runs.
+      showLive();
+      mountHandle = globalThis.LivingTimeSphere.mount({
+        container: stage,
+        runtimeProfile: "instrument",
+        mode: "today",
+        state: {
+          // The sphere's today must be the caption's today: the
+          // visitor's own timezone at the midnight boundary. (The
+          // stack's defaults are America/Los_Angeles and sunset.)
+          timeZone: visitorTimeZone(),
+          boundaryMode: "midnight",
+          motionMode: "drift",
+          moonLabelMode: "essential",
+          dayLabelMode: "key",
+          connectionMode: "selected"
+        },
+        visibleLayers: { ...HERO_VISIBLE_LAYERS }
+      });
+      if (!mountHandle) stayFallback();
+    } catch {
+      stayFallback();
     }
-    document.addEventListener("visibilitychange", () => {
-      tabVisible = !document.hidden;
+  }
+
+  // ── The small control set ─────────────────────────────────────────
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener("click", () => {
+      if (!mountHandle) return;
+      rotationOn = !rotationOn;
+      try {
+        mountHandle.refresh({ motionMode: rotationOn ? "drift" : "still" });
+      } catch {
+        /* the sphere keeps its last state */
+      }
+      toggleBtn.setAttribute("aria-pressed", String(!rotationOn));
+      toggleBtn.textContent = rotationOn ? "Pause rotation" : "Resume rotation";
     });
+  }
 
-    function resize() {
-      const w = stage.clientWidth || 1;
-      const h = stage.clientHeight || 1;
-      renderer.setSize(w, h, false);
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-    }
-    if (typeof ResizeObserver === "function") {
-      new ResizeObserver(resize).observe(stage);
-    }
-    window.addEventListener("resize", resize);
-    resize();
+  if (todayBtn) {
+    todayBtn.addEventListener("click", () => {
+      const now = resolveToday(globalThis.PatternCalendar);
+      const day = now && now.insideCountedYear ? now.dayOfPatternYear : null;
+      const renderer = globalThis.LivingTimeSphereRenderer3d;
+      if (!day || !renderer || typeof renderer.focusPatternDay !== "function") return;
+      // The Observatory's own Today control calls focusPatternDay the
+      // same way — twice, so the swing lands even mid-settle.
+      renderer.focusPatternDay(day, { distance: 2.25, animated: true });
+      window.setTimeout(() => {
+        if (mountHandle) {
+          renderer.focusPatternDay(day, { distance: 2.25, animated: true });
+        }
+      }, 700);
+    });
+  }
 
-    const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-    let last = performance.now();
-    function frame(now) {
-      requestAnimationFrame(frame);
-      const dt = Math.min(0.05, (now - last) / 1000);
-      last = now;
-      if (!visible || !tabVisible) return;
-      if (swing) {
-        swing.t += dt / 1.25;
-        const k = easeInOut(Math.min(1, swing.t));
-        rotY = swing.from + (swing.to - swing.from) * k;
-        rotYTarget = rotY;
-        if (swing.t >= 1) swing = null;
-      } else {
-        if (spinning && !dragging) rotYTarget += dt * SPIN_SPEED;
-        let delta = (rotYTarget - rotY) % (Math.PI * 2);
-        if (delta > Math.PI) delta -= Math.PI * 2;
-        if (delta < -Math.PI) delta += Math.PI * 2;
-        rotY += delta * Math.min(1, dt * 8);
-      }
-      phi += (phiTarget - phi) * Math.min(1, dt * 8);
-      world.rotation.y = rotY;
-      if (glow) {
-        const pulse = 1 + Math.sin(now / 1400) * 0.07;
-        glow.scale.setScalar(pulse);
-      }
-      camera.position.set(
-        0,
-        CAMERA_DISTANCE * Math.cos(phi),
-        CAMERA_DISTANCE * Math.sin(phi)
-      );
-      camera.lookAt(0, 0, 0);
-      renderer.render(scene, camera);
+  // If the tab sits open across midnight, the caption and the sphere
+  // move to the new day together when the visitor comes back to it.
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden || !mountHandle) return;
+    const now = resolveToday(globalThis.PatternCalendar);
+    if (!now || now.dayOfPatternYear === mountedPatternDay) return;
+    mountedPatternDay = now.dayOfPatternYear;
+    const nextText = coordinateText(now);
+    if (coordinateEl && nextText) coordinateEl.textContent = nextText;
+    try {
+      mountHandle.refresh({});
+    } catch {
+      /* keep the last frame */
     }
-    requestAnimationFrame(frame);
+  });
+
+  // The 3D renderer is a singleton behind the mount; release it when
+  // the page goes away so nothing outlives the hero.
+  window.addEventListener("pagehide", () => {
+    if (mountHandle) {
+      try {
+        mountHandle.teardown();
+      } catch {
+        /* nothing to release */
+      }
+      mountHandle = null;
+    }
+  });
+
+  if (typeof IntersectionObserver === "function") {
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          io.disconnect();
+          void boot();
+        }
+      },
+      { rootMargin: "240px" }
+    );
+    io.observe(root);
+  } else {
+    void boot();
   }
 })();

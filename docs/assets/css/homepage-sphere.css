@@ -2,9 +2,11 @@
  * Homepage Live Sphere — hero presentation.
  *
  * The sphere stage lives inside the existing hero image card. Until the
- * module proves WebGL and builds the scene, the static hero art shows
- * exactly as before; the stage, hint and motion controls only appear in
- * the live state. Nothing here touches the Observatory's own styles.
+ * module mounts the real Living Time Sphere (the Observatory's own
+ * stack, styled by living-time-sphere.css), the static hero art shows
+ * exactly as before; the stage, hint and motion controls only appear
+ * in the live state. These rules only place the hero's own frame,
+ * hint and buttons — the sphere itself wears its own styles.
  */
 
 /* The module drives visibility with the hidden attribute; the site's
@@ -28,10 +30,30 @@
   object-fit: contain;
 }
 
+/* The mount sets the stage's position inline (relative — its own
+   positioning context for the layers it manages). The hero only has
+   to give the stage the frame's full height to fill. */
 .homepage-sphere-stage {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* The mount layers its SVG baseline and its 3D canvas in the stage.
+   Stack them the way the Observatory's own stage does — both filling
+   the frame, the canvas above the baseline it replaces. Once the 3D
+   renderer is the active one (the mount publishes that on the stage),
+   the baseline steps aside; if 3D ever falls back, the attribute
+   flips back and the baseline returns on its own. */
+.homepage-sphere-stage > svg,
+.homepage-sphere-stage > canvas {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.homepage-sphere-stage[data-active-renderer="3d"] > svg {
+  display: none;
 }
 
 .homepage-sphere-stage:focus-visible {
@@ -39,23 +61,11 @@
   outline-offset: -2px;
 }
 
-.homepage-sphere-canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-  cursor: grab;
-}
-
-.homepage-sphere-canvas:active {
-  cursor: grabbing;
-}
-
 .homepage-sphere-hint {
   position: absolute;
-  left: 50%;
+  left: 0.65rem;
   bottom: 0.65rem;
-  z-index: 2;
-  transform: translateX(-50%);
+  z-index: 4;
   margin: 0;
   padding: 0.3rem 0.7rem;
   border-radius: 999px;
