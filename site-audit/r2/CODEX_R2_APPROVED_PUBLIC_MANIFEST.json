@@ -29,7 +29,7 @@
     },
     {
       "path": "docs/alignment-ledger.html",
-      "sha256": "cdcbf718f14614cf93c8b5bf7c04c4d372cc1fe709fdd81d23404c28f5105f95",
+      "sha256": "15d85ad6ea00388f4027fed00fe049f568b1a5c4687eb610325abb5694d30612",
       "publicUrl": "https://codexofreality.org/alignment-ledger.html",
       "status": "operational"
     },
@@ -317,7 +317,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "84f544416608532cfceaff47ffe3eee5af62c03dad0067a3a5f95ce84cb47410",
+      "sha256": "b6e0967e9eea3992bdf17f90e41a5cd91499c8ee12d85a49bd9285a5a37d2b5a",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -2248,18 +2248,6 @@
       "status": "operational"
     },
     {
-      "path": "docs/assets/media/alignment-ledger-explainer.mp4",
-      "sha256": "02c205bd0349d9ce4ed3d77dfbaab8a09597666d1e4a73034416aedfc338907f",
-      "publicUrl": "https://codexofreality.org/assets/media/alignment-ledger-explainer.mp4",
-      "status": "operational"
-    },
-    {
-      "path": "docs/assets/media/circle-explainer.mp4",
-      "sha256": "9d7a3a747d8ea7f27c29bb1aded88b26bebc40a891cccc766e06135fdc3671fb",
-      "publicUrl": "https://codexofreality.org/assets/media/circle-explainer.mp4",
-      "status": "operational"
-    },
-    {
       "path": "docs/assets/media/codex-atlas-explainer.mp4",
       "sha256": "8c61f05deff34c7265d6efa4cd193ebb1571e2f35dc7127270c059bec5a85845",
       "publicUrl": "https://codexofreality.org/assets/media/codex-atlas-explainer.mp4",
@@ -2281,12 +2269,6 @@
       "path": "docs/assets/media/downloads-explainer.mp4",
       "sha256": "81d21105b24b74457d0a602605b69fc8b7e12e10a78fe03e1471cac0853fded8",
       "publicUrl": "https://codexofreality.org/assets/media/downloads-explainer.mp4",
-      "status": "operational"
-    },
-    {
-      "path": "docs/assets/media/equinox-passage-explainer.mp4",
-      "sha256": "9cbd4ed2e6064b0ba26efa3a60ae6966297870f4243253493e249626b88f0921",
-      "publicUrl": "https://codexofreality.org/assets/media/equinox-passage-explainer.mp4",
       "status": "operational"
     },
     {
@@ -2335,12 +2317,6 @@
       "path": "docs/assets/media/lab-explainer.mp4",
       "sha256": "62d666fc04db777b66953780b7b8c2c5399b553eed4062dac42bcc25ad65fc80",
       "publicUrl": "https://codexofreality.org/assets/media/lab-explainer.mp4",
-      "status": "operational"
-    },
-    {
-      "path": "docs/assets/media/ledger-explainer.mp4",
-      "sha256": "19393b53b370e36a980751d5c373dae5483b52fade2bc59f45e210b1bab7ebc7",
-      "publicUrl": "https://codexofreality.org/assets/media/ledger-explainer.mp4",
       "status": "operational"
     },
     {
@@ -2417,13 +2393,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "e6f4a6f62e765c69180e70754e1403cc613ffb28b66870cd280b40e080c262a0",
+      "sha256": "839f347cb369d88f91466d59d2bc4d6a1dd24e60f821c7c3f7a57ca86ccd7720",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "4b7f69db650351de71ea0a4d4a9223241925491b79fffd725711390e5cded1af",
+      "sha256": "271c3b80785f305dc0afe40e8dc8401da829e16a24da9e92da687aa79b309a56",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -2459,7 +2435,7 @@
     },
     {
       "path": "docs/circle.html",
-      "sha256": "55debb2d07ae31a31febb4e6ce4bfa4c07de9f215b558b32164e0657d312674d",
+      "sha256": "203c7c750511fe06e9bc29bcf3262f5b0b2092ec63c532661e29d828f3c546df",
       "publicUrl": "https://codexofreality.org/circle.html",
       "status": "operational"
     },
@@ -2513,7 +2489,7 @@
     },
     {
       "path": "docs/equinox-passage.html",
-      "sha256": "34f71e39e95d8f9fd130d5e57be01e4003ad4981cf4778700c66e42db2b88c92",
+      "sha256": "ef308a7d025f2eb960d5ce3dc9f4d8846b8bbc429d3736973fbc90964d8cfa5e",
       "publicUrl": "https://codexofreality.org/equinox-passage.html",
       "status": "operational"
     },
@@ -2555,7 +2531,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "9cff83a46e41b873b50769a387352abf185b3f43765f5b8e1e04a74cf72b68b1",
+      "sha256": "847b9182ee7cf618f4fd86365d118ab762ae150265d4b842214c403c02e2ed4e",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
@@ -2567,13 +2543,13 @@
     },
     {
       "path": "docs/lab.html",
-      "sha256": "0a39382e112e992f994384d703e352060bcb8156f1cad6d7d50c62bc609c5514",
+      "sha256": "95cd21abe00492bd581e98a148099c67782aeaf707f06c72e19ea682a1c799be",
       "publicUrl": "https://codexofreality.org/lab.html",
       "status": "operational"
     },
     {
       "path": "docs/ledger.html",
-      "sha256": "e4ec95b47479b1ea82b8c3aee3940a367833da656d0401fce15b0cf224008840",
+      "sha256": "821ffcd3f0ad2b4f89982d4fb4fa564cfae64a121bf7ef3de06971f3ad0a7c25",
       "publicUrl": "https://codexofreality.org/ledger.html",
       "status": "operational"
     },
@@ -8933,7 +8909,7 @@
     },
     {
       "path": "docs/teach.html",
-      "sha256": "4a7bd2f91efca8ad5b58ad3f8fa08de4ef23da4545658cbb648fa0db7c8ca86d",
+      "sha256": "00cf1f0971fc6f32153fd4802f0e7787152c91639446c8a371da3a2d737d2af4",
       "publicUrl": "https://codexofreality.org/teach.html",
       "status": "operational"
     },
