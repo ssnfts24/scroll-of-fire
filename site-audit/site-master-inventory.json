@@ -12901,6 +12901,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -17809,7 +17810,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 166,
+        "inboundPages": 167,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []

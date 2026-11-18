@@ -351,7 +351,7 @@ The page itself was not changed. Full lists are in `downloads-reconciliation.jso
 | `scroll/lexicon.html` | 1 | 1 | yes | yes | 169 |
 | `scroll/reader.html` | 2 | 2 | no | yes | 2 |
 | `scroll/search.html` | 1 | 1 | yes | yes | 169 |
-| `search.html` | 1 | 1 | no | yes | 166 |
+| `search.html` | 1 | 1 | no | yes | 167 |
 | `shop.html` | 1 | 1 | yes | yes | 168 |
 | `start.html` | 1 | 1 | yes | yes | 67 |
 | `systems/archive.html` | 1 | 1 | yes | yes | 64 |
