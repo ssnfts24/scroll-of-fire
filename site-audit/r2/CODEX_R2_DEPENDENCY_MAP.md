@@ -103,7 +103,7 @@
 | `docs/theory/assets/js/site.js` | 15 |
 | `docs/theory/assets/js/theory.js` | 15 |
 | `docs/assets/js/codex-witness.js` | 8 |
-| `docs/assets/js/share/remnant-share-url.js` | 6 |
+| `docs/assets/js/calendar/pattern-calendar-version.js` | 7 |
 
 ## Protected systems (do not modify)
 

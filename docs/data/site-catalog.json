@@ -73,6 +73,12 @@
       "target": "living-time-sphere"
     },
     {
+      "id": "practice",
+      "label": "Practice",
+      "description": "Manifest — the Remnant Visual Exercise. Seal a session; it takes its place on the Sphere's day.",
+      "target": "manifest"
+    },
+    {
       "id": "archive",
       "label": "Archive",
       "description": "Sealed downloads and preserved originals.",
