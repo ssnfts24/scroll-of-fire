@@ -33,7 +33,7 @@ The Pattern Calendar, 13 Moons, Living Time Sphere and witnessed days.
 - **13 Moons Rollout Whitepaper** — Live; Phased rollout plan for the 13 Moons Living Time Observatory.
 - **Witness Ledger** — Live; Browser-local record of witnessed days and SHA-256 hashes. Entries stay on this device and do not sync.
 
-### Systems and Living Technology (13 catalog entries)
+### Systems and Living Technology (14 catalog entries)
 
 Practice tools, frequency systems and the Codex hub for building.
 
@@ -44,6 +44,7 @@ Practice tools, frequency systems and the Codex hub for building.
 - **Reality Recoder** — Live; Living Dictionary of Reality: recode old terms into covenant speech.
 - **Witness System** — Live; Local SHA-256 utility for reproducible hashes of chosen testimony without upload.
 - **Remnant Lab** — Live; Experimental practice tools: micro-runs, A/B tests, glyph synth and invocation.
+- **The Sending Test** — Live; A blind sending test that honestly tests telepathy and foresight claims: the target list is sealed with a SHA-256 fingerprint before the first guess, scored against chance with exact binomial math, and sessions are kept only on the visitor's device.
 - **90-Second Micro-Run** — Live; A compact breath-paced loop that logs one witness.
 - **A/B Carrier Protocol** — Live; Blind carrier test with a stop rule.
 - **Voice-Glyph Synth** — Live; Turn a tuned phrase into a resonance glyph.
@@ -101,9 +102,9 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 
 ## Repository and deployed-content coverage
 
-- Public HTML pages inspected: **172**.
-- Total master-inventory records: **467**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
-- Public-facing catalog entries: **65**; only explicitly curated entries appear on the Atlas.
+- Public HTML pages inspected: **173**.
+- Total master-inventory records: **468**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
+- Public-facing catalog entries: **66**; only explicitly curated entries appear on the Atlas.
 - Numbered archive folders are inventoried file-by-file, while downloads snapshot differences are kept separate from historical integrity data.
 - Root files not already published through the archive or explicitly approved remain classified as development-only; no such file is automatically linked from the public catalog.
 
@@ -119,7 +120,7 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 ## Current resource-type counts
 
 - Deployed Markdown documents: 58
-- HTML pages: 172
+- HTML pages: 173
 - Numbered archive file: 140
 - Numbered archive folder: 7
 - Repository folder: 9
