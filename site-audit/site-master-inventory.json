@@ -46,7 +46,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -108,7 +110,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -164,11 +168,13 @@
         "index.html",
         "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "shop.html",
         "theory.html"
       ],
       "canonicalUrl": "https://codexofreality.org/alignment-ledger.html",
@@ -214,7 +220,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -367,7 +375,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -421,7 +431,7 @@
     },
     {
       "id": "docs-assets:assets/css",
-      "title": "docs/assets/css (40 files)",
+      "title": "docs/assets/css (42 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -506,7 +516,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (145 files)",
+      "title": "docs/assets/js (147 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1646,7 +1656,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 0,
         "hopsFromHomeWithoutAtlas": 0,
-        "inboundPages": 73,
+        "inboundPages": 166,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -1983,6 +1993,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/exodus/01.html",
         "scripture/genesis/01.html",
@@ -1991,7 +2003,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/about.html",
       "privacyEligibility": "approved-public",
@@ -2024,6 +2037,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/02.html",
@@ -2072,7 +2087,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/01.html",
       "privacyEligibility": "approved-public",
@@ -2105,6 +2121,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -2152,7 +2170,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/02.html",
       "privacyEligibility": "approved-public",
@@ -2185,6 +2204,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -2232,7 +2253,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/03.html",
       "privacyEligibility": "approved-public",
@@ -2265,6 +2287,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -2312,7 +2336,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/04.html",
       "privacyEligibility": "approved-public",
@@ -2345,6 +2370,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -2392,7 +2419,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/05.html",
       "privacyEligibility": "approved-public",
@@ -2425,6 +2453,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -2472,7 +2502,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/06.html",
       "privacyEligibility": "approved-public",
@@ -2505,6 +2536,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -2552,7 +2585,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/07.html",
       "privacyEligibility": "approved-public",
@@ -2585,6 +2619,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -2632,7 +2668,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/08.html",
       "privacyEligibility": "approved-public",
@@ -2665,6 +2702,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -2712,7 +2751,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/09.html",
       "privacyEligibility": "approved-public",
@@ -2745,6 +2785,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -2792,7 +2834,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/10.html",
       "privacyEligibility": "approved-public",
@@ -2825,6 +2868,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -2872,7 +2917,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/11.html",
       "privacyEligibility": "approved-public",
@@ -2905,6 +2951,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -2952,7 +3000,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/12.html",
       "privacyEligibility": "approved-public",
@@ -2985,6 +3034,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -3032,7 +3083,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/13.html",
       "privacyEligibility": "approved-public",
@@ -3065,6 +3117,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -3112,7 +3166,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/14.html",
       "privacyEligibility": "approved-public",
@@ -3145,6 +3200,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -3192,7 +3249,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/15.html",
       "privacyEligibility": "approved-public",
@@ -3225,6 +3283,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -3272,7 +3332,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/16.html",
       "privacyEligibility": "approved-public",
@@ -3305,6 +3366,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -3352,7 +3415,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/17.html",
       "privacyEligibility": "approved-public",
@@ -3385,6 +3449,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -3432,7 +3498,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/18.html",
       "privacyEligibility": "approved-public",
@@ -3465,6 +3532,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -3512,7 +3581,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/19.html",
       "privacyEligibility": "approved-public",
@@ -3545,6 +3615,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -3592,7 +3664,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/20.html",
       "privacyEligibility": "approved-public",
@@ -3625,6 +3698,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -3672,7 +3747,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/21.html",
       "privacyEligibility": "approved-public",
@@ -3705,6 +3781,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -3752,7 +3830,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/22.html",
       "privacyEligibility": "approved-public",
@@ -3785,6 +3864,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -3832,7 +3913,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/23.html",
       "privacyEligibility": "approved-public",
@@ -3865,6 +3947,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -3912,7 +3996,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/24.html",
       "privacyEligibility": "approved-public",
@@ -3945,6 +4030,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -3992,7 +4079,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/25.html",
       "privacyEligibility": "approved-public",
@@ -4025,6 +4113,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -4072,7 +4162,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/26.html",
       "privacyEligibility": "approved-public",
@@ -4105,6 +4196,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -4152,7 +4245,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/27.html",
       "privacyEligibility": "approved-public",
@@ -4185,6 +4279,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -4232,7 +4328,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/28.html",
       "privacyEligibility": "approved-public",
@@ -4265,6 +4362,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -4312,7 +4411,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/29.html",
       "privacyEligibility": "approved-public",
@@ -4345,6 +4445,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -4392,7 +4494,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/30.html",
       "privacyEligibility": "approved-public",
@@ -4425,6 +4528,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -4472,7 +4577,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/31.html",
       "privacyEligibility": "approved-public",
@@ -4505,6 +4611,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -4552,7 +4660,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/32.html",
       "privacyEligibility": "approved-public",
@@ -4585,6 +4694,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -4632,7 +4743,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/33.html",
       "privacyEligibility": "approved-public",
@@ -4665,6 +4777,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -4712,7 +4826,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/34.html",
       "privacyEligibility": "approved-public",
@@ -4745,6 +4860,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -4792,7 +4909,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/35.html",
       "privacyEligibility": "approved-public",
@@ -4825,6 +4943,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -4872,7 +4992,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/36.html",
       "privacyEligibility": "approved-public",
@@ -4905,6 +5026,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -4952,7 +5075,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/37.html",
       "privacyEligibility": "approved-public",
@@ -4985,6 +5109,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -5032,7 +5158,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/38.html",
       "privacyEligibility": "approved-public",
@@ -5065,6 +5192,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -5112,7 +5241,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/39.html",
       "privacyEligibility": "approved-public",
@@ -5145,6 +5275,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -5192,7 +5324,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/exodus/40.html",
       "privacyEligibility": "approved-public",
@@ -5225,6 +5358,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -5282,7 +5417,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/01.html",
       "privacyEligibility": "approved-public",
@@ -5315,6 +5451,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -5372,7 +5510,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/02.html",
       "privacyEligibility": "approved-public",
@@ -5405,6 +5544,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -5462,7 +5603,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/03.html",
       "privacyEligibility": "approved-public",
@@ -5495,6 +5637,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -5552,7 +5696,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/04.html",
       "privacyEligibility": "approved-public",
@@ -5585,6 +5730,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -5642,7 +5789,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/05.html",
       "privacyEligibility": "approved-public",
@@ -5675,6 +5823,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -5732,7 +5882,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/06.html",
       "privacyEligibility": "approved-public",
@@ -5765,6 +5916,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -5822,7 +5975,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/07.html",
       "privacyEligibility": "approved-public",
@@ -5855,6 +6009,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -5912,7 +6068,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/08.html",
       "privacyEligibility": "approved-public",
@@ -5945,6 +6102,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -6002,7 +6161,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/09.html",
       "privacyEligibility": "approved-public",
@@ -6035,6 +6195,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -6092,7 +6254,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/10.html",
       "privacyEligibility": "approved-public",
@@ -6125,6 +6288,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -6182,7 +6347,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/11.html",
       "privacyEligibility": "approved-public",
@@ -6215,6 +6381,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -6272,7 +6440,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/12.html",
       "privacyEligibility": "approved-public",
@@ -6305,6 +6474,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -6362,7 +6533,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/13.html",
       "privacyEligibility": "approved-public",
@@ -6395,6 +6567,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -6452,7 +6626,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/14.html",
       "privacyEligibility": "approved-public",
@@ -6485,6 +6660,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -6542,7 +6719,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/15.html",
       "privacyEligibility": "approved-public",
@@ -6575,6 +6753,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -6632,7 +6812,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/16.html",
       "privacyEligibility": "approved-public",
@@ -6665,6 +6846,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -6722,7 +6905,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/17.html",
       "privacyEligibility": "approved-public",
@@ -6755,6 +6939,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -6812,7 +6998,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/18.html",
       "privacyEligibility": "approved-public",
@@ -6845,6 +7032,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -6902,7 +7091,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/19.html",
       "privacyEligibility": "approved-public",
@@ -6935,6 +7125,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -6992,7 +7184,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/20.html",
       "privacyEligibility": "approved-public",
@@ -7025,6 +7218,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -7082,7 +7277,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/21.html",
       "privacyEligibility": "approved-public",
@@ -7115,6 +7311,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -7172,7 +7370,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/22.html",
       "privacyEligibility": "approved-public",
@@ -7205,6 +7404,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -7262,7 +7463,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/23.html",
       "privacyEligibility": "approved-public",
@@ -7295,6 +7497,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -7352,7 +7556,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/24.html",
       "privacyEligibility": "approved-public",
@@ -7385,6 +7590,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -7442,7 +7649,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/25.html",
       "privacyEligibility": "approved-public",
@@ -7475,6 +7683,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -7532,7 +7742,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/26.html",
       "privacyEligibility": "approved-public",
@@ -7565,6 +7776,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -7622,7 +7835,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/27.html",
       "privacyEligibility": "approved-public",
@@ -7655,6 +7869,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -7712,7 +7928,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/28.html",
       "privacyEligibility": "approved-public",
@@ -7745,6 +7962,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -7802,7 +8021,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/29.html",
       "privacyEligibility": "approved-public",
@@ -7835,6 +8055,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -7892,7 +8114,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/30.html",
       "privacyEligibility": "approved-public",
@@ -7925,6 +8148,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -7982,7 +8207,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/31.html",
       "privacyEligibility": "approved-public",
@@ -8015,6 +8241,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -8072,7 +8300,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/32.html",
       "privacyEligibility": "approved-public",
@@ -8105,6 +8334,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -8162,7 +8393,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/33.html",
       "privacyEligibility": "approved-public",
@@ -8195,6 +8427,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -8252,7 +8486,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/34.html",
       "privacyEligibility": "approved-public",
@@ -8285,6 +8520,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -8342,7 +8579,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/35.html",
       "privacyEligibility": "approved-public",
@@ -8375,6 +8613,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -8432,7 +8672,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/36.html",
       "privacyEligibility": "approved-public",
@@ -8465,6 +8706,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -8522,7 +8765,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/37.html",
       "privacyEligibility": "approved-public",
@@ -8555,6 +8799,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -8612,7 +8858,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/38.html",
       "privacyEligibility": "approved-public",
@@ -8645,6 +8892,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -8702,7 +8951,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/39.html",
       "privacyEligibility": "approved-public",
@@ -8735,6 +8985,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -8792,7 +9044,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/40.html",
       "privacyEligibility": "approved-public",
@@ -8825,6 +9078,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -8882,7 +9137,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/41.html",
       "privacyEligibility": "approved-public",
@@ -8915,6 +9171,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -8972,7 +9230,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/42.html",
       "privacyEligibility": "approved-public",
@@ -9005,6 +9264,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -9062,7 +9323,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/43.html",
       "privacyEligibility": "approved-public",
@@ -9095,6 +9357,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -9152,7 +9416,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/44.html",
       "privacyEligibility": "approved-public",
@@ -9185,6 +9450,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -9242,7 +9509,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/45.html",
       "privacyEligibility": "approved-public",
@@ -9275,6 +9543,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -9332,7 +9602,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/46.html",
       "privacyEligibility": "approved-public",
@@ -9365,6 +9636,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -9422,7 +9695,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/47.html",
       "privacyEligibility": "approved-public",
@@ -9455,6 +9729,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -9512,7 +9788,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/48.html",
       "privacyEligibility": "approved-public",
@@ -9545,6 +9822,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -9602,7 +9881,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/49.html",
       "privacyEligibility": "approved-public",
@@ -9635,6 +9915,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -9692,7 +9974,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/genesis/50.html",
       "privacyEligibility": "approved-public",
@@ -9725,6 +10008,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -9734,7 +10019,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/lemma.html",
       "privacyEligibility": "approved-public",
@@ -9854,7 +10140,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -9928,7 +10216,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -10004,7 +10294,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -10079,7 +10371,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -10155,7 +10449,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -10231,7 +10527,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -10307,7 +10605,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -10385,7 +10685,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -10457,7 +10759,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -10529,7 +10833,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -10604,7 +10910,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -10679,7 +10987,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -10755,7 +11065,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -10830,7 +11142,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -10904,7 +11218,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -10979,7 +11295,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -11054,7 +11372,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -11129,7 +11449,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -11204,7 +11526,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -11260,11 +11584,13 @@
         "index.html",
         "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "shop.html",
         "theory.html"
       ],
       "canonicalUrl": "https://codexofreality.org/equinox-passage.html",
@@ -11310,7 +11636,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -11374,7 +11702,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -11425,12 +11755,15 @@
         "ethics.html",
         "index.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "shop.html",
         "start.html",
         "theory.html"
       ],
@@ -11480,7 +11813,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -11543,7 +11878,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -11607,7 +11944,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -11668,7 +12007,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -11730,7 +12071,9 @@
         "index.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -11797,8 +12140,10 @@
         "index.html",
         "invoke.html",
         "ledger.html",
+        "living-time-sphere.html",
         "micro.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -11859,7 +12204,9 @@
         "index.html",
         "invoke.html",
         "lab.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -11933,7 +12280,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 6,
+        "inboundPages": 165,
         "pagesWithNavLinkToIt": 3
       },
       "issues": []
@@ -11966,7 +12313,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -12026,7 +12375,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -12089,7 +12440,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -12157,6 +12510,7 @@
         "lab.html",
         "ledger.html",
         "living-time-sphere.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -12261,7 +12615,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -12566,7 +12922,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (87 files)",
+      "title": "tests/ (90 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -16607,6 +16963,8 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
         "moons.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
@@ -16704,7 +17062,8 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scripture/index.html",
       "privacyEligibility": "approved-public",
@@ -16715,7 +17074,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 94,
+        "inboundPages": 164,
         "pagesWithNavLinkToIt": 93
       },
       "issues": []
@@ -16737,10 +17096,13 @@
         "codex-atlas.html",
         "glossary.html",
         "index.html",
+        "living-time-sphere.html",
+        "scripture/index.html",
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scroll/atlas.html",
       "privacyEligibility": "approved-public",
@@ -16774,10 +17136,13 @@
         "codex-atlas.html",
         "glossary.html",
         "index.html",
+        "living-time-sphere.html",
+        "scripture/index.html",
         "scroll/atlas.html",
         "scroll/index.html",
         "scroll/lexicon.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scroll/editorial.html",
       "privacyEligibility": "approved-public",
@@ -16813,10 +17178,13 @@
         "codex-atlas.html",
         "glossary.html",
         "index.html",
+        "living-time-sphere.html",
+        "scripture/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scroll/lexicon.html",
       "privacyEligibility": "approved-public",
@@ -16827,7 +17195,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 165,
+        "inboundPages": 166,
         "pagesWithNavLinkToIt": 161
       },
       "issues": []
@@ -16854,11 +17222,14 @@
         "codex-atlas.html",
         "glossary.html",
         "index.html",
+        "living-time-sphere.html",
+        "scripture/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/lexicon.html",
         "scroll/reader.html",
-        "scroll/search.html"
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scroll/index.html",
       "privacyEligibility": "approved-public",
@@ -16892,9 +17263,13 @@
       "relatedPages": [
         "codex-atlas.html",
         "index.html",
+        "living-time-sphere.html",
+        "scripture/index.html",
         "scroll/editorial.html",
         "scroll/index.html",
-        "scroll/search.html"
+        "scroll/lexicon.html",
+        "scroll/search.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scroll/reader.html",
       "privacyEligibility": "approved-public",
@@ -16928,10 +17303,13 @@
         "codex-atlas.html",
         "glossary.html",
         "index.html",
+        "living-time-sphere.html",
+        "scripture/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
-        "scroll/lexicon.html"
+        "scroll/lexicon.html",
+        "shop.html"
       ],
       "canonicalUrl": "https://codexofreality.org/scroll/search.html",
       "privacyEligibility": "approved-public",
@@ -16977,7 +17355,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -17004,7 +17384,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 62,
+        "inboundPages": 165,
         "pagesWithNavLinkToIt": 63
       },
       "issues": [
@@ -17040,7 +17420,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -17100,7 +17482,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -17162,7 +17546,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -17224,7 +17610,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -17304,7 +17692,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -17383,7 +17773,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -17478,7 +17870,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -17564,7 +17958,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -17639,7 +18035,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -17710,7 +18108,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -17790,7 +18190,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -17873,7 +18275,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -17968,7 +18372,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -18048,7 +18454,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -18131,7 +18539,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -18202,7 +18612,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -18271,7 +18683,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -18341,7 +18755,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -18422,7 +18838,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -18508,7 +18926,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -18572,12 +18992,14 @@
         "ledger.html",
         "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "shop.html",
         "start.html",
         "theory.html"
       ],
@@ -18617,7 +19039,9 @@
         "hub.html",
         "index.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -18673,7 +19097,9 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
+        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
