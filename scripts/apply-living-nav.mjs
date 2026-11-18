@@ -7,8 +7,8 @@
  *   1. ensures the shared living layer stylesheet (living-ui.css) is
  *      referenced exactly once — the nav's styles live there;
  *   2. inserts the unified nav bar (Home · Scroll · Atlas · Lexicon ·
- *      Scripture · Sphere · Shop, current area marked, plus the
- *      external Support door last) immediately after the page's skip
+ *      Scripture · Sphere · Shop · Witness · Living Search,
+ *      current area marked, plus the external Support door last) immediately after the page's skip
  *      link, or right after <body> when the page has no skip link.
  *      Pages that already carry the nav get their emitted block
  *      refreshed in place, so emission changes reach them too;
@@ -69,7 +69,10 @@ const AREAS = [
   { id: "shop", label: "Shop", target: "shop.html" },
   /* Witness's own page (Aaron's grant, Nov 18, 2026): a quiet door,
    * last of the areas, standing just before the Support door. */
-  { id: "witness", label: "Witness", target: "witness.html" }
+  { id: "witness", label: "Witness", target: "witness.html" },
+  /* The whole-site search door, just before Support: Living Search
+   * (search.html) covers every page, not only the Scroll Library. */
+  { id: "search", label: "Living Search", target: "search.html" }
 ];
 
 /* One external door, always last in the bar: support for the work.
@@ -131,6 +134,7 @@ function currentAreaFor(rel) {
   if (rel.startsWith("scripture/")) return "scripture";
   if (rel === "shop.html") return "shop";
   if (rel === "witness.html") return "witness";
+  if (rel === "search.html") return "search";
   return null;
 }
 
