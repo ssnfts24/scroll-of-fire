@@ -195,7 +195,7 @@
         ? SEMANTIC_MOBILE_LABEL_CAP
         : SEMANTIC_DESKTOP_LABEL_CAP;
 
-    return Math.max(
+    const base = Math.max(
       0,
       Math.min(
         absoluteCap,
@@ -205,6 +205,27 @@
         || 0
       )
     );
+
+    /*
+     * R2 — the adaptive-quality governor (Living Strata Phase F) may
+     * tighten the floating-label budget while a device is struggling.
+     * Governor absent or off, the scale is 1 and the historic budget
+     * is returned untouched.
+     */
+    const governorScale = Number(
+      globalThis
+        .LivingTimeSphereQualityGovernor
+        ?.semanticScale
+        ?.()
+    );
+
+    return (
+      Number.isFinite(governorScale)
+      && governorScale > 0
+      && governorScale < 1
+    )
+      ? Math.floor(base * governorScale)
+      : base;
   }
 
   function semanticTargetGroup(
@@ -874,6 +895,10 @@
         Array.isArray(semanticTargets) ? semanticTargets.length : 0,
         String(semanticBand || "medium"),
         cameraOverhead ? "overhead" : "tilted",
+        // R2 — the preview options are part of placement identity: a
+        // flipped switch must re-place, not wait for the camera to move.
+        globalThis.LivingTimeSphereOptions?.get?.()?.labelMode || "always",
+        `gov${globalThis.LivingTimeSphereQualityGovernor?.tier?.() ?? 0}`,
         cameraSignature(camera)
       ].join("::");
 
@@ -993,6 +1018,9 @@
       candidates.sort((a, b) => b.priority - a.priority || b.frontness - a.frontness);
 
       let selectedTarget = null;
+      // R2 — placed Moon labels, kept for the placement-governance
+      // post-pass below (fit mode only).
+      const moonPlacements = [];
       for (const candidate of candidates) {
         const { el, targetX, targetY, selected, quiet, frontness } = candidate;
         el.style.display = "";
@@ -1077,6 +1105,13 @@
         }
 
         placedRects.push(rectBox);
+        moonPlacements.push({
+          moon: candidate.moon,
+          priority: candidate.priority,
+          selected,
+          el,
+          rect: rectBox
+        });
         const clampDistance = Math.hypot((left + w / 2) - targetX, (top + h / 2) - targetY);
         const opacity = clamp((0.45 + frontness * 0.6) - clampDistance * 0.02, selected ? 0.9 : 0.2, 1);
         el.style.left = `${left}px`;
@@ -1098,6 +1133,67 @@
             displaced: clampDistance > 6 || Math.hypot((left + w / 2) - candidate.anchorX, (top + h / 2) - candidate.anchorY) > 20,
             opacity
           };
+        }
+      }
+
+      /*
+       * R2 — Moon-name placement governance (opt-in "fit" mode).
+       *
+       * The placement loop above honours the B7.55/B7.57 persistent-
+       * identity doctrine: in the observatory profile a colliding Moon
+       * name is force-placed, so on a small screen names can stack.
+       * When the visitor chooses "Show what fits", the pure placement
+       * engine resolves those stacks here: shift what can shift, hide
+       * what cannot, never hide the selected Moon. In the default
+       * "always" mode this block does not run and placement is exactly
+       * the historic behaviour.
+       */
+      if (
+        globalThis.LivingTimeSphereOptions?.get?.()?.labelMode === "fit"
+        && globalThis.LivingTimeSphereLabelPlacement
+          ?.resolveMoonLabelOverlaps
+      ) {
+        const { results } =
+          globalThis.LivingTimeSphereLabelPlacement
+            .resolveMoonLabelOverlaps(
+              moonPlacements.map(placed => ({
+                id: placed.moon,
+                priority: placed.priority,
+                selected: placed.selected,
+                rect: placed.rect
+              })),
+              {
+                mode: "fit",
+                blocked: blockedRects,
+                bounds: {
+                  minX: offsetX + STAGE_PADDING,
+                  minY: offsetY + STAGE_PADDING,
+                  maxX: offsetX + stageRect.width - STAGE_PADDING,
+                  maxY: offsetY + stageRect.height - STAGE_PADDING
+                }
+              }
+            );
+        const byMoon = new Map(
+          moonPlacements.map(placed => [placed.moon, placed])
+        );
+        for (const result of results) {
+          const placed = byMoon.get(result.id);
+          if (!placed) continue;
+          if (!result.visible) {
+            _hideLabel(placed.el);
+            const ix = placedRects.indexOf(placed.rect);
+            if (ix >= 0) placedRects.splice(ix, 1);
+          } else if (result.moved) {
+            placed.el.style.left = `${placed.rect.x}px`;
+            placed.el.style.top = `${placed.rect.y}px`;
+            if (placed.selected && selectedTarget) {
+              selectedTarget.centerX =
+                placed.rect.x + placed.rect.w / 2;
+              selectedTarget.centerY =
+                placed.rect.y + placed.rect.h / 2;
+              selectedTarget.displaced = true;
+            }
+          }
         }
       }
 

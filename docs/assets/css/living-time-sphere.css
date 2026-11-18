@@ -4587,3 +4587,14 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
   font-size: 0.85rem;
   opacity: 0.75;
 }
+
+/* R2 rework preview options */
+.sphere-r2-options {
+  margin-top: 0.75rem;
+}
+
+.sphere-r2-options-note {
+  margin: 0 0 0.5rem;
+  font-size: 0.82rem;
+  opacity: 0.85;
+}
