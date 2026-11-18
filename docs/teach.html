@@ -36,6 +36,7 @@
 
     <link rel="stylesheet" href="assets/css/navigation.css">
   <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
+  <link rel="stylesheet" href="assets/css/manifest-practice.css?v=20261117-mp1">
 <style>
     :root {
       --maxw: 1180px;
@@ -626,6 +627,7 @@
     }
   </style>
   <script defer src="assets/js/site.js"></script>
+  <script defer src="assets/js/living-search-launcher.js"></script>
   <script defer src="assets/js/calendar-cor.js"></script>
   <script defer src="assets/js/living-codex.js"></script>
   <link rel="icon" type="image/png" href="assets/img/shared/branding/favicon.png">
@@ -645,6 +647,7 @@
         <li><a href="scripture/index.html">Scripture</a></li>
         <li><a href="living-time-sphere.html">Sphere</a></li>
         <li><a href="shop.html">Shop</a></li>
+        <li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li>
       </ul>
     </nav>
   </div>
@@ -766,10 +769,17 @@
     </ul>
   </section>
 
-    <section class="page-intro" aria-labelledby="manifest-page-title">
+    <section class="page-intro" id="manifest" aria-labelledby="manifest-page-title">
       <p class="eyebrow">Manifest · Visual Exercise</p>
       <h1 id="manifest-page-title">Remnant Visual Exercise</h1>
       <p>A transparent practice console for visual field work, carrier control, breath pacing, coherence estimates, drills, and local witness—always bounded by the stop rule.</p>
+      <p>Seal a session and it takes its place on the Sphere's day: the seal is recorded in your Life Atlas, the day is marked on the 13 Moons calendar, and the session appears in the Living Time Sphere's day view with its own marker.</p>
+    </section>
+
+    <section class="manifest-today" data-manifest-today aria-label="Today in the practice loop">
+      <span class="manifest-today-glyph" aria-hidden="true">🜚</span>
+      <p class="manifest-today-line">Today: <strong data-manifest-today-coords>—</strong> · <span data-manifest-today-count>—</span></p>
+      <a class="manifest-today-link" href="#manifest">Open the exercise</a>
     </section>
 
     <section id="tab-remnant" class="tab active" role="tabpanel">
@@ -853,6 +863,24 @@
               <button id="savePreset" class="lab-btn" type="button">Save Preset</button>
               <button id="loadPreset" class="lab-btn" type="button">Load Preset</button>
             </div>
+
+            <div class="span-12 lab-row manifest-seal-fields">
+              <label>Session kind
+                <select id="mpKind" class="lab-input">
+                  <option value="practice" selected>Practice</option>
+                  <option value="craft">Craft</option>
+                  <option value="working">Working</option>
+                </select>
+              </label>
+              <label style="flex:1;min-width:170px">Materials (craft)
+                <input id="mpMaterials" class="lab-input" placeholder="Copper, quartz, stone…">
+              </label>
+              <label style="flex:2;min-width:200px">Witness note
+                <input id="mpNote" class="lab-input" placeholder="What changed? Record it plainly.">
+              </label>
+            </div>
+
+            <p class="span-12 hint manifest-seal-status" id="mpSealStatus" role="status">Sealing also records the session in your Life Atlas — on this device only — and marks the day on the 13 Moons calendar and in the Sphere's day view.</p>
           </div>
         </div>
 
@@ -909,6 +937,14 @@
             </p>
           </div>
         </aside>
+      </article>
+
+      <article class="grid">
+        <div class="card col-12 manifest-summary-card">
+          <h3>🜚 This Moon — Practice Record</h3>
+          <p class="meta">Counted from your Life Atlas records on this device. An observed record of what was sealed — nothing inferred, and no effect claimed. Ξ is the console's own coherence estimate.</p>
+          <div id="mpSummaryBody" class="manifest-summary-body">Loading your practice record…</div>
+        </div>
       </article>
             </section>
             <section id="tab-carrier" class="tab" role="tabpanel">
@@ -1871,6 +1907,10 @@
       const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       let seed = Math.random() * 10000;
+      /* The Manifest practice loop (manifest-practice.js) reads the live
+         seed through this getter so a sealed session can name the seed
+         that reproduces its field. */
+      window.__sofManifestSeed = () => seed;
       let phi = 0;
 
       function fitCanvas() {
@@ -2879,5 +2919,18 @@
     })();
   </script>
   <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
+
+  <!-- Manifest practice loop: canonical temporal converter + Life Atlas
+       repository, then the seal → Atlas → markers module. -->
+  <script src="assets/js/calendar/pattern-calendar-version.js?v=20260722-4"></script>
+  <script src="assets/js/calendar/pattern-calendar-data.js?v=20260722-4"></script>
+  <script src="assets/js/calendar/pattern-calendar-format.js?v=20260722-4"></script>
+  <script src="assets/js/calendar/pattern-calendar-boundary.js?v=20260722-4"></script>
+  <script src="assets/js/calendar/pattern-calendar.js?v=20260722-4"></script>
+  <script src="assets/js/life-atlas/life-atlas-schema.js?v=20260817-1"></script>
+  <script src="assets/js/life-atlas/life-atlas-repository.js?v=20260819-b750"></script>
+  <script src="assets/js/life-atlas/life-atlas-indexeddb.js?v=20260819-b750"></script>
+  <script src="assets/js/life-atlas/life-atlas-runtime.js?v=20260819-b750"></script>
+  <script src="assets/js/manifest-practice.js?v=20261117-mp1"></script>
 </body>
 </html>

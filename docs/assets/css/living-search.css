@@ -1,0 +1,216 @@
+/* =======================================================================
+   Living Search — interface styles.
+   Dark stone, covenant gold, cyan fire: the Codex palette from
+   assets/css/tokens.css, referenced with fallbacks so the overlay
+   looks right on any page that launches it.
+   ======================================================================= */
+
+.living-search-open {
+  font: inherit;
+  cursor: pointer;
+  color: var(--ink, #eae7df);
+  background: color-mix(in srgb, var(--gold, #f3c97a) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--gold, #f3c97a) 45%, transparent);
+  border-radius: 999px;
+  padding: 0.3rem 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.living-search-open:hover { background: color-mix(in srgb, var(--gold, #f3c97a) 22%, transparent); }
+.living-search-open kbd {
+  font-size: 0.68rem;
+  border: 1px solid var(--line, #2a2a33);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 0 0.3rem;
+  color: var(--muted, #b8b3a6);
+}
+.living-search-open--floating {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 900;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.55);
+}
+
+body.ls-open { overflow: hidden; }
+
+.ls-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(3, 4, 8, 0.78);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 8vh 1rem 1rem;
+}
+.ls-overlay[hidden] { display: none; }
+.ls-panel {
+  width: min(720px, 100%);
+  max-height: 82vh;
+  overflow: auto;
+  background: var(--card, #121219);
+  border: 1px solid color-mix(in srgb, var(--gold, #f3c97a) 35%, var(--line, #2a2a33));
+  border-radius: 14px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(0, 0, 0, 0.4), 0 0 42px rgba(243, 201, 122, 0.08);
+  padding: 1.1rem 1.2rem 1.3rem;
+}
+
+.ls-form { margin-bottom: 0.6rem; }
+.ls-label {
+  display: block;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold, #f3c97a);
+  margin-bottom: 0.45rem;
+}
+.ls-input-row { display: flex; gap: 0.5rem; }
+.ls-input {
+  flex: 1;
+  font: inherit;
+  font-size: 1.05rem;
+  color: var(--ink, #eae7df);
+  background: var(--bg, #0b0b0f);
+  border: 1px solid var(--line, #2a2a33);
+  border-radius: 10px;
+  padding: 0.65rem 0.9rem;
+}
+.ls-input:focus {
+  outline: 2px solid color-mix(in srgb, var(--accent, #7af3ff) 65%, transparent);
+  outline-offset: 1px;
+  border-color: var(--accent, #7af3ff);
+}
+.ls-close {
+  font: inherit;
+  cursor: pointer;
+  color: var(--muted, #b8b3a6);
+  background: transparent;
+  border: 1px solid var(--line, #2a2a33);
+  border-radius: 10px;
+  padding: 0 0.8rem;
+}
+.ls-close:hover { color: var(--ink, #eae7df); }
+
+.ls-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.7rem; }
+.ls-chip {
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--muted, #b8b3a6);
+  background: transparent;
+  border: 1px solid var(--line, #2a2a33);
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+}
+.ls-chip:hover { color: var(--ink, #eae7df); }
+.ls-chip.is-active {
+  color: #0b0b0f;
+  background: var(--gold, #f3c97a);
+  border-color: var(--gold, #f3c97a);
+  font-weight: 600;
+}
+.ls-status { color: var(--muted, #b8b3a6); font-size: 0.85rem; min-height: 1.2em; margin: 0.55rem 0 0; }
+
+.ls-results { list-style: none; margin: 0.4rem 0 0; padding: 0; }
+.ls-result { border-radius: 10px; }
+.ls-result-link {
+  display: block;
+  padding: 0.6rem 0.7rem;
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--ink, #eae7df);
+}
+.ls-result.is-active .ls-result-link,
+.ls-result-link:hover { background: color-mix(in srgb, var(--accent, #7af3ff) 9%, transparent); }
+.ls-result-link:focus-visible { outline: 2px solid var(--accent, #7af3ff); outline-offset: 1px; }
+.ls-badge {
+  display: inline-block;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold, #f3c97a);
+  border: 1px solid color-mix(in srgb, var(--gold, #f3c97a) 40%, transparent);
+  border-radius: 4px;
+  padding: 0.05rem 0.4rem;
+  margin-right: 0.5rem;
+  vertical-align: 0.12em;
+}
+.ls-result-title { font-weight: 600; }
+.ls-result-note { color: var(--muted, #b8b3a6); font-size: 0.82rem; margin-left: 0.5rem; }
+.ls-result-snippet {
+  display: block;
+  color: var(--muted, #b8b3a6);
+  font-size: 0.92rem;
+  margin-top: 0.25rem;
+  line-height: 1.45;
+}
+.ls-results mark, .ls-result-title mark {
+  background: color-mix(in srgb, var(--gold, #f3c97a) 38%, transparent);
+  color: inherit;
+  border-radius: 2px;
+  padding: 0 0.05em;
+}
+
+.ls-home-block { margin-top: 1rem; }
+.ls-home-block h3 {
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted, #b8b3a6);
+  margin: 0 0 0.5rem;
+}
+.ls-recent-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.ls-recent {
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+  color: var(--accent, #7af3ff);
+  background: transparent;
+  border: 1px solid var(--line, #2a2a33);
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+}
+.ls-recent:hover { border-color: var(--accent, #7af3ff); }
+.ls-visits, .ls-pathways { list-style: none; margin: 0; padding: 0; }
+.ls-visits li, .ls-pathways li { margin: 0.3rem 0; }
+.ls-visits a, .ls-pathways a { color: var(--ink, #eae7df); text-decoration: none; }
+.ls-visits a:hover, .ls-pathways a:hover { text-decoration: underline; }
+.ls-pathways a span { display: block; color: var(--muted, #b8b3a6); font-size: 0.88rem; }
+.ls-memory-note { color: var(--muted, #b8b3a6); font-size: 0.88rem; margin-top: 1.2rem; line-height: 1.5; }
+.ls-clear {
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--rose, #ff7aa3);
+  background: transparent;
+  border: 1px solid var(--line, #2a2a33);
+  border-radius: 999px;
+  padding: 0.2rem 0.7rem;
+  margin-left: 0.4rem;
+}
+.ls-empty { color: var(--muted, #b8b3a6); line-height: 1.55; margin-top: 0.6rem; }
+
+/* Full search page */
+.ls-page { max-width: 820px; margin: 0 auto; padding: 1rem; }
+.ls-page .ls-panel-like {
+  background: var(--card, #121219);
+  border: 1px solid var(--line, #2a2a33);
+  border-radius: 14px;
+  padding: 1.2rem 1.3rem 1.4rem;
+}
+.ls-how { color: var(--muted, #b8b3a6); line-height: 1.6; margin-top: 1.4rem; }
+.ls-how strong { color: var(--ink, #eae7df); }
+
+@media (max-width: 560px) {
+  .ls-overlay { padding: 0; }
+  .ls-panel { max-height: 100dvh; height: 100dvh; border-radius: 0; }
+  .living-search-open kbd { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ls-overlay { backdrop-filter: none; }
+}

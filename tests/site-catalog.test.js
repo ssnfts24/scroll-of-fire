@@ -20,9 +20,9 @@ test("public catalog has six areas, usable routes, and only explicit publication
     "Artifacts and Creative Works",
     "Archive and Downloads"
   ]);
-  assert.equal(catalog.frontDoor.length, 5);
+  assert.equal(catalog.frontDoor.length, 6);
   assert.deepEqual(catalog.frontDoor.map(path => path.label), [
-    "Read", "Explore", "Build", "Living Time", "Archive"
+    "Read", "Explore", "Build", "Living Time", "Practice", "Archive"
   ]);
   const ids = new Set(catalog.entries.map(entry => entry.id));
   assert.equal(ids.size, catalog.entries.length);

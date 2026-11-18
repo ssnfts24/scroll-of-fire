@@ -58,12 +58,44 @@ test("the overlay is injected by JS, never hard-coded in the HTML", () => {
   assert.match(JS, /appendChild\(overlay\)/);
 });
 
-test("entry honours the session gate, reduced motion, and dismissal", () => {
-  assert.match(JS, /sessionStorage/);
-  assert.match(JS, /sof-living-entry-seen/);
+test("entry plays on every visit — no session gate remains", () => {
+  assert.ok(!JS.includes("sessionStorage"),
+    "the once-per-session gate is gone: no sessionStorage reads or writes");
+  assert.ok(!JS.includes("sof-living-entry-seen"),
+    "the old session key must not be referenced anywhere");
+  assert.ok(!JS.includes("SESSION_KEY"),
+    "the session-key constant must be removed, not orphaned");
+  assert.match(JS, /function showEntry\(\)/);
+  assert.match(JS, /appendChild\(overlay\)/,
+    "a fresh page load injects the overlay regardless of any prior visit");
+});
+
+test("entry honours reduced motion and instant dismissal", () => {
   assert.match(JS, /prefers-reduced-motion/);
-  assert.match(JS, /addEventListener\("pointerdown", dismiss\)/);
+  assert.match(JS, /addEventListener\("pointerdown", onPointerdown\)/);
   assert.match(JS, /addEventListener\("keydown", onKeydown, true\)/);
+  assert.match(JS, /dismiss\(true\)/,
+    "tap and keypress dismiss instantly, never waiting on the soft fade");
+});
+
+test("entry timing is longer and softer: ~3.9s total, slow stages, gentle fade", () => {
+  const stageMs = Number(JS.match(/const STAGE_MS = (\d+);/)[1]);
+  const holdMs = Number(JS.match(/const HOLD_END_MS = (\d+);/)[1]);
+  const fadeMs = Number(JS.match(/const FADE_MS = (\d+);/)[1]);
+  assert.ok(stageMs >= 550 && stageMs <= 600,
+    `status steps breathe at 550–600ms, got ${stageMs}`);
+  assert.ok(fadeMs >= 700 && fadeMs <= 800,
+    `fade runs 700–800ms, got ${fadeMs}`);
+  const total = holdMs + fadeMs;
+  assert.ok(total >= 3800 && total <= 4000,
+    `total on-screen time is ~3.8–4.0s, got ${total}`);
+  const cssFade = CSS.match(/\.le-overlay \{[^}]*transition: opacity ([\d.]+)s/);
+  assert.ok(cssFade, "overlay fade transition must be declared in CSS");
+  assert.equal(Number(cssFade[1]) * 1000, fadeMs,
+    "the CSS fade duration and the JS removal delay must agree");
+  const breathe = CSS.match(/\.le-emblem-wrap::before \{[^}]*animation: le-breathe ([\d.]+)s/);
+  assert.ok(breathe && Number(breathe[1]) >= 4,
+    "the emblem breathing pulse is slowed to 4s or more");
 });
 
 test("entry walks the five growth stages in order", () => {
@@ -198,6 +230,10 @@ test("existing homepage hooks survive the restructure", () => {
     "<!-- site-catalog:front-door:end -->",
     'id="front-door-recent"',
     'class="front-door-list"',
+    /* The Front Door shows the four newest growth entries; the pin
+     * follows the newest date in the record (2026-11-17 — the Nov 1
+     * entry rotated off the door, not out of the record). */
+    '<time datetime="2026-11-17">',
     'id="home-sphere-observatory"',
     'id="home-title"',
     'id="participation"',

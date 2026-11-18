@@ -195,7 +195,7 @@ const shelfIndex = shelves.map(shelf => {
 function livingNav(area) {
   const link = (href, label, key) =>
     `<a${key === area ? ' class="is-current" aria-current="page"' : ""} href="${href}">${label}</a>`;
-  return `<div class="living-nav" data-living-nav><nav class="living-nav-inner" aria-label="Site navigation"><a class="living-nav-brand" href="../index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a><ul class="living-nav-links"><li>${link("../index.html", "Home", "home")}</li><li>${link("index.html", "Scroll", "scroll")}</li><li>${link("../codex-atlas.html", "Atlas", "atlas")}</li><li>${link("lexicon.html", "Lexicon", "lexicon")}</li><li>${link("../scripture/index.html", "Scripture", "scripture")}</li><li>${link("../living-time-sphere.html", "Sphere", "sphere")}</li><li>${link("../shop.html", "Shop", "shop")}</li></ul></nav></div>`;
+  return `<div class="living-nav" data-living-nav><nav class="living-nav-inner" aria-label="Site navigation"><a class="living-nav-brand" href="../index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a><ul class="living-nav-links"><li>${link("../index.html", "Home", "home")}</li><li>${link("index.html", "Scroll", "scroll")}</li><li>${link("../codex-atlas.html", "Atlas", "atlas")}</li><li>${link("lexicon.html", "Lexicon", "lexicon")}</li><li>${link("../scripture/index.html", "Scripture", "scripture")}</li><li>${link("../living-time-sphere.html", "Sphere", "sphere")}</li><li>${link("../shop.html", "Shop", "shop")}</li><li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li></ul></nav></div>`;
 }
 
 const homepage = `<!doctype html>

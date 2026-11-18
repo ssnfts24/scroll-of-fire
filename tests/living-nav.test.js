@@ -3,9 +3,11 @@
  *
  * The unified navigation: every content page carries one living nav
  * (Home · Scroll · Atlas · Lexicon · Scripture · Sphere · Shop) with
- * the current area marked, and Home resolves to the site homepage from
- * every page — the Scroll section used to trap the reader with no
- * persistent route home. The nav is inserted into hand-maintained pages
+ * the current area marked, plus one external Support door last
+ * (Aaron's Cash App, decided Nov 17, 2026 — never a local target,
+ * never the current area), and Home resolves to the site homepage
+ * from every page — the Scroll section used to trap the reader with
+ * no persistent route home. The nav is inserted into hand-maintained pages
  * by scripts/apply-living-nav.mjs and emitted by the generators for the
  * pages they own (build-scroll-library.mjs for docs/scroll/,
  * r2_02_pages.py for docs/scripture/); these tests verify the result
@@ -44,6 +46,9 @@ const AREAS = [
   { id: "sphere", label: "Sphere", target: "living-time-sphere.html" },
   { id: "shop", label: "Shop", target: "shop.html" }
 ];
+
+/* The one external door, always last in the bar. */
+const SUPPORT = { label: "Support", href: "https://cash.app/$AaronLaird7" };
 
 function walk(dir, prefix = "") {
   const out = [];
@@ -100,7 +105,10 @@ function navAnchors(block) {
         .replace(/<[^>]+>/g, "")
         .trim(),
       current: /\baria-current="page"/.test(attrs),
-      isCurrentClass: /\bclass="[^"]*\bis-current\b/.test(attrs)
+      isCurrentClass: /\bclass="[^"]*\bis-current\b/.test(attrs),
+      target: (attrs.match(/\btarget="([^"]*)"/) || [])[1] || null,
+      rel: (attrs.match(/\brel="([^"]*)"/) || [])[1] || "",
+      supportClass: /\bclass="[^"]*\bliving-nav-support\b/.test(attrs)
     });
   }
   return anchors;
@@ -128,7 +136,7 @@ test("every content page carries exactly one unified living nav", () => {
     const block = navBlock(html);
     assert.ok(block, `${rel}: nav block present`);
     const anchors = navAnchors(block);
-    assert.equal(anchors.length, AREAS.length + 1, `${rel}: brand + ${AREAS.length} area links`);
+    assert.equal(anchors.length, AREAS.length + 2, `${rel}: brand + ${AREAS.length} area links + Support`);
     assert.equal(anchors[0].text, "Codex of Reality", `${rel}: brand label`);
     assert.equal(resolveHref(rel, html, anchors[0].href), "index.html", `${rel}: brand goes home`);
     AREAS.forEach((area, i) => {
@@ -140,7 +148,34 @@ test("every content page carries exactly one unified living nav", () => {
         `${rel}: ${area.label} link target`
       );
     });
+    const support = anchors[AREAS.length + 1];
+    assert.equal(support.text, SUPPORT.label, `${rel}: Support door is last`);
+    assert.equal(support.href, SUPPORT.href, `${rel}: Support door target`);
+    assert.equal(support.target, "_blank", `${rel}: Support door opens externally`);
+    assert.match(support.rel, /\bnoopener\b/, `${rel}: Support door rel`);
+    assert.ok(support.supportClass, `${rel}: Support door carries its gold-tint class`);
+    assert.equal(support.current, false, `${rel}: Support door is never the current area`);
+    assert.equal(
+      anchors.filter((a) => a.text === SUPPORT.label).length,
+      1,
+      `${rel}: exactly one Support door`
+    );
   }
+});
+
+test("the Support door is emitted by all three nav emission paths", () => {
+  /* The census above proves the pages; this proves a regeneration
+   * cannot wipe the door: every source that emits the nav carries it. */
+  for (const source of [
+    "scripts/apply-living-nav.mjs",
+    "scripts/build-scroll-library.mjs",
+    "scripts/r2_02_pages.py"
+  ]) {
+    assert.ok(read(source).includes(SUPPORT.href), `${source} emits the Support door`);
+  }
+  const css = read("docs/assets/css/living-ui.css");
+  assert.match(css, /\.living-nav-links a\.living-nav-support\s*\{[^}]*color:\s*var\(--lnav-gold\)/,
+    "Support door carries the gold tint at the same tap target");
 });
 
 test("Home is one tap away from every content page (the Scroll trap is closed)", () => {
@@ -164,6 +199,9 @@ test("the current area is marked exactly where the page belongs", () => {
     const html = read(`docs/${rel}`);
     const anchors = navAnchors(navBlock(html));
     const marked = anchors.filter((a) => a.current);
+    const support = anchors.find((a) => a.text === SUPPORT.label);
+    assert.ok(support && !support.current && !support.isCurrentClass,
+      `${rel}: the Support door is never marked current`);
     const expected = areaOf(rel);
     if (!expected) {
       assert.equal(marked.length, 0, `${rel}: no area should be marked`);
