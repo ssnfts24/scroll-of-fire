@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 1916,
-    "bytes": 538175322,
+    "bytes": 538175319,
     "byGroup": {
       "tooling": 148,
       "manuscript": 17,
@@ -43256,8 +43256,8 @@
       "path": "scripts/__pycache__/r2_02_build.cpython-312.pyc",
       "title": "r2_02_build.cpython-312.pyc",
       "format": "pyc",
-      "bytes": 61155,
-      "sha256": "e7ce9a0f532a448bfcb40a7edcbceb44ff2ca3c319beae8f4b19aa3f2f438c96",
+      "bytes": 61152,
+      "sha256": "00d7e851f32913dc826457ffd97d6c43d3edc5f0792d2c4040b19284c4467640",
       "group": "tooling",
       "role": "Build or audit script",
       "deployed": false,
