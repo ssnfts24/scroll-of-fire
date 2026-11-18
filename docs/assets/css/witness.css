@@ -201,6 +201,17 @@
   margin-bottom: 0;
 }
 
+/* Found and kept: where a find lives, kept plain like the shelf it honors */
+.witness-kept-where {
+  margin-top: -0.35rem;
+  font-size: 0.95rem;
+  color: rgba(232, 236, 240, 0.78);
+}
+
+.witness-kept-where a {
+  color: #7af3ff;
+}
+
 /* The two doors */
 .witness-doors {
   display: flex;
