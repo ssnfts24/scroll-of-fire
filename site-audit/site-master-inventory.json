@@ -7,15 +7,14 @@
     "publicHtmlPages": 171,
     "catalogEntries": 65,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 20,
+      "not-linked-directly-from-homepage": 19,
       "nav-label-differs-from-title": 24,
       "deployed-but-unlinked": 57,
       "unreachable-from-homepage": 3,
       "compatibility-redirect-page": 1,
       "no-public-url-yet": 1,
       "not-published-in-catalog": 29,
-      "unnamed-image-needs-descriptive-title": 21,
-      "reachable-only-through-atlas": 1
+      "unnamed-image-needs-descriptive-title": 21
     }
   },
   "resources": [
@@ -56,6 +55,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -121,6 +121,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -177,6 +178,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "theory.html",
         "witness.html"
@@ -233,6 +235,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -391,6 +394,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -1677,6 +1681,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -2047,6 +2052,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -2132,6 +2138,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -2216,6 +2223,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -2300,6 +2308,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -2384,6 +2393,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -2468,6 +2478,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -2552,6 +2563,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -2636,6 +2648,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -2720,6 +2733,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -2804,6 +2818,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -2888,6 +2903,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -2972,6 +2988,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -3056,6 +3073,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -3140,6 +3158,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -3224,6 +3243,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -3308,6 +3328,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -3392,6 +3413,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -3476,6 +3498,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -3560,6 +3583,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -3644,6 +3668,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -3728,6 +3753,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -3812,6 +3838,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -3896,6 +3923,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -3980,6 +4008,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -4064,6 +4093,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -4148,6 +4178,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -4232,6 +4263,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -4316,6 +4348,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -4400,6 +4433,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -4484,6 +4518,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -4568,6 +4603,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -4652,6 +4688,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -4736,6 +4773,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -4820,6 +4858,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -4904,6 +4943,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -4988,6 +5028,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -5072,6 +5113,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -5156,6 +5198,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -5240,6 +5283,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -5324,6 +5368,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -5408,6 +5453,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -5502,6 +5548,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -5596,6 +5643,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -5690,6 +5738,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -5784,6 +5833,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -5878,6 +5928,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -5972,6 +6023,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -6066,6 +6118,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -6160,6 +6213,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -6254,6 +6308,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -6348,6 +6403,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -6442,6 +6498,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -6536,6 +6593,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -6630,6 +6688,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -6724,6 +6783,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -6818,6 +6878,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -6912,6 +6973,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -7006,6 +7068,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -7100,6 +7163,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -7194,6 +7258,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -7288,6 +7353,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -7382,6 +7448,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -7476,6 +7543,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -7570,6 +7638,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -7664,6 +7733,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -7758,6 +7828,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -7852,6 +7923,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -7946,6 +8018,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -8040,6 +8113,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -8134,6 +8208,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -8228,6 +8303,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -8322,6 +8398,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -8416,6 +8493,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -8510,6 +8588,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -8604,6 +8683,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -8698,6 +8778,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -8792,6 +8873,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -8886,6 +8968,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -8980,6 +9063,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -9074,6 +9158,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -9168,6 +9253,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -9262,6 +9348,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -9356,6 +9443,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -9450,6 +9538,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -9544,6 +9633,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -9638,6 +9728,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -9732,6 +9823,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -9826,6 +9918,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -9920,6 +10013,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -10014,6 +10108,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -10108,6 +10203,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -10154,6 +10250,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -10284,6 +10381,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -10361,6 +10459,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -10440,6 +10539,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -10518,6 +10618,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -10597,6 +10698,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -10676,6 +10778,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -10755,6 +10858,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -10836,6 +10940,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -10911,6 +11016,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -10986,6 +11092,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -11064,6 +11171,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -11142,6 +11250,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -11221,6 +11330,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -11299,6 +11409,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -11376,6 +11487,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -11454,6 +11566,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -11532,6 +11645,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -11610,6 +11724,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -11688,6 +11803,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -11744,6 +11860,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "theory.html",
         "witness.html"
@@ -11800,6 +11917,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -11867,6 +11985,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -11920,6 +12039,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "theory.html",
@@ -11980,6 +12100,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -12046,6 +12167,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -12113,6 +12235,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -12177,6 +12300,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -12242,6 +12366,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -12313,6 +12438,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -12377,6 +12503,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -12487,6 +12614,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -12550,6 +12678,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -12616,6 +12745,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -12685,6 +12815,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -12772,6 +12903,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -17212,6 +17344,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -17252,6 +17385,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -17293,6 +17427,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -17336,6 +17471,7 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -17382,6 +17518,7 @@
         "scroll/lexicon.html",
         "scroll/reader.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -17423,6 +17560,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -17464,6 +17602,7 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -17480,7 +17619,7 @@
         "pagesWithNavLinkToIt": 163
       },
       "issues": [
-        "nav-label-differs-from-title: \"Scroll Search\" vs \"Search the Scroll\""
+        "nav-label-differs-from-title: \"Search the Scroll Library\" vs \"Search the Scroll\""
       ]
     },
     {
@@ -17520,6 +17659,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "start.html",
         "systems/archive.html",
         "systems/frequencies.html",
@@ -17604,16 +17744,13 @@
         "path": "search.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": null,
-        "inboundPages": 1,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 166,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "reachable-only-through-atlas",
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "start",
@@ -17653,6 +17790,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "systems/archive.html",
         "systems/frequencies.html",
@@ -17716,6 +17854,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/frequencies.html",
@@ -17781,6 +17920,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -17846,6 +17986,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -17929,6 +18070,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -18011,6 +18153,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -18109,6 +18252,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -18198,6 +18342,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -18276,6 +18421,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -18350,6 +18496,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -18433,6 +18580,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -18519,6 +18667,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -18617,6 +18766,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -18700,6 +18850,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -18786,6 +18937,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -18860,6 +19012,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -18932,6 +19085,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -19005,6 +19159,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -19089,6 +19244,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -19178,6 +19334,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -19243,6 +19400,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "theory.html",
@@ -19292,6 +19450,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/frequencies.html",
@@ -19353,6 +19512,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -19416,6 +19576,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",

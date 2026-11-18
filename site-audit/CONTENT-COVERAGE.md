@@ -12,7 +12,7 @@ Read the Scroll, search its text, study Hebrew roots and follow Genesis 1–50.
 - **Scroll Library** — Live; The Scroll of Fire Unsealed: reading edition, eight shelves, Genesis 1–50 and a link to every original line.
 - **Genesis & Exodus Scripture** — Live; A source-attributed Hebrew reader for Genesis 1–50 and Exodus 1–40, with word studies, morphology, lexical senses and separate interpretive layers.
 - **Scroll Reader** — Live; The long-form reader with chapter navigation, source-line provenance and deep links.
-- **Scroll Search** — Live; Local full-text search across all 1,609 reader segments, with shelf filters and Hebrew normalisation.
+- **Search the Scroll Library** — Live; Local full-text search across all 1,609 reader segments, with shelf filters and Hebrew normalisation.
 - **Hebrew Lexicon** — Live; 911 indexed Hebrew forms with occurrences, transliteration variants and clear separation of spelling, root and interpretation.
 - **Scroll Reference Atlas** — Live; Typed cross-references among scriptures, repeated terms, people, places and manuscript passages.
 - **Original Scroll (archival edition)** — Archived; The unchanged Full_Scroll_Unsealed text, frozen with a published SHA-256.
@@ -97,7 +97,7 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 - **Interactive Archive** — Live; Filterable index of every Scroll page and system.
 - **Repository README** — Source only; Project overview and contribution context on GitHub.
 - **Codex Atlas** — Live; A unified discovery page for the Scroll Library, Living Time, systems, research, artifacts and archive.
-- **Site-wide Search** — Live; Living Search: one generated index across every page, the Scroll Library, the Hebrew Lexicon, the Atlas and the Claim Register, with a memory that stays on the reader's device. It links to, and does not replace, Scroll Search.
+- **Site-wide Search** — Live; Living Search: one generated index across every page, the Scroll Library, the Hebrew Lexicon, the Atlas and the Claim Register, with a memory that stays on the reader's device. It links to, and does not replace, the search inside the Scroll Library.
 
 ## Repository and deployed-content coverage
 
