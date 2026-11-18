@@ -44,7 +44,8 @@ const AREAS = [
   { id: "lexicon", label: "Lexicon", target: "scroll/lexicon.html" },
   { id: "scripture", label: "Scripture", target: "scripture/index.html" },
   { id: "sphere", label: "Sphere", target: "living-time-sphere.html" },
-  { id: "shop", label: "Shop", target: "shop.html" }
+  { id: "shop", label: "Shop", target: "shop.html" },
+  { id: "witness", label: "Witness", target: "witness.html" }
 ];
 
 /* The one external door, always last in the bar. */
@@ -121,6 +122,7 @@ function areaOf(rel) {
   if (rel === "codex-atlas.html") return "atlas";
   if (rel.startsWith("scripture/")) return "scripture";
   if (rel === "shop.html") return "shop";
+  if (rel === "witness.html") return "witness";
   return null;
 }
 
