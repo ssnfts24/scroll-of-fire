@@ -1,5 +1,29 @@
 [
   {
+    "date": "2026-11-17",
+    "type": "system",
+    "title": "The Sphere learned to open a single day",
+    "summary": "Zoom Into This Day opens a Pattern Day to show its civil date, Moon, day and Pattern Day together with that day's Life Atlas schedule.",
+    "url": "./living-time-sphere.html",
+    "symbol": "◉"
+  },
+  {
+    "date": "2026-11-17",
+    "type": "system",
+    "title": "The Life Atlas learned to keep a copy of itself",
+    "summary": "A Download Backup button exports the Life Atlas as JSON, and the import picker restores it, so a life's record can leave the browser and return.",
+    "url": "./living-time-sphere.html",
+    "symbol": "◇"
+  },
+  {
+    "date": "2026-11-17",
+    "type": "update",
+    "title": "The mirror is made whole",
+    "summary": "Every page on the GitHub mirror now resolves its assets through its own depth, and all 76 pages and 322 assets were verified clean on both addresses.",
+    "url": "./index.html",
+    "symbol": "✦"
+  },
+  {
     "date": "2026-11-01",
     "type": "library",
     "title": "The editorial evidence edition joins the Scroll Library",
