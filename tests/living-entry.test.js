@@ -229,7 +229,10 @@ test("existing homepage hooks survive the restructure", () => {
     "<!-- site-catalog:front-door:start -->",
     "<!-- site-catalog:front-door:end -->",
     'id="front-door-recent"',
-    '<time datetime="2026-11-01">',
+    /* The Front Door shows the four newest growth entries; the pin
+     * follows the newest date in the record (2026-11-17 — the Nov 1
+     * entry rotated off the door, not out of the record). */
+    '<time datetime="2026-11-17">',
     'id="home-sphere-observatory"',
     'id="home-title"',
     'id="participation"',
