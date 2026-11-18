@@ -3,15 +3,15 @@
  *
  * Three behaviours, all progressive enhancements:
  *
- * 1. THE ENTRY — on a first visit in a browser session, the Codex wakes:
+ * 1. THE ENTRY — on every visit, the Codex wakes:
  *    a cracked-stone emblem draws its gold seams, the teal eye opens, and a
  *    status line walks the growth sequence (Witness → Encode → Resonate →
  *    Integrate → Illuminate) over a living data line: today's civil date
  *    and today's 13 Moons coordinate, computed with the site's own
- *    PatternCalendar (loaded before this file). ~2.4s, then it fades.
+ *    PatternCalendar (loaded before this file). ~3.9s, then it fades softly.
  *    Any click, tap, or keypress dismisses it at once. It never appears
- *    under prefers-reduced-motion, never without JS (it is injected from
- *    here, never hard-coded in the HTML), and never twice in a session.
+ *    under prefers-reduced-motion, and never without JS (it is injected
+ *    from here, never hard-coded in the HTML).
  *
  * 2. THE PATH RAIL — the fixed step indicator gets its active state from
  *    an IntersectionObserver over the five step heads. Without JS the rail
@@ -33,9 +33,9 @@
     "Illuminating…"
   ];
 
-  const SESSION_KEY = "sof-living-entry-seen";
-  const STAGE_MS = 380;
-  const HOLD_END_MS = 2120;
+  const STAGE_MS = 575;
+  const HOLD_END_MS = 3200;
+  const FADE_MS = 750;
 
   const reducedMotion =
     typeof window.matchMedia === "function" &&
@@ -129,13 +129,6 @@
   function showEntry() {
     if (reducedMotion) return;
 
-    try {
-      if (window.sessionStorage.getItem(SESSION_KEY)) return;
-      window.sessionStorage.setItem(SESSION_KEY, "1");
-    } catch (error) {
-      /* Storage unavailable — the entry still plays once per page load. */
-    }
-
     const { civil, coordinate } = livingCoordinateLine();
 
     const overlay = document.createElement("div");
@@ -173,29 +166,39 @@
       window.setTimeout(() => {
         status.textContent = STAGES[stageIndex];
         status.classList.remove("le-status-swap");
-      }, 160);
+      }, 200);
     }, STAGE_MS);
 
-    const holdTimer = window.setTimeout(dismiss, HOLD_END_MS);
+    const holdTimer = window.setTimeout(() => dismiss(false), HOLD_END_MS);
 
     function onKeydown() {
-      dismiss();
+      dismiss(true);
     }
 
-    function dismiss() {
+    function onPointerdown() {
+      dismiss(true);
+    }
+
+    function dismiss(instant) {
       if (dismissed) return;
       dismissed = true;
       window.clearInterval(stageTimer);
       window.clearTimeout(holdTimer);
       document.removeEventListener("keydown", onKeydown, true);
+      if (instant) {
+        // A visitor's tap or keypress is never trapped by the soft fade.
+        overlay.remove();
+        document.body.classList.remove("le-lock");
+        return;
+      }
       overlay.classList.add("le-leaving");
       window.setTimeout(() => {
         overlay.remove();
         document.body.classList.remove("le-lock");
-      }, 400);
+      }, FADE_MS);
     }
 
-    overlay.addEventListener("pointerdown", dismiss);
+    overlay.addEventListener("pointerdown", onPointerdown);
     document.addEventListener("keydown", onKeydown, true);
   }
 
