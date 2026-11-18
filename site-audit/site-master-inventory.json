@@ -7,8 +7,8 @@
     "publicHtmlPages": 172,
     "catalogEntries": 65,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 20,
       "nav-label-differs-from-title": 24,
+      "not-linked-directly-from-homepage": 17,
       "deployed-but-unlinked": 57,
       "unreachable-from-homepage": 3,
       "compatibility-redirect-page": 1,
@@ -75,15 +75,13 @@
         "path": "ab.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 2,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 3,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "about-aaron",
@@ -546,7 +544,7 @@
     },
     {
       "id": "docs-assets:assets/media",
-      "title": "docs/assets/media (30 files)",
+      "title": "docs/assets/media (36 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1677,6 +1675,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "13-moon-whitepaper.html",
+        "ab.html",
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
@@ -1685,12 +1684,14 @@
         "ethics.html",
         "genesis-oracle.html",
         "glossary.html",
+        "glyphs.html",
         "guide.html",
         "hub.html",
         "invoke.html",
         "lab.html",
         "ledger.html",
         "living-time-sphere.html",
+        "micro.html",
         "moons.html",
         "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
@@ -12205,15 +12206,13 @@
         "path": "glyphs.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 3,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 4,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "guide",
@@ -12716,15 +12715,13 @@
         "path": "micro.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 2,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 3,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "mind-renewal",
