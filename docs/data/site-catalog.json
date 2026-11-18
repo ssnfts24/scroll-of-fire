@@ -1101,15 +1101,15 @@
       "publicationEligibility": "approved-public"
     },
     {
-      "id": "planned-sitewide-search",
-      "title": "Site-wide search",
-      "description": "A future site-wide index that links to, and does not replace, Scroll Search.",
+      "id": "site-search",
+      "title": "Site-wide Search",
+      "description": "Living Search: one generated index across every page, the Scroll Library, the Hebrew Lexicon, the Atlas and the Claim Register, with a memory that stays on the reader's device. It links to, and does not replace, Scroll Search.",
       "area": "archive",
       "category": "Discovery",
       "resourceType": "tool",
-      "status": "planned",
-      "path": null,
-      "url": null,
+      "status": "live",
+      "path": "search.html",
+      "url": "https://codexofreality.org/search.html",
       "related": [
         "scroll-search"
       ],
