@@ -690,6 +690,18 @@
     stale: false,
   });
   let _environmentState = EMPTY_ENVIRONMENT_STATE;
+  // B7.61 — the data-bound sky derived from _environmentState (see
+  // LivingTimeSphereSky). Recomputed on every environment apply; the
+  // render loop reads it for wind drift and precipitation animation.
+  let _skyState = null;
+  // B7.61 — while a camera gesture is active the cloud shell fades to this
+  // factor instead of vanishing (B7.56 kept it visible-or-nothing).
+  let _environmentGestureDim = 1;
+  // B7.61 — adaptive cloud cost: the frame-rate governor sheds cloud
+  // sub-tori before anything else when frames run long.
+  let _cloudFpsCap = 3;
+  let _frameTimeEmaMs = 16.7;
+  let _cloudGovernorFrames = 0;
   let _selectedSeasonAngle = 0;
   let _scheduleDensityKey = "";
   let _scheduleDensityBuiltAt = 0;
@@ -2800,7 +2812,12 @@
     return {
       ...EMPTY_ENVIRONMENT_STATE,
       ...source,
-      hourly: Array.isArray(source.hourly) ? source.hourly : [],
+      // B7.61 — hourly may be the provider's object of parallel arrays;
+      // preserve it so the low/mid/high cloud bands keep their data.
+      hourly: (Array.isArray(source.hourly)
+        || (source.hourly && typeof source.hourly === "object"))
+        ? source.hourly
+        : [],
       daily: source.daily && typeof source.daily === "object" ? source.daily : {},
     };
   }
@@ -3424,9 +3441,16 @@
     group.add(compassGroup);
 
     /*
-     * Three cloud belts correspond to low / mid / high cloud fields.
-     * They are deliberately thin; cloud COVER changes opacity rather than
-     * covering the entire sphere.
+     * B7.61 — DATA-BOUND CLOUD SHELL.
+     *
+     * Three cloud belts correspond to low / mid / high cloud fields. Each
+     * belt is now a small stack of three sub-tori at varied radius, height
+     * and tube so cover reads as DEPTH, not a wire: the sky mapping
+     * (LivingTimeSphereSky) lights 1–3 sub-tori per belt and scales their
+     * opacity from the band's actual cover. 0% = absent, ~50% = clearly
+     * visible soft bands, 100% = a full breathing overcast. All materials
+     * keep depthWrite off and capped opacity so day numerals, labels and
+     * the slim gold marker stay readable through the shell.
      */
     const cloudBands = new THREE.Group();
 
@@ -3435,29 +3459,68 @@
       { y:  0.00, radius: 1.135, tilt:  0.04 },
       { y:  0.17, radius: 1.165, tilt:  0.10 }
     ].forEach((spec, index) => {
-      const band = new THREE.Mesh(
-        new THREE.TorusGeometry(
-          spec.radius,
-          0.006,
-          6,
-          72
-        ),
-        new THREE.MeshBasicMaterial({
-          color: 0xd4edf0,
-          transparent: true,
-          opacity: 0.025,
-          depthWrite: false
-        })
-      );
-
-      band.rotation.x = Math.PI / 2 + spec.tilt;
-      band.position.y = spec.y;
+      const band = new THREE.Group();
       band.name = `environment-cloud-band-${index + 1}`;
+
+      [
+        { radiusOffset: -0.022, yOffset: -0.018, tube: 0.016, tiltOffset: -0.03, factor: 0.55 },
+        { radiusOffset:  0.000, yOffset:  0.000, tube: 0.030, tiltOffset:  0.00, factor: 0.80 },
+        { radiusOffset:  0.022, yOffset:  0.018, tube: 0.048, tiltOffset:  0.03, factor: 1.00 }
+      ].forEach((sub, subIndex) => {
+        const mesh = new THREE.Mesh(
+          new THREE.TorusGeometry(
+            spec.radius + sub.radiusOffset,
+            sub.tube,
+            7,
+            72
+          ),
+          new THREE.MeshBasicMaterial({
+            color: 0xd4edf0,
+            transparent: true,
+            opacity: 0,
+            depthWrite: false
+          })
+        );
+        mesh.rotation.x = Math.PI / 2 + spec.tilt + sub.tiltOffset;
+        mesh.position.y = spec.y + sub.yOffset;
+        mesh.name = `environment-cloud-band-${index + 1}-layer-${subIndex + 1}`;
+        mesh.userData.opacityFactor = sub.factor;
+        band.add(mesh);
+      });
+
+      band.userData = {
+        type: "environment-cloud-band",
+        level: ["low", "mid", "high"][index]
+      };
       cloudBands.add(band);
     });
 
     cloudBands.name = "environment-cloud-bands";
     group.add(cloudBands);
+
+    /*
+     * The overcast veil: a BackSide shell that only gathers when total
+     * cover is genuinely heavy (sky.veilOpacity is 0 at or below 40%).
+     * It gives an overcast its grey depth around the rim without washing
+     * the calendar face.
+     */
+    const cloudVeil = new THREE.Mesh(
+      new THREE.SphereGeometry(
+        1.22,
+        _isMobileWidth() ? 24 : 34,
+        _isMobileWidth() ? 16 : 24
+      ),
+      new THREE.MeshBasicMaterial({
+        color: 0xaebfc4,
+        transparent: true,
+        opacity: 0,
+        depthWrite: false,
+        side: THREE.BackSide
+      })
+    );
+    cloudVeil.name = "environment-cloud-veil";
+    cloudVeil.visible = false;
+    group.add(cloudVeil);
 
     /*
      * Wind is a directional stream with real arrowheads.
@@ -3600,6 +3663,13 @@
         3
       )
     );
+    // B7.61 — the pristine field, kept on the geometry so the per-frame
+    // precipitation animation (rain fall / snow drift) can wrap particles
+    // without accumulating error. _applyEnvironmentState overwrites the
+    // Points object's own userData, so the base field cannot live there.
+    precipGeometry.userData = {
+      basePositions: Float32Array.from(precipPositions)
+    };
 
     const precip = new THREE.Points(
       precipGeometry,
@@ -3646,6 +3716,7 @@
     _objects.environmentShell = shell;
     _objects.environmentCompass = compassGroup;
     _objects.environmentCloudBands = cloudBands;
+    _objects.environmentCloudVeil = cloudVeil;
     _objects.environmentWindVectors = windGroup;
     _objects.environmentWindArrows = windArrows;
     _objects.environmentTemperatureArc = tempArc;
@@ -3795,6 +3866,17 @@
     }
   }
 
+  // B7.61 — how many cloud sub-tori per band the device may draw. The
+  // capability tier sets the ceiling; the frame-rate governor can only
+  // lower it. Clouds shed cost before anything else does.
+  function _cloudDensityCap() {
+    const tierCap =
+      _activeTier === "minimal" || _activeTier === "lowpower" ? 1
+      : _activeTier === "balanced" ? 2
+      : 3;
+    return Math.max(1, Math.min(tierCap, _cloudFpsCap));
+  }
+
   function _applyEnvironmentState() {
     const snapshot = _normalizedEnvironmentState(_environmentState);
     const current = snapshot?.current || null;
@@ -3806,9 +3888,17 @@
     // 44×44 shell, three 96-segment cloud tori, wind vectors and multiple
     // additional meshes even when no weather/location data existed.
     if (!hasData) {
+      // B7.61 — no snapshot, no sky: the honest unset state. Nothing is
+      // invented; the group hides and the drift/animation state clears.
+      _skyState = null;
       if (_objects.environmentGroup) _objects.environmentGroup.visible = false;
       return;
     }
+
+    // B7.61 — one mapping, one snapshot: the sky the renderer draws is
+    // derived from the same normalized state (same fetchedAt) that the
+    // ENV strip renders, so the two surfaces can never disagree.
+    _skyState = globalThis.LivingTimeSphereSky?.skyFromSnapshot?.(snapshot) || null;
 
     _buildEnvironmentLayerObjects();
 
@@ -3839,18 +3929,31 @@
         0.72
       );
 
+      // B7.61 — the shell's light follows the snapshot's is_day / cover:
+      // clear noon stays bright teal, an overcast greys, night deepens.
+      if (_skyState) {
+        shellColor.lerp(
+          new _THREE.Color(_skyState.light.shellTint),
+          0.35
+        );
+      }
+
       _objects.environmentShell.material.color.copy(
         shellColor
       );
 
       /*
        * The shell is context, not fog. Even 100% cloud + humidity now stays
-       * below ~0.11 opacity instead of washing the calendar blue.
+       * below ~0.11 opacity instead of washing the calendar blue. The
+       * sky's light glow dims it further at night / under heavy cover.
        */
       _objects.environmentShell.material.opacity =
-        0.025
-        + (cloud / 100) * 0.045
-        + (humidity / 100) * 0.035;
+        (
+          0.025
+          + (cloud / 100) * 0.045
+          + (humidity / 100) * 0.035
+        )
+        * (_skyState ? (0.55 + 0.45 * _skyState.light.glow) : 1);
 
       if (_objects.environmentCompass) {
         _objects.environmentCompass.visible = true;
@@ -3858,51 +3961,72 @@
     });
 
     _runEnvironmentLayer("clouds", () => {
-      const low = _num(
-        hourly?.cloud_cover_low?.[0],
-        cloud
-      );
-
-      const mid = _num(
-        hourly?.cloud_cover_mid?.[0],
-        cloud
-      );
-
-      const high = _num(
-        hourly?.cloud_cover_high?.[0],
-        cloud
-      );
+      // B7.61 — bands are driven by the data-bound sky: each band's own
+      // low/mid/high cover sets how many of its sub-tori are lit and how
+      // opaque they burn; the light mode sets their colour. A band with
+      // 0% cover is absent, not faint.
+      if (!_skyState) return;
 
       const bands =
         _objects.environmentCloudBands?.children
         || [];
 
-      [low, mid, high].forEach(
-        (value, index) => {
+      const densityCap = _cloudDensityCap();
+
+      _skyState.bands.forEach(
+        (skyBand, index) => {
           const band = bands[index];
           if (!band) return;
 
-          band.material.opacity =
-            0.018
-            + _clamp(
-                value,
-                0,
-                100
-              )
-              / 100
-              * 0.16;
+          const litCount = Math.min(
+            skyBand.density,
+            densityCap
+          );
+
+          band.visible = skyBand.cover > 0;
+
+          (band.children || []).forEach(
+            (mesh, subIndex) => {
+              const lit = subIndex < litCount;
+              mesh.visible = lit;
+              if (!lit) return;
+              mesh.material.opacity =
+                skyBand.opacity
+                * (Number(mesh.userData?.opacityFactor) || 1)
+                * _environmentGestureDim;
+              mesh.material.color.setHex(
+                _skyState.light.cloudColor
+              );
+            }
+          );
 
           band.userData = {
             ...(band.userData || {}),
-            cloudLevel:
-              ["low", "mid", "high"][index],
-            cover:
-              Math.round(
-                _clamp(value, 0, 100)
-              )
+            type: "environment-cloud-band",
+            cloudLevel: skyBand.level,
+            cover: Math.round(skyBand.cover)
           };
         }
       );
+
+      if (_objects.environmentCloudVeil) {
+        const veil = _objects.environmentCloudVeil;
+        veil.visible = _skyState.veilOpacity > 0.01;
+        veil.material.opacity =
+          _skyState.veilOpacity * _environmentGestureDim;
+        veil.material.color.setHex(
+          _skyState.light.cloudColor
+        );
+      }
+
+      if (_objects.environmentCloudBands) {
+        _objects.environmentCloudBands.userData = {
+          type: "environment-cloud-shell",
+          totalCover: Math.round(_skyState.totalCover),
+          lightMode: _skyState.light.mode,
+          driftRadiansPerSecond: _skyState.driftRadiansPerSecond
+        };
+      }
     });
 
     _runEnvironmentLayer("wind", () => {
@@ -4033,26 +4157,41 @@
     });
 
     _runEnvironmentLayer("precipitation", () => {
-      const active =
-        precipitation > 0.02;
+      // B7.61 — precipitation reads as what the data says it is: the WMO
+      // weather_code chooses the mode (rain = fine, fast, blue streaks;
+      // snow = larger, slow, white motes), the measured rate sets the
+      // intensity. No precipitation in the snapshot -> no particles.
+      const skyPrecip = _skyState?.precipitation
+        || { mode: precipitation > 0.02 ? "rain" : "none", intensity: 0, mm: precipitation };
+      const active = skyPrecip.mode !== "none";
 
       _objects.environmentPrecip.visible =
         active;
 
-      _objects.environmentPrecip.material.opacity =
-        active
-          ? (
-              0.12
-              + Math.min(
-                  0.50,
-                  precipitation / 8
-                )
-            )
-          : 0;
+      if (active) {
+        const isSnow = skyPrecip.mode === "snow";
+        _objects.environmentPrecip.material.color.setHex(
+          isSnow ? 0xf4f8ff : 0x8ddcff
+        );
+        _objects.environmentPrecip.material.size =
+          isSnow
+            ? 0.02
+            : (_isMobileWidth() ? 0.013 : 0.011);
+        _objects.environmentPrecip.material.opacity =
+          (
+            0.15
+            + skyPrecip.intensity * 0.55
+          )
+          * _environmentGestureDim;
+      } else {
+        _objects.environmentPrecip.material.opacity = 0;
+      }
 
       _objects.environmentPrecip.userData = {
         type: "environment-precipitation",
-        precipitation
+        precipitation,
+        mode: skyPrecip.mode,
+        intensity: skyPrecip.intensity
       };
     });
 
@@ -5349,6 +5488,72 @@
 
   // ── Frame render ──────────────────────────────────────────────────
 
+  let _lastSkyNowMs = 0;
+
+  /*
+   * B7.61 — per-frame sky motion, all of it data-bound:
+   *  - the cloud shell drifts at the snapshot's wind speed;
+   *  - precipitation falls (rain fast and fine, snow slow with a sway);
+   *  - a frame-rate governor sheds cloud sub-tori first when frames run
+   *    long, and restores them when the device recovers.
+   */
+  function _animateSky(nowMs) {
+    const now = Number(nowMs) || 0;
+    const dtMs = _lastSkyNowMs > 0 ? Math.min(100, Math.max(0, now - _lastSkyNowMs)) : 16.7;
+    _lastSkyNowMs = now;
+    const dt = dtMs / 1000;
+
+    // Frame-rate governor: exponential average, checked in windows so a
+    // single hitch never strips the sky.
+    _frameTimeEmaMs = _frameTimeEmaMs * 0.92 + dtMs * 0.08;
+    _cloudGovernorFrames += 1;
+    if (_cloudGovernorFrames >= 90) {
+      _cloudGovernorFrames = 0;
+      if (_frameTimeEmaMs > 25 && _cloudFpsCap > 1) {
+        _cloudFpsCap -= 1;
+        _applyEnvironmentState();
+      } else if (_frameTimeEmaMs < 17 && _cloudFpsCap < 3) {
+        _cloudFpsCap += 1;
+        _applyEnvironmentState();
+      }
+    }
+
+    if (!_skyState || !_objects.environmentGroup?.visible) return;
+
+    if (_objects.environmentCloudBands?.visible) {
+      _objects.environmentCloudBands.rotation.y +=
+        _skyState.driftRadiansPerSecond * dt;
+    }
+
+    const precip = _objects.environmentPrecip;
+    const skyPrecip = _skyState.precipitation;
+    if (precip?.visible && skyPrecip && skyPrecip.mode !== "none") {
+      const attribute = precip.geometry?.getAttribute?.("position");
+      const base = precip.geometry?.userData?.basePositions;
+      if (attribute && base) {
+        const isSnow = skyPrecip.mode === "snow";
+        const fallSpeed = isSnow
+          ? 0.08 + skyPrecip.intensity * 0.06
+          : 0.55 + skyPrecip.intensity * 0.55;
+        const span = 1.08;
+        const t = now / 1000;
+        for (let i = 0; i < attribute.count; i += 1) {
+          const baseY = base[i * 3 + 1];
+          let y = baseY - ((t * fallSpeed + i * 0.173) % span);
+          if (y < -0.54) y += span;
+          attribute.setY(i, y);
+          if (isSnow) {
+            attribute.setX(
+              i,
+              base[i * 3] + Math.sin(t * 0.6 + i * 1.7) * 0.02
+            );
+          }
+        }
+        attribute.needsUpdate = true;
+      }
+    }
+  }
+
   function render(nowMs) {
     if (!_renderer || !_scene || !_camera) return;
 
@@ -5374,6 +5579,9 @@
     // Update sphere-anchored Moon labels
     _syncSemanticZoomFromCamera(false);
     _updateMoonLabels(_viewMode, nowMs);
+
+    // B7.61 — wind drift, precipitation fall, cloud cost governor.
+    _animateSky(nowMs);
 
     globalThis.LivingTimeSphereExtensionHost?.renderAll?.(
       _extensionContext({
@@ -5749,6 +5957,15 @@
       _canvas.setAttribute("aria-describedby", "sphere-text-model");
       // touch-action: pan-y by default — vertical page scroll preserved.
       _canvas.style.touchAction = "pan-y";
+      // B7.61 picking invariant: pin the canvas to the container's origin.
+      // The label manager projects day chips against the container rect and
+      // _handleClick raycasts against the canvas rect; the two must be the
+      // same rect forever. An in-flow sibling inserted above a static canvas
+      // (the live environment telemetry bar did exactly this) shifts the
+      // canvas without moving the container and silently warps every pick.
+      _canvas.style.position = "absolute";
+      _canvas.style.left = "0";
+      _canvas.style.top = "0";
       container.appendChild(_canvas);
       _pruneRendererOwnedCanvases(container, _canvas, "post-append-orphan-cleanup");
       _recordCanvasConnection("after-append");
@@ -6237,10 +6454,18 @@
           !== false;
       }
 
+      /*
+       * B7.61 — during a gesture the cloud shell and precipitation FADE
+       * to half presence instead of switching off, then restore. The
+       * re-apply recomputes their opacities with the gesture dim factor
+       * from the same sky state, so data and picture stay in step.
+       */
+      _environmentGestureDim = active ? 0.5 : 1;
+      _applyEnvironmentState();
+
       if (_objects.environmentCloudBands) {
         _objects.environmentCloudBands.visible =
-          !active
-          && _environmentLayerEnabled.clouds
+          _environmentLayerEnabled.clouds
              !== false;
       }
 
@@ -6255,8 +6480,7 @@
           );
 
         _objects.environmentPrecip.visible =
-          !active
-          && precipitation > 0.02
+          precipitation > 0.02
           && _environmentLayerEnabled.precipitation
              !== false;
       }
@@ -6864,11 +7088,21 @@
     // B7.19: the readable 13 × 4 × 7 matrix is a first-class pick surface. A
     // tap near any calendar cell resolves to that exact Pattern day even when
     // the numeral is hidden by LOD. Scheduled markers are raycast first.
+    //
+    // B7.61: the search runs against the DISPLAY lanes (nearestDisplayCell),
+    // not the canonical lanes. The numerals live on the presentation lanes
+    // (1.320 + week × 0.092); the old canonical-lane search (1.298 + week ×
+    // 0.030) resolved a tap on a numeral to the next week's cell — the
+    // measured +7/+8 wrong-day selection in the lab tap protocol.
     const calendarGeometry = globalThis.LivingTimeSphereCalendarGeometry;
-    const matrixHit = calendarGeometry?.nearestCalendarCell?.(
+    const matrixHit = calendarGeometry?.nearestDisplayCell?.(
       angle,
       radius / patternRadius,
-      { maxDistance: 0.12 }
+      {
+        dayNumberWeek1: CALENDAR_RAIL.dayNumberPresentationWeek1,
+        dayNumberWeekStep: CALENDAR_RAIL.dayNumberPresentationWeekStep,
+        maxDistance: 0.12
+      }
     );
     if (matrixHit) {
       const dayOfPatternYear = Number(matrixHit.dayOfPatternYear);

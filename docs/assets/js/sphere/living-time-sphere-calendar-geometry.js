@@ -211,6 +211,45 @@
     return Object.freeze({ ...best, hitDistance: bestDistance });
   }
 
+  /*
+   * B7.61 — DISPLAY-LANE PICKING.
+   *
+   * nearestCalendarCell() searches the canonical selectable lanes
+   * (1.298 + week × 0.030), but since B7.59.2C the day numerals are DRAWN on
+   * the wider presentation lanes of calendarDisplayCell()
+   * (1.320 + week × 0.092). A tap at a numeral's exact centre was therefore
+   * closest to the NEXT week's canonical cell — the measured +7/+8
+   * wrong-day selection (lab protocol, Nov 17 2026). This search resolves a
+   * pointer position against the lanes the user can actually see, so the
+   * day under the numeral is the day that gets selected. Canonical
+   * calendarCell() geometry is untouched; this is a second, presentation-
+   * space search over the same addresses.
+   */
+  function nearestDisplayCell(angle, radialFactor, options = {}) {
+    const a = normalizeAngle(angle);
+    const r = Number(radialFactor);
+    if (!Number.isFinite(r)) return null;
+    const maxDistance = Number.isFinite(Number(options.maxDistance))
+      ? Number(options.maxDistance)
+      : 0.115;
+    let best = null;
+    let bestDistance = Infinity;
+    for (let day = 1; day <= PATTERN_DAYS; day += 1) {
+      const cell = calendarDisplayCell(day, options);
+      const deltaDegRaw = Math.abs(normalizeAngle(a - cell.angle));
+      const deltaDeg = Math.min(deltaDegRaw, 360 - deltaDegRaw);
+      const angularDistance = (deltaDeg * Math.PI / 180) * cell.dayNumberRadialFactor;
+      const radialDistance = Math.abs(r - cell.dayNumberRadialFactor);
+      const distance = Math.hypot(angularDistance, radialDistance);
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        best = cell;
+      }
+    }
+    if (!best || bestDistance > maxDistance) return null;
+    return Object.freeze({ ...best, hitDistance: bestDistance });
+  }
+
   // B7.19 — adaptive disclosure without changing geometry. Zoomed-out views
   // show no day numerals. As a Moon comes to the front, its week anchors appear;
   // near/detail reveals all 28 days for the front Moon. The selected Moon keeps
@@ -325,6 +364,7 @@
     calendarMatrixCell,
     calendarDisplayCell,
     nearestCalendarCell,
+    nearestDisplayCell,
     numeralPolicy,
     dayBoundary,
     plannerLane,
