@@ -209,7 +209,7 @@
     },
     {
       "path": "docs/assets/css/moons-interface.css",
-      "sha256": "ec184e3abf83adee7a4bf65795d3e850e829f08f6a9cfb0de18913d49b45b3ec",
+      "sha256": "59037bf916ea583a547911cb5624efd358a323243080c29425e4f69ab3c9d3ce",
       "publicUrl": "https://codexofreality.org/assets/css/moons-interface.css",
       "status": "operational"
     },
@@ -323,7 +323,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "aa278827c6ebe72062fa77e53db024c94d4151df9e15ae624f916268e811b6a1",
+      "sha256": "aa22e105c3b06891ac9f6cc54b62fe862d5213832cdeb43dcfd340629d9bb473",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -1516,6 +1516,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/js/day-telling.js",
+      "sha256": "72b9e8737cc63b3ea8e60b47d7f21edfd24a2001d4eb9340a7e5da2b3d4fd803",
+      "publicUrl": "https://codexofreality.org/assets/js/day-telling.js",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/js/environment/environment-authority.js",
       "sha256": "a4283364f24c40260029bbc31c260a9e7dce018f4350735ac59109448cddbb5b",
       "publicUrl": "https://codexofreality.org/assets/js/environment/environment-authority.js",
@@ -1883,7 +1889,7 @@
     },
     {
       "path": "docs/assets/js/moons.js",
-      "sha256": "efe979ef8ffb663cd80031da6946e68a9b9bb4208743e7ee4a237442135c87f6",
+      "sha256": "4dc5471ee3d197b2e7c71589928b8e0df1ecc2e70c31278be146476f4dc10207",
       "publicUrl": "https://codexofreality.org/assets/js/moons.js",
       "status": "operational"
     },
@@ -2489,13 +2495,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "0a787e30d80ce1de77a187a9ce99f79b1877101b715ed382bc3da5100cc92e16",
+      "sha256": "0cb17a910037fa25348b46dc938c733e27c9121cb762dfe00e89a3dee6e46c15",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "ab08ddb71e9ae01be36681f2677cc8f0e3549248042003435770a2e393043876",
+      "sha256": "2f3db93a0615340834edc38ec0ecab2624fcbd2009366adec24e4a053ba77c66",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -2627,7 +2633,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "06d94acb14e869a24ff13b0fd974273da1669d41ea45a4d02c77b018e6b9c408",
+      "sha256": "9436f7ca8a6ef48cf2b0e82ad7069574ecdf994e4b5d4b89f662fd6344c03839",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
@@ -2663,7 +2669,7 @@
     },
     {
       "path": "docs/moons.html",
-      "sha256": "21d52aeb62359be7e833f58bb4e5d5cceca77545750adc9a0715379332e7afba",
+      "sha256": "4100ec2a7b06f5bf45f7f76a5d538800798dcb50832e4bfecbe29c3a2142cc7e",
       "publicUrl": "https://codexofreality.org/moons.html",
       "status": "operational"
     },
