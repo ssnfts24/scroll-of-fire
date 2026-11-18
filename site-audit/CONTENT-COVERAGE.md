@@ -4,12 +4,13 @@ Generated from the shared catalog at base revision `548e858`. This report is dev
 
 ## Public discovery areas
 
-### Scroll and Scripture (12 catalog entries)
+### Scroll and Scripture (13 catalog entries)
 
 Read the Scroll, search its text, study Hebrew roots and follow Genesis 1–50.
 
 - **Start Here** — Live; A guided first doorway into the Codex, the 13 Moons calendar and the daily practice.
 - **Scroll Library** — Live; The Scroll of Fire Unsealed: reading edition, eight shelves, Genesis 1–50 and a link to every original line.
+- **Genesis & Exodus Scripture** — Live; A source-attributed Hebrew reader for Genesis 1–50 and Exodus 1–40, with word studies, morphology, lexical senses and separate interpretive layers.
 - **Scroll Reader** — Live; The long-form reader with chapter navigation, source-line provenance and deep links.
 - **Scroll Search** — Live; Local full-text search across all 1,609 reader segments, with shelf filters and Hebrew normalisation.
 - **Hebrew Lexicon** — Live; 911 indexed Hebrew forms with occurrences, transliteration variants and clear separation of spelling, root and interpretation.
@@ -99,9 +100,9 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 
 ## Repository and deployed-content coverage
 
-- Public HTML pages inspected: **77**.
-- Total master-inventory records: **369**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
-- Public-facing catalog entries: **63**; only explicitly curated entries appear on the Atlas.
+- Public HTML pages inspected: **170**.
+- Total master-inventory records: **464**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
+- Public-facing catalog entries: **64**; only explicitly curated entries appear on the Atlas.
 - Numbered archive folders are inventoried file-by-file, while downloads snapshot differences are kept separate from historical integrity data.
 - Root files not already published through the archive or explicitly approved remain classified as development-only; no such file is automatically linked from the public catalog.
 
@@ -118,9 +119,9 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 
 - Deployed Markdown documents: 58
 - Evidence: 1
-- HTML pages: 77
+- HTML pages: 170
 - Numbered archive file: 140
 - Numbered archive folder: 7
-- Repository folder: 8
+- Repository folder: 9
 - Repository root file: 57
-- Static assets: 21
+- Static assets: 22
