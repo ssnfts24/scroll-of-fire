@@ -80,7 +80,7 @@
 
 | Stylesheet | Pages |
 | --- | --- |
-| `docs/assets/css/living-ui.css` | 125 |
+| `docs/assets/css/living-ui.css` | 126 |
 | `docs/scripture/assets/scripture.css` | 93 |
 | `docs/assets/css/codex.css` | 36 |
 | `docs/assets/css/navigation.css` | 30 |
@@ -96,7 +96,7 @@
 | Script | Pages |
 | --- | --- |
 | `docs/assets/js/site.js` | 129 |
-| `docs/assets/js/living-ui.js` | 125 |
+| `docs/assets/js/living-ui.js` | 126 |
 | `docs/scripture/assets/scripture.js` | 93 |
 | `docs/assets/js/living-search-launcher.js` | 26 |
 | `docs/theory/equations/https:/cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js` | 19 |

@@ -251,7 +251,7 @@ The page itself was not changed. Full lists are in `downloads-reconciliation.jso
 | `invoke.html` | 1 | 1 | yes | yes | 62 |
 | `lab.html` | 1 | 1 | yes | yes | 62 |
 | `ledger.html` | 1 | 1 | yes | no | 66 |
-| `living-time-sphere.html` | 1 | 1 | yes | yes | 165 |
+| `living-time-sphere.html` | 1 | 1 | yes | yes | 166 |
 | `micro.html` | 2 | 2 | no | yes | 2 |
 | `moons.html` | 1 | 1 | yes | yes | 162 |
 | `offline.html` | — | — | no | no | 0 |
@@ -346,7 +346,7 @@ The page itself was not changed. Full lists are in `downloads-reconciliation.jso
 | `scripture/genesis/48.html` | 2 | 2 | no | yes | 50 |
 | `scripture/genesis/49.html` | 2 | 2 | no | yes | 50 |
 | `scripture/genesis/50.html` | 2 | 2 | no | yes | 51 |
-| `scripture/index.html` | 1 | 1 | yes | yes | 164 |
+| `scripture/index.html` | 1 | 1 | yes | yes | 165 |
 | `scripture/lemma.html` | 2 | 2 | no | yes | 1 |
 | `scroll-of-fire-codex-of-reality-remnant-whitepaper.html` | 1 | 1 | yes | yes | 64 |
 | `scroll/atlas.html` | 1 | 1 | yes | yes | 166 |
