@@ -15,9 +15,11 @@
 | `scroll:editorial:check` | `node scripts/build-scroll-editorial.mjs --check` |
 | `site:catalog` | `node scripts/build-site-catalog.mjs` |
 | `site:catalog:check` | `node scripts/build-site-catalog.mjs --check` |
+| `search:index` | `node scripts/build-search-index.mjs` |
+| `search:index:check` | `node scripts/build-search-index.mjs --check` |
 | `r2:inventory` | `node scripts/build-r2-inventory.mjs` |
 | `r2:inventory:check` | `node scripts/build-r2-inventory.mjs --check` |
-| `validate` | `npm run test && npm run site:catalog:check && npm run r2:inventory:check && npm run audit` |
+| `validate` | `npm run test && npm run site:catalog:check && npm run search:index:check && npm run r2:inventory:check && npm run audit` |
 
 ## Workflows
 
@@ -60,6 +62,7 @@
 | `scripts/build-scroll-editorial.mjs` | `docs/scroll/data/editorial-edition.json`, `docs/scroll/evidence/claim-register.json`, `docs/scroll/evidence/register.md` |
 | `scripts/build-scroll-library.mjs` | `archive/Full_Scroll_Unsealed.txt`, `archive/edition.json` |
 | `scripts/build-scroll-search.mjs` | — |
+| `scripts/build-search-index.mjs` | `docs/data/site-catalog.json`, `docs/scroll/data/library.json`, `docs/scroll/data/reader-segments.json`, `docs/scroll/search/lexicon/lexicon-index.json`, `docs/scroll/evidence/claim-register.json` |
 | `scripts/build-site-catalog.mjs` | `site-audit/pr5a-body.md`, `docs/downloads.html`, `docs/data/site-catalog.json` |
 | `scripts/free_all_circuits.py` | — |
 | `scripts/generate-equinox-passage-data.mjs` | `docs/data/equinox-passage/equinox-source-metadata.json`, `docs/data/equinox-passage/equinox-reference-2014-2026.json`, `docs/data/equinox-passage/equinox-passage-2014-2026.json` |
@@ -78,10 +81,10 @@
 
 | Stylesheet | Pages |
 | --- | --- |
-| `docs/assets/css/living-ui.css` | 125 |
+| `docs/assets/css/living-ui.css` | 126 |
 | `docs/scripture/assets/scripture.css` | 93 |
-| `docs/assets/css/codex.css` | 35 |
-| `docs/assets/css/navigation.css` | 29 |
+| `docs/assets/css/codex.css` | 36 |
+| `docs/assets/css/navigation.css` | 30 |
 | `docs/theory/equations/assets/css/codex.css` | 19 |
 | `docs/theory/equations/assets/css/navigation.css` | 19 |
 | `docs/theory/equations/assets/css/theory.css` | 19 |
@@ -93,18 +96,18 @@
 
 | Script | Pages |
 | --- | --- |
-| `docs/assets/js/site.js` | 128 |
+| `docs/assets/js/site.js` | 129 |
+| `docs/assets/js/living-ui.js` | 126 |
 | `docs/scripture/assets/scripture.js` | 93 |
-| `docs/assets/js/living-ui.js` | 26 |
+| `docs/assets/js/living-search-launcher.js` | 26 |
 | `docs/theory/equations/https:/cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js` | 19 |
 | `docs/theory/equations/assets/js/site.js` | 19 |
+| `docs/theory/equations/assets/js/living-search-launcher.js` | 19 |
 | `docs/theory/equations/assets/js/theory.js` | 19 |
+| `docs/theory/equations/assets/js/living-ui.js` | 19 |
 | `docs/assets/js/living-codex.js` | 18 |
 | `docs/assets/js/calendar-cor.js` | 16 |
 | `docs/theory/https:/cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js` | 15 |
-| `docs/theory/assets/js/site.js` | 15 |
-| `docs/theory/assets/js/theory.js` | 15 |
-| `docs/assets/js/codex-witness.js` | 8 |
 
 ## Protected systems (do not modify)
 

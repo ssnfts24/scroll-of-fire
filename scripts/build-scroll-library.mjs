@@ -208,11 +208,11 @@ const homepage = `<!doctype html>
   <title>Scroll of Fire — Unsealed Library</title>
   <link rel="canonical" href="https://codexofreality.org/scroll/index.html">
   <link rel="stylesheet" href="assets/library.css">
-  <link rel="stylesheet" href="../assets/css/living-ui.css">
+  <link rel="stylesheet" href="../assets/css/living-ui.css?v=20261117-1">
   <script defer src="../assets/js/site.js"></script>
   <script defer src="assets/library.js"></script>
 </head>
-<body class="library-home">
+<body class="library-home living-ui">
   <a class="skip-link" href="#main">Skip to library</a>
   ${livingNav("scroll")}
   <header class="masthead">
@@ -267,6 +267,7 @@ const homepage = `<!doctype html>
     </section>
   </main>
   <footer class="library-footer"><a class="wordmark" href="./"><span class="wordmark-mark" aria-hidden="true">✦</span><span><strong>SCROLL OF FIRE</strong><small>UNSEALED LIBRARY</small></span></a><p>Original words · Clear provenance · Whole archive</p><a href="archive/Full_Scroll_Unsealed.txt">Read the preserved source ↗</a></footer>
+  <script defer src="../assets/js/living-ui.js?v=20261117-1"></script>
 </body>
 </html>
 `;
@@ -281,12 +282,12 @@ const reader = `<!doctype html>
   <title>Reading the Scroll — Unsealed Library</title>
   <link rel="canonical" href="https://codexofreality.org/scroll/reader.html">
   <link rel="stylesheet" href="assets/library.css">
-  <link rel="stylesheet" href="../assets/css/living-ui.css">
+  <link rel="stylesheet" href="../assets/css/living-ui.css?v=20261117-1">
   <script defer src="../assets/js/site.js"></script>
   <script defer src="assets/search-normalize.js"></script>
   <script defer src="assets/reader.js"></script>
 </head>
-<body class="reader-page">
+<body class="reader-page living-ui">
   <a class="skip-link" href="#reading">Skip to passage</a>
   ${livingNav("scroll")}
   <header class="reader-masthead">
@@ -321,6 +322,7 @@ const reader = `<!doctype html>
     <a data-next href="./">Next passage →</a>
   </div>
   <footer class="reader-footer"><p>Words are presented as preserved. Contextual grouping does not independently verify historical or scientific claims.</p><a href="archive/edition.json">Edition ${escapeHtml(edition.editionVersion)} provenance ↗</a></footer>
+  <script defer src="../assets/js/living-ui.js?v=20261117-1"></script>
 </body>
 </html>
 `;
@@ -338,13 +340,13 @@ function toolPage({ file, title, description, bodyClass, current, intro, body, s
   <title>${escapeHtml(title)} — Scroll of Fire Library</title>
   <link rel="canonical" href="https://codexofreality.org/scroll/${file}">
   <link rel="stylesheet" href="assets/library.css">
-  <link rel="stylesheet" href="../assets/css/living-ui.css">
+  <link rel="stylesheet" href="../assets/css/living-ui.css?v=20261117-1">
   <script defer src="../assets/js/site.js"></script>
   <script defer src="assets/search-normalize.js"></script>
   <script defer src="assets/scroll-common.js"></script>
 ${scripts.map(script => `  <script defer src="assets/${script}"></script>`).join("\n")}
 </head>
-<body class="tool-body ${bodyClass}">
+<body class="tool-body ${bodyClass} living-ui">
   <a class="skip-link" href="#main">Skip to content</a>
   ${livingNav(current === "lexicon" ? "lexicon" : "scroll")}
   <header class="reader-masthead">
@@ -362,6 +364,7 @@ ${scripts.map(script => `  <script defer src="assets/${script}"></script>`).join
 ${body}
   </main>
   <footer class="reader-footer"><p>Search and references are generated from the frozen manuscript, edition ${escapeHtml(edition.editionVersion)}. Matches show where words appear; they do not verify claims.</p><a href="archive/edition.json">Edition provenance ↗</a></footer>
+  <script defer src="../assets/js/living-ui.js?v=20261117-1"></script>
 </body>
 </html>
 `;

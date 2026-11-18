@@ -633,3 +633,68 @@ body.le-lock {
     transform: none;
   }
 }
+
+/* ---- Living activity panel ---------------------------------------- */
+/* "The Codex Today": today's coordinate, the latest growth-record     */
+/* additions, and the line for the day — all real site data, filled    */
+/* by living-entry.js; the static markup already carries real values.  */
+.le-activity {
+  border: 1px solid rgba(243, 201, 122, 0.25);
+  background: linear-gradient(180deg, rgba(16, 21, 34, 0.72), rgba(8, 11, 19, 0.88));
+  border-radius: 14px;
+  padding: 1.1rem 1.2rem 1.2rem;
+}
+.le-act-today {
+  font-size: 1.02rem;
+  color: #f4f0de;
+  margin: 0.2rem 0 0.9rem;
+}
+.le-act-label {
+  display: inline-block;
+  color: #05070d;
+  background: #f3c97a;
+  border-radius: 999px;
+  padding: 0.05rem 0.55rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-right: 0.45rem;
+  vertical-align: 0.12em;
+}
+.le-act-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 1.6rem;
+}
+@media (max-width: 640px) {
+  .le-act-grid { grid-template-columns: 1fr; }
+}
+.le-act-slot h3 {
+  margin: 0 0 0.45rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #d99545;
+}
+.le-act-growth {
+  margin: 0;
+  padding-left: 1.05rem;
+  color: #cfd6e4;
+  font-size: 0.92rem;
+}
+.le-act-growth li { margin: 0.28rem 0; }
+.le-act-growth time { color: #8fa3bf; font-size: 0.82rem; margin-right: 0.3rem; }
+.le-act-teaching { margin: 0; }
+.le-act-teaching p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: #f4f0de;
+}
+.le-act-slot figcaption {
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: #7af3ff;
+}

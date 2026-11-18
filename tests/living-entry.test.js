@@ -209,3 +209,53 @@ test("existing homepage hooks survive the restructure", () => {
     assert.ok(HTML.includes(needle), `homepage hook missing after restructure: ${needle}`);
   }
 });
+
+/* ------------------------------------------------------------------ */
+/* Living activity panel ("The Codex Today")                           */
+/* ------------------------------------------------------------------ */
+
+test("the activity panel sits in the Witness step with its three slots", () => {
+  const frontDoorEnd = HTML.indexOf("site-catalog:front-door:end");
+  const panelAt = HTML.indexOf('id="living-activity"');
+  const sphereAt = HTML.indexOf('id="home-sphere-observatory"');
+  assert.ok(panelAt > frontDoorEnd, "panel follows the Front Door");
+  assert.ok(panelAt < sphereAt, "panel precedes the sphere observatory");
+  assert.match(HTML, /data-le-today/);
+  assert.match(HTML, /data-le-growth/);
+  assert.match(HTML, /data-le-teaching/);
+  assert.match(HTML, /data-le-teaching-source/);
+});
+
+test("the panel's static growth items mirror the Front Door record verbatim", () => {
+  const panel = HTML.slice(HTML.indexOf('id="living-activity"'), HTML.indexOf('id="home-sphere-observatory"'));
+  const panelItems = [...panel.matchAll(/<li>([\s\S]*?)<\/li>/g)].map((m) => m[1].replace(/\s+/g, " ").trim());
+  assert.ok(panelItems.length >= 3, "panel carries at least three static additions");
+  const frontDoor = HTML.slice(HTML.indexOf('id="front-door"'), HTML.indexOf("site-catalog:front-door:end"));
+  for (const item of panelItems) {
+    assert.ok(frontDoor.replace(/\s+/g, " ").includes(item),
+      "panel item must appear verbatim in the Front Door growth record: " + item);
+    assert.match(item, /<time datetime="\d{4}-\d{2}-\d{2}">/);
+  }
+});
+
+test("the panel is fed by real data wiring in living-entry.js", () => {
+  assert.match(JS, /function initActivity\(\)/);
+  assert.match(JS, /front-door-recent/, "growth slot mirrors the growth record");
+  assert.match(JS, /dayOfYear\(new Date\(\)\) % TEACHINGS\.length/,
+    "teaching rotates by day-of-year");
+  const texts = [...JS.matchAll(/\{\s*text: "([^"]+)", source: "([^"]+)" \}/g)];
+  assert.ok(texts.length >= 5, "at least five verbatim teaching lines");
+  for (const [, text] of texts) {
+    assert.ok(HTML.includes(text), "teaching line must stand verbatim on the homepage: " + text);
+  }
+});
+
+test("fixture: on 2026-11-17 the day rotation lands on the Living Technology line", () => {
+  const texts = [...JS.matchAll(/\{\s*text: "([^"]+)", source: "([^"]+)" \}/g)]
+    .map((m) => ({ text: m[1], source: m[2] }));
+  // Day-of-year for Nov 17, 2026 (not a leap year): 304 + 17 = 321.
+  const dayOfYear = 321;
+  const pick = texts[dayOfYear % texts.length];
+  assert.equal(pick.source, "Living Technology");
+  assert.match(pick.text, /handcrafted copper/);
+});

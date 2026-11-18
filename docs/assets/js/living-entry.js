@@ -269,8 +269,68 @@
   }
 
   /* ---------------------------------------------------------------- */
+  /* The living activity panel ("The Codex Today")                     */
+  /*                                                                   */
+  /* Fed only by real site data: today's coordinate from the site's    */
+  /* own PatternCalendar (the same computation as the entry overlay),  */
+  /* the latest growth-record additions mirrored live from the Front   */
+  /* Door list (so stewardship edits flow here — no second copy to     */
+  /* keep), and a line for the day chosen by day-of-year from lines    */
+  /* that already stand on this page. Nothing is invented; without     */
+  /* JS the panel still shows the real values in its static markup.    */
+  /* ---------------------------------------------------------------- */
+
+  const TEACHINGS = [
+    { text: "Look at what is happening before rushing to name it.", source: "The Daily Return" },
+    { text: "Give the pattern a clean word, symbol, moon marker, or ledger note.", source: "The Daily Return" },
+    { text: "Breathe, record, act, and bring the body back into the present field.", source: "The Daily Return" },
+    { text: "Track rhythm through the Remnant 13 Moons calendar, moon phase, symbolic day reading, and seasonal witness practice.", source: "13 Moons" },
+    { text: "The daily rhythm engine: moon, element, witness, calendar, mirror, and return.", source: "The Daily Rhythm" },
+    { text: "Use the moving field as a simple mirror. Let the page slow the room before choosing where to go next.", source: "First Exercise" },
+    { text: "Explore handcrafted copper, stone, glass, and Living Technology pieces entered into the Artifact Registry.", source: "Living Technology" }
+  ];
+
+  function dayOfYear(now) {
+    const start = new Date(now.getFullYear(), 0, 0);
+    return Math.floor((now - start) / 86400000);
+  }
+
+  function initActivity() {
+    const panel = document.getElementById("living-activity");
+    if (!panel) return;
+
+    const todayEl = panel.querySelector("[data-le-today]");
+    if (todayEl) {
+      const { civil, coordinate } = livingCoordinateLine();
+      todayEl.textContent = coordinate ? civil + " · " + coordinate : civil;
+    }
+
+    const growthEl = panel.querySelector("[data-le-growth]");
+    const sourceList = document.querySelector(
+      'section[aria-labelledby="front-door-recent"] ul'
+    );
+    if (growthEl && sourceList) {
+      const items = Array.from(sourceList.querySelectorAll("li")).slice(0, 3);
+      if (items.length) {
+        growthEl.replaceChildren(
+          ...items.map((item) => item.cloneNode(true))
+        );
+      }
+    }
+
+    const teachingEl = panel.querySelector("[data-le-teaching]");
+    const sourceEl = panel.querySelector("[data-le-teaching-source]");
+    if (teachingEl) {
+      const pick = TEACHINGS[dayOfYear(new Date()) % TEACHINGS.length];
+      teachingEl.textContent = pick.text;
+      if (sourceEl) sourceEl.textContent = pick.source;
+    }
+  }
+
+  /* ---------------------------------------------------------------- */
 
   function init() {
+    initActivity();
     showEntry();
     initRail();
     initReveals();
