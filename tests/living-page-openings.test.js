@@ -71,6 +71,14 @@ test("the opening lives in the shared living runtime", () => {
   assert.match(css, /\.lpo-line/);
 });
 
+test("the page name is read the way a reader sees it (line breaks honored)", () => {
+  const js = read("docs/assets/js/living-ui.js");
+  // Headings like "A scroll kept<br><em>whole.</em>" must not fuse into
+  // "keptwhole." — the name extraction prefers innerText (which honors
+  // <br>) and falls back to textContent.
+  assert.match(js, /innerText \|\| heading\.textContent/);
+});
+
 test("every page family carries the opening by construction", () => {
   for (const [family, pages] of Object.entries(FAMILIES)) {
     for (const rel of pages) {

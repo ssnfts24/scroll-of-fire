@@ -126,7 +126,11 @@
 
   function lpoPageName() {
     const heading = document.querySelector("h1");
-    let name = heading ? heading.textContent : "";
+    // innerText first: it honors <br> and block breaks in the heading
+    // ("A scroll kept<br><em>whole.</em>" reads "A scroll kept whole.",
+    // where textContent fuses the words). Fall back to textContent
+    // wherever innerText is unavailable or empty.
+    let name = heading ? (heading.innerText || heading.textContent || "") : "";
     name = (name || "").replace(/\s+/g, " ").trim();
     if (!name) {
       name = (document.title || "").split(/[·|—–-]/)[0].trim();
