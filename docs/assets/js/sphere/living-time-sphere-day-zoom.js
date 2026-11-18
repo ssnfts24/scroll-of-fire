@@ -531,16 +531,28 @@
         push("Breath", session.breathPattern);
         push("Duration", formatDuration(session.durationSeconds));
 
+        /* The Manifest console seals Ξ as a bare number; the visual
+           exercise may seal it as { value, label }. Read both. */
         const xi =
-          finite(session.xi?.value);
+          session.xi && typeof session.xi === "object"
+            ? finite(session.xi.value)
+            : typeof session.xi === "number" ||
+                typeof session.xi === "string"
+              ? finite(session.xi)
+              : null;
 
         if (xi !== null) {
+          const xiLabel =
+            session.xi && typeof session.xi === "object"
+              ? cleanString(session.xi.label) ||
+                "the console's own estimate"
+              : null;
+
           push(
             "Coherence Ξ",
-            `${Math.round(xi * 100) / 100} — ${
-              cleanString(session.xi?.label) ||
-              "the console's own estimate"
-            }`
+            xiLabel
+              ? `${Math.round(xi * 100) / 100} — ${xiLabel}`
+              : String(Math.round(xi * 100) / 100)
           );
         }
 

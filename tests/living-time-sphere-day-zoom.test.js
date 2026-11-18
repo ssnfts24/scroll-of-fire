@@ -584,6 +584,52 @@ test(
 );
 
 test(
+  "practice depth reads the console's bare-number coherence value",
+  () => {
+    const selection =
+      api.selectionFromCoordinate(COORDINATE);
+
+    const view = api.buildDayView({
+      selection,
+      scheduling: fakeScheduling(),
+      records: [
+        record({
+          id: "console-session",
+          type: "event",
+          subtype: "practice-session",
+          title: "Console sealing",
+          summary: "Materials: copper",
+          tags: ["manifest-practice", "practice"],
+          payload: {
+            manifestPractice: {
+              version: 1,
+              intention: "Console intention",
+              sessionKind: "practice",
+              carriersHz: [432],
+              sequencePath: null,
+              visualMode: null,
+              seed: null,
+              breathPattern: null,
+              durationSeconds: null,
+              xi: 0.72,
+              materials: "copper",
+              witnessNote: null
+            }
+          }
+        })
+      ]
+    });
+
+    const entry = view.entries[0];
+
+    assert.equal(detailValue(entry, "Coherence Ξ"), "0.72");
+    assert.equal(detailValue(entry, "Carriers"), "432 Hz");
+    assert.equal(detailValue(entry, "Duration"), null);
+    assert.equal(detailValue(entry, "Witness note"), null);
+  }
+);
+
+test(
   "buildDayView groups the full day: timed, all day, on this day",
   () => {
     const selection =
