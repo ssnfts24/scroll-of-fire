@@ -136,12 +136,6 @@
       "status": "operational"
     },
     {
-      "path": "docs/assets/css/living-entry.css",
-      "sha256": "9f67199e054c60281c8d66b2b94188222552dba1f0ee7ac164aa176307e55294",
-      "publicUrl": "https://codexofreality.org/assets/css/living-entry.css",
-      "status": "operational"
-    },
-    {
       "path": "docs/assets/css/living-planner.css",
       "sha256": "b94659c8824a1c0aa60aad19818649d69878817dbde9c73ecf811445a9358398",
       "publicUrl": "https://codexofreality.org/assets/css/living-planner.css",
@@ -281,7 +275,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "dea80a1218996ab0235396b4baac9ff2c5735810a8d5480e7300024c2ddbb06f",
+      "sha256": "a770270c85bba04c8e58b237cf67e08a22f1cdb6301c26fb1e368cb626749f47",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -1756,12 +1750,6 @@
       "status": "operational"
     },
     {
-      "path": "docs/assets/js/living-entry.js",
-      "sha256": "2aa31dca67c16cc5542b759c262ba514f9435c2dc3dea4a6269404559e103dbd",
-      "publicUrl": "https://codexofreality.org/assets/js/living-entry.js",
-      "status": "operational"
-    },
-    {
       "path": "docs/assets/js/living-time-app-enhancements.js",
       "sha256": "669c3a83b81927055f867b70b6d1dca4714d9dbdf064d89e9623b50bd4ab1ab3",
       "publicUrl": "https://codexofreality.org/assets/js/living-time-app-enhancements.js",
@@ -2261,7 +2249,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "8d975543e703c079afa1556a4c903d23686fe35ba62248cc435e11d54b0822f4",
+      "sha256": "bdaa7c3aa2d01f8f25f0e59726ef40187c05cb549897995f995602059a2410e3",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
