@@ -31,6 +31,7 @@
   <link rel="preload" as="style" href="assets/css/codex.css?v=2.8.1">
     <link rel="stylesheet" href="assets/css/navigation.css">
 <link rel="stylesheet" href="assets/css/codex.css?v=2.8.1" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
   <style>
     :root{
       --accent-432:#7af3ff; --accent-528:#a4ff90; --accent-369:#f3c97a; --accent-144:#b3e1ff; --accent-963:#ffd1f3;
@@ -125,8 +126,10 @@ header .nav{display:flex;align-items:center;justify-content:space-between;gap:10
   <link rel="icon" type="image/png" href="assets/img/shared/branding/favicon.png">
   <link rel="apple-touch-icon" href="assets/img/shared/branding/favicon.png">
 </head>
-<body class="stars living-all carrier-432" data-theme="dark">
+<body class="stars living-all carrier-432 living-ui" data-theme="dark">
   <a class="skip-link" href="#main">Skip to content</a>
+  <nav class="lui-nav" aria-label="Codex"><a class="lui-nav-home" href="index.html">⌂ Home</a><a href="codex-atlas.html">Atlas</a><a href="scroll/index.html">Scroll Library</a><a href="scroll/lexicon.html">Lexicon</a><a href="living-time-sphere.html">Sphere</a><a href="scripture/index.html">Scripture</a><a href="shop.html">Shop</a></nav>
+  
   <!-- Header (kept minimal; site-level header can replace this if included globally) -->
     <header class="site-header" data-sof-header>
     <a class="brand" href="./" aria-label="Scroll of Fire home">
@@ -892,5 +895,6 @@ header .nav{display:flex;align-items:center;justify-content:space-between;gap:10
     </nav>
     <p>© <span id="year">2026</span> Aaron Paul Laird — Scroll of Fire · Codex of Reality · Scribe of Circuits</p>
   </footer>
+  <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
 </body>
 </html>

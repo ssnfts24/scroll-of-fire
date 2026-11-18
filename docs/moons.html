@@ -143,6 +143,7 @@
   <link rel="stylesheet" href="assets/css/animations.css">
   <link rel="stylesheet" href="assets/css/share-day.css?v=1">
   <link rel="stylesheet" href="assets/css/moons-interface.css?v=20260818-b6">
+  <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
 
   <script>
     window.SOF_MOONS_CONFIG = Object.freeze({
@@ -230,7 +231,9 @@
   <script defer src="assets/js/motion.js"></script>
 </head>
 
-<body data-remnant-boundary="sunset">
+<body class="living-ui" data-remnant-boundary="sunset">
+  <nav class="lui-nav" aria-label="Codex"><a class="lui-nav-home" href="index.html">⌂ Home</a><a href="codex-atlas.html">Atlas</a><a href="scroll/index.html">Scroll Library</a><a href="scroll/lexicon.html">Lexicon</a><a href="living-time-sphere.html">Sphere</a><a href="scripture/index.html">Scripture</a><a href="shop.html">Shop</a></nav>
+  
   <canvas id="skyBg" aria-hidden="true"></canvas>
   <a class="skip-link" href="#main">Skip to content</a>
 
@@ -2692,7 +2695,7 @@
   <script src="assets/js/sphere/living-time-sphere-live-data.js?v=20260724-1"></script>
   <script src="assets/js/sphere/living-time-sphere-url-state.js?v=20260724-1"></script>
   <script src="assets/js/sphere/living-time-sphere-mount.js?v=20260724-1"></script>
-  <script src="assets/js/sphere/living-time-sphere-today.js?v=20260724-1"></script>
+  <script src="assets/js/sphere/living-time-sphere-today.js?v=20261117-1"></script>
 
   <!-- Canonical Life Atlas planner data plane: shared with Living Time Sphere. -->
   <script src="assets/js/life-atlas/life-atlas-schema.js?v=20260817-1"></script>
@@ -3732,5 +3735,7 @@ Let the next step be firm.`;
   <script defer src="assets/js/performance-runtime.js?v=20260731-1"></script>
 <script defer src="assets/js/environment/unit-preferences.js?v=20260816-1"></script>
 <script defer src="assets/js/calendar/temporal-coordinate-engine.js?v=20260816-1"></script>
+<script defer src="assets/js/calendar/temporal-cursor-controller.js?v=20260816-2"></script>
+  <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
 </body>
   </html>
