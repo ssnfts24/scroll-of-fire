@@ -17,11 +17,35 @@
   },
   {
     "date": "2026-11-17",
+    "type": "artifact",
+    "title": "Two works left the shop",
+    "summary": "HaLevanah (HL-001) and Covenant 67 (CV-067) no longer stand in the shop, and their cards have left the homepage strip.",
+    "url": "./shop.html",
+    "symbol": "✕"
+  },
+  {
+    "date": "2026-11-17",
+    "type": "system",
+    "title": "The living entry returns on every visit",
+    "summary": "The living entry now plays on every visit, longer and softer, instead of once.",
+    "url": "./index.html",
+    "symbol": "↻"
+  },
+  {
+    "date": "2026-11-17",
     "type": "library",
     "title": "Living Search opened across the whole Codex",
     "summary": "One search now reaches every page, scroll, atlas entry, lexicon form and claim in the Codex, and remembers your searches only on your own device.",
     "url": "./search.html",
     "symbol": "⌕"
+  },
+  {
+    "date": "2026-11-17",
+    "type": "artifact",
+    "title": "A word in the shop was set right",
+    "summary": "The shop page now reads “copper comes from the QRI 16 V.A.R.S.E Reality Engine” — “frome” corrected to “from”.",
+    "url": "./shop.html",
+    "symbol": "✎"
   },
   {
     "date": "2026-11-17",
