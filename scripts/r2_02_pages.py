@@ -34,10 +34,18 @@ def head(title, desc, base, canonical_path, extra=""):
 """
 
 
+def living_nav(base):
+    # The unified site navigation (same markup as scripts/apply-living-nav.mjs
+    # inserts into the hand-maintained pages): Home is one tap away from every
+    # page, Scripture is the current area here. Emitted by the generator so the
+    # deterministic build keeps it; never hand-edit the generated pages.
+    return f"""<div class="living-nav" data-living-nav><nav class="living-nav-inner" aria-label="Site navigation"><a class="living-nav-brand" href="{base}../index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a><ul class="living-nav-links"><li><a href="{base}../index.html">Home</a></li><li><a href="{base}../scroll/index.html">Scroll</a></li><li><a href="{base}../codex-atlas.html">Atlas</a></li><li><a href="{base}../scroll/lexicon.html">Lexicon</a></li><li><a class="is-current" aria-current="page" href="{base}index.html">Scripture</a></li><li><a href="{base}../living-time-sphere.html">Sphere</a></li><li><a href="{base}../shop.html">Shop</a></li></ul></nav></div>
+"""
+
+
 def masthead(base):
     return f"""<a class="skip-link" href="#main">Skip to content</a>
-<nav class="lui-nav" aria-label="Codex"><a class="lui-nav-home" href="{base}../index.html">⌂ Home</a><a href="{base}../codex-atlas.html">Atlas</a><a href="{base}../scroll/index.html">Scroll Library</a><a href="{base}../scroll/lexicon.html">Lexicon</a><a href="{base}../living-time-sphere.html">Sphere</a><a href="{base}index.html">Scripture</a><a href="{base}../shop.html">Shop</a></nav>
-<header class="sf-mast">
+{living_nav(base)}<header class="sf-mast">
 <a class="sf-brand" href="{base}index.html"><span aria-hidden="true">✦</span> Scripture · Genesis &amp; Exodus</a>
 <nav data-site-nav aria-label="Scripture navigation"><a href="{base}genesis/01.html">Genesis</a><a href="{base}exodus/01.html">Exodus</a><a href="{base}index.html#lemma-finder">Word finder</a><a href="{base}about.html">Sources &amp; method</a><a href="{base}../scroll/search.html">Scroll Search</a><a href="{base}../scroll/lexicon.html">Hebrew Lexicon</a><a href="{base}../scroll/atlas.html">Reference Atlas</a><a href="{base}../scroll/editorial.html">Evidence Edition</a><a href="{base}../moons.html">13 Moons</a><a href="{base}../codex-atlas.html">Codex Atlas</a><a href="{base}../scroll/index.html">Unsealed Library</a></nav>
 </header>
