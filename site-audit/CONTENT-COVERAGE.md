@@ -76,7 +76,7 @@ Theory chapters, the claim register and the editorial evidence edition.
 - **Theory Glossary** — Live; Symbols, operators and witness terms of the theory system.
 - **Bibliography** — Live; Source architecture: project records, scientific and technical references.
 - **Ethics & Coherence Law** — Live; The living laws of the Codex: consent, non-harm, accountability and the stop rule.
-- **Historical timeline and claims atlas** — Planned; Planned fifth stage of the Scroll Library: timeline and wider claims atlas.
+- **Historical timeline** — Live; Two dated records, kept separate: the publication dates of the sources cited in the claim register, each entry linking to its claim in the Evidence Edition, and the Codex's own growth record.
 
 ### Artifacts and Creative Works (6 catalog entries)
 
@@ -101,7 +101,7 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 
 ## Repository and deployed-content coverage
 
-- Public HTML pages inspected: **171**.
+- Public HTML pages inspected: **172**.
 - Total master-inventory records: **467**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
 - Public-facing catalog entries: **65**; only explicitly curated entries appear on the Atlas.
 - Numbered archive folders are inventoried file-by-file, while downloads snapshot differences are kept separate from historical integrity data.
@@ -119,8 +119,7 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 ## Current resource-type counts
 
 - Deployed Markdown documents: 58
-- Evidence: 1
-- HTML pages: 171
+- HTML pages: 172
 - Numbered archive file: 140
 - Numbered archive folder: 7
 - Repository folder: 9
