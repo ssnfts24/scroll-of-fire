@@ -5,7 +5,7 @@
   "approved": [
     {
       "path": "docs/13-moon-whitepaper.html",
-      "sha256": "acc0c6882fb5e56ebecbacbdcecf96738d154e773bd97a183a06b5ab84f198e0",
+      "sha256": "e1a6130fb48464b485ffb74f3e23041565bfdd8e8b3a63e9dddb6693a8830307",
       "publicUrl": "https://codexofreality.org/13-moon-whitepaper.html",
       "status": "operational"
     },
@@ -17,19 +17,19 @@
     },
     {
       "path": "docs/ab.html",
-      "sha256": "d17f9bf6c8948bca90050324de135008d0348912b6251ba073078b438de53d7d",
+      "sha256": "ff02ac8c931c064249542afe143c152d98ca10877a425d83a715366c921055a7",
       "publicUrl": "https://codexofreality.org/ab.html",
       "status": "operational"
     },
     {
       "path": "docs/about-aaron.html",
-      "sha256": "ed9e0daf411bd59deb9c4a145b32ed9513e342d3a694df8d181fea26921a3135",
+      "sha256": "102682b9617b6cce4ae46493f86207bc4d589b55ac742f71168b6dcc5edc12e7",
       "publicUrl": "https://codexofreality.org/about-aaron.html",
       "status": "operational"
     },
     {
       "path": "docs/alignment-ledger.html",
-      "sha256": "d0f234f7266859dd6a397fafca6409b1c099dd0fe80c1089ef5f0bdfdc4a9c9e",
+      "sha256": "5897e59a38ec2141d009e190ca09dc29b6da652a500e7c330a0c2031bb0194d4",
       "publicUrl": "https://codexofreality.org/alignment-ledger.html",
       "status": "operational"
     },
@@ -136,6 +136,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/css/living-entry.css",
+      "sha256": "d49902831e18cccb0434524200e0a005364f7ccc3ade463dcdba2e8d73de4e21",
+      "publicUrl": "https://codexofreality.org/assets/css/living-entry.css",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/css/living-planner.css",
       "sha256": "b94659c8824a1c0aa60aad19818649d69878817dbde9c73ecf811445a9358398",
       "publicUrl": "https://codexofreality.org/assets/css/living-planner.css",
@@ -163,6 +169,12 @@
       "path": "docs/assets/css/living-time-sphere.css",
       "sha256": "0b26310649235f4109322f09e8e809c6781f536a36b0715c5134f8154d30ed89",
       "publicUrl": "https://codexofreality.org/assets/css/living-time-sphere.css",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/css/living-ui.css",
+      "sha256": "17639268cf6582d3c0293588aae8eba4c4478d41e08860c991d1ff2ca9f2be88",
+      "publicUrl": "https://codexofreality.org/assets/css/living-ui.css",
       "status": "operational"
     },
     {
@@ -1750,9 +1762,21 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/js/living-entry.js",
+      "sha256": "62db0866b644b63b1e0582e34764659a96d3565b4bd4bee10b7165719dd2698a",
+      "publicUrl": "https://codexofreality.org/assets/js/living-entry.js",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/js/living-time-app-enhancements.js",
       "sha256": "669c3a83b81927055f867b70b6d1dca4714d9dbdf064d89e9623b50bd4ab1ab3",
       "publicUrl": "https://codexofreality.org/assets/js/living-time-app-enhancements.js",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/js/living-ui.js",
+      "sha256": "5d23e9dcf53ba2241d912dce7a916f5b35714a19430549d60786206ceec71912",
+      "publicUrl": "https://codexofreality.org/assets/js/living-ui.js",
       "status": "operational"
     },
     {
@@ -2153,19 +2177,19 @@
     },
     {
       "path": "docs/circle.html",
-      "sha256": "c50ca4a948a7efc0ea74e93c998024a8ebfaf6c699ec031163b426c601a12073",
+      "sha256": "f5a64a29dc9ec5b8cfcafaaf5b7cf3cb33374b16cfff3182c14dbcaf60a76c2d",
       "publicUrl": "https://codexofreality.org/circle.html",
       "status": "operational"
     },
     {
       "path": "docs/codex-atlas.html",
-      "sha256": "3ea432dcd391aa8b32094af0d87e316ce57683a59957437946c94d4b698f0ff6",
+      "sha256": "31433b9fee9d51c736d9e60a4f9eaf9f6a57abdb2f15c54efa6354febdeb3618",
       "publicUrl": "https://codexofreality.org/codex-atlas.html",
       "status": "operational"
     },
     {
       "path": "docs/covenant-caravan.html",
-      "sha256": "c8407166622b7fc6089ef173a3dea9f20f9e7f4b3fce6ed1092d3f3c17b64eef",
+      "sha256": "9110091472325957b14522ba6be93d5482072378c51b7d709ec6c8999a98abf7",
       "publicUrl": "https://codexofreality.org/covenant-caravan.html",
       "status": "operational"
     },
@@ -2201,73 +2225,73 @@
     },
     {
       "path": "docs/downloads.html",
-      "sha256": "4948f91729ac7968f1109c9258425730a74ac52e0cfe30a2ba6fb4fb228ae64d",
+      "sha256": "a86878dc674e734a08be1e33e9b5b73c2e0038e275cf91bdfe0b8f094e3670ec",
       "publicUrl": "https://codexofreality.org/downloads.html",
       "status": "operational"
     },
     {
       "path": "docs/equinox-passage.html",
-      "sha256": "7b7c75fe0c309c74d50bc3597e9a89061666d811abd669a001c6f20445df6cea",
+      "sha256": "74939ebeac9c853192934e419a1156d91d78a283d70ab638186f0efacd8ecf5e",
       "publicUrl": "https://codexofreality.org/equinox-passage.html",
       "status": "operational"
     },
     {
       "path": "docs/ethics.html",
-      "sha256": "a3efbd5a8df2ce292f1701aeaeed193c3e4139fca2f1df1b7a71850b54d4321c",
+      "sha256": "cbe953d4a9b8648eedb1f16c2980c2e46e81862259f9ccaeb9c7cf1b94d50fd4",
       "publicUrl": "https://codexofreality.org/ethics.html",
       "status": "operational"
     },
     {
       "path": "docs/genesis-oracle.html",
-      "sha256": "1a4edcb62b7c70c25937599bcdf895c6d16f004a89ebb86bedf6174ccfff25b0",
+      "sha256": "402b4fd3bb7936e1cd6105de225c7da7ef268ed939d04b7b9bf37d62a4987f4d",
       "publicUrl": "https://codexofreality.org/genesis-oracle.html",
       "status": "operational"
     },
     {
       "path": "docs/glossary.html",
-      "sha256": "ce18942fe524e156e037384a13388e8e7c0a564df254b7e473cee7a979fe7f2f",
+      "sha256": "e6926974eda0fa86c7fba6b3dd149abde37bcfec1ed4ec3ec5e72f0d45678d22",
       "publicUrl": "https://codexofreality.org/glossary.html",
       "status": "operational"
     },
     {
       "path": "docs/glyphs.html",
-      "sha256": "5fbb18a699501d4dbf4016f1e6b75c2f5013d4931c2162474d85dcf230c835d9",
+      "sha256": "e8cbd990acbf42a9ae7ee0edf210429e9888225124999ba38c9abe87ea5426bf",
       "publicUrl": "https://codexofreality.org/glyphs.html",
       "status": "operational"
     },
     {
       "path": "docs/guide.html",
-      "sha256": "9d53c5e42894787c129d0567e6d072d42ed137ba3832c1545c1d81aa2bbacdc2",
+      "sha256": "aa4ced57229053da87c8f62d119cebc47ba325d7163e3fa6754ee3fac2f870be",
       "publicUrl": "https://codexofreality.org/guide.html",
       "status": "operational"
     },
     {
       "path": "docs/hub.html",
-      "sha256": "b1eb910f02da957212af3163c4d92f945b44ea30d64747bdb78ac37426d777ae",
+      "sha256": "2e4ae2bf4d16aaa2a821cb907e4e439ac8b7235fccfb853ae96eadbaf0bea167",
       "publicUrl": "https://codexofreality.org/hub.html",
       "status": "operational"
     },
     {
       "path": "docs/index.html",
-      "sha256": "b990043a4fe6760fdff695c99dcb00698f8601c0e89e61f8ee117284b9f85800",
+      "sha256": "16c7e2d6071cd9f9461a1157aba9303d681c46280b1c9d2909e043b24a6ac222",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
     {
       "path": "docs/invoke.html",
-      "sha256": "2936418d97769bcabd5201705d342c3b95e609aa14d366e3688ac95d8675ca2c",
+      "sha256": "14e30b07c16b075a81b0763ef586a5003b96972a57958397f03700360ea0d3e0",
       "publicUrl": "https://codexofreality.org/invoke.html",
       "status": "operational"
     },
     {
       "path": "docs/lab.html",
-      "sha256": "6aee53d284adca638a2d037b0c6c10dc66fbc7961b7c4ba392a262b5e110c764",
+      "sha256": "f7157c344ee76c5d46331312fd927e6e278928b0452925363cb39354133b3136",
       "publicUrl": "https://codexofreality.org/lab.html",
       "status": "operational"
     },
     {
       "path": "docs/ledger.html",
-      "sha256": "b55f5fa7b32e034e1f3982dadbe647f0f58e63d30ecd14d38f415a972df90612",
+      "sha256": "16ba93083ebaca0f45bdd5b0257c468e34e084052eead8570288aa9379f234cf",
       "publicUrl": "https://codexofreality.org/ledger.html",
       "status": "operational"
     },
@@ -2279,13 +2303,13 @@
     },
     {
       "path": "docs/micro.html",
-      "sha256": "ae87ee8c5217c5b195b5ef1909032f26f07b00d2d99e65fa17035d2ba8e8d5d7",
+      "sha256": "da7e66d33895cf59cacb32001f29bc058cc12fc15d8cd791b206b4c2cc7399d7",
       "publicUrl": "https://codexofreality.org/micro.html",
       "status": "operational"
     },
     {
       "path": "docs/moons.html",
-      "sha256": "ffd374b5c3e92b593f4f635770447929a97501dfaebc603104d689e7bf93ee55",
+      "sha256": "04174a08124416dce15f2d3cb7d5124668678a38e166ac5be9fce154bbd6f23d",
       "publicUrl": "https://codexofreality.org/moons.html",
       "status": "operational"
     },
@@ -2297,7 +2321,7 @@
     },
     {
       "path": "docs/scripture/about.html",
-      "sha256": "37c8b8ef9f84aeace816a94ef960ed8230eab6acea726f5a76a4d6d90ffbf625",
+      "sha256": "b9d6e88cbccbe2c057f21d7463048e75902b8d83344bfe77d1e53386832e3055",
       "publicUrl": "https://codexofreality.org/scripture/about.html",
       "status": "partially-reviewed"
     },
@@ -3059,559 +3083,559 @@
     },
     {
       "path": "docs/scripture/exodus/01.html",
-      "sha256": "c65ae7da402919b6dabcd8c41cdd69368d64a05691fc6e033a535ad05e3eeeb6",
+      "sha256": "461ba1becab81af51c7a22c922266f270457884e2e9cb8a6925d6ed1a52507ce",
       "publicUrl": "https://codexofreality.org/scripture/exodus/01.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/02.html",
-      "sha256": "f8f2ed6cd33e574b9402fb538fb256ad349775ab11636e696d5eb7650bf0de63",
+      "sha256": "f4d282c9a77655f60d10e273143b9f2f6ff643cb0f947a2b332c537ecd9968fb",
       "publicUrl": "https://codexofreality.org/scripture/exodus/02.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/03.html",
-      "sha256": "c7700a56a6296eb344ef63fe955044afdb3daf029d870bfe20310e5bdec21699",
+      "sha256": "419a99f2ddf1c714f63e6185116e32db7c5c297e73395049a7989139fe466fdc",
       "publicUrl": "https://codexofreality.org/scripture/exodus/03.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/04.html",
-      "sha256": "bcc7dcafbc6ec66a71bf300ad81ecc9967e00e8025bc335c117af3490c8af645",
+      "sha256": "d6e7eebdfee8728109f662f0d0f8e3afd087f9f4f7fdf9d868cf6b23f536c3de",
       "publicUrl": "https://codexofreality.org/scripture/exodus/04.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/05.html",
-      "sha256": "c7200140ac94873450dfa0236fe59fb3e7c34a05fd545e2a6ed47d0bc3438e48",
+      "sha256": "95bceff82ada4ca766309dcf2eed4bb5424da5cc3190de0b41ae305b928d95e9",
       "publicUrl": "https://codexofreality.org/scripture/exodus/05.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/06.html",
-      "sha256": "22869d83edead7bb66efcc45f18eb5722c661f7251510c29e09e423e0c3b5365",
+      "sha256": "9a26490f4bdcd350ad64e93ee195e602ca7b6735e48fc52c8c77dc74e7396e76",
       "publicUrl": "https://codexofreality.org/scripture/exodus/06.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/07.html",
-      "sha256": "a8dcf1742b76347f596dcc5d23c0252657979d7fb1c44dfed872d115d446d0a9",
+      "sha256": "db25d9655bad57915fdf8b8436473a0a600ccf6244e4dfdb601f6e73d1463d73",
       "publicUrl": "https://codexofreality.org/scripture/exodus/07.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/08.html",
-      "sha256": "cac1664c4d4d1f342a5001f52b5d6206c763260b920b2a163cd6a3421da7f2a2",
+      "sha256": "2cd8c286054c319c1683d978aa8402509aa6d454b4ed3ae4c56f0940116dc407",
       "publicUrl": "https://codexofreality.org/scripture/exodus/08.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/09.html",
-      "sha256": "39bbad50be96e2cea17071739081d748bed01e8a3ef393279350a1757586c9f8",
+      "sha256": "35aacc0ca214abdfcb17b0493f673afc879bb47258f384b7e1a8f4e94f15a624",
       "publicUrl": "https://codexofreality.org/scripture/exodus/09.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/10.html",
-      "sha256": "ac4546802116852a6bd9380110bd90a809feeb974514169454bd7eebf371a90c",
+      "sha256": "88f9cc8608adcab94e2face7f1f4e9e14d8dcb7ffd2261c15cbb5dd3e626c7d9",
       "publicUrl": "https://codexofreality.org/scripture/exodus/10.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/11.html",
-      "sha256": "a66c3e3ccef5dec30cfc9a803ba6a9ebb6daf92901e0a0ac215e72100b0152b8",
+      "sha256": "290daf1201e108a6792a7186711e55dbeb8c9f8faa9a4a497253f0d7a4545522",
       "publicUrl": "https://codexofreality.org/scripture/exodus/11.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/12.html",
-      "sha256": "af7c27b39a3ec8b433aeee08e8120a9ff047a1f4c8d2fdb887e550e030a0b2c2",
+      "sha256": "71b672aae4a0194d4496a52c749b214e23c17e6b78d9d0c0d9104f6a553686d6",
       "publicUrl": "https://codexofreality.org/scripture/exodus/12.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/13.html",
-      "sha256": "5ede5097cf64e83ec5f5ee66175e808d54cff791ea174934ec4553337b16ef8b",
+      "sha256": "f92d2b7288274989c59c07714caf76c46a1b00081562729208c9d9f0d96d158d",
       "publicUrl": "https://codexofreality.org/scripture/exodus/13.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/14.html",
-      "sha256": "8573a35ec9402b9915342cee0a090fbb196e18912888edc5f32a29b853886cde",
+      "sha256": "904400764231bdd158dea40f1b2aea6f6671d90eaa81f1c63d4d1b71d49847e9",
       "publicUrl": "https://codexofreality.org/scripture/exodus/14.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/15.html",
-      "sha256": "7cc79f9d59eb72239434f0d1054f4d93e17e611ad8dc1132eb1a262a195ecf85",
+      "sha256": "6cafbe52b885c9838b5811f51818bae45836c62e1605c04ad808891e4347c6e1",
       "publicUrl": "https://codexofreality.org/scripture/exodus/15.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/16.html",
-      "sha256": "306c56d9a0c647aee13b9c689ff6cdecd8705dcff68f0b3dffdb547f3ddb4e34",
+      "sha256": "34486ed72b7a2c0185a865e5a0b3edf2a3a37fcf490ccb2f54894640edb18c3c",
       "publicUrl": "https://codexofreality.org/scripture/exodus/16.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/17.html",
-      "sha256": "b88fc46af552c8cb8c0c5057e5ad2f0cd18d30e084e56dea4f34fe700d0ce601",
+      "sha256": "7541f2fd9083ecd270fe74a8393b20aaa869f596da380f3fb3b6b745e08ce9d0",
       "publicUrl": "https://codexofreality.org/scripture/exodus/17.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/18.html",
-      "sha256": "2a23fd3801fdbcca1bc77437bdc0e714185caab786795a597dc6f6a636452f3b",
+      "sha256": "c49d08171eb79f21b489a64f81e800a0e018457d0b4f3503cd22e6d478b787cb",
       "publicUrl": "https://codexofreality.org/scripture/exodus/18.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/19.html",
-      "sha256": "c2d4c0ab44468a6074744226898a1e0c5b2e091d15e3a3d120f46b95f5dc0a56",
+      "sha256": "8d5eb9ed6733347f28770c6971a1aff2aadfb32009e9f7e9714a4e5f120232a3",
       "publicUrl": "https://codexofreality.org/scripture/exodus/19.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/20.html",
-      "sha256": "b5e63b451eaa09293b414b38029251e893edda81a60e83d15f60f8e611d612d0",
+      "sha256": "4f2c91f4b8464770a3e350012bfd2f547f9875ff8c110da54d301091ac34187d",
       "publicUrl": "https://codexofreality.org/scripture/exodus/20.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/21.html",
-      "sha256": "bbe23f3e397d5574f4c8d482db0d42cd059f7718706d3c0a4be30b8d44be38e1",
+      "sha256": "48060b9a89426942ed931fe9711a8d9dbe61f506548ff9f56fd296e51b293815",
       "publicUrl": "https://codexofreality.org/scripture/exodus/21.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/22.html",
-      "sha256": "d6dcca8ae2fa2cb28ac259d079741c5e1ee36cdc46801999269d640a77b6b4c7",
+      "sha256": "58b270e1bac58915c219606655a8720614034f32e7ad333c96e7e93ec1ce5497",
       "publicUrl": "https://codexofreality.org/scripture/exodus/22.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/23.html",
-      "sha256": "b34dfee7eb4b98db7f5d89ba830065c6392c341f5773f7cd8c1cf1c47bf74ebc",
+      "sha256": "c0036a3cfe33c40d0c941b6622fbf89682c2248b1b6081b5b1154240c0e65069",
       "publicUrl": "https://codexofreality.org/scripture/exodus/23.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/24.html",
-      "sha256": "4b74c4777d1b419161357c6a504dc61fd8901b65268908a8758d8f932f08b69e",
+      "sha256": "61b5da18fed9e625f3c303bd8ba2edfcd179784f521b9c1de5511c719cc17ea4",
       "publicUrl": "https://codexofreality.org/scripture/exodus/24.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/25.html",
-      "sha256": "e33a85efccd7859c787d953e3aa0a329a391e62a19cdff276c0872c515e3a176",
+      "sha256": "c567df590cdaf02b34fe5d0b3e4a83b5db2f417eb09238a93cfe78c7be4b43a5",
       "publicUrl": "https://codexofreality.org/scripture/exodus/25.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/26.html",
-      "sha256": "3d09814abfed3ce31723fdef7b51c3249ef1f127e42ff8bceef61e48e7488eae",
+      "sha256": "20e7dd86b44b89161e9813b51ce413b5fcd0eddc229585e50abf9a6256dfe73f",
       "publicUrl": "https://codexofreality.org/scripture/exodus/26.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/27.html",
-      "sha256": "5489088f2e51a72e9549c608f80e78702e1b72453b5ddb2f5802e4bf127a6a35",
+      "sha256": "4f22eefabe57405c448d6884b3a14a6338588be5cf3e825ee1cb0c21ec1f0bc4",
       "publicUrl": "https://codexofreality.org/scripture/exodus/27.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/28.html",
-      "sha256": "068d35e8466728d8eaa0933738578e429e51ac205555c1fc7761e8e811690c71",
+      "sha256": "4e87867d7060cd61113fe25501d15df494e52b8725895e59a35061d6aa7e9d68",
       "publicUrl": "https://codexofreality.org/scripture/exodus/28.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/29.html",
-      "sha256": "fbf66efb416346411ab122401b2e6e81599dce0b18de1750ef0e5e1edcb8917d",
+      "sha256": "e6ccc5913bacc18834fb99cbcd273c037d2b07c87970df38b5e3948470802236",
       "publicUrl": "https://codexofreality.org/scripture/exodus/29.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/30.html",
-      "sha256": "db48c1a2fb442e27819b36a1fc6a1c4870f68ece1907ce44f3fb00ea9cd270f0",
+      "sha256": "1b6a888679e60566da46a17e969d6630a6809f2ff2c5d0b1f8d6d4fd7a37aec7",
       "publicUrl": "https://codexofreality.org/scripture/exodus/30.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/31.html",
-      "sha256": "7cebe983ae329022645e0557188f6d7f2dcacf32452aa560d3c8b954fc4c89c5",
+      "sha256": "70b93b800ef6b8bc528ccb04b213a1e31bb6e29af6982080316dce1be3b70d1e",
       "publicUrl": "https://codexofreality.org/scripture/exodus/31.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/32.html",
-      "sha256": "9519b3bfb14486e9d6f6617584655248549d408d5bd23a12689d0e7618e87f41",
+      "sha256": "cd742daaa22feccdc9ac6ec6624e58c99545237c8ccde768eb2b5fa84ffc7ef1",
       "publicUrl": "https://codexofreality.org/scripture/exodus/32.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/33.html",
-      "sha256": "921d6be3a9ccbcd1d7e9aab00164f15e5cdec8880807ef5a90ea4186b3dfaed9",
+      "sha256": "3352633d64c4f43d8d6402074a8edf88e49d0efe3eca04d0126abc312d1cb2bf",
       "publicUrl": "https://codexofreality.org/scripture/exodus/33.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/34.html",
-      "sha256": "97f304a765313469983770b2a3c1123eb7e2f2341fac722b829415715fe42a64",
+      "sha256": "d712b38d24c338f7583e86bbbccf7472e6931e328c9d1af0a06623b36586c550",
       "publicUrl": "https://codexofreality.org/scripture/exodus/34.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/35.html",
-      "sha256": "12bf1fc1fcf3a414a058fa7bcffc4c738bb6933d89f3cf890cb2bb37b61effbb",
+      "sha256": "792943dab7ce4f0a1aad07e876518baf709afdb2743d5da908f0cd3a1fa82374",
       "publicUrl": "https://codexofreality.org/scripture/exodus/35.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/36.html",
-      "sha256": "e0fbda11f7d8a6d0a409cfb0a99c5372ef428d0e027ef29117275a2a767e6be8",
+      "sha256": "d7a93beb3e15e958fbb5277c0791ba7c1ada5adf73e5eb98f241f069f4f23852",
       "publicUrl": "https://codexofreality.org/scripture/exodus/36.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/37.html",
-      "sha256": "5cb76bbb8684d69e7df54b14c41594994005e3f88bccbc3f15e4bd429e19a1ca",
+      "sha256": "d97e046fb752683db24900318dc30f500630092aa035434c29d7c80b30c99fb4",
       "publicUrl": "https://codexofreality.org/scripture/exodus/37.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/38.html",
-      "sha256": "48f89dbdc8cc4c3fb96872bf2de70a35a647a0f8df52646db6bea384b7e1ace3",
+      "sha256": "bca117906d39cf08086150450168d0d44390de9ec9183a4fd28b83921c665e3f",
       "publicUrl": "https://codexofreality.org/scripture/exodus/38.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/39.html",
-      "sha256": "48faa3c44d4d7634f767355dadc418582a0e5f05a12282c5a6415aa72c830200",
+      "sha256": "52479f83cfd34d7b22d65f7dad0be27856ec697de66582898f8ffeca32e4b461",
       "publicUrl": "https://codexofreality.org/scripture/exodus/39.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/exodus/40.html",
-      "sha256": "5d80e4e909ce930c2ab693f5b05755b2a7ab2b00ccecf27d044ab04078eca0d8",
+      "sha256": "504036880cec540dfe63b48462ff2cd451639014930a979719001d8ccc1bd8fb",
       "publicUrl": "https://codexofreality.org/scripture/exodus/40.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/01.html",
-      "sha256": "3121ed4ab3fbe0d215e64d6e9822518670e1b1e512cc211019c37f293a86b33f",
+      "sha256": "b46fa5d19be749579bb03c713c5d7b9d06ff8a73c5d8af9807005f5814a21357",
       "publicUrl": "https://codexofreality.org/scripture/genesis/01.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/02.html",
-      "sha256": "cd22fbec8d6275dad2f0565e526b464811f82766efdbd16d52f22c92692a8a4b",
+      "sha256": "5c908a127f3bfe3c9ed01cb562d6c69fc355e4892de00659f53f567ba07c5cd4",
       "publicUrl": "https://codexofreality.org/scripture/genesis/02.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/03.html",
-      "sha256": "326931ced2a2d1b9cf658b290678089e5a61d1ee1cb1148dc743785b122b403c",
+      "sha256": "ca5191fe30aa40c9bc46a6b35c0a51391eff16d3aa6c022ed7f1c1e6fb746254",
       "publicUrl": "https://codexofreality.org/scripture/genesis/03.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/04.html",
-      "sha256": "a226d9a29fcd1809764ae9d771cf792a712a27cbdd4c0abe4702b3b86b20feaa",
+      "sha256": "38b3f04a8caf6c9e3f5719715223ca6b6e69a93195a4d9f06e609c948095c8a0",
       "publicUrl": "https://codexofreality.org/scripture/genesis/04.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/05.html",
-      "sha256": "147d470801c58776a15fe66e62c93a5c1b632ced0bf1c336c05b9a7d403b2b91",
+      "sha256": "6ff50a35dab2e000ffeb380f0d7e1ed2080d7ebc2234f4f37dddfc7fb3581a50",
       "publicUrl": "https://codexofreality.org/scripture/genesis/05.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/06.html",
-      "sha256": "0904f6e7ac914cf2c5658238987bc30f71e940131b42b21b8ac7ad05a5d56271",
+      "sha256": "3cabf4c740cf5b43ba8a4c959ea63b22551689796adc22fffa885445a0f3f83c",
       "publicUrl": "https://codexofreality.org/scripture/genesis/06.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/07.html",
-      "sha256": "eb5aba45ebe0ff2d8d886435d38b8c3dbc444d306a9685847e4c9caeb2c8d0bc",
+      "sha256": "82d8775e666b5a58e8e1c66301265e06fb3cdf52a2e4ee608f6e8b23d81de1b1",
       "publicUrl": "https://codexofreality.org/scripture/genesis/07.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/08.html",
-      "sha256": "b3cad17195b417604da25a2570b6977ff9b09308b32205363e3f376ee4c46bb4",
+      "sha256": "ddce0d801e0feeeda743867126e2f3f8a4c50cda200c4130af3c556a04997610",
       "publicUrl": "https://codexofreality.org/scripture/genesis/08.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/09.html",
-      "sha256": "7b90cee6d60d5f72d09a4b83a72efe78d774b8e8bba6808e88639c96769fdcdd",
+      "sha256": "d4fb7757abfb73f521fc42c9f048d63e596e67a72666cbc76d995082a37a1eee",
       "publicUrl": "https://codexofreality.org/scripture/genesis/09.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/10.html",
-      "sha256": "213c754e73bff5f7c43ebebcc8ec94eccd831efe76098cc03001270af27a9b4f",
+      "sha256": "97c5704847858ac02e063bd3b86c1ab37481320b771248e4d46a1896bbbbd24e",
       "publicUrl": "https://codexofreality.org/scripture/genesis/10.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/11.html",
-      "sha256": "5d0da64208895d0fbef366d571c78c554cf57f2b7540c98171ece47fb6eec021",
+      "sha256": "95ebefcf2fa7b05469fc2dd78c5da37fc68ced3face2c483879deacc7a94be4f",
       "publicUrl": "https://codexofreality.org/scripture/genesis/11.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/12.html",
-      "sha256": "01a4de0ab763e8d7f7fd4a9426b2f4b3b7456fded98d498b9b896ce7e6be7c26",
+      "sha256": "f1655cc11dbbd073a8fff5b3eff77b167a513442d5a0f7bb7e02131d9b2e0e47",
       "publicUrl": "https://codexofreality.org/scripture/genesis/12.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/13.html",
-      "sha256": "a4934f96a4771f669633e4e8113a09eb3740788d0274774233145b4da2ff0ff1",
+      "sha256": "27dd975abeb725d43b5d0346c0d78f9a62ec055de04a4d340647147ea467aa3c",
       "publicUrl": "https://codexofreality.org/scripture/genesis/13.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/14.html",
-      "sha256": "afc348221412ba4cb21d2b31f2af75e135ca03834a2f6b08781c84f2400947e4",
+      "sha256": "68020baa5c2386693d6c5053752cb92a61039a39eb95e3cb37166938efe041de",
       "publicUrl": "https://codexofreality.org/scripture/genesis/14.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/15.html",
-      "sha256": "6a7f39fe5c61bf64cf5d07643af33aa9630161a779be694761928d41dccf8531",
+      "sha256": "58a51c74a051e187d102f3dcc00317212a8172630fd25794455c9a2585aff9c4",
       "publicUrl": "https://codexofreality.org/scripture/genesis/15.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/16.html",
-      "sha256": "336360dbbac2aa88dcd61ec7173d82789db9a81d74e92b61484760793cd795f9",
+      "sha256": "58e84b0b03669bd6b1aa4bc758863d3e2077a80c3e5f2c4fdb62e42760d27f0c",
       "publicUrl": "https://codexofreality.org/scripture/genesis/16.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/17.html",
-      "sha256": "b87dd6b84393e0c6e9cbcc260184e09afe468387cc32cd093ec5994032ca29ca",
+      "sha256": "bd6a9f8773dbfd0f21379879d97c76b6554e748e08e7a46cb0f6945f82dc2521",
       "publicUrl": "https://codexofreality.org/scripture/genesis/17.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/18.html",
-      "sha256": "673d84bd27da1035063d02e29f462b5d7aa0b8e51c957d47ab09a5c3e1864ae4",
+      "sha256": "b010844f908c19521ffcc603b367874068efb3544f2f9a8c7138c11f46972a80",
       "publicUrl": "https://codexofreality.org/scripture/genesis/18.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/19.html",
-      "sha256": "c9791e90549cccecbf9c208c2872b834effc860a95c949aeeaff23031339a853",
+      "sha256": "bf2aa1699b03a6a180ec9a567a91493f94a6b0cc92d73aefd2826d4eecf8ac36",
       "publicUrl": "https://codexofreality.org/scripture/genesis/19.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/20.html",
-      "sha256": "a8d85c1feebdecd4a7f1d3c4d89f7e07a31d96aaf7ab1b76fcdde6bf9f8b3bcf",
+      "sha256": "19ecefbccfafa08ef739b252cb223bc7fcdf8007ab1182479fa916d1ad33f641",
       "publicUrl": "https://codexofreality.org/scripture/genesis/20.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/21.html",
-      "sha256": "ae7254dbe311c21d14c17989ff47096dc990060d73dc8734f9a5e24644627b55",
+      "sha256": "e30ede7465a3db78f938cca5280061e0527de70e540d2cb53503a9361ba8270e",
       "publicUrl": "https://codexofreality.org/scripture/genesis/21.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/22.html",
-      "sha256": "96baf810eaa18a6b33cab3e8b3004e0075cf37a7dce335fc276a925ef014c315",
+      "sha256": "fb1de604c8b69b3da5eb7635e735d34e62f2abaeeef15be61d103a51a3c47a66",
       "publicUrl": "https://codexofreality.org/scripture/genesis/22.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/23.html",
-      "sha256": "39196fc4bb96a6044fe134d23b2ff9ea53f020042f3d05f404e45abb6a519603",
+      "sha256": "dcf577d047ebab886b12ce0290096339d0439f08164a66f0e970e956edd10a73",
       "publicUrl": "https://codexofreality.org/scripture/genesis/23.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/24.html",
-      "sha256": "84d71999e0400205d2f5e5d0eb6ec4416e1598906e5525ae06d38cc31dc83a3a",
+      "sha256": "a72e0c598aa7bd4720bb2d4a5a46f47a0e11c4b0df66ee71aaba4c809bf49bda",
       "publicUrl": "https://codexofreality.org/scripture/genesis/24.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/25.html",
-      "sha256": "4421f24ace7a47b6ff607ff54e38aa77dc365dd6b9a17f895daf8fe1d3cf532e",
+      "sha256": "369212053983b2c614068185e75a9913972381609b2f3da8024fc31d7e5c69e8",
       "publicUrl": "https://codexofreality.org/scripture/genesis/25.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/26.html",
-      "sha256": "592cb5534a977d397b372cc51751a02ff4f55937f5ae6dd2130cbc25fa8c96c2",
+      "sha256": "3524073f5be30347d0901d39924a053cffae3cabc7f7d004b26193034ccc73cf",
       "publicUrl": "https://codexofreality.org/scripture/genesis/26.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/27.html",
-      "sha256": "f9feda10e1c72d04fce816d3c01beee9e1f0fd4d7fafe73315ad52eaf50dba51",
+      "sha256": "a82e448fe828da69f96cafdf536d1fdf5182d844d3b4956cae11d21f9d246997",
       "publicUrl": "https://codexofreality.org/scripture/genesis/27.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/28.html",
-      "sha256": "04b6c4f15853a2999785a9de34facdf30c068446febefac1ebffc2c878a8680e",
+      "sha256": "46f9238d73fb8e99692f520ef90e55049b51b4adbb5ff893e65ebf9a511b7f89",
       "publicUrl": "https://codexofreality.org/scripture/genesis/28.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/29.html",
-      "sha256": "15166bc41dd2362a48a37c1f0bd6aefc5f2de8af18827a4888d7f24f6c31665f",
+      "sha256": "52852a71692da35560651db3cda9dea15cc7e63ebbe9ee5f4355beee26f9dcf2",
       "publicUrl": "https://codexofreality.org/scripture/genesis/29.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/30.html",
-      "sha256": "3a5824007e15b4963941c893f92f9e6eab4d0d32e7c109bbade2641ba171f228",
+      "sha256": "71cd6f69318b5adca0eea300d4b01f8ed8cb8c1b6a8fa1096e0e092a86bb2014",
       "publicUrl": "https://codexofreality.org/scripture/genesis/30.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/31.html",
-      "sha256": "2aed0e8b364c83d7aa24bc83217514525bc52fea6a3205cabd13dc9c025978c6",
+      "sha256": "f892ec049bcf79d959cc620b381415741b9b7427e71db7247d0d500bc972a9a4",
       "publicUrl": "https://codexofreality.org/scripture/genesis/31.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/32.html",
-      "sha256": "2ada921ec7aa2c49f4af94bc257db7bd2e37ef4d8973eaa3dd898499be60c94a",
+      "sha256": "6a4afc46db3b784bbbcd2ff2e0d559e581bcbbd8f6efaf671cde4ab7a47df7eb",
       "publicUrl": "https://codexofreality.org/scripture/genesis/32.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/33.html",
-      "sha256": "f8977ba6d9758216da5e937e89ab58fc31dd136d14c81b3da13bc0c1ec6d5fb2",
+      "sha256": "9b9150101454007aad497172e299ff0c7ae14383ffdce369e405cbb37679e960",
       "publicUrl": "https://codexofreality.org/scripture/genesis/33.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/34.html",
-      "sha256": "ebbc4965d8eb32d84f488feed8b55f1d02fa4df726c08e8c7b1a6a6eea8ca349",
+      "sha256": "d398829f81eaeee3a4a7bbc4517c193673719bee7b7181c90202a6bf0d4b2cd2",
       "publicUrl": "https://codexofreality.org/scripture/genesis/34.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/35.html",
-      "sha256": "91d56b31bebfbaee4e4e21d2b630d953273615e852d2b9e76586678155f33777",
+      "sha256": "b52eb5a61e8bd426e54962f77ec7dc79c02857c9c02ce072f524cf3b9664d3a7",
       "publicUrl": "https://codexofreality.org/scripture/genesis/35.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/36.html",
-      "sha256": "f307dbdda806d64497fffc691cd74b1a41209b323fdd0df933dedfd344c79906",
+      "sha256": "2f6a541543ae00fa924e18ddee5e21a4b5ca1c7ccc0c462622a6c864209c5e69",
       "publicUrl": "https://codexofreality.org/scripture/genesis/36.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/37.html",
-      "sha256": "52b936c89007b4d038746967f34b9e46f500a53803467423e9b34cddf0dc5d56",
+      "sha256": "ee9f7b63b034adb48ea11b101894b9cab1dd0873c1e819588b96bbc53d783fa4",
       "publicUrl": "https://codexofreality.org/scripture/genesis/37.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/38.html",
-      "sha256": "1b485359d4dce8f686ec912c2b5d3b0199deab62ebb196b79038dcb545205603",
+      "sha256": "b6433b928561b2980267e8ee91ad4bd18b1d74d7e7a8c5d9bf1b316e7bdf0b4c",
       "publicUrl": "https://codexofreality.org/scripture/genesis/38.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/39.html",
-      "sha256": "c3c5d15ceb8367f8e53b9613377156d35f534264ebcda97963485c3781ca1067",
+      "sha256": "a7666d27fc4a0c73e9a392e5b21af387ce90d16f823f32ae890c1dc350905e3f",
       "publicUrl": "https://codexofreality.org/scripture/genesis/39.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/40.html",
-      "sha256": "2ad24e0feb39d9598aa5fa98de0d358d04a286fe930e4269781946be22f38332",
+      "sha256": "5460f233fba1a4e620d275edb945bc93a799e4985704b563062b9bfcd8d03667",
       "publicUrl": "https://codexofreality.org/scripture/genesis/40.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/41.html",
-      "sha256": "8ecfc631fffed7e1feb478691ab90005fb369f2bb21db9cf79ea683ee8722ea4",
+      "sha256": "df12f197dccade9544ff952f9ee3c20be2a558015a876fe6381c6407c2b24a7b",
       "publicUrl": "https://codexofreality.org/scripture/genesis/41.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/42.html",
-      "sha256": "c78f5ea8a7f879ebbf41e4f8eb599bdbfd2470251830fbad9440168456e2f214",
+      "sha256": "df1a76f00acb74903aa64dc800081c8fd34b71b5085cc7b46463496e99913e17",
       "publicUrl": "https://codexofreality.org/scripture/genesis/42.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/43.html",
-      "sha256": "50d5b028a236b66ec61ad43f613a8dd36f27ef9f5bf76fa5da05101f3f47b0da",
+      "sha256": "01a8b812f0682f7591092de3dd0d04ddac079e5e1e6044630304fa8e1058922b",
       "publicUrl": "https://codexofreality.org/scripture/genesis/43.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/44.html",
-      "sha256": "05f12bf67c3150debbf6b7b0f9d5f27139909c91529f93a0070d9ee687539b23",
+      "sha256": "b317a073555398302d0813324651d31b701aeb7b7f6dd544ed0d47d5c89f6413",
       "publicUrl": "https://codexofreality.org/scripture/genesis/44.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/45.html",
-      "sha256": "65d4d502b2553d69c334532d076d1fbeb5004ee3270bb9e43f9a81f394dd71e7",
+      "sha256": "972c785c6237d5d3962806dd9a56325cd86721f6b26eec5b1159786a52a6fa9a",
       "publicUrl": "https://codexofreality.org/scripture/genesis/45.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/46.html",
-      "sha256": "8e6730a04f4988e744e59b6cfe3d9e0adc8f3cf2b4bba80ab956d466830e1130",
+      "sha256": "467b133999a6e5ad6053893fd9d2b9ae17c5452901eae57f67a684f62151cd1c",
       "publicUrl": "https://codexofreality.org/scripture/genesis/46.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/47.html",
-      "sha256": "8e7d598f269f17f1efe8445767c27c6ed1c97f5fba6687d98438e25e999dbf34",
+      "sha256": "daaba09f90ad87b3884913760eb6f2d2e42e627c5a1009cae25dca568f1aa355",
       "publicUrl": "https://codexofreality.org/scripture/genesis/47.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/48.html",
-      "sha256": "677f769e7db8af1b952199cfa0646c4c35b7fad0944a8402c426e48a38c386c5",
+      "sha256": "df5db88875ae37756ae84be7481768c84193bc55291b313ca48a600f8d7e9c80",
       "publicUrl": "https://codexofreality.org/scripture/genesis/48.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/49.html",
-      "sha256": "86b9d8a29e67e84f96e15b11b1ee61322d04eb1d444c21bdd5e292f2dcacbb79",
+      "sha256": "a0d78ce39c9ef69e2f3061f1646023dd6412d9f97b4cc25b40af69c68a1cbd5c",
       "publicUrl": "https://codexofreality.org/scripture/genesis/49.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/genesis/50.html",
-      "sha256": "a470d4ddc33fdc960915b1e244f89e88b6ecc639920996bb4d19b04216d10350",
+      "sha256": "0f3491c0599ac8ed2d48fcbad44b3b91486d573dfa5231670a67e01d2a2dd480",
       "publicUrl": "https://codexofreality.org/scripture/genesis/50.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/index.html",
-      "sha256": "77dbfa5f4fe2e283ddadfa31e7501c9b15241f50c7c256fa8a202799ef5c8c7c",
+      "sha256": "44464f971d924455f7c2a8fff40c8ca4a301cb9645e7c8409fdc483e7e221149",
       "publicUrl": "https://codexofreality.org/scripture/",
       "status": "operational"
     },
     {
       "path": "docs/scripture/lemma.html",
-      "sha256": "0bbb2fa645e9b3df06eb0da504b7ae15051e47c21452245420163264f214d283",
+      "sha256": "2939874faf7206084a3df5173ebfb0197bef52a71faea38b681b8a9e6d01a39a",
       "publicUrl": "https://codexofreality.org/scripture/lemma.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
-      "sha256": "a38c4180a45fbbe8d573c2d86e146abed75848a1c48a6bea9af94b57fe03e879",
+      "sha256": "13ac2076ec3e36d5451336690cd4b5e788df2fb2fb5a5e095dc5da7a7b2bc174",
       "publicUrl": "https://codexofreality.org/scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
       "status": "operational"
     },
@@ -3695,7 +3719,7 @@
     },
     {
       "path": "docs/scroll/atlas.html",
-      "sha256": "aaeea5aa525a58599254934cfe42be181c6e3f5232ef94de501adffbb52e8656",
+      "sha256": "48bfe658e541563d323a57566f24d5422f272ba5049d0d4e100a34ce2def5b7a",
       "publicUrl": "https://codexofreality.org/scroll/atlas.html",
       "status": "operational"
     },
@@ -3719,7 +3743,7 @@
     },
     {
       "path": "docs/scroll/editorial.html",
-      "sha256": "537658d2e0e536b2907b3f76e03534ce6d92870f2fcd5c562e4060b846c41242",
+      "sha256": "24d2db15f89c2b581c7be5a3a0b899617a01bd6f1b085fc744a17a8136731427",
       "publicUrl": "https://codexofreality.org/scroll/editorial.html",
       "status": "operational"
     },
@@ -3737,25 +3761,25 @@
     },
     {
       "path": "docs/scroll/index.html",
-      "sha256": "4175d349cbf1f25ac6c8588480b9ca663093f69778015ea5dbff1b75cf9c8abb",
+      "sha256": "4e08334d46d022818a8abdb94f31096d5a3a07e18672e539bd8b1fb024d6c054",
       "publicUrl": "https://codexofreality.org/scroll/",
       "status": "operational"
     },
     {
       "path": "docs/scroll/lexicon.html",
-      "sha256": "ef23da9c51b15b46ce79635b1e609cb0b7896959c1c5b70c663e51d441fe73e9",
+      "sha256": "615533d675d4bfc5add20eb998a3d17192bd1cdbfad967dd7460b1d68938873b",
       "publicUrl": "https://codexofreality.org/scroll/lexicon.html",
       "status": "operational"
     },
     {
       "path": "docs/scroll/reader.html",
-      "sha256": "0fda25cc6c1e4897f4248292d334c748ed1b2cf173ee17a0f530020a2a76506b",
+      "sha256": "97bc8da6d847f9c83ace488941fa95703cad92b66f2d2accb73166e1cb048344",
       "publicUrl": "https://codexofreality.org/scroll/reader.html",
       "status": "operational"
     },
     {
       "path": "docs/scroll/search.html",
-      "sha256": "9fe9fa4a8e30d93aac695b36f225fabba67d62f05abf0bd6e672a30c1e57825f",
+      "sha256": "5fde921aa231eef8aae9dc0c904fba26669cd2896bf49adb10e6064db445a5ce",
       "publicUrl": "https://codexofreality.org/scroll/search.html",
       "status": "operational"
     },
@@ -8573,265 +8597,265 @@
     },
     {
       "path": "docs/shop.html",
-      "sha256": "18c72b29346363ba670147ffdb8e5fe7d5a8e79924a7300d42d0f3fc5a2086ed",
+      "sha256": "b868812abef87e815665d447021f37af0ba82650cb94dc4ddd2e086c3901ffaa",
       "publicUrl": "https://codexofreality.org/shop.html",
       "status": "operational"
     },
     {
       "path": "docs/start.html",
-      "sha256": "6204c10102ea644dde1616e55d5d25f368e24970852e6e956126d507bd6d9f96",
+      "sha256": "2ec35f6bb192775c69a52f761f33116c0397a07bfee7b8de37239af4ec8713fa",
       "publicUrl": "https://codexofreality.org/start.html",
       "status": "operational"
     },
     {
       "path": "docs/systems/archive.html",
-      "sha256": "5e7d4c309b9074ad7a9f20f794b47b197cf403236b252e52fa1bf94092d4cef7",
+      "sha256": "e07598dcff394392c0b1a6406715fa599782134f2a28fc4a45fcfc008f382fce",
       "publicUrl": "https://codexofreality.org/systems/archive.html",
       "status": "operational"
     },
     {
       "path": "docs/systems/frequencies.html",
-      "sha256": "01f55e43ef09de8797a33bf9dbfdadc43e2950af26fa80d627a220750317a995",
+      "sha256": "c530e3dcbd543c40b8d097807737519b2f88c49b05c4a0fe95e8cb5c357703a3",
       "publicUrl": "https://codexofreality.org/systems/frequencies.html",
       "status": "operational"
     },
     {
       "path": "docs/systems/mind-renewal.html",
-      "sha256": "294b626408a04f09060219f7172ac6f5e20bcc4193e6b635387e240d3c85449a",
+      "sha256": "f5a431b7f806b3f8cb6338b99635ed9c79c7f860cc765fe043405f4f50fa9708",
       "publicUrl": "https://codexofreality.org/systems/mind-renewal.html",
       "status": "operational"
     },
     {
       "path": "docs/systems/recoder.html",
-      "sha256": "80667f494709645c0b7862827a371ac71a05986ed90caf731b1c9808764f1d9c",
+      "sha256": "a75be2ffb00730c4a058643faebc8d9664633b0948a2ae060c7b898fec89eda7",
       "publicUrl": "https://codexofreality.org/systems/recoder.html",
       "status": "operational"
     },
     {
       "path": "docs/systems/t-7.html",
-      "sha256": "3ab39536b2f07022bd3ac3301e8882a0f54ae1a84905be90a544c1dbfd0b2f8f",
+      "sha256": "2b091074f0b4a01ebd7e8b7e8f08b3ecd8bc1604879f72393db57c748b4780ae",
       "publicUrl": "https://codexofreality.org/systems/t-7.html",
       "status": "operational"
     },
     {
       "path": "docs/systems/witness.html",
-      "sha256": "371bcf14327dd1adeef2dfdf3acaaf27508f34b66172100cfcff18c50e32a3e4",
+      "sha256": "21d179c7522e5cd4e5034620add6fd7b1ebe3c0a7a38234df281ba91d84cbbd6",
       "publicUrl": "https://codexofreality.org/systems/witness.html",
       "status": "operational"
     },
     {
       "path": "docs/teach.html",
-      "sha256": "269e725f5edb127a455acd09680cf5bf5872e9a941eba62292f942a526ea5164",
+      "sha256": "9cd65ecf0c76fee3ad6cf613e51a297a79a1c7cc2f41938122961046f80b7c8d",
       "publicUrl": "https://codexofreality.org/teach.html",
       "status": "operational"
     },
     {
       "path": "docs/theory.html",
-      "sha256": "ab54a96c53c3071a2601eddbf5b41b7c1d85c3f81fcc405f294a5a01a3a580a9",
+      "sha256": "086ad79fe4ca27ea3a49393d76a75e66aea45c950b4b5cf7382d7f694fce639e",
       "publicUrl": "https://codexofreality.org/theory.html",
       "status": "operational"
     },
     {
       "path": "docs/theory/artifact-theory.html",
-      "sha256": "5134f5e26467d3269a8ea5ac56213679fe4dd93b7a2aaf3ec9f3352aaa909154",
+      "sha256": "14659b17b5c05b984235290bcdb8286fd1c1bc19f80a9318f1973999dea3e283",
       "publicUrl": "https://codexofreality.org/theory/artifact-theory.html",
       "status": "operational"
     },
     {
       "path": "docs/theory/bibliography.html",
-      "sha256": "41c4eb33f963eb3bf9a4d04ec79b31648fe8a2600f4d91250d1ca4325467f7dd",
+      "sha256": "d1cb8a1e865609cd190c982723739d6bc310f664cfcec70bf842498c0164c35e",
       "publicUrl": "https://codexofreality.org/theory/bibliography.html",
       "status": "operational"
     },
     {
       "path": "docs/theory/canon.html",
-      "sha256": "eac057d6039e99c53fb6c522504c0ee10fa85372d6d42dbbe03556408377a5a1",
+      "sha256": "a0f83379ee87d4bf0fce125452aa8f932bf736570ca308150b769908abe0f62c",
       "publicUrl": "https://codexofreality.org/theory/canon.html",
       "status": "operational"
     },
     {
       "path": "docs/theory/delta-framework.html",
-      "sha256": "040e363be9d0b1de6f36fe3bd52a3a6429410eb76a149740d9e17e843e026862",
+      "sha256": "8e3a28e9c40dabf807b69353c6c7dcd5613128d56bfc207914c092a5195c02ae",
       "publicUrl": "https://codexofreality.org/theory/delta-framework.html",
       "status": "operational"
     },
     {
       "path": "docs/theory/equations/eq00.html",
-      "sha256": "5096cb621db7eb8275c96fcdbaead50c56dcc0e853d83aedc2ac21f3bb8e9bdf",
+      "sha256": "09a21fa813622a1f9c5533bed163e539697516dccd6b95bf65bd48abb4d41844",
       "publicUrl": "https://codexofreality.org/theory/equations/eq00.html",
       "status": "operational"
     },
     {
       "path": "docs/theory/equations/eq01.html",
-      "sha256": "24f91a8c5aaa4f951f6017a1b3029763724840ccfdc75ca94ef57bd2e919d160",
+      "sha256": "f0f44b2fcb8cf46bbd41f72553649f5f64b095f3f77b3967beda7991130b1f51",
       "publicUrl": "https://codexofreality.org/theory/equations/eq01.html",
       "status": "unverified"
     },
     {
       "path": "docs/theory/equations/eq02.html",
-      "sha256": "39895acf89e6073c903c2cc70cb9333cc19914e5a9077500e0b1893c866310a9",
+      "sha256": "80018915fb7af76da307f8acf9f54ee4ebb80c3b3c8e0e5efc160fd09c07942e",
       "publicUrl": "https://codexofreality.org/theory/equations/eq02.html",
       "status": "unverified"
     },
     {
       "path": "docs/theory/equations/eq03.html",
-      "sha256": "0403ed2a5a2d0315105bf17883db749d74d86d563843e67f40b9537e3447ef6e",
+      "sha256": "f82552986e0ae981bd2431f0c67fcfbb915963bc13c636466d65e73055f7a935",
       "publicUrl": "https://codexofreality.org/theory/equations/eq03.html",
       "status": "unverified"
     },
     {
       "path": "docs/theory/equations/eq04.html",
-      "sha256": "213bc3c051dd7429dd2d3b49a9367feef229c6a2c6205fef38424c444e1a8925",
+      "sha256": "28a9f363d88696eb401202820778c49851daa27b7773caa4d5a592a060978e14",
       "publicUrl": "https://codexofreality.org/theory/equations/eq04.html",
       "status": "unverified"
     },
     {
       "path": "docs/theory/equations/eq04b.html",
-      "sha256": "12db8fa309c69b06e215b9d3a23cee06ecb277935f14f97191cc80f5da6c06c5",
+      "sha256": "a6c0cd79db25b2368084c284559fe544618b614eec807de912fd64389eb85779",
       "publicUrl": "https://codexofreality.org/theory/equations/eq04b.html",
       "status": "unverified"
     },
     {
       "path": "docs/theory/equations/eq05.html",
-      "sha256": "277202930f2154f6c9b044ca24ad1e9ba5d697dc8fc5170bf308aa635916bbef",
+      "sha256": "8fb6f10ed35704e6657ca642d218f7c980e9f8f2056173d55a09265bfa37004f",
       "publicUrl": "https://codexofreality.org/theory/equations/eq05.html",
       "status": "unverified"
     },
     {
       "path": "docs/theory/equations/eq06.html",
-      "sha256": "aa8f49ac4f2aea353fc3b6235a021de22a85d83141501cb6a3b593c2d74f69b8",
+      "sha256": "c6ad286a8f74f7fa53c27fe49083b64bae6ca215483b8be6cdd4d8e490a9fa68",
       "publicUrl": "https://codexofreality.org/theory/equations/eq06.html",
       "status": "unverified"
     },
     {
       "path": "docs/theory/equations/eq07.html",
-      "sha256": "d8702da73ab9edc38d36129faac9c4bd70cd9f57632f3f4624293da870929b87",
+      "sha256": "380e5d4960c49f325615152d7565446abf1c890220f885c8357bfda892a4b2fa",
       "publicUrl": "https://codexofreality.org/theory/equations/eq07.html",
       "status": "unverified"
     },
     {
       "path": "docs/theory/equations/eq08.html",
-      "sha256": "648cd15a5227246955e470c7d068070be46126d248e6365d66fb159215339aa8",
+      "sha256": "8f07cf290d50b3c4734612a559911fe1b29638a5c27d8387e89bcd0eeb607104",
       "publicUrl": "https://codexofreality.org/theory/equations/eq08.html",
       "status": "unverified"
     },
     {
       "path": "docs/theory/equations/eq09.html",
-      "sha256": "8214d33483cf57ff614559cfc4912706d72fd7854d0b3178e4331842bafa85b2",
+      "sha256": "6dc65d6ebb916d256df6890339bfb53b0c6e32d5b8bab7671e5c883bb17995a8",
       "publicUrl": "https://codexofreality.org/theory/equations/eq09.html",
       "status": "unverified"
     },
     {
       "path": "docs/theory/equations/eq10.html",
-      "sha256": "96e6f48bab67820b8f71d29b872e7a276aff3098f1baac919ca3ec78db92c213",
+      "sha256": "9b9938b4be8e971d5f3fc07c7393288df7a1af08994e315910183285cb97c356",
       "publicUrl": "https://codexofreality.org/theory/equations/eq10.html",
       "status": "unverified"
     },
     {
       "path": "docs/theory/equations/eq11.html",
-      "sha256": "2027261aaea7ae7e553e113abfd0979d0c147806e2d327066482027984b69336",
+      "sha256": "ead38183e6ca023b64a57b0f065a7e859da14ac28df2d7479367736acb4595c9",
       "publicUrl": "https://codexofreality.org/theory/equations/eq11.html",
       "status": "unverified"
     },
     {
       "path": "docs/theory/equations/eq12.html",
-      "sha256": "5ac37ba2d01051d5f9188fb62c6f5009029090ea781c40556029ff19809c53a5",
+      "sha256": "914886bbe1ac938653d1e93e462087b563e87a84e3ad55bb0d80449e8082f977",
       "publicUrl": "https://codexofreality.org/theory/equations/eq12.html",
       "status": "unverified"
     },
     {
       "path": "docs/theory/equations/eq13.html",
-      "sha256": "cbe42515754e94ae1b87502a7b1e383045a722a4fc6c1ab2698383f3d5d2a79b",
+      "sha256": "6f388351cf62d84a59adab7dc30478e92ff26e84d5d750d93b7565072b0655ef",
       "publicUrl": "https://codexofreality.org/theory/equations/eq13.html",
       "status": "unverified"
     },
     {
       "path": "docs/theory/equations/eq14.html",
-      "sha256": "33483adfb7fe73e489a62ec2c32a9be211de9d3fd8e4da08ac75108871510938",
+      "sha256": "2cceff333a98c93192c0bf1cbd292cf0c26e063d286f540853433610bcdb2261",
       "publicUrl": "https://codexofreality.org/theory/equations/eq14.html",
       "status": "unverified"
     },
     {
       "path": "docs/theory/equations/eq15.html",
-      "sha256": "b7493084e47c400c66f8f521bbadef587075e7eb933f3e52687484a0dd9249fe",
+      "sha256": "565203b1d261e25b0bf75ebe61a7322226e02fbe7dcbd03ad7a11a47425843c4",
       "publicUrl": "https://codexofreality.org/theory/equations/eq15.html",
       "status": "unverified"
     },
     {
       "path": "docs/theory/equations/eq16.html",
-      "sha256": "9f1aa50ace92611dc2f6fcfc483653037d15c984f865ca6ae51949240ee34788",
+      "sha256": "e0323d4e817a2bc6320d25a1be87acd546f3bdaeba5da59ef515accdad0359df",
       "publicUrl": "https://codexofreality.org/theory/equations/eq16.html",
       "status": "unverified"
     },
     {
       "path": "docs/theory/equations/eq17.html",
-      "sha256": "d9c56004523bf487801a716bdeff79949c0d68fc9f0d5ede910589e20736db58",
+      "sha256": "1e9b370685880fb42c1b19c11c09a9f116af6fc4d804a40221d01e363e9329e7",
       "publicUrl": "https://codexofreality.org/theory/equations/eq17.html",
       "status": "unverified"
     },
     {
       "path": "docs/theory/ethics.html",
-      "sha256": "10aa74ea1d94322f1f234aa10ed33523564d7812980204b6c65c63302976e66c",
+      "sha256": "83fb1d80f54118a1d806690d919f2e242c5319f45d0aefa8632ff826514d763a",
       "publicUrl": "https://codexofreality.org/theory/ethics.html",
       "status": "operational"
     },
     {
       "path": "docs/theory/frequency-governance.html",
-      "sha256": "5b98f2bc906dcdba4968b5c0eb60a167e5271e38312a223f96a5c3beec5d2237",
+      "sha256": "d6e8effdde391f3d2be0b30799e934d15179f26c40d239b35cdc6c2c57f99e68",
       "publicUrl": "https://codexofreality.org/theory/frequency-governance.html",
       "status": "operational"
     },
     {
       "path": "docs/theory/glossary.html",
-      "sha256": "70e88b5a060dae2ca01cd0fb8aad09aa23ab8b10398e84570f6536c2e5d31a03",
+      "sha256": "70564265a7d6b1a226c10866a151f412d06ab9094c4b7669878fa629769ccab9",
       "publicUrl": "https://codexofreality.org/theory/glossary.html",
       "status": "operational"
     },
     {
       "path": "docs/theory/living-technology.html",
-      "sha256": "b34a7b2f4d29dccf66a6f861d7c7309002c1948c2f79cf8871475983ca193b37",
+      "sha256": "78304b3a37da81e8d8af8b2341c0a6d38edfcb96b3f1e684bb2b9229b409c10a",
       "publicUrl": "https://codexofreality.org/theory/living-technology.html",
       "status": "operational"
     },
     {
       "path": "docs/theory/master-equation.html",
-      "sha256": "db2db655dd10a5e21d799c032e26c36f379f87cfef0da5a7d9ab91498ed0f6d8",
+      "sha256": "65ad7cef14c45a953803e1af28e9ee81bb9c09fdd36873972e05a600d16cc449",
       "publicUrl": "https://codexofreality.org/theory/master-equation.html",
       "status": "operational"
     },
     {
       "path": "docs/theory/memory.html",
-      "sha256": "758ad87098854aa309961f053e8a06cb64e6f5be2bbf3536317471df00e052cd",
+      "sha256": "2f853f8657072d42fe152e70332ab4b62b43eb7f904945814bf814070b930ff0",
       "publicUrl": "https://codexofreality.org/theory/memory.html",
       "status": "operational"
     },
     {
       "path": "docs/theory/notation.html",
-      "sha256": "6dd1fd4c10f75d32b59d4c6c2b4d3fcfd0c2b2e8f6c9c069dfd3c4954910110a",
+      "sha256": "fb1071ed3f3bb77c7e740f18a6d402ad705d075e42d252ae687ca408308791cb",
       "publicUrl": "https://codexofreality.org/theory/notation.html",
       "status": "operational"
     },
     {
       "path": "docs/theory/operators.html",
-      "sha256": "67955bca221062283f1ea3c6d9033acf72a89dd097d54231b3b6d37b354d83fc",
+      "sha256": "6fcc0b05b8956f6fb9600da650c1ae4f5013481afa654efa0a5fe10c431a7ec6",
       "publicUrl": "https://codexofreality.org/theory/operators.html",
       "status": "operational"
     },
     {
       "path": "docs/theory/thirteen-moons.html",
-      "sha256": "7ac304cf564fddbc16aa28524fdb2bf82aa43a83ba6210fca00c25a5987291ee",
+      "sha256": "9eeea69eb682c95c5770d5bc7f6e48b52fa97fa17c9b36650fb6e967187dfe0d",
       "publicUrl": "https://codexofreality.org/theory/thirteen-moons.html",
       "status": "operational"
     },
     {
       "path": "docs/theory/unified-field.html",
-      "sha256": "458eeb99d3f237424ed07bcbbfba18e69b0ff4a67ac715eb27e1858cc5c7135c",
+      "sha256": "f94367d5a39c2e0aee53bf260376c256befdbc816ee80bb03bd218a1ac32d78b",
       "publicUrl": "https://codexofreality.org/theory/unified-field.html",
       "status": "operational"
     },
     {
       "path": "docs/theory/witness.html",
-      "sha256": "d4cf1aad204fc2a77f7fdcff14267908e4dd7c318a4016ebd563edd362385bad",
+      "sha256": "00daf5685682ec58c7eabc3f27d21d139f94a5b1d979f35996f69ce6c29d13d4",
       "publicUrl": "https://codexofreality.org/theory/witness.html",
       "status": "operational"
     }
