@@ -63,6 +63,22 @@
     }),
   });
 
+  /*
+   * B7.60 — overhead (top-view) elevation gate.
+   * Day numerals are composed for the tilted front view; near top-down the
+   * canonical rail compresses into unreadable piles, so callers gate day
+   * disclosure on camera elevation. phi is elevation from the XZ plane, so
+   * top-down is π/2. The pattern/top camera preset rests at phi ≈ 1.28,
+   * inside this tolerance; the default tilted view (phi ≈ 0.7) is not.
+   */
+  const OVERHEAD_PHI_TOLERANCE = 0.35;
+
+  function isOverheadPhi(phi) {
+    const p = Number(phi);
+    if (!Number.isFinite(p)) return false;
+    return Math.abs(p - Math.PI / 2) <= OVERHEAD_PHI_TOLERANCE;
+  }
+
   function _mobileOffset(screenWidth) {
     const w = Number(screenWidth) || 1024;
     if (w < 480) return 0.24;
@@ -106,6 +122,8 @@
     BAND_ORDER,
     BASE_THRESHOLDS,
     BAND_VISIBILITY,
+    OVERHEAD_PHI_TOLERANCE,
+    isOverheadPhi,
     resolveBand,
     resolveVisibility,
   });
