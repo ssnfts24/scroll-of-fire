@@ -5,17 +5,21 @@
  *
  * 1. THE PAGE OPENING — one quiet moment on arrival (every content page
  *    except the homepage, which keeps its own full entry): the
- *    cracked-stone / spiral-eye mark settles in near the page head with
- *    the page's own name and today's living line — the civil date, plus
- *    the 13 Moons coordinate ONLY where the site's PatternCalendar is
- *    already loaded on that page (never an invented coordinate). The
- *    page content rises gently beneath it. The moment is light
- *    (~1.5s), adds no panels, no controls and no decisions, and leaves
- *    nothing behind: the overlay is pointer-events:none, any click,
- *    tap, keypress or scroll dismisses it at once, and it removes
- *    itself from the DOM when done. It is injected from here, never
- *    hard-coded in markup, so no-JS pages render fully normal — and it
- *    never appears under prefers-reduced-motion.
+ *    cracked-stone / spiral-eye mark settles in on the same opaque
+ *    deep-stone ground as the homepage entry, with the page's own name
+ *    and today's living line — the civil date, plus the 13 Moons
+ *    coordinate ONLY where the site's PatternCalendar is already loaded
+ *    on that page (never an invented coordinate). While it plays, the
+ *    page beneath is neither visible nor interactive: the ground is
+ *    opaque, the overlay takes the taps, and the page is scroll-locked
+ *    (body.lpo-opening), exactly as the homepage entry locks. It adds
+ *    no panels, no controls and no decisions, and leaves nothing
+ *    behind: any click, tap, keypress or scroll dismisses it in the
+ *    same instant (never trapped by the fade), it fades on its own at
+ *    ~3.4s over 0.75s — pacing at or beyond the homepage entry's — and
+ *    it removes itself from the DOM when done. It is injected from
+ *    here, never hard-coded in markup, so no-JS pages render fully
+ *    normal — and it never appears under prefers-reduced-motion.
  *
  * 2. STAGED REVEALS — reveal-on-enter for top-level sections on pages
  *    that carry the layer (body.living-ui). Sections are visible by
@@ -41,8 +45,13 @@
   /* The page opening                                                  */
   /* ---------------------------------------------------------------- */
 
-  const LPO_FADE_AT_MS = 1200;
-  const LPO_FADE_MS = 350;
+  /* Pacing floor is the homepage entry's (living-entry.js: hold ends
+   * at 3200ms, fade 750ms, ~3.95s on screen). The page opening holds a
+   * breath longer: fade begins at 3400ms, fades over 750ms — 4.15s in
+   * all. LPO_FADE_MS must equal the .lpo-overlay transition in
+   * living-ui.css; tests/living-page-openings.test.js pins the pair. */
+  const LPO_FADE_AT_MS = 3400;
+  const LPO_FADE_MS = 750;
 
   const LPO_EMBLEM = [
     '<svg class="lpo-emblem" viewBox="0 0 200 200" aria-hidden="true" focusable="false">',
@@ -167,14 +176,27 @@
     document.body.classList.add("lpo-opening");
 
     let dismissed = false;
-    const fadeTimer = window.setTimeout(dismiss, LPO_FADE_AT_MS);
+    const fadeTimer = window.setTimeout(() => dismiss(false), LPO_FADE_AT_MS);
 
-    function dismiss() {
+    function onFirstGesture() {
+      dismiss(true);
+    }
+
+    function dismiss(instant) {
       if (dismissed) return;
       dismissed = true;
       window.clearTimeout(fadeTimer);
       for (const type of ["pointerdown", "keydown", "wheel", "touchmove", "scroll"]) {
-        window.removeEventListener(type, dismiss, { capture: true });
+        window.removeEventListener(type, onFirstGesture, { capture: true });
+      }
+      if (instant) {
+        // A visitor's first gesture is never trapped by the soft fade:
+        // the opening is gone in the same instant, like the homepage
+        // entry — the gesture itself is spent on the dismissal, and
+        // nothing beneath the overlay ever receives it.
+        overlay.remove();
+        document.body.classList.remove("lpo-opening");
+        return;
       }
       overlay.classList.add("lpo-leaving");
       window.setTimeout(() => {
@@ -184,7 +206,7 @@
     }
 
     for (const type of ["pointerdown", "keydown", "wheel", "touchmove", "scroll"]) {
-      window.addEventListener(type, dismiss, { capture: true, passive: true });
+      window.addEventListener(type, onFirstGesture, { capture: true, passive: true });
     }
   }
 

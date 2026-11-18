@@ -141,19 +141,58 @@ test("no-JS safety: the opening state never appears in markup", () => {
   assert.match(css, /body\.lpo-opening main\s*\{\s*animation:\s*lpo-rise/);
 });
 
-test("the opening never blocks the page", () => {
+test("while it plays, the opening stands apart from the page", () => {
   const css = read("docs/assets/css/living-ui.css");
   const overlayRule = css.match(/\.lpo-overlay\s*\{[^}]*\}/);
   assert.ok(overlayRule, "overlay rule must exist");
-  assert.match(overlayRule[0], /pointer-events:\s*none/,
-    "the overlay must never intercept clicks, taps, or scroll");
-  assert.ok(!/body\.lpo-lock|lpo-lock/.test(css),
-    "the light opening must not lock scrolling (that is the homepage entry's behaviour, not this one's)");
+  // Opaque deep-stone ground — the homepage entry's own recipe
+  // (.le-overlay in living-entry.css): faint glows over a solid dark
+  // gradient, never a translucent veil the page can bleed through.
+  assert.match(overlayRule[0], /background:/,
+    "the overlay must carry its own opaque ground");
+  assert.match(overlayRule[0], /linear-gradient\(170deg, #0a0e18 0%, #05070d 70%\)/,
+    "the ground must be the entry's opaque deep-stone gradient");
+  assert.match(overlayRule[0], /position:\s*fixed/);
+  assert.match(overlayRule[0], /inset:\s*0/,
+    "the overlay must cover the full viewport");
+  assert.match(overlayRule[0], /pointer-events:\s*auto/,
+    "while it plays, the overlay takes the taps — nothing reaches the page beneath");
+  // The exit fade releases the page again, exactly like the entry's.
+  const leavingRule = css.match(/\.lpo-overlay\.lpo-leaving\s*\{[^}]*\}/);
+  assert.ok(leavingRule, "leaving rule must exist");
+  assert.match(leavingRule[0], /opacity:\s*0/);
+  assert.match(leavingRule[0], /pointer-events:\s*none/);
+  // And the page is scroll-locked beneath it, like the entry's le-lock.
+  assert.match(css, /body\.lpo-opening\s*\{\s*overflow:\s*hidden/,
+    "the page must be scroll-locked while the opening plays");
   const js = read("docs/assets/js/living-ui.js");
   for (const type of ["pointerdown", "keydown", "wheel", "touchmove", "scroll"]) {
-    assert.ok(js.includes(`"${type}"`), `opening must dismiss instantly on ${type}`);
+    assert.ok(js.includes(`"${type}"`), `opening must dismiss on ${type}`);
   }
+  assert.match(js, /dismiss\(true\)/,
+    "a visitor's gesture must take the instant-dismissal path, never the fade");
   assert.match(js, /overlay\.remove\(\)/, "the overlay must remove itself, leaving nothing behind");
+});
+
+test("the opening's pacing is at least the homepage entry's, and CSS agrees with JS", () => {
+  const js = read("docs/assets/js/living-ui.js");
+  const entryJs = read("docs/assets/js/living-entry.js");
+  const fadeAt = Number(js.match(/LPO_FADE_AT_MS = (\d+)/)[1]);
+  const fadeMs = Number(js.match(/LPO_FADE_MS = (\d+)/)[1]);
+  const entryHold = Number(entryJs.match(/HOLD_END_MS = (\d+)/)[1]);
+  const entryFade = Number(entryJs.match(/FADE_MS = (\d+)/)[1]);
+  assert.ok(fadeAt >= entryHold,
+    `the opening must hold at least the entry's ${entryHold}ms, got ${fadeAt}ms`);
+  assert.equal(fadeMs, entryFade,
+    "the opening's fade must match the entry's fade");
+  assert.ok(fadeAt + fadeMs >= entryHold + entryFade,
+    "total on-screen time must be at least the entry's");
+  const css = read("docs/assets/css/living-ui.css");
+  const overlayRule = css.match(/\.lpo-overlay\s*\{[^}]*\}/)[0];
+  const transition = overlayRule.match(/transition:\s*opacity\s+([\d.]+)s/);
+  assert.ok(transition, "the overlay's fade must be a CSS opacity transition");
+  assert.equal(Number(transition[1]) * 1000, fadeMs,
+    "the CSS fade duration must equal LPO_FADE_MS in living-ui.js");
 });
 
 test("the opening adds no controls and asks for no decisions", () => {
