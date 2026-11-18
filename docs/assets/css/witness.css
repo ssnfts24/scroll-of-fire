@@ -201,6 +201,100 @@
   margin-bottom: 0;
 }
 
+/* Found and kept: where a find lives, kept plain like the shelf it honors */
+.witness-kept-where {
+  margin-top: -0.35rem;
+  font-size: 0.95rem;
+  color: rgba(232, 236, 240, 0.78);
+}
+
+.witness-kept-where a {
+  color: #7af3ff;
+}
+
+/* Release day: a cornerstone set into the page, and the plaque under it.
+ * The stone carries weight — a bevel of light along the top, depth at
+ * the bottom, a chiseled inner edge — and one gold seam runs through
+ * its cracks, the same mending as the disc. The letters are carved:
+ * dark, incised, wide-set. Static stone: no motion, no script, and the
+ * page is complete with both off. */
+.witness-cornerstone {
+  position: relative;
+  max-width: 26rem;
+  margin: 1.75rem auto 1.5rem;
+  padding: 2.1rem 1.5rem 1.9rem;
+  text-align: center;
+  overflow: hidden;
+  border: 1px solid rgba(122, 243, 255, 0.16);
+  border-radius: 0.35rem;
+  background:
+    radial-gradient(ellipse 130% 95% at 50% 0%, #1d2839 0%, #111827 52%, #070a12 100%);
+  box-shadow:
+    inset 0 2px 0 rgba(232, 236, 240, 0.08),
+    inset 0 0 0 6px rgba(0, 0, 0, 0.22),
+    inset 0 0 0 7px rgba(232, 236, 240, 0.05),
+    inset 0 -16px 30px rgba(0, 0, 0, 0.55),
+    inset 0 12px 24px rgba(0, 0, 0, 0.35),
+    0 24px 46px rgba(0, 0, 0, 0.55),
+    0 5px 12px rgba(0, 0, 0, 0.5);
+}
+
+.witness-stone-cracks {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.witness-cornerstone p {
+  position: relative;
+  margin: 0;
+  text-transform: uppercase;
+  color: #2c3a56;
+  text-shadow:
+    0 -1px 2px rgba(0, 0, 0, 0.9),
+    0 1px 0 rgba(196, 226, 232, 0.16);
+}
+
+.witness-cornerstone .witness-stone-opened {
+  font-size: 1.85rem;
+  font-weight: 700;
+  letter-spacing: 0.34em;
+  text-indent: 0.34em;
+  margin-bottom: 1rem;
+}
+
+.witness-stone-line {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-indent: 0.24em;
+  line-height: 2.1;
+}
+
+/* The plaque: the release piece, set in the letter's warm stone. */
+.witness-release-piece {
+  border: 1px solid rgba(243, 201, 122, 0.3);
+  border-left: 4px solid #f3c97a;
+  border-radius: 0.6rem;
+  padding: 1.5rem 1.6rem;
+  background:
+    linear-gradient(168deg, rgba(243, 201, 122, 0.07), rgba(11, 15, 26, 0.5) 55%),
+    rgba(11, 15, 26, 0.45);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+}
+
+.witness-release-piece p:first-child {
+  color: #f3c97a;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.witness-release-piece p:last-child {
+  margin-bottom: 0;
+}
+
 /* The two doors */
 .witness-doors {
   display: flex;
