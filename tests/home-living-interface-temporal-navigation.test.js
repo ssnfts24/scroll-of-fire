@@ -226,6 +226,77 @@ test(
 );
 
 test(
+  "explorer opens at today instead of the mount default Pattern Day 1",
+  () => {
+    assert.match(
+      UI,
+      /openExplorerAtToday/
+    );
+
+    assert.match(
+      UI,
+      /api\(\)\s*\?\.\s*returnToday/
+    );
+
+    assert.match(
+      UI,
+      /explorerTouched/,
+      "auto-today must never override a visitor-chosen coordinate"
+    );
+  }
+);
+
+test(
+  "homepage embed stacks the 3D canvas over the SVG baseline and retires the baseline in 3D",
+  () => {
+    assert.match(
+      CSS,
+      /\.home-living-sphere__preview > svg,\s*\.home-page \.home-living-sphere__preview > canvas \{\s*position: absolute;/
+    );
+
+    assert.match(
+      CSS,
+      /\.home-living-sphere__preview\[data-active-renderer="3d"\] > svg \{\s*display: none;/
+    );
+  }
+);
+
+test(
+  "renderer status pill sits below the stage disc, not over the day numerals",
+  () => {
+    assert.match(
+      CSS,
+      /\.home-living-sphere__render-state \{\s*position: static;/
+    );
+
+    const viewportClose =
+      HTML.indexOf(
+        "</div>\n          <p class=\"home-living-sphere__render-state\""
+      );
+
+    assert.ok(
+      viewportClose >= 0,
+      "render-state pill must live outside the sphere viewport"
+    );
+  }
+);
+
+test(
+  "phone widths show one sphere card at a time, docked off the center",
+  () => {
+    assert.match(
+      CSS,
+      /@media \(max-width: 760px\) \{[\s\S]*?\.sphere-semantic-label\[data-semantic-id="live-today"\] \{\s*display: none !important;/
+    );
+
+    assert.match(
+      CSS,
+      /\.sphere-semantic-label \{\s*left: 50% !important;/
+    );
+  }
+);
+
+test(
   "homepage projection refresh must not retain stale Pattern selection",
   () => {
     const HOME = read(
