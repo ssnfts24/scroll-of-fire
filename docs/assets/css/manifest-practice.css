@@ -1,0 +1,82 @@
+/* Manifest Practice Loop — Seal → Life Atlas → calendar / Sphere markers
+   Styles for docs/assets/js/manifest-practice.js surfaces:
+   the today strip (teach.html, moons.html), the seal-details row and
+   "This Moon" summary (teach.html), and the practice day markers on
+   the 13 Moons calendar cells (moons.html). Day-zoom panel marker
+   styles live with the other day-zoom rules in living-time-sphere.css. */
+
+/* ------------------------------ today strip ------------------------------ */
+
+.manifest-today {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.85rem;
+  max-width: 1180px;
+  margin: 0.9rem auto 0;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  border-radius: 0.6rem;
+  background: rgba(212, 175, 55, 0.07);
+}
+
+.manifest-today-glyph {
+  color: #e8c766;
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.manifest-today-line {
+  margin: 0;
+  flex: 1 1 260px;
+}
+
+.manifest-today-link {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* --------------------------- seal details row ---------------------------- */
+
+.manifest-seal-fields {
+  align-items: end;
+}
+
+.manifest-seal-status {
+  margin: 0;
+}
+
+/* ------------------------------ this Moon -------------------------------- */
+
+.manifest-summary-body .manifest-summary-line {
+  margin: 0.25rem 0;
+}
+
+/* --------------------------- calendar markers ---------------------------- */
+
+.manifest-practice-markers {
+  display: inline-flex;
+  gap: 0.15rem;
+  align-items: center;
+  margin-left: 0.3rem;
+  pointer-events: none;
+}
+
+.manifest-practice-marker {
+  font-size: 0.72rem;
+  line-height: 1;
+  color: #e8c766;
+  text-shadow: 0 0 6px rgba(232, 199, 102, 0.55);
+}
+
+.manifest-practice-marker--craft {
+  color: #f0d48a;
+}
+
+.manifest-practice-marker--working {
+  color: #ffd968;
+}
+
+.has-manifest-practice {
+  box-shadow: inset 0 0 0 1px rgba(212, 175, 55, 0.45);
+}
