@@ -5,9 +5,9 @@ import process from "node:process";
 
 const root = process.cwd();
 const sourcePath = path.join(root, "docs/data/equinox-passage/equinox-source-metadata.json");
-const referenceJsonPath = path.join(root, "docs/data/equinox-passage/equinox-reference-2014-2026.json");
-const passageJsonPath = path.join(root, "docs/data/equinox-passage/equinox-passage-2014-2026.json");
-const passageCsvPath = path.join(root, "docs/data/equinox-passage/equinox-passage-2014-2026.csv");
+const referenceJsonPath = path.join(root, "docs/data/equinox-passage/equinox-reference-2014-2027.json");
+const passageJsonPath = path.join(root, "docs/data/equinox-passage/equinox-passage-2014-2027.json");
+const passageCsvPath = path.join(root, "docs/data/equinox-passage/equinox-passage-2014-2027.csv");
 const referenceJsPath = path.join(root, "docs/assets/js/astronomy/equinox-reference-data.js");
 const sourcesJsPath = path.join(root, "docs/assets/js/astronomy/astronomy-sources.js");
 
@@ -35,25 +35,43 @@ function deepFreezeExpression(name, value) {
   return `const ${name} = deepFreeze(${JSON.stringify(value, null, 2)});`;
 }
 
+// Records whose source chain differs from the dataset's primary import carry a
+// recordProvenance entry in the metadata (e.g. 2027: USNO Earth's Seasons
+// primary, whole-second value computed with Skyfield + JPL DE421). Their
+// generated stamp must name their own chain, not the dataset default.
+function stampFor(metadata, record) {
+  const provenance = metadata.recordProvenance?.[String(record.year)];
+  return {
+    source: provenance?.sourceLabel ?? metadata.primarySource.label,
+    sourceVersion: provenance?.sourceVersion ?? metadata.primarySource.sourceRevisionOrChecksum,
+    importedAt: provenance?.importedAt ?? metadata.generationTimestamp,
+    calculated: provenance?.calculated ?? false,
+    dataOrigin: provenance?.dataOrigin ?? metadata.dataOrigin
+  };
+}
+
 function buildSourcesScript(metadata) {
   return `(() => {\n  "use strict";\n\n  function deepFreeze(value) {\n    if (!value || typeof value !== "object" || Object.isFrozen(value)) return value;\n    Object.freeze(value);\n    Object.keys(value).forEach(key => deepFreeze(value[key]));\n    return value;\n  }\n\n  ${deepFreezeExpression("sourceMetadata", metadata)}\n\n  const sources = Object.freeze({\n    primary: Object.freeze({\n      id: "janmr-third-party-import",\n      label: sourceMetadata.primarySource.label,\n      source: "Third-party equinox table imported into this repository",\n      sourceVersion: sourceMetadata.primarySource.sourceRevisionOrChecksum,\n      sourceIntegrityStatus: sourceMetadata.sourceIntegrityStatus,\n      dataOrigin: sourceMetadata.dataOrigin,\n      url: sourceMetadata.primarySource.websiteUrl,\n      primarySourceUrl: sourceMetadata.primarySource.primarySourceUrl,\n      sourceTableUrl: sourceMetadata.primarySource.sourceTableUrl,\n      timestampResolutionSeconds: sourceMetadata.timestampResolutionSeconds,\n      validationToleranceSeconds: sourceMetadata.validationToleranceSeconds,\n      maximumMeasuredDeviationSeconds: sourceMetadata.maximumMeasuredDeviationSeconds,\n      maximumDeviationYear: sourceMetadata.maximumDeviationYear,\n      skyfieldVersion: sourceMetadata.primarySource.skyfieldVersion,\n      jplKernelFilename: sourceMetadata.primarySource.jplKernelFilename,\n      ephemerisVersionOrChecksum: sourceMetadata.primarySource.ephemerisVersionOrChecksum,\n      timescale: sourceMetadata.primarySource.timescale,\n      equinoxFindingAlgorithm: sourceMetadata.primarySource.equinoxFindingAlgorithm,\n      generationScriptPath: sourceMetadata.primarySource.generationScriptPath,\n      timestampRoundingPolicy: sourceMetadata.primarySource.timestampRoundingPolicy,\n      generationTimestamp: sourceMetadata.generationTimestamp\n    }),\n    validation: Object.freeze({\n      id: "bazica-solar-term-validation",\n      label: sourceMetadata.independentValidation.label,\n      source: "Independent validation reference",\n      sourceVersion: sourceMetadata.independentValidation.sourceRevisionOrChecksum,\n      url: sourceMetadata.independentValidation.independentValidationUrl,\n      validationMethod: sourceMetadata.independentValidation.validationMethod\n    }),\n    lunar: Object.freeze({\n      id: sourceMetadata.lunarMethod.source,\n      label: sourceMetadata.lunarMethod.label,\n      source: "Deterministic synodic-cycle approximation",\n      sourceVersion: sourceMetadata.lunarMethod.sourceVersion,\n      approximate: sourceMetadata.lunarMethod.approximate,\n      calculationInstantPolicy: sourceMetadata.lunarMethod.calculationInstantPolicy\n    })\n  });\n\n  globalThis.AstronomySources = Object.freeze({\n    sourceMetadata,\n    sources\n  });\n})();\n`;
 }
 
 function buildReferenceScript(metadata) {
-  const records = metadata.records.map(record => ({
-    ...record,
-    source: metadata.primarySource.label,
-    sourceVersion: metadata.primarySource.sourceRevisionOrChecksum,
-    timestampResolutionSeconds: metadata.timestampResolutionSeconds,
-    validationToleranceSeconds: metadata.validationToleranceSeconds,
-    maximumMeasuredDeviationSeconds: metadata.maximumMeasuredDeviationSeconds,
-    maximumDeviationYear: metadata.maximumDeviationYear,
-    dataOrigin: metadata.dataOrigin,
-    sourceIntegrityStatus: metadata.sourceIntegrityStatus,
-    calculated: false,
-    validationStatus: "validated-against-independent-table",
-    importedAt: metadata.generationTimestamp
-  }));
+  const records = metadata.records.map(record => {
+    const stamp = stampFor(metadata, record);
+    return {
+      ...record,
+      source: stamp.source,
+      sourceVersion: stamp.sourceVersion,
+      timestampResolutionSeconds: metadata.timestampResolutionSeconds,
+      validationToleranceSeconds: metadata.validationToleranceSeconds,
+      maximumMeasuredDeviationSeconds: metadata.maximumMeasuredDeviationSeconds,
+      maximumDeviationYear: metadata.maximumDeviationYear,
+      dataOrigin: stamp.dataOrigin,
+      sourceIntegrityStatus: metadata.sourceIntegrityStatus,
+      calculated: stamp.calculated,
+      validationStatus: "validated-against-independent-table",
+      importedAt: stamp.importedAt
+    };
+  });
   const baseMetadata = {
     schemaVersion: metadata.datasetVersion,
     astronomyVersion: metadata.astronomyVersion,
@@ -73,20 +91,23 @@ function buildReferenceScript(metadata) {
 }
 
 function buildReferenceJson(metadata) {
-  const records = metadata.records.map(record => ({
-    ...record,
-    source: metadata.primarySource.label,
-    sourceVersion: metadata.primarySource.sourceRevisionOrChecksum,
-    timestampResolutionSeconds: metadata.timestampResolutionSeconds,
-    validationToleranceSeconds: metadata.validationToleranceSeconds,
-    maximumMeasuredDeviationSeconds: metadata.maximumMeasuredDeviationSeconds,
-    maximumDeviationYear: metadata.maximumDeviationYear,
-    dataOrigin: metadata.dataOrigin,
-    sourceIntegrityStatus: metadata.sourceIntegrityStatus,
-    calculated: false,
-    validationStatus: "validated-against-independent-table",
-    importedAt: metadata.generationTimestamp
-  }));
+  const records = metadata.records.map(record => {
+    const stamp = stampFor(metadata, record);
+    return {
+      ...record,
+      source: stamp.source,
+      sourceVersion: stamp.sourceVersion,
+      timestampResolutionSeconds: metadata.timestampResolutionSeconds,
+      validationToleranceSeconds: metadata.validationToleranceSeconds,
+      maximumMeasuredDeviationSeconds: metadata.maximumMeasuredDeviationSeconds,
+      maximumDeviationYear: metadata.maximumDeviationYear,
+      dataOrigin: stamp.dataOrigin,
+      sourceIntegrityStatus: metadata.sourceIntegrityStatus,
+      calculated: stamp.calculated,
+      validationStatus: "validated-against-independent-table",
+      importedAt: stamp.importedAt
+    };
+  });
   const content = {
     metadata: {
       schemaVersion: metadata.datasetVersion,

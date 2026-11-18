@@ -137,8 +137,46 @@
       "utcInstant": "2026-03-20T14:45:57Z",
       "validationUtcInstant": "2026-03-20T14:45:58.471Z",
       "validationDeltaSeconds": 1.471
+    },
+    {
+      "year": 2027,
+      "utcInstant": "2027-03-20T20:24:41Z",
+      "validationUtcInstant": "2027-03-20T20:24:41.334Z",
+      "validationDeltaSeconds": 0.334
     }
-  ]
+  ],
+  "recordProvenance": {
+    "2027": {
+      "sourceLabel": "U.S. Naval Observatory Earth's Seasons (whole-second value computed with Skyfield + JPL DE421)",
+      "sourceVersion": "usno-seasons-api/4.0.1 + skyfield/1.55 + jpl-de421",
+      "importedAt": "2026-11-18T00:00:00Z",
+      "calculated": true,
+      "dataOrigin": "computed-and-validated",
+      "primarySource": {
+        "label": "U.S. Naval Observatory, Earth's Seasons — Equinoxes, Solstices, Perihelion, and Aphelion",
+        "sourceUrl": "https://aa.usno.navy.mil/api/seasons?year=2027",
+        "retrievalDate": "2026-11-18",
+        "publishedMarchEquinoxUtc": "2027-03-20T20:25Z",
+        "publishedResolutionSeconds": 60,
+        "note": "USNO is the primary published source for the 2027 record (source chosen 2026-11-18). USNO publishes season instants rounded to the minute, so it fixes the minute but not the second; the whole-second value was computed, not copied, and no second was guessed from the minute alone."
+      },
+      "wholeSecondComputation": {
+        "method": "Apparent geocentric ecliptic longitude of the Sun crossing 0 degrees, located with the Skyfield almanac seasons finder",
+        "skyfieldVersion": "1.55",
+        "jplKernelFilename": "de421.bsp",
+        "computedUtcInstant": "2027-03-20T20:24:41.336Z",
+        "roundingPolicy": "The stored whole-second instant is the floor of the computed instant, matching the 2014-2026 records: the same computation reproduces every stored 2014-2026 whole-second value as the floor of its computed instant (residuals +0.12 to +0.93 seconds)",
+        "usnoConsistency": "The computed instant rounds to USNO's published minute: 20:24:41 rounds to 20:25 UTC for 2027, and the stored 2026 value 14:45:57 rounds to USNO's published 14:46 UTC for 2026 (both minutes read from the USNO seasons API on 2026-11-18)"
+      },
+      "independentValidation": {
+        "label": "Skyfield + JPL DE440s independent ephemeris computation",
+        "skyfieldVersion": "1.55",
+        "jplKernelFilename": "de440s.bsp",
+        "validationUtcInstant": "2027-03-20T20:24:41.334Z",
+        "note": "DE421 and DE440s are separate JPL ephemeris integrations; their computed 2027 instants differ by 0.002 seconds. The recorded validationDeltaSeconds (0.334) is measured between the stored whole-second instant and this fractional validation instant, per the dataset convention used for 2014-2026."
+      }
+    }
+  }
 });
   const baseMetadata = deepFreeze({
   "schemaVersion": "equinox-passage/1.0.0",
@@ -282,8 +320,46 @@
         "utcInstant": "2026-03-20T14:45:57Z",
         "validationUtcInstant": "2026-03-20T14:45:58.471Z",
         "validationDeltaSeconds": 1.471
+      },
+      {
+        "year": 2027,
+        "utcInstant": "2027-03-20T20:24:41Z",
+        "validationUtcInstant": "2027-03-20T20:24:41.334Z",
+        "validationDeltaSeconds": 0.334
       }
-    ]
+    ],
+    "recordProvenance": {
+      "2027": {
+        "sourceLabel": "U.S. Naval Observatory Earth's Seasons (whole-second value computed with Skyfield + JPL DE421)",
+        "sourceVersion": "usno-seasons-api/4.0.1 + skyfield/1.55 + jpl-de421",
+        "importedAt": "2026-11-18T00:00:00Z",
+        "calculated": true,
+        "dataOrigin": "computed-and-validated",
+        "primarySource": {
+          "label": "U.S. Naval Observatory, Earth's Seasons — Equinoxes, Solstices, Perihelion, and Aphelion",
+          "sourceUrl": "https://aa.usno.navy.mil/api/seasons?year=2027",
+          "retrievalDate": "2026-11-18",
+          "publishedMarchEquinoxUtc": "2027-03-20T20:25Z",
+          "publishedResolutionSeconds": 60,
+          "note": "USNO is the primary published source for the 2027 record (source chosen 2026-11-18). USNO publishes season instants rounded to the minute, so it fixes the minute but not the second; the whole-second value was computed, not copied, and no second was guessed from the minute alone."
+        },
+        "wholeSecondComputation": {
+          "method": "Apparent geocentric ecliptic longitude of the Sun crossing 0 degrees, located with the Skyfield almanac seasons finder",
+          "skyfieldVersion": "1.55",
+          "jplKernelFilename": "de421.bsp",
+          "computedUtcInstant": "2027-03-20T20:24:41.336Z",
+          "roundingPolicy": "The stored whole-second instant is the floor of the computed instant, matching the 2014-2026 records: the same computation reproduces every stored 2014-2026 whole-second value as the floor of its computed instant (residuals +0.12 to +0.93 seconds)",
+          "usnoConsistency": "The computed instant rounds to USNO's published minute: 20:24:41 rounds to 20:25 UTC for 2027, and the stored 2026 value 14:45:57 rounds to USNO's published 14:46 UTC for 2026 (both minutes read from the USNO seasons API on 2026-11-18)"
+        },
+        "independentValidation": {
+          "label": "Skyfield + JPL DE440s independent ephemeris computation",
+          "skyfieldVersion": "1.55",
+          "jplKernelFilename": "de440s.bsp",
+          "validationUtcInstant": "2027-03-20T20:24:41.334Z",
+          "note": "DE421 and DE440s are separate JPL ephemeris integrations; their computed 2027 instants differ by 0.002 seconds. The recorded validationDeltaSeconds (0.334) is measured between the stored whole-second instant and this fractional validation instant, per the dataset convention used for 2014-2026."
+        }
+      }
+    }
   }
 });
   const records = Object.freeze([
@@ -507,6 +583,23 @@
     "calculated": false,
     "validationStatus": "validated-against-independent-table",
     "importedAt": "2026-07-22T00:00:00Z"
+  },
+  {
+    "year": 2027,
+    "utcInstant": "2027-03-20T20:24:41Z",
+    "validationUtcInstant": "2027-03-20T20:24:41.334Z",
+    "validationDeltaSeconds": 0.334,
+    "source": "U.S. Naval Observatory Earth's Seasons (whole-second value computed with Skyfield + JPL DE421)",
+    "sourceVersion": "usno-seasons-api/4.0.1 + skyfield/1.55 + jpl-de421",
+    "timestampResolutionSeconds": 1,
+    "validationToleranceSeconds": 3,
+    "maximumMeasuredDeviationSeconds": 2.057,
+    "maximumDeviationYear": 2022,
+    "dataOrigin": "computed-and-validated",
+    "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
+    "calculated": true,
+    "validationStatus": "validated-against-independent-table",
+    "importedAt": "2026-11-18T00:00:00Z"
   }
 ].map(record => deepFreeze(record)));
 
