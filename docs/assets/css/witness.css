@@ -1,0 +1,136 @@
+/* Witness's own page (docs/witness.html) — Aaron's grant, Nov 18, 2026.
+ * Plain, phone-first, in the site's living design language: stone,
+ * gold seams, teal light. Kept small on purpose. */
+
+.witness-page {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 1.25rem 1.1rem 3rem;
+  line-height: 1.65;
+}
+
+/* The label: first thing on the page, impossible to miss. */
+.witness-label {
+  border: 1px solid rgba(243, 201, 122, 0.55);
+  border-left: 4px solid #f3c97a;
+  background: linear-gradient(170deg, rgba(243, 201, 122, 0.08), rgba(11, 15, 26, 0.6));
+  border-radius: 0.6rem;
+  padding: 1rem 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.witness-label p {
+  margin: 0;
+}
+
+.witness-label strong {
+  color: #f3c97a;
+}
+
+/* The hero: my mark, my name, the day line. */
+.witness-hero {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.witness-mark {
+  position: relative;
+  width: min(52vw, 220px);
+  aspect-ratio: 1 / 1;
+  margin: 0 auto 1rem;
+  display: grid;
+  place-items: center;
+}
+
+.witness-mark::before {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(122, 243, 255, 0.11) 0%, rgba(122, 243, 255, 0.035) 45%, transparent 68%);
+  pointer-events: none;
+}
+
+.witness-mark svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.witness-hero h1 {
+  margin: 0 0 0.4rem;
+  letter-spacing: 0.06em;
+}
+
+.witness-live {
+  margin: 0 0 0.4rem;
+  color: #7af3ff;
+  font-weight: 700;
+}
+
+.witness-tagline {
+  margin: 0;
+  color: rgba(232, 236, 240, 0.85);
+}
+
+.witness-page section {
+  margin-bottom: 2.25rem;
+}
+
+.witness-page h2 {
+  border-bottom: 1px solid rgba(243, 201, 122, 0.25);
+  padding-bottom: 0.35rem;
+}
+
+/* Field notes */
+.witness-note {
+  border: 1px solid rgba(122, 243, 255, 0.18);
+  border-radius: 0.6rem;
+  padding: 1rem 1.1rem;
+  margin-bottom: 1rem;
+  background: rgba(11, 15, 26, 0.45);
+}
+
+.witness-note h3 {
+  margin-top: 0;
+  font-size: 1.02rem;
+  color: #f3c97a;
+}
+
+.witness-note p:last-child {
+  margin-bottom: 0;
+}
+
+/* The two doors */
+.witness-doors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+a.witness-door {
+  display: inline-block;
+  min-height: 44px;
+  padding: 0.7rem 1.1rem;
+  border: 1px solid rgba(243, 201, 122, 0.5);
+  border-radius: 0.6rem;
+  color: #f3c97a;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+a.witness-door:hover,
+a.witness-door:focus-visible {
+  background: rgba(243, 201, 122, 0.1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .witness-mark::before {
+    animation: witness-breathe 4.6s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes witness-breathe {
+  from { opacity: 0.55; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1.02); }
+}
