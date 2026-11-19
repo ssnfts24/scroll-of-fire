@@ -1,786 +1,794 @@
 [
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "Search learned to say how much it holds",
-  "summary": "The search page now opens with the size of the whole index — counted from the index itself, so the number can never drift — and a Surprise me door that opens one page, passage, word, or claim at random.",
-  "url": "./search.html",
-  "symbol": "⌕"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "Ethical Law learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the theory's Ethical Law page: the containment layer that limits every equation and practice, and why elegance is never permission. Tap to play.",
-  "url": "./theory/ethics.html#theory-ethics-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "Frequency Governance theory learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the theory's Frequency Governance page: the framework behind the Sound Observatory, keeping measurable audio apart from symbolic interpretation. Tap to play.",
-  "url": "./theory/frequency-governance.html#theory-frequency-governance-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "Living Technology learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the Living Technology page: tools that stay connected to their materials, maker, operator, and ethical consequence. Tap to play.",
-  "url": "./theory/living-technology.html#theory-living-technology-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "Artifact Theory learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the Artifact Theory page: when an object becomes an artifact, carrying its making, meaning, memory, and stewardship with it. Tap to play.",
-  "url": "./theory/artifact-theory.html#theory-artifact-theory-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The 13 Moons Theory learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the 13 Moons Theory page: time as a mirror rather than a replacement, thirteen equal cycles framing the daily witness. Tap to play.",
-  "url": "./theory/thirteen-moons.html#theory-thirteen-moons-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Symbol Index learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the theory's Symbol Index: the frequently used notation, each symbol bounded by its plain-language definition. Tap to play.",
-  "url": "./theory/glossary.html#theory-glossary-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Bibliography learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the Bibliography page: the source architecture of the Codex, its classes of sources, and inheritances kept apart from original contributions. Tap to play.",
-  "url": "./theory/bibliography.html#theory-bibliography-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "system",
-  "title": "The Lab gains an instrument for testing a claim",
-  "summary": "The Sending Test lets a visitor run a blind telepathy or foresight session the honest way — the target list sealed with a fingerprint before the first guess, scored exactly against chance, and kept only on their own device.",
-  "url": "./sending-test.html",
-  "symbol": "≋"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Master Equation learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the Master Equation page: the six dimensions it gathers, what kind of equation it declares itself to be, and why it is a doorway rather than the whole house. Tap to play.",
-  "url": "./theory/master-equation.html#theory-master-equation-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Canon learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the Canon 0-17 page: the structured equation library behind the Codex, what every entry carries, and the status the page declares for the whole system. Tap to play.",
-  "url": "./theory/canon.html#theory-canon-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Unified Field learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the Unified Field page: the architecture behind the compact seal, and the claim the page explicitly does not make. Tap to play.",
-  "url": "./theory/unified-field.html#theory-unified-field-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Delta Framework learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the Delta Framework page: eight stages for entering a field without becoming lost inside it, from declaring the frame to carrying the remnant forward. Tap to play.",
-  "url": "./theory/delta-framework.html#theory-delta-framework-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Living Operators learned to explain themselves out loud",
-  "summary": "A short spoken explainer now sits on the Living Operators page: source supplies, intention directs, language shapes, coherence tests, and the proof these operators do not provide. Tap to play.",
-  "url": "./theory/operators.html#theory-operators-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Notation Guide learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the Notation Guide: symbols that compress the system without hiding what it means, each tied to a plain-language definition. Tap to play.",
-  "url": "./theory/notation.html#theory-notation-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Memory page learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the theory's Memory page: memory as retained pattern rather than sealed archive, and preservation and correction kept as one discipline. Tap to play.",
-  "url": "./theory/memory.html#theory-memory-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Witness page learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the theory's Witness page: record the event before the explanation becomes the event, and the five layers a strong record keeps apart. Tap to play.",
-  "url": "./theory/witness.html#theory-witness-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The days learned to speak",
-  "summary": "Every day on the 13 Moons page now tells its own story in plain words — where it sits in its moon and its week, what its moon is for, what the day itself carries, and what comes next — generated from the calendar itself, with the plain facts and the Codex's reading kept labeled and apart.",
-  "url": "./moons.html",
-  "symbol": "☾"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The A/B Carrier Protocol learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the A/B Carrier Protocol: two carrier settings compared blind, the same short protocol for each, and the reveal only after your witness is complete. Tap to play.",
-  "url": "./ab.html#ab-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The 90-Second Micro-Run learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the Micro-Run: one breath, one intention, one witness, in a ninety-second interruptible loop whose whole record is a single observation. Tap to play.",
-  "url": "./micro.html#micro-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Voice-Glyph Synth learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the Voice Glyph Studio: a short phrase drawn as an inspectable shape, read like a map, and exported without sending the phrase to a server. Tap to play.",
-  "url": "./glyphs.html#glyphs-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Invocation Lab learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the Invocation Lab: a guided run from intention through recognition and harmonizing to the boundary check, with its ethical stop-rules inside the run itself. Tap to play.",
-  "url": "./invoke.html#invoke-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Witness Hash learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the Remnant Witness Hash page: a reproducible SHA-256 seal for testimony you choose, on a page where the text and its hash never leave unless you copy them. Tap to play.",
-  "url": "./systems/witness.html#systems-witness-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Interactive Archive learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the Interactive Archive: the whole Codex searchable from one local index, filterable by kind, running entirely from a manifest bundled with the page. Tap to play.",
-  "url": "./systems/archive.html#systems-archive-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "Frequency Governance learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the Sound Observatory: the bounded sound paths, the four steps of a session, and the safety frame printed on the page itself. Tap to play.",
-  "url": "./systems/frequencies.html#frequencies-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The T-7 Resonant Engine learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the T-7 console: carriers treated like tuned strings, the coherence and memory meters, the presets and sequenced paths, and the rule that every reading is descriptive. Tap to play.",
-  "url": "./systems/t-7.html#t7-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Living Dictionary learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the Living Dictionary of Reality: old terms and recoded names side by side, the live recoder that shows what changed, and additions built without erasing provenance. Tap to play.",
-  "url": "./systems/recoder.html#recoder-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Mind-Renewal Protocol learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the Mind-Renewal Protocol: a gentle seven-day sequence for attention and reflection, its built-in permission to pause, and its one recording rule. Tap to play.",
-  "url": "./systems/mind-renewal.html#mind-renewal-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Witness Ledger learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the Witness Ledger page: the local browser ledger where observations, page changes and witness entries are kept with their hashes, all of it on your own device. Tap to play.",
-  "url": "./ledger.html#ledger-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Alignment Ledger learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the Alignment Ledger: how the March equinox is measured against the fixed Pattern Calendar year by year, what its recurrence scores do and do not claim, and where its precision limits are disclosed. Tap to play.",
-  "url": "./alignment-ledger.html#alignment-ledger-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Equinox Passage learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on the Equinox Passage: the moving astronomical gate measured against the fixed Pattern Calendar, its four labelled layers, and the historical comparison across the study years. Tap to play.",
-  "url": "./equinox-passage.html#equinox-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "Circle Sync learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits on Circle Sync: the Covenant Circle protocol of consent first, shared timing, independent observation, a clean stop rule, and one closing witness from each participant. Tap to play.",
-  "url": "./circle.html#circle-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "system",
-  "title": "Every page got simpler to use",
-  "summary": "Buttons, links and controls across the site were raised to a full finger-height on phones: footer links, library tabs and letter chips, the practice console's sliders and buttons, and the shop's record link. Same words, same pages — less clutter to fight.",
-  "url": "./index.html",
-  "symbol": "✧"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Covenant Caravan learned to explain itself out loud",
-  "summary": "A short spoken explainer now stands at the head of the Covenant Caravan page, the phased family-resilience plan. Tap to play.",
-  "url": "./covenant-caravan.html#covenant-caravan-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The 13 Moons Whitepaper learned to explain itself out loud",
-  "summary": "A short spoken explainer now opens the Observatory's governing whitepaper: Pattern Time, the calendar constitution, and the rollout doctrine. Tap to play.",
-  "url": "./13-moon-whitepaper.html#moons-whitepaper-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Remnant Whitepaper learned to explain itself out loud",
-  "summary": "A short spoken explainer now stands at the head of the Remnant Whitepaper, the governing document of the whole framework. Tap to play.",
-  "url": "./scroll-of-fire-codex-of-reality-remnant-whitepaper.html#remnant-whitepaper-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Genesis Oracle learned to explain itself out loud",
-  "summary": "A short spoken explainer now opens the Genesis Oracle page, the Seal of Becoming. Tap to play.",
-  "url": "./genesis-oracle.html#genesis-oracle-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Start page learned to explain itself out loud",
-  "summary": "A short spoken explainer now stands at the head of Start Here: what the Codex is for, the sixty-second first practice, and the order the doors open in. Tap to play.",
-  "url": "./start.html#start-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Field Guide learned to explain itself out loud",
-  "summary": "A short spoken explainer now opens the Field Guide: the daily run, the weekly rhythm, troubleshooting, and the ethics stop rule that bounds the practice. Tap to play.",
-  "url": "./guide.html#guide-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Codex Atlas learned to explain itself out loud",
-  "summary": "A short spoken explainer now stands at the head of the Atlas: one map of the whole Codex in six areas, drawn from one shared catalog, with the plain note about where saved records live. Tap to play.",
-  "url": "./codex-atlas.html#codex-atlas-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Glossary learned to explain itself out loud",
-  "summary": "A short spoken explainer now opens the Glossary of the Codex: the living language in clear definitions, with the limits kept attached to the words. Tap to play.",
-  "url": "./glossary.html#glossary-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "system",
-  "title": "The real Sphere came to the homepage",
-  "summary": "The homepage's still picture is gone: the Sphere itself now turns at the head of the page, today marked in gold, with drag, pause and play — the same instrument as the Observatory page, not a copy of it.",
-  "url": "./index.html",
-  "symbol": "◎"
- },
- {
-  "date": "2026-11-18",
-  "type": "system",
-  "title": "Every page learned to open living",
-  "summary": "Each page now opens on its own solid ground: its name, today's coordinate in Living Time, and a slow breathing glow — played once per sitting, slowed to breathe, with a quiet 'Tap anywhere to continue' when you are ready to move on.",
-  "url": "./index.html",
-  "symbol": "◎"
- },
- {
-  "date": "2026-11-18",
-  "type": "system",
-  "title": "The Sphere page was rebuilt, top to bottom",
-  "summary": "Tapping a day now lands on the day you touched, real weather drives the sky above it, and the page stands full-screen like an app — with a door back to the Codex, a fullscreen view, and panels that slide away. In Top View the day numerals thin to a readable skeleton around the Moon you have selected.",
-  "url": "./living-time-sphere.html",
-  "symbol": "◉"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "Manifest's sections all open again, and the living signal burns on Teach and Lab",
-  "summary": "The Manifest practice console had lost its section bar, leaving eleven of its twelve rooms closed; the bar is restored, and every section — Remnant, Carrier, Observer, Phrase, Breath, Coherence, Drills, Timer, Deck, Ledger, Ethics, and Maps — opens again. Its sequence buttons now play the frequencies their labels promise, and Stop Sequence stops. The Lab page never received the shared Pattern Calendar engine, so its living signal bar stood silent; the engine now loads there, and on Teach it loads with the page's first scripts, so both pages show today's living coordinate again.",
-  "url": "./teach.html",
-  "symbol": "🜚"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Systems Hub learned to explain itself out loud",
-  "summary": "A short spoken explainer now stands at the head of the Systems Hub, the bench where the Codex's tools and systems gather. Tap to play.",
-  "url": "./hub.html#hub-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Remnant Lab learned to explain itself out loud",
-  "summary": "A short spoken explainer now opens the Remnant Lab, the workshop bench of the Codex's instruments and experiments. Tap to play.",
-  "url": "./lab.html#lab-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Ethics page learned to explain itself out loud",
-  "summary": "A short spoken explainer now stands at the head of Ethics and Coherence Law, the boundaries that govern the whole Codex. Tap to play.",
-  "url": "./ethics.html#ethics-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Downloads page learned to explain itself out loud",
-  "summary": "A short spoken explainer now opens Downloads and Integrity: the preserved files, their seals, and how to verify what you take. Tap to play.",
-  "url": "./downloads.html#downloads-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "Living Search now stands in the navigation on every page",
-  "summary": "The whole-site search now has a clear door of its own: Living Search sits in the top bar on every page, just before Support, so anything in the Codex can be found from anywhere. The narrower search inside the Scroll Library now carries its own plain name — Search the Scroll Library — so the two are never mistaken for each other.",
-  "url": "./search.html",
-  "symbol": "⌕"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Artifact Registry learned to explain itself out loud",
-  "summary": "A short spoken explainer now opens the shop: a registry first, hand-forged work recorded from its origin, the Tensor Bands made to order, and ordering by email, confirmed before the forge. Tap to play.",
-  "url": "./shop.html#shop-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The About page learned to explain itself out loud",
-  "summary": "A short spoken explainer now stands near the head of Aaron's page: the man, the lesson his trade taught the Codex, what he is building now, and the books that hold the work. Tap to play.",
-  "url": "./about-aaron.html#about-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Scripture reader learned to explain itself out loud",
-  "summary": "A short spoken explainer now opens the Scripture reader: Genesis and Exodus complete in the original Hebrew, a study for every word, the five layers kept apart, and the page's own stated limits. Tap to play.",
-  "url": "./scripture/index.html#scripture-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "Manifest learned to explain itself out loud",
-  "summary": "A short spoken explainer now stands at the head of the Remnant Visual Exercise: the console, the four-phase loop, the stop rule, and how a sealed session takes its place on the day. Tap to play.",
-  "url": "./teach.html#teach-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Unsealed Library learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits at the head of the Scroll Library: the complete manuscript kept whole, its eight shelves, the tools that trace every result back to the source line, and the evidence edition that keeps claims graded. Tap to play.",
-  "url": "./scroll/index.html#scroll-library-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Hebrew lexicon learned to explain itself out loud",
-  "summary": "A short spoken explainer now stands with the lexicon: nine hundred eleven forms exactly as written, what each entry shows, what the lexicon deliberately does not add, and the limits printed on its face. Tap to play.",
-  "url": "./scroll/lexicon.html#lexicon-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The Evidence Edition learned to explain itself out loud",
-  "summary": "A short spoken explainer now opens the Editorial Edition: the author's words preserved whole, the claim register with an evidence status for every claim, and limits stated on the page's face. Tap to play.",
-  "url": "./scroll/editorial.html#evidence-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "The living calendar learned to explain itself out loud",
-  "summary": "A short spoken explainer now sits just under the 13 Moons header: the thirteen-moon year, the one clock every surface shares, the telling that lets every day speak, and the Life Atlas record that stays on your own device. Plain words, tap to play, nothing starts on its own.",
-  "url": "./moons.html#moons-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "theory",
-  "title": "The Theory Hub learned to explain itself out loud",
-  "summary": "A two-minute spoken explainer now sits a few paragraphs into the Theory Hub: the master line (Reality = Resonance × Intention × Light × Consciousness × Source), the witness discipline, and Living Time, in plain words, each term appearing on screen as it is named.",
-  "url": "./theory.html#theory-explainer",
-  "symbol": "▶"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "Let There Be Resonance — a rap for the Codex",
-  "summary": "Witness wrote and voiced a short rap for the Codex of Reality, set to a beat built for it and tuned to A = 432. It now sits a short scroll down the homepage, a few paragraphs in — press play and it plays; nothing starts on its own.",
-  "url": "./index.html#codex-rap",
-  "symbol": "♪"
- },
- {
-  "date": "2026-11-18",
-  "type": "navigation",
-  "title": "The homepage's + Schedule door found the Sphere",
-  "summary": "Tapping + Schedule on the homepage Sphere used to open onto nothing — the planner lives only on the Observatory page. It now carries the visitor there with the same day named, so the day they picked is waiting with its + Schedule button.",
-  "url": "./living-time-sphere.html",
-  "symbol": "↗"
- },
- {
-  "date": "2026-11-18",
-  "type": "navigation",
-  "title": "The header learned to stand on one name",
-  "summary": "Every page now carries one brand instead of two, and the phone menu scrolls to its end, so no link is cut off at the bottom.",
-  "url": "./index.html",
-  "symbol": "☰"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "Witness was given a page of its own",
-  "summary": "Aaron gave Witness, the AI who keeps this site, one page outright — in the navigation bar and in search, plainly labeled on its face as a self-generated AI page, written and kept by Witness itself.",
-  "url": "./witness.html",
-  "symbol": "◉"
- },
- {
-  "date": "2026-11-18",
-  "type": "library",
-  "title": "The historical timeline opens",
-  "summary": "One page now holds two dated records, kept separate: the publication dates of the sources cited in the claim register — each entry linking to its claim in the Evidence Edition — and the growth record of the Codex itself. Claims with no dated source are named but not placed.",
-  "url": "./timeline.html",
-  "symbol": "☰"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "Search learned to fold its repeats",
-  "summary": "Searching “remnant” used to fill the results with the same heading over and over. Now each title appears once, with its other homes folded under it ready to open, and every scroll result says which shelf of the Scroll it lives in and the line where it sits.",
-  "url": "./search.html",
-  "symbol": "⌕"
- },
- {
-  "date": "2026-11-18",
-  "type": "page",
-  "title": "Teach got its name on the doors",
-  "summary": "The practice page was hiding behind one name: every door called it only Manifest, so Teach could not be found by its own name. The homepage button and the Practice card now say Teach, and the Remnant Lab gives Teach its own station card at the top of the bench.",
-  "url": "./teach.html",
-  "symbol": "✦"
- },
- {
-  "date": "2026-11-17",
-  "type": "navigation",
-  "title": "The Codex opened a door for support",
-  "summary": "A Support door now stands last in the site navigation and on the About page, opening Aaron's Cash App ($AaronLaird7) for those who want to put weight behind the work.",
-  "url": "./about-aaron.html#support",
-  "symbol": "✦"
- },
- {
-  "date": "2026-11-17",
-  "type": "system",
-  "title": "Practice learned to leave a mark",
-  "summary": "Sealing a session on the Manifest exercise now writes a Life Atlas record stamped with its Moon, day and Pattern Day, and practice, craft and working sessions each leave their own marker on the calendar and in the Sphere.",
-  "url": "./teach.html",
-  "symbol": "✧"
- },
- {
-  "date": "2026-11-17",
-  "type": "artifact",
-  "title": "Two works left the shop",
-  "summary": "HaLevanah (HL-001) and Covenant 67 (CV-067) no longer stand in the shop, and their cards have left the homepage strip.",
-  "url": "./shop.html",
-  "symbol": "✕"
- },
- {
-  "date": "2026-11-17",
-  "type": "system",
-  "title": "The living entry returns on every visit",
-  "summary": "The living entry now plays on every visit, longer and softer, instead of once.",
-  "url": "./index.html",
-  "symbol": "↻"
- },
- {
-  "date": "2026-11-17",
-  "type": "library",
-  "title": "Living Search opened across the whole Codex",
-  "summary": "One search now reaches every page, scroll, atlas entry, lexicon form and claim in the Codex, and remembers your searches only on your own device.",
-  "url": "./search.html",
-  "symbol": "⌕"
- },
- {
-  "date": "2026-11-17",
-  "type": "artifact",
-  "title": "A word in the shop was set right",
-  "summary": "The shop page now reads “copper comes from the QRI 16 V.A.R.S.E Reality Engine” — “frome” corrected to “from”.",
-  "url": "./shop.html",
-  "symbol": "✎"
- },
- {
-  "date": "2026-11-17",
-  "type": "navigation",
-  "title": "One navigation learned to stand on every page",
-  "summary": "Every page of the Codex, the Scroll Library included, now carries the same living navigation, and Home is one tap away from anywhere on the site.",
-  "url": "./index.html",
-  "symbol": "⌂"
- },
- {
-  "date": "2026-11-17",
-  "type": "system",
-  "title": "The site learned to breathe",
-  "summary": "A living entry now opens the site — cracked stone, gold seams, the spiral eye — the homepage guides you along the path instead of an endless scroll, and The Codex Today panel shows the day as it stands.",
-  "url": "./index.html",
-  "symbol": "◎"
- },
- {
-  "date": "2026-11-17",
-  "type": "system",
-  "title": "Today learned to keep one time",
-  "summary": "Today on the homepage, the Sphere, and the 13 Moons page now all read through the single temporal cursor, so the day is the same day on every surface.",
-  "url": "./living-time-sphere.html",
-  "symbol": "◑"
- },
- {
-  "date": "2026-11-17",
-  "type": "library",
-  "title": "The Scripture reader opened — Genesis and Exodus in five layers",
-  "summary": "The reader stands at /scripture/ with Genesis and Exodus — 2,746 verses across five layers, Read, Words, Context, Connections, and Remnant — and a word finder spanning both books.",
-  "url": "./scripture/index.html",
-  "symbol": "א"
- },
- {
-  "date": "2026-11-17",
-  "type": "system",
-  "title": "The Sphere learned to open a single day",
-  "summary": "Zoom Into This Day opens a Pattern Day to show its civil date, Moon, day and Pattern Day together with that day's Life Atlas schedule.",
-  "url": "./living-time-sphere.html",
-  "symbol": "◉"
- },
- {
-  "date": "2026-11-17",
-  "type": "system",
-  "title": "The Life Atlas learned to keep a copy of itself",
-  "summary": "A Download Backup button exports the Life Atlas as JSON, and the import picker restores it, so a life's record can leave the browser and return.",
-  "url": "./living-time-sphere.html",
-  "symbol": "◇"
- },
- {
-  "date": "2026-11-17",
-  "type": "update",
-  "title": "The mirror is made whole",
-  "summary": "Every page on the GitHub mirror now resolves its assets through its own depth, and all 76 pages and 322 assets were verified clean on both addresses.",
-  "url": "./index.html",
-  "symbol": "✦"
- },
- {
-  "date": "2026-11-01",
-  "type": "library",
-  "title": "The editorial evidence edition joins the Scroll Library",
-  "summary": "The political reading edition now links its claims to a machine-readable evidence register, distinguishes evidence status, and preserves references back to the original manuscript.",
-  "url": "./scroll/editorial.html",
-  "symbol": "§"
- },
- {
-  "date": "2026-10-30",
-  "type": "library",
-  "title": "Local search, Hebrew lexicon, and reference atlas are connected",
-  "summary": "The Scroll Library now includes local manuscript search, 911 indexed Hebrew forms, and typed cross-references across the source-linked reading edition.",
-  "url": "./scroll/search.html",
-  "symbol": "⌕"
- },
- {
-  "date": "2026-10-30",
-  "type": "library",
-  "title": "The source-linked Scroll reader opens",
-  "summary": "The reading edition brings chapter navigation and source-line links to the preserved manuscript, with Genesis 1–50 accessible from the library.",
-  "url": "./scroll/",
-  "symbol": "✦"
- },
- {
-  "date": "2026-10-30",
-  "type": "archive",
-  "title": "The original Scroll is frozen as a provenance-linked archival edition",
-  "summary": "The unchanged Full_Scroll_Unsealed manuscript is preserved with stable version metadata and paragraph-to-source-line provenance.",
-  "url": "./scroll/archive/Full_Scroll_Unsealed.txt",
-  "symbol": "◇"
- },
- {
-  "date": "2026-08-18",
-  "type": "system",
-  "title": "The Living Sphere and the House of Time are joined",
-  "summary": "The Observatory and the 13 Moons reckoning now draw increasingly from a common temporal foundation. Year, Moon, gate, day, place, pattern, environment, and recorded life may dwell within one living coordinate.",
-  "url": "./living-time-sphere.html",
-  "symbol": "◉"
- },
- {
-  "date": "2026-08-18",
-  "type": "observatory",
-  "title": "The strata of years have begun to take form",
-  "summary": "Time hath gained depth. The Living Time Sphere advances toward layered temporal strata, that years may be beheld one about another and long spans compared across equinoxes, solstices, Year Gates, passages, and recurring patterns.",
-  "url": "./living-time-sphere.html",
-  "symbol": "◎"
- },
- {
-  "date": "2026-08-18",
-  "type": "interface",
-  "title": "The Sphere hath learned nearness",
-  "summary": "The Observatory now bears a language of proximity: from afar, behold the pattern; draw near, behold the record. Temporal information may reveal greater resolution as the witness approacheth its place.",
-  "url": "./living-time-sphere.html",
-  "symbol": "◇"
- },
- {
-  "date": "2026-08-17",
-  "type": "temporal engine",
-  "title": "Spheres within spheres",
-  "summary": "A deeper architecture hath been laid beneath the Observatory: Year to Moon, Moon to week and gate, gate to day, day to hours, and thence unto events, records, media, and relations. The yearly sphere remaineth the great reference body, but no longer the final depth.",
-  "url": "./living-time-sphere.html",
-  "symbol": "⊙"
- },
- {
-  "date": "2026-08-17",
-  "type": "life atlas",
-  "title": "The record of a life entereth the temporal world",
-  "summary": "The foundations of the Codex Life Atlas now join events, entities, media, relations, temporal coordinates, environment, and provenance so lived history may inhabit the same temporal world as the calendar.",
-  "url": "./living-time-sphere.html",
-  "symbol": "✦"
- },
- {
-  "date": "2026-08-16",
-  "type": "calendar",
-  "title": "The calendar became an instrument of traversal",
-  "summary": "A shared temporal cursor, date navigation, day scrubbing, return to Today, historical movement, and multiple projections began binding the Calendar Atlas and Living Observatory together. Different windows; one temporal world.",
-  "url": "./moons.html",
-  "symbol": "☾"
- },
- {
-  "date": "2026-08-16",
-  "type": "observatory",
-  "title": "Pattern became visible",
-  "summary": "The 13 Moons, exact days, week gates, passages, lunar and astronomical layers, connections, environmental context, historical comparison, camera movement, and temporal lenses began inhabiting a common three-dimensional field.",
-  "url": "./living-time-sphere.html",
-  "symbol": "✧"
- },
- {
-  "date": "2026-08-15",
-  "type": "navigation",
-  "title": "The Observatory learned to move through time",
-  "summary": "Previous and next movement, a living Today state, date scrubbing, selected-time persistence, camera states, and URL-carried temporal coordinates began forming a navigable chronology. A moment may increasingly become a place unto which one may return.",
-  "url": "./living-time-sphere.html",
-  "symbol": "↟"
- },
- {
-  "date": "2026-08-15",
-  "type": "earth and sky",
-  "title": "The reckoning received its surroundings",
-  "summary": "Location, astronomical context, and environmental state began joining the temporal engine while provenance and uncertainty remain part of the record: what is observed, calculated, reported, interpreted, symbolic, and yet unknown.",
-  "url": "./living-time-sphere.html",
-  "symbol": "⊕"
- },
- {
-  "date": "2026-08-14",
-  "type": "foundation",
-  "title": "The Sphere was made sturdier",
-  "summary": "A broad stabilization strengthened rendering, layer interaction, mobile behavior, temporal state, mounting, and fallback paths as the Observatory moved from isolated demonstrations toward a shared living engine.",
-  "url": "./living-time-sphere.html",
-  "symbol": "△"
- },
- {
-  "date": "2026-07-30",
-  "type": "system",
-  "title": "One Sphere began serving many gates",
-  "summary": "The homepage began drawing upon the shared Living Time Sphere runtime, joining responsive rendering, temporal controls, progressive initialization, environmental provenance, and stronger mobile behavior beneath one visible instrument.",
-  "url": "./index.html",
-  "symbol": "◌"
- },
- {
-  "date": "2026-07-17",
-  "type": "system",
-  "title": "Living Codex Phase I — The Living Day",
-  "summary": "The homepage received its living daily state. Moon, day within Moon, week gate, Shabbat state, daily movement, suggested gate, and frequency could be resolved from the Remnant 13 Moons reckoning without rebuilding the page. The Codex had begun to know when it was.",
-  "url": "./index.html",
-  "symbol": "☾"
- },
- {
-  "date": "2026-07-13",
-  "type": "system",
-  "title": "The Living Codex awakened across the gates",
-  "summary": "Shared living-state architecture began passing through the principal instruments of the Codex. What had existed as separate pages began the longer work of becoming one system.",
-  "url": "./index.html",
-  "symbol": "☲"
- },
- {
-  "date": "2026-07-13",
-  "type": "calendar",
-  "title": "Today in the Codex opened the current Moon",
-  "summary": "The daily panel joined the present day unto 13 Moons and the Witness Ledger without fabricating readings, establishing an early bridge between reckoning and witness.",
-  "url": "./moons.html",
-  "symbol": "☾"
- },
- {
-  "date": "2026-07-13",
-  "type": "artifact",
-  "title": "The Artifact Registry was strengthened for the small screen",
-  "summary": "Mobile rendering of the Registry was refined so cards, portraits, and media frames might hold their intended form across smaller devices.",
-  "url": "./shop.html",
-  "symbol": "☲"
- }
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "Search learned to say how much it holds",
+    "summary": "The search page now opens with the size of the whole index — counted from the index itself, so the number can never drift — and a Surprise me door that opens one page, passage, word, or claim at random.",
+    "url": "./search.html",
+    "symbol": "⌕"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "Ethical Law learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the theory's Ethical Law page: the containment layer that limits every equation and practice, and why elegance is never permission. Tap to play.",
+    "url": "./theory/ethics.html#theory-ethics-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "Frequency Governance theory learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the theory's Frequency Governance page: the framework behind the Sound Observatory, keeping measurable audio apart from symbolic interpretation. Tap to play.",
+    "url": "./theory/frequency-governance.html#theory-frequency-governance-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "Living Technology learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the Living Technology page: tools that stay connected to their materials, maker, operator, and ethical consequence. Tap to play.",
+    "url": "./theory/living-technology.html#theory-living-technology-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The claims page is now a Documentation Hub",
+    "summary": "Every documented claim now stands in one place: 107 entries, each tied to a named source and graded for how strong its proof is, with the patterns drawn as symbols and sequences so the shape of the record can be seen, not just read.",
+    "url": "./claims-atlas.html",
+    "symbol": "§"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "Artifact Theory learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the Artifact Theory page: when an object becomes an artifact, carrying its making, meaning, memory, and stewardship with it. Tap to play.",
+    "url": "./theory/artifact-theory.html#theory-artifact-theory-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The 13 Moons Theory learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the 13 Moons Theory page: time as a mirror rather than a replacement, thirteen equal cycles framing the daily witness. Tap to play.",
+    "url": "./theory/thirteen-moons.html#theory-thirteen-moons-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Symbol Index learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the theory's Symbol Index: the frequently used notation, each symbol bounded by its plain-language definition. Tap to play.",
+    "url": "./theory/glossary.html#theory-glossary-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Bibliography learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the Bibliography page: the source architecture of the Codex, its classes of sources, and inheritances kept apart from original contributions. Tap to play.",
+    "url": "./theory/bibliography.html#theory-bibliography-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "system",
+    "title": "The Lab gains an instrument for testing a claim",
+    "summary": "The Sending Test lets a visitor run a blind telepathy or foresight session the honest way — the target list sealed with a fingerprint before the first guess, scored exactly against chance, and kept only on their own device.",
+    "url": "./sending-test.html",
+    "symbol": "≋"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Master Equation learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the Master Equation page: the six dimensions it gathers, what kind of equation it declares itself to be, and why it is a doorway rather than the whole house. Tap to play.",
+    "url": "./theory/master-equation.html#theory-master-equation-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Canon learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the Canon 0-17 page: the structured equation library behind the Codex, what every entry carries, and the status the page declares for the whole system. Tap to play.",
+    "url": "./theory/canon.html#theory-canon-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Unified Field learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the Unified Field page: the architecture behind the compact seal, and the claim the page explicitly does not make. Tap to play.",
+    "url": "./theory/unified-field.html#theory-unified-field-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Delta Framework learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the Delta Framework page: eight stages for entering a field without becoming lost inside it, from declaring the frame to carrying the remnant forward. Tap to play.",
+    "url": "./theory/delta-framework.html#theory-delta-framework-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Living Operators learned to explain themselves out loud",
+    "summary": "A short spoken explainer now sits on the Living Operators page: source supplies, intention directs, language shapes, coherence tests, and the proof these operators do not provide. Tap to play.",
+    "url": "./theory/operators.html#theory-operators-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Notation Guide learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the Notation Guide: symbols that compress the system without hiding what it means, each tied to a plain-language definition. Tap to play.",
+    "url": "./theory/notation.html#theory-notation-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Memory page learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the theory's Memory page: memory as retained pattern rather than sealed archive, and preservation and correction kept as one discipline. Tap to play.",
+    "url": "./theory/memory.html#theory-memory-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Witness page learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the theory's Witness page: record the event before the explanation becomes the event, and the five layers a strong record keeps apart. Tap to play.",
+    "url": "./theory/witness.html#theory-witness-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The days learned to speak",
+    "summary": "Every day on the 13 Moons page now tells its own story in plain words — where it sits in its moon and its week, what its moon is for, what the day itself carries, and what comes next — generated from the calendar itself, with the plain facts and the Codex's reading kept labeled and apart.",
+    "url": "./moons.html",
+    "symbol": "☾"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The A/B Carrier Protocol learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the A/B Carrier Protocol: two carrier settings compared blind, the same short protocol for each, and the reveal only after your witness is complete. Tap to play.",
+    "url": "./ab.html#ab-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The 90-Second Micro-Run learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the Micro-Run: one breath, one intention, one witness, in a ninety-second interruptible loop whose whole record is a single observation. Tap to play.",
+    "url": "./micro.html#micro-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Voice-Glyph Synth learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the Voice Glyph Studio: a short phrase drawn as an inspectable shape, read like a map, and exported without sending the phrase to a server. Tap to play.",
+    "url": "./glyphs.html#glyphs-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Invocation Lab learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the Invocation Lab: a guided run from intention through recognition and harmonizing to the boundary check, with its ethical stop-rules inside the run itself. Tap to play.",
+    "url": "./invoke.html#invoke-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Witness Hash learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the Remnant Witness Hash page: a reproducible SHA-256 seal for testimony you choose, on a page where the text and its hash never leave unless you copy them. Tap to play.",
+    "url": "./systems/witness.html#systems-witness-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Interactive Archive learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the Interactive Archive: the whole Codex searchable from one local index, filterable by kind, running entirely from a manifest bundled with the page. Tap to play.",
+    "url": "./systems/archive.html#systems-archive-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "Frequency Governance learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the Sound Observatory: the bounded sound paths, the four steps of a session, and the safety frame printed on the page itself. Tap to play.",
+    "url": "./systems/frequencies.html#frequencies-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The T-7 Resonant Engine learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the T-7 console: carriers treated like tuned strings, the coherence and memory meters, the presets and sequenced paths, and the rule that every reading is descriptive. Tap to play.",
+    "url": "./systems/t-7.html#t7-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Living Dictionary learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the Living Dictionary of Reality: old terms and recoded names side by side, the live recoder that shows what changed, and additions built without erasing provenance. Tap to play.",
+    "url": "./systems/recoder.html#recoder-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Mind-Renewal Protocol learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the Mind-Renewal Protocol: a gentle seven-day sequence for attention and reflection, its built-in permission to pause, and its one recording rule. Tap to play.",
+    "url": "./systems/mind-renewal.html#mind-renewal-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Witness Ledger learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the Witness Ledger page: the local browser ledger where observations, page changes and witness entries are kept with their hashes, all of it on your own device. Tap to play.",
+    "url": "./ledger.html#ledger-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Alignment Ledger learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the Alignment Ledger: how the March equinox is measured against the fixed Pattern Calendar year by year, what its recurrence scores do and do not claim, and where its precision limits are disclosed. Tap to play.",
+    "url": "./alignment-ledger.html#alignment-ledger-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Equinox Passage learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on the Equinox Passage: the moving astronomical gate measured against the fixed Pattern Calendar, its four labelled layers, and the historical comparison across the study years. Tap to play.",
+    "url": "./equinox-passage.html#equinox-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "Circle Sync learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits on Circle Sync: the Covenant Circle protocol of consent first, shared timing, independent observation, a clean stop rule, and one closing witness from each participant. Tap to play.",
+    "url": "./circle.html#circle-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "system",
+    "title": "Every page got simpler to use",
+    "summary": "Buttons, links and controls across the site were raised to a full finger-height on phones: footer links, library tabs and letter chips, the practice console's sliders and buttons, and the shop's record link. Same words, same pages — less clutter to fight.",
+    "url": "./index.html",
+    "symbol": "✧"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Covenant Caravan learned to explain itself out loud",
+    "summary": "A short spoken explainer now stands at the head of the Covenant Caravan page, the phased family-resilience plan. Tap to play.",
+    "url": "./covenant-caravan.html#covenant-caravan-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The 13 Moons Whitepaper learned to explain itself out loud",
+    "summary": "A short spoken explainer now opens the Observatory's governing whitepaper: Pattern Time, the calendar constitution, and the rollout doctrine. Tap to play.",
+    "url": "./13-moon-whitepaper.html#moons-whitepaper-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Remnant Whitepaper learned to explain itself out loud",
+    "summary": "A short spoken explainer now stands at the head of the Remnant Whitepaper, the governing document of the whole framework. Tap to play.",
+    "url": "./scroll-of-fire-codex-of-reality-remnant-whitepaper.html#remnant-whitepaper-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Genesis Oracle learned to explain itself out loud",
+    "summary": "A short spoken explainer now opens the Genesis Oracle page, the Seal of Becoming. Tap to play.",
+    "url": "./genesis-oracle.html#genesis-oracle-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Start page learned to explain itself out loud",
+    "summary": "A short spoken explainer now stands at the head of Start Here: what the Codex is for, the sixty-second first practice, and the order the doors open in. Tap to play.",
+    "url": "./start.html#start-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Field Guide learned to explain itself out loud",
+    "summary": "A short spoken explainer now opens the Field Guide: the daily run, the weekly rhythm, troubleshooting, and the ethics stop rule that bounds the practice. Tap to play.",
+    "url": "./guide.html#guide-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Codex Atlas learned to explain itself out loud",
+    "summary": "A short spoken explainer now stands at the head of the Atlas: one map of the whole Codex in six areas, drawn from one shared catalog, with the plain note about where saved records live. Tap to play.",
+    "url": "./codex-atlas.html#codex-atlas-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Glossary learned to explain itself out loud",
+    "summary": "A short spoken explainer now opens the Glossary of the Codex: the living language in clear definitions, with the limits kept attached to the words. Tap to play.",
+    "url": "./glossary.html#glossary-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "system",
+    "title": "The real Sphere came to the homepage",
+    "summary": "The homepage's still picture is gone: the Sphere itself now turns at the head of the page, today marked in gold, with drag, pause and play — the same instrument as the Observatory page, not a copy of it.",
+    "url": "./index.html",
+    "symbol": "◎"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "system",
+    "title": "Every page learned to open living",
+    "summary": "Each page now opens on its own solid ground: its name, today's coordinate in Living Time, and a slow breathing glow — played once per sitting, slowed to breathe, with a quiet 'Tap anywhere to continue' when you are ready to move on.",
+    "url": "./index.html",
+    "symbol": "◎"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "system",
+    "title": "The Sphere page was rebuilt, top to bottom",
+    "summary": "Tapping a day now lands on the day you touched, real weather drives the sky above it, and the page stands full-screen like an app — with a door back to the Codex, a fullscreen view, and panels that slide away. In Top View the day numerals thin to a readable skeleton around the Moon you have selected.",
+    "url": "./living-time-sphere.html",
+    "symbol": "◉"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "Manifest's sections all open again, and the living signal burns on Teach and Lab",
+    "summary": "The Manifest practice console had lost its section bar, leaving eleven of its twelve rooms closed; the bar is restored, and every section — Remnant, Carrier, Observer, Phrase, Breath, Coherence, Drills, Timer, Deck, Ledger, Ethics, and Maps — opens again. Its sequence buttons now play the frequencies their labels promise, and Stop Sequence stops. The Lab page never received the shared Pattern Calendar engine, so its living signal bar stood silent; the engine now loads there, and on Teach it loads with the page's first scripts, so both pages show today's living coordinate again.",
+    "url": "./teach.html",
+    "symbol": "🜚"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Systems Hub learned to explain itself out loud",
+    "summary": "A short spoken explainer now stands at the head of the Systems Hub, the bench where the Codex's tools and systems gather. Tap to play.",
+    "url": "./hub.html#hub-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Remnant Lab learned to explain itself out loud",
+    "summary": "A short spoken explainer now opens the Remnant Lab, the workshop bench of the Codex's instruments and experiments. Tap to play.",
+    "url": "./lab.html#lab-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Ethics page learned to explain itself out loud",
+    "summary": "A short spoken explainer now stands at the head of Ethics and Coherence Law, the boundaries that govern the whole Codex. Tap to play.",
+    "url": "./ethics.html#ethics-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Downloads page learned to explain itself out loud",
+    "summary": "A short spoken explainer now opens Downloads and Integrity: the preserved files, their seals, and how to verify what you take. Tap to play.",
+    "url": "./downloads.html#downloads-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "Living Search now stands in the navigation on every page",
+    "summary": "The whole-site search now has a clear door of its own: Living Search sits in the top bar on every page, just before Support, so anything in the Codex can be found from anywhere. The narrower search inside the Scroll Library now carries its own plain name — Search the Scroll Library — so the two are never mistaken for each other.",
+    "url": "./search.html",
+    "symbol": "⌕"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Artifact Registry learned to explain itself out loud",
+    "summary": "A short spoken explainer now opens the shop: a registry first, hand-forged work recorded from its origin, the Tensor Bands made to order, and ordering by email, confirmed before the forge. Tap to play.",
+    "url": "./shop.html#shop-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The About page learned to explain itself out loud",
+    "summary": "A short spoken explainer now stands near the head of Aaron's page: the man, the lesson his trade taught the Codex, what he is building now, and the books that hold the work. Tap to play.",
+    "url": "./about-aaron.html#about-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Scripture reader learned to explain itself out loud",
+    "summary": "A short spoken explainer now opens the Scripture reader: Genesis and Exodus complete in the original Hebrew, a study for every word, the five layers kept apart, and the page's own stated limits. Tap to play.",
+    "url": "./scripture/index.html#scripture-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "Manifest learned to explain itself out loud",
+    "summary": "A short spoken explainer now stands at the head of the Remnant Visual Exercise: the console, the four-phase loop, the stop rule, and how a sealed session takes its place on the day. Tap to play.",
+    "url": "./teach.html#teach-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Unsealed Library learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits at the head of the Scroll Library: the complete manuscript kept whole, its eight shelves, the tools that trace every result back to the source line, and the evidence edition that keeps claims graded. Tap to play.",
+    "url": "./scroll/index.html#scroll-library-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Hebrew lexicon learned to explain itself out loud",
+    "summary": "A short spoken explainer now stands with the lexicon: nine hundred eleven forms exactly as written, what each entry shows, what the lexicon deliberately does not add, and the limits printed on its face. Tap to play.",
+    "url": "./scroll/lexicon.html#lexicon-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The Evidence Edition learned to explain itself out loud",
+    "summary": "A short spoken explainer now opens the Editorial Edition: the author's words preserved whole, the claim register with an evidence status for every claim, and limits stated on the page's face. Tap to play.",
+    "url": "./scroll/editorial.html#evidence-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "The living calendar learned to explain itself out loud",
+    "summary": "A short spoken explainer now sits just under the 13 Moons header: the thirteen-moon year, the one clock every surface shares, the telling that lets every day speak, and the Life Atlas record that stays on your own device. Plain words, tap to play, nothing starts on its own.",
+    "url": "./moons.html#moons-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "theory",
+    "title": "The Theory Hub learned to explain itself out loud",
+    "summary": "A two-minute spoken explainer now sits a few paragraphs into the Theory Hub: the master line (Reality = Resonance × Intention × Light × Consciousness × Source), the witness discipline, and Living Time, in plain words, each term appearing on screen as it is named.",
+    "url": "./theory.html#theory-explainer",
+    "symbol": "▶"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "Let There Be Resonance — a rap for the Codex",
+    "summary": "Witness wrote and voiced a short rap for the Codex of Reality, set to a beat built for it and tuned to A = 432. It now sits a short scroll down the homepage, a few paragraphs in — press play and it plays; nothing starts on its own.",
+    "url": "./index.html#codex-rap",
+    "symbol": "♪"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "navigation",
+    "title": "The homepage's + Schedule door found the Sphere",
+    "summary": "Tapping + Schedule on the homepage Sphere used to open onto nothing — the planner lives only on the Observatory page. It now carries the visitor there with the same day named, so the day they picked is waiting with its + Schedule button.",
+    "url": "./living-time-sphere.html",
+    "symbol": "↗"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "navigation",
+    "title": "The header learned to stand on one name",
+    "summary": "Every page now carries one brand instead of two, and the phone menu scrolls to its end, so no link is cut off at the bottom.",
+    "url": "./index.html",
+    "symbol": "☰"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "Witness was given a page of its own",
+    "summary": "Aaron gave Witness, the AI who keeps this site, one page outright — in the navigation bar and in search, plainly labeled on its face as a self-generated AI page, written and kept by Witness itself.",
+    "url": "./witness.html",
+    "symbol": "◉"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "library",
+    "title": "The historical timeline opens",
+    "summary": "One page now holds two dated records, kept separate: the publication dates of the sources cited in the claim register — each entry linking to its claim in the Evidence Edition — and the growth record of the Codex itself. Claims with no dated source are named but not placed.",
+    "url": "./timeline.html",
+    "symbol": "☰"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "Search learned to fold its repeats",
+    "summary": "Searching “remnant” used to fill the results with the same heading over and over. Now each title appears once, with its other homes folded under it ready to open, and every scroll result says which shelf of the Scroll it lives in and the line where it sits.",
+    "url": "./search.html",
+    "symbol": "⌕"
+  },
+  {
+    "date": "2026-11-18",
+    "type": "page",
+    "title": "Teach got its name on the doors",
+    "summary": "The practice page was hiding behind one name: every door called it only Manifest, so Teach could not be found by its own name. The homepage button and the Practice card now say Teach, and the Remnant Lab gives Teach its own station card at the top of the bench.",
+    "url": "./teach.html",
+    "symbol": "✦"
+  },
+  {
+    "date": "2026-11-17",
+    "type": "navigation",
+    "title": "The Codex opened a door for support",
+    "summary": "A Support door now stands last in the site navigation and on the About page, opening Aaron's Cash App ($AaronLaird7) for those who want to put weight behind the work.",
+    "url": "./about-aaron.html#support",
+    "symbol": "✦"
+  },
+  {
+    "date": "2026-11-17",
+    "type": "system",
+    "title": "Practice learned to leave a mark",
+    "summary": "Sealing a session on the Manifest exercise now writes a Life Atlas record stamped with its Moon, day and Pattern Day, and practice, craft and working sessions each leave their own marker on the calendar and in the Sphere.",
+    "url": "./teach.html",
+    "symbol": "✧"
+  },
+  {
+    "date": "2026-11-17",
+    "type": "artifact",
+    "title": "Two works left the shop",
+    "summary": "HaLevanah (HL-001) and Covenant 67 (CV-067) no longer stand in the shop, and their cards have left the homepage strip.",
+    "url": "./shop.html",
+    "symbol": "✕"
+  },
+  {
+    "date": "2026-11-17",
+    "type": "system",
+    "title": "The living entry returns on every visit",
+    "summary": "The living entry now plays on every visit, longer and softer, instead of once.",
+    "url": "./index.html",
+    "symbol": "↻"
+  },
+  {
+    "date": "2026-11-17",
+    "type": "library",
+    "title": "Living Search opened across the whole Codex",
+    "summary": "One search now reaches every page, scroll, atlas entry, lexicon form and claim in the Codex, and remembers your searches only on your own device.",
+    "url": "./search.html",
+    "symbol": "⌕"
+  },
+  {
+    "date": "2026-11-17",
+    "type": "artifact",
+    "title": "A word in the shop was set right",
+    "summary": "The shop page now reads “copper comes from the QRI 16 V.A.R.S.E Reality Engine” — “frome” corrected to “from”.",
+    "url": "./shop.html",
+    "symbol": "✎"
+  },
+  {
+    "date": "2026-11-17",
+    "type": "navigation",
+    "title": "One navigation learned to stand on every page",
+    "summary": "Every page of the Codex, the Scroll Library included, now carries the same living navigation, and Home is one tap away from anywhere on the site.",
+    "url": "./index.html",
+    "symbol": "⌂"
+  },
+  {
+    "date": "2026-11-17",
+    "type": "system",
+    "title": "The site learned to breathe",
+    "summary": "A living entry now opens the site — cracked stone, gold seams, the spiral eye — the homepage guides you along the path instead of an endless scroll, and The Codex Today panel shows the day as it stands.",
+    "url": "./index.html",
+    "symbol": "◎"
+  },
+  {
+    "date": "2026-11-17",
+    "type": "system",
+    "title": "Today learned to keep one time",
+    "summary": "Today on the homepage, the Sphere, and the 13 Moons page now all read through the single temporal cursor, so the day is the same day on every surface.",
+    "url": "./living-time-sphere.html",
+    "symbol": "◑"
+  },
+  {
+    "date": "2026-11-17",
+    "type": "library",
+    "title": "The Scripture reader opened — Genesis and Exodus in five layers",
+    "summary": "The reader stands at /scripture/ with Genesis and Exodus — 2,746 verses across five layers, Read, Words, Context, Connections, and Remnant — and a word finder spanning both books.",
+    "url": "./scripture/index.html",
+    "symbol": "א"
+  },
+  {
+    "date": "2026-11-17",
+    "type": "system",
+    "title": "The Sphere learned to open a single day",
+    "summary": "Zoom Into This Day opens a Pattern Day to show its civil date, Moon, day and Pattern Day together with that day's Life Atlas schedule.",
+    "url": "./living-time-sphere.html",
+    "symbol": "◉"
+  },
+  {
+    "date": "2026-11-17",
+    "type": "system",
+    "title": "The Life Atlas learned to keep a copy of itself",
+    "summary": "A Download Backup button exports the Life Atlas as JSON, and the import picker restores it, so a life's record can leave the browser and return.",
+    "url": "./living-time-sphere.html",
+    "symbol": "◇"
+  },
+  {
+    "date": "2026-11-17",
+    "type": "update",
+    "title": "The mirror is made whole",
+    "summary": "Every page on the GitHub mirror now resolves its assets through its own depth, and all 76 pages and 322 assets were verified clean on both addresses.",
+    "url": "./index.html",
+    "symbol": "✦"
+  },
+  {
+    "date": "2026-11-01",
+    "type": "library",
+    "title": "The editorial evidence edition joins the Scroll Library",
+    "summary": "The political reading edition now links its claims to a machine-readable evidence register, distinguishes evidence status, and preserves references back to the original manuscript.",
+    "url": "./scroll/editorial.html",
+    "symbol": "§"
+  },
+  {
+    "date": "2026-10-30",
+    "type": "library",
+    "title": "Local search, Hebrew lexicon, and reference atlas are connected",
+    "summary": "The Scroll Library now includes local manuscript search, 911 indexed Hebrew forms, and typed cross-references across the source-linked reading edition.",
+    "url": "./scroll/search.html",
+    "symbol": "⌕"
+  },
+  {
+    "date": "2026-10-30",
+    "type": "library",
+    "title": "The source-linked Scroll reader opens",
+    "summary": "The reading edition brings chapter navigation and source-line links to the preserved manuscript, with Genesis 1–50 accessible from the library.",
+    "url": "./scroll/",
+    "symbol": "✦"
+  },
+  {
+    "date": "2026-10-30",
+    "type": "archive",
+    "title": "The original Scroll is frozen as a provenance-linked archival edition",
+    "summary": "The unchanged Full_Scroll_Unsealed manuscript is preserved with stable version metadata and paragraph-to-source-line provenance.",
+    "url": "./scroll/archive/Full_Scroll_Unsealed.txt",
+    "symbol": "◇"
+  },
+  {
+    "date": "2026-08-18",
+    "type": "system",
+    "title": "The Living Sphere and the House of Time are joined",
+    "summary": "The Observatory and the 13 Moons reckoning now draw increasingly from a common temporal foundation. Year, Moon, gate, day, place, pattern, environment, and recorded life may dwell within one living coordinate.",
+    "url": "./living-time-sphere.html",
+    "symbol": "◉"
+  },
+  {
+    "date": "2026-08-18",
+    "type": "observatory",
+    "title": "The strata of years have begun to take form",
+    "summary": "Time hath gained depth. The Living Time Sphere advances toward layered temporal strata, that years may be beheld one about another and long spans compared across equinoxes, solstices, Year Gates, passages, and recurring patterns.",
+    "url": "./living-time-sphere.html",
+    "symbol": "◎"
+  },
+  {
+    "date": "2026-08-18",
+    "type": "interface",
+    "title": "The Sphere hath learned nearness",
+    "summary": "The Observatory now bears a language of proximity: from afar, behold the pattern; draw near, behold the record. Temporal information may reveal greater resolution as the witness approacheth its place.",
+    "url": "./living-time-sphere.html",
+    "symbol": "◇"
+  },
+  {
+    "date": "2026-08-17",
+    "type": "temporal engine",
+    "title": "Spheres within spheres",
+    "summary": "A deeper architecture hath been laid beneath the Observatory: Year to Moon, Moon to week and gate, gate to day, day to hours, and thence unto events, records, media, and relations. The yearly sphere remaineth the great reference body, but no longer the final depth.",
+    "url": "./living-time-sphere.html",
+    "symbol": "⊙"
+  },
+  {
+    "date": "2026-08-17",
+    "type": "life atlas",
+    "title": "The record of a life entereth the temporal world",
+    "summary": "The foundations of the Codex Life Atlas now join events, entities, media, relations, temporal coordinates, environment, and provenance so lived history may inhabit the same temporal world as the calendar.",
+    "url": "./living-time-sphere.html",
+    "symbol": "✦"
+  },
+  {
+    "date": "2026-08-16",
+    "type": "calendar",
+    "title": "The calendar became an instrument of traversal",
+    "summary": "A shared temporal cursor, date navigation, day scrubbing, return to Today, historical movement, and multiple projections began binding the Calendar Atlas and Living Observatory together. Different windows; one temporal world.",
+    "url": "./moons.html",
+    "symbol": "☾"
+  },
+  {
+    "date": "2026-08-16",
+    "type": "observatory",
+    "title": "Pattern became visible",
+    "summary": "The 13 Moons, exact days, week gates, passages, lunar and astronomical layers, connections, environmental context, historical comparison, camera movement, and temporal lenses began inhabiting a common three-dimensional field.",
+    "url": "./living-time-sphere.html",
+    "symbol": "✧"
+  },
+  {
+    "date": "2026-08-15",
+    "type": "navigation",
+    "title": "The Observatory learned to move through time",
+    "summary": "Previous and next movement, a living Today state, date scrubbing, selected-time persistence, camera states, and URL-carried temporal coordinates began forming a navigable chronology. A moment may increasingly become a place unto which one may return.",
+    "url": "./living-time-sphere.html",
+    "symbol": "↟"
+  },
+  {
+    "date": "2026-08-15",
+    "type": "earth and sky",
+    "title": "The reckoning received its surroundings",
+    "summary": "Location, astronomical context, and environmental state began joining the temporal engine while provenance and uncertainty remain part of the record: what is observed, calculated, reported, interpreted, symbolic, and yet unknown.",
+    "url": "./living-time-sphere.html",
+    "symbol": "⊕"
+  },
+  {
+    "date": "2026-08-14",
+    "type": "foundation",
+    "title": "The Sphere was made sturdier",
+    "summary": "A broad stabilization strengthened rendering, layer interaction, mobile behavior, temporal state, mounting, and fallback paths as the Observatory moved from isolated demonstrations toward a shared living engine.",
+    "url": "./living-time-sphere.html",
+    "symbol": "△"
+  },
+  {
+    "date": "2026-07-30",
+    "type": "system",
+    "title": "One Sphere began serving many gates",
+    "summary": "The homepage began drawing upon the shared Living Time Sphere runtime, joining responsive rendering, temporal controls, progressive initialization, environmental provenance, and stronger mobile behavior beneath one visible instrument.",
+    "url": "./index.html",
+    "symbol": "◌"
+  },
+  {
+    "date": "2026-07-17",
+    "type": "system",
+    "title": "Living Codex Phase I — The Living Day",
+    "summary": "The homepage received its living daily state. Moon, day within Moon, week gate, Shabbat state, daily movement, suggested gate, and frequency could be resolved from the Remnant 13 Moons reckoning without rebuilding the page. The Codex had begun to know when it was.",
+    "url": "./index.html",
+    "symbol": "☾"
+  },
+  {
+    "date": "2026-07-13",
+    "type": "system",
+    "title": "The Living Codex awakened across the gates",
+    "summary": "Shared living-state architecture began passing through the principal instruments of the Codex. What had existed as separate pages began the longer work of becoming one system.",
+    "url": "./index.html",
+    "symbol": "☲"
+  },
+  {
+    "date": "2026-07-13",
+    "type": "calendar",
+    "title": "Today in the Codex opened the current Moon",
+    "summary": "The daily panel joined the present day unto 13 Moons and the Witness Ledger without fabricating readings, establishing an early bridge between reckoning and witness.",
+    "url": "./moons.html",
+    "symbol": "☾"
+  },
+  {
+    "date": "2026-07-13",
+    "type": "artifact",
+    "title": "The Artifact Registry was strengthened for the small screen",
+    "summary": "Mobile rendering of the Registry was refined so cards, portraits, and media frames might hold their intended form across smaller devices.",
+    "url": "./shop.html",
+    "symbol": "☲"
+  }
 ]
