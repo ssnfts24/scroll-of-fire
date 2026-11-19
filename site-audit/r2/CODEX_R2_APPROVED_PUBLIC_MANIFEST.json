@@ -268,6 +268,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/css/shroom-garden.css",
+      "sha256": "bf20dc793c54b667e9528d7a497ee90e711f93e10d5fdfc6f321a7dde0ca98cf",
+      "publicUrl": "https://codexofreality.org/assets/css/shroom-garden.css",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/css/site-atlas.css",
       "sha256": "2f9aa74c36018d4f5c44087ad2685570ee1c20e4e9a6263f8af6034848e659a1",
       "publicUrl": "https://codexofreality.org/assets/css/site-atlas.css",
@@ -329,7 +335,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "46525685422b4944d77f8b66e1cdd03f6201ee35198197659fc93967edb667e2",
+      "sha256": "d3b7dc2908283ae7dfd5125444965907e8a1f7fb22b604dfa322adb8439a33be",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -2050,6 +2056,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/js/shroom-garden.js",
+      "sha256": "de796fb595267ad3153a7f9cfd176d2c29afc1eb7ee5fafcc5a206ce50d38c86",
+      "publicUrl": "https://codexofreality.org/assets/js/shroom-garden.js",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/js/site.js",
       "sha256": "9fdbfbbbf1488b24eeb9c6ceacb8026687974e50abbf7eef4be9d7343522f5c7",
       "publicUrl": "https://codexofreality.org/assets/js/site.js",
@@ -2741,7 +2753,7 @@
     },
     {
       "path": "docs/assets/search/atlas.json",
-      "sha256": "2011979862fd751868ba158a40f8286aee8b2670e7221ac6b175ad86cf861f8a",
+      "sha256": "4464aa35d2724b808c8c52fd2516b31044968cc8c84803c33bd8c1a758b6a5c0",
       "publicUrl": "https://codexofreality.org/assets/search/atlas.json",
       "status": "operational"
     },
@@ -2759,13 +2771,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "b6aa536431eb547297ad63ce889545e97c9e41bc98a9cd8153ef053cdb832a4a",
+      "sha256": "07300d99c6f2d15aa5f0aff77849ece6b5a12dbaacf679cb85a83c2c7d86a727",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "7a39f37eb34454ca61249936e372e4a37d8911f9d38edcca973fca5a83cbf4f3",
+      "sha256": "39b89ec2077c6ba8d16efab5e230921af54f4224d679855cf9dd9d970095d6e5",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -2813,7 +2825,7 @@
     },
     {
       "path": "docs/codex-atlas.html",
-      "sha256": "63d3f4d013f36d81ff60ae28e0b0fffb1359786a1b105da00f82ab2553dd7961",
+      "sha256": "a4eeaed69138f5e47346a1ecaea9cdf7d93d86dfa11375897d8fbf5799bfa87d",
       "publicUrl": "https://codexofreality.org/codex-atlas.html",
       "status": "operational"
     },
@@ -2849,7 +2861,7 @@
     },
     {
       "path": "docs/data/site-catalog.json",
-      "sha256": "828e1e51a83ad7af0bb1353430369c5b4916896b2ab6b5a10749076e696f8c56",
+      "sha256": "e094aa6ccc1bb753e0034b30d3bce16cafbf549df13ff690e2963e8ec11e62e7",
       "publicUrl": "https://codexofreality.org/data/site-catalog.json",
       "status": "operational"
     },
@@ -2869,6 +2881,12 @@
       "path": "docs/ethics.html",
       "sha256": "eb5e014239ce9bb0f9d0b546c64e3e0441f5502989171c7ac48319421bdbd0bb",
       "publicUrl": "https://codexofreality.org/ethics.html",
+      "status": "operational"
+    },
+    {
+      "path": "docs/garden.html",
+      "sha256": "1cbb010cc48eb811770fe127e481b1c5ededb25398e59d8e9ac4680bd87cc9da",
+      "publicUrl": "https://codexofreality.org/garden.html",
       "status": "operational"
     },
     {
@@ -2903,7 +2921,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "3dbf6ea02e706b7275a4dc6a59c511dfd0e6b012eb95b22f67f9a107589bbb20",
+      "sha256": "ba700d48586f53518de894d5418f8e3bb8e93cd74ae50e18932af2419622f02a",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
@@ -2915,7 +2933,7 @@
     },
     {
       "path": "docs/lab.html",
-      "sha256": "fdb2f4e148b87beac474adc1488d748d3fb9787e17bf61fd05b6878c0b736940",
+      "sha256": "22d70569d4ca369c3a25b288b194fa06e8e810a33d646549bf0dbc16856ce5e1",
       "publicUrl": "https://codexofreality.org/lab.html",
       "status": "operational"
     },

@@ -641,6 +641,22 @@
       "publicationEligibility": "approved-public"
     },
     {
+      "id": "shroom-garden",
+      "title": "Shroom Search — the Garden",
+      "description": "A small garden game on the bench: tend mushroom beds, grow them through tiers across days and practice, and harvest passes kept as Life Atlas records on the visitor's own device.",
+      "area": "systems",
+      "category": "Practice",
+      "resourceType": "tool",
+      "status": "live",
+      "path": "garden.html",
+      "url": "https://codexofreality.org/garden.html",
+      "related": [
+        "manifest"
+      ],
+      "featured": false,
+      "publicationEligibility": "approved-public"
+    },
+    {
       "id": "scroll-editorial",
       "title": "Editorial Evidence Edition",
       "description": "Reading edition of the political chapters with a claim register, evidence statuses and original-line links.",

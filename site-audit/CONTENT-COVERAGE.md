@@ -33,7 +33,7 @@ The Pattern Calendar, 13 Moons, Living Time Sphere and witnessed days.
 - **13 Moons Rollout Whitepaper** — Live; Phased rollout plan for the 13 Moons Living Time Observatory.
 - **Witness Ledger** — Live; Browser-local record of witnessed days and SHA-256 hashes. Entries stay on this device and do not sync.
 
-### Systems and Living Technology (14 catalog entries)
+### Systems and Living Technology (15 catalog entries)
 
 Practice tools, frequency systems and the Codex hub for building.
 
@@ -51,6 +51,7 @@ Practice tools, frequency systems and the Codex hub for building.
 - **Invocation Lab** — Live; Guided run space for the Codex equations with carriers, ethics and witnesses.
 - **Field Guide** — Live; Daily and weekly practice, troubleshooting and ethics.
 - **Manifest** — Live; Remnant visual exercise: carrier frequency engine, harmonic sequences and breath.
+- **Shroom Search — the Garden** — Live; A small garden game on the bench: tend mushroom beds, grow them through tiers across days and practice, and harvest passes kept as Life Atlas records on the visitor's own device.
 
 ### Evidence and Research (23 catalog entries)
 
@@ -103,9 +104,9 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 
 ## Repository and deployed-content coverage
 
-- Public HTML pages inspected: **174**.
-- Total master-inventory records: **469**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
-- Public-facing catalog entries: **67**; only explicitly curated entries appear on the Atlas.
+- Public HTML pages inspected: **175**.
+- Total master-inventory records: **470**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
+- Public-facing catalog entries: **68**; only explicitly curated entries appear on the Atlas.
 - Numbered archive folders are inventoried file-by-file, while downloads snapshot differences are kept separate from historical integrity data.
 - Root files not already published through the archive or explicitly approved remain classified as development-only; no such file is automatically linked from the public catalog.
 
@@ -121,7 +122,7 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 ## Current resource-type counts
 
 - Deployed Markdown documents: 58
-- HTML pages: 174
+- HTML pages: 175
 - Numbered archive file: 140
 - Numbered archive folder: 7
 - Repository folder: 9
