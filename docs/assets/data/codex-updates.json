@@ -1,6 +1,14 @@
 [
  {
   "date": "2026-11-18",
+  "type": "navigation",
+  "title": "The 13 Moons + Schedule door found the Sphere",
+  "summary": "Tapping + Schedule on a day picked in the 13 Moons Sphere used to open onto nothing — the planner lives only on the Observatory page. It now carries the visitor there with the same day named, so the day they picked is waiting with its + Schedule button, the same way the homepage door already worked.",
+  "url": "./moons.html",
+  "symbol": "↗"
+ },
+ {
+  "date": "2026-11-18",
   "type": "page",
   "title": "The Reference Atlas learned to explain itself out loud",
   "summary": "A short spoken explainer now sits on the Scroll Library's Reference Atlas: scriptures, passages, names, places, and years traced across the manuscript, with every link stating how the two things are related. Tap to play.",
