@@ -371,7 +371,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "fcd50cf24a893bb28be46dc6c1372a8eee068a4274780b0d573b916e7143390c",
+      "sha256": "23cfaac5c4a4873c4aacf386a3cef064db5632d8726cd0e25d674241f72a7daa",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -2158,12 +2158,6 @@
       "status": "operational"
     },
     {
-      "path": "docs/assets/js/spark-bundle.js",
-      "sha256": "475022d452258a23c0784a42dd622f0916fd9caffae94c65911fd2acceb03368",
-      "publicUrl": "https://codexofreality.org/assets/js/spark-bundle.js",
-      "status": "operational"
-    },
-    {
       "path": "docs/assets/js/spark-companion.js",
       "sha256": "d6361795351d72b4954e25eedf60fe5fd985352371d2c277c2d17b41363760d9",
       "publicUrl": "https://codexofreality.org/assets/js/spark-companion.js",
@@ -2173,12 +2167,6 @@
       "path": "docs/assets/js/spark-companions-page.js",
       "sha256": "cf2dd2395b66a2c7bcd5324da6b3e078784596314e87375bc579923214bc7b6d",
       "publicUrl": "https://codexofreality.org/assets/js/spark-companions-page.js",
-      "status": "operational"
-    },
-    {
-      "path": "docs/assets/js/spark-companions-travel.js",
-      "sha256": "1edcc1d70a4e36a52d37e3dad80ae5450cf925272a23731832c714ede1780978",
-      "publicUrl": "https://codexofreality.org/assets/js/spark-companions-travel.js",
       "status": "operational"
     },
     {
@@ -3076,6 +3064,18 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/media/spark-demo-live-poster.webp",
+      "sha256": "2908bce927731f847c1a45428f58b621c8302f29da9278fe6edb7966fea0bf65",
+      "publicUrl": "https://codexofreality.org/assets/media/spark-demo-live-poster.webp",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/spark-demo-live.mp4",
+      "sha256": "6d7714070857c222064c61aab850e18ef06118818aa568aa693cb92a5e1fd7e1",
+      "publicUrl": "https://codexofreality.org/assets/media/spark-demo-live.mp4",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/media/start-explainer-poster.webp",
       "sha256": "0a8b2de0f9b97b55043d379a197837da2b4faebb33d23d2df6a34542bfcbe265",
       "publicUrl": "https://codexofreality.org/assets/media/start-explainer-poster.webp",
@@ -3347,13 +3347,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "43b280e01775b5e89c9770d56374298d82cb832ce843766a75bde67e637be2ae",
+      "sha256": "11249791d4e134b939a2e9b1312ba179a6f17f46a262e506c5ef5f7cdbb250aa",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "67c1209c36a8d2bf9977c0e9558f13e1d02dffd23a0ca19ddd2fe20c9d6bd432",
+      "sha256": "8b53ae1daadf269b05a40c9799b680fbed833d58e70d0c3457c251ad6aba7b4f",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -3413,7 +3413,7 @@
     },
     {
       "path": "docs/companions.html",
-      "sha256": "b3e769f29abd16b6d5cf7e8b3920dead54e5258503bf683de2b5f19c56052af9",
+      "sha256": "eb99ffe6fb7587709f8d59f20c92a56a67c0efe57e44563903cc08a60649d16f",
       "publicUrl": "https://codexofreality.org/companions.html",
       "status": "operational"
     },
@@ -3509,7 +3509,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "135cae1ea2c4011061112d5cbd2be89b172e8ec994f1de6eb97641722f485343",
+      "sha256": "0265af87506e00d890a94f4c75dce4e540ef7f51dd7ace75dfd673db2d5ca4b4",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
