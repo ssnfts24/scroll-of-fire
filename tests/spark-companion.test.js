@@ -1129,6 +1129,296 @@ test("v5 voice rides the presence: default quiet, keeper-switched, mute-ruled, t
   assert.ok(!/fetch\(|XMLHttpRequest|sendBeacon/.test(presence), "the voice sends nothing anywhere");
 });
 
+test("v6 play record: touches counted as they happen, bests kept honestly", () => {
+  const companion = Core.generate(SEED_A);
+  /* A record kept by an earlier build carries no play block;
+   * playOf reads it as a fresh, unplayed-with Spark — nothing
+   * owed, nothing lost. */
+  const legacy = { seed: SEED_A, daysSeen: [216] };
+  assert.deepEqual(Core.playOf(legacy), {
+    pets: 0, pokes: 0, drags: 0, catches: 0, bestChase: 0, echoBest: 0, tricks: [], askedDay: null
+  });
+  let record = Core.newRecord({ seed: SEED_A, name: "Nori", civilDate: "2026-11-18" });
+  record = Core.recordPlay(record, { action: "pet" }).record;
+  record = Core.recordPlay(record, { action: "pet" }).record;
+  record = Core.recordPlay(record, { action: "poke" }).record;
+  record = Core.recordPlay(record, { action: "drag" }).record;
+  let play = Core.playOf(record);
+  assert.equal(play.pets, 2, "pets counted");
+  assert.equal(play.pokes, 1, "pokes counted");
+  assert.equal(play.drags, 1, "drags counted");
+  record = Core.recordPlay(record, { action: "chase", catches: 3 }).record;
+  record = Core.recordPlay(record, { action: "chase", catches: 5 }).record;
+  record = Core.recordPlay(record, { action: "chase", catches: 2 }).record;
+  play = Core.playOf(record);
+  assert.equal(play.catches, 10, "catches accumulate across chases");
+  assert.equal(play.bestChase, 5, "the best chase is the fullest one");
+  record = Core.recordPlay(record, { action: "echo", round: 2 }).record;
+  record = Core.recordPlay(record, { action: "echo", round: 4 }).record;
+  record = Core.recordPlay(record, { action: "echo", round: 3 }).record;
+  assert.equal(Core.playOf(record).echoBest, 4, "the echo best only ever rises");
+  const same = Core.recordPlay(record, { action: "dance" });
+  assert.deepEqual(Core.playOf(same.record), Core.playOf(record), "an unknown act of play changes nothing");
+  assert.deepEqual(same.learned, [], "and teaches nothing");
+  assert.ok(companion, "the companion stands behind the record");
+});
+
+test("v6 tricks: play teaches them, each names its teacher, learning lands once", () => {
+  const companion = Core.generate(SEED_A); /* Water — its own trick is Ripple */
+  let record = Core.newRecord({ seed: SEED_A, name: "Nori", civilDate: "2026-11-18" });
+  const names = Core.tricksFor({ record, companion }).map((t) => t.id);
+  assert.deepEqual(names, ["spin", "leap", "glow", "ripple"], "three shared tricks and the kind's own");
+  /* Spin: three drags by hand. */
+  let out = Core.recordPlay(record, { action: "drag" });
+  out = Core.recordPlay(out.record, { action: "drag" });
+  assert.deepEqual(out.learned, [], "two drags teach nothing yet");
+  out = Core.recordPlay(out.record, { action: "drag" });
+  assert.deepEqual(out.learned, ["spin"], "the third drag teaches Spin");
+  out = Core.recordPlay(out.record, { action: "drag" });
+  assert.deepEqual(out.learned, [], "Spin is never announced twice");
+  record = out.record;
+  /* Leap: four catches in the chase. */
+  out = Core.recordPlay(record, { action: "chase", catches: 3 });
+  assert.deepEqual(out.learned, [], "three catches are a beginning");
+  out = Core.recordPlay(out.record, { action: "chase", catches: 1 });
+  assert.deepEqual(out.learned, ["leap"], "the fourth catch teaches Leap");
+  record = out.record;
+  /* Glow pulse: five pets. Ripple, Water's own: eight. */
+  for (let i = 0; i < 4; i++) record = Core.recordPlay(record, { action: "pet" }).record;
+  out = Core.recordPlay(record, { action: "pet" });
+  assert.deepEqual(out.learned, ["glow"], "the fifth pet teaches the Glow pulse");
+  record = out.record;
+  for (let i = 0; i < 2; i++) record = Core.recordPlay(record, { action: "pet" }).record;
+  out = Core.recordPlay(record, { action: "pet" });
+  assert.deepEqual(out.learned, ["ripple"], "the eighth pet teaches Water's Ripple");
+  record = out.record;
+  const tricks = Core.tricksFor({ record, companion });
+  assert.ok(tricks.every((t) => t.learned), "every trick stands learned in the list");
+  const spin = tricks.find((t) => t.id === "spin");
+  assert.equal(spin.teacher, "being moved by hand", "each trick names its teacher");
+  assert.ok(spin.count >= spin.need, "and its count stands beside it");
+});
+
+test("v6 tricks: every kind carries its own trick, and care can teach too", () => {
+  const own = { fire: "flare", water: "ripple", shadow: "vanish", air: "loop", earth: "root", light: "beam" };
+  for (let kindIndex = 0; kindIndex < 6; kindIndex++) {
+    const seed = Core.makeSeed({ moon: 8, patternDay: 216, kindIndex, nonce: `own${kindIndex}zz` });
+    const companion = Core.generate(seed);
+    const list = Core.trickListFor(companion);
+    assert.equal(list.length, 4, `${companion.kindName} has three shared tricks and its own`);
+    assert.equal(list[3].id, own[companion.kind], `${companion.kindName}'s own trick is ${own[companion.kind]}`);
+    assert.equal(list[3].kindTrick, true, "marked as the kind's own");
+  }
+  /* Flare learns from kindling — a care act, not a play act:
+   * the flip is there for any write to announce. */
+  const fireSeed = Core.makeSeed({ moon: 8, patternDay: 216, kindIndex: 0, nonce: "flare001" });
+  const fire = Core.generate(fireSeed);
+  const fresh = Core.newRecord({ seed: fireSeed, name: "", civilDate: "2026-11-18" });
+  let kindled = Core.applyCare(fresh, { action: "kindle", patternDay: 216 });
+  kindled = Core.applyCare(kindled, { action: "kindle", patternDay: 216 });
+  assert.deepEqual(
+    Core.learnedBetween({ before: fresh, after: kindled, companion: fire }),
+    ["flare"],
+    "two kindles teach Flare, and the diff sees it"
+  );
+  const kept = Core.markTricksKnown(kindled, ["flare"]);
+  assert.deepEqual(Core.playOf(kept).tricks, ["flare"], "an announced trick is kept in the record");
+  assert.deepEqual(
+    Core.learnedBetween({ before: kept, after: kept, companion: fire }),
+    [],
+    "a kept trick never flips again"
+  );
+});
+
+test("v6 echo game: her seed's pattern, her colours, rounds that grow", () => {
+  const companion = Core.generate(SEED_A);
+  const r1 = Core.echoFor({ companion, round: 1 });
+  assert.equal(r1.pads.length, 4, "four pads");
+  assert.equal(r1.steps.length, 3, "the first round is three notes");
+  assert.equal(Core.echoFor({ companion, round: 2 }).steps.length, 4, "each round grows by one");
+  assert.equal(Core.echoFor({ companion, round: 30 }).steps.length, 9, "growth stops at a kind length");
+  assert.deepEqual(Core.echoFor({ companion, round: 2 }).steps, Core.echoFor({ companion, round: 2 }).steps, "the same Spark sings the same round anywhere");
+  assert.notDeepEqual(Core.echoFor({ companion, round: 1 }).steps, Core.echoFor({ companion, round: 3 }).steps, "rounds differ from each other");
+  const base = Core.chirpFor(companion).first;
+  assert.equal(r1.pads[0].note, base, "the first pad sounds her own first note");
+  assert.ok(r1.pads.every((p, i) => i === 0 || p.note > r1.pads[i - 1].note), "the pads rise from her pitch");
+  assert.ok(r1.pads.every((p) => /^hsl\(/.test(p.color)), "the pads wear colours, grown from her hue");
+  assert.ok(r1.steps.every((s) => s >= 0 && s <= 3), "every step lands on a pad");
+  assert.deepEqual(Core.echoFor({ companion: null, round: 1 }), { pads: [], steps: [], round: 0 }, "no companion, no game");
+});
+
+test("v6 moods: derived from what has happened — play, care, the hour", () => {
+  const companion = Core.generate(SEED_A);
+  let record = Core.newRecord({ seed: SEED_A, name: "Nori", civilDate: "2026-11-18" });
+  const at = (hour, recent) =>
+    Core.moodFor({ record, companion, todayPatternDay: 216, hour, recent }).id;
+  assert.equal(at(10), "curious", "a plain morning is curious");
+  assert.equal(at(23), "sleepy", "the late hours soften her");
+  assert.equal(at(2), "sleepy", "the deep night too");
+  assert.equal(at(20), "calm", "the evening settles her");
+  assert.equal(at(10, { petted: true }), "bright", "a fresh pet leaves her bright");
+  assert.equal(at(10, { learned: true }), "proud", "a trick learned leaves her proud");
+  assert.equal(at(10, { won: true }), "proud", "a round echoed true, the same");
+  assert.equal(at(23, { played: true }), "bright", "a chase just run leaves her bright, even in the late hours");
+  const kindled = Core.applyCare(record, { action: "kindle", patternDay: 216 });
+  assert.equal(
+    Core.moodFor({ record: kindled, companion, todayPatternDay: 216, hour: 10 }).id,
+    "bright",
+    "kindled today is bright"
+  );
+  const rested = Core.applyCare(record, { action: "rest", patternDay: 216 });
+  assert.equal(
+    Core.moodFor({ record: rested, companion, todayPatternDay: 216, hour: 10 }).id,
+    "calm",
+    "rested today is calm"
+  );
+  const banned = /you have not|haven't|have not|not done|not yet|missed|incomplete/i;
+  for (const id of Object.keys(Core.MOODS)) {
+    assert.ok(!banned.test(Core.MOODS[id].line), `the ${id} mood line is clean copy`);
+  }
+  const panel = Core.panelFor({ record, companion, today: { moon: 8, day: 20, dayOfPatternYear: 216 }, hour: 10 });
+  assert.equal(panel.mood.id, "curious", "the panel names her mood");
+  assert.equal(panel.play.tricksTotal, 4, "and counts her tricks");
+  assert.equal(panel.play.tricksKnown, 0, "honestly, before any play");
+});
+
+test("v6 daypart: the hour's own greeting, in her temperament's voice", () => {
+  assert.equal(Core.daypartFor(4), "night");
+  assert.equal(Core.daypartFor(5), "morning");
+  assert.equal(Core.daypartFor(10), "morning");
+  assert.equal(Core.daypartFor(11), "day");
+  assert.equal(Core.daypartFor(16), "day");
+  assert.equal(Core.daypartFor(17), "evening");
+  assert.equal(Core.daypartFor(21), "evening");
+  assert.equal(Core.daypartFor(22), "night");
+  const banned = /you have not|haven't|have not|not done|not yet|missed|incomplete/i;
+  for (let kindIndex = 0; kindIndex < 6; kindIndex++) {
+    const companion = Core.generate(
+      Core.makeSeed({ moon: 8, patternDay: 216, kindIndex, nonce: `dp${kindIndex}zzzz` })
+    );
+    const lines = new Set();
+    for (const hour of [7, 13, 19, 23]) {
+      const line = Core.daypartLineFor({ companion, hour });
+      assert.ok(line && line.length > 3, `${companion.temperament} greets at hour ${hour}`);
+      assert.ok(!banned.test(line), `the hour ${hour} greeting is clean copy: ${line}`);
+      lines.add(line);
+    }
+    assert.equal(lines.size, 4, "four hours, four greetings");
+  }
+  assert.equal(Core.daypartLineFor({ companion: null, hour: 7 }), "", "no companion, no greeting");
+});
+
+test("v6 her question: drawn from the record, once a day, skippable forever", () => {
+  const companion = Core.generate(SEED_A); /* born Pattern Day 216 */
+  const today = { moon: 8, day: 20, dayOfPatternYear: 216 };
+  let record = Core.newRecord({ seed: SEED_A, name: "Nori", civilDate: "2026-11-18" });
+  const birthday = Core.questionFor({ record, companion, today, page: "index.html" });
+  assert.ok(birthday && birthday.href === "teach.html", "her birth day in the pattern asks toward a practice");
+  assert.match(birthday.text, /Pattern Day I was born on/, "and says why, plainly");
+  const later = { moon: 8, day: 21, dayOfPatternYear: 217 };
+  record = Core.recordVisit(record, { patternDay: 216, page: "index.html" });
+  record = Core.recordVisit(record, { patternDay: 217, page: "moons.html" });
+  const thread = Core.questionFor({ record, companion, today: later, page: "theory.html" });
+  assert.ok(thread && thread.href === "index.html", "the left-off thread is a question with its door");
+  /* Nothing true to ask: every door walked, the day practised,
+   * no thread behind her — the question rests, honestly. */
+  let walked = Core.newRecord({ seed: SEED_A, name: "Nori", civilDate: "2026-11-18" });
+  for (const key of Object.keys(Core.PAGE_GUIDE)) {
+    walked = Core.recordVisit(walked, { patternDay: 217, page: key });
+  }
+  walked = Core.recordPractice(walked, { patternDay: 217 });
+  walked = { ...walked, prevPage: null, lastPage: "index.html" };
+  assert.equal(
+    Core.questionFor({ record: walked, companion, today: later, page: "index.html" }),
+    null,
+    "with nothing true to ask, she asks nothing"
+  );
+  const asked = Core.markAsked(walked, { patternDay: 217 });
+  assert.equal(Core.playOf(asked).askedDay, 217, "asking is kept for the day, and only the asking");
+  const banned = /you have not|haven't|have not|not done|not yet|missed|incomplete/i;
+  for (const q of [birthday, thread]) assert.ok(!banned.test(q.text), `her question is clean copy: ${q.text}`);
+});
+
+test("v6 conversation beats: touch, tricks, echo, celebration — every temperament, clean copy", () => {
+  const banned = /you have not|haven't|have not|not done|not yet|missed|incomplete/i;
+  const beats = ["pet", "poke", "tricks", "learned", "trick", "echoStart", "echoWin", "echoMiss", "sealed", "saved"];
+  for (let kindIndex = 0; kindIndex < 6; kindIndex++) {
+    const companion = Core.generate(
+      Core.makeSeed({ moon: 8, patternDay: 216, kindIndex, nonce: `v6beat${kindIndex}zz` })
+    );
+    for (const beat of beats) {
+      const line = Core.convoLineFor({ companion, beat });
+      assert.ok(line && line.length > 3, `${companion.temperament} has a ${beat} line`);
+      assert.ok(!banned.test(line), `${companion.temperament}'s ${beat} line is clean copy: ${line}`);
+      assert.equal(Core.convoLineFor({ companion, beat }), line, "the same Spark speaks consistently");
+    }
+  }
+});
+
+test("v6 play rides the presence: touch, tricks, echo, moods, celebration hooks", () => {
+  const presence = read("docs/assets/js/spark-presence.js");
+  for (const hook of [
+    "setPointerCapture",
+    "is-petted",
+    "is-poked",
+    "doPet",
+    "recordPlay",
+    "performTrick",
+    "doTricks",
+    "tricksFor",
+    "learnedBetween",
+    "markTricksKnown",
+    "announceLearned",
+    "announceLine",
+    "spark-echo-pads",
+    "spark-echo-status",
+    "beginEchoRound",
+    "echoTap",
+    "echoWin",
+    "echoMiss",
+    "echoFor",
+    "moodFor",
+    "is-mood-",
+    "daypartLineFor",
+    "questionFor",
+    "markAsked",
+    "grab()",
+    "dragTo",
+    "tossTo",
+    "isPlaying",
+    "sof:life-atlas-records-changed",
+    "manifest-practice",
+    "sof:witness-saved",
+    "celebrate("
+  ]) {
+    assert.ok(presence.includes(hook), `the presence carries ${hook}`);
+  }
+  assert.ok(!/fetch\(|XMLHttpRequest|sendBeacon/.test(presence), "play sends nothing anywhere either");
+  const css = read("docs/assets/css/spark-companion.css");
+  for (const hook of [
+    ".spark-echo-pad",
+    ".is-leaping",
+    ".is-pulsing",
+    ".is-petted",
+    ".is-mood-bright",
+    ".is-mood-sleepy",
+    "spark-trick-flare",
+    "spark-trick-vanish",
+    "spark-pet-lean",
+    "spark-leap"
+  ]) {
+    assert.ok(css.includes(hook), `the stylesheet carries ${hook}`);
+  }
+  const padAt = css.indexOf(".spark-echo-pad {");
+  assert.ok(css.slice(padAt, padAt + 400).includes("min-height: 56px"), "an echo pad is a thumb-sized target");
+  const v6At = css.indexOf("v6: touch, tricks");
+  assert.ok(v6At > -1, "the v6 section is in the stylesheet");
+  const reduced = css.slice(css.indexOf("@media (prefers-reduced-motion: reduce)", v6At), css.length);
+  assert.ok(reduced.includes(".is-leaping"), "reduced motion stills the leap");
+  assert.ok(reduced.includes(".is-petted"), "reduced motion stills the petting lean");
+  assert.ok(reduced.includes(".spark-echo-pad"), "reduced motion stills the pads' transitions");
+});
+
 test("no R1.7 protected file is touched by the Spark", () => {
   const manifest = read("docs/development/R1.7-PROTECTED-MANIFEST.md");
   for (const rel of [

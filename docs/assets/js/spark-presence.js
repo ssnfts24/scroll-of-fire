@@ -249,6 +249,19 @@
         : `Stage ${prog.stage.index + 1} of ${Core.STAGES.length}: ${data.stageName} · ${data.points} growth points — fully grown`
     );
     row("Together:", `${data.daysTogether} day${data.daysTogether === 1 ? "" : "s"}`);
+    if (data.mood) row("Mood:", data.mood.line);
+    if (data.play) {
+      const bits = [];
+      bits.push(
+        data.play.tricksKnown > 0
+          ? `Tricks known: ${data.play.tricksKnown} of ${data.play.tricksTotal} — ${data.play.trickNames.join(", ")}`
+          : "Tricks: play teaches them — petting, being moved by hand, the chase, the echo game"
+      );
+      if (data.play.bestChase > 0) bits.push(`Best chase: ${data.play.bestChase} catch${data.play.bestChase === 1 ? "" : "es"}`);
+      if (data.play.echoBest > 0) bits.push(`Best echo: round ${data.play.echoBest}`);
+      if (data.play.pets > 0) bits.push(`Pets given: ${data.play.pets}`);
+      row("Play:", bits.join(" · "));
+    }
     const head = document.createElement("p");
     head.className = "spark-panel-row spark-panel-notices-head";
     head.textContent = "Noticed, on this device:";
@@ -351,7 +364,9 @@
       `<p class="spark-presence-guide"></p>` +
       `<div class="spark-convo">` +
       `<div class="spark-convo-thread" aria-live="polite" aria-label="Talking with your Spark"></div>` +
-      `<div class="spark-convo-chips" role="group" aria-label="Answers and offers"></div></div>` +
+      `<div class="spark-convo-chips" role="group" aria-label="Answers and offers"></div>` +
+      `<div class="spark-echo" hidden><p class="spark-echo-status"></p>` +
+      `<div class="spark-echo-pads" role="group" aria-label="Echo game colours"></div></div></div>` +
       `<p class="spark-presence-links"><a class="spark-presence-go" href="#">See it</a> ` +
       `<a class="spark-presence-panel-link" href="#">Your Spark</a> ` +
       `<a class="spark-presence-visit" href="companions.html">Visit</a> ` +
@@ -392,11 +407,47 @@
 
     /* ---- v3: the care life and the real guide ---- */
     const getRecord = () => (store ? store.get() : record);
+    /* v6: what just happened, kept only in this page's memory —
+     * the fresh facts her mood is derived from. Nothing here is
+     * stored; the record keeps the counts, the page keeps the
+     * glow of the moment. */
+    const recent = { pettedAt: 0, playedAt: 0, learnedAt: 0, wonAt: 0 };
+    function refreshMood() {
+      const now = Date.now();
+      const mood = Core.moodFor({
+        record: getRecord(),
+        companion,
+        todayPatternDay: today ? today.dayOfPatternYear : null,
+        hour: new Date().getHours(),
+        recent: {
+          petted: now - recent.pettedAt < 120000,
+          played: now - recent.playedAt < 120000,
+          learned: now - recent.learnedAt < 180000,
+          won: now - recent.wonAt < 180000
+        }
+      });
+      walker.dataset.mood = mood.id;
+      const artEl = host.querySelector(".spark-presence-art");
+      if (artEl) {
+        artEl.classList.remove("is-mood-proud", "is-mood-bright", "is-mood-sleepy", "is-mood-calm", "is-mood-curious");
+        artEl.classList.add(`is-mood-${mood.id}`);
+      }
+      return mood;
+    }
+    /* Every write passes through here — care, play, the trail —
+     * so a trick learned by any of them is announced exactly
+     * once, by this one path: the diff is taken from the counts
+     * themselves, the announcement is kept in the record, and
+     * no second path can repeat it. */
     const setRecord = (next) => {
+      const fresh = Core.learnedBetween({ before: getRecord(), after: next, companion });
+      if (fresh.length) next = Core.markTricksKnown(next, fresh);
       if (store) store.set(next);
       writeRecord(next);
       fillPanel(host, getRecord(), companion, today);
       fillCare();
+      refreshMood();
+      if (fresh.length) announceLearned(fresh);
     };
     const careBox = host.querySelector(".spark-presence-care");
     const careLines = host.querySelector(".spark-care-lines");
@@ -607,6 +658,7 @@
     }
     const chip = (label, go, cls) => ({ label, go, cls });
     function afterTalk() {
+      endEcho();
       say(Core.convoLineFor({ companion, beat: "next" }));
       setChips(mainChips());
     }
@@ -616,6 +668,7 @@
         chip("Explain this page", doExplain, "spark-guide-explain"),
         chip("Let's play", doPlay),
         chip("Care", offerCare),
+        chip("Tricks", doTricks),
         chip("Today's trail", doTrail),
         chip("More", moreChips)
       ];
@@ -624,6 +677,7 @@
       answerInBody(false);
       setChips([
         chip("Today", doToday, "spark-guide-today"),
+        chip("Echo game", doEcho, "spark-guide-echo"),
         chip("Where was I?", doResume, "spark-guide-resume"),
         chip("Share my Spark", doShare),
         chip("My record", doRecord),
@@ -646,6 +700,243 @@
           setChips(mainChips());
         })
       ]);
+    }
+
+    /* ---- v6: tricks, learned from real play ----
+     * A trick is performed in the body first — a class on the
+     * drawing, a move in the 3D body — and named aloud in the
+     * talk: she says its name, then her line about it. Under
+     * reduced motion the drawing holds still, as the device
+     * asks, and the name and the line carry the performance —
+     * the same honesty the chase has always kept. */
+    const TRICK_ART = {
+      spin: "is-spinning",
+      leap: "is-leaping",
+      glow: "is-pulsing",
+      flare: "is-trick-flare",
+      ripple: "is-trick-ripple",
+      vanish: "is-trick-vanish",
+      loop: "is-trick-loop",
+      root: "is-trick-root",
+      beam: "is-trick-beam"
+    };
+    function trickBody(trick) {
+      const cls = TRICK_ART[trick.id];
+      if (art && cls) {
+        art.classList.remove(cls);
+        void art.offsetWidth;
+        art.classList.add(cls);
+        window.setTimeout(() => art.classList.remove(cls), 1500);
+      }
+      if (ctrl) {
+        if (trick.id === "spin") ctrl.flourish("is-spinning");
+        else if (trick.id === "leap") ctrl.delight();
+        else if (trick.id === "glow" || trick.id === "ripple") ctrl.flourish("is-stretching");
+        else if (trick.id === "flare" || trick.id === "beam") ctrl.celebrate();
+        else if (trick.id === "loop") ctrl.dart();
+        else if (trick.id === "root") ctrl.crouch();
+        else if (trick.id === "vanish") ctrl.lookAt(0.9, 0);
+      }
+    }
+    function performTrick(trick) {
+      answerInBody(false);
+      say(`${trick.name}!`);
+      trickBody(trick);
+      const sounds = Core.soundsFor(companion);
+      if (sounds && !soundOff()) playNotes(trick.id === "spin" ? sounds.adopt : sounds.growth, 0.1);
+      say(Core.convoLineFor({ companion, beat: "trick" }));
+    }
+    /* A trick learned, announced once, at the moment it lands:
+     * her learned line, then the trick itself, performed on the
+     * spot. If the talk is folded, she opens it briefly — the
+     * way she announces a growth — says it, and steps back. */
+    function announceLearned(ids) {
+      const tricks = Core.tricksFor({ record: getRecord(), companion });
+      ids.forEach((id, i) => {
+        const trick = tricks.find((t) => t.id === id);
+        if (!trick) return;
+        window.setTimeout(() => {
+          recent.learnedAt = Date.now();
+          refreshMood();
+          if (!bubble.hasAttribute("hidden")) {
+            say(Core.convoLineFor({ companion, beat: "learned" }));
+            performTrick(trick);
+          } else {
+            announceLine(`${Core.convoLineFor({ companion, beat: "learned" })} ${trick.name}!`);
+            trickBody(trick);
+            if (ctrl) ctrl.celebrate();
+          }
+        }, i * 1700);
+      });
+    }
+    /* One line, spoken from a folded talk: the bubble opens
+     * with just that line and the standing offers, and folds
+     * again on its own — the arrival pattern, reused for the
+     * moments worth announcing (a trick learned, a seal kept).
+     * A keeper's tap takes the talk over, as always. */
+    function announceLine(text) {
+      if (!bubble.hasAttribute("hidden")) {
+        say(text);
+        return;
+      }
+      convoStarted = true;
+      bubble.removeAttribute("hidden");
+      button.setAttribute("aria-expanded", "true");
+      say(text);
+      setChips(mainChips());
+      if (arrivalTimer) window.clearTimeout(arrivalTimer);
+      arrivalTimer = window.setTimeout(closeBubble, 8000);
+    }
+    function doTricks() {
+      answerInBody();
+      endEcho();
+      say(Core.convoLineFor({ companion, beat: "tricks" }));
+      const tricks = Core.tricksFor({ record: getRecord(), companion });
+      const known = tricks.filter((t) => t.learned);
+      const learning = tricks.filter((t) => !t.learned);
+      if (learning.length) {
+        sayList((box) => {
+          const list = document.createElement("ul");
+          list.className = "spark-guide-doors spark-trick-list";
+          for (const t of learning) {
+            const li = document.createElement("li");
+            li.textContent = `${t.name} — learned from ${t.teacher}: ${t.count} of ${t.need} so far.`;
+            list.appendChild(li);
+          }
+          box.appendChild(list);
+        });
+      }
+      if (!known.length) {
+        say("Play teaches me — pet me, move me by hand, chase me, echo me — and this list grows.");
+      }
+      setChips([
+        ...known.map((t) => chip(t.name, () => performTrick(t), "spark-trick-chip")),
+        chip("Back", () => {
+          say(Core.convoLineFor({ companion, beat: "ask" }));
+          setChips(mainChips());
+        })
+      ]);
+    }
+
+    /* ---- v6: the echo game ----
+     * She pulses a pattern — her seed's notes, in her own four
+     * colours — and the keeper taps it back. Rounds grow one
+     * note at a time; the best round is kept on this device and
+     * stands in her record. A note astray ends the round kindly:
+     * the best stands, the pattern offers to sing again, and
+     * nothing anywhere is taken away. */
+    const echoBox = host.querySelector(".spark-echo");
+    const echoStatus = host.querySelector(".spark-echo-status");
+    const echoPadsBox = host.querySelector(".spark-echo-pads");
+    let echo = null;
+    function playTone(freq) {
+      if (soundOff()) return;
+      playNotes([freq], 0);
+    }
+    function buildEchoPads(pads) {
+      echoPadsBox.innerHTML = "";
+      pads.forEach((pad, i) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "spark-echo-pad";
+        b.style.setProperty("--echo-pad", pad.color);
+        b.setAttribute("aria-label", `Echo colour ${i + 1}`);
+        b.addEventListener("click", () => echoTap(i));
+        echoPadsBox.appendChild(b);
+      });
+    }
+    function lightPad(i, ms = 420) {
+      const el = echoPadsBox.children[i];
+      if (!el) return;
+      el.classList.add("is-lit");
+      window.setTimeout(() => el.classList.remove("is-lit"), ms);
+    }
+    function doEcho() {
+      answerInBody();
+      say(Core.convoLineFor({ companion, beat: "echoStart" }));
+      const first = Core.echoFor({ companion, round: 1 });
+      buildEchoPads(first.pads);
+      echoBox.removeAttribute("hidden");
+      echoStatus.textContent = "Tap Begin, and I will pulse the pattern. Then tap it back to me, colour for colour.";
+      echo = { round: 1, steps: [], at: 0, phase: "ready", pads: first.pads };
+      setChips([
+        chip("Begin", beginEchoRound, "spark-echo-begin"),
+        chip("Back", () => {
+          endEcho();
+          say(Core.convoLineFor({ companion, beat: "ask" }));
+          setChips(mainChips());
+        })
+      ]);
+    }
+    function beginEchoRound() {
+      if (!echo) return;
+      const data = Core.echoFor({ companion, round: echo.round });
+      echo.steps = data.steps;
+      echo.at = 0;
+      echo.phase = "showing";
+      echoStatus.textContent = `Round ${echo.round} — watch and listen.`;
+      setChips([]);
+      data.steps.forEach((padIx, i) => {
+        window.setTimeout(() => {
+          if (!echo) return;
+          lightPad(padIx);
+          playTone(data.pads[padIx].note);
+        }, 450 + i * 640);
+      });
+      window.setTimeout(() => {
+        if (!echo || echo.phase !== "showing") return;
+        echo.phase = "answer";
+        echoStatus.textContent = "Your turn — tap the colours back to me.";
+      }, 450 + data.steps.length * 640 + 250);
+    }
+    function echoTap(i) {
+      if (!echo || echo.phase !== "answer") return;
+      lightPad(i, 300);
+      playTone(echo.pads[i].note);
+      if (i !== echo.steps[echo.at]) {
+        echoMiss();
+        return;
+      }
+      echo.at += 1;
+      if (echo.at >= echo.steps.length) echoWin();
+    }
+    function echoWin() {
+      const round = echo.round;
+      echo.phase = "done";
+      recent.wonAt = Date.now();
+      setRecord(Core.recordPlay(getRecord(), { action: "echo", round }).record);
+      refreshMood();
+      say(Core.convoLineFor({ companion, beat: "echoWin" }));
+      say(`Round ${round}, echoed whole. Your best stands at round ${Core.playOf(getRecord()).echoBest}.`);
+      echoStatus.textContent = "Echoed whole. The next round grows by one note.";
+      setChips([
+        chip("Next round", () => {
+          echo.round = round + 1;
+          beginEchoRound();
+        }),
+        chip("Done for now", () => {
+          endEcho();
+          afterTalk();
+        })
+      ]);
+    }
+    function echoMiss() {
+      echo.phase = "done";
+      say(Core.convoLineFor({ companion, beat: "echoMiss" }));
+      const best = Core.playOf(getRecord()).echoBest;
+      if (best > 0) say(`Your best stands at round ${best}.`);
+      echoStatus.textContent = "The round rests here. The pattern will sing again whenever you ask.";
+      setChips([
+        chip("Try again", () => beginEchoRound()),
+        chip("Done for now", () => {
+          endEcho();
+          afterTalk();
+        })
+      ]);
+    }
+    function endEcho() {
+      echo = null;
+      if (echoBox) echoBox.setAttribute("hidden", "");
     }
     function doAround() {
       answerInBody();
@@ -826,8 +1117,35 @@
     let convoStarted = false;
     function startConvo() {
       convoStarted = true;
-      say(Core.convoLineFor({ companion, beat: "greet" }));
+      /* The hour greets first, in her temperament's voice; then
+       * the day itself, counted by the calendar; then — once a
+       * day at most — her one gentle question, drawn from what
+       * the record truly holds, with its door on a chip and a
+       * way past it that costs nothing. Any other day, the
+       * standing question opens the talk as it always has. */
+      const dayLine = Core.daypartLineFor({ companion, hour: new Date().getHours() });
+      if (dayLine) say(dayLine);
       say(`${Core.coordinateLineFor(today)}. ${guide.text}`);
+      const todayDay = today ? today.dayOfPatternYear : null;
+      const askedDay = Core.playOf(getRecord()).askedDay;
+      const question =
+        todayDay != null && askedDay !== todayDay
+          ? Core.questionFor({ record: getRecord(), companion, today, page: pageKey() })
+          : null;
+      if (question) {
+        setRecord(Core.markAsked(getRecord(), { patternDay: todayDay }));
+        say(question.text);
+        setChips([
+          chip(question.label, () => {
+            window.location.href = question.href;
+          }),
+          chip("Another time", () => {
+            say(Core.convoLineFor({ companion, beat: "ask" }));
+            setChips(mainChips());
+          })
+        ]);
+        return;
+      }
       say(Core.convoLineFor({ companion, beat: "ask" }));
       setChips(mainChips());
     }
@@ -919,8 +1237,10 @@
     const closeBubble = () => {
       bubble.setAttribute("hidden", "");
       button.setAttribute("aria-expanded", "false");
-      /* Closing the talk stills her voice with it. */
+      /* Closing the talk stills her voice with it — and folds
+       * the echo board away with the talk it belongs to. */
       stopSpeaking();
+      endEcho();
       if (arrivalTimer) {
         window.clearTimeout(arrivalTimer);
         arrivalTimer = null;
@@ -943,6 +1263,13 @@
       if (ctrl) art.classList.add("has-3d");
     }
     button.addEventListener("click", () => {
+      /* A press that became a petting or a dragging has already
+       * been answered by the touch layer below; the click that
+       * trails it must not also open the talk. */
+      if (suppressClick) {
+        suppressClick = false;
+        return;
+      }
       if (arrivalTimer) {
         window.clearTimeout(arrivalTimer);
         arrivalTimer = null;
@@ -965,6 +1292,134 @@
         closeBubble();
       }
     });
+
+    /* ---- v6: touch — she answers the hand itself ----
+     * A plain tap stays a tap (and, mid-chase, a catch). But a
+     * hand can do more than tap, and she answers all of it:
+     * a jab is a poke — a squash, a count, a word in her voice
+     * if her voice is on. A press that rubs is petting — she
+     * leans in and glows, and the pet is counted. A press that
+     * travels is a drag — she rides the finger and settles
+     * where she is left. A drag let go fast is a toss — she
+     * darts to where the throw was heading, on the same spring
+     * as her dodges. Every one of these is play, counted on
+     * this device, and play teaches her tricks. Under reduced
+     * motion the roam rests, so a drag moves her drawing
+     * directly and leaves her where she was put — the still
+     * equivalent, never a dead press. */
+    let suppressClick = false;
+    let press = null;
+    const freeDrag = { x: 0, y: 0 };
+    function doPet() {
+      recent.pettedAt = Date.now();
+      setRecord(Core.recordPlay(getRecord(), { action: "pet" }).record);
+      if (art) {
+        art.classList.add("is-petted");
+        window.setTimeout(() => art.classList.remove("is-petted"), 1000);
+      }
+      if (roam) roam.glow();
+      if (ctrl) ctrl.delight();
+      chirp(companion);
+      speak(Core.convoLineFor({ companion, beat: "pet" }));
+      refreshMood();
+    }
+    button.addEventListener("pointerdown", (event) => {
+      /* Mid-chase a press on her is a catch in the making; the
+       * click that follows it does the counting, as always. */
+      if (roam && roam.isPlaying()) return;
+      press = {
+        x: event.clientX,
+        y: event.clientY,
+        lastX: event.clientX,
+        lastY: event.clientY,
+        t: performance.now(),
+        moved: 0,
+        dirX: 0,
+        reversals: 0,
+        petted: false,
+        dragging: false,
+        offX: 0,
+        offY: 0,
+        baseX: freeDrag.x,
+        baseY: freeDrag.y
+      };
+      const rect = walker.getBoundingClientRect();
+      press.offX = event.clientX - rect.left;
+      press.offY = event.clientY - rect.top;
+      if (art) {
+        art.classList.add("is-poked");
+        window.setTimeout(() => art.classList.remove("is-poked"), 240);
+      }
+      try {
+        button.setPointerCapture(event.pointerId);
+      } catch {
+        /* capture is a courtesy; the press works without it */
+      }
+    });
+    button.addEventListener("pointermove", (event) => {
+      if (!press) return;
+      const dx = event.clientX - press.lastX;
+      const dy = event.clientY - press.lastY;
+      press.moved += Math.hypot(dx, dy);
+      if (Math.abs(dx) > 2) {
+        const dir = Math.sign(dx);
+        if (press.dirX && dir !== press.dirX) press.reversals += 1;
+        press.dirX = dir;
+      }
+      press.lastX = event.clientX;
+      press.lastY = event.clientY;
+      const disp = Math.hypot(event.clientX - press.x, event.clientY - press.y);
+      if (!press.dragging && disp > 30 && performance.now() - press.t > 120) {
+        press.dragging = true;
+        if (roam) roam.grab();
+      }
+      if (press.dragging) {
+        if (roam) roam.dragTo(event.clientX - press.offX, event.clientY - press.offY);
+        else {
+          walker.style.transform =
+            `translate(${press.baseX + event.clientX - press.x}px, ${press.baseY + event.clientY - press.y}px)`;
+        }
+      } else if (!press.petted && press.moved > 130 && press.reversals >= 2) {
+        press.petted = true;
+        if (art) art.classList.add("is-petted");
+      }
+    });
+    function endPress(event, cancelled) {
+      if (!press) return;
+      const p = press;
+      press = null;
+      if (art) art.classList.remove("is-petted");
+      const dt = Math.max(1, performance.now() - p.t);
+      if (p.dragging) {
+        suppressClick = true;
+        const vx = (p.lastX - p.x) / dt;
+        const vy = (p.lastY - p.y) / dt;
+        const speed = Math.hypot(vx, vy);
+        if (roam) {
+          if (!cancelled && dt < 420 && speed > 0.8) {
+            /* The toss: she flies to where the throw pointed. */
+            roam.tossTo(p.lastX + vx * 280, p.lastY + vy * 280);
+          } else {
+            roam.release();
+          }
+        } else {
+          freeDrag.x = p.baseX + p.lastX - p.x;
+          freeDrag.y = p.baseY + p.lastY - p.y;
+        }
+        setRecord(Core.recordPlay(getRecord(), { action: "drag" }).record);
+        if (ctrl) ctrl.delight();
+      } else if (p.petted) {
+        suppressClick = true;
+        if (!cancelled) doPet();
+      } else if (!cancelled && dt < 260) {
+        /* A plain tap — a poke, counted. The click that follows
+         * does the rest, exactly as it always has. */
+        setRecord(Core.recordPlay(getRecord(), { action: "poke" }).record);
+        speak(Core.convoLineFor({ companion, beat: "poke" }));
+      }
+    }
+    button.addEventListener("pointerup", (event) => endPress(event, false));
+    button.addEventListener("pointercancel", (event) => endPress(event, true));
     /* The Your Spark panel: who it is, how it has grown, and what
      * it has noticed — folded inside the bubble, one tap away. */
     const panel = host.querySelector(".spark-presence-panel");
@@ -1019,17 +1474,23 @@
       }
       closeBubble();
       if (roam) {
-        roam.startPlay(() => {
-          setRecord(
-            Core.applyCare(getRecord(), {
-              action: "play",
-              patternDay: today ? today.dayOfPatternYear : null
-            })
-          );
+        roam.startPlay((catches) => {
+          recent.playedAt = Date.now();
+          let next = Core.applyCare(getRecord(), {
+            action: "play",
+            patternDay: today ? today.dayOfPatternYear : null
+          });
+          next = Core.recordPlay(next, { action: "chase", catches }).record;
+          setRecord(next);
+          refreshMood();
           bubble.removeAttribute("hidden");
           button.setAttribute("aria-expanded", "true");
           if (!convoStarted) startConvo();
           say(Core.convoLineFor({ companion, beat: "caught" }));
+          say(
+            `That chase: ${catches} catch${catches === 1 ? "" : "es"}. ` +
+              `Your best chase stands at ${Core.playOf(getRecord()).bestChase}.`
+          );
           say("Play is in my step now — the bond grew with that chase.");
           say(Core.convoLineFor({ companion, beat: "next" }));
           setChips(mainChips());
@@ -1134,6 +1595,56 @@
         todayPatternDay: today ? today.dayOfPatternYear : null
       })
     });
+    refreshMood();
+    /* ---- v6: she celebrates what the site itself completes ----
+     * Only events the code truly fires, hooked as they stand:
+     * a practice sealed on the practice page (the Manifest
+     * console writes it to the Life Atlas and announces the
+     * records change with its own name on it), and a witness
+     * entry saved on the 13 Moons page (its own saved event).
+     * Her answer: a hop, a glow, her chime — the moment was the
+     * keeper's own tap — and one line in her voice. A seal also
+     * refreshes what she senses of the practice days, so her
+     * record stays honest the moment it happens. The planner's
+     * events live only on the Sphere page, where she does not
+     * walk; no reading anywhere on the site announces its end,
+     * so no celebration is hooked to one. */
+    let celebrateGuard = 0;
+    function celebrate(kind) {
+      const now = Date.now();
+      if (now - celebrateGuard < 1600) return;
+      celebrateGuard = now;
+      if (art) {
+        art.classList.remove("is-hopping");
+        void art.offsetWidth;
+        art.classList.add("is-hopping");
+        window.setTimeout(() => art.classList.remove("is-hopping"), 1500);
+      }
+      if (ctrl) ctrl.celebrate();
+      if (roam) roam.glow();
+      chirp(companion);
+      announceLine(Core.convoLineFor({ companion, beat: kind }));
+      if (kind === "sealed") {
+        sensePractice(getRecord()).then((next) => {
+          if (next && next !== getRecord()) setRecord(next);
+        });
+      }
+    }
+    /* Both events are dispatched without bubbling, each on its
+     * own target: the witness event lives on the document alone,
+     * and the records change is announced on the document and
+     * the window both. So she listens on both targets, and the
+     * guard above keeps the double announcement to one answer. */
+    const onRecordsChanged = (event) => {
+      const detail = event && event.detail;
+      if (detail && detail.source === "manifest-practice") celebrate("sealed");
+    };
+    const onWitnessSaved = () => celebrate("saved");
+    document.addEventListener("sof:life-atlas-records-changed", onRecordsChanged);
+    window.addEventListener("sof:life-atlas-records-changed", onRecordsChanged);
+    document.addEventListener("sof:witness-saved", onWitnessSaved);
+    window.addEventListener("sof:witness-saved", onWitnessSaved);
+
     /* A guide speaks first on arrival, briefly, then steps back:
      * the line shows itself, and folds away on its own. A growth
      * is spoken the same way, once, when it is new. A tap on
@@ -1341,6 +1852,8 @@
     let lastInteractAt = performance.now();
     let playQueue = [];
     let playDone = null;
+    let playCatches = 0;
+    let lureTimer = null;
     let resting = false;
     let napping = false;
     const vel = { x: 0, y: 0 };
@@ -1574,6 +2087,15 @@
         if (art) art.classList.add("is-playful");
         return;
       }
+      if (state === "toss") {
+        /* A throw, landed: a small delight, then the walk
+         * resumes — she goes where the hand sent her and is
+         * pleased about the journey. */
+        if (ctrl) ctrl.delight();
+        goIdle(1200 + Math.random() * 900);
+        state = "idle";
+        return;
+      }
       if (state === "investigate") {
         if (art) art.classList.add("is-looking");
         window.setTimeout(() => art && art.classList.remove("is-looking"), 2600);
@@ -1612,7 +2134,7 @@
      * while it is still walking in, and after three quick scoots
      * it settles for a while, where a tap can always reach it. */
     function tryPlay(now) {
-      if (state === "dodge" || state === "anticipate" || state === "enter" || state === "hold" || state === "play" || state === "playwait") return false;
+      if (state === "dodge" || state === "anticipate" || state === "enter" || state === "hold" || state === "play" || state === "playwait" || state === "held" || state === "toss") return false;
       if (bubbleOpen()) return false;
       if (now < settleUntil || now - lastDodgeAt < play.cooldown) return false;
       const c = center();
@@ -1662,6 +2184,12 @@
       const dt = Math.min(0.05, (ts - lastTs) / 1000 || 0);
       lastTs = ts;
       if (state === "idle") return;
+      if (state === "held") {
+        /* In the keeper's hand: the hand moves her, not the
+         * steering. The loop rests until she is set down. */
+        rafId = null;
+        return;
+      }
       if (bubbleOpen()) {
         state = "hold";
       }
@@ -1699,9 +2227,9 @@
       const dy = target.y - pos.y;
       const dist = Math.hypot(dx, dy);
       const maxSpeed =
-        state === "dodge" ? SPEED * 3.4 : state === "play" ? SPEED * 2.6 : state === "enter" ? SPEED * 1.15 : state === "approach" ? SPEED * 0.7 : SPEED;
-      const maxForce = state === "dodge" ? 1500 : state === "play" ? 900 : 280;
-      const arriveRadius = state === "dodge" ? 0 : 90;
+        state === "dodge" ? SPEED * 3.4 : state === "toss" ? SPEED * 3.1 : state === "play" ? SPEED * 2.6 : state === "enter" ? SPEED * 1.15 : state === "approach" ? SPEED * 0.7 : SPEED;
+      const maxForce = state === "dodge" ? 1500 : state === "toss" ? 1200 : state === "play" ? 900 : 280;
+      const arriveRadius = state === "dodge" || state === "toss" ? 0 : 90;
       const speedNow = dist < arriveRadius ? maxSpeed * Math.max(0.12, dist / arriveRadius) : maxSpeed;
       let sx = (dx / (dist || 1)) * speedNow - vel.x;
       let sy = (dy / (dist || 1)) * speedNow - vel.y;
@@ -1766,6 +2294,41 @@
          * but a landing ON it is a tap, and a tap always lands. */
         if (button.contains(e.target)) return;
         trackPointer(e);
+        /* The lure: a finger that lands near her and simply
+         * holds — stillness is safety, the oldest rule of her
+         * play. If it is still there a breath later and she did
+         * not startle away, she comes to it, the way the peek
+         * brings her back after a dodge. */
+        const c0 = center();
+        const d0 = Math.hypot(e.clientX - c0.x, e.clientY - c0.y);
+        if (d0 < play.radius * 2.4 && d0 > 12 && !bubbleOpen()) {
+          window.clearTimeout(lureTimer);
+          lureTimer = window.setTimeout(() => {
+            if (
+              performance.now() - pointer.lastMoveAt > 850 &&
+              !bubbleOpen() &&
+              state !== "play" &&
+              state !== "playwait" &&
+              state !== "held" &&
+              state !== "dodge"
+            ) {
+              const c = center();
+              const dx = pointer.x - c.x;
+              const dy = pointer.y - c.y;
+              const dist = Math.hypot(dx, dy) || 1;
+              const stepIn = dist - play.radius * 1.15;
+              if (stepIn > 6) {
+                target = clampPos({
+                  x: pos.x + (dx / dist) * stepIn,
+                  y: pos.y + (dy / dist) * stepIn
+                });
+                state = "approach";
+                window.clearTimeout(idleTimer);
+                wake();
+              }
+            }
+          }, 950);
+        }
         tryPlay(pointer.seenAt);
       },
       { passive: true }
@@ -1837,14 +2400,19 @@
         playQueue = [];
         for (let i = 0; i < n; i++) playQueue.push(pickTarget());
         playDone = typeof done === "function" ? done : null;
+        playCatches = 0;
         target = playQueue.shift();
         state = "play";
         window.clearTimeout(idleTimer);
         wake();
       },
-      /* A tap landed mid-chase. Returns true when it counted. */
+      /* A tap landed mid-chase. Returns true when it counted.
+       * The chase keeps its own score: how many catches landed
+       * before the last one closed it — handed to the finish
+       * so the talk can say the count aloud. */
       catchSpark() {
         if (state !== "playwait") return false;
+        playCatches += 1;
         if (art) art.classList.remove("is-playful");
         if (playQueue.length) {
           target = playQueue.shift();
@@ -1855,9 +2423,47 @@
           const done = playDone;
           playDone = null;
           goIdle(2500);
-          if (done) done();
+          if (done) done(playCatches);
         }
         return true;
+      },
+      /* Whether a chase is running — the touch layer leaves
+       * her alone for the catch while it is. */
+      isPlaying() {
+        return state === "play" || state === "playwait";
+      },
+      /* The hand takes her: motion stops, the loop rests, and
+       * dragTo moves her directly until release sets her down
+       * where the hand left her. */
+      grab() {
+        if (state === "play" || state === "playwait") return;
+        leaveRest();
+        state = "held";
+        window.clearTimeout(idleTimer);
+        if (rafId != null) window.cancelAnimationFrame(rafId);
+        rafId = null;
+      },
+      dragTo(x, y) {
+        if (state !== "held") return;
+        pos = clampPos({ x, y });
+        vel.x = 0;
+        vel.y = 0;
+        apply();
+      },
+      release() {
+        if (state !== "held") return;
+        state = "idle";
+        goIdle(1300);
+      },
+      /* The toss: a target thrown ahead of the hand, flown to
+       * on the chase's own spring. The point given is where
+       * her centre should land. */
+      tossTo(x, y) {
+        leaveRest();
+        target = clampPos({ x: x - W() / 2, y: y - H() / 2 });
+        state = "toss";
+        window.clearTimeout(idleTimer);
+        wake();
       },
       /* Rest: dims, curls, breathes — until woken. */
       rest() {

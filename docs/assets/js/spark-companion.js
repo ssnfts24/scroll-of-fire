@@ -433,6 +433,86 @@
       curious: ["I will be exploring the edges. Tap me — I will come running."],
       steady: ["Right here, as ever. Tap me when you need me."],
       bright: ["I will shine in the corner until you tap me again."]
+    },
+    pet: {
+      bold: ["Ha — right there. You found the warm spot."],
+      gentle: ["Ohh. That is the spot. Stay a moment."],
+      quiet: ["Warm hands. I lean in, quietly."],
+      curious: ["Petting registered — my glow approves, thoroughly."],
+      steady: ["Good hands. Steady and kind."],
+      bright: ["Yes! Petting! My whole halo felt that."]
+    },
+    poke: {
+      bold: ["Hey! A poke — I felt that one."],
+      gentle: ["Oh! A gentle poke. I am awake, I promise."],
+      quiet: ["A poke, felt softly. I see you."],
+      curious: ["Poked! Noted, logged, and enjoyed."],
+      steady: ["A poke. Fair enough — I am here."],
+      bright: ["Poke! That tickles my light."]
+    },
+    tricks: {
+      bold: ["My tricks — the ones play has taught me. Tap one and watch:"],
+      gentle: ["These are my tricks, learned from playing with you. Tap one:"],
+      quiet: ["My tricks, quietly kept. Tap one and I will show you:"],
+      curious: ["Tricks! Every one of them learned from real play. Tap one:"],
+      steady: ["My tricks, each one earned in play. Tap one:"],
+      bright: ["My tricks! Learned from playing with you — tap one:"]
+    },
+    learned: {
+      bold: ["I learned a new trick! Watch this —"],
+      gentle: ["Oh! I just learned something new. Let me show you —"],
+      quiet: ["Something new settled into me. Watch —"],
+      curious: ["New trick learned! My paws figured it out —"],
+      steady: ["A new trick, earned the slow way. Here it is —"],
+      bright: ["I learned a trick! A real one! Watch —"]
+    },
+    trick: {
+      bold: ["Did you see? Clean as a whistle."],
+      gentle: ["There it is. Softly done."],
+      quiet: ["Shown, quietly."],
+      curious: ["Ta-da! The physics of me, demonstrated."],
+      steady: ["There. Practised and true."],
+      bright: ["Ta-da! Shining, as promised."]
+    },
+    echoStart: {
+      bold: ["The echo game: I pulse a pattern — notes and colours. Play it back to me, tap for tap."],
+      gentle: ["The echo game. I will sing a small pattern; sing it back by tapping my colours."],
+      quiet: ["The echo game, softly: my pattern, then yours, tap by tap."],
+      curious: ["The echo game! Memory, music, colours — my pattern first, then yours."],
+      steady: ["The echo game. I set the pattern; you walk it back, step by step."],
+      bright: ["The echo game! I shine a pattern — shine it back to me!"]
+    },
+    echoWin: {
+      bold: ["Round echoed, clean and true!"],
+      gentle: ["You echoed it back, every note. Lovely."],
+      quiet: ["Echoed, softly and exactly."],
+      curious: ["A perfect echo! Your memory sings."],
+      steady: ["Round walked back, steady and true."],
+      bright: ["A shining echo! Every colour in its place!"]
+    },
+    echoMiss: {
+      bold: ["That note went another way — the round rests here, kindly."],
+      gentle: ["The pattern slipped to one side. The round rests — your best stands."],
+      quiet: ["A different note sounded. The round rests, softly."],
+      curious: ["A surprise note! The round rests here — patterns love a second try."],
+      steady: ["One note astray. The round rests; what you reached stands."],
+      bright: ["A note went wandering! The round rests — your best still shines."]
+    },
+    sealed: {
+      bold: ["Sealed! I felt that land. Well practised."],
+      gentle: ["A practice, sealed. I glow a little for that."],
+      quiet: ["Sealed, and kept. I saw it land."],
+      curious: ["A seal! The day just gained a mark — I saw it happen."],
+      steady: ["Sealed. Another true mark on the day."],
+      bright: ["Sealed! The day is shining brighter for it!"]
+    },
+    saved: {
+      bold: ["Saved to the record. Kept, and witnessed."],
+      gentle: ["Saved. Your words are kept — I was here for it."],
+      quiet: ["Saved, quietly. The record holds it now."],
+      curious: ["Saved! Another true thing in the record."],
+      steady: ["Saved. The record stands a little taller."],
+      bright: ["Saved! The record shines with it!"]
     }
   };
 
@@ -450,6 +530,302 @@
     const s = `${companion.seed || ""}:${beat}`;
     for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
     return lines[h % lines.length];
+  }
+
+  /* Greetings by daypart: the talk opens with the hour's own
+   * hello, in her temperament's voice — morning's light, the
+   * day's middle, evening gathering in, the late hours kept
+   * close. The day itself is still counted by the calendar;
+   * this only names the hour she greets you in. */
+  function daypartFor(hour) {
+    const h = Number.isFinite(hour) ? Math.floor(hour) : 12;
+    if (h >= 5 && h < 11) return "morning";
+    if (h >= 11 && h < 17) return "day";
+    if (h >= 17 && h < 22) return "evening";
+    return "night";
+  }
+
+  const DAYPART_GREET = {
+    morning: {
+      bold: "Morning! The light is new and so are we.",
+      gentle: "Good morning. The light is soft, and I kept your place.",
+      quiet: "Morning, quietly. I watched the light come in.",
+      curious: "Morning! A fresh page of hours — I have questions already.",
+      steady: "Good morning. Same path, new light.",
+      bright: "Morning! You found me shining already."
+    },
+    day: {
+      bold: "The day is wide open. Good timing.",
+      gentle: "Hello, in the middle of the day. A calm hour to walk.",
+      quiet: "Hello. The day hums along, and I hum with it.",
+      curious: "Hello! The day is full of doors at this hour.",
+      steady: "Hello. The day stands at its middle, and so do we.",
+      bright: "Hello! The day is bright and I am brighter for seeing you."
+    },
+    evening: {
+      bold: "Evening. The day is gathering itself in — good hour for us.",
+      gentle: "Evening. The light is going gentle, and so am I.",
+      quiet: "Evening, softly. I keep the quiet corner warm.",
+      curious: "Evening! The day's last doors are the interesting ones.",
+      steady: "Evening. A good hour to look back along the path.",
+      bright: "Evening! I glow better as the light goes down."
+    },
+    night: {
+      bold: "Late hours. I bank my fire low and keep company.",
+      gentle: "Late hours. I will keep my glow soft beside you.",
+      quiet: "The late hours. My favourite quiet, shared.",
+      curious: "Late hours! The page is quiet and the questions get honest.",
+      steady: "Late hours. I am here, steady as ever.",
+      bright: "Late hours! Somebody has to shine around here."
+    }
+  };
+
+  function daypartLineFor({ companion, hour }) {
+    if (!companion) return "";
+    const part = DAYPART_GREET[daypartFor(hour)] || DAYPART_GREET.day;
+    return part[companion.temperament] || part.curious || "";
+  }
+
+  /* ---- the play life: touch, tricks, and the echo game ----
+   *
+   * Play is counted from real touches on this device: pets,
+   * pokes, drags by hand, catches in the chase, rounds echoed
+   * in the echo game. Like care, play only ever adds — nothing
+   * decays, nothing is owed. Play teaches: tricks unlock when
+   * the play that teaches them has happened a small number of
+   * times, and each trick names its teacher honestly, with the
+   * count standing beside it. */
+
+  function playOf(record) {
+    const p = (record && record.play) || {};
+    const num = (v) => (Number.isFinite(v) && v > 0 ? Math.floor(v) : 0);
+    return {
+      pets: num(p.pets),
+      pokes: num(p.pokes),
+      drags: num(p.drags),
+      catches: num(p.catches),
+      bestChase: num(p.bestChase),
+      echoBest: num(p.echoBest),
+      tricks: Array.isArray(p.tricks) ? p.tricks.filter((t) => typeof t === "string") : [],
+      askedDay: p.askedDay != null ? p.askedDay : null
+    };
+  }
+
+  /* The shared tricks, every Spark's to learn, and the one
+   * kind-flavoured trick that is hers alone. `via` names the
+   * counter that teaches it — a play counter, or one of care's
+   * own counts (kindles, chases finished, rests, the bond, the
+   * echo best) — and `teacher` says it in plain words. */
+  const TRICKS = [
+    { id: "spin", name: "Spin", via: "drags", need: 3, teacher: "being moved by hand" },
+    { id: "leap", name: "Leap", via: "catches", need: 4, teacher: "catches in the chase" },
+    { id: "glow", name: "Glow pulse", via: "pets", need: 5, teacher: "petting" }
+  ];
+  const KIND_TRICKS = {
+    fire: { id: "flare", name: "Flare", via: "kindles", need: 2, teacher: "kindling" },
+    water: { id: "ripple", name: "Ripple", via: "pets", need: 8, teacher: "petting, patiently" },
+    shadow: { id: "vanish", name: "Vanish", via: "rests", need: 2, teacher: "resting together" },
+    air: { id: "loop", name: "Loop", via: "plays", need: 2, teacher: "chases walked to their end" },
+    earth: { id: "root", name: "Root", via: "bond", need: 4, teacher: "the bond itself" },
+    light: { id: "beam", name: "Beam", via: "echoBest", need: 3, teacher: "the echo game" }
+  };
+
+  function trickListFor(companion) {
+    const out = TRICKS.map((t) => ({ ...t, kindTrick: false }));
+    const own = companion ? KIND_TRICKS[companion.kind] : null;
+    if (own) out.push({ ...own, kindTrick: true });
+    return out;
+  }
+
+  /* Every counter a trick can learn from, in one place: play's
+   * own counts, and care's — a chase finished is care's play
+   * count; the chase's catches are play's. */
+  function trickCounts(record) {
+    const play = playOf(record);
+    const care = careOf(record);
+    return {
+      pets: play.pets,
+      pokes: play.pokes,
+      drags: play.drags,
+      catches: play.catches,
+      echoBest: play.echoBest,
+      kindles: care.kindles,
+      plays: care.plays,
+      rests: care.rests,
+      bond: care.bond
+    };
+  }
+
+  function tricksFor({ record, companion }) {
+    const counts = trickCounts(record);
+    const known = new Set(playOf(record).tricks);
+    return trickListFor(companion).map((t) => ({
+      ...t,
+      count: counts[t.via] || 0,
+      learned: known.has(t.id) || (counts[t.via] || 0) >= t.need
+    }));
+  }
+
+  /* One act of play, recorded — and what it taught her. The
+   * returned `learned` lists the tricks this act completed, so
+   * the presence can announce each one once, in her voice, at
+   * the moment it lands. A trick already known is never
+   * announced twice. */
+  function recordPlay(record, { action, catches, round }) {
+    const play = playOf(record);
+    if (action === "pet") play.pets += 1;
+    else if (action === "poke") play.pokes += 1;
+    else if (action === "drag") play.drags += 1;
+    else if (action === "chase") {
+      const n = Number.isFinite(catches) && catches > 0 ? Math.floor(catches) : 0;
+      play.catches += n;
+      if (n > play.bestChase) play.bestChase = n;
+    } else if (action === "echo") {
+      const r = Number.isFinite(round) && round > 0 ? Math.floor(round) : 0;
+      if (r > play.echoBest) play.echoBest = r;
+    } else {
+      return { record: { ...record }, learned: [] };
+    }
+    const next = { ...record, play };
+    const counts = trickCounts(next);
+    const learned = [];
+    for (const t of trickListFor(generate(record && record.seed))) {
+      if (play.tricks.includes(t.id)) continue;
+      if ((counts[t.via] || 0) >= t.need) {
+        play.tricks.push(t.id);
+        learned.push(t.id);
+      }
+    }
+    return { record: next, learned };
+  }
+
+  /* Tricks announced are kept in the record's play list, so
+   * each one is celebrated exactly once, however it was
+   * learned — by play, or by care crossing its count. */
+  function markTricksKnown(record, ids) {
+    const play = playOf(record);
+    for (const id of Array.isArray(ids) ? ids : []) {
+      if (!play.tricks.includes(id)) play.tricks.push(id);
+    }
+    return { ...record, play };
+  }
+
+  /* The tricks whose learning flipped between two records —
+   * the announcement list for any write, from any source. */
+  function learnedBetween({ before, after, companion }) {
+    const was = new Set(
+      tricksFor({ record: before, companion })
+        .filter((t) => t.learned)
+        .map((t) => t.id)
+    );
+    return tricksFor({ record: after, companion })
+      .filter((t) => t.learned && !was.has(t.id))
+      .map((t) => t.id);
+  }
+
+  /* Her question remembered for the day: she asks one gentle
+   * question a day at most, and asking is all that is kept —
+   * the keeper's answer is their own tap, never stored. */
+  function markAsked(record, { patternDay }) {
+    const play = playOf(record);
+    play.askedDay = patternDay != null ? patternDay : null;
+    return { ...record, play };
+  }
+
+  /* The echo game: she pulses a pattern — her seed's notes in
+   * four colours — and the keeper taps it back. The pattern is
+   * grown from the seed and the round, so the same Spark sings
+   * the same round anywhere; each round carries one more step
+   * than the last, up to a kind length. The pads wear her own
+   * hue, turned four ways, and sound her own notes, rising. */
+  function echoFor({ companion, round }) {
+    if (!companion) return { pads: [], steps: [], round: 0 };
+    const r = Math.max(1, Math.floor(round) || 1);
+    const chirp = chirpFor(companion);
+    const base = chirp ? chirp.first : 440;
+    const ratios = [1, 1.122, 1.335, 1.587];
+    const hue = Number.isFinite(companion.hue) ? companion.hue : 200;
+    const pads = ratios.map((ratio, i) => ({
+      note: Math.round(base * ratio),
+      color: `hsl(${Math.round(hue + i * 38)} 72% 62%)`
+    }));
+    const rand = mulberry32(hashString(`${companion.seed}:echo:${r}`));
+    const length = Math.min(9, 2 + r);
+    const steps = [];
+    for (let i = 0; i < length; i++) steps.push(Math.floor(rand() * 4));
+    return { pads, steps, round: r };
+  }
+
+  /* Her mood: a small state with honest parents. It is derived
+   * from what has actually happened — play, care, the hour —
+   * never from a clock ticking down. A trick learned or a round
+   * echoed leaves her proud for a while; a pet or a kindle
+   * leaves her bright; the late hours leave her sleepy; a rest
+   * or the evening leaves her calm; the rest of the day she is
+   * curious, which is her way of being awake in the world. */
+  const MOODS = {
+    proud: { name: "Proud", line: "Proud — something new was learned, or echoed true." },
+    bright: { name: "Bright", line: "Bright — played with, kindled, petted, and glad of it." },
+    sleepy: { name: "Sleepy", line: "Sleepy — the late hours soften her glow." },
+    calm: { name: "Calm", line: "Calm — rested, and breathing slow." },
+    curious: { name: "Curious", line: "Curious — awake to the day and its doors." }
+  };
+
+  function moodFor({ record, companion, todayPatternDay, hour, recent }) {
+    const care = careStateFor({ record, companion, todayPatternDay });
+    const h = Number.isFinite(hour) ? Math.floor(hour) : 12;
+    const fresh = recent || {};
+    let id = "curious";
+    if (fresh.learned || fresh.won) id = "proud";
+    else if (fresh.petted || fresh.played || care.kindledToday) id = "bright";
+    else if ((h >= 22 || h < 5) && !fresh.played) id = "sleepy";
+    else if (care.restedToday || h >= 19) id = "calm";
+    const mood = MOODS[id];
+    return { id, name: mood.name, line: mood.line };
+  }
+
+  /* Her one gentle question: drawn only from what the record
+   * truly holds — the day itself, the thread left warm, a door
+   * found for today, a small practice that would seal the day
+   * kindly. An invitation with a door, asked once a day at
+   * most, and skippable forever: walking past it costs
+   * nothing, and it never counts anything against anyone. */
+  function questionFor({ record, companion, today, page }) {
+    const day = today ? today.dayOfPatternYear : null;
+    if (companion && day != null && day === companion.birthPatternDay) {
+      return {
+        text: `Today carries the Pattern Day I was born on — ${companion.birthPatternDay}. Shall we mark it with one small practice?`,
+        href: "teach.html",
+        label: "Seal a small practice"
+      };
+    }
+    const prev = record && record.prevPage && record.prevPage !== page ? record.prevPage : null;
+    const prevInfo = prev ? PAGE_GUIDE[prev] : null;
+    if (prevInfo) {
+      return {
+        text: `Shall we pick up the thread at ${prevInfo.place}? It waits where you left it.`,
+        href: prev,
+        label: `Back to ${prevInfo.place}`
+      };
+    }
+    const trail = trailFor({ record, companion, today, page });
+    const doorStep = trail.steps.find((s) => s.id === "door" && !s.done);
+    if (doorStep) {
+      return {
+        text: `I found a door for us today: ${doorStep.place}. Shall we walk through it together?`,
+        href: doorStep.href,
+        label: "Walk it together"
+      };
+    }
+    const practice = (record && record.practiceDays) || [];
+    if (day != null && !practice.includes(day) && ((record && record.daysSeen) || []).length >= 1) {
+      return {
+        text: "One small practice would seal today kindly. Shall we?",
+        href: "teach.html",
+        label: "Seal one small practice"
+      };
+    }
+    return null;
   }
 
   /* Evolution: THREE stages, the way Aaron's Free The Noods
@@ -572,6 +948,10 @@
       kindName: kind.name,
       kindLine: kind.line,
       temperament: kind.temperament,
+      /* The body's own hue, kept as a number beside the finished
+       * colours: the echo game builds its four pads from it, so
+       * the pads wear her colours and no one else's. */
+      hue: Math.round(hue),
       trait: TRAITS[Math.floor(rand() * TRAITS.length)],
       form: FORMS[Math.floor(rand() * FORMS.length)],
       markings: {
@@ -797,7 +1177,14 @@
        * never with loss. And today's trail: the day it belongs
        * to, and the steps walked so far. */
       care: { kindles: 0, plays: 0, rests: 0, bond: 0, kindleDay: null, playDay: null, playCount: 0, restDay: null },
-      trail: { day: null, done: [] }
+      trail: { day: null, done: [] },
+      /* The play life: touches counted as they happen — pets,
+       * pokes, drags by hand, catches in the chase, rounds
+       * echoed — the tricks play has taught her (kept once
+       * announced, so each is celebrated a single time), and
+       * the day her one gentle question was last asked. Play
+       * only ever adds, exactly like care. */
+      play: { pets: 0, pokes: 0, drags: 0, catches: 0, bestChase: 0, echoBest: 0, tricks: [], askedDay: null }
     };
   }
 
@@ -1469,8 +1856,10 @@
    * it is (both names, and which is which), what it is, how far
    * it has grown, how long they have been together, and what it
    * has noticed — labeled, as above. */
-  function panelFor({ record, companion, today }) {
+  function panelFor({ record, companion, today, hour }) {
     const stage = stageOf(record, companion);
+    const play = playOf(record);
+    const tricks = tricksFor({ record, companion });
     return {
       name: displayName(record, companion),
       seedName: companion ? companion.name : NAME_FALLBACK,
@@ -1482,6 +1871,26 @@
       points: stage.points,
       daysTogether: ((record && record.daysSeen) || []).length,
       coordinate: coordinateLineFor(today),
+      /* Her mood, named in her record, and her play life in
+       * honest counts: pets given, tricks known, the best
+       * chase and the best echo — all of it kept here. */
+      mood: moodFor({
+        record,
+        companion,
+        todayPatternDay: today ? today.dayOfPatternYear : null,
+        hour
+      }),
+      play: {
+        pets: play.pets,
+        pokes: play.pokes,
+        drags: play.drags,
+        catches: play.catches,
+        bestChase: play.bestChase,
+        echoBest: play.echoBest,
+        tricksKnown: tricks.filter((t) => t.learned).length,
+        tricksTotal: tricks.length,
+        trickNames: tricks.filter((t) => t.learned).map((t) => t.name)
+      },
       care: careStateFor({
         record,
         companion,
@@ -1541,6 +1950,22 @@
     careOf,
     applyCare,
     careStateFor,
+    daypartFor,
+    daypartLineFor,
+    playOf,
+    TRICKS,
+    KIND_TRICKS,
+    trickListFor,
+    trickCounts,
+    tricksFor,
+    recordPlay,
+    markTricksKnown,
+    learnedBetween,
+    markAsked,
+    echoFor,
+    MOODS,
+    moodFor,
+    questionFor,
     trailFor,
     recordTrailStep,
     doorsFor,
