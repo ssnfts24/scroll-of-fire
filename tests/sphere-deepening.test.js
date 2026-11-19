@@ -154,6 +154,25 @@ test("the everyday stage keeps a measured space for the guide bar, so the bar re
   assert.ok(layer.includes("ResizeObserver"), "the reserve follows the bar's own height");
 });
 
+test("mobile rescue: the guide bar starts slim on portrait phones, so the stage keeps the screen", () => {
+  assert.ok(layer.includes("sgb-slim-default"), "the root carries the slim-default mark");
+  assert.ok(layer.includes("applySlimDefault"), "one function owns the slim default");
+  assert.ok(layer.includes("(max-width: 720px) and (orientation: portrait)"), "the fold is scoped to portrait phones");
+  assert.ok(layer.includes("sphere-app"), "the fold applies in the app view, the phone's default");
+  assert.ok(css.includes("html.sgb-slim-default .sgb-clean-toggle"), "the Guide button is available in the slim default");
+  assert.ok(css.includes("html.sgb-slim-default .sphere-guide-bar.sgb-bar-slim"), "the slim fold is styled outside full screen");
+  assert.ok(css.includes("flex-wrap: nowrap"), "the slim line never wraps to a second row");
+});
+
+test("mobile rescue: the app stage carries a floor above the renderer's minimum height", () => {
+  const appCss = read("docs/assets/css/living-time-sphere-app.css");
+  assert.ok(appCss.includes("min-height: 200px"), "the app stage never drops to the 2D-fallback zone");
+  assert.ok(appCss.includes("clamp(300px, 45dvh, 520px)"), "on portrait phones the stage is sized to the phone's own height");
+  assert.ok(appCss.includes("(max-width: 720px) and (orientation: portrait)"), "the portrait sizing is scoped to portrait phones");
+  assert.ok(appCss.includes(".sphere-environment-bridge"), "the environment strip gives its height back as one row");
+  assert.ok(appCss.includes(".sphere-interact-bar"), "the Interact bar gives its height back as one row");
+});
+
 test("the homepage hint rides the top corner, clear of the Sphere's selected-year card", () => {
   const homeCss = read("docs/assets/css/homepage-sphere.css");
   const start = homeCss.indexOf(".homepage-sphere-hint {");
