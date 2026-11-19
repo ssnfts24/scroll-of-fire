@@ -335,7 +335,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "9132d3892e3f40863213c7214aa6a6206a1da5fb3d4ca5fb2992ad55d1015a55",
+      "sha256": "afedbe46cb4d7507c5192da0f1735925b0d8fbecbcf37377654177204d78df41",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -2536,6 +2536,18 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/media/theory-artifact-theory-explainer.mp4",
+      "sha256": "4ae91bb2a07d4343e37e0d6ce9b757b0d60115577a5a413c6ad82e85b400c0ec",
+      "publicUrl": "https://codexofreality.org/assets/media/theory-artifact-theory-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/theory-bibliography-explainer.mp4",
+      "sha256": "e8e410e30902a4bc74d2a5974531c64b9f3d72276a812d885b9c668bc4b7345a",
+      "publicUrl": "https://codexofreality.org/assets/media/theory-bibliography-explainer.mp4",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/media/theory-canon-explainer.mp4",
       "sha256": "f2a6376999a0099bc61284f170ef477e1db37198bcf8e39f3c70765316d517dd",
       "publicUrl": "https://codexofreality.org/assets/media/theory-canon-explainer.mp4",
@@ -2548,9 +2560,33 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/media/theory-ethics-explainer.mp4",
+      "sha256": "d10a6f8f913655f60772c95d23b0f2e2ae7fd9671210bc286dfab09868991dc0",
+      "publicUrl": "https://codexofreality.org/assets/media/theory-ethics-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/theory-frequency-governance-explainer.mp4",
+      "sha256": "3f6d25da1f26042980602099ff2bfd8642b56bee0025a924ab5f932267bddd00",
+      "publicUrl": "https://codexofreality.org/assets/media/theory-frequency-governance-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/theory-glossary-explainer.mp4",
+      "sha256": "05476a2c7aa28fe8d17c413c59b3d8ec814c8ed94ffaa0f1e5af1b8bb1615052",
+      "publicUrl": "https://codexofreality.org/assets/media/theory-glossary-explainer.mp4",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/media/theory-hub-explainer.mp4",
       "sha256": "7fd39c10fdfad8fbf19110e14ae68a5b1f83d3263c49be865671f44274f2bc82",
       "publicUrl": "https://codexofreality.org/assets/media/theory-hub-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/theory-living-technology-explainer.mp4",
+      "sha256": "ca772534782b707489fb228236cb430ad46c0afb6c6db79f64d2a4684dca8425",
+      "publicUrl": "https://codexofreality.org/assets/media/theory-living-technology-explainer.mp4",
       "status": "operational"
     },
     {
@@ -2575,6 +2611,12 @@
       "path": "docs/assets/media/theory-operators-explainer.mp4",
       "sha256": "6d0e4345e250ad468036a8a3223b8cd1828353903367efb6bcef7b2ad49923e2",
       "publicUrl": "https://codexofreality.org/assets/media/theory-operators-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/theory-thirteen-moons-explainer.mp4",
+      "sha256": "d45409d776915abf88c96b09798898bcdf154a1bea62307fd01284818c1d539c",
+      "publicUrl": "https://codexofreality.org/assets/media/theory-thirteen-moons-explainer.mp4",
       "status": "operational"
     },
     {
@@ -2609,13 +2651,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "d4ccb7f7d53be3bb7c12c76a9957da0e6a4255fdfdbf2e7fa001def675d4bceb",
+      "sha256": "1d3a8733012bfd7c849035e7640dd148b19ba827097bc1e92b1c205194369ee0",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "dc89b318634ef41d45490c8cb0e598962944f25511b8d32ae44bd1c6fa292230",
+      "sha256": "63a86bb011c568adc7f03c524a250acd45033f21def8f78f09f16bb5f4569ac1",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -2759,7 +2801,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "7736a813c52f09e03aa8354d9ec902a426ddce2d3dc403bd9e58313934148280",
+      "sha256": "ecf58f5f77532d142a0424402b52aa3635e8c3cdaa07468e5e333d3383425ef1",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
@@ -9155,13 +9197,13 @@
     },
     {
       "path": "docs/theory/artifact-theory.html",
-      "sha256": "c9154907fd832ebc05e635417c045abeef9395a7b6576f45a2d0a610d6122ed4",
+      "sha256": "1ddbc9aed50bcb02336a2d0bb36ca0d7d295fbb523fd33fd208e3e2465010271",
       "publicUrl": "https://codexofreality.org/theory/artifact-theory.html",
       "status": "operational"
     },
     {
       "path": "docs/theory/bibliography.html",
-      "sha256": "c534913d1abf97a045ad5b6924595cdc7f94f638520f0c8dd355364ffa4884a3",
+      "sha256": "4bc2d34e33a7ee4357ee12d6aa0de77d1fb9978842fe5ec650618c66da9326d5",
       "publicUrl": "https://codexofreality.org/theory/bibliography.html",
       "status": "operational"
     },
@@ -9293,25 +9335,25 @@
     },
     {
       "path": "docs/theory/ethics.html",
-      "sha256": "99bb42bf7d89eee60d8627647fa2f526598fc2550c6b678eb6151b48c27329f4",
+      "sha256": "e127738e4ddca58b1d2b0d3f5bd9ff4701dcf8cbf32d9ba4168a9baca777827b",
       "publicUrl": "https://codexofreality.org/theory/ethics.html",
       "status": "operational"
     },
     {
       "path": "docs/theory/frequency-governance.html",
-      "sha256": "b823c2c81872ff88624059f63de7021f9a3d3784f61532dc2209d08b97c8fdcc",
+      "sha256": "43c0791599b3012a719ee69ab33882c0a8419336838a3e195e406248cfcc618b",
       "publicUrl": "https://codexofreality.org/theory/frequency-governance.html",
       "status": "operational"
     },
     {
       "path": "docs/theory/glossary.html",
-      "sha256": "8f1f729c4791826316b3d993550b4d5033e108c4daae8e983ec8166a13c4a902",
+      "sha256": "7697055c721762b2f973be6d8cff5a6dfcc32df7eaa999651b06cb344fa7a370",
       "publicUrl": "https://codexofreality.org/theory/glossary.html",
       "status": "operational"
     },
     {
       "path": "docs/theory/living-technology.html",
-      "sha256": "b1711f3d6e6f32ad40e5e6b70e412a10b3b86283d36784aee95d3e56ece63ad9",
+      "sha256": "28539089f82b08421165bd43390b5a68e7356c3130a416de44fe806b6d2db1bc",
       "publicUrl": "https://codexofreality.org/theory/living-technology.html",
       "status": "operational"
     },
@@ -9341,7 +9383,7 @@
     },
     {
       "path": "docs/theory/thirteen-moons.html",
-      "sha256": "1a519510d7f9e01ce0fc15817af14acf705d8b8608cce653df0016ca4a2f725c",
+      "sha256": "ac4172ae679f2bb0c04c606f4ecc8a77113547cb4954e1cd661698942162d141",
       "publicUrl": "https://codexofreality.org/theory/thirteen-moons.html",
       "status": "operational"
     },
