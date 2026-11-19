@@ -2334,6 +2334,298 @@
     return out.slice(0, 5);
   }
 
+  /* ---- v10: her rarity — counted from her own draws ----
+   *
+   * Aaron's word: Sparks should carry different rarities, and
+   * the variety should be very large. The rule this build
+   * keeps: rarity is COMPUTED, never stickered. Every trait
+   * she has was drawn from her seed with some probability;
+   * her rarity is that probability, read back off the same
+   * tables the draws came from — so a trait drawn 1-in-N
+   * shows odds of about 1 in N, and no number here is
+   * invented. Rarity is a fact about her, never a price:
+   * every Spark is free to adopt, rarity gates nothing, and
+   * nothing here speaks of buying, selling, or scarcity.
+   *
+   * The census counts the variety itself, from the tables:
+   * every categorical draw the generator can make, times the
+   * measured traits at the steps the generator rounds them
+   * to. It is a floor, not a ceiling — her exact hue and her
+   * palette's shades are drawn on finer steps still, and her
+   * birth day (365 of them) roots each seed in its own day.
+   *
+   * Her standing is counted among Sparks of her own kind,
+   * from the three draws whose odds truly vary: her name
+   * (a name with a middle is a rarer draw than one without),
+   * her set of grown details (which of the five she drew,
+   * and which she did not), and her breath (none, or one of
+   * its 26 steps). The uniform draws — her form, her
+   * markings, her sound family — are the same odds for every
+   * Spark, so they are counted in the census, where they
+   * belong, and not dressed up as rarity here. */
+
+  /* The measured traits, at the steps the generator itself
+   * rounds them to — each count read off its draw:
+   * size 0.85–1.18 by hundredths (34), pace 0.90–1.10 (21),
+   * density 0.70–1.30 (61), brightness 0.85–1.15 (31),
+   * decay 0.80–1.25 (46), vibrato depth 0.002–0.009 by
+   * thousandths (8), vibrato rate 4.2–6.1 by tenths (20),
+   * vocal-tract scale 0.86–1.22 (37), and breath — none, or
+   * one of 0.05–0.30 by hundredths (27 outcomes). */
+  const MEASURE_STEPS = [
+    { id: "size", steps: 34 },
+    { id: "pace", steps: 21 },
+    { id: "density", steps: 61 },
+    { id: "brightness", steps: 31 },
+    { id: "decay", steps: 46 },
+    { id: "vibratoDepth", steps: 8 },
+    { id: "vibratoRate", steps: 20 },
+    { id: "formantScale", steps: 37 },
+    { id: "breathiness", steps: 27 }
+  ];
+
+  /* The whole variety, recounted from the derivation tables
+   * every time it is asked for — if a table grows, the count
+   * grows with it, and the two can never drift apart. */
+  function censusFor() {
+    let nameSpace = 0;
+    for (const k of KINDS) {
+      nameSpace +=
+        (NAME_OPENERS[k.id] || []).length *
+        (1 + NAME_MIDDLES.length) *
+        NAME_CLOSERS.length;
+    }
+    const factors = {
+      names: nameSpace,
+      forms: FORMS.length,
+      markingStyles: MARKINGS.length,
+      markingCounts: 4,
+      eyes: EYES.length,
+      crests: CRESTS.length,
+      traits: TRAITS.length,
+      gaits: GAITS.length,
+      glows: GLOWS.length,
+      crestStyles: CREST_STYLES.length,
+      earStyles: EAR_STYLES.length,
+      trailStyles: TRAIL_STYLES.length,
+      cheekStyles: CHEEK_STYLES.length,
+      patternStyles: PATTERN_STYLES.length,
+      eyeVariants: EYE_VARIANTS.length,
+      soundFamilies: SOUND_FAMILIES.length
+    };
+    const categorical = Object.values(factors).reduce((a, b) => a * b, 1);
+    const measuredMultiplier = MEASURE_STEPS.reduce((a, s) => a * s.steps, 1);
+    return {
+      factors,
+      categorical,
+      measureSteps: MEASURE_STEPS.map((s) => ({ ...s })),
+      measuredMultiplier,
+      total: categorical * measuredMultiplier,
+      /* Her birth day: 364 Pattern Days, and the one day
+       * outside them. The day fixes the moon, so the two are
+       * counted once, as days. */
+      birthDays: 365,
+      /* Which of her five grown details a seed may draw —
+       * each present or not — makes 32 shapes of schedule. */
+      revealShapes: 32
+    };
+  }
+
+  /* Her name's draw, replayed: the seed picks one of her
+   * kind's openers, then — 45 times in 100 — one of the
+   * middles, then one of the closers. A name with no middle
+   * is carried by about 1 in 131 of her kind; a name with a
+   * middle, by about 1 in 1,280. */
+  function nameDrawFor(companion) {
+    if (!companion) return null;
+    const rand = mulberry32(hashString(companion.seed + ":name"));
+    rand();
+    const hasMiddle = rand() < 0.45;
+    return {
+      hasMiddle,
+      p: hasMiddle
+        ? 0.45 / ((NAME_OPENERS[companion.kind] || []).length * NAME_MIDDLES.length * NAME_CLOSERS.length)
+        : 0.55 / ((NAME_OPENERS[companion.kind] || []).length * NAME_CLOSERS.length)
+    };
+  }
+
+  /* Her set of grown details, and its odds: each of the
+   * four detail lists holds three grown styles and a "none"
+   * (present 3 times in 4); her crest style holds five
+   * grown styles and a "plain" (present 5 times in 6). The
+   * set she actually drew — these present, those not — runs
+   * from about 1 in 4 (all five) to 1 in 1,536 (none). */
+  function detailSetFor(companion) {
+    if (!companion) return null;
+    const d = companion.details || {};
+    const draws = [
+      { id: "cheeks", present: !!d.cheeks && d.cheeks !== "none", pPresent: 3 / 4 },
+      { id: "pattern", present: !!d.pattern && d.pattern !== "none", pPresent: 3 / 4 },
+      { id: "ears", present: !!d.ears && d.ears !== "none", pPresent: 3 / 4 },
+      { id: "trail", present: !!d.trail && d.trail !== "none", pPresent: 3 / 4 },
+      { id: "crest", present: !!d.crestStyle && d.crestStyle !== "plain", pPresent: 5 / 6 }
+    ];
+    let p = 1;
+    for (const dr of draws) p *= dr.present ? dr.pPresent : 1 - dr.pPresent;
+    return { draws, presentCount: draws.filter((x) => x.present).length, p };
+  }
+
+  /* Her breath's draw: 45 in 100 Sparks breathe not at all;
+   * the rest settle on one of the 26 steps from 0.05 to
+   * 0.30, so any one breathing voice is the rarer draw. */
+  function breathDrawFor(companion) {
+    const box = voiceBoxFor(companion);
+    if (!box) return null;
+    return {
+      breathless: box.breathiness === 0,
+      p: box.breathiness === 0 ? 0.45 : 0.55 / 26
+    };
+  }
+
+  /* Her standing, in five bands of the counted odds —
+   * plain Codex words, no trumpets. Each band is ten times
+   * the odds of the one before it, and the odds themselves
+   * always stand beside the name, so the name never claims
+   * more than the count says. */
+  const RARITY_TIERS = [
+    { id: "common", name: "Common ground", under: 10000 },
+    { id: "uncommon", name: "Uncommon ground", under: 100000 },
+    { id: "rare", name: "Rare ground", under: 1000000 },
+    { id: "deep", name: "Deep rare", under: 10000000 },
+    { id: "singular", name: "Singular", under: Infinity }
+  ];
+
+  function tierForOneIn(oneIn) {
+    return RARITY_TIERS.find((t) => oneIn < t.under) || RARITY_TIERS[RARITY_TIERS.length - 1];
+  }
+
+  /* Odds, said the way a person says them: whole numbers
+   * under ten thousand, two honest figures above that. */
+  function oneInText(p) {
+    if (!(p > 0)) return "—";
+    const n = 1 / p;
+    if (n < 10000) return Math.round(n).toLocaleString("en-US");
+    const d = Math.pow(10, Math.floor(Math.log10(n)) - 1);
+    return (Math.round(n / d) * d).toLocaleString("en-US");
+  }
+
+  /* Her rarity, whole: an overall standing from the three
+   * varying draws multiplied, a line for each notable trait
+   * with its own odds, and the marks that come from birth
+   * and life rather than draws — a birth outside the moons,
+   * a birth on the Year Gate, a schedule fully arrived, a
+   * full set of tricks, the fullest form. Deterministic:
+   * the same seed and the same record count the same rarity
+   * anywhere, and nothing is kept anywhere new. */
+  function rarityFor({ record, companion } = {}) {
+    if (!companion) return null;
+    const nameDraw = nameDrawFor(companion);
+    const detailSet = detailSetFor(companion);
+    const breath = breathDrawFor(companion);
+    const p = nameDraw.p * detailSet.p * breath.p;
+    const oneIn = 1 / p;
+    const tier = tierForOneIn(oneIn);
+    const traits = [
+      {
+        id: "name",
+        oneIn: Math.round(1 / nameDraw.p),
+        line:
+          `Her name, ${companion.name}: about 1 in ${oneInText(nameDraw.p)} ` +
+          `${companion.kindName} Sparks carry this exact name.`
+      }
+    ];
+    if (companion.crest === "halo" && companion.details && companion.details.crestStyle === "halo") {
+      traits.push({
+        id: "halo-upon-halo",
+        oneIn: 30,
+        line: "A halo over a halo — her crest and its style agree: about 1 in 30 Sparks wear both."
+      });
+    }
+    if (companion.crest === "leaf" && companion.details && companion.details.crestStyle === "leaf") {
+      traits.push({
+        id: "leaf-upon-leaf",
+        oneIn: 30,
+        line: "A leaf over a leaf — her crest and its style agree: about 1 in 30 Sparks wear both."
+      });
+    }
+    if (detailSet.presentCount === 0) {
+      traits.push({
+        id: "no-detail",
+        oneIn: 1536,
+        line: "She grows no extra detail at all — her born look is her whole look: about 1 in 1,536 Sparks are drawn this spare."
+      });
+    } else if (detailSet.presentCount === detailSet.draws.length) {
+      traits.push({
+        id: "all-detail",
+        oneIn: 4,
+        line: "She grows every detail her seed can draw — cheeks, pattern, ears, trail, and a styled crest: about 1 in 4 Sparks do."
+      });
+    }
+    const size = companion.shape ? companion.shape.size : null;
+    if (size != null && size >= 1.16) {
+      traits.push({
+        id: "tall",
+        oneIn: 11,
+        line: "She stands among the tallest Sparks: about 1 in 11 reach this height."
+      });
+    } else if (size != null && size <= 0.87) {
+      traits.push({
+        id: "small",
+        oneIn: 11,
+        line: "She stands among the smallest Sparks: about 1 in 11 are this small."
+      });
+    }
+    const specials = [];
+    if (companion.birthMoon == null) {
+      specials.push({
+        id: "born-outside",
+        line: "Born on the Day Out of Time — the one day of the year that belongs to no moon."
+      });
+    }
+    if (companion.birthPatternDay === 1) {
+      specials.push({
+        id: "year-gate",
+        line: "Born on Pattern Day 1 — the Year Gate, the first day of the pattern year."
+      });
+    }
+    if (record) {
+      const rev = revealsFor({ record, companion });
+      if (rev.schedule.length >= 2 && rev.revealed.length === rev.schedule.length) {
+        specials.push({
+          id: "fully-revealed",
+          line: "Every detail on her schedule has arrived — her whole face, grown in over the walk."
+        });
+      }
+      const trickList = tricksFor({ record, companion });
+      if (trickList.length > 0 && trickList.every((t) => t.learned)) {
+        specials.push({
+          id: "all-tricks",
+          line: "She knows every trick she can learn."
+        });
+      }
+      if (stageOf(record, companion).index >= STAGES.length - 1) {
+        specials.push({
+          id: "fully-grown",
+          line: "Fully grown — Radiant, the fullest form there is."
+        });
+      }
+    }
+    return {
+      tier: tier.id,
+      tierName: tier.name,
+      oneIn,
+      oneInText: oneInText(p),
+      nameOneIn: Math.round(1 / nameDraw.p),
+      detailSetOneIn: Math.round((1 / detailSet.p) * 10) / 10,
+      breathless: breath.breathless,
+      traits,
+      specials,
+      line:
+        `${tier.name} — about 1 in ${oneInText(p)} Sparks of her kind match her ` +
+        `on name, grown detail, and breath together.`
+    };
+  }
+
   /* The share card's words, in one place: exactly what the
    * keeper already sees in their own panel — the name it
    * answers to, its seed name underneath, its kind and
@@ -2356,6 +2648,10 @@
         ? `${companion.kindName} Spark — ${companion.temperament}, and ${companion.trait}`
         : "",
       stageLine: `Stage ${stage.index + 1} of ${STAGES.length}: ${stage.name}`,
+      rarityLine: (() => {
+        const rarity = rarityFor({ record, companion });
+        return rarity ? `Standing: ${rarity.tierName} — about 1 in ${rarity.oneInText}` : "";
+      })(),
       bornLine: born,
       todayLine: coordinateLineFor(today),
       daysLine: `${((record && record.daysSeen) || []).length} day${((record && record.daysSeen) || []).length === 1 ? "" : "s"} together`,
@@ -2407,6 +2703,9 @@
         companion,
         todayPatternDay: today ? today.dayOfPatternYear : null
       }),
+      /* Her rarity, counted from her own draws — the same
+       * counting the share card carries. */
+      rarity: rarityFor({ record, companion }),
       trail: trailFor({ record, companion, today, page: null }),
       notices: noticesFor({
         record,
@@ -2425,6 +2724,20 @@
     QUESTIONS,
     FORMS,
     MARKINGS,
+    EYES,
+    CRESTS,
+    TRAITS,
+    GAITS,
+    GLOWS,
+    CREST_STYLES,
+    EAR_STYLES,
+    TRAIL_STYLES,
+    CHEEK_STYLES,
+    PATTERN_STYLES,
+    EYE_VARIANTS,
+    NAME_OPENERS,
+    NAME_MIDDLES,
+    NAME_CLOSERS,
     STAGES,
     hashString,
     mulberry32,
@@ -2450,6 +2763,12 @@
     REVEAL_LINES,
     revealLineFor,
     revealScheduleFor,
+    RARITY_TIERS,
+    censusFor,
+    nameDrawFor,
+    detailSetFor,
+    breathDrawFor,
+    rarityFor,
     engagementOf,
     revealsFor,
     revealsSeenOf,

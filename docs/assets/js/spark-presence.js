@@ -250,6 +250,14 @@
     row("Kind:", `${data.kindName} — ${data.temperament}, ${data.trait}`);
     const herSound = Core.soundFor(companion);
     if (herSound) row("Sound:", `${herSound.familyName} — hers alone.`);
+    /* Her rarity, counted from her own draws — the standing
+     * first, then each notable trait with its odds, then the
+     * marks birth and life gave her. Facts, plainly kept. */
+    if (data.rarity) {
+      row("Standing:", `${data.rarity.tierName} — about 1 in ${data.rarity.oneInText}, counted from her draws.`);
+      for (const trait of data.rarity.traits) row("Notable:", trait.line);
+      for (const special of data.rarity.specials) row("Birth & life:", special.line);
+    }
     const prog = Core.progressOf(record, companion);
     row(
       "Stage:",
@@ -1600,14 +1608,19 @@
         ctx.fillText(card.kindLine, W / 2, 758);
         ctx.fillStyle = "#d9a441";
         ctx.font = "600 44px Georgia, 'Times New Roman', serif";
-        ctx.fillText(card.stageLine, W / 2, 824);
+        ctx.fillText(card.stageLine, W / 2, 818);
+        if (card.rarityLine) {
+          ctx.font = "400 38px Georgia, 'Times New Roman', serif";
+          ctx.fillStyle = "#cfe8e2";
+          ctx.fillText(card.rarityLine, W / 2, 872);
+        }
         ctx.font = "400 38px Georgia, 'Times New Roman', serif";
         ctx.fillStyle = "#cfe8e2";
-        ctx.fillText(card.bornLine, W / 2, 882);
-        ctx.fillText(`${card.todayLine} · ${card.daysLine}`, W / 2, 934);
+        ctx.fillText(card.bornLine, W / 2, 924);
+        ctx.fillText(`${card.todayLine} · ${card.daysLine}`, W / 2, 972);
         ctx.fillStyle = "#8fa3ad";
         ctx.font = "400 34px Georgia, 'Times New Roman', serif";
-        ctx.fillText(card.brand, W / 2, 1004);
+        ctx.fillText(card.brand, W / 2, 1022);
         const a = document.createElement("a");
         a.download = `codex-spark-${card.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.png`;
         a.href = canvas.toDataURL("image/png");

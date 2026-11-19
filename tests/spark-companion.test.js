@@ -1812,3 +1812,289 @@ test("v9 reveals: earned by walking, announced once, and time away costs nothing
     assert.ok(!banned.test(Core.revealLineFor(id)), `the ${id} line is clean copy: ${Core.revealLineFor(id)}`);
   }
 });
+
+/* ---- v10: her rarity — counted from her own draws, and the
+ * census of the whole variety. Rarity is computed, never
+ * stickered: every odds line below is checked against the
+ * same tables the generator draws from. ---- */
+
+test("v10 census: the variety, recounted from the derivation tables", () => {
+  const census = Core.censusFor();
+  /* The name space, recounted by hand from the name tables:
+   * per kind, its openers × (no middle, or one of the
+   * middles) × the closers, summed over the kinds. */
+  let names = 0;
+  for (const k of Core.KINDS) {
+    names +=
+      Core.NAME_OPENERS[k.id].length *
+      (1 + Core.NAME_MIDDLES.length) *
+      Core.NAME_CLOSERS.length;
+  }
+  assert.equal(census.factors.names, names, "the census counts the name tables as they stand");
+  assert.equal(names, 3888, "six kinds of names, 648 to a kind");
+  /* Every categorical factor is its table's own length. */
+  const tables = {
+    forms: Core.FORMS,
+    markingStyles: Core.MARKINGS,
+    eyes: Core.EYES,
+    crests: Core.CRESTS,
+    traits: Core.TRAITS,
+    gaits: Core.GAITS,
+    glows: Core.GLOWS,
+    crestStyles: Core.CREST_STYLES,
+    earStyles: Core.EAR_STYLES,
+    trailStyles: Core.TRAIL_STYLES,
+    cheekStyles: Core.CHEEK_STYLES,
+    patternStyles: Core.PATTERN_STYLES,
+    eyeVariants: Core.EYE_VARIANTS,
+    soundFamilies: Core.SOUND_FAMILIES
+  };
+  for (const [factor, table] of Object.entries(tables)) {
+    assert.equal(census.factors[factor], table.length, `${factor} is counted from its table`);
+  }
+  assert.equal(census.factors.markingCounts, 4, "her markings fall two, three, four, or five at a time");
+  /* The products are the products — recomputed here, from
+   * the factors, so the headline can never drift from them. */
+  const categorical = Object.values(census.factors).reduce((a, b) => a * b, 1);
+  assert.equal(census.categorical, categorical, "the categorical count is its factors' product");
+  const measured = census.measureSteps.reduce((a, s) => a * s.steps, 1);
+  assert.equal(census.measuredMultiplier, measured, "the measured multiplier is its steps' product");
+  assert.equal(census.total, categorical * measured, "the total is the two counts multiplied");
+  assert.ok(census.categorical > 1e13, `the born variety is counted in the tens of trillions (saw ${census.categorical})`);
+  assert.ok(census.total > 1e25, `with her measured traits, the counted variety passes 10^25 (saw ${census.total})`);
+  assert.equal(census.birthDays, 365, "364 Pattern Days and the one day outside them");
+  assert.equal(census.revealShapes, 32, "five grown details, each present or not");
+  /* The drift guard: whatever the tables promise, the
+   * generator keeps — sampled seeds wear only table values,
+   * and their measured traits land on the counted steps. */
+  const onStep = (v, lo, hi, step) =>
+    v >= lo - 1e-9 && v <= hi + 1e-9 && Math.abs((v - lo) / step - Math.round((v - lo) / step)) < 1e-6;
+  for (let i = 0; i < 300; i++) {
+    const c = Core.generate(Core.makeSeed({ moon: 8, patternDay: 216, kindIndex: i % 6, nonce: `cen${i}zz` }));
+    assert.ok(Core.FORMS.includes(c.form), "her form is one of its table");
+    assert.ok(Core.MARKINGS.includes(c.markings.style), "her markings are one of their table");
+    assert.ok(c.markings.count >= 2 && c.markings.count <= 5, "her marking count is in its four");
+    assert.ok(Core.EYES.includes(c.eye) && Core.CRESTS.includes(c.crest), "eye and crest from their tables");
+    assert.ok(Core.TRAITS.includes(c.trait), "her trait is one of its table");
+    assert.ok(Core.GAITS.includes(c.shape.gait) && Core.GLOWS.includes(c.shape.glow), "gait and glow from their tables");
+    assert.ok(Core.CREST_STYLES.includes(c.details.crestStyle), "crest style from its table");
+    assert.ok(Core.EAR_STYLES.includes(c.details.ears), "ears from their table");
+    assert.ok(Core.TRAIL_STYLES.includes(c.details.trail), "trail from its table");
+    assert.ok(Core.CHEEK_STYLES.includes(c.details.cheeks), "cheeks from their table");
+    assert.ok(Core.PATTERN_STYLES.includes(c.details.pattern), "pattern from its table");
+    assert.ok(Core.EYE_VARIANTS.includes(c.details.eyeVariant), "eye variant from its table");
+    assert.ok(onStep(c.shape.size, 0.85, 1.18, 0.01), "her size lands on its counted steps");
+    assert.ok(onStep(c.shape.pace, 0.9, 1.1, 0.01), "her pace lands on its counted steps");
+    assert.ok(onStep(c.details.density, 0.7, 1.3, 0.01), "her density lands on its counted steps");
+    const s = Core.soundFor(c);
+    assert.ok(Core.SOUND_FAMILIES.some((f) => f.id === s.family), "her sound family is one of its table");
+    assert.ok(onStep(s.brightness, 0.85, 1.15, 0.01), "her brightness lands on its counted steps");
+    assert.ok(onStep(s.decay, 0.8, 1.25, 0.01), "her decay lands on its counted steps");
+    const box = Core.voiceBoxFor(c);
+    assert.ok(onStep(box.formantScale, 0.86, 1.22, 0.01), "her vocal tract lands on its counted steps");
+    assert.ok(box.breathiness === 0 || onStep(box.breathiness, 0.05, 0.3, 0.01), "her breath lands on its counted steps");
+  }
+});
+
+test("v10 rarity math: a trait drawn 1-in-N shows odds of about 1 in N", () => {
+  /* Her name's draw, replayed independently from the seed:
+   * opener draw, then the middle draw — under 0.45 she
+   * carries a middle, and her name is the rarer for it. */
+  let sawPlain = 0;
+  let sawMiddle = 0;
+  for (let i = 0; i < 60; i++) {
+    const seed = Core.makeSeed({ moon: 8, patternDay: 216, kindIndex: i % 6, nonce: `nam${i}zz` });
+    const companion = Core.generate(seed);
+    const rand = Core.mulberry32(Core.hashString(seed + ":name"));
+    rand();
+    const hasMiddle = rand() < 0.45;
+    const draw = Core.nameDrawFor(companion);
+    assert.equal(draw.hasMiddle, hasMiddle, "the rarity reads the same draw the name was made from");
+    if (hasMiddle) {
+      sawMiddle += 1;
+      assert.ok(Math.abs(draw.p - 0.45 / 576) < 1e-12, "a middle name's odds are the draw's own");
+      assert.equal(Core.rarityFor({ companion }).nameOneIn, 1280, "about 1 in 1,280 of her kind");
+    } else {
+      sawPlain += 1;
+      assert.ok(Math.abs(draw.p - 0.55 / 72) < 1e-12, "a plain name's odds are the draw's own");
+      assert.equal(Core.rarityFor({ companion }).nameOneIn, 131, "about 1 in 131 of her kind");
+    }
+  }
+  assert.ok(sawPlain > 0 && sawMiddle > 0, "both name shapes stand in the field");
+  /* Her detail set's odds, from crafted sets — the product
+   * of what she drew and what she did not. */
+  const bare = { details: { cheeks: "none", pattern: "none", ears: "none", trail: "none", crestStyle: "plain" } };
+  assert.ok(Math.abs(Core.detailSetFor(bare).p - 1 / 1536) < 1e-12, "no detail at all: 1 in 1,536");
+  const full = { details: { cheeks: "glow", pattern: "bands", ears: "fins", trail: "wisp", crestStyle: "halo" } };
+  assert.ok(Math.abs(Core.detailSetFor(full).p - (3 / 4) ** 4 * (5 / 6)) < 1e-12, "every detail: about 1 in 4");
+  const mixed = { details: { cheeks: "glow", pattern: "none", ears: "fins", trail: "none", crestStyle: "plain" } };
+  assert.ok(
+    Math.abs(Core.detailSetFor(mixed).p - (3 / 4) * (1 / 4) * (3 / 4) * (1 / 4) * (1 / 6)) < 1e-12,
+    "a mixed set multiplies its own draws"
+  );
+  /* Her breath's odds: none, or one of its 26 steps. */
+  for (let i = 0; i < 40; i++) {
+    const companion = Core.generate(Core.makeSeed({ moon: 8, patternDay: 216, kindIndex: i % 6, nonce: `bre${i}zz` }));
+    const breath = Core.breathDrawFor(companion);
+    if (Core.voiceBoxFor(companion).breathiness === 0) {
+      assert.equal(breath.breathless, true);
+      assert.equal(breath.p, 0.45, "a breathless voice is the 45-in-100 draw");
+    } else {
+      assert.equal(breath.breathless, false);
+      assert.ok(Math.abs(breath.p - 0.55 / 26) < 1e-12, "a breathing voice is one of 26 steps");
+    }
+  }
+  /* The halo over a halo, counted in the field: crest halo
+   * is 1 in 5, its style halo 1 in 6, so the pair stands at
+   * about 1 in 30 — and the rarity says so, in those words. */
+  let halos = 0;
+  const N = 3000;
+  for (let i = 0; i < N; i++) {
+    const c = Core.generate(Core.makeSeed({ moon: 8, patternDay: 216, kindIndex: i % 6, nonce: `hal${i}zz` }));
+    if (c.crest === "halo" && c.details.crestStyle === "halo") halos += 1;
+  }
+  const share = halos / N;
+  assert.ok(share > 0.02 && share < 0.05, `the field keeps the 1-in-30 count (saw ${(share * 100).toFixed(1)} in 100)`);
+  let haloSpark = null;
+  for (let i = 0; i < 400 && !haloSpark; i++) {
+    const c = Core.generate(Core.makeSeed({ moon: 8, patternDay: 216, kindIndex: i % 6, nonce: `hal${i}zz` }));
+    if (c.crest === "halo" && c.details.crestStyle === "halo") haloSpark = c;
+  }
+  const haloTrait = Core.rarityFor({ companion: haloSpark }).traits.find((t) => t.id === "halo-upon-halo");
+  assert.ok(haloTrait && haloTrait.oneIn === 30 && /1 in 30/.test(haloTrait.line), "the halo's odds are stated as drawn");
+});
+
+test("v10 standing: bands follow the counted odds, and the count is deterministic", () => {
+  for (const tier of Core.RARITY_TIERS) assert.ok(tier.name && tier.under > 0, "every band is named and bounded");
+  for (let i = 1; i < Core.RARITY_TIERS.length - 1; i++) {
+    assert.equal(
+      Core.RARITY_TIERS[i].under,
+      Core.RARITY_TIERS[i - 1].under * 10,
+      "each bounded band is ten times the odds of the one before"
+    );
+  }
+  assert.equal(
+    Core.RARITY_TIERS[Core.RARITY_TIERS.length - 1].under,
+    Infinity,
+    "the last band stands open — however long the odds, they land somewhere named"
+  );
+  /* A common Spark and a rare one, found in the field: the
+   * standing orders them as the count does. */
+  let common = null;
+  let rare = null;
+  for (let i = 0; i < 4000 && (!common || !rare); i++) {
+    const companion = Core.generate(Core.makeSeed({ moon: 8, patternDay: 216, kindIndex: i % 6, nonce: `ord${i}zz` }));
+    const r = Core.rarityFor({ companion });
+    if (!common && r.oneIn < 10000) common = { companion, r };
+    if (!rare && r.oneIn >= 1000000) rare = { companion, r };
+  }
+  assert.ok(common && rare, "both standings stand in the field");
+  assert.equal(common.r.tierName, "Common ground", "small odds, the common band");
+  assert.ok(["Deep rare", "Singular"].includes(rare.r.tierName), "long odds, a deep band");
+  assert.ok(rare.r.oneIn > common.r.oneIn * 100, "the rare Spark's odds are far longer");
+  /* The same seed counts the same rarity twice — and with
+   * the same record, the same rarity again. */
+  const record = Core.newRecord({ seed: common.companion.seed, name: "Nori", civilDate: "2026-11-19" });
+  assert.deepEqual(Core.rarityFor({ companion: common.companion }), common.r, "no record, same count");
+  assert.deepEqual(
+    Core.rarityFor({ record, companion: common.companion }),
+    Core.rarityFor({ record, companion: common.companion }),
+    "same seed and record, same rarity, anywhere"
+  );
+  assert.equal(Core.rarityFor({ companion: null }), null, "no companion, no rarity");
+  /* Her panel and her share card carry the same count. */
+  const panel = Core.panelFor({ record, companion: common.companion, today: { moon: 8, day: 21, dayOfPatternYear: 217 } });
+  assert.equal(panel.rarity.tierName, common.r.tierName, "the panel counts as the core counts");
+  const card = Core.shareCardFor({ record, companion: common.companion, today: { moon: 8, day: 21, dayOfPatternYear: 217 } });
+  assert.ok(card.rarityLine.includes(common.r.tierName), "the share card carries her standing");
+  assert.ok(card.rarityLine.includes(common.r.oneInText), "and its counted odds");
+});
+
+test("v10 birth and life: the marks that are not draws", () => {
+  /* A birth outside the moons. */
+  const doot = Core.generate(Core.makeSeed({ moon: null, patternDay: null, kindIndex: 5, nonce: "doot0001" }));
+  const dootRarity = Core.rarityFor({ companion: doot });
+  assert.ok(dootRarity.specials.some((s) => s.id === "born-outside"), "the Day Out of Time birth is marked");
+  /* A birth on the Year Gate. */
+  const gate = Core.generate(Core.makeSeed({ moon: 1, patternDay: 1, kindIndex: 2, nonce: "gate0001" }));
+  assert.ok(
+    Core.rarityFor({ companion: gate }).specials.some((s) => s.id === "year-gate"),
+    "the Year Gate birth is marked"
+  );
+  /* A plain birth carries neither mark. */
+  const plain = Core.generate(SEED_A);
+  assert.ok(!Core.rarityFor({ companion: plain }).specials.some((s) => s.id.startsWith("born") || s.id === "year-gate"), "an ordinary day is marked as itself — not at all");
+  /* A schedule fully arrived: a seed with arrivals to earn,
+   * and a record that has walked far past the last of them. */
+  let walker = null;
+  for (let i = 0; i < 60 && !walker; i++) {
+    const c = Core.generate(Core.makeSeed({ moon: 8, patternDay: 216, kindIndex: i % 6, nonce: `wlk${i}zz` }));
+    if (Core.revealScheduleFor(c).length >= 2) walker = c;
+  }
+  assert.ok(walker, "a seed with a schedule was found");
+  let record = Core.newRecord({ seed: walker.seed, name: "Nori", civilDate: "2026-11-19" });
+  assert.ok(
+    !Core.rarityFor({ record, companion: walker }).specials.some((s) => s.id === "fully-revealed"),
+    "a fresh record has arrived nowhere yet"
+  );
+  record = { ...record, pagesSeen: Array.from({ length: 220 }, (_, i) => `p${i}`) };
+  assert.ok(
+    Core.rarityFor({ record, companion: walker }).specials.some((s) => s.id === "fully-revealed"),
+    "a walked-out schedule is marked as arrived, whole"
+  );
+  /* Every trick learned — counted from the same counters
+   * the tricks themselves read. */
+  const adept = {
+    ...Core.newRecord({ seed: SEED_A, name: "Nori", civilDate: "2026-11-19" }),
+    play: { pets: 8, pokes: 0, drags: 3, catches: 4, bestChase: 4, echoBest: 3, tricks: [], askedDay: null },
+    care: { kindles: 2, plays: 2, rests: 2, bond: 4, kindleDay: null, playDay: null, playCount: 0, restDay: null }
+  };
+  assert.ok(
+    Core.rarityFor({ record: adept, companion: plain }).specials.some((s) => s.id === "all-tricks"),
+    "a full set of tricks is marked"
+  );
+  /* The fullest form: growth counted from the record's own
+   * days, pages, and practice. */
+  const grown = {
+    ...Core.newRecord({ seed: SEED_A, name: "Nori", civilDate: "2026-11-19" }),
+    daysSeen: Array.from({ length: 10 }, (_, i) => 200 + i),
+    pagesSeen: Array.from({ length: 10 }, (_, i) => `p${i}`),
+    practiceDays: [200, 201, 202, 203]
+  };
+  assert.ok(
+    Core.rarityFor({ record: grown, companion: plain }).specials.some((s) => s.id === "fully-grown"),
+    "Radiant is marked when the record has grown her there"
+  );
+});
+
+test("v10 rarity rides the record, the panel, and the share card — clean, unpriced words", () => {
+  const presence = read("docs/assets/js/spark-presence.js");
+  assert.ok(presence.includes("Standing:"), "her panel states her standing");
+  assert.ok(presence.includes("data.rarity"), "from the panel's own counted rarity");
+  assert.ok(presence.includes("card.rarityLine"), "the share card draws her standing");
+  assert.ok(!/fetch\(|XMLHttpRequest|sendBeacon/.test(presence), "the rarity sends nothing anywhere");
+  const page = read("docs/assets/js/spark-companions-page.js");
+  assert.ok(page.includes("spark-rarity") && page.includes("rarityFor"), "her home page states the count too");
+  assert.ok(read("docs/companions.html").includes('id="spark-rarity"'), "with a place kept for it");
+  /* Every word the rarity speaks, audited: no absence
+   * framing, and no market talk — rarity here is a fact
+   * about her, never a price on her. */
+  const banned = /you have not|haven't|have not|not done|not yet|missed|incomplete/i;
+  const market = /\b(buy|sell|price|mint|hurry)\b|for sale|limited edition|act now|rare drop/i;
+  const rich = {
+    ...Core.newRecord({ seed: SEED_A, name: "Nori", civilDate: "2026-11-19" }),
+    pagesSeen: Array.from({ length: 220 }, (_, i) => `p${i}`),
+    play: { pets: 8, pokes: 0, drags: 3, catches: 4, bestChase: 4, echoBest: 3, tricks: [], askedDay: null },
+    care: { kindles: 2, plays: 2, rests: 2, bond: 4, kindleDay: null, playDay: null, playCount: 0, restDay: null }
+  };
+  for (let i = 0; i < 60; i++) {
+    const companion = Core.generate(Core.makeSeed({ moon: 8, patternDay: 216, kindIndex: i % 6, nonce: `aud${i}zz` }));
+    const r = Core.rarityFor({ record: rich, companion });
+    const lines = [r.line, r.tierName, ...r.traits.map((t) => t.line), ...r.specials.map((s) => s.line)];
+    for (const line of lines) {
+      assert.ok(!banned.test(line), `clean copy: ${line}`);
+      assert.ok(!market.test(line), `no market talk: ${line}`);
+    }
+  }
+});
+
