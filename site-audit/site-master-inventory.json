@@ -7,7 +7,7 @@
     "publicHtmlPages": 174,
     "catalogEntries": 67,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 17,
+      "not-linked-directly-from-homepage": 18,
       "nav-label-differs-from-title": 24,
       "deployed-but-unlinked": 57,
       "unreachable-from-homepage": 3,
@@ -597,7 +597,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (164 files)",
+      "title": "docs/assets/js (165 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1779,7 +1779,6 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/artifact-theory.html",
         "theory/canon.html",
         "theory/ethics.html",
         "theory/frequency-governance.html",
@@ -13345,7 +13344,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (109 files)",
+      "title": "tests/ (110 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -18233,13 +18232,15 @@
         "path": "theory/artifact-theory.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 17,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 16,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": []
+      "issues": [
+        "not-linked-directly-from-homepage"
+      ]
     },
     {
       "id": "theory-bibliography",
