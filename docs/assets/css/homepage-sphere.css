@@ -61,10 +61,15 @@
   outline-offset: -2px;
 }
 
+/* The hint rides the frame's top-left corner. It used to sit at
+   bottom-left, where the Sphere's own selected-year card anchors
+   in the hero framing and covered it (Aaron's phone, Nov 19,
+   2026). The card is the instrument's — it keeps its place; the
+   hero's hint moves out of its way. */
 .homepage-sphere-hint {
   position: absolute;
   left: 0.65rem;
-  bottom: 0.65rem;
+  top: 0.65rem;
   z-index: 4;
   margin: 0;
   padding: 0.3rem 0.7rem;
@@ -130,7 +135,7 @@
 
   .homepage-sphere-hint {
     font-size: 0.66rem;
-    bottom: 0.5rem;
+    top: 0.5rem;
   }
 }
 
