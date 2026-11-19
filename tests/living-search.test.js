@@ -232,3 +232,36 @@ test("the Living Search client is local-only: no remote endpoints in its scripts
   const memory = fs.readFileSync(path.join(docs, "assets", "js", "living-search-memory.js"), "utf8");
   assert.doesNotMatch(memory, /fetch|XMLHttpRequest|sendBeacon/);
 });
+
+test("grouping folds same-title results, keeps the strongest, and collapses true duplicates", () => {
+  const results = [
+    { doc: { i: "s1", a: "scrolls", t: "REMNANT RISING", u: "scroll/reader.html?section=one", w: "Scroll of Fire · Witness shelf", g: "uppercase-heading:REMNANT RISING" }, score: 9, matched: ["remnant"] },
+    { doc: { i: "s2", a: "scrolls", t: "**REMNANT RISING**", u: "scroll/reader.html?section=two", w: "Scroll of Fire · Witness shelf", g: "uppercase-heading:REMNANT RISING" }, score: 8, matched: ["remnant"] },
+    { doc: { i: "s3", a: "scrolls", t: "REMNANT RISING", u: "scroll/reader.html?section=one", w: "Scroll of Fire · Witness shelf", g: "uppercase-heading:REMNANT RISING" }, score: 7, matched: ["remnant"] },
+    { doc: { i: "p1", a: "pages", t: "Remnant Rising", u: "rising.html" }, score: 6, matched: ["remnant"] }
+  ];
+  const groups = Core.groupResults(results);
+  assert.equal(groups.length, 2);
+  assert.equal(groups[0].doc.i, "s1", "the strongest result leads its group");
+  assert.deepEqual(groups[0].folded.map(entry => entry.doc.i), ["s2"], "s3 shares title, home and target with s1, so it collapses");
+  assert.equal(groups[1].doc.i, "p1", "the same title in another area stays its own row");
+});
+
+test("every scroll result in the index names its home and its place in the Scroll", () => {
+  for (const doc of shards.scrolls.docs) {
+    assert.match(doc.w || "", /^Scroll of Fire · .+ shelf$/, doc.i);
+    assert.ok(doc.p, doc.i);
+  }
+  const rising = shards.scrolls.docs.filter(doc => doc.g === "uppercase-heading:REMNANT RISING");
+  assert.ok(rising.length >= 12, `the library's REMNANT RISING duplicate group reaches the index (got ${rising.length})`);
+});
+
+test("a search for remnant shows one Remnant Rising row with the repeats folded under it", () => {
+  const index = Core.createIndex();
+  for (const area of manifest.areas) Core.addDocuments(index, shards[area.id].docs);
+  const { results } = Core.search(index, "remnant", { limit: 200 });
+  const groups = Core.groupResults(results);
+  const rising = groups.filter(group => Core.normalize(group.doc.t) === "remnant rising");
+  assert.equal(rising.length, 1);
+  assert.ok(rising[0].folded.length >= 7, `expected at least 7 folded repeats, got ${rising[0].folded.length}`);
+});

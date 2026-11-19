@@ -155,7 +155,7 @@
     },
     {
       "path": "docs/assets/css/living-search.css",
-      "sha256": "5d7e296aa79255b62c1ebd150fd823a66fef13732e5d527c8b407d7c3d125f11",
+      "sha256": "f135ec0a389d9edb0c7c5c429ab73a0924aecc103656c63bbcaa26c902ad1ce0",
       "publicUrl": "https://codexofreality.org/assets/css/living-search.css",
       "status": "operational"
     },
@@ -323,7 +323,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "d5ff86bd82463d800ad5261ff13827d59a9070a6329dbb8ce78c5c1c14d5801f",
+      "sha256": "658be7450ab5a40a651a74afd602a2cd07a547abc97f702ac1d927569ca8e768",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -1805,7 +1805,7 @@
     },
     {
       "path": "docs/assets/js/living-codex.js",
-      "sha256": "7f105a82ced28840c54bffdf7b78450ab0000395c588b8138c0778a3528b0244",
+      "sha256": "016c545ca698493bb9034d8c72c9fe8b4460b8a014c2e896dd278f1de4e72c8d",
       "publicUrl": "https://codexofreality.org/assets/js/living-codex.js",
       "status": "operational"
     },
@@ -1817,7 +1817,7 @@
     },
     {
       "path": "docs/assets/js/living-search-core.js",
-      "sha256": "1bb02cc0465a0b1ef1b1853f8ade75bd95cea836138acc2b30b17b42aacdd915",
+      "sha256": "7bfbbe732098dec4041b268632fe336e851b64b1f580ddee635136f3ff617ddb",
       "publicUrl": "https://codexofreality.org/assets/js/living-search-core.js",
       "status": "operational"
     },
@@ -1835,7 +1835,7 @@
     },
     {
       "path": "docs/assets/js/living-search.js",
-      "sha256": "b13cffd4226c241d5deab6a1da472493af4259dbbc5249575130ec431fb527dd",
+      "sha256": "157b8ee66be7e0d535d474bf957643e35592d9c5489c8881772d9956a49cea26",
       "publicUrl": "https://codexofreality.org/assets/js/living-search.js",
       "status": "operational"
     },
@@ -1975,24 +1975,6 @@
       "path": "docs/assets/js/pwa.js",
       "sha256": "a15ec26a6f6e6fd1eb1d1ae1456142828522cbb26b73bf8b03545f4095530332",
       "publicUrl": "https://codexofreality.org/assets/js/pwa.js",
-      "status": "operational"
-    },
-    {
-      "path": "docs/assets/js/sealed-protocol.js",
-      "sha256": "8a4a731294db923f674ddd56106ee3562328ef53a2847fc6bee5fbe2f52c23d1",
-      "publicUrl": "https://codexofreality.org/assets/js/sealed-protocol.js",
-      "status": "operational"
-    },
-    {
-      "path": "docs/assets/js/sending-test-ui.js",
-      "sha256": "cf1e8d0273faeb46929cbef2e11375fa1541f7221d7020df09b1b8a753a0b9b0",
-      "publicUrl": "https://codexofreality.org/assets/js/sending-test-ui.js",
-      "status": "operational"
-    },
-    {
-      "path": "docs/assets/js/sending-test.js",
-      "sha256": "3ccdc393dcb31772a865082dde9de7f0a4db9dd8ded64253f28daed285985bc8",
-      "publicUrl": "https://codexofreality.org/assets/js/sending-test.js",
       "status": "operational"
     },
     {
@@ -2488,14 +2470,62 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/media/theory-canon-explainer.mp4",
+      "sha256": "f2a6376999a0099bc61284f170ef477e1db37198bcf8e39f3c70765316d517dd",
+      "publicUrl": "https://codexofreality.org/assets/media/theory-canon-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/theory-delta-framework-explainer.mp4",
+      "sha256": "c948332a33fa8a6adc1cc3a95c5a43bdf615d04356ef3935dd5b09e73a51dfb0",
+      "publicUrl": "https://codexofreality.org/assets/media/theory-delta-framework-explainer.mp4",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/media/theory-hub-explainer.mp4",
       "sha256": "7fd39c10fdfad8fbf19110e14ae68a5b1f83d3263c49be865671f44274f2bc82",
       "publicUrl": "https://codexofreality.org/assets/media/theory-hub-explainer.mp4",
       "status": "operational"
     },
     {
+      "path": "docs/assets/media/theory-master-equation-explainer.mp4",
+      "sha256": "470155e4f199576995214ad284396b18ae76e3fdc5151c213ad8a9273b07ab53",
+      "publicUrl": "https://codexofreality.org/assets/media/theory-master-equation-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/theory-memory-explainer.mp4",
+      "sha256": "29dd6c20544bdfeef9c801a85bbab87c5e14a628ce4c931517ab769fae31da70",
+      "publicUrl": "https://codexofreality.org/assets/media/theory-memory-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/theory-notation-explainer.mp4",
+      "sha256": "ef17dc027d02585687daf28283fa324f4387dbab8ef0cf379a9ffe36c414587e",
+      "publicUrl": "https://codexofreality.org/assets/media/theory-notation-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/theory-operators-explainer.mp4",
+      "sha256": "6d0e4345e250ad468036a8a3223b8cd1828353903367efb6bcef7b2ad49923e2",
+      "publicUrl": "https://codexofreality.org/assets/media/theory-operators-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/theory-unified-field-explainer.mp4",
+      "sha256": "98a8b479ba4d5344b4add27dcf215e15ea4a8b51c5941dba554583d695f2839b",
+      "publicUrl": "https://codexofreality.org/assets/media/theory-unified-field-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/theory-witness-explainer.mp4",
+      "sha256": "2865783199e0aa2694d4ac5406d98489217db5f4e4b85dca53f05d1aaf5a904b",
+      "publicUrl": "https://codexofreality.org/assets/media/theory-witness-explainer.mp4",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/search/atlas.json",
-      "sha256": "7dd7e7ea7de0a70d040a948e5044d6cca43953794f17a30812b6b7411557eb54",
+      "sha256": "2d189200a08517a6274d1cf7ec88a172556c2529c55a68b260f65514a6165c6d",
       "publicUrl": "https://codexofreality.org/assets/search/atlas.json",
       "status": "operational"
     },
@@ -2513,19 +2543,19 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "727a18d917a8ccd06bce0aa01bc6fe57c47149f5cd4a350563b57d639c878f07",
+      "sha256": "a9b11dd729ccf34966becdc591e89ed491b37fc3db411eb63eb5ba1ec3856835",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "9cbef4fc7b3e74feab9d3308733cccfb62f8f07550aa9cdf29ff90470805d519",
+      "sha256": "1bdf5e8332c35de2857de57ed85499df3f5bb99d51fcfc75ae01a2bf2897d843",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/scrolls.json",
-      "sha256": "ad7fcf8d603623eda03a36f85ff85ba0077207076ae3e5f93a0a6ba18e7f659d",
+      "sha256": "d5fa675a2e1ee8c1991d01f83900504797a1e1ed805e3bd2ff5dbc39c9770d32",
       "publicUrl": "https://codexofreality.org/assets/search/scrolls.json",
       "status": "operational"
     },
@@ -2561,7 +2591,7 @@
     },
     {
       "path": "docs/codex-atlas.html",
-      "sha256": "2225a2e3329ce4018fe5c9cef6daa32bf9fd87f53abafc6af5ef1a4788925870",
+      "sha256": "b4a73fcda2cfa5bcd12be966bcfdebe8b85b1cb806e350a82097bbb77ce2c710",
       "publicUrl": "https://codexofreality.org/codex-atlas.html",
       "status": "operational"
     },
@@ -2597,7 +2627,7 @@
     },
     {
       "path": "docs/data/site-catalog.json",
-      "sha256": "3699e9d4cf0e3981cc49411d7427bb5ef54f80dc4ac63f6d39ac43402c835079",
+      "sha256": "a5b8495abb90a4903d61a061013ddca03a16c8ba16e59787f71efc7a6f72b034",
       "publicUrl": "https://codexofreality.org/data/site-catalog.json",
       "status": "operational"
     },
@@ -2651,7 +2681,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "ece4bba6d3e67cd607fe410431383b15fe95a3558ec6dc0b0cbe3640ac0a1644",
+      "sha256": "59d954604eb92f97f471d5964607f00fce7e80737aeafc1c3dcf47663b6cf549",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
@@ -2663,7 +2693,7 @@
     },
     {
       "path": "docs/lab.html",
-      "sha256": "3b2aad891be611ea825f99688bd0e7542c859de01dd8d2a2e1e9c9d6bdeb9d33",
+      "sha256": "95cd21abe00492bd581e98a148099c67782aeaf707f06c72e19ea682a1c799be",
       "publicUrl": "https://codexofreality.org/lab.html",
       "status": "operational"
     },
@@ -8980,12 +9010,6 @@
       "status": "operational"
     },
     {
-      "path": "docs/sending-test.html",
-      "sha256": "f5354277df3a8d300e0ddc6f48a3080f214d588b84e0e9f693092d5744a032d3",
-      "publicUrl": "https://codexofreality.org/sending-test.html",
-      "status": "operational"
-    },
-    {
       "path": "docs/shop.html",
       "sha256": "bafa4c15012e136e7755fadd7d0d469eed0dfbe779b354739c5c51bdab0c65be",
       "publicUrl": "https://codexofreality.org/shop.html",
@@ -9059,13 +9083,13 @@
     },
     {
       "path": "docs/theory/canon.html",
-      "sha256": "c98943299a9587d4120147b8a7f96cd0c490de6c4b0101dc5f199ae97835bc48",
+      "sha256": "895ecf58b017540663fd69cd254bdf162022cd556945799ee157cff1555a7f25",
       "publicUrl": "https://codexofreality.org/theory/canon.html",
       "status": "operational"
     },
     {
       "path": "docs/theory/delta-framework.html",
-      "sha256": "930e013f238564203af257204159b2d3338729d6ecb834ae34633db2bf7634f3",
+      "sha256": "a00fd307c34e5fc2c8ba0741c82bdeaa6c92dd30204329c1164c665a0561063c",
       "publicUrl": "https://codexofreality.org/theory/delta-framework.html",
       "status": "operational"
     },
@@ -9209,25 +9233,25 @@
     },
     {
       "path": "docs/theory/master-equation.html",
-      "sha256": "7f09e7cea9dada53ff81541bfa0746bdc4c99aa0e59c41e45757f14f35477de4",
+      "sha256": "2992077fef8d50ad82078e76f1b255be0c47fb8d3fe0c96d4019bf6bfc943672",
       "publicUrl": "https://codexofreality.org/theory/master-equation.html",
       "status": "operational"
     },
     {
       "path": "docs/theory/memory.html",
-      "sha256": "0816d9b224db0bf1047421c56d64af1593641ee4aaa62621cb26f8e2ee0ea053",
+      "sha256": "cd3026bb8b4aa59c03abfd8f52548f85b801122d9b76a1692e140e5ffdd83448",
       "publicUrl": "https://codexofreality.org/theory/memory.html",
       "status": "operational"
     },
     {
       "path": "docs/theory/notation.html",
-      "sha256": "24d624d6328a07fd4477a6156fe089ea340373cd02a6937d75006f68f9f97fee",
+      "sha256": "f195eabba6cda12493e8ec8175b320a3c573057fea1b30ea74223fe93638baeb",
       "publicUrl": "https://codexofreality.org/theory/notation.html",
       "status": "operational"
     },
     {
       "path": "docs/theory/operators.html",
-      "sha256": "bf7e510d0c5ba06dd6a914ffc615d6674766a7679868e603aa955a23aa13bec4",
+      "sha256": "665afa61cac6d95eb8c3459cbd3368d55d5427c1506e76aa843e88a6ba3c01f5",
       "publicUrl": "https://codexofreality.org/theory/operators.html",
       "status": "operational"
     },
@@ -9239,13 +9263,13 @@
     },
     {
       "path": "docs/theory/unified-field.html",
-      "sha256": "b2ebfc74ba7c75efef23e999093718118799dc8667447fc8e901a77c02bf75c7",
+      "sha256": "cefe06eceb059ae25f868f2971ae683ce85433fe5a040d28cc09aa584facab42",
       "publicUrl": "https://codexofreality.org/theory/unified-field.html",
       "status": "operational"
     },
     {
       "path": "docs/theory/witness.html",
-      "sha256": "3600e920960a55833015ec284fd61ad616fcbe9a3da11f1f50cb7b6ac986b510",
+      "sha256": "6e8a9f9010b86c9c71fa5a3918460a468c30e8980a1b6762ac8c545baf16fa6d",
       "publicUrl": "https://codexofreality.org/theory/witness.html",
       "status": "operational"
     },

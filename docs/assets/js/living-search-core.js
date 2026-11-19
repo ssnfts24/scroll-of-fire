@@ -248,6 +248,44 @@
     return { results: results.slice(0, limit), matchedTokens: tokens.length - unresolved.length, unresolved, total: results.length };
   }
 
+  /*
+   * Fold a ranked result list for display. Results that share an
+   * identical title within one area become one row: the strongest
+   * (first, since the list arrives score-sorted) stays visible and the
+   * rest fold under it, in rank order. A result whose title, home
+   * (doc.w) and target (doc.u) are all identical to one already seen
+   * is a true duplicate and collapses entirely.
+   *
+   * The grouping key prefers doc.g — the Scroll Library's own
+   * duplicateGroups key, carried into the index by the builder — so
+   * the folding follows the grouping the library already computed
+   * instead of a second, invented one. Documents without a g fall
+   * back to their normalized title. A title that normalizes to
+   * nothing (pure punctuation) never groups.
+   */
+  function groupResults(results) {
+    const seen = new Set();
+    const groups = [];
+    const byKey = new Map();
+    for (const result of results) {
+      const doc = result.doc;
+      const duplicateKey = [doc.a, normalize(doc.t), doc.w || "", doc.u].join("|");
+      if (seen.has(duplicateKey)) continue;
+      seen.add(duplicateKey);
+      const titleKey = doc.g || normalize(doc.t);
+      const key = titleKey ? `${doc.a}|${titleKey}` : doc.i;
+      let group = byKey.get(key);
+      if (!group) {
+        group = { doc, score: result.score, matched: result.matched, folded: [] };
+        byKey.set(key, group);
+        groups.push(group);
+      } else {
+        group.folded.push(result);
+      }
+    }
+    return groups;
+  }
+
   /* Nearest vocabulary terms for a token that resolved to nothing. */
   function suggestTerms(index, token, limit = 3) {
     const normalized = tokenize(token)[0] || "";
@@ -305,7 +343,7 @@
 
   return {
     normalize, tokenize, hasHebrew, transliterationKey,
-    createIndex, addDocuments, search, suggestTerms, snippetFor,
+    createIndex, addDocuments, search, groupResults, suggestTerms, snippetFor,
     FIELD_WEIGHTS
   };
 });
