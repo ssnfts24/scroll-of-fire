@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 2162,
-    "bytes": 905558225,
+    "bytes": 905558286,
     "byGroup": {
       "tooling": 180,
       "manuscript": 17,
@@ -21054,8 +21054,8 @@
       "path": "docs/lab.html",
       "title": "Remnant Lab",
       "format": "html",
-      "bytes": 17738,
-      "sha256": "357015fa99adba4a686dd196d8b663cbf0a3434c4440d0d32eaf576ec75c423b",
+      "bytes": 17799,
+      "sha256": "3f4b6e8ae2bfe97f80f9101fdcf715b48e5b4ac34933e607276e95c29a19b77c",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
