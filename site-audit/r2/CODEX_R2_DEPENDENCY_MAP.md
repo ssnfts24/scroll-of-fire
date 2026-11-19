@@ -86,6 +86,7 @@
 | `docs/scripture/assets/scripture.css` | 93 |
 | `docs/assets/css/codex.css` | 41 |
 | `docs/assets/css/navigation.css` | 34 |
+| `docs/assets/css/social-bridge.css` | 31 |
 | `docs/assets/css/animations.css` | 19 |
 | `docs/theory/equations/assets/css/codex.css` | 19 |
 | `docs/theory/equations/assets/css/navigation.css` | 19 |
@@ -93,22 +94,21 @@
 | `docs/theory/equations/assets/css/living-ui.css` | 19 |
 | `docs/theory/assets/css/codex.css` | 15 |
 | `docs/theory/assets/css/navigation.css` | 15 |
-| `docs/theory/assets/css/theory.css` | 15 |
 
 | Script | Pages |
 | --- | --- |
 | `docs/assets/js/site.js` | 133 |
 | `docs/assets/js/living-ui.js` | 130 |
 | `docs/scripture/assets/scripture.js` | 93 |
+| `docs/assets/js/calendar/pattern-calendar-version.js` | 31 |
+| `docs/assets/js/calendar/pattern-calendar-data.js` | 31 |
+| `docs/assets/js/calendar/pattern-calendar-format.js` | 31 |
+| `docs/assets/js/calendar/pattern-calendar-boundary.js` | 31 |
+| `docs/assets/js/calendar/pattern-calendar.js` | 31 |
+| `docs/assets/js/social-bridge.js` | 31 |
+| `docs/assets/js/day-telling.js` | 30 |
 | `docs/assets/js/living-search-launcher.js` | 28 |
 | `docs/assets/js/living-codex.js` | 19 |
-| `docs/theory/equations/https:/cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js` | 19 |
-| `docs/theory/equations/assets/js/site.js` | 19 |
-| `docs/theory/equations/assets/js/living-search-launcher.js` | 19 |
-| `docs/theory/equations/assets/js/theory.js` | 19 |
-| `docs/theory/equations/assets/js/living-ui.js` | 19 |
-| `docs/assets/js/calendar-cor.js` | 17 |
-| `docs/theory/https:/cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js` | 15 |
 
 ## Protected systems (do not modify)
 
