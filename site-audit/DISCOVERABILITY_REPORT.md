@@ -51,22 +51,22 @@ These pages have no shared header navigation; readers cannot move to other secti
 
 These pages remain discoverable through the Atlas or linked pages, but are not linked directly from homepage content or menus.
 
+- `ab.html`
 - `alignment-ledger.html`
 - `equinox-passage.html`
+- `glyphs.html`
+- `micro.html`
 - `timeline.html`
 - `theory/artifact-theory.html`
 - `theory/bibliography.html`
-- `theory/delta-framework.html`
 - `theory/ethics.html`
 - `theory/frequency-governance.html`
 - `theory/glossary.html`
 - `theory/living-technology.html`
-- `theory/master-equation.html`
 - `theory/memory.html`
 - `theory/notation.html`
 - `theory/operators.html`
 - `theory/thirteen-moons.html`
-- `theory/unified-field.html`
 - `theory/witness.html`
 
 ## Missing meta descriptions (0)
@@ -228,7 +228,7 @@ The page itself was not changed. Full lists are in `downloads-reconciliation.jso
 |---|---:|---:|:-:|:-:|---:|
 | `13-moon-whitepaper.html` | 1 | 1 | yes | yes | 69 |
 | `404.html` | — | — | no | no | 0 |
-| `ab.html` | 1 | 1 | no | yes | 3 |
+| `ab.html` | 2 | 2 | no | yes | 2 |
 | `about-aaron.html` | 1 | 1 | yes | yes | 64 |
 | `alignment-ledger.html` | 2 | 2 | yes | yes | 4 |
 | `caravan.html` | — | — | no | no | 0 |
@@ -240,7 +240,7 @@ The page itself was not changed. Full lists are in `downloads-reconciliation.jso
 | `ethics.html` | 1 | 1 | yes | yes | 65 |
 | `genesis-oracle.html` | 1 | 1 | yes | yes | 66 |
 | `glossary.html` | 1 | 1 | yes | yes | 69 |
-| `glyphs.html` | 1 | 1 | no | yes | 4 |
+| `glyphs.html` | 2 | 2 | no | yes | 3 |
 | `guide.html` | 1 | 1 | no | yes | 4 |
 | `hub.html` | 1 | 1 | yes | yes | 65 |
 | `index.html` | 0 | 0 | no | yes | 169 |
@@ -248,7 +248,7 @@ The page itself was not changed. Full lists are in `downloads-reconciliation.jso
 | `lab.html` | 1 | 1 | yes | yes | 64 |
 | `ledger.html` | 1 | 1 | yes | no | 68 |
 | `living-time-sphere.html` | 1 | 1 | yes | yes | 168 |
-| `micro.html` | 1 | 1 | no | yes | 3 |
+| `micro.html` | 2 | 2 | no | yes | 2 |
 | `moons.html` | 1 | 1 | yes | yes | 164 |
 | `offline.html` | — | — | no | no | 0 |
 | `scripture/about.html` | 2 | 2 | yes | yes | 92 |
@@ -365,7 +365,7 @@ The page itself was not changed. Full lists are in `downloads-reconciliation.jso
 | `theory/artifact-theory.html` | 2 | 2 | no | yes | 16 |
 | `theory/bibliography.html` | 2 | 2 | no | yes | 35 |
 | `theory/canon.html` | 1 | 1 | yes | yes | 64 |
-| `theory/delta-framework.html` | 2 | 2 | no | yes | 8 |
+| `theory/delta-framework.html` | 1 | 1 | no | yes | 9 |
 | `theory/equations/eq00.html` | 2 | 2 | no | yes | 12 |
 | `theory/equations/eq01.html` | 2 | 2 | no | yes | 13 |
 | `theory/equations/eq02.html` | 2 | 2 | no | yes | 22 |
@@ -389,12 +389,12 @@ The page itself was not changed. Full lists are in `downloads-reconciliation.jso
 | `theory/frequency-governance.html` | 2 | 2 | no | yes | 13 |
 | `theory/glossary.html` | 2 | 2 | no | yes | 35 |
 | `theory/living-technology.html` | 2 | 2 | no | yes | 12 |
-| `theory/master-equation.html` | 2 | 2 | no | yes | 35 |
+| `theory/master-equation.html` | 1 | 1 | no | yes | 36 |
 | `theory/memory.html` | 2 | 2 | no | yes | 17 |
 | `theory/notation.html` | 2 | 2 | no | yes | 35 |
 | `theory/operators.html` | 2 | 2 | no | yes | 35 |
 | `theory/thirteen-moons.html` | 2 | 2 | no | yes | 10 |
-| `theory/unified-field.html` | 2 | 2 | no | yes | 35 |
+| `theory/unified-field.html` | 1 | 1 | no | yes | 36 |
 | `theory/witness.html` | 2 | 2 | no | yes | 14 |
 | `timeline.html` | 2 | — | no | yes | 1 |
 | `witness.html` | 1 | 1 | no | yes | 167 |
