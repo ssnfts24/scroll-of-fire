@@ -27,6 +27,10 @@
 
   const $ = (sel) => document.querySelector(sel);
 
+  /* The big art's 3D mount, kept so a re-render lets the old
+   * context go before a new one stands. */
+  let bigCtrl3d = null;
+
   function todayCoordinate() {
     if (window.SOFTemporalCursor && typeof window.SOFTemporalCursor.resolvePosition === "function") {
       try {
@@ -233,6 +237,24 @@
     view.hidden = false;
 
     $("#spark-big-art").innerHTML = Core.renderSVG(companion, { stage: stage.index });
+    /* Its 3D body stands here at home, where WebGL is to be had —
+     * the same seed, the same stage, turning gently. Where it is
+     * not, the flat drawing above stands as it always did. */
+    if (bigCtrl3d) {
+      bigCtrl3d.dispose();
+      bigCtrl3d = null;
+    }
+    if (window.Spark3D) {
+      try {
+        bigCtrl3d = window.Spark3D.mount($("#spark-big-art"), companion, {
+          stage: stage.index,
+          px: 190
+        });
+      } catch {
+        bigCtrl3d = null;
+      }
+      if (bigCtrl3d) $("#spark-big-art").classList.add("has-3d");
+    }
     $("#spark-big-name").textContent = name;
     $("#spark-big-kind").textContent =
       `A ${companion.kindName} Spark — ${companion.temperament}, and ${companion.trait}. ${companion.kindLine}`;
@@ -246,12 +268,16 @@
       record.name && record.name !== companion.name
         ? `Its seed-name is ${companion.name}. ${record.name} is the name it answers to — the name you gave it.`
         : `Its name comes from its seed: the same seed speaks the same name anywhere.`;
-    $("#spark-stage").textContent = `${stage.name} — ${stage.points} growth points`;
-    const nextStage = Core.STAGES[stage.index + 1];
-    const pace = companion.shape ? companion.shape.pace : 1;
-    $("#spark-next").textContent = nextStage
-      ? `Next: ${nextStage.name}, at ${Math.ceil(nextStage.min / pace)} points. Sparks grow by days you come back, pages you visit, and practice you seal — each at its own pace.`
-      : `The highest stage there is. It grows in company, not in size.`;
+    $("#spark-stage").textContent =
+      `Stage ${stage.index + 1} of ${Core.STAGES.length}: ${stage.name} — ${stage.points} growth points`;
+    const progress = Core.progressOf(record, companion);
+    $("#spark-next").textContent = progress.next
+      ? `Next: ${progress.next.name}, at ${progress.nextAt} points — ${progress.nextAt - stage.points} to go. ` +
+        `It grows by faithfulness, nothing bought and nothing burned: each day you come back after the first is worth 2, ` +
+        `each practice day you seal 3, each new page it sees 1 (up to 10 pages) — at its own pace. ` +
+        `So far that is ${progress.counts.days} day${progress.counts.days === 1 ? "" : "s"} together, ` +
+        `${progress.counts.pages} page${progress.counts.pages === 1 ? "" : "s"} seen, ${progress.counts.practice} practice day${progress.counts.practice === 1 ? "" : "s"} sealed.`
+      : `The fullest form there is — Ember, Flame, and now Radiant. It keeps growing in company from here.`;
     $("#spark-noticed").textContent =
       `So far, on this device: ${record.daysSeen.length} day${record.daysSeen.length === 1 ? "" : "s"} together, ` +
       `${record.pagesSeen.length} page${record.pagesSeen.length === 1 ? "" : "s"} seen, ` +

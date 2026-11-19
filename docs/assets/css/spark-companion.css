@@ -66,10 +66,96 @@
   animation: spark-bob 5s ease-in-out infinite;
 }
 
+.spark-presence-art {
+  display: block;
+}
+
 .spark-presence-art svg {
   display: block;
   width: calc(38px * var(--spark-size, 1));
   height: calc(38px * var(--spark-size, 1));
+}
+
+/* It turns to face the way it travels. */
+.spark-presence-art.is-flipped {
+  transform: scaleX(-1);
+}
+
+/* Its 3D body, where WebGL is to be had: the canvas stands in
+ * the flat drawing's place, and the drawing steps aside. Where
+ * it is not to be had, no canvas ever arrives and the drawing
+ * simply stays — the fallback is the original, untouched. */
+.spark-presence-art canvas,
+.spark-encounter-art canvas,
+.spark-big-art canvas {
+  display: block;
+}
+
+.spark-encounter-art canvas,
+.spark-big-art canvas {
+  margin: 0 auto;
+}
+
+.spark-presence-art.has-3d svg,
+.spark-encounter-art.has-3d svg,
+.spark-big-art.has-3d svg {
+  display: none;
+}
+
+/* Character, in motion only — no new art, just life. A tap is a
+ * delighted bounce; its idle hours bring a spin, a stretch, or a
+ * look around; and the moment it evolves, it grows in a flourish
+ * its keeper can see from across the room. */
+.spark-presence-art.is-delighted svg {
+  animation: spark-delight 0.65s ease-in-out;
+}
+
+@keyframes spark-delight {
+  0% { transform: translateY(0) scale(1) rotate(0deg); }
+  30% { transform: translateY(-9px) scale(1.08) rotate(-4deg); }
+  55% { transform: translateY(0) scale(1) rotate(3deg); }
+  100% { transform: translateY(0) scale(1) rotate(0deg); }
+}
+
+.spark-presence-art.is-spinning svg {
+  animation: spark-spin-once 0.9s ease-in-out;
+}
+
+@keyframes spark-spin-once {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.06); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+.spark-presence-art.is-stretching svg {
+  animation: spark-stretch 1.1s ease-in-out;
+}
+
+@keyframes spark-stretch {
+  0%, 100% { transform: scale(1, 1) translateY(0); }
+  35% { transform: scale(0.94, 1.13) translateY(-3px); }
+  70% { transform: scale(1.04, 0.95) translateY(0); }
+}
+
+.spark-presence-art.is-looking svg {
+  animation: spark-look 1.4s ease-in-out;
+}
+
+@keyframes spark-look {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(-3px) rotate(-4deg); }
+  65% { transform: translateX(3px) rotate(4deg); }
+}
+
+.spark-presence-art.is-evolving svg {
+  animation: spark-evolve 1.6s ease-in-out;
+}
+
+@keyframes spark-evolve {
+  0% { transform: scale(1) rotate(0deg); filter: brightness(1); }
+  30% { transform: scale(1.18) rotate(-6deg); filter: brightness(1.5); }
+  55% { transform: scale(1.28) rotate(5deg); filter: brightness(1.8); }
+  100% { transform: scale(1) rotate(0deg); filter: brightness(1); }
 }
 
 .spark-walker[data-gait="hop"] .spark-presence-art.is-walking svg {
@@ -126,6 +212,12 @@
 @media (prefers-reduced-motion: reduce) {
   .spark-presence-button { animation: none; }
   .spark-presence-art.is-walking svg { animation: none; }
+  .spark-presence-art.is-delighted svg { animation: none; }
+  .spark-presence-art.is-spinning svg { animation: none; }
+  .spark-presence-art.is-stretching svg { animation: none; }
+  .spark-presence-art.is-looking svg { animation: none; }
+  .spark-presence-art.is-evolving svg { animation: none; }
+  .spark-presence-art.is-flipped { transform: none; }
   .spark-big-art svg { animation: none; }
   .spark-encounter { animation: none; }
   .spark-encounter-art svg { animation: none; }

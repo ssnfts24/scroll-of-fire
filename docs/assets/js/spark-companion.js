@@ -145,14 +145,16 @@
     return { first: Math.round(base), second: Math.round(base * 1.335) };
   }
 
-  /* Growth stages, in plain words. Points come from facts:
-   * each return day after the first is worth 2, each practice day 3,
-   * each new page seen 1 (counted up to 10 pages). */
+  /* Evolution: three stages, as the Noods grew — Ember, Flame,
+   * Radiant. The driver is faithfulness, not spending: points come
+   * from facts in the record only. Each return day after the first
+   * is worth 2, each practice day 3, each new page seen 1 (counted
+   * up to 10 pages). Nothing is bought and nothing is burned; a
+   * Spark grows because its keeper keeps coming back. Thresholds
+   * bend a little by the pace its seed grew (see stageFor). */
   const STAGES = [
-    { name: "Just born", min: 0 },
-    { name: "Kindled", min: 3 },
-    { name: "Growing", min: 8 },
-    { name: "Bright", min: 15 },
+    { name: "Ember", min: 0 },
+    { name: "Flame", min: 8 },
     { name: "Radiant", min: 25 }
   ];
 
@@ -369,12 +371,40 @@
   function renderSVG(companion, { stage = 0 } = {}) {
     if (!companion) return "";
     const rand = mulberry32(hashString(companion.seed + ":marks"));
+    /* Evolution shows on the body, and it is the SAME body at
+     * every stage — same seed, same form, same markings grown
+     * from the same random stream. An Ember stands smaller, with
+     * half its markings and a small, faint crest, in a softer
+     * halo. A Flame stands near full size, markings complete,
+     * crest developed, a plain ring at its shoulder. A Radiant
+     * stands fullest, markings richest, crest full, its ring
+     * dashed gold and a crown above it, glowing brightest in the
+     * colour its seed gave it. */
+    const bodyScale = stage >= 2 ? 1.03 : stage === 1 ? 0.92 : 0.8;
+    const markCount =
+      stage >= 2
+        ? companion.markings.count + 1
+        : stage === 1
+          ? companion.markings.count
+          : Math.max(1, Math.ceil(companion.markings.count / 2));
+    const grown = {
+      ...companion,
+      markings: { ...companion.markings, count: markCount }
+    };
+    const crestScale = stage >= 2 ? 1.02 : stage === 1 ? 0.88 : 0.65;
+    const crestOpacity = stage >= 2 ? 1 : stage === 1 ? 0.9 : 0.7;
+    const crest =
+      `<g transform="translate(50 18) scale(${crestScale}) translate(-50 -18)" opacity="${crestOpacity}">` +
+      crestShape(companion) +
+      `</g>`;
     const stageRing =
       stage >= 2
         ? `<circle cx="50" cy="52" r="46" fill="none" stroke="${companion.palette.accent}" stroke-width="1.6" stroke-dasharray="4 6" opacity="0.8"/>`
-        : "";
+        : stage === 1
+          ? `<circle cx="50" cy="52" r="44" fill="none" stroke="${companion.palette.accent}" stroke-width="1.2" opacity="0.4"/>`
+          : "";
     const stageCrown =
-      stage >= 4
+      stage >= 2
         ? `<path d="M38 12 L44 4 L50 11 L56 4 L62 12 Z" fill="${companion.palette.accent}" opacity="0.95"/>`
         : "";
     const halo = companion.shape
@@ -386,12 +416,14 @@
       : 0.14;
     return (
       `<svg viewBox="0 0 100 100" role="img" aria-label="A ${companion.kindName} Spark" data-spark-form="${companion.form}" data-spark-stage="${stage}" data-spark-size="${companion.shape ? companion.shape.size : 1}" data-spark-glow="${companion.shape ? companion.shape.glow : "soft"}" data-spark-gait="${companion.shape ? companion.shape.gait : "stroll"}">` +
-      `<circle cx="50" cy="52" r="40" fill="${companion.palette.glow}" opacity="${halo + stage * 0.03}"/>` +
+      `<circle cx="50" cy="52" r="40" fill="${companion.palette.glow}" opacity="${(halo + stage * 0.05).toFixed(3)}"/>` +
       stageRing +
-      bodyShape(companion) +
-      markingShapes(companion, rand) +
-      crestShape(companion) +
-      eyeShape(companion) +
+      `<g transform="translate(50 54) scale(${bodyScale}) translate(-50 -54)">` +
+      bodyShape(grown) +
+      markingShapes(grown, rand) +
+      crest +
+      eyeShape(grown) +
+      `</g>` +
       stageCrown +
       `</svg>`
     );
@@ -475,6 +507,26 @@
   function stageOf(record, companion) {
     const pace = companion && companion.shape ? companion.shape.pace : 1;
     return stageFor(growthPoints(record), pace);
+  }
+
+  /* Honest progress, in the record's own counts: where the Spark
+   * stands, what the next stage is and the points it stands at
+   * (bent by this Spark's pace), and the facts the points came
+   * from — days together, pages seen, practice days sealed. */
+  function progressOf(record, companion) {
+    const stage = stageOf(record, companion);
+    const pace = companion && companion.shape ? companion.shape.pace : 1;
+    const next = STAGES[stage.index + 1] || null;
+    return {
+      stage,
+      next,
+      nextAt: next ? Math.ceil(next.min / pace) : null,
+      counts: {
+        days: (record.daysSeen || []).length,
+        pages: (record.pagesSeen || []).length,
+        practice: (record.practiceDays || []).length
+      }
+    };
   }
 
   /* ---- guidance: lines drawn only from what the record holds ---- */
@@ -630,6 +682,7 @@
     growthPoints,
     stageFor,
     stageOf,
+    progressOf,
     guidanceFor,
     encounterFor,
     arrivalFor,

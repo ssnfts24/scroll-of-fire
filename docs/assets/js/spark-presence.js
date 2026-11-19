@@ -10,11 +10,14 @@
  * a small ember at the page's edge, tappable whenever its person is
  * ready. No form, no quiz stands in front of the meeting.
  *
- * Once adopted, the Spark is a guide as well as a companion. It
- * draws in the corner of the page, small and quiet, walks with its
- * person page to page, and — arriving somewhere new — names the
- * place and points to a fitting next door, in short lines that
- * never block the page. Its record is kept up to date on this
+ * Once adopted, the Spark is a guide as well as a companion, and
+ * it is alive on the page: it roams the screen like a small
+ * character, plays shy (or bold) of your cursor and finger, idles
+ * with a character of its own, and evolves — Ember, Flame,
+ * Radiant — as its record of returns grows, celebrating the
+ * change with a flourish when it happens. Arriving somewhere new,
+ * it names the place and points to a fitting next door, in short
+ * lines that never block the page. Its record is kept up to date on this
  * device only: today's visit, the page seen, and — on pages where
  * the Life Atlas is already open (the practice page, the companions
  * page) — the practice days sealed there. Nothing is sent anywhere;
@@ -206,7 +209,7 @@
     }
   }
 
-  function renderPresence(record, companion, today, arrival) {
+  function renderPresence(record, companion, today, arrival, grew) {
     const stage = Core.stageOf(record, companion);
     /* Arriving somewhere new — or just adopted — the Spark speaks
      * as a guide: where you are, and a fitting next door. The rest
@@ -263,6 +266,7 @@
 
     const button = host.querySelector(".spark-presence-button");
     const bubble = host.querySelector(".spark-presence-bubble");
+    const art = host.querySelector(".spark-presence-art");
     let arrivalTimer = null;
     const closeBubble = () => {
       bubble.setAttribute("hidden", "");
@@ -273,7 +277,16 @@
       }
     };
     button.addEventListener("click", () => {
-      chirp(companion);
+      chirpFromGesture(companion);
+      /* A tap lands as happiness: a small delighted bounce —
+       * a bounce-and-spin in its 3D body, where it has one. */
+      if (ctrl3d) ctrl3d.delight();
+      if (art) {
+        art.classList.remove("is-delighted");
+        void art.offsetWidth;
+        art.classList.add("is-delighted");
+        window.setTimeout(() => art.classList.remove("is-delighted"), 700);
+      }
       const open = bubble.hasAttribute("hidden");
       if (open) {
         bubble.removeAttribute("hidden");
@@ -293,7 +306,7 @@
         /* toggle simply does not persist */
       }
       paintSound();
-      if (!soundOff()) chirp(companion);
+      if (!soundOff()) chirpFromGesture(companion);
     });
     paintSound();
     /* Pointerdown, not click — and a tap on a page's living entry
@@ -305,7 +318,39 @@
       if (!host.contains(event.target)) closeBubble();
     });
     document.body.appendChild(host);
-    roam(walker, host.querySelector(".spark-presence-art"));
+    /* Its 3D body, grown from the same seed, where WebGL is to
+     * be had: the flat drawing steps aside for it. Where it is
+     * not, the flat Spark stands as it always did — the mount
+     * returns null and nothing here changes. */
+    let ctrl3d = null;
+    if (window.Spark3D && art) {
+      try {
+        ctrl3d = window.Spark3D.mount(art, companion, {
+          stage: stage.index,
+          px: Math.round(46 * (companion.shape ? companion.shape.size : 1))
+        });
+      } catch {
+        ctrl3d = null;
+      }
+      if (ctrl3d) art.classList.add("has-3d");
+    }
+    roam(walker, art, companion, {
+      isOpen: () => !bubble.hasAttribute("hidden"),
+      ctrl: ctrl3d
+    });
+    /* It grew — on this very visit, from the facts just written
+     * down. The moment is small and never blocks the page: a
+     * flourish of the body, and its chirp if its voice has been
+     * woken by a tap before. The bubble's first line already
+     * speaks the new stage's name. */
+    if (grew) {
+      if (art && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        art.classList.add("is-evolving");
+        window.setTimeout(() => art.classList.remove("is-evolving"), 1700);
+      }
+      if (ctrl3d) ctrl3d.celebrate();
+      chirpCelebration(companion);
+    }
     /* A guide speaks first on arrival, briefly, then steps back:
      * the line shows itself, and folds away on its own. A tap on
      * the Spark, or anywhere else, folds it sooner. Pages open
@@ -345,6 +390,20 @@
   }
 
   let audioCtx = null;
+  /* Its voice wakes only by touch: a chirp asked for by a tap (or
+   * the adoption tap, or the sound switch) arms it for the page.
+   * The one moment the Spark ever speaks unasked — the flourish
+   * when it evolves — borrows that armed voice, and stays silent
+   * on any page where no tap has woken it. Sound rules unchanged:
+   * nothing autoplays, the off switch still rules. */
+  let voiceArmed = false;
+  function chirpFromGesture(companion) {
+    voiceArmed = true;
+    chirp(companion);
+  }
+  function chirpCelebration(companion) {
+    if (voiceArmed) chirp(companion);
+  }
   function chirp(companion) {
     if (soundOff()) return;
     const notes = Core.chirpFor(companion);
@@ -373,42 +432,476 @@
     }
   }
 
-  /* Roaming: the Spark walks in when a page opens, settles in its
-   * corner, and now and then strolls a little way along the bottom
-   * of the page and back — the same companion, wandering its site.
-   * The strip it walks in takes no clicks, so it never blocks the
-   * page. A visitor whose device asks for reduced motion gets a
-   * Spark that simply appears in its corner and stays there. */
-  function roam(walker, art) {
+  /* The living Spark. It is not pinned to its corner any more:
+   * once it has walked in, it roams the whole screen like a small
+   * character — along the floor, up the sides, now and then across
+   * the open middle — pausing to bob, spin, stretch, or look
+   * around, each move shaped by the gait and pace its seed grew.
+   * It plays with the pointer, too: a cursor, or a finger coming
+   * down near it, makes it scoot away a short hop — and how soon
+   * it flees, how far, and how soon it will flee again is its
+   * temperament's own. A bold Spark barely budges and sometimes
+   * comes closer to look; a quiet one darts early and far. But it
+   * never flees the screen, it tires of fleeing and settles where
+   * a tap can reach it, and a true tap on it always lands.
+   *
+   * The fences hold: the strip it travels in takes no clicks, so
+   * it never blocks the page — approached, it moves out from
+   * under the pointer rather than covering anything. While its
+   * guidance bubble is open it holds still. When the tab is
+   * hidden it rests. Its loop sleeps while it idles, so a resting
+   * Spark costs the page nothing. And a visitor whose device asks
+   * for reduced motion gets a Spark that simply appears in its
+   * corner and stays there. */
+  function roam(walker, art, companion, hooks) {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const maxStroll = () => Math.max(60, Math.min(430, window.innerWidth * 0.38));
-    /* How it moves is its own, from its seed: a drifter floats, a
-     * hopper hurries, a stroller keeps the plain pace. */
-    const gait = walker.dataset.gait || "stroll";
-    const gaitFactor = gait === "drift" ? 1.9 : gait === "hop" ? 0.65 : 1;
-    const gaitEase = gait === "drift" ? "ease-in-out" : "linear";
-    const walkTo = (distance, done) => {
-      const duration = Math.max(900, Math.min(6800, distance * 9 * gaitFactor));
-      walker.style.transition = `transform ${duration}ms ${gaitEase}`;
-      walker.style.transform = `translateX(${-distance}px)`;
-      if (art) art.classList.add("is-walking");
-      window.setTimeout(() => {
-        if (art) art.classList.remove("is-walking");
-        if (done) done();
-      }, duration);
+    const button = walker.querySelector(".spark-presence-button");
+    if (!button) return;
+    const gait =
+      (companion && companion.shape && companion.shape.gait) || walker.dataset.gait || "stroll";
+    const pace = (companion && companion.shape && companion.shape.pace) || 1;
+    const temperament = (companion && companion.temperament) || "steady";
+    /* Its 3D body, when it has one: the engine speaks, it moves. */
+    const ctrl = hooks.ctrl || null;
+
+    /* How it plays is its temperament's own: how close a pointer
+     * may come before it scoots (radius), how far the scoot
+     * carries, how long before it will scoot again (cooldown),
+     * and how often it comes to look instead of fleeing. The
+     * last two are its utility curves — how much it loves to
+     * wander, and how playful it is — the weights its small
+     * brain scores its choices with. Temperament is parameters,
+     * never code paths: a bold Spark and a shy one run the same
+     * engine on different numbers. */
+    const PLAY = {
+      bold: { radius: 52, scoot: [36, 64], cooldown: 1400, approach: 0.35, wander: 1.1, playfulness: 0.8 },
+      curious: { radius: 84, scoot: [56, 96], cooldown: 1900, approach: 0.4, wander: 1.25, playfulness: 0.9 },
+      bright: { radius: 76, scoot: [64, 110], cooldown: 2000, approach: 0.15, wander: 1.0, playfulness: 1.0 },
+      gentle: { radius: 88, scoot: [70, 120], cooldown: 2400, approach: 0.1, wander: 0.8, playfulness: 0.6 },
+      steady: { radius: 64, scoot: [44, 80], cooldown: 2200, approach: 0.05, wander: 0.7, playfulness: 0.4 },
+      quiet: { radius: 118, scoot: [120, 190], cooldown: 3000, approach: 0, wander: 0.6, playfulness: 0.5 }
     };
-    const stroll = () => {
-      const pause = 14000 + Math.random() * 22000;
-      window.setTimeout(() => {
-        const out = 40 + Math.random() * maxStroll() * 0.55;
-        walkTo(out, () => window.setTimeout(() => walkTo(0, stroll), 2600));
-      }, pause);
+    const play = PLAY[temperament] || PLAY.steady;
+    const SPEED = { stroll: 62, drift: 34, hop: 100 }[gait] || 62;
+    /* Its signature idle move leans to its temperament, too. */
+    const SIGNATURE = {
+      bold: "is-spinning",
+      bright: "is-spinning",
+      gentle: "is-looking",
+      curious: "is-looking",
+      steady: "is-stretching",
+      quiet: "is-stretching"
     };
-    /* Walk in from a little way across the page, then settle. */
-    walker.style.transform = `translateX(${-maxStroll()}px)`;
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => walkTo(0, stroll));
+    const FLOURISHES = ["is-spinning", "is-stretching", "is-looking"];
+
+    /* Position is an offset from its home corner — x leftward,
+     * y upward — clamped inside the screen by the bounds, and
+     * never higher than the lower half's reach, so its bubble
+     * always has room to open above it. */
+    const pos = { x: 0, y: 0 };
+    let home = null;
+    let minX = 0, maxX = 0, minY = 0, maxY = 0;
+    function measure() {
+      const r = button.getBoundingClientRect();
+      home = { cx: r.left + r.width / 2 - pos.x, cy: r.top + r.height / 2 - pos.y };
+      minX = -(r.left - pos.x - 10);
+      maxX = window.innerWidth - 10 - (r.right - pos.x);
+      minY = Math.max(-(r.top - pos.y - 10), -(window.innerHeight * 0.55));
+      maxY = window.innerHeight - 10 - (r.bottom - pos.y);
+    }
+    const clampPos = (p) => ({
+      x: Math.max(minX, Math.min(maxX, p.x)),
+      y: Math.max(minY, Math.min(maxY, p.y))
     });
+    const apply = () => {
+      walker.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
+    };
+    const center = () => ({ x: home.cx + pos.x, y: home.cy + pos.y });
+
+    let target = null;
+    let state = "enter";
+    let rafId = null;
+    let lastTs = 0;
+    let idleTimer = null;
+    let lastDodgeAt = 0;
+    let dodgeStreak = 0;
+    let lastStreakAt = 0;
+    let settleUntil = 0;
+    let anticipateUntil = 0;
+    let peekWanted = false;
+    let activeStreak = 0;
+    /* The body moves by steering, not by animation: a velocity,
+     * a desired velocity, and a capped force between them — so
+     * it accelerates, arcs, and eases to a stop like a creature,
+     * and feels the same at any frame rate. */
+    const vel = { x: 0, y: 0 };
+    /* The pointer is tracked with its velocity, so the Spark can
+     * flee from where the pointer WILL be, not only where it is. */
+    const pointer = { x: 0, y: 0, vx: 0, vy: 0, seenAt: 0, lastMoveAt: 0 };
+    const pointerPredicted = (lead) => ({
+      x: pointer.x + pointer.vx * lead,
+      y: pointer.y + pointer.vy * lead
+    });
+    function trackPointer(e) {
+      const now = performance.now();
+      const dt = Math.max(1, now - (pointer.lastMoveAt || now)) / 1000;
+      if (pointer.lastMoveAt) {
+        const ivx = (e.clientX - pointer.x) / dt;
+        const ivy = (e.clientY - pointer.y) / dt;
+        pointer.vx = pointer.vx * 0.6 + ivx * 0.4;
+        pointer.vy = pointer.vy * 0.6 + ivy * 0.4;
+      }
+      pointer.x = e.clientX;
+      pointer.y = e.clientY;
+      pointer.seenAt = now;
+      pointer.lastMoveAt = now;
+    }
+
+    function wake() {
+      if (rafId != null) return;
+      lastTs = performance.now();
+      rafId = window.requestAnimationFrame(tick);
+    }
+    function sleep() {
+      if (rafId != null) window.cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+    function goIdle(pauseMs) {
+      state = "idle";
+      if (art) art.classList.remove("is-walking");
+      window.clearTimeout(idleTimer);
+      idleTimer = window.setTimeout(nextBehavior, pauseMs);
+      sleep();
+    }
+    /* Its small utility brain: at each idle moment it scores the
+     * things a Spark can do — wander, come and look, flourish,
+     * rest — against the world as it stands (a pointer nearby and
+     * holding still invites a look; a long active streak invites
+     * rest), weighted by its temperament's curves and a little
+     * noise so it never turns mechanical. The dodge is NOT scored
+     * here: that is a reflex, and reflexes do not deliberate. */
+    function chooseBehavior() {
+      const c = center();
+      const pointerNear =
+        performance.now() - pointer.lastMoveAt < 2500 &&
+        Math.hypot(pointer.x - c.x, pointer.y - c.y) < 340;
+      const pointerStill = performance.now() - pointer.lastMoveAt > 1100;
+      const scores = {
+        wander: play.wander,
+        approach: pointerNear ? play.approach * 2.4 + (pointerStill ? 0.25 : 0) : play.approach * 0.3,
+        flourish: 0.5 * play.playfulness + 0.12,
+        rest: 0.22 + activeStreak * 0.2
+      };
+      let best = "wander";
+      let bestScore = -1;
+      for (const [name, score] of Object.entries(scores)) {
+        const weighted = score * (0.75 + Math.random() * 0.5);
+        if (weighted > bestScore) {
+          bestScore = weighted;
+          best = name;
+        }
+      }
+      return best;
+    }
+    function nextBehavior() {
+      if (document.hidden) {
+        idleTimer = window.setTimeout(nextBehavior, 4000);
+        return;
+      }
+      if (hooks.isOpen()) {
+        idleTimer = window.setTimeout(nextBehavior, 3000);
+        return;
+      }
+      /* The tease: it dodged you, you held still — stillness is
+       * safety — so it peeks back and comes a little closer. */
+      if (peekWanted) {
+        peekWanted = false;
+        const c = center();
+        const dx = pointer.x - c.x;
+        const dy = pointer.y - c.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist > play.radius * 1.25) {
+          const stepIn = dist - play.radius * 1.2;
+          target = clampPos({
+            x: pos.x + (dx / dist) * stepIn,
+            y: pos.y + (dy / dist) * stepIn
+          });
+          state = "approach";
+          activeStreak += 1;
+          wake();
+          return;
+        }
+      }
+      const choice = chooseBehavior();
+      if (choice === "flourish") {
+        flourish();
+        activeStreak += 1;
+        goIdle((5000 + Math.random() * 9000) / pace);
+      } else if (choice === "approach") {
+        const c = center();
+        const dx = pointer.x - c.x;
+        const dy = pointer.y - c.y;
+        const dist = Math.hypot(dx, dy) || 1;
+        const stepIn = Math.max(24, dist - play.radius * 1.3);
+        target = clampPos({
+          x: pos.x + (dx / dist) * stepIn,
+          y: pos.y + (dy / dist) * stepIn
+        });
+        state = "approach";
+        activeStreak += 1;
+        wake();
+      } else if (choice === "rest") {
+        activeStreak = 0;
+        goIdle((14000 + Math.random() * 14000) / pace);
+      } else {
+        target = pickTarget();
+        state = "move";
+        activeStreak += 1;
+        wake();
+      }
+    }
+    function flourish() {
+      if (!art) return;
+      const cls =
+        Math.random() < 0.6
+          ? SIGNATURE[temperament] || "is-looking"
+          : FLOURISHES[Math.floor(Math.random() * FLOURISHES.length)];
+      art.classList.add(cls);
+      if (ctrl) ctrl.flourish(cls);
+      window.setTimeout(() => art.classList.remove(cls), 1500);
+    }
+    function pickTarget() {
+      const r = Math.random();
+      let fx, fy;
+      if (r < 0.55) {
+        /* along the floor */
+        fx = Math.random();
+        fy = Math.random() * 0.22;
+      } else if (r < 0.8) {
+        /* up one of the sides */
+        fx = Math.random() < 0.5 ? Math.random() * 0.18 : 0.82 + Math.random() * 0.18;
+        fy = Math.random() * 0.7;
+      } else {
+        /* across the open middle */
+        fx = Math.random();
+        fy = 0.3 + Math.random() * 0.55;
+      }
+      return clampPos({ x: minX + (maxX - minX) * fx, y: maxY + (minY - maxY) * fy });
+    }
+    function arrive() {
+      if (art) art.classList.remove("is-walking");
+      if (ctrl) ctrl.setTravel(false, 0);
+      vel.x = 0;
+      vel.y = 0;
+      if (state === "dodge") {
+        /* It fled; if the pointer has held still since, the
+         * tease is armed — when it next stirs, it peeks back. */
+        const c = center();
+        peekWanted =
+          performance.now() - pointer.lastMoveAt > 900 &&
+          Math.hypot(pointer.x - c.x, pointer.y - c.y) < 320 &&
+          play.approach > 0;
+        goIdle(1100 + Math.random() * 1200);
+      }
+      else if (state === "approach") {
+        flourish();
+        goIdle(6000 + Math.random() * 6000);
+      } else goIdle((6000 + Math.random() * 10000) / pace);
+    }
+    function tick(ts) {
+      rafId = null;
+      const dt = Math.min(0.05, (ts - lastTs) / 1000 || 0);
+      lastTs = ts;
+      if (state === "idle") return;
+      if (state === "hold") {
+        if (!hooks.isOpen()) {
+          goIdle(2500);
+          return;
+        }
+        rafId = window.requestAnimationFrame(tick);
+        return;
+      }
+      if (hooks.isOpen()) {
+        state = "hold";
+        rafId = window.requestAnimationFrame(tick);
+        return;
+      }
+      /* Anticipation: the little crouch before the dart. It
+       * gathers itself for a breath — about a tenth of a second —
+       * then the dart fires. */
+      if (state === "anticipate") {
+        vel.x *= 0.8;
+        vel.y *= 0.8;
+        if (ts >= anticipateUntil) {
+          state = "dodge";
+          if (ctrl) ctrl.dart();
+        }
+        rafId = window.requestAnimationFrame(tick);
+        return;
+      }
+      /* A resting pointer it is wandering toward still startles
+       * it out from under the cursor. */
+      if (state === "move" && ts - pointer.seenAt < 3000 && tryPlay(ts)) {
+        rafId = window.requestAnimationFrame(tick);
+        return;
+      }
+      if (!target) {
+        goIdle(3000);
+        return;
+      }
+      /* Steering: seek the target with a capped force, easing
+       * out as it nears (the arrive), so every journey starts
+       * with a gather and ends with a settle — never a slide. */
+      const dx = target.x - pos.x;
+      const dy = target.y - pos.y;
+      const dist = Math.hypot(dx, dy);
+      const maxSpeed =
+        state === "dodge" ? SPEED * 3.4 : state === "enter" ? SPEED * 1.15 : state === "approach" ? SPEED * 0.7 : SPEED;
+      const maxForce = state === "dodge" ? 1500 : 280;
+      const arriveRadius = state === "dodge" ? 0 : 90;
+      const speedNow = dist < arriveRadius ? maxSpeed * Math.max(0.12, dist / arriveRadius) : maxSpeed;
+      let sx = (dx / (dist || 1)) * speedNow - vel.x;
+      let sy = (dy / (dist || 1)) * speedNow - vel.y;
+      const sLen = Math.hypot(sx, sy);
+      if (sLen > maxForce) {
+        sx = (sx / sLen) * maxForce;
+        sy = (sy / sLen) * maxForce;
+      }
+      vel.x += sx * dt;
+      vel.y += sy * dt;
+      pos.x += vel.x * dt;
+      pos.y += vel.y * dt;
+      const clamped = clampPos(pos);
+      pos.x = clamped.x;
+      pos.y = clamped.y;
+      apply();
+      const vLen = Math.hypot(vel.x, vel.y);
+      if (ctrl) ctrl.setTravel(vLen > 6, vel.x);
+      if (art) {
+        art.classList.add("is-walking");
+        /* It turns to face the way it travels. */
+        if (vel.x < -8) art.classList.add("is-flipped");
+        else if (vel.x > 8) art.classList.remove("is-flipped");
+      }
+      if (dist < 5 && vLen < 16) {
+        pos.x = target.x;
+        pos.y = target.y;
+        apply();
+        arrive();
+        return;
+      }
+      rafId = window.requestAnimationFrame(tick);
+    }
+    /* The play itself — a reflex, deliberately not part of the
+     * utility brain: deliberation is for idle moments, and a
+     * startle is not one. Returns true when it acted. Capped
+     * three ways, so it charms and never torments: a cooldown
+     * between scoots, no scooting while its bubble is open or
+     * while it is still walking in, and after three quick scoots
+     * it settles for a while, where a tap can always reach it. */
+    function tryPlay(now) {
+      if (!home || state === "dodge" || state === "anticipate" || state === "enter" || state === "hold") return false;
+      if (hooks.isOpen()) return false;
+      if (now < settleUntil || now - lastDodgeAt < play.cooldown) return false;
+      const c = center();
+      /* Evade is predictive: it flees from where the pointer
+       * will be a breath from now, not where it is — a plain
+       * flee-from-here reads as a proximity sensor going off;
+       * fleeing the pointer's path reads as being alive. */
+      const ahead = pointerPredicted(0.28);
+      const dx = c.x - ahead.x;
+      const dy = c.y - ahead.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist > play.radius) return false;
+      if (Math.random() < play.approach && state === "idle") {
+        /* It comes to look instead: a step toward the pointer,
+         * stopping politely short of it. */
+        const stepIn = dist - play.radius * 0.85;
+        if (stepIn < 8) return false;
+        const ux = dx / (dist || 1);
+        const uy = dy / (dist || 1);
+        target = clampPos({ x: pos.x - ux * stepIn, y: pos.y - uy * stepIn });
+        state = "approach";
+        window.clearTimeout(idleTimer);
+        wake();
+        return true;
+      }
+      const away = dist > 1 ? { x: dx / dist, y: dy / dist } : { x: -1, y: 0 };
+      const far = play.scoot[0] + Math.random() * (play.scoot[1] - play.scoot[0]);
+      target = clampPos({
+        x: pos.x + away.x * far,
+        y: pos.y + away.y * far * 0.7 - far * 0.18
+      });
+      /* First the crouch — anticipation — then the dart. */
+      state = "anticipate";
+      anticipateUntil = now + 110;
+      if (ctrl) ctrl.crouch();
+      lastDodgeAt = now;
+      if (now - lastStreakAt > 6000) dodgeStreak = 0;
+      lastStreakAt = now;
+      dodgeStreak += 1;
+      if (dodgeStreak >= 3) {
+        settleUntil = now + 8000;
+        dodgeStreak = 0;
+      }
+      window.clearTimeout(idleTimer);
+      wake();
+      return true;
+    }
+    window.addEventListener(
+      "pointermove",
+      (e) => {
+        trackPointer(e);
+        /* Near, but not yet startling it: it looks toward you —
+         * the gaze lands before the body ever reacts. */
+        if (ctrl && home) {
+          const c = center();
+          const lx = pointer.x - c.x;
+          const ly = pointer.y - c.y;
+          if (Math.hypot(lx, ly) < play.radius * 2.4) ctrl.lookAt(lx / 140, ly / 140);
+        }
+        tryPlay(pointer.seenAt);
+      },
+      { passive: true }
+    );
+    document.addEventListener(
+      "pointerdown",
+      (e) => {
+        /* A finger has no hover: its approach is its landing.
+         * A landing near the Spark startles it the same way —
+         * but a landing ON it is a tap, and a tap always lands. */
+        if (button.contains(e.target)) return;
+        trackPointer(e);
+        tryPlay(pointer.seenAt);
+      },
+      { passive: true }
+    );
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        sleep();
+        window.clearTimeout(idleTimer);
+      } else if (state === "idle") {
+        idleTimer = window.setTimeout(nextBehavior, 1200);
+      } else {
+        wake();
+      }
+    });
+    window.addEventListener("resize", () => {
+      measure();
+      const c = clampPos(pos);
+      pos.x = c.x;
+      pos.y = c.y;
+      apply();
+    });
+
+    /* Walk in from a little way across the floor, then live. */
+    measure();
+    pos.x = minX * 0.55;
+    pos.y = 0;
+    apply();
+    target = clampPos({ x: minX * 0.1, y: 0 });
+    state = "enter";
+    window.setTimeout(wake, 500);
   }
 
   /* The adopted life, on any page: keep the record honest, then
@@ -417,12 +910,18 @@
   async function adoptedStart(record, companion, today, justAdopted) {
     const patternDay = today ? today.dayOfPatternYear : null;
     const isNewPage = !(record.pagesSeen || []).includes(pageKey());
+    /* Evolution is read off the record, before and after this
+     * visit's facts land: if the stage rose, this visit is the
+     * one that grew it, and the Spark celebrates when it walks in. */
+    const stageBefore = Core.stageOf(record, companion).index;
     record = Core.recordVisit(record, { patternDay, page: pageKey() });
     record = await sensePractice(record);
     writeRecord(record);
+    const stageAfter = Core.stageOf(record, companion);
+    const grew = stageAfter.index > stageBefore ? stageAfter : null;
     /* On its own home page the Spark is already centre stage. */
     if (pageKey() !== "companions.html") {
-      renderPresence(record, companion, today, justAdopted || isNewPage);
+      renderPresence(record, companion, today, justAdopted || isNewPage, grew);
     }
   }
 
@@ -455,20 +954,38 @@
     adopt.textContent = words.adoptLabel;
     const later = host.querySelector(".spark-encounter-later");
     later.textContent = words.laterLabel;
+    /* The meeting shows its 3D body too, where WebGL is to be
+     * had — a newborn Ember, turning gently as it introduces
+     * itself. Its context is let go when the meeting ends. */
+    let ctrl3d = null;
+    const teardown = () => {
+      if (ctrl3d) ctrl3d.dispose();
+      ctrl3d = null;
+      host.remove();
+    };
     adopt.addEventListener("click", () => {
       const record = Core.newRecord({ seed, name: "", civilDate: civilToday() });
       clearPending();
       writeRecord(record);
-      chirp(companion);
-      host.remove();
+      chirpFromGesture(companion);
+      teardown();
       adoptedStart(record, companion, today, true);
     });
     later.addEventListener("click", () => {
-      host.remove();
+      teardown();
       renderEmber(companion, seed, today);
     });
     liftClear(host);
     document.body.appendChild(host);
+    const artBox = host.querySelector(".spark-encounter-art");
+    if (window.Spark3D && artBox) {
+      try {
+        ctrl3d = window.Spark3D.mount(artBox, companion, { stage: 0, px: 84 });
+      } catch {
+        ctrl3d = null;
+      }
+      if (ctrl3d) artBox.classList.add("has-3d");
+    }
   }
 
   /* The ember: after "Not now", the same Spark waits at the edge
