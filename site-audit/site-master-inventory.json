@@ -7,7 +7,7 @@
     "publicHtmlPages": 173,
     "catalogEntries": 66,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 18,
+      "not-linked-directly-from-homepage": 19,
       "nav-label-differs-from-title": 24,
       "deployed-but-unlinked": 57,
       "unreachable-from-homepage": 3,
@@ -530,7 +530,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (162 files)",
+      "title": "docs/assets/js (163 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1714,7 +1714,6 @@
         "theory.html",
         "theory/canon.html",
         "theory/master-equation.html",
-        "theory/unified-field.html",
         "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/",
@@ -13275,7 +13274,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (108 files)",
+      "title": "tests/ (109 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -19423,13 +19422,15 @@
         "path": "theory/unified-field.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 36,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 35,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": []
+      "issues": [
+        "not-linked-directly-from-homepage"
+      ]
     },
     {
       "id": "theory-witness",
