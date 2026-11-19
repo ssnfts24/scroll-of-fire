@@ -99,6 +99,25 @@
   const MARKINGS = ["rings", "speckles", "seam", "stripes", "stars"];
   const EYES = ["round", "half", "bright"];
   const CRESTS = ["none", "flame", "leaf", "halo", "curl"];
+
+  /* The finer grain of her — v9. Drawn from their own stream
+   * (seed + ":detail") so the draws above never move: the
+   * style of the crest she grows in, her ears, the trail that
+   * follows her, her cheeks, a second pattern layer under the
+   * first, how densely her markings fall, and the small
+   * variant her eye carries. Several independent draws, so
+   * the combinations multiply: two Sparks of one kind and one
+   * form still do not wear the same face. Most of these are
+   * not worn at birth — they arrive on her reveal schedule
+   * (revealScheduleFor), one at a time, as her keeper walks
+   * with her. Her marking density and her eye's variant are
+   * born with her: the base look was never bare. */
+  const CREST_STYLES = ["tuft", "horns", "fin", "halo", "leaf", "plain"];
+  const EAR_STYLES = ["fins", "tufts", "points", "none"];
+  const TRAIL_STYLES = ["wisp", "ribbon", "sparkles", "none"];
+  const CHEEK_STYLES = ["glow", "blush", "freckles", "none"];
+  const PATTERN_STYLES = ["speckles", "bands", "belly", "none"];
+  const EYE_VARIANTS = ["sparkle", "lash", "ring", "plain"];
   const TRAITS = [
     "keeps good notes", "hums at low hours", "collects small stones",
     "asks one more question", "remembers every door", "likes high shelves",
@@ -166,7 +185,56 @@
     };
   }
 
-  /* Her voice box, grown from her seed — v7.
+  /* Her sound family — the newest growth of her seed.
+   *
+   * Every sound she makes — her voice's syllables, her chirps,
+   * her songs, the echo game's notes — is drawn in one of a
+   * small set of soft, synthesized families, and her seed picks
+   * which one is hers, the way it picks her form and her name.
+   * A bell Spark rings softly; a hum Spark warms; a pluck Spark
+   * taps like wood; a blip Spark sounds like water. Inside her
+   * family the seed also settles her brightness, how long her
+   * notes ring, and the little vibrato she carries, so two
+   * Sparks of one family still do not sound the same. Pure
+   * data: the same seed settles the same sound anywhere. The
+   * browser glue renders the family with WebAudio — no samples,
+   * no files, no network. */
+  const SOUND_FAMILIES = [
+    { id: "bell", name: "Soft bell" },
+    { id: "hum", name: "Warm hum" },
+    { id: "pluck", name: "Wooden pluck" },
+    { id: "blip", name: "Watery blip" }
+  ];
+
+  function soundFor(companion) {
+    if (!companion) return null;
+    const rand = mulberry32(hashString(companion.seed + ":sound"));
+    const family = SOUND_FAMILIES[Math.floor(rand() * SOUND_FAMILIES.length)];
+    return {
+      family: family.id,
+      familyName: family.name,
+      /* How bright her filters sit, 0.85–1.15. */
+      brightness: Math.round((0.85 + rand() * 0.3) * 100) / 100,
+      /* How long her notes ring, against her family's own
+       * length, 0.8–1.25. */
+      decay: Math.round((0.8 + rand() * 0.45) * 100) / 100,
+      /* The waver in a held note: depth as a share of the
+       * pitch, and its pace in cycles per second. */
+      vibratoDepth: Math.round((0.002 + rand() * 0.007) * 1000) / 1000,
+      vibratoRate: Math.round((4.2 + rand() * 1.9) * 10) / 10
+    };
+  }
+
+  /* The extra note her greeting gains once her voice has
+   * flowered — the flourish on her reveal schedule. It rises
+   * from the same chirp root as everything she sounds. */
+  function flourishFor(companion) {
+    const chirp = chirpFor(companion);
+    if (!chirp) return null;
+    return Math.round(chirp.first * 1.78);
+  }
+
+  /* Her voice box, grown from her seed — v7, softened in v9.
    *
    * Until v6 her spoken voice was the device's own speech
    * synthesis: a generic robot, the same on every phone, tuned
@@ -183,7 +251,16 @@
    * the same seed settles the same voice on any device, and two
    * Sparks sound audibly different. The browser glue sings the
    * plan with WebAudio — no samples, no network, no device
-   * speech, nothing recorded, nothing sent anywhere. */
+   * speech, nothing recorded, nothing sent anywhere.
+   *
+   * In v9 the voice itself was softened at Aaron's word — the
+   * first box buzzed, and it sang too much of every line. Now
+   * she sounds in her seed's sound family (soundFor), on a
+   * round sine stack instead of a sawtooth's buzz; her breath
+   * is a seed's choice, and many seeds choose none; and she
+   * sounds only a line's first sentence, about a dozen
+   * syllables, at a lower level. Less of her, and softer —
+   * the words still stand whole in text. */
 
   /* Her pace, by temperament: bold and bright a touch quicker,
    * gentle a touch slower — the same table that paced the old
@@ -209,20 +286,39 @@
    *   Earth's ~282 Hz to Light's ~806; her speaking fundamental
    *   sits lower, 150–330 Hz, where a formant voice lives.
    * - formantScale: the size of her vocal tract, 0.86–1.22.
-   * - breathiness: how much soft air rides under the tone, 0–1.
-   * - tempo: syllables per second, her temperament's pace. */
+   * - breathiness: how much soft air rides under the tone.
+   *   Since v9 it is a choice her seed makes: many seeds settle
+   *   on none at all, and those that breathe keep it low,
+   *   0.05–0.3 — the hiss of the first box is gone.
+   * - tempo: syllables per second, her temperament's pace.
+   * - and her sound (soundFor): the family she sings in, its
+   *   brightness and ring, and her vibrato — carried on the box
+   *   so the browser glue reads one measurement set. */
   function voiceBoxFor(companion) {
     if (!companion) return null;
     const chirp = chirpFor(companion);
     if (!chirp) return null;
+    const sound = soundFor(companion);
     const rand = mulberry32(hashString(companion.seed + ":voicebox"));
     const span = Math.min(1, Math.max(0, (chirp.first - 282) / (806 - 282)));
     const basePitch = Math.round(150 + span * 180 + (rand() - 0.5) * 14);
     const formantScale = Math.round((0.86 + rand() * 0.36) * 100) / 100;
-    const breathiness = Math.round((0.15 + rand() * 0.6) * 100) / 100;
+    const breathiness =
+      rand() < 0.45 ? 0 : Math.round((0.05 + rand() * 0.25) * 100) / 100;
     const rate = VOICE_RATES[companion.temperament] || 1;
     const tempo = Math.round(4.6 * rate * (0.97 + rand() * 0.06) * 100) / 100;
-    return { basePitch, formantScale, breathiness, tempo };
+    return {
+      basePitch,
+      formantScale,
+      breathiness,
+      tempo,
+      family: sound.family,
+      familyName: sound.familyName,
+      brightness: sound.brightness,
+      decay: sound.decay,
+      vibratoDepth: sound.vibratoDepth,
+      vibratoRate: sound.vibratoRate
+    };
   }
 
   /* One word, sounded out: its syllables, each with the vowel it
@@ -301,53 +397,58 @@
    * The contour is the sentence's own: a statement starts a
    * little high and settles; a question holds, then rises on its
    * last syllables; the first syllable of a word stands a touch
-   * taller than its fellows. She sounds the opening of a long
-   * line — whole sentences, up to a sane count — while the full
-   * line stands in text, as it always has. The plan is seeded by
-   * the line itself, so the same Spark sounds the same line the
-   * same way twice. */
-  const VOICE_MAX_SYLLABLES = 44;
+   * taller than its fellows. Each syllable also drifts a breath
+   * off the contour — a seeded waver of a percent or two — so a
+   * line never lands mechanically twice the same way in the
+   * ear, though the plan itself is settled.
+   * Since v9 she sounds less of a line: its first sentence
+   * only, and only about a dozen syllables of it, whole words
+   * to the cap — the rest of the line stands in text, as it
+   * always has, and her sound is the greeting over it, not a
+   * reading of it. The plan is seeded by the line itself, so
+   * the same Spark sounds the same line the same way twice. */
+  const VOICE_MAX_SYLLABLES = 12;
   function vocalPlanFor({ companion, text }) {
     const box = voiceBoxFor(companion);
     const clean = String(text == null ? "" : text).replace(/\s+/g, " ").trim();
     if (!box || !clean) return { box, syllables: [], seconds: 0 };
     const rand = mulberry32(hashString(companion.seed + ":line:" + clean));
-    const sentences = clean.match(/[^.!?]+[.!?]+/g) || [clean];
+    const sentence = (clean.match(/[^.!?]+[.!?]+/) || [clean])[0].trim();
+    const question = /\?$/.test(sentence);
+    const words = sentence.split(" ").filter(Boolean);
+    const sung = [];
+    let count = 0;
+    for (const word of words) {
+      const parts = wordSyllables(word);
+      parts.forEach((part, pi) => {
+        sung.push({ ...part, stressed: pi === 0, wordEnd: pi === parts.length - 1 });
+      });
+      count += parts.length;
+      if (count >= VOICE_MAX_SYLLABLES) break;
+    }
     const syllables = [];
     let seconds = 0;
-    for (const sentence of sentences) {
-      if (syllables.length >= VOICE_MAX_SYLLABLES) break;
-      const trimmed = sentence.trim();
-      const question = /\?$/.test(trimmed);
-      const words = trimmed.split(" ").filter(Boolean);
-      const sung = [];
-      for (const word of words) {
-        const parts = wordSyllables(word);
-        parts.forEach((part, pi) => {
-          sung.push({ ...part, stressed: pi === 0, wordEnd: pi === parts.length - 1 });
-        });
-      }
-      const n = sung.length;
-      sung.forEach((s, idx) => {
-        const place = n > 1 ? idx / (n - 1) : 0;
-        let contour = 1.05 - 0.13 * place;
-        if (question && idx >= n - 2) contour += 0.05 + 0.13 * ((idx - (n - 2)) / Math.max(1, Math.min(2, n) - 1 || 1));
-        if (s.stressed) contour *= 1.05;
-        const dur = (1 / box.tempo) * (s.stressed ? 1.12 : 0.92) * (0.94 + rand() * 0.12);
-        const gap = idx === n - 1 ? 0.1 : s.wordEnd ? 0.02 : 0.005;
-        syllables.push({
-          vowel: s.vowel,
-          onset: s.onset,
-          f0: Math.round(box.basePitch * contour * 10) / 10,
-          dur: Math.round(dur * 1000) / 1000,
-          gap: Math.round(gap * 1000) / 1000,
-          formants: (VOWEL_FORMANTS[s.vowel] || VOWEL_FORMANTS.neutral).map((f) =>
-            Math.round(f * box.formantScale)
-          )
-        });
-        seconds += dur + gap;
+    const n = sung.length;
+    sung.forEach((s, idx) => {
+      const place = n > 1 ? idx / (n - 1) : 0;
+      let contour = 1.05 - 0.13 * place;
+      if (question && idx >= n - 2) contour += 0.05 + 0.13 * ((idx - (n - 2)) / Math.max(1, Math.min(2, n) - 1 || 1));
+      if (s.stressed) contour *= 1.05;
+      const drift = 0.99 + rand() * 0.02;
+      const dur = (1 / box.tempo) * (s.stressed ? 1.12 : 0.92) * (0.92 + rand() * 0.16);
+      const gap = idx === n - 1 ? 0.06 : s.wordEnd ? 0.02 : 0.005;
+      syllables.push({
+        vowel: s.vowel,
+        onset: s.onset,
+        f0: Math.round(box.basePitch * contour * drift * 10) / 10,
+        dur: Math.round(dur * 1000) / 1000,
+        gap: Math.round(gap * 1000) / 1000,
+        formants: (VOWEL_FORMANTS[s.vowel] || VOWEL_FORMANTS.neutral).map((f) =>
+          Math.round(f * box.formantScale)
+        )
       });
-    }
+      seconds += dur + gap;
+    });
     return { box, syllables, seconds: Math.round(seconds * 100) / 100 };
   }
 
@@ -848,6 +949,150 @@
     return { ...record, play };
   }
 
+  /* ---- her reveals: detail that arrives over time ----
+   *
+   * She is born with a whole look — form, markings, crest,
+   * her markings' density, her eye's variant — but the finer
+   * detail of her (her cheeks, her second pattern, her ears,
+   * her trail, the styled crest, and a flourish in her voice)
+   * is not all there at the meeting. It arrives, one piece at
+   * a time, as her keeper actually walks with her: Aaron's
+   * shape for it — fast at first, so a new keeper notices her
+   * change after a few pages; then slower, and slower again,
+   * and never quite on a beat. The schedule is counted in
+   * engagement, from the counters her record already keeps —
+   * pages seen, return days, practices sealed, acts of play
+   * and care — never in wall-clock time, so a keeper who is
+   * away loses nothing: the schedule simply waits where it
+   * was. The gaps stretch by about 1.7 each time, with a
+   * seeded jitter of up to a quarter either way, and each gap
+   * is at least one step longer than the one before, so the
+   * stretching is real and the rhythm is never clockwork.
+   * Same seed + same history = the same reveal points, on any
+   * device. Which features stand on her schedule is her
+   * seed's own draw: a Spark whose detail draw left her
+   * cheekless has no cheeks to reveal — that place on her
+   * schedule simply is not there. The flourish stands last
+   * for every Spark: her voice flowers after her face does. */
+
+  /* The order a detail arrives in: the face first, where a
+   * keeper looks; the voice last. */
+  const REVEAL_ORDER = ["cheeks", "pattern", "ears", "trail", "crest", "flourish"];
+
+  const REVEAL_LINES = {
+    cheeks: "Her cheeks came in.",
+    pattern: "A second pattern showed.",
+    ears: "Her ears came in.",
+    trail: "A little trail follows her.",
+    crest: "Her crest grew in.",
+    flourish: "Her voice learned a flourish."
+  };
+
+  function revealLineFor(id) {
+    return REVEAL_LINES[id] || "Something new about her.";
+  }
+
+  /* Does her seed hold this detail at all? A feature she was
+   * never drawn with is not a reveal she is owed — it is
+   * simply not hers. */
+  function revealPresent(companion, id) {
+    const d = (companion && companion.details) || {};
+    switch (id) {
+      case "cheeks":
+        return !!d.cheeks && d.cheeks !== "none";
+      case "pattern":
+        return !!d.pattern && d.pattern !== "none";
+      case "ears":
+        return !!d.ears && d.ears !== "none";
+      case "trail":
+        return !!d.trail && d.trail !== "none";
+      case "crest":
+        return !!d.crestStyle && d.crestStyle !== "plain";
+      case "flourish":
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  /* Her reveal points, in engagement: the first after a
+   * handful of pages (a gap of 3–5), each next gap about
+   * 1.7 times the last, jittered by her seed, and never
+   * shorter than the gap before it plus one. */
+  function revealScheduleFor(companion) {
+    if (!companion) return [];
+    const present = REVEAL_ORDER.filter((id) => revealPresent(companion, id));
+    const rand = mulberry32(hashString(companion.seed + ":reveals"));
+    const out = [];
+    let at = 0;
+    present.forEach((id, i) => {
+      let gap = Math.round(4 * Math.pow(1.7, i) * (0.78 + rand() * 0.5));
+      if (i > 0) gap = Math.max(gap, out[i - 1].gap + 1);
+      gap = Math.max(2, gap);
+      at += gap;
+      out.push({ id, at, gap });
+    });
+    return out;
+  }
+
+  /* The walking itself, counted: every page she has been met
+   * on, four for each return day after the first, two for
+   * each practice sealed, one for each act of care, and one
+   * for every five acts of play. Nothing here is time: a
+   * record that does not move does not ripen. */
+  function engagementOf(record) {
+    if (!record) return 0;
+    const pages = Array.isArray(record.pagesSeen) ? record.pagesSeen.length : 0;
+    const days = Array.isArray(record.daysSeen) ? record.daysSeen.length : 0;
+    const practice = Array.isArray(record.practiceDays) ? record.practiceDays.length : 0;
+    const play = playOf(record);
+    const playActs = play.pets + play.pokes + play.drags + play.catches;
+    const care = careOf(record);
+    const careActs = care.kindles + care.plays + care.rests;
+    return (
+      pages +
+      Math.max(0, days - 1) * 4 +
+      practice * 2 +
+      Math.floor(playActs / 5) +
+      careActs
+    );
+  }
+
+  /* Where she stands: her schedule, what has arrived, and
+   * what comes next — all read off the record's own counters,
+   * so it can be recomputed anywhere and kept nowhere else. */
+  function revealsFor({ record, companion }) {
+    const schedule = revealScheduleFor(companion);
+    const score = engagementOf(record);
+    const revealed = schedule.filter((s) => score >= s.at).map((s) => s.id);
+    const next = schedule.find((s) => score < s.at) || null;
+    return { schedule, revealed, next, score };
+  }
+
+  /* The reveals her keeper has already been told about, kept
+   * in the record like everything else; a record from before
+   * reveals existed has simply been told about none. */
+  function revealsSeenOf(record) {
+    return Array.isArray(record && record.revealsSeen) ? record.revealsSeen.slice() : [];
+  }
+
+  /* The same single-announcement discipline as her tricks:
+   * a reveal is news exactly once — when it has arrived in
+   * the after-record, was not arrived in the before-record,
+   * and has not already been announced. */
+  function newRevealsBetween({ before, after, companion }) {
+    const was = new Set(revealsFor({ record: before, companion }).revealed);
+    const seen = new Set(revealsSeenOf(after));
+    return revealsFor({ record: after, companion })
+      .revealed.filter((id) => !was.has(id) && !seen.has(id));
+  }
+
+  function markRevealsSeen(record, ids) {
+    const seen = new Set(revealsSeenOf(record));
+    for (const id of ids || []) seen.add(id);
+    return { ...record, revealsSeen: [...seen] };
+  }
+
   /* The echo game: she pulses a pattern — her seed's notes in
    * four colours — and the keeper taps it back. The pattern is
    * grown from the seed and the round, so the same Spark sings
@@ -1096,6 +1341,22 @@
           gait: GAITS[Math.floor(r2() * GAITS.length)],
           pace: Math.round((0.9 + r2() * 0.2) * 100) / 100
         };
+      })(),
+      /* Her finer grain, from its own stream (see the lists
+       * above): which details she will grow, and the two she
+       * is born wearing — her markings' density and her eye's
+       * variant. */
+      details: (() => {
+        const r3 = mulberry32(hashString(seed + ":detail"));
+        return {
+          crestStyle: CREST_STYLES[Math.floor(r3() * CREST_STYLES.length)],
+          ears: EAR_STYLES[Math.floor(r3() * EAR_STYLES.length)],
+          trail: TRAIL_STYLES[Math.floor(r3() * TRAIL_STYLES.length)],
+          cheeks: CHEEK_STYLES[Math.floor(r3() * CHEEK_STYLES.length)],
+          pattern: PATTERN_STYLES[Math.floor(r3() * PATTERN_STYLES.length)],
+          density: Math.round((0.7 + r3() * 0.6) * 100) / 100,
+          eyeVariant: EYE_VARIANTS[Math.floor(r3() * EYE_VARIANTS.length)]
+        };
       })()
     };
   }
@@ -1165,15 +1426,133 @@
     }
   }
 
-  function eyeShape(companion) {
-    const cy = companion.form === "moth" ? 50 : 52;
-    if (companion.eye === "half")
-      return `<path class="spark-eye" d="M41 ${cy} Q50 ${cy - 7} 59 ${cy}" stroke="#0b0e18" stroke-width="3" fill="none" stroke-linecap="round"/>`;
-    const r = companion.eye === "bright" ? 8.5 : 7;
-    return `<g class="spark-eye"><circle cx="50" cy="${cy}" r="${r}" fill="#0b0e18"/><circle cx="50" cy="${cy}" r="${r * 0.45}" fill="${companion.palette.glow}"/><circle cx="${50 + r * 0.3}" cy="${cy - r * 0.3}" r="${r * 0.18}" fill="#fff"/></g>`;
+  /* Her finer grain, drawn — v9. One function per detail of
+   * companion.details, in the body's own coordinates; renderSVG
+   * decides which stand on the page, by her reveal state. The
+   * trail is drawn behind the body, the rest over it. All of
+   * it is kept small on purpose: at roaming size these read as
+   * a silhouette's character, not as separate parts. */
+
+  function trailShape(companion) {
+    const { accent, glow } = companion.palette;
+    switch (companion.details.trail) {
+      case "wisp":
+        return `<path d="M30 66 Q14 74 8 90 Q20 84 30 78 Q24 72 30 66 Z" fill="${accent}" opacity="0.55"/>`;
+      case "ribbon":
+        return `<path d="M28 60 Q12 62 6 52 M28 70 Q14 76 10 84" stroke="${accent}" stroke-width="2.2" fill="none" opacity="0.6" stroke-linecap="round"/>`;
+      case "sparkles":
+        return `<circle cx="16" cy="66" r="1.9" fill="${glow}" opacity="0.9"/><circle cx="10" cy="78" r="1.4" fill="${accent}" opacity="0.85"/><circle cx="22" cy="80" r="1.1" fill="${glow}" opacity="0.8"/>`;
+      default:
+        return "";
+    }
   }
 
-  function renderSVG(companion, { stage = 0 } = {}) {
+  function earsShape(companion) {
+    const { accent, body } = companion.palette;
+    switch (companion.details.ears) {
+      case "fins":
+        return `<path d="M26 44 L14 38 L22 54 Z" fill="${accent}" opacity="0.8"/><path d="M74 44 L86 38 L78 54 Z" fill="${accent}" opacity="0.8"/>`;
+      case "tufts":
+        return `<path d="M28 34 q-3 -6 -8 -8 M30 32 q-1 -7 -5 -10 M72 34 q3 -6 8 -8 M70 32 q1 -7 5 -10" stroke="${accent}" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.85"/>`;
+      case "points":
+        return `<path d="M33 30 L29 16 L42 24 Z" fill="${body}"/><path d="M67 30 L71 16 L58 24 Z" fill="${body}"/>`;
+      default:
+        return "";
+    }
+  }
+
+  function cheekShape(companion) {
+    const { accent, glow } = companion.palette;
+    const cy = companion.form === "moth" ? 58 : 61;
+    const dx = companion.form === "moth" ? 7 : 13;
+    switch (companion.details.cheeks) {
+      case "glow":
+        return `<ellipse cx="${50 - dx}" cy="${cy}" rx="5" ry="3.4" fill="${glow}" opacity="0.55"/><ellipse cx="${50 + dx}" cy="${cy}" rx="5" ry="3.4" fill="${glow}" opacity="0.55"/>`;
+      case "blush":
+        return `<ellipse cx="${50 - dx}" cy="${cy}" rx="4.6" ry="3" fill="${accent}" opacity="0.5"/><ellipse cx="${50 + dx}" cy="${cy}" rx="4.6" ry="3" fill="${accent}" opacity="0.5"/>`;
+      case "freckles": {
+        let dots = "";
+        for (const sx of [50 - dx - 3, 50 - dx, 50 - dx + 3, 50 + dx - 3, 50 + dx, 50 + dx + 3])
+          dots += `<circle cx="${sx}" cy="${cy + (sx % 3)}" r="0.9" fill="${accent}" opacity="0.75"/>`;
+        return dots;
+      }
+      default:
+        return "";
+    }
+  }
+
+  /* The styled crest, drawn inside the crest's own group, so
+   * it grows with the same stage scale as the crest it joins. */
+  function crestExtraShape(companion) {
+    const { accent, glow } = companion.palette;
+    switch (companion.details.crestStyle) {
+      case "tuft":
+        return `<path d="M44 22 q-2 -8 -8 -11 M50 21 q0 -9 -4 -13 M56 22 q2 -8 8 -11" stroke="${accent}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`;
+      case "horns":
+        return `<path d="M36 24 Q28 14 30 6 Q38 12 40 20 Z" fill="${accent}"/><path d="M64 24 Q72 14 70 6 Q62 12 60 20 Z" fill="${accent}"/>`;
+      case "fin":
+        return `<path d="M50 24 Q50 4 36 2 Q44 12 44 22 Z" fill="${accent}" opacity="0.9"/>`;
+      case "halo":
+        return `<ellipse cx="50" cy="9" rx="10" ry="3" fill="none" stroke="${glow}" stroke-width="1.8" opacity="0.85"/>`;
+      case "leaf":
+        return `<path d="M56 20 Q58 8 70 8 Q69 20 56 20 Z" fill="${accent}" opacity="0.9"/>`;
+      default:
+        return "";
+    }
+  }
+
+  /* The second pattern layer, under the markings' own logic:
+   * fine speckles fall where they fall; bands and the belly
+   * patch are cut to the body's own silhouette by a clip. */
+  function patternLayer(companion, rand, clipId) {
+    const { accent, glow } = companion.palette;
+    const d = companion.details;
+    if (d.pattern === "speckles") {
+      const out = [];
+      const n = Math.round(9 * d.density) + 3;
+      for (let i = 0; i < n; i++) {
+        const a = rand() * Math.PI * 2;
+        const r = 6 + rand() * 19;
+        out.push(`<circle cx="${(50 + Math.cos(a) * r).toFixed(1)}" cy="${(54 + Math.sin(a) * r).toFixed(1)}" r="${(0.8 + rand() * 0.6).toFixed(1)}" fill="${accent}" opacity="0.65"/>`);
+      }
+      return out.join("");
+    }
+    if (d.pattern === "bands") {
+      return `<g clip-path="url(#${clipId})"><path d="M18 44 Q50 36 82 44" stroke="${glow}" stroke-width="3.4" fill="none" opacity="0.4"/><path d="M18 66 Q50 58 82 66" stroke="${accent}" stroke-width="3" fill="none" opacity="0.35"/></g>`;
+    }
+    if (d.pattern === "belly") {
+      return `<g clip-path="url(#${clipId})"><ellipse cx="50" cy="72" rx="11" ry="8.5" fill="${glow}" opacity="0.4"/></g>`;
+    }
+    return "";
+  }
+
+  function eyeShape(companion) {
+    const cy = companion.form === "moth" ? 50 : 52;
+    const variant = companion.details ? companion.details.eyeVariant : "plain";
+    if (companion.eye === "half") {
+      const extra =
+        variant === "sparkle"
+          ? `<circle cx="50" cy="${cy - 6}" r="1.1" fill="#fff"/>`
+          : variant === "lash"
+            ? `<path d="M59 ${cy - 1} l3.4 -2.6" stroke="#0b0e18" stroke-width="1.6" stroke-linecap="round"/>`
+            : variant === "ring"
+              ? `<path d="M40 ${cy + 1} Q50 ${cy - 9} 60 ${cy + 1}" stroke="${companion.palette.glow}" stroke-width="1.2" fill="none" opacity="0.6"/>`
+              : "";
+      return `<path class="spark-eye" d="M41 ${cy} Q50 ${cy - 7} 59 ${cy}" stroke="#0b0e18" stroke-width="3" fill="none" stroke-linecap="round"/>${extra}`;
+    }
+    const r = companion.eye === "bright" ? 8.5 : 7;
+    const extra =
+      variant === "sparkle"
+        ? `<circle cx="${50 - r * 0.38}" cy="${cy + r * 0.28}" r="${r * 0.14}" fill="#fff"/>`
+        : variant === "lash"
+          ? `<path d="M${50 + r * 0.8} ${cy - r * 0.55} l2.8 -2" stroke="#0b0e18" stroke-width="1.5" stroke-linecap="round"/>`
+          : variant === "ring"
+            ? `<circle cx="50" cy="${cy}" r="${r + 2.6}" fill="none" stroke="${companion.palette.glow}" stroke-width="1.1" opacity="0.55"/>`
+            : "";
+    return `<g class="spark-eye"><circle cx="50" cy="${cy}" r="${r}" fill="#0b0e18"/><circle cx="50" cy="${cy}" r="${r * 0.45}" fill="${companion.palette.glow}"/><circle cx="${50 + r * 0.3}" cy="${cy - r * 0.3}" r="${r * 0.18}" fill="#fff"/>${extra}</g>`;
+  }
+
+  function renderSVG(companion, { stage = 0, revealed = null } = {}) {
     if (!companion) return "";
     const rand = mulberry32(hashString(companion.seed + ":marks"));
     /* Evolution, drawn: the same seed-body at every stage — the
@@ -1189,13 +1568,27 @@
     const markFraction = [0.5, 0.85, 1.15][stage] || 1;
     const crestScale = [0.65, 0.88, 1.02][stage] || 1;
     const crestOpacity = [0.7, 0.9, 1][stage] || 1;
+    /* Her finer grain stands only where her schedule has
+     * brought it: `revealed` names the detail that has arrived
+     * (revealScheduleFor, counted from her record). No list —
+     * a first meeting, a fresh record — is her born look: the
+     * whole base, none of the arrivals. Her markings' density
+     * and her eye's variant are born with her and always stand. */
+    const shown = (id) => Array.isArray(revealed) && revealed.includes(id);
+    const density = companion.details ? companion.details.density : 1;
     const grown = {
       ...companion,
       markings: {
         ...companion.markings,
-        count: Math.max(1, Math.round(companion.markings.count * markFraction))
+        count: Math.max(1, Math.round(companion.markings.count * markFraction * density))
       }
     };
+    const drand = mulberry32(hashString(companion.seed + ":detail2d"));
+    const clipId = `sb${Math.abs(hashString(companion.seed)).toString(36)}`;
+    const needsClip =
+      shown("pattern") &&
+      companion.details &&
+      (companion.details.pattern === "bands" || companion.details.pattern === "belly");
     const stageRingPlain =
       stage >= 1
         ? `<circle cx="50" cy="52" r="44" fill="none" stroke="${companion.palette.accent}" stroke-width="1.4" opacity="0.55"/>`
@@ -1225,17 +1618,23 @@
           : 0.14
       : 0.14;
     return (
-      `<svg viewBox="0 0 100 100" role="img" aria-label="A ${companion.kindName} Spark" data-spark-form="${companion.form}" data-spark-stage="${stage}" data-spark-size="${companion.shape ? companion.shape.size : 1}" data-spark-glow="${companion.shape ? companion.shape.glow : "soft"}" data-spark-gait="${companion.shape ? companion.shape.gait : "stroll"}">` +
+      `<svg viewBox="0 0 100 100" role="img" aria-label="A ${companion.kindName} Spark" data-spark-form="${companion.form}" data-spark-stage="${stage}" data-spark-size="${companion.shape ? companion.shape.size : 1}" data-spark-glow="${companion.shape ? companion.shape.glow : "soft"}" data-spark-gait="${companion.shape ? companion.shape.gait : "stroll"}" data-spark-shown="${(revealed || []).join(" ")}">` +
+      (needsClip ? `<defs><clipPath id="${clipId}">${bodyShape(companion)}</clipPath></defs>` : "") +
       `<circle class="spark-halo" cx="50" cy="52" r="40" fill="${companion.palette.glow}" opacity="${halo + stage * 0.05}"/>` +
       stageRing +
       stageRingPlain +
       stageRing2 +
       stageSatellites +
       `<g transform="translate(50 54) scale(${bodyScale}) translate(-50 -54)">` +
+      (shown("trail") ? trailShape(companion) : "") +
       bodyShape(companion) +
       markingShapes(grown, rand) +
+      (shown("pattern") ? patternLayer(companion, drand, clipId) : "") +
+      (shown("ears") ? earsShape(companion) : "") +
+      (shown("cheeks") ? cheekShape(companion) : "") +
       `<g transform="translate(50 14) scale(${crestScale}) translate(-50 -14)" opacity="${crestOpacity}">` +
       crestShape(companion) +
+      (shown("crest") ? crestExtraShape(companion) : "") +
       `</g>` +
       eyeShape(companion) +
       `</g>` +
@@ -1300,7 +1699,13 @@
        * announced, so each is celebrated a single time), and
        * the day her one gentle question was last asked. Play
        * only ever adds, exactly like care. */
-      play: { pets: 0, pokes: 0, drags: 0, catches: 0, bestChase: 0, echoBest: 0, tricks: [], askedDay: null }
+      play: { pets: 0, pokes: 0, drags: 0, catches: 0, bestChase: 0, echoBest: 0, tricks: [], askedDay: null },
+      /* The reveals her keeper has already been told about —
+       * her detail arrives on a stretching schedule counted
+       * from this record's own counters, and each arrival is
+       * announced exactly once, so what is kept here is only
+       * the telling, never the schedule itself. */
+      revealsSeen: []
     };
   }
 
@@ -2033,10 +2438,23 @@
     renderSVG,
     chirpFor,
     soundsFor,
+    SOUND_FAMILIES,
+    soundFor,
+    flourishFor,
     voiceBoxFor,
     vocalPlanFor,
+    VOICE_MAX_SYLLABLES,
     syllableCountFor,
     wordSyllables,
+    REVEAL_ORDER,
+    REVEAL_LINES,
+    revealLineFor,
+    revealScheduleFor,
+    engagementOf,
+    revealsFor,
+    revealsSeenOf,
+    newRevealsBetween,
+    markRevealsSeen,
     VOICE_LINES,
     CONVO,
     DAYPART_GREET,

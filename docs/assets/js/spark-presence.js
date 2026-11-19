@@ -231,7 +231,10 @@
     container.innerHTML = "";
     const face = document.createElement("div");
     face.className = "spark-panel-face";
-    face.innerHTML = Core.renderSVG(companion, { stage: data.stageIndex });
+    face.innerHTML = Core.renderSVG(companion, {
+      stage: data.stageIndex,
+      revealed: Core.revealsFor({ record, companion }).revealed
+    });
     container.appendChild(face);
     const row = (label, value) => {
       const p = document.createElement("p");
@@ -245,6 +248,8 @@
     row("Answers to:", data.name);
     if (data.seedName && data.seedName !== data.name) row("Seed name:", data.seedName);
     row("Kind:", `${data.kindName} — ${data.temperament}, ${data.trait}`);
+    const herSound = Core.soundFor(companion);
+    if (herSound) row("Sound:", `${herSound.familyName} — hers alone.`);
     const prog = Core.progressOf(record, companion);
     row(
       "Stage:",
@@ -360,7 +365,7 @@
       `<div class="spark-panel-grid" role="group" aria-label="Your Spark's options"></div>` +
       `</div></div>` +
       `<button type="button" class="spark-presence-button" aria-expanded="false">` +
-      `<span class="spark-presence-art">${Core.renderSVG(companion, { stage: stage.index })}</span>` +
+      `<span class="spark-presence-art">${Core.renderSVG(companion, { stage: stage.index, revealed: Core.revealsFor({ record, companion }).revealed })}</span>` +
       `<span class="spark-presence-name"></span></button>`;
     host.querySelector(".spark-presence-button").setAttribute(
       "aria-label",
@@ -420,12 +425,31 @@
     const setRecord = (next) => {
       const fresh = Core.learnedBetween({ before: getRecord(), after: next, companion });
       if (fresh.length) next = Core.markTricksKnown(next, fresh);
+      /* Her reveals ride the same one path as her tricks: a
+       * detail that has arrived since the last write is news
+       * exactly once — marked in the record as told, announced
+       * gently, and her face is drawn again wearing it. */
+      const arrived = Core.newRevealsBetween({ before: getRecord(), after: next, companion });
+      if (arrived.length) next = Core.markRevealsSeen(next, arrived);
       if (store) store.set(next);
       writeRecord(next);
       refreshPanel();
       refreshMood();
       if (fresh.length) announceLearned(fresh);
+      if (arrived.length) announceReveals(arrived);
     };
+    /* Her greeting's extra note, once her voice has flowered:
+     * the flourish stands last on her reveal schedule, and
+     * until it arrives her greeting is the plain two notes it
+     * has always been. */
+    const flourishNote = () =>
+      Core.revealsFor({ record: getRecord(), companion }).revealed.includes("flourish")
+        ? Core.flourishFor(companion)
+        : null;
+    /* The detail she wears right now, for every drawing of
+     * her on this page — read off the record, never kept
+     * anywhere else. */
+    const revealedNow = () => Core.revealsFor({ record: getRecord(), companion }).revealed;
     /* When the record changes under an open panel, a state
      * that shows record facts is drawn again — care, tricks,
      * the record itself. Other states keep their line and
@@ -547,10 +571,22 @@
      * tempo) and a plan for each line (Core.vocalPlanFor: its
      * syllables, mouth shapes, and pitch contour — rising for a
      * question, settling at a sentence's end), sung with
-     * WebAudio: a glottal pulse through her formant filters,
-     * breath under the tone, a consonant tick where one falls.
-     * Her words stand in text, whole; the voice box is her sound
-     * over them, the way a game companion vocalizes.
+     * WebAudio. Her words stand in text, whole; the voice box
+     * is her sound over them, the way a game companion
+     * vocalizes.
+     * In v9 Aaron heard the first box and named its fault too:
+     * it buzzed, and there was too much of it. So the sawtooth
+     * is gone — her syllables are round sine stacks now, her
+     * formants a gentle warmth at low Q instead of a buzz at
+     * high Q, her breath a whisper some seeds do not carry at
+     * all, and the whole voice sits lower (a syllable peaks at
+     * about 0.055 here, against 0.135 in v7). She also sounds
+     * less: a line's first sentence only, about a dozen
+     * syllables (Core's plan). And she sings in her seed's
+     * sound family (Core.soundFor) — soft bell, warm hum,
+     * wooden pluck, watery blip — the same family her chirps
+     * and songs are rendered in, so she sounds like one
+     * creature, and no two Sparks sound alike.
      * The fences are the ones her voice has always kept: the
      * Voice switch rests quiet until the keeper turns it on
      * (kept on this device), the talk is armed by a tap on her
@@ -592,52 +628,155 @@
         voiceMaster = null;
       }
     }
-    /* One syllable of her voice: a sawtooth's pulse-train buzz
-     * through a lowpass throat, shaped by her three formant
-     * peaks for this syllable's vowel, with her breath riding
-     * under it and a consonant tick at its head where the plan
-     * marks one. A handful of nodes, all stopped when spent. */
-    function singSyllable(ctx, out, box, syl, at) {
-      const dur = syl.dur;
-      const osc = ctx.createOscillator();
-      osc.type = "sawtooth";
-      osc.frequency.setValueAtTime(syl.f0 * 1.05, at);
-      osc.frequency.exponentialRampToValueAtTime(Math.max(40, syl.f0 * 0.95), at + dur);
-      const throat = ctx.createBiquadFilter();
-      throat.type = "lowpass";
-      throat.frequency.value = 1100;
-      throat.Q.value = 0.4;
-      const gain = ctx.createGain();
-      gain.gain.setValueAtTime(0.0001, at);
-      gain.gain.exponentialRampToValueAtTime(0.15, at + Math.min(0.03, dur * 0.3));
-      gain.gain.setValueAtTime(0.15, at + Math.max(0.03, dur - 0.035));
-      gain.gain.exponentialRampToValueAtTime(0.0001, at + dur);
-      osc.connect(throat);
-      let node = throat;
+    /* A tracked source: everything she starts is kept here so
+     * stopVoice can still it, and it lets go of itself when
+     * spent. */
+    function voiceSource(node) {
+      voiceSources.add(node);
+      node.onended = () => voiceSources.delete(node);
+      return node;
+    }
+    /* A soft envelope: in over the attack, held a breath, out
+     * by the syllable's end — no hard edges anywhere. */
+    function softEnv(ctx, peak, at, dur, attack) {
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, at);
+      g.gain.exponentialRampToValueAtTime(peak, at + attack);
+      g.gain.setValueAtTime(peak, at + Math.max(attack, dur - 0.04));
+      g.gain.exponentialRampToValueAtTime(0.0001, at + dur);
+      return g;
+    }
+    /* Her throat, softened: a lowpass that follows her tract
+     * and her brightness, then her three formants as gentle
+     * peaks — Q near 1, a few decibels. A warmth in the vowel,
+     * where v7 put a buzz (Q 4.5, +7 dB). */
+    function softThroat(ctx, box, syl) {
+      const lp = ctx.createBiquadFilter();
+      lp.type = "lowpass";
+      lp.frequency.value = Math.min(3400, (syl.formants[1] || 1200) * (box.brightness || 1) * 1.35);
+      lp.Q.value = 0.4;
+      let node = lp;
       for (const f of syl.formants) {
         const peak = ctx.createBiquadFilter();
         peak.type = "peaking";
         peak.frequency.value = f;
-        peak.Q.value = 4.5;
-        peak.gain.value = 7;
+        peak.Q.value = 1.1;
+        peak.gain.value = 3;
         node.connect(peak);
         node = peak;
       }
-      node.connect(gain);
-      gain.connect(out);
-      osc.start(at);
-      osc.stop(at + dur + 0.05);
-      voiceSources.add(osc);
-      osc.onended = () => voiceSources.delete(osc);
+      return { input: lp, output: node };
+    }
+    /* Her vibrato, on syllables long enough to hold one: a
+     * slow, small waver, hers by seed, on the fundamental. */
+    function addVibrato(ctx, box, osc, f0, at, dur) {
+      if (dur < 0.12 || !box.vibratoDepth) return;
+      const lfo = voiceSource(ctx.createOscillator());
+      lfo.type = "sine";
+      lfo.frequency.value = box.vibratoRate || 5;
+      const depth = ctx.createGain();
+      depth.gain.value = f0 * box.vibratoDepth;
+      lfo.connect(depth);
+      depth.connect(osc.frequency);
+      lfo.start(at);
+      lfo.stop(at + dur + 0.05);
+    }
+    /* One syllable of her voice, sung in her family:
+     * - bell: a sine stack with a soft inharmonic ring, rung
+     *   once and left to fade a little past the syllable.
+     * - hum: her warm default — a sine and a breath of
+     *   triangle through the soft throat, vibrato riding.
+     * - pluck: a triangle tapped like wood, its pitch settling
+     *   as it sounds, its body gone by the syllable's end.
+     * - blip: a droplet — a sine that rises into its pitch and
+     *   sighs off it, through a plain soft lowpass.
+     * Her breath rides far under the tone, only on the seeds
+     * that carry any; her consonant ticks are smaller and
+     * duller than they were. A handful of nodes per syllable,
+     * all stopped when spent. */
+    function singSyllable(ctx, out, box, syl, at) {
+      const dur = syl.dur;
+      const fam = box.family || "hum";
+      if (fam === "bell") {
+        const throat = softThroat(ctx, box, syl);
+        const g = softEnv(ctx, 0.1, at, dur + 0.1 * (box.decay || 1), 0.008);
+        for (const [ratio, level] of [[1, 1], [2, 0.38], [2.99, 0.13]]) {
+          const osc = voiceSource(ctx.createOscillator());
+          osc.type = "sine";
+          osc.frequency.value = syl.f0 * ratio;
+          const og = ctx.createGain();
+          og.gain.value = level;
+          osc.connect(og);
+          og.connect(throat.input);
+          if (ratio === 1) addVibrato(ctx, box, osc, syl.f0, at, dur);
+          osc.start(at);
+          osc.stop(at + dur + 0.16);
+        }
+        throat.output.connect(g);
+        g.connect(out);
+      } else if (fam === "pluck") {
+        const throat = softThroat(ctx, box, syl);
+        const osc = voiceSource(ctx.createOscillator());
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(syl.f0 * 1.03, at);
+        osc.frequency.exponentialRampToValueAtTime(Math.max(40, syl.f0), at + 0.05);
+        const g = ctx.createGain();
+        g.gain.setValueAtTime(0.0001, at);
+        g.gain.exponentialRampToValueAtTime(0.11, at + 0.006);
+        g.gain.exponentialRampToValueAtTime(0.035, at + dur * 0.45);
+        g.gain.exponentialRampToValueAtTime(0.0001, at + dur);
+        osc.connect(throat.input);
+        throat.output.connect(g);
+        g.connect(out);
+        osc.start(at);
+        osc.stop(at + dur + 0.05);
+      } else if (fam === "blip") {
+        const lp = ctx.createBiquadFilter();
+        lp.type = "lowpass";
+        lp.frequency.value = 2100 * (box.brightness || 1);
+        lp.Q.value = 0.4;
+        const osc = voiceSource(ctx.createOscillator());
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(syl.f0 * 0.9, at);
+        osc.frequency.exponentialRampToValueAtTime(syl.f0 * 1.02, at + dur * 0.4);
+        osc.frequency.exponentialRampToValueAtTime(Math.max(40, syl.f0 * 0.97), at + dur);
+        const g = softEnv(ctx, 0.1, at, dur, Math.min(0.03, dur * 0.25));
+        osc.connect(lp);
+        lp.connect(g);
+        g.connect(out);
+        osc.start(at);
+        osc.stop(at + dur + 0.05);
+      } else {
+        const throat = softThroat(ctx, box, syl);
+        const g = softEnv(ctx, 0.1, at, dur, Math.min(0.05, dur * 0.3));
+        const main = voiceSource(ctx.createOscillator());
+        main.type = "sine";
+        main.frequency.value = syl.f0;
+        main.connect(throat.input);
+        addVibrato(ctx, box, main, syl.f0, at, dur);
+        const soft = voiceSource(ctx.createOscillator());
+        soft.type = "triangle";
+        soft.frequency.value = syl.f0;
+        const sg = ctx.createGain();
+        sg.gain.value = 0.3;
+        soft.connect(sg);
+        sg.connect(throat.input);
+        throat.output.connect(g);
+        g.connect(out);
+        main.start(at);
+        main.stop(at + dur + 0.05);
+        soft.start(at);
+        soft.stop(at + dur + 0.05);
+      }
       if (box.breathiness > 0.03) {
-        const noise = ctx.createBufferSource();
+        const noise = voiceSource(ctx.createBufferSource());
         noise.buffer = voiceNoiseBuffer(ctx);
         const bp = ctx.createBiquadFilter();
         bp.type = "bandpass";
         bp.frequency.value = syl.formants[1] || 1200;
         bp.Q.value = 0.8;
         const ng = ctx.createGain();
-        const level = 0.055 * box.breathiness;
+        const level = 0.02 * box.breathiness;
         ng.gain.setValueAtTime(0.0001, at);
         ng.gain.exponentialRampToValueAtTime(level, at + 0.03);
         ng.gain.exponentialRampToValueAtTime(0.0001, at + dur);
@@ -646,27 +785,23 @@
         ng.connect(out);
         noise.start(at, Math.random() * 0.4);
         noise.stop(at + dur + 0.02);
-        voiceSources.add(noise);
-        noise.onended = () => voiceSources.delete(noise);
       }
       if (syl.onset !== "soft") {
-        const tick = ctx.createBufferSource();
+        const tick = voiceSource(ctx.createBufferSource());
         tick.buffer = voiceNoiseBuffer(ctx);
         const hp = ctx.createBiquadFilter();
-        hp.type = "highpass";
-        hp.frequency.value = syl.onset === "fricative" ? 2600 : 1800;
+        hp.type = "lowpass";
+        hp.frequency.value = 3200;
         const tg = ctx.createGain();
-        const td = syl.onset === "fricative" ? Math.min(0.07, dur * 0.5) : 0.025;
+        const td = syl.onset === "fricative" ? Math.min(0.06, dur * 0.5) : 0.02;
         tg.gain.setValueAtTime(0.0001, at);
-        tg.gain.exponentialRampToValueAtTime(syl.onset === "fricative" ? 0.05 : 0.09, at + 0.008);
+        tg.gain.exponentialRampToValueAtTime(syl.onset === "fricative" ? 0.018 : 0.03, at + 0.008);
         tg.gain.exponentialRampToValueAtTime(0.0001, at + td);
         tick.connect(hp);
         hp.connect(tg);
         tg.connect(out);
         tick.start(at, Math.random() * 0.4);
         tick.stop(at + td + 0.02);
-        voiceSources.add(tick);
-        tick.onended = () => voiceSources.delete(tick);
       }
     }
     function vocalize(text) {
@@ -682,7 +817,9 @@
         const run = voiceRun;
         const ctx = audioCtx;
         voiceMaster = ctx.createGain();
-        voiceMaster.gain.value = 0.9;
+        /* Her level, lowered in v9: a syllable peaks near
+         * 0.055 through this master, against 0.135 in v7. */
+        voiceMaster.gain.value = 0.55;
         voiceMaster.connect(ctx.destination);
         const out = voiceMaster;
         let at = ctx.currentTime + 0.03;
@@ -721,7 +858,7 @@
         if (ctrl.lookAt) ctrl.lookAt(0.5, 0.15);
         if (ctrl.delight) ctrl.delight();
       }
-      if (withVoice) chirp(companion);
+      if (withVoice) chirp(companion, flourishNote());
     }
 
     /* ---- the states ----
@@ -849,10 +986,50 @@
       panelSay(`${trick.name}!`);
       trickBody(trick);
       const sounds = Core.soundsFor(companion);
-      if (sounds && !soundOff()) playNotes(trick.id === "spin" ? sounds.adopt : sounds.growth, 0.1);
+      if (sounds && !soundOff()) playNotes(trick.id === "spin" ? sounds.adopt : sounds.growth, 0.1, companion);
       window.setTimeout(() => {
         if (panelState === "tricks") panelSay(beatLine("trick"));
       }, 850);
+    }
+    /* Her face, drawn again wearing what has just arrived:
+     * the 3D body is remounted on the new reveal state, the
+     * flat drawing is simply drawn again. Nothing else about
+     * her moves — same place, same stage, same everything. */
+    function redrawArt() {
+      if (!art) return;
+      if (ctrl) {
+        ctrl.dispose();
+        art.classList.remove("has-3d");
+        ctrl = null;
+      }
+      art.innerHTML = Core.renderSVG(companion, { stage: stage.index, revealed: revealedNow() });
+      if (window.Spark3D) {
+        const grownSize = companion.shape
+          ? companion.shape.size * (1 + stage.index * 0.07)
+          : 1;
+        ctrl = window.Spark3D.mount(art, companion, {
+          stage: stage.index,
+          px: Math.round(48 * grownSize),
+          revealed: revealedNow()
+        });
+        if (ctrl) art.classList.add("has-3d");
+      }
+    }
+    /* A reveal, announced once, at the moment it lands — the
+     * trick discipline, for her face: her face is drawn again
+     * wearing the new detail, she celebrates, and one short
+     * line says what arrived. If the panel is folded, the line
+     * opens it briefly, as announcements do. */
+    function announceReveals(ids) {
+      ids.forEach((id, i) => {
+        window.setTimeout(() => {
+          redrawArt();
+          if (ctrl) ctrl.celebrate();
+          const line = Core.revealLineFor(id);
+          if (!bubble.hasAttribute("hidden")) panelSay(line);
+          else announceLine(line);
+        }, i * 1700);
+      });
     }
     /* A trick learned, announced once, at the moment it lands:
      * her learned line, then the trick itself, performed on
@@ -928,7 +1105,7 @@
     let echo = null;
     function playTone(freq) {
       if (soundOff()) return;
-      playNotes([freq], 0);
+      playNotes([freq], 0, companion);
     }
     function buildEchoPads(pads) {
       echoPadsBox.innerHTML = "";
@@ -1436,7 +1613,7 @@
         a.href = canvas.toDataURL("image/png");
         a.click();
       };
-      const svg = Core.renderSVG(companion, { stage: stage.index }).replace(
+      const svg = Core.renderSVG(companion, { stage: stage.index, revealed: revealedNow() }).replace(
         "<svg ",
         '<svg xmlns="http://www.w3.org/2000/svg" width="460" height="460" '
       );
@@ -1484,7 +1661,8 @@
         : 1;
       ctrl = window.Spark3D.mount(art, companion, {
         stage: stage.index,
-        px: Math.round(48 * grownSize)
+        px: Math.round(48 * grownSize),
+        revealed: revealedNow()
       });
       if (ctrl) art.classList.add("has-3d");
     }
@@ -1500,7 +1678,7 @@
         window.clearTimeout(arrivalTimer);
         arrivalTimer = null;
       }
-      tapSound(companion);
+      tapSound(companion, flourishNote());
       /* A tap is answered in body as well as voice: a small
        * bounce of delight, gone as soon as it lands. */
       if (art) react(art);
@@ -1545,7 +1723,7 @@
       }
       if (roam) roam.glow();
       if (ctrl) ctrl.delight();
-      chirp(companion);
+      chirp(companion, flourishNote());
       vocalize(beatLine("pet"));
       refreshMood();
     }
@@ -1743,7 +1921,7 @@
       } catch {
         /* toggle simply does not persist */
       }
-      if (!soundOff()) chirp(companion);
+      if (!soundOff()) chirp(companion, flourishNote());
       showMore(soundOff() ? "Sounds off." : "Sounds on.");
     }
     function toggleVoice() {
@@ -1816,7 +1994,7 @@
       }
       if (ctrl) ctrl.celebrate();
       if (roam) roam.glow();
-      chirp(companion);
+      chirp(companion, flourishNote());
       announceLine(beatLine(kind));
       if (kind === "sealed") {
         sensePractice(getRecord()).then((next) => {
@@ -1893,10 +2071,70 @@
   }
 
   let audioCtx = null;
-  /* A row of soft notes, played in order. Nothing here ever runs
+  /* One note, rendered in her sound family — the same family
+   * her voice sings in, so her chirps, her songs, and the echo
+   * game's pads all sound like the one creature she is:
+   * - bell: a fundamental with two soft inharmonic partials,
+   *   rung once and left to fade — the longest ring she has.
+   * - hum: a sine with a breath of its octave, swelling in
+   *   slowly and out again.
+   * - pluck: a triangle tapped like wood, pitch settling as
+   *   it sounds, gone quickly.
+   * - blip: a droplet sine, rising into its pitch.
+   * Softer and shorter than the plain sine row she had before:
+   * a note peaks at 0.07 here, against 0.12. */
+  function playFamilyNote(ctx, companion, freq, at) {
+    const snd = Core.soundFor(companion) || { family: "hum", brightness: 1, decay: 1 };
+    const peak = 0.07;
+    const note = (type, f, level, len, attack, glideFrom) => {
+      const osc = ctx.createOscillator();
+      osc.type = type;
+      if (glideFrom) {
+        osc.frequency.setValueAtTime(f * glideFrom, at);
+        osc.frequency.exponentialRampToValueAtTime(f, at + 0.05);
+      } else {
+        osc.frequency.value = f;
+      }
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, at);
+      g.gain.exponentialRampToValueAtTime(peak * level, at + attack);
+      g.gain.exponentialRampToValueAtTime(0.0001, at + len);
+      osc.connect(g).connect(ctx.destination);
+      osc.start(at);
+      osc.stop(at + len + 0.05);
+    };
+    if (snd.family === "bell") {
+      const ring = 0.85 * snd.decay;
+      note("sine", freq, 1, ring, 0.008);
+      note("sine", freq * 2.76, 0.32, ring * 0.6, 0.008);
+      note("sine", freq * 5.4, 0.08, ring * 0.35, 0.008);
+    } else if (snd.family === "pluck") {
+      const osc = ctx.createOscillator();
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(freq * 1.04, at);
+      osc.frequency.exponentialRampToValueAtTime(freq, at + 0.04);
+      const lp = ctx.createBiquadFilter();
+      lp.type = "lowpass";
+      lp.frequency.value = 2600 * snd.brightness;
+      const g = ctx.createGain();
+      const len = 0.3 * snd.decay;
+      g.gain.setValueAtTime(0.0001, at);
+      g.gain.exponentialRampToValueAtTime(peak * 1.05, at + 0.006);
+      g.gain.exponentialRampToValueAtTime(0.0001, at + len);
+      osc.connect(lp).connect(g).connect(ctx.destination);
+      osc.start(at);
+      osc.stop(at + len + 0.05);
+    } else if (snd.family === "blip") {
+      note("sine", freq * 1.01, 1, 0.42 * snd.decay, 0.03, 0.83);
+    } else {
+      note("sine", freq, 1, 0.5 * snd.decay, 0.035);
+      note("sine", freq * 2, 0.22, 0.5 * snd.decay, 0.035);
+    }
+  }
+  /* A row of her notes, played in order. Nothing here ever runs
    * on its own — every call site is a tap: the Spark tapped, the
    * adoption tapped, the sounds turned back on. */
-  function playNotes(notes, step = 0.14) {
+  function playNotes(notes, step = 0.14, companion = null) {
     if (!notes || !notes.length) return;
     try {
       const AC = window.AudioContext || window.webkitAudioContext;
@@ -1905,28 +2143,22 @@
       if (audioCtx.state === "suspended") audioCtx.resume();
       const now = audioCtx.currentTime;
       notes.forEach((freq, i) => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = "sine";
-        osc.frequency.value = freq;
-        const start = now + i * step;
-        gain.gain.setValueAtTime(0.0001, start);
-        gain.gain.exponentialRampToValueAtTime(0.12, start + 0.03);
-        gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.32);
-        osc.connect(gain).connect(audioCtx.destination);
-        osc.start(start);
-        osc.stop(start + 0.36);
+        playFamilyNote(audioCtx, companion, freq, now + i * step);
       });
     } catch {
       /* no voice on this device: the Spark stays silent, unbothered */
     }
   }
 
-  /* The greeting chirp — the Spark answering a tap. */
-  function chirp(companion) {
+  /* The greeting chirp — the Spark answering a tap. Once her
+   * voice has flowered (the flourish on her reveal schedule),
+   * the greeting gains its rising third note. */
+  function chirp(companion, flourish = null) {
     if (soundOff()) return;
     const sounds = Core.soundsFor(companion);
-    if (sounds) playNotes(sounds.greeting);
+    if (!sounds) return;
+    const notes = flourish ? [...sounds.greeting, flourish] : sounds.greeting;
+    playNotes(notes, 0.14, companion);
   }
 
   /* The adoption song: a rising arpeggio, played at the moment of
@@ -1934,7 +2166,7 @@
   function adoptSong(companion) {
     if (soundOff()) return;
     const sounds = Core.soundsFor(companion);
-    if (sounds) playNotes(sounds.adopt, 0.11);
+    if (sounds) playNotes(sounds.adopt, 0.11, companion);
   }
 
   /* The growth chime. A growth is usually noticed on arrival,
@@ -1942,18 +2174,18 @@
    * and the Spark's first tap of the visit plays it instead of
    * the plain greeting. */
   let growthChimeWaiting = false;
-  function tapSound(companion) {
+  function tapSound(companion, flourish = null) {
     if (growthChimeWaiting) {
       growthChimeWaiting = false;
       if (!soundOff()) {
         const sounds = Core.soundsFor(companion);
         if (sounds) {
-          playNotes(sounds.growth);
+          playNotes(sounds.growth, 0.14, companion);
           return;
         }
       }
     }
-    chirp(companion);
+    chirp(companion, flourish);
   }
 
   /* The character engine. The Spark is not pinned to its corner:

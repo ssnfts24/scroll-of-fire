@@ -236,7 +236,8 @@
     const view = $("#spark-companion");
     view.hidden = false;
 
-    $("#spark-big-art").innerHTML = Core.renderSVG(companion, { stage: stage.index });
+    const revealed = Core.revealsFor({ record, companion }).revealed;
+    $("#spark-big-art").innerHTML = Core.renderSVG(companion, { stage: stage.index, revealed });
     /* Its 3D body stands here at home, where WebGL is to be had —
      * the same seed, the same stage, turning gently. Where it is
      * not, the flat drawing above stands as it always did. */
@@ -248,7 +249,8 @@
       try {
         bigCtrl3d = window.Spark3D.mount($("#spark-big-art"), companion, {
           stage: stage.index,
-          px: 190
+          px: 190,
+          revealed
         });
       } catch {
         bigCtrl3d = null;

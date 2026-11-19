@@ -7,7 +7,12 @@
  * small low-poly creature built in code from its kind's form,
  * its palette, its markings, its crest and eye, and its stage —
  * Ember small and simple, Flame developed, Radiant full, ringed
- * and crowned. Hand-rolled WebGL1, no libraries, nothing fetched:
+ * and crowned. Since v9 it also wears her finer grain: the
+ * detail her seed drew (companion.details) — ears, a trail,
+ * cheeks, a styled crest, a second pattern painted onto the
+ * body's own faces — standing only where her reveal schedule
+ * has brought it, exactly as the flat drawing wears it.
+ * Hand-rolled WebGL1, no libraries, nothing fetched:
  * the site stays static and offline, and the whole creature is a
  * few hundred triangles in two small meshes (body and eye) plus
  * two quads (its glow, and a fake soft shadow that grounds it) —
@@ -225,6 +230,38 @@
     }
   };
 
+  /* Face painting by position, for the second pattern layer:
+   * the centroid of one of the body's own triangles, and the
+   * brush that recolours it. Bands paint by height; the belly
+   * paints the front-and-low faces. No new geometry — the
+   * pattern is the body's own faces, coloured. */
+  Builder.prototype.centroid = function (v) {
+    return [
+      (this.pos[v * 3] + this.pos[(v + 1) * 3] + this.pos[(v + 2) * 3]) / 3,
+      (this.pos[v * 3 + 1] + this.pos[(v + 1) * 3 + 1] + this.pos[(v + 2) * 3 + 1]) / 3,
+      (this.pos[v * 3 + 2] + this.pos[(v + 1) * 3 + 2] + this.pos[(v + 2) * 3 + 2]) / 3
+    ];
+  };
+  Builder.prototype.paint = function (v, color) {
+    for (let k = 0; k < 3; k++) {
+      this.col[(v + k) * 3] = color[0];
+      this.col[(v + k) * 3 + 1] = color[1];
+      this.col[(v + k) * 3 + 2] = color[2];
+    }
+  };
+  Builder.prototype.bands = function (ys, half, color) {
+    for (const v of this.bodyTris) {
+      const c = this.centroid(v);
+      if (ys.some((y) => Math.abs(c[1] - y) < half)) this.paint(v, color);
+    }
+  };
+  Builder.prototype.belly = function (color) {
+    for (const v of this.bodyTris) {
+      const c = this.centroid(v);
+      if (c[2] > 0.22 && c[1] < -0.08) this.paint(v, color);
+    }
+  };
+
   /* Markings, mapped onto the form: a seeded share of the body's
    * own faces take the glow and accent colours. How many is the
    * stage's development of the seed's marking count — the same
@@ -249,12 +286,24 @@
 
   /* ---- the creature itself, from its seed-record ---- */
 
-  function buildGeometry(companion, stage) {
+  function buildGeometry(companion, stage, revealed) {
     const b = new Builder();
     const body = parseColor(companion.palette.body, [0.4, 0.7, 0.8]);
     const glow = parseColor(companion.palette.glow, [0.7, 0.9, 1]);
     const accent = parseColor(companion.palette.accent, [0.85, 0.64, 0.25]);
     const rand = mulberry32(hashString(companion.seed + ":marks3d"));
+    /* Her finer grain (Core's companion.details): which pieces
+     * stand here is the reveal state's word — `revealed` names
+     * what her schedule has brought (the presence and the home
+     * page pass it from her record). No list is her born look.
+     * Her markings' density and her eye's variant are born
+     * with her and always stand. The detail geometry is kept
+     * cheap on purpose: cones and octahedra, a few dozen
+     * triangles all told, no new draw calls — it rides in the
+     * same two meshes as everything else. */
+    const details = companion.details || null;
+    const has = (id) => Array.isArray(revealed) && revealed.includes(id);
+    const dScale = stage >= 2 ? 1.1 : stage === 1 ? 1 : 0.85;
     /* Its exact proportions are its seed's too: the same form
      * family, never the same dimensions twice. */
     const jr = mulberry32(hashString(companion.seed + ":shape"));
@@ -292,14 +341,34 @@
     }
 
     /* Markings: half-grown for an Ember, full for a Flame, one
-     * richer again for a Radiant — the flat drawing's own count. */
-    const markCount =
-      stage >= 2
-        ? companion.markings.count + 1
-        : stage === 1
-          ? companion.markings.count
-          : Math.max(1, Math.ceil(companion.markings.count / 2));
+     * richer again for a Radiant — the flat drawing's own count,
+     * deepened or thinned by her seed's marking density. */
+    const density = details ? details.density : 1;
+    const markCount = Math.max(
+      1,
+      Math.round(
+        (stage >= 2
+          ? companion.markings.count + 1
+          : stage === 1
+            ? companion.markings.count
+            : Math.max(1, Math.ceil(companion.markings.count / 2))) * density
+      )
+    );
     b.speckle(rand, markCount, glow, accent);
+
+    /* The second pattern layer, once it has arrived: a finer
+     * speckle in her other colour, two bands around the body,
+     * or a belly patch of lightened body colour — the body's
+     * own faces, painted, never new geometry. */
+    if (has("pattern") && details) {
+      if (details.pattern === "speckles") {
+        b.speckle(rand, 2, accent, glow);
+      } else if (details.pattern === "bands") {
+        b.bands([-0.2, 0.24], 0.1, glow);
+      } else if (details.pattern === "belly") {
+        b.belly(body.map((c, i) => c + (glow[i] - c) * 0.45));
+      }
+    }
 
     /* The crest, developed by stage: small and low for an Ember,
      * near full for a Flame, full for a Radiant. */
@@ -327,6 +396,86 @@
         break;
     }
 
+    /* The styled crest, once it has arrived — grown at the
+     * crest's own stage scale, so a stage never swaps her
+     * identity, it only grows what is hers: a tuft of three
+     * small cones, two horns, a swept fin, a second halo, or
+     * a leaf leaning off the crest's shoulder. */
+    if (has("crest") && details) {
+      const cs = crestScale;
+      if (details.crestStyle === "tuft") {
+        b.cone(-0.07, crestY + 0.02, 0, 0.05 * cs, 0.2 * cs, accent, -0.3, false);
+        b.cone(0, crestY + 0.04, 0, 0.05 * cs, 0.24 * cs, accent, 0, false);
+        b.cone(0.07, crestY + 0.02, 0, 0.05 * cs, 0.2 * cs, accent, 0.3, false);
+      } else if (details.crestStyle === "horns") {
+        b.cone(-0.3, crestY - 0.12, 0, 0.09 * cs, 0.3 * cs, accent, -0.5, false);
+        b.cone(0.3, crestY - 0.12, 0, 0.09 * cs, 0.3 * cs, accent, 0.5, false);
+      } else if (details.crestStyle === "fin") {
+        b.octa(0, crestY + 0.12, -0.06, 0.07 * cs, 0.26 * cs, 0.16 * cs, accent, false);
+      } else if (details.crestStyle === "halo") {
+        b.ring(0, crestY + 0.34 * cs, 0, 0.13 * cs, 0.19 * cs, glow, 0.35);
+      } else if (details.crestStyle === "leaf") {
+        b.cone(0.14, crestY, 0, 0.11 * cs, 0.26 * cs, accent, 0.7, false);
+      }
+    }
+
+    /* Her ears, once they have arrived: fins swept from her
+     * sides, a spray of small tufts, or two points in her own
+     * body colour — silhouette first, so they read at roaming
+     * size, where she is a few dozen pixels tall. */
+    if (has("ears") && details) {
+      if (details.ears === "fins") {
+        b.cone(-0.78, 0.02, 0, 0.16 * dScale, 0.34 * dScale, accent, -1.15, false);
+        b.cone(0.78, 0.02, 0, 0.16 * dScale, 0.34 * dScale, accent, 1.15, false);
+      } else if (details.ears === "tufts") {
+        for (const sx of [-1, 1]) {
+          for (const dx of [-0.06, 0, 0.06]) {
+            b.cone(sx * 0.55 + dx, 0.55, 0, 0.045, 0.2 * dScale, accent, sx * 0.5, false);
+          }
+        }
+      } else if (details.ears === "points") {
+        b.cone(-0.45, 0.55, 0, 0.13 * dScale, 0.34 * dScale, body, -0.35, false);
+        b.cone(0.45, 0.55, 0, 0.13 * dScale, 0.34 * dScale, body, 0.35, false);
+      }
+    }
+
+    /* The trail that follows her, once it has arrived: a wisp
+     * or two ribbons streaming behind, or three small sparks
+     * hanging in her wake. Behind her, always — the comet's
+     * own tail simply gains company. */
+    if (has("trail") && details) {
+      if (details.trail === "wisp") {
+        b.cone(-0.72, -0.18, -0.08, 0.13 * dScale, 0.5 * dScale, accent, -1.35, false);
+      } else if (details.trail === "ribbon") {
+        b.cone(-0.7, -0.05, 0.1, 0.07, 0.44 * dScale, accent, -1.3, false);
+        b.cone(-0.7, -0.28, -0.12, 0.07, 0.4 * dScale, glow, -1.45, false);
+      } else if (details.trail === "sparkles") {
+        b.octa(-0.88, -0.15, 0, 0.055, 0.055, 0.055, glow, false);
+        b.octa(-1.02, -0.3, 0.08, 0.04, 0.04, 0.04, accent, false);
+        b.octa(-0.8, -0.38, -0.1, 0.032, 0.032, 0.032, glow, false);
+      }
+    }
+
+    /* Her cheeks, once they have arrived: two flattened gems
+     * of glow or accent on her face's front, or a spray of
+     * freckle-points. Their depth is set by her form, so they
+     * sit on the surface the form actually has. */
+    if (has("cheeks") && details) {
+      const cheekZ = companion.form === "moth" ? 0.3 : companion.form === "shard" ? 0.5 : 0.62;
+      const cheekX = companion.form === "moth" ? 0.16 : 0.3;
+      if (details.cheeks === "freckles") {
+        for (const sx of [-1, 1]) {
+          for (const [ox, oy] of [[0.22, -0.1], [0.31, -0.16], [0.25, -0.22]]) {
+            b.octa(sx * ox * (cheekX / 0.3), oy, cheekZ - 0.02, 0.028, 0.028, 0.02, accent, false);
+          }
+        }
+      } else {
+        const cheekCol = details.cheeks === "glow" ? glow : accent;
+        b.octa(-cheekX, -0.14, cheekZ, 0.1 * dScale, 0.07 * dScale, 0.04, cheekCol, false);
+        b.octa(cheekX, -0.14, cheekZ, 0.1 * dScale, 0.07 * dScale, 0.04, cheekCol, false);
+      }
+    }
+
     /* The eye is its own small mesh, built around its own
      * centre: it has a life the body doesn't — it jumps in
      * saccades, it leads the head when the Spark looks, and
@@ -336,6 +485,17 @@
     const eyeSquash = companion.eye === "half" ? 0.45 : 1;
     eye.ball(0, 0, 0, eyeR, eyeR * eyeSquash, 0.07, INK, false);
     eye.ball(0.05, 0.05, 0.06, 0.05, 0.05, 0.03, WHITE, false);
+    /* Her eye's variant — born with her, not revealed: a
+     * second, lower shine; a ring of her glow around the eye;
+     * or one small lash at its outer corner. */
+    const eyeVariant = details ? details.eyeVariant : "plain";
+    if (eyeVariant === "sparkle") {
+      eye.octa(-0.055, -0.045, 0.055, 0.028, 0.028, 0.02, WHITE, false);
+    } else if (eyeVariant === "ring") {
+      eye.ring(0, 0, 0.05, eyeR + 0.025, eyeR + 0.05, glow, Math.PI / 2);
+    } else if (eyeVariant === "lash") {
+      eye.cone(eyeR * 0.85, eyeR * 0.6, 0.03, 0.02, 0.09, INK, 0.8, false);
+    }
     const eyeCenter = [0, 0.08, 0.72];
 
     /* A Flame gains its ring; a Radiant wears it dashed in the
@@ -511,7 +671,12 @@
     const shadowProg = program(gl, SHADOW_VERT, SHADOW_FRAG);
     if (!prog || !haloProg || !shadowProg) return null;
 
-    const geo = buildGeometry(companion, stage);
+    const geo = buildGeometry(companion, stage, options.revealed || null);
+    /* The build's size, kept where a keeper of the lab can
+     * read it: how many triangles her two meshes carry
+     * (three vertices to a triangle, three numbers to a
+     * vertex). */
+    canvas.dataset.tris = String((geo.main.pos.length + geo.eye.pos.length) / 9);
     function meshBuffer(builder) {
       const verts = builder.pos.length / 3;
       const data = new Float32Array(verts * 9);
@@ -533,7 +698,7 @@
     }
     const mainMesh = meshBuffer(geo.main);
     const eyeMesh = meshBuffer(geo.eye);
-    const totalTris = mainMesh.verts + eyeMesh.verts;
+    const totalTris = (mainMesh.verts + eyeMesh.verts) / 3;
 
     const haloBuf = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, haloBuf);

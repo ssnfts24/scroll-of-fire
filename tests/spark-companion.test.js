@@ -1069,14 +1069,23 @@ test("v8 one thing and Look next: offers drawn only from what is real", () => {
   assert.ok(!/fetch\(|XMLHttpRequest|sendBeacon/.test(look), "suggestions fetch nothing");
 });
 
-test("v7 voice box: the seed grows her voice — pitch, tract, breath, tempo", () => {
+test("v9 voice box: the seed grows her voice — pitch, tract, breath, tempo, family", () => {
   const a = Core.generate(SEED_A);
   const first = Core.voiceBoxFor(a);
   assert.deepEqual(Core.voiceBoxFor(a), first, "the same Spark settles the same voice anywhere");
   assert.ok(first.basePitch >= 140 && first.basePitch <= 340, "her fundamental sits where a formant voice lives");
   assert.ok(first.formantScale >= 0.86 && first.formantScale <= 1.22, "her vocal tract is seed-sized");
-  assert.ok(first.breathiness >= 0 && first.breathiness <= 1, "breathiness is a share of the tone");
+  assert.ok(
+    first.breathiness === 0 || (first.breathiness >= 0.05 && first.breathiness <= 0.3),
+    "breath is a seed's choice: none at all, or a low whisper — never the old hiss"
+  );
   assert.ok(first.tempo >= 3.5 && first.tempo <= 5.5, "her tempo is a speaking pace");
+  /* Her sound family rides on the box, and it is the same
+   * family soundFor settles — one creature, one sound. */
+  const snd = Core.soundFor(a);
+  assert.equal(first.family, snd.family, "the box sings in her own family");
+  assert.equal(first.familyName, snd.familyName);
+  assert.ok(Core.SOUND_FAMILIES.some((f) => f.id === first.family), "her family is one of the grown set");
   /* The pitch follows the same chirp root as everything she
    * sounds: the lowest kind (Earth) sounds lower than the
    * highest (Light), for any seed jitter. */
@@ -1114,12 +1123,16 @@ test("v7 syllables: a line is sounded out by its vowel groups", () => {
   assert.deepEqual(Core.wordSyllables("123"), [], "a word with no letters sounds nothing");
 });
 
-test("v7 vocal plan: a line's shape, sung syllable by syllable", () => {
+test("v9 vocal plan: a line's shape, sung syllable by syllable — first sentence only", () => {
   const a = Core.generate(SEED_A);
   const line = "Hello there. Are you ready to wander?";
   const plan = Core.vocalPlanFor({ companion: a, text: line });
-  assert.equal(plan.syllables.length, Core.syllableCountFor(line), "every syllable of the line is planned");
-  assert.ok(plan.seconds > 1 && plan.seconds < 6, "the plan lasts about as long as the line takes to say");
+  assert.equal(
+    plan.syllables.length,
+    Core.syllableCountFor("Hello there."),
+    "she sounds the line's first sentence — the rest stands in text"
+  );
+  assert.ok(plan.seconds > 0.3 && plan.seconds < 6, "the plan lasts about as long as the sentence takes to say");
   assert.deepEqual(
     Core.vocalPlanFor({ companion: a, text: line }),
     plan,
@@ -1137,8 +1150,10 @@ test("v7 vocal plan: a line's shape, sung syllable by syllable", () => {
   const qLast = q.syllables[q.syllables.length - 1].f0;
   const sLast = s.syllables[s.syllables.length - 1].f0;
   assert.ok(qLast > sLast, "the question's last syllable stands higher than the statement's");
-  /* A long line is sounded from its opening, whole sentences
-   * only; the rest is left to the text, as it always has been. */
+  /* A long line is sounded from its opening only: the first
+   * sentence, and about a dozen syllables of it — whole words
+   * to the cap, never a word cut in half; the rest is left to
+   * the text, as it always has been. */
   const long =
     "First sentence of the page, stated plainly and in full here. " +
     "Second sentence, carrying the next fact of the page with it. " +
@@ -1147,20 +1162,26 @@ test("v7 vocal plan: a line's shape, sung syllable by syllable", () => {
     "Fifth sentence, carrying the account further along its way. " +
     "Sixth sentence, which the voice leaves for the text to carry.";
   const capped = Core.vocalPlanFor({ companion: a, text: long });
-  const wholeSentences =
-    "First sentence of the page, stated plainly and in full here. " +
-    "Second sentence, carrying the next fact of the page with it. " +
-    "Third sentence, with a good deal more of the page's own wording. " +
-    "Fourth sentence, also the page's own, and still in its order.";
-  assert.equal(
-    capped.syllables.length,
-    Core.syllableCountFor(wholeSentences),
-    "the sounded opening is whole sentences only, up to the cap — never a sentence cut in half"
+  assert.ok(
+    capped.syllables.length <= Core.VOICE_MAX_SYLLABLES + 4,
+    "the sounded opening stays near the dozen-syllable cap (a word in flight finishes)"
   );
-  assert.ok(capped.syllables.length <= 44 + 16, "the sounded opening stays near the sane cap");
+  assert.ok(
+    capped.syllables.length < Core.syllableCountFor("First sentence of the page, stated plainly and in full here."),
+    "even the first sentence is not sounded whole when it runs long"
+  );
   assert.ok(
     capped.syllables.length < Core.syllableCountFor(long),
     "a long line is not sounded whole — its opening is"
+  );
+  /* A single long sentence caps the same way. */
+  const oneLong = Core.vocalPlanFor({
+    companion: a,
+    text: "One two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen."
+  });
+  assert.ok(
+    oneLong.syllables.length >= Core.VOICE_MAX_SYLLABLES && oneLong.syllables.length <= Core.VOICE_MAX_SYLLABLES + 4,
+    "a long single sentence sounds about a dozen syllables"
   );
   assert.deepEqual(Core.vocalPlanFor({ companion: a, text: "" }).syllables, [], "silence plans nothing");
   assert.deepEqual(Core.vocalPlanFor({ companion: null, text: "Hello." }).syllables, [], "no companion, no plan");
@@ -1581,5 +1602,213 @@ test("no R1.7 protected file is touched by the Spark", () => {
   ]) {
     const base = rel.split("/").pop();
     assert.ok(!manifest.includes(base), `${base} must not be a protected file`);
+  }
+});
+
+/* ---- v9: her sound family — the seed picks how she sounds ---- */
+
+test("v9 sound family: the seed picks her family, and settles her sound", () => {
+  const a = Core.generate(SEED_A);
+  const first = Core.soundFor(a);
+  assert.deepEqual(Core.soundFor(a), first, "the same seed settles the same sound anywhere");
+  assert.ok(Core.SOUND_FAMILIES.map((f) => f.id).includes(first.family), "her family is one of the grown set");
+  assert.ok(first.familyName.length > 3, "her family has a name her record can speak");
+  assert.ok(first.brightness >= 0.85 && first.brightness <= 1.15, "her brightness is a small seed jitter");
+  assert.ok(first.decay >= 0.8 && first.decay <= 1.25, "her ring is a small seed jitter");
+  assert.ok(first.vibratoDepth >= 0.002 && first.vibratoDepth <= 0.009, "her vibrato is a waver, not a wobble");
+  assert.ok(first.vibratoRate >= 4.2 && first.vibratoRate <= 6.1, "her vibrato pace is a held note's pace");
+  assert.equal(Core.soundFor(null), null, "no companion, no sound");
+  /* Across many seeds, every family is somebody's — and two
+   * Sparks of one family still differ inside it. */
+  const seen = new Map();
+  for (let i = 0; i < 80; i++) {
+    const c = Core.generate(Core.makeSeed({ moon: 8, patternDay: 216, kindIndex: i % 6, nonce: `fam${i}zz` }));
+    const s = Core.soundFor(c);
+    if (!seen.has(s.family)) seen.set(s.family, []);
+    seen.get(s.family).push(s);
+  }
+  assert.equal(seen.size, Core.SOUND_FAMILIES.length, "every family is reached by some seed");
+  for (const [fam, list] of seen) {
+    const shapes = new Set(list.map((s) => `${s.brightness}/${s.decay}/${s.vibratoRate}`));
+    assert.ok(shapes.size > 1, `family ${fam} is not one fixed sound — its Sparks differ inside it`);
+  }
+  /* The flourish rises from her own chirp root. */
+  const chirp = Core.chirpFor(a);
+  assert.equal(Core.flourishFor(a), Math.round(chirp.first * 1.78), "the flourish is her pitch, risen");
+  assert.ok(Core.flourishFor(a) > chirp.second, "and it stands above her greeting's second note");
+});
+
+test("v9 softer voice rides the presence: families rendered, no sawtooth, lower level", () => {
+  const presence = read("docs/assets/js/spark-presence.js");
+  for (const hook of [
+    "playFamilyNote",
+    "soundFor",
+    "softThroat",
+    "addVibrato",
+    "announceReveals",
+    "newRevealsBetween",
+    "markRevealsSeen",
+    "revealLineFor",
+    "flourishNote",
+    "hers alone"
+  ]) {
+    assert.ok(presence.includes(hook), `the presence carries ${hook}`);
+  }
+  assert.ok(!presence.includes('"sawtooth"'), "the buzz is gone: no sawtooth oscillator anywhere in her voice");
+  assert.ok(
+    presence.includes("voiceMaster.gain.value = 0.55"),
+    "her master level is the lowered one (a syllable peaks near 0.055, against 0.135 in v7)"
+  );
+  for (const fam of ["bell", "hum", "pluck", "blip"]) {
+    assert.ok(presence.includes(`"${fam}"`), `the ${fam} family is rendered`);
+  }
+});
+
+/* ---- v9: her finer grain — detail every seed draws differently ---- */
+
+test("v9 details: every seed draws its own finer grain", () => {
+  const a = Core.generate(SEED_A);
+  assert.deepEqual(Core.generate(SEED_A).details, a.details, "the same seed draws the same detail anywhere");
+  const lists = {
+    crestStyle: ["tuft", "horns", "fin", "halo", "leaf", "plain"],
+    ears: ["fins", "tufts", "points", "none"],
+    trail: ["wisp", "ribbon", "sparkles", "none"],
+    cheeks: ["glow", "blush", "freckles", "none"],
+    pattern: ["speckles", "bands", "belly", "none"],
+    eyeVariant: ["sparkle", "lash", "ring", "plain"]
+  };
+  for (const [key, values] of Object.entries(lists)) {
+    assert.ok(values.includes(a.details[key]), `her ${key} is one of its grown set`);
+  }
+  assert.ok(a.details.density >= 0.7 && a.details.density <= 1.3, "her marking density is a seed's share");
+  /* The draws are independent, so the combinations multiply:
+   * across sixty seeds the detail tuples are nearly all
+   * distinct, and no single value sweeps its list. */
+  const tuples = new Set();
+  const counts = new Map();
+  for (let i = 0; i < 60; i++) {
+    const c = Core.generate(Core.makeSeed({ moon: 8, patternDay: 216, kindIndex: i % 6, nonce: `det${i}zz` }));
+    const d = c.details;
+    tuples.add([d.crestStyle, d.ears, d.trail, d.cheeks, d.pattern, d.eyeVariant].join("/"));
+    counts.set(d.crestStyle, (counts.get(d.crestStyle) || 0) + 1);
+  }
+  assert.ok(tuples.size >= 45, `detail combinations multiply (saw ${tuples.size} distinct faces in 60 seeds)`);
+  for (const [value, n] of counts) {
+    assert.ok(n < 40, `crest style ${value} does not sweep the field (${n} of 60)`);
+  }
+  /* Her born identity does not move: the detail stream is its
+   * own stream, so kind, form, markings, eye, crest and name
+   * are exactly what the seed always grew. */
+  const b = Core.generate(SEED_B);
+  assert.notDeepEqual(b.details, a.details, "a different seed draws different detail");
+});
+
+test("v9 details on the face: born look first, arrivals only when revealed", () => {
+  /* A seed with arrivals to show. */
+  let companion = null;
+  for (let i = 0; i < 40 && !companion; i++) {
+    const c = Core.generate(Core.makeSeed({ moon: 8, patternDay: 216, kindIndex: i % 6, nonce: `face${i}zz` }));
+    if (Core.revealScheduleFor(c).length >= 4) companion = c;
+  }
+  assert.ok(companion, "a seed with a full schedule was found");
+  const born = Core.renderSVG(companion, { stage: 1 });
+  assert.ok(born.includes('data-spark-shown=""'), "a first meeting shows her born look — no arrivals");
+  const all = Core.revealScheduleFor(companion).map((s) => s.id);
+  const later = Core.renderSVG(companion, { stage: 1, revealed: all });
+  assert.notEqual(later, born, "the later face is not the born face");
+  for (const id of all) {
+    assert.ok(later.includes(id), `the later face names ${id} among what she wears`);
+  }
+  /* The arrivals are the same identity grown, at every stage:
+   * what she wears at Ember she still wears at Radiant. */
+  const ember = Core.renderSVG(companion, { stage: 0, revealed: all });
+  const radiant = Core.renderSVG(companion, { stage: 2, revealed: all });
+  assert.ok(ember.includes(`data-spark-shown="${all.join(" ")}"`), "her arrivals stand at Ember");
+  assert.ok(radiant.includes(`data-spark-shown="${all.join(" ")}"`), "and the same arrivals stand at Radiant — grown, never swapped");
+  /* The 3D builder reads the same detail and the same list. */
+  const three = read("docs/assets/js/spark-3d.js");
+  assert.ok(three.includes("companion.details"), "the 3D body grows from her detail");
+  assert.ok(three.includes("revealed"), "and wears only what her schedule has brought");
+  assert.ok(three.includes("options.revealed"), "the mount takes the reveal state in");
+});
+
+/* ---- v9: the reveal cadence — fast first, then stretching ---- */
+
+test("v9 reveal schedule: first arrival fast, gaps strictly stretching, jitter bounded", () => {
+  for (let i = 0; i < 24; i++) {
+    const c = Core.generate(Core.makeSeed({ moon: 8, patternDay: 216, kindIndex: i % 6, nonce: `sch${i}zz` }));
+    const sched = Core.revealScheduleFor(c);
+    assert.ok(sched.length >= 1, "every Spark has at least the flourish to grow toward");
+    assert.equal(sched[sched.length - 1].id, "flourish", "her voice flowers last");
+    assert.ok(sched[0].at >= 3 && sched[0].at <= 5, `the first arrival comes after a handful of pages (at ${sched[0].at})`);
+    for (let k = 1; k < sched.length; k++) {
+      assert.ok(sched[k].gap > sched[k - 1].gap, "each gap is longer than the one before — never clockwork");
+      assert.ok(sched[k].at > sched[k - 1].at, "the points themselves only move forward");
+    }
+    for (let k = 0; k < sched.length; k++) {
+      const base = 4 * Math.pow(1.7, k);
+      assert.ok(
+        sched[k].gap >= Math.floor(base * 0.7) && sched[k].gap <= Math.ceil(base * 1.35) + k,
+        `gap ${k} stays within its jittered band of the curve`
+      );
+    }
+    assert.deepEqual(Core.revealScheduleFor(c), sched, "the same seed keeps the same schedule anywhere");
+  }
+  /* A feature her seed never drew is not on her schedule:
+   * nothing is owed, nothing is missing. */
+  let plain = null;
+  for (let i = 0; i < 60 && !plain; i++) {
+    const c = Core.generate(Core.makeSeed({ moon: 8, patternDay: 216, kindIndex: i % 6, nonce: `pln${i}zz` }));
+    if (c.details.cheeks === "none") plain = c;
+  }
+  assert.ok(plain, "a cheekless seed exists in the field");
+  assert.ok(
+    !Core.revealScheduleFor(plain).some((s) => s.id === "cheeks"),
+    "her schedule holds no cheeks she was never drawn with"
+  );
+});
+
+test("v9 reveals: earned by walking, announced once, and time away costs nothing", () => {
+  const companion = Core.generate(SEED_A);
+  const sched = Core.revealScheduleFor(companion);
+  const fresh = Core.newRecord({ seed: SEED_A, name: "Nori", civilDate: "2026-11-19" });
+  assert.equal(Core.engagementOf(fresh), 0, "a fresh record has walked nowhere");
+  assert.deepEqual(Core.revealsFor({ record: fresh, companion }).revealed, [], "no walking, no arrivals");
+  assert.deepEqual(Core.revealsSeenOf(fresh), [], "and nothing has been announced");
+  /* Surfing to the first point earns exactly the first arrival. */
+  const walked = { ...fresh, pagesSeen: Array.from({ length: sched[0].at }, (_, i) => `p${i}`) };
+  assert.deepEqual(
+    Core.revealsFor({ record: walked, companion }).revealed,
+    [sched[0].id],
+    "the first arrival lands at its point, not before"
+  );
+  const justShort = { ...fresh, pagesSeen: Array.from({ length: sched[0].at - 1 }, (_, i) => `p${i}`) };
+  assert.deepEqual(Core.revealsFor({ record: justShort, companion }).revealed, [], "one page short is still short");
+  /* Announced exactly once, through the one path. */
+  const news = Core.newRevealsBetween({ before: fresh, after: walked, companion });
+  assert.deepEqual(news, [sched[0].id], "the arrival is news once");
+  const told = Core.markRevealsSeen(walked, news);
+  assert.deepEqual(Core.newRevealsBetween({ before: fresh, after: told, companion }), [], "and never news twice");
+  assert.deepEqual(Core.newRevealsBetween({ before: told, after: told, companion }), [], "a kept telling stays kept");
+  /* Time is not in the count at all: a record that only aged
+   * — different days on its face, no new walking — ripens
+   * nothing. The schedule waits; it never punishes. */
+  const aged = { ...walked, lastDay: 999, bornCivil: "2031-01-01" };
+  assert.equal(Core.engagementOf(aged), Core.engagementOf(walked), "the count reads counters, never clocks");
+  assert.deepEqual(
+    Core.revealsFor({ record: aged, companion }).revealed,
+    Core.revealsFor({ record: walked, companion }).revealed,
+    "away time reveals nothing and takes nothing"
+  );
+  /* Return days and care count too — the walking is the whole
+   * of her life with her keeper, not pages alone. */
+  const returned = { ...fresh, daysSeen: [216, 217] };
+  assert.equal(Core.engagementOf(returned), 4, "a second day together counts four");
+  const cared = Core.applyCare(fresh, { action: "kindle", patternDay: 217 });
+  assert.ok(Core.engagementOf(cared) > Core.engagementOf(fresh), "care walks her forward too");
+  /* Her arrival lines are clean copy, every one. */
+  const banned = /you have not|haven't|have not|not done|not yet|missed|incomplete/i;
+  for (const id of Core.REVEAL_ORDER) {
+    assert.ok(!banned.test(Core.revealLineFor(id)), `the ${id} line is clean copy: ${Core.revealLineFor(id)}`);
   }
 });
