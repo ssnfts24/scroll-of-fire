@@ -194,6 +194,18 @@ Your browser does not support the video element. The same tour is written out ac
 {masthead('')}
 <main id="main">
 <h1>Sources, licences and limits</h1>
+<section id="scripture-about-explainer" style="max-width:880px;margin:2rem auto;">
+  <p style="letter-spacing:.12em;text-transform:uppercase;font-size:.8rem;opacity:.75;margin:0 0 .35rem;">Watch · The Explainer</p>
+  <h2>Sources, licences, and limits — stated.</h2>
+  <p>A short spoken tour of the Scripture edition's sources page: its three completeness levels, the pinned sources behind the Hebrew, the lexicon, and the English, and the limits the edition declares about itself. Press play and let the page explain itself.</p>
+  <video controls preload="metadata" width="1280" height="720"
+    style="width:100%;height:auto;display:block"
+    src="../assets/media/scripture-about-explainer.mp4"
+    aria-label="Video: Scripture sources and method, explained in plain words">
+    Your browser does not support the video element. The same tour is
+    written out across this page.
+  </video>
+</section>
 <h2>Three completeness levels</h2>
 <table><thead><tr><th>Level</th><th>Status</th><th>Detail</th></tr></thead><tbody>
 <tr><td>1. Original word and morphology</td><td>{E(c['level1_originalWordAndMorphology']['status'])}</td><td>{t['wordTokens']} words and {t['wordParts']} word parts imported from OSHB and machine-compared to the pinned source files by the validation suite; no independent scholarly collation is claimed.</td></tr>

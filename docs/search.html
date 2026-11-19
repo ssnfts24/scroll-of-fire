@@ -35,6 +35,7 @@
   <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261118-2">
   <script defer src="assets/js/spark-companion.js?v=20261118-2"></script>
   <script defer src="assets/js/spark-presence.js?v=20261118-2"></script>
+  <script defer src="assets/js/living-search-page.js"></script>
 </head>
 <body class="living-ui">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -146,9 +147,14 @@
   <main id="main" class="ls-page">
     <h1>Search the Codex</h1>
     <p>One living index for the whole site: every page, the Scroll Library's sections and passages, the Hebrew Lexicon, the Atlas and the Claim Register. Press <kbd>Ctrl K</kbd> anywhere on the site to search without leaving the page you are reading.</p>
+    <p class="ls-counts" id="ls-counts" hidden></p>
     <div class="ls-panel-like">
       <div id="living-search-app"></div>
       <noscript><p>The interactive search needs JavaScript. You can still browse the <a href="codex-atlas.html">Codex Atlas</a> or use <a href="scroll/search.html">Search the Scroll Library</a>, the dedicated search inside the Library.</p></noscript>
+    </div>
+    <div class="ls-surprise">
+      <button type="button" id="ls-surprise-btn" class="ls-surprise-btn">Surprise me</button>
+      <p class="ls-surprise-note" id="ls-surprise-note">No question in mind? Open one thing at random from the whole index — a page, a scroll passage, a Hebrew word, a claim.</p>
     </div>
     <section class="ls-how" aria-labelledby="ls-how-title">
       <h2 id="ls-how-title">How this search stays true</h2>

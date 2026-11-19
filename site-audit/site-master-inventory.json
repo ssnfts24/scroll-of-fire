@@ -7,7 +7,7 @@
     "publicHtmlPages": 175,
     "catalogEntries": 68,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 18,
+      "not-linked-directly-from-homepage": 21,
       "nav-label-differs-from-title": 24,
       "no-global-navigation": 1,
       "deployed-but-unlinked": 57,
@@ -648,7 +648,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (167 files)",
+      "title": "docs/assets/js (168 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -665,7 +665,7 @@
     },
     {
       "id": "docs-assets:assets/media",
-      "title": "docs/assets/media (51 files)",
+      "title": "docs/assets/media (72 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1813,6 +1813,7 @@
         "ledger.html",
         "living-time-sphere.html",
         "moons.html",
+        "scripture/about.html",
         "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
@@ -1832,9 +1833,7 @@
         "teach.html",
         "theory.html",
         "theory/canon.html",
-        "theory/ethics.html",
-        "theory/frequency-governance.html",
-        "theory/living-technology.html",
+        "theory/equations/eq10.html",
         "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/",
@@ -2205,10 +2204,10 @@
         "path": "scripture/about.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 92,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 93,
         "pagesWithNavLinkToIt": 93
       },
       "issues": []
@@ -11450,10 +11449,10 @@
         "path": "theory/equations/eq10.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 6,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 7,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -13524,7 +13523,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (110 files)",
+      "title": "tests/ (111 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -18857,13 +18856,15 @@
         "path": "theory/ethics.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 32,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 31,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": []
+      "issues": [
+        "not-linked-directly-from-homepage"
+      ]
     },
     {
       "id": "theory-frequency-governance",
@@ -18939,13 +18940,15 @@
         "path": "theory/frequency-governance.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 14,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 13,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": []
+      "issues": [
+        "not-linked-directly-from-homepage"
+      ]
     },
     {
       "id": "theory-glossary",
@@ -19211,13 +19214,15 @@
         "path": "theory/living-technology.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 13,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 12,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": []
+      "issues": [
+        "not-linked-directly-from-homepage"
+      ]
     },
     {
       "id": "theory-master-equation",

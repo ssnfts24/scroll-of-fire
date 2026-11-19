@@ -85,7 +85,7 @@
 | --- | --- |
 | `docs/assets/css/living-ui.css` | 131 |
 | `docs/scripture/assets/scripture.css` | 93 |
-| `docs/assets/css/spark-companion.css` | 72 |
+| `docs/assets/css/spark-companion.css` | 71 |
 | `docs/assets/css/codex.css` | 42 |
 | `docs/assets/css/navigation.css` | 35 |
 | `docs/assets/css/animations.css` | 19 |
@@ -101,8 +101,8 @@
 | `docs/assets/js/site.js` | 134 |
 | `docs/assets/js/living-ui.js` | 131 |
 | `docs/scripture/assets/scripture.js` | 93 |
-| `docs/assets/js/spark-companion.js` | 72 |
-| `docs/assets/js/spark-presence.js` | 71 |
+| `docs/assets/js/spark-companion.js` | 71 |
+| `docs/assets/js/spark-presence.js` | 70 |
 | `docs/assets/js/living-search-launcher.js` | 28 |
 | `docs/assets/js/living-codex.js` | 19 |
 | `docs/theory/equations/https:/cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js` | 19 |
