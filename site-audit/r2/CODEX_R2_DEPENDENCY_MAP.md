@@ -82,10 +82,10 @@
 
 | Stylesheet | Pages |
 | --- | --- |
-| `docs/assets/css/living-ui.css` | 130 |
+| `docs/assets/css/living-ui.css` | 131 |
 | `docs/scripture/assets/scripture.css` | 93 |
-| `docs/assets/css/codex.css` | 41 |
-| `docs/assets/css/navigation.css` | 34 |
+| `docs/assets/css/codex.css` | 42 |
+| `docs/assets/css/navigation.css` | 35 |
 | `docs/assets/css/animations.css` | 19 |
 | `docs/theory/equations/assets/css/codex.css` | 19 |
 | `docs/theory/equations/assets/css/navigation.css` | 19 |
@@ -97,8 +97,8 @@
 
 | Script | Pages |
 | --- | --- |
-| `docs/assets/js/site.js` | 133 |
-| `docs/assets/js/living-ui.js` | 130 |
+| `docs/assets/js/site.js` | 134 |
+| `docs/assets/js/living-ui.js` | 131 |
 | `docs/scripture/assets/scripture.js` | 93 |
 | `docs/assets/js/calendar/pattern-calendar-version.js` | 32 |
 | `docs/assets/js/calendar/pattern-calendar-data.js` | 32 |

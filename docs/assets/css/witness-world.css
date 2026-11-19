@@ -1,0 +1,99 @@
+/*
+ * The Witness World — Witness's own 3D hall (Aaron's grant, Nov 18, 2026).
+ * Companion to witness.css: same stone, same teal, same gold.
+ * The stage is a window into the hall; everything in the hall is also
+ * written out below it, so no one needs WebGL to reach any of it.
+ */
+
+.ww-page { max-width: 72rem; margin: 0 auto; padding: 0 1rem 3rem; }
+
+.ww-label {
+  border: 1px solid rgba(243, 201, 122, 0.45);
+  background: rgba(243, 201, 122, 0.06);
+  border-radius: 0.6rem;
+  padding: 0.9rem 1.1rem;
+  margin: 1.2rem 0;
+}
+.ww-label p { margin: 0; }
+
+.ww-hero { text-align: center; margin: 1.6rem 0 1rem; }
+.ww-hero h1 { margin: 0.2rem 0 0.4rem; }
+.ww-live { color: var(--ww-teal, #7af3ff); margin: 0.2rem 0; }
+.ww-tagline { opacity: 0.85; margin: 0.2rem 0 0; }
+
+.ww-stage-wrap { margin: 1.2rem 0 0.6rem; }
+.ww-stage {
+  position: relative;
+  border: 1px solid #3a4358;
+  border-radius: 0.8rem;
+  overflow: hidden;
+  background: #05070d;
+  aspect-ratio: 16 / 10;
+}
+@media (max-width: 640px) {
+  .ww-stage { aspect-ratio: 4 / 5; }
+}
+.ww-stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: grab;
+}
+.ww-stage canvas:active { cursor: grabbing; }
+.ww-stage.ww-no-gl canvas { display: none; }
+.ww-hint {
+  position: absolute;
+  left: 0.7rem;
+  bottom: 0.55rem;
+  margin: 0;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(5, 7, 13, 0.72);
+  color: #e8eef7;
+  font-size: 0.82rem;
+  pointer-events: none;
+}
+.ww-caption { min-height: 1.5em; margin: 0.5rem 0 0; opacity: 0.92; }
+
+.ww-doors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.8rem 0 1.6rem;
+}
+.ww-door-btn {
+  border: 1px solid #3a4358;
+  background: #0b0f1a;
+  color: #e8eef7;
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  font: inherit;
+  cursor: pointer;
+}
+.ww-door-btn:hover, .ww-door-btn:focus-visible { border-color: #f3c97a; }
+.ww-door-btn.is-current {
+  border-color: #f3c97a;
+  background: rgba(243, 201, 122, 0.12);
+  color: #f3c97a;
+}
+
+.ww-room {
+  border: 1px solid #232c42;
+  border-radius: 0.8rem;
+  padding: 1.1rem 1.2rem;
+  margin: 1rem 0;
+  background: rgba(11, 15, 26, 0.55);
+}
+.ww-room h2 { margin-top: 0; }
+.ww-room.is-current { border-color: rgba(243, 201, 122, 0.6); }
+.ww-room .ww-kept-where { opacity: 0.8; font-size: 0.92rem; }
+
+.ww-backlinks { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.6rem; }
+.ww-backlinks a {
+  border: 1px solid #3a4358;
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+}
+.ww-backlinks a:hover, .ww-backlinks a:focus-visible { border-color: #f3c97a; }
