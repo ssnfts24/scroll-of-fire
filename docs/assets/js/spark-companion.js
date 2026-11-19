@@ -166,6 +166,83 @@
     };
   }
 
+  /* Her spoken voice, when the keeper turns it on: the device's
+   * own speech synthesis, tuned by the same seed that pitches
+   * her chirp — so the voice and the chirp feel like one
+   * creature. The pitch follows the chirp's base note (a high
+   * kind chirps high and speaks high; a low kind speaks low),
+   * and the pace is its temperament's own: bold and bright a
+   * touch quicker, gentle a touch slower. Pure data — the same
+   * seed settles the same voice on any device. */
+  const VOICE_RATES = { bold: 1.05, gentle: 0.93, quiet: 0.95, curious: 1.03, steady: 0.97, bright: 1.06 };
+
+  function voiceFor(companion) {
+    if (!companion) return null;
+    const chirp = chirpFor(companion);
+    if (!chirp) return null;
+    /* Chirp bases run from Earth's ~282 to Light's ~806. The
+     * speech pitch scale runs 0.5–2 with 1 as the device's own
+     * middle; her range sits inside it, 0.79–1.26. */
+    const pitch = Math.min(
+      1.3,
+      Math.max(0.75, Math.round((0.79 + ((chirp.first - 282) / (806 - 282)) * 0.47) * 100) / 100)
+    );
+    const rand = mulberry32(hashString(companion.seed + ":speech"));
+    const base = VOICE_RATES[companion.temperament] || 1;
+    const rate = Math.round(base * (0.98 + rand() * 0.04) * 100) / 100;
+    return { pitch, rate };
+  }
+
+  /* Which of the device's voices she speaks with, in a stated
+   * order: a warm named en-US voice first (on a typical
+   * Android/Chrome that is "Google US English"; on Apple
+   * devices, Samantha and her named kin), then any en-US voice,
+   * then any English voice, then the device's own default.
+   * The list is the device's; the choice is deterministic. */
+  function pickVoice(voices) {
+    if (!Array.isArray(voices) || !voices.length) return null;
+    const score = (v) => {
+      const name = String((v && v.name) || "");
+      const lang = String((v && v.lang) || "").toLowerCase();
+      const enUS = lang === "en-us";
+      if (enUS && /google us english/i.test(name)) return 6;
+      if (enUS && /natural|neural/i.test(name)) return 5;
+      if (enUS && /samantha|zira|aria|jenny/i.test(name)) return 4;
+      if (enUS) return 3;
+      if (lang.startsWith("en")) return 2;
+      if (v && v.default) return 1;
+      return 0;
+    };
+    let best = null;
+    let bestScore = -1;
+    for (const v of voices) {
+      const s = score(v);
+      if (s > bestScore) {
+        bestScore = s;
+        best = v;
+      }
+    }
+    return best;
+  }
+
+  /* What she actually says aloud from a line: the opening,
+   * whole sentences only, up to a sane length. The full line
+   * always stands in the talk in text; the voice takes the
+   * beginning of it, the way a person starts a thought aloud. */
+  function speechTextFor(text, maxChars = 280) {
+    const clean = String(text == null ? "" : text).replace(/\s+/g, " ").trim();
+    if (!clean) return "";
+    if (clean.length <= maxChars) return clean;
+    const sentences = clean.match(/[^.!?]+[.!?]+/g) || [clean];
+    let out = "";
+    for (const s of sentences) {
+      if ((out + s).length > maxChars) break;
+      out += s;
+    }
+    if (!out) out = clean.slice(0, maxChars);
+    return out.trim();
+  }
+
   /* Each kind speaks in its temperament's voice. One short line,
    * in character — the first thing the Spark says about itself
    * after its name. */
@@ -292,6 +369,22 @@
       curious: ["I read the page's own explainer. Here it is, in its words:"],
       steady: ["Straight from the page itself:"],
       bright: ["The page speaks for itself — listen:"]
+    },
+    more: {
+      bold: ["More, then — the page goes on, in its own words:"],
+      gentle: ["Here is more of it, in the page's own words:"],
+      quiet: ["More, quietly — the page's own words:"],
+      curious: ["More! The page has more to say, in its own words:"],
+      steady: ["More of the page, in its own words:"],
+      bright: ["More! In the page's own words:"]
+    },
+    telling: {
+      bold: ["The day's telling — here it is, as this page carries it:"],
+      gentle: ["Here is the day's telling, as this page carries it:"],
+      quiet: ["The day's telling, as this page carries it:"],
+      curious: ["The day's telling! This page carries it — listen:"],
+      steady: ["The day's telling, as this page carries it:"],
+      bright: ["The day's telling — this page carries it, and it shines:"]
     },
     today: {
       bold: ["Today, counted the Codex way:"],
@@ -1207,24 +1300,84 @@
    * first its own explainer, where the page carries one (the
    * spoken tours state themselves in plain words), and otherwise
    * its own opening words. The core only chooses and shortens:
-   * two sentences at most, and it says where they came from. */
-  function explainFor({ explainerText, introText }) {
-    const pick = (text) => {
-      const clean = String(text || "").replace(/\s+/g, " ").trim();
-      if (!clean) return "";
-      const sentences = clean.match(/[^.!?]+[.!?]+/g) || [clean];
+   * two sentences at most, and it says where they came from.
+   *
+   * The explanation is cut into chunks that partition the page's
+   * own text — the first chunk is the explanation above; each
+   * following chunk is what "Tell me more" reads next. Nothing
+   * is added between the chunks and nothing is repeated: laid
+   * end to end, they are the page's own words, in its own order. */
+  function partitionText(text, withFirst) {
+    const rest = text.match(/[^.!?]+[.!?]+/g) || [text];
+    const chunks = [];
+    let first = withFirst;
+    while (rest.length) {
+      const cap = first ? 320 : 420;
+      const maxSentences = first ? 2 : 3;
       let out = "";
-      for (const s of sentences.slice(0, 2)) {
-        if ((out + s).length > 320) break;
+      let n = 0;
+      while (rest.length && n < maxSentences) {
+        const s = rest[0];
+        if (out && (out + s).length > cap) break;
+        if (!out && s.length > cap) {
+          /* One long sentence: it is read in cap-sized pieces,
+           * and the remainder stays in line for the next chunk. */
+          out = s.slice(0, cap);
+          rest[0] = s.slice(cap);
+          if (!rest[0].trim()) rest.shift();
+          n += 1;
+          break;
+        }
         out += s;
+        rest.shift();
+        n += 1;
       }
-      return (out || clean.slice(0, 320)).trim();
-    };
-    const fromExplainer = pick(explainerText);
-    if (fromExplainer) return { text: fromExplainer, source: "explainer" };
-    const fromIntro = pick(introText);
-    if (fromIntro) return { text: fromIntro, source: "page" };
-    return { text: "", source: "none" };
+      if (out.trim()) chunks.push(out.trim());
+      first = false;
+    }
+    return chunks;
+  }
+
+  function explainChunksFor({ explainerText, introText }) {
+    const clean = (text) => String(text || "").replace(/\s+/g, " ").trim();
+    const fromExplainer = clean(explainerText);
+    const text = fromExplainer || clean(introText);
+    if (!text) return { source: "none", chunks: [] };
+    return { source: fromExplainer ? "explainer" : "page", chunks: partitionText(text, true) };
+  }
+
+  function explainFor({ explainerText, introText }) {
+    const { source, chunks } = explainChunksFor({ explainerText, introText });
+    return { text: chunks[0] || "", source };
+  }
+
+  /* Continuation chunks for "Tell me more": the same partition
+   * at the deeper cut (three sentences, a little more room),
+   * for text that follows the explanation — the rest of the
+   * page's own account of itself, in its own order. Laid end to
+   * end behind the explanation, the chunks are the page's own
+   * words: nothing added, nothing repeated. */
+  function moreChunksFor(text) {
+    const clean = String(text || "").replace(/\s+/g, " ").trim();
+    if (!clean) return [];
+    return partitionText(clean, false);
+  }
+
+  /* The day's telling, as a page itself carries it: on the 13
+   * Moons page the telling stands in blocks — a headline, the
+   * day's position, its arc, and the Codex's reading — all of
+   * them generated there from the canonical calendar. The core
+   * only gathers the blocks the page hands it, in their order,
+   * dropping the empty ones. A page that carries no telling
+   * hands back nothing, and the Spark says so by its absence. */
+  function tellingFor(parts) {
+    const clean = (text) => String(text || "").replace(/\s+/g, " ").trim();
+    const lines = [];
+    for (const key of ["headline", "position", "arc", "reading"]) {
+      const line = clean(parts && parts[key]);
+      if (line) lines.push(line);
+    }
+    return { lines, has: lines.length > 0 };
   }
 
   /* "Where was I?": the thread, picked back up. Drawn from the
@@ -1365,6 +1518,9 @@
     renderSVG,
     chirpFor,
     soundsFor,
+    voiceFor,
+    pickVoice,
+    speechTextFor,
     VOICE_LINES,
     convoLineFor,
     lookLineFor,
@@ -1389,6 +1545,9 @@
     recordTrailStep,
     doorsFor,
     explainFor,
+    explainChunksFor,
+    moreChunksFor,
+    tellingFor,
     resumeFor,
     shareCardFor,
     guidanceFor,

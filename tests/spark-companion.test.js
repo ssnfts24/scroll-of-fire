@@ -967,6 +967,168 @@ test("v4 conversation rides the presence: a thread, chips for buttons, a body th
   assert.ok(css.slice(shareAt, shareAt + 300).includes("min-height: 44px"), "the share button is a thumb-sized target");
 });
 
+test("v5 spoken voice: the seed pitches it, the temperament paces it", () => {
+  const a = Core.generate(SEED_A);
+  const first = Core.voiceFor(a);
+  assert.deepEqual(Core.voiceFor(a), first, "the same Spark settles the same voice anywhere");
+  assert.ok(first.pitch >= 0.75 && first.pitch <= 1.3, "pitch sits inside the speech scale");
+  assert.ok(first.rate >= 0.85 && first.rate <= 1.15, "rate stays near natural speech");
+  /* The pitch follows the chirp: the lowest kind (Earth) speaks
+   * lower than the highest (Light), for any seed jitter. */
+  const earth = Core.generate(Core.makeSeed({ moon: 3, patternDay: 40, kindIndex: 4, nonce: "voice0001" }));
+  const light = Core.generate(Core.makeSeed({ moon: 3, patternDay: 40, kindIndex: 5, nonce: "voice0001" }));
+  assert.ok(Core.chirpFor(earth).first < Core.chirpFor(light).first, "the chirp ordering the voice follows");
+  assert.ok(Core.voiceFor(earth).pitch < Core.voiceFor(light).pitch, "a low chirp speaks low; a high chirp speaks high");
+  /* The pace is the temperament's: bold quicker than gentle,
+   * whatever the seed's small jitter. */
+  const bold = Core.generate(Core.makeSeed({ moon: 3, patternDay: 40, kindIndex: 0, nonce: "voice0002" }));
+  const gentle = Core.generate(Core.makeSeed({ moon: 3, patternDay: 40, kindIndex: 1, nonce: "voice0002" }));
+  assert.ok(Core.voiceFor(bold).rate > Core.voiceFor(gentle).rate, "bold speaks a touch quicker than gentle");
+  assert.equal(Core.voiceFor(null), null, "no companion, no voice settings");
+});
+
+test("v5 voice choice: the device's warm en-US voice wins, in the stated order", () => {
+  const david = { name: "Microsoft David - English (United States)", lang: "en-US", default: true };
+  const google = { name: "Google US English", lang: "en-US", default: false };
+  const uk = { name: "Google UK English Female", lang: "en-GB", default: false };
+  const french = { name: "Google français", lang: "fr-FR", default: false };
+  assert.equal(Core.pickVoice([david, google, uk]).name, "Google US English", "the warm named en-US voice wins");
+  assert.equal(Core.pickVoice([david, uk]).name, david.name, "any en-US voice beats another English voice");
+  assert.equal(Core.pickVoice([french, uk]).name, uk.name, "any English voice beats a non-English default");
+  const samantha = { name: "Samantha", lang: "en-US", default: true };
+  assert.equal(Core.pickVoice([uk, samantha]).name, "Samantha", "a named en-US voice beats a plainer English one");
+  assert.equal(Core.pickVoice([]), null, "no voices offered, no voice chosen");
+  assert.equal(Core.pickVoice(null), null, "a missing list chooses nothing");
+});
+
+test("v5 speech text: she says the opening, in whole sentences, capped", () => {
+  assert.equal(Core.speechTextFor("A short line."), "A short line.", "a short line is spoken whole");
+  assert.equal(Core.speechTextFor(""), "", "silence stays silence");
+  const long =
+    "First sentence of the page, stated plainly. " +
+    "Second sentence, carrying the next fact of it. " +
+    "Third sentence, with a good deal more of the page's own wording in it to carry the count upward. " +
+    "Fourth sentence, also the page's own, and by now the spoken cap is close at hand for this line. " +
+    "Fifth sentence, which the voice leaves for the text to carry, since the opening has been said.";
+  const spoken = Core.speechTextFor(long);
+  assert.ok(spoken.length <= 280, "the spoken opening is capped");
+  assert.ok(long.startsWith(spoken), "what she says is the opening of the line, word for word");
+  assert.ok(/[.!?]$/.test(spoken), "she stops at a sentence's end, not mid-thought");
+  const oneLong = "word ".repeat(120).trim() + ".";
+  assert.ok(Core.speechTextFor(oneLong).length <= 280, "even one long sentence is capped");
+});
+
+test("v5 tell me more: the explanation continues in the page's own words only", () => {
+  const explainer =
+    "One plain sentence opens it. A second one follows close behind. " +
+    "A third sentence carries the middle of the page's own account of itself. " +
+    "A fourth adds the next part of that account, still in the page's own words. " +
+    "A fifth sentence rounds the account toward its close, in those same words. " +
+    "A sixth and final sentence ends the account, exactly as the page wrote it.";
+  const chunks = Core.explainChunksFor({ explainerText: explainer, introText: "Ignored." });
+  assert.equal(chunks.source, "explainer", "the explainer is the source, as with the first chunk");
+  assert.ok(chunks.chunks.length >= 3, "a six-sentence account cuts into several chunks");
+  assert.equal(
+    chunks.chunks.join(" "),
+    explainer,
+    "laid end to end, the chunks are the page's own words — nothing added, nothing repeated"
+  );
+  const first = Core.explainFor({ explainerText: explainer, introText: "" });
+  assert.equal(first.text, chunks.chunks[0], "the explanation is the first chunk");
+  assert.ok(
+    !first.text.includes(chunks.chunks[1]) && !chunks.chunks[1].includes(first.text),
+    "no chunk repeats another"
+  );
+  const fromIntro = Core.explainChunksFor({ explainerText: "", introText: explainer });
+  assert.equal(fromIntro.source, "page", "with no explainer, the opening words carry the depth too");
+  assert.deepEqual(fromIntro.chunks, chunks.chunks, "the same partition, from the page's opening");
+  /* Beyond the explainer, the page's main content continues —
+   * cut by the same partition, at the deeper cut. */
+  const following =
+    "The body of the page takes the account further, in its own order. " +
+    "It names what the opening only pointed at, plainly and in full. " +
+    "It closes the account the way the page itself closes it, word for word.";
+  const more = Core.moreChunksFor(following);
+  assert.ok(more.length >= 1, "the following content cuts into continuation chunks");
+  assert.equal(more.join(" "), following, "the continuation is the page's own words, whole and in order");
+  assert.deepEqual(Core.moreChunksFor(""), [], "no following words, no continuation");
+  assert.deepEqual(Core.moreChunksFor("  "), [], "blank following words, no continuation");
+});
+
+test("v5 the telling: gathered from the blocks the page itself carries", () => {
+  const telling = Core.tellingFor({
+    headline: "  Day 21 of the Observer moon ",
+    position: "Moon 8 · Day 21 · Pattern Day 217.",
+    arc: "",
+    reading: "The Codex's reading of the day, in its own words."
+  });
+  assert.equal(telling.has, true, "a page carrying a telling has one to read");
+  assert.deepEqual(
+    telling.lines,
+    ["Day 21 of the Observer moon", "Moon 8 · Day 21 · Pattern Day 217.", "The Codex's reading of the day, in its own words."],
+    "the blocks stand in their order, empties dropped, words only cleaned of space"
+  );
+  assert.equal(Core.tellingFor({}).has, false, "a page with no telling blocks hands back nothing");
+  assert.equal(Core.tellingFor({ headline: " ", position: "" }).has, false, "blank blocks are no telling");
+});
+
+test("v5 conversation beats: more and telling, in every temperament, clean copy", () => {
+  const banned = /you have not|haven't|have not|not done|not yet|missed|incomplete/i;
+  for (let kindIndex = 0; kindIndex < 6; kindIndex++) {
+    const companion = Core.generate(
+      Core.makeSeed({ moon: 8, patternDay: 216, kindIndex, nonce: `v5beat${kindIndex}zz` })
+    );
+    for (const beat of ["more", "telling"]) {
+      const line = Core.convoLineFor({ companion, beat });
+      assert.ok(line && line.length > 3, `${companion.temperament} has a ${beat} line`);
+      assert.ok(!banned.test(line), `${companion.temperament}'s ${beat} line is clean copy: ${line}`);
+      assert.equal(Core.convoLineFor({ companion, beat }), line, "the same Spark speaks consistently");
+    }
+  }
+});
+
+test("v5 voice rides the presence: default quiet, keeper-switched, mute-ruled, tap-gated", () => {
+  const presence = read("docs/assets/js/spark-presence.js");
+  for (const hook of [
+    "spark-presence-voice",
+    "sof.spark.voice",
+    "speechSynthesis",
+    "SpeechSynthesisUtterance",
+    "voiceFor",
+    "pickVoice",
+    "speechTextFor",
+    "stopSpeaking",
+    "Tell me more",
+    "moreChunksFor",
+    "pageFollowingText",
+    "tellingFor",
+    "dayTellingHeadline",
+    "spark-guide-more"
+  ]) {
+    assert.ok(presence.includes(hook), `the presence carries ${hook}`);
+  }
+  assert.ok(
+    presence.includes('window.localStorage.getItem(VOICE_KEY) === "on"'),
+    "voice rests quiet unless the keeper stored it on — default quiet"
+  );
+  const speakAt = presence.indexOf("function speak(text)");
+  const gate = presence.slice(speakAt, speakAt + 220);
+  assert.ok(gate.includes("!voiceOn()"), "she does not speak while Voice is off");
+  assert.ok(gate.includes("soundOff()"), "the Sounds mute silences her voice too");
+  assert.ok(gate.includes("!voiceArmed"), "she does not speak before a keeper tap arms the talk");
+  const closeAt = presence.indexOf("const closeBubble");
+  assert.ok(
+    presence.slice(closeAt, closeAt + 320).includes("stopSpeaking()"),
+    "closing the talk stills her voice"
+  );
+  assert.ok(
+    presence.includes('speechSynthesis.addEventListener("voiceschanged"') ||
+      presence.includes("voiceschanged"),
+    "the device voice list is followed as it loads"
+  );
+  assert.ok(!/fetch\(|XMLHttpRequest|sendBeacon/.test(presence), "the voice sends nothing anywhere");
+});
+
 test("no R1.7 protected file is touched by the Spark", () => {
   const manifest = read("docs/development/R1.7-PROTECTED-MANIFEST.md");
   for (const rel of [

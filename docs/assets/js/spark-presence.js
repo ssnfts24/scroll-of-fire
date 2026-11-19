@@ -355,7 +355,8 @@
       `<p class="spark-presence-links"><a class="spark-presence-go" href="#">See it</a> ` +
       `<a class="spark-presence-panel-link" href="#">Your Spark</a> ` +
       `<a class="spark-presence-visit" href="companions.html">Visit</a> ` +
-      `<a class="spark-presence-sound" href="#">Sounds: on</a></p>` +
+      `<a class="spark-presence-sound" href="#">Sounds: on</a> ` +
+      `<a class="spark-presence-voice" href="#">Voice: quiet</a></p>` +
       `<div class="spark-presence-panel" hidden></div>` +
       `<div class="spark-presence-care" hidden>` +
       `<p class="spark-panel-row spark-care-head"><strong>Care</strong> <span class="spark-care-sub">— a pet's small life, kept on this device</span></p>` +
@@ -470,6 +471,59 @@
       while (thread.children.length > 9) thread.removeChild(thread.firstChild);
       thread.scrollTop = thread.scrollHeight;
     }
+    /* ---- her spoken voice ----
+     * The device's own speech, switched on only when the
+     * keeper turns Voice on (it rests quiet until then, kept
+     * on this device), and heard only in answer to the
+     * keeper's own taps: the talk is armed by a tap on her
+     * furniture, so an arrival line she opens by herself is
+     * never spoken aloud uninvited. She speaks her own lines
+     * only — never the keeper's echoed answers — each new line
+     * stills the one before it, closing the talk stills her,
+     * and the Sounds switch silences her along with the chirps.
+     * Her pitch and pace are her seed's (Core.voiceFor), the
+     * same root as her chirp; the voice itself is the device's
+     * warm en-US voice where it offers one (Core.pickVoice).
+     * A device with no speech simply keeps the words. */
+    let voiceArmed = false;
+    let deviceVoice = null;
+    function refreshDeviceVoice() {
+      if (!window.speechSynthesis || typeof window.speechSynthesis.getVoices !== "function") return;
+      const picked = Core.pickVoice(window.speechSynthesis.getVoices() || []);
+      if (picked) deviceVoice = picked;
+    }
+    if (window.speechSynthesis && typeof window.speechSynthesis.addEventListener === "function") {
+      refreshDeviceVoice();
+      window.speechSynthesis.addEventListener("voiceschanged", refreshDeviceVoice);
+    }
+    function speak(text) {
+      if (!voiceArmed || !voiceOn() || soundOff()) return;
+      const synth = window.speechSynthesis;
+      if (!synth || typeof synth.speak !== "function") return;
+      const clean = Core.speechTextFor(text);
+      if (!clean) return;
+      try {
+        synth.cancel();
+        const utter = new window.SpeechSynthesisUtterance(clean);
+        const settings = Core.voiceFor(companion);
+        if (settings) {
+          utter.pitch = settings.pitch;
+          utter.rate = settings.rate;
+        }
+        if (!deviceVoice) refreshDeviceVoice();
+        if (deviceVoice) utter.voice = deviceVoice;
+        synth.speak(utter);
+      } catch {
+        /* no spoken voice on this device: the words still stand */
+      }
+    }
+    function stopSpeaking() {
+      try {
+        if (window.speechSynthesis) window.speechSynthesis.cancel();
+      } catch {
+        /* nothing to still */
+      }
+    }
     function say(text) {
       if (!text) return;
       const p = document.createElement("p");
@@ -480,6 +534,7 @@
       p.appendChild(document.createTextNode(` ${text}`));
       thread.appendChild(p);
       trimThread();
+      speak(text);
     }
     function sayList(build) {
       const box = document.createElement("div");
@@ -489,6 +544,7 @@
       trimThread();
     }
     function sayDoor(text, href, hrefLabel) {
+      speak(text);
       sayList((box) => {
         const p = document.createElement("p");
         p.className = "spark-guide-text";
@@ -615,14 +671,42 @@
       });
       afterTalk();
     }
+    /* "Tell me more": the page's own words beyond the
+     * explanation, gathered in the page's own order — first the
+     * unheard remainder of the explainer (or opening) itself,
+     * then the main content's paragraphs that follow it. The
+     * core cuts them into chunks that partition that text:
+     * nothing is padded, nothing is repeated, and nothing comes
+     * from anywhere but this page. */
+    let explainRest = [];
+    function pageFollowingText(src) {
+      const main = document.querySelector("main") || document.body;
+      const headText = (src.explainerText || src.introText || "").replace(/\s+/g, " ").trim();
+      const paras = Array.from(main.querySelectorAll("p"))
+        .filter((p) => !p.closest(".spark-presence"))
+        .map((p) => (p.textContent || "").replace(/\s+/g, " ").trim())
+        .filter((t) => t.length >= 40);
+      let startAt = 0;
+      const headIx = paras.findIndex((t) => headText && headText.includes(t));
+      if (headIx >= 0) startAt = headIx + 1;
+      return paras
+        .slice(startAt)
+        .filter((t) => t !== headText && !headText.includes(t))
+        .join(" ");
+    }
     function doExplain() {
       answerInBody();
-      const ex = Core.explainFor(pageExplainSource());
+      const src = pageExplainSource();
+      const ex = Core.explainFor(src);
       if (!ex.text) {
         say("This page speaks from its first lines — start at the top and I'll walk it with you.");
         afterTalk();
         return;
       }
+      explainRest = [
+        ...Core.explainChunksFor(src).chunks.slice(1),
+        ...Core.moreChunksFor(pageFollowingText(src))
+      ];
       say(Core.convoLineFor({ companion, beat: "explain" }));
       say(
         ex.text +
@@ -630,7 +714,27 @@
             ? " — in this page's own explainer's words."
             : " — in this page's own opening words.")
       );
-      afterTalk();
+      afterExplain();
+    }
+    function afterExplain() {
+      say(Core.convoLineFor({ companion, beat: "next" }));
+      if (explainRest.length) {
+        setChips([chip("Tell me more", () => doExplainMore(), "spark-guide-more"), ...mainChips()]);
+      } else {
+        setChips(mainChips());
+      }
+    }
+    function doExplainMore() {
+      answerInBody();
+      const next = explainRest.shift();
+      if (!next) {
+        say("That is everything this page says about itself — all of it in the page's own words.");
+        afterTalk();
+        return;
+      }
+      say(Core.convoLineFor({ companion, beat: "more" }));
+      say(next + " — still this page's own words.");
+      afterExplain();
     }
     function doResume() {
       answerInBody();
@@ -639,8 +743,35 @@
       sayDoor(resume.text, resume.href, resume.href ? "Back to it" : null);
       afterTalk();
     }
+    /* The day's telling, where this page itself carries it:
+     * the 13 Moons page stands its telling in blocks, filled
+     * there from the canonical calendar. The presence only
+     * reads the blocks as they stand — it composes nothing. */
+    function pageTellingSource() {
+      const grab = (selector) => {
+        const el = document.querySelector(selector);
+        return el ? el.textContent : "";
+      };
+      return {
+        headline: grab("#dayTellingHeadline"),
+        position: grab("#dayTellingPosition"),
+        arc: grab("#dayTellingArc"),
+        reading: grab("#dayTellingReading")
+      };
+    }
     function doToday() {
       answerInBody();
+      const telling = Core.tellingFor(pageTellingSource());
+      if (telling.has) {
+        /* This page carries the telling itself: she reads it —
+         * the coordinate first, then the telling's own lines,
+         * in the order the page stands them. */
+        say(Core.convoLineFor({ companion, beat: "telling" }));
+        say(Core.coordinateLineFor(today));
+        for (const line of telling.lines) say(line);
+        afterTalk();
+        return;
+      }
       say(Core.convoLineFor({ companion, beat: "today" }));
       sayDoor(
         `${Core.coordinateLineFor(today)}. The day's telling is told in plain words on the 13 Moons page.`,
@@ -788,6 +919,8 @@
     const closeBubble = () => {
       bubble.setAttribute("hidden", "");
       button.setAttribute("aria-expanded", "false");
+      /* Closing the talk stills her voice with it. */
+      stopSpeaking();
       if (arrivalTimer) {
         window.clearTimeout(arrivalTimer);
         arrivalTimer = null;
@@ -942,6 +1075,42 @@
       );
     });
     paintSound();
+    /* Her spoken voice, on its own switch beside Sounds: it
+     * rests quiet until the keeper turns it on, and the choice
+     * is kept on this device. Turning it on, she says so —
+     * aloud, since the keeper's tap is the gesture. Turning it
+     * off stills her mid-line. The Sounds switch rules it too:
+     * sounds off means her voice rests as well. */
+    const voiceToggle = host.querySelector(".spark-presence-voice");
+    const paintVoice = () =>
+      (voiceToggle.textContent = voiceOn() ? "Voice: speak" : "Voice: quiet");
+    voiceToggle.addEventListener("click", (event) => {
+      event.preventDefault();
+      const turningOn = !voiceOn();
+      try {
+        window.localStorage.setItem(VOICE_KEY, turningOn ? "on" : "off");
+      } catch {
+        /* toggle simply does not persist */
+      }
+      paintVoice();
+      if (turningOn) {
+        say("My voice is on. I will speak my lines as we talk — tap me and listen.");
+      } else {
+        stopSpeaking();
+        say("My voice rests now. My words stay here on the page.");
+      }
+    });
+    paintVoice();
+    /* A tap on her own furniture — her button, her chips, her
+     * links — is the gesture her voice answers. Capture phase,
+     * so the arming lands before the tap's own click speaks. */
+    host.addEventListener(
+      "pointerdown",
+      () => {
+        voiceArmed = true;
+      },
+      true
+    );
     /* Pointerdown, not click — and a tap on a page's living entry
      * is never counted: that tap lifts the entry's door, and the
      * click that follows it belongs to the same gesture. It must
@@ -1000,6 +1169,19 @@
   function soundOff() {
     try {
       return window.localStorage.getItem(SOUND_KEY) === "off";
+    } catch {
+      return false;
+    }
+  }
+
+  /* Her spoken voice rests quiet until the keeper turns it on;
+   * the choice is kept on this device, like the sounds. Any
+   * stored value other than "on" — including none at all —
+   * means quiet: she never speaks first and asks later. */
+  const VOICE_KEY = "sof.spark.voice";
+  function voiceOn() {
+    try {
+      return window.localStorage.getItem(VOICE_KEY) === "on";
     } catch {
       return false;
     }
