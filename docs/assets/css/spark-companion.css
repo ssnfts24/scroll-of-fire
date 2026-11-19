@@ -980,3 +980,163 @@
   margin-top: 36px;
   font-size: 1.25rem;
 }
+
+/* ---------- v4: the conversation, and buttons a thumb can hit ----------
+ * A tap on the Spark opens a talk. Her lines stand in a thread;
+ * the keeper's answers are chips — every control in the talk is
+ * at least 44px tall, labelled in plain words, and answers the
+ * press visibly the moment it lands. Nothing in the talk waits
+ * on a hover: there is no hover on a phone. */
+
+/* The talk gets a little more room than the old one-line bubble:
+ * wide enough at phone size that her chips sit one line each. */
+.spark-presence-bubble {
+  max-width: min(344px, 88vw);
+}
+
+.spark-convo {
+  margin-top: 8px;
+  border-top: 1px solid var(--spark-line);
+  padding-top: 8px;
+}
+
+.spark-convo-thread {
+  max-height: 190px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.spark-convo-line {
+  margin: 0 0 7px !important;
+  font-size: 0.92rem !important;
+  line-height: 1.45;
+}
+
+.spark-convo-line strong {
+  color: var(--spark-gold);
+  font-weight: 600;
+}
+
+.spark-convo-line .spark-guide-doors li,
+.spark-convo-line .spark-trail-steps li {
+  margin-bottom: 6px;
+}
+
+.spark-convo-line .spark-guide-doors a,
+.spark-convo-line .spark-trail-steps a {
+  display: inline-block;
+  padding: 4px 2px;
+}
+
+.spark-convo-reply {
+  margin: 0 0 7px !important;
+  text-align: right;
+  font-size: 0.85rem !important;
+  color: var(--spark-teal);
+}
+
+.spark-convo-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.spark-chip {
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(45, 212, 191, 0.55);
+  background: rgba(45, 212, 191, 0.1);
+  color: var(--spark-ink);
+  font: inherit;
+  font-size: 0.88rem;
+  line-height: 1.2;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 0.08s ease, background 0.08s ease;
+}
+
+.spark-chip:hover,
+.spark-chip:focus-visible {
+  background: rgba(45, 212, 191, 0.22);
+}
+
+.spark-chip:active {
+  transform: scale(0.95);
+  background: rgba(45, 212, 191, 0.32);
+}
+
+/* The standing links row, made tappable: pills a thumb can hit,
+ * not bare words. */
+.spark-presence-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.spark-presence-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 6px 11px;
+  border: 1px solid var(--spark-line);
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+
+.spark-presence-links a:active {
+  background: rgba(217, 164, 65, 0.2);
+}
+
+/* The care and share buttons, brought up to the same size. */
+.spark-care-buttons button {
+  min-height: 44px;
+  padding: 10px 6px;
+  touch-action: manipulation;
+  transition: transform 0.08s ease, background 0.08s ease;
+}
+
+.spark-care-buttons button:active {
+  transform: scale(0.95);
+  background: rgba(217, 164, 65, 0.32);
+}
+
+.spark-share-btn {
+  min-height: 44px;
+  padding: 10px 16px;
+  touch-action: manipulation;
+  transition: transform 0.08s ease, background 0.08s ease;
+}
+
+.spark-share-btn:active {
+  transform: scale(0.95);
+  background: rgba(45, 212, 191, 0.3);
+}
+
+.spark-presence-button:active {
+  transform: scale(0.94);
+}
+
+/* The tap reaction, with its settle: a squash as the bounce
+ * lands, then the spring back — follow-through you can see. */
+@keyframes spark-wiggle {
+  0% { transform: rotate(0deg) scale(1, 1); }
+  30% { transform: rotate(-7deg) scale(1.08, 1.05); }
+  55% { transform: rotate(6deg) scale(1.05, 1.08); }
+  78% { transform: rotate(-2deg) scale(0.96, 0.94); }
+  100% { transform: rotate(0deg) scale(1, 1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spark-chip { transition: none; }
+  .spark-chip:active { transform: none; }
+  .spark-care-buttons button { transition: none; }
+  .spark-care-buttons button:active { transform: none; }
+  .spark-share-btn { transition: none; }
+  .spark-share-btn:active { transform: none; }
+  .spark-presence-button:active { transform: none; }
+  .spark-convo-thread { scroll-behavior: auto; }
+}

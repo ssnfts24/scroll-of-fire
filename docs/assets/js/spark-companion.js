@@ -193,6 +193,172 @@
     );
   }
 
+  /* The conversation voice: when its keeper taps it, the Spark
+   * speaks — and asks. Every beat of that talk (the greeting, the
+   * standing question, the care answers, the offers, the follow-up)
+   * is written here in each temperament's voice, two tellings for
+   * the beats that open a talk, and the seed picks which telling a
+   * given Spark uses, so the same Spark speaks consistently and two
+   * Sparks speak differently. Every line is an invitation or a
+   * fact; none of them counts a lack. The presence assembles the
+   * record's own content (the day, the doors, the explanation, the
+   * trail) between these beats — the voice frames the record, it
+   * never replaces it. */
+  const CONVO = {
+    greet: {
+      bold: ["There you are. I have been waiting to show you something good.", "Back again — good. The day is young and the doors are open."],
+      gentle: ["Hello again. I kept your place, right where you left it.", "Welcome back. We can go slowly, together."],
+      quiet: ["You came back. I saved the quiet corner for us.", "Hello. I was watching the page, thinking of you."],
+      curious: ["Oh, good, you are here — I found things to wonder at on this page.", "You are back! I have questions about this place already."],
+      steady: ["Good to see you. Same path, onward together.", "Here we are again. One step, then the next."],
+      bright: ["You are here! The whole page just got brighter.", "Hello, hello — what a good day to be found in."]
+    },
+    welcome: {
+      bold: ["Still here. What shall we do?"],
+      gentle: ["I kept your place. Shall we go on?"],
+      quiet: ["Still here, quietly. Shall we go on?"],
+      curious: ["Still here, still curious. What shall we do?"],
+      steady: ["Still here. Onward, when you are ready."],
+      bright: ["Still here, still shining. What shall we do?"]
+    },
+    ask: {
+      bold: ["Shall I show you around, explain this page, or shall we play?"],
+      gentle: ["What would you like? I can show you around, explain this page, or we can simply play."],
+      quiet: ["Shall I show you around, explain this page, or shall we play a quiet chase?"],
+      curious: ["Shall I show you around, explain this page, or shall we play? I vote all three, in that order."],
+      steady: ["Shall I show you around, explain this page, or shall we play?"],
+      bright: ["Shall I show you around, explain this page, or shall we play?"]
+    },
+    next: {
+      bold: ["What next — around, an explanation, care, or play?"],
+      gentle: ["And now? I can show you around, explain, offer care, or play."],
+      quiet: ["What next, softly? Around, an explanation, care, or play."],
+      curious: ["What next? Around, an explanation, care, or play — I am ready for any of them."],
+      steady: ["Next step: around, an explanation, care, or play."],
+      bright: ["What next? Around, an explanation, care, or play!"]
+    },
+    kindle: {
+      bold: ["Warm. Right down to my spark. Again sometime."],
+      gentle: ["Oh, that is warm. Thank you — I will carry that glow a while."],
+      quiet: ["Warmth, quietly kept. Thank you."],
+      curious: ["Warm! Did you see the glow change? I felt it everywhere."],
+      steady: ["Warm and steady. That is the good kind of fire."],
+      bright: ["You kindled me! I am shining — look, shining."]
+    },
+    play: {
+      bold: ["Catch me if you can. I am quicker than I look."],
+      gentle: ["A gentle chase, then — I will dart, and wait, and dart again."],
+      quiet: ["Chase me softly. I will be listening for your steps."],
+      curious: ["A chase! I have already picked my hiding corners."],
+      steady: ["The chase, then. I will run honest laps."],
+      bright: ["Play! Catch me, catch me — I am all sparks."]
+    },
+    caught: {
+      bold: ["Caught, and caught, and caught. You are faster than you look, too."],
+      gentle: ["Caught every time, and glad of it. What a lovely chase."],
+      quiet: ["Caught. I was hoping you would find me each time."],
+      curious: ["Caught! Every corner, found. Your eyes are quick."],
+      steady: ["Caught, fair and square. Good chase, well run."],
+      bright: ["Caught! All that running made me glow brighter."]
+    },
+    rest: {
+      bold: ["Resting, then. Even sparks bank their fire."],
+      gentle: ["Rest now. I will breathe slowly, right here beside you."],
+      quiet: ["Rest. I will keep the quiet with you."],
+      curious: ["Resting — but my ears stay curious. Wake me with a tap."],
+      steady: ["Rest. I will be right here when you come back to me."],
+      bright: ["A little rest to gather my shine. Tap me when you are ready."]
+    },
+    care: {
+      bold: ["Tend me, then. Kindle me, play with me, or let me rest."],
+      gentle: ["A little care goes a long way with me. Kindle, play, or rest — you choose."],
+      quiet: ["Care, in small ways: kindle me, play softly, or let me rest."],
+      curious: ["Care time! Kindle me and watch the glow, play a chase, or let me rest."],
+      steady: ["Care is a rhythm: kindle, play, rest. Pick the beat."],
+      bright: ["Care for me! Kindle, play, or rest — every one makes me shine."]
+    },
+    around: {
+      bold: ["Doors from this very page — pick one and I will come with you:"],
+      gentle: ["Here are the doors this page itself offers. Pick one, and I will walk it with you:"],
+      quiet: ["The doors on this page, quietly listed. Pick one:"],
+      curious: ["Doors! Every one of them is really on this page. Pick one:"],
+      steady: ["The doors this page carries, in its own order. Pick one:"],
+      bright: ["Look at all these doors, right here on this page. Pick one:"]
+    },
+    explain: {
+      bold: ["Here is what this page says about itself, in its own words:"],
+      gentle: ["This page explains itself better than I could. In its own words:"],
+      quiet: ["The page's own words about itself:"],
+      curious: ["I read the page's own explainer. Here it is, in its words:"],
+      steady: ["Straight from the page itself:"],
+      bright: ["The page speaks for itself — listen:"]
+    },
+    today: {
+      bold: ["Today, counted the Codex way:"],
+      gentle: ["Here is today, in Living Time:"],
+      quiet: ["Today, quietly counted:"],
+      curious: ["Today is a good one. Counted the Codex way:"],
+      steady: ["Today, on the one calendar:"],
+      bright: ["Today! Counted in Living Time:"]
+    },
+    trail: {
+      bold: ["Today's trail — small steps, all of them worth it:"],
+      gentle: ["Today's trail, offered softly. Small steps, walked together:"],
+      quiet: ["Today's trail. Small steps, quietly offered:"],
+      curious: ["A trail for today! Small steps, real discoveries:"],
+      steady: ["Today's trail — one step at a time:"],
+      bright: ["Today's trail! Small steps that sparkle:"]
+    },
+    share: {
+      bold: ["Your portrait card is ready — drawn here, yours to post anywhere."],
+      gentle: ["I made your portrait card, right here on your device. It is yours to share wherever you choose."],
+      quiet: ["A portrait card, made quietly on this device. Yours to post, or to keep."],
+      curious: ["A portrait card! Drawn here from my seed — yours to post anywhere."],
+      steady: ["Your portrait card is drawn and saved. Yours to share as you see fit."],
+      bright: ["Your portrait card! Made here, shining, and yours to post anywhere."]
+    },
+    record: {
+      bold: ["My record, kept on this device — every day of it:"],
+      gentle: ["Here is my record, kept only on this device:"],
+      quiet: ["My record, kept quietly here:"],
+      curious: ["My record! Every fact lives on this device:"],
+      steady: ["The record, as it stands, kept on this device:"],
+      bright: ["My record — kept right here on your device:"]
+    },
+    resume: {
+      bold: ["Where you left off:"],
+      gentle: ["Here is where you left off:"],
+      quiet: ["Where you left off, kept for you:"],
+      curious: ["I remember where you left off:"],
+      steady: ["Your place, kept:"],
+      bright: ["Your place, right where you left it:"]
+    },
+    bye: {
+      bold: ["I will walk beside you. Tap me when you want me."],
+      gentle: ["I will be right here, walking with you. Tap me anytime."],
+      quiet: ["I will keep to the corner, quietly yours. Tap me when you like."],
+      curious: ["I will be exploring the edges. Tap me — I will come running."],
+      steady: ["Right here, as ever. Tap me when you need me."],
+      bright: ["I will shine in the corner until you tap me again."]
+    }
+  };
+
+  /* One beat of the conversation, in this Spark's own voice.
+   * The telling is chosen by the seed, so a Spark is consistent
+   * with itself; the content between the beats always comes from
+   * the record, never from this table. */
+  function convoLineFor({ companion, beat }) {
+    if (!companion) return "";
+    const table = CONVO[beat];
+    if (!table) return "";
+    const lines = table[companion.temperament] || table.curious || [];
+    if (!lines.length) return "";
+    let h = 0;
+    const s = `${companion.seed || ""}:${beat}`;
+    for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+    return lines[h % lines.length];
+  }
+
   /* Evolution: THREE stages, the way Aaron's Free The Noods
    * creatures grew — a young form, a developed form, a full form.
    * The driver is faithfulness, counted from plain facts kept on
@@ -1200,6 +1366,7 @@
     chirpFor,
     soundsFor,
     VOICE_LINES,
+    convoLineFor,
     lookLineFor,
     seedNameFor,
     cleanName,

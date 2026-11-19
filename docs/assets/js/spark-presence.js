@@ -349,16 +349,13 @@
       `<p class="spark-presence-today"></p>` +
       `<p class="spark-presence-growth" hidden></p>` +
       `<p class="spark-presence-guide"></p>` +
+      `<div class="spark-convo">` +
+      `<div class="spark-convo-thread" aria-live="polite" aria-label="Talking with your Spark"></div>` +
+      `<div class="spark-convo-chips" role="group" aria-label="Answers and offers"></div></div>` +
       `<p class="spark-presence-links"><a class="spark-presence-go" href="#">See it</a> ` +
       `<a class="spark-presence-panel-link" href="#">Your Spark</a> ` +
       `<a class="spark-presence-visit" href="companions.html">Visit</a> ` +
       `<a class="spark-presence-sound" href="#">Sounds: on</a></p>` +
-      `<p class="spark-presence-actions">` +
-      `<a class="spark-guide-around" href="#">Show me around</a> ` +
-      `<a class="spark-guide-explain" href="#">Explain this page</a> ` +
-      `<a class="spark-guide-resume" href="#">Where was I?</a> ` +
-      `<a class="spark-guide-today" href="#">Today</a></p>` +
-      `<div class="spark-guide-out" hidden></div>` +
       `<div class="spark-presence-panel" hidden></div>` +
       `<div class="spark-presence-care" hidden>` +
       `<p class="spark-panel-row spark-care-head"><strong>Care</strong> <span class="spark-care-sub">— a pet's small life, kept on this device</span></p>` +
@@ -453,16 +450,46 @@
     }
     fillCare();
 
-    /* The guide's output: one small area under the actions,
-     * filled with text nodes and real links only. */
-    const guideOut = host.querySelector(".spark-guide-out");
-    function showGuide(build) {
-      guideOut.innerHTML = "";
-      build(guideOut);
-      guideOut.removeAttribute("hidden");
+    /* ---- the conversation ----
+     * A tap on the Spark opens a talk, not a dashboard. She
+     * speaks first — a greeting in her temperament's voice, the
+     * real day from the canonical calendar, and the thread the
+     * record holds — then she asks a question, and the keeper
+     * answers with a tap on a chip. Every answer she gives is
+     * assembled from the record and the page: the day's
+     * coordinate, the doors this page carries, the page's own
+     * words about itself, the trail, the care life. Her voice
+     * frames those facts (Core.convoLineFor); it never invents
+     * beyond them. The chips are the buttons, made thumb-sized;
+     * every chip makes her answer in body, voice, and words at
+     * once — a look, then the delight bounce, her little sound,
+     * and a line in the thread. */
+    const thread = host.querySelector(".spark-convo-thread");
+    const chipsBox = host.querySelector(".spark-convo-chips");
+    function trimThread() {
+      while (thread.children.length > 9) thread.removeChild(thread.firstChild);
+      thread.scrollTop = thread.scrollHeight;
     }
-    function guideLine(text, href, hrefLabel) {
-      showGuide((box) => {
+    function say(text) {
+      if (!text) return;
+      const p = document.createElement("p");
+      p.className = "spark-convo-line";
+      const b = document.createElement("strong");
+      b.textContent = displayName;
+      p.appendChild(b);
+      p.appendChild(document.createTextNode(` ${text}`));
+      thread.appendChild(p);
+      trimThread();
+    }
+    function sayList(build) {
+      const box = document.createElement("div");
+      box.className = "spark-convo-line spark-convo-list";
+      build(box);
+      thread.appendChild(box);
+      trimThread();
+    }
+    function sayDoor(text, href, hrefLabel) {
+      sayList((box) => {
         const p = document.createElement("p");
         p.className = "spark-guide-text";
         p.textContent = text;
@@ -476,18 +503,104 @@
         }
       });
     }
-    host.querySelector(".spark-guide-around").addEventListener("click", (event) => {
-      event.preventDefault();
+    function replyEcho(label) {
+      const p = document.createElement("p");
+      p.className = "spark-convo-reply";
+      p.textContent = label;
+      thread.appendChild(p);
+      trimThread();
+    }
+    /* Every tap answered in the body first: the eyes land —
+     * a glance toward the keeper — then the body answers with
+     * its bounce, and her voice answers with it. One helper, so
+     * no control in the talk is ever a dead tap. */
+    function answerInBody(withVoice = true) {
+      if (art) {
+        art.classList.add("is-looking");
+        window.setTimeout(() => {
+          art.classList.remove("is-looking");
+          react(art);
+        }, 100);
+      }
+      if (ctrl) {
+        if (ctrl.lookAt) ctrl.lookAt(0.5, 0.15);
+        if (ctrl.delight) ctrl.delight();
+      }
+      if (withVoice) chirp(companion);
+    }
+    function setChips(list) {
+      chipsBox.innerHTML = "";
+      for (const c of list) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = c.cls ? `spark-chip ${c.cls}` : "spark-chip";
+        b.textContent = c.label;
+        b.addEventListener("click", () => {
+          /* The keeper has taken the talk: the arrival timer
+           * that would fold her opening line away must never
+           * fold a conversation mid-sentence. */
+          if (arrivalTimer) {
+            window.clearTimeout(arrivalTimer);
+            arrivalTimer = null;
+          }
+          replyEcho(c.label);
+          c.go();
+        });
+        chipsBox.appendChild(b);
+      }
+    }
+    const chip = (label, go, cls) => ({ label, go, cls });
+    function afterTalk() {
+      say(Core.convoLineFor({ companion, beat: "next" }));
+      setChips(mainChips());
+    }
+    function mainChips() {
+      return [
+        chip("Show me around", doAround, "spark-guide-around"),
+        chip("Explain this page", doExplain, "spark-guide-explain"),
+        chip("Let's play", doPlay),
+        chip("Care", offerCare),
+        chip("Today's trail", doTrail),
+        chip("More", moreChips)
+      ];
+    }
+    function moreChips() {
+      answerInBody(false);
+      setChips([
+        chip("Today", doToday, "spark-guide-today"),
+        chip("Where was I?", doResume, "spark-guide-resume"),
+        chip("Share my Spark", doShare),
+        chip("My record", doRecord),
+        chip("Just walk with me", doBye),
+        chip("Back", () => {
+          say(Core.convoLineFor({ companion, beat: "ask" }));
+          setChips(mainChips());
+        })
+      ]);
+    }
+    function offerCare() {
+      answerInBody();
+      say(Core.convoLineFor({ companion, beat: "care" }));
+      setChips([
+        chip("Kindle", doKindle, "spark-care-kindle"),
+        chip("Play", doPlay, "spark-care-play"),
+        chip("Rest", doRest, "spark-care-rest"),
+        chip("Back", () => {
+          say(Core.convoLineFor({ companion, beat: "ask" }));
+          setChips(mainChips());
+        })
+      ]);
+    }
+    function doAround() {
+      answerInBody();
       const doors = Core.doorsFor({ links: pageLinks(), page: pageKey() });
       if (!doors.length) {
-        guideLine("This page keeps its doors in the menu at the top — every one of them is real, and I walk them all with you.");
+        say("This page keeps its doors in the menu at the top — every one of them is real, and I walk them all with you.");
+        afterTalk();
         return;
       }
-      showGuide((box) => {
-        const p = document.createElement("p");
-        p.className = "spark-guide-text";
-        p.textContent = "Doors from this very page — pick one and I'll come with you:";
-        box.appendChild(p);
+      say(Core.convoLineFor({ companion, beat: "around" }));
+      sayList((box) => {
         const list = document.createElement("ul");
         list.className = "spark-guide-doors";
         for (const door of doors) {
@@ -500,34 +613,103 @@
         }
         box.appendChild(list);
       });
-    });
-    host.querySelector(".spark-guide-explain").addEventListener("click", (event) => {
-      event.preventDefault();
+      afterTalk();
+    }
+    function doExplain() {
+      answerInBody();
       const ex = Core.explainFor(pageExplainSource());
       if (!ex.text) {
-        guideLine("This page speaks from its first lines — start at the top and I'll walk it with you.");
+        say("This page speaks from its first lines — start at the top and I'll walk it with you.");
+        afterTalk();
         return;
       }
-      guideLine(
+      say(Core.convoLineFor({ companion, beat: "explain" }));
+      say(
         ex.text +
           (ex.source === "explainer"
             ? " — in this page's own explainer's words."
             : " — in this page's own opening words.")
       );
-    });
-    host.querySelector(".spark-guide-resume").addEventListener("click", (event) => {
-      event.preventDefault();
+      afterTalk();
+    }
+    function doResume() {
+      answerInBody();
       const resume = Core.resumeFor({ record: getRecord() });
-      guideLine(resume.text, resume.href, resume.href ? "Back to it" : null);
-    });
-    host.querySelector(".spark-guide-today").addEventListener("click", (event) => {
-      event.preventDefault();
-      guideLine(
+      say(Core.convoLineFor({ companion, beat: "resume" }));
+      sayDoor(resume.text, resume.href, resume.href ? "Back to it" : null);
+      afterTalk();
+    }
+    function doToday() {
+      answerInBody();
+      say(Core.convoLineFor({ companion, beat: "today" }));
+      sayDoor(
         `${Core.coordinateLineFor(today)}. The day's telling is told in plain words on the 13 Moons page.`,
         "moons.html",
         "Hear today's telling"
       );
-    });
+      afterTalk();
+    }
+    function doTrail() {
+      answerInBody();
+      say(Core.convoLineFor({ companion, beat: "trail" }));
+      const trail = Core.trailFor({ record: getRecord(), companion, today, page: pageKey() });
+      if (!trail.steps.length) {
+        say("The trail is quiet today — the day itself is the step.");
+        afterTalk();
+        return;
+      }
+      sayList((box) => {
+        const list = document.createElement("ul");
+        list.className = "spark-trail-steps";
+        for (const step of trail.steps) {
+          const li = document.createElement("li");
+          li.className = step.done ? "is-done" : "";
+          const mark = document.createElement("span");
+          mark.className = "spark-trail-mark";
+          mark.textContent = step.done ? "●" : "○";
+          li.appendChild(mark);
+          li.appendChild(document.createTextNode(" "));
+          const a = document.createElement("a");
+          a.href = step.href;
+          a.textContent = step.label;
+          li.appendChild(a);
+          list.appendChild(li);
+        }
+        box.appendChild(list);
+      });
+      if (trail.complete) say("Walked, all of it. Well done, both of you.");
+      afterTalk();
+    }
+    function doRecord() {
+      answerInBody();
+      say(Core.convoLineFor({ companion, beat: "record" }));
+      if (panel.hasAttribute("hidden")) panelLink.click();
+      afterTalk();
+    }
+    function doBye() {
+      answerInBody();
+      say(Core.convoLineFor({ companion, beat: "bye" }));
+      setChips([]);
+      window.setTimeout(closeBubble, 1200);
+    }
+    let convoStarted = false;
+    function startConvo() {
+      convoStarted = true;
+      say(Core.convoLineFor({ companion, beat: "greet" }));
+      say(`${Core.coordinateLineFor(today)}. ${guide.text}`);
+      say(Core.convoLineFor({ companion, beat: "ask" }));
+      setChips(mainChips());
+    }
+    function welcomeBack() {
+      say(Core.convoLineFor({ companion, beat: "welcome" }));
+      setChips(mainChips());
+    }
+    function openConvo() {
+      bubble.removeAttribute("hidden");
+      button.setAttribute("aria-expanded", "true");
+      if (!convoStarted) startConvo();
+      else welcomeBack();
+    }
 
     /* Share my Spark: a portrait card drawn here, on this
      * device, from the same record the panel shows — its
@@ -535,7 +717,8 @@
      * born from, and today. The keeper downloads the picture
      * and posts it wherever they choose; nothing is uploaded,
      * nothing is posted for them. */
-    host.querySelector(".spark-share-btn").addEventListener("click", () => {
+    function doShare() {
+      answerInBody();
       const card = Core.shareCardFor({ record: getRecord(), companion, today });
       const stage = Core.stageOf(getRecord(), companion);
       const W = 1080;
@@ -593,7 +776,10 @@
         drawWords();
       };
       img.src = url;
-    });
+      say(Core.convoLineFor({ companion, beat: "share" }));
+      afterTalk();
+    }
+    host.querySelector(".spark-share-btn").addEventListener("click", doShare);
 
     const button = host.querySelector(".spark-presence-button");
     const bubble = host.querySelector(".spark-presence-bubble");
@@ -624,6 +810,10 @@
       if (ctrl) art.classList.add("has-3d");
     }
     button.addEventListener("click", () => {
+      if (arrivalTimer) {
+        window.clearTimeout(arrivalTimer);
+        arrivalTimer = null;
+      }
       tapSound(companion);
       /* A tap is answered in body as well as voice: a small
        * bounce of delight, gone as soon as it lands. */
@@ -635,8 +825,9 @@
       if (roam) roam.wake();
       const open = bubble.hasAttribute("hidden");
       if (open) {
-        bubble.removeAttribute("hidden");
-        button.setAttribute("aria-expanded", "true");
+        /* A tap opens a talk: she turns, greets the day, and
+         * asks her question — the panel rides inside the talk. */
+        openConvo();
       } else {
         closeBubble();
       }
@@ -647,6 +838,7 @@
     const panelLink = host.querySelector(".spark-presence-panel-link");
     panelLink.addEventListener("click", (event) => {
       event.preventDefault();
+      answerInBody();
       if (panel.hasAttribute("hidden")) {
         panel.removeAttribute("hidden");
         careBox.removeAttribute("hidden");
@@ -663,7 +855,7 @@
      * Rest: it dims and curls and breathes quietly until a tap
      * or a scroll wakes it. Every act is recorded on this device
      * alone, and care only ever adds. */
-    host.querySelector(".spark-care-kindle").addEventListener("click", () => {
+    function doKindle() {
       setRecord(
         Core.applyCare(getRecord(), {
           action: "kindle",
@@ -676,11 +868,22 @@
         art.classList.add("is-kindling");
         window.setTimeout(() => art.classList.remove("is-kindling"), 1200);
       }
-      if (ctrl) ctrl.delight();
-      chirp(companion);
       if (roam) roam.glow();
-    });
-    host.querySelector(".spark-care-play").addEventListener("click", () => {
+      answerInBody();
+      say(Core.convoLineFor({ companion, beat: "kindle" }));
+      afterTalk();
+    }
+    function doPlay() {
+      answerInBody();
+      say(Core.convoLineFor({ companion, beat: "play" }));
+      if (!roam) {
+        /* Reduced motion: she stays in her corner by the
+         * device's own asking, so the chase rests — and she
+         * says so, rather than letting the tap fall dead. */
+        say("I stay in my corner while your device asks for stillness — the chase rests with me. Care and talk still work, all of it.");
+        afterTalk();
+        return;
+      }
       closeBubble();
       if (roam) {
         roam.startPlay(() => {
@@ -690,22 +893,36 @@
               patternDay: today ? today.dayOfPatternYear : null
             })
           );
-          guideLine("Caught, and caught, and caught — good chase. Play is in its step now.");
           bubble.removeAttribute("hidden");
           button.setAttribute("aria-expanded", "true");
+          if (!convoStarted) startConvo();
+          say(Core.convoLineFor({ companion, beat: "caught" }));
+          say("Play is in my step now — the bond grew with that chase.");
+          say(Core.convoLineFor({ companion, beat: "next" }));
+          setChips(mainChips());
         });
       }
-    });
-    host.querySelector(".spark-care-rest").addEventListener("click", () => {
+    }
+    function doRest() {
       setRecord(
         Core.applyCare(getRecord(), {
           action: "rest",
           patternDay: today ? today.dayOfPatternYear : null
         })
       );
+      answerInBody(false);
+      say(Core.convoLineFor({ companion, beat: "rest" }));
+      if (!roam) {
+        say("I am already resting in my corner — stillness suits me here.");
+        afterTalk();
+        return;
+      }
       closeBubble();
       if (roam) roam.rest();
-    });
+    }
+    host.querySelector(".spark-care-kindle").addEventListener("click", doKindle);
+    host.querySelector(".spark-care-play").addEventListener("click", doPlay);
+    host.querySelector(".spark-care-rest").addEventListener("click", doRest);
     const soundToggle = host.querySelector(".spark-presence-sound");
     const paintSound = () =>
       (soundToggle.textContent = soundOff() ? "Sounds: off" : "Sounds: on");
@@ -718,6 +935,11 @@
       }
       paintSound();
       if (!soundOff()) chirp(companion);
+      say(
+        soundOff()
+          ? "Sounds are off. My voice rests until you turn it on again."
+          : "Sounds are on — my little notes will answer your taps."
+      );
     });
     paintSound();
     /* Pointerdown, not click — and a tap on a page's living entry
@@ -752,8 +974,9 @@
     if (arrival || growthLine) {
       const openBubble = () => {
         if (!bubble.hasAttribute("hidden")) return;
-        bubble.removeAttribute("hidden");
-        button.setAttribute("aria-expanded", "true");
+        /* Arriving, she opens the talk herself: greeting, the
+         * real day, her question — then she steps back. */
+        openConvo();
         arrivalTimer = window.setTimeout(closeBubble, 11000);
       };
       let waited = 0;

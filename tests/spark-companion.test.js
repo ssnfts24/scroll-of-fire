@@ -896,6 +896,77 @@ test("v3 share card: the keeper's own panel facts, plainly a Codex Spark, made o
   assert.ok(!/fetch\(|XMLHttpRequest|sendBeacon/.test(presence), "sharing uploads nothing, posts nothing");
 });
 
+test("v4 conversation voice: every beat, in every temperament, from the seed — and clean copy", () => {
+  const banned = /you have not|haven't|have not|not done|not yet|missed|incomplete/i;
+  const beats = [
+    "greet", "welcome", "ask", "next", "kindle", "play", "caught", "rest",
+    "care", "around", "explain", "today", "trail", "share", "record", "resume", "bye"
+  ];
+  for (let kindIndex = 0; kindIndex < 6; kindIndex++) {
+    const seed = Core.makeSeed({ moon: 8, patternDay: 216, kindIndex, nonce: `voice${kindIndex}zz` });
+    const companion = Core.generate(seed);
+    for (const beat of beats) {
+      const line = Core.convoLineFor({ companion, beat });
+      assert.ok(line && line.length > 3, `${companion.temperament} has a ${beat} line`);
+      assert.ok(!banned.test(line), `${companion.temperament}'s ${beat} line is clean copy: ${line}`);
+      assert.equal(
+        Core.convoLineFor({ companion, beat }),
+        line,
+        "the same Spark speaks consistently"
+      );
+    }
+    assert.notEqual(
+      Core.convoLineFor({ companion, beat: "greet" }),
+      Core.convoLineFor({ companion, beat: "bye" }),
+      "different beats, different words"
+    );
+  }
+  assert.equal(Core.convoLineFor({ companion: null, beat: "greet" }), "", "no companion, no line");
+  assert.equal(
+    Core.convoLineFor({ companion: Core.generate(SEED_A), beat: "no-such-beat" }),
+    "",
+    "an unknown beat stays silent rather than inventing"
+  );
+});
+
+test("v4 conversation rides the presence: a thread, chips for buttons, a body that answers", () => {
+  const presence = read("docs/assets/js/spark-presence.js");
+  for (const hook of [
+    "spark-convo-thread",
+    "spark-convo-chips",
+    "spark-convo-reply",
+    "convoLineFor",
+    "startConvo",
+    "openConvo",
+    "answerInBody",
+    "setChips",
+    "replyEcho",
+    "doAround",
+    "doExplain",
+    "doKindle",
+    "doPlay",
+    "doRest",
+    "doShare",
+    "doTrail",
+    "doBye"
+  ]) {
+    assert.ok(presence.includes(hook), `the presence carries ${hook}`);
+  }
+  assert.ok(!/fetch\(|XMLHttpRequest|sendBeacon/.test(presence), "the conversation sends nothing anywhere");
+  const css = read("docs/assets/css/spark-companion.css");
+  assert.ok(css.includes(".spark-convo-thread"), "the thread is styled");
+  assert.ok(css.includes(".spark-convo-chips"), "the chips are styled");
+  const chipBlock = css.slice(css.indexOf(".spark-chip {"), css.indexOf(".spark-chip {") + 500);
+  assert.ok(chipBlock.includes("min-height: 44px"), "a chip is a thumb-sized target");
+  const v4Start = css.indexOf("v4: the conversation");
+  assert.ok(v4Start > -1, "the v4 interaction section is in the stylesheet");
+  const careAt = css.indexOf(".spark-care-buttons button {", v4Start);
+  const careBlock = css.slice(careAt, careAt + 300);
+  assert.ok(careBlock.includes("min-height: 44px"), "a care button is a thumb-sized target");
+  const shareAt = css.indexOf(".spark-share-btn {", v4Start);
+  assert.ok(css.slice(shareAt, shareAt + 300).includes("min-height: 44px"), "the share button is a thumb-sized target");
+});
+
 test("no R1.7 protected file is touched by the Spark", () => {
   const manifest = read("docs/development/R1.7-PROTECTED-MANIFEST.md");
   for (const rel of [
