@@ -270,6 +270,73 @@ test("the Spark roams: it walks in, strolls, and respects reduced motion", () =>
   assert.match(css, /prefers-reduced-motion/, "the stylesheet stills the Spark for reduced motion");
 });
 
+test("the meeting speaks first: the Spark introduces itself by its seed-name", () => {
+  const companion = Core.generate(SEED_A);
+  const words = Core.encounterFor({ companion });
+  assert.equal(words.greeting, "Hey — I'm the Spark you adopt.");
+  assert.ok(words.intro.includes(companion.name), "the introduction speaks the seed-born name");
+  assert.ok(words.intro.includes(companion.kindName), "and its kind");
+  assert.match(words.born, /Moon 8, Pattern Day 216/, "and the day it was made from");
+  assert.equal(words.adoptLabel, `Adopt ${companion.name}`, "one tap adopts it, by name");
+  assert.equal(words.laterLabel, "Not now");
+  assert.match(words.invite, /only on this device/, "the invitation is honest about where it lives");
+});
+
+test("a Day Out of Time meeting does not invent a moon", () => {
+  const seed = Core.makeSeed({ moon: null, patternDay: null, kindIndex: 5, nonce: "doot0001" });
+  const words = Core.encounterFor({ companion: Core.generate(seed) });
+  assert.match(words.born, /Day Out of Time/);
+  assert.ok(!/Moon \d/.test(words.born), "no moon is claimed for the day outside the moons");
+});
+
+test("the guide names the place you arrived at, and points to a fitting next door", () => {
+  const companion = Core.generate(SEED_A);
+  let record = Core.newRecord({ seed: SEED_A, name: "Ember", civilDate: "2026-11-18" });
+  record = Core.recordVisit(record, { patternDay: 216, page: "index.html" });
+  const a = Core.arrivalFor({ record, companion, todayPatternDay: 216, page: "index.html" });
+  assert.match(a.text, /Front Door/, "it says where you are");
+  assert.equal(a.href, "moons.html", "and suggests the fitting next door");
+  assert.equal(a.name, "Ember", "speaking to the keeper's name, as always");
+
+  /* Once that next door is walked, the record's own standing
+   * suggestion speaks instead of repeating the same pointer. */
+  record = Core.recordVisit(record, { patternDay: 216, page: "moons.html" });
+  const again = Core.arrivalFor({ record, companion, todayPatternDay: 216, page: "index.html" });
+  assert.equal(again.href, Core.guidanceFor({ record, companion, todayPatternDay: 216 }).href);
+
+  /* A page the guide cannot name falls back to the record, whole. */
+  const unknown = Core.arrivalFor({ record, companion, todayPatternDay: 216, page: "ab.html" });
+  assert.deepEqual(unknown, Core.guidanceFor({ record, companion, todayPatternDay: 216 }));
+});
+
+test("every door the guide points to is a real page", () => {
+  for (const [page, info] of Object.entries(Core.PAGE_GUIDE)) {
+    assert.ok(info.place && info.line, `${page} has a name and a line`);
+    assert.ok(
+      fs.existsSync(path.join(root, "docs", info.next.href)),
+      `${page} points to ${info.next.href}, which exists`
+    );
+  }
+});
+
+test("the pop-up meeting rides the presence: one tap, a remembered not-now, a waiting ember", () => {
+  const presence = read("docs/assets/js/spark-presence.js");
+  assert.ok(presence.includes("PENDING_KEY"), "the waiting Spark's seed is kept on the device");
+  assert.ok(presence.includes("spark-encounter"), "the Spark pops up and introduces itself");
+  assert.ok(presence.includes("spark-encounter-adopt"), "one button adopts it");
+  assert.ok(presence.includes("spark-ember"), "after not-now it waits as an ember at the edge");
+  assert.ok(presence.includes("arrivalFor"), "arriving somewhere new, it speaks as a guide");
+  assert.ok(presence.includes("le-rail"), "its furniture lifts clear of the homepage's bottom path rail");
+  assert.ok(presence.includes("lpo-overlay"), "the guide also waits for a page opening, not only the homepage entry");
+  assert.ok(presence.includes("encounterFor"), "its first words come from the core, in its own voice");
+  assert.ok(!/fetch\(|XMLHttpRequest|sendBeacon/.test(presence), "the meeting sends nothing anywhere either");
+  const page = read("docs/assets/js/spark-companions-page.js");
+  assert.ok(page.includes("PENDING_KEY"), "a Spark kept on its home page ends the ember's wait");
+  const css = read("docs/assets/css/spark-companion.css");
+  assert.match(css, /\.spark-encounter\s*\{/, "the meeting has its card");
+  assert.match(css, /\.spark-ember\s*\{/, "the ember has its place at the edge");
+});
+
 test("no R1.7 protected file is touched by the Spark", () => {
   const manifest = read("docs/development/R1.7-PROTECTED-MANIFEST.md");
   for (const rel of [

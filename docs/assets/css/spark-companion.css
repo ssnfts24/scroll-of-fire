@@ -127,6 +127,140 @@
   .spark-presence-button { animation: none; }
   .spark-presence-art.is-walking svg { animation: none; }
   .spark-big-art svg { animation: none; }
+  .spark-encounter { animation: none; }
+  .spark-encounter-art svg { animation: none; }
+  .spark-ember { animation: none; }
+}
+
+/* ---------- the meeting: pop-up encounter and waiting ember ---------- */
+
+/* The Spark pops up where its person first arrives: a card at the
+ * corner of the page, the creature itself and its own short words.
+ * It takes the corner only — the page behind it stays readable,
+ * and both of its buttons are full-size tap targets. */
+.spark-encounter-host {
+  position: fixed;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(12px, env(safe-area-inset-bottom));
+  z-index: 810;
+  font-family: inherit;
+}
+
+.spark-encounter {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  max-width: min(400px, calc(100vw - 24px));
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid var(--spark-line);
+  background: var(--spark-card);
+  color: var(--spark-ink);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  transform-origin: bottom right;
+  animation: spark-pop 0.45s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+
+@keyframes spark-pop {
+  from { opacity: 0; transform: translateY(14px) scale(0.85); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.spark-encounter-art svg {
+  display: block;
+  width: 84px;
+  height: 84px;
+  animation: spark-bob 5s ease-in-out infinite;
+}
+
+.spark-encounter-words p {
+  margin: 0 0 6px;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.spark-encounter-greet {
+  font-weight: 700;
+  font-size: 1rem !important;
+}
+
+.spark-encounter-born,
+.spark-encounter-invite {
+  color: var(--spark-dim);
+  font-size: 0.86rem !important;
+}
+
+.spark-encounter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.spark-encounter-adopt {
+  min-height: 44px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--spark-gold);
+  background: var(--spark-gold);
+  color: #14100a;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.spark-encounter-later {
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--spark-dim);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+/* After "Not now": the same Spark, waiting as a small ember at the
+ * edge of the page. Quiet on purpose — a soft pulse, nothing more.
+ * It never pops up on its own again. */
+.spark-ember-host {
+  position: fixed;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(12px, env(safe-area-inset-bottom));
+  z-index: 800;
+  font-family: inherit;
+}
+
+.spark-ember {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid var(--spark-line);
+  background: var(--spark-card);
+  cursor: pointer;
+  opacity: 0.75;
+  animation: spark-ember-pulse 4.5s ease-in-out infinite;
+}
+
+.spark-ember:hover,
+.spark-ember:focus-visible {
+  opacity: 1;
+}
+
+.spark-ember-art svg {
+  display: block;
+  width: 32px;
+  height: 32px;
+}
+
+@keyframes spark-ember-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(217, 164, 65, 0); }
+  50% { box-shadow: 0 0 14px 2px rgba(217, 164, 65, 0.25); }
 }
 
 /* ---------- the companions page ---------- */

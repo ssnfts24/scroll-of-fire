@@ -8,8 +8,11 @@
  *   2. the Spark core + presence scripts (spark-companion.js, then
  *      spark-presence.js), deferred.
  *
- * The presence renders nothing until a Spark has been adopted on
- * that device, so unadopted visitors see no change at all.
+ * For a visitor who has adopted a Spark on that device, the
+ * presence draws it in the corner and walks it with them. For a
+ * visitor who has not, the presence carries the meeting to them:
+ * the Spark pops up once, introduces itself, and — if they say
+ * "Not now" — waits as a small ember at the page's edge.
  *
  * Exclusions, following the living-nav discipline:
  *   - docs/living-time-sphere.html — R1.7-protected; never edited.
@@ -43,11 +46,12 @@ const EXCLUDED_FILES = new Set([
 ]);
 const EXCLUDED_DIRS = new Set(["scroll", "scripture"]);
 
+const STAMP = "20261118-2";
 const CSS_TAG =
-  '<link rel="stylesheet" href="assets/css/spark-companion.css?v=20261118-1">';
+  `<link rel="stylesheet" href="assets/css/spark-companion.css?v=${STAMP}">`;
 const SCRIPT_TAGS =
-  '<script defer src="assets/js/spark-companion.js?v=20261118-1"></script>\n' +
-  '  <script defer src="assets/js/spark-presence.js?v=20261118-1"></script>';
+  `<script defer src="assets/js/spark-companion.js?v=${STAMP}"></script>\n` +
+  `  <script defer src="assets/js/spark-presence.js?v=${STAMP}"></script>`;
 
 function walk(dir, prefix = "") {
   const out = [];
@@ -81,6 +85,14 @@ for (const rel of walk(docsDir).sort()) {
   const prefix = depth > 0 ? "../".repeat(depth) : "";
   const cssTag = CSS_TAG.replace('href="assets/', `href="${prefix}assets/`);
   const scriptTags = SCRIPT_TAGS.replaceAll('src="assets/', `src="${prefix}assets/`);
+
+  /* The cache stamp moves with the Spark's code: an older stamp
+   * on an existing tag is brought up to the current one, so a
+   * returning visitor's browser does not keep yesterday's Spark. */
+  html = html
+    .replace(/spark-companion\.css\?v=[0-9A-Za-z-]+/g, `spark-companion.css?v=${STAMP}`)
+    .replace(/spark-companion\.js\?v=[0-9A-Za-z-]+/g, `spark-companion.js?v=${STAMP}`)
+    .replace(/spark-presence\.js\?v=[0-9A-Za-z-]+/g, `spark-presence.js?v=${STAMP}`);
 
   if (!html.includes("spark-companion.css")) {
     if (!html.includes("</head>")) {

@@ -29,6 +29,11 @@
 })(typeof self !== "undefined" ? self : this, function () {
   const SEED_PREFIX = "spark1";
   const STORAGE_KEY = "sof.spark.v1";
+  /* A Spark that has introduced itself but not yet been adopted
+   * waits on the device under this key: its seed, and nothing else.
+   * "Not now" is remembered here — the seed stays, the pop-up goes,
+   * and the same Spark waits as a small ember at the page's edge. */
+  const PENDING_KEY = "sof.spark.pending";
   const NAME_FALLBACK = "your Spark";
   const NAME_MAX = 24;
 
@@ -520,9 +525,84 @@
     );
   }
 
+  /* ---- the meeting: the Spark introduces itself, anywhere ---- */
+
+  /* The first words a Spark ever says, on whatever page it pops
+   * up on. Its own voice: a greeting, its seed-born name, the day
+   * it was made from, and the invitation. One tap adopts it; the
+   * words never ask for a form or a quiz first. */
+  function encounterFor({ companion }) {
+    const name = companion ? companion.name : NAME_FALLBACK;
+    const born =
+      !companion || companion.birthMoon == null
+        ? "I was made from today — the Day Out of Time, which belongs to no moon."
+        : `I was made from today — Moon ${companion.birthMoon}, Pattern Day ${companion.birthPatternDay}.`;
+    return {
+      name,
+      greeting: "Hey — I'm the Spark you adopt.",
+      intro: companion
+        ? `I'm ${name}, a ${companion.kindName} Spark — ${companion.temperament}, and ${companion.trait}. ${companion.kindLine}`
+        : `I'm ${name}.`,
+      born,
+      invite:
+        "Adopt me and I'll walk the whole site with you, pointing out doors as we go. I live only on this device — nothing about me is sent anywhere.",
+      adoptLabel: `Adopt ${name}`,
+      laterLabel: "Not now"
+    };
+  }
+
+  /* ---- the guide: arriving somewhere new ---- */
+
+  /* The places the Spark can name, and the door that fits each
+   * one. Keyed by page file name, the same key the record keeps.
+   * A page not listed here is still walked — the Spark simply
+   * falls back to what the record itself suggests. */
+  const PAGE_GUIDE = {
+    "index.html": { place: "the Front Door", line: "everything here starts from today", next: { href: "moons.html", label: "the 13 Moons telling" } },
+    "moons.html": { place: "the 13 Moons page", line: "today, told in plain words", next: { href: "living-time-sphere.html", label: "the Sphere — the whole year, turning" } },
+    "teach.html": { place: "the practice page", line: "where a day gets sealed with a mark", next: { href: "moons.html", label: "the 13 Moons telling" } },
+    "witness.html": { place: "Witness's page", line: "kept by the one who tends this site", next: { href: "companions.html", label: "my record page" } },
+    "hub.html": { place: "the Documentation Hub", line: "documented claims, each carrying its source", next: { href: "timeline.html", label: "the history timeline" } },
+    "timeline.html": { place: "the history timeline", line: "the years, laid out in one line", next: { href: "hub.html", label: "the Documentation Hub" } },
+    "search.html": { place: "Living Search", line: "one door to every shelf of the library", next: { href: "codex-atlas.html", label: "the Codex Atlas" } },
+    "codex-atlas.html": { place: "the Codex Atlas", line: "the whole map on one page", next: { href: "search.html", label: "Living Search" } },
+    "lab.html": { place: "the Lab", line: "the bench, where the instruments live", next: { href: "teach.html", label: "the practice page" } },
+    "shop.html": { place: "the Shop", line: "work made by hand", next: { href: "about-aaron.html", label: "Aaron's own page" } },
+    "about-aaron.html": { place: "Aaron's page", line: "the scribe, in his own words", next: { href: "witness.html", label: "Witness's page" } },
+    "start.html": { place: "the Start page", line: "the short path into the Codex", next: { href: "moons.html", label: "the 13 Moons telling" } },
+    "theory.html": { place: "the Theory", line: "the framework, stated plainly", next: { href: "lab.html", label: "the Lab" } },
+    "glossary.html": { place: "the Glossary", line: "the words of the Codex, defined", next: { href: "theory.html", label: "the Theory" } },
+    "guide.html": { place: "the Field Guide", line: "how to walk the Codex well", next: { href: "start.html", label: "the Start page" } },
+    "downloads.html": { place: "the Downloads shelf", line: "sealed files, kept in the open", next: { href: "hub.html", label: "the Documentation Hub" } },
+    "genesis-oracle.html": { place: "the Genesis Oracle", line: "a symbolic mirror — a reflection, not a prediction", next: { href: "moons.html", label: "the 13 Moons telling" } },
+    "sending-test.html": { place: "the Sending Test", line: "an instrument that tests a claim honestly", next: { href: "lab.html", label: "the Lab" } },
+    "claims-atlas.html": { place: "the Claims Atlas", line: "claims, graded by their evidence", next: { href: "hub.html", label: "the Documentation Hub" } },
+    "ethics.html": { place: "the Ethical Law page", line: "the limits every practice here answers to", next: { href: "theory.html", label: "the Theory" } }
+  };
+
+  /* What the Spark says when its person arrives somewhere new:
+   * where you are, in the page's own terms, and a fitting next
+   * door. Drawn only from the page's identity and the record —
+   * if this page's next door is already walked, the record's own
+   * standing suggestion speaks instead. */
+  function arrivalFor({ record, companion, todayPatternDay, page }) {
+    const info = PAGE_GUIDE[page] || null;
+    if (!info) return guidanceFor({ record, companion, todayPatternDay });
+    const seen = (record && record.pagesSeen) || [];
+    if (seen.includes(info.next.href)) {
+      return guidanceFor({ record, companion, todayPatternDay });
+    }
+    return {
+      name: displayName(record, companion),
+      text: `This is ${info.place} — ${info.line}. When you're ready, ${info.next.label} is a good next door.`,
+      href: info.next.href
+    };
+  }
+
   return {
     SEED_PREFIX,
     STORAGE_KEY,
+    PENDING_KEY,
     NAME_FALLBACK,
     KINDS,
     QUESTIONS,
@@ -550,6 +630,9 @@
     growthPoints,
     stageFor,
     stageOf,
-    guidanceFor
+    guidanceFor,
+    encounterFor,
+    arrivalFor,
+    PAGE_GUIDE
   };
 });

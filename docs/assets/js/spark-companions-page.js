@@ -10,6 +10,12 @@
  * the companion itself — how it has grown, what it has noticed on
  * this device, and what it suggests next.
  *
+ * This page is the Spark's home, not its only door: the presence
+ * (spark-presence.js) carries the same meeting to wherever a
+ * visitor first arrives, as a pop-up with one-tap adoption. The
+ * questions here remain as the slower way to meet — they flavour
+ * the kind, here as everywhere; they gate nothing.
+ *
  * Everything is kept in this browser's local storage. The Life
  * Atlas stack is loaded on this page for one reason only: to read
  * the practice days the visitor has already sealed there, so the
@@ -194,6 +200,14 @@
         civilDate: civilToday()
       });
       writeRecord(record);
+      /* A Spark kept here ends any wait elsewhere: the ember the
+       * pop-up meeting left at the page's edge is for a Spark not
+       * yet adopted, and this one just was. */
+      try {
+        window.localStorage.removeItem(Core.PENDING_KEY);
+      } catch {
+        /* nothing to clear */
+      }
       showCompanion(today);
     });
   }
