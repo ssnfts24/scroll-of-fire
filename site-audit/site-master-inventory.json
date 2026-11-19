@@ -7,7 +7,7 @@
     "publicHtmlPages": 174,
     "catalogEntries": 67,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 19,
+      "not-linked-directly-from-homepage": 18,
       "nav-label-differs-from-title": 24,
       "deployed-but-unlinked": 57,
       "unreachable-from-homepage": 3,
@@ -614,7 +614,7 @@
     },
     {
       "id": "docs-assets:assets/media",
-      "title": "docs/assets/media (44 files)",
+      "title": "docs/assets/media (51 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1769,7 +1769,6 @@
         "scroll/lexicon.html",
         "scroll/search.html",
         "search.html",
-        "sending-test.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -1781,7 +1780,9 @@
         "teach.html",
         "theory.html",
         "theory/canon.html",
-        "theory/master-equation.html",
+        "theory/ethics.html",
+        "theory/frequency-governance.html",
+        "theory/living-technology.html",
         "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/",
@@ -17820,13 +17821,15 @@
         "path": "sending-test.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 3,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 2,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": []
+      "issues": [
+        "not-linked-directly-from-homepage"
+      ]
     },
     {
       "id": "shop",
@@ -18655,15 +18658,13 @@
         "path": "theory/ethics.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 31,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 32,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "theory-frequency-governance",
@@ -18738,15 +18739,13 @@
         "path": "theory/frequency-governance.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 13,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 14,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "theory-glossary",
@@ -19009,15 +19008,13 @@
         "path": "theory/living-technology.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 12,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 13,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "theory-master-equation",
@@ -19096,13 +19093,15 @@
         "path": "theory/master-equation.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 36,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 35,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": []
+      "issues": [
+        "not-linked-directly-from-homepage"
+      ]
     },
     {
       "id": "theory-memory",
