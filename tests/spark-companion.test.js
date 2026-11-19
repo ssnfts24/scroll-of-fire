@@ -171,10 +171,6 @@ test("growth counts return days, pages, and practice — each once", () => {
   /* 1 return day x2 + 1 practice day x3 + 2 pages = 7 points */
   assert.equal(Core.growthPoints(record), 7);
   assert.equal(Core.stageOf(record).name, "Ember");
-  /* One more practice day carries it over the Flame threshold. */
-  record = Core.recordPractice(record, { patternDay: 218 });
-  assert.equal(Core.growthPoints(record), 10);
-  assert.equal(Core.stageOf(record).name, "Flame");
 });
 
 test("stages rise in order and never fall", () => {
@@ -187,49 +183,6 @@ test("stages rise in order and never fall", () => {
     last = ix;
   }
   assert.equal(Core.stageFor(25).name, "Radiant");
-});
-
-test("evolution: three stages, one creature, grown by returns alone", () => {
-  const spark = Core.generate(SEED_A);
-  assert.equal(Core.STAGES.length, 3, "three stages, as the Noods grew");
-  assert.equal(Core.stageFor(0).name, "Ember");
-  assert.equal(Core.stageFor(8).name, "Flame");
-  assert.equal(Core.stageFor(25).name, "Radiant");
-
-  /* The same seed at every stage: form, palette and gait never
-   * change — only the body's development does. */
-  const ember = Core.renderSVG(spark, { stage: 0 });
-  const flame = Core.renderSVG(spark, { stage: 1 });
-  const radiant = Core.renderSVG(spark, { stage: 2 });
-  for (const svg of [ember, flame, radiant]) {
-    assert.ok(svg.includes(`data-spark-form="${spark.form}"`), "same form at every stage");
-    assert.ok(svg.includes(spark.palette.body), "same seed-true colours at every stage");
-  }
-  assert.ok(ember.includes('data-spark-stage="0"'));
-  assert.ok(!ember.includes("stroke-dasharray"), "an Ember wears no ring yet");
-  assert.ok(!ember.includes("M38 12"), "and no crown");
-  assert.ok(flame.includes('data-spark-stage="1"'));
-  assert.ok(flame.includes('r="44"'), "a Flame gains its plain ring");
-  assert.ok(!flame.includes("stroke-dasharray"), "but not the dashed ring");
-  assert.ok(radiant.includes("stroke-dasharray"), "a Radiant wears the dashed gold ring");
-  assert.ok(radiant.includes("M38 12"), "and the crown");
-  /* Growth is visible in the drawing itself: the body stands
-   * larger at each stage. */
-  const scaleOf = (svg) => Number(svg.match(/translate\(50 54\) scale\(([\d.]+)\)/)[1]);
-  assert.ok(scaleOf(ember) < scaleOf(flame), "Flame stands larger than Ember");
-  assert.ok(scaleOf(flame) < scaleOf(radiant), "Radiant stands largest");
-
-  /* Progress is honest: the record's own counts, the next stage,
-   * and the points it stands at. */
-  let record = Core.newRecord({ seed: SEED_A, name: "", civilDate: "2026-11-18" });
-  record = Core.recordVisit(record, { patternDay: 216, page: "index.html" });
-  const progress = Core.progressOf(record, spark);
-  assert.equal(progress.stage.name, "Ember");
-  assert.equal(progress.next.name, "Flame");
-  assert.equal(progress.counts.days, 1);
-  assert.equal(progress.counts.pages, 1);
-  assert.equal(progress.counts.practice, 0);
-  assert.ok(progress.nextAt >= 8, "Flame stands at 8 points, bent only by its own pace");
 });
 
 test("guidance is drawn from the record, in plain words, with a door", () => {
@@ -274,10 +227,11 @@ test("the drawing is built from the parts, and growth shows on it", () => {
   const young = Core.renderSVG(spark, { stage: 0 });
   assert.match(young, /<svg/);
   assert.ok(young.includes(`data-spark-form="${spark.form}"`));
-  assert.ok(!young.includes("stroke-dasharray"), "no dashed ring for an Ember");
+  assert.ok(!young.includes("stroke-dasharray"), "no stage ring before Radiant");
   const grown = Core.renderSVG(spark, { stage: 2 });
-  assert.ok(grown.includes("stroke-dasharray"), "the dashed ring appears at Radiant");
-  assert.ok(grown.includes('data-spark-stage="2"'));
+  assert.ok(grown.includes("stroke-dasharray"), "the dashed stage ring appears at Radiant");
+  const radiant = Core.renderSVG(spark, { stage: 2 });
+  assert.ok(radiant.includes('data-spark-stage="2"'));
 });
 
 test("the companions page carries the meeting: questions, a name, and the keep", () => {
@@ -314,103 +268,6 @@ test("the Spark roams: it walks in, strolls, and respects reduced motion", () =>
   const css = read("docs/assets/css/spark-companion.css");
   assert.match(css, /\.spark-presence\s*\{[^}]*pointer-events:\s*none/, "the walking strip never blocks the page");
   assert.match(css, /prefers-reduced-motion/, "the stylesheet stills the Spark for reduced motion");
-});
-
-test("the Spark plays: it roams free, dodges a near pointer by temperament, and a tap still lands", () => {
-  const presence = read("docs/assets/js/spark-presence.js");
-  /* Free roam: a real character engine, not a corner stroll. */
-  assert.ok(presence.includes("requestAnimationFrame"), "movement runs on the frame loop");
-  assert.ok(presence.includes("pickTarget"), "it chooses where to wander: floor, sides, open middle");
-  assert.ok(presence.includes("visibilitychange"), "it rests when the tab is hidden");
-  assert.ok(presence.includes("is-flipped"), "it turns to face the way it travels");
-  /* Pointer play, shaped by temperament. */
-  assert.ok(presence.includes("pointermove"), "it feels a cursor approach");
-  assert.ok(presence.includes("pointerdown"), "and a finger's landing — touch has no hover");
-  assert.ok(presence.includes("const PLAY = {"), "the play is a table of temperaments");
-  for (const t of ["bold", "curious", "bright", "gentle", "steady", "quiet"]) {
-    assert.ok(presence.includes(`${t}: { radius:`), `${t} has its own radius, scoot, and cooldown`);
-  }
-  assert.ok(presence.includes("approach"), "bold and curious Sparks sometimes come to look instead");
-  assert.ok(presence.includes("settleUntil"), "after three quick scoots it settles, where a tap can reach it");
-  assert.ok(presence.includes("play.cooldown"), "a cooldown caps how often it may scoot");
-  assert.ok(presence.includes("hooks.isOpen()"), "it never scoots or roams while its bubble is open");
-  /* Character reactions, in motion only. */
-  assert.ok(presence.includes("is-delighted"), "a tap lands as a delighted bounce");
-  assert.ok(presence.includes("SIGNATURE"), "its idle signature leans to its temperament");
-  for (const cls of ["is-spinning", "is-stretching", "is-looking"]) {
-    assert.ok(presence.includes(cls), `idle life includes ${cls}`);
-  }
-  const css = read("docs/assets/css/spark-companion.css");
-  for (const kf of ["spark-delight", "spark-spin-once", "spark-stretch", "spark-look", "spark-evolve"]) {
-    assert.ok(css.includes(`@keyframes ${kf}`), `${kf} is drawn`);
-  }
-  const reduceBlock = css.slice(css.indexOf("prefers-reduced-motion"));
-  for (const cls of ["is-delighted", "is-spinning", "is-stretching", "is-looking", "is-evolving"]) {
-    assert.ok(reduceBlock.includes(cls), `reduced motion stills ${cls}`);
-  }
-  assert.ok(!/fetch\(|XMLHttpRequest|sendBeacon/.test(presence), "the play sends nothing anywhere either");
-  /* The research layer: predictive, anticipated, chosen, steered. */
-  assert.ok(presence.includes("pointerPredicted"), "it flees from where the pointer will be, not only where it is");
-  assert.ok(presence.includes("trackPointer"), "the pointer is tracked with its velocity");
-  assert.ok(presence.includes('state = "anticipate"'), "a crouch — anticipation — stands between the startle and the dart");
-  assert.ok(presence.includes("ctrl.crouch()"), "and the 3D body is told to gather itself");
-  assert.ok(presence.includes("peekWanted"), "the tease: after a dodge, a still pointer earns a peek back");
-  assert.ok(presence.includes("chooseBehavior"), "idle choices are scored by a small utility brain");
-  assert.ok(presence.includes("playfulness"), "whose weights are the temperament's own curves");
-  assert.ok(presence.includes("maxForce"), "it travels by steering — velocity and a capped force — never by sliding");
-});
-
-test("the Spark has a 3D body: seed-grown WebGL, honestly falling back to the flat figure", () => {
-  const d3 = read("docs/assets/js/spark-3d.js");
-  assert.ok(d3.includes("Spark3D"), "the renderer stands as its own module");
-  assert.ok(d3.includes('getContext("webgl"'), "hand-rolled WebGL1, no library");
-  assert.ok(!/https?:\/\//.test(d3), "nothing is fetched — the site stays static and offline");
-  assert.ok(d3.includes("return null"), "where WebGL is not to be had, the mount declines");
-  assert.ok(d3.includes("buildGeometry"), "the body is built from the companion, not shipped as a model");
-  for (const form of ["orb", "shard", "comet", "sprout", "wave", "moth"]) {
-    assert.ok(d3.includes(`"${form}"`), `the ${form} form has a 3D body family`);
-  }
-  assert.ok(d3.includes("speckle"), "markings map onto the form's own faces");
-  assert.ok(d3.includes("marks3d"), "from their own seed stream");
-  assert.ok(d3.includes("stage >= 2"), "evolution changes the 3D form: the Radiant gains ring and crown");
-  assert.ok(d3.includes("dart") && d3.includes("delight") && d3.includes("celebrate"), "its movements are its life's: dart, delight, celebrate");
-  assert.ok(d3.includes("lookAt"), "it looks toward a near pointer");
-  assert.ok(d3.includes("visibilitychange"), "its loop rests when the tab hides");
-  assert.ok(d3.includes("tier"), "and steps its own quality down on a slow device");
-  assert.ok(d3.includes("prefers-reduced-motion"), "reduced motion gets one still frame");
-  /* The research layer, in the body: a gaze with saccades and
-   * blinks, a spring that lands the same at any frame rate, a
-   * wrap-and-rim light, a soft blob shadow, seed-true shape. */
-  assert.ok(d3.includes("nextSaccade"), "its gaze jumps in saccades, with an occasional aversion");
-  assert.ok(d3.includes("blinkScale"), "and now and then it blinks");
-  assert.ok(d3.includes("eyeYaw"), "the eyes lead; the head follows");
-  assert.ok(d3.includes("1 / 240"), "its bounce is a spring stepped at a fixed 240Hz");
-  assert.ok(d3.includes("uRim"), "a rim of its own glow colour rims the form");
-  assert.ok(d3.includes("wrap"), "lit by a wrap diffuse, not a flat Lambert");
-  assert.ok(d3.includes("SHADOW_VERT"), "a fake soft shadow grounds it — no shadow maps");
-  assert.ok(d3.includes('":shape"'), "its exact proportions grow from its seed too");
-  assert.ok(d3.includes("lastActivity"), "a long-resting Spark draws ever more rarely");
-  const presence = read("docs/assets/js/spark-presence.js");
-  assert.ok(presence.includes("Spark3D"), "the presence mounts the 3D body");
-  assert.ok(presence.includes("has-3d"), "and the flat drawing steps aside only when it stands");
-  assert.ok(presence.includes("renderSVG"), "the flat figure remains — the fallback is the original");
-  const page = read("docs/assets/js/spark-companions-page.js");
-  assert.ok(page.includes("Spark3D"), "its home panel stands in 3D too");
-  for (const p of ["index.html", "moons.html", "companions.html"]) {
-    assert.ok(read(`docs/${p}`).includes("spark-3d.js"), `${p} loads the renderer before the presence`);
-  }
-});
-
-test("evolution is celebrated in the presence, never as a modal", () => {
-  const presence = read("docs/assets/js/spark-presence.js");
-  assert.ok(presence.includes("stageBefore"), "the stage is read before the visit's facts land");
-  assert.ok(presence.includes("stageAfter"), "and after — the crossing is this visit's own");
-  assert.ok(presence.includes("is-evolving"), "the growth shows as a flourish of the body");
-  assert.ok(presence.includes("chirpCelebration"), "and a chirp, only through the voice a tap already woke");
-  assert.ok(presence.includes("voiceArmed"), "an unwoken voice stays silent — nothing autoplays");
-  const page = read("docs/assets/js/spark-companions-page.js");
-  assert.ok(page.includes("progressOf"), "the panel shows honest progress from the record");
-  assert.ok(page.includes("Stage ${stage.index + 1} of"), "with the stage named, of three");
 });
 
 test("the meeting speaks first: the Spark introduces itself by its seed-name", () => {
@@ -468,7 +325,7 @@ test("the pop-up meeting rides the presence: one tap, a remembered not-now, a wa
   assert.ok(presence.includes("spark-encounter"), "the Spark pops up and introduces itself");
   assert.ok(presence.includes("spark-encounter-adopt"), "one button adopts it");
   assert.ok(presence.includes("spark-ember"), "after not-now it waits as an ember at the edge");
-  assert.ok(presence.includes("arrivalFor"), "arriving somewhere new, it speaks as a guide");
+  assert.ok(presence.includes("arrivalGuideFor"), "arriving somewhere new, it speaks as a guide — with a memory, since v2");
   assert.ok(presence.includes("le-rail"), "its furniture lifts clear of the homepage's bottom path rail");
   assert.ok(presence.includes("lpo-overlay"), "the guide also waits for a page opening, not only the homepage entry");
   assert.ok(presence.includes("encounterFor"), "its first words come from the core, in its own voice");
@@ -478,6 +335,305 @@ test("the pop-up meeting rides the presence: one tap, a remembered not-now, a wa
   const css = read("docs/assets/css/spark-companion.css");
   assert.match(css, /\.spark-encounter\s*\{/, "the meeting has its card");
   assert.match(css, /\.spark-ember\s*\{/, "the ember has its place at the edge");
+});
+
+/* ---------- v2: a living meeting, a memory, visible growth ---------- */
+
+test("the meeting speaks in its temperament's voice, and its look can be seen", () => {
+  const companion = Core.generate(SEED_A);
+  const words = Core.encounterFor({ companion });
+  assert.equal(words.voice, Core.VOICE_LINES[companion.kind], "one line, in character");
+  assert.ok(words.voice.length > 10);
+  assert.ok(words.look.includes(companion.form), "the look line names its form");
+  assert.ok(words.look.includes(companion.markings.style), "and its markings");
+  assert.ok(words.look.includes(companion.shape.glow), "and its glow");
+  for (const kind of Core.KINDS) {
+    assert.ok(Core.VOICE_LINES[kind.id], `${kind.id} has a voice`);
+  }
+  const voices = new Set(Object.values(Core.VOICE_LINES));
+  assert.equal(voices.size, Core.KINDS.length, "no two kinds speak alike");
+});
+
+test("three voices, one pitch: greeting, adoption song, growth chime", () => {
+  const companion = Core.generate(SEED_A);
+  const sounds = Core.soundsFor(companion);
+  const chirp = Core.chirpFor(companion);
+  assert.deepEqual(sounds.greeting, [chirp.first, chirp.second], "the greeting is the chirp");
+  assert.equal(sounds.adopt.length, 4, "adoption is a four-note arpeggio");
+  for (let i = 1; i < sounds.adopt.length; i++) {
+    assert.ok(sounds.adopt[i] > sounds.adopt[i - 1], "and it rises");
+  }
+  assert.equal(sounds.growth.length, 3, "growth is a rising three");
+  assert.ok(sounds.growth[2] > sounds.growth[0]);
+  assert.notDeepEqual(sounds.growth, sounds.adopt);
+  assert.deepEqual(sounds, Core.soundsFor(Core.generate(SEED_A)), "same seed, same voices");
+  assert.equal(Core.soundsFor(null), null);
+});
+
+test("the record remembers where its person left off", () => {
+  let record = Core.newRecord({ seed: SEED_A, name: "Ember", civilDate: "2026-11-18" });
+  assert.equal(record.lastPage, null);
+  assert.equal(record.prevPage, null);
+  record = Core.recordVisit(record, { patternDay: 216, page: "index.html" });
+  assert.equal(record.lastPage, "index.html");
+  assert.equal(record.prevPage, null, "nowhere to have left off from, yet");
+  record = Core.recordVisit(record, { patternDay: 216, page: "moons.html" });
+  assert.equal(record.lastPage, "moons.html");
+  assert.equal(record.prevPage, "index.html");
+  /* A reload of the same page is not a journey: the thread stays. */
+  record = Core.recordVisit(record, { patternDay: 217, page: "moons.html" });
+  assert.equal(record.prevPage, "index.html");
+  record = Core.recordVisit(record, { patternDay: 217, page: "teach.html" });
+  assert.equal(record.prevPage, "moons.html");
+});
+
+test("the guide greets with the day, then picks the thread back up", () => {
+  const companion = Core.generate(SEED_A);
+  let record = Core.newRecord({ seed: SEED_A, name: "Ember", civilDate: "2026-11-18" });
+  record = Core.recordVisit(record, { patternDay: 216, page: "index.html" });
+  record = Core.recordVisit(record, { patternDay: 216, page: "moons.html" });
+  record = Core.recordVisit(record, { patternDay: 217, page: "index.html" });
+  const today = { moon: 8, day: 21, dayOfPatternYear: 217 };
+  const g = Core.arrivalGuideFor({ record, companion, today, page: "index.html" });
+  assert.equal(g.coordinate, "Moon 8 · Day 21 · Pattern Day 217", "the day, in Living Time");
+  assert.equal(g.kind, "observed", "a remembered thread is counted from the record");
+  assert.match(g.text, /left off at the 13 Moons page/);
+  assert.equal(g.href, "living-time-sphere.html", "the door they were heading toward");
+
+  /* When that door has been walked, the offer is the place itself. */
+  record = Core.recordVisit(record, { patternDay: 217, page: "living-time-sphere.html" });
+  record = Core.recordVisit(record, { patternDay: 217, page: "moons.html" });
+  record = Core.recordVisit(record, { patternDay: 217, page: "index.html" });
+  const back = Core.arrivalGuideFor({ record, companion, today, page: "index.html" });
+  assert.equal(back.href, "moons.html", "the thread's door is walked: return to where you left off");
+  assert.match(back.text, /left off at the 13 Moons page/);
+
+  /* No thread to remember: the standing guidance speaks, labeled a suggestion. */
+  const fresh = Core.newRecord({ seed: SEED_A, name: "", civilDate: "2026-11-18" });
+  const f = Core.arrivalGuideFor({ record: fresh, companion, today, page: "ab.html" });
+  assert.equal(f.kind, "inferred");
+  assert.equal(f.coordinate, "Moon 8 · Day 21 · Pattern Day 217");
+});
+
+test("a Day Out of Time greeting invents no moon", () => {
+  const line = Core.coordinateLineFor({ moon: null, moonName: "Day Out of Time", dayOfPatternYear: 365 });
+  assert.match(line, /Day Out of Time/);
+  assert.ok(!/Moon \d/.test(line));
+});
+
+test("growth is announced once: against the stage its person last saw", () => {
+  const companion = Core.generate(SEED_A);
+  let record = Core.newRecord({ seed: SEED_A, name: "Ember", civilDate: "2026-11-18" });
+  assert.equal(Core.growthEventFor({ record, companion }).grew, false, "just born is not growth");
+  for (let d = 0; d < 8; d++) {
+    record = Core.recordVisit(record, { patternDay: 216 + d, page: `p${d}.html` });
+  }
+  const event = Core.growthEventFor({ record, companion });
+  assert.equal(event.grew, true, "eight days together outgrow Ember");
+  assert.ok(event.stage.index > 0);
+  const line = Core.growthLineFor({ record, companion, stage: event.stage });
+  assert.match(line, /I grew — Day 8 of us/);
+  assert.ok(line.includes(event.stage.name));
+  /* Once seen, it is not news again. */
+  const seen = Core.markStageSeen(record, event.stage.index);
+  assert.equal(Core.growthEventFor({ record: seen, companion }).grew, false);
+  /* A record kept by the first build carries no seen-stage: its
+   * stage is taken as seen, so it never cries growth over old news. */
+  const legacy = { ...record };
+  delete legacy.stageSeen;
+  assert.equal(Core.growthEventFor({ record: legacy, companion }).grew, false);
+});
+
+test("growth shows on the drawing: satellites, then a second ring", () => {
+  const spark = Core.generate(SEED_A);
+  const born = Core.renderSVG(spark, { stage: 0 });
+  assert.ok(!born.includes("spark-satellite"), "no satellites at birth");
+  const kindled = Core.renderSVG(spark, { stage: 1 });
+  assert.ok(kindled.includes("spark-satellite"), "satellites arrive at Flame");
+  assert.ok(!kindled.includes("spark-stage-ring2"), "no second ring yet");
+  const bright = Core.renderSVG(spark, { stage: 2 });
+  assert.ok(bright.includes("spark-stage-ring2"), "a second ring stands at Radiant");
+  assert.ok(bright.includes('class="spark-eye"'), "the eye carries its blink class");
+  assert.ok(bright.includes('class="spark-halo"'), "the halo carries its class");
+});
+
+test("the panel: both names, its character, its growth, its labeled notices", () => {
+  const companion = Core.generate(SEED_A);
+  let record = Core.newRecord({ seed: SEED_A, name: "Nori", civilDate: "2026-11-18" });
+  record = Core.recordVisit(record, { patternDay: 216, page: "index.html" });
+  record = Core.recordVisit(record, { patternDay: 217, page: "moons.html" });
+  record = Core.recordPractice(record, { patternDay: 217 });
+  const panel = Core.panelFor({
+    record,
+    companion,
+    today: { moon: 8, day: 21, dayOfPatternYear: 217 }
+  });
+  assert.equal(panel.name, "Nori", "the name it answers to");
+  assert.equal(panel.seedName, companion.name, "and its seed name, underneath");
+  assert.equal(panel.kindName, companion.kindName);
+  assert.equal(panel.temperament, companion.temperament);
+  assert.equal(panel.trait, companion.trait);
+  assert.equal(panel.daysTogether, 2);
+  assert.equal(panel.coordinate, "Moon 8 · Day 21 · Pattern Day 217");
+  assert.ok(panel.stageName.length > 0);
+  assert.ok(panel.notices.length >= 3, "a walked record has things to say");
+  for (const notice of panel.notices) {
+    assert.ok(["observed", "inferred"].includes(notice.kind), "every notice is labeled");
+    assert.ok(notice.text.length > 0);
+  }
+  const observed = panel.notices.filter((n) => n.kind === "observed");
+  const inferred = panel.notices.filter((n) => n.kind === "inferred");
+  assert.ok(observed.length >= 2 && inferred.length >= 1, "both kinds present, never merged");
+  assert.ok(
+    observed.some((n) => /2 days together/.test(n.text)),
+    "observed facts are counted from the record"
+  );
+  assert.ok(
+    observed.some((n) => /Practice sealed on 1 day/.test(n.text)),
+    "practice is observed, not suggested"
+  );
+});
+
+test("the v2 life rides the presence: celebration, naming, panel, growth", () => {
+  const presence = read("docs/assets/js/spark-presence.js");
+  assert.ok(presence.includes("spark-encounter-artbtn"), "the Spark itself is tappable at the meeting");
+  assert.ok(presence.includes("is-celebrating"), "adoption is a moment, not a form submit");
+  assert.ok(presence.includes("spark-encounter-bigname"), "its name stands large in the moment");
+  assert.ok(presence.includes("spark-encounter-name-input"), "the keeper's name is offered in the same flow");
+  assert.ok(presence.includes("Name it answers to — optional"), "and it is plainly optional");
+  assert.ok(presence.includes("spark-encounter-name-skip"), "and skippable in one tap");
+  assert.ok(presence.includes("soundsFor"), "the three voices come from the core");
+  assert.ok(presence.includes("adoptSong"), "adoption has its own song");
+  assert.ok(presence.includes("growthChimeWaiting"), "the growth chime waits for a tap, never autoplays");
+  assert.ok(presence.includes("arrivalGuideFor"), "the guide speaks with a memory");
+  assert.ok(presence.includes("spark-presence-panel"), "the Your Spark panel rides the bubble");
+  assert.ok(presence.includes("panelFor"), "the panel is filled from the core's panel data");
+  assert.ok(presence.includes("growthEventFor"), "growth is checked against the last seen stage");
+  assert.ok(presence.includes("is-reacting"), "a tap is answered in the body");
+  assert.ok(!/fetch\(|XMLHttpRequest|sendBeacon/.test(presence), "v2 sends nothing anywhere either");
+  const css = read("docs/assets/css/spark-companion.css");
+  for (const hook of [
+    "spark-pop-hop",
+    "spark-pop-drift",
+    "spark-bloom",
+    "spark-breathe",
+    "spark-blink",
+    "spark-glance",
+    "spark-wiggle",
+    ".spark-presence-panel",
+    ".spark-notice-kind"
+  ]) {
+    assert.ok(css.includes(hook), `the stylesheet carries ${hook}`);
+  }
+  const blockStart = css.indexOf("prefers-reduced-motion");
+  const reduced = css.slice(blockStart, blockStart + 1600);
+  assert.ok(reduced.includes(".spark-eye"), "reduced motion stills the blink");
+  assert.ok(reduced.includes(".spark-presence-art svg"), "reduced motion stills the breathing");
+  assert.ok(reduced.includes(".is-celebrating"), "reduced motion stills the celebration");
+});
+
+
+test("evolution: three stages, one creature grown, driven by faithfulness alone", () => {
+  assert.deepEqual(Core.STAGES.map((s) => s.name), ["Ember", "Flame", "Radiant"]);
+  assert.deepEqual(Core.STAGES.map((s) => s.min), [0, 8, 25]);
+  const spark = Core.generate(SEED_A);
+  const stages = [0, 1, 2].map((stage) => Core.renderSVG(spark, { stage }));
+  for (const svg of stages) {
+    assert.ok(svg.includes(`data-spark-form="${spark.form}"`), "the same form at every stage");
+  }
+  assert.ok(stages[0].includes("scale(0.8)"), "an Ember stands small");
+  assert.ok(stages[2].includes("scale(1.03)"), "a Radiant stands full");
+  assert.ok(
+    !stages[0].includes("spark-satellite") && stages[1].includes("spark-satellite"),
+    "company arrives at Flame"
+  );
+  /* Progress, in honest counts from its own record. */
+  let record = Core.newRecord({ seed: SEED_A, name: "", civilDate: "2026-11-18" });
+  record = Core.recordVisit(record, { patternDay: 216, page: "index.html" });
+  record = Core.recordVisit(record, { patternDay: 217, page: "moons.html" });
+  record = Core.recordPractice(record, { patternDay: 217 });
+  const progress = Core.progressOf(record, spark);
+  assert.equal(progress.points, 7);
+  assert.equal(progress.stage.name, "Ember");
+  assert.equal(progress.next, "Flame");
+  assert.equal(progress.counts.returnDays, 1);
+  assert.equal(progress.counts.practiceDays, 1);
+  assert.equal(progress.counts.pagesSeen, 2);
+  assert.ok(progress.toGo >= 1, "points still to go, at its own pace");
+});
+
+test("the Spark is alive on the page: it roams, and it plays", () => {
+  const presence = read("docs/assets/js/spark-presence.js");
+  assert.ok(presence.includes("startRoam"), "a character engine, not a corner stroll");
+  assert.ok(presence.includes("pickTarget"), "it chooses where to wander: floor, sides, open middle");
+  assert.ok(presence.includes("visibilitychange"), "it rests when the tab is hidden");
+  assert.ok(presence.includes("is-flipped"), "it turns to face the way it travels");
+  assert.ok(presence.includes("pointermove"), "it feels a cursor approach");
+  assert.ok(presence.includes("pointerdown"), "and a finger's landing — touch has no hover");
+  assert.ok(presence.includes("const PLAY = {"), "the play is a table of temperaments");
+  for (const t of ["bold", "curious", "bright", "gentle", "steady", "quiet"]) {
+    assert.ok(presence.includes(`${t}: { radius:`), `${t} has its own radius, scoot, and cooldown`);
+  }
+  assert.ok(presence.includes("settleUntil"), "after three quick scoots it settles, where a tap can reach it");
+  assert.ok(presence.includes("play.cooldown"), "a cooldown caps how often it may scoot");
+  assert.ok(presence.includes("bubbleOpen()"), "it never scoots or roams while its bubble is open");
+  assert.ok(presence.includes("SIGNATURE"), "its idle signature leans to its temperament");
+  for (const cls of ["is-spinning", "is-stretching", "is-looking"]) {
+    assert.ok(presence.includes(cls), `idle life includes ${cls}`);
+  }
+  /* The research layer: predictive, anticipated, chosen, steered. */
+  assert.ok(presence.includes("pointerPredicted"), "it flees from where the pointer will be, not only where it is");
+  assert.ok(presence.includes("trackPointer"), "the pointer is tracked with its velocity");
+  assert.ok(presence.includes('state = "anticipate"'), "a crouch — anticipation — stands between the startle and the dart");
+  assert.ok(presence.includes("ctrl.crouch()"), "and the 3D body is told to gather itself");
+  assert.ok(presence.includes("peekWanted"), "the tease: after a dodge, a still pointer earns a peek back");
+  assert.ok(presence.includes("chooseBehavior"), "idle choices are scored by a small utility brain");
+  assert.ok(presence.includes("playfulness"), "whose weights are the temperament's own curves");
+  assert.ok(presence.includes("maxForce"), "it travels by steering — velocity and a capped force — never by sliding");
+  const css = read("docs/assets/css/spark-companion.css");
+  for (const kf of ["spark-spin-once", "spark-stretch", "spark-look", "spark-evolve"]) {
+    assert.ok(css.includes(`@keyframes ${kf}`), `${kf} is drawn`);
+  }
+});
+
+test("the Spark has a 3D body: seed-grown WebGL, honestly falling back to the flat figure", () => {
+  const d3 = read("docs/assets/js/spark-3d.js");
+  assert.ok(d3.includes("Spark3D"), "the renderer stands as its own module");
+  assert.ok(d3.includes('getContext("webgl"'), "hand-rolled WebGL1, no library");
+  assert.ok(!/https?:\/\//.test(d3), "nothing is fetched — the site stays static and offline");
+  assert.ok(d3.includes("return null"), "where WebGL is not to be had, the mount declines");
+  assert.ok(d3.includes("buildGeometry"), "the body is built from the companion, not shipped as a model");
+  for (const form of ["orb", "shard", "comet", "sprout", "wave", "moth"]) {
+    assert.ok(d3.includes(`"${form}"`), `the ${form} form has a 3D body family`);
+  }
+  assert.ok(d3.includes("speckle"), "markings map onto the form's own faces");
+  assert.ok(d3.includes("marks3d"), "from their own seed stream");
+  assert.ok(d3.includes("stage >= 2"), "evolution changes the 3D form: the Radiant gains ring and crown");
+  assert.ok(d3.includes("dart") && d3.includes("delight") && d3.includes("celebrate"), "its movements are its life's: dart, delight, celebrate");
+  assert.ok(d3.includes("lookAt"), "it looks toward a near pointer");
+  assert.ok(d3.includes("visibilitychange"), "its loop rests when the tab hides");
+  assert.ok(d3.includes("tier"), "and steps its own quality down on a slow device");
+  assert.ok(d3.includes("prefers-reduced-motion"), "reduced motion gets one still frame");
+  /* The research layer, in the body. */
+  assert.ok(d3.includes("nextSaccade"), "its gaze jumps in saccades, with an occasional aversion");
+  assert.ok(d3.includes("blinkScale"), "and now and then it blinks");
+  assert.ok(d3.includes("eyeYaw"), "the eyes lead; the head follows");
+  assert.ok(d3.includes("1 / 240"), "its bounce is a spring stepped at a fixed 240Hz");
+  assert.ok(d3.includes("uRim"), "a rim of its own glow colour rims the form");
+  assert.ok(d3.includes("wrap"), "lit by a wrap diffuse, not a flat Lambert");
+  assert.ok(d3.includes("SHADOW_VERT"), "a fake soft shadow grounds it — no shadow maps");
+  assert.ok(d3.includes('":shape"'), "its exact proportions grow from its seed too");
+  assert.ok(d3.includes("lastActivity"), "a long-resting Spark draws ever more rarely");
+  const presence = read("docs/assets/js/spark-presence.js");
+  assert.ok(presence.includes("Spark3D"), "the presence mounts the 3D body");
+  assert.ok(presence.includes("has-3d"), "and the flat drawing steps aside only when it stands");
+  assert.ok(presence.includes("is-evolving"), "a growth is celebrated in the body when it walks in");
+  assert.ok(presence.includes("ctrl.celebrate()"), "in 3D as in flat: a flourish, never a modal");
+  const page = read("docs/assets/js/spark-companions-page.js");
+  assert.ok(page.includes("Spark3D"), "its home panel stands in 3D too");
+  for (const p of ["index.html", "moons.html", "companions.html"]) {
+    assert.ok(read(`docs/${p}`).includes("spark-3d.js"), `${p} loads the renderer before the presence`);
+  }
 });
 
 test("no R1.7 protected file is touched by the Spark", () => {

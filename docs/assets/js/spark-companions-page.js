@@ -272,11 +272,11 @@
       `Stage ${stage.index + 1} of ${Core.STAGES.length}: ${stage.name} — ${stage.points} growth points`;
     const progress = Core.progressOf(record, companion);
     $("#spark-next").textContent = progress.next
-      ? `Next: ${progress.next.name}, at ${progress.nextAt} points — ${progress.nextAt - stage.points} to go. ` +
+      ? `Next: ${progress.next}, at ${progress.nextAt} points — ${progress.toGo} to go. ` +
         `It grows by faithfulness, nothing bought and nothing burned: each day you come back after the first is worth 2, ` +
         `each practice day you seal 3, each new page it sees 1 (up to 10 pages) — at its own pace. ` +
-        `So far that is ${progress.counts.days} day${progress.counts.days === 1 ? "" : "s"} together, ` +
-        `${progress.counts.pages} page${progress.counts.pages === 1 ? "" : "s"} seen, ${progress.counts.practice} practice day${progress.counts.practice === 1 ? "" : "s"} sealed.`
+        `So far that is ${record.daysSeen.length} day${record.daysSeen.length === 1 ? "" : "s"} together, ` +
+        `${record.pagesSeen.length} page${record.pagesSeen.length === 1 ? "" : "s"} seen, ${record.practiceDays.length} practice day${record.practiceDays.length === 1 ? "" : "s"} sealed.`
       : `The fullest form there is — Ember, Flame, and now Radiant. It keeps growing in company from here.`;
     $("#spark-noticed").textContent =
       `So far, on this device: ${record.daysSeen.length} day${record.daysSeen.length === 1 ? "" : "s"} together, ` +
