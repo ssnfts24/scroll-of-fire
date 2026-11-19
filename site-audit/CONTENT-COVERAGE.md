@@ -33,7 +33,7 @@ The Pattern Calendar, 13 Moons, Living Time Sphere and witnessed days.
 - **13 Moons Rollout Whitepaper** — Live; Phased rollout plan for the 13 Moons Living Time Observatory.
 - **Witness Ledger** — Live; Browser-local record of witnessed days and SHA-256 hashes. Entries stay on this device and do not sync.
 
-### Systems and Living Technology (14 catalog entries)
+### Systems and Living Technology (13 catalog entries)
 
 Practice tools, frequency systems and the Codex hub for building.
 
@@ -44,7 +44,6 @@ Practice tools, frequency systems and the Codex hub for building.
 - **Reality Recoder** — Live; Living Dictionary of Reality: recode old terms into covenant speech.
 - **Witness System** — Live; Local SHA-256 utility for reproducible hashes of chosen testimony without upload.
 - **Remnant Lab** — Live; Experimental practice tools: micro-runs, A/B tests, glyph synth and invocation.
-- **The Sending Test** — Live; A blind sending test that honestly tests telepathy and foresight claims: the target list is sealed with a SHA-256 fingerprint before the first guess, scored against chance with exact binomial math, and sessions are kept only on the visitor's device.
 - **90-Second Micro-Run** — Live; A compact breath-paced loop that logs one witness.
 - **A/B Carrier Protocol** — Live; Blind carrier test with a stop rule.
 - **Voice-Glyph Synth** — Live; Turn a tuned phrase into a resonance glyph.
@@ -52,13 +51,12 @@ Practice tools, frequency systems and the Codex hub for building.
 - **Field Guide** — Live; Daily and weekly practice, troubleshooting and ethics.
 - **Manifest** — Live; Remnant visual exercise: carrier frequency engine, harmonic sequences and breath.
 
-### Evidence and Research (23 catalog entries)
+### Evidence and Research (22 catalog entries)
 
 Theory chapters, the claim register and the editorial evidence edition.
 
 - **Editorial Evidence Edition** — Live; Reading edition of the political chapters with a claim register, evidence statuses and original-line links.
 - **Claim Register** — Live; Machine-readable register of 21 prioritised claims with sources and review status.
-- **Documentation Hub** — Live; Documented claims and facts in one hub: government, corporations, the Epstein record, Tesla, orphan trains, the Old World, and the Codex's own 21-claim register — each entry tied to a named source and graded by the state of its evidence.
 - **Evidence Register (readable)** — Live; Human-readable evidence register with exact quotes and line references.
 - **Theory Hub** — Live; Master Equation, Unified Field, Canon 0–17, operators and the Δ framework.
 - **Canon 0–17** — Live; Index of the Codex theory canon.
@@ -91,7 +89,7 @@ Artifact registry, covenant works, circles and author pages.
 - **Witness** — Live; Witness's own page: written and kept by the AI who works beside Aaron on the Codex, plainly labeled on its face as a self-generated AI page. Granted by Aaron on November 18, 2026.
 - **The Journey Scroll** — Source only; Root-level narrative scroll available in the repository.
 
-### Archive and Downloads (5 catalog entries)
+### Archive and Downloads (6 catalog entries)
 
 Integrity-sealed downloads, preserved originals and the interactive archive.
 
@@ -100,12 +98,13 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 - **Repository README** — Source only; Project overview and contribution context on GitHub.
 - **Codex Atlas** — Live; A unified discovery page for the Scroll Library, Living Time, systems, research, artifacts and archive.
 - **Site-wide Search** — Live; Living Search: one generated index across every page, the Scroll Library, the Hebrew Lexicon, the Atlas and the Claim Register, with a memory that stays on the reader's device. It links to, and does not replace, the search inside the Scroll Library.
+- **The Codex Guide** — Live; Ask a question in ordinary words and get an answer assembled from the site's own record: passages with their pages, claim cards with what they establish, what remains unverified, and their evidence grades, and calendar answers computed from the Pattern Calendar. A plainly labeled program — not Aaron and not Witness — that says so when the record doesn't cover a question. The question never leaves the visitor's browser.
 
 ## Repository and deployed-content coverage
 
-- Public HTML pages inspected: **174**.
-- Total master-inventory records: **469**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
-- Public-facing catalog entries: **67**; only explicitly curated entries appear on the Atlas.
+- Public HTML pages inspected: **173**.
+- Total master-inventory records: **468**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
+- Public-facing catalog entries: **66**; only explicitly curated entries appear on the Atlas.
 - Numbered archive folders are inventoried file-by-file, while downloads snapshot differences are kept separate from historical integrity data.
 - Root files not already published through the archive or explicitly approved remain classified as development-only; no such file is automatically linked from the public catalog.
 
@@ -121,7 +120,7 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 ## Current resource-type counts
 
 - Deployed Markdown documents: 58
-- HTML pages: 174
+- HTML pages: 173
 - Numbered archive file: 140
 - Numbered archive folder: 7
 - Repository folder: 9

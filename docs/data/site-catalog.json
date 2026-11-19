@@ -1175,6 +1175,23 @@
       "publicationEligibility": "approved-public"
     },
     {
+      "id": "codex-guide",
+      "title": "The Codex Guide",
+      "description": "Ask a question in ordinary words and get an answer assembled from the site's own record: passages with their pages, claim cards with what they establish, what remains unverified, and their evidence grades, and calendar answers computed from the Pattern Calendar. A plainly labeled program — not Aaron and not Witness — that says so when the record doesn't cover a question. The question never leaves the visitor's browser.",
+      "area": "archive",
+      "category": "Discovery",
+      "resourceType": "tool",
+      "status": "live",
+      "path": "codex-guide.html",
+      "url": "https://codexofreality.org/codex-guide.html",
+      "related": [
+        "site-search",
+        "moons"
+      ],
+      "featured": false,
+      "publicationEligibility": "approved-public"
+    },
+    {
       "id": "planned-timeline",
       "title": "Historical timeline",
       "description": "Two dated records, kept separate: the publication dates of the sources cited in the claim register, each entry linking to its claim in the Evidence Edition, and the Codex's own growth record.",
