@@ -3,10 +3,10 @@
   "purpose": "Development-only registry of every tracked or intended repository file. Not a publication list.",
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
-    "files": 2042,
-    "bytes": 896960265,
+    "files": 2043,
+    "bytes": 896964322,
     "byGroup": {
-      "tooling": 165,
+      "tooling": 166,
       "manuscript": 17,
       "unlabelled-image": 21,
       "witness-record": 20,
@@ -35,7 +35,7 @@
       "scripture-source": 15
     },
     "byPublicationEligibility": {
-      "development-only": 208,
+      "development-only": 209,
       "pending-publication-review": 42,
       "restricted-review": 180,
       "protected-immutable": 21,
@@ -43,7 +43,7 @@
       "approved-public": 1585
     },
     "byExamination": {
-      "inventoried-only": 1912,
+      "inventoried-only": 1913,
       "parser-unavailable": 16,
       "text-extracted": 40,
       "archive-listed": 8,
@@ -46759,7 +46759,7 @@
       "title": "site-master-inventory.json",
       "format": "json",
       "bytes": 718657,
-      "sha256": "7efe7c075e69e9c97e3dbfdedae8f2373425439b9b7a3bb6521f5cacdce8514d",
+      "sha256": "2dd48233716184093d161a10fdd39ffe6c3696ed194b4e5ab5e325eba7415e26",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -47600,6 +47600,30 @@
       "format": "js",
       "bytes": 12602,
       "sha256": "240feb806bf5b1bd3795dd0a432222feb2d277b8011e3f2babc35cc8eb004359",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-living-motion-test-js-d928da",
+      "path": "tests/living-motion.test.js",
+      "title": "living-motion.test.js",
+      "format": "js",
+      "bytes": 4057,
+      "sha256": "bb7f99fa12e41f09e2dc0cc5e08a23ca40ffeda006d1765928396a756ae2a527",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
