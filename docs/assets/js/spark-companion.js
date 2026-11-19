@@ -11,9 +11,10 @@
  * Day of the adoption day, read from the canonical PatternCalendar
  * by the page, never computed here.
  *
- * The adopter names their Spark. The name is part of the record,
- * not of the seed: the creature is the seed; the name is the
- * relationship.
+ * The seed also speaks the Spark's name: the same seed grows the
+ * same name anywhere, the way it grows the same form. The keeper
+ * may also give it a name of their own — that name lives in the
+ * record, alongside, as the name the Spark answers to.
  *
  * Growth is counted from plain facts kept on the visitor's own
  * device: days they came back, pages they have seen, practice
@@ -105,6 +106,32 @@
    * The notes are pure data here; the browser glue plays them with
    * WebAudio, only ever in answer to a tap — never on its own. */
   const KIND_PITCH = { fire: 660, water: 440, shadow: 330, air: 560, earth: 300, light: 760 };
+
+  /* The seed speaks a name. Openers carry the kind's flavour;
+   * middles and closers are shared. Two or three syllables, drawn
+   * from the seed alone — the same seed speaks the same name on
+   * any device, the way it grows the same form. */
+  const NAME_OPENERS = {
+    fire: ["Ka", "Em", "Sol", "Py", "Rav", "Ash"],
+    water: ["Mi", "Lu", "Na", "Sel", "On", "Tha"],
+    shadow: ["Ve", "No", "Um", "Se", "Ka", "Lo"],
+    air: ["Ae", "Wi", "Ze", "Si", "Fa", "Or"],
+    earth: ["Te", "Ga", "Ro", "An", "Du", "Ma"],
+    light: ["Lu", "A", "So", "Ra", "Eli", "No"]
+  };
+  const NAME_MIDDLES = ["a", "e", "i", "o", "li", "ra", "mi", "an"];
+  const NAME_CLOSERS = ["ra", "m", "th", "lo", "ri", "n", "sha", "el", "or", "mi", "ka", "ven"];
+  const GAITS = ["stroll", "drift", "hop"];
+  const GLOWS = ["soft", "bright", "deep"];
+
+  function seedNameFor(seed, kindId) {
+    const rand = mulberry32(hashString(String(seed) + ":name"));
+    const openers = NAME_OPENERS[kindId] || NAME_OPENERS.light;
+    let name = openers[Math.floor(rand() * openers.length)];
+    if (rand() < 0.45) name += NAME_MIDDLES[Math.floor(rand() * NAME_MIDDLES.length)];
+    name += NAME_CLOSERS[Math.floor(rand() * NAME_CLOSERS.length)];
+    return name;
+  }
 
   function chirpFor(companion) {
     if (!companion) return null;
@@ -243,7 +270,21 @@
         accent: hsl(accentHue, 72, 60 + rand() * 10)
       },
       birthMoon: parsed.moon,
-      birthPatternDay: parsed.patternDay
+      birthPatternDay: parsed.patternDay,
+      name: seedNameFor(seed, kind.id),
+      /* Uniqueness beyond the visible parts, drawn from their own
+       * stream so the parts above stay as they were: how big it
+       * stands, how its light behaves, how it moves, and the pace
+       * at which it grows. */
+      shape: (() => {
+        const r2 = mulberry32(hashString(seed + ":shape"));
+        return {
+          size: Math.round((0.85 + r2() * 0.33) * 100) / 100,
+          glow: GLOWS[Math.floor(r2() * GLOWS.length)],
+          gait: GAITS[Math.floor(r2() * GAITS.length)],
+          pace: Math.round((0.9 + r2() * 0.2) * 100) / 100
+        };
+      })()
     };
   }
 
@@ -331,9 +372,16 @@
       stage >= 4
         ? `<path d="M38 12 L44 4 L50 11 L56 4 L62 12 Z" fill="${companion.palette.accent}" opacity="0.95"/>`
         : "";
+    const halo = companion.shape
+      ? companion.shape.glow === "bright"
+        ? 0.22
+        : companion.shape.glow === "deep"
+          ? 0.08
+          : 0.14
+      : 0.14;
     return (
-      `<svg viewBox="0 0 100 100" role="img" aria-label="A ${companion.kindName} Spark" data-spark-form="${companion.form}" data-spark-stage="${stage}">` +
-      `<circle cx="50" cy="52" r="40" fill="${companion.palette.glow}" opacity="${0.14 + stage * 0.03}"/>` +
+      `<svg viewBox="0 0 100 100" role="img" aria-label="A ${companion.kindName} Spark" data-spark-form="${companion.form}" data-spark-stage="${stage}" data-spark-size="${companion.shape ? companion.shape.size : 1}" data-spark-glow="${companion.shape ? companion.shape.glow : "soft"}" data-spark-gait="${companion.shape ? companion.shape.gait : "stroll"}">` +
+      `<circle cx="50" cy="52" r="40" fill="${companion.palette.glow}" opacity="${halo + stage * 0.03}"/>` +
       stageRing +
       bodyShape(companion) +
       markingShapes(companion, rand) +
@@ -352,11 +400,29 @@
     return clean.slice(0, NAME_MAX);
   }
 
+  /* The keeper's own name for their Spark, cleaned for keeping.
+   * Blank stays blank: the Spark still has its seed-name. */
+  function cleanName(name) {
+    return String(name == null ? "" : name)
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, NAME_MAX);
+  }
+
+  /* The name to speak: the keeper's name when they gave one (the
+   * name it answers to), otherwise the name its seed grew. */
+  function displayName(record, companion) {
+    const keeper = cleanName(record && record.name);
+    if (keeper) return keeper;
+    if (companion && companion.name) return companion.name;
+    return NAME_FALLBACK;
+  }
+
   function newRecord({ seed, name, civilDate }) {
     return {
       version: 1,
       seed,
-      name: normalizeName(name),
+      name: cleanName(name),
       bornCivil: civilDate || null,
       daysSeen: [],
       pagesSeen: [],
@@ -392,22 +458,24 @@
     return returnDays * 2 + practice * 3 + pages;
   }
 
-  function stageFor(points) {
+  function stageFor(points, pace = 1) {
     let ix = 0;
     STAGES.forEach((s, i) => {
-      if (points >= s.min) ix = i;
+      if (points >= s.min / pace) ix = i;
     });
     return { index: ix, name: STAGES[ix].name, points };
   }
 
-  function stageOf(record) {
-    return stageFor(growthPoints(record));
+  /* Each Spark grows at its own pace, grown from its seed. */
+  function stageOf(record, companion) {
+    const pace = companion && companion.shape ? companion.shape.pace : 1;
+    return stageFor(growthPoints(record), pace);
   }
 
   /* ---- guidance: lines drawn only from what the record holds ---- */
 
   function guidanceFor({ record, companion, todayPatternDay }) {
-    const name = normalizeName(record && record.name);
+    const name = displayName(record, companion);
     const pages = (record && record.pagesSeen) || [];
     const practice = (record && record.practiceDays) || [];
     const days = (record && record.daysSeen) || [];
@@ -472,6 +540,9 @@
     generate,
     renderSVG,
     chirpFor,
+    seedNameFor,
+    cleanName,
+    displayName,
     normalizeName,
     newRecord,
     recordVisit,

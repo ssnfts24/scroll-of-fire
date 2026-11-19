@@ -8,8 +8,9 @@
  * day, read by the page from the canonical PatternCalendar; the core
  * never computes dates itself).
  *
- * The adopter names the Spark. The name rides in the record, never
- * in the seed, and the Spark's guidance speaks it.
+ * The seed speaks the Spark's name: the same seed grows the same
+ * name anywhere. The keeper may add a name of their own in the
+ * record — the name it answers to — and guidance speaks that first.
  *
  * Growth is counted from plain on-device facts: return days, pages
  * seen, practice days sealed. Nothing here may reach for a network,
@@ -109,22 +110,52 @@ test("the adoption questions are three, light, and every answer leans somewhere"
   }
 });
 
-test("the adopter names the Spark; the name is kept with the record", () => {
+test("the keeper's name is kept with the record, cleaned", () => {
   const record = Core.newRecord({ seed: SEED_A, name: "  Ember   Lee ", civilDate: "2026-11-18" });
   assert.equal(record.name, "Ember Lee");
   assert.equal(record.seed, SEED_A);
-  assert.equal(Core.normalizeName(""), Core.NAME_FALLBACK);
-  assert.equal(Core.normalizeName(null), Core.NAME_FALLBACK);
-  assert.equal(Core.normalizeName("x".repeat(40)).length, 24);
+  const blank = Core.newRecord({ seed: SEED_A, name: "", civilDate: "2026-11-18" });
+  assert.equal(blank.name, "", "blank stays blank — the seed-name still speaks");
+  assert.equal(Core.cleanName("x".repeat(40)).length, 24);
 });
 
-test("guidance speaks the Spark's name — or the gentle placeholder", () => {
+test("the seed speaks the name: same seed, same name, anywhere", () => {
+  const a = Core.generate(SEED_A);
+  const b = Core.generate(SEED_A);
+  assert.ok(a.name && a.name.length >= 3, "a seed-name exists");
+  assert.equal(a.name, b.name);
+  assert.equal(Core.seedNameFor(SEED_A, a.kind), a.name);
+  const names = new Set();
+  for (let i = 0; i < 40; i++) {
+    const seed = Core.makeSeed({ moon: 8, patternDay: 216, kindIndex: i % 6, nonce: `n${i}` });
+    names.add(Core.generate(seed).name);
+  }
+  assert.ok(names.size > 20, `names vary across seeds (got ${names.size} of 40)`);
+});
+
+test("the spoken name: the keeper's name first, the seed-name otherwise", () => {
+  const companion = Core.generate(SEED_A);
   const named = Core.newRecord({ seed: SEED_A, name: "Ember", civilDate: "2026-11-18" });
-  const g1 = Core.guidanceFor({ record: named, companion: Core.generate(SEED_A), todayPatternDay: 216 });
-  assert.equal(g1.name, "Ember");
+  assert.equal(Core.displayName(named, companion), "Ember");
   const unnamed = Core.newRecord({ seed: SEED_A, name: "", civilDate: "2026-11-18" });
-  const g2 = Core.guidanceFor({ record: unnamed, companion: Core.generate(SEED_A), todayPatternDay: 216 });
-  assert.equal(g2.name, "your Spark");
+  assert.equal(Core.displayName(unnamed, companion), companion.name);
+  const g1 = Core.guidanceFor({ record: named, companion, todayPatternDay: 216 });
+  assert.equal(g1.name, "Ember");
+  const g2 = Core.guidanceFor({ record: unnamed, companion, todayPatternDay: 216 });
+  assert.equal(g2.name, companion.name);
+});
+
+test("shape: size, glow, gait and pace are the seed's own, in range", () => {
+  const a = Core.generate(SEED_A);
+  const b = Core.generate(SEED_A);
+  assert.deepEqual(a.shape, b.shape);
+  assert.ok(a.shape.size >= 0.85 && a.shape.size <= 1.18, a.shape.size);
+  assert.ok(["soft", "bright", "deep"].includes(a.shape.glow), a.shape.glow);
+  assert.ok(["stroll", "drift", "hop"].includes(a.shape.gait), a.shape.gait);
+  assert.ok(a.shape.pace >= 0.9 && a.shape.pace <= 1.1, a.shape.pace);
+  const svg = Core.renderSVG(a, { stage: 0 });
+  assert.ok(svg.includes(`data-spark-gait="${a.shape.gait}"`));
+  assert.ok(svg.includes(`data-spark-size="${a.shape.size}"`));
 });
 
 test("growth counts return days, pages, and practice — each once", () => {
@@ -206,7 +237,9 @@ test("the drawing is built from the parts, and growth shows on it", () => {
 test("the companions page carries the meeting: questions, a name, and the keep", () => {
   const html = read("docs/companions.html");
   assert.match(html, /<title>Companions/);
-  assert.ok(html.includes('id="spark-name"'), "the adopter names the Spark on the page");
+  assert.ok(html.includes('id="spark-name"'), "the keeper may add their own name for it on the page");
+  assert.ok(html.includes('id="spark-preview-name"'), "the seed-name is spoken at the meeting");
+  assert.ok(html.includes('id="spark-seed-name"'), "the seed-name is kept on the companion card");
   assert.ok(html.includes('id="spark-questions"'), "the adoption questions have a home");
   assert.ok(html.includes('id="spark-keep"'), "the keep button is there");
   assert.ok(html.includes("pattern-calendar.js"), "the birth coordinate comes from the canonical calendar");

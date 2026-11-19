@@ -68,8 +68,17 @@
 
 .spark-presence-art svg {
   display: block;
-  width: 38px;
-  height: 38px;
+  width: calc(38px * var(--spark-size, 1));
+  height: calc(38px * var(--spark-size, 1));
+}
+
+.spark-walker[data-gait="hop"] .spark-presence-art.is-walking svg {
+  animation-name: spark-walk-hop;
+}
+
+@keyframes spark-walk-hop {
+  from { transform: translateY(0); }
+  to { transform: translateY(-7px); }
 }
 
 .spark-presence-name {

@@ -117,18 +117,25 @@
   }
 
   function renderPresence(record, companion, today) {
-    const stage = Core.stageOf(record);
+    const stage = Core.stageOf(record, companion);
     const guide = Core.guidanceFor({
       record,
       companion,
       todayPatternDay: today ? today.dayOfPatternYear : null
     });
 
-    const displayName = Core.normalizeName(record.name);
+    const displayName = Core.displayName(record, companion);
     const host = document.createElement("div");
     host.className = "spark-presence";
     const walker = document.createElement("div");
     walker.className = "spark-walker";
+    /* Its own shape, from its seed: how big it stands, how it
+     * moves. The walking strip itself stays pointer-events: none;
+     * only the button takes taps. */
+    if (companion.shape) {
+      walker.dataset.gait = companion.shape.gait;
+      walker.style.setProperty("--spark-size", String(companion.shape.size));
+    }
     host.appendChild(walker);
     walker.innerHTML =
       `<div class="spark-presence-bubble" hidden>` +
@@ -236,9 +243,14 @@
   function roam(walker, art) {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const maxStroll = () => Math.max(60, Math.min(430, window.innerWidth * 0.38));
+    /* How it moves is its own, from its seed: a drifter floats, a
+     * hopper hurries, a stroller keeps the plain pace. */
+    const gait = walker.dataset.gait || "stroll";
+    const gaitFactor = gait === "drift" ? 1.9 : gait === "hop" ? 0.65 : 1;
+    const gaitEase = gait === "drift" ? "ease-in-out" : "linear";
     const walkTo = (distance, done) => {
-      const duration = Math.max(900, Math.min(4200, distance * 9));
-      walker.style.transition = `transform ${duration}ms linear`;
+      const duration = Math.max(900, Math.min(6800, distance * 9 * gaitFactor));
+      walker.style.transition = `transform ${duration}ms ${gaitEase}`;
       walker.style.transform = `translateX(${-distance}px)`;
       if (art) art.classList.add("is-walking");
       window.setTimeout(() => {

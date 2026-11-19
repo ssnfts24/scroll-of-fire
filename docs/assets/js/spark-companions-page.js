@@ -4,8 +4,9 @@
  * Spark companion — the companions page.
  *
  * Two views on one page. Before adoption: the meeting — today's
- * coordinate in Living Time, three short questions, a name the
- * adopter chooses, and the Spark the seed builds. After adoption:
+ * coordinate in Living Time, three short questions, and the Spark
+ * the seed builds, with the name its seed speaks; the adopter may
+ * add a name of their own, the name it answers to. After adoption:
  * the companion itself — how it has grown, what it has noticed on
  * this device, and what it suggests next.
  *
@@ -167,14 +168,14 @@
       nonce: Core.randomNonce()
     });
     const companion = Core.generate(pendingSeed);
-    const name = Core.normalizeName($("#spark-name").value);
+    const keeper = Core.cleanName($("#spark-name").value);
     const art = $("#spark-preview-art");
     art.innerHTML = Core.renderSVG(companion, { stage: 0 });
+    $("#spark-preview-name").textContent = `Its name, from its seed: ${companion.name}`;
     $("#spark-preview-kind").textContent =
       `A ${companion.kindName} Spark — ${companion.temperament}, and ${companion.trait}.`;
     $("#spark-preview-line").textContent = companion.kindLine;
-    $("#spark-keep").textContent =
-      name === Core.NAME_FALLBACK ? "Keep this Spark" : `Keep ${name}`;
+    $("#spark-keep").textContent = `Keep ${keeper || companion.name}`;
     $("#spark-preview").hidden = false;
     chirp(companion);
     return companion;
@@ -210,8 +211,8 @@
     writeRecord(record);
 
     const companion = Core.generate(record.seed);
-    const stage = Core.stageOf(record);
-    const name = Core.normalizeName(record.name);
+    const stage = Core.stageOf(record, companion);
+    const name = Core.displayName(record, companion);
 
     $("#spark-meet").hidden = true;
     const view = $("#spark-companion");
@@ -227,10 +228,15 @@
           (record.bornCivil ? ` · ${record.bornCivil}` : "")
         : `Born in Moon ${companion.birthMoon} · Pattern Day ${companion.birthPatternDay}` +
           (record.bornCivil ? ` · ${record.bornCivil}` : "");
+    $("#spark-seed-name").textContent =
+      record.name && record.name !== companion.name
+        ? `Its seed-name is ${companion.name}. ${record.name} is the name it answers to — the name you gave it.`
+        : `Its name comes from its seed: the same seed speaks the same name anywhere.`;
     $("#spark-stage").textContent = `${stage.name} — ${stage.points} growth points`;
     const nextStage = Core.STAGES[stage.index + 1];
+    const pace = companion.shape ? companion.shape.pace : 1;
     $("#spark-next").textContent = nextStage
-      ? `Next: ${nextStage.name}, at ${nextStage.min} points. Sparks grow by days you come back, pages you visit, and practice you seal.`
+      ? `Next: ${nextStage.name}, at ${Math.ceil(nextStage.min / pace)} points. Sparks grow by days you come back, pages you visit, and practice you seal — each at its own pace.`
       : `The highest stage there is. It grows in company, not in size.`;
     $("#spark-noticed").textContent =
       `So far, on this device: ${record.daysSeen.length} day${record.daysSeen.length === 1 ? "" : "s"} together, ` +
@@ -252,9 +258,9 @@
     }
 
     const rename = $("#spark-rename");
-    rename.value = record.name === Core.NAME_FALLBACK ? "" : record.name;
+    rename.value = record.name || "";
     $("#spark-rename-button").onclick = () => {
-      const updated = { ...record, name: Core.normalizeName(rename.value) };
+      const updated = { ...record, name: Core.cleanName(rename.value) };
       writeRecord(updated);
       showCompanion(today);
     };

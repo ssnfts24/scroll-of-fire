@@ -13,14 +13,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#05070d">
   <meta name="color-scheme" content="dark">
-  <meta name="description" content="Meet a Spark: a small companion that is made for you on the day you adopt it, named by you, and kept on your own device. It grows as you return, visit, and practice.">
+  <meta name="description" content="Meet a Spark: a small companion that is made for you on the day you adopt it. Its seed speaks its name. It is kept on your own device, and grows as you return, visit, and practice.">
   <meta name="author" content="Aaron Paul Laird">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://codexofreality.org/companions.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Codex of Reality">
   <meta property="og:title" content="Companions — meet your Spark">
-  <meta property="og:description" content="A small companion, made from the day you meet it and named by you. It lives on your device and grows with your practice.">
+  <meta property="og:description" content="A small companion, made from the day you meet it, with a name grown from its seed. It lives on your device and grows with your practice.">
   <meta property="og:url" content="https://codexofreality.org/companions.html">
   <link rel="icon" type="image/png" href="assets/img/shared/branding/favicon.png">
   <link rel="apple-touch-icon" href="assets/img/shared/branding/favicon.png">
@@ -70,7 +70,8 @@
       A Spark is a small companion that lives here, on this device, and nowhere else.
       It is not picked from a shelf. It is made at the moment you meet it, out of
       today&rsquo;s place in Living Time and a few answers only you would give —
-      so no two Sparks are alike. You name it. It keeps you company as you read,
+      so no two Sparks are alike. Its seed even speaks its name, and no two
+      move, glow, or grow quite the same way. It keeps you company as you read,
       return, and practice, and it grows as you do.
     </p>
     <p><span class="spark-today" id="spark-today">Today, in Living Time</span></p>
@@ -85,16 +86,17 @@
       </p>
       <div id="spark-questions"></div>
       <div class="spark-name-row">
-        <label for="spark-name">What will you name your Spark?</label>
+        <label for="spark-name">Your own name for it (only if you want)</label>
         <input id="spark-name" type="text" maxlength="24" autocomplete="off"
                placeholder="A name only you would choose">
-        <p class="spark-note">Naming is part of adopting. You can change it later, and you can leave it blank for now.</p>
+        <p class="spark-note">Every Spark arrives with a name of its own, grown from its seed — the same seed speaks the same name anywhere. If you give it a name of your own, that is the name it will answer to. You can change it, or clear it, later.</p>
       </div>
       <div class="spark-actions">
         <button type="button" class="spark-button primary" id="spark-meet-button">Meet your Spark</button>
       </div>
       <div class="spark-preview" id="spark-preview" hidden>
         <div class="spark-preview-art" id="spark-preview-art"></div>
+        <p id="spark-preview-name" style="font-weight:600"></p>
         <p id="spark-preview-kind"></p>
         <p class="spark-note" id="spark-preview-line"></p>
         <div class="spark-actions" style="justify-content:center">
@@ -112,6 +114,7 @@
         <div class="spark-facts">
           <p id="spark-big-kind"></p>
           <p id="spark-born"></p>
+          <p class="spark-note" id="spark-seed-name"></p>
           <p><strong id="spark-stage"></strong></p>
           <p class="spark-note" id="spark-next"></p>
           <p id="spark-noticed"></p>
@@ -136,7 +139,7 @@
       numbers that holds today&rsquo;s Moon and Pattern Day, the kind your answers
       leaned toward, and a random twist. That seed alone builds your Spark&rsquo;s
       shape, markings, colours, and temperament, the same way every time, on any
-      device. The seed and the name you chose are kept in this browser, on this
+      device. The seed — and any name of your own you gave it — is kept in this browser, on this
       device. Nothing is sent to a server, because there is no account and no
       server keeping Sparks. Clear this browser&rsquo;s site data and the Spark
       is gone with it.
