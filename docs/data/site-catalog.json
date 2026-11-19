@@ -660,13 +660,13 @@
     {
       "id": "claim-register",
       "title": "Claim Register",
-      "description": "Machine-readable register of 21 prioritised claims with sources and review status.",
+      "description": "The Codex's own 21 prioritised claims in readable form: exact quotes, evidence grades and source-review status, each claim linked to its place in the Evidence Edition. The machine-readable register is linked from the Documentation Hub.",
       "area": "evidence",
       "category": "Evidence",
-      "resourceType": "dataset",
+      "resourceType": "document",
       "status": "live",
-      "path": "scroll/evidence/claim-register.json",
-      "url": "https://codexofreality.org/scroll/evidence/claim-register.json",
+      "path": "scroll/editorial.html",
+      "url": "https://codexofreality.org/scroll/editorial.html",
       "related": [
         "scroll-editorial"
       ],

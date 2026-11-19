@@ -12,7 +12,6 @@
       "deployed-but-unlinked": 57,
       "unreachable-from-homepage": 3,
       "compatibility-redirect-page": 1,
-      "reachable-only-through-atlas": 1,
       "not-published-in-catalog": 29,
       "unnamed-image-needs-descriptive-title": 21
     }
@@ -266,6 +265,49 @@
       ]
     },
     {
+      "id": "claim-register",
+      "title": "Editorial reading and evidence — Scroll of Fire Library",
+      "description": "A distinct, source-linked editorial reading of prioritized political claims, preserving the original Scroll of Fire manuscript and its spiritual voice.",
+      "category": "Evidence",
+      "area": "evidence",
+      "relatedProjects": [
+        "scroll-editorial"
+      ],
+      "sourcePath": "docs/scroll/editorial.html",
+      "publicUrl": "https://codexofreality.org/scroll/editorial.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "codex-atlas.html",
+        "glossary.html",
+        "index.html",
+        "living-time-sphere.html",
+        "scripture/index.html",
+        "scroll/atlas.html",
+        "scroll/index.html",
+        "scroll/lexicon.html",
+        "scroll/search.html",
+        "search.html",
+        "shop.html",
+        "witness.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/scroll/editorial.html",
+      "privacyEligibility": "approved-public",
+      "discoverability": {
+        "path": "scroll/editorial.html",
+        "inSitemap": true,
+        "inGlobalNav": true,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 171,
+        "pagesWithNavLinkToIt": 166
+      },
+      "issues": [
+        "nav-label-differs-from-title: \"Evidence Edition\" vs \"Editorial reading and evidence\""
+      ]
+    },
+    {
       "id": "claims-atlas",
       "title": "Documentation Hub — Scroll of Fire | Codex of Reality",
       "description": "Documentation Hub: documented claims and facts — government, corporations, the Epstein record, Nikola Tesla, orphan trains, the Old World, and the Codex's own claim register — each tied to a named source and graded by the state of its evidence.",
@@ -315,6 +357,7 @@
         "teach.html",
         "theory.html",
         "theory/canon.html",
+        "timeline.html",
         "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/claims-atlas.html",
@@ -1782,7 +1825,6 @@
         "theory.html",
         "theory/canon.html",
         "theory/equations/eq10.html",
-        "theory/equations/eq11.html",
         "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/",
@@ -11375,10 +11417,10 @@
         "path": "theory/equations/eq11.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 9,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 8,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -12998,12 +13040,11 @@
         "inGlobalNav": false,
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": null,
-        "inboundPages": 1,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 2,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
-        "reachable-only-through-atlas",
         "not-linked-directly-from-homepage"
       ]
     },
@@ -17543,50 +17584,6 @@
         "pagesWithNavLinkToIt": 166
       },
       "issues": []
-    },
-    {
-      "id": "scroll-editorial",
-      "title": "Editorial reading and evidence — Scroll of Fire Library",
-      "description": "A distinct, source-linked editorial reading of prioritized political claims, preserving the original Scroll of Fire manuscript and its spiritual voice.",
-      "category": "Evidence",
-      "area": "evidence",
-      "relatedProjects": [
-        "scroll-library",
-        "claim-register"
-      ],
-      "sourcePath": "docs/scroll/editorial.html",
-      "publicUrl": "https://codexofreality.org/scroll/editorial.html",
-      "publicationStatus": "live",
-      "lastVerifiedSourceRevision": "548e858",
-      "relatedPages": [
-        "codex-atlas.html",
-        "glossary.html",
-        "index.html",
-        "living-time-sphere.html",
-        "scripture/index.html",
-        "scroll/atlas.html",
-        "scroll/index.html",
-        "scroll/lexicon.html",
-        "scroll/search.html",
-        "search.html",
-        "shop.html",
-        "witness.html"
-      ],
-      "canonicalUrl": "https://codexofreality.org/scroll/editorial.html",
-      "privacyEligibility": "approved-public",
-      "discoverability": {
-        "path": "scroll/editorial.html",
-        "inSitemap": true,
-        "inGlobalNav": true,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 171,
-        "pagesWithNavLinkToIt": 166
-      },
-      "issues": [
-        "nav-label-differs-from-title: \"Evidence Edition\" vs \"Editorial reading and evidence\""
-      ]
     },
     {
       "id": "scroll-lexicon",

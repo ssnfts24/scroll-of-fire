@@ -100,15 +100,15 @@
 | `docs/assets/js/site.js` | 133 |
 | `docs/assets/js/living-ui.js` | 130 |
 | `docs/scripture/assets/scripture.js` | 93 |
-| `docs/assets/js/living-search-launcher.js` | 28 |
+| `docs/assets/js/calendar/pattern-calendar-version.js` | 32 |
+| `docs/assets/js/calendar/pattern-calendar-data.js` | 32 |
+| `docs/assets/js/calendar/pattern-calendar-format.js` | 32 |
+| `docs/assets/js/calendar/pattern-calendar-boundary.js` | 32 |
+| `docs/assets/js/calendar/pattern-calendar.js` | 32 |
+| `docs/assets/js/living-search-launcher.js` | 30 |
 | `docs/assets/js/living-codex.js` | 19 |
 | `docs/theory/equations/https:/cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js` | 19 |
 | `docs/theory/equations/assets/js/site.js` | 19 |
-| `docs/theory/equations/assets/js/living-search-launcher.js` | 19 |
-| `docs/theory/equations/assets/js/theory.js` | 19 |
-| `docs/theory/equations/assets/js/living-ui.js` | 19 |
-| `docs/assets/js/calendar-cor.js` | 17 |
-| `docs/theory/https:/cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js` | 15 |
 
 ## Protected systems (do not modify)
 
