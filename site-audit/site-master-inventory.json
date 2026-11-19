@@ -614,7 +614,7 @@
     },
     {
       "id": "docs-assets:assets/media",
-      "title": "docs/assets/media (62 files)",
+      "title": "docs/assets/media (70 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1780,10 +1780,10 @@
         "teach.html",
         "theory.html",
         "theory/canon.html",
-        "theory/equations/eq00.html",
-        "theory/equations/eq01.html",
-        "theory/equations/eq02.html",
-        "theory/equations/eq03.html",
+        "theory/equations/eq10.html",
+        "theory/equations/eq11.html",
+        "theory/equations/eq12.html",
+        "theory/equations/eq13.html",
         "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/",
@@ -10505,10 +10505,10 @@
         "path": "theory/equations/eq01.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 14,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 13,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -10585,10 +10585,10 @@
         "path": "theory/equations/eq02.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 23,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 22,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -10664,10 +10664,10 @@
         "path": "theory/equations/eq03.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 17,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 16,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -11296,10 +11296,10 @@
         "path": "theory/equations/eq10.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 6,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 7,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -11376,10 +11376,10 @@
         "path": "theory/equations/eq11.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 8,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 9,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -11455,10 +11455,10 @@
         "path": "theory/equations/eq12.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 8,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 9,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -11533,10 +11533,10 @@
         "path": "theory/equations/eq13.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 16,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 17,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -18586,10 +18586,10 @@
         "path": "theory/equations/eq00.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 13,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 12,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
