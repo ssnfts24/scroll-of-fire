@@ -4,7 +4,7 @@
   "engine": "living-search-bm25-v1",
   "note": "Generated from the sealed catalog and Scroll data. The index Netlify and GitHub Pages serve is this committed artifact; regenerate with npm run search:index after site:catalog.",
   "sources": {
-    "docs/data/site-catalog.json": "2c4843cb5de669440c1b6cd6c4609d6a459330b4d2005591b6743c635bb178d9",
+    "docs/data/site-catalog.json": "e094aa6ccc1bb753e0034b30d3bce16cafbf549df13ff690e2963e8ec11e62e7",
     "docs/scroll/data/library.json": "86370223f9bffe5fc30afc4c13767cb283f2f0cd2499321d84d166279ef24588",
     "docs/scroll/data/reader-segments.json": "2624fe5640fd4abcf63499b32f28e36a532c8253f9a7cd2983833a1aa33297dc",
     "docs/scroll/search/lexicon/lexicon-index.json": "92e4169f9a75bfa5467ab5bb57d77cca990a11cd2ab8ba8248685561a571b879",
@@ -38,21 +38,21 @@
     }
   ],
   "counts": {
-    "pages": 167,
+    "pages": 165,
     "scrollSections": 817,
     "scrollSegments": 1609,
     "scrolls": 2426,
-    "atlas": 70,
+    "atlas": 68,
     "lexicon": 911,
     "claims": 21,
-    "total": 3595
+    "total": 3591
   },
   "shards": {
     "pages": {
       "file": "pages.json",
-      "count": 167,
-      "bytes": 768579,
-      "sha256": "8f8b1d057d379336a78116de46c920ba8e13790b7aebd663a8559eafa99f2756"
+      "count": 165,
+      "bytes": 761230,
+      "sha256": "39b89ec2077c6ba8d16efab5e230921af54f4224d679855cf9dd9d970095d6e5"
     },
     "scrolls": {
       "file": "scrolls.json",
@@ -62,9 +62,9 @@
     },
     "atlas": {
       "file": "atlas.json",
-      "count": 70,
-      "bytes": 17437,
-      "sha256": "5d9c21e4ce311e6d21a223efa4fb1e7fe9c957fad5ad6edc5124bbda3e48784a"
+      "count": 68,
+      "bytes": 16352,
+      "sha256": "4464aa35d2724b808c8c52fd2516b31044968cc8c84803c33bd8c1a758b6a5c0"
     },
     "lexicon": {
       "file": "lexicon.json",
