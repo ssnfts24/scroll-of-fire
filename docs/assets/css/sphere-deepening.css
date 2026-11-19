@@ -3,9 +3,11 @@
  * Aaron's direction (Nov 18, 2026): more detail, easier navigation,
  * a reachable full screen, and Nori travelling around the Sphere.
  * Everything here styles the PAGE around the instrument — the
- * guide bar, her orbit, the app dock's fit on a phone, and the
- * depth of the room the Sphere sits in. The instrument's own
- * stylesheet (living-time-sphere.css, R1.7) is untouched.
+ * guide bar, her orbit, the app dock's fit on a phone, the depth
+ * of the room the Sphere sits in, and the clean full screen (the
+ * chrome steps aside while the root element carries sgb-fs). The
+ * instrument's own stylesheet (living-time-sphere.css, R1.7) is
+ * untouched.
  */
 
 /* ── The room: depth behind the instrument ─────────────────────── */
@@ -309,4 +311,110 @@ html.sphere-nori-orbiting .spark-walker {
   .sphere-nori-orbit {
     filter: none;
   }
+}
+
+/* ── Clean full screen ─────────────────────────────────────────── */
+/* Aaron's word (Nov 19, 2026): the full screen was as covered as
+ * the page — the guide bar and the page chrome sat on the Sphere.
+ * While full screen is on, the companion layer marks the root
+ * element with sgb-fs and these rules step everything else aside:
+ * the Sphere takes the whole screen, with only the folded guide
+ * bar and Nori's orbit riding along. Leaving full screen restores
+ * the everyday view, untouched. */
+
+/* The Guide button exists only inside full screen. */
+.sgb-clean-toggle {
+  display: none;
+}
+html.sgb-fs .sgb-clean-toggle {
+  display: inline-flex;
+}
+
+/* The folded guide bar: one slim line — the day, Exit, Guide. */
+html.sgb-fs .sphere-guide-bar.sgb-bar-slim {
+  width: auto;
+  max-width: 94vw;
+  padding: 0.35rem 0.55rem;
+  gap: 0.35rem 0.5rem;
+  background: rgba(6, 12, 20, 0.72);
+}
+html.sgb-fs .sphere-guide-bar.sgb-bar-slim .sgb-actions > :not(.sgb-fs):not(.sgb-clean-toggle),
+html.sgb-fs .sphere-guide-bar.sgb-bar-slim .sgb-status,
+html.sgb-fs .sphere-guide-bar.sgb-bar-slim .sgb-share-row {
+  display: none;
+}
+html.sgb-fs .sphere-guide-bar.sgb-bar-slim .sgb-readout-label {
+  display: none;
+}
+html.sgb-fs .sphere-guide-bar.sgb-bar-slim .sgb-readout-value {
+  max-width: 38vw;
+}
+
+/* Inside the stage column, only the instrument, the guide bar,
+ * her orbit and the Interact bar remain. The Interact bar itself
+ * steps aside once touch interaction is on; while it is off, it
+ * is the one control the visitor still needs, so it stays. */
+html.sgb-fs .sphere-canvas-wrap > :not(.sphere-instrument-shell):not(.sphere-guide-bar):not(.sphere-nori-orbit):not(.sphere-interact-bar) {
+  display: none;
+}
+html.sgb-fs .sphere-interact-bar {
+  display: none;
+}
+html.sgb-fs.sgb-fs-interact-off .sphere-interact-bar {
+  display: flex;
+}
+
+/* App view: the top bar, the selected-day bar and the dock step
+ * aside, and the stage column goes edge to edge. */
+html.sgb-fs body.sphere-app .sphere-app-topbar,
+html.sgb-fs body.sphere-app .sphere-app-daybar,
+html.sgb-fs body.sphere-app .sphere-app-dock {
+  display: none;
+}
+html.sgb-fs body.sphere-app .sphere-canvas-wrap {
+  padding: 0;
+}
+
+/* Classic full page: the wrapper becomes the stage — fixed, edge
+ * to edge, over the document beneath it — and the instrument
+ * fills it the same way the app view fills its stage. */
+html.sgb-fs body:not(.sphere-app) {
+  overflow: hidden;
+}
+html.sgb-fs body:not(.sphere-app) .site-header,
+html.sgb-fs body:not(.sphere-app) #living-command-trigger {
+  display: none;
+}
+html.sgb-fs body:not(.sphere-app) .sphere-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  background: #05070d;
+}
+html.sgb-fs body:not(.sphere-app) .sphere-wrapper > :not(.sphere-canvas-wrap) {
+  display: none;
+}
+html.sgb-fs body:not(.sphere-app) .sphere-canvas-wrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+html.sgb-fs body:not(.sphere-app) .sphere-instrument-shell {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+html.sgb-fs body:not(.sphere-app) #sphere-container {
+  flex: 1 1 auto;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  width: 100%;
 }

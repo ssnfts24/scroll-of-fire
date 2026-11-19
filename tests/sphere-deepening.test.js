@@ -121,3 +121,44 @@ test("the picture is an honest capture or a labelled drawn card, never a fake sc
   assert.ok(layer.includes("drawShareCard"), "the drawn card fallback exists");
   assert.ok(layer.includes("not a screenshot"), "the card is labelled as drawn, in plain words");
 });
+
+test("clean full screen: the layer marks the root and folds the guide bar to a slim line", () => {
+  assert.ok(layer.includes("sgb-fs"), "the root element carries the full-screen mark");
+  assert.ok(layer.includes("syncCleanFs"), "one sync keeps the mark honest on every fullscreenchange");
+  assert.ok(layer.includes("sgb-bar-slim"), "the guide bar folds while full screen is on");
+  assert.ok(layer.includes('data-sgb="guide"'), "a Guide button brings the full bar back on tap");
+  assert.ok(layer.includes("toggleGuideBar"), "the Guide button folds and opens the bar");
+  assert.ok(css.includes(".sgb-bar-slim"), "the folded bar is styled slim");
+  assert.ok(css.includes(".sgb-clean-toggle"), "the Guide button lives only in full screen");
+});
+
+test("clean full screen: the chrome steps aside in both views, the instrument fills the stage", () => {
+  assert.ok(css.includes("html.sgb-fs body.sphere-app .sphere-app-topbar"), "app top bar steps aside");
+  assert.ok(css.includes("html.sgb-fs body.sphere-app .sphere-app-daybar"), "selected-day bar steps aside");
+  assert.ok(css.includes("html.sgb-fs body.sphere-app .sphere-app-dock"), "dock steps aside");
+  assert.ok(css.includes(".sphere-canvas-wrap > :not(.sphere-instrument-shell)"), "inside the stage column only the instrument rides along");
+  assert.ok(css.includes("html.sgb-fs body:not(.sphere-app) .sphere-wrapper"), "the classic wrapper becomes the stage");
+  assert.ok(css.includes("html.sgb-fs body:not(.sphere-app) #sphere-container"), "the classic instrument fills its stage");
+});
+
+test("clean full screen: touch interaction is switched on through the page's own Interact button", () => {
+  assert.ok(layer.includes("sphere-interact-btn"), "the layer drives the public Interact button");
+  assert.ok(layer.includes("sphere-interact-end-btn"), "interaction state is read from the public end button");
+  assert.ok(layer.includes("sgb-fs-interact-off"), "while interaction stays off, its bar stays in view");
+  assert.ok(css.includes("sgb-fs-interact-off"), "the stylesheet carries the carve-out");
+});
+
+test("the everyday stage keeps a measured space for the guide bar, so the bar rests under the Sphere", () => {
+  assert.ok(layer.includes("fitBarReserve"), "the reserve is fitted, not guessed");
+  assert.ok(layer.includes("paddingBottom"), "the stage column carries the reserve");
+  assert.ok(layer.includes("ResizeObserver"), "the reserve follows the bar's own height");
+});
+
+test("the homepage hint rides the top corner, clear of the Sphere's selected-year card", () => {
+  const homeCss = read("docs/assets/css/homepage-sphere.css");
+  const start = homeCss.indexOf(".homepage-sphere-hint {");
+  assert.ok(start > 0, "the hint is styled by the homepage's own stylesheet");
+  const block = homeCss.slice(start, homeCss.indexOf("}", start));
+  assert.ok(block.includes("top:"), "the hint sits at the top of the frame");
+  assert.ok(!block.includes("bottom:"), "the hint no longer sits where the card anchors");
+});

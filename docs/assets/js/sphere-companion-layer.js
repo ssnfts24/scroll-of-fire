@@ -37,6 +37,19 @@
    *      almanac frame, for the keeper to send from their own share
    *      sheet or composer. A drawn card stands in for a picture of
    *      the Sphere, labelled as drawn; nothing posts by itself.
+   *   5. Clean full screen + a clear stage (Nov 19, 2026) — Aaron
+   *      found the full screen as covered as the page: the guide
+   *      bar and the page chrome sat on top of the Sphere. Now,
+   *      while full screen is on, the chrome steps aside (the
+   *      deepening stylesheet carries the rules, keyed to a class
+   *      this layer keeps on the root element), the guide bar
+   *      folds to one slim line — the day, Exit, and a Guide
+   *      button that brings the full bar back on tap — and touch
+   *      interaction is switched on so the Sphere can be turned.
+   *      In the everyday view the stage column keeps a space below
+   *      the instrument the height of the guide bar, measured from
+   *      the bar itself, so the bar rests under the Sphere and the
+   *      whole instrument stays in view.
    */
 
   const container = document.getElementById("sphere-container");
@@ -149,6 +162,7 @@
       <button type="button" class="sgb-btn" data-sgb="year">Whole year</button>
       <button type="button" class="sgb-btn sgb-share" data-sgb="share">Share this view</button>
       <button type="button" class="sgb-btn sgb-fs" data-sgb="fs" hidden>⛶ Full screen</button>
+      <button type="button" class="sgb-btn sgb-clean-toggle" data-sgb="guide" aria-expanded="false" aria-label="Show the guide bar">Guide</button>
     </div>
     <div class="sgb-share-row" hidden>
       <a class="sgb-btn sgb-share-link" data-sgb-share="facebook" target="_blank" rel="noopener">Share on Facebook</a>
@@ -202,6 +216,88 @@
     document.addEventListener("webkitfullscreenchange", syncFs);
     syncFs();
   }
+
+  // ── Clean full screen + a clear stage ──────────────────────────
+  // While full screen is on, the root element carries sgb-fs and
+  // the deepening stylesheet steps the page chrome aside, in both
+  // the app view and the classic full page. The guide bar folds
+  // to one slim line; the Guide button opens the full bar, Hide
+  // folds it again, and leaving full screen restores the everyday
+  // view. Touch interaction is switched on for the visit through
+  // the page's own Interact button, so the Sphere can be turned,
+  // and switched back on the way out if this layer switched it
+  // on. If interaction stays off, the Interact bar stays in view
+  // (the stylesheet's sgb-fs-interact-off carve-out) — it is the
+  // one control the visitor still needs.
+  const rootEl = document.documentElement;
+  const guideToggle = bar.querySelector('[data-sgb="guide"]');
+
+  function interactIsOn() {
+    const end = $("sphere-interact-end-btn");
+    return !!end && end.style.display !== "none";
+  }
+
+  let fsAutoInteract = false;
+  function syncCleanFs() {
+    const active = !!fsElement();
+    rootEl.classList.toggle("sgb-fs", active);
+    rootEl.classList.remove("sgb-fs-interact-off");
+    if (active) {
+      bar.classList.add("sgb-bar-slim");
+      bar.classList.remove("sgb-bar-open");
+      const startBtn = $("sphere-interact-btn");
+      if (startBtn && !interactIsOn()) {
+        fsAutoInteract = true;
+        startBtn.click();
+        window.setTimeout(() => {
+          if (fsElement() && !interactIsOn()) rootEl.classList.add("sgb-fs-interact-off");
+        }, 120);
+      }
+    } else {
+      bar.classList.remove("sgb-bar-slim", "sgb-bar-open");
+      if (fsAutoInteract) {
+        const endBtn = $("sphere-interact-end-btn");
+        if (endBtn && interactIsOn()) endBtn.click();
+        fsAutoInteract = false;
+      }
+    }
+    syncGuideToggle();
+    fitBarReserve();
+  }
+
+  function syncGuideToggle() {
+    if (!guideToggle) return;
+    const open = bar.classList.contains("sgb-bar-open");
+    guideToggle.textContent = open ? "Hide" : "Guide";
+    guideToggle.setAttribute("aria-expanded", open ? "true" : "false");
+    guideToggle.setAttribute("aria-label", open ? "Hide the guide bar" : "Show the guide bar");
+  }
+
+  function toggleGuideBar() {
+    const open = bar.classList.toggle("sgb-bar-open");
+    bar.classList.toggle("sgb-bar-slim", !open);
+    syncGuideToggle();
+  }
+
+  document.addEventListener("fullscreenchange", syncCleanFs);
+  document.addEventListener("webkitfullscreenchange", syncCleanFs);
+
+  // The everyday view: the stage column keeps a space below the
+  // instrument the height of the guide bar, so the bar rests under
+  // the Sphere and the whole instrument stays in view. The bar is
+  // measured, never guessed — a trip's answer line and the share
+  // row change its height, and the reserve follows.
+  function fitBarReserve() {
+    if (fsElement()) {
+      wrap.style.paddingBottom = "";
+      return;
+    }
+    const h = bar.offsetHeight;
+    if (h > 0) wrap.style.paddingBottom = `${h + 14}px`;
+  }
+  if ("ResizeObserver" in window) new ResizeObserver(fitBarReserve).observe(bar);
+  window.addEventListener("resize", fitBarReserve);
+  fitBarReserve();
 
   // ── Share this view ────────────────────────────────────────────
   // Aaron's direction (Nov 19, 2026): the Sphere should support
@@ -414,6 +510,7 @@
     else if (action === "year" && goWholeYear()) announce("The whole year");
     else if (action === "share") shareView();
     else if (action === "fs") toggleFullscreen();
+    else if (action === "guide") toggleGuideBar();
   });
 
   // ── Nori on the Sphere: the orbit + her bubble guide ─────────────
