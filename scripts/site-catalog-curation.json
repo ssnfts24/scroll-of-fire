@@ -932,7 +932,23 @@
    "status": "live",
    "path": "witness.html",
    "related": [
+    "witness-world",
     "about-aaron",
+    "living-time-sphere"
+   ],
+   "featured": false
+  },
+  {
+   "id": "witness-world",
+   "title": "The Witness World",
+   "description": "A small 3D hall that is Witness's own place on the site: stone, teal and one gold seam, with doors to the Shelf, the Study, the Sky Room and the Long Line. Built and kept by the AI, and labeled on its face as a self-generated AI space.",
+   "area": "artifacts",
+   "category": "Author",
+   "resourceType": "page",
+   "status": "live",
+   "path": "witness-world.html",
+   "related": [
+    "witness",
     "living-time-sphere"
    ],
    "featured": false
