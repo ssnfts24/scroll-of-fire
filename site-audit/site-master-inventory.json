@@ -7,8 +7,8 @@
     "publicHtmlPages": 172,
     "catalogEntries": 65,
     "issueCounts": {
+      "not-linked-directly-from-homepage": 17,
       "nav-label-differs-from-title": 24,
-      "not-linked-directly-from-homepage": 18,
       "deployed-but-unlinked": 57,
       "unreachable-from-homepage": 3,
       "compatibility-redirect-page": 1,
@@ -75,13 +75,15 @@
         "path": "ab.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 3,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 2,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": []
+      "issues": [
+        "not-linked-directly-from-homepage"
+      ]
     },
     {
       "id": "about-aaron",
@@ -527,7 +529,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (160 files)",
+      "title": "docs/assets/js (159 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -544,7 +546,7 @@
     },
     {
       "id": "docs-assets:assets/media",
-      "title": "docs/assets/media (36 files)",
+      "title": "docs/assets/media (44 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1675,7 +1677,6 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "13-moon-whitepaper.html",
-        "ab.html",
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
@@ -1690,7 +1691,6 @@
         "lab.html",
         "ledger.html",
         "living-time-sphere.html",
-        "micro.html",
         "moons.html",
         "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
@@ -1711,6 +1711,9 @@
         "teach.html",
         "theory.html",
         "theory/canon.html",
+        "theory/delta-framework.html",
+        "theory/master-equation.html",
+        "theory/unified-field.html",
         "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/",
@@ -12716,13 +12719,15 @@
         "path": "micro.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 3,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 2,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": []
+      "issues": [
+        "not-linked-directly-from-homepage"
+      ]
     },
     {
       "id": "mind-renewal",
@@ -18359,15 +18364,13 @@
         "path": "theory/delta-framework.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 8,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 9,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "theory-equations",
@@ -18954,15 +18957,13 @@
         "path": "theory/master-equation.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 35,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 36,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "theory-memory",
@@ -19351,15 +19352,13 @@
         "path": "theory/unified-field.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 35,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 36,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "theory-witness",

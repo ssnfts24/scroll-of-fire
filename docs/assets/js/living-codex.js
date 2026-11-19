@@ -237,7 +237,15 @@
     }
 
     if (typeof calendar.get13Moon === "function") {
-      return calendar.get13Moon(todayISO(), Intl.DateTimeFormat().resolvedOptions().timeZone);
+      try {
+        return calendar.get13Moon(todayISO(), Intl.DateTimeFormat().resolvedOptions().timeZone);
+      } catch (_) {
+        /* The shared calendar adapter throws when the Pattern Calendar
+           engine is not loaded on this page (e.g. lab.html). The signal
+           bar must still render without the moon line instead of dying
+           with the throw. */
+        return null;
+      }
     }
 
     return null;
