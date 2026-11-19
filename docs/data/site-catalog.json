@@ -520,7 +520,25 @@
         "micro",
         "ab",
         "glyphs",
-        "invoke"
+        "invoke",
+        "sending-test"
+      ],
+      "featured": false,
+      "publicationEligibility": "approved-public"
+    },
+    {
+      "id": "sending-test",
+      "title": "The Sending Test",
+      "description": "A blind sending test that honestly tests telepathy and foresight claims: the target list is sealed with a SHA-256 fingerprint before the first guess, scored against chance with exact binomial math, and sessions are kept only on the visitor's device.",
+      "area": "systems",
+      "category": "Practice tools",
+      "resourceType": "tool",
+      "status": "live",
+      "path": "sending-test.html",
+      "url": "https://codexofreality.org/sending-test.html",
+      "related": [
+        "lab",
+        "ledger"
       ],
       "featured": false,
       "publicationEligibility": "approved-public"
