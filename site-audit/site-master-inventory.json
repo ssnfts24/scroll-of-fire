@@ -7,7 +7,7 @@
     "publicHtmlPages": 174,
     "catalogEntries": 67,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 18,
+      "not-linked-directly-from-homepage": 19,
       "nav-label-differs-from-title": 24,
       "deployed-but-unlinked": 57,
       "unreachable-from-homepage": 3,
@@ -1782,7 +1782,6 @@
         "theory.html",
         "theory/canon.html",
         "theory/master-equation.html",
-        "theory/unified-field.html",
         "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/",
@@ -19492,13 +19491,15 @@
         "path": "theory/unified-field.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 36,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 35,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": []
+      "issues": [
+        "not-linked-directly-from-homepage"
+      ]
     },
     {
       "id": "theory-witness",
