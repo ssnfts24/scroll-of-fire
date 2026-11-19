@@ -46,7 +46,8 @@ const AREAS = [
   { id: "sphere", label: "Sphere", target: "living-time-sphere.html" },
   { id: "shop", label: "Shop", target: "shop.html" },
   { id: "witness", label: "Witness", target: "witness.html" },
-  { id: "search", label: "Living Search", target: "search.html" }
+  { id: "search", label: "Living Search", target: "search.html" },
+  { id: "companion", label: "Companion", target: "companions.html" }
 ];
 
 /* The one external door, always last in the bar. */
@@ -125,6 +126,7 @@ function areaOf(rel) {
   if (rel === "shop.html") return "shop";
   if (rel === "witness.html") return "witness";
   if (rel === "search.html") return "search";
+  if (rel === "companions.html") return "companion";
   return null;
 }
 

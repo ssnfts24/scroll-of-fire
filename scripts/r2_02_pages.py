@@ -30,6 +30,9 @@ def head(title, desc, base, canonical_path, extra=""):
 <link rel="stylesheet" href="{base}../assets/css/living-ui.css?v=20261117-1">
 <script defer src="{base}../assets/js/site.js"></script>
 <script defer src="{base}assets/scripture.js"></script>
+<link rel="stylesheet" href="{base}../assets/css/spark-companion.css?v=20261118-3">
+<script defer src="{base}../assets/js/spark-companion.js?v=20261118-3"></script>
+<script defer src="{base}../assets/js/spark-presence.js?v=20261118-3"></script>
 {extra}</head>
 """
 
@@ -39,7 +42,7 @@ def living_nav(base):
     # inserts into the hand-maintained pages): Home is one tap away from every
     # page, Scripture is the current area here. Emitted by the generator so the
     # deterministic build keeps it; never hand-edit the generated pages.
-    return f"""<div class="living-nav" data-living-nav><nav class="living-nav-inner" aria-label="Site navigation"><a class="living-nav-brand" href="{base}../index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a><ul class="living-nav-links"><li><a href="{base}../index.html">Home</a></li><li><a href="{base}../scroll/index.html">Scroll</a></li><li><a href="{base}../codex-atlas.html">Atlas</a></li><li><a href="{base}../scroll/lexicon.html">Lexicon</a></li><li><a class="is-current" aria-current="page" href="{base}index.html">Scripture</a></li><li><a href="{base}../living-time-sphere.html">Sphere</a></li><li><a href="{base}../shop.html">Shop</a></li><li><a href="{base}../witness.html">Witness</a></li><li><a href="{base}../search.html">Living Search</a></li><li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li></ul></nav></div>
+    return f"""<div class="living-nav" data-living-nav><nav class="living-nav-inner" aria-label="Site navigation"><a class="living-nav-brand" href="{base}../index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a><ul class="living-nav-links"><li><a href="{base}../index.html">Home</a></li><li><a href="{base}../scroll/index.html">Scroll</a></li><li><a href="{base}../codex-atlas.html">Atlas</a></li><li><a href="{base}../scroll/lexicon.html">Lexicon</a></li><li><a class="is-current" aria-current="page" href="{base}index.html">Scripture</a></li><li><a href="{base}../living-time-sphere.html">Sphere</a></li><li><a href="{base}../shop.html">Shop</a></li><li><a href="{base}../witness.html">Witness</a></li><li><a href="{base}../search.html">Living Search</a></li><li><a href="{base}../companions.html">Companion</a></li><li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li></ul></nav></div>
 """
 
 

@@ -195,7 +195,7 @@ const shelfIndex = shelves.map(shelf => {
 function livingNav(area) {
   const link = (href, label, key) =>
     `<a${key === area ? ' class="is-current" aria-current="page"' : ""} href="${href}">${label}</a>`;
-  return `<div class="living-nav" data-living-nav><nav class="living-nav-inner" aria-label="Site navigation"><a class="living-nav-brand" href="../index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a><ul class="living-nav-links"><li>${link("../index.html", "Home", "home")}</li><li>${link("index.html", "Scroll", "scroll")}</li><li>${link("../codex-atlas.html", "Atlas", "atlas")}</li><li>${link("lexicon.html", "Lexicon", "lexicon")}</li><li>${link("../scripture/index.html", "Scripture", "scripture")}</li><li>${link("../living-time-sphere.html", "Sphere", "sphere")}</li><li>${link("../shop.html", "Shop", "shop")}</li><li>${link("../witness.html", "Witness", "witness")}</li><li>${link("../search.html", "Living Search", "search")}</li><li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li></ul></nav></div>`;
+  return `<div class="living-nav" data-living-nav><nav class="living-nav-inner" aria-label="Site navigation"><a class="living-nav-brand" href="../index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a><ul class="living-nav-links"><li>${link("../index.html", "Home", "home")}</li><li>${link("index.html", "Scroll", "scroll")}</li><li>${link("../codex-atlas.html", "Atlas", "atlas")}</li><li>${link("lexicon.html", "Lexicon", "lexicon")}</li><li>${link("../scripture/index.html", "Scripture", "scripture")}</li><li>${link("../living-time-sphere.html", "Sphere", "sphere")}</li><li>${link("../shop.html", "Shop", "shop")}</li><li>${link("../witness.html", "Witness", "witness")}</li><li>${link("../search.html", "Living Search", "search")}</li><li>${link("../companions.html", "Companion", "companion")}</li><li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li></ul></nav></div>`;
 }
 
 const homepage = `<!doctype html>
@@ -211,6 +211,9 @@ const homepage = `<!doctype html>
   <link rel="stylesheet" href="../assets/css/living-ui.css?v=20261117-1">
   <script defer src="../assets/js/site.js"></script>
   <script defer src="assets/library.js"></script>
+  <link rel="stylesheet" href="../assets/css/spark-companion.css?v=20261118-3">
+  <script defer src="../assets/js/spark-companion.js?v=20261118-3"></script>
+  <script defer src="../assets/js/spark-presence.js?v=20261118-3"></script>
 </head>
 <body class="library-home living-ui">
   <a class="skip-link" href="#main">Skip to library</a>
@@ -296,6 +299,9 @@ const reader = `<!doctype html>
   <script defer src="../assets/js/site.js"></script>
   <script defer src="assets/search-normalize.js"></script>
   <script defer src="assets/reader.js"></script>
+  <link rel="stylesheet" href="../assets/css/spark-companion.css?v=20261118-3">
+  <script defer src="../assets/js/spark-companion.js?v=20261118-3"></script>
+  <script defer src="../assets/js/spark-presence.js?v=20261118-3"></script>
 </head>
 <body class="reader-page living-ui">
   <a class="skip-link" href="#reading">Skip to passage</a>
@@ -355,6 +361,9 @@ function toolPage({ file, title, description, bodyClass, current, intro, body, s
   <script defer src="assets/search-normalize.js"></script>
   <script defer src="assets/scroll-common.js"></script>
 ${scripts.map(script => `  <script defer src="assets/${script}"></script>`).join("\n")}
+  <link rel="stylesheet" href="../assets/css/spark-companion.css?v=20261118-3">
+  <script defer src="../assets/js/spark-companion.js?v=20261118-3"></script>
+  <script defer src="../assets/js/spark-presence.js?v=20261118-3"></script>
 </head>
 <body class="tool-body ${bodyClass} living-ui">
   <a class="skip-link" href="#main">Skip to content</a>
