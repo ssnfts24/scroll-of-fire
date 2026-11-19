@@ -166,11 +166,11 @@ test("recent activity includes the reviewed October and November library release
 test("Downloads reconciliation preserves snapshot accounting and reports rather than rewrites", () => {
   assert.equal(reconciliation.note, "Report only. downloads.html and its integrity history were not modified.");
   assert.equal(reconciliation.snapshot.commit, "af3078a5fc2cc7969733ad9df1fcffd6754d974c");
-  assert.equal(reconciliation.snapshot.declaredFiles, 167);
-  assert.equal(reconciliation.snapshot.parsedRows, 167);
+  assert.equal(reconciliation.snapshot.declaredFiles, 168);
+  assert.equal(reconciliation.snapshot.parsedRows, 168);
   assert.equal(reconciliation.counts.added, 27);
   assert.equal(reconciliation.counts.removed, 0);
   assert.equal(reconciliation.counts.changed, 0);
-  assert.equal(reconciliation.counts.unchanged, 167);
+  assert.equal(reconciliation.counts.unchanged, 168);
   assert.ok(curation.entries.some(entry => entry.id === "downloads"));
 });
