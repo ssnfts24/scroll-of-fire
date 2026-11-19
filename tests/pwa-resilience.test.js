@@ -157,7 +157,9 @@ test("missing optional image does not block install or offline startup", async (
       type: "APP_SHELL_READY",
       appVersion: "2026.07.16.3",
       serviceWorkerBuild: "2026.07.16.3",
-      mandatoryAssetCount: 109
+      // 109 + the three Sphere R2 modules added to mandatoryPaths
+      // (label placement, quality governor, preview options).
+      mandatoryAssetCount: 112
     }
   );
   await activateWorker(harness);
