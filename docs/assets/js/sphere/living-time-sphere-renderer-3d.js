@@ -130,6 +130,10 @@
   let _initEndedAt = null;
   let _requestedDpr = null;
   let _appliedDpr = null;
+  // R2 — the DPR the quality preset asked for, before the adaptive
+  // governor scales it; and the last applied sky-intensity scale.
+  let _baseDpr = null;
+  let _lastSkyIntensityScale = 1;
   let _activeTier = null;
   let _restoreAttempts = 0;
   let _lastRenderTimestamp = 0;
@@ -3953,7 +3957,8 @@
           + (cloud / 100) * 0.045
           + (humidity / 100) * 0.035
         )
-        * (_skyState ? (0.55 + 0.45 * _skyState.light.glow) : 1);
+        * (_skyState ? (0.55 + 0.45 * _skyState.light.glow) : 1)
+        * _skyIntensityScale();
 
       if (_objects.environmentCompass) {
         _objects.environmentCompass.visible = true;
@@ -3993,7 +3998,8 @@
               mesh.material.opacity =
                 skyBand.opacity
                 * (Number(mesh.userData?.opacityFactor) || 1)
-                * _environmentGestureDim;
+                * _environmentGestureDim
+                * _skyIntensityScale();
               mesh.material.color.setHex(
                 _skyState.light.cloudColor
               );
@@ -4013,7 +4019,9 @@
         const veil = _objects.environmentCloudVeil;
         veil.visible = _skyState.veilOpacity > 0.01;
         veil.material.opacity =
-          _skyState.veilOpacity * _environmentGestureDim;
+          _skyState.veilOpacity
+          * _environmentGestureDim
+          * _skyIntensityScale();
         veil.material.color.setHex(
           _skyState.light.cloudColor
         );
@@ -5506,15 +5514,34 @@
     // Frame-rate governor: exponential average, checked in windows so a
     // single hitch never strips the sky.
     _frameTimeEmaMs = _frameTimeEmaMs * 0.92 + dtMs * 0.08;
-    _cloudGovernorFrames += 1;
-    if (_cloudGovernorFrames >= 90) {
-      _cloudGovernorFrames = 0;
-      if (_frameTimeEmaMs > 25 && _cloudFpsCap > 1) {
-        _cloudFpsCap -= 1;
+    /*
+     * R2 — the adaptive-quality governor (Living Strata Phase F)
+     * generalises this cloud-only governor. While it is enabled it
+     * owns the cloud cap and also steps pixel ratio, the floating-
+     * label budget, and the breath/flow effects, in that shed order.
+     * While it is off, the historic cloud-only stepping below runs
+     * exactly as before.
+     */
+    const r2Governor = globalThis.LivingTimeSphereQualityGovernor;
+    if (r2Governor?.isEnabled?.()) {
+      const step = r2Governor.sampleFrame(dtMs);
+      const cap = r2Governor.cloudCap();
+      if (cap !== _cloudFpsCap) {
+        _cloudFpsCap = cap;
         _applyEnvironmentState();
-      } else if (_frameTimeEmaMs < 17 && _cloudFpsCap < 3) {
-        _cloudFpsCap += 1;
-        _applyEnvironmentState();
+      }
+      if (step?.changed) _applyGovernorTier();
+    } else {
+      _cloudGovernorFrames += 1;
+      if (_cloudGovernorFrames >= 90) {
+        _cloudGovernorFrames = 0;
+        if (_frameTimeEmaMs > 25 && _cloudFpsCap > 1) {
+          _cloudFpsCap -= 1;
+          _applyEnvironmentState();
+        } else if (_frameTimeEmaMs < 17 && _cloudFpsCap < 3) {
+          _cloudFpsCap += 1;
+          _applyEnvironmentState();
+        }
       }
     }
 
@@ -5554,19 +5581,65 @@
     }
   }
 
+  // R2 — sky intensity from the preview options: "calm" softens the
+  // weather sky's shell, cloud bands, and veil by one shared scale.
+  function _skyIntensityScale() {
+    return globalThis.LivingTimeSphereOptions?.get?.()?.skyIntensity
+      === "calm"
+      ? 0.45
+      : 1;
+  }
+
+  // R2 — the governor's deepest tier stills the breath/flow effects.
+  function _governorEffectsOk() {
+    const governor = globalThis.LivingTimeSphereQualityGovernor;
+    if (!governor?.isEnabled?.()) return true;
+    return governor.effectsEnabled();
+  }
+
+  /*
+   * R2 — apply the governor's current tier to the renderer: pixel
+   * ratio is the fragment-cost lever (scaled from the preset's base
+   * DPR, never during a touch gesture — the gesture path owns DPR
+   * while a finger is down and restores from _appliedDpr after), and
+   * the label manager re-places under the tier's budget.
+   */
+  function _applyGovernorTier() {
+    const governor = globalThis.LivingTimeSphereQualityGovernor;
+    if (!governor?.isEnabled?.() || !_renderer) return;
+    if (!_cameraGestureActive) {
+      const base = Number(_baseDpr || _appliedDpr || 1);
+      const next = Math.max(0.5, base * governor.dprScale());
+      if (Math.abs(next - Number(_appliedDpr || 1)) > 0.01) {
+        _renderer.setPixelRatio(next);
+        _appliedDpr = next;
+      }
+    }
+    _moonLabelManager?.markDirty?.();
+  }
+
   function render(nowMs) {
     if (!_renderer || !_scene || !_camera) return;
+
+    // R2 — a flipped sky switch re-applies the environment once, so
+    // the change is visible immediately rather than at the next
+    // weather refresh.
+    const skyScale = _skyIntensityScale();
+    if (skyScale !== _lastSkyIntensityScale) {
+      _lastSkyIntensityScale = skyScale;
+      _applyEnvironmentState();
+    }
 
     const breathVal = globalThis.LivingTimeSphereAnimation.breathValue();
     const flowVal   = globalThis.LivingTimeSphereAnimation.flowValue();
 
     // Breathing core
-    if (_objects.coreGlow && _quality?.breathing) {
+    if (_objects.coreGlow && _quality?.breathing && _governorEffectsOk()) {
       globalThis.LivingTimeSphereEffects.updateCoreGlow(_objects.coreGlow, breathVal);
     }
 
     // Passage flow: subtle emissive pulse on the arc
-    if (_objects.passageArc && _objects.passageArc.material && _quality?.passageFlow) {
+    if (_objects.passageArc && _objects.passageArc.material && _quality?.passageFlow && _governorEffectsOk()) {
       const mat = globalThis.LivingTimeSphereM;
       _objects.passageArc.material.emissiveIntensity = mat.EMISSIVE.passage + flowVal * 0.3;
     }
@@ -6103,6 +6176,7 @@
       _markStage("context", "active");
       _renderer.setPixelRatio(pixelRatio);
       _appliedDpr = pixelRatio;
+      _baseDpr = pixelRatio;
       _quality = quality;
 
       _renderer.setSize(w, h);
@@ -7485,6 +7559,8 @@
       const nextDpr = Math.min(rawDpr, tierCap, Number(preset.pixelRatioMax ?? tierCap), mobileCap);
       _renderer.setPixelRatio(nextDpr);
       _appliedDpr = nextDpr;
+      _baseDpr = nextDpr;
+      _applyGovernorTier();
     }
     if (_motionMode === "drift" && preset.idleDrift && !_prefersReducedMotion()) {
       globalThis.LivingTimeSphereCamera.startDrift(performance.now());
