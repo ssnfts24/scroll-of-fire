@@ -60,7 +60,7 @@ test("AlignmentVersion: exports correct version strings", () => {
   assert.equal(ctx.AlignmentVersion.alignmentLedgerVersion, "alignment-ledger/1.0.0");
   assert.equal(ctx.AlignmentVersion.sphereVersion, "living-time-sphere/1.0.0");
   assert.equal(ctx.AlignmentVersion.studyRange.start, 2014);
-  assert.equal(ctx.AlignmentVersion.studyRange.end,   2026);
+  assert.equal(ctx.AlignmentVersion.studyRange.end,   2027);
 });
 
 test("AlignmentVersion: versionBlock matches expected keys", () => {
@@ -97,12 +97,19 @@ test("AlignmentLedgerEngine: buildRecord is deterministic", () => {
   assert.equal(r1.equinox.utcInstant, r2.equinox.utcInstant);
 });
 
-test("AlignmentLedgerEngine: listSupportedYears returns 2014–2026", () => {
+test("AlignmentLedgerEngine: listSupportedYears returns 2014–2027", () => {
   const ctx = loadAlignmentContext();
   const years = ctx.AlignmentLedgerEngine.listSupportedYears();
   assert.equal(years[0],  2014);
-  assert.equal(years[years.length - 1], 2026);
-  assert.equal(years.length, 13);
+  assert.equal(years[years.length - 1], 2027);
+  assert.equal(years.length, 14);
+});
+
+test("AlignmentLedgerEngine: buildRecord for 2027 rests on the USNO-sourced equinox instant", () => {
+  const ctx = loadAlignmentContext();
+  const rec = ctx.AlignmentLedgerEngine.buildRecord({ selectedYear: 2027 });
+  assert.equal(rec.year, 2027);
+  assert.equal(rec.equinox.utcInstant, "2027-03-20T20:24:41Z");
 });
 
 test("AlignmentLedgerEngine: yearGateUtc returns April 17", () => {
@@ -133,10 +140,10 @@ test("AlignmentLedgerEngine: normalized values in [0,1]", () => {
 
 // ── Data layer ────────────────────────────────────────────────────────
 
-test("AlignmentLedgerData: getAllRecords returns 13 records", () => {
+test("AlignmentLedgerData: getAllRecords returns 14 records", () => {
   const ctx = loadAlignmentContext();
   const recs = ctx.AlignmentLedgerData.getAllRecords();
-  assert.equal(recs.length, 13);
+  assert.equal(recs.length, 14);
 });
 
 test("AlignmentLedgerData: getRecord caches correctly (same object)", () => {
@@ -168,10 +175,10 @@ test("AlignmentComparison: compareToPrevious(2026) is same as compareTwo(2025,20
   assert.equal(cmpA.equinoxUtcShiftHours, cmpB.equinoxUtcShiftHours);
 });
 
-test("AlignmentComparison: compareFullStudy returns 12 sequential pairs", () => {
+test("AlignmentComparison: compareFullStudy returns 13 sequential pairs", () => {
   const ctx = loadAlignmentContext();
   const results = ctx.AlignmentComparison.compareFullStudy();
-  assert.equal(results.length, 12);
+  assert.equal(results.length, 13);
   assert.equal(results[0].yearA, 2014);
   assert.equal(results[0].yearB, 2015);
 });
@@ -182,7 +189,7 @@ test("AlignmentRecurrence: findRecurrences returns array", () => {
   const ctx = loadAlignmentContext();
   const results = ctx.AlignmentRecurrence.findRecurrences(2026, { minimumScore: 0.0 });
   assert.ok(Array.isArray(results));
-  assert.equal(results.length, 12); // 12 other years
+  assert.equal(results.length, 13); // 13 other years
 });
 
 test("AlignmentRecurrence: similarity scores in [0,1]", () => {
@@ -260,12 +267,12 @@ test("AlignmentExport: toRecordJSON produces valid JSON", () => {
   assert.equal(parsed.schemaVersion, "alignment-ledger/1.0.0");
 });
 
-test("AlignmentExport: toHistoricalCSV produces CSV with header and 13 data rows", () => {
+test("AlignmentExport: toHistoricalCSV produces CSV with header and 14 data rows", () => {
   const ctx = loadAlignmentContext();
   const recs = ctx.AlignmentLedgerData.getAllRecords();
   const csv = ctx.AlignmentExport.toHistoricalCSV(recs);
   const lines = csv.split("\r\n").filter(l => l.trim());
-  assert.equal(lines.length, 14); // 1 header + 13 data rows
+  assert.equal(lines.length, 15); // 1 header + 14 data rows
 });
 
 test("AlignmentExport: toReadableText contains year and measurement labels", () => {

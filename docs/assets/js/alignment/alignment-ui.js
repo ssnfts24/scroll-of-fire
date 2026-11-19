@@ -141,8 +141,8 @@
         </tr>`;
       }).join("");
       el.innerHTML = `
-        <table class="al-historical-table" role="table" aria-label="Historical alignment records 2014–2026">
-          <caption>Alignment measurements 2014–2026. Select a year to load its full record.</caption>
+        <table class="al-historical-table" role="table" aria-label="Historical alignment records 2014–2027">
+          <caption>Alignment measurements 2014–2027. Select a year to load its full record.</caption>
           <thead><tr><th>Year</th><th>Moon</th><th>Day</th><th>Passage (h)</th><th>Lunar phase</th></tr></thead>
           <tbody>${rows}</tbody>
         </table>`;

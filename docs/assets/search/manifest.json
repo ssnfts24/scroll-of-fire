@@ -4,7 +4,7 @@
   "engine": "living-search-bm25-v1",
   "note": "Generated from the sealed catalog and Scroll data. The index Netlify and GitHub Pages serve is this committed artifact; regenerate with npm run search:index after site:catalog.",
   "sources": {
-    "docs/data/site-catalog.json": "828e1e51a83ad7af0bb1353430369c5b4916896b2ab6b5a10749076e696f8c56",
+    "docs/data/site-catalog.json": "bf71d0adb22ecb61ad5f207c131a91a7ce0333bd50a374e45c520d0993f53104",
     "docs/scroll/data/library.json": "86370223f9bffe5fc30afc4c13767cb283f2f0cd2499321d84d166279ef24588",
     "docs/scroll/data/reader-segments.json": "2624fe5640fd4abcf63499b32f28e36a532c8253f9a7cd2983833a1aa33297dc",
     "docs/scroll/search/lexicon/lexicon-index.json": "92e4169f9a75bfa5467ab5bb57d77cca990a11cd2ab8ba8248685561a571b879",
@@ -38,33 +38,33 @@
     }
   ],
   "counts": {
-    "pages": 164,
+    "pages": 161,
     "scrollSections": 817,
     "scrollSegments": 1609,
     "scrolls": 2426,
-    "atlas": 67,
+    "atlas": 65,
     "lexicon": 911,
     "claims": 21,
-    "total": 3589
+    "total": 3584
   },
   "shards": {
     "pages": {
       "file": "pages.json",
-      "count": 164,
-      "bytes": 757540,
-      "sha256": "6455a5426b73fdd4bd90107d0f5876ee8b066ee36a1d7c9ffc3406e60ff7c7cd"
+      "count": 161,
+      "bytes": 735897,
+      "sha256": "26c3eb4df95213a225190ecf7fd20d655082b2cd991cfba313783be5a5b8b0b5"
     },
     "scrolls": {
       "file": "scrolls.json",
       "count": 2426,
-      "bytes": 1290856,
-      "sha256": "d5fa675a2e1ee8c1991d01f83900504797a1e1ed805e3bd2ff5dbc39c9770d32"
+      "bytes": 1115619,
+      "sha256": "ad7fcf8d603623eda03a36f85ff85ba0077207076ae3e5f93a0a6ba18e7f659d"
     },
     "atlas": {
       "file": "atlas.json",
-      "count": 67,
-      "bytes": 16013,
-      "sha256": "2011979862fd751868ba158a40f8286aee8b2670e7221ac6b175ad86cf861f8a"
+      "count": 65,
+      "bytes": 15090,
+      "sha256": "d705771da8d1ce8662fab76ab2bec6f40da12077a888e34fb748fc347ffed40f"
     },
     "lexicon": {
       "file": "lexicon.json",

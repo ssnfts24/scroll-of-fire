@@ -1532,5 +1532,123 @@
         "validationStatus": "approximate"
       }
     ]
+  },
+  {
+    "schemaVersion": "equinox-passage/1.0.0",
+    "astronomyVersion": "astronomy/1.0.0",
+    "calendarVersion": "pattern-calendar/1.0.0",
+    "selectedYear": 2027,
+    "timeZone": "America/Los_Angeles",
+    "boundaryMode": "sunset",
+    "manualSunset": "18:00",
+    "equinox": {
+      "utcInstant": "2027-03-20T20:24:41Z",
+      "localInstant": "2027-03-20T13:24:41",
+      "civilDate": "2027-03-20",
+      "source": "U.S. Naval Observatory Earth's Seasons (whole-second value computed with Skyfield + JPL DE421)",
+      "sourceVersion": "usno-seasons-api/4.0.1 + skyfield/1.55 + jpl-de421",
+      "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
+      "dataOrigin": "computed-and-validated",
+      "timestampResolutionSeconds": 1,
+      "validationToleranceSeconds": 3,
+      "maximumMeasuredDeviationSeconds": 2.057,
+      "maximumDeviationYear": 2022,
+      "primarySourceUrl": "unknown",
+      "sourceTableUrl": "unknown",
+      "validationUrl": "unknown",
+      "skyfieldVersion": "unknown",
+      "jplKernelFilename": "unknown",
+      "ephemerisVersionOrChecksum": "unknown",
+      "timescale": "UTC",
+      "equinoxFindingAlgorithm": "unknown; repository imports third-party whole-second March equinox timestamps rather than reproducing the original computation",
+      "generationScriptPath": "scripts/generate-equinox-passage-data.mjs",
+      "timestampRoundingPolicy": "Imported whole-second UTC timestamps are stored exactly as copied; the repository does not invent sub-second values",
+      "generationTimestamp": "2026-07-22T00:00:00Z",
+      "status": "calculated",
+      "validationStatus": "validated-against-independent-table",
+      "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
+      "validationDeltaSeconds": 0.334,
+      "validationUtcInstant": "2027-03-20T20:24:41.334Z",
+      "generatedOrImportedAt": "2026-11-18T00:00:00Z"
+    },
+    "patternPosition": {
+      "effectiveDate": "2027-03-20",
+      "patternYear": 1,
+      "moon": 13,
+      "moonName": "Completion Seal",
+      "day": 2,
+      "dayOfPatternYear": 338,
+      "weekGate": "Week 1 · Ignition",
+      "archetype": "Witness",
+      "tone": "Witness",
+      "insideCountedYear": true,
+      "isDayOutOfTime": false,
+      "isDeepTimeDay": false
+    },
+    "passage": {
+      "startInstant": "2027-03-20T20:24:41Z",
+      "endInstant": "2027-04-17T01:00:00.000Z",
+      "totalMilliseconds": 2349319000,
+      "totalDays": 27.191192,
+      "civilMidnightsCrossed": 27,
+      "selectedPatternBoundariesCrossed": 28
+    },
+    "lunarLayer": {
+      "source": "approximate-synodic-phase",
+      "sourceVersion": "13-moons-synodic/1.0.0",
+      "status": "approximate",
+      "ageDays": 12.812898,
+      "cyclePosition": 0.433886,
+      "illumination": 0.957476,
+      "illuminationPercent": 95.7,
+      "phaseName": "Waxing Gibbous",
+      "calculationInstantUtc": "2027-03-20T20:24:41Z",
+      "approximate": true
+    },
+    "annualSignature": {
+      "calculated": "Equinox entered at Completion Seal · Day 2.",
+      "astronomical": "Approximate lunar phase at the equinox instant: Waxing Gibbous with approximately 95.7% illumination.",
+      "symbolic": "Week 1 · Ignition frames a Witness threshold without claiming causation.",
+      "observational": "Passage length under the declared boundary settings: 27 days, 4 hours, 35 minutes. No conclusion until witness records are collected."
+    },
+    "normalizedValues": {
+      "patternCyclePosition": 0.925824,
+      "moonIndex": 12,
+      "dayIndex": 1,
+      "yearProgress": 0.925824,
+      "equinoxCyclePosition": 0.224044,
+      "lunarCyclePosition": 0.433886,
+      "solarSeasonPosition": 0
+    },
+    "sources": [
+      {
+        "layer": "astronomical-fact",
+        "source": "U.S. Naval Observatory Earth's Seasons (whole-second value computed with Skyfield + JPL DE421)",
+        "sourceVersion": "usno-seasons-api/4.0.1 + skyfield/1.55 + jpl-de421",
+        "exactUtcInstant": "2027-03-20T20:24:41Z",
+        "timestampResolutionSeconds": 1,
+        "validationToleranceSeconds": 3,
+        "validationStatus": "validated-against-independent-table",
+        "validationMethod": "Compare each stored whole-second UTC equinox instant against the independent validation instant and record the absolute difference in seconds",
+        "validationDeltaSeconds": 0.334,
+        "maximumMeasuredDeviationSeconds": 2.057,
+        "maximumDeviationYear": 2022,
+        "sourceIntegrityStatus": "partial-unverified-third-party-source-chain",
+        "generatedOrImportedAt": "2026-11-18T00:00:00Z"
+      },
+      {
+        "layer": "pattern-calculation",
+        "source": "pattern-calendar/1.0.0",
+        "sourced": false,
+        "validationStatus": "deterministic-fixed-epoch-arithmetic"
+      },
+      {
+        "layer": "lunar-approximation",
+        "source": "approximate-synodic-phase",
+        "sourceVersion": "13-moons-synodic/1.0.0",
+        "sourced": false,
+        "validationStatus": "approximate"
+      }
+    ]
   }
 ]

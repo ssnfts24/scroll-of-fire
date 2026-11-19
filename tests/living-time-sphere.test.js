@@ -153,12 +153,12 @@ test("LivingTimeSphereModel: markers present with labels", () => {
   assert.ok(model.markers.lunarMarker.label, "lunarMarker must have label");
 });
 
-test("LivingTimeSphereModel: buildSpiral returns 13 years", () => {
+test("LivingTimeSphereModel: buildSpiral returns 14 years", () => {
   const ctx = loadSphereContext();
   const spiral = ctx.LivingTimeSphereModel.buildSpiral();
-  assert.equal(spiral.years.length, 13);
+  assert.equal(spiral.years.length, 14);
   assert.equal(spiral.years[0].year,  2014);
-  assert.equal(spiral.years[12].year, 2026);
+  assert.equal(spiral.years[13].year, 2027);
 });
 
 test("LivingTimeSphereModel: spiral year indices are sequential", () => {

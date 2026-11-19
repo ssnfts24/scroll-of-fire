@@ -8,7 +8,7 @@
   - `astronomy/1.0.0`
   - `equinox-passage/1.0.0`
   - `pattern-calendar/1.0.0`
-- Bundled reference years: 2014–2026.
+- Bundled reference years: 2014–2027. The 2027 record's source chain differs from 2014–2026: U.S. Naval Observatory Earth's Seasons is the primary published source (minute precision), the whole-second value was computed with Skyfield + JPL DE421, and validation is against an independent Skyfield + JPL DE440s computation. See `recordProvenance` in the source metadata.
 - Bundled study timezone: America/Los_Angeles.
 - Bundled boundary model: sunset with `18:00` fallback unless the user supplies another sunset value.
 - Astronomical source policy:

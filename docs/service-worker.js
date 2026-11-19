@@ -1,3 +1,4 @@
+/* Equinox 2027 data extension: precache paths follow the renamed 2014-2027 dataset files. */
 /* B7.58.2 calendar-rail alignment hotfix: refresh changed Sphere assets. */
 /* B7.58.1 label-glass hotfix: force service-worker script refresh. */
 "use strict";
@@ -125,8 +126,8 @@ const mandatoryPaths = [
   "./assets/js/environment/location-command.js",
   "./assets/js/sphere/living-time-sphere-live-data.js",
   "./assets/data/moons.json",
-  "./data/equinox-passage/equinox-reference-2014-2026.json",
-  "./data/equinox-passage/equinox-passage-2014-2026.csv",
+  "./data/equinox-passage/equinox-reference-2014-2027.json",
+  "./data/equinox-passage/equinox-passage-2014-2027.csv",
   "./assets/img/moons/app/icon-192.png",
   "./assets/img/moons/app/icon-512.png",
   "./assets/img/moons/app/icon-maskable-512.png"
