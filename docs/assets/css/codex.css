@@ -233,6 +233,9 @@ p{line-height:1.75;text-wrap:pretty}
 }
 
 .compact-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-height: 44px;
 }
 

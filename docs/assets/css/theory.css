@@ -559,7 +559,7 @@ body[data-reading-mode] ::selection {
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
-  min-height: 2.65rem;
+  min-height: 2.75rem;
   padding: 0.68rem 0.95rem;
   border: 1px solid rgba(226, 184, 91, 0.28);
   border-radius: 999px;
@@ -1339,8 +1339,8 @@ body[data-reading-mode="study"] .graph-card {
   }
 
   .nav-toggle {
-    width: 2.55rem;
-    height: 2.55rem;
+    width: 2.75rem;
+    height: 2.75rem;
   }
 
   .theory-header .site-nav {

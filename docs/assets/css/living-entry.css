@@ -418,7 +418,7 @@ body.le-lock {
 
 @media (max-width: 1099.98px) {
   html.home-page body {
-    padding-bottom: 3.6rem;
+    padding-bottom: 4.25rem;
   }
 
   .le-rail {
@@ -439,6 +439,8 @@ body.le-lock {
 
   .le-rail a {
     flex-direction: column;
+    justify-content: center;
+    min-height: 44px;
     gap: 0.3rem;
     padding: 0.3rem 0.25rem;
     font-size: 0.62rem;

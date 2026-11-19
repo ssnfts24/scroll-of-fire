@@ -169,7 +169,7 @@ def render_all(OUT, emit_text, books_meta, chapters, manifest, remnant, curated,
 <section id="scripture-explainer" style="max-width:880px;margin:2rem auto;">
 <h2>Genesis and Exodus, word by word.</h2>
 <p>A short spoken tour of the Scripture reader: the complete Hebrew text of Genesis and Exodus, a study opened for every single word, the five layers kept visibly apart, and the page’s own stated limits. Press play and let the page explain itself.</p>
-<video controls preload="metadata" width="1280" height="720" style="width:100%;height:auto;display:block" src="../assets/media/scripture-explainer.mp4" aria-label="Video: the Scripture reader for Genesis and Exodus, explained in plain words">
+<video controls preload="none" width="1280" height="720" style="width:100%;height:auto;display:block" src="../assets/media/scripture-explainer.mp4" poster="../assets/media/scripture-explainer-poster.webp" aria-label="Video: the Scripture reader for Genesis and Exodus, explained in plain words">
 Your browser does not support the video element. The same tour is written out across this page.
 </video>
 </section>
@@ -201,9 +201,9 @@ Your browser does not support the video element. The same tour is written out ac
   <p style="letter-spacing:.12em;text-transform:uppercase;font-size:.8rem;opacity:.75;margin:0 0 .35rem;">Watch · The Explainer</p>
   <h2>Sources, licences, and limits — stated.</h2>
   <p>A short spoken tour of the Scripture edition's sources page: its three completeness levels, the pinned sources behind the Hebrew, the lexicon, and the English, and the limits the edition declares about itself. Press play and let the page explain itself.</p>
-  <video controls preload="metadata" width="1280" height="720"
+  <video controls preload="none" width="1280" height="720"
     style="width:100%;height:auto;display:block"
-    src="../assets/media/scripture-about-explainer.mp4"
+    src="../assets/media/scripture-about-explainer.mp4" poster="../assets/media/scripture-about-explainer-poster.webp"
     aria-label="Video: Scripture sources and method, explained in plain words">
     Your browser does not support the video element. The same tour is
     written out across this page.
