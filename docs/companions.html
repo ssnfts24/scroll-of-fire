@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963">
+<head>
+  <base href="./">
+  <script>
+    if (location.hostname === "ssnfts24.github.io") {
+      const base = document.querySelector("base");
+      if (base) base.setAttribute("href", "/scroll-of-fire/");
+    }
+  </script>
+  <meta charset="utf-8">
+  <title>Companions — Scroll of Fire | Codex of Reality</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#05070d">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Meet a Spark: a small companion that is made for you on the day you adopt it, named by you, and kept on your own device. It grows as you return, visit, and practice.">
+  <meta name="author" content="Aaron Paul Laird">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://codexofreality.org/companions.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Codex of Reality">
+  <meta property="og:title" content="Companions — meet your Spark">
+  <meta property="og:description" content="A small companion, made from the day you meet it and named by you. It lives on your device and grows with your practice.">
+  <meta property="og:url" content="https://codexofreality.org/companions.html">
+  <link rel="icon" type="image/png" href="assets/img/shared/branding/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/shared/branding/favicon.png">
+  <link rel="stylesheet" href="assets/css/codex.css">
+  <link rel="stylesheet" href="assets/css/navigation.css">
+  <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
+  <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261118-1">
+  <script defer src="assets/js/site.js"></script>
+  <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-version.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-data.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-format.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-boundary.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/temporal-cursor-controller.js?v=20260816-2"></script>
+  <script defer src="assets/js/life-atlas/life-atlas-schema.js?v=20260817-1"></script>
+  <script defer src="assets/js/life-atlas/life-atlas-repository.js?v=20260819-b750"></script>
+  <script defer src="assets/js/life-atlas/life-atlas-indexeddb.js?v=20260819-b750"></script>
+  <script defer src="assets/js/life-atlas/life-atlas-runtime.js?v=20260819-b750"></script>
+  <script defer src="assets/js/spark-companion.js?v=20261118-1"></script>
+  <script defer src="assets/js/spark-companions-page.js?v=20261118-1"></script>
+</head>
+<body class="living-ui">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="living-nav" data-living-nav>
+    <nav class="living-nav-inner" aria-label="Site navigation">
+      <a class="living-nav-brand" href="index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a>
+      <ul class="living-nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="scroll/index.html">Scroll</a></li>
+        <li><a href="codex-atlas.html">Atlas</a></li>
+        <li><a href="scroll/lexicon.html">Lexicon</a></li>
+        <li><a href="scripture/index.html">Scripture</a></li>
+        <li><a href="living-time-sphere.html">Sphere</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="witness.html">Witness</a></li>
+        <li><a href="search.html">Living Search</a></li>
+        <li><a href="companions.html" class="is-current" aria-current="page">Companion</a></li>
+        <li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <main id="main" class="spark-wrap">
+    <h1>A Spark of your own</h1>
+    <p class="spark-lede">
+      A Spark is a small companion that lives here, on this device, and nowhere else.
+      It is not picked from a shelf. It is made at the moment you meet it, out of
+      today&rsquo;s place in Living Time and a few answers only you would give —
+      so no two Sparks are alike. You name it. It keeps you company as you read,
+      return, and practice, and it grows as you do.
+    </p>
+    <p><span class="spark-today" id="spark-today">Today, in Living Time</span></p>
+
+    <!-- The meeting: shown until a Spark is adopted on this device. -->
+    <section id="spark-meet" hidden>
+      <h2>Meet your Spark</h2>
+      <p class="spark-note">
+        Three short questions first. There are no wrong answers — they simply
+        lean your Spark toward one of the six kinds: Fire, Water, Shadow, Air,
+        Earth, or Light. Today&rsquo;s Moon and Pattern Day lean too.
+      </p>
+      <div id="spark-questions"></div>
+      <div class="spark-name-row">
+        <label for="spark-name">What will you name your Spark?</label>
+        <input id="spark-name" type="text" maxlength="24" autocomplete="off"
+               placeholder="A name only you would choose">
+        <p class="spark-note">Naming is part of adopting. You can change it later, and you can leave it blank for now.</p>
+      </div>
+      <div class="spark-actions">
+        <button type="button" class="spark-button primary" id="spark-meet-button">Meet your Spark</button>
+      </div>
+      <div class="spark-preview" id="spark-preview" hidden>
+        <div class="spark-preview-art" id="spark-preview-art"></div>
+        <p id="spark-preview-kind"></p>
+        <p class="spark-note" id="spark-preview-line"></p>
+        <div class="spark-actions" style="justify-content:center">
+          <button type="button" class="spark-button primary" id="spark-keep">Keep this Spark</button>
+          <button type="button" class="spark-button quiet" id="spark-another">Show me another</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- The companion: shown once a Spark lives on this device. -->
+    <section id="spark-companion" hidden>
+      <div class="spark-companion-card">
+        <div class="spark-big-art" id="spark-big-art"></div>
+        <h2 id="spark-big-name" style="margin-top:10px"></h2>
+        <div class="spark-facts">
+          <p id="spark-big-kind"></p>
+          <p id="spark-born"></p>
+          <p><strong id="spark-stage"></strong></p>
+          <p class="spark-note" id="spark-next"></p>
+          <p id="spark-noticed"></p>
+        </div>
+        <div class="spark-guide-box">
+          <p id="spark-guide" style="margin:0"></p>
+          <p style="margin:8px 0 0"><a id="spark-guide-link" href="moons.html">See it</a></p>
+        </div>
+        <div class="spark-rename-row">
+          <input id="spark-rename" type="text" maxlength="24" autocomplete="off" aria-label="Rename your Spark">
+          <button type="button" class="spark-button" id="spark-rename-button">Rename</button>
+        </div>
+        <div class="spark-actions" style="justify-content:center">
+          <button type="button" class="spark-button quiet" id="spark-leave">Let go</button>
+        </div>
+      </div>
+    </section>
+
+    <h2>How a Spark works</h2>
+    <p class="spark-note">
+      When you adopt, the site writes down a short seed — a line of letters and
+      numbers that holds today&rsquo;s Moon and Pattern Day, the kind your answers
+      leaned toward, and a random twist. That seed alone builds your Spark&rsquo;s
+      shape, markings, colours, and temperament, the same way every time, on any
+      device. The seed and the name you chose are kept in this browser, on this
+      device. Nothing is sent to a server, because there is no account and no
+      server keeping Sparks. Clear this browser&rsquo;s site data and the Spark
+      is gone with it.
+    </p>
+    <p class="spark-note">
+      Your Spark grows from what it can honestly see here: the days you come
+      back, the pages you visit, and the practice sessions you seal on the
+      practice page. It will suggest where to go next, in plain words, from
+      those same facts — never from anything tracked elsewhere. Once adopted,
+      it walks the site with you: it strolls in when a page opens and wanders
+      a little as you read. If your device asks for reduced motion, it simply
+      appears in its corner and stays.
+    </p>
+    <h2>Free, and staying free</h2>
+    <p class="spark-note">
+      A Spark is free — free to adopt, free to keep, free to grow. That is how
+      it was designed from the start, and it does not change. If a shared
+      currency ever joins the Codex, it will be earned by practice, never
+      bought.
+    </p>
+    <h2>What is not here yet</h2>
+    <p class="spark-note">
+      Accounts, keeping a Spark across devices, and trading are later steps,
+      and they are not open yet. For now a Spark is yours alone, on the
+      device where you met it — which is how the Codex keeps everything
+      first: local, and shareable only by choice.
+    </p>
+  </main>
+
+  <footer class="site-footer">
+    <p><a href="index.html">Home</a> · <a href="moons.html">13 Moons</a> · <a href="teach.html">Practice</a> · <a href="witness.html">Witness</a></p>
+  </footer>
+</body>
+</html>

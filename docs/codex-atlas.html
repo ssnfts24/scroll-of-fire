@@ -31,6 +31,9 @@
   <script defer src="assets/js/site.js"></script>
   <script defer src="assets/js/living-search-launcher.js"></script>
   <script defer src="assets/js/codex-atlas.js"></script>
+  <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261118-1">
+  <script defer src="assets/js/spark-companion.js?v=20261118-1"></script>
+  <script defer src="assets/js/spark-presence.js?v=20261118-1"></script>
 </head>
 <body class="living-ui">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -47,6 +50,7 @@
         <li><a href="shop.html">Shop</a></li>
         <li><a href="witness.html">Witness</a></li>
         <li><a href="search.html">Living Search</a></li>
+        <li><a href="companions.html">Companion</a></li>
         <li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li>
       </ul>
     </nav>
@@ -177,12 +181,12 @@
     <form class="atlas-filters" data-atlas-filters hidden aria-label="Filter the Codex Atlas">
       <label>Search <input type="search" name="q" autocomplete="off" placeholder="Title or description"></label>
       <label>Area <select name="area"><option value="">All areas</option><option value="scroll-scripture">Scroll and Scripture</option><option value="living-time">Living Time and Observatory</option><option value="systems">Systems and Living Technology</option><option value="evidence">Evidence and Research</option><option value="artifacts">Artifacts and Creative Works</option><option value="archive">Archive and Downloads</option></select></label>
-      <label>Category <select name="category"><option value="">All categories</option><option value="Archive">Archive</option><option value="Artifacts">Artifacts</option><option value="Author">Author</option><option value="Calendar">Calendar</option><option value="Community">Community</option><option value="Creative works">Creative works</option><option value="Discovery">Discovery</option><option value="Documentation">Documentation</option><option value="Downloads">Downloads</option><option value="Ethics">Ethics</option><option value="Evidence">Evidence</option><option value="Hebrew research">Hebrew research</option><option value="Hub">Hub</option><option value="Observatory">Observatory</option><option value="Orientation">Orientation</option><option value="Practice">Practice</option><option value="Practice tools">Practice tools</option><option value="Preserved original">Preserved original</option><option value="Preserved source">Preserved source</option><option value="Reading">Reading</option><option value="Reference">Reference</option><option value="Scripture">Scripture</option><option value="Search">Search</option><option value="Systems">Systems</option><option value="Theory">Theory</option><option value="Whitepaper">Whitepaper</option><option value="Witness records">Witness records</option></select></label>
+      <label>Category <select name="category"><option value="">All categories</option><option value="Archive">Archive</option><option value="Artifacts">Artifacts</option><option value="Author">Author</option><option value="Calendar">Calendar</option><option value="Community">Community</option><option value="Companion">Companion</option><option value="Creative works">Creative works</option><option value="Discovery">Discovery</option><option value="Documentation">Documentation</option><option value="Downloads">Downloads</option><option value="Ethics">Ethics</option><option value="Evidence">Evidence</option><option value="Hebrew research">Hebrew research</option><option value="Hub">Hub</option><option value="Observatory">Observatory</option><option value="Orientation">Orientation</option><option value="Practice">Practice</option><option value="Practice tools">Practice tools</option><option value="Preserved original">Preserved original</option><option value="Preserved source">Preserved source</option><option value="Reading">Reading</option><option value="Reference">Reference</option><option value="Scripture">Scripture</option><option value="Search">Search</option><option value="Systems">Systems</option><option value="Theory">Theory</option><option value="Whitepaper">Whitepaper</option><option value="Witness records">Witness records</option></select></label>
       <label>Resource type <select name="type"><option value="">All types</option><option value="collection">collection</option><option value="dataset">dataset</option><option value="document">document</option><option value="page">page</option><option value="tool">tool</option></select></label>
       <label>Status <select name="status"><option value="">All statuses</option><option value="live">Live</option><option value="source-only">Source only</option><option value="prototype">Prototype</option><option value="archived">Archived</option><option value="planned">Planned</option></select></label>
       <button type="reset" class="btn">Clear filters</button>
     </form>
-    <p class="atlas-count" role="status" aria-live="polite" data-atlas-count>65 resources in 6 areas</p>
+    <p class="atlas-count" role="status" aria-live="polite" data-atlas-count>66 resources in 6 areas</p>
     <p class="atlas-empty" data-atlas-empty hidden>No resources match these filters. Clear a filter or search for a different word.</p>
     <section class="atlas-area" id="area-scroll-scripture" data-atlas-area="scroll-scripture" aria-labelledby="area-scroll-scripture-title">
       <header>
@@ -313,6 +317,12 @@
           <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>tool</span><span>Witness records</span></p>
           <p>Browser-local record of witnessed days and SHA-256 hashes. Entries stay on this device and do not sync.</p>
           <p class="atlas-related"><strong>Related pages:</strong> <a href="systems/witness.html">Witness System</a> · <a href="moons.html">13 Moons</a></p>
+        </li>
+        <li class="atlas-card" data-atlas-card data-id="companions" data-area="living-time" data-category="Companion" data-type="page" data-status="live">
+          <h3><a class="atlas-card-title" href="companions.html">Companions</a></h3>
+          <p class="atlas-meta"><span class="atlas-badge atlas-badge--live">Live</span><span>page</span><span>Companion</span></p>
+          <p>Meet a Spark: a small companion made for you on the day you adopt it, named by you, kept on your own device. It grows as you return, visit, and practice, and roams the site with you.</p>
+          <p class="atlas-related"><strong>Related pages:</strong> <a href="living-time-sphere.html">Living Time Sphere</a> · <a href="witness.html">Witness</a></p>
         </li>
       </ul>
     </section>

@@ -1,0 +1,284 @@
+/* Spark companion — the companions page and the corner presence.
+ * Uses the living layer's palette where it is loaded, with the
+ * Codex night colours as the fallback so it stands on its own. */
+
+:root {
+  --spark-ink: var(--living-ink, #e8ecf6);
+  --spark-dim: var(--living-dim, #a7b0c6);
+  --spark-gold: var(--lnav-gold, #d9a441);
+  --spark-teal: #2dd4bf;
+  --spark-card: rgba(16, 22, 38, 0.72);
+  --spark-line: rgba(217, 164, 65, 0.35);
+}
+
+/* ---------- the roaming presence ---------- */
+
+/* The strip the Spark walks in: fixed to the bottom of the screen,
+ * and it takes no clicks at all — only the Spark itself does. */
+.spark-presence {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 0;
+  z-index: 800;
+  pointer-events: none;
+  font-family: inherit;
+}
+
+.spark-walker {
+  position: absolute;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(12px, env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  will-change: transform;
+}
+
+.spark-walker .spark-presence-button,
+.spark-walker .spark-presence-bubble {
+  pointer-events: auto;
+}
+
+.spark-presence-art.is-walking svg {
+  animation: spark-walk-bob 0.36s ease-in-out infinite alternate;
+}
+
+@keyframes spark-walk-bob {
+  from { transform: translateY(0) rotate(-2deg); }
+  to { transform: translateY(-3px) rotate(2deg); }
+}
+
+.spark-presence-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 4px 12px 4px 4px;
+  border-radius: 999px;
+  border: 1px solid var(--spark-line);
+  background: var(--spark-card);
+  color: var(--spark-ink);
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  animation: spark-bob 5s ease-in-out infinite;
+}
+
+.spark-presence-art svg {
+  display: block;
+  width: 38px;
+  height: 38px;
+}
+
+.spark-presence-name {
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+}
+
+.spark-presence-bubble {
+  max-width: min(300px, 82vw);
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--spark-line);
+  background: var(--spark-card);
+  color: var(--spark-ink);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+.spark-presence-bubble p {
+  margin: 0 0 8px;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.spark-presence-bubble p:last-child {
+  margin-bottom: 0;
+}
+
+.spark-presence-bubble a {
+  color: var(--spark-teal);
+}
+
+.spark-presence-line {
+  color: var(--spark-dim);
+  font-size: 0.8rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+@keyframes spark-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spark-presence-button { animation: none; }
+  .spark-presence-art.is-walking svg { animation: none; }
+  .spark-big-art svg { animation: none; }
+}
+
+/* ---------- the companions page ---------- */
+
+.spark-wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px 18px 64px;
+  color: var(--spark-ink);
+}
+
+.spark-wrap h1 {
+  font-size: clamp(1.7rem, 5vw, 2.4rem);
+  margin: 8px 0 6px;
+}
+
+.spark-lede {
+  color: var(--spark-dim);
+  line-height: 1.55;
+  max-width: 56ch;
+}
+
+.spark-today {
+  display: inline-block;
+  margin: 10px 0 4px;
+  padding: 6px 12px;
+  border: 1px solid var(--spark-line);
+  border-radius: 999px;
+  color: var(--spark-gold);
+  font-size: 0.9rem;
+  letter-spacing: 0.03em;
+}
+
+.spark-question {
+  border: 1px solid rgba(167, 176, 198, 0.25);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin: 16px 0;
+}
+
+.spark-question legend {
+  padding: 0 6px;
+  font-weight: 600;
+}
+
+.spark-option {
+  display: block;
+  padding: 8px 6px;
+  min-height: 44px;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.spark-name-row {
+  margin: 18px 0;
+}
+
+.spark-name-row label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.spark-name-row input,
+.spark-rename-row input {
+  width: 100%;
+  max-width: 340px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(167, 176, 198, 0.4);
+  background: rgba(5, 7, 13, 0.6);
+  color: var(--spark-ink);
+  font-size: 1rem;
+}
+
+.spark-button {
+  min-height: 44px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1px solid var(--spark-gold);
+  background: transparent;
+  color: var(--spark-gold);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.spark-button.primary {
+  background: var(--spark-gold);
+  color: #14100a;
+  font-weight: 600;
+}
+
+.spark-button.quiet {
+  border-color: rgba(167, 176, 198, 0.4);
+  color: var(--spark-dim);
+}
+
+.spark-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.spark-preview,
+.spark-companion-card {
+  border: 1px solid var(--spark-line);
+  border-radius: 18px;
+  padding: 20px;
+  margin: 20px 0;
+  background: var(--spark-card);
+  text-align: center;
+}
+
+.spark-preview-art svg,
+.spark-big-art svg {
+  width: min(220px, 60vw);
+  height: auto;
+}
+
+.spark-big-art svg {
+  animation: spark-bob 6s ease-in-out infinite;
+}
+
+.spark-facts {
+  text-align: left;
+  line-height: 1.6;
+  max-width: 52ch;
+  margin: 12px auto 0;
+}
+
+.spark-facts p {
+  margin: 6px 0;
+}
+
+.spark-guide-box {
+  border-left: 3px solid var(--spark-teal);
+  padding: 10px 14px;
+  margin: 18px 0;
+  text-align: left;
+  background: rgba(45, 212, 191, 0.06);
+  line-height: 1.55;
+}
+
+.spark-rename-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.spark-note {
+  color: var(--spark-dim);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.spark-wrap h2 {
+  margin-top: 36px;
+  font-size: 1.25rem;
+}

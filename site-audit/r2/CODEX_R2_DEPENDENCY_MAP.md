@@ -57,6 +57,7 @@
 | Script | Referenced output paths (first 8) |
 | --- | --- |
 | `scripts/apply-living-nav.mjs` | `docs/living-time-sphere.html`, `docs/404.html`, `docs/offline.html`, `docs/caravan.html` |
+| `scripts/apply-spark-presence.mjs` | `docs/living-time-sphere.html`, `docs/404.html`, `docs/offline.html`, `docs/caravan.html`, `docs/companions.html` |
 | `scripts/audit-site.mjs` | — |
 | `scripts/build-r2-inventory.mjs` | `site-audit/r2/document-extracts.json`, `docs/scroll/archive/Full_Scroll_Unsealed.txt`, `docs/development/TEMPORAL-AUTHORITY-CONTRACT.md` |
 | `scripts/build-scroll-editorial.mjs` | `docs/scroll/data/editorial-edition.json`, `docs/scroll/evidence/claim-register.json`, `docs/scroll/evidence/register.md` |
@@ -84,6 +85,7 @@
 | --- | --- |
 | `docs/assets/css/living-ui.css` | 127 |
 | `docs/scripture/assets/scripture.css` | 93 |
+| `docs/assets/css/spark-companion.css` | 68 |
 | `docs/assets/css/codex.css` | 37 |
 | `docs/assets/css/navigation.css` | 31 |
 | `docs/theory/equations/assets/css/codex.css` | 19 |
@@ -93,13 +95,14 @@
 | `docs/assets/css/animations.css` | 18 |
 | `docs/theory/assets/css/codex.css` | 15 |
 | `docs/theory/assets/css/navigation.css` | 15 |
-| `docs/theory/assets/css/theory.css` | 15 |
 
 | Script | Pages |
 | --- | --- |
 | `docs/assets/js/site.js` | 130 |
 | `docs/assets/js/living-ui.js` | 127 |
 | `docs/scripture/assets/scripture.js` | 93 |
+| `docs/assets/js/spark-companion.js` | 68 |
+| `docs/assets/js/spark-presence.js` | 68 |
 | `docs/assets/js/living-search-launcher.js` | 26 |
 | `docs/theory/equations/https:/cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js` | 19 |
 | `docs/theory/equations/assets/js/site.js` | 19 |
@@ -107,8 +110,6 @@
 | `docs/theory/equations/assets/js/theory.js` | 19 |
 | `docs/theory/equations/assets/js/living-ui.js` | 19 |
 | `docs/assets/js/living-codex.js` | 18 |
-| `docs/assets/js/calendar-cor.js` | 16 |
-| `docs/theory/https:/cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js` | 15 |
 
 ## Protected systems (do not modify)
 
