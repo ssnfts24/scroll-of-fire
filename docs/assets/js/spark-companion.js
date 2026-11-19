@@ -166,81 +166,189 @@
     };
   }
 
-  /* Her spoken voice, when the keeper turns it on: the device's
-   * own speech synthesis, tuned by the same seed that pitches
-   * her chirp — so the voice and the chirp feel like one
-   * creature. The pitch follows the chirp's base note (a high
-   * kind chirps high and speaks high; a low kind speaks low),
-   * and the pace is its temperament's own: bold and bright a
-   * touch quicker, gentle a touch slower. Pure data — the same
-   * seed settles the same voice on any device. */
+  /* Her voice box, grown from her seed — v7.
+   *
+   * Until v6 her spoken voice was the device's own speech
+   * synthesis: a generic robot, the same on every phone, tuned
+   * only in pitch and pace. Aaron heard it and named it plainly:
+   * too robot-like. So the robot is gone. What stands here now
+   * is a voice the seed itself grows, the way it grows her body,
+   * her name, and her chirp: a small set of vocal measurements
+   * (voiceBoxFor) and a way of sounding a line's shape with them
+   * (vocalPlanFor) — syllable by syllable, mouth-shape by
+   * mouth-shape, the pitch rising for a question and settling at
+   * a sentence's end. The words themselves stand in text, whole,
+   * exactly as they always have; the voice box is her sound over
+   * them, the way a beloved game companion vocalizes. Pure data:
+   * the same seed settles the same voice on any device, and two
+   * Sparks sound audibly different. The browser glue sings the
+   * plan with WebAudio — no samples, no network, no device
+   * speech, nothing recorded, nothing sent anywhere. */
+
+  /* Her pace, by temperament: bold and bright a touch quicker,
+   * gentle a touch slower — the same table that paced the old
+   * speech, now pacing her own syllables per second. */
   const VOICE_RATES = { bold: 1.05, gentle: 0.93, quiet: 0.95, curious: 1.03, steady: 0.97, bright: 1.06 };
 
-  function voiceFor(companion) {
+  /* Mouth shapes: the three formant resonances of each vowel, in
+   * hertz, at a vocal-tract scale of 1. Her seed's scale stretches
+   * or shrinks the whole set — a smaller tract, a brighter mouth.
+   * Classic values, long published; the seed chooses among them. */
+  const VOWEL_FORMANTS = {
+    a: [730, 1090, 2440],
+    e: [530, 1840, 2480],
+    i: [270, 2290, 3010],
+    o: [570, 840, 2410],
+    u: [300, 870, 2240],
+    neutral: [500, 1500, 2500]
+  };
+
+  /* Her vocal measurements, all from the seed:
+   * - basePitch: her fundamental, following the same chirp root
+   *   as everything else she sounds — the chirp bases run from
+   *   Earth's ~282 Hz to Light's ~806; her speaking fundamental
+   *   sits lower, 150–330 Hz, where a formant voice lives.
+   * - formantScale: the size of her vocal tract, 0.86–1.22.
+   * - breathiness: how much soft air rides under the tone, 0–1.
+   * - tempo: syllables per second, her temperament's pace. */
+  function voiceBoxFor(companion) {
     if (!companion) return null;
     const chirp = chirpFor(companion);
     if (!chirp) return null;
-    /* Chirp bases run from Earth's ~282 to Light's ~806. The
-     * speech pitch scale runs 0.5–2 with 1 as the device's own
-     * middle; her range sits inside it, 0.79–1.26. */
-    const pitch = Math.min(
-      1.3,
-      Math.max(0.75, Math.round((0.79 + ((chirp.first - 282) / (806 - 282)) * 0.47) * 100) / 100)
-    );
-    const rand = mulberry32(hashString(companion.seed + ":speech"));
-    const base = VOICE_RATES[companion.temperament] || 1;
-    const rate = Math.round(base * (0.98 + rand() * 0.04) * 100) / 100;
-    return { pitch, rate };
+    const rand = mulberry32(hashString(companion.seed + ":voicebox"));
+    const span = Math.min(1, Math.max(0, (chirp.first - 282) / (806 - 282)));
+    const basePitch = Math.round(150 + span * 180 + (rand() - 0.5) * 14);
+    const formantScale = Math.round((0.86 + rand() * 0.36) * 100) / 100;
+    const breathiness = Math.round((0.15 + rand() * 0.6) * 100) / 100;
+    const rate = VOICE_RATES[companion.temperament] || 1;
+    const tempo = Math.round(4.6 * rate * (0.97 + rand() * 0.06) * 100) / 100;
+    return { basePitch, formantScale, breathiness, tempo };
   }
 
-  /* Which of the device's voices she speaks with, in a stated
-   * order: a warm named en-US voice first (on a typical
-   * Android/Chrome that is "Google US English"; on Apple
-   * devices, Samantha and her named kin), then any en-US voice,
-   * then any English voice, then the device's own default.
-   * The list is the device's; the choice is deterministic. */
-  function pickVoice(voices) {
-    if (!Array.isArray(voices) || !voices.length) return null;
-    const score = (v) => {
-      const name = String((v && v.name) || "");
-      const lang = String((v && v.lang) || "").toLowerCase();
-      const enUS = lang === "en-us";
-      if (enUS && /google us english/i.test(name)) return 6;
-      if (enUS && /natural|neural/i.test(name)) return 5;
-      if (enUS && /samantha|zira|aria|jenny/i.test(name)) return 4;
-      if (enUS) return 3;
-      if (lang.startsWith("en")) return 2;
-      if (v && v.default) return 1;
-      return 0;
+  /* One word, sounded out: its syllables, each with the vowel it
+   * turns on and the consonant onset that opens it. A plain,
+   * deterministic sounding-out — vowel groups are syllables, a
+   * trailing silent e folds into the syllable before it, and the
+   * onset is named by its hardest consonant: a plosive (t, k, p…)
+   * ticks short, a fricative (s, f, sh…) hisses a breath longer,
+   * the rest open soft. It does not need to be a linguist; it
+   * needs the line's true shape — its count, its rises, its
+   * little consonant weather. */
+  function wordSyllables(word) {
+    const w = String(word || "").toLowerCase().replace(/[^a-z]/g, "");
+    if (!w) return [];
+    const isVowelAt = (i) => {
+      const c = w[i];
+      if ("aeiou".includes(c)) return true;
+      /* y sounds as a vowel when it follows a consonant */
+      return c === "y" && i > 0 && !"aeiouy".includes(w[i - 1]);
     };
-    let best = null;
-    let bestScore = -1;
-    for (const v of voices) {
-      const s = score(v);
-      if (s > bestScore) {
-        bestScore = s;
-        best = v;
+    const groups = [];
+    let i = 0;
+    while (i < w.length) {
+      if (isVowelAt(i)) {
+        let j = i + 1;
+        while (j < w.length && isVowelAt(j)) j += 1;
+        groups.push({ start: i, end: j, letters: w.slice(i, j) });
+        i = j;
+      } else {
+        i += 1;
       }
     }
-    return best;
+    if (!groups.length) return [{ vowel: "neutral", onset: "soft" }];
+    /* A trailing silent e is not its own syllable — unless it is
+     * the word's only vowel, or sounds in -le after a consonant
+     * ("little", "table"), where it keeps its syllable. */
+    if (groups.length > 1) {
+      const last = groups[groups.length - 1];
+      const soundsLe = /[^aeiouy]le$/.test(w);
+      if (last.letters === "e" && last.end === w.length && !soundsLe) groups.pop();
+    }
+    const vowelKey = (letters) => {
+      if (letters.startsWith("oo") || letters.startsWith("ou") || letters.startsWith("ow")) return "u";
+      if (letters.startsWith("ee") || letters.startsWith("ea") || letters.startsWith("ei")) return "e";
+      if (letters.startsWith("ai") || letters.startsWith("ay")) return "a";
+      if (letters.startsWith("au") || letters.startsWith("aw") || letters.startsWith("oi") || letters.startsWith("oy")) return "o";
+      const first = letters[0];
+      if (first === "y") return "i";
+      return "aeiou".includes(first) ? first : "neutral";
+    };
+    const onsetKind = (letters) => {
+      if (!letters) return "soft";
+      if (/sh|ch|th|s|f|v|z|x/.test(letters)) return "fricative";
+      if (/t|k|p|d|b|g|c|q|j/.test(letters)) return "plosive";
+      return "soft";
+    };
+    return groups.map((g, idx) => ({
+      vowel: vowelKey(g.letters),
+      onset: onsetKind(w.slice(idx === 0 ? 0 : groups[idx - 1].end, g.start))
+    }));
   }
 
-  /* What she actually says aloud from a line: the opening,
-   * whole sentences only, up to a sane length. The full line
-   * always stands in the talk in text; the voice takes the
-   * beginning of it, the way a person starts a thought aloud. */
-  function speechTextFor(text, maxChars = 280) {
+  /* How many syllables a line carries — the count her voice box
+   * will sound. Exposed for the record and the tests. */
+  function syllableCountFor(text) {
     const clean = String(text == null ? "" : text).replace(/\s+/g, " ").trim();
-    if (!clean) return "";
-    if (clean.length <= maxChars) return clean;
+    if (!clean) return 0;
+    return clean
+      .split(" ")
+      .reduce((n, word) => n + wordSyllables(word).length, 0);
+  }
+
+  /* A line, planned for her voice box: the syllables she will
+   * sound, in order, each with its length, its pitch, its mouth
+   * shape (formants already scaled by her tract), and its onset.
+   * The contour is the sentence's own: a statement starts a
+   * little high and settles; a question holds, then rises on its
+   * last syllables; the first syllable of a word stands a touch
+   * taller than its fellows. She sounds the opening of a long
+   * line — whole sentences, up to a sane count — while the full
+   * line stands in text, as it always has. The plan is seeded by
+   * the line itself, so the same Spark sounds the same line the
+   * same way twice. */
+  const VOICE_MAX_SYLLABLES = 44;
+  function vocalPlanFor({ companion, text }) {
+    const box = voiceBoxFor(companion);
+    const clean = String(text == null ? "" : text).replace(/\s+/g, " ").trim();
+    if (!box || !clean) return { box, syllables: [], seconds: 0 };
+    const rand = mulberry32(hashString(companion.seed + ":line:" + clean));
     const sentences = clean.match(/[^.!?]+[.!?]+/g) || [clean];
-    let out = "";
-    for (const s of sentences) {
-      if ((out + s).length > maxChars) break;
-      out += s;
+    const syllables = [];
+    let seconds = 0;
+    for (const sentence of sentences) {
+      if (syllables.length >= VOICE_MAX_SYLLABLES) break;
+      const trimmed = sentence.trim();
+      const question = /\?$/.test(trimmed);
+      const words = trimmed.split(" ").filter(Boolean);
+      const sung = [];
+      for (const word of words) {
+        const parts = wordSyllables(word);
+        parts.forEach((part, pi) => {
+          sung.push({ ...part, stressed: pi === 0, wordEnd: pi === parts.length - 1 });
+        });
+      }
+      const n = sung.length;
+      sung.forEach((s, idx) => {
+        const place = n > 1 ? idx / (n - 1) : 0;
+        let contour = 1.05 - 0.13 * place;
+        if (question && idx >= n - 2) contour += 0.05 + 0.13 * ((idx - (n - 2)) / Math.max(1, Math.min(2, n) - 1 || 1));
+        if (s.stressed) contour *= 1.05;
+        const dur = (1 / box.tempo) * (s.stressed ? 1.12 : 0.92) * (0.94 + rand() * 0.12);
+        const gap = idx === n - 1 ? 0.1 : s.wordEnd ? 0.02 : 0.005;
+        syllables.push({
+          vowel: s.vowel,
+          onset: s.onset,
+          f0: Math.round(box.basePitch * contour * 10) / 10,
+          dur: Math.round(dur * 1000) / 1000,
+          gap: Math.round(gap * 1000) / 1000,
+          formants: (VOWEL_FORMANTS[s.vowel] || VOWEL_FORMANTS.neutral).map((f) =>
+            Math.round(f * box.formantScale)
+          )
+        });
+        seconds += dur + gap;
+      });
     }
-    if (!out) out = clean.slice(0, maxChars);
-    return out.trim();
+    return { box, syllables, seconds: Math.round(seconds * 100) / 100 };
   }
 
   /* Each kind speaks in its temperament's voice. One short line,
@@ -1927,9 +2035,10 @@
     renderSVG,
     chirpFor,
     soundsFor,
-    voiceFor,
-    pickVoice,
-    speechTextFor,
+    voiceBoxFor,
+    vocalPlanFor,
+    syllableCountFor,
+    wordSyllables,
     VOICE_LINES,
     convoLineFor,
     lookLineFor,

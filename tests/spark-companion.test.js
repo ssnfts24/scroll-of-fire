@@ -967,55 +967,101 @@ test("v4 conversation rides the presence: a thread, chips for buttons, a body th
   assert.ok(css.slice(shareAt, shareAt + 300).includes("min-height: 44px"), "the share button is a thumb-sized target");
 });
 
-test("v5 spoken voice: the seed pitches it, the temperament paces it", () => {
+test("v7 voice box: the seed grows her voice — pitch, tract, breath, tempo", () => {
   const a = Core.generate(SEED_A);
-  const first = Core.voiceFor(a);
-  assert.deepEqual(Core.voiceFor(a), first, "the same Spark settles the same voice anywhere");
-  assert.ok(first.pitch >= 0.75 && first.pitch <= 1.3, "pitch sits inside the speech scale");
-  assert.ok(first.rate >= 0.85 && first.rate <= 1.15, "rate stays near natural speech");
-  /* The pitch follows the chirp: the lowest kind (Earth) speaks
-   * lower than the highest (Light), for any seed jitter. */
+  const first = Core.voiceBoxFor(a);
+  assert.deepEqual(Core.voiceBoxFor(a), first, "the same Spark settles the same voice anywhere");
+  assert.ok(first.basePitch >= 140 && first.basePitch <= 340, "her fundamental sits where a formant voice lives");
+  assert.ok(first.formantScale >= 0.86 && first.formantScale <= 1.22, "her vocal tract is seed-sized");
+  assert.ok(first.breathiness >= 0 && first.breathiness <= 1, "breathiness is a share of the tone");
+  assert.ok(first.tempo >= 3.5 && first.tempo <= 5.5, "her tempo is a speaking pace");
+  /* The pitch follows the same chirp root as everything she
+   * sounds: the lowest kind (Earth) sounds lower than the
+   * highest (Light), for any seed jitter. */
   const earth = Core.generate(Core.makeSeed({ moon: 3, patternDay: 40, kindIndex: 4, nonce: "voice0001" }));
   const light = Core.generate(Core.makeSeed({ moon: 3, patternDay: 40, kindIndex: 5, nonce: "voice0001" }));
   assert.ok(Core.chirpFor(earth).first < Core.chirpFor(light).first, "the chirp ordering the voice follows");
-  assert.ok(Core.voiceFor(earth).pitch < Core.voiceFor(light).pitch, "a low chirp speaks low; a high chirp speaks high");
+  assert.ok(
+    Core.voiceBoxFor(earth).basePitch < Core.voiceBoxFor(light).basePitch,
+    "a low chirp sounds low; a high chirp sounds high"
+  );
   /* The pace is the temperament's: bold quicker than gentle,
    * whatever the seed's small jitter. */
   const bold = Core.generate(Core.makeSeed({ moon: 3, patternDay: 40, kindIndex: 0, nonce: "voice0002" }));
   const gentle = Core.generate(Core.makeSeed({ moon: 3, patternDay: 40, kindIndex: 1, nonce: "voice0002" }));
-  assert.ok(Core.voiceFor(bold).rate > Core.voiceFor(gentle).rate, "bold speaks a touch quicker than gentle");
-  assert.equal(Core.voiceFor(null), null, "no companion, no voice settings");
+  assert.ok(Core.voiceBoxFor(bold).tempo > Core.voiceBoxFor(gentle).tempo, "bold sounds a touch quicker than gentle");
+  /* Two Sparks do not share one voice. */
+  const b = Core.generate(SEED_B);
+  assert.notDeepEqual(Core.voiceBoxFor(b), first, "a different seed grows a different voice");
+  assert.equal(Core.voiceBoxFor(null), null, "no companion, no voice box");
 });
 
-test("v5 voice choice: the device's warm en-US voice wins, in the stated order", () => {
-  const david = { name: "Microsoft David - English (United States)", lang: "en-US", default: true };
-  const google = { name: "Google US English", lang: "en-US", default: false };
-  const uk = { name: "Google UK English Female", lang: "en-GB", default: false };
-  const french = { name: "Google français", lang: "fr-FR", default: false };
-  assert.equal(Core.pickVoice([david, google, uk]).name, "Google US English", "the warm named en-US voice wins");
-  assert.equal(Core.pickVoice([david, uk]).name, david.name, "any en-US voice beats another English voice");
-  assert.equal(Core.pickVoice([french, uk]).name, uk.name, "any English voice beats a non-English default");
-  const samantha = { name: "Samantha", lang: "en-US", default: true };
-  assert.equal(Core.pickVoice([uk, samantha]).name, "Samantha", "a named en-US voice beats a plainer English one");
-  assert.equal(Core.pickVoice([]), null, "no voices offered, no voice chosen");
-  assert.equal(Core.pickVoice(null), null, "a missing list chooses nothing");
+test("v7 syllables: a line is sounded out by its vowel groups", () => {
+  assert.equal(Core.syllableCountFor(""), 0, "silence has no syllables");
+  assert.equal(Core.syllableCountFor("Hello."), 2, "hello is two");
+  assert.equal(Core.syllableCountFor("voice"), 1, "a trailing silent e folds into the syllable before it");
+  assert.equal(Core.syllableCountFor("little"), 2, "the sounding -le keeps its syllable");
+  assert.equal(Core.syllableCountFor("Are you ready to wander?"), 7, "the count is the line's true shape");
+  const there = Core.wordSyllables("there");
+  assert.equal(there.length, 1, "there is one syllable");
+  assert.equal(there[0].onset, "fricative", "its th opens as a breath, not a tick");
+  const ready = Core.wordSyllables("ready");
+  assert.equal(ready.length, 2, "ready is two syllables");
+  assert.equal(ready[1].onset, "plosive", "its second syllable opens on the d — a small tick");
+  assert.equal(ready[0].onset, "soft", "its first syllable opens soft, on the r");
+  assert.deepEqual(Core.wordSyllables("123"), [], "a word with no letters sounds nothing");
 });
 
-test("v5 speech text: she says the opening, in whole sentences, capped", () => {
-  assert.equal(Core.speechTextFor("A short line."), "A short line.", "a short line is spoken whole");
-  assert.equal(Core.speechTextFor(""), "", "silence stays silence");
+test("v7 vocal plan: a line's shape, sung syllable by syllable", () => {
+  const a = Core.generate(SEED_A);
+  const line = "Hello there. Are you ready to wander?";
+  const plan = Core.vocalPlanFor({ companion: a, text: line });
+  assert.equal(plan.syllables.length, Core.syllableCountFor(line), "every syllable of the line is planned");
+  assert.ok(plan.seconds > 1 && plan.seconds < 6, "the plan lasts about as long as the line takes to say");
+  assert.deepEqual(
+    Core.vocalPlanFor({ companion: a, text: line }),
+    plan,
+    "the same Spark sounds the same line the same way twice"
+  );
+  for (const syl of plan.syllables) {
+    assert.equal(syl.formants.length, 3, "each syllable carries its mouth shape — three formants");
+    assert.ok(syl.f0 > 80 && syl.f0 < 500, "each syllable's pitch sits in her range");
+    assert.ok(syl.dur > 0.05 && syl.dur < 0.6, "each syllable lasts a syllable's length");
+  }
+  /* The contour is the sentence's own: a question rises on its
+   * last syllables; a statement settles. */
+  const q = Core.vocalPlanFor({ companion: a, text: "Are you ready to wander?" });
+  const s = Core.vocalPlanFor({ companion: a, text: "You are ready to wander." });
+  const qLast = q.syllables[q.syllables.length - 1].f0;
+  const sLast = s.syllables[s.syllables.length - 1].f0;
+  assert.ok(qLast > sLast, "the question's last syllable stands higher than the statement's");
+  /* A long line is sounded from its opening, whole sentences
+   * only; the rest is left to the text, as it always has been. */
   const long =
-    "First sentence of the page, stated plainly. " +
-    "Second sentence, carrying the next fact of it. " +
-    "Third sentence, with a good deal more of the page's own wording in it to carry the count upward. " +
-    "Fourth sentence, also the page's own, and by now the spoken cap is close at hand for this line. " +
-    "Fifth sentence, which the voice leaves for the text to carry, since the opening has been said.";
-  const spoken = Core.speechTextFor(long);
-  assert.ok(spoken.length <= 280, "the spoken opening is capped");
-  assert.ok(long.startsWith(spoken), "what she says is the opening of the line, word for word");
-  assert.ok(/[.!?]$/.test(spoken), "she stops at a sentence's end, not mid-thought");
-  const oneLong = "word ".repeat(120).trim() + ".";
-  assert.ok(Core.speechTextFor(oneLong).length <= 280, "even one long sentence is capped");
+    "First sentence of the page, stated plainly and in full here. " +
+    "Second sentence, carrying the next fact of the page with it. " +
+    "Third sentence, with a good deal more of the page's own wording. " +
+    "Fourth sentence, also the page's own, and still in its order. " +
+    "Fifth sentence, carrying the account further along its way. " +
+    "Sixth sentence, which the voice leaves for the text to carry.";
+  const capped = Core.vocalPlanFor({ companion: a, text: long });
+  const wholeSentences =
+    "First sentence of the page, stated plainly and in full here. " +
+    "Second sentence, carrying the next fact of the page with it. " +
+    "Third sentence, with a good deal more of the page's own wording. " +
+    "Fourth sentence, also the page's own, and still in its order.";
+  assert.equal(
+    capped.syllables.length,
+    Core.syllableCountFor(wholeSentences),
+    "the sounded opening is whole sentences only, up to the cap — never a sentence cut in half"
+  );
+  assert.ok(capped.syllables.length <= 44 + 16, "the sounded opening stays near the sane cap");
+  assert.ok(
+    capped.syllables.length < Core.syllableCountFor(long),
+    "a long line is not sounded whole — its opening is"
+  );
+  assert.deepEqual(Core.vocalPlanFor({ companion: a, text: "" }).syllables, [], "silence plans nothing");
+  assert.deepEqual(Core.vocalPlanFor({ companion: null, text: "Hello." }).syllables, [], "no companion, no plan");
 });
 
 test("v5 tell me more: the explanation continues in the page's own words only", () => {
@@ -1087,17 +1133,16 @@ test("v5 conversation beats: more and telling, in every temperament, clean copy"
   }
 });
 
-test("v5 voice rides the presence: default quiet, keeper-switched, mute-ruled, tap-gated", () => {
+test("v7 voice box rides the presence: generated, default quiet, mute-ruled, tap-gated — and the robot is gone", () => {
   const presence = read("docs/assets/js/spark-presence.js");
+  const core = read("docs/assets/js/spark-companion.js");
   for (const hook of [
     "spark-presence-voice",
     "sof.spark.voice",
-    "speechSynthesis",
-    "SpeechSynthesisUtterance",
-    "voiceFor",
-    "pickVoice",
-    "speechTextFor",
-    "stopSpeaking",
+    "voiceBoxFor",
+    "vocalPlanFor",
+    "singSyllable",
+    "stopVoice",
     "Tell me more",
     "moreChunksFor",
     "pageFollowingText",
@@ -1107,24 +1152,28 @@ test("v5 voice rides the presence: default quiet, keeper-switched, mute-ruled, t
   ]) {
     assert.ok(presence.includes(hook), `the presence carries ${hook}`);
   }
+  /* The device's robot voice is removed whole, not merely
+   * unwired: no speech synthesis anywhere in her code, no
+   * voice picker, no utterance machinery. Her voice is the
+   * generated one, or she is quiet. */
+  for (const [name, src] of [["presence", presence], ["core", core]]) {
+    assert.ok(!src.includes("speechSynthesis"), `no device speech remains in the ${name}`);
+    assert.ok(!src.includes("SpeechSynthesisUtterance"), `no utterance machinery remains in the ${name}`);
+    assert.ok(!src.includes("pickVoice"), `no device voice is picked in the ${name}`);
+  }
   assert.ok(
     presence.includes('window.localStorage.getItem(VOICE_KEY) === "on"'),
     "voice rests quiet unless the keeper stored it on — default quiet"
   );
-  const speakAt = presence.indexOf("function speak(text)");
-  const gate = presence.slice(speakAt, speakAt + 220);
-  assert.ok(gate.includes("!voiceOn()"), "she does not speak while Voice is off");
+  const vocalAt = presence.indexOf("function vocalize(text)");
+  const gate = presence.slice(vocalAt, vocalAt + 220);
+  assert.ok(gate.includes("!voiceOn()"), "she does not sound while Voice is off");
   assert.ok(gate.includes("soundOff()"), "the Sounds mute silences her voice too");
-  assert.ok(gate.includes("!voiceArmed"), "she does not speak before a keeper tap arms the talk");
+  assert.ok(gate.includes("!voiceArmed"), "she does not sound before a keeper tap arms the talk");
   const closeAt = presence.indexOf("const closeBubble");
   assert.ok(
-    presence.slice(closeAt, closeAt + 320).includes("stopSpeaking()"),
+    presence.slice(closeAt, closeAt + 320).includes("stopVoice()"),
     "closing the talk stills her voice"
-  );
-  assert.ok(
-    presence.includes('speechSynthesis.addEventListener("voiceschanged"') ||
-      presence.includes("voiceschanged"),
-    "the device voice list is followed as it loads"
   );
   assert.ok(!/fetch\(|XMLHttpRequest|sendBeacon/.test(presence), "the voice sends nothing anywhere");
 });

@@ -522,57 +522,173 @@
       while (thread.children.length > 9) thread.removeChild(thread.firstChild);
       thread.scrollTop = thread.scrollHeight;
     }
-    /* ---- her spoken voice ----
-     * The device's own speech, switched on only when the
-     * keeper turns Voice on (it rests quiet until then, kept
-     * on this device), and heard only in answer to the
-     * keeper's own taps: the talk is armed by a tap on her
-     * furniture, so an arrival line she opens by herself is
-     * never spoken aloud uninvited. She speaks her own lines
-     * only — never the keeper's echoed answers — each new line
-     * stills the one before it, closing the talk stills her,
-     * and the Sounds switch silences her along with the chirps.
-     * Her pitch and pace are her seed's (Core.voiceFor), the
-     * same root as her chirp; the voice itself is the device's
-     * warm en-US voice where it offers one (Core.pickVoice).
-     * A device with no speech simply keeps the words. */
+    /* ---- her voice box ----
+     * Her voice is her own: grown from her seed, not borrowed
+     * from the device. Until v6 she spoke through the device's
+     * speech synthesis — a generic robot, the same for every
+     * Spark — and Aaron named it: too robot-like. The robot is
+     * gone, removed whole. What stands here is a small formant
+     * voice the seed composes (Core.voiceBoxFor: her fundamental,
+     * her vocal tract's size, her breathiness, her temperament's
+     * tempo) and a plan for each line (Core.vocalPlanFor: its
+     * syllables, mouth shapes, and pitch contour — rising for a
+     * question, settling at a sentence's end), sung with
+     * WebAudio: a glottal pulse through her formant filters,
+     * breath under the tone, a consonant tick where one falls.
+     * Her words stand in text, whole; the voice box is her sound
+     * over them, the way a game companion vocalizes.
+     * The fences are the ones her voice has always kept: the
+     * Voice switch rests quiet until the keeper turns it on
+     * (kept on this device), the talk is armed by a tap on her
+     * furniture so a line she opens by herself is never sounded
+     * uninvited, she sounds her own lines only — never the
+     * keeper's echoed answers — each new line stills the one
+     * before it, closing the talk stills her, and the Sounds
+     * switch silences her along with the chirps. No samples, no
+     * network, nothing recorded, nothing sent anywhere. */
     let voiceArmed = false;
-    let deviceVoice = null;
-    function refreshDeviceVoice() {
-      if (!window.speechSynthesis || typeof window.speechSynthesis.getVoices !== "function") return;
-      const picked = Core.pickVoice(window.speechSynthesis.getVoices() || []);
-      if (picked) deviceVoice = picked;
+    let voiceRun = 0;
+    let voiceMaster = null;
+    const voiceSources = new Set();
+    let voiceNoise = null;
+    function voiceNoiseBuffer(ctx) {
+      if (!voiceNoise) {
+        voiceNoise = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
+        const data = voiceNoise.getChannelData(0);
+        for (let i = 0; i < data.length; i += 1) data[i] = Math.random() * 2 - 1;
+      }
+      return voiceNoise;
     }
-    if (window.speechSynthesis && typeof window.speechSynthesis.addEventListener === "function") {
-      refreshDeviceVoice();
-      window.speechSynthesis.addEventListener("voiceschanged", refreshDeviceVoice);
-    }
-    function speak(text) {
-      if (!voiceArmed || !voiceOn() || soundOff()) return;
-      const synth = window.speechSynthesis;
-      if (!synth || typeof synth.speak !== "function") return;
-      const clean = Core.speechTextFor(text);
-      if (!clean) return;
-      try {
-        synth.cancel();
-        const utter = new window.SpeechSynthesisUtterance(clean);
-        const settings = Core.voiceFor(companion);
-        if (settings) {
-          utter.pitch = settings.pitch;
-          utter.rate = settings.rate;
+    function stopVoice() {
+      voiceRun += 1;
+      for (const src of voiceSources) {
+        try {
+          src.stop();
+        } catch {
+          /* already still */
         }
-        if (!deviceVoice) refreshDeviceVoice();
-        if (deviceVoice) utter.voice = deviceVoice;
-        synth.speak(utter);
-      } catch {
-        /* no spoken voice on this device: the words still stand */
+      }
+      voiceSources.clear();
+      if (voiceMaster) {
+        try {
+          voiceMaster.disconnect();
+        } catch {
+          /* already gone */
+        }
+        voiceMaster = null;
       }
     }
-    function stopSpeaking() {
+    /* One syllable of her voice: a sawtooth's pulse-train buzz
+     * through a lowpass throat, shaped by her three formant
+     * peaks for this syllable's vowel, with her breath riding
+     * under it and a consonant tick at its head where the plan
+     * marks one. A handful of nodes, all stopped when spent. */
+    function singSyllable(ctx, out, box, syl, at) {
+      const dur = syl.dur;
+      const osc = ctx.createOscillator();
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(syl.f0 * 1.05, at);
+      osc.frequency.exponentialRampToValueAtTime(Math.max(40, syl.f0 * 0.95), at + dur);
+      const throat = ctx.createBiquadFilter();
+      throat.type = "lowpass";
+      throat.frequency.value = 1100;
+      throat.Q.value = 0.4;
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.0001, at);
+      gain.gain.exponentialRampToValueAtTime(0.15, at + Math.min(0.03, dur * 0.3));
+      gain.gain.setValueAtTime(0.15, at + Math.max(0.03, dur - 0.035));
+      gain.gain.exponentialRampToValueAtTime(0.0001, at + dur);
+      osc.connect(throat);
+      let node = throat;
+      for (const f of syl.formants) {
+        const peak = ctx.createBiquadFilter();
+        peak.type = "peaking";
+        peak.frequency.value = f;
+        peak.Q.value = 4.5;
+        peak.gain.value = 7;
+        node.connect(peak);
+        node = peak;
+      }
+      node.connect(gain);
+      gain.connect(out);
+      osc.start(at);
+      osc.stop(at + dur + 0.05);
+      voiceSources.add(osc);
+      osc.onended = () => voiceSources.delete(osc);
+      if (box.breathiness > 0.03) {
+        const noise = ctx.createBufferSource();
+        noise.buffer = voiceNoiseBuffer(ctx);
+        const bp = ctx.createBiquadFilter();
+        bp.type = "bandpass";
+        bp.frequency.value = syl.formants[1] || 1200;
+        bp.Q.value = 0.8;
+        const ng = ctx.createGain();
+        const level = 0.055 * box.breathiness;
+        ng.gain.setValueAtTime(0.0001, at);
+        ng.gain.exponentialRampToValueAtTime(level, at + 0.03);
+        ng.gain.exponentialRampToValueAtTime(0.0001, at + dur);
+        noise.connect(bp);
+        bp.connect(ng);
+        ng.connect(out);
+        noise.start(at, Math.random() * 0.4);
+        noise.stop(at + dur + 0.02);
+        voiceSources.add(noise);
+        noise.onended = () => voiceSources.delete(noise);
+      }
+      if (syl.onset !== "soft") {
+        const tick = ctx.createBufferSource();
+        tick.buffer = voiceNoiseBuffer(ctx);
+        const hp = ctx.createBiquadFilter();
+        hp.type = "highpass";
+        hp.frequency.value = syl.onset === "fricative" ? 2600 : 1800;
+        const tg = ctx.createGain();
+        const td = syl.onset === "fricative" ? Math.min(0.07, dur * 0.5) : 0.025;
+        tg.gain.setValueAtTime(0.0001, at);
+        tg.gain.exponentialRampToValueAtTime(syl.onset === "fricative" ? 0.05 : 0.09, at + 0.008);
+        tg.gain.exponentialRampToValueAtTime(0.0001, at + td);
+        tick.connect(hp);
+        hp.connect(tg);
+        tg.connect(out);
+        tick.start(at, Math.random() * 0.4);
+        tick.stop(at + td + 0.02);
+        voiceSources.add(tick);
+        tick.onended = () => voiceSources.delete(tick);
+      }
+    }
+    function vocalize(text) {
+      if (!voiceArmed || !voiceOn() || soundOff()) return;
+      const plan = Core.vocalPlanFor({ companion, text });
+      if (!plan || !plan.box || !plan.syllables.length) return;
       try {
-        if (window.speechSynthesis) window.speechSynthesis.cancel();
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return;
+        audioCtx = audioCtx || new AC();
+        if (audioCtx.state === "suspended") audioCtx.resume();
+        stopVoice();
+        const run = voiceRun;
+        const ctx = audioCtx;
+        voiceMaster = ctx.createGain();
+        voiceMaster.gain.value = 0.9;
+        voiceMaster.connect(ctx.destination);
+        const out = voiceMaster;
+        let at = ctx.currentTime + 0.03;
+        for (const syl of plan.syllables) {
+          singSyllable(ctx, out, plan.box, syl, at);
+          at += syl.dur + syl.gap;
+        }
+        const totalMs = (at - ctx.currentTime + 0.3) * 1000;
+        window.setTimeout(() => {
+          if (run === voiceRun && voiceMaster === out) {
+            try {
+              out.disconnect();
+            } catch {
+              /* already gone */
+            }
+            voiceMaster = null;
+          }
+        }, totalMs);
       } catch {
-        /* nothing to still */
+        /* no voice box on this device: the words still stand */
       }
     }
     function say(text) {
@@ -585,7 +701,7 @@
       p.appendChild(document.createTextNode(` ${text}`));
       thread.appendChild(p);
       trimThread();
-      speak(text);
+      vocalize(text);
     }
     function sayList(build) {
       const box = document.createElement("div");
@@ -595,7 +711,7 @@
       trimThread();
     }
     function sayDoor(text, href, hrefLabel) {
-      speak(text);
+      vocalize(text);
       sayList((box) => {
         const p = document.createElement("p");
         p.className = "spark-guide-text";
@@ -1239,7 +1355,7 @@
       button.setAttribute("aria-expanded", "false");
       /* Closing the talk stills her voice with it — and folds
        * the echo board away with the talk it belongs to. */
-      stopSpeaking();
+      stopVoice();
       endEcho();
       if (arrivalTimer) {
         window.clearTimeout(arrivalTimer);
@@ -1320,7 +1436,7 @@
       if (roam) roam.glow();
       if (ctrl) ctrl.delight();
       chirp(companion);
-      speak(Core.convoLineFor({ companion, beat: "pet" }));
+      vocalize(Core.convoLineFor({ companion, beat: "pet" }));
       refreshMood();
     }
     button.addEventListener("pointerdown", (event) => {
@@ -1415,7 +1531,7 @@
         /* A plain tap — a poke, counted. The click that follows
          * does the rest, exactly as it always has. */
         setRecord(Core.recordPlay(getRecord(), { action: "poke" }).record);
-        speak(Core.convoLineFor({ companion, beat: "poke" }));
+        vocalize(Core.convoLineFor({ companion, beat: "poke" }));
       }
     }
     button.addEventListener("pointerup", (event) => endPress(event, false));
@@ -1536,12 +1652,13 @@
       );
     });
     paintSound();
-    /* Her spoken voice, on its own switch beside Sounds: it
+    /* Her voice box, on its own switch beside Sounds: it
      * rests quiet until the keeper turns it on, and the choice
-     * is kept on this device. Turning it on, she says so —
-     * aloud, since the keeper's tap is the gesture. Turning it
-     * off stills her mid-line. The Sounds switch rules it too:
-     * sounds off means her voice rests as well. */
+     * is kept on this device. Turning it on, she says so — in
+     * her own generated voice, since the keeper's tap is the
+     * gesture. Turning it off stills her mid-line. The Sounds
+     * switch rules it too: sounds off means her voice rests
+     * as well. */
     const voiceToggle = host.querySelector(".spark-presence-voice");
     const paintVoice = () =>
       (voiceToggle.textContent = voiceOn() ? "Voice: speak" : "Voice: quiet");
@@ -1555,9 +1672,9 @@
       }
       paintVoice();
       if (turningOn) {
-        say("My voice is on. I will speak my lines as we talk — tap me and listen.");
+        say("My voice is on — the voice my seed grew, no one else's. It hums along with my lines as we talk.");
       } else {
-        stopSpeaking();
+        stopVoice();
         say("My voice rests now. My words stay here on the page.");
       }
     });
@@ -1685,7 +1802,7 @@
     }
   }
 
-  /* Her spoken voice rests quiet until the keeper turns it on;
+  /* Her voice box rests quiet until the keeper turns it on;
    * the choice is kept on this device, like the sounds. Any
    * stored value other than "on" — including none at all —
    * means quiet: she never speaks first and asks later. */
