@@ -7,7 +7,7 @@
     "publicHtmlPages": 172,
     "catalogEntries": 65,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 17,
+      "not-linked-directly-from-homepage": 18,
       "nav-label-differs-from-title": 24,
       "deployed-but-unlinked": 57,
       "unreachable-from-homepage": 3,
@@ -529,7 +529,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (159 files)",
+      "title": "docs/assets/js (160 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1711,7 +1711,6 @@
         "teach.html",
         "theory.html",
         "theory/canon.html",
-        "theory/delta-framework.html",
         "theory/master-equation.html",
         "theory/unified-field.html",
         "witness.html"
@@ -13272,7 +13271,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (107 files)",
+      "title": "tests/ (108 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -18364,13 +18363,15 @@
         "path": "theory/delta-framework.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 9,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 8,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": []
+      "issues": [
+        "not-linked-directly-from-homepage"
+      ]
     },
     {
       "id": "theory-equations",
