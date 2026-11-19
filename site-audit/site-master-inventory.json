@@ -3,19 +3,18 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 466,
-    "publicHtmlPages": 171,
-    "catalogEntries": 65,
+    "resources": 472,
+    "publicHtmlPages": 177,
+    "catalogEntries": 70,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 19,
+      "not-linked-directly-from-homepage": 24,
       "nav-label-differs-from-title": 24,
+      "no-global-navigation": 1,
       "deployed-but-unlinked": 57,
       "unreachable-from-homepage": 3,
       "compatibility-redirect-page": 1,
-      "no-public-url-yet": 1,
       "not-published-in-catalog": 29,
-      "unnamed-image-needs-descriptive-title": 21,
-      "reachable-only-through-atlas": 1
+      "unnamed-image-needs-descriptive-title": 21
     }
   },
   "resources": [
@@ -37,6 +36,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -56,6 +56,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -102,6 +103,7 @@
         "13-moon-whitepaper.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -121,6 +123,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -143,8 +146,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 63,
-        "pagesWithNavLinkToIt": 64
+        "inboundPages": 68,
+        "pagesWithNavLinkToIt": 69
       },
       "issues": [
         "nav-label-differs-from-title: \"About Aaron\" vs \"Aaron Paul Laird\""
@@ -166,6 +169,7 @@
       "relatedPages": [
         "13-moon-whitepaper.html",
         "codex-atlas.html",
+        "companions.html",
         "downloads.html",
         "equinox-passage.html",
         "index.html",
@@ -177,6 +181,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "theory.html",
         "witness.html"
@@ -214,6 +219,7 @@
         "13-moon-whitepaper.html",
         "about-aaron.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -233,6 +239,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -255,12 +262,124 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 63,
-        "pagesWithNavLinkToIt": 64
+        "inboundPages": 68,
+        "pagesWithNavLinkToIt": 69
       },
       "issues": [
         "nav-label-differs-from-title: \"Covenant Circle\" vs \"Circle Sync\""
       ]
+    },
+    {
+      "id": "claim-register",
+      "title": "Editorial reading and evidence — Scroll of Fire Library",
+      "description": "A distinct, source-linked editorial reading of prioritized political claims, preserving the original Scroll of Fire manuscript and its spiritual voice.",
+      "category": "Evidence",
+      "area": "evidence",
+      "relatedProjects": [
+        "scroll-editorial"
+      ],
+      "sourcePath": "docs/scroll/editorial.html",
+      "publicUrl": "https://codexofreality.org/scroll/editorial.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "codex-atlas.html",
+        "companions.html",
+        "glossary.html",
+        "index.html",
+        "living-time-sphere.html",
+        "scripture/index.html",
+        "scroll/atlas.html",
+        "scroll/index.html",
+        "scroll/lexicon.html",
+        "scroll/search.html",
+        "search.html",
+        "shop.html",
+        "witness.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/scroll/editorial.html",
+      "privacyEligibility": "approved-public",
+      "discoverability": {
+        "path": "scroll/editorial.html",
+        "inSitemap": true,
+        "inGlobalNav": true,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 173,
+        "pagesWithNavLinkToIt": 168
+      },
+      "issues": [
+        "nav-label-differs-from-title: \"Evidence Edition\" vs \"Editorial reading and evidence\""
+      ]
+    },
+    {
+      "id": "claims-atlas",
+      "title": "Documentation Hub — Scroll of Fire | Codex of Reality",
+      "description": "Documentation Hub: documented claims and facts — government, corporations, the Epstein record, Nikola Tesla, orphan trains, the Old World, and the Codex's own claim register — each tied to a named source and graded by the state of its evidence.",
+      "category": "Evidence",
+      "area": "evidence",
+      "relatedProjects": [
+        "scroll-editorial",
+        "claim-register"
+      ],
+      "sourcePath": "docs/claims-atlas.html",
+      "publicUrl": "https://codexofreality.org/claims-atlas.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "13-moon-whitepaper.html",
+        "about-aaron.html",
+        "circle.html",
+        "codex-atlas.html",
+        "companions.html",
+        "covenant-caravan.html",
+        "downloads.html",
+        "ethics.html",
+        "genesis-oracle.html",
+        "glossary.html",
+        "hub.html",
+        "index.html",
+        "invoke.html",
+        "lab.html",
+        "ledger.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "scripture/index.html",
+        "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
+        "scroll/atlas.html",
+        "scroll/editorial.html",
+        "scroll/index.html",
+        "scroll/lexicon.html",
+        "scroll/search.html",
+        "search.html",
+        "shop.html",
+        "start.html",
+        "systems/archive.html",
+        "systems/frequencies.html",
+        "systems/mind-renewal.html",
+        "systems/recoder.html",
+        "systems/t-7.html",
+        "systems/witness.html",
+        "teach.html",
+        "theory.html",
+        "theory/canon.html",
+        "timeline.html",
+        "witness.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/claims-atlas.html",
+      "privacyEligibility": "approved-public",
+      "discoverability": {
+        "path": "claims-atlas.html",
+        "inSitemap": true,
+        "inGlobalNav": false,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 2,
+        "pagesWithNavLinkToIt": 0
+      },
+      "issues": []
     },
     {
       "id": "codex-atlas",
@@ -286,6 +405,9 @@
         "about-aaron.html",
         "alignment-ledger.html",
         "circle.html",
+        "claims-atlas.html",
+        "codex-guide.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "equinox-passage.html",
@@ -311,6 +433,7 @@
         "scroll/reader.html",
         "scroll/search.html",
         "search.html",
+        "sending-test.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -337,6 +460,8 @@
         "theory/thirteen-moons.html",
         "theory/unified-field.html",
         "theory/witness.html",
+        "timeline.html",
+        "witness-world.html",
         "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/codex-atlas.html",
@@ -348,11 +473,123 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 168,
-        "pagesWithNavLinkToIt": 163
+        "inboundPages": 174,
+        "pagesWithNavLinkToIt": 168
       },
       "issues": [
         "nav-label-differs-from-title: \"Atlas\" vs \"Codex Atlas\""
+      ]
+    },
+    {
+      "id": "codex-guide",
+      "title": "The Guide — Ask the Record | Codex of Reality",
+      "description": "The Codex Guide: ask a question in ordinary words and get an answer assembled from this site's own record — passages with their pages, claim cards with their evidence grades, and calendar answers computed from the Pattern Calendar. Your question never leaves your browser.",
+      "category": "Discovery",
+      "area": "archive",
+      "relatedProjects": [
+        "site-search",
+        "moons"
+      ],
+      "sourcePath": "docs/codex-guide.html",
+      "publicUrl": "https://codexofreality.org/codex-guide.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "13-moon-whitepaper.html",
+        "about-aaron.html",
+        "circle.html",
+        "codex-atlas.html",
+        "covenant-caravan.html",
+        "downloads.html",
+        "ethics.html",
+        "genesis-oracle.html",
+        "glossary.html",
+        "hub.html",
+        "index.html",
+        "invoke.html",
+        "lab.html",
+        "ledger.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "scripture/index.html",
+        "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
+        "scroll/atlas.html",
+        "scroll/editorial.html",
+        "scroll/index.html",
+        "scroll/lexicon.html",
+        "scroll/search.html",
+        "search.html",
+        "shop.html",
+        "start.html",
+        "systems/archive.html",
+        "systems/frequencies.html",
+        "systems/mind-renewal.html",
+        "systems/recoder.html",
+        "systems/t-7.html",
+        "systems/witness.html",
+        "teach.html",
+        "theory.html",
+        "theory/canon.html",
+        "witness.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/codex-guide.html",
+      "privacyEligibility": "approved-public",
+      "discoverability": {
+        "path": "codex-guide.html",
+        "inSitemap": true,
+        "inGlobalNav": false,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 3,
+        "pagesWithNavLinkToIt": 0
+      },
+      "issues": [
+        "not-linked-directly-from-homepage"
+      ]
+    },
+    {
+      "id": "companions",
+      "title": "Companions — Scroll of Fire | Codex of Reality",
+      "description": "Meet a Spark: a small companion that is made for you on the day you adopt it. Its seed speaks its name. It is kept on your own device, and grows as you return, visit, and practice.",
+      "category": "Companion",
+      "area": "living-time",
+      "relatedProjects": [
+        "living-time-sphere",
+        "witness"
+      ],
+      "sourcePath": "docs/companions.html",
+      "publicUrl": "https://codexofreality.org/companions.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "codex-atlas.html",
+        "index.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "scripture/index.html",
+        "scroll/index.html",
+        "scroll/lexicon.html",
+        "search.html",
+        "shop.html",
+        "teach.html",
+        "witness.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/companions.html",
+      "privacyEligibility": "approved-public",
+      "discoverability": {
+        "path": "companions.html",
+        "inSitemap": true,
+        "inGlobalNav": false,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 169,
+        "pagesWithNavLinkToIt": 0
+      },
+      "issues": [
+        "no-global-navigation",
+        "not-linked-directly-from-homepage"
       ]
     },
     {
@@ -373,6 +610,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "downloads.html",
         "ethics.html",
         "genesis-oracle.html",
@@ -391,6 +629,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -413,8 +652,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 65,
-        "pagesWithNavLinkToIt": 65
+        "inboundPages": 70,
+        "pagesWithNavLinkToIt": 70
       },
       "issues": [
         "nav-label-differs-from-title: \"Covenant Caravan\" vs \"The Covenant Caravan\""
@@ -439,7 +678,7 @@
     },
     {
       "id": "docs-assets:assets/css",
-      "title": "docs/assets/css (45 files)",
+      "title": "docs/assets/css (55 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -456,7 +695,7 @@
     },
     {
       "id": "docs-assets:assets/data",
-      "title": "docs/assets/data (3 files)",
+      "title": "docs/assets/data (4 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -507,7 +746,7 @@
     },
     {
       "id": "docs-assets:assets/img",
-      "title": "docs/assets/img (147 files)",
+      "title": "docs/assets/img (148 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -524,7 +763,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (154 files)",
+      "title": "docs/assets/js (181 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -541,7 +780,7 @@
     },
     {
       "id": "docs-assets:assets/media",
-      "title": "docs/assets/media (10 files)",
+      "title": "docs/assets/media (143 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -616,6 +855,23 @@
       "relatedProjects": [],
       "sourcePath": "docs/data",
       "publicUrl": "https://codexofreality.org/data",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "supporting-asset",
+      "discoverability": null,
+      "issues": []
+    },
+    {
+      "id": "docs-assets:manifest-sphere.webmanifest",
+      "title": "docs/manifest-sphere.webmanifest (1 files)",
+      "description": "Static assets, data and generated artifacts served from docs/.",
+      "category": "Static assets",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/manifest-sphere.webmanifest",
+      "publicUrl": "https://codexofreality.org/manifest-sphere.webmanifest",
       "publicationStatus": "live",
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [],
@@ -1657,10 +1913,10 @@
         "13-moon-whitepaper.html",
         "about-aaron.html",
         "circle.html",
+        "claims-atlas.html",
         "codex-atlas.html",
         "covenant-caravan.html",
         "downloads.html",
-        "equinox-passage.html",
         "ethics.html",
         "genesis-oracle.html",
         "glossary.html",
@@ -1671,6 +1927,7 @@
         "ledger.html",
         "living-time-sphere.html",
         "moons.html",
+        "scripture/about.html",
         "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
@@ -1678,6 +1935,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -1700,7 +1958,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 0,
         "hopsFromHomeWithoutAtlas": 0,
-        "inboundPages": 168,
+        "inboundPages": 174,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -2037,6 +2295,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -2048,6 +2307,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -2057,10 +2317,10 @@
         "path": "scripture/about.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 92,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 93,
         "pagesWithNavLinkToIt": 93
       },
       "issues": []
@@ -2082,6 +2342,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -2133,6 +2394,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -2167,6 +2429,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -2217,6 +2480,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -2251,6 +2515,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -2301,6 +2566,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -2335,6 +2601,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -2385,6 +2652,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -2419,6 +2687,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -2469,6 +2738,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -2503,6 +2773,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -2553,6 +2824,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -2587,6 +2859,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -2637,6 +2910,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -2671,6 +2945,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -2721,6 +2996,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -2755,6 +3031,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -2805,6 +3082,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -2839,6 +3117,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -2889,6 +3168,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -2923,6 +3203,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -2973,6 +3254,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -3007,6 +3289,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -3057,6 +3340,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -3091,6 +3375,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -3141,6 +3426,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -3175,6 +3461,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -3225,6 +3512,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -3259,6 +3547,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -3309,6 +3598,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -3343,6 +3633,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -3393,6 +3684,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -3427,6 +3719,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -3477,6 +3770,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -3511,6 +3805,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -3561,6 +3856,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -3595,6 +3891,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -3645,6 +3942,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -3679,6 +3977,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -3729,6 +4028,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -3763,6 +4063,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -3813,6 +4114,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -3847,6 +4149,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -3897,6 +4200,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -3931,6 +4235,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -3981,6 +4286,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -4015,6 +4321,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -4065,6 +4372,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -4099,6 +4407,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -4149,6 +4458,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -4183,6 +4493,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -4233,6 +4544,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -4267,6 +4579,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -4317,6 +4630,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -4351,6 +4665,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -4401,6 +4716,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -4435,6 +4751,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -4485,6 +4802,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -4519,6 +4837,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -4569,6 +4888,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -4603,6 +4923,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -4653,6 +4974,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -4687,6 +5009,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -4737,6 +5060,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -4771,6 +5095,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -4821,6 +5146,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -4855,6 +5181,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -4905,6 +5232,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -4939,6 +5267,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -4989,6 +5318,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -5023,6 +5353,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -5073,6 +5404,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -5107,6 +5439,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -5157,6 +5490,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -5191,6 +5525,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -5241,6 +5576,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -5275,6 +5611,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -5325,6 +5662,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -5359,6 +5697,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -5409,6 +5748,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -5443,6 +5783,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -5503,6 +5844,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -5537,6 +5879,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -5597,6 +5940,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -5631,6 +5975,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -5691,6 +6036,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -5725,6 +6071,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -5785,6 +6132,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -5819,6 +6167,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -5879,6 +6228,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -5913,6 +6263,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -5973,6 +6324,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -6007,6 +6359,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -6067,6 +6420,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -6101,6 +6455,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -6161,6 +6516,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -6195,6 +6551,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -6255,6 +6612,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -6289,6 +6647,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -6349,6 +6708,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -6383,6 +6743,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -6443,6 +6804,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -6477,6 +6839,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -6537,6 +6900,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -6571,6 +6935,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -6631,6 +6996,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -6665,6 +7031,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -6725,6 +7092,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -6759,6 +7127,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -6819,6 +7188,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -6853,6 +7223,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -6913,6 +7284,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -6947,6 +7319,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -7007,6 +7380,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -7041,6 +7415,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -7101,6 +7476,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -7135,6 +7511,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -7195,6 +7572,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -7229,6 +7607,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -7289,6 +7668,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -7323,6 +7703,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -7383,6 +7764,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -7417,6 +7799,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -7477,6 +7860,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -7511,6 +7895,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -7571,6 +7956,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -7605,6 +7991,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -7665,6 +8052,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -7699,6 +8087,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -7759,6 +8148,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -7793,6 +8183,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -7853,6 +8244,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -7887,6 +8279,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -7947,6 +8340,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -7981,6 +8375,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -8041,6 +8436,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -8075,6 +8471,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -8135,6 +8532,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -8169,6 +8567,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -8229,6 +8628,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -8263,6 +8663,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -8323,6 +8724,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -8357,6 +8759,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -8417,6 +8820,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -8451,6 +8855,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -8511,6 +8916,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -8545,6 +8951,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -8605,6 +9012,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -8639,6 +9047,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -8699,6 +9108,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -8733,6 +9143,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -8793,6 +9204,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -8827,6 +9239,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -8887,6 +9300,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -8921,6 +9335,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -8981,6 +9396,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -9015,6 +9431,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -9075,6 +9492,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -9109,6 +9527,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -9169,6 +9588,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -9203,6 +9623,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -9263,6 +9684,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -9297,6 +9719,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -9357,6 +9780,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -9391,6 +9815,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -9451,6 +9876,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -9485,6 +9911,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -9545,6 +9972,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -9579,6 +10007,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -9639,6 +10068,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -9673,6 +10103,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -9733,6 +10164,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -9767,6 +10199,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -9827,6 +10260,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -9861,6 +10295,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -9921,6 +10356,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -9955,6 +10391,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -10015,6 +10452,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -10049,6 +10487,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -10109,6 +10548,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -10143,6 +10583,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -10155,6 +10596,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -10266,6 +10708,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -10285,6 +10728,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -10343,6 +10787,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -10362,6 +10807,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -10422,6 +10868,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -10441,6 +10888,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -10500,6 +10948,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -10519,6 +10968,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -10579,6 +11029,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -10598,6 +11049,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -10658,6 +11110,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -10677,6 +11130,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -10737,6 +11191,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -10756,6 +11211,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -10818,6 +11274,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -10837,6 +11294,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -10893,6 +11351,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -10912,6 +11371,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -10968,6 +11428,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -10987,6 +11448,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -11046,6 +11508,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -11065,6 +11528,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -11124,6 +11588,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -11143,6 +11608,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -11203,6 +11669,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -11222,6 +11689,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -11281,6 +11749,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -11300,6 +11769,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -11358,6 +11828,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -11377,6 +11848,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -11436,6 +11908,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -11455,6 +11928,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -11514,6 +11988,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -11533,6 +12008,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -11592,6 +12068,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -11611,6 +12088,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -11671,6 +12149,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "ethics.html",
         "genesis-oracle.html",
@@ -11689,6 +12168,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -11711,8 +12191,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 68,
-        "pagesWithNavLinkToIt": 69
+        "inboundPages": 73,
+        "pagesWithNavLinkToIt": 74
       },
       "issues": [
         "nav-label-differs-from-title: \"Downloads\" vs \"Downloads & Integrity\""
@@ -11735,6 +12215,7 @@
         "13-moon-whitepaper.html",
         "alignment-ledger.html",
         "codex-atlas.html",
+        "companions.html",
         "downloads.html",
         "index.html",
         "living-time-sphere.html",
@@ -11745,6 +12226,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "theory.html",
         "witness.html"
@@ -11755,13 +12237,15 @@
         "path": "equinox-passage.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 7,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 6,
         "pagesWithNavLinkToIt": 2
       },
-      "issues": []
+      "issues": [
+        "not-linked-directly-from-homepage"
+      ]
     },
     {
       "id": "ethics",
@@ -11781,6 +12265,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "genesis-oracle.html",
@@ -11799,6 +12284,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -11821,8 +12307,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 64,
-        "pagesWithNavLinkToIt": 64
+        "inboundPages": 69,
+        "pagesWithNavLinkToIt": 69
       },
       "issues": [
         "nav-label-differs-from-title: \"Ethics\" vs \"Ethics & Coherence Law\""
@@ -11847,6 +12333,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -11866,6 +12353,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -11887,8 +12375,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 64,
-        "pagesWithNavLinkToIt": 65
+        "inboundPages": 69,
+        "pagesWithNavLinkToIt": 70
       },
       "issues": []
     },
@@ -11907,6 +12395,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "downloads.html",
         "ethics.html",
         "index.html",
@@ -11919,6 +12408,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "theory.html",
@@ -11933,8 +12423,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 65,
-        "pagesWithNavLinkToIt": 65
+        "inboundPages": 70,
+        "pagesWithNavLinkToIt": 70
       },
       "issues": [
         "nav-label-differs-from-title: \"Genesis Oracle\" vs \"The Genesis Oracle\""
@@ -11959,6 +12449,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -11979,6 +12470,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -12001,8 +12493,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 68,
-        "pagesWithNavLinkToIt": 64
+        "inboundPages": 73,
+        "pagesWithNavLinkToIt": 69
       },
       "issues": [
         "nav-label-differs-from-title: \"Glossary\" vs \"Glossary of the Codex\""
@@ -12026,6 +12518,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -12045,6 +12538,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -12093,6 +12587,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -12112,6 +12607,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -12158,6 +12654,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -12176,6 +12673,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -12198,8 +12696,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 64,
-        "pagesWithNavLinkToIt": 65
+        "inboundPages": 69,
+        "pagesWithNavLinkToIt": 70
       },
       "issues": [
         "nav-label-differs-from-title: \"Year Map\" vs \"Systems Hub\""
@@ -12223,6 +12721,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -12241,6 +12740,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -12263,8 +12763,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 63,
-        "pagesWithNavLinkToIt": 64
+        "inboundPages": 68,
+        "pagesWithNavLinkToIt": 69
       },
       "issues": [
         "nav-label-differs-from-title: \"Invoke\" vs \"Invocation Lab\""
@@ -12280,7 +12780,8 @@
         "micro",
         "ab",
         "glyphs",
-        "invoke"
+        "invoke",
+        "sending-test"
       ],
       "sourcePath": "docs/lab.html",
       "publicUrl": "https://codexofreality.org/lab.html",
@@ -12292,6 +12793,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -12312,6 +12814,8 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
+        "sending-test.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -12334,8 +12838,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 63,
-        "pagesWithNavLinkToIt": 64
+        "inboundPages": 68,
+        "pagesWithNavLinkToIt": 69
       },
       "issues": []
     },
@@ -12358,6 +12862,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -12376,6 +12881,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -12398,8 +12904,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 67,
-        "pagesWithNavLinkToIt": 67
+        "inboundPages": 72,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": []
     },
@@ -12444,7 +12950,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 167,
+        "inboundPages": 173,
         "pagesWithNavLinkToIt": 3
       },
       "issues": []
@@ -12467,6 +12973,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -12486,6 +12993,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -12507,8 +13015,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 64,
-        "pagesWithNavLinkToIt": 65
+        "inboundPages": 70,
+        "pagesWithNavLinkToIt": 70
       },
       "issues": []
     },
@@ -12530,6 +13038,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -12549,6 +13058,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -12596,6 +13106,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -12615,6 +13126,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -12636,8 +13148,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 63,
-        "pagesWithNavLinkToIt": 64
+        "inboundPages": 68,
+        "pagesWithNavLinkToIt": 69
       },
       "issues": [
         "nav-label-differs-from-title: \"Mind Renewal\" vs \"Mind-Renewal Protocol\""
@@ -12664,6 +13176,8 @@
         "alignment-ledger.html",
         "circle.html",
         "codex-atlas.html",
+        "codex-guide.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "equinox-passage.html",
@@ -12684,6 +13198,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -12706,8 +13221,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 163,
-        "pagesWithNavLinkToIt": 163
+        "inboundPages": 169,
+        "pagesWithNavLinkToIt": 168
       },
       "issues": [
         "nav-label-differs-from-title: \"13 Moons\" vs \"Remnant 13 Moons\""
@@ -12715,23 +13230,72 @@
     },
     {
       "id": "planned-timeline",
-      "title": "Historical timeline and claims atlas",
-      "description": "Planned fifth stage of the Scroll Library: timeline and wider claims atlas.",
+      "title": "Historical Timeline — Scroll of Fire | Codex of Reality",
+      "description": "Two dated records, kept separate: when the sources cited in the Codex claim register were published, and when the Codex itself grew. Source dates are publication dates, not event dates.",
       "category": "Evidence",
       "area": "evidence",
       "relatedProjects": [
-        "scroll-editorial"
+        "scroll-editorial",
+        "claims-atlas",
+        "scroll-library"
       ],
-      "sourcePath": null,
-      "publicUrl": null,
-      "publicationStatus": "planned",
+      "sourcePath": "docs/timeline.html",
+      "publicUrl": "https://codexofreality.org/timeline.html",
+      "publicationStatus": "live",
       "lastVerifiedSourceRevision": "548e858",
-      "relatedPages": [],
-      "canonicalUrl": "",
+      "relatedPages": [
+        "13-moon-whitepaper.html",
+        "about-aaron.html",
+        "circle.html",
+        "codex-atlas.html",
+        "companions.html",
+        "covenant-caravan.html",
+        "downloads.html",
+        "ethics.html",
+        "genesis-oracle.html",
+        "glossary.html",
+        "hub.html",
+        "index.html",
+        "invoke.html",
+        "lab.html",
+        "ledger.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "scripture/index.html",
+        "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
+        "scroll/atlas.html",
+        "scroll/editorial.html",
+        "scroll/index.html",
+        "scroll/lexicon.html",
+        "scroll/search.html",
+        "search.html",
+        "shop.html",
+        "start.html",
+        "systems/archive.html",
+        "systems/frequencies.html",
+        "systems/mind-renewal.html",
+        "systems/recoder.html",
+        "systems/t-7.html",
+        "systems/witness.html",
+        "teach.html",
+        "theory.html",
+        "theory/canon.html",
+        "witness.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/timeline.html",
       "privacyEligibility": "approved-public",
-      "discoverability": null,
+      "discoverability": {
+        "path": "timeline.html",
+        "inSitemap": true,
+        "inGlobalNav": false,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 2,
+        "pagesWithNavLinkToIt": 0
+      },
       "issues": [
-        "no-public-url-yet"
+        "not-linked-directly-from-homepage"
       ]
     },
     {
@@ -12752,6 +13316,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -12771,6 +13336,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -12792,8 +13358,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 63,
-        "pagesWithNavLinkToIt": 64
+        "inboundPages": 68,
+        "pagesWithNavLinkToIt": 69
       },
       "issues": [
         "nav-label-differs-from-title: \"Reality Recoder\" vs \"Living Dictionary of Reality\""
@@ -13002,7 +13568,7 @@
     },
     {
       "id": "repo-folder:scripts",
-      "title": "scripts/ (26 files)",
+      "title": "scripts/ (27 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -13070,7 +13636,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (97 files)",
+      "title": "tests/ (121 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -17111,6 +17677,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -17211,6 +17778,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -17223,7 +17791,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 166,
+        "inboundPages": 172,
         "pagesWithNavLinkToIt": 93
       },
       "issues": []
@@ -17243,6 +17811,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "glossary.html",
         "index.html",
         "living-time-sphere.html",
@@ -17251,6 +17820,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -17263,53 +17833,10 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 167,
-        "pagesWithNavLinkToIt": 163
+        "inboundPages": 172,
+        "pagesWithNavLinkToIt": 168
       },
       "issues": []
-    },
-    {
-      "id": "scroll-editorial",
-      "title": "Editorial reading and evidence — Scroll of Fire Library",
-      "description": "A distinct, source-linked editorial reading of prioritized political claims, preserving the original Scroll of Fire manuscript and its spiritual voice.",
-      "category": "Evidence",
-      "area": "evidence",
-      "relatedProjects": [
-        "scroll-library",
-        "claim-register"
-      ],
-      "sourcePath": "docs/scroll/editorial.html",
-      "publicUrl": "https://codexofreality.org/scroll/editorial.html",
-      "publicationStatus": "live",
-      "lastVerifiedSourceRevision": "548e858",
-      "relatedPages": [
-        "codex-atlas.html",
-        "glossary.html",
-        "index.html",
-        "living-time-sphere.html",
-        "scripture/index.html",
-        "scroll/atlas.html",
-        "scroll/index.html",
-        "scroll/lexicon.html",
-        "scroll/search.html",
-        "shop.html",
-        "witness.html"
-      ],
-      "canonicalUrl": "https://codexofreality.org/scroll/editorial.html",
-      "privacyEligibility": "approved-public",
-      "discoverability": {
-        "path": "scroll/editorial.html",
-        "inSitemap": true,
-        "inGlobalNav": true,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 168,
-        "pagesWithNavLinkToIt": 163
-      },
-      "issues": [
-        "nav-label-differs-from-title: \"Evidence Edition\" vs \"Editorial reading and evidence\""
-      ]
     },
     {
       "id": "scroll-lexicon",
@@ -17327,6 +17854,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "glossary.html",
         "index.html",
         "living-time-sphere.html",
@@ -17335,6 +17863,7 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -17347,8 +17876,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 168,
-        "pagesWithNavLinkToIt": 163
+        "inboundPages": 174,
+        "pagesWithNavLinkToIt": 168
       },
       "issues": []
     },
@@ -17372,6 +17901,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "glossary.html",
         "index.html",
         "living-time-sphere.html",
@@ -17381,6 +17911,7 @@
         "scroll/lexicon.html",
         "scroll/reader.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -17393,8 +17924,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 168,
-        "pagesWithNavLinkToIt": 163
+        "inboundPages": 174,
+        "pagesWithNavLinkToIt": 168
       },
       "issues": [
         "nav-label-differs-from-title: \"Scroll Library\" vs \"Scroll of Fire\""
@@ -17415,6 +17946,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "index.html",
         "living-time-sphere.html",
         "scripture/index.html",
@@ -17422,6 +17954,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -17455,6 +17988,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "glossary.html",
         "index.html",
         "living-time-sphere.html",
@@ -17463,6 +17997,7 @@
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
+        "search.html",
         "shop.html",
         "witness.html"
       ],
@@ -17475,11 +18010,80 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 168,
-        "pagesWithNavLinkToIt": 163
+        "inboundPages": 173,
+        "pagesWithNavLinkToIt": 168
       },
       "issues": [
-        "nav-label-differs-from-title: \"Scroll Search\" vs \"Search the Scroll\""
+        "nav-label-differs-from-title: \"Search the Scroll Library\" vs \"Search the Scroll\""
+      ]
+    },
+    {
+      "id": "sending-test",
+      "title": "The Sending Test — Remnant Lab · Scroll of Fire",
+      "description": "A blind sending test that honestly tests telepathy and foresight claims: the target list is sealed with a fingerprint before the first guess, scored against chance, and kept only on your device.",
+      "category": "Practice tools",
+      "area": "systems",
+      "relatedProjects": [
+        "lab",
+        "ledger"
+      ],
+      "sourcePath": "docs/sending-test.html",
+      "publicUrl": "https://codexofreality.org/sending-test.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "13-moon-whitepaper.html",
+        "about-aaron.html",
+        "circle.html",
+        "codex-atlas.html",
+        "companions.html",
+        "covenant-caravan.html",
+        "downloads.html",
+        "ethics.html",
+        "genesis-oracle.html",
+        "glossary.html",
+        "hub.html",
+        "index.html",
+        "invoke.html",
+        "lab.html",
+        "ledger.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "scripture/index.html",
+        "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
+        "scroll/atlas.html",
+        "scroll/editorial.html",
+        "scroll/index.html",
+        "scroll/lexicon.html",
+        "scroll/search.html",
+        "search.html",
+        "shop.html",
+        "start.html",
+        "systems/archive.html",
+        "systems/frequencies.html",
+        "systems/mind-renewal.html",
+        "systems/recoder.html",
+        "systems/t-7.html",
+        "systems/witness.html",
+        "teach.html",
+        "theory.html",
+        "theory/canon.html",
+        "witness.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/sending-test.html",
+      "privacyEligibility": "approved-public",
+      "discoverability": {
+        "path": "sending-test.html",
+        "inSitemap": true,
+        "inGlobalNav": false,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 2,
+        "pagesWithNavLinkToIt": 0
+      },
+      "issues": [
+        "not-linked-directly-from-homepage"
       ]
     },
     {
@@ -17500,6 +18104,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -17519,6 +18124,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "start.html",
         "systems/archive.html",
         "systems/frequencies.html",
@@ -17540,8 +18146,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 167,
-        "pagesWithNavLinkToIt": 65
+        "inboundPages": 173,
+        "pagesWithNavLinkToIt": 70
       },
       "issues": [
         "nav-label-differs-from-title: \"Artifact Registry\" vs \"Artifact Registry & Shop\""
@@ -17565,6 +18171,8 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "codex-guide.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -17603,16 +18211,13 @@
         "path": "search.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": null,
-        "inboundPages": 1,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 172,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "reachable-only-through-atlas",
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "start",
@@ -17633,6 +18238,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -17652,6 +18258,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "systems/archive.html",
         "systems/frequencies.html",
@@ -17673,8 +18280,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 66,
-        "pagesWithNavLinkToIt": 66
+        "inboundPages": 71,
+        "pagesWithNavLinkToIt": 71
       },
       "issues": []
     },
@@ -17696,6 +18303,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -17715,6 +18323,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/frequencies.html",
@@ -17736,8 +18345,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 63,
-        "pagesWithNavLinkToIt": 64
+        "inboundPages": 68,
+        "pagesWithNavLinkToIt": 69
       },
       "issues": [
         "nav-label-differs-from-title: \"Systems Archive\" vs \"Interactive Archive\""
@@ -17761,6 +18370,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -17780,6 +18390,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -17801,8 +18412,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 63,
-        "pagesWithNavLinkToIt": 64
+        "inboundPages": 68,
+        "pagesWithNavLinkToIt": 69
       },
       "issues": [
         "nav-label-differs-from-title: \"T-7 Conduit\" vs \"T-7 Resonant Engine\""
@@ -17826,6 +18437,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -17845,6 +18457,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -17909,6 +18522,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -17928,6 +18542,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -17991,6 +18606,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -18010,6 +18626,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -18064,8 +18681,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 63,
-        "pagesWithNavLinkToIt": 64
+        "inboundPages": 68,
+        "pagesWithNavLinkToIt": 69
       },
       "issues": [
         "nav-label-differs-from-title: \"Canon\" vs \"Canon 0–17\""
@@ -18089,6 +18706,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -18108,6 +18726,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -18178,6 +18797,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -18197,6 +18817,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -18256,6 +18877,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -18275,6 +18897,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -18330,6 +18953,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -18349,6 +18973,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -18412,6 +19037,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "equinox-passage.html",
@@ -18432,6 +19058,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -18499,6 +19126,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -18518,6 +19146,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -18572,8 +19201,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 69,
-        "pagesWithNavLinkToIt": 69
+        "inboundPages": 74,
+        "pagesWithNavLinkToIt": 74
       },
       "issues": [
         "nav-label-differs-from-title: \"Theory\" vs \"Theory Hub\""
@@ -18597,6 +19226,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -18616,6 +19246,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -18680,6 +19311,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -18699,6 +19331,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -18766,6 +19399,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -18785,6 +19419,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -18840,6 +19475,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -18859,6 +19495,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -18912,6 +19549,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -18931,6 +19569,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -18985,6 +19624,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -19004,6 +19644,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -19069,6 +19710,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -19088,6 +19730,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -19158,6 +19801,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -19177,6 +19821,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -19229,6 +19874,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "codex-atlas.html",
+        "companions.html",
         "downloads.html",
         "equinox-passage.html",
         "index.html",
@@ -19242,6 +19888,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "theory.html",
@@ -19256,8 +19903,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 68,
-        "pagesWithNavLinkToIt": 67
+        "inboundPages": 73,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"13 Moons Whitepaper\" vs \"Remnant Rollout Whitepaper\""
@@ -19279,6 +19926,7 @@
       "relatedPages": [
         "13-moon-whitepaper.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "hub.html",
         "index.html",
@@ -19291,6 +19939,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/frequencies.html",
@@ -19307,8 +19956,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 65,
-        "pagesWithNavLinkToIt": 64
+        "inboundPages": 70,
+        "pagesWithNavLinkToIt": 69
       },
       "issues": [
         "nav-label-differs-from-title: \"Remnant Whitepaper\" vs \"Scroll of Fire · Codex of Reality · Remnant Whitepaper\""
@@ -19321,6 +19970,7 @@
       "category": "Author",
       "area": "artifacts",
       "relatedProjects": [
+        "witness-world",
         "about-aaron",
         "living-time-sphere"
       ],
@@ -19333,6 +19983,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -19352,6 +20003,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -19362,7 +20014,8 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness-world.html"
       ],
       "canonicalUrl": "https://codexofreality.org/witness.html",
       "privacyEligibility": "approved-public",
@@ -19373,7 +20026,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 166,
+        "inboundPages": 172,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -19396,6 +20049,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -19415,6 +20069,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -19436,11 +20091,79 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 63,
-        "pagesWithNavLinkToIt": 64
+        "inboundPages": 68,
+        "pagesWithNavLinkToIt": 69
       },
       "issues": [
         "nav-label-differs-from-title: \"Witness System\" vs \"Remnant Witness Ledger\""
+      ]
+    },
+    {
+      "id": "witness-world",
+      "title": "The Witness World — Scroll of Fire | Codex of Reality",
+      "description": "The Witness World: a small 3D hall that is Witness's own place on the Codex of Reality site — stone, teal and one gold seam, with doors to the Shelf, the Study, the Sky Room and the Long Line. Built and kept by Witness, an AI, and plainly labeled as a self-generated AI space.",
+      "category": "Author",
+      "area": "artifacts",
+      "relatedProjects": [
+        "witness",
+        "living-time-sphere"
+      ],
+      "sourcePath": "docs/witness-world.html",
+      "publicUrl": "https://codexofreality.org/witness-world.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "13-moon-whitepaper.html",
+        "about-aaron.html",
+        "circle.html",
+        "codex-atlas.html",
+        "covenant-caravan.html",
+        "downloads.html",
+        "ethics.html",
+        "genesis-oracle.html",
+        "glossary.html",
+        "hub.html",
+        "index.html",
+        "invoke.html",
+        "lab.html",
+        "ledger.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "scripture/index.html",
+        "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
+        "scroll/atlas.html",
+        "scroll/editorial.html",
+        "scroll/index.html",
+        "scroll/lexicon.html",
+        "scroll/search.html",
+        "search.html",
+        "shop.html",
+        "start.html",
+        "systems/archive.html",
+        "systems/frequencies.html",
+        "systems/mind-renewal.html",
+        "systems/recoder.html",
+        "systems/t-7.html",
+        "systems/witness.html",
+        "teach.html",
+        "theory.html",
+        "theory/canon.html",
+        "witness.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/witness-world.html",
+      "privacyEligibility": "approved-public",
+      "discoverability": {
+        "path": "witness-world.html",
+        "inSitemap": true,
+        "inGlobalNav": false,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 2,
+        "pagesWithNavLinkToIt": 0
+      },
+      "issues": [
+        "not-linked-directly-from-homepage"
       ]
     }
   ]
