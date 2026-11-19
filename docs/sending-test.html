@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="sof carrier-432">
+<head>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2TBMEK502C"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+    window.dataLayer.push(arguments);
+  }
+
+  gtag("js", new Date());
+  gtag("config", "G-2TBMEK502C");
+</script>
+  <base href="./">
+  <script>if(location.hostname==="ssnfts24.github.io"){const base=document.querySelector("base");if(base)base.setAttribute("href","/scroll-of-fire/");}</script>
+
+  <meta charset="utf-8">
+  <title>The Sending Test — Remnant Lab · Scroll of Fire</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="A blind sending test that honestly tests telepathy and foresight claims: the target list is sealed with a fingerprint before the first guess, scored against chance, and kept only on your device.">
+  <meta name="author" content="Aaron Paul Laird">
+  <meta name="theme-color" content="#05070d">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://codexofreality.org/sending-test.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Scroll of Fire">
+  <meta property="og:title" content="The Sending Test — Remnant Lab · Scroll of Fire">
+  <meta property="og:description" content="Sealed targets, honest scoring: run a telepathy or foresight session whose result you can check yourself.">
+  <meta property="og:url" content="https://codexofreality.org/sending-test.html">
+  <meta property="og:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
+
+  <link rel="icon" type="image/svg+xml" href="assets/img/shared/branding/favicon.svg">
+  <link rel="apple-touch-icon" href="assets/img/shared/branding/favicon.svg">
+  <link rel="preload" href="assets/css/codex.css" as="style">
+    <link rel="stylesheet" href="assets/css/navigation.css">
+<link rel="stylesheet" href="assets/css/codex.css">
+
+  <style>
+    .lab-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-top:1.1rem}
+    .lab-card{position:relative;overflow:hidden;padding:1.1rem;border-radius:24px;border:1px solid rgba(255,255,255,.12);background:radial-gradient(circle at 20% 0%,rgba(243,201,122,.08),transparent 35%),linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));display:flex;flex-direction:column;gap:.5rem}
+    .lab-card .sigil{font-size:1.9rem;line-height:1}
+    .lab-card h3{margin:.1rem 0 0;color:var(--gold,#f3c97a)}
+    .lab-card p{margin:0;color:var(--muted)}
+    .lab-card .text-link{margin-top:auto}
+    .lab-tag{align-self:flex-start;font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(122,243,255,.25);color:var(--cyan,#7af3ff)}
+    @media (max-width:1000px){.lab-grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:760px){
+      .lab-grid{grid-template-columns:1fr}
+    }
+  </style>
+
+  <style>
+    .st-h2{color:var(--gold,#f3c97a);margin:.2rem 0 .8rem}
+    .st-fieldset{border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:1rem;margin:0 0 1rem;display:flex;flex-direction:column;gap:.7rem}
+    .st-fieldset legend{padding:0 .4rem;color:var(--gold,#f3c97a);font-weight:600}
+    .st-choice{display:flex;gap:.6rem;align-items:flex-start;cursor:pointer;line-height:1.45}
+    .st-choice input{margin-top:.25rem;min-width:20px;min-height:20px;accent-color:#c9a227}
+    .st-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:.7rem 1.2rem;border-radius:999px;border:1px solid rgba(243,201,122,.45);background:rgba(255,255,255,.04);color:inherit;font:inherit;font-weight:600;cursor:pointer}
+    .st-btn:hover{border-color:rgba(243,201,122,.8)}
+    .st-btn-primary{background:linear-gradient(180deg,rgba(243,201,122,.22),rgba(243,201,122,.08));width:100%;margin-top:.4rem}
+    .st-error{color:#ff9d8a;min-height:1.2em;margin:.5rem 0 0}
+    .st-fingerprint{font-size:1.05rem}
+    .st-codeblock{word-break:break-all}
+    .st-note{color:var(--muted);font-size:.94rem;line-height:1.5}
+    .st-progress{color:var(--cyan,#7af3ff);letter-spacing:.03em;margin:0 0 .8rem}
+    .st-big-symbol{font-size:6rem;line-height:1.1;text-align:center;margin:.6rem 0 0;color:var(--gold,#f3c97a)}
+    .st-big-symbol-name{text-align:center;font-size:1.15rem;margin:.2rem 0 1rem}
+    .st-prompt{font-size:1.05rem;line-height:1.5}
+    .st-symbols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.7rem;margin-top:.8rem}
+    .st-symbol-btn{display:flex;flex-direction:column;align-items:center;gap:.3rem;min-height:96px;padding:.8rem .3rem;border-radius:18px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.03);color:inherit;font:inherit;cursor:pointer}
+    .st-symbol-btn:hover{border-color:rgba(243,201,122,.7)}
+    .st-glyph{font-size:2.4rem;line-height:1}
+    .st-sym-0 .st-glyph{color:#f3c97a}.st-sym-1 .st-glyph{color:#7af3ff}.st-sym-2 .st-glyph{color:#9fe8c1}.st-sym-3 .st-glyph{color:#f0b8d8}
+    .st-reveal-text{font-size:1.15rem;line-height:1.55}
+    .st-sequence{font-size:1.5rem;letter-spacing:.3em}
+    .st-sessions{list-style:none;padding:0;display:flex;flex-direction:column;gap:.5rem}
+    .st-session-row{display:flex;gap:.8rem;align-items:center;justify-content:space-between;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:.6rem .8rem}
+    .st-session-main{line-height:1.45}
+    .st-session-seal{white-space:nowrap}
+    .st-delete{min-height:44px;padding:.4rem .8rem;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:transparent;color:inherit;font:inherit;cursor:pointer}
+    @media (max-width:760px){.st-symbols{grid-template-columns:repeat(2,1fr)}.st-big-symbol{font-size:4.6rem}}
+  </style>
+  <script defer src="assets/js/site.js"></script>
+  <script defer src="assets/js/living-search-launcher.js"></script>
+  <script defer src="assets/js/calendar-cor.js"></script>
+  <script defer src="assets/js/living-codex.js"></script>
+  <script defer src="assets/js/codex-witness.js"></script>
+  <script defer src="assets/js/sealed-protocol.js"></script>
+  <script defer src="assets/js/sending-test.js"></script>
+  <script defer src="assets/js/sending-test-ui.js"></script>
+  <link rel="stylesheet" href="assets/css/animations.css">
+  <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
+  <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261118-1">
+  <script defer src="assets/js/spark-companion.js?v=20261118-1"></script>
+  <script defer src="assets/js/spark-presence.js?v=20261118-1"></script>
+</head>
+
+<body class="living-ui">
+  <div class="living-aura" aria-hidden="true"></div>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="living-nav" data-living-nav>
+    <nav class="living-nav-inner" aria-label="Site navigation">
+      <a class="living-nav-brand" href="index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a>
+      <ul class="living-nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="scroll/index.html">Scroll</a></li>
+        <li><a href="codex-atlas.html">Atlas</a></li>
+        <li><a href="scroll/lexicon.html">Lexicon</a></li>
+        <li><a href="scripture/index.html">Scripture</a></li>
+        <li><a href="living-time-sphere.html">Sphere</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="witness.html">Witness</a></li>
+        <li><a href="search.html">Living Search</a></li>
+        <li><a href="companions.html">Companion</a></li>
+        <li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li>
+      </ul>
+    </nav>
+  </div>
+
+    <header class="site-header" data-sof-header>
+
+    <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="primary-navigation" data-nav-toggle>
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav id="primary-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
+      <!-- site-nav:global:start -->
+      <a class="is-featured" href="./scroll/">Scroll Library</a>
+      <a href="./codex-atlas.html">Atlas</a>
+      <!-- site-nav:global:end -->
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-today" data-dropdown-toggle>
+          Today <span aria-hidden="true">▾</span>
+        </button>
+        <div id="nav-today" class="nav-drop-menu">
+          <a href="./moons.html">13 Moons</a>
+          <a href="./ledger.html">Witness Ledger</a>
+          <a href="./hub.html">Year Map</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-explore" data-dropdown-toggle>
+          Explore <span aria-hidden="true">▾</span>
+        </button>
+        <div id="nav-explore" class="nav-drop-menu">
+          <!-- site-nav:explore:start -->
+          <a href="./scroll/search.html">Search the Scroll Library</a>
+          <a href="./scroll/lexicon.html">Hebrew Lexicon</a>
+          <a href="./scroll/atlas.html">Reference Atlas</a>
+          <a href="./scroll/editorial.html">Evidence Edition</a>
+          <!-- site-nav:explore:end -->
+          <a href="./theory.html">Theory</a>
+          <a href="./theory/canon.html">Canon</a>
+          <a href="./genesis-oracle.html">Genesis Oracle</a>
+          <a href="./glossary.html">Glossary</a>
+          <a href="./systems/archive.html">Systems Archive</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-build" data-dropdown-toggle>
+          Build <span aria-hidden="true">▾</span>
+        </button>
+        <div id="nav-build" class="nav-drop-menu">
+          <a href="./systems/frequencies.html">Frequency Governance</a>
+          <a href="./systems/t-7.html">T-7 Conduit</a>
+          <a href="./systems/recoder.html">Reality Recoder</a>
+          <a href="./systems/mind-renewal.html">Mind Renewal</a>
+          <a href="./lab.html">Remnant Lab</a>
+          <a href="./invoke.html">Invoke</a>
+          <a href="./systems/witness.html">Witness System</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-artifacts" data-dropdown-toggle>
+          Artifacts <span aria-hidden="true">▾</span>
+        </button>
+        <div id="nav-artifacts" class="nav-drop-menu">
+          <a href="./shop.html">Artifact Registry</a>
+          <a href="./circle.html">Covenant Circle</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-about" data-dropdown-toggle>
+          About <span aria-hidden="true">▾</span>
+        </button>
+        <div id="nav-about" class="nav-drop-menu">
+          <a href="./start.html">Start Here</a>
+          <a href="./covenant-caravan.html">Covenant Caravan</a>
+          <a href="./teach.html">Manifest</a>
+          <a href="./ethics.html">Ethics</a>
+          <a href="./downloads.html">Downloads</a>
+          <a href="./scroll-of-fire-codex-of-reality-remnant-whitepaper.html">Remnant Whitepaper</a>
+          <a href="./13-moon-whitepaper.html">13 Moons Whitepaper</a>
+          <a href="./about-aaron.html">About Aaron</a>
+        </div>
+      </div>
+
+    </nav>
+  </header>
+  <section class="living-signal-shell" aria-label="Living signal">
+    <ul class="living-signal-bar" data-living-signal-root>
+      <li class="living-signal-item">Daily signal loads with your local time and Codex data when JavaScript is available.</li>
+      <li class="living-signal-item"><a class="living-signal-link" href="./moons.html">Open 13 Moons</a></li>
+      <li class="living-signal-item"><a class="living-signal-link" href="./ledger.html">Record Witness</a></li>
+    </ul>
+  </section>
+
+  <main id="main">
+    <section class="section-shell" aria-labelledby="sending-title">
+      <div class="section-heading">
+        <p class="eyebrow">Remnant Lab · Test an Instrument</p>
+        <h1 id="sending-title">The Sending Test</h1>
+        <span class="codex-status" data-status="experimental">Experimental</span>
+        <p>
+          People talk about telepathy — one mind reaching another — and about foresight,
+          knowing something before it happens. Talk is cheap either way. This tool does
+          not ask you to believe or to disbelieve. It lets you <strong>run the test
+          cleanly</strong>: a fixed number of tries, targets sealed before the first
+          guess, and a score measured honestly against chance.
+        </p>
+      </div>
+
+      <article class="card glow">
+        <p class="eyebrow">The protocol — read this first</p>
+        <h2>How the test stays honest</h2>
+        <ol class="clean-list">
+          <li><strong>You fix the length first.</strong> A session is 20 or 40 tries, chosen before anything is drawn. You cannot quietly stop early on a lucky streak or stretch a session until it looks good.</li>
+          <li><strong>The targets are sealed.</strong> When the session starts, the page draws the whole list of targets from a secret seed — a starting number the draw grows from — and locks it in a box. The box's fingerprint is shown to you before the first guess: a long code made from the list (a SHA-256 hash). If the list were changed afterward, the fingerprint would no longer match, and at the end you can check it yourself.</li>
+          <li><strong>Chance is one in four.</strong> Each try offers four symbols and exactly one is the target. Guessing blindly scores about 5 hits in 20 tries, or 10 in 40 — and luck alone sometimes runs higher. The scoring below says exactly how often.</li>
+          <li><strong>Everything is revealed at the end.</strong> The seed and the full target list are shown, the seal is re-checked in front of you, and the session is kept on this device only. Nothing is uploaded anywhere.</li>
+        </ol>
+      </article>
+    </section>
+
+    <section class="section-shell" aria-labelledby="st-run-title">
+      <h2 id="st-run-title" class="st-h2">Run a session</h2>
+
+      <div id="st-setup" class="card">
+        <fieldset class="st-fieldset">
+          <legend>Choose how to test</legend>
+          <label class="st-choice">
+            <input type="radio" name="st-mode" value="receiver" checked>
+            <span><strong>Receiver</strong> — tests telepathy, mind to mind. Two people, one phone.
+            A sender is shown each target and holds it in mind; the receiver, who never saw it, picks.</span>
+          </label>
+          <label class="st-choice">
+            <input type="radio" name="st-mode" value="foresight">
+            <span><strong>Foresight</strong> — tests precognition, knowing before. One person.
+            You pick first — but understand what that means here: the whole target list was
+            already drawn and sealed before you started. Nothing is drawn after you guess.
+            You are testing whether your picks line up with a list that was already fixed,
+            which is exactly the claim foresight makes.</span>
+          </label>
+        </fieldset>
+
+        <fieldset class="st-fieldset">
+          <legend>Choose the length — fixed once you start</legend>
+          <label class="st-choice st-choice-inline">
+            <input type="radio" name="st-trials" value="20" checked>
+            <span><strong>20 tries</strong> — chance averages 5 hits; luck alone reaches 9 or more about 1 time in 25.</span>
+          </label>
+          <label class="st-choice st-choice-inline">
+            <input type="radio" name="st-trials" value="40">
+            <span><strong>40 tries</strong> — chance averages 10 hits; luck alone reaches 16 or more about 1 time in 38.</span>
+          </label>
+        </fieldset>
+
+        <button id="st-start" class="st-btn st-btn-primary" type="button">Draw and seal the targets</button>
+        <p id="st-setup-error" class="st-error" role="alert"></p>
+      </div>
+
+      <div id="st-seal" class="card glow" hidden>
+        <p class="eyebrow">Sealed</p>
+        <h3>The targets are locked in</h3>
+        <p id="st-seal-summary"></p>
+        <p class="st-fingerprint">Fingerprint: <code id="st-seal-short"></code></p>
+        <details>
+          <summary>The full fingerprint (the commitment)</summary>
+          <p><code id="st-seal-full" class="st-codeblock"></code></p>
+          <p class="st-note">Write it down if you like. After the session, the list and the seed are
+          revealed, and this page re-makes the fingerprint from them in front of you. If even one
+          target had been changed after your guesses, the fingerprints would not match.</p>
+        </details>
+        <button id="st-begin" class="st-btn st-btn-primary" type="button">Begin trial 1</button>
+      </div>
+
+      <div id="st-stage" class="card" hidden>
+        <p id="st-progress" class="st-progress" aria-live="polite"></p>
+
+        <div id="st-sender" hidden>
+          <p class="eyebrow">Sender — this screen is for your eyes only</p>
+          <p>Look at this symbol. Hold it in mind — its shape, its feel. When you are
+          holding it, tap the button and hand the phone to the receiver. The target will
+          not be shown again until the receiver has picked.</p>
+          <p class="st-big-symbol" aria-hidden="true" id="st-sender-glyph">●</p>
+          <p class="st-big-symbol-name">Send <strong id="st-sender-name">the Circle</strong></p>
+          <button id="st-hide" class="st-btn st-btn-primary" type="button">I am holding it in mind — hide it and pass the phone</button>
+        </div>
+
+        <div id="st-pick" hidden>
+          <p id="st-pick-prompt" class="st-prompt"></p>
+          <div class="st-symbols" role="group" aria-label="Pick one symbol">
+            <button type="button" class="st-symbol-btn st-sym-0" data-index="0"><span class="st-glyph" aria-hidden="true">●</span><span>Circle</span></button>
+            <button type="button" class="st-symbol-btn st-sym-1" data-index="1"><span class="st-glyph" aria-hidden="true">▲</span><span>Triangle</span></button>
+            <button type="button" class="st-symbol-btn st-sym-2" data-index="2"><span class="st-glyph" aria-hidden="true">≋</span><span>Waves</span></button>
+            <button type="button" class="st-symbol-btn st-sym-3" data-index="3"><span class="st-glyph" aria-hidden="true">★</span><span>Star</span></button>
+          </div>
+        </div>
+
+        <div id="st-reveal" hidden>
+          <p id="st-reveal-text" class="st-reveal-text" aria-live="polite"></p>
+          <button id="st-next" class="st-btn st-btn-primary" type="button">Next trial</button>
+        </div>
+      </div>
+
+      <div id="st-results" class="card glow" hidden>
+        <p class="eyebrow">Result</p>
+        <h3>What the numbers say</h3>
+        <ul id="st-verdict-lines" class="clean-list"></ul>
+        <details>
+          <summary>The reveal — check the seal yourself</summary>
+          <p>The seed this session was drawn from: <code id="st-result-seed"></code></p>
+          <p>The full target list, in order: <span id="st-result-sequence" class="st-sequence"></span></p>
+          <p>The fingerprint shown before the first guess: <code id="st-result-fingerprint" class="st-codeblock"></code></p>
+          <button id="st-check-seal" class="st-btn" type="button">Re-check the seal now</button>
+          <p id="st-seal-check-result" class="st-note" aria-live="polite"></p>
+        </details>
+        <p class="st-note">This session was saved to <strong>this device only</strong> — see your sessions below. Nothing was uploaded anywhere.</p>
+        <button id="st-again" class="st-btn st-btn-primary" type="button">Run another session</button>
+      </div>
+    </section>
+
+    <section class="section-shell" aria-labelledby="st-sessions-title">
+      <h2 id="st-sessions-title" class="st-h2">Your sessions on this device</h2>
+      <p>
+        Sessions live in this browser, on this device, and nowhere else. One strong session
+        means little; a record that repeats is what would count — so the record is kept
+        whole, seals and all, and you can take a copy with you.
+      </p>
+      <p id="st-sessions-empty">No sessions yet. Run one above and it will be kept here.</p>
+      <ul id="st-sessions-list" class="st-sessions"></ul>
+      <button id="st-export" class="st-btn" type="button">Download a backup of my sessions</button>
+      <p class="st-note">The backup is one file holding every session whole — targets, guesses, and
+      fingerprints — so the record can be re-checked anywhere, the same way the Life Atlas
+      backup door works. The file contains your session record; keep it where you keep
+      your own things.</p>
+    </section>
+
+    <section class="section-shell split" aria-label="What would count as evidence">
+      <article class="card glow">
+        <p class="eyebrow">Reading a result</p>
+        <h2>What would count as evidence</h2>
+        <p>
+          Three things, all built into this tool: targets sealed before the first guess,
+          a trial count fixed in advance, and a record anyone can re-check. A claim
+          tested any other way — targets chosen after, sessions stopped when they look
+          good, records nobody can verify — has not really been tested at all.
+        </p>
+        <p>
+          And the hard part: even a score outside the luck line, once, is not proof.
+          Luck deals somebody an unlikely session every day. What would count is the
+          same result, outside the line, repeating across many sealed sessions.
+        </p>
+      </article>
+
+      <article class="card">
+        <p class="eyebrow">Why small samples mislead</p>
+        <h2>Luck runs in streaks</h2>
+        <p>
+          In 20 tries, luck alone reaches 8 hits about 1 time in 10 — that feels like
+          something, and it is nothing but luck doing what luck does. It reaches 9 or
+          more about 1 time in 25. Short runs swing wildly; that is why this tool fixes
+          the count up front and why its verdict always names how often luck alone
+          would do at least as well.
+        </p>
+      </article>
+    </section>
+
+    <section class="section-shell" aria-label="What others tried">
+      <article class="card">
+        <p class="eyebrow">History — labeled as history</p>
+        <h2>What others tried</h2>
+        <p>
+          In the 1970s through the 1990s, researchers ran "Ganzfeld" sessions: a receiver
+          resting in soft, even light and sound, a sender viewing a picture or a clip,
+          then the receiver picking it from four choices — the same one-in-four shape as
+          this tool. Some combined reports put the hit rate above chance; other
+          researchers argued the methods leaked or the counting was generous. Decades
+          later it is still argued, both ways. The lesson that survives the argument is
+          the protocol: seal the targets, fix the count, keep the record — which is
+          what this page does.
+        </p>
+        <a class="text-link" href="./ethics.html">Read Ethics &amp; Stop Rules →</a>
+      </article>
+    </section>
+
+    <div class="section-shell">
+      <div class="record-witness-band" data-witness-context>
+        <span class="record-witness-icon" aria-hidden="true">Ξ</span>
+        <div class="record-witness-text">
+          <strong>Record in Witness Ledger</strong>
+          <span>Save an observation, insight, or result from this page to your local Codex.</span>
+        </div>
+        <a class="record-witness-link" href="./ledger.html" data-witness-link>Record</a>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <nav aria-label="Footer navigation">
+      <a href="./start.html">Start</a>
+      <a href="./moons.html">13 Moons</a>
+      <a href="./covenant-caravan.html">Caravan</a>
+      <a href="./teach.html">Manifest</a>
+      <a href="./shop.html">Artifacts</a>
+      <a href="./hub.html">Hub</a>
+      <a href="./ledger.html">Ledger</a>
+      <a href="./systems/frequencies.html">Frequency</a>
+      <a href="./genesis-oracle.html">Oracle</a>
+      <a href="./theory.html">Theory</a>
+      <a href="./ethics.html">Ethics</a>
+      <a href="./sitemap.xml">Sitemap</a>
+    </nav>
+    <p>© <span id="year">2026</span> Aaron Paul Laird — Scroll of Fire · Codex of Reality · Scribe of Circuits</p>
+  </footer>
+  <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
+</body>
+</html>

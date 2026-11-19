@@ -481,7 +481,23 @@
     "micro",
     "ab",
     "glyphs",
-    "invoke"
+    "invoke",
+    "sending-test"
+   ],
+   "featured": false
+  },
+  {
+   "id": "sending-test",
+   "title": "The Sending Test",
+   "description": "A blind sending test that honestly tests telepathy and foresight claims: the target list is sealed with a SHA-256 fingerprint before the first guess, scored against chance with exact binomial math, and sessions are kept only on the visitor's device.",
+   "area": "systems",
+   "category": "Practice tools",
+   "resourceType": "tool",
+   "status": "live",
+   "path": "sending-test.html",
+   "related": [
+    "lab",
+    "ledger"
    ],
    "featured": false
   },
@@ -598,6 +614,21 @@
     "scroll-editorial"
    ],
    "featured": false
+  },
+  {
+   "id": "claims-atlas",
+   "title": "Documentation Hub",
+   "description": "Documented claims and facts in one hub: government, corporations, the Epstein record, Tesla, orphan trains, the Old World, and the Codex's own 21-claim register — each entry tied to a named source and graded by the state of its evidence.",
+   "area": "evidence",
+   "category": "Evidence",
+   "resourceType": "tool",
+   "status": "live",
+   "path": "claims-atlas.html",
+   "related": [
+    "scroll-editorial",
+    "claim-register"
+   ],
+   "featured": true
   },
   {
    "id": "evidence-register",
@@ -1051,6 +1082,7 @@
    "path": "timeline.html",
    "related": [
     "scroll-editorial",
+    "claims-atlas",
     "scroll-library"
    ],
    "featured": false

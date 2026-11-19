@@ -83,33 +83,33 @@
 
 | Stylesheet | Pages |
 | --- | --- |
-| `docs/assets/css/living-ui.css` | 129 |
+| `docs/assets/css/living-ui.css` | 131 |
 | `docs/scripture/assets/scripture.css` | 93 |
-| `docs/assets/css/spark-companion.css` | 70 |
-| `docs/assets/css/codex.css` | 39 |
-| `docs/assets/css/navigation.css` | 33 |
+| `docs/assets/css/spark-companion.css` | 72 |
+| `docs/assets/css/codex.css` | 42 |
+| `docs/assets/css/navigation.css` | 35 |
+| `docs/assets/css/animations.css` | 19 |
 | `docs/theory/equations/assets/css/codex.css` | 19 |
 | `docs/theory/equations/assets/css/navigation.css` | 19 |
 | `docs/theory/equations/assets/css/theory.css` | 19 |
 | `docs/theory/equations/assets/css/living-ui.css` | 19 |
-| `docs/assets/css/animations.css` | 18 |
 | `docs/theory/assets/css/codex.css` | 15 |
 | `docs/theory/assets/css/navigation.css` | 15 |
 
 | Script | Pages |
 | --- | --- |
-| `docs/assets/js/site.js` | 132 |
-| `docs/assets/js/living-ui.js` | 129 |
+| `docs/assets/js/site.js` | 134 |
+| `docs/assets/js/living-ui.js` | 131 |
 | `docs/scripture/assets/scripture.js` | 93 |
-| `docs/assets/js/spark-companion.js` | 70 |
-| `docs/assets/js/spark-presence.js` | 69 |
-| `docs/assets/js/living-search-launcher.js` | 26 |
+| `docs/assets/js/spark-companion.js` | 72 |
+| `docs/assets/js/spark-presence.js` | 71 |
+| `docs/assets/js/living-search-launcher.js` | 28 |
+| `docs/assets/js/living-codex.js` | 19 |
 | `docs/theory/equations/https:/cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js` | 19 |
 | `docs/theory/equations/assets/js/site.js` | 19 |
 | `docs/theory/equations/assets/js/living-search-launcher.js` | 19 |
 | `docs/theory/equations/assets/js/theory.js` | 19 |
 | `docs/theory/equations/assets/js/living-ui.js` | 19 |
-| `docs/assets/js/living-codex.js` | 18 |
 
 ## Protected systems (do not modify)
 
