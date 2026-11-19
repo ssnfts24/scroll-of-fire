@@ -1,0 +1,281 @@
+/* Sphere deepening — page-layer finish for the Living Time Sphere.
+ *
+ * Aaron's direction (Nov 18, 2026): more detail, easier navigation,
+ * a reachable full screen, and Nori travelling around the Sphere.
+ * Everything here styles the PAGE around the instrument — the
+ * guide bar, her orbit, the app dock's fit on a phone, and the
+ * depth of the room the Sphere sits in. The instrument's own
+ * stylesheet (living-time-sphere.css, R1.7) is untouched.
+ */
+
+/* ── The room: depth behind the instrument ─────────────────────── */
+
+body.lts-luxury {
+  background:
+    radial-gradient(1100px 620px at 18% -8%, rgba(45, 212, 191, 0.10), transparent 60%),
+    radial-gradient(900px 700px at 88% 108%, rgba(212, 175, 55, 0.07), transparent 62%),
+    radial-gradient(700px 480px at 72% 22%, rgba(64, 96, 178, 0.08), transparent 65%),
+    #04060c;
+}
+
+/* A faint starfield, still and cheap: two layers of pinpoints. */
+body.lts-luxury::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1.5px 1.5px at 12% 22%, rgba(226, 244, 255, 0.55), transparent 60%),
+    radial-gradient(1px 1px at 34% 68%, rgba(226, 244, 255, 0.4), transparent 60%),
+    radial-gradient(1.5px 1.5px at 57% 14%, rgba(255, 240, 200, 0.5), transparent 60%),
+    radial-gradient(1px 1px at 71% 44%, rgba(226, 244, 255, 0.38), transparent 60%),
+    radial-gradient(1px 1px at 83% 79%, rgba(226, 244, 255, 0.45), transparent 60%),
+    radial-gradient(1.5px 1.5px at 93% 30%, rgba(190, 242, 255, 0.5), transparent 60%),
+    radial-gradient(1px 1px at 45% 88%, rgba(226, 244, 255, 0.35), transparent 60%),
+    radial-gradient(1px 1px at 5% 57%, rgba(255, 240, 200, 0.4), transparent 60%),
+    radial-gradient(1px 1px at 26% 41%, rgba(226, 244, 255, 0.3), transparent 60%),
+    radial-gradient(1.5px 1.5px at 64% 91%, rgba(226, 244, 255, 0.42), transparent 60%);
+}
+
+body.lts-luxury .wrap {
+  position: relative;
+  z-index: 1;
+}
+
+/* The stage frame: a gold hairline, an inner teal breath, and a
+ * soft halo cast into the room behind it. */
+.sphere-canvas-wrap #sphere-container {
+  box-shadow:
+    0 0 0 1px rgba(212, 175, 55, 0.22),
+    0 0 42px rgba(45, 212, 191, 0.10),
+    0 24px 70px rgba(0, 0, 0, 0.55),
+    inset 0 0 60px rgba(4, 10, 18, 0.55);
+}
+
+/* Headings on this page carry a small gold rule. */
+.sphere-page h2 {
+  letter-spacing: 0.02em;
+}
+.sphere-page section > h2::after,
+.sphere-page .sphere-sidebar-heading::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 2px;
+  margin-top: 0.35rem;
+  border-radius: 2px;
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.85), rgba(212, 175, 55, 0));
+}
+
+/* ── The Sphere guide bar ──────────────────────────────────────── */
+
+.sphere-guide-bar {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 10px;
+  z-index: 35;
+  width: min(96%, 860px);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem 0.7rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 1rem;
+  background: rgba(6, 12, 20, 0.82);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  color: #e8f1f2;
+  font-size: 0.85rem;
+}
+
+.sgb-readout {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  min-width: 0;
+}
+.sgb-readout-label {
+  color: rgba(190, 220, 225, 0.75);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.sgb-readout-value {
+  color: #ffd97a;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 46vw;
+}
+
+.sgb-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.sgb-btn,
+.sgb-moon-select {
+  font: inherit;
+  font-size: 0.82rem;
+  color: #eaf6f6;
+  background: rgba(45, 212, 191, 0.10);
+  border: 1px solid rgba(45, 212, 191, 0.35);
+  border-radius: 999px;
+  padding: 0.38rem 0.8rem;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.sgb-btn:hover,
+.sgb-btn:focus-visible {
+  background: rgba(45, 212, 191, 0.22);
+  border-color: rgba(45, 212, 191, 0.65);
+}
+.sgb-btn.sgb-fs {
+  border-color: rgba(212, 175, 55, 0.5);
+  background: rgba(212, 175, 55, 0.12);
+}
+.sgb-moon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.sgb-moon-label {
+  color: rgba(190, 220, 225, 0.75);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.sgb-moon-select {
+  border-radius: 0.6rem;
+  max-width: 11.5rem;
+}
+
+.sgb-status {
+  flex-basis: 100%;
+  margin: 0;
+  text-align: center;
+  color: rgba(190, 220, 225, 0.85);
+  font-size: 0.78rem;
+  min-height: 0;
+}
+.sgb-status:empty {
+  display: none;
+}
+
+@media (max-width: 560px) {
+  .sphere-guide-bar {
+    bottom: 6px;
+    padding: 0.45rem 0.5rem;
+    font-size: 0.8rem;
+  }
+  .sgb-readout-value {
+    max-width: 52vw;
+  }
+}
+
+/* In the app view the bar rides just above the day bar's space —
+ * the wrap is the whole stage there, so the same overlay holds. */
+body.sphere-app .sphere-guide-bar {
+  bottom: 12px;
+}
+
+/* ── Nori's orbit ──────────────────────────────────────────────── */
+
+.sphere-nori-orbit {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 34;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 6px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  will-change: transform;
+  filter: drop-shadow(0 0 10px rgba(45, 212, 191, 0.35));
+}
+.sphere-nori-art svg {
+  display: block;
+  width: 44px;
+  height: 44px;
+}
+.sphere-nori-name {
+  color: #ffe9a8;
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9);
+}
+
+/* While she orbits the Sphere, her corner walker rests. */
+html.sphere-nori-orbiting .spark-walker {
+  visibility: hidden;
+}
+
+/* Her bubble's Sphere guide. */
+.spark-sphere-guide {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(212, 175, 55, 0.3);
+}
+.spark-sphere-guide-buttons,
+.spark-sphere-guide-moons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+.spark-sphere-guide-buttons button,
+.spark-sphere-guide-moons button,
+.spark-sphere-guide-moons select {
+  font: inherit;
+  font-size: 0.8rem;
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid rgba(45, 212, 191, 0.4);
+  background: rgba(45, 212, 191, 0.10);
+  color: inherit;
+  cursor: pointer;
+}
+.spark-sphere-guide-moons select {
+  border-radius: 0.6rem;
+  max-width: 10.5rem;
+}
+
+/* ── The app dock fits a phone ─────────────────────────────────── */
+/* Nine dock buttons at 390px used to need 441px: the Full button
+ * sat off-screen to the right, unreachable. Tighten the dock on
+ * small screens so every control — Full included — is on screen. */
+@media (max-width: 560px) {
+  body.sphere-app .sphere-app-dock {
+    gap: 0.12rem;
+    padding-left: 0.3rem;
+    padding-right: 0.3rem;
+  }
+  body.sphere-app .sphere-dock-btn {
+    min-width: 0;
+    font-size: 0.6rem;
+    letter-spacing: 0;
+    padding: 0.2rem 0.05rem;
+    border-radius: 0.6rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sphere-nori-orbit {
+    filter: none;
+  }
+}

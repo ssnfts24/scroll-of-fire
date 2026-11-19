@@ -3,10 +3,10 @@
   "purpose": "Development-only registry of every tracked or intended repository file. Not a publication list.",
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
-    "files": 2050,
-    "bytes": 897272894,
+    "files": 2053,
+    "bytes": 897303568,
     "byGroup": {
-      "tooling": 167,
+      "tooling": 168,
       "manuscript": 17,
       "unlabelled-image": 21,
       "witness-record": 20,
@@ -25,7 +25,7 @@
       "legacy-asset": 1,
       "site-page": 48,
       "deployed-dev-doc": 56,
-      "site-asset": 462,
+      "site-asset": 464,
       "vendor": 3,
       "site-data": 5,
       "scroll-library": 826,
@@ -35,17 +35,17 @@
       "scripture-source": 15
     },
     "byPublicationEligibility": {
-      "development-only": 210,
+      "development-only": 211,
       "pending-publication-review": 42,
       "restricted-review": 180,
       "protected-immutable": 21,
       "public-unreviewed": 6,
-      "approved-public": 1591
+      "approved-public": 1593
     },
     "byExamination": {
-      "inventoried-only": 1919,
-      "parser-unavailable": 16,
-      "text-extracted": 40,
+      "inventoried-only": 1922,
+      "text-extracted": 55,
+      "no-text-layer-needs-visual-review": 1,
       "archive-listed": 8,
       "structurally-audited": 67
     }
@@ -356,10 +356,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 192,
+        "words": 33734,
+        "hebrew": true,
+        "greek": true,
+        "metadata": {
+          "CreationDate": "D:20260307003018+00'00'",
+          "Creator": "Microsoft Word"
+        }
       }
     },
     {
@@ -418,10 +426,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 4,
+        "words": 524,
+        "hebrew": false,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20260318162939+00'00'",
+          "Creator": "Microsoft Word"
+        }
       },
       "variants": [
         "1_Codex_of_Reality/Codex_of_Life_Scroll_FULL.docx"
@@ -579,10 +595,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 55,
+        "words": 5079,
+        "hebrew": false,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20260318163211+00'00'",
+          "Creator": "Microsoft Word"
+        }
       },
       "variants": [
         "1_Codex_of_Reality/Living Laws.docx"
@@ -657,10 +681,15 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 182,
+        "words": 55224,
+        "hebrew": true,
+        "greek": true,
+        "metadata": {}
       }
     },
     {
@@ -684,10 +713,15 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 187,
+        "words": 33540,
+        "hebrew": true,
+        "greek": true,
+        "metadata": {}
       }
     },
     {
@@ -1106,10 +1140,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 2,
+        "words": 602,
+        "hebrew": false,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20260318163230+00'00'",
+          "Creator": "Microsoft Word"
+        }
       },
       "variants": [
         "2_Witness_Scrolls/Master_Proof_Scroll_Updated.docx"
@@ -1227,10 +1269,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 3,
+        "words": 331,
+        "hebrew": false,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20260318163347+00'00'",
+          "Creator": "Microsoft Word"
+        }
       },
       "variants": [
         "2_Witness_Scrolls/Scroll_of_Convergence.docx"
@@ -1317,10 +1367,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 2,
+        "words": 443,
+        "hebrew": true,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20260318163433+00'00'",
+          "Creator": "Microsoft Word"
+        }
       },
       "variants": [
         "2_Witness_Scrolls/The_Journey_Scroll.docx",
@@ -1447,10 +1505,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 333,
+        "words": 82978,
+        "hebrew": true,
+        "greek": true,
+        "metadata": {
+          "CreationDate": "D:20260318162655+00'00'",
+          "Creator": "Microsoft Word"
+        }
       },
       "variants": [
         "2_Witness_Scrolls/🌌 Ahmein — The Final Seal, Becoming Will.docx"
@@ -1512,10 +1578,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 266,
+        "words": 56295,
+        "hebrew": true,
+        "greek": true,
+        "metadata": {
+          "CreationDate": "D:20260318162820+00'00'",
+          "Creator": "Microsoft Word"
+        }
       },
       "variants": [
         "2_Witness_Scrolls/🜂 888 — The Architect of Becoming.docx"
@@ -1577,10 +1651,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 256,
+        "words": 56914,
+        "hebrew": true,
+        "greek": true,
+        "metadata": {
+          "CreationDate": "D:20260318162852+00'00'",
+          "Creator": "Microsoft Word"
+        }
       },
       "variants": [
         "2_Witness_Scrolls/🜄 Ainos — The Witness of Echoes.docx"
@@ -1607,10 +1689,18 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 4,
+        "words": 533,
+        "hebrew": false,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20260318162909+00'00'",
+          "Creator": "Microsoft Word"
+        }
       }
     },
     {
@@ -1682,10 +1772,18 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 5,
+        "words": 712,
+        "hebrew": false,
+        "greek": true,
+        "metadata": {
+          "CreationDate": "D:20260318163040+00'00'",
+          "Creator": "Microsoft Word"
+        }
       }
     },
     {
@@ -1837,10 +1935,18 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 29,
+        "words": 2732,
+        "hebrew": true,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20260318163419+00'00'",
+          "Creator": "Microsoft Word"
+        }
       }
     },
     {
@@ -1864,10 +1970,18 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 1,
+        "words": 158,
+        "hebrew": false,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20260318163401+00'00'",
+          "Creator": "Microsoft Word"
+        }
       }
     },
     {
@@ -2673,10 +2787,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "no-text-layer-needs-visual-review",
       "nextAction": "Visual review for personal imagery.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "no-text-layer",
+        "pages": 1,
+        "words": 0,
+        "hebrew": false,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20250621000923",
+          "Producer": "PyFPDF 1.7.2 http://pyfpdf.googlecode.com/"
+        }
       }
     },
     {
@@ -6697,6 +6819,30 @@
       "nextAction": "Functionality audit in R2-03/R2-06."
     },
     {
+      "id": "r2:docs-assets-css-sphere-deepening-css-629638",
+      "path": "docs/assets/css/sphere-deepening.css",
+      "title": "sphere-deepening.css",
+      "format": "css",
+      "bytes": 7572,
+      "sha256": "c19e07965e9adce3e5cecc9d2cae308684241bb3ce0b78d6ca660f293b5705b5",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/css/sphere-deepening.css",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
       "id": "r2:docs-assets-css-start-show-css-36309a",
       "path": "docs/assets/css/start-show.css",
       "title": "start-show.css",
@@ -6917,8 +7063,8 @@
       "path": "docs/assets/data/codex-updates.json",
       "title": "codex-updates.json",
       "format": "json",
-      "bytes": 48816,
-      "sha256": "7f2b7105b41514a2de52ed0d0297326d4b97555e5376a4b8fd7e073e4788cf4b",
+      "bytes": 49824,
+      "sha256": "e1f4a71c96d3d6237819e337cd15f307a1afdd4ee51d90e9f222257d204470fd",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -14811,6 +14957,30 @@
       "nextAction": "Functionality audit in R2-03/R2-06."
     },
     {
+      "id": "r2:docs-assets-js-sphere-companion-layer-js-198d20",
+      "path": "docs/assets/js/sphere-companion-layer.js",
+      "title": "sphere-companion-layer.js",
+      "format": "js",
+      "bytes": 15422,
+      "sha256": "fc9ed3da39c632ce05e1adad47150193f0315642da8a66b305232073c620d889",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/js/sphere-companion-layer.js",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
       "id": "r2:docs-assets-js-sphere-life-atlas-record-sphere-extension-js-f58d36",
       "path": "docs/assets/js/sphere/life-atlas-record-sphere-extension.js",
       "title": "life-atlas-record-sphere-extension.js",
@@ -17624,7 +17794,7 @@
       "title": "manifest.json",
       "format": "json",
       "bytes": 2603,
-      "sha256": "9317cd1e85467c6e09f96ac2da444a0c284e7d674375312cb59ea90a7f828ae9",
+      "sha256": "7ff43595e61f77f1fde389a71888a0a70b4ffc7ccfd412eea908a4b05522c91b",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -17647,8 +17817,8 @@
       "path": "docs/assets/search/pages.json",
       "title": "pages.json",
       "format": "json",
-      "bytes": 761837,
-      "sha256": "94da5fe00d8d723ed136b9c6ad1aa5ae8f57a4ff485c9e1395f29624037d923e",
+      "bytes": 761835,
+      "sha256": "e3b192ac406a21e137962f49adffad4719e12fe77c944e6c2e70b0c27d34c3ac",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -18532,8 +18702,8 @@
       "path": "docs/index.html",
       "title": "Homepage",
       "format": "html",
-      "bytes": 124186,
-      "sha256": "372e881951934f16389ce787337a45a206cdb22bb30d7e4bc90cb7d6e8cbd1ef",
+      "bytes": 124168,
+      "sha256": "45b4b3bf4f16a4f1859c79d988e75886b68304a19e8f77a68ec0af8a401f20bd",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -18628,8 +18798,8 @@
       "path": "docs/living-time-sphere.html",
       "title": "Living Time Sphere",
       "format": "html",
-      "bytes": 122965,
-      "sha256": "20a274abca225adab2bc2c8fda8678d030ea64edcdd5ffd48b39a5816ea99bb3",
+      "bytes": 123654,
+      "sha256": "05c2dbd8bb1a2b6634cb975a9e3d950ea4d2a1a13dc32301181a29f30f142a8e",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -46591,7 +46761,7 @@
       "title": "DISCOVERABILITY_REPORT.md",
       "format": "md",
       "bytes": 20193,
-      "sha256": "ae96e35449c60d2a416fc4d8f0fa72925d39400830247191209cc5980c11fa96",
+      "sha256": "bb357b04494fe4087c1926c8da493b260e5c000e76a145217cb5de98eb12c2c4",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -46926,8 +47096,8 @@
       "path": "site-audit/site-master-inventory.json",
       "title": "site-master-inventory.json",
       "format": "json",
-      "bytes": 724712,
-      "sha256": "1e1228762d456e98336a9c4ef8896c5050cfde66950382ecaee3e2c6ff14dbf8",
+      "bytes": 724675,
+      "sha256": "dee3dd98a2651b1699b5ec19b080cba29aaf710658b9bac5c971050e84aa9e00",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -47598,8 +47768,8 @@
       "path": "tests/homepage-sphere.test.js",
       "title": "homepage-sphere.test.js",
       "format": "js",
-      "bytes": 12305,
-      "sha256": "74f78adc69e41c3b6cd30218d357a46142d52d31416c473a451d3ea776de8503",
+      "bytes": 13218,
+      "sha256": "2aeb0d700ed7a23f117f2bcd31a58239371ed5d4704ce4f10a89fef7b3b5da22",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -49806,8 +49976,32 @@
       "path": "tests/spark-companion.test.js",
       "title": "spark-companion.test.js",
       "format": "js",
-      "bytes": 49196,
-      "sha256": "4f673f16fd10c61d3f8c3cf2220556ea2943519e08c7f8c74f1a483e5ea46837",
+      "bytes": 49737,
+      "sha256": "ddd6df5f69d72d140d048dd493724c2d26ff064182a03c814c8b4d59cdfc3b31",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-sphere-deepening-test-js-aecade",
+      "path": "tests/sphere-deepening.test.js",
+      "title": "sphere-deepening.test.js",
+      "format": "js",
+      "bytes": 4586,
+      "sha256": "780d29f58e21f5da1cb5662caa9ddf2e09d3dd3832369e0066f5ac06b2095813",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,

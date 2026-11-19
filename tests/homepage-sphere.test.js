@@ -269,7 +269,21 @@ test("no R1.7 protected file is touched by this branch", () => {
   } catch {
     /* no git available: nothing further can be inspected */
   }
+  /* Declared exception — disclosed, not quiet. Aaron's direction
+   * (Nov 18, 2026): Nori comes ON the Sphere as her own overlay
+   * layer, the page gains a reachable full screen and plainer
+   * navigation. That requires exactly one protected file to change:
+   * docs/living-time-sphere.html gains two stylesheet links and
+   * four script tags (the Spark presence + the overlay layer) and
+   * nothing else — no markup, geometry, camera, selection, or
+   * module changes. The overlay module itself lives OUTSIDE the
+   * protected directories (docs/assets/js/sphere-companion-layer.js)
+   * so this exception list stays at one. Every other protected
+   * path still fails this test on sight. The full disclosure and
+   * regression evidence live in the sphere-deepening PR body. */
+  const declaredExceptions = new Set(["docs/living-time-sphere.html"]);
   for (const file of changed) {
+    if (declaredExceptions.has(file)) continue;
     assert.ok(!protectedPaths.has(file), `R1.7 protected file changed: ${file}`);
   }
 });

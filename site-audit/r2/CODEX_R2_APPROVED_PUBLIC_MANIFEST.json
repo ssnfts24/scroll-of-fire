@@ -280,6 +280,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/css/sphere-deepening.css",
+      "sha256": "c19e07965e9adce3e5cecc9d2cae308684241bb3ce0b78d6ca660f293b5705b5",
+      "publicUrl": "https://codexofreality.org/assets/css/sphere-deepening.css",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/css/start-show.css",
       "sha256": "331514c0c812d15bbd3bdb080f924b42dbdeb35ea8a7133805725fce125aa488",
       "publicUrl": "https://codexofreality.org/assets/css/start-show.css",
@@ -335,7 +341,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "7f2b7105b41514a2de52ed0d0297326d4b97555e5376a4b8fd7e073e4788cf4b",
+      "sha256": "e1f4a71c96d3d6237819e337cd15f307a1afdd4ee51d90e9f222257d204470fd",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -2086,6 +2092,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/js/sphere-companion-layer.js",
+      "sha256": "fc9ed3da39c632ce05e1adad47150193f0315642da8a66b305232073c620d889",
+      "publicUrl": "https://codexofreality.org/assets/js/sphere-companion-layer.js",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/js/sphere/life-atlas-record-sphere-extension.js",
       "sha256": "e0fd5e0f54fd7a7163e7fe4485424622277db6c84228efe51452c7dae526610e",
       "publicUrl": "https://codexofreality.org/assets/js/sphere/life-atlas-record-sphere-extension.js",
@@ -2789,13 +2801,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "9317cd1e85467c6e09f96ac2da444a0c284e7d674375312cb59ea90a7f828ae9",
+      "sha256": "7ff43595e61f77f1fde389a71888a0a70b4ffc7ccfd412eea908a4b05522c91b",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "94da5fe00d8d723ed136b9c6ad1aa5ae8f57a4ff485c9e1395f29624037d923e",
+      "sha256": "e3b192ac406a21e137962f49adffad4719e12fe77c944e6c2e70b0c27d34c3ac",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -2939,7 +2951,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "372e881951934f16389ce787337a45a206cdb22bb30d7e4bc90cb7d6e8cbd1ef",
+      "sha256": "45b4b3bf4f16a4f1859c79d988e75886b68304a19e8f77a68ec0af8a401f20bd",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
@@ -2963,7 +2975,7 @@
     },
     {
       "path": "docs/living-time-sphere.html",
-      "sha256": "20a274abca225adab2bc2c8fda8678d030ea64edcdd5ffd48b39a5816ea99bb3",
+      "sha256": "05c2dbd8bb1a2b6634cb975a9e3d950ea4d2a1a13dc32301181a29f30f142a8e",
       "publicUrl": "https://codexofreality.org/living-time-sphere.html",
       "status": "operational"
     },
