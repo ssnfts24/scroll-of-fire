@@ -99,6 +99,9 @@ body.ls-open { overflow: hidden; }
 .ls-chip {
   font: inherit;
   font-size: 0.85rem;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
   cursor: pointer;
   color: var(--muted, #b8b3a6);
   background: transparent;

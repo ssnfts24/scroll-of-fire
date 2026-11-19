@@ -26,6 +26,17 @@
   const HUB_URL = "assets/data/documentation-hub.json";
   const SVG_NS = "http://www.w3.org/2000/svg";
 
+  /* The hub list (documentation-hub.js) reads the same data file. Both
+     scripts share one fetch through this promise, so the file is
+     downloaded once per page; each reader clones the response before
+     reading it, so both keep their own error handling. */
+  function sharedHubResponse() {
+    if (!window.__codexHubResponse) {
+      window.__codexHubResponse = fetch(HUB_URL);
+    }
+    return window.__codexHubResponse.then(response => response.clone());
+  }
+
   /* ---------- symbols: one glyph per kind of evidence ---------- */
   const KINDS = {
     "map-change": {
@@ -285,6 +296,9 @@
       buckets.set(bucketKey, n + 1);
       const dy = [0, -13, 13, -7, 7][n % 5];
       const g = svgEl("g", { class: `hubp-dot ${entry.gradeStyle.cls}`, tabindex: "0", role: "button", "aria-label": `${entry.title} — ${entry.dates}` });
+      /* Invisible finger-size hit circle under the visible symbol: the
+         drawn disc stays 23 px wide, the tappable area reaches 44 px. */
+      g.append(svgEl("circle", { cx, cy: cy + dy, r: 26, class: "hubp-hit" }));
       g.append(svgEl("circle", { cx, cy: cy + dy, r: 13.5, class: "hubp-discface" }));
       const glyph = svgEl("g", { transform: `translate(${cx - 8.5}, ${cy + dy - 8.5}) scale(0.708)`, class: "hubp-glyphwrap" });
       glyph.innerHTML = KINDS[entry.kind].glyph;
@@ -492,7 +506,7 @@
     const clearBtn = document.querySelector("[data-hubp-chip-clear]");
     if (clearBtn) clearBtn.addEventListener("click", clearFilter);
     try {
-      const response = await fetch(HUB_URL);
+      const response = await sharedHubResponse();
       if (!response.ok) throw new Error(`Hub data could not be loaded (${response.status}).`);
       const hub = await response.json();
       const entries = hub.entries.map(entry => {

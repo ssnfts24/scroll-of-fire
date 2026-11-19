@@ -183,7 +183,11 @@
     }
 
     const hero = createImageFigure({
-      file: "app/splash-2732.webp",
+      /* Web-sized copy of the app splash (2732 px, 721 KB): the splash
+         file itself stays for the installed app; the page hero uses the
+         1200 px derivative so the first screen is not held up decoding
+         a launch image. */
+      file: "app/hero-1200.webp",
       alt: "Remnant 13 Moons living calendar",
       className: "moons-app-hero",
       eager: true

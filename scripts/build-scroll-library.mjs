@@ -244,9 +244,9 @@ const homepage = `<!doctype html>
     </section>
     <section id="scroll-library-explainer" style="max-width:880px;margin:2rem auto;">
       <div class="section-heading"><div><p class="eyebrow">Watch · The Explainer</p><h2>The Scroll of Fire, kept whole.</h2></div><p>A short spoken tour of the Unsealed Library: the complete manuscript in the author’s original words, its eight shelves, the research tools that trace every result back to the source line, and the evidence edition that keeps claims graded. Press play and let the page explain itself.</p></div>
-      <video controls preload="metadata" width="1280" height="720"
+      <video controls preload="none" width="1280" height="720"
         style="width:100%;height:auto;display:block"
-        src="../assets/media/scroll-library-explainer.mp4"
+        src="../assets/media/scroll-library-explainer.mp4" poster="../assets/media/scroll-library-explainer-poster.webp"
         aria-label="Video: the Scroll of Fire Unsealed Library, explained in plain words">
         Your browser does not support the video element. The same tour is
         written out across this page.
@@ -440,9 +440,9 @@ const lexiconPage = toolPage({
     <p class="more-row"><button type="button" class="ghost-button" data-lex-more hidden>Show more forms</button></p>
     <section id="lexicon-explainer" style="max-width:880px;margin:2rem auto;">
       <div class="section-heading"><div><p class="eyebrow">Watch · The Explainer</p><h2>Every Hebrew form, exactly as written.</h2></div><p>A short spoken tour of the Hebrew lexicon: the nine hundred eleven forms of the manuscript, what each entry shows, what this lexicon deliberately does not add, and the limits printed on its face. Press play and let the page explain itself.</p></div>
-      <video controls preload="metadata" width="1280" height="720"
+      <video controls preload="none" width="1280" height="720"
         style="width:100%;height:auto;display:block"
-        src="../assets/media/hebrew-lexicon-explainer.mp4"
+        src="../assets/media/hebrew-lexicon-explainer.mp4" poster="../assets/media/hebrew-lexicon-explainer-poster.webp"
         aria-label="Video: the Hebrew lexicon of the manuscript, explained in plain words">
         Your browser does not support the video element. The same tour is
         written out across this page.
@@ -467,9 +467,9 @@ const atlasPage = toolPage({
     <p>Follow scriptures, repeated passages, names, places, subjects, and years across the manuscript. Every link states <em>how</em> two things are related. A shared subject is a navigation aid, not proof of a historical or causal connection.</p>`,
   body: `    <section id="scroll-atlas-explainer" style="max-width:880px;margin:2rem auto;">
       <div class="section-heading"><div><p class="eyebrow">Watch · The Explainer</p><h2>Follow the connections, labelled by kind.</h2></div><p>A short spoken tour of the Reference Atlas: scriptures, repeated passages, names, places, subjects, and years traced across the manuscript — with every link stating how the two things are related. Press play and let the page explain itself.</p></div>
-      <video controls preload="metadata" width="1280" height="720"
+      <video controls preload="none" width="1280" height="720"
         style="width:100%;height:auto;display:block"
-        src="../assets/media/scroll-atlas-explainer.mp4"
+        src="../assets/media/scroll-atlas-explainer.mp4" poster="../assets/media/scroll-atlas-explainer-poster.webp"
         aria-label="Video: the Scroll Library Reference Atlas, explained in plain words">
         Your browser does not support the video element. The same tour is
         written out across this page.
@@ -508,9 +508,9 @@ const editorialPage = toolPage({
     <p class="editorial-links"><a href="evidence/register.md">Read the complete evidence register (Markdown)</a> · <a href="evidence/claim-register.json">Machine-readable claim register (JSON)</a> · <a href="archive/Full_Scroll_Unsealed.txt">Frozen original</a></p>
     <section id="evidence-explainer" style="max-width:880px;margin:2rem auto;">
       <div class="section-heading"><div><p class="eyebrow">Watch · The Explainer</p><h2>The author’s words, with their grades attached.</h2></div><p>A short spoken tour of the Editorial Edition: the expanded reading that preserves the author’s words in full while separating documented events, allegations, forecasts, and interpretation, claim by claim. Press play and let the page explain itself.</p></div>
-      <video controls preload="metadata" width="1280" height="720"
+      <video controls preload="none" width="1280" height="720"
         style="width:100%;height:auto;display:block"
-        src="../assets/media/evidence-edition-explainer.mp4"
+        src="../assets/media/evidence-edition-explainer.mp4" poster="../assets/media/evidence-edition-explainer-poster.webp"
         aria-label="Video: the Editorial reading and evidence edition, explained in plain words">
         Your browser does not support the video element. The same tour is
         written out across this page.

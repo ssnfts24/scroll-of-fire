@@ -580,7 +580,7 @@
     },
     {
       "id": "docs-assets:assets/img",
-      "title": "docs/assets/img (147 files)",
+      "title": "docs/assets/img (148 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -614,7 +614,7 @@
     },
     {
       "id": "docs-assets:assets/media",
-      "title": "docs/assets/media (72 files)",
+      "title": "docs/assets/media (143 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1782,7 +1782,6 @@
         "theory.html",
         "theory/canon.html",
         "theory/equations/eq10.html",
-        "theory/equations/eq11.html",
         "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/",
@@ -11375,10 +11374,10 @@
         "path": "theory/equations/eq11.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 9,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 8,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -13344,7 +13343,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (110 files)",
+      "title": "tests/ (111 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,

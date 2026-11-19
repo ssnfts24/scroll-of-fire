@@ -224,6 +224,15 @@ test("the launcher line is on content pages and off the protected and Scroll pag
   assert.match(launcher, /data-site-nav/);
 });
 
+test("the search index loads on first interaction, not when the UI is built", () => {
+  const script = fs.readFileSync(path.join(docs, "assets", "js", "living-search.js"), "utf8");
+  assert.match(script, /function ensureIndexStarted\(\)/, "the deferred starter exists");
+  assert.match(script, /addEventListener\("pointerdown", ensureIndexStarted\)/, "a tap in the box starts the index");
+  assert.match(script, /start: ensureIndexStarted/, "the overlay can start the index when it opens");
+  assert.ok(!/^ {4}loadInitial\(\(\) =>/m.test(script), "buildUI no longer starts the index load eagerly");
+  assert.match(script, /^ {6}loadInitial\(\(\) =>/m, "the only loadInitial call lives inside the starter");
+});
+
 test("the Living Search client is local-only: no remote endpoints in its scripts", () => {
   for (const name of ["living-search-core.js", "living-search-memory.js", "living-search.js", "living-search-launcher.js"]) {
     const script = fs.readFileSync(path.join(docs, "assets", "js", name), "utf8");

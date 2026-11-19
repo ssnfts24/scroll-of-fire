@@ -136,7 +136,7 @@
     let timer = null;
 
     function statusLine(extra = "") {
-      if (!state.manifest) { status.textContent = "Gathering the index…"; return; }
+      if (!state.manifest) { status.textContent = indexStarted ? "Gathering the index…" : ""; return; }
       const names = AREA_ORDER.map(area => state.loaded.has(area)
         ? `${AREA_LABELS[area]}s ${state.manifest.counts[area]}`
         : `${AREA_LABELS[area]}s …`);
@@ -223,6 +223,7 @@
     }
 
     async function run(record = false) {
+      ensureIndexStarted();
       const query = input.value.trim();
       const id = ++state.runId;
       if (!query) {
@@ -271,7 +272,9 @@
         : `${total} result${total === 1 ? "" : "s"}. `);
     }
 
+    input.addEventListener("pointerdown", ensureIndexStarted);
     input.addEventListener("input", () => {
+      ensureIndexStarted();
       clearTimeout(timer);
       timer = setTimeout(() => run(false), 120);
     });
@@ -286,6 +289,7 @@
     });
     container.querySelector(".ls-form").addEventListener("submit", event => { event.preventDefault(); run(true); });
     chips.forEach(chip => chip.addEventListener("click", () => {
+      ensureIndexStarted();
       chips.forEach(other => other.classList.toggle("is-active", other === chip));
       activeArea = chip.dataset.area || "";
       if (input.value.trim()) run(false);
@@ -315,11 +319,22 @@
       if (index !== activeIndex) setActive(index);
     });
 
-    loadInitial(() => { statusLine(); if (!input.value.trim()) renderHome(); }).catch(() => {
-      status.textContent = "The search index could not be loaded. The Atlas and Search the Scroll Library remain available from the navigation.";
-    });
+    /* The index (2.2 MB across its shards) used to load the moment this
+       UI was built, before a single letter was typed. Now it loads on
+       first interaction: a tap or keystroke in the box, a filter chip,
+       a search run, or the overlay being opened. The sealed counts line
+       on the search page is rendered by living-search-page.js from the
+       manifest alone and is unaffected. */
+    let indexStarted = false;
+    function ensureIndexStarted() {
+      if (indexStarted) return;
+      indexStarted = true;
+      loadInitial(() => { statusLine(); if (!input.value.trim()) renderHome(); }).catch(() => {
+        status.textContent = "The search index could not be loaded. The Atlas and Search the Scroll Library remain available from the navigation.";
+      });
+    }
     renderHome();
-    return { input, run, focus: () => input.focus() };
+    return { input, run, start: ensureIndexStarted, focus: () => input.focus() };
   }
 
   /* ---------------- overlay ---------------- */
@@ -342,6 +357,7 @@
     lastFocus = document.activeElement;
     overlay.hidden = false;
     document.body.classList.add("ls-open");
+    overlayUI.start();
     if (typeof initialQuery === "string" && initialQuery) {
       overlayUI.input.value = initialQuery;
       overlayUI.run(true);

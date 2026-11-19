@@ -13,6 +13,17 @@
 (function () {
   const HUB_URL = "assets/data/documentation-hub.json";
   const REGISTER_URL = "scroll/evidence/claim-register.json";
+
+  /* The pattern layer (documentation-hub-patterns.js) reads the same hub
+     data file. Both scripts share one fetch through this promise, so the
+     file is downloaded once per page; each reader clones the response
+     before reading it, so both keep their own error handling. */
+  function sharedHubResponse() {
+    if (!window.__codexHubResponse) {
+      window.__codexHubResponse = fetch(HUB_URL);
+    }
+    return window.__codexHubResponse.then(response => response.clone());
+  }
   const EDITORIAL_URL = "scroll/editorial.html";
 
   function element(tag, className, text) {
@@ -178,7 +189,7 @@
     const guide = document.querySelector("[data-hub-guide]");
     if (!sections || !count) return;
     try {
-      const [hubResponse, registerResponse] = await Promise.all([fetch(HUB_URL), fetch(REGISTER_URL)]);
+      const [hubResponse, registerResponse] = await Promise.all([sharedHubResponse(), fetch(REGISTER_URL)]);
       if (!hubResponse.ok) throw new Error(`Documentation hub data could not be loaded (${hubResponse.status}).`);
       if (!registerResponse.ok) throw new Error(`Claim register could not be loaded (${registerResponse.status}).`);
       const hub = await hubResponse.json();
