@@ -2,9 +2,9 @@
   "note": "Report only. downloads.html and its integrity history were not modified.",
   "snapshot": {
     "commit": "af3078a5fc2cc7969733ad9df1fcffd6754d974c",
-    "declaredFiles": 167,
-    "declaredSize": "208.44 MB",
-    "parsedRows": 167
+    "declaredFiles": 168,
+    "declaredSize": "210.01 MB",
+    "parsedRows": 168
   },
   "current": {
     "files": 194,
@@ -12,7 +12,7 @@
   },
   "counts": {
     "added": 27,
-    "removed": 0,
+    "removed": 1,
     "changed": 0,
     "unchanged": 167
   },
@@ -45,7 +45,9 @@
     "TEMPORAL-STRATA-PATCH.txt",
     "index.md"
   ],
-  "removed": [],
+  "removed": [
+    "3_Living_Technology/Living-Phone-App.apk"
+  ],
   "changed": [],
   "outsideSnapshotScope": 20
 }
