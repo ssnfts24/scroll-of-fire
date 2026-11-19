@@ -329,7 +329,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "f147de9bf24f0b7cba4007fe6aa34607287a820517cf4cf2b5a562e59f32d2e1",
+      "sha256": "1e4d8b01e24beecf265dafe8a66aac739ae0e961755bce4b442675c6d43a7568",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -2422,6 +2422,54 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/media/eq10-explainer.mp4",
+      "sha256": "c6ddbf8331ecee240f6d203ddda2513ddbc2d02178475fba90efd7bcaae18dea",
+      "publicUrl": "https://codexofreality.org/assets/media/eq10-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/eq11-explainer.mp4",
+      "sha256": "e72c66eb62c5784b530352490b29448db81c0cc506b64b3b4a83c62bd8765acf",
+      "publicUrl": "https://codexofreality.org/assets/media/eq11-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/eq12-explainer.mp4",
+      "sha256": "4ca344363e0ad4e3882c5aeccaf88da12e810441837798ef66e077c2358e48bd",
+      "publicUrl": "https://codexofreality.org/assets/media/eq12-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/eq13-explainer.mp4",
+      "sha256": "c54e2e3b04f2a739b418ff305af97a71304c89458d5fe365a6ea4419a618b118",
+      "publicUrl": "https://codexofreality.org/assets/media/eq13-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/eq14-explainer.mp4",
+      "sha256": "89546c151b46dc848f68c21bd023657c81a6c8aec4408800fa848ae607f71948",
+      "publicUrl": "https://codexofreality.org/assets/media/eq14-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/eq15-explainer.mp4",
+      "sha256": "3eafcd1277886f12cd565ddd028b055992fd4c34bcd797281381419e97eb99ff",
+      "publicUrl": "https://codexofreality.org/assets/media/eq15-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/eq16-explainer.mp4",
+      "sha256": "90d7e843ab8ae35df1db49068b969b881a2f5874ff41d713dbd6d9414910bc7e",
+      "publicUrl": "https://codexofreality.org/assets/media/eq16-explainer.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/eq17-explainer.mp4",
+      "sha256": "23b9538f10723966298d6c86c34d883979df764fcf38f1f8a616572f11a5ae70",
+      "publicUrl": "https://codexofreality.org/assets/media/eq17-explainer.mp4",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/media/equinox-passage-explainer.mp4",
       "sha256": "9cbd4ed2e6064b0ba26efa3a60ae6966297870f4243253493e249626b88f0921",
       "publicUrl": "https://codexofreality.org/assets/media/equinox-passage-explainer.mp4",
@@ -2699,13 +2747,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "f3fbd34dbf27ba8b4ff77124ce31730ce7361cb56e8b0149e7c548c8b853eef2",
+      "sha256": "3889a60a799328b4246ba848cb394060db396fa29b9ac2d0fc0911ef7ae2fd47",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "ca9aad7582055af5db60df9990845f8c5e5834fed669bb389d70d62311fe6296",
+      "sha256": "de7c2ade2a75b8cacb42d639f66664d5b34f5fda77f2c69df5e3bf6aef704c4d",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -2843,7 +2891,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "399ca41d7c3868ec5e55f870cf04f0b1c4d649d0a5cd8caa243390e9c40e27a3",
+      "sha256": "a55dca77963c8da1a97e6bc75a8129b02a0f56e8f7a1d61ee605101145d59e0d",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
@@ -9329,49 +9377,49 @@
     },
     {
       "path": "docs/theory/equations/eq10.html",
-      "sha256": "4ec8e9f109d0e2e291918c548b64361963d2195fe120c97402069c9d43aeddaf",
+      "sha256": "9f9a8d725ac0294fe7158e83bd1c4b45acbd2c9b3e73ba89096b1fa741b552e9",
       "publicUrl": "https://codexofreality.org/theory/equations/eq10.html",
       "status": "unverified"
     },
     {
       "path": "docs/theory/equations/eq11.html",
-      "sha256": "f27be6e9e24f88777e8557093ab82541f58ad1bedfbdd60723fb9e5435841df8",
+      "sha256": "25d1c9bb059e789f7660394d233cd0f725eaeedddc263d5c3719cd6f123f135d",
       "publicUrl": "https://codexofreality.org/theory/equations/eq11.html",
       "status": "unverified"
     },
     {
       "path": "docs/theory/equations/eq12.html",
-      "sha256": "86bc99ad1af82937d498923824b9a6cfea923b76e6fe0be738d305cb47c3d4fd",
+      "sha256": "c3a10bcaba7422588a86f86a96bd86d876d70fc060a3da8cb93d20eac4df8022",
       "publicUrl": "https://codexofreality.org/theory/equations/eq12.html",
       "status": "unverified"
     },
     {
       "path": "docs/theory/equations/eq13.html",
-      "sha256": "d3a346c7dd5c71c52aefb739dc14b4f7ec54947b2acffb4611a62cc3dbe3dd90",
+      "sha256": "b41242b8e8bfe3f764c678c85437d728ef7a499869ba234f9d1582de7c9d9aa4",
       "publicUrl": "https://codexofreality.org/theory/equations/eq13.html",
       "status": "unverified"
     },
     {
       "path": "docs/theory/equations/eq14.html",
-      "sha256": "604b2a7aa59ff822d187cd28b06e1f7f286d7a385bb4c3b6b87983ccd1d9a629",
+      "sha256": "d1cb8e898861505c1642dd2d7fe3fa854a726b8e75d20b5a47c6c6d0ab2950d0",
       "publicUrl": "https://codexofreality.org/theory/equations/eq14.html",
       "status": "unverified"
     },
     {
       "path": "docs/theory/equations/eq15.html",
-      "sha256": "31d587c67df43ad2d7be8fbe7c1c96885b1ac636add11f5de9c8598b9f920323",
+      "sha256": "b4b46addc7c8b4a67e7a406b0c14b82a57a77c299cc7fe3d0bc210a7fdf1ea7d",
       "publicUrl": "https://codexofreality.org/theory/equations/eq15.html",
       "status": "unverified"
     },
     {
       "path": "docs/theory/equations/eq16.html",
-      "sha256": "6842b44b05453960acd2486119c0ab02cad7e3e45e5207ab979693e26f69e0a7",
+      "sha256": "7a003c642b5a31e3f2a26d67d6e67d5b328d7a6161b9ba0705a6d1be63ccb900",
       "publicUrl": "https://codexofreality.org/theory/equations/eq16.html",
       "status": "unverified"
     },
     {
       "path": "docs/theory/equations/eq17.html",
-      "sha256": "2afbbf5c5be58cdca9769ae9b378838002f4699736ffa57dfe4db96101273d63",
+      "sha256": "248b2eb7f6b4763fbe08cb4893f67c1f9501f72124becbe8f1c0bdd66dd4f587",
       "publicUrl": "https://codexofreality.org/theory/equations/eq17.html",
       "status": "unverified"
     },
