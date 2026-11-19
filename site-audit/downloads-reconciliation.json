@@ -7,14 +7,14 @@
     "parsedRows": 168
   },
   "current": {
-    "files": 194,
-    "sizeMB": 230.6
+    "files": 195,
+    "sizeMB": 232.17
   },
   "counts": {
     "added": 27,
-    "removed": 1,
+    "removed": 0,
     "changed": 0,
-    "unchanged": 167
+    "unchanged": 168
   },
   "added": [
     "ADVANCED-REBUILD-HANDOFF.md",
@@ -45,9 +45,7 @@
     "TEMPORAL-STRATA-PATCH.txt",
     "index.md"
   ],
-  "removed": [
-    "3_Living_Technology/Living-Phone-App.apk"
-  ],
+  "removed": [],
   "changed": [],
   "outsideSnapshotScope": 20
 }

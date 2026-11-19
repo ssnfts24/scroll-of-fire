@@ -3,7 +3,7 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 473,
+    "resources": 474,
     "publicHtmlPages": 178,
     "catalogEntries": 71,
     "issueCounts": {
@@ -13424,7 +13424,7 @@
     },
     {
       "id": "repo-folder:3_Living_Technology",
-      "title": "3_Living_Technology/ (15 files)",
+      "title": "3_Living_Technology/ (16 files)",
       "description": "Numbered archive folder listed file-by-file in the Downloads catalog.",
       "category": "Numbered archive folder",
       "area": "archive",
@@ -14732,6 +14732,27 @@
       ],
       "sourcePath": "3_Living_Technology/Living_Cosmos_Field_Guide_v2_Public.md",
       "publicUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/Living_Cosmos_Field_Guide_v2_Public.md",
+      "publicationStatus": "archived",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "docs/downloads.html"
+      ],
+      "canonicalUrl": "",
+      "privacyEligibility": "published-via-downloads",
+      "discoverability": null,
+      "issues": []
+    },
+    {
+      "id": "repo:3_Living_Technology/Living-Phone-App.apk",
+      "title": "Living-Phone-App.apk",
+      "description": "Archived file from 3_Living_Technology; listed in the Downloads integrity catalog.",
+      "category": "Numbered archive file",
+      "area": "archive",
+      "relatedProjects": [
+        "downloads"
+      ],
+      "sourcePath": "3_Living_Technology/Living-Phone-App.apk",
+      "publicUrl": "https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/Living-Phone-App.apk",
       "publicationStatus": "archived",
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
