@@ -115,6 +115,18 @@ function buildScrolls() {
   const segmentData = readJson("docs", "scroll", "data", "reader-segments.json");
   const shelfTitle = new Map(library.shelves.map(shelf => [shelf.id, shelf.title]));
   const sectionById = new Map(library.sections.map(section => [section.id, section]));
+  /* The library already knows which sections repeat a heading across the
+   * Scroll (duplicateGroups). Carry that key into the index as `g` so
+   * Living Search folds those repeats with the library's own grouping
+   * instead of inventing a second one. Every scroll entry also names its
+   * home (`w`: the Scroll and the shelf it sits in) and its place (`p`:
+   * section or passage, and the line it starts on), so a result never
+   * appears as a bare repeated title with no sign of where it lives. */
+  const groupBySection = new Map();
+  for (const group of library.duplicateGroups || []) {
+    for (const sectionId of group.sectionIds || []) groupBySection.set(sectionId, group.key);
+  }
+  const workOf = section => `Scroll of Fire · ${shelfTitle.get(section?.shelf) || "Scroll"} shelf`;
   const docsOut = [];
   for (const section of library.sections) {
     const firstSegment = section.segmentIds?.[0];
@@ -122,7 +134,10 @@ function buildScrolls() {
       i: `sec:${section.id}`, a: "scrolls", t: section.title,
       u: `scroll/reader.html?section=${encodeURIComponent(section.id)}${firstSegment ? `#${encodeURIComponent(firstSegment)}` : ""}`,
       h: [shelfTitle.get(section.shelf) || "", section.genesisChapter ? `Genesis ${section.genesisChapter}` : "", section.label || ""].filter(Boolean).join(" "),
-      b: "", x: shelfTitle.get(section.shelf) || ""
+      b: "", x: "",
+      w: workOf(section),
+      p: section.line ? `section, line ${section.line}` : "section",
+      ...(groupBySection.has(section.id) ? { g: groupBySection.get(section.id) } : {})
     });
   }
   for (const segment of segmentData.segments) {
@@ -132,7 +147,10 @@ function buildScrolls() {
       u: `scroll/reader.html?section=${encodeURIComponent(segment.sectionId)}#${encodeURIComponent(segment.id)}`,
       h: [section ? shelfTitle.get(section.shelf) || "" : "", segment.genesisChapter ? `Genesis ${segment.genesisChapter}` : ""].filter(Boolean).join(" "),
       b: String(segment.text || "").slice(0, SEGMENT_BODY_CAP),
-      x: section?.title || ""
+      x: "",
+      w: section ? workOf(section) : "Scroll of Fire",
+      p: segment.lineStart ? `passage, line ${segment.lineStart}` : "passage",
+      ...(groupBySection.has(segment.sectionId) ? { g: groupBySection.get(segment.sectionId) } : {})
     });
   }
   return docsOut.sort((a, b) => a.i.localeCompare(b.i));
