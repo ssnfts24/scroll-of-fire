@@ -57,7 +57,6 @@
 | Script | Referenced output paths (first 8) |
 | --- | --- |
 | `scripts/apply-living-nav.mjs` | `docs/living-time-sphere.html`, `docs/404.html`, `docs/offline.html`, `docs/caravan.html` |
-| `scripts/apply-spark-presence.mjs` | `docs/living-time-sphere.html`, `docs/404.html`, `docs/offline.html`, `docs/caravan.html`, `docs/companions.html` |
 | `scripts/audit-site.mjs` | — |
 | `scripts/build-r2-inventory.mjs` | `site-audit/r2/document-extracts.json`, `docs/scroll/archive/Full_Scroll_Unsealed.txt`, `docs/development/TEMPORAL-AUTHORITY-CONTRACT.md` |
 | `scripts/build-scroll-editorial.mjs` | `docs/scroll/data/editorial-edition.json`, `docs/scroll/evidence/claim-register.json`, `docs/scroll/evidence/register.md` |
@@ -83,11 +82,10 @@
 
 | Stylesheet | Pages |
 | --- | --- |
-| `docs/assets/css/spark-companion.css` | 172 |
-| `docs/assets/css/living-ui.css` | 131 |
+| `docs/assets/css/living-ui.css` | 130 |
 | `docs/scripture/assets/scripture.css` | 93 |
-| `docs/assets/css/codex.css` | 42 |
-| `docs/assets/css/navigation.css` | 35 |
+| `docs/assets/css/codex.css` | 41 |
+| `docs/assets/css/navigation.css` | 34 |
 | `docs/assets/css/animations.css` | 19 |
 | `docs/theory/equations/assets/css/codex.css` | 19 |
 | `docs/theory/equations/assets/css/navigation.css` | 19 |
@@ -95,21 +93,22 @@
 | `docs/theory/equations/assets/css/living-ui.css` | 19 |
 | `docs/theory/assets/css/codex.css` | 15 |
 | `docs/theory/assets/css/navigation.css` | 15 |
+| `docs/theory/assets/css/theory.css` | 15 |
 
 | Script | Pages |
 | --- | --- |
-| `docs/assets/js/spark-companion.js` | 172 |
-| `docs/assets/js/spark-presence.js` | 171 |
-| `docs/assets/js/site.js` | 134 |
-| `docs/assets/js/living-ui.js` | 131 |
+| `docs/assets/js/site.js` | 133 |
+| `docs/assets/js/living-ui.js` | 130 |
 | `docs/scripture/assets/scripture.js` | 93 |
-| `docs/assets/js/spark-3d.js` | 73 |
-| `docs/assets/js/living-search-launcher.js` | 28 |
+| `docs/assets/js/calendar/pattern-calendar-version.js` | 32 |
+| `docs/assets/js/calendar/pattern-calendar-data.js` | 32 |
+| `docs/assets/js/calendar/pattern-calendar-format.js` | 32 |
+| `docs/assets/js/calendar/pattern-calendar-boundary.js` | 32 |
+| `docs/assets/js/calendar/pattern-calendar.js` | 32 |
+| `docs/assets/js/living-search-launcher.js` | 30 |
 | `docs/assets/js/living-codex.js` | 19 |
 | `docs/theory/equations/https:/cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js` | 19 |
 | `docs/theory/equations/assets/js/site.js` | 19 |
-| `docs/theory/equations/assets/js/living-search-launcher.js` | 19 |
-| `docs/theory/equations/assets/js/theory.js` | 19 |
 
 ## Protected systems (do not modify)
 

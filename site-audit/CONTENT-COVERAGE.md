@@ -58,7 +58,7 @@ Practice tools, frequency systems and the Codex hub for building.
 Theory chapters, the claim register and the editorial evidence edition.
 
 - **Editorial Evidence Edition** — Live; Reading edition of the political chapters with a claim register, evidence statuses and original-line links.
-- **Claim Register** — Live; Machine-readable register of 21 prioritised claims with sources and review status.
+- **Claim Register** — Live; The Codex's own 21 prioritised claims in readable form: exact quotes, evidence grades and source-review status, each claim linked to its place in the Evidence Edition. The machine-readable register is linked from the Documentation Hub.
 - **Documentation Hub** — Live; Documented claims and facts in one hub: government, corporations, the Epstein record, Tesla, orphan trains, the Old World, and the Codex's own 21-claim register — each entry tied to a named source and graded by the state of its evidence.
 - **Evidence Register (readable)** — Live; Human-readable evidence register with exact quotes and line references.
 - **Theory Hub** — Live; Master Equation, Unified Field, Canon 0–17, operators and the Δ framework.

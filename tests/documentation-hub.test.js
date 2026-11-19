@@ -26,7 +26,8 @@ test("documentation hub page carries the unified nav, the hub mounts, and a no-J
   assert.ok(page.includes("data-hub-filters"), "page has no filter form");
   assert.match(page, /<noscript>[\s\S]*?scroll\/editorial\.html[\s\S]*?scroll\/evidence\/register\.md[\s\S]*?scroll\/evidence\/claim-register\.json[\s\S]*?<\/noscript>/);
   assert.ok(page.includes("https://codexofreality.org/claims-atlas.html"), "page lacks its canonical URL");
-  assert.ok(page.includes("The historical timeline"), "page does not say the timeline is still planned");
+  assert.ok(page.includes('href="timeline.html"'), "page does not link the standing historical timeline");
+  assert.ok(page.includes("now stands"), "page does not say the timeline now stands");
 });
 
 test("hub script renders only from the two data files and deep-links register claims", () => {
