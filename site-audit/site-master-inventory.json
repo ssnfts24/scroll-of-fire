@@ -512,7 +512,7 @@
     },
     {
       "id": "docs-assets:assets/css",
-      "title": "docs/assets/css (49 files)",
+      "title": "docs/assets/css (50 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -597,7 +597,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (165 files)",
+      "title": "docs/assets/js (166 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1782,7 +1782,6 @@
         "theory.html",
         "theory/canon.html",
         "theory/equations/eq10.html",
-        "theory/equations/eq11.html",
         "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/",
@@ -11375,10 +11374,10 @@
         "path": "theory/equations/eq11.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 9,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 8,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []

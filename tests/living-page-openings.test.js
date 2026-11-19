@@ -253,9 +253,11 @@ test("the living line never invents a coordinate", () => {
   assert.match(js, /toLocaleDateString\("en-US"/,
     "the civil date line is always available as the fallback");
   // Pages without temporal code load no calendar: the line stays civil-only.
-  const shop = read("docs/shop.html");
+  // (The main house, shop included, gained the calendar with the Living Moon
+  // Theme so every room can change with the moon; 404.html still carries none.)
+  const shop = read("docs/404.html");
   assert.ok(!shop.includes("pattern-calendar"),
-    "shop.html carries no PatternCalendar, so its opening shows the civil date only");
+    "404.html carries no PatternCalendar, so its opening shows the civil date only");
   // A page that does carry the calendar gets the full coordinate.
   const moons = read("docs/moons.html");
   assert.ok(moons.includes("pattern-calendar"),
