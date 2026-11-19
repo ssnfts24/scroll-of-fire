@@ -674,6 +674,23 @@
       "publicationEligibility": "approved-public"
     },
     {
+      "id": "claims-atlas",
+      "title": "Documentation Hub",
+      "description": "Documented claims and facts in one hub: government, corporations, the Epstein record, Tesla, orphan trains, the Old World, and the Codex's own 21-claim register — each entry tied to a named source and graded by the state of its evidence.",
+      "area": "evidence",
+      "category": "Evidence",
+      "resourceType": "tool",
+      "status": "live",
+      "path": "claims-atlas.html",
+      "url": "https://codexofreality.org/claims-atlas.html",
+      "related": [
+        "scroll-editorial",
+        "claim-register"
+      ],
+      "featured": true,
+      "publicationEligibility": "approved-public"
+    },
+    {
       "id": "evidence-register",
       "title": "Evidence Register (readable)",
       "description": "Human-readable evidence register with exact quotes and line references.",
@@ -1169,6 +1186,7 @@
       "url": "https://codexofreality.org/timeline.html",
       "related": [
         "scroll-editorial",
+        "claims-atlas",
         "scroll-library"
       ],
       "featured": false,

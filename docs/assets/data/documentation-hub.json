@@ -1,0 +1,1423 @@
+{
+ "schemaVersion": 1,
+ "title": "Documentation Hub",
+ "compiled": "2026-11-18",
+ "about": "Every entry in this hub is tied to a named, checkable source that was opened and read. Grades follow the Claim Register's evidence scheme. An entry documents what its source shows — nothing more. Interpretation is labeled where it appears.",
+ "domains": [
+  {
+   "id": "government",
+   "label": "Government",
+   "blurb": "Documented programs, orders, court rulings, and official findings — from declassified files, committee reports, and the government's own records."
+  },
+  {
+   "id": "corporations",
+   "label": "Corporations",
+   "blurb": "Documented outcomes only: court judgments, guilty pleas, regulatory orders, fines, and settlements. An accusation is labeled as an accusation."
+  },
+  {
+   "id": "epstein",
+   "label": "The Epstein Record",
+   "blurb": "The documented record of the Epstein cases: the plea agreement, the indictment, the rulings, the conviction of Maxwell, and what the released documents do and do not show."
+  },
+  {
+   "id": "tesla",
+   "label": "Nikola Tesla",
+   "blurb": "Tesla's documented record — patents, contracts, the FBI file, and the court cases — kept apart from the mythology that grew around him."
+  },
+  {
+   "id": "orphan-trains",
+   "label": "Orphan Trains",
+   "blurb": "The documented history of the placing-out era, 1854–1929: the agencies, the scale as historians document it, and the records a descendant can still find."
+  },
+  {
+   "id": "old-world",
+   "label": "Old World, 1800–1930",
+   "blurb": "Documented anchors for the Old World investigation: fires, fairs, forts, asylums, and demolitions as the record states them. The facts are the floor; hypotheses are labeled as hypotheses."
+  },
+  {
+   "id": "bench",
+   "label": "From the Bench",
+   "blurb": "Aaron's own artifacts and claims, documented in the Codex's own pages and graded by the same rule as everything else here."
+  },
+  {
+   "id": "register",
+   "label": "The Claim Register",
+   "blurb": "The Codex's own 21 claims, each graded by the state of its evidence, opening its full record on the Evidence Edition."
+  }
+ ],
+ "entries": [
+  {
+   "id": "GOV-MKULTRA-001",
+   "domain": "government",
+   "title": "MKULTRA — CIA program of research in behavioral modification",
+   "statement": "The CIA ran Project MKULTRA, an umbrella program for research on drugs and behavioral modification that included covert drug tests on unwitting subjects.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Program 1953–1964, per CIA Director testimony; joint Senate hearing August 3, 1977",
+   "sources": [
+    {
+     "name": "U.S. Senate Joint Hearing, Project MKULTRA (govinfo.gov)",
+     "url": "https://www.govinfo.gov/content/pkg/CHRG-95shrg96408O/text/CHRG-95shrg96408O.txt"
+    }
+   ],
+   "shows": "CIA Director Stansfield Turner testified the project ran 1953–1964 and that seven boxes of documents had been discovered, covering 149 subprojects, many connected with behavioral modification, drug acquisition and testing, or administering drugs surreptitiously. Senator Kennedy's opening statement records testimony that over 30 universities and institutions were involved, LSD was administered to unwitting subjects, and at least one death, that of Dr. Frank Olson, resulted. The hearing record does not show that reliable mind control was achieved."
+  },
+  {
+   "id": "GOV-MKULTRA-DESTROY-002",
+   "domain": "government",
+   "title": "MKULTRA — destruction of records in 1973",
+   "statement": "Most MKULTRA records were destroyed in 1973 on the instruction of then-CIA Director Richard Helms, before surviving financial records were found.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Destruction January 1973; surviving records discovered and disclosed to Congress in 1977",
+   "sources": [
+    {
+     "name": "U.S. Senate Joint Hearing, Project MKULTRA (govinfo.gov)",
+     "url": "https://www.govinfo.gov/content/pkg/CHRG-95shrg96408O/text/CHRG-95shrg96408O.txt"
+    }
+   ],
+   "shows": "The 1977 hearing states the records were destroyed in January 1973 at Helms's instruction, and that until the new discovery it was believed all MKULTRA files on behavioral modification had been destroyed in 1973 on the orders of the retiring Chief of the Office of Technical Services, with the then-Director's authorization. The destruction is documented; what the destroyed files contained is not recoverable from this record and cannot be filled in by speculation."
+  },
+  {
+   "id": "GOV-COINTELPRO-001",
+   "domain": "government",
+   "title": "COINTELPRO — FBI covert action to disrupt and discredit domestic groups",
+   "statement": "The FBI ran COINTELPRO, a covert-action program designed to disrupt and discredit groups and individuals deemed a threat to the social order.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Program 1956–1971; Church Committee final report April 29, 1976",
+   "sources": [
+    {
+     "name": "U.S. Senate Historical Office — Church Committee",
+     "url": "https://www.senate.gov/artandhistory/history/common/investigations/ChurchCommittee.htm"
+    }
+   ],
+   "shows": "The Senate page states committee staff researched COINTELPRO under that definition and that targets included the Southern Christian Leadership Conference, the anti-Vietnam War movement, Martin Luther King, Jr., and local, state, and federal elected officials. The committee held 126 full meetings, interviewed some 800 witnesses, reviewed 110,000 documents, and concluded intelligence agencies had undermined citizens' constitutional rights. The page documents the program and its targets; it does not by itself prove every later claim made under the COINTELPRO name."
+  },
+  {
+   "id": "GOV-MLK-LETTER-001",
+   "domain": "government",
+   "title": "FBI surveillance of Martin Luther King, Jr. — the anonymous 1964 letter and tape package",
+   "statement": "In November 1964 the FBI sent Dr. Martin Luther King, Jr. an anonymous package containing a tape and a letter ending with the words \"There is but one way out for you.\"",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Package November 1964; reproduced in Church Committee Final Report Book III, 1976",
+   "sources": [
+    {
+     "name": "Church Committee Book III / FBI Vault transcription — The Classified Record",
+     "url": "https://theclassifiedrecord.com/documents/cointelpro/primary-documents"
+    }
+   ],
+   "shows": "The transcription reproduces the letter in full (Book III, pp. 158–161), states it was obtained by the Committee from FBI files, and records the Committee's finding on authorship in the FBI's Domestic Intelligence Division. It also records 295 COINTELPRO actions against King and the SCLC documented by the Committee. The word \"suicide\" does not appear in the quoted closing; that King and his associates interpreted it as urging suicide is the recorded interpretation, not a word in the letter itself."
+  },
+  {
+   "id": "GOV-NORTHWOODS-001",
+   "domain": "government",
+   "title": "Operation Northwoods — Joint Chiefs memorandum on pretexts for intervention in Cuba",
+   "statement": "On March 13, 1962, the Joint Chiefs of Staff forwarded to the Secretary of Defense a Top Secret memorandum proposing pretexts that would provide justification for U.S. military intervention in Cuba.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Memorandum March 13, 1962; declassified through the JFK Assassination Records Review Board process, made public November 18, 1997",
+   "sources": [
+    {
+     "name": "Joint Chiefs of Staff Memorandum, JCS 1969/321 — National Security Archive transcription",
+     "url": "https://theclassifiedrecord.com/documents/operation-northwoods/primary-documents"
+    }
+   ],
+   "shows": "The cover memorandum, signed for the Joint Chiefs by Chairman L. L. Lemnitzer, forwards the attached Cuba Project memorandum as a preliminary submission suitable for planning purposes. The appended proposals describe manufactured incidents intended to place the United States in the apparent position of suffering defensible grievances from Cuba. The document is a proposal that was forwarded for planning; this record does not show the proposals were approved or carried out."
+  },
+  {
+   "id": "GOV-TUSKEGEE-001",
+   "domain": "government",
+   "title": "U.S. Public Health Service untreated syphilis study at Tuskegee",
+   "statement": "From 1932 to 1972 the U.S. Public Health Service studied untreated syphilis in Black men in Macon County, Alabama, without informed consent and without offering treatment even after it was easily available.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Study 1932–1972; ended 1972 on recommendation of an Ad Hoc Advisory Panel; formal Presidential Apology 1997",
+   "sources": [
+    {
+     "name": "Centers for Disease Control and Prevention — About the Untreated Syphilis Study at Tuskegee",
+     "url": "https://www.cdc.gov/tuskegee/about/index.html"
+    }
+   ],
+   "shows": "CDC states researchers did not collect informed consent and did not offer treatment even after it was easily available, and that participants were not offered penicillin after it became widely available. CDC's FAQ, citing a 1936 journal article, states the 399 men in the syphilitic group were recruited because they already had late-latent syphilis and the 201 controls did not have the disease — CDC records no evidence men were purposefully infected for this study, a common claim that outruns this record. President Clinton issued a formal Presidential Apology in 1997."
+  },
+  {
+   "id": "GOV-RADIATION-001",
+   "domain": "government",
+   "title": "U.S. human radiation experiments — the ACHRE report",
+   "statement": "Between 1944 and 1974 the federal government sponsored several thousand human radiation experiments, identified by a presidential advisory committee from government documents.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Experiments 1944–1974; committee appointed January 15, 1994; final report October 1995",
+   "sources": [
+    {
+     "name": "Advisory Committee on Human Radiation Experiments — Executive Summary (U.S. Department of Energy)",
+     "url": "https://ehss.energy.gov/OHRE/roadmap/achre/summary.html"
+    }
+   ],
+   "shows": "ACHRE states recovered documents enabled it to identify nearly 4,000 experiments, that most involved tracer amounts unlikely to have caused physical harm, and that consent rules recognized by the AEC, Defense, and NIH were evidenced mainly in research with healthy subjects, not generally. Case-study categories included plutonium experiments, nontherapeutic research on children, total-body irradiation, research on prisoners, and intentional environmental releases. The report distinguishes these documented categories; it does not support treating every radiation study as equally harmful."
+  },
+  {
+   "id": "GOV-PAPERCLIP-001",
+   "domain": "government",
+   "title": "Operation Paperclip — the foreign scientist program",
+   "statement": "The Joint Intelligence Objectives Agency operated a foreign scientist program, first code-named Overcast and then Paperclip, that brought over 1,500 German and other foreign scientists, technicians, and engineers to the United States.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "JIOA established 1945, disbanded 1962; Foreign Scientist Case Files 1945–1958",
+   "sources": [
+    {
+     "name": "National Archives — Records of the Secretary of Defense (RG 330)",
+     "url": "https://www.archives.gov/iwg/declassified-records/rg-330-defense-secretary"
+    }
+   ],
+   "shows": "NARA states the JIOA was given direct responsibility for operating the program, administering its policies, and compiling dossiers, and that the case-file series consists of personnel dossiers on over 1,500 people brought under Project Paperclip and similar programs. NARA names dossiers including Georg Rickhey, Walter Schreiber, and Arthur Rudolph, and notes Wernher von Braun's dossier was never transferred to NARA. The record documents recruitment and dossiers; individual culpability varies by person and is not established by inclusion alone."
+  },
+  {
+   "id": "GOV-TONKIN-001",
+   "domain": "government",
+   "title": "Gulf of Tonkin — NSA release and the Hanyok study of the August 4, 1964 incident",
+   "statement": "NSA released previously classified Gulf of Tonkin material in 2005–2006, including historian Robert J. Hanyok's study concluding the full signals-intelligence record would have told the story that no attack happened on August 4, 1964.",
+   "grade": "disputed-interpretation",
+   "dates": "Incidents August 2–4, 1964; Hanyok study written 2000–2001; NSA releases November 30, 2005 and May 30, 2006",
+   "sources": [
+    {
+     "name": "National Security Agency — Gulf of Tonkin Historical Releases",
+     "url": "https://www.nsa.gov/Helpful-Links/NSA-FOIA/Declassification-Transparency-Initiatives/Historical-Releases/Gulf-of-Tonkin/smdpage14697/4/"
+    }
+   ],
+   "shows": "NSA's release page confirms the 2005 and 2006 installments — articles, chronologies, oral histories, SIGINT reports and translations — and states opinions in the documents are those of the authors and do not necessarily represent NSA's official views. Hanyok's conclusion about skewed SIGINT reporting is therefore an attributed historian's conclusion; whether senior officials personally knew no attack had occurred is a separate, contested intent question not settled by the release page."
+  },
+  {
+   "id": "GOV-PENTAGON-001",
+   "domain": "government",
+   "title": "Pentagon Papers — New York Times Co. v. United States (1971)",
+   "statement": "In 1971 the Supreme Court held the government had not met its heavy burden to justify stopping the New York Times and Washington Post from publishing a classified study of U.S. decision-making on Vietnam policy.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Study commissioned 1967; first publication June 13, 1971; decided June 30, 1971; complete report released by National Archives June 13, 2011",
+   "sources": [
+    {
+     "name": "Supreme Court, New York Times Co. v. United States, 403 U.S. 713 (govinfo.gov)",
+     "url": "https://www.govinfo.gov/content/pkg/USREPORTS-403/pdf/USREPORTS-403-713.pdf"
+    }
+   ],
+   "shows": "The per curiam opinion states any system of prior restraints bears a heavy presumption against its constitutional validity and that the government carries a heavy burden of showing justification, which it had not met. The opinion is narrow: it decides the government failed that burden in these cases; it does not hold that no prior restraint could ever be justified, and the nine justices wrote differing concurrences and dissents."
+  },
+  {
+   "id": "GOV-IRANCONTRA-001",
+   "domain": "government",
+   "title": "Iran-Contra — arms sales to Iran and diversion of proceeds to the Contras",
+   "statement": "U.S. officials sold arms to Iran, then under an arms embargo, and used funds from those sales to continue funding the Nicaraguan Contras despite congressional restrictions.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Arms sales and contra support 1984–1986, publicly exposed October–November 1986; Tower Commission Report February 27, 1987",
+   "sources": [
+    {
+     "name": "National Archives — The Iran-Contra Affair",
+     "url": "https://text-message.blogs.archives.gov/2021/08/17/iran-contra-affair/"
+    }
+   ],
+   "shows": "The National Archives account states the Boland Amendments banned federally appropriated funds for military support to overthrow Nicaragua's government, that Lt. Col. Oliver North used funds from weapons sales to Iran to continue funding the Contras, and that the Tower Commission found CIA Director William Casey should have alerted Reagan to risks and informed Congress as required by law, while stating Reagan did not know the full extent of all the programs. It records that officials destroyed and withheld records, that Independent Counsel Lawrence Walsh's investigation led to indictments and eleven convictions, and that North's and Poindexter's convictions were later overturned and others pardoned. How much President Reagan personally knew remains stated in the record as not the full extent."
+  },
+  {
+   "id": "GOV-BULK215-001",
+   "domain": "government",
+   "title": "NSA bulk telephony metadata program — Section 215 and ACLU v. Clapper",
+   "statement": "The NSA collected telephone metadata about calls by and to Americans in bulk under Section 215 of the PATRIOT Act, a program the Second Circuit held on May 7, 2015 was not authorized by Section 215.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Public disclosures beginning 2013; Second Circuit holding May 7, 2015; USA FREEDOM Act enacted June 2, 2015",
+   "sources": [
+    {
+     "name": "U.S. Court of Appeals for the Second Circuit — ACLU v. Clapper",
+     "url": "https://caselaw.findlaw.com/court/us-2nd-circuit/1716856.html"
+    }
+   ],
+   "shows": "The opinion defines telephone metadata as call details such as length and numbers dialed and received, not call content, aggregated into a queryable repository. It recites the May 7, 2015 holding: if Congress had intended to authorize bulk collection of virtually all metadata it would have done so explicitly. The court decided the case on statutory grounds and declined to reach the constitutional issues."
+  },
+  {
+   "id": "GOV-SEASPRAY-001",
+   "domain": "government",
+   "title": "Open-air biological simulant tests — San Francisco Bay, September 1950 (Operation Sea-Spray)",
+   "statement": "The first large-area vulnerability test with biological simulants was conducted in San Francisco Bay in September 1950, using simulants and fluorescent particles, as part of a wider open-air test program later presented to the Senate.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "San Francisco Bay test September 1950; Senate hearings March 8 and May 23, 1977",
+   "sources": [
+    {
+     "name": "U.S. Senate Subcommittee on Health and Scientific Research — Biological Testing Involving Human Subjects by the Department of Defense, 1977 (Internet Archive)",
+     "url": "https://archive.org/stream/Biotestinghumansubjectsenate1977/Biotestinghumansubjectsenate1977_djvu.txt"
+    }
+   ],
+   "shows": "The hearing volume includes the Army's own history, stating vulnerability tests with simulants began in late 1949 and the first large-area test was in San Francisco Bay in September 1950. The record documents the test and the program; a causal link between this test and any specific death was contested in later proceedings and is not established by the Army history alone."
+  },
+  {
+   "id": "GOV-CB121283-001",
+   "domain": "government",
+   "title": "Seattle CB 121283 — the RV permit bill, the veto, and the failed override",
+   "statement": "Seattle's council passed CB 121283 (6–3, Oct 20, 2026) to limit unpermitted RV parking and create a vehicle-resident permit; Mayor Wilson vetoed it, and the override vote on Nov 12, 2026 failed 5–4, one short of the six required — the bill did not become law.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Passed 2026-10-20; vetoed November 2026; override failed 2026-11-12",
+   "sources": [
+    {
+     "name": "Seattle City Council Blog — Councilmember Strauss statement after council upholds mayor veto (Nov 12, 2026)",
+     "url": "https://council.seattle.gov/2026/11/12/seattle-city-councilmember-dan-strauss-statement-after-council-upholds-mayor-veto-of-rv-legislation/"
+    },
+    {
+     "name": "Focal News — Seattle City Council falls one vote short of overriding Mayor Wilson's veto (Nov 12, 2026)",
+     "url": "https://focalnews.org/seattle-wa/politics/seattle-city-council-falls-one-vote-short-of-overriding-mayor-wilsons-veto-of-rv-permit-program"
+    }
+   ],
+   "shows": "The council's own statement records the full sequence: the six-bill Vehicle Resident Assistance Program passed Oct 20, the mayor vetoed CB 121283, and the override drew five of the six votes the charter requires. The documented end state is that the veto stands and the bill is dead; anything presenting CB 121283 as law after the veto is wrong on the record. Aaron tracked this bill in his posts through the fall of 2026; this entry is the documented record those posts answer to."
+  },
+  {
+   "id": "GOV-EO202609-001",
+   "domain": "government",
+   "title": "Seattle Executive Order 2026-09 — a by-name list, and no count yet",
+   "statement": "Mayor Wilson's Executive Order 2026-09 (Nov 3, 2026) directs Seattle departments to expand outreach to vehicle residents, support safe parking, and build a citywide by-name list of vehicle residents; the Mayor's Office announced it by press release the same day.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "2026-11-03",
+   "sources": [
+    {
+     "name": "Seattle City Council Blog (Nov 12, 2026) — describes the executive order issued with the veto",
+     "url": "https://council.seattle.gov/2026/11/12/seattle-city-councilmember-dan-strauss-statement-after-council-upholds-mayor-veto-of-rv-legislation/"
+    },
+    {
+     "name": "Focal News (Nov 12, 2026) — the order's working group and safe-parking directives",
+     "url": "https://focalnews.org/seattle-wa/politics/seattle-city-council-falls-one-vote-short-of-overriding-mayor-wilsons-veto-of-rv-permit-program"
+    }
+   ],
+   "shows": "The documented core is narrow: the order exists, it directs a by-name list and a cross-department working group, and the mayor's office said the city needs a better understanding of how vehicles are being used. The sentence widely quoted from it — \"The precise number of RVs on Seattle streets is unknown\" — comes from 570 KVI's Nov 5, 2026 quotation of the order; the order's full text has not been publicly posted, so that sentence is documented as a quotation in reporting, not yet checked against the order itself. What the admission means is interpretation, and Aaron's Nov 14, 2026 post labels it as such."
+  },
+  {
+   "id": "CORP-TOBACCO-001",
+   "domain": "corporations",
+   "title": "Tobacco industry RICO judgment — U.S. v. Philip Morris USA",
+   "statement": "A federal court found major cigarette manufacturers liable under civil RICO for a scheme to defraud smokers and potential smokers.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Suit filed September 22, 1999; final opinion August 17, 2006 (449 F. Supp. 2d 1, D.D.C.); liability affirmed May 22, 2009 (D.C. Cir.)",
+   "sources": [
+    {
+     "name": "U.S. District Court for the District of Columbia — Memorandum Opinion, Judge Gladys Kessler (govinfo.gov)",
+     "url": "https://www.govinfo.gov/content/pkg/USCOURTS-dcd-1_99-cv-02496/pdf/USCOURTS-dcd-1_99-cv-02496-14.pdf"
+    }
+   ],
+   "shows": "The judgment found the defendants conspired to violate and violated 18 U.S.C. § 1962(c) and (d), knowingly making false statements on health effects, addictiveness, nicotine manipulation, low-tar claims, and secondhand smoke. The remedy was forward-looking injunctive relief, including corrective statements on those five topics, not disgorgement of past profits."
+  },
+  {
+   "id": "CORP-PURDUE07-001",
+   "domain": "corporations",
+   "title": "Purdue Frederick guilty plea — OxyContin misbranding, 2007",
+   "statement": "The Purdue Frederick Company pleaded guilty to felony misbranding of OxyContin with intent to defraud and mislead.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Pleas entered May 10, 2007, U.S. District Court, Abingdon, Virginia; conduct described January 1996 – June 30, 2001",
+   "sources": [
+    {
+     "name": "U.S. Attorney, Western District of Virginia — DOJ News Release, May 10, 2007 (archived copy)",
+     "url": "https://media.defense.gov/2007/May/10/2001711223/-1/-1/1/purduefrederick1.pdf"
+    }
+   ],
+   "shows": "The company admitted marketing OxyContin as less addictive, less subject to abuse, and less likely to cause withdrawal than other pain medications without supporting research or FDA approval, and agreed with three executives to pay $634,515,475 in total. The three executives pleaded guilty to misdemeanor misbranding, not felonies; the felony plea was by the Purdue Frederick entity."
+  },
+  {
+   "id": "CORP-PURDUE20-001",
+   "domain": "corporations",
+   "title": "Purdue Pharma L.P. guilty plea — fraud and kickback conspiracies, 2020",
+   "statement": "Purdue Pharma L.P. pleaded guilty to three felony offenses: conspiracy to defraud the United States and violate the Food, Drug, and Cosmetic Act, and two anti-kickback conspiracies.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Resolution announced October 21, 2020; guilty plea November 24, 2020, federal court, Newark, New Jersey",
+   "sources": [
+    {
+     "name": "U.S. Department of Justice, Office of Public Affairs — Purdue Pharma pleads guilty",
+     "url": "https://www.justice.gov/archives/opa/pr/opioid-manufacturer-purdue-pharma-pleads-guilty-fraud-and-kickback-conspiracies"
+    }
+   ],
+   "shows": "Purdue admitted impeding the DEA's lawful function, marketing opioids to providers it had reason to believe were diverting them, and paying kickbacks through a doctor speaker program and to Practice Fusion Inc. The plea agreement set a $3.544 billion criminal fine plus $2 billion criminal forfeiture, and a separate $2.8 billion civil claim. The DOJ release states the resolutions gave no criminal release to any individual, including Sackler family members."
+  },
+  {
+   "id": "CORP-VW-001",
+   "domain": "corporations",
+   "title": "Volkswagen AG guilty plea — diesel emissions defeat device",
+   "statement": "Volkswagen AG agreed to plead guilty to three criminal felony counts for using defeat-device software to cheat U.S. emissions tests.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "DOJ announcement January 11, 2017; approximately 590,000 U.S. diesel vehicles, model years 2009–2016",
+   "sources": [
+    {
+     "name": "U.S. Department of Justice, U.S. Attorney's Office, Eastern District of Michigan",
+     "url": "https://www.justice.gov/usao-edmi/pr/volkswagen-ag-agrees-plead-guilty-and-pay-43-billion-criminal-and-civil-penalties-and"
+    }
+   ],
+   "shows": "The charges were conspiracy to defraud the United States and U.S. customers and violate the Clean Air Act, obstruction of justice, and importation by false statements, with a $2.8 billion criminal penalty plus $1.5 billion in separate civil resolutions, three years' probation, and an independent monitor. The statement of facts described software that detected test cycles and reduced emissions controls in normal driving, emitting NOx up to 40 times U.S. standards."
+  },
+  {
+   "id": "CORP-ENRON-001",
+   "domain": "corporations",
+   "title": "Enron — Lay and Skilling jury convictions, 2006",
+   "statement": "A federal jury in Houston convicted former Enron CEOs Kenneth Lay and Jeffrey Skilling of conspiracy, securities fraud, wire fraud, and related charges.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Verdict May 25, 2006, after 56 days of trial",
+   "sources": [
+    {
+     "name": "U.S. Department of Justice — Press Release #06-328, May 25, 2006",
+     "url": "https://www.justice.gov/archive/opa/pr/2006/May/06_crm_328.html"
+    }
+   ],
+   "shows": "Lay was convicted on all six jury counts against him, plus bank fraud and false statements to banks in a separate bench trial. Skilling was convicted on 19 of 28 counts and acquitted on nine insider-trading counts. This record is the verdict announcement; Lay died before sentencing and his conviction was later vacated under the abatement doctrine — a legal consequence of dying pending appeal, not a finding that the verdict was wrong."
+  },
+  {
+   "id": "CORP-BP-001",
+   "domain": "corporations",
+   "title": "BP Exploration and Production criminal guilty plea — Deepwater Horizon",
+   "statement": "BP Exploration and Production Inc. pleaded guilty to 11 counts of felony manslaughter, felony obstruction of Congress, and Clean Water Act and Migratory Bird Treaty Act violations.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Disaster April 20, 2010; plea accepted and sentence imposed January 29, 2013 (E.D. La.)",
+   "sources": [
+    {
+     "name": "U.S. Department of Justice, Criminal Division — United States v. BP Exploration and Production, Inc.",
+     "url": "https://www.justice.gov/criminal/criminal-vns/case/united-states-v-bp-exploration-and-production-inc"
+    }
+   ],
+   "shows": "BP was sentenced to pay $4 billion in criminal fines and penalties, with about $2.4 billion directed to Gulf marine and coastal restoration, plus five years' probation and monitors. In pleading guilty BP admitted its two well site leaders negligently caused the deaths of 11 men and the spill, and that a senior executive obstructed Congress by understating flow rates while internal teams estimated over 60,000 barrels per day. This entry documents the criminal plea; the separate civil settlement is a distinct record."
+  },
+  {
+   "id": "CORP-WELLS-001",
+   "domain": "corporations",
+   "title": "Wells Fargo unauthorized-accounts consent orders, 2016",
+   "statement": "The CFPB fined Wells Fargo Bank $100 million for secretly opening unauthorized deposit and credit card accounts.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "CFPB enforcement action September 8, 2016; order period from January 1, 2011",
+   "sources": [
+    {
+     "name": "Consumer Financial Protection Bureau — Wells Fargo consent order announcement",
+     "url": "https://www.consumerfinance.gov/archive/newsroom/consumer-financial-protection-bureau-fines-wells-fargo-100-million-widespread-illegal-practice-secretly-opening-unauthorized-accounts/"
+    }
+   ],
+   "shows": "The CFPB stated that, per the bank's own analysis, employees opened roughly 1.5 million deposit accounts and applied for roughly 565,000 credit card accounts that may not have been authorized, also issuing debit cards and creating phony email addresses without consent. Total penalties were $185 million across the CFPB, OCC, and the City and County of Los Angeles. The CFPB's wording is \"may not have been authorized\" — not a finding that every counted account was proven unauthorized."
+  },
+  {
+   "id": "CORP-BOEING-001",
+   "domain": "corporations",
+   "title": "Boeing 737 MAX — deferred prosecution agreement, 2021",
+   "statement": "Boeing entered a deferred prosecution agreement on one count of conspiracy to defraud the United States, agreeing to pay over $2.5 billion after two of its 737 MAX technical pilots deceived the FAA's Aircraft Evaluation Group about the MCAS flight-control system.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Agreement filed January 7, 2021 (N.D. Tex., Case 4:21-cr-00005-O)",
+   "sources": [
+    {
+     "name": "U.S. Department of Justice — Final DPA Package, U.S. v. The Boeing Company",
+     "url": "https://www.justice.gov/opa/press-release/file/1351336/download"
+    }
+   ],
+   "shows": "The $2.5 billion total is a $243.6 million criminal monetary penalty, $1.77 billion in compensation to airline customers, and a $500 million fund for the heirs of the 346 passengers who died in the Lion Air Flight 610 and Ethiopian Airlines Flight 302 crashes. A deferred prosecution agreement is not a conviction: Boeing admitted the statement of facts, and prosecution was deferred for three years on conditions. The later history of the case — including DOJ's 2024 breach determination — is a separate record from this 2021 agreement."
+  },
+  {
+   "id": "CORP-PGE-001",
+   "domain": "corporations",
+   "title": "PG&E guilty plea — 84 counts of involuntary manslaughter, Camp Fire",
+   "statement": "Pacific Gas and Electric Company pleaded guilty as charged to 84 felony counts of involuntary manslaughter and one count of unlawfully and recklessly causing the Camp Fire, agreeing the evidence of its criminal negligence was established beyond a reasonable doubt.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Camp Fire November 8, 2018; indictment March 2020; guilty plea and sentencing June 2020, Butte County Superior Court",
+   "sources": [
+    {
+     "name": "Butte County, California — Camp Fire investigation and prosecution record",
+     "url": "https://www.buttecounty.ca.gov/342/Camp-Fire"
+    }
+   ],
+   "shows": "The Butte County District Attorney's record states a grand jury indicted PG&E on 85 felony counts — one for causing the fire and 84 naming each person killed — plus special allegations including about 18,804 structures burned. PG&E pleaded guilty to all counts; the criminal fine was capped at about $3.5 million plus $500,000 in investigation costs, a figure set by statute, not by the scale of the loss. The fire killed 85 people in total; 84 deaths were charged, one death having been ruled a suicide."
+  },
+  {
+   "id": "CORP-FACEBOOK-001",
+   "domain": "corporations",
+   "title": "Facebook — FTC $5 billion penalty and 20-year privacy order, 2019",
+   "statement": "Facebook, Inc. agreed to pay a $5 billion penalty and accept a new 20-year FTC order to settle charges it violated the FTC's 2012 order.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Announced July 24, 2019; Commission vote 3–2",
+   "sources": [
+    {
+     "name": "Federal Trade Commission — press release, July 24, 2019",
+     "url": "https://www.ftc.gov/news-events/news/press-releases/2019/07/ftc-imposes-5-billion-penalty-sweeping-new-privacy-restrictions-facebook"
+    }
+   ],
+   "shows": "The FTC described the $5 billion as the largest penalty ever imposed on a company for violating consumers' privacy, and the order required an independent board privacy committee, compliance officers, and CEO certifications, covering Facebook, WhatsApp, and Instagram. The underlying conduct is framed by the FTC as alleged violations settled by stipulated order, not as findings after a trial."
+  },
+  {
+   "id": "CORP-DUPONT-EPA-001",
+   "domain": "corporations",
+   "title": "DuPont PFOA — EPA settlement and record administrative penalty, 2005",
+   "statement": "DuPont agreed to pay $10.25 million, then the largest civil administrative penalty EPA had ever obtained, to settle alleged failures to report PFOA risk information.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "EPA complaints July and December 2004; settlement announced December 14, 2005",
+   "sources": [
+    {
+     "name": "U.S. Environmental Protection Agency — news release, December 14, 2005",
+     "url": "https://www.epa.gov/archive/epapages/newsroom_archive/newsreleases/fdcb2f665cac66bb852570d7005d6665.html"
+    }
+   ],
+   "shows": "The settlement resolved eight counts under TSCA and RCRA, seven of them TSCA Section 8(e) failures to report substantial-risk information about PFOA (also called C8), used at DuPont's Washington Works facility in West Virginia, plus $6.25 million in Supplemental Environmental Projects. EPA framed the counts as violations alleged in its complaints and resolved by settlement; the release does not record an admission of liability by DuPont or a finding about PFOA's health effects themselves."
+  },
+  {
+   "id": "CORP-DUPONT-C8-001",
+   "domain": "corporations",
+   "title": "DuPont PFOA — the C8 Science Panel's \"probable link\" findings",
+   "statement": "The C8 Science Panel determined in 2012 that PFOA exposure was probably linked to six conditions in the highly exposed Mid-Ohio Valley population.",
+   "grade": "disputed-interpretation",
+   "dates": "Panel determination 2012; review published 2020 (Environment International 145, 106125)",
+   "sources": [
+    {
+     "name": "Steenland et al. — Review: Evolution of evidence on PFOA and health following the assessments of the C8 Science Panel (LSHTM repository)",
+     "url": "https://researchonline.lshtm.ac.uk/id/eprint/4674478/"
+    }
+   ],
+   "shows": "The six probable-link conditions were high cholesterol, thyroid disease, kidney cancer, testicular cancer, pregnancy-induced hypertension, and ulcerative colitis, with \"probable link\" defined as more probable than not on the weight of available evidence. The panel members' own 2020 review calls the overall epidemiologic evidence limited. The finding documents a settlement-panel determination for a highly exposed population, not settled proof of causation at all exposure levels."
+  },
+  {
+   "id": "CORP-THERANOS-001",
+   "domain": "corporations",
+   "title": "Theranos — Elizabeth Holmes conviction and sentence, 2022",
+   "statement": "A federal jury convicted Theranos founder Elizabeth Holmes of conspiracy to defraud investors and three counts of fraud on individual investors.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Conviction January 3, 2022; sentenced November 18, 2022, to 135 months (N.D. Cal.)",
+   "sources": [
+    {
+     "name": "U.S. Department of Justice, U.S. Attorney's Office, Northern District of California",
+     "url": "https://www.justice.gov/usao-ndca/pr/elizabeth-holmes-sentenced-more-11-years-defrauding-theranos-investors-hundreds"
+    }
+   ],
+   "shows": "The convicted counts involved wire transfers totaling more than $140 million, and trial evidence showed Holmes knew the Theranos analyzer could perform only a few basic tests. The jury acquitted Holmes on the patient-related conspiracy count and three patient fraud counts. The conviction therefore documents investor fraud; it is not a conviction for defrauding patients."
+  },
+  {
+   "id": "CORP-GOOGLE-001",
+   "domain": "corporations",
+   "title": "Google search antitrust liability ruling — U.S. v. Google LLC, 2024",
+   "statement": "A federal court held that Google violated Section 2 of the Sherman Act by unlawfully maintaining monopolies in general search services and general search text advertising through exclusive default distribution agreements.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Suit filed October 20, 2020 (Case 1:20-cv-03010-APM, D.D.C.); liability memorandum opinion August 5, 2024 (747 F. Supp. 3d 1)",
+   "sources": [
+    {
+     "name": "U.S. District Court for the District of Columbia — Memorandum Opinion, Judge Amit P. Mehta, Document 1033 filed August 5, 2024 (opinion text, Wikisource)",
+     "url": "https://en.wikisource.org/wiki/Page:United_States_v_Google_20240805.pdf/8"
+    },
+    {
+     "name": "U.S. Department of Justice, Office of Public Affairs — Justice Department Statements on the U.S. v. Google decision, August 5, 2024",
+     "url": "https://www.justice.gov/archives/opa/pr/justice-department-statements-us-district-court-district-columbias-decision-us-v-google"
+    }
+   ],
+   "shows": "Judge Mehta's conclusion: \"Google is a monopolist, and it has acted as one to maintain its monopoly,\" including charging supracompetitive prices for general search text ads. The ruling was not across the board: the court found Google lacked monopoly power in the broader search advertising market, found no product market for general search advertising, held Google not liable for its SA360 advertising platform conduct, and declined to sanction Google over unpreserved employee chat messages. This entry documents the 2024 liability ruling only; remedies were decided in a separate later phase, described in DOJ's 2025 remedies release."
+  },
+  {
+   "id": "CORP-BP-CIVIL-001",
+   "domain": "corporations",
+   "title": "BP $20.8 billion civil settlement — Deepwater Horizon consent decree, 2015",
+   "statement": "The United States and five Gulf states settled the governments' civil claims against BP over the Deepwater Horizon spill for $20.8 billion, the largest settlement with a single entity in Justice Department history.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Announced and consent decree lodged October 5, 2015 (E.D. La.); spill April 20, 2010",
+   "sources": [
+    {
+     "name": "U.S. Department of Justice, Office of Public Affairs — U.S. and Five Gulf States Reach Historic Settlement with BP, October 5, 2015",
+     "url": "https://www.justice.gov/opa/pr/us-and-five-gulf-states-reach-historic-settlement-bp-resolve-civil-lawsuit-over-deepwater"
+    }
+   ],
+   "shows": "The consent decree terms: a $5.5 billion Clean Water Act penalty, plus interest — described by DOJ as the largest civil penalty in the history of environmental law, 80 percent directed to Gulf restoration under the RESTORE Act — $8.1 billion in natural resource damages plus up to $700 million for later-discovered conditions, and $600 million for other claims, alongside separate agreements of $4.9 billion to the five Gulf states and up to $1 billion to local governments for economic damages, all paid over time. DOJ records that the civil case had established the spill was caused by BP's gross negligence. The $20.8 billion is a settlement total that includes amounts BP had already committed, not a single fine; BP's 2013 criminal plea is a separate record (CORP-BP-001)."
+  },
+  {
+   "id": "CORP-MANVILLE-001",
+   "domain": "corporations",
+   "title": "Johns-Manville Chapter 11 filing — asbestos liability, 1982",
+   "statement": "Johns-Manville Corporation, then the world's largest manufacturer of asbestos, filed a voluntary Chapter 11 petition facing claims from current and future victims of asbestos-related deaths and injuries estimated to total $2 billion.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Voluntary petition filed August 26, 1982 (Bankr. S.D.N.Y.); Second Amended Plan of Reorganization confirmed 1986",
+   "sources": [
+    {
+     "name": "U.S. Court of Appeals for the Second Circuit — In re Joint Eastern & Southern District Asbestos Litigation, 982 F.2d 721 (2d Cir. 1992) (Justia)",
+     "url": "https://law.justia.com/cases/federal/appellate-courts/F2/982/721/137057/"
+    }
+   ],
+   "shows": "The Second Circuit's account records that the confirmed 1986 plan made the Manville Personal Injury Settlement Trust its cornerstone — funded by insurer settlements, cash, stock, long-term notes, and up to 20 percent of Manville's yearly profits — and that a channeling injunction required all asbestos health claimants, present and future, to proceed only against the Trust. The record shows a reorganization that kept Manville operating under a confirmed plan, not a liquidation. The same opinion records the Trust's strain: by March 30, 1990 it had received more than 150,000 claims, 50 percent above the highest number estimated when the plan was approved, and was effectively out of money to pay its current obligations."
+  },
+  {
+   "id": "EPS-NPA-001",
+   "domain": "epstein",
+   "title": "The 2008 Florida plea and the federal Non-Prosecution Agreement — documented terms",
+   "statement": "Epstein pleaded guilty in Florida state court on June 30, 2008, under a federal Non-Prosecution Agreement signed September 24, 2007, and received 18 months in county jail plus 12 months of community control.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "NPA signed 2007-09-24; plea and sentencing 2008-06-30; work release from October 2008; released to community control 2009-07-22",
+   "sources": [
+    {
+     "name": "DOJ Office of Professional Responsibility — Executive Summary of Report on the 2006–2008 Epstein Investigation (Nov 2020)",
+     "url": "https://www.justice.gov/opa/press-release/file/1336416/download"
+    }
+   ],
+   "shows": "The OPR summary states the NPA required a plea to felony solicitation of prostitution and to procurement of minors to engage in prostitution (Fla. Stat. § 796.03), sex-offender registration, and a binding recommendation of 18 months (imposed as 12 + 6 months consecutive) followed by 12 months of community control. In exchange, the U.S. Attorney's Office for the Southern District of Florida agreed to forgo federal prosecution of Epstein, four named co-conspirators, and \"any potential co-conspirators.\" The summary also documents work release of 12 hours per day from October 2008 and that Epstein served less than 13 months with gain time. The NPA was a decision not to bring federal charges in that district; it is not a finding about conduct outside its terms."
+  },
+  {
+   "id": "EPS-CVRA-002",
+   "domain": "epstein",
+   "title": "2019 ruling that the NPA process violated the Crime Victims' Rights Act",
+   "statement": "On February 21, 2019, Judge Kenneth A. Marra (S.D. Fla.) ruled the government violated the Crime Victims' Rights Act by entering the NPA without advising victims and by misleading them about whether federal prosecution remained possible.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Ruling 2019-02-21; Doe v. United States, No. 9:08-cv-80736, 359 F. Supp. 3d 1201 (S.D. Fla. 2019)",
+   "sources": [
+    {
+     "name": "DOJ Office of Professional Responsibility — Executive Summary of Report on the 2006–2008 Epstein Investigation (Nov 2020)",
+     "url": "https://www.justice.gov/opa/press-release/file/1336416/download"
+    }
+   ],
+   "shows": "The OPR summary records that the court found victims were not advised of the intent to enter the NPA, and that post-NPA letters describing the investigation as ongoing misled victims to believe federal prosecution was still a possibility. The ruling decided a victims'-rights process violation and ordered briefing on remedies; it did not itself rescind the NPA, and after Epstein's death the court denied the requested remedies and closed the case as moot, per the same summary."
+  },
+  {
+   "id": "EPS-SDNY-003",
+   "domain": "epstein",
+   "title": "The 2019 SDNY indictment — charges as alleged",
+   "statement": "A two-count SDNY indictment unsealed July 8, 2019, charged Epstein with conspiracy to commit sex trafficking and sex trafficking of underage girls, alleging abuse of dozens of victims in New York and Palm Beach from at least 2002 to 2005.",
+   "grade": "documented-allegation-or-testimony",
+   "dates": "United States v. Epstein, 19 Cr. 490 (S.D.N.Y.); arrested 2019-07-06; unsealed 2019-07-08; indictment dismissed after death 2019-08-29",
+   "sources": [
+    {
+     "name": "U.S. Attorney Geoffrey S. Berman — Remarks on the Indictment and Arrest of Jeffrey Epstein, USAO-SDNY (July 8, 2019)",
+     "url": "https://www.justice.gov/usao-sdny/page/file/1181906/dl"
+    }
+   ],
+   "shows": "The U.S. Attorney's remarks describe the indictment's allegations: victims as young as 14, recruited for massages that became sex acts, paid hundreds of dollars in cash, and some victims paid to recruit others. These are charges as alleged in a filed indictment, not a conviction — Epstein died before trial and the indictment was dismissed, so no jury ever adjudicated these counts against him."
+  },
+  {
+   "id": "EPS-DEATH-004",
+   "domain": "epstein",
+   "title": "Death on August 10, 2019 — the official medical examiner finding",
+   "statement": "The New York City Office of Chief Medical Examiner determined that Epstein, found hanged in his cell at MCC New York on August 10, 2019, died by suicide, cause hanging.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Found 2019-08-10; Chief Medical Examiner determination announced 2019-08-16; OIG report released 2023-06-27",
+   "sources": [
+    {
+     "name": "DOJ Office of Inspector General — Report on BOP Custody, Care, and Supervision of Jeffrey Epstein at MCC New York",
+     "url": "https://oig.justice.gov/news/doj-oig-releases-report-bops-custody-care-and-supervision-jeffrey-epstein-metropolitan"
+    }
+   ],
+   "shows": "The OIG release states the Office of the Chief Medical Examiner determined Epstein died by suicide, that the FBI separately determined the death was not the result of a criminal act, and that OIG found no evidence contradicting that determination. The manner of death is publicly disputed — reporting at the time noted broken neck bones raised foul-play speculation, which the Chief Medical Examiner addressed by stating the determination followed careful review of all investigative information, including complete autopsy findings. That dispute is a disputed interpretation; the official record itself has not been revised in the sources opened."
+  },
+  {
+   "id": "EPS-CUSTODY-005",
+   "domain": "epstein",
+   "title": "Documented custody failures at MCC and the guards' deferred prosecution",
+   "statement": "The DOJ Inspector General found numerous and serious failures at MCC New York before Epstein's death, including falsified count and round records, and the two charged employees' cases were dismissed after they complied with deferred prosecution agreements.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Night of 2019-08-09 to 2019-08-10; OIG report 2023-06-27 (Report 23-085)",
+   "sources": [
+    {
+     "name": "DOJ Office of Inspector General — Report on BOP Custody, Care, and Supervision of Jeffrey Epstein at MCC New York",
+     "url": "https://oig.justice.gov/news/doj-oig-releases-report-bops-custody-care-and-supervision-jeffrey-epstein-metropolitan"
+    }
+   ],
+   "shows": "OIG found no 30-minute rounds after about 10:40 p.m. on August 9, no required counts after 4:00 p.m., count slips and round sheets falsified to show rounds that were not performed, no replacement cellmate assigned despite a Psychology Department instruction, excess blankets and linens left in the cell, and nearly all SHU cameras not recording from late July 2019 through the death. OIG states two MCC employees were charged with falsifying records and the charges were dismissed upon compliance with deferred prosecution agreements. The report documents negligence and misconduct; OIG expressly did not find evidence contradicting the FBI's determination about how Epstein died."
+  },
+  {
+   "id": "EPS-MAXWELL-006",
+   "domain": "epstein",
+   "title": "Ghislaine Maxwell conviction (2021) and 20-year sentence (2022)",
+   "statement": "A SDNY jury found Ghislaine Maxwell guilty on December 29, 2021, on five counts relating to recruiting and grooming minors for Epstein, and she was sentenced to 240 months (20 years) in prison on June 28, 2022.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Verdict 2021-12-29; sentencing 2022-06-28",
+   "sources": [
+    {
+     "name": "USAO-SDNY — Ghislaine Maxwell Sentenced To 20 Years In Prison",
+     "url": "https://www.justice.gov/usao-sdny/pr/ghislaine-maxwell-sentenced-20-years-prison-conspiring-jeffrey-epstein-sexually-abuse"
+    }
+   ],
+   "shows": "The DOJ release lists the guilty counts: conspiracy to entice minors to travel to engage in illegal sex acts, conspiracy to transport minors, transporting a minor, sex trafficking conspiracy, and sex trafficking of a minor, for a scheme dated from at least 1994 to about 2004. The sentence included five years of supervised release and a $750,000 fine. This is an adjudicated conviction of Maxwell; it is not a conviction of Epstein, who was never tried on the 2019 SDNY charges."
+  },
+  {
+   "id": "EPS-UNSEAL-007",
+   "domain": "epstein",
+   "title": "January 2024 unsealing of Giuffre v. Maxwell documents — what the release actually was",
+   "statement": "By final unsealing order dated December 18, 2023, Judge Loretta A. Preska (S.D.N.Y.) concluded the majority of previously sealed materials in Giuffre v. Maxwell should be unsealed in full, with releases following in January 2024.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Civil case filed 2015, settled May 2017; final unsealing order 2023-12-18; releases began January 2024",
+   "sources": [
+    {
+     "name": "Giuffre v. Maxwell, Opinion and Order, 15-CV-07433 (S.D.N.Y.)",
+     "url": "https://unredact.org/api/documents/79e462d0a8cda3c820efecabaee4a6af/content"
+    }
+   ],
+   "shows": "The release was the unsealing of already-filed civil-case documents — depositions, motions, and exhibits from a settled 2015 defamation suit — not a new indictment and not a court-issued \"client list.\" Presence of a name in these documents is not evidence of wrongdoing: names appear in many contexts (witness, employee, acquaintance, person mentioned in testimony), and the unsealing order made no finding of guilt against any person named."
+  },
+  {
+   "id": "EPS-FLIGHT-008",
+   "domain": "epstein",
+   "title": "Flight logs as Maxwell trial exhibits — what they document",
+   "statement": "Handwritten pilot flight logs were admitted in U.S. v. Maxwell as Government Exhibit 662-RR, recording dates, aircraft, departure and arrival points, and passenger names or initials as entered by the pilot.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Trial U.S. v. Maxwell, 20 Cr. 330 (S.D.N.Y.), 2021; DOJ release of the exhibit 2025-02-27",
+   "sources": [
+    {
+     "name": "Government Exhibit 662-RR — Flight Log Released in U.S. v. Maxwell (DOJ)",
+     "url": "https://www.justice.gov/ag/media/1391276/dl?inline"
+    }
+   ],
+   "shows": "The exhibit is a pilot logbook: it documents who the pilot recorded as being on a given flight, on what date, between which places. A log entry by itself does not document why a person traveled, what happened on board or at a destination, or any crime, and the logs cover only flights the pilot recorded, often by initials or first names."
+  },
+  {
+   "id": "EPS-BANKS-009",
+   "domain": "epstein",
+   "title": "2023 bank settlements — JPMorgan $290 million and Deutsche Bank $75 million, no admission",
+   "statement": "In 2023 JPMorgan Chase agreed to pay $290 million to settle a class action by women who said Epstein abused them, without admitting wrongdoing, and Deutsche Bank's similar $75 million settlement received final approval on October 20, 2023.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "JPMorgan agreement June 2023; Deutsche Bank final approval 2023-10-20; JPMorgan separately agreed $75 million to the U.S. Virgin Islands, September 2023",
+   "sources": [
+    {
+     "name": "Reuters (Luc Cohen) — US judge to weigh JPMorgan's $290 million settlement with Epstein accusers (Nov 9, 2023)",
+     "url": "https://stacks921.com/2023/11/09/us-judge-to-weigh-jpmorgans-290-million-settlement-with-epstein-accusers/"
+    }
+   ],
+   "shows": "Reuters reports the JPMorgan settlement covered more than 100 women, that Epstein was a JPMorgan client from 1998 to 2013, and that JPMorgan did not admit wrongdoing in agreeing to settle. A settlement is a documented payment resolving civil claims; liability was not adjudicated by a jury in either case, and a settlement amount is not a court finding that the bank committed the conduct alleged in the complaints."
+  },
+  {
+   "id": "EPS-OPR-010",
+   "domain": "epstein",
+   "title": "Acosta and the NPA — the DOJ OPR findings (2020)",
+   "statement": "The DOJ Office of Professional Responsibility found that U.S. Attorney R. Alexander Acosta approved the NPA and accepted responsibility for it, found no professional misconduct and no evidence the decision rested on corruption or Epstein's wealth, status, or associations, and concluded Acosta exercised poor judgment.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "NPA 2007–2008; OPR Executive Summary November 2020",
+   "sources": [
+    {
+     "name": "DOJ Office of Professional Responsibility — Executive Summary of Report on the 2006–2008 Epstein Investigation (Nov 2020)",
+     "url": "https://www.justice.gov/opa/press-release/file/1336416/download"
+    }
+   ],
+   "shows": "OPR states Acosta made the pivotal decision to resolve the federal investigation through a state-based plea, participated in drafting and approved the NPA with knowledge of its terms, and acknowledged responsibility. OPR concluded the subjects did not commit professional misconduct as OPR defines it, and separately concluded the NPA was a flawed mechanism with several unusual and problematic terms — a poor-judgment finding, which is an internal DOJ professional-responsibility conclusion, not a criminal charge or a court ruling against Acosta."
+  },
+  {
+   "id": "TES-AC-001",
+   "domain": "tesla",
+   "title": "AC induction motor and polyphase patents (1888) — and the Westinghouse license",
+   "statement": "Tesla's U.S. Patent 381,968 for an electro-magnetic motor using two or more independent alternating-current circuits was filed October 12, 1887 and granted May 1, 1888, and Westinghouse licensed Tesla's polyphase AC induction motor patent.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Filed 1887-10-12; granted 1888-05-01; Westinghouse Model A two-phase motor 1888",
+   "sources": [
+    {
+     "name": "USPTO record via Google Patents — US381968A",
+     "url": "https://patents.google.com/patent/US381968A/en"
+    },
+    {
+     "name": "Smithsonian — Electric Motor (Alternating Current), Westinghouse Model A",
+     "url": "https://www.si.edu/object/electric-motor-alternating-current:nmah_739995"
+    }
+   ],
+   "shows": "The patent text describes progressive shifting of magnetism by alternating currents in independent circuits. The Smithsonian record says Westinghouse engineers refined Tesla's concept and introduced the Model A two-phase motor in 1888, and Energy.gov says Westinghouse had licensed the polyphase patent. The opened authoritative pages do not state the often-repeated $60,000 plus $2.50-per-horsepower royalty terms, so those terms are not documented in this entry."
+  },
+  {
+   "id": "TES-FAIR-002",
+   "domain": "tesla",
+   "title": "1893 World's Columbian Exposition lighting",
+   "statement": "Westinghouse won the contract to power the 1893 Chicago World's Fair using Tesla's alternating current, bidding $399,000 against General Electric's $554,000 DC bid.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "1893",
+   "sources": [
+    {
+     "name": "U.S. Department of Energy — The War of the Currents: AC vs. DC Power",
+     "url": "https://www.energy.gov/articles/war-currents-ac-vs-dc-power"
+    }
+   ],
+   "shows": "Energy.gov states the fair took place in 1893 at the height of the War of the Currents, that General Electric bid $554,000 using Edison's direct current, and that Westinghouse said he could power the fair for $399,000 using Tesla's alternating current. It does not claim Tesla personally installed the lighting; the documented actor for the contract is Westinghouse."
+  },
+  {
+   "id": "TES-NIAG-003",
+   "domain": "tesla",
+   "title": "Niagara Falls power and transmission to Buffalo, 1896",
+   "statement": "In 1893 the Niagara Falls Power Company awarded Westinghouse, licensee of Tesla's polyphase AC patent, the contract to generate power from Niagara Falls, and on November 16, 1896, Buffalo was lit by AC from Niagara.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Contract award 1893; Buffalo transmission 1896-11-16",
+   "sources": [
+    {
+     "name": "U.S. Department of Energy — The War of the Currents: AC vs. DC Power",
+     "url": "https://www.energy.gov/articles/war-currents-ac-vs-dc-power"
+    }
+   ],
+   "shows": "Energy.gov gives both the 1893 award and the November 16, 1896 Buffalo date in one record. It frames this as a Westinghouse generation contract using a licensed Tesla patent, not as Tesla single-handedly building the Adams Power Station."
+  },
+  {
+   "id": "TES-WARD-004",
+   "domain": "tesla",
+   "title": "Wardenclyffe Tower — Morgan financing, stated purpose, failure, and 1917 demolition",
+   "statement": "J. Pierpont Morgan put $150,000 into Tesla's global wireless venture at Wardenclyffe; work began in mid-1901, Tesla wrote Morgan in July 1903 that the towers would transmit electric power as well as information, Morgan refused further advances, and in 1917 the new owners had the tower blown up and sold for scrap.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Financing and construction start 1901; Tesla letter to Morgan July 1903; demolition 1917",
+   "sources": [
+    {
+     "name": "Tesla Science Center at Wardenclyffe — reprinting New York Times, \"A Battle to Preserve a Visionary's Bold Failure\"",
+     "url": "https://teslasciencecenter.org/announcements/nytimes-may-2009/"
+    },
+    {
+     "name": "Tesla Science Center — Tesla's Wireless Power",
+     "url": "https://teslasciencecenter.org/teslas-wireless-power/"
+    }
+   ],
+   "shows": "The article quotes Morgan's reply — \"I should not feel disposed to make any further advances\" — and says Tesla never finished the prototype; scientists in the article agree broadcasting information was possible but power transmission was impractical. The tower never became operational and the project had effectively ended by 1906. The popular claim that Morgan said \"Where do I put the meter?\" is not in these opened sources and is not documented here."
+  },
+  {
+   "id": "TES-DEATH-005",
+   "domain": "tesla",
+   "title": "Tesla's death, January 7, 1943, New York City",
+   "statement": "Tesla died in Room 3327 of the New Yorker Hotel on the evening of January 7, 1943, aged 86, with cause of death given as coronary thrombosis, and was found the following evening.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Death 1943-01-07; found 1943-01-08",
+   "sources": [
+    {
+     "name": "Bench Degree — Chapter 14: The Mythology, and What the Documents Say (documents-based secondary account citing the FBI file)",
+     "url": "https://www.benchdegree.com/electromagnetism/mythology-and-what-the-documents-say.html"
+    },
+    {
+     "name": "FBI Records: The Vault — Nikola Tesla",
+     "url": "https://vault.fbi.gov/nikola-tesla"
+    }
+   ],
+   "shows": "This documents-based account names the room, date, age, and cause, and cites the underlying FBI file at vault.fbi.gov for January 1943 material. The FBI Vault PDF text itself was not text-extractable in the opened view, so the coroner wording is carried here as given in this secondary documents account, not quoted directly from the coroner's record."
+  },
+  {
+   "id": "TES-TELE-006",
+   "domain": "tesla",
+   "title": "Office of Alien Property Custodian seizure of Tesla's papers and effects",
+   "statement": "After Tesla's death, agents of the Office of Alien Property Custodian — not the FBI directly — removed his papers and effects from his hotel room and from Manhattan storage, on a Trading with the Enemy Act theory, although Tesla had been a naturalized U.S. citizen since 1891.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "January 1943, within hours and days of 1943-01-07",
+   "sources": [
+    {
+     "name": "Bench Degree — Chapter 14: The Mythology, and What the Documents Say (documents-based secondary account citing the FBI file)",
+     "url": "https://www.benchdegree.com/electromagnetism/mythology-and-what-the-documents-say.html"
+    }
+   ],
+   "shows": "The account says the legal theory — that original nationality governed the estate — was contested at the time and applied anyway, and that the seizure inventory is in National Archives Record Group 131. It separates the documented seizure from any claim about what was in the papers: Tesla's claimed particle-beam weapon, which he called Teleforce in 1934 press interviews and the press called a \"death ray,\" is documented in the same source only as Tesla's own claim, not as a working device."
+  },
+  {
+   "id": "TES-TRUMP-007",
+   "domain": "tesla",
+   "title": "John G. Trump's MIT review of the seized papers",
+   "statement": "John G. Trump, MIT professor of electrical engineering, examined the seized Tesla material beginning about January 26, 1943, for about three days, and concluded it contained no discoveries of significance to the war effort.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Review beginning about 1943-01-26; about three days",
+   "sources": [
+    {
+     "name": "Bench Degree — Chapter 14: The Mythology, and What the Documents Say (documents-based secondary account citing the FBI file)",
+     "url": "https://www.benchdegree.com/electromagnetism/mythology-and-what-the-documents-say.html"
+    }
+   ],
+   "shows": "The opened account paraphrases Trump's conclusion as finding no discoveries of significance to the war effort and no ideas Tesla had not already published. Longer wordings quoted in other summaries of the FBI file were not text-extracted from the FBI PDF in this research, so they are not quoted verbatim here. A three-day review is a triage, not an exhaustive review of decades of papers."
+  },
+  {
+   "id": "TES-VAULT-008",
+   "domain": "tesla",
+   "title": "The FBI FOIA Vault Tesla file — what was released",
+   "statement": "The FBI's FOIA Library, The Vault, publishes a Nikola Tesla collection in three parts: Part 01, Part 02, and Part 03 (Final).",
+   "grade": "documented-event-with-cited-record",
+   "dates": "File material includes pre-1943 and January 1943 material",
+   "sources": [
+    {
+     "name": "FBI Records: The Vault — Nikola Tesla",
+     "url": "https://vault.fbi.gov/nikola-tesla"
+    }
+   ],
+   "shows": "The opened Vault page lists the three part files; Part 01 opens to a download PDF view (45,098 kB). The file contains material predating 1943 and still carries redactions. A specific release date and page count were not established from an opened primary page in this research and are not stated here."
+  },
+  {
+   "id": "TES-MARC-009",
+   "domain": "tesla",
+   "title": "Marconi Wireless Telegraph Co. v. United States, 320 U.S. 1 (1943)",
+   "statement": "On June 21, 1943, the Supreme Court held the broad claims of Marconi Patent No. 763,772 for a four-circuit tuning apparatus invalid because anticipated, in a damages suit against the United States over government use of patents.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Decided 1943-06-21",
+   "sources": [
+    {
+     "name": "Supreme Court opinion via Justia — Marconi Wireless Tel. Co. v. United States, 320 U.S. 1",
+     "url": "https://supreme.justia.com/cases/federal/us/320/1/"
+    }
+   ],
+   "shows": "The syllabus names the Stone and Lodge patents as the anticipation basis, not Tesla; no Tesla patent was in suit. In the body, the Court says Tesla Patent No. 645,576 anticipated the four-circuit tuned combination except for variable inductance, which Lodge developed after Tesla. The Court did not declare Tesla \"the inventor of radio,\" did not restore a Tesla patent, and Marconi's original basic patent was expressly not the patent in suit."
+  },
+  {
+   "id": "TES-COLO-010",
+   "domain": "tesla",
+   "title": "Colorado Springs experiments, 1899 — Tesla's own notes",
+   "statement": "Tesla's Colorado Springs laboratory notes, written June 1, 1899 to January 7, 1900 and unpublished until the Nikola Tesla Museum book Colorado Springs Notes, 1899–1900 (1978), record research on transmitters of great power, individualizing energy transmission, and laws of propagation of currents through earth and atmosphere.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Notes 1899-06-01 to 1900-01-07; book published 1978 (Nolit, Belgrade)",
+   "sources": [
+    {
+     "name": "Colorado Springs Notes, 1899–1900 — full text",
+     "url": "https://nzt-eth.ipns.dweb.link/wiki/Colorado_Springs_Notes%2C_1899%E2%80%931900.html"
+    }
+   ],
+   "shows": "The text reproduces Tesla's dated daily notes and the editors' statement that no alterations were made to the original. It documents what Tesla recorded and intended to research; it does not by itself prove his later claims about wireless power transmission or signals from another planet."
+  },
+  {
+   "id": "TES-NOBEL-011",
+   "domain": "tesla",
+   "title": "The 1915 Nobel Prize report — the Tesla/Edison rumor",
+   "statement": "The New York Times erroneously reported on its front page that Tesla would share the 1915 Nobel Prize in Physics with Thomas Edison; the 1915 prize was actually awarded to William Henry Bragg and William Lawrence Bragg for analysis of crystal structure by X-rays.",
+   "grade": "disputed-interpretation",
+   "dates": "1915",
+   "sources": [
+    {
+     "name": "NobelPrize.org — Nobel Prize in Physics 1915",
+     "url": "https://www.nobelprize.org/prizes/physics/1915/speedread/"
+    },
+    {
+     "name": "Tesla Science Center — Trivia Tuesdays (May 10, 2022)",
+     "url": "https://teslasciencecenter.org/trivia-tuesdays-may-10-2022/"
+    }
+   ],
+   "shows": "NobelPrize.org confirms the Braggs, father and son, received the 1915 Physics prize, and the Tesla Science Center calls the Times announcement an erroneous news report. No opened source documents the further claim that Tesla refused the prize because he would not share it with Edison; that refusal story is unverified in this record."
+  },
+  {
+   "id": "ORP-BRACE-001",
+   "domain": "orphan-trains",
+   "title": "Children's Aid Society founding and the first orphan train to Dowagiac",
+   "statement": "Charles Loring Brace founded the Children's Aid Society in 1853, and in 1854 it sent the first orphan train — 46 children, ages 7 to 15 — to Dowagiac, Michigan, where all 46 were placed in homes within the week.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "1853 (founding); 1854 (first train)",
+   "sources": [
+    {
+     "name": "National Orphan Train Complex — Placing Organizations: The Children's Aid Society",
+     "url": "https://orphantraindepot.org/history/the-childrens-aid-society/"
+    }
+   ],
+   "shows": "The page states CAS was founded in 1853 by Brace, a minister working in New York's poorest neighborhoods, and that the 1854 group of 46 children to Dowagiac began the movement. It does not support claims that Brace invented placing-out from nothing — the same page notes New York orphanages had already sent small groups to in-state foster homes."
+  },
+  {
+   "id": "ORP-SCALE-001",
+   "domain": "orphan-trains",
+   "title": "Scale of the orphan train movement, 1854–1929",
+   "statement": "Historians and institutional histories put the total at approximately 200,000 children relocated between 1854 and 1929, with some estimates reaching about 250,000; the records behind the count were kept by the placing agencies themselves.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "1854–1929",
+   "sources": [
+    {
+     "name": "VCU Libraries, Social Welfare History Project — Orphan Trains (1854–1929)",
+     "url": "https://socialwelfare.library.vcu.edu/programs/orphan-trains/"
+    }
+   ],
+   "shows": "The VCU text says \"approximately 200,000 children\" while a photo caption on the same page says \"a quarter million children rode the orphan trains\" — the variance is in the source itself, so 200,000 is presented here as the commonly cited figure inside a 200,000–250,000 estimate range, not as an exact count. No central government registry existed; the movement ran before federal child-welfare involvement."
+  },
+  {
+   "id": "ORP-END-001",
+   "domain": "orphan-trains",
+   "title": "End of the orphan trains in 1929",
+   "statement": "The Children's Aid Society ended its placing-out program in 1929, as states passed laws prohibiting cross-state placement of children and state and local governments took over family support.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "1920s decline; 1929 (CAS program end)",
+   "sources": [
+    {
+     "name": "VCU Libraries, Social Welfare History Project — Orphan Trains (1854–1929)",
+     "url": "https://socialwelfare.library.vcu.edu/programs/orphan-trains/"
+    },
+    {
+     "name": "NYU Special Collections Finding Aids — Children's Aid Society records (MS 111)",
+     "url": "https://findingaids.library.nyu.edu/nyhs/ms111_childrens_aid_society/all/"
+    }
+   ],
+   "shows": "VCU documents the sharp 1920s decrease, state laws prohibiting placing children across state lines, the 1912 creation of the U.S. Children's Bureau, and growing government family support. The finding aid corroborates the mechanism inside CAS: a Foster Home and Temporary Boarding Home Department initiated in 1924 phased out the Emigration/Placing-Out Department by 1929. Claims that a single law or the Depression alone ended the program outrun this record."
+  },
+  {
+   "id": "ORP-RECORDS-001",
+   "domain": "orphan-trains",
+   "title": "Surviving records — what a descendant can actually find",
+   "statement": "Children's Aid Society records (1836–2006, bulk 1853–1947; 787 linear feet) are held at the New-York Historical Society, and the National Orphan Train Complex in Concordia, Kansas, maintains a searchable rider database of 8,000+ children.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Records 1836–2006 (bulk 1853–1947); archives active today",
+   "sources": [
+    {
+     "name": "NYU Special Collections Finding Aids — Children's Aid Society records (MS 111), New-York Historical Society",
+     "url": "https://findingaids.library.nyu.edu/nyhs/ms111_childrens_aid_society/all/"
+    },
+    {
+     "name": "National Orphan Train Complex — Research and Registration",
+     "url": "https://orphantraindepot.org/research-and-registration/"
+    }
+   ],
+   "shows": "The finding aid states plainly that most records involving specific children require special permission to be viewed — they are not open public browsing. The National Orphan Train Complex offers a free name search of its 8,000+ rider database (information supplied by riders, descendants, or NOTC research). A descendant can confirm a name and placement details in some cases, but no complete rider list exists in either repository."
+  },
+  {
+   "id": "ORP-CONDITIONS-001",
+   "domain": "orphan-trains",
+   "title": "Documented conditions and criticisms — indenture, labor, and sibling separation in rider testimony",
+   "statement": "Placement terms varied by agency and included formal indenture for many children, and rider testimony collected by the National Orphan Train Complex documents siblings being separated at placement.",
+   "grade": "documented-allegation-or-testimony",
+   "dates": "1854–1929; testimony published later",
+   "sources": [
+    {
+     "name": "National Orphan Train Complex — Jean Sexton, rider story",
+     "url": "https://orphantraindepot.org/history/orphan-train-rider-stories/jean-sexton/"
+    },
+    {
+     "name": "National Orphan Train Complex — Placing Organizations",
+     "url": "https://orphantraindepot.org/history/the-childrens-aid-society/"
+    }
+   ],
+   "shows": "Sexton's own account: taken to CAS with her five siblings after both parents died, she boarded a train in 1914 at age three and was separated from her sister and brothers when adopted in southwest Missouri, reuniting only after a CAS agent gave her a brother's address when she was sixteen — testimony, graded as testimony, not a program-wide statistic. Indenture as a documented term: the NOTC placing-organizations page states the New York Juvenile Asylum sent approximately 6,000 children by train and most of these children were formally indentured. Neither a uniformly benign nor a uniformly abusive picture is what the record shows."
+  },
+  {
+   "id": "OLD-CHICAGO-001",
+   "domain": "old-world",
+   "title": "Great Chicago Fire, October 1871",
+   "statement": "The Great Chicago Fire burned from the evening of October 8 to the morning of October 10, 1871, killing about 300 people, destroying some 17,450 buildings over about 3.3–3.5 square miles, and leaving nearly 100,000 people homeless.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "October 8–10, 1871",
+   "sources": [
+    {
+     "name": "Encyclopaedia Britannica — Chicago fire of 1871",
+     "url": "https://kids.britannica.com/kids/article/Chicago-fire-of-1871/623609"
+    }
+   ],
+   "shows": "Britannica gives the dates, about 300 lives, nearly 100,000 homeless, 17,450 buildings, and 3.5 square miles, and states the cause is not known — the O'Leary cow story is presented as legend, not fact. The 17,500 and 3.3 square mile figures in common use are roundings of the same documented toll, not a different event or a hidden larger one."
+  },
+  {
+   "id": "OLD-PESHTIGO-001",
+   "domain": "old-world",
+   "title": "Peshtigo Fire — the deadlier fire the same night",
+   "statement": "On the same night, October 8, 1871, the Peshtigo Fire in Wisconsin burned about 1.5 million acres and killed an estimated 1,200–2,400 people (exact number unknown, about 800 in Peshtigo itself), making it the deadliest wildfire in U.S. history.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "October 8–10, 1871",
+   "sources": [
+    {
+     "name": "National Weather Service, Green Bay — The Great Midwest Wildfires of 1871",
+     "url": "https://www.weather.gov/grb/peshtigofire2"
+    }
+   ],
+   "shows": "NWS gives the 1,200–2,400 range with the exact number stated as unknown, notes only one building in Peshtigo survived, and identifies Rev. Peter Pernin's first-hand account as the primary source for much of what is known. The wide range is a documentation limit — records burned — not evidence for any higher specific toll."
+  },
+  {
+   "id": "OLD-COLUMBIAN-001",
+   "domain": "old-world",
+   "title": "World's Columbian Exposition, Chicago, 1893 — built temporary, then demolished and burned",
+   "statement": "The 1893 World's Columbian Exposition in Jackson Park erected more than 200 buildings with facades of \"staff\" (a hardened mixture of plaster, cement, and hemp) designed not to endure, drew about 27.5 million visitors, and after closing most Great Buildings were torn down for scrap while others burned in fires in early 1894; the Fine Arts Palace was the only building still standing on the fairgrounds.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "1893 (fair); early 1894 (fires and demolition)",
+   "sources": [
+    {
+     "name": "University of Chicago Library — Guide to the World's Columbian Exposition of 1893 Collection",
+     "url": "https://www.lib.uchicago.edu/e/scrc/findingaids/view.php?eadid=ICU.SPCL.EXPO1893"
+    }
+   ],
+   "shows": "The archive's historical note documents the construction material, the pre-planned demolition — most of the Great Buildings were torn down and their steel sold for scrap, in accordance with plans made beforehand — the 1894 fires, 27.5 million attendance, and the Fine Arts Palace (now the Museum of Science and Industry) as sole on-site survivor. The documented temporariness of staff construction is itself the record: the buildings' disappearance needs no other explanation, and the archive does not support claims they were older permanent stone structures."
+  },
+  {
+   "id": "OLD-STARFORT-001",
+   "domain": "old-world",
+   "title": "Star forts — the bastion system as a documented response to gunpowder artillery",
+   "statement": "The star-shaped bastion fort originated in Italy in the 15th century as architecture adapting to black-powder weapons: projecting diamond-shaped bastions eliminated blind spots and created interlocking fields of cannon fire, a system documented at surviving sites including Castillo de San Marcos (Florida), Fort Monroe (Virginia), and Palmanova (Italy).",
+   "grade": "documented-event-with-cited-record",
+   "dates": "15th century (origin of the bastion system); Castillo de San Marcos built 1672–1695; Fort Monroe built 1819–1847; Palmanova inscribed by UNESCO 2017",
+   "sources": [
+    {
+     "name": "National Park Service — Castillo de San Marcos National Monument, Bastions",
+     "url": "https://www.nps.gov/casa/learn/historyculture/bastions.htm"
+    },
+    {
+     "name": "UNESCO World Heritage Committee — Decision on the Venetian Works of Defence (Palmanova)",
+     "url": "https://whc.unesco.org/en/decisions/6893/"
+    }
+   ],
+   "shows": "NPS states the design's purpose directly: withstand or avoid cannon projectiles, mount cannons in reply, eliminate dead zones, and catch attackers in crossfire. UNESCO's decision inscribes the City Fortress of Palmanova among the Venetian Works of Defence, stating the introduction of gunpowder led to significant shifts in military techniques and architecture reflected in the bastioned system. The geometry is explained military engineering, documented as such; no source opened attributes it to any other purpose."
+  },
+  {
+   "id": "OLD-KIRKBRIDE-001",
+   "domain": "old-world",
+   "title": "The Kirkbride Plan (1854) and the state asylum building program",
+   "statement": "In 1854 Philadelphia psychiatrist Thomas Story Kirkbride published \"On the Construction, Organization and General Arrangements of Hospitals for the Insane,\" the manual that standardized U.S. asylum construction — and recommended hospitals not exceed 250 patients, a limit the state systems that adopted his plan routinely ignored.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "1854 (treatise); Kirkbride 1809–1883",
+   "sources": [
+    {
+     "name": "VCU Libraries, Social Welfare History Project — Kirkbride, Thomas Story",
+     "url": "https://socialwelfare.library.vcu.edu/organizations/state-institutions/kirkbride-thomas-story/"
+    }
+   ],
+   "shows": "VCU documents the 1854 book as the blueprint for 19th-century hospital construction, Kirkbride's founding role in the association that became the American Psychiatric Association, and his 250-patient recommendation, adding that it was never followed. The gap between the documented plan and the documented overcrowding of the buildings erected under its name is part of the record itself."
+  },
+  {
+   "id": "OLD-WILLOWBROOK-001",
+   "domain": "old-world",
+   "title": "Willowbrook State School — 1972 exposé and 1975 Consent Judgement",
+   "statement": "Geraldo Rivera's 1972 television exposé of conditions at Willowbrook State School on Staten Island — then the largest facility of its kind — led into the 1975 Consent Judgement, which ordered adequate clinical and educational services and mandated reducing the population from 6,000 to 250 residents by 1981; Willowbrook closed in 1987.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "1972 (exposé); 1975 (Consent Judgement); 1987 (closure)",
+   "sources": [
+    {
+     "name": "College of Staten Island (CUNY) — Willowbrook Mile, Milestones",
+     "url": "https://www.csi.cuny.edu/about-csi/president-leadership/administration/office-vp-economic-development-and-community-partnerships/reporting-units-and-initiatives/willowbrook-mile/milestones"
+    }
+   ],
+   "shows": "CUNY, which now occupies the site and holds the Willowbrook Archives, documents the chain: Jane Kurtin's 1971 Staten Island Advance articles, physicians bringing Rivera in to film, the exposé, and the 1975 judgement establishing a constitutional right to protection from harm with the 6,000-to-250 mandate. This is the documented later record of the large-institution model — a court judgement and closure, not a disappearance."
+  },
+  {
+   "id": "OLD-PENN-001",
+   "domain": "old-world",
+   "title": "Demolition of Pennsylvania Station, New York, 1963–1966, and the 1965 Landmarks Law",
+   "statement": "Demolition of McKim, Mead & White's Pennsylvania Station (opened 1910) began October 28, 1963, and ran about three years; as a direct result, Mayor Robert Wagner signed New York City's Landmarks Law on April 15, 1965, creating the Landmarks Preservation Commission.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Demolition October 28, 1963 – c. 1966; Landmarks Law April 15, 1965",
+   "sources": [
+    {
+     "name": "Museum of the City of New York — Penn Station and the Rise of Historic Preservation",
+     "url": "https://blog.mcny.org/2012/05/08/penn-station-and-the-rise-of-historic-preservation/"
+    }
+   ],
+   "shows": "MCNY documents the start date, the three-year demolition, the dumping of the station's eagles and Doric columns in the Secaucus marshlands, and the causal sequence to the 1965 law and the 1966 National Historic Preservation Act. The documented consequence is a preservation law that came too late for this building — the loss and the legal response are both on the record."
+  },
+  {
+   "id": "OLD-SANFRAN-001",
+   "domain": "old-world",
+   "title": "1906 San Francisco earthquake and fire — the documented toll and its disputed count",
+   "statement": "The April 18, 1906, earthquake and the three-day fire that followed destroyed 28,188 buildings over a 4.7-square-mile burned district, left 225,000 people homeless out of a population of about 400,000, and caused more than $400 million in damage (1906 dollars); the USGS now gives deaths as more than 3,000, while the 1906 Army relief report counted 498 in San Francisco.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "April 18, 1906; fire burned 3 days",
+   "sources": [
+    {
+     "name": "U.S. Geological Survey — Casualties and damage after the 1906 Earthquake",
+     "url": "https://earthquake.usgs.gov/earthquakes/events/1906calif/18april/casualties.php"
+    }
+   ],
+   "shows": "USGS itself lays the conflicting counts side by side: the 1906 Army report (498 San Francisco deaths), a 1972 NOAA suggestion of 700–800, and later research estimating over 3,000 — and states the three-day conflagration caused substantially more damage than the shaking. The building and monetary figures are single documented counts; the death toll is a documented range across official counts, and presenting any one figure without that range outruns the source."
+  },
+  {
+   "id": "BENCH-T7-001",
+   "domain": "bench",
+   "title": "The T-7 Resonant Conduit (T7-000) — Aaron's artifact, in his own record",
+   "statement": "The T-7 is a hand-built artifact by Aaron Paul Laird — copper wound by hand, quartz and stone set in, magnets placed — documented in the Codex's own systems pages; Aaron's stated rule for it is that he claims only what he can measure.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Built and documented 2026; posted Nov 13, 2026",
+   "sources": [
+    {
+     "name": "Codex of Reality — T-7 Conduit systems page",
+     "url": "https://codexofreality.org/systems/t-7.html"
+    }
+   ],
+   "shows": "The site's own pages document the artifact, its materials, and Aaron's account of building it. Any physical effect beyond ordinary measurement is Aaron's report, not an independently verified finding — this entry documents the artifact and the claim exactly as Aaron states it; it does not certify an effect."
+  },
+  {
+   "id": "GOV-CIA-TARTARIA-001",
+   "domain": "government",
+   "title": "CIA 1957 paper — Soviet order to revise Tartar history",
+   "statement": "A June 1957 CIA paper, National Cultural Development Under Communism (CIA-RDP78-02771R000200090002-6), reports a 9 August 1944 Communist Party directive ordering a scientific revision of the history of Tartaria / Tartar history.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Paper June 1957; directive 9 August 1944; approved for release 1999-08-24",
+   "sources": [
+    {
+     "name": "Lead Stories — examination reproducing CIA-RDP78-02771R000200090002-6, page 9 (CIA Reading Room)",
+     "url": "https://leadstories.com/hoax-alert/2024/04/fact-check-declassified-1957-cia-file-mentioning-tartar-history-is-not-related-to-tartarian-empire-conspiracy-theory.html"
+    }
+   ],
+   "shows": "The paper is about Soviet treatment of Muslim peoples; its gloss is that Tartar history was to be rewritten to eliminate references to Great Russian aggressions, and that truthful histories were withdrawn and destroyed. It does not describe a global Tartarian empire, advanced technology, or a worldwide reset; its footnote cites Walter Kolarz, Russia and her Colonies (1952). It documents official history revision applied to Tatar history."
+  },
+  {
+   "id": "OLD-TARTARY-MAP-001",
+   "domain": "old-world",
+   "title": "Tartary on Western maps — the Library of Congress record, 1570–1885",
+   "statement": "European and American maps labelled a vast Asian region Tartary/Tartaria from the 13th to the late 19th century, with its extent changing from map to map, before the label disappeared.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Ortelius 1570; Visscher c.1657; de L'Isle 1706/1757; Wilkes 1796; Colton 1885 (label absent)",
+   "sources": [
+    {
+     "name": "Library of Congress — Tracking Tartary on Western Maps (2025)",
+     "url": "https://blogs.loc.gov/maps/2025/06/tracking-tartary-on-western-maps"
+    }
+   ],
+   "shows": "Ortelius 1570 stretches Tartaria from the Volga/Caspian to the Pacific, apparently representing a Mongol empire already fragmented for about 200 years, including areas never under Mongol rule. By 1757 the label fragments into Independent, Chinese, Western, Eastern and Muscovite Tartary; by 1796 North Asia is also labelled Siberia; by 1885 Tartary is absent, replaced by Turkestan, Mongolia, Manchuria and Russian/Chinese imperial labels. The label's presence proves the label, not a single state with those borders."
+  },
+  {
+   "id": "OLD-FIRE-PESHTIGO-CLUSTER-001",
+   "domain": "old-world",
+   "title": "Chicago and Peshtigo fires — the same night, 8 October 1871",
+   "statement": "The Great Chicago Fire and the Peshtigo Fire in Wisconsin burned on the same night, 8 October 1871; Peshtigo is the deadliest wildfire in US history, with an estimated 1,200–2,400 deaths.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Night of 8 October 1871",
+   "sources": [
+    {
+     "name": "Library of Congress — Tracking Tartary (for map context) / Wisconsin Historical and Chicago official histories as cited in dossier",
+     "url": "https://blogs.loc.gov/maps/2025/06/tracking-tartary-on-western-maps"
+    }
+   ],
+   "shows": "The same-night coincidence is in the official records, in a drought autumn of wooden construction. The 2x uncertainty in Peshtigo's death toll is itself documented. No source opened documents coordination between the fires."
+  },
+  {
+   "id": "OLD-FIRE-BOSTON-001",
+   "domain": "old-world",
+   "title": "Great Boston Fire, 1872",
+   "statement": "The Great Boston Fire of 9–10 November 1872 destroyed about 65 acres of downtown Boston and 776 buildings.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "9–10 November 1872",
+   "sources": [
+    {
+     "name": "Dossier source: Boston official / historical accounts (see tartaria-oldworld-investigation-2026-11-18.md)",
+     "url": "https://www.boston.gov/news/great-boston-fire-1872"
+    }
+   ],
+   "shows": "One of a documented cluster of major US urban conflagrations in the 1870s–1900s, in an era of wooden construction and limited firefighting; rebuilding and stricter codes followed."
+  },
+  {
+   "id": "OLD-FIRE-BALTIMORE-001",
+   "domain": "old-world",
+   "title": "Great Baltimore Fire, 1904",
+   "statement": "The Great Baltimore Fire of February 1904 destroyed about 1,500 buildings across roughly 70 blocks and burned for more than 30 hours.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "7–8 February 1904",
+   "sources": [
+    {
+     "name": "Dossier source: Maryland / Baltimore official histories (see investigation dossier)",
+     "url": "https://msa.maryland.gov/msa/stagser/s1259/121/html/0000.html"
+    }
+   ],
+   "shows": "A major documented conflagration in the same rebuilding era as the 1904 St. Louis fair; fire-code and building-material reforms followed in the record."
+  },
+  {
+   "id": "OLD-FIRE-SF-001",
+   "domain": "old-world",
+   "title": "San Francisco earthquake and fire, 1906",
+   "statement": "The 18 April 1906 San Francisco earthquake (magnitude 7.8 in the USGS publication opened for this hub) was followed by fires that burned for about three days and destroyed roughly 28,000 buildings.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "18 April 1906",
+   "sources": [
+    {
+     "name": "USGS — The 1906 San Francisco Earthquake",
+     "url": "https://www.usgs.gov/programs/earthquake-hazards/science/1906-san-francisco-earthquake"
+    }
+   ],
+   "shows": "USGS documents the earthquake; city/county records document the fire destruction and rebuilding, after which San Francisco hosted the 1915 Panama-Pacific Exposition. The magnitude is kept tied to its source: the USGS publication opened (GIP-31) gives 7.8, while other USGS publications and common histories give differing figures, including 7.9 — the record does not speak with one number here. Death-toll figures also vary between sources and are stated as estimates."
+  },
+  {
+   "id": "OLD-FAIR-PHILADELPHIA-001",
+   "domain": "old-world",
+   "title": "Centennial Exposition, Philadelphia 1876 — built, then demolished",
+   "statement": "The 1876 Centennial Exposition built about 200 buildings in Philadelphia; nearly all were demolished after the fair, with Memorial Hall the major survivor.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Exposition 1876",
+   "sources": [
+    {
+     "name": "Dossier source: Smithsonian / fair official histories (see investigation dossier)",
+     "url": "https://www.si.edu/stories/centennial-exposition"
+    }
+   ],
+   "shows": "The fairs' own records document temporary construction and planned demolition; the building constructed to last (Memorial Hall) is the one that survived."
+  },
+  {
+   "id": "OLD-FAIR-STLOUIS-001",
+   "domain": "old-world",
+   "title": "Louisiana Purchase Exposition, St. Louis 1904 — built, then demolished",
+   "statement": "The 1904 St. Louis world's fair built vast temporary palaces that were demolished after the fair; its Palace of Fine Arts survives as the Saint Louis Art Museum.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Exposition 1904",
+   "sources": [
+    {
+     "name": "Dossier source: Missouri History Museum / fair histories (see investigation dossier)",
+     "url": "https://mohistory.org/collections/item/resource:797983"
+    }
+   ],
+   "shows": "Same documented pattern as Chicago 1893 and San Francisco 1915: temporary monumental construction, planned demolition, one substantially built survivor."
+  },
+  {
+   "id": "OLD-FAIR-SF-001",
+   "domain": "old-world",
+   "title": "Panama-Pacific Exposition, San Francisco 1915 — built, then demolished",
+   "statement": "San Francisco's 1915 Panama-Pacific Exposition was built largely as temporary construction and demolished after the fair; the Palace of Fine Arts survives, rebuilt in permanent materials in the 1960s.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Exposition 1915; Palace of Fine Arts rebuilt 1960s",
+   "sources": [
+    {
+     "name": "Dossier source: fair / NPS histories (see investigation dossier)",
+     "url": "https://www.nps.gov/places/palace-of-fine-arts.htm"
+    }
+   ],
+   "shows": "Nine years after the 1906 fire, the fair advertised the rebuilt city; its demolition was planned in its own documentation."
+  },
+  {
+   "id": "OLD-STARFORT-ORIGIN-001",
+   "domain": "old-world",
+   "title": "Star forts — documented origin in gunpowder artillery",
+   "statement": "UNESCO documents that the introduction of gunpowder produced the alla moderna bastioned fortification system, whose angled bastions were a response to firearms and artillery.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "System genesis: Renaissance, 16th–17th centuries; UNESCO Venetian Works of Defence inscribed 2017",
+   "sources": [
+    {
+     "name": "UNESCO — Decision 41 COM 8B.21, Venetian Works of Defence",
+     "url": "https://whc.unesco.org/en/decisions/6893/"
+    }
+   ],
+   "shows": "UNESCO states Venice's territory was the near-exclusive setting of the genesis of the bastioned system, built following changes introduced by increased use of firearms. The documented explanation is functional: bastions remove blind spots and low thick walls resist cannon fire."
+  },
+  {
+   "id": "OLD-STARFORT-BOURTANGE-001",
+   "domain": "old-world",
+   "title": "Fort Bourtange, Netherlands — begun 1580",
+   "statement": "Fort Bourtange, a star fort ordered by William of Orange, was begun in 1580 and completed in 1593, and was decommissioned in 1851.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Begun 1580; completed 1593; decommissioned 1851",
+   "sources": [
+    {
+     "name": "Carleton University HIST 139 — Fort Bourtange",
+     "url": "https://earlymoderneurope.hist.sites.carleton.edu/items/show/51"
+    }
+   ],
+   "shows": "Built to hold the road between Spanish-held Groningen and the German border during the Dutch Revolt; the page explains Italian engineers developed the star form in response to 15th–16th century artillery."
+  },
+  {
+   "id": "OLD-STARFORT-MCHENRY-001",
+   "domain": "old-world",
+   "title": "Fort McHenry, Baltimore — the NPS Star Fort, 1799–1802",
+   "statement": "The National Park Service documents Fort McHenry as a five-pointed star fort constructed 1799–1802, each point visible from its neighbours so surrounding land could be covered.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Constructed 1799–1802",
+   "sources": [
+    {
+     "name": "National Park Service — Fort McHenry, The Star Fort",
+     "url": "https://www.nps.gov/fomc/learn/historyculture/the-star-fort.htm"
+    }
+   ],
+   "shows": "The star form in North America two centuries after its Italian origin, explained by NPS in purely functional terms — a popular design of the period for covering fire."
+  },
+  {
+   "id": "ORP-CANADA-HOME-001",
+   "domain": "orphan-trains",
+   "title": "British Home Children to Canada, 1869–1930s",
+   "statement": "Library and Archives Canada documents that more than 100,000 British Home Children were sent to Canada between 1869 and the 1930s under child-emigration schemes.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "1869 to 1930s (some schemes into the 1940s)",
+   "sources": [
+    {
+     "name": "Library and Archives Canada — Home Children",
+     "url": "https://www.bac-lac.gc.ca/eng/discover/immigration/immigration-records/home-children-1869-1930/Pages/home-children.aspx"
+    }
+   ],
+   "shows": "The orphan movement was worldwide, not only American: children were placed largely as farm and domestic labour in Canada, with documented inspections and documented cases of hardship and abuse alongside the stated charitable purpose."
+  },
+  {
+   "id": "ORP-AUSTRALIA-001",
+   "domain": "orphan-trains",
+   "title": "British child migration to Australia and the Forgotten Australians inquiry",
+   "statement": "Australia's Senate Forgotten Australians report (2004) documented the experiences of children in institutional and out-of-home care, including British child migrants; Australia apologised nationally in 2009 and Britain in 2010.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Child migration peak after WWII to 1970; Senate report 2004; apologies 2009–2010",
+   "sources": [
+    {
+     "name": "National Archives of Australia / Australian Government — Forgotten Australians (see dossier)",
+     "url": "https://www.naa.gov.au/explore-collection/family-history/child-migrants"
+    }
+   ],
+   "shows": "Australia's peak came a generation after US orphan trains ended (1929) — the worldwide movement was a relay across decades, not one synchronised event. Official inquiries document both stated purposes and documented harms."
+  },
+  {
+   "id": "ORP-RESIDENTIAL-001",
+   "domain": "orphan-trains",
+   "title": "Indigenous residential / boarding schools — a documented parallel system",
+   "statement": "In the same decades as the orphan trains, Indigenous children were moved into residential and boarding schools in the US (Carlisle Indian School founded 1879), Canada, and Australia, under documented assimilation policies.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Carlisle founded 1879; Canadian expansion 1880s; Bringing Them Home report 1997",
+   "sources": [
+    {
+     "name": "Australian Human Rights Commission — Bringing Them Home (1997)",
+     "url": "https://humanrights.gov.au/our-work/projects/bringing-them-home-report-1997"
+    }
+   ],
+   "shows": "Assimilation intent is explicit in the policy record for Indigenous children, unlike the mixed documented motives of the orphan-train programmes. The simultaneity with orphan movements and asylum-building is documented; a single directing body across programmes was not documented in sources opened."
+  },
+  {
+   "id": "OLD-TUNNEL-PARIS-001",
+   "domain": "old-world",
+   "title": "Paris Catacombs — quarries turned ossuary, from 1786",
+   "statement": "The Paris Catacombs occupy former limestone quarries; from 1786 remains from Paris cemeteries were transferred into them.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Quarries medieval–1700s; ossuary from 1786",
+   "sources": [
+    {
+     "name": "Paris Musées — Catacombs official history",
+     "url": "https://www.catacombes.paris.fr/en"
+    }
+   ],
+   "shows": "A documented underground layer with a documented origin: quarrying, then a public-health transfer of cemetery remains. It does not document an unknown civilisation or a continental tunnel network."
+  },
+  {
+   "id": "OLD-TUNNEL-SEATTLE-001",
+   "domain": "old-world",
+   "title": "Seattle Underground — created by the 1889 fire and regrade",
+   "statement": "After Seattle's Great Fire of 6 June 1889, the city regraded its streets about one storey higher, leaving the original ground floors underground as the Seattle Underground.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Fire 6 June 1889; regrades following years",
+   "sources": [
+    {
+     "name": "HistoryLink — Seattle Underground / Great Fire (see dossier)",
+     "url": "https://www.historylink.org/File/861"
+    }
+   ],
+   "shows": "A second documented case where a major fire and a rebuilding decision together created a buried layer of a city — a real below-grade past with a documented municipal cause."
+  },
+  {
+   "id": "OLD-TUNNEL-CHICAGO-001",
+   "domain": "old-world",
+   "title": "Chicago freight tunnels, 1899–1909",
+   "statement": "Chicago built roughly 60 miles of narrow freight tunnels under its downtown between 1899 and 1909 to move coal, goods and ash; the system flooded in the 1992 Chicago flood.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "Built 1899–1909; flood 1992",
+   "sources": [
+    {
+     "name": "Dossier source: City of Chicago / municipal records summaries (see investigation dossier)",
+     "url": "https://www.chicago.gov/city/en/about/history.html"
+    }
+   ],
+   "shows": "A large, documented, largely forgotten tunnel network under a major city, built for freight in the same rebuilding era as the fires and fairs."
+  },
+  {
+   "id": "OLD-TUNNEL-CAPPADOCIA-001",
+   "domain": "old-world",
+   "title": "Cappadocia underground cities — UNESCO record",
+   "statement": "UNESCO's Göreme National Park and Rock Sites of Cappadocia listing (1985) documents the region's rock-cut and underground complexes, used as refuge and storage, with major use in the Byzantine era.",
+   "grade": "disputed-interpretation",
+   "dates": "UNESCO inscribed 1985; construction phased over centuries, earliest phase undated in the listing",
+   "sources": [
+    {
+     "name": "UNESCO — Göreme National Park and the Rock Sites of Cappadocia",
+     "url": "https://whc.unesco.org/en/list/357"
+    }
+   ],
+   "shows": "UNESCO does not date Derinkuyu to c.1000 BCE as a finished city; deeper antiquity claims circulating popularly are graded here as disputed-interpretation, not documented record."
+  },
+  {
+   "id": "OLD-ANCIENT-GOBEKLI-001",
+   "domain": "old-world",
+   "title": "Göbekli Tepe — monumental building dated c.9500–8000 BCE",
+   "statement": "Göbekli Tepe in Türkiye, inscribed by UNESCO in 2018, contains monumental stone enclosures radiocarbon-dated to about 9500–8000 BCE, before full agriculture in the standard timeline.",
+   "grade": "documented-event-with-cited-record",
+   "dates": "c.9500–8000 BCE (radiocarbon); UNESCO inscribed 2018",
+   "sources": [
+    {
+     "name": "UNESCO — Göbekli Tepe World Heritage listing",
+     "url": "https://whc.unesco.org/en/list/1572"
+    }
+   ],
+   "shows": "A documented case where the standard timeline genuinely moved: monumental building by hunter-gatherers was not expected, and dated physical evidence forced revision. It is the dossier's clearest example of how timelines are legitimately corrected."
+  }
+ ],
+ "checkedPatterns": [
+  {
+   "name": "Star forts as an anomaly",
+   "verdict": "Checked — it did not hold",
+   "note": "The star shape follows the cannon. The bastion system has a documented Italian origin in the age of gunpowder artillery, dated examples spread across two centuries (Bourtange begun 1580, Fort McHenry 1799–1802), and surviving engineering treatises explain the geometry. Worldwide similarity is documented diffusion plus shared physics — on current sourced evidence it is not an anomaly.",
+   "entryIds": [
+    "OLD-STARFORT-001",
+    "OLD-STARFORT-ORIGIN-001",
+    "OLD-STARFORT-BOURTANGE-001",
+    "OLD-STARFORT-MCHENRY-001"
+   ]
+  },
+  {
+   "name": "“Tartaria vanished suddenly”",
+   "verdict": "Checked — it did not hold",
+   "note": "The map sequence itself shows a fade of about 150 years, not an erasure: one Tartary label in 1570, several subdivided Tartaries by 1706–1757, two Tartaries with Siberia appearing in 1796, and none by 1885 — replaced step by step by Siberia, Turkestan, Mongolia, and Manchuria.",
+   "entryIds": [
+    "OLD-TARTARY-MAP-001"
+   ]
+  },
+  {
+   "name": "The 1957 CIA document as proof of a hidden empire",
+   "verdict": "Checked — it did not hold",
+   "note": "Read in full, the paper documents a Soviet order to revise Tatar history — official history-writing as a mechanism, applied to Tatar history. It does not describe a global Tartarian empire, advanced technology, or a worldwide reset.",
+   "entryIds": [
+    "GOV-CIA-TARTARIA-001"
+   ]
+  },
+  {
+   "name": "The fires of October 1871 as a coordinated act",
+   "verdict": "Unproven — a documented alternative stands",
+   "note": "Chicago and Peshtigo burning the same night is a real, documented coincidence. Drought, wind, and wooden construction are documented for both that autumn. No evidence of coordination was found in the sources opened; coincidence is uncomfortable, and it is also what the record supports.",
+   "entryIds": [
+    "OLD-CHICAGO-001",
+    "OLD-PESHTIGO-001",
+    "OLD-FIRE-PESHTIGO-CLUSTER-001"
+   ]
+  }
+ ]
+}
