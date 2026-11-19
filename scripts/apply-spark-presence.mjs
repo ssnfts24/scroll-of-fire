@@ -20,10 +20,11 @@
  *   - docs/caravan.html — meta-refresh redirect stub.
  *   - docs/companions.html — the Spark's home; it loads the core and
  *     its own page glue instead of the corner presence.
- *   - docs/scroll/ and docs/scripture/ — generator-owned pages; their
- *     generators do not emit the presence in v1, so a rebuild cannot
- *     wipe a hand edit that was never made. A later wave can teach
- *     the generators.
+ *   - docs/scroll/ and docs/scripture/ — generator-owned pages. Their
+ *     generators (scripts/build-scroll-library.mjs and
+ *     scripts/r2_02_pages.py) emit the presence themselves, so this
+ *     script stays out: one owner per page, and a rebuild keeps the
+ *     Spark travelling with its keeper there too.
  *
  * Idempotent: anything already present is left exactly as it is.
  *

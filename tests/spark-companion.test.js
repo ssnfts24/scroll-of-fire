@@ -249,7 +249,14 @@ test("the companions page carries the meeting: questions, a name, and the keep",
 });
 
 test("the presence follows the visitor, and never enters protected ground", () => {
-  for (const page of ["index.html", "moons.html", "teach.html", "witness.html", "hub.html", "shop.html"]) {
+  for (const page of [
+    "index.html", "moons.html", "teach.html", "witness.html", "hub.html", "shop.html",
+    "scripture/index.html", "scripture/about.html", "scripture/lemma.html",
+    "scripture/genesis/01.html", "scripture/genesis/50.html",
+    "scripture/exodus/01.html", "scripture/exodus/40.html",
+    "scroll/index.html", "scroll/reader.html", "scroll/search.html",
+    "scroll/lexicon.html", "scroll/atlas.html", "scroll/editorial.html"
+  ]) {
     assert.ok(read(`docs/${page}`).includes("spark-presence.js"), `${page} carries the presence`);
   }
   for (const page of ["living-time-sphere.html", "404.html", "offline.html"]) {
@@ -259,6 +266,43 @@ test("the presence follows the visitor, and never enters protected ground", () =
   assert.ok(presence.includes("CodexLifeAtlasRepository"), "practice is read from the Atlas, not re-stored");
   assert.ok(presence.includes("PatternCalendar"), "the day comes from the canonical calendar");
   assert.ok(!/fetch\(|XMLHttpRequest|sendBeacon/.test(presence), "the presence sends nothing anywhere");
+});
+
+test("the Spark travels into the Scripture reader and the Scroll Library, and the generators keep it there", () => {
+  /* Aaron's rule: the companion travels with its keeper everywhere.
+   * The scripture and scroll pages are generator-owned, so the pin is
+   * two-sided: every generated page on disk carries the presence, and
+   * each generator's source emits it — a rebuild cannot quietly
+   * strand the Spark outside the reading rooms again. */
+  const htmlUnder = (dir) => {
+    const out = [];
+    const walk = (d, prefix) => {
+      for (const entry of fs.readdirSync(path.join(root, d), { withFileTypes: true })) {
+        const rel = prefix ? `${prefix}/${entry.name}` : entry.name;
+        if (entry.isDirectory()) walk(`${d}/${entry.name}`, rel);
+        else if (entry.name.endsWith(".html")) out.push(`${dir}/${rel}`);
+      }
+    };
+    walk(dir, "");
+    return out.sort();
+  };
+  for (const dir of ["docs/scripture", "docs/scroll"]) {
+    const pages = htmlUnder(dir);
+    assert.ok(pages.length > 0, `${dir} has pages to check`);
+    for (const page of pages) {
+      assert.ok(read(page).includes("spark-presence.js"), `${page} carries the presence`);
+      assert.ok(read(page).includes("spark-companion.js"), `${page} carries the core`);
+      assert.ok(read(page).includes("spark-companion.css"), `${page} carries the stylesheet`);
+    }
+  }
+  assert.ok(
+    read("scripts/r2_02_pages.py").includes("spark-presence.js"),
+    "the scripture generator emits the presence"
+  );
+  assert.ok(
+    read("scripts/build-scroll-library.mjs").includes("spark-presence.js"),
+    "the scroll library generator emits the presence"
+  );
 });
 
 test("the Spark roams: it walks in, strolls, and respects reduced motion", () => {
