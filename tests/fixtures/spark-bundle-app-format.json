@@ -1,0 +1,189 @@
+{
+  "format": "living-phone-spark-bundle",
+  "version": 1,
+  "app": "org.codexofreality.livingphone",
+  "exportedAt": "2026-11-19T21:00:00.000Z",
+  "payload": {
+    "spark": {
+      "record": {
+        "version": 1,
+        "seed": "spark1-8-217-1-3q45gs7i",
+        "name": "Nori",
+        "bornCivil": "2026-11-19",
+        "daysSeen": [
+          217
+        ],
+        "pagesSeen": [
+          "companions.html"
+        ],
+        "practiceDays": [
+          217
+        ],
+        "lastDay": 217,
+        "lastPage": "companions.html",
+        "prevPage": null,
+        "stageSeen": 0,
+        "care": {
+          "kindles": 0,
+          "plays": 0,
+          "rests": 0,
+          "bond": 0,
+          "kindleDay": null,
+          "playDay": null,
+          "playCount": 0,
+          "restDay": null
+        },
+        "trail": {
+          "day": null,
+          "done": []
+        },
+        "play": {
+          "pets": 0,
+          "pokes": 0,
+          "drags": 0,
+          "catches": 0,
+          "bestChase": 0,
+          "echoBest": 0,
+          "tricks": [],
+          "askedDay": null
+        },
+        "revealsSeen": []
+      },
+      "pendingSeed": null,
+      "sound": "on",
+      "voice": "off"
+    },
+    "garden": [
+      {
+        "id": "garden-tend-fixture-0001",
+        "schemaVersion": "1.0.0",
+        "type": "event",
+        "subtype": "garden-tend",
+        "title": "Tended the first bed — garden cycle 1",
+        "summary": "One tend in the Shroom Search garden. Growth is counted from tends and practice-rain days, never from timers.",
+        "temporal": {
+          "instant": "2026-11-19T18:00:00.000Z",
+          "start": null,
+          "end": null,
+          "timezone": null,
+          "boundaryMode": null,
+          "civilDate": "2026-11-19",
+          "patternYear": 1,
+          "moon": 8,
+          "moonDay": 21,
+          "patternDay": 217,
+          "week": 31,
+          "weekGate": null,
+          "outsideDay": false
+        },
+        "spatial": {
+          "latitude": null,
+          "longitude": null,
+          "altitude": null,
+          "placeId": null,
+          "placeLabel": null,
+          "precision": "unknown"
+        },
+        "relations": [],
+        "tags": [
+          "shroom-garden",
+          "garden-tend"
+        ],
+        "provenance": {
+          "sourceType": "shroom-garden",
+          "sourceId": "garden.html",
+          "createdAt": "2026-11-19T18:00:00.000Z",
+          "updatedAt": "2026-11-19T18:00:00.000Z",
+          "importedAt": null,
+          "confidence": null,
+          "calculationAuthority": "PatternCalendar"
+        },
+        "privacy": {
+          "visibility": "private",
+          "containsPersonalData": true,
+          "shareAllowed": false
+        },
+        "payload": {
+          "shroomGarden": {
+            "version": 1,
+            "action": "tend",
+            "bedId": "bed-1",
+            "cycle": 1
+          }
+        }
+      },
+      {
+        "id": "garden-pass-fixture-0001",
+        "schemaVersion": "1.0.0",
+        "type": "artifact",
+        "subtype": "garden-pass",
+        "title": "Garden pass — harvested from the first bed, cycle 1",
+        "summary": "A pass earned in the Shroom Search garden, held in the keeper's Life Atlas on this device.",
+        "temporal": {
+          "instant": "2026-11-19T18:00:00.000Z",
+          "start": null,
+          "end": null,
+          "timezone": null,
+          "boundaryMode": null,
+          "civilDate": "2026-11-19",
+          "patternYear": 1,
+          "moon": 8,
+          "moonDay": 21,
+          "patternDay": 217,
+          "week": 31,
+          "weekGate": null,
+          "outsideDay": false
+        },
+        "spatial": {
+          "latitude": null,
+          "longitude": null,
+          "altitude": null,
+          "placeId": null,
+          "placeLabel": null,
+          "precision": "unknown"
+        },
+        "relations": [],
+        "tags": [
+          "shroom-garden",
+          "garden-pass"
+        ],
+        "provenance": {
+          "sourceType": "shroom-garden",
+          "sourceId": "garden.html",
+          "createdAt": "2026-11-19T18:05:00.000Z",
+          "updatedAt": "2026-11-19T18:05:00.000Z",
+          "importedAt": null,
+          "confidence": null,
+          "calculationAuthority": "PatternCalendar"
+        },
+        "privacy": {
+          "visibility": "private",
+          "containsPersonalData": true,
+          "shareAllowed": false
+        },
+        "payload": {
+          "shroomGarden": {
+            "version": 1,
+            "action": "harvest",
+            "bedId": "bed-1",
+            "cycle": 1,
+            "status": "held",
+            "earnedBy": "bloom-harvest"
+          }
+        }
+      }
+    ],
+    "pins": [
+      {
+        "kind": "photo-day",
+        "ref": "2026-11-19",
+        "label": "Photos — Thursday, November 19, 2026",
+        "pinnedAt": "2026-11-19T20:00:00.000Z"
+      }
+    ]
+  },
+  "integrity": {
+    "algorithm": "sha256",
+    "hash": "39bf355cdb1d7b088e6e7627e5c878bee513e6f59fcaf9f331e1d5755409dfda"
+  }
+}
