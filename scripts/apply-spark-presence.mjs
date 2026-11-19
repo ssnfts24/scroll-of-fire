@@ -46,7 +46,7 @@ const EXCLUDED_FILES = new Set([
 ]);
 const EXCLUDED_DIRS = new Set(["scroll", "scripture"]);
 
-const STAMP = "20261118-2";
+const STAMP = "20261118-3";
 const CSS_TAG =
   `<link rel="stylesheet" href="assets/css/spark-companion.css?v=${STAMP}">`;
 const SCRIPT_TAGS =

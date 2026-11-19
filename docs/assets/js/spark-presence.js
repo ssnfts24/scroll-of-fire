@@ -180,6 +180,15 @@
     if (lift > 0) host.style.bottom = `${12 + lift}px`;
   }
 
+  /* A tap reaction: the wiggle class lands, plays, and is taken
+   * back off, so the Spark's ordinary breathing resumes. */
+  function react(el) {
+    el.classList.remove("is-reacting");
+    void el.offsetWidth;
+    el.classList.add("is-reacting");
+    window.setTimeout(() => el.classList.remove("is-reacting"), 500);
+  }
+
   function pageKey() {
     const path = window.location.pathname.replace(/\/+$/, "");
     const last = path.split("/").pop() || "index.html";
@@ -206,19 +215,66 @@
     }
   }
 
-  function renderPresence(record, companion, today, arrival) {
+  /* The panel's contents, from the core's panel data: both names
+   * and which is which, its kind and character, its growth, the
+   * days together, and what it has noticed — observed labeled
+   * observed, inferred labeled inferred, never merged. Built with
+   * text nodes throughout: nothing the record holds is ever
+   * treated as markup. */
+  function fillPanel(host, record, companion, today) {
+    const panel = host.querySelector(".spark-presence-panel");
+    if (!panel) return;
+    const data = Core.panelFor({ record, companion, today });
+    panel.innerHTML = "";
+    const row = (label, value) => {
+      const p = document.createElement("p");
+      p.className = "spark-panel-row";
+      const b = document.createElement("strong");
+      b.textContent = label;
+      p.appendChild(b);
+      p.appendChild(document.createTextNode(` ${value}`));
+      panel.appendChild(p);
+    };
+    row("Answers to:", data.name);
+    if (data.seedName && data.seedName !== data.name) row("Seed name:", data.seedName);
+    row("Kind:", `${data.kindName} — ${data.temperament}, and ${data.trait}`);
+    row("Growth:", `${data.stageName} · ${data.points} points`);
+    row("Together:", `${data.daysTogether} day${data.daysTogether === 1 ? "" : "s"}`);
+    const head = document.createElement("p");
+    head.className = "spark-panel-row spark-panel-notices-head";
+    head.textContent = "Noticed, on this device:";
+    panel.appendChild(head);
+    const list = document.createElement("ul");
+    list.className = "spark-notices";
+    for (const notice of data.notices) {
+      const li = document.createElement("li");
+      const tag = document.createElement("span");
+      tag.className = `spark-notice-kind is-${notice.kind}`;
+      tag.textContent = notice.kind === "observed" ? "Observed" : "Inferred";
+      li.appendChild(tag);
+      li.appendChild(document.createTextNode(" "));
+      if (notice.href) {
+        const a = document.createElement("a");
+        a.href = notice.href;
+        a.textContent = notice.text;
+        li.appendChild(a);
+      } else {
+        li.appendChild(document.createTextNode(notice.text));
+      }
+      list.appendChild(li);
+    }
+    panel.appendChild(list);
+  }
+
+  function renderPresence(record, companion, today, arrival, growthLine) {
     const stage = Core.stageOf(record, companion);
     /* Arriving somewhere new — or just adopted — the Spark speaks
-     * as a guide: where you are, and a fitting next door. The rest
-     * of the time its standing suggestion, drawn from the record,
+     * as a guide with a memory: today's coordinate first, then the
+     * thread it remembers, then a fitting next door. The rest of
+     * the time its standing suggestion, drawn from the record,
      * waits behind a tap. */
     const guide = arrival
-      ? Core.arrivalFor({
-          record,
-          companion,
-          todayPatternDay: today ? today.dayOfPatternYear : null,
-          page: pageKey()
-        })
+      ? Core.arrivalGuideFor({ record, companion, today, page: pageKey() })
       : Core.guidanceFor({
           record,
           companion,
@@ -232,20 +288,26 @@
     walker.className = "spark-walker";
     liftClear(walker);
     /* Its own shape, from its seed: how big it stands, how it
-     * moves. The walking strip itself stays pointer-events: none;
-     * only the button takes taps. */
+     * moves — and growth you can see, each stage standing a
+     * little larger than the last. The walking strip itself stays
+     * pointer-events: none; only the button takes taps. */
     if (companion.shape) {
       walker.dataset.gait = companion.shape.gait;
-      walker.style.setProperty("--spark-size", String(companion.shape.size));
+      const grownSize = companion.shape.size * (1 + stage.index * 0.07);
+      walker.style.setProperty("--spark-size", String(Math.round(grownSize * 100) / 100));
     }
     host.appendChild(walker);
     walker.innerHTML =
       `<div class="spark-presence-bubble" hidden>` +
       `<p class="spark-presence-line"><strong class="spark-presence-who"></strong> · ${stage.name}</p>` +
+      `<p class="spark-presence-today"></p>` +
+      `<p class="spark-presence-growth" hidden></p>` +
       `<p class="spark-presence-guide"></p>` +
       `<p class="spark-presence-links"><a class="spark-presence-go" href="#">See it</a> ` +
+      `<a class="spark-presence-panel-link" href="#">Your Spark</a> ` +
       `<a class="spark-presence-visit" href="companions.html">Visit</a> ` +
-      `<a class="spark-presence-sound" href="#">Sounds: on</a></p></div>` +
+      `<a class="spark-presence-sound" href="#">Sounds: on</a></p>` +
+      `<div class="spark-presence-panel" hidden></div></div>` +
       `<button type="button" class="spark-presence-button" aria-expanded="false">` +
       `<span class="spark-presence-art">${Core.renderSVG(companion, { stage: stage.index })}</span>` +
       `<span class="spark-presence-name"></span></button>`;
@@ -256,10 +318,17 @@
     host.querySelector(".spark-presence-name").textContent = displayName;
     host.querySelector(".spark-presence-who").textContent = displayName;
     host.querySelector(".spark-presence-visit").textContent = `Visit ${displayName}`;
+    host.querySelector(".spark-presence-today").textContent = Core.coordinateLineFor(today);
     host.querySelector(".spark-presence-guide").textContent = guide.text;
+    const growthEl = host.querySelector(".spark-presence-growth");
+    if (growthLine) {
+      growthEl.textContent = growthLine;
+      growthEl.removeAttribute("hidden");
+    }
     const go = host.querySelector(".spark-presence-go");
     if (guide.href) go.setAttribute("href", guide.href);
     else go.remove();
+    fillPanel(host, record, companion, today);
 
     const button = host.querySelector(".spark-presence-button");
     const bubble = host.querySelector(".spark-presence-bubble");
@@ -272,8 +341,12 @@
         arrivalTimer = null;
       }
     };
+    const art = host.querySelector(".spark-presence-art");
     button.addEventListener("click", () => {
-      chirp(companion);
+      tapSound(companion);
+      /* A tap is answered in body as well as voice: a small
+       * bounce of delight, gone as soon as it lands. */
+      if (art) react(art);
       const open = bubble.hasAttribute("hidden");
       if (open) {
         bubble.removeAttribute("hidden");
@@ -281,6 +354,15 @@
       } else {
         closeBubble();
       }
+    });
+    /* The Your Spark panel: who it is, how it has grown, and what
+     * it has noticed — folded inside the bubble, one tap away. */
+    const panel = host.querySelector(".spark-presence-panel");
+    const panelLink = host.querySelector(".spark-presence-panel-link");
+    panelLink.addEventListener("click", (event) => {
+      event.preventDefault();
+      if (panel.hasAttribute("hidden")) panel.removeAttribute("hidden");
+      else panel.setAttribute("hidden", "");
     });
     const soundToggle = host.querySelector(".spark-presence-sound");
     const paintSound = () =>
@@ -307,11 +389,12 @@
     document.body.appendChild(host);
     roam(walker, host.querySelector(".spark-presence-art"));
     /* A guide speaks first on arrival, briefly, then steps back:
-     * the line shows itself, and folds away on its own. A tap on
+     * the line shows itself, and folds away on its own. A growth
+     * is spoken the same way, once, when it is new. A tap on
      * the Spark, or anywhere else, folds it sooner. Pages open
      * with a living entry first, though — so while that door is
      * up, the guide waits, and speaks the moment it lifts. */
-    if (arrival) {
+    if (arrival || growthLine) {
       const openBubble = () => {
         if (!bubble.hasAttribute("hidden")) return;
         bubble.removeAttribute("hidden");
@@ -345,22 +428,23 @@
   }
 
   let audioCtx = null;
-  function chirp(companion) {
-    if (soundOff()) return;
-    const notes = Core.chirpFor(companion);
-    if (!notes) return;
+  /* A row of soft notes, played in order. Nothing here ever runs
+   * on its own — every call site is a tap: the Spark tapped, the
+   * adoption tapped, the sounds turned back on. */
+  function playNotes(notes, step = 0.14) {
+    if (!notes || !notes.length) return;
     try {
       const AC = window.AudioContext || window.webkitAudioContext;
       if (!AC) return;
       audioCtx = audioCtx || new AC();
       if (audioCtx.state === "suspended") audioCtx.resume();
       const now = audioCtx.currentTime;
-      [notes.first, notes.second].forEach((freq, i) => {
+      notes.forEach((freq, i) => {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = "sine";
         osc.frequency.value = freq;
-        const start = now + i * 0.14;
+        const start = now + i * step;
         gain.gain.setValueAtTime(0.0001, start);
         gain.gain.exponentialRampToValueAtTime(0.12, start + 0.03);
         gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.32);
@@ -371,6 +455,40 @@
     } catch {
       /* no voice on this device: the Spark stays silent, unbothered */
     }
+  }
+
+  /* The greeting chirp — the Spark answering a tap. */
+  function chirp(companion) {
+    if (soundOff()) return;
+    const sounds = Core.soundsFor(companion);
+    if (sounds) playNotes(sounds.greeting);
+  }
+
+  /* The adoption song: a rising arpeggio, played at the moment of
+   * the adoption tap itself — that tap is the gesture. */
+  function adoptSong(companion) {
+    if (soundOff()) return;
+    const sounds = Core.soundsFor(companion);
+    if (sounds) playNotes(sounds.adopt, 0.11);
+  }
+
+  /* The growth chime. A growth is usually noticed on arrival,
+   * before any tap — so it is never played uninvited. It waits,
+   * and the Spark's first tap of the visit plays it instead of
+   * the plain greeting. */
+  let growthChimeWaiting = false;
+  function tapSound(companion) {
+    if (growthChimeWaiting) {
+      growthChimeWaiting = false;
+      if (!soundOff()) {
+        const sounds = Core.soundsFor(companion);
+        if (sounds) {
+          playNotes(sounds.growth);
+          return;
+        }
+      }
+    }
+    chirp(companion);
   }
 
   /* Roaming: the Spark walks in when a page opens, settles in its
@@ -413,55 +531,123 @@
 
   /* The adopted life, on any page: keep the record honest, then
    * walk in — speaking as a guide when this page is new to the
-   * record, or when the adoption just happened on this very page. */
+   * record, or when the adoption just happened on this very page.
+   * Growth is checked against the stage its person last saw: a
+   * new stage is announced once, in words on arrival and in the
+   * growth chime at the first tap, and then it is simply how the
+   * Spark is. */
   async function adoptedStart(record, companion, today, justAdopted) {
     const patternDay = today ? today.dayOfPatternYear : null;
     const isNewPage = !(record.pagesSeen || []).includes(pageKey());
     record = Core.recordVisit(record, { patternDay, page: pageKey() });
     record = await sensePractice(record);
+    const growth = Core.growthEventFor({ record, companion });
+    record = Core.markStageSeen(record, growth.stage.index);
     writeRecord(record);
+    if (growth.grew) growthChimeWaiting = true;
     /* On its own home page the Spark is already centre stage. */
     if (pageKey() !== "companions.html") {
-      renderPresence(record, companion, today, justAdopted || isNewPage);
+      renderPresence(
+        record,
+        companion,
+        today,
+        justAdopted || isNewPage,
+        growth.grew ? Core.growthLineFor({ record, companion, stage: growth.stage }) : null
+      );
     }
   }
 
-  /* The pop-up meeting. The Spark itself appears — its drawing,
-   * its name, its own short words — with one button that adopts
-   * it and one quiet way to say "Not now". Nothing is asked first:
-   * no form, no questions. The keeper's own name for it, if they
-   * ever want one, waits on the companions page as it always did. */
+  /* The pop-up meeting. The Spark itself arrives — flying,
+   * hopping or drifting in with the gait its seed grew, drawn so
+   * its uniqueness reads at a glance — and speaks in its
+   * temperament's voice: its kind, its trait, its seed-born name,
+   * the day it was made from. It answers a tap before it is
+   * adopted: a chirp and a wiggle. One button adopts it; one
+   * quiet way says "Not now". Nothing is asked first: no form,
+   * no quiz. The adoption itself is a moment — a bloom of light,
+   * its song, its name large — and inside that same moment the
+   * keeper may give it a name of their own, or skip and let the
+   * seed name be the name it answers to. */
   function renderEncounter(companion, seed, today) {
     const words = Core.encounterFor({ companion });
+    const gait = companion.shape ? companion.shape.gait : "stroll";
     const host = document.createElement("div");
     host.className = "spark-encounter-host";
     host.innerHTML =
-      `<div class="spark-encounter" role="dialog" aria-label="Meet your Spark">` +
-      `<div class="spark-encounter-art">${Core.renderSVG(companion, { stage: 0 })}</div>` +
+      `<div class="spark-encounter" role="dialog" aria-label="Meet your Spark" data-gait="${gait}">` +
+      `<button type="button" class="spark-encounter-artbtn" aria-label="Say hello to ${companion.name}">` +
+      `<span class="spark-encounter-art">${Core.renderSVG(companion, { stage: 0 })}</span></button>` +
       `<div class="spark-encounter-words">` +
       `<p class="spark-encounter-greet"></p>` +
       `<p class="spark-encounter-intro"></p>` +
+      `<p class="spark-encounter-voice"></p>` +
+      `<p class="spark-encounter-look"></p>` +
       `<p class="spark-encounter-born"></p>` +
       `<p class="spark-encounter-invite"></p>` +
       `<div class="spark-encounter-actions">` +
       `<button type="button" class="spark-encounter-adopt"></button>` +
       `<button type="button" class="spark-encounter-later"></button>` +
-      `</div></div></div>`;
+      `</div>` +
+      `<div class="spark-encounter-celebrate" hidden>` +
+      `<p class="spark-encounter-bigname"></p>` +
+      `<p class="spark-encounter-seednote"></p>` +
+      `<label class="spark-encounter-namelabel" for="spark-encounter-name-input">Name it answers to — optional</label>` +
+      `<input type="text" class="spark-encounter-name-input" id="spark-encounter-name-input" maxlength="24" autocomplete="off">` +
+      `<div class="spark-encounter-actions">` +
+      `<button type="button" class="spark-encounter-name-keep">Keep that name</button>` +
+      `<button type="button" class="spark-encounter-name-skip"></button>` +
+      `</div></div>` +
+      `</div></div>`;
     host.querySelector(".spark-encounter-greet").textContent = words.greeting;
     host.querySelector(".spark-encounter-intro").textContent = words.intro;
+    host.querySelector(".spark-encounter-voice").textContent = words.voice;
+    host.querySelector(".spark-encounter-look").textContent = words.look;
     host.querySelector(".spark-encounter-born").textContent = words.born;
     host.querySelector(".spark-encounter-invite").textContent = words.invite;
+    const card = host.querySelector(".spark-encounter");
+    const artBtn = host.querySelector(".spark-encounter-artbtn");
+    const art = host.querySelector(".spark-encounter-art");
+    /* Before adoption, a tap on the Spark itself is answered:
+     * its greeting chirp, and a wiggle of delight. */
+    artBtn.addEventListener("click", () => {
+      chirp(companion);
+      react(art);
+    });
     const adopt = host.querySelector(".spark-encounter-adopt");
     adopt.textContent = words.adoptLabel;
     const later = host.querySelector(".spark-encounter-later");
     later.textContent = words.laterLabel;
     adopt.addEventListener("click", () => {
-      const record = Core.newRecord({ seed, name: "", civilDate: civilToday() });
-      clearPending();
-      writeRecord(record);
-      chirp(companion);
-      host.remove();
-      adoptedStart(record, companion, today, true);
+      /* The moment itself: the song, the bloom, the name large —
+       * and the one optional question, asked inside the moment,
+       * skippable with a single tap. */
+      adoptSong(companion);
+      card.classList.add("is-celebrating");
+      host.querySelector(".spark-encounter-actions").setAttribute("hidden", "");
+      host.querySelector(".spark-encounter-invite").setAttribute("hidden", "");
+      const celebrate = host.querySelector(".spark-encounter-celebrate");
+      celebrate.removeAttribute("hidden");
+      host.querySelector(".spark-encounter-bigname").textContent = companion.name;
+      host.querySelector(".spark-encounter-seednote").textContent =
+        `${companion.name} is the name its seed speaks — its true name, the same anywhere. ` +
+        `Give it a name of your own below and it will answer to that, with ${companion.name} underneath.`;
+      host.querySelector(".spark-encounter-name-skip").textContent =
+        `Skip — keep ${companion.name}`;
+      const finish = (keeperName) => {
+        const record = Core.newRecord({ seed, name: keeperName, civilDate: civilToday() });
+        clearPending();
+        writeRecord(record);
+        host.remove();
+        adoptedStart(record, companion, today, true);
+      };
+      host
+        .querySelector(".spark-encounter-name-keep")
+        .addEventListener("click", () =>
+          finish(host.querySelector(".spark-encounter-name-input").value)
+        );
+      host
+        .querySelector(".spark-encounter-name-skip")
+        .addEventListener("click", () => finish(""));
     });
     later.addEventListener("click", () => {
       host.remove();

@@ -325,7 +325,7 @@ test("the pop-up meeting rides the presence: one tap, a remembered not-now, a wa
   assert.ok(presence.includes("spark-encounter"), "the Spark pops up and introduces itself");
   assert.ok(presence.includes("spark-encounter-adopt"), "one button adopts it");
   assert.ok(presence.includes("spark-ember"), "after not-now it waits as an ember at the edge");
-  assert.ok(presence.includes("arrivalFor"), "arriving somewhere new, it speaks as a guide");
+  assert.ok(presence.includes("arrivalGuideFor"), "arriving somewhere new, it speaks as a guide — with a memory, since v2");
   assert.ok(presence.includes("le-rail"), "its furniture lifts clear of the homepage's bottom path rail");
   assert.ok(presence.includes("lpo-overlay"), "the guide also waits for a page opening, not only the homepage entry");
   assert.ok(presence.includes("encounterFor"), "its first words come from the core, in its own voice");
@@ -335,6 +335,201 @@ test("the pop-up meeting rides the presence: one tap, a remembered not-now, a wa
   const css = read("docs/assets/css/spark-companion.css");
   assert.match(css, /\.spark-encounter\s*\{/, "the meeting has its card");
   assert.match(css, /\.spark-ember\s*\{/, "the ember has its place at the edge");
+});
+
+/* ---------- v2: a living meeting, a memory, visible growth ---------- */
+
+test("the meeting speaks in its temperament's voice, and its look can be seen", () => {
+  const companion = Core.generate(SEED_A);
+  const words = Core.encounterFor({ companion });
+  assert.equal(words.voice, Core.VOICE_LINES[companion.kind], "one line, in character");
+  assert.ok(words.voice.length > 10);
+  assert.ok(words.look.includes(companion.form), "the look line names its form");
+  assert.ok(words.look.includes(companion.markings.style), "and its markings");
+  assert.ok(words.look.includes(companion.shape.glow), "and its glow");
+  for (const kind of Core.KINDS) {
+    assert.ok(Core.VOICE_LINES[kind.id], `${kind.id} has a voice`);
+  }
+  const voices = new Set(Object.values(Core.VOICE_LINES));
+  assert.equal(voices.size, Core.KINDS.length, "no two kinds speak alike");
+});
+
+test("three voices, one pitch: greeting, adoption song, growth chime", () => {
+  const companion = Core.generate(SEED_A);
+  const sounds = Core.soundsFor(companion);
+  const chirp = Core.chirpFor(companion);
+  assert.deepEqual(sounds.greeting, [chirp.first, chirp.second], "the greeting is the chirp");
+  assert.equal(sounds.adopt.length, 4, "adoption is a four-note arpeggio");
+  for (let i = 1; i < sounds.adopt.length; i++) {
+    assert.ok(sounds.adopt[i] > sounds.adopt[i - 1], "and it rises");
+  }
+  assert.equal(sounds.growth.length, 3, "growth is a rising three");
+  assert.ok(sounds.growth[2] > sounds.growth[0]);
+  assert.notDeepEqual(sounds.growth, sounds.adopt);
+  assert.deepEqual(sounds, Core.soundsFor(Core.generate(SEED_A)), "same seed, same voices");
+  assert.equal(Core.soundsFor(null), null);
+});
+
+test("the record remembers where its person left off", () => {
+  let record = Core.newRecord({ seed: SEED_A, name: "Ember", civilDate: "2026-11-18" });
+  assert.equal(record.lastPage, null);
+  assert.equal(record.prevPage, null);
+  record = Core.recordVisit(record, { patternDay: 216, page: "index.html" });
+  assert.equal(record.lastPage, "index.html");
+  assert.equal(record.prevPage, null, "nowhere to have left off from, yet");
+  record = Core.recordVisit(record, { patternDay: 216, page: "moons.html" });
+  assert.equal(record.lastPage, "moons.html");
+  assert.equal(record.prevPage, "index.html");
+  /* A reload of the same page is not a journey: the thread stays. */
+  record = Core.recordVisit(record, { patternDay: 217, page: "moons.html" });
+  assert.equal(record.prevPage, "index.html");
+  record = Core.recordVisit(record, { patternDay: 217, page: "teach.html" });
+  assert.equal(record.prevPage, "moons.html");
+});
+
+test("the guide greets with the day, then picks the thread back up", () => {
+  const companion = Core.generate(SEED_A);
+  let record = Core.newRecord({ seed: SEED_A, name: "Ember", civilDate: "2026-11-18" });
+  record = Core.recordVisit(record, { patternDay: 216, page: "index.html" });
+  record = Core.recordVisit(record, { patternDay: 216, page: "moons.html" });
+  record = Core.recordVisit(record, { patternDay: 217, page: "index.html" });
+  const today = { moon: 8, day: 21, dayOfPatternYear: 217 };
+  const g = Core.arrivalGuideFor({ record, companion, today, page: "index.html" });
+  assert.equal(g.coordinate, "Moon 8 · Day 21 · Pattern Day 217", "the day, in Living Time");
+  assert.equal(g.kind, "observed", "a remembered thread is counted from the record");
+  assert.match(g.text, /left off at the 13 Moons page/);
+  assert.equal(g.href, "living-time-sphere.html", "the door they were heading toward");
+
+  /* When that door has been walked, the offer is the place itself. */
+  record = Core.recordVisit(record, { patternDay: 217, page: "living-time-sphere.html" });
+  record = Core.recordVisit(record, { patternDay: 217, page: "moons.html" });
+  record = Core.recordVisit(record, { patternDay: 217, page: "index.html" });
+  const back = Core.arrivalGuideFor({ record, companion, today, page: "index.html" });
+  assert.equal(back.href, "moons.html", "the thread's door is walked: return to where you left off");
+  assert.match(back.text, /left off at the 13 Moons page/);
+
+  /* No thread to remember: the standing guidance speaks, labeled a suggestion. */
+  const fresh = Core.newRecord({ seed: SEED_A, name: "", civilDate: "2026-11-18" });
+  const f = Core.arrivalGuideFor({ record: fresh, companion, today, page: "ab.html" });
+  assert.equal(f.kind, "inferred");
+  assert.equal(f.coordinate, "Moon 8 · Day 21 · Pattern Day 217");
+});
+
+test("a Day Out of Time greeting invents no moon", () => {
+  const line = Core.coordinateLineFor({ moon: null, moonName: "Day Out of Time", dayOfPatternYear: 365 });
+  assert.match(line, /Day Out of Time/);
+  assert.ok(!/Moon \d/.test(line));
+});
+
+test("growth is announced once: against the stage its person last saw", () => {
+  const companion = Core.generate(SEED_A);
+  let record = Core.newRecord({ seed: SEED_A, name: "Ember", civilDate: "2026-11-18" });
+  assert.equal(Core.growthEventFor({ record, companion }).grew, false, "just born is not growth");
+  for (let d = 0; d < 8; d++) {
+    record = Core.recordVisit(record, { patternDay: 216 + d, page: `p${d}.html` });
+  }
+  const event = Core.growthEventFor({ record, companion });
+  assert.equal(event.grew, true, "eight days together outgrow Just born");
+  assert.ok(event.stage.index > 0);
+  const line = Core.growthLineFor({ record, companion, stage: event.stage });
+  assert.match(line, /I grew — Day 8 of us/);
+  assert.ok(line.includes(event.stage.name));
+  /* Once seen, it is not news again. */
+  const seen = Core.markStageSeen(record, event.stage.index);
+  assert.equal(Core.growthEventFor({ record: seen, companion }).grew, false);
+  /* A record kept by the first build carries no seen-stage: its
+   * stage is taken as seen, so it never cries growth over old news. */
+  const legacy = { ...record };
+  delete legacy.stageSeen;
+  assert.equal(Core.growthEventFor({ record: legacy, companion }).grew, false);
+});
+
+test("growth shows on the drawing: satellites, then a second ring", () => {
+  const spark = Core.generate(SEED_A);
+  const born = Core.renderSVG(spark, { stage: 0 });
+  assert.ok(!born.includes("spark-satellite"), "no satellites at birth");
+  const kindled = Core.renderSVG(spark, { stage: 1 });
+  assert.ok(kindled.includes("spark-satellite"), "satellites arrive at Kindled");
+  assert.ok(!kindled.includes("spark-stage-ring2"), "no second ring yet");
+  const bright = Core.renderSVG(spark, { stage: 3 });
+  assert.ok(bright.includes("spark-stage-ring2"), "a second ring stands at Bright");
+  assert.ok(bright.includes('class="spark-eye"'), "the eye carries its blink class");
+  assert.ok(bright.includes('class="spark-halo"'), "the halo carries its class");
+});
+
+test("the panel: both names, its character, its growth, its labeled notices", () => {
+  const companion = Core.generate(SEED_A);
+  let record = Core.newRecord({ seed: SEED_A, name: "Nori", civilDate: "2026-11-18" });
+  record = Core.recordVisit(record, { patternDay: 216, page: "index.html" });
+  record = Core.recordVisit(record, { patternDay: 217, page: "moons.html" });
+  record = Core.recordPractice(record, { patternDay: 217 });
+  const panel = Core.panelFor({
+    record,
+    companion,
+    today: { moon: 8, day: 21, dayOfPatternYear: 217 }
+  });
+  assert.equal(panel.name, "Nori", "the name it answers to");
+  assert.equal(panel.seedName, companion.name, "and its seed name, underneath");
+  assert.equal(panel.kindName, companion.kindName);
+  assert.equal(panel.temperament, companion.temperament);
+  assert.equal(panel.trait, companion.trait);
+  assert.equal(panel.daysTogether, 2);
+  assert.equal(panel.coordinate, "Moon 8 · Day 21 · Pattern Day 217");
+  assert.ok(panel.stageName.length > 0);
+  assert.ok(panel.notices.length >= 3, "a walked record has things to say");
+  for (const notice of panel.notices) {
+    assert.ok(["observed", "inferred"].includes(notice.kind), "every notice is labeled");
+    assert.ok(notice.text.length > 0);
+  }
+  const observed = panel.notices.filter((n) => n.kind === "observed");
+  const inferred = panel.notices.filter((n) => n.kind === "inferred");
+  assert.ok(observed.length >= 2 && inferred.length >= 1, "both kinds present, never merged");
+  assert.ok(
+    observed.some((n) => /2 days together/.test(n.text)),
+    "observed facts are counted from the record"
+  );
+  assert.ok(
+    observed.some((n) => /Practice sealed on 1 day/.test(n.text)),
+    "practice is observed, not suggested"
+  );
+});
+
+test("the v2 life rides the presence: celebration, naming, panel, growth", () => {
+  const presence = read("docs/assets/js/spark-presence.js");
+  assert.ok(presence.includes("spark-encounter-artbtn"), "the Spark itself is tappable at the meeting");
+  assert.ok(presence.includes("is-celebrating"), "adoption is a moment, not a form submit");
+  assert.ok(presence.includes("spark-encounter-bigname"), "its name stands large in the moment");
+  assert.ok(presence.includes("spark-encounter-name-input"), "the keeper's name is offered in the same flow");
+  assert.ok(presence.includes("Name it answers to — optional"), "and it is plainly optional");
+  assert.ok(presence.includes("spark-encounter-name-skip"), "and skippable in one tap");
+  assert.ok(presence.includes("soundsFor"), "the three voices come from the core");
+  assert.ok(presence.includes("adoptSong"), "adoption has its own song");
+  assert.ok(presence.includes("growthChimeWaiting"), "the growth chime waits for a tap, never autoplays");
+  assert.ok(presence.includes("arrivalGuideFor"), "the guide speaks with a memory");
+  assert.ok(presence.includes("spark-presence-panel"), "the Your Spark panel rides the bubble");
+  assert.ok(presence.includes("panelFor"), "the panel is filled from the core's panel data");
+  assert.ok(presence.includes("growthEventFor"), "growth is checked against the last seen stage");
+  assert.ok(presence.includes("is-reacting"), "a tap is answered in the body");
+  assert.ok(!/fetch\(|XMLHttpRequest|sendBeacon/.test(presence), "v2 sends nothing anywhere either");
+  const css = read("docs/assets/css/spark-companion.css");
+  for (const hook of [
+    "spark-pop-hop",
+    "spark-pop-drift",
+    "spark-bloom",
+    "spark-breathe",
+    "spark-blink",
+    "spark-glance",
+    "spark-wiggle",
+    ".spark-presence-panel",
+    ".spark-notice-kind"
+  ]) {
+    assert.ok(css.includes(hook), `the stylesheet carries ${hook}`);
+  }
+  const blockStart = css.indexOf("prefers-reduced-motion");
+  const reduced = css.slice(blockStart, blockStart + 1600);
+  assert.ok(reduced.includes(".spark-eye"), "reduced motion stills the blink");
+  assert.ok(reduced.includes(".spark-presence-art svg"), "reduced motion stills the breathing");
+  assert.ok(reduced.includes(".is-celebrating"), "reduced motion stills the celebration");
 });
 
 test("no R1.7 protected file is touched by the Spark", () => {

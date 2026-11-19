@@ -145,6 +145,54 @@
     return { first: Math.round(base), second: Math.round(base * 1.335) };
   }
 
+  /* The Spark's three voices, all grown from the same seed pitch:
+   * the greeting (the plain two-note chirp), the adoption song (a
+   * small rising arpeggio — the happiest sound it knows), and the
+   * growth chime (a rising three, different from both). Pure data;
+   * the browser glue plays them, only ever after a tap. */
+  function soundsFor(companion) {
+    const chirp = chirpFor(companion);
+    if (!chirp) return null;
+    const base = chirp.first;
+    return {
+      greeting: [chirp.first, chirp.second],
+      adopt: [
+        base,
+        Math.round(base * 1.25),
+        Math.round(base * 1.5),
+        Math.round(base * 2)
+      ],
+      growth: [base, Math.round(base * 1.335), Math.round(base * 1.78)]
+    };
+  }
+
+  /* Each kind speaks in its temperament's voice. One short line,
+   * in character — the first thing the Spark says about itself
+   * after its name. */
+  const VOICE_LINES = {
+    fire: "I don't do slow hellos. Let's go and see everything.",
+    water: "No hurry here. We'll wander, and I'll keep up.",
+    shadow: "I notice the corners other people walk past. I'll show you.",
+    air: "I already have questions about this place. Good ones.",
+    earth: "One door at a time, and we'll miss nothing.",
+    light: "Morning or not, I'm glad you're here. Let's look around."
+  };
+
+  /* What to look for when you look at it: the uniqueness the seed
+   * grew, said in plain words so it can be seen, not just stored. */
+  function lookLineFor(companion) {
+    if (!companion) return "";
+    const crest =
+      companion.crest && companion.crest !== "none"
+        ? `, a small ${companion.crest} crest`
+        : "";
+    const glow = companion.shape ? companion.shape.glow : "soft";
+    return (
+      `Look closely: a ${companion.form}, ${companion.markings.style} for markings` +
+      `${crest}, with a ${glow} glow. No other Spark is built quite like this one.`
+    );
+  }
+
   /* Growth stages, in plain words. Points come from facts:
    * each return day after the first is worth 2, each practice day 3,
    * each new page seen 1 (counted up to 10 pages). */
@@ -361,9 +409,9 @@
   function eyeShape(companion) {
     const cy = companion.form === "moth" ? 50 : 52;
     if (companion.eye === "half")
-      return `<path d="M41 ${cy} Q50 ${cy - 7} 59 ${cy}" stroke="#0b0e18" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+      return `<path class="spark-eye" d="M41 ${cy} Q50 ${cy - 7} 59 ${cy}" stroke="#0b0e18" stroke-width="3" fill="none" stroke-linecap="round"/>`;
     const r = companion.eye === "bright" ? 8.5 : 7;
-    return `<circle cx="50" cy="${cy}" r="${r}" fill="#0b0e18"/><circle cx="50" cy="${cy}" r="${r * 0.45}" fill="${companion.palette.glow}"/><circle cx="${50 + r * 0.3}" cy="${cy - r * 0.3}" r="${r * 0.18}" fill="#fff"/>`;
+    return `<g class="spark-eye"><circle cx="50" cy="${cy}" r="${r}" fill="#0b0e18"/><circle cx="50" cy="${cy}" r="${r * 0.45}" fill="${companion.palette.glow}"/><circle cx="${50 + r * 0.3}" cy="${cy - r * 0.3}" r="${r * 0.18}" fill="#fff"/></g>`;
   }
 
   function renderSVG(companion, { stage = 0 } = {}) {
@@ -377,6 +425,19 @@
       stage >= 4
         ? `<path d="M38 12 L44 4 L50 11 L56 4 L62 12 Z" fill="${companion.palette.accent}" opacity="0.95"/>`
         : "";
+    /* Growth you can see: from Kindled on, two small satellites
+     * keep it company; from Bright on, a second, quieter ring
+     * stands inside the first. A returning visitor should be able
+     * to tell at a glance that their Spark is not as it was. */
+    const stageSatellites =
+      stage >= 1
+        ? `<circle class="spark-satellite" cx="17" cy="30" r="2.3" fill="${companion.palette.accent}" opacity="0.85"/>` +
+          `<circle class="spark-satellite" cx="83" cy="72" r="1.8" fill="${companion.palette.glow}" opacity="0.85"/>`
+        : "";
+    const stageRing2 =
+      stage >= 3
+        ? `<circle class="spark-stage-ring2" cx="50" cy="52" r="42" fill="none" stroke="${companion.palette.glow}" stroke-width="1" opacity="0.55"/>`
+        : "";
     const halo = companion.shape
       ? companion.shape.glow === "bright"
         ? 0.22
@@ -386,8 +447,10 @@
       : 0.14;
     return (
       `<svg viewBox="0 0 100 100" role="img" aria-label="A ${companion.kindName} Spark" data-spark-form="${companion.form}" data-spark-stage="${stage}" data-spark-size="${companion.shape ? companion.shape.size : 1}" data-spark-glow="${companion.shape ? companion.shape.glow : "soft"}" data-spark-gait="${companion.shape ? companion.shape.gait : "stroll"}">` +
-      `<circle cx="50" cy="52" r="40" fill="${companion.palette.glow}" opacity="${halo + stage * 0.03}"/>` +
+      `<circle class="spark-halo" cx="50" cy="52" r="40" fill="${companion.palette.glow}" opacity="${halo + stage * 0.03}"/>` +
       stageRing +
+      stageRing2 +
+      stageSatellites +
       bodyShape(companion) +
       markingShapes(companion, rand) +
       crestShape(companion) +
@@ -432,7 +495,14 @@
       daysSeen: [],
       pagesSeen: [],
       practiceDays: [],
-      lastDay: null
+      lastDay: null,
+      /* The memory the guide speaks from: the page being walked
+       * now, and the one walked just before it — where its person
+       * left off. And the growth stage its person last saw, so a
+       * growth can be announced once, when it is new. */
+      lastPage: null,
+      prevPage: null,
+      stageSeen: 0
     };
   }
 
@@ -443,6 +513,17 @@
     }
     if (page && !next.pagesSeen.includes(page)) {
       next.pagesSeen = [...next.pagesSeen, page];
+    }
+    if (page) {
+      /* Leaving off is remembered honestly: the page before this
+       * one becomes "where you left off" — unless this page is
+       * that same page again (a reload is not a journey). */
+      if (record.lastPage && record.lastPage !== page) {
+        next.prevPage = record.lastPage;
+      } else {
+        next.prevPage = record.prevPage || null;
+      }
+      next.lastPage = page;
     }
     if (patternDay != null) next.lastDay = patternDay;
     return next;
@@ -475,6 +556,34 @@
   function stageOf(record, companion) {
     const pace = companion && companion.shape ? companion.shape.pace : 1;
     return stageFor(growthPoints(record), pace);
+  }
+
+  /* A growth is an event only when it is new to its person: the
+   * stage the record has reached, against the stage they last
+   * saw. A record that has never carried a seen-stage (kept by
+   * the first build) announces nothing — its stage is simply
+   * taken as seen, so no Spark cries "I grew" over old news. */
+  function growthEventFor({ record, companion }) {
+    const stage = stageOf(record, companion);
+    const seen =
+      record && typeof record.stageSeen === "number" ? record.stageSeen : stage.index;
+    return {
+      grew: stage.index > seen,
+      stage,
+      daysTogether: ((record && record.daysSeen) || []).length
+    };
+  }
+
+  function markStageSeen(record, stageIndex) {
+    return { ...record, stageSeen: stageIndex };
+  }
+
+  /* Said once, when the growth is new: how long they have been
+   * together, and what it has become. */
+  function growthLineFor({ record, companion, stage }) {
+    const days = Math.max(1, ((record && record.daysSeen) || []).length);
+    const name = displayName(record, companion);
+    return `I grew — Day ${days} of us. ${name} is ${stage.name} now.`;
   }
 
   /* ---- guidance: lines drawn only from what the record holds ---- */
@@ -543,12 +652,23 @@
       intro: companion
         ? `I'm ${name}, a ${companion.kindName} Spark — ${companion.temperament}, and ${companion.trait}. ${companion.kindLine}`
         : `I'm ${name}.`,
+      voice: companion ? VOICE_LINES[companion.kind] || "" : "",
+      look: lookLineFor(companion),
       born,
       invite:
         "Adopt me and I'll walk the whole site with you, pointing out doors as we go. I live only on this device — nothing about me is sent anywhere.",
       adoptLabel: `Adopt ${name}`,
       laterLabel: "Not now"
     };
+  }
+
+  /* Today's coordinate, in the same plain words the companions
+   * page uses. Formats only what the page hands it — the day
+   * itself still comes from the canonical PatternCalendar. */
+  function coordinateLineFor(today) {
+    if (!today) return "Today, in Living Time";
+    if (today.moon == null) return `Today is the ${today.moonName || "Day Out of Time"}`;
+    return `Moon ${today.moon} · Day ${today.day} · Pattern Day ${today.dayOfPatternYear}`;
   }
 
   /* ---- the guide: arriving somewhere new ---- */
@@ -599,6 +719,114 @@
     };
   }
 
+  /* ---- guidance with a memory ---- */
+
+  /* What the Spark says on arrival, now with a memory. First the
+   * day itself, in Living Time. Then, when the record honestly
+   * knows where its person left off, that thread is picked back
+   * up before anything new is suggested: the place they were, and
+   * the door they were heading toward. Only when there is no
+   * thread does the standing guidance for this page speak. Every
+   * line is one of two kinds and says so: "observed" — counted
+   * from the record itself — or "inferred" — a suggestion drawn
+   * from it. The two are never merged into one blur. */
+  function arrivalGuideFor({ record, companion, today, page }) {
+    const name = displayName(record, companion);
+    const coordinate = coordinateLineFor(today);
+    const seen = (record && record.pagesSeen) || [];
+    const prev = record && record.prevPage && record.prevPage !== page ? record.prevPage : null;
+    const prevInfo = prev ? PAGE_GUIDE[prev] : null;
+    if (prevInfo) {
+      const thread = prevInfo.next;
+      if (thread.href !== page && !seen.includes(thread.href)) {
+        return {
+          name,
+          coordinate,
+          kind: "observed",
+          text:
+            `Last time you left off at ${prevInfo.place} — ` +
+            `you were heading toward ${thread.label}.`,
+          href: thread.href
+        };
+      }
+      return {
+        name,
+        coordinate,
+        kind: "observed",
+        text: `Last time you left off at ${prevInfo.place}. Shall we pick it back up?`,
+        href: prev
+      };
+    }
+    const standing = arrivalFor({
+      record,
+      companion,
+      todayPatternDay: today ? today.dayOfPatternYear : null,
+      page
+    });
+    return { name, coordinate, kind: "inferred", text: standing.text, href: standing.href };
+  }
+
+  /* The things a Spark has noticed, for its panel. Drawn only
+   * from the record on this device, and every one labeled:
+   * observed means counted from the record; inferred means a
+   * suggestion the record suggests. Never merged, never padded —
+   * a young record simply has less to say. */
+  function noticesFor({ record, companion, todayPatternDay }) {
+    const out = [];
+    const days = ((record && record.daysSeen) || []).length;
+    const pages = ((record && record.pagesSeen) || []).length;
+    const practice = ((record && record.practiceDays) || []).length;
+    const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
+    if (days >= 1) out.push({ kind: "observed", text: `${plural(days, "day")} together so far.` });
+    if (pages >= 1)
+      out.push({ kind: "observed", text: `You have walked ${plural(pages, "page")} together.` });
+    const prev = record && record.prevPage ? PAGE_GUIDE[record.prevPage] : null;
+    if (prev)
+      out.push({ kind: "observed", text: `Last time, you left off at ${prev.place}.`, href: record.prevPage });
+    if (practice >= 1) {
+      out.push({ kind: "observed", text: `Practice sealed on ${plural(practice, "day")}.` });
+    } else if (days >= 2) {
+      out.push({ kind: "observed", text: "No practice day sealed yet." });
+    }
+    const guide = guidanceFor({ record, companion, todayPatternDay });
+    out.push({ kind: "inferred", text: guide.text, href: guide.href });
+    const seen = (record && record.pagesSeen) || [];
+    const untried = Object.keys(PAGE_GUIDE).find((key) => !seen.includes(key));
+    if (untried) {
+      out.push({
+        kind: "inferred",
+        text: `A door you have not tried yet: ${PAGE_GUIDE[untried].place}.`,
+        href: untried
+      });
+    }
+    return out.slice(0, 5);
+  }
+
+  /* Everything the "Your Spark" panel shows, in one place: who
+   * it is (both names, and which is which), what it is, how far
+   * it has grown, how long they have been together, and what it
+   * has noticed — labeled, as above. */
+  function panelFor({ record, companion, today }) {
+    const stage = stageOf(record, companion);
+    return {
+      name: displayName(record, companion),
+      seedName: companion ? companion.name : NAME_FALLBACK,
+      kindName: companion ? companion.kindName : "",
+      temperament: companion ? companion.temperament : "",
+      trait: companion ? companion.trait : "",
+      stageName: stage.name,
+      stageIndex: stage.index,
+      points: stage.points,
+      daysTogether: ((record && record.daysSeen) || []).length,
+      coordinate: coordinateLineFor(today),
+      notices: noticesFor({
+        record,
+        companion,
+        todayPatternDay: today ? today.dayOfPatternYear : null
+      })
+    };
+  }
+
   return {
     SEED_PREFIX,
     STORAGE_KEY,
@@ -620,6 +848,9 @@
     generate,
     renderSVG,
     chirpFor,
+    soundsFor,
+    VOICE_LINES,
+    lookLineFor,
     seedNameFor,
     cleanName,
     displayName,
@@ -630,9 +861,16 @@
     growthPoints,
     stageFor,
     stageOf,
+    growthEventFor,
+    markStageSeen,
+    growthLineFor,
     guidanceFor,
     encounterFor,
     arrivalFor,
+    arrivalGuideFor,
+    coordinateLineFor,
+    noticesFor,
+    panelFor,
     PAGE_GUIDE
   };
 });
