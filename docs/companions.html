@@ -44,6 +44,8 @@
   <script defer src="assets/js/spark-companion.js?v=20261119-1"></script>
   <script src="assets/js/spark-3d.js?v=20261119-1"></script>
   <script defer src="assets/js/spark-companions-page.js?v=20261119-1"></script>
+  <script defer src="assets/js/spark-bundle.js?v=20261119-1"></script>
+  <script defer src="assets/js/spark-companions-travel.js?v=20261119-1"></script>
 </head>
 <body class="living-ui">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -69,7 +71,7 @@
   <main id="main" class="spark-wrap">
     <h1>A Spark of your own</h1>
     <p class="spark-lede">
-      A Spark is a small companion that lives here, on this device, and nowhere else.
+      A Spark is a small companion that lives here, on this device.
       It is not picked from a shelf. It is made at the moment you meet it, out of
       today&rsquo;s place in Living Time — and, if you meet it on this page, a few
       answers only you would give — so no two Sparks are alike. Its seed even
@@ -144,6 +146,40 @@
       </div>
     </section>
 
+    <!-- Her record travels: the bundle the Living Phone app speaks,
+         carried by the keeper's own hand in either direction. -->
+    <section id="spark-travel" aria-labelledby="spark-travel-title">
+      <h2 id="spark-travel-title">Her record travels</h2>
+      <p class="spark-note">
+        Your Spark&rsquo;s whole record — her seed, her growth, her garden,
+        the passes she has sealed — fits in one small file, and the Living
+        Phone app speaks the same file. Save her record here and restore it
+        in the app, or save it in the app and bring it here: the same seed
+        grows the same Spark in both places, her history whole. The file
+        moves only by your hand, the way a key does — nothing is sent
+        anywhere. Keep it somewhere you trust: whoever holds it can
+        restore her.
+      </p>
+      <p class="spark-note">
+        A damaged file is refused whole; her record here is never
+        half-replaced. And if a different Spark already lives on this
+        device, restoring asks you plainly first — her record is never
+        overwritten in silence.
+      </p>
+      <div class="spark-actions">
+        <button type="button" class="spark-button" id="spark-travel-export">Export my Spark</button>
+        <button type="button" class="spark-button" id="spark-travel-import">Bring a Spark here</button>
+        <input type="file" id="spark-travel-file" accept=".json,application/json" hidden>
+      </div>
+      <p class="spark-note" id="spark-travel-note" role="status"></p>
+      <div id="spark-travel-confirm" hidden>
+        <p class="spark-note" id="spark-travel-confirm-text"></p>
+        <div class="spark-actions">
+          <button type="button" class="spark-button primary" id="spark-travel-confirm-button">Restore the Spark in this file</button>
+        </div>
+      </div>
+    </section>
+
     <h2>How a Spark works</h2>
     <p class="spark-note">
       When you adopt, the site writes down a short seed — a line of letters and
@@ -184,9 +220,12 @@
     </p>
     <h2>What is not here yet</h2>
     <p class="spark-note">
-      Accounts, keeping a Spark across devices, and trading are later steps,
-      and they are not open yet. For now a Spark is yours alone, on the
-      device where you met it — which is how the Codex keeps everything
+      Accounts and trading are later steps, and they are not open yet.
+      Keeping a Spark across devices is here, in the plainest form: her
+      record travels as one file, carried by your own hand, under
+      &ldquo;Her record travels&rdquo; above — there is still no account
+      and no server keeping Sparks. A Spark is yours alone, on the
+      devices you carry her to — which is how the Codex keeps everything
       first: local, and shareable only by choice.
     </p>
   </main>
