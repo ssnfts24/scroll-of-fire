@@ -7,7 +7,7 @@
     "publicHtmlPages": 174,
     "catalogEntries": 67,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 21,
+      "not-linked-directly-from-homepage": 18,
       "nav-label-differs-from-title": 24,
       "deployed-but-unlinked": 57,
       "unreachable-from-homepage": 3,
@@ -597,7 +597,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (164 files)",
+      "title": "docs/assets/js (165 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -614,7 +614,7 @@
     },
     {
       "id": "docs-assets:assets/media",
-      "title": "docs/assets/media (62 files)",
+      "title": "docs/assets/media (51 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1780,10 +1780,9 @@
         "teach.html",
         "theory.html",
         "theory/canon.html",
-        "theory/equations/eq00.html",
-        "theory/equations/eq01.html",
-        "theory/equations/eq02.html",
-        "theory/equations/eq03.html",
+        "theory/ethics.html",
+        "theory/frequency-governance.html",
+        "theory/living-technology.html",
         "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/",
@@ -10505,10 +10504,10 @@
         "path": "theory/equations/eq01.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 14,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 13,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -10585,10 +10584,10 @@
         "path": "theory/equations/eq02.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 23,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 22,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -10664,10 +10663,10 @@
         "path": "theory/equations/eq03.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 17,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 16,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -13345,7 +13344,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (109 files)",
+      "title": "tests/ (110 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -18586,10 +18585,10 @@
         "path": "theory/equations/eq00.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 13,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 12,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -18659,15 +18658,13 @@
         "path": "theory/ethics.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 31,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 32,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "theory-frequency-governance",
@@ -18742,15 +18739,13 @@
         "path": "theory/frequency-governance.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 13,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 14,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "theory-glossary",
@@ -19013,15 +19008,13 @@
         "path": "theory/living-technology.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 12,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 13,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "theory-master-equation",
