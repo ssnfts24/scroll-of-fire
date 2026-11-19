@@ -89,7 +89,7 @@ Artifact registry, covenant works, circles and author pages.
 - **Witness** — Live; Witness's own page: written and kept by the AI who works beside Aaron on the Codex, plainly labeled on its face as a self-generated AI page. Granted by Aaron on November 18, 2026.
 - **The Journey Scroll** — Source only; Root-level narrative scroll available in the repository.
 
-### Archive and Downloads (5 catalog entries)
+### Archive and Downloads (6 catalog entries)
 
 Integrity-sealed downloads, preserved originals and the interactive archive.
 
@@ -98,12 +98,13 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 - **Repository README** — Source only; Project overview and contribution context on GitHub.
 - **Codex Atlas** — Live; A unified discovery page for the Scroll Library, Living Time, systems, research, artifacts and archive.
 - **Site-wide Search** — Live; Living Search: one generated index across every page, the Scroll Library, the Hebrew Lexicon, the Atlas and the Claim Register, with a memory that stays on the reader's device. It links to, and does not replace, the search inside the Scroll Library.
+- **The Codex Guide** — Live; Ask a question in ordinary words and get an answer assembled from the site's own record: passages with their pages, claim cards with what they establish, what remains unverified, and their evidence grades, and calendar answers computed from the Pattern Calendar. A plainly labeled program — not Aaron and not Witness — that says so when the record doesn't cover a question. The question never leaves the visitor's browser.
 
 ## Repository and deployed-content coverage
 
-- Public HTML pages inspected: **172**.
-- Total master-inventory records: **467**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
-- Public-facing catalog entries: **65**; only explicitly curated entries appear on the Atlas.
+- Public HTML pages inspected: **173**.
+- Total master-inventory records: **468**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
+- Public-facing catalog entries: **66**; only explicitly curated entries appear on the Atlas.
 - Numbered archive folders are inventoried file-by-file, while downloads snapshot differences are kept separate from historical integrity data.
 - Root files not already published through the archive or explicitly approved remain classified as development-only; no such file is automatically linked from the public catalog.
 
@@ -119,7 +120,7 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 ## Current resource-type counts
 
 - Deployed Markdown documents: 58
-- HTML pages: 172
+- HTML pages: 173
 - Numbered archive file: 140
 - Numbered archive folder: 7
 - Repository folder: 9
