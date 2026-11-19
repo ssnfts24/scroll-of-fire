@@ -371,7 +371,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "1bdb8acd1c9b6f819769ecc3c9ce84f96dfd7277a73237fe2d1b4013ffb5884f",
+      "sha256": "fcd50cf24a893bb28be46dc6c1372a8eee068a4274780b0d573b916e7143390c",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -2158,6 +2158,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/js/spark-bundle.js",
+      "sha256": "475022d452258a23c0784a42dd622f0916fd9caffae94c65911fd2acceb03368",
+      "publicUrl": "https://codexofreality.org/assets/js/spark-bundle.js",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/js/spark-companion.js",
       "sha256": "d6361795351d72b4954e25eedf60fe5fd985352371d2c277c2d17b41363760d9",
       "publicUrl": "https://codexofreality.org/assets/js/spark-companion.js",
@@ -2167,6 +2173,12 @@
       "path": "docs/assets/js/spark-companions-page.js",
       "sha256": "cf2dd2395b66a2c7bcd5324da6b3e078784596314e87375bc579923214bc7b6d",
       "publicUrl": "https://codexofreality.org/assets/js/spark-companions-page.js",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/js/spark-companions-travel.js",
+      "sha256": "1edcc1d70a4e36a52d37e3dad80ae5450cf925272a23731832c714ede1780978",
+      "publicUrl": "https://codexofreality.org/assets/js/spark-companions-travel.js",
       "status": "operational"
     },
     {
@@ -3335,13 +3347,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "7045f2542f2b7c7cc70b8f5b2fb36000598db15548c28db9b728b9ef6589606c",
+      "sha256": "43b280e01775b5e89c9770d56374298d82cb832ce843766a75bde67e637be2ae",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "50b41362d1d3dfc0dacc0a537fd3c634e6b0d826e987b014c42bb0a286364321",
+      "sha256": "67c1209c36a8d2bf9977c0e9558f13e1d02dffd23a0ca19ddd2fe20c9d6bd432",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -3401,7 +3413,7 @@
     },
     {
       "path": "docs/companions.html",
-      "sha256": "8c6704d1e1e141cec785b2c8a37825900fed9315587e0f3887ef8f5a143a6cfa",
+      "sha256": "b3e769f29abd16b6d5cf7e8b3920dead54e5258503bf683de2b5f19c56052af9",
       "publicUrl": "https://codexofreality.org/companions.html",
       "status": "operational"
     },
@@ -3497,7 +3509,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "3507480c5ae3aab52f51ea8d5e0fcab4b429e95079bda081e6998a3dff8b98b9",
+      "sha256": "476b5fac00570ae05bf48dc62dc424bf8d62cae83f43e5f78420b975d1a73b69",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
