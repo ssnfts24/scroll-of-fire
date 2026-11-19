@@ -1782,7 +1782,6 @@
         "theory.html",
         "theory/canon.html",
         "theory/equations/eq10.html",
-        "theory/equations/eq11.html",
         "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/",
@@ -11375,10 +11374,10 @@
         "path": "theory/equations/eq11.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 9,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 8,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
