@@ -6,8 +6,9 @@
  * The same seed that draws the flat Spark also grows this one: a
  * small low-poly creature built in code from its kind's form,
  * its palette, its markings, its crest and eye, and its stage —
- * Ember small and simple, Flame developed, Radiant full, ringed
- * and crowned. Since v9 it also wears her finer grain: the
+ * Ember small and simple, Flame developed, Radiant full and
+ * crowned, her spark motes gathering around her as she grows.
+ * Since v9 it also wears her finer grain: the
  * detail her seed drew (companion.details) — ears, a trail,
  * cheeks, a styled crest, a second pattern painted onto the
  * body's own faces — standing only where her reveal schedule
@@ -498,12 +499,29 @@
     }
     const eyeCenter = [0, 0.08, 0.72];
 
-    /* A Flame gains its ring; a Radiant wears it dashed in the
-     * flat world — here it gains a second, and a crown of three
-     * small flames above the crest. */
-    if (stage >= 1) b.ring(0, -0.02, 0, 1.0, 1.13, accent, 1.12);
+    /* Her spark motes, in the body: small octahedra of her
+     * glow and accent scattered around her — the same light
+     * the flat drawing carries (the core's mote stream, read
+     * the same way), never a ring or a bubble around her
+     * (Aaron's word, Nov 19, 2026: the circle goes; she
+     * lights up like a spark instead). More of them as she
+     * grows; a Radiant also wears a crown of three small
+     * flames above the crest. */
+    {
+      const moteRand = mulberry32(hashString(companion.seed + ":motes"));
+      moteRand(); /* the flat drawing's shape draw — the same stream, the same place in it */
+      const moteCount = 3 + stage * 2 + Math.floor(moteRand() * 2);
+      for (let i = 0; i < moteCount; i++) {
+        const a = moteRand() * Math.PI * 2;
+        const rr = 0.58 + moteRand() * 0.22;
+        const mx = Math.cos(a) * rr;
+        const mz = Math.sin(a) * rr * 0.7;
+        const my = -0.25 + moteRand() * 0.85;
+        const ms = 0.02 + moteRand() * 0.022;
+        b.octa(mx, my, mz, ms, ms, ms, i % 3 === 2 ? accent : glow, false);
+      }
+    }
     if (stage >= 2) {
-      b.ring(0, -0.02, 0, 1.2, 1.27, glow, 1.12);
       for (const dx of [-0.24, 0, 0.24]) {
         b.cone(dx, 1.06, 0, 0.08, 0.24, accent, dx * 0.8, false);
       }

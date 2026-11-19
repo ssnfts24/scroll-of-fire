@@ -227,9 +227,13 @@ test("the drawing is built from the parts, and growth shows on it", () => {
   const young = Core.renderSVG(spark, { stage: 0 });
   assert.match(young, /<svg/);
   assert.ok(young.includes(`data-spark-form="${spark.form}"`));
-  assert.ok(!young.includes("stroke-dasharray"), "no stage ring before Radiant");
+  /* No bubble, no ring, at any stage (Aaron's word, Nov 19,
+   * 2026): her light is a feathered glowfield and her spark
+   * motes, never a circle drawn around her. */
+  assert.ok(!young.includes("stroke-dasharray"), "no ring at birth");
   const grown = Core.renderSVG(spark, { stage: 2 });
-  assert.ok(grown.includes("stroke-dasharray"), "the dashed stage ring appears at Radiant");
+  assert.ok(!grown.includes("stroke-dasharray"), "no ring at Radiant either");
+  assert.ok(!grown.includes("spark-halo"), "the old halo disc is gone");
   const radiant = Core.renderSVG(spark, { stage: 2 });
   assert.ok(radiant.includes('data-spark-stage="2"'));
 });
@@ -496,17 +500,32 @@ test("growth is announced once: against the stage its person last saw", () => {
   assert.equal(Core.growthEventFor({ record: legacy, companion }).grew, false);
 });
 
-test("growth shows on the drawing: satellites, then a second ring", () => {
+test("growth shows on the drawing: her light, and more motes around her", () => {
   const spark = Core.generate(SEED_A);
+  const motesOf = (svg) => (svg.match(/class="spark-mote"/g) || []).length;
   const born = Core.renderSVG(spark, { stage: 0 });
-  assert.ok(!born.includes("spark-satellite"), "no satellites at birth");
+  assert.ok(born.includes('class="spark-glowfield"'), "she stands in a feathered glow, not a disc");
+  assert.ok(born.includes("radialGradient"), "the glow fades at its edge — light, not a bubble");
+  assert.ok(motesOf(born) >= 3 && motesOf(born) <= 4, "a few motes at birth");
   const kindled = Core.renderSVG(spark, { stage: 1 });
-  assert.ok(kindled.includes("spark-satellite"), "satellites arrive at Flame");
-  assert.ok(!kindled.includes("spark-stage-ring2"), "no second ring yet");
+  assert.ok(motesOf(kindled) > motesOf(born), "more motes keep her company at Flame");
   const bright = Core.renderSVG(spark, { stage: 2 });
-  assert.ok(bright.includes("spark-stage-ring2"), "a second ring stands at Radiant");
+  assert.ok(motesOf(bright) > motesOf(kindled), "the fullest company at Radiant");
   assert.ok(bright.includes('class="spark-eye"'), "the eye carries its blink class");
-  assert.ok(bright.includes('class="spark-halo"'), "the halo carries its class");
+  assert.ok(!bright.includes("spark-satellite") && !bright.includes("spark-stage-ring2"), "no rings, no satellites — the bubble is gone");
+  /* The same seed draws the same light anywhere; the mote
+   * variant is the seed's own. */
+  assert.equal(Core.renderSVG(spark, { stage: 1 }), kindled, "same seed, same drawing");
+  const shapes = new Set();
+  for (let i = 0; i < 40; i++) {
+    const other = Core.generate(
+      Core.makeSeed({ moon: 9, patternDay: 240 + i, kindIndex: i % 6, nonce: `n${i}once${i * 7}` })
+    );
+    const m = Core.renderSVG(other, { stage: 0 }).match(/data-spark-motes="(\w+)"/);
+    if (m) shapes.add(m[1]);
+  }
+  assert.ok(shapes.size >= 2, "different Sparks spark differently");
+  for (const s of shapes) assert.ok(["star", "diamond", "dot"].includes(s), "a known mote variant");
 });
 
 test("the panel: both names, its character, its growth, its labeled notices", () => {
@@ -595,9 +614,10 @@ test("evolution: three stages, one creature grown, driven by faithfulness alone"
   }
   assert.ok(stages[0].includes("scale(0.8)"), "an Ember stands small");
   assert.ok(stages[2].includes("scale(1.03)"), "a Radiant stands full");
+  const motesOf = (svg) => (svg.match(/class="spark-mote"/g) || []).length;
   assert.ok(
-    !stages[0].includes("spark-satellite") && stages[1].includes("spark-satellite"),
-    "company arrives at Flame"
+    motesOf(stages[1]) > motesOf(stages[0]),
+    "her company of motes grows at Flame"
   );
   /* Progress, in honest counts from its own record. */
   let record = Core.newRecord({ seed: SEED_A, name: "", civilDate: "2026-11-18" });
@@ -660,7 +680,9 @@ test("the Spark has a 3D body: seed-grown WebGL, honestly falling back to the fl
   }
   assert.ok(d3.includes("speckle"), "markings map onto the form's own faces");
   assert.ok(d3.includes("marks3d"), "from their own seed stream");
-  assert.ok(d3.includes("stage >= 2"), "evolution changes the 3D form: the Radiant gains ring and crown");
+  assert.ok(d3.includes("stage >= 2"), "evolution changes the 3D form: the Radiant gains its crown");
+  assert.ok(d3.includes('":motes"'), "the 3D body carries her spark motes, from the same stream as the drawing");
+  assert.ok(!/stage >= 1\) b\.ring/.test(d3), "no ring around the 3D body — the bubble is gone there too");
   assert.ok(d3.includes("dart") && d3.includes("delight") && d3.includes("celebrate"), "its movements are its life's: dart, delight, celebrate");
   assert.ok(d3.includes("lookAt"), "it looks toward a near pointer");
   assert.ok(d3.includes("visibilitychange"), "its loop rests when the tab hides");
@@ -1195,6 +1217,89 @@ test("v9 vocal plan: a line's shape, sung syllable by syllable — first sentenc
   assert.deepEqual(Core.vocalPlanFor({ companion: null, text: "Hello." }).syllables, [], "no companion, no plan");
 });
 
+test("her voice grows with her: a chirp, then two notes, then a small melody", () => {
+  const companion = Core.generate(SEED_A);
+  const line = "The moon is watching over the water tonight.";
+  const young = Core.phraseFor({ companion, stage: 0, text: line });
+  assert.equal(young.notes.length, 1, "a young Spark answers with a single chirp");
+  const kindled = Core.phraseFor({ companion, stage: 1, text: line });
+  assert.equal(kindled.notes.length, 2, "a Kindled Spark answers in two notes");
+  const grown = Core.phraseFor({ companion, stage: 2, text: line });
+  assert.ok(grown.notes.length >= 3 && grown.notes.length <= 5, "a Bearer sings a short melodic phrase");
+  /* Pitched at her own chirp root, on her own scale. */
+  const tonic = Core.chirpFor(companion).first;
+  for (const phrase of [young, kindled, grown]) {
+    for (const note of phrase.notes) {
+      assert.ok(note.f0 >= tonic * 0.99 && note.f0 <= tonic * 2.01, "every note stands on her scale");
+      assert.ok(note.dur >= 0.08 && note.dur <= 0.2, "every note is a brief chirp");
+    }
+    assert.ok(phrase.seconds > 0 && phrase.seconds < 1.5, "the whole phrase stays brief");
+  }
+  /* A question lifts at its end; a statement settles. */
+  const q = Core.phraseFor({ companion, stage: 2, text: "Shall we wander on?" });
+  assert.ok(q.notes[q.notes.length - 1].glide > 1, "a question's last note lifts");
+  const s = Core.phraseFor({ companion, stage: 2, text: line });
+  assert.ok(s.notes[s.notes.length - 1].glide < 1, "a statement's last note settles");
+  /* The same seed, stage and line settle the same phrase anywhere. */
+  assert.deepEqual(Core.phraseFor({ companion, stage: 2, text: line }), grown, "her phrase is hers, settled");
+  assert.deepEqual(Core.phraseFor({ companion, stage: 1, text: "" }).notes, [], "silence phrases nothing");
+  assert.deepEqual(Core.phraseFor({ companion: null, stage: 1, text: "Hello." }).notes, [], "no companion, no phrase");
+  /* And the presence sings phrases now — the formant singer
+   * and its throat are gone from the sung path. */
+  const presence = read("docs/assets/js/spark-presence.js");
+  assert.ok(presence.includes("Core.phraseFor"), "the presence sings her chirp-phrase");
+  assert.ok(!presence.includes("softThroat"), "the formant throat is removed, not retuned");
+});
+
+test("her doors open from inside a folder too (the /scroll/ broken gate)", () => {
+  /* The Scroll Library's own nav names the root pages with
+   * ../ — the doors she reads there must keep the link as
+   * written and still be the guide's doors. */
+  const doors = Core.doorsFor({
+    page: "index.html",
+    links: [
+      { href: "../moons.html", label: "13 Moons" },
+      { href: "../living-time-sphere.html", label: "Sphere" },
+      { href: "reader.html", label: "Reader" }
+    ]
+  });
+  const moons = doors.find((d) => d.href === "../moons.html");
+  assert.ok(moons, "the moons door survives with its ../ link intact");
+  assert.equal(moons.label, "the 13 Moons page", "and it is still the guide's door, named by its file");
+  assert.ok(doors.some((d) => d.href === "reader.html"), "a sibling door keeps its own name");
+  /* From the root, the same doors by their bare names. */
+  const rootDoors = Core.doorsFor({
+    page: "index.html",
+    links: [{ href: "moons.html", label: "13 Moons" }]
+  });
+  assert.ok(rootDoors.some((d) => d.href === "moons.html"), "bare names still work at the root");
+  /* The glue resolves the core's own bare doors against the
+   * site's root, learned from this script's own address. */
+  const presence = read("docs/assets/js/spark-presence.js");
+  assert.ok(presence.includes("function doorHref"), "the glue carries the door resolver");
+  assert.ok(presence.includes('doorHref("moons.html")'), "her Today door is resolved");
+  assert.ok(presence.includes("doorHref(step.href)"), "her trail doors are resolved");
+  assert.ok(presence.includes("doorHref(guide.href)"), "her guide doors are resolved");
+});
+
+test("the meeting stands above the chrome, and her light is styled to rest", () => {
+  const css = read("docs/assets/css/spark-companion.css");
+  assert.match(css, /\.spark-encounter-host \{[^}]*z-index: 10060/, "the encounter rides above the site chrome");
+  assert.match(css, /\.spark-presence \{[^}]*z-index: 10040/, "her panel layer rides above the floating menu");
+  assert.ok(css.includes("rgba(13, 18, 32, 0.96)"), "the encounter card is near-solid: no page text bleeds through");
+  assert.ok(css.includes("spark-mote-twinkle"), "her motes twinkle gently");
+  assert.match(
+    css,
+    /prefers-reduced-motion: reduce\) \{\n  \.spark-presence-button \{ animation: none; \}\n  \/\* Her motes rest where they were drawn: a still glow\. \*\/\n  \.spark-mote \{ animation: none; \}/,
+    "under reduced motion the motes rest: a still glow"
+  );
+  assert.match(
+    css,
+    /\.spark-presence-button \{[^}]*border: 1px solid transparent;[^}]*background: transparent;/,
+    "no pill around the roaming Spark"
+  );
+});
+
 test("v5 tell me more: the explanation continues in the page's own words only", () => {
   const explainer =
     "One plain sentence opens it. A second one follows close behind. " +
@@ -1271,7 +1376,7 @@ test("v7 voice box rides the presence: generated, default quiet, mute-ruled, tap
     "spark-presence-voice",
     "sof.spark.voice",
     "voiceBoxFor",
-    "vocalPlanFor",
+    "phraseFor",
     "singSyllable",
     "stopVoice",
     "doExplainMore",
@@ -1646,12 +1751,12 @@ test("v9 sound family: the seed picks her family, and settles her sound", () => 
   assert.ok(Core.flourishFor(a) > chirp.second, "and it stands above her greeting's second note");
 });
 
-test("v9 softer voice rides the presence: families rendered, no sawtooth, lower level", () => {
+test("her chirp voice rides the presence: families rendered, no sawtooth, lower level", () => {
   const presence = read("docs/assets/js/spark-presence.js");
   for (const hook of [
     "playFamilyNote",
     "soundFor",
-    "softThroat",
+    "phraseFor",
     "addVibrato",
     "announceReveals",
     "newRevealsBetween",
@@ -1662,10 +1767,11 @@ test("v9 softer voice rides the presence: families rendered, no sawtooth, lower 
   ]) {
     assert.ok(presence.includes(hook), `the presence carries ${hook}`);
   }
+  assert.ok(!presence.includes("softThroat"), "the formant throat is gone: she chirps now, she does not imitate speech");
   assert.ok(!presence.includes('"sawtooth"'), "the buzz is gone: no sawtooth oscillator anywhere in her voice");
   assert.ok(
     presence.includes("voiceMaster.gain.value = 0.55"),
-    "her master level is the lowered one (a syllable peaks near 0.055, against 0.135 in v7)"
+    "her master level is the lowered one (a note peaks near 0.055, against 0.135 in v7)"
   );
   for (const fam of ["bell", "hum", "pluck", "blip"]) {
     assert.ok(presence.includes(`"${fam}"`), `the ${fam} family is rendered`);

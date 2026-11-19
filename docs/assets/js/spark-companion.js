@@ -452,6 +452,73 @@
     return { box, syllables, seconds: Math.round(seconds * 100) / 100 };
   }
 
+  /* Her phrase — the voice grown up, at Aaron's word
+   * (Nov 19, 2026): not a robot reading, not formants shaped
+   * like speech, but a character's chirp-phrase — the kind of
+   * small melodic babble a beloved game companion answers
+   * with. The line still shapes it: a question lifts at its
+   * end, a statement settles home. But what sounds is music
+   * from her own scale, pitched at her chirp root, and it
+   * GROWS with her, the way her body does:
+   * - a young Spark (stage 0) answers with a single chirp;
+   * - a Kindled Spark (stage 1) answers in two notes;
+   * - a Bearer (stage 2) sings a short melodic phrase of
+   *   three to five notes, its contour one of a few playful
+   *   shapes her seed picks.
+   * Pure data, like everything of hers: the same seed, stage
+   * and line settle the same phrase anywhere. The browser
+   * glue sings it in her sound family — round tones, a quick
+   * chirp glide into each note, nothing buzzy, nothing
+   * spoken. Her syllable plan (vocalPlanFor) still stands for
+   * the record; this is what she actually sounds like now. */
+  const PHRASE_SCALE = [1, 1.125, 1.25, 1.335, 1.5, 1.667, 1.78, 2];
+  /* Melodic shapes for a grown phrase, as scale steps: a
+   * rise, a hop and settle, a dip then lift, a small wave. */
+  const PHRASE_CONTOURS = [
+    [0, 2, 4],
+    [0, 3, 2, 0],
+    [0, 1, 3, 2],
+    [0, 2, 1, 3, 2],
+    [0, 4, 2, 3]
+  ];
+  function phraseFor({ companion, stage = 0, text }) {
+    const box = voiceBoxFor(companion);
+    const chirp = chirpFor(companion);
+    const clean = String(text == null ? "" : text).replace(/\s+/g, " ").trim();
+    if (!box || !chirp || !clean) return { box, notes: [], seconds: 0 };
+    const rand = mulberry32(hashString(companion.seed + ":phrase:" + clean));
+    const sentence = (clean.match(/[^.!?]+[.!?]+/) || [clean])[0].trim();
+    const question = /\?$/.test(sentence);
+    const tonic = chirp.first;
+    let steps;
+    if (stage >= 2) {
+      steps = PHRASE_CONTOURS[Math.floor(rand() * PHRASE_CONTOURS.length)].slice();
+      if (question) steps[steps.length - 1] = Math.max(steps[steps.length - 1], 4);
+    } else if (stage === 1) {
+      steps = question ? [0, 4] : [0, 2];
+    } else {
+      steps = [0];
+    }
+    const notes = [];
+    let seconds = 0;
+    steps.forEach((step, idx) => {
+      const last = idx === steps.length - 1;
+      const f0 = Math.round(tonic * PHRASE_SCALE[step] * 10) / 10;
+      /* Quick chirps; the last note of a grown phrase rings
+       * a breath longer, the way a phrase lands. */
+      let dur = 0.09 + rand() * 0.05;
+      if (last && steps.length > 1) dur += 0.05;
+      dur = Math.round(dur * 1000) / 1000;
+      /* How the note leaves its pitch: a statement's last
+       * note settles a touch down; a question's lifts. */
+      const glide = last ? (question ? 1.1 : 0.96) : 1;
+      const gap = last ? 0 : Math.round((0.035 + rand() * 0.02) * 1000) / 1000;
+      notes.push({ f0, dur, gap, glide });
+      seconds += dur + gap;
+    });
+    return { box, notes, seconds: Math.round(seconds * 100) / 100 };
+  }
+
   /* Each kind speaks in its temperament's voice. One short line,
    * in character — the first thing the Spark says about itself
    * after its name. */
@@ -1552,18 +1619,55 @@
     return `<g class="spark-eye"><circle cx="50" cy="${cy}" r="${r}" fill="#0b0e18"/><circle cx="50" cy="${cy}" r="${r * 0.45}" fill="${companion.palette.glow}"/><circle cx="${50 + r * 0.3}" cy="${cy - r * 0.3}" r="${r * 0.18}" fill="#fff"/>${extra}</g>`;
   }
 
+  /* Her spark-light, drawn: the motes that form around her.
+   * No bubble, no ring — Aaron's word (Nov 19, 2026): the
+   * circle around her goes, and in its place she lights up
+   * like a spark, with little sparks of her own forming
+   * around her. The variant is the seed's: one mote shape per
+   * Spark (a four-point star, a small diamond, a plain dot),
+   * her own scatter, her palette's glow and accent taking
+   * turns. The count grows with her stage — a young Spark
+   * carries a few, a grown one a small company — so growth
+   * still reads at a glance, as light, not furniture. */
+  const MOTE_SHAPES = ["star", "diamond", "dot"];
+  function moteShapes(companion, stage) {
+    const rand = mulberry32(hashString(companion.seed + ":motes"));
+    const shape = MOTE_SHAPES[Math.floor(rand() * MOTE_SHAPES.length)];
+    const count = 3 + stage * 2 + Math.floor(rand() * 2);
+    const { accent, glow } = companion.palette;
+    const out = [];
+    for (let i = 0; i < count; i++) {
+      const a = rand() * Math.PI * 2;
+      const r = 33 + rand() * 13;
+      const x = (50 + Math.cos(a) * r).toFixed(1);
+      const y = (52 + Math.sin(a) * r * 0.92).toFixed(1);
+      const s = (0.7 + rand() * 0.9).toFixed(2);
+      const col = i % 3 === 2 ? accent : glow;
+      const op = (0.5 + rand() * 0.45).toFixed(2);
+      const delay = (-rand() * 3).toFixed(2);
+      const at = `transform="translate(${x} ${y}) scale(${s})"`;
+      const cls = `class="spark-mote" style="animation-delay:${delay}s"`;
+      if (shape === "star")
+        out.push(`<path ${cls} ${at} d="M0 -5 C0.8 -1.5 1.5 -0.8 5 0 C1.5 0.8 0.8 1.5 0 5 C-0.8 1.5 -1.5 0.8 -5 0 C-1.5 -0.8 -0.8 -1.5 0 -5 Z" fill="${col}" opacity="${op}"/>`);
+      else if (shape === "diamond")
+        out.push(`<path ${cls} ${at} d="M0 -3.4 L2.4 0 L0 3.4 L-2.4 0 Z" fill="${col}" opacity="${op}"/>`);
+      else out.push(`<circle ${cls} cx="${x}" cy="${y}" r="${(1.6 * s).toFixed(1)}" fill="${col}" opacity="${op}"/>`);
+    }
+    return { shape, motes: out.join("") };
+  }
+
   function renderSVG(companion, { stage = 0, revealed = null } = {}) {
     if (!companion) return "";
     const rand = mulberry32(hashString(companion.seed + ":marks"));
     /* Evolution, drawn: the same seed-body at every stage — the
      * stages are this creature grown, not three creatures. An
      * Ember stands small, its markings half-shown, its crest
-     * young. A Flame stands larger, markings full, crest grown,
-     * a plain ring and two small satellites keeping it company.
-     * A Radiant stands full: markings richest, the dashed ring
-     * and a second, quieter ring inside it, and a crown. A
-     * returning visitor can tell at a glance that their Spark is
-     * not as it was. */
+     * young, a few spark motes in the air around it. A Flame
+     * stands larger, markings full, crest grown, its light
+     * brighter and its motes more. A Radiant stands full:
+     * markings richest, the fullest company of motes, and a
+     * crown. A returning visitor can tell at a glance that
+     * their Spark is not as it was. */
     const bodyScale = [0.8, 0.92, 1.03][stage] || 1;
     const markFraction = [0.5, 0.85, 1.15][stage] || 1;
     const crestScale = [0.65, 0.88, 1.02][stage] || 1;
@@ -1589,27 +1693,14 @@
       shown("pattern") &&
       companion.details &&
       (companion.details.pattern === "bands" || companion.details.pattern === "belly");
-    const stageRingPlain =
-      stage >= 1
-        ? `<circle cx="50" cy="52" r="44" fill="none" stroke="${companion.palette.accent}" stroke-width="1.4" opacity="0.55"/>`
-        : "";
-    const stageRing =
-      stage >= 2
-        ? `<circle cx="50" cy="52" r="46" fill="none" stroke="${companion.palette.accent}" stroke-width="1.6" stroke-dasharray="4 6" opacity="0.8"/>`
-        : "";
     const stageCrown =
       stage >= 2
         ? `<path d="M38 12 L44 4 L50 11 L56 4 L62 12 Z" fill="${companion.palette.accent}" opacity="0.95"/>`
         : "";
-    const stageSatellites =
-      stage >= 1
-        ? `<circle class="spark-satellite" cx="17" cy="30" r="2.3" fill="${companion.palette.accent}" opacity="0.85"/>` +
-          `<circle class="spark-satellite" cx="83" cy="72" r="1.8" fill="${companion.palette.glow}" opacity="0.85"/>`
-        : "";
-    const stageRing2 =
-      stage >= 2
-        ? `<circle class="spark-stage-ring2" cx="50" cy="52" r="42" fill="none" stroke="${companion.palette.glow}" stroke-width="1" opacity="0.55"/>`
-        : "";
+    /* Her light, feathered: a radial glow in her own glow
+     * colour that fades to nothing at its edge — light she
+     * stands in, not a disc she sits on. It deepens a little
+     * as she grows. */
     const halo = companion.shape
       ? companion.shape.glow === "bright"
         ? 0.22
@@ -1617,14 +1708,20 @@
           ? 0.08
           : 0.14
       : 0.14;
+    const glowLevel = Math.round((halo + stage * 0.05) * 100) / 100;
+    const glowId = `sg${Math.abs(hashString(companion.seed)).toString(36)}`;
+    const glowDef =
+      `<radialGradient id="${glowId}">` +
+      `<stop offset="0%" stop-color="${companion.palette.glow}" stop-opacity="${glowLevel}"/>` +
+      `<stop offset="55%" stop-color="${companion.palette.glow}" stop-opacity="${Math.round(glowLevel * 50) / 100}"/>` +
+      `<stop offset="100%" stop-color="${companion.palette.glow}" stop-opacity="0"/>` +
+      `</radialGradient>`;
+    const { shape: moteShape, motes } = moteShapes(companion, stage);
     return (
-      `<svg viewBox="0 0 100 100" role="img" aria-label="A ${companion.kindName} Spark" data-spark-form="${companion.form}" data-spark-stage="${stage}" data-spark-size="${companion.shape ? companion.shape.size : 1}" data-spark-glow="${companion.shape ? companion.shape.glow : "soft"}" data-spark-gait="${companion.shape ? companion.shape.gait : "stroll"}" data-spark-shown="${(revealed || []).join(" ")}">` +
-      (needsClip ? `<defs><clipPath id="${clipId}">${bodyShape(companion)}</clipPath></defs>` : "") +
-      `<circle class="spark-halo" cx="50" cy="52" r="40" fill="${companion.palette.glow}" opacity="${halo + stage * 0.05}"/>` +
-      stageRing +
-      stageRingPlain +
-      stageRing2 +
-      stageSatellites +
+      `<svg viewBox="0 0 100 100" role="img" aria-label="A ${companion.kindName} Spark" data-spark-form="${companion.form}" data-spark-stage="${stage}" data-spark-size="${companion.shape ? companion.shape.size : 1}" data-spark-glow="${companion.shape ? companion.shape.glow : "soft"}" data-spark-gait="${companion.shape ? companion.shape.gait : "stroll"}" data-spark-shown="${(revealed || []).join(" ")}" data-spark-motes="${moteShape}">` +
+      `<defs>${glowDef}${needsClip ? `<clipPath id="${clipId}">${bodyShape(companion)}</clipPath>` : ""}</defs>` +
+      `<circle class="spark-glowfield" cx="50" cy="52" r="47" fill="url(#${glowId})"/>` +
+      `<g class="spark-motes">${motes}</g>` +
       `<g transform="translate(50 54) scale(${bodyScale}) translate(-50 -54)">` +
       (shown("trail") ? trailShape(companion) : "") +
       bodyShape(companion) +
@@ -2181,16 +2278,22 @@
     for (const link of list) {
       if (!link || typeof link.href !== "string") continue;
       const href = link.href.split("#")[0];
-      if (!href.endsWith(".html") || href === page || seenHrefs.has(href)) continue;
+      /* A door is named by its file name — the guide's pages
+       * are root pages, named bare — but the link itself is
+       * kept as the page wrote it, so a door read from inside
+       * a folder ("../moons.html" from the Scroll Library)
+       * still points where the page pointed it. */
+      const key = href.split("/").pop();
+      if (!key.endsWith(".html") || key === page || seenHrefs.has(href)) continue;
       seenHrefs.add(href);
-      clean.push({ href, label: String(link.label || "").replace(/\s+/g, " ").trim() });
+      clean.push({ href, key, label: String(link.label || "").replace(/\s+/g, " ").trim() });
     }
     for (const item of clean) {
-      const info = PAGE_GUIDE[item.href];
+      const info = PAGE_GUIDE[item.key];
       if (info) out.push({ href: item.href, label: info.place, line: info.line });
     }
     for (const item of clean) {
-      if (PAGE_GUIDE[item.href]) continue;
+      if (PAGE_GUIDE[item.key]) continue;
       if (item.label) out.push({ href: item.href, label: item.label, line: "" });
     }
     return out.slice(0, 5);
@@ -2756,6 +2859,7 @@
     flourishFor,
     voiceBoxFor,
     vocalPlanFor,
+    phraseFor,
     VOICE_MAX_SYLLABLES,
     syllableCountFor,
     wordSyllables,

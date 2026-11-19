@@ -83,7 +83,7 @@
 
 | Stylesheet | Pages |
 | --- | --- |
-| `docs/assets/css/spark-companion.css` | 171 |
+| `docs/assets/css/spark-companion.css` | 175 |
 | `docs/assets/css/living-ui.css` | 134 |
 | `docs/scripture/assets/scripture.css` | 93 |
 | `docs/assets/css/codex.css` | 46 |
@@ -98,8 +98,8 @@
 
 | Script | Pages |
 | --- | --- |
-| `docs/assets/js/spark-companion.js` | 171 |
-| `docs/assets/js/spark-presence.js` | 170 |
+| `docs/assets/js/spark-companion.js` | 175 |
+| `docs/assets/js/spark-presence.js` | 174 |
 | `docs/assets/js/site.js` | 137 |
 | `docs/assets/js/living-ui.js` | 134 |
 | `docs/scripture/assets/scripture.js` | 93 |

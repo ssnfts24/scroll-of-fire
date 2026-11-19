@@ -21,7 +21,13 @@
   right: 0;
   top: 0;
   bottom: 0;
-  z-index: 800;
+  /* Above the site's chrome (its sticky header rides at 900,
+   * its skip link at 1000): her panel must never sit under a
+   * floating menu button (Aaron's phone review, Nov 19,
+   * 2026). The layer itself takes no pointer events — only
+   * her own furniture does — so the nav beneath stays fully
+   * usable wherever she is not. */
+  z-index: 10040;
   pointer-events: none;
   font-family: inherit;
 }
@@ -72,12 +78,23 @@
   min-height: 44px;
   padding: 4px 12px 4px 4px;
   border-radius: 999px;
-  border: 1px solid var(--spark-line);
-  background: var(--spark-card);
+  /* No pill around her anymore (Aaron's word, Nov 19, 2026:
+   * the bubble around the character goes). The button keeps
+   * its shape and its full tap target — the record of her
+   * growth record line still needs a legible name beside
+   * her, carried on a shadow now, not a box — but she stands
+   * on the page itself, lit, not in a container. */
+  border: 1px solid transparent;
+  background: transparent;
   color: var(--spark-ink);
   cursor: pointer;
-  backdrop-filter: blur(6px);
   animation: spark-bob 5s ease-in-out infinite;
+}
+
+.spark-presence-button .spark-presence-name {
+  text-shadow:
+    0 1px 6px rgba(5, 8, 16, 0.9),
+    0 0 2px rgba(5, 8, 16, 0.9);
 }
 
 .spark-presence-art {
@@ -88,6 +105,30 @@
   display: block;
   width: calc(38px * var(--spark-size, 1));
   height: calc(38px * var(--spark-size, 1));
+}
+
+/* She lights up like a spark: a soft warm aura stands around
+ * the drawing itself — light, not a shape she sits in — and
+ * her motes (drawn by the core, seeded per Spark) twinkle
+ * gently out of step with one another. Under reduced motion
+ * the motes rest where they were drawn and the aura simply
+ * stands: a still glow. */
+.spark-presence-art svg,
+.spark-encounter-art svg {
+  filter:
+    drop-shadow(0 0 6px rgba(255, 226, 160, 0.45))
+    drop-shadow(0 0 16px rgba(240, 190, 90, 0.28));
+}
+
+.spark-mote {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: spark-mote-twinkle 3.4s ease-in-out infinite alternate;
+}
+
+@keyframes spark-mote-twinkle {
+  from { opacity: 0.3; transform: scale(0.75); }
+  to { opacity: 1; transform: scale(1.15); }
 }
 
 /* It turns to face the way it travels. */
@@ -218,6 +259,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .spark-presence-button { animation: none; }
+  /* Her motes rest where they were drawn: a still glow. */
+  .spark-mote { animation: none; }
   .spark-presence-art.is-walking svg { animation: none; }
   .spark-presence-art.is-delighted svg { animation: none; }
   .spark-presence-art.is-spinning svg { animation: none; }
@@ -470,7 +513,11 @@
   position: fixed;
   right: max(12px, env(safe-area-inset-right));
   bottom: max(12px, env(safe-area-inset-bottom));
-  z-index: 810;
+  /* The meeting sits above everything of the site's chrome —
+   * the header, the nav, the floating menu button, even the
+   * living opening's overlay: nothing hovers over the card
+   * (Aaron's phone review, Nov 19, 2026). */
+  z-index: 10060;
   font-family: inherit;
 }
 
@@ -481,13 +528,19 @@
   max-width: min(400px, calc(100vw - 24px));
   /* The whole moment stays on screen, even a small one: when
    * the celebration makes the card taller than the view, the
-   * card scrolls within itself rather than leaving the screen. */
-  max-height: min(82vh, 760px);
+   * card scrolls within itself rather than leaving the screen.
+   * The cap is measured from the screen itself, so the card's
+   * top always clears the day line and the header. */
+  max-height: min(calc(100dvh - 96px), 760px);
   overflow-y: auto;
   padding: 16px;
   border-radius: 18px;
   border: 1px solid var(--spark-line);
-  background: var(--spark-card);
+  /* Near-solid, where the shared card tint is translucent:
+   * on the encounter nothing of the page behind may bleed
+   * through (Aaron's screenshot showed the page's own words
+   * inside the card). */
+  background: rgba(13, 18, 32, 0.96);
   color: var(--spark-ink);
   backdrop-filter: blur(8px);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
@@ -694,7 +747,7 @@
   position: fixed;
   right: max(12px, env(safe-area-inset-right));
   bottom: max(12px, env(safe-area-inset-bottom));
-  z-index: 800;
+  z-index: 10040;
   font-family: inherit;
 }
 

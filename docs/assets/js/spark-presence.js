@@ -47,6 +47,32 @@
     return "assets/js/";
   }
 
+  /* The site's root, as an absolute address: this script's own
+   * folder, two steps up. The Spark walks pages that live in
+   * folders of their own — the Scroll Library under /scroll/,
+   * the systems under /systems/ — and the doors the core names
+   * for her are root pages ("moons.html", the Sphere, her own
+   * companions page). Resolved from a folder page, a bare name
+   * lands on a gate that does not exist (/scroll/moons.html —
+   * the broken gate Aaron found, Nov 19, 2026). So every door
+   * she offers is resolved here, in the glue: a bare name the
+   * guide knows as a root page is taken to the root; anything
+   * else — a page's own relative link, a sibling page — is
+   * left exactly as it stands. */
+  function siteRoot() {
+    const base = scriptBase();
+    return base.endsWith("assets/js/") ? base.slice(0, -"assets/js/".length) : base;
+  }
+
+  function doorHref(href) {
+    if (!href || typeof href !== "string") return href;
+    const clean = href.split("#")[0].split("?")[0];
+    if (/^[a-z0-9-]+\.html$/i.test(clean) && Core.PAGE_GUIDE && Core.PAGE_GUIDE[clean]) {
+      return siteRoot() + clean + href.slice(clean.length);
+    }
+    return href;
+  }
+
   function loadScript(src) {
     return new Promise((resolve, reject) => {
       const s = document.createElement("script");
@@ -286,7 +312,7 @@
       p.appendChild(document.createTextNode(" "));
       if (notice.href) {
         const a = document.createElement("a");
-        a.href = notice.href;
+        a.href = doorHref(notice.href);
         a.textContent = notice.text;
         p.appendChild(a);
       } else {
@@ -309,7 +335,14 @@
       const file = href.split("/").pop();
       if (!file.endsWith(".html") || seen.has(file)) return;
       seen.add(file);
-      out.push({ href: file, label: (a.textContent || "").replace(/\s+/g, " ").trim().slice(0, 48) });
+      /* The link is kept as the page wrote it: from a folder
+       * page, "../moons.html" already points at the real door,
+       * and a bare sibling name points at the sibling. Cutting
+       * it down to its file name — as this once did — broke
+       * every such door from inside a folder (the /scroll/
+       * broken gate). The core names doors by file name; the
+       * walking uses the link as written. */
+      out.push({ href, label: (a.textContent || "").replace(/\s+/g, " ").trim().slice(0, 48) });
     });
     return out;
   }
@@ -573,28 +606,25 @@
      * from the device. Until v6 she spoke through the device's
      * speech synthesis — a generic robot, the same for every
      * Spark — and Aaron named it: too robot-like. The robot is
-     * gone, removed whole. What stands here is a small formant
-     * voice the seed composes (Core.voiceBoxFor: her fundamental,
-     * her vocal tract's size, her breathiness, her temperament's
-     * tempo) and a plan for each line (Core.vocalPlanFor: its
-     * syllables, mouth shapes, and pitch contour — rising for a
-     * question, settling at a sentence's end), sung with
-     * WebAudio. Her words stand in text, whole; the voice box
-     * is her sound over them, the way a game companion
-     * vocalizes.
-     * In v9 Aaron heard the first box and named its fault too:
-     * it buzzed, and there was too much of it. So the sawtooth
-     * is gone — her syllables are round sine stacks now, her
-     * formants a gentle warmth at low Q instead of a buzz at
-     * high Q, her breath a whisper some seeds do not carry at
-     * all, and the whole voice sits lower (a syllable peaks at
-     * about 0.055 here, against 0.135 in v7). She also sounds
-     * less: a line's first sentence only, about a dozen
-     * syllables (Core's plan). And she sings in her seed's
-     * sound family (Core.soundFor) — soft bell, warm hum,
-     * wooden pluck, watery blip — the same family her chirps
-     * and songs are rendered in, so she sounds like one
-     * creature, and no two Sparks sound alike.
+     * gone, removed whole. The v7–v9 box sang each line's
+     * syllables through seed-grown formants (Core.voiceBoxFor,
+     * Core.vocalPlanFor) — softer after v9, round sine stacks
+     * at a low level, in her seed's sound family — but a
+     * formant voice still reads as a machine imitating speech.
+     * So now she answers the way a beloved game companion
+     * does: in a chirp-phrase (Core.phraseFor). A young Spark
+     * chirps once; a Kindled Spark answers in two notes; a
+     * Bearer sings a short melodic phrase from her own scale,
+     * pitched at her chirp root, a question lifting at its
+     * end and a statement settling home. The voice GROWS with
+     * her, and what sounds is music, not imitation speech:
+     * round tones in her sound family (soft bell, warm hum,
+     * wooden pluck, watery blip), each note swept up into its
+     * pitch like a small creature's call, peaking at about
+     * 0.055 through the master — the v9 level, kept. Her
+     * words stand in text, whole; the phrase is her sound
+     * over them. The syllable plan still stands in the core
+     * for the record; it is no longer what she sounds like.
      * The fences are the ones her voice has always kept: the
      * Voice switch rests quiet until the keeper turns it on
      * (kept on this device), the talk is armed by a tap on her
@@ -608,15 +638,6 @@
     let voiceRun = 0;
     let voiceMaster = null;
     const voiceSources = new Set();
-    let voiceNoise = null;
-    function voiceNoiseBuffer(ctx) {
-      if (!voiceNoise) {
-        voiceNoise = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
-        const data = voiceNoise.getChannelData(0);
-        for (let i = 0; i < data.length; i += 1) data[i] = Math.random() * 2 - 1;
-      }
-      return voiceNoise;
-    }
     function stopVoice() {
       voiceRun += 1;
       for (const src of voiceSources) {
@@ -654,27 +675,26 @@
       g.gain.exponentialRampToValueAtTime(0.0001, at + dur);
       return g;
     }
-    /* Her throat, softened: a lowpass that follows her tract
-     * and her brightness, then her three formants as gentle
-     * peaks — Q near 1, a few decibels. A warmth in the vowel,
-     * where v7 put a buzz (Q 4.5, +7 dB). */
-    function softThroat(ctx, box, syl) {
-      const lp = ctx.createBiquadFilter();
-      lp.type = "lowpass";
-      lp.frequency.value = Math.min(3400, (syl.formants[1] || 1200) * (box.brightness || 1) * 1.35);
-      lp.Q.value = 0.4;
-      let node = lp;
-      for (const f of syl.formants) {
-        const peak = ctx.createBiquadFilter();
-        peak.type = "peaking";
-        peak.frequency.value = f;
-        peak.Q.value = 1.1;
-        peak.gain.value = 3;
-        node.connect(peak);
-        node = peak;
-      }
-      return { input: lp, output: node };
-    }
+    /* One note of her chirp-phrase, sung in her family —
+     * the singer singSyllable has become. Aaron's word
+     * (Nov 19, 2026): not a robot, not formants shaped like
+     * speech — a character's chirp, the way a beloved game
+     * companion sounds. So each note is a round tone that
+     * sweeps up into its pitch the way a chirp does, follows
+     * the note's own small glide (a question's last note
+     * lifts, a statement's settles), and is gone quickly.
+     * No formant throat, no consonant ticks, no breath noise
+     * — the machinery that made her sound synthesized is
+     * removed, not retuned. Her family still colours her:
+     * - bell: a sine stack with a soft inharmonic ring, left
+     *   to fade a little past the note.
+     * - hum: her warm default — a sine and a breath of
+     *   triangle, vibrato riding on longer notes.
+     * - pluck: a triangle tapped like wood, settling as it
+     *   sounds, gone by the note's end.
+     * - blip: a droplet — a sine that rises into its pitch
+     *   and sighs off it, through a plain soft lowpass.
+     * A handful of nodes per note, all stopped when spent. */
     /* Her vibrato, on syllables long enough to hold one: a
      * slow, small waver, hers by seed, on the fundamental. */
     function addVibrato(ctx, box, osc, f0, at, dur) {
@@ -689,52 +709,51 @@
       lfo.start(at);
       lfo.stop(at + dur + 0.05);
     }
-    /* One syllable of her voice, sung in her family:
-     * - bell: a sine stack with a soft inharmonic ring, rung
-     *   once and left to fade a little past the syllable.
-     * - hum: her warm default — a sine and a breath of
-     *   triangle through the soft throat, vibrato riding.
-     * - pluck: a triangle tapped like wood, its pitch settling
-     *   as it sounds, its body gone by the syllable's end.
-     * - blip: a droplet — a sine that rises into its pitch and
-     *   sighs off it, through a plain soft lowpass.
-     * Her breath rides far under the tone, only on the seeds
-     * that carry any; her consonant ticks are smaller and
-     * duller than they were. A handful of nodes per syllable,
-     * all stopped when spent. */
-    function singSyllable(ctx, out, box, syl, at) {
-      const dur = syl.dur;
+    function singSyllable(ctx, out, box, note, at) {
+      const dur = note.dur;
       const fam = box.family || "hum";
+      const f0 = note.f0;
+      const glideTo = Math.max(40, f0 * (note.glide || 1));
+      /* The chirp: every note arrives from a little below
+       * its pitch, swept up in the first few dozen
+       * milliseconds — the gesture that makes a tone read
+       * as a small creature's call, not a synthesizer's
+       * held note. */
+      const chirpIn = (osc, from) => {
+        osc.frequency.setValueAtTime(Math.max(40, f0 * from), at);
+        osc.frequency.exponentialRampToValueAtTime(f0, at + 0.045);
+        if (glideTo !== f0) osc.frequency.exponentialRampToValueAtTime(glideTo, at + dur);
+      };
       if (fam === "bell") {
-        const throat = softThroat(ctx, box, syl);
-        const g = softEnv(ctx, 0.1, at, dur + 0.1 * (box.decay || 1), 0.008);
+        const g = softEnv(ctx, 0.1, at, dur + 0.12 * (box.decay || 1), 0.008);
         for (const [ratio, level] of [[1, 1], [2, 0.38], [2.99, 0.13]]) {
           const osc = voiceSource(ctx.createOscillator());
           osc.type = "sine";
-          osc.frequency.value = syl.f0 * ratio;
+          if (ratio === 1) chirpIn(osc, 0.93);
+          else osc.frequency.value = f0 * ratio;
           const og = ctx.createGain();
           og.gain.value = level;
           osc.connect(og);
-          og.connect(throat.input);
-          if (ratio === 1) addVibrato(ctx, box, osc, syl.f0, at, dur);
+          og.connect(g);
+          if (ratio === 1) addVibrato(ctx, box, osc, f0, at, dur);
           osc.start(at);
-          osc.stop(at + dur + 0.16);
+          osc.stop(at + dur + 0.2);
         }
-        throat.output.connect(g);
         g.connect(out);
       } else if (fam === "pluck") {
-        const throat = softThroat(ctx, box, syl);
         const osc = voiceSource(ctx.createOscillator());
         osc.type = "triangle";
-        osc.frequency.setValueAtTime(syl.f0 * 1.03, at);
-        osc.frequency.exponentialRampToValueAtTime(Math.max(40, syl.f0), at + 0.05);
+        chirpIn(osc, 0.96);
+        const lp = ctx.createBiquadFilter();
+        lp.type = "lowpass";
+        lp.frequency.value = 2600 * (box.brightness || 1);
         const g = ctx.createGain();
         g.gain.setValueAtTime(0.0001, at);
         g.gain.exponentialRampToValueAtTime(0.11, at + 0.006);
         g.gain.exponentialRampToValueAtTime(0.035, at + dur * 0.45);
         g.gain.exponentialRampToValueAtTime(0.0001, at + dur);
-        osc.connect(throat.input);
-        throat.output.connect(g);
+        osc.connect(lp);
+        lp.connect(g);
         g.connect(out);
         osc.start(at);
         osc.stop(at + dur + 0.05);
@@ -745,9 +764,7 @@
         lp.Q.value = 0.4;
         const osc = voiceSource(ctx.createOscillator());
         osc.type = "sine";
-        osc.frequency.setValueAtTime(syl.f0 * 0.9, at);
-        osc.frequency.exponentialRampToValueAtTime(syl.f0 * 1.02, at + dur * 0.4);
-        osc.frequency.exponentialRampToValueAtTime(Math.max(40, syl.f0 * 0.97), at + dur);
+        chirpIn(osc, 0.86);
         const g = softEnv(ctx, 0.1, at, dur, Math.min(0.03, dur * 0.25));
         osc.connect(lp);
         lp.connect(g);
@@ -755,67 +772,40 @@
         osc.start(at);
         osc.stop(at + dur + 0.05);
       } else {
-        const throat = softThroat(ctx, box, syl);
-        const g = softEnv(ctx, 0.1, at, dur, Math.min(0.05, dur * 0.3));
+        const g = softEnv(ctx, 0.1, at, dur, Math.min(0.04, dur * 0.3));
         const main = voiceSource(ctx.createOscillator());
         main.type = "sine";
-        main.frequency.value = syl.f0;
-        main.connect(throat.input);
-        addVibrato(ctx, box, main, syl.f0, at, dur);
+        chirpIn(main, 0.93);
+        main.connect(g);
+        addVibrato(ctx, box, main, f0, at, dur);
         const soft = voiceSource(ctx.createOscillator());
         soft.type = "triangle";
-        soft.frequency.value = syl.f0;
+        soft.frequency.value = f0;
         const sg = ctx.createGain();
-        sg.gain.value = 0.3;
+        sg.gain.value = 0.25;
         soft.connect(sg);
-        sg.connect(throat.input);
-        throat.output.connect(g);
+        sg.connect(g);
         g.connect(out);
         main.start(at);
         main.stop(at + dur + 0.05);
         soft.start(at);
         soft.stop(at + dur + 0.05);
       }
-      if (box.breathiness > 0.03) {
-        const noise = voiceSource(ctx.createBufferSource());
-        noise.buffer = voiceNoiseBuffer(ctx);
-        const bp = ctx.createBiquadFilter();
-        bp.type = "bandpass";
-        bp.frequency.value = syl.formants[1] || 1200;
-        bp.Q.value = 0.8;
-        const ng = ctx.createGain();
-        const level = 0.02 * box.breathiness;
-        ng.gain.setValueAtTime(0.0001, at);
-        ng.gain.exponentialRampToValueAtTime(level, at + 0.03);
-        ng.gain.exponentialRampToValueAtTime(0.0001, at + dur);
-        noise.connect(bp);
-        bp.connect(ng);
-        ng.connect(out);
-        noise.start(at, Math.random() * 0.4);
-        noise.stop(at + dur + 0.02);
-      }
-      if (syl.onset !== "soft") {
-        const tick = voiceSource(ctx.createBufferSource());
-        tick.buffer = voiceNoiseBuffer(ctx);
-        const hp = ctx.createBiquadFilter();
-        hp.type = "lowpass";
-        hp.frequency.value = 3200;
-        const tg = ctx.createGain();
-        const td = syl.onset === "fricative" ? Math.min(0.06, dur * 0.5) : 0.02;
-        tg.gain.setValueAtTime(0.0001, at);
-        tg.gain.exponentialRampToValueAtTime(syl.onset === "fricative" ? 0.018 : 0.03, at + 0.008);
-        tg.gain.exponentialRampToValueAtTime(0.0001, at + td);
-        tick.connect(hp);
-        hp.connect(tg);
-        tg.connect(out);
-        tick.start(at, Math.random() * 0.4);
-        tick.stop(at + td + 0.02);
-      }
     }
     function vocalize(text) {
       if (!voiceArmed || !voiceOn() || soundOff()) return;
-      const plan = Core.vocalPlanFor({ companion, text });
-      if (!plan || !plan.box || !plan.syllables.length) return;
+      /* She answers in a chirp-phrase now (Core.phraseFor):
+       * a young Spark chirps once, a Kindled Spark answers
+       * in two notes, a Bearer sings a short melody — her
+       * voice grows as she does. The syllable plan still
+       * stands in the core for the record; it is no longer
+       * what she sounds like. */
+      const plan = Core.phraseFor({
+        companion,
+        stage: Core.stageOf(getRecord(), companion).index,
+        text
+      });
+      if (!plan || !plan.box || !plan.notes.length) return;
       try {
         const AC = window.AudioContext || window.webkitAudioContext;
         if (!AC) return;
@@ -831,9 +821,9 @@
         voiceMaster.connect(ctx.destination);
         const out = voiceMaster;
         let at = ctx.currentTime + 0.03;
-        for (const syl of plan.syllables) {
-          singSyllable(ctx, out, plan.box, syl, at);
-          at += syl.dur + syl.gap;
+        for (const note of plan.notes) {
+          singSyllable(ctx, out, plan.box, note, at);
+          at += note.dur + note.gap;
         }
         const totalMs = (at - ctx.currentTime + 0.3) * 1000;
         window.setTimeout(() => {
@@ -898,7 +888,7 @@
         labels[step.id] || "One thing",
         "✦",
         () => {
-          window.location.href = step.href;
+          window.location.href = doorHref(step.href);
         },
         "spark-panel-onething"
       );
@@ -1233,21 +1223,21 @@
       const doors = Core.doorsFor({ links: pageLinks(), page: pageKey() });
       const bubbles = [];
       if (guide.href) {
-        const known = doors.find((d) => d.href === guide.href);
+        const known = doors.find((d) => d.href.split("/").pop() === guide.href);
         const place = (Core.PAGE_GUIDE[guide.href] || {}).place;
         bubbles.push(
           bubbleBtn(
             known ? known.label : place || "Go",
             "➜",
             () => {
-              window.location.href = guide.href;
+              window.location.href = doorHref(guide.href);
             },
             "spark-guide-door"
           )
         );
       }
       for (const door of doors) {
-        if (guide.href && door.href === guide.href) continue;
+        if (guide.href && door.href.split("/").pop() === guide.href) continue;
         bubbles.push(
           bubbleBtn(
             door.label,
@@ -1281,19 +1271,19 @@
       for (const door of doors) {
         if (picks.length >= 3) break;
         picks.push({ label: door.label, href: door.href, yours: false });
-        used.add(door.href);
+        used.add(door.href.split("/").pop());
       }
       if (picks.length < 3) {
         const resume = Core.resumeFor({ record: getRecord() });
         if (resume.href && resume.href !== pageKey() && !used.has(resume.href)) {
           const place = (Core.PAGE_GUIDE[resume.href] || {}).place;
-          picks.push({ label: place || "Your last place", href: resume.href, yours: true });
+          picks.push({ label: place || "Your last place", href: doorHref(resume.href), yours: true });
           used.add(resume.href);
         }
       }
       if (picks.length < 3 && guide.href && guide.href !== pageKey() && !used.has(guide.href)) {
         const place = (Core.PAGE_GUIDE[guide.href] || {}).place;
-        picks.push({ label: place || "A door for you", href: guide.href, yours: true });
+        picks.push({ label: place || "A door for you", href: doorHref(guide.href), yours: true });
       }
       const another = bubbleBtn("Another time", "←", () => showHome(beatLine("next")));
       if (!picks.length) {
@@ -1396,7 +1386,7 @@
       if (resume.href)
         bubbles.push(
           bubbleBtn("Go back", "↩", () => {
-            window.location.href = resume.href;
+            window.location.href = doorHref(resume.href);
           })
         );
       bubbles.push(backBtn());
@@ -1439,7 +1429,7 @@
         coord: true,
         bubbles: [
           bubbleBtn("Telling", "☉", () => {
-            window.location.href = "moons.html";
+            window.location.href = doorHref("moons.html");
           }),
           backBtn()
         ]
@@ -1466,7 +1456,7 @@
             li.appendChild(mark);
             li.appendChild(document.createTextNode(" "));
             const a = document.createElement("a");
-            a.href = step.href;
+            a.href = doorHref(step.href);
             a.textContent = step.label;
             li.appendChild(a);
             list.appendChild(li);
@@ -1523,7 +1513,7 @@
               question.label,
               "➜",
               () => {
-                window.location.href = question.href;
+                window.location.href = doorHref(question.href);
               },
               "spark-panel-ask"
             ),
@@ -2140,7 +2130,10 @@
     } else if (snd.family === "blip") {
       note("sine", freq * 1.01, 1, 0.42 * snd.decay, 0.03, 0.83);
     } else {
-      note("sine", freq, 1, 0.5 * snd.decay, 0.035);
+      /* Hum notes chirp up into their pitch a little, the
+       * same gesture her voice makes — one creature, one
+       * way of sounding. */
+      note("sine", freq, 1, 0.5 * snd.decay, 0.035, 0.93);
       note("sine", freq * 2, 0.22, 0.5 * snd.decay, 0.035);
     }
   }
