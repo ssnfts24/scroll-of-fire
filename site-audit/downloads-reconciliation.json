@@ -2,19 +2,19 @@
   "note": "Report only. downloads.html and its integrity history were not modified.",
   "snapshot": {
     "commit": "af3078a5fc2cc7969733ad9df1fcffd6754d974c",
-    "declaredFiles": 167,
-    "declaredSize": "208.44 MB",
-    "parsedRows": 167
+    "declaredFiles": 168,
+    "declaredSize": "210.01 MB",
+    "parsedRows": 168
   },
   "current": {
-    "files": 194,
-    "sizeMB": 230.6
+    "files": 195,
+    "sizeMB": 232.17
   },
   "counts": {
     "added": 27,
     "removed": 0,
     "changed": 0,
-    "unchanged": 167
+    "unchanged": 168
   },
   "added": [
     "ADVANCED-REBUILD-HANDOFF.md",
