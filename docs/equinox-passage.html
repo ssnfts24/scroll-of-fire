@@ -27,6 +27,8 @@
   <link rel="stylesheet" href="assets/css/equinox-passage.css?v=20260722-4">
   <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260724-1">
   <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
+  <link rel="stylesheet" href="assets/css/living-moon-theme.css?v=20261119-1">
+  <link rel="stylesheet" href="assets/css/social-bridge.css">
   <script defer src="assets/js/site.js"></script>
   <script defer src="assets/js/living-search-launcher.js"></script>
   <script defer src="assets/js/share/remnant-share-url.js"></script>
@@ -49,6 +51,10 @@
   <script defer src="assets/js/equinox/equinox-passage-storage.js"></script>
   <script defer src="assets/js/equinox/equinox-passage-visualization-data.js"></script>
   <script defer src="assets/js/equinox/equinox-passage-ui.js"></script>
+  <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261119-1">
+  <script defer src="assets/js/spark-companion.js?v=20261119-1"></script>
+  <script src="assets/js/spark-3d.js?v=20261119-1"></script>
+  <script defer src="assets/js/spark-presence.js?v=20261119-1"></script>
 </head>
 <body class="living-ui">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -65,6 +71,7 @@
         <li><a href="shop.html">Shop</a></li>
         <li><a href="witness.html">Witness</a></li>
         <li><a href="search.html">Living Search</a></li>
+        <li><a href="companions.html">Companion</a></li>
         <li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li>
       </ul>
     </nav>
@@ -103,9 +110,9 @@
       <p style="letter-spacing:.12em;text-transform:uppercase;font-size:.8rem;opacity:.75;margin:0 0 .35rem;">Watch · The Explainer</p>
       <h2>The sky moves; the Pattern remains stable.</h2>
       <p>A short spoken tour of the Equinox Passage: the March equinox measured against the fixed Pattern Calendar, its four labelled layers, and the historical comparison across the study years. Press play and let the page explain itself.</p>
-      <video controls preload="metadata" width="1280" height="720"
+      <video controls preload="none" width="1280" height="720"
         style="width:100%;height:auto;display:block"
-        src="assets/media/equinox-passage-explainer.mp4"
+        src="assets/media/equinox-passage-explainer.mp4" poster="assets/media/equinox-passage-explainer-poster.webp"
         aria-label="Video: the Equinox Passage, explained in plain words">
         Your browser does not support the video element. The same tour is
         written out across this page.
@@ -193,7 +200,7 @@
 
       <section class="equinox-card" aria-labelledby="equinoxHistoryTitle">
         <p class="eyebrow">Annual records</p>
-        <h2 id="equinoxHistoryTitle">2014–2026 historical table</h2>
+        <h2 id="equinoxHistoryTitle">2014–2027 historical table</h2>
         <div class="equinox-table-wrap">
           <table class="equinox-table">
             <thead><tr><th>Year</th><th>Equinox UTC</th><th>Pattern Position</th><th>Passage</th><th>Lunar</th><th>Boundary</th><th>Source</th><th>Precision</th></tr></thead>
@@ -208,7 +215,7 @@
         <p id="equinoxMethods">—</p>
         <p><strong>Astronomical fact:</strong> exact March equinox instant. <strong>Pattern calculation:</strong> mapping the instant into the fixed Pattern Calendar. <strong>Symbolic interpretation:</strong> optional reflective language only. <strong>Personal observation:</strong> stored locally. <strong>Hypothesis:</strong> not treated as proof.</p>
         <p id="equinoxMethodsBoundaryNote" class="equinox-muted">Boundary explanation pending.</p>
-        <p><a href="specifications/equinox-passage-v1.md">Open specification</a> · <a href="data/equinox-passage/equinox-source-metadata.json">Source metadata JSON</a> · <a href="data/equinox-passage/equinox-reference-2014-2026.json">Reference JSON</a> · <a href="data/equinox-passage/equinox-passage-2014-2026.csv">Historical CSV</a></p>
+        <p><a href="specifications/equinox-passage-v1.md">Open specification</a> · <a href="data/equinox-passage/equinox-source-metadata.json">Source metadata JSON</a> · <a href="data/equinox-passage/equinox-reference-2014-2027.json">Reference JSON</a> · <a href="data/equinox-passage/equinox-passage-2014-2027.csv">Historical CSV</a></p>
       </section>
 
       <section class="equinox-card" aria-labelledby="equinoxExportTitle">
@@ -353,6 +360,9 @@
       </section>
     </main>
   </div>
+  <script defer src="assets/js/living-moon-theme.js?v=20261119-1"></script>
   <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
+  <script defer src="assets/js/day-telling.js?v=20261119-1"></script>
+  <script defer src="assets/js/social-bridge.js?v=20261119-1"></script>
 </body>
 </html>

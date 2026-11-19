@@ -1123,3 +1123,32 @@
   line-height: 1.5;
   opacity: 0.75;
 }
+
+/* ---------- First-minute plain words (gap sweep, Nov 19 2026) ---------- */
+/* The short note under the hero emblem that says what 7.83 Hz and the
+   Field number mean, in plain words, where they first appear. */
+.hero-note {
+  max-width: var(--moons-readable);
+  margin: 0.9rem auto 0;
+  text-align: center;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  opacity: 0.82;
+}
+
+/* ---------- Mini-sphere day points: a real hit area ---------- */
+/* The today preview draws the whole year ring at phone size, so each
+   day point is a 5 px dot with its neighbours about 2 px away. The dots
+   keep their look; an invisible stroke widens the tappable disc to
+   about 17 px, the most the ring's spacing can carry. Exact day picking
+   lives on the full-size day grid beside the preview (46 px buttons).
+   Keyboard focus turns the same disc gold so the focused day shows. */
+#moons-sphere-today-preview .sphere-day-point {
+  stroke: rgba(0, 0, 0, 0);
+  stroke-width: 12px;
+  pointer-events: all;
+}
+
+#moons-sphere-today-preview .sphere-day-point:focus-visible {
+  stroke: var(--gold);
+}

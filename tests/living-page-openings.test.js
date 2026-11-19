@@ -252,10 +252,25 @@ test("the living line never invents a coordinate", () => {
   assert.match(js, /calendar\.fromCivilDate/);
   assert.match(js, /toLocaleDateString\("en-US"/,
     "the civil date line is always available as the fallback");
+  // Every main-house page that carries the living opening also carries the
+  // calendar, so the coordinate an opening speaks is always the computed
+  // one. (The Scroll and Scripture houses keep their own page furniture and
+  // are outside this sweep.) The civil-only fallback in living-ui.js stays
+  // for any page where the calendar is absent — it is never a guess.
+  const offenders = walkHtml(docsDir, "")
+    .filter(rel => !rel.startsWith("scroll/") && !rel.startsWith("scripture/"))
+    .filter(rel => {
+      const html = read("docs/" + rel);
+      return html.includes("living-ui.js") && !html.includes("pattern-calendar");
+    });
+  assert.deepEqual(offenders, [],
+    "every main-house page with the living opening must carry the PatternCalendar");
   // Pages without temporal code load no calendar: the line stays civil-only.
-  const shop = read("docs/shop.html");
+  // (The main house, shop included, gained the calendar with the Living Moon
+  // Theme so every room can change with the moon; 404.html still carries none.)
+  const shop = read("docs/404.html");
   assert.ok(!shop.includes("pattern-calendar"),
-    "shop.html carries no PatternCalendar, so its opening shows the civil date only");
+    "404.html carries no PatternCalendar, so its opening shows the civil date only");
   // A page that does carry the calendar gets the full coordinate.
   const moons = read("docs/moons.html");
   assert.ok(moons.includes("pattern-calendar"),

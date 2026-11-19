@@ -15,6 +15,10 @@
  *   - smooth in-page anchor travel (motion-safe only)
  *   - staged reveal-on-enter for top-level sections (armed by
  *     living-ui.js; everything is fully visible without JS)
+ *   - the living motion wave: cards rising softly into view, hover
+ *     and press answers on doors and buttons, surfaces easing their
+ *     colours when the theme variables change, and two quiet
+ *     homepage moments (the day line, the Sphere frame's glow)
  *   - the page opening (.lpo-*): one quiet arrival moment, once per
  *     session — the mark, the page's name, today's line, and a quiet
  *     way-forward line late in the hold — injected by
@@ -450,6 +454,214 @@ body.lpo-opening main {
 }
 
 /* ------------------------------------------------------------------ */
+/* Living motion — the animation wave                                  */
+/*                                                                     */
+/* Shared, tasteful motion for the whole house, riding this layer:     */
+/*   - cards rise softly into view, once, as they arrive — armed by    */
+/*     living-ui.js only, so nothing is ever hidden without JS         */
+/*   - cards and doors answer a hover and a press                      */
+/*   - surfaces ease their colours when the site's theme variables     */
+/*     change: whatever sets the variables (a moon theme, a daypart),  */
+/*     the surfaces crossfade instead of snapping — this layer is      */
+/*     theme-agnostic and names no theme of its own                    */
+/*   - two homepage moments: the day line settles in as it is          */
+/*     written, and the homepage Sphere's frame breathes a slow        */
+/*     gold glow (the Sphere page itself is never touched)             */
+/*                                                                     */
+/* Discipline: transform/opacity only, plus the independent            */
+/* translate/scale properties, which compose with — never override —   */
+/* a page's own transforms and transitions. No infinite animation      */
+/* here runs while the tab is hidden (living-ui.js adds .lui-paused).  */
+/* Everything in this section rests under reduced motion and under     */
+/* the site's motion-off attribute (data-codex-motion="off").          */
+/* ------------------------------------------------------------------ */
+
+/* Colour ease — surfaces crossfade when theme variables change */
+body.living-ui {
+  transition: background-color 0.8s ease;
+}
+
+body.living-ui main :is(
+  .card,
+  .feature-card,
+  .what-card,
+  .signal-card,
+  .front-door-card,
+  .moon-panel,
+  .caravan-card,
+  .exercise-card,
+  .witness-card,
+  .artifact-card-mini,
+  .participation-chapter,
+  .participation-outcome,
+  .codex-seal
+) {
+  transition:
+    translate 0.3s ease,
+    scale 0.2s ease,
+    background-color 0.8s ease,
+    border-color 0.8s ease;
+}
+
+/* Card reveals — the armed state is applied by living-ui.js at
+ * runtime, only to cards still below the fold; the pending state
+ * never appears in markup and never applies without JS. */
+body.living-ui main :is(
+  .card,
+  .feature-card,
+  .what-card,
+  .signal-card,
+  .front-door-card,
+  .moon-panel,
+  .caravan-card,
+  .exercise-card,
+  .witness-card,
+  .artifact-card-mini,
+  .participation-chapter,
+  .participation-outcome,
+  .codex-seal
+).lui-card-armed {
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.22, 0.61, 0.21, 1),
+    translate 0.3s ease,
+    scale 0.2s ease,
+    background-color 0.8s ease,
+    border-color 0.8s ease;
+}
+
+body.living-ui main :is(
+  .card,
+  .feature-card,
+  .what-card,
+  .signal-card,
+  .front-door-card,
+  .moon-panel,
+  .caravan-card,
+  .exercise-card,
+  .witness-card,
+  .artifact-card-mini,
+  .participation-chapter,
+  .participation-outcome,
+  .codex-seal
+).lui-card-pending {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+@keyframes lui-soft-in {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes lui-frame-breathe {
+  from { opacity: 0.22; }
+  to { opacity: 0.5; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Hover lift + press answer on the house's cards and doors.
+   * The independent translate/scale properties carry these, so a
+   * page's own transform animations keep composing underneath. */
+  body.living-ui main :is(
+    .card,
+    .feature-card,
+    .what-card,
+    .signal-card,
+    .front-door-card,
+    .moon-panel,
+    .caravan-card,
+    .exercise-card,
+    .witness-card,
+    .artifact-card-mini,
+    .participation-chapter,
+    .participation-outcome,
+    .codex-seal
+  ):hover {
+    translate: 0 -2px;
+  }
+
+  body.living-ui main :is(
+    .card,
+    .feature-card,
+    .what-card,
+    .signal-card,
+    .front-door-card,
+    .moon-panel,
+    .caravan-card,
+    .exercise-card,
+    .witness-card,
+    .artifact-card-mini,
+    .participation-chapter,
+    .participation-outcome,
+    .codex-seal
+  ):active {
+    scale: 0.99;
+  }
+
+  /* Buttons and entry doors dip a breath when pressed. No transition
+   * is declared here on purpose: the press lands crisply and each
+   * page's own button transitions stay exactly as authored. */
+  body.living-ui :is(.btn, .le-door):active {
+    scale: 0.98;
+  }
+
+  /* The day line settles in each time it is written — on arrival,
+   * and again when the living day panel rewrites it. */
+  body.living-ui .ld-moon-line {
+    animation: lui-soft-in 0.9s ease both;
+  }
+
+  /* The homepage Sphere's frame breathes a slow gold glow. This is
+   * the hero card's frame on the homepage only — an overlay of
+   * light, pointer-transparent, above the stage and beneath the
+   * card's own inset glow. The Sphere page is untouched. */
+  .homepage-sphere-frame::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: radial-gradient(circle at 50% 42%, rgba(243, 201, 122, 0.16), transparent 62%);
+    opacity: 0.35;
+    pointer-events: none;
+    animation: lui-frame-breathe 9s ease-in-out infinite alternate;
+  }
+}
+
+/* Hidden tab: the layer's ambient animations rest instead of
+ * breathing unseen (.lui-paused is toggled by living-ui.js). */
+body.living-ui.lui-paused::before,
+body.lui-paused .homepage-sphere-frame::before {
+  animation-play-state: paused;
+}
+
+/* The site's motion-off attribute stills this wave too (set on the
+ * homepage root by living-codex.js when motion is not allowed). */
+html[data-codex-motion="off"] body.living-ui .ld-moon-line,
+html[data-codex-motion="off"] .homepage-sphere-frame::before {
+  animation: none;
+}
+
+html[data-codex-motion="off"] body.living-ui main :is(
+  .card,
+  .feature-card,
+  .what-card,
+  .signal-card,
+  .front-door-card,
+  .moon-panel,
+  .caravan-card,
+  .exercise-card,
+  .witness-card,
+  .artifact-card-mini,
+  .participation-chapter,
+  .participation-outcome,
+  .codex-seal
+) {
+  translate: none;
+  scale: none;
+}
+
+/* ------------------------------------------------------------------ */
 /* Reduced motion: the layer rests                                     */
 /* ------------------------------------------------------------------ */
 
@@ -474,5 +686,53 @@ body.lpo-opening main {
   body.living-ui main > section.lui-reveal-pending {
     opacity: 1;
     transform: none;
+  }
+
+  /* The animation wave rests completely: no card is ever left
+   * pending, no hover or press offset applies, the day line and
+   * the Sphere frame's glow stand still. */
+  body.living-ui main :is(
+    .card,
+    .feature-card,
+    .what-card,
+    .signal-card,
+    .front-door-card,
+    .moon-panel,
+    .caravan-card,
+    .exercise-card,
+    .witness-card,
+    .artifact-card-mini,
+    .participation-chapter,
+    .participation-outcome,
+    .codex-seal
+  ),
+  body.living-ui :is(.btn, .le-door) {
+    transition: none;
+    translate: none;
+    scale: none;
+  }
+
+  body.living-ui main :is(
+    .card,
+    .feature-card,
+    .what-card,
+    .signal-card,
+    .front-door-card,
+    .moon-panel,
+    .caravan-card,
+    .exercise-card,
+    .witness-card,
+    .artifact-card-mini,
+    .participation-chapter,
+    .participation-outcome,
+    .codex-seal
+  ).lui-card-pending {
+    opacity: 1;
+    transform: none;
+  }
+
+  body.living-ui .ld-moon-line,
+  .homepage-sphere-frame::before {
+    animation: none;
   }
 }

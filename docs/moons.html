@@ -140,11 +140,14 @@
   <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260819-b752&r=20260820-b758&p=20260820-b7581-labelglass&u=20260820-b7582-railalign&b=20260820-b7592a-farskeleton&d=20260821-b7592d7-unified">
   <link rel="stylesheet" href="assets/css/living-time-app-enhancements.css?v=20260730-1">
   <link rel="stylesheet" href="assets/css/manifest-practice.css?v=20261117-mp1">
+  <link rel="stylesheet" href="assets/css/presence.css?v=20261118-lw1">
 
   <link rel="stylesheet" href="assets/css/animations.css">
   <link rel="stylesheet" href="assets/css/share-day.css?v=1">
   <link rel="stylesheet" href="assets/css/moons-interface.css?v=20260818-b6">
   <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
+  <link rel="stylesheet" href="assets/css/living-moon-theme.css?v=20261119-1">
+  <link rel="stylesheet" href="assets/css/social-bridge.css">
 
   <script>
     window.SOF_MOONS_CONFIG = Object.freeze({
@@ -230,6 +233,10 @@
   <script defer src="assets/js/share-day.js"></script>
   <script defer src="assets/js/codex-witness.js"></script>
   <script defer src="assets/js/motion.js"></script>
+  <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261119-1">
+  <script defer src="assets/js/spark-companion.js?v=20261119-1"></script>
+  <script src="assets/js/spark-3d.js?v=20261119-1"></script>
+  <script defer src="assets/js/spark-presence.js?v=20261119-1"></script>
 </head>
 
 <body class="living-ui" data-remnant-boundary="sunset">
@@ -248,6 +255,7 @@
         <li><a href="shop.html">Shop</a></li>
         <li><a href="witness.html">Witness</a></li>
         <li><a href="search.html">Living Search</a></li>
+        <li><a href="companions.html">Companion</a></li>
         <li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li>
       </ul>
     </nav>
@@ -430,12 +438,13 @@
         <span>☽</span>
       </div>
 
-      <aside class="notice">
-        <strong>🔥 Living Calendar Mode:</strong>
-        day turnover is configured for local sunset, Shabbat is mapped to
-        Moon Days 2, 9, 16, and 23, and the continuous seven-day week remains
-        unbroken through the Year Gate.
-      </aside>
+      <p class="hero-note">
+        The emblem above carries 7.83 Hz: that is the Earth Hum, the natural
+        resonance between the earth and the upper air, kept here as context,
+        not command. The strip at the top of the page shows a Field number
+        for the day: that is the tone, in hertz, that the Codex pairs with
+        the current moon.
+      </p>
 
       <!-- COMPACT INSTALL SHORTCUT — above the tab bar, scrolls with page -->
       <div class="app-shortcuts" id="installShortcutRow" aria-label="App install shortcuts">
@@ -462,9 +471,9 @@
         </p>
       </div>
 
-      <video controls preload="metadata" width="1280" height="720"
+      <video controls preload="none" width="1280" height="720"
         style="width:100%;height:auto;display:block"
-        src="assets/media/moons-explainer.mp4"
+        src="assets/media/moons-explainer.mp4" poster="assets/media/moons-explainer-poster.webp"
         aria-label="Video: the 13 Moons living calendar, explained in plain words">
         Your browser does not support the video element. The same tour is
         written out across this page.
@@ -691,10 +700,45 @@
           <p class="day-telling-note">This telling is generated from the calendar itself — the same count the Living Sphere keeps. The positions are arithmetic; the reading is the Codex's own layer, and it is labeled so the two never blur.</p>
         </section>
 
+        <aside class="notice">
+          <strong>🔥 Living Calendar Mode:</strong>
+          day turnover is configured for local sunset, Shabbat is mapped to
+          Moon Days 2, 9, 16, and 23, and the continuous seven-day week remains
+          unbroken through the Year Gate.
+        </aside>
+
         <section class="manifest-today" data-manifest-today aria-label="Today in the practice loop">
           <span class="manifest-today-glyph" aria-hidden="true">🜚</span>
           <p class="manifest-today-line">Manifest practice — Today: <strong data-manifest-today-coords>—</strong> · <span data-manifest-today-count>—</span></p>
           <a class="manifest-today-link" href="./teach.html#manifest">Seal a session</a>
+        </section>
+
+        <section class="card day-notes" id="day-notes" data-day-notes aria-labelledby="dayNotesTitle">
+          <div class="day-notes__head">
+            <h2 id="dayNotesTitle">Day Notes</h2>
+            <p class="day-notes__intro">Pick a day. See everything you have stored on it — practice, plans, notes — and write a plain note of your own. It all stays on this device.</p>
+          </div>
+          <div data-presence-guidance></div>
+          <div class="day-notes__day">
+            <span class="day-notes__headline" data-day-notes-headline>Today</span>
+            <span class="day-notes__detail" data-day-notes-detail></span>
+          </div>
+          <div class="day-notes__stepper">
+            <button type="button" data-day-notes-prev>← Day before</button>
+            <button type="button" data-day-notes-today>Today</button>
+            <button type="button" data-day-notes-next>Day after →</button>
+            <input type="date" data-day-notes-date aria-label="Pick a day">
+          </div>
+          <p class="day-notes__empty" data-day-notes-empty hidden>Nothing on this day yet.</p>
+          <ul class="day-notes__list" data-day-notes-list></ul>
+          <form class="day-notes__form" data-day-notes-form>
+            <label for="day-notes-text">Write a note on this day</label>
+            <textarea id="day-notes-text" data-day-notes-text placeholder="One line is enough."></textarea>
+            <button type="submit">Write it on this day</button>
+          </form>
+          <p class="day-notes__status" data-day-notes-status aria-live="polite"></p>
+          <p class="day-notes__storage">Notes live in the same on-device record as your practice and plans. They survive through the Life Atlas backup — export it from the <a href="living-time-sphere.html">Sphere</a> page — and a cleared browser can lose what was never backed up.</p>
+          <p class="day-notes__guide-door">Questions about the site itself? <a href="codex-guide.html">Ask the Guide</a> — it answers from the site's own record, with the proof showing.</p>
         </section>
 
         <section class="card today-hero-actions" aria-labelledby="todayHeroHeading">
@@ -2771,6 +2815,8 @@
   <script src="assets/js/life-atlas/life-atlas-calendar-projection.js?v=20260819-b750"></script>
   <!-- Manifest practice loop: gold day markers for sealed sessions. -->
   <script src="assets/js/manifest-practice.js?v=20261117-mp1"></script>
+  <script src="assets/js/day-notes.js?v=20261118-lw1"></script>
+  <script src="assets/js/presence-guidance.js?v=20261118-lw1"></script>
 
   <!-- Astrology and planetary mirror -->
   <script src="assets/js/astrology.js?v=20260722-4"></script>
@@ -3797,6 +3843,9 @@ Let the next step be firm.`;
 <script defer src="assets/js/environment/unit-preferences.js?v=20260816-1"></script>
 <script defer src="assets/js/calendar/temporal-coordinate-engine.js?v=20260816-1"></script>
 <script defer src="assets/js/calendar/temporal-cursor-controller.js?v=20260816-2"></script>
+  <script defer src="assets/js/living-moon-theme.js?v=20261119-1"></script>
   <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
+  <script defer src="assets/js/moons-schedule-handoff.js?v=20261118-1"></script>
+  <script defer src="assets/js/social-bridge.js?v=20261119-1"></script>
 </body>
   </html>

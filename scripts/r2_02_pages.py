@@ -30,6 +30,9 @@ def head(title, desc, base, canonical_path, extra=""):
 <link rel="stylesheet" href="{base}../assets/css/living-ui.css?v=20261117-1">
 <script defer src="{base}../assets/js/site.js"></script>
 <script defer src="{base}assets/scripture.js"></script>
+<link rel="stylesheet" href="{base}../assets/css/spark-companion.css?v=20261119-1">
+<script defer src="{base}../assets/js/spark-companion.js?v=20261119-1"></script>
+<script defer src="{base}../assets/js/spark-presence.js?v=20261119-1"></script>
 {extra}</head>
 """
 
@@ -39,7 +42,7 @@ def living_nav(base):
     # inserts into the hand-maintained pages): Home is one tap away from every
     # page, Scripture is the current area here. Emitted by the generator so the
     # deterministic build keeps it; never hand-edit the generated pages.
-    return f"""<div class="living-nav" data-living-nav><nav class="living-nav-inner" aria-label="Site navigation"><a class="living-nav-brand" href="{base}../index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a><ul class="living-nav-links"><li><a href="{base}../index.html">Home</a></li><li><a href="{base}../scroll/index.html">Scroll</a></li><li><a href="{base}../codex-atlas.html">Atlas</a></li><li><a href="{base}../scroll/lexicon.html">Lexicon</a></li><li><a class="is-current" aria-current="page" href="{base}index.html">Scripture</a></li><li><a href="{base}../living-time-sphere.html">Sphere</a></li><li><a href="{base}../shop.html">Shop</a></li><li><a href="{base}../witness.html">Witness</a></li><li><a href="{base}../search.html">Living Search</a></li><li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li></ul></nav></div>
+    return f"""<div class="living-nav" data-living-nav><nav class="living-nav-inner" aria-label="Site navigation"><a class="living-nav-brand" href="{base}../index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a><ul class="living-nav-links"><li><a href="{base}../index.html">Home</a></li><li><a href="{base}../scroll/index.html">Scroll</a></li><li><a href="{base}../codex-atlas.html">Atlas</a></li><li><a href="{base}../scroll/lexicon.html">Lexicon</a></li><li><a class="is-current" aria-current="page" href="{base}index.html">Scripture</a></li><li><a href="{base}../living-time-sphere.html">Sphere</a></li><li><a href="{base}../shop.html">Shop</a></li><li><a href="{base}../witness.html">Witness</a></li><li><a href="{base}../search.html">Living Search</a></li><li><a href="{base}../companions.html">Companion</a></li><li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li></ul></nav></div>
 """
 
 
@@ -166,7 +169,7 @@ def render_all(OUT, emit_text, books_meta, chapters, manifest, remnant, curated,
 <section id="scripture-explainer" style="max-width:880px;margin:2rem auto;">
 <h2>Genesis and Exodus, word by word.</h2>
 <p>A short spoken tour of the Scripture reader: the complete Hebrew text of Genesis and Exodus, a study opened for every single word, the five layers kept visibly apart, and the page’s own stated limits. Press play and let the page explain itself.</p>
-<video controls preload="metadata" width="1280" height="720" style="width:100%;height:auto;display:block" src="../assets/media/scripture-explainer.mp4" aria-label="Video: the Scripture reader for Genesis and Exodus, explained in plain words">
+<video controls preload="none" width="1280" height="720" style="width:100%;height:auto;display:block" src="../assets/media/scripture-explainer.mp4" poster="../assets/media/scripture-explainer-poster.webp" aria-label="Video: the Scripture reader for Genesis and Exodus, explained in plain words">
 Your browser does not support the video element. The same tour is written out across this page.
 </video>
 </section>
@@ -198,9 +201,9 @@ Your browser does not support the video element. The same tour is written out ac
   <p style="letter-spacing:.12em;text-transform:uppercase;font-size:.8rem;opacity:.75;margin:0 0 .35rem;">Watch · The Explainer</p>
   <h2>Sources, licences, and limits — stated.</h2>
   <p>A short spoken tour of the Scripture edition's sources page: its three completeness levels, the pinned sources behind the Hebrew, the lexicon, and the English, and the limits the edition declares about itself. Press play and let the page explain itself.</p>
-  <video controls preload="metadata" width="1280" height="720"
+  <video controls preload="none" width="1280" height="720"
     style="width:100%;height:auto;display:block"
-    src="../assets/media/scripture-about-explainer.mp4"
+    src="../assets/media/scripture-about-explainer.mp4" poster="../assets/media/scripture-about-explainer-poster.webp"
     aria-label="Video: Scripture sources and method, explained in plain words">
     Your browser does not support the video element. The same tour is
     written out across this page.

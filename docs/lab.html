@@ -63,6 +63,12 @@
   <script defer src="assets/js/codex-witness.js"></script>
   <link rel="stylesheet" href="assets/css/animations.css">
   <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
+  <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261119-1">
+  <script defer src="assets/js/spark-companion.js?v=20261119-1"></script>
+  <script src="assets/js/spark-3d.js?v=20261119-1"></script>
+  <script defer src="assets/js/spark-presence.js?v=20261119-1"></script>
+  <link rel="stylesheet" href="assets/css/living-moon-theme.css?v=20261119-1">
+  <link rel="stylesheet" href="assets/css/social-bridge.css">
 </head>
 
 <body class="living-ui">
@@ -81,6 +87,7 @@
         <li><a href="shop.html">Shop</a></li>
         <li><a href="witness.html">Witness</a></li>
         <li><a href="search.html">Living Search</a></li>
+        <li><a href="companions.html">Companion</a></li>
         <li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li>
       </ul>
     </nav>
@@ -202,6 +209,14 @@
         </article>
 
         <article class="lab-card">
+          <span class="sigil" aria-hidden="true">🍄</span>
+          <span class="lab-tag">Grow</span>
+          <h3>Shroom Search — the Garden</h3>
+          <p>A small garden in the corner of the bench. Tend three mushroom beds, grow them through their tiers across days and practice, and harvest passes — every tend, tier, and pass kept in your own Life Atlas, on this device.</p>
+          <a class="text-link" href="./garden.html">Open the Garden →</a>
+        </article>
+
+        <article class="lab-card">
           <span class="sigil" aria-hidden="true">⏳</span>
           <span class="lab-tag">Quick Run</span>
           <h3>90-Second Micro-Run</h3>
@@ -268,9 +283,9 @@
         </p>
       </div>
 
-      <video controls preload="metadata" width="1280" height="720"
+      <video controls preload="none" width="1280" height="720"
         style="width:100%;height:auto;display:block"
-        src="assets/media/lab-explainer.mp4"
+        src="assets/media/lab-explainer.mp4" poster="assets/media/lab-explainer-poster.webp"
         aria-label="Video: the Remnant Lab, explained in plain words">
         Your browser does not support the video element. The same tour is
         written out across this page.
@@ -330,6 +345,9 @@
     </nav>
     <p>© <span id="year">2026</span> Aaron Paul Laird — Scroll of Fire · Codex of Reality · Scribe of Circuits</p>
   </footer>
+  <script defer src="assets/js/living-moon-theme.js?v=20261119-1"></script>
   <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
+  <script defer src="assets/js/day-telling.js?v=20261119-1"></script>
+  <script defer src="assets/js/social-bridge.js?v=20261119-1"></script>
 </body>
 </html>

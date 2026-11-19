@@ -1,0 +1,106 @@
+/* Social Bridge — the share-out and follow doors in the living chrome.
+ * Colors meet AA on the deep-stone ground: gold #f3c97a and text
+ * #f4f1e8 / #d6deea on #0b0f1a-class backgrounds. */
+
+.social-bridge {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 0.5rem clamp(0.75rem, 3vw, 1.5rem);
+  background: linear-gradient(180deg, rgba(8, 12, 23, 0.97), rgba(5, 7, 13, 0.97));
+  border-bottom: 1px solid rgba(243, 201, 122, 0.28);
+  color: #f4f1e8;
+  font-size: 0.92rem;
+}
+
+.social-bridge-share,
+.social-bridge-doors button {
+  min-height: 44px;
+  border-radius: 10px;
+  border: 1px solid rgba(243, 201, 122, 0.55);
+  background: rgba(243, 201, 122, 0.14);
+  color: #f3c97a;
+  font: inherit;
+  font-weight: 600;
+  padding: 0.45rem 0.9rem;
+  cursor: pointer;
+}
+
+.social-bridge-share:hover,
+.social-bridge-share:focus-visible,
+.social-bridge-doors button:hover,
+.social-bridge-doors button:focus-visible {
+  background: rgba(243, 201, 122, 0.24);
+  outline: none;
+}
+
+.social-bridge-follow {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.8rem;
+}
+
+.social-bridge-follow-label {
+  color: #a7b4c7;
+}
+
+.social-bridge-follow a,
+.social-bridge-doors a {
+  color: #7af3ff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: 0.35rem 0.1rem;
+}
+
+.social-bridge-panel {
+  flex-basis: 100%;
+  border: 1px solid rgba(122, 243, 255, 0.32);
+  border-radius: 12px;
+  background: rgba(3, 7, 14, 0.92);
+  padding: 0.8rem;
+  margin-top: 0.4rem;
+}
+
+.social-bridge-panel[hidden] {
+  display: none;
+}
+
+.social-bridge-text {
+  margin: 0 0 0.7rem;
+  white-space: pre-wrap;
+  font: inherit;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #f4f1e8;
+}
+
+.social-bridge-doors {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.9rem;
+}
+
+.social-bridge-note {
+  margin: 0.7rem 0 0;
+  color: #d6deea;
+  font-size: 0.85rem;
+}
+
+.social-bridge-status {
+  margin: 0.4rem 0 0;
+  min-height: 1.2em;
+  color: #9ecff2;
+  font-size: 0.85rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .social-bridge * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

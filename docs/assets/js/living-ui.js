@@ -39,6 +39,13 @@
  *    reduced-motion visitors lose nothing, and nothing is ever
  *    hijacked.
  *
+ * 3. LIVING MOTION — the same reveal discipline one level down: the
+ *    house's cards rise softly into view, once, as they arrive
+ *    (.lui-card-pending, armed only below the fold, staggered a
+ *    breath apart within a family). And when the tab is hidden, the
+ *    layer's ambient animations are paused (body.lui-paused) instead
+ *    of breathing unseen.
+ *
  * The homepage opts out of both: living-entry.js already runs the full
  * entry and the same reveal discipline there.
  */
@@ -274,26 +281,81 @@
   if (!("IntersectionObserver" in window)) return;
 
   const targets = Array.from(document.querySelectorAll("main > section"));
-  if (!targets.length) return;
+  if (targets.length) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.remove("lui-reveal-pending");
+          observer.unobserve(entry.target);
+        });
+      },
+      { rootMargin: "0px 0px -8% 0px", threshold: 0.04 }
+    );
 
-  const observer = new IntersectionObserver(
+    targets.forEach((target) => {
+      const rect = target.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.94) {
+        // Already in (or near) the first viewport — never hide it.
+        return;
+      }
+      target.classList.add("lui-reveal-pending");
+      observer.observe(target);
+    });
+  }
+
+  /* ---------------------------------------------------------------- */
+  /* Living motion — cards rise as they arrive; the layer rests        */
+  /* while the tab is hidden                                           */
+  /* ---------------------------------------------------------------- */
+
+  document.addEventListener("visibilitychange", () => {
+    document.body.classList.toggle("lui-paused", document.hidden);
+  });
+  if (document.hidden) document.body.classList.add("lui-paused");
+
+  const CARD_SELECTOR =
+    "main .card, main .feature-card, main .what-card, main .signal-card, " +
+    "main .front-door-card, main .moon-panel, main .caravan-card, " +
+    "main .exercise-card, main .witness-card, main .artifact-card-mini, " +
+    "main .participation-chapter, main .participation-outcome, main .codex-seal";
+
+  const cards = Array.from(document.querySelectorAll(CARD_SELECTOR));
+  if (!cards.length) return;
+
+  const cardObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
-        entry.target.classList.remove("lui-reveal-pending");
-        observer.unobserve(entry.target);
+        const card = entry.target;
+        card.classList.remove("lui-card-pending");
+        cardObserver.unobserve(card);
+        // The stagger delay was only for the rise; clear it once the
+        // card has landed so hover and press answers stay instant.
+        window.setTimeout(() => {
+          card.style.transitionDelay = "";
+          card.classList.remove("lui-card-armed");
+        }, 950);
       });
     },
-    { rootMargin: "0px 0px -8% 0px", threshold: 0.04 }
+    { rootMargin: "0px 0px -6% 0px", threshold: 0.04 }
   );
 
-  targets.forEach((target) => {
-    const rect = target.getBoundingClientRect();
+  const familyCounts = new Map();
+  cards.forEach((card) => {
+    const rect = card.getBoundingClientRect();
     if (rect.top < window.innerHeight * 0.94) {
       // Already in (or near) the first viewport — never hide it.
       return;
     }
-    target.classList.add("lui-reveal-pending");
-    observer.observe(target);
+    // A breath of stagger within a family of cards, capped so a long
+    // grid never keeps a visitor waiting.
+    const family = card.parentElement;
+    const index = familyCounts.get(family) || 0;
+    familyCounts.set(family, index + 1);
+    card.style.transitionDelay = Math.min(index, 4) * 55 + "ms";
+    card.classList.add("lui-card-armed");
+    card.classList.add("lui-card-pending");
+    cardObserver.observe(card);
   });
 })();

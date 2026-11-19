@@ -22,6 +22,7 @@
   const scriptUrl = [...document.scripts].find(script => /living-search\.js(?:\?|$)/.test(script.src))?.src || "";
   const searchRoot = scriptUrl ? new URL("../search/", scriptUrl).href : "assets/search/";
   const AREA_LABELS = { pages: "Page", scrolls: "Scroll", atlas: "Atlas", lexicon: "Lexicon", claims: "Claim" };
+  const AREA_LABELS_PLURAL = { pages: "Pages", scrolls: "Scrolls", atlas: "Atlas", lexicon: "Lexicon", claims: "Claims" };
   const AREA_ORDER = ["pages", "scrolls", "atlas", "lexicon", "claims"];
   const PATHWAYS = [
     { t: "Enter the Scroll Library", u: "scroll/", d: "The full manuscript, in eight shelves" },
@@ -118,7 +119,7 @@
         </div>
         <div class="ls-chips" role="group" aria-label="Filter by area">
           <button type="button" class="ls-chip is-active" data-area="">All</button>
-          ${AREA_ORDER.map(area => `<button type="button" class="ls-chip" data-area="${area}">${AREA_LABELS[area]}s</button>`).join("")}
+          ${AREA_ORDER.map(area => `<button type="button" class="ls-chip" data-area="${area}">${AREA_LABELS_PLURAL[area]}</button>`).join("")}
         </div>
         <p class="ls-status" role="status" aria-live="polite"></p>
       </form>
@@ -136,10 +137,10 @@
     let timer = null;
 
     function statusLine(extra = "") {
-      if (!state.manifest) { status.textContent = "Gathering the index…"; return; }
+      if (!state.manifest) { status.textContent = indexStarted ? "Gathering the index…" : ""; return; }
       const names = AREA_ORDER.map(area => state.loaded.has(area)
-        ? `${AREA_LABELS[area]}s ${state.manifest.counts[area]}`
-        : `${AREA_LABELS[area]}s …`);
+        ? `${AREA_LABELS_PLURAL[area]} ${state.manifest.counts[area]}`
+        : `${AREA_LABELS_PLURAL[area]} …`);
       status.textContent = `${extra}Index: ${names.join(" · ")}`.trim();
     }
 
@@ -223,6 +224,7 @@
     }
 
     async function run(record = false) {
+      ensureIndexStarted();
       const query = input.value.trim();
       const id = ++state.runId;
       if (!query) {
@@ -249,7 +251,7 @@
       if (!results.length) {
         resultsList.innerHTML = "";
         const suggestions = [...new Set(unresolved.flatMap(token => core.suggestTerms(state.index, token)))].slice(0, 5);
-        emptyBox.innerHTML = `<p>No results for “${esc(query)}”${activeArea ? ` in ${AREA_LABELS[activeArea]}s` : ""}.</p>${
+        emptyBox.innerHTML = `<p>No results for “${esc(query)}”${activeArea ? ` in ${AREA_LABELS_PLURAL[activeArea]}` : ""}.</p>${
           suggestions.length ? `<p>Nearest terms in the index: ${suggestions.map(term =>
             `<button type="button" class="ls-recent" data-query="${esc(term)}">${esc(term)}</button>`).join(" ")}</p>` : ""
         }<p>Try fewer words, Hebrew letters without vowel marks, or a transliteration such as “bereshit”.</p>`;
@@ -271,7 +273,9 @@
         : `${total} result${total === 1 ? "" : "s"}. `);
     }
 
+    input.addEventListener("pointerdown", ensureIndexStarted);
     input.addEventListener("input", () => {
+      ensureIndexStarted();
       clearTimeout(timer);
       timer = setTimeout(() => run(false), 120);
     });
@@ -286,6 +290,7 @@
     });
     container.querySelector(".ls-form").addEventListener("submit", event => { event.preventDefault(); run(true); });
     chips.forEach(chip => chip.addEventListener("click", () => {
+      ensureIndexStarted();
       chips.forEach(other => other.classList.toggle("is-active", other === chip));
       activeArea = chip.dataset.area || "";
       if (input.value.trim()) run(false);
@@ -315,11 +320,22 @@
       if (index !== activeIndex) setActive(index);
     });
 
-    loadInitial(() => { statusLine(); if (!input.value.trim()) renderHome(); }).catch(() => {
-      status.textContent = "The search index could not be loaded. The Atlas and Search the Scroll Library remain available from the navigation.";
-    });
+    /* The index (2.2 MB across its shards) used to load the moment this
+       UI was built, before a single letter was typed. Now it loads on
+       first interaction: a tap or keystroke in the box, a filter chip,
+       a search run, or the overlay being opened. The sealed counts line
+       on the search page is rendered by living-search-page.js from the
+       manifest alone and is unaffected. */
+    let indexStarted = false;
+    function ensureIndexStarted() {
+      if (indexStarted) return;
+      indexStarted = true;
+      loadInitial(() => { statusLine(); if (!input.value.trim()) renderHome(); }).catch(() => {
+        status.textContent = "The search index could not be loaded. The Atlas and Search the Scroll Library remain available from the navigation.";
+      });
+    }
     renderHome();
-    return { input, run, focus: () => input.focus() };
+    return { input, run, start: ensureIndexStarted, focus: () => input.focus() };
   }
 
   /* ---------------- overlay ---------------- */
@@ -342,6 +358,7 @@
     lastFocus = document.activeElement;
     overlay.hidden = false;
     document.body.classList.add("ls-open");
+    overlayUI.start();
     if (typeof initialQuery === "string" && initialQuery) {
       overlayUI.input.value = initialQuery;
       overlayUI.run(true);

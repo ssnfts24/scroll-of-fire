@@ -1,0 +1,302 @@
+/*
+ * Presence styles — Living Witness Rungs 1–2 (Dashboard item 17).
+ * The Day Notes panel and guidance lines on the 13 Moons page, and
+ * The Codex Guide page. Palette follows the site's living surfaces:
+ * stone ink, muted bone, gold seams, quiet teal.
+ */
+
+/* ------------------------- Day Notes panel ------------------------- */
+
+.day-notes {
+  margin: 2rem auto;
+  max-width: 46rem;
+  padding: 1.25rem 1.25rem 1rem;
+  color: var(--ink, #eae7df);
+  background: var(--card, #121219);
+  border: 1px solid var(--line, #2a2a33);
+  border-radius: 14px;
+}
+
+.day-notes__head h2 {
+  margin: 0 0 0.25rem;
+  color: var(--gold, #f3c97a);
+}
+
+.day-notes__intro {
+  margin: 0 0 1rem;
+  color: var(--muted, #b8b3a6);
+}
+
+.day-notes__day {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.day-notes__headline {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.day-notes__detail {
+  color: var(--muted, #b8b3a6);
+}
+
+.day-notes__stepper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.day-notes__stepper button,
+.day-notes__form button {
+  color: var(--ink, #eae7df);
+  background: color-mix(in srgb, var(--gold, #f3c97a) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--gold, #f3c97a) 45%, transparent);
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  cursor: pointer;
+}
+
+.day-notes__stepper button:hover,
+.day-notes__form button:hover {
+  background: color-mix(in srgb, var(--gold, #f3c97a) 22%, transparent);
+}
+
+.day-notes__stepper input[type="date"] {
+  color: var(--ink, #eae7df);
+  background: var(--bg, #0b0b0f);
+  border: 1px solid var(--line, #2a2a33);
+  border-radius: 8px;
+  padding: 0.35rem 0.5rem;
+}
+
+.day-notes__list {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.day-notes__record {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--line, #2a2a33);
+  border-radius: 10px;
+}
+
+.day-notes__kind {
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--teal, #7af3ff);
+}
+
+.day-notes__summary {
+  color: var(--muted, #b8b3a6);
+  overflow-wrap: anywhere;
+}
+
+.day-notes__empty {
+  color: var(--muted, #b8b3a6);
+  margin: 0 0 1rem;
+}
+
+.day-notes__form {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.day-notes__form label {
+  font-weight: 600;
+}
+
+.day-notes__form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 4.5rem;
+  color: var(--ink, #eae7df);
+  background: var(--bg, #0b0b0f);
+  border: 1px solid var(--line, #2a2a33);
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+  font: inherit;
+}
+
+.day-notes__form button {
+  justify-self: start;
+}
+
+.day-notes__status {
+  min-height: 1.2em;
+  color: var(--gold, #f3c97a);
+  margin: 0 0 0.5rem;
+}
+
+.day-notes__storage {
+  color: var(--muted, #b8b3a6);
+  font-size: 0.92rem;
+  margin: 0;
+}
+
+.day-notes__guide-door {
+  margin: 0.75rem 0 0;
+}
+
+/* --------------------------- Guidance ------------------------------ */
+
+.presence-guidance {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px dashed color-mix(in srgb, var(--teal, #7af3ff) 40%, transparent);
+  border-radius: 10px;
+}
+
+.presence-guidance__label {
+  margin: 0 0 0.4rem;
+  font-size: 0.85rem;
+  color: var(--muted, #b8b3a6);
+}
+
+.presence-guidance__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.3rem;
+}
+
+.presence-guidance__line--noticed {
+  color: var(--ink, #eae7df);
+}
+
+.presence-guidance__line--offer a {
+  color: var(--gold, #f3c97a);
+}
+
+/* ----------------------------- Guide ------------------------------- */
+
+.codex-guide {
+  margin: 0 auto;
+  max-width: 46rem;
+  padding: 1.5rem 1.25rem 2.5rem;
+  color: var(--ink, #eae7df);
+}
+
+.codex-guide__fence {
+  border: 1px solid color-mix(in srgb, var(--gold, #f3c97a) 35%, var(--line, #2a2a33));
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  margin-bottom: 1.25rem;
+  background: var(--card, #121219);
+}
+
+.codex-guide__fence p {
+  margin: 0.3rem 0;
+}
+
+.codex-guide__form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.codex-guide__form input[type="text"] {
+  flex: 1 1 16rem;
+  color: var(--ink, #eae7df);
+  background: var(--bg, #0b0b0f);
+  border: 1px solid var(--line, #2a2a33);
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+  font: inherit;
+}
+
+.codex-guide__form button {
+  color: var(--ink, #eae7df);
+  background: color-mix(in srgb, var(--gold, #f3c97a) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--gold, #f3c97a) 45%, transparent);
+  border-radius: 999px;
+  padding: 0.55rem 1.1rem;
+  cursor: pointer;
+}
+
+.codex-guide__status {
+  min-height: 1.2em;
+  color: var(--muted, #b8b3a6);
+}
+
+.codex-guide__answer {
+  border: 1px solid var(--line, #2a2a33);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  margin: 1rem 0;
+  background: var(--card, #121219);
+}
+
+.codex-guide__kicker {
+  margin: 0 0 0.25rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--teal, #7af3ff);
+}
+
+.codex-guide__headline {
+  margin: 0 0 0.4rem;
+}
+
+.codex-guide__label {
+  margin: 0.8rem 0 0.2rem;
+  font-weight: 700;
+  color: var(--gold, #f3c97a);
+}
+
+.codex-guide__detail {
+  margin: 0.2rem 0;
+  color: var(--ink, #eae7df);
+}
+
+.codex-guide__grade {
+  margin: 0.2rem 0;
+  font-weight: 600;
+}
+
+.codex-guide__sources,
+.codex-guide__passages {
+  margin: 0.3rem 0;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.codex-guide__passage {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.codex-guide__snippet,
+.codex-guide__caveat {
+  color: var(--muted, #b8b3a6);
+  overflow-wrap: anywhere;
+}
+
+.codex-guide__caveat {
+  font-style: italic;
+}
+
+.codex-guide__how {
+  margin-top: 2rem;
+  color: var(--muted, #b8b3a6);
+}
+
+.codex-guide__how h2 {
+  color: var(--ink, #eae7df);
+}

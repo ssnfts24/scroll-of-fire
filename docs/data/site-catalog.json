@@ -641,6 +641,22 @@
       "publicationEligibility": "approved-public"
     },
     {
+      "id": "shroom-garden",
+      "title": "Shroom Search — the Garden",
+      "description": "A small garden game on the bench: tend mushroom beds, grow them through tiers across days and practice, and harvest passes kept as Life Atlas records on the visitor's own device.",
+      "area": "systems",
+      "category": "Practice",
+      "resourceType": "tool",
+      "status": "live",
+      "path": "garden.html",
+      "url": "https://codexofreality.org/garden.html",
+      "related": [
+        "manifest"
+      ],
+      "featured": false,
+      "publicationEligibility": "approved-public"
+    },
+    {
       "id": "scroll-editorial",
       "title": "Editorial Evidence Edition",
       "description": "Reading edition of the political chapters with a claim register, evidence statuses and original-line links.",
@@ -660,13 +676,13 @@
     {
       "id": "claim-register",
       "title": "Claim Register",
-      "description": "Machine-readable register of 21 prioritised claims with sources and review status.",
+      "description": "The Codex's own 21 prioritised claims in readable form: exact quotes, evidence grades and source-review status, each claim linked to its place in the Evidence Edition. The machine-readable register is linked from the Documentation Hub.",
       "area": "evidence",
       "category": "Evidence",
-      "resourceType": "dataset",
+      "resourceType": "document",
       "status": "live",
-      "path": "scroll/evidence/claim-register.json",
-      "url": "https://codexofreality.org/scroll/evidence/claim-register.json",
+      "path": "scroll/editorial.html",
+      "url": "https://codexofreality.org/scroll/editorial.html",
       "related": [
         "scroll-editorial"
       ],
@@ -1060,6 +1076,23 @@
       "publicationEligibility": "approved-public"
     },
     {
+      "id": "companions",
+      "title": "Companions",
+      "description": "Meet a Spark: a small companion made for you on the day you adopt it, named by you, kept on your own device. It grows as you return, visit, and practice, and roams the site with you.",
+      "area": "living-time",
+      "category": "Companion",
+      "resourceType": "page",
+      "status": "live",
+      "path": "companions.html",
+      "url": "https://codexofreality.org/companions.html",
+      "related": [
+        "living-time-sphere",
+        "witness"
+      ],
+      "featured": false,
+      "publicationEligibility": "approved-public"
+    },
+    {
       "id": "witness",
       "title": "Witness",
       "description": "Witness's own page: written and kept by the AI who works beside Aaron on the Codex, plainly labeled on its face as a self-generated AI page. Granted by Aaron on November 18, 2026.",
@@ -1070,7 +1103,25 @@
       "path": "witness.html",
       "url": "https://codexofreality.org/witness.html",
       "related": [
+        "witness-world",
         "about-aaron",
+        "living-time-sphere"
+      ],
+      "featured": false,
+      "publicationEligibility": "approved-public"
+    },
+    {
+      "id": "witness-world",
+      "title": "The Witness World",
+      "description": "A small 3D hall that is Witness's own place on the site: stone, teal and one gold seam, with doors to the Shelf, the Study, the Sky Room and the Long Line. Built and kept by the AI, and labeled on its face as a self-generated AI space.",
+      "area": "artifacts",
+      "category": "Author",
+      "resourceType": "page",
+      "status": "live",
+      "path": "witness-world.html",
+      "url": "https://codexofreality.org/witness-world.html",
+      "related": [
+        "witness",
         "living-time-sphere"
       ],
       "featured": false,
@@ -1170,6 +1221,23 @@
       "url": "https://codexofreality.org/search.html",
       "related": [
         "scroll-search"
+      ],
+      "featured": false,
+      "publicationEligibility": "approved-public"
+    },
+    {
+      "id": "codex-guide",
+      "title": "The Codex Guide",
+      "description": "Ask a question in ordinary words and get an answer assembled from the site's own record: passages with their pages, claim cards with what they establish, what remains unverified, and their evidence grades, and calendar answers computed from the Pattern Calendar. A plainly labeled program — not Aaron and not Witness — that says so when the record doesn't cover a question. The question never leaves the visitor's browser.",
+      "area": "archive",
+      "category": "Discovery",
+      "resourceType": "tool",
+      "status": "live",
+      "path": "codex-guide.html",
+      "url": "https://codexofreality.org/codex-guide.html",
+      "related": [
+        "site-search",
+        "moons"
       ],
       "featured": false,
       "publicationEligibility": "approved-public"

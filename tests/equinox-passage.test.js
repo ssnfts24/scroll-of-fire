@@ -89,14 +89,24 @@ test("reference instants match bundled authoritative values", () => {
   assert.equal(context.EquinoxEngine.getReferenceRecord(2014).utcInstant, "2014-03-20T16:57:05Z");
   assert.equal(context.EquinoxEngine.getReferenceRecord(2020).utcInstant, "2020-03-20T03:49:37Z");
   assert.equal(context.EquinoxEngine.getReferenceRecord(2026).utcInstant, "2026-03-20T14:45:57Z");
+  assert.equal(context.EquinoxEngine.getReferenceRecord(2027).utcInstant, "2027-03-20T20:24:41Z");
 });
 
-test("historical dataset is complete and chronologically ordered for 2014-2026", () => {
+test("2027 record carries its own USNO + Skyfield source chain", () => {
+  const context = loadCoreContext();
+  const record = context.EquinoxEngine.getReferenceRecord(2027);
+  assert.equal(record.validationUtcInstant, "2027-03-20T20:24:41.334Z");
+  assert.equal(record.validationDeltaSeconds, 0.334);
+  assert.match(record.source, /Naval Observatory/);
+  assert.equal(context.EquinoxEngine.describeEquinox(2027, "UTC").localInstant, "2027-03-20T20:24:41");
+});
+
+test("historical dataset is complete and chronologically ordered for 2014-2027", () => {
   const context = loadCoreContext();
   const years = context.EquinoxPassageData.listYears();
-  assert.equal(years.length, 13);
+  assert.equal(years.length, 14);
   assert.equal(years[0], 2014);
-  assert.equal(years.at(-1), 2026);
+  assert.equal(years.at(-1), 2027);
   const instants = years.map(year => context.EquinoxEngine.getReferenceRecord(year).utcInstant);
   assert.equal([...instants].sort().join("|"), instants.join("|"));
 });
@@ -169,7 +179,7 @@ test("source metadata includes required source-chain fields and measured limits"
   assert.equal(metadata.primarySource.ephemerisVersionOrChecksum, "unknown");
   assert.equal(metadata.primarySource.primarySourceUrl, "unknown");
   assert.equal(metadata.independentValidation.independentValidationUrl, "unknown");
-  assert.equal(metadata.records.length, 13);
+  assert.equal(metadata.records.length, 14);
 });
 
 test("annual JSON export is canonical and historical CSV contains stable source metadata", () => {
@@ -228,7 +238,7 @@ test("URL parsing restores supported state, falls back safely, and ignores malfo
   assert.equal(parsed.displayMode, "standard");
   assert.equal(parsed.datasetVersion, "equinox-passage/1.0.0");
   assert.equal(parsed.compareYearA, 2014);
-  assert.equal(parsed.compareYearB, 2026);
+  assert.equal(parsed.compareYearB, 2027);
   assert.equal(parsed.issues.length >= 5, true);
 });
 
@@ -270,7 +280,7 @@ test("13 Moons compact card link preserves current equinox state and page restor
     scrollOfFireMoons: { selectedTimezone: () => "America/Los_Angeles" }
   });
   const href = nodeMap.get("equinoxCompactLinkText").attributes.href;
-  assert.match(href, /year=2026/);
+  assert.match(href, /year=2027/);
   assert.match(href, /tz=America%2FLos_Angeles/);
   assert.match(href, /boundary=manual/);
   assert.match(href, /sunset=18%3A45/);
@@ -283,9 +293,9 @@ test("unsupported accuracy language guardrail stays absent from shipped equinox 
     "docs/assets/js/equinox/equinox-passage-format.js",
     "docs/assets/js/equinox/equinox-passage-ui.js",
     "docs/data/equinox-passage/equinox-source-metadata.json",
-    "docs/data/equinox-passage/equinox-reference-2014-2026.json",
-    "docs/data/equinox-passage/equinox-passage-2014-2026.json",
-    "docs/data/equinox-passage/equinox-passage-2014-2026.csv",
+    "docs/data/equinox-passage/equinox-reference-2014-2027.json",
+    "docs/data/equinox-passage/equinox-passage-2014-2027.json",
+    "docs/data/equinox-passage/equinox-passage-2014-2027.csv",
     "docs/specifications/equinox-passage-v1.md",
     "docs/reports/remnant-phase-02-validation.md",
     "docs/equinox-passage.html",

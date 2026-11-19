@@ -650,9 +650,10 @@ body.site-menu-open {
 }
 
 .living-signal-item {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  min-height: 34px;
+  min-height: 44px;
   padding: 0.45rem 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 999px;
@@ -666,6 +667,13 @@ body.site-menu-open {
 .living-signal-link {
   color: inherit;
   text-decoration: none;
+}
+
+/* The whole pill is the tap target, not just its text. */
+.living-signal-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
 }
 
 .living-signal-link:hover,

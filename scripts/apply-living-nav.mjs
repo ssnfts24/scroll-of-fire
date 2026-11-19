@@ -72,7 +72,10 @@ const AREAS = [
   { id: "witness", label: "Witness", target: "witness.html" },
   /* The whole-site search door, just before Support: Living Search
    * (search.html) covers every page, not only the Scroll Library. */
-  { id: "search", label: "Living Search", target: "search.html" }
+  { id: "search", label: "Living Search", target: "search.html" },
+  /* The Spark's home (Aaron's companions direction, Nov 18, 2026):
+   * the newest door, standing just before the Support door. */
+  { id: "companion", label: "Companion", target: "companions.html" }
 ];
 
 /* One external door, always last in the bar: support for the work.
@@ -135,6 +138,7 @@ function currentAreaFor(rel) {
   if (rel === "shop.html") return "shop";
   if (rel === "witness.html") return "witness";
   if (rel === "search.html") return "search";
+  if (rel === "companions.html") return "companion";
   return null;
 }
 

@@ -28,10 +28,16 @@
   <link rel="stylesheet" href="assets/css/navigation.css">
   <link rel="stylesheet" href="assets/css/living-search.css">
   <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
+  <link rel="stylesheet" href="assets/css/living-moon-theme.css?v=20261119-1">
+  <link rel="stylesheet" href="assets/css/social-bridge.css">
   <script defer src="assets/js/site.js"></script>
   <script defer src="assets/js/living-search-core.js"></script>
   <script defer src="assets/js/living-search-memory.js"></script>
   <script defer src="assets/js/living-search.js"></script>
+  <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261119-1">
+  <script defer src="assets/js/spark-companion.js?v=20261119-1"></script>
+  <script src="assets/js/spark-3d.js?v=20261119-1"></script>
+  <script defer src="assets/js/spark-presence.js?v=20261119-1"></script>
   <script defer src="assets/js/living-search-page.js"></script>
 </head>
 <body class="living-ui">
@@ -49,6 +55,7 @@
         <li><a href="shop.html">Shop</a></li>
         <li><a href="witness.html">Witness</a></li>
         <li><a href="search.html" class="is-current" aria-current="page">Living Search</a></li>
+        <li><a href="companions.html">Companion</a></li>
         <li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li>
       </ul>
     </nav>
@@ -142,7 +149,7 @@
 
   <main id="main" class="ls-page">
     <h1>Search the Codex</h1>
-    <p>One living index for the whole site: every page, the Scroll Library's sections and passages, the Hebrew Lexicon, the Atlas and the Claim Register. Press <kbd>Ctrl K</kbd> anywhere on the site to search without leaving the page you are reading.</p>
+    <p>One living index for the whole site: every page, the Scroll Library's sections and passages, the Hebrew Lexicon, the Atlas and the Claim Register. On most pages you can also press <kbd>Ctrl K</kbd> to search without leaving the page you are reading.</p>
     <p class="ls-counts" id="ls-counts" hidden></p>
     <div class="ls-panel-like">
       <div id="living-search-app"></div>
@@ -157,6 +164,7 @@
       <p><strong>In sync by construction.</strong> The index is generated from this site's own repository — the same sealed catalog and Scroll data the site is built from — and the generated files are committed beside the pages they describe. The copy served by codexofreality.org and the copy in the GitHub source are the same artifact, sealed by the same hash registry, so the search can never quietly drift from the site.</p>
       <p><strong>Hebrew-aware.</strong> Vowel marks and cantillation are folded away for matching, so pointed and unpointed spellings meet; lexicon entries are also findable by the author's transliteration and by romanization keys.</p>
       <p><strong>Its memory is yours.</strong> Recent searches and the results you opened are remembered in this browser only, on this device, to help you pick up where you left off. They are never transmitted, and one control clears them.</p>
+      <p><strong>Want the answer, not just the results?</strong> <a href="codex-guide.html">The Codex Guide</a> assembles an answer from this same record — passages with their pages, claims with their evidence grades, calendar answers computed — and says so plainly when the record doesn't cover a question.</p>
     </section>
   </main>
   <footer class="site-footer">
@@ -170,6 +178,19 @@
     </nav>
     <p>© <span id="year">2026</span> Aaron Paul Laird — Scroll of Fire · Codex of Reality · Scribe of Circuits</p>
   </footer>
+  <script defer src="assets/js/calendar/pattern-calendar-version.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-data.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-format.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-boundary.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar.js?v=20260722-4"></script>
+  <script defer src="assets/js/living-moon-theme.js?v=20261119-1"></script>
   <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-version.js?v=20260722-3"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-data.js?v=20260722-3"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-format.js?v=20260722-3"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-boundary.js?v=20260722-3"></script>
+  <script defer src="assets/js/calendar/pattern-calendar.js?v=20260722-3"></script>
+  <script defer src="assets/js/day-telling.js?v=20261119-1"></script>
+  <script defer src="assets/js/social-bridge.js?v=20261119-1"></script>
 </body>
 </html>

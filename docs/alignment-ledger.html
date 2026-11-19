@@ -26,6 +26,8 @@
   <link rel="stylesheet" href="assets/css/moons.css?v=20260722-4">
   <link rel="stylesheet" href="assets/css/alignment-ledger.css?v=20260723-1">
   <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
+  <link rel="stylesheet" href="assets/css/living-moon-theme.css?v=20261119-1">
+  <link rel="stylesheet" href="assets/css/social-bridge.css">
 
   <!-- Core engines (load order matters — dependencies first) -->
   <script defer src="assets/js/site.js"></script>
@@ -66,6 +68,10 @@
       if (globalThis.AlignmentUI) AlignmentUI.init();
     });
   </script>
+  <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261119-1">
+  <script defer src="assets/js/spark-companion.js?v=20261119-1"></script>
+  <script src="assets/js/spark-3d.js?v=20261119-1"></script>
+  <script defer src="assets/js/spark-presence.js?v=20261119-1"></script>
 </head>
 <body class="living-ui">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -82,6 +88,7 @@
         <li><a href="shop.html">Shop</a></li>
         <li><a href="witness.html">Witness</a></li>
         <li><a href="search.html">Living Search</a></li>
+        <li><a href="companions.html">Companion</a></li>
         <li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li>
       </ul>
     </nav>
@@ -126,9 +133,9 @@
       <p style="letter-spacing:.12em;text-transform:uppercase;font-size:.8rem;opacity:.75;margin:0 0 .35rem;">Watch · The Explainer</p>
       <h2>Where the moving sky meets the fixed Pattern.</h2>
       <p>A short spoken tour of the Alignment Ledger: how the March equinox is measured against the Pattern Calendar year by year, what its recurrence scores do and do not claim, and where its precision limits are disclosed. Press play and let the page explain itself.</p>
-      <video controls preload="metadata" width="1280" height="720"
+      <video controls preload="none" width="1280" height="720"
         style="width:100%;height:auto;display:block"
-        src="assets/media/alignment-ledger-explainer.mp4"
+        src="assets/media/alignment-ledger-explainer.mp4" poster="assets/media/alignment-ledger-explainer-poster.webp"
         aria-label="Video: the Alignment Ledger, explained in plain words">
         Your browser does not support the video element. The same tour is
         written out across this page.
@@ -184,7 +191,7 @@
 
       <!-- 8. Historical table -->
       <section class="al-section" aria-labelledby="alHistoricalHeading">
-        <h2 id="alHistoricalHeading" class="al-section-heading">Historical table — 2014–2026</h2>
+        <h2 id="alHistoricalHeading" class="al-section-heading">Historical table — 2014–2027</h2>
         <div id="al-historical-table" aria-live="polite">
           <p class="al-methods-summary">Loading historical data…</p>
         </div>
@@ -225,6 +232,9 @@
 
     </main>
   </div>
+  <script defer src="assets/js/living-moon-theme.js?v=20261119-1"></script>
   <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
+  <script defer src="assets/js/day-telling.js?v=20261119-1"></script>
+  <script defer src="assets/js/social-bridge.js?v=20261119-1"></script>
 </body>
 </html>

@@ -461,11 +461,25 @@
       "format": "webp",
       "alt": "Remnant 13 Moons living calendar.",
       "usedBy": [
-        "docs/assets/js/moons-images.js (hero artwork)"
+        "installed app splash artwork"
       ],
       "status": "active",
       "width": 2732,
       "height": 2732
+    },
+    {
+      "id": "hero-1200",
+      "path": "assets/img/moons/app/hero-1200.webp",
+      "category": "moons",
+      "purpose": "app",
+      "format": "webp",
+      "alt": "Remnant 13 Moons living calendar.",
+      "usedBy": [
+        "docs/assets/js/moons-images.js (hero artwork)"
+      ],
+      "status": "active",
+      "width": 1200,
+      "height": 1200
     },
     {
       "id": "gate-01-preparation",

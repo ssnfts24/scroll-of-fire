@@ -463,3 +463,196 @@ test(
     assert.match(source, /sof:temporal-cursor-change/);
   }
 );
+
+function practiceRecord(overrides = {}) {
+  return {
+    id: "practice-1",
+    type: "event",
+    subtype: "practice-session",
+    title: "Hold the tone and watch the field",
+    summary: "The room went quiet.",
+    tags: ["manifest-practice", "craft"],
+    temporal: {
+      civilDate: "2026-11-17",
+      patternYear: 2026,
+      patternDay: 215,
+      moon: 8,
+      moonDay: 19,
+      week: 31
+    },
+    payload: {
+      manifestPractice: {
+        version: 1,
+        intention: "Hold the tone and watch the field",
+        sessionKind: "craft",
+        carriersHz: [144, 432],
+        sequencePath: "𝓘 → 𝓛 → 𝓒 → 𝓢",
+        visualMode: { value: "field", label: "Living field" },
+        seed: 216,
+        breathPattern: "4 · 2 · 6",
+        durationSeconds: null,
+        xi: {
+          value: 0.72,
+          label: "console coherence estimate (Ξ) — the exercise console's own number, not a measured effect"
+        },
+        materials: "copper, quartz",
+        witnessNote: "The room went quiet."
+      }
+    },
+    ...overrides
+  };
+}
+
+test(
+  "buildDayView carries a planner entry's intention as recorded detail",
+  () => {
+    const selection =
+      api.selectionFromCoordinate(COORDINATE);
+
+    const view = api.buildDayView({
+      selection,
+      scheduling: fakeScheduling(),
+      records: [
+        record({
+          id: "plan-1",
+          title: "Plant the winter bed",
+          payload: {
+            planner: {
+              category: "planting",
+              intention: "Get the garlic in before the first hard frost.",
+              seasonalWindow: "Moon 8 – Moon 9"
+            }
+          }
+        }),
+        record({ id: "plan-2", title: "Plain entry" })
+      ]
+    });
+
+    const withDetail =
+      view.entries.find(entry => entry.id === "plan-1");
+
+    assert.deepEqual(withDetail.details, [
+      "Intention: Get the garlic in before the first hard frost.",
+      "Seasonal window: Moon 8 – Moon 9"
+    ]);
+
+    const plain =
+      view.entries.find(entry => entry.id === "plan-2");
+
+    assert.deepEqual(plain.details, []);
+  }
+);
+
+test(
+  "buildDayView carries a sealed Manifest session's full recorded detail",
+  () => {
+    const selection =
+      api.selectionFromCoordinate(COORDINATE);
+
+    const view = api.buildDayView({
+      selection,
+      scheduling: fakeScheduling(),
+      records: [practiceRecord()]
+    });
+
+    assert.equal(view.count, 1);
+
+    const entry = view.entries[0];
+
+    assert.equal(entry.practice, true);
+    assert.equal(entry.sessionKind, "craft");
+    assert.equal(entry.markerGlyph, "◆");
+    assert.equal(entry.type, "Manifest · craft session");
+
+    // The intention is the title here, so it is not repeated as a
+    // detail line; the witness note is the summary, likewise. The
+    // rest of what the console recorded shows in full.
+    assert.deepEqual(entry.details, [
+      "Carriers: 144 · 432 Hz",
+      "Sequence: 𝓘 → 𝓛 → 𝓒 → 𝓢",
+      "Visual: Living field · seed 216",
+      "Breath: 4 · 2 · 6",
+      "Ξ 0.72 — console coherence estimate (Ξ) — the exercise console's own number, not a measured effect",
+      "Materials: copper, quartz"
+    ]);
+  }
+);
+
+test(
+  "controller refresh merges planner, practice, and every other Atlas record for the day",
+  async () => {
+    const cursor =
+      fakeCursor(
+        COORDINATE,
+        new Date("2026-11-17T12:00:00Z")
+      );
+
+    const plannerRecord =
+      record({ id: "a", title: "Planner entry" });
+
+    const zoom = api.createDayZoom({
+      cursor,
+      scheduling: fakeScheduling(),
+
+      planner: {
+        async plansForYear() {
+          return [plannerRecord];
+        }
+      },
+
+      async practiceRecordsProvider(year) {
+        assert.equal(year, 2026);
+        return [practiceRecord()];
+      },
+
+      async dayRecordsProvider(year) {
+        assert.equal(year, 2026);
+
+        return [
+          // The same planner record, straight from the repository:
+          // it must not appear twice.
+          plannerRecord,
+          practiceRecord(),
+          {
+            id: "note-1",
+            type: "note",
+            subtype: "note",
+            title: "Imported observation",
+            summary: "",
+            tags: [],
+            temporal: {
+              civilDate: "2026-11-17",
+              patternYear: 2026,
+              patternDay: 215,
+              moon: 8,
+              moonDay: 19,
+              week: 31
+            },
+            payload: {}
+          },
+          record({
+            id: "other-day",
+            title: "Another day",
+            temporal: {
+              civilDate: "2026-11-18",
+              patternYear: 2026,
+              patternDay: 216,
+              moon: 8,
+              moonDay: 20,
+              week: 31
+            }
+          })
+        ];
+      }
+    });
+
+    const result =
+      await zoom.refresh("test");
+
+    assert.equal(result.view.count, 3);
+    assert.deepEqual(
+      result.view.entries.map(entry => entry.id).sort(),
+      ["a", "note-1", "practice-1"]
+    );
+  }
+);

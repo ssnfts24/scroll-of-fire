@@ -119,6 +119,7 @@
 .hubp-trackline { stroke: #1d2126; stroke-width: 1; }
 
 .hubp-dot { cursor: pointer; outline: none; }
+.hubp-dot .hubp-hit { fill: #000; opacity: 0; pointer-events: all; }
 .hubp-dot .hubp-discface { stroke-width: 2; }
 .hubp-dot.g-doc .hubp-discface { fill: var(--hubp-teal-dim); stroke: var(--hubp-gold); }
 .hubp-dot.g-all .hubp-discface { fill: rgba(23, 126, 112, .12); stroke: var(--hubp-teal); stroke-dasharray: 4 3; }

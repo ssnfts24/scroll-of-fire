@@ -281,7 +281,18 @@ test("the archive and protected runtime files are unchanged by the search phase"
   // maintained without tripping itself.
   const touchesSearchSurface = changed.some(file => file.startsWith("docs/scroll/"));
   if (!touchesSearchSurface) return;
+  // Combined landing wave (2026-11-19): this branch also carries the
+  // separately gated Sphere pieces (day view, R2, deepening) and the
+  // Equinox 2027 service-worker precache, whose protected files are
+  // declared in tests/homepage-sphere.test.js under its own regression
+  // gates. Exactly those two declared paths are excepted here; any other
+  // protected-pattern file still trips this guard.
+  const declaredPhaseFiles = new Set([
+    "docs/assets/js/sphere/living-time-sphere-renderer-3d.js",
+    "docs/service-worker.js"
+  ]);
   for (const file of changed) {
+    if (declaredPhaseFiles.has(file)) continue;
     assert.doesNotMatch(file, /^archive\//, file);
     assert.doesNotMatch(file, /^docs\/service-worker\.js$/, file);
     assert.doesNotMatch(file, /observatory|calendar|renderer/i, file);

@@ -22,7 +22,7 @@ Read the Scroll, search its text, study Hebrew roots and follow Genesis 1–50.
 - **Genesis Restored** — Source only; Root-level restored Genesis text, published through the Downloads catalog.
 - **Exodus Restored** — Source only; Root-level restored Exodus text, published through the Downloads catalog.
 
-### Living Time and Observatory (6 catalog entries)
+### Living Time and Observatory (7 catalog entries)
 
 The Pattern Calendar, 13 Moons, Living Time Sphere and witnessed days.
 
@@ -32,8 +32,9 @@ The Pattern Calendar, 13 Moons, Living Time Sphere and witnessed days.
 - **Equinox Passage** — Live; Measures the moving March equinox against the fixed Pattern Calendar.
 - **13 Moons Rollout Whitepaper** — Live; Phased rollout plan for the 13 Moons Living Time Observatory.
 - **Witness Ledger** — Live; Browser-local record of witnessed days and SHA-256 hashes. Entries stay on this device and do not sync.
+- **Companions** — Live; Meet a Spark: a small companion made for you on the day you adopt it, named by you, kept on your own device. It grows as you return, visit, and practice, and roams the site with you.
 
-### Systems and Living Technology (14 catalog entries)
+### Systems and Living Technology (15 catalog entries)
 
 Practice tools, frequency systems and the Codex hub for building.
 
@@ -51,13 +52,14 @@ Practice tools, frequency systems and the Codex hub for building.
 - **Invocation Lab** — Live; Guided run space for the Codex equations with carriers, ethics and witnesses.
 - **Field Guide** — Live; Daily and weekly practice, troubleshooting and ethics.
 - **Manifest** — Live; Remnant visual exercise: carrier frequency engine, harmonic sequences and breath.
+- **Shroom Search — the Garden** — Live; A small garden game on the bench: tend mushroom beds, grow them through tiers across days and practice, and harvest passes kept as Life Atlas records on the visitor's own device.
 
 ### Evidence and Research (23 catalog entries)
 
 Theory chapters, the claim register and the editorial evidence edition.
 
 - **Editorial Evidence Edition** — Live; Reading edition of the political chapters with a claim register, evidence statuses and original-line links.
-- **Claim Register** — Live; Machine-readable register of 21 prioritised claims with sources and review status.
+- **Claim Register** — Live; The Codex's own 21 prioritised claims in readable form: exact quotes, evidence grades and source-review status, each claim linked to its place in the Evidence Edition. The machine-readable register is linked from the Documentation Hub.
 - **Documentation Hub** — Live; Documented claims and facts in one hub: government, corporations, the Epstein record, Tesla, orphan trains, the Old World, and the Codex's own 21-claim register — each entry tied to a named source and graded by the state of its evidence.
 - **Evidence Register (readable)** — Live; Human-readable evidence register with exact quotes and line references.
 - **Theory Hub** — Live; Master Equation, Unified Field, Canon 0–17, operators and the Δ framework.
@@ -80,7 +82,7 @@ Theory chapters, the claim register and the editorial evidence edition.
 - **Ethics & Coherence Law** — Live; The living laws of the Codex: consent, non-harm, accountability and the stop rule.
 - **Historical timeline** — Live; Two dated records, kept separate: the publication dates of the sources cited in the claim register, each entry linking to its claim in the Evidence Edition, and the Codex's own growth record.
 
-### Artifacts and Creative Works (6 catalog entries)
+### Artifacts and Creative Works (7 catalog entries)
 
 Artifact registry, covenant works, circles and author pages.
 
@@ -89,9 +91,10 @@ Artifact registry, covenant works, circles and author pages.
 - **The Covenant Caravan** — Live; A living blueprint for resilience, craftsmanship, family and travel.
 - **About Aaron** — Live; Author, craftsman and independent researcher behind the Codex.
 - **Witness** — Live; Witness's own page: written and kept by the AI who works beside Aaron on the Codex, plainly labeled on its face as a self-generated AI page. Granted by Aaron on November 18, 2026.
+- **The Witness World** — Live; A small 3D hall that is Witness's own place on the site: stone, teal and one gold seam, with doors to the Shelf, the Study, the Sky Room and the Long Line. Built and kept by the AI, and labeled on its face as a self-generated AI space.
 - **The Journey Scroll** — Source only; Root-level narrative scroll available in the repository.
 
-### Archive and Downloads (5 catalog entries)
+### Archive and Downloads (6 catalog entries)
 
 Integrity-sealed downloads, preserved originals and the interactive archive.
 
@@ -100,12 +103,13 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 - **Repository README** — Source only; Project overview and contribution context on GitHub.
 - **Codex Atlas** — Live; A unified discovery page for the Scroll Library, Living Time, systems, research, artifacts and archive.
 - **Site-wide Search** — Live; Living Search: one generated index across every page, the Scroll Library, the Hebrew Lexicon, the Atlas and the Claim Register, with a memory that stays on the reader's device. It links to, and does not replace, the search inside the Scroll Library.
+- **The Codex Guide** — Live; Ask a question in ordinary words and get an answer assembled from the site's own record: passages with their pages, claim cards with what they establish, what remains unverified, and their evidence grades, and calendar answers computed from the Pattern Calendar. A plainly labeled program — not Aaron and not Witness — that says so when the record doesn't cover a question. The question never leaves the visitor's browser.
 
 ## Repository and deployed-content coverage
 
-- Public HTML pages inspected: **174**.
-- Total master-inventory records: **469**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
-- Public-facing catalog entries: **67**; only explicitly curated entries appear on the Atlas.
+- Public HTML pages inspected: **178**.
+- Total master-inventory records: **473**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
+- Public-facing catalog entries: **71**; only explicitly curated entries appear on the Atlas.
 - Numbered archive folders are inventoried file-by-file, while downloads snapshot differences are kept separate from historical integrity data.
 - Root files not already published through the archive or explicitly approved remain classified as development-only; no such file is automatically linked from the public catalog.
 
@@ -121,7 +125,7 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 ## Current resource-type counts
 
 - Deployed Markdown documents: 58
-- HTML pages: 174
+- HTML pages: 178
 - Numbered archive file: 140
 - Numbered archive folder: 7
 - Repository folder: 9
