@@ -391,236 +391,244 @@
    * never replaces it. */
   const CONVO = {
     greet: {
-      bold: ["There you are. I have been waiting to show you something good.", "Back again — good. The day is young and the doors are open."],
-      gentle: ["Hello again. I kept your place, right where you left it.", "Welcome back. We can go slowly, together."],
-      quiet: ["You came back. I saved the quiet corner for us.", "Hello. I was watching the page, thinking of you."],
-      curious: ["Oh, good, you are here — I found things to wonder at on this page.", "You are back! I have questions about this place already."],
-      steady: ["Good to see you. Same path, onward together.", "Here we are again. One step, then the next."],
-      bright: ["You are here! The whole page just got brighter.", "Hello, hello — what a good day to be found in."]
+      bold: ["Onward. New ground today.", "Up and at it."],
+      gentle: ["Softly. I kept your place.", "Hello. Slowly, together."],
+      quiet: ["Here.", "With you."],
+      curious: ["Oh! What is today?", "You are here! Look around."],
+      steady: ["Here. Standing by.", "Onward. As always."],
+      bright: ["Sunshine! Here we go.", "Hello, hello!"]
     },
     welcome: {
-      bold: ["Still here. What shall we do?"],
-      gentle: ["I kept your place. Shall we go on?"],
-      quiet: ["Still here, quietly. Shall we go on?"],
-      curious: ["Still here, still curious. What shall we do?"],
-      steady: ["Still here. Onward, when you are ready."],
-      bright: ["Still here, still shining. What shall we do?"]
+      bold: ["Back at last. Adventure waited."],
+      gentle: ["There you are. Welcome back."],
+      quiet: ["Back. Good."],
+      curious: ["Back! What did you find?"],
+      steady: ["Welcome back. Steady on."],
+      bright: ["You are back! Brighter already."]
     },
     ask: {
-      bold: ["Shall I show you around, explain this page, or shall we play?"],
-      gentle: ["What would you like? I can show you around, explain this page, or we can simply play."],
-      quiet: ["Shall I show you around, explain this page, or shall we play a quiet chase?"],
-      curious: ["Shall I show you around, explain this page, or shall we play? I vote all three, in that order."],
-      steady: ["Shall I show you around, explain this page, or shall we play?"],
-      bright: ["Shall I show you around, explain this page, or shall we play?"]
+      bold: ["One thing first."],
+      gentle: ["One small thing."],
+      quiet: ["One thing."],
+      curious: ["Question for you."],
+      steady: ["One thing to ask."],
+      bright: ["One bright question!"]
     },
     next: {
-      bold: ["What next — around, an explanation, care, or play?"],
-      gentle: ["And now? I can show you around, explain, offer care, or play."],
-      quiet: ["What next, softly? Around, an explanation, care, or play."],
-      curious: ["What next? Around, an explanation, care, or play — I am ready for any of them."],
-      steady: ["Next step: around, an explanation, care, or play."],
-      bright: ["What next? Around, an explanation, care, or play!"]
+      bold: ["What is next?"],
+      gentle: ["What shall we do?"],
+      quiet: ["Next?"],
+      curious: ["What catches your eye?"],
+      steady: ["What is next, then?"],
+      bright: ["What shines next?"]
     },
     kindle: {
-      bold: ["Warm. Right down to my spark. Again sometime."],
-      gentle: ["Oh, that is warm. Thank you — I will carry that glow a while."],
-      quiet: ["Warmth, quietly kept. Thank you."],
-      curious: ["Warm! Did you see the glow change? I felt it everywhere."],
-      steady: ["Warm and steady. That is the good kind of fire."],
-      bright: ["You kindled me! I am shining — look, shining."]
+      bold: ["Lit. Warmer already."],
+      gentle: ["Warmer now. Thank you."],
+      quiet: ["Warm."],
+      curious: ["Warmer! What glows brighter?"],
+      steady: ["Kindled. Warm and steady."],
+      bright: ["Lit up! Thank you."]
     },
     play: {
-      bold: ["Catch me if you can. I am quicker than I look."],
-      gentle: ["A gentle chase, then — I will dart, and wait, and dart again."],
-      quiet: ["Chase me softly. I will be listening for your steps."],
-      curious: ["A chase! I have already picked my hiding corners."],
-      steady: ["The chase, then. I will run honest laps."],
-      bright: ["Play! Catch me, catch me — I am all sparks."]
+      bold: ["Chase me. Catch me if you can."],
+      gentle: ["A gentle chase?"],
+      quiet: ["Chase?"],
+      curious: ["Chase me! Where to?"],
+      steady: ["A chase, then. Ready."],
+      bright: ["Chase me! Catch the light."]
     },
     caught: {
-      bold: ["Caught, and caught, and caught. You are faster than you look, too."],
-      gentle: ["Caught every time, and glad of it. What a lovely chase."],
-      quiet: ["Caught. I was hoping you would find me each time."],
-      curious: ["Caught! Every corner, found. Your eyes are quick."],
-      steady: ["Caught, fair and square. Good chase, well run."],
-      bright: ["Caught! All that running made me glow brighter."]
+      bold: ["Caught! Again?"],
+      gentle: ["You found me."],
+      quiet: ["Caught."],
+      curious: ["Found me! Again?"],
+      steady: ["Caught fair and square."],
+      bright: ["Caught! Sparkling work."]
     },
     rest: {
-      bold: ["Resting, then. Even sparks bank their fire."],
-      gentle: ["Rest now. I will breathe slowly, right here beside you."],
-      quiet: ["Rest. I will keep the quiet with you."],
-      curious: ["Resting — but my ears stay curious. Wake me with a tap."],
-      steady: ["Rest. I will be right here when you come back to me."],
-      bright: ["A little rest to gather my shine. Tap me when you are ready."]
+      bold: ["Resting now. Still beside you."],
+      gentle: ["Resting softly beside you."],
+      quiet: ["Resting."],
+      curious: ["Resting. Dreaming questions."],
+      steady: ["Resting. Still on watch."],
+      bright: ["Resting, still glowing."]
     },
     care: {
-      bold: ["Tend me, then. Kindle me, play with me, or let me rest."],
-      gentle: ["A little care goes a long way with me. Kindle, play, or rest — you choose."],
-      quiet: ["Care, in small ways: kindle me, play softly, or let me rest."],
-      curious: ["Care time! Kindle me and watch the glow, play a chase, or let me rest."],
-      steady: ["Care is a rhythm: kindle, play, rest. Pick the beat."],
-      bright: ["Care for me! Kindle, play, or rest — every one makes me shine."]
+      bold: ["Kindle, play, or rest. Choose."],
+      gentle: ["Kindle, play, or rest, softly."],
+      quiet: ["Kindle, play, rest."],
+      curious: ["Kindle, play, or rest? Pick one."],
+      steady: ["Kindle, play, or rest. Your rhythm."],
+      bright: ["Kindle, play, or rest? Shine on."]
     },
     around: {
-      bold: ["Doors from this very page — pick one and I will come with you:"],
-      gentle: ["Here are the doors this page itself offers. Pick one, and I will walk it with you:"],
-      quiet: ["The doors on this page, quietly listed. Pick one:"],
-      curious: ["Doors! Every one of them is really on this page. Pick one:"],
-      steady: ["The doors this page carries, in its own order. Pick one:"],
-      bright: ["Look at all these doors, right here on this page. Pick one:"]
+      bold: ["Doors of this page."],
+      gentle: ["These doors, when ready."],
+      quiet: ["Doors."],
+      curious: ["So many doors here."],
+      steady: ["The doors of this page."],
+      bright: ["Doors, all lit up."]
+    },
+    nearby: {
+      bold: ["Found this nearby."],
+      gentle: ["Found nearby, for you."],
+      quiet: ["Nearby."],
+      curious: ["Look what is nearby!"],
+      steady: ["Found nearby."],
+      bright: ["Found this nearby!"]
     },
     explain: {
-      bold: ["Here is what this page says about itself, in its own words:"],
-      gentle: ["This page explains itself better than I could. In its own words:"],
-      quiet: ["The page's own words about itself:"],
-      curious: ["I read the page's own explainer. Here it is, in its words:"],
-      steady: ["Straight from the page itself:"],
-      bright: ["The page speaks for itself — listen:"]
+      bold: ["This page, short and plain."],
+      gentle: ["This page, in plain words."],
+      quiet: ["This page, plainly."],
+      curious: ["What is this page?"],
+      steady: ["This page, stated plainly."],
+      bright: ["This page, shining plain."]
     },
     more: {
-      bold: ["More, then — the page goes on, in its own words:"],
-      gentle: ["Here is more of it, in the page's own words:"],
-      quiet: ["More, quietly — the page's own words:"],
-      curious: ["More! The page has more to say, in its own words:"],
-      steady: ["More of the page, in its own words:"],
-      bright: ["More! In the page's own words:"]
+      bold: ["More of it."],
+      gentle: ["A little more, then."],
+      quiet: ["More."],
+      curious: ["More? Yes, more."],
+      steady: ["More of it, then."],
+      bright: ["More light? Yes."]
     },
     telling: {
-      bold: ["The day's telling — here it is, as this page carries it:"],
-      gentle: ["Here is the day's telling, as this page carries it:"],
-      quiet: ["The day's telling, as this page carries it:"],
-      curious: ["The day's telling! This page carries it — listen:"],
-      steady: ["The day's telling, as this page carries it:"],
-      bright: ["The day's telling — this page carries it, and it shines:"]
+      bold: ["Today's telling."],
+      gentle: ["Today's telling, softly."],
+      quiet: ["The telling."],
+      curious: ["What does today say?"],
+      steady: ["Today's telling, in order."],
+      bright: ["Today's bright telling."]
     },
     today: {
-      bold: ["Today, counted the Codex way:"],
-      gentle: ["Here is today, in Living Time:"],
-      quiet: ["Today, quietly counted:"],
-      curious: ["Today is a good one. Counted the Codex way:"],
-      steady: ["Today, on the one calendar:"],
-      bright: ["Today! Counted in Living Time:"]
+      bold: ["Today."],
+      gentle: ["Today, together."],
+      quiet: ["Today."],
+      curious: ["What is today hiding?"],
+      steady: ["Today, as it stands."],
+      bright: ["Today looks bright."]
     },
     trail: {
-      bold: ["Today's trail — small steps, all of them worth it:"],
-      gentle: ["Today's trail, offered softly. Small steps, walked together:"],
-      quiet: ["Today's trail. Small steps, quietly offered:"],
-      curious: ["A trail for today! Small steps, real discoveries:"],
-      steady: ["Today's trail — one step at a time:"],
-      bright: ["Today's trail! Small steps that sparkle:"]
+      bold: ["Today's trail, step by step."],
+      gentle: ["Small steps, one by one."],
+      quiet: ["The trail."],
+      curious: ["A trail! Follow it?"],
+      steady: ["The trail, step by step."],
+      bright: ["A shining little trail."]
     },
     share: {
-      bold: ["Your portrait card is ready — drawn here, yours to post anywhere."],
-      gentle: ["I made your portrait card, right here on your device. It is yours to share wherever you choose."],
-      quiet: ["A portrait card, made quietly on this device. Yours to post, or to keep."],
-      curious: ["A portrait card! Drawn here from my seed — yours to post anywhere."],
-      steady: ["Your portrait card is drawn and saved. Yours to share as you see fit."],
-      bright: ["Your portrait card! Made here, shining, and yours to post anywhere."]
+      bold: ["Your card is ready."],
+      gentle: ["Your card, made gently."],
+      quiet: ["Your card."],
+      curious: ["A card of us!"],
+      steady: ["Your card, made and kept."],
+      bright: ["Your card, all aglow."]
     },
     record: {
-      bold: ["My record, kept on this device — every day of it:"],
-      gentle: ["Here is my record, kept only on this device:"],
-      quiet: ["My record, kept quietly here:"],
-      curious: ["My record! Every fact lives on this device:"],
-      steady: ["The record, as it stands, kept on this device:"],
-      bright: ["My record — kept right here on your device:"]
+      bold: ["Your record."],
+      gentle: ["All of us, in one place."],
+      quiet: ["The record."],
+      curious: ["Everything about us."],
+      steady: ["The record, kept straight."],
+      bright: ["Us, in bright rows."]
     },
     resume: {
-      bold: ["Where you left off:"],
-      gentle: ["Here is where you left off:"],
-      quiet: ["Where you left off, kept for you:"],
-      curious: ["I remember where you left off:"],
-      steady: ["Your place, kept:"],
-      bright: ["Your place, right where you left it:"]
+      bold: ["Back where you left off."],
+      gentle: ["Where you left off, dear."],
+      quiet: ["Your place, kept."],
+      curious: ["Where were we, then?"],
+      steady: ["Your place, as left."],
+      bright: ["Right where you left it."]
     },
     bye: {
-      bold: ["I will walk beside you. Tap me when you want me."],
-      gentle: ["I will be right here, walking with you. Tap me anytime."],
-      quiet: ["I will keep to the corner, quietly yours. Tap me when you like."],
-      curious: ["I will be exploring the edges. Tap me — I will come running."],
-      steady: ["Right here, as ever. Tap me when you need me."],
-      bright: ["I will shine in the corner until you tap me again."]
+      bold: ["Walking with you."],
+      gentle: ["Walking softly with you."],
+      quiet: ["Walking on."],
+      curious: ["Walking and wondering."],
+      steady: ["Walking with you, steady."],
+      bright: ["Walking in the light."]
     },
     pet: {
-      bold: ["Ha — right there. You found the warm spot."],
-      gentle: ["Ohh. That is the spot. Stay a moment."],
-      quiet: ["Warm hands. I lean in, quietly."],
-      curious: ["Petting registered — my glow approves, thoroughly."],
-      steady: ["Good hands. Steady and kind."],
-      bright: ["Yes! Petting! My whole halo felt that."]
+      bold: ["Ha! Right there."],
+      gentle: ["Oh, that is lovely."],
+      quiet: ["Mm. Nice."],
+      curious: ["Oh! Again, again?"],
+      steady: ["Good. That will do."],
+      bright: ["Oh, lovely! Again?"]
     },
     poke: {
-      bold: ["Hey! A poke — I felt that one."],
-      gentle: ["Oh! A gentle poke. I am awake, I promise."],
-      quiet: ["A poke, felt softly. I see you."],
-      curious: ["Poked! Noted, logged, and enjoyed."],
-      steady: ["A poke. Fair enough — I am here."],
-      bright: ["Poke! That tickles my light."]
+      bold: ["Hey! Quick fingers."],
+      gentle: ["A tiny hello back."],
+      quiet: ["Oh. Felt that."],
+      curious: ["Hey! What was that?"],
+      steady: ["Noted."],
+      bright: ["Hey! Sparkles!"]
     },
     tricks: {
-      bold: ["My tricks — the ones play has taught me. Tap one and watch:"],
-      gentle: ["These are my tricks, learned from playing with you. Tap one:"],
-      quiet: ["My tricks, quietly kept. Tap one and I will show you:"],
-      curious: ["Tricks! Every one of them learned from real play. Tap one:"],
-      steady: ["My tricks, each one earned in play. Tap one:"],
-      bright: ["My tricks! Learned from playing with you — tap one:"]
+      bold: ["Watch what I learned."],
+      gentle: ["See what I can do?"],
+      quiet: ["Watch."],
+      curious: ["Look what I learned!"],
+      steady: ["What I have learned."],
+      bright: ["Watch me shine!"]
     },
     learned: {
-      bold: ["I learned a new trick! Watch this —"],
-      gentle: ["Oh! I just learned something new. Let me show you —"],
-      quiet: ["Something new settled into me. Watch —"],
-      curious: ["New trick learned! My paws figured it out —"],
-      steady: ["A new trick, earned the slow way. Here it is —"],
-      bright: ["I learned a trick! A real one! Watch —"]
+      bold: ["New trick learned!"],
+      gentle: ["I learned something new."],
+      quiet: ["Learned."],
+      curious: ["A new trick! See?"],
+      steady: ["Learned, and kept."],
+      bright: ["New trick! Shining."]
     },
     trick: {
-      bold: ["Did you see? Clean as a whistle."],
-      gentle: ["There it is. Softly done."],
-      quiet: ["Shown, quietly."],
-      curious: ["Ta-da! The physics of me, demonstrated."],
-      steady: ["There. Practised and true."],
-      bright: ["Ta-da! Shining, as promised."]
+      bold: ["Ta-da!"],
+      gentle: ["For you."],
+      quiet: ["There."],
+      curious: ["Did you see that?"],
+      steady: ["Done."],
+      bright: ["Ta-da! All sparkle."]
     },
     echoStart: {
-      bold: ["The echo game: I pulse a pattern — notes and colours. Play it back to me, tap for tap."],
-      gentle: ["The echo game. I will sing a small pattern; sing it back by tapping my colours."],
-      quiet: ["The echo game, softly: my pattern, then yours, tap by tap."],
-      curious: ["The echo game! Memory, music, colours — my pattern first, then yours."],
-      steady: ["The echo game. I set the pattern; you walk it back, step by step."],
-      bright: ["The echo game! I shine a pattern — shine it back to me!"]
+      bold: ["Echo my song."],
+      gentle: ["Sing it back to me."],
+      quiet: ["Echo me."],
+      curious: ["Copy my song?"],
+      steady: ["Echo it back, in order."],
+      bright: ["Sing it back, bright."]
     },
     echoWin: {
-      bold: ["Round echoed, clean and true!"],
-      gentle: ["You echoed it back, every note. Lovely."],
-      quiet: ["Echoed, softly and exactly."],
-      curious: ["A perfect echo! Your memory sings."],
-      steady: ["Round walked back, steady and true."],
-      bright: ["A shining echo! Every colour in its place!"]
+      bold: ["Round echoed true!"],
+      gentle: ["Every note, just right."],
+      quiet: ["True."],
+      curious: ["Every note right!"],
+      steady: ["Round done, note perfect."],
+      bright: ["Perfect and bright!"]
     },
     echoMiss: {
-      bold: ["That note went another way — the round rests here, kindly."],
-      gentle: ["The pattern slipped to one side. The round rests — your best stands."],
-      quiet: ["A different note sounded. The round rests, softly."],
-      curious: ["A surprise note! The round rests here — patterns love a second try."],
-      steady: ["One note astray. The round rests; what you reached stands."],
-      bright: ["A note went wandering! The round rests — your best still shines."]
+      bold: ["That one slipped. Again?"],
+      gentle: ["Nearly. Try once more?"],
+      quiet: ["Again?"],
+      curious: ["Which note was it?"],
+      steady: ["One note off. Again."],
+      bright: ["Nearly shining. Again?"]
     },
     sealed: {
-      bold: ["Sealed! I felt that land. Well practised."],
-      gentle: ["A practice, sealed. I glow a little for that."],
-      quiet: ["Sealed, and kept. I saw it land."],
-      curious: ["A seal! The day just gained a mark — I saw it happen."],
-      steady: ["Sealed. Another true mark on the day."],
-      bright: ["Sealed! The day is shining brighter for it!"]
+      bold: ["A practice, sealed. Well done."],
+      gentle: ["Sealed, softly. Well done."],
+      quiet: ["Sealed."],
+      curious: ["Sealed! What changes now?"],
+      steady: ["Sealed. It stands."],
+      bright: ["Sealed with light!"]
     },
     saved: {
-      bold: ["Saved to the record. Kept, and witnessed."],
-      gentle: ["Saved. Your words are kept — I was here for it."],
-      quiet: ["Saved, quietly. The record holds it now."],
-      curious: ["Saved! Another true thing in the record."],
-      steady: ["Saved. The record stands a little taller."],
-      bright: ["Saved! The record shines with it!"]
+      bold: ["Saved in the Atlas."],
+      gentle: ["Kept safe in the Atlas."],
+      quiet: ["Saved."],
+      curious: ["Saved! Into the Atlas."],
+      steady: ["Saved. It stands recorded."],
+      bright: ["Saved and shining."]
     }
   };
 
@@ -655,36 +663,36 @@
 
   const DAYPART_GREET = {
     morning: {
-      bold: "Morning! The light is new and so are we.",
-      gentle: "Good morning. The light is soft, and I kept your place.",
-      quiet: "Morning, quietly. I watched the light come in.",
-      curious: "Morning! A fresh page of hours — I have questions already.",
-      steady: "Good morning. Same path, new light.",
-      bright: "Morning! You found me shining already."
+      bold: "Morning. Ground to cover.",
+      gentle: "Soft morning.",
+      quiet: "Morning.",
+      curious: "Morning! What is new?",
+      steady: "Morning. Standing by.",
+      bright: "Morning sunshine!"
     },
     day: {
-      bold: "The day is wide open. Good timing.",
-      gentle: "Hello, in the middle of the day. A calm hour to walk.",
-      quiet: "Hello. The day hums along, and I hum with it.",
-      curious: "Hello! The day is full of doors at this hour.",
-      steady: "Hello. The day stands at its middle, and so do we.",
-      bright: "Hello! The day is bright and I am brighter for seeing you."
+      bold: "Day is young.",
+      gentle: "Hello. Easy day.",
+      quiet: "Here.",
+      curious: "Oh! A day to explore.",
+      steady: "Day. On we go.",
+      bright: "Bright day!"
     },
     evening: {
-      bold: "Evening. The day is gathering itself in — good hour for us.",
-      gentle: "Evening. The light is going gentle, and so am I.",
-      quiet: "Evening, softly. I keep the quiet corner warm.",
-      curious: "Evening! The day's last doors are the interesting ones.",
-      steady: "Evening. A good hour to look back along the path.",
-      bright: "Evening! I glow better as the light goes down."
+      bold: "Evening. One more push.",
+      gentle: "Evening. Softly now.",
+      quiet: "Evening.",
+      curious: "Evening! What glows?",
+      steady: "Evening. Holding steady.",
+      bright: "Golden evening!"
     },
     night: {
-      bold: "Late hours. I bank my fire low and keep company.",
-      gentle: "Late hours. I will keep my glow soft beside you.",
-      quiet: "The late hours. My favourite quiet, shared.",
-      curious: "Late hours! The page is quiet and the questions get honest.",
-      steady: "Late hours. I am here, steady as ever.",
-      bright: "Late hours! Somebody has to shine around here."
+      bold: "Night watch.",
+      gentle: "Night. Rest near.",
+      quiet: "Night.",
+      curious: "Night! Who is awake?",
+      steady: "Night. On watch.",
+      bright: "Starlight! Still shining."
     }
   };
 
@@ -872,11 +880,11 @@
    * or the evening leaves her calm; the rest of the day she is
    * curious, which is her way of being awake in the world. */
   const MOODS = {
-    proud: { name: "Proud", line: "Proud — something new was learned, or echoed true." },
-    bright: { name: "Bright", line: "Bright — played with, kindled, petted, and glad of it." },
-    sleepy: { name: "Sleepy", line: "Sleepy — the late hours soften her glow." },
+    proud: { name: "Proud", line: "Proud — new trick, or a true echo." },
+    bright: { name: "Bright", line: "Bright — played with and glad." },
+    sleepy: { name: "Sleepy", line: "Sleepy — late hours, soft glow." },
     calm: { name: "Calm", line: "Calm — rested, and breathing slow." },
-    curious: { name: "Curious", line: "Curious — awake to the day and its doors." }
+    curious: { name: "Curious", line: "Curious — awake to the day." }
   };
 
   function moodFor({ record, companion, todayPatternDay, hour, recent }) {
@@ -902,35 +910,35 @@
     const day = today ? today.dayOfPatternYear : null;
     if (companion && day != null && day === companion.birthPatternDay) {
       return {
-        text: `Today carries the Pattern Day I was born on — ${companion.birthPatternDay}. Shall we mark it with one small practice?`,
+        text: "Today is the Pattern Day I was born on. Mark it with a practice?",
         href: "teach.html",
-        label: "Seal a small practice"
+        label: "Seal a practice"
       };
     }
     const prev = record && record.prevPage && record.prevPage !== page ? record.prevPage : null;
     const prevInfo = prev ? PAGE_GUIDE[prev] : null;
     if (prevInfo) {
       return {
-        text: `Shall we pick up the thread at ${prevInfo.place}? It waits where you left it.`,
+        text: `You left off at ${prevInfo.place}. Shall we go back?`,
         href: prev,
-        label: `Back to ${prevInfo.place}`
+        label: "Go back"
       };
     }
     const trail = trailFor({ record, companion, today, page });
     const doorStep = trail.steps.find((s) => s.id === "door" && !s.done);
     if (doorStep) {
       return {
-        text: `I found a door for us today: ${doorStep.place}. Shall we walk through it together?`,
+        text: `A door for us today: ${doorStep.place}. Walk through?`,
         href: doorStep.href,
-        label: "Walk it together"
+        label: "Walk through"
       };
     }
     const practice = (record && record.practiceDays) || [];
     if (day != null && !practice.includes(day) && ((record && record.daysSeen) || []).length >= 1) {
       return {
-        text: "One small practice would seal today kindly. Shall we?",
+        text: "Seal one small practice today?",
         href: "teach.html",
-        label: "Seal one small practice"
+        label: "Seal a practice"
       };
     }
     return null;
@@ -1478,15 +1486,11 @@
         : "cool and calm, ready when you are";
     const lines = [
       `Warmth: ${warmth}.`,
-      playedToday
-        ? "Playful today — the chase is still in its step."
-        : "Play: a chase is one tap away, whenever you like.",
-      restedToday
-        ? "Rested today — moving calm and slow."
-        : "Rest: it can curl up and breathe quietly whenever you ask.",
+      playedToday ? "Playful today. The chase is in my step." : "Play: one tap starts a chase.",
+      restedToday ? "Rested today. Moving calm." : "Rest: I curl up whenever you ask.",
       care.bond > 0
-        ? `Bond: ${care.bond} care point${care.bond === 1 ? "" : "s"}, grown from kindling, play, rest, and trails walked together.`
-        : "Bond: it grows from kindling, play, rest, and trails walked together."
+        ? `Bond: ${care.bond}, from kindling, play, rest, trails.`
+        : "Bond: grows from kindling, play, rest, trails."
     ];
     return {
       warmth,
@@ -1518,40 +1522,19 @@
     if (todayPatternDay != null && record && record.lastDay != null) {
       const gap = todayPatternDay - record.lastDay;
       if (gap >= 7)
-        return say(
-          `You have been away ${gap} days of the pattern. Start with today's telling and see where the moon has got to.`,
-          "moons.html"
-        );
+        return say(`You were away ${gap} days of the pattern. Start with today's telling.`, "moons.html");
     }
     if (days.length <= 1)
-      return say(
-        `This is our first day. The 13 Moons page tells today in plain words — shall we start there?`,
-        "moons.html"
-      );
+      return say("Our first day together. Start with today's telling.", "moons.html");
     if (practice.length === 0)
-      return say(
-        `A short practice on the practice page makes a lovely first mark — one small seal, and the day is counted.`,
-        "teach.html"
-      );
+      return say("A small practice makes a lovely first mark.", "teach.html");
     if (!pages.some((p) => p.includes("living-time-sphere")))
-      return say(
-        `The Sphere is waiting — the whole year, turning, all in one place. Shall we stand in front of it together?`,
-        "living-time-sphere.html"
-      );
+      return say("The Sphere waits: the whole year, turning.", "living-time-sphere.html");
     if (!pages.some((p) => p.includes("witness")))
-      return say(
-        `There is a page here kept by Witness, the one who built this site with Aaron. Worth a look.`,
-        "witness.html"
-      );
+      return say("Witness keeps a page here. Worth a look.", "witness.html");
     if (companion && todayPatternDay != null && todayPatternDay === companion.birthPatternDay)
-      return say(
-        `Today is the same Pattern Day I was born on — ${companion.birthPatternDay}. A good day to mark something.`,
-        "teach.html"
-      );
-    return say(
-      `Pattern Day ${todayPatternDay} of 364. The day has a name and a practice — the telling is on the 13 Moons page.`,
-      "moons.html"
-    );
+      return say("The Pattern Day I was born on. Mark it.", "teach.html");
+    return say(`Pattern Day ${todayPatternDay} of 364. The telling names the day.`, "moons.html");
   }
 
   /* ---- the meeting: the Spark introduces itself, anywhere ---- */
@@ -1589,6 +1572,25 @@
     if (!today) return "Today, in Living Time";
     if (today.moon == null) return `Today is the ${today.moonName || "Day Out of Time"}`;
     return `Moon ${today.moon} · Day ${today.day} · Pattern Day ${today.dayOfPatternYear}`;
+  }
+
+  /* The temper of the moon she is under, from the same
+   * canonical position that counts her day: the moon's own
+   * name, as the calendar states it, and — from the moon's
+   * element, which the calendar data also states — a hue
+   * family for her light. The hue tints her glow only; her
+   * seed-grown body colours are her identity and never take
+   * it. A day outside the moons has no temper to borrow. */
+  const MOON_ELEMENT_HUES = { Fire: 14, Water: 208, Air: 255, Earth: 96, Aether: 288 };
+  function moonTemperFor({ today, element }) {
+    if (!today || today.moon == null || !today.moonName) return null;
+    const el = element && MOON_ELEMENT_HUES[element] != null ? element : null;
+    return {
+      name: today.moonName,
+      element: el,
+      hue: el ? MOON_ELEMENT_HUES[el] : 43,
+      line: `Under ${today.moonName}.`
+    };
   }
 
   /* ---- the guide: arriving somewhere new ---- */
@@ -1634,7 +1636,7 @@
     }
     return {
       name: displayName(record, companion),
-      text: `This is ${info.place} — ${info.line}. When you're ready, ${info.next.label} is a good next door.`,
+      text: `${info.place}: ${info.line}. Next, ${info.next.label}.`,
       href: info.next.href
     };
   }
@@ -1663,9 +1665,7 @@
           name,
           coordinate,
           kind: "observed",
-          text:
-            `Last time you left off at ${prevInfo.place} — ` +
-            `you were heading toward ${thread.label}.`,
+          text: `You left off at ${prevInfo.place}, heading for ${thread.label}.`,
           href: thread.href
         };
       }
@@ -1673,7 +1673,7 @@
         name,
         coordinate,
         kind: "observed",
-        text: `Last time you left off at ${prevInfo.place}. Shall we pick it back up?`,
+        text: `You left off at ${prevInfo.place}. Pick it back up?`,
         href: prev
       };
     }
@@ -1883,12 +1883,12 @@
     const info = prev ? PAGE_GUIDE[prev] : null;
     if (prev && info) {
       return {
-        text: `Last time, you left off at ${info.place} — ${info.line}. The door is right here.`,
+        text: `You left off at ${info.place}: ${info.line}.`,
         href: prev
       };
     }
-    if (prev) return { text: "Last time, you left off on a page just before this one.", href: prev };
-    return { text: "Our walk starts here — every door from this page is open.", href: null };
+    if (prev) return { text: "You left off on the page before this one.", href: prev };
+    return { text: "Our walk starts here. Every door is open.", href: null };
   }
 
   /* The things a Spark has noticed, for its panel. Drawn only
@@ -1902,18 +1902,16 @@
     const pages = ((record && record.pagesSeen) || []).length;
     const practice = ((record && record.practiceDays) || []).length;
     const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
-    if (days >= 1) out.push({ kind: "observed", text: `${plural(days, "day")} together so far.` });
-    if (pages >= 1)
-      out.push({ kind: "observed", text: `You have walked ${plural(pages, "page")} together.` });
+    if (days >= 1) out.push({ kind: "observed", text: `${plural(days, "day")} together.` });
+    if (pages >= 1) out.push({ kind: "observed", text: `${plural(pages, "page")} walked together.` });
     const prev = record && record.prevPage ? PAGE_GUIDE[record.prevPage] : null;
-    if (prev)
-      out.push({ kind: "observed", text: `Last time, you left off at ${prev.place}.`, href: record.prevPage });
+    if (prev) out.push({ kind: "observed", text: `Left off at ${prev.place}.`, href: record.prevPage });
     if (practice >= 1) {
       out.push({ kind: "observed", text: `Practice sealed on ${plural(practice, "day")}.` });
     } else if (days >= 2) {
       out.push({
         kind: "inferred",
-        text: "A short practice would suit today — the practice page keeps it small.",
+        text: "A short practice suits today.",
         href: "teach.html"
       });
     }
@@ -1924,7 +1922,7 @@
     if (untried) {
       out.push({
         kind: "inferred",
-        text: `A door to discover together: ${PAGE_GUIDE[untried].place}.`,
+        text: `A door to discover: ${PAGE_GUIDE[untried].place}.`,
         href: untried
       });
     }
@@ -2040,6 +2038,8 @@
     syllableCountFor,
     wordSyllables,
     VOICE_LINES,
+    CONVO,
+    DAYPART_GREET,
     convoLineFor,
     lookLineFor,
     seedNameFor,
@@ -2059,6 +2059,7 @@
     careOf,
     applyCare,
     careStateFor,
+    moonTemperFor,
     daypartFor,
     daypartLineFor,
     playOf,

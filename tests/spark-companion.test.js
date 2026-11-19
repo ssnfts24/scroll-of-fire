@@ -550,7 +550,7 @@ test("the v2 life rides the presence: celebration, naming, panel, growth", () =>
   assert.ok(presence.includes("adoptSong"), "adoption has its own song");
   assert.ok(presence.includes("growthChimeWaiting"), "the growth chime waits for a tap, never autoplays");
   assert.ok(presence.includes("arrivalGuideFor"), "the guide speaks with a memory");
-  assert.ok(presence.includes("spark-presence-panel"), "the Your Spark panel rides the bubble");
+  assert.ok(presence.includes("spark-panel"), "the control panel rides the bubble");
   assert.ok(presence.includes("panelFor"), "the panel is filled from the core's panel data");
   assert.ok(presence.includes("growthEventFor"), "growth is checked against the last seen stage");
   assert.ok(presence.includes("is-reacting"), "a tap is answered in the body");
@@ -564,7 +564,7 @@ test("the v2 life rides the presence: celebration, naming, panel, growth", () =>
     "spark-blink",
     "spark-glance",
     "spark-wiggle",
-    ".spark-presence-panel",
+    ".spark-panel-grid",
     ".spark-notice-kind"
   ]) {
     assert.ok(css.includes(hook), `the stylesheet carries ${hook}`);
@@ -889,7 +889,7 @@ test("v3 share card: the keeper's own panel facts, plainly a Codex Spark, made o
   });
   assert.match(doot.bornLine, /Day Out of Time/, "a Day Out of Time birth invents no moon");
   const presence = read("docs/assets/js/spark-presence.js");
-  assert.ok(presence.includes("spark-share-btn"), "the panel carries the share action");
+  assert.ok(presence.includes('bubbleBtn("Share"'), "the panel carries the share action as a bubble");
   assert.ok(presence.includes("shareCardFor"), "the card's words come from the core");
   assert.ok(presence.includes("toDataURL"), "the picture is drawn and downloaded locally");
   assert.ok(presence.includes('a.download'), "as the keeper's own file");
@@ -929,20 +929,27 @@ test("v4 conversation voice: every beat, in every temperament, from the seed —
   );
 });
 
-test("v4 conversation rides the presence: a thread, chips for buttons, a body that answers", () => {
+test("v8 panel rides the presence: one line, big bubbles, states that swap — no thread", () => {
   const presence = read("docs/assets/js/spark-presence.js");
   for (const hook of [
-    "spark-convo-thread",
-    "spark-convo-chips",
-    "spark-convo-reply",
+    "spark-panel",
+    "spark-panel-line",
+    "spark-panel-coord",
+    "spark-panel-grid",
+    "spark-panel-bubble",
+    "setPanel",
+    "panelSay",
+    "bubbleBtn",
+    "showHome",
+    "showMore",
+    "showCare",
     "convoLineFor",
     "startConvo",
     "openConvo",
     "answerInBody",
-    "setChips",
-    "replyEcho",
     "doAround",
     "doExplain",
+    "doLookNext",
     "doKindle",
     "doPlay",
     "doRest",
@@ -952,19 +959,114 @@ test("v4 conversation rides the presence: a thread, chips for buttons, a body th
   ]) {
     assert.ok(presence.includes(hook), `the presence carries ${hook}`);
   }
-  assert.ok(!/fetch\(|XMLHttpRequest|sendBeacon/.test(presence), "the conversation sends nothing anywhere");
+  /* The scrolling transcript is gone as the interaction
+   * surface: no thread element, no echoed keeper lines, no
+   * chip machinery anywhere in her code or her styles. */
+  assert.ok(!presence.includes("spark-convo"), "no conversation thread remains in the presence");
+  assert.ok(!presence.includes("replyEcho"), "the keeper's taps are never echoed back");
+  assert.ok(!presence.includes("scrollTop"), "nothing in the panel scrolls a transcript");
   const css = read("docs/assets/css/spark-companion.css");
-  assert.ok(css.includes(".spark-convo-thread"), "the thread is styled");
-  assert.ok(css.includes(".spark-convo-chips"), "the chips are styled");
-  const chipBlock = css.slice(css.indexOf(".spark-chip {"), css.indexOf(".spark-chip {") + 500);
-  assert.ok(chipBlock.includes("min-height: 44px"), "a chip is a thumb-sized target");
-  const v4Start = css.indexOf("v4: the conversation");
-  assert.ok(v4Start > -1, "the v4 interaction section is in the stylesheet");
-  const careAt = css.indexOf(".spark-care-buttons button {", v4Start);
-  const careBlock = css.slice(careAt, careAt + 300);
-  assert.ok(careBlock.includes("min-height: 44px"), "a care button is a thumb-sized target");
-  const shareAt = css.indexOf(".spark-share-btn {", v4Start);
-  assert.ok(css.slice(shareAt, shareAt + 300).includes("min-height: 44px"), "the share button is a thumb-sized target");
+  assert.ok(!css.includes(".spark-convo"), "no thread styles remain in the stylesheet");
+  assert.ok(css.includes(".spark-panel-grid"), "the bubble grid is styled");
+  assert.ok(css.includes(".spark-panel-bubble"), "the bubbles are styled");
+  const bubbleAt = css.indexOf(".spark-panel-bubble {");
+  const bubbleBlock = css.slice(bubbleAt, bubbleAt + 700);
+  const minHeight = /min-height:\s*(\d+)px/.exec(bubbleBlock);
+  assert.ok(minHeight && Number(minHeight[1]) >= 48, "a panel bubble is a thumb-sized target, 48px or more");
+  const bubbleRule = /\.spark-presence-bubble\s*\{[^}]*\}/g;
+  for (const rule of css.match(bubbleRule) || []) {
+    assert.ok(!/overflow-y:\s*auto/.test(rule), "the panel bubble itself never scrolls");
+  }
+  assert.ok(!/fetch\(|XMLHttpRequest|sendBeacon/.test(presence), "the panel sends nothing anywhere");
+});
+
+test("v8 word diet: her lines are short, in every temperament, and still distinct", () => {
+  const banned = /you have not|haven't|have not|not done|not yet|missed|incomplete/i;
+  const words = (line) => line.replace("{name}", "Nori").split(/\s+/).filter(Boolean).length;
+  let total = 0;
+  let count = 0;
+  let longest = 0;
+  for (const [beat, byTemperament] of Object.entries(Core.CONVO)) {
+    const variants = new Set();
+    for (const [temperament, lines] of Object.entries(byTemperament)) {
+      for (const line of lines) {
+        const w = words(line);
+        total += w;
+        count += 1;
+        longest = Math.max(longest, w);
+        variants.add(line);
+        assert.ok(!banned.test(line), `${temperament}'s ${beat} line is clean copy: ${line}`);
+      }
+    }
+    assert.ok(variants.size >= 4, `the ${beat} beat keeps its temperaments distinct (${variants.size} of 6)`);
+  }
+  for (const [part, byTemperament] of Object.entries(Core.DAYPART_GREET)) {
+    for (const line of Object.values(byTemperament)) {
+      const w = words(line);
+      total += w;
+      count += 1;
+      longest = Math.max(longest, w);
+      assert.ok(!banned.test(line), `the ${part} greeting is clean copy: ${line}`);
+    }
+  }
+  assert.ok(count >= 190, `the whole table was measured (${count} lines)`);
+  assert.ok(longest <= 10, `no line runs past ten words (longest: ${longest})`);
+  assert.ok(total / count <= 6, `her lines average six words or fewer (got ${(total / count).toFixed(1)})`);
+});
+
+test("v8 moon temper: her greeting and her light answer the moon she is under", () => {
+  const today = { moon: 8, moonName: "Deep Mirror", day: 21, dayOfPatternYear: 217 };
+  const temper = Core.moonTemperFor({ today, element: "Water" });
+  assert.equal(temper.name, "Deep Mirror", "the moon's own name, as the calendar states it");
+  assert.equal(temper.line, "Under Deep Mirror.", "the greeting carries the moon, in few words");
+  assert.equal(temper.hue, 208, "Water lends its hue family");
+  assert.equal(Core.moonTemperFor({ today, element: "Fire" }).hue, 14, "Fire lends its own");
+  assert.equal(Core.moonTemperFor({ today, element: "Earth" }).hue, 96, "Earth lends its own");
+  assert.notEqual(
+    Core.moonTemperFor({ today, element: "Fire" }).hue,
+    Core.moonTemperFor({ today, element: "Water" }).hue,
+    "each element's light differs"
+  );
+  /* A day outside the moons borrows no temper. */
+  assert.equal(
+    Core.moonTemperFor({ today: { moon: null, moonName: "Day Out of Time", dayOfPatternYear: 365 }, element: "Water" }),
+    null,
+    "the Day Out of Time invents no moon temper"
+  );
+  assert.equal(Core.moonTemperFor({ today: null, element: "Fire" }), null, "no day, no temper");
+  /* Her seed-grown body is untouched by the moon: the same
+   * seed builds the same colours, temper or no temper. */
+  const spark = Core.generate(SEED_A);
+  Core.moonTemperFor({ today, element: "Fire" });
+  assert.deepEqual(Core.generate(SEED_A).palette, spark.palette, "her colours stay hers");
+  const presence = read("docs/assets/js/spark-presence.js");
+  assert.ok(presence.includes("moonTemperFor"), "the presence reads the moon's temper");
+  assert.ok(presence.includes("--spark-moon-hue"), "and lends it to her light");
+  assert.ok(presence.includes("PatternCalendarData"), "the element comes from the calendar's own data");
+  const css = read("docs/assets/css/spark-companion.css");
+  assert.ok(css.includes("--spark-moon-hue"), "her glow styles borrow the moon's hue");
+});
+
+test("v8 one thing and Look next: offers drawn only from what is real", () => {
+  const presence = read("docs/assets/js/spark-presence.js");
+  /* The day's one thing: the trail's next step, one bubble
+   * at the front of the home grid. */
+  const oneThingAt = presence.indexOf("function oneThingBubble()");
+  const oneThing = presence.slice(oneThingAt, oneThingAt + 700);
+  assert.ok(oneThing.includes("trailFor"), "the one thing is the trail's next step, from the record");
+  assert.ok(oneThing.includes("spark-panel-onething"), "it stands as its own wide bubble");
+  assert.ok(presence.includes('bubbleBtn("Look next"'), "the home grid carries Look next");
+  /* Look next, in order of trust: this page's own doors
+   * first, then the keeper's own left-off place, labeled
+   * theirs — and an honest line when nothing is real. */
+  const lookAt = presence.indexOf("function doLookNext()");
+  const look = presence.slice(lookAt, lookAt + 2400);
+  assert.ok(look.includes("doorsFor"), "first trust: the page's own doors");
+  assert.ok(look.includes("resumeFor"), "then the keeper's own record");
+  assert.ok(look.includes('"yours"'), "the keeper's own suggestion is labeled theirs");
+  assert.ok(look.includes("Another time"), "a way past it is always there");
+  assert.ok(look.includes("Nothing nearby"), "a page with nothing real gets an honest line, not an invention");
+  assert.ok(!/fetch\(|XMLHttpRequest|sendBeacon/.test(look), "suggestions fetch nothing");
 });
 
 test("v7 voice box: the seed grows her voice — pitch, tract, breath, tempo", () => {
@@ -1143,7 +1245,7 @@ test("v7 voice box rides the presence: generated, default quiet, mute-ruled, tap
     "vocalPlanFor",
     "singSyllable",
     "stopVoice",
-    "Tell me more",
+    "doExplainMore",
     "moreChunksFor",
     "pageFollowingText",
     "tellingFor",
@@ -1420,7 +1522,7 @@ test("v6 play rides the presence: touch, tricks, echo, moods, celebration hooks"
     "announceLearned",
     "announceLine",
     "spark-echo-pads",
-    "spark-echo-status",
+    "spark-panel-line",
     "beginEchoRound",
     "echoTap",
     "echoWin",

@@ -218,17 +218,21 @@
     }
   }
 
-  /* The panel's contents, from the core's panel data: both names
-   * and which is which, its kind and character, its growth, the
-   * days together, and what it has noticed — observed labeled
-   * observed, inferred labeled inferred, never merged. Built with
-   * text nodes throughout: nothing the record holds is ever
-   * treated as markup. */
-  function fillPanel(host, record, companion, today) {
-    const panel = host.querySelector(".spark-presence-panel");
-    if (!panel) return;
+  /* The record state's rows, from the core's panel data: her
+   * face, both names and which is which, its kind and
+   * character, its growth, the days together, and what it has
+   * noticed — observed labeled observed, inferred labeled
+   * inferred, never merged. Built with text nodes throughout:
+   * nothing the record holds is ever treated as markup. Kept
+   * compact on purpose — short rows, so the whole record
+   * stands in the panel at phone size. */
+  function buildRecordRows(container, record, companion, today) {
     const data = Core.panelFor({ record, companion, today });
-    panel.innerHTML = "";
+    container.innerHTML = "";
+    const face = document.createElement("div");
+    face.className = "spark-panel-face";
+    face.innerHTML = Core.renderSVG(companion, { stage: data.stageIndex });
+    container.appendChild(face);
     const row = (label, value) => {
       const p = document.createElement("p");
       p.className = "spark-panel-row";
@@ -236,58 +240,48 @@
       b.textContent = label;
       p.appendChild(b);
       p.appendChild(document.createTextNode(` ${value}`));
-      panel.appendChild(p);
+      container.appendChild(p);
     };
     row("Answers to:", data.name);
     if (data.seedName && data.seedName !== data.name) row("Seed name:", data.seedName);
-    row("Kind:", `${data.kindName} — ${data.temperament}, and ${data.trait}`);
+    row("Kind:", `${data.kindName} — ${data.temperament}, ${data.trait}`);
     const prog = Core.progressOf(record, companion);
     row(
-      "Growth:",
+      "Stage:",
       prog.next
-        ? `Stage ${prog.stage.index + 1} of ${Core.STAGES.length}: ${data.stageName} · ${data.points} growth points — ${prog.toGo} to ${prog.next}`
-        : `Stage ${prog.stage.index + 1} of ${Core.STAGES.length}: ${data.stageName} · ${data.points} growth points — fully grown`
+        ? `${data.stageName} · ${data.points} points · ${prog.toGo} to ${prog.next}`
+        : `${data.stageName} · fully grown`
     );
     row("Together:", `${data.daysTogether} day${data.daysTogether === 1 ? "" : "s"}`);
     if (data.mood) row("Mood:", data.mood.line);
     if (data.play) {
       const bits = [];
-      bits.push(
-        data.play.tricksKnown > 0
-          ? `Tricks known: ${data.play.tricksKnown} of ${data.play.tricksTotal} — ${data.play.trickNames.join(", ")}`
-          : "Tricks: play teaches them — petting, being moved by hand, the chase, the echo game"
-      );
-      if (data.play.bestChase > 0) bits.push(`Best chase: ${data.play.bestChase} catch${data.play.bestChase === 1 ? "" : "es"}`);
-      if (data.play.echoBest > 0) bits.push(`Best echo: round ${data.play.echoBest}`);
-      if (data.play.pets > 0) bits.push(`Pets given: ${data.play.pets}`);
-      row("Play:", bits.join(" · "));
+      if (data.play.tricksKnown > 0) bits.push(`Tricks ${data.play.tricksKnown} of ${data.play.tricksTotal}`);
+      if (data.play.bestChase > 0) bits.push(`best chase ${data.play.bestChase}`);
+      if (data.play.echoBest > 0) bits.push(`best echo round ${data.play.echoBest}`);
+      if (data.play.pets > 0) bits.push(`${data.play.pets} pets`);
+      if (bits.length) row("Play:", bits.join(" · "));
     }
-    const head = document.createElement("p");
-    head.className = "spark-panel-row spark-panel-notices-head";
-    head.textContent = "Noticed, on this device:";
-    panel.appendChild(head);
-    const list = document.createElement("ul");
-    list.className = "spark-notices";
-    for (const notice of data.notices) {
-      const li = document.createElement("li");
+    if (data.care) row("Bond:", `${data.care.bond} · ${data.care.warmth}`);
+    for (const notice of data.notices.slice(0, 3)) {
+      const p = document.createElement("p");
+      p.className = "spark-panel-row spark-panel-notice";
       const tag = document.createElement("span");
       tag.className = `spark-notice-kind is-${notice.kind}`;
       tag.textContent = notice.kind === "observed" ? "Observed" : "Inferred";
-      li.appendChild(tag);
-      li.appendChild(document.createTextNode(" "));
+      p.appendChild(tag);
+      p.appendChild(document.createTextNode(" "));
       if (notice.href) {
         const a = document.createElement("a");
         a.href = notice.href;
         a.textContent = notice.text;
-        li.appendChild(a);
+        p.appendChild(a);
       } else {
-        li.appendChild(document.createTextNode(notice.text));
+        p.appendChild(document.createTextNode(notice.text));
       }
-      list.appendChild(li);
+      container.appendChild(p);
     }
-    panel.appendChild(list);
   }
-
   /* The doors this page itself carries, read from the page as it
    * stands: same-site page links, in the order the page offers
    * them, with the words the page itself gives them. The guide
@@ -358,31 +352,13 @@
     host.appendChild(walker);
     walker.innerHTML =
       `<div class="spark-presence-bubble" hidden>` +
-      `<p class="spark-presence-line"><strong class="spark-presence-who"></strong> · ${stage.name}</p>` +
-      `<p class="spark-presence-today"></p>` +
-      `<p class="spark-presence-growth" hidden></p>` +
-      `<p class="spark-presence-guide"></p>` +
-      `<div class="spark-convo">` +
-      `<div class="spark-convo-thread" aria-live="polite" aria-label="Talking with your Spark"></div>` +
-      `<div class="spark-convo-chips" role="group" aria-label="Answers and offers"></div>` +
-      `<div class="spark-echo" hidden><p class="spark-echo-status"></p>` +
-      `<div class="spark-echo-pads" role="group" aria-label="Echo game colours"></div></div></div>` +
-      `<p class="spark-presence-links"><a class="spark-presence-go" href="#">See it</a> ` +
-      `<a class="spark-presence-panel-link" href="#">Your Spark</a> ` +
-      `<a class="spark-presence-visit" href="companions.html">Visit</a> ` +
-      `<a class="spark-presence-sound" href="#">Sounds: on</a> ` +
-      `<a class="spark-presence-voice" href="#">Voice: quiet</a></p>` +
-      `<div class="spark-presence-panel" hidden></div>` +
-      `<div class="spark-presence-care" hidden>` +
-      `<p class="spark-panel-row spark-care-head"><strong>Care</strong> <span class="spark-care-sub">— a pet's small life, kept on this device</span></p>` +
-      `<div class="spark-care-lines"></div>` +
-      `<p class="spark-care-buttons">` +
-      `<button type="button" class="spark-care-kindle">Kindle</button> ` +
-      `<button type="button" class="spark-care-play">Play</button> ` +
-      `<button type="button" class="spark-care-rest">Rest</button></p>` +
-      `<div class="spark-trail"></div>` +
-      `<p class="spark-share-row"><button type="button" class="spark-share-btn">Share my Spark</button> ` +
-      `<span class="spark-share-note">a portrait card, made here on your device — yours to post wherever you choose</span></p></div></div>` +
+      `<div class="spark-panel">` +
+      `<p class="spark-panel-line" aria-live="polite"><strong class="spark-panel-who"></strong> <span class="spark-panel-text"></span></p>` +
+      `<p class="spark-panel-coord"></p>` +
+      `<div class="spark-panel-rows"></div>` +
+      `<div class="spark-echo" hidden><div class="spark-echo-pads" role="group" aria-label="Echo game colours"></div></div>` +
+      `<div class="spark-panel-grid" role="group" aria-label="Your Spark's options"></div>` +
+      `</div></div>` +
       `<button type="button" class="spark-presence-button" aria-expanded="false">` +
       `<span class="spark-presence-art">${Core.renderSVG(companion, { stage: stage.index })}</span>` +
       `<span class="spark-presence-name"></span></button>`;
@@ -391,19 +367,21 @@
       `Your Spark, ${displayName} — tap for a suggestion`
     );
     host.querySelector(".spark-presence-name").textContent = displayName;
-    host.querySelector(".spark-presence-who").textContent = displayName;
-    host.querySelector(".spark-presence-visit").textContent = `Visit ${displayName}`;
-    host.querySelector(".spark-presence-today").textContent = Core.coordinateLineFor(today);
-    host.querySelector(".spark-presence-guide").textContent = guide.text;
-    const growthEl = host.querySelector(".spark-presence-growth");
-    if (growthLine) {
-      growthEl.textContent = growthLine;
-      growthEl.removeAttribute("hidden");
+    host.querySelector(".spark-panel-who").textContent = displayName;
+    host.querySelector(".spark-panel-coord").textContent = Core.coordinateLineFor(today);
+    /* The moon she is under, from the same canonical position
+     * that counts her day: its name flavors her greeting, and
+     * its element lends its hue family to her light — her
+     * glow, never her seed-grown colours, which stay hers. */
+    const moonElement =
+      today && today.moon != null && window.PatternCalendarData && Array.isArray(window.PatternCalendarData.moons)
+        ? (window.PatternCalendarData.moons[today.moon - 1] || {}).element || null
+        : null;
+    const moonTemper = Core.moonTemperFor({ today, element: moonElement });
+    if (moonTemper) {
+      walker.style.setProperty("--spark-moon-hue", String(moonTemper.hue));
+      walker.dataset.moonElement = moonTemper.element || "";
     }
-    const go = host.querySelector(".spark-presence-go");
-    if (guide.href) go.setAttribute("href", guide.href);
-    else go.remove();
-    fillPanel(host, record, companion, today);
 
     /* ---- v3: the care life and the real guide ---- */
     const getRecord = () => (store ? store.get() : record);
@@ -444,83 +422,119 @@
       if (fresh.length) next = Core.markTricksKnown(next, fresh);
       if (store) store.set(next);
       writeRecord(next);
-      fillPanel(host, getRecord(), companion, today);
-      fillCare();
+      refreshPanel();
       refreshMood();
       if (fresh.length) announceLearned(fresh);
     };
-    const careBox = host.querySelector(".spark-presence-care");
-    const careLines = host.querySelector(".spark-care-lines");
-    const trailBox = host.querySelector(".spark-trail");
-    function fillCare() {
-      const current = getRecord();
-      const care = Core.careStateFor({
-        record: current,
-        companion,
-        todayPatternDay: today ? today.dayOfPatternYear : null
-      });
-      careLines.innerHTML = "";
-      for (const line of care.lines) {
+    /* When the record changes under an open panel, a state
+     * that shows record facts is drawn again — care, tricks,
+     * the record itself. Other states keep their line and
+     * their bubbles; nothing is yanked away mid-use. */
+    function refreshPanel() {
+      if (bubble.hasAttribute("hidden")) return;
+      if (panelState === "care") showCare(false);
+      else if (panelState === "record") doRecord(false);
+      else if (panelState === "tricks") doTricks(false);
+    }
+
+    /* ---- the panel (v8) ----
+     * A tap on the Spark opens a control panel, not a scrolling
+     * talk. One short line of hers at the top, the day's
+     * coordinate in small type under it, and a grid of big
+     * bubbles that simply appear: everything she offers is
+     * visible at once or one swap away. A state replaces the
+     * state before it — nothing scrolls, nothing is hunted
+     * for, and the keeper's taps are never echoed back as a
+     * transcript. Her line is spoken by her voice box under
+     * the same gating as always; the words themselves come
+     * from the record and the page, framed in her
+     * temperament's voice (Core.convoLineFor), never invented
+     * beyond them. */
+    const lineText = host.querySelector(".spark-panel-text");
+    const coordEl = host.querySelector(".spark-panel-coord");
+    const rowsEl = host.querySelector(".spark-panel-rows");
+    const gridEl = host.querySelector(".spark-panel-grid");
+    let panelState = "home";
+    let growthShown = false;
+    const fillName = (text) => String(text || "").replaceAll("{name}", displayName);
+    const beatLine = (beat) => fillName(Core.convoLineFor({ companion, beat }));
+    /* Her one line: the text swaps in place, and her voice
+     * box sounds it under its own gating (tap-armed, Voice
+     * switch, Sounds mute) — a line she opens by herself
+     * before any tap stays silent, as it always has. */
+    function panelSay(text, opts = {}) {
+      if (text == null) return;
+      lineText.textContent = text;
+      if (!opts.silent) vocalize(text);
+    }
+    function renderRows(rows, buildRows) {
+      rowsEl.innerHTML = "";
+      for (const r of rows || []) {
         const p = document.createElement("p");
-        p.className = "spark-panel-row spark-care-line";
-        p.textContent = line;
-        careLines.appendChild(p);
-      }
-      trailBox.innerHTML = "";
-      const trail = Core.trailFor({ record: current, companion, today, page: pageKey() });
-      if (trail.steps.length) {
-        const head = document.createElement("p");
-        head.className = "spark-panel-row spark-trail-head";
-        head.innerHTML = "";
-        const b = document.createElement("strong");
-        b.textContent = "Today's trail";
-        head.appendChild(b);
-        head.appendChild(
-          document.createTextNode(
-            trail.complete ? " — walked, all of it. Well done, both of you." : " — small steps, offered, never owed."
-          )
-        );
-        trailBox.appendChild(head);
-        const list = document.createElement("ul");
-        list.className = "spark-trail-steps";
-        for (const step of trail.steps) {
-          const li = document.createElement("li");
-          li.className = step.done ? "is-done" : "";
-          const mark = document.createElement("span");
-          mark.className = "spark-trail-mark";
-          mark.textContent = step.done ? "●" : "○";
-          li.appendChild(mark);
-          li.appendChild(document.createTextNode(" "));
-          const a = document.createElement("a");
-          a.href = step.href;
-          a.textContent = step.label;
-          li.appendChild(a);
-          list.appendChild(li);
+        p.className = "spark-panel-row";
+        if (r.label) {
+          const b = document.createElement("strong");
+          b.textContent = r.label;
+          p.appendChild(b);
+          p.appendChild(document.createTextNode(` ${r.value || ""}`));
+        } else {
+          p.textContent = r.text || "";
         }
-        trailBox.appendChild(list);
+        rowsEl.appendChild(p);
+      }
+      if (buildRows) buildRows(rowsEl);
+    }
+    /* A bubble: an icon, a word or two, and what it does.
+     * Descriptors are data; setPanel builds the buttons, so
+     * every state is drawn the same thumb-sized way. */
+    function bubbleBtn(label, icon, go, cls, stateText) {
+      return { label, icon, go, cls, stateText };
+    }
+    function setPanel(state, opts = {}) {
+      panelState = state;
+      if (state !== "game") endEcho();
+      if (opts.line != null) panelSay(opts.line, opts);
+      coordEl.style.display = opts.coord ? "" : "none";
+      renderRows(opts.rows, opts.buildRows);
+      gridEl.innerHTML = "";
+      gridEl.className = opts.gridCls ? `spark-panel-grid ${opts.gridCls}` : "spark-panel-grid";
+      for (const b of opts.bubbles || []) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = b.cls ? `spark-panel-bubble ${b.cls}` : "spark-panel-bubble";
+        const ic = document.createElement("span");
+        ic.className = "spark-panel-icon";
+        ic.setAttribute("aria-hidden", "true");
+        ic.textContent = b.icon || "";
+        const lb = document.createElement("span");
+        lb.className = "spark-panel-label";
+        lb.textContent = b.label;
+        btn.appendChild(ic);
+        btn.appendChild(lb);
+        if (b.stateText) {
+          const st = document.createElement("span");
+          st.className = "spark-panel-state";
+          st.textContent = b.stateText;
+          btn.appendChild(st);
+        }
+        btn.addEventListener("click", () => {
+          /* The keeper has taken the panel: the arrival timer
+           * that would fold her opening away must never fold
+           * a panel mid-use. */
+          if (arrivalTimer) {
+            window.clearTimeout(arrivalTimer);
+            arrivalTimer = null;
+          }
+          b.go();
+        });
+        gridEl.appendChild(btn);
       }
     }
-    fillCare();
-
-    /* ---- the conversation ----
-     * A tap on the Spark opens a talk, not a dashboard. She
-     * speaks first — a greeting in her temperament's voice, the
-     * real day from the canonical calendar, and the thread the
-     * record holds — then she asks a question, and the keeper
-     * answers with a tap on a chip. Every answer she gives is
-     * assembled from the record and the page: the day's
-     * coordinate, the doors this page carries, the page's own
-     * words about itself, the trail, the care life. Her voice
-     * frames those facts (Core.convoLineFor); it never invents
-     * beyond them. The chips are the buttons, made thumb-sized;
-     * every chip makes her answer in body, voice, and words at
-     * once — a look, then the delight bounce, her little sound,
-     * and a line in the thread. */
-    const thread = host.querySelector(".spark-convo-thread");
-    const chipsBox = host.querySelector(".spark-convo-chips");
-    function trimThread() {
-      while (thread.children.length > 9) thread.removeChild(thread.firstChild);
-      thread.scrollTop = thread.scrollHeight;
+    function backBtn() {
+      return bubbleBtn("Back", "←", () => showHome(beatLine("next")));
+    }
+    function setRows(rows) {
+      renderRows(rows, null);
     }
     /* ---- her voice box ----
      * Her voice is her own: grown from her seed, not borrowed
@@ -691,52 +705,10 @@
         /* no voice box on this device: the words still stand */
       }
     }
-    function say(text) {
-      if (!text) return;
-      const p = document.createElement("p");
-      p.className = "spark-convo-line";
-      const b = document.createElement("strong");
-      b.textContent = displayName;
-      p.appendChild(b);
-      p.appendChild(document.createTextNode(` ${text}`));
-      thread.appendChild(p);
-      trimThread();
-      vocalize(text);
-    }
-    function sayList(build) {
-      const box = document.createElement("div");
-      box.className = "spark-convo-line spark-convo-list";
-      build(box);
-      thread.appendChild(box);
-      trimThread();
-    }
-    function sayDoor(text, href, hrefLabel) {
-      vocalize(text);
-      sayList((box) => {
-        const p = document.createElement("p");
-        p.className = "spark-guide-text";
-        p.textContent = text;
-        box.appendChild(p);
-        if (href) {
-          const a = document.createElement("a");
-          a.className = "spark-guide-door";
-          a.href = href;
-          a.textContent = hrefLabel || "Go there";
-          box.appendChild(a);
-        }
-      });
-    }
-    function replyEcho(label) {
-      const p = document.createElement("p");
-      p.className = "spark-convo-reply";
-      p.textContent = label;
-      thread.appendChild(p);
-      trimThread();
-    }
     /* Every tap answered in the body first: the eyes land —
      * a glance toward the keeper — then the body answers with
-     * its bounce, and her voice answers with it. One helper, so
-     * no control in the talk is ever a dead tap. */
+     * its bounce, and her little sound answers with it. One
+     * helper, so no bubble in the panel is ever a dead tap. */
     function answerInBody(withVoice = true) {
       if (art) {
         art.classList.add("is-looking");
@@ -751,77 +723,95 @@
       }
       if (withVoice) chirp(companion);
     }
-    function setChips(list) {
-      chipsBox.innerHTML = "";
-      for (const c of list) {
-        const b = document.createElement("button");
-        b.type = "button";
-        b.className = c.cls ? `spark-chip ${c.cls}` : "spark-chip";
-        b.textContent = c.label;
-        b.addEventListener("click", () => {
-          /* The keeper has taken the talk: the arrival timer
-           * that would fold her opening line away must never
-           * fold a conversation mid-sentence. */
-          if (arrivalTimer) {
-            window.clearTimeout(arrivalTimer);
-            arrivalTimer = null;
-          }
-          replyEcho(c.label);
-          c.go();
-        });
-        chipsBox.appendChild(b);
-      }
+
+    /* ---- the states ----
+     * Each function below is one panel state: her line, any
+     * short rows the state carries, and its bubbles. Opening
+     * one replaces the last; Back returns home. */
+    function moonify(text) {
+      return moonTemper && moonTemper.line ? `${text} ${moonTemper.line}` : text;
     }
-    const chip = (label, go, cls) => ({ label, go, cls });
-    function afterTalk() {
-      endEcho();
-      say(Core.convoLineFor({ companion, beat: "next" }));
-      setChips(mainChips());
+    function greetingLine() {
+      const day = Core.daypartLineFor({ companion, hour: new Date().getHours() });
+      return moonify(day ? fillName(day) : beatLine("greet"));
     }
-    function mainChips() {
-      return [
-        chip("Show me around", doAround, "spark-guide-around"),
-        chip("Explain this page", doExplain, "spark-guide-explain"),
-        chip("Let's play", doPlay),
-        chip("Care", offerCare),
-        chip("Tricks", doTricks),
-        chip("Today's trail", doTrail),
-        chip("More", moreChips)
-      ];
+    /* The day's one thing: the daily trail's next unwalked
+     * step, drawn only from the record, offered as one clear
+     * bubble at the front of the home grid — one thing that
+     * fits the day, not a list. When the trail is walked, or
+     * the day holds none, no bubble is offered. */
+    function oneThingBubble() {
+      const trail = Core.trailFor({ record: getRecord(), companion, today, page: pageKey() });
+      const step = trail.steps.find((s) => !s.done);
+      if (!step) return null;
+      const labels = {
+        telling: "Today's telling",
+        door: "A new door",
+        practice: "Seal a practice"
+      };
+      return bubbleBtn(
+        labels[step.id] || "One thing",
+        "✦",
+        () => {
+          window.location.href = step.href;
+        },
+        "spark-panel-onething"
+      );
     }
-    function moreChips() {
-      answerInBody(false);
-      setChips([
-        chip("Today", doToday, "spark-guide-today"),
-        chip("Echo game", doEcho, "spark-guide-echo"),
-        chip("Where was I?", doResume, "spark-guide-resume"),
-        chip("Share my Spark", doShare),
-        chip("My record", doRecord),
-        chip("Just walk with me", doBye),
-        chip("Back", () => {
-          say(Core.convoLineFor({ companion, beat: "ask" }));
-          setChips(mainChips());
-        })
-      ]);
+    function showHome(line, opts = {}) {
+      const bubbles = [];
+      const oneThing = oneThingBubble();
+      if (oneThing) bubbles.push(oneThing);
+      bubbles.push(
+        bubbleBtn("Play", "▶", doPlay),
+        bubbleBtn("Care", "✚", showCare),
+        bubbleBtn("Tricks", "✦", doTricks),
+        bubbleBtn("Game", "♪", doEcho),
+        bubbleBtn("Today", "☉", doToday),
+        bubbleBtn("Guide", "➤", () => doAround(), "spark-guide-around"),
+        bubbleBtn("Look next", "◎", doLookNext),
+        bubbleBtn("More", "+", showMore)
+      );
+      setPanel("home", { line, coord: true, rows: opts.rows || [], bubbles });
     }
-    function offerCare() {
-      answerInBody();
-      say(Core.convoLineFor({ companion, beat: "care" }));
-      setChips([
-        chip("Kindle", doKindle, "spark-care-kindle"),
-        chip("Play", doPlay, "spark-care-play"),
-        chip("Rest", doRest, "spark-care-rest"),
-        chip("Back", () => {
-          say(Core.convoLineFor({ companion, beat: "ask" }));
-          setChips(mainChips());
-        })
-      ]);
+    function showMore(line) {
+      setPanel("more", {
+        line: line != null ? line : beatLine("next"),
+        bubbles: [
+          bubbleBtn("Trail", "∴", doTrail),
+          bubbleBtn("Resume", "↩", doResume),
+          bubbleBtn("Record", "≡", () => doRecord()),
+          bubbleBtn("Share", "↗", doShare),
+          bubbleBtn("Sounds", "♫", toggleSounds, "spark-presence-sound", soundOff() ? "off" : "on"),
+          bubbleBtn("Voice", "◉", toggleVoice, "spark-presence-voice", voiceOn() ? "on" : "off"),
+          bubbleBtn("Walk", "→", doBye),
+          backBtn()
+        ]
+      });
+    }
+    function showCare(announce = true) {
+      if (announce) answerInBody();
+      const care = Core.careStateFor({
+        record: getRecord(),
+        companion,
+        todayPatternDay: today ? today.dayOfPatternYear : null
+      });
+      setPanel("care", {
+        line: beatLine("care"),
+        rows: care.lines.map((t) => ({ text: t })),
+        bubbles: [
+          bubbleBtn("Kindle", "✺", doKindle, "spark-care-kindle"),
+          bubbleBtn("Play", "▶", doPlay, "spark-care-play"),
+          bubbleBtn("Rest", "☾", doRest, "spark-care-rest"),
+          backBtn()
+        ]
+      });
     }
 
     /* ---- v6: tricks, learned from real play ----
      * A trick is performed in the body first — a class on the
-     * drawing, a move in the 3D body — and named aloud in the
-     * talk: she says its name, then her line about it. Under
+     * drawing, a move in the 3D body — and named in the panel:
+     * her line says its name, then her trick line. Under
      * reduced motion the drawing holds still, as the device
      * asks, and the name and the line carry the performance —
      * the same honesty the chase has always kept. */
@@ -856,16 +846,19 @@
     }
     function performTrick(trick) {
       answerInBody(false);
-      say(`${trick.name}!`);
+      panelSay(`${trick.name}!`);
       trickBody(trick);
       const sounds = Core.soundsFor(companion);
       if (sounds && !soundOff()) playNotes(trick.id === "spin" ? sounds.adopt : sounds.growth, 0.1);
-      say(Core.convoLineFor({ companion, beat: "trick" }));
+      window.setTimeout(() => {
+        if (panelState === "tricks") panelSay(beatLine("trick"));
+      }, 850);
     }
     /* A trick learned, announced once, at the moment it lands:
-     * her learned line, then the trick itself, performed on the
-     * spot. If the talk is folded, she opens it briefly — the
-     * way she announces a growth — says it, and steps back. */
+     * her learned line, then the trick itself, performed on
+     * the spot. If the panel is folded, she opens it briefly —
+     * the way she announces a growth — says it, and steps
+     * back. */
     function announceLearned(ids) {
       const tricks = Core.tricksFor({ record: getRecord(), companion });
       ids.forEach((id, i) => {
@@ -875,74 +868,62 @@
           recent.learnedAt = Date.now();
           refreshMood();
           if (!bubble.hasAttribute("hidden")) {
-            say(Core.convoLineFor({ companion, beat: "learned" }));
-            performTrick(trick);
+            panelSay(beatLine("learned"));
+            trickBody(trick);
+            if (ctrl) ctrl.celebrate();
           } else {
-            announceLine(`${Core.convoLineFor({ companion, beat: "learned" })} ${trick.name}!`);
+            announceLine(`${beatLine("learned")} ${trick.name}!`);
             trickBody(trick);
             if (ctrl) ctrl.celebrate();
           }
         }, i * 1700);
       });
     }
-    /* One line, spoken from a folded talk: the bubble opens
-     * with just that line and the standing offers, and folds
-     * again on its own — the arrival pattern, reused for the
-     * moments worth announcing (a trick learned, a seal kept).
-     * A keeper's tap takes the talk over, as always. */
+    /* One line, spoken from a folded panel: the panel opens
+     * at home with just that line, and folds again on its
+     * own — the arrival pattern, reused for the moments worth
+     * announcing (a trick learned, a seal kept). A keeper's
+     * tap takes the panel over, as always. */
     function announceLine(text) {
       if (!bubble.hasAttribute("hidden")) {
-        say(text);
+        panelSay(text);
         return;
       }
       convoStarted = true;
       bubble.removeAttribute("hidden");
       button.setAttribute("aria-expanded", "true");
-      say(text);
-      setChips(mainChips());
+      placePanel();
+      showHome(text);
       if (arrivalTimer) window.clearTimeout(arrivalTimer);
       arrivalTimer = window.setTimeout(closeBubble, 8000);
     }
-    function doTricks() {
-      answerInBody();
+    function doTricks(announce = true) {
+      if (announce) answerInBody();
       endEcho();
-      say(Core.convoLineFor({ companion, beat: "tricks" }));
       const tricks = Core.tricksFor({ record: getRecord(), companion });
       const known = tricks.filter((t) => t.learned);
       const learning = tricks.filter((t) => !t.learned);
-      if (learning.length) {
-        sayList((box) => {
-          const list = document.createElement("ul");
-          list.className = "spark-guide-doors spark-trick-list";
-          for (const t of learning) {
-            const li = document.createElement("li");
-            li.textContent = `${t.name} — learned from ${t.teacher}: ${t.count} of ${t.need} so far.`;
-            list.appendChild(li);
-          }
-          box.appendChild(list);
-        });
-      }
-      if (!known.length) {
-        say("Play teaches me — pet me, move me by hand, chase me, echo me — and this list grows.");
-      }
-      setChips([
-        ...known.map((t) => chip(t.name, () => performTrick(t), "spark-trick-chip")),
-        chip("Back", () => {
-          say(Core.convoLineFor({ companion, beat: "ask" }));
-          setChips(mainChips());
-        })
-      ]);
+      const rows = learning.map((t) => ({ text: `${t.name}: ${t.count} of ${t.need} · ${t.teacher}` }));
+      if (!known.length) rows.push({ text: "Play teaches me tricks." });
+      setPanel("tricks", {
+        line: beatLine("tricks"),
+        rows,
+        bubbles: [
+          ...known.map((t) => bubbleBtn(t.name, "✦", () => performTrick(t), "spark-trick-chip")),
+          backBtn()
+        ]
+      });
     }
 
     /* ---- v6: the echo game ----
      * She pulses a pattern — her seed's notes, in her own four
-     * colours — and the keeper taps it back. Rounds grow one
-     * note at a time; the best round is kept on this device and
-     * stands in her record. A note astray ends the round kindly:
-     * the best stands, the pattern offers to sing again, and
-     * nothing anywhere is taken away. */
+     * colours — and the keeper taps it back on the pads, which
+     * live in the panel while the game state stands. Rounds
+     * grow one note at a time; the best round is kept on this
+     * device and stands in her record. A note astray ends the
+     * round kindly: the best stands, the pattern offers to
+     * sing again, and nothing anywhere is taken away. */
     const echoBox = host.querySelector(".spark-echo");
-    const echoStatus = host.querySelector(".spark-echo-status");
     const echoPadsBox = host.querySelector(".spark-echo-pads");
     let echo = null;
     function playTone(freq) {
@@ -969,29 +950,30 @@
     }
     function doEcho() {
       answerInBody();
-      say(Core.convoLineFor({ companion, beat: "echoStart" }));
       const first = Core.echoFor({ companion, round: 1 });
       buildEchoPads(first.pads);
-      echoBox.removeAttribute("hidden");
-      echoStatus.textContent = "Tap Begin, and I will pulse the pattern. Then tap it back to me, colour for colour.";
       echo = { round: 1, steps: [], at: 0, phase: "ready", pads: first.pads };
-      setChips([
-        chip("Begin", beginEchoRound, "spark-echo-begin"),
-        chip("Back", () => {
-          endEcho();
-          say(Core.convoLineFor({ companion, beat: "ask" }));
-          setChips(mainChips());
-        })
-      ]);
+      setPanel("game", {
+        line: beatLine("echoStart"),
+        rows: [{ text: "Tap Begin. I pulse; you tap it back." }],
+        bubbles: [
+          bubbleBtn("Begin", "▶", beginEchoRound, "spark-echo-begin"),
+          bubbleBtn("Back", "←", () => {
+            endEcho();
+            showHome(beatLine("next"));
+          })
+        ]
+      });
+      echoBox.removeAttribute("hidden");
     }
     function beginEchoRound() {
-      if (!echo) return;
+      if (!echo || echo.phase === "showing") return;
       const data = Core.echoFor({ companion, round: echo.round });
       echo.steps = data.steps;
       echo.at = 0;
       echo.phase = "showing";
-      echoStatus.textContent = `Round ${echo.round} — watch and listen.`;
-      setChips([]);
+      panelSay(`Round ${echo.round}. Watch.`);
+      setRows([]);
       data.steps.forEach((padIx, i) => {
         window.setTimeout(() => {
           if (!echo) return;
@@ -1002,7 +984,7 @@
       window.setTimeout(() => {
         if (!echo || echo.phase !== "showing") return;
         echo.phase = "answer";
-        echoStatus.textContent = "Your turn — tap the colours back to me.";
+        panelSay("Your turn.");
       }, 450 + data.steps.length * 640 + 250);
     }
     function echoTap(i) {
@@ -1022,61 +1004,134 @@
       recent.wonAt = Date.now();
       setRecord(Core.recordPlay(getRecord(), { action: "echo", round }).record);
       refreshMood();
-      say(Core.convoLineFor({ companion, beat: "echoWin" }));
-      say(`Round ${round}, echoed whole. Your best stands at round ${Core.playOf(getRecord()).echoBest}.`);
-      echoStatus.textContent = "Echoed whole. The next round grows by one note.";
-      setChips([
-        chip("Next round", () => {
-          echo.round = round + 1;
-          beginEchoRound();
-        }),
-        chip("Done for now", () => {
-          endEcho();
-          afterTalk();
-        })
-      ]);
+      const best = Core.playOf(getRecord()).echoBest;
+      setPanel("game", {
+        line: beatLine("echoWin"),
+        rows: [{ text: `Round ${round} echoed whole. Best: round ${best}.` }],
+        bubbles: [
+          bubbleBtn("Next round", "▶", () => {
+            echo.round = round + 1;
+            beginEchoRound();
+          }),
+          bubbleBtn("Done", "✓", () => {
+            endEcho();
+            showHome(beatLine("next"));
+          })
+        ]
+      });
     }
     function echoMiss() {
       echo.phase = "done";
-      say(Core.convoLineFor({ companion, beat: "echoMiss" }));
       const best = Core.playOf(getRecord()).echoBest;
-      if (best > 0) say(`Your best stands at round ${best}.`);
-      echoStatus.textContent = "The round rests here. The pattern will sing again whenever you ask.";
-      setChips([
-        chip("Try again", () => beginEchoRound()),
-        chip("Done for now", () => {
-          endEcho();
-          afterTalk();
-        })
-      ]);
+      setPanel("game", {
+        line: beatLine("echoMiss"),
+        rows: best > 0 ? [{ text: `Your best stands at round ${best}.` }] : [],
+        bubbles: [
+          bubbleBtn("Try again", "▶", () => beginEchoRound()),
+          bubbleBtn("Done", "✓", () => {
+            endEcho();
+            showHome(beatLine("next"));
+          })
+        ]
+      });
     }
     function endEcho() {
       echo = null;
       if (echoBox) echoBox.setAttribute("hidden", "");
     }
-    function doAround() {
+    /* The Guide state: her line is the record's own standing
+     * suggestion for this page; the bubbles are this page's
+     * own doors, the same doors the guide has always offered,
+     * with the record's suggested door first among them. */
+    function doAround(lineOverride) {
       answerInBody();
       const doors = Core.doorsFor({ links: pageLinks(), page: pageKey() });
-      if (!doors.length) {
-        say("This page keeps its doors in the menu at the top — every one of them is real, and I walk them all with you.");
-        afterTalk();
+      const bubbles = [];
+      if (guide.href) {
+        const known = doors.find((d) => d.href === guide.href);
+        const place = (Core.PAGE_GUIDE[guide.href] || {}).place;
+        bubbles.push(
+          bubbleBtn(
+            known ? known.label : place || "Go",
+            "➜",
+            () => {
+              window.location.href = guide.href;
+            },
+            "spark-guide-door"
+          )
+        );
+      }
+      for (const door of doors) {
+        if (guide.href && door.href === guide.href) continue;
+        bubbles.push(
+          bubbleBtn(
+            door.label,
+            "➜",
+            () => {
+              window.location.href = door.href;
+            },
+            "spark-guide-door"
+          )
+        );
+      }
+      bubbles.push(bubbleBtn("Explain", "?", doExplain, "spark-guide-explain"));
+      bubbles.push(backBtn());
+      setPanel("guide", {
+        line: lineOverride != null ? lineOverride : guide.text,
+        bubbles,
+        gridCls: "spark-guide-doors"
+      });
+    }
+    /* Look next: her suggestions, drawn only from real site
+     * material, in order of trust — this page's own doors
+     * first (the Guide's own source), then the keeper's own
+     * left-off place from their on-device record, labeled
+     * theirs. Never more than three, never invented: a page
+     * that offers nothing real gets one honest line instead. */
+    function doLookNext() {
+      answerInBody();
+      const doors = Core.doorsFor({ links: pageLinks(), page: pageKey() });
+      const picks = [];
+      const used = new Set();
+      for (const door of doors) {
+        if (picks.length >= 3) break;
+        picks.push({ label: door.label, href: door.href, yours: false });
+        used.add(door.href);
+      }
+      if (picks.length < 3) {
+        const resume = Core.resumeFor({ record: getRecord() });
+        if (resume.href && resume.href !== pageKey() && !used.has(resume.href)) {
+          const place = (Core.PAGE_GUIDE[resume.href] || {}).place;
+          picks.push({ label: place || "Your last place", href: resume.href, yours: true });
+          used.add(resume.href);
+        }
+      }
+      if (picks.length < 3 && guide.href && guide.href !== pageKey() && !used.has(guide.href)) {
+        const place = (Core.PAGE_GUIDE[guide.href] || {}).place;
+        picks.push({ label: place || "A door for you", href: guide.href, yours: true });
+      }
+      const another = bubbleBtn("Another time", "←", () => showHome(beatLine("next")));
+      if (!picks.length) {
+        setPanel("looknext", { line: "Nothing nearby. Here is good.", bubbles: [another] });
         return;
       }
-      say(Core.convoLineFor({ companion, beat: "around" }));
-      sayList((box) => {
-        const list = document.createElement("ul");
-        list.className = "spark-guide-doors";
-        for (const door of doors) {
-          const li = document.createElement("li");
-          const a = document.createElement("a");
-          a.href = door.href;
-          a.textContent = door.line ? `${door.label} — ${door.line}` : door.label;
-          li.appendChild(a);
-          list.appendChild(li);
-        }
-        box.appendChild(list);
+      setPanel("looknext", {
+        line: beatLine("nearby"),
+        bubbles: [
+          ...picks.map((p) =>
+            bubbleBtn(
+              p.label,
+              "➜",
+              () => {
+                window.location.href = p.href;
+              },
+              "spark-looknext-door",
+              p.yours ? "yours" : null
+            )
+          ),
+          another
+        ]
       });
-      afterTalk();
     }
     /* "Tell me more": the page's own words beyond the
      * explanation, gathered in the page's own order — first the
@@ -1084,7 +1139,9 @@
      * then the main content's paragraphs that follow it. The
      * core cuts them into chunks that partition that text:
      * nothing is padded, nothing is repeated, and nothing comes
-     * from anywhere but this page. */
+     * from anywhere but this page. Each chunk replaces her
+     * line in the same bubble — the words never grow a
+     * thread. */
     let explainRest = [];
     function pageFollowingText(src) {
       const main = document.querySelector("main") || document.body;
@@ -1106,49 +1163,63 @@
       const src = pageExplainSource();
       const ex = Core.explainFor(src);
       if (!ex.text) {
-        say("This page speaks from its first lines — start at the top and I'll walk it with you.");
-        afterTalk();
+        doAround("Start at the top. I walk it with you.");
         return;
       }
       explainRest = [
         ...Core.explainChunksFor(src).chunks.slice(1),
         ...Core.moreChunksFor(pageFollowingText(src))
       ];
-      say(Core.convoLineFor({ companion, beat: "explain" }));
-      say(
-        ex.text +
-          (ex.source === "explainer"
-            ? " — in this page's own explainer's words."
-            : " — in this page's own opening words.")
-      );
-      afterExplain();
+      setPanel("explain", {
+        line: ex.text,
+        rows: [
+          {
+            text:
+              ex.source === "explainer"
+                ? "In this page's own words."
+                : "In this page's own opening words."
+          }
+        ],
+        bubbles: explainBubbles()
+      });
     }
-    function afterExplain() {
-      say(Core.convoLineFor({ companion, beat: "next" }));
-      if (explainRest.length) {
-        setChips([chip("Tell me more", () => doExplainMore(), "spark-guide-more"), ...mainChips()]);
-      } else {
-        setChips(mainChips());
-      }
+    function explainBubbles() {
+      const bubbles = [];
+      if (explainRest.length)
+        bubbles.push(bubbleBtn("More", "+", doExplainMore, "spark-guide-more"));
+      bubbles.push(bubbleBtn("Done", "✓", () => showHome(beatLine("next"))));
+      bubbles.push(bubbleBtn("Guide", "←", () => doAround()));
+      return bubbles;
     }
     function doExplainMore() {
       answerInBody();
       const next = explainRest.shift();
       if (!next) {
-        say("That is everything this page says about itself — all of it in the page's own words.");
-        afterTalk();
+        showHome("That is the whole page.");
         return;
       }
-      say(Core.convoLineFor({ companion, beat: "more" }));
-      say(next + " — still this page's own words.");
-      afterExplain();
+      setPanel("explain", {
+        line: next,
+        rows: [{ text: "Still this page's own words." }],
+        bubbles: explainBubbles()
+      });
     }
     function doResume() {
       answerInBody();
       const resume = Core.resumeFor({ record: getRecord() });
-      say(Core.convoLineFor({ companion, beat: "resume" }));
-      sayDoor(resume.text, resume.href, resume.href ? "Back to it" : null);
-      afterTalk();
+      const bubbles = [];
+      if (resume.href)
+        bubbles.push(
+          bubbleBtn("Go back", "↩", () => {
+            window.location.href = resume.href;
+          })
+        );
+      bubbles.push(backBtn());
+      setPanel("resume", {
+        line: beatLine("resume"),
+        rows: [{ text: resume.text }],
+        bubbles
+      });
     }
     /* The day's telling, where this page itself carries it:
      * the 13 Moons page stands its telling in blocks, filled
@@ -1170,78 +1241,81 @@
       answerInBody();
       const telling = Core.tellingFor(pageTellingSource());
       if (telling.has) {
-        /* This page carries the telling itself: she reads it —
-         * the coordinate first, then the telling's own lines,
-         * in the order the page stands them. */
-        say(Core.convoLineFor({ companion, beat: "telling" }));
-        say(Core.coordinateLineFor(today));
-        for (const line of telling.lines) say(line);
-        afterTalk();
+        setPanel("today", {
+          line: beatLine("telling"),
+          coord: true,
+          rows: telling.lines.map((t) => ({ text: t })),
+          bubbles: [backBtn()]
+        });
         return;
       }
-      say(Core.convoLineFor({ companion, beat: "today" }));
-      sayDoor(
-        `${Core.coordinateLineFor(today)}. The day's telling is told in plain words on the 13 Moons page.`,
-        "moons.html",
-        "Hear today's telling"
-      );
-      afterTalk();
+      setPanel("today", {
+        line: beatLine("today"),
+        coord: true,
+        bubbles: [
+          bubbleBtn("Telling", "☉", () => {
+            window.location.href = "moons.html";
+          }),
+          backBtn()
+        ]
+      });
     }
     function doTrail() {
       answerInBody();
-      say(Core.convoLineFor({ companion, beat: "trail" }));
       const trail = Core.trailFor({ record: getRecord(), companion, today, page: pageKey() });
       if (!trail.steps.length) {
-        say("The trail is quiet today — the day itself is the step.");
-        afterTalk();
+        showHome("The trail is quiet today.");
         return;
       }
-      sayList((box) => {
-        const list = document.createElement("ul");
-        list.className = "spark-trail-steps";
-        for (const step of trail.steps) {
-          const li = document.createElement("li");
-          li.className = step.done ? "is-done" : "";
-          const mark = document.createElement("span");
-          mark.className = "spark-trail-mark";
-          mark.textContent = step.done ? "●" : "○";
-          li.appendChild(mark);
-          li.appendChild(document.createTextNode(" "));
-          const a = document.createElement("a");
-          a.href = step.href;
-          a.textContent = step.label;
-          li.appendChild(a);
-          list.appendChild(li);
-        }
-        box.appendChild(list);
+      setPanel("trail", {
+        line: trail.complete ? "Trail walked. Well done." : beatLine("trail"),
+        buildRows: (el) => {
+          const list = document.createElement("ul");
+          list.className = "spark-trail-steps";
+          for (const step of trail.steps) {
+            const li = document.createElement("li");
+            li.className = step.done ? "is-done" : "";
+            const mark = document.createElement("span");
+            mark.className = "spark-trail-mark";
+            mark.textContent = step.done ? "●" : "○";
+            li.appendChild(mark);
+            li.appendChild(document.createTextNode(" "));
+            const a = document.createElement("a");
+            a.href = step.href;
+            a.textContent = step.label;
+            li.appendChild(a);
+            list.appendChild(li);
+          }
+          el.appendChild(list);
+        },
+        bubbles: [backBtn()]
       });
-      if (trail.complete) say("Walked, all of it. Well done, both of you.");
-      afterTalk();
     }
-    function doRecord() {
-      answerInBody();
-      say(Core.convoLineFor({ companion, beat: "record" }));
-      if (panel.hasAttribute("hidden")) panelLink.click();
-      afterTalk();
+    function doRecord(announce = true) {
+      if (announce) answerInBody();
+      setPanel("record", {
+        line: beatLine("record"),
+        buildRows: (el) => buildRecordRows(el, getRecord(), companion, today),
+        bubbles: [bubbleBtn("Share", "↗", doShare), backBtn()]
+      });
     }
     function doBye() {
       answerInBody();
-      say(Core.convoLineFor({ companion, beat: "bye" }));
-      setChips([]);
+      endEcho();
+      panelSay(beatLine("bye"));
+      gridEl.innerHTML = "";
       window.setTimeout(closeBubble, 1200);
     }
     let convoStarted = false;
     function startConvo() {
       convoStarted = true;
-      /* The hour greets first, in her temperament's voice; then
-       * the day itself, counted by the calendar; then — once a
-       * day at most — her one gentle question, drawn from what
-       * the record truly holds, with its door on a chip and a
-       * way past it that costs nothing. Any other day, the
-       * standing question opens the talk as it always has. */
-      const dayLine = Core.daypartLineFor({ companion, hour: new Date().getHours() });
-      if (dayLine) say(dayLine);
-      say(`${Core.coordinateLineFor(today)}. ${guide.text}`);
+      /* Once a day at most, her one gentle question, drawn
+       * from what the record truly holds, stands in the panel
+       * as her line with answer bubbles — and a way past it
+       * that costs nothing. Any other day, the home panel
+       * opens with the hour's greeting, flavored by the moon
+       * she is under. A growth, when one is new, takes the
+       * line first. */
       const todayDay = today ? today.dayOfPatternYear : null;
       const askedDay = Core.playOf(getRecord()).askedDay;
       const question =
@@ -1250,28 +1324,65 @@
           : null;
       if (question) {
         setRecord(Core.markAsked(getRecord(), { patternDay: todayDay }));
-        say(question.text);
-        setChips([
-          chip(question.label, () => {
-            window.location.href = question.href;
-          }),
-          chip("Another time", () => {
-            say(Core.convoLineFor({ companion, beat: "ask" }));
-            setChips(mainChips());
-          })
-        ]);
+        const rows = [];
+        if (growthLine && !growthShown) {
+          growthShown = true;
+          rows.push({ text: growthLine });
+        }
+        setPanel("question", {
+          line: question.text,
+          coord: true,
+          rows,
+          bubbles: [
+            bubbleBtn(
+              question.label,
+              "➜",
+              () => {
+                window.location.href = question.href;
+              },
+              "spark-panel-ask"
+            ),
+            bubbleBtn("Another time", "←", () => showHome(beatLine("ask")))
+          ]
+        });
         return;
       }
-      say(Core.convoLineFor({ companion, beat: "ask" }));
-      setChips(mainChips());
+      if (growthLine && !growthShown) {
+        growthShown = true;
+        showHome(growthLine);
+        return;
+      }
+      showHome(greetingLine());
     }
     function welcomeBack() {
-      say(Core.convoLineFor({ companion, beat: "welcome" }));
-      setChips(mainChips());
+      showHome(moonify(beatLine("welcome")));
+    }
+    /* The panel stands where she stands: placed beside her
+     * at open time, in the walker's own coordinates, clamped
+     * to the view so no state is ever clipped by an edge.
+     * She rests while it is open, so the placing holds. */
+    function placePanel() {
+      const wr = walker.getBoundingClientRect();
+      const r = button.getBoundingClientRect();
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const w = Math.min(356, vw - 24);
+      let left = Math.round(r.right - w);
+      left = Math.max(12, Math.min(left, vw - w - 12));
+      bubble.style.left = `${Math.round(left - wr.left)}px`;
+      bubble.style.right = "auto";
+      if (r.top > vh * 0.45) {
+        bubble.style.top = "auto";
+        bubble.style.bottom = `${Math.round(wr.bottom - r.top + 8)}px`;
+      } else {
+        bubble.style.bottom = "auto";
+        bubble.style.top = `${Math.round(r.bottom - wr.top + 8)}px`;
+      }
     }
     function openConvo() {
       bubble.removeAttribute("hidden");
       button.setAttribute("aria-expanded", "true");
+      placePanel();
       if (!convoStarted) startConvo();
       else welcomeBack();
     }
@@ -1341,10 +1452,9 @@
         drawWords();
       };
       img.src = url;
-      say(Core.convoLineFor({ companion, beat: "share" }));
-      afterTalk();
+      showHome(beatLine("share"));
     }
-    host.querySelector(".spark-share-btn").addEventListener("click", doShare);
+
 
     const button = host.querySelector(".spark-presence-button");
     const bubble = host.querySelector(".spark-presence-bubble");
@@ -1436,7 +1546,7 @@
       if (roam) roam.glow();
       if (ctrl) ctrl.delight();
       chirp(companion);
-      vocalize(Core.convoLineFor({ companion, beat: "pet" }));
+      vocalize(beatLine("pet"));
       refreshMood();
     }
     button.addEventListener("pointerdown", (event) => {
@@ -1531,27 +1641,11 @@
         /* A plain tap — a poke, counted. The click that follows
          * does the rest, exactly as it always has. */
         setRecord(Core.recordPlay(getRecord(), { action: "poke" }).record);
-        vocalize(Core.convoLineFor({ companion, beat: "poke" }));
+        vocalize(beatLine("poke"));
       }
     }
     button.addEventListener("pointerup", (event) => endPress(event, false));
     button.addEventListener("pointercancel", (event) => endPress(event, true));
-    /* The Your Spark panel: who it is, how it has grown, and what
-     * it has noticed — folded inside the bubble, one tap away. */
-    const panel = host.querySelector(".spark-presence-panel");
-    const panelLink = host.querySelector(".spark-presence-panel-link");
-    panelLink.addEventListener("click", (event) => {
-      event.preventDefault();
-      answerInBody();
-      if (panel.hasAttribute("hidden")) {
-        panel.removeAttribute("hidden");
-        careBox.removeAttribute("hidden");
-        fillCare();
-      } else {
-        panel.setAttribute("hidden", "");
-        careBox.setAttribute("hidden", "");
-      }
-    });
     /* Care, in three small acts. Kindle: a press warms it — a
      * bloom of glow, a happy sound, the bond deepens once a day.
      * Play: the bubble folds and the chase is on — it darts to a
@@ -1559,6 +1653,14 @@
      * Rest: it dims and curls and breathes quietly until a tap
      * or a scroll wakes it. Every act is recorded on this device
      * alone, and care only ever adds. */
+    /* Care, in three small acts. Kindle: a press warms it — a
+     * bloom of glow, a happy sound, the bond deepens once a
+     * day. Play: the panel folds and the chase is on — it
+     * darts to a few places on the page and waits, catchable,
+     * at each one. Rest: it dims and curls and breathes
+     * quietly until a tap or a scroll wakes it. Every act is
+     * recorded on this device alone, and care only ever
+     * adds. */
     function doKindle() {
       setRecord(
         Core.applyCare(getRecord(), {
@@ -1574,44 +1676,43 @@
       }
       if (roam) roam.glow();
       answerInBody();
-      say(Core.convoLineFor({ companion, beat: "kindle" }));
-      afterTalk();
+      showHome(beatLine("kindle"));
     }
     function doPlay() {
       answerInBody();
-      say(Core.convoLineFor({ companion, beat: "play" }));
       if (!roam) {
         /* Reduced motion: she stays in her corner by the
          * device's own asking, so the chase rests — and she
          * says so, rather than letting the tap fall dead. */
-        say("I stay in my corner while your device asks for stillness — the chase rests with me. Care and talk still work, all of it.");
-        afterTalk();
+        showHome(beatLine("play"), {
+          rows: [{ text: "Stillness is on. The chase rests; care and talk still work." }]
+        });
         return;
       }
+      panelSay(beatLine("play"));
       closeBubble();
-      if (roam) {
-        roam.startPlay((catches) => {
-          recent.playedAt = Date.now();
-          let next = Core.applyCare(getRecord(), {
-            action: "play",
-            patternDay: today ? today.dayOfPatternYear : null
-          });
-          next = Core.recordPlay(next, { action: "chase", catches }).record;
-          setRecord(next);
-          refreshMood();
-          bubble.removeAttribute("hidden");
-          button.setAttribute("aria-expanded", "true");
-          if (!convoStarted) startConvo();
-          say(Core.convoLineFor({ companion, beat: "caught" }));
-          say(
-            `That chase: ${catches} catch${catches === 1 ? "" : "es"}. ` +
-              `Your best chase stands at ${Core.playOf(getRecord()).bestChase}.`
-          );
-          say("Play is in my step now — the bond grew with that chase.");
-          say(Core.convoLineFor({ companion, beat: "next" }));
-          setChips(mainChips());
+      roam.startPlay((catches) => {
+        recent.playedAt = Date.now();
+        let next = Core.applyCare(getRecord(), {
+          action: "play",
+          patternDay: today ? today.dayOfPatternYear : null
         });
-      }
+        next = Core.recordPlay(next, { action: "chase", catches }).record;
+        setRecord(next);
+        refreshMood();
+        bubble.removeAttribute("hidden");
+        button.setAttribute("aria-expanded", "true");
+        placePanel();
+        if (!convoStarted) startConvo();
+        if (panelState === "home") {
+          panelSay(beatLine("caught"));
+          setRows([
+            {
+              text: `That chase: ${catches} catch${catches === 1 ? "" : "es"} · best ${Core.playOf(getRecord()).bestChase}.`
+            }
+          ]);
+        }
+      });
     }
     function doRest() {
       setRecord(
@@ -1621,64 +1722,40 @@
         })
       );
       answerInBody(false);
-      say(Core.convoLineFor({ companion, beat: "rest" }));
       if (!roam) {
-        say("I am already resting in my corner — stillness suits me here.");
-        afterTalk();
+        showHome(beatLine("rest"), {
+          rows: [{ text: "Already resting in my corner." }]
+        });
         return;
       }
       closeBubble();
       if (roam) roam.rest();
     }
-    host.querySelector(".spark-care-kindle").addEventListener("click", doKindle);
-    host.querySelector(".spark-care-play").addEventListener("click", doPlay);
-    host.querySelector(".spark-care-rest").addEventListener("click", doRest);
-    const soundToggle = host.querySelector(".spark-presence-sound");
-    const paintSound = () =>
-      (soundToggle.textContent = soundOff() ? "Sounds: off" : "Sounds: on");
-    soundToggle.addEventListener("click", (event) => {
-      event.preventDefault();
+    /* Her two switches live in the More state now: Sounds,
+     * and her voice box beside it. Each rests as it was left,
+     * kept on this device; the Sounds switch rules her voice
+     * too, as it always has. Turning Voice on, she says so —
+     * in her own generated voice, since the keeper's tap is
+     * the gesture. Turning it off stills her mid-line. */
+    function toggleSounds() {
       try {
         window.localStorage.setItem(SOUND_KEY, soundOff() ? "on" : "off");
       } catch {
         /* toggle simply does not persist */
       }
-      paintSound();
       if (!soundOff()) chirp(companion);
-      say(
-        soundOff()
-          ? "Sounds are off. My voice rests until you turn it on again."
-          : "Sounds are on — my little notes will answer your taps."
-      );
-    });
-    paintSound();
-    /* Her voice box, on its own switch beside Sounds: it
-     * rests quiet until the keeper turns it on, and the choice
-     * is kept on this device. Turning it on, she says so — in
-     * her own generated voice, since the keeper's tap is the
-     * gesture. Turning it off stills her mid-line. The Sounds
-     * switch rules it too: sounds off means her voice rests
-     * as well. */
-    const voiceToggle = host.querySelector(".spark-presence-voice");
-    const paintVoice = () =>
-      (voiceToggle.textContent = voiceOn() ? "Voice: speak" : "Voice: quiet");
-    voiceToggle.addEventListener("click", (event) => {
-      event.preventDefault();
+      showMore(soundOff() ? "Sounds off." : "Sounds on.");
+    }
+    function toggleVoice() {
       const turningOn = !voiceOn();
       try {
         window.localStorage.setItem(VOICE_KEY, turningOn ? "on" : "off");
       } catch {
         /* toggle simply does not persist */
       }
-      paintVoice();
-      if (turningOn) {
-        say("My voice is on — the voice my seed grew, no one else's. It hums along with my lines as we talk.");
-      } else {
-        stopVoice();
-        say("My voice rests now. My words stay here on the page.");
-      }
-    });
-    paintVoice();
+      if (!turningOn) stopVoice();
+      showMore(turningOn ? "My voice is on." : "Voice off.");
+    }
     /* A tap on her own furniture — her button, her chips, her
      * links — is the gesture her voice answers. Capture phase,
      * so the arming lands before the tap's own click speaks. */
@@ -1740,7 +1817,7 @@
       if (ctrl) ctrl.celebrate();
       if (roam) roam.glow();
       chirp(companion);
-      announceLine(Core.convoLineFor({ companion, beat: kind }));
+      announceLine(beatLine(kind));
       if (kind === "sealed") {
         sensePractice(getRecord()).then((next) => {
           if (next && next !== getRecord()) setRecord(next);

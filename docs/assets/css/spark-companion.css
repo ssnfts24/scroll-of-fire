@@ -211,13 +211,6 @@
   color: var(--spark-teal);
 }
 
-.spark-presence-line {
-  color: var(--spark-dim);
-  font-size: 0.8rem !important;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
 @keyframes spark-bob {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-4px); }
@@ -315,28 +308,37 @@
   100% { transform: rotate(0deg) scale(1); }
 }
 
-/* ---------- the bubble: today, growth, and the Your Spark panel ---------- */
+/* ---------- the bubble: the panel's furniture ---------- */
 
-.spark-presence-bubble {
-  max-height: min(72vh, 600px);
-  overflow-y: auto;
-}
-
-.spark-presence-today {
+/* The panel sizes to its state: no max-height, no scroll —
+ * at phone size every state stands whole (lab-measured). */
+.spark-panel-coord {
   color: var(--spark-gold);
-  font-size: 0.85rem !important;
+  font-size: 0.8rem !important;
   letter-spacing: 0.02em;
+  margin: 0 0 8px !important;
 }
 
-.spark-presence-growth {
+.spark-panel-line {
+  margin: 0 0 2px !important;
+  font-size: 0.95rem !important;
+  line-height: 1.4;
+}
+
+.spark-panel-line strong {
   color: var(--spark-gold);
   font-weight: 600;
 }
 
-.spark-presence-panel {
-  margin-top: 10px;
-  border-top: 1px solid var(--spark-line);
-  padding-top: 10px;
+.spark-panel-face {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+.spark-panel-face svg {
+  width: 54px;
+  height: 54px;
 }
 
 .spark-panel-row {
@@ -347,18 +349,6 @@
 .spark-panel-row strong {
   color: var(--spark-dim);
   font-weight: 600;
-}
-
-.spark-notices {
-  margin: 4px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.spark-notices li {
-  margin: 0 0 6px;
-  font-size: 0.88rem;
-  line-height: 1.45;
 }
 
 .spark-notice-kind {
@@ -384,24 +374,6 @@
 }
 
 /* ---------- v3: the care life, the daily trail, the real guide ---------- */
-
-.spark-presence-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 12px;
-  font-size: 0.85rem !important;
-}
-
-.spark-guide-out {
-  margin-top: 8px;
-  border-top: 1px solid var(--spark-line);
-  padding-top: 8px;
-}
-
-.spark-guide-text {
-  font-size: 0.9rem !important;
-  line-height: 1.5;
-}
 
 .spark-guide-doors,
 .spark-trail-steps {
@@ -429,67 +401,6 @@
   color: var(--spark-dim);
 }
 
-.spark-presence-care {
-  margin-top: 10px;
-  border-top: 1px solid var(--spark-line);
-  padding-top: 10px;
-}
-
-.spark-care-sub {
-  color: var(--spark-dim);
-  font-size: 0.78rem;
-  font-weight: 400;
-}
-
-.spark-care-buttons {
-  display: flex;
-  gap: 8px;
-  margin: 8px 0 4px !important;
-}
-
-.spark-care-buttons button {
-  flex: 1;
-  padding: 8px 6px;
-  border-radius: 999px;
-  border: 1px solid rgba(217, 164, 65, 0.55);
-  background: rgba(217, 164, 65, 0.1);
-  color: var(--spark-ink);
-  font: inherit;
-  font-size: 0.85rem;
-  cursor: pointer;
-}
-
-.spark-care-buttons button:hover,
-.spark-care-buttons button:focus-visible {
-  background: rgba(217, 164, 65, 0.22);
-}
-
-.spark-share-row {
-  margin: 10px 0 0 !important;
-  font-size: 0.85rem !important;
-}
-
-.spark-share-btn {
-  padding: 8px 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(45, 212, 191, 0.55);
-  background: rgba(45, 212, 191, 0.1);
-  color: var(--spark-ink);
-  font: inherit;
-  font-size: 0.85rem;
-  cursor: pointer;
-}
-
-.spark-share-btn:hover,
-.spark-share-btn:focus-visible {
-  background: rgba(45, 212, 191, 0.22);
-}
-
-.spark-share-note {
-  color: var(--spark-dim);
-  font-size: 0.78rem;
-}
-
 /* A kindle's warmth: a brief golden bloom around the body. */
 .spark-presence-art.is-kindling svg,
 .spark-encounter-art.is-kindling svg {
@@ -498,13 +409,13 @@
 
 @keyframes spark-kindling {
   0% { filter: drop-shadow(0 0 0 rgba(255, 190, 80, 0)); transform: scale(1); }
-  35% { filter: drop-shadow(0 0 14px rgba(255, 190, 80, 0.85)); transform: scale(1.1); }
+  35% { filter: drop-shadow(0 0 14px hsl(var(--spark-moon-hue, 43) 90% 62% / 0.85)); transform: scale(1.1); }
   100% { filter: drop-shadow(0 0 0 rgba(255, 190, 80, 0)); transform: scale(1); }
 }
 
 /* Kindled today: its ordinary glow runs warmer. */
 .spark-walker[data-kindled="true"] .spark-presence-art svg {
-  filter: drop-shadow(0 0 7px rgba(255, 180, 90, 0.55));
+  filter: drop-shadow(0 0 7px hsl(var(--spark-moon-hue, 43) 90% 64% / 0.55));
 }
 
 /* Waiting at a chase point: bright, bouncy, catchable. */
@@ -981,139 +892,105 @@
   font-size: 1.25rem;
 }
 
-/* ---------- v4: the conversation, and buttons a thumb can hit ----------
- * A tap on the Spark opens a talk. Her lines stand in a thread;
- * the keeper's answers are chips — every control in the talk is
- * at least 44px tall, labelled in plain words, and answers the
- * press visibly the moment it lands. Nothing in the talk waits
- * on a hover: there is no hover on a phone. */
 
-/* The talk gets a little more room than the old one-line bubble:
- * wide enough at phone size that her chips sit one line each. */
+/* ---------- v8: the control panel, and bubbles a thumb can hit ----------
+ * A tap on the Spark opens a panel, not a scrolling talk.
+ * One short line of hers at the top, the day's coordinate in
+ * small type, any short rows the state carries, and a grid of
+ * big bubbles that simply appear — every bubble at least
+ * 48px tall, labelled in a word or two, answering the press
+ * visibly the moment it lands. A state replaces the state
+ * before it; nothing in the panel scrolls. Nothing waits on
+ * a hover: there is no hover on a phone. Her light — the
+ * halo the panel stands in — borrows the hue family of the
+ * moon she is under (--spark-moon-hue, set from the
+ * calendar's own element for that moon); her seed-grown
+ * body colours never take it. */
+
+/* The panel gets a definite width — wide enough at phone
+ * size for three bubbles across — and the presence places
+ * it beside the Spark at open time, clamped to the view. */
 .spark-presence-bubble {
-  max-width: min(344px, 88vw);
+  width: min(356px, calc(100vw - 24px));
+  max-width: calc(100vw - 24px);
 }
 
-.spark-convo {
-  margin-top: 8px;
-  border-top: 1px solid var(--spark-line);
-  padding-top: 8px;
-}
-
-.spark-convo-thread {
-  max-height: 190px;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}
-
-.spark-convo-line {
-  margin: 0 0 7px !important;
-  font-size: 0.92rem !important;
-  line-height: 1.45;
-}
-
-.spark-convo-line strong {
-  color: var(--spark-gold);
-  font-weight: 600;
-}
-
-.spark-convo-line .spark-guide-doors li,
-.spark-convo-line .spark-trail-steps li {
-  margin-bottom: 6px;
-}
-
-.spark-convo-line .spark-guide-doors a,
-.spark-convo-line .spark-trail-steps a {
-  display: inline-block;
-  padding: 4px 2px;
-}
-
-.spark-convo-reply {
-  margin: 0 0 7px !important;
-  text-align: right;
-  font-size: 0.85rem !important;
-  color: var(--spark-teal);
-}
-
-.spark-convo-chips {
-  display: flex;
-  flex-wrap: wrap;
+.spark-panel-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
   margin-top: 8px;
 }
 
-.spark-chip {
-  min-height: 44px;
-  padding: 10px 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(45, 212, 191, 0.55);
-  background: rgba(45, 212, 191, 0.1);
+.spark-panel-bubble {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 56px;
+  min-width: 0;
+  padding: 8px 4px;
+  border-radius: 16px;
+  border: 1px solid rgba(45, 212, 191, 0.45);
+  background: rgba(45, 212, 191, 0.08);
   color: var(--spark-ink);
   font: inherit;
-  font-size: 0.88rem;
-  line-height: 1.2;
+  font-size: 0.85rem;
+  line-height: 1.15;
   cursor: pointer;
   touch-action: manipulation;
   transition: transform 0.08s ease, background 0.08s ease;
 }
 
-.spark-chip:hover,
-.spark-chip:focus-visible {
-  background: rgba(45, 212, 191, 0.22);
+.spark-panel-bubble:hover,
+.spark-panel-bubble:focus-visible {
+  background: rgba(45, 212, 191, 0.2);
 }
 
-.spark-chip:active {
-  transform: scale(0.95);
-  background: rgba(45, 212, 191, 0.32);
-}
-
-/* The standing links row, made tappable: pills a thumb can hit,
- * not bare words. */
-.spark-presence-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  align-items: center;
-}
-
-.spark-presence-links a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 40px;
-  padding: 6px 11px;
-  border: 1px solid var(--spark-line);
-  border-radius: 999px;
-  text-decoration: none;
-  font-size: 0.85rem;
-}
-
-.spark-presence-links a:active {
-  background: rgba(217, 164, 65, 0.2);
-}
-
-/* The care and share buttons, brought up to the same size. */
-.spark-care-buttons button {
-  min-height: 44px;
-  padding: 10px 6px;
-  touch-action: manipulation;
-  transition: transform 0.08s ease, background 0.08s ease;
-}
-
-.spark-care-buttons button:active {
-  transform: scale(0.95);
-  background: rgba(217, 164, 65, 0.32);
-}
-
-.spark-share-btn {
-  min-height: 44px;
-  padding: 10px 16px;
-  touch-action: manipulation;
-  transition: transform 0.08s ease, background 0.08s ease;
-}
-
-.spark-share-btn:active {
+.spark-panel-bubble:active {
   transform: scale(0.95);
   background: rgba(45, 212, 191, 0.3);
+}
+
+.spark-panel-icon {
+  font-size: 1.05rem;
+  line-height: 1;
+  color: var(--spark-gold);
+}
+
+.spark-panel-label {
+  text-align: center;
+  overflow-wrap: break-word;
+}
+
+.spark-panel-state {
+  font-size: 0.68rem;
+  color: var(--spark-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* The day's one thing stands first, wide, in gold. */
+.spark-panel-onething {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  gap: 8px;
+  min-height: 52px;
+  border-color: rgba(217, 164, 65, 0.65);
+  background: rgba(217, 164, 65, 0.12);
+}
+
+/* In the Guide state the grid carries doors: gold-edged. */
+.spark-guide-doors .spark-panel-bubble {
+  border-color: rgba(217, 164, 65, 0.4);
+  background: rgba(217, 164, 65, 0.07);
+}
+
+.spark-walker .spark-presence-bubble {
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.45),
+    0 0 22px hsl(var(--spark-moon-hue, 43) 85% 60% / 0.16);
 }
 
 .spark-presence-button:active {
@@ -1131,14 +1008,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .spark-chip { transition: none; }
-  .spark-chip:active { transform: none; }
-  .spark-care-buttons button { transition: none; }
-  .spark-care-buttons button:active { transform: none; }
-  .spark-share-btn { transition: none; }
-  .spark-share-btn:active { transform: none; }
+  .spark-panel-bubble { transition: none; }
+  .spark-panel-bubble:active { transform: none; }
   .spark-presence-button:active { transform: none; }
-  .spark-convo-thread { scroll-behavior: auto; }
 }
 
 /* ---------- v6: touch, tricks, the echo game, moods ----------
@@ -1270,12 +1142,6 @@
 /* The echo game board, inside the talk. */
 .spark-echo {
   margin-top: 10px;
-}
-
-.spark-echo-status {
-  font-size: 0.92em;
-  opacity: 0.85;
-  margin: 0 0 8px;
 }
 
 .spark-echo-pads {
