@@ -82,32 +82,32 @@
 
 | Stylesheet | Pages |
 | --- | --- |
-| `docs/assets/css/living-ui.css` | 128 |
+| `docs/assets/css/living-ui.css` | 131 |
 | `docs/scripture/assets/scripture.css` | 93 |
-| `docs/assets/css/codex.css` | 38 |
-| `docs/assets/css/navigation.css` | 32 |
+| `docs/assets/css/codex.css` | 42 |
+| `docs/assets/css/navigation.css` | 35 |
+| `docs/assets/css/animations.css` | 19 |
 | `docs/theory/equations/assets/css/codex.css` | 19 |
 | `docs/theory/equations/assets/css/navigation.css` | 19 |
 | `docs/theory/equations/assets/css/theory.css` | 19 |
 | `docs/theory/equations/assets/css/living-ui.css` | 19 |
-| `docs/assets/css/animations.css` | 18 |
 | `docs/theory/assets/css/codex.css` | 15 |
 | `docs/theory/assets/css/navigation.css` | 15 |
 | `docs/theory/assets/css/theory.css` | 15 |
 
 | Script | Pages |
 | --- | --- |
-| `docs/assets/js/site.js` | 131 |
-| `docs/assets/js/living-ui.js` | 128 |
+| `docs/assets/js/site.js` | 134 |
+| `docs/assets/js/living-ui.js` | 131 |
 | `docs/scripture/assets/scripture.js` | 93 |
-| `docs/assets/js/living-search-launcher.js` | 26 |
+| `docs/assets/js/living-search-launcher.js` | 28 |
+| `docs/assets/js/living-codex.js` | 19 |
 | `docs/theory/equations/https:/cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js` | 19 |
 | `docs/theory/equations/assets/js/site.js` | 19 |
 | `docs/theory/equations/assets/js/living-search-launcher.js` | 19 |
 | `docs/theory/equations/assets/js/theory.js` | 19 |
 | `docs/theory/equations/assets/js/living-ui.js` | 19 |
-| `docs/assets/js/living-codex.js` | 18 |
-| `docs/assets/js/calendar-cor.js` | 16 |
+| `docs/assets/js/calendar-cor.js` | 17 |
 | `docs/theory/https:/cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js` | 15 |
 
 ## Protected systems (do not modify)
