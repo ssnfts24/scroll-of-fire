@@ -1,0 +1,75 @@
+/* Living Moon Theme — presentation only. The moon and day come from the
+   canonical Pattern Calendar (see living-moon-theme.js). Palettes are derived
+   from the calendar data's own fields for each moon: its name and its element
+   (PatternCalendarData.moons[].element). Fire moons lean ember, Water moons
+   lean teal and deep blue, Air moons lean pale silver-blue, Earth moons lean
+   stone and bronze, Aether moons lean gold. Adjacent moons stay related
+   through the site's teal/stone/gold family but never share a palette.
+   Backgrounds stay near-black so body text keeps WCAG AA contrast in every
+   moon (measured table in the PR). No motion is required; nothing here
+   animates, so reduced-motion is unaffected. */
+
+/* ---- Per-moon palettes (element-derived) ---- */
+/* M1 Seed Flame — Fire */        html[data-moon="1"]  { --lmt-accent:#ffb066; --lmt-bg:#130c07; --lmt-bg2:#0b0906; }
+/* M2 Root Waters — Water */      html[data-moon="2"]  { --lmt-accent:#6fd3c9; --lmt-bg:#081210; --lmt-bg2:#060a09; }
+/* M3 Breath Gate — Air */        html[data-moon="3"]  { --lmt-accent:#a8d8ff; --lmt-bg:#0a0f16; --lmt-bg2:#070a0e; }
+/* M4 Stone Witness — Earth */    html[data-moon="4"]  { --lmt-accent:#d8c391; --lmt-bg:#100e09; --lmt-bg2:#0a0906; }
+/* M5 Living Word — Aether */     html[data-moon="5"]  { --lmt-accent:#e8c877; --lmt-bg:#100d07; --lmt-bg2:#0a0805; }
+/* M6 Fire Trial — Fire */        html[data-moon="6"]  { --lmt-accent:#ff8a5c; --lmt-bg:#130a08; --lmt-bg2:#0b0705; }
+/* M7 Crown Balance — Aether */   html[data-moon="7"]  { --lmt-accent:#cfc4ff; --lmt-bg:#0e0a14; --lmt-bg2:#090710; }
+/* M8 Deep Mirror — Water */      html[data-moon="8"]  { --lmt-accent:#5fb8d8; --lmt-bg:#070f14; --lmt-bg2:#050a0d; }
+/* M9 Return Path — Earth */      html[data-moon="9"]  { --lmt-accent:#b9cf8e; --lmt-bg:#0d1008; --lmt-bg2:#080a05; }
+/* M10 Builder's Hand — Earth */  html[data-moon="10"] { --lmt-accent:#e0aa6e; --lmt-bg:#110d08; --lmt-bg2:#0a0805; }
+/* M11 Star Remembrance — Air */  html[data-moon="11"] { --lmt-accent:#b9c8ff; --lmt-bg:#0b0d16; --lmt-bg2:#07080e; }
+/* M12 River of Signs — Water */  html[data-moon="12"] { --lmt-accent:#62c9e8; --lmt-bg:#081118; --lmt-bg2:#050a0e; }
+/* M13 Completion Seal — Aether */html[data-moon="13"] { --lmt-accent:#f0d9a0; --lmt-bg:#0f0c06; --lmt-bg2:#0a0805; }
+/* Day Out of Time — outside the count: still, pale, set apart */
+html[data-moon="outside"] { --lmt-accent:#cfd4d1; --lmt-bg:#0c0d0d; --lmt-bg2:#080909; }
+
+/* ---- Daypart light (visitor's local hour; presentation only) ---- */
+html[data-daypart="morning"] { --lmt-glow-strength:.18; --lmt-daypart-tint:#ffd9a0; }
+html[data-daypart="day"]     { --lmt-glow-strength:.12; --lmt-daypart-tint:#cfe8ff; }
+html[data-daypart="dusk"]    { --lmt-glow-strength:.20; --lmt-daypart-tint:#ff9a66; }
+html[data-daypart="night"]   { --lmt-glow-strength:.08; --lmt-daypart-tint:#7a8fc9; }
+
+/* ---- The wash: whole page takes the moon's light ---- */
+html[data-lmt="on"] {
+  --lmt-accent-day: color-mix(in oklab, var(--lmt-accent) calc(100% - var(--lmt-day-shift, 0%)), #ffffff);
+  --moon-accent: var(--lmt-accent-day);
+  --day-accent: var(--lmt-accent-day);
+}
+html[data-lmt="on"] body {
+  background-color: var(--lmt-bg) !important;
+  background-image:
+    radial-gradient(120% 55% at 50% -10%, color-mix(in oklab, var(--lmt-daypart-tint, #ffffff) calc(var(--lmt-glow-strength, .12) * 100%), transparent), transparent 62%),
+    radial-gradient(90% 50% at 85% 110%, color-mix(in oklab, var(--lmt-accent) 7%, transparent), transparent 60%),
+    linear-gradient(180deg, var(--lmt-bg), var(--lmt-bg2)) !important;
+}
+
+/* ---- Day line + today's one thing ---- */
+.lmt-dayline {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .45rem .9rem;
+  padding: .45rem 1rem .55rem;
+  background: color-mix(in oklab, var(--lmt-bg2, #0a0a0a) 82%, #000000);
+  border-bottom: 1px solid color-mix(in oklab, var(--lmt-accent, #f3c97a) 45%, transparent);
+  color: #eae7df; font-size: .86rem; line-height: 1.35;
+  position: relative; z-index: 60;
+}
+.lmt-dayline-coord { font-weight: 600; letter-spacing: .01em; white-space: nowrap; }
+.lmt-dayline-track {
+  flex: 1 1 90px; min-width: 70px; height: 5px; border-radius: 999px;
+  background: color-mix(in oklab, var(--lmt-accent, #f3c97a) 18%, #222222);
+  overflow: hidden; display: inline-block;
+}
+.lmt-dayline-fill {
+  display: block; height: 100%; border-radius: 999px;
+  width: calc(var(--lmt-day-progress, 0) * 100%);
+  background: var(--lmt-accent-day, var(--lmt-accent, #f3c97a));
+}
+.lmt-onething {
+  display: inline-flex; flex-wrap: wrap; gap: .35rem; align-items: baseline;
+  color: #eae7df; text-decoration: none; min-height: 28px;
+}
+.lmt-onething-label { color: var(--lmt-accent-day, var(--lmt-accent, #f3c97a)); font-weight: 700; white-space: nowrap; }
+.lmt-onething-text { color: #eae7df; }
+.lmt-onething:hover .lmt-onething-text, .lmt-onething:focus-visible .lmt-onething-text { text-decoration: underline; }

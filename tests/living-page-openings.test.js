@@ -265,6 +265,12 @@ test("the living line never invents a coordinate", () => {
     });
   assert.deepEqual(offenders, [],
     "every main-house page with the living opening must carry the PatternCalendar");
+  // Pages without temporal code load no calendar: the line stays civil-only.
+  // (The main house, shop included, gained the calendar with the Living Moon
+  // Theme so every room can change with the moon; 404.html still carries none.)
+  const shop = read("docs/404.html");
+  assert.ok(!shop.includes("pattern-calendar"),
+    "404.html carries no PatternCalendar, so its opening shows the civil date only");
   // A page that does carry the calendar gets the full coordinate.
   const moons = read("docs/moons.html");
   assert.ok(moons.includes("pattern-calendar"),
