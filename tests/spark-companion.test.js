@@ -636,6 +636,222 @@ test("the Spark has a 3D body: seed-grown WebGL, honestly falling back to the fl
   }
 });
 
+test("v3 care: kindling, play, and rest are counted, and the bond grows gently", () => {
+  let record = Core.newRecord({ seed: SEED_A, name: "Nori", civilDate: "2026-11-18" });
+  record = Core.applyCare(record, { action: "kindle", patternDay: 216 });
+  record = Core.applyCare(record, { action: "kindle", patternDay: 216 });
+  let care = Core.careOf(record);
+  assert.equal(care.kindles, 2, "every kindle is remembered");
+  assert.equal(care.bond, 1, "but the bond warms once a day");
+  record = Core.applyCare(record, { action: "kindle", patternDay: 217 });
+  assert.equal(Core.careOf(record).bond, 2, "a new day warms it again");
+  record = Core.applyCare(record, { action: "play", patternDay: 217 });
+  record = Core.applyCare(record, { action: "play", patternDay: 217 });
+  record = Core.applyCare(record, { action: "play", patternDay: 217 });
+  care = Core.careOf(record);
+  assert.equal(care.plays, 3);
+  assert.equal(care.bond, 2 + 4, "the first two chases of a day run deepest");
+  record = Core.applyCare(record, { action: "rest", patternDay: 217 });
+  assert.equal(Core.careOf(record).bond, 7);
+  const before = Core.growthPoints(record);
+  assert.ok(before > 0, "the bond counts toward growth");
+  /* Care never subtracts: an unknown act changes nothing, and a
+   * record kept by an earlier build reads as unharmed. */
+  const untouched = Core.applyCare(record, { action: "neglect", patternDay: 218 });
+  assert.deepEqual(Core.careOf(untouched), Core.careOf(record));
+  const legacy = { seed: SEED_A, daysSeen: [216], pagesSeen: [], practiceDays: [] };
+  assert.equal(Core.careOf(legacy).bond, 0);
+});
+
+test("v3 care state: plain words, and behaviour shaped by today's care", () => {
+  const companion = Core.generate(SEED_A);
+  let record = Core.newRecord({ seed: SEED_A, name: "Nori", civilDate: "2026-11-18" });
+  let state = Core.careStateFor({ record, companion, todayPatternDay: 216 });
+  assert.equal(state.behavior.playful, false);
+  assert.match(state.lines.join(" "), /Bond:/);
+  record = Core.applyCare(record, { action: "play", patternDay: 216 });
+  record = Core.applyCare(record, { action: "kindle", patternDay: 216 });
+  state = Core.careStateFor({ record, companion, todayPatternDay: 216 });
+  assert.equal(state.behavior.playful, true, "played with today, it plays back");
+  assert.ok(state.behavior.playfulnessBoost > 0);
+  assert.equal(state.kindledToday, true);
+  assert.match(state.warmth, /kindled today/);
+  record = Core.applyCare(record, { action: "rest", patternDay: 216 });
+  state = Core.careStateFor({ record, companion, todayPatternDay: 216 });
+  assert.ok(state.behavior.wanderCalm < 1, "rested today, it travels calm");
+  const tomorrow = Core.careStateFor({ record, companion, todayPatternDay: 217 });
+  assert.equal(tomorrow.behavior.playful, false, "a new day starts fresh — nothing is owed");
+});
+
+test("v3 trail: three small steps, framed as discovery, completed by walking them", () => {
+  const companion = Core.generate(SEED_A);
+  const today = { moon: 8, day: 20, dayOfPatternYear: 216 };
+  let record = Core.newRecord({ seed: SEED_A, name: "Nori", civilDate: "2026-11-18" });
+  record = Core.recordVisit(record, { patternDay: 216, page: "index.html" });
+  const trail = Core.trailFor({ record, companion, today, page: "index.html" });
+  assert.equal(trail.steps.length, 3);
+  const [telling, door, practice] = trail.steps;
+  assert.equal(telling.href, "moons.html");
+  assert.match(door.label, /I found a door for us/, "the door is a discovery, not a gap");
+  assert.ok(!record.pagesSeen.includes(door.href), "the door is one the walk has not opened");
+  assert.equal(door.done, false);
+  assert.equal(practice.done, false);
+  const bondBefore = Core.careOf(record).bond;
+  record = Core.recordTrailStep(record, { patternDay: 216, stepId: "telling" });
+  record = Core.recordTrailStep(record, { patternDay: 216, stepId: "telling" });
+  assert.equal(Core.careOf(record).bond, bondBefore + 1, "a step deepens the bond once");
+  const again = Core.trailFor({ record, companion, today, page: "moons.html" });
+  assert.equal(again.steps[0].done, true);
+  record = Core.recordPractice(record, { patternDay: 216 });
+  const walked = Core.trailFor({ record, companion, today, page: "teach.html" });
+  assert.equal(walked.steps[2].done, true, "the practice step completes from the practice day itself");
+  const nextDay = Core.trailFor({
+    record,
+    companion,
+    today: { moon: 8, day: 21, dayOfPatternYear: 217 },
+    page: "index.html"
+  });
+  assert.equal(nextDay.steps[0].done, false, "a new day keeps only its own steps");
+});
+
+test("v3 copy audit: no absence framing anywhere the Spark speaks", () => {
+  const banned = /you have not|haven't|have not|not done|not yet|missed|incomplete/i;
+  const companion = Core.generate(SEED_A);
+  const today = { moon: 8, day: 20, dayOfPatternYear: 216 };
+  const spoken = [];
+  spoken.push(Core.encounterFor({ companion }).greeting);
+  spoken.push(Core.encounterFor({ companion }).intro);
+  spoken.push(Core.encounterFor({ companion }).invite);
+  let fresh = Core.newRecord({ seed: SEED_A, name: "Nori", civilDate: "2026-11-18" });
+  spoken.push(Core.guidanceFor({ record: fresh, companion, todayPatternDay: 216 }).text);
+  fresh = Core.recordVisit(fresh, { patternDay: 216, page: "index.html" });
+  fresh = Core.recordVisit(fresh, { patternDay: 217, page: "moons.html" });
+  spoken.push(Core.guidanceFor({ record: fresh, companion, todayPatternDay: 217 }).text);
+  spoken.push(Core.guidanceFor({ record: fresh, companion, todayPatternDay: 217 }).text);
+  for (const notice of Core.noticesFor({ record: fresh, companion, todayPatternDay: 217 })) spoken.push(notice.text);
+  for (const step of Core.trailFor({ record: fresh, companion, today, page: "index.html" }).steps) spoken.push(step.label);
+  for (const line of Core.careStateFor({ record: fresh, companion, todayPatternDay: 217 }).lines) spoken.push(line);
+  for (const text of spoken) assert.ok(!banned.test(text), `absence framing in: ${text}`);
+  /* And in the source itself: no string literal in any Spark
+   * file may carry the banned framing. Comments are not copy;
+   * literals are. */
+  const literal = /'([^'\\\n]*)'|"([^"\\\n]*)"|`([^`\\]*)`/g;
+  for (const rel of [
+    "docs/assets/js/spark-companion.js",
+    "docs/assets/js/spark-presence.js",
+    "docs/assets/js/spark-companions-page.js",
+    "docs/companions.html"
+  ]) {
+    const src = read(rel);
+    let m;
+    while ((m = literal.exec(src)) !== null) {
+      const text = m[1] || m[2] || m[3] || "";
+      assert.ok(!banned.test(text), `${rel} carries banned copy: ${text.slice(0, 80)}`);
+    }
+  }
+});
+
+test("v3 guide: doors come only from the page's own links; explanations from its own words", () => {
+  const doors = Core.doorsFor({
+    page: "theory.html",
+    links: [
+      { href: "moons.html", label: "Calendar" },
+      { href: "moons.html", label: "Duplicate" },
+      { href: "theory.html", label: "Itself" },
+      { href: "some-real-page.html", label: "A real door" },
+      { href: "index.html", label: "Home" }
+    ]
+  });
+  const hrefs = doors.map((d) => d.href);
+  assert.deepEqual(new Set(hrefs).size, hrefs.length, "no door offered twice");
+  assert.ok(!hrefs.includes("theory.html"), "the page you are on is not a next door");
+  assert.ok(hrefs.every((h) => ["moons.html", "some-real-page.html", "index.html"].includes(h)), "only doors the page carries");
+  const moons = doors.find((d) => d.href === "moons.html");
+  assert.match(moons.label, /13 Moons/, "a known door gets its place-name");
+  const ex = Core.explainFor({
+    explainerText: "One plain sentence. A second one follows. A third must not ride along.",
+    introText: "Ignored intro."
+  });
+  assert.equal(ex.source, "explainer");
+  assert.ok(!ex.text.includes("third"), "two sentences at most");
+  const fallback = Core.explainFor({ explainerText: "", introText: "The page's own opening. Said plainly." });
+  assert.equal(fallback.source, "page");
+  assert.match(fallback.text, /opening/);
+  assert.equal(Core.explainFor({ explainerText: "", introText: "" }).source, "none");
+  const resume = Core.resumeFor({
+    record: { prevPage: "moons.html" }
+  });
+  assert.equal(resume.href, "moons.html");
+  assert.match(resume.text, /left off at the 13 Moons page/);
+});
+
+test("v3 life rides the presence: care, chase, rest, trail, and a real guide", () => {
+  const presence = read("docs/assets/js/spark-presence.js");
+  for (const hook of [
+    "spark-care-kindle",
+    "spark-care-play",
+    "spark-care-rest",
+    "applyCare",
+    "careStateFor",
+    "trailFor",
+    "recordTrailStep",
+    "startPlay",
+    "catchSpark",
+    "is-resting",
+    "is-napping",
+    "perchTarget",
+    "ANTICS_CAP",
+    "pageLinks",
+    "pageExplainSource",
+    "doorsFor",
+    "explainFor",
+    "resumeFor",
+    "spark-guide-around",
+    "spark-guide-explain"
+  ]) {
+    assert.ok(presence.includes(hook), `the presence carries ${hook}`);
+  }
+  assert.ok(!/fetch\(|XMLHttpRequest|sendBeacon/.test(presence), "v3 sends nothing anywhere either");
+  const css = read("docs/assets/css/spark-companion.css");
+  for (const hook of ["spark-kindling", "spark-playful", "spark-rest-breathe", ".spark-trail-steps", ".spark-guide-doors"]) {
+    assert.ok(css.includes(hook), `the stylesheet carries ${hook}`);
+  }
+  const blockStart = css.indexOf("prefers-reduced-motion");
+  const reduced = css.slice(blockStart, blockStart + 2400);
+  assert.ok(reduced.includes(".is-playful"), "reduced motion stills the chase-wait bounce");
+  assert.ok(reduced.includes(".is-resting"), "reduced motion stills the resting breath");
+});
+
+test("v3 share card: the keeper's own panel facts, plainly a Codex Spark, made on-device", () => {
+  const companion = Core.generate(SEED_A);
+  let record = Core.newRecord({ seed: SEED_A, name: "Nori", civilDate: "2026-11-18" });
+  record = Core.recordVisit(record, { patternDay: 216, page: "index.html" });
+  const card = Core.shareCardFor({
+    record,
+    companion,
+    today: { moon: 8, day: 20, dayOfPatternYear: 216 }
+  });
+  assert.equal(card.name, "Nori", "the name it answers to stands first");
+  assert.ok(card.seedLine.includes(companion.name), "its seed name rides underneath");
+  assert.match(card.kindLine, new RegExp(companion.kindName), "its kind and character");
+  assert.match(card.stageLine, /Stage 1 of 3: Ember/);
+  assert.match(card.bornLine, /Born Moon 8 · Pattern Day 216/, "the day it was born from");
+  assert.match(card.todayLine, /Moon 8 · Day 20 · Pattern Day 216/, "and today, in Living Time");
+  assert.match(card.brand, /A Codex Spark/, "the card says plainly what it is");
+  const doot = Core.shareCardFor({
+    record: Core.newRecord({ seed: Core.makeSeed({ moon: null, patternDay: null, kindIndex: 5, nonce: "doot0001" }), name: "", civilDate: "2027-04-16" }),
+    companion: Core.generate(Core.makeSeed({ moon: null, patternDay: null, kindIndex: 5, nonce: "doot0001" })),
+    today: { moon: null, moonName: "Day Out of Time", dayOfPatternYear: 365 }
+  });
+  assert.match(doot.bornLine, /Day Out of Time/, "a Day Out of Time birth invents no moon");
+  const presence = read("docs/assets/js/spark-presence.js");
+  assert.ok(presence.includes("spark-share-btn"), "the panel carries the share action");
+  assert.ok(presence.includes("shareCardFor"), "the card's words come from the core");
+  assert.ok(presence.includes("toDataURL"), "the picture is drawn and downloaded locally");
+  assert.ok(presence.includes('a.download'), "as the keeper's own file");
+  assert.ok(!/fetch\(|XMLHttpRequest|sendBeacon/.test(presence), "sharing uploads nothing, posts nothing");
+});
+
 test("no R1.7 protected file is touched by the Spark", () => {
   const manifest = read("docs/development/R1.7-PROTECTED-MANIFEST.md");
   for (const rel of [

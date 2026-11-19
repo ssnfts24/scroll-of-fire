@@ -531,7 +531,14 @@
        * growth can be announced once, when it is new. */
       lastPage: null,
       prevPage: null,
-      stageSeen: 0
+      stageSeen: 0,
+      /* The care life: kindled, played with, rested — counted
+       * from real interactions on this device, and the bond they
+       * grow. Care only ever adds; time away is met with welcome,
+       * never with loss. And today's trail: the day it belongs
+       * to, and the steps walked so far. */
+      care: { kindles: 0, plays: 0, rests: 0, bond: 0, kindleDay: null, playDay: null, playCount: 0, restDay: null },
+      trail: { day: null, done: [] }
     };
   }
 
@@ -570,7 +577,10 @@
     const returnDays = Math.max(0, (record.daysSeen || []).length - 1);
     const practice = (record.practiceDays || []).length;
     const pages = Math.min(10, (record.pagesSeen || []).length);
-    return returnDays * 2 + practice * 3 + pages;
+    /* The bond counts too — care is faithfulness, felt up close.
+     * Capped, so care deepens growth without replacing the walk. */
+    const bond = Math.min(12, careOf(record).bond);
+    return returnDays * 2 + practice * 3 + pages + bond;
   }
 
   function stageFor(points, pace = 1) {
@@ -605,7 +615,8 @@
       counts: {
         returnDays: Math.max(0, ((record && record.daysSeen) || []).length - 1),
         practiceDays: ((record && record.practiceDays) || []).length,
-        pagesSeen: Math.min(10, ((record && record.pagesSeen) || []).length)
+        pagesSeen: Math.min(10, ((record && record.pagesSeen) || []).length),
+        bond: careOf(record).bond
       }
     };
   }
@@ -638,6 +649,109 @@
     return `I grew — Day ${days} of us. ${name} is ${stage.name} now.`;
   }
 
+  /* ---- the care life: kindled, played with, rested ---- */
+
+  /* A record kept by an earlier build carries no care block;
+   * careOf reads it as a fresh, uncared-for-but-unharmed Spark —
+   * care starts counting from the first kind thing done, and
+   * nothing is ever owed or lost. */
+  function careOf(record) {
+    const c = (record && record.care) || {};
+    const num = (v) => (Number.isFinite(v) && v > 0 ? Math.floor(v) : 0);
+    return {
+      kindles: num(c.kindles),
+      plays: num(c.plays),
+      rests: num(c.rests),
+      bond: num(c.bond),
+      kindleDay: c.kindleDay != null ? c.kindleDay : null,
+      playDay: c.playDay != null ? c.playDay : null,
+      playCount: num(c.playCount),
+      restDay: c.restDay != null ? c.restDay : null
+    };
+  }
+
+  /* One act of care, recorded. Each act counts in full — the
+   * Spark remembers every kindle, every chase, every rest. The
+   * bond it grows is gentler about the day: a kindle warms the
+   * bond once a day, a rest settles it once a day, and the first
+   * two chases of a day run deepest. Care never subtracts. */
+  function applyCare(record, { action, patternDay }) {
+    const care = careOf(record);
+    const day = patternDay != null ? patternDay : null;
+    if (action === "kindle") {
+      care.kindles += 1;
+      if (day != null && care.kindleDay !== day) {
+        care.bond += 1;
+        care.kindleDay = day;
+      }
+    } else if (action === "play") {
+      care.plays += 1;
+      if (day != null) {
+        if (care.playDay !== day) {
+          care.playDay = day;
+          care.playCount = 0;
+        }
+        care.playCount += 1;
+        if (care.playCount <= 2) care.bond += 2;
+      }
+    } else if (action === "rest") {
+      care.rests += 1;
+      if (day != null && care.restDay !== day) {
+        care.bond += 1;
+        care.restDay = day;
+      }
+    } else {
+      return { ...record };
+    }
+    return { ...record, care };
+  }
+
+  /* The care state, in plain words, and the shape it gives the
+   * Spark's behaviour: played with today, it plays back; rested
+   * today, it moves calm; kindled today, it glows warm. Derived
+   * from the record and the day — never from a clock ticking
+   * down, never a debt. */
+  function careStateFor({ record, companion, todayPatternDay }) {
+    const care = careOf(record);
+    const day = todayPatternDay != null ? todayPatternDay : null;
+    const kindledToday = day != null && care.kindleDay === day;
+    const playedToday = day != null && care.playDay === day && care.playCount > 0;
+    const restedToday = day != null && care.restDay === day;
+    const warmth = kindledToday
+      ? "glowing warm — kindled today"
+      : care.kindles > 0
+        ? "warm from your kindling"
+        : "cool and calm, ready when you are";
+    const lines = [
+      `Warmth: ${warmth}.`,
+      playedToday
+        ? "Playful today — the chase is still in its step."
+        : "Play: a chase is one tap away, whenever you like.",
+      restedToday
+        ? "Rested today — moving calm and slow."
+        : "Rest: it can curl up and breathe quietly whenever you ask.",
+      care.bond > 0
+        ? `Bond: ${care.bond} care point${care.bond === 1 ? "" : "s"}, grown from kindling, play, rest, and trails walked together.`
+        : "Bond: it grows from kindling, play, rest, and trails walked together."
+    ];
+    return {
+      warmth,
+      kindledToday,
+      playedToday,
+      restedToday,
+      bond: care.bond,
+      counts: { kindles: care.kindles, plays: care.plays, rests: care.rests },
+      lines,
+      behavior: {
+        playful: playedToday,
+        rested: restedToday,
+        kindled: kindledToday,
+        playfulnessBoost: playedToday ? 0.35 : 0,
+        wanderCalm: restedToday ? 0.6 : 1
+      }
+    };
+  }
+
   /* ---- guidance: lines drawn only from what the record holds ---- */
 
   function guidanceFor({ record, companion, todayPatternDay }) {
@@ -662,12 +776,12 @@
       );
     if (practice.length === 0)
       return say(
-        `You have not sealed a practice yet. A short one on the practice page is a good first mark.`,
+        `A short practice on the practice page makes a lovely first mark — one small seal, and the day is counted.`,
         "teach.html"
       );
     if (!pages.some((p) => p.includes("living-time-sphere")))
       return say(
-        `You have not stood in front of the Sphere together yet. It is the whole year, turning.`,
+        `The Sphere is waiting — the whole year, turning, all in one place. Shall we stand in front of it together?`,
         "living-time-sphere.html"
       );
     if (!pages.some((p) => p.includes("witness")))
@@ -818,6 +932,151 @@
     return { name, coordinate, kind: "inferred", text: standing.text, href: standing.href };
   }
 
+  /* ---- the daily trail: three small steps, offered as discovery ---- */
+
+  /* Each day the Spark lays a small trail: hear the day's
+   * telling, open a door it found for the two of you, seal one
+   * small practice. Every step is an invitation, framed as
+   * discovery — a door found, a telling waiting — never as a
+   * list of things undone. A step completes by being walked:
+   * the telling and the door by arriving there today, the
+   * practice by a practice day sealed today, which the record
+   * already counts honestly. */
+  function trailFor({ record, companion, today, page }) {
+    if (!today || today.dayOfPatternYear == null) return { day: null, steps: [], complete: false };
+    const day = today.dayOfPatternYear;
+    const seen = (record && record.pagesSeen) || [];
+    const practice = (record && record.practiceDays) || [];
+    const kept =
+      record && record.trail && record.trail.day === day && Array.isArray(record.trail.done)
+        ? record.trail.done
+        : [];
+    const doneSet = new Set(kept);
+    const steps = [];
+    steps.push({
+      id: "telling",
+      label: "Hear today's telling together",
+      place: "the 13 Moons page",
+      href: "moons.html",
+      done: doneSet.has("telling")
+    });
+    const door = Object.keys(PAGE_GUIDE).find(
+      (key) => !seen.includes(key) && key !== page && key !== "companions.html"
+    );
+    if (door) {
+      steps.push({
+        id: "door",
+        label: `I found a door for us: ${PAGE_GUIDE[door].place}`,
+        place: PAGE_GUIDE[door].place,
+        href: door,
+        done: doneSet.has("door")
+      });
+    }
+    steps.push({
+      id: "practice",
+      label: "Seal one small practice",
+      place: "the practice page",
+      href: "teach.html",
+      done: doneSet.has("practice") || practice.includes(day)
+    });
+    const stepsOut = steps.slice(0, 3);
+    return {
+      day,
+      steps: stepsOut,
+      complete: stepsOut.length > 0 && stepsOut.every((s) => s.done)
+    };
+  }
+
+  /* A trail step walked, recorded. The day rolls the slate
+   * clean — a new day keeps only its own steps. Each step,
+   * walked once, deepens the bond by one. */
+  function recordTrailStep(record, { patternDay, stepId }) {
+    if (patternDay == null || !stepId) return { ...record };
+    const kept =
+      record && record.trail && record.trail.day === patternDay && Array.isArray(record.trail.done)
+        ? record.trail.done
+        : [];
+    if (kept.includes(stepId)) return { ...record };
+    const care = careOf(record);
+    care.bond += 1;
+    return {
+      ...record,
+      care,
+      trail: { day: patternDay, done: [...kept, stepId] }
+    };
+  }
+
+  /* ---- the real guide: doors from the page itself ---- */
+
+  /* "Show me around": the doors offered are the doors this very
+   * page carries — its own links, read by the presence from the
+   * page as it stands. The core only sorts and names them:
+   * pages the guide knows get their place-names; the rest keep
+   * the words the page itself gives them. A door that is not on
+   * the page is never offered. */
+  function doorsFor({ links, page }) {
+    const out = [];
+    const seenHrefs = new Set();
+    const list = Array.isArray(links) ? links : [];
+    const clean = [];
+    for (const link of list) {
+      if (!link || typeof link.href !== "string") continue;
+      const href = link.href.split("#")[0];
+      if (!href.endsWith(".html") || href === page || seenHrefs.has(href)) continue;
+      seenHrefs.add(href);
+      clean.push({ href, label: String(link.label || "").replace(/\s+/g, " ").trim() });
+    }
+    for (const item of clean) {
+      const info = PAGE_GUIDE[item.href];
+      if (info) out.push({ href: item.href, label: info.place, line: info.line });
+    }
+    for (const item of clean) {
+      if (PAGE_GUIDE[item.href]) continue;
+      if (item.label) out.push({ href: item.href, label: item.label, line: "" });
+    }
+    return out.slice(0, 5);
+  }
+
+  /* "Explain this page": the words come from the page itself —
+   * first its own explainer, where the page carries one (the
+   * spoken tours state themselves in plain words), and otherwise
+   * its own opening words. The core only chooses and shortens:
+   * two sentences at most, and it says where they came from. */
+  function explainFor({ explainerText, introText }) {
+    const pick = (text) => {
+      const clean = String(text || "").replace(/\s+/g, " ").trim();
+      if (!clean) return "";
+      const sentences = clean.match(/[^.!?]+[.!?]+/g) || [clean];
+      let out = "";
+      for (const s of sentences.slice(0, 2)) {
+        if ((out + s).length > 320) break;
+        out += s;
+      }
+      return (out || clean.slice(0, 320)).trim();
+    };
+    const fromExplainer = pick(explainerText);
+    if (fromExplainer) return { text: fromExplainer, source: "explainer" };
+    const fromIntro = pick(introText);
+    if (fromIntro) return { text: fromIntro, source: "page" };
+    return { text: "", source: "none" };
+  }
+
+  /* "Where was I?": the thread, picked back up. Drawn from the
+   * page walked just before this one — the record's own memory,
+   * stated as a present fact and an open door. */
+  function resumeFor({ record }) {
+    const prev = record && record.prevPage ? record.prevPage : null;
+    const info = prev ? PAGE_GUIDE[prev] : null;
+    if (prev && info) {
+      return {
+        text: `Last time, you left off at ${info.place} — ${info.line}. The door is right here.`,
+        href: prev
+      };
+    }
+    if (prev) return { text: "Last time, you left off on a page just before this one.", href: prev };
+    return { text: "Our walk starts here — every door from this page is open.", href: null };
+  }
+
   /* The things a Spark has noticed, for its panel. Drawn only
    * from the record on this device, and every one labeled:
    * observed means counted from the record; inferred means a
@@ -838,7 +1097,11 @@
     if (practice >= 1) {
       out.push({ kind: "observed", text: `Practice sealed on ${plural(practice, "day")}.` });
     } else if (days >= 2) {
-      out.push({ kind: "observed", text: "No practice day sealed yet." });
+      out.push({
+        kind: "inferred",
+        text: "A short practice would suit today — the practice page keeps it small.",
+        href: "teach.html"
+      });
     }
     const guide = guidanceFor({ record, companion, todayPatternDay });
     out.push({ kind: "inferred", text: guide.text, href: guide.href });
@@ -847,11 +1110,40 @@
     if (untried) {
       out.push({
         kind: "inferred",
-        text: `A door you have not tried yet: ${PAGE_GUIDE[untried].place}.`,
+        text: `A door to discover together: ${PAGE_GUIDE[untried].place}.`,
         href: untried
       });
     }
     return out.slice(0, 5);
+  }
+
+  /* The share card's words, in one place: exactly what the
+   * keeper already sees in their own panel — the name it
+   * answers to, its seed name underneath, its kind and
+   * character, its stage, the day it was born from, and today
+   * in Living Time. The card says plainly what it is: a Codex
+   * Spark. The drawing and the download happen in the browser;
+   * nothing is uploaded anywhere, ever. */
+  function shareCardFor({ record, companion, today }) {
+    const stage = stageOf(record, companion);
+    const name = displayName(record, companion);
+    const seedName = companion ? companion.name : NAME_FALLBACK;
+    const born =
+      !companion || companion.birthMoon == null
+        ? "Born on the Day Out of Time"
+        : `Born Moon ${companion.birthMoon} · Pattern Day ${companion.birthPatternDay}`;
+    return {
+      name,
+      seedLine: seedName !== name ? `Seed name: ${seedName}` : "Named by its seed",
+      kindLine: companion
+        ? `${companion.kindName} Spark — ${companion.temperament}, and ${companion.trait}`
+        : "",
+      stageLine: `Stage ${stage.index + 1} of ${STAGES.length}: ${stage.name}`,
+      bornLine: born,
+      todayLine: coordinateLineFor(today),
+      daysLine: `${((record && record.daysSeen) || []).length} day${((record && record.daysSeen) || []).length === 1 ? "" : "s"} together`,
+      brand: "A Codex Spark · codexofreality.org"
+    };
   }
 
   /* Everything the "Your Spark" panel shows, in one place: who
@@ -871,6 +1163,12 @@
       points: stage.points,
       daysTogether: ((record && record.daysSeen) || []).length,
       coordinate: coordinateLineFor(today),
+      care: careStateFor({
+        record,
+        companion,
+        todayPatternDay: today ? today.dayOfPatternYear : null
+      }),
+      trail: trailFor({ record, companion, today, page: null }),
       notices: noticesFor({
         record,
         companion,
@@ -917,6 +1215,15 @@
     growthEventFor,
     markStageSeen,
     growthLineFor,
+    careOf,
+    applyCare,
+    careStateFor,
+    trailFor,
+    recordTrailStep,
+    doorsFor,
+    explainFor,
+    resumeFor,
+    shareCardFor,
     guidanceFor,
     encounterFor,
     arrivalFor,

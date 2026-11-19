@@ -275,7 +275,44 @@
     panel.appendChild(list);
   }
 
-  function renderPresence(record, companion, today, arrival, growthLine, grew) {
+  /* The doors this page itself carries, read from the page as it
+   * stands: same-site page links, in the order the page offers
+   * them, with the words the page itself gives them. The guide
+   * offers only doors that are really here. */
+  function pageLinks() {
+    const out = [];
+    const seen = new Set();
+    document.querySelectorAll("a[href]").forEach((a) => {
+      const raw = a.getAttribute("href") || "";
+      if (!raw || raw.startsWith("#") || raw.startsWith("http") || raw.startsWith("mailto:") || raw.startsWith("tel:")) return;
+      const href = raw.split("#")[0].split("?")[0];
+      const file = href.split("/").pop();
+      if (!file.endsWith(".html") || seen.has(file)) return;
+      seen.add(file);
+      out.push({ href: file, label: (a.textContent || "").replace(/\s+/g, " ").trim().slice(0, 48) });
+    });
+    return out;
+  }
+
+  /* This page's own words about itself: its explainer's plain
+   * statement where it carries one (the spoken tours state the
+   * page in a paragraph), otherwise its own opening — the first
+   * heading and the first words under it. Nothing is invented:
+   * the guide reads the page, it does not describe it from
+   * memory. */
+  function pageExplainSource() {
+    const ex =
+      document.querySelector('section[id$="-explainer"] .section-heading p:not(.eyebrow)') ||
+      document.querySelector('[id$="-explainer"] p:not(.eyebrow)');
+    if (ex && ex.textContent.trim()) return { explainerText: ex.textContent.trim(), introText: "" };
+    const main = document.querySelector("main") || document.body;
+    const h = main.querySelector("h1, h2");
+    const p = main.querySelector("p");
+    const intro = [h ? h.textContent : "", p ? p.textContent : ""].join(" ").trim();
+    return { explainerText: "", introText: intro };
+  }
+
+  function renderPresence(record, companion, today, arrival, growthLine, grew, store) {
     const stage = Core.stageOf(record, companion);
     /* Arriving somewhere new — or just adopted — the Spark speaks
      * as a guide with a memory: today's coordinate first, then the
@@ -316,7 +353,23 @@
       `<a class="spark-presence-panel-link" href="#">Your Spark</a> ` +
       `<a class="spark-presence-visit" href="companions.html">Visit</a> ` +
       `<a class="spark-presence-sound" href="#">Sounds: on</a></p>` +
-      `<div class="spark-presence-panel" hidden></div></div>` +
+      `<p class="spark-presence-actions">` +
+      `<a class="spark-guide-around" href="#">Show me around</a> ` +
+      `<a class="spark-guide-explain" href="#">Explain this page</a> ` +
+      `<a class="spark-guide-resume" href="#">Where was I?</a> ` +
+      `<a class="spark-guide-today" href="#">Today</a></p>` +
+      `<div class="spark-guide-out" hidden></div>` +
+      `<div class="spark-presence-panel" hidden></div>` +
+      `<div class="spark-presence-care" hidden>` +
+      `<p class="spark-panel-row spark-care-head"><strong>Care</strong> <span class="spark-care-sub">— a pet's small life, kept on this device</span></p>` +
+      `<div class="spark-care-lines"></div>` +
+      `<p class="spark-care-buttons">` +
+      `<button type="button" class="spark-care-kindle">Kindle</button> ` +
+      `<button type="button" class="spark-care-play">Play</button> ` +
+      `<button type="button" class="spark-care-rest">Rest</button></p>` +
+      `<div class="spark-trail"></div>` +
+      `<p class="spark-share-row"><button type="button" class="spark-share-btn">Share my Spark</button> ` +
+      `<span class="spark-share-note">a portrait card, made here on your device — yours to post wherever you choose</span></p></div></div>` +
       `<button type="button" class="spark-presence-button" aria-expanded="false">` +
       `<span class="spark-presence-art">${Core.renderSVG(companion, { stage: stage.index })}</span>` +
       `<span class="spark-presence-name"></span></button>`;
@@ -339,8 +392,212 @@
     else go.remove();
     fillPanel(host, record, companion, today);
 
+    /* ---- v3: the care life and the real guide ---- */
+    const getRecord = () => (store ? store.get() : record);
+    const setRecord = (next) => {
+      if (store) store.set(next);
+      writeRecord(next);
+      fillPanel(host, getRecord(), companion, today);
+      fillCare();
+    };
+    const careBox = host.querySelector(".spark-presence-care");
+    const careLines = host.querySelector(".spark-care-lines");
+    const trailBox = host.querySelector(".spark-trail");
+    function fillCare() {
+      const current = getRecord();
+      const care = Core.careStateFor({
+        record: current,
+        companion,
+        todayPatternDay: today ? today.dayOfPatternYear : null
+      });
+      careLines.innerHTML = "";
+      for (const line of care.lines) {
+        const p = document.createElement("p");
+        p.className = "spark-panel-row spark-care-line";
+        p.textContent = line;
+        careLines.appendChild(p);
+      }
+      trailBox.innerHTML = "";
+      const trail = Core.trailFor({ record: current, companion, today, page: pageKey() });
+      if (trail.steps.length) {
+        const head = document.createElement("p");
+        head.className = "spark-panel-row spark-trail-head";
+        head.innerHTML = "";
+        const b = document.createElement("strong");
+        b.textContent = "Today's trail";
+        head.appendChild(b);
+        head.appendChild(
+          document.createTextNode(
+            trail.complete ? " — walked, all of it. Well done, both of you." : " — small steps, offered, never owed."
+          )
+        );
+        trailBox.appendChild(head);
+        const list = document.createElement("ul");
+        list.className = "spark-trail-steps";
+        for (const step of trail.steps) {
+          const li = document.createElement("li");
+          li.className = step.done ? "is-done" : "";
+          const mark = document.createElement("span");
+          mark.className = "spark-trail-mark";
+          mark.textContent = step.done ? "●" : "○";
+          li.appendChild(mark);
+          li.appendChild(document.createTextNode(" "));
+          const a = document.createElement("a");
+          a.href = step.href;
+          a.textContent = step.label;
+          li.appendChild(a);
+          list.appendChild(li);
+        }
+        trailBox.appendChild(list);
+      }
+    }
+    fillCare();
+
+    /* The guide's output: one small area under the actions,
+     * filled with text nodes and real links only. */
+    const guideOut = host.querySelector(".spark-guide-out");
+    function showGuide(build) {
+      guideOut.innerHTML = "";
+      build(guideOut);
+      guideOut.removeAttribute("hidden");
+    }
+    function guideLine(text, href, hrefLabel) {
+      showGuide((box) => {
+        const p = document.createElement("p");
+        p.className = "spark-guide-text";
+        p.textContent = text;
+        box.appendChild(p);
+        if (href) {
+          const a = document.createElement("a");
+          a.className = "spark-guide-door";
+          a.href = href;
+          a.textContent = hrefLabel || "Go there";
+          box.appendChild(a);
+        }
+      });
+    }
+    host.querySelector(".spark-guide-around").addEventListener("click", (event) => {
+      event.preventDefault();
+      const doors = Core.doorsFor({ links: pageLinks(), page: pageKey() });
+      if (!doors.length) {
+        guideLine("This page keeps its doors in the menu at the top — every one of them is real, and I walk them all with you.");
+        return;
+      }
+      showGuide((box) => {
+        const p = document.createElement("p");
+        p.className = "spark-guide-text";
+        p.textContent = "Doors from this very page — pick one and I'll come with you:";
+        box.appendChild(p);
+        const list = document.createElement("ul");
+        list.className = "spark-guide-doors";
+        for (const door of doors) {
+          const li = document.createElement("li");
+          const a = document.createElement("a");
+          a.href = door.href;
+          a.textContent = door.line ? `${door.label} — ${door.line}` : door.label;
+          li.appendChild(a);
+          list.appendChild(li);
+        }
+        box.appendChild(list);
+      });
+    });
+    host.querySelector(".spark-guide-explain").addEventListener("click", (event) => {
+      event.preventDefault();
+      const ex = Core.explainFor(pageExplainSource());
+      if (!ex.text) {
+        guideLine("This page speaks from its first lines — start at the top and I'll walk it with you.");
+        return;
+      }
+      guideLine(
+        ex.text +
+          (ex.source === "explainer"
+            ? " — in this page's own explainer's words."
+            : " — in this page's own opening words.")
+      );
+    });
+    host.querySelector(".spark-guide-resume").addEventListener("click", (event) => {
+      event.preventDefault();
+      const resume = Core.resumeFor({ record: getRecord() });
+      guideLine(resume.text, resume.href, resume.href ? "Back to it" : null);
+    });
+    host.querySelector(".spark-guide-today").addEventListener("click", (event) => {
+      event.preventDefault();
+      guideLine(
+        `${Core.coordinateLineFor(today)}. The day's telling is told in plain words on the 13 Moons page.`,
+        "moons.html",
+        "Hear today's telling"
+      );
+    });
+
+    /* Share my Spark: a portrait card drawn here, on this
+     * device, from the same record the panel shows — its
+     * portrait, both names, its kind and stage, the day it was
+     * born from, and today. The keeper downloads the picture
+     * and posts it wherever they choose; nothing is uploaded,
+     * nothing is posted for them. */
+    host.querySelector(".spark-share-btn").addEventListener("click", () => {
+      const card = Core.shareCardFor({ record: getRecord(), companion, today });
+      const stage = Core.stageOf(getRecord(), companion);
+      const W = 1080;
+      const H = 1080;
+      const canvas = document.createElement("canvas");
+      canvas.width = W;
+      canvas.height = H;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+      ctx.fillStyle = "#0b0e18";
+      ctx.fillRect(0, 0, W, H);
+      ctx.strokeStyle = "#d9a441";
+      ctx.lineWidth = 6;
+      ctx.strokeRect(28, 28, W - 56, H - 56);
+      ctx.strokeStyle = "rgba(45,212,191,0.5)";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(44, 44, W - 88, H - 88);
+      const drawWords = () => {
+        ctx.textAlign = "center";
+        ctx.fillStyle = "#f3ead8";
+        ctx.font = "600 92px Georgia, 'Times New Roman', serif";
+        ctx.fillText(card.name, W / 2, 640);
+        ctx.font = "400 40px Georgia, 'Times New Roman', serif";
+        ctx.fillStyle = "#cfe8e2";
+        ctx.fillText(card.seedLine, W / 2, 700);
+        ctx.fillText(card.kindLine, W / 2, 758);
+        ctx.fillStyle = "#d9a441";
+        ctx.font = "600 44px Georgia, 'Times New Roman', serif";
+        ctx.fillText(card.stageLine, W / 2, 824);
+        ctx.font = "400 38px Georgia, 'Times New Roman', serif";
+        ctx.fillStyle = "#cfe8e2";
+        ctx.fillText(card.bornLine, W / 2, 882);
+        ctx.fillText(`${card.todayLine} · ${card.daysLine}`, W / 2, 934);
+        ctx.fillStyle = "#8fa3ad";
+        ctx.font = "400 34px Georgia, 'Times New Roman', serif";
+        ctx.fillText(card.brand, W / 2, 1004);
+        const a = document.createElement("a");
+        a.download = `codex-spark-${card.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.png`;
+        a.href = canvas.toDataURL("image/png");
+        a.click();
+      };
+      const svg = Core.renderSVG(companion, { stage: stage.index }).replace(
+        "<svg ",
+        '<svg xmlns="http://www.w3.org/2000/svg" width="460" height="460" '
+      );
+      const url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml;charset=utf-8" }));
+      const img = new Image();
+      img.onload = () => {
+        ctx.drawImage(img, (W - 460) / 2, 90, 460, 460);
+        URL.revokeObjectURL(url);
+        drawWords();
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        drawWords();
+      };
+      img.src = url;
+    });
+
     const button = host.querySelector(".spark-presence-button");
     const bubble = host.querySelector(".spark-presence-bubble");
+    let roam = null;
     let arrivalTimer = null;
     const closeBubble = () => {
       bubble.setAttribute("hidden", "");
@@ -372,6 +629,10 @@
        * bounce of delight, gone as soon as it lands. */
       if (art) react(art);
       if (ctrl) ctrl.delight();
+      /* Mid-chase, a tap on the Spark is a catch — the game
+       * counts it before the bubble thinks of opening. */
+      if (roam && roam.catchSpark()) return;
+      if (roam) roam.wake();
       const open = bubble.hasAttribute("hidden");
       if (open) {
         bubble.removeAttribute("hidden");
@@ -386,8 +647,64 @@
     const panelLink = host.querySelector(".spark-presence-panel-link");
     panelLink.addEventListener("click", (event) => {
       event.preventDefault();
-      if (panel.hasAttribute("hidden")) panel.removeAttribute("hidden");
-      else panel.setAttribute("hidden", "");
+      if (panel.hasAttribute("hidden")) {
+        panel.removeAttribute("hidden");
+        careBox.removeAttribute("hidden");
+        fillCare();
+      } else {
+        panel.setAttribute("hidden", "");
+        careBox.setAttribute("hidden", "");
+      }
+    });
+    /* Care, in three small acts. Kindle: a press warms it — a
+     * bloom of glow, a happy sound, the bond deepens once a day.
+     * Play: the bubble folds and the chase is on — it darts to a
+     * few places on the page and waits, catchable, at each one.
+     * Rest: it dims and curls and breathes quietly until a tap
+     * or a scroll wakes it. Every act is recorded on this device
+     * alone, and care only ever adds. */
+    host.querySelector(".spark-care-kindle").addEventListener("click", () => {
+      setRecord(
+        Core.applyCare(getRecord(), {
+          action: "kindle",
+          patternDay: today ? today.dayOfPatternYear : null
+        })
+      );
+      if (art) {
+        art.classList.remove("is-kindling");
+        void art.offsetWidth;
+        art.classList.add("is-kindling");
+        window.setTimeout(() => art.classList.remove("is-kindling"), 1200);
+      }
+      if (ctrl) ctrl.delight();
+      chirp(companion);
+      if (roam) roam.glow();
+    });
+    host.querySelector(".spark-care-play").addEventListener("click", () => {
+      closeBubble();
+      if (roam) {
+        roam.startPlay(() => {
+          setRecord(
+            Core.applyCare(getRecord(), {
+              action: "play",
+              patternDay: today ? today.dayOfPatternYear : null
+            })
+          );
+          guideLine("Caught, and caught, and caught — good chase. Play is in its step now.");
+          bubble.removeAttribute("hidden");
+          button.setAttribute("aria-expanded", "true");
+        });
+      }
+    });
+    host.querySelector(".spark-care-rest").addEventListener("click", () => {
+      setRecord(
+        Core.applyCare(getRecord(), {
+          action: "rest",
+          patternDay: today ? today.dayOfPatternYear : null
+        })
+      );
+      closeBubble();
+      if (roam) roam.rest();
     });
     const soundToggle = host.querySelector(".spark-presence-sound");
     const paintSound = () =>
@@ -412,7 +729,20 @@
       if (!host.contains(event.target)) closeBubble();
     });
     document.body.appendChild(host);
-    startRoam({ walker, button, bubble, art, companion, ctrl, grew });
+    roam = startRoam({
+      walker,
+      button,
+      bubble,
+      art,
+      companion,
+      ctrl,
+      grew,
+      care: Core.careStateFor({
+        record: getRecord(),
+        companion,
+        todayPatternDay: today ? today.dayOfPatternYear : null
+      })
+    });
     /* A guide speaks first on arrival, briefly, then steps back:
      * the line shows itself, and folds away on its own. A growth
      * is spoken the same way, once, when it is new. A tap on
@@ -540,11 +870,19 @@
    * sleeps while the tab is hidden; and a visitor whose device
    * asks for reduced motion gets a Spark that simply appears in
    * its corner and stays there. */
-  function startRoam({ walker, button, bubble, art, companion, ctrl, grew }) {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  function startRoam({ walker, button, bubble, art, companion, ctrl, grew, care }) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return null;
     const play = PLAY[companion.temperament] || PLAY.curious;
     const pace = companion.shape ? companion.shape.pace : 1;
-    const SPEED = { stroll: 62, drift: 34, hop: 100 }[companion.shape ? companion.shape.gait : "stroll"] || 62;
+    /* Care shapes the day: played with, it plays back harder;
+     * rested, it travels calm. Same temperament, same seed —
+     * the care its person gave it, felt in its step. */
+    const carePlay = care && care.behavior ? care.behavior : {};
+    const playfulness = Math.min(1.3, play.playfulness + (carePlay.playfulnessBoost || 0));
+    const SPEED =
+      ({ stroll: 62, drift: 34, hop: 100 }[companion.shape ? companion.shape.gait : "stroll"] || 62) *
+      (carePlay.wanderCalm || 1);
+    if (carePlay.kindled) walker.dataset.kindled = "true";
     const MARGIN = 10;
     const lift = bottomLift();
     const W = () => walker.offsetWidth || 120;
@@ -589,6 +927,17 @@
     let anticipateUntil = 0;
     let peekWanted = false;
     let activeStreak = 0;
+    /* v3 life: the chase, the nap, the investigation — and the
+     * cap that keeps proactivity charming. Antics (flourishes,
+     * investigations, scroll glances) are counted per page and
+     * stop at six; the Spark then simply walks and rests. */
+    let antics = 0;
+    const ANTICS_CAP = 6;
+    let lastInteractAt = performance.now();
+    let playQueue = [];
+    let playDone = null;
+    let resting = false;
+    let napping = false;
     const vel = { x: 0, y: 0 };
     const pointer = { x: 0, y: 0, vx: 0, vy: 0, seenAt: 0, lastMoveAt: 0 };
     const pointerPredicted = (lead) => ({
@@ -657,15 +1006,32 @@
       quiet: "is-looking"
     };
     function flourish() {
+      antics += 1;
       const cls =
         Math.random() < 0.55
           ? SIGNATURE[companion.temperament] || "is-looking"
-          : ["is-spinning", "is-stretching", "is-looking"][Math.floor(Math.random() * 3)];
+          : ["is-spinning", "is-stretching", "is-looking", "is-hopping"][Math.floor(Math.random() * 4)];
       if (art) {
         art.classList.add(cls);
         window.setTimeout(() => art.classList.remove(cls), 1500);
       }
       if (ctrl) ctrl.flourish(cls);
+    }
+
+    /* A place on the page worth a closer look: a heading or a
+     * card, chosen from the page as it stands, with room beneath
+     * it to perch. The Spark investigates what is actually here —
+     * it invents no destinations. */
+    function perchTarget() {
+      const els = document.querySelectorAll("main h2, main .card, article h2, article .card, .card");
+      if (!els.length) return null;
+      const el = els[Math.floor(Math.random() * els.length)];
+      const rect = el.getBoundingClientRect();
+      if (rect.width === 0 || rect.bottom < 40 || rect.top > window.innerHeight - 60) return null;
+      return clampPos({
+        x: rect.left + rect.width / 2 - W() / 2,
+        y: rect.bottom + 10
+      });
     }
 
     function chooseBehavior() {
@@ -674,11 +1040,13 @@
         performance.now() - pointer.lastMoveAt < 2500 &&
         Math.hypot(pointer.x - c.x, pointer.y - c.y) < 340;
       const pointerStill = performance.now() - pointer.lastMoveAt > 1100;
+      const capped = antics >= ANTICS_CAP;
       const scores = {
         wander: play.wander,
         approach: pointerNear ? play.approach * 2.4 + (pointerStill ? 0.25 : 0) : play.approach * 0.3,
-        flourish: 0.5 * play.playfulness + 0.12,
-        rest: 0.22 + activeStreak * 0.2
+        flourish: capped ? 0 : 0.5 * playfulness + 0.12,
+        investigate: capped ? 0 : 0.3 * play.wander + 0.1,
+        rest: 0.22 + activeStreak * 0.2 + (carePlay.rested ? 0.15 : 0)
       };
       let best = "wander";
       let bestScore = -1;
@@ -692,13 +1060,43 @@
       return best;
     }
 
+    function enterNap() {
+      napping = true;
+      state = "idle";
+      walker.classList.add("is-napping");
+      if (ctrl) ctrl.setTravel(false, 0);
+    }
+
+    function leaveRest() {
+      if (resting) {
+        resting = false;
+        walker.classList.remove("is-resting");
+      }
+      if (napping) {
+        napping = false;
+        walker.classList.remove("is-napping");
+      }
+    }
+
     function nextBehavior() {
       if (document.hidden) {
         idleTimer = window.setTimeout(nextBehavior, 4000);
         return;
       }
+      if (resting || napping) {
+        idleTimer = window.setTimeout(nextBehavior, 3000);
+        return;
+      }
       if (bubbleOpen()) {
         idleTimer = window.setTimeout(nextBehavior, 3000);
+        return;
+      }
+      /* A long quiet page is a napping page: after real
+       * inactivity it curls up and breathes, and any touch,
+       * scroll, or key wakes it. */
+      if (performance.now() - lastInteractAt > 45000) {
+        enterNap();
+        idleTimer = window.setTimeout(nextBehavior, 5000);
         return;
       }
       /* The tease: it dodged you, you held still — stillness is
@@ -723,6 +1121,20 @@
         flourish();
         activeStreak += 1;
         goIdle((5000 + Math.random() * 9000) / pace);
+      } else if (choice === "investigate") {
+        const perch = perchTarget();
+        if (perch) {
+          antics += 1;
+          target = perch;
+          state = "investigate";
+          activeStreak += 1;
+          wake();
+        } else {
+          target = pickTarget();
+          state = "move";
+          activeStreak += 1;
+          wake();
+        }
       } else if (choice === "approach") {
         const c = center();
         const dx = pointer.x - c.x;
@@ -749,7 +1161,19 @@
       if (ctrl) ctrl.setTravel(false, 0);
       vel.x = 0;
       vel.y = 0;
-      if (state === "dodge") {
+      if (state === "play") {
+        /* Arrived at a chase point: it waits there, bright and
+         * catchable, until its person's tap lands. No timer
+         * punishes a slow catch — the game waits with it. */
+        state = "playwait";
+        if (art) art.classList.add("is-playful");
+        return;
+      }
+      if (state === "investigate") {
+        if (art) art.classList.add("is-looking");
+        window.setTimeout(() => art && art.classList.remove("is-looking"), 2600);
+        goIdle(3800 + Math.random() * 2200);
+      } else if (state === "dodge") {
         const c = center();
         peekWanted =
           performance.now() - pointer.lastMoveAt > 900 &&
@@ -783,7 +1207,7 @@
      * while it is still walking in, and after three quick scoots
      * it settles for a while, where a tap can always reach it. */
     function tryPlay(now) {
-      if (state === "dodge" || state === "anticipate" || state === "enter" || state === "hold") return false;
+      if (state === "dodge" || state === "anticipate" || state === "enter" || state === "hold" || state === "play" || state === "playwait") return false;
       if (bubbleOpen()) return false;
       if (now < settleUntil || now - lastDodgeAt < play.cooldown) return false;
       const c = center();
@@ -870,8 +1294,8 @@
       const dy = target.y - pos.y;
       const dist = Math.hypot(dx, dy);
       const maxSpeed =
-        state === "dodge" ? SPEED * 3.4 : state === "enter" ? SPEED * 1.15 : state === "approach" ? SPEED * 0.7 : SPEED;
-      const maxForce = state === "dodge" ? 1500 : 280;
+        state === "dodge" ? SPEED * 3.4 : state === "play" ? SPEED * 2.6 : state === "enter" ? SPEED * 1.15 : state === "approach" ? SPEED * 0.7 : SPEED;
+      const maxForce = state === "dodge" ? 1500 : state === "play" ? 900 : 280;
       const arriveRadius = state === "dodge" ? 0 : 90;
       const speedNow = dist < arriveRadius ? maxSpeed * Math.max(0.12, dist / arriveRadius) : maxSpeed;
       let sx = (dx / (dist || 1)) * speedNow - vel.x;
@@ -909,6 +1333,11 @@
     window.addEventListener(
       "pointermove",
       (e) => {
+        lastInteractAt = performance.now();
+        if (napping) {
+          leaveRest();
+          idleTimer = window.setTimeout(nextBehavior, 1500);
+        }
         trackPointer(e);
         /* Near, but not yet startling it: it looks toward you —
          * the gaze lands before the body ever reacts. */
@@ -925,6 +1354,8 @@
     document.addEventListener(
       "pointerdown",
       (e) => {
+        lastInteractAt = performance.now();
+        if (napping) leaveRest();
         /* A finger has no hover: its approach is its landing.
          * A landing near the Spark startles it the same way —
          * but a landing ON it is a tap, and a tap always lands. */
@@ -934,6 +1365,39 @@
       },
       { passive: true }
     );
+    /* Scrolling is company too: it glances toward the motion,
+     * now and then, and any scroll wakes a resting Spark. The
+     * glances count against the same antics cap as everything
+     * else proactive. */
+    let lastScrollGlance = 0;
+    let lastScrollY = window.scrollY;
+    window.addEventListener(
+      "scroll",
+      () => {
+        lastInteractAt = performance.now();
+        if (resting || napping) {
+          leaveRest();
+          if (state === "idle") idleTimer = window.setTimeout(nextBehavior, 1500);
+          return;
+        }
+        const now = performance.now();
+        const dir = window.scrollY > lastScrollY ? 1 : -1;
+        lastScrollY = window.scrollY;
+        if (now - lastScrollGlance < 1400 || antics >= ANTICS_CAP || bubbleOpen()) return;
+        lastScrollGlance = now;
+        antics += 1;
+        if (ctrl) ctrl.lookAt(0, dir * 0.5);
+        if (art) {
+          art.classList.add("is-looking");
+          window.setTimeout(() => art.classList.remove("is-looking"), 700);
+        }
+      },
+      { passive: true }
+    );
+    window.addEventListener("keydown", () => {
+      lastInteractAt = performance.now();
+      if (napping) leaveRest();
+    });
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
         if (rafId != null) window.cancelAnimationFrame(rafId);
@@ -955,6 +1419,67 @@
     target = home;
     state = "enter";
     wake();
+
+    /* The care controls the bubble drives. */
+    return {
+      /* The chase: three to five darts across the floor and the
+       * open middle, a bright wait at each, and a finish when
+       * the last catch lands. */
+      startPlay(done) {
+        if (state === "play" || state === "playwait") return;
+        leaveRest();
+        const n = 3 + Math.floor(Math.random() * 3);
+        playQueue = [];
+        for (let i = 0; i < n; i++) playQueue.push(pickTarget());
+        playDone = typeof done === "function" ? done : null;
+        target = playQueue.shift();
+        state = "play";
+        window.clearTimeout(idleTimer);
+        wake();
+      },
+      /* A tap landed mid-chase. Returns true when it counted. */
+      catchSpark() {
+        if (state !== "playwait") return false;
+        if (art) art.classList.remove("is-playful");
+        if (playQueue.length) {
+          target = playQueue.shift();
+          state = "play";
+          wake();
+        } else {
+          state = "idle";
+          const done = playDone;
+          playDone = null;
+          goIdle(2500);
+          if (done) done();
+        }
+        return true;
+      },
+      /* Rest: dims, curls, breathes — until woken. */
+      rest() {
+        resting = true;
+        state = "idle";
+        window.clearTimeout(idleTimer);
+        if (rafId != null) window.cancelAnimationFrame(rafId);
+        rafId = null;
+        walker.classList.add("is-resting");
+        if (ctrl) ctrl.setTravel(false, 0);
+      },
+      wake() {
+        if (!resting && !napping) return;
+        leaveRest();
+        idleTimer = window.setTimeout(nextBehavior, 1200);
+      },
+      /* A kindle's warmth, in the body: a brief warm bloom. */
+      glow() {
+        walker.dataset.kindled = "true";
+        if (art) {
+          art.classList.remove("is-kindling");
+          void art.offsetWidth;
+          art.classList.add("is-kindling");
+          window.setTimeout(() => art.classList.remove("is-kindling"), 1200);
+        }
+      }
+    };
   }
 
   /* How it plays is its temperament's own: how close a pointer
@@ -985,19 +1510,38 @@
     const isNewPage = !(record.pagesSeen || []).includes(pageKey());
     record = Core.recordVisit(record, { patternDay, page: pageKey() });
     record = await sensePractice(record);
+    /* Today's trail, honestly kept: arriving at a step's door
+     * today walks that step. The practice step completes from
+     * the practice days themselves, sensed just above. */
+    const trail = Core.trailFor({ record, companion, today, page: pageKey() });
+    for (const step of trail.steps) {
+      if (!step.done && step.id !== "practice" && step.href === pageKey()) {
+        record = Core.recordTrailStep(record, { patternDay, stepId: step.id });
+      }
+    }
     const growth = Core.growthEventFor({ record, companion });
     record = Core.markStageSeen(record, growth.stage.index);
     writeRecord(record);
     if (growth.grew) growthChimeWaiting = true;
     /* On its own home page the Spark is already centre stage. */
     if (pageKey() !== "companions.html") {
+      const store = {
+        current: record,
+        get() {
+          return this.current;
+        },
+        set(next) {
+          this.current = next;
+        }
+      };
       renderPresence(
         record,
         companion,
         today,
         justAdopted || isNewPage,
         growth.grew ? Core.growthLineFor({ record, companion, stage: growth.stage }) : null,
-        growth.grew
+        growth.grew,
+        store
       );
     }
   }
