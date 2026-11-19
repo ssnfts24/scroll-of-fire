@@ -92,3 +92,32 @@ test("the copy carries no negative absence framing", () => {
     assert.ok(!layer.toLowerCase().includes(banned), `layer copy must not say "${banned}"`);
   }
 });
+
+test("Share this view rides the guide bar, keeper-sent, with compose-door fallbacks", () => {
+  assert.ok(layer.includes("Share this view"), "the guide bar offers the share");
+  assert.ok(layer.includes("navigator.share"), "the device share sheet is the first door");
+  assert.ok(layer.includes("facebook.com/sharer/sharer.php"), "the Facebook compose door");
+  assert.ok(layer.includes("twitter.com/intent/tweet"), "the X compose door");
+  assert.ok(!layer.includes("connect.facebook.net"), "no Facebook SDK");
+  assert.ok(!layer.includes("platform.twitter.com"), "no X widget SDK");
+});
+
+test("the share text is composed from the public readout, coordinate first, in the almanac frame", () => {
+  assert.ok(layer.includes("parseReadout"), "the readout is parsed, never the engine");
+  assert.ok(layer.includes("PatternCalendarData"), "Moon names come from the calendar's own data, where they actually live");
+  const start = layer.indexOf("function buildShareText");
+  const end = layer.indexOf("function captureStageImage");
+  assert.ok(start > 0 && end > start, "the share builder stands before the capture code");
+  const builder = layer.slice(start, end);
+  assert.ok(builder.includes("Pattern Day"), "the coordinate leads with its Pattern Day");
+  assert.ok(builder.includes("Looking at this day on the Living Time Sphere."), "one short line");
+  assert.ok(builder.includes("Observe. Breathe. Align. Return."), "the closing ritual");
+  assert.ok(builder.includes("#13Moons #LivingTime #CodexOfReality"), "the small hashtag set");
+  assert.ok(!builder.includes("—"), "plain punctuation, no em-dashes");
+});
+
+test("the picture is an honest capture or a labelled drawn card, never a fake screenshot", () => {
+  assert.ok(layer.includes("captureStageImage"), "a true capture is attempted and pixel-checked");
+  assert.ok(layer.includes("drawShareCard"), "the drawn card fallback exists");
+  assert.ok(layer.includes("not a screenshot"), "the card is labelled as drawn, in plain words");
+});

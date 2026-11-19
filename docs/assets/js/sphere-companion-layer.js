@@ -32,6 +32,11 @@
    *      her orbit (or her opening her bubble) brings her back.
    *      Reduced motion means no orbit — she simply stays in her
    *      corner, exactly as her own presence already behaves.
+   *   4. Share this view (Nov 19, 2026) — the guide bar composes a
+   *      share of the day on screen from its own readout, in the
+   *      almanac frame, for the keeper to send from their own share
+   *      sheet or composer. A drawn card stands in for a picture of
+   *      the Sphere, labelled as drawn; nothing posts by itself.
    */
 
   const container = document.getElementById("sphere-container");
@@ -123,7 +128,7 @@
   // ── The Sphere guide bar ─────────────────────────────────────────
 
   const moonNames = (() => {
-    const names = globalThis.PatternCalendar?.moonNames;
+    const names = globalThis.PatternCalendarData?.moonNames || globalThis.PatternCalendar?.moonNames;
     if (Array.isArray(names) && names.length === 13) return names;
     return Array.from({ length: 13 }, (_, i) => `Moon ${i + 1}`);
   })();
@@ -142,7 +147,14 @@
       <button type="button" class="sgb-btn" data-sgb="moon-go">Go</button>
       <button type="button" class="sgb-btn" data-sgb="day">Selected day</button>
       <button type="button" class="sgb-btn" data-sgb="year">Whole year</button>
+      <button type="button" class="sgb-btn sgb-share" data-sgb="share">Share this view</button>
       <button type="button" class="sgb-btn sgb-fs" data-sgb="fs" hidden>⛶ Full screen</button>
+    </div>
+    <div class="sgb-share-row" hidden>
+      <a class="sgb-btn sgb-share-link" data-sgb-share="facebook" target="_blank" rel="noopener">Share on Facebook</a>
+      <a class="sgb-btn sgb-share-link" data-sgb-share="x" target="_blank" rel="noopener">Share on X</a>
+      <a class="sgb-btn sgb-share-link" data-sgb-share="card" download>Save the drawn card</a>
+      <span class="sgb-share-note"></span>
     </div>
     <p class="sgb-status" role="status" aria-live="polite"></p>`;
 
@@ -191,6 +203,206 @@
     syncFs();
   }
 
+  // ── Share this view ────────────────────────────────────────────
+  // Aaron's direction (Nov 19, 2026): the Sphere should support
+  // social media. The share is composed from the guide bar's own
+  // readout — the instrument's public state strip, mirrored above —
+  // in the almanac frame: coordinate first, the Moon's name, one
+  // short line, the closing ritual, the site, three hashtags. The
+  // keeper sends it themselves from their own share sheet or
+  // composer. Nothing posts by itself; no SDKs, no trackers.
+  const SPHERE_URL = "https://codexofreality.org/living-time-sphere.html";
+  const shareRow = bar.querySelector(".sgb-share-row");
+  const shareNote = bar.querySelector(".sgb-share-note");
+  const shareCardLink = bar.querySelector('[data-sgb-share="card"]');
+  let shareCardObjectUrl = null;
+
+  function parseReadout(text) {
+    const t = String(text || "");
+    const full = t.match(/Moon (\d{1,2}) · Day (\d{1,2}) · Day (\d{1,3})\/364/);
+    if (full) return { moon: Number(full[1]), day: Number(full[2]), patternDay: Number(full[3]) };
+    const part = t.match(/Moon (\d{1,2}) · Day (\d{1,2})/);
+    if (part) return { moon: Number(part[1]), day: Number(part[2]), patternDay: null };
+    return null;
+  }
+
+  function buildShareText(coord) {
+    const moonName = moonNames[coord.moon - 1] || `Moon ${coord.moon}`;
+    const head = coord.patternDay
+      ? `Moon ${coord.moon} · Day ${coord.day} · Pattern Day ${coord.patternDay}`
+      : `Moon ${coord.moon} · Day ${coord.day}`;
+    return [
+      head,
+      moonName,
+      "Looking at this day on the Living Time Sphere.",
+      "Observe. Breathe. Align. Return.",
+      "codexofreality.org",
+      "#13Moons #LivingTime #CodexOfReality"
+    ].join("\n");
+  }
+
+  // A true capture of the stage, when the browser honestly gives
+  // one. The sphere renders WebGL without a preserved drawing
+  // buffer, so the canvas usually reads back blank; the pixels are
+  // sampled and a blank capture is rejected, never shared as if it
+  // were the Sphere.
+  function captureStageImage() {
+    const canvas = container.querySelector("canvas");
+    if (!canvas || !canvas.width || !canvas.height) return null;
+    try {
+      const copy = document.createElement("canvas");
+      copy.width = canvas.width;
+      copy.height = canvas.height;
+      const g = copy.getContext("2d", { willReadFrequently: true });
+      if (!g) return null;
+      g.drawImage(canvas, 0, 0);
+      const data = g.getImageData(0, 0, copy.width, copy.height).data;
+      let nonBlank = 0;
+      let sampled = 0;
+      for (let i = 0; i < data.length; i += 401 * 4) {
+        sampled += 1;
+        if (data[i + 3] > 0 && (data[i] > 12 || data[i + 1] > 12 || data[i + 2] > 12)) nonBlank += 1;
+      }
+      if (!sampled || nonBlank / sampled < 0.02) return null;
+      return copy;
+    } catch {
+      return null;
+    }
+  }
+
+  // The fallback picture: a card drawn from the day's coordinate,
+  // in the Codex colours. It is labelled as drawn, everywhere it
+  // appears, and never passed off as a screenshot of the Sphere.
+  function drawShareCard(coord) {
+    const card = document.createElement("canvas");
+    card.width = 1200;
+    card.height = 630;
+    const g = card.getContext("2d");
+    if (!g) return null;
+    g.fillStyle = "#04060c";
+    g.fillRect(0, 0, 1200, 630);
+    const wash = g.createRadialGradient(600, 240, 40, 600, 240, 560);
+    wash.addColorStop(0, "rgba(45, 212, 191, 0.20)");
+    wash.addColorStop(1, "rgba(4, 6, 12, 0)");
+    g.fillStyle = wash;
+    g.fillRect(0, 0, 1200, 630);
+    g.strokeStyle = "rgba(212, 175, 55, 0.85)";
+    g.lineWidth = 3;
+    g.strokeRect(36, 36, 1128, 558);
+    // The ring: thirteen Moons around one circle, the shared Moon in gold.
+    const cx = 600;
+    const cy = 218;
+    g.strokeStyle = "rgba(45, 212, 191, 0.55)";
+    g.lineWidth = 2;
+    g.beginPath();
+    g.arc(cx, cy, 118, 0, Math.PI * 2);
+    g.stroke();
+    g.beginPath();
+    g.arc(cx, cy, 84, 0, Math.PI * 2);
+    g.stroke();
+    for (let i = 0; i < 13; i += 1) {
+      const a = (i / 13) * Math.PI * 2 - Math.PI / 2;
+      const x = cx + Math.cos(a) * 118;
+      const y = cy + Math.sin(a) * 118;
+      g.fillStyle = i === coord.moon - 1 ? "#d4af37" : "rgba(190, 242, 255, 0.75)";
+      g.beginPath();
+      g.arc(x, y, i === coord.moon - 1 ? 10 : 6, 0, Math.PI * 2);
+      g.fill();
+    }
+    g.fillStyle = "#ffd97a";
+    g.beginPath();
+    g.arc(cx, cy, 15, 0, Math.PI * 2);
+    g.fill();
+    const head = coord.patternDay
+      ? `Moon ${coord.moon} · Day ${coord.day} · Pattern Day ${coord.patternDay}`
+      : `Moon ${coord.moon} · Day ${coord.day}`;
+    const moonName = moonNames[coord.moon - 1] || `Moon ${coord.moon}`;
+    g.textAlign = "center";
+    g.fillStyle = "#ffd97a";
+    g.font = "600 58px Georgia, 'Times New Roman', serif";
+    g.fillText(head, cx, 448);
+    g.fillStyle = "#e8f1f2";
+    g.font = "italic 40px Georgia, 'Times New Roman', serif";
+    g.fillText(moonName, cx, 508);
+    g.fillStyle = "rgba(190, 220, 225, 0.85)";
+    g.font = "28px Georgia, 'Times New Roman', serif";
+    g.fillText("The Living Time Sphere · codexofreality.org", cx, 562);
+    return card;
+  }
+
+  function renderShareRow(coord, text, imageCanvas, imageKind) {
+    const fb = bar.querySelector('[data-sgb-share="facebook"]');
+    const xi = bar.querySelector('[data-sgb-share="x"]');
+    if (fb) fb.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(SPHERE_URL)}&quote=${encodeURIComponent(text)}`;
+    if (xi) xi.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(SPHERE_URL)}`;
+    if (shareCardLink) {
+      if (shareCardObjectUrl) URL.revokeObjectURL(shareCardObjectUrl);
+      shareCardObjectUrl = null;
+      if (imageCanvas) {
+        shareCardLink.hidden = false;
+        shareCardLink.textContent = imageKind === "capture" ? "Save the view image" : "Save the drawn card";
+        shareCardLink.setAttribute("download", `living-time-sphere-moon-${coord.moon}-day-${coord.day}.png`);
+        imageCanvas.toBlob((blob) => {
+          if (!blob) { shareCardLink.hidden = true; return; }
+          shareCardObjectUrl = URL.createObjectURL(blob);
+          shareCardLink.href = shareCardObjectUrl;
+        }, "image/png");
+      } else {
+        shareCardLink.hidden = true;
+      }
+    }
+    if (shareNote) {
+      shareNote.textContent = imageKind === "card"
+        ? "The card is drawn from this day's coordinate. It is not a screenshot of the Sphere."
+        : "";
+    }
+  }
+
+  async function shareView() {
+    mirrorReadout();
+    const coord = parseReadout(readoutValue.textContent);
+    if (!coord) {
+      statusEl.textContent = "Share waits until the Sphere has aligned.";
+      return;
+    }
+    const text = buildShareText(coord);
+    let imageCanvas = captureStageImage();
+    let imageKind = imageCanvas ? "capture" : null;
+    if (!imageCanvas) {
+      imageCanvas = drawShareCard(coord);
+      imageKind = imageCanvas ? "card" : null;
+    }
+    renderShareRow(coord, text, imageCanvas, imageKind);
+    if (typeof navigator.share === "function") {
+      const payload = { title: "The Living Time Sphere", text, url: SPHERE_URL };
+      try {
+        if (imageCanvas && typeof navigator.canShare === "function") {
+          const blob = await new Promise((resolve) => imageCanvas.toBlob(resolve, "image/png"));
+          if (blob) {
+            const file = new File([blob], `living-time-sphere-moon-${coord.moon}-day-${coord.day}.png`, { type: "image/png" });
+            if (navigator.canShare({ files: [file] })) payload.files = [file];
+          }
+        }
+        await navigator.share(payload);
+        if (shareRow) shareRow.hidden = true;
+        statusEl.textContent = imageKind === "card"
+          ? "Shared, with a drawn card of this day. The card is drawn, not a screenshot."
+          : "Shared.";
+        return;
+      } catch (err) {
+        if (err && err.name === "AbortError") {
+          statusEl.textContent = "Share closed. Nothing was sent.";
+          return;
+        }
+        // Any other failure: the compose doors below carry it.
+      }
+    }
+    if (shareRow) shareRow.hidden = false;
+    statusEl.textContent = imageKind === "card"
+      ? "Share this view: choose a door below. The card is drawn from the day's coordinate, not a screenshot."
+      : "Share this view: choose a door below.";
+  }
+
   bar.addEventListener("click", (event) => {
     const btn = event.target.closest?.("[data-sgb]");
     if (!btn) return;
@@ -200,6 +412,7 @@
       announce(`To Moon ${moonSelect.value}, ${moonNames[Number(moonSelect.value) - 1]}`);
     } else if (action === "day" && openSelectedDay()) announce("Your selected day, open");
     else if (action === "year" && goWholeYear()) announce("The whole year");
+    else if (action === "share") shareView();
     else if (action === "fs") toggleFullscreen();
   });
 

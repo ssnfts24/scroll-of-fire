@@ -143,6 +143,37 @@ body.lts-luxury .wrap {
   border-color: rgba(212, 175, 55, 0.5);
   background: rgba(212, 175, 55, 0.12);
 }
+.sgb-btn.sgb-share {
+  border-color: rgba(212, 175, 55, 0.5);
+  background: rgba(212, 175, 55, 0.12);
+}
+
+/* The share doors: compose links the keeper sends themselves,
+ * plus the drawn card. Shown only after Share this view is tapped
+ * on a browser without its own share sheet. */
+.sgb-share-row {
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+.sgb-share-row[hidden] {
+  display: none;
+}
+a.sgb-btn {
+  text-decoration: none;
+}
+.sgb-share-note {
+  flex-basis: 100%;
+  text-align: center;
+  color: rgba(190, 220, 225, 0.85);
+  font-size: 0.75rem;
+}
+.sgb-share-note:empty {
+  display: none;
+}
 .sgb-moon {
   display: inline-flex;
   align-items: center;
