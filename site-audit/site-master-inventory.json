@@ -614,7 +614,7 @@
     },
     {
       "id": "docs-assets:assets/media",
-      "title": "docs/assets/media (70 files)",
+      "title": "docs/assets/media (72 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1761,6 +1761,7 @@
         "ledger.html",
         "living-time-sphere.html",
         "moons.html",
+        "scripture/about.html",
         "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
@@ -1782,8 +1783,6 @@
         "theory/canon.html",
         "theory/equations/eq10.html",
         "theory/equations/eq11.html",
-        "theory/equations/eq12.html",
-        "theory/equations/eq13.html",
         "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/",
@@ -2153,10 +2152,10 @@
         "path": "scripture/about.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 92,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 93,
         "pagesWithNavLinkToIt": 93
       },
       "issues": []
@@ -11455,10 +11454,10 @@
         "path": "theory/equations/eq12.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 9,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 8,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -11533,10 +11532,10 @@
         "path": "theory/equations/eq13.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 17,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 16,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
