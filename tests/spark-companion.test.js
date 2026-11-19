@@ -259,9 +259,17 @@ test("the presence follows the visitor, and never enters protected ground", () =
   ]) {
     assert.ok(read(`docs/${page}`).includes("spark-presence.js"), `${page} carries the presence`);
   }
-  for (const page of ["living-time-sphere.html", "404.html", "offline.html"]) {
+  for (const page of ["404.html", "offline.html"]) {
     assert.ok(!read(`docs/${page}`).includes("spark-presence"), `${page} stays untouched`);
   }
+  /* The Sphere page is the one exception Aaron himself directed
+   * (Nov 18, 2026): Nori comes ON the Sphere as her own overlay
+   * layer — the presence scripts plus the sphere companion layer —
+   * while the Sphere engine files stay untouched (pinned in
+   * tests/sphere-deepening.test.js). */
+  const spherePage = read("docs/living-time-sphere.html");
+  assert.ok(spherePage.includes("spark-presence.js"), "the Sphere page carries the presence");
+  assert.ok(spherePage.includes("sphere-companion-layer.js"), "the Sphere page carries her overlay layer");
   const presence = read("docs/assets/js/spark-presence.js");
   assert.ok(presence.includes("CodexLifeAtlasRepository"), "practice is read from the Atlas, not re-stored");
   assert.ok(presence.includes("PatternCalendar"), "the day comes from the canonical calendar");

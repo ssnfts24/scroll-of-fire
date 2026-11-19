@@ -278,6 +278,16 @@ test("no R1.7 protected file is touched by this branch", () => {
    * does not declare itself below, the original rule stands: no
    * protected file may change. The R2 branch declares exactly this
    * set; a protected file outside it still fails this test loudly.
+   *
+   * Combined landing extension (Nov 19, 2026): this branch carries
+   * the whole landing wave in one change set, so the declared set
+   * also names the day-zoom module (the Sphere day view, PR #140).
+   * The sphere page entry covers both the R2 rework and the Sphere
+   * deepening's additions (PR #159: two stylesheet links and four
+   * script tags on that page, its overlay module living outside the
+   * protected directories), and the service-worker entry also
+   * covers the equinox tables' precache update (PR #127). Every
+   * other protected path still fails this test on sight.
    */
   const r2DeclaredProtected = new Set([
     "docs/assets/js/sphere/living-time-sphere-label-manager.js",
@@ -285,6 +295,7 @@ test("no R1.7 protected file is touched by this branch", () => {
     "docs/assets/js/sphere/living-time-sphere-label-placement.js",
     "docs/assets/js/sphere/living-time-sphere-quality-governor.js",
     "docs/assets/js/sphere/living-time-sphere-options.js",
+    "docs/assets/js/sphere/living-time-sphere-day-zoom.js",
     "docs/assets/css/living-time-sphere.css",
     "docs/living-time-sphere.html",
     "docs/service-worker.js"
