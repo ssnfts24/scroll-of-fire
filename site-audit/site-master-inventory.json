@@ -7,7 +7,7 @@
     "publicHtmlPages": 174,
     "catalogEntries": 67,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 17,
+      "not-linked-directly-from-homepage": 18,
       "nav-label-differs-from-title": 24,
       "deployed-but-unlinked": 57,
       "unreachable-from-homepage": 3,
@@ -1779,7 +1779,6 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/artifact-theory.html",
         "theory/canon.html",
         "theory/ethics.html",
         "theory/frequency-governance.html",
@@ -18233,13 +18232,15 @@
         "path": "theory/artifact-theory.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 17,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 16,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": []
+      "issues": [
+        "not-linked-directly-from-homepage"
+      ]
     },
     {
       "id": "theory-bibliography",
