@@ -82,8 +82,15 @@
       shedAboveMs: 24,
       // Sustained frame time below this (ms) may restore a tier.
       restoreBelowMs: 15,
-      // Frames per evaluation window.
-      windowFrames: 45,
+      /*
+       * Evaluation windows are measured in accumulated frame time,
+       * not frame count: on the struggling devices this governor
+       * exists for, frames are scarce (at 7 fps a 45-frame window
+       * takes over six seconds per step). A window closes once it
+       * holds at least windowMs of frame time and minSamples samples.
+       */
+      windowMs: 1500,
+      minSamples: 5,
       // Consecutive good windows required before restoring (hysteresis).
       restoreWindows: 2,
       // EMA weight for each new frame sample.
@@ -94,7 +101,8 @@
       const config = { ...DEFAULTS, ...overrides };
       let tier = 0;
       let emaMs = 16.7;
-      let framesInWindow = 0;
+      let windowTimeMs = 0;
+      let windowSamples = 0;
       let goodWindows = 0;
       let samples = 0;
 
@@ -111,11 +119,13 @@
         }
         samples += 1;
         emaMs = emaMs * (1 - config.emaAlpha) + ms * config.emaAlpha;
-        framesInWindow += 1;
-        if (framesInWindow < config.windowFrames) {
+        windowTimeMs += ms;
+        windowSamples += 1;
+        if (windowTimeMs < config.windowMs || windowSamples < config.minSamples) {
           return { tier, changed: false };
         }
-        framesInWindow = 0;
+        windowTimeMs = 0;
+        windowSamples = 0;
 
         if (emaMs > config.shedAboveMs && tier < TIERS.length - 1) {
           tier += 1;
@@ -142,7 +152,8 @@
       function reset() {
         tier = 0;
         emaMs = 16.7;
-        framesInWindow = 0;
+        windowTimeMs = 0;
+        windowSamples = 0;
         goodWindows = 0;
         samples = 0;
       }

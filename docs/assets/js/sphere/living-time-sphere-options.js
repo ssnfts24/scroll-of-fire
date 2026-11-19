@@ -120,7 +120,16 @@
   let sawFirstCursorChange = false;
   let flyTimer = null;
 
-  function onCursorChange() {
+  function patternDayFrom(source) {
+    // The canonical day lives on the temporal coordinate, not on the
+    // cursor snapshot's top level.
+    return Number(
+      source?.coordinate?.remnant13Moons?.patternDay
+      ?? source?.patternDay
+    );
+  }
+
+  function onCursorChange(event) {
     if (current.zoomFeel !== "deep") return;
     // The first cursor event after load is the opening state, not a
     // selection — never hijack the sphere's designed first frame.
@@ -128,8 +137,8 @@
       sawFirstCursorChange = true;
       return;
     }
-    const day = Number(
-      globalThis.SOFTemporalCursor?.getState?.()?.patternDay
+    const day = patternDayFrom(
+      event?.detail || globalThis.SOFTemporalCursor?.getState?.()
     );
     if (!Number.isFinite(day) || day < 1 || day > 364) return;
     if (day === lastFlownDay) return;

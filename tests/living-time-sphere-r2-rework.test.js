@@ -169,31 +169,42 @@ test("r2 governor: sustained slow frames shed tiers stepwise", () => {
     for (let i = 0; i < frames; i += 1) last = gov.sampleFrame(ms);
     return last;
   };
+  // One evaluation window = 1500ms of accumulated frame time:
+  // 50 frames at 30ms. Feed 55 to close each window with margin.
   assert.equal(gov.tier(), 0);
-  feed(30, 45);
+  feed(30, 55);
   assert.equal(gov.tier(), 1);
-  feed(30, 45);
+  feed(30, 55);
   assert.equal(gov.tier(), 2);
-  feed(30, 45);
+  feed(30, 55);
   assert.equal(gov.tier(), 3);
-  feed(30, 90);
+  feed(30, 110);
   assert.equal(gov.tier(), 3); // never sheds past the floor
+});
+
+test("r2 governor: windows close on frame time, not frame count", () => {
+  // At 100ms per frame (a struggling device), only 15 frames fill a
+  // 1500ms window — the governor must still step in promptly.
+  const gov = governorModule.createGovernor();
+  for (let i = 0; i < 15; i += 1) gov.sampleFrame(100);
+  assert.equal(gov.tier(), 1);
 });
 
 test("r2 governor: recovery needs consecutive good windows (hysteresis)", () => {
   const gov = governorModule.createGovernor();
-  for (let i = 0; i < 135; i += 1) gov.sampleFrame(30);
+  for (let i = 0; i < 160; i += 1) gov.sampleFrame(30);
   assert.equal(gov.tier(), 3);
-  for (let i = 0; i < 45; i += 1) gov.sampleFrame(10);
+  // At 10ms per frame a window needs 150 frames.
+  for (let i = 0; i < 155; i += 1) gov.sampleFrame(10);
   assert.equal(gov.tier(), 3); // one good window is not enough
-  for (let i = 0; i < 45; i += 1) gov.sampleFrame(10);
+  for (let i = 0; i < 155; i += 1) gov.sampleFrame(10);
   assert.equal(gov.tier(), 2); // two in a row restore one tier
 });
 
 test("r2 governor: changed flag fires only on the transition sample", () => {
   const gov = governorModule.createGovernor();
   let changes = 0;
-  for (let i = 0; i < 45; i += 1) {
+  for (let i = 0; i < 50; i += 1) {
     if (gov.sampleFrame(30).changed) changes += 1;
   }
   assert.equal(changes, 1);
