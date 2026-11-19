@@ -46,11 +46,12 @@ test("the bridge rides the shared living chrome on every main-house page", () =>
     assert.ok(html.includes("assets/css/social-bridge.css"), name + ": css");
     assert.ok(html.includes("assets/js/social-bridge.js"), name + ": js");
     if (name === "shop.html") {
-      // Standing pin (living-page-openings.test.js): the shop carries
-      // no calendar, so its bridge honestly falls back to the civil
-      // date and the page's own name. No coordinate is invented.
-      assert.ok(!html.includes("calendar/pattern-calendar.js"), "shop: no calendar");
-      continue;
+      // The Living Moon Theme gave the whole main house — the shop
+      // included — the canonical calendar, so the shop's bridge speaks
+      // the full coordinate like every other room (an earlier pin held
+      // the shop calendar-free; the moon theme superseded it, and
+      // living-page-openings.test.js now requires the calendar there).
+      assert.ok(html.includes("calendar/pattern-calendar.js"), "shop: calendar from the moon theme");
     }
     assert.ok(html.includes("assets/js/day-telling.js"), name + ": telling");
     assert.ok(

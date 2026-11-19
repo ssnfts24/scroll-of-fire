@@ -165,6 +165,7 @@
   <script defer src="assets/js/calendar/pattern-calendar-boundary.js?v=20260722-3"></script>
   <script defer src="assets/js/calendar/pattern-calendar.js?v=20260722-3"></script>
   <script defer src="assets/js/living-entry.js?v=20261117-1"></script>
+  <script defer src="assets/js/home-telling.js?v=20261118-1"></script>
   <script defer src="assets/js/living-witness.js?v=20261117-1"></script>
   <script defer src="assets/js/sphere/living-time-sphere-calendar-geometry.js?v=20260819-b727&r=20260820-b7584-rootrail&b=20260820-b7592a-farskeleton&d=20260821-b7592d7-unified"></script>
   <script defer src="assets/js/homepage-sphere.js?v=20261118-2"></script>
@@ -429,6 +430,10 @@
     }
   </style>
 
+  <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261118-3">
+  <script defer src="assets/js/spark-companion.js?v=20261118-3"></script>
+  <script src="assets/js/spark-3d.js?v=20261118-3"></script>
+  <script defer src="assets/js/spark-presence.js?v=20261118-3"></script>
 </head>
 
 <body class="living-ui">
@@ -447,6 +452,7 @@
         <li><a href="shop.html">Shop</a></li>
         <li><a href="witness.html">Witness</a></li>
         <li><a href="search.html">Living Search</a></li>
+        <li><a href="companions.html">Companion</a></li>
         <li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li>
       </ul>
     </nav>
@@ -742,13 +748,19 @@
       <p class="eyebrow">The Codex Today</p>
       <h2 id="living-activity-title">The Codex is alive</h2>
       <p class="le-act-today"><span class="le-act-label">Today</span> <span data-le-today>The Codex is alive — witness, encode, resonate, integrate, illuminate.</span></p>
+      <div class="le-act-telling" data-home-telling>
+        <h3>The day's telling</h3>
+        <p class="le-act-telling-main" data-home-telling-main>Day 20 of the Deep Mirror moon · Pattern Day 216 of 364. Week 3 · Testing: watch pressure, resistance, correction, and refinement. The day's name is Bread — receive provision and share it.</p>
+        <p class="le-act-telling-practice" data-home-telling-practice>The moon's practice: look beneath the surface; journal before judging.</p>
+        <p class="le-act-telling-note">The day's facts come from the calendar itself. The reading is the Codex's own — a mirror, not a claim. <a href="./moons.html">Open the 13 Moons page →</a></p>
+      </div>
       <div class="le-act-grid">
         <div class="le-act-slot">
           <h3>Latest additions</h3>
           <ul class="le-act-growth" data-le-growth>
             <li><time datetime="2026-11-19">2026-11-19</time> <a href="./index.html">The whole site learned to change with the moon</a></li>
-            <li><time datetime="2026-11-18">2026-11-18</time> <a href="./scroll/atlas.html#scroll-atlas-explainer">The Reference Atlas learned to explain itself out loud</a></li>
-            <li><time datetime="2026-11-18">2026-11-18</time> <a href="./scripture/about.html#scripture-about-explainer">Sources and Method learned to explain itself out loud</a></li>
+            <li><time datetime="2026-11-19">2026-11-19</time> <a href="./about-aaron.html#follow">The site learned to share a day out</a></li>
+            <li><time datetime="2026-11-19">2026-11-19</time> <a href="./index.html">The whole house learned to move gently</a></li>
           </ul>
         </div>
         <figure class="le-act-slot">
@@ -1214,47 +1226,6 @@
       </div>
     </section>
 
-    <section class="section-shell" aria-labelledby="what-title">
-      <div class="section-heading">
-        <p class="eyebrow">What This Is</p>
-        <h2 id="what-title">What You Can Do Here</h2>
-        <p>
-          This is a practical ecosystem for daily reflection, pattern tracking, and
-          real-world building. Start simple, then go deeper into theory, systems, and artifacts.
-        </p>
-      </div>
-
-      <div class="what-grid">
-        <article class="what-card">
-          <span aria-hidden="true">☾</span>
-          <strong>Calendar</strong>
-          <p>Track rhythm through the Remnant 13 Moons calendar, moon phase, symbolic day reading, and seasonal witness practice.</p>
-          <a class="text-link" href="./moons.html">Read today’s mirror →</a>
-        </article>
-        <article class="what-card">
-          <span aria-hidden="true">≋</span>
-          <strong>Frequency</strong>
-          <p>Use Frequency Governance for carrier tones, structured listening, visual practice, and focused reflection.</p>
-          <a class="text-link" href="./systems/frequencies.html">Open the console →</a>
-        </article>
-        <article class="what-card">
-          <span aria-hidden="true">☲</span>
-          <strong>Artifacts</strong>
-          <p>Explore handcrafted copper, stone, glass, and Living Technology pieces entered into the Artifact Registry.</p>
-          <a class="text-link" href="./shop.html">Enter the registry →</a>
-        </article>
-      </div>
-    </section>
-
-    <section class="section-shell" aria-label="Signal summary">
-      <div class="signal-strip">
-        <article class="signal-card"><strong>13×28</strong><span>Calendar rhythm, moon tracking, daily witness, and seasonal alignment.</span></article>
-        <article class="signal-card"><strong>ΨΩ</strong><span>Codex language for awareness, memory, intention, flow, relation, and coherence.</span></article>
-        <article class="signal-card"><strong>T-7</strong><span>Living Technology Array: conduit, ember, band, shard, node, and archive.</span></article>
-        <article class="signal-card"><strong>☷</strong><span>Covenant Caravan: family, craft, road, animals, shelter, trade, and earned movement.</span></article>
-      </div>
-    </section>
-
     <section class="section-shell" aria-labelledby="exercise-title">
       <div class="exercise-grid">
         <article class="exercise-card">
@@ -1350,6 +1321,8 @@
             symbolic reading, field layers, and a daily witness practice.
           </p>
           <p>It is the strongest recurring entry point into the Codex.</p>
+          <p>Track rhythm through the Remnant 13 Moons calendar, moon phase, symbolic day reading, and seasonal witness practice.</p>
+          <p>The daily rhythm engine: moon, element, witness, calendar, mirror, and return.</p>
           <div class="hero-actions">
             <a class="btn primary" href="./moons.html">Open the Living Calendar</a>
             <a class="btn" href="./ledger.html">Daily Witness Ledger</a>
@@ -1373,6 +1346,7 @@
         <p class="eyebrow">Artifact Registry</p>
         <h2 id="artifact-title">Living Technology Archive</h2>
         <p>Personal instruments, gifted artifacts, available works, active builds, and future releases. This is where the Scroll becomes physical.</p>
+        <p>Explore handcrafted copper, stone, glass, and Living Technology pieces entered into the Artifact Registry.</p>
       </div>
 
       <div class="artifact-strip">
@@ -1464,41 +1438,6 @@
       </div>
     </section>
 
-    <section class="section-shell" aria-labelledby="core-title">
-      <div class="section-heading">
-        <p class="eyebrow">Core Gates</p>
-        <h2 id="core-title">Enter Through the Main Systems</h2>
-      </div>
-
-      <figure class="section-visual">
-        <img
-          src="assets/img/home/sections/home-core-gates.webp"
-          alt="The Core Gates of the Codex of Reality — entry points into each living system"
-          width="2048"
-          height="1152"
-          loading="lazy"
-          decoding="async">
-      </figure>
-
-      <div class="feature-grid">
-        <article class="feature-card"><h3>Start</h3><p>A clean doorway for first-time visitors who need orientation.</p><a class="text-link" href="./start.html">Begin →</a></article>
-        <article class="feature-card"><h3>13 Moons</h3><p>The daily rhythm engine: moon, element, witness, calendar, mirror, and return.</p><a class="text-link" href="./moons.html">Open 13 Moons →</a></article>
-        <article class="feature-card"><h3>Covenant Caravan</h3><p>The road system: family, craft, horses, shelter, trade, discipline, and transition.</p><a class="text-link" href="./covenant-caravan.html">Open Caravan →</a></article>
-        <article class="feature-card"><h3>Frequency Governance</h3><p>Carrier tones, harmonic layers, visual practice, and structured listening.</p><a class="text-link" href="./systems/frequencies.html">Open Frequencies →</a></article>
-        <article class="feature-card"><h3>Genesis Oracle</h3><p>A symbolic mirror for language, pattern, reflection, and daily witness.</p><a class="text-link" href="./genesis-oracle.html">Open Oracle →</a></article>
-        <!--
-          PLANNED IMAGE:
-          Path: assets/img/home/gates/home-gate-genesis-oracle.webp
-          Purpose: Homepage gateway card image for Genesis Oracle
-          Recommended size: 1200 × 1200 (square)
-          Alt text: Enter the Genesis Oracle.
-          Enable only after the image file has been added and verified.
-          Example markup (disabled — do not activate until image exists):
-          figure.gate-card-image > img[loading=lazy][decoding=async][width=1200][height=1200]
-        -->
-        <article class="feature-card"><h3>Artifact Registry</h3><p>Copper, stone, glass, named artifacts, valuations, gifts, and archive pieces.</p><a class="text-link" href="./shop.html">View Artifacts →</a></article>
-      </div>
-    </section>
     <!-- Participation Vision: retained in normal document flow; layout repaired in the head. -->
 <section
       class="section-shell participation-vision"
