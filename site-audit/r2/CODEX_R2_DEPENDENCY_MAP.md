@@ -83,11 +83,11 @@
 
 | Stylesheet | Pages |
 | --- | --- |
-| `docs/assets/css/living-ui.css` | 127 |
+| `docs/assets/css/living-ui.css` | 129 |
 | `docs/scripture/assets/scripture.css` | 93 |
-| `docs/assets/css/spark-companion.css` | 68 |
-| `docs/assets/css/codex.css` | 37 |
-| `docs/assets/css/navigation.css` | 31 |
+| `docs/assets/css/spark-companion.css` | 70 |
+| `docs/assets/css/codex.css` | 39 |
+| `docs/assets/css/navigation.css` | 33 |
 | `docs/theory/equations/assets/css/codex.css` | 19 |
 | `docs/theory/equations/assets/css/navigation.css` | 19 |
 | `docs/theory/equations/assets/css/theory.css` | 19 |
@@ -98,11 +98,11 @@
 
 | Script | Pages |
 | --- | --- |
-| `docs/assets/js/site.js` | 130 |
-| `docs/assets/js/living-ui.js` | 127 |
+| `docs/assets/js/site.js` | 132 |
+| `docs/assets/js/living-ui.js` | 129 |
 | `docs/scripture/assets/scripture.js` | 93 |
-| `docs/assets/js/spark-companion.js` | 68 |
-| `docs/assets/js/spark-presence.js` | 68 |
+| `docs/assets/js/spark-companion.js` | 70 |
+| `docs/assets/js/spark-presence.js` | 69 |
 | `docs/assets/js/living-search-launcher.js` | 26 |
 | `docs/theory/equations/https:/cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js` | 19 |
 | `docs/theory/equations/assets/js/site.js` | 19 |

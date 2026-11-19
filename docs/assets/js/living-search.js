@@ -176,6 +176,42 @@
       }));
     }
 
+    /* "in Scroll of Fire · Witness shelf — passage, line 51": where a
+     * result lives, in plain words, so repeated titles are told apart. */
+    function whereLine(doc) {
+      if (!doc.w && !doc.p) return "";
+      return [doc.w ? `in ${doc.w}` : "", doc.p || ""].filter(Boolean).join(" — ");
+    }
+
+    function renderResult(group, query) {
+      const { doc, folded } = group;
+      const where = whereLine(doc);
+      let also = "";
+      if (folded.length) {
+        const homes = [...new Set(folded.map(entry => entry.doc.w || AREA_LABELS[entry.doc.a] || entry.doc.a))];
+        also = `
+        <div class="ls-also">
+          <button type="button" class="ls-also-toggle" aria-expanded="false">Also in: ${esc(homes.join(", "))} — ${folded.length} more ${folded.length === 1 ? "place" : "places"}</button>
+          <ol class="ls-also-list" hidden>${folded.map(entry => `
+            <li><a class="ls-also-link" href="${esc(entry.doc.u)}">
+              <span class="ls-also-place">${esc(whereLine(entry.doc) || entry.doc.u)}</span>
+              <span class="ls-also-snippet">${snippetHtml(entry.doc, query)}</span>
+            </a></li>`).join("")}
+          </ol>
+        </div>`;
+      }
+      return `
+        <li class="ls-result" data-area="${esc(doc.a)}">
+          <a class="ls-result-link" href="${esc(doc.u)}">
+            <span class="ls-badge">${esc(AREA_LABELS[doc.a] || doc.a)}</span>
+            <span class="ls-result-title">${highlight(doc.t, query)}</span>
+            ${doc.x ? `<span class="ls-result-note">${esc(doc.x)}</span>` : ""}
+            ${where ? `<span class="ls-result-work">${esc(where)}</span>` : ""}
+            <span class="ls-result-snippet">${snippetHtml(doc, query)}</span>
+          </a>${also}
+        </li>`;
+    }
+
     function setActive(next) {
       const items = [...resultsList.querySelectorAll(".ls-result")];
       if (!items.length) { activeIndex = -1; return; }
@@ -207,7 +243,7 @@
       if (id !== state.runId) return;
       const { results, total, unresolved } = core.search(state.index, query, {
         areas: activeArea ? [activeArea] : null,
-        limit: 40
+        limit: 200
       });
       activeIndex = -1;
       if (!results.length) {
@@ -226,16 +262,13 @@
         return;
       }
       emptyBox.hidden = true;
-      resultsList.innerHTML = results.map(({ doc }) => `
-        <li class="ls-result" data-area="${esc(doc.a)}">
-          <a class="ls-result-link" href="${esc(doc.u)}">
-            <span class="ls-badge">${esc(AREA_LABELS[doc.a] || doc.a)}</span>
-            <span class="ls-result-title">${highlight(doc.t, query)}</span>
-            ${doc.x ? `<span class="ls-result-note">${esc(doc.x)}</span>` : ""}
-            <span class="ls-result-snippet">${snippetHtml(doc, query)}</span>
-          </a>
-        </li>`).join("");
-      statusLine(`${total} result${total === 1 ? "" : "s"}. `);
+      const groups = core.groupResults(results);
+      const shownGroups = groups.slice(0, 40);
+      const foldedCount = groups.reduce((sum, group) => sum + group.folded.length, 0);
+      resultsList.innerHTML = shownGroups.map(group => renderResult(group, query)).join("");
+      statusLine(foldedCount
+        ? `${total} matches, folded into ${groups.length} result${groups.length === 1 ? "" : "s"}${groups.length > shownGroups.length ? ` — first ${shownGroups.length} shown` : ""}. `
+        : `${total} result${total === 1 ? "" : "s"}. `);
     }
 
     input.addEventListener("input", () => {
@@ -258,10 +291,19 @@
       if (input.value.trim()) run(false);
     }));
     resultsList.addEventListener("click", event => {
-      const link = event.target.closest(".ls-result-link");
+      const toggle = event.target.closest(".ls-also-toggle");
+      if (toggle) {
+        const list = toggle.closest(".ls-also")?.querySelector(".ls-also-list");
+        if (!list) return;
+        const opening = list.hidden;
+        list.hidden = !opening;
+        toggle.setAttribute("aria-expanded", String(opening));
+        return;
+      }
+      const link = event.target.closest(".ls-result-link, .ls-also-link");
       if (!link) return;
       const item = link.closest(".ls-result");
-      const title = link.querySelector(".ls-result-title")?.textContent || link.href;
+      const title = item?.querySelector(".ls-result-title")?.textContent || link.href;
       memory.addVisit({ t: title, u: link.getAttribute("href"), a: item?.dataset.area || "" });
       if (input.value.trim()) memory.addRecent(input.value.trim());
     });

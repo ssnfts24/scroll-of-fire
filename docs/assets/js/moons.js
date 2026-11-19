@@ -784,6 +784,7 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
     text("solarGate", `${solar[0]} · ${solar[1]}`);
     text("skyMirrorCopy", solar[2]);
     renderTodaySummary(context, phase, lit, week, movementText);
+    renderDayTelling(context);
 
     renderClockOnly();
     renderRemnantCalendar(context);
@@ -821,6 +822,44 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       }
     }));
     setCalendarState("is-ready");
+  }
+
+  function renderDayTelling(context) {
+    const panel = $("#dayTellingPanel");
+    const engine = globalThis.DayTelling;
+    if (!panel || !engine || !CALENDAR) return;
+
+    let telling;
+    try {
+      const summary = CALENDAR.fromCivilDate({
+        date: context.effectiveDate,
+        timeZone: selectedTZ,
+        boundaryMode: "midnight"
+      });
+      telling = engine.tell(summary, CALENDAR_DATA);
+    } catch (err) {
+      console.error("13 Moons: day telling unavailable", err);
+      return;
+    }
+    if (!telling) return;
+
+    const fillBlock = (id, lines) => {
+      const node = document.getElementById(id);
+      if (!node) return;
+      node.replaceChildren(
+        ...lines.map(line => {
+          const p = document.createElement("p");
+          p.textContent = line;
+          return p;
+        })
+      );
+    };
+
+    text("dayTellingHeadline", telling.headline);
+    text("dayTellingReadingLabel", telling.readingLabel);
+    fillBlock("dayTellingPosition", telling.position);
+    fillBlock("dayTellingArc", telling.arc);
+    fillBlock("dayTellingReading", telling.reading);
   }
 
   function renderTodaySummary(context, phase, lit, week, movementText) {

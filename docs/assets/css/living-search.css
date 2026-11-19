@@ -148,6 +148,46 @@ body.ls-open { overflow: hidden; }
   margin-top: 0.25rem;
   line-height: 1.45;
 }
+.ls-result-work {
+  display: block;
+  color: var(--gold, #f3c97a);
+  font-size: 0.8rem;
+  margin-top: 0.2rem;
+}
+.ls-also { margin: 0 0.7rem 0.6rem; }
+.ls-also-toggle {
+  font: inherit;
+  font-size: 0.84rem;
+  cursor: pointer;
+  color: var(--accent, #7af3ff);
+  background: transparent;
+  border: 1px solid var(--line, #2a2a33);
+  border-radius: 999px;
+  padding: 0.22rem 0.75rem;
+}
+.ls-also-toggle:hover { border-color: var(--accent, #7af3ff); }
+.ls-also-list {
+  list-style: none;
+  margin: 0.5rem 0 0.2rem;
+  padding: 0 0 0 0.6rem;
+  border-left: 2px solid color-mix(in srgb, var(--gold, #f3c97a) 30%, transparent);
+}
+.ls-also-link {
+  display: block;
+  padding: 0.35rem 0.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--ink, #eae7df);
+}
+.ls-also-link:hover { background: color-mix(in srgb, var(--accent, #7af3ff) 9%, transparent); }
+.ls-also-place { display: block; font-size: 0.78rem; color: var(--gold, #f3c97a); }
+.ls-also-snippet {
+  display: block;
+  color: var(--muted, #b8b3a6);
+  font-size: 0.88rem;
+  margin-top: 0.1rem;
+  line-height: 1.45;
+}
 .ls-results mark, .ls-result-title mark {
   background: color-mix(in srgb, var(--gold, #f3c97a) 38%, transparent);
   color: inherit;

@@ -1158,16 +1158,17 @@
     },
     {
       "id": "planned-timeline",
-      "title": "Historical timeline and claims atlas",
-      "description": "Planned fifth stage of the Scroll Library: timeline and wider claims atlas.",
+      "title": "Historical timeline",
+      "description": "Two dated records, kept separate: the publication dates of the sources cited in the claim register, each entry linking to its claim in the Evidence Edition, and the Codex's own growth record.",
       "area": "evidence",
       "category": "Evidence",
       "resourceType": "tool",
-      "status": "planned",
-      "path": null,
-      "url": null,
+      "status": "live",
+      "path": "timeline.html",
+      "url": "https://codexofreality.org/timeline.html",
       "related": [
-        "scroll-editorial"
+        "scroll-editorial",
+        "scroll-library"
       ],
       "featured": false,
       "publicationEligibility": "approved-public"
