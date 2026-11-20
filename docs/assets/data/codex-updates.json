@@ -2,6 +2,14 @@
  {
   "date": "2026-11-19",
   "type": "feature",
+  "title": "The Sphere page, calmer on a phone",
+  "summary": "On a phone the Sphere's camera presets were four big half-width slabs and its coordinate table split words in half to fit. The presets are now one quiet row of small pills, and the table keeps every word whole and slides sideways instead. A full audit of the page stands behind the change; the rest of its findings wait on the work already carrying the page's own files.",
+  "url": "./living-time-sphere.html",
+  "symbol": "◉"
+ },
+ {
+  "date": "2026-11-19",
+  "type": "feature",
   "title": "One record layer under every door",
   "summary": "The helpers that clean and stamp a Life Atlas record lived as separate copies in the day notes, the practice loop, and the garden, and the copies had begun to drift. They live once now, in one shared module, so every door cleans and stamps a record the same way.",
   "url": "./moons.html",
