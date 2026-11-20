@@ -71,27 +71,39 @@
     const XI_LABEL =
       "console coherence estimate (Ξ) — the exercise console's own number, not a measured effect";
 
+        /* The one record layer: record cleaning, the temporal shape,
+     * repository resolution, and change notices live in
+     * life-atlas/record-helpers.js (CodexRecordHelpers) — one shared
+     * module for every door. Do not re-define them here. */
+    const RecordHelpers =
+      (typeof globalThis !== "undefined" ? globalThis.CodexRecordHelpers : null) ||
+      (typeof module === "object" && module.exports
+        ? (() => {
+            try {
+              return require("./life-atlas/record-helpers.js");
+            } catch {
+              return null;
+            }
+          })()
+        : null);
+
+    if (!RecordHelpers) {
+      throw new Error(
+        "CodexRecordHelpers is required — load life-atlas/record-helpers.js first."
+      );
+    }
+
+    const cleanText = RecordHelpers.cleanText;
+    const cleanNullable = RecordHelpers.cleanNullable;
+    const finiteOrNull = RecordHelpers.finiteOrNull;
+    const temporalFromConversion = RecordHelpers.temporalFromConversion;
+    const notifyRecordsChanged = RecordHelpers.notifyRecordsChanged;
+    const resolveRepository = RecordHelpers.createRepositoryResolver();
+
     /* ------------------------- pure helpers ------------------------- */
 
-    function finiteOrNull(value) {
-      if (value === null || value === undefined || value === "") {
-        return null;
-      }
 
-      const number = Number(value);
-      return Number.isFinite(number) ? number : null;
-    }
-
-    function cleanText(value, max = 2000) {
-      if (value === null || value === undefined) return "";
-
-      return String(value).trim().slice(0, max);
-    }
-
-    function cleanNullable(value, max = 2000) {
-      const text = cleanText(value, max);
-      return text || null;
-    }
+    
 
     function sessionKindOf(record) {
       const kind =
@@ -118,61 +130,6 @@
       );
     }
 
-    /**
-     * Map a PatternCalendar.fromCivilDate conversion into the temporal
-     * shape Life Atlas records persist. patternYear follows the Life
-     * Atlas convention documented in life-atlas-planner.js: the anchor
-     * (alignment) civil year, not the ordinal patternYear the converter
-     * also reports.
-     */
-    function temporalFromConversion(conversion, instant = null) {
-      if (!conversion || typeof conversion !== "object") {
-        return null;
-      }
-
-      const anchor =
-        conversion.anchorDate instanceof Date
-          ? conversion.anchorDate
-          : conversion.anchorDate
-            ? new Date(conversion.anchorDate)
-            : null;
-
-      const anchorYear =
-        anchor && !Number.isNaN(anchor.getTime())
-          ? anchor.getUTCFullYear()
-          : null;
-
-      let instantIso = null;
-
-      if (instant) {
-        const when =
-          instant instanceof Date ? instant : new Date(instant);
-
-        if (!Number.isNaN(when.getTime())) {
-          instantIso = when.toISOString();
-        }
-      }
-
-      return {
-        instant: instantIso,
-        start: instantIso,
-        end: null,
-
-        timezone: cleanNullable(conversion.timeZone, 80),
-        boundaryMode: cleanNullable(conversion.boundaryMode, 40),
-
-        civilDate: cleanNullable(conversion.civilDate, 20),
-
-        patternYear: anchorYear,
-        moon: finiteOrNull(conversion.moon),
-        moonDay: finiteOrNull(conversion.day),
-        patternDay: finiteOrNull(conversion.dayOfPatternYear),
-        week: finiteOrNull(conversion.weekOfYear),
-
-        weekGate: null,
-        outsideDay: !conversion.insideCountedYear
-      };
-    }
 
     /**
      * Read today's (or any instant's) temporal coordinate from the
@@ -442,67 +399,8 @@
       };
     }
 
-    /* --------------------- browser integration --------------------- */
 
-    let repositoryPromise = null;
-
-    function resolveRepository() {
-      if (repositoryPromise) return repositoryPromise;
-
-      repositoryPromise = (async () => {
-        const runtime =
-          typeof globalThis !== "undefined"
-            ? globalThis.CodexLifeAtlasRuntime
-            : null;
-
-        if (runtime?.ready) {
-          try {
-            const repository = await runtime.ready;
-            if (repository) return repository;
-          } catch {
-            /* fall through to a direct persistent repository */
-          }
-        }
-
-        const Repository =
-          typeof globalThis !== "undefined"
-            ? globalThis.CodexLifeAtlasRepository
-            : null;
-
-        if (!Repository) return null;
-
-        try {
-          if (typeof Repository.createPersistentRepository === "function") {
-            return Repository.createPersistentRepository();
-          }
-        } catch {
-          /* IndexedDB unavailable — memory fallback below */
-        }
-
-        try {
-          return Repository.createRepository();
-        } catch {
-          return null;
-        }
-      })();
-
-      return repositoryPromise;
-    }
-
-    function notifyRecordsChanged(detail) {
-      if (typeof document !== "undefined") {
-        document.dispatchEvent(
-          new CustomEvent("sof:life-atlas-records-changed", { detail })
-        );
-      }
-
-      if (typeof window !== "undefined") {
-        window.dispatchEvent(
-          new CustomEvent("sof:life-atlas-records-changed", { detail })
-        );
-      }
-    }
-
+    
     function parseHzActive(text) {
       const match = String(text || "").match(/(\d+(?:\.\d+)?)\s*Hz\s+active/i);
       return match ? Number(match[1]) : null;
