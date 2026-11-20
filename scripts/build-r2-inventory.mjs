@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 // CODEX R2-01: builds the development-only master registry, reports and the approved-public manifest.
-// Usage: node scripts/build-r2-inventory.mjs [--check]
+// Usage: node scripts/build-r2-inventory.mjs [--check | --check=branch]
+// --check is the strict landing gate: committed seals must byte-match this tree.
+// --check=branch is the feature-branch gate (foundation F6, SEALS-AT-LANDING-PLAN.md):
+// committed seals must be main's valid, untouched landing seal; staleness against
+// the branch's own tree is reported as pending re-seal, not failed.
 // Document statistics come from site-audit/r2/document-extracts.json (scripts/r2-extract-documents.py).
 // New files must be staged before generation; untracked workspace files are never inventory inputs.
 import crypto from "node:crypto";
@@ -12,6 +16,7 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outDir = path.join(root, "site-audit", "r2");
 const check = process.argv.includes("--check");
+const branchCheck = process.argv.includes("--check=branch");
 const FROZEN_SHA = "81a015fb937f1664c2383fa38fddf956d281c6309a9584382c6dbc9d8b691400";
 const BASE_URL = "https://codexofreality.org/";
 
@@ -363,15 +368,12 @@ ${table(topShared("js").map(([k, v]) => ["`" + k + "`", v]), ["Script", "Pages"]
 
 ## Reproducible generation order
 
-Stage any intentional new files before generation. Then run:
+Stage any intentional new files before generation. Feature branches never regenerate the seals: they run \`npm run validate\`, whose branch seal check reports staleness as pending re-seal. Seals regenerate exactly once at landing, on main:
 
 \`\`\`sh
-npm run site:catalog
-python3 scripts/r2-extract-documents.py  # requires pypdf
-npm run r2:inventory
-npm run site:catalog:check
-npm run r2:inventory:check
-npm run validate
+npm run site:seal        # catalog -> search index -> document extract -> R2 inventory
+# commit the regenerated site-audit/r2/ files as the landing seal commit
+npm run validate:landing # strict: committed seals must byte-match the landed tree
 \`\`\`
 
 The two \`--check\` commands are read-only. Catalog scanning uses an OS temporary directory, and both inventories use only index-listed paths. Run checks after the full test suite: the Scroll reader reproducibility test rebuilds tracked \`docs/scroll/\` outputs, which the R2 registry hashes.
@@ -441,11 +443,44 @@ const outputs = {
 if (!proofOk) { console.error("Frozen source hash mismatch", proofs); process.exit(1); }
 if (unclassified.length) { console.error("Unclassified files:\n" + unclassified.map(r => r.path).join("\n")); process.exit(1); }
 
+const SEAL_FILES = [...Object.keys(outputs), "document-extracts.json"];
 let stale = [];
 for (const [name, body] of Object.entries(outputs)) {
   const file = path.join(outDir, name);
-  if (check) { if (!fs.existsSync(file) || fs.readFileSync(file, "utf8") !== body) stale.push(name); }
+  if (check || branchCheck) { if (!fs.existsSync(file) || fs.readFileSync(file, "utf8") !== body) stale.push(name); }
   else fs.writeFileSync(file, body);
 }
 if (check && stale.length) { console.error("Stale R2 reports: " + stale.join(", ") + "\nRun: node scripts/build-r2-inventory.mjs"); process.exit(1); }
-console.log(`${check ? "Checked" : "Wrote"} ${Object.keys(outputs).length} R2 outputs for ${recs.length} files; hash proof ${proofOk ? "OK" : "FAILED"}.`);
+if (branchCheck) {
+  // Branch mode (foundation F6 — SEALS-AT-LANDING-PLAN.md): the committed seals are
+  // main's landing seal. They must be a valid seal and untouched by this branch;
+  // staleness against this branch's own tree is reported, not failed — the seals are
+  // regenerated exactly once at landing (npm run site:seal). The content guards
+  // above (frozen hash proof, unclassified files) stay strict in every mode.
+  const fail = msg => { console.error("Branch seal check FAILED: " + msg); process.exit(1); };
+  let committed;
+  try { committed = readJson(path.join(outDir, "CODEX_R2_RESOURCE_REGISTRY.json")); }
+  catch { fail("committed CODEX_R2_RESOURCE_REGISTRY.json is missing or unreadable."); }
+  if (committed.integrityProof?.allMatch !== true) fail("committed seals are not a valid landing seal (their integrity proof does not match).");
+  const git = args => execFileSync("git", args, { cwd: root, maxBuffer: 1 << 26 }).toString("utf8");
+  let sealCommit = "";
+  try { sealCommit = git(["log", "-1", "--format=%H", "--", "site-audit/r2/CODEX_R2_RESOURCE_REGISTRY.json"]).trim(); } catch { /* handled below */ }
+  if (!sealCommit) fail("no landing seal commit found in history for the registry.");
+  try { execFileSync("git", ["merge-base", "--is-ancestor", sealCommit, "HEAD"], { cwd: root }); }
+  catch { fail(`committed seals come from ${sealCommit.slice(0, 10)}, which is not an ancestor of HEAD — a branch must carry main's seals untouched, never its own.`); }
+  const changed = git(["diff", "--name-only", "-z", sealCommit, "--", "."]).split("\0").filter(Boolean);
+  const sealTouched = changed.filter(p => SEAL_FILES.some(n => p === "site-audit/r2/" + n));
+  if (sealTouched.length) fail("this branch changes seal files (" + sealTouched.join(", ") + "). Branches no longer carry seals: revert them; seals regenerate once at landing (npm run site:seal).");
+  if (!stale.length) {
+    console.log(`Branch seal check OK: committed seals already match this tree (${recs.length} files; hash proof OK).`);
+  } else {
+    const before = new Map(committed.resources.map(r => [r.path, r.sha256]));
+    const now = new Map(recs.map(r => [r.path, r.sha256]));
+    const changedFiles = [...now.keys()].filter(p => before.has(p) && before.get(p) !== now.get(p));
+    const addedFiles = [...now.keys()].filter(p => !before.has(p));
+    const removedFiles = [...before.keys()].filter(p => !now.has(p));
+    console.log(`Branch seal check OK: committed seals are a valid landing seal, untouched by this branch. Pending re-seal at landing: ${changedFiles.length} changed, ${addedFiles.length} added, ${removedFiles.length} removed inventoried file(s); seal outputs to regenerate: ${stale.join(", ")}. Run npm run site:seal on main after this lands.`);
+  }
+} else {
+  console.log(`${check ? "Checked" : "Wrote"} ${Object.keys(outputs).length} R2 outputs for ${recs.length} files; hash proof ${proofOk ? "OK" : "FAILED"}.`);
+}
