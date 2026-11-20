@@ -350,6 +350,52 @@ html.sgb-fs .sphere-guide-bar.sgb-bar-slim .sgb-readout-value {
   max-width: 38vw;
 }
 
+/* Slim by default on portrait phones (Nov 19, 2026). The full guide
+ * bar wraps to three rows at phone width, and the reserve it takes
+ * under the stage squeezed the Sphere below the renderer's minimum
+ * height — the phone got the 2D fallback. So in the app view on a
+ * portrait phone the companion layer starts the bar folded (root
+ * carries sgb-slim-default, bar carries sgb-bar-slim): one slim line
+ * with the day's reading, Full screen, and Guide. Guide unfolds the
+ * whole bar; Hide folds it again. */
+html.sgb-slim-default .sgb-clean-toggle {
+  display: inline-flex;
+}
+html.sgb-slim-default .sphere-guide-bar.sgb-bar-slim {
+  width: auto;
+  padding: 0.35rem 0.55rem;
+  gap: 0.35rem 0.5rem;
+  background: rgba(6, 12, 20, 0.72);
+}
+html.sgb-slim-default .sphere-guide-bar.sgb-bar-slim .sgb-actions > :not(.sgb-fs):not(.sgb-clean-toggle),
+html.sgb-slim-default .sphere-guide-bar.sgb-bar-slim .sgb-status,
+html.sgb-slim-default .sphere-guide-bar.sgb-bar-slim .sgb-share-row {
+  display: none;
+}
+html.sgb-slim-default .sphere-guide-bar.sgb-bar-slim .sgb-readout-label {
+  display: none;
+}
+html.sgb-slim-default .sphere-guide-bar.sgb-bar-slim .sgb-readout-value {
+  max-width: 38vw;
+}
+/* The two kept buttons stay on the readout's line: no wrapping, and
+ * a long day's reading ellipsizes instead of pushing them down. */
+html.sgb-slim-default .sphere-guide-bar.sgb-bar-slim {
+  flex-wrap: nowrap;
+}
+html.sgb-slim-default .sphere-guide-bar.sgb-bar-slim .sgb-actions {
+  flex-wrap: nowrap;
+  flex: 0 0 auto;
+}
+html.sgb-slim-default .sphere-guide-bar.sgb-bar-slim .sgb-readout {
+  min-width: 0;
+}
+html.sgb-slim-default .sphere-guide-bar.sgb-bar-slim .sgb-readout-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* Inside the stage column, only the instrument, the guide bar,
  * her orbit and the Interact bar remain. The Interact bar itself
  * steps aside once touch interaction is on; while it is off, it

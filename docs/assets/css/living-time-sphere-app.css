@@ -97,7 +97,9 @@ body.sphere-app .sphere-instrument-shell {
 body.sphere-app #sphere-container {
   flex: 1 1 auto;
   height: auto;
-  min-height: 0;
+  /* Never below the renderer's own 180px minimum height: under it the
+   * page refuses 3D and settles on the 2D fallback (Nov 19, 2026). */
+  min-height: 200px;
   max-height: none;
   width: 100%;
 }
@@ -469,6 +471,90 @@ body.sphere-app .sphere-sidebar,
 body.sphere-app .living-planner-shell {
   max-height: none;
   margin: 0;
+}
+
+/* ── Portrait phones: the Sphere owns the screen (Nov 19, 2026) ────
+ * On Aaron's Galaxy A16 the app column gave the stage what was left
+ * after every bar took its share — about 153px of an 844px screen,
+ * under the renderer's 180px minimum, so the phone got the 2D
+ * fallback and a letterbox stage. Here the bars go slim and the
+ * stage takes the screen: environment and Interact become one row
+ * each, the top bar and selected-day bar tighten, and the container
+ * carries a floor sized to the phone's own height. The guide bar's
+ * share is handled by its slim default in sphere-deepening.css. */
+@media (max-width: 720px) and (orientation: portrait) {
+  body.sphere-app #sphere-container {
+    min-height: clamp(300px, 45dvh, 520px);
+  }
+
+  body.sphere-app .sphere-app-topbar {
+    padding-top: calc(0.3rem + env(safe-area-inset-top, 0px));
+    padding-bottom: 0.3rem;
+  }
+
+  .sphere-app-top-btn {
+    white-space: nowrap;
+    min-height: 44px;
+  }
+
+  body.sphere-app .sphere-state-strip {
+    margin: 0;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+  }
+
+  /* Environment: one row — the reading, then its button beside it. */
+  body.sphere-app .sphere-environment-bridge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.5rem;
+  }
+
+  body.sphere-app .sphere-environment-bridge-text {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  body.sphere-app .sphere-environment-bridge .sphere-btn {
+    flex: 0 0 auto;
+    min-height: 32px;
+  }
+
+  /* Interact: one row — the button, then its hint beside it. */
+  body.sphere-app .sphere-interact-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  body.sphere-app .sphere-interact-hint {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.72rem;
+  }
+
+  body.sphere-app .sphere-app-daybar {
+    padding: 0.3rem 0.5rem;
+  }
+
+  .sphere-app-day-nav,
+  .sphere-app-day-main {
+    min-height: 44px;
+  }
+
+  .sphere-dock-btn {
+    min-height: 48px;
+  }
 }
 
 /* ── Reduced motion: tactile answers stay instant, travel stops ── */

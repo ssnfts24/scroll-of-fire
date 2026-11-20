@@ -2,6 +2,14 @@
  {
   "date": "2026-11-19",
   "type": "feature",
+  "title": "The Sphere took the phone screen",
+  "summary": "On a phone, the Sphere was being squeezed into a thin strip by the bars around it, and below a certain height the page would not start its three-dimensional view at all, so a phone could be left with the flat fallback. Now the bars go slim on a phone: the environment and Interact strips take one row each, the guide bar starts as a single line with a Guide button that opens it whole, and the Sphere itself takes the middle of the screen, always tall enough for its full view. Tap a day to choose it, exactly as before, and full screen still gives the Sphere the whole phone.",
+  "url": "./living-time-sphere.html",
+  "symbol": "◉"
+ },
+ {
+  "date": "2026-11-19",
+  "type": "feature",
   "title": "The Living Phone app came to the start page",
   "summary": "The Living Phone app can now be downloaded from the homepage and from Downloads, sealed with its SHA-256 like every other download. The app carries the Spark onto an Android phone: her greeting by the moon and the day, her home, the Observatory with the Sphere inside it, and the garden, moving between the rooms as she does here. It lives wholly on the phone, asks for no account and no internet, and this edition is her living presence while the deeper platform wiring is still being connected behind it.",
   "url": "./index.html#living-phone-app",

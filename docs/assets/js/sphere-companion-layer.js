@@ -299,6 +299,46 @@
   window.addEventListener("resize", fitBarReserve);
   fitBarReserve();
 
+  // ── Slim by default on portrait phones ─────────────────────────
+  // In the app view on a portrait phone, the full guide bar wraps to
+  // three rows and the reserve it takes under the stage squeezes the
+  // Sphere below the renderer's own minimum height — the page then
+  // refuses 3D and settles on the 2D fallback (Aaron's A16, Nov 19,
+  // 2026). So on a portrait phone the bar starts folded to its slim
+  // line, the same fold full screen uses; the Guide button unfolds
+  // it, Hide folds it again. The root carries sgb-slim-default so
+  // the deepening stylesheet can show the Guide button and style
+  // the fold outside full screen.
+  const slimMq = window.matchMedia?.("(max-width: 720px) and (orientation: portrait)");
+  function applySlimDefault(force = false) {
+    if (fsElement()) return; // full screen runs its own fold
+    const slim = !!slimMq?.matches && document.body.classList.contains("sphere-app");
+    rootEl.classList.toggle("sgb-slim-default", slim);
+    if (!slim) {
+      if (!bar.classList.contains("sgb-bar-open")) bar.classList.remove("sgb-bar-slim");
+      return;
+    }
+    if (force || !bar.classList.contains("sgb-bar-open")) {
+      bar.classList.add("sgb-bar-slim");
+      bar.classList.remove("sgb-bar-open");
+    }
+    syncGuideToggle();
+    fitBarReserve();
+  }
+  applySlimDefault(true);
+  window.addEventListener("load", () => applySlimDefault(true));
+  slimMq?.addEventListener?.("change", () => applySlimDefault(true));
+  // Leaving full screen clears the bar's fold; restore the slim
+  // default afterwards (registered after syncCleanFs, so it runs
+  // after the full-screen fold has been lifted).
+  document.addEventListener("fullscreenchange", () => applySlimDefault(true));
+  document.addEventListener("webkitfullscreenchange", () => applySlimDefault(true));
+  if ("MutationObserver" in window && document.body) {
+    // The app shell adds sphere-app to the body as it boots; catch
+    // that moment so the fold is in place before the stage settles.
+    new MutationObserver(() => applySlimDefault()).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+  }
+
   // ── Share this view ────────────────────────────────────────────
   // Aaron's direction (Nov 19, 2026): the Sphere should support
   // social media. The share is composed from the guide bar's own
