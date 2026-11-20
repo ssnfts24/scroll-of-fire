@@ -1,6 +1,14 @@
 [
  {
   "date": "2026-11-19",
+  "type": "sphere",
+  "title": "The Day World: a day you can step into",
+  "summary": "Picking a day on the Living Time Sphere now offers a door into the day itself: its full coordinate and telling, its sky, everything kept for it, the keeper's Spark met there, a memory from the same Moon and Day last cycle when one exists, and the day's closing questions, with a note written on the day in the keeper's own records.",
+  "url": "./living-time-sphere.html",
+  "symbol": "◎"
+ },
+ {
+  "date": "2026-11-19",
   "type": "feature",
   "title": "The Sphere took the phone screen",
   "summary": "On a phone, the Sphere was being squeezed into a thin strip by the bars around it, and below a certain height the page would not start its three-dimensional view at all, so a phone could be left with the flat fallback. Now the bars go slim on a phone: the environment and Interact strips take one row each, the guide bar starts as a single line with a Guide button that opens it whole, and the Sphere itself takes the middle of the screen, always tall enough for its full view. Tap a day to choose it, exactly as before, and full screen still gives the Sphere the whole phone.",
