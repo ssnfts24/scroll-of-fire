@@ -1,6 +1,14 @@
 [
  {
   "date": "2026-11-19",
+  "type": "system",
+  "title": "The site put down what it was carrying twice",
+  "summary": "The site was carrying a full copy of itself in a folder of zip files, a hundred and eleven megabytes that no page linked to and no visitor ever opened, and eleven stylesheet and script files that no page loads anymore, including one stylesheet that existed twice under a misspelled name. Both are removed. The snapshot lives on in the project's own history and archives, and every removed file was checked against every page on the site before it was let go.",
+  "url": "./index.html",
+  "symbol": "◎"
+ },
+ {
+  "date": "2026-11-19",
   "type": "feature",
   "title": "The Sphere took the phone screen",
   "summary": "On a phone, the Sphere was being squeezed into a thin strip by the bars around it, and below a certain height the page would not start its three-dimensional view at all, so a phone could be left with the flat fallback. Now the bars go slim on a phone: the environment and Interact strips take one row each, the guide bar starts as a single line with a Guide button that opens it whole, and the Sphere itself takes the middle of the screen, always tall enough for its full view. Tap a day to choose it, exactly as before, and full screen still gives the Sphere the whole phone.",
