@@ -215,6 +215,10 @@ test("all 35 Theory pages carry the module hook", () => {
       html.includes("assets/js/life-atlas/life-atlas-repository.js"),
       `${rel} repository`
     );
+    assert.ok(
+      html.includes("assets/js/life-atlas/record-helpers.js"),
+      `${rel} record helpers`
+    );
   }
 });
 
@@ -224,6 +228,6 @@ test("the module file itself exists and names its honesty", () => {
     "utf8"
   );
   assert.match(source, /theory-witness-note/);
-  assert.match(source, /CodexLifeAtlasRepository/);
+  assert.match(source, /CodexRecordHelpers/);
   assert.doesNotMatch(source, /\bshe\b|\bher\b/i);
 });

@@ -31,11 +31,12 @@
  * the existing Atlas export/backup unchanged. Nothing here tracks,
  * scores, streaks, or shames: a note is a witness mark, not a grade.
  *
- * The temporal stamp follows the Life Atlas convention used by
- * manifest-practice.js (PatternCalendar conversion, patternYear =
- * the anchor civil year). When the shared record layer (Foundation
- * F1) lands, these helpers converge into it; until then this module
- * follows the reading rooms' existing shapes exactly.
+ * The temporal stamp follows the Life Atlas convention (PatternCalendar
+ * conversion, patternYear = the anchor civil year). Record cleaning,
+ * the temporal shape, repository resolution, and change notices come
+ * from the one shared record layer — life-atlas/record-helpers.js
+ * (CodexRecordHelpers), the same module every other door uses. This
+ * module does not re-define them.
  *
  * The pure functions (PLAYGROUNDS, computePlayground,
  * buildWitnessNoteRecord, isWitnessNoteRecord, latestNoteForPage,
@@ -55,6 +56,37 @@
   function () {
     "use strict";
 
+    /* The one record layer: record cleaning, the temporal shape,
+     * repository resolution, and change notices live in
+     * life-atlas/record-helpers.js (CodexRecordHelpers) — one shared
+     * module for every door. Do not re-define them here. */
+    const RecordHelpers =
+      (typeof globalThis !== "undefined"
+        ? globalThis.CodexRecordHelpers
+        : null) ||
+      (typeof module === "object" && module.exports
+        ? (() => {
+            try {
+              return require("./life-atlas/record-helpers.js");
+            } catch {
+              return null;
+            }
+          })()
+        : null);
+
+    if (!RecordHelpers) {
+      throw new Error(
+        "CodexRecordHelpers is required — load life-atlas/record-helpers.js first."
+      );
+    }
+
+    const cleanText = RecordHelpers.cleanText;
+    const cleanNullable = RecordHelpers.cleanNullable;
+    const finiteOrNull = RecordHelpers.finiteOrNull;
+    const temporalFromConversion = RecordHelpers.temporalFromConversion;
+    const notifyRecordsChanged = RecordHelpers.notifyRecordsChanged;
+    const resolveRepository = RecordHelpers.createRepositoryResolver();
+
     const VERSION = "theory-work/1.0.0";
 
     const RECORD_TYPE = "witness";
@@ -68,26 +100,6 @@
       "not a measured law, and a pattern is not a cause.";
 
     /* ------------------------- pure helpers ------------------------- */
-
-    function finiteOrNull(value) {
-      if (value === null || value === undefined || value === "") {
-        return null;
-      }
-
-      const number = Number(value);
-      return Number.isFinite(number) ? number : null;
-    }
-
-    function cleanText(value, max = 2000) {
-      if (value === null || value === undefined) return "";
-
-      return String(value).trim().slice(0, max);
-    }
-
-    function cleanNullable(value, max = 2000) {
-      const text = cleanText(value, max);
-      return text || null;
-    }
 
     function formatNumber(value) {
       if (value === null || value === undefined) return "—";
@@ -485,60 +497,6 @@
 
     /* --------------------- witness note records --------------------- */
 
-    /**
-     * Map a PatternCalendar.fromCivilDate conversion into the
-     * temporal shape Life Atlas records persist — the same mapping
-     * manifest-practice.js uses (patternYear = anchor civil year).
-     */
-    function temporalFromConversion(conversion, instant = null) {
-      if (!conversion || typeof conversion !== "object") {
-        return null;
-      }
-
-      const anchor =
-        conversion.anchorDate instanceof Date
-          ? conversion.anchorDate
-          : conversion.anchorDate
-            ? new Date(conversion.anchorDate)
-            : null;
-
-      const anchorYear =
-        anchor && !Number.isNaN(anchor.getTime())
-          ? anchor.getUTCFullYear()
-          : null;
-
-      let instantIso = null;
-
-      if (instant) {
-        const when =
-          instant instanceof Date ? instant : new Date(instant);
-
-        if (!Number.isNaN(when.getTime())) {
-          instantIso = when.toISOString();
-        }
-      }
-
-      return {
-        instant: instantIso,
-        start: instantIso,
-        end: null,
-
-        timezone: cleanNullable(conversion.timeZone, 80),
-        boundaryMode: cleanNullable(conversion.boundaryMode, 40),
-
-        civilDate: cleanNullable(conversion.civilDate, 20),
-
-        patternYear: anchorYear,
-        moon: finiteOrNull(conversion.moon),
-        moonDay: finiteOrNull(conversion.day),
-        patternDay: finiteOrNull(conversion.dayOfPatternYear),
-        week: finiteOrNull(conversion.weekOfYear),
-
-        weekGate: null,
-        outsideDay: !conversion.insideCountedYear
-      };
-    }
-
     function coordinateForInstant(
       instant = new Date(),
       options = {},
@@ -667,65 +625,6 @@
     }
 
     /* --------------------- browser integration --------------------- */
-
-    let repositoryPromise = null;
-
-    function resolveRepository() {
-      if (repositoryPromise) return repositoryPromise;
-
-      repositoryPromise = (async () => {
-        const runtime =
-          typeof globalThis !== "undefined"
-            ? globalThis.CodexLifeAtlasRuntime
-            : null;
-
-        if (runtime?.ready) {
-          try {
-            const repository = await runtime.ready;
-            if (repository) return repository;
-          } catch {
-            /* fall through to a direct persistent repository */
-          }
-        }
-
-        const Repository =
-          typeof globalThis !== "undefined"
-            ? globalThis.CodexLifeAtlasRepository
-            : null;
-
-        if (!Repository) return null;
-
-        try {
-          if (typeof Repository.createPersistentRepository === "function") {
-            return Repository.createPersistentRepository();
-          }
-        } catch {
-          /* IndexedDB unavailable — memory fallback below */
-        }
-
-        try {
-          return Repository.createRepository();
-        } catch {
-          return null;
-        }
-      })();
-
-      return repositoryPromise;
-    }
-
-    function notifyRecordsChanged(detail) {
-      if (typeof document !== "undefined") {
-        document.dispatchEvent(
-          new CustomEvent("sof:life-atlas-records-changed", { detail })
-        );
-      }
-
-      if (typeof window !== "undefined") {
-        window.dispatchEvent(
-          new CustomEvent("sof:life-atlas-records-changed", { detail })
-        );
-      }
-    }
 
     function pageFileOf(pathname) {
       const parts = String(pathname || "").split("/").filter(Boolean);

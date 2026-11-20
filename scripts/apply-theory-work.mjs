@@ -37,12 +37,18 @@ const CSS_TAG =
 const CSS_ANCHOR =
   '<link rel="stylesheet" href="assets/css/theory.css">';
 
+const HELPERS_TAG =
+  '<script defer src="assets/js/life-atlas/record-helpers.js?v=20261119-1"></script>';
+const MODULE_TAG =
+  '<script defer src="assets/js/theory-work.js?v=20261119-tw1"></script>';
+
 const SCRIPT_TAGS = [
   '<script defer src="assets/js/life-atlas/life-atlas-schema.js?v=20260817-1"></script>',
   '<script defer src="assets/js/life-atlas/life-atlas-repository.js?v=20260819-b750"></script>',
   '<script defer src="assets/js/life-atlas/life-atlas-indexeddb.js?v=20260819-b750"></script>',
   '<script defer src="assets/js/life-atlas/life-atlas-runtime.js?v=20260819-b750"></script>',
-  '<script defer src="assets/js/theory-work.js?v=20261119-tw1"></script>'
+  HELPERS_TAG,
+  MODULE_TAG
 ].join("\n  ");
 const SCRIPT_ANCHOR =
   '<script defer src="assets/js/living-ui.js?v=20261117-1"></script>';
@@ -71,6 +77,20 @@ for (const page of theoryPages()) {
   const original = readFileSync(page, "utf8");
 
   if (original.includes("theory-work.css")) {
+    // Hooked already. The one addition a hooked page can still need
+    // is the shared record layer's tag, which the module requires.
+    if (original.includes("record-helpers.js")) continue;
+
+    if (checkOnly) {
+      pending.push(`${page} — record-helpers tag missing`);
+      continue;
+    }
+
+    writeFileSync(
+      page,
+      original.replace(MODULE_TAG, `${HELPERS_TAG}\n  ${MODULE_TAG}`)
+    );
+    changed += 1;
     continue;
   }
 
