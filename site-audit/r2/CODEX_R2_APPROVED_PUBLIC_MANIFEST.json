@@ -365,7 +365,7 @@
     },
     {
       "path": "docs/assets/css/story-layer.css",
-      "sha256": "742a8a06a29989c83961dcc0e09ec0cc84592f4e1fbb60c5804e7d48d851f92c",
+      "sha256": "bc270101bb1ed5b5217182c3ca49dc7d81304b38ca5638a869cbb636c008845d",
       "publicUrl": "https://codexofreality.org/assets/css/story-layer.css",
       "status": "operational"
     },
@@ -431,13 +431,13 @@
     },
     {
       "path": "docs/assets/data/codex-story.json",
-      "sha256": "0e09321e7270b005685925b29a1467588492789f52f2e047bb3fb53e13985349",
+      "sha256": "248fcef63aae1c9358cf2a0c1a8c704327afe0db48d41d1f115a3379ca73771c",
       "publicUrl": "https://codexofreality.org/assets/data/codex-story.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "ffbc2f91847ad47bf06dc9dec5335d8e3987efe9a32d310e0f11c69b457062f9",
+      "sha256": "1fc02250d423d496c5cacd44e5c483ffb212a7e73f7953efb4c57a4070aadfd7",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -2645,7 +2645,7 @@
     },
     {
       "path": "docs/assets/js/story-layer.js",
-      "sha256": "9df595cba55dfa436a0d09bc54c1b96b8f7218b9a55bcbb44a6454e85300ee49",
+      "sha256": "7af5e36b965298512f20a7aefe613cc33cd08de8eeb1f10a61ddb2e633ee6479",
       "publicUrl": "https://codexofreality.org/assets/js/story-layer.js",
       "status": "operational"
     },
@@ -2669,7 +2669,7 @@
     },
     {
       "path": "docs/assets/js/travellers-map.js",
-      "sha256": "408898bba478195f54635985b63092691ffbb187c9b86a0698175cb997ea842c",
+      "sha256": "f48166dd963fa5921d30ed832fe8ee753abd103f74b499c75429ee73bd60abe1",
       "publicUrl": "https://codexofreality.org/assets/js/travellers-map.js",
       "status": "operational"
     },
@@ -3346,6 +3346,18 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/media/story-episode-02-a-friend-for-the-road-poster.webp",
+      "sha256": "e7192abf0c2ce13616597335a0fc14a945c9fbad3ad3bb59b14f79587b10bee1",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-02-a-friend-for-the-road-poster.webp",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-02-a-friend-for-the-road.mp4",
+      "sha256": "5a4cdac6bf743623fa466c6a23dabc02d9240d17e7c36845f39e607ea0a99ab8",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-02-a-friend-for-the-road.mp4",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/media/systems-archive-explainer-poster.webp",
       "sha256": "d8aea911c2df4dea6fb3f687d2266ac4fbc604b8c299b2d6fc1e11141a17b385",
       "publicUrl": "https://codexofreality.org/assets/media/systems-archive-explainer-poster.webp",
@@ -3605,13 +3617,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "1ceeed0e78685b79a4b86caf883ef2687a3cc918ea21e84a489be86820348698",
+      "sha256": "915013d99a130fad5e9d9579b491d05e0401f77943b55eb7bb6fbb5eb0d91ef8",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "47f7c355ab3e316c285af9cc7490408808068d194e62b8226700a99080373f43",
+      "sha256": "9325b783ef77a98523af0bcc525d39a0a95e41dd13cdbc3b5ce12a5f11c7db75",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -3767,7 +3779,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "fcb1b4c605d9a499180015b76de4f825985b71b481228933c8672c81e1dfbe86",
+      "sha256": "5e447b9e0b058b0860c40c0013942626337934abb933f24bf5b9a35d1742ccfe",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
