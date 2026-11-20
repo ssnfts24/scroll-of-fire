@@ -14,10 +14,10 @@
 
 body.lts-luxury {
   background:
-    radial-gradient(1100px 620px at 18% -8%, rgba(45, 212, 191, 0.10), transparent 60%),
-    radial-gradient(900px 700px at 88% 108%, rgba(212, 175, 55, 0.07), transparent 62%),
-    radial-gradient(700px 480px at 72% 22%, rgba(64, 96, 178, 0.08), transparent 65%),
-    #04060c;
+    radial-gradient(1100px 620px at 18% -8%, hsla(var(--sphere-moon-hue, 43), 72%, 60%, 0.10), transparent 60%),
+    radial-gradient(900px 700px at 88% 108%, rgba(var(--warm-glow, 218, 164, 91), var(--warm-glow-alpha, 0.24)), transparent 62%),
+    radial-gradient(700px 480px at 72% 22%, rgba(116, 60, 33, 0.10), transparent 65%),
+    var(--warm-ground, #100906);
 }
 
 /* A faint starfield, still and cheap: two layers of pinpoints. */
@@ -45,14 +45,15 @@ body.lts-luxury .wrap {
   z-index: 1;
 }
 
-/* The stage frame: a gold hairline, an inner teal breath, and a
- * soft halo cast into the room behind it. */
+/* The stage frame: a brass hairline, a soft halo in the light of
+ * the Moon on show cast into the room behind it, and a warm
+ * inner shade. */
 .sphere-canvas-wrap #sphere-container {
   box-shadow:
-    0 0 0 1px rgba(212, 175, 55, 0.22),
-    0 0 42px rgba(45, 212, 191, 0.10),
+    0 0 0 1px rgba(218, 164, 91, 0.28),
+    0 0 42px hsla(var(--sphere-moon-hue, 43), 80%, 60%, 0.12),
     0 24px 70px rgba(0, 0, 0, 0.55),
-    inset 0 0 60px rgba(4, 10, 18, 0.55);
+    inset 0 0 60px rgba(26, 13, 4, 0.55);
 }
 
 /* Headings on this page carry a small gold rule. */
@@ -85,12 +86,12 @@ body.lts-luxury .wrap {
   justify-content: center;
   gap: 0.4rem 0.7rem;
   padding: 0.5rem 0.7rem;
-  border: 1px solid rgba(212, 175, 55, 0.35);
+  border: 1px solid rgba(218, 164, 91, 0.40);
   border-radius: 1rem;
-  background: rgba(6, 12, 20, 0.82);
+  background: rgba(26, 14, 7, 0.86);
   backdrop-filter: blur(10px);
-  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  color: #e8f1f2;
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 226, 170, 0.08);
+  color: #f3e7cd;
   font-size: 0.85rem;
 }
 
@@ -102,7 +103,7 @@ body.lts-luxury .wrap {
   min-width: 0;
 }
 .sgb-readout-label {
-  color: rgba(190, 220, 225, 0.75);
+  color: rgba(233, 205, 158, 0.78);
   font-size: 0.72rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -128,9 +129,9 @@ body.lts-luxury .wrap {
 .sgb-moon-select {
   font: inherit;
   font-size: 0.82rem;
-  color: #eaf6f6;
-  background: rgba(45, 212, 191, 0.10);
-  border: 1px solid rgba(45, 212, 191, 0.35);
+  color: #f6ead2;
+  background: rgba(218, 164, 91, 0.10);
+  border: 1px solid rgba(218, 164, 91, 0.38);
   border-radius: 999px;
   padding: 0.38rem 0.8rem;
   cursor: pointer;
@@ -138,16 +139,16 @@ body.lts-luxury .wrap {
 }
 .sgb-btn:hover,
 .sgb-btn:focus-visible {
-  background: rgba(45, 212, 191, 0.22);
-  border-color: rgba(45, 212, 191, 0.65);
+  background: rgba(218, 164, 91, 0.22);
+  border-color: rgba(218, 164, 91, 0.65);
 }
 .sgb-btn.sgb-fs {
-  border-color: rgba(212, 175, 55, 0.5);
-  background: rgba(212, 175, 55, 0.12);
+  border-color: rgba(230, 189, 123, 0.55);
+  background: rgba(218, 164, 91, 0.14);
 }
 .sgb-btn.sgb-share {
-  border-color: rgba(212, 175, 55, 0.5);
-  background: rgba(212, 175, 55, 0.12);
+  border-color: rgba(230, 189, 123, 0.55);
+  background: rgba(218, 164, 91, 0.14);
 }
 
 /* The share doors: compose links the keeper sends themselves,
@@ -170,7 +171,7 @@ a.sgb-btn {
 .sgb-share-note {
   flex-basis: 100%;
   text-align: center;
-  color: rgba(190, 220, 225, 0.85);
+  color: rgba(233, 205, 158, 0.85);
   font-size: 0.75rem;
 }
 .sgb-share-note:empty {
@@ -182,7 +183,7 @@ a.sgb-btn {
   gap: 0.35rem;
 }
 .sgb-moon-label {
-  color: rgba(190, 220, 225, 0.75);
+  color: rgba(233, 205, 158, 0.78);
   font-size: 0.72rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -196,7 +197,7 @@ a.sgb-btn {
   flex-basis: 100%;
   margin: 0;
   text-align: center;
-  color: rgba(190, 220, 225, 0.85);
+  color: rgba(233, 205, 158, 0.85);
   font-size: 0.78rem;
   min-height: 0;
 }
@@ -239,7 +240,7 @@ body.sphere-app .sphere-guide-bar {
   cursor: pointer;
   pointer-events: auto;
   will-change: transform;
-  filter: drop-shadow(0 0 10px rgba(45, 212, 191, 0.35));
+  filter: drop-shadow(0 0 10px rgba(245, 168, 61, 0.45)) drop-shadow(0 0 26px rgba(218, 164, 91, 0.22));
 }
 .sphere-nori-art svg {
   display: block;
@@ -278,8 +279,8 @@ html.sphere-nori-orbiting .spark-walker {
   font-size: 0.8rem;
   border-radius: 999px;
   padding: 0.3rem 0.7rem;
-  border: 1px solid rgba(45, 212, 191, 0.4);
-  background: rgba(45, 212, 191, 0.10);
+  border: 1px solid rgba(218, 164, 91, 0.42);
+  background: rgba(218, 164, 91, 0.10);
   color: inherit;
   cursor: pointer;
 }
@@ -336,7 +337,7 @@ html.sgb-fs .sphere-guide-bar.sgb-bar-slim {
   max-width: 94vw;
   padding: 0.35rem 0.55rem;
   gap: 0.35rem 0.5rem;
-  background: rgba(6, 12, 20, 0.72);
+  background: rgba(26, 14, 7, 0.78);
 }
 html.sgb-fs .sphere-guide-bar.sgb-bar-slim .sgb-actions > :not(.sgb-fs):not(.sgb-clean-toggle),
 html.sgb-fs .sphere-guide-bar.sgb-bar-slim .sgb-status,
@@ -365,7 +366,7 @@ html.sgb-slim-default .sphere-guide-bar.sgb-bar-slim {
   width: auto;
   padding: 0.35rem 0.55rem;
   gap: 0.35rem 0.5rem;
-  background: rgba(6, 12, 20, 0.72);
+  background: rgba(26, 14, 7, 0.78);
 }
 html.sgb-slim-default .sphere-guide-bar.sgb-bar-slim .sgb-actions > :not(.sgb-fs):not(.sgb-clean-toggle),
 html.sgb-slim-default .sphere-guide-bar.sgb-bar-slim .sgb-status,
@@ -438,7 +439,7 @@ html.sgb-fs body:not(.sphere-app) .sphere-wrapper {
   display: flex;
   flex-direction: column;
   margin: 0;
-  background: #05070d;
+  background: var(--warm-app-bg, #130a06);
 }
 html.sgb-fs body:not(.sphere-app) .sphere-wrapper > :not(.sphere-canvas-wrap) {
   display: none;
@@ -463,4 +464,89 @@ html.sgb-fs body:not(.sphere-app) #sphere-container {
   min-height: 0;
   max-height: none;
   width: 100%;
+}
+
+/* ── The room's warmth ─────────────────────────────────────────── */
+/* Aaron's direction (Nov 19, 2026): the cartoon Sphere's warmth,
+ * carried across only where it maps to something real here. The
+ * companion layer marks the root element with the visitor's part
+ * of day (sphere-warm--dawn / day / dusk / night, from their own
+ * clock, the front door's four bands) and sets --sphere-moon-hue
+ * from the Moon on show, through the same temper the Spark's own
+ * light borrows. These variables are that light, in CSS:
+ *   --warm-glow / --warm-glow-alpha: the horizon light of the
+ *     visitor's part of day — amber rising at dawn, pale brass
+ *     at day, deep ember at dusk, low gold at night;
+ *   --warm-ground / --warm-app-bg: the room's warm dark, wood
+ *     and shadow rather than blue-black, so the Sphere sits in
+ *     the material the cartoon gives it — an instrument's face,
+ *     the same wood and brass as the front door's frame. */
+
+:root {
+  --warm-glow: 218, 164, 91;
+  --warm-glow-alpha: 0.24;
+  --warm-ground: #100906;
+  --warm-app-bg: #130a06;
+}
+html.sphere-warm--dawn {
+  --warm-glow: 242, 158, 79;
+  --warm-glow-alpha: 0.34;
+  --warm-ground: #17100b;
+  --warm-app-bg: #180e07;
+}
+html.sphere-warm--day {
+  --warm-glow: 230, 189, 123;
+  --warm-glow-alpha: 0.26;
+  --warm-ground: #161210;
+  --warm-app-bg: #171009;
+}
+html.sphere-warm--dusk {
+  --warm-glow: 221, 124, 79;
+  --warm-glow-alpha: 0.36;
+  --warm-ground: #180d07;
+  --warm-app-bg: #190d06;
+}
+html.sphere-warm--night {
+  --warm-glow: 218, 164, 91;
+  --warm-glow-alpha: 0.22;
+  --warm-ground: #0f0805;
+  --warm-app-bg: #120905;
+}
+
+/* In the app view the stage ground rests on the same light. */
+body.sphere-app .sphere-wrapper {
+  background: var(--warm-app-bg, var(--sphere-app-bg));
+}
+
+/* The held light around the stage: a halo in the Moon's hue over
+ * the daypart horizon glow, breathing at the Spark's own cadence
+ * (spark-breathe, 4.6s ease-in-out — the room breathes with the
+ * Spark who lives in it). The instrument shell lifts one layer,
+ * so the halo stays behind the Sphere, never over it. */
+.sphere-canvas-wrap::before {
+  content: "";
+  position: absolute;
+  inset: -3% -2%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 78% 62% at 50% 40%, hsla(var(--sphere-moon-hue, 43), 85%, 62%, 0.13), transparent 65%),
+    radial-gradient(ellipse 92% 55% at 50% 110%, rgba(var(--warm-glow, 218, 164, 91), var(--warm-glow-alpha, 0.24)), transparent 62%);
+  animation: sphere-warm-breathe 4.6s ease-in-out infinite;
+}
+@keyframes sphere-warm-breathe {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+.sphere-canvas-wrap .sphere-instrument-shell {
+  position: relative;
+  z-index: 1;
+}
+
+/* The designed still face: no breathing — the halo rests, held. */
+@media (prefers-reduced-motion: reduce) {
+  .sphere-canvas-wrap::before {
+    animation: none;
+    opacity: 0.7;
+  }
 }

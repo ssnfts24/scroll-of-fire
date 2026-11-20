@@ -6,14 +6,18 @@
  * document. In app mode the sphere wrapper becomes a full-viewport stage
  * that does not scroll; panels present as sheets over the living sphere;
  * the dock and the selected-day bar are always within thumb reach.
- * Palette follows the living-ui conventions: deep stone ground, teal
- * shadow, gold seams.
+ * Palette follows the living-ui conventions: deep warm ground, teal
+ * shadow, brass seams. (Nov 19, 2026: the ground and panels took
+ * the cartoon Sphere's wood-and-brass warmth; the teal stays as
+ * the small glyph-light accent, the way the cartoon's own glyph
+ * light rides its warm wood. The daypart shades of this ground
+ * live in sphere-deepening.css, under the room's warmth.)
  */
 
 :root {
-  --sphere-app-bg: #05070d;
-  --sphere-app-panel: rgba(10, 16, 24, 0.97);
-  --sphere-app-line: rgba(212, 175, 55, 0.35);
+  --sphere-app-bg: #130a06;
+  --sphere-app-panel: rgba(23, 13, 7, 0.97);
+  --sphere-app-line: rgba(218, 164, 91, 0.38);
   --sphere-app-text: #e8e4d9;
   --sphere-app-dim: rgba(232, 228, 217, 0.62);
   --sphere-app-teal: #57b7a8;
@@ -39,7 +43,7 @@ body:not(.sphere-app) .sphere-app-enter {
   padding: 0.65rem 1.1rem;
   border: 1px solid var(--sphere-app-line);
   border-radius: 999px;
-  background: rgba(10, 16, 24, 0.9);
+  background: rgba(23, 13, 7, 0.92);
   color: var(--sphere-app-text);
   font: inherit;
   cursor: pointer;
@@ -282,7 +286,7 @@ body.sphere-app .sphere-app-daybar {
   padding: 0.35rem 0.8rem;
   border: 1px solid transparent;
   border-radius: 0.8rem;
-  background: rgba(87, 183, 168, 0.08);
+  background: rgba(218, 164, 91, 0.10);
   color: var(--sphere-app-text);
   font: inherit;
   text-align: left;
@@ -375,7 +379,7 @@ body.sphere-app .sphere-app-scrim {
   position: fixed;
   inset: 0;
   z-index: 110;
-  background: rgba(3, 5, 9, 0.55);
+  background: rgba(12, 6, 2, 0.55);
   opacity: 0;
   visibility: hidden;
   transition: opacity 200ms ease, visibility 0s linear 200ms;
@@ -390,7 +394,7 @@ body.sphere-app .sphere-app-scrim.is-visible {
 body.sphere-app .sphere-sheet {
   position: fixed;
   z-index: 120;
-  background: #0a1018;
+  background: #170d07;
   color: var(--sphere-app-text);
   box-shadow: 0 -12px 44px rgba(0, 0, 0, 0.5);
   overflow-y: auto;
@@ -446,7 +450,7 @@ body.sphere-app .sphere-sheet.is-open {
   padding: 0.4rem 0.85rem;
   border: 1px solid var(--sphere-app-line);
   border-radius: 999px;
-  background: rgba(10, 16, 24, 0.92);
+  background: rgba(23, 13, 7, 0.92);
   color: var(--sphere-app-text);
   font: inherit;
   font-size: 0.82rem;
