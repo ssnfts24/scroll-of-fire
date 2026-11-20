@@ -19,7 +19,10 @@
 | `search:index:check` | `node scripts/build-search-index.mjs --check` |
 | `r2:inventory` | `node scripts/build-r2-inventory.mjs` |
 | `r2:inventory:check` | `node scripts/build-r2-inventory.mjs --check` |
-| `validate` | `npm run test && npm run site:catalog:check && npm run search:index:check && npm run r2:inventory:check && npm run audit` |
+| `r2:inventory:check:branch` | `node scripts/build-r2-inventory.mjs --check=branch` |
+| `site:seal` | `npm run site:catalog && npm run search:index && python3 scripts/r2-extract-documents.py && npm run r2:inventory` |
+| `validate` | `npm run test && npm run site:catalog:check && npm run search:index:check && npm run r2:inventory:check:branch && npm run audit` |
+| `validate:landing` | `npm run test && npm run site:catalog:check && npm run search:index:check && npm run r2:inventory:check && npm run audit` |
 
 ## Workflows
 
@@ -61,7 +64,7 @@
 | `scripts/apply-spark-presence.mjs` | `docs/living-time-sphere.html`, `docs/404.html`, `docs/offline.html`, `docs/caravan.html`, `docs/companions.html` |
 | `scripts/apply-theory-work.mjs` | `docs/theory.html` |
 | `scripts/audit-site.mjs` | — |
-| `scripts/build-r2-inventory.mjs` | `site-audit/r2/document-extracts.json`, `docs/scroll/archive/Full_Scroll_Unsealed.txt`, `docs/development/TEMPORAL-AUTHORITY-CONTRACT.md` |
+| `scripts/build-r2-inventory.mjs` | `site-audit/r2/document-extracts.json`, `docs/scroll/archive/Full_Scroll_Unsealed.txt`, `docs/development/TEMPORAL-AUTHORITY-CONTRACT.md`, `site-audit/r2/CODEX_R2_RESOURCE_REGISTRY.json` |
 | `scripts/build-scroll-editorial.mjs` | `docs/scroll/data/editorial-edition.json`, `docs/scroll/evidence/claim-register.json`, `docs/scroll/evidence/register.md` |
 | `scripts/build-scroll-library.mjs` | `archive/Full_Scroll_Unsealed.txt`, `archive/edition.json` |
 | `scripts/build-scroll-search.mjs` | — |
@@ -85,14 +88,14 @@
 
 | Stylesheet | Pages |
 | --- | --- |
-| `docs/assets/css/spark-companion.css` | 175 |
-| `docs/assets/css/living-ui.css` | 134 |
+| `docs/assets/css/spark-companion.css` | 176 |
+| `docs/assets/css/living-ui.css` | 135 |
 | `docs/scripture/assets/scripture.css` | 93 |
-| `docs/assets/css/codex.css` | 46 |
-| `docs/assets/css/navigation.css` | 38 |
-| `docs/assets/css/social-bridge.css` | 35 |
+| `docs/assets/css/codex.css` | 48 |
+| `docs/assets/css/navigation.css` | 39 |
+| `docs/assets/css/social-bridge.css` | 36 |
 | `docs/assets/css/living-moon-theme.css` | 31 |
-| `docs/assets/css/animations.css` | 20 |
+| `docs/assets/css/animations.css` | 21 |
 | `docs/theory/equations/assets/css/codex.css` | 19 |
 | `docs/theory/equations/assets/css/navigation.css` | 19 |
 | `docs/theory/equations/assets/css/theory.css` | 19 |
@@ -100,18 +103,18 @@
 
 | Script | Pages |
 | --- | --- |
-| `docs/assets/js/spark-companion.js` | 175 |
-| `docs/assets/js/spark-presence.js` | 174 |
-| `docs/assets/js/site.js` | 137 |
-| `docs/assets/js/living-ui.js` | 134 |
+| `docs/assets/js/spark-companion.js` | 176 |
+| `docs/assets/js/spark-presence.js` | 175 |
+| `docs/assets/js/site.js` | 138 |
+| `docs/assets/js/living-ui.js` | 135 |
 | `docs/scripture/assets/scripture.js` | 93 |
 | `docs/assets/js/heaven-sound.js` | 75 |
+| `docs/assets/js/calendar/pattern-calendar-version.js` | 73 |
+| `docs/assets/js/calendar/pattern-calendar-data.js` | 73 |
+| `docs/assets/js/calendar/pattern-calendar-format.js` | 73 |
+| `docs/assets/js/calendar/pattern-calendar-boundary.js` | 73 |
+| `docs/assets/js/calendar/pattern-calendar.js` | 73 |
 | `docs/assets/js/spark-3d.js` | 72 |
-| `docs/assets/js/calendar/pattern-calendar-version.js` | 71 |
-| `docs/assets/js/calendar/pattern-calendar-data.js` | 71 |
-| `docs/assets/js/calendar/pattern-calendar-format.js` | 71 |
-| `docs/assets/js/calendar/pattern-calendar-boundary.js` | 71 |
-| `docs/assets/js/calendar/pattern-calendar.js` | 71 |
 
 ## Protected systems (do not modify)
 
@@ -126,15 +129,12 @@
 
 ## Reproducible generation order
 
-Stage any intentional new files before generation. Then run:
+Stage any intentional new files before generation. Feature branches never regenerate the seals: they run `npm run validate`, whose branch seal check reports staleness as pending re-seal. Seals regenerate exactly once at landing, on main:
 
 ```sh
-npm run site:catalog
-python3 scripts/r2-extract-documents.py  # requires pypdf
-npm run r2:inventory
-npm run site:catalog:check
-npm run r2:inventory:check
-npm run validate
+npm run site:seal        # catalog -> search index -> document extract -> R2 inventory
+# commit the regenerated site-audit/r2/ files as the landing seal commit
+npm run validate:landing # strict: committed seals must byte-match the landed tree
 ```
 
 The two `--check` commands are read-only. Catalog scanning uses an OS temporary directory, and both inventories use only index-listed paths. Run checks after the full test suite: the Scroll reader reproducibility test rebuilds tracked `docs/scroll/` outputs, which the R2 registry hashes.

@@ -60,6 +60,7 @@ These pages remain discoverable through the Atlas or linked pages, but are not l
 - `timeline.html`
 - `sending-test.html`
 - `garden.html`
+- `search.html`
 - `theory/artifact-theory.html`
 - `theory/bibliography.html`
 - `theory/delta-framework.html`
@@ -74,7 +75,6 @@ These pages remain discoverable through the Atlas or linked pages, but are not l
 - `theory/thirteen-moons.html`
 - `theory/unified-field.html`
 - `theory/witness.html`
-- `witness-world.html`
 
 ## Missing meta descriptions (0)
 
@@ -241,11 +241,11 @@ The page itself was not changed. Full lists are in `downloads-reconciliation.jso
 | `caravan.html` | — | — | no | no | 0 |
 | `circle.html` | 1 | 1 | yes | yes | 70 |
 | `claims-atlas.html` | 1 | 1 | no | yes | 2 |
-| `codex-atlas.html` | 1 | 1 | yes | yes | 176 |
+| `codex-atlas.html` | 1 | 1 | yes | yes | 175 |
 | `codex-guide.html` | 2 | 2 | no | yes | 3 |
 | `companions.html` | 1 | 1 | no | yes | 174 |
 | `covenant-caravan.html` | 1 | 1 | yes | yes | 72 |
-| `downloads.html` | 1 | 1 | yes | yes | 75 |
+| `downloads.html` | 1 | 1 | yes | yes | 176 |
 | `equinox-passage.html` | 2 | 2 | yes | yes | 6 |
 | `ethics.html` | 1 | 1 | yes | yes | 71 |
 | `garden.html` | 2 | 2 | no | yes | 3 |
@@ -258,9 +258,9 @@ The page itself was not changed. Full lists are in `downloads-reconciliation.jso
 | `invoke.html` | 1 | 1 | yes | yes | 70 |
 | `lab.html` | 1 | 1 | yes | yes | 70 |
 | `ledger.html` | 1 | 1 | yes | no | 74 |
-| `living-time-sphere.html` | 1 | 1 | yes | yes | 175 |
+| `living-time-sphere.html` | 1 | 1 | yes | yes | 176 |
 | `micro.html` | 2 | 2 | no | yes | 3 |
-| `moons.html` | 1 | 1 | yes | yes | 171 |
+| `moons.html` | 1 | 1 | yes | yes | 177 |
 | `offline.html` | — | — | no | no | 0 |
 | `practices.html` | 1 | 1 | no | yes | 4 |
 | `scripture/about.html` | 2 | 2 | yes | yes | 92 |
@@ -354,16 +354,16 @@ The page itself was not changed. Full lists are in `downloads-reconciliation.jso
 | `scripture/genesis/48.html` | 2 | 2 | no | yes | 50 |
 | `scripture/genesis/49.html` | 2 | 2 | no | yes | 50 |
 | `scripture/genesis/50.html` | 2 | 2 | no | yes | 51 |
-| `scripture/index.html` | 1 | 1 | yes | yes | 174 |
+| `scripture/index.html` | 1 | 1 | yes | yes | 95 |
 | `scripture/lemma.html` | 2 | 2 | no | yes | 1 |
 | `scroll-of-fire-codex-of-reality-remnant-whitepaper.html` | 1 | 1 | yes | yes | 72 |
 | `scroll/atlas.html` | 1 | 1 | yes | yes | 174 |
 | `scroll/editorial.html` | 1 | 1 | yes | yes | 175 |
-| `scroll/index.html` | 1 | 1 | yes | yes | 176 |
-| `scroll/lexicon.html` | 1 | 1 | yes | yes | 176 |
+| `scroll/index.html` | 1 | 1 | yes | yes | 175 |
+| `scroll/lexicon.html` | 1 | 1 | yes | yes | 174 |
 | `scroll/reader.html` | 2 | 2 | no | yes | 2 |
 | `scroll/search.html` | 1 | 1 | yes | yes | 175 |
-| `search.html` | 1 | 1 | no | yes | 174 |
+| `search.html` | 2 | 2 | no | yes | 4 |
 | `sending-test.html` | 2 | 2 | no | yes | 3 |
 | `shop.html` | 1 | 1 | yes | yes | 175 |
 | `start.html` | 1 | 1 | yes | yes | 73 |
@@ -410,5 +410,5 @@ The page itself was not changed. Full lists are in `downloads-reconciliation.jso
 | `theory/unified-field.html` | 2 | 2 | no | yes | 35 |
 | `theory/witness.html` | 2 | 2 | no | yes | 14 |
 | `timeline.html` | 2 | 2 | no | yes | 2 |
-| `witness-world.html` | 2 | 2 | no | yes | 2 |
+| `witness-world.html` | 1 | 1 | no | yes | 173 |
 | `witness.html` | 1 | 1 | no | yes | 174 |
