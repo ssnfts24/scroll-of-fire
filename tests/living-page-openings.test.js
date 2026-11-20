@@ -267,10 +267,15 @@ test("the living line never invents a coordinate", () => {
     "every main-house page with the living opening must carry the PatternCalendar");
   // Pages without temporal code load no calendar: the line stays civil-only.
   // (The main house, shop included, gained the calendar with the Living Moon
-  // Theme so every room can change with the moon; 404.html still carries none.)
-  const shop = read("docs/404.html");
-  assert.ok(!shop.includes("pattern-calendar"),
-    "404.html carries no PatternCalendar, so its opening shows the civil date only");
+  // Theme so every room can change with the moon. Interactivity wave 1 gave
+  // 404.html the calendar too — deliberately: its day line speaks only the
+  // coordinate PatternCalendar computes, and its static fallback names no
+  // coordinate at all, so the never-invent rule holds there as well.)
+  const gate = read("docs/404.html");
+  assert.ok(gate.includes("pattern-calendar"),
+    "404.html carries the PatternCalendar, so its day line may show the coordinate");
+  assert.ok(gate.includes("PatternCalendar.fromCivilDate"),
+    "the 404 day line is computed by the canonical engine, never written by hand");
   // A page that does carry the calendar gets the full coordinate.
   const moons = read("docs/moons.html");
   assert.ok(moons.includes("pattern-calendar"),
