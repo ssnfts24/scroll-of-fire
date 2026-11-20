@@ -187,15 +187,17 @@ const shelfIndex = shelves.map(shelf => {
   return `<details class="index-shelf" id="shelf-${shelf.id}"><summary><span class="shelf-number">${shelf.icon}</span><span><strong>${escapeHtml(shelf.title)}</strong><small>${shelfSections[shelf.id].length} original sections</small></span></summary><ol>${links}</ol></details>`;
 }).join("\n");
 
-// The unified site navigation — the same markup scripts/apply-living-nav.mjs
+// The one travel bar — the same markup scripts/apply-living-nav.mjs
 // inserts into the hand-maintained pages and scripts/r2_02_pages.py emits for
 // the Scripture reader. It is emitted here because these library pages are
 // generated (the reader test suite rebuilds them), so hand edits would be
-// wiped. Home is one tap away from every library page.
+// wiped. Home is one tap away from every library page. The library pages
+// are deep shelves, not one of the main rooms, so no room is marked
+// current here (the `area` argument is kept for call-site compatibility).
 function livingNav(area) {
   const link = (href, label, key) =>
     `<a${key === area ? ' class="is-current" aria-current="page"' : ""} href="${href}">${label}</a>`;
-  return `<div class="living-nav" data-living-nav><nav class="living-nav-inner" aria-label="Site navigation"><a class="living-nav-brand" href="../index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a><ul class="living-nav-links"><li>${link("../index.html", "Home", "home")}</li><li>${link("index.html", "Scroll", "scroll")}</li><li>${link("../codex-atlas.html", "Atlas", "atlas")}</li><li>${link("lexicon.html", "Lexicon", "lexicon")}</li><li>${link("../scripture/index.html", "Scripture", "scripture")}</li><li>${link("../living-time-sphere.html", "Sphere", "sphere")}</li><li>${link("../shop.html", "Shop", "shop")}</li><li>${link("../witness.html", "Witness", "witness")}</li><li>${link("../search.html", "Living Search", "search")}</li><li>${link("../companions.html", "Companion", "companion")}</li><li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li></ul></nav></div>`;
+  return `<div class="living-nav travel-bar" data-living-nav data-travel-bar><nav class="living-nav-inner" aria-label="Travel bar — main rooms"><a class="living-nav-brand" href="../index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a><ul class="living-nav-links"><li>${link("../index.html", "Home", "home")}</li><li>${link("../living-time-sphere.html", "Sphere", "sphere")}</li><li>${link("../companions.html", "Companions", "companions")}</li><li>${link("../moons.html", "13 Moons", "moons")}</li><li>${link("../downloads.html", "Library", "library")}</li><li>${link("../witness-world.html", "Witness World", "witness-world")}</li><li>${link("../shop.html", "Shop", "shop")}</li><li>${link("../witness.html", "Witness", "witness")}</li><li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li></ul></nav></div>`;
 }
 
 const homepage = `<!doctype html>

@@ -627,10 +627,12 @@ body.site-menu-open {
    LIVING CODEX SIGNAL BAR
    ========================================================= */
 
+/* The signal bar retired as a stacked sticky bar with the one
+ * travel bar (Nov 19, 2026): the shell survives only on the homepage,
+ * holding the Living Day toggle and panel in normal flow — it no
+ * longer sticks beneath the headers. */
 .living-signal-shell {
-  position: sticky;
-  top: var(--header-h, 72px);
-  z-index: 720;
+  position: static;
   padding: 0.3rem max(0.75rem, calc((100vw - var(--content-wide, 1440px)) / 2 + 0.75rem)) 0.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(5, 7, 13, 0.82);

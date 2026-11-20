@@ -446,12 +446,25 @@
   panel.appendChild(status);
   bar.appendChild(panel);
 
+  /* One travel bar (Nov 19, 2026): the bridge no longer stacks a
+   * second bar under the nav. Its share button and follow doors live
+   * inside the travel bar itself, and its panel opens as a full-width
+   * row of that same bar. Only a page with no travel bar at all keeps
+   * the old standalone placement. */
   const navHost = document.querySelector(".living-nav");
-  if (navHost && navHost.parentNode) {
+  const navInner = document.querySelector(".living-nav-inner");
+  if (navInner) {
+    bar.classList.add("social-bridge-in-bar");
+    navInner.appendChild(bar);
+    navHost.appendChild(panel);
+  } else if (navHost && navHost.parentNode) {
+    bar.appendChild(panel);
     navHost.parentNode.insertBefore(bar, navHost.nextSibling);
   } else if (document.querySelector("main")) {
+    bar.appendChild(panel);
     document.querySelector("main").prepend(bar);
   } else {
+    bar.appendChild(panel);
     document.body.prepend(bar);
   }
 
