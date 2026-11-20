@@ -1,0 +1,163 @@
+/* Theory — Work This Page (Interactivity Wave 2)
+   Styles for the shared module in docs/assets/js/theory-work.js:
+   the equation playground and the witness note that now ride every
+   Theory library page. Static layout only — the module adds no
+   motion, so reduced-motion needs nothing extra here. */
+
+.theory-work {
+  max-width: 1180px;
+  margin: 1.4rem auto 0;
+  padding: 0 1rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.theory-work-kicker {
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.theory-work-card {
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  border-radius: 0.6rem;
+  background: rgba(212, 175, 55, 0.06);
+  padding: 1rem 1.1rem 1.1rem;
+}
+
+.theory-work-heading {
+  margin: 0 0 0.35rem;
+  font-size: 1.25rem;
+}
+
+.theory-work-formula {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.theory-work-blurb {
+  margin: 0 0 0.8rem;
+  max-width: 65ch;
+}
+
+.theory-work-row {
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) minmax(120px, 2fr) 4.5rem;
+  align-items: center;
+  gap: 0.6rem 0.9rem;
+  margin: 0.35rem 0;
+}
+
+.theory-work-label {
+  font-size: 0.95rem;
+}
+
+.theory-work-row input[type="range"] {
+  width: 100%;
+  min-height: 32px;
+  accent-color: #b8912f;
+}
+
+.theory-work-value {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  font-weight: 600;
+}
+
+.theory-work-readout {
+  margin: 0.85rem 0 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.theory-work-note {
+  margin: 0.35rem 0 0;
+  font-style: italic;
+}
+
+.theory-work-honesty {
+  margin: 0.85rem 0 0;
+  font-size: 0.9rem;
+  opacity: 0.85;
+  max-width: 70ch;
+}
+
+.theory-work-saved {
+  margin: 0 0 0.6rem;
+  font-weight: 600;
+}
+
+.theory-work-saved:empty {
+  display: none;
+}
+
+.theory-work-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 3.2rem;
+  padding: 0.6rem 0.7rem;
+  border-radius: 0.45rem;
+  border: 1px solid rgba(127, 127, 127, 0.55);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+.theory-work-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.7rem 1.2rem;
+  margin-top: 0.7rem;
+}
+
+.theory-work-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.theory-work-mark input[type="checkbox"] {
+  width: 1.15rem;
+  height: 1.15rem;
+  accent-color: #b8912f;
+}
+
+.theory-work-save {
+  min-height: 44px;
+  padding: 0.55rem 1.15rem;
+  border-radius: 0.45rem;
+  border: 1px solid rgba(212, 175, 55, 0.65);
+  background: rgba(212, 175, 55, 0.16);
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.theory-work-save:hover,
+.theory-work-save:focus-visible {
+  background: rgba(212, 175, 55, 0.28);
+}
+
+.theory-work-status {
+  margin: 0.6rem 0 0;
+}
+
+.theory-work-status:empty {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .theory-work-row {
+    grid-template-columns: 1fr 4.5rem;
+  }
+
+  .theory-work-label {
+    grid-column: 1 / -1;
+  }
+}
