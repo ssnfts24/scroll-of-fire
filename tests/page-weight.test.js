@@ -66,7 +66,13 @@ test("the diet cannot regress silently: the idempotent stacks load once per page
     "calendar/pattern-calendar.js",
     "living-trail.js"
   ];
+  /* One named exception: guide.html is the Guide's own page,
+   * fenced off from branch edits by the Guide-seat test — its
+   * duplicate loads are main's own, to be dieted when the
+   * Guide's pages are next opened with Aaron's word. */
+  const DIET_EXEMPT = new Set(["guide.html"]);
   for (const rel of walkPages()) {
+    if (DIET_EXEMPT.has(rel)) continue;
     const html = fs.readFileSync(path.join(docsRoot, rel), "utf8");
     const srcs = [...html.matchAll(/<script[^>]+src="([^"]+)"/g)].map(m => m[1]);
     for (const stack of safeStacks) {

@@ -34,7 +34,7 @@ The Pattern Calendar, 13 Moons, Living Time Sphere and witnessed days.
 - **Witness Ledger** — Live; Browser-local record of witnessed days and SHA-256 hashes. Entries stay on this device and do not sync.
 - **Companions** — Live; Meet a Spark: a small companion made for you on the day you adopt it, named by you, kept on your own device. It grows as you return, visit, and practice, and roams the site with you.
 
-### Systems and Living Technology (16 catalog entries)
+### Systems and Living Technology (17 catalog entries)
 
 Practice tools, frequency systems and the Codex hub for building.
 
@@ -52,8 +52,9 @@ Practice tools, frequency systems and the Codex hub for building.
 - **Invocation Lab** — Live; Guided run space for the Codex equations with carriers, ethics and witnesses.
 - **Field Guide** — Live; Daily and weekly practice, troubleshooting and ethics.
 - **Manifest** — Live; Remnant visual exercise: carrier frequency engine, harmonic sequences and breath.
-- **Shroom Search — the Garden** — Live; A small garden game on the bench: tend mushroom beds, grow them through tiers across days and practice, and harvest passes kept as Life Atlas records on the visitor's own device.
+- **The Pattern Garden — the Garden** — Live; The garden game on the bench, remade: thirteen beds keyed to the thirteen Moons, plantings read from the real Western Washington farm record, growth counted from the keeper's kept days, and harvests kept as Life Atlas keepsakes on the visitor's own device. Shroom Search passes earned before the remake stay in keepers' Atlases exactly as they are.
 - **Practices — the Exercises Wing** — Live; Short exercises for a human in the Training Grounds: breath, attention, seeing, memory, and intention. Each finished exercise seals a practice record in the visitor's own Life Atlas — the same record the garden reads as rain — on this device only.
+- **The Traveller's Map** — Live; The whole site drawn as the lands of one road: every place pictured by its cartoon scene, the Traveller's Road story in walking order with found chapters stamped by their Pattern day, the Year Thread showing today's place in the year and the keeper's trail, and the pages still waiting for their chapters named honestly.
 
 ### Evidence and Research (23 catalog entries)
 
@@ -108,9 +109,9 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 
 ## Repository and deployed-content coverage
 
-- Public HTML pages inspected: **179**.
-- Total master-inventory records: **475**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
-- Public-facing catalog entries: **72**; only explicitly curated entries appear on the Atlas.
+- Public HTML pages inspected: **180**.
+- Total master-inventory records: **476**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
+- Public-facing catalog entries: **73**; only explicitly curated entries appear on the Atlas.
 - Numbered archive folders are inventoried file-by-file, while downloads snapshot differences are kept separate from historical integrity data.
 - Root files not already published through the archive or explicitly approved remain classified as development-only; no such file is automatically linked from the public catalog.
 
@@ -126,7 +127,7 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 ## Current resource-type counts
 
 - Deployed Markdown documents: 57
-- HTML pages: 179
+- HTML pages: 180
 - Numbered archive file: 141
 - Numbered archive folder: 7
 - Repository folder: 10

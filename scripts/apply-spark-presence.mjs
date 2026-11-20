@@ -51,7 +51,13 @@ const EXCLUDED_FILES = new Set([
   "404.html",
   "offline.html",
   "caravan.html",
-  "companions.html"
+  "companions.html",
+  /* The Guide's own pages: they carry the Codex Guide's seat,
+   * and the two seats stay separate — the Spark seat does not
+   * stand in the Guide's house (the Guide-seat fence test in
+   * tests/spark-agent.test.js guards the Guide's files). */
+  "guide.html",
+  "codex-guide.html"
 ]);
 const EXCLUDED_DIRS = new Set(["scroll", "scripture"]);
 
