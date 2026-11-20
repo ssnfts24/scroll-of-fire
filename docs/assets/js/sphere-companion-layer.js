@@ -553,6 +553,56 @@
     else if (action === "guide") toggleGuideBar();
   });
 
+  // ── The room's warmth ────────────────────────────────────────
+  // Aaron's direction (Nov 19, 2026): bring the cartoon Sphere's
+  // warmth into the real instrument, only where it maps to
+  // something the instrument already knows. Two signals, both
+  // read from the page's own sources:
+  //   1. The visitor's part of day, from their own clock, in the
+  //      same four bands the front door uses (dawn, day, dusk,
+  //      night). The root element carries sphere-warm--<part>,
+  //      and the overlay stylesheets rest the room's light on it.
+  //   2. The temper of the Moon on show. The state strip is the
+  //      instrument's public readout; the Moon it names lends
+  //      its element's hue to the room's glow, through the same
+  //      moonTemperFor the Spark's own light borrows from, fed
+  //      by the same calendar data that states the Moon's
+  //      element. A day outside the Moons has no temper to
+  //      borrow, so the room keeps its daypart warmth alone.
+  // This block reads and marks only. Trips, selection and the
+  // instrument itself stay with the modules that own them.
+
+  const warmParts = ["dawn", "day", "dusk", "night"];
+  function daypartNow() {
+    const hour = new Date().getHours();
+    return hour >= 5 && hour < 10 ? "dawn" : hour >= 10 && hour < 17 ? "day" : hour >= 17 && hour < 21 ? "dusk" : "night";
+  }
+  function syncDaypart() {
+    const part = daypartNow();
+    for (const name of warmParts) rootEl.classList.toggle(`sphere-warm--${name}`, name === part);
+  }
+  syncDaypart();
+  window.setInterval(syncDaypart, 15 * 60 * 1000);
+
+  function syncMoonHue() {
+    const core = window.SparkCompanion;
+    const coord = parseReadout(readoutValue.textContent);
+    if (!coord || !core || typeof core.moonTemperFor !== "function") {
+      rootEl.style.removeProperty("--sphere-moon-hue");
+      return;
+    }
+    const moons = globalThis.PatternCalendarData?.moons;
+    const element = Array.isArray(moons) ? (moons[coord.moon - 1] || {}).element || null : null;
+    const temper = core.moonTemperFor({
+      today: { moon: coord.moon, moonName: moonNames[coord.moon - 1] },
+      element
+    });
+    if (temper) rootEl.style.setProperty("--sphere-moon-hue", String(temper.hue));
+    else rootEl.style.removeProperty("--sphere-moon-hue");
+  }
+  if (strip) new MutationObserver(syncMoonHue).observe(strip, { childList: true, subtree: true, characterData: true });
+  syncMoonHue();
+
   // ── Nori on the Sphere: the orbit + her bubble guide ─────────────
 
   const Core = window.SparkCompanion;
