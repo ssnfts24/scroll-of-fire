@@ -18,6 +18,9 @@
   var state = load();
   state.prefs = Object.assign({ hebrew: 'pointed', size: 100, english: true, layers: ['words'] }, state.prefs || {});
   state.bookmarks = state.bookmarks || [];
+  state.read = state.read || [];
+  var VERSE_POOL = ['Gen.1.3', 'Gen.1.27', 'Gen.2.3', 'Gen.12.1', 'Gen.15.1', 'Gen.28.15', 'Gen.32.28', 'Gen.50.20', 'Exod.3.5', 'Exod.14.14', 'Exod.16.4', 'Exod.20.8', 'Exod.33.14', 'Exod.34.6'];
+  var chapterKey = null;
 
   function el(tag, attrs, kids) {
     var n = doc.createElement(tag);
@@ -90,11 +93,13 @@
       });
       lay.appendChild(el('label', {}, [cb, ' ' + l.charAt(0).toUpperCase() + l.slice(1)]));
     });
+    var readBtn = el('button', { type: 'button', id: 'sf-read', 'aria-pressed': 'false', text: 'Mark chapter read' });
+    readBtn.addEventListener('click', function () { toggleRead(); });
     var bm = el('details', { class: 'bookmarks' }, [el('summary', { text: 'Bookmarks (this browser only)' }), el('ul', { id: 'sf-bm' })]);
-    host.appendChild(el('div', { class: 'row' }, [sel, el('label', {}, [eng, ' English']), minus, plus, simple, deep]));
+    host.appendChild(el('div', { class: 'row' }, [sel, el('label', {}, [eng, ' English']), minus, plus, simple, deep, readBtn]));
     host.appendChild(lay);
     host.appendChild(bm);
-    ctl = { sel: sel, eng: eng };
+    ctl = { sel: sel, eng: eng, read: readBtn };
   }
   function syncControls() {
     if (!ctl.sel) return;
@@ -117,6 +122,17 @@
       var on = state.bookmarks.indexOf(b.dataset.verse) >= 0;
       b.textContent = on ? '★' : '☆'; b.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
+    if (ctl.read && chapterKey) {
+      var read = state.read.indexOf(chapterKey) >= 0;
+      ctl.read.textContent = read ? 'Chapter read ✓ (tap to undo)' : 'Mark chapter read';
+      ctl.read.setAttribute('aria-pressed', read ? 'true' : 'false');
+    }
+  }
+  function toggleRead() {
+    if (!chapterKey) return;
+    var i = state.read.indexOf(chapterKey);
+    if (i >= 0) state.read.splice(i, 1); else state.read.push(chapterKey);
+    save(state); syncControls();
   }
   function toggleBookmark(v) {
     var i = state.bookmarks.indexOf(v);
@@ -372,6 +388,7 @@
   }
   function initChapter() {
     var book = body.dataset.book, ch = parseInt(body.dataset.chapter, 10);
+    chapterKey = book + '.' + ch;
     panel = doc.getElementById('study'); panel.setAttribute('tabindex', '-1'); panel.setAttribute('role', 'region');
     buildControls(); addVerseTools(); applyPrefs(); syncControls();
     state.last = Object.assign(state.last || {}, { book: book, chapter: ch }); save(state);
@@ -402,12 +419,58 @@
 
   /* ---------------- index + lemma pages ---------------- */
   function plain(s) { return (s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); }
+  function verseForToday() {
+    var days = Math.floor(Date.now() / 86400000);
+    return VERSE_POOL[days % VERSE_POOL.length];
+  }
+  function buildTodayVerse(lede) {
+    if (!lede) return;
+    var ref = verseForToday();
+    var p = ref.split('.');
+    var body = para('Opening today\u2019s verse\u2026', 'sf-today-body');
+    var panel = el('section', { class: 'sf-today', 'aria-labelledby': 'sf-today-title' }, [
+      el('h2', { id: 'sf-today-title', text: 'A verse for today' }),
+      para('Chosen by today\u2019s date \u2014 the same verse for every visitor today. Its words are quoted from this edition\u2019s own chapter data.', 'muted'),
+      body]);
+    lede.parentNode.insertBefore(panel, lede.nextSibling);
+    getJSON('data/chapters/' + p[0] + '-' + pad(p[1]) + '.json').then(function (d) {
+      var v = d.verses.filter(function (x) { return x.id === ref; })[0];
+      body.textContent = '';
+      if (!v) { body.textContent = 'Today\u2019s verse could not be opened. Every chapter below is open instead.'; return; }
+      body.appendChild(el('span', { class: 'sf-today-text', text: '\u201C' + v.en + '\u201D ' }));
+      body.appendChild(el('a', { href: SLUG[p[0]] + '/' + pad(p[1]) + '.html#' + ref, text: refLabel(ref) + ' \u2014 read it in the chapter' }));
+    }).catch(function () { body.textContent = 'Today\u2019s verse could not be loaded. Every chapter below is open instead.'; });
+  }
+  function buildReadingShelf(lede) {
+    if (!lede || !state.read.length) return;
+    var byBook = { Gen: [], Exod: [] };
+    state.read.forEach(function (k) { var p = k.split('.'); if (byBook[p[0]]) byBook[p[0]].push(parseInt(p[1], 10)); });
+    var kids = [el('h2', { id: 'sf-shelf-title', text: 'Your reading shelf' }),
+      para('Chapters you have marked read, kept in this browser only. Unmark a chapter from its own page.', 'muted')];
+    ['Gen', 'Exod'].forEach(function (b) {
+      var list = byBook[b].sort(function (a, c) { return a - c; });
+      if (!list.length) return;
+      var line = el('p', { class: 'sf-shelf-line' }, [el('strong', { text: NAME[b] + ': ' })]);
+      list.forEach(function (ch, i) {
+        if (i) line.appendChild(doc.createTextNode(' \u00B7 '));
+        line.appendChild(el('a', { href: SLUG[b] + '/' + pad(ch) + '.html', text: String(ch) }));
+      });
+      kids.push(line);
+    });
+    if (kids.length < 3) return;
+    var shelf = el('section', { class: 'sf-shelf', 'aria-labelledby': 'sf-shelf-title' }, kids);
+    var today = doc.querySelector('.sf-today');
+    var anchor = today || lede;
+    anchor.parentNode.insertBefore(shelf, anchor.nextSibling);
+  }
   function initIndex() {
     var lede = doc.querySelector('.sf-index main .lede');
     if (lede && state.last && SLUG[state.last.book]) {
       var s = state.last;
       lede.parentNode.insertBefore(el('p', { class: 'resume' }, ['Continue where you left off: ', el('a', { href: SLUG[s.book] + '/' + pad(s.chapter) + '.html' + (s.verse ? '#' + s.verse + (s.word ? '/' + s.word : '') : ''), text: NAME[s.book] + ' ' + s.chapter + (s.verse ? ':' + s.verse.split('.')[2] : '') }), ' (saved in this browser only)']), lede.nextSibling);
     }
+    buildTodayVerse(lede);
+    buildReadingShelf(lede);
     var q = doc.getElementById('lf-q'), out = doc.getElementById('lf-results'); if (!q) return;
     var idx = null;
     q.addEventListener('input', function () {

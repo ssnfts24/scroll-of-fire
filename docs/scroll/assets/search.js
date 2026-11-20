@@ -530,6 +530,23 @@
     for (const chip of chips) chip.setAttribute("aria-pressed", String(chip.dataset.shelf === state.shelf));
   }
 
+  /* A door for the visitor with no question: draw one passage by lot from
+     the whole library and offer it. The draw is the visitor's own; nothing
+     is recorded or sent anywhere. */
+  const lotButton = document.querySelector("[data-lot]");
+  if (lotButton) lotButton.addEventListener("click", () => {
+    statusEl.textContent = "Casting the lot across the whole library\u2026";
+    loadSections().then(value => {
+      const rows = (value.sections ?? []).filter(row => Array.isArray(row) && row[0] && row[1]);
+      if (!rows.length) { statusEl.textContent = "The lot could not be cast: the library index did not open."; return; }
+      const row = rows[Math.floor(Math.random() * rows.length)];
+      const link = document.createElement("a");
+      link.href = `reader.html?section=${encodeURIComponent(row[0])}`;
+      link.textContent = "Open it in the reader";
+      statusEl.replaceChildren(`The lot fell on \u201C${row[1]}\u201D. `, link, ".");
+    }).catch(() => { statusEl.textContent = "The lot could not be cast: the library index did not open."; });
+  });
+
   window.addEventListener("popstate", () => { readUrl(); renderScope(); execute(); });
   readUrl();
   renderScope();

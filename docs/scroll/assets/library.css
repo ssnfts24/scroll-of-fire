@@ -738,3 +738,14 @@ button { color: inherit; }
   .reader-masthead { flex-wrap: wrap; row-gap: .4rem; }
   .reader-actions { flex-wrap: wrap; }
 }
+
+.continue-reading {
+  margin: 0;
+  padding: .8rem max(8vw, calc((100vw - 1120px) / 2));
+  background: var(--night, #0d1524);
+  color: #f4eddd;
+  border-bottom: 1px solid rgba(243, 201, 122, .35);
+  font-size: .95rem;
+}
+.continue-reading a { color: var(--gold-bright, #f3c97a); font-weight: 600; }
+.continue-note { opacity: .75; font-size: .85em; }

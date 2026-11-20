@@ -156,6 +156,17 @@
         The archive is still active.
       </p>
     </section>
+
+    <section class="card" style="margin-top:1rem;text-align:left;">
+      <p class="eyebrow">The Day, Meanwhile</p>
+      <h2>The day went on without this page.</h2>
+      <p id="sof-404-day">The living calendar is still turning. Open the moons to see where today stands.</p>
+      <div class="hero-actions">
+        <a class="btn" href="moons.html">See today in the 13 Moons</a>
+        <a class="btn" href="living-time-sphere.html">Open the Living Sphere</a>
+        <a class="btn" href="search.html">Search the Codex</a>
+      </div>
+    </section>
   </main>
   <footer class="site-footer">
     <nav aria-label="Footer navigation">
@@ -174,5 +185,26 @@
     </nav>
     <p>© <span id="year">2026</span> Aaron Paul Laird — Scroll of Fire · Codex of Reality · Scribe of Circuits</p>
   </footer>
+  <script defer src="assets/js/calendar/pattern-calendar-version.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-data.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-format.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-boundary.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar.js?v=20260722-4"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var line = document.getElementById("sof-404-day");
+      if (!line || !window.PatternCalendar) return;
+      try {
+        var t = window.PatternCalendar.fromCivilDate({ date: new Date() });
+        if (t && t.isDayOutOfTime) {
+          line.textContent = "Today is the Day Out of Time — the one day of the year that belongs to no moon. The moons are still there when you are ready.";
+        } else if (t && t.isDeepTimeDay) {
+          line.textContent = "Today is a Deep Time day in the living calendar. The moons are still there when you are ready.";
+        } else if (t && t.moon && t.day) {
+          line.textContent = "Today is Moon " + t.moon + (t.moonName ? " (" + t.moonName + ")" : "") + ", Day " + t.day + " — Pattern Day " + t.dayOfPatternYear + " of the living year. This page is missing, but the day is not.";
+        }
+      } catch (e) { /* the static line above still serves */ }
+    });
+  </script>
 </body>
 </html>
