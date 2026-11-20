@@ -601,6 +601,22 @@
    "featured": false
   },
   {
+   "id": "practice-wing",
+   "title": "Practices — the Exercises Wing",
+   "description": "Short exercises for a human in the Training Grounds: breath, attention, seeing, memory, and intention. Each finished exercise seals a practice record in the visitor's own Life Atlas — the same record the garden reads as rain — on this device only.",
+   "area": "systems",
+   "category": "Practice",
+   "resourceType": "tool",
+   "status": "live",
+   "path": "practices.html",
+   "related": [
+    "shroom-garden",
+    "manifest",
+    "sending-test"
+   ],
+   "featured": false
+  },
+  {
    "id": "scroll-editorial",
    "title": "Editorial Evidence Edition",
    "description": "Reading edition of the political chapters with a claim register, evidence statuses and original-line links.",

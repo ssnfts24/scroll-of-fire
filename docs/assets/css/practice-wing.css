@@ -1,0 +1,296 @@
+/* Practices — the Exercises Wing (practices.html)
+   Styles for docs/assets/js/practice-wing.js surfaces: the today
+   strip, the exercise cards, and the practice stage (breathing ring,
+   drifting light, quiet still). Kept light for small phones. All
+   motion is slow and single-purpose; reduced-motion stills every
+   visual and the words carry the exercise alone. */
+
+.pw-today {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.85rem;
+  margin: 0.9rem 0 0;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  border-radius: 0.6rem;
+  background: rgba(212, 175, 55, 0.07);
+}
+
+.pw-today-glyph {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.pw-today p {
+  margin: 0;
+}
+
+/* ------------------------------ stage ------------------------------ */
+
+.pw-stage-shell [hidden],
+.pw-cards [hidden] {
+  display: none !important;
+}
+
+.pw-stage {
+  margin-top: 1.1rem;
+  padding: 1.2rem;
+  border-radius: 24px;
+  border: 1px solid rgba(243, 201, 122, 0.35);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(122, 243, 255, 0.06), transparent 45%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015));
+  text-align: center;
+}
+
+.pw-stage-family {
+  margin: 0;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cyan, #7af3ff);
+}
+
+.pw-stage-title {
+  margin: 0.3rem 0 0;
+  color: var(--gold, #f3c97a);
+}
+
+.pw-visual {
+  position: relative;
+  height: 190px;
+  margin: 1rem auto 0.4rem;
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.pw-ring {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: 2px solid rgba(243, 201, 122, 0.75);
+  background:
+    radial-gradient(circle, rgba(243, 201, 122, 0.20) 0%, rgba(243, 201, 122, 0.05) 62%, transparent 72%);
+  transform: scale(1);
+}
+
+.pw-visual[data-visual="drift"] .pw-ring,
+.pw-visual[data-visual="still"] .pw-ring {
+  opacity: 0.35;
+}
+
+.pw-dot {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff6d8 0%, rgba(243, 201, 122, 0.9) 45%, rgba(243, 201, 122, 0) 72%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pw-visual[data-visual="drift"] .pw-dot {
+  opacity: 1;
+}
+
+@keyframes pw-drift {
+  0% { transform: translate(-120px, -34px); }
+  25% { transform: translate(96px, 22px); }
+  50% { transform: translate(128px, -48px); }
+  75% { transform: translate(-88px, 40px); }
+  100% { transform: translate(-120px, -34px); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pw-visual[data-visual="drift"][data-still="false"] .pw-dot {
+    animation: pw-drift 20s ease-in-out infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pw-dot {
+    animation: none;
+  }
+
+  .pw-ring {
+    transition: none !important;
+  }
+}
+
+.pw-phase-label {
+  margin: 0.4rem 0 0;
+  font-size: 1.35rem;
+  font-weight: 650;
+}
+
+.pw-phase-prompt {
+  margin: 0.45rem auto 0;
+  max-width: 34rem;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.pw-clock {
+  margin: 0.6rem 0 0;
+  min-height: 1.2em;
+  font-size: 0.92rem;
+  color: var(--cyan, #7af3ff);
+}
+
+.pw-answers,
+.pw-seal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.pw-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 0.7rem 1.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(243, 201, 122, 0.45);
+  background: rgba(255, 255, 255, 0.04);
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pw-btn:hover {
+  border-color: rgba(243, 201, 122, 0.85);
+}
+
+.pw-btn-answer {
+  min-width: 8.5rem;
+  font-size: 1.05rem;
+}
+
+.pw-btn-seal {
+  background: linear-gradient(180deg, rgba(243, 201, 122, 0.24), rgba(243, 201, 122, 0.09));
+}
+
+.pw-btn-quiet {
+  border-color: rgba(255, 255, 255, 0.22);
+  font-weight: 500;
+}
+
+.pw-write {
+  max-width: 34rem;
+  margin: 1rem auto 0;
+  text-align: left;
+}
+
+.pw-write label {
+  display: block;
+  margin: 0.7rem 0 0.3rem;
+  font-weight: 600;
+}
+
+.pw-write input[type="text"],
+.pw-write textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.65rem 0.8rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.05);
+  color: inherit;
+  font: inherit;
+}
+
+.pw-write .pw-btn {
+  margin-top: 0.9rem;
+}
+
+.pw-seal-panel {
+  max-width: 34rem;
+  margin: 1rem auto 0;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.pw-seal-line {
+  font-weight: 600;
+}
+
+.pw-leave-row {
+  margin-top: 1rem;
+}
+
+.pw-status {
+  min-height: 1.2em;
+  margin: 1rem 0 0;
+  color: var(--cyan, #7af3ff);
+}
+
+/* ------------------------------ cards ------------------------------ */
+
+.pw-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.1rem;
+}
+
+.pw-card {
+  padding: 1.1rem;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(243, 201, 122, 0.08), transparent 38%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018));
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pw-card-glyph {
+  font-size: 2rem;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.pw-card h3 {
+  margin: 0.1rem 0 0;
+  color: var(--gold, #f3c97a);
+}
+
+.pw-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.pw-card-meta {
+  font-size: 0.88rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--cyan, #7af3ff);
+}
+
+.pw-card-trains {
+  color: inherit;
+}
+
+.pw-card .pw-btn {
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+@media (max-width: 760px) {
+  .pw-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .pw-visual {
+    height: 160px;
+  }
+}
