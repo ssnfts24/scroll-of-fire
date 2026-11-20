@@ -56,6 +56,7 @@
 
 | Script | Referenced output paths (first 8) |
 | --- | --- |
+| `scripts/apply-heaven-sound.mjs` | `docs/living-time-sphere.html`, `docs/404.html`, `docs/offline.html`, `docs/caravan.html` |
 | `scripts/apply-living-nav.mjs` | `docs/living-time-sphere.html`, `docs/404.html`, `docs/offline.html`, `docs/caravan.html` |
 | `scripts/apply-spark-presence.mjs` | `docs/living-time-sphere.html`, `docs/404.html`, `docs/offline.html`, `docs/caravan.html`, `docs/companions.html` |
 | `scripts/audit-site.mjs` | — |
@@ -103,13 +104,13 @@
 | `docs/assets/js/site.js` | 137 |
 | `docs/assets/js/living-ui.js` | 134 |
 | `docs/scripture/assets/scripture.js` | 93 |
+| `docs/assets/js/heaven-sound.js` | 75 |
 | `docs/assets/js/spark-3d.js` | 72 |
 | `docs/assets/js/calendar/pattern-calendar-version.js` | 71 |
 | `docs/assets/js/calendar/pattern-calendar-data.js` | 71 |
 | `docs/assets/js/calendar/pattern-calendar-format.js` | 71 |
 | `docs/assets/js/calendar/pattern-calendar-boundary.js` | 71 |
 | `docs/assets/js/calendar/pattern-calendar.js` | 71 |
-| `docs/assets/js/day-telling.js` | 35 |
 
 ## Protected systems (do not modify)
 

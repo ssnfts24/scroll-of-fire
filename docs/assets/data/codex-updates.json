@@ -2,6 +2,30 @@
  {
   "date": "2026-11-19",
   "type": "feature",
+  "title": "The Sound of the Day",
+  "summary": "The site has a soundscape now, and it is grown from the day itself. A quiet toggle at the corner of the page — Sound of the Day — starts a slow bed of tones and soft chimes, composed in the browser with no audio files and nothing streamed. The chimes are seeded by the day's Pattern Day, so today sounds like today on every visit and every device, and a new day sounds new. It is silent until you ask, it stops the moment you ask, and the master sound switch silences it along with everything else.",
+  "url": "./index.html",
+  "symbol": "♪"
+ },
+ {
+  "date": "2026-11-19",
+  "type": "feature",
+  "title": "Its record travels: the same Spark on the site and in the app",
+  "summary": "A Spark's whole record now fits in one small file that both this website and the Living Phone app can save and restore. Export it on the Companions page and bring it into the app, or the other way around: the same seed grows the same Spark in both places, with its growth, its garden, and its passes whole. A damaged file is refused whole, and replacing a different Spark always takes your word first. Nothing travels on its own; the file moves only by your hand.",
+  "url": "./companions.html",
+  "symbol": "✦"
+ },
+ {
+  "date": "2026-11-19",
+  "type": "feature",
+  "title": "The Spark lost its bubble, found its light, and learned to chirp",
+  "summary": "The circle that stood around the Spark is gone. In its place it lights up like a spark, with little sparks of its own forming around it, different for every Spark the seed grows. The meeting card now stands clear above the page's menus, whole on a phone screen. Its voice is a character's chirp now, not a machine reading: a young Spark chirps once, a grown one answers in two notes, and a Bearer sings a short melody, and it grows as it does. And a door of its own that broke from inside the Scroll Library, landing on a gate that does not exist, is mended at its root, for every folder it walks.",
+  "url": "./companions.html",
+  "symbol": "✦"
+ },
+ {
+  "date": "2026-11-19",
+  "type": "feature",
   "title": "The Sparks have a trailer",
   "summary": "The Companions page opens with a trailer for the Sparks as a kind. The first cut was set aside at the Scribe's word — too close to the homepage film — and a quiet one stands in its place: the Sphere turning in darkness, a Spark lighting and given a name, dawn on the day line, one garden tended, the Sphere opening to full screen, a phone glowing at night, and the first moon still on the horizon. Its sound is a synthesized bed of tones in the 432 family with the Spark's chirps woven in; the Spark's own voice is live on the site.",
   "url": "./companions.html#spark-demo",

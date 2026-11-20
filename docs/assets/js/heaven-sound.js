@@ -1,6 +1,12 @@
-/*! Heavenly Ambience v1.2 — Remnant YHWH style
+/*! Heavenly Ambience v1.3 — the Sound of the Day
     - Procedural pads + chimes, no audio files
     - Page-aware "scenes", opt-in, respectful
+    - The day's chimes are seeded by the canonical Pattern Day (the same
+      engine that tells the day everywhere else on the site), so a given
+      day sounds the same on every visit and every device, and a new day
+      sounds new. Seeding touches presentation only — never a fact.
+    - The site's master sound switch (sof.spark.sound) silences this too:
+      when the keeper has turned sound off, the Sound of the Day stays off.
     - Scales: Ahava Rabbah (Freygish), Hijaz, Minor Pentatonic, Dorian
 */
 (function(){
@@ -45,6 +51,50 @@
   const rnd = (a,b)=>a + Math.random()*(b-a);
   const choice = arr => arr[(Math.random()*arr.length)|0];
   const clamp = (x,a,b)=>Math.max(a,Math.min(b,x));
+
+  /* ---- the day's seed ------------------------------------------------
+   * One seed per Pattern Day, from the canonical calendar engine when
+   * the page carries it (the main house does), else from the civil
+   * date. mulberry32 keeps the sequence identical everywhere. */
+  function mulberry32(seed){
+    let a = seed >>> 0;
+    return function(){
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function todayCoordinate(){
+    try {
+      const cal = window.PatternCalendar;
+      if (cal && typeof cal.fromCivilDate === "function"){
+        const s = cal.fromCivilDate({ date: new Date(), boundaryMode: "midnight" });
+        if (s && typeof s.dayOfPatternYear === "number"){
+          return { patternYear: s.patternYear || 0, patternDay: s.dayOfPatternYear, moon: s.moon || null, source: "pattern" };
+        }
+      }
+    } catch(_){ /* fall through to the civil date */ }
+    const d = new Date();
+    return { patternYear: d.getFullYear(), patternDay: d.getFullYear()*10000 + (d.getMonth()+1)*100 + d.getDate(), moon: null, source: "civil" };
+  }
+
+  function seedForDay(coord){
+    const c = coord || todayCoordinate();
+    return ((c.patternYear * 1000) + c.patternDay) >>> 0;
+  }
+
+  // The day's chime picker: a fresh picker replays the same sequence.
+  function makeChimePicker(pool){
+    const rng = mulberry32(seedForDay());
+    return ()=> pool[Math.floor(rng() * pool.length)];
+  }
+
+  // The site's master sound switch — the Spark's mute silences the place too.
+  function masterSoundOff(){
+    try { return localStorage.getItem("sof.spark.sound") === "off"; } catch(_){ return false; }
+  }
   const now = ()=> (audio?.currentTime||0);
   const store = {
     get(k, d){ try{ return JSON.parse(localStorage.getItem(k)) ?? d; }catch(_){ return d; } },
@@ -144,10 +194,12 @@
       return makeDroneVoice(f, 0.08 + Math.abs(semi)*0.004);
     });
 
-    // Chimes loop
+    // Chimes loop — pitches come from the day's seeded picker, so the
+    // day has a melody-shape of its own; only the spacing breathes free.
+    const pickChime = makeChimePicker(pool);
     function loop(){
       const p = Math.random();
-      if (p < scene.density){ chimeOnce(choice(pool), rnd(1.8, 3.2)); }
+      if (p < scene.density){ chimeOnce(pickChime(), rnd(1.8, 3.2)); }
       schedulerId = setTimeout(loop, rnd(900, 2400)); // gentle spacing
     }
     loop();
@@ -170,6 +222,15 @@
 
   // Public toggle
   function setEnabled(on){
+    if (on && masterSoundOff()){
+      // The master switch is off: the place stays silent, and the
+      // toggle says so instead of pretending to play.
+      playing = false;
+      const btn0 = document.getElementById("heavenToggle");
+      if (btn0) btn0.setAttribute("aria-pressed", "false");
+      store.set("sof.heaven.enabled", false);
+      return;
+    }
     playing = !!on;
     const btn = document.getElementById("heavenToggle");
     if (btn) btn.setAttribute("aria-pressed", playing ? "true" : "false");
@@ -195,17 +256,48 @@
       btn.title = `Volume ${(vol*100|0)}% (scroll to adjust)`;
     }, {passive:false});
 
-    // Keyboard quick-mute (M)
+    // Keyboard quick-mute (M) — never while typing, never with modifiers.
     document.addEventListener("keydown", e=>{
+      const t = e.target;
+      if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName || ""))) return;
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
       if (e.key.toLowerCase()==="m"){ setEnabled(!playing); }
     });
   }
 
+  // The toggle: a page may provide #heavenToggle; where none does, the
+  // module builds its own quiet pill at the bottom-left (the Spark's
+  // ember owns the bottom-right).
+  function ensureToggle(){
+    if (document.getElementById("heavenToggle")) return;
+    if (!document.getElementById("heaven-toggle-style")){
+      const st = document.createElement("style");
+      st.id = "heaven-toggle-style";
+      st.textContent =
+        ".heaven-toggle{position:fixed;left:max(12px,env(safe-area-inset-left));bottom:max(12px,env(safe-area-inset-bottom));z-index:9000;" +
+        "font:inherit;font-size:.82rem;letter-spacing:.02em;padding:.5rem .8rem;border-radius:999px;cursor:pointer;" +
+        "color:var(--sof-ink,#e8e2d4);background:var(--sof-panel,rgba(16,20,32,.82));border:1px solid var(--sof-line,rgba(201,168,106,.45));" +
+        "backdrop-filter:blur(6px);}" +
+        ".heaven-toggle[aria-pressed=\"true\"]{border-color:var(--sof-gold,#c9a86a);color:var(--sof-gold,#c9a86a);}" +
+        "@media (prefers-reduced-motion: reduce){.heaven-toggle{transition:none;}}";
+      document.head.appendChild(st);
+    }
+    const btn = document.createElement("button");
+    btn.id = "heavenToggle";
+    btn.type = "button";
+    btn.className = "heaven-toggle";
+    btn.textContent = "Sound of the Day";
+    btn.setAttribute("aria-pressed", "false");
+    btn.title = "The Sound of the Day — a quiet soundscape grown from today's date";
+    document.body.appendChild(btn);
+  }
+
   // Boot (but don’t start sound until user clicks)
   function boot(){
+    ensureToggle();
     bindUI();
-    // restore previous choice
-    const saved = !!store.get("sof.heaven.enabled", false);
+    // restore previous choice (the master switch outranks it)
+    const saved = !!store.get("sof.heaven.enabled", false) && !masterSoundOff();
     scene = resolveScene(); // in case body data was set late
     if (!PREFERS_OFF && saved){
       // browsers require a user gesture; many allow playback if user enabled before.
@@ -220,7 +312,17 @@
   // Expose a tiny API (optional)
   window.SOFSound = {
     setScene(id){ if (SCENES[id]){ scene=SCENES[id]; if (playing){ stopScene(); startScene(); } } },
-    enable(){ setEnabled(true); }, disable(){ setEnabled(false); }
+    enable(){ setEnabled(true); }, disable(){ setEnabled(false); },
+    // The day's identity, for tests and for any surface that wants to
+    // show it: the seed, and the first n chime pitches the day will
+    // sound (from the current scene's pool, replayed deterministically).
+    daySeed(){ return seedForDay(); },
+    coordinate(){ return todayCoordinate(); },
+    chimePlan(n){
+      const pool = scalePool(scene.root, scene.scale);
+      const pick = makeChimePicker(pool);
+      return Array.from({ length: n || 8 }, ()=> pick());
+    }
   };
 
   window.addEventListener("DOMContentLoaded", boot);
