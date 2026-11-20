@@ -8,6 +8,14 @@
  *   2. the Spark core + presence scripts (spark-companion.js, then
  *      spark-presence.js), deferred.
  *
+ * It also stamps the Spark agent seat (spark-agent-seat.css +
+ * spark-agent-seat.js, Nov 20, 2026): the same talking seat the
+ * Sphere carries, for every page the Spark travels to — local
+ * on-device answers everywhere, the talking door metered on its
+ * own line, fail-closed. The Sphere's page is excluded (it has
+ * its own seat); Companions is excluded (the Spark's home has
+ * its own panel).
+ *
  * For a visitor who has adopted a Spark on that device, the
  * presence draws it in the corner and walks it with them. For a
  * visitor who has not, the presence carries the meeting to them:
@@ -53,6 +61,11 @@ const CSS_TAG =
 const SCRIPT_TAGS =
   `<script defer src="assets/js/spark-companion.js?v=${STAMP}"></script>\n` +
   `  <script defer src="assets/js/spark-presence.js?v=${STAMP}"></script>`;
+const SEAT_STAMP = "20261120-1";
+const SEAT_CSS_TAG =
+  `<link rel="stylesheet" href="assets/css/spark-agent-seat.css?v=${SEAT_STAMP}">`;
+const SEAT_SCRIPT_TAG =
+  `<script defer src="assets/js/spark-agent-seat.js?v=${SEAT_STAMP}"></script>`;
 
 function walk(dir, prefix = "") {
   const out = [];
@@ -86,6 +99,8 @@ for (const rel of walk(docsDir).sort()) {
   const prefix = depth > 0 ? "../".repeat(depth) : "";
   const cssTag = CSS_TAG.replace('href="assets/', `href="${prefix}assets/`);
   const scriptTags = SCRIPT_TAGS.replaceAll('src="assets/', `src="${prefix}assets/`);
+  const seatCssTag = SEAT_CSS_TAG.replace('href="assets/', `href="${prefix}assets/`);
+  const seatScriptTag = SEAT_SCRIPT_TAG.replace('src="assets/', `src="${prefix}assets/`);
 
   /* The cache stamp moves with the Spark's code: an older stamp
    * on an existing tag is brought up to the current one, so a
@@ -105,6 +120,12 @@ for (const rel of walk(docsDir).sort()) {
   }
   if (!html.includes("spark-presence.js")) {
     html = html.replace("</head>", `  ${scriptTags}\n</head>`);
+  }
+  if (!html.includes("spark-agent-seat.css")) {
+    html = html.replace("</head>", `  ${seatCssTag}\n</head>`);
+  }
+  if (!html.includes("spark-agent-seat.js")) {
+    html = html.replace("</head>", `  ${seatScriptTag}\n</head>`);
   }
 
   if (html !== before) {
