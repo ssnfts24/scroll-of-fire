@@ -4,16 +4,25 @@
   // Living Time Sphere — material and color definitions for the 3D scene.
   // All values are pure data: no THREE references here.
   // The renderer imports these and applies them to THREE material instances.
+  //
+  // Sphere page rebuild (Nov 20, 2026 — Aaron lifted the appearance
+  // fence: "The sphere needs to actually physically change... make
+  // it awesome looking like everything else"): the palette takes
+  // the films' language — warm wood, brass, glass, held light —
+  // in place of the cold blue steel it opened with. Every change
+  // here is a colour or an opacity; no size, geometry, or calendar
+  // value moves. The cool notes that stay (lunar light, the spiral's
+  // teal) are the house's glyph-light accents, kept on purpose.
 
   // ── Color palette ─────────────────────────────────────────────────
 
   const COLORS = Object.freeze({
-    bg:            0x0a0a14,
-    patternRing:   0x334466,
-    moonFill:      0x1a1f30,
+    bg:            0x0c0805,
+    patternRing:   0x8f6b32,
+    moonFill:      0x2b1d0f,
     moonActive:    0x4a3010,
     moonHighlight: 0x6a4820,
-    moonStroke:    0x2a3050,
+    moonStroke:    0x74582a,
     today:         0xffd700,
     todayGlow:     0xffe060,
     todayHalo:     0xffd700,
@@ -23,9 +32,9 @@
     passage:       0xfbbf24,
     passageGlow:   0xffd060,
     lunar:         0xb4b4ff,
-    lunarRing:     0x282850,
+    lunarRing:     0x2e2438,
     solar:         0xffdc50,
-    annual:        0x88aacc,
+    annual:        0xb3a284,
     annualSelected:0xfbbf24,
     spiral:        0x64c8b4,
     center:        0xffffff,
@@ -33,18 +42,18 @@
     star:          0xffffff,
     recurrence:    0x80c0ff,
     weekGate:      0x6699aa,
-    atmosphere:    0x0d1020,
-    haze:          0x050818,
+    atmosphere:    0x150e07,
+    haze:          0x0a0603,
   });
 
   // ── Opacity levels ────────────────────────────────────────────────
 
   const OPACITY = Object.freeze({
-    patternRing:   0.42,
-    moonFill:      0.06,
+    patternRing:   0.58,
+    moonFill:      0.10,
     moonActive:    0.25,
     moonHighlight: 0.38,
-    moonStroke:    0.24,
+    moonStroke:    0.36,
     today:         1.00,
     todayHalo:     1.00,
     todayLine:     0.70,

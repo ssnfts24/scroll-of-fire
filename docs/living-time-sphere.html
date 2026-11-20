@@ -59,6 +59,11 @@
   <link rel="stylesheet" href="assets/css/living-planner.css?v=20260818-1">
   <link rel="stylesheet" href="assets/css/living-time-calendar-workbench.css?v=20260819-b728">
 <link rel="stylesheet" href="assets/css/temporal-coordinate-ui.css?v=20260816-1">
+  <!-- Sphere page rebuild (Nov 20, 2026): the page's own app shell
+       stylesheet — links and tags only, in the neighbourhood the
+       R3 waves opened. It loads last so the rebuilt arrangement
+       has the final say over the page's own presentation. -->
+  <link rel="stylesheet" href="assets/css/sphere-rebuild.css?v=20261120-1">
 
   <!-- Core engines -->
   <script defer src="assets/js/moons-version.js?v=20260819-b752&r=20260820-b757"></script>
@@ -257,6 +262,13 @@
         instrument (links and tags only; no protected file is touched).
         day-telling and day-notes are the canonical modules the room
         reads and writes through. -->
+   <!-- Sphere page rebuild (Nov 20, 2026): record-helpers loads
+        before its consumers. day-notes.js requires CodexRecordHelpers
+        and this page never loaded it, so every load of the Sphere
+        page opened with that error. The helpers module is the Life
+        Atlas record layer's own file, loaded the same way the other
+        pages load it. -->
+   <script defer src="assets/js/life-atlas/record-helpers.js?v=20261119-1"></script>
    <script defer src="assets/js/day-telling.js"></script>
    <script defer src="assets/js/day-notes.js"></script>
    <script defer src="assets/js/sphere-day-world.js?v=20261119-1"></script>
@@ -271,6 +283,16 @@
         today through PatternCalendar and DayTelling, the canonical
         modules already loaded above. -->
    <script defer src="assets/js/sphere-ambient.js?v=20261120-1"></script>
+   <!-- Sphere page rebuild (Nov 20, 2026 — Aaron: "The sphere as a
+        app needs to be redone... Make it way better"): the rebuilt
+        page arrangement, as an overlay layer beside the instrument
+        (links and tags only). It stands the Sphere first, keeps it
+        always interactive with one Freeze control, arranges the
+        rooms below it, wires the homestead panel in beside the
+        farm, and gives the Spark its conversation on this page.
+        It drives the instrument only through the page's own public
+        controls and reads only the canonical modules. -->
+   <script defer src="assets/js/sphere-rebuild.js?v=20261120-1"></script>
    <script defer>
      document.addEventListener("DOMContentLoaded", () => {
        const container = document.getElementById("sphere-container");
