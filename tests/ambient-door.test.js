@@ -50,10 +50,10 @@ test("the film is tap-to-play, never automatic, with a designed still", () => {
   assert.ok(!/autoplay/i.test(door), "no autoplay anywhere in the door");
   assert.match(door, /<video[^>]*controls/);
   assert.match(door, /preload="none"/);
-  assert.match(door, /poster="assets\/media\/codex-cartoon-clip-poster\.jpg"/);
+  assert.match(door, /poster="assets\/media\/codex-cartoon-clip-poster\.webp"/);
   assert.match(door, /src="assets\/media\/codex-cartoon-clip\.mp4"/);
   assert.ok(fs.existsSync(path.join(ROOT, "docs/assets/media/codex-cartoon-clip.mp4")));
-  assert.ok(fs.existsSync(path.join(ROOT, "docs/assets/media/codex-cartoon-clip-poster.jpg")));
+  assert.ok(fs.existsSync(path.join(ROOT, "docs/assets/media/codex-cartoon-clip-poster.webp")));
   // The still mode is designed, not a frozen accident.
   assert.match(CSS, /prefers-reduced-motion: reduce/);
 });
