@@ -109,7 +109,7 @@
 | `docs/assets/js/calendar/pattern-calendar-format.js` | 71 |
 | `docs/assets/js/calendar/pattern-calendar-boundary.js` | 71 |
 | `docs/assets/js/calendar/pattern-calendar.js` | 71 |
-| `docs/assets/js/day-telling.js` | 35 |
+| `docs/assets/js/day-telling.js` | 36 |
 
 ## Protected systems (do not modify)
 
