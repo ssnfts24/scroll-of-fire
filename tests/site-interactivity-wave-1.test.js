@@ -90,6 +90,8 @@ test("scroll search can open a passage by lot from the loaded index", () => {
   const html = read("docs/scroll/search.html");
   assert.ok(html.includes("data-lot"), "lot button is on the search page");
   assert.ok(html.includes("Open a passage by lot"), "button is named in plain words");
+  const template = read("scripts/build-scroll-library.mjs");
+  assert.ok(template.includes("data-lot"), "lot button lives in the generator template, so rebuilds keep it");
   const code = read("docs/scroll/assets/search.js");
   assert.ok(code.includes('document.querySelector("[data-lot]")'), "lot button is wired");
   assert.ok(code.includes("loadSections()"), "draw uses the already-loaded sections index");
