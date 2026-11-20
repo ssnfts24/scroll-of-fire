@@ -5,10 +5,10 @@
  * uses for the coordinate line printed above the panel) joined with
  * PatternCalendarData (moon names and practices, day archetypes, week
  * gates). The sentence shapes match the 13 Moons telling so the site
- * speaks about a day in one voice. The static markup already carries
- * the real telling for the day the page was last sealed; this script
- * refreshes it for the visitor's actual day. On any failure — or on a
- * day outside the counted year — the static copy stands.
+ * speaks about a day in one voice. The static markup is
+ * date-neutral; this script fills in the visitor's actual day. On
+ * any failure — or on a day outside the counted year — the static
+ * copy stands.
  */
 (() => {
   "use strict";
