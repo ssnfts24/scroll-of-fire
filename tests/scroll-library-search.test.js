@@ -289,7 +289,10 @@ test("the archive and protected runtime files are unchanged by the search phase"
   // protected-pattern file still trips this guard.
   const declaredPhaseFiles = new Set([
     "docs/assets/js/sphere/living-time-sphere-renderer-3d.js",
-    "docs/service-worker.js"
+    "docs/service-worker.js",
+    // Integration wave (Nov 19, 2026): PR #190's Sphere-page calm pass
+    // edits the observatory workspace sheet under its own lab gates.
+    "docs/assets/css/observatory-workspace.css"
   ]);
   for (const file of changed) {
     if (declaredPhaseFiles.has(file)) continue;

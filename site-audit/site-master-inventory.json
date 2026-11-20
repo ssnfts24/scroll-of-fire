@@ -7,7 +7,7 @@
     "publicHtmlPages": 179,
     "catalogEntries": 72,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 24,
+      "not-linked-directly-from-homepage": 25,
       "nav-label-differs-from-title": 24,
       "no-global-navigation": 1,
       "deployed-but-unlinked": 56,
@@ -1888,7 +1888,6 @@
         "ledger.html",
         "living-time-sphere.html",
         "moons.html",
-        "practices.html",
         "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
@@ -13353,14 +13352,12 @@
         "living-time-sphere.html",
         "micro.html",
         "moons.html",
-        "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
-        "search.html",
         "sending-test.html",
         "shop.html",
         "start.html",
@@ -13373,6 +13370,7 @@
         "teach.html",
         "theory.html",
         "theory/canon.html",
+        "witness-world.html",
         "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/practices.html",
@@ -13381,13 +13379,15 @@
         "path": "practices.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 4,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 3,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": []
+      "issues": [
+        "not-linked-directly-from-homepage"
+      ]
     },
     {
       "id": "recoder",
@@ -17922,7 +17922,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 95,
+        "inboundPages": 94,
         "pagesWithNavLinkToIt": 93
       },
       "issues": []
@@ -18414,8 +18414,8 @@
         "inGlobalNav": false,
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 4,
+        "hopsFromHomeWithoutAtlas": 3,
+        "inboundPages": 3,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
@@ -20337,7 +20337,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 173,
+        "inboundPages": 174,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []

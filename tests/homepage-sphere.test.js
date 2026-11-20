@@ -326,6 +326,8 @@ test("no R1.7 protected file is touched by this branch", () => {
   ]);
   const carriesDayWorld = changed.has(
     "docs/assets/js/sphere-day-world.js"
+  );
+  /*
    * Deep Time declaration (Sphere R3 Wave 2, Nov 19, 2026 — Aaron
    * approved the R3 finishing plan; Wave 1, the Day World, set this
    * declaration pattern). This change set declares itself the same
