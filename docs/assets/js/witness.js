@@ -7,9 +7,8 @@
  * contract) so this page never becomes a second authority. If the
  * cursor is unavailable it falls back to PatternCalendar directly,
  * the same computation the living entry uses. The static markup
- * carries the coordinate for the day this page was last tended, so
- * the line is true even without JavaScript; with JavaScript it is
- * the visitor's own today.
+ * is date-neutral, so the line never asserts a day that is not the
+ * visitor's; with JavaScript it is the visitor's own today.
  */
 (() => {
   "use strict";

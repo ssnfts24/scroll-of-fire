@@ -46,7 +46,7 @@ test("the telling is computed from the canonical calendar only", () => {
     "same boundary mode as the coordinate line above the panel");
 });
 
-test("fixture: the static telling matches the calendar data for 2026-11-18", () => {
+test("fixture: the calendar computes the 2026-11-18 telling; the static copy stays date-neutral", () => {
   const files = [
     "pattern-calendar-version.js",
     "pattern-calendar-data.js",
@@ -79,16 +79,24 @@ test("fixture: the static telling matches the calendar data for 2026-11-18", () 
     "Day " + mapped.day + " of the " + moon.name + " moon · Pattern Day " +
     mapped.dayOfPatternYear + " of 364. " + gate[0] + ": " + soften(gate[1]) +
     ". The day's name is " + archetype[0] + " — " + soften(archetype[1]) + ".";
-  assert.ok(HTML.includes(expectedMain),
-    "static telling must be the real telling for the seal date: " + expectedMain);
-
   const softenSentences = (text) => soften(
     String(text).trim().replace(/\.\s+(\S)/g, (m, ch) => "; " + ch.toLowerCase())
   );
   const expectedPractice =
     "The moon's practice: " + softenSentences(moon.practice) + ".";
-  assert.ok(HTML.includes(expectedPractice),
-    "static practice must come from the moon data: " + expectedPractice);
+
+  // The strings above are what home-telling.js will speak for that
+  // date — the fixture pins the computation. The static copy must NOT
+  // carry them: a sealed day in static HTML is false on every other
+  // day (Aaron's rule: everything shown must be real information), so
+  // the static block stays date-neutral and the script fills it live.
+  const tellingAt = HTML.indexOf("data-home-telling");
+  const block = HTML.slice(tellingAt, HTML.indexOf('class="le-act-grid"', tellingAt));
+  assert.ok(!block.includes(expectedMain),
+    "static telling must not seal a specific day: " + expectedMain);
+  assert.ok(!block.includes(expectedPractice),
+    "static practice must not seal a specific moon: " + expectedPractice);
+  assert.match(block, /read live by the calendar engine/);
 });
 
 test("the tidy: duplicated door-card sections are gone, their lines re-homed", () => {
