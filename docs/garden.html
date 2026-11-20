@@ -17,9 +17,9 @@
   <script>if(location.hostname==="ssnfts24.github.io"){const base=document.querySelector("base");if(base)base.setAttribute("href","/scroll-of-fire/");}</script>
 
   <meta charset="utf-8">
-  <title>Shroom Search — the Garden · Remnant Lab · Scroll of Fire</title>
+  <title>The Pattern Garden — the Garden · Remnant Lab · Scroll of Fire</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="Shroom Search: a small garden game on the bench. Tend three mushroom beds, grow them through their tiers across days and practice, and harvest passes — every tend, tier, and pass kept as a record in your own Life Atlas, on this device only.">
+  <meta name="description" content="The Pattern Garden: thirteen beds, one for each Moon. The calendar keys when a bed is open; the farm record keys what goes in it. Plantings grow on the days you keep, harvest at the Moon's turn into keepsakes in your own Life Atlas, and return a year later — on this device only.">
   <meta name="author" content="Aaron Paul Laird">
   <meta name="theme-color" content="#05070d">
   <meta name="robots" content="index, follow">
@@ -27,8 +27,8 @@
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Scroll of Fire">
-  <meta property="og:title" content="Shroom Search — the Garden · Remnant Lab · Scroll of Fire">
-  <meta property="og:description" content="Tend the beds, grow through the tiers, harvest passes — kept in your own record, on your own device.">
+  <meta property="og:title" content="The Pattern Garden — the Garden · Remnant Lab · Scroll of Fire">
+  <meta property="og:description" content="Thirteen beds, one for each Moon. Plant what the farm record plants, grow on kept days, harvest keepsakes at the Moon's turn — kept in your own record, on your own device.">
   <meta property="og:url" content="https://codexofreality.org/garden.html">
   <meta property="og:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
 
@@ -51,7 +51,7 @@
   <link rel="stylesheet" href="assets/css/animations.css">
   <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
   <link rel="stylesheet" href="assets/css/social-bridge.css">
-  <link rel="stylesheet" href="assets/css/shroom-garden.css?v=20261119-g1">
+  <link rel="stylesheet" href="assets/css/pattern-garden.css?v=20261120-1">
 <link rel="stylesheet" href="assets/css/cartoon-scenes.css?v=20261120-1">
   <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261119-1">
   <script defer src="assets/js/spark-companion.js?v=20261119-1"></script>
@@ -169,42 +169,57 @@
     <section class="section-shell" aria-labelledby="garden-title">
       <div class="section-heading">
         <p class="eyebrow">Remnant Lab · The Garden</p>
-        <h1 id="garden-title">Shroom Search</h1>
+        <h1 id="garden-title">The Pattern Garden</h1>
         <span class="codex-status" data-status="experimental">Experimental</span>
         <p>
-          A small garden in the corner of the Training Grounds. Three mushroom beds
-          grow through four tiers — <strong>Spore → Thread → Cap → Bloom</strong> — across
-          days and practice. Tend a bed and it grows. Seal a practice session at
-          <a href="./teach.html">Teach</a> and your practice rains on every bed you are
-          growing. A bed in full Bloom can be harvested, and the harvest earns a
-          <strong>pass</strong>, kept in your own record.
+          Thirteen beds, one for each Moon. The calendar keys <strong>when</strong> a bed
+          is open — each Moon, its bed is the open one, for that Moon's twenty-eight
+          days — and the farm record keys <strong>what</strong> goes in it: the planting
+          choices below are read from the site's Western Washington farm data, each
+          with its real window and its sources. Nothing here is planted by a Moon
+          line, and nothing grows by a timer.
         </p>
         <p>
-          Nothing here is in a hurry, and nothing here is lost. Leave for a moon and
-          the garden is exactly as you left it — growth is counted from what you
-          actually did, never from a clock, and it never runs backward.
+          A planting grows on the days you <strong>keep</strong> — the days your own
+          record holds — while its Moon runs. Witness the open bed and today is
+          kept. At the Moon's turn, a planting witnessed on seven of its days is
+          harvested into a <strong>keepsake</strong> in your Life Atlas; witnessed
+          less, it goes honestly to seed. And a keepsake returns: when its Moon
+          comes round next year, it comes back to you.
+        </p>
+        <p>
+          This garden replaces Shroom Search, the mushroom game that stood here
+          before. What you earned there is untouched — see your passes below.
         </p>
       </div>
 
       <div class="garden-today" data-garden-today>
-        <span class="garden-today-glyph" aria-hidden="true">🍄</span>
+        <span class="garden-today-glyph" aria-hidden="true">🌿</span>
         <p><span id="garden-today-coords">Today's coordinate loads with your local time.</span></p>
         <p><span id="garden-today-count">Reading your garden…</span></p>
       </div>
 
+      <p class="garden-county-row">
+        <label for="garden-county">The garden's ground — planting windows are read for this county:</label>
+        <select id="garden-county"></select>
+      </p>
+
+      <div id="garden-seed-find" aria-live="polite"></div>
+
       <figure class="cartoon-scene">
         <img src="assets/img/cartoon/cartoon-garden.webp" width="1200" height="675" loading="lazy" decoding="async"
-             alt="Cartoon scene: a storybook garden at golden hour — wooden beds with brass corners in rows, a gate with a gear latch, lanterns lit, mushrooms among the greens, and a small green Spark drifting over the beds.">
-        <figcaption>The beds below are this garden's real beds and passes, kept in Living Time. This is the garden they grow in.</figcaption>
+             alt="Cartoon scene: a storybook garden at golden hour — wooden beds with brass corners in rows, a gate with a gear latch, lanterns lit, and a small green Spark drifting over the beds.">
+        <figcaption>The beds below are this garden's real beds, keyed to the thirteen Moons and kept in Living Time. This is the garden they grow in.</figcaption>
       </figure>
     </section>
 
     <section class="section-shell" aria-labelledby="garden-beds-title">
-      <h2 id="garden-beds-title">The beds</h2>
+      <h2 id="garden-beds-title">The thirteen beds</h2>
       <p>
-        One tend per bed per day — tending is a small, real act, not a grind.
-        Each tend and each tier turn is written into your Life Atlas, stamped
-        with the day it happened.
+        One bed for each Moon of the year. The open bed takes this Moon's
+        planting; the others show their spans, their plantings, and what they
+        hold. Every planting, witness, and harvest is written into your Life
+        Atlas, stamped with the day it happened.
       </p>
       <div id="garden-beds" class="garden-beds">
         <p>The beds are read from your Life Atlas records when JavaScript is available.</p>
@@ -212,22 +227,21 @@
       <p id="garden-status" class="garden-status" aria-live="polite"></p>
     </section>
 
-    <section class="section-shell" aria-labelledby="garden-passes-title">
-      <h2 id="garden-passes-title">Your passes</h2>
+    <section class="section-shell" aria-labelledby="garden-keepsakes-title">
+      <h2 id="garden-keepsakes-title">Your keepsakes</h2>
       <p>
-        A pass is a record in your Life Atlas — the same record your practice
-        sessions and witnessed days live in, on this device, under your hand.
-        It rides the Atlas backup like every other record you keep here.
+        A keepsake is a harvest kept in your Life Atlas — the same record your
+        witnessed days live in, on this device, under your hand. It rides the
+        Atlas backup like every other record you keep here, and it returns to
+        you when its Moon comes round again.
       </p>
-      <p>
-        <strong>What a pass opens, honestly:</strong> today, a pass is held.
-        Passes are made to open the site's heavier rooms as those rooms are
-        built — the first one planned is the Sphere's Day World, a place a
-        pass will open by being spent. Until that door exists, a pass waits
-        with you, and nothing about it leaves this device.
-      </p>
-      <p id="garden-passes-empty">No passes yet. Grow a bed to Bloom and harvest it, and the pass will be kept here.</p>
-      <ul id="garden-passes" class="garden-passes"></ul>
+      <p id="garden-keepsakes-empty">No keepsakes yet. Plant in the open bed, witness it through its Moon, and harvest at the Moon's turn.</p>
+      <ul id="garden-keepsakes" class="garden-passes"></ul>
+    </section>
+
+    <section class="section-shell" aria-labelledby="garden-old-title">
+      <h2 id="garden-old-title">Your Shroom Search passes</h2>
+      <p id="garden-old-passes">Reading your record…</p>
     </section>
 
     <section class="section-shell split" aria-label="How the garden works">
@@ -235,11 +249,13 @@
         <p class="eyebrow">The rules — all of them</p>
         <h2>How the garden grows</h2>
         <ol class="clean-list">
-          <li><strong>Tending grows a bed.</strong> One tend per bed per Pattern Day. A bed turns Thread at 2 growth, Cap at 5, and Bloom at 9.</li>
-          <li><strong>Practice is rain.</strong> A Manifest session sealed at Teach on a day between a bed's first and latest tend adds one growth for that day, to every bed under cultivation. Practice you do after your last visit is not lost — it rains when you next tend.</li>
-          <li><strong>Harvest at Bloom.</strong> Harvesting writes your pass and the bed begins again at Spore, ready for a new cycle. Your earlier harvests stay in the record.</li>
-          <li><strong>Nothing decays.</strong> Nothing fades and nothing is lost for time away. The garden keeps your place.</li>
-          <li><strong>Your record, your device.</strong> Tends, tier turns, and passes are Life Atlas records. Nothing is uploaded anywhere; the garden itself makes no network calls.</li>
+          <li><strong>The calendar keys the beds.</strong> Thirteen beds, one per Moon; each Moon, its bed is open for that Moon's 28 days. The Day Out of Time opens no bed — the garden rests with the calendar.</li>
+          <li><strong>The farm record keys the planting.</strong> A crop is offered only when a real planting window in the Western Washington farm data overlaps the open Moon's dates, and the offer names the window and its sources. Moon lines are never farm facts.</li>
+          <li><strong>Tending is witnessing.</strong> A planting grows on the days you keep inside its Moon — days your Life Atlas record holds. The bed's Witness button keeps today. Nothing grows while nothing is kept, and nothing is counted from a clock.</li>
+          <li><strong>Harvest at the Moon's turn.</strong> Seven witnessed days or more, and the planting harvests into a keepsake. Fewer, and it goes to seed — the season ended, honestly.</li>
+          <li><strong>A keepsake returns.</strong> When the same Moon comes round the next year, last year's keepsake from that bed returns to you, and its return is written beside it.</li>
+          <li><strong>Your Spark helps.</strong> Now and then your Spark finds a seed of the season among the beds — readily at first, rarer later. Plant a found seed and its keepsake remembers where it came from.</li>
+          <li><strong>Your record, your device.</strong> Plantings, witnesses, seeds, returns, and keepsakes are Life Atlas records. Nothing is uploaded anywhere.</li>
         </ol>
       </article>
 
@@ -247,10 +263,10 @@
         <p class="eyebrow">Ground rule</p>
         <h2>A game, kept honest</h2>
         <p>
-          A pass is a key-shaped record, not an asset: nothing here promises a
+          A keepsake is a record you hold, not an asset: nothing here promises a
           price, a yield, or a value, and nothing in the garden can be bought.
           Growing is the whole economy — what you earn here, you earn by
-          tending and by practice.
+          planting in season and keeping your days.
         </p>
         <p>
           The garden is one corner of the bench. Its neighbours are the
@@ -293,15 +309,15 @@
     <p>© <span id="year">2026</span> Aaron Paul Laird — Scroll of Fire · Codex of Reality · Scribe of Circuits</p>
   </footer>
 
-  <!-- Shroom Search: Life Atlas repository, then the garden module.
-       The canonical temporal converter (Pattern Calendar) loads with
-       the head scripts above. -->
+  <!-- The Pattern Garden: Life Atlas repository, then the garden
+       module. The canonical temporal converter (Pattern Calendar)
+       loads with the head scripts above. -->
   <script src="assets/js/life-atlas/life-atlas-schema.js?v=20260817-1"></script>
   <script src="assets/js/life-atlas/life-atlas-repository.js?v=20260819-b750"></script>
   <script src="assets/js/life-atlas/life-atlas-indexeddb.js?v=20260819-b750"></script>
   <script src="assets/js/life-atlas/life-atlas-runtime.js?v=20260819-b750"></script>
   <script src="assets/js/life-atlas/record-helpers.js?v=20261119-1"></script>
-  <script src="assets/js/shroom-garden.js?v=20261119-g1"></script>
+  <script src="assets/js/pattern-garden.js?v=20261120-1"></script>
   <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
   <script defer src="assets/js/social-bridge.js?v=20261119-1"></script>
   <script defer src="assets/js/day-telling.js?v=20261119-1"></script>

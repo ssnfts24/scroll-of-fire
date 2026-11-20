@@ -1,0 +1,197 @@
+/* The Pattern Garden — the Garden (garden.html)
+   Styles for docs/assets/js/pattern-garden.js surfaces: the today strip,
+   the thirteen Moon beds, the planting choices, and the keeper's
+   keepsake list. Kept light for small phones; the open bed carries a
+   single gentle pulse, and reduced-motion turns it off entirely. */
+
+.garden-today {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.85rem;
+  margin: 0.9rem 0 0;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  border-radius: 0.6rem;
+  background: rgba(212, 175, 55, 0.07);
+}
+
+.garden-today-glyph {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.garden-today p {
+  margin: 0;
+}
+
+.garden-beds {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.1rem;
+}
+
+.garden-bed {
+  position: relative;
+  overflow: hidden;
+  padding: 1.1rem;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(159, 232, 193, 0.09), transparent 35%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018));
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.garden-bed-glyph {
+  font-size: 2.2rem;
+  line-height: 1.1;
+  margin: 0;
+  color: var(--gold, #f3c97a);
+}
+
+.garden-bed h3 {
+  margin: 0.1rem 0 0;
+  color: var(--gold, #f3c97a);
+}
+
+.garden-bed p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.garden-bed-tier {
+  font-weight: 600;
+  color: inherit;
+}
+
+.garden-bed-note {
+  font-size: 0.94rem;
+}
+
+.garden-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  margin-top: auto;
+  padding: 0.7rem 1.2rem;
+  border-radius: 999px;
+  border: 1px solid rgba(243, 201, 122, 0.45);
+  background: rgba(255, 255, 255, 0.04);
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.garden-btn:hover:not(:disabled) {
+  border-color: rgba(243, 201, 122, 0.8);
+}
+
+.garden-btn:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.garden-btn-harvest {
+  background: linear-gradient(180deg, rgba(243, 201, 122, 0.22), rgba(243, 201, 122, 0.08));
+  margin-top: 0.6rem;
+}
+
+@keyframes garden-bloom-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.72; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .garden-bed-glyph-bloom {
+    animation: garden-bloom-pulse 3.2s ease-in-out infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .garden-bed-glyph-bloom {
+    animation: none;
+  }
+}
+
+.garden-status {
+  min-height: 1.2em;
+  margin: 1rem 0 0;
+  color: var(--cyan, #7af3ff);
+}
+
+.garden-passes {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 1rem 0 0;
+}
+
+.garden-pass {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 0.6rem 0.8rem;
+}
+
+.garden-pass-main {
+  line-height: 1.45;
+}
+
+.garden-pass-held {
+  white-space: nowrap;
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--gold, #f3c97a);
+}
+
+@media (max-width: 1000px) {
+  .garden-beds {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .garden-beds {
+    grid-template-columns: 1fr;
+  }
+
+  .garden-pass {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* The Pattern Garden's own pieces. */
+.garden-bed-open {
+  border-color: rgba(212, 175, 55, 0.75);
+  box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.35), 0 0 22px rgba(212, 175, 55, 0.12);
+}
+.garden-plant-choices { margin-top: 0.6rem; text-align: left; }
+.garden-plant-choice { margin: 0.45rem 0; font-size: 0.92rem; }
+.garden-plant-choice .garden-btn { margin-right: 0.5rem; }
+.garden-county-row { margin: 0.6rem 0 0; }
+.garden-county-row select {
+  background: #0d1322; color: inherit; border: 1px solid rgba(212,175,55,0.45);
+  border-radius: 0.45rem; padding: 0.35rem 0.5rem; font: inherit;
+}
+#garden-seed-find:empty { display: none; }
+#garden-seed-find {
+  margin: 0.9rem 0 0; padding: 0.6rem 0.9rem;
+  border: 1px dashed rgba(140, 220, 160, 0.55); border-radius: 0.6rem;
+  background: rgba(140, 220, 160, 0.06);
+}
+@media (max-width: 720px) {
+  .garden-beds { grid-template-columns: 1fr; }
+}

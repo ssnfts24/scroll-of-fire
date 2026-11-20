@@ -225,6 +225,7 @@ test("the doors import the helpers — the copies are gone", () => {
     "day-notes.js",
     "manifest-practice.js",
     "shroom-garden.js",
+    "pattern-garden.js",
     "presence-guidance.js"
   ];
 
@@ -255,7 +256,7 @@ test("the door pages load the shared module before the doors", () => {
   const pages = {
     "moons.html": "manifest-practice.js",
     "teach.html": "manifest-practice.js",
-    "garden.html": "shroom-garden.js"
+    "garden.html": "pattern-garden.js"
   };
 
   for (const [page, door] of Object.entries(pages)) {
