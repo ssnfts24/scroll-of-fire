@@ -2542,9 +2542,9 @@
       "status": "operational"
     },
     {
-      "path": "docs/assets/media/codex-cartoon-clip-poster.jpg",
-      "sha256": "cbc5b29e8778462fa2aaea543ac7c04cf1c0c0fd60c9bc2609ea85d2fa7c2bd6",
-      "publicUrl": "https://codexofreality.org/assets/media/codex-cartoon-clip-poster.jpg",
+      "path": "docs/assets/media/codex-cartoon-clip-poster.webp",
+      "sha256": "dfe4825cc178dd997da0f6569461e6c0d25df71087bf175795fab290d400dba1",
+      "publicUrl": "https://codexofreality.org/assets/media/codex-cartoon-clip-poster.webp",
       "status": "operational"
     },
     {
@@ -3545,7 +3545,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "b70fa417aa0d988cea8ac46597f458f99e9be12ceaf0d7c2aff75c989911d6d0",
+      "sha256": "e59efe920cf850af4ca842d319d401a8a560fa4eb90f8c46e0767bb194f17477",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
