@@ -2,6 +2,14 @@
  {
   "date": "2026-11-19",
   "type": "feature",
+  "title": "The homepage opens on the living day",
+  "summary": "The first thing the homepage shows is now the day itself: today's coordinate in the 13 Moons calendar, the day's telling and its practice, and a short cartoon film of the Sphere turning in warm wood and brass with the Spark coming to meet its keeper. The film waits for a tap and never plays on its own. Everything the homepage explained before is still here, one step below, and the Sphere instrument and every door keep their places.",
+  "url": "./index.html#ambient-door",
+  "symbol": "☾"
+ },
+ {
+  "date": "2026-11-19",
+  "type": "feature",
   "title": "The Sphere took the phone screen",
   "summary": "On a phone, the Sphere was being squeezed into a thin strip by the bars around it, and below a certain height the page would not start its three-dimensional view at all, so a phone could be left with the flat fallback. Now the bars go slim on a phone: the environment and Interact strips take one row each, the guide bar starts as a single line with a Guide button that opens it whole, and the Sphere itself takes the middle of the screen, always tall enough for its full view. Tap a day to choose it, exactly as before, and full screen still gives the Sphere the whole phone.",
   "url": "./living-time-sphere.html",

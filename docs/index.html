@@ -78,6 +78,7 @@
   <link rel="stylesheet" href="assets/css/social-bridge.css">
   <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260819-b743&p=20260820-b7581-labelglass&u=20260820-b7582-railalign&b=20260820-b7592a-farskeleton&d=20260821-b7592d7-unified">
   <link rel="stylesheet" href="assets/css/homepage-sphere.css?v=20261119-1">
+  <link rel="stylesheet" href="assets/css/ambient-door.css?v=20261119-1">
 
   <script type="application/ld+json">
   {
@@ -166,6 +167,7 @@
   <script defer src="assets/js/calendar/pattern-calendar.js?v=20260722-3"></script>
   <script defer src="assets/js/living-entry.js?v=20261117-1"></script>
   <script defer src="assets/js/home-telling.js?v=20261118-1"></script>
+  <script defer src="assets/js/ambient-door.js?v=20261119-1"></script>
   <script defer src="assets/js/living-witness.js?v=20261117-1"></script>
   <script defer src="assets/js/sphere/living-time-sphere-calendar-geometry.js?v=20260819-b727&r=20260820-b7584-rootrail&b=20260820-b7592a-farskeleton&d=20260821-b7592d7-unified"></script>
   <script defer src="assets/js/homepage-sphere.js?v=20261118-2"></script>
@@ -575,6 +577,35 @@
   </nav>
 
   <main id="main">
+    <!-- The Ambient Door: the homepage's first face is the living day
+         itself — today's coordinate, the day's telling, and the Sphere
+         in its warm, storybook look. It asks nothing and explains
+         nothing; the framework waits below. Static copy carries the
+         real day as last sealed; ambient-door.js refreshes it from the
+         canonical calendar. The film is tap-to-play, never automatic,
+         and its still mode is its poster. -->
+    <section class="ambient-door" id="ambient-door" aria-labelledby="ambient-door-title" data-ambient-door>
+      <div class="ambient-door-inner">
+        <p class="ambient-eyebrow" data-ambient-civil>Today · Thursday, November 19, 2026</p>
+        <h2 id="ambient-door-title" class="ambient-title" data-ambient-coordinate>Day 21 of the Deep Mirror moon</h2>
+        <p class="ambient-pattern" data-ambient-pattern>Pattern Day 217 of 364</p>
+        <p class="ambient-telling" data-ambient-telling>Day 21 of the Deep Mirror moon · Pattern Day 217 of 364. Week 3 · Testing: watch pressure, resistance, correction, and refinement. The day's name is Watch — stay awake to timing.</p>
+        <p class="ambient-practice" data-ambient-practice>The moon's practice: look beneath the surface; journal before judging.</p>
+        <figure class="ambient-film">
+          <video controls preload="none" playsinline
+                 poster="assets/media/codex-cartoon-clip-poster.jpg"
+                 src="assets/media/codex-cartoon-clip.mp4"
+                 aria-label="A short cartoon film: the Living Time Sphere turning in warm wood and brass, and a Spark of light coming to meet its keeper"></video>
+          <figcaption>The Sphere and the Spark, as the Codex dreams them. Tap to play — the words are spoken only when you ask for them.</figcaption>
+        </figure>
+        <div class="ambient-actions">
+          <a class="btn primary" href="./living-time-sphere.html">Enter the Sphere</a>
+          <a class="btn" href="./companions.html">Meet the Spark</a>
+          <a class="btn" href="#home-sphere-observatory">Sit with the Sphere here</a>
+        </div>
+      </div>
+    </section>
+
     <section class="section-shell le-path-head" id="step-witness" aria-labelledby="step-witness-title">
       <div class="le-path-head-inner">
         <span class="le-step-badge" aria-hidden="true">1</span>
