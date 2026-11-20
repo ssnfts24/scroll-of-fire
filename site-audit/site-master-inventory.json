@@ -3,7 +3,7 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 474,
+    "resources": 475,
     "publicHtmlPages": 178,
     "catalogEntries": 71,
     "issueCounts": {
@@ -13,7 +13,7 @@
       "deployed-but-unlinked": 57,
       "unreachable-from-homepage": 3,
       "compatibility-redirect-page": 1,
-      "not-published-in-catalog": 29,
+      "not-published-in-catalog": 30,
       "unnamed-image-needs-descriptive-title": 21
     }
   },
@@ -17598,6 +17598,25 @@
       "area": null,
       "relatedProjects": [],
       "sourcePath": "RENDERER-HOTFIX-HANDOFF.md",
+      "publicUrl": null,
+      "publicationStatus": "source-only",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": null,
+      "privacyEligibility": "development-only",
+      "discoverability": null,
+      "issues": [
+        "not-published-in-catalog"
+      ]
+    },
+    {
+      "id": "repo:SEALS-AT-LANDING-PLAN.md",
+      "title": "SEALS-AT-LANDING-PLAN.md",
+      "description": "Root-level Markdown publication or project document. Not approved for the public catalog; review before adding a site entry.",
+      "category": "Repository root file",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "SEALS-AT-LANDING-PLAN.md",
       "publicUrl": null,
       "publicationStatus": "source-only",
       "lastVerifiedSourceRevision": "548e858",
