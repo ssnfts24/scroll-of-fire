@@ -1,0 +1,200 @@
+/*
+ * The Spark on the Sphere page — the reset build (Nov 20, 2026).
+ *
+ * Fresh presence styles for sphere-spark.js: the orbiting light
+ * on the instrument, its halo breathing at the Spark's own 4.6 s
+ * cadence in the shown Moon's hue, the name plate that appears on
+ * hover and on touch-and-hold (the name-call), and the talk panel.
+ * Brass #daa45b is the house colour; the Moon's hue arrives
+ * through --sphere-moon-hue, set by the companion layer's warmth
+ * from the instrument's own state.
+ *
+ * The reset's one-presence rule: on this page, under the rebuilt
+ * shell, the site-wide corner presence rests — the Spark lives
+ * here, on the instrument, once.
+ */
+
+html.sphere-rebuilt .spark-presence {
+  display: none !important;
+}
+
+/* ── The presence on the instrument ──────────────────────────── */
+
+.sphere-spark-presence {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 68px;
+  height: 68px;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+.sphere-spark-orbit {
+  position: relative;
+  width: 68px;
+  height: 68px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  padding: 0;
+}
+.sphere-spark-halo {
+  position: absolute;
+  inset: -16px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    hsla(var(--sphere-moon-hue, 36), 80%, 64%, 0.5) 0%,
+    hsla(var(--sphere-moon-hue, 36), 75%, 52%, 0.22) 45%,
+    transparent 70%);
+  animation: sphere-spark-breathe 4.6s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes sphere-spark-breathe {
+  0%, 100% { transform: scale(0.92); opacity: 0.75; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+.sphere-spark-art {
+  position: absolute;
+  inset: 6px;
+  display: block;
+  filter: drop-shadow(0 0 10px hsla(var(--sphere-moon-hue, 36), 85%, 65%, 0.55));
+}
+.sphere-spark-art svg { width: 100%; height: 100%; display: block; }
+
+/* The name plate: hover, focus, or the name-call hold. A plate,
+ * not a tooltip — the Spark's name, kind and stage, in brass. */
+.sphere-spark-nameplate {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  transform: translateX(-50%) translateY(4px);
+  min-width: 9.5rem;
+  padding: 0.5rem 0.8rem 0.55rem;
+  border: 1px solid rgba(218, 164, 91, 0.55);
+  border-radius: 12px;
+  background: rgba(19, 12, 6, 0.94);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45), 0 0 18px hsla(var(--sphere-moon-hue, 36), 80%, 60%, 0.18);
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 9;
+}
+.sphere-spark-name {
+  display: block;
+  color: #ffe9bd;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.sphere-spark-kind {
+  display: block;
+  color: #c9b18c;
+  font-size: 0.78rem;
+  margin-top: 0.15rem;
+}
+.sphere-spark-orbit:hover .sphere-spark-nameplate,
+.sphere-spark-orbit:focus-visible .sphere-spark-nameplate,
+.sphere-spark-name-shown .sphere-spark-nameplate {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ── The talk panel ──────────────────────────────────────────── */
+
+.sphere-spark-talk {
+  max-width: 60rem;
+  margin: 1.5rem auto;
+  padding: 1.1rem 1.1rem 0.9rem;
+  border: 1px solid rgba(218, 164, 91, 0.38);
+  border-radius: 18px;
+  background: rgba(23, 16, 10, 0.92);
+  color: #f3e7d3;
+}
+.sphere-spark-talk-head {
+  display: flex;
+  gap: 0.9rem;
+  align-items: center;
+}
+.sphere-spark-talk-art { width: 64px; height: 64px; flex: none; }
+.sphere-spark-talk-art svg { width: 100%; height: 100%; display: block; }
+.sphere-spark-talk-title { margin: 0; font-size: 1.35rem; }
+.sphere-spark-talk-stage { margin: 0.2rem 0 0; color: #c9b18c; }
+.sphere-spark-talk-privacy { color: #c9b18c; line-height: 1.5; font-size: 0.92rem; }
+.sphere-spark-talk-log {
+  max-height: 22rem;
+  overflow-y: auto;
+  padding: 0.4rem 0.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.sphere-spark-talk-keeper, .sphere-spark-talk-spark {
+  margin: 0;
+  line-height: 1.5;
+  max-width: 92%;
+}
+.sphere-spark-talk-keeper { align-self: flex-end; text-align: right; }
+.sphere-spark-talk-who {
+  display: block;
+  font-size: 0.75rem;
+  color: #c9b18c;
+  margin-bottom: 0.1rem;
+}
+.sphere-spark-talk-source {
+  display: block;
+  font-size: 0.75rem;
+  color: #a68d63;
+  margin-top: 0.15rem;
+  font-style: italic;
+}
+.sphere-spark-talk-seat { color: #c9b18c; font-size: 0.9rem; min-height: 1.2em; }
+.sphere-spark-talk-form {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.4rem;
+}
+.sphere-spark-talk-form input {
+  flex: 1 1 12rem;
+  min-height: 48px;
+  border-radius: 999px;
+  border: 1px solid rgba(218, 164, 91, 0.4);
+  background: rgba(10, 6, 3, 0.55);
+  color: #f3e7d3;
+  padding: 0.55rem 1rem;
+  font-size: 1rem;
+}
+.sphere-spark-talk-send, .sphere-spark-talk-mic {
+  min-height: 48px;
+  padding: 0.55rem 1.2rem;
+  border-radius: 999px;
+  border: 1px solid #daa45b;
+  background: rgba(218, 164, 91, 0.16);
+  color: #f3e7d3;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.sphere-spark-talk-voice {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.6rem;
+  color: #c9b18c;
+  min-height: 44px;
+}
+.sphere-spark-talk-voice input { width: 20px; height: 20px; }
+.sphere-spark-keeper-line {
+  color: #ffe9bd;
+  text-align: center;
+}
+
+/* ── Reduced motion: the presence rests, beautiful and still ── */
+
+@media (prefers-reduced-motion: reduce) {
+  .sphere-spark-halo { animation: none; }
+  .sphere-spark-presence { position: absolute; }
+  .sphere-spark-nameplate { transition: none; }
+}

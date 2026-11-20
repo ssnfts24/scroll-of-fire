@@ -363,13 +363,51 @@ test("no R1.7 protected file is touched by this branch", () => {
   const carriesAmbient = changed.has(
     "docs/assets/js/sphere-ambient.js"
   );
+  /*
+   * Sphere Page Rebuild declaration (Nov 20, 2026 — Aaron's orders
+   * that night, in sequence: "The sphere as a app needs to be
+   * redone. Get rid of it and rework that page"; "Make that sphere
+   * work perfect. However you need to"; and the appearance fence
+   * LIFTED — "The sphere needs to actually physically change. Like
+   * animated it and make it awesome looking like everything else" —
+   * with the TRUTH fence standing: the canonical pipeline and
+   * PatternCalendar math untouched, selection exact, fixtures
+   * proven). This change set declares itself by carrying its
+   * signature file (the rebuild shell module, which lives outside
+   * the protected directories), and its declared set names exactly
+   * the protected paths the rebuild touches, each flagged in the
+   * PR in capital terms with regression proof:
+   *   - the page (new shell tags, the record-helpers load-order
+   *     fix, F9's copy moves, the pronoun comment resolved);
+   *   - the renderer (the always-interactive touch fix and the
+   *     year-progress arc on the Pattern ring);
+   *   - the materials (the warm palette, colours and opacity only);
+   *   - the label manager (F3's collision rule for floating cards);
+   *   - the camera (F6's mobile framing);
+   *   - the options (F5: fit is the default Moon-label mode);
+   *   - the UI module (the quick-jump civil-date year fix).
+   * Every other protected path still fails this test loudly.
+   */
+  const rebuildDeclaredProtected = new Set([
+    "docs/living-time-sphere.html",
+    "docs/assets/js/sphere/living-time-sphere-renderer-3d.js",
+    "docs/assets/js/sphere/living-time-sphere-materials.js",
+    "docs/assets/js/sphere/living-time-sphere-label-manager.js",
+    "docs/assets/js/sphere/living-time-sphere-camera.js",
+    "docs/assets/js/sphere/living-time-sphere-options.js",
+    "docs/assets/js/sphere/living-time-sphere-ui.js"
+  ]);
+  const carriesRebuild = changed.has(
+    "docs/assets/js/sphere-rebuild.js"
+  );
   for (const file of changed) {
     if (!protectedPaths.has(file)) continue;
     assert.ok(
       (carriesR2Rework && r2DeclaredProtected.has(file)) ||
         (carriesDayWorld && dayWorldDeclaredProtected.has(file)) ||
         (carriesDeepTime && deepTimeDeclaredProtected.has(file)) ||
-        (carriesAmbient && ambientDeclaredProtected.has(file)),
+        (carriesAmbient && ambientDeclaredProtected.has(file)) ||
+        (carriesRebuild && rebuildDeclaredProtected.has(file)),
       `R1.7 protected file changed: ${file}`
     );
   }

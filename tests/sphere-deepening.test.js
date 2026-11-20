@@ -75,11 +75,19 @@ test("the guide bar answers the first-time visitor: where am I, today, a moon, t
   assert.ok(css.includes(".sphere-guide-bar"), "guide bar is styled");
 });
 
-test("Nori's orbit is their own overlay, reduced-motion safe, and yields to their bubble", () => {
-  assert.ok(layer.includes("sphere-nori-orbit"), "the orbit element exists");
-  assert.ok(layer.includes("prefers-reduced-motion"), "reduced motion is checked before orbiting");
-  assert.ok(layer.includes("renderSVG"), "they are drawn from their own seed art");
-  assert.ok(css.includes("sphere-nori-orbiting"), "the corner walker rests while they orbit");
+test("the Spark's page presence was RESET (Nov 20, 2026): the orbit and bubble guide left this layer", () => {
+  // Aaron's order: a full reset of the Spark layer, built fresh —
+  // not patched. The deepening build's orbit + bubble guide are
+  // gone from the companion layer; the fresh presence lives in
+  // sphere-spark.js, on the Spark core's own pinned derivations,
+  // so no keeper's Spark changed. This test now pins the reset.
+  assert.ok(!layer.includes("sphere-nori-orbit"), "the old orbit is gone from this layer");
+  assert.ok(!layer.includes("buildSphereGuide"), "the old bubble guide is gone from this layer");
+  assert.ok(layer.includes("RESET (Nov 20, 2026)"), "the layer names the reset where the presence stood");
+  const spark = read("docs/assets/js/sphere-spark.js");
+  assert.ok(spark.includes("sphere-spark-orbit"), "the fresh presence carries the orbit");
+  assert.ok(spark.includes("prefers-reduced-motion: reduce"), "the fresh presence honours reduced motion");
+  assert.ok(spark.includes("renderSVG"), "the Spark is drawn from its own seed art");
 });
 
 test("the dock fits a phone: the Full button comes on screen", () => {

@@ -78,12 +78,55 @@
     if (/\btoday\b.*\b(coordinate|pattern day|moon)\b|\bwhat day is (it|today)\b|\bwhat'?s today\b|\btoday'?s coordinate\b/.test(t)) return "today";
     if (/\bwhich moon\b|\bwhat moon\b|\bthis moon\b/.test(t)) return "moon";
     if (/\btelling\b|\btell me about today\b|\babout this day\b/.test(t)) return "telling";
+    if (/\bpatterns?\b|\bwhen do i\b|\bwhat have we played\b|\bgames\b.*\b(play|played|record)\b|\bdo i (come|play|visit)\b/.test(t)) return "patterns";
     return null;
+  }
+
+  // The one clock, read the one way the house reads it: the
+  // canonical cursor first, the calendar itself behind it. Every
+  // stamp in the keeper's record comes from here — never a second
+  // clock — so patterns can be traced across days, practices and
+  // play from the record alone.
+  function daypartForHour(hour) {
+    const h = Number(hour);
+    if (!Number.isFinite(h)) return "night";
+    return h >= 5 && h < 10 ? "dawn" : h >= 10 && h < 17 ? "day" : h >= 17 && h < 21 ? "dusk" : "night";
+  }
+
+  function patternStamp(global, now) {
+    const date = now instanceof Date ? now : new Date();
+    let pos = null;
+    try { pos = global.SOFTemporalCursor?.resolvePosition ? global.SOFTemporalCursor.resolvePosition(date) : null; } catch { pos = null; }
+    if (!pos) {
+      try { pos = global.PatternCalendar?.fromCivilDate ? global.PatternCalendar.fromCivilDate({ date }) : null; } catch { pos = null; }
+    }
+    if (!pos) return null;
+    return {
+      moon: pos.moon ?? null,
+      day: pos.day ?? null,
+      patternDay: pos.dayOfPatternYear ?? null,
+      patternYear: pos.patternYear ?? null,
+      civilDate: pos.civilDate || date.toISOString().slice(0, 10),
+      daypart: daypartForHour(date.getHours()),
+    };
+  }
+
+  // Patterns told truthfully from the record's own stamps.
+  function playSummary(record, stamp) {
+    const log = Array.isArray(record?.playLog) ? record.playLog : [];
+    const thisMoon = stamp
+      ? log.filter((e) => e?.stamp && e.stamp.moon === stamp.moon && e.stamp.patternYear === stamp.patternYear).length
+      : 0;
+    const dayparts = {};
+    for (const e of log) { if (e?.stamp?.daypart) dayparts[e.stamp.daypart] = (dayparts[e.stamp.daypart] || 0) + 1; }
+    let usualDaypart = null;
+    for (const [band, count] of Object.entries(dayparts)) { if (!usualDaypart || count > dayparts[usualDaypart]) usualDaypart = band; }
+    return { total: log.length, thisMoon, usualDaypart, last: log.length ? log[log.length - 1] : null };
   }
 
   const ACTION_NAMES = ["goToday", "showDay", "openDayWorld", "openDeepTime", "openFarm", "freeze", "wake", "speakDay"];
 
-  const api = { VERSION, AGENT_URL, planNotesFor, classifyLocal, ACTION_NAMES };
+  const api = { VERSION, AGENT_URL, planNotesFor, classifyLocal, ACTION_NAMES, daypartForHour, patternStamp, playSummary };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   global.SphereSparkCore = api;
 
@@ -187,6 +230,48 @@
     } catch { /* the written reply stands */ }
   }
 
+  /* ── The one record: stamps, the play log, single notes ─────── */
+
+  function stamp() { return patternStamp(window, new Date()); }
+
+  function logPlay(kind, detail) {
+    const record = readRecord();
+    if (!record || !Core?.STORAGE_KEY) return false;
+    const entry = { kind, ...(detail || {}), stamp: stamp(), at: new Date().toISOString() };
+    const log = Array.isArray(record.playLog) ? record.playLog : [];
+    log.push(entry);
+    record.playLog = log.slice(-200);
+    try { window.localStorage.setItem(Core.STORAGE_KEY, JSON.stringify(record)); return true; }
+    catch { return false; }
+  }
+
+  function soundNote(freq, durSec) {
+    if (soundOff() || !Number.isFinite(freq)) return;
+    try {
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === "suspended") audioCtx.resume();
+    } catch { return; }
+    const ctx = audioCtx;
+    const t = ctx.currentTime + 0.02;
+    const dur = Math.max(0.08, durSec || 0.3);
+    const osc = ctx.createOscillator();
+    osc.type = "sine";
+    osc.frequency.value = freq;
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(0.14, t + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.start(t); osc.stop(t + dur + 0.05);
+  }
+
+  function soundMotif(context) {
+    const record = readRecord();
+    if (!record) return;
+    const companion = Core.generate(record.seed);
+    soundContext(context || "day", companion, record);
+  }
+
   /* ── The presence: a living light on the instrument ─────────── */
 
   function buildPresence(record, companion) {
@@ -243,6 +328,17 @@
         if (input) window.setTimeout(() => { try { input.focus({ preventScroll: true }); } catch { /* scroll stands */ } }, reducedMotion ? 0 : 350);
       }
     }, true);
+
+    // Reduced motion: the Spark stations itself at the stage's
+    // lower right and rests there, still and beautiful.
+    if (reducedMotion) {
+      const station = () => {
+        const w = wrap.clientWidth, h = wrap.clientHeight;
+        if (w && h) holder.style.transform = `translate(${Math.max(0, w - 84)}px, ${Math.round(h * 0.58)}px)`;
+      };
+      station();
+      window.addEventListener("resize", station);
+    }
 
     // The orbit: a slow circuit of the stage with depth, so the
     // Spark reads as a companion on the instrument, not a widget.
@@ -311,6 +407,17 @@
         return summary?.moonName
           ? `We are in Moon ${summary.moon}, the Moon of ${summary.moonName}.`
           : "The Sphere's readout names the Moon we are in.";
+      case "patterns": {
+        const summary = playSummary(record, stamp());
+        const growthLine = growth ? `We have kept ${growth.daysTogether} distinct days together.` : "";
+        if (!summary.total) {
+          return `${growthLine} No games stand in your record yet — the Play room below the Sphere is where they begin, and every round is stamped with its Pattern day when it happens.`.trim();
+        }
+        const parts = [`${growthLine}`, `Your record holds ${summary.total} game${summary.total === 1 ? "" : "s"} — ${summary.thisMoon} of them this Moon.`];
+        if (summary.usualDaypart) parts.push(`You come and play most often at ${summary.usualDaypart}.`);
+        if (summary.last?.stamp) parts.push(`The last was ${summary.last.kind} on Moon ${summary.last.stamp.moon} · Day ${summary.last.stamp.day}.`);
+        return parts.filter(Boolean).join(" ");
+      }
       case "telling": {
         try {
           const telling = window.DayTelling?.tellForDate ? window.DayTelling.tellForDate(new Date()) : null;
@@ -340,6 +447,7 @@
         voiceStage: growth?.name || null,
       },
       record: growth ? { daysTogether: growth.daysTogether, practiceDays: growth.practiceDays } : null,
+      play: (() => { const s = playSummary(record, stamp()); return s.total ? { gamesTotal: s.total, gamesThisMoon: s.thisMoon, usualDaypart: s.usualDaypart } : null; })(),
       today: summary ? { moon: summary.moon, day: summary.day, patternDay: summary.dayOfPatternYear, moonName: summary.moonName || null } : null,
       shownLine: shown || null,
       frozen: Boolean(window.SphereRebuild?.isFrozen?.()),
@@ -568,13 +676,51 @@
 
   /* ── Boot ───────────────────────────────────────────────────── */
 
+  // A surprise for a returning keeper: the welcome room under the
+  // Sphere remembers, in one plain line, what the record holds.
+  function welcomeKeeperLine(record, companion) {
+    if (!record || !companion) return;
+    let tries = 0;
+    const timer = window.setInterval(() => {
+      tries += 1;
+      const panel = $(".sphere-ambient-panel");
+      if (panel) {
+        window.clearInterval(timer);
+        if (panel.querySelector(".sphere-spark-keeper-line")) return;
+        const growth = Core.livingVoiceGrowthFor ? Core.livingVoiceGrowthFor({ record, companion }) : null;
+        const name = Core.displayName(record, companion);
+        const summary = playSummary(record, stamp());
+        const p = document.createElement("p");
+        p.className = "sphere-spark-keeper-line";
+        p.textContent = growth
+          ? `${name} has kept ${growth.daysTogether} day${growth.daysTogether === 1 ? "" : "s"} with you${summary.total ? `, and ${summary.total} game${summary.total === 1 ? "" : "s"} stand in the record` : ""}.`
+          : `${name} is here with you.`;
+        panel.appendChild(p);
+      }
+      if (tries > 40) window.clearInterval(timer);
+    }, 200);
+  }
+
   function boot() {
     if (!Core) return;
     const record = readRecord();
     const companion = record ? Core.generate(record.seed) : null;
     if (record && companion) buildPresence(record, companion);
     buildTalkPanel(record, companion);
+    welcomeKeeperLine(record, companion);
   }
+
+  // The play room's bridge: stamps, the record's play log, and
+  // single notes, all owned here so the record has one writer.
+  global.SphereSpark = Object.freeze({
+    VERSION,
+    stamp,
+    logPlay,
+    playSummary: () => playSummary(readRecord() || {}, stamp()),
+    soundNote,
+    soundMotif,
+    hasCompanion: () => Boolean(readRecord()),
+  });
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();
