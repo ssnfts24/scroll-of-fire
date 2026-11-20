@@ -227,14 +227,18 @@ test("r2 governor: disabled singleton reports full quality", () => {
 /* ── Options store ────────────────────────────────────────────── */
 
 test("r2 options: defaults are the doctrine-true behaviour", () => {
+  // Sphere page rebuild (Nov 20, 2026, audit F5): the default Moon
+  // label mode is now "fit" — thirteen stacked names were the
+  // friction; a keeper's stored "always" still stands (see the
+  // rebuild suite). The other defaults are unchanged.
   assert.deepEqual({ ...options.DEFAULTS }, {
-    labelMode: "always",
+    labelMode: "fit",
     zoomFeel: "current",
     skyIntensity: "full",
     governor: true
   });
   const current = options.get();
-  assert.equal(current.labelMode, "always");
+  assert.equal(current.labelMode, "fit");
   assert.equal(current.zoomFeel, "current");
   assert.equal(current.skyIntensity, "full");
   assert.equal(current.governor, true);
@@ -244,11 +248,11 @@ test("r2 options: set normalizes, notifies once, and syncs the governor", () => 
   let calls = 0;
   const off = options.onChange(() => { calls += 1; });
   try {
-    options.set({ labelMode: "fit" });
-    assert.equal(options.get().labelMode, "fit");
+    options.set({ labelMode: "always" });
+    assert.equal(options.get().labelMode, "always", "a keeper's explicit always still stands (rebuild, F5)");
     assert.equal(calls, 1);
     options.set({ labelMode: "nonsense" });
-    assert.equal(options.get().labelMode, "always");
+    assert.equal(options.get().labelMode, "fit", "an unreadable value falls back to the default, now fit (rebuild, F5)");
     options.set({ governor: false });
     assert.equal(governorModule.isEnabled(), false);
     options.set({ governor: true });
