@@ -99,6 +99,8 @@
   <script defer src="../assets/js/heaven-sound.js?v=20261119-1"></script>
   <link rel="stylesheet" href="../assets/css/spark-agent-seat.css?v=20261120-1">
   <script defer src="../assets/js/spark-agent-seat.js?v=20261120-1"></script>
+  <link rel="stylesheet" href="assets/css/hidden-layer.css?v=20261120-hl1">
+  <script defer src="assets/js/hidden-layer.js?v=20261120-hl1"></script>
 </head>
 
 <body class="living-ui">
@@ -914,7 +916,10 @@ Press Escape to stop.</pre>
         <a class="record-witness-link" href="./ledger.html" data-witness-link>Record</a>
       </div>
     </div>
-  </main>
+        <section class="card" aria-label="Find the Day's Tone">
+      <div data-hidden-layer-game="tone"></div>
+    </section>
+</main>
 
   <div class="mobile-dock">
     <button id="dockPlay" type="button">Play</button>
@@ -943,5 +948,11 @@ Press Escape to stop.</pre>
     <p>© <span id="year">2026</span> Aaron Paul Laird — Scroll of Fire · Codex of Reality · Scribe of Circuits</p>
   </footer>
   <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
+  <!-- The Hidden Layer: Life Atlas repository, in the garden's own pattern. -->
+  <script src="assets/js/life-atlas/life-atlas-schema.js?v=20260817-1"></script>
+  <script src="assets/js/life-atlas/life-atlas-repository.js?v=20260819-b750"></script>
+  <script src="assets/js/life-atlas/life-atlas-indexeddb.js?v=20260819-b750"></script>
+  <script src="assets/js/life-atlas/life-atlas-runtime.js?v=20260819-b750"></script>
+  <script src="assets/js/life-atlas/record-helpers.js?v=20261119-1"></script>
 </body>
   </html>
