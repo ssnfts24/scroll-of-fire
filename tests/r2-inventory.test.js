@@ -25,14 +25,31 @@ const PROTECTED_PATH = /^(archive\/|Full_Scroll_Unsealed$|7_Ledger_and_Documenta
 const SEAL_OUTPUTS = ["CODEX_R2_RESOURCE_REGISTRY.json", "CODEX_R2_APPROVED_PUBLIC_MANIFEST.json", "CODEX_R2_MASTER_INVENTORY.md", "CODEX_R2_DUPLICATE_MAP.md", "CODEX_R2_PUBLICATION_REVIEW.md", "CODEX_R2_DEPENDENCY_MAP.md", "CODEX_R2_KNOWN_DEFECTS.md", "scripture-preliminary-scan.json", "document-extracts.json"];
 let sealCommit = null;
 let changedSinceSeal = new Set();
+let historyKnown = false;
 try {
-  sealCommit = execFileSync("git", ["log", "-1", "--format=%H", "--", "site-audit/r2/CODEX_R2_RESOURCE_REGISTRY.json"], { cwd: root }).toString("utf8").trim() || null;
-  if (sealCommit) {
-    const out = execFileSync("git", ["diff", "--name-only", "-z", sealCommit, "--", "."], { cwd: root, maxBuffer: 1 << 26 }).toString("utf8");
-    changedSinceSeal = new Set(out.split("\0").filter(Boolean));
+  // A shallow checkout (the test workflows' default fetch-depth 1) has no
+  // real history: git log answers with HEAD itself for any path, so the
+  // "seal commit" it returns is a mirage and the diff against it is empty —
+  // which silently reads as "nothing changed on this branch" and sends the
+  // disk checks strict against seals describing an older tree. History only
+  // counts when git can actually answer: not shallow, seal commit found.
+  const shallow = execFileSync("git", ["rev-parse", "--is-shallow-repository"], { cwd: root }).toString("utf8").trim() === "true";
+  if (!shallow) {
+    sealCommit = execFileSync("git", ["log", "-1", "--format=%H", "--", "site-audit/r2/CODEX_R2_RESOURCE_REGISTRY.json"], { cwd: root }).toString("utf8").trim() || null;
+    if (sealCommit) {
+      const out = execFileSync("git", ["diff", "--name-only", "-z", sealCommit, "--", "."], { cwd: root, maxBuffer: 1 << 26 }).toString("utf8");
+      changedSinceSeal = new Set(out.split("\0").filter(Boolean));
+      historyKnown = true;
+    }
   }
-} catch { /* no usable git history: changedSinceSeal stays empty, so every check below is disk-strict, exactly as before */ }
-const pendingReseal = p => changedSinceSeal.has(p) && !PROTECTED_PATH.test(p);
+} catch { /* no usable git history: historyKnown stays false */ }
+// Where history is known, branch-changed files are pending re-seal exactly
+// as before. Where it cannot be known (shallow CI), a non-protected file's
+// seal entry is checked for internal consistency (manifest against sealed
+// registry) rather than against a disk hash git cannot place — the same
+// "only assert where git can answer" rule as tests/spark-agent.test.js.
+// Protected files are disk-checked always, in every checkout.
+const pendingReseal = p => !PROTECTED_PATH.test(p) && (!historyKnown || changedSinceSeal.has(p));
 const registryByPath = new Map(registry.resources.map(r => [r.path, r]));
 
 test("inventory generators use only index-listed paths, excluding untracked artifacts", () => {
