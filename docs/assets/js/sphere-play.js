@@ -85,6 +85,55 @@
       <p class="sphere-play-record" role="status"></p>`;
     if (talk) talk.after(section); else sidebar.after(section);
 
+    /* ── The games live on the face (Aaron, Nov 20, 2026) ──────
+     * The room above keeps the full telling of each game; the
+     * playing happens on the instrument. A slim bar at the
+     * stage's top edge starts each game (pressing the room's
+     * own buttons, so there is exactly one logic path), carries
+     * the live status line, and holds the echo pads while an
+     * echo round runs. */
+    const stageBar = document.createElement("div");
+    stageBar.className = "sphere-play-bar";
+    stageBar.setAttribute("data-sphere-play-bar", "");
+    stageBar.innerHTML = `
+      <div class="sphere-play-bar-doors">
+        <button type="button" class="sphere-play-bar-btn" data-play-bar-hunt>Find the day</button>
+        <button type="button" class="sphere-play-bar-btn" data-play-bar-echo>Echo</button>
+        <button type="button" class="sphere-play-bar-btn" data-play-bar-arm>Catch the turning</button>
+        <button type="button" class="sphere-play-bar-btn" data-play-bar-catch hidden>Caught it!</button>
+      </div>
+      <p class="sphere-play-bar-status" role="status" hidden></p>
+      <div class="sphere-play-bar-pads" data-play-bar-pads hidden></div>`;
+    const stageWrap = $(".sphere-canvas-wrap");
+    if (stageWrap) stageWrap.appendChild(stageBar);
+    const stageStatus = stageBar.querySelector(".sphere-play-bar-status");
+    const stagePads = stageBar.querySelector("[data-play-bar-pads]");
+    const stageCatch = stageBar.querySelector("[data-play-bar-catch]");
+    let stageStatusTimer = 0;
+    const stageSay = (text, holdMs) => {
+      if (!stageStatus) return;
+      stageStatus.textContent = text;
+      stageStatus.hidden = false;
+      window.clearTimeout(stageStatusTimer);
+      if (holdMs) stageStatusTimer = window.setTimeout(() => { stageStatus.hidden = true; }, holdMs);
+    };
+    const stageEchoPads = (show) => {
+      if (!stagePads) return;
+      stagePads.innerHTML = "";
+      if (!show) { stagePads.hidden = true; return; }
+      const roomPads = section.querySelectorAll(".sphere-play-pad");
+      roomPads.forEach((pad, i) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "sphere-play-pad";
+        b.style.setProperty("--pad-hue", String(Math.round(30 + i * 28)));
+        b.setAttribute("aria-label", `Echo pad ${i + 1} on the Sphere`);
+        b.addEventListener("click", () => pad.click());
+        stagePads.appendChild(b);
+      });
+      stagePads.hidden = roomPads.length === 0;
+    };
+
     const recordLine = section.querySelector(".sphere-play-record");
     const noteRecord = () => {
       const Spark = window.SphereSpark;
@@ -107,6 +156,10 @@
         if (still) { btn.disabled = true; btn.dataset.stillOff = "1"; }
         else if (btn.dataset.stillOff) { btn.disabled = false; delete btn.dataset.stillOff; }
       }
+      for (const btn of stageBar.querySelectorAll(".sphere-play-bar-btn")) {
+        if (still) { btn.disabled = true; btn.dataset.stillOff = "1"; }
+        else if (btn.dataset.stillOff) { btn.disabled = false; delete btn.dataset.stillOff; }
+      }
       if (still) recordLine.textContent = "Play rests while the Sphere is still. Wake it, and the games wake too.";
       else noteRecord();
     };
@@ -123,6 +176,7 @@
       huntBtn.textContent = "Play again";
       if (won) {
         huntStatus.textContent = `You found it — Moon ${target.moon} · Day ${target.day}. The Sphere itself says so.`;
+        stageSay(`You found it — Moon ${target.moon} · Day ${target.day}. The Sphere itself says so.`, 9000);
         window.SphereSpark?.soundMotif?.("day");
         window.SphereSpark?.logPlay?.("hunt", { target: { moon: target.moon, day: target.day, patternDay: target.patternDay } });
         noteRecord();
@@ -143,6 +197,7 @@
       const day = ((pd - 1) % 28) + 1;
       huntTarget = { moon, day, patternDay: pd };
       huntStatus.textContent = `Find this day: Moon ${moon} · Day ${day}. Spin the Sphere, tap a moon and a day, or use Choose a day — the Sphere will tell you when you are standing on it.`;
+      stageSay(`Find this day: Moon ${moon} · Day ${day}. Spin the Sphere until you are standing on it.`);
       $(".sphere-wrapper")?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
     });
 
@@ -196,6 +251,8 @@
               echoStep += 1;
               if (echoStep >= echoSequence.length) {
                 echoStatus.textContent = "That is the motif, note for note. Your Spark heard itself in you.";
+                stageSay("That is the motif, note for note. Your Spark heard itself in you.", 9000);
+                stageEchoPads(false);
                 Spark.soundMotif("day");
                 Spark.logPlay("echo", { notes: echoSequence.length });
                 echoSequence = [];
@@ -206,6 +263,8 @@
               }
             } else {
               echoStatus.textContent = "Not quite that note. Listen once more, then try again.";
+              stageSay("Not quite that note. Hear it again, then try.", 6000);
+              stageEchoPads(false);
               echoSequence = [];
               echoBtn.textContent = "Hear it again";
             }
@@ -230,12 +289,16 @@
       echoSequence = seq;
       echoStep = 0;
       echoStatus.textContent = "Listen…";
+      stageEchoPads(true);
+      stageSay("Listen…");
       seq.forEach((padIndex, i) => {
         window.setTimeout(() => {
           Spark?.soundNote(echoPads[padIndex].note, 0.34);
           const b = padsEl.children[padIndex];
           if (b) { b.classList.add("sphere-play-pad-lit"); window.setTimeout(() => b.classList.remove("sphere-play-pad-lit"), 260); }
-          if (i === seq.length - 1) window.setTimeout(() => { echoStatus.textContent = "Now you — tap the same notes back."; }, 420);
+          const sb = stagePads.children[padIndex];
+          if (sb) { sb.classList.add("sphere-play-pad-lit"); window.setTimeout(() => sb.classList.remove("sphere-play-pad-lit"), 260); }
+          if (i === seq.length - 1) window.setTimeout(() => { echoStatus.textContent = "Now you — tap the same notes back."; stageSay("Now you — tap the same notes back."); }, 420);
         }, 420 * (i + 1));
       });
     });
@@ -261,6 +324,7 @@
       if (!armedBand) { turnStatus.textContent = "The day's clock is still waking up — try again in a moment."; return; }
       armBtn.disabled = true;
       turnStatus.textContent = `Armed. The light is ${armedBand} now; it next turns at ${nextTurnText()}. Stay on the page, and catch it when it turns.`;
+      stageSay(`Armed. The light is ${armedBand} now; it next turns at ${nextTurnText()}.`);
     });
 
     window.setInterval(() => {
@@ -270,28 +334,41 @@
         armedBand = null;
         catchDeadline = Date.now() + 60000;
         catchBtn.hidden = false;
+        if (stageCatch) stageCatch.hidden = false;
         armBtn.disabled = false;
         armBtn.textContent = "Arm again";
         turnStatus.textContent = `The light just turned to ${now} — catch it! You have a minute.`;
+        stageSay(`The light just turned to ${now} — catch it! You have a minute.`);
         window.SphereSpark?.soundMotif?.("moment");
       }
       if (catchDeadline && Date.now() > catchDeadline && !catchBtn.hidden) {
         catchBtn.hidden = true;
+        if (stageCatch) stageCatch.hidden = true;
         catchDeadline = 0;
         turnStatus.textContent = "The turning slipped past uncaught — it will come again. Arm it and wait with the Sphere.";
+        stageSay("The turning slipped past uncaught — it will come again.", 6000);
       }
     }, 5000);
 
     catchBtn.addEventListener("click", () => {
       if (!catchDeadline || Date.now() > catchDeadline) return;
       catchBtn.hidden = true;
+      if (stageCatch) stageCatch.hidden = true;
       catchDeadline = 0;
       const band = bandOf();
       turnStatus.textContent = `Caught — the light turned to ${band}, and you were here for it. It stands in your record.`;
+      stageSay(`Caught — the light turned to ${band}, and you were here for it.`, 9000);
       window.SphereSpark?.soundMotif?.("day");
       window.SphereSpark?.logPlay?.("turning", { band });
       noteRecord();
     });
+
+    // The stage doors press the room's own buttons — one logic
+    // path for both homes of each game.
+    stageBar.querySelector("[data-play-bar-hunt]")?.addEventListener("click", () => huntBtn.click());
+    stageBar.querySelector("[data-play-bar-echo]")?.addEventListener("click", () => echoBtn.click());
+    stageBar.querySelector("[data-play-bar-arm]")?.addEventListener("click", () => armBtn.click());
+    stageCatch?.addEventListener("click", () => catchBtn.click());
 
     // Still mode quiets the room; waking restores it.
     const motionSel = $("#sphere-motion-mode");

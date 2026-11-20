@@ -1726,6 +1726,10 @@
       Number(selected.day || 0),
       Number(selected.dayOfPatternYear || 0),
       Number(_selectedYear || 0),
+      // The hub plate also carries today's kept-plans count,
+      // published by the page layer; when it changes, the plate
+      // re-inks even though the day did not move.
+      String(globalThis.__sofHubPlans?.key || ""),
     ].join(":");
   }
 
@@ -2259,6 +2263,80 @@
     _syncArmillaryDressing(true);
   }
 
+  // Marker name tags (corrective, Aaron, Nov 20, 2026): with
+  // the Legend box gone, the markers carry their names at their
+  // places on the face. The semantic label channel shows Today
+  // at the resting view, but the gate/equinox/passage labels
+  // are gated off by layer visibility in several view states —
+  // so the dressing itself inks the three fixed names as small
+  // glowing sprites standing on their markers, re-anchored to
+  // the live marker positions at every sync, and hidden while
+  // their marker is on the far side of the instrument. The
+  // passage tag follows the same canonical passage angles the
+  // semantic target reads; when the model carries no passage,
+  // no tag is drawn — the face never invents a place.
+  function _armillaryNameTag(text) {
+    const canvas = _armillaryCanvas(512, 112);
+    const ctx = canvas?.getContext("2d");
+    if (!ctx || !_THREE) return null;
+    ctx.clearRect(0, 0, 512, 112);
+    ctx.font = "600 52px Georgia, 'Times New Roman', serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.shadowColor = "rgba(255,157,60,0.9)";
+    ctx.shadowBlur = 12;
+    ctx.fillStyle = "#ffd98f";
+    ctx.fillText(text, 256, 58, 480);
+    const texture = new _THREE.CanvasTexture(canvas);
+    const material = new _THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false });
+    const sprite = new _THREE.Sprite(material);
+    sprite.scale.set(0.34, 0.074, 1);
+    sprite.name = "armillaryNameTag";
+    return sprite;
+  }
+
+  function _syncArmillaryNameTags() {
+    if (!_scene || !_THREE || !_camera) return;
+    if (!_objects.armillaryNameTags) {
+      const group = new _THREE.Group();
+      group.name = "armillaryNameTags";
+      const tags = {};
+      for (const [key, text] of [["yearGate", "YEAR GATE"], ["equinox", "MARCH EQUINOX"], ["passage", "EQUINOX PASSAGE"]]) {
+        const sprite = _armillaryNameTag(text);
+        if (sprite) { tags[key] = sprite; group.add(sprite); }
+      }
+      _scene.add(group);
+      _objects.armillaryNameTags = tags;
+      _objects.armillaryNameTagGroup = group;
+    }
+    const tags = _objects.armillaryNameTags;
+    const mat = globalThis.LivingTimeSphereM;
+    const camPos = _camera.position;
+    const orbit = camPos ? camPos.length() : 0;
+    const place = (sprite, pos) => {
+      if (!sprite || !pos) { if (sprite) sprite.visible = false; return; }
+      sprite.position.set(pos.x, (pos.y || 0) + 0.045, pos.z);
+      // Near-side only: a marker farther than the orbit's heart
+      // is on the far side of the instrument; its name rests.
+      sprite.visible = !camPos || Math.hypot(pos.x - camPos.x, pos.z - camPos.z) < orbit + 0.25;
+    };
+    place(tags.yearGate, _objects.yearGate?.position);
+    place(tags.equinox, _objects.equinoxGate?.position);
+    let passagePos = null;
+    const passageStart = Number(_model?.passageStartAngle ?? _model?.passage?.startAngle);
+    const passageEnd = Number(_model?.passageEndAngle ?? _model?.passage?.endAngle);
+    if (Number.isFinite(passageStart) && Number.isFinite(passageEnd) && mat?.SIZES?.passageArc) {
+      const sweep = ((passageEnd - passageStart + 360) % 360);
+      const mid = (passageStart + sweep * 0.5) % 360;
+      const pp = angleToXZ(mid, mat.SIZES.passageArc);
+      passagePos = { x: pp.x, y: 0.018, z: pp.z };
+    }
+    place(tags.passage, passagePos);
+    if (_objects.armillaryNameTagGroup) {
+      _objects.armillaryNameTagGroup.visible = !!_visibleLayers?.pattern;
+    }
+  }
+
   // Bring the dressing to the shown day: gear and globe angles
   // (tweened, unless motion is stilled), the script inscription
   // (redrawn only when the coordinate changes), the Moon glows,
@@ -2312,6 +2390,8 @@
       _drawArmillaryHubPlate();
     }
     _syncArmillaryRecordMarkers();
+    _syncArmillaryTrailMarkers();
+    _syncArmillaryNameTags();
     // Moon glows: the shown Moon burns brighter; today's keeps a
     // softer halo when it is not the shown one.
     const selectedMoon = Number(_model?.selectedPatternPosition?.moon || 0);
@@ -2372,6 +2452,19 @@
       ctx.font = "italic 27px Georgia, 'Times New Roman', serif";
       ctx.fillStyle = "#54340f";
       ctx.fillText(archetype ? `${moonName} — ${archetype}` : moonName, cx, S * 0.815);
+      // Today's kept plans, counted on the hub (Aaron, Nov 20,
+      // 2026: "today's plans count on the hub") — real only: the
+      // page layer publishes the count from the keeper's own
+      // planner record, and the line appears only while the
+      // plate is showing today itself and the count is real.
+      const todayDoy = Number(_model?.todayPatternPosition?.dayOfPatternYear || 0);
+      const hubPlans = globalThis.__sofHubPlans;
+      const planCount = Number(hubPlans?.count || 0);
+      if (todayDoy === doy && planCount > 0) {
+        ctx.font = "600 23px Georgia, 'Times New Roman', serif";
+        ctx.fillStyle = "#54340f";
+        ctx.fillText(`TODAY · ${planCount} PLAN${planCount === 1 ? "" : "S"} KEPT`, cx, S * 0.90, S * 0.52);
+      }
     } else if (moon >= 1) {
       ctx.font = "700 36px Georgia, 'Times New Roman', serif";
       ctx.fillText(moonName.toUpperCase(), cx, S * 0.64);
@@ -2426,6 +2519,54 @@
     group.visible = !!_visibleLayers?.pattern;
     _scene.add(group);
     _objects.armillaryRecordGroup = group;
+  }
+
+  // The keeper's trail on the face (Aaron, Nov 20, 2026: the
+  // year reads as a journey): one small warm light on the rail
+  // for each day of the shown year the keeper has actually
+  // stood on — a plan kept, a practice done, a game stamped —
+  // supplied by the page layer from the keeper's own record.
+  // Gold, where the planned gems are teal: what is DONE lights
+  // the year; what is planned gems it. Display only, like the
+  // gems — no picking, no calendar math, no score.
+  function _setTrailMarkers(patternDays) {
+    const days = [...new Set((patternDays || []).map(Number).filter((d) => d >= 1 && d <= 364))].sort((a, b) => a - b);
+    _objects.armillaryTrailDays = days;
+    _syncArmillaryTrailMarkers();
+  }
+
+  function _syncArmillaryTrailMarkers() {
+    const days = _objects.armillaryTrailDays || [];
+    const key = days.join(",");
+    if (_objects.armillaryTrailKey === key) return;
+    if (!_scene || !_THREE) return;
+    _objects.armillaryTrailKey = key;
+    const old = _objects.armillaryTrailGroup;
+    if (old?.parent) old.parent.remove(old);
+    _objects.armillaryTrailGroup = null;
+    if (days.length === 0) return;
+    const THREE = _THREE;
+    const mat = globalThis.LivingTimeSphereM;
+    const group = new THREE.Group();
+    group.name = "armillaryTrailMarkers";
+    const geo = new THREE.SphereGeometry(0.0085, 10, 8);
+    const material = new THREE.MeshStandardMaterial({
+      color: 0x8a5a17,
+      emissive: 0xffb84d,
+      emissiveIntensity: 1.1,
+      roughness: 0.35,
+      metalness: 0.1,
+    });
+    for (const d of days) {
+      const angle = ((d - 0.5) / 364) * 360;
+      const { x, z } = angleToXZ(angle, mat.SIZES.patternRing);
+      const light = new THREE.Mesh(geo, material);
+      light.position.set(x, 0.012, z);
+      group.add(light);
+    }
+    group.visible = !!_visibleLayers?.pattern;
+    _scene.add(group);
+    _objects.armillaryTrailGroup = group;
   }
 
   function _buildMoonAnchors(viewMode = _viewMode) {
@@ -2638,10 +2779,18 @@
     // already available in the fixed instrument UI and should not become a
     // swarm of floating cards. Only landmarks whose position itself matters
     // remain semantic labels here.
+    // Corrective (Aaron, Nov 20, 2026, from his phone): the
+    // Legend box is gone from the page, so the markers carry
+    // their own names at their places on the face — the four
+    // landmarks' name tags now show at the resting view's
+    // distance, not only up close. Their details still wait
+    // for a nearer look (detailDistance stays a fraction of
+    // showDistance), and their priorities keep them first in
+    // the placement arbitration.
     const simple = [
-      _semanticTargetFromObject("live-today", "Today", _objects.todayMarker, { kind: "pattern-day", priority: 97, showDistance: 1.50, resetDistance: 1.82, detail: todayDetail }),
-      _semanticTargetFromObject("year-gate", "Year Gate", _objects.yearGate, { kind: "gate", priority: 86, showDistance: 1.58, resetDistance: 1.90, detail: "Moon 1 · Day 1 · fixed Pattern seam" }),
-      _semanticTargetFromObject("march-equinox", "March Equinox", _objects.equinoxGate, { kind: "astronomy", priority: 87, showDistance: 1.58, resetDistance: 1.92, detail: "Astronomical alignment marker" })
+      _semanticTargetFromObject("live-today", "Today", _objects.todayMarker, { kind: "pattern-day", priority: 97, showDistance: 5.4, resetDistance: 5.85, detail: todayDetail }),
+      _semanticTargetFromObject("year-gate", "Year Gate", _objects.yearGate, { kind: "gate", priority: 86, showDistance: 5.4, resetDistance: 5.85, detail: "Moon 1 · Day 1 · fixed Pattern seam" }),
+      _semanticTargetFromObject("march-equinox", "March Equinox", _objects.equinoxGate, { kind: "astronomy", priority: 87, showDistance: 5.4, resetDistance: 5.85, detail: "Astronomical alignment marker" })
     ].filter(Boolean);
     targets.push(...simple);
 
@@ -2674,7 +2823,7 @@
       const pp = angleToXZ(mid, globalThis.LivingTimeSphereM.SIZES.passageArc);
       targets.push({
         id: "passage-midpoint", label: "Equinox Passage", detail: "Passage midpoint", kind: "passage",
-        worldX: pp.x, worldY: 0.018, worldZ: pp.z, priority: 82, showDistance: 1.62, resetDistance: 1.94
+        worldX: pp.x, worldY: 0.018, worldZ: pp.z, priority: 82, showDistance: 5.4, resetDistance: 5.85
       });
     }
 
@@ -8942,6 +9091,7 @@
     getLastInitError,
     getDiagnostics,
     setRecordMarkers: _setRecordMarkers,
+    setTrailMarkers: _setTrailMarkers,
     exportPng,
     getCalendarRailGeometry: _calendarRailGeometry,
     THREE_VERSION,

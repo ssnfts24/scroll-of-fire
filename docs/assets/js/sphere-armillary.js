@@ -99,6 +99,12 @@
     if (!main || !sidebar || !dock) return false; // the rebuild shell is still booting; the caller retries
     shellBuilt = true;
     document.documentElement.classList.add("armillary-app");
+    // The frame is CSS from the first paint now, but a keeper
+    // may have scrolled the unframed page during a slow load
+    // (his phone did — the two screenshots sit at two offsets).
+    // Standing the shell also stands the page back at its top,
+    // where the lock then holds it.
+    try { window.scrollTo(0, 0); } catch (err) { /* the lock holds regardless */ }
 
     // The one rooms sheet gets a bar: its name, the way back, and
     // the site links (the site header stands down in app mode).
@@ -164,22 +170,26 @@
     // one sheet as the Guide room — every function it carries
     // stays reachable in exactly one place, and the surface
     // keeps only the dock and the on-sphere readout. The legend
-    // folds with it. Both are swept whenever they appear: the
-    // companion layer mounts its bar on its own clock.
-    var canvasWrap = document.querySelector(".sphere-canvas-wrap");
-    if (canvasWrap) {
-      var sweepWrap = function () {
-        [".sphere-guide-bar", "#sphere-legend"].forEach(function (sel) {
-          var el = canvasWrap.querySelector(sel);
-          if (el) {
-            el.classList.add("sphere-sheet-room");
-            sidebar.appendChild(el);
-          }
-        });
-      };
-      sweepWrap();
-      new MutationObserver(sweepWrap).observe(canvasWrap, { childList: true });
-    }
+    // folds with it.
+    // CORRECTIVE (Nov 20, 09:11 PST): the first sweep searched
+    // only the canvas wrap — but the legend's parent is the
+    // sphere WRAPPER, so the fold never happened anywhere, on
+    // any device, and his phone showed the box standing over a
+    // squeezed stage. The sweep now searches the whole main,
+    // subtree-deep, and the stylesheet hides both pieces while
+    // they are anywhere in the stage's frame, so the surface is
+    // clean from the first paint even before this runs.
+    var sweepChrome = function () {
+      [".sphere-guide-bar", "#sphere-legend"].forEach(function (sel) {
+        var el = main.querySelector(sel);
+        if (el && el.parentElement !== sidebar) {
+          el.classList.add("sphere-sheet-room");
+          sidebar.appendChild(el);
+        }
+      });
+    };
+    sweepChrome();
+    new MutationObserver(sweepChrome).observe(main, { childList: true, subtree: true });
 
     // Technical material leaves the visitor surface: the two
     // diagnostics sections and the methods section fold behind
@@ -225,6 +235,50 @@
 
   /* ── 3. The on-sphere readout ────────────────────────────────── */
 
+  // What the keeper's record keeps on each Pattern day of the
+  // shown year — filled by the record pass below, read by the
+  // readout. patternDay → { plans: [titles], played: bool }.
+  var keptByDay = {};
+  var renderKeptRef = null;
+
+  // The shown Moon's name rides its medallion's label: the label
+  // spans are the renderer's, their text set once at setup to
+  // "Moon N" — the page layer writes the name onto the shown
+  // Moon's span and restores the rest. (Aaron, Nov 20, 2026:
+  // "the shown Moon's name on its medallion".)
+  function nameShownMoon(pos) {
+    var labels = document.getElementById("sphere-moon-labels");
+    if (!labels || !pos) return;
+    var data = window.PatternCalendarData || {};
+    labels.querySelectorAll(".sphere-moon-label[data-moon]").forEach(function (el) {
+      var n = Number(el.getAttribute("data-moon"));
+      var name = (data.moons && data.moons[n - 1] && data.moons[n - 1].name) || "";
+      var text = n === pos.moon && name ? "Moon " + n + " · " + name : "Moon " + n;
+      if (el.textContent !== text) el.textContent = text;
+    });
+  }
+
+  // A tapped day answers with its own note (Aaron, Nov 20, 2026:
+  // "tappable days answer with light and sound"). The note is a
+  // fixed function of the Pattern day — a pentatonic ladder over
+  // two octaves, the same day always sounding the same note —
+  // played through the Spark's own voice, which honours the
+  // keeper's sound setting. Only after the keeper's first touch:
+  // browsers forbid sound before a gesture, and the Sphere
+  // should never sound uninvited.
+  var gestureHeard = false;
+  document.addEventListener("pointerdown", function () { gestureHeard = true; }, { once: true });
+  var lastSoundedDay = 0;
+  function soundForDay(pos) {
+    if (!gestureHeard || !pos || pos.dayOfPatternYear === lastSoundedDay) return;
+    lastSoundedDay = pos.dayOfPatternYear;
+    var Spark = window.SphereSpark;
+    if (!Spark || !Spark.soundNote) return;
+    var ladder = [0, 2, 4, 7, 9, 12, 14, 16, 19, 21, 24, 26, 28, 31, 33];
+    var semis = ladder[(pos.dayOfPatternYear - 1) % ladder.length];
+    Spark.soundNote(330 * Math.pow(2, semis / 12), 0.16);
+  }
+
   function buildReadout() {
     var wrap = document.querySelector(".sphere-canvas-wrap") || document.getElementById("sphere-container")?.parentElement;
     if (!wrap) return;
@@ -234,6 +288,7 @@
     card.innerHTML =
       '<p class="sphere-day-readout-where"></p>' +
       '<p class="sphere-day-readout-telling"></p>' +
+      '<p class="sphere-day-readout-kept" hidden></p>' +
       '<div class="sphere-day-readout-actions">' +
       '<button type="button" class="sphere-day-readout-enter">Enter this day</button>' +
       '<button type="button" class="sphere-day-readout-schedule">Schedule something for this day</button>' +
@@ -259,11 +314,28 @@
 
     var where = card.querySelector(".sphere-day-readout-where");
     var telling = card.querySelector(".sphere-day-readout-telling");
+    var kept = card.querySelector(".sphere-day-readout-kept");
+    function renderKept() {
+      var pos = selectedPosition();
+      var entry = pos ? keptByDay[pos.dayOfPatternYear] : null;
+      if (!entry || (!entry.plans.length && !entry.played)) {
+        kept.hidden = true;
+        kept.textContent = "";
+        return;
+      }
+      var bits = [];
+      if (entry.plans.length) bits.push("Kept here: " + entry.plans.slice(0, 3).join(" · ") + (entry.plans.length > 3 ? " · +" + (entry.plans.length - 3) + " more" : ""));
+      if (entry.played) bits.push("a game is stamped here");
+      kept.textContent = bits.join(" — ");
+      kept.hidden = false;
+    }
+    renderKeptRef = renderKept;
     function render() {
       var pos = selectedPosition();
       if (!pos) {
         where.textContent = stripText() || "The Sphere is waking up.";
         telling.textContent = "";
+        kept.hidden = true;
         return;
       }
       var data = window.PatternCalendarData || {};
@@ -271,6 +343,9 @@
       var archetype = (data.dayArchetypes && data.dayArchetypes[(pos.day - 1) % 28] && data.dayArchetypes[(pos.day - 1) % 28][0]) || "";
       where.textContent = "Moon " + pos.moon + " · Day " + pos.day + " · Pattern Day " + pos.dayOfPatternYear + " of 364";
       telling.textContent = archetype ? moonName + " — " + archetype : moonName;
+      renderKept();
+      nameShownMoon(pos);
+      soundForDay(pos);
     }
     render();
     var strip = document.getElementById("sphere-state-strip");
@@ -325,11 +400,42 @@
       var year = Number(window.LivingTimeSphereUi?.getSphereDiagnostics?.().selectedYear) || new Date().getFullYear();
       var plans = await planner.plansForYear(year);
       var days = [];
+      var trail = [];
+      var kept = {};
+      var now = new Date();
+      var todayIso = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0");
+      var todayCount = 0;
       (plans || []).forEach(function (rec) {
         var d = planPatternDay(rec);
-        if (d) days.push(d);
+        if (!d) return;
+        days.push(d);
+        if (!kept[d]) kept[d] = { plans: [], played: false };
+        if (rec.title) kept[d].plans.push(String(rec.title));
+        if (rec.completed) trail.push(d);
+        if (planCivil(rec) === todayIso && !rec.completed) todayCount += 1;
       });
+      // The trail also carries the Spark's stamped games: the
+      // play log lives in the companion record, each entry
+      // stamped with its Pattern day by the one canonical clock.
+      try {
+        var Core = window.SparkCompanion;
+        var raw = Core && Core.STORAGE_KEY ? window.localStorage.getItem(Core.STORAGE_KEY) : null;
+        var record = raw ? JSON.parse(raw) : null;
+        (Array.isArray(record && record.playLog) ? record.playLog : []).forEach(function (entry) {
+          var d = Number(entry && entry.stamp && entry.stamp.patternDay);
+          if (d >= 1 && d <= 364) {
+            trail.push(d);
+            if (!kept[d]) kept[d] = { plans: [], played: false };
+            kept[d].played = true;
+          }
+        });
+      } catch (err) { /* no companion yet — the trail is plans alone */ }
+      keptByDay = kept;
       renderer.setRecordMarkers(days);
+      if (renderer.setTrailMarkers) renderer.setTrailMarkers(trail);
+      // Today's kept-plans count, published for the hub plate.
+      window.__sofHubPlans = { key: todayIso + ":" + todayCount, count: todayCount };
+      if (renderKeptRef) renderKeptRef();
     } catch (err) { /* the record is the keeper's; silence is honest */ }
   }
 
@@ -373,6 +479,115 @@
     } catch (err) { /* alerts are an invitation, never an error surface */ }
   }
 
+  /* ── 4b. The sky line: real values or one honest line ──────────
+   *
+   * The sphere UI keeps a live-environment strip and parks it
+   * inside the stage, where it showed placeholder dashes framed
+   * as data ("—°C / —°F · Kp — · AQI —") — Aaron, Nov 20, 2026:
+   * "Real values or one plain honest line; never fake data on
+   * the face." The page layer adopts the strip into the telling
+   * line's block as the sky line: segments with real numbers
+   * stand; dash-only segments are dropped; while nothing real
+   * has arrived the line stays hidden, and if nothing real
+   * arrives at all, one plain line says so. */
+
+  function adoptSkyline() {
+    var caption = document.querySelector(".sphere-rebuild-caption");
+    if (!caption) return;
+    var adopted = null;
+    var firstSeenAt = 0;
+    function sanitize(el) {
+      var primary = el.querySelector(".sphere-live-environment-primary");
+      var secondary = el.querySelector(".sphere-live-environment-secondary");
+      var selected = el.querySelector(".sphere-live-environment-selected");
+      if (secondary && /loading/i.test(secondary.textContent || "")) secondary.textContent = "";
+      if (selected && !/\d/.test(selected.textContent || "") && /—/.test(selected.textContent || "")) selected.textContent = "";
+      if (!primary) return;
+      var segments = String(primary.textContent || "").split("·").map(function (s) { return s.trim(); }).filter(Boolean);
+      var real = segments.filter(function (s) { return /\d/.test(s) && s !== "NOW"; });
+      if (real.length) {
+        var text = "NOW · " + real.join(" · ");
+        if (primary.textContent !== text) primary.textContent = text;
+        el.hidden = false;
+        return;
+      }
+      if (firstSeenAt && Date.now() - firstSeenAt > 12000) {
+        var honest = "Live sky data isn't available right now";
+        if (primary.textContent !== honest) primary.textContent = honest;
+        el.hidden = false;
+      } else {
+        el.hidden = true;
+      }
+    }
+    function adopt() {
+      var el = document.getElementById("sphere-live-environment-telemetry");
+      if (!el) return;
+      if (adopted !== el) {
+        adopted = el;
+        firstSeenAt = Date.now();
+        el.classList.add("sphere-skyline");
+        el.hidden = true;
+        caption.appendChild(el);
+        new MutationObserver(function () { sanitize(el); }).observe(el, { childList: true, subtree: true, characterData: true });
+      }
+      sanitize(el);
+    }
+    adopt();
+    new MutationObserver(adopt).observe(document.body, { childList: true, subtree: true });
+    window.setInterval(adopt, 3000);
+  }
+
+  /* ── 4c. The instrument is directly touchable ──────────────────
+   *
+   * The Interact toggle existed to keep touch drags scrolling
+   * the page; this page never scrolls, so once the instrument
+   * reports ready, the page layer presses the toggle itself —
+   * the Sphere turns under the keeper's thumb from the first
+   * moment, like a game board. */
+
+  function autoInteract() {
+    var tries = 0;
+    var wait = window.setInterval(function () {
+      tries += 1;
+      var diag = null;
+      try { diag = window.LivingTimeSphereUi && window.LivingTimeSphereUi.getSphereDiagnostics ? window.LivingTimeSphereUi.getSphereDiagnostics() : null; } catch (err) { diag = null; }
+      var btn = document.getElementById("sphere-interact-btn");
+      var endBtn = document.getElementById("sphere-interact-end-btn");
+      if (diag && diag.threeDReady && btn && endBtn && endBtn.style.display === "none") {
+        window.clearInterval(wait);
+        btn.click();
+      } else if (tries > 90) {
+        window.clearInterval(wait);
+      }
+    }, 500);
+  }
+
+  /* ── 4d. The command trigger stands in the dock ────────────────
+   *
+   * The Living command trigger is a fixed pill; on this page it
+   * floated over the dock's right-hand doors. It joins the dock
+   * as an eighth door instead — the same control with the same
+   * job, in the one row. (Its window is a fixed overlay with its
+   * own life, untouched by the move.) */
+
+  function dockCommandTrigger() {
+    var tries = 0;
+    var wait = window.setInterval(function () {
+      tries += 1;
+      var trigger = document.querySelector(".living-command-trigger");
+      var dock = document.querySelector(".sphere-rebuild-dock");
+      if (trigger && dock) {
+        window.clearInterval(wait);
+        if (trigger.parentElement !== dock) {
+          dock.appendChild(trigger);
+          dock.classList.add("has-command-trigger");
+        }
+      } else if (tries > 90) {
+        window.clearInterval(wait);
+      }
+    }, 500);
+  }
+
   function startRecordAndAlerts() {
     var tries = 0;
     var wait = window.setInterval(function () {
@@ -406,6 +621,9 @@
     }
     buildReadout();
     watchDayWorld();
+    adoptSkyline();
+    autoInteract();
+    dockCommandTrigger();
     startRecordAndAlerts();
   }
 

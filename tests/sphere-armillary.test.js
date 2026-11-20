@@ -153,3 +153,56 @@ test("the guard declaration names this change set", () => {
   assert.ok(guard.includes("armillaryDeclaredProtected"), "the declared set exists");
   assert.ok(guard.includes('"docs/assets/js/sphere-armillary.js"'), "the signature file is the handoff module");
 });
+
+/* ── The corrective (Aaron's real phone, Nov 20, 09:11 PST) ────
+ * His screenshots showed what the lab had missed: the Sphere
+ * squeezed into a band, the Legend box standing on the stage,
+ * the page shifting between two scroll offsets, and placeholder
+ * dashes framed as data. These tests pin the corrective's
+ * mechanisms; the phone-size behaviour itself is proven by the
+ * lab's fixed-moment sampling (browser-lab/sphere-corrective-
+ * verify.mjs), which asserts without ever waiting for a success
+ * state — the earlier lab's waiting was how it missed all four. */
+
+test("corrective: the legend fold searches the whole main, subtree-deep", () => {
+  // The first sweep searched only the canvas wrap; the legend's
+  // parent is the sphere WRAPPER, so the fold never happened on
+  // any device. The sweep now queries main itself and stands
+  // guard over its whole subtree.
+  assert.ok(handoff.includes('main.querySelector(sel)'), "the chrome sweep queries the whole main");
+  assert.ok(handoff.includes('[".sphere-guide-bar", "#sphere-legend"]'), "the sweep names the guide bar and the legend");
+  assert.ok(handoff.includes("{ childList: true, subtree: true }"), "the sweep guard watches the subtree");
+  // And while either piece is still in the stage's frame, the
+  // stylesheet hides it — the surface is clean from first paint.
+  assert.ok(shellCss.includes(".sphere-wrapper > #sphere-legend"), "the stylesheet hides the legend while it stands in the wrapper");
+  assert.ok(shellCss.includes(".sphere-canvas-wrap .sphere-guide-bar"), "the stylesheet hides the guide bar while it stands in the stage");
+});
+
+test("corrective: standing the shell stands the page back at its top", () => {
+  assert.ok(handoff.includes("window.scrollTo(0, 0)"), "the shell build returns the page to its top before the lock holds it");
+});
+
+test("corrective: the markers carry their names at their places on the face", () => {
+  assert.ok(renderer.includes("function _armillaryNameTag("), "the name-tag inker exists");
+  assert.ok(renderer.includes("function _syncArmillaryNameTags()"), "the name tags sync with the dressing");
+  for (const name of ['"YEAR GATE"', '"MARCH EQUINOX"', '"EQUINOX PASSAGE"']) {
+    assert.ok(renderer.includes(name), `the face inks ${name}`);
+  }
+  assert.ok(renderer.includes("_objects.yearGate?.position"), "the Year Gate tag stands on its live marker");
+  assert.ok(renderer.includes("_objects.equinoxGate?.position"), "the equinox tag stands on its live marker");
+  assert.ok(renderer.includes("passageStartAngle"), "the passage tag reads the model's canonical passage angles");
+  assert.ok(renderer.includes("no tag is drawn"), "when the model carries no passage, no tag is invented");
+  assert.ok(renderer.includes("armillaryNameTagGroup.visible = !!_visibleLayers?.pattern"), "the tags rest with the Pattern layer");
+});
+
+test("corrective: the sky line is real values or one honest line, never dashes", () => {
+  assert.ok(handoff.includes("function adoptSkyline()"), "the page layer adopts the environment strip as the sky line");
+  assert.ok(handoff.includes("Live sky data isn't available right now"), "the one honest line is stated plainly");
+  assert.ok(handoff.includes('s !== "NOW"'), "only segments carrying real numbers stand as data");
+});
+
+test("corrective: the command trigger stands in the dock as its eighth door", () => {
+  assert.ok(handoff.includes("function dockCommandTrigger()"), "the trigger is docked by the page layer");
+  assert.ok(handoff.includes('dock.classList.add("has-command-trigger")'), "the dock names its eighth door");
+  assert.ok(handoff.includes("dock.appendChild(trigger)"), "the trigger joins the one row instead of floating over it");
+});

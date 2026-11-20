@@ -64,16 +64,46 @@
 
   // ── Lifecycle ──────────────────────────────────────────────────────
 
+  // The stage's aspect, tracked so presets can frame the whole
+  // instrument in portrait (corrective, Aaron, Nov 20, 2026:
+  // on his phone the armillary's rings were cropped at the
+  // resting view — the presets were distances chosen for a
+  // landscape disc, and a portrait stage's narrow horizontal
+  // field cut the wider armillary dressing at both sides).
+  let _aspect = 0;
+
+  // The distance at which a sphere of the instrument's radius
+  // (the cage at 1.07 plus its labels' margin) fits BOTH fields
+  // of view at the current aspect.
+  const FIT_RADIUS = 1.18;
+  function _fitDistance() {
+    if (!_aspect || _aspect >= 1) return 0;
+    const halfFov = Math.tan((FOV * Math.PI) / 360);
+    const sinHalfHorizontal = (halfFov * _aspect) / Math.sqrt(1 + halfFov * halfFov * _aspect * _aspect);
+    return FIT_RADIUS / sinHalfHorizontal;
+  }
+
   function create(THREE, containerWidth, containerHeight) {
-    _cam = new THREE.PerspectiveCamera(FOV, containerWidth / containerHeight, 0.035, 50);
+    _aspect = containerWidth / containerHeight;
+    _cam = new THREE.PerspectiveCamera(FOV, _aspect, 0.035, 50);
     _apply();
     return _cam;
   }
 
   function resize(width, height) {
     if (!_cam) return;
-    _cam.aspect = width / height;
+    _aspect = width / height;
+    _cam.aspect = _aspect;
     _cam.updateProjectionMatrix();
+    // A stage that grows more portrait (the phone's frame
+    // settling, a resize) must never leave the resting view
+    // cropped: if the current distance no longer frames the
+    // instrument, stand back to the fit — never zoom in.
+    const fit = _fitDistance();
+    if (fit && _dist < fit && !_dragging) {
+      _dist = Math.min(fit, MAX_ZOOM);
+      _apply();
+    }
   }
 
   function _isMobileViewport() {
@@ -82,7 +112,12 @@
 
   function _presetForMode(mode) {
     const base = MODE_POSITIONS[mode] || MODE_POSITIONS.default;
-    if (!_isMobileViewport()) return base;
+    if (!_isMobileViewport()) {
+      // Even on a desktop window gone portrait-narrow, the
+      // resting presets frame the whole instrument.
+      const fit = _fitDistance();
+      return fit ? { ...base, distance: Math.max(base.distance, Math.min(fit, MAX_ZOOM)) } : base;
+    }
     return {
       ...base,
       // Sphere page rebuild (Nov 20, 2026) — the audit's F6: the
@@ -91,7 +126,16 @@
       // the lowest day numbers in half. Framing wins over filling:
       // on a phone the preset now stands slightly FURTHER back, so
       // the whole ring and its numbers stay inside the stage.
-      distance: Math.max(MIN_ZOOM, base.distance + (mode === "years" ? -0.1 : 0.3)),
+      // Corrective (Nov 20, 09:11 PST): +0.3 was not enough for
+      // the armillary face in a portrait stage — the preset now
+      // also respects the true fit distance for the stage's
+      // aspect, so the whole instrument, rings and all, stands
+      // inside the frame at rest.
+      distance: Math.max(
+        MIN_ZOOM,
+        base.distance + (mode === "years" ? -0.1 : 0.3),
+        Math.min(_fitDistance() || 0, MAX_ZOOM)
+      ),
       phi: mode === "pattern" ? Math.min(1.42, base.phi + 0.05) : base.phi,
       targetRadius: mode === "today" ? 0.26 : mode === "pattern" ? 0.12 : base.targetRadius,
     };
