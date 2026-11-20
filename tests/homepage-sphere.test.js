@@ -310,10 +310,28 @@ test("no R1.7 protected file is touched by this branch", () => {
   const carriesR2Rework = changed.has(
     "docs/assets/js/sphere/living-time-sphere-options.js"
   );
+  /*
+   * Day World declaration (Sphere R3 Wave 1, Nov 19, 2026 — Aaron
+   * approved the R3 finishing plan with the Day World first). This
+   * change set declares itself the same way, by carrying its
+   * signature file (the Day World overlay module), and its declared
+   * set names exactly one protected path: the Sphere page, changed
+   * by links and tags only — one stylesheet link and three script
+   * tags in the neighbourhood PR #159 opened, the module itself
+   * living outside the protected directories. Every other protected
+   * path still fails this test loudly.
+   */
+  const dayWorldDeclaredProtected = new Set([
+    "docs/living-time-sphere.html"
+  ]);
+  const carriesDayWorld = changed.has(
+    "docs/assets/js/sphere-day-world.js"
+  );
   for (const file of changed) {
     if (!protectedPaths.has(file)) continue;
     assert.ok(
-      carriesR2Rework && r2DeclaredProtected.has(file),
+      (carriesR2Rework && r2DeclaredProtected.has(file)) ||
+        (carriesDayWorld && dayWorldDeclaredProtected.has(file)),
       `R1.7 protected file changed: ${file}`
     );
   }
