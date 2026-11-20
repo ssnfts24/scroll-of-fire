@@ -328,15 +328,22 @@ test("no absence-guilt or decay language anywhere in the garden's copy", () => {
     "punish"
   ];
 
-  for (const rel of ["garden.html", "assets/js/shroom-garden.js", "assets/css/shroom-garden.css"]) {
+  for (const rel of [
+    "garden.html",
+    "assets/js/shroom-garden.js",
+    "assets/css/shroom-garden.css",
+    "assets/js/pattern-garden.js",
+    "assets/css/pattern-garden.css"
+  ]) {
     const text = read(rel).toLowerCase();
     for (const phrase of banned) {
       assert.ok(!text.includes(phrase), `${rel} must not say "${phrase}"`);
     }
   }
 
-  /* The register instead: the garden keeps your place. */
-  assert.ok(read("garden.html").includes("keeps your place"));
+  /* The register instead: the old garden kept your place; the
+   * Pattern Garden states its seasons honestly, without guilt. */
+  assert.ok(read("garden.html").includes("goes honestly to seed"));
 });
 
 test("reduced-motion still mode is honored in the garden stylesheet", () => {
@@ -353,15 +360,20 @@ test("garden.html loads the canonical converter, the Atlas stack, and the garden
   assert.match(html, /life-atlas\/life-atlas-schema\.js/);
   assert.match(html, /life-atlas\/life-atlas-repository\.js/);
   assert.match(html, /life-atlas\/life-atlas-runtime\.js/);
-  assert.match(html, /assets\/js\/shroom-garden\.js/);
-  assert.match(html, /assets\/css\/shroom-garden\.css/);
+  /* The Pattern Garden stands where Shroom Search stood (the
+   * remake, Nov 20, 2026); the old module remains in the tree as
+   * the record of the old game's shapes, unloaded by the page. */
+  assert.match(html, /assets\/js\/pattern-garden\.js/);
+  assert.match(html, /assets\/css\/pattern-garden\.css/);
+  assert.ok(!/assets\/js\/shroom-garden\.js/.test(html), "the page no longer loads the old game");
   assert.match(html, /id="garden-beds"/);
-  assert.match(html, /id="garden-passes"/);
+  assert.match(html, /id="garden-keepsakes"/);
+  assert.match(html, /id="garden-old-passes"/);
   assert.match(html, /id="garden-status"/);
   assert.match(html, /id="garden-today-coords"/);
-  /* The honest label: a pass is held today, and the page says so. */
-  assert.match(html, /today, a pass is held/);
-  assert.match(html, /Day World/);
+  /* The honest label: the replacement is named, and the old
+   * passes are stated to be untouched. */
+  assert.match(html, /replaces Shroom Search/);
   /* Exactly one unified living nav, like every content page. */
   assert.equal((html.match(/data-living-nav/g) || []).length, 1);
 });
@@ -369,12 +381,12 @@ test("garden.html loads the canonical converter, the Atlas stack, and the garden
 test("the Lab bench grid doors into the garden, and the catalog knows the page", () => {
   const lab = read("lab.html");
   assert.match(lab, /href="\.\/garden\.html"/);
-  assert.match(lab, /Shroom Search — the Garden/);
+  assert.match(lab, /The Pattern Garden — the Garden/);
 
   const curation = JSON.parse(
     fs.readFileSync(path.resolve(__dirname, "../scripts/site-catalog-curation.json"), "utf8")
   );
-  const entry = curation.entries.find(item => item.id === "shroom-garden");
+  const entry = curation.entries.find(item => item.id === "pattern-garden");
   assert.ok(entry, "curation entry exists");
   assert.equal(entry.path, "garden.html");
   assert.equal(entry.status, "live");

@@ -1551,6 +1551,1037 @@
     _buildMoonNumberField();
   }
 
+  // ── Armillary face (Sphere redesign, Nov 20, 2026) ──────────────
+  // Aaron's verdict on the page rebuild: the page changed, the
+  // Sphere itself did not. The instrument now takes the cartoon
+  // armillary's face — nested brass rings, warm wood, moon faces
+  // riding the rim, gearwork in the turning, script glowing along
+  // the band — under Aaron's binding rule: every characteristic
+  // carried from the cartoon MAPS to something real here, never
+  // mere decoration. The mapping, kept honest:
+  //   wooden band      = the Pattern rail itself (the 364-day ring
+  //                      the markers ride), its seams the 13 Moon
+  //                      boundaries, its ticks the days and weeks;
+  //   script band      = the year's rim, ticked for all 364 days,
+  //                      named for the 13 Moons, and inscribed at
+  //                      the front with the shown day's coordinate
+  //                      and telling (redrawn when the day changes);
+  //   moon faces       = the thirteen Moons, one medallion per Moon
+  //                      at its own sector centre, coloured by its
+  //                      element, glowing when shown or today;
+  //   gears            = the turning of days: each gear's angle is
+  //                      a fixed function of the shown Pattern Day,
+  //                      so the gearwork moves when the day moves
+  //                      and only then;
+  //   centre globe     = the turning year: one full rotation per
+  //                      364-day Pattern year, etched with stars;
+  //   cage rings       = the armillary's frame — fixed mount rings,
+  //                      as a real armillary's meridian ring is
+  //                      fixed; they carry the year-progress arc's
+  //                      ring family, not a calendar reading;
+  //   held light       = the point light takes the shown Moon's
+  //                      tint, over the room's warm key light.
+  // Left out, by the same rule: the cartoon's pedestal crystals,
+  // potion bottles, and library shelves map to nothing in the
+  // instrument, so they are not here.
+  // Picking is untouched: no dressing mesh joins any marker list,
+  // and day selection still resolves through the same raycast
+  // targets and the same calendar plane math as before.
+
+  function _armillaryCanvas(width, height) {
+    if (typeof document === "undefined") return null;
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    return canvas;
+  }
+
+  function _armillaryTexture(canvas) {
+    if (!canvas || !_THREE) return null;
+    const texture = new _THREE.CanvasTexture(canvas);
+    texture.minFilter = _THREE.LinearMipmapLinearFilter;
+    texture.magFilter = _THREE.LinearFilter;
+    texture.generateMipmaps = true;
+    texture.anisotropy = 4;
+    if ("colorSpace" in texture && _THREE.SRGBColorSpace) texture.colorSpace = _THREE.SRGBColorSpace;
+    return texture;
+  }
+
+  // The room's held light: a warm radial falloff behind the
+  // instrument, darkest at the edges — the storybook room stated
+  // as light, not as scenery.
+  function _armillaryBackdropTexture() {
+    if (_objects.armillaryBackdropTexture) return _objects.armillaryBackdropTexture;
+    const canvas = _armillaryCanvas(512, 512);
+    const ctx = canvas?.getContext("2d");
+    if (!ctx) return null;
+    const grad = ctx.createRadialGradient(256, 236, 40, 256, 256, 360);
+    grad.addColorStop(0, "#3a2410");
+    grad.addColorStop(0.45, "#1c1006");
+    grad.addColorStop(1, "#060302");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 512, 512);
+    const texture = _armillaryTexture(canvas);
+    _objects.armillaryBackdropTexture = texture;
+    return texture;
+  }
+
+  // The wooden band's skin, drawn in polar space to match
+  // RingGeometry's planar UVs (the canvas maps the whole disc;
+  // only the annulus between bandInner and bandOuter is sampled).
+  function _armillaryWoodTexture() {
+    if (_objects.armillaryWoodTexture) return _objects.armillaryWoodTexture;
+    const mat = globalThis.LivingTimeSphereM;
+    const A = mat.ARMILLARY;
+    const size = 1024;
+    const canvas = _armillaryCanvas(size, size);
+    const ctx = canvas?.getContext("2d");
+    if (!ctx) return null;
+    const cx = size / 2;
+    const cy = size / 2;
+    const px = (r) => (r / A.bandOuter) * (size / 2);
+    // Base timber across the whole canvas (mip safety at the rim).
+    ctx.fillStyle = "#6e4a1e";
+    ctx.fillRect(0, 0, size, size);
+    // Concentric grain: many arcs of varying warmth.
+    let seed = 0xa17c;
+    const rnd = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+    for (let i = 0; i < 210; i += 1) {
+      const r = px(A.bandInner) + rnd() * (px(A.bandOuter) - px(A.bandInner));
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, rnd() * Math.PI * 2, Math.PI * (0.4 + rnd() * 1.4));
+      ctx.lineWidth = 0.6 + rnd() * 2.2;
+      ctx.strokeStyle = rnd() > 0.5
+        ? `rgba(46,26,8,${0.05 + rnd() * 0.13})`
+        : `rgba(214,164,92,${0.04 + rnd() * 0.10})`;
+      ctx.stroke();
+    }
+    // Alternating sector shading, one tone step per Moon.
+    for (let i = 0; i < 13; i += 1) {
+      if (i % 2 === 0) continue;
+      const a0 = ((i / 13) * 360 - 90) * Math.PI / 180;
+      const a1 = (((i + 1) / 13) * 360 - 90) * Math.PI / 180;
+      ctx.beginPath();
+      ctx.arc(cx, cy, px(A.bandOuter), a0, a1);
+      ctx.arc(cx, cy, px(A.bandInner), a1, a0, true);
+      ctx.closePath();
+      ctx.fillStyle = "rgba(30,16,4,0.10)";
+      ctx.fill();
+    }
+    // Radial plank seams at the 13 Moon boundaries.
+    for (let i = 0; i < 13; i += 1) {
+      const a = ((i / 13) * 360 - 90) * Math.PI / 180;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(a) * px(A.bandInner), cy + Math.sin(a) * px(A.bandInner));
+      ctx.lineTo(cx + Math.cos(a) * px(A.bandOuter), cy + Math.sin(a) * px(A.bandOuter));
+      ctx.lineWidth = 2.4;
+      ctx.strokeStyle = "rgba(24,12,2,0.55)";
+      ctx.stroke();
+    }
+    // Day ticks at the outer edge: 364, longer at week starts,
+    // longest where a Moon begins. Canvas angle for a day follows
+    // angleToXZ: canvas x = cx + r·cos(θ−90°), y = cy + r·sin(θ−90°)
+    // with the ring lying in XZ (texture v runs along −z after the
+    // −90° X rotation, which the sin term already carries).
+    for (let d = 1; d <= 364; d += 1) {
+      const theta = ((d - 0.5) / 364) * 360;
+      const a = (theta - 90) * Math.PI / 180;
+      const isMoonStart = (d - 1) % 28 === 0;
+      const isWeekStart = (d - 1) % 7 === 0;
+      const len = isMoonStart ? 26 : isWeekStart ? 17 : 9;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(a) * (px(A.bandOuter) - len), cy + Math.sin(a) * (px(A.bandOuter) - len));
+      ctx.lineTo(cx + Math.cos(a) * px(A.bandOuter), cy + Math.sin(a) * px(A.bandOuter));
+      ctx.lineWidth = isMoonStart ? 2.2 : 1.2;
+      ctx.strokeStyle = isMoonStart ? "rgba(255,206,120,0.85)" : "rgba(240,190,110,0.5)";
+      ctx.stroke();
+    }
+    // Brass rim lines at both edges of the band.
+    for (const r of [A.bandInner, A.bandOuter]) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, px(r) - 1.5, 0, Math.PI * 2);
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = "rgba(201,151,63,0.8)";
+      ctx.stroke();
+    }
+    const texture = _armillaryTexture(canvas);
+    _objects.armillaryWoodTexture = texture;
+    return texture;
+  }
+
+  // The script band's skin: a rectangular wrap for the rim
+  // cylinder. u runs around the year: u(θ) = (180 − θ)/360 for a
+  // disc angle θ (angleToXZ convention), so the front of the
+  // instrument — the point nearest the resting camera — is the
+  // canvas seam, and the day's inscription is drawn centred on it
+  // (twice: at x=0 and x=width, so the seam never cuts it).
+  const ARMILLARY_SCRIPT_W = 2048;
+  const ARMILLARY_SCRIPT_H = 160;
+
+  function _armillaryScriptStateKey() {
+    const selected = _model?.selectedPatternPosition || _model?.todayPatternPosition || null;
+    if (!selected) return "";
+    return [
+      Number(selected.moon || 0),
+      Number(selected.day || 0),
+      Number(selected.dayOfPatternYear || 0),
+      Number(_selectedYear || 0),
+      // The hub plate also carries today's kept-plans count,
+      // published by the page layer; when it changes, the plate
+      // re-inks even though the day did not move.
+      String(globalThis.__sofHubPlans?.key || ""),
+    ].join(":");
+  }
+
+  function _drawArmillaryScriptBand() {
+    const store = _objects.armillaryScript;
+    if (!store?.ctx) return;
+    const { ctx, canvas } = store;
+    const W = ARMILLARY_SCRIPT_W;
+    const H = ARMILLARY_SCRIPT_H;
+    const uOf = (thetaDeg) => (((180 - thetaDeg) % 360) + 360) % 360 / 360 * W;
+    ctx.clearRect(0, 0, W, H);
+    // Dark walnut ground with a faint vertical grain.
+    ctx.fillStyle = "#2a1708";
+    ctx.fillRect(0, 0, W, H);
+    let seed = 0x5eed;
+    const rnd = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+    for (let i = 0; i < 260; i += 1) {
+      const x = rnd() * W;
+      ctx.fillStyle = rnd() > 0.5 ? "rgba(0,0,0,0.10)" : "rgba(190,130,60,0.06)";
+      ctx.fillRect(x, 0, 1 + rnd() * 2, H);
+    }
+    // Brass hairlines, top and bottom.
+    ctx.fillStyle = "rgba(201,151,63,0.9)";
+    ctx.fillRect(0, 4, W, 3);
+    ctx.fillRect(0, H - 7, W, 3);
+    // One tick per Pattern Day around the whole band: the year,
+    // written small. Moon starts longest, week starts mid.
+    for (let d = 1; d <= 364; d += 1) {
+      const theta = ((d - 0.5) / 364) * 360;
+      const x = uOf(theta);
+      const isMoonStart = (d - 1) % 28 === 0;
+      const isWeekStart = (d - 1) % 7 === 0;
+      const len = isMoonStart ? 40 : isWeekStart ? 26 : 14;
+      ctx.fillStyle = isMoonStart ? "rgba(255,206,120,0.95)" : "rgba(240,190,110,0.55)";
+      ctx.fillRect(x - 1, H - 12 - len, isMoonStart ? 3 : 2, len);
+    }
+    // The thirteen Moon names at their own sector centres.
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    for (let i = 0; i < 13; i += 1) {
+      const theta = ((i + 0.5) / 13) * 360;
+      const x = uOf(theta);
+      const name = String(MOON_IDENTITIES[i]?.name || `Moon ${i + 1}`).toUpperCase();
+      ctx.font = "600 25px Georgia, 'Times New Roman', serif";
+      ctx.fillStyle = "rgba(232,180,90,0.92)";
+      ctx.fillText(name, x, 34, 150);
+    }
+    // The shown day's inscription, glowing at the front seam.
+    const selected = _model?.selectedPatternPosition || _model?.todayPatternPosition || null;
+    if (selected) {
+      const moonName = MOON_IDENTITIES[Number(selected.moon || 1) - 1]?.name || "";
+      const archetypes = globalThis.PatternCalendarData?.dayArchetypes;
+      const archetype = Array.isArray(archetypes)
+        ? (archetypes[(Number(selected.day || 1) - 1) % 28] || [])[0] || ""
+        : "";
+      const line1 = `MOON ${selected.moon} · DAY ${selected.day} · PATTERN DAY ${selected.dayOfPatternYear} OF 364`;
+      const line2 = [moonName, archetype].filter(Boolean).join(" — ");
+      ctx.save();
+      ctx.shadowColor = "rgba(255,157,60,0.9)";
+      ctx.shadowBlur = 14;
+      ctx.fillStyle = "#ffd98f";
+      ctx.font = "600 37px Georgia, 'Times New Roman', serif";
+      ctx.fillText(line1, 0, 84, 900);
+      ctx.fillText(line1, W, 84, 900);
+      ctx.font = "italic 30px Georgia, 'Times New Roman', serif";
+      ctx.fillStyle = "#f4c87e";
+      ctx.fillText(line2, 0, 122, 700);
+      ctx.fillText(line2, W, 122, 700);
+      ctx.restore();
+    }
+    if (store.texture) store.texture.needsUpdate = true;
+    store.key = _armillaryScriptStateKey();
+  }
+
+  // The centre globe's etched parchment: seeded stars joined into
+  // constellations, gear rings etched in umber, faint graticule.
+  // Pure drawing — the globe's READING is its rotation, set from
+  // the Pattern Day in the sync.
+  function _armillaryGlobeTexture() {
+    if (_objects.armillaryGlobeTexture) return _objects.armillaryGlobeTexture;
+    const canvas = _armillaryCanvas(1024, 512);
+    const ctx = canvas?.getContext("2d");
+    if (!ctx) return null;
+    const grad = ctx.createLinearGradient(0, 0, 0, 512);
+    grad.addColorStop(0, "#e2c184");
+    grad.addColorStop(0.5, "#d3ab66");
+    grad.addColorStop(1, "#c39a52");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 1024, 512);
+    let seed = 0x91c3;
+    const rnd = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+    // Age spots and fibre.
+    for (let i = 0; i < 420; i += 1) {
+      ctx.fillStyle = rnd() > 0.5 ? "rgba(120,80,30,0.05)" : "rgba(255,240,200,0.05)";
+      ctx.beginPath();
+      ctx.arc(rnd() * 1024, rnd() * 512, 1 + rnd() * 9, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // Graticule, etched faint.
+    ctx.strokeStyle = "rgba(101,66,22,0.28)";
+    ctx.lineWidth = 1;
+    for (let i = 1; i < 12; i += 1) {
+      ctx.beginPath(); ctx.moveTo((i / 12) * 1024, 0); ctx.lineTo((i / 12) * 1024, 512); ctx.stroke();
+    }
+    for (let i = 1; i < 6; i += 1) {
+      ctx.beginPath(); ctx.moveTo(0, (i / 6) * 512); ctx.lineTo(1024, (i / 6) * 512); ctx.stroke();
+    }
+    // Constellations: clusters of stars joined by etched lines.
+    const stars = [];
+    for (let c = 0; c < 9; c += 1) {
+      const cx0 = rnd() * 1024;
+      const cy0 = 40 + rnd() * 432;
+      const n = 4 + Math.floor(rnd() * 4);
+      let px = cx0;
+      let py = cy0;
+      for (let s = 0; s < n; s += 1) {
+        const x = px + (rnd() - 0.3) * 90;
+        const y = Math.max(16, Math.min(496, py + (rnd() - 0.5) * 90));
+        stars.push([x, y]);
+        if (s > 0) {
+          ctx.beginPath();
+          ctx.moveTo(px, py); ctx.lineTo(x, y);
+          ctx.strokeStyle = "rgba(101,66,22,0.5)";
+          ctx.lineWidth = 1.4;
+          ctx.stroke();
+        }
+        px = x; py = y;
+      }
+    }
+    for (const [x, y] of stars) {
+      ctx.beginPath();
+      ctx.arc(x, y, 2.6, 0, Math.PI * 2);
+      ctx.fillStyle = "#5e3c14";
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(x, y, 5.4, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(94,60,20,0.45)";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+    // Etched gear rings — the maker's mark of the turning.
+    for (const [gx, gy, gr] of [[180, 380, 44], [830, 140, 54], [560, 330, 30]]) {
+      ctx.beginPath(); ctx.arc(gx, gy, gr, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(101,66,22,0.55)"; ctx.lineWidth = 3; ctx.stroke();
+      ctx.beginPath(); ctx.arc(gx, gy, gr * 0.55, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(101,66,22,0.45)"; ctx.lineWidth = 2; ctx.stroke();
+      for (let t = 0; t < 12; t += 1) {
+        const a = (t / 12) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.moveTo(gx + Math.cos(a) * gr, gy + Math.sin(a) * gr);
+        ctx.lineTo(gx + Math.cos(a) * (gr + 9), gy + Math.sin(a) * (gr + 9));
+        ctx.strokeStyle = "rgba(101,66,22,0.55)"; ctx.lineWidth = 4; ctx.stroke();
+      }
+    }
+    const texture = _armillaryTexture(canvas);
+    if (texture) {
+      texture.wrapS = _THREE.RepeatWrapping;
+    }
+    _objects.armillaryGlobeTexture = texture;
+    return texture;
+  }
+
+  // One Moon's face, drawn in its element's colour: a serene
+  // cratered disc — closed eyes, a small smile — in the cartoon's
+  // manner. The face is the Moon's identity; its name rides the
+  // script band and the label layer, as before.
+  function _armillaryMoonFaceTexture(moonIndex) {
+    const cached = _objects.armillaryFaceTextures || (_objects.armillaryFaceTextures = []);
+    if (cached[moonIndex]) return cached[moonIndex];
+    const mat = globalThis.LivingTimeSphereM;
+    const size = 256;
+    const canvas = _armillaryCanvas(size, size);
+    const ctx = canvas?.getContext("2d");
+    if (!ctx) return null;
+    const element = globalThis.PatternCalendarData?.moons?.[moonIndex]?.element || null;
+    const baseHex = (element && mat.ELEMENT_COLORS[element]) || MOON_IDENTITY_COLORS[moonIndex] || 0xcccccc;
+    const base = new _THREE.Color(baseHex);
+    const light = base.clone().lerp(new _THREE.Color(0xffffff), 0.38);
+    const dark = base.clone().lerp(new _THREE.Color(0x1a0f04), 0.30);
+    const css = (c) => `#${c.getHexString()}`;
+    const cx = size / 2;
+    const cy = size / 2;
+    const R = size / 2 - 4;
+    const grad = ctx.createRadialGradient(cx - R * 0.35, cy - R * 0.4, R * 0.1, cx, cy, R);
+    grad.addColorStop(0, css(light));
+    grad.addColorStop(0.75, css(base));
+    grad.addColorStop(1, css(dark));
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.fillStyle = grad; ctx.fill();
+    // Craters, seeded per Moon so each face differs.
+    let seed = 0x1000 + moonIndex * 977;
+    const rnd = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
+    for (let i = 0; i < 9; i += 1) {
+      const a = rnd() * Math.PI * 2;
+      const dist = rnd() * R * 0.78;
+      const x = cx + Math.cos(a) * dist;
+      const y = cy + Math.sin(a) * dist;
+      const r = 5 + rnd() * 15;
+      ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(30,18,6,0.13)"; ctx.fill();
+      ctx.beginPath(); ctx.arc(x - r * 0.18, y - r * 0.18, r * 0.86, Math.PI * 1.05, Math.PI * 1.8);
+      ctx.strokeStyle = "rgba(255,246,220,0.20)"; ctx.lineWidth = 2; ctx.stroke();
+    }
+    // The face: closed eyes and a small, contented smile.
+    ctx.strokeStyle = "rgba(43,26,8,0.88)";
+    ctx.lineCap = "round";
+    for (const side of [-1, 1]) {
+      ctx.beginPath();
+      ctx.arc(cx + side * R * 0.34, cy - R * 0.10, R * 0.13, Math.PI * 0.12, Math.PI * 0.88);
+      ctx.lineWidth = 6; ctx.stroke();
+    }
+    ctx.beginPath();
+    ctx.arc(cx, cy + R * 0.16, R * 0.20, Math.PI * 0.2, Math.PI * 0.8);
+    ctx.lineWidth = 6; ctx.stroke();
+    // Cheeks.
+    for (const side of [-1, 1]) {
+      ctx.beginPath();
+      ctx.arc(cx + side * R * 0.52, cy + R * 0.14, R * 0.10, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(255,120,90,0.28)"; ctx.fill();
+    }
+    // Inner etched ring.
+    ctx.beginPath(); ctx.arc(cx, cy, R - 7, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(60,36,10,0.35)"; ctx.lineWidth = 2.5; ctx.stroke();
+    const texture = _armillaryTexture(canvas);
+    cached[moonIndex] = texture;
+    return texture;
+  }
+
+  // A soft radial glow sprite texture, shared by the Moon glows.
+  function _armillaryGlowTexture() {
+    if (_objects.armillaryGlowTexture) return _objects.armillaryGlowTexture;
+    const canvas = _armillaryCanvas(128, 128);
+    const ctx = canvas?.getContext("2d");
+    if (!ctx) return null;
+    const grad = ctx.createRadialGradient(64, 64, 2, 64, 64, 62);
+    grad.addColorStop(0, "rgba(255,214,140,0.85)");
+    grad.addColorStop(0.4, "rgba(255,180,90,0.32)");
+    grad.addColorStop(1, "rgba(255,160,60,0)");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 128, 128);
+    const texture = _armillaryTexture(canvas);
+    _objects.armillaryGlowTexture = texture;
+    return texture;
+  }
+
+  // Gear geometry: a toothed wheel with a hub hole and lightening
+  // holes, extruded thin and laid flat (axis +Y). One geometry per
+  // size, shared by every gear of that size.
+  function _armillaryGearGeometry(radius, teeth, depth) {
+    const shape = new _THREE.Shape();
+    const root = radius * 0.80;
+    const steps = teeth * 4;
+    for (let i = 0; i <= steps; i += 1) {
+      const a = (i / steps) * Math.PI * 2;
+      const seg = i % 4;
+      const r = (seg === 1 || seg === 2) ? radius : root;
+      const x = Math.cos(a) * r;
+      const y = Math.sin(a) * r;
+      if (i === 0) shape.moveTo(x, y); else shape.lineTo(x, y);
+    }
+    const hub = new _THREE.Path();
+    hub.absarc(0, 0, radius * 0.26, 0, Math.PI * 2, true);
+    shape.holes.push(hub);
+    for (let s = 0; s < 5; s += 1) {
+      const a = (s / 5) * Math.PI * 2;
+      const hole = new _THREE.Path();
+      hole.absarc(Math.cos(a) * radius * 0.52, Math.sin(a) * radius * 0.52, radius * 0.13, 0, Math.PI * 2, true);
+      shape.holes.push(hole);
+    }
+    const geo = new _THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: false, curveSegments: 5 });
+    // After this rotation the extrusion runs +Y: the wheel lies
+    // flat in XZ with its body between y=0 and y=depth.
+    geo.rotateX(-Math.PI / 2);
+    return geo;
+  }
+
+  // The gear train's law, stated once: the large Year Gate gear
+  // turns once per Pattern year (its angle IS the year's angle);
+  // the thirteen Moon gears are its planets — counter-rotating,
+  // geared by the teeth ratio. Nothing here reads the clock; the
+  // only input is the shown Pattern Day.
+  function _armillaryDayAngle() {
+    const selected = _model?.selectedPatternPosition || _model?.todayPatternPosition || null;
+    const doy = Number(selected?.dayOfPatternYear || 0);
+    if (!Number.isFinite(doy) || doy <= 0) return 0;
+    return (doy / 364) * Math.PI * 2;
+  }
+
+  function _buildArmillaryDressing() {
+    if (!_THREE || !_scene) return;
+    const THREE = _THREE;
+    const mat = globalThis.LivingTimeSphereM;
+    const A = mat.ARMILLARY;
+    const group = new THREE.Group();
+    group.name = "armillaryDressing";
+    group.userData.type = "armillary-dressing";
+
+    // ── The wooden band under the Pattern rail ──────────────────
+    {
+      const geo = new THREE.RingGeometry(A.bandInner, A.bandOuter, 160, 1);
+      const m = new THREE.MeshStandardMaterial({
+        map: _armillaryWoodTexture(),
+        roughness: 0.78,
+        metalness: 0.05,
+      });
+      const band = new THREE.Mesh(geo, m);
+      band.rotation.x = -Math.PI / 2;
+      band.position.y = 0.0012;
+      band.name = "armillaryBand";
+      band.renderOrder = 1;
+      group.add(band);
+      _objects.armillaryBand = band;
+    }
+
+    // ── The script band standing at the rim ─────────────────────
+    {
+      const canvas = _armillaryCanvas(ARMILLARY_SCRIPT_W, ARMILLARY_SCRIPT_H);
+      const ctx = canvas?.getContext("2d") || null;
+      const texture = _armillaryTexture(canvas);
+      if (texture) {
+        texture.wrapS = THREE.RepeatWrapping;
+      }
+      _objects.armillaryScript = { canvas, ctx, texture, key: null };
+      const geo = new THREE.CylinderGeometry(A.scriptRadius, A.scriptRadius, A.scriptHeight, 160, 1, true);
+      const m = new THREE.MeshStandardMaterial({
+        map: texture,
+        emissive: 0xffa040,
+        emissiveMap: texture,
+        emissiveIntensity: 0.42,
+        roughness: 0.62,
+        metalness: 0.08,
+        side: THREE.FrontSide,
+      });
+      const band = new THREE.Mesh(geo, m);
+      band.name = "armillaryScriptBand";
+      group.add(band);
+      _objects.armillaryScriptBand = band;
+      _drawArmillaryScriptBand();
+    }
+
+    // ── The cage: three fixed brass rings ───────────────────────
+    {
+      const brass = new THREE.MeshStandardMaterial({
+        color: mat.COLORS.brass,
+        metalness: 0.85,
+        roughness: 0.38,
+        emissive: mat.COLORS.brassDark,
+        emissiveIntensity: 0.12,
+      });
+      const tilts = [
+        { x: Math.PI / 2, y: 0 },
+        { x: Math.PI / 2 - 0.42, y: 0.35 },
+        { x: Math.PI / 2 + 0.42, y: -0.35 },
+      ];
+      const cage = new THREE.Group();
+      cage.name = "armillaryCage";
+      for (const tilt of tilts) {
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(A.cageRadius, A.cageTube, 10, 180), brass);
+        ring.rotation.x = tilt.x;
+        ring.rotation.y = tilt.y;
+        cage.add(ring);
+      }
+      group.add(cage);
+      _objects.armillaryCage = cage;
+    }
+
+    // ── The gearwork: one Year Gate gear, thirteen Moon gears ───
+    {
+      const brassDark = new THREE.MeshStandardMaterial({
+        color: mat.COLORS.brassDark,
+        metalness: 0.8,
+        roughness: 0.45,
+        emissive: 0x2a1a05,
+        emissiveIntensity: 0.25,
+      });
+      const gearsGroup = new THREE.Group();
+      gearsGroup.name = "armillaryGears";
+      const smallGeo = _armillaryGearGeometry(A.gearRadius, A.gearTeeth, A.gearDepth);
+      const largeGeo = _armillaryGearGeometry(A.gearLargeRadius, A.gearLargeTeeth, A.gearDepth * 1.3);
+      const gears = [];
+      const ratio = A.gearLargeTeeth / A.gearTeeth;
+      for (let i = 0; i < 13; i += 1) {
+        const angle = (i / 13) * 360;
+        const { x, z } = angleToXZ(angle, mat.SIZES.patternRing);
+        const isGate = i === 0;
+        const mesh = new THREE.Mesh(isGate ? largeGeo : smallGeo, brassDark);
+        mesh.position.set(x, 0.004, z);
+        mesh.name = isGate ? "armillaryYearGateGear" : `armillaryMoonGear-${i + 1}`;
+        mesh.userData.armillary = {
+          dir: isGate ? 1 : -1,
+          ratio: isGate ? 1 : ratio,
+          phase: i * 0.13,
+        };
+        gearsGroup.add(mesh);
+        gears.push(mesh);
+      }
+      group.add(gearsGroup);
+      _objects.armillaryGears = gears;
+      _objects.armillaryGearsGroup = gearsGroup;
+    }
+
+    // ── The centre globe on its brass pin ───────────────────────
+    {
+      const brass = new THREE.MeshStandardMaterial({
+        color: mat.COLORS.brass,
+        metalness: 0.85,
+        roughness: 0.35,
+      });
+      const globeGroup = new THREE.Group();
+      globeGroup.name = "armillaryGlobeMount";
+      const pin = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.011, A.globeHeight - A.globeRadius + 0.02, 10), brass);
+      pin.position.y = (A.globeHeight - A.globeRadius + 0.02) / 2;
+      globeGroup.add(pin);
+      const collar = new THREE.Mesh(new THREE.TorusGeometry(A.globeRadius * 1.04, 0.0045, 8, 48), brass);
+      collar.rotation.x = Math.PI / 2;
+      collar.position.y = A.globeHeight;
+      globeGroup.add(collar);
+      const globe = new THREE.Mesh(
+        new THREE.SphereGeometry(A.globeRadius, _isMobileWidth() ? 28 : 36, _isMobileWidth() ? 20 : 26),
+        new THREE.MeshStandardMaterial({
+          map: _armillaryGlobeTexture(),
+          roughness: 0.55,
+          metalness: 0.05,
+          emissive: 0x694a1c,
+          emissiveIntensity: 0.12,
+        })
+      );
+      globe.position.y = A.globeHeight;
+      globe.name = "armillaryGlobe";
+      globeGroup.add(globe);
+      group.add(globeGroup);
+      _objects.armillaryGlobe = globe;
+    }
+
+    // ── The hub plate at the fixed centre ───────────────────────
+    {
+      const canvas = _armillaryCanvas(512, 512);
+      const ctx = canvas?.getContext("2d") || null;
+      const texture = _armillaryTexture(canvas);
+      _objects.armillaryHub = { canvas, ctx, texture, key: null };
+      const plate = new THREE.Mesh(
+        new THREE.CircleGeometry(0.19, 48),
+        new THREE.MeshStandardMaterial({
+          map: texture,
+          transparent: true,
+          roughness: 0.6,
+          metalness: 0.05,
+          emissive: 0xffca7a,
+          emissiveMap: texture,
+          emissiveIntensity: 0.16,
+        })
+      );
+      plate.rotation.x = -Math.PI / 2;
+      plate.position.y = 0.0022;
+      plate.name = "armillaryHubPlate";
+      group.add(plate);
+      const rim = new THREE.Mesh(
+        new THREE.TorusGeometry(0.19, 0.0055, 8, 64),
+        new THREE.MeshStandardMaterial({ color: mat.COLORS.brass, metalness: 0.85, roughness: 0.38 })
+      );
+      rim.rotation.x = Math.PI / 2;
+      rim.position.y = 0.003;
+      group.add(rim);
+      _objects.armillaryHubPlate = plate;
+      _drawArmillaryHubPlate();
+    }
+
+    // ── The Moon medallions riding the rim ──────────────────────
+    {
+      const brass = new THREE.MeshStandardMaterial({
+        color: mat.COLORS.brass,
+        metalness: 0.85,
+        roughness: 0.38,
+      });
+      const medallions = new THREE.Group();
+      medallions.name = "armillaryMedallions";
+      const faceGeo = new THREE.CircleGeometry(A.medallionRadius, 40);
+      const rimGeo = new THREE.TorusGeometry(A.medallionRadius, A.medallionRimTube, 8, 44);
+      const glowTex = _armillaryGlowTexture();
+      const list = [];
+      for (let i = 0; i < 13; i += 1) {
+        const angle = _moonSectorCenterAngle(i);
+        const { x, z } = angleToXZ(angle, A.scriptRadius);
+        const holder = new THREE.Group();
+        holder.position.set(x, 0, z);
+        holder.rotation.y = Math.atan2(x, z);
+        const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.007, 0.009, 0.055, 8), brass);
+        stem.position.y = 0.027;
+        holder.add(stem);
+        const disc = new THREE.Group();
+        disc.position.y = 0.088;
+        disc.rotation.x = -0.52;
+        const face = new THREE.Mesh(faceGeo, new THREE.MeshStandardMaterial({
+          map: _armillaryMoonFaceTexture(i),
+          roughness: 0.55,
+          metalness: 0.0,
+          emissive: 0xffffff,
+          emissiveMap: _armillaryMoonFaceTexture(i),
+          emissiveIntensity: 0.16,
+        }));
+        face.name = `armillaryMoonFace-${i + 1}`;
+        disc.add(face);
+        const rim = new THREE.Mesh(rimGeo, brass);
+        disc.add(rim);
+        const glow = new THREE.Mesh(
+          new THREE.PlaneGeometry(A.medallionRadius * 3.1, A.medallionRadius * 3.1),
+          new THREE.MeshBasicMaterial({
+            map: glowTex,
+            transparent: true,
+            opacity: 0,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending,
+            side: THREE.DoubleSide,
+          })
+        );
+        glow.position.z = -0.014;
+        glow.visible = false;
+        glow.name = `armillaryMoonGlow-${i + 1}`;
+        disc.add(glow);
+        holder.add(disc);
+        medallions.add(holder);
+        list.push({ holder, disc, glow, moon: i + 1 });
+      }
+      group.add(medallions);
+      _objects.armillaryMedallions = list;
+      _objects.armillaryMedallionsGroup = medallions;
+    }
+
+    _scene.add(group);
+    _objects.armillaryGroup = group;
+    _syncArmillaryDressing(true);
+  }
+
+  // Marker name tags (corrective, Aaron, Nov 20, 2026): with
+  // the Legend box gone, the markers carry their names at their
+  // places on the face. The semantic label channel shows Today
+  // at the resting view, but the gate/equinox/passage labels
+  // are gated off by layer visibility in several view states —
+  // so the dressing itself inks the three fixed names as small
+  // glowing sprites standing on their markers, re-anchored to
+  // the live marker positions at every sync, and hidden while
+  // their marker is on the far side of the instrument. The
+  // passage tag follows the same canonical passage angles the
+  // semantic target reads; when the model carries no passage,
+  // no tag is drawn — the face never invents a place.
+  function _armillaryNameTag(text) {
+    const canvas = _armillaryCanvas(512, 112);
+    const ctx = canvas?.getContext("2d");
+    if (!ctx || !_THREE) return null;
+    ctx.clearRect(0, 0, 512, 112);
+    ctx.font = "600 52px Georgia, 'Times New Roman', serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.shadowColor = "rgba(255,157,60,0.9)";
+    ctx.shadowBlur = 12;
+    ctx.fillStyle = "#ffd98f";
+    ctx.fillText(text, 256, 58, 480);
+    const texture = new _THREE.CanvasTexture(canvas);
+    const material = new _THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false });
+    const sprite = new _THREE.Sprite(material);
+    sprite.scale.set(0.34, 0.074, 1);
+    sprite.name = "armillaryNameTag";
+    return sprite;
+  }
+
+  function _syncArmillaryNameTags() {
+    if (!_scene || !_THREE || !_camera) return;
+    if (!_objects.armillaryNameTags) {
+      const group = new _THREE.Group();
+      group.name = "armillaryNameTags";
+      const tags = {};
+      for (const [key, text] of [["yearGate", "YEAR GATE"], ["equinox", "MARCH EQUINOX"], ["passage", "EQUINOX PASSAGE"],
+        // Seasons show (Aaron, Nov 20): the year's other three
+        // turns carry their names on the face too, standing on
+        // the solar-axis anchors the semantic layer already
+        // reads (90° June Solstice, 180° September Equinox,
+        // 270° December Solstice; March rides its own gate).
+        ["juneSolstice", "JUNE SOLSTICE"], ["septemberEquinox", "SEPTEMBER EQUINOX"], ["decemberSolstice", "DECEMBER SOLSTICE"]]) {
+        const sprite = _armillaryNameTag(text);
+        if (sprite) { tags[key] = sprite; group.add(sprite); }
+      }
+      _scene.add(group);
+      _objects.armillaryNameTags = tags;
+      _objects.armillaryNameTagGroup = group;
+    }
+    const tags = _objects.armillaryNameTags;
+    const mat = globalThis.LivingTimeSphereM;
+    const camPos = _camera.position;
+    const orbit = camPos ? camPos.length() : 0;
+    const place = (sprite, pos) => {
+      if (!sprite || !pos) { if (sprite) sprite.visible = false; return; }
+      sprite.position.set(pos.x, (pos.y || 0) + 0.045, pos.z);
+      // Near-side only: a marker farther than the orbit's heart
+      // is on the far side of the instrument; its name rests.
+      sprite.visible = !camPos || Math.hypot(pos.x - camPos.x, pos.z - camPos.z) < orbit + 0.25;
+    };
+    place(tags.yearGate, _objects.yearGate?.position);
+    place(tags.equinox, _objects.equinoxGate?.position);
+    // The season turns stand on the solar-axis anchors, and
+    // rest when the season markers rest.
+    const seasonsShown = _objects.seasonMarkers?.visible !== false && !!mat?.SIZES?.solarAxis;
+    for (const [key, angle] of [["juneSolstice", 90], ["septemberEquinox", 180], ["decemberSolstice", 270]]) {
+      if (!seasonsShown) { if (tags[key]) tags[key].visible = false; continue; }
+      place(tags[key], _positionOnSolarAxis(angle, mat.SIZES.solarAxis));
+    }
+    let passagePos = null;
+    const passageStart = Number(_model?.passageStartAngle ?? _model?.passage?.startAngle);
+    const passageEnd = Number(_model?.passageEndAngle ?? _model?.passage?.endAngle);
+    if (Number.isFinite(passageStart) && Number.isFinite(passageEnd) && mat?.SIZES?.passageArc) {
+      const sweep = ((passageEnd - passageStart + 360) % 360);
+      const mid = (passageStart + sweep * 0.5) % 360;
+      const pp = angleToXZ(mid, mat.SIZES.passageArc);
+      passagePos = { x: pp.x, y: 0.018, z: pp.z };
+    }
+    place(tags.passage, passagePos);
+    if (_objects.armillaryNameTagGroup) {
+      _objects.armillaryNameTagGroup.visible = !!_visibleLayers?.pattern;
+    }
+  }
+
+  // Bring the dressing to the shown day: gear and globe angles
+  // (tweened, unless motion is stilled), the script inscription
+  // (redrawn only when the coordinate changes), the Moon glows,
+  // and the held light's tint.
+  function _syncArmillaryDressing(snap = false) {
+    if (!_objects.armillaryGroup) return;
+    const dayAngle = _armillaryDayAngle();
+    const targets = [];
+    for (const gear of _objects.armillaryGears || []) {
+      const u = gear.userData.armillary;
+      targets.push({ mesh: gear, prop: "y", to: u.dir * dayAngle * u.ratio + u.phase });
+    }
+    if (_objects.armillaryGlobe) {
+      targets.push({ mesh: _objects.armillaryGlobe, prop: "y", to: -dayAngle });
+    }
+    const still = snap || _motionMode === "still" || _prefersReducedMotion();
+    const anim = globalThis.LivingTimeSphereAnimation;
+    if (still || !anim?.addEffect) {
+      for (const t of targets) t.mesh.rotation[t.prop] = t.to;
+      anim?.removeEffect?.("armillary-gearwork");
+      _objects.armillaryAnim = null;
+    } else {
+      const from = new Map(targets.map((t) => [t.mesh, t.mesh.rotation[t.prop]]));
+      const moving = targets.some((t) => Math.abs(t.to - from.get(t.mesh)) > 0.0005);
+      if (moving) {
+        const state = { t0: null, dur: 650, targets, from };
+        _objects.armillaryAnim = state;
+        anim.addEffect("armillary-gearwork", (dt, nowMs) => {
+          if (state.t0 == null) state.t0 = nowMs;
+          const k = Math.min(1, (nowMs - state.t0) / state.dur);
+          const e = 1 - Math.pow(1 - k, 3);
+          for (const t of state.targets) {
+            t.mesh.rotation[t.prop] = state.from.get(t.mesh) + (t.to - state.from.get(t.mesh)) * e;
+          }
+          if (k >= 1) {
+            anim.removeEffect("armillary-gearwork");
+            if (_objects.armillaryAnim === state) _objects.armillaryAnim = null;
+            return false;
+          }
+          return true;
+        });
+      }
+    }
+    // The script band re-inks itself only when the day changes.
+    if (_objects.armillaryScript && _objects.armillaryScript.key !== _armillaryScriptStateKey()) {
+      _drawArmillaryScriptBand();
+    }
+    // So does the hub plate, and the record gems follow the
+    // keeper's plans for the shown year.
+    if (_objects.armillaryHub && _objects.armillaryHub.key !== _armillaryScriptStateKey()) {
+      _drawArmillaryHubPlate();
+    }
+    _syncArmillaryRecordMarkers();
+    _syncArmillaryTrailMarkers();
+    _syncArmillaryNameTags();
+    // Moon glows: the shown Moon burns brighter; today's keeps a
+    // softer halo when it is not the shown one.
+    const selectedMoon = Number(_model?.selectedPatternPosition?.moon || 0);
+    const todayMoon = Number(_model?.todayPatternPosition?.moon || 0);
+    for (const entry of _objects.armillaryMedallions || []) {
+      const isSelected = entry.moon === selectedMoon;
+      const isToday = entry.moon === todayMoon;
+      entry.glow.visible = isSelected || isToday;
+      entry.glow.material.opacity = isSelected ? 0.95 : 0.5;
+      const s = isSelected ? 1.14 : isToday ? 1.07 : 1;
+      entry.holder.scale.set(s, s, s);
+    }
+    // Held light: the point light borrows the shown Moon's tint.
+    if (_objects.pointLight && selectedMoon >= 1 && selectedMoon <= 13) {
+      const warm = new _THREE.Color(0xffd080);
+      const tint = new _THREE.Color(MOON_IDENTITY_COLORS[selectedMoon - 1] || 0xffd080);
+      _objects.pointLight.color.copy(warm).lerp(tint, 0.35);
+    }
+  }
+
+  // The hub plate: a parchment disc at the fixed Pattern centre,
+  // inscribed with the shown day's coordinate and telling. It is
+  // the instrument's own readout — what is written on the Sphere
+  // changes when the day changes, drawn from the same position
+  // the script band reads. Text sits in the disc's front half,
+  // clear of the globe's base.
+  function _drawArmillaryHubPlate() {
+    const store = _objects.armillaryHub;
+    if (!store?.ctx || !store.canvas) return;
+    const { ctx, canvas } = store;
+    const S = canvas.width;
+    const cx = S / 2;
+    ctx.clearRect(0, 0, S, S);
+    const grad = ctx.createRadialGradient(cx, cx, S * 0.05, cx, cx, S * 0.5);
+    grad.addColorStop(0, "#e8cb8d");
+    grad.addColorStop(0.8, "#d9b77c");
+    grad.addColorStop(1, "#b98d4e");
+    ctx.beginPath(); ctx.arc(cx, cx, S * 0.495, 0, Math.PI * 2);
+    ctx.fillStyle = grad; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx, cx, S * 0.475, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(122,84,32,0.85)"; ctx.lineWidth = 5; ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx, cx, S * 0.40, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(122,84,32,0.4)"; ctx.lineWidth = 2; ctx.stroke();
+    const pos = _model?.selectedPatternPosition || _model?.todayPatternPosition || null;
+    const moon = Number(pos?.moon || 0);
+    const day = Number(pos?.day || 0);
+    const doy = Number(pos?.dayOfPatternYear || 0);
+    const moonName = moon >= 1 && moon <= 13 ? (MOON_IDENTITIES[moon - 1]?.name || "") : "";
+    ctx.fillStyle = "#38220c";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    if (moon >= 1 && day >= 1 && doy >= 1 && doy <= 364) {
+      const archetype = globalThis.PatternCalendarData?.dayArchetypes?.[(day - 1) % 28]?.[0] || "";
+      ctx.font = "700 40px Georgia, 'Times New Roman', serif";
+      ctx.fillText(`MOON ${moon} · DAY ${day}`, cx, S * 0.60);
+      ctx.font = "700 31px Georgia, 'Times New Roman', serif";
+      ctx.fillText(`PATTERN DAY ${doy} OF 364`, cx, S * 0.71);
+      ctx.font = "italic 27px Georgia, 'Times New Roman', serif";
+      ctx.fillStyle = "#54340f";
+      ctx.fillText(archetype ? `${moonName} — ${archetype}` : moonName, cx, S * 0.815);
+      // Today's kept plans, counted on the hub (Aaron, Nov 20,
+      // 2026: "today's plans count on the hub") — real only: the
+      // page layer publishes the count from the keeper's own
+      // planner record, and the line appears only while the
+      // plate is showing today itself and the count is real.
+      const todayDoy = Number(_model?.todayPatternPosition?.dayOfPatternYear || 0);
+      const hubPlans = globalThis.__sofHubPlans;
+      const planCount = Number(hubPlans?.count || 0);
+      if (todayDoy === doy && planCount > 0) {
+        ctx.font = "600 23px Georgia, 'Times New Roman', serif";
+        ctx.fillStyle = "#54340f";
+        ctx.fillText(`TODAY · ${planCount} PLAN${planCount === 1 ? "" : "S"} KEPT`, cx, S * 0.90, S * 0.52);
+      }
+    } else if (moon >= 1) {
+      ctx.font = "700 36px Georgia, 'Times New Roman', serif";
+      ctx.fillText(moonName.toUpperCase(), cx, S * 0.64);
+      ctx.font = "italic 27px Georgia, 'Times New Roman', serif";
+      ctx.fillStyle = "#54340f";
+      ctx.fillText("outside the count", cx, S * 0.76);
+    }
+    store.key = _armillaryScriptStateKey();
+    if (store.texture) store.texture.needsUpdate = true;
+  }
+
+  // Kept-record markers: one small teal gem on the Pattern rail
+  // for each day of the shown year that carries a plan in the
+  // keeper's own record. The page layer supplies the days (from
+  // the planner, the record's own source); the renderer only
+  // places them. Display only — no picking, no calendar math.
+  function _setRecordMarkers(patternDays) {
+    const days = [...new Set((patternDays || []).map(Number).filter((d) => d >= 1 && d <= 364))].sort((a, b) => a - b);
+    _objects.armillaryRecordDays = days;
+    _syncArmillaryRecordMarkers();
+  }
+
+  function _syncArmillaryRecordMarkers() {
+    const days = _objects.armillaryRecordDays || [];
+    const key = days.join(",");
+    if (_objects.armillaryRecordKey === key) return;
+    if (!_scene || !_THREE) return; // the key is recorded only once the gems can actually be built
+    _objects.armillaryRecordKey = key;
+    const old = _objects.armillaryRecordGroup;
+    if (old?.parent) old.parent.remove(old);
+    _objects.armillaryRecordGroup = null;
+    if (days.length === 0) return;
+    const THREE = _THREE;
+    const mat = globalThis.LivingTimeSphereM;
+    const group = new THREE.Group();
+    group.name = "armillaryRecordMarkers";
+    const geo = new THREE.OctahedronGeometry(0.0115);
+    const material = new THREE.MeshStandardMaterial({
+      color: 0x1f6f66,
+      emissive: 0x53e0cd,
+      emissiveIntensity: 0.85,
+      roughness: 0.3,
+      metalness: 0.1,
+    });
+    for (const d of days) {
+      const angle = ((d - 0.5) / 364) * 360;
+      const { x, z } = angleToXZ(angle, mat.SIZES.patternRing);
+      const gem = new THREE.Mesh(geo, material);
+      gem.position.set(x, 0.02, z);
+      group.add(gem);
+    }
+    group.visible = !!_visibleLayers?.pattern;
+    _scene.add(group);
+    _objects.armillaryRecordGroup = group;
+  }
+
+  // The keeper's trail on the face (Aaron, Nov 20, 2026: the
+  // year reads as a journey): one small warm light on the rail
+  // for each day of the shown year the keeper has actually
+  // stood on — a plan kept, a practice done, a game stamped —
+  // supplied by the page layer from the keeper's own record.
+  // Gold, where the planned gems are teal: what is DONE lights
+  // the year; what is planned gems it. Display only, like the
+  // gems — no picking, no calendar math, no score.
+  function _setTrailMarkers(patternDays) {
+    const days = [...new Set((patternDays || []).map(Number).filter((d) => d >= 1 && d <= 364))].sort((a, b) => a - b);
+    _objects.armillaryTrailDays = days;
+    _syncArmillaryTrailMarkers();
+  }
+
+  function _syncArmillaryTrailMarkers() {
+    const days = _objects.armillaryTrailDays || [];
+    const key = days.join(",");
+    if (_objects.armillaryTrailKey === key) return;
+    if (!_scene || !_THREE) return;
+    _objects.armillaryTrailKey = key;
+    const old = _objects.armillaryTrailGroup;
+    if (old?.parent) old.parent.remove(old);
+    _objects.armillaryTrailGroup = null;
+    if (days.length === 0) return;
+    const THREE = _THREE;
+    const mat = globalThis.LivingTimeSphereM;
+    const group = new THREE.Group();
+    group.name = "armillaryTrailMarkers";
+    const geo = new THREE.SphereGeometry(0.0085, 10, 8);
+    const material = new THREE.MeshStandardMaterial({
+      color: 0x8a5a17,
+      emissive: 0xffb84d,
+      emissiveIntensity: 1.1,
+      roughness: 0.35,
+      metalness: 0.1,
+    });
+    for (const d of days) {
+      const angle = ((d - 0.5) / 364) * 360;
+      const { x, z } = angleToXZ(angle, mat.SIZES.patternRing);
+      const light = new THREE.Mesh(geo, material);
+      light.position.set(x, 0.012, z);
+      group.add(light);
+    }
+    group.visible = !!_visibleLayers?.pattern;
+    _scene.add(group);
+    _objects.armillaryTrailGroup = group;
+  }
+
   function _buildMoonAnchors(viewMode = _viewMode) {
     const mat = globalThis.LivingTimeSphereM;
     // B7.51: Pattern-Moon bodies/names live on their own inner identity lane.
@@ -1761,10 +2792,18 @@
     // already available in the fixed instrument UI and should not become a
     // swarm of floating cards. Only landmarks whose position itself matters
     // remain semantic labels here.
+    // Corrective (Aaron, Nov 20, 2026, from his phone): the
+    // Legend box is gone from the page, so the markers carry
+    // their own names at their places on the face — the four
+    // landmarks' name tags now show at the resting view's
+    // distance, not only up close. Their details still wait
+    // for a nearer look (detailDistance stays a fraction of
+    // showDistance), and their priorities keep them first in
+    // the placement arbitration.
     const simple = [
-      _semanticTargetFromObject("live-today", "Today", _objects.todayMarker, { kind: "pattern-day", priority: 97, showDistance: 1.50, resetDistance: 1.82, detail: todayDetail }),
-      _semanticTargetFromObject("year-gate", "Year Gate", _objects.yearGate, { kind: "gate", priority: 86, showDistance: 1.58, resetDistance: 1.90, detail: "Moon 1 · Day 1 · fixed Pattern seam" }),
-      _semanticTargetFromObject("march-equinox", "March Equinox", _objects.equinoxGate, { kind: "astronomy", priority: 87, showDistance: 1.58, resetDistance: 1.92, detail: "Astronomical alignment marker" })
+      _semanticTargetFromObject("live-today", "Today", _objects.todayMarker, { kind: "pattern-day", priority: 97, showDistance: 5.4, resetDistance: 5.85, detail: todayDetail }),
+      _semanticTargetFromObject("year-gate", "Year Gate", _objects.yearGate, { kind: "gate", priority: 86, showDistance: 5.4, resetDistance: 5.85, detail: "Moon 1 · Day 1 · fixed Pattern seam" }),
+      _semanticTargetFromObject("march-equinox", "March Equinox", _objects.equinoxGate, { kind: "astronomy", priority: 87, showDistance: 5.4, resetDistance: 5.85, detail: "Astronomical alignment marker" })
     ].filter(Boolean);
     targets.push(...simple);
 
@@ -1797,7 +2836,7 @@
       const pp = angleToXZ(mid, globalThis.LivingTimeSphereM.SIZES.passageArc);
       targets.push({
         id: "passage-midpoint", label: "Equinox Passage", detail: "Passage midpoint", kind: "passage",
-        worldX: pp.x, worldY: 0.018, worldZ: pp.z, priority: 82, showDistance: 1.62, resetDistance: 1.94
+        worldX: pp.x, worldY: 0.018, worldZ: pp.z, priority: 82, showDistance: 5.4, resetDistance: 5.85
       });
     }
 
@@ -2060,7 +3099,9 @@
     const mat   = globalThis.LivingTimeSphereM;
     _countLifecycle("sceneRootBuildCount");
     _scene = new THREE.Scene();
-    _scene.background = new THREE.Color(mat.COLORS.bg);
+    // The room's held light behind the instrument (armillary
+    // face); the flat house colour remains the fallback.
+    _scene.background = _armillaryBackdropTexture() || new THREE.Color(mat.COLORS.bg);
 
     // ── Pattern Core (geometric, not planet-like) ─────────────────
     {
@@ -2316,7 +3357,7 @@
       const material = new THREE.LineBasicMaterial({
         color: 0x78aebb,
         transparent: true,
-        opacity: _isMobileWidth() ? 0.34 : 0.28,
+        opacity: _isMobileWidth() ? 0.55 : 0.5,
         depthWrite: false
       });
       const ticks = new THREE.LineSegments(geo, material);
@@ -2348,9 +3389,9 @@
       _dayNodeVisibleKey = "";
       const m = new THREE.PointsMaterial({
         color:       mat.COLORS.patternRing,
-        size:        _isMobileWidth() ? 0.02 : 0.016,
+        size:        _isMobileWidth() ? 0.032 : 0.026,
         transparent: true,
-        opacity:     0.7,
+        opacity:     0.9,
         sizeAttenuation: true,
       });
       const pts = new THREE.Points(geo, m);
@@ -2678,11 +3719,14 @@
       _scene.add(seasonPts);
       _objects.seasonMarkers = seasonPts;
 
-      const selectedGeo = new THREE.SphereGeometry(0.024, 8, 8);
+      // Days more visible (Aaron, Nov 20): the shown-day and
+      // today markers stand larger and burn brighter, so the
+      // two days that matter most read instantly at a glance.
+      const selectedGeo = new THREE.SphereGeometry(0.034, 8, 8);
       const selectedMat = new THREE.MeshStandardMaterial({
         color: 0xfff1c2,
         emissive: 0xffd76a,
-        emissiveIntensity: 0.7,
+        emissiveIntensity: 1.05,
         roughness: 0.3,
       });
       const selectedMarker = new THREE.Mesh(selectedGeo, selectedMat);
@@ -2692,11 +3736,11 @@
       _scene.add(selectedMarker);
       _objects.solarSelectedMarker = selectedMarker;
 
-      const todayGeo = new THREE.SphereGeometry(0.022, 8, 8);
+      const todayGeo = new THREE.SphereGeometry(0.03, 8, 8);
       const todayMat = new THREE.MeshStandardMaterial({
         color: 0xfff59b,
         emissive: 0xffd76a,
-        emissiveIntensity: 0.55,
+        emissiveIntensity: 0.95,
         roughness: 0.36,
       });
       const todayMarker = new THREE.Mesh(todayGeo, todayMat);
@@ -2785,15 +3829,27 @@
 
     // ── Lighting ─────────────────────────────────────────────────────
     {
-      const ambient = new THREE.AmbientLight(0x1a2030, 1.5);
+      // Warm room light (armillary face): the cold blue ambient
+      // gives way to the room's held warmth, with a warm key light
+      // from above the keeper's shoulder. The point light stays
+      // the Moon-tinted lamp the sync dresses.
+      const ambient = new THREE.AmbientLight(0x2a1a0e, 1.5);
       _scene.add(ambient);
       _objects.ambientLight = ambient;
+
+      const key = new THREE.DirectionalLight(0xffd9a8, 0.85);
+      key.position.set(1.6, 2.4, 1.2);
+      _scene.add(key);
+      _objects.keyLight = key;
 
       const point = new THREE.PointLight(0xffd080, 1.2, 8, 2);
       point.position.set(0.5, 1.5, 0.5);
       _scene.add(point);
       _objects.pointLight = point;
     }
+
+    // ── Armillary face (Sphere redesign) ──────────────────────────
+    _buildArmillaryDressing();
   }
 
   // ── Update scene from model data ──────────────────────────────────
@@ -4445,7 +5501,7 @@
     if (_objects.dayTicks) {
       _objects.dayTicks.visible = !!vl.pattern && vl.exactDays !== false;
       if (_objects.dayTicks.material) {
-        _objects.dayTicks.material.opacity = band === "far" ? 0.30 : band === "medium" ? 0.52 : band === "near" ? 0.68 : 0.82;
+        _objects.dayTicks.material.opacity = band === "far" ? 0.5 : band === "medium" ? 0.7 : band === "near" ? 0.85 : 0.95;
       }
     }
     if (_objects.shabbatNodes) _objects.shabbatNodes.visible = !!vl.pattern && band !== "far";
@@ -4903,6 +5959,15 @@
     if (_objects.moonIdentityMarkers) _objects.moonIdentityMarkers.visible = !!vl.pattern;
     if (_objects.moonIdentityDetails) _objects.moonIdentityDetails.visible = !!vl.pattern;
     if (_objects.moonIdentityNumbers) _objects.moonIdentityNumbers.visible = !!vl.pattern;
+    // Armillary face: the band, script rim, gearwork, and Moon
+    // medallions ARE the Pattern rail's dressing, so they follow
+    // the pattern layer; the cage and globe are the instrument's
+    // frame and stay, as a mount stays when a layer is lifted.
+    if (_objects.armillaryBand) _objects.armillaryBand.visible = !!vl.pattern;
+    if (_objects.armillaryScriptBand) _objects.armillaryScriptBand.visible = !!vl.pattern;
+    if (_objects.armillaryGearsGroup) _objects.armillaryGearsGroup.visible = !!vl.pattern;
+    if (_objects.armillaryMedallionsGroup) _objects.armillaryMedallionsGroup.visible = !!vl.pattern;
+    if (_objects.armillaryRecordGroup) _objects.armillaryRecordGroup.visible = !!vl.pattern;
     _applySemanticVisibility(vl, semanticState || { band: "medium", visibility: {} });
     if (_objects.yearGate)     _objects.yearGate.visible     = !!vl.pattern;
     if (_objects.todayLineGroup) _objects.todayLineGroup.visible = true;
@@ -5067,6 +6132,9 @@
     // ── Layer visibility ────────────────────────────────────────────
     const vl = _visibleLayers;
     _applyLayerVisibility(vl, _semanticZoomState || { band: "medium", visibility: {} });
+
+    // ── Armillary face follows the shown day ──────────────────────
+    _syncArmillaryDressing();
 
     // ── Equinox gate position ───────────────────────────────────────
     if (_objects.equinoxGate && model.passageStartAngle != null) {
@@ -7723,6 +8791,25 @@
       _objects.moonIdentityNumberTexture.dispose();
       _objects.moonIdentityNumberTexture = null;
     }
+    // Armillary face textures are canvas-born and cached outside
+    // the scene tree; dispose them with the rest of the renderer.
+    for (const key of ["armillaryBackdropTexture", "armillaryWoodTexture", "armillaryGlobeTexture", "armillaryGlowTexture"]) {
+      if (_objects[key]?.dispose) _objects[key].dispose();
+      _objects[key] = null;
+    }
+    if (Array.isArray(_objects.armillaryFaceTextures)) {
+      for (const texture of _objects.armillaryFaceTextures) texture?.dispose?.();
+      _objects.armillaryFaceTextures = null;
+    }
+    if (_objects.armillaryScript?.texture?.dispose) {
+      _objects.armillaryScript.texture.dispose();
+    }
+    _objects.armillaryScript = null;
+    if (_objects.armillaryHub?.texture?.dispose) {
+      _objects.armillaryHub.texture.dispose();
+    }
+    _objects.armillaryHub = null;
+    _objects.armillaryAnim = null;
     _moonAnchors.length = 0;
     _dayNodeBasePositions = null;
     _dayNodeVisibleKey = "";
@@ -8019,6 +9106,8 @@
     getRenderer,
     getLastInitError,
     getDiagnostics,
+    setRecordMarkers: _setRecordMarkers,
+    setTrailMarkers: _setTrailMarkers,
     exportPng,
     getCalendarRailGeometry: _calendarRailGeometry,
     THREE_VERSION,

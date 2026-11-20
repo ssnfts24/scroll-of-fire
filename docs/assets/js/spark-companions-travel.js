@@ -27,7 +27,14 @@
 
   const $ = (id) => document.getElementById(id);
 
-  const GARDEN_SUBTYPES = ["garden-tend", "garden-tier", "garden-pass"];
+  /* The garden's records, both gardens: the old garden's tends,
+   * tier turns, and passes (kept exactly as they are), and the
+   * Pattern Garden's plantings, witnesses, seeds, returns, and
+   * keepsakes — a keeper's whole garden travels with their Spark. */
+  const GARDEN_SUBTYPES = [
+    "garden-tend", "garden-tier", "garden-pass",
+    "garden-planting", "garden-witness", "garden-seed", "garden-return", "garden-keepsake"
+  ];
   const SOUND_KEY = "sof.spark.sound";
   const VOICE_KEY = "sof.spark.voice";
   /* The pins the app keeps live under this key; the site keeps

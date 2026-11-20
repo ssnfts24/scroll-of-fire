@@ -3,9 +3,9 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 475,
-    "publicHtmlPages": 179,
-    "catalogEntries": 72,
+    "resources": 476,
+    "publicHtmlPages": 180,
+    "catalogEntries": 73,
     "issueCounts": {
       "not-linked-directly-from-homepage": 24,
       "nav-label-differs-from-title": 24,
@@ -14,7 +14,8 @@
       "unreachable-from-homepage": 3,
       "compatibility-redirect-page": 1,
       "not-published-in-catalog": 30,
-      "unnamed-image-needs-descriptive-title": 21
+      "unnamed-image-needs-descriptive-title": 21,
+      "not-in-sitemap": 1
     }
   },
   "resources": [
@@ -144,8 +145,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 70,
-        "pagesWithNavLinkToIt": 71
+        "inboundPages": 71,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"About Aaron\" vs \"Aaron Paul Laird\""
@@ -258,8 +259,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 70,
-        "pagesWithNavLinkToIt": 71
+        "inboundPages": 71,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"Covenant Circle\" vs \"Circle Sync\""
@@ -303,8 +304,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 175,
-        "pagesWithNavLinkToIt": 170
+        "inboundPages": 176,
+        "pagesWithNavLinkToIt": 171
       },
       "issues": [
         "nav-label-differs-from-title: \"Evidence Edition\" vs \"Editorial reading and evidence\""
@@ -419,6 +420,7 @@
         "lab.html",
         "ledger.html",
         "living-time-sphere.html",
+        "map.html",
         "micro.html",
         "moons.html",
         "practices.html",
@@ -471,8 +473,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 175,
-        "pagesWithNavLinkToIt": 170
+        "inboundPages": 176,
+        "pagesWithNavLinkToIt": 171
       },
       "issues": [
         "nav-label-differs-from-title: \"Atlas\" vs \"Codex Atlas\""
@@ -537,13 +539,15 @@
         "path": "codex-guide.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 4,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 3,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": []
+      "issues": [
+        "not-linked-directly-from-homepage"
+      ]
     },
     {
       "id": "companions",
@@ -578,7 +582,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 174,
+        "inboundPages": 175,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
@@ -644,8 +648,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 72,
-        "pagesWithNavLinkToIt": 72
+        "inboundPages": 73,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": [
         "nav-label-differs-from-title: \"Covenant Caravan\" vs \"The Covenant Caravan\""
@@ -670,7 +674,7 @@
     },
     {
       "id": "docs-assets:assets/css",
-      "title": "docs/assets/css (59 files)",
+      "title": "docs/assets/css (65 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -687,7 +691,7 @@
     },
     {
       "id": "docs-assets:assets/data",
-      "title": "docs/assets/data (6 files)",
+      "title": "docs/assets/data (7 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -738,7 +742,7 @@
     },
     {
       "id": "docs-assets:assets/img",
-      "title": "docs/assets/img (148 files)",
+      "title": "docs/assets/img (155 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -755,7 +759,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (193 files)",
+      "title": "docs/assets/js (201 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -772,7 +776,7 @@
     },
     {
       "id": "docs-assets:assets/media",
-      "title": "docs/assets/media (147 files)",
+      "title": "docs/assets/media (148 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1873,11 +1877,11 @@
         "circle.html",
         "claims-atlas.html",
         "codex-atlas.html",
-        "codex-guide.html",
         "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
+        "garden.html",
         "genesis-oracle.html",
         "glossary.html",
         "guide.html",
@@ -1886,6 +1890,7 @@
         "lab.html",
         "ledger.html",
         "living-time-sphere.html",
+        "map.html",
         "moons.html",
         "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
@@ -1917,7 +1922,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 0,
         "hopsFromHomeWithoutAtlas": 0,
-        "inboundPages": 176,
+        "inboundPages": 177,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -12223,8 +12228,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 176,
-        "pagesWithNavLinkToIt": 76
+        "inboundPages": 177,
+        "pagesWithNavLinkToIt": 77
       },
       "issues": [
         "nav-label-differs-from-title: \"Downloads\" vs \"Downloads & Integrity\""
@@ -12337,8 +12342,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 71,
-        "pagesWithNavLinkToIt": 71
+        "inboundPages": 72,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"Ethics\" vs \"Ethics & Coherence Law\""
@@ -12404,8 +12409,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 71,
-        "pagesWithNavLinkToIt": 72
+        "inboundPages": 72,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": []
     },
@@ -12451,8 +12456,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 72,
-        "pagesWithNavLinkToIt": 72
+        "inboundPages": 73,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": [
         "nav-label-differs-from-title: \"Genesis Oracle\" vs \"The Genesis Oracle\""
@@ -12520,8 +12525,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 75,
-        "pagesWithNavLinkToIt": 71
+        "inboundPages": 76,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"Glossary\" vs \"Glossary of the Codex\""
@@ -12720,8 +12725,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 71,
-        "pagesWithNavLinkToIt": 72
+        "inboundPages": 72,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": [
         "nav-label-differs-from-title: \"Year Map\" vs \"Systems Hub\""
@@ -12786,8 +12791,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 70,
-        "pagesWithNavLinkToIt": 71
+        "inboundPages": 71,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"Invoke\" vs \"Invocation Lab\""
@@ -12862,8 +12867,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 70,
-        "pagesWithNavLinkToIt": 71
+        "inboundPages": 71,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": []
     },
@@ -12927,8 +12932,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 74,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 75,
+        "pagesWithNavLinkToIt": 75
       },
       "issues": []
     },
@@ -12973,7 +12978,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 176,
+        "inboundPages": 177,
         "pagesWithNavLinkToIt": 3
       },
       "issues": []
@@ -13037,8 +13042,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 72,
-        "pagesWithNavLinkToIt": 72
+        "inboundPages": 73,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": []
     },
@@ -13168,8 +13173,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 70,
-        "pagesWithNavLinkToIt": 71
+        "inboundPages": 71,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"Mind Renewal\" vs \"Mind-Renewal Protocol\""
@@ -13240,12 +13245,78 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 177,
-        "pagesWithNavLinkToIt": 170
+        "inboundPages": 178,
+        "pagesWithNavLinkToIt": 171
       },
       "issues": [
         "nav-label-differs-from-title: \"13 Moons\" vs \"Remnant 13 Moons\""
       ]
+    },
+    {
+      "id": "pattern-garden",
+      "title": "The Pattern Garden — the Garden · Remnant Lab · Scroll of Fire",
+      "description": "The Pattern Garden: thirteen beds, one for each Moon. The calendar keys when a bed is open; the farm record keys what goes in it. Plantings grow on the days you keep, harvest at the Moon's turn into keepsakes in your own Life Atlas, and return a year later — on this device only.",
+      "category": "Practice",
+      "area": "systems",
+      "relatedProjects": [
+        "manifest"
+      ],
+      "sourcePath": "docs/garden.html",
+      "publicUrl": "https://codexofreality.org/garden.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "13-moon-whitepaper.html",
+        "about-aaron.html",
+        "circle.html",
+        "codex-atlas.html",
+        "companions.html",
+        "covenant-caravan.html",
+        "downloads.html",
+        "ethics.html",
+        "genesis-oracle.html",
+        "glossary.html",
+        "hub.html",
+        "index.html",
+        "invoke.html",
+        "lab.html",
+        "ledger.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "practices.html",
+        "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
+        "scroll/atlas.html",
+        "scroll/editorial.html",
+        "scroll/index.html",
+        "scroll/lexicon.html",
+        "scroll/search.html",
+        "shop.html",
+        "start.html",
+        "systems/archive.html",
+        "systems/frequencies.html",
+        "systems/mind-renewal.html",
+        "systems/recoder.html",
+        "systems/t-7.html",
+        "systems/witness.html",
+        "teach.html",
+        "theory.html",
+        "theory/canon.html",
+        "witness-world.html",
+        "witness.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/garden.html",
+      "privacyEligibility": "approved-public",
+      "discoverability": {
+        "path": "garden.html",
+        "inSitemap": true,
+        "inGlobalNav": false,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 4,
+        "pagesWithNavLinkToIt": 0
+      },
+      "issues": []
     },
     {
       "id": "planned-timeline",
@@ -13323,7 +13394,7 @@
       "category": "Practice",
       "area": "systems",
       "relatedProjects": [
-        "shroom-garden",
+        "pattern-garden",
         "manifest",
         "sending-test"
       ],
@@ -13447,8 +13518,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 70,
-        "pagesWithNavLinkToIt": 71
+        "inboundPages": 71,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"Reality Recoder\" vs \"Living Dictionary of Reality\""
@@ -13742,7 +13813,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (146 files)",
+      "title": "tests/ (155 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -17981,8 +18052,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 174,
-        "pagesWithNavLinkToIt": 170
+        "inboundPages": 175,
+        "pagesWithNavLinkToIt": 171
       },
       "issues": []
     },
@@ -18025,8 +18096,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 174,
-        "pagesWithNavLinkToIt": 170
+        "inboundPages": 175,
+        "pagesWithNavLinkToIt": 171
       },
       "issues": []
     },
@@ -18074,8 +18145,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 175,
-        "pagesWithNavLinkToIt": 170
+        "inboundPages": 176,
+        "pagesWithNavLinkToIt": 171
       },
       "issues": [
         "nav-label-differs-from-title: \"Scroll Library\" vs \"Scroll of Fire\""
@@ -18161,8 +18232,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 175,
-        "pagesWithNavLinkToIt": 170
+        "inboundPages": 176,
+        "pagesWithNavLinkToIt": 171
       },
       "issues": [
         "nav-label-differs-from-title: \"Search the Scroll Library\" vs \"Search the Scroll\""
@@ -18295,79 +18366,11 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 175,
-        "pagesWithNavLinkToIt": 72
+        "inboundPages": 176,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": [
         "nav-label-differs-from-title: \"Artifact Registry\" vs \"Artifact Registry & Shop\""
-      ]
-    },
-    {
-      "id": "shroom-garden",
-      "title": "Shroom Search — the Garden · Remnant Lab · Scroll of Fire",
-      "description": "Shroom Search: a small garden game on the bench. Tend three mushroom beds, grow them through their tiers across days and practice, and harvest passes — every tend, tier, and pass kept as a record in your own Life Atlas, on this device only.",
-      "category": "Practice",
-      "area": "systems",
-      "relatedProjects": [
-        "manifest"
-      ],
-      "sourcePath": "docs/garden.html",
-      "publicUrl": "https://codexofreality.org/garden.html",
-      "publicationStatus": "live",
-      "lastVerifiedSourceRevision": "548e858",
-      "relatedPages": [
-        "13-moon-whitepaper.html",
-        "about-aaron.html",
-        "circle.html",
-        "codex-atlas.html",
-        "companions.html",
-        "covenant-caravan.html",
-        "downloads.html",
-        "ethics.html",
-        "genesis-oracle.html",
-        "glossary.html",
-        "hub.html",
-        "index.html",
-        "invoke.html",
-        "lab.html",
-        "ledger.html",
-        "living-time-sphere.html",
-        "moons.html",
-        "practices.html",
-        "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
-        "scroll/atlas.html",
-        "scroll/editorial.html",
-        "scroll/index.html",
-        "scroll/lexicon.html",
-        "scroll/search.html",
-        "shop.html",
-        "start.html",
-        "systems/archive.html",
-        "systems/frequencies.html",
-        "systems/mind-renewal.html",
-        "systems/recoder.html",
-        "systems/t-7.html",
-        "systems/witness.html",
-        "teach.html",
-        "theory.html",
-        "theory/canon.html",
-        "witness-world.html",
-        "witness.html"
-      ],
-      "canonicalUrl": "https://codexofreality.org/garden.html",
-      "privacyEligibility": "approved-public",
-      "discoverability": {
-        "path": "garden.html",
-        "inSitemap": true,
-        "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 3,
-        "pagesWithNavLinkToIt": 0
-      },
-      "issues": [
-        "not-linked-directly-from-homepage"
       ]
     },
     {
@@ -18430,7 +18433,7 @@
         "inGlobalNav": false,
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
+        "hopsFromHomeWithoutAtlas": 3,
         "inboundPages": 3,
         "pagesWithNavLinkToIt": 0
       },
@@ -18498,8 +18501,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 73
+        "inboundPages": 74,
+        "pagesWithNavLinkToIt": 74
       },
       "issues": []
     },
@@ -18562,8 +18565,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 70,
-        "pagesWithNavLinkToIt": 71
+        "inboundPages": 71,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"Systems Archive\" vs \"Interactive Archive\""
@@ -18628,8 +18631,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 70,
-        "pagesWithNavLinkToIt": 71
+        "inboundPages": 71,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"T-7 Conduit\" vs \"T-7 Resonant Engine\""
@@ -18894,8 +18897,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 70,
-        "pagesWithNavLinkToIt": 71
+        "inboundPages": 71,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"Canon\" vs \"Canon 0–17\""
@@ -19408,8 +19411,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 76,
-        "pagesWithNavLinkToIt": 76
+        "inboundPages": 77,
+        "pagesWithNavLinkToIt": 77
       },
       "issues": [
         "nav-label-differs-from-title: \"Theory\" vs \"Theory Hub\""
@@ -20059,6 +20062,73 @@
       ]
     },
     {
+      "id": "travellers-map",
+      "title": "The Traveller's Map — Codex of Reality",
+      "description": "The Traveller's Map: the whole Codex drawn as the lands of one road — every place pictured by its cartoon scene, the Traveller's Road story in walking order, found chapters stamped with their Pattern day, and your place in the year on the Year Thread.",
+      "category": "Practice",
+      "area": "systems",
+      "relatedProjects": [
+        "manifest"
+      ],
+      "sourcePath": "docs/map.html",
+      "publicUrl": "https://codexofreality.org/map.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "13-moon-whitepaper.html",
+        "about-aaron.html",
+        "circle.html",
+        "codex-atlas.html",
+        "companions.html",
+        "covenant-caravan.html",
+        "downloads.html",
+        "ethics.html",
+        "genesis-oracle.html",
+        "glossary.html",
+        "hub.html",
+        "index.html",
+        "invoke.html",
+        "lab.html",
+        "ledger.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
+        "scroll/atlas.html",
+        "scroll/editorial.html",
+        "scroll/index.html",
+        "scroll/lexicon.html",
+        "scroll/search.html",
+        "shop.html",
+        "start.html",
+        "systems/archive.html",
+        "systems/frequencies.html",
+        "systems/mind-renewal.html",
+        "systems/recoder.html",
+        "systems/t-7.html",
+        "systems/witness.html",
+        "teach.html",
+        "theory.html",
+        "theory/canon.html",
+        "witness-world.html",
+        "witness.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/garden.html",
+      "privacyEligibility": "approved-public",
+      "discoverability": {
+        "path": "map.html",
+        "inSitemap": false,
+        "inGlobalNav": false,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 2,
+        "pagesWithNavLinkToIt": 0
+      },
+      "issues": [
+        "not-in-sitemap"
+      ]
+    },
+    {
       "id": "whitepaper-13-moons",
       "title": "Remnant Rollout Whitepaper | The 13 Moons Remnant Living Time Observatory",
       "description": "The official rollout whitepaper for The 13 Moons Remnant Living Time Observatory: the phased plan for the Pattern Calendar, Equinox Passage, Alignment Ledger, Witness System, Codex Theory integration, research tools, PWA, API, and Living Time Commons.",
@@ -20101,8 +20171,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 75,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 76,
+        "pagesWithNavLinkToIt": 75
       },
       "issues": [
         "nav-label-differs-from-title: \"13 Moons Whitepaper\" vs \"Remnant Rollout Whitepaper\""
@@ -20154,8 +20224,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 72,
-        "pagesWithNavLinkToIt": 71
+        "inboundPages": 73,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"Remnant Whitepaper\" vs \"Scroll of Fire · Codex of Reality · Remnant Whitepaper\""
@@ -20222,7 +20292,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 174,
+        "inboundPages": 175,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -20286,8 +20356,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 70,
-        "pagesWithNavLinkToIt": 71
+        "inboundPages": 71,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"Witness System\" vs \"Remnant Witness Ledger\""
@@ -20353,7 +20423,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 174,
+        "inboundPages": 175,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []

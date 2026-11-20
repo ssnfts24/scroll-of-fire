@@ -284,15 +284,38 @@ function scoreSentence(sentence, context) {
     }
   }
 
+  /* Bridged vocabulary ranks lightly by design: its hits are
+   * capped, so a contents list that merely names everything on
+   * the page cannot harvest the bridge into a crown. */
+  let expansionScore = 0;
   for (const term of context.expansionTerms || []) {
-    if (tokenSet.has(term)) score += 1;
+    if (tokenSet.has(term)) expansionScore += 1;
   }
+  score += Math.min(3, expansionScore);
 
+  /* Phrase evidence counts once per mention, not once per nested
+   * variant: the phrase list holds "the codex of reality", "codex
+   * of reality" and "the codex" side by side, and a single mention
+   * of the site's name in a contents list used to harvest all
+   * three (+5/+2/+2) and outscore the sentence that actually
+   * states the answer. Longest phrases claim their span first; a
+   * shorter phrase counts only where it mentions something new. */
   let phraseHits = 0;
-  for (const phrase of context.phrases) {
-    if (phrase && normalized.includes(phrase)) {
-      score += phraseHits === 0 ? 5 : 2;
-      phraseHits += 1;
+  const claimed = [];
+  const byLength = [...new Set(context.phrases)]
+    .filter(Boolean)
+    .sort((a, b) => b.length - a.length);
+  for (const phrase of byLength) {
+    let at = normalized.indexOf(phrase);
+    while (at !== -1) {
+      const end = at + phrase.length;
+      if (!claimed.some(([s, e]) => at < e && end > s)) {
+        claimed.push([at, end]);
+        score += phraseHits === 0 ? 5 : 2;
+        phraseHits += 1;
+        break;
+      }
+      at = normalized.indexOf(phrase, at + 1);
     }
   }
 
@@ -302,7 +325,7 @@ function scoreSentence(sentence, context) {
       /\b(is|are|means|equals|counts|names|stands for)\b/.test(normalized);
     if (hasVerb) score += 2;
     if (run >= 3) {
-      score += Math.min(6, 1.5 * (run - 2));
+      score += Math.min(8, 2 * (run - 2));
       /* A naming verb or "as" binding an enumeration is the
        * record's statement shape: "Reality as Resonance,
        * Intention, Light, Consciousness, and Source". */

@@ -22,8 +22,11 @@
  *     always-interactive start), with one plain Freeze button that
  *     holds it perfectly still and wakes it again.
  *   - One dock under the stage carries every action by its plain
- *     name: Today · Choose a day · Step into this day · Deep Time ·
- *     Farm & home · Freeze · Your Spark.
+ *     name: Today · Schedule · Enter this day · Deep Time ·
+ *     Farm & home · Freeze · Your Spark. (Sphere redesign,
+ *     Nov 20, 2026: Schedule stands where Choose a day stood —
+ *     Aaron: "I didn't see an easy way to schedule" — and Enter
+ *     carries its plain name.)
  *   - The Ambient face's welcome (PR #196) becomes a room below the
  *     stage instead of a veil over it; its one plain sentence stands
  *     directly under the instrument.
@@ -102,6 +105,54 @@
     return true;
   }
   function openDeepTime() { return clickFirst([".deep-time-door-button"]); }
+
+  /* Schedule, made plain (Sphere redesign, Nov 20, 2026 — Aaron:
+   * "I didn't see an easy way to schedule"). The one path: pick a
+   * day on the Sphere, tap Schedule (dock or the day's own
+   * readout), and the Living Planner opens on that day — the same
+   * hand the label manager's card has always offered, now standing
+   * in the open. The plan is kept in the keeper's own record by
+   * the planner itself. */
+  function selectedCivilDate() {
+    const d = globalThis.LivingTimeSphereUi?.getSphereDiagnostics?.() || {};
+    const doy = Number(d.selectedDay || 0);
+    const year = Number(d.selectedYear || 0);
+    if (!Number.isFinite(doy) || doy < 1 || doy > 364 || !year) return null;
+    const epoch = globalThis.PatternCalendar?.epochForYear?.(year);
+    if (!(epoch instanceof Date) || Number.isNaN(epoch.getTime())) return null;
+    const date = new Date(epoch.getTime() + (doy - 1) * 86400000);
+    const iso = `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}-${String(date.getUTCDate()).padStart(2, "0")}`;
+    return { civil: iso, moon: Math.floor((doy - 1) / 28) + 1, day: ((doy - 1) % 28) + 1, dayOfPatternYear: doy };
+  }
+
+  function openSchedule() {
+    const sel = selectedCivilDate();
+    if (sel) {
+      const request = {
+        source: "sphere-schedule-door",
+        selectedCivilDate: sel.civil,
+        pattern: { moon: sel.moon, day: sel.day, dayOfPatternYear: sel.dayOfPatternYear },
+      };
+      globalThis.__SOF_PENDING_SCHEDULE_DAY__ = request;
+      document.dispatchEvent(new CustomEvent("sof:sphere-schedule-selected-day", { detail: request }));
+    }
+    const plannerOpen = document.getElementById("living-planner-open");
+    if (!plannerOpen) return false;
+    plannerOpen.click();
+    if (sel) {
+      window.setTimeout(() => {
+        const dateInput = document.getElementById("living-planner-date");
+        if (dateInput && dateInput.value !== sel.civil) {
+          dateInput.value = sel.civil;
+          dateInput.dispatchEvent(new Event("input", { bubbles: true }));
+          dateInput.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+        const title = document.getElementById("living-planner-title-input");
+        if (title) { try { title.focus({ preventScroll: true }); } catch { /* focus is a courtesy */ } }
+      }, 80);
+    }
+    return true;
+  }
 
   function openFarm() {
     const farm = $("[data-sphere-farm-section]");
@@ -259,8 +310,8 @@
     dock.setAttribute("aria-label", "Sphere actions");
     dock.innerHTML = `
       <button type="button" class="sphere-rebuild-dock-btn" data-sphere-rebuild-today>Today</button>
-      <button type="button" class="sphere-rebuild-dock-btn" data-sphere-rebuild-choose>Choose a day</button>
-      <button type="button" class="sphere-rebuild-dock-btn" data-sphere-rebuild-dayworld>Step into this day</button>
+      <button type="button" class="sphere-rebuild-dock-btn" data-sphere-rebuild-schedule>Schedule</button>
+      <button type="button" class="sphere-rebuild-dock-btn" data-sphere-rebuild-dayworld>Enter this day</button>
       <button type="button" class="sphere-rebuild-dock-btn" data-sphere-rebuild-deeptime>Deep Time</button>
       <button type="button" class="sphere-rebuild-dock-btn" data-sphere-rebuild-farm>Farm &amp; home</button>
       <button type="button" class="sphere-rebuild-dock-btn" data-sphere-rebuild-freeze aria-pressed="false">Freeze</button>
@@ -269,13 +320,7 @@
     if (sidebar) dock.after(sidebar);
 
     dock.querySelector("[data-sphere-rebuild-today]").addEventListener("click", () => { wake(); goToday(); });
-    dock.querySelector("[data-sphere-rebuild-choose]").addEventListener("click", () => {
-      const moon = $("#sphere-select-moon");
-      if (moon) {
-        moon.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "center" });
-        window.setTimeout(() => { try { moon.focus({ preventScroll: true }); } catch { /* scroll stands */ } }, reducedMotion ? 0 : 350);
-      }
-    });
+    dock.querySelector("[data-sphere-rebuild-schedule]").addEventListener("click", () => { openSchedule(); });
     dock.querySelector("[data-sphere-rebuild-dayworld]").addEventListener("click", openDayWorld);
     dock.querySelector("[data-sphere-rebuild-deeptime]").addEventListener("click", openDeepTime);
     dock.querySelector("[data-sphere-rebuild-farm]").addEventListener("click", openFarm);
@@ -370,7 +415,15 @@
       const watcher = new MutationObserver(rest);
       watcher.observe(obsShell, { attributes: true, attributeFilter: ["hidden"] });
       watcher.observe(document.body, { attributes: true, attributeFilter: ["class"] });
-      window.setTimeout(() => watcher.disconnect(), 15000);
+      // Sphere redesign (Nov 20, 2026): the guard used to stand
+      // down after 15 seconds — but the workspace wakes on its own
+      // clock, and on a slow phone it offers the question long
+      // after the guard has gone, dropping the modal on the
+      // instrument and eating every tap meant for the Sphere
+      // (measured in the lab: taps at 20s+ selected nothing until
+      // the shell was dismissed). The guard now stands for the
+      // page's whole life; it costs one small observer and acts
+      // only when the shell opens uninvited.
       rest();
     }
 
@@ -724,6 +777,7 @@
     VERSION,
     goToday,
     showDay,
+    openSchedule,
     openDayWorld,
     openDeepTime,
     openFarm,

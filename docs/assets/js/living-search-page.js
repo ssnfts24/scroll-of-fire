@@ -19,6 +19,22 @@
       fmt(counts.claims) + " claims, each one graded.";
   }
 
+  /* How many documents each area's shard actually holds. The
+   * manifest's headline counts name pages as pages (169), but the
+   * pages shard holds passages (one page, many documents) — the
+   * surprise pick weighs areas by documents, so it reads the
+   * shard counts, falling back to the headline counts. */
+  function docCounts(manifest) {
+    var out = {};
+    var counts = (manifest && manifest.counts) || {};
+    var shards = (manifest && manifest.shards) || {};
+    for (var key of Object.keys(counts)) out[key] = counts[key];
+    for (var area of Object.keys(shards)) {
+      if (typeof shards[area].count === "number") out[area] = shards[area].count;
+    }
+    return out;
+  }
+
   /* Pick an area with probability proportional to how much it holds. */
   function pickArea(areas, counts, rng) {
     var total = 0;
@@ -70,7 +86,7 @@
       btn.addEventListener("click", function () {
         btn.disabled = true;
         loadManifest().then(function (manifest) {
-          var area = pickArea(manifest.areas, manifest.counts, Math.random);
+          var area = pickArea(manifest.areas, docCounts(manifest), Math.random);
           return fetch("assets/search/" + shardFile(manifest, area)).then(function (r) {
             if (!r.ok) throw new Error("shard unavailable");
             return r.json();
@@ -101,7 +117,7 @@
     }
   }
 
-  var api = { formatCounts: formatCounts, pickArea: pickArea, pickDoc: pickDoc, shardFile: shardFile };
+  var api = { formatCounts: formatCounts, docCounts: docCounts, pickArea: pickArea, pickDoc: pickDoc, shardFile: shardFile };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   global.LivingSearchPage = api;
 })(typeof window !== "undefined" ? window : globalThis);

@@ -40,7 +40,20 @@ const sha = bytes => crypto.createHash("sha256").update(bytes).digest("hex");
 const readJson = (...parts) => JSON.parse(fs.readFileSync(path.join(root, ...parts), "utf8"));
 const sourceHash = (...parts) => sha(fs.readFileSync(path.join(root, ...parts)));
 
-const PAGE_BODY_CAP = 4000;
+/* Pages are indexed as passages, not as one truncated body. The
+ * first-generation builder kept only the first 4,000 characters of
+ * each page, which blinded Living Search and the Codex Guide to
+ * everything deeper — a Glossary entry defined at character 9,800
+ * simply did not exist to them (named in PR #197, fixed here). A
+ * page now contributes one document per passage: its text split at
+ * section headings, then into sentence-respecting chunks of at
+ * most PASSAGE_CHARS. Every chunk carries the page's group key
+ * (`g` — the page's own path) so the search core folds a page's
+ * passages back into one result whose representative is the
+ * best-matching passage, exactly the model the Guide's passage
+ * retrieval (PR #197) already expects. */
+const PASSAGE_CHARS = 1500;
+const SCRIPTURE_BODY_CAP = 4000;
 const PAGE_HEADINGS_CAP = 1200;
 const SEGMENT_BODY_CAP = 2000;
 const CLAIM_BODY_CAP = 2000;
@@ -87,8 +100,88 @@ function extractPage(html) {
   const headingText = [rawTitle, description, ...headings.filter(heading => heading.text !== title).map(heading => heading.text)]
     .filter(Boolean).join(" ").slice(0, PAGE_HEADINGS_CAP);
   const main = withoutNoise.match(/<main[^>]*>([\s\S]*?)<\/main>/i)?.[1] || withoutNoise;
-  const body = stripTags(main).slice(0, PAGE_BODY_CAP);
-  return { title, headings: headingText, body };
+  return { title, headings: headingText, sections: extractSections(main) };
+}
+
+/* Split a page's main content into its sections: a new section
+ * starts at each h2/h3, carrying that heading's text and its id
+ * (the deep link a passage result can point at). Content before
+ * the first sub-heading is the opening section. */
+function extractSections(mainHtml) {
+  const sections = [];
+  const parts = String(mainHtml).split(/(<h[23][^>]*>[\s\S]*?<\/h[23]>)/gi);
+  let current = { heading: "", anchor: "", html: "" };
+  for (const part of parts) {
+    const headingMatch = part.match(/^<h[23]([^>]*)>([\s\S]*?)<\/h[23]>$/i);
+    if (headingMatch) {
+      sections.push(current);
+      const id = headingMatch[1].match(/\bid="([^"]+)"/i)?.[1] || "";
+      current = { heading: stripTags(headingMatch[2]), anchor: id, html: "" };
+    } else {
+      current.html += part;
+    }
+  }
+  sections.push(current);
+  return sections
+    .map(section => {
+      const body = stripTags(section.html);
+      /* The heading stays IN the text stream, as it was when the
+       * whole page was one body: a Glossary entry's term IS its
+       * h3, and a definition whose term lives only in metadata is
+       * a definition no passage window can ever quote. */
+      return {
+        heading: section.heading,
+        anchor: section.anchor,
+        text: section.heading ? `${section.heading} ${body}` : body
+      };
+    })
+    .filter(section => section.text);
+}
+
+/* Split a text into sentence-like pieces: on sentence ends where
+ * the text offers them, on clause marks where a run is very long —
+ * never mid-word. */
+function splitSentences(text) {
+  const clean = String(text || "").replace(/\s+/g, " ").trim();
+  if (!clean) return [];
+  const pieces = [];
+  for (const raw of clean.split(/(?<=[.!?…])\s+(?=[A-Z0-9"“‘(])/u)) {
+    let rest = raw.trim();
+    while (rest.length > PASSAGE_CHARS) {
+      const window = rest.slice(0, PASSAGE_CHARS);
+      const cut = Math.max(window.lastIndexOf("; "), window.lastIndexOf(", "), window.lastIndexOf(" — "), window.lastIndexOf(" "));
+      const at = cut > 400 ? cut + 1 : PASSAGE_CHARS;
+      pieces.push(rest.slice(0, at).trim());
+      rest = rest.slice(at).trim();
+    }
+    if (rest) pieces.push(rest);
+  }
+  return pieces;
+}
+
+/* Pack a page's sections into passages of at most PASSAGE_CHARS.
+ * Sentences flow across section boundaries (a page of many short
+ * sections would otherwise shatter into useless slivers); each
+ * passage remembers the section it STARTS in, which names its
+ * place and its deep link. A passage does break at a section
+ * boundary once it already holds a substantial body, so a long
+ * page's passages stay near their sections. */
+function chunkSections(sections) {
+  const tagged = [];
+  for (const section of sections) {
+    for (const piece of splitSentences(section.text)) tagged.push({ piece, section });
+  }
+  const chunks = [];
+  let current = null;
+  const push = () => { if (current) chunks.push(current); current = null; };
+  for (const { piece, section } of tagged) {
+    if (current && current.section !== section && current.text.length >= 600) push();
+    if (current && current.text.length + piece.length + 1 > PASSAGE_CHARS) push();
+    if (!current) current = { text: piece, section };
+    else current.text = `${current.text} ${piece}`;
+  }
+  push();
+  return chunks;
 }
 
 /* ---------------- pages ---------------- */
@@ -102,9 +195,44 @@ function buildPages() {
     const rel = path.relative(docs, file).split(path.sep).join("/");
     if (PAGE_EXCLUDED_PREFIXES.some(prefix => rel.startsWith(prefix))) continue;
     if (PAGE_EXCLUDED_FILES.includes(rel)) continue;
-    const { title, headings, body } = extractPage(fs.readFileSync(file, "utf8"));
+    const { title, headings, sections } = extractPage(fs.readFileSync(file, "utf8"));
     if (!title) continue;
-    pages.push({ i: `page:${rel}`, a: "pages", t: title, u: rel, h: headings, b: body, x: areaByPagePath.get(rel) || "" });
+    /* Scripture chapter pages keep the directory treatment they
+     * have always had — one document, the opening of the chapter:
+     * a chapter's full text is the reader's own corpus, served by
+     * the reader's own instruments, and the pages shard is a
+     * directory, not a second copy of the Bible. Every other page
+     * is indexed whole, in passages. */
+    if (rel.startsWith("scripture/")) {
+      const body = sections.map(section => section.text).join(" ").slice(0, SCRIPTURE_BODY_CAP);
+      pages.push({ i: `page:${rel}`, a: "pages", t: title, u: rel, h: headings, b: body, x: areaByPagePath.get(rel) || "", g: rel });
+      continue;
+    }
+    /* One document per passage. The first passage keeps the
+     * page's own id and bare URL (the definitional routing and
+     * every existing link expect them); later passages point at
+     * their section's anchor when the page gives it one. All of a
+     * page's passages share its group key `g`, so result grouping
+     * folds them into one result per page. */
+    const chunks = chunkSections(sections);
+    if (!chunks.length) {
+      pages.push({ i: `page:${rel}`, a: "pages", t: title, u: rel, h: headings, b: "", x: areaByPagePath.get(rel) || "", g: rel });
+      continue;
+    }
+    chunks.forEach((chunk, passageIndex) => {
+      const first = passageIndex === 0;
+      pages.push({
+        i: first ? `page:${rel}` : `page:${rel}#p${passageIndex}`,
+        a: "pages",
+        t: title,
+        u: first ? rel : `${rel}#${chunk.section.anchor || `p${passageIndex}`}`,
+        h: first ? headings : (chunk.section.heading || headings),
+        b: chunk.text,
+        x: areaByPagePath.get(rel) || "",
+        g: rel,
+        ...(first || !chunk.section.heading ? {} : { p: chunk.section.heading })
+      });
+    });
   }
   return pages.sort((a, b) => a.i.localeCompare(b.i));
 }
@@ -224,10 +352,17 @@ const files = new Map();
 const shardInfo = {};
 const counts = {};
 let total = 0;
+let pageCount = 0;
 for (const area of AREAS) {
   const docsForArea = builders[area.id]();
   counts[area.id] = docsForArea.length;
   total += docsForArea.length;
+  if (area.id === "pages") {
+    /* The pages shard holds passages now; `pages` in the counts
+     * stays the count of pages themselves, and the passage count
+     * is recorded beside it as pagePassages. */
+    pageCount = new Set(docsForArea.map(doc => doc.g)).size;
+  }
   const bytes = Buffer.from(`${JSON.stringify({ schemaVersion: 1, area: area.id, count: docsForArea.length, docs: docsForArea })}\n`, "utf8");
   files.set(area.shard, bytes);
   shardInfo[area.id] = { file: area.shard, count: docsForArea.length, bytes: bytes.length, sha256: sha(bytes) };
@@ -249,7 +384,8 @@ const manifest = {
   },
   areas: AREAS,
   counts: {
-    pages: counts.pages,
+    pages: pageCount,
+    pagePassages: counts.pages,
     scrollSections: library.sections.length,
     scrollSegments: segmentData.segments.length,
     scrolls: counts.scrolls,
@@ -282,4 +418,4 @@ if (args.has("--check")) {
 fs.mkdirSync(outputRoot, { recursive: true });
 for (const [name, bytes] of files) fs.writeFileSync(path.join(outputRoot, name), bytes);
 const totalBytes = [...files.values()].reduce((sum, bytes) => sum + bytes.length, 0);
-console.log(`Built Living Search index: ${total} documents (${counts.pages} pages, ${counts.scrolls} scrolls, ${counts.atlas} atlas, ${counts.lexicon} lexicon, ${counts.claims} claims), ${totalBytes} bytes across ${files.size} files.`);
+console.log(`Built Living Search index: ${total} documents (${pageCount} pages in ${counts.pages} passages, ${counts.scrolls} scrolls, ${counts.atlas} atlas, ${counts.lexicon} lexicon, ${counts.claims} claims), ${totalBytes} bytes across ${files.size} files.`);

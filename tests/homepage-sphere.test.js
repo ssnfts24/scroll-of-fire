@@ -405,6 +405,41 @@ test("no R1.7 protected file is touched by this branch", () => {
   const carriesRebuild = changed.has(
     "docs/assets/js/sphere-rebuild.js"
   );
+  /*
+   * Armillary face declaration (Nov 20, 2026 — Aaron's verdict on
+   * the rebuild: "the sphere itself didn't get any design edits it
+   * seems", and his word to start the redesign of the Sphere's
+   * FACE, under the appearance fence he lifted the night before,
+   * with the TRUTH fence standing). This change set declares
+   * itself by carrying its signature file (the portrait-handoff
+   * module, which lives outside the protected directories), and
+   * its declared set names exactly the protected paths the face
+   * touches, each flagged in the PR with regression proof:
+   *   - the page (the warm portrait still and its two tags);
+   *   - the materials (the armillary palette and dimensions —
+   *     colours and sizes only, no calendar data);
+   *   - the renderer (the dressing build and sync: wooden band,
+   *     script rim, cage rings, gearwork, centre globe, Moon
+   *     medallions, the room backdrop and warm lights — geometry
+   *     dressing only; the picking model, the marker lists, and
+   *     every calendar reading are untouched, proven by the
+   *     fixtures and the selection A/B in the PR);
+   *   - the UI module (the first-load fix only: SVG class names
+   *     read truly, and a covered-only surface verdict gets a
+   *     settle re-check instead of a teardown).
+   * PatternCalendar and the rest of the canonical pipeline are
+   * byte-untouched. Every other protected path still fails this
+   * test loudly.
+   */
+  const armillaryDeclaredProtected = new Set([
+    "docs/living-time-sphere.html",
+    "docs/assets/js/sphere/living-time-sphere-renderer-3d.js",
+    "docs/assets/js/sphere/living-time-sphere-materials.js",
+    "docs/assets/js/sphere/living-time-sphere-ui.js"
+  ]);
+  const carriesArmillary = changed.has(
+    "docs/assets/js/sphere-armillary.js"
+  );
   for (const file of changed) {
     if (!protectedPaths.has(file)) continue;
     assert.ok(
@@ -412,7 +447,8 @@ test("no R1.7 protected file is touched by this branch", () => {
         (carriesDayWorld && dayWorldDeclaredProtected.has(file)) ||
         (carriesDeepTime && deepTimeDeclaredProtected.has(file)) ||
         (carriesAmbient && ambientDeclaredProtected.has(file)) ||
-        (carriesRebuild && rebuildDeclaredProtected.has(file)),
+        (carriesRebuild && rebuildDeclaredProtected.has(file)) ||
+        (carriesArmillary && armillaryDeclaredProtected.has(file)),
       `R1.7 protected file changed: ${file}`
     );
   }

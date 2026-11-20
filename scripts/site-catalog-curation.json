@@ -587,9 +587,9 @@
    "featured": false
   },
   {
-   "id": "shroom-garden",
-   "title": "Shroom Search — the Garden",
-   "description": "A small garden game on the bench: tend mushroom beds, grow them through tiers across days and practice, and harvest passes kept as Life Atlas records on the visitor's own device.",
+   "id": "pattern-garden",
+   "title": "The Pattern Garden — the Garden",
+   "description": "The garden game on the bench, remade: thirteen beds keyed to the thirteen Moons, plantings read from the real Western Washington farm record, growth counted from the keeper's kept days, and harvests kept as Life Atlas keepsakes on the visitor's own device. Shroom Search passes earned before the remake stay in keepers' Atlases exactly as they are.",
    "area": "systems",
    "category": "Practice",
    "resourceType": "tool",
@@ -610,7 +610,7 @@
    "status": "live",
    "path": "practices.html",
    "related": [
-    "shroom-garden",
+    "pattern-garden",
     "manifest",
     "sending-test"
    ],
@@ -1145,6 +1145,20 @@
     "scroll-editorial",
     "claims-atlas",
     "scroll-library"
+   ],
+   "featured": false
+  },
+  {
+   "id": "travellers-map",
+   "title": "The Traveller's Map",
+   "description": "The whole site drawn as the lands of one road: every place pictured by its cartoon scene, the Traveller's Road story in walking order with found chapters stamped by their Pattern day, the Year Thread showing today's place in the year and the keeper's trail, and the pages still waiting for their chapters named honestly.",
+   "area": "systems",
+   "category": "Practice",
+   "resourceType": "tool",
+   "status": "live",
+   "path": "map.html",
+   "related": [
+    "manifest"
    ],
    "featured": false
   }

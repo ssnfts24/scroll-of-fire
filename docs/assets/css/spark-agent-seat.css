@@ -1,0 +1,90 @@
+/* The Spark agent seat, site-wide — a quiet corner seat that
+   matches the presence layer's language. Bottom-left, so it
+   never covers the Spark's own walker. Small on phones. */
+
+.spark-seat {
+  position: fixed;
+  left: 0.8rem;
+  bottom: 0.8rem;
+  z-index: 60;
+  max-width: min(92vw, 24rem);
+}
+
+.spark-seat-button {
+  border: 1px solid rgba(212, 175, 55, 0.6);
+  background: rgba(20, 16, 8, 0.88);
+  color: #ffe9a8;
+  border-radius: 999px;
+  padding: 0.5rem 0.95rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+}
+
+.spark-seat-panel {
+  margin-bottom: 0.6rem;
+  border: 1px solid rgba(212, 175, 55, 0.55);
+  border-radius: 0.7rem;
+  background: rgba(16, 13, 7, 0.96);
+  color: #f3ead2;
+  padding: 0.8rem 0.9rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+.spark-seat-head {
+  margin: 0 0 0.3rem;
+  font-weight: 600;
+  color: #ffe9a8;
+}
+
+.spark-seat-meter {
+  margin: 0 0 0.6rem;
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.spark-seat-log {
+  max-height: 38vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-bottom: 0.6rem;
+}
+
+.spark-seat-line {
+  margin: 0;
+  line-height: 1.5;
+  font-size: 0.92rem;
+}
+
+.spark-seat-line.is-keeper {
+  align-self: flex-end;
+  background: rgba(212, 175, 55, 0.16);
+  border-radius: 0.6rem;
+  padding: 0.35rem 0.6rem;
+}
+
+.spark-seat-form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.spark-seat-input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  padding: 0.45rem 0.6rem;
+}
+
+.spark-seat-send {
+  border: 1px solid rgba(212, 175, 55, 0.6);
+  background: rgba(212, 175, 55, 0.2);
+  color: #ffe9a8;
+  border-radius: 0.5rem;
+  padding: 0.45rem 0.8rem;
+  cursor: pointer;
+}

@@ -37,11 +37,15 @@ test("the counts line is the manifest's own counts, word for word", () => {
 
 test("the surprise pick is weighted by area size and lands on real documents", () => {
   const areas = manifest.areas;
-  assert.equal(Page.pickArea(areas, manifest.counts, () => 0).id, areas[0].id);
-  assert.equal(Page.pickArea(areas, manifest.counts, () => 0.999999).id, areas[areas.length - 1].id);
+  /* Areas are weighed by the documents their shards hold: the
+   * pages shard holds passages, so its weight is the passage
+   * count, not the page count. */
+  const weights = Page.docCounts(manifest);
+  assert.equal(Page.pickArea(areas, weights, () => 0).id, areas[0].id);
+  assert.equal(Page.pickArea(areas, weights, () => 0.999999).id, areas[areas.length - 1].id);
   for (const area of areas) {
     const shard = readJson(searchRoot, Page.shardFile(manifest, area));
-    assert.equal(shard.docs.length, manifest.counts[area.id], `${area.id} shard matches manifest count`);
+    assert.equal(shard.docs.length, weights[area.id], `${area.id} shard matches its document count`);
     for (const roll of [0, 0.37, 0.999999]) {
       const doc = Page.pickDoc(shard.docs, () => roll);
       assert.equal(typeof doc.u, "string", `${area.id} pick has a url`);
