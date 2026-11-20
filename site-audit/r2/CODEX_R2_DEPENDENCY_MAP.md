@@ -104,11 +104,11 @@
 | `docs/assets/js/living-ui.js` | 134 |
 | `docs/scripture/assets/scripture.js` | 93 |
 | `docs/assets/js/spark-3d.js` | 72 |
-| `docs/assets/js/calendar/pattern-calendar-version.js` | 71 |
-| `docs/assets/js/calendar/pattern-calendar-data.js` | 71 |
-| `docs/assets/js/calendar/pattern-calendar-format.js` | 71 |
-| `docs/assets/js/calendar/pattern-calendar-boundary.js` | 71 |
-| `docs/assets/js/calendar/pattern-calendar.js` | 71 |
+| `docs/assets/js/calendar/pattern-calendar-version.js` | 72 |
+| `docs/assets/js/calendar/pattern-calendar-data.js` | 72 |
+| `docs/assets/js/calendar/pattern-calendar-format.js` | 72 |
+| `docs/assets/js/calendar/pattern-calendar-boundary.js` | 72 |
+| `docs/assets/js/calendar/pattern-calendar.js` | 72 |
 | `docs/assets/js/day-telling.js` | 35 |
 
 ## Protected systems (do not modify)

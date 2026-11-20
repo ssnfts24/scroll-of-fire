@@ -1206,6 +1206,7 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
@@ -1213,6 +1214,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -12952,7 +12954,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 174,
+        "inboundPages": 175,
         "pagesWithNavLinkToIt": 3
       },
       "issues": []
@@ -13638,7 +13640,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (124 files)",
+      "title": "tests/ (125 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -18305,7 +18307,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 173,
+        "inboundPages": 174,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []

@@ -258,7 +258,7 @@ The page itself was not changed. Full lists are in `downloads-reconciliation.jso
 | `invoke.html` | 1 | 1 | yes | yes | 69 |
 | `lab.html` | 1 | 1 | yes | yes | 69 |
 | `ledger.html` | 1 | 1 | yes | no | 73 |
-| `living-time-sphere.html` | 1 | 1 | yes | yes | 174 |
+| `living-time-sphere.html` | 1 | 1 | yes | yes | 175 |
 | `micro.html` | 2 | 2 | no | yes | 2 |
 | `moons.html` | 1 | 1 | yes | yes | 170 |
 | `offline.html` | — | — | no | no | 0 |
@@ -362,7 +362,7 @@ The page itself was not changed. Full lists are in `downloads-reconciliation.jso
 | `scroll/lexicon.html` | 1 | 1 | yes | yes | 175 |
 | `scroll/reader.html` | 2 | 2 | no | yes | 2 |
 | `scroll/search.html` | 1 | 1 | yes | yes | 174 |
-| `search.html` | 1 | 1 | no | yes | 173 |
+| `search.html` | 1 | 1 | no | yes | 174 |
 | `sending-test.html` | 2 | 2 | no | yes | 2 |
 | `shop.html` | 1 | 1 | yes | yes | 174 |
 | `start.html` | 1 | 1 | yes | yes | 72 |
