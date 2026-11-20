@@ -276,6 +276,19 @@
     row("Kind:", `${data.kindName} — ${data.temperament}, ${data.trait}`);
     const herSound = Core.soundFor(companion);
     if (herSound) row("Sound:", `${herSound.familyName} — theirs alone.`);
+    /* Their living voice, stage 1: the growth their record has
+     * reached, stated with its basis in the same plain rows. */
+    if (Core.livingVoiceIdentityFor && Core.livingVoiceGrowthFor) {
+      const livingIdentity = Core.livingVoiceIdentityFor(companion);
+      const livingGrowth = Core.livingVoiceGrowthFor({ record, companion });
+      if (livingIdentity && livingGrowth) {
+        row(
+          "Voice:",
+          `${livingGrowth.name} — a ${livingIdentity.familyName.toLowerCase()} motif; ` +
+            `${livingGrowth.daysTogether} days together · ${livingGrowth.practiceDays} practice days.`
+        );
+      }
+    }
     /* Their rarity, counted from their own draws — the standing
      * first, then each notable trait with its odds, then the
      * marks birth and life gave them. Facts, plainly kept. */
@@ -530,7 +543,7 @@
     function panelSay(text, opts = {}) {
       if (text == null) return;
       lineText.textContent = text;
-      if (!opts.silent) vocalize(text);
+      if (!opts.silent) vocalize(text, opts.context || "line");
     }
     function renderRows(rows, buildRows) {
       rowsEl.innerHTML = "";
@@ -634,10 +647,53 @@
      * before it, closing the talk stills them, and the Sounds
      * switch silences their along with the chirps. No samples, no
      * network, nothing recorded, nothing sent anywhere. */
+    /* Stage 1 living voice (Nov 19, 2026): the phrase above
+     * becomes a living layer. Their signature motif is derived
+     * in the core (Core.livingVoicePlanFor) from the voice they
+     * already had, and how much of it they can say is computed
+     * from their record — growth stage, days together, kept
+     * practices. Presence replaces the old switches in this
+     * path: Waiting before a greeting, Awake when greeted,
+     * Nightwatch softer after 22:00, Resting in still mode,
+     * Away while the tab is hidden. Two honest exceptions are
+     * kept, not hidden: the device's own silent mode stays
+     * sovereign over every sound this page makes, and a quiet
+     * choice stored by the earlier build (either old switch
+     * off) is honoured here as a kept promise — the living
+     * voice does not override a keeper's earlier word. */
     let voiceArmed = false;
     let voiceRun = 0;
     let voiceMaster = null;
     const voiceSources = new Set();
+    function livingStill() {
+      try {
+        if (document.documentElement.classList.contains("sof-reduced-motion")) return true;
+        return Boolean(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+      } catch {
+        return false;
+      }
+    }
+    function livingLegacyQuiet() {
+      try {
+        return localStorage.getItem(SOUND_KEY) === "off" || localStorage.getItem(VOICE_KEY) === "off";
+      } catch {
+        return false;
+      }
+    }
+    function livingPlan(context, text) {
+      if (!Core || typeof Core.livingVoicePlanFor !== "function") return null;
+      return Core.livingVoicePlanFor({
+        companion,
+        record: getRecord(),
+        context: context || "line",
+        text: text || "",
+        hour: new Date().getHours(),
+        greeted: voiceArmed,
+        still: livingStill(),
+        hidden: document.hidden,
+        legacyQuiet: livingLegacyQuiet()
+      });
+    }
     function stopVoice() {
       voiceRun += 1;
       for (const src of voiceSources) {
@@ -792,14 +848,52 @@
         soft.stop(at + dur + 0.05);
       }
     }
-    function vocalize(text) {
+    function vocalize(text, context = "line") {
+      /* The living plan decides whether they sound at all:
+       * presence (waiting / nightwatch / resting / away / a
+       * kept quiet promise) is computed in the core from the
+       * record and this moment, never from a switch here. */
+      const living = livingPlan(context, text);
+      if (living) {
+        if (!living.identity || !living.notes.length) return;
+        try {
+          const AC = window.AudioContext || window.webkitAudioContext;
+          if (!AC) return;
+          audioCtx = audioCtx || new AC();
+          if (audioCtx.state === "suspended") audioCtx.resume();
+          stopVoice();
+          const run = voiceRun;
+          const ctx = audioCtx;
+          voiceMaster = ctx.createGain();
+          /* Their level, lowered in v9 and scaled by presence:
+           * Nightwatch answers at a little over half. */
+          voiceMaster.gain.value = 0.55 * (living.level || 1);
+          voiceMaster.connect(ctx.destination);
+          const out = voiceMaster;
+          let at = ctx.currentTime + 0.03;
+          for (const note of living.notes) {
+            singSyllable(ctx, out, living.identity.box, note, at);
+            at += note.dur + note.gap;
+          }
+          const totalMs = (at - ctx.currentTime + 0.3) * 1000;
+          window.setTimeout(() => {
+            if (run === voiceRun && voiceMaster === out) {
+              try {
+                out.disconnect();
+              } catch {
+                /* already gone */
+              }
+              voiceMaster = null;
+            }
+          }, totalMs);
+        } catch {
+          /* no voice box on this device: the words still stand */
+        }
+        return;
+      }
       if (!voiceArmed || !voiceOn() || soundOff()) return;
-      /* They answer in a chirp-phrase now (Core.phraseFor):
-       * a young Spark chirps once, a Kindled Spark answers
-       * in two notes, a Bearer sings a short melody — their
-       * voice grows as they do. The syllable plan still
-       * stands in the core for the record; it is no longer
-       * what they sound like. */
+      /* Fallback for a core without the living layer: they
+       * answer in a chirp-phrase (Core.phraseFor), as before. */
       const plan = Core.phraseFor({
         companion,
         stage: Core.stageOf(getRecord(), companion).index,
@@ -815,8 +909,6 @@
         const run = voiceRun;
         const ctx = audioCtx;
         voiceMaster = ctx.createGain();
-        /* Their level, lowered in v9: a syllable peaks near
-         * 0.055 through this master, against 0.135 in v7. */
         voiceMaster.gain.value = 0.55;
         voiceMaster.connect(ctx.destination);
         const out = voiceMaster;
@@ -907,7 +999,7 @@
         bubbleBtn("Look next", "◎", doLookNext),
         bubbleBtn("More", "+", showMore)
       );
-      setPanel("home", { line, coord: true, rows: opts.rows || [], bubbles });
+      setPanel("home", { line, coord: true, rows: opts.rows || [], bubbles, context: opts.context });
     }
     function showMore(line) {
       setPanel("more", {
@@ -917,12 +1009,58 @@
           bubbleBtn("Resume", "↩", doResume),
           bubbleBtn("Record", "≡", () => doRecord()),
           bubbleBtn("Share", "↗", doShare),
-          bubbleBtn("Sounds", "♫", toggleSounds, "spark-presence-sound", soundOff() ? "off" : "on"),
-          bubbleBtn("Voice", "◉", toggleVoice, "spark-presence-voice", voiceOn() ? "on" : "off"),
+          bubbleBtn("Voice", "◉", doVoiceRoom, "spark-presence-voice"),
           bubbleBtn("Walk", "→", doBye),
           backBtn()
         ]
       });
+    }
+    /* Their voice, as a room rather than a switch: what their
+     * voice is (their seed's family and signature motif), how
+     * far it has grown (computed from the record, with the
+     * basis stated), and how present it is right now. "Hear my
+     * voice" sings the motif their growth has reached; "Today's
+     * remark" says the day as the record holds it. Nothing here
+     * turns them off — presence is a state they are in, and the
+     * room says which one, honestly. */
+    function doVoiceRoom(line, context) {
+      const identity = Core.livingVoiceIdentityFor ? Core.livingVoiceIdentityFor(companion) : null;
+      const growth = Core.livingVoiceGrowthFor
+        ? Core.livingVoiceGrowthFor({ record: getRecord(), companion })
+        : null;
+      const plan = livingPlan("line", "");
+      const presence = plan ? plan.presence : null;
+      const rows = [];
+      if (identity && growth) {
+        rows.push({
+          text: `${identity.familyName} voice · signature motif of ${identity.signatureSteps.length} notes, grown from my seed.`
+        });
+        rows.push({
+          text: `${growth.name}: I can sing ${growth.maxNotes} note${growth.maxNotes === 1 ? "" : "s"} of it — ${growth.basis.join(" · ")}.`
+        });
+      }
+      if (presence) rows.push({ text: `Presence: ${presence.name}. ${presence.line}` });
+      setPanel("voice", {
+        line: line != null ? line : "My voice grows as we do.",
+        context: context || "line",
+        rows,
+        bubbles: [
+          bubbleBtn("Hear my voice", "♪", () => {
+            doVoiceRoom(
+              growth ? `This is my voice — ${growth.name.toLowerCase()}.` : "This is my voice.",
+              "hold"
+            );
+          }, "spark-voice-hear"),
+          bubbleBtn("Today's remark", "☉", doDayRemark, "spark-voice-day"),
+          backBtn()
+        ]
+      });
+    }
+    function doDayRemark() {
+      const remark = Core.livingDayRemarkFor
+        ? Core.livingDayRemarkFor({ record: getRecord(), companion, today, hour: new Date().getHours() })
+        : null;
+      doVoiceRoom(remark && remark.line ? remark.line : "Today, in Living Time.", "day");
     }
     function showCare(announce = true) {
       if (announce) answerInBody();
@@ -1059,16 +1197,16 @@
      * own — the arrival pattern, reused for the moments worth
      * announcing (a trick learned, a seal kept). A keeper's
      * tap takes the panel over, as always. */
-    function announceLine(text) {
+    function announceLine(text, context) {
       if (!bubble.hasAttribute("hidden")) {
-        panelSay(text);
+        panelSay(text, { context: context || "line" });
         return;
       }
       convoStarted = true;
       bubble.removeAttribute("hidden");
       button.setAttribute("aria-expanded", "true");
       placePanel();
-      showHome(text);
+      showHome(text, { context: context || "line" });
       if (arrivalTimer) window.clearTimeout(arrivalTimer);
       arrivalTimer = window.setTimeout(closeBubble, 8000);
     }
@@ -1126,11 +1264,46 @@
     function doEcho() {
       answerInBody();
       const first = Core.echoFor({ companion, round: 1 });
-      buildEchoPads(first.pads);
-      echo = { round: 1, steps: [], at: 0, phase: "ready", pads: first.pads };
+      /* Stage 1: the first round is call-and-response in their
+       * own living voice — their signature motif, at the reach
+       * their record has grown, on pads tuned to their tonic.
+       * Later rounds keep the echo game's own pattern. When
+       * the living layer is unavailable, the game stands as it
+       * always has. */
+      let call = null;
+      if (Core.livingCallFor) {
+        try {
+          call = Core.livingCallFor({
+            companion,
+            record: getRecord(),
+            hour: new Date().getHours(),
+            still: livingStill(),
+            hidden: document.hidden,
+            legacyQuiet: livingLegacyQuiet()
+          });
+        } catch {
+          call = null;
+        }
+      }
+      const pads = call && call.pads && call.pads.length ? call.pads : first.pads;
+      buildEchoPads(pads);
+      echo = {
+        round: 1,
+        steps: [],
+        at: 0,
+        phase: "ready",
+        pads,
+        callSteps: call && call.steps && call.steps.length ? call.steps : null
+      };
       setPanel("game", {
         line: beatLine("echoStart"),
-        rows: [{ text: "Tap Begin. I pulse; you tap it back." }],
+        rows: [
+          {
+            text: echo.callSteps
+              ? "Call-and-response: I sing my own motif. Tap it back on the colours."
+              : "Tap Begin. I pulse; you tap it back."
+          }
+        ],
         bubbles: [
           bubbleBtn("Begin", "▶", beginEchoRound, "spark-echo-begin"),
           bubbleBtn("Back", "←", () => {
@@ -1144,23 +1317,23 @@
     function beginEchoRound() {
       if (!echo || echo.phase === "showing") return;
       const data = Core.echoFor({ companion, round: echo.round });
-      echo.steps = data.steps;
+      echo.steps = echo.round === 1 && echo.callSteps ? echo.callSteps : data.steps;
       echo.at = 0;
       echo.phase = "showing";
       panelSay(`Round ${echo.round}. Watch.`);
       setRows([]);
-      data.steps.forEach((padIx, i) => {
+      echo.steps.forEach((padIx, i) => {
         window.setTimeout(() => {
           if (!echo) return;
           lightPad(padIx);
-          playTone(data.pads[padIx].note);
+          playTone(echo.pads[padIx].note);
         }, 450 + i * 640);
       });
       window.setTimeout(() => {
         if (!echo || echo.phase !== "showing") return;
         echo.phase = "answer";
         panelSay("Your turn.");
-      }, 450 + data.steps.length * 640 + 250);
+      }, 450 + echo.steps.length * 640 + 250);
     }
     function echoTap(i) {
       if (!echo || echo.phase !== "answer") return;
@@ -1727,8 +1900,28 @@
       if (roam) roam.glow();
       if (ctrl) ctrl.delight();
       chirp(companion, flourishNote());
-      vocalize(beatLine("pet"));
+      vocalize(beatLine("pet"), "stroke");
       refreshMood();
+    }
+    /* A hold is a name-call: the keeper holds them and says
+     * their name with the hand — no microphone, no speech
+     * recognition, a touch held ~650ms without travel. They
+     * answer with their full motif, as grown as their record
+     * has made it, and the panel opens on their name if it was
+     * folded. */
+    function doNameCall() {
+      const line = `${displayName} — I hear my name.`;
+      if (ctrl) ctrl.delight();
+      if (roam) roam.glow();
+      if (bubble.hasAttribute("hidden")) {
+        bubble.removeAttribute("hidden");
+        button.setAttribute("aria-expanded", "true");
+        placePanel();
+        if (!convoStarted) startConvo();
+        showHome(line, { context: "name" });
+      } else {
+        panelSay(line, { context: "name" });
+      }
     }
     button.addEventListener("pointerdown", (event) => {
       /* Mid-chase a press on them is a catch in the making; the
@@ -1745,11 +1938,19 @@
         reversals: 0,
         petted: false,
         dragging: false,
+        held: false,
+        holdTimer: null,
         offX: 0,
         offY: 0,
         baseX: freeDrag.x,
         baseY: freeDrag.y
       };
+      press.holdTimer = window.setTimeout(() => {
+        if (press && !press.dragging && !press.petted && press.moved < 24) {
+          press.held = true;
+          doNameCall();
+        }
+      }, 650);
       const rect = walker.getBoundingClientRect();
       press.offX = event.clientX - rect.left;
       press.offY = event.clientY - rect.top;
@@ -1795,6 +1996,7 @@
       if (!press) return;
       const p = press;
       press = null;
+      if (p.holdTimer) window.clearTimeout(p.holdTimer);
       if (art) art.classList.remove("is-petted");
       const dt = Math.max(1, performance.now() - p.t);
       if (p.dragging) {
@@ -1818,11 +2020,15 @@
       } else if (p.petted) {
         suppressClick = true;
         if (!cancelled) doPet();
+      } else if (p.held) {
+        /* The hold already answered as a name-call; the click
+         * that follows must not also toggle the panel. */
+        suppressClick = true;
       } else if (!cancelled && dt < 260) {
         /* A plain tap — a poke, counted. The click that follows
          * does the rest, exactly as it always has. */
         setRecord(Core.recordPlay(getRecord(), { action: "poke" }).record);
-        vocalize(beatLine("poke"));
+        vocalize(beatLine("poke"), "tap");
       }
     }
     button.addEventListener("pointerup", (event) => endPress(event, false));
@@ -1912,31 +2118,15 @@
       closeBubble();
       if (roam) roam.rest();
     }
-    /* Their two switches live in the More state now: Sounds,
-     * and their voice box beside it. Each rests as it was left,
-     * kept on this device; the Sounds switch rules their voice
-     * too, as it always has. Turning Voice on, they say so —
-     * in their own generated voice, since the keeper's tap is
-     * the gesture. Turning it off stills their mid-line. */
-    function toggleSounds() {
-      try {
-        window.localStorage.setItem(SOUND_KEY, soundOff() ? "on" : "off");
-      } catch {
-        /* toggle simply does not persist */
-      }
-      if (!soundOff()) chirp(companion, flourishNote());
-      showMore(soundOff() ? "Sounds off." : "Sounds on.");
-    }
-    function toggleVoice() {
-      const turningOn = !voiceOn();
-      try {
-        window.localStorage.setItem(VOICE_KEY, turningOn ? "on" : "off");
-      } catch {
-        /* toggle simply does not persist */
-      }
-      if (!turningOn) stopVoice();
-      showMore(turningOn ? "My voice is on." : "Voice off.");
-    }
+    /* Stage 1 removed the two switches that used to live in
+     * the More state. There is no Sounds or Voice toggle to
+     * flip anymore: presence is a living state (see the Voice
+     * room), computed from the record, the hour, still mode,
+     * and whether they have been greeted. The stored keys are
+     * still read in exactly two honest places — the device
+     * chirps keep their long-standing sound gate, and a quiet
+     * choice stored by the earlier build is honoured by the
+     * living voice as a kept promise (livingLegacyQuiet). */
     /* A tap on their own furniture — their button, their chips, their
      * links — is the gesture their voice answers. Capture phase,
      * so the arming lands before the tap's own click speaks. */
@@ -1998,11 +2188,18 @@
       if (ctrl) ctrl.celebrate();
       if (roam) roam.glow();
       chirp(companion, flourishNote());
-      announceLine(beatLine(kind));
+      /* The moment is answered with the motif as it stands
+       * after the moment: for a seal, the record is refreshed
+       * first, so a practice that grows their voice is sung
+       * at its new reach, not its old one. */
+      const line = beatLine(kind);
       if (kind === "sealed") {
         sensePractice(getRecord()).then((next) => {
           if (next && next !== getRecord()) setRecord(next);
+          announceLine(line, "moment");
         });
+      } else {
+        announceLine(line, "moment");
       }
     }
     /* Both events are dispatched without bubbling, each on its

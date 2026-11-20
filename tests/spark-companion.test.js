@@ -1401,11 +1401,22 @@ test("v7 voice box rides the presence: generated, default quiet, mute-ruled, tap
     presence.includes('window.localStorage.getItem(VOICE_KEY) === "on"'),
     "voice rests quiet unless the keeper stored it on — default quiet"
   );
-  const vocalAt = presence.indexOf("function vocalize(text)");
-  const gate = presence.slice(vocalAt, vocalAt + 220);
-  assert.ok(gate.includes("!voiceOn()"), "they do not sound while Voice is off");
-  assert.ok(gate.includes("soundOff()"), "the Sounds mute silences their voice too");
-  assert.ok(gate.includes("!voiceArmed"), "they do not sound before a keeper tap arms the talk");
+  const vocalAt = presence.indexOf("function vocalize(text");
+  const gate = presence.slice(vocalAt, vocalAt + 400);
+  /* Stage 1 (living voice): the switch gate this test once
+   * asserted is replaced by the living plan — presence states
+   * decide, and a quiet choice stored by this older build is
+   * honoured as a kept promise rather than overridden. */
+  assert.ok(gate.includes("livingPlan(context, text)"), "the living plan decides whether they sound");
+  assert.ok(
+    presence.includes("legacyQuiet: livingLegacyQuiet()"),
+    "a stored quiet choice still silences their living voice — kept, not overridden"
+  );
+  assert.ok(
+    presence.includes("localStorage.getItem(SOUND_KEY) === \"off\" || localStorage.getItem(VOICE_KEY) === \"off\""),
+    "either old switch, stored off, is part of that promise"
+  );
+  assert.ok(presence.includes("greeted: voiceArmed"), "they do not sound before a keeper tap arms the talk");
   const closeAt = presence.indexOf("const closeBubble");
   assert.ok(
     presence.slice(closeAt, closeAt + 320).includes("stopVoice()"),
