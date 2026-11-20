@@ -37,6 +37,30 @@
   const FOOTPRINT_CAP = 400;
   const MAX_LINES = 3;
 
+  /* The one record layer: record cleaning, the temporal shape,
+   * repository resolution, and change notices live in
+   * life-atlas/record-helpers.js (CodexRecordHelpers) — one shared
+   * module for every door. Do not re-define them here. */
+  const RecordHelpers =
+    (typeof globalThis !== "undefined" ? globalThis.CodexRecordHelpers : null) ||
+    (typeof module === "object" && module.exports
+      ? (() => {
+          try {
+            return require("./life-atlas/record-helpers.js");
+          } catch {
+            return null;
+          }
+        })()
+      : null);
+
+  if (!RecordHelpers) {
+    throw new Error(
+      "CodexRecordHelpers is required — load life-atlas/record-helpers.js first."
+    );
+  }
+
+  const resolveRepository = RecordHelpers.createRepositoryResolver();
+
   /* --------------------------- pure core ---------------------------- */
 
   function dayKey(record) {
@@ -230,42 +254,6 @@
 
   /* ------------------------- browser wiring ------------------------- */
 
-  async function resolveRepository() {
-    const runtime =
-      typeof globalThis !== "undefined"
-        ? globalThis.CodexLifeAtlasRuntime
-        : null;
-
-    if (runtime?.ready) {
-      try {
-        const repository = await runtime.ready;
-        if (repository) return repository;
-      } catch {
-        /* fall through */
-      }
-    }
-
-    const Repository =
-      typeof globalThis !== "undefined"
-        ? globalThis.CodexLifeAtlasRepository
-        : null;
-
-    if (!Repository) return null;
-
-    try {
-      if (typeof Repository.createPersistentRepository === "function") {
-        return Repository.createPersistentRepository();
-      }
-    } catch {
-      /* fall through */
-    }
-
-    try {
-      return Repository.createRepository();
-    } catch {
-      return null;
-    }
-  }
 
   async function renderGuidance() {
     const slots = document.querySelectorAll("[data-presence-guidance]");
