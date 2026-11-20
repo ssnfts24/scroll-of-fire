@@ -200,6 +200,55 @@ body.sphere-app .sphere-ambient-line {
   color: rgba(243, 229, 200, 0.6);
 }
 
+/* On a small phone the panel tightens: a doorway, not a cover.
+ * Every line of the greeting stays; it simply stands closer. */
+@media (max-width: 640px) {
+  .sphere-ambient-veil {
+    padding: 0.6rem 0.6rem 0.5rem;
+  }
+
+  .sphere-ambient-panel {
+    padding: 0.7rem 0.9rem 0.6rem;
+    max-width: 94%;
+  }
+
+  .sphere-ambient-kicker {
+    margin-bottom: 0.15rem;
+    font-size: 0.66rem;
+  }
+
+  .sphere-ambient-coordinate {
+    font-size: 1.18rem;
+  }
+
+  .sphere-ambient-moon {
+    font-size: 0.95rem;
+  }
+
+  .sphere-ambient-headline {
+    margin-top: 0.35rem;
+    font-size: 0.92rem;
+  }
+
+  .sphere-ambient-civil,
+  .sphere-ambient-daypart,
+  .sphere-ambient-spark {
+    margin-top: 0.2rem;
+    font-size: 0.82rem;
+  }
+
+  .sphere-ambient-enter {
+    margin-top: 0.6rem;
+    padding: 0.5rem 1.2rem;
+    font-size: 0.95rem;
+  }
+
+  .sphere-ambient-rest-note {
+    margin-top: 0.4rem;
+    font-size: 0.72rem;
+  }
+}
+
 /* The designed still face: under reduced motion the held light
  * rests — no breathing, no fade — exactly as #188's halo rests. */
 @media (prefers-reduced-motion: reduce) {
