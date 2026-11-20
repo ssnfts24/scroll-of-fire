@@ -317,6 +317,17 @@ html.living-time-sphere-page body:not(.sphere-app) .sphere-sidebar {
   z-index: 6000;
   width: auto;
   max-width: none;
+  /* Desktop-width corrective (Aaron, Nov 20): the workspace
+   * sheets cap .sphere-sidebar at min(78vh, 900px) from 1024px
+   * up, and this rule never declared a height — so at desktop
+   * width the fixed sheet stood only ~78% tall, and translating
+   * it by 103% of that capped height left its top strip (sheet
+   * bar + first room) painted over the dock zone. The dock read
+   * as missing and the strip scrolled like the page itself. The
+   * sheet is full-height at every width, so the closed sheet
+   * clears the stage entirely, as it already did on the phone. */
+  height: 100dvh;
+  max-height: none;
   margin: 0;
   padding: 0 0 3rem;
   background: #17100a;
@@ -605,4 +616,29 @@ html.living-time-sphere-page.armillary-rooms-open .sphere-sidebar {
   html.living-time-sphere-page .sphere-sidebar {
     transition: none;
   }
+}
+
+/* Days more visible (Aaron, Nov 20): the calendar-face day
+ * numerals were .50rem on phones — 8px, unreadable at a glance.
+ * The label manager's collision pass drops overlaps, so a larger
+ * numeral costs density, not clutter: the key days (1/7/14/21/28
+ * and the Moon turns) keep their places and read instantly. */
+html.living-time-sphere-page .sphere-semantic-label[data-calendar-face="true"] .sphere-semantic-label-title {
+  font-size: 0.8rem !important;
+  min-width: 0.9rem;
+}
+@media (max-width: 720px) {
+  html.living-time-sphere-page .sphere-semantic-label[data-calendar-face="true"] .sphere-semantic-label-title {
+    font-size: 0.66rem !important;
+    min-width: 0.78rem;
+  }
+}
+
+/* The season line: the current season and the next turn, in the
+ * caption beside the sky line — plain words, real dates only. */
+.sphere-season-line {
+  margin: 0.15rem 0 0;
+  font-size: 0.86rem;
+  line-height: 1.35;
+  color: #ffd98f;
 }

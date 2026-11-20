@@ -2301,7 +2301,13 @@
       const group = new _THREE.Group();
       group.name = "armillaryNameTags";
       const tags = {};
-      for (const [key, text] of [["yearGate", "YEAR GATE"], ["equinox", "MARCH EQUINOX"], ["passage", "EQUINOX PASSAGE"]]) {
+      for (const [key, text] of [["yearGate", "YEAR GATE"], ["equinox", "MARCH EQUINOX"], ["passage", "EQUINOX PASSAGE"],
+        // Seasons show (Aaron, Nov 20): the year's other three
+        // turns carry their names on the face too, standing on
+        // the solar-axis anchors the semantic layer already
+        // reads (90° June Solstice, 180° September Equinox,
+        // 270° December Solstice; March rides its own gate).
+        ["juneSolstice", "JUNE SOLSTICE"], ["septemberEquinox", "SEPTEMBER EQUINOX"], ["decemberSolstice", "DECEMBER SOLSTICE"]]) {
         const sprite = _armillaryNameTag(text);
         if (sprite) { tags[key] = sprite; group.add(sprite); }
       }
@@ -2322,6 +2328,13 @@
     };
     place(tags.yearGate, _objects.yearGate?.position);
     place(tags.equinox, _objects.equinoxGate?.position);
+    // The season turns stand on the solar-axis anchors, and
+    // rest when the season markers rest.
+    const seasonsShown = _objects.seasonMarkers?.visible !== false && !!mat?.SIZES?.solarAxis;
+    for (const [key, angle] of [["juneSolstice", 90], ["septemberEquinox", 180], ["decemberSolstice", 270]]) {
+      if (!seasonsShown) { if (tags[key]) tags[key].visible = false; continue; }
+      place(tags[key], _positionOnSolarAxis(angle, mat.SIZES.solarAxis));
+    }
     let passagePos = null;
     const passageStart = Number(_model?.passageStartAngle ?? _model?.passage?.startAngle);
     const passageEnd = Number(_model?.passageEndAngle ?? _model?.passage?.endAngle);
@@ -3344,7 +3357,7 @@
       const material = new THREE.LineBasicMaterial({
         color: 0x78aebb,
         transparent: true,
-        opacity: _isMobileWidth() ? 0.34 : 0.28,
+        opacity: _isMobileWidth() ? 0.55 : 0.5,
         depthWrite: false
       });
       const ticks = new THREE.LineSegments(geo, material);
@@ -3376,9 +3389,9 @@
       _dayNodeVisibleKey = "";
       const m = new THREE.PointsMaterial({
         color:       mat.COLORS.patternRing,
-        size:        _isMobileWidth() ? 0.02 : 0.016,
+        size:        _isMobileWidth() ? 0.032 : 0.026,
         transparent: true,
-        opacity:     0.7,
+        opacity:     0.9,
         sizeAttenuation: true,
       });
       const pts = new THREE.Points(geo, m);
@@ -3706,11 +3719,14 @@
       _scene.add(seasonPts);
       _objects.seasonMarkers = seasonPts;
 
-      const selectedGeo = new THREE.SphereGeometry(0.024, 8, 8);
+      // Days more visible (Aaron, Nov 20): the shown-day and
+      // today markers stand larger and burn brighter, so the
+      // two days that matter most read instantly at a glance.
+      const selectedGeo = new THREE.SphereGeometry(0.034, 8, 8);
       const selectedMat = new THREE.MeshStandardMaterial({
         color: 0xfff1c2,
         emissive: 0xffd76a,
-        emissiveIntensity: 0.7,
+        emissiveIntensity: 1.05,
         roughness: 0.3,
       });
       const selectedMarker = new THREE.Mesh(selectedGeo, selectedMat);
@@ -3720,11 +3736,11 @@
       _scene.add(selectedMarker);
       _objects.solarSelectedMarker = selectedMarker;
 
-      const todayGeo = new THREE.SphereGeometry(0.022, 8, 8);
+      const todayGeo = new THREE.SphereGeometry(0.03, 8, 8);
       const todayMat = new THREE.MeshStandardMaterial({
         color: 0xfff59b,
         emissive: 0xffd76a,
-        emissiveIntensity: 0.55,
+        emissiveIntensity: 0.95,
         roughness: 0.36,
       });
       const todayMarker = new THREE.Mesh(todayGeo, todayMat);
@@ -5485,7 +5501,7 @@
     if (_objects.dayTicks) {
       _objects.dayTicks.visible = !!vl.pattern && vl.exactDays !== false;
       if (_objects.dayTicks.material) {
-        _objects.dayTicks.material.opacity = band === "far" ? 0.30 : band === "medium" ? 0.52 : band === "near" ? 0.68 : 0.82;
+        _objects.dayTicks.material.opacity = band === "far" ? 0.5 : band === "medium" ? 0.7 : band === "near" ? 0.85 : 0.95;
       }
     }
     if (_objects.shabbatNodes) _objects.shabbatNodes.visible = !!vl.pattern && band !== "far";

@@ -30,6 +30,7 @@ const read = (rel) => fs.readFileSync(path.join(root, rel), "utf8");
 
 const page = read("docs/living-time-sphere.html");
 const renderer = read("docs/assets/js/sphere/living-time-sphere-renderer-3d.js");
+const camera = read("docs/assets/js/sphere/living-time-sphere-camera.js");
 const ui = read("docs/assets/js/sphere/living-time-sphere-ui.js");
 const handoff = read("docs/assets/js/sphere-armillary.js");
 const shell = read("docs/assets/js/sphere-rebuild.js");
@@ -205,4 +206,65 @@ test("corrective: the command trigger stands in the dock as its eighth door", ()
   assert.ok(handoff.includes("function dockCommandTrigger()"), "the trigger is docked by the page layer");
   assert.ok(handoff.includes('dock.classList.add("has-command-trigger")'), "the dock names its eighth door");
   assert.ok(handoff.includes("dock.appendChild(trigger)"), "the trigger joins the one row instead of floating over it");
+});
+
+/* ── The desktop-width corrective + polish (Aaron, Nov 20,
+ * 11:04–11:09 PST) ─────────────────────────────────────────────
+ * Witness's wide-browser verification found what the phone lab
+ * could not: at ~1550px the rooms sheet's capped height left a
+ * strip painted over the dock (the dock "missing", the page
+ * "scrolling"), the camera had no framing floor at wide aspect,
+ * and Chapter 4 lived only behind the Day World's step-in.
+ * Aaron's polish on the face he likes: days more visible, the
+ * environment arriving on its own, the seasons shown. */
+
+test("desktop corrective: the rooms sheet is full-height at every width", () => {
+  assert.ok(shellCss.includes("height: 100dvh;"), "the sheet declares the full viewport height");
+  assert.ok(shellCss.includes("max-height: none;"), "the workspace sheets' 78vh cap is overridden in the sheet's own rule");
+});
+
+test("desktop corrective: the fit floor binds at every aspect and holds during drift", () => {
+  assert.ok(!camera.includes("if (!_aspect || _aspect >= 1) return 0;"), "the portrait-only fit is gone");
+  assert.ok(camera.includes("Math.min(sinHalfVertical, sinHalfHorizontal)"), "the fit is the nearer of the two fields");
+  assert.ok(camera.includes("the fit floor"), "the drift branch names its floor");
+  const drift = camera.slice(camera.indexOf("Idle drift (only when no transition"));
+  assert.ok(drift.includes("_fitDistance()"), "drift consults the fit");
+  assert.ok(drift.includes("if (fit && _dist < fit)"), "drift eases back out to the frame when left inside it");
+});
+
+test("desktop corrective: Chapter 4 stands on the Day World's door as well as in its room", () => {
+  assert.ok(handoff.includes("function dressDayWorldDoor()"), "the door dressing exists");
+  assert.ok(handoff.includes('slot.setAttribute("data-story-entry", "")'), "the entry slot is marked as the door's");
+  assert.ok(handoff.includes('slot.setAttribute("data-story-chapter", "through-the-day-door")'), "the entry slot names Chapter 4");
+});
+
+test("polish: the days stand stronger — ticks, nodes, markers, numerals", () => {
+  assert.ok(renderer.includes('band === "far" ? 0.5 : band === "medium" ? 0.7 : band === "near" ? 0.85 : 0.95'), "the tick opacity ladder is raised at every band");
+  assert.ok(renderer.includes("opacity: _isMobileWidth() ? 0.55 : 0.5,"), "the ticks are built stronger");
+  assert.ok(renderer.includes("size:        _isMobileWidth() ? 0.032 : 0.026,"), "the day nodes stand larger");
+  assert.ok(renderer.includes("new THREE.SphereGeometry(0.03, 8, 8)"), "today's marker stands larger");
+  assert.ok(renderer.includes("new THREE.SphereGeometry(0.034, 8, 8)"), "the shown day's marker stands larger");
+  assert.ok(shellCss.includes('font-size: 0.66rem !important;'), "phone day numerals are no longer 8px");
+});
+
+test("polish: the environment is asked for once, on open, through the browser's own flow", () => {
+  assert.ok(handoff.includes("function autoEnvironment()"), "the auto-ask exists");
+  assert.ok(handoff.includes("adapter.requestDeviceLocation()"), "the ask is the adapter's device-location request");
+  assert.ok(handoff.includes("sof.armillary.locationAsked"), "the ask happens once");
+  assert.ok(handoff.includes("sof:location-changed"), "a granted place raises the location-changed word");
+  assert.ok(handoff.includes("SofEnvironmentAuthority"), "the authority fetches the real providers");
+  assert.ok(handoff.includes("__sofSkyLocationRefused"), "a refusal is remembered for the honest line");
+  assert.ok(handoff.includes("Location is off, so the live sky line can't fill in."), "the refused line is one plain sentence");
+});
+
+test("polish: the seasons show — turns named on the face, the current season in a line", () => {
+  for (const name of ['"JUNE SOLSTICE"', '"SEPTEMBER EQUINOX"', '"DECEMBER SOLSTICE"']) {
+    assert.ok(renderer.includes(name), `the face inks ${name}`);
+  }
+  assert.ok(renderer.includes("_positionOnSolarAxis(angle, mat.SIZES.solarAxis)"), "the season tags stand on the solar-axis anchors");
+  assert.ok(handoff.includes("SEASON_TURNS"), "the season line's dated table exists");
+  assert.ok(handoff.includes("2026-09-23T00:05:00Z"), "the 2026 September Equinox is the USNO instant");
+  assert.ok(handoff.includes("2026-12-21T20:50:00Z"), "the 2026 December Solstice is the USNO instant");
+  assert.ok(handoff.includes("function seasonLine()"), "the season line is built");
+  assert.ok(shellCss.includes(".sphere-season-line"), "the season line is styled");
 });

@@ -77,10 +77,20 @@
   // of view at the current aspect.
   const FIT_RADIUS = 1.18;
   function _fitDistance() {
-    if (!_aspect || _aspect >= 1) return 0;
+    if (!_aspect) return 0;
+    // Desktop-width corrective (Nov 20): the fit used to exist
+    // only in portrait (aspect < 1) — at desktop width it
+    // returned 0, so no preset, resize, or drift state had any
+    // framing floor, and the resting distances (chosen for a
+    // landscape disc) sat BELOW the distance the instrument's
+    // full height needs in the vertical field. The fit is the
+    // nearer of the two fields at EVERY aspect: in portrait the
+    // horizontal field binds (the original formula, unchanged);
+    // in landscape the vertical field binds.
     const halfFov = Math.tan((FOV * Math.PI) / 360);
+    const sinHalfVertical = halfFov / Math.sqrt(1 + halfFov * halfFov);
     const sinHalfHorizontal = (halfFov * _aspect) / Math.sqrt(1 + halfFov * halfFov * _aspect * _aspect);
-    return FIT_RADIUS / sinHalfHorizontal;
+    return FIT_RADIUS / Math.min(sinHalfVertical, sinHalfHorizontal);
   }
 
   function create(THREE, containerWidth, containerHeight) {
@@ -222,6 +232,20 @@
       _lastDriftTime = nowMs;
       if (dt > 0 && dt < 500) { // guard against tab wake-up jumps
         _theta = (_theta + _driftRate * dt) % (Math.PI * 2);
+        // Desktop-width corrective (Nov 20): the fit floor
+        // holds DURING drift, at every aspect. The unattended
+        // camera may wander in theta, but it never sits closer
+        // than the framing distance — if a flight or a resize
+        // left it inside the fit, drift eases it back out to
+        // the frame instead of turning inside a cropped face.
+        // A keeper's own zoom is untouched: dragging stops
+        // drift, and this branch never runs under their hand.
+        const fit = _fitDistance();
+        if (fit && _dist < fit) {
+          const goal = Math.min(fit, MAX_ZOOM);
+          _dist += (goal - _dist) * 0.08;
+          if (goal - _dist < 0.002) _dist = goal;
+        }
         _apply();
         dirty = true;
       }

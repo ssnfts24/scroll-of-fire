@@ -383,9 +383,32 @@
     }
   }
 
+  /* The chapter also stands on the room's DOOR (desktop-width
+   * corrective, Nov 20): the chapter inside the room only
+   * exists behind the step-in, so a keeper reading the page —
+   * or searching it — found no chapter at all. The door resting
+   * in the rooms sheet now carries the chapter at its entry,
+   * labelled as part of The Traveller's Road like every other
+   * fitted chapter; the room keeps its own copy under the
+   * scene. One chapter, two doorways, the same slot contract. */
+  function dressDayWorldDoor() {
+    var door = document.querySelector(".day-world-door");
+    if (!door || !door.parentElement) return;
+    if (door.parentElement.querySelector("[data-story-entry]")) return;
+    var slot = document.createElement("div");
+    slot.setAttribute("data-story-slot", "");
+    slot.setAttribute("data-story-entry", "");
+    slot.setAttribute("data-story-chapter", "through-the-day-door");
+    door.after(slot);
+  }
+
   function watchDayWorld() {
     dressDayWorld();
-    new MutationObserver(dressDayWorld).observe(document.body, { childList: true, subtree: true });
+    dressDayWorldDoor();
+    new MutationObserver(function () {
+      dressDayWorld();
+      dressDayWorldDoor();
+    }).observe(document.body, { childList: true, subtree: true });
   }
 
   /* ── 4. The record on the face + the Spark's alert ───────────── */
@@ -545,7 +568,11 @@
         return;
       }
       if (firstSeenAt && Date.now() - firstSeenAt > 12000) {
-        var honest = "Live sky data isn't available right now";
+        // One plain honest sentence, and the right one: a
+        // refused location is not a failed provider.
+        var honest = window.__sofSkyLocationRefused
+          ? "Location is off, so the live sky line can't fill in."
+          : "Live sky data isn't available right now";
         if (primary.textContent !== honest) primary.textContent = honest;
         el.hidden = false;
       } else {
@@ -568,6 +595,166 @@
     adopt();
     new MutationObserver(adopt).observe(document.body, { childList: true, subtree: true });
     window.setInterval(adopt, 3000);
+  }
+
+  /* ── 4b-ii. The environment arrives on its own (Aaron, Nov 20):
+   * the sky line sat at "Location required" forever because
+   * nothing on this page ever asked. On open: if a place is
+   * already kept, the providers refresh now; if none is kept,
+   * ask ONCE through the browser's own permission flow (the
+   * adapter's device-location request — the prompt is the
+   * browser's, the answer is the keeper's). Granted: the place
+   * is kept by the adapter, the location-changed word goes out,
+   * and the authority fetches the real providers — the face
+   * then works with the data through the standing sky bridge.
+   * Refused: no second ask, and the sky line says so in its one
+   * honest sentence. Nothing is invented either way. */
+
+  function autoEnvironment() {
+    // The environment stack is phase three of the page's staged
+    // loader — it lands after first paint by design — so the
+    // watch is patient: a cheap check three times a second-ish
+    // for as long as a slow phone could reasonably take, then
+    // it stands down.
+    var tries = 0;
+    var wait = window.setInterval(function () {
+      tries += 1;
+      var adapter = window.OpenMeteoAdapter;
+      if (!adapter || typeof adapter.requestDeviceLocation !== "function" || typeof adapter.getActivePlace !== "function") {
+        if (tries > 320) window.clearInterval(wait);
+        return;
+      }
+      window.clearInterval(wait);
+      startAutoEnvironment(adapter);
+    }, 750);
+  }
+
+  function startAutoEnvironment(adapter) {
+    function refresh() {
+      try {
+        if (window.SofEnvironmentAuthority && typeof window.SofEnvironmentAuthority.refreshCurrent === "function") {
+          window.SofEnvironmentAuthority.refreshCurrent({ force: true });
+        }
+      } catch (err) { /* if nothing arrives, the sky line says so honestly */ }
+    }
+    var place = null;
+    try { place = adapter.getActivePlace(); } catch (err) { place = null; }
+    if (place) { refresh(); return; }
+    var asked = false;
+    try { asked = !!window.localStorage.getItem("sof.armillary.locationAsked"); } catch (err) { asked = false; }
+    function ask() {
+      try { window.localStorage.setItem("sof.armillary.locationAsked", "1"); } catch (err) { /* private mode: the browser still remembers its own answer */ }
+      adapter.requestDeviceLocation().then(function () {
+        try { window.dispatchEvent(new CustomEvent("sof:location-changed", { detail: { source: "sphere-auto" } })); } catch (err) { /* the refresh below still runs */ }
+        refresh();
+      }).catch(function (err) {
+        if (err && err.code === 1) window.__sofSkyLocationRefused = true;
+      });
+    }
+    if (navigator.permissions && typeof navigator.permissions.query === "function") {
+      navigator.permissions.query({ name: "geolocation" }).then(function (status) {
+        if (status.state === "granted") ask();
+        else if (status.state === "denied") window.__sofSkyLocationRefused = true;
+        else if (!asked) ask();
+      }).catch(function () { if (!asked) ask(); });
+    } else if (!asked) {
+      ask();
+    }
+  }
+
+  /* ── 4b-iii. The season line (Aaron, Nov 20): the current
+   * season, plainly, beside the sky line — with the next turn
+   * and its real date. The dates are the U.S. Naval
+   * Observatory's published season instants for the year (the
+   * same source the repo's equinox record stands on; read from
+   * the USNO seasons table on 2026-11-20, UTC, minute-rounded
+   * as USNO publishes). The line prints a date only for a year
+   * in this table; for any other year it names the season and
+   * the next turn from the model's standing anchors and prints
+   * no date it cannot source. */
+
+  var SEASON_TURNS = {
+    2026: [
+      { name: "March Equinox", season: "Spring", utc: "2026-03-20T14:46:00Z" },
+      { name: "June Solstice", season: "Summer", utc: "2026-06-21T08:24:00Z" },
+      { name: "September Equinox", season: "Autumn", utc: "2026-09-23T00:05:00Z" },
+      { name: "December Solstice", season: "Winter", utc: "2026-12-21T20:50:00Z" }
+    ],
+    2027: [
+      { name: "March Equinox", season: "Spring", utc: "2027-03-20T20:25:00Z" },
+      { name: "June Solstice", season: "Summer", utc: "2027-06-21T14:11:00Z" },
+      { name: "September Equinox", season: "Autumn", utc: "2027-09-23T06:02:00Z" },
+      { name: "December Solstice", season: "Winter", utc: "2027-12-22T02:42:00Z" }
+    ]
+  };
+  var SEASON_ANCHORS = [
+    { name: "March Equinox", season: "Spring", month: 2, day: 20 },
+    { name: "June Solstice", season: "Summer", month: 5, day: 20 },
+    { name: "September Equinox", season: "Autumn", month: 8, day: 22 },
+    { name: "December Solstice", season: "Winter", month: 11, day: 21 }
+  ];
+  var SEASON_FLIP = { Spring: "Autumn", Summer: "Winter", Autumn: "Spring", Winter: "Summer" };
+  var MONTH_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  function seasonNow(now) {
+    var year = now.getFullYear();
+    var turns = SEASON_TURNS[year];
+    if (turns) {
+      var stamps = turns.map(function (t) { return { name: t.name, season: t.season, at: new Date(t.utc) }; });
+      var current = { season: "Winter" };
+      var next = null;
+      for (var i = 0; i < stamps.length; i += 1) {
+        if (now >= stamps[i].at) current = stamps[i];
+        else { next = stamps[i]; break; }
+      }
+      if (!next) {
+        var nextYear = SEASON_TURNS[year + 1];
+        if (nextYear && nextYear[0]) next = { name: nextYear[0].name, season: nextYear[0].season, at: new Date(nextYear[0].utc) };
+      }
+      return { season: current.season, next: next };
+    }
+    var anchors = SEASON_ANCHORS.map(function (a) {
+      return { name: a.name, season: a.season, at: new Date(year, a.month, a.day) };
+    });
+    var cur = { season: "Winter" };
+    var nxt = null;
+    for (var j = 0; j < anchors.length; j += 1) {
+      if (now >= anchors[j].at) cur = anchors[j];
+      else { nxt = { name: anchors[j].name }; break; }
+    }
+    if (!nxt) nxt = { name: SEASON_ANCHORS[0].name };
+    return { season: cur.season, next: nxt };
+  }
+
+  function seasonLine() {
+    var caption = document.querySelector(".sphere-rebuild-caption");
+    if (!caption) return;
+    var line = document.createElement("p");
+    line.className = "sphere-season-line";
+    line.setAttribute("role", "note");
+    var telling = caption.querySelector(".sphere-rebuild-telling");
+    if (telling) telling.after(line);
+    else caption.appendChild(line);
+    function render() {
+      var info = seasonNow(new Date());
+      var season = info.season;
+      // The face's own season ring turns its names by latitude
+      // when a place is known; the line follows the same rule.
+      try {
+        var state = window.SofEnvironmentState && window.SofEnvironmentState.getEnvironmentState ? window.SofEnvironmentState.getEnvironmentState() : null;
+        var lat = Number(state && state.place && state.place.latitude);
+        if (Number.isFinite(lat) && lat < -10) season = SEASON_FLIP[season] || season;
+      } catch (err) { /* northern names stand */ }
+      var text = season;
+      if (info.next && info.next.at) {
+        text += " · the " + info.next.name + " turns on " + MONTH_SHORT[info.next.at.getMonth()] + " " + info.next.at.getDate();
+      } else if (info.next) {
+        text += " · the " + info.next.name + " is the next turn";
+      }
+      if (line.textContent !== text) line.textContent = text;
+    }
+    render();
+    window.setInterval(render, 60000);
   }
 
   /* ── 4c. The instrument is directly touchable ──────────────────
@@ -655,6 +842,8 @@
     buildReadout();
     watchDayWorld();
     adoptSkyline();
+    autoEnvironment();
+    seasonLine();
     autoInteract();
     dockCommandTrigger();
     startRecordAndAlerts();
