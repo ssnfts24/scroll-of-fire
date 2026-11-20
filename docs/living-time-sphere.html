@@ -64,6 +64,10 @@
        R3 waves opened. It loads last so the rebuilt arrangement
        has the final say over the page's own presentation. -->
   <link rel="stylesheet" href="assets/css/sphere-rebuild.css?v=20261120-1">
+  <link rel="stylesheet" href="assets/css/sphere-armillary.css?v=20261120-1">
+  <!-- The Sphere's portrait is the first thing the stage shows;
+       start its fetch before the parser reaches the stage. -->
+  <link rel="preload" as="image" href="assets/img/sphere/sphere-portrait.webp" fetchpriority="high">
   <link rel="stylesheet" href="assets/css/sphere-spark.css?v=20261120-1">
 
   <!-- Core engines -->
@@ -296,6 +300,7 @@
         It drives the instrument only through the page's own public
         controls and reads only the canonical modules. -->
    <script defer src="assets/js/sphere-rebuild.js?v=20261120-1"></script>
+   <script defer src="assets/js/sphere-armillary.js?v=20261120-1"></script>
    <script defer src="assets/js/sphere-spark.js?v=20261120-1"></script>
    <script defer src="assets/js/sphere-play.js?v=20261120-1"></script>
    <script defer>
@@ -768,6 +773,16 @@
               <p class="sphere-instrument-topline-primary">REMNANT LIVING TIME OBSERVATORY</p>
               <p class="sphere-live-dot">LIVE FIELD</p>
             </div>
+            <!-- The Sphere's warm portrait: a still of the armillary
+                 face, present from the first paint so the stage is
+                 never a black wait. It stands in the instrument
+                 shell, over the container — the UI manages the
+                 container's own children as the canvas mounts, and
+                 the portrait must survive that handoff until
+                 sphere-armillary.js fades it out when the live
+                 instrument's first real frame lands. Presentation
+                 only; it takes no touch. -->
+            <img class="sphere-portrait" data-sphere-portrait src="assets/img/sphere/sphere-portrait.webp" alt="" aria-hidden="true" fetchpriority="high" decoding="async" width="840" height="1740">
             <div id="sphere-container" role="img" aria-label="Living Time Sphere — interactive" tabindex="0"
                  aria-describedby="sphere-text-model" aria-busy="true">
               <!-- SVG or 3D canvas rendered here by LivingTimeSphereUi.init() -->

@@ -486,7 +486,15 @@
     return {
       tagName: String(node.tagName || "").toLowerCase(),
       id: node.id || "",
-      className: node.className || "",
+      // SVG elements carry className as an SVGAnimatedString, not a
+      // string; read the class attribute so class-based checks (the
+      // render-surface covering test among them) see the real value
+      // for SVG nodes too. Without this, the sphere's own SVG reads
+      // as "[object SVGAnimatedString]" and can be mistaken for
+      // foreign covering media on a cold load.
+      className: typeof node.className === "string"
+        ? node.className
+        : (node.getAttribute?.("class") || ""),
       isConnected: !!node.isConnected,
       hidden: !!node.hidden,
       rect: rect ? {
@@ -1118,6 +1126,19 @@
     if (ts > 0) _state.lastRenderTimestamp = ts;
   }
 
+  // A surface verdict whose ONLY failure is CANVAS_COVERED means
+  // the canvas, scene, camera, and first frame all check out, but
+  // some media element still sits at the centre hit-point — on a
+  // cold load that is the page's own overlay DOM settling, not a
+  // broken renderer. Tearing the renderer down over it was the
+  // cold-load retry chain (init attempts 2 and 3 on first load,
+  // one attempt on a warm reload). Covered-only verdicts get one
+  // settle re-check, never a teardown.
+  function _isCoveredOnlyFailure(surfaceCheck) {
+    const failures = Array.isArray(surfaceCheck?.failures) ? surfaceCheck.failures : [];
+    return failures.length > 0 && failures.every(f => f === RENDER_SURFACE_REASON.CANVAS_COVERED);
+  }
+
   function _watchForBlankCanvas(container) {
     setTimeout(() => {
       if (!container || _state.requestedRendererMode === "svg" || _state.rendererLifecycle === "failed") return;
@@ -1127,7 +1148,7 @@
       const hasCanvas = Number(diag.canvasWidth || 0) > 0 && Number(diag.canvasHeight || 0) > 0;
       const firstFrame = diag.stageState?.firstFrame === "rendered";
       const surface = _verifyRenderSurface(container, { requireVisibleCenter: false });
-      if ((hasCanvas && !firstFrame) || !surface.healthy) {
+      if ((hasCanvas && !firstFrame) || (!surface.healthy && !_isCoveredOnlyFailure(surface))) {
         _state.active3d = false;
         _setRendererLifecycle("recovering");
         renderer.requestSingleRender?.();
@@ -2872,7 +2893,22 @@
       _markInitTimeline("post-layout-raf", { generation: initGeneration });
       globalThis.LivingTimeSphereRenderer3d?.requestSingleRender?.();
       _markInitTimeline("first-frame-acknowledged", { generation: initGeneration });
-      const surfaceCheck = _verifyRenderSurface(container, { requireVisibleCenter: false, expectedGeneration: initGeneration });
+      let surfaceCheck = _verifyRenderSurface(container, { requireVisibleCenter: false, expectedGeneration: initGeneration });
+      if (!surfaceCheck.healthy && _isCoveredOnlyFailure(surfaceCheck)) {
+        // Cold-load handoff: the first frame has rendered, but the
+        // centre hit-point still reads overlay DOM that has not
+        // settled (the class-name fix above covers the sphere's
+        // own SVG; anything else transient gets one short settle
+        // window). Re-verify once before condemning a healthy
+        // renderer to the teardown-and-retry chain.
+        await new Promise(resolve => setTimeout(resolve, 450));
+        if (initGeneration !== _state._3dInitGeneration) {
+          _disposeRendererForRetry(container, "stale-init-generation");
+          return;
+        }
+        surfaceCheck = _verifyRenderSurface(container, { requireVisibleCenter: false, expectedGeneration: initGeneration });
+        _markInitTimeline("surface-validation-covered-recheck", { generation: initGeneration, healthy: !!surfaceCheck?.healthy, reason: surfaceCheck?.reason || null });
+      }
       _markRenderSurfaceCanvasTrace("after-validation");
       _markInitTimeline("surface-validation", { generation: initGeneration, healthy: !!surfaceCheck?.healthy, reason: surfaceCheck?.reason || null });
       if (!surfaceCheck.healthy) {
@@ -2969,7 +3005,13 @@
         _scheduleRetry(container, "scene-readiness-refresh");
         return;
       }
-      if (!surfaceCheck.healthy) {
+      if (!surfaceCheck.healthy && _isCoveredOnlyFailure(surfaceCheck)) {
+        // Covered-only on a refresh: the renderer is rendering and
+        // the centre point is transiently held by overlay DOM. Note
+        // it and carry on — a teardown here was the second link in
+        // the cold-load retry chain.
+        _markInitTimeline("surface-covered-tolerated", { reason: surfaceCheck.reason || null });
+      } else if (!surfaceCheck.healthy) {
         _state.active3d = false;
         _state.activeRendererMode = "recovering";
         _setRendererLifecycle("recovering");

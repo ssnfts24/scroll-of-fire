@@ -91,10 +91,13 @@ test("quick-jump speaks truthfully at the edges: waking calendar, substituted ye
 });
 
 test("the shell carries the dock: every action by one plain name", () => {
-  for (const label of ["Today", "Choose a day", "Step into this day", "Deep Time", "Farm &amp; home", "Freeze", "Your Spark"]) {
+  // The dock's names as Aaron specified them in the Sphere
+  // redesign (Nov 20, 2026): Schedule stands where Choose a day
+  // stood, and Enter carries its plain name.
+  for (const label of ["Today", "Schedule", "Enter this day", "Deep Time", "Farm &amp; home", "Freeze", "Your Spark"]) {
     assert.ok(shell.includes(label), `dock speaks: ${label}`);
   }
-  for (const api of ["goToday", "showDay", "openDayWorld", "openDeepTime", "openFarm", "freeze", "wake", "isFrozen", "selectedLine"]) {
+  for (const api of ["goToday", "showDay", "openSchedule", "openDayWorld", "openDeepTime", "openFarm", "freeze", "wake", "isFrozen", "selectedLine"]) {
     assert.ok(shell.includes(api), `SphereRebuild exposes ${api}`);
   }
   assert.ok(shell.includes("sphere-rebuild-shield"), "freeze holds the stage behind a shield");

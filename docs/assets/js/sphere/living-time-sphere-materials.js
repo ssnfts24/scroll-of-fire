@@ -44,6 +44,52 @@
     weekGate:      0x6699aa,
     atmosphere:    0x150e07,
     haze:          0x0a0603,
+    // Armillary face (Nov 20, 2026 — the Sphere redesign: the
+    // instrument takes the cartoon armillary's materials). Brass
+    // and wood are the frame's metals and timber; parchment is the
+    // centre globe's etched skin; scriptGlow is the lit ink of the
+    // day band.
+    brass:         0xc9973f,
+    brassDark:     0x8a6428,
+    wood:          0x9a6a30,
+    woodDark:      0x54340f,
+    parchment:     0xd9b77c,
+    scriptGlow:    0xffca7a,
+  });
+
+  // The five elements' colours for the Moon faces, matching the
+  // house hues the Spark's moon-temper uses (Fire 14, Water 208,
+  // Air 255, Earth 96, Aether 288), stated here as hex so the
+  // renderer needs no companion-layer dependency.
+  const ELEMENT_COLORS = Object.freeze({
+    Fire:   0xe8762c,
+    Water:  0x3f8fd2,
+    Air:    0x9fb4ff,
+    Earth:  0x7fae4c,
+    Aether: 0xb07fe8,
+  });
+
+  // Armillary dimensions (scene units, sphere radius = 1.0). Every
+  // radius is chosen against the calendar's own rails: the wooden
+  // band carries the Pattern ring (0.70), the script band stands at
+  // the rim inside the outer boundary (1.00), and the armillary
+  // cage rings circle just outside it.
+  const ARMILLARY = Object.freeze({
+    bandInner:      0.615,
+    bandOuter:      0.785,
+    scriptRadius:   0.99,
+    scriptHeight:   0.085,
+    cageRadius:     1.07,
+    cageTube:       0.008,
+    gearRadius:     0.05,
+    gearTeeth:      12,
+    gearLargeRadius: 0.088,
+    gearLargeTeeth: 16,
+    gearDepth:      0.012,
+    medallionRadius: 0.074,
+    medallionRimTube: 0.009,
+    globeRadius:    0.08,
+    globeHeight:    0.115,
   });
 
   // ── Opacity levels ────────────────────────────────────────────────
@@ -241,6 +287,8 @@
     COLORS,
     OPACITY,
     EMISSIVE,
+    ELEMENT_COLORS,
+    ARMILLARY,
     SIZES,
     MARKER_HALO_CLEARANCE,
     markerSeparation,

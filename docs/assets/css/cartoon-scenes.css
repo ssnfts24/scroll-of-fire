@@ -1,0 +1,51 @@
+/* cartoon-scenes.css — the cartoon exploration pass (Nov 20, 2026).
+ *
+ * One figure treatment for the illustrated scenes that now stand
+ * at the site's doorways, all in the approved cartoon's world:
+ * warm wood and brass, held light. A scene is a still first —
+ * lazy-loaded, phone-sized — with only the films' gentlest life:
+ * a slow breathing of the light, and never under reduced motion.
+ * Each scene maps to its page's real subject; the mapping is
+ * stated in the figure's caption and alt text, never decoration
+ * for its own sake.
+ */
+
+.cartoon-scene {
+  margin: 1.5rem auto;
+  max-width: 880px;
+  padding: 0.6rem 0.6rem 0.8rem;
+  border: 1px solid rgba(218, 164, 91, 0.45);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(35, 22, 10, 0.92), rgba(20, 12, 6, 0.94));
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.35);
+}
+
+.cartoon-scene img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+.cartoon-scene figcaption {
+  margin: 0.65rem 0.4rem 0.1rem;
+  font-size: 0.98rem;
+  line-height: 1.45;
+  color: #e8d5ae;
+  text-align: center;
+}
+
+@keyframes cartoon-scene-breathe {
+  0%, 100% { box-shadow: 0 10px 34px rgba(0, 0, 0, 0.35), 0 0 0 rgba(218, 164, 91, 0); }
+  50% { box-shadow: 0 10px 34px rgba(0, 0, 0, 0.35), 0 0 26px rgba(218, 164, 91, 0.16); }
+}
+
+.cartoon-scene {
+  animation: cartoon-scene-breathe 7s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cartoon-scene {
+    animation: none;
+  }
+}
