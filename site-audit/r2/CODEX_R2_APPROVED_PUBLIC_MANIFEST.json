@@ -118,6 +118,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/css/hidden-layer.css",
+      "sha256": "f3eeb9f3d91d1e41116400dda933705d144456c90ce46ba91c9b435a4a1938e3",
+      "publicUrl": "https://codexofreality.org/assets/css/hidden-layer.css",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/css/home-living-interface.css",
       "sha256": "4898d96e9f57a70884f0e21519178895a708d5e3af63111178e6743405dc8945",
       "publicUrl": "https://codexofreality.org/assets/css/home-living-interface.css",
@@ -431,7 +437,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "b8f2994f643145a60840ee3a0b9191ebda3a0a3540c1afc0e624d060aaf3b662",
+      "sha256": "ffbc2f91847ad47bf06dc9dec5335d8e3987efe9a32d310e0f11c69b457062f9",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -1825,6 +1831,12 @@
       "path": "docs/assets/js/heaven-sound.js",
       "sha256": "5719d8a380f614ea0e927eceb954822218eafa91d239b19d9aef5884eb78a60d",
       "publicUrl": "https://codexofreality.org/assets/js/heaven-sound.js",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/js/hidden-layer.js",
+      "sha256": "f6459e164f9eea22e372837fa02b727cb0e051c6c624b3c1887e977982903103",
+      "publicUrl": "https://codexofreality.org/assets/js/hidden-layer.js",
       "status": "operational"
     },
     {
@@ -3593,13 +3605,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "9397ce4532fe237b4f28278241f7c8202c06b338452428d016d0441ceb8bd6a6",
+      "sha256": "f1c83db068e2415e42781d3c8d5f75c80a46586381a45e9c7f940fecfd80e0a1",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "84272ac17f4c316dcfc70f60f5b67cbddded80721c34ebaaa83a84bbc5030eb7",
+      "sha256": "287b0932ff2994bbbc25a905bb219161bf7e9eaade834d1f6f10cfa06229c1fa",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -3707,7 +3719,7 @@
     },
     {
       "path": "docs/equinox-passage.html",
-      "sha256": "861abb79bbb6667b57fc6c51f7d1ee5e7990bedce93a313c2abae0eefa692143",
+      "sha256": "5c2e3fd3ebb1cf65b00256701e97eb8e16821140f6d68f9004d4f75ea17d5737",
       "publicUrl": "https://codexofreality.org/equinox-passage.html",
       "status": "operational"
     },
@@ -3719,7 +3731,7 @@
     },
     {
       "path": "docs/garden.html",
-      "sha256": "795a53d3f481444879ebcebc8b1136f3c5d8d1f541462f23175a7eba8c7d3850",
+      "sha256": "cb07f54443c0ed424ee0058b8a465e929d8500b96436153857a84007238592db",
       "publicUrl": "https://codexofreality.org/garden.html",
       "status": "operational"
     },
@@ -3731,7 +3743,7 @@
     },
     {
       "path": "docs/glossary.html",
-      "sha256": "adb40dcd6c25cb1178ac9c8358d25e9fbbf0b30bd4fabed22f6150c5e0faf368",
+      "sha256": "ef239d15389e471db62dbccf574f72793bd44bf4fa78f82bb546d67c7fc16706",
       "publicUrl": "https://codexofreality.org/glossary.html",
       "status": "operational"
     },
@@ -3755,7 +3767,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "cb52604c710106f624583117adedceee6f9da950bf23a4b5769dada03d5cf5ba",
+      "sha256": "31e7208b3ae9f5eeac62d251f70f171d042b616a4b5991c977965c76f0590dd8",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
@@ -3797,7 +3809,7 @@
     },
     {
       "path": "docs/moons.html",
-      "sha256": "2de59ebd46fafaf7ba5d90e81187c62083342479b36f5dbf7fd58c8573f73a3e",
+      "sha256": "f76ab5c486fb78efe8b93984e4f148440f1d0182826761fc10d3ce7ee6cafe8d",
       "publicUrl": "https://codexofreality.org/moons.html",
       "status": "operational"
     },
@@ -10121,7 +10133,7 @@
     },
     {
       "path": "docs/systems/frequencies.html",
-      "sha256": "083766d7e94fa1beb798302e96415d92d32174b1354baf39107cfd20bde204ea",
+      "sha256": "d6a19ca2557d24db5b25f1e051e7cb9462c8a0512c63d9968fe2b798f0d044ae",
       "publicUrl": "https://codexofreality.org/systems/frequencies.html",
       "status": "operational"
     },
@@ -10349,7 +10361,7 @@
     },
     {
       "path": "docs/theory/thirteen-moons.html",
-      "sha256": "37aec7635b8ddb210305bdc35d991b33f4dc3ffbee09bce690e989ba4566f394",
+      "sha256": "61c0f1f09144eb2bc1401e2a646770ef9aef9a6808913497dfff3d0643947053",
       "publicUrl": "https://codexofreality.org/theory/thirteen-moons.html",
       "status": "operational"
     },
