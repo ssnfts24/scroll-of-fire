@@ -1147,6 +1147,20 @@
     "scroll-library"
    ],
    "featured": false
+  },
+  {
+   "id": "travellers-map",
+   "title": "The Traveller's Map",
+   "description": "The whole site drawn as the lands of one road: every place pictured by its cartoon scene, the Traveller's Road story in walking order with found chapters stamped by their Pattern day, the Year Thread showing today's place in the year and the keeper's trail, and the pages still waiting for their chapters named honestly.",
+   "area": "systems",
+   "category": "Practice",
+   "resourceType": "tool",
+   "status": "live",
+   "path": "map.html",
+   "related": [
+    "manifest"
+   ],
+   "featured": false
   }
  ]
 }

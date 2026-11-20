@@ -372,6 +372,15 @@
     img.alt = "Cartoon scene: a wooden door with brass fittings standing ajar in a circular ring, warm light spilling out and a Spark's glow at the threshold — the door into one day.";
     fig.appendChild(img);
     sheet.insertBefore(fig, sheet.firstChild);
+    // The story layer's Day World chapter stands under the scene:
+    // an empty slot naming its chapter, filled by story-layer.js
+    // when it lands (the layer watches for late slots).
+    if (!sheet.querySelector("[data-story-slot]")) {
+      var slot = document.createElement("div");
+      slot.setAttribute("data-story-slot", "");
+      slot.setAttribute("data-story-chapter", "through-the-day-door");
+      fig.after(slot);
+    }
   }
 
   function watchDayWorld() {
@@ -430,6 +439,30 @@
           }
         });
       } catch (err) { /* no companion yet — the trail is plans alone */ }
+      // …and the Living Trail: the days the keeper stood on and
+      // the days a chapter of the Traveller's Road was found join
+      // the same trail by the same pattern-day numbers (the
+      // trail's stamps are PatternCalendar coordinates, read from
+      // the one clock — only this year's days light this year's
+      // face).
+      try {
+        var Trail = window.LivingTrail;
+        if (Trail && Trail.load) {
+          var t = Trail.load();
+          (Trail.daysForYear(t, year) || []).forEach(function (d) {
+            trail.push(d);
+            if (!kept[d]) kept[d] = { plans: [], played: false };
+          });
+          Object.keys(t.finds || {}).forEach(function (chapterId) {
+            var f = t.finds[chapterId];
+            var d = Number(f && f.patternDay);
+            if (f && f.patternYear === year && d >= 1 && d <= 364) {
+              trail.push(d);
+              if (!kept[d]) kept[d] = { plans: [], played: false };
+            }
+          });
+        }
+      } catch (err) { /* no trail yet — the face is plans and play alone */ }
       keptByDay = kept;
       renderer.setRecordMarkers(days);
       if (renderer.setTrailMarkers) renderer.setTrailMarkers(trail);

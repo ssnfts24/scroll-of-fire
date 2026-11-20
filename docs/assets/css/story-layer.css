@@ -1,0 +1,107 @@
+/* The Story Layer — a storybook panel standing plainly apart
+   from the record: warm parchment tones, a ruled edge, and its
+   label always on its face. Kept light for small phones. */
+
+.story-chapter {
+  margin: 1.4rem 0;
+  padding: 1.1rem 1.2rem 0.9rem;
+  border: 1px solid rgba(212, 175, 55, 0.55);
+  border-left: 4px solid rgba(212, 175, 55, 0.85);
+  border-radius: 0.6rem;
+  background: linear-gradient(160deg, rgba(212, 175, 55, 0.10), rgba(120, 72, 20, 0.06));
+}
+
+.story-eyebrow {
+  margin: 0 0 0.25rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.story-title {
+  margin: 0 0 0.5rem;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.story-beat {
+  font-style: italic;
+  opacity: 0.92;
+}
+
+.story-frame-note {
+  font-size: 0.85rem;
+  opacity: 0.75;
+  margin: 0 0 0.4rem;
+}
+
+.story-text {
+  line-height: 1.65;
+}
+
+.story-foot {
+  margin-top: 0.7rem;
+  padding-top: 0.55rem;
+  border-top: 1px dashed rgba(212, 175, 55, 0.4);
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+/* The Traveller's Map. */
+.map-regions {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.map-region {
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 0.6rem;
+  overflow: hidden;
+  background: rgba(212, 175, 55, 0.05);
+}
+
+.map-region img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.map-region-body {
+  padding: 0.7rem 0.9rem 0.85rem;
+}
+
+.map-region-body h3 {
+  margin: 0 0 0.3rem;
+}
+
+.map-found {
+  font-size: 0.85rem;
+  color: #9fd6a4;
+}
+
+.map-unfound {
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+/* The Year Thread strip. */
+.year-thread {
+  margin: 1.2rem 0;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  border-radius: 0.6rem;
+  background: rgba(212, 175, 55, 0.05);
+}
+
+.year-thread canvas {
+  width: 100%;
+  height: 54px;
+  display: block;
+}
+
+.year-thread-line {
+  margin: 0.45rem 0 0;
+  font-size: 0.95rem;
+}
