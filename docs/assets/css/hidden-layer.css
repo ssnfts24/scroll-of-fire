@@ -1,0 +1,245 @@
+/* The Hidden Layer — stage 1.
+ * The films' language, kept quiet: warm dark wood, brass, held light.
+ * Everything here is an overlay or a seated card; it never moves the
+ * host page's own furniture. Reduced motion: nothing here animates
+ * beyond a soft fade, and that fade is removed entirely. */
+
+:root {
+  --hl-brass: #daa45b;
+  --hl-brass-soft: rgba(218, 164, 91, 0.45);
+  --hl-wood: #241a12;
+  --hl-wood-2: #2f2115;
+  --hl-parchment: #f3e7cf;
+  --hl-parchment-dim: rgba(243, 231, 207, 0.72);
+}
+
+/* Docked at the top, under the header: the Spark's own furniture
+ * lives at the bottom of the screen, and a find must never hide
+ * under it. z-index sits above the site chrome (~1000) and just
+ * under the Spark's presence layer (10040). */
+.hl-notice,
+.hl-shelf {
+  position: fixed;
+  left: 1rem;
+  top: 7rem;
+  z-index: 10030;
+  max-width: min(21rem, calc(100vw - 2rem));
+  background: linear-gradient(160deg, var(--hl-wood-2), var(--hl-wood));
+  color: var(--hl-parchment);
+  border: 1px solid var(--hl-brass-soft);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(0, 0, 0, 0.25),
+    0 0 22px hsla(var(--hl-hue, 42), 70%, 55%, 0.14);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.hl-shelf {
+  max-height: 70vh;
+  overflow: auto;
+}
+
+.hl-notice-line {
+  margin: 0 0 0.25rem;
+  color: var(--hl-brass);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.hl-notice-name {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.hl-notice-detail,
+.hl-notice-teaching {
+  margin: 0 0 0.4rem;
+  color: var(--hl-parchment-dim);
+}
+
+.hl-notice-teaching {
+  font-style: italic;
+}
+
+.hl-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+.hl-btn {
+  appearance: none;
+  border: 1px solid var(--hl-brass-soft);
+  background: rgba(218, 164, 91, 0.08);
+  color: var(--hl-parchment);
+  border-radius: 999px;
+  padding: 0.42rem 0.9rem;
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.hl-btn:hover,
+.hl-btn:focus-visible {
+  border-color: var(--hl-brass);
+  background: rgba(218, 164, 91, 0.18);
+  outline: none;
+}
+
+.hl-btn-keep {
+  background: rgba(218, 164, 91, 0.22);
+  border-color: var(--hl-brass);
+  color: #fff7e8;
+}
+
+.hl-btn.is-selected {
+  background: rgba(218, 164, 91, 0.3);
+  border-color: var(--hl-brass);
+}
+
+.hl-shelf-chip {
+  position: fixed;
+  right: 1rem;
+  top: 7rem;
+  z-index: 10030;
+  appearance: none;
+  border: 1px solid var(--hl-brass-soft);
+  background: linear-gradient(160deg, var(--hl-wood-2), var(--hl-wood));
+  color: var(--hl-parchment);
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.4);
+}
+
+.hl-shelf-title {
+  margin: 0 0 0.3rem;
+  font-size: 1.05rem;
+  color: var(--hl-parchment);
+}
+
+.hl-shelf-sub,
+.hl-shelf-level {
+  margin: 0 0 0.6rem;
+  color: var(--hl-parchment-dim);
+  font-size: 0.85rem;
+}
+
+.hl-shelf-list {
+  list-style: none;
+  margin: 0 0 0.7rem;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.hl-shelf-item {
+  border-left: 2px solid var(--hl-brass-soft);
+  padding-left: 0.6rem;
+  display: grid;
+  gap: 0.1rem;
+}
+
+.hl-shelf-name {
+  font-weight: 600;
+}
+
+.hl-shelf-teaching {
+  color: var(--hl-parchment-dim);
+  font-size: 0.83rem;
+  font-style: italic;
+}
+
+.hl-shelf-where {
+  color: var(--hl-brass);
+  font-size: 0.8rem;
+}
+
+/* The games, seated in their host pages. */
+
+.hl-game {
+  border: 1px solid var(--hl-brass-soft);
+  border-radius: 16px;
+  padding: 1.1rem 1.2rem;
+  background: linear-gradient(165deg, rgba(47, 33, 21, 0.92), rgba(36, 26, 18, 0.96));
+  color: var(--hl-parchment);
+  box-shadow: inset 0 1px 0 rgba(243, 231, 207, 0.07), 0 10px 26px rgba(0, 0, 0, 0.35);
+  max-width: 44rem;
+  margin: 1.5rem auto;
+}
+
+.hl-game-title {
+  margin: 0 0 0.4rem;
+  font-size: 1.25rem;
+  color: #fff7e8;
+}
+
+.hl-game-line,
+.hl-game-spark {
+  margin: 0 0 0.6rem;
+  color: var(--hl-parchment-dim);
+  line-height: 1.5;
+}
+
+.hl-game-spark {
+  color: var(--hl-brass);
+}
+
+.hl-game-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.7rem 0;
+}
+
+.hl-game-status {
+  min-height: 1.4em;
+  margin: 0.5rem 0 0;
+  color: var(--hl-parchment);
+}
+
+.hl-count-steps {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 0.8rem 0;
+  padding: 0;
+}
+
+.hl-count-step {
+  border: 1px solid var(--hl-brass-soft);
+  border-radius: 10px;
+  padding: 0.45rem 0.7rem;
+  background: rgba(218, 164, 91, 0.07);
+  font-size: 0.92rem;
+}
+
+.hl-count-next {
+  border-style: dashed;
+  color: var(--hl-brass);
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hl-notice,
+  .hl-shelf {
+    animation: hl-arrive 0.45s ease-out;
+  }
+}
+
+@keyframes hl-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

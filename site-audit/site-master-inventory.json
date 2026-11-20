@@ -7,7 +7,7 @@
     "publicHtmlPages": 180,
     "catalogEntries": 73,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 24,
+      "not-linked-directly-from-homepage": 25,
       "nav-label-differs-from-title": 24,
       "no-global-navigation": 1,
       "deployed-but-unlinked": 56,
@@ -15,7 +15,8 @@
       "compatibility-redirect-page": 1,
       "not-published-in-catalog": 30,
       "unnamed-image-needs-descriptive-title": 21,
-      "not-in-sitemap": 1
+      "not-in-sitemap": 1,
+      "reachable-only-through-atlas": 1
     }
   },
   "resources": [
@@ -674,7 +675,7 @@
     },
     {
       "id": "docs-assets:assets/css",
-      "title": "docs/assets/css (65 files)",
+      "title": "docs/assets/css (66 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -759,7 +760,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (201 files)",
+      "title": "docs/assets/js (202 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1890,7 +1891,6 @@
         "lab.html",
         "ledger.html",
         "living-time-sphere.html",
-        "map.html",
         "moons.html",
         "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
@@ -13813,7 +13813,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (155 files)",
+      "title": "tests/ (156 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -20118,14 +20118,16 @@
         "path": "map.html",
         "inSitemap": false,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 2,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": null,
+        "inboundPages": 1,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
-        "not-in-sitemap"
+        "not-in-sitemap",
+        "reachable-only-through-atlas",
+        "not-linked-directly-from-homepage"
       ]
     },
     {
