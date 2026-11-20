@@ -45,6 +45,11 @@
   const VERSION = "sphere-rebuild/1.0.0";
   const rootEl = document.documentElement;
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // The arrival URL, captured before the page's own URL-state
+  // machinery rewrites it with the current view's parameters —
+  // a motion choice is the keeper's only when it arrived with
+  // them, not when the page echoed it back.
+  const arrivalUrl = window.location.search + window.location.hash;
 
   let frozen = false;
   let savedMotion = null;
@@ -81,7 +86,21 @@
     return true;
   }
 
-  function openDayWorld() { return clickFirst([".day-world-door-button"]); }
+  function openDayWorld() {
+    // The Day World's door opens for the day the zoom is showing;
+    // before any day has been flown to, that view may not exist
+    // yet and the door stands quiet. The dock's promise is one
+    // tap: if the room does not open, stand on today first —
+    // today always has a view — and open the door again.
+    const opened = () => document.documentElement.classList.contains("day-world-open");
+    if (!clickFirst([".day-world-door-button"])) return false;
+    window.setTimeout(() => {
+      if (opened()) return;
+      goToday();
+      window.setTimeout(() => clickFirst([".day-world-door-button"]), 700);
+    }, 450);
+    return true;
+  }
   function openDeepTime() { return clickFirst([".deep-time-door-button"]); }
 
   function openFarm() {
@@ -295,6 +314,20 @@
       if (el) navRoom.appendChild(el);
     }
 
+    // The temporal coordinate panel builds itself a few seconds
+    // after the instrument and sets its root at the head of main —
+    // in front of the stage. It is navigation chrome, so whenever
+    // it appears it takes its place in this room instead, and the
+    // stage keeps the first place on the page.
+    const takeCoordinateRoot = () => {
+      const coordRoot = $(".temporal-coordinate-root");
+      if (coordRoot && coordRoot.parentElement !== navRoom) navRoom.appendChild(coordRoot);
+    };
+    takeCoordinateRoot();
+    const rootWatcher = new MutationObserver(takeCoordinateRoot);
+    rootWatcher.observe(main, { childList: true });
+    window.setTimeout(() => rootWatcher.disconnect(), 30000);
+
     // The guided introduction stands in the flow below the stage,
     // never floating over the instrument.
     const intro = $("#sphere-intro");
@@ -317,17 +350,28 @@
       details.dataset.sphereRebuildControls = "";
     }
 
-    // The observatory's question shell must never cover the stage.
+    // The observatory's daily question must never cover the
+    // stage at arrival. The workspace offers it on open (the
+    // keeper's own preference), about a second after it wakes —
+    // on the rebuilt page that lid lands on the instrument, so
+    // during the arrival window the shell rests an uninvited
+    // opening through the question's own close button. A keeper
+    // who summons the question themselves (Ask now) is never
+    // rested, and the question stays one tap away in its room.
     const obsShell = $("#obs-question-shell");
-    if (obsShell && !obsShell.hidden && obsShell.getClientRects().length) {
-      // It is a room of the page, not a lid on the instrument: if
-      // it renders open over the stage at first load, close it to
-      // its resting place below.
-      const rect = obsShell.getBoundingClientRect();
-      const shellRect = $(".sphere-instrument-shell")?.getBoundingClientRect();
-      if (shellRect && rect.top < shellRect.bottom && rect.bottom > shellRect.top) {
+    if (obsShell) {
+      let summoned = false;
+      $("#obs-question-ask-now")?.addEventListener("click", () => { summoned = true; }, { capture: true });
+      const rest = () => {
+        if (summoned || obsShell.hidden) return;
         obsShell.classList.add("sphere-rebuild-obs-resting");
-      }
+        $("#obs-question-close")?.click();
+      };
+      const watcher = new MutationObserver(rest);
+      watcher.observe(obsShell, { attributes: true, attributeFilter: ["hidden"] });
+      watcher.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+      window.setTimeout(() => watcher.disconnect(), 15000);
+      rest();
     }
 
     placeAmbientPieces(caption);
@@ -617,18 +661,57 @@
 
   function setLivingMotion() {
     if (reducedMotion) return;
-    if (/(^|[?&#])motion/i.test(window.location.search + window.location.hash)) return;
-    const motion = $("#sphere-motion-mode");
-    if (motion && motion.value === "still") {
-      motion.value = "drift";
-      motion.dispatchEvent(new Event("change", { bubbles: true }));
-    }
+    // A link that carries an explicit motion choice (still,
+    // reduced) is the keeper's word and stands. The page's own
+    // URL state also echoes its current mode back as
+    // &motion=drift — that echo is not an override, and must not
+    // silence the living default.
+    const carried = /[?&#]motion=([a-z]+)/i.exec(arrivalUrl);
+    if (carried && carried[1].toLowerCase() !== "drift") return;
+    // The rebuild's resting state is alive: drift. Two things
+    // work against a one-time setting: the sphere's own state
+    // restore can set the select back to "still" seconds later
+    // (its init lands late on a slow phone), and the controls
+    // themselves are rebuilt during that init — the select this
+    // function first holds is not always the select on the page
+    // a moment later. So the living default is defended with a
+    // fresh lookup for the arrival window, and only there. A
+    // keeper who touches the select themselves, or freezes the
+    // Sphere, is never fought. (Left undefended, the play room
+    // also reads the page as still forever and never wakes.)
+    let keeperChose = false;
+    const noteKeeper = (event) => { if (event.target?.id === "sphere-motion-mode") keeperChose = true; };
+    document.addEventListener("pointerdown", noteKeeper, { capture: true });
+    document.addEventListener("keydown", noteKeeper, { capture: true });
+    const defend = () => {
+      if (keeperChose || frozen) return;
+      const motion = $("#sphere-motion-mode");
+      if (motion && motion.value === "still") {
+        motion.value = "drift";
+        motion.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+    };
+    defend();
+    for (const delay of [1200, 3000, 6000, 10000, 15000]) window.setTimeout(defend, delay);
   }
 
   /* ── Boot ───────────────────────────────────────────────────── */
 
   function boot() {
-    if (document.body.classList.contains("sphere-app")) return; // the app shell owns that room
+    // The old app shell (B7.61) enters its own app mode on every
+    // load — on the old page, that mode WAS the arrival. The
+    // rebuild is the app now (Aaron, Nov 20, 2026: "the sphere as
+    // a app needs to be redone. Get rid of it and rework that
+    // page"), so the page leaves that mode through the app's own
+    // Full page door and builds the new shell here. The old view
+    // stays reachable: its Enter control waits in the controls
+    // room below. If the exit is ever refused, stand down rather
+    // than fight the other shell for the room.
+    if (document.body.classList.contains("sphere-app")) {
+      const exit = document.querySelector('[data-app-action="fullpage"]');
+      if (exit) exit.click();
+    }
+    if (document.body.classList.contains("sphere-app")) return;
     if (!buildShell()) return;
     watchArming();
     window.setTimeout(setLivingMotion, 400);
