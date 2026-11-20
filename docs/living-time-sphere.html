@@ -47,6 +47,7 @@
   <link rel="stylesheet" href="assets/css/living-time-sphere-app.css?v=20261118-b761-fixes">
   <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261118-3">
   <link rel="stylesheet" href="assets/css/sphere-deepening.css?v=20261118-1">
+  <link rel="stylesheet" href="assets/css/sphere-deep-time.css?v=20261119-1">
   <!-- B7.52 FAST BOOT: Three.js is a dynamic import, so advertise it before
        the renderer reaches init instead of discovering the module late. -->
   <link rel="modulepreload" href="assets/vendor/three/three.module.min.js" fetchpriority="high">
@@ -250,6 +251,12 @@
    <script src="assets/js/spark-3d.js?v=20261119-1"></script>
    <script defer src="assets/js/spark-presence.js?v=20261118-3"></script>
    <script defer src="assets/js/sphere-companion-layer.js?v=20261118-1"></script>
+   <!-- Sphere R3 Wave 2 — Deep Time: an overlay layer beside the
+        instrument (links and tags only; no protected file is
+        touched). day-telling is the canonical module the Alignment
+        Plane reads its tellings through. -->
+   <script defer src="assets/js/day-telling.js"></script>
+   <script defer src="assets/js/sphere-deep-time.js?v=20261119-1"></script>
    <script defer>
      document.addEventListener("DOMContentLoaded", () => {
        const container = document.getElementById("sphere-container");
