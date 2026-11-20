@@ -107,11 +107,31 @@
 .social-bridge.social-bridge-in-bar {
   display: inline-flex;
   flex-wrap: nowrap;
+  align-items: center;
+  flex: none;
   margin: 0;
   max-width: none;
   padding: 0 0 0 0.5rem;
   background: none;
   border-bottom: none;
+}
+
+.social-bridge-in-bar .social-bridge-share {
+  flex: none;
+  white-space: nowrap;
+}
+
+.social-bridge-in-bar .social-bridge-follow {
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+/* The follow doors are also on the About page; below a wide screen
+ * they crowd the rooms out of the bar, so they rest there too. */
+@media (max-width: 1200px) {
+  .social-bridge-in-bar .social-bridge-follow {
+    display: none;
+  }
 }
 
 .living-nav > .social-bridge-panel {
