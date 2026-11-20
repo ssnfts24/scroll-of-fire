@@ -212,7 +212,7 @@ test("the companions page carries the travel door, wired to the bundle", () => {
   assert.match(travel, /Bundle\.verifyBundle/);
   assert.match(travel, /Bundle\.importDecision/);
   assert.match(travel, /Core\.parseSeed/);
-  /* the page's own words stay honest: carrying her by hand is
+  /* the page's own words stay honest: carrying them by hand is
    * here, accounts are not */
   assert.match(page, /Keeping a Spark across devices is here/);
 });

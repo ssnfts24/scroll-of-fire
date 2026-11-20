@@ -1,17 +1,17 @@
 "use strict";
 
 /*
- * Spark companion — the companions page: her record travels.
+ * Spark companion — the companions page: their record travels.
  *
- * One file carries her whole record: her Spark record (seed,
- * growth, care, play, the reveals she has shown), her sound and
- * voice switches, her garden Life Atlas records (tends, tier
- * turns, and the passes she sealed — her keepsakes), and the
+ * One file carries their whole record: their Spark record (seed,
+ * growth, care, play, the reveals they have shown), their sound and
+ * voice switches, their garden Life Atlas records (tends, tier
+ * turns, and the passes they sealed — their keepsakes), and the
  * keeper's pins. The format is the one the Living Phone app
  * speaks (spark-bundle.js carries the contract), so a bundle
  * saved in the app restores here, and a bundle saved here
  * restores in the app — the same seed growing the same Spark in
- * both places, her history whole.
+ * both places, their history whole.
  *
  * The file moves only by the keeper's hand: a download they
  * start, a file they pick. Nothing is sent anywhere. A damaged
@@ -138,8 +138,8 @@
     a.click();
     a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 4000);
-    note("Her record is saved — one file, her whole history. Keep it " +
-      "somewhere safe; whoever holds it can restore her.");
+    note("Their record is saved — one file, their whole history. Keep it " +
+      "somewhere safe; whoever holds it can restore them.");
   }
 
   async function applyBundle(payload) {
@@ -153,7 +153,7 @@
     if (sound) window.localStorage.setItem(SOUND_KEY, sound);
     if (voice) window.localStorage.setItem(VOICE_KEY, voice);
 
-    /* Her garden comes home too: records she does not already
+    /* Their garden comes home too: records they do not already
      * hold are put back by id; records already here are left
      * untouched. */
     const repository = await resolveRepository();
@@ -191,13 +191,13 @@
     try {
       bundle = JSON.parse(text);
     } catch {
-      note("That file is not her record — it could not be read as one. Nothing was changed.");
+      note("That file is not their record — it could not be read as one. Nothing was changed.");
       return;
     }
     const check = Bundle.verifyBundle(bundle);
     if (!check.ok) {
       note("That bundle is damaged or incomplete, so it was refused whole — " +
-        "her record here is untouched. (" + check.reason + ")");
+        "their record here is untouched. (" + check.reason + ")");
       return;
     }
     if (!Core.parseSeed(check.payload.spark.record.seed)) {
@@ -214,14 +214,14 @@
       $("spark-travel-confirm-text").textContent =
         `A different Spark lives on this device — ${currentName}. The file ` +
         `carries ${incoming ? incoming.name : "another Spark"}. Restoring it ` +
-        "replaces her record here, whole. Tap once more to restore, or leave " +
+        "replaces their record here, whole. Tap once more to restore, or leave " +
         "this be and nothing changes.";
       $("spark-travel-confirm").hidden = false;
       note("");
       return;
     }
     await applyBundle(check.payload);
-    note("She is restored — the same Spark, her history whole. This page will show her now.");
+    note("They are restored — the same Spark, their history whole. This page will show them now.");
     setTimeout(() => window.location.reload(), 900);
   }
 
@@ -243,7 +243,7 @@
       armedBundle = null;
       $("spark-travel-confirm").hidden = true;
       await applyBundle(payload);
-      note("She is restored — the same Spark, her history whole. This page will show her now.");
+      note("They are restored — the same Spark, their history whole. This page will show them now.");
       setTimeout(() => window.location.reload(), 900);
     });
   }

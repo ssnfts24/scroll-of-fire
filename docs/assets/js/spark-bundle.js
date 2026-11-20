@@ -5,7 +5,7 @@
  *
  * One file carries a Spark's whole record, so the same character
  * can live everywhere — the Living Phone app, this website,
- * wherever she is kept next — without any server standing
+ * wherever they are kept next — without any server standing
  * between. The format is the contract written down in the
  * living-phone repository (app-android/BUNDLE-FORMAT.md); the app
  * has spoken it since its v2, and this module is the website

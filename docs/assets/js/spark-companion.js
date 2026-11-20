@@ -100,18 +100,18 @@
   const EYES = ["round", "half", "bright"];
   const CRESTS = ["none", "flame", "leaf", "halo", "curl"];
 
-  /* The finer grain of her — v9. Drawn from their own stream
+  /* The finer grain of the Spark — v9. Drawn from their own stream
    * (seed + ":detail") so the draws above never move: the
-   * style of the crest she grows in, her ears, the trail that
-   * follows her, her cheeks, a second pattern layer under the
-   * first, how densely her markings fall, and the small
-   * variant her eye carries. Several independent draws, so
+   * style of the crest they grow in, their ears, the trail that
+   * follows them, their cheeks, a second pattern layer under the
+   * first, how densely their markings fall, and the small
+   * variant their eye carries. Several independent draws, so
    * the combinations multiply: two Sparks of one kind and one
    * form still do not wear the same face. Most of these are
-   * not worn at birth — they arrive on her reveal schedule
-   * (revealScheduleFor), one at a time, as her keeper walks
-   * with her. Her marking density and her eye's variant are
-   * born with her: the base look was never bare. */
+   * not worn at birth — they arrive on their reveal schedule
+   * (revealScheduleFor), one at a time, as their keeper walks
+   * with them. Their marking density and their eye's variant are
+   * born with them: the base look was never bare. */
   const CREST_STYLES = ["tuft", "horns", "fin", "halo", "leaf", "plain"];
   const EAR_STYLES = ["fins", "tufts", "points", "none"];
   const TRAIL_STYLES = ["wisp", "ribbon", "sparkles", "none"];
@@ -185,16 +185,16 @@
     };
   }
 
-  /* Her sound family — the newest growth of her seed.
+  /* Their sound family — the newest growth of their seed.
    *
-   * Every sound she makes — her voice's syllables, her chirps,
-   * her songs, the echo game's notes — is drawn in one of a
-   * small set of soft, synthesized families, and her seed picks
-   * which one is hers, the way it picks her form and her name.
+   * Every sound they make — their voice's syllables, their chirps,
+   * their songs, the echo game's notes — is drawn in one of a
+   * small set of soft, synthesized families, and their seed picks
+   * which one is theirs, the way it picks their form and their name.
    * A bell Spark rings softly; a hum Spark warms; a pluck Spark
-   * taps like wood; a blip Spark sounds like water. Inside her
-   * family the seed also settles her brightness, how long her
-   * notes ring, and the little vibrato she carries, so two
+   * taps like wood; a blip Spark sounds like water. Inside their
+   * family the seed also settles their brightness, how long their
+   * notes ring, and the little vibrato they carry, so two
    * Sparks of one family still do not sound the same. Pure
    * data: the same seed settles the same sound anywhere. The
    * browser glue renders the family with WebAudio — no samples,
@@ -213,9 +213,9 @@
     return {
       family: family.id,
       familyName: family.name,
-      /* How bright her filters sit, 0.85–1.15. */
+      /* How bright their filters sit, 0.85–1.15. */
       brightness: Math.round((0.85 + rand() * 0.3) * 100) / 100,
-      /* How long her notes ring, against her family's own
+      /* How long their notes ring, against their family's own
        * length, 0.8–1.25. */
       decay: Math.round((0.8 + rand() * 0.45) * 100) / 100,
       /* The waver in a held note: depth as a share of the
@@ -225,28 +225,28 @@
     };
   }
 
-  /* The extra note her greeting gains once her voice has
-   * flowered — the flourish on her reveal schedule. It rises
-   * from the same chirp root as everything she sounds. */
+  /* The extra note their greeting gains once their voice has
+   * flowered — the flourish on their reveal schedule. It rises
+   * from the same chirp root as everything they sound. */
   function flourishFor(companion) {
     const chirp = chirpFor(companion);
     if (!chirp) return null;
     return Math.round(chirp.first * 1.78);
   }
 
-  /* Her voice box, grown from her seed — v7, softened in v9.
+  /* Their voice box, grown from their seed — v7, softened in v9.
    *
-   * Until v6 her spoken voice was the device's own speech
+   * Until v6 their spoken voice was the device's own speech
    * synthesis: a generic robot, the same on every phone, tuned
    * only in pitch and pace. Aaron heard it and named it plainly:
    * too robot-like. So the robot is gone. What stands here now
-   * is a voice the seed itself grows, the way it grows her body,
-   * her name, and her chirp: a small set of vocal measurements
+   * is a voice the seed itself grows, the way it grows their body,
+   * their name, and their chirp: a small set of vocal measurements
    * (voiceBoxFor) and a way of sounding a line's shape with them
    * (vocalPlanFor) — syllable by syllable, mouth-shape by
    * mouth-shape, the pitch rising for a question and settling at
    * a sentence's end. The words themselves stand in text, whole,
-   * exactly as they always have; the voice box is her sound over
+   * exactly as they always have; the voice box is their sound over
    * them, the way a beloved game companion vocalizes. Pure data:
    * the same seed settles the same voice on any device, and two
    * Sparks sound audibly different. The browser glue sings the
@@ -255,20 +255,20 @@
    *
    * In v9 the voice itself was softened at Aaron's word — the
    * first box buzzed, and it sang too much of every line. Now
-   * she sounds in her seed's sound family (soundFor), on a
-   * round sine stack instead of a sawtooth's buzz; her breath
-   * is a seed's choice, and many seeds choose none; and she
-   * sounds only a line's first sentence, about a dozen
-   * syllables, at a lower level. Less of her, and softer —
+   * they sound in their seed's sound family (soundFor), on a
+   * round sine stack instead of a sawtooth's buzz; their breath
+   * is a seed's choice, and many seeds choose none; and they
+   * sound only a line's first sentence, about a dozen
+   * syllables, at a lower level. Less of them, and softer —
    * the words still stand whole in text. */
 
-  /* Her pace, by temperament: bold and bright a touch quicker,
+  /* Their pace, by temperament: bold and bright a touch quicker,
    * gentle a touch slower — the same table that paced the old
-   * speech, now pacing her own syllables per second. */
+   * speech, now pacing their own syllables per second. */
   const VOICE_RATES = { bold: 1.05, gentle: 0.93, quiet: 0.95, curious: 1.03, steady: 0.97, bright: 1.06 };
 
   /* Mouth shapes: the three formant resonances of each vowel, in
-   * hertz, at a vocal-tract scale of 1. Her seed's scale stretches
+   * hertz, at a vocal-tract scale of 1. Their seed's scale stretches
    * or shrinks the whole set — a smaller tract, a brighter mouth.
    * Classic values, long published; the seed chooses among them. */
   const VOWEL_FORMANTS = {
@@ -280,19 +280,19 @@
     neutral: [500, 1500, 2500]
   };
 
-  /* Her vocal measurements, all from the seed:
-   * - basePitch: her fundamental, following the same chirp root
-   *   as everything else she sounds — the chirp bases run from
-   *   Earth's ~282 Hz to Light's ~806; her speaking fundamental
+  /* Their vocal measurements, all from the seed:
+   * - basePitch: their fundamental, following the same chirp root
+   *   as everything else they sound — the chirp bases run from
+   *   Earth's ~282 Hz to Light's ~806; their speaking fundamental
    *   sits lower, 150–330 Hz, where a formant voice lives.
-   * - formantScale: the size of her vocal tract, 0.86–1.22.
+   * - formantScale: the size of their vocal tract, 0.86–1.22.
    * - breathiness: how much soft air rides under the tone.
-   *   Since v9 it is a choice her seed makes: many seeds settle
+   *   Since v9 it is a choice their seed makes: many seeds settle
    *   on none at all, and those that breathe keep it low,
    *   0.05–0.3 — the hiss of the first box is gone.
-   * - tempo: syllables per second, her temperament's pace.
-   * - and her sound (soundFor): the family she sings in, its
-   *   brightness and ring, and her vibrato — carried on the box
+   * - tempo: syllables per second, their temperament's pace.
+   * - and their sound (soundFor): the family they sing in, its
+   *   brightness and ring, and their vibrato — carried on the box
    *   so the browser glue reads one measurement set. */
   function voiceBoxFor(companion) {
     if (!companion) return null;
@@ -381,7 +381,7 @@
     }));
   }
 
-  /* How many syllables a line carries — the count her voice box
+  /* How many syllables a line carries — the count their voice box
    * will sound. Exposed for the record and the tests. */
   function syllableCountFor(text) {
     const clean = String(text == null ? "" : text).replace(/\s+/g, " ").trim();
@@ -391,9 +391,9 @@
       .reduce((n, word) => n + wordSyllables(word).length, 0);
   }
 
-  /* A line, planned for her voice box: the syllables she will
+  /* A line, planned for their voice box: the syllables they will
    * sound, in order, each with its length, its pitch, its mouth
-   * shape (formants already scaled by her tract), and its onset.
+   * shape (formants already scaled by their tract), and its onset.
    * The contour is the sentence's own: a statement starts a
    * little high and settles; a question holds, then rises on its
    * last syllables; the first syllable of a word stands a touch
@@ -401,10 +401,10 @@
    * off the contour — a seeded waver of a percent or two — so a
    * line never lands mechanically twice the same way in the
    * ear, though the plan itself is settled.
-   * Since v9 she sounds less of a line: its first sentence
+   * Since v9 they sound less of a line: its first sentence
    * only, and only about a dozen syllables of it, whole words
    * to the cap — the rest of the line stands in text, as it
-   * always has, and her sound is the greeting over it, not a
+   * always has, and their sound is the greeting over it, not a
    * reading of it. The plan is seeded by the line itself, so
    * the same Spark sounds the same line the same way twice. */
   const VOICE_MAX_SYLLABLES = 12;
@@ -452,25 +452,25 @@
     return { box, syllables, seconds: Math.round(seconds * 100) / 100 };
   }
 
-  /* Her phrase — the voice grown up, at Aaron's word
+  /* Their phrase — the voice grown up, at Aaron's word
    * (Nov 19, 2026): not a robot reading, not formants shaped
    * like speech, but a character's chirp-phrase — the kind of
    * small melodic babble a beloved game companion answers
    * with. The line still shapes it: a question lifts at its
    * end, a statement settles home. But what sounds is music
-   * from her own scale, pitched at her chirp root, and it
-   * GROWS with her, the way her body does:
+   * from their own scale, pitched at their chirp root, and it
+   * GROWS with them, the way their body does:
    * - a young Spark (stage 0) answers with a single chirp;
    * - a Kindled Spark (stage 1) answers in two notes;
    * - a Bearer (stage 2) sings a short melodic phrase of
    *   three to five notes, its contour one of a few playful
-   *   shapes her seed picks.
-   * Pure data, like everything of hers: the same seed, stage
+   *   shapes their seed picks.
+   * Pure data, like everything of theirs: the same seed, stage
    * and line settle the same phrase anywhere. The browser
-   * glue sings it in her sound family — round tones, a quick
+   * glue sings it in their sound family — round tones, a quick
    * chirp glide into each note, nothing buzzy, nothing
-   * spoken. Her syllable plan (vocalPlanFor) still stands for
-   * the record; this is what she actually sounds like now. */
+   * spoken. Their syllable plan (vocalPlanFor) still stands for
+   * the record; this is what they actually sound like now. */
   const PHRASE_SCALE = [1, 1.125, 1.25, 1.335, 1.5, 1.667, 1.78, 2];
   /* Melodic shapes for a grown phrase, as scale steps: a
    * rise, a hop and settle, a dip then lift, a small wave. */
@@ -817,10 +817,10 @@
   }
 
   /* Greetings by daypart: the talk opens with the hour's own
-   * hello, in her temperament's voice — morning's light, the
+   * hello, in their temperament's voice — morning's light, the
    * day's middle, evening gathering in, the late hours kept
    * close. The day itself is still counted by the calendar;
-   * this only names the hour she greets you in. */
+   * this only names the hour they greet you in. */
   function daypartFor(hour) {
     const h = Number.isFinite(hour) ? Math.floor(hour) : 12;
     if (h >= 5 && h < 11) return "morning";
@@ -896,7 +896,7 @@
   }
 
   /* The shared tricks, every Spark's to learn, and the one
-   * kind-flavoured trick that is hers alone. `via` names the
+   * kind-flavoured trick that is theirs alone. `via` names the
    * counter that teaches it — a play counter, or one of care's
    * own counts (kindles, chases finished, rests, the bond, the
    * echo best) — and `teacher` says it in plain words. */
@@ -950,9 +950,9 @@
     }));
   }
 
-  /* One act of play, recorded — and what it taught her. The
+  /* One act of play, recorded — and what it taught them. The
    * returned `learned` lists the tricks this act completed, so
-   * the presence can announce each one once, in her voice, at
+   * the presence can announce each one once, in their voice, at
    * the moment it lands. A trick already known is never
    * announced twice. */
   function recordPlay(record, { action, catches, round }) {
@@ -1007,7 +1007,7 @@
       .map((t) => t.id);
   }
 
-  /* Her question remembered for the day: she asks one gentle
+  /* Their question remembered for the day: they ask one gentle
    * question a day at most, and asking is all that is kept —
    * the keeper's answer is their own tap, never stored. */
   function markAsked(record, { patternDay }) {
@@ -1016,18 +1016,18 @@
     return { ...record, play };
   }
 
-  /* ---- her reveals: detail that arrives over time ----
+  /* ---- their reveals: detail that arrives over time ----
    *
-   * She is born with a whole look — form, markings, crest,
-   * her markings' density, her eye's variant — but the finer
-   * detail of her (her cheeks, her second pattern, her ears,
-   * her trail, the styled crest, and a flourish in her voice)
+   * They are born with a whole look — form, markings, crest,
+   * their markings' density, their eye's variant — but the finer
+   * detail of their (their cheeks, their second pattern, their ears,
+   * their trail, the styled crest, and a flourish in their voice)
    * is not all there at the meeting. It arrives, one piece at
-   * a time, as her keeper actually walks with her: Aaron's
-   * shape for it — fast at first, so a new keeper notices her
+   * a time, as their keeper actually walks with them: Aaron's
+   * shape for it — fast at first, so a new keeper notices their
    * change after a few pages; then slower, and slower again,
    * and never quite on a beat. The schedule is counted in
-   * engagement, from the counters her record already keeps —
+   * engagement, from the counters their record already keeps —
    * pages seen, return days, practices sealed, acts of play
    * and care — never in wall-clock time, so a keeper who is
    * away loses nothing: the schedule simply waits where it
@@ -1036,32 +1036,32 @@
    * is at least one step longer than the one before, so the
    * stretching is real and the rhythm is never clockwork.
    * Same seed + same history = the same reveal points, on any
-   * device. Which features stand on her schedule is her
-   * seed's own draw: a Spark whose detail draw left her
-   * cheekless has no cheeks to reveal — that place on her
+   * device. Which features stand on their schedule is their
+   * seed's own draw: a Spark whose detail draw left their
+   * cheekless has no cheeks to reveal — that place on their
    * schedule simply is not there. The flourish stands last
-   * for every Spark: her voice flowers after her face does. */
+   * for every Spark: their voice flowers after their face does. */
 
   /* The order a detail arrives in: the face first, where a
    * keeper looks; the voice last. */
   const REVEAL_ORDER = ["cheeks", "pattern", "ears", "trail", "crest", "flourish"];
 
   const REVEAL_LINES = {
-    cheeks: "Her cheeks came in.",
+    cheeks: "Their cheeks came in.",
     pattern: "A second pattern showed.",
-    ears: "Her ears came in.",
-    trail: "A little trail follows her.",
-    crest: "Her crest grew in.",
-    flourish: "Her voice learned a flourish."
+    ears: "Their ears came in.",
+    trail: "A little trail follows them.",
+    crest: "Their crest grew in.",
+    flourish: "Their voice learned a flourish."
   };
 
   function revealLineFor(id) {
-    return REVEAL_LINES[id] || "Something new about her.";
+    return REVEAL_LINES[id] || "Something new about them.";
   }
 
-  /* Does her seed hold this detail at all? A feature she was
-   * never drawn with is not a reveal she is owed — it is
-   * simply not hers. */
+  /* Does their seed hold this detail at all? A feature they were
+   * never drawn with is not a reveal they are owed — it is
+   * simply not theirs. */
   function revealPresent(companion, id) {
     const d = (companion && companion.details) || {};
     switch (id) {
@@ -1082,9 +1082,9 @@
     }
   }
 
-  /* Her reveal points, in engagement: the first after a
+  /* Their reveal points, in engagement: the first after a
    * handful of pages (a gap of 3–5), each next gap about
-   * 1.7 times the last, jittered by her seed, and never
+   * 1.7 times the last, jittered by their seed, and never
    * shorter than the gap before it plus one. */
   function revealScheduleFor(companion) {
     if (!companion) return [];
@@ -1102,7 +1102,7 @@
     return out;
   }
 
-  /* The walking itself, counted: every page she has been met
+  /* The walking itself, counted: every page they have been met
    * on, four for each return day after the first, two for
    * each practice sealed, one for each act of care, and one
    * for every five acts of play. Nothing here is time: a
@@ -1125,7 +1125,7 @@
     );
   }
 
-  /* Where she stands: her schedule, what has arrived, and
+  /* Where they stand: their schedule, what has arrived, and
    * what comes next — all read off the record's own counters,
    * so it can be recomputed anywhere and kept nowhere else. */
   function revealsFor({ record, companion }) {
@@ -1136,14 +1136,14 @@
     return { schedule, revealed, next, score };
   }
 
-  /* The reveals her keeper has already been told about, kept
+  /* The reveals their keeper has already been told about, kept
    * in the record like everything else; a record from before
    * reveals existed has simply been told about none. */
   function revealsSeenOf(record) {
     return Array.isArray(record && record.revealsSeen) ? record.revealsSeen.slice() : [];
   }
 
-  /* The same single-announcement discipline as her tricks:
+  /* The same single-announcement discipline as their tricks:
    * a reveal is news exactly once — when it has arrived in
    * the after-record, was not arrived in the before-record,
    * and has not already been announced. */
@@ -1160,12 +1160,12 @@
     return { ...record, revealsSeen: [...seen] };
   }
 
-  /* The echo game: she pulses a pattern — her seed's notes in
+  /* The echo game: they pulse a pattern — their seed's notes in
    * four colours — and the keeper taps it back. The pattern is
    * grown from the seed and the round, so the same Spark sings
    * the same round anywhere; each round carries one more step
-   * than the last, up to a kind length. The pads wear her own
-   * hue, turned four ways, and sound her own notes, rising. */
+   * than the last, up to a kind length. The pads wear their own
+   * hue, turned four ways, and sound their own notes, rising. */
   function echoFor({ companion, round }) {
     if (!companion) return { pads: [], steps: [], round: 0 };
     const r = Math.max(1, Math.floor(round) || 1);
@@ -1184,13 +1184,13 @@
     return { pads, steps, round: r };
   }
 
-  /* Her mood: a small state with honest parents. It is derived
+  /* Their mood: a small state with honest parents. It is derived
    * from what has actually happened — play, care, the hour —
    * never from a clock ticking down. A trick learned or a round
-   * echoed leaves her proud for a while; a pet or a kindle
-   * leaves her bright; the late hours leave her sleepy; a rest
-   * or the evening leaves her calm; the rest of the day she is
-   * curious, which is her way of being awake in the world. */
+   * echoed leaves them proud for a while; a pet or a kindle
+   * leaves them bright; the late hours leave them sleepy; a rest
+   * or the evening leaves them calm; the rest of the day they are
+   * curious, which is their way of being awake in the world. */
   const MOODS = {
     proud: { name: "Proud", line: "Proud — new trick, or a true echo." },
     bright: { name: "Bright", line: "Bright — played with and glad." },
@@ -1212,7 +1212,7 @@
     return { id, name: mood.name, line: mood.line };
   }
 
-  /* Her one gentle question: drawn only from what the record
+  /* Their one gentle question: drawn only from what the record
    * truly holds — the day itself, the thread left warm, a door
    * found for today, a small practice that would seal the day
    * kindly. An invitation with a door, asked once a day at
@@ -1378,7 +1378,7 @@
       temperament: kind.temperament,
       /* The body's own hue, kept as a number beside the finished
        * colours: the echo game builds its four pads from it, so
-       * the pads wear her colours and no one else's. */
+       * the pads wear their colours and no one else's. */
       hue: Math.round(hue),
       trait: TRAITS[Math.floor(rand() * TRAITS.length)],
       form: FORMS[Math.floor(rand() * FORMS.length)],
@@ -1409,9 +1409,9 @@
           pace: Math.round((0.9 + r2() * 0.2) * 100) / 100
         };
       })(),
-      /* Her finer grain, from its own stream (see the lists
-       * above): which details she will grow, and the two she
-       * is born wearing — her markings' density and her eye's
+      /* Their finer grain, from its own stream (see the lists
+       * above): which details they will grow, and the two they
+       * are born wearing — their markings' density and their eye's
        * variant. */
       details: (() => {
         const r3 = mulberry32(hashString(seed + ":detail"));
@@ -1493,9 +1493,9 @@
     }
   }
 
-  /* Her finer grain, drawn — v9. One function per detail of
+  /* Their finer grain, drawn — v9. One function per detail of
    * companion.details, in the body's own coordinates; renderSVG
-   * decides which stand on the page, by her reveal state. The
+   * decides which stand on the page, by their reveal state. The
    * trail is drawn behind the body, the rest over it. All of
    * it is kept small on purpose: at roaming size these read as
    * a silhouette's character, not as separate parts. */
@@ -1619,14 +1619,14 @@
     return `<g class="spark-eye"><circle cx="50" cy="${cy}" r="${r}" fill="#0b0e18"/><circle cx="50" cy="${cy}" r="${r * 0.45}" fill="${companion.palette.glow}"/><circle cx="${50 + r * 0.3}" cy="${cy - r * 0.3}" r="${r * 0.18}" fill="#fff"/>${extra}</g>`;
   }
 
-  /* Her spark-light, drawn: the motes that form around her.
+  /* Their spark-light, drawn: the motes that form around them.
    * No bubble, no ring — Aaron's word (Nov 19, 2026): the
-   * circle around her goes, and in its place she lights up
-   * like a spark, with little sparks of her own forming
-   * around her. The variant is the seed's: one mote shape per
+   * circle around their goes, and in its place they light up
+   * like a spark, with little sparks of their own forming
+   * around them. The variant is the seed's: one mote shape per
    * Spark (a four-point star, a small diamond, a plain dot),
-   * her own scatter, her palette's glow and accent taking
-   * turns. The count grows with her stage — a young Spark
+   * their own scatter, their palette's glow and accent taking
+   * turns. The count grows with their stage — a young Spark
    * carries a few, a grown one a small company — so growth
    * still reads at a glance, as light, not furniture. */
   const MOTE_SHAPES = ["star", "diamond", "dot"];
@@ -1672,12 +1672,12 @@
     const markFraction = [0.5, 0.85, 1.15][stage] || 1;
     const crestScale = [0.65, 0.88, 1.02][stage] || 1;
     const crestOpacity = [0.7, 0.9, 1][stage] || 1;
-    /* Her finer grain stands only where her schedule has
+    /* Their finer grain stands only where their schedule has
      * brought it: `revealed` names the detail that has arrived
-     * (revealScheduleFor, counted from her record). No list —
-     * a first meeting, a fresh record — is her born look: the
-     * whole base, none of the arrivals. Her markings' density
-     * and her eye's variant are born with her and always stand. */
+     * (revealScheduleFor, counted from their record). No list —
+     * a first meeting, a fresh record — is their born look: the
+     * whole base, none of the arrivals. Their markings' density
+     * and their eye's variant are born with them and always stand. */
     const shown = (id) => Array.isArray(revealed) && revealed.includes(id);
     const density = companion.details ? companion.details.density : 1;
     const grown = {
@@ -1697,10 +1697,10 @@
       stage >= 2
         ? `<path d="M38 12 L44 4 L50 11 L56 4 L62 12 Z" fill="${companion.palette.accent}" opacity="0.95"/>`
         : "";
-    /* Her light, feathered: a radial glow in her own glow
-     * colour that fades to nothing at its edge — light she
-     * stands in, not a disc she sits on. It deepens a little
-     * as she grows. */
+    /* Their light, feathered: a radial glow in their own glow
+     * colour that fades to nothing at its edge — light they
+     * stand in, not a disc they sit on. It deepens a little
+     * as they grow. */
     const halo = companion.shape
       ? companion.shape.glow === "bright"
         ? 0.22
@@ -1792,13 +1792,13 @@
       trail: { day: null, done: [] },
       /* The play life: touches counted as they happen — pets,
        * pokes, drags by hand, catches in the chase, rounds
-       * echoed — the tricks play has taught her (kept once
+       * echoed — the tricks play has taught their (kept once
        * announced, so each is celebrated a single time), and
-       * the day her one gentle question was last asked. Play
+       * the day their one gentle question was last asked. Play
        * only ever adds, exactly like care. */
       play: { pets: 0, pokes: 0, drags: 0, catches: 0, bestChase: 0, echoBest: 0, tricks: [], askedDay: null },
-      /* The reveals her keeper has already been told about —
-       * her detail arrives on a stretching schedule counted
+      /* The reveals their keeper has already been told about —
+       * their detail arrives on a stretching schedule counted
        * from this record's own counters, and each arrival is
        * announced exactly once, so what is kept here is only
        * the telling, never the schedule itself. */
@@ -2076,12 +2076,12 @@
     return `Moon ${today.moon} · Day ${today.day} · Pattern Day ${today.dayOfPatternYear}`;
   }
 
-  /* The temper of the moon she is under, from the same
-   * canonical position that counts her day: the moon's own
+  /* The temper of the moon they are under, from the same
+   * canonical position that counts their day: the moon's own
    * name, as the calendar states it, and — from the moon's
    * element, which the calendar data also states — a hue
-   * family for her light. The hue tints her glow only; her
-   * seed-grown body colours are her identity and never take
+   * family for their light. The hue tints their glow only; their
+   * seed-grown body colours are their identity and never take
    * it. A day outside the moons has no temper to borrow. */
   const MOON_ELEMENT_HUES = { Fire: 14, Water: 208, Air: 255, Earth: 96, Aether: 288 };
   function moonTemperFor({ today, element }) {
@@ -2437,33 +2437,33 @@
     return out.slice(0, 5);
   }
 
-  /* ---- v10: her rarity — counted from her own draws ----
+  /* ---- v10: their rarity — counted from their own draws ----
    *
    * Aaron's word: Sparks should carry different rarities, and
    * the variety should be very large. The rule this build
    * keeps: rarity is COMPUTED, never stickered. Every trait
-   * she has was drawn from her seed with some probability;
-   * her rarity is that probability, read back off the same
+   * they have was drawn from their seed with some probability;
+   * their rarity is that probability, read back off the same
    * tables the draws came from — so a trait drawn 1-in-N
    * shows odds of about 1 in N, and no number here is
-   * invented. Rarity is a fact about her, never a price:
+   * invented. Rarity is a fact about them, never a price:
    * every Spark is free to adopt, rarity gates nothing, and
    * nothing here speaks of buying, selling, or scarcity.
    *
    * The census counts the variety itself, from the tables:
    * every categorical draw the generator can make, times the
    * measured traits at the steps the generator rounds them
-   * to. It is a floor, not a ceiling — her exact hue and her
-   * palette's shades are drawn on finer steps still, and her
+   * to. It is a floor, not a ceiling — their exact hue and their
+   * palette's shades are drawn on finer steps still, and their
    * birth day (365 of them) roots each seed in its own day.
    *
-   * Her standing is counted among Sparks of her own kind,
-   * from the three draws whose odds truly vary: her name
+   * Their standing is counted among Sparks of their own kind,
+   * from the three draws whose odds truly vary: their name
    * (a name with a middle is a rarer draw than one without),
-   * her set of grown details (which of the five she drew,
-   * and which she did not), and her breath (none, or one of
-   * its 26 steps). The uniform draws — her form, her
-   * markings, her sound family — are the same odds for every
+   * their set of grown details (which of the five they drew,
+   * and which they did not), and their breath (none, or one of
+   * its 26 steps). The uniform draws — their form, their
+   * markings, their sound family — are the same odds for every
    * Spark, so they are counted in the census, where they
    * belong, and not dressed up as rarity here. */
 
@@ -2524,20 +2524,20 @@
       measureSteps: MEASURE_STEPS.map((s) => ({ ...s })),
       measuredMultiplier,
       total: categorical * measuredMultiplier,
-      /* Her birth day: 364 Pattern Days, and the one day
+      /* Their birth day: 364 Pattern Days, and the one day
        * outside them. The day fixes the moon, so the two are
        * counted once, as days. */
       birthDays: 365,
-      /* Which of her five grown details a seed may draw —
+      /* Which of their five grown details a seed may draw —
        * each present or not — makes 32 shapes of schedule. */
       revealShapes: 32
     };
   }
 
-  /* Her name's draw, replayed: the seed picks one of her
+  /* Their name's draw, replayed: the seed picks one of their
    * kind's openers, then — 45 times in 100 — one of the
    * middles, then one of the closers. A name with no middle
-   * is carried by about 1 in 131 of her kind; a name with a
+   * is carried by about 1 in 131 of their kind; a name with a
    * middle, by about 1 in 1,280. */
   function nameDrawFor(companion) {
     if (!companion) return null;
@@ -2552,11 +2552,11 @@
     };
   }
 
-  /* Her set of grown details, and its odds: each of the
+  /* Their set of grown details, and its odds: each of the
    * four detail lists holds three grown styles and a "none"
-   * (present 3 times in 4); her crest style holds five
+   * (present 3 times in 4); their crest style holds five
    * grown styles and a "plain" (present 5 times in 6). The
-   * set she actually drew — these present, those not — runs
+   * set they actually drew — these present, those not — runs
    * from about 1 in 4 (all five) to 1 in 1,536 (none). */
   function detailSetFor(companion) {
     if (!companion) return null;
@@ -2573,7 +2573,7 @@
     return { draws, presentCount: draws.filter((x) => x.present).length, p };
   }
 
-  /* Her breath's draw: 45 in 100 Sparks breathe not at all;
+  /* Their breath's draw: 45 in 100 Sparks breathe not at all;
    * the rest settle on one of the 26 steps from 0.05 to
    * 0.30, so any one breathing voice is the rarer draw. */
   function breathDrawFor(companion) {
@@ -2585,7 +2585,7 @@
     };
   }
 
-  /* Her standing, in five bands of the counted odds —
+  /* Their standing, in five bands of the counted odds —
    * plain Codex words, no trumpets. Each band is ten times
    * the odds of the one before it, and the odds themselves
    * always stand beside the name, so the name never claims
@@ -2612,7 +2612,7 @@
     return (Math.round(n / d) * d).toLocaleString("en-US");
   }
 
-  /* Her rarity, whole: an overall standing from the three
+  /* Their rarity, whole: an overall standing from the three
    * varying draws multiplied, a line for each notable trait
    * with its own odds, and the marks that come from birth
    * and life rather than draws — a birth outside the moons,
@@ -2633,7 +2633,7 @@
         id: "name",
         oneIn: Math.round(1 / nameDraw.p),
         line:
-          `Her name, ${companion.name}: about 1 in ${oneInText(nameDraw.p)} ` +
+          `Their name, ${companion.name}: about 1 in ${oneInText(nameDraw.p)} ` +
           `${companion.kindName} Sparks carry this exact name.`
       }
     ];
@@ -2641,27 +2641,27 @@
       traits.push({
         id: "halo-upon-halo",
         oneIn: 30,
-        line: "A halo over a halo — her crest and its style agree: about 1 in 30 Sparks wear both."
+        line: "A halo over a halo — their crest and its style agree: about 1 in 30 Sparks wear both."
       });
     }
     if (companion.crest === "leaf" && companion.details && companion.details.crestStyle === "leaf") {
       traits.push({
         id: "leaf-upon-leaf",
         oneIn: 30,
-        line: "A leaf over a leaf — her crest and its style agree: about 1 in 30 Sparks wear both."
+        line: "A leaf over a leaf — their crest and its style agree: about 1 in 30 Sparks wear both."
       });
     }
     if (detailSet.presentCount === 0) {
       traits.push({
         id: "no-detail",
         oneIn: 1536,
-        line: "She grows no extra detail at all — her born look is her whole look: about 1 in 1,536 Sparks are drawn this spare."
+        line: "They grow no extra detail at all — their born look is their whole look: about 1 in 1,536 Sparks are drawn this spare."
       });
     } else if (detailSet.presentCount === detailSet.draws.length) {
       traits.push({
         id: "all-detail",
         oneIn: 4,
-        line: "She grows every detail her seed can draw — cheeks, pattern, ears, trail, and a styled crest: about 1 in 4 Sparks do."
+        line: "They grow every detail their seed can draw — cheeks, pattern, ears, trail, and a styled crest: about 1 in 4 Sparks do."
       });
     }
     const size = companion.shape ? companion.shape.size : null;
@@ -2669,13 +2669,13 @@
       traits.push({
         id: "tall",
         oneIn: 11,
-        line: "She stands among the tallest Sparks: about 1 in 11 reach this height."
+        line: "They stand among the tallest Sparks: about 1 in 11 reach this height."
       });
     } else if (size != null && size <= 0.87) {
       traits.push({
         id: "small",
         oneIn: 11,
-        line: "She stands among the smallest Sparks: about 1 in 11 are this small."
+        line: "They stand among the smallest Sparks: about 1 in 11 are this small."
       });
     }
     const specials = [];
@@ -2696,14 +2696,14 @@
       if (rev.schedule.length >= 2 && rev.revealed.length === rev.schedule.length) {
         specials.push({
           id: "fully-revealed",
-          line: "Every detail on her schedule has arrived — her whole face, grown in over the walk."
+          line: "Every detail on their schedule has arrived — their whole face, grown in over the walk."
         });
       }
       const trickList = tricksFor({ record, companion });
       if (trickList.length > 0 && trickList.every((t) => t.learned)) {
         specials.push({
           id: "all-tricks",
-          line: "She knows every trick she can learn."
+          line: "They know every trick they can learn."
         });
       }
       if (stageOf(record, companion).index >= STAGES.length - 1) {
@@ -2724,7 +2724,7 @@
       traits,
       specials,
       line:
-        `${tier.name} — about 1 in ${oneInText(p)} Sparks of her kind match her ` +
+        `${tier.name} — about 1 in ${oneInText(p)} Sparks of their kind match them ` +
         `on name, grown detail, and breath together.`
     };
   }
@@ -2781,7 +2781,7 @@
       points: stage.points,
       daysTogether: ((record && record.daysSeen) || []).length,
       coordinate: coordinateLineFor(today),
-      /* Her mood, named in her record, and her play life in
+      /* Their mood, named in their record, and their play life in
        * honest counts: pets given, tricks known, the best
        * chase and the best echo — all of it kept here. */
       mood: moodFor({
@@ -2806,7 +2806,7 @@
         companion,
         todayPatternDay: today ? today.dayOfPatternYear : null
       }),
-      /* Her rarity, counted from her own draws — the same
+      /* Their rarity, counted from their own draws — the same
        * counting the share card carries. */
       rarity: rarityFor({ record, companion }),
       trail: trailFor({ record, companion, today, page: null }),

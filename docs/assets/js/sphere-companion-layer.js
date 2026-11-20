@@ -6,7 +6,7 @@
    *
    * Aaron's direction (Nov 18, 2026): the Sphere needs more detail,
    * a true fullscreen, easier navigation on the full page, and Nori
-   * ON the Sphere — travelling around it and helping her keeper
+   * ON the Sphere — travelling around it and helping their keeper
    * navigate it.
    *
    * This module is an overlay only. It never touches the sphere
@@ -25,13 +25,13 @@
    *      document-level fullscreen the app shell uses (so the
    *      sheets stay reachable), offered on the stage itself, in
    *      both the app view and the classic full page.
-   *   3. Nori's orbit — for a keeper who has adopted a Spark, she
-   *      travels an ellipse around the sphere on this page, and her
+   *   3. Nori's orbit — for a keeper who has adopted a Spark, they
+   *      travel an ellipse around the sphere on this page, and their
    *      bubble gains a Sphere guide that performs the same trips.
-   *      While she orbits, her corner walker rests hidden; tapping
-   *      her orbit (or her opening her bubble) brings her back.
-   *      Reduced motion means no orbit — she simply stays in her
-   *      corner, exactly as her own presence already behaves.
+   *      While they orbit, their corner walker rests hidden; tapping
+   *      their orbit (or their opening their bubble) brings them back.
+   *      Reduced motion means no orbit — they simply stay in their
+   *      corner, exactly as their own presence already behaves.
    *   4. Share this view (Nov 19, 2026) — the guide bar composes a
    *      share of the day on screen from its own readout, in the
    *      almanac frame, for the keeper to send from their own share
@@ -513,7 +513,7 @@
     else if (action === "guide") toggleGuideBar();
   });
 
-  // ── Nori on the Sphere: the orbit + her bubble guide ─────────────
+  // ── Nori on the Sphere: the orbit + their bubble guide ─────────────
 
   const Core = window.SparkCompanion;
   if (!Core) return;
@@ -571,7 +571,7 @@
 
     const moonsRow = box.querySelector(".spark-sphere-guide-moons");
     const moonSel = document.createElement("select");
-    moonSel.setAttribute("aria-label", "Choose a Moon and she will take you there");
+    moonSel.setAttribute("aria-label", "Choose a Moon and they will take you there");
     moonNames.forEach((moonName, i) => {
       const opt = document.createElement("option");
       opt.value = String(i + 1);
@@ -607,7 +607,7 @@
 
   function startOrbit(host, bubble) {
     const record = readRecord();
-    if (!record) return; // No adopted Spark — her meeting happens first.
+    if (!record) return; // No adopted Spark — their meeting happens first.
     const companion = Core.generate(record.seed);
     const stage = Core.stageOf ? Core.stageOf(record, companion) : { index: 0 };
     const name = Core.displayName(record, companion);
@@ -615,7 +615,7 @@
     const orbit = document.createElement("button");
     orbit.type = "button";
     orbit.className = "sphere-nori-orbit";
-    orbit.setAttribute("aria-label", `${name} is travelling around the Sphere — tap to talk with her`);
+    orbit.setAttribute("aria-label", `${name} is travelling around the Sphere — tap to talk with their`);
     orbit.innerHTML = `<span class="sphere-nori-art">${Core.renderSVG(companion, { stage: stage.index })}</span><span class="sphere-nori-name">${name}</span>`;
     wrap.appendChild(orbit);
 

@@ -1,7 +1,7 @@
 "use strict";
 
 /* Sphere deepening — Aaron's direction (Nov 18, 2026): Nori on the
- * Sphere as her own overlay layer, a reachable full screen, easier
+ * Sphere as their own overlay layer, a reachable full screen, easier
  * navigation on the full page, and more detail on the page around
  * the instrument.
  *
@@ -75,11 +75,11 @@ test("the guide bar answers the first-time visitor: where am I, today, a moon, t
   assert.ok(css.includes(".sphere-guide-bar"), "guide bar is styled");
 });
 
-test("Nori's orbit is her own overlay, reduced-motion safe, and yields to her bubble", () => {
+test("Nori's orbit is their own overlay, reduced-motion safe, and yields to their bubble", () => {
   assert.ok(layer.includes("sphere-nori-orbit"), "the orbit element exists");
   assert.ok(layer.includes("prefers-reduced-motion"), "reduced motion is checked before orbiting");
-  assert.ok(layer.includes("renderSVG"), "she is drawn from her own seed art");
-  assert.ok(css.includes("sphere-nori-orbiting"), "the corner walker rests while she orbits");
+  assert.ok(layer.includes("renderSVG"), "they are drawn from their own seed art");
+  assert.ok(css.includes("sphere-nori-orbiting"), "the corner walker rests while they orbit");
 });
 
 test("the dock fits a phone: the Full button comes on screen", () => {

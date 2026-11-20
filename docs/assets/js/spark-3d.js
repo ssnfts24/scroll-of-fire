@@ -7,11 +7,11 @@
  * small low-poly creature built in code from its kind's form,
  * its palette, its markings, its crest and eye, and its stage —
  * Ember small and simple, Flame developed, Radiant full and
- * crowned, her spark motes gathering around her as she grows.
- * Since v9 it also wears her finer grain: the
- * detail her seed drew (companion.details) — ears, a trail,
+ * crowned, their spark motes gathering around them as they grow.
+ * Since v9 it also wears their finer grain: the
+ * detail their seed drew (companion.details) — ears, a trail,
  * cheeks, a styled crest, a second pattern painted onto the
- * body's own faces — standing only where her reveal schedule
+ * body's own faces — standing only where their reveal schedule
  * has brought it, exactly as the flat drawing wears it.
  * Hand-rolled WebGL1, no libraries, nothing fetched:
  * the site stays static and offline, and the whole creature is a
@@ -293,12 +293,12 @@
     const glow = parseColor(companion.palette.glow, [0.7, 0.9, 1]);
     const accent = parseColor(companion.palette.accent, [0.85, 0.64, 0.25]);
     const rand = mulberry32(hashString(companion.seed + ":marks3d"));
-    /* Her finer grain (Core's companion.details): which pieces
+    /* Their finer grain (Core's companion.details): which pieces
      * stand here is the reveal state's word — `revealed` names
-     * what her schedule has brought (the presence and the home
-     * page pass it from her record). No list is her born look.
-     * Her markings' density and her eye's variant are born
-     * with her and always stand. The detail geometry is kept
+     * what their schedule has brought (the presence and the home
+     * page pass it from their record). No list is their born look.
+     * Their markings' density and their eye's variant are born
+     * with them and always stand. The detail geometry is kept
      * cheap on purpose: cones and octahedra, a few dozen
      * triangles all told, no new draw calls — it rides in the
      * same two meshes as everything else. */
@@ -343,7 +343,7 @@
 
     /* Markings: half-grown for an Ember, full for a Flame, one
      * richer again for a Radiant — the flat drawing's own count,
-     * deepened or thinned by her seed's marking density. */
+     * deepened or thinned by their seed's marking density. */
     const density = details ? details.density : 1;
     const markCount = Math.max(
       1,
@@ -358,7 +358,7 @@
     b.speckle(rand, markCount, glow, accent);
 
     /* The second pattern layer, once it has arrived: a finer
-     * speckle in her other colour, two bands around the body,
+     * speckle in their other colour, two bands around the body,
      * or a belly patch of lightened body colour — the body's
      * own faces, painted, never new geometry. */
     if (has("pattern") && details) {
@@ -398,8 +398,8 @@
     }
 
     /* The styled crest, once it has arrived — grown at the
-     * crest's own stage scale, so a stage never swaps her
-     * identity, it only grows what is hers: a tuft of three
+     * crest's own stage scale, so a stage never swaps their
+     * identity, it only grows what is theirs: a tuft of three
      * small cones, two horns, a swept fin, a second halo, or
      * a leaf leaning off the crest's shoulder. */
     if (has("crest") && details) {
@@ -420,10 +420,10 @@
       }
     }
 
-    /* Her ears, once they have arrived: fins swept from her
-     * sides, a spray of small tufts, or two points in her own
+    /* Their ears, once they have arrived: fins swept from their
+     * sides, a spray of small tufts, or two points in their own
      * body colour — silhouette first, so they read at roaming
-     * size, where she is a few dozen pixels tall. */
+     * size, where they are a few dozen pixels tall. */
     if (has("ears") && details) {
       if (details.ears === "fins") {
         b.cone(-0.78, 0.02, 0, 0.16 * dScale, 0.34 * dScale, accent, -1.15, false);
@@ -440,9 +440,9 @@
       }
     }
 
-    /* The trail that follows her, once it has arrived: a wisp
+    /* The trail that follows them, once it has arrived: a wisp
      * or two ribbons streaming behind, or three small sparks
-     * hanging in her wake. Behind her, always — the comet's
+     * hanging in their wake. Behind them, always — the comet's
      * own tail simply gains company. */
     if (has("trail") && details) {
       if (details.trail === "wisp") {
@@ -457,9 +457,9 @@
       }
     }
 
-    /* Her cheeks, once they have arrived: two flattened gems
-     * of glow or accent on her face's front, or a spray of
-     * freckle-points. Their depth is set by her form, so they
+    /* Their cheeks, once they have arrived: two flattened gems
+     * of glow or accent on their face's front, or a spray of
+     * freckle-points. Their depth is set by their form, so they
      * sit on the surface the form actually has. */
     if (has("cheeks") && details) {
       const cheekZ = companion.form === "moth" ? 0.3 : companion.form === "shard" ? 0.5 : 0.62;
@@ -486,8 +486,8 @@
     const eyeSquash = companion.eye === "half" ? 0.45 : 1;
     eye.ball(0, 0, 0, eyeR, eyeR * eyeSquash, 0.07, INK, false);
     eye.ball(0.05, 0.05, 0.06, 0.05, 0.05, 0.03, WHITE, false);
-    /* Her eye's variant — born with her, not revealed: a
-     * second, lower shine; a ring of her glow around the eye;
+    /* Their eye's variant — born with them, not revealed: a
+     * second, lower shine; a ring of their glow around the eye;
      * or one small lash at its outer corner. */
     const eyeVariant = details ? details.eyeVariant : "plain";
     if (eyeVariant === "sparkle") {
@@ -499,13 +499,13 @@
     }
     const eyeCenter = [0, 0.08, 0.72];
 
-    /* Her spark motes, in the body: small octahedra of her
-     * glow and accent scattered around her — the same light
+    /* Their spark motes, in the body: small octahedra of their
+     * glow and accent scattered around them — the same light
      * the flat drawing carries (the core's mote stream, read
-     * the same way), never a ring or a bubble around her
-     * (Aaron's word, Nov 19, 2026: the circle goes; she
-     * lights up like a spark instead). More of them as she
-     * grows; a Radiant also wears a crown of three small
+     * the same way), never a ring or a bubble around their
+     * (Aaron's word, Nov 19, 2026: the circle goes; they
+     * light up like a spark instead). More of them as they
+     * grow; a Radiant also wears a crown of three small
      * flames above the crest. */
     {
       const moteRand = mulberry32(hashString(companion.seed + ":motes"));
@@ -691,7 +691,7 @@
 
     const geo = buildGeometry(companion, stage, options.revealed || null);
     /* The build's size, kept where a keeper of the lab can
-     * read it: how many triangles her two meshes carry
+     * read it: how many triangles their two meshes carry
      * (three vertices to a triangle, three numbers to a
      * vertex). */
     canvas.dataset.tris = String((geo.main.pos.length + geo.eye.pos.length) / 9);
