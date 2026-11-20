@@ -519,6 +519,276 @@
     return { box, notes, seconds: Math.round(seconds * 100) / 100 };
   }
 
+  /* ---- their living voice: identity, growth, presence ----
+   *
+   * Stage 1 (Aaron, Nov 19, 2026): their sound is not a switch
+   * and not a sound pack. It is a living layer over the voice
+   * they already have. The fence is exact: this layer reads
+   * chirpFor, soundFor, and voiceBoxFor as they stand and adds
+   * one new deterministic stream (`seed + ":living-voice:1"`)
+   * for a signature motif. It never re-rolls their root, their
+   * family, or any measurement an existing keeper's Spark was
+   * born with. Their repertoire — how much of that motif they
+   * can say — is computed from their record every time: their
+   * growth stage, the distinct days they have lived with their
+   * keeper, and the practice days they have kept. Nothing is
+   * bought, stored as a separate level, or reset. */
+  const LIVING_VOICE_VERSION = "living-voice/1";
+  const LIVING_VOICE_STAGES = [
+    { id: "spark", name: "Spark voice", maxNotes: 1 },
+    { id: "kindled", name: "Kindled voice", maxNotes: 2 },
+    { id: "bearer", name: "Bearer voice", maxNotes: 5 },
+    { id: "guardian", name: "Guardian voice", maxNotes: 7 }
+  ];
+
+  function uniqueCount(values) {
+    return Array.isArray(values) ? new Set(values).size : 0;
+  }
+
+  function livingVoiceIdentityFor(companion) {
+    if (!companion) return null;
+    const chirp = chirpFor(companion);
+    const sound = soundFor(companion);
+    const box = voiceBoxFor(companion);
+    if (!chirp || !sound || !box) return null;
+    const rand = mulberry32(hashString(companion.seed + ":living-voice:1"));
+    const steps = [0];
+    steps.push(1 + Math.floor(rand() * 4));
+    let third = Math.floor(rand() * 5);
+    if (third === steps[1]) third = (third + 1) % 5;
+    steps.push(third);
+    steps.push(2 + Math.floor(rand() * 4));
+    let fifth = 1 + Math.floor(rand() * 4);
+    if (fifth === steps[3]) fifth = fifth === 4 ? 3 : fifth + 1;
+    steps.push(fifth);
+    const signature = steps.map((step, i) => {
+      const last = i === steps.length - 1;
+      return {
+        step,
+        f0: Math.round(chirp.first * PHRASE_SCALE[step] * 10) / 10,
+        dur: Math.round((0.1 + rand() * 0.04 + (last ? 0.05 : 0)) * 1000) / 1000,
+        gap: last ? 0 : Math.round((0.04 + rand() * 0.02) * 1000) / 1000,
+        glide: last ? 0.98 : 1
+      };
+    });
+    const variationRand = mulberry32(hashString(companion.seed + ":living-voice:1:variation"));
+    const variationSteps = [3 + Math.floor(variationRand() * 4), Math.floor(variationRand() * 4)];
+    const variation = variationSteps.map((step, i) => ({
+      step,
+      f0: Math.round(chirp.first * PHRASE_SCALE[step] * 10) / 10,
+      dur: Math.round((0.1 + variationRand() * 0.04 + (i === variationSteps.length - 1 ? 0.06 : 0)) * 1000) / 1000,
+      gap: i === variationSteps.length - 1 ? 0 : 0.045,
+      glide: i === variationSteps.length - 1 ? 0.98 : 1
+    }));
+    return {
+      version: LIVING_VOICE_VERSION,
+      tonic: chirp.first,
+      greeting: [chirp.first, chirp.second],
+      family: sound.family,
+      familyName: sound.familyName,
+      brightness: sound.brightness,
+      decay: sound.decay,
+      vibratoDepth: sound.vibratoDepth,
+      vibratoRate: sound.vibratoRate,
+      box,
+      signatureSteps: steps.slice(),
+      signature,
+      variationSteps,
+      variation
+    };
+  }
+
+  function livingVoiceGrowthFor({ record, companion } = {}) {
+    if (!companion) {
+      return {
+        index: 0,
+        id: "spark",
+        name: "Spark voice",
+        maxNotes: 1,
+        bodyStageIndex: 0,
+        bodyStageName: "",
+        bodyPoints: 0,
+        daysTogether: 0,
+        practiceDays: 0,
+        engagement: 0,
+        basis: []
+      };
+    }
+    const body = stageOf(record || {}, companion);
+    const daysTogether = uniqueCount(record && record.daysSeen);
+    const practiceDays = uniqueCount(record && record.practiceDays);
+    let index = 0;
+    if (body.index >= 1 || (daysTogether >= 3 && practiceDays >= 1)) index = 1;
+    if (body.index >= 2 || (daysTogether >= 14 && practiceDays >= 5)) index = 2;
+    if (body.index >= 2 && daysTogether >= 60 && practiceDays >= 20) index = 3;
+    const stage = LIVING_VOICE_STAGES[index];
+    return {
+      index,
+      id: stage.id,
+      name: stage.name,
+      maxNotes: stage.maxNotes,
+      bodyStageIndex: body.index,
+      bodyStageName: body.name,
+      bodyPoints: body.points,
+      daysTogether,
+      practiceDays,
+      engagement: engagementOf(record || {}),
+      basis: [
+        `body stage ${body.index + 1} (${body.name})`,
+        `${daysTogether} distinct day${daysTogether === 1 ? "" : "s"} together`,
+        `${practiceDays} practice day${practiceDays === 1 ? "" : "s"} kept`
+      ]
+    };
+  }
+
+  function livingVoicePresenceFor({
+    hour = 12,
+    greeted = false,
+    still = false,
+    hidden = false,
+    legacyQuiet = false
+  } = {}) {
+    if (hidden) {
+      return { id: "away", name: "Away", canSound: false, level: 0, maxNotes: 0, line: "The tab is hidden; their voice rests with the page." };
+    }
+    if (still) {
+      return { id: "resting", name: "Resting", canSound: false, level: 0, maxNotes: 0, line: "Stillness is on; they rest, and their words and doors still work." };
+    }
+    if (legacyQuiet) {
+      return { id: "quiet-promise", name: "Resting quietly", canSound: false, level: 0, maxNotes: 0, line: "A quiet promise from the earlier build is being kept." };
+    }
+    if (!greeted) {
+      return { id: "waiting", name: "Waiting", canSound: false, level: 0, maxNotes: 0, line: "They wait to be greeted before they sound." };
+    }
+    const h = Number.isFinite(hour) ? Math.floor(hour) : 12;
+    if (h >= 22 || h < 5) {
+      return { id: "nightwatch", name: "Nightwatch", canSound: true, level: 0.55, maxNotes: 3, line: "Nightwatch: fewer notes, softly, when greeted." };
+    }
+    return { id: "awake", name: "Awake", canSound: true, level: 1, maxNotes: 7, line: "Awake and answering in their own voice." };
+  }
+
+  function livingVoicePlanFor({
+    companion,
+    record,
+    context = "greeting",
+    text = "",
+    hour = 12,
+    greeted = true,
+    still = false,
+    hidden = false,
+    legacyQuiet = false
+  } = {}) {
+    const identity = livingVoiceIdentityFor(companion);
+    const growth = livingVoiceGrowthFor({ record, companion });
+    const presence = livingVoicePresenceFor({ hour, greeted, still, hidden, legacyQuiet });
+    if (!identity || !presence.canSound) {
+      return { version: LIVING_VOICE_VERSION, identity, growth, presence, context, notes: [], seconds: 0, level: 0 };
+    }
+    const counts = {
+      tap: [1, 2, 3, 3],
+      greeting: [1, 2, 3, 3],
+      hold: [1, 2, 5, 7],
+      name: [1, 2, 5, 7],
+      stroke: [1, 2, 4, 5],
+      call: [1, 2, 5, 5],
+      day: [1, 2, 5, 7],
+      moment: [1, 2, 5, 7],
+      line: [1, 2, 5, 7]
+    };
+    let count = (counts[context] || counts.greeting)[growth.index];
+    count = Math.min(count, growth.maxNotes, presence.maxNotes || count);
+    let notes = identity.signature.slice(0, Math.min(count, identity.signature.length)).map((n) => ({ ...n }));
+    if (count > notes.length) notes = notes.concat(identity.variation.slice(0, count - notes.length).map((n) => ({ ...n })));
+    const clean = String(text == null ? "" : text).replace(/\s+/g, " ").trim();
+    const question = /\?$/.test((clean.match(/[^.!?]+[.!?]+/) || [clean])[0].trim());
+    notes = notes.map((note, i) => {
+      const last = i === notes.length - 1;
+      const out = { ...note };
+      if (context === "stroke") {
+        out.dur = Math.round(out.dur * 1.18 * 1000) / 1000;
+        out.glide = last ? 0.98 : 1;
+      }
+      if (presence.id === "nightwatch") out.dur = Math.round(out.dur * 1.08 * 1000) / 1000;
+      if (last && notes.length > 1) {
+        if (question) {
+          const step = Math.max(out.step || 0, 4);
+          out.step = step;
+          out.f0 = Math.round(identity.tonic * PHRASE_SCALE[step] * 10) / 10;
+          out.glide = 1.1;
+        } else {
+          out.glide = 0.96;
+        }
+        out.gap = 0;
+      }
+      return out;
+    });
+    const seconds = notes.reduce((sum, n) => sum + n.dur + n.gap, 0);
+    return {
+      version: LIVING_VOICE_VERSION,
+      identity,
+      growth,
+      presence,
+      context,
+      notes,
+      seconds: Math.round(seconds * 100) / 100,
+      level: presence.level
+    };
+  }
+
+  function livingCallFor({
+    companion,
+    record,
+    hour = 12,
+    still = false,
+    hidden = false,
+    legacyQuiet = false
+  } = {}) {
+    const plan = livingVoicePlanFor({
+      companion,
+      record,
+      context: "call",
+      hour,
+      greeted: true,
+      still,
+      hidden,
+      legacyQuiet
+    });
+    if (!plan.identity) return { plan, pads: [], steps: [] };
+    const ratios = [1, 1.25, 1.5, 2];
+    const hue = Number.isFinite(companion.hue) ? companion.hue : 200;
+    const pads = ratios.map((ratio, i) => ({
+      note: Math.round(plan.identity.tonic * ratio),
+      color: `hsl(${Math.round(hue + i * 38)} 72% 62%)`
+    }));
+    const steps = plan.notes.map((note) => {
+      if (note.step <= 1) return 0;
+      if (note.step === 2) return 1;
+      if (note.step === 3) return 2;
+      return 3;
+    });
+    return { plan, pads, steps };
+  }
+
+  function livingDayRemarkFor({ record, companion, today, hour = 12, farmNote = "" } = {}) {
+    const growth = livingVoiceGrowthFor({ record, companion });
+    const facts = [];
+    if (today) facts.push(coordinateLineFor(today));
+    if (today && today.moonName) facts.push(`Under ${today.moonName}`);
+    if (Number.isFinite(hour)) facts.push(`${daypartFor(hour)} on this device`);
+    const patternDay = today ? today.dayOfPatternYear : null;
+    if (patternDay != null) {
+      facts.push(
+        uniqueCount(record && record.practiceDays) && (record.practiceDays || []).includes(patternDay)
+          ? "Practice is sealed for today"
+          : "No practice is sealed for today"
+      );
+    }
+    facts.push(`${growth.daysTogether} day${growth.daysTogether === 1 ? "" : "s"} together`);
+    const farm = String(farmNote || "").replace(/\s+/g, " ").trim();
+    if (farm) facts.push(farm);
+    return { line: facts.length ? `${facts.join(" · ")}.` : "", facts, growth };
+  }
+
   /* Each kind speaks in its temperament's voice. One short line,
    * in character — the first thing the Spark says about itself
    * after its name. */
@@ -2860,6 +3130,14 @@
     voiceBoxFor,
     vocalPlanFor,
     phraseFor,
+    LIVING_VOICE_VERSION,
+    LIVING_VOICE_STAGES,
+    livingVoiceIdentityFor,
+    livingVoiceGrowthFor,
+    livingVoicePresenceFor,
+    livingVoicePlanFor,
+    livingCallFor,
+    livingDayRemarkFor,
     VOICE_MAX_SYLLABLES,
     syllableCountFor,
     wordSyllables,
