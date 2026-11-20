@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 2241,
-    "bytes": 815673359,
+    "bytes": 815673354,
     "byGroup": {
       "tooling": 223,
       "manuscript": 17,
@@ -51134,8 +51134,8 @@
       "path": "tests/fixtures/page-weight-budget.json",
       "title": "page-weight-budget.json",
       "format": "json",
-      "bytes": 3164,
-      "sha256": "96c5f9a1f3abb8c7e7ea4039666642aa3ba3ed3d556b63a1e76ab82ce5eba1db",
+      "bytes": 3159,
+      "sha256": "8d873081b7872f408a8bc51ed3d24dee91876904ae3de122ca5d07f4ff21b5b3",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
