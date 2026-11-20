@@ -655,3 +655,50 @@ body.obs-question-modal-open {
     grid-template-columns: 1fr;
   }
 }
+
+/* Sphere page calm pass (Nov 19, 2026) — presentational overrides only.
+   This sheet loads after the protected sphere stylesheet, so the rules
+   below out-cascade it at equal specificity without editing it.
+   Audit: sphere-page-improvement-audit-2026-11-19 (F7, F8). */
+
+@media (max-width: 640px) {
+  /* F7 — the four camera presets become one row of compact pills
+     instead of a 2x2 grid of half-width slabs. */
+  .sphere-camera-controls {
+    flex-wrap: nowrap;
+    gap: 0.3rem;
+  }
+
+  .sphere-camera-controls .sphere-cam-label {
+    width: auto;
+    flex: 0 0 auto;
+    align-self: center;
+    text-align: left;
+    font-size: 0.68rem;
+  }
+
+  .sphere-camera-controls .sphere-cam-btn {
+    flex: 1 1 0;
+    min-height: 2rem;
+    padding: 0.3rem 0.15rem;
+    border-radius: 999px;
+    font-size: clamp(0.6rem, 2.7vw, 0.72rem);
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  /* F8 — the coordinate table keeps its words whole: it scrolls
+     sideways as one piece and the field-name column never breaks. */
+  .sphere-coordinate-table {
+    display: block;
+    overflow-x: auto;
+    table-layout: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sphere-coordinate-table td:first-child {
+    white-space: nowrap;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+}
