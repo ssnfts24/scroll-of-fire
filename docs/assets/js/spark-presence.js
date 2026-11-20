@@ -1041,6 +1041,32 @@
         });
       }
       if (presence) rows.push({ text: `Presence: ${presence.name}. ${presence.line}` });
+      /* The kept quiet promise gains its release (Nov 20, 2026):
+       * a keeper who switched the earlier build's sounds off can
+       * release that promise here, in one plain action — and keep
+       * it again the same way. Keeper-controlled, reversible,
+       * never automatic: nothing in the living voice ever lifts
+       * it by itself. */
+      const quietKept = livingLegacyQuiet();
+      if (quietKept) {
+        rows.push({
+          text: "A quiet promise from the earlier build is being kept: you switched my sounds off once, so my living voice rests. It stays kept until you release it — here, and only here."
+        });
+      }
+      const promiseBtn = quietKept
+        ? bubbleBtn("Release the quiet promise", "♫", () => {
+            try {
+              localStorage.removeItem(SOUND_KEY);
+              localStorage.removeItem(VOICE_KEY);
+            } catch { /* storage blocked: the promise simply stands */ }
+            doVoiceRoom("The promise is released. My voice can sound again.", "hold");
+          }, "spark-voice-release")
+        : bubbleBtn("Keep a quiet promise", "◍", () => {
+            try {
+              localStorage.setItem(SOUND_KEY, "off");
+            } catch { /* storage blocked: nothing is kept */ }
+            doVoiceRoom("Kept. My sounds rest until you release the promise here.", "line");
+          }, "spark-voice-keep");
       setPanel("voice", {
         line: line != null ? line : "My voice grows as we do.",
         context: context || "line",
@@ -1053,6 +1079,7 @@
             );
           }, "spark-voice-hear"),
           bubbleBtn("Today's remark", "☉", doDayRemark, "spark-voice-day"),
+          promiseBtn,
           backBtn()
         ]
       });

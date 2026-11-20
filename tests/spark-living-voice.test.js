@@ -94,9 +94,9 @@ test("living voice growth: computed from the record — stage, days, practices",
   assert.ok(kindled.basis.some((b) => b.includes("3 distinct days")), "the basis is stated, not hidden");
 
   /* The body path: growth points alone can kindle a voice —
-   * nine return days earn Flame's points with no practice at
+   * nine return days earn Kindled's points with no practice at
    * all, and the voice follows the body. */
-  assert.equal(growthOf({ daysSeen: days(9) }).id, "kindled", "body stage 2 (Flame) kindles the voice");
+  assert.equal(growthOf({ daysSeen: days(9) }).id, "kindled", "body stage 2 (Kindled) kindles the voice");
 
   const bearer = growthOf({ daysSeen: days(14), practiceDays: days(5) });
   assert.equal(bearer.id, "bearer");
@@ -105,12 +105,12 @@ test("living voice growth: computed from the record — stage, days, practices",
   assert.equal(
     growthOf({ daysSeen: days(14), pagesSeen: pages }).id,
     "bearer",
-    "body stage 3 (Radiant) carries the motif even before the life path ripens"
+    "body stage 3 (Guardian) carries the motif even before the life path ripens"
   );
 
   /* Guardian is earned by a life, not a stage alone: the
    * fullest body AND sixty distinct days AND twenty kept
-   * practice days. Radiant without the days stays Bearer. */
+   * practice days. Guardian without the days stays Bearer. */
   assert.equal(growthOf({ growth: 25, daysSeen: days(59), practiceDays: days(20) }).id, "bearer");
   assert.equal(growthOf({ growth: 25, daysSeen: days(60), practiceDays: days(19) }).id, "bearer");
   const guardian = growthOf({ growth: 25, daysSeen: days(60), practiceDays: days(20) });

@@ -85,7 +85,13 @@
     if (!_isMobileViewport()) return base;
     return {
       ...base,
-      distance: Math.max(MIN_ZOOM, base.distance - (mode === "years" ? 0.45 : 0.35)),
+      // Sphere page rebuild (Nov 20, 2026) — the audit's F6: the
+      // old mobile rule zoomed IN by 0.35 to fill the width, which
+      // cropped the tilted ring at the stage's bottom edge and cut
+      // the lowest day numbers in half. Framing wins over filling:
+      // on a phone the preset now stands slightly FURTHER back, so
+      // the whole ring and its numbers stay inside the stage.
+      distance: Math.max(MIN_ZOOM, base.distance + (mode === "years" ? -0.1 : 0.3)),
       phi: mode === "pattern" ? Math.min(1.42, base.phi + 0.05) : base.phi,
       targetRadius: mode === "today" ? 0.26 : mode === "pattern" ? 0.12 : base.targetRadius,
     };

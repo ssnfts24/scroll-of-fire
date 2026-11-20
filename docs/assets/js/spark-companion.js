@@ -1535,10 +1535,19 @@
    * a Spark grows because its person keeps coming back. Each
    * Spark's own pace, grown from its seed, bends the thresholds
    * a little, so no two Sparks grow on quite the same day. */
+  /* Stage names are Aaron's (Spark / Kindled / Bearer / Guardian,
+   * the ladder his voice stages already climb). The rename of
+   * Nov 20, 2026 changed the NAMES ONLY: the thresholds, the
+   * indices, and every derivation from them are exactly what they
+   * were when the stages were called Ember / Flame / Radiant, so
+   * no keeper's Spark changed stage, shape, or standing. The body
+   * ladder has three rungs; its fullest rung takes the ladder's
+   * top name, Guardian — Bearer stands in the voice ladder, whose
+   * four rungs climb Spark → Kindled → Bearer → Guardian. */
   const STAGES = [
-    { name: "Ember", min: 0 },
-    { name: "Flame", min: 8 },
-    { name: "Radiant", min: 25 }
+    { name: "Spark", min: 0 },
+    { name: "Kindled", min: 8 },
+    { name: "Guardian", min: 25 }
   ];
 
   /* ---- seed ---- */
@@ -1931,10 +1940,10 @@
     const rand = mulberry32(hashString(companion.seed + ":marks"));
     /* Evolution, drawn: the same seed-body at every stage — the
      * stages are this creature grown, not three creatures. An
-     * Ember stands small, its markings half-shown, its crest
-     * young, a few spark motes in the air around it. A Flame
+     * A Spark stands small, its markings half-shown, its crest
+     * young, a few spark motes in the air around it. A Kindled
      * stands larger, markings full, crest grown, its light
-     * brighter and its motes more. A Radiant stands full:
+     * brighter and its motes more. A Guardian stands full:
      * markings richest, the fullest company of motes, and a
      * crown. A returning visitor can tell at a glance that
      * their Spark is not as it was. */
@@ -2979,7 +2988,7 @@
       if (stageOf(record, companion).index >= STAGES.length - 1) {
         specials.push({
           id: "fully-grown",
-          line: "Fully grown — Radiant, the fullest form there is."
+          line: "Fully grown — Guardian, the fullest form there is."
         });
       }
     }

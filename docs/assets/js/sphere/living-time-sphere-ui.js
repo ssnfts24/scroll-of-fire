@@ -5680,8 +5680,16 @@
         const resolved = globalThis.LivingTimeCalendarWorkbench?.resolveCivilDate?.(civil[1]);
         if (!resolved?.valid) return announceQuick("That civil date could not be mapped.", false);
         if (!resolved.inside) return announceQuick(`${civil[1]} is outside the counted 13 × 28 days. Open Calendar Atlas for the Year Gate day.`, false);
-        if (resolved.patternYear && normalizedYears.includes(Number(resolved.patternYear))) applyYear(Number(resolved.patternYear), "quick-jump-civil-year");
-        _setCursorFromPatternDay(container, resolved.dayOfPatternYear, { year: Number(resolved.patternYear || _state.year), source: "quick-jump-civil" });
+        // Sphere page rebuild (Nov 20, 2026) — the 1902 defect:
+        // resolved.patternYear is PatternCalendar's year COUNT from
+        // the 2026 epoch (1, 2, …), not a civil year. Feeding it to
+        // applyYear / the cursor as a year landed every civil-date
+        // jump in the alignment ledger's first year, 1902. The
+        // workbench's own call sites use resolved.selectedYear —
+        // the civil year the date actually belongs to. So does
+        // this one now.
+        if (resolved.selectedYear && normalizedYears.includes(Number(resolved.selectedYear))) applyYear(Number(resolved.selectedYear), "quick-jump-civil-year");
+        _setCursorFromPatternDay(container, resolved.dayOfPatternYear, { year: Number(resolved.selectedYear || _state.year), source: "quick-jump-civil" });
         focusDay(resolved.dayOfPatternYear, 1.78);
         return announceQuick(`${civil[1]} → Moon ${resolved.moon} Day ${resolved.day}.`);
       }

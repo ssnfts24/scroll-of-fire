@@ -64,6 +64,7 @@
        R3 waves opened. It loads last so the rebuilt arrangement
        has the final say over the page's own presentation. -->
   <link rel="stylesheet" href="assets/css/sphere-rebuild.css?v=20261120-1">
+  <link rel="stylesheet" href="assets/css/sphere-spark.css?v=20261120-1">
 
   <!-- Core engines -->
   <script defer src="assets/js/moons-version.js?v=20260819-b752&r=20260820-b757"></script>
@@ -250,10 +251,12 @@
    <script defer src="assets/js/sphere/living-time-sphere-today.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-ui.js?v=20260819-b752&r=20260820-b757&a=20260820-b7585v3-auto"></script>
    <script defer src="assets/js/sphere/living-time-sphere-app-shell.js?v=20261118-b761-fixes"></script>
-   <!-- Sphere deepening (overlay only): the Spark companion's presence
-        and her Sphere layer. The Sphere engine is untouched; she
-        travels as her own layer over the page and drives only the
-        page's public controls. -->
+   <!-- Sphere deepening (overlay only): the Spark companion's
+        presence and its Sphere layer. The Sphere engine is
+        untouched; the Spark travels as its own layer over the page
+        and drives only the page's public controls. (Pronoun sweep
+        completed in the Sphere page rebuild, Nov 20, 2026: Sparks
+        are named, never "she/her".) -->
    <script defer src="assets/js/spark-companion.js?v=20261118-3"></script>
    <script src="assets/js/spark-3d.js?v=20261119-1"></script>
    <script defer src="assets/js/spark-presence.js?v=20261118-3"></script>
@@ -293,6 +296,7 @@
         It drives the instrument only through the page's own public
         controls and reads only the canonical modules. -->
    <script defer src="assets/js/sphere-rebuild.js?v=20261120-1"></script>
+   <script defer src="assets/js/sphere-spark.js?v=20261120-1"></script>
    <script defer>
      document.addEventListener("DOMContentLoaded", () => {
        const container = document.getElementById("sphere-container");
@@ -1530,8 +1534,6 @@
           <article><small>Day of 364</small><strong id="obs-current-day">—</strong></article>
           <article><small>Lunar</small><strong id="obs-current-lunar">—</strong></article>
           <article><small>Passage</small><strong id="obs-current-passage">—</strong></article>
-          <article><small>Source</small><strong id="obs-current-source">—</strong></article>
-          <article><small>Engine</small><strong id="obs-current-version">—</strong></article>
           <article><small>Season</small><strong id="obs-current-season">—</strong></article>
           <article><small>Daylight</small><strong id="obs-current-daylight">—</strong></article>
         </div>
@@ -1639,9 +1641,9 @@
         </section>
       </section>
 
-      <!-- 8. Accessible text model -->
+      <!-- 8. The day in words (a text version of the Sphere) -->
       <section aria-labelledby="sphereTextModelHeading">
-        <h2 id="sphereTextModelHeading">Accessible text model</h2>
+        <h2 id="sphereTextModelHeading">The day in words (a text version of the Sphere)</h2>
         <pre id="sphere-text-model" class="sphere-text-model" aria-live="polite" aria-atomic="true">Loading…</pre>
       </section>
 
@@ -1658,6 +1660,15 @@
             <dt>Pattern position</dt>   <dd id="sphere-diag-today-position">—</dd>
             <dt>Today marker angle</dt> <dd id="sphere-diag-today-angle">—</dd>
             <dt>Data source</dt>        <dd id="sphere-diag-today-source">—</dd>
+            <!-- Sphere page rebuild (Nov 20, 2026) — the audit's F9:
+                 the Source and Engine rows stood in the Observatory
+                 Archive's visitor-facing metric grid, tech-program
+                 material presented as visitor content. They live
+                 here now, with the diagnostics, where they belong.
+                 Their ids are unchanged, so the module that fills
+                 them never noticed the move. -->
+            <dt>Source</dt>             <dd id="obs-current-source">—</dd>
+            <dt>Engine</dt>             <dd id="obs-current-version">—</dd>
           </dl>
         </details>
       </section>
@@ -1739,14 +1750,14 @@
           <table class="sphere-coordinate-table" aria-label="Coordinate conventions">
             <thead><tr><th>Field</th><th>Zero position</th><th>Range</th><th>Direction</th></tr></thead>
             <tbody>
-              <tr><td>patternAngle</td><td>Moon 1 Day 1 (Year Gate)</td><td>0–360°</td><td>Clockwise</td></tr>
-              <tr><td>lunarAngle</td><td>New moon</td><td>0–360°</td><td>Clockwise</td></tr>
-              <tr><td>solarSeasonAngle</td><td>March equinox</td><td>0–360°</td><td>Clockwise</td></tr>
+              <tr><td>Pattern angle<br><small>patternAngle</small></td><td>Moon 1 Day 1 (Year Gate)</td><td>0–360°</td><td>Clockwise</td></tr>
+              <tr><td>Moon angle<br><small>lunarAngle</small></td><td>New moon</td><td>0–360°</td><td>Clockwise</td></tr>
+              <tr><td>Sun season angle<br><small>solarSeasonAngle</small></td><td>March equinox</td><td>0–360°</td><td>Clockwise</td></tr>
                   <tr><td>planetary longitude</td><td>Ecliptic 0° reference</td><td>0–360°</td><td>Approximate geocentric ecliptic longitude; precision context only</td></tr>
-              <tr><td>passageStartAngle</td><td>Equinox position on pattern ring</td><td>0–360°</td><td>Clockwise</td></tr>
-              <tr><td>passageEndAngle</td><td>Year Gate = 0°</td><td>0–360°</td><td>Clockwise</td></tr>
-              <tr><td>yearSpiralAngle</td><td>First study year (2014)</td><td>0–360°+</td><td>Clockwise per revolution</td></tr>
-              <tr><td>yearSpiralRadius</td><td>0 = center</td><td>0–1</td><td>Outward</td></tr>
+              <tr><td>Passage start angle<br><small>passageStartAngle</small></td><td>Equinox position on pattern ring</td><td>0–360°</td><td>Clockwise</td></tr>
+              <tr><td>Passage end angle<br><small>passageEndAngle</small></td><td>Year Gate = 0°</td><td>0–360°</td><td>Clockwise</td></tr>
+              <tr><td>Year spiral angle<br><small>yearSpiralAngle</small></td><td>First study year (2014)</td><td>0–360°+</td><td>Clockwise per revolution</td></tr>
+              <tr><td>Year spiral radius<br><small>yearSpiralRadius</small></td><td>0 = center</td><td>0–1</td><td>Outward</td></tr>
             </tbody>
           </table>
         </div>

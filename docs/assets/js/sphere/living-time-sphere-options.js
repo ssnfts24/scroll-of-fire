@@ -10,9 +10,15 @@
    * switch and the sphere answers immediately, so the choices can be
    * judged in the hand, not in the abstract.
    *
-   *   labelMode    "always" — Moon names: always show all (the
-   *                B7.55/B7.57 persistent-identity doctrine).
-   *                "fit" — Moon names: show what fits, no overlaps.
+   *   labelMode    "fit" — Moon names: show what fits, no overlaps
+   *                (the Sphere page rebuild's default, Nov 20, 2026:
+   *                the audit's F5 — clustered Moon names at the top
+   *                of the ring — is answered by the placement
+   *                engine's fit mode standing as the default).
+   *                "always" — Moon names: always show all (the
+   *                B7.55/B7.57 persistent-identity doctrine), one
+   *                flip away in the options panel for any keeper
+   *                who prefers every name at any cost.
    *   zoomFeel     "current" — selecting a day leaves the camera be.
    *                "deep" — selecting a day flies the camera in close
    *                to that day, while the page's existing "Zoom Into
@@ -31,7 +37,7 @@
   const STORAGE_KEY = "lts-r2-options";
 
   const DEFAULTS = Object.freeze({
-    labelMode: "always",
+    labelMode: "fit",
     zoomFeel: "current",
     skyIntensity: "full",
     governor: true
@@ -40,7 +46,7 @@
   function normalize(raw) {
     const value = raw && typeof raw === "object" ? raw : {};
     return {
-      labelMode: value.labelMode === "fit" ? "fit" : "always",
+      labelMode: value.labelMode === "always" ? "always" : "fit",
       zoomFeel: value.zoomFeel === "deep" ? "deep" : "current",
       skyIntensity: value.skyIntensity === "calm" ? "calm" : "full",
       governor: value.governor !== false

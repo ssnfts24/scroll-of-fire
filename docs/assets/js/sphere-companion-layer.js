@@ -25,13 +25,11 @@
    *      document-level fullscreen the app shell uses (so the
    *      sheets stay reachable), offered on the stage itself, in
    *      both the app view and the classic full page.
-   *   3. Nori's orbit — for a keeper who has adopted a Spark, they
-   *      travel an ellipse around the sphere on this page, and their
-   *      bubble gains a Sphere guide that performs the same trips.
-   *      While they orbit, their corner walker rests hidden; tapping
-   *      their orbit (or their opening their bubble) brings them back.
-   *      Reduced motion means no orbit — they simply stay in their
-   *      corner, exactly as their own presence already behaves.
+   *   3. The Spark's presence on this page — RESET Nov 20, 2026 and
+   *      rebuilt fresh in sphere-spark.js (see the note at the foot
+   *      of this file). The orbit and bubble guide that stood here
+   *      in the deepening build are gone; nothing of the Spark's
+   *      page presence remains in this layer.
    *   4. Share this view (Nov 19, 2026) — the guide bar composes a
    *      share of the day on screen from its own readout, in the
    *      almanac frame, for the keeper to send from their own share
@@ -630,177 +628,14 @@
     }
   })();
 
-  // ── Nori on the Sphere: the orbit + their bubble guide ─────────────
-  const Core = window.SparkCompanion;
-  if (!Core) return;
-
-  function readRecord() {
-    try {
-      const raw = window.localStorage.getItem(Core.STORAGE_KEY);
-      if (!raw) return null;
-      const record = JSON.parse(raw);
-      if (!record || !Core.parseSeed(record.seed)) return null;
-      return record;
-    } catch {
-      return null;
-    }
-  }
-
-  let orbitStarted = false;
-  function whenPresenceReady(tries) {
-    const host = document.querySelector(".spark-presence");
-    const bubble = host?.querySelector(".spark-presence-bubble");
-    if (host && bubble) {
-      buildSphereGuide(host, bubble);
-      if (!reducedMotion && !orbitStarted) {
-        orbitStarted = true;
-        startOrbit(host, bubble);
-      }
-      return;
-    }
-    if (tries > 0) window.setTimeout(() => whenPresenceReady(tries - 1), 700);
-  }
-
-  function buildSphereGuide(host, bubble) {
-    if (bubble.querySelector(".spark-sphere-guide")) return;
-    const record = readRecord();
-    const name = record ? Core.displayName(record, Core.generate(record.seed)) : "Your Spark";
-    const box = document.createElement("div");
-    box.className = "spark-sphere-guide";
-    box.innerHTML = `
-      <p class="spark-panel-row spark-sphere-guide-head"><strong>On the Sphere</strong>
-        <span class="spark-sphere-guide-sub">— ${name} can take you</span></p>
-      <p class="spark-sphere-guide-line" aria-live="polite"></p>
-      <p class="spark-sphere-guide-buttons">
-        <button type="button" data-ssg="today">Today</button>
-        <button type="button" data-ssg="day">The selected day</button>
-        <button type="button" data-ssg="year">The whole year</button>
-      </p>
-      <p class="spark-sphere-guide-moons"></p>`;
-    const line = box.querySelector(".spark-sphere-guide-line");
-    const syncLine = () => {
-      const text = (strip?.textContent || "").trim().replace(/\s+/g, " ");
-      if (text && !/resolving|aligning/i.test(text)) line.textContent = `We are looking at ${text}.`;
-    };
-    if (strip) new MutationObserver(syncLine).observe(strip, { childList: true, subtree: true, characterData: true });
-    syncLine();
-
-    const moonsRow = box.querySelector(".spark-sphere-guide-moons");
-    const moonSel = document.createElement("select");
-    moonSel.setAttribute("aria-label", "Choose a Moon and they will take you there");
-    moonNames.forEach((moonName, i) => {
-      const opt = document.createElement("option");
-      opt.value = String(i + 1);
-      opt.textContent = `${i + 1} · ${moonName}`;
-      moonSel.appendChild(opt);
-    });
-    const moonGo = document.createElement("button");
-    moonGo.type = "button";
-    moonGo.textContent = "Take me to this Moon";
-    moonGo.addEventListener("click", () => {
-      if (goMoon(Number(moonSel.value))) {
-        window.setTimeout(syncLine, 450);
-      }
-    });
-    moonsRow.appendChild(moonSel);
-    moonsRow.appendChild(document.createTextNode(" "));
-    moonsRow.appendChild(moonGo);
-
-    box.addEventListener("click", (event) => {
-      const btn = event.target.closest?.("[data-ssg]");
-      if (!btn) return;
-      const action = btn.dataset.ssg;
-      if (action === "today") goToday();
-      else if (action === "day") openSelectedDay();
-      else if (action === "year") goWholeYear();
-      window.setTimeout(syncLine, 450);
-    });
-
-    const anchor = bubble.querySelector(".spark-presence-actions");
-    if (anchor && anchor.parentNode === bubble) anchor.insertAdjacentElement("afterend", box);
-    else bubble.appendChild(box);
-  }
-
-  function startOrbit(host, bubble) {
-    const record = readRecord();
-    if (!record) return; // No adopted Spark — their meeting happens first.
-    const companion = Core.generate(record.seed);
-    const stage = Core.stageOf ? Core.stageOf(record, companion) : { index: 0 };
-    const name = Core.displayName(record, companion);
-
-    const orbit = document.createElement("button");
-    orbit.type = "button";
-    orbit.className = "sphere-nori-orbit";
-    orbit.setAttribute("aria-label", `${name} is travelling around the Sphere — tap to talk with their`);
-    orbit.innerHTML = `<span class="sphere-nori-art">${Core.renderSVG(companion, { stage: stage.index })}</span><span class="sphere-nori-name">${name}</span>`;
-    wrap.appendChild(orbit);
-
-    const walkerButton = host.querySelector(".spark-presence-button");
-    let orbiting = false;
-    let rafId = null;
-    let angle = Math.random() * Math.PI * 2;
-    let lastTs = 0;
-    const PERIOD_MS = 42000; // one unhurried circuit of the Sphere
-
-    const bubbleOpen = () => !bubble.hasAttribute("hidden");
-    let stageVisible = true;
-    if ("IntersectionObserver" in window) {
-      new IntersectionObserver((entries) => {
-        stageVisible = entries.some((e) => e.isIntersecting);
-      }, { threshold: 0.15 }).observe(container);
-    }
-
-    function setOrbiting(on) {
-      if (on === orbiting) return;
-      orbiting = on;
-      document.documentElement.classList.toggle("sphere-nori-orbiting", on);
-      orbit.hidden = !on;
-      if (on) {
-        lastTs = 0;
-        rafId = window.requestAnimationFrame(tick);
-      } else if (rafId != null) {
-        window.cancelAnimationFrame(rafId);
-        rafId = null;
-      }
-    }
-
-    function tick(ts) {
-      if (!orbiting) return;
-      rafId = window.requestAnimationFrame(tick);
-      if (document.hidden || !stageVisible || bubbleOpen()) {
-        if (bubbleOpen()) setOrbiting(false);
-        return;
-      }
-      if (lastTs) angle += ((ts - lastTs) / PERIOD_MS) * Math.PI * 2;
-      lastTs = ts;
-      const c = container.getBoundingClientRect();
-      const w = wrap.getBoundingClientRect();
-      if (c.width === 0) return;
-      const cx = c.left - w.left + c.width / 2;
-      const cy = c.top - w.top + c.height / 2;
-      const rx = c.width / 2 + 30;
-      const ry = c.height / 2 + 26;
-      const x = cx + Math.cos(angle) * rx;
-      const y = cy + Math.sin(angle) * ry;
-      const depth = (Math.sin(angle) + 1) / 2; // 0 = far side, 1 = near side
-      orbit.style.transform = `translate(-50%, -50%) translate(${Math.round(x)}px, ${Math.round(y)}px) scale(${(0.78 + depth * 0.3).toFixed(3)})`;
-      orbit.style.zIndex = depth > 0.5 ? "34" : "6";
-      orbit.style.opacity = (0.72 + depth * 0.28).toFixed(3);
-    }
-
-    orbit.addEventListener("click", () => {
-      setOrbiting(false);
-      if (walkerButton) walkerButton.click();
-    });
-    orbit.addEventListener("mouseenter", () => { lastTs = 0; });
-    new MutationObserver(() => {
-      if (!bubbleOpen() && !orbiting) {
-        window.setTimeout(() => { if (!bubbleOpen()) setOrbiting(true); }, 2500);
-      }
-    }).observe(bubble, { attributes: true, attributeFilter: ["hidden"] });
-
-    setOrbiting(true);
-  }
-
-  whenPresenceReady(30);
+  // ── The Spark's presence on this page was RESET (Nov 20, 2026) ──
+  // Aaron's order: a full reset of the Spark layer, built fresh —
+  // not patched. The orbit and bubble guide that stood here are
+  // gone. The Spark's presence on the Sphere page now lives in
+  // sphere-spark.js (fresh visual form, living-voice wiring,
+  // hover/hold name plate, and the agent talk panel), built on the
+  // Spark core's own pinned derivations, so the reset changed
+  // everything about how the Spark is built and nothing about who
+  // anyone's Spark is. This layer keeps its other work: the guide
+  // bar, clean fullscreen, share, warmth, and the farm loader.
 })();

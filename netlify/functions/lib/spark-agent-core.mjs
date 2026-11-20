@@ -63,7 +63,7 @@ function numberFrom(value, fallback) {
  */
 export function readSparkConfig(env = {}) {
   return {
-    apiKey: <redacted>
+    apiKey: env.GUIDE_API_KEY || "",
     apiBaseUrl: (env.GUIDE_API_BASE_URL || "https://api.openai.com/v1").replace(/\/+$/, ""),
     model: env.GUIDE_MODEL || "gpt-4o-mini",
     ceilingUsd: numberFrom(env.GUIDE_MONTHLY_CEILING_USD, 20),

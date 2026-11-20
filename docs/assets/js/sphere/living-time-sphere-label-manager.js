@@ -2268,6 +2268,17 @@
 
           el.style.top =
             `${railY}px`;
+
+          // Sphere page rebuild (Nov 20, 2026) — the audit's F3:
+          // a placed rail numeral is real estate the floating
+          // cards must respect. Register its box so a card placed
+          // later in this pass cannot sit on top of the numbers.
+          placedRects.push({
+            x: railX - w / 2,
+            y: railY - h / 2,
+            w,
+            h
+          });
           /*
            * B7.60.2 — overhead, the X-only aperture passes ONLY for a
            * numeral the gate itself passed in this update (recorded in
@@ -2394,6 +2405,19 @@
           + radialUnitY
           * semanticOutward;
 
+        // Sphere page rebuild (Nov 20, 2026) — the audit's F3
+        // collision rule: after the anchor's own outward spot,
+        // cards prefer the stage's empty corners before they try
+        // the ring's neighbourhood. Candidates are already sorted
+        // selected-first, so the selection card claims its ground
+        // and the Today card yields to it.
+        const cornerAttempts = [
+          { x: offsetX + STAGE_PADDING, y: offsetY + STAGE_PADDING },
+          { x: offsetX + stageRect.width - w - STAGE_PADDING, y: offsetY + STAGE_PADDING },
+          { x: offsetX + STAGE_PADDING, y: offsetY + stageRect.height - h - STAGE_PADDING },
+          { x: offsetX + stageRect.width - w - STAGE_PADDING, y: offsetY + stageRect.height - h - STAGE_PADDING }
+        ];
+
         const attempts = [
           {
             x:
@@ -2405,6 +2429,8 @@
               - h
               / 2
           },
+
+          ...cornerAttempts,
 
           {
             x:
@@ -2472,6 +2498,22 @@
           el.style.display = "none";
           activeSemanticIds.delete(target.id);
           continue;
+        }
+        if (!chosen) {
+          // Sphere page rebuild (Nov 20, 2026) — F3: a pinned or
+          // selected card is never hidden, but its last resort is
+          // a free corner, not the anchor's ground on the ring.
+          // Only when every corner is also taken does it stand at
+          // the anchor, as before.
+          for (const corner of cornerAttempts) {
+            const left = clamp(corner.x, offsetX + STAGE_PADDING, Math.max(offsetX + STAGE_PADDING, offsetX + stageRect.width - w - STAGE_PADDING));
+            const top = clamp(corner.y, offsetY + STAGE_PADDING, Math.max(offsetY + STAGE_PADDING, offsetY + stageRect.height - h - STAGE_PADDING));
+            const box = { x: left, y: top, w, h };
+            const collides =
+              placedRects.some(prev => rectsOverlap(box, prev))
+              || (target.kind === "living-plan" ? blockedRects : semanticBlockedRects).some(prev => rectsOverlap(box, prev));
+            if (!collides) { chosen = { left, top, box }; break; }
+          }
         }
         if (!chosen) {
           const left = clamp(candidate.anchorX + 12, offsetX + STAGE_PADDING, Math.max(offsetX + STAGE_PADDING, offsetX + stageRect.width - w - STAGE_PADDING));
