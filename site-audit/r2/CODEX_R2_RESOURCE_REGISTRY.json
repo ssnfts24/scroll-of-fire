@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 2244,
-    "bytes": 815741728,
+    "bytes": 815741695,
     "byGroup": {
       "tooling": 224,
       "manuscript": 17,
@@ -53990,8 +53990,8 @@
       "path": "tests/spark-agent.test.js",
       "title": "spark-agent.test.js",
       "format": "js",
-      "bytes": 9533,
-      "sha256": "0e80de82f975b3aa1d7f50aa300937b6e0ee84840a700b560290fd824471e34d",
+      "bytes": 9500,
+      "sha256": "04c27ce5c70b70f4653911ad14066d448c6167832d4aaf24928dc6dc25d9506d",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
