@@ -3,7 +3,7 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 474,
+    "resources": 475,
     "publicHtmlPages": 179,
     "catalogEntries": 72,
     "issueCounts": {
@@ -13639,6 +13639,23 @@
       "issues": []
     },
     {
+      "id": "repo-folder:netlify",
+      "title": "netlify/ (6 files)",
+      "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
+      "category": "Repository folder",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "netlify",
+      "publicUrl": null,
+      "publicationStatus": "source-only",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "development-only",
+      "discoverability": null,
+      "issues": []
+    },
+    {
       "id": "repo-folder:project-files",
       "title": "project-files/ (1 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
@@ -13725,7 +13742,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (138 files)",
+      "title": "tests/ (139 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,

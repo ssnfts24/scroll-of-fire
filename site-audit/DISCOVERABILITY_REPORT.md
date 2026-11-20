@@ -181,6 +181,7 @@ Everything under `docs/` is served by Netlify. These Markdown files are fetchabl
 
 - `.github`
 - `assets`
+- `netlify`
 - `project-files`
 - `scripts`
 - `Site`
