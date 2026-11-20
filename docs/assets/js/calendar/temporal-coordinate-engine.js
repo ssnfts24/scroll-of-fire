@@ -377,15 +377,60 @@
 
     const offset = daysBetween(anchor, date);
 
-    const yearIndex = Math.floor(offset / 365);
-    const dayWithinCycle = positiveModulo(offset, 365);
-
-    const patternDay =
-      dayWithinCycle < 364
-        ? dayWithinCycle + 1
+    /*
+     * Sphere page rebuild (Nov 20, 2026) — the one-clock seam,
+     * closed. This adapter once decomposed the cycle with a fixed
+     * 365-day year, so in a leap cycle every date after the Deep
+     * Time Day read one Pattern day early, and the Deep Time Day
+     * itself (2028-04-16) read as Pattern Day 1 of the next cycle
+     * while PatternCalendar — the canonical authority — holds it
+     * outside the count. When PatternCalendar is present and the
+     * anchor is the canonical epoch, the decomposition (counted
+     * day, Day Out of Time, Deep Time Day, true cycle length) is
+     * taken from it whole. The fixed-365 path remains only as a
+     * fallback for contexts that load this engine without the
+     * calendar.
+     */
+    const canonical =
+      anchorConfig.year === DEFAULT_ANCHOR.year &&
+      anchorConfig.month === DEFAULT_ANCHOR.month &&
+      anchorConfig.day === DEFAULT_ANCHOR.day
+        ? globalThis.PatternCalendar?.convertEffectiveDate?.(date)
         : null;
 
-    const isYearGate = dayWithinCycle === 364;
+    let yearIndex;
+    let dayWithinCycle;
+    let patternDay;
+    let isYearGate;
+    let isDeepTimeDay = false;
+    let cycleLength = 365;
+
+    if (canonical) {
+      yearIndex = canonical.anchorDate.getUTCFullYear() - anchorConfig.year;
+      cycleLength = canonical.windowLength || 365;
+      if (canonical.inside) {
+        patternDay = canonical.dayOfPatternYear;
+        dayWithinCycle = patternDay - 1;
+        isYearGate = false;
+      } else {
+        patternDay = null;
+        isYearGate = !!canonical.isDayOutOfTime;
+        isDeepTimeDay = !!canonical.isDeepTimeDay;
+        dayWithinCycle = 363 + (canonical.intercalaryIndex || 1);
+      }
+    } else {
+      yearIndex = Math.floor(offset / 365);
+      dayWithinCycle = positiveModulo(offset, 365);
+      patternDay =
+        dayWithinCycle < 364
+          ? dayWithinCycle + 1
+          : null;
+      isYearGate = dayWithinCycle === 364;
+    }
+
+    const outsideLabel = isDeepTimeDay
+      ? (canonical?.moonName || 'Deep Time Day')
+      : 'Year Gate';
 
     const moon =
       patternDay !== null
@@ -415,7 +460,7 @@
     const moonName =
       moon !== null
         ? getMoonName(moon)
-        : 'Year Gate';
+        : outsideLabel;
 
     return {
       calendar: 'remnant-13-moons',
@@ -460,10 +505,14 @@
 
       isYearGate,
 
-      isPatternDay: !isYearGate,
+      isDayOutOfTime: isYearGate,
+
+      isDeepTimeDay,
+
+      isPatternDay: patternDay !== null,
 
       progress: {
-        cycle: (dayWithinCycle + 1) / 365,
+        cycle: (dayWithinCycle + 1) / cycleLength,
         pattern:
           patternDay !== null
             ? patternDay / 364
@@ -475,23 +524,23 @@
       },
 
       labels: {
-        compact: isYearGate
-          ? 'Year Gate'
+        compact: patternDay === null
+          ? outsideLabel
           : `Moon ${moon} · Day ${moonDay}`,
 
-        full: isYearGate
-          ? 'Year Gate · Outside the 13 × 28 pattern'
+        full: patternDay === null
+          ? `${outsideLabel} · Outside the 13 × 28 pattern`
           : `Moon ${moon} · ${moonName} · Day ${moonDay}/28 · Day ${patternDay}/364`,
 
-        moon: isYearGate
-          ? 'Year Gate'
+        moon: patternDay === null
+          ? outsideLabel
           : `Moon ${moon} · ${moonName}`,
 
-        patternDay: isYearGate
+        patternDay: patternDay === null
           ? 'Outside Day'
           : `Day ${patternDay}/364`,
 
-        week: isYearGate
+        week: patternDay === null
           ? 'Outside Week'
           : `Week ${week}`
       }

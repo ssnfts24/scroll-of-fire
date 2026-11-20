@@ -84,6 +84,12 @@ test("the 1902 defect: quick-jump's civil branch uses the civil year", () => {
   assert.ok(ui.includes("the 1902 defect"), "the fix names itself");
 });
 
+test("quick-jump speaks truthfully at the edges: waking calendar, substituted year", () => {
+  assert.ok(ui.includes("The calendar is still waking up"), "an early civil date is not called unmappable");
+  assert.ok(ui.includes("exactYearMatch === false"), "the substitution branch exists");
+  assert.ok(ui.includes("the nearest year this Sphere carries"), "and it names the substitution plainly");
+});
+
 test("the shell carries the dock: every action by one plain name", () => {
   for (const label of ["Today", "Choose a day", "Step into this day", "Deep Time", "Farm &amp; home", "Freeze", "Your Spark"]) {
     assert.ok(shell.includes(label), `dock speaks: ${label}`);
@@ -106,7 +112,8 @@ test("the guard declaration for this change set exists and names the touched pro
     "docs/assets/js/sphere/living-time-sphere-label-manager.js",
     "docs/assets/js/sphere/living-time-sphere-camera.js",
     "docs/assets/js/sphere/living-time-sphere-options.js",
-    "docs/assets/js/sphere/living-time-sphere-ui.js"
+    "docs/assets/js/sphere/living-time-sphere-ui.js",
+    "docs/assets/js/calendar/temporal-coordinate-engine.js"
   ]) {
     assert.ok(guard.includes(`"${file}"`), `declared: ${file}`);
   }
@@ -137,4 +144,37 @@ test("fixtures hold in the canonical calendar, and the leap seam agrees", () => 
   assert.equal(leap.isDeepTimeDay, true); assert.equal(leap.inside, false); assert.equal(leap.dayOfPatternYear, null);
   const jump = conv("2027-04-14");
   assert.equal(jump.dayOfPatternYear, 363, "the quick-jump fixture date maps inside its true year");
+});
+
+test("the one-clock seam is closed: the coordinate engine's adapter agrees with PatternCalendar", () => {
+  // Before the rebuild, the engine's own 13-Moons adapter used a
+  // fixed 365-day cycle: in the leap cycle it read 2028-04-16 —
+  // the Deep Time Day — as Pattern Day 1. The adapter now takes
+  // its decomposition from PatternCalendar. Proven across the
+  // whole seam, with ordinary days unchanged.
+  const ctx = { console, CustomEvent: class {}, Event: class {}, localStorage: { getItem: () => null, setItem: () => {} }, dispatchEvent: () => true, addEventListener: () => {} };
+  ctx.globalThis = ctx; ctx.window = ctx;
+  vm.createContext(ctx);
+  for (const f of [
+    "docs/assets/js/calendar/pattern-calendar-version.js",
+    "docs/assets/js/calendar/pattern-calendar-format.js",
+    "docs/assets/js/calendar/pattern-calendar-data.js",
+    "docs/assets/js/calendar/pattern-calendar-boundary.js",
+    "docs/assets/js/calendar/pattern-calendar.js",
+    "docs/assets/js/calendar/temporal-coordinate-engine.js"
+  ]) {
+    vm.runInContext(read(f), ctx, { filename: f });
+  }
+  const R = ctx.SOFTemporalCoordinate.remnant13MoonsFromDate;
+  const at = (iso) => R(new Date(`${iso}T12:00:00Z`));
+  assert.equal(at("2026-11-20").patternDay, 218, "today unchanged");
+  assert.equal(at("2028-04-14").patternDay, 364, "the leap cycle's last counted day");
+  const gate = at("2028-04-15");
+  assert.equal(gate.patternDay, null); assert.equal(gate.isYearGate, true);
+  const deep = at("2028-04-16");
+  assert.equal(deep.patternDay, null, "the Deep Time Day is outside the count — never Pattern Day 1");
+  assert.equal(deep.isDeepTimeDay, true);
+  assert.equal(deep.labels.compact, "Deep Time Day");
+  assert.equal(at("2028-04-17").patternDay, 1, "Pattern Day 1 belongs to 2028-04-17");
+  assert.equal(at("2027-04-16").isYearGate, true, "the ordinary Day Out of Time still reads as the Year Gate");
 });

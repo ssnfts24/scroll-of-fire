@@ -386,6 +386,10 @@ test("no R1.7 protected file is touched by this branch", () => {
    *   - the camera (F6's mobile framing);
    *   - the options (F5: fit is the default Moon-label mode);
    *   - the UI module (the quick-jump civil-date year fix).
+   *   - the temporal coordinate engine (the one-clock seam: its
+   *     13-Moons adapter now takes its cycle decomposition from
+   *     PatternCalendar, so the leap Deep Time Day reads outside
+   *     the count in the published coordinate too).
    * Every other protected path still fails this test loudly.
    */
   const rebuildDeclaredProtected = new Set([
@@ -395,7 +399,8 @@ test("no R1.7 protected file is touched by this branch", () => {
     "docs/assets/js/sphere/living-time-sphere-label-manager.js",
     "docs/assets/js/sphere/living-time-sphere-camera.js",
     "docs/assets/js/sphere/living-time-sphere-options.js",
-    "docs/assets/js/sphere/living-time-sphere-ui.js"
+    "docs/assets/js/sphere/living-time-sphere-ui.js",
+    "docs/assets/js/calendar/temporal-coordinate-engine.js"
   ]);
   const carriesRebuild = changed.has(
     "docs/assets/js/sphere-rebuild.js"
