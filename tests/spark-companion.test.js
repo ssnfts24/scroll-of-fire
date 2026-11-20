@@ -228,8 +228,8 @@ test("the drawing is built from the parts, and growth shows on it", () => {
   assert.match(young, /<svg/);
   assert.ok(young.includes(`data-spark-form="${spark.form}"`));
   /* No bubble, no ring, at any stage (Aaron's word, Nov 19,
-   * 2026): her light is a feathered glowfield and her spark
-   * motes, never a circle drawn around her. */
+   * 2026): their light is a feathered glowfield and their spark
+   * motes, never a circle drawn around them. */
   assert.ok(!young.includes("stroke-dasharray"), "no ring at birth");
   const grown = Core.renderSVG(spark, { stage: 2 });
   assert.ok(!grown.includes("stroke-dasharray"), "no ring at Radiant either");
@@ -267,13 +267,13 @@ test("the presence follows the visitor, and never enters protected ground", () =
     assert.ok(!read(`docs/${page}`).includes("spark-presence"), `${page} stays untouched`);
   }
   /* The Sphere page is the one exception Aaron himself directed
-   * (Nov 18, 2026): Nori comes ON the Sphere as her own overlay
+   * (Nov 18, 2026): Nori comes ON the Sphere as their own overlay
    * layer — the presence scripts plus the sphere companion layer —
    * while the Sphere engine files stay untouched (pinned in
    * tests/sphere-deepening.test.js). */
   const spherePage = read("docs/living-time-sphere.html");
   assert.ok(spherePage.includes("spark-presence.js"), "the Sphere page carries the presence");
-  assert.ok(spherePage.includes("sphere-companion-layer.js"), "the Sphere page carries her overlay layer");
+  assert.ok(spherePage.includes("sphere-companion-layer.js"), "the Sphere page carries their overlay layer");
   const presence = read("docs/assets/js/spark-presence.js");
   assert.ok(presence.includes("CodexLifeAtlasRepository"), "practice is read from the Atlas, not re-stored");
   assert.ok(presence.includes("PatternCalendar"), "the day comes from the canonical calendar");
@@ -500,15 +500,15 @@ test("growth is announced once: against the stage its person last saw", () => {
   assert.equal(Core.growthEventFor({ record: legacy, companion }).grew, false);
 });
 
-test("growth shows on the drawing: her light, and more motes around her", () => {
+test("growth shows on the drawing: their light, and more motes around them", () => {
   const spark = Core.generate(SEED_A);
   const motesOf = (svg) => (svg.match(/class="spark-mote"/g) || []).length;
   const born = Core.renderSVG(spark, { stage: 0 });
-  assert.ok(born.includes('class="spark-glowfield"'), "she stands in a feathered glow, not a disc");
+  assert.ok(born.includes('class="spark-glowfield"'), "they stand in a feathered glow, not a disc");
   assert.ok(born.includes("radialGradient"), "the glow fades at its edge — light, not a bubble");
   assert.ok(motesOf(born) >= 3 && motesOf(born) <= 4, "a few motes at birth");
   const kindled = Core.renderSVG(spark, { stage: 1 });
-  assert.ok(motesOf(kindled) > motesOf(born), "more motes keep her company at Flame");
+  assert.ok(motesOf(kindled) > motesOf(born), "more motes keep them company at Flame");
   const bright = Core.renderSVG(spark, { stage: 2 });
   assert.ok(motesOf(bright) > motesOf(kindled), "the fullest company at Radiant");
   assert.ok(bright.includes('class="spark-eye"'), "the eye carries its blink class");
@@ -617,7 +617,7 @@ test("evolution: three stages, one creature grown, driven by faithfulness alone"
   const motesOf = (svg) => (svg.match(/class="spark-mote"/g) || []).length;
   assert.ok(
     motesOf(stages[1]) > motesOf(stages[0]),
-    "her company of motes grows at Flame"
+    "their company of motes grows at Flame"
   );
   /* Progress, in honest counts from its own record. */
   let record = Core.newRecord({ seed: SEED_A, name: "", civilDate: "2026-11-18" });
@@ -681,7 +681,7 @@ test("the Spark has a 3D body: seed-grown WebGL, honestly falling back to the fl
   assert.ok(d3.includes("speckle"), "markings map onto the form's own faces");
   assert.ok(d3.includes("marks3d"), "from their own seed stream");
   assert.ok(d3.includes("stage >= 2"), "evolution changes the 3D form: the Radiant gains its crown");
-  assert.ok(d3.includes('":motes"'), "the 3D body carries her spark motes, from the same stream as the drawing");
+  assert.ok(d3.includes('":motes"'), "the 3D body carries their spark motes, from the same stream as the drawing");
   assert.ok(!/stage >= 1\) b\.ring/.test(d3), "no ring around the 3D body — the bubble is gone there too");
   assert.ok(d3.includes("dart") && d3.includes("delight") && d3.includes("celebrate"), "its movements are its life's: dart, delight, celebrate");
   assert.ok(d3.includes("lookAt"), "it looks toward a near pointer");
@@ -991,7 +991,7 @@ test("v8 panel rides the presence: one line, big bubbles, states that swap — n
   }
   /* The scrolling transcript is gone as the interaction
    * surface: no thread element, no echoed keeper lines, no
-   * chip machinery anywhere in her code or her styles. */
+   * chip machinery anywhere in their code or their styles. */
   assert.ok(!presence.includes("spark-convo"), "no conversation thread remains in the presence");
   assert.ok(!presence.includes("replyEcho"), "the keeper's taps are never echoed back");
   assert.ok(!presence.includes("scrollTop"), "nothing in the panel scrolls a transcript");
@@ -1010,7 +1010,7 @@ test("v8 panel rides the presence: one line, big bubbles, states that swap — n
   assert.ok(!/fetch\(|XMLHttpRequest|sendBeacon/.test(presence), "the panel sends nothing anywhere");
 });
 
-test("v8 word diet: her lines are short, in every temperament, and still distinct", () => {
+test("v8 word diet: their lines are short, in every temperament, and still distinct", () => {
   const banned = /you have not|haven't|have not|not done|not yet|missed|incomplete/i;
   const words = (line) => line.replace("{name}", "Nori").split(/\s+/).filter(Boolean).length;
   let total = 0;
@@ -1041,10 +1041,10 @@ test("v8 word diet: her lines are short, in every temperament, and still distinc
   }
   assert.ok(count >= 190, `the whole table was measured (${count} lines)`);
   assert.ok(longest <= 10, `no line runs past ten words (longest: ${longest})`);
-  assert.ok(total / count <= 6, `her lines average six words or fewer (got ${(total / count).toFixed(1)})`);
+  assert.ok(total / count <= 6, `their lines average six words or fewer (got ${(total / count).toFixed(1)})`);
 });
 
-test("v8 moon temper: her greeting and her light answer the moon she is under", () => {
+test("v8 moon temper: their greeting and their light answer the moon they are under", () => {
   const today = { moon: 8, moonName: "Deep Mirror", day: 21, dayOfPatternYear: 217 };
   const temper = Core.moonTemperFor({ today, element: "Water" });
   assert.equal(temper.name, "Deep Mirror", "the moon's own name, as the calendar states it");
@@ -1064,17 +1064,17 @@ test("v8 moon temper: her greeting and her light answer the moon she is under", 
     "the Day Out of Time invents no moon temper"
   );
   assert.equal(Core.moonTemperFor({ today: null, element: "Fire" }), null, "no day, no temper");
-  /* Her seed-grown body is untouched by the moon: the same
+  /* Their seed-grown body is untouched by the moon: the same
    * seed builds the same colours, temper or no temper. */
   const spark = Core.generate(SEED_A);
   Core.moonTemperFor({ today, element: "Fire" });
-  assert.deepEqual(Core.generate(SEED_A).palette, spark.palette, "her colours stay hers");
+  assert.deepEqual(Core.generate(SEED_A).palette, spark.palette, "their colours stay theirs");
   const presence = read("docs/assets/js/spark-presence.js");
   assert.ok(presence.includes("moonTemperFor"), "the presence reads the moon's temper");
-  assert.ok(presence.includes("--spark-moon-hue"), "and lends it to her light");
+  assert.ok(presence.includes("--spark-moon-hue"), "and lends it to their light");
   assert.ok(presence.includes("PatternCalendarData"), "the element comes from the calendar's own data");
   const css = read("docs/assets/css/spark-companion.css");
-  assert.ok(css.includes("--spark-moon-hue"), "her glow styles borrow the moon's hue");
+  assert.ok(css.includes("--spark-moon-hue"), "their glow styles borrow the moon's hue");
 });
 
 test("v8 one thing and Look next: offers drawn only from what is real", () => {
@@ -1099,25 +1099,25 @@ test("v8 one thing and Look next: offers drawn only from what is real", () => {
   assert.ok(!/fetch\(|XMLHttpRequest|sendBeacon/.test(look), "suggestions fetch nothing");
 });
 
-test("v9 voice box: the seed grows her voice — pitch, tract, breath, tempo, family", () => {
+test("v9 voice box: the seed grows their voice — pitch, tract, breath, tempo, family", () => {
   const a = Core.generate(SEED_A);
   const first = Core.voiceBoxFor(a);
   assert.deepEqual(Core.voiceBoxFor(a), first, "the same Spark settles the same voice anywhere");
-  assert.ok(first.basePitch >= 140 && first.basePitch <= 340, "her fundamental sits where a formant voice lives");
-  assert.ok(first.formantScale >= 0.86 && first.formantScale <= 1.22, "her vocal tract is seed-sized");
+  assert.ok(first.basePitch >= 140 && first.basePitch <= 340, "their fundamental sits where a formant voice lives");
+  assert.ok(first.formantScale >= 0.86 && first.formantScale <= 1.22, "their vocal tract is seed-sized");
   assert.ok(
     first.breathiness === 0 || (first.breathiness >= 0.05 && first.breathiness <= 0.3),
     "breath is a seed's choice: none at all, or a low whisper — never the old hiss"
   );
-  assert.ok(first.tempo >= 3.5 && first.tempo <= 5.5, "her tempo is a speaking pace");
-  /* Her sound family rides on the box, and it is the same
+  assert.ok(first.tempo >= 3.5 && first.tempo <= 5.5, "their tempo is a speaking pace");
+  /* Their sound family rides on the box, and it is the same
    * family soundFor settles — one creature, one sound. */
   const snd = Core.soundFor(a);
-  assert.equal(first.family, snd.family, "the box sings in her own family");
+  assert.equal(first.family, snd.family, "the box sings in their own family");
   assert.equal(first.familyName, snd.familyName);
-  assert.ok(Core.SOUND_FAMILIES.some((f) => f.id === first.family), "her family is one of the grown set");
-  /* The pitch follows the same chirp root as everything she
-   * sounds: the lowest kind (Earth) sounds lower than the
+  assert.ok(Core.SOUND_FAMILIES.some((f) => f.id === first.family), "their family is one of the grown set");
+  /* The pitch follows the same chirp root as everything they
+   * sound: the lowest kind (Earth) sounds lower than the
    * highest (Light), for any seed jitter. */
   const earth = Core.generate(Core.makeSeed({ moon: 3, patternDay: 40, kindIndex: 4, nonce: "voice0001" }));
   const light = Core.generate(Core.makeSeed({ moon: 3, patternDay: 40, kindIndex: 5, nonce: "voice0001" }));
@@ -1160,7 +1160,7 @@ test("v9 vocal plan: a line's shape, sung syllable by syllable — first sentenc
   assert.equal(
     plan.syllables.length,
     Core.syllableCountFor("Hello there."),
-    "she sounds the line's first sentence — the rest stands in text"
+    "they sound the line's first sentence — the rest stands in text"
   );
   assert.ok(plan.seconds > 0.3 && plan.seconds < 6, "the plan lasts about as long as the sentence takes to say");
   assert.deepEqual(
@@ -1170,7 +1170,7 @@ test("v9 vocal plan: a line's shape, sung syllable by syllable — first sentenc
   );
   for (const syl of plan.syllables) {
     assert.equal(syl.formants.length, 3, "each syllable carries its mouth shape — three formants");
-    assert.ok(syl.f0 > 80 && syl.f0 < 500, "each syllable's pitch sits in her range");
+    assert.ok(syl.f0 > 80 && syl.f0 < 500, "each syllable's pitch sits in their range");
     assert.ok(syl.dur > 0.05 && syl.dur < 0.6, "each syllable lasts a syllable's length");
   }
   /* The contour is the sentence's own: a question rises on its
@@ -1217,7 +1217,7 @@ test("v9 vocal plan: a line's shape, sung syllable by syllable — first sentenc
   assert.deepEqual(Core.vocalPlanFor({ companion: null, text: "Hello." }).syllables, [], "no companion, no plan");
 });
 
-test("her voice grows with her: a chirp, then two notes, then a small melody", () => {
+test("their voice grows with them: a chirp, then two notes, then a small melody", () => {
   const companion = Core.generate(SEED_A);
   const line = "The moon is watching over the water tonight.";
   const young = Core.phraseFor({ companion, stage: 0, text: line });
@@ -1226,11 +1226,11 @@ test("her voice grows with her: a chirp, then two notes, then a small melody", (
   assert.equal(kindled.notes.length, 2, "a Kindled Spark answers in two notes");
   const grown = Core.phraseFor({ companion, stage: 2, text: line });
   assert.ok(grown.notes.length >= 3 && grown.notes.length <= 5, "a Bearer sings a short melodic phrase");
-  /* Pitched at her own chirp root, on her own scale. */
+  /* Pitched at their own chirp root, on their own scale. */
   const tonic = Core.chirpFor(companion).first;
   for (const phrase of [young, kindled, grown]) {
     for (const note of phrase.notes) {
-      assert.ok(note.f0 >= tonic * 0.99 && note.f0 <= tonic * 2.01, "every note stands on her scale");
+      assert.ok(note.f0 >= tonic * 0.99 && note.f0 <= tonic * 2.01, "every note stands on their scale");
       assert.ok(note.dur >= 0.08 && note.dur <= 0.2, "every note is a brief chirp");
     }
     assert.ok(phrase.seconds > 0 && phrase.seconds < 1.5, "the whole phrase stays brief");
@@ -1241,19 +1241,19 @@ test("her voice grows with her: a chirp, then two notes, then a small melody", (
   const s = Core.phraseFor({ companion, stage: 2, text: line });
   assert.ok(s.notes[s.notes.length - 1].glide < 1, "a statement's last note settles");
   /* The same seed, stage and line settle the same phrase anywhere. */
-  assert.deepEqual(Core.phraseFor({ companion, stage: 2, text: line }), grown, "her phrase is hers, settled");
+  assert.deepEqual(Core.phraseFor({ companion, stage: 2, text: line }), grown, "their phrase is theirs, settled");
   assert.deepEqual(Core.phraseFor({ companion, stage: 1, text: "" }).notes, [], "silence phrases nothing");
   assert.deepEqual(Core.phraseFor({ companion: null, stage: 1, text: "Hello." }).notes, [], "no companion, no phrase");
   /* And the presence sings phrases now — the formant singer
    * and its throat are gone from the sung path. */
   const presence = read("docs/assets/js/spark-presence.js");
-  assert.ok(presence.includes("Core.phraseFor"), "the presence sings her chirp-phrase");
+  assert.ok(presence.includes("Core.phraseFor"), "the presence sings their chirp-phrase");
   assert.ok(!presence.includes("softThroat"), "the formant throat is removed, not retuned");
 });
 
-test("her doors open from inside a folder too (the /scroll/ broken gate)", () => {
+test("their doors open from inside a folder too (the /scroll/ broken gate)", () => {
   /* The Scroll Library's own nav names the root pages with
-   * ../ — the doors she reads there must keep the link as
+   * ../ — the doors they read there must keep the link as
    * written and still be the guide's doors. */
   const doors = Core.doorsFor({
     page: "index.html",
@@ -1277,20 +1277,20 @@ test("her doors open from inside a folder too (the /scroll/ broken gate)", () =>
    * site's root, learned from this script's own address. */
   const presence = read("docs/assets/js/spark-presence.js");
   assert.ok(presence.includes("function doorHref"), "the glue carries the door resolver");
-  assert.ok(presence.includes('doorHref("moons.html")'), "her Today door is resolved");
-  assert.ok(presence.includes("doorHref(step.href)"), "her trail doors are resolved");
-  assert.ok(presence.includes("doorHref(guide.href)"), "her guide doors are resolved");
+  assert.ok(presence.includes('doorHref("moons.html")'), "their Today door is resolved");
+  assert.ok(presence.includes("doorHref(step.href)"), "their trail doors are resolved");
+  assert.ok(presence.includes("doorHref(guide.href)"), "their guide doors are resolved");
 });
 
-test("the meeting stands above the chrome, and her light is styled to rest", () => {
+test("the meeting stands above the chrome, and their light is styled to rest", () => {
   const css = read("docs/assets/css/spark-companion.css");
   assert.match(css, /\.spark-encounter-host \{[^}]*z-index: 10060/, "the encounter rides above the site chrome");
-  assert.match(css, /\.spark-presence \{[^}]*z-index: 10040/, "her panel layer rides above the floating menu");
+  assert.match(css, /\.spark-presence \{[^}]*z-index: 10040/, "their panel layer rides above the floating menu");
   assert.ok(css.includes("rgba(13, 18, 32, 0.96)"), "the encounter card is near-solid: no page text bleeds through");
-  assert.ok(css.includes("spark-mote-twinkle"), "her motes twinkle gently");
+  assert.ok(css.includes("spark-mote-twinkle"), "their motes twinkle gently");
   assert.match(
     css,
-    /prefers-reduced-motion: reduce\) \{\n  \.spark-presence-button \{ animation: none; \}\n  \/\* Her motes rest where they were drawn: a still glow\. \*\/\n  \.spark-mote \{ animation: none; \}/,
+    /prefers-reduced-motion: reduce\) \{\n  \.spark-presence-button \{ animation: none; \}\n  \/\* Their motes rest where they were drawn: a still glow\. \*\/\n  \.spark-mote \{ animation: none; \}/,
     "under reduced motion the motes rest: a still glow"
   );
   assert.match(
@@ -1389,9 +1389,9 @@ test("v7 voice box rides the presence: generated, default quiet, mute-ruled, tap
     assert.ok(presence.includes(hook), `the presence carries ${hook}`);
   }
   /* The device's robot voice is removed whole, not merely
-   * unwired: no speech synthesis anywhere in her code, no
-   * voice picker, no utterance machinery. Her voice is the
-   * generated one, or she is quiet. */
+   * unwired: no speech synthesis anywhere in their code, no
+   * voice picker, no utterance machinery. Their voice is the
+   * generated one, or they are quiet. */
   for (const [name, src] of [["presence", presence], ["core", core]]) {
     assert.ok(!src.includes("speechSynthesis"), `no device speech remains in the ${name}`);
     assert.ok(!src.includes("SpeechSynthesisUtterance"), `no utterance machinery remains in the ${name}`);
@@ -1403,13 +1403,13 @@ test("v7 voice box rides the presence: generated, default quiet, mute-ruled, tap
   );
   const vocalAt = presence.indexOf("function vocalize(text)");
   const gate = presence.slice(vocalAt, vocalAt + 220);
-  assert.ok(gate.includes("!voiceOn()"), "she does not sound while Voice is off");
-  assert.ok(gate.includes("soundOff()"), "the Sounds mute silences her voice too");
-  assert.ok(gate.includes("!voiceArmed"), "she does not sound before a keeper tap arms the talk");
+  assert.ok(gate.includes("!voiceOn()"), "they do not sound while Voice is off");
+  assert.ok(gate.includes("soundOff()"), "the Sounds mute silences their voice too");
+  assert.ok(gate.includes("!voiceArmed"), "they do not sound before a keeper tap arms the talk");
   const closeAt = presence.indexOf("const closeBubble");
   assert.ok(
     presence.slice(closeAt, closeAt + 320).includes("stopVoice()"),
-    "closing the talk stills her voice"
+    "closing the talk stills their voice"
   );
   assert.ok(!/fetch\(|XMLHttpRequest|sendBeacon/.test(presence), "the voice sends nothing anywhere");
 });
@@ -1515,7 +1515,7 @@ test("v6 tricks: every kind carries its own trick, and care can teach too", () =
   );
 });
 
-test("v6 echo game: her seed's pattern, her colours, rounds that grow", () => {
+test("v6 echo game: their seed's pattern, their colours, rounds that grow", () => {
   const companion = Core.generate(SEED_A);
   const r1 = Core.echoFor({ companion, round: 1 });
   assert.equal(r1.pads.length, 4, "four pads");
@@ -1525,9 +1525,9 @@ test("v6 echo game: her seed's pattern, her colours, rounds that grow", () => {
   assert.deepEqual(Core.echoFor({ companion, round: 2 }).steps, Core.echoFor({ companion, round: 2 }).steps, "the same Spark sings the same round anywhere");
   assert.notDeepEqual(Core.echoFor({ companion, round: 1 }).steps, Core.echoFor({ companion, round: 3 }).steps, "rounds differ from each other");
   const base = Core.chirpFor(companion).first;
-  assert.equal(r1.pads[0].note, base, "the first pad sounds her own first note");
-  assert.ok(r1.pads.every((p, i) => i === 0 || p.note > r1.pads[i - 1].note), "the pads rise from her pitch");
-  assert.ok(r1.pads.every((p) => /^hsl\(/.test(p.color)), "the pads wear colours, grown from her hue");
+  assert.equal(r1.pads[0].note, base, "the first pad sounds their own first note");
+  assert.ok(r1.pads.every((p, i) => i === 0 || p.note > r1.pads[i - 1].note), "the pads rise from their pitch");
+  assert.ok(r1.pads.every((p) => /^hsl\(/.test(p.color)), "the pads wear colours, grown from their hue");
   assert.ok(r1.steps.every((s) => s >= 0 && s <= 3), "every step lands on a pad");
   assert.deepEqual(Core.echoFor({ companion: null, round: 1 }), { pads: [], steps: [], round: 0 }, "no companion, no game");
 });
@@ -1538,13 +1538,13 @@ test("v6 moods: derived from what has happened — play, care, the hour", () => 
   const at = (hour, recent) =>
     Core.moodFor({ record, companion, todayPatternDay: 216, hour, recent }).id;
   assert.equal(at(10), "curious", "a plain morning is curious");
-  assert.equal(at(23), "sleepy", "the late hours soften her");
+  assert.equal(at(23), "sleepy", "the late hours soften them");
   assert.equal(at(2), "sleepy", "the deep night too");
-  assert.equal(at(20), "calm", "the evening settles her");
-  assert.equal(at(10, { petted: true }), "bright", "a fresh pet leaves her bright");
-  assert.equal(at(10, { learned: true }), "proud", "a trick learned leaves her proud");
+  assert.equal(at(20), "calm", "the evening settles them");
+  assert.equal(at(10, { petted: true }), "bright", "a fresh pet leaves them bright");
+  assert.equal(at(10, { learned: true }), "proud", "a trick learned leaves them proud");
   assert.equal(at(10, { won: true }), "proud", "a round echoed true, the same");
-  assert.equal(at(23, { played: true }), "bright", "a chase just run leaves her bright, even in the late hours");
+  assert.equal(at(23, { played: true }), "bright", "a chase just run leaves them bright, even in the late hours");
   const kindled = Core.applyCare(record, { action: "kindle", patternDay: 216 });
   assert.equal(
     Core.moodFor({ record: kindled, companion, todayPatternDay: 216, hour: 10 }).id,
@@ -1562,12 +1562,12 @@ test("v6 moods: derived from what has happened — play, care, the hour", () => 
     assert.ok(!banned.test(Core.MOODS[id].line), `the ${id} mood line is clean copy`);
   }
   const panel = Core.panelFor({ record, companion, today: { moon: 8, day: 20, dayOfPatternYear: 216 }, hour: 10 });
-  assert.equal(panel.mood.id, "curious", "the panel names her mood");
-  assert.equal(panel.play.tricksTotal, 4, "and counts her tricks");
+  assert.equal(panel.mood.id, "curious", "the panel names their mood");
+  assert.equal(panel.play.tricksTotal, 4, "and counts their tricks");
   assert.equal(panel.play.tricksKnown, 0, "honestly, before any play");
 });
 
-test("v6 daypart: the hour's own greeting, in her temperament's voice", () => {
+test("v6 daypart: the hour's own greeting, in their temperament's voice", () => {
   assert.equal(Core.daypartFor(4), "night");
   assert.equal(Core.daypartFor(5), "morning");
   assert.equal(Core.daypartFor(10), "morning");
@@ -1593,12 +1593,12 @@ test("v6 daypart: the hour's own greeting, in her temperament's voice", () => {
   assert.equal(Core.daypartLineFor({ companion: null, hour: 7 }), "", "no companion, no greeting");
 });
 
-test("v6 her question: drawn from the record, once a day, skippable forever", () => {
+test("v6 their question: drawn from the record, once a day, skippable forever", () => {
   const companion = Core.generate(SEED_A); /* born Pattern Day 216 */
   const today = { moon: 8, day: 20, dayOfPatternYear: 216 };
   let record = Core.newRecord({ seed: SEED_A, name: "Nori", civilDate: "2026-11-18" });
   const birthday = Core.questionFor({ record, companion, today, page: "index.html" });
-  assert.ok(birthday && birthday.href === "teach.html", "her birth day in the pattern asks toward a practice");
+  assert.ok(birthday && birthday.href === "teach.html", "their birth day in the pattern asks toward a practice");
   assert.match(birthday.text, /Pattern Day I was born on/, "and says why, plainly");
   const later = { moon: 8, day: 21, dayOfPatternYear: 217 };
   record = Core.recordVisit(record, { patternDay: 216, page: "index.html" });
@@ -1606,7 +1606,7 @@ test("v6 her question: drawn from the record, once a day, skippable forever", ()
   const thread = Core.questionFor({ record, companion, today: later, page: "theory.html" });
   assert.ok(thread && thread.href === "index.html", "the left-off thread is a question with its door");
   /* Nothing true to ask: every door walked, the day practised,
-   * no thread behind her — the question rests, honestly. */
+   * no thread behind them — the question rests, honestly. */
   let walked = Core.newRecord({ seed: SEED_A, name: "Nori", civilDate: "2026-11-18" });
   for (const key of Object.keys(Core.PAGE_GUIDE)) {
     walked = Core.recordVisit(walked, { patternDay: 217, page: key });
@@ -1616,12 +1616,12 @@ test("v6 her question: drawn from the record, once a day, skippable forever", ()
   assert.equal(
     Core.questionFor({ record: walked, companion, today: later, page: "index.html" }),
     null,
-    "with nothing true to ask, she asks nothing"
+    "with nothing true to ask, they ask nothing"
   );
   const asked = Core.markAsked(walked, { patternDay: 217 });
   assert.equal(Core.playOf(asked).askedDay, 217, "asking is kept for the day, and only the asking");
   const banned = /you have not|haven't|have not|not done|not yet|missed|incomplete/i;
-  for (const q of [birthday, thread]) assert.ok(!banned.test(q.text), `her question is clean copy: ${q.text}`);
+  for (const q of [birthday, thread]) assert.ok(!banned.test(q.text), `their question is clean copy: ${q.text}`);
 });
 
 test("v6 conversation beats: touch, tricks, echo, celebration — every temperament, clean copy", () => {
@@ -1718,18 +1718,18 @@ test("no R1.7 protected file is touched by the Spark", () => {
   }
 });
 
-/* ---- v9: her sound family — the seed picks how she sounds ---- */
+/* ---- v9: their sound family — the seed picks how they sound ---- */
 
-test("v9 sound family: the seed picks her family, and settles her sound", () => {
+test("v9 sound family: the seed picks their family, and settles their sound", () => {
   const a = Core.generate(SEED_A);
   const first = Core.soundFor(a);
   assert.deepEqual(Core.soundFor(a), first, "the same seed settles the same sound anywhere");
-  assert.ok(Core.SOUND_FAMILIES.map((f) => f.id).includes(first.family), "her family is one of the grown set");
-  assert.ok(first.familyName.length > 3, "her family has a name her record can speak");
-  assert.ok(first.brightness >= 0.85 && first.brightness <= 1.15, "her brightness is a small seed jitter");
-  assert.ok(first.decay >= 0.8 && first.decay <= 1.25, "her ring is a small seed jitter");
-  assert.ok(first.vibratoDepth >= 0.002 && first.vibratoDepth <= 0.009, "her vibrato is a waver, not a wobble");
-  assert.ok(first.vibratoRate >= 4.2 && first.vibratoRate <= 6.1, "her vibrato pace is a held note's pace");
+  assert.ok(Core.SOUND_FAMILIES.map((f) => f.id).includes(first.family), "their family is one of the grown set");
+  assert.ok(first.familyName.length > 3, "their family has a name their record can speak");
+  assert.ok(first.brightness >= 0.85 && first.brightness <= 1.15, "their brightness is a small seed jitter");
+  assert.ok(first.decay >= 0.8 && first.decay <= 1.25, "their ring is a small seed jitter");
+  assert.ok(first.vibratoDepth >= 0.002 && first.vibratoDepth <= 0.009, "their vibrato is a waver, not a wobble");
+  assert.ok(first.vibratoRate >= 4.2 && first.vibratoRate <= 6.1, "their vibrato pace is a held note's pace");
   assert.equal(Core.soundFor(null), null, "no companion, no sound");
   /* Across many seeds, every family is somebody's — and two
    * Sparks of one family still differ inside it. */
@@ -1745,13 +1745,13 @@ test("v9 sound family: the seed picks her family, and settles her sound", () => 
     const shapes = new Set(list.map((s) => `${s.brightness}/${s.decay}/${s.vibratoRate}`));
     assert.ok(shapes.size > 1, `family ${fam} is not one fixed sound — its Sparks differ inside it`);
   }
-  /* The flourish rises from her own chirp root. */
+  /* The flourish rises from their own chirp root. */
   const chirp = Core.chirpFor(a);
-  assert.equal(Core.flourishFor(a), Math.round(chirp.first * 1.78), "the flourish is her pitch, risen");
-  assert.ok(Core.flourishFor(a) > chirp.second, "and it stands above her greeting's second note");
+  assert.equal(Core.flourishFor(a), Math.round(chirp.first * 1.78), "the flourish is their pitch, risen");
+  assert.ok(Core.flourishFor(a) > chirp.second, "and it stands above their greeting's second note");
 });
 
-test("her chirp voice rides the presence: families rendered, no sawtooth, lower level", () => {
+test("their chirp voice rides the presence: families rendered, no sawtooth, lower level", () => {
   const presence = read("docs/assets/js/spark-presence.js");
   for (const hook of [
     "playFamilyNote",
@@ -1763,22 +1763,22 @@ test("her chirp voice rides the presence: families rendered, no sawtooth, lower 
     "markRevealsSeen",
     "revealLineFor",
     "flourishNote",
-    "hers alone"
+    "theirs alone"
   ]) {
     assert.ok(presence.includes(hook), `the presence carries ${hook}`);
   }
-  assert.ok(!presence.includes("softThroat"), "the formant throat is gone: she chirps now, she does not imitate speech");
-  assert.ok(!presence.includes('"sawtooth"'), "the buzz is gone: no sawtooth oscillator anywhere in her voice");
+  assert.ok(!presence.includes("softThroat"), "the formant throat is gone: they chirp now, they do not imitate speech");
+  assert.ok(!presence.includes('"sawtooth"'), "the buzz is gone: no sawtooth oscillator anywhere in their voice");
   assert.ok(
     presence.includes("voiceMaster.gain.value = 0.55"),
-    "her master level is the lowered one (a note peaks near 0.055, against 0.135 in v7)"
+    "their master level is the lowered one (a note peaks near 0.055, against 0.135 in v7)"
   );
   for (const fam of ["bell", "hum", "pluck", "blip"]) {
     assert.ok(presence.includes(`"${fam}"`), `the ${fam} family is rendered`);
   }
 });
 
-/* ---- v9: her finer grain — detail every seed draws differently ---- */
+/* ---- v9: their finer grain — detail every seed draws differently ---- */
 
 test("v9 details: every seed draws its own finer grain", () => {
   const a = Core.generate(SEED_A);
@@ -1792,9 +1792,9 @@ test("v9 details: every seed draws its own finer grain", () => {
     eyeVariant: ["sparkle", "lash", "ring", "plain"]
   };
   for (const [key, values] of Object.entries(lists)) {
-    assert.ok(values.includes(a.details[key]), `her ${key} is one of its grown set`);
+    assert.ok(values.includes(a.details[key]), `their ${key} is one of its grown set`);
   }
-  assert.ok(a.details.density >= 0.7 && a.details.density <= 1.3, "her marking density is a seed's share");
+  assert.ok(a.details.density >= 0.7 && a.details.density <= 1.3, "their marking density is a seed's share");
   /* The draws are independent, so the combinations multiply:
    * across sixty seeds the detail tuples are nearly all
    * distinct, and no single value sweeps its list. */
@@ -1810,7 +1810,7 @@ test("v9 details: every seed draws its own finer grain", () => {
   for (const [value, n] of counts) {
     assert.ok(n < 40, `crest style ${value} does not sweep the field (${n} of 60)`);
   }
-  /* Her born identity does not move: the detail stream is its
+  /* Their born identity does not move: the detail stream is its
    * own stream, so kind, form, markings, eye, crest and name
    * are exactly what the seed always grew. */
   const b = Core.generate(SEED_B);
@@ -1826,23 +1826,23 @@ test("v9 details on the face: born look first, arrivals only when revealed", () 
   }
   assert.ok(companion, "a seed with a full schedule was found");
   const born = Core.renderSVG(companion, { stage: 1 });
-  assert.ok(born.includes('data-spark-shown=""'), "a first meeting shows her born look — no arrivals");
+  assert.ok(born.includes('data-spark-shown=""'), "a first meeting shows their born look — no arrivals");
   const all = Core.revealScheduleFor(companion).map((s) => s.id);
   const later = Core.renderSVG(companion, { stage: 1, revealed: all });
   assert.notEqual(later, born, "the later face is not the born face");
   for (const id of all) {
-    assert.ok(later.includes(id), `the later face names ${id} among what she wears`);
+    assert.ok(later.includes(id), `the later face names ${id} among what they wear`);
   }
   /* The arrivals are the same identity grown, at every stage:
-   * what she wears at Ember she still wears at Radiant. */
+   * what they wear at Ember they still wear at Radiant. */
   const ember = Core.renderSVG(companion, { stage: 0, revealed: all });
   const radiant = Core.renderSVG(companion, { stage: 2, revealed: all });
-  assert.ok(ember.includes(`data-spark-shown="${all.join(" ")}"`), "her arrivals stand at Ember");
+  assert.ok(ember.includes(`data-spark-shown="${all.join(" ")}"`), "their arrivals stand at Ember");
   assert.ok(radiant.includes(`data-spark-shown="${all.join(" ")}"`), "and the same arrivals stand at Radiant — grown, never swapped");
   /* The 3D builder reads the same detail and the same list. */
   const three = read("docs/assets/js/spark-3d.js");
-  assert.ok(three.includes("companion.details"), "the 3D body grows from her detail");
-  assert.ok(three.includes("revealed"), "and wears only what her schedule has brought");
+  assert.ok(three.includes("companion.details"), "the 3D body grows from their detail");
+  assert.ok(three.includes("revealed"), "and wears only what their schedule has brought");
   assert.ok(three.includes("options.revealed"), "the mount takes the reveal state in");
 });
 
@@ -1853,7 +1853,7 @@ test("v9 reveal schedule: first arrival fast, gaps strictly stretching, jitter b
     const c = Core.generate(Core.makeSeed({ moon: 8, patternDay: 216, kindIndex: i % 6, nonce: `sch${i}zz` }));
     const sched = Core.revealScheduleFor(c);
     assert.ok(sched.length >= 1, "every Spark has at least the flourish to grow toward");
-    assert.equal(sched[sched.length - 1].id, "flourish", "her voice flowers last");
+    assert.equal(sched[sched.length - 1].id, "flourish", "their voice flowers last");
     assert.ok(sched[0].at >= 3 && sched[0].at <= 5, `the first arrival comes after a handful of pages (at ${sched[0].at})`);
     for (let k = 1; k < sched.length; k++) {
       assert.ok(sched[k].gap > sched[k - 1].gap, "each gap is longer than the one before — never clockwork");
@@ -1868,7 +1868,7 @@ test("v9 reveal schedule: first arrival fast, gaps strictly stretching, jitter b
     }
     assert.deepEqual(Core.revealScheduleFor(c), sched, "the same seed keeps the same schedule anywhere");
   }
-  /* A feature her seed never drew is not on her schedule:
+  /* A feature their seed never drew is not on their schedule:
    * nothing is owed, nothing is missing. */
   let plain = null;
   for (let i = 0; i < 60 && !plain; i++) {
@@ -1878,7 +1878,7 @@ test("v9 reveal schedule: first arrival fast, gaps strictly stretching, jitter b
   assert.ok(plain, "a cheekless seed exists in the field");
   assert.ok(
     !Core.revealScheduleFor(plain).some((s) => s.id === "cheeks"),
-    "her schedule holds no cheeks she was never drawn with"
+    "their schedule holds no cheeks they were never drawn with"
   );
 });
 
@@ -1915,19 +1915,19 @@ test("v9 reveals: earned by walking, announced once, and time away costs nothing
     "away time reveals nothing and takes nothing"
   );
   /* Return days and care count too — the walking is the whole
-   * of her life with her keeper, not pages alone. */
+   * of their life with their keeper, not pages alone. */
   const returned = { ...fresh, daysSeen: [216, 217] };
   assert.equal(Core.engagementOf(returned), 4, "a second day together counts four");
   const cared = Core.applyCare(fresh, { action: "kindle", patternDay: 217 });
-  assert.ok(Core.engagementOf(cared) > Core.engagementOf(fresh), "care walks her forward too");
-  /* Her arrival lines are clean copy, every one. */
+  assert.ok(Core.engagementOf(cared) > Core.engagementOf(fresh), "care walks their forward too");
+  /* Their arrival lines are clean copy, every one. */
   const banned = /you have not|haven't|have not|not done|not yet|missed|incomplete/i;
   for (const id of Core.REVEAL_ORDER) {
     assert.ok(!banned.test(Core.revealLineFor(id)), `the ${id} line is clean copy: ${Core.revealLineFor(id)}`);
   }
 });
 
-/* ---- v10: her rarity — counted from her own draws, and the
+/* ---- v10: their rarity — counted from their own draws, and the
  * census of the whole variety. Rarity is computed, never
  * stickered: every odds line below is checked against the
  * same tables the generator draws from. ---- */
@@ -1966,7 +1966,7 @@ test("v10 census: the variety, recounted from the derivation tables", () => {
   for (const [factor, table] of Object.entries(tables)) {
     assert.equal(census.factors[factor], table.length, `${factor} is counted from its table`);
   }
-  assert.equal(census.factors.markingCounts, 4, "her markings fall two, three, four, or five at a time");
+  assert.equal(census.factors.markingCounts, 4, "their markings fall two, three, four, or five at a time");
   /* The products are the products — recomputed here, from
    * the factors, so the headline can never drift from them. */
   const categorical = Object.values(census.factors).reduce((a, b) => a * b, 1);
@@ -1975,7 +1975,7 @@ test("v10 census: the variety, recounted from the derivation tables", () => {
   assert.equal(census.measuredMultiplier, measured, "the measured multiplier is its steps' product");
   assert.equal(census.total, categorical * measured, "the total is the two counts multiplied");
   assert.ok(census.categorical > 1e13, `the born variety is counted in the tens of trillions (saw ${census.categorical})`);
-  assert.ok(census.total > 1e25, `with her measured traits, the counted variety passes 10^25 (saw ${census.total})`);
+  assert.ok(census.total > 1e25, `with their measured traits, the counted variety passes 10^25 (saw ${census.total})`);
   assert.equal(census.birthDays, 365, "364 Pattern Days and the one day outside them");
   assert.equal(census.revealShapes, 32, "five grown details, each present or not");
   /* The drift guard: whatever the tables promise, the
@@ -1985,11 +1985,11 @@ test("v10 census: the variety, recounted from the derivation tables", () => {
     v >= lo - 1e-9 && v <= hi + 1e-9 && Math.abs((v - lo) / step - Math.round((v - lo) / step)) < 1e-6;
   for (let i = 0; i < 300; i++) {
     const c = Core.generate(Core.makeSeed({ moon: 8, patternDay: 216, kindIndex: i % 6, nonce: `cen${i}zz` }));
-    assert.ok(Core.FORMS.includes(c.form), "her form is one of its table");
-    assert.ok(Core.MARKINGS.includes(c.markings.style), "her markings are one of their table");
-    assert.ok(c.markings.count >= 2 && c.markings.count <= 5, "her marking count is in its four");
+    assert.ok(Core.FORMS.includes(c.form), "their form is one of its table");
+    assert.ok(Core.MARKINGS.includes(c.markings.style), "their markings are one of their table");
+    assert.ok(c.markings.count >= 2 && c.markings.count <= 5, "their marking count is in its four");
     assert.ok(Core.EYES.includes(c.eye) && Core.CRESTS.includes(c.crest), "eye and crest from their tables");
-    assert.ok(Core.TRAITS.includes(c.trait), "her trait is one of its table");
+    assert.ok(Core.TRAITS.includes(c.trait), "their trait is one of its table");
     assert.ok(Core.GAITS.includes(c.shape.gait) && Core.GLOWS.includes(c.shape.glow), "gait and glow from their tables");
     assert.ok(Core.CREST_STYLES.includes(c.details.crestStyle), "crest style from its table");
     assert.ok(Core.EAR_STYLES.includes(c.details.ears), "ears from their table");
@@ -1997,23 +1997,23 @@ test("v10 census: the variety, recounted from the derivation tables", () => {
     assert.ok(Core.CHEEK_STYLES.includes(c.details.cheeks), "cheeks from their table");
     assert.ok(Core.PATTERN_STYLES.includes(c.details.pattern), "pattern from its table");
     assert.ok(Core.EYE_VARIANTS.includes(c.details.eyeVariant), "eye variant from its table");
-    assert.ok(onStep(c.shape.size, 0.85, 1.18, 0.01), "her size lands on its counted steps");
-    assert.ok(onStep(c.shape.pace, 0.9, 1.1, 0.01), "her pace lands on its counted steps");
-    assert.ok(onStep(c.details.density, 0.7, 1.3, 0.01), "her density lands on its counted steps");
+    assert.ok(onStep(c.shape.size, 0.85, 1.18, 0.01), "their size lands on its counted steps");
+    assert.ok(onStep(c.shape.pace, 0.9, 1.1, 0.01), "their pace lands on its counted steps");
+    assert.ok(onStep(c.details.density, 0.7, 1.3, 0.01), "their density lands on its counted steps");
     const s = Core.soundFor(c);
-    assert.ok(Core.SOUND_FAMILIES.some((f) => f.id === s.family), "her sound family is one of its table");
-    assert.ok(onStep(s.brightness, 0.85, 1.15, 0.01), "her brightness lands on its counted steps");
-    assert.ok(onStep(s.decay, 0.8, 1.25, 0.01), "her decay lands on its counted steps");
+    assert.ok(Core.SOUND_FAMILIES.some((f) => f.id === s.family), "their sound family is one of its table");
+    assert.ok(onStep(s.brightness, 0.85, 1.15, 0.01), "their brightness lands on its counted steps");
+    assert.ok(onStep(s.decay, 0.8, 1.25, 0.01), "their decay lands on its counted steps");
     const box = Core.voiceBoxFor(c);
-    assert.ok(onStep(box.formantScale, 0.86, 1.22, 0.01), "her vocal tract lands on its counted steps");
-    assert.ok(box.breathiness === 0 || onStep(box.breathiness, 0.05, 0.3, 0.01), "her breath lands on its counted steps");
+    assert.ok(onStep(box.formantScale, 0.86, 1.22, 0.01), "their vocal tract lands on its counted steps");
+    assert.ok(box.breathiness === 0 || onStep(box.breathiness, 0.05, 0.3, 0.01), "their breath lands on its counted steps");
   }
 });
 
 test("v10 rarity math: a trait drawn 1-in-N shows odds of about 1 in N", () => {
-  /* Her name's draw, replayed independently from the seed:
-   * opener draw, then the middle draw — under 0.45 she
-   * carries a middle, and her name is the rarer for it. */
+  /* Their name's draw, replayed independently from the seed:
+   * opener draw, then the middle draw — under 0.45 they
+   * carry a middle, and their name is the rarer for it. */
   let sawPlain = 0;
   let sawMiddle = 0;
   for (let i = 0; i < 60; i++) {
@@ -2027,16 +2027,16 @@ test("v10 rarity math: a trait drawn 1-in-N shows odds of about 1 in N", () => {
     if (hasMiddle) {
       sawMiddle += 1;
       assert.ok(Math.abs(draw.p - 0.45 / 576) < 1e-12, "a middle name's odds are the draw's own");
-      assert.equal(Core.rarityFor({ companion }).nameOneIn, 1280, "about 1 in 1,280 of her kind");
+      assert.equal(Core.rarityFor({ companion }).nameOneIn, 1280, "about 1 in 1,280 of their kind");
     } else {
       sawPlain += 1;
       assert.ok(Math.abs(draw.p - 0.55 / 72) < 1e-12, "a plain name's odds are the draw's own");
-      assert.equal(Core.rarityFor({ companion }).nameOneIn, 131, "about 1 in 131 of her kind");
+      assert.equal(Core.rarityFor({ companion }).nameOneIn, 131, "about 1 in 131 of their kind");
     }
   }
   assert.ok(sawPlain > 0 && sawMiddle > 0, "both name shapes stand in the field");
-  /* Her detail set's odds, from crafted sets — the product
-   * of what she drew and what she did not. */
+  /* Their detail set's odds, from crafted sets — the product
+   * of what they drew and what they did not. */
   const bare = { details: { cheeks: "none", pattern: "none", ears: "none", trail: "none", crestStyle: "plain" } };
   assert.ok(Math.abs(Core.detailSetFor(bare).p - 1 / 1536) < 1e-12, "no detail at all: 1 in 1,536");
   const full = { details: { cheeks: "glow", pattern: "bands", ears: "fins", trail: "wisp", crestStyle: "halo" } };
@@ -2046,7 +2046,7 @@ test("v10 rarity math: a trait drawn 1-in-N shows odds of about 1 in N", () => {
     Math.abs(Core.detailSetFor(mixed).p - (3 / 4) * (1 / 4) * (3 / 4) * (1 / 4) * (1 / 6)) < 1e-12,
     "a mixed set multiplies its own draws"
   );
-  /* Her breath's odds: none, or one of its 26 steps. */
+  /* Their breath's odds: none, or one of its 26 steps. */
   for (let i = 0; i < 40; i++) {
     const companion = Core.generate(Core.makeSeed({ moon: 8, patternDay: 216, kindIndex: i % 6, nonce: `bre${i}zz` }));
     const breath = Core.breathDrawFor(companion);
@@ -2116,11 +2116,11 @@ test("v10 standing: bands follow the counted odds, and the count is deterministi
     "same seed and record, same rarity, anywhere"
   );
   assert.equal(Core.rarityFor({ companion: null }), null, "no companion, no rarity");
-  /* Her panel and her share card carry the same count. */
+  /* Their panel and their share card carry the same count. */
   const panel = Core.panelFor({ record, companion: common.companion, today: { moon: 8, day: 21, dayOfPatternYear: 217 } });
   assert.equal(panel.rarity.tierName, common.r.tierName, "the panel counts as the core counts");
   const card = Core.shareCardFor({ record, companion: common.companion, today: { moon: 8, day: 21, dayOfPatternYear: 217 } });
-  assert.ok(card.rarityLine.includes(common.r.tierName), "the share card carries her standing");
+  assert.ok(card.rarityLine.includes(common.r.tierName), "the share card carries their standing");
   assert.ok(card.rarityLine.includes(common.r.oneInText), "and its counted odds");
 });
 
@@ -2177,22 +2177,22 @@ test("v10 birth and life: the marks that are not draws", () => {
   };
   assert.ok(
     Core.rarityFor({ record: grown, companion: plain }).specials.some((s) => s.id === "fully-grown"),
-    "Radiant is marked when the record has grown her there"
+    "Radiant is marked when the record has grown them there"
   );
 });
 
 test("v10 rarity rides the record, the panel, and the share card — clean, unpriced words", () => {
   const presence = read("docs/assets/js/spark-presence.js");
-  assert.ok(presence.includes("Standing:"), "her panel states her standing");
+  assert.ok(presence.includes("Standing:"), "their panel states their standing");
   assert.ok(presence.includes("data.rarity"), "from the panel's own counted rarity");
-  assert.ok(presence.includes("card.rarityLine"), "the share card draws her standing");
+  assert.ok(presence.includes("card.rarityLine"), "the share card draws their standing");
   assert.ok(!/fetch\(|XMLHttpRequest|sendBeacon/.test(presence), "the rarity sends nothing anywhere");
   const page = read("docs/assets/js/spark-companions-page.js");
-  assert.ok(page.includes("spark-rarity") && page.includes("rarityFor"), "her home page states the count too");
+  assert.ok(page.includes("spark-rarity") && page.includes("rarityFor"), "their home page states the count too");
   assert.ok(read("docs/companions.html").includes('id="spark-rarity"'), "with a place kept for it");
   /* Every word the rarity speaks, audited: no absence
    * framing, and no market talk — rarity here is a fact
-   * about her, never a price on her. */
+   * about them, never a price on them. */
   const banned = /you have not|haven't|have not|not done|not yet|missed|incomplete/i;
   const market = /\b(buy|sell|price|mint|hurry)\b|for sale|limited edition|act now|rare drop/i;
   const rich = {

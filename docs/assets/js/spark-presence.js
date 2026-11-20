@@ -51,11 +51,11 @@
    * folder, two steps up. The Spark walks pages that live in
    * folders of their own — the Scroll Library under /scroll/,
    * the systems under /systems/ — and the doors the core names
-   * for her are root pages ("moons.html", the Sphere, her own
+   * for their are root pages ("moons.html", the Sphere, their own
    * companions page). Resolved from a folder page, a bare name
    * lands on a gate that does not exist (/scroll/moons.html —
    * the broken gate Aaron found, Nov 19, 2026). So every door
-   * she offers is resolved here, in the glue: a bare name the
+   * they offer is resolved here, in the glue: a bare name the
    * guide knows as a root page is taken to the root; anything
    * else — a page's own relative link, a sibling page — is
    * left exactly as it stands. */
@@ -244,7 +244,7 @@
     }
   }
 
-  /* The record state's rows, from the core's panel data: her
+  /* The record state's rows, from the core's panel data: their
    * face, both names and which is which, its kind and
    * character, its growth, the days together, and what it has
    * noticed — observed labeled observed, inferred labeled
@@ -275,12 +275,12 @@
     if (data.seedName && data.seedName !== data.name) row("Seed name:", data.seedName);
     row("Kind:", `${data.kindName} — ${data.temperament}, ${data.trait}`);
     const herSound = Core.soundFor(companion);
-    if (herSound) row("Sound:", `${herSound.familyName} — hers alone.`);
-    /* Her rarity, counted from her own draws — the standing
+    if (herSound) row("Sound:", `${herSound.familyName} — theirs alone.`);
+    /* Their rarity, counted from their own draws — the standing
      * first, then each notable trait with its odds, then the
-     * marks birth and life gave her. Facts, plainly kept. */
+     * marks birth and life gave them. Facts, plainly kept. */
     if (data.rarity) {
-      row("Standing:", `${data.rarity.tierName} — about 1 in ${data.rarity.oneInText}, counted from her draws.`);
+      row("Standing:", `${data.rarity.tierName} — about 1 in ${data.rarity.oneInText}, counted from their draws.`);
       for (const trait of data.rarity.traits) row("Notable:", trait.line);
       for (const special of data.rarity.specials) row("Birth & life:", special.line);
     }
@@ -415,10 +415,10 @@
     host.querySelector(".spark-presence-name").textContent = displayName;
     host.querySelector(".spark-panel-who").textContent = displayName;
     host.querySelector(".spark-panel-coord").textContent = Core.coordinateLineFor(today);
-    /* The moon she is under, from the same canonical position
-     * that counts her day: its name flavors her greeting, and
-     * its element lends its hue family to her light — her
-     * glow, never her seed-grown colours, which stay hers. */
+    /* The moon they are under, from the same canonical position
+     * that counts their day: its name flavors their greeting, and
+     * its element lends its hue family to their light — their
+     * glow, never their seed-grown colours, which stay theirs. */
     const moonElement =
       today && today.moon != null && window.PatternCalendarData && Array.isArray(window.PatternCalendarData.moons)
         ? (window.PatternCalendarData.moons[today.moon - 1] || {}).element || null
@@ -432,7 +432,7 @@
     /* ---- v3: the care life and the real guide ---- */
     const getRecord = () => (store ? store.get() : record);
     /* v6: what just happened, kept only in this page's memory —
-     * the fresh facts her mood is derived from. Nothing here is
+     * the fresh facts their mood is derived from. Nothing here is
      * stored; the record keeps the counts, the page keeps the
      * glow of the moment. */
     const recent = { pettedAt: 0, playedAt: 0, learnedAt: 0, wonAt: 0 };
@@ -466,10 +466,10 @@
     const setRecord = (next) => {
       const fresh = Core.learnedBetween({ before: getRecord(), after: next, companion });
       if (fresh.length) next = Core.markTricksKnown(next, fresh);
-      /* Her reveals ride the same one path as her tricks: a
+      /* Their reveals ride the same one path as their tricks: a
        * detail that has arrived since the last write is news
        * exactly once — marked in the record as told, announced
-       * gently, and her face is drawn again wearing it. */
+       * gently, and their face is drawn again wearing it. */
       const arrived = Core.newRevealsBetween({ before: getRecord(), after: next, companion });
       if (arrived.length) next = Core.markRevealsSeen(next, arrived);
       if (store) store.set(next);
@@ -479,16 +479,16 @@
       if (fresh.length) announceLearned(fresh);
       if (arrived.length) announceReveals(arrived);
     };
-    /* Her greeting's extra note, once her voice has flowered:
-     * the flourish stands last on her reveal schedule, and
-     * until it arrives her greeting is the plain two notes it
+    /* Their greeting's extra note, once their voice has flowered:
+     * the flourish stands last on their reveal schedule, and
+     * until it arrives their greeting is the plain two notes it
      * has always been. */
     const flourishNote = () =>
       Core.revealsFor({ record: getRecord(), companion }).revealed.includes("flourish")
         ? Core.flourishFor(companion)
         : null;
-    /* The detail she wears right now, for every drawing of
-     * her on this page — read off the record, never kept
+    /* The detail they wear right now, for every drawing of
+     * them on this page — read off the record, never kept
      * anywhere else. */
     const revealedNow = () => Core.revealsFor({ record: getRecord(), companion }).revealed;
     /* When the record changes under an open panel, a state
@@ -504,15 +504,15 @@
 
     /* ---- the panel (v8) ----
      * A tap on the Spark opens a control panel, not a scrolling
-     * talk. One short line of hers at the top, the day's
+     * talk. One short line of theirs at the top, the day's
      * coordinate in small type under it, and a grid of big
-     * bubbles that simply appear: everything she offers is
+     * bubbles that simply appear: everything they offer is
      * visible at once or one swap away. A state replaces the
      * state before it — nothing scrolls, nothing is hunted
      * for, and the keeper's taps are never echoed back as a
-     * transcript. Her line is spoken by her voice box under
+     * transcript. Their line is spoken by their voice box under
      * the same gating as always; the words themselves come
-     * from the record and the page, framed in her
+     * from the record and the page, framed in their
      * temperament's voice (Core.convoLineFor), never invented
      * beyond them. */
     const lineText = host.querySelector(".spark-panel-text");
@@ -523,9 +523,9 @@
     let growthShown = false;
     const fillName = (text) => String(text || "").replaceAll("{name}", displayName);
     const beatLine = (beat) => fillName(Core.convoLineFor({ companion, beat }));
-    /* Her one line: the text swaps in place, and her voice
+    /* Their one line: the text swaps in place, and their voice
      * box sounds it under its own gating (tap-armed, Voice
-     * switch, Sounds mute) — a line she opens by herself
+     * switch, Sounds mute) — a line they open by themselves
      * before any tap stays silent, as it always has. */
     function panelSay(text, opts = {}) {
       if (text == null) return;
@@ -584,7 +584,7 @@
         }
         btn.addEventListener("click", () => {
           /* The keeper has taken the panel: the arrival timer
-           * that would fold her opening away must never fold
+           * that would fold their opening away must never fold
            * a panel mid-use. */
           if (arrivalTimer) {
             window.clearTimeout(arrivalTimer);
@@ -601,38 +601,38 @@
     function setRows(rows) {
       renderRows(rows, null);
     }
-    /* ---- her voice box ----
-     * Her voice is her own: grown from her seed, not borrowed
-     * from the device. Until v6 she spoke through the device's
+    /* ---- their voice box ----
+     * Their voice is their own: grown from their seed, not borrowed
+     * from the device. Until v6 they spoke through the device's
      * speech synthesis — a generic robot, the same for every
      * Spark — and Aaron named it: too robot-like. The robot is
      * gone, removed whole. The v7–v9 box sang each line's
      * syllables through seed-grown formants (Core.voiceBoxFor,
      * Core.vocalPlanFor) — softer after v9, round sine stacks
-     * at a low level, in her seed's sound family — but a
+     * at a low level, in their seed's sound family — but a
      * formant voice still reads as a machine imitating speech.
-     * So now she answers the way a beloved game companion
+     * So now they answer the way a beloved game companion
      * does: in a chirp-phrase (Core.phraseFor). A young Spark
      * chirps once; a Kindled Spark answers in two notes; a
-     * Bearer sings a short melodic phrase from her own scale,
-     * pitched at her chirp root, a question lifting at its
+     * Bearer sings a short melodic phrase from their own scale,
+     * pitched at their chirp root, a question lifting at its
      * end and a statement settling home. The voice GROWS with
-     * her, and what sounds is music, not imitation speech:
-     * round tones in her sound family (soft bell, warm hum,
+     * them, and what sounds is music, not imitation speech:
+     * round tones in their sound family (soft bell, warm hum,
      * wooden pluck, watery blip), each note swept up into its
      * pitch like a small creature's call, peaking at about
-     * 0.055 through the master — the v9 level, kept. Her
-     * words stand in text, whole; the phrase is her sound
+     * 0.055 through the master — the v9 level, kept. Their
+     * words stand in text, whole; the phrase is their sound
      * over them. The syllable plan still stands in the core
-     * for the record; it is no longer what she sounds like.
-     * The fences are the ones her voice has always kept: the
+     * for the record; it is no longer what they sound like.
+     * The fences are the ones their voice has always kept: the
      * Voice switch rests quiet until the keeper turns it on
-     * (kept on this device), the talk is armed by a tap on her
-     * furniture so a line she opens by herself is never sounded
-     * uninvited, she sounds her own lines only — never the
+     * (kept on this device), the talk is armed by a tap on their
+     * furniture so a line they open by themselves is never sounded
+     * uninvited, they sound their own lines only — never the
      * keeper's echoed answers — each new line stills the one
-     * before it, closing the talk stills her, and the Sounds
-     * switch silences her along with the chirps. No samples, no
+     * before it, closing the talk stills them, and the Sounds
+     * switch silences their along with the chirps. No samples, no
      * network, nothing recorded, nothing sent anywhere. */
     let voiceArmed = false;
     let voiceRun = 0;
@@ -657,7 +657,7 @@
         voiceMaster = null;
       }
     }
-    /* A tracked source: everything she starts is kept here so
+    /* A tracked source: everything they start is kept here so
      * stopVoice can still it, and it lets go of itself when
      * spent. */
     function voiceSource(node) {
@@ -675,7 +675,7 @@
       g.gain.exponentialRampToValueAtTime(0.0001, at + dur);
       return g;
     }
-    /* One note of her chirp-phrase, sung in her family —
+    /* One note of their chirp-phrase, sung in their family —
      * the singer singSyllable has become. Aaron's word
      * (Nov 19, 2026): not a robot, not formants shaped like
      * speech — a character's chirp, the way a beloved game
@@ -684,19 +684,19 @@
      * the note's own small glide (a question's last note
      * lifts, a statement's settles), and is gone quickly.
      * No formant throat, no consonant ticks, no breath noise
-     * — the machinery that made her sound synthesized is
-     * removed, not retuned. Her family still colours her:
+     * — the machinery that made their sound synthesized is
+     * removed, not retuned. Their family still colours them:
      * - bell: a sine stack with a soft inharmonic ring, left
      *   to fade a little past the note.
-     * - hum: her warm default — a sine and a breath of
+     * - hum: their warm default — a sine and a breath of
      *   triangle, vibrato riding on longer notes.
      * - pluck: a triangle tapped like wood, settling as it
      *   sounds, gone by the note's end.
      * - blip: a droplet — a sine that rises into its pitch
      *   and sighs off it, through a plain soft lowpass.
      * A handful of nodes per note, all stopped when spent. */
-    /* Her vibrato, on syllables long enough to hold one: a
-     * slow, small waver, hers by seed, on the fundamental. */
+    /* Their vibrato, on syllables long enough to hold one: a
+     * slow, small waver, theirs by seed, on the fundamental. */
     function addVibrato(ctx, box, osc, f0, at, dur) {
       if (dur < 0.12 || !box.vibratoDepth) return;
       const lfo = voiceSource(ctx.createOscillator());
@@ -794,12 +794,12 @@
     }
     function vocalize(text) {
       if (!voiceArmed || !voiceOn() || soundOff()) return;
-      /* She answers in a chirp-phrase now (Core.phraseFor):
+      /* They answer in a chirp-phrase now (Core.phraseFor):
        * a young Spark chirps once, a Kindled Spark answers
-       * in two notes, a Bearer sings a short melody — her
-       * voice grows as she does. The syllable plan still
+       * in two notes, a Bearer sings a short melody — their
+       * voice grows as they do. The syllable plan still
        * stands in the core for the record; it is no longer
-       * what she sounds like. */
+       * what they sound like. */
       const plan = Core.phraseFor({
         companion,
         stage: Core.stageOf(getRecord(), companion).index,
@@ -815,7 +815,7 @@
         const run = voiceRun;
         const ctx = audioCtx;
         voiceMaster = ctx.createGain();
-        /* Her level, lowered in v9: a syllable peaks near
+        /* Their level, lowered in v9: a syllable peaks near
          * 0.055 through this master, against 0.135 in v7. */
         voiceMaster.gain.value = 0.55;
         voiceMaster.connect(ctx.destination);
@@ -842,7 +842,7 @@
     }
     /* Every tap answered in the body first: the eyes land —
      * a glance toward the keeper — then the body answers with
-     * its bounce, and her little sound answers with it. One
+     * its bounce, and their little sound answers with it. One
      * helper, so no bubble in the panel is ever a dead tap. */
     function answerInBody(withVoice = true) {
       if (art) {
@@ -860,7 +860,7 @@
     }
 
     /* ---- the states ----
-     * Each function below is one panel state: her line, any
+     * Each function below is one panel state: their line, any
      * short rows the state carries, and its bubbles. Opening
      * one replaces the last; Back returns home. */
     function moonify(text) {
@@ -946,7 +946,7 @@
     /* ---- v6: tricks, learned from real play ----
      * A trick is performed in the body first — a class on the
      * drawing, a move in the 3D body — and named in the panel:
-     * her line says its name, then her trick line. Under
+     * their line says its name, then their trick line. Under
      * reduced motion the drawing holds still, as the device
      * asks, and the name and the line carry the performance —
      * the same honesty the chase has always kept. */
@@ -989,10 +989,10 @@
         if (panelState === "tricks") panelSay(beatLine("trick"));
       }, 850);
     }
-    /* Her face, drawn again wearing what has just arrived:
+    /* Their face, drawn again wearing what has just arrived:
      * the 3D body is remounted on the new reveal state, the
      * flat drawing is simply drawn again. Nothing else about
-     * her moves — same place, same stage, same everything. */
+     * their moves — same place, same stage, same everything. */
     function redrawArt() {
       if (!art) return;
       if (ctrl) {
@@ -1014,8 +1014,8 @@
       }
     }
     /* A reveal, announced once, at the moment it lands — the
-     * trick discipline, for her face: her face is drawn again
-     * wearing the new detail, she celebrates, and one short
+     * trick discipline, for their face: their face is drawn again
+     * wearing the new detail, they celebrate, and one short
      * line says what arrived. If the panel is folded, the line
      * opens it briefly, as announcements do. */
     function announceReveals(ids) {
@@ -1030,9 +1030,9 @@
       });
     }
     /* A trick learned, announced once, at the moment it lands:
-     * her learned line, then the trick itself, performed on
-     * the spot. If the panel is folded, she opens it briefly —
-     * the way she announces a growth — says it, and steps
+     * their learned line, then the trick itself, performed on
+     * the spot. If the panel is folded, they open it briefly —
+     * the way they announce a growth — say it, and step
      * back. */
     function announceLearned(ids) {
       const tricks = Core.tricksFor({ record: getRecord(), companion });
@@ -1091,11 +1091,11 @@
     }
 
     /* ---- v6: the echo game ----
-     * She pulses a pattern — her seed's notes, in her own four
+     * They pulse a pattern — their seed's notes, in their own four
      * colours — and the keeper taps it back on the pads, which
      * live in the panel while the game state stands. Rounds
      * grow one note at a time; the best round is kept on this
-     * device and stands in her record. A note astray ends the
+     * device and stands in their record. A note astray ends the
      * round kindly: the best stands, the pattern offers to
      * sing again, and nothing anywhere is taken away. */
     const echoBox = host.querySelector(".spark-echo");
@@ -1214,7 +1214,7 @@
       echo = null;
       if (echoBox) echoBox.setAttribute("hidden", "");
     }
-    /* The Guide state: her line is the record's own standing
+    /* The Guide state: their line is the record's own standing
      * suggestion for this page; the bubbles are this page's
      * own doors, the same doors the guide has always offered,
      * with the record's suggested door first among them. */
@@ -1257,7 +1257,7 @@
         gridCls: "spark-guide-doors"
       });
     }
-    /* Look next: her suggestions, drawn only from real site
+    /* Look next: their suggestions, drawn only from real site
      * material, in order of trust — this page's own doors
      * first (the Guide's own source), then the keeper's own
      * left-off place from their on-device record, labeled
@@ -1314,7 +1314,7 @@
      * then the main content's paragraphs that follow it. The
      * core cuts them into chunks that partition that text:
      * nothing is padded, nothing is repeated, and nothing comes
-     * from anywhere but this page. Each chunk replaces her
+     * from anywhere but this page. Each chunk replaces their
      * line in the same bubble — the words never grow a
      * thread. */
     let explainRest = [];
@@ -1484,12 +1484,12 @@
     let convoStarted = false;
     function startConvo() {
       convoStarted = true;
-      /* Once a day at most, her one gentle question, drawn
+      /* Once a day at most, their one gentle question, drawn
        * from what the record truly holds, stands in the panel
-       * as her line with answer bubbles — and a way past it
+       * as their line with answer bubbles — and a way past it
        * that costs nothing. Any other day, the home panel
        * opens with the hour's greeting, flavored by the moon
-       * she is under. A growth, when one is new, takes the
+       * they are under. A growth, when one is new, takes the
        * line first. */
       const todayDay = today ? today.dayOfPatternYear : null;
       const askedDay = Core.playOf(getRecord()).askedDay;
@@ -1532,10 +1532,10 @@
     function welcomeBack() {
       showHome(moonify(beatLine("welcome")));
     }
-    /* The panel stands where she stands: placed beside her
+    /* The panel stands where they stand: placed beside them
      * at open time, in the walker's own coordinates, clamped
      * to the view so no state is ever clipped by an edge.
-     * She rests while it is open, so the placing holds. */
+     * They rest while it is open, so the placing holds. */
     function placePanel() {
       const wr = walker.getBoundingClientRect();
       const r = button.getBoundingClientRect();
@@ -1643,7 +1643,7 @@
     const closeBubble = () => {
       bubble.setAttribute("hidden", "");
       button.setAttribute("aria-expanded", "false");
-      /* Closing the talk stills her voice with it — and folds
+      /* Closing the talk stills their voice with it — and folds
        * the echo board away with the talk it belongs to. */
       stopVoice();
       endEcho();
@@ -1692,27 +1692,27 @@
       if (roam) roam.wake();
       const open = bubble.hasAttribute("hidden");
       if (open) {
-        /* A tap opens a talk: she turns, greets the day, and
-         * asks her question — the panel rides inside the talk. */
+        /* A tap opens a talk: they turn, greet the day, and
+         * ask their question — the panel rides inside the talk. */
         openConvo();
       } else {
         closeBubble();
       }
     });
 
-    /* ---- v6: touch — she answers the hand itself ----
+    /* ---- v6: touch — they answer the hand itself ----
      * A plain tap stays a tap (and, mid-chase, a catch). But a
-     * hand can do more than tap, and she answers all of it:
-     * a jab is a poke — a squash, a count, a word in her voice
-     * if her voice is on. A press that rubs is petting — she
-     * leans in and glows, and the pet is counted. A press that
-     * travels is a drag — she rides the finger and settles
-     * where she is left. A drag let go fast is a toss — she
-     * darts to where the throw was heading, on the same spring
-     * as her dodges. Every one of these is play, counted on
-     * this device, and play teaches her tricks. Under reduced
-     * motion the roam rests, so a drag moves her drawing
-     * directly and leaves her where she was put — the still
+     * hand can do more than tap, and they answer all of it:
+     * a jab is a poke — a squash, a count, a word in their voice
+     * if their voice is on. A press that rubs is petting — they
+     * lean in and glows, and the pet is counted. A press that
+     * travels is a drag — they ride the finger and settle
+     * where they are left. A drag let go fast is a toss — they
+     * dart to where the throw was heading, on the same spring
+     * as their dodges. Every one of these is play, counted on
+     * this device, and play teaches their tricks. Under reduced
+     * motion the roam rests, so a drag moves their drawing
+     * directly and leaves their where they were put — the still
      * equivalent, never a dead press. */
     let suppressClick = false;
     let press = null;
@@ -1731,7 +1731,7 @@
       refreshMood();
     }
     button.addEventListener("pointerdown", (event) => {
-      /* Mid-chase a press on her is a catch in the making; the
+      /* Mid-chase a press on them is a catch in the making; the
        * click that follows it does the counting, as always. */
       if (roam && roam.isPlaying()) return;
       press = {
@@ -1804,7 +1804,7 @@
         const speed = Math.hypot(vx, vy);
         if (roam) {
           if (!cancelled && dt < 420 && speed > 0.8) {
-            /* The toss: she flies to where the throw pointed. */
+            /* The toss: they fly to where the throw pointed. */
             roam.tossTo(p.lastX + vx * 280, p.lastY + vy * 280);
           } else {
             roam.release();
@@ -1862,9 +1862,9 @@
     function doPlay() {
       answerInBody();
       if (!roam) {
-        /* Reduced motion: she stays in her corner by the
-         * device's own asking, so the chase rests — and she
-         * says so, rather than letting the tap fall dead. */
+        /* Reduced motion: they stay in their corner by the
+         * device's own asking, so the chase rests — and they
+         * say so, rather than letting the tap fall dead. */
         showHome(beatLine("play"), {
           rows: [{ text: "Stillness is on. The chase rests; care and talk still work." }]
         });
@@ -1912,12 +1912,12 @@
       closeBubble();
       if (roam) roam.rest();
     }
-    /* Her two switches live in the More state now: Sounds,
-     * and her voice box beside it. Each rests as it was left,
-     * kept on this device; the Sounds switch rules her voice
-     * too, as it always has. Turning Voice on, she says so —
-     * in her own generated voice, since the keeper's tap is
-     * the gesture. Turning it off stills her mid-line. */
+    /* Their two switches live in the More state now: Sounds,
+     * and their voice box beside it. Each rests as it was left,
+     * kept on this device; the Sounds switch rules their voice
+     * too, as it always has. Turning Voice on, they say so —
+     * in their own generated voice, since the keeper's tap is
+     * the gesture. Turning it off stills their mid-line. */
     function toggleSounds() {
       try {
         window.localStorage.setItem(SOUND_KEY, soundOff() ? "on" : "off");
@@ -1937,8 +1937,8 @@
       if (!turningOn) stopVoice();
       showMore(turningOn ? "My voice is on." : "Voice off.");
     }
-    /* A tap on her own furniture — her button, her chips, her
-     * links — is the gesture her voice answers. Capture phase,
+    /* A tap on their own furniture — their button, their chips, their
+     * links — is the gesture their voice answers. Capture phase,
      * so the arming lands before the tap's own click speaks. */
     host.addEventListener(
       "pointerdown",
@@ -1971,17 +1971,17 @@
       })
     });
     refreshMood();
-    /* ---- v6: she celebrates what the site itself completes ----
+    /* ---- v6: they celebrate what the site itself completes ----
      * Only events the code truly fires, hooked as they stand:
      * a practice sealed on the practice page (the Manifest
      * console writes it to the Life Atlas and announces the
      * records change with its own name on it), and a witness
      * entry saved on the 13 Moons page (its own saved event).
-     * Her answer: a hop, a glow, her chime — the moment was the
-     * keeper's own tap — and one line in her voice. A seal also
-     * refreshes what she senses of the practice days, so her
+     * Their answer: a hop, a glow, their chime — the moment was the
+     * keeper's own tap — and one line in their voice. A seal also
+     * refreshes what they sense of the practice days, so their
      * record stays honest the moment it happens. The planner's
-     * events live only on the Sphere page, where she does not
+     * events live only on the Sphere page, where they do not
      * walk; no reading anywhere on the site announces its end,
      * so no celebration is hooked to one. */
     let celebrateGuard = 0;
@@ -2008,7 +2008,7 @@
     /* Both events are dispatched without bubbling, each on its
      * own target: the witness event lives on the document alone,
      * and the records change is announced on the document and
-     * the window both. So she listens on both targets, and the
+     * the window both. So they listen on both targets, and the
      * guard above keeps the double announcement to one answer. */
     const onRecordsChanged = (event) => {
       const detail = event && event.detail;
@@ -2029,8 +2029,8 @@
     if (arrival || growthLine) {
       const openBubble = () => {
         if (!bubble.hasAttribute("hidden")) return;
-        /* Arriving, she opens the talk herself: greeting, the
-         * real day, her question — then she steps back. */
+        /* Arriving, they open the talk themselves: greeting, the
+         * real day, their question — then they step back. */
         openConvo();
         arrivalTimer = window.setTimeout(closeBubble, 11000);
       };
@@ -2060,10 +2060,10 @@
     }
   }
 
-  /* Her voice box rests quiet until the keeper turns it on;
+  /* Their voice box rests quiet until the keeper turns it on;
    * the choice is kept on this device, like the sounds. Any
    * stored value other than "on" — including none at all —
-   * means quiet: she never speaks first and asks later. */
+   * means quiet: they never speak first and ask later. */
   const VOICE_KEY = "sof.spark.voice";
   function voiceOn() {
     try {
@@ -2074,17 +2074,17 @@
   }
 
   let audioCtx = null;
-  /* One note, rendered in her sound family — the same family
-   * her voice sings in, so her chirps, her songs, and the echo
-   * game's pads all sound like the one creature she is:
+  /* One note, rendered in their sound family — the same family
+   * their voice sings in, so their chirps, their songs, and the echo
+   * game's pads all sound like the one creature they are:
    * - bell: a fundamental with two soft inharmonic partials,
-   *   rung once and left to fade — the longest ring she has.
+   *   rung once and left to fade — the longest ring they have.
    * - hum: a sine with a breath of its octave, swelling in
    *   slowly and out again.
    * - pluck: a triangle tapped like wood, pitch settling as
    *   it sounds, gone quickly.
    * - blip: a droplet sine, rising into its pitch.
-   * Softer and shorter than the plain sine row she had before:
+   * Softer and shorter than the plain sine row they had before:
    * a note peaks at 0.07 here, against 0.12. */
   function playFamilyNote(ctx, companion, freq, at) {
     const snd = Core.soundFor(companion) || { family: "hum", brightness: 1, decay: 1 };
@@ -2131,13 +2131,13 @@
       note("sine", freq * 1.01, 1, 0.42 * snd.decay, 0.03, 0.83);
     } else {
       /* Hum notes chirp up into their pitch a little, the
-       * same gesture her voice makes — one creature, one
+       * same gesture their voice makes — one creature, one
        * way of sounding. */
       note("sine", freq, 1, 0.5 * snd.decay, 0.035, 0.93);
       note("sine", freq * 2, 0.22, 0.5 * snd.decay, 0.035);
     }
   }
-  /* A row of her notes, played in order. Nothing here ever runs
+  /* A row of their notes, played in order. Nothing here ever runs
    * on its own — every call site is a tap: the Spark tapped, the
    * adoption tapped, the sounds turned back on. */
   function playNotes(notes, step = 0.14, companion = null) {
@@ -2156,8 +2156,8 @@
     }
   }
 
-  /* The greeting chirp — the Spark answering a tap. Once her
-   * voice has flowered (the flourish on her reveal schedule),
+  /* The greeting chirp — the Spark answering a tap. Once their
+   * voice has flowered (the flourish on their reveal schedule),
    * the greeting gains its rising third note. */
   function chirp(companion, flourish = null) {
     if (soundOff()) return;
@@ -2521,7 +2521,7 @@
       }
       if (state === "toss") {
         /* A throw, landed: a small delight, then the walk
-         * resumes — she goes where the hand sent her and is
+         * resumes — they go where the hand sent them and is
          * pleased about the journey. */
         if (ctrl) ctrl.delight();
         goIdle(1200 + Math.random() * 900);
@@ -2617,8 +2617,8 @@
       lastTs = ts;
       if (state === "idle") return;
       if (state === "held") {
-        /* In the keeper's hand: the hand moves her, not the
-         * steering. The loop rests until she is set down. */
+        /* In the keeper's hand: the hand moves them, not the
+         * steering. The loop rests until they are set down. */
         rafId = null;
         return;
       }
@@ -2726,11 +2726,11 @@
          * but a landing ON it is a tap, and a tap always lands. */
         if (button.contains(e.target)) return;
         trackPointer(e);
-        /* The lure: a finger that lands near her and simply
-         * holds — stillness is safety, the oldest rule of her
-         * play. If it is still there a breath later and she did
-         * not startle away, she comes to it, the way the peek
-         * brings her back after a dodge. */
+        /* The lure: a finger that lands near them and simply
+         * holds — stillness is safety, the oldest rule of their
+         * play. If it is still there a breath later and they did
+         * not startle away, they come to it, the way the peek
+         * brings them back after a dodge. */
         const c0 = center();
         const d0 = Math.hypot(e.clientX - c0.x, e.clientY - c0.y);
         if (d0 < play.radius * 2.4 && d0 > 12 && !bubbleOpen()) {
@@ -2860,13 +2860,13 @@
         return true;
       },
       /* Whether a chase is running — the touch layer leaves
-       * her alone for the catch while it is. */
+       * them alone for the catch while it is. */
       isPlaying() {
         return state === "play" || state === "playwait";
       },
-      /* The hand takes her: motion stops, the loop rests, and
-       * dragTo moves her directly until release sets her down
-       * where the hand left her. */
+      /* The hand takes them: motion stops, the loop rests, and
+       * dragTo moves them directly until release sets them down
+       * where the hand left them. */
       grab() {
         if (state === "play" || state === "playwait") return;
         leaveRest();
@@ -2889,7 +2889,7 @@
       },
       /* The toss: a target thrown ahead of the hand, flown to
        * on the chase's own spring. The point given is where
-       * her centre should land. */
+       * their centre should land. */
       tossTo(x, y) {
         leaveRest();
         target = clampPos({ x: x - W() / 2, y: y - H() / 2 });

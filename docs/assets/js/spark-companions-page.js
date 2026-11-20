@@ -284,10 +284,10 @@
       `So far, on this device: ${record.daysSeen.length} day${record.daysSeen.length === 1 ? "" : "s"} together, ` +
       `${record.pagesSeen.length} page${record.pagesSeen.length === 1 ? "" : "s"} seen, ` +
       `${record.practiceDays.length} practice day${record.practiceDays.length === 1 ? "" : "s"} sealed.`;
-    /* Her rarity, counted from her own draws — never a
+    /* Their rarity, counted from their own draws — never a
      * sticker: the standing, the notable traits with their
-     * odds, and the marks of her birth and life, in the same
-     * words her panel and her share card carry. */
+     * odds, and the marks of their birth and life, in the same
+     * words their panel and their share card carry. */
     const rarity = Core.rarityFor({ record, companion });
     $("#spark-rarity").textContent = rarity
       ? `Standing: ${rarity.line} ` +

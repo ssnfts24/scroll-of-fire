@@ -3,7 +3,7 @@
  * Aaron's direction (Nov 18, 2026): more detail, easier navigation,
  * a reachable full screen, and Nori travelling around the Sphere.
  * Everything here styles the PAGE around the instrument — the
- * guide bar, her orbit, the app dock's fit on a phone, the depth
+ * guide bar, their orbit, the app dock's fit on a phone, the depth
  * of the room the Sphere sits in, and the clean full screen (the
  * chrome steps aside while the root element carries sgb-fs). The
  * instrument's own stylesheet (living-time-sphere.css, R1.7) is
@@ -253,12 +253,12 @@ body.sphere-app .sphere-guide-bar {
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9);
 }
 
-/* While she orbits the Sphere, her corner walker rests. */
+/* While they orbit the Sphere, their corner walker rests. */
 html.sphere-nori-orbiting .spark-walker {
   visibility: hidden;
 }
 
-/* Her bubble's Sphere guide. */
+/* Their bubble's Sphere guide. */
 .spark-sphere-guide {
   margin-top: 0.5rem;
   padding-top: 0.5rem;
@@ -397,7 +397,7 @@ html.sgb-slim-default .sphere-guide-bar.sgb-bar-slim .sgb-readout-value {
 }
 
 /* Inside the stage column, only the instrument, the guide bar,
- * her orbit and the Interact bar remain. The Interact bar itself
+ * their orbit and the Interact bar remain. The Interact bar itself
  * steps aside once touch interaction is on; while it is off, it
  * is the one control the visitor still needs, so it stays. */
 html.sgb-fs .sphere-canvas-wrap > :not(.sphere-instrument-shell):not(.sphere-guide-bar):not(.sphere-nori-orbit):not(.sphere-interact-bar) {

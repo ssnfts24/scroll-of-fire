@@ -22,11 +22,11 @@
   top: 0;
   bottom: 0;
   /* Above the site's chrome (its sticky header rides at 900,
-   * its skip link at 1000): her panel must never sit under a
+   * its skip link at 1000): their panel must never sit under a
    * floating menu button (Aaron's phone review, Nov 19,
    * 2026). The layer itself takes no pointer events — only
-   * her own furniture does — so the nav beneath stays fully
-   * usable wherever she is not. */
+   * their own furniture does — so the nav beneath stays fully
+   * usable wherever they are not. */
   z-index: 10040;
   pointer-events: none;
   font-family: inherit;
@@ -78,11 +78,11 @@
   min-height: 44px;
   padding: 4px 12px 4px 4px;
   border-radius: 999px;
-  /* No pill around her anymore (Aaron's word, Nov 19, 2026:
+  /* No pill around them anymore (Aaron's word, Nov 19, 2026:
    * the bubble around the character goes). The button keeps
-   * its shape and its full tap target — the record of her
+   * its shape and its full tap target — the record of their
    * growth record line still needs a legible name beside
-   * her, carried on a shadow now, not a box — but she stands
+   * them, carried on a shadow now, not a box — but they stand
    * on the page itself, lit, not in a container. */
   border: 1px solid transparent;
   background: transparent;
@@ -107,9 +107,9 @@
   height: calc(38px * var(--spark-size, 1));
 }
 
-/* She lights up like a spark: a soft warm aura stands around
- * the drawing itself — light, not a shape she sits in — and
- * her motes (drawn by the core, seeded per Spark) twinkle
+/* They light up like a spark: a soft warm aura stands around
+ * the drawing itself — light, not a shape they sit in — and
+ * their motes (drawn by the core, seeded per Spark) twinkle
  * gently out of step with one another. Under reduced motion
  * the motes rest where they were drawn and the aura simply
  * stands: a still glow. */
@@ -259,7 +259,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .spark-presence-button { animation: none; }
-  /* Her motes rest where they were drawn: a still glow. */
+  /* Their motes rest where they were drawn: a still glow. */
   .spark-mote { animation: none; }
   .spark-presence-art.is-walking svg { animation: none; }
   .spark-presence-art.is-delighted svg { animation: none; }
@@ -948,16 +948,16 @@
 
 /* ---------- v8: the control panel, and bubbles a thumb can hit ----------
  * A tap on the Spark opens a panel, not a scrolling talk.
- * One short line of hers at the top, the day's coordinate in
+ * One short line of theirs at the top, the day's coordinate in
  * small type, any short rows the state carries, and a grid of
  * big bubbles that simply appear — every bubble at least
  * 48px tall, labelled in a word or two, answering the press
  * visibly the moment it lands. A state replaces the state
  * before it; nothing in the panel scrolls. Nothing waits on
- * a hover: there is no hover on a phone. Her light — the
+ * a hover: there is no hover on a phone. Their light — the
  * halo the panel stands in — borrows the hue family of the
- * moon she is under (--spark-moon-hue, set from the
- * calendar's own element for that moon); her seed-grown
+ * moon they are under (--spark-moon-hue, set from the
+ * calendar's own element for that moon); their seed-grown
  * body colours never take it. */
 
 /* The panel gets a definite width — wide enough at phone
@@ -1067,13 +1067,13 @@
 }
 
 /* ---------- v6: touch, tricks, the echo game, moods ----------
- * She answers the hand itself now: the button takes the whole
+ * They answer the hand itself now: the button takes the whole
  * press (no scroll fights it), a poke squashes, a petting leans
- * her in with a static warmth under the lean, and each trick has
- * its own small performance. Her mood shows in her light — a
+ * them in with a static warmth under the lean, and each trick has
+ * its own small performance. Their mood shows in their light — a
  * filter, not a costume — so it reads at a glance and costs the
- * phone nothing. The echo pads are her own colours, thumb-sized,
- * and light where her pattern touches them. */
+ * phone nothing. The echo pads are their own colours, thumb-sized,
+ * and light where their pattern touches them. */
 
 .spark-presence-button {
   touch-action: none;
@@ -1175,7 +1175,7 @@
   35% { filter: brightness(1.6) saturate(1.35) drop-shadow(0 0 16px rgba(255, 236, 170, 0.8)); transform: scale(1.06); }
 }
 
-/* Her mood, in her light. */
+/* Their mood, in their light. */
 .spark-presence-art.is-mood-bright svg {
   filter: brightness(1.09) drop-shadow(0 0 9px rgba(255, 196, 86, 0.5));
 }
