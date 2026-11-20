@@ -553,6 +553,28 @@
     else if (action === "guide") toggleGuideBar();
   });
 
+  // ── The Farm on the Sphere (PR #186 wiring) ─────────────────────
+  // Aaron (Nov 19, 2026): "the farming dating and seasons and
+  // everything should be on the sphere." The farm section lives in
+  // its own overlay module; this loader is the only hook — it sets
+  // the module's stylesheet and scripts on the page, in order, and
+  // nothing else in this layer changes.
+  (() => {
+    if (document.querySelector("script[data-sphere-farm-sphere]")) return;
+    const css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = "assets/css/sphere-farm-sphere.css?v=20261119-1";
+    css.setAttribute("data-sphere-farm-sphere", "");
+    document.head.appendChild(css);
+    for (const src of ["assets/js/sphere-farm-panel.js?v=20261119-1", "assets/js/sphere-farm-sphere.js?v=20261119-1"]) {
+      const s = document.createElement("script");
+      s.src = src;
+      s.async = false;
+      s.setAttribute("data-sphere-farm-sphere", "");
+      document.head.appendChild(s);
+    }
+  })();
+
   // ── Nori on the Sphere: the orbit + her bubble guide ─────────────
 
   const Core = window.SparkCompanion;
