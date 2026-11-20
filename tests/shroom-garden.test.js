@@ -368,11 +368,10 @@ test("garden.html loads the canonical converter, the Atlas stack, and the garden
   assert.ok(!/assets\/js\/shroom-garden\.js/.test(html), "the page no longer loads the old game");
   assert.match(html, /id="garden-beds"/);
   assert.match(html, /id="garden-keepsakes"/);
-  assert.match(html, /id="garden-old-passes"/);
+  assert.ok(!/id="garden-old-passes"/.test(html), "the passes section is gone — Aaron removed the passes legacy (Nov 20, 2026)");
   assert.match(html, /id="garden-status"/);
   assert.match(html, /id="garden-today-coords"/);
-  /* The honest label: the replacement is named, and the old
-   * passes are stated to be untouched. */
+  /* The honest label: the replacement is named. */
   assert.match(html, /replaces Shroom Search/);
   /* Exactly one unified living nav, like every content page. */
   assert.equal((html.match(/data-living-nav/g) || []).length, 1);

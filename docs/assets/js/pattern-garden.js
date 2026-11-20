@@ -39,15 +39,16 @@
  *      ones are rarer, by a rule computed from the keeper's own
  *      record and the day, on this device only.
  *
- * RECORD SAFETY (standing law): what keepers earned in Shroom
- * Search stays in their Atlas exactly as it is. This module reads
- * the old garden's records only to count the passes a keeper holds;
- * it never writes, edits, or deletes a record of the old subtypes
- * ("garden-tend", "garden-tier", "garden-pass"), and its own
- * records ride the schema's type + subtype extension path under
- * their own names: "garden-planting", "garden-witness",
+ * RECORD SAFETY (standing law): this module keeps to its own
+ * records. It never writes, edits, or deletes a record of the old
+ * garden's subtypes ("garden-tend", "garden-tier", "garden-pass"),
+ * and its own records ride the schema's type + subtype extension
+ * path under their own names: "garden-planting", "garden-witness",
  * "garden-seed", "garden-return", and the keepsake, type
- * "artifact" / subtype "garden-keepsake".
+ * "artifact" / subtype "garden-keepsake". The old garden's passes
+ * are not read, counted, or shown here: Aaron removed the Shroom
+ * Search passes legacy entirely (Nov 20, 2026), and this garden
+ * keeps no window onto it.
  *
  * The pure functions (moonSpan, cropWindows, plantableForSpan,
  * foldGarden, seedFindFor, the record builders) carry no DOM or
@@ -77,12 +78,6 @@
     const KEEPSAKE_SUBTYPE = "garden-keepsake";
     const KEEPSAKE_TYPE = "artifact";
     const EVENT_TYPE = "event";
-
-    /* The old garden's pass subtype — read-only here, forever.
-     * Counted so the page can say plainly that earned passes are
-     * untouched; never written by this module. */
-    const OLD_PASS_SUBTYPE = "garden-pass";
-    const OLD_RECORD_TAG = "shroom-garden";
 
     /* Growth stages by witnessed (kept) days inside the Moon. */
     const STAGES = Object.freeze([
@@ -285,12 +280,6 @@
       );
     }
 
-    function countOldPasses(records) {
-      return (Array.isArray(records) ? records : []).filter(
-        record => record && record.subtype === OLD_PASS_SUBTYPE
-      ).length;
-    }
-
     function recordInstant(record) {
       return record?.temporal?.instant || record?.createdAt || record?.temporal?.civilDate || "";
     }
@@ -461,7 +450,6 @@
         beds,
         keepsakes,
         seeds,
-        oldPasses: countOldPasses(records),
         openBed: beds.find(b => b.state === "open") || null
       };
     }
@@ -1052,13 +1040,6 @@
         if (keepEmpty) keepEmpty.hidden = state.keepsakes.length > 0;
       }
 
-      /* The old garden's passes: counted, named, untouched. */
-      const oldHost = document.getElementById("garden-old-passes");
-      if (oldHost) {
-        oldHost.textContent = state.oldPasses
-          ? `You hold ${state.oldPasses} pass${state.oldPasses === 1 ? "" : "es"} earned in Shroom Search. They stay in your Life Atlas exactly as they are — this garden reads them only to say so, and never writes to them.`
-          : "No Shroom Search passes are held on this device. Any earned elsewhere stay exactly as they are — this garden never writes to the old garden's records.";
-      }
     }
 
     async function init() {
@@ -1106,8 +1087,7 @@
         WITNESS: WITNESS_SUBTYPE,
         SEED: SEED_SUBTYPE,
         RETURN: RETURN_SUBTYPE,
-        KEEPSAKE: KEEPSAKE_SUBTYPE,
-        OLD_PASS: OLD_PASS_SUBTYPE
+        KEEPSAKE: KEEPSAKE_SUBTYPE
       }),
       moonSpan,
       bedIdFor,
@@ -1118,7 +1098,6 @@
       METHOD_LABELS,
       stageFor,
       foldGarden,
-      countOldPasses,
       seedFindFor,
       buildPlantRecord,
       buildWitnessRecord,
