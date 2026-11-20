@@ -40,6 +40,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/css/ambient-door.css",
+      "sha256": "ed67adddd71d8549ac3fd428425dda2219af3bf80bb5d44e164cab1ef0263f5f",
+      "publicUrl": "https://codexofreality.org/assets/css/ambient-door.css",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/css/animations.css",
       "sha256": "ec746841bb29ad778a2393211e1f825d78f89274514b5afabb56ad82e4f048a5",
       "publicUrl": "https://codexofreality.org/assets/css/animations.css",
@@ -371,7 +377,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "052cad9c209b8f30de152e9eab5d0a8970bbe8d7fee000b8d53f16dd23fde658",
+      "sha256": "923e0f61ad54364fd02e051bd22cc19e43797f5ecba8c1be29a65d14734393c1",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -1435,6 +1441,12 @@
       "path": "docs/assets/js/alignment/alignment-version.js",
       "sha256": "bde28d670bf9d35ec07d612bff1f78c2cef526a2229431b914b8b867b90c78dd",
       "publicUrl": "https://codexofreality.org/assets/js/alignment/alignment-version.js",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/js/ambient-door.js",
+      "sha256": "9e2553df23367475ba64b586e49eaf2bfe98b721806a3e9f11634f1f5c2f5b9b",
+      "publicUrl": "https://codexofreality.org/assets/js/ambient-door.js",
       "status": "operational"
     },
     {
@@ -2530,6 +2542,18 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/media/codex-cartoon-clip-poster.jpg",
+      "sha256": "cbc5b29e8778462fa2aaea543ac7c04cf1c0c0fd60c9bc2609ea85d2fa7c2bd6",
+      "publicUrl": "https://codexofreality.org/assets/media/codex-cartoon-clip-poster.jpg",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/codex-cartoon-clip.mp4",
+      "sha256": "3e0a565acad7fb7b17a6482490cb3cb769885eabca2bcf56a7a5814867bd31f9",
+      "publicUrl": "https://codexofreality.org/assets/media/codex-cartoon-clip.mp4",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/media/codex-of-reality-rap-poster.webp",
       "sha256": "6b4b9789bb0ccd0083424e37d0172ba20b2eaf0858081c9012b5c09b9842e640",
       "publicUrl": "https://codexofreality.org/assets/media/codex-of-reality-rap-poster.webp",
@@ -3359,13 +3383,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "f4efceee01334867201576bf9b1e1881d4e8a983eae7315c9113ac4e6be4477b",
+      "sha256": "fbae96fbf753345d373f40dab3dd02f3e2b37cf758da63fdb3dca129f7ff9c50",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "e126dfe5f8775990bf1090c736765d8828638f4266b2df29f532468f0733dfb2",
+      "sha256": "eb834bd69d34a4b04ed17e03d840bd2d7db575d5b95082a939143b2c6650119a",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -3521,7 +3545,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "2024af1740a033e8c5aabbe13d289b3edc3abb79e99b943923acf3ae539f6600",
+      "sha256": "b70fa417aa0d988cea8ac46597f458f99e9be12ceaf0d7c2aff75c989911d6d0",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
