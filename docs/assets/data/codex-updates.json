@@ -2,6 +2,14 @@
  {
   "date": "2026-11-20",
   "type": "feature",
+  "title": "The long reads learned to be witnessed — and the site went on a diet",
+  "summary": "Interactivity wave 3 reached the remaining wall pages. The two whitepapers and Mind-Renewal now carry the Witness Mark: a section rail built from the page's own headings so a long read can be travelled, and a standing action — witness this page, with an optional one-line reflection — that writes the mark into the keeper's Life Atlas with today's Pattern stamp and ties the day onto their trail. One mark per page per day, and the page says so honestly when the day already carries it. The same pass put the whole site on a measured diet: 176 duplicate script loads were removed (the calendar stack and the trail were being loaded two and three times on page after page), and a standing budget test now caps every page's weight — its own HTML plus the unique scripts and styles it loads — so a page that grows past its budget fails the suite until it is dieted or the growth is owned deliberately.",
+  "url": "./13-moon-whitepaper.html",
+  "symbol": "✎"
+ },
+ {
+  "date": "2026-11-20",
+  "type": "feature",
   "title": "Your Spark can talk with you anywhere on the site",
   "summary": "The Spark's agent seat — until now seated beside the Sphere — now travels with the Spark to every page. A keeper who has met their Spark gets a small seat in the corner of the page: ask, and the Spark answers. Some answers live on the device and are instant: what day it is by the canonical calendar, how many days you have kept together, who your Spark is, how the Traveller's Road is going — and place-aware answers about the very page you are standing on, its subject and its story chapter when it has one. Anything deeper goes through the same talking door the Sphere uses, metered on the Spark's own line under the shared ceiling, and when the door cannot be reached the seat says so plainly instead of pretending. The Codex Guide's seat is a different seat and is untouched.",
   "url": "./companions.html",

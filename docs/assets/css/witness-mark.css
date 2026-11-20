@@ -1,0 +1,67 @@
+/* The Witness Mark strip — wave 3's standing action for
+   long-read pages. Quiet, bordered, in the house brass. */
+
+.witness-mark {
+  margin: 1.4rem 0;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(212, 175, 55, 0.5);
+  border-radius: 0.6rem;
+  background: rgba(212, 175, 55, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.witness-mark-rail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.8rem;
+  align-items: baseline;
+}
+
+.witness-mark-rail-label {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.witness-mark-rail a {
+  font-size: 0.9rem;
+}
+
+.witness-mark-stamp {
+  margin: 0;
+  font-size: 0.92rem;
+  opacity: 0.9;
+}
+
+.witness-mark-reflection {
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: inherit;
+  padding: 0.5rem 0.65rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.witness-mark-button {
+  align-self: flex-start;
+  border: 1px solid rgba(212, 175, 55, 0.65);
+  background: rgba(212, 175, 55, 0.18);
+  color: inherit;
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.witness-mark-button[disabled] {
+  opacity: 0.65;
+  cursor: default;
+}
+
+.witness-mark-state {
+  margin: 0;
+  font-size: 0.88rem;
+  opacity: 0.85;
+}
