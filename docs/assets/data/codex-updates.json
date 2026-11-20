@@ -2,6 +2,14 @@
  {
   "date": "2026-11-19",
   "type": "sphere",
+  "title": "The farm took its place on the Sphere",
+  "summary": "The planting calendar now stands on the Sphere itself. Select any day and its panel names the season for that date and speaks the farm notes for the day in your county — what to start indoors, what to sow, what can go out, what is still too early, and the frost watch at the season's edges — counted for the selected day through the same sourced western Washington data, not just for today. The county is yours to choose between Lewis and Snohomish, and the choice rests in your own record on your own device. The day's civil date is read from the Sphere's own canonical coordinate, so the farm never keeps a second clock.",
+  "url": "./living-time-sphere.html",
+  "symbol": "🌾"
+ },
+ {
+  "date": "2026-11-19",
+  "type": "sphere",
   "title": "The Sphere learned the homestead year",
   "summary": "Beside the planting calendar, the Day World's ground layer now holds the homestead work around it for western Washington: six cover crops with WSU's own sowing windows and rates, the last sowings that still make a winter harvest, season extension counted against each county's frost record, storage conditions and keeping times for onions, garlic, potatoes, winter squash, and apples, beginner seed saving from the crops that pollinate themselves, and small seasonal notes for chickens and goats. Every entry carries its extension source, disagreements between tables are kept as ranges, and the one gap is named in the open: no WSU goat calendar was found, so the goat note rests on Penn State Extension and says so.",
   "url": "./living-time-sphere.html",
