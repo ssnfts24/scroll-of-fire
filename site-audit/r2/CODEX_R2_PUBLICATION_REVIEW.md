@@ -2,7 +2,7 @@
 
 "Unlinked does not mean private." Everything under `docs/` is deployed (Netlify `publish = "docs"`, no build command).
 
-## Deployed files that need an explicit decision (73)
+## Deployed files that need an explicit decision (65)
 
 | Path | Eligibility | What it is |
 | --- | --- | --- |
@@ -45,14 +45,6 @@
 | `docs/assets/img/shared/branding/README.md` | restricted-review | Image pipeline note stored under the publish tree |
 | `docs/assets/img/shared/placeholders/README.md` | restricted-review | Image pipeline note stored under the publish tree |
 | `docs/assets/img/shared/social/README.md` | restricted-review | Image pipeline note stored under the publish tree |
-| `docs/codex_final_upload/CODEX-FINAL-UPLOAD-PART-01-OF-06.zip` | restricted-review | Upload parts and directive stored under the publish tree |
-| `docs/codex_final_upload/CODEX-FINAL-UPLOAD-PART-02-OF-06.zip` | restricted-review | Upload parts and directive stored under the publish tree |
-| `docs/codex_final_upload/CODEX-FINAL-UPLOAD-PART-03-OF-06.zip` | restricted-review | Upload parts and directive stored under the publish tree |
-| `docs/codex_final_upload/CODEX-FINAL-UPLOAD-PART-04-OF-06.zip` | restricted-review | Upload parts and directive stored under the publish tree |
-| `docs/codex_final_upload/CODEX-FINAL-UPLOAD-PART-05-OF-06.zip` | restricted-review | Upload parts and directive stored under the publish tree |
-| `docs/codex_final_upload/CODEX-FINAL-UPLOAD-PART-06-OF-06.zip` | restricted-review | Upload parts and directive stored under the publish tree |
-| `docs/codex_final_upload/COPILOT-DIRECTIVE.txt` | restricted-review | Upload parts and directive stored under the publish tree |
-| `docs/codex_final_upload/README.md` | restricted-review | Upload parts and directive stored under the publish tree |
 | `docs/development/LIVING-INTERFACE-ARCHITECTURE-V4-PLAN.md` | restricted-review | Engineering report or specification under the publish tree |
 | `docs/development/R1.7-PROTECTED-MANIFEST.md` | restricted-review | Engineering report or specification under the publish tree |
 | `docs/development/TEMPORAL-AUTHORITY-CONTRACT.md` | restricted-review | Engineering report or specification under the publish tree |

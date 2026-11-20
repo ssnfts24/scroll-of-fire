@@ -3,8 +3,8 @@
   "purpose": "Development-only registry of every tracked or intended repository file. Not a publication list.",
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
-    "files": 2162,
-    "bytes": 905566920,
+    "files": 2143,
+    "bytes": 789981003,
     "byGroup": {
       "tooling": 180,
       "manuscript": 17,
@@ -17,7 +17,7 @@
       "ledger": 15,
       "dev-handoff": 19,
       "project-doc": 4,
-      "deployed-bundle": 9,
+      "deployed-bundle": 1,
       "editorial": 2,
       "scripture": 221,
       "frozen-archive": 6,
@@ -25,7 +25,7 @@
       "legacy-asset": 1,
       "site-page": 51,
       "deployed-dev-doc": 56,
-      "site-asset": 557,
+      "site-asset": 546,
       "vendor": 3,
       "site-data": 5,
       "scroll-library": 826,
@@ -37,16 +37,16 @@
     "byPublicationEligibility": {
       "development-only": 223,
       "pending-publication-review": 43,
-      "restricted-review": 180,
+      "restricted-review": 172,
       "protected-immutable": 21,
       "public-unreviewed": 6,
-      "approved-public": 1689
+      "approved-public": 1678
     },
     "byExamination": {
-      "inventoried-only": 2029,
-      "text-extracted": 55,
+      "inventoried-only": 2017,
+      "text-extracted": 54,
       "no-text-layer-needs-visual-review": 1,
-      "archive-listed": 8,
+      "archive-listed": 2,
       "structurally-audited": 69
     }
   },
@@ -4489,10 +4489,7 @@
       "extract": {
         "status": "listed-only",
         "members": 11
-      },
-      "duplicates": [
-        "docs/codex_final_upload/CODEX-FINAL-UPLOAD-PART-01-OF-06.zip"
-      ]
+      }
     },
     {
       "id": "r2:codex-life-atlas-architecture-md-2753a3",
@@ -5949,30 +5946,6 @@
       "nextAction": "Functionality audit in R2-03/R2-06."
     },
     {
-      "id": "r2:docs-assets-css-bridge-css-9bae48",
-      "path": "docs/assets/css/bridge.css",
-      "title": "bridge.css",
-      "format": "css",
-      "bytes": 1287,
-      "sha256": "965a51e2bf8d2172d59ffd237b57ca71b38403354ed51b1df81d8fcdd99787f3",
-      "group": "site-asset",
-      "role": "Runtime stylesheet, script, data or image",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/assets/css/bridge.css",
-      "publicationEligibility": "approved-public",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Functionality audit in R2-03/R2-06."
-    },
-    {
       "id": "r2:docs-assets-css-caravan-css-97cba1",
       "path": "docs/assets/css/caravan.css",
       "title": "caravan.css",
@@ -6103,30 +6076,6 @@
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
       "publicUrl": "https://codexofreality.org/assets/css/equinox-passage.css",
-      "publicationEligibility": "approved-public",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Functionality audit in R2-03/R2-06."
-    },
-    {
-      "id": "r2:docs-assets-css-fonts-css-e0316f",
-      "path": "docs/assets/css/fonts.css",
-      "title": "fonts.css",
-      "format": "css",
-      "bytes": 1548,
-      "sha256": "a8925c184f3f2b83ced3cda799747fe1af4f738cf17de735dd362d224aff9f64",
-      "group": "site-asset",
-      "role": "Runtime stylesheet, script, data or image",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/assets/css/fonts.css",
       "publicationEligibility": "approved-public",
       "status": "operational",
       "catalogId": null,
@@ -6573,30 +6522,6 @@
       "nextAction": "Functionality audit in R2-03/R2-06."
     },
     {
-      "id": "r2:docs-assets-css-manifest-show-css-7cca78",
-      "path": "docs/assets/css/manifest-show.css",
-      "title": "manifest-show.css",
-      "format": "css",
-      "bytes": 5271,
-      "sha256": "f5e96c7501e6171bcea11050f7378e322651c35a7d08237b41f026a5c2174b5a",
-      "group": "site-asset",
-      "role": "Runtime stylesheet, script, data or image",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/assets/css/manifest-show.css",
-      "publicationEligibility": "approved-public",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Functionality audit in R2-03/R2-06."
-    },
-    {
       "id": "r2:docs-assets-css-moons-interface-css-415d53",
       "path": "docs/assets/css/moons-interface.css",
       "title": "moons-interface.css",
@@ -6714,37 +6639,7 @@
         "functionality": "not-started"
       },
       "examination": "inventoried-only",
-      "nextAction": "Functionality audit in R2-03/R2-06.",
-      "duplicates": [
-        "docs/assets/css/performance-runtine.css"
-      ]
-    },
-    {
-      "id": "r2:docs-assets-css-performance-runtine-css-218d64",
-      "path": "docs/assets/css/performance-runtine.css",
-      "title": "performance-runtine.css",
-      "format": "css",
-      "bytes": 1147,
-      "sha256": "a1408ad28ea7753d7162b76047093aa1d4c04cf87a63ea849ab091c4b1e64e72",
-      "group": "site-asset",
-      "role": "Runtime stylesheet, script, data or image",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/assets/css/performance-runtine.css",
-      "publicationEligibility": "approved-public",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Functionality audit in R2-03/R2-06.",
-      "duplicates": [
-        "docs/assets/css/performance-runtime.css"
-      ]
+      "nextAction": "Functionality audit in R2-03/R2-06."
     },
     {
       "id": "r2:docs-assets-css-presence-css-a69f5e",
@@ -6963,30 +6858,6 @@
       "nextAction": "Functionality audit in R2-03/R2-06."
     },
     {
-      "id": "r2:docs-assets-css-start-show-css-36309a",
-      "path": "docs/assets/css/start-show.css",
-      "title": "start-show.css",
-      "format": "css",
-      "bytes": 9245,
-      "sha256": "331514c0c812d15bbd3bdb080f924b42dbdeb35ea8a7133805725fce125aa488",
-      "group": "site-asset",
-      "role": "Runtime stylesheet, script, data or image",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/assets/css/start-show.css",
-      "publicationEligibility": "approved-public",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Functionality audit in R2-03/R2-06."
-    },
-    {
       "id": "r2:docs-assets-css-superlayout-css-a7d24c",
       "path": "docs/assets/css/superlayout.css",
       "title": "superlayout.css",
@@ -7131,30 +7002,6 @@
       "nextAction": "Functionality audit in R2-03/R2-06."
     },
     {
-      "id": "r2:docs-assets-css-tokens-css-668676",
-      "path": "docs/assets/css/tokens.css",
-      "title": "tokens.css",
-      "format": "css",
-      "bytes": 7402,
-      "sha256": "330b0458f4fea1c956e06ab7c25e7f86378e38b43cff9e773853996f07a22eaa",
-      "group": "site-asset",
-      "role": "Runtime stylesheet, script, data or image",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/assets/css/tokens.css",
-      "publicationEligibility": "approved-public",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Functionality audit in R2-03/R2-06."
-    },
-    {
       "id": "r2:docs-assets-css-witness-world-css-c92a54",
       "path": "docs/assets/css/witness-world.css",
       "title": "witness-world.css",
@@ -7207,8 +7054,8 @@
       "path": "docs/assets/data/codex-updates.json",
       "title": "codex-updates.json",
       "format": "json",
-      "bytes": 67511,
-      "sha256": "052cad9c209b8f30de152e9eab5d0a8970bbe8d7fee000b8d53f16dd23fde658",
+      "bytes": 68139,
+      "sha256": "8c7e454ce01666f18ba3cdb0cc9809ad7a6d9dd7cda28bf6ddde688bc5670013",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -12077,54 +11924,6 @@
       "nextAction": "Functionality audit in R2-03/R2-06."
     },
     {
-      "id": "r2:docs-assets-js-codex-js-f5c16c",
-      "path": "docs/assets/js/Codex.js",
-      "title": "Codex.js",
-      "format": "js",
-      "bytes": 11183,
-      "sha256": "c84f19a102d52e8ee0cb67b47a26f97fbdbfa8dc2b18adc3d8fd5a50142bbdc0",
-      "group": "site-asset",
-      "role": "Runtime stylesheet, script, data or image",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/assets/js/Codex.js",
-      "publicationEligibility": "approved-public",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Functionality audit in R2-03/R2-06."
-    },
-    {
-      "id": "r2:docs-assets-js-accents-js-eb25a2",
-      "path": "docs/assets/js/accents.js",
-      "title": "accents.js",
-      "format": "js",
-      "bytes": 1082,
-      "sha256": "7a2dc1de81e24e0a410c3ed11cd2424393bfb38e4b1a5008fc4b2ae412a9f0e4",
-      "group": "site-asset",
-      "role": "Runtime stylesheet, script, data or image",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/assets/js/accents.js",
-      "publicationEligibility": "approved-public",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Functionality audit in R2-03/R2-06."
-    },
-    {
       "id": "r2:docs-assets-js-alignment-alignment-comparison-js-158699",
       "path": "docs/assets/js/alignment/alignment-comparison.js",
       "title": "alignment-comparison.js",
@@ -12351,30 +12150,6 @@
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
       "publicUrl": "https://codexofreality.org/assets/js/alignment/alignment-version.js",
-      "publicationEligibility": "approved-public",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Functionality audit in R2-03/R2-06."
-    },
-    {
-      "id": "r2:docs-assets-js-astro-panel-js-ea9be2",
-      "path": "docs/assets/js/astro-panel.js",
-      "title": "astro-panel.js",
-      "format": "js",
-      "bytes": 1749,
-      "sha256": "9c31c0b6ec203880e67381ddd758d56e98792913eb0b390ff18ab8f3bc3a89fd",
-      "group": "site-asset",
-      "role": "Runtime stylesheet, script, data or image",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/assets/js/astro-panel.js",
       "publicationEligibility": "approved-public",
       "status": "operational",
       "catalogId": null,
@@ -13431,30 +13206,6 @@
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
       "publicUrl": "https://codexofreality.org/assets/js/frequency-governance.js",
-      "publicationEligibility": "approved-public",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Functionality audit in R2-03/R2-06."
-    },
-    {
-      "id": "r2:docs-assets-js-frequency-nature-js-1ccef1",
-      "path": "docs/assets/js/frequency-nature.js",
-      "title": "frequency-nature.js",
-      "format": "js",
-      "bytes": 15397,
-      "sha256": "6e85b9f26b78dff0e90832072443fdea261cff39d2c3faf25ec298d1290051bf",
-      "group": "site-asset",
-      "role": "Runtime stylesheet, script, data or image",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/assets/js/frequency-nature.js",
       "publicationEligibility": "approved-public",
       "status": "operational",
       "catalogId": null,
@@ -16359,30 +16110,6 @@
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
       "publicUrl": "https://codexofreality.org/assets/js/sphere/observatory-capability-manager.js",
-      "publicationEligibility": "approved-public",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Functionality audit in R2-03/R2-06."
-    },
-    {
-      "id": "r2:docs-assets-js-teach-js-fc620a",
-      "path": "docs/assets/js/teach.js",
-      "title": "teach.js",
-      "format": "js",
-      "bytes": 42373,
-      "sha256": "f38a5b9f24282ad5662496c8427b62ea5446976d3864d2ade55e39bebd10ec35",
-      "group": "site-asset",
-      "role": "Runtime stylesheet, script, data or image",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/assets/js/teach.js",
       "publicationEligibility": "approved-public",
       "status": "operational",
       "catalogId": null,
@@ -20050,7 +19777,7 @@
       "title": "manifest.json",
       "format": "json",
       "bytes": 2603,
-      "sha256": "f4efceee01334867201576bf9b1e1881d4e8a983eae7315c9113ac4e6be4477b",
+      "sha256": "1a7e0413982b4300994dfda56d40b05fd6e1602f9fe1375d17df6e69050a948b",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -20073,8 +19800,8 @@
       "path": "docs/assets/search/pages.json",
       "title": "pages.json",
       "format": "json",
-      "bytes": 772471,
-      "sha256": "e126dfe5f8775990bf1090c736765d8828638f4266b2df29f532468f0733dfb2",
+      "bytes": 772473,
+      "sha256": "bd33912906973e038fdfb61423f51549fd4dea2b25a2370a60f6a6e98e30f794",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -20319,231 +20046,6 @@
       },
       "examination": "structurally-audited",
       "nextAction": "Functionality review."
-    },
-    {
-      "id": "r2:docs-codex-final-upload-codex-final-upload-part-01-of-06-zip-6aeae7",
-      "path": "docs/codex_final_upload/CODEX-FINAL-UPLOAD-PART-01-OF-06.zip",
-      "title": "CODEX-FINAL-UPLOAD-PART-01-OF-06.zip",
-      "format": "zip",
-      "bytes": 23069029,
-      "sha256": "6f2b414475e53e294694a2bea014316de82f92097100e7e18ca051cd9ed69289",
-      "group": "deployed-bundle",
-      "role": "Upload parts and directive stored under the publish tree",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/codex_final_upload/CODEX-FINAL-UPLOAD-PART-01-OF-06.zip",
-      "publicationEligibility": "restricted-review",
-      "status": "unverified",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "archive-listed",
-      "nextAction": "Inspect archive contents; likely move out of publish tree.",
-      "extract": {
-        "status": "listed-only",
-        "members": 11
-      },
-      "duplicates": [
-        "CODEX-FINAL-UPLOAD-PART-01-OF-06.zip"
-      ]
-    },
-    {
-      "id": "r2:docs-codex-final-upload-codex-final-upload-part-02-of-06-zip-7548bf",
-      "path": "docs/codex_final_upload/CODEX-FINAL-UPLOAD-PART-02-OF-06.zip",
-      "title": "CODEX-FINAL-UPLOAD-PART-02-OF-06.zip",
-      "format": "zip",
-      "bytes": 23069195,
-      "sha256": "6af7baadf4d7ba905c800e9ddce4bbf5a4000e918d05af71067d8bf9aa8add4f",
-      "group": "deployed-bundle",
-      "role": "Upload parts and directive stored under the publish tree",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/codex_final_upload/CODEX-FINAL-UPLOAD-PART-02-OF-06.zip",
-      "publicationEligibility": "restricted-review",
-      "status": "unverified",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "archive-listed",
-      "nextAction": "Inspect archive contents; likely move out of publish tree.",
-      "extract": {
-        "status": "listed-only",
-        "members": 14
-      }
-    },
-    {
-      "id": "r2:docs-codex-final-upload-codex-final-upload-part-03-of-06-zip-79dfdc",
-      "path": "docs/codex_final_upload/CODEX-FINAL-UPLOAD-PART-03-OF-06.zip",
-      "title": "CODEX-FINAL-UPLOAD-PART-03-OF-06.zip",
-      "format": "zip",
-      "bytes": 23069818,
-      "sha256": "ff15987b15930bfc87f6199f1b737b56ca6b59eb055bd68a60714619b64ee09b",
-      "group": "deployed-bundle",
-      "role": "Upload parts and directive stored under the publish tree",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/codex_final_upload/CODEX-FINAL-UPLOAD-PART-03-OF-06.zip",
-      "publicationEligibility": "restricted-review",
-      "status": "unverified",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "archive-listed",
-      "nextAction": "Inspect archive contents; likely move out of publish tree.",
-      "extract": {
-        "status": "listed-only",
-        "members": 32
-      }
-    },
-    {
-      "id": "r2:docs-codex-final-upload-codex-final-upload-part-04-of-06-zip-ac9f2e",
-      "path": "docs/codex_final_upload/CODEX-FINAL-UPLOAD-PART-04-OF-06.zip",
-      "title": "CODEX-FINAL-UPLOAD-PART-04-OF-06.zip",
-      "format": "zip",
-      "bytes": 23070106,
-      "sha256": "c872c507644b670ee0cca3a7480bb53169db626b2662f51ba20e1ba161e1ff9d",
-      "group": "deployed-bundle",
-      "role": "Upload parts and directive stored under the publish tree",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/codex_final_upload/CODEX-FINAL-UPLOAD-PART-04-OF-06.zip",
-      "publicationEligibility": "restricted-review",
-      "status": "unverified",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "archive-listed",
-      "nextAction": "Inspect archive contents; likely move out of publish tree.",
-      "extract": {
-        "status": "listed-only",
-        "members": 41
-      }
-    },
-    {
-      "id": "r2:docs-codex-final-upload-codex-final-upload-part-05-of-06-zip-687fda",
-      "path": "docs/codex_final_upload/CODEX-FINAL-UPLOAD-PART-05-OF-06.zip",
-      "title": "CODEX-FINAL-UPLOAD-PART-05-OF-06.zip",
-      "format": "zip",
-      "bytes": 23073161,
-      "sha256": "efe606a6a535cfd5c116ab64fa6f5dd1471931c999516fd36fab9d44ef17f029",
-      "group": "deployed-bundle",
-      "role": "Upload parts and directive stored under the publish tree",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/codex_final_upload/CODEX-FINAL-UPLOAD-PART-05-OF-06.zip",
-      "publicationEligibility": "restricted-review",
-      "status": "unverified",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "archive-listed",
-      "nextAction": "Inspect archive contents; likely move out of publish tree.",
-      "extract": {
-        "status": "listed-only",
-        "members": 239
-      }
-    },
-    {
-      "id": "r2:docs-codex-final-upload-codex-final-upload-part-06-of-06-zip-1d0dfe",
-      "path": "docs/codex_final_upload/CODEX-FINAL-UPLOAD-PART-06-OF-06.zip",
-      "title": "CODEX-FINAL-UPLOAD-PART-06-OF-06.zip",
-      "format": "zip",
-      "bytes": 133271,
-      "sha256": "452aa2b4be27e921299306c838f29171b2c83cf8028b2057468e82639165fe71",
-      "group": "deployed-bundle",
-      "role": "Upload parts and directive stored under the publish tree",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/codex_final_upload/CODEX-FINAL-UPLOAD-PART-06-OF-06.zip",
-      "publicationEligibility": "restricted-review",
-      "status": "unverified",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "archive-listed",
-      "nextAction": "Inspect archive contents; likely move out of publish tree.",
-      "extract": {
-        "status": "listed-only",
-        "members": 131
-      }
-    },
-    {
-      "id": "r2:docs-codex-final-upload-copilot-directive-txt-956d1c",
-      "path": "docs/codex_final_upload/COPILOT-DIRECTIVE.txt",
-      "title": "COPILOT-DIRECTIVE.txt",
-      "format": "txt",
-      "bytes": 1138,
-      "sha256": "2f94c0befb5722e90722d7e1eca8dbffb607cf6dc107caa41bdc4b05e7b92773",
-      "group": "deployed-bundle",
-      "role": "Upload parts and directive stored under the publish tree",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/codex_final_upload/COPILOT-DIRECTIVE.txt",
-      "publicationEligibility": "restricted-review",
-      "status": "unverified",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "text-extracted",
-      "nextAction": "Inspect archive contents; likely move out of publish tree.",
-      "extract": {
-        "status": "text-extracted",
-        "words": 167,
-        "hebrew": false,
-        "greek": false
-      }
-    },
-    {
-      "id": "r2:docs-codex-final-upload-readme-md-240922",
-      "path": "docs/codex_final_upload/README.md",
-      "title": "README.md",
-      "format": "md",
-      "bytes": 1700,
-      "sha256": "d1abc86b8d8b6cd29f5c73a09bf5974a1972f6291834f717344d1019b11a19c2",
-      "group": "deployed-bundle",
-      "role": "Upload parts and directive stored under the publish tree",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/codex_final_upload/README.md",
-      "publicationEligibility": "restricted-review",
-      "status": "unverified",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Inspect archive contents; likely move out of publish tree."
     },
     {
       "id": "r2:docs-companions-html-272629",
@@ -21006,8 +20508,8 @@
       "path": "docs/index.html",
       "title": "Homepage",
       "format": "html",
-      "bytes": 122501,
-      "sha256": "2024af1740a033e8c5aabbe13d289b3edc3abb79e99b943923acf3ae539f6600",
+      "bytes": 122479,
+      "sha256": "bc543d9ff83c7c0c3bcf7b24ae2f30e20a972c16f267217c4a4ffba4566704e2",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -49065,7 +48567,7 @@
       "title": "CONTENT-COVERAGE.md",
       "format": "md",
       "bytes": 11966,
-      "sha256": "f6125eb41424de24cd2470b0f231c02d52cc4384a85cc284bf10476da53f9408",
+      "sha256": "c0592ac5ee1dec14e87e4e31160d2323688f85995568ec037088a78a15e755f3",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -49088,8 +48590,8 @@
       "path": "site-audit/DISCOVERABILITY_REPORT.md",
       "title": "DISCOVERABILITY_REPORT.md",
       "format": "md",
-      "bytes": 20333,
-      "sha256": "c2ef2d9bdb6f731d6ece5c98b5f4563e357abff3648385fc57ea0e96423a90a6",
+      "bytes": 20277,
+      "sha256": "82a679c6b7786154b5c9831093dc147a7ed30144da9037e5a87daa1fae390c4f",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -49424,8 +48926,8 @@
       "path": "site-audit/site-master-inventory.json",
       "title": "site-master-inventory.json",
       "format": "json",
-      "bytes": 732440,
-      "sha256": "0e14d414fa43e56712feefd24baa58cf8712cdcca08f0bbaad6bb7c1a0204d32",
+      "bytes": 731073,
+      "sha256": "54bd710640787a7690759307992617206e2c9ea549748ddda00ade41a26f9037",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,

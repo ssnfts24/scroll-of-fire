@@ -3,14 +3,14 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 474,
+    "resources": 472,
     "publicHtmlPages": 178,
     "catalogEntries": 71,
     "issueCounts": {
       "not-linked-directly-from-homepage": 24,
       "nav-label-differs-from-title": 24,
       "no-global-navigation": 1,
-      "deployed-but-unlinked": 57,
+      "deployed-but-unlinked": 56,
       "unreachable-from-homepage": 3,
       "compatibility-redirect-page": 1,
       "not-published-in-catalog": 29,
@@ -679,7 +679,7 @@
     },
     {
       "id": "docs-assets:assets/css",
-      "title": "docs/assets/css (56 files)",
+      "title": "docs/assets/css (50 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -764,7 +764,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (184 files)",
+      "title": "docs/assets/js (179 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -822,23 +822,6 @@
       "relatedProjects": [],
       "sourcePath": "docs/assets/vendor",
       "publicUrl": "https://codexofreality.org/assets/vendor",
-      "publicationStatus": "live",
-      "lastVerifiedSourceRevision": "548e858",
-      "relatedPages": [],
-      "canonicalUrl": "",
-      "privacyEligibility": "supporting-asset",
-      "discoverability": null,
-      "issues": []
-    },
-    {
-      "id": "docs-assets:codex_final_upload",
-      "title": "docs/codex_final_upload (7 files)",
-      "description": "Static assets, data and generated artifacts served from docs/.",
-      "category": "Static assets",
-      "area": null,
-      "relatedProjects": [],
-      "sourcePath": "docs/codex_final_upload",
-      "publicUrl": "https://codexofreality.org/codex_final_upload",
       "publicationStatus": "live",
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [],
@@ -1802,25 +1785,6 @@
       "issues": [
         "unreachable-from-homepage",
         "compatibility-redirect-page"
-      ]
-    },
-    {
-      "id": "docs:codex_final_upload/README.md",
-      "title": "codex_final_upload/README.md",
-      "description": "Markdown document deployed inside docs/ and therefore publicly fetchable, but not linked from the site.",
-      "category": "Development document",
-      "area": null,
-      "relatedProjects": [],
-      "sourcePath": "docs/codex_final_upload/README.md",
-      "publicUrl": "https://codexofreality.org/codex_final_upload/README.md",
-      "publicationStatus": "source-only",
-      "lastVerifiedSourceRevision": "548e858",
-      "relatedPages": [],
-      "canonicalUrl": "",
-      "privacyEligibility": "documentation",
-      "discoverability": null,
-      "issues": [
-        "deployed-but-unlinked"
       ]
     },
     {

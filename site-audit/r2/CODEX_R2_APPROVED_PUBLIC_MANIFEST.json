@@ -58,12 +58,6 @@
       "status": "operational"
     },
     {
-      "path": "docs/assets/css/bridge.css",
-      "sha256": "965a51e2bf8d2172d59ffd237b57ca71b38403354ed51b1df81d8fcdd99787f3",
-      "publicUrl": "https://codexofreality.org/assets/css/bridge.css",
-      "status": "operational"
-    },
-    {
       "path": "docs/assets/css/caravan.css",
       "sha256": "eb7f6292ac324aa963233a28792ab4c5f15e0d0568b449c43038a8bdc1015c68",
       "publicUrl": "https://codexofreality.org/assets/css/caravan.css",
@@ -97,12 +91,6 @@
       "path": "docs/assets/css/equinox-passage.css",
       "sha256": "fd8283eb32d81db36c61d12e4f91b70421d4c426d04ed049560e597874550da1",
       "publicUrl": "https://codexofreality.org/assets/css/equinox-passage.css",
-      "status": "operational"
-    },
-    {
-      "path": "docs/assets/css/fonts.css",
-      "sha256": "a8925c184f3f2b83ced3cda799747fe1af4f738cf17de735dd362d224aff9f64",
-      "publicUrl": "https://codexofreality.org/assets/css/fonts.css",
       "status": "operational"
     },
     {
@@ -214,12 +202,6 @@
       "status": "operational"
     },
     {
-      "path": "docs/assets/css/manifest-show.css",
-      "sha256": "f5e96c7501e6171bcea11050f7378e322651c35a7d08237b41f026a5c2174b5a",
-      "publicUrl": "https://codexofreality.org/assets/css/manifest-show.css",
-      "status": "operational"
-    },
-    {
       "path": "docs/assets/css/moons-interface.css",
       "sha256": "5c13db74d31124682ee486ccea6019e4a4b695d092f5c3a0f7d1294bb19841a1",
       "publicUrl": "https://codexofreality.org/assets/css/moons-interface.css",
@@ -247,12 +229,6 @@
       "path": "docs/assets/css/performance-runtime.css",
       "sha256": "a1408ad28ea7753d7162b76047093aa1d4c04cf87a63ea849ab091c4b1e64e72",
       "publicUrl": "https://codexofreality.org/assets/css/performance-runtime.css",
-      "status": "operational"
-    },
-    {
-      "path": "docs/assets/css/performance-runtine.css",
-      "sha256": "a1408ad28ea7753d7162b76047093aa1d4c04cf87a63ea849ab091c4b1e64e72",
-      "publicUrl": "https://codexofreality.org/assets/css/performance-runtine.css",
       "status": "operational"
     },
     {
@@ -310,12 +286,6 @@
       "status": "operational"
     },
     {
-      "path": "docs/assets/css/start-show.css",
-      "sha256": "331514c0c812d15bbd3bdb080f924b42dbdeb35ea8a7133805725fce125aa488",
-      "publicUrl": "https://codexofreality.org/assets/css/start-show.css",
-      "status": "operational"
-    },
-    {
       "path": "docs/assets/css/superlayout.css",
       "sha256": "6060cdf5a7f7f169246daa68643d6b35e76fb020ab259675c535fb1f39d30b66",
       "publicUrl": "https://codexofreality.org/assets/css/superlayout.css",
@@ -352,12 +322,6 @@
       "status": "operational"
     },
     {
-      "path": "docs/assets/css/tokens.css",
-      "sha256": "330b0458f4fea1c956e06ab7c25e7f86378e38b43cff9e773853996f07a22eaa",
-      "publicUrl": "https://codexofreality.org/assets/css/tokens.css",
-      "status": "operational"
-    },
-    {
       "path": "docs/assets/css/witness-world.css",
       "sha256": "6498534182a1d776e02a9c7ac4196667f69310159bc7b679ff73eb7621b10af1",
       "publicUrl": "https://codexofreality.org/assets/css/witness-world.css",
@@ -371,7 +335,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "052cad9c209b8f30de152e9eab5d0a8970bbe8d7fee000b8d53f16dd23fde658",
+      "sha256": "8c7e454ce01666f18ba3cdb0cc9809ad7a6d9dd7cda28bf6ddde688bc5670013",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -1366,18 +1330,6 @@
       "status": "operational"
     },
     {
-      "path": "docs/assets/js/Codex.js",
-      "sha256": "c84f19a102d52e8ee0cb67b47a26f97fbdbfa8dc2b18adc3d8fd5a50142bbdc0",
-      "publicUrl": "https://codexofreality.org/assets/js/Codex.js",
-      "status": "operational"
-    },
-    {
-      "path": "docs/assets/js/accents.js",
-      "sha256": "7a2dc1de81e24e0a410c3ed11cd2424393bfb38e4b1a5008fc4b2ae412a9f0e4",
-      "publicUrl": "https://codexofreality.org/assets/js/accents.js",
-      "status": "operational"
-    },
-    {
       "path": "docs/assets/js/alignment/alignment-comparison.js",
       "sha256": "6fb1790a706b5640b14106670a49c9b55dbf8405578422b562000cf7303cd1b6",
       "publicUrl": "https://codexofreality.org/assets/js/alignment/alignment-comparison.js",
@@ -1435,12 +1387,6 @@
       "path": "docs/assets/js/alignment/alignment-version.js",
       "sha256": "bde28d670bf9d35ec07d612bff1f78c2cef526a2229431b914b8b867b90c78dd",
       "publicUrl": "https://codexofreality.org/assets/js/alignment/alignment-version.js",
-      "status": "operational"
-    },
-    {
-      "path": "docs/assets/js/astro-panel.js",
-      "sha256": "9c31c0b6ec203880e67381ddd758d56e98792913eb0b390ff18ab8f3bc3a89fd",
-      "publicUrl": "https://codexofreality.org/assets/js/astro-panel.js",
       "status": "operational"
     },
     {
@@ -1705,12 +1651,6 @@
       "path": "docs/assets/js/frequency-governance.js",
       "sha256": "0317076518e5a739dbf22e93ece34651e83b8d2690f065114a3ba1018414dde0",
       "publicUrl": "https://codexofreality.org/assets/js/frequency-governance.js",
-      "status": "operational"
-    },
-    {
-      "path": "docs/assets/js/frequency-nature.js",
-      "sha256": "6e85b9f26b78dff0e90832072443fdea261cff39d2c3faf25ec298d1290051bf",
-      "publicUrl": "https://codexofreality.org/assets/js/frequency-nature.js",
       "status": "operational"
     },
     {
@@ -2437,12 +2377,6 @@
       "path": "docs/assets/js/sphere/observatory-capability-manager.js",
       "sha256": "8f1ef29ee3d1f1ba472f3f3c5a03ae2fdc42ec3ad46db6fb5da01dd6fe86d2e7",
       "publicUrl": "https://codexofreality.org/assets/js/sphere/observatory-capability-manager.js",
-      "status": "operational"
-    },
-    {
-      "path": "docs/assets/js/teach.js",
-      "sha256": "f38a5b9f24282ad5662496c8427b62ea5446976d3864d2ade55e39bebd10ec35",
-      "publicUrl": "https://codexofreality.org/assets/js/teach.js",
       "status": "operational"
     },
     {
@@ -3359,13 +3293,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "f4efceee01334867201576bf9b1e1881d4e8a983eae7315c9113ac4e6be4477b",
+      "sha256": "1a7e0413982b4300994dfda56d40b05fd6e1602f9fe1375d17df6e69050a948b",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "e126dfe5f8775990bf1090c736765d8828638f4266b2df29f532468f0733dfb2",
+      "sha256": "bd33912906973e038fdfb61423f51549fd4dea2b25a2370a60f6a6e98e30f794",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -3521,7 +3455,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "2024af1740a033e8c5aabbe13d289b3edc3abb79e99b943923acf3ae539f6600",
+      "sha256": "bc543d9ff83c7c0c3bcf7b24ae2f30e20a972c16f267217c4a4ffba4566704e2",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
@@ -10372,54 +10306,6 @@
       "publicUrl": "https://codexofreality.org/assets/img/shared/social/README.md",
       "eligibility": "restricted-review",
       "reason": "Image pipeline note stored under the publish tree"
-    },
-    {
-      "path": "docs/codex_final_upload/CODEX-FINAL-UPLOAD-PART-01-OF-06.zip",
-      "publicUrl": "https://codexofreality.org/codex_final_upload/CODEX-FINAL-UPLOAD-PART-01-OF-06.zip",
-      "eligibility": "restricted-review",
-      "reason": "Upload parts and directive stored under the publish tree"
-    },
-    {
-      "path": "docs/codex_final_upload/CODEX-FINAL-UPLOAD-PART-02-OF-06.zip",
-      "publicUrl": "https://codexofreality.org/codex_final_upload/CODEX-FINAL-UPLOAD-PART-02-OF-06.zip",
-      "eligibility": "restricted-review",
-      "reason": "Upload parts and directive stored under the publish tree"
-    },
-    {
-      "path": "docs/codex_final_upload/CODEX-FINAL-UPLOAD-PART-03-OF-06.zip",
-      "publicUrl": "https://codexofreality.org/codex_final_upload/CODEX-FINAL-UPLOAD-PART-03-OF-06.zip",
-      "eligibility": "restricted-review",
-      "reason": "Upload parts and directive stored under the publish tree"
-    },
-    {
-      "path": "docs/codex_final_upload/CODEX-FINAL-UPLOAD-PART-04-OF-06.zip",
-      "publicUrl": "https://codexofreality.org/codex_final_upload/CODEX-FINAL-UPLOAD-PART-04-OF-06.zip",
-      "eligibility": "restricted-review",
-      "reason": "Upload parts and directive stored under the publish tree"
-    },
-    {
-      "path": "docs/codex_final_upload/CODEX-FINAL-UPLOAD-PART-05-OF-06.zip",
-      "publicUrl": "https://codexofreality.org/codex_final_upload/CODEX-FINAL-UPLOAD-PART-05-OF-06.zip",
-      "eligibility": "restricted-review",
-      "reason": "Upload parts and directive stored under the publish tree"
-    },
-    {
-      "path": "docs/codex_final_upload/CODEX-FINAL-UPLOAD-PART-06-OF-06.zip",
-      "publicUrl": "https://codexofreality.org/codex_final_upload/CODEX-FINAL-UPLOAD-PART-06-OF-06.zip",
-      "eligibility": "restricted-review",
-      "reason": "Upload parts and directive stored under the publish tree"
-    },
-    {
-      "path": "docs/codex_final_upload/COPILOT-DIRECTIVE.txt",
-      "publicUrl": "https://codexofreality.org/codex_final_upload/COPILOT-DIRECTIVE.txt",
-      "eligibility": "restricted-review",
-      "reason": "Upload parts and directive stored under the publish tree"
-    },
-    {
-      "path": "docs/codex_final_upload/README.md",
-      "publicUrl": "https://codexofreality.org/codex_final_upload/README.md",
-      "eligibility": "restricted-review",
-      "reason": "Upload parts and directive stored under the publish tree"
     },
     {
       "path": "docs/development/LIVING-INTERFACE-ARCHITECTURE-V4-PLAN.md",
