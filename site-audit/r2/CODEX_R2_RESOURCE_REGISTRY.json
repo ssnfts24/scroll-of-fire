@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 2165,
-    "bytes": 905603719,
+    "bytes": 905604551,
     "byGroup": {
       "tooling": 181,
       "manuscript": 17,
@@ -50216,8 +50216,8 @@
       "path": "tests/homepage-sphere.test.js",
       "title": "homepage-sphere.test.js",
       "format": "js",
-      "bytes": 14507,
-      "sha256": "37f31f540f11f54e784e84078404427ee80960b06c9e79c4443b5967c0d4f71d",
+      "bytes": 15339,
+      "sha256": "7222cc56ed9187829c507c6d7008df802117a25bd773d577c9403cc43f2736a0",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
