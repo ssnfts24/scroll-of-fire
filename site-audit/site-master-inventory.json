@@ -7,7 +7,7 @@
     "publicHtmlPages": 179,
     "catalogEntries": 72,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 25,
+      "not-linked-directly-from-homepage": 24,
       "nav-label-differs-from-title": 24,
       "no-global-navigation": 1,
       "deployed-but-unlinked": 56,
@@ -481,7 +481,7 @@
     {
       "id": "codex-guide",
       "title": "The Guide — Ask the Record | Codex of Reality",
-      "description": "The Codex Guide: ask a question in ordinary words and get an answer assembled from this site's own record — passages with their pages, claim cards with their evidence grades, and calendar answers computed from the Pattern Calendar. Your question never leaves your browser.",
+      "description": "The Codex Guide: ask a question in ordinary words and get an answer assembled from this site's own record — passages with their pages, claim cards with their evidence grades, and calendar answers computed from the Pattern Calendar. Asking the record never leaves your browser.",
       "category": "Discovery",
       "area": "archive",
       "relatedProjects": [
@@ -537,15 +537,13 @@
         "path": "codex-guide.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 3,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 4,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "companions",
@@ -757,7 +755,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (188 files)",
+      "title": "docs/assets/js (189 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1875,6 +1873,7 @@
         "circle.html",
         "claims-atlas.html",
         "codex-atlas.html",
+        "codex-guide.html",
         "companions.html",
         "covenant-caravan.html",
         "downloads.html",
@@ -18414,7 +18413,7 @@
         "inGlobalNav": false,
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 3,
+        "hopsFromHomeWithoutAtlas": 2,
         "inboundPages": 3,
         "pagesWithNavLinkToIt": 0
       },
