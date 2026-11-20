@@ -1,0 +1,163 @@
+/* The Ambient Door — the homepage's first face.
+ *
+ * A calm, living presence: today's coordinate, the day's telling, and the
+ * Sphere in its warm, storybook look (wood, brass, moonlight). It asks
+ * nothing and explains nothing; the framework waits below the fold.
+ * Daypart classes (set by ambient-door.js from the visitor's own clock)
+ * shift the light slowly — dawn, day, dusk, night. The designed still
+ * mode is the film's poster and a motionless glow: under
+ * prefers-reduced-motion nothing moves at all.
+ */
+
+.ambient-door {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(2.5rem, 7vh, 4.5rem) 1.25rem clamp(2rem, 6vh, 3.5rem);
+  text-align: center;
+  color: #f6ead2;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% 108%, rgba(214, 144, 62, 0.28), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 50% -10%, rgba(96, 74, 148, 0.35), transparent 65%),
+    linear-gradient(180deg, #241a33 0%, #2e1f2e 55%, #3a241f 100%);
+}
+
+.ambient-door--dawn {
+  background:
+    radial-gradient(ellipse 90% 55% at 50% 108%, rgba(232, 164, 92, 0.38), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 50% -10%, rgba(122, 96, 158, 0.32), transparent 65%),
+    linear-gradient(180deg, #2c2138 0%, #3a2531 55%, #4a2c20 100%);
+}
+
+.ambient-door--day {
+  background:
+    radial-gradient(ellipse 90% 55% at 50% 108%, rgba(224, 178, 96, 0.30), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 50% -10%, rgba(84, 96, 156, 0.30), transparent 65%),
+    linear-gradient(180deg, #2a2140 0%, #37262f 55%, #43302a 100%);
+}
+
+.ambient-door--dusk {
+  background:
+    radial-gradient(ellipse 90% 55% at 50% 108%, rgba(216, 116, 62, 0.40), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 50% -10%, rgba(88, 62, 138, 0.34), transparent 65%),
+    linear-gradient(180deg, #251a36 0%, #33202c 55%, #472818 100%);
+}
+
+.ambient-door--night {
+  background:
+    radial-gradient(ellipse 90% 55% at 50% 108%, rgba(178, 116, 58, 0.22), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 50% -10%, rgba(70, 58, 132, 0.38), transparent 65%),
+    linear-gradient(180deg, #1d1529 0%, #251a2b 55%, #2e201c 100%);
+}
+
+.ambient-door-inner {
+  position: relative;
+  max-width: 46rem;
+  margin: 0 auto;
+}
+
+.ambient-eyebrow {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #d9b878;
+}
+
+.ambient-title {
+  margin: 0;
+  font-size: clamp(1.9rem, 6vw, 3.1rem);
+  line-height: 1.12;
+  font-weight: 600;
+  color: #fdf3da;
+  text-wrap: balance;
+}
+
+.ambient-pattern {
+  margin: 0.6rem 0 0;
+  font-size: clamp(1rem, 3vw, 1.2rem);
+  letter-spacing: 0.06em;
+  color: #e8cfa0;
+}
+
+.ambient-telling {
+  margin: 1.4rem auto 0;
+  max-width: 38rem;
+  font-size: clamp(1rem, 2.8vw, 1.13rem);
+  line-height: 1.65;
+  color: #efe0c2;
+}
+
+.ambient-practice {
+  margin: 0.7rem auto 0;
+  max-width: 38rem;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: #cdbb96;
+}
+
+.ambient-film {
+  position: relative;
+  margin: 2rem auto 0;
+  max-width: 40rem;
+}
+
+.ambient-film::before {
+  content: "";
+  position: absolute;
+  inset: -8% -6%;
+  background: radial-gradient(ellipse at 50% 45%, rgba(255, 190, 96, 0.30), transparent 65%);
+  pointer-events: none;
+  animation: ambient-breathe 9s ease-in-out infinite;
+}
+
+.ambient-film video {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 18px;
+  border: 1px solid rgba(217, 184, 120, 0.45);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45), 0 0 0 6px rgba(58, 40, 26, 0.35);
+  background: #1d1529;
+}
+
+.ambient-film figcaption {
+  margin-top: 0.8rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: #c9b489;
+}
+
+.ambient-actions {
+  margin-top: 1.8rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  justify-content: center;
+}
+
+.ambient-actions .btn {
+  border-color: rgba(217, 184, 120, 0.55);
+  color: #f6ead2;
+  background: rgba(29, 21, 41, 0.35);
+}
+
+.ambient-actions .btn.primary {
+  background: #b9822e;
+  border-color: #d9a94f;
+  color: #fff8e8;
+}
+
+@keyframes ambient-breathe {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.035); }
+}
+
+/* The designed still mode: no breathing, no motion — the poster and the
+ * quiet gradient carry the face. */
+@media (prefers-reduced-motion: reduce) {
+  .ambient-film::before {
+    animation: none;
+    opacity: 0.7;
+  }
+}
