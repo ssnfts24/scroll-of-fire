@@ -2,7 +2,7 @@
 
 Nothing is deleted or merged by this report.
 
-## Byte-identical files (35 groups)
+## Byte-identical files (33 groups)
 
 - `9b20b4c3430d…`
   - `6_Images_and_Symbols/Living_Technology/20251015_154838.jpg`
@@ -10,9 +10,6 @@ Nothing is deleted or merged by this report.
 - `b3cbf9065d22…`
   - `6_Images_and_Symbols/Living_Technology/20251015_171552.jpg`
   - `6_Images_and_Symbols/synchronicities/20251015_171552.jpg`
-- `6f2b414475e5…`
-  - `CODEX-FINAL-UPLOAD-PART-01-OF-06.zip`
-  - `docs/codex_final_upload/CODEX-FINAL-UPLOAD-PART-01-OF-06.zip`
 - `968de4eb9324…`
   - `EVIDENCE_REGISTER.md`
   - `docs/scroll/evidence/register.md`
@@ -23,9 +20,6 @@ Nothing is deleted or merged by this report.
 - `07be1d6a6929…`
   - `archive/Full_Scroll_Unsealed/1.0.0/edition.json`
   - `docs/scroll/archive/edition.json`
-- `a1408ad28ea7…`
-  - `docs/assets/css/performance-runtime.css`
-  - `docs/assets/css/performance-runtine.css`
 - `05db1403f023…`
   - `docs/assets/img/archive/duplicates/CB02GreenTide2-docs-root.png`
   - `docs/assets/img/artifacts/registry/cb-02-green-tide.png`

@@ -1,6 +1,14 @@
 [
  {
   "date": "2026-11-19",
+  "type": "system",
+  "title": "The site put down what it was carrying twice",
+  "summary": "The site was carrying a full copy of itself in a folder of zip files, a hundred and eleven megabytes that no page linked to and no visitor ever opened, and eleven stylesheet and script files that no page loads anymore, including one stylesheet that existed twice under a misspelled name. Both are removed. The snapshot lives on in the project's own history and archives, and every removed file was checked against every page on the site before it was let go.",
+  "url": "./index.html",
+  "symbol": "◎"
+ },
+ {
+  "date": "2026-11-19",
   "type": "feature",
   "title": "The Exercises Wing opened in the Training Grounds",
   "summary": "The Training Grounds has a practice room now: five short exercises for a human — the Fourfold Breath, Count the Returns for attention, Sixty Seconds of Seeing, the Keeping for memory, and the Sealed Intention. Each one is done fully on the page, in plain words, and a finished exercise seals a practice record in the keeper's own Life Atlas, the same record a Manifest session writes: the day counts as a practice day, rains on the garden, and carries its marker on the calendar. Leaving early writes nothing, durations are the keeper's own real seconds, and nothing about the room keeps score against anyone.",
