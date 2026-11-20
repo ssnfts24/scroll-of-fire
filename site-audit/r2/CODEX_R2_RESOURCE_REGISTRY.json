@@ -3,10 +3,10 @@
   "purpose": "Development-only registry of every tracked or intended repository file. Not a publication list.",
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
-    "files": 2191,
-    "bytes": 813175193,
+    "files": 2205,
+    "bytes": 813394067,
     "byGroup": {
-      "tooling": 204,
+      "tooling": 213,
       "manuscript": 17,
       "unlabelled-image": 21,
       "witness-record": 20,
@@ -25,7 +25,7 @@
       "legacy-asset": 1,
       "site-page": 52,
       "deployed-dev-doc": 56,
-      "site-asset": 568,
+      "site-asset": 573,
       "vendor": 3,
       "site-data": 5,
       "scroll-library": 826,
@@ -35,17 +35,17 @@
       "scripture-source": 15
     },
     "byPublicationEligibility": {
-      "development-only": 248,
+      "development-only": 257,
       "pending-publication-review": 43,
       "restricted-review": 172,
       "protected-immutable": 21,
       "public-unreviewed": 6,
-      "approved-public": 1701
+      "approved-public": 1706
     },
     "byExamination": {
-      "inventoried-only": 2064,
-      "parser-unavailable": 16,
-      "text-extracted": 39,
+      "inventoried-only": 2078,
+      "text-extracted": 54,
+      "no-text-layer-needs-visual-review": 1,
       "archive-listed": 2,
       "structurally-audited": 70
     }
@@ -356,10 +356,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 192,
+        "words": 33734,
+        "hebrew": true,
+        "greek": true,
+        "metadata": {
+          "CreationDate": "D:20260307003018+00'00'",
+          "Creator": "Microsoft Word"
+        }
       }
     },
     {
@@ -418,10 +426,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 4,
+        "words": 524,
+        "hebrew": false,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20260318162939+00'00'",
+          "Creator": "Microsoft Word"
+        }
       },
       "variants": [
         "1_Codex_of_Reality/Codex_of_Life_Scroll_FULL.docx"
@@ -579,10 +595,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 55,
+        "words": 5079,
+        "hebrew": false,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20260318163211+00'00'",
+          "Creator": "Microsoft Word"
+        }
       },
       "variants": [
         "1_Codex_of_Reality/Living Laws.docx"
@@ -657,10 +681,15 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 182,
+        "words": 55224,
+        "hebrew": true,
+        "greek": true,
+        "metadata": {}
       }
     },
     {
@@ -684,10 +713,15 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 187,
+        "words": 33540,
+        "hebrew": true,
+        "greek": true,
+        "metadata": {}
       }
     },
     {
@@ -1106,10 +1140,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 2,
+        "words": 602,
+        "hebrew": false,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20260318163230+00'00'",
+          "Creator": "Microsoft Word"
+        }
       },
       "variants": [
         "2_Witness_Scrolls/Master_Proof_Scroll_Updated.docx"
@@ -1227,10 +1269,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 3,
+        "words": 331,
+        "hebrew": false,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20260318163347+00'00'",
+          "Creator": "Microsoft Word"
+        }
       },
       "variants": [
         "2_Witness_Scrolls/Scroll_of_Convergence.docx"
@@ -1317,10 +1367,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 2,
+        "words": 443,
+        "hebrew": true,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20260318163433+00'00'",
+          "Creator": "Microsoft Word"
+        }
       },
       "variants": [
         "2_Witness_Scrolls/The_Journey_Scroll.docx",
@@ -1447,10 +1505,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 333,
+        "words": 82978,
+        "hebrew": true,
+        "greek": true,
+        "metadata": {
+          "CreationDate": "D:20260318162655+00'00'",
+          "Creator": "Microsoft Word"
+        }
       },
       "variants": [
         "2_Witness_Scrolls/🌌 Ahmein — The Final Seal, Becoming Will.docx"
@@ -1512,10 +1578,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 266,
+        "words": 56295,
+        "hebrew": true,
+        "greek": true,
+        "metadata": {
+          "CreationDate": "D:20260318162820+00'00'",
+          "Creator": "Microsoft Word"
+        }
       },
       "variants": [
         "2_Witness_Scrolls/🜂 888 — The Architect of Becoming.docx"
@@ -1577,10 +1651,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 256,
+        "words": 56914,
+        "hebrew": true,
+        "greek": true,
+        "metadata": {
+          "CreationDate": "D:20260318162852+00'00'",
+          "Creator": "Microsoft Word"
+        }
       },
       "variants": [
         "2_Witness_Scrolls/🜄 Ainos — The Witness of Echoes.docx"
@@ -1607,10 +1689,18 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 4,
+        "words": 533,
+        "hebrew": false,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20260318162909+00'00'",
+          "Creator": "Microsoft Word"
+        }
       }
     },
     {
@@ -1682,10 +1772,18 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 5,
+        "words": 712,
+        "hebrew": false,
+        "greek": true,
+        "metadata": {
+          "CreationDate": "D:20260318163040+00'00'",
+          "Creator": "Microsoft Word"
+        }
       }
     },
     {
@@ -1861,10 +1959,18 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 29,
+        "words": 2732,
+        "hebrew": true,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20260318163419+00'00'",
+          "Creator": "Microsoft Word"
+        }
       }
     },
     {
@@ -1888,10 +1994,18 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 1,
+        "words": 158,
+        "hebrew": false,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20260318163401+00'00'",
+          "Creator": "Microsoft Word"
+        }
       }
     },
     {
@@ -2697,10 +2811,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "no-text-layer-needs-visual-review",
       "nextAction": "Visual review for personal imagery.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "no-text-layer",
+        "pages": 1,
+        "words": 0,
+        "hebrew": false,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20250621000923",
+          "Producer": "PyFPDF 1.7.2 http://pyfpdf.googlecode.com/"
+        }
       }
     },
     {
@@ -6904,6 +7026,54 @@
       "nextAction": "Functionality audit in R2-03/R2-06."
     },
     {
+      "id": "r2:docs-assets-css-sphere-rebuild-css-f3b93f",
+      "path": "docs/assets/css/sphere-rebuild.css",
+      "title": "sphere-rebuild.css",
+      "format": "css",
+      "bytes": 8527,
+      "sha256": "08fd2dd78ecc555c3003f0c965a987b10d32f826816a68753b6c0e664c57793c",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/css/sphere-rebuild.css",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-css-sphere-spark-css-428b42",
+      "path": "docs/assets/css/sphere-spark.css",
+      "title": "sphere-spark.css",
+      "format": "css",
+      "bytes": 5669,
+      "sha256": "b1eb34e754536049e0925031f48c7ded4d38fdb04034fce5e15a4b8b813f4690",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/css/sphere-spark.css",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
       "id": "r2:docs-assets-css-superlayout-css-a7d24c",
       "path": "docs/assets/css/superlayout.css",
       "title": "superlayout.css",
@@ -7124,8 +7294,8 @@
       "path": "docs/assets/data/codex-updates.json",
       "title": "codex-updates.json",
       "format": "json",
-      "bytes": 82506,
-      "sha256": "c6add221eb81b6b387997c17ebc78ede32a858142864c2a29c2ea37737894d25",
+      "bytes": 84617,
+      "sha256": "fef16173dc7703dbd7cace672bbb14639112c9fe5e3b860a8f0172d60f16132c",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -15238,8 +15408,8 @@
       "path": "docs/assets/js/spark-companion.js",
       "title": "spark-companion.js",
       "format": "js",
-      "bytes": 123052,
-      "sha256": "5d29598631efde5e358e20c50a061e86cbf9d55ab9e08b04e1770a7dd5a2e809",
+      "bytes": 134050,
+      "sha256": "1e57580f4765eb0a0ff5ab34cae53a4302621075850eda62d71c533343e18b56",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -15310,8 +15480,8 @@
       "path": "docs/assets/js/spark-presence.js",
       "title": "spark-presence.js",
       "format": "js",
-      "bytes": 124495,
-      "sha256": "041e6f8d294304b872e9e66d4053741c2c7fcc1691594b9c164bbafe60102a57",
+      "bytes": 134299,
+      "sha256": "65cc91a218bd4788ca29ea7c6dade96a954f3fc39364237c9441f794cad033ca",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -15358,8 +15528,8 @@
       "path": "docs/assets/js/sphere-companion-layer.js",
       "title": "sphere-companion-layer.js",
       "format": "js",
-      "bytes": 35225,
-      "sha256": "af3c732def7b83f624db62e89c810699cdcc25104863f8f1340db5acb998a155",
+      "bytes": 28873,
+      "sha256": "be238829f5fa3c85a743c79f6e0f6332c7ea1bff58d216f801d166892303f60f",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -15484,6 +15654,78 @@
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
       "publicUrl": "https://codexofreality.org/assets/js/sphere-homestead-panel.js",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-js-sphere-play-js-ed52e9",
+      "path": "docs/assets/js/sphere-play.js",
+      "title": "sphere-play.js",
+      "format": "js",
+      "bytes": 15307,
+      "sha256": "a1c8e8c13eff538a78d88cfe98b9d8611e3d4461b91c08bcaf87bf20884cdefe",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/js/sphere-play.js",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-js-sphere-rebuild-js-12fa9a",
+      "path": "docs/assets/js/sphere-rebuild.js",
+      "title": "sphere-rebuild.js",
+      "format": "js",
+      "bytes": 26872,
+      "sha256": "0b51831bd858bcd2c7fb5152508801c9a0ca09d783aea98830383a99b75e4989",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/js/sphere-rebuild.js",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-js-sphere-spark-js-36db29",
+      "path": "docs/assets/js/sphere-spark.js",
+      "title": "sphere-spark.js",
+      "format": "js",
+      "bytes": 34612,
+      "sha256": "6f43a8e6da715a0026653c62709b7c4b422304e799f29241767b97e3f958f9ce",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/js/sphere-spark.js",
       "publicationEligibility": "approved-public",
       "status": "operational",
       "catalogId": null,
@@ -15694,8 +15936,8 @@
       "path": "docs/assets/js/sphere/living-time-sphere-camera.js",
       "title": "living-time-sphere-camera.js",
       "format": "js",
-      "bytes": 12558,
-      "sha256": "ecb18ff44e379c6d9d9e4930c3439dfba59813e5dc8665fca4bb8c39a1412a8f",
+      "bytes": 12960,
+      "sha256": "e6fee85c3e83d7270b92ac68009445f53783e7b36920ffdeb0bb15a3812bedb5",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -15886,8 +16128,8 @@
       "path": "docs/assets/js/sphere/living-time-sphere-label-manager.js",
       "title": "living-time-sphere-label-manager.js",
       "format": "js",
-      "bytes": 78104,
-      "sha256": "410fdb61d8f67975d36f96c3d6c2879bc47437f87e6d246f932d1db037a133bc",
+      "bytes": 80350,
+      "sha256": "119d39976654537375d617756320749f80333e190271bfa6083e08585f658e3c",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -15982,8 +16224,8 @@
       "path": "docs/assets/js/sphere/living-time-sphere-materials.js",
       "title": "living-time-sphere-materials.js",
       "format": "js",
-      "bytes": 8206,
-      "sha256": "ae0553bf52b5215a8e50e750c85feb654c959a6f9b8d956485bfdf3f0fd80105",
+      "bytes": 8754,
+      "sha256": "6c5e6578438594789bc0ac29776e5f79e00ac992d50f7b8f3db3818075a233b5",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -16078,8 +16320,8 @@
       "path": "docs/assets/js/sphere/living-time-sphere-options.js",
       "title": "living-time-sphere-options.js",
       "format": "js",
-      "bytes": 8758,
-      "sha256": "2441b54975ed4e44f3a59599c01aa8c53015ac83544ba95b2e060f6f9931fece",
+      "bytes": 9153,
+      "sha256": "7c4096f677017e6fb7efbabe18f15b72506907b625ec84aecb7ad327c22c5242",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -16150,8 +16392,8 @@
       "path": "docs/assets/js/sphere/living-time-sphere-renderer-3d.js",
       "title": "living-time-sphere-renderer-3d.js",
       "format": "js",
-      "bytes": 317262,
-      "sha256": "a65d1b55d466d0040b9e60ef915d0b6dd1b0902f32237798c801df0beb9a68f9",
+      "bytes": 320460,
+      "sha256": "2dba6a75b46e595898fa0a795d3cc8982401c163e1078c12559bc1942ad5bfbf",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -16390,8 +16632,8 @@
       "path": "docs/assets/js/sphere/living-time-sphere-ui.js",
       "title": "living-time-sphere-ui.js",
       "format": "js",
-      "bytes": 305231,
-      "sha256": "788985825487707de2a09f90e16f6db5b416df8bd974c2bdb42898ab34fe09f1",
+      "bytes": 305731,
+      "sha256": "1d67cd541f6ca6d7982bce8b54027adb26f6ceaef362571400272283de8043fd",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -20207,7 +20449,7 @@
       "title": "manifest.json",
       "format": "json",
       "bytes": 2603,
-      "sha256": "5952c2570c8ab0f748075a6dcb2958c79936c4986ebb0a382bfd43e100ef12c2",
+      "sha256": "8a2902f862b2fc2e8590463f7362171a081d8ebf1d9b214b5627722af82ec11a",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -20230,8 +20472,8 @@
       "path": "docs/assets/search/pages.json",
       "title": "pages.json",
       "format": "json",
-      "bytes": 778685,
-      "sha256": "af078747665e60e59b13a11c7f7499b2279e90cc47fe17a9f443c24e2d21afa1",
+      "bytes": 778711,
+      "sha256": "f23b6fc56ab764e41bf81389f47546d98458047f33976e0e5643d3d4f76ec854",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -20482,8 +20724,8 @@
       "path": "docs/companions.html",
       "title": "Companions",
       "format": "html",
-      "bytes": 14985,
-      "sha256": "bb8b191ed3ff92d48a771e177df0fc30ba60ca54301859a360d5033313e20b3b",
+      "bytes": 14988,
+      "sha256": "25a6e98751e2b423f61be10e2898f19141ca90831059d10a0f304c436be18ccc",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -20938,8 +21180,8 @@
       "path": "docs/index.html",
       "title": "Homepage",
       "format": "html",
-      "bytes": 124337,
-      "sha256": "6467d315c2376cb0007231c32e3fa3c846f3dbf17f9353ecf263ffabb7a8853e",
+      "bytes": 124444,
+      "sha256": "8596b2f6255cb26913d0505d219389bd64bf626489deb68618da947d2df40f51",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -21034,8 +21276,8 @@
       "path": "docs/living-time-sphere.html",
       "title": "Living Time Sphere",
       "format": "html",
-      "bytes": 125536,
-      "sha256": "a6b0d326edd8a35dac92aa6ccf8411a01fd82dec5af3546b704c9fa3f58354e9",
+      "bytes": 128058,
+      "sha256": "338655766f1f97d4e2302199ba789cefa45d5212b37dbcf9d92e35208679a2be",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -48368,8 +48610,8 @@
       "path": "netlify/functions/lib/guide-core.mjs",
       "title": "guide-core.mjs",
       "format": "mjs",
-      "bytes": 15299,
-      "sha256": "2cc376db807fe653dddede642ffd16b6ccb8749da8cb3d1d434e9f862ec876ea",
+      "bytes": 15493,
+      "sha256": "2a3470ad64e07c07fb1da34c1daee09be75f7352474df09e5d7e6d85e47220d3",
       "group": "tooling",
       "role": "Netlify Function — server code for the Codex Guide's talking rung; deployed to the host's function runtime, never published as a page",
       "deployed": false,
@@ -48392,8 +48634,32 @@
       "path": "netlify/functions/lib/guide-corpus.mjs",
       "title": "guide-corpus.mjs",
       "format": "mjs",
-      "bytes": 7362,
-      "sha256": "fc8a14693cb5507be40414544af69ac856aeabcf9ad629090b3011a2802bbc54",
+      "bytes": 14594,
+      "sha256": "7a3d5fbaefdea86549cfdcace7a55bc174f42a0a748a20f4af8cb4547e49ab2b",
+      "group": "tooling",
+      "role": "Netlify Function — server code for the Codex Guide's talking rung; deployed to the host's function runtime, never published as a page",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green. The provider key lives in the host's environment settings, never in the repo."
+    },
+    {
+      "id": "r2:netlify-functions-lib-guide-passages-mjs-fcaaf7",
+      "path": "netlify/functions/lib/guide-passages.mjs",
+      "title": "guide-passages.mjs",
+      "format": "mjs",
+      "bytes": 15692,
+      "sha256": "cd87ad8dad08eccd585be3b6edaca6a9adcbf4e00e2e37460bca9074d2cacf6c",
       "group": "tooling",
       "role": "Netlify Function — server code for the Codex Guide's talking rung; deployed to the host's function runtime, never published as a page",
       "deployed": false,
@@ -48418,6 +48684,54 @@
       "format": "mjs",
       "bytes": 4190,
       "sha256": "f1bff17290e9a9acf7e1dd7286c91d6ceff9aa2a49ac3a794110d6c9038e03b4",
+      "group": "tooling",
+      "role": "Netlify Function — server code for the Codex Guide's talking rung; deployed to the host's function runtime, never published as a page",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green. The provider key lives in the host's environment settings, never in the repo."
+    },
+    {
+      "id": "r2:netlify-functions-lib-spark-agent-core-mjs-92a0be",
+      "path": "netlify/functions/lib/spark-agent-core.mjs",
+      "title": "spark-agent-core.mjs",
+      "format": "mjs",
+      "bytes": 16976,
+      "sha256": "0aa8d1c7231a0ef787ce768c8959ede944a38aa0d12624437dc9714c58eccc25",
+      "group": "tooling",
+      "role": "Netlify Function — server code for the Codex Guide's talking rung; deployed to the host's function runtime, never published as a page",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green. The provider key lives in the host's environment settings, never in the repo."
+    },
+    {
+      "id": "r2:netlify-functions-spark-agent-mjs-5b10ec",
+      "path": "netlify/functions/spark-agent.mjs",
+      "title": "spark-agent.mjs",
+      "format": "mjs",
+      "bytes": 5276,
+      "sha256": "e929c36c974398469ce7b9c4b83e45d5362e746bef61c950683ee766503b53df",
       "group": "tooling",
       "role": "Netlify Function — server code for the Codex Guide's talking rung; deployed to the host's function runtime, never published as a page",
       "deployed": false,
@@ -49285,7 +49599,7 @@
       "title": "downloads-reconciliation.json",
       "format": "json",
       "bytes": 1490,
-      "sha256": "2d73866ade950031d01f42ca10c0e35276eb44c77442cc0d879074b26504451b",
+      "sha256": "da8d5f779259842defcc2158aaa8832238a8f56b251ee5c6a5bf7711e5541498",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -49573,7 +49887,7 @@
       "title": "site-master-inventory.json",
       "format": "json",
       "bytes": 736143,
-      "sha256": "22fdfed98327804843f1af821505038295fb99e563782bbf1fda099092465a1f",
+      "sha256": "ff0ae59741f2f12ba2698ae935afed75ae57cc11d13165c1ae22039486aec565",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -50024,6 +50338,30 @@
       "nextAction": "Keep green."
     },
     {
+      "id": "r2:tests-codex-guide-intelligence-test-js-b35dc9",
+      "path": "tests/codex-guide-intelligence.test.js",
+      "title": "codex-guide-intelligence.test.js",
+      "format": "js",
+      "bytes": 11041,
+      "sha256": "ea4150285093fb424697e8e4eb03b1733649994665855fd451d5a19f11a394ee",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
       "id": "r2:tests-codex-guide-talking-test-js-dd58b6",
       "path": "tests/codex-guide-talking.test.js",
       "title": "codex-guide-talking.test.js",
@@ -50364,8 +50702,8 @@
       "path": "tests/homepage-sphere.test.js",
       "title": "homepage-sphere.test.js",
       "format": "js",
-      "bytes": 17071,
-      "sha256": "91a48ff5af6ed28e762714ff35a8c42eecdfc0455d326418eabb99a65fca67c4",
+      "bytes": 19128,
+      "sha256": "1aefbf3d63e7657d0b0922208f6d820da7ec865f18c5c1785f2692e1d2e9db0c",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -52832,6 +53170,30 @@
       "nextAction": "Keep green."
     },
     {
+      "id": "r2:tests-spark-agent-test-js-dcc4b2",
+      "path": "tests/spark-agent.test.js",
+      "title": "spark-agent.test.js",
+      "format": "js",
+      "bytes": 9057,
+      "sha256": "f45610b9db4a786aa5c91f01d135a734edf7201061ba525a55fce2c3d9ceafbd",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
       "id": "r2:tests-spark-bundle-test-js-b19f08",
       "path": "tests/spark-bundle.test.js",
       "title": "spark-bundle.test.js",
@@ -52860,8 +53222,32 @@
       "path": "tests/spark-companion.test.js",
       "title": "spark-companion.test.js",
       "format": "js",
-      "bytes": 121246,
-      "sha256": "1a353fe221650e3224e9ef062edcef3a024e50fdbc8d92eab3d39fcd92b8ee4a",
+      "bytes": 121825,
+      "sha256": "bed75a11d84a8c0fa34269ed6f7b81a0d6cbb980e84ac0275f4d63115097e86c",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-spark-living-voice-test-js-1047fa",
+      "path": "tests/spark-living-voice.test.js",
+      "title": "spark-living-voice.test.js",
+      "format": "js",
+      "bytes": 14886,
+      "sha256": "ecef9b017cbef91fec8416b2e4d14744508d2c57ac437d801b368648383d089b",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -52956,8 +53342,8 @@
       "path": "tests/sphere-deepening.test.js",
       "title": "sphere-deepening.test.js",
       "format": "js",
-      "bytes": 11197,
-      "sha256": "27402b803918439216c80e51b378f5bede256962fd333592420d4a62f817db4f",
+      "bytes": 11819,
+      "sha256": "60b6549b7fb212eddbeaaf08219509699cf774783a659cca71c4ca3a81cdfd3b",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -53096,12 +53482,84 @@
       "nextAction": "Keep green."
     },
     {
+      "id": "r2:tests-sphere-play-test-js-2ca56f",
+      "path": "tests/sphere-play.test.js",
+      "title": "sphere-play.test.js",
+      "format": "js",
+      "bytes": 3319,
+      "sha256": "0bfa904dd406108c4a848b65b13e1697c1ad787bcd351fb44cdcb02fbbc0456b",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-sphere-rebuild-test-js-bd6edf",
+      "path": "tests/sphere-rebuild.test.js",
+      "title": "sphere-rebuild.test.js",
+      "format": "js",
+      "bytes": 7812,
+      "sha256": "43c803b4d0d1ffdce4d336d5bdabbaba032b831e4c735eba6e6c1f4574f9616d",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
       "id": "r2:tests-sphere-renderer-lifecycle-hotfix-test-js-0a52b5",
       "path": "tests/sphere-renderer-lifecycle-hotfix.test.js",
       "title": "sphere-renderer-lifecycle-hotfix.test.js",
       "format": "js",
       "bytes": 3308,
       "sha256": "0cdced38aa1a28d4de51b3c41e26102dda63d58d59f2565c8d9bb457bcb61088",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-sphere-spark-test-js-853765",
+      "path": "tests/sphere-spark.test.js",
+      "title": "sphere-spark.test.js",
+      "format": "js",
+      "bytes": 6636,
+      "sha256": "7a2d2ba22f189bf0984a4e0e3f0cf2d4486c7d95911620a45b19ce729212b187",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
