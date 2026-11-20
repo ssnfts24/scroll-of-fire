@@ -1,0 +1,645 @@
+{
+ "dataset": "farm-homestead-western-wa",
+ "version": "1.0.0",
+ "built": "2026-11-19",
+ "about": "Homestead data for the Sphere's farm layer, western Washington: the work around the planting calendar — cover crops, the last sowings for a winter harvest, season extension, harvest storage, beginner seed saving, and small seasonal notes for chickens and goats. Every entry carries the source it came from, and only extension and university sources are used: WSU Extension, Oregon State's PNW 548, and the extension services of Nebraska, Kansas State, Illinois, North Carolina State, Wisconsin, and Penn State, with NOAA frost normals for the two founding counties. Where sources disagree, the disagreement is written into the entry rather than smoothed over. A category with no solid source behind it is left out, never guessed. WSU's cover crop table speaks in parts of months (beginning, mid, end); this dataset renders beginning as days 1–10, mid as 11–20, and end or late as day 21 to the month's end, and the words govern.",
+ "locations": [
+  {
+   "id": "lewis",
+   "county": "Lewis County",
+   "anchor": "Morton–Centralia lowland, and the Randle valley floor",
+   "station": "Centralia, WA — NOAA 1991–2020 normals",
+   "zones": [
+    "8a",
+    "8b"
+   ],
+   "lastSpringFrost": "04-22",
+   "safeLastSpringFrost": "04-30",
+   "firstFallFrost": "10-27",
+   "safeFirstFallFrost": "10-19",
+   "frostFreeDays": 188,
+   "frostSources": [
+    "noaa-normals"
+   ],
+   "safeFrostSources": [
+    "almanac-frost"
+   ],
+   "zoneSources": [
+    "usda-zones"
+   ],
+   "frostRangeNote": "The NOAA median (the middle year of 1991–2020) says last spring frost Apr 22 and first fall frost Oct 27. The Old Farmer's Almanac, counting a 30% chance of frost after the date instead, says Apr 30 and Oct 19. The median plans the season; the Almanac line is the safer one."
+  },
+  {
+   "id": "snohomish",
+   "county": "Snohomish County",
+   "anchor": "Everett–Lynnwood lowland",
+   "station": "Everett, WA (60 ft) — NOAA 1991–2020 normals",
+   "zones": [
+    "8b",
+    "9a"
+   ],
+   "lastSpringFrost": "03-24",
+   "safeLastSpringFrost": "05-01",
+   "firstFallFrost": "11-02",
+   "safeFirstFallFrost": "10-04",
+   "frostFreeDays": 223,
+   "frostSources": [
+    "noaa-normals"
+   ],
+   "safeFrostSources": [
+    "wsu-king-tipsheet5"
+   ],
+   "zoneSources": [
+    "usda-zones"
+   ],
+   "frostRangeNote": "WSU's Snohomish weather station has recorded last spring frosts from Mar 18 to May 1 since 2012, so the frost watch here stays open until May 1 even though the lowland median is Mar 24. First fall frosts on the same record run from Oct 4 to Nov 19."
+  }
+ ],
+ "sources": [
+  {
+   "id": "wsu-cover-crops-west",
+   "publisher": "WSU Extension (Home Garden Series, FS111E)",
+   "title": "Cover Crops for Home Gardens West of the Cascades",
+   "url": "https://pubs.extension.wsu.edu/product/cover-crops-for-home-gardens-west-of-the-cascades-home-garden-series/"
+  },
+  {
+   "id": "wsu-clallam-fall-winter",
+   "publisher": "WSU Extension, Clallam County Master Gardeners (adapted from OSU PNW 548)",
+   "title": "Planning Your Fall and Winter Garden (revised July 2024)",
+   "url": "https://s3.wp.wsu.edu/uploads/sites/2069/2024/08/A-BROCHURE-Fall-Winter-Gardening-July-2024-FINAL.pdf"
+  },
+  {
+   "id": "osu-pnw548",
+   "publisher": "Oregon State University Extension Service (PNW 548)",
+   "title": "Fall and Winter Vegetable Gardening in the Pacific Northwest",
+   "url": "http://www.webgrower.com/regional/pdf/Winter-Gardening-OR_pnw548.pdf"
+  },
+  {
+   "id": "wsu-skagit-season-extenders",
+   "publisher": "WSU Skagit County Extension Master Gardeners",
+   "title": "Season Extenders",
+   "url": "https://www.skagitmg.org/tag/gardening/?print=print-search"
+  },
+  {
+   "id": "wsu-skagit-storing-harvest",
+   "publisher": "WSU Skagit County Extension Master Gardeners",
+   "title": "Storing Your Garden Harvest",
+   "url": "https://wpcdn.web.wsu.edu/extension/uploads/sites/57/2019/08/Storing-Your-Garden-Harvest.pdf"
+  },
+  {
+   "id": "unl-storing-g1264",
+   "publisher": "University of Nebraska–Lincoln Extension (G1264)",
+   "title": "Storing Fresh Fruits and Vegetables",
+   "url": "https://extensionpubs.unl.edu/publication/g1264/na/html/view"
+  },
+  {
+   "id": "kstate-storage",
+   "publisher": "Kansas State University Extension",
+   "title": "Storage of Fresh Produce (after USDA Agriculture Handbook 66)",
+   "url": "https://extension.k-state.edu/foodsafety/produce/resources/docs/Storage_of_Fresh_Produce.pdf"
+  },
+  {
+   "id": "illinois-seed-saving",
+   "publisher": "University of Illinois Extension (isolation chart from Seed Savers Exchange)",
+   "title": "How to Save Seeds",
+   "url": "https://extension.illinois.edu/sites/default/files/how_to_save_seeds_062021.pdf"
+  },
+  {
+   "id": "ncstate-seed-saving",
+   "publisher": "NC State Extension, Onslow County Center",
+   "title": "Saving Your Own Seed",
+   "url": "https://onslow.ces.ncsu.edu/news/saving-your-own-seed/"
+  },
+  {
+   "id": "illinois-chicken-winter",
+   "publisher": "University of Illinois Extension",
+   "title": "How to Care for Backyard Chickens in Winter",
+   "url": "https://extension.illinois.edu/blogs/know-how-know-more/2020-12-12-how-care-backyard-chickens-winter"
+  },
+  {
+   "id": "wsu-ww-chicken-winter",
+   "publisher": "WSU Extension, Walla Walla County (newsletter carrying the Illinois Extension winter-care guidance)",
+   "title": "Winter Care for Backyard Chickens (November 2021 newsletter)",
+   "url": "https://wpcdn.web.wsu.edu/extension/uploads/sites/73/2021/11/Nov-2021.pdf"
+  },
+  {
+   "id": "uw-livestock-winter",
+   "publisher": "University of Wisconsin–Madison, Division of Extension",
+   "title": "Preparing for Winter — Livestock",
+   "url": "https://livestock.extension.wisc.edu/articles/preparing-for-winter/#new_tab"
+  },
+  {
+   "id": "psu-small-ruminants-winter",
+   "publisher": "Penn State Extension",
+   "title": "Winter Nutrition for Small Ruminants: Gestation to Weaning",
+   "url": "https://extension.psu.edu/winter-nutrition-for-small-ruminants-gestation-to-weaning"
+  },
+  {
+   "id": "noaa-normals",
+   "publisher": "NOAA National Centers for Environmental Information (NCEI)",
+   "title": "1991–2020 climate normals, Washington stations (read through lastfrostdate.com)",
+   "url": "https://lastfrostdate.com/frost-dates/washington/"
+  },
+  {
+   "id": "almanac-frost",
+   "publisher": "The Old Farmer's Almanac",
+   "title": "Frost dates for ZIP 98532 (Centralia), 30% probability line",
+   "url": "http://almanac.com/gardening/frostdates/zipcode/98532"
+  },
+  {
+   "id": "wsu-king-tipsheet5",
+   "publisher": "WSU Extension King County Master Gardeners (Tip Sheet #5)",
+   "title": "Vegetable Gardening in the Pacific Northwest",
+   "url": "https://extension.wsu.edu/king/mg-home/gardening-resources/tip-sheets/tip-sheet-5"
+  },
+  {
+   "id": "usda-zones",
+   "publisher": "USDA Agricultural Research Service (town readings via PlantMaps)",
+   "title": "2023 Plant Hardiness Zone Map",
+   "url": "https://www.plantmaps.com/hardiness-zones-for-morton-washington"
+  }
+ ],
+ "coverCrops": [
+  {
+   "id": "cereal-rye",
+   "name": "Cereal rye",
+   "kind": "grass",
+   "purpose": "Nitrogen scavenger, quick cover, rapid spring growth, and competes with weeds",
+   "sowWindow": {
+    "start": "08-21",
+    "end": "10-15",
+    "text": "late August to mid-October"
+   },
+   "rateText": "1 cup per 100 sq ft",
+   "notes": [
+    "Hardy and reliable — one of the most commonly grown cover crops in the Northwest.",
+    "It grows rapidly in the spring, so mow or cut it before turning it under, or it can be hard to incorporate."
+   ],
+   "sources": [
+    "wsu-cover-crops-west"
+   ]
+  },
+  {
+   "id": "crimson-clover",
+   "name": "Crimson clover",
+   "kind": "legume",
+   "purpose": "Legume nitrogen source, soil builder, erosion fighter",
+   "sowWindow": {
+    "start": "08-21",
+    "end": "09-30",
+    "text": "late August through September"
+   },
+   "rateText": "1/4 cup per 100 sq ft",
+   "notes": [
+    "Easy to incorporate when its season ends."
+   ],
+   "sources": [
+    "wsu-cover-crops-west"
+   ]
+  },
+  {
+   "id": "hairy-vetch",
+   "name": "Hairy vetch",
+   "kind": "legume",
+   "purpose": "Legume nitrogen source, soil builder",
+   "sowWindow": {
+    "start": "08-21",
+    "end": "09-30",
+    "text": "late August through September"
+   },
+   "rateText": "1/2 cup per 100 sq ft",
+   "notes": [
+    "A reliable legume. WSU's mixture table pairs it with cereal rye (1/4 cup rye and 3/4 cup vetch per 100 sq ft); it germinates in the fall but grows slowly until spring."
+   ],
+   "sources": [
+    "wsu-cover-crops-west"
+   ]
+  },
+  {
+   "id": "winter-wheat",
+   "name": "Winter wheat",
+   "kind": "grass",
+   "purpose": "Nitrogen scavenger, soil builder, quick cover, rapid spring growth",
+   "sowWindow": {
+    "start": "09-11",
+    "end": "10-15",
+    "text": "mid-September to mid-October"
+   },
+   "rateText": "1 cup per 100 sq ft",
+   "notes": [
+    "Most suitable for mid- to late-season planting; planting it before late September makes it more susceptible to disease and premature death."
+   ],
+   "sources": [
+    "wsu-cover-crops-west"
+   ]
+  },
+  {
+   "id": "winter-oats",
+   "name": "Winter oats",
+   "kind": "grass",
+   "purpose": "Nitrogen scavenger, quick cover, rapid spring growth, competes with weeds",
+   "sowWindow": {
+    "start": "08-21",
+    "end": "10-15",
+    "text": "late August to mid-October"
+   },
+   "rateText": "1.5 cups per 100 sq ft",
+   "notes": [
+    "Spring oat varieties (such as Cayuse and Monida) should be planted by early September in the Puget Sound area to get good growth."
+   ],
+   "sources": [
+    "wsu-cover-crops-west"
+   ]
+  },
+  {
+   "id": "annual-ryegrass",
+   "name": "Annual ryegrass",
+   "kind": "grass",
+   "purpose": "Nitrogen scavenger, soil builder, quick cover, rapid spring growth",
+   "sowWindow": {
+    "start": "08-21",
+    "end": "09-07",
+    "text": "late August to early September"
+   },
+   "rateText": "1/2 cup per 100 sq ft",
+   "notes": [
+    "Tolerates wet soils, and its vigorous roots reduce erosion."
+   ],
+   "sources": [
+    "wsu-cover-crops-west"
+   ]
+  }
+ ],
+ "finalSowings": {
+  "note": "WSU Clallam County's fall and winter chart (adapted from PNW 548) is written for the North Olympic Peninsula; it is WSU's maritime western-Washington guidance and is kept here in the chart's own months. Most winter crops in it are planted from mid-July through August and must be well established by the first frost.",
+  "crops": [
+   {
+    "id": "beets-fall",
+    "name": "Beets",
+    "seedingText": "June to early August",
+    "lastMonth": 8,
+    "harvestText": "through November",
+    "sources": [
+     "wsu-clallam-fall-winter"
+    ]
+   },
+   {
+    "id": "broccoli-sprouting",
+    "name": "Broccoli, purple sprouting",
+    "seedingText": "August",
+    "lastMonth": 8,
+    "harvestText": "November to May",
+    "sources": [
+     "wsu-clallam-fall-winter"
+    ]
+   },
+   {
+    "id": "cabbage-overwinter",
+    "name": "Cabbage, overwintering",
+    "seedingText": "July to August",
+    "lastMonth": 8,
+    "harvestText": "January to March",
+    "sources": [
+     "wsu-clallam-fall-winter"
+    ]
+   },
+   {
+    "id": "carrots-fall",
+    "name": "Carrots",
+    "seedingText": "August",
+    "lastMonth": 8,
+    "harvestText": "March to June",
+    "sources": [
+     "wsu-clallam-fall-winter"
+    ]
+   },
+   {
+    "id": "cauliflower-fall",
+    "name": "Cauliflower",
+    "seedingText": "August",
+    "lastMonth": 8,
+    "harvestText": "February to April",
+    "sources": [
+     "wsu-clallam-fall-winter"
+    ]
+   },
+   {
+    "id": "kale-fall",
+    "name": "Kale",
+    "seedingText": "July to August",
+    "lastMonth": 8,
+    "harvestText": "October to May",
+    "sources": [
+     "wsu-clallam-fall-winter"
+    ]
+   },
+   {
+    "id": "arugula-fall",
+    "name": "Arugula",
+    "seedingText": "August to September",
+    "lastMonth": 9,
+    "harvestText": "October to February",
+    "sources": [
+     "wsu-clallam-fall-winter"
+    ]
+   },
+   {
+    "id": "asian-greens-fall",
+    "name": "Asian greens and mustard",
+    "seedingText": "July to September",
+    "lastMonth": 9,
+    "harvestText": "October to December, if covered",
+    "sources": [
+     "wsu-clallam-fall-winter"
+    ]
+   },
+   {
+    "id": "chard-fall",
+    "name": "Chard",
+    "seedingText": "August to September",
+    "lastMonth": 9,
+    "harvestText": "November to January",
+    "sources": [
+     "wsu-clallam-fall-winter"
+    ]
+   },
+   {
+    "id": "lettuce-winter",
+    "name": "Lettuce, winter",
+    "seedingText": "September",
+    "lastMonth": 9,
+    "harvestText": "December to May, if covered",
+    "sources": [
+     "wsu-clallam-fall-winter"
+    ]
+   }
+  ],
+  "sources": [
+   "wsu-clallam-fall-winter",
+   "osu-pnw548"
+  ]
+ },
+ "seasonExtension": [
+  {
+   "id": "covers-for-winter-crops",
+   "name": "Cold frames and low tunnels over the winter crops",
+   "timing": "fall-frost-watch",
+   "text": "Covering winter crops with a cold frame or row cover protects them from frost, heavy rain, and cold winds, and protection from rain alone can extend the life of a winter garden dramatically. Covers should be in place before the county's frost window opens.",
+   "sources": [
+    "wsu-clallam-fall-winter",
+    "osu-pnw548"
+   ]
+  },
+  {
+   "id": "cold-frame-spring",
+   "name": "Cold frames for seed starting and hardening off",
+   "timing": "spring-frost-watch",
+   "text": "Cold frames earn their keep in the spring frost window: they are used for starting seeds and for hardening off plants before they go into the garden, and they grow cool-season crops like lettuce, radishes, and spinach well. Ventilate the frame when temperatures rise above 45°F inside it.",
+   "sources": [
+    "wsu-skagit-season-extenders",
+    "wsu-clallam-fall-winter"
+   ]
+  },
+  {
+   "id": "covers-off",
+   "name": "Covers off and stored",
+   "timing": "after-safe-last-frost",
+   "text": "The latest spring frost on this county's record has passed. Season extenders can come off and be stored; WSU's Skagit gardeners count them good for two to four extra weeks at each end of the season, spring and fall.",
+   "sources": [
+    "wsu-skagit-season-extenders",
+    "noaa-normals"
+   ]
+  },
+  {
+   "id": "winter-crop-planting-season",
+   "name": "The winter garden is planted in summer",
+   "timing": "fixed",
+   "fixed": {
+    "start": "07-15",
+    "end": "08-31"
+   },
+   "text": "Most winter crops are planted from mid-July through August — late enough that they will not mature too early in the warm months, early enough to be well established by the first frost.",
+   "sources": [
+    "wsu-clallam-fall-winter",
+    "osu-pnw548"
+   ]
+  }
+ ],
+ "storage": {
+  "note": "The panel speaks storage in the harvest months (September to November), when these crops come in. Conditions are the extension tables' own figures; where two tables differ, both are kept and the entry says so.",
+  "crops": [
+   {
+    "id": "onions-dry",
+    "name": "Onions, dry",
+    "temperatureText": "32°F",
+    "humidityText": "65–70% relative humidity",
+    "lifeMonths": [
+     1,
+     8
+    ],
+    "cureText": "Cure first: spread in a single layer on a screen or in a well-ventilated area for 2–4 weeks before storing.",
+    "notes": [
+     "Do not remove the skins.",
+     "Keep onions away from apples and potatoes — onions and peppers can impart off-flavors to both in storage."
+    ],
+    "sources": [
+     "unl-storing-g1264",
+     "kstate-storage",
+     "wsu-skagit-storing-harvest"
+    ]
+   },
+   {
+    "id": "garlic",
+    "name": "Garlic",
+    "temperatureText": "32°F",
+    "humidityText": "65–70% relative humidity",
+    "lifeMonths": [
+     6,
+     7
+    ],
+    "cureText": "Cure first: spread in a single layer or tie in bunches in a shaded, well-ventilated, cool area for 2–4 weeks.",
+    "notes": [
+     "Do not remove the skins.",
+     "Store seed garlic warmer, at 50°F."
+    ],
+    "sources": [
+     "unl-storing-g1264",
+     "wsu-skagit-storing-harvest"
+    ]
+   },
+   {
+    "id": "potatoes-late",
+    "name": "Potatoes, late crop",
+    "temperatureText": "40–45°F",
+    "humidityText": "90% relative humidity",
+    "lifeMonths": [
+     2,
+     9
+    ],
+    "cureText": "Cure first, in a dark place for 1–2 weeks. WSU counts the curing warmth at 50–65°F; Nebraska's curing table counts 60–70°F. The range is kept.",
+    "notes": [
+     "Late-crop potatoes are the keepers; early potatoes do not store as long.",
+     "Kansas State's table gives 4–5 months at 40°F, inside Nebraska's wider 2–9 months.",
+     "Keep potatoes away from apples — apple gas makes potatoes sprout."
+    ],
+    "sources": [
+     "unl-storing-g1264",
+     "kstate-storage",
+     "wsu-skagit-storing-harvest"
+    ]
+   },
+   {
+    "id": "winter-squash",
+    "name": "Winter squash",
+    "temperatureText": "50–55°F",
+    "humidityText": "50–75% relative humidity",
+    "lifeMonths": [
+     2,
+     6
+    ],
+    "cureText": "Cure first (all but acorn squash): 80–85°F for 7–14 days to harden the skins.",
+    "notes": [
+     "Cool and dry is its corner of the cellar — the warmest of the four storage groups WSU names."
+    ],
+    "sources": [
+     "unl-storing-g1264",
+     "kstate-storage",
+     "wsu-skagit-storing-harvest"
+    ]
+   },
+   {
+    "id": "apples",
+    "name": "Apples",
+    "temperatureText": "30–40°F",
+    "humidityText": "90% relative humidity",
+    "lifeMonths": [
+     3,
+     8
+    ],
+    "cureText": null,
+    "notes": [
+     "Kansas State's table allows 1–12 months depending on the variety; Nebraska's 3–8 months is the home-storage planning range kept here.",
+     "Apples give off ethylene gas. WSU's word: avoid storing apples or pears with celery, cabbage, carrots, potatoes, or onions."
+    ],
+    "sources": [
+     "unl-storing-g1264",
+     "kstate-storage",
+     "wsu-skagit-storing-harvest"
+    ]
+   }
+  ]
+ },
+ "seedSaving": {
+  "note": "Beginner seed saving, from the crops that pollinate themselves. Save seed only from open-pollinated varieties — seed from hybrids will not grow true to the parent. The panel speaks seed saving from August through October, when these crops ripen and dry down.",
+  "crops": [
+   {
+    "id": "beans-seed",
+    "name": "Beans",
+    "pollination": "self-pollinating",
+    "isolationText": "Keep 10–20 feet between varieties (Illinois Extension's chart); NC State says at least 10 feet.",
+    "howText": "Let the pods mature and dry on the vine. Collect them before they split and let them dry 1–2 weeks more before shelling.",
+    "sources": [
+     "illinois-seed-saving",
+     "ncstate-seed-saving"
+    ]
+   },
+   {
+    "id": "peas-seed",
+    "name": "Peas",
+    "pollination": "self-pollinating",
+    "isolationText": "Keep 10–20 feet between varieties (Illinois Extension's chart); NC State says at least 10 feet.",
+    "howText": "Let the pods mature and dry on the vine. Collect them before they split and let them dry 1–2 weeks more before shelling.",
+    "sources": [
+     "illinois-seed-saving",
+     "ncstate-seed-saving"
+    ]
+   },
+   {
+    "id": "lettuce-seed",
+    "name": "Lettuce",
+    "pollination": "self-pollinating",
+    "isolationText": "Keep 10–20 feet between varieties (Illinois Extension's chart).",
+    "howText": "Beans, peas, and lettuce are the crops Illinois Extension names as not requiring isolation — a few plants give good seed.",
+    "sources": [
+     "illinois-seed-saving",
+     "ncstate-seed-saving"
+    ]
+   },
+   {
+    "id": "tomatoes-seed",
+    "name": "Tomatoes",
+    "pollination": "self-pollinating, mostly",
+    "isolationText": "NC State counts 20–30 feet between varieties if you can; Illinois counts a few rows apart. Both are kept.",
+    "howText": "Cut a fully ripe fruit and squeeze the pulp into a container with a little water. Let it ferment at room temperature 3–4 days, stirring daily; the good seed settles out. Rinse it and spread it thin to dry thoroughly.",
+    "sources": [
+     "illinois-seed-saving",
+     "ncstate-seed-saving"
+    ]
+   }
+  ],
+  "sources": [
+   "illinois-seed-saving",
+   "ncstate-seed-saving"
+  ]
+ },
+ "animals": {
+  "note": "Small seasonal notes only, from extension livestock guidance. No WSU goat calendar was found, so the goat note rests on Penn State Extension and says so in its entry.",
+  "entries": [
+   {
+    "id": "chickens-winterize",
+    "animal": "Chickens",
+    "name": "Winterize the coop before winter",
+    "fixed": {
+     "start": "09-01",
+     "end": "11-30"
+    },
+    "lines": [
+     "Chickens need a dry, draft-free, and well-ventilated building. Put down 6–12 inches of dry bedding on the floor for insulation.",
+     "Water is the winter problem: birds need access at least every 10 hours, day and night. Keep it from freezing with a heater in the waterer or a heated bowl.",
+     "Birds eat more in winter to stay warm. Feed a good balanced diet, free-choice if you can, or scatter high-energy feed like grains or oilseeds in the coop in the evening.",
+     "Large combs and wattles can frostbite; a little petroleum jelly on them reduces the chance."
+    ],
+    "sources": [
+     "illinois-chicken-winter",
+     "wsu-ww-chicken-winter"
+    ]
+   },
+   {
+    "id": "chickens-light",
+    "animal": "Chickens",
+    "name": "Light, if you want eggs through winter",
+    "fixed": {
+     "start": "09-01",
+     "end": "03-31",
+     "wrapsYear": true
+    },
+    "lines": [
+     "Hens need 14–16 hours of light to keep laying. If you add light, Wisconsin Extension counts it as traditionally started around September 1 and kept up until spring's natural day length reaches 14 hours.",
+     "It is a choice, not a duty — hens also rest and molt when the days shorten."
+    ],
+    "sources": [
+     "illinois-chicken-winter",
+     "uw-livestock-winter"
+    ]
+   },
+   {
+    "id": "goats-winter",
+    "animal": "Goats",
+    "name": "Winter care for does (Penn State Extension — no WSU goat calendar was found)",
+    "fixed": {
+     "start": "11-01",
+     "end": "02-28",
+     "wrapsYear": true
+    },
+    "lines": [
+     "Give the herd a well-ventilated, draft-free shelter with ample bedding, and keep does dry — wet and cold together are what hurt them.",
+     "Watch body condition through winter and aim for 2.5 to 3.5 on the 5-point score; adjust feed before a doe falls below it.",
+     "A doe in her last trimester is growing about 70% of the kid in those weeks and needs more energy and protein — Penn State counts 0.5 to 1 pound of a 12–14% protein grain a day as common, rising toward kidding."
+    ],
+    "sources": [
+     "psu-small-ruminants-winter"
+    ]
+   }
+  ]
+ }
+}
