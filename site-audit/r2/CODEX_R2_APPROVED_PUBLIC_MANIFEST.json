@@ -310,6 +310,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/css/sphere-farm-sphere.css",
+      "sha256": "37581bedd761b396338b289bfe25202a1a811e49bba7486ba155ee7ed3bc1dc8",
+      "publicUrl": "https://codexofreality.org/assets/css/sphere-farm-sphere.css",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/css/start-show.css",
       "sha256": "331514c0c812d15bbd3bdb080f924b42dbdeb35ea8a7133805725fce125aa488",
       "publicUrl": "https://codexofreality.org/assets/css/start-show.css",
@@ -371,7 +377,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "cc215e18d2880049e9e3d5adbb12853d43bba46e772e338da7f43c5d4cc5d535",
+      "sha256": "5b86b5518d1f8a59e0e5405d3d33c700df85524b880e3b6bf7e047fd8ddac9b3",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -2201,7 +2207,7 @@
     },
     {
       "path": "docs/assets/js/sphere-companion-layer.js",
-      "sha256": "77206b2c1a602333d9cf924c4608837fcaaed60e7d7fe0b68ab722ff4da13720",
+      "sha256": "ed6fad146aeaa64d751ae4df01299d4c7890bb2fac0d2b77ed97f87b1c6f38f4",
       "publicUrl": "https://codexofreality.org/assets/js/sphere-companion-layer.js",
       "status": "operational"
     },
@@ -2209,6 +2215,12 @@
       "path": "docs/assets/js/sphere-farm-panel.js",
       "sha256": "b42bc3274df3b55edcc4c692f8bcfdb3a0177b7b27a51fb39bf1e4d985b4b890",
       "publicUrl": "https://codexofreality.org/assets/js/sphere-farm-panel.js",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/js/sphere-farm-sphere.js",
+      "sha256": "b7eb644812aaff2b38909f57cc85761b8e8674c309ed91b5d8930cd3bae279a3",
+      "publicUrl": "https://codexofreality.org/assets/js/sphere-farm-sphere.js",
       "status": "operational"
     },
     {
@@ -3377,13 +3389,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "976a614e4a838dc365e364b6b3d42fc3c9d6e2f1908295e4d6c227841ed566ae",
+      "sha256": "9c3ea3eb75ec7cf1157258abdd526afc0f68e069b3e1c312e3ac04e56ce03e4d",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "f552acee9c41401894b5bd2b8888b0ccdcf197c3f7f2e839a0aac3e343561080",
+      "sha256": "cfff7c16145658bab5c606132c8d04cf2437329743d204ba828e6ca19f255e6e",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -3539,7 +3551,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "77a421f911dd6a4f884a5b63db23fc56830d182d97389610d664924e516e5a8d",
+      "sha256": "ffebac883d993594f01fce9b4a8cb64c0f553f827377036c631f5cc45530cc61",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
