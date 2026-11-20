@@ -307,7 +307,10 @@ test("record safety: no builder here can emit an old garden subtype", () => {
   }
 });
 
-test("record safety: old passes are counted, and the fold mutates nothing it reads", () => {
+test("record safety: the fold gives the old garden's passes no window, and mutates nothing it reads", () => {
+  /* Aaron removed the Shroom Search passes legacy entirely
+   * (Nov 20, 2026), superseding the earlier count-and-name ruling:
+   * the fold neither counts a pass nor carries a field for one. */
   const oldPass = Schema.createLifeRecord({
     type: "artifact",
     subtype: "garden-pass",
@@ -326,8 +329,9 @@ test("record safety: old passes are counted, and the fold mutates nothing it rea
     today: todayOn("2026-09-15", 6),
     moonNames: []
   });
-  assert.equal(state.oldPasses, 1);
-  assert.equal(Garden.countOldPasses(frozen), 1);
+  assert.ok(!("oldPasses" in state), "the fold carries no pass count");
+  assert.equal(Garden.countOldPasses, undefined, "the pass counter is removed, not renamed");
+  assert.equal(Garden.SUBTYPES.OLD_PASS, undefined, "the pass subtype is no longer exported");
   assert.equal(state.keepsakes.length, 0, "an old pass is never re-badged as a keepsake");
 });
 
@@ -350,5 +354,6 @@ test("the garden page carries the Pattern Garden, not the mushrooms", () => {
   assert.ok(page.includes("cartoon-garden.webp"), "the garden's cartoon scene remains its face");
   assert.ok(page.includes('id="garden-beds"'), "the beds stand on the page");
   assert.ok(page.includes('id="garden-keepsakes"'), "the keepsakes stand on the page");
-  assert.ok(page.includes('id="garden-old-passes"'), "the old passes are named on the page, untouched");
+  assert.ok(!page.includes('id="garden-old-passes"'), "the passes section is gone — Aaron removed the passes legacy (Nov 20, 2026)");
+  assert.ok(!page.includes("Your Shroom Search passes"), "no pass display remains on the page");
 });
