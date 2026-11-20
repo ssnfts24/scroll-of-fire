@@ -3,6 +3,27 @@
 
 # Static HTML site — no build step. Netlify serves the files in docs/ directly.
 
+# The Codex Guide's talking rung (Rung 3) — the site's only function.
+# It lives on this host only; the GitHub Pages mirror serves the
+# record-only Guide, as the mirror split declares. The function's
+# corpus is the site's own record: the Living Search shards, the
+# Claim Register, and the modules that read them, carried into the
+# function bundle so the record it speaks from is the record in this
+# repo. The provider key is set by Aaron in this host's environment
+# settings (GUIDE_API_KEY) — never in this repo.
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+  external_node_modules = ["@netlify/blobs"]
+  included_files = [
+    "docs/assets/search/**",
+    "docs/scroll/evidence/claim-register.json",
+    "docs/assets/js/living-search-core.js",
+    "docs/assets/js/codex-guide.js",
+    "docs/assets/js/calendar/**",
+    "netlify/functions/lib/codex-guide-rulebook.md"
+  ]
+
 [[headers]]
   for = "/*"
   [headers.values]
