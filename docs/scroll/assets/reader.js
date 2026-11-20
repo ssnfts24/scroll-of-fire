@@ -9,6 +9,7 @@
   const selectedId = params.get("section");
   const textScaleKey = "sof-scroll-text-scale";
   const themeKey = "sof-scroll-theme";
+  const lastPassageKey = "sof-scroll-last-passage";
 
   function node(tag, className, text) {
     const element = document.createElement(tag);
@@ -190,6 +191,9 @@
 
     document.title = `${requested.title} — Scroll of Fire Library`;
     document.querySelector("[data-current-title]").textContent = requested.title;
+    try {
+      localStorage.setItem(lastPassageKey, JSON.stringify({ id: requested.id, title: requested.title }));
+    } catch (e) { /* storage unavailable: the reader simply does not remember */ }
     const shelfLink = document.querySelector("[data-shelf-link]");
     shelfLink.href = `./#shelf-${requested.shelf}`;
     shelfLink.textContent = shelf?.title ?? "Library";

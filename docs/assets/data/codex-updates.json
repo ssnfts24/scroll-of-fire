@@ -82,6 +82,14 @@
  {
   "date": "2026-11-19",
   "type": "feature",
+  "title": "The reading rooms learned to remember and to answer",
+  "summary": "The Scripture reader now lets you mark a chapter read, and its home keeps a reading shelf of the chapters you have finished, in your browser only, beside a verse chosen by today's date from the edition's own text. The Scroll Library door now offers the passage you were last reading, and its search can open a passage by lot for the visitor who arrives without a question. Even the missing-page gate now names the day it is in and points at the day's doors. Nothing is counted, streaked, or sent anywhere; the marks live on your own device.",
+  "url": "./scripture/index.html",
+  "symbol": "✎"
+ },
+ {
+  "date": "2026-11-19",
+  "type": "feature",
   "title": "The Sphere took the phone screen",
   "summary": "On a phone, the Sphere was being squeezed into a thin strip by the bars around it, and below a certain height the page would not start its three-dimensional view at all, so a phone could be left with the flat fallback. Now the bars go slim on a phone: the environment and Interact strips take one row each, the guide bar starts as a single line with a Guide button that opens it whole, and the Sphere itself takes the middle of the screen, always tall enough for its full view. Tap a day to choose it, exactly as before, and full screen still gives the Sphere the whole phone.",
   "url": "./living-time-sphere.html",

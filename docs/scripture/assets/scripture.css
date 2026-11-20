@@ -83,3 +83,10 @@ table{border-collapse:collapse}.sf-about td,.sf-about th{border:1px solid var(--
 @media print{.sf-mast,.controls,.chips,.pn,.vtools,.study,.skip-link{display:none!important}body{background:#fff;color:#000}.wtable,.layer{display:none!important}.verse{break-inside:avoid}}
 .study .hebrew{font-size:1.45em}
 .study .part h4 .hebrew{font-size:1.6em}
+.sf-today,.sf-shelf{border:1px solid var(--sf-line);border-radius:8px;background:var(--sf-card);padding:.7rem .9rem;margin:1rem 0}
+.sf-today h2,.sf-shelf h2{margin:.1rem 0 .4rem;font-size:1.15rem;color:var(--sf-gold)}
+.sf-today-text{font-style:italic}
+.sf-shelf-line{margin:.3rem 0}
+.sf-shelf-line a{margin-right:.15rem}
+#sf-read[aria-pressed="true"]{background:var(--sf-gold);color:#000;border-color:var(--sf-gold)}
+@media print{.sf-today,.sf-shelf{display:none!important}}

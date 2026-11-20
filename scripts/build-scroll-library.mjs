@@ -405,6 +405,7 @@ const searchPage = toolPage({
         <div class="search-row">
           <input id="search-input" type="search" name="q" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Try Nachash, בראשית, Genesis 24, orphan train" data-search-input>
           <button type="submit" class="primary-button">Search</button>
+          <button type="button" class="ghost-button" data-lot>Open a passage by lot</button>
           <button type="button" class="ghost-button" data-search-clear hidden>Clear</button>
         </div>
       </form>
