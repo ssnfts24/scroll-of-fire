@@ -70,6 +70,7 @@ const RULES = [
   [/^Site\//, { group: "legacy-site", role: "Legacy site fragment", eligibility: "pending-publication-review", status: "deprecated", next: "Decide merge or retire." }],
   [/^project-files\//, { group: "project-file", role: "Project planning bundle", eligibility: "development-only", status: "prototype", next: "Inspect archive contents." }],
   [/^assets\//, { group: "legacy-asset", role: "Root-level script outside the publish tree", eligibility: "development-only", status: "deprecated", next: "Confirm unused." }],
+  [/^netlify\//, { group: "tooling", role: "Netlify Function — server code for the Codex Guide's talking rung; deployed to the host's function runtime, never published as a page", eligibility: "development-only", status: "operational", next: "Keep green. The provider key lives in the host's environment settings, never in the repo." }],
   [/^tests\//, { group: "tooling", role: "Automated test", eligibility: "development-only", status: "operational", next: "Keep green." }],
   [/^scripts\//, { group: "tooling", role: "Build or audit script", eligibility: "development-only", status: "operational", next: "Keep green." }],
   [/^site-audit\//, { group: "tooling", role: "Generated audit report", eligibility: "development-only", status: "operational", next: "Regenerate when sources change." }],
