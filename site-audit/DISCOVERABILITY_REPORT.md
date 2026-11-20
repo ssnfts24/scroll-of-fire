@@ -225,8 +225,8 @@ Snapshot commit `af3078a5fc2c` declares 168 files / 210.01 MB; 168 rows were par
 
 - Added since snapshot: **28**
 - Removed since snapshot: **0**
-- Changed hash: **1**
-- Unchanged: **167**
+- Changed hash: **0**
+- Unchanged: **168**
 
 The page itself was not changed. Full lists are in `downloads-reconciliation.json`.
 
