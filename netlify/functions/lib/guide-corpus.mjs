@@ -22,6 +22,7 @@ import { fileURLToPath } from "node:url";
 
 import {
   DEFINITIONAL_URLS,
+  STOPWORDS,
   analyzeQuestion,
   bestPassage,
   buildVocabulary,
@@ -208,7 +209,7 @@ export function buildCorpus({ modules, manifest, shards, claims }) {
         ...expansions.flatMap(entry => entry.tokens),
         ...mined.flatMap(entry => entry.tokens)
       ])
-    ].filter(token => !questionTermSet.has(token));
+    ].filter(token => !questionTermSet.has(token) && !STOPWORDS.has(token));
     const windowPhrases = [
       ...new Set(
         [analysis.subject, ...expansions.map(entry => entry.phrase)]
@@ -233,11 +234,82 @@ export function buildCorpus({ modules, manifest, shards, claims }) {
       atlas: "Codex Atlas"
     };
 
+    /* The best window across one page's passages, with the page's
+     * other strong statements joined in page order. A page may
+     * state its answer several times over — the Theory page
+     * states its equation as a boxed formula, as a working
+     * sentence, and as the spoken master line — and no single one
+     * of those windows outscores a contents list on its own. Up
+     * to three further windows join the strongest when each is
+     * strong in its own right and carries the question's own
+     * words — bestPassage's within-document rule, lifted to the
+     * page's passages, with one more seat because a page's
+     * passages are separate chunks, not neighbouring sentences. */
+    const bestPageWindow = docs => {
+      const windows = docs.map((doc, index) => ({
+        doc,
+        index,
+        window: bestPassage(doc.b || doc.h || doc.t || "", context)
+      }));
+      let primary = windows[0];
+      for (const entry of windows) {
+        if (entry.window.score > primary.window.score) primary = entry;
+      }
+      const joined = [primary];
+      const seconds = windows
+        .filter(entry => entry !== primary)
+        .filter(
+          entry =>
+            entry.window.text &&
+            entry.window.score >= 5 &&
+            entry.window.score >= 0.5 * primary.window.score &&
+            (entry.window.termHits >= 1 || entry.window.phraseHits >= 1)
+        )
+        .sort((a, b) => b.window.score - a.window.score)
+        .slice(0, 3);
+      joined.push(...seconds);
+      joined.sort((a, b) => a.index - b.index);
+      if (joined.length < 2) return { doc: primary.doc, window: primary.window };
+      const stripMarks = value => value.replace(/^…+/, "").replace(/…+$/, "").trim();
+      return {
+        doc: primary.doc,
+        window: {
+          ...primary.window,
+          text: joined.map(entry => stripMarks(entry.window.text)).join(" … ")
+        }
+      };
+    };
+
     const passages = [];
     for (const group of groups.slice(0, 8)) {
-      const doc = group.doc || {};
-      const window = bestPassage(doc.b || doc.h || doc.t || "", context);
-      if (!window.text || (window.termHits < 1 && window.phraseHits < 1)) continue;
+      /* A pages-area group is one page, indexed in passages: the
+       * window is chosen across ALL of the page's passages, so the
+       * passage that actually states the answer — not merely the
+       * passage BM25 ranked first — is the one the record speaks
+       * from. Other areas keep the representative-only read they
+       * were tuned with: their documents already are passages,
+       * and widening their windows lets stray folded near-matches
+       * (a "womb" for a "wombat") qualify a page the record does
+       * not actually hold an answer on. */
+      const representative = group.doc || {};
+      const candidates = [representative];
+      if (representative.a === "pages" && representative.g) {
+        for (const doc of index.docs) {
+          if (doc.a === "pages" && doc.g === representative.g && doc.i !== representative.i) {
+            candidates.push(doc);
+          }
+        }
+      }
+      const { doc, window } = bestPageWindow(candidates);
+      /* Qualification is genuine containment: an exact question
+       * term or the subject phrase in the window. A prefix cousin
+       * alone ("womb" for "wombat", worth 2) does not make the
+       * record hold an answer — with the index chunked, more
+       * groups reach this loop, and stray near-matches must not
+       * spend a visitor's question on a passage that does not
+       * answer it. An exact term scores 3, a phrase 5, so the
+       * bar at 3 is exactly "one genuine hit". */
+      if (!window.text || window.score < 3 || (window.termHits < 1 && window.phraseHits < 1)) continue;
       passages.push({
         title: doc.t || "Untitled",
         area: doc.a || "",
@@ -260,24 +332,76 @@ export function buildCorpus({ modules, manifest, shards, claims }) {
      * defining page joins the passages only when its own window
      * earns it: the question's term, stated definitionaly. */
     if (analysis.definitional) {
-      const present = new Set(passages.map(passage => passage.url));
+      /* Presence is judged by the page, not the passage URL: a
+       * passage deep in the Glossary (glossary.html#p13) is the
+       * Glossary answering, and must not be duplicated by the
+       * direct read below. Presence is not the end of it, though:
+       * the main loop may have seated the page on a weak window
+       * (its BM25 group ranked low, so the passage competes at a
+       * low quality and falls out of the final five) while the
+       * page's own best definitional window is strong. When the
+       * direct read's window outranks the seated one, it takes
+       * the seat — the defining page speaks with its definition,
+       * not with whatever window the ranking happened to crown. */
+      const presentAt = new Map(
+        passages.map((passage, index) => [
+          String(passage.url || "").split("#")[0],
+          index
+        ])
+      );
+      /* Every defining page is read whole: since the index began
+       * chunking pages into passages, the definition may live in
+       * any of the page's passages, not only its first — the
+       * page's best joined window is its answer. All qualifying
+       * reads are gathered first and seated strongest-first:
+       * upgrades of an already-seated page always apply (they add
+       * no seat), but NEW seats from the direct read are bounded
+       * at two. Unbounded, the boosted reads flooded the final
+       * five and crowded out the very page that states the answer
+       * in full — the calendar's own chapter for the calendar
+       * question, the Ledger for the Year Gate. The read still
+       * happens for every defining page; only the extra seats are
+       * rationed, and they go to the strongest definitions. */
+      const directReads = [];
       for (const url of DEFINITIONAL_URLS) {
-        if (present.has(url)) continue;
-        const doc = index.docs.find(candidate => candidate.u === url);
-        if (!doc) continue;
-        const window = bestPassage(doc.b || doc.h || doc.t || "", context);
+        const pageDocs = index.docs.filter(
+          candidate => candidate.a === "pages" && (candidate.g === url || candidate.u === url)
+        );
+        if (!pageDocs.length) continue;
+        const { doc, window } = bestPageWindow(pageDocs);
         if (!window.text || window.termHits < 1 || window.score < 8) continue;
-        passages.push({
-          title: doc.t || "Untitled",
-          area: doc.a || "",
-          areaLabel: AREA_LABELS[doc.a] || doc.a || "Record",
-          url: doc.u || null,
-          snippet: window.snippet,
-          text: window.text,
-          isLexicon: doc.a === "lexicon",
-          folded: 0,
-          quality: window.score + 8
+        directReads.push({
+          page: url,
+          candidate: {
+            title: doc.t || "Untitled",
+            area: doc.a || "",
+            areaLabel: AREA_LABELS[doc.a] || doc.a || "Record",
+            url: doc.u || null,
+            snippet: window.snippet,
+            text: window.text,
+            isLexicon: doc.a === "lexicon",
+            folded: 0,
+            quality: window.score + 8
+          }
         });
+      }
+      directReads.sort((a, b) => b.candidate.quality - a.candidate.quality);
+      let newSeats = 0;
+      for (const { page, candidate } of directReads) {
+        const seatedAt = presentAt.get(page);
+        if (seatedAt === undefined) {
+          if (newSeats >= 2) continue;
+          newSeats += 1;
+          presentAt.set(page, passages.length);
+          passages.push(candidate);
+        } else if (
+          candidate.quality > passages[seatedAt].quality &&
+          !passages.some(
+            (passage, index) => index !== seatedAt && passage.url === candidate.url
+          )
+        ) {
+          passages[seatedAt] = candidate;
+        }
       }
     }
 

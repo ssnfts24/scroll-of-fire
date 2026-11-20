@@ -191,6 +191,26 @@ test("battery: the Glossary's own definition answers a plain term question", asy
   );
 });
 
+test("battery: a definition past the old 4,000-character cap now surfaces", async () => {
+  /* The Glossary defines Frequency Governance at roughly
+   * character 9,800 of its page — more than twice as deep as the
+   * first-generation index ever read (it kept each page's first
+   * 4,000 characters and nothing else). The passage-chunked index
+   * must carry that definition to the Guide: this is the proof
+   * the cap is gone, run against the real built index. */
+  const retrieval = await retrieve("What is frequency governance?");
+  const fromGlossary = retrieval.passages.filter(
+    passage => (passage.url || "").split("#")[0] === "glossary.html"
+  );
+  assert.ok(fromGlossary.length, "the Glossary itself answers");
+  assert.ok(
+    fromGlossary.some(passage =>
+      (passage.text || "").includes("deliberate organization of tone")
+    ),
+    `the Glossary's deep definition surfaces; got:\n${passageTexts(retrieval).join("\n---\n")}`
+  );
+});
+
 /* --------------------------- the talking path ---------------------------- */
 
 test("talking: the formula reaches the provider, and the answer cites its page", async () => {

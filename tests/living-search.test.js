@@ -45,15 +45,19 @@ test("indexed counts equal the counts of the catalogued sources", () => {
   assert.equal(manifest.counts.scrollSegments, segments.segments.length);
   assert.equal(manifest.counts.scrolls, library.sections.length + segments.segments.length);
   for (const area of manifest.areas) {
-    assert.equal(shards[area.id].count, manifest.counts[area.id], area.id);
-    assert.equal(shards[area.id].docs.length, manifest.counts[area.id], area.id);
+    /* The pages shard holds passages, not pages: its document
+     * count is counts.pagePassages, while counts.pages stays the
+     * count of pages themselves (pinned by the walk test below). */
+    const expectedDocs = area.id === "pages" ? manifest.counts.pagePassages : manifest.counts[area.id];
+    assert.equal(shards[area.id].count, expectedDocs, area.id);
+    assert.equal(shards[area.id].docs.length, expectedDocs, area.id);
     const info = manifest.shards[area.id];
     const bytes = fs.readFileSync(path.join(searchRoot, info.file));
     assert.equal(bytes.length, info.bytes, area.id);
     assert.equal(sha(bytes), info.sha256, area.id);
   }
   assert.equal(manifest.counts.total,
-    manifest.counts.pages + manifest.counts.scrolls + manifest.counts.atlas + manifest.counts.lexicon + manifest.counts.claims);
+    manifest.counts.pagePassages + manifest.counts.scrolls + manifest.counts.atlas + manifest.counts.lexicon + manifest.counts.claims);
 });
 
 test("the pages count equals an independent walk of the site with the recorded exclusions", () => {
