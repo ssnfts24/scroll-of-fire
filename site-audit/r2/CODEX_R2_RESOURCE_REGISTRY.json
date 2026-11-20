@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 2181,
-    "bytes": 813107736,
+    "bytes": 813107841,
     "byGroup": {
       "tooling": 197,
       "manuscript": 17,
@@ -15384,8 +15384,8 @@
       "path": "docs/assets/js/spark-presence.js",
       "title": "spark-presence.js",
       "format": "js",
-      "bytes": 132784,
-      "sha256": "794403eda92440811d006e9076036b241f8239593e1a56614e515f0a7cdc75d6",
+      "bytes": 132889,
+      "sha256": "5cefe81be214e556a5bc125c51d035564392a0d24c86c9d43959aa4ff0beec6f",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,

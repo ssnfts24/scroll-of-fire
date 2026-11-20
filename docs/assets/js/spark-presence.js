@@ -285,7 +285,8 @@
         row(
           "Voice:",
           `${livingGrowth.name} — a ${livingIdentity.familyName.toLowerCase()} motif; ` +
-            `${livingGrowth.daysTogether} days together · ${livingGrowth.practiceDays} practice days.`
+            `${livingGrowth.daysTogether} day${livingGrowth.daysTogether === 1 ? "" : "s"} together · ` +
+            `${livingGrowth.practiceDays} practice day${livingGrowth.practiceDays === 1 ? "" : "s"}.`
         );
       }
     }
