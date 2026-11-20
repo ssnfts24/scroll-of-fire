@@ -292,6 +292,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/css/sphere-ambient.css",
+      "sha256": "c40540e18e725202d0acec6f55c33c1cb7370a953b8a6eac0b4c242bc8230a73",
+      "publicUrl": "https://codexofreality.org/assets/css/sphere-ambient.css",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/css/sphere-day-world.css",
       "sha256": "80d05d8535a21dcf693d2eb70708f8f757aed57fdd43bd3572bba8b4041f743f",
       "publicUrl": "https://codexofreality.org/assets/css/sphere-day-world.css",
@@ -2197,6 +2203,12 @@
       "path": "docs/assets/js/spark-presence.js",
       "sha256": "041e6f8d294304b872e9e66d4053741c2c7fcc1691594b9c164bbafe60102a57",
       "publicUrl": "https://codexofreality.org/assets/js/spark-presence.js",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/js/sphere-ambient.js",
+      "sha256": "4cce2f1c3b7f1c3353dde410c11be4131fb9534bcaa1561714a2a6fc363a0ba5",
+      "publicUrl": "https://codexofreality.org/assets/js/sphere-ambient.js",
       "status": "operational"
     },
     {
