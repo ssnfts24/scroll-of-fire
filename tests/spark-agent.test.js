@@ -82,8 +82,8 @@ test("actions are extracted and validated; malformed ones drop silently", async 
   const agent = core.createSparkAgent({ config: config(), store: memoryStore(), provider, now });
   const out = await ask(agent, "show me Moon 5 Day 12 and step in");
   assert.equal(out.actions.length, 2, "only the two valid actions survive");
-  assert.deepEqual(out.actions[0], { tool: "showDay", moon: 5, day: 12 });
-  assert.deepEqual(out.actions[1], { tool: "openDayWorld" });
+  assert.deepEqual(out.actions[0], { name: "showDay", args: { moon: 5, day: 12 } }, "actions reach the page as { name, args }");
+  assert.deepEqual(out.actions[1], { name: "openDayWorld", args: {} });
   assert.ok(!out.reply.includes("[[action"), "markers never reach the keeper's eyes");
 });
 
@@ -102,7 +102,7 @@ test("the combined ceiling fails closed — Guide spend counts against the Spark
   const provider = { complete: async () => ({ text: "x", usage: { promptTokens: 1, completionTokens: 1 } }) };
   const agent = core.createSparkAgent({ config: config(), store, provider, now });
   const status = await agent.status();
-  assert.equal(status.agentEnabled, false);
+  assert.equal(status.talkingEnabled, false);
   assert.equal(status.meter.guideUsd, 19.99);
   assert.equal(status.meter.sparkUsd, 0.02, "the two lines are shown apart");
   const out = await ask(agent, "hello");
@@ -121,8 +121,8 @@ test("a meter that cannot be read closes the seat", async () => {
 test("no key, no fake conversation: the seat says why in one plain line", async () => {
   const agent = core.createSparkAgent({ config: core.readSparkConfig({}), store: memoryStore(), provider: null, now });
   const status = await agent.status();
-  assert.equal(status.agentEnabled, false);
-  assert.equal(status.reason, core.UNAVAILABLE_NOTICE);
+  assert.equal(status.talkingEnabled, false);
+  assert.equal(status.notice, core.UNAVAILABLE_NOTICE);
   const out = await ask(agent, "hello");
   assert.equal(out.mode, "unavailable");
   assert.equal(out.reply, core.UNAVAILABLE_NOTICE);

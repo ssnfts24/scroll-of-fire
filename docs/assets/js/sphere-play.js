@@ -44,9 +44,11 @@
   }
 
   function shownCoordinate() {
+    // The published coordinate carries its Pattern day inside
+    // the 13-Moons adapter's reading, not at the top level.
     const c = window.SOFCurrentTemporalCoordinate;
-    if (c && c.dayOfPatternYear != null) return c;
-    return null;
+    const pd = c?.remnant13Moons?.patternDay ?? c?.adapters?.remnant13Moons?.patternDay ?? null;
+    return pd != null ? { dayOfPatternYear: pd } : null;
   }
 
   function buildPlayRoom() {

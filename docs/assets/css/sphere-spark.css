@@ -191,6 +191,9 @@ html.sphere-rebuilt .spark-presence {
   text-align: center;
 }
 
+/* Frozen: the Spark's breathing rests with the instrument. */
+html.sphere-frozen .sphere-spark-halo { animation-play-state: paused; }
+
 /* ── Reduced motion: the presence rests, beautiful and still ── */
 
 @media (prefers-reduced-motion: reduce) {

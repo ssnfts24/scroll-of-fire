@@ -351,6 +351,9 @@
       const orbit = (now) => {
         raf = requestAnimationFrame(orbit);
         if (document.hidden || !visible) return;
+        // Frozen means frozen: while the keeper holds the Sphere
+        // still, the Spark stations itself and rests too.
+        if (window.SphereRebuild?.isFrozen?.()) return;
         const w = wrap.clientWidth, h = wrap.clientHeight;
         if (!w || !h) return;
         const angle = (now / 26000) * Math.PI * 2 + 0.8;
@@ -580,6 +583,12 @@
       const clean = String(text || "").trim();
       if (!clean) return;
       greeted = true;
+      // The record grows during the visit — games played, days
+      // kept. Answers (patterns above all) must read the record
+      // as it stands now, not as it stood when the panel was
+      // built, or the Spark would deny games it just played.
+      const live = readRecord();
+      if (live) record = live;
       addLine("keeper", clean);
       input.value = "";
 

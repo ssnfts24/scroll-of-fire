@@ -217,9 +217,12 @@ export function createSparkAgent({ config, store, provider, now = () => new Date
   }
 
   async function status() {
+    // Field names follow the door's house convention — the same
+    // talkingEnabled / notice pair the Guide seat's page reads —
+    // so the Spark's page reads this seat the same way.
     const base = { name: SEAT_NAME, seat: "spark", ceilingUsd: config.ceilingUsd };
     if (!provider) {
-      return { ...base, agentEnabled: false, reason: UNAVAILABLE_NOTICE, meter: null };
+      return { ...base, talkingEnabled: false, notice: UNAVAILABLE_NOTICE, meter: null };
     }
     try {
       const meter = await readMeter();
@@ -227,8 +230,8 @@ export function createSparkAgent({ config, store, provider, now = () => new Date
       const open = combinedUsd < config.ceilingUsd;
       return {
         ...base,
-        agentEnabled: open,
-        reason: open ? "" : CEILING_NOTICE,
+        talkingEnabled: open,
+        notice: open ? "" : CEILING_NOTICE,
         meter: {
           month: meter.monthKey,
           guideUsd: Math.round(meter.guideUsd * 10000) / 10000,
@@ -238,7 +241,7 @@ export function createSparkAgent({ config, store, provider, now = () => new Date
         }
       };
     } catch {
-      return { ...base, agentEnabled: false, reason: METER_NOTICE, meter: null };
+      return { ...base, talkingEnabled: false, notice: METER_NOTICE, meter: null };
     }
   }
 
@@ -320,7 +323,13 @@ export function createSparkAgent({ config, store, provider, now = () => new Date
     return {
       mode: "agent",
       reply: reply || "I'm here. Ask me again in a few words?",
-      actions,
+      // The page runs actions as { name, args } — the same shape
+      // the Spark seat's charter names. Translate once, here, so
+      // the validated { tool, ... } form never reaches the page.
+      actions: actions.map((a) => {
+        const { tool, ...args } = a;
+        return { name: tool, args };
+      }),
       meter: {
         month: meter.monthKey,
         sparkUsd: Math.round((meter.sparkUsd + costUsd) * 10000) / 10000,
