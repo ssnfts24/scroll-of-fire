@@ -6,9 +6,9 @@
  * For each content page under docs/ (recursive), this script:
  *   1. ensures the shared living layer stylesheet (living-ui.css) is
  *      referenced exactly once — the nav's styles live there;
- *   2. inserts the unified nav bar (Home · Scroll · Atlas · Lexicon ·
- *      Scripture · Sphere · Shop · Witness · Living Search,
- *      current area marked, plus the external Support door last) immediately after the page's skip
+ *   2. inserts the one travel bar (Home · Sphere · Companions ·
+ *      13 Moons · Library · Witness World · Shop · Witness,
+ *      current room marked, plus the external Support door last) immediately after the page's skip
  *      link, or right after <body> when the page has no skip link.
  *      Pages that already carry the nav get their emitted block
  *      refreshed in place, so emission changes reach them too;
@@ -58,24 +58,26 @@ const EXCLUDED = new Set([
   "caravan.html"
 ]);
 
-/* The seven areas, in nav order. Targets are docs-relative paths. */
+/* The main rooms, in travel order (Aaron's one-travel-bar direction,
+ * Nov 19, 2026): the bar carries a visitor between the rooms they
+ * live in, and only those. The deeper shelves (Scroll, Atlas,
+ * Lexicon, Scripture, Living Search) stay one tap deeper — through
+ * the site header's deep menu where a page carries one, and through
+ * the rooms themselves. Targets are docs-relative paths. */
 const AREAS = [
   { id: "home", label: "Home", target: "index.html" },
-  { id: "scroll", label: "Scroll", target: "scroll/index.html" },
-  { id: "atlas", label: "Atlas", target: "codex-atlas.html" },
-  { id: "lexicon", label: "Lexicon", target: "scroll/lexicon.html" },
-  { id: "scripture", label: "Scripture", target: "scripture/index.html" },
   { id: "sphere", label: "Sphere", target: "living-time-sphere.html" },
+  /* The Spark's home (Aaron's companions direction, Nov 18, 2026). */
+  { id: "companions", label: "Companions", target: "companions.html" },
+  { id: "moons", label: "13 Moons", target: "moons.html" },
+  /* The Library room is Downloads: the shelf of files a visitor can
+   * take with them. */
+  { id: "library", label: "Library", target: "downloads.html" },
+  { id: "witness-world", label: "Witness World", target: "witness-world.html" },
   { id: "shop", label: "Shop", target: "shop.html" },
-  /* Witness's own page (Aaron's grant, Nov 18, 2026): a quiet door,
-   * last of the areas, standing just before the Support door. */
-  { id: "witness", label: "Witness", target: "witness.html" },
-  /* The whole-site search door, just before Support: Living Search
-   * (search.html) covers every page, not only the Scroll Library. */
-  { id: "search", label: "Living Search", target: "search.html" },
-  /* The Spark's home (Aaron's companions direction, Nov 18, 2026):
-   * the newest door, standing just before the Support door. */
-  { id: "companion", label: "Companion", target: "companions.html" }
+  /* Witness's own page (Aaron's grant, Nov 18, 2026): the last room,
+   * standing just before the Support door. */
+  { id: "witness", label: "Witness", target: "witness.html" }
 ];
 
 /* One external door, always last in the bar: support for the work.
@@ -131,14 +133,12 @@ function relativeHref(fromDir, target) {
 
 function currentAreaFor(rel) {
   if (rel === "index.html") return "home";
-  if (rel === "scroll/lexicon.html") return "lexicon";
-  if (rel.startsWith("scroll/")) return "scroll";
-  if (rel === "codex-atlas.html") return "atlas";
-  if (rel.startsWith("scripture/")) return "scripture";
+  if (rel === "companions.html") return "companions";
+  if (rel === "moons.html") return "moons";
+  if (rel === "downloads.html") return "library";
+  if (rel === "witness-world.html") return "witness-world";
   if (rel === "shop.html") return "shop";
   if (rel === "witness.html") return "witness";
-  if (rel === "search.html") return "search";
-  if (rel === "companions.html") return "companion";
   return null;
 }
 
@@ -154,8 +154,8 @@ function buildNav(baseDir, currentArea) {
   }).join("\n");
   const support = `        <li><a class="living-nav-support" href="${SUPPORT.href}" target="_blank" rel="noopener">${SUPPORT.label}</a></li>`;
   return [
-    `  <div class="living-nav" data-living-nav>`,
-    `    <nav class="living-nav-inner" aria-label="Site navigation">`,
+    `  <div class="living-nav travel-bar" data-living-nav data-travel-bar>`,
+    `    <nav class="living-nav-inner" aria-label="Travel bar — main rooms">`,
     `      <a class="living-nav-brand" href="${home}"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a>`,
     `      <ul class="living-nav-links">`,
     items,
@@ -244,7 +244,7 @@ for (const full of [...walk(docsDir)].sort()) {
      * holds no nested <div>, so its first </div> is its own close.
      * A brand strip above lands in the same single write. */
     const fresh = buildNav(baseDir, currentAreaFor(rel));
-    const navRe = /^[ \t]*<div class="living-nav" data-living-nav>[\s\S]*?<\/div>/m;
+    const navRe = /^[ \t]*<div class="living-nav[^"]*" data-living-nav[^>]*>[\s\S]*?<\/div>/m;
     const next = html.replace(navRe, () => fresh);
     if (next !== html) {
       html = next;

@@ -1,9 +1,9 @@
 /*
  * Living nav + homepage activity (part 2 of the living site update).
  *
- * The unified navigation: every content page carries one living nav
- * (Home · Scroll · Atlas · Lexicon · Scripture · Sphere · Shop · Witness · Living Search) with
- * the current area marked, plus one external Support door last
+ * The one travel bar: every content page carries one slim travel bar
+ * (Home · Sphere · Companions · 13 Moons · Library · Witness World · Shop · Witness) with
+ * the current room marked, plus one external Support door last
  * (Aaron's Cash App, decided Nov 17, 2026 — never a local target,
  * never the current area), and Home resolves to the site homepage
  * from every page — the Scroll section used to trap the reader with
@@ -39,15 +39,13 @@ const EXCLUDED = new Set([
 
 const AREAS = [
   { id: "home", label: "Home", target: "index.html" },
-  { id: "scroll", label: "Scroll", target: "scroll/index.html" },
-  { id: "atlas", label: "Atlas", target: "codex-atlas.html" },
-  { id: "lexicon", label: "Lexicon", target: "scroll/lexicon.html" },
-  { id: "scripture", label: "Scripture", target: "scripture/index.html" },
   { id: "sphere", label: "Sphere", target: "living-time-sphere.html" },
+  { id: "companions", label: "Companions", target: "companions.html" },
+  { id: "moons", label: "13 Moons", target: "moons.html" },
+  { id: "library", label: "Library", target: "downloads.html" },
+  { id: "witness-world", label: "Witness World", target: "witness-world.html" },
   { id: "shop", label: "Shop", target: "shop.html" },
-  { id: "witness", label: "Witness", target: "witness.html" },
-  { id: "search", label: "Living Search", target: "search.html" },
-  { id: "companion", label: "Companion", target: "companions.html" }
+  { id: "witness", label: "Witness", target: "witness.html" }
 ];
 
 /* The one external door, always last in the bar. */
@@ -90,7 +88,7 @@ function resolveHref(pageRel, html, href) {
 }
 
 function navBlock(html) {
-  const match = html.match(/<div class="living-nav" data-living-nav>([\s\S]*?)<\/div>/);
+  const match = html.match(/<div class="living-nav travel-bar" data-living-nav data-travel-bar>([\s\S]*?)<\/div>/);
   return match ? match[1] : null;
 }
 
@@ -119,14 +117,12 @@ function navAnchors(block) {
 
 function areaOf(rel) {
   if (rel === "index.html") return "home";
-  if (rel === "scroll/lexicon.html") return "lexicon";
-  if (rel.startsWith("scroll/")) return "scroll";
-  if (rel === "codex-atlas.html") return "atlas";
-  if (rel.startsWith("scripture/")) return "scripture";
+  if (rel === "companions.html") return "companions";
+  if (rel === "moons.html") return "moons";
+  if (rel === "downloads.html") return "library";
+  if (rel === "witness-world.html") return "witness-world";
   if (rel === "shop.html") return "shop";
   if (rel === "witness.html") return "witness";
-  if (rel === "search.html") return "search";
-  if (rel === "companions.html") return "companion";
   return null;
 }
 
@@ -139,6 +135,7 @@ test("every content page carries exactly one unified living nav", () => {
   for (const rel of contentPages) {
     const html = read(`docs/${rel}`);
     assert.equal((html.match(/data-living-nav/g) || []).length, 1, `${rel}: nav count`);
+    assert.equal((html.match(/data-travel-bar/g) || []).length, 1, `${rel}: travel bar count`);
     const block = navBlock(html);
     assert.ok(block, `${rel}: nav block present`);
     const anchors = navAnchors(block);
@@ -169,17 +166,20 @@ test("every content page carries exactly one unified living nav", () => {
   }
 });
 
-test("the Support door and the Living Search door are emitted by all three nav emission paths", () => {
+test("the Support door and the travel rooms are emitted by all three nav emission paths", () => {
   /* The census above proves the pages; this proves a regeneration
-   * cannot wipe the door: every source that emits the nav carries it. */
+   * cannot wipe the bar: every source that emits the nav carries it. */
   for (const source of [
     "scripts/apply-living-nav.mjs",
     "scripts/build-scroll-library.mjs",
     "scripts/r2_02_pages.py"
   ]) {
     assert.ok(read(source).includes(SUPPORT.href), `${source} emits the Support door`);
-    assert.ok(read(source).includes("Living Search"), `${source} emits the Living Search door`);
-    assert.ok(read(source).includes("search.html"), `${source} links the Living Search door to search.html`);
+    assert.ok(read(source).includes("data-travel-bar"), `${source} emits the travel bar`);
+    assert.ok(read(source).includes("Witness World"), `${source} emits the Witness World room`);
+    assert.ok(read(source).includes("witness-world.html"), `${source} links the Witness World room`);
+    assert.ok(read(source).includes("13 Moons"), `${source} emits the 13 Moons room`);
+    assert.ok(read(source).includes("moons.html"), `${source} links the 13 Moons room`);
   }
   const css = read("docs/assets/css/living-ui.css");
   assert.match(css, /\.living-nav-links a\.living-nav-support\s*\{[^}]*color:\s*var\(--lnav-gold\)/,

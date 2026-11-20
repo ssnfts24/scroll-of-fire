@@ -98,6 +98,46 @@
   font-size: 0.85rem;
 }
 
+/* One travel bar (Nov 19, 2026): inside the travel bar the bridge is
+ * a quiet inline slot — no second background, no second border, no
+ * stacked bar. The follow doors rest on wide screens; on a phone the
+ * bar keeps the rooms and the Share button, and the follow doors stay
+ * where they always were, on the About page. The panel opens as a
+ * full-width row of the travel bar itself. */
+.social-bridge.social-bridge-in-bar {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  margin: 0;
+  max-width: none;
+  padding: 0 0 0 0.5rem;
+  background: none;
+  border-bottom: none;
+}
+
+.living-nav > .social-bridge-panel {
+  max-width: 1240px;
+  margin: 0 auto;
+  border: 1px solid rgba(122, 243, 255, 0.32);
+  border-radius: 0 0 12px 12px;
+  background: rgba(3, 7, 14, 0.92);
+  padding: 0.8rem 1rem;
+}
+
+.living-nav > .social-bridge-panel[hidden] {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .social-bridge-in-bar .social-bridge-follow {
+    display: none;
+  }
+
+  .social-bridge-in-bar .social-bridge-share {
+    padding: 0.45rem 0.6rem;
+    font-size: 0.9rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .social-bridge * {
     transition: none !important;
