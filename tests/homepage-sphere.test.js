@@ -345,12 +345,31 @@ test("no R1.7 protected file is touched by this branch", () => {
   const carriesDeepTime = changed.has(
     "docs/assets/js/sphere-deep-time.js"
   );
+  /*
+   * Ambient face declaration (Sphere R3 Wave 3, Nov 20, 2026 — Aaron
+   * waived the options round: "Go with what you're closest to — what
+   * you're going with in the videos"). This change set declares
+   * itself the same way, by carrying its signature file (the Ambient
+   * overlay module), and its declared set names exactly one
+   * protected path: the Sphere page, changed by links and tags only
+   * — one stylesheet link and one script tag in the neighbourhood
+   * PR #159 opened, the module itself living outside the protected
+   * directories. Every other protected path still fails this test
+   * loudly.
+   */
+  const ambientDeclaredProtected = new Set([
+    "docs/living-time-sphere.html"
+  ]);
+  const carriesAmbient = changed.has(
+    "docs/assets/js/sphere-ambient.js"
+  );
   for (const file of changed) {
     if (!protectedPaths.has(file)) continue;
     assert.ok(
       (carriesR2Rework && r2DeclaredProtected.has(file)) ||
         (carriesDayWorld && dayWorldDeclaredProtected.has(file)) ||
-        (carriesDeepTime && deepTimeDeclaredProtected.has(file)),
+        (carriesDeepTime && deepTimeDeclaredProtected.has(file)) ||
+        (carriesAmbient && ambientDeclaredProtected.has(file)),
       `R1.7 protected file changed: ${file}`
     );
   }

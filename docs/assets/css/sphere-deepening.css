@@ -210,9 +210,16 @@ a.sgb-btn {
     bottom: 6px;
     padding: 0.45rem 0.5rem;
     font-size: 0.8rem;
+    height: auto;
   }
+  /* F4 (Sphere page audit, Nov 19, 2026): the readout is the one
+   * line that says where a visitor is — it wraps whole rather
+   * than cutting a word in half, and the bar grows to hold it. */
   .sgb-readout-value {
     max-width: 52vw;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
   }
 }
 

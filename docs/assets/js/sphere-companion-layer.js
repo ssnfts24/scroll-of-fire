@@ -162,6 +162,7 @@
       <button type="button" class="sgb-btn" data-sgb="year">Whole year</button>
       <button type="button" class="sgb-btn sgb-share" data-sgb="share">Share this view</button>
       <button type="button" class="sgb-btn sgb-fs" data-sgb="fs" hidden>⛶ Full screen</button>
+      <button type="button" class="sgb-btn" data-sgb="rest">Rest</button>
       <button type="button" class="sgb-btn sgb-clean-toggle" data-sgb="guide" aria-expanded="false" aria-label="Show the guide bar">Guide</button>
     </div>
     <div class="sgb-share-row" hidden>
@@ -550,6 +551,10 @@
     else if (action === "year" && goWholeYear()) announce("The whole year");
     else if (action === "share") shareView();
     else if (action === "fs") toggleFullscreen();
+    else if (action === "rest" && window.SphereAmbient?.rest) {
+      window.SphereAmbient.rest();
+      statusEl.textContent = "The Sphere is resting. Enter whenever you are ready.";
+    }
     else if (action === "guide") toggleGuideBar();
   });
 

@@ -49,6 +49,7 @@
   <link rel="stylesheet" href="assets/css/sphere-deepening.css?v=20261118-1">
   <link rel="stylesheet" href="assets/css/sphere-day-world.css?v=20261119-1">
   <link rel="stylesheet" href="assets/css/sphere-deep-time.css?v=20261119-1">
+  <link rel="stylesheet" href="assets/css/sphere-ambient.css?v=20261120-1">
   <!-- B7.52 FAST BOOT: Three.js is a dynamic import, so advertise it before
        the renderer reaches init instead of discovering the module late. -->
   <link rel="modulepreload" href="assets/vendor/three/three.module.min.js" fetchpriority="high">
@@ -264,6 +265,12 @@
         touched). day-telling is the canonical module the Alignment
         Plane reads its tellings through. -->
    <script defer src="assets/js/sphere-deep-time.js?v=20261119-1"></script>
+   <!-- Sphere R3 Wave 3 — the Ambient face: a resting state and the
+        room's environment, an overlay layer beside the instrument
+        (links and tags only; no protected file is touched). It reads
+        today through PatternCalendar and DayTelling, the canonical
+        modules already loaded above. -->
+   <script defer src="assets/js/sphere-ambient.js?v=20261120-1"></script>
    <script defer>
      document.addEventListener("DOMContentLoaded", () => {
        const container = document.getElementById("sphere-container");
