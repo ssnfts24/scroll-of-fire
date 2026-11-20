@@ -148,7 +148,7 @@ test("the system prompt carries the children's fence and the not-a-person lines"
   assert.ok(prompt.includes("not kept"), "the privacy line is spoken");
 });
 
-test("the Guide seat is untouched by the Spark seat: only PR #197's own files differ, rulebook intact", () => {
+test("the Guide seat is untouched by the Spark seat: no Guide files differ, rulebook intact", () => {
   let changed = null;
   try {
     changed = execFileSync("git", ["diff", "--name-only", "origin/main...HEAD"], { cwd: root, encoding: "utf8" }).split("\n").filter(Boolean);
@@ -161,18 +161,15 @@ test("the Guide seat is untouched by the Spark seat: only PR #197's own files di
   // fences below (rulebook bytes, no guide-core import) hold
   // everywhere.
   if (changed) {
-    // Aaron ordered ONE preview: PR #197's retrieval work is in
-    // this branch by his word, and its four files are the only
-    // Guide-side differences. The Spark seat itself changes no
-    // Guide file, and the approved rulebook — the Guide's fence —
-    // is byte-untouched.
+    // The fence's substance: a change set may touch the Spark
+    // seat, but it changes NO Guide-side file, and the approved
+    // rulebook — the Guide's fence — is byte-untouched. (This
+    // once expected exactly PR #197's four retrieval files, which
+    // were in that branch by Aaron's word; PR #197 landed inside
+    // PR #199 on Nov 20, 2026, so its files are part of main now
+    // and the standing expectation is zero Guide-side differences.)
     const guideFiles = changed.filter((f) => /guide/.test(f) && !/spark-agent/.test(f)).sort();
-    assert.deepEqual(guideFiles, [
-      "netlify/functions/lib/guide-core.mjs",
-      "netlify/functions/lib/guide-corpus.mjs",
-      "netlify/functions/lib/guide-passages.mjs",
-      "tests/codex-guide-intelligence.test.js"
-    ], `unexpected Guide-side changes: ${guideFiles.join(", ")}`);
+    assert.deepEqual(guideFiles, [], `unexpected Guide-side changes: ${guideFiles.join(", ")}`);
     assert.ok(!changed.some((f) => f.includes("codex-guide-rulebook")), "the rulebook file is untouched");
   }
   const fn = fs.readFileSync(path.join(root, "netlify/functions/spark-agent.mjs"), "utf8");
