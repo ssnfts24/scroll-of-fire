@@ -185,7 +185,7 @@ function recordBlockForPrompt(retrieval) {
 
   for (const passage of retrieval.passages) {
     parts.push(
-      `PASSAGE — ${passage.title} (${passage.areaLabel})${passage.url ? ` [${passage.url}]` : ""}\n${passage.snippet || ""}`
+      `PASSAGE — ${passage.title} (${passage.areaLabel})${passage.url ? ` [${passage.url}]` : ""}\n${passage.text || passage.snippet || ""}`
     );
   }
 
@@ -405,7 +405,10 @@ export function createGuide({
       `${rulebookText}\n\n---\n\n` +
       `## The record for this question\n\n${recordBlockForPrompt(retrieval)}\n\n` +
       `Answer the visitor's question from the record above only, ` +
-      `carrying the claim grades as given. If the record above does ` +
+      `carrying the claim grades as given. When the record states a ` +
+      `definition, a formula, or a calendar fact, give it in the ` +
+      `record's own words first, then explain briefly if that helps. ` +
+      `If the record above does ` +
       `not answer it, say: ${RECORD_DOES_NOT_COVER}`;
 
     const messages = [...cleanHistory, { role: "user", content: text }];
