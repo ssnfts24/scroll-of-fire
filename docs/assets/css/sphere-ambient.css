@@ -1,0 +1,325 @@
+/* ── Sphere R3 Wave 3 — the Ambient face ─────────────────────────
+ * The films' language, extended from accent to environment.
+ *
+ * PR #188 carried the cartoon's warmth onto the instrument's own
+ * surfaces: wood and brass (brass #daa45b, sampled from the film),
+ * daypart light from the visitor's clock, the Moon's hue lent to
+ * the room's glow, a halo breathing at the Spark's 4.6s cadence.
+ * This sheet takes the same language one step further — the room
+ * itself. The observatory becomes a warm wooden room at the day's
+ * hour: a wooden frame around the stage, held light at its edges,
+ * and in front of the instrument a resting face (the Ambient
+ * veil) where the day meets the visitor quietly.
+ *
+ * Overlay only. Nothing here moves the instrument: no geometry,
+ * no camera, no rendering, no labels. The Sphere's own stylesheets
+ * stand untouched; this sheet loads after them and speaks only to
+ * the room, the frame, the veil, and the page's own chrome.
+ * The warmth variables (--warm-glow, --warm-ground, --sphere-moon-hue)
+ * are #188's, set by the companion layer; this sheet spends them,
+ * it does not mint new ones.
+ */
+
+:root {
+  --ambient-brass: #daa45b;
+  --ambient-brass-pale: #e6bd7b;
+  --ambient-amber: #f29e4f;
+  --ambient-wood-deep: #1c1108;
+  --ambient-wood: #2a1a0d;
+  --ambient-wood-light: #3a2412;
+  --ambient-ink: #f3e5c8;
+}
+
+/* ── The room ────────────────────────────────────────────────────
+ * The page around the stage rests in wood and shadow, lit from
+ * the stage itself: the daypart horizon glow (#188's variables)
+ * rises behind the instrument, and the Moon on show lends its
+ * hue to the held light at the room's centre. */
+
+.sphere-page {
+  background:
+    radial-gradient(ellipse 90% 46% at 50% 0%, rgba(var(--warm-glow, 218, 164, 91), calc(var(--warm-glow-alpha, 0.24) * 0.55)), transparent 62%),
+    linear-gradient(180deg, var(--warm-ground, #100906) 0%, #0a0603 55%, #070403 100%);
+}
+
+/* The wooden frame: a ring of wood tones and a brass hairline
+ * around the stage, with the room's shadow held inside it. In
+ * the app view the stage is the whole screen, so the frame steps
+ * aside there and only the held light remains. */
+body:not(.sphere-app) .sphere-canvas-wrap {
+  border-radius: 18px;
+  box-shadow:
+    0 0 0 5px var(--ambient-wood-deep),
+    0 0 0 6px rgba(218, 164, 91, 0.5),
+    0 0 0 11px var(--ambient-wood),
+    0 0 0 12px rgba(218, 164, 91, 0.22),
+    0 30px 80px rgba(0, 0, 0, 0.6);
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 38%, hsla(var(--sphere-moon-hue, 43), 85%, 62%, 0.07), transparent 66%),
+    linear-gradient(180deg, var(--ambient-wood-light), var(--ambient-wood-deep) 130%);
+}
+
+/* ── F10 — the plain name line ───────────────────────────────────
+ * One line above the stage saying what the Sphere is, in plain
+ * words, present resting or awake. (Delivered by the overlay;
+ * the page HTML is protected.) In the app view the stage is the
+ * whole screen and keeps its full height, so the line rests. */
+
+.sphere-ambient-line {
+  margin: 0;
+  padding: 0.55rem 0.9rem 0.35rem;
+  text-align: center;
+  color: var(--ambient-brass-pale);
+  font-size: 0.92rem;
+  letter-spacing: 0.01em;
+}
+
+body.sphere-app .sphere-ambient-line {
+  display: none;
+}
+
+/* ── The resting face ────────────────────────────────────────────
+ * A veil of held light across the stage: the edges rest in wood
+ * shadow, the centre stays clear enough that the instrument is
+ * visible, resting, behind its own light. The greeting stands in
+ * the upper part of the stage, on a wooden panel with a brass
+ * edge — the film's materials, the day's own words. */
+
+.sphere-ambient-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(0.75rem, 4% , 2.5rem) 1rem 1rem;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 72% 58% at 50% 42%, transparent 55%, rgba(16, 8, 3, 0.38) 100%),
+    linear-gradient(180deg, rgba(20, 11, 4, 0.34) 0%, transparent 30%, transparent 72%, rgba(16, 8, 3, 0.42) 100%);
+}
+
+.sphere-ambient-veil[hidden] {
+  display: none;
+}
+
+/* The held light breathes at the Spark's own cadence, behind the
+ * panel — the room breathing, as #188's halo already does. */
+.sphere-ambient-veil::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 62% 46% at 50% 40%, hsla(var(--sphere-moon-hue, 43), 85%, 62%, 0.14), transparent 66%);
+  animation: sphere-ambient-breathe 4.6s ease-in-out infinite;
+}
+
+@keyframes sphere-ambient-breathe {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+.sphere-ambient-panel {
+  position: relative;
+  pointer-events: auto;
+  max-width: min(30rem, 92%);
+  text-align: center;
+  padding: 1.1rem 1.4rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(218, 164, 91, 0.55);
+  background:
+    linear-gradient(180deg, rgba(58, 36, 18, 0.88), rgba(28, 17, 8, 0.92));
+  box-shadow:
+    0 18px 50px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(230, 189, 123, 0.35);
+  color: var(--ambient-ink);
+}
+
+.sphere-ambient-kicker {
+  margin: 0 0 0.3rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ambient-brass);
+}
+
+.sphere-ambient-coordinate {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.25rem, 4.6vw, 1.7rem);
+  font-weight: 600;
+  color: #ffd97a;
+}
+
+.sphere-ambient-moon {
+  margin: 0.15rem 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--ambient-brass-pale);
+}
+
+.sphere-ambient-headline {
+  margin: 0.55rem 0 0;
+  font-size: 1rem;
+}
+
+.sphere-ambient-civil {
+  margin: 0.3rem 0 0;
+  font-size: 0.9rem;
+  color: rgba(243, 229, 200, 0.85);
+}
+
+.sphere-ambient-daypart,
+.sphere-ambient-spark {
+  margin: 0.3rem 0 0;
+  font-size: 0.9rem;
+  color: rgba(243, 229, 200, 0.75);
+}
+
+.sphere-ambient-enter {
+  margin-top: 0.85rem;
+  padding: 0.6rem 1.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(218, 164, 91, 0.75);
+  background: linear-gradient(180deg, rgba(242, 158, 79, 0.28), rgba(218, 164, 91, 0.16));
+  color: #ffe9bb;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sphere-ambient-enter:hover,
+.sphere-ambient-enter:focus-visible {
+  background: linear-gradient(180deg, rgba(242, 158, 79, 0.42), rgba(218, 164, 91, 0.24));
+}
+
+.sphere-ambient-rest-note {
+  margin: 0.6rem 0 0;
+  font-size: 0.78rem;
+  color: rgba(243, 229, 200, 0.6);
+}
+
+/* On a small phone the panel tightens: a doorway, not a cover.
+ * Every line of the greeting stays; it simply stands closer. */
+@media (max-width: 640px) {
+  .sphere-ambient-veil {
+    padding: 0.6rem 0.6rem 0.5rem;
+  }
+
+  .sphere-ambient-panel {
+    padding: 0.7rem 0.9rem 0.6rem;
+    max-width: 94%;
+  }
+
+  .sphere-ambient-kicker {
+    margin-bottom: 0.15rem;
+    font-size: 0.66rem;
+  }
+
+  .sphere-ambient-coordinate {
+    font-size: 1.18rem;
+  }
+
+  .sphere-ambient-moon {
+    font-size: 0.95rem;
+  }
+
+  .sphere-ambient-headline {
+    margin-top: 0.35rem;
+    font-size: 0.92rem;
+  }
+
+  .sphere-ambient-civil,
+  .sphere-ambient-daypart,
+  .sphere-ambient-spark {
+    margin-top: 0.2rem;
+    font-size: 0.82rem;
+  }
+
+  .sphere-ambient-enter {
+    margin-top: 0.6rem;
+    padding: 0.5rem 1.2rem;
+    font-size: 0.95rem;
+  }
+
+  .sphere-ambient-rest-note {
+    margin-top: 0.4rem;
+    font-size: 0.72rem;
+  }
+}
+
+/* The designed still face: under reduced motion the held light
+ * rests — no breathing, no fade — exactly as #188's halo rests. */
+@media (prefers-reduced-motion: reduce) {
+  .sphere-ambient-veil::before {
+    animation: none;
+    opacity: 0.7;
+  }
+}
+
+/* ── F1 — the meeting stands below the stage (this page) ─────────
+ * The Spark encounter is a fixed corner card site-wide. On this
+ * page, at phone widths, the Ambient module moves its host below
+ * the stage and this rule stands it in the page's flow, full
+ * width, so the instrument introduces itself first. On wider
+ * screens the corner card stays, capped narrower so it covers
+ * less of the instrument. */
+
+.spark-encounter-host.sphere-ambient-below {
+  position: static;
+  display: block;
+  margin: 0.9rem auto 0;
+  max-width: min(34rem, calc(100vw - 24px));
+}
+
+.spark-encounter-host.sphere-ambient-below .spark-encounter {
+  max-width: 100%;
+}
+
+@media (min-width: 901px) {
+  .spark-encounter {
+    max-width: min(330px, calc(100vw - 24px));
+  }
+}
+
+/* ── F2 — the chrome above the stage folds slimmer (phone) ───────
+ * Four stacked bars stood between a phone visitor and the
+ * instrument. The strips keep their words and their work; they
+ * take one slim row each instead of a slab. Page-scoped: this
+ * sheet loads only on the Sphere page, after the page's own
+ * stylesheets. */
+
+@media (max-width: 640px) {
+  .sphere-canvas-wrap .sphere-location-season-strip {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.78rem;
+    flex-wrap: nowrap;
+    overflow: hidden;
+  }
+
+  .sphere-canvas-wrap .sphere-location-season-value {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sphere-canvas-wrap .sphere-interact-bar {
+    padding: 0.35rem 0.6rem;
+    gap: 0.5rem;
+  }
+
+  .sphere-canvas-wrap .sphere-interact-toggle {
+    padding: 0.4rem 0.9rem;
+    font-size: 0.85rem;
+  }
+
+  .sphere-canvas-wrap .sphere-interact-hint {
+    font-size: 0.75rem;
+    margin: 0;
+  }
+
+  .sphere-canvas-wrap .sphere-quick-nav {
+    padding: 0.4rem 0.6rem;
+  }
+}

@@ -170,19 +170,19 @@ test("growth counts return days, pages, and practice — each once", () => {
   assert.deepEqual(record.practiceDays, [217]);
   /* 1 return day x2 + 1 practice day x3 + 2 pages = 7 points */
   assert.equal(Core.growthPoints(record), 7);
-  assert.equal(Core.stageOf(record).name, "Ember");
+  assert.equal(Core.stageOf(record).name, "Spark");
 });
 
 test("stages rise in order and never fall", () => {
   const names = Core.STAGES.map((s) => s.name);
-  assert.deepEqual(names, ["Ember", "Flame", "Radiant"]);
+  assert.deepEqual(names, ["Spark", "Kindled", "Guardian"]);
   let last = -1;
   for (let points = 0; points <= 30; points++) {
     const ix = Core.stageFor(points).index;
     assert.ok(ix >= last, `stage fell at ${points}`);
     last = ix;
   }
-  assert.equal(Core.stageFor(25).name, "Radiant");
+  assert.equal(Core.stageFor(25).name, "Guardian");
 });
 
 test("guidance is drawn from the record, in plain words, with a door", () => {
@@ -232,7 +232,7 @@ test("the drawing is built from the parts, and growth shows on it", () => {
    * motes, never a circle drawn around them. */
   assert.ok(!young.includes("stroke-dasharray"), "no ring at birth");
   const grown = Core.renderSVG(spark, { stage: 2 });
-  assert.ok(!grown.includes("stroke-dasharray"), "no ring at Radiant either");
+  assert.ok(!grown.includes("stroke-dasharray"), "no ring at Guardian either");
   assert.ok(!grown.includes("spark-halo"), "the old halo disc is gone");
   const radiant = Core.renderSVG(spark, { stage: 2 });
   assert.ok(radiant.includes('data-spark-stage="2"'));
@@ -485,7 +485,7 @@ test("growth is announced once: against the stage its person last saw", () => {
     record = Core.recordVisit(record, { patternDay: 216 + d, page: `p${d}.html` });
   }
   const event = Core.growthEventFor({ record, companion });
-  assert.equal(event.grew, true, "eight days together outgrow Ember");
+  assert.equal(event.grew, true, "eight days together outgrow Spark");
   assert.ok(event.stage.index > 0);
   const line = Core.growthLineFor({ record, companion, stage: event.stage });
   assert.match(line, /I grew — Day 8 of us/);
@@ -508,9 +508,9 @@ test("growth shows on the drawing: their light, and more motes around them", () 
   assert.ok(born.includes("radialGradient"), "the glow fades at its edge — light, not a bubble");
   assert.ok(motesOf(born) >= 3 && motesOf(born) <= 4, "a few motes at birth");
   const kindled = Core.renderSVG(spark, { stage: 1 });
-  assert.ok(motesOf(kindled) > motesOf(born), "more motes keep them company at Flame");
+  assert.ok(motesOf(kindled) > motesOf(born), "more motes keep them company at Kindled");
   const bright = Core.renderSVG(spark, { stage: 2 });
-  assert.ok(motesOf(bright) > motesOf(kindled), "the fullest company at Radiant");
+  assert.ok(motesOf(bright) > motesOf(kindled), "the fullest company at Guardian");
   assert.ok(bright.includes('class="spark-eye"'), "the eye carries its blink class");
   assert.ok(!bright.includes("spark-satellite") && !bright.includes("spark-stage-ring2"), "no rings, no satellites — the bubble is gone");
   /* The same seed draws the same light anywhere; the mote
@@ -605,19 +605,19 @@ test("the v2 life rides the presence: celebration, naming, panel, growth", () =>
 
 
 test("evolution: three stages, one creature grown, driven by faithfulness alone", () => {
-  assert.deepEqual(Core.STAGES.map((s) => s.name), ["Ember", "Flame", "Radiant"]);
+  assert.deepEqual(Core.STAGES.map((s) => s.name), ["Spark", "Kindled", "Guardian"]);
   assert.deepEqual(Core.STAGES.map((s) => s.min), [0, 8, 25]);
   const spark = Core.generate(SEED_A);
   const stages = [0, 1, 2].map((stage) => Core.renderSVG(spark, { stage }));
   for (const svg of stages) {
     assert.ok(svg.includes(`data-spark-form="${spark.form}"`), "the same form at every stage");
   }
-  assert.ok(stages[0].includes("scale(0.8)"), "an Ember stands small");
-  assert.ok(stages[2].includes("scale(1.03)"), "a Radiant stands full");
+  assert.ok(stages[0].includes("scale(0.8)"), "a Spark stands small");
+  assert.ok(stages[2].includes("scale(1.03)"), "a Guardian stands full");
   const motesOf = (svg) => (svg.match(/class="spark-mote"/g) || []).length;
   assert.ok(
     motesOf(stages[1]) > motesOf(stages[0]),
-    "their company of motes grows at Flame"
+    "their company of motes grows at Kindled"
   );
   /* Progress, in honest counts from its own record. */
   let record = Core.newRecord({ seed: SEED_A, name: "", civilDate: "2026-11-18" });
@@ -626,8 +626,8 @@ test("evolution: three stages, one creature grown, driven by faithfulness alone"
   record = Core.recordPractice(record, { patternDay: 217 });
   const progress = Core.progressOf(record, spark);
   assert.equal(progress.points, 7);
-  assert.equal(progress.stage.name, "Ember");
-  assert.equal(progress.next, "Flame");
+  assert.equal(progress.stage.name, "Spark");
+  assert.equal(progress.next, "Kindled");
   assert.equal(progress.counts.returnDays, 1);
   assert.equal(progress.counts.practiceDays, 1);
   assert.equal(progress.counts.pagesSeen, 2);
@@ -680,7 +680,7 @@ test("the Spark has a 3D body: seed-grown WebGL, honestly falling back to the fl
   }
   assert.ok(d3.includes("speckle"), "markings map onto the form's own faces");
   assert.ok(d3.includes("marks3d"), "from their own seed stream");
-  assert.ok(d3.includes("stage >= 2"), "evolution changes the 3D form: the Radiant gains its crown");
+  assert.ok(d3.includes("stage >= 2"), "evolution changes the 3D form: the Guardian gains its crown");
   assert.ok(d3.includes('":motes"'), "the 3D body carries their spark motes, from the same stream as the drawing");
   assert.ok(!/stage >= 1\) b\.ring/.test(d3), "no ring around the 3D body — the bubble is gone there too");
   assert.ok(d3.includes("dart") && d3.includes("delight") && d3.includes("celebrate"), "its movements are its life's: dart, delight, celebrate");
@@ -908,7 +908,7 @@ test("v3 share card: the keeper's own panel facts, plainly a Codex Spark, made o
   assert.equal(card.name, "Nori", "the name it answers to stands first");
   assert.ok(card.seedLine.includes(companion.name), "its seed name rides underneath");
   assert.match(card.kindLine, new RegExp(companion.kindName), "its kind and character");
-  assert.match(card.stageLine, /Stage 1 of 3: Ember/);
+  assert.match(card.stageLine, /Stage 1 of 3: Spark/);
   assert.match(card.bornLine, /Born Moon 8 · Pattern Day 216/, "the day it was born from");
   assert.match(card.todayLine, /Moon 8 · Day 20 · Pattern Day 216/, "and today, in Living Time");
   assert.match(card.brand, /A Codex Spark/, "the card says plainly what it is");
@@ -1401,11 +1401,22 @@ test("v7 voice box rides the presence: generated, default quiet, mute-ruled, tap
     presence.includes('window.localStorage.getItem(VOICE_KEY) === "on"'),
     "voice rests quiet unless the keeper stored it on — default quiet"
   );
-  const vocalAt = presence.indexOf("function vocalize(text)");
-  const gate = presence.slice(vocalAt, vocalAt + 220);
-  assert.ok(gate.includes("!voiceOn()"), "they do not sound while Voice is off");
-  assert.ok(gate.includes("soundOff()"), "the Sounds mute silences their voice too");
-  assert.ok(gate.includes("!voiceArmed"), "they do not sound before a keeper tap arms the talk");
+  const vocalAt = presence.indexOf("function vocalize(text");
+  const gate = presence.slice(vocalAt, vocalAt + 400);
+  /* Stage 1 (living voice): the switch gate this test once
+   * asserted is replaced by the living plan — presence states
+   * decide, and a quiet choice stored by this older build is
+   * honoured as a kept promise rather than overridden. */
+  assert.ok(gate.includes("livingPlan(context, text)"), "the living plan decides whether they sound");
+  assert.ok(
+    presence.includes("legacyQuiet: livingLegacyQuiet()"),
+    "a stored quiet choice still silences their living voice — kept, not overridden"
+  );
+  assert.ok(
+    presence.includes("localStorage.getItem(SOUND_KEY) === \"off\" || localStorage.getItem(VOICE_KEY) === \"off\""),
+    "either old switch, stored off, is part of that promise"
+  );
+  assert.ok(presence.includes("greeted: voiceArmed"), "they do not sound before a keeper tap arms the talk");
   const closeAt = presence.indexOf("const closeBubble");
   assert.ok(
     presence.slice(closeAt, closeAt + 320).includes("stopVoice()"),
@@ -1834,11 +1845,11 @@ test("v9 details on the face: born look first, arrivals only when revealed", () 
     assert.ok(later.includes(id), `the later face names ${id} among what they wear`);
   }
   /* The arrivals are the same identity grown, at every stage:
-   * what they wear at Ember they still wear at Radiant. */
+   * what they wear as a Spark they still wear as a Guardian. */
   const ember = Core.renderSVG(companion, { stage: 0, revealed: all });
   const radiant = Core.renderSVG(companion, { stage: 2, revealed: all });
-  assert.ok(ember.includes(`data-spark-shown="${all.join(" ")}"`), "their arrivals stand at Ember");
-  assert.ok(radiant.includes(`data-spark-shown="${all.join(" ")}"`), "and the same arrivals stand at Radiant — grown, never swapped");
+  assert.ok(ember.includes(`data-spark-shown="${all.join(" ")}"`), "their arrivals stand as a Spark");
+  assert.ok(radiant.includes(`data-spark-shown="${all.join(" ")}"`), "and the same arrivals stand as a Guardian — grown, never swapped");
   /* The 3D builder reads the same detail and the same list. */
   const three = read("docs/assets/js/spark-3d.js");
   assert.ok(three.includes("companion.details"), "the 3D body grows from their detail");
@@ -2177,7 +2188,7 @@ test("v10 birth and life: the marks that are not draws", () => {
   };
   assert.ok(
     Core.rarityFor({ record: grown, companion: plain }).specials.some((s) => s.id === "fully-grown"),
-    "Radiant is marked when the record has grown them there"
+    "Guardian is marked when the record has grown them there"
   );
 });
 

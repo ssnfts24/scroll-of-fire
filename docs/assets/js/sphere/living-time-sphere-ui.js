@@ -5677,12 +5677,36 @@
       }
       const civil = /^(\d{4}-\d{2}-\d{2})$/.exec(q);
       if (civil) {
-        const resolved = globalThis.LivingTimeCalendarWorkbench?.resolveCivilDate?.(civil[1]);
+        // Sphere page rebuild (Nov 20, 2026): the workbench wakes
+        // a few seconds after the instrument; a civil date typed
+        // before it is ready is not an unmappable date, and the
+        // page must not say it is.
+        if (typeof globalThis.LivingTimeCalendarWorkbench?.resolveCivilDate !== "function") {
+          return announceQuick("The calendar is still waking up — give it a moment, then try that date again.", false);
+        }
+        const resolved = globalThis.LivingTimeCalendarWorkbench.resolveCivilDate(civil[1]);
         if (!resolved?.valid) return announceQuick("That civil date could not be mapped.", false);
         if (!resolved.inside) return announceQuick(`${civil[1]} is outside the counted 13 × 28 days. Open Calendar Atlas for the Year Gate day.`, false);
-        if (resolved.patternYear && normalizedYears.includes(Number(resolved.patternYear))) applyYear(Number(resolved.patternYear), "quick-jump-civil-year");
-        _setCursorFromPatternDay(container, resolved.dayOfPatternYear, { year: Number(resolved.patternYear || _state.year), source: "quick-jump-civil" });
+        // Sphere page rebuild (Nov 20, 2026) — the 1902 defect:
+        // resolved.patternYear is PatternCalendar's year COUNT from
+        // the 2026 epoch (1, 2, …), not a civil year. Feeding it to
+        // applyYear / the cursor as a year landed every civil-date
+        // jump in the alignment ledger's first year, 1902. The
+        // workbench's own call sites use resolved.selectedYear —
+        // the civil year the date actually belongs to. So does
+        // this one now.
+        if (resolved.selectedYear && normalizedYears.includes(Number(resolved.selectedYear))) applyYear(Number(resolved.selectedYear), "quick-jump-civil-year");
+        _setCursorFromPatternDay(container, resolved.dayOfPatternYear, { year: Number(resolved.selectedYear || _state.year), source: "quick-jump-civil" });
         focusDay(resolved.dayOfPatternYear, 1.78);
+        // Sphere page rebuild (Nov 20, 2026): the year view is
+        // built from the alignment ledger, which carries
+        // 2014–2027. When a date's own year stands outside that
+        // range, the workbench lands the same Pattern day in the
+        // nearest carried year — say so plainly rather than let
+        // the keeper believe the Sphere is showing their year.
+        if (resolved.exactYearMatch === false) {
+          return announceQuick(`${civil[1]} → Moon ${resolved.moon} Day ${resolved.day}, shown in ${resolved.selectedYear} — the nearest year this Sphere carries.`);
+        }
         return announceQuick(`${civil[1]} → Moon ${resolved.moon} Day ${resolved.day}.`);
       }
       const moonDay = /^(?:m|moon)\s*(\d{1,2})(?:\s*(?:d|day)\s*(\d{1,2}))?$/.exec(q);

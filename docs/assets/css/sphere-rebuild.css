@@ -1,0 +1,286 @@
+/*
+ * The Sphere page, rebuilt as an app (Nov 20, 2026).
+ *
+ * Layout law for the rebuilt page, scoped to html.sphere-rebuilt
+ * (set by sphere-rebuild.js at boot) and standing down entirely
+ * in the app shell's own room (body.sphere-app). The instrument's
+ * protected stylesheet is never edited; these rules win by order
+ * (this file loads last on the page) and by scope.
+ *
+ * The films' language: warm wood and brass, held light. Brass is
+ * #daa45b, the house colour from the Ambient face.
+ */
+
+html.sphere-rebuilt {
+  --sphere-bg: #0c0805;
+  --sphere-border: rgba(218, 164, 91, 0.35);
+  --rebuild-brass: #daa45b;
+  --rebuild-wood: #17100a;
+  --rebuild-panel: rgba(23, 16, 10, 0.92);
+  --rebuild-line: rgba(218, 164, 91, 0.38);
+  --rebuild-text: #f3e7d3;
+  --rebuild-muted: #c9b18c;
+}
+
+/* ── Stage first ─────────────────────────────────────────────── */
+
+html.sphere-rebuilt body:not(.sphere-app) .sphere-wrapper {
+  margin-top: 0;
+}
+
+/* The interact gate is moot — the instrument is always live —
+ * but its buttons keep their wiring in the DOM. */
+html.sphere-rebuilt .sphere-interact-bar {
+  display: none !important;
+}
+
+/* The state strip is the "You are looking at" line: it wraps
+ * whole, never truncates (F4, in the shell's own scope). */
+html.sphere-rebuilt body:not(.sphere-app) #sphere-state-strip {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  height: auto;
+}
+
+/* The guided introduction stands in the flow, never floating. */
+html.sphere-rebuilt body:not(.sphere-app) .sphere-intro {
+  position: relative;
+  inset: auto;
+  margin: 1rem auto;
+  max-width: 44rem;
+}
+
+/* The welcome (Ambient veil) is a room below the stage now. It
+ * can never cover the instrument again, whatever class the root
+ * carries or whichever of its old buttons is pressed. */
+html.sphere-rebuilt body:not(.sphere-app) .sphere-ambient-veil {
+  position: relative !important;
+  inset: auto !important;
+  z-index: auto !important;
+  pointer-events: auto;
+  margin: 1.25rem auto;
+  max-width: 46rem;
+  border: 1px solid var(--rebuild-line);
+  border-radius: 18px;
+  background: var(--rebuild-panel);
+  padding: 1.25rem 1.25rem 1rem;
+}
+
+/* The meeting waits in the flow at every width — a door, not a
+ * billboard (F1). */
+html.sphere-rebuilt body:not(.sphere-app) .spark-encounter-host {
+  position: relative !important;
+  inset: auto !important;
+  z-index: auto !important;
+  margin: 1.25rem auto;
+  max-width: 46rem;
+}
+
+/* The observatory's question shell rests below; the rebuild
+ * marks it when it would otherwise open over the stage. */
+html.sphere-rebuilt .obs-question-shell.sphere-rebuild-obs-resting {
+  position: relative !important;
+  inset: auto !important;
+  z-index: auto !important;
+  margin: 1rem auto;
+}
+
+/* ── Caption + dock ──────────────────────────────────────────── */
+
+.sphere-rebuild-caption {
+  max-width: 46rem;
+  margin: 0.9rem auto 0;
+  padding: 0 1rem;
+  text-align: center;
+}
+.sphere-rebuild-caption .sphere-ambient-line {
+  margin: 0;
+  color: var(--rebuild-text);
+  font-size: 1.02rem;
+  line-height: 1.5;
+}
+
+.sphere-rebuild-dock {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  max-width: 60rem;
+  margin: 0.9rem auto 0;
+  padding: 0 0.75rem;
+}
+body.sphere-app .sphere-rebuild-dock,
+body.sphere-app .sphere-rebuild-caption {
+  display: none;
+}
+.sphere-rebuild-dock-btn {
+  min-height: 48px;
+  min-width: 44px;
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--rebuild-line);
+  background: var(--rebuild-panel);
+  color: var(--rebuild-text);
+  font-size: 0.98rem;
+  cursor: pointer;
+}
+.sphere-rebuild-dock-btn:hover,
+.sphere-rebuild-dock-btn:focus-visible {
+  border-color: var(--rebuild-brass);
+  color: #fff4de;
+}
+.sphere-rebuild-dock-btn[aria-pressed="true"] {
+  background: rgba(218, 164, 91, 0.22);
+  border-color: var(--rebuild-brass);
+}
+.sphere-rebuild-dock-spark {
+  border-color: var(--rebuild-brass);
+  box-shadow: 0 0 0 1px rgba(218, 164, 91, 0.25), 0 0 18px rgba(218, 164, 91, 0.12);
+}
+
+/* ── Freeze shield + held light ──────────────────────────────── */
+
+.sphere-rebuild-shield {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 0.75rem;
+  touch-action: pan-y;
+  background: rgba(10, 6, 3, 0.12);
+}
+.sphere-rebuild-shield-chip {
+  border: 1px solid var(--rebuild-line);
+  background: var(--rebuild-panel);
+  color: var(--rebuild-text);
+  border-radius: 999px;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.9rem;
+}
+.sphere-rebuild-light {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  z-index: 2;
+}
+.sphere-rebuild-light-turn {
+  animation: sphere-rebuild-light-turn 2.4s ease-in-out;
+}
+@keyframes sphere-rebuild-light-turn {
+  0% { opacity: 1; }
+  35% { opacity: 0.35; }
+  100% { opacity: 1; }
+}
+
+/* Frozen means frozen: the stage's own animations hold still. */
+html.sphere-frozen .sphere-canvas-wrap *,
+html.sphere-frozen .sphere-instrument-shell * {
+  animation-play-state: paused !important;
+}
+
+/* ── Rooms below the stage ───────────────────────────────────── */
+
+.sphere-rebuild-controls {
+  max-width: 60rem;
+  margin: 1.25rem auto;
+  padding: 0 1rem;
+}
+.sphere-rebuild-controls > summary {
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  color: var(--rebuild-text);
+  border: 1px solid var(--rebuild-line);
+  border-radius: 12px;
+  padding: 0.5rem 1rem;
+  background: var(--rebuild-panel);
+  list-style: none;
+}
+.sphere-rebuild-nav-room .sphere-year-navigator,
+.sphere-rebuild-nav-room .sphere-quick-nav,
+.sphere-rebuild-nav-room .sphere-view-tools,
+.sphere-rebuild-nav-room .sphere-everyday-toolbar,
+.sphere-rebuild-nav-room .sphere-schedule-navigator {
+  position: relative;
+  inset: auto;
+  margin: 0.5rem 0;
+}
+.sphere-rebuild-season-line,
+.sphere-rebuild-daypart-note {
+  color: var(--rebuild-muted);
+  text-align: center;
+}
+.sphere-rebuild-homestead .day-world-line {
+  margin: 0.35rem 0;
+}
+
+/* F9's smaller second line for the methods table's field names. */
+.sphere-coordinate-table td small {
+  color: var(--rebuild-muted, #8a7a5f);
+  font-size: 0.78em;
+}
+
+/* ── Play room ───────────────────────────────────────────────── */
+
+.sphere-play {
+  max-width: 60rem;
+  margin: 1.5rem auto;
+  padding: 1.1rem 1.1rem 0.9rem;
+  border: 1px solid var(--rebuild-line);
+  border-radius: 18px;
+  background: var(--rebuild-panel);
+  color: var(--rebuild-text);
+}
+.sphere-play-title { margin: 0 0 0.3rem; font-size: 1.3rem; }
+.sphere-play-line, .sphere-play-record { color: var(--rebuild-muted); }
+.sphere-play-games {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 0.9rem;
+  margin-top: 0.8rem;
+}
+.sphere-play-game {
+  border: 1px solid rgba(218, 164, 91, 0.22);
+  border-radius: 14px;
+  padding: 0.9rem;
+}
+.sphere-play-game h3 { margin: 0 0 0.4rem; font-size: 1.05rem; }
+.sphere-play-status { min-height: 3.2em; color: var(--rebuild-muted); line-height: 1.45; }
+.sphere-play-btn {
+  min-height: 48px;
+  padding: 0.55rem 1.2rem;
+  border-radius: 999px;
+  border: 1px solid var(--rebuild-brass);
+  background: rgba(218, 164, 91, 0.14);
+  color: var(--rebuild-text);
+  font-size: 1rem;
+  cursor: pointer;
+}
+.sphere-play-btn:disabled { opacity: 0.45; cursor: default; }
+.sphere-play-pads { display: flex; gap: 0.6rem; margin: 0.4rem 0 0.7rem; }
+.sphere-play-pad {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid hsl(var(--pad-hue, 36), 70%, 62%);
+  background: radial-gradient(circle at 50% 42%, hsla(var(--pad-hue, 36), 85%, 66%, 0.5), rgba(10, 6, 3, 0.4) 70%);
+  cursor: pointer;
+}
+.sphere-play-pad-lit {
+  background: radial-gradient(circle at 50% 42%, hsla(var(--pad-hue, 36), 95%, 78%, 0.95), rgba(10, 6, 3, 0.2) 75%);
+}
+.sphere-play-still .sphere-play-games { opacity: 0.55; }
+
+/* ── Reduced motion: everything the shell moves, rests ───────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .sphere-rebuild-light-turn { animation: none; }
+  .sphere-play-pad { transition: none; }
+}

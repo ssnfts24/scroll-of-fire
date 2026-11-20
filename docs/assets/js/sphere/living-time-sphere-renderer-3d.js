@@ -655,6 +655,7 @@
   // update even when their coordinates had not changed.
   let _lastSolarProgressGeometryKey = "";
   let _lastTodayLineGeometryKey = "";
+  let _lastYearProgressGeometryKey = "";
   let _lastActiveMoonGeometryKey = "";
 
   // B7.50 — first paint is now independent from Life Atlas / temporal extension
@@ -2503,6 +2504,12 @@
     _objects.todayLineGroup = new THREE.Group();
     _objects.todayLineGroup.name = "todayLineGroup";
     _scene.add(_objects.todayLineGroup);
+
+    // ── Year progress arc (Sphere page rebuild, Nov 20, 2026) ────
+    // Initialized as empty; rebuilt in updateScene()
+    _objects.yearProgressGroup = new THREE.Group();
+    _objects.yearProgressGroup.name = "yearProgressGroup";
+    _scene.add(_objects.yearProgressGroup);
 
     // ── Passage arc (tube geometry, rebuilt on model change) ─────────
     // Initialized as empty; rebuilt in updateScene()
@@ -5267,6 +5274,45 @@
       }
     }
 
+    // ── Year progress arc (Sphere page rebuild, Nov 20, 2026) ────
+    // The year's walk so far, drawn on the Pattern ring itself:
+    // from the Year Gate (Pattern Day 1) to today's Pattern Day, in
+    // today's gold — the day-ring progress fill Aaron asked for.
+    // It reads only the model's own today position and the model's
+    // own angle for each day; it adds no temporal math of its own,
+    // and it is never a picking target (picking walks the named
+    // marker lists only). A day outside the count leaves the ring
+    // unfilled rather than inventing a position.
+    if (_objects.yearProgressGroup) {
+      const tp = model.todayPatternPosition || null;
+      const progressDay = tp && tp.dayOfPatternYear != null ? Number(tp.dayOfPatternYear) : null;
+      const progressKey = progressDay != null && progressDay >= 1 ? `day:${progressDay}` : "hidden";
+      if (_lastYearProgressGeometryKey !== progressKey) {
+        _disposeGroupChildren(_objects.yearProgressGroup);
+        if (progressKey !== "hidden") {
+          const pts = [];
+          const steps = Math.max(2, progressDay);
+          for (let d = 1; d <= steps; d += 1) {
+            const a = globalThis.LivingTimeSphereModel.patternAngleForDayOfYear(d);
+            const p = angleToXZ(a, mat.SIZES.patternRing);
+            pts.push(new _THREE.Vector3(p.x, 0.012, p.z));
+          }
+          const geo = new _THREE.BufferGeometry().setFromPoints(pts);
+          const arcMat = new _THREE.LineBasicMaterial({
+            color:       mat.COLORS.today,
+            transparent: true,
+            opacity:     0.9,
+            depthWrite:  false,
+          });
+          const arc = new _THREE.Line(geo, arcMat);
+          arc.name = "yearProgressArc";
+          arc.userData = { type: "year-progress-arc", throughDay: progressDay };
+          _objects.yearProgressGroup.add(arc);
+        }
+        _lastYearProgressGeometryKey = progressKey;
+      }
+    }
+
     if (_objects.todayHalo?.material) {
       _objects.todayHalo.material.emissiveIntensity = mat.EMISSIVE.todayHalo;
       _objects.todayHalo.material.opacity = mat.OPACITY.todayHalo;
@@ -5970,6 +6016,7 @@
     }
     _lastSolarProgressGeometryKey = "";
     _lastTodayLineGeometryKey = "";
+    _lastYearProgressGeometryKey = "";
     _lastActiveMoonGeometryKey = "";
     _contextLostAt = 0;
     _contextRestoredAt = 0;
@@ -6028,8 +6075,15 @@
       _canvas.setAttribute("role", "img");
       _canvas.setAttribute("aria-label", "Living Time Sphere 3D view");
       _canvas.setAttribute("aria-describedby", "sphere-text-model");
-      // touch-action: pan-y by default — vertical page scroll preserved.
-      _canvas.style.touchAction = "pan-y";
+      // Sphere page rebuild (Nov 20, 2026 — Aaron: the Sphere is
+      // always interactive, with a Freeze control as the one
+      // deliberate still state): touch-action is none from creation.
+      // The old pan-y resting state let a sideways drag apply the
+      // gesture visual budget without ever engaging the camera, and
+      // the gated restore on pointerup never ran — the Sphere was
+      // left blacked out until reload. Interaction is the resting
+      // state now; freezing is a page-level act, not a touch mode.
+      _canvas.style.touchAction = "none";
       // B7.61 picking invariant: pin the canvas to the container's origin.
       // The label manager projects day chips against the container rect and
       // _handleClick raycasts against the canvas rect; the two must be the
@@ -6390,7 +6444,7 @@
     let twistActive   = false;
     let pointerCache  = new Map();
     let panCentroid0  = null;
-    let interactMode  = false;    // on small screens, require explicit engage
+    let interactMode  = true;     // Sphere page rebuild (Nov 20, 2026): always interactive — see the canvas creation note. Exit remains possible through the page's own controls (the Freeze path), never by accident of a first touch.
     const TWIST_DEADZONE = 0.09;
 
     // B7.35 — pointer events can arrive much faster than the display refresh
@@ -6719,7 +6773,11 @@
           if (remaining) globalThis.LivingTimeSphereCamera.onPointerDown(remaining.clientX, remaining.clientY);
         }
       }
-      if (pointerCache.size === 0 && interactMode) {
+      if (pointerCache.size === 0) {
+        // Sphere page rebuild (Nov 20, 2026): the gesture restore is
+        // unconditional. It used to be gated on interactMode, so in
+        // the old resting state a horizontal drag applied the
+        // gesture visual budget and nothing ever restored it.
         setCameraGestureActive(false);
         // B7.3: releasing the finger ends camera motion, not interaction mode.
         // The explicit Exit button returns page scrolling. This keeps the
