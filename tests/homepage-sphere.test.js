@@ -326,12 +326,29 @@ test("no R1.7 protected file is touched by this branch", () => {
   ]);
   const carriesDayWorld = changed.has(
     "docs/assets/js/sphere-day-world.js"
+   * Deep Time declaration (Sphere R3 Wave 2, Nov 19, 2026 — Aaron
+   * approved the R3 finishing plan; Wave 1, the Day World, set this
+   * declaration pattern). This change set declares itself the same
+   * way, by carrying its signature file (the Deep Time overlay
+   * module), and its declared set names exactly one protected path:
+   * the Sphere page, changed by links and tags only — one
+   * stylesheet link and two script tags in the neighbourhood
+   * PR #159 opened, the module itself living outside the protected
+   * directories. Every other protected path still fails this test
+   * loudly.
+   */
+  const deepTimeDeclaredProtected = new Set([
+    "docs/living-time-sphere.html"
+  ]);
+  const carriesDeepTime = changed.has(
+    "docs/assets/js/sphere-deep-time.js"
   );
   for (const file of changed) {
     if (!protectedPaths.has(file)) continue;
     assert.ok(
       (carriesR2Rework && r2DeclaredProtected.has(file)) ||
-        (carriesDayWorld && dayWorldDeclaredProtected.has(file)),
+        (carriesDayWorld && dayWorldDeclaredProtected.has(file)) ||
+        (carriesDeepTime && deepTimeDeclaredProtected.has(file)),
       `R1.7 protected file changed: ${file}`
     );
   }
