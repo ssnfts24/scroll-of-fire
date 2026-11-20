@@ -40,6 +40,12 @@
   },
   {
    "beat": "The Traveller learns to read the road's milestones: thirteen moons, twenty-eight days each.",
+   "episode": {
+    "duration": "1:24",
+    "film": "assets/media/story-episode-03-the-road-of-thirteen-moons.mp4",
+    "label": "Episode 3 — the animated telling of this chapter. The written chapter below is its guide card.",
+    "poster": "assets/media/story-episode-03-the-road-of-thirteen-moons-poster.webp"
+   },
    "id": "the-road-of-thirteen-moons",
    "n": 3,
    "page": "moons.html",
@@ -56,6 +62,12 @@
   },
   {
    "beat": "A door standing in the road opens onto one single day, whole — and the Traveller steps in.",
+   "episode": {
+    "duration": "1:16",
+    "film": "assets/media/story-episode-04-through-the-day-door.mp4",
+    "label": "Episode 4 — the animated telling of this chapter. The written chapter below is its guide card.",
+    "poster": "assets/media/story-episode-04-through-the-day-door-poster.webp"
+   },
    "id": "through-the-day-door",
    "n": 4,
    "page": "living-time-sphere.html",
@@ -72,6 +84,12 @@
   },
   {
    "beat": "Inside a walled garden of thirteen beds — one waking at a time — the Traveller learns patience.",
+   "episode": {
+    "duration": "1:16",
+    "film": "assets/media/story-episode-05-the-garden-of-thirteen-beds.mp4",
+    "label": "Episode 5 — the animated telling of this chapter. The written chapter below is its guide card.",
+    "poster": "assets/media/story-episode-05-the-garden-of-thirteen-beds-poster.webp"
+   },
    "id": "the-garden-of-thirteen-beds",
    "n": 5,
    "page": "garden.html",
