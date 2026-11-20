@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 2163,
-    "bytes": 905586084,
+    "bytes": 905586447,
     "byGroup": {
       "tooling": 181,
       "manuscript": 17,
@@ -50432,8 +50432,8 @@
       "path": "tests/living-page-openings.test.js",
       "title": "living-page-openings.test.js",
       "format": "js",
-      "bytes": 13534,
-      "sha256": "a410426e33b2dd9856edea90e83860fe1e89958330feaeebc92a863a7c53643c",
+      "bytes": 13897,
+      "sha256": "0a8e86800e45c59de43d33bff0abcc4cbd3751c65eb6a195d89ecd1cd842a378",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
