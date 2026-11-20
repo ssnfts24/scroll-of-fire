@@ -8,13 +8,13 @@
   },
   "current": {
     "files": 196,
-    "sizeMB": 232.17
+    "sizeMB": 232.14
   },
   "counts": {
     "added": 28,
     "removed": 0,
-    "changed": 0,
-    "unchanged": 168
+    "changed": 1,
+    "unchanged": 167
   },
   "added": [
     "ADVANCED-REBUILD-HANDOFF.md",
@@ -47,6 +47,12 @@
     "index.md"
   ],
   "removed": [],
-  "changed": [],
+  "changed": [
+    {
+      "path": "3_Living_Technology/Living-Phone-App.apk",
+      "snapshotSha256": "cef026c9675a31f0138bb4453ccafb14f9cbd1627f0f6338635e58296b454d2a",
+      "currentSha256": "08db6baa8f2c30624a2ea742092ebbcda65296c4d7b5edc778b2041ee6ad4341"
+    }
+  ],
   "outsideSnapshotScope": 20
 }

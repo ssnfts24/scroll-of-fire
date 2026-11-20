@@ -170,7 +170,7 @@ test("Downloads reconciliation preserves snapshot accounting and reports rather 
   assert.equal(reconciliation.snapshot.parsedRows, 168);
   assert.equal(reconciliation.counts.added, 28); // +1: SEALS-AT-LANDING-PLAN.md (root file added by the F6 seals-at-landing PR)
   assert.equal(reconciliation.counts.removed, 0);
-  assert.equal(reconciliation.counts.changed, 0);
-  assert.equal(reconciliation.counts.unchanged, 168);
+  assert.equal(reconciliation.counts.changed, 1); // Living-Phone-App.apk: v2 -> v3 door swap (Nov 19, 2026)
+  assert.equal(reconciliation.counts.unchanged, 167);
   assert.ok(curation.entries.some(entry => entry.id === "downloads"));
 });
