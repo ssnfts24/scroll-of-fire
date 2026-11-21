@@ -642,3 +642,79 @@ html.living-time-sphere-page .sphere-semantic-label[data-calendar-face="true"] .
   line-height: 1.35;
   color: #ffd98f;
 }
+
+.sphere-season-line[hidden] {
+  display: none;
+}
+
+/* ── 5. The rings (Sphere design Phase 1) ────────────────────
+ * The ring charters and their two toggles, in the rooms sheet
+ * above the granular Layers list. Words only — the face itself
+ * is the instrument's, untouched by this sheet. */
+
+.sphere-rings-intro {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: #c9b18c;
+}
+
+.sphere-rings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.sphere-ring-row {
+  border: 1px solid rgba(218, 164, 91, 0.3);
+  border-radius: 12px;
+  padding: 0.55rem 0.75rem 0.6rem;
+  background: rgba(12, 8, 5, 0.5);
+}
+
+.sphere-ring-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.sphere-ring-head strong {
+  font-size: 0.98rem;
+  color: #f3e7d3;
+}
+
+.sphere-ring-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 40px;
+  font-size: 0.9rem;
+  color: #f3e7d3;
+  cursor: pointer;
+}
+
+.sphere-ring-toggle input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: #daa45b;
+}
+
+.sphere-ring-status {
+  font-size: 0.84rem;
+  color: #a68d64;
+}
+
+.sphere-ring-charter {
+  margin: 0.3rem 0 0;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: #c9b18c;
+}
+
+.sphere-rings-field {
+  margin: 0.75rem 0 0;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: #a68d64;
+}

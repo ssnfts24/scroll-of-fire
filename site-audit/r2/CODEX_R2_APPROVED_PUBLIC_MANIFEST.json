@@ -124,6 +124,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/css/home-ambient-life.css",
+      "sha256": "8f7de247568ac2b352f27f66a8c0ee61d09c9cc7271d46c07dac9f792c6b6d26",
+      "publicUrl": "https://codexofreality.org/assets/css/home-ambient-life.css",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/css/home-living-interface.css",
       "sha256": "4898d96e9f57a70884f0e21519178895a708d5e3af63111178e6743405dc8945",
       "publicUrl": "https://codexofreality.org/assets/css/home-living-interface.css",
@@ -245,7 +251,7 @@
     },
     {
       "path": "docs/assets/css/pattern-garden.css",
-      "sha256": "4fce6d548c06bbf0c4c53f061358b98b59a0065eddc85a3d97570ace2f40a62c",
+      "sha256": "296d00ae10d1624bca498b3c8d45112de43df0047b75eed88785abe850a0f551",
       "publicUrl": "https://codexofreality.org/assets/css/pattern-garden.css",
       "status": "operational"
     },
@@ -323,7 +329,7 @@
     },
     {
       "path": "docs/assets/css/sphere-armillary.css",
-      "sha256": "55ada7bca5db100e8d5efd090755b735b7a483a64c4e324de662bef05576e3bc",
+      "sha256": "d3b22b29e86460737bed6cdb35782ef348f47217ffce37372c38b0fd60990bb6",
       "publicUrl": "https://codexofreality.org/assets/css/sphere-armillary.css",
       "status": "operational"
     },
@@ -437,7 +443,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "ffbc2f91847ad47bf06dc9dec5335d8e3987efe9a32d310e0f11c69b457062f9",
+      "sha256": "a14e3c92d307fd9164caac872c9e56126bc3090fbd12138199ff2ad90e4d60a3",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -445,12 +451,6 @@
       "path": "docs/assets/data/documentation-hub.json",
       "sha256": "2c56922ddf5e56b2515b78a3446a160057697a5ce0991516614cd8a42aaab083",
       "publicUrl": "https://codexofreality.org/assets/data/documentation-hub.json",
-      "status": "operational"
-    },
-    {
-      "path": "docs/assets/data/farm-garden-teaching.json",
-      "sha256": "1306bde6126fd8650d55bba7170d00d23a6422cf63c313f565ce5a9aa9b8f406",
-      "publicUrl": "https://codexofreality.org/assets/data/farm-garden-teaching.json",
       "status": "operational"
     },
     {
@@ -1846,6 +1846,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/js/home-ambient-life.js",
+      "sha256": "50c59e50f9ce8c375f7691d75aa6c50c7ef55881c3ef60d5712ae8e5592286c5",
+      "publicUrl": "https://codexofreality.org/assets/js/home-ambient-life.js",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/js/home-living-interface.js",
       "sha256": "3551c71df37e98ba134c26d933d633e06bcbfec624dbc275893892f646ccc16a",
       "publicUrl": "https://codexofreality.org/assets/js/home-living-interface.js",
@@ -2201,7 +2207,7 @@
     },
     {
       "path": "docs/assets/js/pattern-garden.js",
-      "sha256": "79b543b42b283906a84cf202dba980e9a3190f8ec7f40bc96aad643a9c868a33",
+      "sha256": "1d944e8fa9a18519e778650b02e093949ca8b9432b20bb95773fc4b7c8cfe508",
       "publicUrl": "https://codexofreality.org/assets/js/pattern-garden.js",
       "status": "operational"
     },
@@ -2345,13 +2351,13 @@
     },
     {
       "path": "docs/assets/js/sphere-armillary.js",
-      "sha256": "74fab9215ca1bfab5ae414f121fa18393db38f5806f9a518f158084af777da18",
+      "sha256": "a87699a596eb6acb30f6cd5639ed3f85b8ff4b7c8c7db349eca529239ddccf61",
       "publicUrl": "https://codexofreality.org/assets/js/sphere-armillary.js",
       "status": "operational"
     },
     {
       "path": "docs/assets/js/sphere-companion-layer.js",
-      "sha256": "be238829f5fa3c85a743c79f6e0f6332c7ea1bff58d216f801d166892303f60f",
+      "sha256": "c1d362300e6f4de73578760fa8630bb0106747d2d3e09cb5f1e4ebb6eb3f6d5f",
       "publicUrl": "https://codexofreality.org/assets/js/sphere-companion-layer.js",
       "status": "operational"
     },
@@ -2393,13 +2399,13 @@
     },
     {
       "path": "docs/assets/js/sphere-rebuild.js",
-      "sha256": "a2cc70683ec4f62f00b86eb523c782dd7593dcf5ecd9622c270568c361dae669",
+      "sha256": "3ef21ea4ed802173f2d7013d452b1c2f28ec06da6b7666b9a6e0c0c8c0327d6f",
       "publicUrl": "https://codexofreality.org/assets/js/sphere-rebuild.js",
       "status": "operational"
     },
     {
       "path": "docs/assets/js/sphere-spark.js",
-      "sha256": "4ad935f489781a16b202a70017f4c1576516d821344e6260a3e69db54aa64eb0",
+      "sha256": "458aead0983be06ceacbabcecff019b5f556473d9f6afe4253d0e2c23519de3a",
       "publicUrl": "https://codexofreality.org/assets/js/sphere-spark.js",
       "status": "operational"
     },
@@ -3611,13 +3617,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "b53e15c1a24ff17f35ecb9665fe689c54379a2954ca7447510677464c2b06e9d",
+      "sha256": "034e4b3bba4468a2ec7d7c6d8ebbf43f1056086e8f890c9758de0d9dab9da76d",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "9941122e607cacccae71ee66478d30b3da3436c5f9027a2eba688ec313961990",
+      "sha256": "59f30f17cf9402bd3cc50794aa9136f12443076d370e2790669b1ea9951a8495",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -3737,7 +3743,7 @@
     },
     {
       "path": "docs/garden.html",
-      "sha256": "5c39f38af80928c0f8301e7b50406475673dd98fe2a328f40e13be367922cb3b",
+      "sha256": "01e8eacca5085bf58f8283591149009fab9fc1deb2ca4fd0d9eb139a08accce5",
       "publicUrl": "https://codexofreality.org/garden.html",
       "status": "operational"
     },
@@ -3773,7 +3779,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "fcb1b4c605d9a499180015b76de4f825985b71b481228933c8672c81e1dfbe86",
+      "sha256": "77c796a38a54ba9c9459b0712d2316d6ed784f13f0c7f86f3f0284ad330dcb4d",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
