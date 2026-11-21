@@ -2,6 +2,13 @@
  {
   "date": "2026-11-20",
   "type": "feature",
+  "title": "The map became a gate",
+  "summary": "The Traveller's Map is now the World Gate: the thirteen lands of the Codex as a raised relief on the Atlas Room's long table, under today's sky, with the Sphere's sign turning above it — the sky, not a land, reached by looking up. The lands are drawn from the site's own catalog, so the map can never drift from the site, and every page keeps its own address, unchanged. Tap a land on the relief and you travel to its page; beneath the scene, every land stands in plain words with its one clear next step, so no visitor is ever taxed a world for a fact. Where 3D cannot stand — no WebGL, reduced motion, a data-saving connection, or the keeper's own plain-site switch — the Gate rests in its flat twin: the same lands, the same words, the same order, the same next steps. A first-time keeper is led — Gate, Clearing, then the land today opens, the calendar choosing — and a returning keeper is not led twice. This is Phase 1 of the Codex World: one shared engine, built once from the machinery Their Home proved, which every later land will consume. Their Home itself stands exactly as it stood.",
+  "url": "./map.html",
+  "symbol": "⌖"
+ }, {
+  "date": "2026-11-20",
+  "type": "feature",
   "title": "The Spark got a home of its own",
   "summary": "The companions page now holds Their Home: a small 3D world that belongs to the keeper's own Spark, and decorates itself only from the keeper's real records on their own device. The sky is today's — its phase from the visitor's hour, its season from the Pattern Day, read live through the canonical calendar. The path grows one stone for every day in the Spark's own record. The shelf holds the hidden layer's keepsakes, each still carrying its answer card, spoken whole at a tap. Thirteen beds ring the house, folded from the Pattern Garden's own records — a bed grows only what its plantings say, and harvests rest in a basket by the door. A signpost by the gate flies a flag for every chapter of the Traveller's Road the keeper's trail has found. And the house itself grows with the Spark's stage, from the same count the companion card speaks: a hearth and a lean-to, then a cottage, then a hall. Where a record is empty the place stands honestly empty and says so; the whole world is also written out in plain words under the scene, and where 3D cannot stand, that still form carries it. Nothing is written, nothing is sent — the world only reads what the site already keeps.",
   "url": "./companions.html",

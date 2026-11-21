@@ -1,0 +1,143 @@
+/* The World Gate — the Traveller's Map as the world's literal
+   map (Codex World design, Phase 1). The stage keeps a steady
+   shape while the relief loads, so the page never jumps; the
+   Porch list under it is the Gate in plain words, and the flat
+   twin stands whole whenever the scene rests. */
+
+.world-gate-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  max-height: 540px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: radial-gradient(120% 90% at 50% 20%, #1b2748 0%, #0a1128 70%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.world-gate-stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: grab;
+}
+
+.world-gate-stage canvas:active {
+  cursor: grabbing;
+}
+
+.world-gate-stage-note {
+  margin: 0;
+  padding: 0.8rem 1rem;
+  font-size: 0.92rem;
+  opacity: 0.85;
+}
+
+.world-gate-guidance {
+  padding: 0.65rem 0.8rem;
+  border-left: 3px solid rgba(255, 202, 122, 0.75);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0 8px 8px 0;
+}
+
+.world-gate-guidance a {
+  white-space: nowrap;
+}
+
+.world-gate-dismiss {
+  margin-left: 0.5rem;
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.world-gate-readout {
+  margin: 0.55rem 0 0;
+  padding: 0.65rem 0.8rem;
+  border-left: 3px solid rgba(255, 202, 122, 0.75);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0 8px 8px 0;
+  min-height: 1.4em;
+}
+
+.world-gate-travel-wrap {
+  margin: 0.55rem 0 0;
+  font-size: 0.95rem;
+}
+
+.world-gate-lands {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 0.7rem;
+}
+
+.world-gate-land {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.world-gate-land.is-today {
+  border-color: rgba(255, 202, 122, 0.65);
+}
+
+.world-gate-land h4 {
+  margin: 0 0 0.3rem;
+  font-size: 1rem;
+}
+
+.world-gate-land p {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+}
+
+.world-gate-today-mark {
+  font-size: 0.82rem;
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+.world-gate-next {
+  font-size: 0.88rem;
+  opacity: 0.9;
+}
+
+.world-gate-plain-row {
+  margin: 0.8rem 0 0;
+  font-size: 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+#world-gate-plain-toggle {
+  font: inherit;
+  font-size: 0.88rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.world-gate-face-note {
+  opacity: 0.85;
+}
+
+.world-gate-flat {
+  margin-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  padding-top: 0.8rem;
+}
