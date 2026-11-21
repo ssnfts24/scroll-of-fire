@@ -82,8 +82,6 @@ Automated scan of deployed Markdown, TXT, HTML, JSON and JS (excluding Scroll Li
 | --- | --- | --- |
 | `docs/about-aaron.html` | codexofrealityshop@gmail.com | — |
 | `docs/assets/search/pages.json` | codexofrealityshop@gmail.com | 1 |
-| `docs/assets/search/pages.json` | codexofrealityshop@gmail.com | 1 |
-| `docs/assets/search/pages.json` | codexofrealityshop@gmail.com | 1 |
 | `docs/index.html` | codexofrealityshop@gmail.com | — |
 | `docs/invoke.html` | friend@node.org, team@example.com | — |
 | `docs/shop.html` | codexofrealityshop@gmail.com | — |
