@@ -7,7 +7,7 @@
     "publicHtmlPages": 180,
     "catalogEntries": 73,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 26,
+      "not-linked-directly-from-homepage": 25,
       "nav-label-differs-from-title": 24,
       "no-global-navigation": 1,
       "deployed-but-unlinked": 56,
@@ -777,7 +777,7 @@
     },
     {
       "id": "docs-assets:assets/media",
-      "title": "docs/assets/media (162 files)",
+      "title": "docs/assets/media (168 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1891,6 +1891,7 @@
         "ledger.html",
         "living-time-sphere.html",
         "moons.html",
+        "practices.html",
         "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
@@ -13450,15 +13451,13 @@
         "path": "practices.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 3,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 4,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "recoder",

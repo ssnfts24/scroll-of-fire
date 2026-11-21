@@ -437,13 +437,13 @@
     },
     {
       "path": "docs/assets/data/codex-story.json",
-      "sha256": "e12f35f8a34ae715f6ad91bc2b6b6613f78159ead4583f49b1c53e724f9336c4",
+      "sha256": "0db79c8921cb1c953ea91d6150f17b63d2a8b308e30fe9a9e8db7770bc4c786c",
       "publicUrl": "https://codexofreality.org/assets/data/codex-story.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "f0ed376305166e84075ec6b8a34c9b376bf45fe16bdcf5dc77f40b68da32106b",
+      "sha256": "7937081542674d63d05d4ff9cb99a53531cf12f8c08e58ee0a048dfd251f9648",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -3454,6 +3454,42 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/media/story-episode-09-the-roundhouse-of-engines-poster.webp",
+      "sha256": "94cabdf64f92dfdfd56d3c19e37160463328a30c74298f185b05fae07779165f",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-09-the-roundhouse-of-engines-poster.webp",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-09-the-roundhouse-of-engines.mp4",
+      "sha256": "bddd028eca1814f3c123ba9d3262eb8983d6ec27b6f712ba1b133080f21d2c49",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-09-the-roundhouse-of-engines.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-10-the-remnant-lab-poster.webp",
+      "sha256": "80f86e9d69c1b3333c825fdd188c1f42233d8ea1a5d129aef58f9c941c96d730",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-10-the-remnant-lab-poster.webp",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-10-the-remnant-lab.mp4",
+      "sha256": "a27e4cce7aeddbe2a1839ce42db7c9a84fac3c1e03e866e8866bf1885fdf602b",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-10-the-remnant-lab.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-11-the-practice-yard-poster.webp",
+      "sha256": "665c06ced5389e86748e6bd98fae78b4eb232d44fb50d9787136ae2d01a42600",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-11-the-practice-yard-poster.webp",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-11-the-practice-yard.mp4",
+      "sha256": "6539850aad043a51f176cc21c4829bd0e165923577cb22fdd0c3c828e3398b6d",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-11-the-practice-yard.mp4",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/media/systems-archive-explainer-poster.webp",
       "sha256": "d8aea911c2df4dea6fb3f687d2266ac4fbc604b8c299b2d6fc1e11141a17b385",
       "publicUrl": "https://codexofreality.org/assets/media/systems-archive-explainer-poster.webp",
@@ -3713,13 +3749,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "2a12d3b7e241aa07286bbd67c30a09556935289e286cf283d420ff2f47e56347",
+      "sha256": "c9bce271e554426c6912ad950dc265d19df666984921ca2017184668c8afa913",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "74cecc693c6a96737c78d6ae5ba3e41d5d655f9e09ebffa11c827aa81fe02f5d",
+      "sha256": "4fa2e3f4de67c86b0a834ab9eac7e24911ca6665290c60810788211a1c59223f",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -3875,7 +3911,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "f0bb71f8f0c94abd32f5a6371cb91aeae39fc0d94ec6c8f0f7d9b3f1eed73bac",
+      "sha256": "83295be89fe381c38359f1a852969d97e9bc83ca16f61bfa86c7ebc73eec3f28",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
