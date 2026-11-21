@@ -67,7 +67,7 @@ const CSS_TAG =
 const SCRIPT_TAGS =
   `<script defer src="assets/js/spark-companion.js?v=${STAMP}"></script>\n` +
   `  <script defer src="assets/js/spark-presence.js?v=${STAMP}"></script>`;
-const SEAT_STAMP = "20261120-1";
+const SEAT_STAMP = "20261120-2";
 const SEAT_CSS_TAG =
   `<link rel="stylesheet" href="assets/css/spark-agent-seat.css?v=${SEAT_STAMP}">`;
 const SEAT_SCRIPT_TAG =
@@ -114,7 +114,9 @@ for (const rel of walk(docsDir).sort()) {
   html = html
     .replace(/spark-companion\.css\?v=[0-9A-Za-z-]+/g, `spark-companion.css?v=${STAMP}`)
     .replace(/spark-companion\.js\?v=[0-9A-Za-z-]+/g, `spark-companion.js?v=${STAMP}`)
-    .replace(/spark-presence\.js\?v=[0-9A-Za-z-]+/g, `spark-presence.js?v=${STAMP}`);
+    .replace(/spark-presence\.js\?v=[0-9A-Za-z-]+/g, `spark-presence.js?v=${STAMP}`)
+    .replace(/spark-agent-seat\.css\?v=[0-9A-Za-z-]+/g, `spark-agent-seat.css?v=${SEAT_STAMP}`)
+    .replace(/spark-agent-seat\.js\?v=[0-9A-Za-z-]+/g, `spark-agent-seat.js?v=${SEAT_STAMP}`);
 
   if (!html.includes("spark-companion.css")) {
     if (!html.includes("</head>")) {

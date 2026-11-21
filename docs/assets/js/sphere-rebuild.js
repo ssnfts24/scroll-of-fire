@@ -580,25 +580,48 @@
       new IntersectionObserver((entries) => { visible = entries[0]?.isIntersecting !== false; }, { threshold: 0.05 }).observe(shell);
     }
 
-    function hue() {
-      const raw = getComputedStyle(rootEl).getPropertyValue("--sphere-moon-hue").trim();
-      const n = Number.parseFloat(raw);
-      return Number.isFinite(n) ? n : 36;
+    /* Performance (sphere-performance pass): the frame loop used
+     * to read getComputedStyle and the shell's client size on
+     * EVERY frame — a style recalculation and a layout read per
+     * frame on a low-end phone. The hue changes only when the
+     * shown Moon changes, and the shell's size changes only on
+     * resize, so both are cached: the hue is re-read at most
+     * twice a second (the same value the per-frame read would
+     * return), and the size is kept by a ResizeObserver. The
+     * drawn light is pixel-for-pixel the same. */
+    let cachedHue = 36;
+    let hueReadAt = -1000;
+    function hue(now) {
+      if (now - hueReadAt >= 500) {
+        hueReadAt = now;
+        const raw = getComputedStyle(rootEl).getPropertyValue("--sphere-moon-hue").trim();
+        const n = Number.parseFloat(raw);
+        cachedHue = Number.isFinite(n) ? n : 36;
+      }
+      return cachedHue;
     }
+
+    let shellW = 0;
+    let shellH = 0;
+    const measureShell = () => { shellW = shell.clientWidth; shellH = shell.clientHeight; };
+    measureShell();
+    if ("ResizeObserver" in window) new ResizeObserver(measureShell).observe(shell);
+    else window.addEventListener("resize", measureShell);
 
     function frame(now) {
       if (!reducedMotion) requestAnimationFrame(frame);
       if (frozen || document.hidden || !visible) return;
-      const w = Math.max(2, Math.floor(shell.clientWidth / 4));
-      const h = Math.max(2, Math.floor(shell.clientHeight / 4));
+      if (!shellW || !shellH) measureShell();
+      const w = Math.max(2, Math.floor(shellW / 4));
+      const h = Math.max(2, Math.floor(shellH / 4));
       if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
       ctx.clearRect(0, 0, w, h);
       const breathe = reducedMotion ? 0.5 : 0.5 + 0.5 * Math.sin((now / 4600) * Math.PI * 2);
       const alpha = 0.07 + breathe * 0.07;
       const cx = w / 2, cy = h * 0.44, r = Math.max(w, h) * 0.62;
       const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
-      grad.addColorStop(0, `hsla(${hue()}, 72%, 62%, ${alpha})`);
-      grad.addColorStop(0.55, `hsla(${hue()}, 68%, 48%, ${alpha * 0.45})`);
+      grad.addColorStop(0, `hsla(${hue(now)}, 72%, 62%, ${alpha})`);
+      grad.addColorStop(0.55, `hsla(${hue(now)}, 68%, 48%, ${alpha * 0.45})`);
       grad.addColorStop(1, "hsla(36, 60%, 40%, 0)");
       ctx.globalCompositeOperation = "screen";
       ctx.fillStyle = grad;
@@ -612,7 +635,7 @@
         ctx.moveTo(cx, cy);
         ctx.arc(cx, cy, r * 0.8, ang - 0.5, ang);
         ctx.closePath();
-        ctx.fillStyle = `hsla(${hue()}, 80%, 66%, ${(1 - t) * 0.12})`;
+        ctx.fillStyle = `hsla(${hue(now)}, 80%, 66%, ${(1 - t) * 0.12})`;
         ctx.fill();
       }
       ctx.globalCompositeOperation = "source-over";
