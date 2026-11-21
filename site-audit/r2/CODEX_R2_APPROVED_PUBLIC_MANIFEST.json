@@ -245,7 +245,7 @@
     },
     {
       "path": "docs/assets/css/pattern-garden.css",
-      "sha256": "296d00ae10d1624bca498b3c8d45112de43df0047b75eed88785abe850a0f551",
+      "sha256": "4fce6d548c06bbf0c4c53f061358b98b59a0065eddc85a3d97570ace2f40a62c",
       "publicUrl": "https://codexofreality.org/assets/css/pattern-garden.css",
       "status": "operational"
     },
@@ -445,6 +445,12 @@
       "path": "docs/assets/data/documentation-hub.json",
       "sha256": "2c56922ddf5e56b2515b78a3446a160057697a5ce0991516614cd8a42aaab083",
       "publicUrl": "https://codexofreality.org/assets/data/documentation-hub.json",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/data/farm-garden-guides.json",
+      "sha256": "561cb5dccf85a6a83ad7cc4e11ed79459e3dcf4a46c04a559ae4fb06f74f8a76",
+      "publicUrl": "https://codexofreality.org/assets/data/farm-garden-guides.json",
       "status": "operational"
     },
     {
@@ -2195,7 +2201,7 @@
     },
     {
       "path": "docs/assets/js/pattern-garden.js",
-      "sha256": "1d944e8fa9a18519e778650b02e093949ca8b9432b20bb95773fc4b7c8cfe508",
+      "sha256": "f0cfc0d6cc749876d3d012224c6d8b30d250f8376df5dce2acb4a1edda276881",
       "publicUrl": "https://codexofreality.org/assets/js/pattern-garden.js",
       "status": "operational"
     },
@@ -3605,13 +3611,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "f261bd4851fe862cd6b0a3903966ef8b425df180efe61e7ce8ce15b686d85266",
+      "sha256": "b53e15c1a24ff17f35ecb9665fe689c54379a2954ca7447510677464c2b06e9d",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "fa31346d39a1453aa9de2ce4476cbb80958eecabe6f933971830411d9fd60990",
+      "sha256": "9941122e607cacccae71ee66478d30b3da3436c5f9027a2eba688ec313961990",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -3731,7 +3737,7 @@
     },
     {
       "path": "docs/garden.html",
-      "sha256": "01e8eacca5085bf58f8283591149009fab9fc1deb2ca4fd0d9eb139a08accce5",
+      "sha256": "5c39f38af80928c0f8301e7b50406475673dd98fe2a328f40e13be367922cb3b",
       "publicUrl": "https://codexofreality.org/garden.html",
       "status": "operational"
     },
