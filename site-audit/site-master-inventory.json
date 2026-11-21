@@ -7,7 +7,7 @@
     "publicHtmlPages": 180,
     "catalogEntries": 73,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 25,
+      "not-linked-directly-from-homepage": 26,
       "nav-label-differs-from-title": 24,
       "no-global-navigation": 1,
       "deployed-but-unlinked": 56,
@@ -675,7 +675,7 @@
     },
     {
       "id": "docs-assets:assets/css",
-      "title": "docs/assets/css (66 files)",
+      "title": "docs/assets/css (67 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -760,7 +760,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (202 files)",
+      "title": "docs/assets/js (203 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1882,7 +1882,6 @@
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
-        "garden.html",
         "genesis-oracle.html",
         "glossary.html",
         "guide.html",
@@ -13310,13 +13309,15 @@
         "path": "garden.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 4,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 3,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": []
+      "issues": [
+        "not-linked-directly-from-homepage"
+      ]
     },
     {
       "id": "planned-timeline",
@@ -13813,7 +13814,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (157 files)",
+      "title": "tests/ (158 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,

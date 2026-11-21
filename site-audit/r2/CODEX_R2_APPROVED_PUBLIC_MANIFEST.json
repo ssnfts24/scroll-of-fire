@@ -124,6 +124,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/css/home-ambient-life.css",
+      "sha256": "8f7de247568ac2b352f27f66a8c0ee61d09c9cc7271d46c07dac9f792c6b6d26",
+      "publicUrl": "https://codexofreality.org/assets/css/home-ambient-life.css",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/css/home-living-interface.css",
       "sha256": "4898d96e9f57a70884f0e21519178895a708d5e3af63111178e6743405dc8945",
       "publicUrl": "https://codexofreality.org/assets/css/home-living-interface.css",
@@ -437,7 +443,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "ffbc2f91847ad47bf06dc9dec5335d8e3987efe9a32d310e0f11c69b457062f9",
+      "sha256": "a14e3c92d307fd9164caac872c9e56126bc3090fbd12138199ff2ad90e4d60a3",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -1837,6 +1843,12 @@
       "path": "docs/assets/js/hidden-layer.js",
       "sha256": "f6459e164f9eea22e372837fa02b727cb0e051c6c624b3c1887e977982903103",
       "publicUrl": "https://codexofreality.org/assets/js/hidden-layer.js",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/js/home-ambient-life.js",
+      "sha256": "50c59e50f9ce8c375f7691d75aa6c50c7ef55881c3ef60d5712ae8e5592286c5",
+      "publicUrl": "https://codexofreality.org/assets/js/home-ambient-life.js",
       "status": "operational"
     },
     {
@@ -3605,13 +3617,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "0ed24c556b7798de117ae72124b254b0df6564bdb46130935276b2907f2f307d",
+      "sha256": "e4d16a10f8126d21a27e17ab93879c2c93ade1ff539c27bcbd7ec04c7c93468b",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "3b77b70d56ca4c31363fd9c234d7f1dc1e379d935769f843b54fc8662c851851",
+      "sha256": "9a324348f1069690e851c1198507ed5d40f505af8a565d048fe1f07d287b5fff",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -3767,7 +3779,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "fcb1b4c605d9a499180015b76de4f825985b71b481228933c8672c81e1dfbe86",
+      "sha256": "77c796a38a54ba9c9459b0712d2316d6ed784f13f0c7f86f3f0284ad330dcb4d",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
