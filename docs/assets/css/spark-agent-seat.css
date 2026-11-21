@@ -65,6 +65,14 @@
   padding: 0.35rem 0.6rem;
 }
 
+/* The mind's working notes — "Thinking deeper at the door…",
+ * honest routing and failure notes — set quieter than speech. */
+.spark-seat-line.is-status {
+  font-size: 0.82rem;
+  font-style: italic;
+  opacity: 0.75;
+}
+
 .spark-seat-form {
   display: flex;
   gap: 0.5rem;

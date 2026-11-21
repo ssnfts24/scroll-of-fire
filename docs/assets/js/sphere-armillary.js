@@ -23,7 +23,163 @@
  *     rail (through the renderer's setRecordMarkers), and when a
  *     scheduled time comes, the Spark's invitation appears at the
  *     Sphere's edge — once per plan, kept on this device.
+ *  5. The rings (Sphere design Phase 1): the charters, seating,
+ *     label law, and clutter cap declared in the architecture
+ *     core below, with their controls in the rooms sheet — Sky
+ *     driving the existing granular layers, Kept Days gating
+ *     job 4's record data. No calendar math of its own here
+ *     either: every ring reads what the canonical line publishes.
  */
+
+/* Sphere rings architecture — BEGIN TESTABLE CORE
+ *
+ * Phase 1 of the approved Living Sphere design: rings are
+ * formal readings over the one canonical line, never rival
+ * calendars. This core is deliberately free of DOM and calendar
+ * calls: it declares charters, seating, labels, the clutter cap,
+ * and the field-ring admittance rule. The page layer below is
+ * the only part that touches the instrument.
+ */
+var SphereRingArchitecture = (function () {
+  "use strict";
+
+  var CANONICAL_LINE = "SOFTemporalCursor → PatternCalendar → Canonical Living State → LivingProjectionBus";
+  var HOUSE_LABELS = Object.freeze(["Counted", "Measured", "Story"]);
+  var MAX_OPTIONAL_RINGS = 4;
+  var SEATING_ORDER = Object.freeze(["pattern", "sky", "farm", "kept-days", "family", "story", "field"]);
+  var PHASE_ONE_RING_IDS = Object.freeze(["pattern", "sky", "kept-days"]);
+
+  var CHARTERS = Object.freeze([
+    Object.freeze({
+      id: "pattern",
+      name: "Pattern",
+      seat: 0,
+      alwaysOn: true,
+      label: "Counted",
+      grammar: "pattern-count",
+      source: "PatternCalendar, read only through " + CANONICAL_LINE,
+      owner: "Codex",
+      span: "Every Pattern year the calendar defines",
+      layers: Object.freeze(["pattern"])
+    }),
+    Object.freeze({
+      id: "sky",
+      name: "Sky",
+      seat: 1,
+      alwaysOn: false,
+      label: "Measured",
+      grammar: "sky-measured",
+      source: "U.S. Naval Observatory season instants and the Sphere stack's solar, lunar, and planetary positions",
+      owner: "Codex",
+      span: "Season dates are printed only for the USNO table years 2026–2027; other years name the turn without inventing a date",
+      layers: Object.freeze(["lunar", "solar", "planets", "markers", "passage"])
+    }),
+    Object.freeze({
+      id: "kept-days",
+      name: "Kept Days",
+      seat: 3,
+      alwaysOn: false,
+      label: "Counted",
+      grammar: "keeper-record",
+      source: "The keeper's on-device planner, Spark play log, and Living Trail",
+      owner: "The keeper",
+      span: "The shown Pattern year; the record is read on this device and leaves it never",
+      layers: Object.freeze([])
+    })
+  ]);
+
+  var FIELD_RING_PROTOTYPE = Object.freeze({
+    id: "field",
+    name: "Field ring",
+    seat: 6,
+    alwaysOn: false,
+    label: "Source-named",
+    grammar: "field-source",
+    source: "A checkable source must be named in the ring's own charter before admittance can be considered",
+    owner: "The field's keeper",
+    span: "Declared in the ring's own charter",
+    status: "specified-not-riding"
+  });
+
+  function charterFor(id) {
+    for (var i = 0; i < CHARTERS.length; i += 1) {
+      if (CHARTERS[i].id === id) return CHARTERS[i];
+    }
+    return null;
+  }
+
+  function optionalActiveCount(activeIds) {
+    var seen = {};
+    var count = 0;
+    (activeIds || []).forEach(function (id) {
+      if (id === "pattern" || seen[id]) return;
+      seen[id] = true;
+      count += 1;
+    });
+    return count;
+  }
+
+  function canEnable(activeIds, ringId) {
+    if (ringId === "pattern") return true;
+    if ((activeIds || []).indexOf(ringId) !== -1) return true;
+    return optionalActiveCount(activeIds) < MAX_OPTIONAL_RINGS;
+  }
+
+  function validateFieldRingCharter(charter) {
+    var reasons = [];
+    if (!charter || typeof charter !== "object") {
+      return { valid: false, reasons: ["A field ring needs a charter object."] };
+    }
+    if (!charter.id || typeof charter.id !== "string") reasons.push("The ring must name its id.");
+    if (!charter.name || typeof charter.name !== "string") reasons.push("The ring must name itself.");
+    if (!charter.owner || typeof charter.owner !== "string") reasons.push("The ring must name its owner.");
+    if (!charter.span || typeof charter.span !== "string") reasons.push("The ring must declare its honest span.");
+    if (!charter.label || typeof charter.label !== "string") reasons.push("The ring must carry its source-named label.");
+    if (HOUSE_LABELS.indexOf(charter.label) !== -1) reasons.push("A field ring may not borrow a house label (Counted, Measured, or Story).");
+    var source = charter.source;
+    if (!source || typeof source !== "object") {
+      reasons.push("The ring must name its source.");
+    } else {
+      if (!source.name || typeof source.name !== "string") reasons.push("The source must be named.");
+      if (source.checkable !== true) reasons.push("The source must be checkable by a stranger.");
+      if (!source.reference || typeof source.reference !== "string") reasons.push("The source must carry a reference a stranger can check.");
+    }
+    return { valid: reasons.length === 0, reasons: reasons };
+  }
+
+  function admitFieldRing(charter) {
+    var verdict = validateFieldRingCharter(charter);
+    if (!verdict.valid) {
+      return { admitted: false, rides: false, status: "rejected", reasons: verdict.reasons };
+    }
+    return {
+      admitted: false,
+      rides: false,
+      status: FIELD_RING_PROTOTYPE.status,
+      reasons: ["Phase 1 specifies the field-ring mechanism only; no field ring rides yet."]
+    };
+  }
+
+  return Object.freeze({
+    version: "sphere-rings/1.0.0",
+    canonicalLine: CANONICAL_LINE,
+    houseLabels: HOUSE_LABELS,
+    maxOptionalRings: MAX_OPTIONAL_RINGS,
+    seatingOrder: SEATING_ORDER,
+    phaseOneRingIds: PHASE_ONE_RING_IDS,
+    charters: CHARTERS,
+    fieldRingPrototype: FIELD_RING_PROTOTYPE,
+    charterFor: charterFor,
+    optionalActiveCount: optionalActiveCount,
+    canEnable: canEnable,
+    validateFieldRingCharter: validateFieldRingCharter,
+    admitFieldRing: admitFieldRing
+  });
+})();
+if (typeof window !== "undefined") window.SphereRings = SphereRingArchitecture;
+
+/* Sphere rings architecture — END TESTABLE CORE */
+
 (function () {
   "use strict";
 
@@ -120,6 +276,7 @@
     bar.querySelector(".sphere-sheet-close").addEventListener("click", function () {
       document.documentElement.classList.remove("armillary-rooms-open");
     });
+    buildRingPanel(sidebar);
 
     // Everything that is not the stage, the telling line, or the
     // dock moves into the one sheet, in the page's own order —
@@ -180,16 +337,30 @@
     // they are anywhere in the stage's frame, so the surface is
     // clean from the first paint even before this runs.
     var sweepChrome = function () {
+      var allFolded = true;
       [".sphere-guide-bar", "#sphere-legend"].forEach(function (sel) {
         var el = main.querySelector(sel);
         if (el && el.parentElement !== sidebar) {
           el.classList.add("sphere-sheet-room");
           sidebar.appendChild(el);
         }
+        if (el && el.parentElement !== sidebar) allFolded = false;
+        if (!el) allFolded = false;
       });
+      return allFolded;
     };
-    sweepChrome();
-    new MutationObserver(sweepChrome).observe(main, { childList: true, subtree: true });
+    /* Performance (sphere-performance pass): this observer used
+     * to watch the whole main subtree for the page's entire life,
+     * re-scanning on every mutation the busy instrument makes.
+     * Once both pieces stand folded in the sheet they never move
+     * back, so the guard stands down; until then it behaves
+     * exactly as before. */
+    if (!sweepChrome()) {
+      var chromeWatcher = new MutationObserver(function () {
+        if (sweepChrome()) chromeWatcher.disconnect();
+      });
+      chromeWatcher.observe(main, { childList: true, subtree: true });
+    }
 
     // Technical material leaves the visitor surface: the two
     // diagnostics sections and the methods section fold behind
@@ -240,6 +411,212 @@
   // readout. patternDay → { plans: [titles], played: bool }.
   var keptByDay = {};
   var renderKeptRef = null;
+
+  /* ── 3a. Rings (Sphere design Phase 1) ───────────────────────
+   *
+   * The ring controls live in the rooms sheet, above the
+   * granular Layers list. They are presets with charters, not a
+   * second layer system: Sky drives the existing granular
+   * checkboxes through their own change events (so the UI's own
+   * state, traces, and rendering carry the change), and Kept
+   * Days gates the record data the page layer feeds the face —
+   * off means the data is cleared, not dimmed. Pattern has no
+   * toggle: it is the face the other rings are read against. */
+
+  var ringArchitecture = window.SphereRings || SphereRingArchitecture;
+  var SKY_LAYERS = ringArchitecture.charterFor("sky").layers;
+  var skyRingSelected = true;
+  var skyRingUserSet = false;
+  var keptDaysAvailable = false;
+  var keptDaysEnabled = false;
+  var keptDaysUserSet = false;
+  var seasonLineRef = null;
+  var ringRefs = {};
+
+  function activeOptionalRingIds() {
+    var ids = [];
+    if (skyRingSelected) ids.push("sky");
+    if (keptDaysEnabled) ids.push("kept-days");
+    return ids;
+  }
+
+  function setGranularLayer(layerId, enabled) {
+    var cb = document.getElementById("sphere-layer-" + layerId);
+    if (!cb || cb.checked === enabled) return;
+    cb.checked = enabled;
+    cb.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+
+  function granularLayerOn(layerId) {
+    var cb = document.getElementById("sphere-layer-" + layerId);
+    return !!(cb && cb.checked);
+  }
+
+  function skyLayerSummary() {
+    var on = SKY_LAYERS.filter(granularLayerOn).length;
+    if (on === SKY_LAYERS.length) return "On";
+    if (on === 0) return "Off";
+    return "Partly on — the Layers list below can differ";
+  }
+
+  function syncSkyRingControl() {
+    if (ringRefs.skyInput) ringRefs.skyInput.checked = skyRingSelected;
+    if (ringRefs.skyStatus) ringRefs.skyStatus.textContent = skyLayerSummary();
+    if (seasonLineRef) seasonLineRef.hidden = !skyRingSelected;
+  }
+
+  function applySkyRing(enabled, byUser) {
+    if (enabled && !ringArchitecture.canEnable(activeOptionalRingIds(), "sky")) return false;
+    skyRingSelected = !!enabled;
+    if (byUser) skyRingUserSet = true;
+    SKY_LAYERS.forEach(function (layerId) { setGranularLayer(layerId, skyRingSelected); });
+    syncSkyRingControl();
+    return true;
+  }
+
+  function beginSkyInitialSync() {
+    var tries = 0;
+    var wait = window.setInterval(function () {
+      tries += 1;
+      if (skyRingUserSet) { window.clearInterval(wait); return; }
+      var diag = null;
+      try { diag = window.LivingTimeSphereUi && window.LivingTimeSphereUi.getSphereDiagnostics ? window.LivingTimeSphereUi.getSphereDiagnostics() : null; } catch (err) { diag = null; }
+      var current = diag && Array.isArray(diag.currentLayerSet) ? diag.currentLayerSet : null;
+      if (current) {
+        window.clearInterval(wait);
+        skyRingSelected = SKY_LAYERS.some(function (layerId) { return current.indexOf(layerId) !== -1; });
+        syncSkyRingControl();
+      } else if (tries > 40) {
+        window.clearInterval(wait);
+      }
+    }, 500);
+  }
+
+  function syncKeptRingControl() {
+    if (!ringRefs.keptInput) return;
+    ringRefs.keptInput.checked = keptDaysEnabled;
+    ringRefs.keptInput.disabled = !keptDaysAvailable;
+    if (ringRefs.keptStatus) {
+      ringRefs.keptStatus.textContent = !keptDaysAvailable
+        ? "No kept days on this device yet"
+        : (keptDaysEnabled ? "On — read on this device only" : "Off — absent from the face");
+    }
+  }
+
+  function clearKeptDaysFace() {
+    keptByDay = {};
+    var renderer = window.LivingTimeSphereRenderer3d;
+    if (renderer && renderer.setRecordMarkers) renderer.setRecordMarkers([]);
+    if (renderer && renderer.setTrailMarkers) renderer.setTrailMarkers([]);
+    var now = new Date();
+    var todayIso = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0");
+    window.__sofHubPlans = { key: todayIso + ":0", count: 0 };
+    if (renderKeptRef) renderKeptRef();
+  }
+
+  function setKeptDaysEnabled(enabled, byUser) {
+    if (enabled && !keptDaysAvailable) return false;
+    if (enabled && !ringArchitecture.canEnable(activeOptionalRingIds(), "kept-days")) return false;
+    keptDaysEnabled = !!enabled;
+    if (byUser) keptDaysUserSet = true;
+    if (!keptDaysEnabled) clearKeptDaysFace();
+    syncKeptRingControl();
+    if (keptDaysEnabled) refreshRecordMarkers();
+    return true;
+  }
+
+  function buildRingPanel(sidebar) {
+    if (!sidebar || document.querySelector("[data-sphere-rings]")) return;
+    var section = document.createElement("section");
+    section.className = "sphere-sidebar-section sphere-rings";
+    section.setAttribute("data-sphere-rings", "");
+    section.setAttribute("aria-label", "Sphere rings");
+
+    var heading = document.createElement("h2");
+    heading.className = "sphere-sidebar-heading";
+    heading.textContent = "Rings";
+    section.appendChild(heading);
+
+    var intro = document.createElement("p");
+    intro.className = "sphere-rings-intro";
+    intro.textContent = "Each ring is one kind of truth, read through the one calendar. A ring that is off is absent, not dimmed.";
+    section.appendChild(intro);
+
+    var list = document.createElement("div");
+    list.className = "sphere-rings-list";
+    section.appendChild(list);
+
+    ringArchitecture.charters.forEach(function (charter) {
+      var row = document.createElement("article");
+      row.className = "sphere-ring-row";
+      row.setAttribute("data-ring-id", charter.id);
+      row.setAttribute("data-ring-label", charter.label);
+      row.setAttribute("data-ring-grammar", charter.grammar);
+
+      var head = document.createElement("div");
+      head.className = "sphere-ring-head";
+      var name = document.createElement("strong");
+      name.textContent = charter.name + " · " + charter.label;
+      head.appendChild(name);
+
+      if (charter.alwaysOn) {
+        var fixed = document.createElement("span");
+        fixed.className = "sphere-ring-status";
+        fixed.textContent = "Always on";
+        head.appendChild(fixed);
+      } else if (charter.id === "sky" || charter.id === "kept-days") {
+        var label = document.createElement("label");
+        label.className = "sphere-ring-toggle";
+        var input = document.createElement("input");
+        input.type = "checkbox";
+        input.id = charter.id === "sky" ? "sphere-ring-sky" : "sphere-ring-kept-days";
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(" Ride"));
+        head.appendChild(label);
+        var status = document.createElement("span");
+        status.className = "sphere-ring-status";
+        head.appendChild(status);
+        if (charter.id === "sky") {
+          ringRefs.skyInput = input;
+          ringRefs.skyStatus = status;
+          input.checked = skyRingSelected;
+          input.addEventListener("change", function () { applySkyRing(input.checked, true); });
+        } else {
+          ringRefs.keptInput = input;
+          ringRefs.keptStatus = status;
+          input.checked = false;
+          input.disabled = true;
+          status.textContent = "Reading this device…";
+          input.addEventListener("change", function () { setKeptDaysEnabled(input.checked, true); });
+        }
+      }
+      row.appendChild(head);
+
+      var charterLine = document.createElement("p");
+      charterLine.className = "sphere-ring-charter";
+      charterLine.textContent = "Source: " + charter.source + " · Owner: " + charter.owner + " · Span: " + charter.span + ".";
+      row.appendChild(charterLine);
+      list.appendChild(row);
+    });
+
+    var field = document.createElement("p");
+    field.className = "sphere-rings-field";
+    field.setAttribute("data-field-ring-stub", "");
+    field.textContent = "Field rings: none ride in this phase. A field ring must first name a checkable source, its owner, and its span in its own charter — and it never borrows a house label.";
+    section.appendChild(field);
+
+    var layersSection = sidebar.querySelector(".sphere-layers")?.closest(".sphere-sidebar-section");
+    if (layersSection && layersSection.parentElement === sidebar) sidebar.insertBefore(section, layersSection);
+    else sidebar.appendChild(section);
+
+    SKY_LAYERS.forEach(function (layerId) {
+      var cb = document.getElementById("sphere-layer-" + layerId);
+      if (cb) cb.addEventListener("change", syncSkyRingControl);
+    });
+    beginSkyInitialSync();
+    syncSkyRingControl();
+    syncKeptRingControl();
+  }
 
   // The shown Moon's name rides its medallion's label: the label
   // spans are the renderer's, their text set once at setup to
@@ -349,7 +726,19 @@
     }
     render();
     var strip = document.getElementById("sphere-state-strip");
-    if (strip) new MutationObserver(render).observe(strip, { childList: true, subtree: true, characterData: true });
+    /* Performance (sphere-performance pass): during a drag the
+     * state strip mutates many times a second and each mutation
+     * used to run the full readout render (including a scan of
+     * all thirteen Moon labels). Renders are now coalesced to at
+     * most one per animation frame — the readout shows the same
+     * words, never more than a frame later. */
+    var renderQueued = false;
+    function renderSoon() {
+      if (renderQueued) return;
+      renderQueued = true;
+      window.requestAnimationFrame(function () { renderQueued = false; render(); });
+    }
+    if (strip) new MutationObserver(renderSoon).observe(strip, { childList: true, subtree: true, characterData: true });
     window.setInterval(render, 4000);
   }
 
@@ -405,10 +794,38 @@
   function watchDayWorld() {
     dressDayWorld();
     dressDayWorldDoor();
-    new MutationObserver(function () {
-      dressDayWorld();
-      dressDayWorldDoor();
-    }).observe(document.body, { childList: true, subtree: true });
+    /* Performance (sphere-performance pass): the watch used to
+     * observe the whole document subtree for the page's life and
+     * run two querySelector scans on every mutation batch — on a
+     * page whose labels mutate constantly, that was a standing
+     * tax. The door dressing is one-shot (once its slot stands
+     * beside the door it never needs dressing again), and once
+     * the Day World sheet itself exists, only the sheet's own
+     * children can change what dressDayWorld does, so the watch
+     * narrows to the sheet and the body-wide watch stands down.
+     * Until the sheet exists, mutation batches are coalesced to
+     * one check per animation frame. The dressings applied are
+     * identical. */
+    var doorDone = !!document.querySelector(".day-world-door")?.parentElement?.querySelector("[data-story-entry]");
+    var queued = false;
+    var bodyWatcher = new MutationObserver(function () {
+      if (queued) return;
+      queued = true;
+      window.requestAnimationFrame(function () {
+        queued = false;
+        dressDayWorld();
+        if (!doorDone) {
+          dressDayWorldDoor();
+          doorDone = !!document.querySelector(".day-world-door")?.parentElement?.querySelector("[data-story-entry]");
+        }
+        var sheet = document.querySelector(".day-world-sheet");
+        if (sheet) {
+          bodyWatcher.disconnect();
+          new MutationObserver(dressDayWorld).observe(sheet, { childList: true });
+        }
+      });
+    });
+    bodyWatcher.observe(document.body, { childList: true, subtree: true });
   }
 
   /* ── 4. The record on the face + the Spark's alert ───────────── */
@@ -486,9 +903,32 @@
           });
         }
       } catch (err) { /* no trail yet — the face is plans and play alone */ }
+      // Kept Days ring gate (Phase 1): the ring rides only
+      // when this device actually keeps a record, and only
+      // while it is on. Off — or no record — clears the face's
+      // record data outright (markers, trail, the readout's
+      // kept line, and the hub plate's plan count), rather
+      // than dimming anything. allPlans is the planner's own
+      // cached read; every source named here is on-device.
+      var allPlans = plans;
+      try { if (planner.allPlans) allPlans = await planner.allPlans(); } catch (err) { allPlans = plans; }
+      keptDaysAvailable = (allPlans || []).some(function (rec) { return !!planPatternDay(rec); }) || days.length > 0 || trail.length > 0;
+      if (!keptDaysAvailable) {
+        keptDaysEnabled = false;
+        clearKeptDaysFace();
+        syncKeptRingControl();
+        return;
+      }
+      if (!keptDaysUserSet) keptDaysEnabled = true;
+      if (!keptDaysEnabled) {
+        clearKeptDaysFace();
+        syncKeptRingControl();
+        return;
+      }
       keptByDay = kept;
       renderer.setRecordMarkers(days);
       if (renderer.setTrailMarkers) renderer.setTrailMarkers(trail);
+      syncKeptRingControl();
       // Today's kept-plans count, published for the hub plate.
       window.__sofHubPlans = { key: todayIso + ":" + todayCount, count: todayCount };
       if (renderKeptRef) renderKeptRef();
@@ -589,12 +1029,26 @@
         el.hidden = true;
         caption.appendChild(el);
         new MutationObserver(function () { sanitize(el); }).observe(el, { childList: true, subtree: true, characterData: true });
+        /* Performance (sphere-performance pass): once the strip
+         * is adopted, its own observer above carries the work and
+         * the body-wide watch stands down (it used to re-run on
+         * every mutation on the page for the page's whole life).
+         * The 3-second interval below remains as the safety net:
+         * if the strip were ever replaced, the interval re-adopts
+         * the new element and re-arms the body watch until then. */
+        if (bodyWatcher) bodyWatcher.disconnect();
       }
       sanitize(el);
     }
     adopt();
-    new MutationObserver(adopt).observe(document.body, { childList: true, subtree: true });
-    window.setInterval(adopt, 3000);
+    var bodyWatcher = new MutationObserver(adopt);
+    if (!adopted) bodyWatcher.observe(document.body, { childList: true, subtree: true });
+    window.setInterval(function () {
+      adopt();
+      if (!adopted) {
+        try { bodyWatcher.observe(document.body, { childList: true, subtree: true }); } catch (err) { /* already observing */ }
+      }
+    }, 3000);
   }
 
   /* ── 4b-ii. The environment arrives on its own (Aaron, Nov 20):
@@ -732,6 +1186,8 @@
     var line = document.createElement("p");
     line.className = "sphere-season-line";
     line.setAttribute("role", "note");
+    line.setAttribute("data-sky-readout", "");
+    seasonLineRef = line;
     var telling = caption.querySelector(".sphere-rebuild-telling");
     if (telling) telling.after(line);
     else caption.appendChild(line);
@@ -745,13 +1201,17 @@
         var lat = Number(state && state.place && state.place.latitude);
         if (Number.isFinite(lat) && lat < -10) season = SEASON_FLIP[season] || season;
       } catch (err) { /* northern names stand */ }
-      var text = season;
+      // Label law (Sphere design §1.3): a sky fact is read
+      // out as a sky fact — the line begins "Sky:" so it can
+      // never be mistaken for the Pattern count beside it.
+      var text = "Sky: " + season;
       if (info.next && info.next.at) {
         text += " · the " + info.next.name + " turns on " + MONTH_SHORT[info.next.at.getMonth()] + " " + info.next.at.getDate();
       } else if (info.next) {
         text += " · the " + info.next.name + " is the next turn";
       }
       if (line.textContent !== text) line.textContent = text;
+      line.hidden = !skyRingSelected;
     }
     render();
     window.setInterval(render, 60000);
