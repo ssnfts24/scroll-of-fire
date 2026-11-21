@@ -40,6 +40,12 @@
   },
   {
    "beat": "The Traveller learns to read the road's milestones: thirteen moons, twenty-eight days each.",
+   "episode": {
+    "duration": "1:24",
+    "film": "assets/media/story-episode-03-the-road-of-thirteen-moons.mp4",
+    "label": "Episode 3 — the animated telling of this chapter. The written chapter below is its guide card.",
+    "poster": "assets/media/story-episode-03-the-road-of-thirteen-moons-poster.webp"
+   },
    "id": "the-road-of-thirteen-moons",
    "n": 3,
    "page": "moons.html",
@@ -56,6 +62,12 @@
   },
   {
    "beat": "A door standing in the road opens onto one single day, whole — and the Traveller steps in.",
+   "episode": {
+    "duration": "1:27",
+    "film": "assets/media/story-episode-04-through-the-day-door.mp4",
+    "label": "Episode 4 — the animated telling of this chapter. The written chapter below is its guide card.",
+    "poster": "assets/media/story-episode-04-through-the-day-door-poster.webp"
+   },
    "id": "through-the-day-door",
    "n": 4,
    "page": "living-time-sphere.html",
@@ -72,6 +84,12 @@
   },
   {
    "beat": "Inside a walled garden of thirteen beds — one waking at a time — the Traveller learns patience.",
+   "episode": {
+    "duration": "1:26",
+    "film": "assets/media/story-episode-05-the-garden-of-thirteen-beds.mp4",
+    "label": "Episode 5 — the animated telling of this chapter. The written chapter below is its guide card.",
+    "poster": "assets/media/story-episode-05-the-garden-of-thirteen-beds-poster.webp"
+   },
    "id": "the-garden-of-thirteen-beds",
    "n": 5,
    "page": "garden.html",
@@ -112,7 +130,7 @@
    "text": [
     "Where five roads met there stood a desk under a lantern, and at the desk sat the Witness, writing in a great book with a brass clasp.",
     "\"What do you write?\" asked the Traveller. \"The road,\" said the Witness. \"Exactly as it happens. Not as it was wished, not as it was feared. As it happens. It is the whole of my work, and it is enough.\"",
-    "The Traveller told the tale of the road so far — the gate, the clearing, the wheel of moons, the day door, the garden, the storehouse — and the Witness wrote it all down in a clear hand, and read it back, and it was the same tale, only truer for having been kept.",
+    "The Traveller told the tale of the road so far — the gate, the clearing, the wheel of moons, the day door, the garden, the storehouse — and the Witness wrote it all down in a clear hand, and read it back, and it was the same tale, only truer for having been kept. When the garden day came round in the reading, the Witness had written only, \"He waited by the waking bed,\" though the Traveller's telling had made a morning's work of carrying water; the Traveller saw the difference, and let it pass.",
     "\"A road unwitnessed is only half walked,\" said the Witness, closing the book. \"Yours is kept now. Walk on.\"",
     "And the Traveller walked on into the next moon, with the little spark riding the lantern, and the road unrolling ahead — and behind them, in the great book at the crossroads, their story so far stood written, where anyone coming after could read how the way went."
    ],
@@ -211,6 +229,7 @@
     "In it, everything the road claimed was entered plainly: what was promised, what was done, what it cost, what changed — each entry dated, each one left open on the desk where any traveller could check it against the world.",
     "\"A tale can be beautiful,\" said the ledger-keeper. \"An account must be checkable. The road keeps both books, and never lets them pretend to be each other.\"",
     "The Traveller turned the pages and found the entries neither flattering nor harsh — just exact, the way a good scale is exact, and kind in the way exactness is kind.",
+    "Lower on the page, he found the garden day: \"Waited by the waking bed. Carried water. Kept the quiet.\" The cost stood plainly beside it — one morning — and so did the change: the bed had not waited alone. Beneath the entry, not over it, a correction to the tale had been appended in a clear hand, naming the larger tale told at the crossroads and setting the smaller, truer day beside it. The Traveller read it with heat in his face, for he had let the difference pass and had been quietly ashamed of how little the day seemed to hold; now the account showed him that the little had still been a keeping, and that a day is lost not by being ordinary, but by never being entered at all.",
     "The little spark lit on the book's brass corner and approved, and they walked on, trusting the road a little more for having seen its accounts."
    ]
   },
@@ -259,6 +278,7 @@
     "Every made thing was entered in the registry before it was offered — what it was, who made it, what it was for — for the stall-keeper held that a thing you can trace is a thing you can trust.",
     "\"Makers make,\" said the stall-keeper, wrapping a copper spiral in cloth for a traveller ahead in the queue. \"The registry remembers. The stall just introduces them.\"",
     "The Traveller turned the registry's pages and found the entries plain and complete, and the little spark examined a quartz point on the counter and lit it from inside, just for a moment, the way sunlight does.",
+    "Then the Traveller opened his pocket notebook at the end of the counter and made a fair copy of the road so far — its names and numbers and days, written again in his neatest hand. It cost him the rest of the morning. When the copy was done, he entered it in the registry himself: \"A road kept by its walker, made from the days as they were witnessed.\" The stall-keeper laid it among the made things, for nothing in the registry could be traced more plainly to the hands that made it.",
     "They bought nothing that day, having miles still to go — but the Traveller wrote the stall's place in the notebook, for some roads you walk twice: once to see, and once to carry home."
    ]
   },
