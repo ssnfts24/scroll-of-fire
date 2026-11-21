@@ -16,6 +16,11 @@
  * the tone round drawn from a chime plan with nearest neighbours,
  * the page wiring, and the fences: no network in the module, no
  * absence-guilt language, the Spark named by name / "the Spark" / it.
+ *
+ * The finds layer is parked (Aaron, Nov 20, 2026): the engine's
+ * pure functions stay pinned here, and the wiring tests pin that
+ * no finds runtime runs anywhere — the games alone carry the layer,
+ * and no record a keeper holds is deleted.
  */
 
 const test = require("node:test");
@@ -256,17 +261,37 @@ test("The Count crosses the Day Out of Time at the year's turn", () => {
 
 /* --------------------------- wiring and fences --------------------------- */
 
-test("the host pages carry the layer, the games, and the Atlas block", () => {
-  for (const page of ["systems/frequencies.html", "theory/thirteen-moons.html", "glossary.html", "garden.html", "moons.html", "equinox-passage.html"]) {
+test("the game rooms carry the layer; the finds pages no longer load it", () => {
+  for (const page of ["systems/frequencies.html", "theory/thirteen-moons.html"]) {
     const html = read(page);
     assert.match(html, /hidden-layer\.js/, `${page} loads the module`);
     assert.match(html, /hidden-layer\.css/, `${page} loads the styles`);
+  }
+  for (const page of ["glossary.html", "garden.html", "moons.html", "equinox-passage.html"]) {
+    const html = read(page);
+    assert.ok(!/hidden-layer\.(js|css)/.test(html), `${page} loads no hidden-layer runtime`);
   }
   assert.match(read("systems/frequencies.html"), /data-hidden-layer-game="tone"/);
   assert.match(read("theory/thirteen-moons.html"), /data-hidden-layer-game="count"/);
   for (const page of ["systems/frequencies.html", "glossary.html", "equinox-passage.html"]) {
     assert.match(read(page), /life-atlas-repository\.js/, `${page} gained the Atlas block in the garden's pattern`);
   }
+});
+
+test("the finds layer is off: nothing spawns, nothing renders, nothing is deleted", () => {
+  /* Aaron, Nov 20, 2026: "The finds layer is pointless right now."
+   * The whole layer is off — no chip, no shelf, no find offered on
+   * any page — while the games play on untouched and every record
+   * a keeper already holds stays exactly as it was. */
+  const source = read("assets/js/hidden-layer.js");
+  const styles = read("assets/css/hidden-layer.css");
+  for (const gone of ["hl-shelf-chip", "hl-shelf", "hl-notice", "renderShelf", "offerFind"]) {
+    assert.ok(!source.includes(gone), `the module carries no ${gone}`);
+    assert.ok(!styles.includes(gone), `the styles carry no ${gone}`);
+  }
+  assert.ok(!/repository\.(delete|remove)|deleteDatabase/.test(source), "the module deletes no record");
+  assert.match(source, /bootToneGame\(\{ state, repository/, "the tone game still boots");
+  assert.match(source, /bootCountGame\(\{ state, repository/, "the count game still boots");
 });
 
 test("fences: no network, no guilt language, no protected files in the module's world", () => {

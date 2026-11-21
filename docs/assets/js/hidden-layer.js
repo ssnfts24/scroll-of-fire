@@ -1,38 +1,35 @@
 /**
- * The Hidden Layer — little games and found things (stage 1).
+ * The Hidden Layer — little games in their own rooms (stage 1),
+ * and the parked finds engine.
  *
  * Aaron's design (Nov 20, 2026), argued in
  * your_files/hidden-layer-design-2026-11-20.md:
  *
- *   1. Every game and find is DERIVED from its host page's own
- *      material and teaches that page's teaching by doing:
+ *   1. Every game is DERIVED from its host page's own material and
+ *      teaches that page's teaching by doing:
  *        - "Find the Day's Tone" on Frequency Governance (the Sound
  *          Observatory) — attunement: know the day's tone by ear.
  *        - "The Count" on 13 Moons Theory — the Pattern count itself,
  *          stepped by hand across moon boundaries and the Day Out of
  *          Time, every coordinate computed by PatternCalendar.
- *        - Finds: a tone fragment (Frequencies), a word (Glossary),
- *          a pressed leaf (Garden, 13 Moons), a smooth stone
- *          (Equinox Passage).
- *   2. The Spark is the medium: finds are found by the keeper's Spark
- *      and brought to the keeper; games are accompanied by the Spark
- *      (guide seat, never the opposition seat). A Spark's kind leans
- *      toward its kindred finds — flavour, never a gate.
- *   3. Woven into live material: tones come from the Sound of the
- *      Day (SOFSound.chimePlan — today's seeded chimes) and from the
- *      keeper's own Spark's seed voice (SparkCompanion chirpFor /
- *      soundsFor). This module edits none of those files and keeps
- *      no second record: keepsakes are canonical Life Atlas records,
- *      type "artifact" / subtype "hidden-keepsake", the garden pass's
- *      own shape (PR #166).
- *   4. The level curve: generous first, rare later. An opportunity
- *      is a visit to a find page, at most one per page per Pattern
- *      Day and at most three per day. The roll is deterministic —
- *      hash(seed ‖ civil date ‖ page) — so the find waiting on a
- *      page today is the same find all day, and an assurance counter
- *      (opportunities since the last kept find) guarantees a find by
- *      each level's cap. Absence changes nothing; nothing expires;
- *      nothing is bought. Rarity serves wonder, never appetite.
+ *   2. The Spark accompanies the games (guide seat, never the
+ *      opposition seat). Woven into live material: tones come from
+ *      the Sound of the Day (SOFSound.chimePlan — today's seeded
+ *      chimes) and from the keeper's own Spark's seed voice
+ *      (SparkCompanion chirpFor / soundsFor). This module edits
+ *      none of those files and keeps no second record: game
+ *      keepsakes are canonical Life Atlas records, type "artifact"
+ *      / subtype "hidden-keepsake", the garden pass's own shape
+ *      (PR #166).
+ *
+ * THE FINDS ARE PARKED (Aaron, Nov 20, 2026: "The finds layer is
+ * pointless right now"). The finds engine — the level curve, the
+ * deterministic rolls, the placement table, the candidate builder
+ * — remains below as pure functions, unit-tested and uncalled by
+ * the browser path: no find spawns on any page, nothing renders
+ * for finds, and only the two game rooms load this module at all.
+ * Finds a keeper already kept stay in that keeper's Life Atlas
+ * exactly as recorded; the layer adds nothing and deletes nothing.
  *
  * The pure functions (levelFor, rollFor, candidateFor, buildCountRound,
  * toneRoundFor, buildKeepsakeRecord) carry no DOM or storage
@@ -117,10 +114,12 @@
       return rollFor({ seed, civilDate, pageId }) < level.p;
     }
 
-    /* ------------------------- the finds ------------------------- */
+    /* ------------------ the finds (parked) ------------------ */
 
-    /* Which kinds each page offers in stage 1 — the placement table,
-     * in code. A page not listed offers nothing. */
+    /* The finds engine rests here, uncalled by the browser path:
+     * the placement table, the kindred lean, the word pool, the
+     * teachings, and the candidate builder. Which kinds each page
+     * offered in stage 1 — a page not listed offered nothing. */
     const PAGE_FINDS = Object.freeze({
       frequencies: Object.freeze(["tone-fragment"]),
       glossary: Object.freeze(["word"]),
@@ -444,18 +443,6 @@
     const isBrowser =
       typeof document !== "undefined" && typeof window !== "undefined";
 
-    function pageIdFromLocation() {
-      const path = (window.location.pathname || "").toLowerCase();
-      const file = path.split("/").pop().replace(/\.html$/, "");
-      if (file === "frequencies") return "frequencies";
-      if (file === "glossary") return "glossary";
-      if (file === "garden") return "garden";
-      if (file === "moons") return "moons";
-      if (file === "equinox-passage") return "equinox-passage";
-      if (file === "thirteen-moons") return "thirteen-moons";
-      return file || "index";
-    }
-
     function readSparkRecord() {
       try {
         const raw = window.localStorage.getItem(SPARK_STORAGE_KEY);
@@ -586,7 +573,6 @@
     /* ------------------------- boot ------------------------- */
 
     async function boot() {
-      const pageId = pageIdFromLocation();
       const conv = todayConversion();
       const civilDate = conv ? conv.civilDate : new Date().toISOString().slice(0, 10);
       const record = readSparkRecord();
@@ -595,219 +581,16 @@
       const sparkName =
         record && Core && companion ? Core.displayName(record, companion) : "your Spark";
 
-      const state = Object.assign(
-        {
-          findsKept: 0,
-          opportunitiesSinceFind: 0,
-          countedToday: { civilDate: "", pages: [] },
-          declined: {},
-          muted: false,
-          gameDays: {}
-        },
-        loadState()
-      );
+      /* The stored state is carried whole: a keeper's parked finds
+       * fields ride along untouched in storage, and only the games
+       * read or write anything here (their own gameDays). */
+      const state = Object.assign({ gameDays: {} }, loadState());
 
       const repository = resolveRepository();
-      let keepsakes = [];
-      if (repository) {
-        try {
-          keepsakes = await repository.query({ subtype: KEEPSAKE_SUBTYPE });
-        } catch {
-          keepsakes = [];
-        }
-      }
-      const findRecords = keepsakes.filter(
-        recordItem =>
-          recordItem && recordItem.payload && recordItem.payload.hiddenLayer &&
-          recordItem.payload.hiddenLayer.source === "find"
-      );
-      state.findsKept = findRecords.length;
-
-      renderShelf(state, keepsakes, sparkName);
 
       /* ---- the games ---- */
       bootToneGame({ state, repository, conv, civilDate, companion, sparkName });
       bootCountGame({ state, repository, conv, civilDate, sparkName });
-
-      /* ---- the finds ---- */
-      if (!record || !companion || state.muted) {
-        saveState(state);
-        return;
-      }
-      if (!PAGE_FINDS[pageId]) {
-        saveState(state);
-        return;
-      }
-
-      if (state.countedToday.civilDate !== civilDate) {
-        state.countedToday = { civilDate, pages: [] };
-      }
-      let counted = false;
-      if (!state.countedToday.pages.includes(pageId) && state.countedToday.pages.length < 3) {
-        state.countedToday.pages.push(pageId);
-        counted = true;
-      }
-
-      const spawn = shouldSpawn({
-        seed: record.seed,
-        civilDate,
-        pageId,
-        findsKept: state.findsKept,
-        opportunitiesSinceFind: state.opportunitiesSinceFind
-      });
-
-      if (counted) {
-        state.opportunitiesSinceFind += 1;
-      }
-      saveState(state);
-
-      if (!spawn) return;
-
-      const chimePlan =
-        window.SOFSound && typeof window.SOFSound.chimePlan === "function"
-          ? window.SOFSound.chimePlan(8)
-          : null;
-      const candidate = candidateFor({
-        seed: record.seed,
-        civilDate,
-        pageId,
-        sparkKind: companion.kind,
-        conv,
-        chimePlan
-      });
-      if (!candidate) return;
-      if (state.declined[candidate.findKey]) return;
-      const alreadyKept = findRecords.some(
-        recordItem => recordItem.payload.hiddenLayer.findKey === candidate.findKey
-      );
-      if (alreadyKept) return;
-
-      offerFind({ candidate, state, repository, conv, sparkName, companion });
-    }
-
-    function offerFind({ candidate, state, repository, conv, sparkName, companion }) {
-      const card = el("div", "hl-notice");
-      card.setAttribute("role", "dialog");
-      card.setAttribute("aria-label", "Something found");
-      const hue = companion && typeof companion.hue === "number" ? companion.hue : 42;
-      card.style.setProperty("--hl-hue", String(Math.round(hue)));
-
-      card.appendChild(el("p", "hl-notice-line", `${sparkName} found something here.`));
-      card.appendChild(el("p", "hl-notice-name", candidate.name));
-      card.appendChild(el("p", "hl-notice-detail", candidate.detail));
-      card.appendChild(el("p", "hl-notice-teaching", candidate.teaching));
-
-      const actions = el("div", "hl-actions");
-      const keep = el("button", "hl-btn hl-btn-keep", "Keep it");
-      keep.type = "button";
-      const notNow = el("button", "hl-btn", "Not now");
-      notNow.type = "button";
-      actions.appendChild(keep);
-      actions.appendChild(notNow);
-      card.appendChild(actions);
-      document.body.appendChild(card);
-
-      notNow.addEventListener("click", () => {
-        state.declined[candidate.findKey] = true;
-        saveState(state);
-        card.remove();
-      });
-
-      keep.addEventListener("click", async () => {
-        keep.disabled = true;
-        const recordItem = buildKeepsakeRecord(
-          Object.assign({}, candidate, { coordinate: coordinateLabel(conv) }),
-          temporalForNow(conv)
-        );
-        if (repository) {
-          try {
-            await repository.put(recordItem);
-          } catch {
-            /* a missed write never blocks the moment */
-          }
-        }
-        state.findsKept += 1;
-        state.opportunitiesSinceFind = 0;
-        saveState(state);
-        card.innerHTML = "";
-        card.appendChild(el("p", "hl-notice-line", "Kept in your record."));
-        card.appendChild(el("p", "hl-notice-name", candidate.name));
-        const shelf = document.querySelector(".hl-shelf-chip");
-        if (shelf) shelf.remove();
-        const fresh = await refreshKeepsakes(repository);
-        renderShelf(state, fresh, sparkName);
-        window.setTimeout(() => card.remove(), 4200);
-      });
-    }
-
-    async function refreshKeepsakes(repository) {
-      if (!repository) return [];
-      try {
-        return await repository.query({ subtype: KEEPSAKE_SUBTYPE });
-      } catch {
-        return [];
-      }
-    }
-
-    function renderShelf(state, keepsakes, sparkName) {
-      if (!keepsakes.length) return;
-      const chip = el("button", "hl-shelf-chip", `✦ Found along the way · ${keepsakes.length}`);
-      chip.type = "button";
-      chip.setAttribute("aria-haspopup", "dialog");
-      document.body.appendChild(chip);
-
-      chip.addEventListener("click", () => {
-        const existing = document.querySelector(".hl-shelf");
-        if (existing) {
-          existing.remove();
-          return;
-        }
-        const shelf = el("div", "hl-shelf");
-        shelf.setAttribute("role", "dialog");
-        shelf.setAttribute("aria-label", "Found along the way");
-        shelf.appendChild(el("h2", "hl-shelf-title", "Found along the way"));
-        shelf.appendChild(
-          el("p", "hl-shelf-sub", `Kept by ${sparkName} and you, in your own record, on this device.`)
-        );
-        const list = el("ul", "hl-shelf-list");
-        for (const recordItem of keepsakes) {
-          const payload = (recordItem.payload && recordItem.payload.hiddenLayer) || {};
-          const item = el("li", "hl-shelf-item");
-          item.appendChild(el("span", "hl-shelf-name", payload.name || recordItem.title || "A keepsake"));
-          if (payload.teaching) item.appendChild(el("span", "hl-shelf-teaching", payload.teaching));
-          if (payload.coordinate) item.appendChild(el("span", "hl-shelf-where", payload.coordinate));
-          list.appendChild(item);
-        }
-        shelf.appendChild(list);
-
-        const level = levelFor(state.findsKept || 0);
-        shelf.appendChild(
-          el(
-            "p",
-            "hl-shelf-level",
-            `Finds grow rarer as the shelf grows — you are walking ${level.name}. Nothing here expires, and nothing was ever owed.`
-          )
-        );
-
-        const mute = el(
-          "button",
-          "hl-btn",
-          state.muted ? "Let the Spark look again" : "Ask the Spark not to look for a while"
-        );
-        mute.type = "button";
-        mute.addEventListener("click", () => {
-          state.muted = !state.muted;
-          saveState(state);
-          shelf.remove();
-        });
-        shelf.appendChild(mute);
-
-        const close = el("button", "hl-btn", "Close");
-        close.type = "button";
-        close.addEventListener("click", () => shelf.remove());
-        shelf.appendChild(close);
-        document.body.appendChild(shelf);
-      });
     }
 
     /* ------------------------- the tone game ------------------------- */
