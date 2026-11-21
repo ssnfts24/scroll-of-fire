@@ -1,5 +1,53 @@
 [
  {
+  "date": "2026-11-21",
+  "type": "sphere",
+  "title": "The Sphere learned to read the whole day",
+  "summary": "The Sphere's readout now tells the whole day, one labelled line for each ring that rides: where the day stands — Moon, day, Pattern Day, and now the Pattern Year — the telling, the sky's season and next turn, the farm, the story, and the keeper's own kept days. Each line is present only when its ring rides and its data exists; absence is honest, never padded. Two rings took their seats. The Farm Ring, labelled Measured and owned by the record, resolves the keeper's county on their own device and draws every crop's planting window for that county and year on the readout's own year wheel — each arc converted through the Pattern Calendar itself, titled with its crop, its window, and its civil dates. The Story Ring, labelled Story, places only the dates the story itself names: the Traveller waking on Pattern Day 1, and the seed found in Moon 4. Its panel says plainly that the road's other chapters walk undated, until the story's own record dates them.",
+  "url": "./living-time-sphere.html",
+  "symbol": "◎"
+ },
+ {
+  "date": "2026-11-21",
+  "type": "feature",
+  "title": "The finds were parked, and the games stayed",
+  "summary": "The finds layer is off, by Aaron's ruling: the floating 'Found along the way' chip sat over the page text, in the way and pointless for now. The pages where finds lived — the glossary, the garden, the Moons, and the equinox passage — no longer load the layer at all: nothing renders, nothing intercepts. The two hidden games stay exactly as they were and still boot in their rooms; only the finds went quiet. The finds engine is parked, not destroyed — it remains in the code as tested workings that nothing calls, the way the old garden game was parked before it — and every find a keeper already kept stays in their Life Atlas exactly as recorded. Nothing was deleted.",
+  "url": "./systems/frequencies.html",
+  "symbol": "✦"
+ },
+ {
+  "date": "2026-11-21",
+  "type": "page",
+  "title": "The site gained a privacy page",
+  "summary": "Spark. Living Day now has its privacy policy standing on the site itself, at privacy-policy.html — the web address the app's store listing points to. The page carries the listing pack's policy text word for word, on the site's full page frame with the unified nav and the living layer, and it stands in the catalog and the sitemap like any other page of the house.",
+  "url": "./privacy-policy.html",
+  "symbol": "§"
+ },
+ {
+  "date": "2026-11-20",
+  "type": "feature",
+  "title": "The garden learned to teach",
+  "summary": "Every crop the Pattern Garden can plant — all thirty-six vegetables and six cover crops — now carries a full growing guide: planting depth and spacing, germination, how to start and set out, sun, soil and water, the signs of harvest, storage, and the troubles a Pacific Northwest gardener actually meets, each with its standard remedy. Every field stands on named sources, sixty of them — extension services, the regional plant-disease and insect handbooks, and seed houses. Where sources disagree, the guide holds the range and says so; where no source stood behind a field, the field is absent, never filled from habit. The guide's dates are counted at reading time from the keeper's own county frost record — the same reading that makes the planting offers, so a guide and an offer can never disagree — and the fence stands on the guide's face: the Moon opens the bed; the farm record sets the dates.",
+  "url": "./garden.html",
+  "symbol": "🌱"
+ },
+ {
+  "date": "2026-11-20",
+  "type": "feature",
+  "title": "The garden learned every county in Washington",
+  "summary": "The Pattern Garden's ground now covers all thirty-nine Washington counties. Each county is anchored on a named weather station's 1991–2020 normals — its median last spring frost, first fall frost, published season length, and planting zones — and where a county's other stations disagree, the record names the range instead of hiding it. Choose a county and the garden's planting windows move with that county's own frost record: the same crops, the same garden, counted from the ground the keeper actually stands on.",
+  "url": "./garden.html",
+  "symbol": "🗺"
+ },
+ {
+  "date": "2026-11-20",
+  "type": "sphere",
+  "title": "The Sphere's rings were given their charters",
+  "summary": "The Living Sphere's rings were seated as an architecture. Every ring now declares a charter — where its facts come from, the label it must wear (Counted, Measured, or Story), who owns it, and the span it can honestly cover — and every ring reads its dates only through the one canonical calendar, so no ring can drift from the day the rest of the site keeps. It changed nothing a visitor sees beyond one wording fix; it is the frame the Farm Ring, the Story Ring, and the packed readout were then built on.",
+  "url": "./living-time-sphere.html",
+  "symbol": "◉"
+ },
+ {
   "date": "2026-11-20",
   "type": "feature",
   "title": "The map became a gate",
