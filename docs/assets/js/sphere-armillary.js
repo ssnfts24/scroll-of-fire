@@ -180,16 +180,30 @@
     // they are anywhere in the stage's frame, so the surface is
     // clean from the first paint even before this runs.
     var sweepChrome = function () {
+      var allFolded = true;
       [".sphere-guide-bar", "#sphere-legend"].forEach(function (sel) {
         var el = main.querySelector(sel);
         if (el && el.parentElement !== sidebar) {
           el.classList.add("sphere-sheet-room");
           sidebar.appendChild(el);
         }
+        if (el && el.parentElement !== sidebar) allFolded = false;
+        if (!el) allFolded = false;
       });
+      return allFolded;
     };
-    sweepChrome();
-    new MutationObserver(sweepChrome).observe(main, { childList: true, subtree: true });
+    /* Performance (sphere-performance pass): this observer used
+     * to watch the whole main subtree for the page's entire life,
+     * re-scanning on every mutation the busy instrument makes.
+     * Once both pieces stand folded in the sheet they never move
+     * back, so the guard stands down; until then it behaves
+     * exactly as before. */
+    if (!sweepChrome()) {
+      var chromeWatcher = new MutationObserver(function () {
+        if (sweepChrome()) chromeWatcher.disconnect();
+      });
+      chromeWatcher.observe(main, { childList: true, subtree: true });
+    }
 
     // Technical material leaves the visitor surface: the two
     // diagnostics sections and the methods section fold behind
@@ -349,7 +363,19 @@
     }
     render();
     var strip = document.getElementById("sphere-state-strip");
-    if (strip) new MutationObserver(render).observe(strip, { childList: true, subtree: true, characterData: true });
+    /* Performance (sphere-performance pass): during a drag the
+     * state strip mutates many times a second and each mutation
+     * used to run the full readout render (including a scan of
+     * all thirteen Moon labels). Renders are now coalesced to at
+     * most one per animation frame — the readout shows the same
+     * words, never more than a frame later. */
+    var renderQueued = false;
+    function renderSoon() {
+      if (renderQueued) return;
+      renderQueued = true;
+      window.requestAnimationFrame(function () { renderQueued = false; render(); });
+    }
+    if (strip) new MutationObserver(renderSoon).observe(strip, { childList: true, subtree: true, characterData: true });
     window.setInterval(render, 4000);
   }
 
@@ -405,10 +431,38 @@
   function watchDayWorld() {
     dressDayWorld();
     dressDayWorldDoor();
-    new MutationObserver(function () {
-      dressDayWorld();
-      dressDayWorldDoor();
-    }).observe(document.body, { childList: true, subtree: true });
+    /* Performance (sphere-performance pass): the watch used to
+     * observe the whole document subtree for the page's life and
+     * run two querySelector scans on every mutation batch — on a
+     * page whose labels mutate constantly, that was a standing
+     * tax. The door dressing is one-shot (once its slot stands
+     * beside the door it never needs dressing again), and once
+     * the Day World sheet itself exists, only the sheet's own
+     * children can change what dressDayWorld does, so the watch
+     * narrows to the sheet and the body-wide watch stands down.
+     * Until the sheet exists, mutation batches are coalesced to
+     * one check per animation frame. The dressings applied are
+     * identical. */
+    var doorDone = !!document.querySelector(".day-world-door")?.parentElement?.querySelector("[data-story-entry]");
+    var queued = false;
+    var bodyWatcher = new MutationObserver(function () {
+      if (queued) return;
+      queued = true;
+      window.requestAnimationFrame(function () {
+        queued = false;
+        dressDayWorld();
+        if (!doorDone) {
+          dressDayWorldDoor();
+          doorDone = !!document.querySelector(".day-world-door")?.parentElement?.querySelector("[data-story-entry]");
+        }
+        var sheet = document.querySelector(".day-world-sheet");
+        if (sheet) {
+          bodyWatcher.disconnect();
+          new MutationObserver(dressDayWorld).observe(sheet, { childList: true });
+        }
+      });
+    });
+    bodyWatcher.observe(document.body, { childList: true, subtree: true });
   }
 
   /* ── 4. The record on the face + the Spark's alert ───────────── */
@@ -589,12 +643,26 @@
         el.hidden = true;
         caption.appendChild(el);
         new MutationObserver(function () { sanitize(el); }).observe(el, { childList: true, subtree: true, characterData: true });
+        /* Performance (sphere-performance pass): once the strip
+         * is adopted, its own observer above carries the work and
+         * the body-wide watch stands down (it used to re-run on
+         * every mutation on the page for the page's whole life).
+         * The 3-second interval below remains as the safety net:
+         * if the strip were ever replaced, the interval re-adopts
+         * the new element and re-arms the body watch until then. */
+        if (bodyWatcher) bodyWatcher.disconnect();
       }
       sanitize(el);
     }
     adopt();
-    new MutationObserver(adopt).observe(document.body, { childList: true, subtree: true });
-    window.setInterval(adopt, 3000);
+    var bodyWatcher = new MutationObserver(adopt);
+    if (!adopted) bodyWatcher.observe(document.body, { childList: true, subtree: true });
+    window.setInterval(function () {
+      adopt();
+      if (!adopted) {
+        try { bodyWatcher.observe(document.body, { childList: true, subtree: true }); } catch (err) { /* already observing */ }
+      }
+    }, 3000);
   }
 
   /* ── 4b-ii. The environment arrives on its own (Aaron, Nov 20):
