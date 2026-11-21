@@ -273,12 +273,6 @@ function frontDoorBlock() {
 ${curation.frontDoor.map(f => `        <li><a class="front-door-card" href="${esc(hrefOf(f.target))}"><strong>${esc(f.label)}</strong><span>${esc(f.description)}</span></a></li>`).join("\n")}
       </ul>
       <div class="front-door-grid">
-        <section aria-labelledby="front-door-featured">
-          <h3 id="front-door-featured">Featured</h3>
-          <ul class="front-door-list">
-${featured.map(e => `            <li><a href="${esc(publicHref(e))}">${esc(e.title)}</a> <span>${esc(e.description)}</span></li>`).join("\n")}
-          </ul>
-        </section>
         <section aria-labelledby="front-door-recent">
           <h3 id="front-door-recent">Recent additions</h3>
           <ul class="front-door-list">
@@ -286,6 +280,15 @@ ${recent.map(u => `            <li><time datetime="${esc(u.date)}">${esc(u.date)
           </ul>
         </section>
       </div>
+      <details class="home-fold front-door-featured-fold">
+        <summary><span class="home-fold-title">Featured pages — the deep shelf</span><span class="home-fold-note">${featured.length} pages, one tap deeper</span></summary>
+        <section aria-labelledby="front-door-featured">
+          <h3 id="front-door-featured">Featured</h3>
+          <ul class="front-door-list">
+${featured.map(e => `            <li><a href="${esc(publicHref(e))}">${esc(e.title)}</a> <span>${esc(e.description)}</span></li>`).join("\n")}
+          </ul>
+        </section>
+      </details>
       <p class="front-door-actions"><a class="btn primary" href="codex-atlas.html">Open the full Codex Atlas</a> <a class="btn" href="scroll/">Enter the Scroll Library</a></p>
       <p class="atlas-note">Saved witness records, readings and settings live only in this browser. They do not synchronize between devices.</p>
     </section>`;

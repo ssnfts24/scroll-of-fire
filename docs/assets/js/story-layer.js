@@ -21,6 +21,16 @@
  * data carries a scene is never rendered with it there (the
  * fitted slot declares `data-story-plain` on such pages, and the
  * scene is dropped).
+ *
+ * Episodes: a chapter the spine marks with an `episode` carries
+ * its animated telling — a short film in the story's cartoon
+ * language, narrated from the chapter's own words. The film
+ * renders inside the chapter's slot, above the written chapter,
+ * which stands beneath it as the episode's guide card. The film
+ * is poster-first and lazy (preload="none", the house film
+ * pattern): nothing heavy loads until the keeper presses play.
+ * On plain surfaces the episode is dropped with the scene, by
+ * the same fence.
  */
 (function () {
   "use strict";
@@ -47,6 +57,17 @@
     return (story?.chapters || []).find(c => c.id === id) || null;
   }
 
+  function assetUrl(path) {
+    /* Spine asset paths (scenes, episode films and posters) are
+     * site-root relative; resolve them the way the story data
+     * itself is resolved. */
+    try {
+      return new URL(path, pageBase()).href;
+    } catch {
+      return path;
+    }
+  }
+
   function renderChapter(slot, story, chapter) {
     const plain = slot.hasAttribute("data-story-plain");
     slot.classList.add("story-chapter");
@@ -71,6 +92,33 @@
       frame.className = "story-frame-note";
       frame.textContent = "Told beside this page's cartoon scene, above.";
       slot.appendChild(frame);
+    }
+
+    if (chapter.episode && !plain) {
+      /* The chapter's animated telling, where one has been
+       * filmed: poster-first and lazy — nothing heavy loads
+       * until the keeper presses play. The written chapter
+       * below is its guide card. */
+      const figure = document.createElement("figure");
+      figure.className = "story-episode";
+      const video = document.createElement("video");
+      video.controls = true;
+      video.preload = "none";
+      video.playsInline = true;
+      video.width = 1280;
+      video.height = 720;
+      video.poster = assetUrl(chapter.episode.poster);
+      video.src = assetUrl(chapter.episode.film);
+      video.setAttribute(
+        "aria-label",
+        `Video: ${story.title}, Chapter ${chapter.n} — ${chapter.title}, the animated episode`
+      );
+      const caption = document.createElement("figcaption");
+      caption.textContent =
+        chapter.episode.label ||
+        `Episode ${chapter.n} — the animated telling of this chapter. The written chapter below is its guide card.`;
+      figure.append(video, caption);
+      slot.appendChild(figure);
     }
 
     if (chapter.beat) {
