@@ -70,6 +70,12 @@
           state.textContent = "Not yet found. The chapter waits on its own page.";
         }
         body.appendChild(state);
+        if (chapter.episode) {
+          const filmed = document.createElement("p");
+          filmed.className = "map-episode";
+          filmed.textContent = "Episode filmed — the animated telling stands on its page.";
+          body.appendChild(filmed);
+        }
         card.appendChild(body);
         regionsHost.appendChild(card);
       }
@@ -90,6 +96,9 @@
           ? `Found · Pattern Day ${found.patternDay}.`
           : "Not yet found.";
         item.appendChild(state);
+        if (chapter.episode) {
+          item.appendChild(document.createTextNode(" Episode filmed."));
+        }
         roadHost.appendChild(item);
       }
     }

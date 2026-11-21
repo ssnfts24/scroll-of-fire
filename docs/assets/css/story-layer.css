@@ -39,6 +39,26 @@
   line-height: 1.65;
 }
 
+/* The chapter's animated episode: poster-first, phone-light,
+   standing inside the chapter panel above its guide card. */
+.story-episode {
+  margin: 0.6rem 0 0.8rem;
+}
+
+.story-episode video {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 0.4rem;
+  background: #17100a;
+}
+
+.story-episode figcaption {
+  font-size: 0.85rem;
+  opacity: 0.75;
+  margin-top: 0.35rem;
+}
+
 .story-foot {
   margin-top: 0.7rem;
   padding-top: 0.55rem;
@@ -84,6 +104,11 @@
 .map-unfound {
   font-size: 0.85rem;
   opacity: 0.75;
+}
+
+.map-episode {
+  font-size: 0.85rem;
+  opacity: 0.85;
 }
 
 /* The Year Thread strip. */
