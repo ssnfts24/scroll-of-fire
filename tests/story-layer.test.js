@@ -130,6 +130,27 @@ test("the year thread model: today, knots and find-days from the trail alone", (
   assert.deepEqual([...model.findDays], [218]);
 });
 
+test("episodes: a filmed chapter carries its episode in the spine, under the contract the layer and the map honour", () => {
+  const filmed = story.chapters.filter(c => c.episode);
+  assert.deepEqual(
+    filmed.map(c => c.n),
+    [2],
+    "exactly one episode is filmed so far — chapter 2, the pattern-setter; the rest land as they are filmed"
+  );
+  for (const chapter of filmed) {
+    const { film, poster, duration } = chapter.episode;
+    assert.ok(film.startsWith("assets/media/") && film.endsWith(".mp4"), `chapter ${chapter.n}'s episode names its film`);
+    assert.ok(fs.existsSync(path.join(docsRoot, film)), `chapter ${chapter.n}'s film stands in the media folder`);
+    assert.ok(fs.existsSync(path.join(docsRoot, poster)), `chapter ${chapter.n}'s poster stands in the media folder`);
+    assert.ok(/^\d+:\d{2}$/.test(duration), `chapter ${chapter.n}'s episode states its length`);
+  }
+  const layer = read("docs/assets/js/story-layer.js");
+  assert.ok(layer.includes("chapter.episode && !plain"), "the episode drops on plain surfaces, by the same fence as the scene");
+  assert.ok(layer.includes("story-episode") && layer.includes('preload = "none"'), "the layer renders the episode poster-first and lazy");
+  const map = read("docs/assets/js/travellers-map.js");
+  assert.ok(map.includes("chapter.episode"), "the map reflects which chapters are filmed");
+});
+
 test("the map page and the fitted pages carry the layer honestly", () => {
   const map = fs.readFileSync(path.join(docsRoot, "map.html"), "utf8");
   assert.ok(map.includes("The Traveller's Map"), "the map page stands");
