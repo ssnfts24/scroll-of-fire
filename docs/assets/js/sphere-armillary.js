@@ -1062,6 +1062,8 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
     if (renderReadoutRef) renderReadoutRef();
   });
 
+  var modelConvCache = null;
+  var modelConvReadAt = 0;
   function conversionForSelection(pos) {
     if (!pos) return null;
     // First source: the instrument's own current model. Its
@@ -1074,14 +1076,25 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
     // and the cursor's day are not always the same day — a
     // face tap moves the face alone — so the model's position
     // is the one reading that always names the shown day.
-    var ui = window.LivingTimeSphereUi;
-    if (ui && ui.getCurrentModel) {
-      var model = null;
-      try { model = ui.getCurrentModel(); } catch (err) { model = null; }
-      var sel = model && model.selectedPatternPosition;
-      if (sel && sel.dayOfPatternYear === pos.dayOfPatternYear && sel.moon === pos.moon && sel.day === pos.day) {
-        if (sel.civilDate) selectedCivilISO = sel.civilDate;
-        return sel;
+    // The model is a heavy build and the strip mutates
+    // constantly, so the conversion is cached by the shown
+    // day and re-read at most a few times a second; the
+    // telling converges a breath after the day settles.
+    var key = pos.moon + "|" + pos.day + "|" + pos.dayOfPatternYear;
+    if (modelConvCache && modelConvCache.key === key) return modelConvCache.conv;
+    var now = Date.now();
+    if (now - modelConvReadAt >= 300) {
+      modelConvReadAt = now;
+      var ui = window.LivingTimeSphereUi;
+      if (ui && ui.getCurrentModel) {
+        var model = null;
+        try { model = ui.getCurrentModel(); } catch (err) { model = null; }
+        var sel = model && model.selectedPatternPosition;
+        if (sel && sel.dayOfPatternYear === pos.dayOfPatternYear && sel.moon === pos.moon && sel.day === pos.day) {
+          if (sel.civilDate) selectedCivilISO = sel.civilDate;
+          modelConvCache = { key: key, conv: sel };
+          return sel;
+        }
       }
     }
     // Fallback: the cursor's own conversion, used only when
