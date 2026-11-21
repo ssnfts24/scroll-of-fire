@@ -19,7 +19,14 @@
  *      dates, and the offer names its window and its sources. Moon
  *      lines are never passed off as farm facts: the calendar says
  *      when the bed is open; the farm record says what belongs in
- *      the ground.
+ *      the ground. The ground is the keeper's own county: the farm
+ *      dataset carries all thirty-nine Washington counties, each
+ *      anchored on its real frost record and labeled published or
+ *      computed in its provenance, never one dressed as the other.
+ *      The keeper's county is remembered on their device, and every
+ *      planting record carries the county it was planted under, so
+ *      changing ground never rewrites a planting already in the
+ *      ground.
  *   3. Tending is witnessing. A planting grows on the days its
  *      keeper keeps — days the keeper's own Life Atlas record
  *      holds, counted inside the planting's Moon — and the bed's
@@ -265,6 +272,21 @@
       return out.sort((a, b) => a.name.localeCompare(b.name) || a.method.localeCompare(b.method));
     }
 
+    /* The keeper's ground. The county is a choice, remembered on
+     * the keeper's device, and stamped on every planting; the
+     * default is Lewis County, the garden's home ground, so an
+     * existing keeper's garden reads exactly as it always did. */
+    const DEFAULT_COUNTY_ID = "lewis";
+    const COUNTY_STORAGE_KEY = "sof.pattern-garden.county.v1";
+
+    function resolveCountyId(locations, requested) {
+      const list = Array.isArray(locations) ? locations : [];
+      if (!list.length) return null;
+      if (requested && list.some(l => l && l.id === requested)) return requested;
+      if (list.some(l => l && l.id === DEFAULT_COUNTY_ID)) return DEFAULT_COUNTY_ID;
+      return list[0].id || null;
+    }
+
     /* --------------------------- records -------------------------- */
 
     function gardenPayload(record) {
@@ -413,6 +435,8 @@
               stageName: stage.name,
               stageGlyph: stage.glyph,
               foundSeed: Boolean(p.foundSeed),
+              countyId: p.countyId || null,
+              countyName: p.countyName || null,
               harvested,
               canHarvest: Boolean(past && !harvested && witnessedDays >= HARVEST_WITNESS_MIN),
               goneToSeed: Boolean(past && !harvested && witnessedDays < HARVEST_WITNESS_MIN)
@@ -527,6 +551,8 @@
           method: cleanText(input.method, 20) || null,
           plantedCivilDate: cleanText(input.plantedCivilDate, 20) || null,
           foundSeed: Boolean(input.foundSeed),
+          countyId: cleanText(input.countyId, 40) || null,
+          countyName: cleanText(input.countyName, 60) || null,
           seedId: cleanText(input.seedId, 80) || null
         }
       });
@@ -668,7 +694,19 @@
     let farmData = null;
     let state = null;
     let todayTemporal = null;
-    let countyId = "lewis";
+    let countyId = DEFAULT_COUNTY_ID;
+
+    function readStoredCountyId() {
+      try {
+        return globalThis.localStorage?.getItem(COUNTY_STORAGE_KEY) || null;
+      } catch { return null; }
+    }
+
+    function storeCountyId(id) {
+      try {
+        globalThis.localStorage?.setItem(COUNTY_STORAGE_KEY, id);
+      } catch { /* the choice still holds for the session */ }
+    }
 
     function moonNames() {
       try {
@@ -858,6 +896,7 @@
             line.textContent =
               `${planting.stageGlyph} ${planting.cropName} — ${planting.stageName} · witnessed ${planting.witnessedDays} day${planting.witnessedDays === 1 ? "" : "s"}` +
               (planting.foundSeed ? " · from a found seed" : "") +
+              (planting.countyName ? ` · ground: ${planting.countyName}` : "") +
               (planting.harvested
                 ? " · harvested — its keepsake is in your Atlas"
                 : planting.goneToSeed
@@ -984,6 +1023,8 @@
                           cropName: choice.name,
                           method: choice.method,
                           plantedCivilDate: todayTemporal?.civilDate || null,
+                          countyId: loc?.id || countyId,
+                          countyName: loc?.county || null,
                           foundSeed: Boolean(seed),
                           seedId: seed ? seed.recordId : null
                         },
@@ -1048,6 +1089,7 @@
       if (!host) return;
       const countySelect = document.getElementById("garden-county");
       await loadFarm();
+      if (farmData) countyId = resolveCountyId(farmData.locations, readStoredCountyId()) || DEFAULT_COUNTY_ID;
       if (countySelect && farmData) {
         countySelect.replaceChildren();
         for (const loc of farmData.locations) {
@@ -1058,7 +1100,8 @@
           countySelect.appendChild(opt);
         }
         countySelect.addEventListener("change", () => {
-          countyId = countySelect.value;
+          countyId = resolveCountyId(farmData.locations, countySelect.value) || DEFAULT_COUNTY_ID;
+          storeCountyId(countyId);
           render();
         });
       }
@@ -1095,6 +1138,9 @@
       isCurrentMoon,
       cropWindows,
       plantableForSpan,
+      DEFAULT_COUNTY_ID,
+      COUNTY_STORAGE_KEY,
+      resolveCountyId,
       METHOD_LABELS,
       stageFor,
       foldGarden,

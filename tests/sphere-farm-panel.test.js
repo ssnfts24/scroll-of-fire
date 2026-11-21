@@ -32,18 +32,30 @@ function assertSourced(part, label) {
   }
 }
 
-test("dataset: both founding counties are present with sourced frost dates and zones", () => {
+test("dataset: all thirty-nine Washington counties are present with sourced frost dates and zones", () => {
   const ids = data.locations.map(l => l.id);
-  assert.deepEqual(ids.sort(), ["lewis", "snohomish"]);
+  assert.deepEqual(ids.sort(), [
+    "adams", "asotin", "benton", "chelan", "clallam", "clark", "columbia",
+    "cowlitz", "douglas", "ferry", "franklin", "garfield", "grant",
+    "grays-harbor", "island", "jefferson", "king", "kitsap", "kittitas",
+    "klickitat", "lewis", "lincoln", "mason", "okanogan", "pacific",
+    "pend-oreille", "pierce", "san-juan", "skagit", "skamania",
+    "snohomish", "spokane", "stevens", "thurston", "wahkiakum",
+    "walla-walla", "whatcom", "whitman", "yakima"
+  ]);
   for (const loc of data.locations) {
     assert.match(loc.lastSpringFrost, /^\d{2}-\d{2}$/);
     assert.match(loc.firstFallFrost, /^\d{2}-\d{2}$/);
-    assert.ok(loc.frostFreeDays > 150 && loc.frostFreeDays < 260);
+    assert.ok(loc.frostFreeDays > 60 && loc.frostFreeDays < 290);
     assert.ok(loc.zones.length >= 1);
     assertSourced({ sources: loc.frostSources }, `${loc.id} frost dates`);
     assertSourced({ sources: loc.safeFrostSources }, `${loc.id} safe frost dates`);
     assertSourced({ sources: loc.zoneSources }, `${loc.id} zones`);
     assert.ok(loc.frostRangeNote.length > 40, `${loc.id} must carry its disagreement/range note`);
+    assert.ok(
+      loc.provenance && (loc.provenance.kind === "published" || loc.provenance.kind === "computed"),
+      `${loc.id} must carry its provenance — published or computed, never unlabeled`
+    );
   }
   const lewis = data.locations.find(l => l.id === "lewis");
   assert.equal(lewis.lastSpringFrost, "04-22"); // Centralia, NOAA median
@@ -138,7 +150,7 @@ test("fixture: Lewis County, August 10 — fall broccoli is in, fall cabbage has
 });
 
 test("unknown county and bad date fail honestly", () => {
-  assert.equal(panel.adviceForDate(data, "pierce", "2027-04-01").ok, false);
+  assert.equal(panel.adviceForDate(data, "multnomah", "2027-04-01").ok, false);
   assert.equal(panel.adviceForDate(data, "lewis", "not-a-date").ok, false);
 });
 
