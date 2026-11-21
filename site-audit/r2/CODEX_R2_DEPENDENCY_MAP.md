@@ -112,10 +112,10 @@
 | `docs/assets/js/heaven-sound.js` | 77 |
 | `docs/assets/js/spark-agent-seat.js` | 75 |
 | `docs/assets/js/spark-3d.js` | 73 |
-| `docs/assets/js/calendar/pattern-calendar-version.js` | 42 |
-| `docs/assets/js/calendar/pattern-calendar-data.js` | 42 |
-| `docs/assets/js/calendar/pattern-calendar-format.js` | 42 |
-| `docs/assets/js/calendar/pattern-calendar-boundary.js` | 42 |
+| `docs/assets/js/calendar/pattern-calendar-version.js` | 40 |
+| `docs/assets/js/calendar/pattern-calendar-data.js` | 40 |
+| `docs/assets/js/calendar/pattern-calendar-format.js` | 40 |
+| `docs/assets/js/calendar/pattern-calendar-boundary.js` | 40 |
 
 ## Protected systems (do not modify)
 
