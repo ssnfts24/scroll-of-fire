@@ -106,6 +106,12 @@
   },
   {
    "beat": "At the storehouse, the Traveller packs scrolls and tools for the long road ahead.",
+   "episode": {
+    "duration": "1:15",
+    "film": "assets/media/story-episode-06-packing-for-the-way.mp4",
+    "label": "Episode 6 — the animated telling of this chapter. The written chapter below is its guide card.",
+    "poster": "assets/media/story-episode-06-packing-for-the-way-poster.webp"
+   },
    "id": "packing-for-the-way",
    "n": 6,
    "page": "downloads.html",
@@ -122,6 +128,12 @@
   },
   {
    "beat": "At a crossroads stands a desk where a Witness writes down the road, exactly as it happens.",
+   "episode": {
+    "duration": "1:34",
+    "film": "assets/media/story-episode-07-the-desk-at-the-crossroads.mp4",
+    "label": "Episode 7 — the animated telling of this chapter. The written chapter below is its guide card.",
+    "poster": "assets/media/story-episode-07-the-desk-at-the-crossroads-poster.webp"
+   },
    "id": "the-desk-at-the-crossroads",
    "n": 7,
    "page": "witness.html",
@@ -143,6 +155,12 @@
    "place": "Start Here",
    "title": "The Signpost Meadow",
    "beat": "Past the crossroads, a meadow of signposts shows the Traveller the short road and the long one.",
+   "episode": {
+    "duration": "1:17",
+    "film": "assets/media/story-episode-08-the-signpost-meadow.mp4",
+    "label": "Episode 8 — the animated telling of this chapter. The written chapter below is its guide card.",
+    "poster": "assets/media/story-episode-08-the-signpost-meadow-poster.webp"
+   },
    "scene": null,
    "text": [
     "Past the crossroads the road came to a meadow, and the meadow was full of signposts — dozens of them, planted like a young orchard, every one carved with a name and an arrow.",
