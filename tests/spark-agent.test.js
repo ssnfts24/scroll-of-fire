@@ -18,7 +18,8 @@
  *   - the rate limit holds;
  *   - the system prompt carries the children's fence and the
  *     not-a-person lines;
- *   - no Guide file changes in this change set.
+ *   - no Guide machinery changes in this change set (one named
+ *     exception: docs/guide.html, by Aaron's word, Nov 21, 2026).
  */
 
 const assert = require("node:assert/strict");
@@ -168,7 +169,17 @@ test("the Guide seat is untouched by the Spark seat: no Guide files differ, rule
     // were in that branch by Aaron's word; PR #197 landed inside
     // PR #199 on Nov 20, 2026, so its files are part of main now
     // and the standing expectation is zero Guide-side differences.)
-    const guideFiles = changed.filter((f) => /guide/.test(f) && !/spark-agent/.test(f)).sort();
+    // One named exception, by Aaron's word (Nov 21, 2026: "Fix
+    // the guide page too"): docs/guide.html — the field-guide
+    // page, a reader page that loads the calendar like any other
+    // — may carry its fixes (a deduped calendar stack, a closing
+    // next step, share metadata). The exception names that one
+    // file only. Every Guide-machinery file — codex-guide.html,
+    // the codex-guide scripts, the Guide function and its lib,
+    // and the rulebook — stays pinned at zero differences.
+    const guideFiles = changed
+      .filter((f) => /guide/.test(f) && !/spark-agent/.test(f) && f !== "docs/guide.html")
+      .sort();
     assert.deepEqual(guideFiles, [], `unexpected Guide-side changes: ${guideFiles.join(", ")}`);
     assert.ok(!changed.some((f) => f.includes("codex-guide-rulebook")), "the rulebook file is untouched");
   }
