@@ -540,6 +540,7 @@
   "use strict";
 
   let depthTimer = 0;
+  let lastDepthBand = "";
   let navigationWired = false;
   let explorerTouched = false;
   let todaySettled = false;
@@ -1021,6 +1022,12 @@
         || "medium"
       ).toLowerCase();
 
+    // The depth readout is a pure function of the band; when the
+    // band has not changed, the DOM already says the right thing
+    // and rewriting it is waste.
+    if (band === lastDepthBand) return;
+    lastDepthBand = band;
+
     const root =
       document.querySelector(
         "[data-home-live-root]"
@@ -1339,34 +1346,42 @@
       );
     }
 
-    if (
-      depthTimer
-    ) {
-      clearInterval(
-        depthTimer
-      );
-    }
-
     /*
      * Low-rate semantic diagnostic sampling only.
      * No geometry work and no new animation loop.
+     *
+     * The sampler runs only while the instrument section is on or
+     * near the screen. Each sample asks the renderer for a full
+     * diagnostics pass; while the visitor is elsewhere on the page
+     * — watching the hero sphere turn, for instance — the depth
+     * readout is not visible, so sampling then was pure cost on
+     * the same main thread the sphere animates on. Entering the
+     * section samples immediately, then every 900 ms while it
+     * stays in view: the same cadence and the same values as
+     * before, without the off-screen cost. Where no
+     * IntersectionObserver exists, the sampler runs as it always
+     * did.
      */
-    depthTimer =
-      window.setInterval(
-        () => {
-          if (
-            document.hidden
-          ) {
-            return;
-          }
+    const startDepthSampler =
+      () => {
+        if (depthTimer) return;
 
-          renderDepth();
-        },
-        900
-      );
+        depthTimer =
+          window.setInterval(
+            () => {
+              if (
+                document.hidden
+              ) {
+                return;
+              }
 
-    window.addEventListener(
-      "pagehide",
+              renderDepth();
+            },
+            900
+          );
+      };
+
+    const stopDepthSampler =
       () => {
         if (
           depthTimer
@@ -1377,6 +1392,59 @@
 
           depthTimer = 0;
         }
+      };
+
+    const liveRoot =
+      document.querySelector(
+        "[data-home-live-root]"
+      );
+
+    if (
+      liveRoot
+      && typeof IntersectionObserver
+        !== "undefined"
+    ) {
+      const depthObserver =
+        new IntersectionObserver(
+          entries => {
+            if (
+              entries.some(
+                entry =>
+                  entry.isIntersecting
+              )
+            ) {
+              renderDepth();
+              startDepthSampler();
+            } else {
+              stopDepthSampler();
+            }
+          },
+          {
+            rootMargin:
+              "320px 0px"
+          }
+        );
+
+      depthObserver.observe(
+        liveRoot
+      );
+
+      window.addEventListener(
+        "pagehide",
+        () => depthObserver.disconnect(),
+        {
+          once:
+            true
+        }
+      );
+    } else {
+      startDepthSampler();
+    }
+
+    window.addEventListener(
+      "pagehide",
+      () => {
+        stopDepthSampler();
       },
       {
         once:

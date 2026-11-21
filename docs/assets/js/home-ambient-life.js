@@ -125,7 +125,13 @@
     rafId = null;
     if (!heroVisible || document.hidden) return;
     const elapsed = timestamp / 1000;
-    if (!lastFrame || timestamp - lastFrame >= 33) {
+    // Redraw at ~20 fps, not ~30: the field's motion is a pure
+    // function of elapsed time (drift integrates real deltas, sway
+    // and pulse read the clock), so a slower cadence draws the exact
+    // same field, sampled less often — and the compositor blends
+    // this full-hero layer under the hero's live sphere canvas
+    // half as often again while the sphere turns above it.
+    if (!lastFrame || timestamp - lastFrame >= 50) {
       const delta = lastFrame ? Math.min(0.05, (timestamp - lastFrame) / 1000) : 0.016;
       for (const particle of particles) {
         particle.x += particle.drift * delta;

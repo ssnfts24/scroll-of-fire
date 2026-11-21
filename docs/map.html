@@ -54,6 +54,7 @@
   <link rel="stylesheet" href="assets/css/pattern-garden.css?v=20261120-1">
 <link rel="stylesheet" href="assets/css/story-layer.css?v=20261120-1">
 <link rel="stylesheet" href="assets/css/cartoon-scenes.css?v=20261120-1">
+<link rel="stylesheet" href="assets/css/world-gate.css?v=20261120-1">
 <link rel="stylesheet" href="assets/css/story-layer.css?v=20261120-1">
   <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261119-1">
   <script defer src="assets/js/spark-companion.js?v=20261119-1"></script>
@@ -177,6 +178,25 @@
       <p>The map is a story's map, drawn alongside the record — the record itself is unchanged by it.</p>
       <div data-year-thread></div>
     </section>
+    <section class="garden-panel world-gate" id="world-gate" aria-labelledby="world-gate-title">
+      <p class="garden-eyebrow">The World Gate</p>
+      <h2 id="world-gate-title">The world, on the Atlas table</h2>
+      <p>The Traveller's Map is now the world's map in fact: the thirteen lands of the Codex as a raised relief on the Atlas Room's long table, under today's sky. <span id="world-gate-sky-line">Today's sky is read live from the calendar when the Gate wakes.</span> The Sphere turns above the table — it is the sky, not a land, and <a href="living-time-sphere.html">looking up</a> is one tap. Every land below is a doorway: tap it on the relief, or take its name in plain words, and you travel to its page — every page keeps its own address, unchanged. The lands are drawn from the site's own catalog, so this map can never drift from the site.</p>
+      <p class="world-gate-guidance" id="world-gate-guidance" hidden></p>
+      <div class="world-gate-stage" id="world-gate-stage" role="img" aria-label="A raised relief of the thirteen lands on the Atlas Room's long table, under today's sky, with the Sphere's sign turning above it. Every land is listed in plain words below."></div>
+      <p class="world-gate-stage-note" id="world-gate-stage-note"></p>
+      <p class="world-gate-readout" id="world-gate-readout" role="status" aria-live="polite">The Gate is waking…</p>
+      <p class="world-gate-travel-wrap"><a id="world-gate-travel" href="companions.html">Travel — begin in the Clearing</a></p>
+      <h3>The lands, in plain words</h3>
+      <ol class="world-gate-lands" id="world-gate-lands"><li>Opening the Gate…</li></ol>
+      <p class="world-gate-plain-row"><button type="button" id="world-gate-plain-toggle">Read the plain Gate instead</button> <span class="world-gate-face-note" id="world-gate-face-note"></span></p>
+      <div class="world-gate-flat" id="world-gate-flat" hidden>
+        <h3>The Gate in plain words — the flat twin</h3>
+        <p>This is the whole Gate with no scene at all: the same lands, in the same order, with the same words and the same next steps. Nothing here is gated — every land's door stands open from the first visit, walked or read.</p>
+        <ol class="world-gate-lands" id="world-gate-flat-lands"></ol>
+        <p>The sky over the Gate: <a href="living-time-sphere.html">the Sphere</a> — look up.</p>
+      </div>
+    </section>
     <section class="garden-panel" aria-labelledby="map-lands-title">
       <h2 id="map-lands-title">The lands</h2>
       <div id="map-regions" class="map-regions"><p>Drawing the lands…</p></div>
@@ -220,6 +240,9 @@
   <script src="assets/js/living-trail.js?v=20261120-1"></script>
   <script src="assets/js/year-thread.js?v=20261120-1"></script>
   <script src="assets/js/travellers-map.js?v=20261120-1"></script>
+  <script src="assets/js/world-engine.js?v=20261120-1"></script>
+  <script src="assets/js/world-lands.js?v=20261120-1"></script>
+  <script src="assets/js/world-gate.js?v=20261120-1"></script>
   <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
   <script defer src="assets/js/social-bridge.js?v=20261119-1"></script>
   <script defer src="assets/js/day-telling.js?v=20261119-1"></script>

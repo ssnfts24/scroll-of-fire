@@ -70,6 +70,7 @@
 | `scripts/build-scroll-search.mjs` | — |
 | `scripts/build-search-index.mjs` | `docs/data/site-catalog.json`, `docs/scroll/data/library.json`, `docs/scroll/data/reader-segments.json`, `docs/scroll/search/lexicon/lexicon-index.json`, `docs/scroll/evidence/claim-register.json` |
 | `scripts/build-site-catalog.mjs` | `site-audit/pr5a-body.md`, `docs/downloads.html`, `docs/data/site-catalog.json` |
+| `scripts/build-world-lands.mjs` | `docs/data/site-catalog.json` |
 | `scripts/free_all_circuits.py` | — |
 | `scripts/generate-equinox-passage-data.mjs` | `docs/data/equinox-passage/equinox-source-metadata.json`, `docs/data/equinox-passage/equinox-reference-2014-2027.json`, `docs/data/equinox-passage/equinox-passage-2014-2027.json` |
 | `scripts/generate-pattern-calendar-vectors.mjs` | — |
@@ -88,14 +89,14 @@
 
 | Stylesheet | Pages |
 | --- | --- |
-| `docs/assets/css/spark-companion.css` | 177 |
-| `docs/assets/css/living-ui.css` | 136 |
+| `docs/assets/css/spark-companion.css` | 178 |
+| `docs/assets/css/living-ui.css` | 137 |
 | `docs/scripture/assets/scripture.css` | 93 |
-| `docs/assets/css/spark-agent-seat.css` | 74 |
-| `docs/assets/css/codex.css` | 50 |
-| `docs/assets/css/navigation.css` | 40 |
-| `docs/assets/css/social-bridge.css` | 37 |
-| `docs/assets/css/living-moon-theme.css` | 31 |
+| `docs/assets/css/spark-agent-seat.css` | 75 |
+| `docs/assets/css/codex.css` | 51 |
+| `docs/assets/css/navigation.css` | 41 |
+| `docs/assets/css/social-bridge.css` | 38 |
+| `docs/assets/css/living-moon-theme.css` | 32 |
 | `docs/assets/css/animations.css` | 22 |
 | `docs/assets/css/story-layer.css` | 19 |
 | `docs/theory/equations/assets/css/codex.css` | 19 |
@@ -103,18 +104,18 @@
 
 | Script | Pages |
 | --- | --- |
-| `docs/assets/js/spark-companion.js` | 177 |
-| `docs/assets/js/spark-presence.js` | 176 |
-| `docs/assets/js/site.js` | 139 |
-| `docs/assets/js/living-ui.js` | 136 |
+| `docs/assets/js/spark-companion.js` | 178 |
+| `docs/assets/js/spark-presence.js` | 177 |
+| `docs/assets/js/site.js` | 140 |
+| `docs/assets/js/living-ui.js` | 137 |
 | `docs/scripture/assets/scripture.js` | 93 |
-| `docs/assets/js/heaven-sound.js` | 76 |
-| `docs/assets/js/spark-agent-seat.js` | 74 |
-| `docs/assets/js/spark-3d.js` | 72 |
-| `docs/assets/js/calendar/pattern-calendar-version.js` | 41 |
-| `docs/assets/js/calendar/pattern-calendar-data.js` | 41 |
-| `docs/assets/js/calendar/pattern-calendar-format.js` | 41 |
-| `docs/assets/js/calendar/pattern-calendar-boundary.js` | 41 |
+| `docs/assets/js/heaven-sound.js` | 77 |
+| `docs/assets/js/spark-agent-seat.js` | 75 |
+| `docs/assets/js/spark-3d.js` | 73 |
+| `docs/assets/js/calendar/pattern-calendar-version.js` | 42 |
+| `docs/assets/js/calendar/pattern-calendar-data.js` | 42 |
+| `docs/assets/js/calendar/pattern-calendar-format.js` | 42 |
+| `docs/assets/js/calendar/pattern-calendar-boundary.js` | 42 |
 
 ## Protected systems (do not modify)
 
