@@ -348,14 +348,30 @@
       if ("IntersectionObserver" in window) {
         new IntersectionObserver((entries) => { visible = entries[0]?.isIntersecting !== false; }, { threshold: 0.02 }).observe(wrap);
       }
+      /* Performance (sphere-performance pass): the orbit used to
+       * read the wrap's client size on every frame (a layout read
+       * per frame) and was guarded by a MutationObserver on the
+       * whole document subtree, whose callback ran on every DOM
+       * mutation anywhere on this busy page. The size is now kept
+       * by a ResizeObserver (same values, read when they change),
+       * the z-index is written only when the Spark crosses from
+       * behind to in front, and the removal guard watches only
+       * the wrap's own child list — the holder can only leave
+       * the page from there. The orbit's path, speed, scale and
+       * opacity are computed exactly as before. */
+      let wrapW = wrap.clientWidth, wrapH = wrap.clientHeight;
+      const measureWrap = () => { wrapW = wrap.clientWidth; wrapH = wrap.clientHeight; };
+      if ("ResizeObserver" in window) new ResizeObserver(measureWrap).observe(wrap);
+      else window.addEventListener("resize", measureWrap);
+      let lastFront = null;
       const orbit = (now) => {
         raf = requestAnimationFrame(orbit);
         if (document.hidden || !visible) return;
         // Frozen means frozen: while the keeper holds the Sphere
         // still, the Spark stations itself and rests too.
         if (window.SphereRebuild?.isFrozen?.()) return;
-        const w = wrap.clientWidth, h = wrap.clientHeight;
-        if (!w || !h) return;
+        const w = wrapW, h = wrapH;
+        if (!w || !h) { measureWrap(); return; }
         const angle = (now / 26000) * Math.PI * 2 + 0.8;
         const rx = w * 0.36, ry = h * 0.30;
         const x = w / 2 + Math.cos(angle) * rx;
@@ -363,12 +379,13 @@
         const depth = (Math.sin(angle) + 1) / 2; // 0 behind, 1 in front
         holder.style.transform = `translate(${Math.round(x - 34)}px, ${Math.round(y - 34)}px) scale(${(0.82 + depth * 0.33).toFixed(3)})`;
         holder.style.opacity = String(0.72 + depth * 0.28);
-        holder.style.zIndex = depth > 0.5 ? "7" : "3";
+        const front = depth > 0.5;
+        if (front !== lastFront) { lastFront = front; holder.style.zIndex = front ? "7" : "3"; }
       };
       raf = requestAnimationFrame(orbit);
       holder.dataset.orbiting = "1";
       // Keep the loop honest when the holder leaves the page.
-      new MutationObserver(() => { if (!document.contains(holder)) cancelAnimationFrame(raf); }).observe(document.body, { childList: true, subtree: true });
+      new MutationObserver(() => { if (!document.contains(holder)) cancelAnimationFrame(raf); }).observe(wrap, { childList: true });
     }
     return holder;
   }
