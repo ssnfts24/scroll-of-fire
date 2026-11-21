@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 2295,
-    "bytes": 969220887,
+    "bytes": 969270459,
     "byGroup": {
       "tooling": 234,
       "manuscript": 17,
@@ -17928,8 +17928,8 @@
       "path": "docs/assets/media/codex-cartoon-clip.mp4",
       "title": "codex-cartoon-clip.mp4",
       "format": "mp4",
-      "bytes": 21016106,
-      "sha256": "c4a620d4f8a753dae8fac8dcafbfdd17637fa7506a083a5860bb1d7e44ae185f",
+      "bytes": 21065678,
+      "sha256": "dc65e4fce778d06e6f937e04eb39be5a2748fcc82aa87a203e6db8c06be96c10",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
