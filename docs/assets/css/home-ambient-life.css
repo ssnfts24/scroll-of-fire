@@ -1,0 +1,30 @@
+/* Homepage ambient life — a quiet field behind the hero.
+ *
+ * The canvas is decorative only: it takes no pointer events, creates
+ * no layout box of its own beyond the hero it fills, and sits behind
+ * the hero copy and Sphere. Reduced-motion visitors receive one still
+ * field from the script rather than a moving one.
+ */
+.home-ambient-life {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.58;
+  mix-blend-mode: screen;
+}
+
+@media (max-width: 720px) {
+  .home-ambient-life {
+    opacity: 0.46;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-ambient-life {
+    opacity: 0.34;
+  }
+}
