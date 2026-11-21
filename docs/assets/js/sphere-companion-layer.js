@@ -184,9 +184,17 @@
   const readoutValue = bar.querySelector(".sgb-readout-value");
   const statusEl = bar.querySelector(".sgb-status");
   const strip = $("sphere-state-strip");
+  /* Performance (sphere-performance pass): the strip observer
+   * fires on every mutation in the strip's subtree, including
+   * mutations that leave its text unchanged. The last mirrored
+   * text is remembered and unchanged text is skipped — the
+   * readout shows exactly the same words. */
+  let lastMirroredText = null;
   function mirrorReadout() {
     if (!strip) return;
     const text = (strip.textContent || "").trim().replace(/\s+/g, " ");
+    if (text === lastMirroredText) return;
+    lastMirroredText = text;
     if (text && !/resolving|aligning/i.test(text)) readoutValue.textContent = text;
   }
   if (strip) {
@@ -587,9 +595,17 @@
   syncDaypart();
   window.setInterval(syncDaypart, 15 * 60 * 1000);
 
+  /* Performance (sphere-performance pass): same guard as the
+   * readout mirror — the hue depends only on the readout text,
+   * so an unchanged text cannot change the hue; skip the parse
+   * and the companion call for those mutations. */
+  let lastHueText = null;
   function syncMoonHue() {
+    const hueText = readoutValue.textContent;
+    if (hueText === lastHueText) return;
+    lastHueText = hueText;
     const core = window.SparkCompanion;
-    const coord = parseReadout(readoutValue.textContent);
+    const coord = parseReadout(hueText);
     if (!coord || !core || typeof core.moonTemperFor !== "function") {
       rootEl.style.removeProperty("--sphere-moon-hue");
       return;

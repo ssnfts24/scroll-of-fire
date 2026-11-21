@@ -432,14 +432,36 @@
     }
   </style>
 
+  <style id="homepage-finish-folds-v20261120">
+    /* The finished home page (Nov 20, 2026): plain surface first, depth
+       one tap deeper. A fold is a native details element; its summary is
+       the one clear tap. Nothing inside a fold is removed — it waits. */
+    .home-fold{margin:1.5rem 0 0;border:1px solid rgba(255,255,255,.12);border-radius:1.1rem;background:rgba(255,255,255,.025);text-align:left}
+    .home-fold>summary{display:flex;flex-wrap:wrap;align-items:baseline;gap:.4rem .8rem;padding:1rem 1.2rem;cursor:pointer;list-style:none}
+    .home-fold>summary::-webkit-details-marker{display:none}
+    .home-fold>summary::after{content:"▾";margin-left:auto;color:#ffad70;font-size:1rem;line-height:1}
+    .home-fold[open]>summary::after{content:"▴"}
+    .home-fold-title{font-weight:700;color:rgba(255,255,255,.92)}
+    .home-fold-note{color:rgba(255,255,255,.55);font-size:.85rem}
+    .home-fold>summary:hover .home-fold-title{color:#ffc28f}
+    .front-door-featured-fold>section{padding:0 1.2rem 1.2rem}
+    .participation-more{max-width:1180px;margin:0 auto}
+    .participation-more .participation-article{padding:0 1.2rem 1.2rem}
+    .caravan-path-fold .caravan-path{padding:0 1.2rem 1.2rem}
+    .memory-controls-fold{margin-top:1.25rem}
+    .memory-controls-fold .codex-memory-controls{padding:0 1.2rem 1.2rem}
+  </style>
+
   <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261119-1">
+  <link rel="stylesheet" href="assets/css/home-ambient-life.css?v=20261120-1">
   <script defer src="assets/js/spark-companion.js?v=20261119-1"></script>
   <script defer src="assets/js/spark-3d.js?v=20261119-1"></script>
   <script defer src="assets/js/spark-presence.js?v=20261119-1"></script>
+  <script defer src="assets/js/home-ambient-life.js?v=20261120-1"></script>
   <script defer src="assets/js/heaven-sound.js?v=20261119-1"></script>
   <link rel="stylesheet" href="assets/css/story-layer.css?v=20261120-1">
-  <link rel="stylesheet" href="assets/css/spark-agent-seat.css?v=20261120-1">
-  <script defer src="assets/js/spark-agent-seat.js?v=20261120-1"></script>
+  <link rel="stylesheet" href="assets/css/spark-agent-seat.css?v=20261120-2">
+  <script defer src="assets/js/spark-agent-seat.js?v=20261120-2"></script>
 </head>
 
 <body class="living-ui">
@@ -724,6 +746,18 @@
         <li><a class="front-door-card" href="downloads.html"><strong>Archive</strong><span>Sealed downloads and preserved originals.</span></a></li>
       </ul>
       <div class="front-door-grid">
+        <section aria-labelledby="front-door-recent">
+          <h3 id="front-door-recent">Recent additions</h3>
+          <ul class="front-door-list">
+            <li><time datetime="2026-11-20">2026-11-20</time> <a href="./teach.html">The Picture Lesson is now a filmed episode</a></li>
+            <li><time datetime="2026-11-20">2026-11-20</time> <a href="./ledger.html">The Second Book is now a filmed episode</a></li>
+            <li><time datetime="2026-11-20">2026-11-20</time> <a href="./glossary.html">The Word-Hoard is now a filmed episode</a></li>
+            <li><time datetime="2026-11-20">2026-11-20</time> <a href="./hub.html">The Roundhouse of Engines is now a filmed episode</a></li>
+          </ul>
+        </section>
+      </div>
+      <details class="home-fold front-door-featured-fold">
+        <summary><span class="home-fold-title">Featured pages — the deep shelf</span><span class="home-fold-note">13 pages, one tap deeper</span></summary>
         <section aria-labelledby="front-door-featured">
           <h3 id="front-door-featured">Featured</h3>
           <ul class="front-door-list">
@@ -742,16 +776,7 @@
             <li><a href="codex-atlas.html">Codex Atlas</a> <span>A unified discovery page for the Scroll Library, Living Time, systems, research, artifacts and archive.</span></li>
           </ul>
         </section>
-        <section aria-labelledby="front-door-recent">
-          <h3 id="front-door-recent">Recent additions</h3>
-          <ul class="front-door-list">
-            <li><time datetime="2026-11-20">2026-11-20</time> <a href="./theory.html">The High Library is now a filmed episode</a></li>
-            <li><time datetime="2026-11-20">2026-11-20</time> <a href="./shop.html">The Registry Stall is now a filmed episode</a></li>
-            <li><time datetime="2026-11-20">2026-11-20</time> <a href="./codex-atlas.html">The Atlas Room is now a filmed episode</a></li>
-            <li><time datetime="2026-11-20">2026-11-20</time> <a href="./teach.html">The Picture Lesson is now a filmed episode</a></li>
-          </ul>
-        </section>
-      </div>
+      </details>
       <p class="front-door-actions"><a class="btn primary" href="codex-atlas.html">Open the full Codex Atlas</a> <a class="btn" href="scroll/">Enter the Scroll Library</a></p>
       <p class="atlas-note">Saved witness records, readings and settings live only in this browser. They do not synchronize between devices.</p>
     </section>
@@ -1071,25 +1096,31 @@
     </section>
 
     <section class="section-shell living-phone-app" id="living-phone-app" aria-labelledby="living-phone-app-title">
-      <p class="eyebrow">Living Day</p>
-      <h2 id="living-phone-app-title">Take Living Day with you</h2>
+      <p class="eyebrow">Spark. Living Day</p>
+      <h2 id="living-phone-app-title">Spark. Living Day is coming soon</h2>
       <p>
-        Living Day carries the Spark onto your Android phone. They greet
-        you by the moon and the day, keep their home on the phone, and move between
-        their rooms: their home, the Observatory with the Living Time Sphere inside it,
-        and the garden. In the Observatory the Sphere turns as it does here, and a
-        chosen day opens what is kept for it. If you allow it, they can also see your
-        calendar and your photos by day — there on the phone, and nowhere else.
+        Spark. Living Day carries the Spark onto your Android phone. The Spark
+        greets you by the moon and the day, keeps its home on the phone, and moves
+        between its rooms: its home, the Observatory with the Living Time Sphere
+        inside it, and the garden. In the Observatory the Sphere turns as it does
+        here, and a chosen day opens what is kept for it. If you allow it, the Spark
+        can also see your calendar and your photos by day — there on the phone,
+        and nowhere else.
       </p>
       <p>
         The app lives wholly on your phone. It needs no account and no internet,
-        and nothing leaves the device. This edition is their living presence — the
-        greeting, the rooms, the Sphere, the garden — while the deeper Living
-        Phone platform wiring is still being connected behind it. Living Day is
-        the app; Living Phone is the technology underneath it.
+        and nothing leaves the device. This edition is the Spark's living presence —
+        the greeting, the rooms, the Sphere, the garden — while the deeper Living
+        Phone platform wiring is still being connected behind it. Spark. Living Day
+        is the app; Living Phone is the technology underneath it.
       </p>
-      <p class="front-door-actions"><a class="btn primary" href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/Living-Phone-App.apk?raw=1">Download Living Day</a> <a class="btn" href="companions.html">Meet the Spark first</a></p>
-      <p class="atlas-note">Android · version 0.3.0 · 1.53 MB · SHA-256 sealed — its full seal stands in <a href="downloads.html#3_Living_Technology">Downloads, folder 3 · Living Technology</a>. To install: open the downloaded file on your phone and tap Install; if Android asks, allow installs from that source.</p>
+      <p><strong>Coming soon to Google Play.</strong></p>
+      <p class="front-door-actions"><a class="btn" href="companions.html">Meet the Spark first</a></p>
+      <details class="home-fold app-download-fold">
+        <summary><span class="home-fold-title">Can't wait? Take the direct download now</span><span class="home-fold-note">The sealed Android edition, today</span></summary>
+        <p class="front-door-actions"><a class="btn primary" href="https://github.com/ssnfts24/scroll-of-fire/blob/main/3_Living_Technology/Living-Phone-App.apk?raw=1">Download Spark. Living Day directly</a></p>
+        <p class="atlas-note">Android · version 0.3.0 · 1.53 MB · SHA-256 sealed — its full seal stands in <a href="downloads.html#3_Living_Technology">Downloads, folder 3 · Living Technology</a>. To install: open the downloaded file on your phone and tap Install; if Android asks, allow installs from that source.</p>
+      </details>
     </section>
 
 <section class="section-shell codex-live-grid" aria-label="Living Codex panels">
@@ -1241,6 +1272,8 @@
         </div>
 
         <!-- Phase 2 Memory Controls -->
+        <details class="home-fold memory-controls-fold">
+          <summary><span class="home-fold-title">Memory controls</span><span class="home-fold-note">View, export, import, or clear this browser's Codex memory</span></summary>
         <div class="codex-memory-controls" data-codex-memory-controls>
           <p class="codex-memory-controls-heading">Codex Memory — Phase 2</p>
           <p class="codex-memory-controls-desc">Codex Memory is stored in this browser. It is used to continue your path and is not a user account. No remote data is stored.</p>
@@ -1255,6 +1288,7 @@
           </div>
           <div class="codex-memory-status" data-codex-memory-status aria-live="polite" aria-label="Codex Memory contents"></div>
         </div>
+        </details>
 
         <p class="codex-privacy-note">All Codex data stays in this browser. No account required. Clearing browser storage removes all saved data.</p>
       </article>
@@ -1355,6 +1389,8 @@
           </div>
         </article>
 
+        <details class="home-fold caravan-path-fold">
+          <summary><span class="home-fold-title">The road, in five stages</span><span class="home-fold-note">Stabilize, practice, build, trade, move</span></summary>
         <div class="caravan-path" aria-label="Covenant Caravan transition path">
           <div class="path-row"><b>1</b><span><strong>Stabilize</strong>Map money, food, shelter, family needs, animal care, legal boundaries, and first safe movement.</span></div>
           <div class="path-row"><b>2</b><span><strong>Practice</strong>Train the daily rhythm: water, fire, food, repair, teaching, craft, and sleep.</span></div>
@@ -1362,6 +1398,7 @@
           <div class="path-row"><b>4</b><span><strong>Trade</strong>Earn through flooring, copper work, artifacts, repair, writing, teaching, and markets.</span></div>
           <div class="path-row"><b>5</b><span><strong>Move</strong>Travel with route scouting, animal welfare, rest days, logs, and community anchors.</span></div>
         </div>
+        </details>
       </div>
     </section>
 
@@ -1570,6 +1607,9 @@
             <span>Begin the next cycle with memory.</span>
           </div>
         </div>
+
+        <details class="home-fold participation-more">
+          <summary><span class="home-fold-title">Read the full vision — The Living Horizon</span><span class="home-fold-note">Eleven chapters, one tap deeper</span></summary>
 
         <div class="participation-article">
 
@@ -2126,6 +2166,7 @@
 
           </div>
         </div>
+        </details>
 
         <section class="participation-outcome" aria-labelledby="participation-outcome-title">
           <p class="eyebrow">The Highest Realization</p>
