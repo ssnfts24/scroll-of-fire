@@ -1140,7 +1140,14 @@
     return moonCatalog;
   }
 
+  let recentUpdatesLoaded = false;
+
   async function loadRecentUpdates() {
+    // The growth record cannot change during a visit, so fetch and
+    // parse it once (the moon catalog above already works this way)
+    // instead of re-fetching 90+ KB on every refresh tick.
+    if (recentUpdatesLoaded) return recentUpdates;
+
     try {
       const response = await fetch(new URL("assets/data/codex-updates.json", document.baseURI).href, {
         credentials: "same-origin"
@@ -1160,6 +1167,7 @@
               return String(b.date).localeCompare(String(a.date));
             })
         : [];
+      recentUpdatesLoaded = true;
     } catch (_) {
       recentUpdates = [];
     }
