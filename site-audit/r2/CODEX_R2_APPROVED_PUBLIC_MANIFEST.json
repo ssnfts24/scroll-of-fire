@@ -23,7 +23,7 @@
     },
     {
       "path": "docs/about-aaron.html",
-      "sha256": "7c44d83bc5422c5d4b8cb36c6942534f1b6db2d1d6d541e8702d42c091a5b978",
+      "sha256": "b1e90ff309df05dd9d3d6de6199f66af9d106890f9adcf84c021417fa0bbe973",
       "publicUrl": "https://codexofreality.org/about-aaron.html",
       "status": "operational"
     },
@@ -455,7 +455,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "1dd53c25b8637e816546a38a2deb31df73bff66e46f3bd7ba63af7ac6b6aad45",
+      "sha256": "31158e0da90e1a3f61052c6ea2890a9795c193376bdbd16d1edcc8f1048370f0",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -1096,6 +1096,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/img/artifacts/registry/cb-02-green-tide.webp",
+      "sha256": "7dd79f9aa90cdbd0220f0e1f13ac3f662d116c013b3a479f2fc092255361f5f6",
+      "publicUrl": "https://codexofreality.org/assets/img/artifacts/registry/cb-02-green-tide.webp",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/img/artifacts/registry/cv-067-covenant-67.png",
       "sha256": "d6f1be8c586ec14ea4e0438acd042f8259e3c6239698e096d7490a6c21edf09b",
       "publicUrl": "https://codexofreality.org/assets/img/artifacts/registry/cv-067-covenant-67.png",
@@ -1105,6 +1111,12 @@
       "path": "docs/assets/img/artifacts/registry/en-007-ember-node-7.png",
       "sha256": "8b79dc2d3f93b76db60702aaff6017d673c21e716e4b30dac3b497fe6f597e7e",
       "publicUrl": "https://codexofreality.org/assets/img/artifacts/registry/en-007-ember-node-7.png",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/img/artifacts/registry/en-007-ember-node-7.webp",
+      "sha256": "768a878c90232ba9c29b20f608832d403bc8df662b87cf17bbc2b9b184c5eda6",
+      "publicUrl": "https://codexofreality.org/assets/img/artifacts/registry/en-007-ember-node-7.webp",
       "status": "operational"
     },
     {
@@ -1120,15 +1132,33 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/img/artifacts/registry/t7-resonant-conduit.webp",
+      "sha256": "17cd8fee6ea6638a4555480a0e82f4b19fc43aa8df6142ef92c56604d4deac0e",
+      "publicUrl": "https://codexofreality.org/assets/img/artifacts/registry/t7-resonant-conduit.webp",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/img/artifacts/registry/tb-01-tensor-band.png",
       "sha256": "4b11bb51d2b75f6f636a6f1075a7e0b79cf1a9b9eb4869277d61db45932968fa",
       "publicUrl": "https://codexofreality.org/assets/img/artifacts/registry/tb-01-tensor-band.png",
       "status": "operational"
     },
     {
+      "path": "docs/assets/img/artifacts/registry/tb-01-tensor-band.webp",
+      "sha256": "749e889bfeb7adc6d57343b36ebf142741fd0a34a2741dc6d9f91ffd31969b9f",
+      "publicUrl": "https://codexofreality.org/assets/img/artifacts/registry/tb-01-tensor-band.webp",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/img/artifacts/registry/tn-001-tiger-node-ring.png",
       "sha256": "c2011ef1c94b2017fb51e69f70b0ef509b8fc4b96a2c1cee45cabec99c0d2b12",
       "publicUrl": "https://codexofreality.org/assets/img/artifacts/registry/tn-001-tiger-node-ring.png",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/img/artifacts/registry/tn-001-tiger-node-ring.webp",
+      "sha256": "0a6acb531f4852b192fef8bd27c533cdd8705408a468142b8739471f90b61f7b",
+      "publicUrl": "https://codexofreality.org/assets/img/artifacts/registry/tn-001-tiger-node-ring.webp",
       "status": "operational"
     },
     {
@@ -1498,9 +1528,21 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/img/shared/social/file_000000002cfc81f798fdc89fcb61c72e.webp",
+      "sha256": "89479c75ec40157e464d7492873dca9c6fb7af77134fd7bc966774dffa5e9dc5",
+      "publicUrl": "https://codexofreality.org/assets/img/shared/social/file_000000002cfc81f798fdc89fcb61c72e.webp",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/img/shared/social/file_00000000eeb081fd970fa27d23ff8f61.png",
       "sha256": "ae19bcea8590d97c8b5943c0faf22e8f1e78e464b5f2eb9e894fa6acc9f4fc80",
       "publicUrl": "https://codexofreality.org/assets/img/shared/social/file_00000000eeb081fd970fa27d23ff8f61.png",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/img/shared/social/file_00000000eeb081fd970fa27d23ff8f61.webp",
+      "sha256": "7423d8fb2d22c530025d0591399ea2c9046fa62966bd57b60d350e8ce9046838",
+      "publicUrl": "https://codexofreality.org/assets/img/shared/social/file_00000000eeb081fd970fa27d23ff8f61.webp",
       "status": "operational"
     },
     {
@@ -3857,13 +3899,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "fc124c6d28bd67731191b8aa10fec8c6c5643f59ff468f11b193c9b0f0dd93ab",
+      "sha256": "9d1d5aa4241c1c2209d886d661d7a2e5ae506503ce80f6c14dbdb7fca497633f",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "527f733d9f8e5839c5688f5b0a1e0e6cc2136023b6047da5cf86b9cf14ab9314",
+      "sha256": "3e09fc4d17f68476df47eb195357e56196eb074493fc53e66aa9874a94d2c004",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -4019,7 +4061,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "1ff6d09af48052191315aa36ea9038e8e5c5198df1c1a9b84a10775ca7d85bde",
+      "sha256": "9082306234945294bbdb76e073419ed23df82ac8d7145d180d5483ed7ffea730",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
@@ -10373,7 +10415,7 @@
     },
     {
       "path": "docs/shop.html",
-      "sha256": "332af41509578d109ae4ac69a0e2ddf656a1b91a2618f596b13f97d6246988fa",
+      "sha256": "6ad4f54b16d21b6983dbad2003416734caa5427348712c8a1ff6bcfb116580b7",
       "publicUrl": "https://codexofreality.org/shop.html",
       "status": "operational"
     },
