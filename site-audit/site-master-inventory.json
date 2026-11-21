@@ -11,7 +11,7 @@
       "nav-label-differs-from-title": 24,
       "no-global-navigation": 1,
       "deployed-but-unlinked": 56,
-      "unreachable-from-homepage": 3,
+      "unreachable-from-homepage": 4,
       "compatibility-redirect-page": 1,
       "not-published-in-catalog": 30,
       "unnamed-image-needs-descriptive-title": 21,
@@ -1891,7 +1891,6 @@
         "ledger.html",
         "living-time-sphere.html",
         "moons.html",
-        "privacy-policy.html",
         "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
@@ -2126,13 +2125,15 @@
         "path": "privacy-policy.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 1,
+        "linkedFromHomepage": false,
+        "hopsFromHome": null,
+        "hopsFromHomeWithoutAtlas": null,
+        "inboundPages": 0,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": []
+      "issues": [
+        "unreachable-from-homepage"
+      ]
     },
     {
       "id": "docs:reports/codex-advanced-rebuild-audit-2026-07-31.md",
