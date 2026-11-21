@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 2244,
-    "bytes": 815757314,
+    "bytes": 815757924,
     "byGroup": {
       "tooling": 226,
       "manuscript": 17,
@@ -15984,8 +15984,8 @@
       "path": "docs/assets/js/sphere-armillary.js",
       "title": "sphere-armillary.js",
       "format": "js",
-      "bytes": 88366,
-      "sha256": "bf49c947734358936bbfaf6c40b544ffee2de4392fbaaf47005b44627f6703bf",
+      "bytes": 88976,
+      "sha256": "f86a7a95c7c74cedbec4dc79d9fb75ba565b3e9fd37d62ecac9cc34b4f0d6f35",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
