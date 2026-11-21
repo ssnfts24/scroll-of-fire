@@ -247,7 +247,7 @@ The page itself was not changed. Full lists are in `downloads-reconciliation.jso
 | `alignment-ledger.html` | 2 | 2 | yes | yes | 4 |
 | `caravan.html` | — | — | no | no | 0 |
 | `circle.html` | 1 | 1 | yes | yes | 72 |
-| `claims-atlas.html` | 1 | 1 | no | yes | 2 |
+| `claims-atlas.html` | 1 | 1 | no | yes | 3 |
 | `codex-atlas.html` | 1 | 1 | yes | yes | 177 |
 | `codex-guide.html` | 2 | 2 | no | yes | 3 |
 | `companions.html` | 1 | 1 | no | yes | 176 |
@@ -255,7 +255,7 @@ The page itself was not changed. Full lists are in `downloads-reconciliation.jso
 | `downloads.html` | 1 | 1 | yes | yes | 178 |
 | `equinox-passage.html` | 2 | 2 | yes | yes | 6 |
 | `ethics.html` | 1 | 1 | yes | yes | 73 |
-| `garden.html` | 2 | 2 | no | yes | 3 |
+| `garden.html` | 2 | 2 | no | yes | 4 |
 | `genesis-oracle.html` | 1 | 1 | yes | yes | 74 |
 | `glossary.html` | 1 | 1 | yes | yes | 77 |
 | `glyphs.html` | 2 | 2 | no | yes | 3 |
@@ -270,7 +270,7 @@ The page itself was not changed. Full lists are in `downloads-reconciliation.jso
 | `micro.html` | 2 | 2 | no | yes | 3 |
 | `moons.html` | 1 | 1 | yes | yes | 179 |
 | `offline.html` | — | — | no | no | 0 |
-| `practices.html` | 2 | 2 | no | yes | 3 |
+| `practices.html` | 2 | 2 | no | yes | 4 |
 | `privacy-policy.html` | — | — | no | yes | 0 |
 | `scripture/about.html` | 2 | 2 | yes | yes | 92 |
 | `scripture/exodus/01.html` | 2 | 2 | yes | yes | 92 |
