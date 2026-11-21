@@ -437,13 +437,13 @@
     },
     {
       "path": "docs/assets/data/codex-story.json",
-      "sha256": "5a516d48f91091fc02ec5e80c2e6813a665f98baec47f52e9f85d53b0fedbb02",
+      "sha256": "fdf06839f659d9ff94d5abcd2f5c8c42efaf5c4a820c7c7e8149a949ae06b8e5",
       "publicUrl": "https://codexofreality.org/assets/data/codex-story.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "c11ce9809807fdecaf4d4c404422152d60f48a245fc3ffff24208f20fddb0855",
+      "sha256": "24a14cf17ff684289d351f148c11cd90ec3f44a37c3bc651c725d4dabccece63",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -3526,6 +3526,42 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/media/story-episode-15-the-high-library-poster.webp",
+      "sha256": "44cb8bcf5445fa7796a2c7984b9aeeaa3d3fd1cb35b121ff03f1070a1fca1234",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-15-the-high-library-poster.webp",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-15-the-high-library.mp4",
+      "sha256": "6cc84a289af1dc6a835719e82346c6d157b2c4c868d75d0fcb2d49ea0867dbb7",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-15-the-high-library.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-16-the-registry-stall-poster.webp",
+      "sha256": "6dfb76cb6901e858607ad3d80d3e7c73d6810d7e188fbe1e665919c623f164cf",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-16-the-registry-stall-poster.webp",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-16-the-registry-stall.mp4",
+      "sha256": "50e0e820bb7d4cf0f9c5d6848f38e4ced7ef07abfdb84caf1b1e4b9189dc320c",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-16-the-registry-stall.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-17-the-atlas-room-poster.webp",
+      "sha256": "7e844a0c9a75522f20193b5df3ee6ffb6a5765951c0a4596aae026dc899ef5c5",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-17-the-atlas-room-poster.webp",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-17-the-atlas-room.mp4",
+      "sha256": "3c14b5ca66db5d9f049c2b16bf3371454fa85a1270c75e72e0e405609d6ded6b",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-17-the-atlas-room.mp4",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/media/systems-archive-explainer-poster.webp",
       "sha256": "d8aea911c2df4dea6fb3f687d2266ac4fbc604b8c299b2d6fc1e11141a17b385",
       "publicUrl": "https://codexofreality.org/assets/media/systems-archive-explainer-poster.webp",
@@ -3785,13 +3821,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "e08675a08dc210c853ffea1cd19018a566800f9e478f2498912d428ddebd0d4e",
+      "sha256": "586142d85330c390a63f6e48811cd2605337f7403734f07e2fc654408c9bfd5a",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "0092d6d0fe4b43999d72b9874687feb14c85f3accb870ff116040f7592cd3c05",
+      "sha256": "8b402cf4c4f36b44cfd055e62ee9d727c026eb5eba9066af43c7b528a08d74fe",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -3947,7 +3983,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "35da2949ec210b3d75f124daf7078e1d713689f8c6155d9ffe43f3f0be4af880",
+      "sha256": "b21e3a79f2cf8257a78d5c186d9ab2faea91440872997291d743a4ea1db53aeb",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
