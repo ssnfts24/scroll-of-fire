@@ -134,8 +134,8 @@ test("episodes: a filmed chapter carries its episode in the spine, under the con
   const filmed = story.chapters.filter(c => c.episode);
   assert.deepEqual(
     filmed.map(c => c.n),
-    [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
-    "exactly the episodes produced are filmed — chapter 2, the pattern-setter, Series One Batch 1 (chapters 3, 4, 5), Series One Batch 2 (chapters 6, 7, 8), Series One Batch 3 (chapters 9, 10, 11) and Series One Batch 4 (chapters 12, 13, 14); chapter 1 carries no episode contract and the rest land as they are filmed"
+    [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+    "exactly the episodes produced are filmed — chapter 2, the pattern-setter, Series One Batch 1 (chapters 3, 4, 5), Series One Batch 2 (chapters 6, 7, 8), Series One Batch 3 (chapters 9, 10, 11) and Series One Batch 4 (chapters 12, 13, 14) and Series One Batch 5 (chapters 15, 16, 17) — the complete Series One spine; chapter 1 carries no episode contract"
   );
   for (const chapter of filmed) {
     const { film, poster, duration } = chapter.episode;
