@@ -61,8 +61,10 @@ test("architecture: the core loads and names the canonical line", () => {
   assert.deepEqual([...Rings.phaseOneRingIds], ["pattern", "sky", "kept-days"]);
 });
 
-test("charters: every Phase 1 ring declares source, label, owner, and span", () => {
-  assert.equal(Rings.charters.length, 3);
+test("charters: every house ring declares source, label, owner, and span", () => {
+  // Phase 1 shipped three charters; Phase 3 (Sphere design)
+  // seats Farm and Story beside them — five house rings.
+  assert.equal(Rings.charters.length, 5);
   for (const charter of Rings.charters) {
     assert.ok(charter.source && charter.source.length > 10, `${charter.id} names its source`);
     assert.ok(Rings.houseLabels.includes(charter.label), `${charter.id} carries a house label`);
@@ -156,7 +158,10 @@ test("sky ring: the readout is prefixed, and off drives the mapped layers off th
   for (const layer of ["lunar", "solar", "planets", "markers", "passage"]) {
     assert.ok(Rings.charterFor("sky").layers.includes(layer), `Sky maps the ${layer} layer`);
   }
-  assert.ok(handoff.includes('id = charter.id === "sky" ? "sphere-ring-sky" : "sphere-ring-kept-days"'), "the ring toggles are built");
+  assert.ok(handoff.includes("ringInputId(charter.id)"), "the ring toggles are built from the one id rule");
+  for (const id of ["sky", "kept-days", "farm", "story"]) {
+    assert.ok(handoff.includes(`charter.id === "${id}"`), `the ${id} ring's toggle is wired`);
+  }
   assert.ok(shellCss.includes(".sphere-ring-row"), "the ring panel is styled in the overlay's own sheet");
 });
 

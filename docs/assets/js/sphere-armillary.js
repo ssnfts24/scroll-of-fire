@@ -48,6 +48,7 @@ var SphereRingArchitecture = (function () {
   var MAX_OPTIONAL_RINGS = 4;
   var SEATING_ORDER = Object.freeze(["pattern", "sky", "farm", "kept-days", "family", "story", "field"]);
   var PHASE_ONE_RING_IDS = Object.freeze(["pattern", "sky", "kept-days"]);
+  var PHASE_THREE_RING_IDS = Object.freeze(["farm", "story"]);
 
   var CHARTERS = Object.freeze([
     Object.freeze({
@@ -75,6 +76,18 @@ var SphereRingArchitecture = (function () {
       layers: Object.freeze(["lunar", "solar", "planets", "markers", "passage"])
     }),
     Object.freeze({
+      id: "farm",
+      name: "Farm",
+      seat: 2,
+      alwaysOn: false,
+      label: "Measured",
+      grammar: "farm-measured",
+      source: "The farm dataset (farm-western-wa.json): extension-sourced planting windows for the keeper's county, every window carrying its cited sources in the dataset itself",
+      owner: "The record",
+      span: "The counties the dataset carries on this build; a crop's arc spans its planting window for the chosen county and the shown year",
+      layers: Object.freeze([])
+    }),
+    Object.freeze({
       id: "kept-days",
       name: "Kept Days",
       seat: 3,
@@ -84,6 +97,18 @@ var SphereRingArchitecture = (function () {
       source: "The keeper's on-device planner, Spark play log, and Living Trail",
       owner: "The keeper",
       span: "The shown Pattern year; the record is read on this device and leaves it never",
+      layers: Object.freeze([])
+    }),
+    Object.freeze({
+      id: "story",
+      name: "Story",
+      seat: 5,
+      alwaysOn: false,
+      label: "Story",
+      grammar: "story-tale",
+      source: "The story spine (codex-story.json) and the storyline's own assignments — only the dates the story itself names, each mark carrying its basis",
+      owner: "Codex",
+      span: "The dates the story itself assigns; chapters and exhibits the story leaves undated are not placed",
       layers: Object.freeze([])
     })
   ]);
@@ -167,6 +192,7 @@ var SphereRingArchitecture = (function () {
     maxOptionalRings: MAX_OPTIONAL_RINGS,
     seatingOrder: SEATING_ORDER,
     phaseOneRingIds: PHASE_ONE_RING_IDS,
+    phaseThreeRingIds: PHASE_THREE_RING_IDS,
     charters: CHARTERS,
     fieldRingPrototype: FIELD_RING_PROTOTYPE,
     charterFor: charterFor,
@@ -179,6 +205,162 @@ var SphereRingArchitecture = (function () {
 if (typeof window !== "undefined") window.SphereRings = SphereRingArchitecture;
 
 /* Sphere rings architecture — END TESTABLE CORE */
+
+/* Sphere readout — BEGIN TESTABLE CORE
+ *
+ * Phase 3 of the approved Living Sphere design: the packed
+ * telling. Pure composition only — no DOM, no calendar calls,
+ * no dates computed. The story marks below are the whole of
+ * what the ring may place: the spine (codex-story.json)
+ * assigns no Pattern dates to its chapters, so the ring
+ * carries only the dates the story itself names, each with
+ * its basis written beside it. A chapter or exhibit the
+ * story leaves undated is not placed, and if the spine ever
+ * assigns dates itself (a patternDay or moon field on a
+ * chapter), storyMarksFromSpine reads them in unchanged.
+ */
+var SphereReadoutCore = (function () {
+  "use strict";
+
+  var STORY_MARKS = Object.freeze([
+    Object.freeze({
+      kind: "episode",
+      chapter: 1,
+      id: "the-gate-at-first-light",
+      title: "The Gate at First Light",
+      patternDay: 1,
+      line: "The Gate at First Light — the road opens on the year's first morning, at the Year Gate.",
+      basis: "The chapter's own opening: the Traveller wakes on the first morning of the year."
+    }),
+    Object.freeze({
+      kind: "beat",
+      chapter: 5,
+      id: "the-garden-of-thirteen-beds",
+      title: "The Garden of Thirteen Beds",
+      moon: 4,
+      line: "In Moon 4 the road passes the Garden of Thirteen Beds, where the seed is found and carried on.",
+      basis: "The approved storyline's own count: the seed is found in Moon 4 and carried to its planting (story bible, the seed thread)."
+    })
+  ]);
+
+  function storyMarksFromSpine(spine) {
+    var marks = [];
+    var chapters = (spine && Array.isArray(spine.chapters)) ? spine.chapters : [];
+    chapters.forEach(function (ch) {
+      if (!ch || typeof ch !== "object") return;
+      var pd = Number(ch.patternDay);
+      var moon = Number(ch.moon);
+      if (Number.isInteger(pd) && pd >= 1 && pd <= 364) {
+        marks.push({
+          kind: "episode",
+          chapter: ch.n || null,
+          id: ch.id || "",
+          title: ch.title || "",
+          patternDay: pd,
+          line: (ch.title || "A chapter") + " — the spine places this chapter on this day.",
+          basis: "The spine itself (codex-story.json) assigns this chapter its Pattern day."
+        });
+      } else if (Number.isInteger(moon) && moon >= 1 && moon <= 13) {
+        marks.push({
+          kind: "beat",
+          chapter: ch.n || null,
+          id: ch.id || "",
+          title: ch.title || "",
+          moon: moon,
+          line: (ch.title || "A chapter") + " — the spine places this chapter in this Moon.",
+          basis: "The spine itself (codex-story.json) assigns this chapter its Moon."
+        });
+      }
+    });
+    return marks;
+  }
+
+  function storyLineFor(marks, pos) {
+    if (!pos) return null;
+    var spanLine = null;
+    for (var i = 0; i < (marks || []).length; i += 1) {
+      var mark = marks[i];
+      if (mark.patternDay != null && mark.patternDay === pos.dayOfPatternYear) {
+        return "Story · " + mark.line;
+      }
+      if (mark.moon != null && mark.moon === pos.moon) spanLine = "Story · " + mark.line;
+    }
+    return spanLine;
+  }
+
+  /* The farm line: the day's window events in the dataset's
+   * own terms. Farm facts are never spoken in Moon language —
+   * the line names the county and the crops, nothing of the
+   * count. */
+  function farmLineText(events, countyName) {
+    if (!events || !events.ok) return null;
+    var bits = [];
+    function narrate(list, verb) {
+      var shown = list.slice(0, 3).map(function (e) { return e.crop + " " + e.kindLabel + " " + verb; });
+      if (list.length > 3) shown.push("+" + (list.length - 3) + " more");
+      return shown.join(" · ");
+    }
+    if (events.opening && events.opening.length) bits.push(narrate(events.opening, "opens today"));
+    if (events.closing && events.closing.length) bits.push(narrate(events.closing, "closes today"));
+    if (!bits.length && events.openNow && events.openNow.length) {
+      var crops = [];
+      events.openNow.forEach(function (e) { if (crops.indexOf(e.crop) === -1) crops.push(e.crop); });
+      var named = crops.slice(0, 3).join(", ");
+      bits.push(crops.length + (crops.length === 1 ? " crop" : " crops") + " in a planting window — " + named + (crops.length > 3 ? " +" + (crops.length - 3) + " more" : ""));
+    }
+    if (!bits.length) return null;
+    return "Farm · " + countyName + ": " + bits.join(" · ");
+  }
+
+  /* The year wheel's geometry: Pattern day 1 at the top, the
+   * year running clockwise, each day an equal sector. */
+  function dayAngle(day) {
+    return ((day - 1) / 364) * Math.PI * 2 - Math.PI / 2;
+  }
+
+  function polarPoint(cx, cy, r, day) {
+    var a = dayAngle(day);
+    return [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+  }
+
+  function arcPathD(cx, cy, r, startDay, endDay) {
+    var a0 = dayAngle(startDay);
+    var a1 = ((endDay) / 364) * Math.PI * 2 - Math.PI / 2;
+    var x0 = cx + r * Math.cos(a0);
+    var y0 = cy + r * Math.sin(a0);
+    if (endDay - startDay >= 363) {
+      var xm = cx + r * Math.cos(a0 + Math.PI);
+      var ym = cy + r * Math.sin(a0 + Math.PI);
+      return "M " + x0.toFixed(2) + " " + y0.toFixed(2) +
+        " A " + r + " " + r + " 0 1 1 " + xm.toFixed(2) + " " + ym.toFixed(2) +
+        " A " + r + " " + r + " 0 1 1 " + x0.toFixed(2) + " " + y0.toFixed(2);
+    }
+    var x1 = cx + r * Math.cos(a1);
+    var y1 = cy + r * Math.sin(a1);
+    var large = (a1 - a0) > Math.PI ? 1 : 0;
+    return "M " + x0.toFixed(2) + " " + y0.toFixed(2) +
+      " A " + r + " " + r + " 0 " + large + " 1 " + x1.toFixed(2) + " " + y1.toFixed(2);
+  }
+
+  function moonSpanDays(moon) {
+    return [(moon - 1) * 28 + 1, moon * 28];
+  }
+
+  return Object.freeze({
+    version: "sphere-readout/1.0.0",
+    storyMarks: STORY_MARKS,
+    storyMarksFromSpine: storyMarksFromSpine,
+    storyLineFor: storyLineFor,
+    farmLineText: farmLineText,
+    dayAngle: dayAngle,
+    polarPoint: polarPoint,
+    arcPathD: arcPathD,
+    moonSpanDays: moonSpanDays
+  });
+})();
+if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
+
+/* Sphere readout — END TESTABLE CORE */
 
 (function () {
   "use strict";
@@ -424,6 +606,7 @@ if (typeof window !== "undefined") window.SphereRings = SphereRingArchitecture;
    * toggle: it is the face the other rings are read against. */
 
   var ringArchitecture = window.SphereRings || SphereRingArchitecture;
+  var readoutCore = window.SphereReadout || SphereReadoutCore;
   var SKY_LAYERS = ringArchitecture.charterFor("sky").layers;
   var skyRingSelected = true;
   var skyRingUserSet = false;
@@ -433,11 +616,147 @@ if (typeof window !== "undefined") window.SphereRings = SphereRingArchitecture;
   var seasonLineRef = null;
   var ringRefs = {};
 
+  function ringInputId(id) { return "sphere-ring-" + id; }
+
   function activeOptionalRingIds() {
     var ids = [];
     if (skyRingSelected) ids.push("sky");
+    if (farmRingSelected) ids.push("farm");
     if (keptDaysEnabled) ids.push("kept-days");
+    if (storyRingSelected) ids.push("story");
     return ids;
+  }
+
+  /* ── 3a-i. Farm and Story rings (Sphere design Phase 3) ──────
+   *
+   * Farm: the sourced county dataset, fetched once; the county
+   * is the keeper's own choice, remembered on this device —
+   * the Sphere farm room's key first, then the garden's key
+   * (sof.pattern-garden.county.v1, the garden's remembered
+   * county once the counties build lands), then Lewis. The
+   * readout names the county it used, so the choice is never
+   * a surprise. Story: the marks the readout core carries,
+   * plus any dates the spine itself assigns if it ever does —
+   * fetched from the same codex-story.json the story layer
+   * reads. Both rings are overlay work: no protected file,
+   * no renderer call, and an off ring costs nothing. */
+
+  var farmRingSelected = false;
+  var farmRingUserSet = false;
+  var farmDataState = "loading"; // loading | ready | failed
+  var farmDataCache = null;
+  var farmCountyId = null;
+  var farmCountyName = null;
+  var storyRingSelected = false;
+  var storyRingUserSet = false;
+  var storyMarksAll = readoutCore.storyMarks.slice();
+  var renderReadoutRef = null;
+
+  function resolveFarmCounty(data) {
+    var ids = (data.locations || []).map(function (l) { return l.id; });
+    var sphereKey = null;
+    var gardenKey = null;
+    try { sphereKey = window.localStorage.getItem("sof.sphere.farm.county.v1"); } catch (err) { sphereKey = null; }
+    try { gardenKey = window.localStorage.getItem("sof.pattern-garden.county.v1"); } catch (err) { gardenKey = null; }
+    if (sphereKey && ids.indexOf(sphereKey) !== -1) return sphereKey;
+    if (gardenKey && ids.indexOf(gardenKey) !== -1) return gardenKey;
+    return ids.indexOf("lewis") !== -1 ? "lewis" : (ids[0] || null);
+  }
+
+  function syncFarmRingControl() {
+    if (!ringRefs.farmInput) return;
+    ringRefs.farmInput.checked = farmRingSelected;
+    ringRefs.farmInput.disabled = farmDataState !== "ready";
+    if (ringRefs.farmStatus) {
+      ringRefs.farmStatus.textContent =
+        farmDataState === "failed" ? "The farm record could not be loaded on this visit" :
+        farmDataState !== "ready" ? "Reading the farm record…" :
+        farmRingSelected ? "On — " + (farmCountyName || "the chosen county") + ", from the sourced dataset" :
+        "Off — absent from the face";
+    }
+  }
+
+  function setFarmRingEnabled(enabled, byUser) {
+    if (enabled && farmDataState !== "ready") return false;
+    if (enabled && !ringArchitecture.canEnable(activeOptionalRingIds(), "farm")) return false;
+    farmRingSelected = !!enabled;
+    if (byUser) farmRingUserSet = true;
+    syncFarmRingControl();
+    if (renderReadoutRef) renderReadoutRef();
+    return true;
+  }
+
+  function maybeDefaultFarmRing() {
+    // The design's keeper default: a keeper (a record exists
+    // on this device) rides Farm beside Pattern, Sky, and
+    // Kept Days. A first visitor rides Pattern + Sky alone.
+    if (farmRingUserSet || farmRingSelected) return;
+    if (!keptDaysAvailable || farmDataState !== "ready") return;
+    setFarmRingEnabled(true, false);
+  }
+
+  function syncStoryRingControl() {
+    if (!ringRefs.storyInput) return;
+    ringRefs.storyInput.checked = storyRingSelected;
+    if (ringRefs.storyStatus) {
+      ringRefs.storyStatus.textContent = storyRingSelected
+        ? "On — " + storyMarksAll.length + " dated marks; the road's other chapters walk undated"
+        : "Off — absent from the face";
+    }
+  }
+
+  function setStoryRingEnabled(enabled, byUser) {
+    if (enabled && !ringArchitecture.canEnable(activeOptionalRingIds(), "story")) return false;
+    storyRingSelected = !!enabled;
+    if (byUser) storyRingUserSet = true;
+    syncStoryRingControl();
+    if (renderReadoutRef) renderReadoutRef();
+    return true;
+  }
+
+  function startRingData() {
+    fetch("assets/data/farm-western-wa.json")
+      .then(function (res) { return res.ok ? res.json() : Promise.reject(new Error("HTTP " + res.status)); })
+      .then(function (data) {
+        farmDataCache = data;
+        farmCountyId = resolveFarmCounty(data);
+        var Panel = window.CodexSphereFarmPanel;
+        var loc = Panel && Panel.locationFor ? Panel.locationFor(data, farmCountyId) : (data.locations || []).find(function (l) { return l.id === farmCountyId; });
+        farmCountyName = loc ? loc.county : null;
+        farmDataState = farmCountyId ? "ready" : "failed";
+        syncFarmRingControl();
+        maybeDefaultFarmRing();
+        if (renderReadoutRef) renderReadoutRef();
+      })
+      .catch(function () {
+        farmDataState = "failed";
+        syncFarmRingControl();
+        if (renderReadoutRef) renderReadoutRef();
+      });
+    fetch("assets/data/codex-story.json")
+      .then(function (res) { return res.ok ? res.json() : Promise.reject(new Error("HTTP " + res.status)); })
+      .then(function (spine) {
+        var fromSpine = readoutCore.storyMarksFromSpine(spine);
+        if (fromSpine.length) {
+          storyMarksAll = readoutCore.storyMarks.concat(fromSpine);
+          syncStoryRingControl();
+          if (renderReadoutRef) renderReadoutRef();
+        }
+      })
+      .catch(function () { /* the core's cited marks stand alone */ });
+    // The farm room's own county select is the keeper's hand
+    // on the same choice: when it changes, re-resolve and let
+    // the readout follow (the farm module stores the key).
+    document.addEventListener("change", function (e) {
+      if (e.target && e.target.id === "sphere-farm-county" && farmDataState === "ready") {
+        farmCountyId = resolveFarmCounty(farmDataCache);
+        var Panel = window.CodexSphereFarmPanel;
+        var loc = Panel && Panel.locationFor ? Panel.locationFor(farmDataCache, farmCountyId) : null;
+        farmCountyName = loc ? loc.county : farmCountyName;
+        syncFarmRingControl();
+        if (renderReadoutRef) renderReadoutRef();
+      }
+    });
   }
 
   function setGranularLayer(layerId, enabled) {
@@ -564,12 +883,12 @@ if (typeof window !== "undefined") window.SphereRings = SphereRingArchitecture;
         fixed.className = "sphere-ring-status";
         fixed.textContent = "Always on";
         head.appendChild(fixed);
-      } else if (charter.id === "sky" || charter.id === "kept-days") {
+      } else if (charter.id === "sky" || charter.id === "kept-days" || charter.id === "farm" || charter.id === "story") {
         var label = document.createElement("label");
         label.className = "sphere-ring-toggle";
         var input = document.createElement("input");
         input.type = "checkbox";
-        input.id = charter.id === "sky" ? "sphere-ring-sky" : "sphere-ring-kept-days";
+        input.id = ringInputId(charter.id);
         label.appendChild(input);
         label.appendChild(document.createTextNode(" Ride"));
         head.appendChild(label);
@@ -581,13 +900,26 @@ if (typeof window !== "undefined") window.SphereRings = SphereRingArchitecture;
           ringRefs.skyStatus = status;
           input.checked = skyRingSelected;
           input.addEventListener("change", function () { applySkyRing(input.checked, true); });
-        } else {
+        } else if (charter.id === "kept-days") {
           ringRefs.keptInput = input;
           ringRefs.keptStatus = status;
           input.checked = false;
           input.disabled = true;
           status.textContent = "Reading this device…";
           input.addEventListener("change", function () { setKeptDaysEnabled(input.checked, true); });
+        } else if (charter.id === "farm") {
+          ringRefs.farmInput = input;
+          ringRefs.farmStatus = status;
+          input.checked = false;
+          input.disabled = true;
+          status.textContent = "Reading the farm record…";
+          input.addEventListener("change", function () { setFarmRingEnabled(input.checked, true); });
+        } else {
+          ringRefs.storyInput = input;
+          ringRefs.storyStatus = status;
+          input.checked = false;
+          status.textContent = "Off — absent from the face";
+          input.addEventListener("change", function () { setStoryRingEnabled(input.checked, true); });
         }
       }
       row.appendChild(head);
@@ -616,6 +948,8 @@ if (typeof window !== "undefined") window.SphereRings = SphereRingArchitecture;
     beginSkyInitialSync();
     syncSkyRingControl();
     syncKeptRingControl();
+    syncFarmRingControl();
+    syncStoryRingControl();
   }
 
   // The shown Moon's name rides its medallion's label: the label
@@ -656,6 +990,235 @@ if (typeof window !== "undefined") window.SphereRings = SphereRingArchitecture;
     Spark.soundNote(330 * Math.pow(2, semis / 12), 0.16);
   }
 
+  /* ── 3-readout support: the selected day's civil date, and
+   * the year wheel ────────────────────────────────────────────
+   *
+   * The packed telling needs the selected day's civil date
+   * (for its Sky and Farm lines) and its Pattern year (for
+   * the year wheel). Both arrive only through the canonical
+   * line: the temporal cursor's own events and globals, read
+   * exactly as the farm room reads them, converted by
+   * PatternCalendar itself. A conversion is used only when
+   * it names the very day the state strip shows — never a
+   * neighbouring day dressed as the selected one. */
+
+  var selectedCivilISO = null;
+  var conversionCacheISO = "";
+  var conversionCache = null;
+
+  function noteCursorDetail(detail) {
+    if (!detail || typeof detail !== "object") return;
+    var coordinate = detail.coordinate && typeof detail.coordinate === "object" ? detail.coordinate : detail;
+    var candidates = [coordinate.gregorianDate, coordinate.civilDate, coordinate.isoDate, coordinate.date, detail.gregorianDate, detail.civilDate];
+    for (var i = 0; i < candidates.length; i += 1) {
+      var c = candidates[i];
+      if (typeof c === "string" && /^\d{4}-\d{2}-\d{2}/.test(c)) { selectedCivilISO = c.slice(0, 10); return; }
+      if (c instanceof Date && !Number.isNaN(c.getTime())) { selectedCivilISO = c.toISOString().slice(0, 10); return; }
+    }
+  }
+
+  function applyCursorGlobals() {
+    var coordinate = window.SOFCurrentTemporalCoordinate;
+    if (coordinate && typeof coordinate === "object") noteCursorDetail(coordinate);
+    var sel = window.SOF_SELECTED_DATE;
+    if (!sel) return;
+    if (typeof sel === "string" && /^\d{4}-\d{2}-\d{2}/.test(sel)) selectedCivilISO = sel.slice(0, 10);
+    else if (sel instanceof Date && !Number.isNaN(sel.getTime())) selectedCivilISO = sel.toISOString().slice(0, 10);
+    else if (typeof sel === "object") noteCursorDetail(sel);
+  }
+
+  window.addEventListener("sof:selected-date-change", function (e) {
+    noteCursorDetail(e && e.detail);
+    if (renderReadoutRef) renderReadoutRef();
+  });
+  window.addEventListener("sof:temporal-cursor-change", function (e) { noteCursorDetail(e && e.detail); });
+
+  function conversionForSelection(pos) {
+    if (!pos) return null;
+    applyCursorGlobals();
+    if (!selectedCivilISO) return null;
+    var PC = window.PatternCalendar;
+    if (!PC || !PC.fromCivilDate) return null;
+    if (conversionCacheISO !== selectedCivilISO) {
+      try { conversionCache = PC.fromCivilDate({ date: selectedCivilISO }); } catch (err) { conversionCache = null; }
+      conversionCacheISO = selectedCivilISO;
+    }
+    var conv = conversionCache;
+    if (!conv) return null;
+    if (conv.moon === pos.moon && conv.day === pos.day && conv.dayOfPatternYear === pos.dayOfPatternYear) return conv;
+    return null;
+  }
+
+  var farmEventsCacheKey = "";
+  var farmEventsCache = null;
+  function farmEventsForSelection() {
+    var Panel = window.CodexSphereFarmPanel;
+    if (!Panel || !Panel.windowEventsForDate || farmDataState !== "ready" || !selectedCivilISO) return null;
+    var key = farmCountyId + "|" + selectedCivilISO;
+    if (key !== farmEventsCacheKey) {
+      farmEventsCache = Panel.windowEventsForDate(farmDataCache, farmCountyId, selectedCivilISO);
+      farmEventsCacheKey = key;
+    }
+    return farmEventsCache;
+  }
+
+  /* The year wheel: the readout's own picture of the shown
+   * Pattern year — farm arcs per crop lane from the dataset's
+   * windows (converted through PatternCalendar, clipped at
+   * the year's edge), story marks in the story's violet, and
+   * a gold spoke for the day being read. Drawn here, on the
+   * readout card; the protected renderer is never touched. */
+  var WHEEL_KINDS = {
+    transplant: { color: "#9ccf5f", width: 2, dash: "", label: "goes out" },
+    sow: { color: "#4f9e57", width: 2, dash: "", label: "direct sow" },
+    indoor: { color: "#cbb287", width: 2.4, dash: "0.5 3", label: "start indoors" },
+    fall: { color: "#d9a441", width: 2, dash: "3.5 2", label: "fall sowing" }
+  };
+  var wheelKey = "";
+  var wheelSpoke = null;
+
+  function farmLanesForYear(patternYear, civilYearHint) {
+    var Panel = window.CodexSphereFarmPanel;
+    var PC = window.PatternCalendar;
+    if (!Panel || !Panel.cropWindows || !PC || !PC.fromCivilDate || !farmDataCache) return [];
+    var loc = Panel.locationFor(farmDataCache, farmCountyId);
+    if (!loc) return [];
+    var lanes = {};
+    var laneOrder = [];
+    [civilYearHint - 1, civilYearHint, civilYearHint + 1].forEach(function (civilYear) {
+      (farmDataCache.crops || []).forEach(function (crop) {
+        var w = Panel.cropWindows(crop, loc, civilYear);
+        ["transplant", "sow", "indoor", "fall"].forEach(function (kind) {
+          var win = w[kind];
+          if (!win) return;
+          var sISO = win.start.toISOString().slice(0, 10);
+          var eISO = win.end.toISOString().slice(0, 10);
+          var s = null;
+          var e = null;
+          try { s = PC.fromCivilDate({ date: sISO }); e = PC.fromCivilDate({ date: eISO }); } catch (err) { return; }
+          if (!s || !e) return;
+          var seg = null;
+          if (s.patternYear === patternYear && e.patternYear === patternYear && s.dayOfPatternYear && e.dayOfPatternYear) seg = [s.dayOfPatternYear, e.dayOfPatternYear];
+          else if (s.patternYear === patternYear && e.patternYear !== patternYear && s.dayOfPatternYear) seg = [s.dayOfPatternYear, 364];
+          else if (s.patternYear !== patternYear && e.patternYear === patternYear && e.dayOfPatternYear) seg = [1, e.dayOfPatternYear];
+          if (!seg) return;
+          if (!lanes[crop.id]) {
+            lanes[crop.id] = { crop: crop.name, cropId: crop.id, entries: {}, firstStart: 999 };
+            laneOrder.push(lanes[crop.id]);
+          }
+          var lane = lanes[crop.id];
+          if (!lane.entries[kind]) lane.entries[kind] = [];
+          lane.entries[kind].push({ start: seg[0], end: seg[1], startISO: sISO, endISO: eISO });
+          if (seg[0] < lane.firstStart) lane.firstStart = seg[0];
+        });
+      });
+    });
+    laneOrder.forEach(function (lane) {
+      Object.keys(lane.entries).forEach(function (kind) {
+        var spans = lane.entries[kind].sort(function (a, b) { return a.start - b.start; });
+        var merged = [];
+        spans.forEach(function (sp) {
+          var last = merged[merged.length - 1];
+          if (last && sp.start <= last.end + 1) {
+            if (sp.end > last.end) { last.end = sp.end; last.endISO = sp.endISO; }
+          } else merged.push({ start: sp.start, end: sp.end, startISO: sp.startISO, endISO: sp.endISO });
+        });
+        lane.entries[kind] = merged;
+      });
+    });
+    laneOrder.sort(function (a, b) { return a.firstStart - b.firstStart; });
+    return laneOrder;
+  }
+
+  function buildWheelSvg(host, conv, showFarm, showStory) {
+    var NS = "http://www.w3.org/2000/svg";
+    host.textContent = "";
+    wheelSpoke = null;
+    var svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", "0 0 232 232");
+    svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", "The shown Pattern year at a glance: planting windows and story marks around the year's wheel");
+    var cx = 116;
+    var cy = 116;
+    function el(name, attrs, titleText) {
+      var node = document.createElementNS(NS, name);
+      Object.keys(attrs).forEach(function (k) { node.setAttribute(k, attrs[k]); });
+      if (titleText) {
+        var t = document.createElementNS(NS, "title");
+        t.textContent = titleText;
+        node.appendChild(t);
+      }
+      svg.appendChild(node);
+      return node;
+    }
+    el("circle", { cx: cx, cy: cy, r: 113, fill: "none", stroke: "rgba(218,164,91,.28)", "stroke-width": 1 });
+    for (var m = 1; m <= 13; m += 1) {
+      var dayOne = (m - 1) * 28 + 1;
+      var p1 = readoutCore.polarPoint(cx, cy, 104, dayOne);
+      var p2 = readoutCore.polarPoint(cx, cy, 111, dayOne);
+      el("line", { x1: p1[0].toFixed(2), y1: p1[1].toFixed(2), x2: p2[0].toFixed(2), y2: p2[1].toFixed(2), stroke: "rgba(218,164,91,.35)", "stroke-width": 1 });
+    }
+    if (showStory) {
+      storyMarksAll.forEach(function (mark) {
+        if (mark.patternDay != null) {
+          var c = readoutCore.polarPoint(cx, cy, 108, mark.patternDay);
+          var pts = [[c[0], c[1] - 4.5], [c[0] + 4.5, c[1]], [c[0], c[1] + 4.5], [c[0] - 4.5, c[1]]].map(function (p) { return p[0].toFixed(2) + "," + p[1].toFixed(2); }).join(" ");
+          el("polygon", { points: pts, fill: "#b48ce8" }, mark.title + " — Pattern Day " + mark.patternDay + " (story)");
+        } else if (mark.moon != null) {
+          var span = readoutCore.moonSpanDays(mark.moon);
+          el("path", { d: readoutCore.arcPathD(cx, cy, 108, span[0], span[1]), fill: "none", stroke: "#b48ce8", "stroke-width": 3, "stroke-linecap": "round", opacity: "0.75" }, mark.title + " — Moon " + mark.moon + " (story)");
+        }
+      });
+    }
+    if (showFarm) {
+      var hint = selectedCivilISO ? Number(selectedCivilISO.slice(0, 4)) : 2025 + conv.patternYear;
+      var lanes = farmLanesForYear(conv.patternYear, hint);
+      lanes.forEach(function (lane, i) {
+        var r = 100 - i * 2.65;
+        if (r < 12) return;
+        Object.keys(lane.entries).forEach(function (kind) {
+          var look = WHEEL_KINDS[kind];
+          lane.entries[kind].forEach(function (sp) {
+            var attrs = { d: readoutCore.arcPathD(cx, cy, r, sp.start, sp.end), fill: "none", stroke: look.color, "stroke-width": look.width, "stroke-linecap": "round" };
+            if (look.dash) attrs["stroke-dasharray"] = look.dash;
+            el("path", attrs, lane.crop + " — " + look.label + " " + sp.startISO + " to " + sp.endISO + " · " + (farmCountyName || "") + " (farm record)");
+          });
+        });
+      });
+    }
+    var spoke = el("line", { x1: cx, y1: cy, x2: cx, y2: cy - 112, stroke: "#daa45b", "stroke-width": 1.5 });
+    wheelSpoke = spoke;
+    el("circle", { cx: cx, cy: cy, r: 2.6, fill: "#daa45b" });
+    host.appendChild(svg);
+  }
+
+  function renderWheel(wrapEl, host, captionEl, pos, conv) {
+    var showFarm = farmRingSelected && farmDataState === "ready";
+    var showStory = storyRingSelected;
+    if ((!showFarm && !showStory) || !conv || !pos) {
+      wrapEl.hidden = true;
+      wheelKey = "";
+      wheelSpoke = null;
+      return;
+    }
+    wrapEl.hidden = false;
+    var key = [showFarm ? farmCountyId : "-", showStory ? String(storyMarksAll.length) : "-", conv.patternYear].join("|");
+    if (key !== wheelKey) {
+      wheelKey = key;
+      buildWheelSvg(host, conv, showFarm, showStory);
+      var parts = ["The year at a glance"];
+      if (showFarm) parts.push("green and gold arcs are " + (farmCountyName || "the chosen county") + "'s planting windows, from the farm record");
+      if (showStory) parts.push("violet marks are the dates the story itself names");
+      parts.push("the gold spoke is the day you are standing on");
+      captionEl.textContent = parts.join(" — ") + ".";
+    }
+    if (wheelSpoke) {
+      var p = readoutCore.polarPoint(116, 116, 112, pos.dayOfPatternYear);
+      wheelSpoke.setAttribute("x2", p[0].toFixed(2));
+      wheelSpoke.setAttribute("y2", p[1].toFixed(2));
+    }
+  }
+
   function buildReadout() {
     var wrap = document.querySelector(".sphere-canvas-wrap") || document.getElementById("sphere-container")?.parentElement;
     if (!wrap) return;
@@ -665,7 +1228,11 @@ if (typeof window !== "undefined") window.SphereRings = SphereRingArchitecture;
     card.innerHTML =
       '<p class="sphere-day-readout-where"></p>' +
       '<p class="sphere-day-readout-telling"></p>' +
+      '<p class="sphere-day-readout-sky" hidden></p>' +
+      '<p class="sphere-day-readout-farm" hidden></p>' +
+      '<p class="sphere-day-readout-story" hidden></p>' +
       '<p class="sphere-day-readout-kept" hidden></p>' +
+      '<div class="sphere-day-readout-wheel" hidden><div class="sphere-day-wheel-host"></div><p class="sphere-day-wheel-caption"></p></div>' +
       '<div class="sphere-day-readout-actions">' +
       '<button type="button" class="sphere-day-readout-enter">Enter this day</button>' +
       '<button type="button" class="sphere-day-readout-schedule">Schedule something for this day</button>' +
@@ -691,7 +1258,13 @@ if (typeof window !== "undefined") window.SphereRings = SphereRingArchitecture;
 
     var where = card.querySelector(".sphere-day-readout-where");
     var telling = card.querySelector(".sphere-day-readout-telling");
+    var skyEl = card.querySelector(".sphere-day-readout-sky");
+    var farmEl = card.querySelector(".sphere-day-readout-farm");
+    var storyEl = card.querySelector(".sphere-day-readout-story");
     var kept = card.querySelector(".sphere-day-readout-kept");
+    var wheelWrap = card.querySelector(".sphere-day-readout-wheel");
+    var wheelHost = card.querySelector(".sphere-day-wheel-host");
+    var wheelCaptionEl = card.querySelector(".sphere-day-wheel-caption");
     function renderKept() {
       var pos = selectedPosition();
       var entry = pos ? keptByDay[pos.dayOfPatternYear] : null;
@@ -703,7 +1276,9 @@ if (typeof window !== "undefined") window.SphereRings = SphereRingArchitecture;
       var bits = [];
       if (entry.plans.length) bits.push("Kept here: " + entry.plans.slice(0, 3).join(" · ") + (entry.plans.length > 3 ? " · +" + (entry.plans.length - 3) + " more" : ""));
       if (entry.played) bits.push("a game is stamped here");
-      kept.textContent = bits.join(" — ");
+      // Label law: the keeper's line names its ring, like
+      // every other line in the packed telling.
+      kept.textContent = "Kept Days · " + bits.join(" — ");
       kept.hidden = false;
     }
     renderKeptRef = renderKept;
@@ -712,18 +1287,46 @@ if (typeof window !== "undefined") window.SphereRings = SphereRingArchitecture;
       if (!pos) {
         where.textContent = stripText() || "The Sphere is waking up.";
         telling.textContent = "";
+        skyEl.hidden = true;
+        farmEl.hidden = true;
+        storyEl.hidden = true;
         kept.hidden = true;
+        wheelWrap.hidden = true;
         return;
       }
       var data = window.PatternCalendarData || {};
       var moonName = (data.moons && data.moons[pos.moon - 1] && data.moons[pos.moon - 1].name) || "";
       var archetype = (data.dayArchetypes && data.dayArchetypes[(pos.day - 1) % 28] && data.dayArchetypes[(pos.day - 1) % 28][0]) || "";
-      where.textContent = "Moon " + pos.moon + " · Day " + pos.day + " · Pattern Day " + pos.dayOfPatternYear + " of 364";
+      var conv = conversionForSelection(pos);
+      where.textContent = "Moon " + pos.moon + " · Day " + pos.day + " · Pattern Day " + pos.dayOfPatternYear + " of 364" +
+        (conv ? " · Pattern Year " + conv.patternYear : "");
       telling.textContent = archetype ? moonName + " — " + archetype : moonName;
+      // The packed telling (Sphere design Phase 3): one line
+      // per riding ring, each named for its ring, each present
+      // only when its ring rides and its data exists. Absence
+      // is honest — a line is never padded into being.
+      if (skyRingSelected && selectedCivilISO) {
+        skyEl.textContent = buildSkyText(new Date(selectedCivilISO + "T12:00:00Z"));
+        skyEl.hidden = false;
+      } else {
+        skyEl.hidden = true;
+      }
+      var fLine = null;
+      if (farmRingSelected) {
+        var events = farmEventsForSelection();
+        if (events) fLine = readoutCore.farmLineText(events, farmCountyName || "");
+      }
+      if (fLine) { farmEl.textContent = fLine; farmEl.hidden = false; }
+      else farmEl.hidden = true;
+      var sLine = storyRingSelected ? readoutCore.storyLineFor(storyMarksAll, pos) : null;
+      if (sLine) { storyEl.textContent = sLine; storyEl.hidden = false; }
+      else storyEl.hidden = true;
       renderKept();
+      renderWheel(wheelWrap, wheelHost, wheelCaptionEl, pos, conv);
       nameShownMoon(pos);
       soundForDay(pos);
     }
+    renderReadoutRef = render;
     render();
     var strip = document.getElementById("sphere-state-strip");
     /* Performance (sphere-performance pass): during a drag the
@@ -913,6 +1516,7 @@ if (typeof window !== "undefined") window.SphereRings = SphereRingArchitecture;
       var allPlans = plans;
       try { if (planner.allPlans) allPlans = await planner.allPlans(); } catch (err) { allPlans = plans; }
       keptDaysAvailable = (allPlans || []).some(function (rec) { return !!planPatternDay(rec); }) || days.length > 0 || trail.length > 0;
+      maybeDefaultFarmRing();
       if (!keptDaysAvailable) {
         keptDaysEnabled = false;
         clearKeptDaysFace();
@@ -1180,6 +1784,31 @@ if (typeof window !== "undefined") window.SphereRings = SphereRingArchitecture;
     return { season: cur.season, next: nxt };
   }
 
+  /* The Sky line's words, for any date: today's for the
+   * caption, the selected day's for the packed readout. One
+   * builder, so the two tellings can never drift apart. */
+  function buildSkyText(date) {
+    var info = seasonNow(date);
+    var season = info.season;
+    // The face's own season ring turns its names by latitude
+    // when a place is known; the line follows the same rule.
+    try {
+      var state = window.SofEnvironmentState && window.SofEnvironmentState.getEnvironmentState ? window.SofEnvironmentState.getEnvironmentState() : null;
+      var lat = Number(state && state.place && state.place.latitude);
+      if (Number.isFinite(lat) && lat < -10) season = SEASON_FLIP[season] || season;
+    } catch (err) { /* northern names stand */ }
+    // Label law (Sphere design §1.3): a sky fact is read
+    // out as a sky fact — the line begins "Sky:" so it can
+    // never be mistaken for the Pattern count beside it.
+    var text = "Sky: " + season;
+    if (info.next && info.next.at) {
+      text += " · the " + info.next.name + " turns on " + MONTH_SHORT[info.next.at.getMonth()] + " " + info.next.at.getDate();
+    } else if (info.next) {
+      text += " · the " + info.next.name + " is the next turn";
+    }
+    return text;
+  }
+
   function seasonLine() {
     var caption = document.querySelector(".sphere-rebuild-caption");
     if (!caption) return;
@@ -1192,24 +1821,7 @@ if (typeof window !== "undefined") window.SphereRings = SphereRingArchitecture;
     if (telling) telling.after(line);
     else caption.appendChild(line);
     function render() {
-      var info = seasonNow(new Date());
-      var season = info.season;
-      // The face's own season ring turns its names by latitude
-      // when a place is known; the line follows the same rule.
-      try {
-        var state = window.SofEnvironmentState && window.SofEnvironmentState.getEnvironmentState ? window.SofEnvironmentState.getEnvironmentState() : null;
-        var lat = Number(state && state.place && state.place.latitude);
-        if (Number.isFinite(lat) && lat < -10) season = SEASON_FLIP[season] || season;
-      } catch (err) { /* northern names stand */ }
-      // Label law (Sphere design §1.3): a sky fact is read
-      // out as a sky fact — the line begins "Sky:" so it can
-      // never be mistaken for the Pattern count beside it.
-      var text = "Sky: " + season;
-      if (info.next && info.next.at) {
-        text += " · the " + info.next.name + " turns on " + MONTH_SHORT[info.next.at.getMonth()] + " " + info.next.at.getDate();
-      } else if (info.next) {
-        text += " · the " + info.next.name + " is the next turn";
-      }
+      var text = buildSkyText(new Date());
       if (line.textContent !== text) line.textContent = text;
       line.hidden = !skyRingSelected;
     }
@@ -1300,6 +1912,7 @@ if (typeof window !== "undefined") window.SphereRings = SphereRingArchitecture;
       }, 400);
     }
     buildReadout();
+    startRingData();
     watchDayWorld();
     adoptSkyline();
     autoEnvironment();
