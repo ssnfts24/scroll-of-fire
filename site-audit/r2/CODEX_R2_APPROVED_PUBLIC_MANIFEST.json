@@ -437,13 +437,13 @@
     },
     {
       "path": "docs/assets/data/codex-story.json",
-      "sha256": "248fcef63aae1c9358cf2a0c1a8c704327afe0db48d41d1f115a3379ca73771c",
+      "sha256": "e12f35f8a34ae715f6ad91bc2b6b6613f78159ead4583f49b1c53e724f9336c4",
       "publicUrl": "https://codexofreality.org/assets/data/codex-story.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "a55ef1da97d57ac5e222844e3fcf5d7b5b935c432fdfeebb487aae232107c5a1",
+      "sha256": "f0ed376305166e84075ec6b8a34c9b376bf45fe16bdcf5dc77f40b68da32106b",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -3382,6 +3382,78 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/media/story-episode-03-the-road-of-thirteen-moons-poster.webp",
+      "sha256": "536b22a0ce453c4fa5d20e523d3692a06dfc3015edb33e16af248366209d8a92",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-03-the-road-of-thirteen-moons-poster.webp",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-03-the-road-of-thirteen-moons.mp4",
+      "sha256": "e0a20ed9f27b0f6fc77caa6a9deaa22f69b64145e8f574917ec3efa873ebe0df",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-03-the-road-of-thirteen-moons.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-04-through-the-day-door-poster.webp",
+      "sha256": "c17bd609e06d4595238546bf2ddc3d1dcbd40620578636a092649c7d70460c0f",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-04-through-the-day-door-poster.webp",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-04-through-the-day-door.mp4",
+      "sha256": "f2176e7f06e3d4366ee103c0034dcd45500e64959484c73483ac67c2217729b7",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-04-through-the-day-door.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-05-the-garden-of-thirteen-beds-poster.webp",
+      "sha256": "620f070edf6892c68656cf69b570292bd99e5fff3f49fd668897fe11f7908123",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-05-the-garden-of-thirteen-beds-poster.webp",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-05-the-garden-of-thirteen-beds.mp4",
+      "sha256": "5137f32b16bad973aa9d6c81d291d97af313ca78e47fb7a5e9a07807aed07332",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-05-the-garden-of-thirteen-beds.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-06-packing-for-the-way-poster.webp",
+      "sha256": "cc9ebc3252a89008bccd518c17b28c9b099ae7f9b0bf526816e50e8664c20176",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-06-packing-for-the-way-poster.webp",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-06-packing-for-the-way.mp4",
+      "sha256": "f7c802558a818a74833ae9ccc0cf5a2034bc3a25825b770971ee56d137fdfff9",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-06-packing-for-the-way.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-07-the-desk-at-the-crossroads-poster.webp",
+      "sha256": "e698acdf7638f91bb896b2349e0400003c3aab3b195e2004888730423a5cff98",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-07-the-desk-at-the-crossroads-poster.webp",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-07-the-desk-at-the-crossroads.mp4",
+      "sha256": "28958579077a33fc88f3f1d4207141f91d60dddf2a3651064739756b8f5718da",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-07-the-desk-at-the-crossroads.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-08-the-signpost-meadow-poster.webp",
+      "sha256": "84be45a2eae3b5f69e383d274a6e48b8f6749a96871e04d45d7fae385ed97bd2",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-08-the-signpost-meadow-poster.webp",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-08-the-signpost-meadow.mp4",
+      "sha256": "010d092bc529a5f6c978fd964aeddd39e4c2ea1f5f97317bebb972f9f73becb1",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-08-the-signpost-meadow.mp4",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/media/systems-archive-explainer-poster.webp",
       "sha256": "d8aea911c2df4dea6fb3f687d2266ac4fbc604b8c299b2d6fc1e11141a17b385",
       "publicUrl": "https://codexofreality.org/assets/media/systems-archive-explainer-poster.webp",
@@ -3641,13 +3713,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "74dd3c005767be5e13470b3b6102d564b4c3b631e96a2ef2351edac6a998bcc4",
+      "sha256": "2a12d3b7e241aa07286bbd67c30a09556935289e286cf283d420ff2f47e56347",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "cf589242486f9cfc68768c1e5bcacf84dcbd44e52b590c4f83fa2ce89cfcaba2",
+      "sha256": "74cecc693c6a96737c78d6ae5ba3e41d5d655f9e09ebffa11c827aa81fe02f5d",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -3803,7 +3875,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "3b72b85ca3bb2c009fe47674b6cb2611cbedb51a55ead128d119dbd3dd1e096f",
+      "sha256": "f0bb71f8f0c94abd32f5a6371cb91aeae39fc0d94ec6c8f0f7d9b3f1eed73bac",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },

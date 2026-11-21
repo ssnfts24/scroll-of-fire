@@ -134,8 +134,8 @@ test("episodes: a filmed chapter carries its episode in the spine, under the con
   const filmed = story.chapters.filter(c => c.episode);
   assert.deepEqual(
     filmed.map(c => c.n),
-    [2],
-    "exactly one episode is filmed so far — chapter 2, the pattern-setter; the rest land as they are filmed"
+    [2, 3, 4, 5, 6, 7, 8],
+    "exactly the episodes produced are filmed — chapter 2, the pattern-setter, Series One Batch 1 (chapters 3, 4, 5) and Series One Batch 2 (chapters 6, 7, 8); chapter 1 carries no episode contract and the rest land as they are filmed"
   );
   for (const chapter of filmed) {
     const { film, poster, duration } = chapter.episode;
@@ -143,7 +143,13 @@ test("episodes: a filmed chapter carries its episode in the spine, under the con
     assert.ok(fs.existsSync(path.join(docsRoot, film)), `chapter ${chapter.n}'s film stands in the media folder`);
     assert.ok(fs.existsSync(path.join(docsRoot, poster)), `chapter ${chapter.n}'s poster stands in the media folder`);
     assert.ok(/^\d+:\d{2}$/.test(duration), `chapter ${chapter.n}'s episode states its length`);
+    assert.equal(
+      chapter.episode.label,
+      `Episode ${chapter.n} — the animated telling of this chapter. The written chapter below is its guide card.`,
+      `chapter ${chapter.n}'s episode carries the label in the pattern-setter's form`
+    );
   }
+  assert.ok(!story.chapters[0].episode, "chapter 1 carries no episode contract");
   const layer = read("docs/assets/js/story-layer.js");
   assert.ok(layer.includes("chapter.episode && !plain"), "the episode drops on plain surfaces, by the same fence as the scene");
   assert.ok(layer.includes("story-episode") && layer.includes('preload = "none"'), "the layer renders the episode poster-first and lazy");

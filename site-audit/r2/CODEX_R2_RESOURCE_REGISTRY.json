@@ -3,8 +3,8 @@
   "purpose": "Development-only registry of every tracked or intended repository file. Not a publication list.",
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
-    "files": 2253,
-    "bytes": 825606659,
+    "files": 2265,
+    "bytes": 883584344,
     "byGroup": {
       "tooling": 229,
       "manuscript": 17,
@@ -25,7 +25,7 @@
       "legacy-asset": 1,
       "site-page": 53,
       "deployed-dev-doc": 56,
-      "site-asset": 604,
+      "site-asset": 616,
       "vendor": 3,
       "site-data": 5,
       "scroll-library": 826,
@@ -40,12 +40,12 @@
       "restricted-review": 172,
       "protected-immutable": 21,
       "public-unreviewed": 6,
-      "approved-public": 1738
+      "approved-public": 1750
     },
     "byExamination": {
-      "inventoried-only": 2125,
-      "text-extracted": 54,
-      "no-text-layer-needs-visual-review": 1,
+      "inventoried-only": 2137,
+      "parser-unavailable": 16,
+      "text-extracted": 39,
       "archive-listed": 2,
       "structurally-audited": 71
     }
@@ -356,18 +356,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 192,
-        "words": 33734,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {
-          "CreationDate": "D:20260307003018+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -426,18 +418,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 4,
-        "words": 524,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318162939+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "1_Codex_of_Reality/Codex_of_Life_Scroll_FULL.docx"
@@ -595,18 +579,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 55,
-        "words": 5079,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163211+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "1_Codex_of_Reality/Living Laws.docx"
@@ -681,15 +657,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 182,
-        "words": 55224,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {}
+        "status": "parser-unavailable"
       }
     },
     {
@@ -713,15 +684,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 187,
-        "words": 33540,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {}
+        "status": "parser-unavailable"
       }
     },
     {
@@ -1140,18 +1106,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 2,
-        "words": 602,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163230+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/Master_Proof_Scroll_Updated.docx"
@@ -1269,18 +1227,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 3,
-        "words": 331,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163347+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/Scroll_of_Convergence.docx"
@@ -1367,18 +1317,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 2,
-        "words": 443,
-        "hebrew": true,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163433+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/The_Journey_Scroll.docx",
@@ -1505,18 +1447,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 333,
-        "words": 82978,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {
-          "CreationDate": "D:20260318162655+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/🌌 Ahmein — The Final Seal, Becoming Will.docx"
@@ -1578,18 +1512,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 266,
-        "words": 56295,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {
-          "CreationDate": "D:20260318162820+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/🜂 888 — The Architect of Becoming.docx"
@@ -1651,18 +1577,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 256,
-        "words": 56914,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {
-          "CreationDate": "D:20260318162852+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/🜄 Ainos — The Witness of Echoes.docx"
@@ -1689,18 +1607,10 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "text-extracted",
-        "pages": 4,
-        "words": 533,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318162909+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -1772,18 +1682,10 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "text-extracted",
-        "pages": 5,
-        "words": 712,
-        "hebrew": false,
-        "greek": true,
-        "metadata": {
-          "CreationDate": "D:20260318163040+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -1959,18 +1861,10 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "text-extracted",
-        "pages": 29,
-        "words": 2732,
-        "hebrew": true,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163419+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -1994,18 +1888,10 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "text-extracted",
-        "pages": 1,
-        "words": 158,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163401+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -2811,18 +2697,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "no-text-layer-needs-visual-review",
+      "examination": "parser-unavailable",
       "nextAction": "Visual review for personal imagery.",
       "extract": {
-        "status": "no-text-layer",
-        "pages": 1,
-        "words": 0,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20250621000923",
-          "Producer": "PyFPDF 1.7.2 http://pyfpdf.googlecode.com/"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -7486,8 +7364,8 @@
       "path": "docs/assets/data/codex-story.json",
       "title": "codex-story.json",
       "format": "json",
-      "bytes": 25798,
-      "sha256": "248fcef63aae1c9358cf2a0c1a8c704327afe0db48d41d1f115a3379ca73771c",
+      "bytes": 29112,
+      "sha256": "e12f35f8a34ae715f6ad91bc2b6b6613f78159ead4583f49b1c53e724f9336c4",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -7510,8 +7388,8 @@
       "path": "docs/assets/data/codex-updates.json",
       "title": "codex-updates.json",
       "format": "json",
-      "bytes": 93445,
-      "sha256": "a55ef1da97d57ac5e222844e3fcf5d7b5b935c432fdfeebb487aae232107c5a1",
+      "bytes": 98480,
+      "sha256": "f0ed376305166e84075ec6b8a34c9b376bf45fe16bdcf5dc77f40b68da32106b",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -20156,6 +20034,294 @@
       "nextAction": "Functionality audit in R2-03/R2-06."
     },
     {
+      "id": "r2:docs-assets-media-story-episode-03-the-road-of-thirteen-moons-poster-webp-2c59ff",
+      "path": "docs/assets/media/story-episode-03-the-road-of-thirteen-moons-poster.webp",
+      "title": "story-episode-03-the-road-of-thirteen-moons-poster.webp",
+      "format": "webp",
+      "bytes": 52760,
+      "sha256": "536b22a0ce453c4fa5d20e523d3692a06dfc3015edb33e16af248366209d8a92",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-03-the-road-of-thirteen-moons-poster.webp",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-media-story-episode-03-the-road-of-thirteen-moons-mp4-1a52f3",
+      "path": "docs/assets/media/story-episode-03-the-road-of-thirteen-moons.mp4",
+      "title": "story-episode-03-the-road-of-thirteen-moons.mp4",
+      "format": "mp4",
+      "bytes": 8772441,
+      "sha256": "e0a20ed9f27b0f6fc77caa6a9deaa22f69b64145e8f574917ec3efa873ebe0df",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-03-the-road-of-thirteen-moons.mp4",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-media-story-episode-04-through-the-day-door-poster-webp-2d90ec",
+      "path": "docs/assets/media/story-episode-04-through-the-day-door-poster.webp",
+      "title": "story-episode-04-through-the-day-door-poster.webp",
+      "format": "webp",
+      "bytes": 51582,
+      "sha256": "c17bd609e06d4595238546bf2ddc3d1dcbd40620578636a092649c7d70460c0f",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-04-through-the-day-door-poster.webp",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-media-story-episode-04-through-the-day-door-mp4-655168",
+      "path": "docs/assets/media/story-episode-04-through-the-day-door.mp4",
+      "title": "story-episode-04-through-the-day-door.mp4",
+      "format": "mp4",
+      "bytes": 10759058,
+      "sha256": "f2176e7f06e3d4366ee103c0034dcd45500e64959484c73483ac67c2217729b7",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-04-through-the-day-door.mp4",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-media-story-episode-05-the-garden-of-thirteen-beds-poster-webp-a2a31d",
+      "path": "docs/assets/media/story-episode-05-the-garden-of-thirteen-beds-poster.webp",
+      "title": "story-episode-05-the-garden-of-thirteen-beds-poster.webp",
+      "format": "webp",
+      "bytes": 77132,
+      "sha256": "620f070edf6892c68656cf69b570292bd99e5fff3f49fd668897fe11f7908123",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-05-the-garden-of-thirteen-beds-poster.webp",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-media-story-episode-05-the-garden-of-thirteen-beds-mp4-ebb079",
+      "path": "docs/assets/media/story-episode-05-the-garden-of-thirteen-beds.mp4",
+      "title": "story-episode-05-the-garden-of-thirteen-beds.mp4",
+      "format": "mp4",
+      "bytes": 8935027,
+      "sha256": "5137f32b16bad973aa9d6c81d291d97af313ca78e47fb7a5e9a07807aed07332",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-05-the-garden-of-thirteen-beds.mp4",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-media-story-episode-06-packing-for-the-way-poster-webp-313403",
+      "path": "docs/assets/media/story-episode-06-packing-for-the-way-poster.webp",
+      "title": "story-episode-06-packing-for-the-way-poster.webp",
+      "format": "webp",
+      "bytes": 85772,
+      "sha256": "cc9ebc3252a89008bccd518c17b28c9b099ae7f9b0bf526816e50e8664c20176",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-06-packing-for-the-way-poster.webp",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-media-story-episode-06-packing-for-the-way-mp4-9494c1",
+      "path": "docs/assets/media/story-episode-06-packing-for-the-way.mp4",
+      "title": "story-episode-06-packing-for-the-way.mp4",
+      "format": "mp4",
+      "bytes": 9874890,
+      "sha256": "f7c802558a818a74833ae9ccc0cf5a2034bc3a25825b770971ee56d137fdfff9",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-06-packing-for-the-way.mp4",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-media-story-episode-07-the-desk-at-the-crossroads-poster-webp-02e77c",
+      "path": "docs/assets/media/story-episode-07-the-desk-at-the-crossroads-poster.webp",
+      "title": "story-episode-07-the-desk-at-the-crossroads-poster.webp",
+      "format": "webp",
+      "bytes": 54572,
+      "sha256": "e698acdf7638f91bb896b2349e0400003c3aab3b195e2004888730423a5cff98",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-07-the-desk-at-the-crossroads-poster.webp",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-media-story-episode-07-the-desk-at-the-crossroads-mp4-0dba48",
+      "path": "docs/assets/media/story-episode-07-the-desk-at-the-crossroads.mp4",
+      "title": "story-episode-07-the-desk-at-the-crossroads.mp4",
+      "format": "mp4",
+      "bytes": 8959830,
+      "sha256": "28958579077a33fc88f3f1d4207141f91d60dddf2a3651064739756b8f5718da",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-07-the-desk-at-the-crossroads.mp4",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-media-story-episode-08-the-signpost-meadow-poster-webp-cc7af1",
+      "path": "docs/assets/media/story-episode-08-the-signpost-meadow-poster.webp",
+      "title": "story-episode-08-the-signpost-meadow-poster.webp",
+      "format": "webp",
+      "bytes": 99456,
+      "sha256": "84be45a2eae3b5f69e383d274a6e48b8f6749a96871e04d45d7fae385ed97bd2",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-08-the-signpost-meadow-poster.webp",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-media-story-episode-08-the-signpost-meadow-mp4-719552",
+      "path": "docs/assets/media/story-episode-08-the-signpost-meadow.mp4",
+      "title": "story-episode-08-the-signpost-meadow.mp4",
+      "format": "mp4",
+      "bytes": 10246266,
+      "sha256": "010d092bc529a5f6c978fd964aeddd39e4c2ea1f5f97317bebb972f9f73becb1",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-08-the-signpost-meadow.mp4",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
       "id": "r2:docs-assets-media-systems-archive-explainer-poster-webp-5220f4",
       "path": "docs/assets/media/systems-archive-explainer-poster.webp",
       "title": "systems-archive-explainer-poster.webp",
@@ -21193,7 +21359,7 @@
       "title": "manifest.json",
       "format": "json",
       "bytes": 2631,
-      "sha256": "74dd3c005767be5e13470b3b6102d564b4c3b631e96a2ef2351edac6a998bcc4",
+      "sha256": "2a12d3b7e241aa07286bbd67c30a09556935289e286cf283d420ff2f47e56347",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -21216,8 +21382,8 @@
       "path": "docs/assets/search/pages.json",
       "title": "pages.json",
       "format": "json",
-      "bytes": 1454935,
-      "sha256": "cf589242486f9cfc68768c1e5bcacf84dcbd44e52b590c4f83fa2ce89cfcaba2",
+      "bytes": 1454981,
+      "sha256": "74cecc693c6a96737c78d6ae5ba3e41d5d655f9e09ebffa11c827aa81fe02f5d",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -21924,8 +22090,8 @@
       "path": "docs/index.html",
       "title": "Homepage",
       "format": "html",
-      "bytes": 127642,
-      "sha256": "3b72b85ca3bb2c009fe47674b6cb2611cbedb51a55ead128d119dbd3dd1e096f",
+      "bytes": 127662,
+      "sha256": "f0bb71f8f0c94abd32f5a6371cb91aeae39fc0d94ec6c8f0f7d9b3f1eed73bac",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -50655,7 +50821,7 @@
       "title": "site-master-inventory.json",
       "format": "json",
       "bytes": 738579,
-      "sha256": "384d1066dc0233acafcecd8d1cb941bcc65f8037dc25d2af21a0be654e1da286",
+      "sha256": "e5fbaa5545aff29663735c6a2f62bcde1817f499910f5890d8f93b317ae91fde",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -54686,8 +54852,8 @@
       "path": "tests/story-layer.test.js",
       "title": "story-layer.test.js",
       "format": "js",
-      "bytes": 8828,
-      "sha256": "75f695379dbfcc40dbb42f608d0d7cf5d170a58440e8502040687588cff1d689",
+      "bytes": 9312,
+      "sha256": "4cd7f35f4768b0824f2b1cd26181a5c848fb378a2652cd9daf036cbc11691e69",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
