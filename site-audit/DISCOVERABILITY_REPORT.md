@@ -247,7 +247,7 @@ The page itself was not changed. Full lists are in `downloads-reconciliation.jso
 | `claims-atlas.html` | 1 | 1 | no | yes | 2 |
 | `codex-atlas.html` | 1 | 1 | yes | yes | 177 |
 | `codex-guide.html` | 2 | 2 | no | yes | 3 |
-| `companions.html` | 1 | 1 | no | yes | 175 |
+| `companions.html` | 1 | 1 | no | yes | 176 |
 | `covenant-caravan.html` | 1 | 1 | yes | yes | 74 |
 | `downloads.html` | 1 | 1 | yes | yes | 178 |
 | `equinox-passage.html` | 2 | 2 | yes | yes | 6 |
@@ -262,7 +262,7 @@ The page itself was not changed. Full lists are in `downloads-reconciliation.jso
 | `invoke.html` | 1 | 1 | yes | yes | 72 |
 | `lab.html` | 1 | 1 | yes | yes | 72 |
 | `ledger.html` | 1 | 1 | yes | no | 76 |
-| `living-time-sphere.html` | 1 | 1 | yes | yes | 177 |
+| `living-time-sphere.html` | 1 | 1 | yes | yes | 178 |
 | `map.html` | 1 | 1 | no | no | 2 |
 | `micro.html` | 2 | 2 | no | yes | 3 |
 | `moons.html` | 1 | 1 | yes | yes | 179 |
@@ -416,5 +416,5 @@ The page itself was not changed. Full lists are in `downloads-reconciliation.jso
 | `theory/unified-field.html` | 2 | 2 | no | yes | 35 |
 | `theory/witness.html` | 2 | 2 | no | yes | 14 |
 | `timeline.html` | 2 | 2 | no | yes | 2 |
-| `witness-world.html` | 1 | 1 | no | yes | 175 |
-| `witness.html` | 1 | 1 | no | yes | 175 |
+| `witness-world.html` | 1 | 1 | no | yes | 176 |
+| `witness.html` | 1 | 1 | no | yes | 176 |

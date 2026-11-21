@@ -582,7 +582,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 175,
+        "inboundPages": 176,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
@@ -2086,6 +2086,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "companions.html",
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
@@ -2096,6 +2097,7 @@
         "invoke.html",
         "lab.html",
         "ledger.html",
+        "living-time-sphere.html",
         "moons.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
@@ -2113,7 +2115,9 @@
         "systems/witness.html",
         "teach.html",
         "theory.html",
-        "theory/canon.html"
+        "theory/canon.html",
+        "witness-world.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/privacy-policy.html",
       "privacyEligibility": "utility",
@@ -13038,7 +13042,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 177,
+        "inboundPages": 178,
         "pagesWithNavLinkToIt": 3
       },
       "issues": []
@@ -20354,7 +20358,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 175,
+        "inboundPages": 176,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -20485,7 +20489,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 175,
+        "inboundPages": 176,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
