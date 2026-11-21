@@ -5,10 +5,9 @@
  * PatternCalendarData — the same computation home-telling.js and
  * living-entry.js use, so the door and the rest of the site never
  * disagree about what day it is. This module keeps no clock and no
- * calendar math of its own. The static markup already carries the real
- * day for the moment the page was last sealed; this script refreshes
- * it for the visitor's actual day. On any failure — or on a day
- * outside the counted year — honest static copy stands.
+ * calendar math of its own. The static markup is date-neutral;
+ * this script fills in the visitor's actual day. On any failure — or
+ * on a day outside the counted year — honest static copy stands.
  *
  * It also rests the door's light on the visitor's own daypart (dawn,
  * day, dusk, night) — a class, nothing more. No sound, ever; the film

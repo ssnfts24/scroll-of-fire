@@ -124,6 +124,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/css/home-ambient-life.css",
+      "sha256": "8f7de247568ac2b352f27f66a8c0ee61d09c9cc7271d46c07dac9f792c6b6d26",
+      "publicUrl": "https://codexofreality.org/assets/css/home-ambient-life.css",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/css/home-living-interface.css",
       "sha256": "4898d96e9f57a70884f0e21519178895a708d5e3af63111178e6743405dc8945",
       "publicUrl": "https://codexofreality.org/assets/css/home-living-interface.css",
@@ -1547,7 +1553,7 @@
     },
     {
       "path": "docs/assets/js/ambient-door.js",
-      "sha256": "9e2553df23367475ba64b586e49eaf2bfe98b721806a3e9f11634f1f5c2f5b9b",
+      "sha256": "996db71f67083203174244a46d515542084710ecbeb3911ca952125536cb0538",
       "publicUrl": "https://codexofreality.org/assets/js/ambient-door.js",
       "status": "operational"
     },
@@ -1840,6 +1846,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/js/home-ambient-life.js",
+      "sha256": "50c59e50f9ce8c375f7691d75aa6c50c7ef55881c3ef60d5712ae8e5592286c5",
+      "publicUrl": "https://codexofreality.org/assets/js/home-ambient-life.js",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/js/home-living-interface.js",
       "sha256": "3551c71df37e98ba134c26d933d633e06bcbfec624dbc275893892f646ccc16a",
       "publicUrl": "https://codexofreality.org/assets/js/home-living-interface.js",
@@ -1853,7 +1865,7 @@
     },
     {
       "path": "docs/assets/js/home-telling.js",
-      "sha256": "4be5764978f053db5c979e75aa6d516b231bd63720c4a56446003d5cebd8624e",
+      "sha256": "673bb00f3a4239e2b661dec3289b431860ffc1a2c3c6cb26e9c8843be25af788",
       "publicUrl": "https://codexofreality.org/assets/js/home-telling.js",
       "status": "operational"
     },
@@ -2195,7 +2207,7 @@
     },
     {
       "path": "docs/assets/js/pattern-garden.js",
-      "sha256": "055421846f454407ad5fa4d17c9543e17c27cd225e3f423ffa637edd1a6f5d40",
+      "sha256": "213bd1626382ba0c6c0761b630ca04d5491e71b15b8ed9b193b0ca3a02255693",
       "publicUrl": "https://codexofreality.org/assets/js/pattern-garden.js",
       "status": "operational"
     },
@@ -2687,7 +2699,7 @@
     },
     {
       "path": "docs/assets/js/witness.js",
-      "sha256": "24a9d09359fb192c3e2ae03b2ed50bfff2efb1ed74ffad3bc9d357e33fffa9cc",
+      "sha256": "0c25087ec4d595d02a5561aeb88a0fa9dc445ccb7ae7af1c9b67b7249e87c670",
       "publicUrl": "https://codexofreality.org/assets/js/witness.js",
       "status": "operational"
     },
@@ -3587,7 +3599,7 @@
     },
     {
       "path": "docs/assets/search/atlas.json",
-      "sha256": "42284125c1e23a15e8f98a9b52f1ce91eb8a05106c3f03d328959ef40932d540",
+      "sha256": "0000a8f02d4e1ff7d64aeb3419f8218ff86b9a557f09d3383d8c41232192a7de",
       "publicUrl": "https://codexofreality.org/assets/search/atlas.json",
       "status": "operational"
     },
@@ -3605,13 +3617,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "d436243301ff1a0cbf0fcaf4ab9c95d4fc10fed514efbcd8b72eac72a48083b0",
+      "sha256": "e4d16a10f8126d21a27e17ab93879c2c93ade1ff539c27bcbd7ec04c7c93468b",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "3c67b82661dc947a983b5dedf370a0747e646eab07dbe2eca2936e11cd2c5bd3",
+      "sha256": "9a324348f1069690e851c1198507ed5d40f505af8a565d048fe1f07d287b5fff",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -3659,7 +3671,7 @@
     },
     {
       "path": "docs/codex-atlas.html",
-      "sha256": "cfb409f16ab194780154d375075d9acd9be4e1927835aa7a5b276e3e170bb4e2",
+      "sha256": "9b1ce020ba8d925574e137d7e220c245244322326d84780b89f8180de7926a2b",
       "publicUrl": "https://codexofreality.org/codex-atlas.html",
       "status": "operational"
     },
@@ -3707,7 +3719,7 @@
     },
     {
       "path": "docs/data/site-catalog.json",
-      "sha256": "4236b1268b5a5cdba5b5962ee309079e2e7f7d0abc18289c6933abf93a459419",
+      "sha256": "362ade89b6d98a7700109a3aae2078d52bc9865d85fac305c4f1cc95f5744373",
       "publicUrl": "https://codexofreality.org/data/site-catalog.json",
       "status": "operational"
     },
@@ -3731,7 +3743,7 @@
     },
     {
       "path": "docs/garden.html",
-      "sha256": "cb07f54443c0ed424ee0058b8a465e929d8500b96436153857a84007238592db",
+      "sha256": "1b273c46950f30a81e7cf83735d19fad28ad3c71e6600130111dabe75cfe0726",
       "publicUrl": "https://codexofreality.org/garden.html",
       "status": "operational"
     },
@@ -3767,7 +3779,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "a7c20cd2e392ee795f411a41a5816469bc397f9c82886e0b64f495d389b31e19",
+      "sha256": "77c796a38a54ba9c9459b0712d2316d6ed784f13f0c7f86f3f0284ad330dcb4d",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
@@ -3809,7 +3821,7 @@
     },
     {
       "path": "docs/moons.html",
-      "sha256": "f76ab5c486fb78efe8b93984e4f148440f1d0182826761fc10d3ce7ee6cafe8d",
+      "sha256": "403146a21ffab57af19ab35bd05295811eca1a890b6e41a4307293b55186c205",
       "publicUrl": "https://codexofreality.org/moons.html",
       "status": "operational"
     },
@@ -10391,7 +10403,7 @@
     },
     {
       "path": "docs/witness.html",
-      "sha256": "549b35576c0b28093fce8c98d58407a111723ca135199308dda4c8fd3476b7c4",
+      "sha256": "80a20faaebc95076bc0fca7c6d82f316538b387d5d860ef6269ca1658e070c24",
       "publicUrl": "https://codexofreality.org/witness.html",
       "status": "operational"
     }

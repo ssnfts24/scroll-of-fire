@@ -151,8 +151,14 @@ test("moons page carries the telling panel, module, and plain static fallback", 
   const html = read("docs/moons.html");
   assert.match(html, /id="dayTellingPanel"/);
   assert.match(html, /assets\/js\/day-telling\.js/);
-  assert.match(html, /Day 20 of the Deep Mirror moon/);
-  assert.match(html, /Pattern Day 216 of 364/);
+  // The static fallback is date-neutral: a sealed day (the panel once
+  // carried 2026-11-18, Moon 8 Day 20, Pattern Day 216) is false on
+  // every other day. The generated telling above pins the real math.
+  const panel = html.slice(html.indexOf('id="dayTellingPanel"'), html.indexOf("manifest-today"));
+  assert.match(panel, /Today in the Pattern calendar/);
+  assert.ok(!/November 18, 2026/.test(panel), "no sealed civil date in the static fallback");
+  assert.ok(!/Day 20 of the Deep Mirror moon/.test(panel), "no sealed coordinate in the static fallback");
+  assert.ok(!/Pattern Day 216/.test(panel), "no sealed Pattern Day in the static fallback");
   assert.match(html, /The Codex's reading/);
 
   const moonsJs = read("docs/assets/js/moons.js");
