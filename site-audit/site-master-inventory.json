@@ -2123,7 +2123,7 @@
       "privacyEligibility": "utility",
       "discoverability": {
         "path": "privacy-policy.html",
-        "inSitemap": false,
+        "inSitemap": true,
         "inGlobalNav": false,
         "linkedFromHomepage": false,
         "hopsFromHome": null,

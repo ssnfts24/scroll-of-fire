@@ -268,7 +268,7 @@ The page itself was not changed. Full lists are in `downloads-reconciliation.jso
 | `moons.html` | 1 | 1 | yes | yes | 179 |
 | `offline.html` | — | — | no | no | 0 |
 | `practices.html` | 2 | 2 | no | yes | 3 |
-| `privacy-policy.html` | — | — | no | no | 0 |
+| `privacy-policy.html` | — | — | no | yes | 0 |
 | `scripture/about.html` | 2 | 2 | yes | yes | 92 |
 | `scripture/exodus/01.html` | 2 | 2 | yes | yes | 92 |
 | `scripture/exodus/02.html` | 2 | 2 | no | yes | 40 |
