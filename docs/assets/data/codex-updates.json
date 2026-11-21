@@ -2,6 +2,93 @@
  {
   "date": "2026-11-20",
   "type": "feature",
+  "title": "The map became a gate",
+  "summary": "The Traveller's Map is now the World Gate: the thirteen lands of the Codex as a raised relief on the Atlas Room's long table, under today's sky, with the Sphere's sign turning above it — the sky, not a land, reached by looking up. The lands are drawn from the site's own catalog, so the map can never drift from the site, and every page keeps its own address, unchanged. Tap a land on the relief and you travel to its page; beneath the scene, every land stands in plain words with its one clear next step, so no visitor is ever taxed a world for a fact. Where 3D cannot stand — no WebGL, reduced motion, a data-saving connection, or the keeper's own plain-site switch — the Gate rests in its flat twin: the same lands, the same words, the same order, the same next steps. A first-time keeper is led — Gate, Clearing, then the land today opens, the calendar choosing — and a returning keeper is not led twice. This is Phase 1 of the Codex World: one shared engine, built once from the machinery Their Home proved, which every later land will consume. Their Home itself stands exactly as it stood.",
+  "url": "./map.html",
+  "symbol": "⌖"
+ }, {
+  "date": "2026-11-20",
+  "type": "feature",
+  "title": "The Spark got a home of its own",
+  "summary": "The companions page now holds Their Home: a small 3D world that belongs to the keeper's own Spark, and decorates itself only from the keeper's real records on their own device. The sky is today's — its phase from the visitor's hour, its season from the Pattern Day, read live through the canonical calendar. The path grows one stone for every day in the Spark's own record. The shelf holds the hidden layer's keepsakes, each still carrying its answer card, spoken whole at a tap. Thirteen beds ring the house, folded from the Pattern Garden's own records — a bed grows only what its plantings say, and harvests rest in a basket by the door. A signpost by the gate flies a flag for every chapter of the Traveller's Road the keeper's trail has found. And the house itself grows with the Spark's stage, from the same count the companion card speaks: a hearth and a lean-to, then a cottage, then a hall. Where a record is empty the place stands honestly empty and says so; the whole world is also written out in plain words under the scene, and where 3D cannot stand, that still form carries it. Nothing is written, nothing is sent — the world only reads what the site already keeps.",
+  "url": "./companions.html",
+  "symbol": "⌂"
+ },
+ {
+  "date": "2026-11-20",
+  "type": "feature",
+  "title": "The High Library is now a filmed episode",
+  "summary": "Chapter 15, 'The High Library', on the Theory page is now an animated episode as well as a written chapter: from the word-hoard, a stair climbs to the high library, where the road's deep pattern is studied — why thirteen moons, why the day has a door, why a spark is born of a day and never twice the same — among shelves that hold the framework of everything below, the great equation chalked on a board by the window, and the arguments kept as carefully as the agreements — narrated from the chapter's own words, with its heart line kept whole: 'The library keeps. Come back by any door.' It stands inside the chapter's story slot, poster-first and lazy so nothing heavy loads unasked, with the written chapter beneath it as its guide card, and the Traveller's Map now marks the chapter as filmed.",
+  "url": "./theory.html",
+  "symbol": "✧"
+ },
+ {
+  "date": "2026-11-20",
+  "type": "feature",
+  "title": "The Registry Stall is now a filmed episode",
+  "summary": "Chapter 16, 'The Registry Stall', on the Artifact Registry & Shop page is now an animated episode as well as a written chapter: where the road comes down toward the river again stands a stall with a striped awning, its registry book on the counter and the road's made things behind it — copperwork, stone, bound pages, small bright instruments — every made thing entered in the registry before it is offered, for a thing you can trace is a thing you can trust — and at the end of the counter the Traveller makes a fair copy of the road so far and enters it in the registry himself — narrated from the chapter's own words, with its heart line kept whole: 'A road kept by its walker, made from the days as they were witnessed.' It stands inside the chapter's story slot, poster-first and lazy so nothing heavy loads unasked, with the written chapter beneath it as its guide card, and the Traveller's Map now marks the chapter as filmed.",
+  "url": "./shop.html",
+  "symbol": "✧"
+ },
+ {
+  "date": "2026-11-20",
+  "type": "feature",
+  "title": "The Atlas Room is now a filmed episode",
+  "summary": "Chapter 17, 'The Atlas Room', on the Codex Atlas page is now an animated episode as well as a written chapter: the last room of that stretch of road is less a room than a table the size of a room, the whole work laid out on it at once — the calendar country, the theory highlands, the long shore of the record, and the small bright settlements of the practices — so a traveller can see not only where a thing is, but what it stands next to, and what it is far from — and the little spark flies the length of the table and back and reports the far end worth the walking — narrated from the chapter's own words, with its heart line kept whole: 'Then we walk.' It stands inside the chapter's story slot, poster-first and lazy so nothing heavy loads unasked, with the written chapter beneath it as its guide card, and the Traveller's Map now marks the chapter as filmed.",
+  "url": "./codex-atlas.html",
+  "symbol": "✧"
+ },
+ {
+  "date": "2026-11-20",
+  "type": "feature",
+  "title": "The Picture Lesson is now a filmed episode",
+  "summary": "Chapter 12, 'The Picture Lesson', on the Manifest — the Visual Exercise page is now an animated episode as well as a written chapter: in a quiet room off the practice yard, a teacher gives a lesson with no words at all — only pictures, shown one at a time, each plainer and truer than the last — and the Traveller, knees up on the too-small schoolroom bench, watches a shape become a pattern and a pattern become a meaning, the way clouds become rain — narrated from the chapter's own words, with its heart line kept whole: 'See it whole… Then name the parts. Never the other way round.' It stands inside the chapter's story slot, poster-first and lazy so nothing heavy loads unasked, with the written chapter beneath it as its guide card, and the Traveller's Map now marks the chapter as filmed.",
+  "url": "./teach.html",
+  "symbol": "✧"
+ },
+ {
+  "date": "2026-11-20",
+  "type": "feature",
+  "title": "The Second Book is now a filmed episode",
+  "summary": "Chapter 13, 'The Second Book', on the Witness Ledger page is now an animated episode as well as a written chapter: the road passes a counting-house with tall windows, where a second great book lies on a stand of its own — not the tale, but the road's account book, every claim entered plainly, dated, and left open where any traveller can check it against the world — and in its exact, unflattering pages the Traveller finds the small garden day entered whole, and learns what the account has to teach — narrated from the chapter's own words, with its heart line kept whole: '…a day is lost not by being ordinary, but by never being entered at all.' It stands inside the chapter's story slot, poster-first and lazy so nothing heavy loads unasked, with the written chapter beneath it as its guide card, and the Traveller's Map now marks the chapter as filmed.",
+  "url": "./ledger.html",
+  "symbol": "✧"
+ },
+ {
+  "date": "2026-11-20",
+  "type": "feature",
+  "title": "The Word-Hoard is now a filmed episode",
+  "summary": "Chapter 14, 'The Word-Hoard', on the Glossary page is now an animated episode as well as a written chapter: behind the road's next door lies the word-hoard, long shelves of names each in its own labelled drawer with its meaning written out fair, where the keeper lays three words out like tools on a cloth — what each one meant, what it did not mean, and where it had come from — and near the floor stands one drawer much larger than the others, bearing no label at all — narrated from the chapter's own words, with its heart line kept whole: 'Some words… are still being understood. That drawer stays open.' It stands inside the chapter's story slot, poster-first and lazy so nothing heavy loads unasked, with the written chapter beneath it as its guide card, and the Traveller's Map now marks the chapter as filmed.",
+  "url": "./glossary.html",
+  "symbol": "✧"
+ },
+ {
+  "date": "2026-11-20",
+  "type": "feature",
+  "title": "The Roundhouse of Engines is now a filmed episode",
+  "summary": "Chapter 9, 'The Roundhouse of Engines', on the Systems Hub page is now an animated episode as well as a written chapter: the road passes a broad, low roundhouse where behind each named door an engine does its own work — one keeping the calendar's turning, one keeping the record straight, one carrying words from place to place, one watching the road itself — and the keeper, polishing a brass fitting, sets the order of things straight for the Traveller — narrated from the chapter's own words, with its heart line kept whole: 'The engines serve the road. The road serves the walking.' It stands inside the chapter's story slot, poster-first and lazy so nothing heavy loads unasked, with the written chapter beneath it as its guide card, and the Traveller's Map now marks the chapter as filmed.",
+  "url": "./hub.html",
+  "symbol": "✧"
+ },
+ {
+  "date": "2026-11-20",
+  "type": "feature",
+  "title": "The Workshop That Tests is now a filmed episode",
+  "summary": "Chapter 10, 'The Workshop That Tests', on the Remnant Lab page is now an animated episode as well as a written chapter: beyond the roundhouse stands a workshop with its doors wide open and its benches covered in half-built things, where everything is a question and nothing is believed until it has been tried — a claim taken apart and tested joint by joint, what it rested on, what would break it, what it could honestly carry — narrated from the chapter's own words, with its heart line kept whole: 'Nothing ragged, nothing left hanging.' It stands inside the chapter's story slot, poster-first and lazy so nothing heavy loads unasked, with the written chapter beneath it as its guide card, and the Traveller's Map now marks the chapter as filmed.",
+  "url": "./lab.html",
+  "symbol": "✧"
+ },
+ {
+  "date": "2026-11-20",
+  "type": "feature",
+  "title": "The Practice Yard is now a filmed episode",
+  "summary": "Chapter 11, 'The Practice Yard', on the Practices page is now an animated episode as well as a written chapter: the road widens into a yard worn smooth by feet, where travellers drill the small daily exercises of the road — one balancing a cup of water across the yard without spilling, learning attention, one repeating a name until it rang true, one simply standing still for the length of a song — and the Traveller carries the cup across and walks on with steadier steps than they arrived with — narrated from the chapter's own words, with its heart line kept whole: 'A little, every day, in the open air.' It stands inside the chapter's story slot, poster-first and lazy so nothing heavy loads unasked, with the written chapter beneath it as its guide card, and the Traveller's Map now marks the chapter as filmed.",
+  "url": "./practices.html",
+  "symbol": "✧"
+ },
+ {
+  "date": "2026-11-20",
+  "type": "feature",
   "title": "Packing for the Way is now a filmed episode",
   "summary": "Chapter 6, 'Packing for the Way', on the Downloads page is now an animated episode as well as a written chapter: at the storehouse where the path comes down to the river, the Traveller packs for the long road ahead — the map of the moons, a small book of the road's own words, one tool for mending, one for measuring starlight, all rolled in oilcloth against the rain — narrated from the chapter's own words, with its heart line kept whole: 'A pack too heavy makes a short road of a long one.' It stands inside the chapter's story slot, poster-first and lazy so nothing heavy loads unasked, with the written chapter beneath it as its guide card, and the Traveller's Map now marks the chapter as filmed.",
   "url": "./downloads.html",
