@@ -60,6 +60,9 @@
   let viewportObserver = null;
   let fxRaf = 0;
   let fxVisible = false;
+  let fxOnScreen = false;
+  let fxSize = { width: 0, height: 0 };
+  let fxSizeObserver = null;
   let listenersWired = false;
   let lastStatus = Object.freeze({ phase: "idle", renderer: null, detail: "Waiting to enter view" });
 
@@ -188,13 +191,35 @@
     fxRaf = 0;
   }
 
+  // The fx canvas's CSS size, kept fresh by a ResizeObserver (see
+  // bootstrap) so the frame loop never has to read layout. Falls
+  // back to a single measurement until the observer reports. Only
+  // a real, rendered size is cached: a zero reading (the canvas is
+  // display:none on constrained devices, by design) must not
+  // stick, or the glow could never start if the canvas appears.
+  function fxCanvasSize(canvas) {
+    if (fxSize.width > 1 && fxSize.height > 1) return fxSize;
+    const rect = canvas.getBoundingClientRect();
+    const size = {
+      width: Math.max(1, Math.round(rect.width)),
+      height: Math.max(1, Math.round(rect.height))
+    };
+    if (size.width > 1 && size.height > 1) fxSize = size;
+    return size;
+  }
+
   function drawFx(canvas) {
-    if (!canvas || !fxVisible) return;
+    fxRaf = 0;
+    if (!canvas || !fxVisible || !fxOnScreen) return;
     const context = canvas.getContext("2d");
     if (!context) return;
-    const rect = canvas.getBoundingClientRect();
-    const width = Math.max(1, Math.round(rect.width));
-    const height = Math.max(1, Math.round(rect.height));
+    const { width, height } = fxCanvasSize(canvas);
+    // Not rendered (zero size — e.g. hidden on constrained
+    // devices): do not spin a frame loop painting an invisible
+    // glow. The size observer restarts the loop if the canvas
+    // gains a real size; a tab return or section re-entry also
+    // re-enters here.
+    if (width <= 1 || height <= 1) return;
     const dpr = Math.min(1.5, window.devicePixelRatio || 1);
     const pixelWidth = Math.round(width * dpr);
     const pixelHeight = Math.round(height * dpr);
@@ -289,12 +314,19 @@
     };
     window.addEventListener(globalThis.SofEnvironmentState?.EVENT_NAME || "sof:environment-change", refresh);
     document.addEventListener("visibilitychange", () => {
-      fxVisible = !document.hidden && !!activeRoot;
-      if (fxVisible) drawFx(root.querySelector("#home-sphere-fx"));
-      else stopFx();
+      // Returning to the tab resumes the fx only when the section
+      // is actually on screen — fxOnScreen is owned by the viewport
+      // observer below. (Before, any tab return restarted the loop
+      // even with the section far off-screen, and a second chain
+      // could start beside the running one.)
+      fxVisible = !document.hidden && !!activeRoot && fxOnScreen;
+      if (fxVisible) {
+        if (!fxRaf) drawFx(root.querySelector("#home-sphere-fx"));
+      } else stopFx();
     });
     window.addEventListener("pagehide", () => {
       stopFx();
+      fxSizeObserver?.disconnect?.();
       viewportObserver?.disconnect?.();
       activeMount?.teardown?.();
       activeMount = null;
@@ -318,7 +350,7 @@
   async function activate(root) {
     activeRoot = root;
     fxVisible = !document.hidden;
-    if (fxVisible && !fxRaf) drawFx(root.querySelector("#home-sphere-fx"));
+    if (fxVisible && fxOnScreen && !fxRaf) drawFx(root.querySelector("#home-sphere-fx"));
     if (!bootPromise) {
       bootPromise = mountInstrument(root).catch(error => {
         bootPromise = null;
@@ -336,15 +368,35 @@
     if (!root || viewportObserver) return;
     wireListeners(root);
     if (!("IntersectionObserver" in window)) {
+      fxOnScreen = true;
       activate(root).catch(() => {});
       return;
+    }
+    const fxCanvas = root.querySelector("#home-sphere-fx");
+    if (fxCanvas && typeof ResizeObserver !== "undefined" && !fxSizeObserver) {
+      fxSizeObserver = new ResizeObserver(entries => {
+        const rect = entries[0]?.contentRect;
+        if (rect && rect.width > 1 && rect.height > 1) {
+          fxSize = {
+            width: Math.round(rect.width),
+            height: Math.round(rect.height)
+          };
+          // The canvas gained a real size (e.g. it was hidden on a
+          // constrained device and is now rendered): if the glow
+          // should be running, start it.
+          if (fxVisible && fxOnScreen && !fxRaf) drawFx(fxCanvas);
+        }
+      });
+      fxSizeObserver.observe(fxCanvas);
     }
     viewportObserver = new IntersectionObserver(entries => {
       const visible = entries.some(entry => entry.isIntersecting);
       if (visible) {
+        fxOnScreen = true;
         activeMount?.activate?.();
         activate(root).catch(() => {});
       } else {
+        fxOnScreen = false;
         fxVisible = false;
         stopFx();
         activeMount?.suspend?.();
