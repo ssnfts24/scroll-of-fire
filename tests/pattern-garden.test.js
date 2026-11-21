@@ -341,6 +341,132 @@ test("the module makes no network calls of its own record path and names the rem
   assert.ok(source.includes("never writes, edits, or deletes"), "in plain words");
 });
 
+/* ----------------- the keeper's ground: thirty-nine counties ----------------- */
+
+const WA_COUNTY_IDS = [
+  "adams", "asotin", "benton", "chelan", "clallam", "clark", "columbia",
+  "cowlitz", "douglas", "ferry", "franklin", "garfield", "grant",
+  "grays-harbor", "island", "jefferson", "king", "kitsap", "kittitas",
+  "klickitat", "lewis", "lincoln", "mason", "okanogan", "pacific",
+  "pend-oreille", "pierce", "san-juan", "skagit", "skamania",
+  "snohomish", "spokane", "stevens", "thurston", "wahkiakum",
+  "walla-walla", "whatcom", "whitman", "yakima"
+];
+
+test("the farm dataset carries all thirty-nine Washington counties, each with its provenance", () => {
+  const ids = farmWest.locations.map(l => l.id).sort();
+  assert.deepEqual(ids, [...WA_COUNTY_IDS].sort());
+  for (const loc of farmWest.locations) {
+    assert.ok(loc.provenance, `${loc.id} carries provenance`);
+    assert.ok(
+      loc.provenance.kind === "published" || loc.provenance.kind === "computed",
+      `${loc.id} provenance is labeled published or computed`
+    );
+    assert.ok(loc.provenance.basis.length > 40, `${loc.id} provenance names its basis`);
+  }
+  const computed = farmWest.locations.filter(l => l.provenance.kind === "computed").map(l => l.id);
+  assert.deepEqual(computed, ["asotin"], "only Asotin is computed — no NOAA normals station stands in it");
+  const asotin = farmWest.locations.find(l => l.id === "asotin");
+  assert.ok(asotin.provenance.basis.includes("Ice Harbor Dam"), "the computed county names its anchor stations");
+  assert.deepEqual(asotin.frostSources, ["garden-county-rule"], "the computed county cites the stated rule, not a station");
+});
+
+test("Lewis County's entered record stands exactly as it was — the expansion added provenance only", () => {
+  assert.equal(lewis.lastSpringFrost, "04-22");
+  assert.equal(lewis.safeLastSpringFrost, "04-30");
+  assert.equal(lewis.firstFallFrost, "10-27");
+  assert.equal(lewis.safeFirstFallFrost, "10-19");
+  assert.equal(lewis.frostFreeDays, 188);
+  assert.equal(lewis.station, "Centralia, WA — NOAA 1991–2020 normals");
+  const snohomish = farmWest.locations.find(l => l.id === "snohomish");
+  assert.equal(snohomish.lastSpringFrost, "03-24");
+  assert.equal(snohomish.safeLastSpringFrost, "05-01");
+  assert.equal(snohomish.firstFallFrost, "11-02");
+});
+
+test("every county's dates are calendrically sane and its windows never run backwards", () => {
+  const stamp = mmdd => { const [m, d] = mmdd.split("-").map(Number); return Date.UTC(2026, m - 1, d); };
+  const home = JSON.parse(read("assets/data/farm-homestead-western-wa.json"));
+  const crops = [...farmWest.crops];
+  for (const cc of home.coverCrops || []) {
+    if (cc && cc.id && cc.sowWindow) {
+      crops.push({ id: cc.id, name: cc.name, frostClass: "cover", fall: { startMonthDay: cc.sowWindow.start, endMonthDay: cc.sowWindow.end, sources: cc.sources || [] } });
+    }
+  }
+  for (const loc of farmWest.locations) {
+    assert.ok(stamp(loc.lastSpringFrost) < stamp(loc.safeLastSpringFrost), `${loc.id}: safe spring stands after the median`);
+    assert.ok(stamp(loc.safeFirstFallFrost) < stamp(loc.firstFallFrost), `${loc.id}: safe fall stands before the median`);
+    assert.ok(stamp(loc.safeLastSpringFrost) < stamp(loc.safeFirstFallFrost), `${loc.id}: the safe season is a season`);
+    for (const crop of crops) {
+      for (const year of [2026, 2027]) {
+        for (const w of Garden.cropWindows(crop, loc, year)) {
+          assert.ok(w.start <= w.end, `${loc.id} ${crop.id} ${w.kind}: window opens before it closes`);
+        }
+      }
+    }
+    const offered = new Set();
+    for (let moon = 1; moon <= 13; moon++) {
+      for (const o of Garden.plantableForSpan(crops, loc, Garden.moonSpan(2026, moon))) offered.add(o.cropId);
+    }
+    assert.ok(offered.size >= 30, `${loc.id} offers a real table across the year (got ${offered.size})`);
+  }
+});
+
+test("the county resolves plainly: the keeper's choice, else Lewis, else the first ground", () => {
+  const locs = farmWest.locations;
+  assert.equal(Garden.DEFAULT_COUNTY_ID, "lewis");
+  assert.equal(Garden.resolveCountyId(locs, "king"), "king");
+  assert.equal(Garden.resolveCountyId(locs, "multnomah"), "lewis", "an unknown county falls back to the home ground");
+  assert.equal(Garden.resolveCountyId(locs, null), "lewis", "no choice yet reads as Lewis — nothing changes for an existing keeper");
+  assert.equal(Garden.resolveCountyId([], "king"), null);
+  assert.equal(Garden.resolveCountyId([{ id: "king" }], null), "king", "without Lewis in the data, the first ground stands");
+});
+
+test("a planting record carries its county, and the fold shows it — changing ground never rewrites it", () => {
+  const king = farmWest.locations.find(l => l.id === "king");
+  const planting = Schema.createLifeRecord(
+    Garden.buildPlantRecord(
+      { moon: 4, anchorYear: 2026, cropId: "kale", cropName: "Kale", method: "sow", plantedCivilDate: "2026-07-10", countyId: king.id, countyName: king.county },
+      temporalOn("2026-07-10", { moon: 4 })
+    )
+  );
+  const payload = Garden.gardenPayload(planting);
+  assert.equal(payload.countyId, "king");
+  assert.equal(payload.countyName, "King County");
+  const state = Garden.foldGarden({
+    records: [planting],
+    keptDates: [],
+    today: todayOn("2026-07-20", 4),
+    moonNames: []
+  });
+  assert.equal(state.beds[3].plantings[0].countyId, "king");
+  assert.equal(state.beds[3].plantings[0].countyName, "King County");
+  /* A planting written before counties were stamped still folds, unnamed. */
+  const unstamped = Schema.createLifeRecord(
+    Garden.buildPlantRecord(
+      { moon: 4, anchorYear: 2026, cropId: "kale", cropName: "Kale", method: "sow", plantedCivilDate: "2026-07-10" },
+      temporalOn("2026-07-10", { moon: 4 })
+    )
+  );
+  const state2 = Garden.foldGarden({
+    records: [unstamped],
+    keptDates: [],
+    today: todayOn("2026-07-20", 4),
+    moonNames: []
+  });
+  assert.equal(state2.beds[3].plantings[0].countyName, null);
+});
+
+test("the picker is remembered on the device and the page names the whole state", () => {
+  const source = fs.readFileSync(path.join(JS, "pattern-garden.js"), "utf8");
+  assert.ok(source.includes("sof.pattern-garden.county.v1"), "the county rests under the garden's own storage key");
+  assert.ok(source.includes("readStoredCountyId"), "the garden reads the remembered county back");
+  assert.ok(source.includes("storeCountyId"), "and writes it when the keeper chooses");
+  const page = read("garden.html");
+  assert.ok(page.includes("thirty-nine counties"), "the page names the whole state's data");
+  assert.ok(page.includes("every planting record carries"), "the page states the per-planting county plainly");
+});
+
 /* ------------------------------ the page ------------------------------ */
 
 test("the garden page carries the Pattern Garden, not the mushrooms", () => {
