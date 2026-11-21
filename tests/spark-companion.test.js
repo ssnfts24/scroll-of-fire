@@ -1300,6 +1300,14 @@ test("the meeting stands above the chrome, and their light is styled to rest", (
   );
 });
 
+test("the first Spark meeting stays compact on narrow and short screens", () => {
+  const css = read("docs/assets/css/spark-companion.css");
+  assert.match(css, /@media \(max-width: 480px\), \(max-height: 560px\)/);
+  assert.match(css, /\.spark-encounter \{[^}]*max-width: min\(320px, calc\(100vw - 24px\)\)/);
+  assert.match(css, /\.spark-encounter-voice,\s*\.spark-encounter-look,\s*\.spark-encounter-born\s*\{\s*display: none;/);
+  assert.ok(Core.encounterFor({ companion: Core.generate(SEED_A) }).invite.includes("only on this device"));
+});
+
 test("v5 tell me more: the explanation continues in the page's own words only", () => {
   const explainer =
     "One plain sentence opens it. A second one follows close behind. " +
@@ -2222,4 +2230,3 @@ test("v10 rarity rides the record, the panel, and the share card — clean, unpr
     }
   }
 });
-
