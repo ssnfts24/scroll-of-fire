@@ -26,6 +26,15 @@
  * meeting itself belongs to the presence layer. The pure local
  * brain (answerLocally) is unit-tested in
  * tests/spark-agent-seat.test.js.
+ *
+ * Phase 1 of the Spark intelligence design (Nov 20, 2026) rides
+ * on this seat without changing its shape: the first time a
+ * keeper opens the panel, the seat lazy-loads the keeper mind
+ * (spark-keeper-mind.js) — the router, the briefing, the memory
+ * the Spark keeps on this device — which attaches through
+ * SparkAgentSeat.attach and takes over the asking when it is
+ * present. If the mind cannot load, the seat keeps answering
+ * exactly as it did before: local brain first, then the door.
  */
 (function (root, factory) {
   const api = factory();
@@ -40,8 +49,23 @@
   function () {
     "use strict";
 
-    const VERSION = "spark-agent-seat/1.0.0";
+    const VERSION = "spark-agent-seat/1.1.0";
     const AGENT_URL = "/.netlify/functions/spark-agent";
+
+    /* Phase 1 attach point: enhancers (the keeper mind) register
+     * here and are applied to every seat already built and every
+     * seat built later. An enhancer receives the seat's public
+     * surface (panel, log, say, the door, the record) and may set
+     * an ask handler that takes over the asking. */
+    const enhancers = [];
+    const builtApis = [];
+    function attach(fn) {
+      if (typeof fn !== "function") return;
+      enhancers.push(fn);
+      for (const api of builtApis) {
+        try { fn(api); } catch { /* an enhancer never breaks the seat */ }
+      }
+    }
 
     /* ---------------- the local brain (pure) ------------------ */
 
@@ -183,10 +207,16 @@
 
       const history = [];
       let doorState = "unknown"; // unknown | open | unavailable | ceiling
+      let doorStatus = { tightening: "open", notice: "", meter: null };
+      let askHandler = null;
 
       function say(who, text) {
         const p = document.createElement("p");
-        p.className = who === "keeper" ? "spark-seat-line is-keeper" : "spark-seat-line is-spark";
+        p.className = who === "keeper"
+          ? "spark-seat-line is-keeper"
+          : who === "status"
+            ? "spark-seat-line is-status"
+            : "spark-seat-line is-spark";
         p.textContent = text;
         log.appendChild(p);
         log.scrollTop = log.scrollHeight;
@@ -210,17 +240,54 @@
           if (!res.ok) throw new Error("door");
           const status = await res.json();
           const m = status.meter || {};
-          if (status.available === false || status.ceilingReached) {
+          doorStatus = {
+            tightening: status.tightening || (status.talkingEnabled === false ? "closed" : "open"),
+            notice: status.notice || "",
+            meter: m
+          };
+          if (status.talkingEnabled === false) {
             doorState = "ceiling";
-            meter.textContent = "The talking door is closed for now — the month's talking ceiling is reached. On-device answers still work.";
+            meter.textContent = status.notice || "The talking door is closed for now — the month's talking ceiling is reached. On-device answers still work.";
           } else {
             doorState = "open";
-            meter.textContent = `The talking door is open. This month: the Guide has used $${Number(m.guideUsd || 0).toFixed(2)} and Sparks $${Number(m.sparkUsd || 0).toFixed(2)} of the $${Number(m.ceilingUsd || 20).toFixed(0)} ceiling, shared.`;
+            const tighteningNote = doorStatus.tightening === "shortening" || doorStatus.tightening === "reserving"
+              ? " The month's meter is climbing, so briefings run shorter and deep thinking is saved for what clearly needs it."
+              : "";
+            meter.textContent = `The talking door is open. This month: the Guide has used $${Number(m.guideUsd || 0).toFixed(2)} and Sparks $${Number(m.sparkUsd || 0).toFixed(2)} of the $${Number(m.ceilingUsd || 20).toFixed(0)} ceiling, shared.${tighteningNote}`;
           }
         } catch {
           doorState = "unavailable";
+          doorStatus = { tightening: "open", notice: "", meter: null };
           meter.textContent = "The talking door is not reachable from here right now. On-device answers still work — ask about today, this page, or our days together.";
         }
+      }
+
+      /* One door call, shared by the seat's own asking and by the
+       * keeper mind's flow: the visit's history and the page's
+       * context ride along; a briefing and a tier ride only when
+       * the mind supplies them. */
+      async function askDoor({ userText, briefing, tier }) {
+        const res = await fetch(AGENT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            messages: [...history, { role: "user", content: userText }],
+            context: {
+              spark: { name, kind: companion.kindName || companion.kind || "Spark", stage: stage.name },
+              today: todayContext(),
+              page: pageContext(),
+              ...(briefing ? { briefing } : {})
+            },
+            ...(tier ? { tier } : {})
+          })
+        });
+        if (!res.ok) throw new Error("door");
+        const data = await res.json();
+        const reply = String(data.reply || data.text || "").trim();
+        if (data.mode === "agent" && reply) {
+          history.push({ role: "user", content: userText }, { role: "assistant", content: reply });
+        }
+        return data;
       }
 
       async function ask() {
@@ -228,6 +295,14 @@
         if (!clean) return;
         input.value = "";
         say("keeper", clean);
+        /* The keeper mind, when it has attached, takes the asking
+         * from here — router, briefing, memory and all. If it
+         * declines or stumbles, the seat's own answers carry on. */
+        if (askHandler) {
+          try {
+            if (await askHandler(clean)) return;
+          } catch { /* the seat's own path answers instead */ }
+        }
         const local = answerLocally(clean, localCtx());
         if (local) { say("spark", local); return; }
         if (doorState === "unknown") await checkDoor();
@@ -238,23 +313,9 @@
           return;
         }
         try {
-          const res = await fetch(AGENT_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              messages: [...history, { role: "user", content: clean }],
-              context: {
-                spark: { name, kind: companion.kindName || companion.kind || "Spark", stage: stage.name },
-                today: todayContext(),
-                page: pageContext()
-              }
-            })
-          });
-          if (!res.ok) throw new Error("door");
-          const data = await res.json();
+          const data = await askDoor({ userText: clean });
           const reply = String(data.reply || data.text || "").trim();
           if (!reply) throw new Error("door");
-          history.push({ role: "user", content: clean }, { role: "assistant", content: reply });
           say("spark", reply);
         } catch {
           doorState = "unavailable";
@@ -262,11 +323,29 @@
         }
       }
 
+      /* The keeper mind is lazy: it loads the first time the
+       * panel opens, from beside this script, at the same cache
+       * stamp — so no page carries its weight for a keeper who
+       * never opens the talk panel. If it cannot load, the seat
+       * simply keeps its own answers (fail down, honestly). */
+      let mindRequested = false;
+      function ensureMind() {
+        if (mindRequested || typeof SparkKeeperMind !== "undefined") return;
+        mindRequested = true;
+        const tag = document.querySelector('script[src*="spark-agent-seat.js"]');
+        if (!tag) return;
+        const script = document.createElement("script");
+        script.src = tag.getAttribute("src").replace(/spark-agent-seat\.js/, "spark-keeper-mind.js");
+        script.defer = true;
+        document.head.appendChild(script);
+      }
+
       button.addEventListener("click", () => {
         const opening = panel.hidden;
         panel.hidden = !opening;
         button.setAttribute("aria-expanded", String(opening));
         if (opening) {
+          ensureMind();
           if (!log.childElementCount) {
             say("spark", `Here I am — ${name}, on this page with you. Ask me about today, about where you are standing, or anything deeper if the door is open.`);
           }
@@ -278,6 +357,36 @@
       input.addEventListener("keydown", event => {
         if (event.key === "Enter") { event.preventDefault(); void ask(); }
       });
+
+      /* The seat's public surface, for the keeper mind. */
+      const seatApi = {
+        panel,
+        log,
+        formEl: form,
+        input,
+        name,
+        record,
+        companion,
+        core: Core,
+        say,
+        localCtx,
+        todayStamp: todayContext,
+        seatAnswerLocally: (question) => answerLocally(question, localCtx()),
+        askDoor,
+        getDoorStatus: () => ({
+          known: doorState !== "unknown",
+          doorOpen: doorState === "open",
+          tightening: doorStatus.tightening,
+          notice: doorStatus.notice
+        }),
+        refreshDoor: checkDoor,
+        setAskHandler: (fn) => { askHandler = typeof fn === "function" ? fn : null; },
+        history
+      };
+      builtApis.push(seatApi);
+      for (const fn of enhancers) {
+        try { fn(seatApi); } catch { /* an enhancer never breaks the seat */ }
+      }
     }
 
     function init() {
@@ -299,6 +408,6 @@
       }
     }
 
-    return { VERSION, answerLocally };
+    return { VERSION, answerLocally, attach };
   }
 );
