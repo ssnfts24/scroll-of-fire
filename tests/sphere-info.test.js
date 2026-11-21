@@ -168,6 +168,7 @@ test("readout: the packed telling is built — one labelled line per ring, the y
   assert.ok(handoff.includes("conversionForSelection"), "the readout converts only through the canonical line");
   assert.ok(handoff.includes("coordinate.gregorian && coordinate.gregorian.isoDate"), "the civil date is read from the cursor snapshot's own gregorian.isoDate — the key the cursor actually publishes");
   assert.ok(handoff.includes("sof:temporal-cursor-ready"), "the telling completes itself when the deferred cursor arrives");
+  assert.ok(handoff.includes("ui.getCurrentModel()") && handoff.includes("model.selectedPatternPosition"), "the shown day's conversion is read from the instrument's own model — a face tap moves the face alone, so the cursor's day is not always the shown day");
 });
 
 test("wheel geometry: arcs are true sectors of the 364-day year", () => {

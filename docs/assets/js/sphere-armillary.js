@@ -996,11 +996,14 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
    * The packed telling needs the selected day's civil date
    * (for its Sky and Farm lines) and its Pattern year (for
    * the year wheel). Both arrive only through the canonical
-   * line: the temporal cursor's own events and globals, read
-   * exactly as the farm room reads them, converted by
-   * PatternCalendar itself. A conversion is used only when
-   * it names the very day the state strip shows — never a
-   * neighbouring day dressed as the selected one. */
+   * line: first the instrument's own current model, whose
+   * selected position PatternCalendar itself resolved; then
+   * the temporal cursor's events and globals, read exactly
+   * as the farm room reads them. A conversion is used only
+   * when it names the very day the state strip shows — never
+   * a neighbouring day dressed as the selected one, and no
+   * date is ever derived from a Pattern Day by local
+   * arithmetic. */
 
   var selectedCivilISO = null;
   var conversionCacheISO = "";
@@ -1061,6 +1064,28 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
 
   function conversionForSelection(pos) {
     if (!pos) return null;
+    // First source: the instrument's own current model. Its
+    // selected position is resolved through PatternCalendar
+    // by the instrument itself and carries the shown day's
+    // civil date and Pattern year — the readout reads that
+    // published conversion and derives no date of its own
+    // (the farm room's law: no date is ever derived from a
+    // Pattern Day by local arithmetic). The face's shown day
+    // and the cursor's day are not always the same day — a
+    // face tap moves the face alone — so the model's position
+    // is the one reading that always names the shown day.
+    var ui = window.LivingTimeSphereUi;
+    if (ui && ui.getCurrentModel) {
+      var model = null;
+      try { model = ui.getCurrentModel(); } catch (err) { model = null; }
+      var sel = model && model.selectedPatternPosition;
+      if (sel && sel.dayOfPatternYear === pos.dayOfPatternYear && sel.moon === pos.moon && sel.day === pos.day) {
+        if (sel.civilDate) selectedCivilISO = sel.civilDate;
+        return sel;
+      }
+    }
+    // Fallback: the cursor's own conversion, used only when
+    // it names the very day the strip shows.
     applyCursorGlobals();
     if (!selectedCivilISO) return null;
     var PC = window.PatternCalendar;
