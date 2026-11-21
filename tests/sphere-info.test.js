@@ -166,6 +166,8 @@ test("readout: the packed telling is built — one labelled line per ring, the y
   assert.ok(handoff.includes('"sof.pattern-garden.county.v1"') || handoff.includes("sof.pattern-garden.county.v1"), "the garden's remembered county is honoured");
   assert.ok(handoff.includes("sof.sphere.farm.county.v1"), "the Sphere farm room's remembered county is honoured");
   assert.ok(handoff.includes("conversionForSelection"), "the readout converts only through the canonical line");
+  assert.ok(handoff.includes("coordinate.gregorian && coordinate.gregorian.isoDate"), "the civil date is read from the cursor snapshot's own gregorian.isoDate — the key the cursor actually publishes");
+  assert.ok(handoff.includes("sof:temporal-cursor-ready"), "the telling completes itself when the deferred cursor arrives");
 });
 
 test("wheel geometry: arcs are true sectors of the 364-day year", () => {

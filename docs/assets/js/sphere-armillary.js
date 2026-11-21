@@ -1008,8 +1008,18 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
 
   function noteCursorDetail(detail) {
     if (!detail || typeof detail !== "object") return;
+    // The cursor snapshot's own shape, read exactly as the
+    // farm room reads it: the coordinate carries its civil
+    // date under gregorian.isoDate.
     var coordinate = detail.coordinate && typeof detail.coordinate === "object" ? detail.coordinate : detail;
-    var candidates = [coordinate.gregorianDate, coordinate.civilDate, coordinate.isoDate, coordinate.date, detail.gregorianDate, detail.civilDate];
+    var candidates = [
+      coordinate.gregorian && coordinate.gregorian.isoDate,
+      detail.gregorian && detail.gregorian.isoDate,
+      coordinate.civilDate,
+      detail.civilDate,
+      coordinate.isoDate,
+      coordinate.date
+    ];
     for (var i = 0; i < candidates.length; i += 1) {
       var c = candidates[i];
       if (typeof c === "string" && /^\d{4}-\d{2}-\d{2}/.test(c)) { selectedCivilISO = c.slice(0, 10); return; }
@@ -1019,12 +1029,21 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
 
   function applyCursorGlobals() {
     var coordinate = window.SOFCurrentTemporalCoordinate;
-    if (coordinate && typeof coordinate === "object") noteCursorDetail(coordinate);
+    if (coordinate && typeof coordinate === "object") {
+      noteCursorDetail({ coordinate: coordinate });
+      if (selectedCivilISO) return;
+    }
+    // The cursor publishes the selected day as a Date; the
+    // canonical conversion names its civil date — the same
+    // fallback the farm room uses.
     var sel = window.SOF_SELECTED_DATE;
-    if (!sel) return;
-    if (typeof sel === "string" && /^\d{4}-\d{2}-\d{2}/.test(sel)) selectedCivilISO = sel.slice(0, 10);
-    else if (sel instanceof Date && !Number.isNaN(sel.getTime())) selectedCivilISO = sel.toISOString().slice(0, 10);
-    else if (typeof sel === "object") noteCursorDetail(sel);
+    var PC = window.PatternCalendar;
+    if (sel && PC && PC.fromCivilDate) {
+      try {
+        var summary = PC.fromCivilDate({ date: sel });
+        if (summary && summary.civilDate) selectedCivilISO = summary.civilDate;
+      } catch (err) { /* the cursor's events remain the primary signal */ }
+    }
   }
 
   window.addEventListener("sof:selected-date-change", function (e) {
@@ -1032,6 +1051,13 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
     if (renderReadoutRef) renderReadoutRef();
   });
   window.addEventListener("sof:temporal-cursor-change", function (e) { noteCursorDetail(e && e.detail); });
+  // The cursor controller rides the page's deferred third
+  // phase: when it arrives, the telling completes itself.
+  window.addEventListener("sof:temporal-cursor-ready", function (e) {
+    noteCursorDetail(e && e.detail);
+    applyCursorGlobals();
+    if (renderReadoutRef) renderReadoutRef();
+  });
 
   function conversionForSelection(pos) {
     if (!pos) return null;
