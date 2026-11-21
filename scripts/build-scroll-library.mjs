@@ -331,6 +331,8 @@ const reader = `<!doctype html>
       <div data-passage></div>
       <aside class="related-panel" data-related hidden aria-labelledby="related-title"></aside>
     </article>
+    <h2>Where to Next</h2>
+    <p><a href="index.html">Scroll Library →</a></p>
   </main>
   <div class="reader-bottom">
     <a data-previous href="./">← Previous passage</a>
@@ -424,7 +426,9 @@ const searchPage = toolPage({
       <li><strong>Hebrew:</strong> vowel marks are optional; final letters and prefixes such as ו ה ב ל are matched.</li>
       <li><strong>English spellings:</strong> Hebrew lexicon matches also follow documented transliteration variants (for example Nachash, Nahash).</li>
       <li><strong>Genesis:</strong> type “Genesis 24” to open that chapter directly.</li></ul>
-      <p>Try: <a href="search.html?q=Nachash">Nachash</a> · <a href="search.html?q=%D7%91%D7%A8%D7%90%D7%A9%D7%99%D7%AA">בראשית</a> · <a href="search.html?q=Genesis+24">Genesis 24</a> · <a href="search.html?q=orphan+train">orphan train</a> · <a href="search.html?q=Revelation+18%3A23">Revelation 18:23</a></p></section>`
+      <p>Try: <a href="search.html?q=Nachash">Nachash</a> · <a href="search.html?q=%D7%91%D7%A8%D7%90%D7%A9%D7%99%D7%AA">בראשית</a> · <a href="search.html?q=Genesis+24">Genesis 24</a> · <a href="search.html?q=orphan+train">orphan train</a> · <a href="search.html?q=Revelation+18%3A23">Revelation 18:23</a></p></section>
+    <h2>Where to Next</h2>
+    <p><a href="index.html">Scroll Library →</a></p>`
 });
 
 const lexiconPage = toolPage({
@@ -504,7 +508,9 @@ const atlasPage = toolPage({
     <section role="tabpanel" id="panel-entities" aria-labelledby="tab-entities" data-panel="entities" hidden></section>
     <section role="tabpanel" id="panel-repeated" aria-labelledby="tab-repeated" data-panel="repeated" hidden></section>
     <section role="tabpanel" id="panel-years" aria-labelledby="tab-years" data-panel="years" hidden></section>
-    <noscript><p class="notice">The atlas needs JavaScript. You can still <a href="./#full-index">browse every source section</a>.</p></noscript>`
+    <noscript><p class="notice">The atlas needs JavaScript. You can still <a href="./#full-index">browse every source section</a>.</p></noscript>
+    <h2>Where to Next</h2>
+    <p><a href="index.html">Scroll Library →</a></p>`
 });
 
 const editorialPage = toolPage({
@@ -532,7 +538,9 @@ const editorialPage = toolPage({
     <section class="editorial-coverage" data-editorial-coverage aria-labelledby="coverage-title"><h2 id="coverage-title">What this edition covers</h2></section>
     <article class="editorial-reading" data-editorial-reading aria-live="polite"></article>
     <section class="editorial-claims" aria-labelledby="claims-title"><h2 id="claims-title">Claim register</h2><p>Each record quotes the exact original wording and separates the claim’s evidence status from whether its cited sources could be inspected in this session.</p><div data-claim-list></div></section>
-    <noscript><p class="notice">The interactive register needs JavaScript. The complete register is available in <a href="evidence/register.md">EVIDENCE_REGISTER.md</a> and <a href="evidence/claim-register.json">JSON</a>.</p></noscript>`
+    <noscript><p class="notice">The interactive register needs JavaScript. The complete register is available in <a href="evidence/register.md">EVIDENCE_REGISTER.md</a> and <a href="evidence/claim-register.json">JSON</a>.</p></noscript>
+    <h2>Where to Next</h2>
+    <p><a href="index.html">Scroll Library →</a></p>`
 });
 
 fs.writeFileSync(path.join(outputRoot, "index.html"), homepage);

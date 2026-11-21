@@ -7,7 +7,7 @@
     "publicHtmlPages": 181,
     "catalogEntries": 73,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 25,
+      "not-linked-directly-from-homepage": 26,
       "nav-label-differs-from-title": 24,
       "no-global-navigation": 1,
       "deployed-but-unlinked": 56,
@@ -374,7 +374,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 2,
+        "inboundPages": 3,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -1882,7 +1882,6 @@
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
-        "garden.html",
         "genesis-oracle.html",
         "glossary.html",
         "guide.html",
@@ -13142,6 +13141,7 @@
         "ledger.html",
         "living-time-sphere.html",
         "moons.html",
+        "practices.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -13271,6 +13271,7 @@
         "downloads.html",
         "equinox-passage.html",
         "ethics.html",
+        "garden.html",
         "genesis-oracle.html",
         "glossary.html",
         "guide.html",
@@ -13374,13 +13375,15 @@
         "path": "garden.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
         "inboundPages": 4,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": []
+      "issues": [
+        "not-linked-directly-from-homepage"
+      ]
     },
     {
       "id": "planned-timeline",
@@ -13401,6 +13404,7 @@
         "13-moon-whitepaper.html",
         "about-aaron.html",
         "circle.html",
+        "claims-atlas.html",
         "codex-atlas.html",
         "companions.html",
         "covenant-caravan.html",
@@ -13516,7 +13520,7 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
         "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 3,
+        "inboundPages": 4,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
