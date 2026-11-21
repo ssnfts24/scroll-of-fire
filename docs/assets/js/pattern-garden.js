@@ -45,6 +45,20 @@
  *      the hidden-finds layer. Early finds come readily; later
  *      ones are rarer, by a rule computed from the keeper's own
  *      record and the day, on this device only.
+ *   7. The garden teaches (Aaron, Nov 20, 2026: "if the garden's
+ *      advantage is to teach people how and what to plant then it
+ *      needs a ton more information"). Every crop carries a full
+ *      growing guide (farm-garden-guides.json): depth, spacing,
+ *      germination, method, sun, soil, water, companions, harvest,
+ *      storage, and the troubles this region meets — every field
+ *      sourced, and an unsourced field left out rather than
+ *      filled from habit. The guide's dates are derived at render
+ *      time from the keeper's chosen county record (the same
+ *      cropWindows reading the offers use), so a guide and an
+ *      offer can never disagree, changing county re-derives the
+ *      guide, and no planting already written is ever rewritten.
+ *      The separation stands on the guide's face: the Moon opens
+ *      the bed; the farm record sets the dates.
  *
  * RECORD SAFETY (standing law): this module keeps to its own
  * records. It never writes, edits, or deletes a record of the old
@@ -270,6 +284,71 @@
         }
       }
       return out.sort((a, b) => a.name.localeCompare(b.name) || a.method.localeCompare(b.method));
+    }
+
+    /* ------------------- the teaching layer --------------------- */
+
+    const MONTH_NAMES = Object.freeze([
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ]);
+
+    /* "2026-04-22" → "April 22". Display only; the ISO date is
+     * always the value carried. */
+    function longDate(iso) {
+      const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso || ""));
+      if (!m) return String(iso || "");
+      return `${MONTH_NAMES[Number(m[2]) - 1]} ${Number(m[3])}`;
+    }
+
+    /* The guide's "when", derived from the county record alone:
+     * the same cropWindows reading the bed offers use, so a guide
+     * and an offer can never disagree, plus the county's own frost
+     * anchors the dates were counted from — named on the guide's
+     * face, so a keeper can see which county dates were used.
+     * Nothing here comes from the calendar: the Moon opens the
+     * bed; these dates are the farm record's. */
+    function guideWhenLines(crop, location, year) {
+      if (!crop || !location || !year) return null;
+      const lines = cropWindows(crop, location, year).map(w => ({
+        method: w.kind,
+        methodLabel: METHOD_LABELS[w.kind] || w.kind,
+        start: w.start,
+        end: w.end,
+        sources: w.sources
+      }));
+      let indoorLead = null;
+      if (crop.indoorStart && Array.isArray(crop.indoorStart.weeksBeforeLastFrost)) {
+        const [lo, hi] = crop.indoorStart.weeksBeforeLastFrost;
+        indoorLead = { weeksMin: lo, weeksMax: hi, sources: crop.indoorStart.sources || [] };
+      }
+      return {
+        county: location.county || null,
+        station: location.station || null,
+        anchor: location.anchor || null,
+        year,
+        lastSpringFrost: monthDayInYear(location.lastSpringFrost, year),
+        safeLastSpringFrost: monthDayInYear(location.safeLastSpringFrost, year),
+        firstFallFrost: monthDayInYear(location.firstFallFrost, year),
+        safeFirstFallFrost: monthDayInYear(location.safeFirstFallFrost, year),
+        indoorLead,
+        fallText: crop.fall && crop.fall.text ? crop.fall.text : null,
+        lines
+      };
+    }
+
+    /* Which year's dates a guide should speak in: the current
+     * year while any of the crop's windows is still ahead; once
+     * every window has closed, the coming year — a guide read in
+     * November teaches next spring's planting, and says which
+     * year it means. */
+    function guideYearFor(crop, location, todayISO) {
+      const year = Number(String(todayISO || "").slice(0, 4));
+      if (!crop || !location || !year) return year || null;
+      const when = guideWhenLines(crop, location, year);
+      if (!when || !when.lines.length) return year;
+      const lastEnd = when.lines.map(l => l.end).sort().pop();
+      return lastEnd && lastEnd < todayISO ? year + 1 : year;
     }
 
     /* The keeper's ground. The county is a choice, remembered on
@@ -719,9 +798,14 @@
     async function loadFarm() {
       if (farmData) return farmData;
       try {
-        const [west, home] = await Promise.all([
+        const [west, home, guideFile] = await Promise.all([
           fetch("assets/data/farm-western-wa.json").then(r => (r.ok ? r.json() : null)),
-          fetch("assets/data/farm-homestead-western-wa.json").then(r => (r.ok ? r.json() : null))
+          fetch("assets/data/farm-homestead-western-wa.json").then(r => (r.ok ? r.json() : null)),
+          /* The teaching layer. Absent file, absent guides — the
+           * garden plants exactly as before (this is also how an
+           * older bundled copy of the garden keeps working until
+           * the guides file reaches it). */
+          fetch("assets/data/farm-garden-guides.json").then(r => (r.ok ? r.json() : null)).catch(() => null)
         ]);
         const crops = [...((west && west.crops) || [])];
         /* Cover crops are real bed plantings too; the homestead
@@ -733,23 +817,30 @@
               id: cc.id,
               name: cc.name,
               frostClass: "cover",
+              purpose: cc.purpose || null,
+              rateText: cc.rateText || null,
+              rateSources: cc.sources || [],
               fall: { startMonthDay: cc.sowWindow.start, endMonthDay: cc.sowWindow.end, sources: cc.sources || [] }
             });
           }
         }
         const sourceNames = {};
-        for (const file of [west, home]) {
+        for (const file of [west, home, guideFile]) {
           for (const s of (file && file.sources) || []) {
-            if (s && s.id) sourceNames[s.id] = s.name || s.id;
+            if (s && s.id) sourceNames[s.id] = s.name || s.title || s.id;
           }
         }
+        const cropById = {};
+        for (const crop of crops) if (crop && crop.id) cropById[crop.id] = crop;
         farmData = {
           crops,
+          cropById,
           locations: (west && west.locations) || [],
+          guides: (guideFile && guideFile.guides) || {},
           sourceNames
         };
       } catch {
-        farmData = { crops: [], locations: [], sourceNames: {} };
+        farmData = { crops: [], cropById: {}, locations: [], guides: {}, sourceNames: {} };
       }
       return farmData;
     }
@@ -810,6 +901,194 @@
       const loc = location();
       if (!bed || !bed.span || !loc || !farmData) return [];
       return plantableForSpan(farmData.crops, loc, bed.span);
+    }
+
+    /* ------------------------- the guides ------------------------ */
+
+    let openGuideCropId = null;
+
+    function guideFor(cropId) {
+      if (!farmData || !cropId) return null;
+      return farmData.guides[cropId] || null;
+    }
+
+    function el(tag, className, text) {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text != null) node.textContent = text;
+      return node;
+    }
+
+    /* One crop's full guide, in the keeper's chosen county. The
+     * "when" is derived from the county record at render time —
+     * never stored — so changing county re-derives the guide,
+     * and a planting already written is never touched. The "how"
+     * is the teaching record (farm-garden-guides.json): every
+     * field carries its sources, and the guide names them. */
+    function renderGuide() {
+      if (typeof document === "undefined") return;
+      const host = document.getElementById("garden-guide");
+      if (!host) return;
+      host.replaceChildren();
+      const crop = openGuideCropId && farmData ? farmData.cropById[openGuideCropId] : null;
+      const guide = openGuideCropId ? guideFor(openGuideCropId) : null;
+      if (!crop || !guide) {
+        host.appendChild(el("p", "garden-guide-empty",
+          "Choose “Growing guide” on a crop in the open bed — or on a planting in any bed — and its guide opens here."));
+        return;
+      }
+      const loc = location();
+      const usedSources = new Set();
+      const take = field => {
+        if (field && Array.isArray(field.sources)) for (const s of field.sources) usedSources.add(s);
+      };
+
+      const card = el("article", "garden-guide-card");
+      const head = el("div", "garden-guide-head");
+      head.appendChild(el("h3", null, `${crop.name} — growing guide`));
+      const closeBtn = el("button", "garden-btn garden-btn-guide-close", "Close the guide");
+      closeBtn.type = "button";
+      closeBtn.addEventListener("click", () => {
+        openGuideCropId = null;
+        const select = document.getElementById("garden-guide-crop");
+        if (select) select.value = "";
+        renderGuide();
+      });
+      head.appendChild(closeBtn);
+      card.appendChild(head);
+
+      if (crop.purpose) card.appendChild(el("p", "garden-guide-purpose", crop.purpose));
+
+      /* When — the county's dates, derived in the open. */
+      const todayISO = todayTemporal?.civilDate || isoOf(new Date());
+      const year = guideYearFor(crop, loc, todayISO);
+      const when = loc ? guideWhenLines(crop, loc, year) : null;
+      card.appendChild(el("h4", null, "When — your county's dates"));
+      if (when) {
+        card.appendChild(el("p", "garden-guide-county",
+          `For ${when.county} — counted from ${when.station}: average last spring frost ` +
+          `${longDate(when.lastSpringFrost)} · the safe line ${longDate(when.safeLastSpringFrost)} · ` +
+          `first fall frost ${longDate(when.firstFallFrost)}. The dates below are for ${when.year}.`));
+        const list = el("ul", "garden-guide-when");
+        const dated = iso => {
+          const text = longDate(iso);
+          /* A window can open in the December before its season
+           * (an early county's indoor starts) — name the year
+           * whenever a date falls outside the guide's own. */
+          return iso && Number(iso.slice(0, 4)) !== when.year ? `${text}, ${iso.slice(0, 4)}` : text;
+        };
+        for (const line of when.lines) {
+          take(line);
+          list.appendChild(el("li", null,
+            `${line.methodLabel}: ${dated(line.start)} – ${dated(line.end)}`));
+        }
+        if (when.indoorLead) {
+          take(when.indoorLead);
+          list.appendChild(el("li", null,
+            `Indoor starts run ${when.indoorLead.weeksMin}–${when.indoorLead.weeksMax} weeks before that last spring frost.`));
+        }
+        if (when.fallText) list.appendChild(el("li", null, when.fallText));
+        card.appendChild(list);
+        if (crop.daysToMaturity && crop.daysToMaturity.min) {
+          take(crop.daysToMaturity);
+          const d = crop.daysToMaturity;
+          card.appendChild(el("p", "garden-guide-maturity",
+            `About ${d.min === d.max ? d.min : `${d.min}–${d.max}`} days to harvest, ${d.basis || "from planting"}, by the farm record.`));
+        }
+      }
+      card.appendChild(el("p", "garden-guide-fence",
+        "The Moon opens the bed. These dates are the farm record's, counted from your county's frost record — no Moon line sets them."));
+
+      const section = (title, rows) => {
+        const filled = rows.filter(r => r && r.text);
+        if (!filled.length) return;
+        card.appendChild(el("h4", null, title));
+        const list = el("ul", "garden-guide-rows");
+        for (const row of filled) {
+          take(row.field);
+          const item = el("li", null);
+          const label = el("strong", null, `${row.label}: `);
+          item.append(label, document.createTextNode(row.text));
+          list.appendChild(item);
+        }
+        card.appendChild(list);
+      };
+      const fieldText = field => (field && field.text ? field.text : null);
+
+      section("How", [
+        { label: "Depth", field: guide.depth, text: fieldText(guide.depth) },
+        crop.rateText
+          ? { label: "Seed", field: { sources: crop.rateSources }, text: `${crop.rateText} per the farm record.` }
+          : null,
+        { label: "Spacing", field: guide.spacing, text: fieldText(guide.spacing) },
+        { label: "Germination", field: guide.germination, text: fieldText(guide.germination) },
+        { label: "The work", field: guide.sowHow, text: fieldText(guide.sowHow) },
+        { label: "Succession", field: guide.succession, text: fieldText(guide.succession) }
+      ]);
+
+      const companionText = guide.companions
+        ? [
+            guide.companions.good && guide.companions.good.length ? `Good neighbours: ${guide.companions.good.join(", ")}.` : null,
+            guide.companions.avoid && guide.companions.avoid.length ? `Keep apart: ${guide.companions.avoid.join(", ")}.` : null
+          ].filter(Boolean).join(" ") || null
+        : null;
+      section("Growing", [
+        { label: "Sun", field: guide.sun, text: fieldText(guide.sun) },
+        { label: "Soil", field: guide.soil, text: fieldText(guide.soil) },
+        { label: "Water", field: guide.water, text: fieldText(guide.water) },
+        { label: "Companions", field: guide.companions, text: companionText }
+      ]);
+
+      section("Harvest", [
+        { label: "Signs", field: guide.harvest, text: fieldText(guide.harvest) },
+        { label: "Storage", field: guide.storage, text: fieldText(guide.storage) }
+      ]);
+
+      section("Finishing", [
+        { label: "Turning under", field: guide.termination, text: fieldText(guide.termination) }
+      ]);
+
+      if (Array.isArray(guide.troubles) && guide.troubles.length) {
+        card.appendChild(el("h4", null, "Troubles — the ones this region meets"));
+        const list = el("ul", "garden-guide-rows");
+        for (const t of guide.troubles) {
+          if (!t || !t.text) continue;
+          take(t);
+          const item = el("li", null);
+          item.append(el("strong", null, `${t.name}: `), document.createTextNode(t.text));
+          list.appendChild(item);
+        }
+        card.appendChild(list);
+      }
+
+      if (Array.isArray(guide.notes)) {
+        for (const note of guide.notes) {
+          if (note) card.appendChild(el("p", "garden-guide-note", note));
+        }
+      }
+
+      const names = [...usedSources].map(id => (farmData.sourceNames || {})[id] || id);
+      if (names.length) {
+        card.appendChild(el("p", "garden-guide-sources", `Sources: ${names.join("; ")}`));
+      }
+
+      host.appendChild(card);
+    }
+
+    function openGuide(cropId) {
+      openGuideCropId = cropId;
+      const select = typeof document !== "undefined" ? document.getElementById("garden-guide-crop") : null;
+      if (select) select.value = cropId;
+      renderGuide();
+      const host = typeof document !== "undefined" ? document.getElementById("garden-guide") : null;
+      if (host && host.scrollIntoView) host.scrollIntoView({ block: "start" });
+    }
+
+    function guideButton(cropId) {
+      const btn = el("button", "garden-btn garden-btn-guide", "Growing guide");
+      btn.type = "button";
+      btn.addEventListener("click", () => openGuide(cropId));
+      return btn;
     }
 
     function render() {
@@ -903,6 +1182,7 @@
                   ? " · went to seed at the Moon's turn"
                   : "");
             card.appendChild(line);
+            if (guideFor(planting.cropId)) card.appendChild(guideButton(planting.cropId));
             if (planting.canHarvest) {
               const btn = document.createElement("button");
               btn.type = "button";
@@ -1044,6 +1324,7 @@
                   ` ${choice.methodLabel} window ${choice.windowStart} → ${choice.windowEnd}. ${sourceLabel(choice.sources)}` +
                   (seed ? " Your Spark's found seed is of this crop." : "");
                 row.append(btn, why);
+                if (guideFor(choice.cropId)) row.appendChild(guideButton(choice.cropId));
                 list.appendChild(row);
               }
               card.appendChild(list);
@@ -1081,6 +1362,8 @@
         if (keepEmpty) keepEmpty.hidden = state.keepsakes.length > 0;
       }
 
+      /* An open guide re-derives with the county in view. */
+      renderGuide();
     }
 
     async function init() {
@@ -1103,11 +1386,36 @@
           countyId = resolveCountyId(farmData.locations, countySelect.value) || DEFAULT_COUNTY_ID;
           storeCountyId(countyId);
           render();
+          renderGuide();
+        });
+      }
+      /* The guide library: every crop with a guide, openable in
+       * any season — the teaching stands even when a bed rests. */
+      const guideSelect = document.getElementById("garden-guide-crop");
+      if (guideSelect && farmData) {
+        guideSelect.replaceChildren();
+        const blank = document.createElement("option");
+        blank.value = "";
+        blank.textContent = "Choose a crop to read its guide…";
+        guideSelect.appendChild(blank);
+        const guided = farmData.crops
+          .filter(c => c && farmData.guides[c.id])
+          .sort((a, b) => a.name.localeCompare(b.name));
+        for (const crop of guided) {
+          const opt = document.createElement("option");
+          opt.value = crop.id;
+          opt.textContent = crop.name;
+          guideSelect.appendChild(opt);
+        }
+        guideSelect.addEventListener("change", () => {
+          if (guideSelect.value) openGuide(guideSelect.value);
+          else { openGuideCropId = null; renderGuide(); }
         });
       }
       const ok = await loadRecords();
       if (!ok) {
         host.innerHTML = "<p>The garden could not read your Life Atlas on this device. Your records are untouched; the beds return when the Atlas does.</p>";
+        renderGuide();
         return;
       }
       render();
@@ -1138,6 +1446,9 @@
       isCurrentMoon,
       cropWindows,
       plantableForSpan,
+      longDate,
+      guideWhenLines,
+      guideYearFor,
       DEFAULT_COUNTY_ID,
       COUNTY_STORAGE_KEY,
       resolveCountyId,

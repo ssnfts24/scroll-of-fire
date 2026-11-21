@@ -51,7 +51,7 @@
   <link rel="stylesheet" href="assets/css/animations.css">
   <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
   <link rel="stylesheet" href="assets/css/social-bridge.css">
-  <link rel="stylesheet" href="assets/css/pattern-garden.css?v=20261120-1">
+  <link rel="stylesheet" href="assets/css/pattern-garden.css?v=20261120-2">
 <link rel="stylesheet" href="assets/css/cartoon-scenes.css?v=20261120-1">
 <link rel="stylesheet" href="assets/css/story-layer.css?v=20261120-1">
   <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261119-1">
@@ -240,6 +240,30 @@
       <p id="garden-status" class="garden-status" aria-live="polite"></p>
     </section>
 
+    <section class="section-shell" aria-labelledby="garden-guide-title">
+      <h2 id="garden-guide-title">Growing guides — how and what to plant</h2>
+      <p>
+        Every crop the farm record can plant carries a full guide: when to
+        plant it in <strong>your county</strong> — the dates below are counted
+        from your county's own frost record, and the guide names the station
+        and the frost dates it counted from — and how to grow it: depth,
+        spacing, germination, sun, soil, water, companions, harvest signs,
+        storage, and the troubles a gardener in this region actually meets.
+        Every line of a guide carries its sources — extension and seed-house
+        teaching, named on the guide. A fact no source stands behind is left
+        out, never guessed.
+      </p>
+      <p>
+        The Moon opens the bed; the farm record sets the dates. Nothing in a
+        guide is planted by a Moon line.
+      </p>
+      <p class="garden-county-row">
+        <label for="garden-guide-crop">Read a crop's guide — in the county chosen above:</label>
+        <select id="garden-guide-crop"></select>
+      </p>
+      <div id="garden-guide" aria-live="polite"></div>
+    </section>
+
     <section class="section-shell" aria-labelledby="garden-keepsakes-title">
       <h2 id="garden-keepsakes-title">Your keepsakes</h2>
       <p>
@@ -325,7 +349,7 @@
   <script src="assets/js/life-atlas/life-atlas-indexeddb.js?v=20260819-b750"></script>
   <script src="assets/js/life-atlas/life-atlas-runtime.js?v=20260819-b750"></script>
   <script src="assets/js/life-atlas/record-helpers.js?v=20261119-1"></script>
-  <script src="assets/js/pattern-garden.js?v=20261120-1"></script>
+  <script src="assets/js/pattern-garden.js?v=20261120-2"></script>
   <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
   <script defer src="assets/js/social-bridge.js?v=20261119-1"></script>
   <script defer src="assets/js/day-telling.js?v=20261119-1"></script>
