@@ -2,8 +2,8 @@
  *
  * Pins the fences that make the door what it is: it is the first face
  * (before the path head and the hero), it speaks the canonical day
- * (static copy matches the PatternCalendar fixture for 2026-11-19 and
- * the script reads the same canonical calendar as home-telling), the
+ * (static copy is date-neutral and the script reads the same canonical
+ * calendar as home-telling), the
  * film is tap-to-play and never automatic, and nothing below the fold
  * was lost — the hero, the Front Door, and the Sphere observatory all
  * keep their places.
@@ -27,12 +27,19 @@ test("the Ambient Door is the homepage's first face", () => {
   assert.ok(doorAt < HTML.indexOf('id="home-title"'), "door precedes the hero");
 });
 
-test("the door speaks the canonical day, sealed as static copy", () => {
-  // Fixture: 2026-11-19 = Moon 8 (Deep Mirror) · Day 21 · Pattern Day 217.
-  assert.match(door, /Day 21 of the Deep Mirror moon/);
-  assert.match(door, /Pattern Day 217 of 364/);
-  assert.match(door, /The day's name is Watch — stay awake to timing\./);
-  assert.match(door, /The moon's practice: look beneath the surface; journal before judging\./);
+test("the door's static copy is date-neutral; the day comes from the calendar", () => {
+  // Aaron's rule: everything shown must be real information. A sealed
+  // day in static copy is false on every other day, so the static door
+  // asserts no civil date, weekday, or Pattern coordinate — the script
+  // fills the real day from the canonical calendar (pinned by the
+  // script test below and the PatternCalendar fixtures).
+  assert.match(door, /Today · on the Pattern calendar/);
+  assert.ok(!/(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),/.test(door),
+    "no sealed weekday in static copy");
+  assert.ok(!/Pattern Day \d+ of 364/.test(door),
+    "no sealed Pattern Day in static copy");
+  assert.ok(!/Day \d+ of the .* moon/.test(door),
+    "no sealed moon coordinate in static copy");
 });
 
 test("the door's script reads the one canonical calendar", () => {
