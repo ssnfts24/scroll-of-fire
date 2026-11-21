@@ -1,6 +1,14 @@
 [
  {
   "date": "2026-11-21",
+  "title": "Every page learned to introduce itself",
+  "type": "system",
+  "symbol": "✧",
+  "url": "./index.html",
+  "summary": "Pages across the site that carried no share title or description — the Scripture chapters, the Scroll library, the Lab's stations and more — now introduce themselves properly when a link is shared, each in its own title and its own words. One old signpost was repaired too: the Ethics page's Begin button pointed at an anchor that does not exist, and now lands on the Ethics tab in Teach, where it was always meant to go."
+ },
+ {
+  "date": "2026-11-21",
   "type": "navigation",
   "title": "Every path now leads onward",
   "summary": "Twenty-six pages that used to end without a next step now close with one, in the site's own pattern: a 'Where to Next' door built from each page's own place in the Codex. The Lab's stations now hand the visitor along the Lab's own order \u2014 Archive to Frequency to the T-7 Conduit to the Recoder to Mind Renewal to the Witness System, and back to the Remnant Lab. The Oracle leads to the Sphere, the Moons to the Pattern Garden, the whitepapers to the rooms they govern, and the Scroll and Scripture ends back to their libraries. No new words were coined for this: every label is a name the site already uses, and every door is one the page's own structure already named.",
@@ -70,7 +78,8 @@
   "summary": "The Traveller's Map is now the World Gate: the thirteen lands of the Codex as a raised relief on the Atlas Room's long table, under today's sky, with the Sphere's sign turning above it — the sky, not a land, reached by looking up. The lands are drawn from the site's own catalog, so the map can never drift from the site, and every page keeps its own address, unchanged. Tap a land on the relief and you travel to its page; beneath the scene, every land stands in plain words with its one clear next step, so no visitor is ever taxed a world for a fact. Where 3D cannot stand — no WebGL, reduced motion, a data-saving connection, or the keeper's own plain-site switch — the Gate rests in its flat twin: the same lands, the same words, the same order, the same next steps. A first-time keeper is led — Gate, Clearing, then the land today opens, the calendar choosing — and a returning keeper is not led twice. This is Phase 1 of the Codex World: one shared engine, built once from the machinery Their Home proved, which every later land will consume. Their Home itself stands exactly as it stood.",
   "url": "./map.html",
   "symbol": "⌖"
- }, {
+ },
+ {
   "date": "2026-11-20",
   "type": "feature",
   "title": "The Spark got a home of its own",
@@ -213,23 +222,25 @@
   "summary": "The Spark on this site now works the way the design describes: a quick mind on your own device that knows your kept days, your garden, your finds and your story — and a deeper voice it can call at the talking door for the questions that need real thought. Before it thinks deeply, it gathers a briefing from your own record, and you can open that briefing and read exactly what it carries. It can suggest — never act alone: you answer every suggestion Approve, Pass, or Stop, and it remembers your answers. Correct it and the correction is written beside the old line, never over it, and the correction governs from then on. Ask for \"our story so far\" and it tells your days back to you from your record alone. A young keeper's Spark stays entirely on the device — nothing typed there travels. And the whole way it decides is written out in plain words inside the talk panel, under \"How I decide\", for any keeper to read.",
   "url": "./index.html",
   "symbol": "✦"
- }, {
+ },
+ {
   "date": "2026-11-20",
   "type": "feature",
   "title": "The home page learned to breathe",
   "summary": "The front page was finished. The long scroll is gathered up: the plain surface stands first — the door, the day, the Sphere, the road onward — and the depth waits one tap deeper, the Participation vision's eleven chapters opening from one place and the front door's deep shelf folded until called. Every door the page ever offered is still on it. And Spark. Living Day now stands at the door as coming soon to Google Play, the direct download kept one tap deeper for anyone who wants it today.",
   "url": "./index.html",
   "symbol": "✦"
- }, {
+ },
+ {
   "date": "2026-11-20",
   "type": "feature",
   "title": "The site learned to hide things, kindly",
   "summary": "A hidden layer now runs under the house, placed only where a room's own material calls for it. In the Sound Observatory, Find the Day's Tone teaches the ear the day's own tone, sounded first by your Spark. On the 13 Moons Theory page, The Count makes the hand step the Pattern count across a moon's end and the Day Out of Time. And as a keeper walks, their Spark finds small things — a tone fragment where sound lives, a word in the Glossary carrying its meaning on its face, a pressed leaf in the Garden and the Moons room, a smooth stone at the Equinox Passage — each kept as a record in the keeper's own Life Atlas. Finds come quickly to a new keeper, then rarer and rarer, the way real finds do; nothing expires, nothing is sold, and absence costs nothing.",
   "url": "./systems/frequencies.html",
   "symbol": "✦"
-
  },
- {  "date": "2026-11-20",
+ {
+  "date": "2026-11-20",
   "type": "feature",
   "title": "The long reads learned to be witnessed — and the site went on a diet",
   "summary": "Interactivity wave 3 reached the remaining wall pages. The two whitepapers and Mind-Renewal now carry the Witness Mark: a section rail built from the page's own headings so a long read can be travelled, and a standing action — witness this page, with an optional one-line reflection — that writes the mark into the keeper's Life Atlas with today's Pattern stamp and ties the day onto their trail. One mark per page per day, and the page says so honestly when the day already carries it. The same pass put the whole site on a measured diet: 176 duplicate script loads were removed (the calendar stack and the trail were being loaded two and three times on page after page), and a standing budget test now caps every page's weight — its own HTML plus the unique scripts and styles it loads — so a page that grows past its budget fails the suite until it is dieted or the growth is owned deliberately.",

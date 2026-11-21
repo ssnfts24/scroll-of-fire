@@ -209,6 +209,11 @@ const homepage = `<!doctype html>
   <meta name="theme-color" content="#101a2b">
   <title>Scroll of Fire — Unsealed Library</title>
   <link rel="canonical" href="https://codexofreality.org/scroll/index.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Codex of Reality">
+  <meta property="og:title" content="Scroll of Fire — Unsealed Library">
+  <meta property="og:description" content="Read the preserved Scroll of Fire manuscript in an organized, source-linked library.">
+  <meta property="og:url" content="https://codexofreality.org/scroll/index.html">
   <link rel="stylesheet" href="assets/library.css">
   <link rel="stylesheet" href="../assets/css/living-ui.css?v=20261117-1">
   <script defer src="../assets/js/site.js"></script>
@@ -296,6 +301,11 @@ const reader = `<!doctype html>
   <meta name="theme-color" content="#101a2b">
   <title>Reading the Scroll — Unsealed Library</title>
   <link rel="canonical" href="https://codexofreality.org/scroll/reader.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Codex of Reality">
+  <meta property="og:title" content="Reading the Scroll — Unsealed Library">
+  <meta property="og:description" content="Read a source-linked passage from the preserved Scroll of Fire manuscript.">
+  <meta property="og:url" content="https://codexofreality.org/scroll/reader.html">
   <link rel="stylesheet" href="assets/library.css">
   <link rel="stylesheet" href="../assets/css/living-ui.css?v=20261117-1">
   <script defer src="../assets/js/site.js"></script>
@@ -359,6 +369,11 @@ function toolPage({ file, title, description, bodyClass, current, intro, body, s
   <meta name="theme-color" content="#101a2b">
   <title>${escapeHtml(title)} — Scroll of Fire Library</title>
   <link rel="canonical" href="https://codexofreality.org/scroll/${file}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Codex of Reality">
+  <meta property="og:title" content="${escapeHtml(title)} — Scroll of Fire Library">
+  <meta property="og:description" content="${escapeHtml(description)}">
+  <meta property="og:url" content="https://codexofreality.org/scroll/${file}">
   <link rel="stylesheet" href="assets/library.css">
   <link rel="stylesheet" href="../assets/css/living-ui.css?v=20261117-1">
   <script defer src="../assets/js/site.js"></script>
