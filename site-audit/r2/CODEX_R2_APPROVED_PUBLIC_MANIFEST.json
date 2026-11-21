@@ -437,13 +437,13 @@
     },
     {
       "path": "docs/assets/data/codex-story.json",
-      "sha256": "7df9475ec5257dc1d31e3b7ec1a5f6adef5fcc282a5c62cab8daa821816a414e",
+      "sha256": "e12f35f8a34ae715f6ad91bc2b6b6613f78159ead4583f49b1c53e724f9336c4",
       "publicUrl": "https://codexofreality.org/assets/data/codex-story.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "1045398bce4e7eb3b00becc52d4c5672dd8af24b278a1697c9f856ab66131504",
+      "sha256": "f0ed376305166e84075ec6b8a34c9b376bf45fe16bdcf5dc77f40b68da32106b",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -3418,6 +3418,42 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/media/story-episode-06-packing-for-the-way-poster.webp",
+      "sha256": "cc9ebc3252a89008bccd518c17b28c9b099ae7f9b0bf526816e50e8664c20176",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-06-packing-for-the-way-poster.webp",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-06-packing-for-the-way.mp4",
+      "sha256": "f7c802558a818a74833ae9ccc0cf5a2034bc3a25825b770971ee56d137fdfff9",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-06-packing-for-the-way.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-07-the-desk-at-the-crossroads-poster.webp",
+      "sha256": "e698acdf7638f91bb896b2349e0400003c3aab3b195e2004888730423a5cff98",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-07-the-desk-at-the-crossroads-poster.webp",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-07-the-desk-at-the-crossroads.mp4",
+      "sha256": "28958579077a33fc88f3f1d4207141f91d60dddf2a3651064739756b8f5718da",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-07-the-desk-at-the-crossroads.mp4",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-08-the-signpost-meadow-poster.webp",
+      "sha256": "84be45a2eae3b5f69e383d274a6e48b8f6749a96871e04d45d7fae385ed97bd2",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-08-the-signpost-meadow-poster.webp",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/media/story-episode-08-the-signpost-meadow.mp4",
+      "sha256": "010d092bc529a5f6c978fd964aeddd39e4c2ea1f5f97317bebb972f9f73becb1",
+      "publicUrl": "https://codexofreality.org/assets/media/story-episode-08-the-signpost-meadow.mp4",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/media/systems-archive-explainer-poster.webp",
       "sha256": "d8aea911c2df4dea6fb3f687d2266ac4fbc604b8c299b2d6fc1e11141a17b385",
       "publicUrl": "https://codexofreality.org/assets/media/systems-archive-explainer-poster.webp",
@@ -3677,13 +3713,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "33c5f7106e92cafb84d54f0963aed380b8d86b0c108a3d90dcefafc7927d6453",
+      "sha256": "2a12d3b7e241aa07286bbd67c30a09556935289e286cf283d420ff2f47e56347",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "edc3c975ecbf3375a08a56bd1b2a9bee5e880fa2d78adda3084051ec912f9806",
+      "sha256": "74cecc693c6a96737c78d6ae5ba3e41d5d655f9e09ebffa11c827aa81fe02f5d",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -3839,7 +3875,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "eb221825e20ee69c5d58964dc0adeb99777a044a670aab8d3dfaf933992295bc",
+      "sha256": "f0bb71f8f0c94abd32f5a6371cb91aeae39fc0d94ec6c8f0f7d9b3f1eed73bac",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
