@@ -48,7 +48,7 @@
  *   7. The garden teaches (Aaron, Nov 20, 2026: "if the garden's
  *      advantage is to teach people how and what to plant then it
  *      needs a ton more information"). Every crop carries a full
- *      growing guide (farm-garden-guides.json): depth, spacing,
+ *      growing guide (farm-garden-teaching.json): depth, spacing,
  *      germination, method, sun, soil, water, companions, harvest,
  *      storage, and the troubles this region meets — every field
  *      sourced, and an unsourced field left out rather than
@@ -805,7 +805,7 @@
            * garden plants exactly as before (this is also how an
            * older bundled copy of the garden keeps working until
            * the guides file reaches it). */
-          fetch("assets/data/farm-garden-guides.json").then(r => (r.ok ? r.json() : null)).catch(() => null)
+          fetch("assets/data/farm-garden-teaching.json").then(r => (r.ok ? r.json() : null)).catch(() => null)
         ]);
         const crops = [...((west && west.crops) || [])];
         /* Cover crops are real bed plantings too; the homestead
@@ -923,7 +923,7 @@
      * "when" is derived from the county record at render time —
      * never stored — so changing county re-derives the guide,
      * and a planting already written is never touched. The "how"
-     * is the teaching record (farm-garden-guides.json): every
+     * is the teaching record (farm-garden-teaching.json): every
      * field carries its sources, and the guide names them. */
     function renderGuide() {
       if (typeof document === "undefined") return;

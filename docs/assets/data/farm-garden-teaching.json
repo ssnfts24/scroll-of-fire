@@ -1,5 +1,5 @@
 {
- "dataset": "farm-garden-guides",
+ "dataset": "farm-garden-teaching",
  "version": "1.0.0",
  "built": "2026-11-20",
  "about": "Growing guides for the Pattern Garden: how each crop the farm record can plant is sown, kept, and harvested, gathered from extension and seed-house teaching. Every field carries the sources it came from, and a field with no sourced value is left out, never guessed; where sources disagree, the range is given and the disagreement is written into the crop's notes. The dates a guide speaks in are not in this file: they are counted at render time from the keeper's county record in farm-western-wa.json, by the same reading that makes the garden's planting offers, so a guide and an offer can never disagree. No Moon line appears anywhere in this file — the calendar keys when a bed is open; this file only teaches the planting.",

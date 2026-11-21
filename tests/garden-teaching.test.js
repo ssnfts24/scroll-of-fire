@@ -8,7 +8,7 @@
  * Covers: every crop the farm record can plant — the thirty-six
  * in farm-western-wa.json and the six cover crops in
  * farm-homestead-western-wa.json — carries a full growing guide
- * in farm-garden-guides.json; every field of every guide carries
+ * in farm-garden-teaching.json; every field of every guide carries
  * sources that resolve in the file's own registry (the dataset's
  * provenance discipline: a guide ships with its sources or not at
  * all); the guide's dates are derived from the county record by
@@ -32,7 +32,7 @@ const Garden = require(path.join(JS, "pattern-garden.js"));
 const read = rel => fs.readFileSync(path.join(DOCS, rel), "utf8");
 const farmWest = JSON.parse(read("assets/data/farm-western-wa.json"));
 const farmHome = JSON.parse(read("assets/data/farm-homestead-western-wa.json"));
-const guideFile = JSON.parse(read("assets/data/farm-garden-guides.json"));
+const guideFile = JSON.parse(read("assets/data/farm-garden-teaching.json"));
 
 const ALL_CROP_IDS = [
   ...farmWest.crops.map(c => c.id),
@@ -198,6 +198,6 @@ test("the garden page carries the guide surface and the module loads the guides 
   assert.match(html, /id="garden-guide"/);
   assert.match(html, /id="garden-guide-crop"/);
   const moduleSource = read("assets/js/pattern-garden.js");
-  assert.match(moduleSource, /farm-garden-guides\.json/);
+  assert.match(moduleSource, /farm-garden-teaching\.json/);
   assert.match(moduleSource, /guideWhenLines/);
 });
