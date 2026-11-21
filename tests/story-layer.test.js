@@ -130,6 +130,33 @@ test("the year thread model: today, knots and find-days from the trail alone", (
   assert.deepEqual([...model.findDays], [218]);
 });
 
+test("episodes: a filmed chapter carries its episode in the spine, under the contract the layer and the map honour", () => {
+  const filmed = story.chapters.filter(c => c.episode);
+  assert.deepEqual(
+    filmed.map(c => c.n),
+    [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+    "exactly the episodes produced are filmed — chapter 2, the pattern-setter, Series One Batch 1 (chapters 3, 4, 5), Series One Batch 2 (chapters 6, 7, 8), Series One Batch 3 (chapters 9, 10, 11) and Series One Batch 4 (chapters 12, 13, 14) and Series One Batch 5 (chapters 15, 16, 17) — the complete Series One spine; chapter 1 carries no episode contract"
+  );
+  for (const chapter of filmed) {
+    const { film, poster, duration } = chapter.episode;
+    assert.ok(film.startsWith("assets/media/") && film.endsWith(".mp4"), `chapter ${chapter.n}'s episode names its film`);
+    assert.ok(fs.existsSync(path.join(docsRoot, film)), `chapter ${chapter.n}'s film stands in the media folder`);
+    assert.ok(fs.existsSync(path.join(docsRoot, poster)), `chapter ${chapter.n}'s poster stands in the media folder`);
+    assert.ok(/^\d+:\d{2}$/.test(duration), `chapter ${chapter.n}'s episode states its length`);
+    assert.equal(
+      chapter.episode.label,
+      `Episode ${chapter.n} — the animated telling of this chapter. The written chapter below is its guide card.`,
+      `chapter ${chapter.n}'s episode carries the label in the pattern-setter's form`
+    );
+  }
+  assert.ok(!story.chapters[0].episode, "chapter 1 carries no episode contract");
+  const layer = read("docs/assets/js/story-layer.js");
+  assert.ok(layer.includes("chapter.episode && !plain"), "the episode drops on plain surfaces, by the same fence as the scene");
+  assert.ok(layer.includes("story-episode") && layer.includes('preload = "none"'), "the layer renders the episode poster-first and lazy");
+  const map = read("docs/assets/js/travellers-map.js");
+  assert.ok(map.includes("chapter.episode"), "the map reflects which chapters are filmed");
+});
+
 test("the map page and the fitted pages carry the layer honestly", () => {
   const map = fs.readFileSync(path.join(docsRoot, "map.html"), "utf8");
   assert.ok(map.includes("The Traveller's Map"), "the map page stands");
