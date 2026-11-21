@@ -1,0 +1,3768 @@
+{
+ "dataset": "farm-garden-teaching",
+ "version": "1.0.0",
+ "built": "2026-11-20",
+ "about": "Growing guides for the Pattern Garden: how each crop the farm record can plant is sown, kept, and harvested, gathered from extension and seed-house teaching. Every field carries the sources it came from, and a field with no sourced value is left out, never guessed; where sources disagree, the range is given and the disagreement is written into the crop's notes. The dates a guide speaks in are not in this file: they are counted at render time from the keeper's county record in farm-western-wa.json, by the same reading that makes the garden's planting offers, so a guide and an offer can never disagree. No Moon line appears anywhere in this file — the calendar keys when a bed is open; this file only teaches the planting.",
+ "sources": [
+  {
+   "id": "cornell-pepper",
+   "name": "Vegetable Growing Guide: Peppers",
+   "publisher": "Cornell Cooperative Extension",
+   "retrieved": "2026-11-20",
+   "url": "http://gardening.cornell.edu/homegardening/scene9c8a.html"
+  },
+  {
+   "id": "iastate-basil",
+   "name": "Growing Basil in the Home Garden",
+   "publisher": "Iowa State University Extension",
+   "retrieved": "2026-11-20",
+   "url": "https://yardandgarden.extension.iastate.edu/how-to/growing-basil-home-garden"
+  },
+  {
+   "id": "johnnys-basil",
+   "name": "Basil - Key Growing Information",
+   "publisher": "Johnny's Selected Seeds",
+   "retrieved": "2026-11-20",
+   "url": "https://www.johnnyseeds.com/growers-library/herbs/basil/basil-key-growing-information.html"
+  },
+  {
+   "id": "johnnys-beets",
+   "name": "Beets — Key Growing Information",
+   "publisher": "Johnny's Selected Seeds",
+   "url": "https://www.johnnyseeds.com/growers-library/vegetables/beets/beets-key-growing-information.html",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "johnnys-broccoli",
+   "name": "Standard Heading Broccoli - Key Growing Information",
+   "publisher": "Johnny's Selected Seeds",
+   "retrieved": "2026-11-20",
+   "url": "https://prod-na02.johnnyseeds.com/broccoli/broccoli-key-growing-information.html"
+  },
+  {
+   "id": "johnnys-bush-bean",
+   "name": "Growing Bush Beans (Green Beans): Planting, Culture & Harvest",
+   "publisher": "Johnny's Selected Seeds",
+   "retrieved": "2026-11-20",
+   "url": "https://www.johnnyseeds.com/growers-library/vegetables/beans/bush-bean-key-growing-information.html"
+  },
+  {
+   "id": "johnnys-carrots",
+   "name": "Carrots — Key Growing Information",
+   "publisher": "Johnny's Selected Seeds",
+   "url": "https://www.johnnyseeds.com/growers-library/vegetables/carrots/carrots-key-growing-information.html",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "johnnys-eggplant",
+   "name": "Eggplant - Key Growing Information",
+   "publisher": "Johnny's Selected Seeds",
+   "retrieved": "2026-11-20",
+   "url": "https://www.johnnyseeds.com/growers-library/vegetables/eggplant/eggplant-key-growing-information.html"
+  },
+  {
+   "id": "johnnys-lettuce",
+   "name": "Lettuce - Key Growing Information",
+   "publisher": "Johnny's Selected Seeds",
+   "retrieved": "2026-11-20",
+   "url": "https://www.johnnyseeds.com/growers-library/vegetables/lettuce/lettuce-key-growing-information.html"
+  },
+  {
+   "id": "johnnys-melon",
+   "name": "Melons - Key Growing Information (Sarah's Choice cantaloupe page)",
+   "publisher": "Johnny's Selected Seeds",
+   "retrieved": "2026-11-20",
+   "url": "https://www.johnnyseeds.com/fruits/melons/cantaloupe-muskmelon/sarahs-choice-f1-melon-seed-2784.html"
+  },
+  {
+   "id": "johnnys-onion-sets",
+   "name": "Onion & Shallot Sets — Key Growing Information",
+   "publisher": "Johnny's Selected Seeds",
+   "url": "https://www.johnnyseeds.com/growers-library/vegetables/onions/onion-sets-key-growing-information.html",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "johnnys-parsley",
+   "name": "Parsley — Key Growing Information",
+   "publisher": "Johnny's Selected Seeds",
+   "url": "https://www.johnnyseeds.com/growers-library/herbs/parsley/parsley-key-growing-information.html",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "johnnys-pepper",
+   "name": "Peppers - Key Growing Information",
+   "publisher": "Johnny's Selected Seeds",
+   "retrieved": "2026-11-20",
+   "url": "https://www.johnnyseeds.com/growers-library/vegetables/peppers/peppers-key-growing-information.html"
+  },
+  {
+   "id": "johnnys-pole-bean",
+   "name": "Growing Pole Beans: How to Plant, Grow & Harvest",
+   "publisher": "Johnny's Selected Seeds",
+   "retrieved": "2026-11-20",
+   "url": "https://www.johnnyseeds.com/beans/pole-bean-key-growing-information.html"
+  },
+  {
+   "id": "johnnys-ryegrass",
+   "name": "How to Grow Ryegrass",
+   "publisher": "Johnny's Selected Seeds",
+   "retrieved": "2026-11-20",
+   "url": "https://www.johnnyseeds.com/growers-library/farm-seed-cover-crops/grasses-millets-and-sorghums/ryegrass-key-growing-information.html"
+  },
+  {
+   "id": "johnnys-sweet-corn",
+   "name": "Growing Sweet Corn: How to Plant, Grow & Harvest",
+   "publisher": "Johnny's Selected Seeds",
+   "retrieved": "2026-11-20",
+   "url": "https://www.johnnyseeds.com/corn/corn-sweet-key-growing-information.html"
+  },
+  {
+   "id": "johnnys-swiss-chard",
+   "name": "Swiss Chard - Key Growing Information",
+   "publisher": "Johnny's Selected Seeds",
+   "retrieved": "2026-11-20",
+   "url": "https://www.johnnyseeds.com/growers-library/vegetables/swiss-chard/swiss-chard-key-growing-information.html"
+  },
+  {
+   "id": "johnnys-tomato",
+   "name": "Tomatoes - Key Growing Information",
+   "publisher": "Johnny's Selected Seeds",
+   "retrieved": "2026-11-20",
+   "url": "https://www.johnnyseeds.com/growers-library/vegetables/tomatoes/tomatoes-key-growing-information.html"
+  },
+  {
+   "id": "johnnys-winter-rye",
+   "name": "Winter Rye Seed - Organic",
+   "publisher": "Johnny's Selected Seeds",
+   "retrieved": "2026-11-20",
+   "url": "https://prod-na02.johnnyseeds.com/cover-crops/grains-and-grasses/winter-rye/winter-rye-common-organic-cover-crop-seed-968G.html"
+  },
+  {
+   "id": "osu-cover-crops-winter",
+   "name": "Cover crops improve soil and support pollinators over winter",
+   "publisher": "OSU Extension Service",
+   "retrieved": "2026-11-20",
+   "url": "https://extension.oregonstate.edu/news/cover-crops-improve-soil-support-pollinators-over-winter"
+  },
+  {
+   "id": "osu-late-blight",
+   "name": "OSU Scientists Warn of Possible Late Blight Epidemic in Gardens",
+   "publisher": "Oregon State University (OSU Extension plant pathologists)",
+   "url": "https://news.oregonstate.edu/news/osu-scientists-warn-possible-late-blight-epidemic-gardens",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "osu-oregon-table",
+   "name": "Annual Vegetable Production Specifics for Oregon (Table 1, sourced from OSU Extension EM 9027 and other OSU Extension publications)",
+   "publisher": "Clackamas County Master Gardeners / OSU Extension",
+   "retrieved": "2026-11-20",
+   "url": "http://clackamascountymastergardeners.org/wp-content/uploads/2019/02/annual-vegetable-production-specifics-for-oregon.pdf"
+  },
+  {
+   "id": "osu-snap-peas",
+   "name": "Snap Peas",
+   "publisher": "OSU Extension Service",
+   "retrieved": "2026-11-20",
+   "url": "https://extension.oregonstate.edu/imported-publication/snap-peas"
+  },
+  {
+   "id": "pnw-bean-white-mold",
+   "name": "Bean, Snap (Phaseolus vulgaris)-White Mold (Sclerotinia Rot)",
+   "publisher": "Pacific Northwest Plant Disease Management Handbook",
+   "retrieved": "2026-11-20",
+   "url": "https://pnwhandbooks.org/plantdisease/host-disease/bean-snap-phaseolus-vulgaris-white-mold-sclerotinia-rot"
+  },
+  {
+   "id": "pnw-clubroot",
+   "name": "Turnip and Rutabaga (Brassica spp.) — Clubroot",
+   "publisher": "Pacific Northwest Pest Management Handbooks",
+   "url": "https://pnwhandbooks.org/plantdisease/host-disease/turnip-rutabaga-brassica-spp-clubroot",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "pnw-corn-smut",
+   "name": "Corn (Zea mays)-Common Smut",
+   "publisher": "Pacific Northwest Plant Disease Management Handbook",
+   "retrieved": "2026-11-20",
+   "url": "https://pnwhandbooks.org/plantdisease/host-disease/corn-zea-mays-common-smut"
+  },
+  {
+   "id": "pnw-garlic-nematode",
+   "name": "Garlic (Allium sativum) — Nematode, Stem and Bulb",
+   "publisher": "Pacific Northwest Pest Management Handbooks",
+   "url": "https://pnwhandbooks.org/plantdisease/host-disease/garlic-allium-sativum-nematode-stem-bulb",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "pnw-onion-white-rot",
+   "name": "Onion (Allium cepa) — White Rot",
+   "publisher": "Pacific Northwest Pest Management Handbooks",
+   "url": "https://pnwhandbooks.org/plantdisease/host-disease/onion-allium-cepa-white-rot",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "umn-cover-crop-research",
+   "name": "Minnesota cover crop research",
+   "publisher": "UMN Extension",
+   "retrieved": "2026-11-20",
+   "url": "https://mosh.umn.edu/management/minnesota-cover-crop-research"
+  },
+  {
+   "id": "umn-peas",
+   "name": "Growing peas in home gardens",
+   "publisher": "UMN Extension",
+   "retrieved": "2026-11-20",
+   "url": "https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/growing-peas"
+  },
+  {
+   "id": "umn-potatoes",
+   "name": "Growing Potatoes in Home Gardens",
+   "publisher": "University of Minnesota Extension",
+   "url": "https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/growing-potatoes",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "unh-root-crops",
+   "name": "Root Crops",
+   "publisher": "UNH Cooperative Extension",
+   "url": "https://extension.unh.edu/sites/default/files/migrated_unmanaged_files/Resource000607_Rep629.pdf",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "usu-aster-yellows",
+   "name": "Aster Yellows (IPM Notes)",
+   "publisher": "Utah State University Extension",
+   "url": "https://extension.usu.edu/planthealth/ipm/notes_ag/veg-aster-yellows",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "usu-beans",
+   "name": "How to Grow Beans in Your Garden",
+   "publisher": "Utah State University Extension",
+   "retrieved": "2026-11-20",
+   "url": "https://extension.usu.edu/yardandgarden/research/beans-in-the-garden"
+  },
+  {
+   "id": "usu-root-planting",
+   "name": "Root Vegetables: Planting and Spacing",
+   "publisher": "Utah State University Extension",
+   "url": "https://extension.usu.edu/vegetableguide/root-crops/planting-spacing",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "usu-rutabagas-turnips",
+   "name": "Rutabagas and Turnips in the Garden",
+   "publisher": "Utah State University Extension",
+   "url": "https://extension.usu.edu/yardandgarden/research/rutabagas-and-turnips-in-the-garden.pdf",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "uw-cover-crops-101",
+   "name": "Cover Crops 101",
+   "publisher": "University of Wisconsin Extension",
+   "retrieved": "2026-11-20",
+   "url": "https://cropsandsoils.extension.wisc.edu/articles/cover-crops-101/"
+  },
+  {
+   "id": "vt-root-crops",
+   "name": "Root Crops (Publication 426-422)",
+   "publisher": "Virginia Cooperative Extension (Virginia Tech)",
+   "url": "https://www.pubs.ext.vt.edu/content/pubs_ext_vt_edu/en/426/426-422/426-422.html",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "wcs-beets",
+   "name": "How to Grow Beets (Merlin F1 Organic)",
+   "publisher": "West Coast Seeds",
+   "url": "https://www.westcoastseeds.com/products/merlin-organic-2",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "wcs-carrots",
+   "name": "How to Grow Carrots (Paris Market)",
+   "publisher": "West Coast Seeds",
+   "url": "https://www.westcoastseeds.com/collections/all-products/products/paris-market",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "wcs-celery",
+   "name": "How to Grow Celery and Celeriac (Brilliant Celeriac)",
+   "publisher": "West Coast Seeds",
+   "url": "https://www.westcoastseeds.com/collections/pea-seed-companions/products/brilliant-celeriac",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "wcs-cucumber",
+   "name": "How to Grow Cucumbers",
+   "publisher": "West Coast Seeds",
+   "retrieved": "2026-11-20",
+   "url": "https://fundraising.westcoastseeds.com/blogs/how-to-grow/grow-cucumbers"
+  },
+  {
+   "id": "wcs-leeks",
+   "name": "How to Grow Leeks (Biker F1)",
+   "publisher": "West Coast Seeds",
+   "url": "https://www.westcoastseeds.com/products/biker-f1",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "wcs-melons",
+   "name": "About Melons: How to Grow",
+   "publisher": "West Coast Seeds",
+   "retrieved": "2026-11-20",
+   "url": "https://seedlings.westcoastseeds.com/blogs/wcs-academy/melons"
+  },
+  {
+   "id": "wcs-onions",
+   "name": "How to Grow Onions / Scallions (Ippon Negi)",
+   "publisher": "West Coast Seeds",
+   "url": "https://www.westcoastseeds.com/products/ippon-negi",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "wcs-parsley",
+   "name": "How to Grow Parsley (Forest Green)",
+   "publisher": "West Coast Seeds",
+   "url": "https://www.westcoastseeds.com/products/forest-green",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "wcs-parsnips",
+   "name": "How to Grow Parsnip (White Spear)",
+   "publisher": "West Coast Seeds",
+   "url": "https://www.westcoastseeds.com/products/white-spear",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "wcs-radishes",
+   "name": "How to Grow Radishes (French Breakfast)",
+   "publisher": "West Coast Seeds",
+   "url": "https://www.westcoastseeds.com/products/french-breakfast",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "wcs-rutabaga",
+   "name": "How to Grow Rutabaga (Helenor)",
+   "publisher": "West Coast Seeds",
+   "url": "https://www.westcoastseeds.com/products/helenor-organic",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "wcs-squash",
+   "name": "How to Grow Squash",
+   "publisher": "West Coast Seeds",
+   "retrieved": "2026-11-20",
+   "url": "https://www.westcoastseeds.com/blogs/wcs-academy/grow-squash"
+  },
+  {
+   "id": "wcs-turnips",
+   "name": "How to Grow Turnips (Tokyo Cross)",
+   "publisher": "West Coast Seeds",
+   "url": "https://www.westcoastseeds.com/products/tokyo-cross",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "wcs-windsor-broad-bean",
+   "name": "Windsor Broad Bean Seeds — How to Grow Broad Beans",
+   "publisher": "West Coast Seeds",
+   "retrieved": "2026-11-20",
+   "url": "https://www.westcoastseeds.com/products/windsor"
+  },
+  {
+   "id": "wsu-brassicas",
+   "name": "All About Brassicas (Growing Groceries, March 5, 2025)",
+   "publisher": "WSU King County Master Gardeners",
+   "retrieved": "2026-11-20",
+   "url": "https://kingcounty.mastergardenerfoundation.org/wp-content/uploads/sites/44/2025/03/GG-2025-All-About-Brassicas-Handout_03_05_2025.pdf"
+  },
+  {
+   "id": "wsu-cover-management",
+   "name": "Methods for Successful Cover Crop Management in Your Home Garden (FS119E)",
+   "publisher": "WSU Extension",
+   "retrieved": "2026-11-20",
+   "url": "https://pubs.extension.wsu.edu/product/methods-for-successful-cover-crop-management-in-your-home-garden-home-garden-series/"
+  },
+  {
+   "id": "wsu-cover-west",
+   "name": "Cover Crops for Home Gardens West of the Cascades (FS111E)",
+   "publisher": "WSU Extension",
+   "retrieved": "2026-11-20",
+   "url": "https://wpcdn.web.wsu.edu/wp-ecommerce/uploads/sites/2/product-3487-sku-FS111E.pdf"
+  },
+  {
+   "id": "wsu-garlic",
+   "name": "Vegetables: Growing Garlic in Home Gardens (FS162E)",
+   "publisher": "Washington State University Extension",
+   "url": "https://pubs.extension.wsu.edu/product/vegetables-growing-garlic-in-home-gardens/",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "wsu-green-peas",
+   "name": "Growing Green Peas in Home Gardens (FS116E)",
+   "publisher": "WSU Extension",
+   "retrieved": "2026-11-20",
+   "url": "https://www.portlandavenursery.com/_files/ugd/71e92b_fdbf3568b8e84c73aee479f7aa2f7b80.pdf"
+  },
+  {
+   "id": "wsu-onion-maggot",
+   "name": "Onions, Garlic: Onion Maggot (Hortsense Fact Sheet)",
+   "publisher": "Washington State University Extension",
+   "url": "https://hortsense.cahnrs.wsu.edu/fact-sheet/onions-garlic-onion-maggot/",
+   "retrieved": "2026-11-20"
+  },
+  {
+   "id": "wsu-tomato-tip",
+   "name": "Tip Sheet #7: Growing Tomatoes",
+   "publisher": "WSU Extension, King County",
+   "retrieved": "2026-11-20",
+   "url": "https://extension.wsu.edu/king/mg-home/gardening-resources/tip-sheets/tip-sheet-7"
+  },
+  {
+   "id": "wsu-wallawalla",
+   "name": "Inland Northwest Vegetable Gardening",
+   "publisher": "WSU Extension, Walla Walla County",
+   "retrieved": "2026-11-20",
+   "url": "https://extension.wsu.edu/wallawalla/inland-northwest-vegetable-gardening/"
+  }
+ ],
+ "guides": {
+  "tomatoes": {
+   "depth": {
+    "sources": [
+     "johnnys-tomato"
+    ],
+    "text": "Sow seed 1/4 inch deep for the indoor start."
+   },
+   "germination": {
+    "sources": [
+     "johnnys-tomato"
+    ],
+    "text": "Typically 5–7 days; keep the seed mix at 75–85°F."
+   },
+   "harvest": {
+    "sources": [
+     "johnnys-tomato"
+    ],
+    "text": "Fruit ripens gradually from the blossom end up to the shoulders. Any fruit that has started to change colour will still ripen after picking. Handle ripe fruit gently and do not stack it deep."
+   },
+   "notes": [
+    "WSU's fact sheet FS145E (cited by the WSU tip sheet) gives soil pH 6.0–6.5; Johnny's allows 6.0–6.8. The soil text here holds both.",
+    "For the Puget Sound area, WSU advises choosing varieties with 75 days or less to maturity so fruit ripens in the short, cool season."
+   ],
+   "soil": {
+    "sources": [
+     "johnnys-tomato",
+     "wsu-tomato-tip"
+    ],
+    "text": "Well-drained, medium-rich soil. Tomatoes do not grow well in heavy clay. Johnny's prefers pH 6.0–6.8; go easy on nitrogen, which causes rampant growth and delayed ripening."
+   },
+   "sowHow": {
+    "sources": [
+     "johnnys-tomato",
+     "wsu-tomato-tip"
+    ],
+    "text": "Start indoors about 5–6 weeks before transplanting and lightly cover the seed. Harden plants off over about a week before planting out. Plant deeply — bury up to 6 inches of stem, or lay a tall plant on its side in a 3-inch trench — so the buried stem grows extra roots."
+   },
+   "spacing": {
+    "sources": [
+     "johnnys-tomato"
+    ],
+    "text": "Space determinate (bush) plants 12–24 inches apart and indeterminate (vining) plants 24–36 inches apart, in rows 4–6 feet apart."
+   },
+   "storage": {
+    "sources": [
+     "johnnys-tomato"
+    ],
+    "text": "Store blemish-free, near-ripe fruit 4–7 days at room temperature in darkness. For longer holding, pick less ripe and keep at 45–60°F; colder storage and picking too green hurt quality."
+   },
+   "succession": {
+    "sources": [
+     "johnnys-tomato"
+    ],
+    "text": "For short determinate varieties, succession-plant every 4–6 weeks."
+   },
+   "sun": {
+    "sources": [
+     "wsu-tomato-tip"
+    ],
+    "text": "Full sun — at least 6 hours of direct sun a day. A warm spot, such as a raised bed or a bed by a south-facing wall, helps in cool climates."
+   },
+   "troubles": [
+    {
+     "name": "Late blight",
+     "sources": [
+      "wsu-tomato-tip"
+     ],
+     "text": "Dark, greasy-looking spots appear on leaves, then spread to stems and fruit; vines can collapse in days and infected green fruit rots before ripening. It usually arrives late in summer when cooler, wetter weather comes. Avoid overhead watering, stake and prune for air flow, remove leaves touching the ground, remove infected plants, and rotate crops."
+    },
+    {
+     "name": "Blossom end rot",
+     "sources": [
+      "wsu-tomato-tip"
+     ],
+     "text": "A soft, dark patch forms on the bottom of ripening fruit. It is a calcium-uptake problem, but in practice the usual cause is irregular watering. Test the soil for nutrients and pH, keep plants evenly watered, and mulch thickly to hold soil moisture."
+    }
+   ],
+   "water": {
+    "sources": [
+     "wsu-tomato-tip"
+    ],
+    "text": "About 1 inch of water a week. Water thoroughly at the base of the plant, about twice a week for in-ground plants. Never use overhead irrigation — wet leaves invite disease."
+   }
+  },
+  "peppers": {
+   "depth": {
+    "sources": [
+     "johnnys-pepper",
+     "cornell-pepper"
+    ],
+    "text": "Sow seed 1/4 inch deep for the indoor start."
+   },
+   "germination": {
+    "sources": [
+     "cornell-pepper",
+     "johnnys-pepper"
+    ],
+    "text": "7–10 days at soil temperatures around 85°F. Keep the seed mix at 80–90°F; pepper seed germinates very slowly in cooler soil and will not germinate below 55°F."
+   },
+   "harvest": {
+    "sources": [
+     "johnnys-pepper"
+    ],
+    "text": "Pick the first peppers promptly when they reach full size to encourage further fruit set."
+   },
+   "notes": [
+    "Cornell allows a wider final spacing of 12–24 inches in rows 24–36 inches apart; Johnny's 12–18 inches is used here.",
+    "Black plastic mulch and row covers buffer cold weather and increase earliness, but remove row covers in sunny weather above 85°F to prevent blossom drop and heat damage."
+   ],
+   "soil": {
+    "sources": [
+     "johnnys-pepper",
+     "cornell-pepper"
+    ],
+    "text": "Well-drained, fertile soil with a pH of about 6.5. Peppers need abundant phosphorus and calcium for the best results."
+   },
+   "sowHow": {
+    "sources": [
+     "johnnys-pepper",
+     "cornell-pepper"
+    ],
+    "text": "Start indoors about 8 weeks before transplanting. When the first true leaves appear, move seedlings into 2-inch cells or 4-inch pots and grow at about 70°F by day and 60°F at night. Transplant out only after frost, when the soil is warm and the weather is settled; good seedlings have buds but no open flowers."
+   },
+   "spacing": {
+    "sources": [
+     "johnnys-pepper"
+    ],
+    "text": "Space plants 12–18 inches apart in rows 24–36 inches apart."
+   },
+   "storage": {
+    "sources": [
+     "johnnys-pepper"
+    ],
+    "text": "Wash and hold at 45°F and 95% relative humidity."
+   },
+   "sun": {
+    "sources": [
+     "cornell-pepper"
+    ],
+    "text": "Full sun. Peppers thrive on full sun and warm weather."
+   },
+   "troubles": [
+    {
+     "name": "Blossom end rot",
+     "sources": [
+      "johnnys-pepper",
+      "cornell-pepper"
+     ],
+     "text": "A dark, sunken patch forms on the bottom of the fruit. Prevent it with adequate soil calcium and regular, even moisture — do not let the soil swing between wet and dry."
+    },
+    {
+     "name": "Sunscald",
+     "sources": [
+      "johnnys-pepper"
+     ],
+     "text": "Pale, sunken patches appear on fruit exposed to strong sun. Sunscald is caused by an inadequate foliage canopy, so avoid over-pruning and keep plants healthy enough to shade their own fruit."
+    }
+   ],
+   "water": {
+    "sources": [
+     "cornell-pepper",
+     "johnnys-pepper"
+    ],
+    "text": "Keep moisture steady and even all season. An even supply of water helps reduce blossom end rot. Drip irrigation also helps prevent bacterial spot and Phytophthora."
+   }
+  },
+  "eggplant": {
+   "depth": {
+    "sources": [
+     "johnnys-eggplant"
+    ],
+    "text": "Sow seed 1/4 inch deep for the indoor start."
+   },
+   "germination": {
+    "sources": [
+     "johnnys-eggplant"
+    ],
+    "text": "Keep the soil at 80–90°F until the seedlings emerge, then about 70°F. Seed will not germinate in cool soil."
+   },
+   "harvest": {
+    "sources": [
+     "johnnys-eggplant"
+    ],
+    "text": "Clip the fruit stem with shears — do not pull fruit off. Pick fruit at the size you want, regularly, to encourage further production."
+   },
+   "notes": [
+    "Johnny's gives no germination day count for eggplant, only the 80–90°F soil temperature, so no day range is stated here.",
+    "Practice a long crop rotation to avoid Verticillium wilt: 4–5 years for all nightshade-family crops (tomato, pepper, eggplant, potato).",
+    "Sun, watering, and storage guidance were not sourced in this pass, so those fields are omitted rather than filled from habit."
+   ],
+   "soil": {
+    "sources": [
+     "johnnys-eggplant"
+    ],
+    "text": "Fertile, well-drained soil with a pH of 6.2–6.8. Do not over-fertilize: too much nitrogen makes large, bushy plants that produce only one small set of fruit."
+   },
+   "sowHow": {
+    "sources": [
+     "johnnys-eggplant"
+    ],
+    "text": "Start indoors 6–8 weeks before planting out. After true leaves form, thin to 2–3 inches apart in flats or move into 2–3 inch pots. Harden plants for about a week by reducing water and temperature to about 60°F. Transplant outdoors in late spring or early summer once the weather has thoroughly settled; eggplants are tender and cold weather weakens them."
+   },
+   "spacing": {
+    "sources": [
+     "johnnys-eggplant"
+    ],
+    "text": "Space transplants 18 inches apart in rows 30–36 inches apart, or 2 rows on plastic mulch with 18–24 inches between plants."
+   },
+   "troubles": [
+    {
+     "name": "Flea beetles",
+     "sources": [
+      "johnnys-eggplant"
+     ],
+     "text": "Tiny beetles chew small holes in the leaves of new transplants. Fabric row covers are the recommended control for flea beetles (and Colorado potato beetles) on newly set transplants; remove covers when plants reach them or when blossoms first appear."
+    }
+   ]
+  },
+  "basil": {
+   "depth": {
+    "sources": [
+     "johnnys-basil"
+    ],
+    "text": "Sow seed 1/4 inch deep."
+   },
+   "germination": {
+    "sources": [
+     "johnnys-basil"
+    ],
+    "text": "5–10 days at 65–70°F."
+   },
+   "harvest": {
+    "sources": [
+     "johnnys-basil",
+     "iastate-basil"
+    ],
+    "text": "Begin light harvesting once plants are established, best in the early morning. For best flavour, harvest when flower buds have formed but before they open, and pinch out stem tips so plants branch and keep producing. For a full harvest, cut the whole plant 4–6 inches above the ground to promote a second growth."
+   },
+   "notes": [
+    "Iowa State advises starting seed indoors 4–5 weeks before the last frost; Johnny's says 6 weeks before setting out. The sowHow text here follows Johnny's.",
+    "Johnny's warns not to store basil below 50°F, while Iowa State describes refrigerated storage in perforated bags; the 50°F floor is the safer rule for fresh leaves, and drying or freezing avoids the conflict."
+   ],
+   "soil": {
+    "sources": [
+     "johnnys-basil",
+     "iastate-basil"
+    ],
+    "text": "Moderately rich, moist, well-drained soil. Avoid heavy nitrogen fertilizer, which affects flavour."
+   },
+   "sowHow": {
+    "sources": [
+     "johnnys-basil",
+     "iastate-basil"
+    ],
+    "text": "Direct seed (recommended): sow 2–3 seeds per inch in rows 18 inches apart and firm the soil over the seed. Or start indoors about 6 weeks before setting out, and transplant when seedlings have 3–4 sets of leaves. Basil is tender — plant outdoors only after all danger of frost is past."
+   },
+   "spacing": {
+    "sources": [
+     "johnnys-basil"
+    ],
+    "text": "Final spacing 4–8 inches apart, in rows 18 inches apart."
+   },
+   "storage": {
+    "sources": [
+     "johnnys-basil",
+     "iastate-basil"
+    ],
+    "text": "Do not store fresh basil below 50°F. Leaves can also be dried on racks in a warm, ventilated place out of direct sun, or frozen — chopped leaves in water in ice-cube trays keep well for sauces and soups."
+   },
+   "sun": {
+    "sources": [
+     "johnnys-basil",
+     "iastate-basil"
+    ],
+    "text": "Full sun."
+   },
+   "troubles": [
+    {
+     "name": "Downy mildew",
+     "sources": [
+      "iastate-basil"
+     ],
+     "text": "Leaves yellow between the veins, with gray fuzzy growth on the underside; leaves then blacken and die. It thrives in warm, wet weather and spreads by rain splash, overhead watering, and wind. Bag and remove infected plants at once, avoid crowding so air circulates, avoid overhead watering and watering at night, and plant resistant (DMR) varieties."
+    },
+    {
+     "name": "Fusarium wilt",
+     "sources": [
+      "iastate-basil"
+     ],
+     "text": "Plants wilt and die where the fungus is present in the soil. There is no cure in the ground; choose Fusarium-resistant varieties where this disease has been a problem."
+    }
+   ],
+   "water": {
+    "sources": [
+     "johnnys-basil"
+    ],
+    "text": "Keep moisture regular all season. Basil is not drought tolerant and can be damaged by heat stress."
+   }
+  },
+  "broccoli": {
+   "depth": {
+    "sources": [
+     "johnnys-broccoli",
+     "osu-oregon-table"
+    ],
+    "text": "Sow seed 1/4 inch deep indoors. If direct seeding, sow 1/2 inch deep."
+   },
+   "germination": {
+    "sources": [
+     "osu-oregon-table",
+     "johnnys-broccoli"
+    ],
+    "text": "3–10 days in the OSU table. Johnny's says to keep soil at 75–80°F until germination, then drop air temperature to about 60°F."
+   },
+   "harvest": {
+    "sources": [
+     "johnnys-broccoli",
+     "wsu-brassicas"
+    ],
+    "text": "Cut the center head before the flower buds open, while heads are tight and dense. Harvest side shoots regularly to encourage more production."
+   },
+   "notes": [
+    "Johnny's gives 1/4 inch depth for the indoor sowing and 1/2 inch for direct seeding; the OSU table lists 1/2 inch. The depths here keep both, by method."
+   ],
+   "soil": {
+    "sources": [
+     "johnnys-broccoli"
+    ],
+    "text": "Well-drained, fertile soil, high in organic matter, pH 6.0–7.5."
+   },
+   "sowHow": {
+    "sources": [
+     "johnnys-broccoli"
+    ],
+    "text": "Sow 2 seeds per cell in plug flats. Seedlings should be ready to transplant in 3–4 weeks. Give them good air circulation and light. Direct seeding is also possible: sow 3 seeds per foot and thin to one plant in each group."
+   },
+   "spacing": {
+    "sources": [
+     "johnnys-broccoli"
+    ],
+    "text": "Transplant outdoors 10–18 inches apart, in rows 18–36 inches apart."
+   },
+   "storage": {
+    "sources": [
+     "johnnys-broccoli"
+    ],
+    "text": "Store at 32°F with 95–98% relative humidity and good air circulation for 10–14 days."
+   },
+   "sun": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Choose a site with sunlight, access to water, and good drainage."
+   },
+   "troubles": [
+    {
+     "name": "Flea beetles and cabbage root maggots",
+     "sources": [
+      "johnnys-broccoli",
+      "wsu-brassicas"
+     ],
+     "text": "Cover young seedlings with floating row cover from the day of planting to keep flea beetles and root maggots off. The WSU guide adds: rotate crops and reduce weeds for cabbage maggot, and use row covers for flea beetles."
+    },
+    {
+     "name": "Clubroot",
+     "sources": [
+      "wsu-brassicas"
+     ],
+     "text": "Clubroot affects all brassicas. Prevent it: rotate crops, keep soil pH above 6.8, provide adequate calcium and magnesium, give good drainage, and remove weeds."
+    }
+   ],
+   "water": {
+    "sources": [
+     "johnnys-broccoli"
+    ],
+    "text": "A consistent supply of moisture all season is important. Irrigate regularly for best results."
+   }
+  },
+  "cabbage": {
+   "depth": {
+    "sources": [
+     "wsu-brassicas",
+     "osu-oregon-table"
+    ],
+    "text": "Sow seed 1/4–1/2 inch deep."
+   },
+   "germination": {
+    "sources": [
+     "wsu-brassicas",
+     "osu-oregon-table"
+    ],
+    "text": "5–17 days in 55–75°F soil in the WSU table; the OSU table gives 3–10 days. The range here holds both."
+   },
+   "harvest": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Early types grow fast, so harvest promptly. Include 2 or 3 wrapper leaves when cutting heads."
+   },
+   "notes": [
+    "WSU says sow 1/4 inch deep; the OSU table says 1/2 inch. The depth here gives the range both sources hold."
+   ],
+   "soil": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Get a soil test and follow its amendment directions. The WSU table lists cabbage as a medium feeder."
+   },
+   "sowHow": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Start indoors 4–6 weeks before transplanting, March through June. Direct seeding March to June is also listed, but the WSU guide does not recommend direct seeding for a fall planting."
+   },
+   "spacing": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Thin or set plants 18–24 inches apart, in rows 2–4 feet apart."
+   },
+   "storage": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Early types store 1–2 months at 36°F. Later types store up to 6 months at 36°F."
+   },
+   "sun": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Choose a site with sunlight, access to water, and good drainage."
+   },
+   "troubles": [
+    {
+     "name": "Clubroot",
+     "sources": [
+      "wsu-brassicas"
+     ],
+     "text": "Clubroot affects all brassicas. Prevent it: rotate crops, keep soil pH above 6.8, provide adequate calcium and magnesium, give good drainage, and remove weeds."
+    },
+    {
+     "name": "Cabbage root maggot",
+     "sources": [
+      "wsu-brassicas"
+     ],
+     "text": "Cabbage maggot attacks cabbage, broccoli, cauliflower, and Brussels sprouts. Rotate crops, reduce weeds, and use row covers."
+    }
+   ],
+   "water": {
+    "sources": [
+     "osu-oregon-table"
+    ],
+    "text": "Keep a constant supply of water; the OSU notes say cool-season crop quality depends on rapid growth under a constant water supply, and crops turn strong-flavored if they go dry."
+   }
+  },
+  "cauliflower": {
+   "depth": {
+    "sources": [
+     "wsu-brassicas",
+     "osu-oregon-table"
+    ],
+    "text": "Sow seed 1/4–1/2 inch deep."
+   },
+   "germination": {
+    "sources": [
+     "wsu-brassicas",
+     "osu-oregon-table"
+    ],
+    "text": "5–17 days in 55–75°F soil in the WSU table; the OSU table gives 3–10 days. The range here holds both."
+   },
+   "harvest": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Harvest heads when the florets are tight and dense. Overmature florets will separate."
+   },
+   "notes": [
+    "WSU says sow 1/4 inch deep; the OSU table says 1/2 inch. The depth here gives the range both sources hold."
+   ],
+   "soil": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Get a soil test and follow its amendment directions. The WSU table lists cauliflower as a high feeder."
+   },
+   "sowHow": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Start indoors 4–6 weeks before transplanting. Direct seeding April to June is also listed, but the WSU guide does not recommend it for a fall planting. For white heads, tie the inner leaves around the head when it starts to form (blanching)."
+   },
+   "spacing": {
+    "sources": [
+     "wsu-brassicas",
+     "osu-oregon-table"
+    ],
+    "text": "Thin or set plants 12–24 inches apart, in rows 18–36 inches apart. The OSU table lists 18 inches."
+   },
+   "storage": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Stores well in the refrigerator."
+   },
+   "sun": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Choose a site with sunlight, access to water, and good drainage."
+   },
+   "troubles": [
+    {
+     "name": "Clubroot",
+     "sources": [
+      "wsu-brassicas"
+     ],
+     "text": "Clubroot affects all brassicas. Prevent it: rotate crops, keep soil pH above 6.8, provide adequate calcium and magnesium, give good drainage, and remove weeds."
+    },
+    {
+     "name": "Imported cabbageworm",
+     "sources": [
+      "wsu-brassicas"
+     ],
+     "text": "Cabbage worms affect all brassicas. Use row covers, remove debris, and attract beneficial insects."
+    }
+   ],
+   "water": {
+    "sources": [
+     "osu-oregon-table"
+    ],
+    "text": "Keep a constant supply of water; the OSU notes say cool-season crop quality depends on rapid growth under a constant water supply, and crops turn strong-flavored if they go dry."
+   }
+  },
+  "kale": {
+   "depth": {
+    "sources": [
+     "wsu-brassicas",
+     "osu-oregon-table"
+    ],
+    "text": "Sow seed 1/4–1/2 inch deep."
+   },
+   "germination": {
+    "sources": [
+     "wsu-brassicas",
+     "osu-oregon-table"
+    ],
+    "text": "5–17 days in 55–75°F soil in the WSU table; the OSU table gives 3–10 days. The range here holds both."
+   },
+   "harvest": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Harvest leaves from the bottom up, at any size. Cool weather and frost bring out the best flavor."
+   },
+   "notes": [
+    "WSU says sow 1/4 inch deep; the OSU table says 1/2 inch. The depth here gives the range both sources hold."
+   ],
+   "soil": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Get a soil test and follow its amendment directions. The WSU table lists kale as a medium feeder."
+   },
+   "sowHow": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Start indoors February to May for transplanting April to mid-July, or direct seed March to mid-July for summer to winter harvest; row cover is recommended. Direct seed or transplant in August for a winter harvest. Kale can survive Pacific Northwest winters."
+   },
+   "spacing": {
+    "sources": [
+     "wsu-brassicas",
+     "osu-oregon-table"
+    ],
+    "text": "Thin or set plants 12–24 inches apart, in rows 18–36 inches apart. The OSU table lists 12–18 inches."
+   },
+   "storage": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Brassica greens store well in the refrigerator."
+   },
+   "sun": {
+    "sources": [
+     "osu-oregon-table"
+    ],
+    "text": "Leafy vegetables prefer full sun, but tolerate partial shade."
+   },
+   "troubles": [
+    {
+     "name": "Flea beetles",
+     "sources": [
+      "wsu-brassicas"
+     ],
+     "text": "Flea beetles affect all brassicas. Reduce weeds and use row covers."
+    },
+    {
+     "name": "Clubroot",
+     "sources": [
+      "wsu-brassicas"
+     ],
+     "text": "Clubroot affects all brassicas. Prevent it: rotate crops, keep soil pH above 6.8, provide adequate calcium and magnesium, give good drainage, and remove weeds."
+    }
+   ],
+   "water": {
+    "sources": [
+     "osu-oregon-table"
+    ],
+    "text": "Keep a constant supply of water; the OSU notes say cool-season crop quality depends on rapid growth under a constant water supply, and crops turn strong-flavored if they go dry."
+   }
+  },
+  "brussels-sprouts": {
+   "depth": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Sow seed 1/4 inch deep."
+   },
+   "germination": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "5–17 days in 55–75°F soil."
+   },
+   "harvest": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Sprouts are best after a couple of frosts. Harvest mature buds, about 1 to 1-1/2 inches across, from the bottom up. Or cut off the top growing point to mature the whole stalk at once."
+   },
+   "soil": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Get a soil test and follow its amendment directions. The WSU table lists Brussels sprouts as a high feeder."
+   },
+   "sowHow": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Direct seeding is not recommended. Start indoors 4–6 weeks before transplanting. Start in May to June for transplanting June to August for a fall crop, and follow the variety's own timing instructions."
+   },
+   "spacing": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Thin or set plants 24 inches apart, in rows 18–36 inches apart."
+   },
+   "storage": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Store refrigerated."
+   },
+   "sun": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Choose a site with sunlight, access to water, and good drainage."
+   },
+   "troubles": [
+    {
+     "name": "Cabbage root maggot",
+     "sources": [
+      "wsu-brassicas"
+     ],
+     "text": "Cabbage maggot attacks Brussels sprouts, cabbage, cauliflower, and broccoli. Rotate crops, reduce weeds, and use row covers."
+    },
+    {
+     "name": "Clubroot",
+     "sources": [
+      "wsu-brassicas"
+     ],
+     "text": "Clubroot affects all brassicas. Prevent it: rotate crops, keep soil pH above 6.8, provide adequate calcium and magnesium, give good drainage, and remove weeds."
+    }
+   ],
+   "water": {
+    "sources": [
+     "osu-oregon-table"
+    ],
+    "text": "Keep a constant supply of water; the OSU notes say cool-season crop quality depends on rapid growth under a constant water supply, and crops turn strong-flavored if they go dry."
+   }
+  },
+  "lettuce": {
+   "depth": {
+    "sources": [
+     "johnnys-lettuce",
+     "osu-oregon-table"
+    ],
+    "text": "Cover seed lightly, to 1/8 inch, and firm gently. For transplants, barely cover seed in trays with vermiculite or fine soil."
+   },
+   "germination": {
+    "sources": [
+     "osu-oregon-table",
+     "johnnys-lettuce"
+    ],
+    "text": "7–12 days in the OSU table. Germination is best at soil temperatures of 60–68°F and below 70°F overall; seed can germinate in soil as low as 40°F, but often poorly above 75°F, and hot soil can push seed into thermal dormancy."
+   },
+   "harvest": {
+    "sources": [
+     "johnnys-lettuce"
+    ],
+    "text": "Head lettuce: cut at the base, keeping wrapper leaves. Baby leaf: harvest about 1 inch above the growing point when leaves are about 3–4 inches long."
+   },
+   "notes": [
+    "Johnny's gives 1/8 inch cover for direct-seeded baby leaf; the OSU table lists 1/4 inch planting depth for head and leaf lettuce. The depth here keeps Johnny's tray and baby-leaf wording and cites both.",
+    "Soil guidance and troubles were not sourced in this pass, so those fields are omitted rather than filled from habit."
+   ],
+   "sowHow": {
+    "sources": [
+     "johnnys-lettuce"
+    ],
+    "text": "For head lettuce, sow in trays 3–4 weeks before field planting and harden plants at least 3–5 days before planting out. For baby leaf, direct seed 4–6 seeds per inch in rows at least 2 inches apart. Water dry soil to keep it cool and moist for even germination."
+   },
+   "spacing": {
+    "sources": [
+     "johnnys-lettuce"
+    ],
+    "text": "Transplant iceberg, romaine, and butterhead lettuce 10–12 inches apart in rows 15–18 inches apart. Other types go 8–10 inches apart in rows 12–18 inches apart. Mini heads can go as close as 6 inches in a grid."
+   },
+   "storage": {
+    "sources": [
+     "johnnys-lettuce"
+    ],
+    "text": "Keep cold at 35–40°F, with high humidity but no standing water. Head lettuce keeps 14–20 days, less for delicate types like butterhead and oakleaf."
+   },
+   "succession": {
+    "sources": [
+     "johnnys-lettuce"
+    ],
+    "text": "Sow every 2–3 weeks for a continuous supply of full heads or salad mix."
+   },
+   "sun": {
+    "sources": [
+     "osu-oregon-table"
+    ],
+    "text": "Leafy vegetables prefer full sun, but tolerate partial shade."
+   },
+   "water": {
+    "sources": [
+     "johnnys-lettuce",
+     "osu-oregon-table"
+    ],
+    "text": "Dry soil must be watered to ensure coolness and moisture for uniform germination. The OSU notes add that cool-season crops need a constant supply of water and turn strong-flavored if they go dry."
+   }
+  },
+  "spinach": {
+   "depth": {
+    "sources": [
+     "osu-oregon-table"
+    ],
+    "text": "Sow seed 1/2 inch deep."
+   },
+   "germination": {
+    "sources": [
+     "osu-oregon-table"
+    ],
+    "text": "6–14 days. The OSU table lists soil temperatures of 40–70°F for germination, with 70°F as the optimum it gives."
+   },
+   "notes": [
+    "Only the OSU table was opened for spinach in this pass, so soil, harvest, storage, succession, and troubles are omitted rather than filled from habit. Downy mildew, leafminer, and bolting still need a sourced PNW or extension page that is actually opened."
+   ],
+   "sowHow": {
+    "sources": [
+     "osu-oregon-table"
+    ],
+    "text": "Direct seed. The OSU table lists spinach as a direct-seeded crop, with no indoor start."
+   },
+   "spacing": {
+    "sources": [
+     "osu-oregon-table"
+    ],
+    "text": "Thin or set plants 4–6 inches apart."
+   },
+   "sun": {
+    "sources": [
+     "osu-oregon-table"
+    ],
+    "text": "Leafy vegetables prefer full sun, but tolerate partial shade."
+   },
+   "water": {
+    "sources": [
+     "osu-oregon-table"
+    ],
+    "text": "Keep a constant supply of water; the OSU notes say cool-season crop quality depends on rapid growth under a constant water supply, and crops turn strong-flavored if they go dry."
+   }
+  },
+  "peas": {
+   "depth": {
+    "sources": [
+     "wsu-green-peas",
+     "osu-snap-peas",
+     "umn-peas"
+    ],
+    "text": "Sow seed 1 inch deep."
+   },
+   "harvest": {
+    "sources": [
+     "wsu-green-peas",
+     "osu-snap-peas"
+    ],
+    "text": "Harvest 50–80 days after planting. Pick edible-pod peas just as the seeds start to form. For shelling peas, pick when pods are well developed but not bulging; later pods turn starchy and less sweet, and yellow pods are bitter. Pick often for best quality and continued production."
+   },
+   "notes": [
+    "WSU gives two bush-pea spacings in the same fact sheet: a summary of 2–4 inches apart in rows 2 feet apart, and planting guidelines of about 2 inches apart in rows 18–24 inches apart. The spacing text above holds both ranges.",
+    "Germination days and a pea enation virus entry were omitted: no page opened in this run gave germination days, and the PNW Handbook pea enation mosaic page could not be opened before the browser rate limit stopped further opens. WSU and OSU both point to disease-resistant varieties (OSU lists Cascadia as disease-resistant), but that alone was not enough to write the virus entry."
+   ],
+   "soil": {
+    "sources": [
+     "wsu-green-peas",
+     "umn-peas"
+    ],
+    "text": "Fertile, well-drained soil with adequate organic matter. UMN gives a soil pH between 6 and 7.5, and says many soils from sandy to heavy clay suit peas as long as drainage is good."
+   },
+   "sowHow": {
+    "sources": [
+     "wsu-green-peas",
+     "osu-snap-peas"
+    ],
+    "text": "Direct sow in spring, 4 to 6 weeks before the last spring frost, when soil temperature reaches at least 50°F and the soil is dry enough to work without sticking to tools. Set up a trellis or netting for vining types. Gardeners who have never grown peas in that soil may mix in a pea inoculant (Rhizobia bacteria). Do not use high-nitrogen fertilizer; too much gives lush foliage but poor flowering and fruiting."
+   },
+   "spacing": {
+    "sources": [
+     "wsu-green-peas",
+     "osu-snap-peas"
+    ],
+    "text": "Bush peas, 2–4 inches apart in rows 2 feet apart; vining peas, 2–4 inches apart in rows 3 feet apart. Along a straight trellis, WSU also gives seeds 1 inch apart, and 6 to 8 seeds around the base of a teepee trellis."
+   },
+   "storage": {
+    "sources": [
+     "osu-snap-peas",
+     "umn-peas"
+    ],
+    "text": "Refrigerate peas soon after picking. OSU: store snap peas in a container with air flow and use within 5 days. UMN: once cooled quickly, shelled peas hold quality for more than a week in the refrigerator."
+   },
+   "succession": {
+    "sources": [
+     "umn-peas"
+    ],
+    "text": "Make a second planting a week after the first, and another a week after that, for a longer harvest period."
+   },
+   "sun": {
+    "sources": [
+     "wsu-green-peas",
+     "osu-snap-peas"
+    ],
+    "text": "Full sun for the highest yield. Snap peas can live with part shade."
+   },
+   "troubles": [
+    {
+     "name": "Powdery mildew",
+     "sources": [
+      "wsu-green-peas"
+     ],
+     "text": "A fungal disease of leaves, pods, and stems: discolored spots, then white powdery mats that give the foliage a bluish cast. Clean up plant debris and discard (do not compost) diseased material, plant in early spring — spring crops seldom show serious damage — plant mildew-resistant varieties, and do not replant peas in the same spot more often than every third year."
+    },
+    {
+     "name": "Root rots in wet soil",
+     "sources": [
+      "wsu-green-peas",
+      "osu-snap-peas"
+     ],
+     "text": "Several fungal root rots stunt and yellow plants and shrink the root system; seed rot and damping-off rot seed in wet soil or topple new seedlings. Plant in well-drained soil — raised beds or added organic matter help drainage — do not over-water, remove and discard diseased plants including roots (do not compost), and rotate so peas return to the same spot no more often than every third year."
+    }
+   ],
+   "water": {
+    "sources": [
+     "wsu-green-peas",
+     "umn-peas"
+    ],
+    "text": "Peas have moderate water needs early, increasing in summer heat. Water the soil, not the vines, to prevent disease, and soak the soil to a depth of at least 1 inch each week during the growing season; sandy soils may need water more often. Avoid overhead watering so leaves stay dry."
+   }
+  },
+  "fava-beans": {
+   "companions": {
+    "avoid": [
+     "onions"
+    ],
+    "good": [],
+    "sources": [
+     "wcs-windsor-broad-bean"
+    ]
+   },
+   "depth": {
+    "sources": [
+     "wcs-windsor-broad-bean"
+    ],
+    "text": "Sow seed 2 inches deep."
+   },
+   "germination": {
+    "sources": [
+     "wcs-windsor-broad-bean"
+    ],
+    "text": "10–14 days, depending on conditions. Optimal soil temperature for germination: 50–70°F."
+   },
+   "harvest": {
+    "sources": [
+     "wcs-windsor-broad-bean"
+    ],
+    "text": "Pick when the pods appear plump and begin to droop from the weight of the seeds. Shell like peas and cook. For dried beans, wait until the pods start to shrivel."
+   },
+   "notes": [
+    "West Coast Seeds cautions that some people are highly allergic to broad beans, and that fresh or dried broad beans must be cooked before eating.",
+    "Water, storage, and succession fields were omitted: the West Coast Seeds broad bean guide opened for this run gives none of them.",
+    "Chocolate spot was omitted: no acceptable source (extension, PNW Handbook, or listed seed house) page on chocolate spot could be opened in this run before the browser rate limit stopped further opens, so no sourced entry could be written."
+   ],
+   "soil": {
+    "sources": [
+     "wcs-windsor-broad-bean"
+    ],
+    "text": "Enrich the soil with compost before planting. Ideal pH: 6.0–6.5."
+   },
+   "sowHow": {
+    "sources": [
+     "wcs-windsor-broad-bean"
+    ],
+    "text": "Direct sow October/November in mild winter areas, or February to May in other areas. Use a broad bean or combination inoculant. Provide stakes or strings between rows to stop the tall plants from falling over, and keep overwintered plants weeded."
+   },
+   "spacing": {
+    "sources": [
+     "wcs-windsor-broad-bean"
+    ],
+    "text": "Sow 6 inches apart in double rows 9 inches apart. Each set of double rows should be 3 feet apart."
+   },
+   "sun": {
+    "sources": [
+     "wcs-windsor-broad-bean"
+    ],
+    "text": "Full sun."
+   },
+   "troubles": [
+    {
+     "name": "Black bean aphid (black aphids)",
+     "sources": [
+      "wcs-windsor-broad-bean"
+     ],
+     "text": "When black aphids appear in May/June, pinch off the growing tips on which the aphids feed, then spray the plants with blasts of water to dislodge the remaining aphids."
+    }
+   ]
+  },
+  "bush-beans": {
+   "depth": {
+    "sources": [
+     "johnnys-bush-bean",
+     "usu-beans"
+    ],
+    "text": "Sow seed 1 inch deep."
+   },
+   "germination": {
+    "sources": [
+     "usu-beans",
+     "johnnys-bush-bean"
+    ],
+    "text": "Seedlings emerge in 7–10 days in soil warmed to 65–85°F. Johnny's gives the optimum soil temperature for germination as 70–90°F, and warns that planting when daytime soil temperatures average below 60°F risks poor germination."
+   },
+   "harvest": {
+    "sources": [
+     "johnnys-bush-bean",
+     "usu-beans"
+    ],
+    "text": "Pick when pods are full size, plump and firm, with small seeds not yet formed — about 7–14 days after flowering. Pick regularly to encourage new pod set; for extra-fine filet pods, pick every 36–48 hours."
+   },
+   "notes": [
+    "Spacing differs by source: Johnny's gives rows 20–36 inches apart; Utah State Extension gives rows 18–24 inches apart. The spacing text holds both.",
+    "Bean rust and slugs on seedlings were omitted: the PNW Handbook rust and snap-bean slug pages were found in search but could not be opened before the browser rate limit stopped further opens, so no sourced entries could be written from them."
+   ],
+   "soil": {
+    "sources": [
+     "johnnys-bush-bean",
+     "usu-beans"
+    ],
+    "text": "Well-drained, fertile soil rich in organic matter, pH 6.5–6.8. Beans have a low fertilizer requirement, and extra nitrogen stimulates leaf growth, delays flowering, and reduces pod set."
+   },
+   "sowHow": {
+    "sources": [
+     "johnnys-bush-bean",
+     "usu-beans"
+    ],
+    "text": "Direct sow after the last frost date, once soil is above 60°F. Inoculants can increase yields. Do not thin. Keep soil evenly moist, especially during flowering, so pods fill out."
+   },
+   "spacing": {
+    "sources": [
+     "johnnys-bush-bean",
+     "usu-beans"
+    ],
+    "text": "Sow seeds about 2 inches apart in rows 20–36 inches apart. Utah State Extension gives 2–3 inches apart in rows 18–24 inches apart."
+   },
+   "storage": {
+    "sources": [
+     "johnnys-bush-bean",
+     "usu-beans"
+    ],
+    "text": "Store at 40°F and 90% relative humidity for 7–10 days. Use fresh beans immediately for best quality; refrigerate if not used right away."
+   },
+   "succession": {
+    "sources": [
+     "johnnys-bush-bean",
+     "usu-beans"
+    ],
+    "text": "Sow every 2–3 weeks through midsummer (Utah State Extension: every 14–21 days until mid-July) for a continuous supply."
+   },
+   "sun": {
+    "sources": [
+     "usu-beans"
+    ],
+    "text": "Full sun."
+   },
+   "troubles": [
+    {
+     "name": "White mold (Sclerotinia)",
+     "sources": [
+      "pnw-bean-white-mold",
+      "johnnys-bush-bean"
+     ],
+     "text": "First shows as water-soaked lesions on stems and pods; infected stems and pods turn beige to white, and the plant may wilt and die from the soil line. Moist conditions in the canopy favor it. Reduce canopy humidity with wider plant and row spacing so leaves and soil dry, time watering so the canopy dries before nightfall, and rotate with non-hosts such as grasses and cereals for at least 2 years. Johnny's adds a 3-year crop rotation and removing or composting bean straw in the fall."
+    },
+    {
+     "name": "Mexican bean beetle",
+     "sources": [
+      "johnnys-bush-bean"
+     ],
+     "text": "Johnny's lists Mexican bean beetles (and, for bush beans, potato leafhoppers) as the main insect pests, controlled with insecticides such as pyrethrin or azadirachtin."
+    }
+   ],
+   "water": {
+    "sources": [
+     "usu-beans"
+    ],
+    "text": "Water regularly through growth and keep soil moisture near field capacity; needs are most critical during flowering and pod sizing. Drought stress at and after flowering causes flower abortion and smaller, stringier pods. Do not over-water — wet soils promote root rot and slow growth."
+   }
+  },
+  "pole-beans": {
+   "depth": {
+    "sources": [
+     "johnnys-pole-bean",
+     "usu-beans"
+    ],
+    "text": "Sow seed 1 inch deep."
+   },
+   "germination": {
+    "sources": [
+     "usu-beans",
+     "johnnys-pole-bean"
+    ],
+    "text": "Seedlings emerge in 7–10 days in soil warmed to 65–85°F. Sow pole beans after soil temperature exceeds 60°F."
+   },
+   "harvest": {
+    "sources": [
+     "usu-beans",
+     "johnnys-pole-bean"
+    ],
+    "text": "Pick when pods are full size, with small seeds, and firm, crisp flesh. Pole types keep bearing for 5–6 weeks of picking; harvest regularly to encourage new pod set."
+   },
+   "notes": [
+    "Succession was omitted for pole beans: Johnny's pole bean guide gives no succession interval, and Utah State Extension says pole beans produce over a long period so only one or two plantings are needed each year — there is no sourced interval to give.",
+    "Bean rust and slugs on seedlings were omitted for the same reason as bush beans: the PNW Handbook pages were found in search but could not be opened before the browser rate limit stopped further opens."
+   ],
+   "soil": {
+    "sources": [
+     "usu-beans",
+     "johnnys-bush-bean"
+    ],
+    "text": "Well-drained, fertile soil rich in organic matter. Beans have a low fertilizer requirement, and extra nitrogen stimulates leaf growth, delays flowering, and reduces pod set."
+   },
+   "sowHow": {
+    "sources": [
+     "johnnys-pole-bean",
+     "usu-beans"
+    ],
+    "text": "Direct sow after the last frost, once soil is above 60°F. Grow on trellises, poles, or mesh fencing, set up so the climbing vines can climb; trellising also makes harvest easier and pole types yield more trellised. Inoculants can increase yields."
+   },
+   "spacing": {
+    "sources": [
+     "johnnys-pole-bean"
+    ],
+    "text": "Sow seeds 3 inches apart in rows 4 feet apart. If using poles, plant 4–6 seeds at the base of each pole."
+   },
+   "storage": {
+    "sources": [
+     "johnnys-pole-bean"
+    ],
+    "text": "Store at 40°F and 90% relative humidity for 7–10 days."
+   },
+   "sun": {
+    "sources": [
+     "usu-beans"
+    ],
+    "text": "Full sun."
+   },
+   "troubles": [
+    {
+     "name": "White mold (Sclerotinia)",
+     "sources": [
+      "pnw-bean-white-mold",
+      "johnnys-pole-bean"
+     ],
+     "text": "First shows as water-soaked lesions on stems and pods; infected stems and pods turn beige to white, and the plant may wilt and die from the soil line. Moist conditions in the canopy favor it. Plant at wider row spacing to promote drying of leaves and soil, reduce canopy humidity, and practice a 3-year crop rotation, preferably into corn or grain crops."
+    },
+    {
+     "name": "Mexican bean beetle",
+     "sources": [
+      "johnnys-pole-bean"
+     ],
+     "text": "Johnny's lists Mexican bean beetles as the main insect pest of pole beans, controlled with insecticides such as pyrethrin or azadirachtin."
+    }
+   ],
+   "water": {
+    "sources": [
+     "usu-beans"
+    ],
+    "text": "Water regularly through growth and keep soil moisture near field capacity; needs are most critical during flowering and pod sizing. Drought stress at and after flowering causes flower abortion and smaller, stringier pods. Do not over-water — wet soils promote root rot and slow growth."
+   }
+  },
+  "sweet-corn": {
+   "depth": {
+    "sources": [
+     "johnnys-sweet-corn"
+    ],
+    "text": "Sow seed 3/4–1 inch deep."
+   },
+   "harvest": {
+    "sources": [
+     "johnnys-sweet-corn"
+    ],
+    "text": "Pick when kernels are full and sweet, generally shown by the ear silks drying and browning. Note the date about half the plants first show silk: corn is ready to eat 18–24 days after ear silks first show, sooner in warmer weather."
+   },
+   "notes": [
+    "Sun, soil, water, germination days, and storage fields were omitted: the one sweet corn guide opened in this run (Johnny's) gives none of them, and the West Coast Seeds and extension corn pages found in search could not be opened before the browser rate limit stopped further opens.",
+    "Corn earworm was omitted: the PNW Handbook corn earworm page was found in search but could not be opened in this run. Johnny's only advises consulting local Extension for pest management and removing or composting cornstalks after harvest to reduce pests in the next crop — not enough for an earworm entry."
+   ],
+   "sowHow": {
+    "sources": [
+     "johnnys-sweet-corn"
+    ],
+    "text": "Direct sow only when the soil is warm: plant untreated seed when soil is at least 65°F, treated seed at at least 60°F — planting in cold soil risks poor germination. Plant in blocks of at least 4 rows, not a single long row, because corn is wind-pollinated and blocks give well-filled ears. Floating row covers can be used on early plantings to help moderate soil temperature."
+   },
+   "spacing": {
+    "sources": [
+     "johnnys-sweet-corn"
+    ],
+    "text": "Sow 6–7 inches apart (or 2 seeds every 9 inches, thinning to 1 plant), in rows 30–36 inches apart. Arrange in blocks of at least 4 rows."
+   },
+   "succession": {
+    "sources": [
+     "johnnys-sweet-corn"
+    ],
+    "text": "Successive plantings can be made through early summer; most growers prefer to extend the season by planting a few varieties of different maturities. Johnny's gives no fixed interval."
+   },
+   "troubles": [
+    {
+     "name": "Common smut",
+     "sources": [
+      "pnw-corn-smut"
+     ],
+     "text": "A fungus that turns young, actively growing tissue into galls, sometimes 4–5 inches across, filled with black powdery spores under a silvery-white membrane. Planting tolerant varieties is the best control. In home gardens, remove and throw away or burn galls before they rupture, avoid injuring plants during cultivation, and keep fertility well balanced rather than heavy on nitrogen."
+    },
+    {
+     "name": "Poor pollination in small plantings",
+     "sources": [
+      "johnnys-sweet-corn"
+     ],
+     "text": "Ears fill poorly when pollen does not reach the silks. Plant in blocks of at least 4 rows rather than one long row, which is needed for well-filled ears. Keep different corn types from crossing where it matters: Johnny's advises keeping super sweet varieties at least 300 feet from non-super sweet types, or staggering plantings by a 12-day difference with 25 feet between them."
+    }
+   ]
+  },
+  "cucumbers": {
+   "companions": {
+    "avoid": [
+     "potatoes",
+     "sage"
+    ],
+    "good": [
+     "asparagus",
+     "beans",
+     "Brassicas",
+     "celery",
+     "corn",
+     "dill",
+     "kohlrabi",
+     "lettuce",
+     "onion",
+     "peas",
+     "radish",
+     "tomatoes"
+    ],
+    "sources": [
+     "wcs-cucumber"
+    ]
+   },
+   "depth": {
+    "sources": [
+     "wcs-cucumber"
+    ],
+    "text": "Sow seed 1 inch deep."
+   },
+   "germination": {
+    "sources": [
+     "wcs-cucumber"
+    ],
+    "text": "Cucumbers need very warm soil to germinate; the optimal soil temperature for germination and transplanting is 60–85°F."
+   },
+   "harvest": {
+    "sources": [
+     "wcs-cucumber"
+    ],
+    "text": "Keep picking regularly — if fruit gets too big, the plant stops producing. About 1 month before first frost, pinch off new flowers so the plant puts its energy into ripening the fruit already set."
+   },
+   "notes": [
+    "West Coast Seeds notes the cucumber beetle causes problems only east of the Rockies, so bacterial wilt spread by cucumber beetles is much less of a Pacific Northwest concern; protect young plants with floating row covers against the pests that are present, removing covers when flowering starts so bees can pollinate.",
+    "West Coast Seeds gives no germination day count for cucumbers, only the 60–85°F soil temperature, so no day range is stated here.",
+    "Storage guidance was not sourced in this pass, so that field is omitted rather than filled from habit."
+   ],
+   "soil": {
+    "sources": [
+     "wcs-cucumber"
+    ],
+    "text": "Warm, well-drained soil, pH 6.0–6.8. Raised beds work well. Cucumbers are vigorous and need lots of nutrition."
+   },
+   "sowHow": {
+    "sources": [
+     "wcs-cucumber"
+    ],
+    "text": "Direct sow once the soil is warm — on the coast, wait until early to mid-June, and re-sow if cool, wet weather follows. Or start transplants indoors in individual peat or coir pots 3–4 weeks before transplanting, using bottom heat, and set them out when they have their third true leaf; larger plants suffer transplant shock. Sow 3–4 seeds in each spot and thin to the strongest seedling."
+   },
+   "spacing": {
+    "sources": [
+     "wcs-cucumber"
+    ],
+    "text": "Space plants 9 inches apart in rows 36 inches apart. Most cucumbers benefit from a trellis; vines can reach 7–8 feet and fruit grown hanging tends to be straighter."
+   },
+   "succession": {
+    "sources": [
+     "wcs-cucumber"
+    ],
+    "text": "For a continuous harvest, make successive plantings every 2–3 weeks until about 3 months before the first fall frost date."
+   },
+   "sun": {
+    "sources": [
+     "wcs-cucumber"
+    ],
+    "text": "Full sun."
+   },
+   "troubles": [
+    {
+     "name": "Powdery mildew",
+     "sources": [
+      "wcs-cucumber"
+     ],
+     "text": "An airborne fungal disease that causes white spots on the leaves late in the season. Resistant varieties get it a few days later than others. Keep foliage dry, avoid spraying water on the leaves, and use disease-resistant varieties where possible."
+    },
+    {
+     "name": "Wilts",
+     "sources": [
+      "wcs-cucumber"
+     ],
+     "text": "Various wilts cause the vines to wilt and die. Control is cultural: strict sanitation, remove diseased material and do not compost it unless the pile gets hot, avoid over-watering, plant in a well-drained site, use long crop rotations, and choose resistant varieties."
+    }
+   ],
+   "water": {
+    "sources": [
+     "wcs-cucumber"
+    ],
+    "text": "Once the weather warms up, keep the soil evenly moist. Water the soil only and keep the leaves as dry as possible."
+   }
+  },
+  "summer-squash": {
+   "companions": {
+    "avoid": [
+     "Brassicas",
+     "potatoes"
+    ],
+    "good": [
+     "corn",
+     "lettuce",
+     "melons",
+     "peas",
+     "radish"
+    ],
+    "sources": [
+     "wcs-squash"
+    ]
+   },
+   "depth": {
+    "sources": [
+     "wcs-squash"
+    ],
+    "text": "Sow seed 1 inch deep."
+   },
+   "germination": {
+    "sources": [
+     "wcs-squash"
+    ],
+    "text": "7–14 days; optimal soil temperature 77–95°F."
+   },
+   "harvest": {
+    "sources": [
+     "wcs-squash"
+    ],
+    "text": "Pick when small and check the plants regularly — if fruit gets big, the plant stops producing."
+   },
+   "notes": [
+    "Early in the season, incomplete pollination is common and produces misshapen fruit withered at the blossom end; discard those fruit before they rot. This is a pollination problem, not blossom end rot.",
+    "Storage guidance was not sourced in this pass, so that field is omitted rather than filled from habit."
+   ],
+   "soil": {
+    "sources": [
+     "wcs-squash"
+    ],
+    "text": "Soil pH 6.0–6.8. These are big, hungry plants: work 1 cup of complete organic fertilizer into the soil beneath each plant."
+   },
+   "sowHow": {
+    "sources": [
+     "wcs-squash"
+    ],
+    "text": "Direct sow or transplant in late spring once the soil is warm. For transplants, start seeds indoors during the first two weeks of May. Sow 3 seeds in each spot where you want a plant, and thin to the strongest plant."
+   },
+   "spacing": {
+    "sources": [
+     "wcs-squash"
+    ],
+    "text": "Space summer squash 18–24 inches apart in rows 36–48 inches apart."
+   },
+   "sun": {
+    "sources": [
+     "wcs-squash"
+    ],
+    "text": "Full sun."
+   },
+   "troubles": [
+    {
+     "name": "Powdery mildew",
+     "sources": [
+      "wcs-squash"
+     ],
+     "text": "White powdery patches spread over the leaves. Avoid wetting the foliage if possible, water early in the day so the above-ground parts dry quickly, avoid crowding, and clear weeds around plants to improve air circulation."
+    },
+    {
+     "name": "Blossom end rot",
+     "sources": [
+      "wsu-wallawalla"
+     ],
+     "text": "A dry, dark blotch forms on the bottom end of the fruit. WSU ties it to uneven soil moisture — soil kept moist and then allowed to dry out before watering again. Keep moisture even and mulch."
+    }
+   ],
+   "water": {
+    "sources": [
+     "wsu-wallawalla"
+    ],
+    "text": "Give at least 1 inch of water a week, and keep soil moisture even — letting moist soil dry out and then watering again is what triggers blossom end rot in summer squash. Mulch helps hold even moisture."
+   }
+  },
+  "winter-squash": {
+   "companions": {
+    "avoid": [
+     "Brassicas",
+     "potatoes"
+    ],
+    "good": [
+     "corn",
+     "lettuce",
+     "melons",
+     "peas",
+     "radish"
+    ],
+    "sources": [
+     "wcs-squash"
+    ]
+   },
+   "depth": {
+    "sources": [
+     "wcs-squash"
+    ],
+    "text": "Sow seed 1 inch deep."
+   },
+   "germination": {
+    "sources": [
+     "wcs-squash"
+    ],
+    "text": "7–14 days; optimal soil temperature 77–95°F."
+   },
+   "harvest": {
+    "sources": [
+     "wcs-squash"
+    ],
+    "text": "Fruit is ripe if your thumbnail does not mark the skin and the stem is dry and brown. Cut the stem about 2 inches from the fruit. Squash survive a light frost, but store better if harvested before frost."
+   },
+   "notes": [],
+   "soil": {
+    "sources": [
+     "wcs-squash"
+    ],
+    "text": "Soil pH 6.0–6.8. These are big, hungry plants: work 1 cup of complete organic fertilizer into the soil beneath each plant."
+   },
+   "sowHow": {
+    "sources": [
+     "wcs-squash"
+    ],
+    "text": "Direct sow or transplant in late spring once the soil is warm. For transplants, start seeds indoors during the first two weeks of May. Sow 3 seeds in each spot where you want a plant, and thin to the strongest plant."
+   },
+   "spacing": {
+    "sources": [
+     "wcs-squash"
+    ],
+    "text": "Give winter squash a minimum of 36–48 inches apart in rows 48–72 inches apart. Vining plants take up a lot of room."
+   },
+   "storage": {
+    "sources": [
+     "wcs-squash"
+    ],
+    "text": "Field-cure for 10 days in the sun, or cure indoors in a warm room for 4–5 days. Store at 50–60°F with low humidity and good air circulation."
+   },
+   "sun": {
+    "sources": [
+     "wcs-squash"
+    ],
+    "text": "Full sun."
+   },
+   "troubles": [
+    {
+     "name": "Powdery mildew",
+     "sources": [
+      "wcs-squash"
+     ],
+     "text": "White powdery patches spread over the leaves. Avoid wetting the foliage if possible, water early in the day so the above-ground parts dry quickly, avoid crowding, and clear weeds around plants to improve air circulation."
+    },
+    {
+     "name": "Bacterial wilt",
+     "sources": [
+      "wcs-squash"
+     ],
+     "text": "Vines wilt and die, spread by striped or spotted cucumber beetles. Remove and destroy infested plants, and control cucumber beetles as early as possible if they appear."
+    }
+   ],
+   "water": {
+    "sources": [
+     "wsu-wallawalla"
+    ],
+    "text": "Give at least 1 inch of water a week, more in hot, windy weather. Mulching helps keep the soil evenly moist."
+   }
+  },
+  "melons": {
+   "depth": {
+    "sources": [
+     "johnnys-melon"
+    ],
+    "text": "Sow seed 1/2 inch deep for direct sowing. For the indoor start, sow 1/4 inch deep in pots."
+   },
+   "germination": {
+    "sources": [
+     "johnnys-melon"
+    ],
+    "text": "Keep the mix at 80–90°F until germination. Direct seed only when the soil is warm, above 70°F."
+   },
+   "harvest": {
+    "sources": [
+     "johnnys-melon",
+     "wcs-melons"
+    ],
+    "text": "For cantaloupe types, harvest at full slip: a gentle tug separates the fruit from the vine. Watch also for a change in skin colour, slight softening, and the tendril nearest the fruit browning or shrivelling. Melons do not ripen off the vine, so pick only ripe fruit. Expect one, possibly two melons per plant in a cool-summer garden."
+   },
+   "notes": [
+    "Indoor sowing depth differs by source: Johnny's says 1/4 inch deep in pots; West Coast Seeds says 3/4 inch deep in 5-inch pots. The depth text here follows Johnny's for pots and for direct sowing.",
+    "Germination temperature differs by source: Johnny's holds seedlings at 80–90°F until germination; West Coast Seeds gives an optimal soil temperature of 68–77°F. The germination text here follows Johnny's.",
+    "Soil pH differs slightly by source: Johnny's says 7.0; West Coast Seeds says 5.8–7.0. The soil text holds both."
+   ],
+   "soil": {
+    "sources": [
+     "johnnys-melon",
+     "wcs-melons"
+    ],
+    "text": "Light, warm, well-drained soil. Johnny's gives a pH of 7.0; West Coast Seeds gives an optimum of 5.8–7.0. Add compost or well-rotted manure before planting."
+   },
+   "sowHow": {
+    "sources": [
+     "johnnys-melon",
+     "wcs-melons"
+    ],
+    "text": "Start indoors about one month (no sooner) before transplanting, in plug trays or 2–3 inch biodegradable pots, because melon roots resent disturbance. Harden off for a week, then transplant when the weather is frost-free, warm, and settled, without disturbing the roots, and water thoroughly. Black plastic mulch, cloches, or floating row covers add the heat melons need; remove covers when female flowers appear so bees can pollinate."
+   },
+   "spacing": {
+    "sources": [
+     "johnnys-melon"
+    ],
+    "text": "Transplant 2–3 feet apart in rows 6 feet apart, or set plants 18 inches apart. For direct seeding, sow 2–3 seeds every 18 inches and thin to 1 plant."
+   },
+   "storage": {
+    "sources": [
+     "johnnys-melon",
+     "wcs-melons"
+    ],
+    "text": "Store ripe netted melons at 36–41°F and 90–95% humidity; other types at 45–50°F and 85–95% humidity. All types hold a few days without refrigeration, and longer if chilled. Wrap cut sections in plastic and refrigerate."
+   },
+   "sun": {
+    "sources": [
+     "johnnys-melon",
+     "wcs-melons"
+    ],
+    "text": "Full sun, in the warmest spot available — a southern exposure is ideal. Raised beds help."
+   },
+   "troubles": [
+    {
+     "name": "Powdery mildew",
+     "sources": [
+      "wcs-melons"
+     ],
+     "text": "White spots on the leaves, a fungus that usually appears at the end of the season. Resistant varieties get the mildew a few days later than susceptible ones; choose resistant varieties where it is a yearly problem."
+    },
+    {
+     "name": "Cool season — fruit fails to ripen",
+     "sources": [
+      "wcs-melons"
+     ],
+     "text": "Melons need 8–10 weeks of good, hot weather to flower, set fruit, and ripen it before cool, damp weather returns, and fruit will not ripen off the vine. In the Pacific Northwest, start plants indoors, transplant into warmed soil under black plastic mulch, cloches, or row covers (a tunnel helps most), and expect ripe fruit only in late August or September."
+    }
+   ],
+   "water": {
+    "sources": [
+     "johnnys-melon"
+    ],
+    "text": "Good soil moisture matters early and during pollination, when fruit is setting. Limit water in the last week before fruit ripens — overwatering then makes bland fruit."
+   }
+  },
+  "carrots": {
+   "depth": {
+    "text": "Sow seed 1/4–1/2 inch deep.",
+    "sources": [
+     "johnnys-carrots",
+     "wcs-carrots",
+     "vt-root-crops"
+    ]
+   },
+   "spacing": {
+    "text": "Thin seedlings to 1–3 inches apart, in rows 16–24 inches apart.",
+    "sources": [
+     "johnnys-carrots",
+     "wcs-carrots",
+     "osu-oregon-table"
+    ]
+   },
+   "germination": {
+    "text": "10–21 days to sprout, depending on soil temperature and moisture; West Coast Seeds gives the best soil range as 45–85°F.",
+    "sources": [
+     "johnnys-carrots",
+     "wcs-carrots",
+     "osu-oregon-table"
+    ]
+   },
+   "sowHow": {
+    "text": "Direct sow as soon as the soil can be worked in spring. Keep the soil surface moist until the seedlings are up, and do not let a crust form over the row.",
+    "sources": [
+     "johnnys-carrots",
+     "vt-root-crops"
+    ]
+   },
+   "sun": {
+    "text": "Full sun.",
+    "sources": [
+     "wcs-carrots",
+     "vt-root-crops"
+    ]
+   },
+   "soil": {
+    "text": "Deep, loose, well-drained soil; sandy loam grows the straightest roots. Soil pH 6.0–6.8. Avoid fresh manure.",
+    "sources": [
+     "johnnys-carrots",
+     "wcs-carrots"
+    ]
+   },
+   "water": {
+    "text": "Keep the seedbed evenly moist until seedlings emerge. Ease off watering as roots near maturity to prevent cracking.",
+    "sources": [
+     "johnnys-carrots",
+     "vt-root-crops"
+    ]
+   },
+   "companions": {
+    "good": [
+     "beans",
+     "Brassicas",
+     "chives",
+     "leeks",
+     "lettuce",
+     "onions",
+     "peas",
+     "peppers",
+     "pole beans",
+     "radish",
+     "rosemary",
+     "sage",
+     "tomatoes"
+    ],
+    "avoid": [
+     "dill",
+     "parsnips",
+     "potatoes"
+    ],
+    "sources": [
+     "wcs-carrots"
+    ]
+   },
+   "harvest": {
+    "text": "Pull at any size once the roots colour up; flavour is best at full, bright colour. Most roots are ready at 1/2–3/4 inch across the top.",
+    "sources": [
+     "johnnys-carrots",
+     "wcs-carrots",
+     "vt-root-crops"
+    ]
+   },
+   "storage": {
+    "text": "Store at 32–33°F and about 95–98% humidity. Mature roots keep 4–5 months.",
+    "sources": [
+     "johnnys-carrots",
+     "vt-root-crops"
+    ]
+   },
+   "succession": {
+    "text": "Sow a new row every 3 weeks for a steady supply.",
+    "sources": [
+     "johnnys-carrots",
+     "wcs-carrots"
+    ]
+   },
+   "troubles": [
+    {
+     "name": "Carrot rust fly",
+     "text": "The fly's maggots tunnel in the roots. Cover the bed with floating row cover so the flies cannot lay eggs, and sow after the beginning of June to miss the first flight of flies.",
+     "sources": [
+      "johnnys-carrots",
+      "wcs-carrots"
+     ]
+    },
+    {
+     "name": "Wireworms",
+     "text": "Wireworms chew into the roots and are worst in ground recently in sod. Grow carrots in a fertile, well-drained bed and avoid planting in freshly turned sod ground.",
+     "sources": [
+      "johnnys-carrots",
+      "wcs-carrots"
+     ]
+    }
+   ],
+   "notes": [
+    "Johnny's and the OSU table put sprouting at 10–17 days; West Coast Seeds allows 14–21 days. The range here holds both.",
+    "Johnny's advises covering exposed carrot crowns with soil so the shoulders do not turn green."
+   ]
+  },
+  "beets": {
+   "depth": {
+    "text": "Sow seed 1/2 inch deep.",
+    "sources": [
+     "johnnys-beets",
+     "wcs-beets"
+    ]
+   },
+   "spacing": {
+    "text": "Thin to one plant every 3–6 inches, in rows 12–18 inches apart.",
+    "sources": [
+     "johnnys-beets",
+     "wcs-beets"
+    ]
+   },
+   "germination": {
+    "text": "5–12 days to sprout; best in 50–80°F soil. Begin sowing once the soil has warmed to about 45°F.",
+    "sources": [
+     "wcs-beets",
+     "osu-oregon-table",
+     "johnnys-beets"
+    ]
+   },
+   "sowHow": {
+    "text": "Direct sow outdoors. Each beet 'seed' is really a cluster of seeds, so thinning is always needed. Beets can also be started indoors 5–6 weeks before transplanting out.",
+    "sources": [
+     "vt-root-crops",
+     "johnnys-beets"
+    ]
+   },
+   "sun": {
+    "text": "Full sun; tolerates partial shade.",
+    "sources": [
+     "wcs-beets",
+     "vt-root-crops"
+    ]
+   },
+   "soil": {
+    "text": "Light, loamy soil, pH 6.0–6.8; keep the pH above 6.0.",
+    "sources": [
+     "johnnys-beets",
+     "wcs-beets"
+    ]
+   },
+   "water": {
+    "text": "Keep beets well watered through the season; Johnny's notes that steady irrigation also helps prevent scab on the roots.",
+    "sources": [
+     "johnnys-beets"
+    ]
+   },
+   "companions": {
+    "good": [
+     "bush beans",
+     "Brassicas",
+     "corn",
+     "garlic",
+     "kohlrabi",
+     "leeks",
+     "lettuce",
+     "mint"
+    ],
+    "avoid": [
+     "pole beans"
+    ],
+    "sources": [
+     "wcs-beets"
+    ]
+   },
+   "harvest": {
+    "text": "Pull roots at any size; best flavour at full size. Roots 1–3 inches across are the eating size — larger roots turn woody. The greens are edible too.",
+    "sources": [
+     "johnnys-beets",
+     "wcs-beets",
+     "vt-root-crops"
+    ]
+   },
+   "storage": {
+    "text": "Cut the tops off and store roots at 32–33°F and 95% humidity; they keep 3–6 months. Roots also store in the ground, or in moist peat or sand just above freezing.",
+    "sources": [
+     "johnnys-beets",
+     "vt-root-crops",
+     "wcs-beets"
+    ]
+   },
+   "succession": {
+    "text": "Sow every 2–3 weeks, stopping about 8 weeks before regular heavy frosts.",
+    "sources": [
+     "johnnys-beets",
+     "vt-root-crops"
+    ]
+   },
+   "troubles": [
+    {
+     "name": "Beet leaf miner",
+     "text": "Maggots tunnel inside the leaves, leaving blistered trails. Squash the maggots inside the leaf, and cover new plantings with row cover so the flies cannot lay eggs.",
+     "sources": [
+      "wcs-beets"
+     ]
+    },
+    {
+     "name": "Cercospora leaf spot",
+     "text": "Round spots with a purple edge spread across the leaves in warm, wet weather. Prevent it with strict crop rotation and sanitation — move beets to a fresh bed and clean up infected leaves.",
+     "sources": [
+      "wcs-beets",
+      "johnnys-beets"
+     ]
+    }
+   ],
+   "notes": [
+    "The OSU table lists beet seed depth at 3/4–1 inch; Johnny's and West Coast Seeds both say 1/2 inch. The shallower depth is used here.",
+    "Johnny's sows beets every 2 weeks; Virginia Tech plants at 3-week intervals. The range here holds both.",
+    "West Coast Seeds notes that a lack of boron in the soil can cause black cankers inside beet roots."
+   ]
+  },
+  "radishes": {
+   "depth": {
+    "text": "Sow seed 1/4–1/2 inch deep.",
+    "sources": [
+     "wcs-radishes",
+     "osu-oregon-table"
+    ]
+   },
+   "spacing": {
+    "text": "Thin to 1–3 inches apart, in rows 12–18 inches apart.",
+    "sources": [
+     "wcs-radishes",
+     "vt-root-crops"
+    ]
+   },
+   "germination": {
+    "text": "3–10 days to sprout; fastest in 65–75°F soil.",
+    "sources": [
+     "wcs-radishes",
+     "osu-oregon-table"
+    ]
+   },
+   "sowHow": {
+    "text": "Direct sow outdoors and keep the row watered — radishes must grow fast. Sow a short row often, thin quickly, and eat quickly.",
+    "sources": [
+     "wcs-radishes"
+    ]
+   },
+   "sun": {
+    "text": "Full sun; tolerates partial shade.",
+    "sources": [
+     "vt-root-crops",
+     "unh-root-crops"
+    ]
+   },
+   "soil": {
+    "text": "Rich, loamy soil, pH 6.0–6.8.",
+    "sources": [
+     "wcs-radishes",
+     "vt-root-crops"
+    ]
+   },
+   "water": {
+    "text": "Keep the soil evenly moist; radishes need steady water to grow quickly.",
+    "sources": [
+     "wcs-radishes"
+    ]
+   },
+   "companions": {
+    "good": [
+     "beans",
+     "beets",
+     "celeriac",
+     "chervil",
+     "cucumber",
+     "lettuce",
+     "mint",
+     "parsnip",
+     "peas",
+     "spinach",
+     "squash",
+     "tomatoes"
+    ],
+    "avoid": [
+     "agastache (hyssop)",
+     "potatoes"
+    ],
+    "sources": [
+     "wcs-radishes"
+    ]
+   },
+   "harvest": {
+    "text": "Pull promptly, at about the size of large marbles — roughly 1–1 1/2 inches across for spring types.",
+    "sources": [
+     "wcs-radishes",
+     "vt-root-crops"
+    ]
+   },
+   "storage": {
+    "text": "Store at about 33°F and 95% humidity; radishes keep 3–4 weeks.",
+    "sources": [
+     "vt-root-crops"
+    ]
+   },
+   "succession": {
+    "text": "Sow a short row every 10–14 days.",
+    "sources": [
+     "vt-root-crops",
+     "usu-root-planting"
+    ]
+   },
+   "troubles": [
+    {
+     "name": "Root maggots",
+     "text": "Maggots tunnel the roots. Without a floating row cover, West Coast Seeds says to expect to lose 20–30% of the crop to maggots — cover the bed from sowing.",
+     "sources": [
+      "wcs-radishes"
+     ]
+    },
+    {
+     "name": "Flea beetles",
+     "text": "Tiny beetles pepper the leaves with small holes and can set seedlings back. A floating row cover over the young plants keeps them off.",
+     "sources": [
+      "wcs-radishes",
+      "vt-root-crops"
+     ]
+    }
+   ],
+   "notes": [
+    "West Coast Seeds sows radish 1/4 inch deep; the OSU table says 1/2 inch. The range here holds both.",
+    "Virginia Tech warns that in hot weather radishes run to seed and turn hot-flavoured; spring and fall sowings do best."
+   ]
+  },
+  "turnips": {
+   "depth": {
+    "text": "Sow seed 1/4–1/2 inch deep.",
+    "sources": [
+     "wcs-turnips",
+     "usu-rutabagas-turnips"
+    ]
+   },
+   "spacing": {
+    "text": "Thin to 3–6 inches apart, in rows 12–24 inches apart.",
+    "sources": [
+     "usu-rutabagas-turnips",
+     "wcs-turnips",
+     "osu-oregon-table"
+    ]
+   },
+   "germination": {
+    "text": "7–14 days to sprout. Seed can go in once the soil reaches 40°F, and germination is best in 60–85°F soil.",
+    "sources": [
+     "usu-rutabagas-turnips",
+     "wcs-turnips"
+    ]
+   },
+   "sowHow": {
+    "text": "Direct sow in early spring, and again in mid to late summer for a fall crop. Sow short rows, thin quickly, and keep the bed watered.",
+    "sources": [
+     "vt-root-crops",
+     "wcs-turnips"
+    ]
+   },
+   "sun": {
+    "text": "Full sun.",
+    "sources": [
+     "vt-root-crops",
+     "usu-rutabagas-turnips"
+    ]
+   },
+   "soil": {
+    "text": "Humus-rich, deeply worked soil — cultivate about 8 inches deep. Soil pH 5.5–7.0.",
+    "sources": [
+     "wcs-turnips",
+     "vt-root-crops"
+    ]
+   },
+   "water": {
+    "text": "Water regularly, about 1–2 inches a week. Swings between dry and wet make roots crack or turn woody, pithy, and bitter.",
+    "sources": [
+     "usu-rutabagas-turnips"
+    ]
+   },
+   "companions": {
+    "good": [
+     "mint",
+     "peas"
+    ],
+    "avoid": [],
+    "sources": [
+     "wcs-turnips"
+    ]
+   },
+   "harvest": {
+    "text": "Pull roots at about 2–3 inches across. Greens can be picked as needed.",
+    "sources": [
+     "vt-root-crops",
+     "wcs-turnips",
+     "usu-rutabagas-turnips"
+    ]
+   },
+   "storage": {
+    "text": "Store at 33–35°F and 95% humidity; roots keep 2–4 months.",
+    "sources": [
+     "vt-root-crops",
+     "usu-rutabagas-turnips"
+    ]
+   },
+   "succession": {
+    "text": "Sow a short row every 2–4 weeks.",
+    "sources": [
+     "wcs-turnips",
+     "usu-rutabagas-turnips"
+    ]
+   },
+   "troubles": [
+    {
+     "name": "Clubroot",
+     "text": "Roots swell into distorted clubs; plants stunt, yellow, and wilt in hot weather. The organism lives in soil as resting spores for 10 years or more and favours cool, wet, acidic soil. Rotate brassicas out of the bed for at least 3 years, control weedy mustards, and where soil is infested, work in finely ground limestone the year before planting to raise the pH above 7.",
+     "sources": [
+      "pnw-clubroot"
+     ]
+    },
+    {
+     "name": "Flea beetles",
+     "text": "Small black beetles chew tiny holes in the first leaves and can kill seedlings. A floating row cover over the young crop keeps them off.",
+     "sources": [
+      "usu-rutabagas-turnips",
+      "wcs-turnips"
+     ]
+    }
+   ],
+   "notes": [
+    "Utah State thins turnips to 3–4 inches and the OSU table to 4–6 inches; West Coast Seeds thins to 6–8 inches in rows 24 inches apart. The middle range is used here.",
+    "West Coast Seeds sows short rows every 2–3 weeks; Utah State seeds turnips every 4 weeks. The range here holds both.",
+    "West Coast Seeds advises not planting turnips where other Brassicas grew in the past 4 years; that rotation prevents nearly all turnip diseases."
+   ]
+  },
+  "parsnips": {
+   "depth": {
+    "text": "Sow seed 1/4–1/2 inch deep.",
+    "sources": [
+     "wcs-parsnips",
+     "vt-root-crops"
+    ]
+   },
+   "spacing": {
+    "text": "Thin to 3–4 inches apart, in rows 18–24 inches apart.",
+    "sources": [
+     "wcs-parsnips",
+     "vt-root-crops"
+    ]
+   },
+   "germination": {
+    "text": "14–25 days to sprout — parsnips are slow. Best soil temperature 50–75°F.",
+    "sources": [
+     "wcs-parsnips",
+     "osu-oregon-table"
+    ]
+   },
+   "sowHow": {
+    "text": "Direct sow from the last frost to mid-summer, and always use fresh seed — parsnip seed only keeps about a year. Cover the row with compost and/or row cover to shade the soil and hold moisture while the seeds sprout.",
+    "sources": [
+     "wcs-parsnips",
+     "vt-root-crops"
+    ]
+   },
+   "sun": {
+    "text": "Full sun.",
+    "sources": [
+     "vt-root-crops"
+    ]
+   },
+   "soil": {
+    "text": "Deep, loose soil, dug deeply and prepared as for carrots. Soil pH 6.0–6.8.",
+    "sources": [
+     "wcs-parsnips",
+     "unh-root-crops"
+    ]
+   },
+   "water": {
+    "text": "Keep the bed watered, especially while the slow seeds are sprouting.",
+    "sources": [
+     "wcs-parsnips"
+    ]
+   },
+   "harvest": {
+    "text": "Dig roots from late summer into winter as needed. Flavour is best after a couple of good frosts.",
+    "sources": [
+     "wcs-parsnips"
+    ]
+   },
+   "storage": {
+    "text": "Leave roots in the ground until the tops freeze — under a thick straw mulch in a cold winter — or store at 33°F and 95% humidity for 2–6 months.",
+    "sources": [
+     "vt-root-crops",
+     "wcs-parsnips"
+    ]
+   },
+   "troubles": [
+    {
+     "name": "Carrot rust fly",
+     "text": "The same fly that tunnels carrots also injures parsnip roots with its maggots. West Coast Seeds calls a floating row cover the most reliable control.",
+     "sources": [
+      "wcs-parsnips"
+     ]
+    }
+   ],
+   "notes": [
+    "The OSU table spaces parsnips 5–6 inches apart; Virginia Tech and West Coast Seeds thin to 3–4 inches. The closer spacing is used here.",
+    "West Coast Seeds cautions that parsnip leaves can cause a rash or skin burns in sunlight — weed and harvest wearing long sleeves and gloves."
+   ]
+  },
+  "potatoes": {
+   "depth": {
+    "text": "Plant seed pieces 3–5 inches deep, cut side down. Where you hill, about 4 inches deep is enough, with 6–8 inches of soil hilled over the stems as they grow.",
+    "sources": [
+     "umn-potatoes",
+     "osu-oregon-table"
+    ]
+   },
+   "spacing": {
+    "text": "Space pieces 10–15 inches apart, in rows 30–36 inches apart.",
+    "sources": [
+     "umn-potatoes",
+     "osu-oregon-table"
+    ]
+   },
+   "sowHow": {
+    "text": "Buy certified disease-free seed tubers — do not plant grocery-store potatoes. Small whole tubers 1–1 1/4 inches across are ideal. Cut larger tubers into chunks about 1 1/4 inches across with at least one eye each (2–3 eyes is better), and let the cut faces dry for a few days at 60–70°F until they form a tough skin. Hill soil around the stems when they are about a foot tall, and once or twice more as they grow.",
+    "sources": [
+     "umn-potatoes"
+    ]
+   },
+   "sun": {
+    "text": "Full sun — plant in a sunny spot.",
+    "sources": [
+     "umn-potatoes"
+    ]
+   },
+   "soil": {
+    "text": "Well-drained sandy soil. Ideal pH 6.0–6.5, though potatoes tolerate soil down to pH 5.0.",
+    "sources": [
+     "umn-potatoes"
+    ]
+   },
+   "water": {
+    "text": "Soak the bed thoroughly once or twice a week — about 1 inch of water a week. Dry soil early in the season makes knobby or hollow tubers.",
+    "sources": [
+     "umn-potatoes"
+    ]
+   },
+   "harvest": {
+    "text": "Dig new potatoes about 7–8 weeks after planting. For mature storage potatoes, wait until the plants have dried down.",
+    "sources": [
+     "umn-potatoes"
+    ]
+   },
+   "storage": {
+    "text": "Cure tubers in a dark, well-ventilated place at 60–65°F for at least 10 days, then store them dark, cold, and moist at 32–40°F and 95% humidity.",
+    "sources": [
+     "umn-potatoes"
+    ]
+   },
+   "troubles": [
+    {
+     "name": "Late blight",
+     "text": "Irregular water-soaked spots on leaves and stems turn into purplish-black lesions, and in cool, wet weather the disease can kill a whole patch in a few days. There is no cure: pull infected plants, bag them, and put them in the trash — never compost them. The disease also survives in volunteer potatoes, so dig volunteers out.",
+     "sources": [
+      "osu-late-blight",
+      "umn-potatoes"
+     ]
+    },
+    {
+     "name": "Potato scab",
+     "text": "Dark, rough, corky spots on the tuber skin. Scabbed tubers do not rot and are completely edible — just peel them. Keep potatoes, tomatoes, peppers, and eggplant out of the same bed for 3–4 years to break disease cycles.",
+     "sources": [
+      "umn-potatoes"
+     ]
+    }
+   ],
+   "notes": [
+    "Minnesota Extension plants seed pieces 3–5 inches deep; the OSU table says 4–6 inches. The range here holds both.",
+    "Potatoes grow from seed pieces, not true seed, and no source opened in this pass states a sourced emergence time, so the germination field is omitted rather than filled from habit."
+   ]
+  },
+  "onions": {
+   "depth": {
+    "text": "Plant sets about 1 inch deep, root end down. Onion seed for transplants goes 1/4–1/2 inch deep.",
+    "sources": [
+     "johnnys-onion-sets",
+     "wcs-onions"
+    ]
+   },
+   "spacing": {
+    "text": "Space bulb onions 4–6 inches apart, in rows 12–18 inches apart.",
+    "sources": [
+     "johnnys-onion-sets"
+    ]
+   },
+   "germination": {
+    "text": "Seed sprouts in 6–12 days; best soil temperature 70–75°F.",
+    "sources": [
+     "wcs-onions",
+     "osu-oregon-table"
+    ]
+   },
+   "sowHow": {
+    "text": "Start storage onions from seed indoors in late winter or early spring and transplant out 2–4 weeks after the last frost, or plant sets as soon as the soil can be worked in spring. Do not set transplants deep — most of the bulb forms on the soil surface. Closer spacing, harvesting every other onion young, gives green and fresh onions from the same row.",
+    "sources": [
+     "wcs-onions",
+     "johnnys-onion-sets"
+    ]
+   },
+   "sun": {
+    "text": "Full sun — onions require it.",
+    "sources": [
+     "johnnys-onion-sets",
+     "wcs-onions"
+    ]
+   },
+   "soil": {
+    "text": "Fertile, well-drained soil; sandy loam is ideal, and raised beds help on heavy soil. Soil pH 5.5–7.0.",
+    "sources": [
+     "johnnys-onion-sets",
+     "wcs-onions"
+    ]
+   },
+   "water": {
+    "text": "Give alliums about 1 inch of water a week, keeping the top 8–12 inches of soil moist. Stop watering when the necks soften and the tops start to fall.",
+    "sources": [
+     "johnnys-onion-sets",
+     "wcs-onions"
+    ]
+   },
+   "companions": {
+    "good": [
+     "chamomile",
+     "summer savory",
+     "beets",
+     "Brassicas",
+     "carrots",
+     "dill",
+     "kohlrabi",
+     "leeks",
+     "lettuce",
+     "strawberries",
+     "tomatoes"
+    ],
+    "avoid": [
+     "asparagus",
+     "peas"
+    ],
+    "sources": [
+     "wcs-onions"
+    ]
+   },
+   "harvest": {
+    "text": "When about half the tops have fallen, push the rest over, wait a week, then lift the bulbs. Cure them in a single layer in an airy spot out of direct sun until the leaves are dry and crisp.",
+    "sources": [
+     "wcs-onions",
+     "johnnys-onion-sets"
+    ]
+   },
+   "storage": {
+    "text": "Store cured bulbs in mesh sacks or braids in a dry, very cool place above freezing, with air moving around them. Well-cured storage onions keep for months — until late spring.",
+    "sources": [
+     "wcs-onions",
+     "johnnys-onion-sets"
+    ]
+   },
+   "troubles": [
+    {
+     "name": "Onion maggot",
+     "text": "Larvae tunnel into the stem and bulb; plants yellow, go flabby, and die, and infested bulbs rot in storage. WSU's non-chemical management: rotate alliums to a new bed and never plant into ground infested the year before, cover the crop with floating row cover or screen cages to stop egg-laying, and clean up all plant debris and cull bulbs.",
+     "sources": [
+      "wsu-onion-maggot"
+     ]
+    },
+    {
+     "name": "White rot",
+     "text": "Leaves decay at the base, yellow, and topple; roots rot, and fluffy white growth with poppy-seed-sized black dots forms on the bulb. The fungus survives in soil for 20–30 years and attacks only alliums, so prevention is everything: plant only clean material in clean soil, wash soil off tools and equipment before moving to a new bed, and dig out infected plants — with the soil around them — and send them to a landfill or hot composting.",
+     "sources": [
+      "pnw-onion-white-rot"
+     ]
+    }
+   ],
+   "notes": [
+    "The OSU table spaces onions 2–3 inches apart; Johnny's spaces sets 4–6 inches apart. The wider spacing is used here, for full bulbs.",
+    "Johnny's gives onion soil pH as 6.0–7.0; West Coast Seeds gives 5.5–6.5. The range here holds both.",
+    "Johnny's notes that its onion sets are tested and certified free of white rot and parasitic nematodes — one more reason to buy sets and seed stock from a clean source."
+   ]
+  },
+  "green-onions": {
+   "depth": {
+    "text": "Sow scallion seed 1/4–1/2 inch deep.",
+    "sources": [
+     "wcs-onions"
+    ]
+   },
+   "spacing": {
+    "text": "Sow scallions 1–2 inches apart, in rows 6 inches apart.",
+    "sources": [
+     "wcs-onions"
+    ]
+   },
+   "germination": {
+    "text": "Seed sprouts in 6–12 days; best soil temperature 70–75°F.",
+    "sources": [
+     "wcs-onions"
+    ]
+   },
+   "sowHow": {
+    "text": "Direct sow scallions outdoors from 2 weeks after the last frost through late summer. Bunching onions can also come from sets: plant sets and harvest once small bulbs have developed.",
+    "sources": [
+     "wcs-onions",
+     "johnnys-onion-sets"
+    ]
+   },
+   "sun": {
+    "text": "Full sun.",
+    "sources": [
+     "wcs-onions"
+    ]
+   },
+   "soil": {
+    "text": "Fertile, well-drained soil, pH 6.0–6.8 for scallions.",
+    "sources": [
+     "wcs-onions"
+    ]
+   },
+   "water": {
+    "text": "Keep scallions watered — alliums want about 1 inch of water a week.",
+    "sources": [
+     "johnnys-onion-sets"
+    ]
+   },
+   "companions": {
+    "good": [
+     "chamomile",
+     "summer savory",
+     "beets",
+     "Brassicas",
+     "carrots",
+     "dill",
+     "kohlrabi",
+     "leeks",
+     "lettuce",
+     "strawberries",
+     "tomatoes"
+    ],
+    "avoid": [
+     "asparagus",
+     "peas"
+    ],
+    "sources": [
+     "wcs-onions"
+    ]
+   },
+   "harvest": {
+    "text": "Pull scallions as needed once they reach the size you want; from sets, harvest bunching onions once small bulbs have formed.",
+    "sources": [
+     "wcs-onions",
+     "johnnys-onion-sets"
+    ]
+   },
+   "succession": {
+    "text": "Sow scallions every 3 weeks, from 2 weeks after the last frost to late summer.",
+    "sources": [
+     "wcs-onions"
+    ]
+   },
+   "troubles": [
+    {
+     "name": "Onion maggot",
+     "text": "Larvae tunnel into the stem and base; young plants yellow, go flabby, and die. Rotate alliums to a new bed each year, cover the crop with floating row cover to stop egg-laying, and clean up all plant debris and cull bulbs.",
+     "sources": [
+      "wsu-onion-maggot"
+     ]
+    }
+   ],
+   "notes": [
+    "Storage guidance was not sourced in this pass, so that field is omitted rather than filled from habit."
+   ]
+  },
+  "leeks": {
+   "depth": {
+    "text": "Sow seed 1/4 inch deep, about 1/2 inch apart in flats.",
+    "sources": [
+     "wcs-leeks",
+     "osu-oregon-table"
+    ]
+   },
+   "spacing": {
+    "text": "Space transplants 4–8 inches apart, in rows 18 inches apart; rows can be as close as 8 inches in raised beds.",
+    "sources": [
+     "wcs-leeks",
+     "osu-oregon-table"
+    ]
+   },
+   "germination": {
+    "text": "7–16 days to sprout; best soil temperature 50–75°F.",
+    "sources": [
+     "wcs-leeks",
+     "osu-oregon-table"
+    ]
+   },
+   "sowHow": {
+    "text": "Start seed indoors in flats 6–8 weeks before the last frost. Transplant out when the seedlings are about 8 inches tall. The traditional method sets each transplant at the bottom of a 6-inch-deep hole made with a dibber and leaves the hole unfilled — rain washes soil in around the stem and blanches it. Hill soil or straw mulch up the stems to blanch them further.",
+    "sources": [
+     "wcs-leeks",
+     "osu-oregon-table"
+    ]
+   },
+   "sun": {
+    "text": "Full sun.",
+    "sources": [
+     "wcs-leeks"
+    ]
+   },
+   "soil": {
+    "text": "Fertile soil with lots of compost worked in; leeks have short roots, so richness near the surface matters. Soil pH 5.5–6.5.",
+    "sources": [
+     "wcs-leeks"
+    ]
+   },
+   "companions": {
+    "good": [
+     "beets",
+     "carrot",
+     "celery",
+     "onions",
+     "spinach"
+    ],
+    "avoid": [
+     "beans",
+     "peas"
+    ],
+    "sources": [
+     "wcs-leeks"
+    ]
+   },
+   "harvest": {
+    "text": "Dig leeks at any size, as needed. Mulch high up the stems in late fall for winter harvest; if leeks freeze solid, wait for a thaw before digging.",
+    "sources": [
+     "wcs-leeks"
+    ]
+   },
+   "troubles": [
+    {
+     "name": "Onion maggot",
+     "text": "Leeks are one of the hosts WSU lists for onion maggot: larvae tunnel into the stem and bulb, and plants yellow and go flabby. Rotate alliums to a new bed, cover with floating row cover to stop egg-laying, and clean up all plant debris.",
+     "sources": [
+      "wsu-onion-maggot"
+     ]
+    },
+    {
+     "name": "White rot",
+     "text": "The white rot fungus attacks only alliums — onion, leek, and shallot among them — and its resting bodies survive in soil for 20–30 years. Plant only clean material in clean soil, wash soil off tools before moving beds, and dig out infected plants with the soil around them and landfill them.",
+     "sources": [
+      "pnw-onion-white-rot"
+     ]
+    }
+   ],
+   "notes": [
+    "West Coast Seeds also reports grower Linda Gilkeson's method: transplant leeks only as deep as their soil plug, with no dibber hole, and still get tall blanched shanks with no grit between the leaves.",
+    "West Coast Seeds sprouts leeks in 10–16 days; the OSU table says 7–12 days. The range here holds both.",
+    "West Coast Seeds notes that leeks help repel carrot rust flies.",
+    "Watering and storage guidance were not sourced in this pass, so those fields are omitted rather than filled from habit."
+   ]
+  },
+  "celery": {
+   "depth": {
+    "text": "Sow seed no more than 1/4 inch deep.",
+    "sources": [
+     "wcs-celery",
+     "osu-oregon-table"
+    ]
+   },
+   "spacing": {
+    "text": "Space plants 12 inches apart, in rows at least 18 inches apart.",
+    "sources": [
+     "wcs-celery"
+    ]
+   },
+   "germination": {
+    "text": "Germination is slow — up to 20–30 days. Best soil temperature 60–75°F.",
+    "sources": [
+     "wcs-celery"
+    ]
+   },
+   "sowHow": {
+    "text": "Start indoors in late winter to mid-spring, 3 seeds per pot, and thin to the strongest seedling. Transplant out when seedlings are 4–5 inches tall, and only when nights stay reliably at 50°F or warmer — young plants exposed to temperatures below 55°F for several days may bolt early.",
+    "sources": [
+     "wcs-celery"
+    ]
+   },
+   "sun": {
+    "text": "Full sun.",
+    "sources": [
+     "wcs-celery"
+    ]
+   },
+   "soil": {
+    "text": "Rich, moist soil with plenty of compost — celery is a heavy feeder. Soil pH 6.0–6.5.",
+    "sources": [
+     "wcs-celery"
+    ]
+   },
+   "water": {
+    "text": "Water frequently; celery wants rich, constantly moist soil.",
+    "sources": [
+     "wcs-celery"
+    ]
+   },
+   "companions": {
+    "good": [
+     "beans",
+     "Brassicas",
+     "cucumber",
+     "garlic",
+     "leek",
+     "lettuce",
+     "onion",
+     "tomatoes"
+    ],
+    "avoid": [],
+    "sources": [
+     "wcs-celery"
+    ]
+   },
+   "harvest": {
+    "text": "Water the day before harvest for better flavour and storage. Pick outer stalks at any time, or cut the whole plant at the size you want; home gardeners can leave the plant in the ground and take stalks as needed.",
+    "sources": [
+     "wcs-celery"
+    ]
+   },
+   "troubles": [
+    {
+     "name": "Aster yellows",
+     "text": "A phytoplasma disease spread by the aster leafhopper: plants come up small and stunted, with twisted growth and yellow or white discoloration. There is no treatment — remove infected plants, manage weeds around the garden, and use row covers to keep leafhoppers from feeding on the plants.",
+     "sources": [
+      "usu-aster-yellows"
+     ]
+    },
+    {
+     "name": "Black heart",
+     "text": "West Coast Seeds lists black heart among celery's problems and identifies it as a calcium deficiency — the remedy given is to add lime.",
+     "sources": [
+      "wcs-celery"
+     ]
+    }
+   ],
+   "notes": [
+    "The OSU table spaces celery 5 inches apart; West Coast Seeds spaces plants 12 inches apart. The wider spacing is used here.",
+    "West Coast Seeds also lists leaf blight and celery mosaic among celery diseases, and cutworms among its pests, with row covers and collars as early protection against cutworms.",
+    "Storage guidance was not sourced in this pass, so that field is omitted rather than filled from habit."
+   ]
+  },
+  "parsley": {
+   "depth": {
+    "text": "Sow seed 1/4–1/2 inch deep.",
+    "sources": [
+     "johnnys-parsley",
+     "wcs-parsley"
+    ]
+   },
+   "spacing": {
+    "text": "Thin final plants to 6–12 inches apart.",
+    "sources": [
+     "johnnys-parsley",
+     "wcs-parsley"
+    ]
+   },
+   "germination": {
+    "text": "14–30 days at 65–70°F. Parsley is slow — allow at least 3 weeks for seeds to germinate.",
+    "sources": [
+     "johnnys-parsley"
+    ]
+   },
+   "sowHow": {
+    "text": "Start indoors in peat pots or plug trays, or direct sow in spring after the danger of frost has passed. Parsley grows a long taproot that does better left undisturbed, so pots beat bare-root transplanting. For a winter crop in mild areas, sow in late summer and transplant to a warm, sunny spot by September, with cloche protection.",
+    "sources": [
+     "wcs-parsley",
+     "johnnys-parsley"
+    ]
+   },
+   "sun": {
+    "text": "Full sun to partial shade. Summer crops do well with some shade during the day.",
+    "sources": [
+     "wcs-parsley",
+     "johnnys-parsley"
+    ]
+   },
+   "soil": {
+    "text": "Moist, fertile soil in a deeply dug bed, with a generous amount of rotted manure or finished compost worked in several weeks ahead of planting.",
+    "sources": [
+     "johnnys-parsley",
+     "wcs-parsley"
+    ]
+   },
+   "water": {
+    "text": "Water during dry spells.",
+    "sources": [
+     "johnnys-parsley"
+    ]
+   },
+   "companions": {
+    "good": [
+     "asparagus",
+     "carrots",
+     "chives",
+     "corn",
+     "onions",
+     "tomatoes"
+    ],
+    "avoid": [
+     "mint"
+    ],
+    "sources": [
+     "wcs-parsley"
+    ]
+   },
+   "harvest": {
+    "text": "Cut individual sprigs from the outside of the plant, or clip leaves as needed.",
+    "sources": [
+     "wcs-parsley",
+     "johnnys-parsley"
+    ]
+   },
+   "storage": {
+    "text": "Keep freshly cut parsley at 32–36°F and 95% humidity to hold its crispness. Or chop sprigs, pack them into an ice-cube tray, cover with water, and freeze — the frozen cubes keep the flavour for months.",
+    "sources": [
+     "johnnys-parsley",
+     "wcs-parsley"
+    ]
+   },
+   "troubles": [
+    {
+     "name": "Diseases (general)",
+     "text": "Johnny's advises preventing parsley diseases with crop rotation and good sanitation — grow parsley in a fresh bed each year and clean up old plant material.",
+     "sources": [
+      "johnnys-parsley"
+     ]
+    }
+   ],
+   "notes": [
+    "Johnny's thins parsley to 8–12 inches; West Coast Seeds thins final plants to 6 inches. The range here holds both.",
+    "Parsley is a biennial: planted in a well-drained spot it can winter over and produce a crop early the following spring. Johnny's advises mulching where temperatures go below 0°F."
+   ]
+  },
+  "swiss-chard": {
+   "depth": {
+    "sources": [
+     "johnnys-swiss-chard",
+     "osu-oregon-table"
+    ],
+    "text": "Sow seed 1/2 inch deep."
+   },
+   "germination": {
+    "sources": [
+     "osu-oregon-table",
+     "johnnys-swiss-chard"
+    ],
+    "text": "7–14 days in the OSU table. Johnny's says seed germinates in soil from 40–100°F, with an optimum of 86°F."
+   },
+   "harvest": {
+    "sources": [
+     "johnnys-swiss-chard"
+    ],
+    "text": "For bunching chard, cut or snap mature leaves off one at a time; new leaves grow for repeated harvests. For baby leaf, cut when leaves are about 3–6 inches, about an inch above the soil and above the basal plate, and cut again when leaves reach size again."
+   },
+   "notes": [
+    "The OSU table lists chard spacing at 8–12 inches; Johnny's lists 4–6 inches for transplants and for thinned bunching plants. The spacing here follows Johnny's, and the disagreement is recorded rather than averaged.",
+    "Johnny's warns that some varieties may bolt if seedlings sit through prolonged temperatures in the low 50s or below.",
+    "Watering and storage guidance were not sourced in this pass, so those fields are omitted rather than filled from habit."
+   ],
+   "soil": {
+    "sources": [
+     "johnnys-swiss-chard"
+    ],
+    "text": "Soil pH should be over 6.0. Cool and mild weather is preferred, though chard has some heat tolerance, and it may overwinter in mild areas."
+   },
+   "sowHow": {
+    "sources": [
+     "johnnys-swiss-chard"
+    ],
+    "text": "Sow indoors or in a cold frame in early spring, about 5–6 weeks before transplanting out, after heavy frosts become infrequent: 2–3 seeds per cell, thinned to 1–2 plants per cell. Or direct seed from midspring into midsummer, about 6 seeds per foot in rows 12–18 inches apart."
+   },
+   "spacing": {
+    "sources": [
+     "johnnys-swiss-chard"
+    ],
+    "text": "Transplant 4–6 inches apart in rows 12–18 inches apart. For direct-seeded bunching chard, thin to 4–6 inches apart for larger leaves."
+   },
+   "sun": {
+    "sources": [
+     "osu-oregon-table"
+    ],
+    "text": "Leafy vegetables prefer full sun, but tolerate partial shade."
+   },
+   "troubles": [
+    {
+     "name": "Cercospora leaf spot",
+     "sources": [
+      "johnnys-swiss-chard"
+     ],
+     "text": "Rotate crops to prevent Cercospora leaf spot and other diseases and pests."
+    }
+   ]
+  },
+  "kohlrabi": {
+   "depth": {
+    "sources": [
+     "osu-oregon-table"
+    ],
+    "text": "Sow seed 1/2 inch deep."
+   },
+   "germination": {
+    "sources": [
+     "osu-oregon-table"
+    ],
+    "text": "3–10 days. The OSU table lists soil temperatures of 40–90°F for germination, with 80°F as the optimum it gives."
+   },
+   "notes": [
+    "Kohlrabi appears in the OSU table and in the WSU brassica family list, but neither opened source gave kohlrabi harvest signs, storage, soil, or watering guidance, so those fields are omitted rather than filled from habit."
+   ],
+   "sowHow": {
+    "sources": [
+     "osu-oregon-table"
+    ],
+    "text": "Grow from transplants or direct seed. The OSU table lists starting indoors 3–4 weeks before transplanting."
+   },
+   "spacing": {
+    "sources": [
+     "osu-oregon-table"
+    ],
+    "text": "Set or thin plants 7–9 inches apart."
+   },
+   "sun": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Choose a site with sunlight, access to water, and good drainage."
+   },
+   "troubles": [
+    {
+     "name": "Clubroot",
+     "sources": [
+      "wsu-brassicas"
+     ],
+     "text": "Clubroot affects all members of the brassica family, kohlrabi included. Prevent it: rotate crops, keep soil pH above 6.8, provide adequate calcium and magnesium, give good drainage, and remove weeds."
+    },
+    {
+     "name": "Flea beetles",
+     "sources": [
+      "wsu-brassicas"
+     ],
+     "text": "Flea beetles affect all brassicas. Reduce weeds and use row covers."
+    }
+   ]
+  },
+  "bok-choy": {
+   "depth": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Sow seed 1/4 inch deep."
+   },
+   "germination": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "2–15 days in 40–75°F soil."
+   },
+   "harvest": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Harvest young leaves or full heads."
+   },
+   "notes": [
+    "The WSU table covers pac choi together with mustard greens (Brassica rapa and Brassica juncea), so the depth, germination, and spacing figures here are the table's shared figures for that pairing.",
+    "Soil, watering, and storage guidance were not sourced in this pass, so those fields are omitted rather than filled from habit."
+   ],
+   "sowHow": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Direct seed in early spring or late summer. Avoid heat to prevent bolting."
+   },
+   "spacing": {
+    "sources": [
+     "wsu-brassicas"
+    ],
+    "text": "Thin plants to 6–18 inches apart, in rows 9–18 inches apart."
+   },
+   "sun": {
+    "sources": [
+     "osu-oregon-table"
+    ],
+    "text": "Leafy vegetables prefer full sun, but tolerate partial shade."
+   },
+   "troubles": [
+    {
+     "name": "Bolting in heat",
+     "sources": [
+      "wsu-brassicas"
+     ],
+     "text": "Pac choi bolts in heat. The WSU guide's instruction is simple: avoid heat — sow in early spring or late summer instead of midsummer."
+    },
+    {
+     "name": "Flea beetles",
+     "sources": [
+      "wsu-brassicas"
+     ],
+     "text": "Flea beetles affect all brassicas. Reduce weeds and use row covers."
+    }
+   ]
+  },
+  "rutabaga": {
+   "depth": {
+    "text": "Sow seed 1/4–1/2 inch deep.",
+    "sources": [
+     "wcs-rutabaga",
+     "usu-rutabagas-turnips"
+    ]
+   },
+   "spacing": {
+    "text": "Thin to 4–8 inches apart, in rows 18–30 inches apart.",
+    "sources": [
+     "wcs-rutabaga",
+     "usu-rutabagas-turnips"
+    ]
+   },
+   "germination": {
+    "text": "7–15 days to sprout; best soil temperature 65–70°F.",
+    "sources": [
+     "wcs-rutabaga"
+    ]
+   },
+   "sowHow": {
+    "text": "Direct sow about 3 weeks either side of the summer solstice. Rutabaga is a fall crop — root development is best in cool weather below 75°F.",
+    "sources": [
+     "wcs-rutabaga",
+     "usu-rutabagas-turnips"
+    ]
+   },
+   "sun": {
+    "text": "Full sun.",
+    "sources": [
+     "usu-rutabagas-turnips"
+    ]
+   },
+   "soil": {
+    "text": "Rich, loamy, fertile, well-drained soil with lots of organic matter. Soil pH 6.0–6.8.",
+    "sources": [
+     "wcs-rutabaga",
+     "usu-rutabagas-turnips"
+    ]
+   },
+   "water": {
+    "text": "Water regularly, about 1–2 inches a week, and generously in hot, dry weather. Uneven moisture makes roots crack or turn woody and bitter.",
+    "sources": [
+     "usu-rutabagas-turnips",
+     "wcs-rutabaga"
+    ]
+   },
+   "harvest": {
+    "text": "Pull when roots are about 4 inches across — larger than a tennis ball.",
+    "sources": [
+     "usu-rutabagas-turnips",
+     "wcs-rutabaga"
+    ]
+   },
+   "storage": {
+    "text": "Store cool and moist, at about 35°F and 95% humidity, for 3–4 months; or keep roots in dry sand or peat, where they store for months. Roots can also overwinter in the ground under a heavy mulch.",
+    "sources": [
+     "usu-rutabagas-turnips",
+     "wcs-rutabaga"
+    ]
+   },
+   "troubles": [
+    {
+     "name": "Clubroot",
+     "text": "Roots swell into distorted clubs; plants stunt, yellow, and wilt in hot weather. The organism lives in soil as resting spores for 10 years or more and favours cool, wet, acidic soil. Rotate brassicas out of the bed for at least 3 years, control weedy mustards, and where soil is infested, work in finely ground limestone the year before planting to raise the pH above 7.",
+     "sources": [
+      "pnw-clubroot"
+     ]
+    },
+    {
+     "name": "Root maggots and flea beetles",
+     "text": "Root maggots tunnel the roots and flea beetles chew the seedling leaves. A floating row cover over the seedlings protects against both.",
+     "sources": [
+      "wcs-rutabaga"
+     ]
+    }
+   ],
+   "notes": [
+    "West Coast Seeds thins rutabaga to 6–8 inches; Utah State thins to 4–6 inches. The range here holds both."
+   ]
+  },
+  "garlic": {
+   "depth": {
+    "text": "Plant cloves flat side down, point up, with the top of the clove 2 inches below the soil surface.",
+    "sources": [
+     "wsu-garlic"
+    ]
+   },
+   "spacing": {
+    "text": "Space cloves 4–6 inches apart, in rows 12–24 inches apart.",
+    "sources": [
+     "wsu-garlic"
+    ]
+   },
+   "sowHow": {
+    "text": "Plant in fall — in western Washington, late fall (November); in eastern Washington, September–October. Buy certified seed garlic; do not plant grocery-store bulbs, which are more likely to carry disease that then persists in your soil. Break each bulb apart the same day you plant, and plant only large, clean, dry cloves. Mulch the bed with 3–4 inches of straw.",
+    "sources": [
+     "wsu-garlic"
+    ]
+   },
+   "sun": {
+    "text": "Full sun, at least 6 hours a day.",
+    "sources": [
+     "wsu-garlic"
+    ]
+   },
+   "soil": {
+    "text": "Loosen the soil well for drainage and work in compost before planting.",
+    "sources": [
+     "wsu-garlic"
+    ]
+   },
+   "water": {
+    "text": "About 1 inch of water a week in spring and early summer. Stop watering when the tops begin to fall and dry, about 2–4 weeks before harvest.",
+    "sources": [
+     "wsu-garlic"
+    ]
+   },
+   "harvest": {
+    "text": "Harvest when the lower third of the leaves have turned yellow — typically late June to mid-July. Loosen bulbs with a trowel or spade; do not pull or bruise them.",
+    "sources": [
+     "wsu-garlic"
+    ]
+   },
+   "storage": {
+    "text": "Cure bulbs with the tops on in a dry, cool, well-ventilated place. After several weeks, trim the tops to about 1 inch and trim the roots. Cured garlic keeps for several months.",
+    "sources": [
+     "wsu-garlic"
+    ]
+   },
+   "troubles": [
+    {
+     "name": "White rot",
+     "text": "Leaves yellow and collapse and bulbs rot, with fluffy white growth on the roots and bulb. The fungus survives in soil for 20–30 years and attacks only alliums. Plant only pathogen-free cloves in clean soil, and never carry soil from an infested bed to a clean one on tools, boots, or equipment.",
+     "sources": [
+      "pnw-onion-white-rot",
+      "wsu-garlic"
+     ]
+    },
+    {
+     "name": "Bloat nematode (stem and bulb nematode)",
+     "text": "Infected cloves usually look fine, but in the field the tops yellow and ripen too early, bulbs can separate from the base plate, and badly hit cloves break down into a spongy mass. It spreads mainly through infected planting stock: plant only nematode-free cloves, pull out volunteer garlic, and keep garlic out of infested ground for at least 2 years.",
+     "sources": [
+      "pnw-garlic-nematode"
+     ]
+    }
+   ],
+   "notes": [
+    "WSU advises discarding any cloves that are discoloured, stippled, or bruised, and rotating garlic and onions out of a bed for 3 years to manage soil-borne disease.",
+    "WSU warns that garlic competes poorly with weeds — keep the bed weeded.",
+    "Garlic is planted as cloves, not seed, and no source opened in this pass gives a sourced sprouting time for cloves, so the germination field is omitted rather than filled from habit."
+   ]
+  },
+  "cereal-rye": {
+   "depth": {
+    "sources": [
+     "wsu-cover-management",
+     "uw-cover-crops-101",
+     "johnnys-winter-rye"
+    ],
+    "text": "Sow seed 3/4 to 1 1/2 inches deep."
+   },
+   "germination": {
+    "sources": [
+     "wsu-cover-management"
+    ],
+    "text": "Can germinate in soil as cold as 35-40°F. No source used here gives a days-to-germination range, so none is stated."
+   },
+   "notes": [
+    "A common mixture is cereal rye with hairy vetch, planted at 1/4 cup rye plus 3/4 cup vetch per 100 sq ft; the vetch germinates in fall, grows slowly until spring, then climbs the upright rye.",
+    "Johnny's also lists rye's allelopathic weed control as a benefit. The waiting period in the termination field is the sourced general rule for cover crop residue inhibiting germination; no opened source here puts a separate, rye-only number of weeks on allelopathy, so none is stated."
+   ],
+   "soil": {
+    "sources": [
+     "johnnys-winter-rye",
+     "umn-cover-crop-research"
+    ],
+    "text": "Adaptable to most soil types. More productive in lighter soils than in heavy clay, and prefers dry soils over wet, poorly drained soils. Ideal pH is 5.0-7.0. It grows better on infertile, sandy, or acidic soil than other cover crops."
+   },
+   "sowHow": {
+    "sources": [
+     "wsu-cover-management",
+     "osu-cover-crops-winter"
+    ],
+    "text": "Broadcast or drill in fall. Rake or lightly till the large seed in for good seed-to-soil contact, and keep the soil moist once germination begins, because a dried-out seedling is quickly lost. Rye is a good choice for late planting because it germinates at low soil temperatures."
+   },
+   "spacing": {
+    "sources": [
+     "wsu-cover-west",
+     "johnnys-winter-rye"
+    ],
+    "text": "Broadcast evenly at 1 cup of seed per 100 sq ft for a winter cover crop. If you broadcast instead of drilling, use a slightly higher rate, then lightly harrow or press the seed in."
+   },
+   "sun": {
+    "sources": [
+     "johnnys-winter-rye"
+    ],
+    "text": "Full sun."
+   },
+   "termination": {
+    "sources": [
+     "wsu-cover-west",
+     "johnnys-winter-rye",
+     "wsu-cover-management"
+    ],
+    "text": "Turn under, mow, or crimp in spring before the crop sets seed. Rye grows fast in spring and can become hard to turn under, so mow or weed-whack a heavy stand first. Tillage works best before the flower heads emerge; after flowers begin to shed pollen, mowing or crimping lays a dense mulch mat. Wait 3 to 4 weeks after terminating before planting vegetable seed: freshly terminated cover crop residue can inhibit seed germination, and large amounts of growth take 4 to 6 weeks to break down."
+   },
+   "troubles": [
+    {
+     "name": "Nitrogen tie-up",
+     "sources": [
+      "wsu-cover-west",
+      "wsu-cover-management"
+     ],
+     "text": "Cereals let go to flowering or seed set can reduce the nitrogen available to the next crop. Terminate earlier, or grow rye with a legume, to reduce this."
+    },
+    {
+     "name": "Volunteer rye from seed set",
+     "sources": [
+      "wsu-cover-west"
+     ],
+     "text": "Terminate winter cover crops before they go to seed, or the rye can come back as a weed in the next crop."
+    }
+   ],
+   "water": {
+    "sources": [
+     "wsu-cover-management",
+     "osu-cover-crops-winter"
+    ],
+    "text": "Winter cover crops seldom need irrigation west of the Cascades. Water at sowing if the weather is still dry, and keep the seedbed moist until fall rains begin."
+   }
+  },
+  "crimson-clover": {
+   "depth": {
+    "sources": [
+     "uw-cover-crops-101",
+     "wsu-cover-management"
+    ],
+    "text": "Sow seed 1/4 to 1/2 inch deep. Small seed must stay close to the surface; it does not have the stored energy to reach the surface if planted too deep."
+   },
+   "notes": [
+    "WSU lists crimson clover as a good option where early crops will be planted the following year, because it is easier to incorporate than the vetches.",
+    "Depth sources differ slightly: UW gives 1/4-1/2 inch for crimson clover; WSU's general range for small seeds such as clover is 1/4-3/4 inch. The narrower UW range is used here."
+   ],
+   "soil": {
+    "sources": [
+     "umn-cover-crop-research",
+     "wsu-cover-west"
+    ],
+    "text": "Grows well in any type of well-drained soil and thrives in cool, moist conditions once established. Legumes in general perform poorly in wet soils and in soils low in phosphorus, potassium, or pH."
+   },
+   "sowHow": {
+    "sources": [
+     "osu-cover-crops-winter",
+     "wsu-cover-west"
+    ],
+    "text": "Broadcast by September or early October; it grows best when planted in the first half of September. Mix small seed with sand to broadcast it evenly, rake it in lightly, and water it in. If this legume has not grown in the bed before, mix the compatible Rhizobium inoculant with the seed before planting, or buy pre-inoculated seed, so the roots form active pink nodules and fix nitrogen."
+   },
+   "spacing": {
+    "sources": [
+     "wsu-cover-west"
+    ],
+    "text": "Broadcast evenly at 1/4 cup of seed per 100 sq ft for a winter cover crop. It is often grown alone or with annual ryegrass; the WSU mixture rate is 1/4 cup annual ryegrass plus 3/8 cup crimson clover per 100 sq ft."
+   },
+   "termination": {
+    "sources": [
+     "wsu-cover-west",
+     "wsu-cover-management",
+     "osu-cover-crops-winter",
+     "umn-cover-crop-research"
+    ],
+    "text": "Crimson clover is easy to turn under and does not produce excessive growth. Mow or till it in, in spring. For the most nitrogen, incorporate legumes at the late-vegetative to early flowering stage, before seed set. Wait 3 to 4 weeks after incorporating before planting vegetables so the residue breaks down well."
+   },
+   "troubles": [
+    {
+     "name": "Poor weed competition",
+     "sources": [
+      "wsu-cover-west"
+     ],
+     "text": "Crimson clover does not compete well with weeds, and it does not compete as well with cereals, so it is often grown alone or with annual ryegrass rather than with a vigorous cereal."
+    },
+    {
+     "name": "Can become weedy",
+     "sources": [
+      "umn-cover-crop-research",
+      "osu-cover-crops-winter"
+     ],
+     "text": "Crimson clover has the potential to become weedy. Kill it before it sets seed unless you want it to reseed."
+    }
+   ],
+   "water": {
+    "sources": [
+     "wsu-cover-management",
+     "osu-cover-crops-winter"
+    ],
+    "text": "Winter cover crops seldom need irrigation west of the Cascades. Keep the area irrigated if the weather stays dry after sowing, until fall rains begin."
+   }
+  },
+  "hairy-vetch": {
+   "depth": {
+    "sources": [
+     "wsu-cover-management",
+     "uw-cover-crops-101"
+    ],
+    "text": "Sow seed 1/2 to 1 1/2 inches deep."
+   },
+   "notes": [
+    "Depth sources differ: UW gives 1-1 1/2 inches for hairy vetch; WSU's general range for large seeds such as vetch is 1/2-1 1/2 inches. The range here holds both.",
+    "No opened source here gives a hard-seed percentage for hairy vetch, so no percentage is stated; the sourced caution is the seed-set warning above."
+   ],
+   "soil": {
+    "sources": [
+     "wsu-cover-management",
+     "wsu-cover-west"
+    ],
+    "text": "Hairy vetch survives wet soils better than crimson clover or winter peas. Legumes in general perform poorly in soils low in phosphorus, potassium, or pH."
+   },
+   "sowHow": {
+    "sources": [
+     "osu-cover-crops-winter",
+     "wsu-cover-management",
+     "wsu-cover-west"
+    ],
+    "text": "Broadcast in fall and rake the fairly large seed in lightly for good seed-to-soil contact. Keep the soil moist once germination begins. If this legume has not grown in the bed before, mix the compatible Rhizobium inoculant with the seed before planting, or buy pre-inoculated seed, so the roots form active pink nodules and fix nitrogen. Vetch germinates in fall but grows slowly until spring, then grows quickly and climbs with its tendrils."
+   },
+   "spacing": {
+    "sources": [
+     "wsu-cover-west"
+    ],
+    "text": "Broadcast evenly at 1/2 cup of seed per 100 sq ft for a winter cover crop. In the common rye and hairy vetch mixture, use 1/4 cup rye plus 3/4 cup vetch per 100 sq ft."
+   },
+   "termination": {
+    "sources": [
+     "wsu-cover-west",
+     "wsu-cover-management",
+     "osu-cover-crops-winter"
+    ],
+    "text": "Terminate before it sets seed. For the most nitrogen, incorporate at the late-vegetative to early flowering stage. Crimping does not terminate legumes well; mow or cut with a scythe, grass whip, or string trimmer, or till it in. Its tendrils can wrap around tiller tines and make turning under harder. Wait 3 to 4 weeks after terminating before planting vegetable seed, because fresh residue can inhibit germination."
+   },
+   "troubles": [
+    {
+     "name": "Becomes a weed if it sets seed",
+     "sources": [
+      "wsu-cover-west"
+     ],
+     "text": "Hairy vetch should be terminated before it sets seed to prevent it from becoming a weed."
+    },
+    {
+     "name": "Hard to turn under",
+     "sources": [
+      "wsu-cover-west",
+      "wsu-cover-management"
+     ],
+     "text": "The tendrils that let vetch climb other plants can also wrap around tiller tines, making it more difficult to turn the crop under with a rototiller. Crimson clover is easier to incorporate if you are working a large area with hand tools."
+    }
+   ],
+   "water": {
+    "sources": [
+     "wsu-cover-management",
+     "osu-cover-crops-winter"
+    ],
+    "text": "Winter cover crops seldom need irrigation west of the Cascades. Keep the seedbed moist after sowing if the weather is dry, until fall rains begin."
+   }
+  },
+  "winter-wheat": {
+   "depth": {
+    "sources": [
+     "uw-cover-crops-101",
+     "wsu-cover-management"
+    ],
+    "text": "Sow seed 3/4 to 1 1/2 inches deep."
+   },
+   "germination": {
+    "sources": [
+     "wsu-cover-management"
+    ],
+    "text": "Can germinate when the soil temperature is above 40-45°F. No source used here gives a days-to-germination range, so none is stated."
+   },
+   "notes": [
+    "WSU's management fact sheet gives a higher wheat rate, 1 1/2 cups per 100 sq ft, for the cool-season niche, where it advises seeding rates about 50% greater than normal to improve establishment. The spacing field uses the standard winter cover crop rate from FS111E.",
+    "Annual ryegrass tolerates wet soils better than winter wheat, so wheat is the weaker choice for a bed that stays wet in winter."
+   ],
+   "sowHow": {
+    "sources": [
+     "wsu-cover-west",
+     "wsu-cover-management"
+    ],
+    "text": "Broadcast or drill in fall, for mid- to late-season planting. Do not plant before late September; earlier planting makes wheat more susceptible to disease and premature death. Rake or lightly till the large seed in for good seed-to-soil contact, and keep the soil moist once germination begins."
+   },
+   "spacing": {
+    "sources": [
+     "wsu-cover-west"
+    ],
+    "text": "Broadcast evenly at 1 cup of seed per 100 sq ft for a winter cover crop."
+   },
+   "termination": {
+    "sources": [
+     "wsu-cover-west",
+     "wsu-cover-management",
+     "uw-cover-crops-101"
+    ],
+    "text": "Turn under, mow, or crimp in spring before the crop sets seed. Wheat does not grow as vigorously as rye in early spring and is more herbaceous, so it may decompose faster when turned back into the soil. Wait 3 to 4 weeks after terminating before planting vegetable seed, and allow 4 to 6 weeks for large amounts of growth to break down."
+   },
+   "troubles": [
+    {
+     "name": "Disease from early planting",
+     "sources": [
+      "wsu-cover-west"
+     ],
+     "text": "Planting winter wheat before late September makes it more susceptible to disease and premature death."
+    },
+    {
+     "name": "Nitrogen tie-up if let mature",
+     "sources": [
+      "wsu-cover-management"
+     ],
+     "text": "Cereals terminated at flowering or later become fibrous and tie up soil nitrogen as they decompose. Terminate earlier, or grow the cereal with a legume, to reduce this."
+    }
+   ],
+   "water": {
+    "sources": [
+     "wsu-cover-management",
+     "osu-cover-crops-winter"
+    ],
+    "text": "Winter cover crops seldom need irrigation west of the Cascades. Water at sowing if the weather is still dry, and keep the seedbed moist until fall rains begin."
+   }
+  },
+  "winter-oats": {
+   "depth": {
+    "sources": [
+     "uw-cover-crops-101",
+     "wsu-cover-management"
+    ],
+    "text": "Sow seed 3/4 to 1 1/2 inches deep."
+   },
+   "germination": {
+    "sources": [
+     "wsu-cover-management"
+    ],
+    "text": "Can germinate in soil at 40-45°F. No source used here gives a days-to-germination range, so none is stated."
+   },
+   "notes": [
+    "WSU's management fact sheet gives a higher oat rate, 2 1/2 cups per 100 sq ft, for the cool-season niche, where it advises seeding rates about 50% greater than normal. The spacing field uses the standard winter cover crop rate from FS111E.",
+    "A common mixture is winter oats with common vetch, at 1/2 cup oats plus 3/4 cup vetch per 100 sq ft."
+   ],
+   "soil": {
+    "sources": [
+     "wsu-cover-west"
+    ],
+    "text": "Oats tolerate wet and heavy soils better than many other cover crops, and grow vigorously when the soil is warm."
+   },
+   "sowHow": {
+    "sources": [
+     "wsu-cover-management",
+     "wsu-cover-west"
+    ],
+    "text": "Broadcast or drill in fall and rake or lightly till the large seed in for good seed-to-soil contact. Keep the soil moist once germination begins. Use a winter oat type for a winter cover crop; spring oat types behave differently over winter (see notes)."
+   },
+   "spacing": {
+    "sources": [
+     "wsu-cover-west"
+    ],
+    "text": "Broadcast evenly at 1 1/2 cups of seed per 100 sq ft for winter oats as a winter cover crop."
+   },
+   "termination": {
+    "sources": [
+     "wsu-cover-management",
+     "osu-cover-crops-winter",
+     "wsu-cover-west",
+     "uw-cover-crops-101"
+    ],
+    "text": "Turn under, mow, or crimp in spring before the crop sets seed. Wait 3 to 4 weeks after terminating before planting vegetable seed, because fresh residue can inhibit germination, and allow 4 to 6 weeks for large amounts of growth to break down. If a spring oat type winterkills, the dead mulch is easy to reincorporate in spring."
+   },
+   "troubles": [
+    {
+     "name": "Winterkill in spring oat types",
+     "sources": [
+      "wsu-cover-west"
+     ],
+     "text": "Spring oats planted for winter cover may winterkill, depending on location and weather, and WSU's winter table calls winterkill likely for spring oats. Winter oat types are more winter hardy and are unlikely to winterkill."
+    },
+    {
+     "name": "Nitrogen tie-up if let mature",
+     "sources": [
+      "wsu-cover-management"
+     ],
+     "text": "Cereals terminated at flowering or later become fibrous and tie up soil nitrogen as they decompose. Terminate earlier, or grow the cereal with a legume, to reduce this."
+    }
+   ],
+   "water": {
+    "sources": [
+     "wsu-cover-management",
+     "osu-cover-crops-winter"
+    ],
+    "text": "Winter cover crops seldom need irrigation west of the Cascades. Water at sowing if the weather is still dry, and keep the seedbed moist until fall rains begin."
+   }
+  },
+  "annual-ryegrass": {
+   "depth": {
+    "sources": [
+     "uw-cover-crops-101",
+     "johnnys-ryegrass",
+     "wsu-cover-management"
+    ],
+    "text": "Sow seed 1/4 to 1/2 inch deep, or broadcast on the surface and keep it moist. Small seed must stay close to the surface; it does not have the stored energy to reach the surface if planted too deep."
+   },
+   "germination": {
+    "sources": [
+     "johnnys-ryegrass"
+    ],
+    "text": "Germinates and establishes more quickly than winter rye. No source used here gives a days-to-germination range, so none is stated."
+   },
+   "notes": [
+    "Depth sources differ slightly: UW gives 1/4-1/2 inch and Johnny's gives 1/2 inch drilled, while WSU's general range for small seeds is 1/4-3/4 inch. The range here holds the crop-specific sources.",
+    "A common mixture is annual ryegrass with crimson clover, at 1/4 cup ryegrass plus 3/8 cup crimson clover per 100 sq ft."
+   ],
+   "soil": {
+    "sources": [
+     "johnnys-ryegrass",
+     "umn-cover-crop-research",
+     "wsu-cover-west"
+    ],
+    "text": "Prefers full sun, medium-to-high fertility, and good drainage, but will grow in almost any soil type. Ideal pH is 6.0-7.0. It tolerates flooding and short-term wet soil, and grows best in fertile, well-drained loam or sandy loam."
+   },
+   "sowHow": {
+    "sources": [
+     "johnnys-ryegrass",
+     "osu-cover-crops-winter",
+     "umn-cover-crop-research"
+    ],
+    "text": "Broadcast spring through early fall, or drill shallow. Mix small seed with sand to broadcast it evenly, and make sure the seed has good soil contact and enough moisture to germinate. It is relatively shade-tolerant and can be interseeded into standing crops."
+   },
+   "spacing": {
+    "sources": [
+     "wsu-cover-west",
+     "johnnys-ryegrass"
+    ],
+    "text": "Broadcast evenly at 1/2 cup of seed per 100 sq ft for a winter cover crop. Johnny's gives the same job as 1/2-1 lb per 1,000 sq ft; combined with a legume, seed ryegrass at 1/3 and clover at 2/3 of their single-crop rates."
+   },
+   "sun": {
+    "sources": [
+     "johnnys-ryegrass",
+     "umn-cover-crop-research"
+    ],
+    "text": "Prefers full sun. It is relatively shade-tolerant, so it can be interseeded into corn or soybeans."
+   },
+   "termination": {
+    "sources": [
+     "johnnys-ryegrass",
+     "wsu-cover-west",
+     "uw-cover-crops-101"
+    ],
+    "text": "Terminate before seed set, as ryegrass can become weedy. Tillage in the vegetative stage can work but may take multiple passes; mowing alone does not reliably kill it, and it regrows readily after mowing. Tarping for 2 to 3 weeks can be effective, especially in warmer months. Do not seed the next crop until at least 3 to 4 weeks after tilling ryegrass under, because of temporary nitrogen tie-up."
+   },
+   "troubles": [
+    {
+     "name": "Persists like a perennial",
+     "sources": [
+      "wsu-cover-west"
+     ],
+     "text": "Once established, annual ryegrass can be harder to till under than cereals. It regrows readily after mowing and can persist like a perennial, making it a potential weed when used as a winter cover crop."
+    },
+    {
+     "name": "Nitrogen tie-up after tilling under",
+     "sources": [
+      "johnnys-ryegrass"
+     ],
+     "text": "Suppression of the following crop can occur after ryegrass because of temporary tie-up of nitrogen in the soil. Wait at least 3 to 4 weeks after tilling under before seeding the next crop."
+    }
+   ],
+   "water": {
+    "sources": [
+     "johnnys-ryegrass",
+     "wsu-cover-management"
+    ],
+    "text": "If you broadcast the seed, ensure adequate moisture so it can germinate properly. Winter cover crops seldom need irrigation west of the Cascades once fall rains begin."
+   }
+  }
+ }
+}

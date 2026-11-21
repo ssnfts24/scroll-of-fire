@@ -195,3 +195,33 @@
 @media (max-width: 720px) {
   .garden-beds { grid-template-columns: 1fr; }
 }
+
+/* The growing guides — the teaching layer. */
+#garden-guide-crop {
+  background: #0d1322; color: inherit; border: 1px solid rgba(212,175,55,0.45);
+  border-radius: 0.45rem; padding: 0.35rem 0.5rem; font: inherit;
+}
+.garden-btn-guide { min-height: 36px; padding: 0.35rem 0.8rem; font-size: 0.88rem; margin-top: 0.3rem; }
+.garden-guide-card {
+  margin-top: 1rem; text-align: left;
+  padding: 1.1rem 1.2rem; border-radius: 18px;
+  border: 1px solid rgba(140, 220, 160, 0.4);
+  background:
+    radial-gradient(circle at 15% 0%, rgba(159, 232, 193, 0.08), transparent 40%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015));
+}
+.garden-guide-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.garden-guide-head h3 { margin: 0; color: var(--gold, #f3c97a); }
+.garden-btn-guide-close { margin-top: 0; }
+.garden-guide-card h4 { margin: 1rem 0 0.35rem; color: var(--gold, #f3c97a); }
+.garden-guide-purpose { font-style: italic; }
+.garden-guide-county, .garden-guide-maturity { font-size: 0.95rem; }
+.garden-guide-fence {
+  font-size: 0.92rem; padding: 0.5rem 0.75rem; border-left: 3px solid rgba(212,175,55,0.6);
+  background: rgba(212, 175, 55, 0.05); border-radius: 0 0.4rem 0.4rem 0;
+}
+.garden-guide-when, .garden-guide-rows { margin: 0.3rem 0 0; padding-left: 1.2rem; }
+.garden-guide-when li, .garden-guide-rows li { margin: 0.3rem 0; line-height: 1.5; }
+.garden-guide-note { font-size: 0.92rem; color: var(--muted); }
+.garden-guide-sources { font-size: 0.85rem; color: var(--muted); margin-top: 1rem; }
+.garden-guide-empty { color: var(--muted); }
