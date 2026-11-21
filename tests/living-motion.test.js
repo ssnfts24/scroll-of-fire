@@ -56,6 +56,7 @@ test("hover and press answers live only in the motion-safe media query", () => {
   const block = css.slice(start, css.indexOf("/* Hidden tab:", start));
   assert.match(block, /translate:\s*0 -2px/);
   assert.match(block, /:active\s*\{[^}]*scale:/);
+  assert.match(block, /\.living-nav a:active\s*\{[^}]*background:\s*rgba\(243, 201, 122, 0\.12\)/);
   assert.match(block, /\.ld-moon-line\s*\{[^}]*animation:\s*lui-soft-in/);
   assert.match(block, /\.homepage-sphere-frame::before\s*\{[^}]*animation:\s*lui-frame-breathe/);
   assert.match(block, /\.homepage-sphere-frame::before\s*\{[^}]*pointer-events:\s*none/);
