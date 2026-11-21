@@ -262,6 +262,74 @@
     };
   }
 
+  /* ── Phase 3 (Sphere design): the day's window events ────────
+   *
+   * windowEventsForDate(data, countyId, isoDate) — the same
+   * counting adviceForDate does, read as events on one day:
+   * which planting windows OPEN on this date, which CLOSE on
+   * it, and which stand open across it — per crop, per window
+   * kind, in civil dates. The Sphere's Farm Ring readout speaks
+   * these; nothing here generates a fact the dataset does not
+   * carry, and no moon timing is produced or touched. Windows
+   * from the years either side are counted too, so an indoor
+   * window that opens in December for next spring's crop is an
+   * event of that December day, and a window closing just past
+   * a year turn is still a closing. */
+
+  const WINDOW_KINDS = [
+    ["indoor", "start indoors"],
+    ["transplant", "goes out"],
+    ["sow", "direct sow"],
+    ["fall", "fall sowing"]
+  ];
+
+  function toISODate(date) {
+    return date.toISOString().slice(0, 10);
+  }
+
+  function windowEventsForDate(data, countyId, isoDate) {
+    const date = parseISODate(isoDate);
+    const location = (data.locations || []).find(l => l.id === countyId) || null;
+    if (!date || !location) {
+      return {
+        ok: false,
+        reason: !date ? "That date could not be read." : "That county is not in the farm data yet.",
+        opening: [],
+        closing: [],
+        openNow: []
+      };
+    }
+    const year = date.getUTCFullYear();
+    const opening = [];
+    const closing = [];
+    const openNow = [];
+    for (const crop of data.crops || []) {
+      for (const y of [year - 1, year, year + 1]) {
+        const w = cropWindows(crop, location, y);
+        for (const [kind, kindLabel] of WINDOW_KINDS) {
+          const win = w[kind];
+          if (!win) continue;
+          const entry = {
+            crop: crop.name,
+            cropId: crop.id,
+            kind,
+            kindLabel,
+            start: toISODate(win.start),
+            end: toISODate(win.end)
+          };
+          if (win.start.getTime() === date.getTime()) opening.push(entry);
+          if (win.end.getTime() === date.getTime()) closing.push(entry);
+          if (contains(win, date)) openNow.push(entry);
+        }
+      }
+    }
+    return { ok: true, county: location.county, anchor: location.anchor, opening, closing, openNow };
+  }
+
+  function locationFor(data, countyId) {
+    return (data.locations || []).find(l => l.id === countyId) || null;
+  }
+
   function renderLines(advice) {
     if (!advice || !advice.ok) return [advice ? advice.reason : "The farm data could not be read."];
     const lines = [advice.seasonLine];
@@ -304,5 +372,5 @@
     return true;
   }
 
-  return { VERSION, adviceForDate, renderLines, renderInto };
+  return { VERSION, adviceForDate, renderLines, renderInto, cropWindows, windowEventsForDate, locationFor };
 });

@@ -458,6 +458,61 @@ html.living-time-sphere-page.armillary-rooms-open .sphere-sidebar {
   display: none;
 }
 
+/* The packed telling (Sphere design Phase 3): one line per
+ * riding ring, each in its ring's own colour. Farm and story
+ * lines name crops and chapters, so they wrap where the
+ * kept line does not. */
+.sphere-day-readout-sky,
+.sphere-day-readout-farm,
+.sphere-day-readout-story {
+  margin: 0.2rem 0 0;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  max-width: 82vw;
+}
+
+.sphere-day-readout-sky[hidden],
+.sphere-day-readout-farm[hidden],
+.sphere-day-readout-story[hidden] {
+  display: none;
+}
+
+.sphere-day-readout-sky {
+  color: #a8c4de;
+}
+
+.sphere-day-readout-farm {
+  color: #9ccf5f;
+}
+
+.sphere-day-readout-story {
+  color: #cdb2f2;
+  font-style: italic;
+}
+
+.sphere-day-readout-wheel {
+  margin-top: 0.45rem;
+}
+
+.sphere-day-readout-wheel[hidden] {
+  display: none;
+}
+
+.sphere-day-wheel-host svg {
+  display: block;
+  width: min(58vw, 232px);
+  height: auto;
+  margin: 0 auto;
+}
+
+.sphere-day-wheel-caption {
+  margin: 0.3rem 0 0;
+  color: rgba(243, 231, 211, 0.62);
+  font-size: 0.74rem;
+  line-height: 1.45;
+  text-align: center;
+}
+
 .sphere-day-readout-actions {
   display: flex;
   gap: 0.45rem;
