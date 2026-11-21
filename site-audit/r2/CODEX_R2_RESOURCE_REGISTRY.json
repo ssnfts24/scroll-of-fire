@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 2249,
-    "bytes": 852729462,
+    "bytes": 852730894,
     "byGroup": {
       "tooling": 223,
       "manuscript": 17,
@@ -7462,8 +7462,8 @@
       "path": "docs/assets/data/codex-story.json",
       "title": "codex-story.json",
       "format": "json",
-      "bytes": 26748,
-      "sha256": "f12db178a8db84b7bde102ba7a53543f29c81d0509b70fe2c725c268bc57600b",
+      "bytes": 28180,
+      "sha256": "8a5949b699f4bbc26b120cc424a8f34ecc413672f633be1d40386c0f3cae84ca",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
