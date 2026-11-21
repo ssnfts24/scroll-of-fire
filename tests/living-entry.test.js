@@ -235,9 +235,9 @@ test("existing homepage hooks survive the restructure", () => {
     'id="front-door-recent"',
     'class="front-door-list"',
     /* The Front Door shows the four newest growth entries; the pin
-     * follows the newest date in the record (2026-11-21 — the sitewide
-     * Batch C entry rotated the Nov 20 entries off the door,
-     * not out of the record). */
+     * follows the newest date in the record (2026-11-21 — the PR #222
+     * catch-up and the sitewide Batch A, B and C entries rotated the
+     * Nov 20 entries off the door, not out of the record). */
     '<time datetime="2026-11-21">',
     'id="home-sphere-observatory"',
     'id="home-title"',
