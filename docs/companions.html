@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
   <link rel="stylesheet" href="assets/css/social-bridge.css">
   <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261119-1">
+  <link rel="stylesheet" href="assets/css/spark-home-world.css?v=20261120-1">
   <link rel="stylesheet" href="assets/css/cartoon-scenes.css?v=20261120-1">
 <link rel="stylesheet" href="assets/css/story-layer.css?v=20261120-1">
   <script defer src="assets/js/site.js"></script>
@@ -48,6 +49,7 @@
   <script defer src="assets/js/spark-companions-page.js?v=20261119-1"></script>
   <script defer src="assets/js/spark-bundle.js?v=20261119-1"></script>
   <script defer src="assets/js/spark-companions-travel.js?v=20261119-1"></script>
+  <script defer src="assets/js/spark-home-world.js?v=20261120-1"></script>
   <script defer src="assets/js/heaven-sound.js?v=20261119-1"></script>
 </head>
 <body class="living-ui">
@@ -172,6 +174,30 @@
           <button type="button" class="spark-button quiet" id="spark-leave">Let go</button>
         </div>
       </div>
+    </section>
+
+    <!-- Their Home: the Spark's own 3D world, decorated only by
+         what the keeper's real records on this device say. The
+         stage stands when the section nears the screen; the list
+         under it is the whole world in plain words, either way. -->
+    <section id="spark-home" aria-labelledby="spark-home-title">
+      <h2 id="spark-home-title">Their Home</h2>
+      <p class="spark-note">
+        This is where your Spark lives: a small world of its own, and
+        everything standing in it was put there by your real days on
+        this site. The path grows a stone for every day you have kept
+        together. The shelf holds the keepsakes your Spark has found.
+        The thirteen beds around the house grow what the Pattern
+        Garden says they grow. The house itself grows as your Spark
+        grows. Nothing here is decoration bought or faked — an empty
+        place simply says so, and waits.
+      </p>
+      <div class="spark-home-stage" id="spark-home-stage" role="img"
+           aria-label="A small 3D world: your Spark's home, its garden ring, the path of kept days, and the sky of today. Everything in it is listed in plain words below."></div>
+      <p class="spark-home-caption" id="spark-home-caption">Their Home — the sky is read live from the calendar when the world stands.</p>
+      <p class="spark-home-readout" id="spark-home-readout" role="status" aria-live="polite">The world is waking…</p>
+      <p class="spark-home-hint">Drag to look around. Tap a thing in the world — or in the list below — to hear what it is.</p>
+      <ul class="spark-home-list" id="spark-home-list"></ul>
     </section>
 
     <!-- Their record travels: the bundle the Living Phone app speaks,
