@@ -229,6 +229,8 @@ Your browser does not support the video element. The same tour is written out ac
 <li>The word-by-word tables list every word part with its OSHB lemma and morphology code.</li>
 <li>Occurrence lists are references only; the Hebrew of other books is not loaded here.</li></ul>
 <h2>Privacy</h2><p>Your place, display preferences and bookmarks are stored in this browser’s localStorage only and are never transmitted.</p>
+<h2>Where to Next</h2>
+<p><a href="index.html">Genesis &amp; Exodus Scripture →</a></p>
 </main>
 {FOOT.format(b='')}</body>
 </html>
@@ -242,6 +244,8 @@ Your browser does not support the video element. The same tour is written out ac
 <h1>Lemma study</h1>
 <div id="lemma-root"><p>Choose a lemma from the word finder on the Scripture home page.</p></div>
 <noscript><p class="nojs">This page needs JavaScript to show the detailed lexical records. The chapter pages contain complete Hebrew and English text plus a static word-by-word table with lemma ids and morphology for every verse.</p></noscript>
+<h2>Where to Next</h2>
+<p><a href="index.html">Scripture home page →</a></p>
 </main>
 {FOOT.format(b='')}</body>
 </html>
