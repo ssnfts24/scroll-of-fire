@@ -157,9 +157,14 @@ R = f(π, e, i, ħ, c, G, DNA, ΩDM, ΩΛ, H₀, 432, 528, 369, 144, 137, Φ, �
 ├─ tests/                # Node.js regression tests
 ├─ netlify/              # Serverless functions for Netlify
 ├─ .github/              # CI workflows and issue templates
+├─ assets/               # Supporting source assets
+├─ Site/                 # Separate site snapshot
 ├─ sources/              # Source and provenance records
 ├─ site-audit/           # Site inventory and audit evidence
-└─ archive/              # Historical material
+├─ project-files/        # Supporting project files
+├─ archive/              # Historical material
+├─ package.json          # Validation and generation commands
+└─ netlify.toml          # Static deployment and function configuration
 ```
 
 ---
