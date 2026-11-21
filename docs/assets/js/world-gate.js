@@ -359,7 +359,7 @@
     const ndc = new THREE.Vector2();
     const controls = Engine.orbit(THREE, ctx.renderer.domElement, camera, {
       target: [0, 0.7, 0],
-      radius: 19.5,
+      radius: 22.5,
       azimuth: 0.55,
       polar: 0.98,
       minRadius: 12,
