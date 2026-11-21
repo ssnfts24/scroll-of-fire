@@ -11,11 +11,12 @@
       "nav-label-differs-from-title": 24,
       "no-global-navigation": 1,
       "deployed-but-unlinked": 56,
-      "unreachable-from-homepage": 4,
+      "unreachable-from-homepage": 3,
       "compatibility-redirect-page": 1,
       "not-published-in-catalog": 30,
       "unnamed-image-needs-descriptive-title": 21,
-      "not-in-sitemap": 1
+      "not-in-sitemap": 1,
+      "reachable-only-through-atlas": 1
     }
   },
   "resources": [
@@ -1881,6 +1882,7 @@
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
+        "garden.html",
         "genesis-oracle.html",
         "glossary.html",
         "guide.html",
@@ -1889,8 +1891,8 @@
         "lab.html",
         "ledger.html",
         "living-time-sphere.html",
-        "map.html",
         "moons.html",
+        "privacy-policy.html",
         "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
@@ -2125,15 +2127,13 @@
         "path": "privacy-policy.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": null,
-        "hopsFromHomeWithoutAtlas": null,
-        "inboundPages": 0,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 1,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "unreachable-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "docs:reports/codex-advanced-rebuild-audit-2026-07-31.md",
@@ -13374,15 +13374,13 @@
         "path": "garden.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 3,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 4,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "planned-timeline",
@@ -20184,14 +20182,16 @@
         "path": "map.html",
         "inSitemap": false,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 2,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": null,
+        "inboundPages": 1,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
-        "not-in-sitemap"
+        "not-in-sitemap",
+        "reachable-only-through-atlas",
+        "not-linked-directly-from-homepage"
       ]
     },
     {
