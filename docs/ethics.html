@@ -23,6 +23,12 @@
   <meta name="theme-color" content="#0b0b0f"><meta name="color-scheme" content="dark">
   <meta name="description" content="Living Laws of the Codex: consent, non-harm, accountability, and the Coherence Stop Rule (Eq.9) — with a guided checklist, covenant, and incident log." />
   <link rel="canonical" href="https://codexofreality.org/ethics.html" />
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Codex of Reality">
+  <meta property="og:title" content="Ethics & Coherence Law — Scroll of Fire">
+  <meta property="og:description" content="Living Laws of the Codex: consent, non-harm, accountability, and the Coherence Stop Rule (Eq.9) — with a guided checklist, covenant, and incident log.">
+  <meta property="og:url" content="https://codexofreality.org/ethics.html">
+  <meta property="og:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
 
   <!-- Styles (blend site + teach lab) -->
   <link rel="preload" as="style" href="assets/css/codex.css?v=2025-10-20">
@@ -347,10 +353,9 @@
   function updateGate(){ begin.disabled = !checks.every(x=>x && x.checked); }
   checks.forEach(x=>x && x.addEventListener('change', updateGate)); updateGate();
   begin && begin.addEventListener('click', ()=>{
-    // Small UX nudge: scroll to Teach start if present, otherwise just confirm.
-    const link = document.querySelector('a[href="teach.html#ethics"]');
-    if (link) { location.href = 'teach.html#ethics'; }
-    else { alert('Ethics satisfied. Begin your session with care.'); }
+    // Checklist complete: send the visitor to the Ethics tab in Teach —
+    // its tab system answers to #tab=ethics (there is no #ethics anchor).
+    location.href = 'teach.html#tab=ethics';
   });
 
   // Covenant seal (local)

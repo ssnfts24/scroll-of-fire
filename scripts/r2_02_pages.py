@@ -24,6 +24,11 @@ def head(title, desc, base, canonical_path, extra=""):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="{E(desc)}">
 <link rel="canonical" href="https://codexofreality.org/{E(canonical_path)}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Codex of Reality">
+<meta property="og:title" content="{E(title)}">
+<meta property="og:description" content="{E(desc)}">
+<meta property="og:url" content="https://codexofreality.org/{E(canonical_path)}">
 <meta name="theme-color" content="#0b0b0f">
 <title>{E(title)}</title>
 <link rel="stylesheet" href="{base}assets/scripture.css">
