@@ -75,7 +75,7 @@ test("farm events: the same crop opens on different days in different counties",
 });
 
 test("farm events: unknown county and unreadable date fail honestly, never inventively", () => {
-  assert.equal(Panel.windowEventsForDate(farmData, "king", "2026-10-01").ok, false);
+  assert.equal(Panel.windowEventsForDate(farmData, "not-a-county", "2026-10-01").ok, false);
   assert.equal(Panel.windowEventsForDate(farmData, "lewis", "not-a-date").ok, false);
 });
 
