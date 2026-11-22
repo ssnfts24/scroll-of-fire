@@ -49,9 +49,20 @@ body:not(.sphere-app) .sphere-app-enter {
   cursor: pointer;
 }
 
+body:not(.sphere-app) .sphere-sheet-close,
+body:not(.sphere-app) .sphere-sheet-handle {
+  display: none;
+}
+
 /* ── Stage ──────────────────────────────────────────────────────── */
 body.sphere-app {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100dvh;
+  min-height: 0;
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
 body.sphere-app .sphere-wrapper {
@@ -66,11 +77,21 @@ body.sphere-app .sphere-wrapper {
   color: var(--sphere-app-text);
 }
 
+html.living-time-sphere-page body.sphere-app .sphere-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+}
+
 /* The app carries its own top bar: the site header (sticky, z-800) and
  * the floating Living command pill (z-11800) step aside inside the app
  * and return in Full page mode. */
 body.sphere-app .site-header,
 body.sphere-app #living-command-trigger {
+  display: none;
+}
+
+body.sphere-app .spark-ember-host {
   display: none;
 }
 
@@ -137,8 +158,9 @@ body.sphere-app .sphere-app-topbar {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: calc(0.45rem + env(safe-area-inset-top, 0px)) 0.8rem 0.45rem;
+  gap: 0.6rem;
+  min-height: 44px;
+  padding: calc(0.35rem + env(safe-area-inset-top, 0px)) max(0.6rem, env(safe-area-inset-right, 0px)) 0.35rem max(0.6rem, env(safe-area-inset-left, 0px));
   border-bottom: 1px solid var(--sphere-app-line);
   background: var(--sphere-app-panel);
 }
@@ -231,6 +253,10 @@ body.sphere-app .sphere-app-coordinate {
   gap: 0.4rem;
 }
 
+body.sphere-app .sphere-app-top-actions {
+  display: none;
+}
+
 .sphere-app-top-btn {
   min-height: 40px;
   padding: 0.4rem 0.8rem;
@@ -257,7 +283,7 @@ body.sphere-app .sphere-app-daybar {
   display: flex;
   align-items: stretch;
   gap: 0.4rem;
-  padding: 0.4rem 0.6rem;
+  padding: 0.3rem max(0.5rem, env(safe-area-inset-right, 0px)) 0.3rem max(0.5rem, env(safe-area-inset-left, 0px));
   border-top: 1px solid var(--sphere-app-line);
   background: var(--sphere-app-panel);
 }
@@ -317,16 +343,17 @@ body.sphere-app .sphere-app-daybar {
 body.sphere-app .sphere-app-dock {
   order: 4;
   flex: 0 0 auto;
-  display: flex;
-  gap: 0.35rem;
-  padding: 0.45rem 0.6rem calc(0.5rem + env(safe-area-inset-bottom, 0px));
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.2rem;
+  padding: 0.3rem max(0.45rem, env(safe-area-inset-right, 0px)) calc(0.35rem + env(safe-area-inset-bottom, 0px)) max(0.45rem, env(safe-area-inset-left, 0px));
   border-top: 1px solid rgba(212, 175, 55, 0.18);
   background: var(--sphere-app-panel);
 }
 
 .sphere-dock-btn {
-  flex: 1 1 0;
-  min-height: 54px;
+  min-width: 0;
+  min-height: 48px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -337,7 +364,7 @@ body.sphere-app .sphere-app-dock {
   background: transparent;
   color: var(--sphere-app-dim);
   font: inherit;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   letter-spacing: 0.03em;
   cursor: pointer;
   touch-action: manipulation;
@@ -348,6 +375,46 @@ body.sphere-app .sphere-app-dock {
   font-size: 1.15rem;
   line-height: 1;
   color: var(--sphere-app-teal);
+}
+
+.sphere-dock-btn:focus-visible,
+.sphere-app-day-main:focus-visible,
+.sphere-app-day-nav:focus-visible,
+.sphere-app-home:focus-visible,
+.sphere-sheet-close:focus-visible,
+.sphere-focus-more button:focus-visible {
+  outline: 2px solid #f2c877;
+  outline-offset: 2px;
+}
+
+/* The full readout is carried by Day Details, never painted over the
+ * instrument. It remains hidden while the app shell moves the card. */
+body.sphere-app .sphere-canvas-wrap > .sphere-day-readout {
+  display: none;
+}
+
+body.sphere-app .sphere-sheet .sphere-day-readout {
+  position: relative;
+  inset: auto;
+  display: block;
+  width: auto;
+  max-width: none;
+  margin: 0 0 1rem;
+  padding: 0.85rem;
+  transform: none;
+  text-align: left;
+  box-shadow: none;
+}
+
+body.sphere-app .sphere-sheet .sphere-day-readout-where,
+body.sphere-app .sphere-sheet .sphere-day-readout-telling,
+body.sphere-app .sphere-sheet .sphere-day-readout-kept,
+body.sphere-app .sphere-sheet .sphere-day-readout-sky,
+body.sphere-app .sphere-sheet .sphere-day-readout-farm,
+body.sphere-app .sphere-sheet .sphere-day-readout-story {
+  max-width: none;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 /* The fullscreen button stays hidden where the browser offers no
@@ -462,6 +529,101 @@ body.sphere-app .sphere-sheet.is-open {
   transform: scale(0.95);
 }
 
+body.sphere-app .sphere-sheet-handle {
+  display: block;
+  width: 2.8rem;
+  height: 0.28rem;
+  margin: 0 auto 0.7rem;
+  border-radius: 999px;
+  background: rgba(232, 228, 217, 0.5);
+  touch-action: none;
+}
+
+.sphere-sheet-heading {
+  margin: 0 0 1rem;
+  color: var(--sphere-app-text);
+  font-size: 1.25rem;
+}
+
+.sphere-focus-more {
+  inset: auto 0 0;
+  width: min(100%, 38rem);
+  max-width: 100%;
+  max-height: 84dvh;
+  margin: 0 auto;
+  padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom, 0px));
+  border: 1px solid var(--sphere-app-line);
+  border-radius: 1.1rem 1.1rem 0 0;
+  background: #170d07;
+  color: var(--sphere-app-text);
+  box-shadow: 0 -12px 44px rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.sphere-focus-more::backdrop {
+  background: rgba(12, 6, 2, 0.68);
+}
+
+.sphere-focus-more-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
+}
+
+.sphere-focus-more-head h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.sphere-focus-more-close {
+  min-height: 44px;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid var(--sphere-app-line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--sphere-app-text);
+  font: inherit;
+}
+
+.sphere-focus-more-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.sphere-focus-more-actions .sphere-dock-btn,
+.sphere-focus-more-actions .sphere-app-top-btn {
+  min-width: 0;
+  min-height: 46px;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--sphere-app-line);
+  border-radius: 0.75rem;
+  background: rgba(218, 164, 91, 0.1);
+  color: var(--sphere-app-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.sphere-focus-more-actions .sphere-dock-btn {
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 0.4rem;
+  max-width: none;
+}
+
+.sphere-focus-more-actions .sphere-dock-btn span {
+  font-size: 1rem;
+}
+
+.sphere-focus-more-actions [hidden] {
+  display: none;
+}
+
 body.sphere-app .sphere-sheet-tools {
   display: grid;
   gap: 0.75rem;
@@ -475,6 +637,10 @@ body.sphere-app .sphere-sidebar,
 body.sphere-app .living-planner-shell {
   max-height: none;
   margin: 0;
+}
+
+body.sphere-app .sphere-sidebar.sphere-sheet {
+  max-height: 84dvh;
 }
 
 /* ── Portrait phones: the Sphere owns the screen (Nov 19, 2026) ────
@@ -557,7 +723,64 @@ body.sphere-app .living-planner-shell {
   }
 
   .sphere-dock-btn {
-    min-height: 48px;
+    min-height: 46px;
+  }
+}
+
+@media (max-width: 899px) and (orientation: landscape) {
+  body.sphere-app .sphere-app-topbar {
+    min-height: 38px;
+    padding-top: max(0.2rem, env(safe-area-inset-top, 0px));
+    padding-bottom: 0.2rem;
+  }
+
+  body.sphere-app .sphere-app-daybar {
+    padding-top: 0.15rem;
+    padding-bottom: 0.15rem;
+  }
+
+  .sphere-app-day-nav,
+  .sphere-app-day-main {
+    min-height: 40px;
+  }
+
+  body.sphere-app .sphere-app-dock {
+    padding-top: 0.15rem;
+    padding-bottom: max(0.15rem, env(safe-area-inset-bottom, 0px));
+  }
+
+  .sphere-dock-btn {
+    min-height: 42px;
+    flex-direction: row;
+    gap: 0.35rem;
+  }
+
+  .sphere-dock-btn span {
+    font-size: 0.95rem;
+  }
+}
+
+@media (min-width: 900px) {
+  body.sphere-app .sphere-app-topbar {
+    padding-right: max(1rem, env(safe-area-inset-right, 0px));
+    padding-left: max(1rem, env(safe-area-inset-left, 0px));
+  }
+
+  body.sphere-app .sphere-app-dock {
+    justify-content: center;
+  }
+
+  .sphere-dock-btn {
+    max-width: 9rem;
+  }
+
+  .sphere-focus-more {
+    inset: 0 0 0 auto;
+    width: min(430px, 94vw);
+    max-height: none;
+    margin: 0;
+    padding: calc(1rem + env(safe-area-inset-top, 0px)) max(1.1rem, env(safe-area-inset-right, 0px)) 1rem 1.1rem;
+    border-radius: 0;
   }
 }
 

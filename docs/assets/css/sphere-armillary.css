@@ -595,8 +595,28 @@ html.living-time-sphere-page.armillary-rooms-open .sphere-sidebar {
 
 .sphere-play-bar-doors {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 0.4rem;
   pointer-events: auto;
+}
+
+.sphere-play-bar-doors[hidden] {
+  display: none;
+}
+
+.sphere-play-bar-toggle {
+  min-height: 40px;
+  padding: 0.35rem 0.9rem;
+  border: 1px solid rgba(218, 164, 91, 0.55);
+  border-radius: 999px;
+  background: rgba(23, 16, 10, 0.92);
+  color: #f3e7d3;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
 }
 
 .sphere-play-bar-btn {

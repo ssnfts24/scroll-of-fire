@@ -96,7 +96,8 @@
     stageBar.className = "sphere-play-bar";
     stageBar.setAttribute("data-sphere-play-bar", "");
     stageBar.innerHTML = `
-      <div class="sphere-play-bar-doors">
+      <button type="button" class="sphere-play-bar-toggle" aria-expanded="false" aria-controls="sphere-play-bar-choices">Play</button>
+      <div class="sphere-play-bar-doors" id="sphere-play-bar-choices" hidden>
         <button type="button" class="sphere-play-bar-btn" data-play-bar-hunt>Find the day</button>
         <button type="button" class="sphere-play-bar-btn" data-play-bar-echo>Echo</button>
         <button type="button" class="sphere-play-bar-btn" data-play-bar-arm>Catch the turning</button>
@@ -106,6 +107,19 @@
       <div class="sphere-play-bar-pads" data-play-bar-pads hidden></div>`;
     const stageWrap = $(".sphere-canvas-wrap");
     if (stageWrap) stageWrap.appendChild(stageBar);
+    const playToggle = stageBar.querySelector(".sphere-play-bar-toggle");
+    const playChoices = stageBar.querySelector(".sphere-play-bar-doors");
+    playToggle?.addEventListener("click", () => {
+      const expanded = playToggle.getAttribute("aria-expanded") === "true";
+      playToggle.setAttribute("aria-expanded", expanded ? "false" : "true");
+      playChoices.hidden = expanded;
+    });
+    playChoices?.addEventListener("click", event => {
+      if (!event.target.closest("[data-play-bar-catch]")) {
+        playChoices.hidden = true;
+        playToggle?.setAttribute("aria-expanded", "false");
+      }
+    });
     const stageStatus = stageBar.querySelector(".sphere-play-bar-status");
     const stagePads = stageBar.querySelector("[data-play-bar-pads]");
     const stageCatch = stageBar.querySelector("[data-play-bar-catch]");

@@ -1301,7 +1301,17 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
       '<button type="button" class="sphere-day-readout-enter">Enter this day</button>' +
       '<button type="button" class="sphere-day-readout-schedule">Schedule something for this day</button>' +
       "</div>";
-    wrap.appendChild(card);
+    var daySheet = document.body.classList.contains("sphere-app") ? document.querySelector(".sphere-sidebar") : null;
+    if (daySheet) {
+      card.classList.add("sphere-day-readout-details");
+      var closeButton = daySheet.querySelector(".sphere-sheet-close");
+      var sheetBar = closeButton && closeButton.closest(".sphere-sheet-bar");
+      if (sheetBar) sheetBar.after(card);
+      else if (closeButton) closeButton.after(card);
+      else daySheet.insertBefore(card, daySheet.firstChild);
+    } else {
+      wrap.appendChild(card);
+    }
     card.querySelector(".sphere-day-readout-enter").addEventListener("click", function () {
       // Stand on the chosen day first (the quick-jump flies the
       // Sphere to it), then step in — so the Day World that opens
@@ -1407,6 +1417,210 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
     }
     if (strip) new MutationObserver(renderSoon).observe(strip, { childList: true, subtree: true, characterData: true });
     window.setInterval(render, 4000);
+  }
+
+  /* ── 3a-ii. Sphere Focus shell ───────────────────────────────── */
+
+  var focusDockBuilt = false;
+  function buildFocusDock() {
+    if (!document.body.classList.contains("sphere-app") || focusDockBuilt) return false;
+    var dock = document.querySelector(".sphere-app-dock");
+    var topActions = document.querySelector(".sphere-app-top-actions");
+    if (!dock || !topActions) return;
+
+    var getDockAction = function (action) {
+      return dock.querySelector('[data-app-action="' + action + '"]');
+    };
+    var today = topActions.querySelector('[data-app-action="today"]');
+    var fullPage = topActions.querySelector('[data-app-action="fullpage"]');
+    var day = getDockAction("open-day");
+    if (!today || !day) return;
+
+    today.className = "sphere-dock-btn";
+    today.innerHTML = '<span aria-hidden="true">◷</span>Today';
+    day.setAttribute("aria-label", "Open Day Details");
+    day.innerHTML = '<span aria-hidden="true">▤</span>Day';
+
+    var more = document.createElement("button");
+    more.type = "button";
+    more.className = "sphere-dock-btn";
+    more.setAttribute("aria-haspopup", "dialog");
+    more.setAttribute("aria-label", "More Sphere controls");
+    more.innerHTML = '<span aria-hidden="true">•••</span>More';
+
+    var schedule = document.createElement("button");
+    schedule.type = "button";
+    schedule.className = "sphere-dock-btn";
+    schedule.innerHTML = '<span aria-hidden="true">＋</span>Schedule';
+    schedule.addEventListener("click", function () {
+      if (!(window.SphereRebuild && window.SphereRebuild.openSchedule && window.SphereRebuild.openSchedule())) {
+        document.querySelector("[data-sphere-rebuild-schedule]")?.click();
+      }
+    });
+
+    var spark = document.createElement("button");
+    spark.type = "button";
+    spark.className = "sphere-dock-btn";
+    spark.innerHTML = '<span aria-hidden="true">✧</span>Spark';
+    spark.addEventListener("click", function () {
+      var talk = document.querySelector("[data-sphere-spark-talk]");
+      var sparkDoor = document.querySelector("[data-sphere-rebuild-spark]");
+      var dayOpener = dock.querySelector('[data-app-action="open-day"]');
+      if (dayOpener) dayOpener.click();
+      window.setTimeout(function () {
+        if (sparkDoor) sparkDoor.click();
+        else if (talk) {
+          talk.scrollIntoView({ behavior: "smooth", block: "start" });
+          talk.querySelector("input, textarea")?.focus({ preventScroll: true });
+        } else {
+          document.getElementById("living-command-trigger")?.click();
+        }
+      }, dayOpener ? 280 : 0);
+    });
+
+    var menu = document.createElement("dialog");
+    menu.className = "sphere-focus-more";
+    menu.setAttribute("aria-labelledby", "sphere-focus-more-title");
+    menu.innerHTML =
+      '<div class="sphere-focus-more-head">' +
+      '<h2 id="sphere-focus-more-title">More Sphere tools</h2>' +
+      '<button type="button" class="sphere-focus-more-close" aria-label="Close More tools">Close</button>' +
+      "</div>" +
+      '<div class="sphere-focus-more-actions" role="group" aria-label="Secondary Sphere controls"></div>';
+    var actions = menu.querySelector(".sphere-focus-more-actions");
+    [
+      "cam-top", "cam-tilt", "cam-edge", "rotate",
+      "open-atlas", "open-planner", "open-settings", "fullscreen",
+    ].forEach(function (action) {
+      var button = getDockAction(action);
+      if (button) actions.appendChild(button);
+    });
+    if (fullPage) actions.appendChild(fullPage);
+    document.body.appendChild(menu);
+    menu.querySelector(".sphere-focus-more-close").addEventListener("click", function () { menu.close(); });
+    more.addEventListener("click", function () {
+      if (typeof menu.showModal === "function") menu.showModal();
+      else menu.setAttribute("open", "");
+    });
+    menu.addEventListener("click", function (event) {
+      if (event.target === menu) menu.close();
+      else if (event.target.closest(".sphere-dock-btn, .sphere-app-top-btn")) menu.close();
+    });
+    dock.replaceChildren(today, schedule, day, spark, more);
+    focusDockBuilt = true;
+
+    var dayMain = document.querySelector(".sphere-app-day-main");
+    if (dayMain) {
+      dayMain.setAttribute("aria-label", "Open Day Details");
+      var subtitle = dayMain.querySelector(".sphere-app-day-sub");
+      if (subtitle) subtitle.textContent = "Day Details";
+    }
+
+    var sidebar = document.querySelector(".sphere-sidebar");
+    var wrapper = document.querySelector(".sphere-wrapper");
+    if (!sidebar || !wrapper) return;
+    var behindSheet = [wrapper.querySelector(".sphere-canvas-wrap"), document.querySelector(".sphere-app-topbar"), document.querySelector(".sphere-app-daybar"), dock];
+    var closeButton = sidebar.querySelector(".sphere-sheet-close");
+    if (!closeButton) return;
+
+    var handle = document.createElement("span");
+    handle.className = "sphere-sheet-handle";
+    handle.setAttribute("aria-hidden", "true");
+    closeButton.before(handle);
+    if ("ontouchstart" in window || navigator.maxTouchPoints) {
+      var startY = null;
+      handle.addEventListener("pointerdown", function (event) {
+        if (event.pointerType === "mouse") return;
+        startY = event.clientY;
+        handle.setPointerCapture?.(event.pointerId);
+      });
+      handle.addEventListener("pointerup", function (event) {
+        if (startY !== null && event.clientY - startY > 60 && sidebar.classList.contains("is-open")) closeButton.click();
+        startY = null;
+      });
+      handle.addEventListener("pointercancel", function () { startY = null; });
+    }
+
+    var sheetWasOpen = false;
+    var returnFocus = null;
+    function syncDaySheet() {
+      var isOpen = sidebar.classList.contains("is-open");
+      if (isOpen === sheetWasOpen) return;
+      sheetWasOpen = isOpen;
+      if (isOpen) {
+        returnFocus = document.activeElement;
+        sidebar.setAttribute("role", "dialog");
+        sidebar.setAttribute("aria-modal", "true");
+        sidebar.setAttribute("aria-label", "Day details and Sphere tools");
+        sidebar.removeAttribute("aria-hidden");
+        behindSheet.forEach(function (el) { el?.setAttribute("inert", ""); });
+        requestAnimationFrame(function () { closeButton.focus({ preventScroll: true }); });
+      } else {
+        behindSheet.forEach(function (el) { el?.removeAttribute("inert"); });
+        sidebar.removeAttribute("aria-modal");
+        sidebar.removeAttribute("role");
+        sidebar.removeAttribute("aria-label");
+        sidebar.setAttribute("aria-hidden", "true");
+        if (returnFocus?.isConnected) returnFocus.focus({ preventScroll: true });
+        returnFocus = null;
+      }
+    }
+    new MutationObserver(syncDaySheet).observe(sidebar, { attributes: true, attributeFilter: ["class"] });
+    document.addEventListener("keydown", function (event) {
+      if (!sidebar.classList.contains("is-open") || event.key !== "Tab") return;
+      var focusable = Array.prototype.slice.call(sidebar.querySelectorAll('a[href], button:not([disabled]):not([hidden]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'))
+        .filter(function (el) { return el.getClientRects().length; });
+      if (!focusable.length) {
+        event.preventDefault();
+        sidebar.focus();
+        return;
+      }
+      var first = focusable[0];
+      var last = focusable[focusable.length - 1];
+      if (event.shiftKey && (document.activeElement === first || !sidebar.contains(document.activeElement))) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (document.activeElement === last || !sidebar.contains(document.activeElement))) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+
+    var readout = document.querySelector(".sphere-day-readout");
+    var canvasWrap = wrapper.querySelector(".sphere-canvas-wrap");
+    if (readout && canvasWrap) {
+      var syncReadoutParent = function () {
+        var currentSidebar = document.querySelector(".sphere-sidebar");
+        var currentClose = currentSidebar && currentSidebar.querySelector(".sphere-sheet-close");
+        var currentBar = currentClose && currentClose.closest(".sphere-sheet-bar");
+        if (document.body.classList.contains("sphere-app")) {
+          if (currentSidebar && readout.parentElement !== currentSidebar) {
+            if (currentBar) currentBar.after(readout);
+            else if (currentClose) currentClose.after(readout);
+            else currentSidebar.prepend(readout);
+          }
+          readout.classList.add("sphere-day-readout-details");
+        } else if (readout.parentElement !== canvasWrap) {
+          canvasWrap.appendChild(readout);
+          readout.classList.remove("sphere-day-readout-details");
+        }
+      };
+      new MutationObserver(syncReadoutParent).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+      syncReadoutParent();
+    }
+    return true;
+  }
+
+  function initializeFocusMode() {
+    var sync = function () {
+      if (document.body.classList.contains("sphere-app")) buildFocusDock();
+    };
+    new MutationObserver(sync).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+    sync();
+    if (!document.body.classList.contains("sphere-app")) {
+      document.querySelector(".sphere-app-enter")?.click();
+    }
+    sync();
   }
 
   /* ── 3b. The Day World's doorway scene (cartoon exploration
@@ -1976,6 +2190,7 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
       }, 400);
     }
     buildReadout();
+    initializeFocusMode();
     startRingData();
     watchDayWorld();
     adoptSkyline();
