@@ -56,11 +56,22 @@
   color: #f3eaff;
 }
 
-/* ---------- Butterflies (drawn, animated; rest still on reduced motion) ---------- */
+/* ---------- Butterflies (drawn, animated, ginger and see-through;
+   rest still on reduced motion, translucency stays) ---------- */
 
 .aiyana-sky {
   position: absolute;
   inset: 0;
+  pointer-events: none;
+}
+
+/* A second gentle group at the bottom of the page, around the
+   "Add one thing" stories card — Aiyana asked for more down there. */
+.aiyana-meadow {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 1.6rem;
   pointer-events: none;
 }
 
@@ -69,6 +80,11 @@
   width: 54px;
   height: 44px;
   will-change: transform;
+  /* Somewhat translucent, as Aiyana asked: the words and buttons
+     underneath always show through, and a butterfly can never
+     block a tap. */
+  opacity: 0.6;
+  pointer-events: none;
 }
 
 .bfly svg { width: 100%; height: 100%; overflow: visible; }
@@ -78,11 +94,17 @@
 .bfly .wing-r, .bfly .wing-r2 { transform-origin: 0% 50%; animation: aiyana-flap 0.55s ease-in-out infinite alternate; }
 .bfly .bfly-body { fill: #33233d; }
 
-.bfly-1 { left: 6%;  top: 8%;  --bf: #ff8fb2; animation: aiyana-fly-1 11s ease-in-out infinite alternate; }
-.bfly-2 { left: 78%; top: 6%;  --bf: #ffb340; animation: aiyana-fly-2 13s ease-in-out infinite alternate; width: 44px; height: 36px; }
-.bfly-3 { left: 84%; top: 52%; --bf: #7cc7ff; animation: aiyana-fly-3 12s ease-in-out infinite alternate; width: 62px; height: 50px; }
-.bfly-4 { left: 10%; top: 58%; --bf: #b18cff; animation: aiyana-fly-4 14s ease-in-out infinite alternate; width: 46px; height: 38px; }
-.bfly-5 { left: 46%; top: 3%;  --bf: #8fe388; animation: aiyana-fly-5 10s ease-in-out infinite alternate; width: 38px; height: 31px; }
+.bfly-1 { left: 6%;  top: 8%;  --bf: #e8762d; animation: aiyana-fly-1 11s ease-in-out infinite alternate; }
+.bfly-2 { left: 78%; top: 6%;  --bf: #f59a3d; animation: aiyana-fly-2 13s ease-in-out infinite alternate; width: 44px; height: 36px; }
+.bfly-3 { left: 84%; top: 52%; --bf: #d96a1e; animation: aiyana-fly-3 12s ease-in-out infinite alternate; width: 62px; height: 50px; }
+.bfly-4 { left: 10%; top: 58%; --bf: #f08c2e; animation: aiyana-fly-4 14s ease-in-out infinite alternate; width: 46px; height: 38px; }
+.bfly-5 { left: 46%; top: 3%;  --bf: #e07f26; animation: aiyana-fly-5 10s ease-in-out infinite alternate; width: 38px; height: 31px; }
+
+/* The bottom group, by the stories card — same ginger family. */
+.bfly-6 { left: 4%;  top: 5%;  --bf: #f08c2e; animation: aiyana-fly-2 12s ease-in-out infinite alternate; width: 46px; height: 38px; }
+.bfly-7 { left: 85%; top: 26%; --bf: #e8762d; animation: aiyana-fly-3 13s ease-in-out infinite alternate; width: 40px; height: 33px; }
+.bfly-8 { left: 7%;  top: 66%; --bf: #f5a94b; animation: aiyana-fly-4 11s ease-in-out infinite alternate; width: 52px; height: 42px; }
+.bfly-9 { left: 83%; top: 80%; --bf: #d96a1e; animation: aiyana-fly-1 14s ease-in-out infinite alternate; width: 44px; height: 36px; }
 
 .bfly .wing, .bfly .wing-l2, .bfly .wing-r2 { fill: var(--bf); }
 .bfly .wing-l2, .bfly .wing-r2 { opacity: 0.75; }
@@ -131,7 +153,7 @@
 .aiyana-card h2 { color: #5b2a86; margin-top: 0; font-size: 1.7rem; }
 .aiyana-card h3 { color: #7a3b9e; margin: 1.4rem 0 0.6rem; font-size: 1.2rem; }
 
-.aiyana-stories { background: #f1eaff; }
+.aiyana-stories { background: #f1eaff; position: relative; }
 
 .aiyana-label {
   display: block;
