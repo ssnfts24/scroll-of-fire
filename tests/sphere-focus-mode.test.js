@@ -15,8 +15,12 @@ const armillaryCss = read("docs/assets/css/sphere-armillary.css");
 
 test("Sphere Rebuild and Armillary own one shell; Focus never re-enters B7.61", () => {
   assert.match(rebuild, /if \(document\.body\.classList\.contains\("sphere-app"\)\)/);
-  assert.match(rebuild, /The Sphere Rebuild shell is authoritative/);
-  assert.match(rebuild, /btn\.remove\(\)/);
+  // The Rebuild shell is authoritative on arrival, and the app
+  // view stays a keeper's choice (PR #232 review, Nov 21, 2026):
+  // its enter button is relocated into the controls door,
+  // never removed and never clicked by the Focus layer.
+  assert.match(rebuild, /details\.appendChild\(btn\)/);
+  assert.doesNotMatch(rebuild, /btn\.remove\(\)/);
   assert.doesNotMatch(armillary, /initializeFocusMode|buildFocusDock|sphere-app-enter.*\.click/);
   assert.match(armillary, /document\.documentElement\.classList\.add\("armillary-app"\)/);
   assert.match(shellCss, /html\.living-time-sphere-page body:not\(\.sphere-app\) \.sphere-rebuild-dock/);

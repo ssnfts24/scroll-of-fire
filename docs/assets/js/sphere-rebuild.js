@@ -516,17 +516,21 @@
   }
 
   function placeAppEnter() {
-    // The B7.61 shell owns a separate viewport and sidebar system.
-    // The Sphere Rebuild shell is authoritative, so remove its legacy
-    // entry point rather than allowing it to reclaim the page later.
+    // The app-shell's own enter button joins the controls door.
+    // The Rebuild shell is authoritative on arrival — it has
+    // already exited the app view — but the app view stays a
+    // keeper's choice: Aaron's correction (PR #232 review,
+    // Nov 21, 2026) removes the Focus mode's reactivation of
+    // the app shell, not the keeper's door into it. Every
+    // existing action stays reachable, and the app/full-page
+    // switch stays testable, so the button is relocated,
+    // never removed.
     let tries = 0;
     const timer = window.setInterval(() => {
       tries += 1;
       const btn = $(".sphere-app-enter");
-      if (btn) {
-        btn.remove();
-        window.clearInterval(timer);
-      }
+      const details = $("[data-sphere-rebuild-controls]");
+      if (btn && details && btn.parentElement !== details) details.appendChild(btn);
       if (btn || tries > 40) window.clearInterval(timer);
     }, 250);
   }
