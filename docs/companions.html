@@ -28,7 +28,7 @@
   <link rel="stylesheet" href="assets/css/navigation.css">
   <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
   <link rel="stylesheet" href="assets/css/social-bridge.css">
-  <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261119-1">
+  <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261122-1">
   <link rel="stylesheet" href="assets/css/spark-home-world.css?v=20261120-1">
   <link rel="stylesheet" href="assets/css/cartoon-scenes.css?v=20261120-1">
 <link rel="stylesheet" href="assets/css/story-layer.css?v=20261120-1">
@@ -44,12 +44,13 @@
   <script defer src="assets/js/life-atlas/life-atlas-repository.js?v=20260819-b750"></script>
   <script defer src="assets/js/life-atlas/life-atlas-indexeddb.js?v=20260819-b750"></script>
   <script defer src="assets/js/life-atlas/life-atlas-runtime.js?v=20260819-b750"></script>
-  <script defer src="assets/js/spark-companion.js?v=20261119-1"></script>
+  <script defer src="assets/js/spark-companion.js?v=20261122-1"></script>
   <script defer src="assets/js/spark-3d.js?v=20261119-1"></script>
-  <script defer src="assets/js/spark-companions-page.js?v=20261119-1"></script>
+  <script defer src="assets/js/spark-companions-page.js?v=20261122-1"></script>
   <script defer src="assets/js/spark-bundle.js?v=20261119-1"></script>
   <script defer src="assets/js/spark-companions-travel.js?v=20261119-1"></script>
-  <script defer src="assets/js/spark-home-world.js?v=20261120-1"></script>
+  <script defer src="assets/js/spark-home-world.js?v=20261122-1"></script>
+  <script defer src="assets/js/spark-passport.js?v=20261122-1"></script>
   <script defer src="assets/js/heaven-sound.js?v=20261119-1"></script>
 </head>
 <body class="living-ui">
@@ -137,10 +138,19 @@
         <button type="button" class="spark-button primary" id="spark-meet-button">Meet your Spark</button>
       </div>
       <div class="spark-preview" id="spark-preview" hidden>
-        <div class="spark-preview-art" id="spark-preview-art"></div>
+        <div class="spark-preview-art" id="spark-preview-art" title="Tap it — it answers"></div>
         <p id="spark-preview-name" style="font-weight:600"></p>
         <p id="spark-preview-kind"></p>
         <p class="spark-note" id="spark-preview-line"></p>
+        <p class="spark-speech" id="spark-preview-speech" role="status" aria-live="polite"></p>
+        <div class="spark-tone-game" id="spark-tone-game">
+          <p class="spark-note">Meet it by ear first: press play, hear the one tone it sings, then tap the pad that sang it.</p>
+          <div class="spark-actions" style="justify-content:center">
+            <button type="button" class="spark-button" id="spark-tone-play">Play its tone</button>
+          </div>
+          <div class="spark-echo-pads" id="spark-tone-pads" role="group" aria-label="The four tones"></div>
+          <p class="spark-note" id="spark-tone-status" role="status" aria-live="polite"></p>
+        </div>
         <div class="spark-actions" style="justify-content:center">
           <button type="button" class="spark-button primary" id="spark-keep">Keep this Spark</button>
           <button type="button" class="spark-button quiet" id="spark-another">Show me another</button>
@@ -151,7 +161,8 @@
     <!-- The companion: shown once a Spark lives on this device. -->
     <section id="spark-companion" hidden>
       <div class="spark-companion-card">
-        <div class="spark-big-art" id="spark-big-art"></div>
+        <div class="spark-big-art" id="spark-big-art" title="Tap it — it answers"></div>
+        <p class="spark-speech" id="spark-big-speech" role="status" aria-live="polite"></p>
         <h2 id="spark-big-name" style="margin-top:10px"></h2>
         <div class="spark-facts">
           <p id="spark-big-kind"></p>
@@ -166,12 +177,71 @@
           <p id="spark-guide" style="margin:0"></p>
           <p style="margin:8px 0 0"><a id="spark-guide-link" href="moons.html">See it</a></p>
         </div>
+        <div class="spark-echo-game" id="spark-echo-game">
+          <h3 style="margin:14px 0 4px">Play: the echo game</h3>
+          <p class="spark-note">Your Spark sings a few notes on the four pads; tap the same pads back in the same order.</p>
+          <div class="spark-actions" style="justify-content:center">
+            <button type="button" class="spark-button" id="spark-echo-start">Start the echo game</button>
+          </div>
+          <div class="spark-echo-pads" id="spark-echo-pads" role="group" aria-label="The four echo pads"></div>
+          <p class="spark-note" id="spark-echo-status" role="status" aria-live="polite"></p>
+        </div>
         <div class="spark-rename-row">
           <input id="spark-rename" type="text" maxlength="24" autocomplete="off" aria-label="Rename your Spark">
           <button type="button" class="spark-button" id="spark-rename-button">Rename</button>
         </div>
         <div class="spark-actions" style="justify-content:center">
           <button type="button" class="spark-button quiet" id="spark-leave">Let go</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- The passport: identity alone travels, in a short code a
+         keeper can type or scan. The same seed grows the same
+         Spark anywhere — so the Spark on your phone can move in
+         here, and the Spark here can move to your phone. -->
+    <section id="spark-passport" aria-labelledby="spark-passport-title">
+      <h2 id="spark-passport-title">Bring your Spark — the passport</h2>
+      <p class="spark-note">
+        A Spark is one and the same on every door of the Codex — the one in
+        the Living Day app on your phone and the one on this page are not two
+        Sparks. Until accounts arrive, a Spark travels by passport: a short
+        code that carries its seed and the name it answers to, and nothing
+        else — no days, no garden, no record. Type the code from the app
+        (in the app, open Their Home and find &ldquo;Its passport&rdquo;), or
+        scan it, and your own Spark moves in here, grown from the same seed,
+        the same in name, kind, and look. Its whole history still travels
+        the older way, as one file, under &ldquo;Their record travels&rdquo;
+        below.
+      </p>
+      <div id="spark-passport-own" hidden>
+        <h3 style="margin:12px 0 4px">The passport of the Spark who lives here</h3>
+        <p class="spark-passport-code" id="spark-passport-own-code"></p>
+        <div class="spark-passport-qr" id="spark-passport-own-qr" aria-label="The same passport as a scannable code"></div>
+        <p class="spark-note">Type this code into the app — or into this page on another device — and the same Spark stands there. Whoever holds the code can raise this Spark, so keep it the way you keep a key.</p>
+      </div>
+      <h3 style="margin:12px 0 4px">Bring a Spark here</h3>
+      <div class="spark-passport-row">
+        <input id="spark-passport-input" type="text" autocomplete="off" spellcheck="false"
+               aria-label="A Spark passport code" placeholder="SPK1-…">
+        <button type="button" class="spark-button" id="spark-passport-go">Read the passport</button>
+        <button type="button" class="spark-button quiet" id="spark-passport-scan" hidden>Scan the code</button>
+      </div>
+      <video id="spark-passport-video" class="spark-passport-video" hidden playsinline muted></video>
+      <div class="spark-preview" id="spark-passport-preview" hidden>
+        <div class="spark-preview-art" id="spark-passport-art"></div>
+        <p id="spark-passport-name" style="font-weight:600"></p>
+        <p id="spark-passport-kind"></p>
+        <p class="spark-note" id="spark-passport-born"></p>
+        <div class="spark-actions" style="justify-content:center">
+          <button type="button" class="spark-button primary" id="spark-passport-confirm">Move this Spark in</button>
+        </div>
+      </div>
+      <p class="spark-note" id="spark-passport-note" role="status" aria-live="polite"></p>
+      <div id="spark-passport-return" hidden>
+        <p class="spark-note">A Spark raised on this device was set gently aside when yours moved in — its record is kept whole, untouched, and it can come back.</p>
+        <div class="spark-actions">
+          <button type="button" class="spark-button quiet" id="spark-passport-return-button">Return to the Spark raised here</button>
         </div>
       </div>
     </section>
@@ -196,8 +266,17 @@
            aria-label="A small 3D world: your Spark's home, its garden ring, the path of kept days, and the sky of today. Everything in it is listed in plain words below."></div>
       <p class="spark-home-caption" id="spark-home-caption">Their Home — the sky is read live from the calendar when the world stands.</p>
       <p class="spark-home-readout" id="spark-home-readout" role="status" aria-live="polite">The world is waking…</p>
-      <p class="spark-home-hint">Drag to look around. Tap a thing in the world — or in the list below — to hear what it is.</p>
+      <p class="spark-home-hint">Drag to look around. Tap a thing in the world — or in the list below — to hear what it is. Tap your Spark itself and it answers: first with the day as it stands, then in its own voice.</p>
       <ul class="spark-home-list" id="spark-home-list"></ul>
+      <div class="spark-passport-door">
+        <h3 style="margin:14px 0 4px">Is your Spark on your phone?</h3>
+        <p class="spark-note">Bring it home: type its passport code here — in the app, open Their Home and find &ldquo;Its passport&rdquo; — and the same Spark moves into this world.</p>
+        <div class="spark-passport-row">
+          <input id="spark-home-passport-input" type="text" autocomplete="off" spellcheck="false"
+                 aria-label="A Spark passport code" placeholder="SPK1-…">
+          <button type="button" class="spark-button" id="spark-home-passport-go">Bring it home</button>
+        </div>
+      </div>
     </section>
 
     <!-- Their record travels: the bundle the Living Phone app speaks,
@@ -212,7 +291,8 @@
         grows the same Spark in both places, their history whole. The file
         moves only by your hand, the way a key does — nothing is sent
         anywhere. Keep it somewhere you trust: whoever holds it can
-        restore them.
+        restore them. Identity alone travels lighter, by the passport
+        above; this file is the one that carries their days with it.
       </p>
       <p class="spark-note">
         A damaged file is refused whole; their record here is never
@@ -275,10 +355,12 @@
     <h2>What is not here yet</h2>
     <p class="spark-note">
       Accounts and trading are later steps, and they are not open yet.
-      Keeping a Spark across devices is here, in the plainest form: their
-      record travels as one file, carried by your own hand, under
-      &ldquo;Their record travels&rdquo; above — there is still no account
-      and no server keeping Sparks. A Spark is yours alone, on the
+      Keeping a Spark across devices is here, in the plainest forms: their
+      identity travels as a short passport code you can type or scan, and
+      their whole record travels as one file, both carried by your own
+      hand — there is still no account and no server keeping Sparks, and
+      their day-to-day memory does not yet flow on its own between
+      devices. A Spark is yours alone, on the
       devices you carry them to — which is how the Codex keeps everything
       first: local, and shareable only by choice.
     </p>
