@@ -65,3 +65,21 @@ test("still mode turns play quiet, and play never covers the Sphere", () => {
   assert.ok(block.includes("margin: 1.5rem auto"), "the room sits in the page flow");
   assert.ok(!/position:\s*fixed/.test(block), "the play room is never an overlay");
 });
+
+test("every game says what it is, how to play, and what it teaches (Nov 22, 2026)", () => {
+  for (const line of [
+    "How to play: the Spark names a day",
+    "What it teaches: the shape of the year",
+    "How to play: press Play and listen",
+    "What it teaches: listening for pattern",
+    "How to play: press Arm now, and stay on this page",
+    "What it teaches: attention",
+  ]) {
+    assert.ok(play.includes(line), `the room speaks plainly: ${line}`);
+  }
+  for (const hint of ["I name a day — move the Sphere until you stand on it", "Hear your Spark's notes — tap them back in order", "Arm it — catch the light as it turns"]) {
+    assert.ok(play.includes(hint), `the stage door explains itself: ${hint}`);
+  }
+  assert.ok(play.includes("You are standing on Moon"), "the hunt tells the keeper where the search stands");
+  assert.ok(play.includes("b.textContent = String(i + 1)"), "the echo pads are numbered, so an order can be followed");
+});

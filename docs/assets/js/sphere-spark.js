@@ -82,6 +82,118 @@
     return null;
   }
 
+  /* ── Scheduling by word of mouth (Aaron, Nov 22, 2026) ───────
+   * "You should be able to tell your Spark to schedule
+   * something, and when you schedule something it gives you a
+   * check under that day." The keeper speaks a plain command —
+   * "schedule Tomatoes on Moon 5 Day 16", "schedule a reminder:
+   * Call the landlord on Pattern Day 220", "unschedule Tomatoes
+   * on Moon 5 Day 16" — and the Spark writes it into the one
+   * planner record (CodexLivingPlanner, the same record the
+   * planner room and the Sphere's own day marks read), on this
+   * device, with no door call. One record: a command that names
+   * a thing already standing on that day adds no duplicate, and
+   * unscheduling removes exactly what scheduling set. */
+
+  // The planner's own kinds (life-atlas-planner TYPE_MAP), with
+  // the record's own glyphs (the extension's SYMBOL_BY_CATEGORY).
+  const SCHEDULE_SYMBOLS = {
+    task: "✓", reminder: "⚑", event: "●", practice: "✦", project: "◆",
+    meeting: "👥", milestone: "★", travel: "✈", planting: "🌱", growing: "🌱",
+    harvest: "🌾", watering: "💧", farming: "🌾", health: "❤", family: "♡",
+    home: "⌂", cleaning: "🧹", writing: "✎", creative: "🎨", school: "🎓",
+    observation: "◉",
+  };
+  const SCHEDULE_KIND_WORDS = {
+    task: "task", reminder: "reminder", event: "event", practice: "practice",
+    project: "project", meeting: "meeting", milestone: "milestone",
+    travel: "travel", note: "observation", quest: "task",
+  };
+
+  // The pattern year's anchor is April 17 of its civil year
+  // (PatternCalendar's epoch rule): Pattern Day N of anchor year
+  // Y is the civil date April 17 + (N − 1) days. Verified against
+  // the house fixtures: anchor 2026, day 92 → 2026-07-17.
+  function civilDateForPatternDay(anchorYear, patternDay) {
+    const y = Number(anchorYear);
+    const pd = Number(patternDay);
+    if (!Number.isFinite(y) || !Number.isFinite(pd) || pd < 1 || pd > 366) return null;
+    return new Date(Date.UTC(y, 3, 17) + (pd - 1) * 86400000).toISOString().slice(0, 10);
+  }
+
+  function anchorYearForCivil(civilDate) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(civilDate || ""));
+    if (!m) return null;
+    const year = Number(m[1]);
+    return `${m[2]}-${m[3]}` >= "04-17" ? year : year - 1;
+  }
+
+  // today: { patternDay, anchorYear, civilDate } — all from the
+  // one canonical read (todaySummary), never a second clock.
+  function parseScheduleCommand(text, today) {
+    const raw = String(text || "").trim().replace(/^please\s+/i, "");
+    if (!raw || !today || !Number.isFinite(Number(today.patternDay))) return null;
+    let action = null;
+    let rest = null;
+    let m = /^(unschedule|cancel|remove|delete)\b[:,]?\s+/i.exec(raw);
+    if (m) { action = "unschedule"; rest = raw.slice(m[0].length); }
+    else {
+      m = /^(schedule|plan|add|put|book)\b[:,]?\s+/i.exec(raw);
+      if (m) { action = "schedule"; rest = raw.slice(m[0].length); }
+    }
+    if (!action || rest == null) return null;
+
+    // The day, in the keeper's own phrasings.
+    let patternDay = null;
+    let dayPhrase = null;
+    const dayPatterns = [
+      { re: /\bpattern\s+day\s+(\d{1,3})\b/i, get: (g) => Number(g[1]) },
+      { re: /\bpd\s*(\d{1,3})\b/i, get: (g) => Number(g[1]) },
+      { re: /\bmoon\s+(\d{1,2})\s*(?:,|·|and)?\s*day\s+(\d{1,2})\b/i, get: (g) => (Number(g[1]) - 1) * 28 + Number(g[2]) },
+      { re: /\bday\s+(\d{1,2})\s+of\s+moon\s+(\d{1,2})\b/i, get: (g) => (Number(g[2]) - 1) * 28 + Number(g[1]) },
+      { re: /\btomorrow\b/i, get: () => Number(today.patternDay) + 1 },
+      { re: /\btoday\b/i, get: () => Number(today.patternDay) },
+    ];
+    for (const { re, get } of dayPatterns) {
+      const hit = re.exec(rest);
+      if (hit) { patternDay = get(hit); dayPhrase = hit[0]; break; }
+    }
+
+    // The title is what remains once the day phrase is lifted out.
+    let title = dayPhrase ? rest.replace(dayPhrase, " ") : rest;
+    title = title.replace(/\s+on\s*$/i, "").replace(/^\s*(a|an|the)\s+/i, "").replace(/\s+/g, " ").trim().replace(/[.\s]+$/, "");
+    if (!title) return null;
+
+    // An optional kind word up front: "schedule a reminder: …".
+    let category = "task";
+    const kindHit = new RegExp(`^(${Object.keys(SCHEDULE_KIND_WORDS).join("|")})\\s*[:\\-]\\s*(.+)$`, "i").exec(title);
+    if (kindHit) {
+      category = SCHEDULE_KIND_WORDS[kindHit[1].toLowerCase()];
+      title = kindHit[2].trim();
+      if (!title) return null;
+    }
+
+    if (patternDay == null) return { action, needsDay: true, title, category };
+    if (!Number.isFinite(patternDay) || patternDay < 1 || patternDay > 366) {
+      return { action, invalid: "That day is outside the pattern year — the count runs from Pattern Day 1 to the Day Out of Time.", title, category };
+    }
+    const moon = patternDay <= 364 ? Math.floor((patternDay - 1) / 28) + 1 : null;
+    const day = patternDay <= 364 ? ((patternDay - 1) % 28) + 1 : null;
+    if (moon != null && (moon < 1 || moon > 13 || day < 1 || day > 28)) {
+      return { action, invalid: "That Moon and day are outside the thirteen Moons of twenty-eight days.", title, category };
+    }
+
+    // The next standing of that day: this pattern year's, unless
+    // it has already passed, in which case next year's.
+    let anchorYear = Number(today.anchorYear);
+    let civilDate = civilDateForPatternDay(anchorYear, patternDay);
+    if (civilDate && today.civilDate && civilDate < today.civilDate) {
+      anchorYear += 1;
+      civilDate = civilDateForPatternDay(anchorYear, patternDay);
+    }
+    return { action, title, category, patternDay, moon, day, anchorYear, civilDate };
+  }
+
   // The one clock, read the one way the house reads it: the
   // canonical cursor first, the calendar itself behind it. Every
   // stamp in the keeper's record comes from here — never a second
@@ -126,7 +238,7 @@
 
   const ACTION_NAMES = ["goToday", "showDay", "openDayWorld", "openDeepTime", "openFarm", "freeze", "wake", "speakDay"];
 
-  const api = { VERSION, AGENT_URL, planNotesFor, classifyLocal, ACTION_NAMES, daypartForHour, patternStamp, playSummary };
+  const api = { VERSION, AGENT_URL, planNotesFor, classifyLocal, ACTION_NAMES, daypartForHour, patternStamp, playSummary, parseScheduleCommand, civilDateForPatternDay, anchorYearForCivil, SCHEDULE_SYMBOLS };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   global.SphereSparkCore = api;
 
@@ -531,7 +643,7 @@
           <p class="sphere-spark-talk-stage">${companion.kindName || companion.kind || "Spark"} · ${stage.name}${growth ? ` · voice: ${growth.name}` : ""}${presence ? ` · ${presence.name}` : ""}</p>
         </div>
       </div>
-      <p class="sphere-spark-talk-privacy">Two ways of answering, named on every reply: from your record on this device, or through the talking door. Your record's summary — ${name}'s name, your days and practices, today's coordinate — travels with your words only while you are in this conversation. Your notes are never sent, and nothing of this conversation is kept when the page closes.</p>
+      <p class="sphere-spark-talk-privacy">Two ways of answering, named on every reply: from your record on this device, or through the talking door. Your record's summary — ${name}'s name, your days and practices, today's coordinate — travels with your words only while you are in this conversation. Your notes are never sent, and nothing of this conversation is kept when the page closes. Scheduling you ask for here — try “schedule Tomatoes on Moon 5 Day 16” — is written to your planner on this device only, and the day takes its mark on the Sphere.</p>
       <div class="sphere-spark-talk-log" role="log" aria-live="polite" aria-label="Conversation with ${name}"></div>
       <p class="sphere-spark-talk-seat" role="status"></p>
       <form class="sphere-spark-talk-form">
@@ -574,6 +686,116 @@
       return p;
     }
 
+    /* ── Scheduling, handled on this device ─────────────────── */
+
+    function scheduleToday() {
+      const summary = todaySummary();
+      if (!summary || summary.dayOfPatternYear == null) return null;
+      return {
+        patternDay: summary.dayOfPatternYear,
+        anchorYear: anchorYearForCivil(summary.civilDate),
+        civilDate: summary.civilDate || null,
+      };
+    }
+
+    function dayWords(cmd) {
+      return cmd.moon != null
+        ? `Moon ${cmd.moon} · Day ${cmd.day}`
+        : "the Day Out of Time";
+    }
+
+    function announceRecordsChanged(action, id) {
+      const detail = { source: "sphere-spark-schedule", action, id: id || null };
+      try { window.dispatchEvent(new CustomEvent("sof:life-atlas-records-changed", { detail })); } catch { /* one door is enough */ }
+      try { document.dispatchEvent(new CustomEvent("sof:life-atlas-records-changed", { detail })); } catch { /* the record stands either way */ }
+    }
+
+    async function handleSchedule(cmd) {
+      const planner = window.CodexLivingPlanner;
+      const source = "From your record, on this device";
+      if (cmd.needsDay) {
+        addLine("spark", `I can set “${cmd.title}” for you — on which day? Name it as a Moon and day (“Moon 5 Day 16”) or a Pattern Day (“Pattern Day 220”).`, source);
+        return;
+      }
+      if (cmd.invalid) { addLine("spark", cmd.invalid, source); return; }
+      if (!planner?.createPlan || !planner?.plansForYear) {
+        addLine("spark", "Your planner is still waking up on this page — give it a moment and tell me again, and I will set it.", source);
+        return;
+      }
+      const symbol = SCHEDULE_SYMBOLS[cmd.category] || "●";
+      try {
+        const plans = await planner.plansForYear(cmd.anchorYear);
+        const sameDay = (plans || []).filter((p) => Number(p?.temporal?.patternDay) === cmd.patternDay);
+        const wanted = cmd.title.toLowerCase();
+        if (cmd.action === "schedule") {
+          const existing = sameDay.find((p) => String(p?.title || "").trim().toLowerCase() === wanted);
+          if (existing) {
+            addLine("spark", `“${cmd.title}” already stands on ${dayWords(cmd)} — I have not set it twice. Its ${symbol} mark is under that day on the Sphere.`, source);
+            return;
+          }
+          const saved = await planner.createPlan({
+            title: cmd.title,
+            category: cmd.category,
+            date: cmd.civilDate,
+            allDay: true,
+            notes: "Set by telling your Spark on the Sphere page.",
+          });
+          announceRecordsChanged("create", saved?.id);
+          soundContext("line", companion, record, cmd.title);
+          addLine("spark", `Done — “${cmd.title}” stands on ${dayWords(cmd)} (${cmd.civilDate}). A ${symbol} now marks that day on the Sphere; tap the day to see it in Day Details. Say “unschedule ${cmd.title} on ${dayWords(cmd).replace(" · ", " ")}” to take it off.`, source);
+          try { window.SphereRebuild?.showDay?.({ moon: cmd.moon, day: cmd.day, patternDay: cmd.patternDay, civilDate: cmd.civilDate }); } catch { /* the mark stands without the jump */ }
+          return;
+        }
+        // Unschedule: remove exactly the named thing on that day.
+        const matches = sameDay.filter((p) => String(p?.title || "").trim().toLowerCase().includes(wanted) || wanted.includes(String(p?.title || "").trim().toLowerCase()));
+        if (!matches.length) {
+          const standing = sameDay.map((p) => p?.title).filter(Boolean);
+          addLine("spark", standing.length
+            ? `Nothing named “${cmd.title}” stands on ${dayWords(cmd)}. That day holds: ${standing.join("; ")}. Name one of those and I will take it off.`
+            : `Nothing stands on ${dayWords(cmd)}, so there is nothing to take off.`, source);
+          return;
+        }
+        for (const match of matches) { await planner.removePlan(match.id); announceRecordsChanged("delete", match.id); }
+        addLine("spark", `Taken off — ${matches.map((p) => `“${p.title}”`).join(", ")} no longer stands on ${dayWords(cmd)}, and its mark is gone from the Sphere.`, source);
+      } catch {
+        addLine("spark", "Your planner would not take that just now — nothing was written. Tell me again in a moment.", source);
+      }
+    }
+
+    // The greeting, spoken only inside this panel, only when the
+    // keeper has come to talk: where the keeper stands in the
+    // year, the next marked day in the record, and the one plain
+    // offer. Text only — the Spark stays quiet by default, and
+    // the sound controls stand as they were.
+    (async () => {
+      const summary = todaySummary();
+      if (!summary) return;
+      let line = `You are standing in Moon ${summary.moon} · Day ${summary.day} — Pattern Day ${summary.dayOfPatternYear} of the year.`;
+      try {
+        const planner = window.CodexLivingPlanner;
+        const anchor = anchorYearForCivil(summary.civilDate);
+        if (planner?.plansForYear && anchor != null) {
+          let upcoming = (await planner.plansForYear(anchor))
+            .filter((p) => Number(p?.temporal?.patternDay) >= Number(summary.dayOfPatternYear))
+            .sort((a, b) => Number(a.temporal.patternDay) - Number(b.temporal.patternDay));
+          if (!upcoming.length) {
+            upcoming = (await planner.plansForYear(anchor + 1))
+              .slice()
+              .sort((a, b) => Number(a.temporal.patternDay) - Number(b.temporal.patternDay));
+          }
+          const next = upcoming[0];
+          if (next?.temporal?.patternDay) {
+            const pd = Number(next.temporal.patternDay);
+            const m = Math.floor((pd - 1) / 28) + 1;
+            const d = ((pd - 1) % 28) + 1;
+            line += ` The next marked day in your record is “${next.title}” — Moon ${m} · Day ${d}.`;
+          }
+        }
+      } catch { /* the coordinate alone is a whole greeting */ }
+      line += " Tell me to schedule something — “schedule Tomatoes on Moon 5 Day 16” — and I will set it and mark the day.";
+      addLine("spark", line, "From your record, on this device");
+    })();
+
     // Seat status, probed once: honest about the door's state.
     fetch(AGENT_URL, { method: "GET" })
       .then((r) => (r.ok ? r.json() : null))
@@ -608,6 +830,11 @@
       if (live) record = live;
       addLine("keeper", clean);
       input.value = "";
+
+      // Scheduling is the record's own work: parsed and kept on
+      // this device, never sent through the talking door.
+      const sched = parseScheduleCommand(clean, scheduleToday());
+      if (sched) { await handleSchedule(sched); viaMic = false; return; }
 
       const kind = classifyLocal(clean);
       if (kind === "motif") {
