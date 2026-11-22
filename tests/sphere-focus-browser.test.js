@@ -377,6 +377,13 @@ test("Sphere Focus browser interactions across responsive viewports", async (t) 
     await waitFor(async () => evaluate(
       `document.documentElement.classList.contains("armillary-rooms-open")`
     ));
+    // The Calendar Atlas is wired by the page's deferred-tools
+    // loader (phased, idle-scheduled; living-time-sphere.html),
+    // which lands well after first paint on a slow box. Wait for
+    // its ready flag before knocking on the Atlas door.
+    await waitFor(async () => evaluate(
+      `globalThis.__SOF_SPHERE_DEFERRED_TOOLS_READY__ === true`
+    ), 120000);
     await waitFor(async () => evaluate(`!!document.querySelector("#calendar-atlas-open")`));
     assert.equal(await click("#calendar-atlas-open"), true);
     await waitFor(async () => evaluate(
