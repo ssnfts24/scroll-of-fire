@@ -1198,6 +1198,10 @@
   color: var(--muted, #b9c1c7);
 }
 
+[data-codex-scroll-resume][hidden] {
+  display: none !important;
+}
+
 .today-codex-stack {
   display: grid;
   gap: 0.75rem;
