@@ -355,7 +355,11 @@ html.living-time-sphere-page.armillary-rooms-open body:not(.sphere-app) .sphere-
   transition: opacity 240ms ease, visibility 0s linear 240ms;
 }
 
-html.living-time-sphere-page.armillary-rooms-open .sphere-rooms-backdrop {
+/* Scoped to the page shell like every other rooms rule: in the
+ * app view the same class can linger on <html>, and the app
+ * shell's own sheets must not sit under this backdrop
+ * (PR #232 review, Nov 21, 2026). */
+html.living-time-sphere-page.armillary-rooms-open body:not(.sphere-app) .sphere-rooms-backdrop {
   opacity: 1;
   visibility: visible;
   transition: opacity 240ms ease;
