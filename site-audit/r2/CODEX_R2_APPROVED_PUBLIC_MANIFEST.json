@@ -250,6 +250,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/css/paths.css",
+      "sha256": "f4f749ee5599bfebc29047e3402cc10258c9618ac5555d8f476c042710fa071f",
+      "publicUrl": "https://codexofreality.org/assets/css/paths.css",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/css/pattern-garden.css",
       "sha256": "4fce6d548c06bbf0c4c53f061358b98b59a0065eddc85a3d97570ace2f40a62c",
       "publicUrl": "https://codexofreality.org/assets/css/pattern-garden.css",
@@ -455,7 +461,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "5288b50d55974569eb7846295cb1ca4c44d0c9952c1b40fba956ab2315e52b04",
+      "sha256": "c5eca824cfdc933a5e7fdf51532352a29a8ef8d550b40e21f1fba60d07026be7",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -481,6 +487,12 @@
       "path": "docs/assets/data/farm-western-wa.json",
       "sha256": "8c5985221f954e7fa88e05a8887a99c1b663fc43fd7c483a944cf7a3fab241ad",
       "publicUrl": "https://codexofreality.org/assets/data/farm-western-wa.json",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/data/link-graph.json",
+      "sha256": "5831e21e4450a0deb40cc85dfa49c55d0b48ac8aa758918abc9d17bcb7bea46c",
+      "publicUrl": "https://codexofreality.org/assets/data/link-graph.json",
       "status": "operational"
     },
     {
@@ -2266,6 +2278,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/js/paths-from-here.js",
+      "sha256": "57cc0b99f50cf146a4bc7463fbaefdf6edc9bc25ca2b76b7b7e5aebb3dc9e398",
+      "publicUrl": "https://codexofreality.org/assets/js/paths-from-here.js",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/js/pattern-garden.js",
       "sha256": "79b543b42b283906a84cf202dba980e9a3190f8ec7f40bc96aad643a9c868a33",
       "publicUrl": "https://codexofreality.org/assets/js/pattern-garden.js",
@@ -3905,13 +3923,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "5701f01124534ebcc21c44f043d2e40718b9b6def4929eba98c72bbd3cbcadd4",
+      "sha256": "dcd3388d64446a13c3e853f94d0af69dc207d552c60da0d5fa541ee0d5da1f95",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "74cdb4b921498e704b37484a094b2090df0dec7a3f3524722b3def3b3198e7d0",
+      "sha256": "125f38507ce005058ef2bc1b2dcccf1c24f237602c318f3423c937e02a293d48",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -4067,13 +4085,13 @@
     },
     {
       "path": "docs/hub.html",
-      "sha256": "217fdd474400d734671c7969c17baf687baac145726cdcf8950d1d0bd3107d3d",
+      "sha256": "ae97709a4c58a9b11a614c56cdefe256d78b28936b20cddf0f9d5ed826f1c7b3",
       "publicUrl": "https://codexofreality.org/hub.html",
       "status": "operational"
     },
     {
       "path": "docs/index.html",
-      "sha256": "589246af7d3a86d3e19fedc49b975f4d371b40cf3ffb9fd5455f81076b4fbb3c",
+      "sha256": "f9ebb66f26bcfcfbecb2ab52125f958ab7ae595ca79cb053ae8fe7129bfd78f1",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
@@ -5579,7 +5597,7 @@
     },
     {
       "path": "docs/scroll/index.html",
-      "sha256": "9cac160f14db3cfb5853b85e19798610fe659732f2a01eb24774f10d9a6faa10",
+      "sha256": "3ad8941150badbed104503cb1b3fb684221e8d98291afeb4f5e49c0ff67b475c",
       "publicUrl": "https://codexofreality.org/scroll/",
       "status": "operational"
     },

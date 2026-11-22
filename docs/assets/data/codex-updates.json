@@ -2,6 +2,14 @@
  {
   "date": "2026-11-22",
   "type": "feature",
+  "title": "The library grew paths",
+  "summary": "The Scroll Library holds 817 sections and the Documentation Hub holds its entries, but until now a page was a shelf with no trails: land deep and there was no way to walk. The trails are now counted from the pages' own words, and a quiet panel stands at the foot of the Scroll Library's opening and the Documentation Hub — Paths from here, the doors this page's own writing opens, grouped by country, and Who points here, the pages that lead back. Only real links are shown: the doors every page carries in its frame are not counted as trails, and a page with no trails simply shows no panel.",
+  "url": "./hub.html",
+  "symbol": "✧"
+ },
+ {
+  "date": "2026-11-22",
+  "type": "feature",
   "title": "The front door learned to remember",
   "summary": "The quiet lines counted from your own record — practice sealed this moon against last, the days you have come back, a today still waiting for its note — used to speak only inside the 13 Moons Day Notes panel. They now speak in two more rooms: the Today panel on the front door, and the opening of the Scroll Library. Every line is still counted on your own device from your own records, and nothing is sent anywhere; the lines only highlight and offer a door, and they hide nothing that was there before.",
   "url": "./index.html#today-panel",
