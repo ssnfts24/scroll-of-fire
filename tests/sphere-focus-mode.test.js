@@ -8,69 +8,77 @@ const path = require("node:path");
 const root = path.resolve(__dirname, "..");
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
 const armillary = read("docs/assets/js/sphere-armillary.js");
-const appCss = read("docs/assets/css/living-time-sphere-app.css");
+const rebuild = read("docs/assets/js/sphere-rebuild.js");
+const shellCss = read("docs/assets/css/sphere-armillary.css");
+const spark = read("docs/assets/js/sphere-spark.js");
 const armillaryCss = read("docs/assets/css/sphere-armillary.css");
 
-test("Sphere Focus keeps the five primary actions and routes secondary tools through More", () => {
-  const primaryLabels = [
-    'aria-hidden="true">◷</span>Today',
-    'aria-hidden="true">＋</span>Schedule',
-    'aria-hidden="true">▤</span>Day',
-    'aria-hidden="true">✧</span>Spark',
-    'aria-hidden="true">•••</span>More',
-  ];
-  for (const label of primaryLabels) {
-    assert.ok(armillary.includes(label), `primary action ${label} is present`);
-  }
-  for (const action of ["cam-top", "cam-tilt", "cam-edge", "rotate", "open-atlas", "open-planner", "open-settings", "fullscreen", "fullpage"]) {
-    assert.ok(armillary.includes(`"${action}"`), `secondary action ${action} remains available`);
-  }
-  assert.match(armillary, /window\.SphereRebuild\.openSchedule/);
-  assert.match(armillary, /data-sphere-rebuild-spark/);
+test("Sphere Rebuild and Armillary own one shell; Focus never re-enters B7.61", () => {
+  assert.match(rebuild, /if \(document\.body\.classList\.contains\("sphere-app"\)\)/);
+  assert.match(rebuild, /The Sphere Rebuild shell is authoritative/);
+  assert.match(rebuild, /btn\.remove\(\)/);
+  assert.doesNotMatch(armillary, /initializeFocusMode|buildFocusDock|sphere-app-enter.*\.click/);
+  assert.match(armillary, /document\.documentElement\.classList\.add\("armillary-app"\)/);
+  assert.match(shellCss, /html\.living-time-sphere-page body:not\(\.sphere-app\) \.sphere-rebuild-dock/);
 });
 
-test("the selected-day readout and its wheel live in Day Details, not over the Sphere", () => {
-  assert.match(armillary, /var daySheet = document\.body\.classList\.contains\("sphere-app"\)/);
-  assert.match(armillary, /card\.classList\.add\("sphere-day-readout-details"\)/);
-  assert.match(armillary, /sheetBar\.after\(card\)/);
-  assert.match(armillary, /currentBar\.after\(readout\)/);
+test("the five primary actions are present and secondary doorways stay in More", () => {
+  assert.match(rebuild, /data-sphere-rebuild-today>Today/);
+  assert.match(rebuild, /data-sphere-rebuild-schedule>Schedule/);
+  assert.match(armillary, /data-sphere-rebuild-daydetails/);
+  assert.match(rebuild, /data-sphere-rebuild-spark>Your Spark/);
+  assert.match(armillary, /moreButton\.textContent = "More"/);
+  assert.match(armillary, /\["dayworld", "deeptime", "farm", "freeze"\]/);
+  for (const action of ["openDayWorld", "openDeepTime", "openFarm", "freeze", "wake", "openSchedule", "goToday"]) {
+    assert.match(rebuild, new RegExp(`function ${action}\\(`), `${action} remains wired`);
+  }
+  assert.match(armillary, /sphere-more-tools/);
+  assert.match(armillary, /dock\.replaceChildren\(/);
+});
+
+test("Day Details carries the selected-day readout within the shared rooms panel", () => {
+  assert.match(armillary, /id = "sphere-day-details"/);
+  assert.match(armillary, /dayDetails\.appendChild\(card\)/);
+  assert.match(armillaryCss, /\.sphere-day-details > \.sphere-day-readout/);
   assert.match(armillaryCss, /\.sphere-day-readout-wheel/);
   assert.match(armillaryCss, /\.sphere-day-readout-actions/);
-  assert.match(appCss, /sphere-canvas-wrap > \.sphere-day-readout\s*\{\s*display:\s*none/);
-  assert.match(appCss, /sphere-sheet \.sphere-day-readout\s*\{\s*position:\s*relative/);
 });
 
-test("day-sheet dismissal supports touch, focus containment, close, and browser Escape behavior", () => {
-  assert.match(armillary, /sphere-sheet-handle/);
-  assert.match(armillary, /event\.clientY - startY > 60/);
+test("Spark opens its own visible conversation without routing through Day Details", () => {
+  assert.match(rebuild, /sphere:open-rooms/);
+  assert.match(armillary, /document\.addEventListener\("sphere:open-rooms"/);
+  assert.doesNotMatch(rebuild, /rootEl\.classList\.add\("armillary-rooms-open"\)/);
+  assert.match(rebuild, /\$\("\[data-sphere-spark-talk\]", \$\("\.sphere-sidebar"\) \|\| document\)/);
+  assert.match(rebuild, /input\.focus\(\{ preventScroll: true \}\)/);
+  assert.doesNotMatch(rebuild, /data-sphere-rebuild-spark[\s\S]{0,800}data-app-action="open-day"/);
+  assert.match(spark, /sphere-spark-talk-privacy/);
+  assert.match(spark, /sphere-spark-talk-log/);
+  assert.match(spark, /SphereSpark/);
+});
+
+test("rooms panel supports focus containment, restoration, Escape, backdrop and touch dismissal", () => {
+  assert.match(armillary, /className = "sphere-rooms-backdrop"/);
+  assert.match(armillary, /event\.key === "Escape"/);
   assert.match(armillary, /event\.key !== "Tab"/);
-  assert.match(armillary, /closeButton\.click\(\)/);
-  assert.match(armillary, /aria-modal", "true"/);
-  assert.match(armillary, /sidebar\.removeAttribute\("aria-modal"\)/);
-  assert.match(armillary, /sidebar\.setAttribute\("aria-hidden", "true"\)/);
-  assert.match(appCss, /body\.sphere-app \.sphere-app-scrim/);
-  assert.match(appCss, /prefers-reduced-motion:\s*reduce/);
+  assert.match(armillary, /returnFocus\.focus\(\{ preventScroll: true \}\)/);
+  assert.match(armillary, /el\.setAttribute\("inert", ""\)/);
+  assert.match(armillary, /event\.clientY - startY > 60/);
+  assert.match(shellCss, /max-height:\s*min\(84dvh, 60rem\)/);
+  assert.match(shellCss, /width:\s*min\(34rem, 44vw\)/);
+  assert.match(shellCss, /max-height:\s*none/);
+  assert.match(shellCss, /safe-area-inset-bottom/);
+  assert.match(shellCss, /orientation:\s*landscape/);
+  assert.match(shellCss, /prefers-reduced-motion:\s*reduce/);
 });
 
-test("the responsive app shell keeps the Sphere central and reserves safe areas", () => {
-  assert.match(appCss, /grid-template-columns:\s*repeat\(5,\s*minmax\(0,\s*1fr\)\)/);
-  assert.match(appCss, /height:\s*100dvh/);
-  assert.match(appCss, /html\.living-time-sphere-page body\.sphere-app \.sphere-wrapper/);
-  assert.match(appCss, /body\.sphere-app \.sphere-sidebar\.sphere-sheet\s*\{\s*max-height:\s*84dvh/);
-  assert.match(appCss, /body\.sphere-app \.spark-ember-host\s*\{\s*display:\s*none/);
-  assert.match(appCss, /env\(safe-area-inset-bottom/);
-  assert.match(appCss, /orientation:\s*landscape/);
-  assert.match(appCss, /min-width:\s*900px/);
+test("the same shell switches between Focus and full-page presentation", () => {
+  assert.match(armillary, /modeToggle\.addEventListener\("click"/);
+  assert.match(armillary, /classList\.toggle\("sphere-full-page"\)/);
+  assert.match(shellCss, /sphere-full-page body:not\(\.sphere-app\) main\.sphere-page/);
+  assert.match(shellCss, /sphere-full-page body:not\(\.sphere-app\) \.sphere-sidebar/);
 });
 
-test("the secondary control menu is a native dismissible dialog", () => {
-  assert.match(armillary, /document\.createElement\("dialog"\)/);
-  assert.match(armillary, /menu\.showModal\(\)/);
-  assert.match(armillary, /menu\.querySelector\("\.sphere-focus-more-close"\)/);
-  assert.match(appCss, /\.sphere-focus-more::backdrop/);
-});
-
-test("Focus mode activates on the initial page load and follows app-mode changes", () => {
-  assert.match(armillary, /document\.querySelector\("\.sphere-app-enter"\)\?\.click\(\)/);
-  assert.match(armillary, /new MutationObserver\(sync\)\.observe\(document\.body/);
+test("legacy app-shell Focus styles do not participate in this page", () => {
+  const legacyCss = read("docs/assets/css/living-time-sphere-app.css");
+  assert.doesNotMatch(legacyCss, /sphere-focus-more|body\.sphere-app \.sphere-sidebar\.sphere-sheet/);
 });

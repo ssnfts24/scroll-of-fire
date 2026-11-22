@@ -202,10 +202,10 @@ test("corrective: the sky line is real values or one honest line, never dashes",
   assert.ok(handoff.includes('s !== "NOW"'), "only segments carrying real numbers stand as data");
 });
 
-test("corrective: the command trigger stands in the dock as its eighth door", () => {
+test("corrective: the command trigger stays with More instead of competing with the primary dock", () => {
   assert.ok(handoff.includes("function dockCommandTrigger()"), "the trigger is docked by the page layer");
-  assert.ok(handoff.includes('dock.classList.add("has-command-trigger")'), "the dock names its eighth door");
-  assert.ok(handoff.includes("dock.appendChild(trigger)"), "the trigger joins the one row instead of floating over it");
+  assert.ok(handoff.includes('document.querySelector(".sphere-more-actions")'), "More owns secondary actions");
+  assert.ok(handoff.includes("actions.appendChild(trigger)"), "the command trigger remains available in More");
 });
 
 /* ── The desktop-width corrective + polish (Aaron, Nov 20,

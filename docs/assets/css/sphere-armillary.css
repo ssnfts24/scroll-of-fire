@@ -314,6 +314,7 @@ html.living-time-sphere-page .sphere-rebuild-dock-btn {
 html.living-time-sphere-page body:not(.sphere-app) .sphere-sidebar {
   position: fixed;
   inset: auto 0 0;
+  box-sizing: border-box;
   z-index: 6000;
   width: auto;
   max-width: none;
@@ -340,7 +341,7 @@ html.living-time-sphere-page body:not(.sphere-app) .sphere-sidebar {
   transition: transform 380ms ease;
 }
 
-html.living-time-sphere-page.armillary-rooms-open .sphere-sidebar {
+html.living-time-sphere-page.armillary-rooms-open body:not(.sphere-app) .sphere-sidebar {
   transform: none;
 }
 
@@ -495,7 +496,7 @@ html.living-time-sphere-page.armillary-rooms-open .sphere-rooms-backdrop {
     transform: translateX(103%);
   }
 
-  html.living-time-sphere-page.armillary-rooms-open .sphere-sidebar {
+  html.living-time-sphere-page.armillary-rooms-open body:not(.sphere-app) .sphere-sidebar {
     transform: none;
   }
 }
@@ -981,7 +982,7 @@ html.living-time-sphere-page.sphere-full-page body:not(.sphere-app) .sphere-rebu
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
   max-width: 62rem;
   margin: 0.5rem auto;
-  padding: 0.5rem max(0.75rem, env(safe-area-inset-left, 0px)) 0.5rem max(0.75rem, env(safe-area-inset-right, 0px));
+  padding: 0.5rem max(0.75rem, env(safe-area-inset-right, 0px)) 0.5rem max(0.75rem, env(safe-area-inset-left, 0px));
   border: 0;
   background: transparent;
 }

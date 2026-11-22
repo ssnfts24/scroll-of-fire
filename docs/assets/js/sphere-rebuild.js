@@ -326,12 +326,17 @@
     dock.querySelector("[data-sphere-rebuild-farm]").addEventListener("click", openFarm);
     dock.querySelector("[data-sphere-rebuild-freeze]").addEventListener("click", () => { if (frozen) wake(); else freeze(); });
     dock.querySelector("[data-sphere-rebuild-spark]").addEventListener("click", () => {
-      rootEl.classList.add("armillary-rooms-open");
+      const sparkButton = dock.querySelector("[data-sphere-rebuild-spark]");
+      const talk = $("[data-sphere-spark-talk]");
+      const input = talk?.querySelector("input, textarea");
+      document.dispatchEvent(new CustomEvent("sphere:open-rooms", {
+        detail: { trigger: sparkButton, target: input || null },
+      }));
       let tries = 0;
       const focusConversation = () => {
         const talk = $("[data-sphere-spark-talk]", $(".sphere-sidebar") || document);
         if (talk) {
-          talk.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+          talk.scrollIntoView({ behavior: "auto", block: "start" });
           const input = talk.querySelector("input, textarea");
           if (input) {
             window.setTimeout(() => {

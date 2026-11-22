@@ -473,7 +473,6 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
       document.querySelector(".sphere-wrapper"),
       document.querySelector(".sphere-rebuild-caption"),
       dock,
-      document.getElementById("living-command-trigger"),
     ].filter(Boolean);
 
     function syncMode() {
@@ -533,6 +532,10 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
 
     closeButton.addEventListener("click", function () { closeRooms(true); });
     backdrop.addEventListener("click", function () { closeRooms(true); });
+    document.addEventListener("sphere:open-rooms", function (event) {
+      var detail = event.detail || {};
+      openRooms(detail.trigger || document.activeElement, detail.target || null);
+    });
     document.addEventListener("keydown", function (event) {
       if (!document.documentElement.classList.contains("armillary-rooms-open")) return;
       if (event.key === "Escape") {
@@ -610,7 +613,7 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
     var dayDetailsButton = document.createElement("button");
     dayDetailsButton.type = "button";
     dayDetailsButton.className = "sphere-rebuild-dock-btn";
-    dayDetailsButton.dataset.sphereRebuildDaydetails = "";
+    dayDetailsButton.setAttribute("data-sphere-rebuild-daydetails", "");
     dayDetailsButton.setAttribute("aria-label", "Open Day Details");
     dayDetailsButton.textContent = "Day Details";
     dayDetailsButton.addEventListener("click", function () {
