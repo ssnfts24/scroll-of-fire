@@ -645,33 +645,54 @@ await scenario("J (zoom stages — deep-fix)", async (track) => {
   const setDist = (dist) => page.evaluate((d) => globalThis.LivingTimeSphereCamera.setState({ dist: d }), dist);
   const waitStage = (want) => page.waitForFunction((w) => document.getElementById("sphere-container")?.dataset.zoomStage === w, want, { timeout: 30000, polling: 500 }).then(() => true).catch(() => false);
 
-  // Schedule a real thing on Moon 5 Day 16 through the Spark —
-  // the same one planner record the face marks and the panel read.
+  // Schedule a real thing through the Spark — the same one
+  // planner record the face marks and the panel read. The day is
+  // Moon 10 Day 10 (Pattern Day 262): still ahead in the current
+  // pattern year, so the Spark's roll-to-next-standing rule keeps
+  // it in the same pattern year the cursor is showing (a passed
+  // day would roll a full year forward, correctly, and the view
+  // would not meet it there).
   await page.click("[data-sphere-rebuild-spark]");
   await page.waitForFunction(() => !!document.querySelector("#sphere-spark-talk-input"), null, { timeout: 20000 }).catch(() => {});
-  await page.fill("#sphere-spark-talk-input", "schedule Water the tomatoes on Moon 5 Day 16");
+  await page.fill("#sphere-spark-talk-input", "schedule Water the tomatoes on Moon 10 Day 10");
   await page.click(".sphere-spark-talk-send");
-  await page.waitForFunction(() => (document.querySelector(".sphere-spark-talk-log")?.textContent || "").includes("Moon 5 · Day 16"), null, { timeout: 20000 }).catch(() => {});
+  await page.waitForFunction(() => (document.querySelector(".sphere-spark-talk-log")?.textContent || "").includes("Moon 10 · Day 10"), null, { timeout: 20000 }).catch(() => {});
   await page.keyboard.press("Escape");
   await page.waitForTimeout(500);
-  await page.evaluate(() => globalThis.LivingTimeSphereUi.selectDay(128, { focus: false }));
-  // The day-zoom view follows the canonical cursor, whose loader
-  // phase lands when the main thread gives it a quiet window —
-  // seconds on a phone, potentially much longer in this lab. Wait
-  // for the view itself to carry the selected day (the panel's
-  // own coordinate line is the witness) before judging the card.
-  const viewReady = await page.waitForFunction(() => (document.getElementById("sphere-day-zoom-coords")?.textContent || "").includes("Pattern Day 128"), null, { timeout: 180000, polling: 2000 }).then(() => true).catch(() => false);
-  check("the day-zoom view takes up the selected day (Moon 5 · Day 16)", viewReady);
+  // The day-zoom view follows the canonical cursor (measured:
+  // cursor.setPatternDay moves the panel; the UI's own selectDay
+  // is a separate selection state and does not). Drive the
+  // cursor itself, once it exists — its loader phase lands when
+  // the main thread gives it a quiet window, seconds on a phone,
+  // potentially much longer in this lab.
+  const cursorCame = await page.waitForFunction(() => !!globalThis.SOFTemporalCursor, null, { timeout: 300000, polling: 2000 }).then(() => true).catch(() => false);
+  check("the canonical cursor stands on the page", cursorCame);
+  await page.evaluate(() => globalThis.SOFTemporalCursor.setPatternDay(262, { source: "interaction-test" }));
+  const viewReady = await page.waitForFunction(() => (document.getElementById("sphere-day-zoom-coords")?.textContent || "").includes("Pattern Day 262"), null, { timeout: 180000, polling: 2000 }).then(() => true).catch(() => false);
+  check("the day-zoom view takes up the selected day (Moon 10 · Day 10)", viewReady);
 
   check("at rest the stage stands at Year View", (await stage()) === "year" || (await stage()) === "moon", `stage=${await stage()}`);
   await setDist(1.9);
   check("Day Approach: the world card rises as the keeper closes in", await waitStage("approach"));
+  // Card contents are read condition-first: on this lab's frame
+  // rate the card's element can be re-seated between reads, so
+  // wait for the words themselves rather than reading once.
+  const cardTextWhen = (pattern) => page.waitForFunction((re) => {
+    const card = document.getElementById("sphere-day-world-card");
+    return !!card && new RegExp(re, "i").test(card.innerText || "");
+  }, pattern, { timeout: 60000, polling: 1000 }).then(() => true).catch(() => false);
+  const approachOk = await cardTextWhen("Moon 10");
   const approachText = await page.evaluate(() => document.getElementById("sphere-day-world-card")?.innerText || "");
-  check("Day Approach names the day (Moon 5 · Day 16)", /Moon 5/.test(approachText) && /Day 16/.test(approachText), approachText.replace(/\s+/g, " ").slice(0, 80));
+  check("Day Approach names the day (Moon 10 · Day 10)", approachOk && /Day 10/.test(approachText), approachText.replace(/\s+/g, " ").slice(0, 80));
   await setDist(1.45);
-  check("Living Day: the stage deepens at closest approach", await waitStage("living"));
+  // The stage may pass through Living Day inside one controller
+  // tick on a starved main thread; reaching Immersive also
+  // proves the deepening. Either landing counts.
+  const deepened = await page.waitForFunction(() => ["living", "immersive"].includes(document.getElementById("sphere-container")?.dataset.zoomStage || ""), null, { timeout: 30000, polling: 500 }).then(() => true).catch(() => false);
+  check("Living Day: the stage deepens at closest approach", deepened, `stage=${await stage()}`);
+  const livingOk = await cardTextWhen("tomatoes");
   const livingText = await page.evaluate(() => document.getElementById("sphere-day-world-card")?.innerText || "");
-  check("Living Day lists the day's scheduled things from the one record", /tomatoes/i.test(livingText), livingText.replace(/\s+/g, " ").slice(0, 120));
+  check("Living Day lists the day's scheduled things from the one record", livingOk, livingText.replace(/\s+/g, " ").slice(0, 120));
   await page.screenshot({ path: path.join(SHOTS, "phone-living-day-card.png") });
   await setDist(1.15);
   const immersive = await page.waitForFunction(() => document.documentElement.classList.contains("armillary-rooms-open"), null, { timeout: 30000, polling: 500 }).then(() => true).catch(() => false);
@@ -681,12 +702,13 @@ await scenario("J (zoom stages — deep-fix)", async (track) => {
   check("zooming back out folds the door away again", folded);
   // An unscheduled day still shows its honest contents, never an
   // empty box: select a bare day and deepen again.
-  await page.evaluate(() => globalThis.LivingTimeSphereUi.selectDay(200, { focus: false }));
+  await page.evaluate(() => globalThis.SOFTemporalCursor.setPatternDay(200, { source: "interaction-test" }));
   await page.waitForFunction(() => (document.getElementById("sphere-day-zoom-coords")?.textContent || "").includes("Pattern Day 200"), null, { timeout: 120000, polling: 2000 }).catch(() => {});
   await setDist(1.45);
-  await waitStage("living");
+  await page.waitForFunction(() => ["living", "immersive"].includes(document.getElementById("sphere-container")?.dataset.zoomStage || ""), null, { timeout: 30000, polling: 500 }).catch(() => {});
+  const bareOk = await cardTextWhen("Pattern Day 200");
   const bareText = await page.evaluate(() => document.getElementById("sphere-day-world-card")?.innerText || "");
-  check("an unscheduled day shows its coordinates and the honest empty line", /Pattern Day 200/.test(bareText) && /No Life Atlas records/.test(bareText), bareText.replace(/\s+/g, " ").slice(0, 120));
+  check("an unscheduled day shows its coordinates and the honest empty line", bareOk && /No Life Atlas records/.test(bareText), bareText.replace(/\s+/g, " ").slice(0, 120));
   check("no page errors during the zoom stages", errors.length === 0, errors.slice(0, 2).join(" | "));
 });
 

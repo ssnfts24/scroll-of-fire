@@ -1733,6 +1733,12 @@
       container.dataset.zoomDepth =
         "on";
 
+      // The stage stands at Year View from the start; the
+      // controller's onStage only fires on CHANGES, so without
+      // this the attribute would be absent until the first zoom.
+      container.dataset.zoomStage =
+        "year";
+
       /*
        * The card is looked up — and if necessary re-seated — on
        * every tick rather than captured once: the stage's contents
@@ -1792,34 +1798,24 @@
               stage;
           }
 
-          const fullPage =
-            document.documentElement.classList.contains(
-              "sphere-full-page"
-            );
-
-          if (stage === "immersive" && !roomsOpen() && !fullPage) {
-            const button =
-              document.querySelector(
-                "[data-sphere-rebuild-daydetails]"
-              );
-
-            if (button) {
-              openedByZoom = true;
-              button.click();
-            }
-          }
-
-          if (stage !== "immersive" && openedByZoom) {
-            openedByZoom = false;
-
-            if (roomsOpen()) {
-              document
-                .querySelector(".sphere-sheet-close")
-                ?.click();
-            }
-          }
+          
         }
       });
+
+      /*
+       * The Immersive Day door is worked from the tick, not only
+       * from the stage flip: the dock's Day Details button is
+       * seated by the shell rebuild and may not exist in the same
+       * instant the zoom crosses the threshold. Entry therefore
+       * gets a short run of attempts (about three seconds). The
+       * attempts stop the moment the door opens, the stage leaves
+       * Immersive Day, or the run is spent — so a keeper who
+       * closes the sheet by hand at closest zoom is never fought:
+       * by then the run is over, and zoom only ever closes a
+       * sheet it opened itself.
+       */
+      let immersiveAttempts = 0;
+      let wasImmersive = false;
 
       const tick = () => {
         // A sheet the keeper closed by hand is no longer zoom's to
@@ -1830,7 +1826,47 @@
 
         currentCard();
 
-        depth.update();
+        const stageNow =
+          depth.update();
+
+        const immersive =
+          stageNow === "immersive";
+
+        if (immersive && !wasImmersive) {
+          immersiveAttempts = 15;
+        }
+
+        wasImmersive = immersive;
+
+        const fullPage =
+          document.documentElement.classList.contains(
+            "sphere-full-page"
+          );
+
+        if (immersive && immersiveAttempts > 0 && !roomsOpen() && !fullPage) {
+          immersiveAttempts -= 1;
+
+          const button =
+            document.querySelector(
+              "[data-sphere-rebuild-daydetails]"
+            );
+
+          if (button) {
+            openedByZoom = true;
+            button.click();
+            immersiveAttempts = 0;
+          }
+        }
+
+        if (!immersive && openedByZoom) {
+          openedByZoom = false;
+
+          if (roomsOpen()) {
+            document
+              .querySelector(".sphere-sheet-close")
+              ?.click();
+          }
+        }
       };
 
       const timer =
