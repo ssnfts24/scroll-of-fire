@@ -221,6 +221,9 @@ const homepage = `<!doctype html>
   <link rel="stylesheet" href="../assets/css/spark-companion.css?v=20261119-1">
   <script defer src="../assets/js/spark-companion.js?v=20261119-1"></script>
   <script defer src="../assets/js/spark-presence.js?v=20261119-1"></script>
+  <!-- Garden of Paths, first slice (Q-04): the trails panel. -->
+  <link rel="stylesheet" href="../assets/css/paths.css?v=20261122-1">
+  <script defer src="../assets/js/paths-from-here.js?v=20261122-1"></script>
 </head>
 <body class="library-home living-ui">
   <a class="skip-link" href="#main">Skip to library</a>
@@ -285,6 +288,10 @@ const homepage = `<!doctype html>
       <div class="section-heading"><div><p class="eyebrow">Nothing left behind</p><h2>Browse every source section</h2></div><p>${sections.length} indexed section entries · repeated headings link to every occurrence</p></div>
       ${shelfIndex}
     </section>
+    <!-- Garden of Paths, first slice (Q-04): this page's own
+         trails and who points here, counted at build time from
+         the pages' own words (assets/data/link-graph.json). -->
+    <section class="paths" data-paths-from-here data-paths-page="scroll/index.html" data-paths-src="../assets/data/link-graph.json" hidden aria-label="Paths from here"></section>
   </main>
   <footer class="library-footer"><a class="wordmark" href="./"><span class="wordmark-mark" aria-hidden="true">✦</span><span><strong>SCROLL OF FIRE</strong><small>UNSEALED LIBRARY</small></span></a><p>Original words · Clear provenance · Whole archive</p><a href="archive/Full_Scroll_Unsealed.txt">Read the preserved source ↗</a></footer>
   <script defer src="../assets/js/living-ui.js?v=20261117-1"></script>
