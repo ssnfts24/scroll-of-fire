@@ -7,7 +7,7 @@
     "publicHtmlPages": 181,
     "catalogEntries": 73,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 26,
+      "not-linked-directly-from-homepage": 25,
       "nav-label-differs-from-title": 24,
       "no-global-navigation": 1,
       "deployed-but-unlinked": 56,
@@ -15,8 +15,7 @@
       "compatibility-redirect-page": 1,
       "not-published-in-catalog": 30,
       "unnamed-image-needs-descriptive-title": 21,
-      "not-in-sitemap": 1,
-      "reachable-only-through-atlas": 1
+      "not-in-sitemap": 1
     }
   },
   "resources": [
@@ -1890,6 +1889,7 @@
         "lab.html",
         "ledger.html",
         "living-time-sphere.html",
+        "map.html",
         "moons.html",
         "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
@@ -20187,16 +20187,14 @@
         "path": "map.html",
         "inSitemap": false,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": null,
-        "inboundPages": 1,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 2,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
-        "not-in-sitemap",
-        "reachable-only-through-atlas",
-        "not-linked-directly-from-homepage"
+        "not-in-sitemap"
       ]
     },
     {
