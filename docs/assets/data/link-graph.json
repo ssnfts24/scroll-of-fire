@@ -1661,14 +1661,14 @@
      "area": "archive"
     },
     {
-     "path": "scroll/index.html",
-     "title": "Scroll of Fire — Unsealed Library",
+     "path": "scripture/index.html",
+     "title": "Genesis & Exodus Scripture",
      "area": "scroll-scripture"
     },
     {
-     "path": "map.html",
-     "title": "The Traveller's Map",
-     "area": "systems"
+     "path": "scroll/search.html",
+     "title": "Search the Scroll",
+     "area": "scroll-scripture"
     }
    ],
    "in": [
@@ -1683,7 +1683,7 @@
      "area": "artifacts"
     }
    ],
-   "outTotal": 24,
+   "outTotal": 22,
    "inTotal": 2
   },
   "invoke.html": {
@@ -2061,15 +2061,10 @@
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
-    },
-    {
-     "path": "index.html",
-     "title": "Codex of Reality",
-     "area": "codex"
     }
    ],
    "outTotal": 2,
-   "inTotal": 2
+   "inTotal": 1
   },
   "micro.html": {
    "title": "⏳ 90-Second Micro-Run",
@@ -16255,11 +16250,6 @@
    ],
    "in": [
     {
-     "path": "index.html",
-     "title": "Codex of Reality",
-     "area": "codex"
-    },
-    {
      "path": "scroll/editorial.html",
      "title": "Editorial reading and evidence",
      "area": "evidence"
@@ -16281,7 +16271,7 @@
     }
    ],
    "outTotal": 6,
-   "inTotal": 5
+   "inTotal": 4
   },
   "scroll/lexicon.html": {
    "title": "Hebrew lexicon",
