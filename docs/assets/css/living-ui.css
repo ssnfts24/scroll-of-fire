@@ -630,6 +630,10 @@ body.living-ui main :is(
     scale: 0.98;
   }
 
+  .living-nav a:active {
+    background: rgba(243, 201, 122, 0.12);
+  }
+
   /* The day line settles in each time it is written — on arrival,
    * and again when the living day panel rewrites it. */
   body.living-ui .ld-moon-line {

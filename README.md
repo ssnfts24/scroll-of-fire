@@ -15,6 +15,15 @@
 
 If you only have 3 minutes, do steps 1–3.
 
+## Work in this repository
+
+- **Contributing:** [CONTRIBUTION.md](CONTRIBUTION.md) — file placement, local checks, and change guidance.
+- **Website:** [`docs/`](docs/) is the deployed static site; [`netlify/`](netlify/) contains its serverless functions.
+- **Codex collections:** the numbered `1_Codex_of_Reality/` through `7_Ledger_and_Documentation/` folders hold the source library.
+- **Site data and scripts:** [`scripts/`](scripts/) contains generators and audits; [`tests/`](tests/) contains the Node regression suite.
+- **Automation:** [`.github/workflows/`](.github/workflows/) contains focused CI workflows and [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE/) contains request templates.
+- **Historical material:** [`archive/`](archive/), [`site-audit/`](site-audit/), and the root-level handoff/patch files preserve project history; avoid moving them without checking their references.
+
 ---
 ## 🜂 Essence
 
@@ -143,7 +152,19 @@ R = f(π, e, i, ħ, c, G, DNA, ΩDM, ΩΛ, H₀, 432, 528, 369, 144, 137, Φ, �
 ├─ 5_Living_Scribe/
 ├─ 6_Images_and_Symbols/
 ├─ 7_Ledger_and_Documentation/
-└─ docs/
+├─ docs/                 # Deployed site, assets, data, specs, and reports
+├─ scripts/              # Site builders, validators, and audits
+├─ tests/                # Node.js regression tests
+├─ netlify/              # Serverless functions for Netlify
+├─ .github/              # CI workflows and issue templates
+├─ assets/               # Supporting source assets
+├─ Site/                 # Separate site snapshot
+├─ sources/              # Source and provenance records
+├─ site-audit/           # Site inventory and audit evidence
+├─ project-files/        # Supporting project files
+├─ archive/              # Historical material
+├─ package.json          # Validation and generation commands
+└─ netlify.toml          # Static deployment and function configuration
 ```
 
 ---

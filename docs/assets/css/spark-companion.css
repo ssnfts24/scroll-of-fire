@@ -1241,3 +1241,22 @@
   .spark-echo-pad.is-lit { transform: none; }
   .spark-presence-button { cursor: auto; }
 }
+
+@media (max-width: 480px), (max-height: 560px) {
+  .spark-encounter {
+    gap: 8px;
+    max-width: min(320px, calc(100vw - 24px));
+    padding: 12px;
+  }
+
+  .spark-encounter-art svg {
+    width: 56px;
+    height: 56px;
+  }
+
+  .spark-encounter-voice,
+  .spark-encounter-look,
+  .spark-encounter-born {
+    display: none;
+  }
+}
