@@ -303,6 +303,22 @@
      * Same physical rule the working schedule-symbol framework used:
      * project each Moon midpoint into camera space and choose the
      * strongest camera-facing Moon.
+     *
+     * DEEP-FIX (Aaron, Nov 22, 2026) — the midpoint must be the
+     * sector's CENTRE, and the old sampling did not measure it:
+     * calendarCell(day).angle is the reading grid's COLUMN angle
+     * (it steps by day-of-week), so the old sample — day 15, a
+     * column-1 day — returned the sector's START angle, half a
+     * sector (about 10.6°) away from the centre of the 4×7 grid
+     * the keeper actually sees. A keeper who centred a Moon's
+     * grid on screen could therefore be told the NEXT Moon was
+     * the faced one — measured in the lab facing Moon 13's grid
+     * centre: the disclosure named Moon 1, Moon 1's whole grid
+     * disclosed at the seam, and Moon 13 stood bare, which is
+     * exactly the phone report this fix answers. The centre is
+     * now the short-way average of the sector's first and last
+     * day angles, so the disclosure turns over at the true
+     * boundary between two grids.
      */
     for (
       let moon = 1;
@@ -326,8 +342,46 @@
 
       if (!cell) continue;
 
+      const firstCell =
+        calendar?.calendarCell?.(
+          ((moon - 1) * 28)
+          + 1
+        );
+
+      const lastCell =
+        calendar?.calendarCell?.(
+          moon * 28
+        );
+
+      let angleDeg =
+        Number(cell.angle);
+
+      if (
+        firstCell
+        && lastCell
+        && Number.isFinite(Number(firstCell.angle))
+        && Number.isFinite(Number(lastCell.angle))
+      ) {
+        const startAngle =
+          Number(firstCell.angle);
+
+        const span =
+          (
+            (
+              Number(lastCell.angle)
+              - startAngle
+              + 540
+            ) % 360
+          )
+          - 180;
+
+        angleDeg =
+          startAngle
+          + (span / 2);
+      }
+
       const angle =
-        Number(cell.angle)
+        angleDeg
         * Math.PI
         / 180;
 

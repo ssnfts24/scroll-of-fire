@@ -1316,7 +1316,10 @@
       }
 
       const zoom = createDayZoom({
-        onRender: renderDayZoom
+        onRender(view, reason) {
+          renderDayZoom(view, reason);
+          renderDayWorldCard(view);
+        }
       });
 
       const prev =
@@ -1372,7 +1375,477 @@
 
       zoom.start();
 
+      startZoomDepth(zoom);
+
       return zoom;
+    }
+
+    /* ------------------------------------------------------------------
+     * ZOOM-DEPTH STAGES (Sphere deep-fix, Aaron, Nov 22, 2026) —
+     * groundwork under the Living Sphere Evolution directive ("Living
+     * Day Worlds and a Unified Spatial Interface"). The directive
+     * names the keeper's approach to a day as a passage through
+     * stages, and this extension gives the passage its first working
+     * form on the existing module:
+     *
+     *   Year View      — the whole Sphere. The faced Moon discloses
+     *                    its 28 days (label manager, this change set).
+     *   Moon View      — the faced Moon's numbers read at full
+     *                    strength (label manager, this change set).
+     *   Day Approach   — closing on the selected day (distance
+     *                    ≤ 2.0): its number and its schedule mark grow,
+     *                    and the day's world card rises inside the
+     *                    stage naming the day.
+     *   Living Day     — distance ≤ 1.5: the world card stands open —
+     *                    the day named, its scheduled things listed
+     *                    with the same glyphs the face itself carries,
+     *                    read from the same view model the Day
+     *                    Details panel renders (one record, one
+     *                    telling). A day with nothing scheduled shows
+     *                    its full coordinates and the honest empty
+     *                    line — never an empty box.
+     *   Immersive Day  — distance ≤ 1.22: the existing Day Details
+     *                    door opens (the page's own dock button is
+     *                    pressed, so the sheet, its focus handling,
+     *                    and the Day World door inside it behave
+     *                    exactly as a keeper's tap). Zooming back out
+     *                    past the exit distance folds it away — but
+     *                    only when zoom itself opened it; a sheet the
+     *                    keeper opened by hand is never closed by the
+     *                    camera.
+     *
+     * Stage changes are discrete and hysteretic (enter and exit
+     * distances differ, so resting on a boundary never flutters);
+     * CSS transitions carry the reveal between stages, so nothing
+     * pops. This controller never touches the calendar: it reads the
+     * camera's distance and the day-zoom view model, and its only
+     * outward acts are pressing the page's own buttons.
+     * ------------------------------------------------------------------ */
+
+    const ZOOM_STAGES = Object.freeze([
+      "year",
+      "moon",
+      "approach",
+      "living",
+      "immersive"
+    ]);
+
+    const ZOOM_STAGE_BOUNDS = Object.freeze({
+      approach: { enter: 2.0, exit: 2.15 },
+      living: { enter: 1.5, exit: 1.62 },
+      immersive: { enter: 1.22, exit: 1.45 }
+    });
+
+    const ZOOM_STAGE_ORDER = Object.freeze({
+      year: 0,
+      moon: 1,
+      approach: 2,
+      living: 3,
+      immersive: 4
+    });
+
+    function zoomStageForDistance(distance, previousStage = "year") {
+      const d =
+        Number(distance);
+
+      if (!Number.isFinite(d) || d <= 0) {
+        return "year";
+      }
+
+      let stage =
+        d <= ZOOM_STAGE_BOUNDS.immersive.enter
+          ? "immersive"
+          : d <= ZOOM_STAGE_BOUNDS.living.enter
+            ? "living"
+            : d <= ZOOM_STAGE_BOUNDS.approach.enter
+              ? "approach"
+              : d < 3.01
+                ? "moon"
+                : "year";
+
+      // Hysteresis: a deeper stage already held survives until the
+      // distance passes that stage's exit threshold.
+      const held =
+        ZOOM_STAGE_BOUNDS[previousStage];
+
+      if (
+        held &&
+        ZOOM_STAGE_ORDER[previousStage] > ZOOM_STAGE_ORDER[stage] &&
+        d < held.exit
+      ) {
+        stage = previousStage;
+      }
+
+      return stage;
+    }
+
+    /*
+     * The glyphs the face itself carries for a scheduled thing — the
+     * same table the Life Atlas record extension draws its day marks
+     * from (SYMBOL_BY_CATEGORY there), kept to the common kinds.
+     * Practice sessions carry their own marker from the console.
+     */
+    const DAY_WORLD_GLYPHS = Object.freeze({
+      task: "✓",
+      event: "●",
+      reminder: "⚑",
+      project: "◆",
+      travel: "✈",
+      milestone: "★",
+      practice: "✦",
+      growing: "🌱",
+      farming: "🌾",
+      planting: "🌱",
+      harvest: "🌾",
+      watering: "💧",
+      seasonal: "☀"
+    });
+
+    function dayWorldGlyphForEntry(entry) {
+      if (entry?.practice) {
+        return entry.markerGlyph || "🜚";
+      }
+
+      const kind =
+        cleanString(entry?.type).toLowerCase();
+
+      return DAY_WORLD_GLYPHS[kind] || "●";
+    }
+
+    function createZoomDepth({
+      getDistance = null,
+      onStage = null
+    } = {}) {
+      let stage = "year";
+
+      function currentDistance() {
+        if (typeof getDistance === "function") {
+          const value =
+            Number(getDistance());
+
+          return Number.isFinite(value) ? value : null;
+        }
+
+        const camera =
+          typeof globalThis !== "undefined"
+            ? globalThis.LivingTimeSphereCamera
+            : null;
+
+        const value =
+          Number(camera?.getState?.().dist);
+
+        return Number.isFinite(value) ? value : null;
+      }
+
+      function update() {
+        const distance =
+          currentDistance();
+
+        if (distance === null) {
+          return stage;
+        }
+
+        const next =
+          zoomStageForDistance(distance, stage);
+
+        if (next !== stage) {
+          stage = next;
+
+          if (typeof onStage === "function") {
+            onStage(stage, distance);
+          }
+        }
+
+        return stage;
+      }
+
+      return Object.freeze({
+        update,
+
+        getStage() {
+          return stage;
+        }
+      });
+    }
+
+    function buildDayWorldCard() {
+      const card =
+        document.createElement("aside");
+
+      card.id =
+        "sphere-day-world-card";
+
+      card.className =
+        "sphere-day-world-card";
+
+      card.dataset.stage =
+        "year";
+
+      card.setAttribute(
+        "aria-label",
+        "The selected day, in depth"
+      );
+
+      const kicker =
+        document.createElement("p");
+
+      kicker.className =
+        "sphere-day-world-kicker";
+
+      kicker.textContent =
+        "Living Day";
+
+      const date =
+        document.createElement("h3");
+
+      date.className =
+        "sphere-day-world-date";
+
+      const coords =
+        document.createElement("p");
+
+      coords.className =
+        "sphere-day-world-coords";
+
+      const list =
+        document.createElement("ul");
+
+      list.className =
+        "sphere-day-world-list";
+
+      const empty =
+        document.createElement("p");
+
+      empty.className =
+        "sphere-day-world-empty";
+
+      card.append(kicker, date, coords, list, empty);
+
+      return card;
+    }
+
+    function renderDayWorldCard(view) {
+      if (typeof document === "undefined" || !view) return;
+
+      const card =
+        document.getElementById("sphere-day-world-card");
+
+      if (!card) return;
+
+      const date =
+        card.querySelector(".sphere-day-world-date");
+
+      const coords =
+        card.querySelector(".sphere-day-world-coords");
+
+      const list =
+        card.querySelector(".sphere-day-world-list");
+
+      const empty =
+        card.querySelector(".sphere-day-world-empty");
+
+      if (date) {
+        date.textContent =
+          formatCivilDate(view.civilDate);
+      }
+
+      if (coords) {
+        coords.textContent =
+          coordinateLine(view);
+      }
+
+      if (list) {
+        list.replaceChildren();
+
+        for (const entry of view.entries) {
+          const item =
+            document.createElement("li");
+
+          item.className =
+            "sphere-day-world-item";
+
+          if (entry.completed) {
+            item.classList.add("is-completed");
+          }
+
+          const glyph =
+            document.createElement("span");
+
+          glyph.className =
+            "sphere-day-world-glyph";
+
+          glyph.textContent =
+            dayWorldGlyphForEntry(entry);
+
+          glyph.setAttribute("aria-hidden", "true");
+
+          const name =
+            document.createElement("span");
+
+          name.className =
+            "sphere-day-world-name";
+
+          name.textContent =
+            entry.title;
+
+          item.append(glyph, name);
+
+          if (!entry.allDay && entry.timeLabel) {
+            const time =
+              document.createElement("span");
+
+            time.className =
+              "sphere-day-world-time";
+
+            time.textContent =
+              entry.timeLabel;
+
+            item.appendChild(time);
+          }
+
+          list.appendChild(item);
+        }
+      }
+
+      if (empty) {
+        empty.hidden =
+          !view.empty;
+
+        empty.textContent =
+          view.empty
+            ? view.emptyMessage
+            : "";
+      }
+    }
+
+    function startZoomDepth(dayZoom = null) {
+      if (typeof document === "undefined") {
+        return null;
+      }
+
+      const container =
+        document.getElementById("sphere-container");
+
+      if (!container || container.dataset.zoomDepth === "on") {
+        return null;
+      }
+
+      container.dataset.zoomDepth =
+        "on";
+
+      /*
+       * The card is looked up — and if necessary re-seated — on
+       * every tick rather than captured once: the stage's contents
+       * are rebuilt around this module (the renderer's mount, the
+       * shell's rooms), and a card seated at DOMContentLoaded can
+       * be wiped by a later mount. Re-seating re-renders the last
+       * known view so the day is never lost with the element.
+       */
+      const currentCard = () => {
+        const host =
+          document.getElementById("sphere-container");
+
+        if (!host) return null;
+
+        let card =
+          document.getElementById("sphere-day-world-card");
+
+        if (!card || card.parentElement !== host) {
+          card = buildDayWorldCard();
+          host.appendChild(card);
+
+          const view =
+            dayZoom?.getLastView?.();
+
+          if (view) {
+            renderDayWorldCard(view);
+          }
+        }
+
+        return card;
+      };
+
+      currentCard();
+
+      let openedByZoom = false;
+
+      const roomsOpen = () =>
+        document.documentElement.classList.contains(
+          "armillary-rooms-open"
+        );
+
+      const depth = createZoomDepth({
+        onStage(stage) {
+          const host =
+            document.getElementById("sphere-container");
+
+          if (host) {
+            host.dataset.zoomStage =
+              stage;
+          }
+
+          const card =
+            currentCard();
+
+          if (card) {
+            card.dataset.stage =
+              stage;
+          }
+
+          const fullPage =
+            document.documentElement.classList.contains(
+              "sphere-full-page"
+            );
+
+          if (stage === "immersive" && !roomsOpen() && !fullPage) {
+            const button =
+              document.querySelector(
+                "[data-sphere-rebuild-daydetails]"
+              );
+
+            if (button) {
+              openedByZoom = true;
+              button.click();
+            }
+          }
+
+          if (stage !== "immersive" && openedByZoom) {
+            openedByZoom = false;
+
+            if (roomsOpen()) {
+              document
+                .querySelector(".sphere-sheet-close")
+                ?.click();
+            }
+          }
+        }
+      });
+
+      const tick = () => {
+        // A sheet the keeper closed by hand is no longer zoom's to
+        // close; forget the claim before the next stage change.
+        if (!roomsOpen()) {
+          openedByZoom = false;
+        }
+
+        currentCard();
+
+        depth.update();
+      };
+
+      const timer =
+        setInterval(tick, 200);
+
+      if (typeof timer === "object" && typeof timer.unref === "function") {
+        timer.unref();
+      }
+
+      container.addEventListener("sphere:interact-end", tick);
+      window.addEventListener("sof:temporal-cursor-change", tick);
+
+      tick();
+
+      return depth;
     }
 
     if (typeof document !== "undefined") {
@@ -1408,7 +1881,15 @@
       formatCivilDate,
       coordinateLine,
       renderDayZoom,
-      initDayZoom
+      initDayZoom,
+
+      ZOOM_STAGES,
+      ZOOM_STAGE_BOUNDS,
+      zoomStageForDistance,
+      dayWorldGlyphForEntry,
+      createZoomDepth,
+      renderDayWorldCard,
+      startZoomDepth
     });
   }
 );

@@ -1094,3 +1094,162 @@ html.living-time-sphere-page.sphere-full-page .sphere-sheet-bar {
     min-height: 320px;
   }
 }
+
+/* ————————————————————————————————————————————————————————————————
+ * ZOOM-DEPTH STAGES (Sphere deep-fix, Nov 22, 2026 — groundwork
+ * under the Living Sphere Evolution directive). The day-zoom module
+ * names the keeper's approach on #sphere-container as
+ * data-zoom-stage: year → moon → approach → living → immersive.
+ *
+ * Day Approach / Living Day: the selected day's number grows as the
+ * keeper closes in. The growth rides the standalone `scale`
+ * property, which composes with — never fights — the label
+ * manager's per-frame transform, and the transition carries the
+ * growth smoothly between stages.
+ *
+ * The day's world card stands inside the stage, docked at its
+ * bottom edge above the doors: at Day Approach it rises naming the
+ * day; at Living Day it stands open with the day's scheduled things;
+ * at Immersive Day the Day Details sheet itself has opened over it.
+ * ———————————————————————————————————————————————————————————————— */
+html.living-time-sphere-page .sphere-semantic-label {
+  transition: scale 340ms ease;
+}
+
+html.living-time-sphere-page #sphere-container[data-zoom-stage="approach"] .sphere-semantic-label.is-selected {
+  scale: 1.3;
+}
+
+html.living-time-sphere-page #sphere-container[data-zoom-stage="living"] .sphere-semantic-label.is-selected,
+html.living-time-sphere-page #sphere-container[data-zoom-stage="immersive"] .sphere-semantic-label.is-selected {
+  scale: 1.55;
+}
+
+html.living-time-sphere-page .sphere-day-world-card {
+  position: absolute;
+  left: 50%;
+  bottom: 0.7rem;
+  /* Above the stage's own label layer and pills (which top out
+   * near z-index 20): at Living Day the card is the stage's
+   * focused content and must not be painted through. Still far
+   * below the rooms sheet and its backdrop (5999+). */
+  z-index: 900;
+  width: max-content;
+  max-width: min(92%, 21rem);
+  padding: 0.6rem 0.85rem 0.7rem;
+  border: 1px solid rgba(103, 232, 249, 0.45);
+  border-radius: 0.9rem;
+  background: rgba(8, 16, 24, 0.88);
+  color: #eef7ff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 12px);
+  transition:
+    opacity 380ms ease,
+    transform 380ms ease,
+    visibility 0s linear 380ms;
+}
+
+html.living-time-sphere-page .sphere-day-world-card[data-stage="approach"],
+html.living-time-sphere-page .sphere-day-world-card[data-stage="living"],
+html.living-time-sphere-page .sphere-day-world-card[data-stage="immersive"] {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+  transition:
+    opacity 380ms ease,
+    transform 380ms ease,
+    visibility 0s;
+}
+
+/* At Day Approach the card names the day; its contents unfold at
+ * Living Day. */
+html.living-time-sphere-page .sphere-day-world-card[data-stage="approach"] .sphere-day-world-list,
+html.living-time-sphere-page .sphere-day-world-card[data-stage="approach"] .sphere-day-world-empty {
+  display: none;
+}
+
+html.living-time-sphere-page .sphere-day-world-kicker {
+  margin: 0 0 0.15rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #67e8f9;
+}
+
+html.living-time-sphere-page .sphere-day-world-date {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+html.living-time-sphere-page .sphere-day-world-coords {
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: rgba(238, 247, 255, 0.82);
+}
+
+html.living-time-sphere-page .sphere-day-world-list {
+  margin: 0.45rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.28rem;
+}
+
+html.living-time-sphere-page .sphere-day-world-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  font-size: 0.86rem;
+  line-height: 1.3;
+}
+
+html.living-time-sphere-page .sphere-day-world-item.is-completed {
+  opacity: 0.62;
+}
+
+html.living-time-sphere-page .sphere-day-world-item.is-completed .sphere-day-world-name {
+  text-decoration: line-through;
+}
+
+html.living-time-sphere-page .sphere-day-world-glyph {
+  flex: 0 0 auto;
+  min-width: 1.1em;
+  text-align: center;
+  color: #67e8f9;
+}
+
+html.living-time-sphere-page .sphere-day-world-time {
+  margin-left: auto;
+  font-size: 0.74rem;
+  color: rgba(238, 247, 255, 0.7);
+}
+
+html.living-time-sphere-page .sphere-day-world-empty {
+  margin: 0.45rem 0 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: rgba(238, 247, 255, 0.78);
+}
+
+/* On phone widths the stage's own Today pill stands at the
+ * bottom-left; the card lifts clear of that row so neither covers
+ * the other's words (seen overlapping in the deep-fix lab pass). */
+@media (max-width: 720px) {
+  html.living-time-sphere-page .sphere-day-world-card {
+    bottom: 3.4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.living-time-sphere-page .sphere-semantic-label,
+  html.living-time-sphere-page .sphere-day-world-card {
+    transition: none;
+  }
+}

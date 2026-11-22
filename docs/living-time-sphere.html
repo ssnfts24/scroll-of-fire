@@ -53,7 +53,7 @@
   <!-- B7.52 FAST BOOT: Three.js is a dynamic import, so advertise it before
        the renderer reaches init instead of discovering the module late. -->
   <link rel="modulepreload" href="assets/vendor/three/three.module.min.js" fetchpriority="high">
-  <link rel="preload" href="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260819-b7523&u=20260820-b7582-railalign&r=20260820-b7584-rootrail&a=20260820-b7585v3-auto&b=20260820-b7592a-farskeleton&s=20260820-b7592b-laneswap&f=20260820-b7592c-face&d=20260821-b7592d7-unified&t=20261117-b760-topviewgate&s=20261117-b7602-gatetied&u=20261117-b7603-selectedskeleton&w=20261117-b761-rework&v=20261120-daysseasons" as="script" fetchpriority="high">
+  <link rel="preload" href="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260819-b7523&u=20260820-b7582-railalign&r=20260820-b7584-rootrail&a=20260820-b7585v3-auto&b=20260820-b7592a-farskeleton&s=20260820-b7592b-laneswap&f=20260820-b7592c-face&d=20260821-b7592d7-unified&t=20261117-b760-topviewgate&s=20261117-b7602-gatetied&u=20261117-b7603-selectedskeleton&w=20261117-b761-rework&v=20261120-daysseasons&df=20261122-deepfix" as="script" fetchpriority="high">
   <link rel="stylesheet" href="assets/css/living-time-sphere-metrics.css?v=20260814-1">
   <link rel="stylesheet" href="assets/css/observatory-workspace.css?v=20261122-1">
   <link rel="stylesheet" href="assets/css/living-planner.css?v=20260818-1">
@@ -64,7 +64,7 @@
        R3 waves opened. It loads last so the rebuilt arrangement
        has the final say over the page's own presentation. -->
   <link rel="stylesheet" href="assets/css/sphere-rebuild.css?v=20261120-1">
-  <link rel="stylesheet" href="assets/css/sphere-armillary.css?v=20261122-1">
+  <link rel="stylesheet" href="assets/css/sphere-armillary.css?v=20261122-3">
   <!-- The Sphere's portrait is the first thing the stage shows;
        start its fetch before the parser reaches the stage. -->
   <link rel="preload" as="image" href="assets/img/sphere/sphere-portrait.webp" fetchpriority="high">
@@ -233,7 +233,7 @@
    <script defer src="assets/js/sphere/living-time-sphere-temporal.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-state.js?v=20260819-b731"></script>
    <script defer src="assets/js/sphere/living-time-sphere-semantic-zoom.js"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-day-zoom.js"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-day-zoom.js?v=20261122-deepfix2"></script>
    <script defer src="assets/js/sphere/living-time-sphere-layout.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-connections.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-sky.js?v=20261117-b761-rework"></script>
@@ -245,16 +245,16 @@
    <script defer src="assets/js/sphere/observatory-capability-manager.js?v=20260819-b750"></script>
    <script defer src="assets/js/sphere/living-time-sphere-materials.js"></script>
    <script defer src="assets/js/sphere/living-time-sphere-effects.js?v=20260815-6"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-camera.js?v=20260819-b740&fit=20261120-desktopfit"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-camera.js?v=20260819-b740&fit=20261120-desktopfit&df=20261122-deepfix"></script>
    <script defer src="assets/js/sphere/living-time-sphere-animation.js?v=20260819-b740"></script>
    <script defer src="assets/js/sphere/living-time-sphere-planetary-positions.js?v=20260819-b730"></script>
-   <script defer src="assets/js/sphere/living-time-sphere-label-manager.js?v=20260819-b750&r=20260820-b758&u=20260820-b7582-railalign&b=20260820-b7592a-farskeleton&d=20260821-b7592d7-unified&t=20261117-b760-topviewgate&s=20261117-b7602-gatetied&u=20261117-b7603-selectedskeleton"></script>
+   <script defer src="assets/js/sphere/living-time-sphere-label-manager.js?v=20260819-b750&r=20260820-b758&u=20260820-b7582-railalign&b=20260820-b7592a-farskeleton&d=20260821-b7592d7-unified&t=20261117-b760-topviewgate&s=20261117-b7602-gatetied&u=20261117-b7603-selectedskeleton&df=20261122-deepfix"></script>
 <script defer src="assets/js/sphere/living-time-sphere-extension-host.js?v=20260816-1"></script>
    <script defer src="assets/js/sphere/living-time-sphere-temporal-legibility.js?v=20260817-1"></script>
   <script defer src="assets/js/sphere/living-time-sphere-temporal-strata.js?v=20260817-5"></script>
    <script defer src="assets/js/sphere/life-atlas-record-sphere-extension.js?v=20260819-b750&r=20260820-b757&u=20260820-b7582-railalign&s=20260820-b7592b-laneswap&f=20260820-b7592c-face&d=20260821-b7592d7-unified"></script>
    <!-- Life Atlas visual world projection temporarily disabled for recursive-sphere refactor -->
-   <script defer fetchpriority="high" src="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260819-b7523&u=20260820-b7582-railalign&r=20260820-b7584-rootrail&a=20260820-b7585v3-auto&b=20260820-b7592a-farskeleton&s=20260820-b7592b-laneswap&f=20260820-b7592c-face&d=20260821-b7592d7-unified&t=20261117-b760-topviewgate&s=20261117-b7602-gatetied&u=20261117-b7603-selectedskeleton&w=20261117-b761-rework&v=20261120-daysseasons"></script>
+   <script defer fetchpriority="high" src="assets/js/sphere/living-time-sphere-renderer-3d.js?v=20260819-b7523&u=20260820-b7582-railalign&r=20260820-b7584-rootrail&a=20260820-b7585v3-auto&b=20260820-b7592a-farskeleton&s=20260820-b7592b-laneswap&f=20260820-b7592c-face&d=20260821-b7592d7-unified&t=20261117-b760-topviewgate&s=20261117-b7602-gatetied&u=20261117-b7603-selectedskeleton&w=20261117-b761-rework&v=20261120-daysseasons&df=20261122-deepfix"></script>
    <script defer src="assets/js/sphere/living-time-sphere-live-data.js?v=20260815-6"></script>
    <script defer src="assets/js/sphere/living-time-sphere-interaction.js?v=20260818-b73"></script>
    <script defer src="assets/js/sphere/living-time-sphere-accessibility.js"></script>

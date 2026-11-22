@@ -1225,6 +1225,17 @@
         ...rawCardTargets.slice(0, SEMANTIC_TARGET_CAP).map(normalizeSemanticTarget).filter(Boolean)
       ];
       const semanticCandidates = [];
+      /*
+       * PERF (Sphere deep-fix, Nov 22, 2026) — the camera-space centre
+       * depth is constant across this whole pass, but it was recomputed
+       * with a fresh Vector3 allocation for every candidate (hundreds
+       * per pass, several passes a second while turning). Hoisted: one
+       * allocation per update, same value.
+       */
+      const centerCamSpaceZ =
+        new THREE.Vector3(0, 0, 0)
+          .applyMatrix4(camera.matrixWorldInverse)
+          .z;
       for (const target of normalizedTargets) {
         const effectiveTarget = resolveProximityEnvelope(
           target,
@@ -1258,14 +1269,13 @@
         const anchorX = offsetX + (((projVec.x + 1) / 2) * stageRect.width);
         const anchorY = offsetY + (((-projVec.y + 1) / 2) * stageRect.height);
         if (anchorX < offsetX - 36 || anchorY < offsetY - 36 || anchorX > offsetX + stageRect.width + 36 || anchorY > offsetY + stageRect.height + 36) continue;
-        const centerCamSpace = new THREE.Vector3(0, 0, 0).applyMatrix4(camera.matrixWorldInverse);
         semanticCandidates.push({
           target: effectiveTarget,
           distance,
           anchorX,
           anchorY,
           cameraZ: camSpace.z,
-          frontDepth: camSpace.z - centerCamSpace.z
+          frontDepth: camSpace.z - centerCamSpaceZ
         });
       }
       semanticCandidates.sort((a, b) =>
@@ -1374,6 +1384,33 @@
           if (
             target?.selected
             || target?.pinned
+          ) {
+            return 1;
+          }
+
+          /*
+           * FACED MOON EXEMPTION (Aaron, Nov 22, 2026 — Sphere deep-fix,
+           * from his phone: Moon 13 centred on his screen with none of
+           * its days showing). The aperture is a window for CONTEXT
+           * Moons: it quiets the days a keeper is not looking at. Lab
+           * measurement showed the fixed ±39% X window also strangles
+           * the faced Moon itself: the closer the keeper moves toward
+           * a Moon, the wider its 4×7 day grid grows on screen, so at
+           * dist 2.55 the faced Moon 13 kept 11 of 28 numerals while
+           * its neighbour kept 28, and at dist 2.0 it kept 3. The
+           * faced (disclosure-centre) Moon's numerals therefore do
+           * not pass through the X window at all. Neighbours still do;
+           * the clutter law is unchanged for every Moon but the one
+           * being faced. (Evolution directive stage names: this is
+           * what makes Moon View legible.)
+           */
+          if (
+            target?.kind === "pattern-day-number"
+            && frontMoon
+            && Number(
+              target.moon
+              || 0
+            ) === frontMoon
           ) {
             return 1;
           }
@@ -1497,6 +1534,25 @@
           }
 
           if (band === "medium") {
+            /*
+             * FACED MOON AT MOON VIEW (Aaron, Nov 22, 2026) — the
+             * medium-band softening below is for context days. The
+             * faced Moon's numerals read at full strength: at 0.56
+             * over the moving face they washed toward the ~0.3 floor
+             * the lab measured on the surviving numerals of a
+             * strangled Moon, which is not legible.
+             */
+            if (
+              target?.kind === "pattern-day-number"
+              && frontMoon
+              && Number(
+                target.moon
+                || 0
+              ) === frontMoon
+            ) {
+              return 1;
+            }
+
             return scheduled
               ? 0.84
               : 0.56;
@@ -1651,12 +1707,25 @@
               ) > 0
               || !!target?.symbol;
 
+            /*
+             * FACED MOON AT YEAR VIEW (Aaron, Nov 22, 2026 — Sphere
+             * deep-fix). The B7.59.2A skeleton thinned even the faced
+             * Moon to its five week anchors, so at the phone's resting
+             * (far-band) distance the Moon a keeper had turned to face
+             * showed five numbers and no more — and the game's "find
+             * this day" could name a day the face did not show. The
+             * faced Moon now discloses its whole 4×7 face at Year
+             * View too: structural is true for every one of its days.
+             * Neighbours keep the sparse skeleton exactly as before,
+             * and the overhead branch below is untouched (it keys to
+             * the SELECTED Moon, B7.60.3, not the disclosure centre).
+             */
             const structural =
               !centerMoon
                 ? farFrontAnchor
                 : (
                     moonDistance === 0
-                      ? farFrontAnchor
+                      ? true
                       : moonDistance === 1
                         ? farNeighborAnchor
                         : false
