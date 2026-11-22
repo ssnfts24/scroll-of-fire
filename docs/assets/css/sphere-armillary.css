@@ -766,6 +766,19 @@ html.living-time-sphere-page.armillary-rooms-open body:not(.sphere-app) .sphere-
   cursor: default;
 }
 
+/* Each stage door says what its game is, in one small line under
+ * its name — the games must make sense from the face itself
+ * (Aaron, Nov 22, 2026), not only from the room below. */
+.sphere-play-bar-hint {
+  display: block;
+  white-space: normal;
+  max-width: 11.5rem;
+  margin-top: 0.15rem;
+  font-size: 0.68rem;
+  line-height: 1.3;
+  color: rgba(243, 231, 211, 0.78);
+}
+
 .sphere-play-bar-status {
   pointer-events: auto;
   max-width: 88vw;
@@ -840,6 +853,68 @@ html.living-time-sphere-page .sphere-semantic-label[data-calendar-face="true"] .
     font-size: 0.66rem !important;
     min-width: 0.78rem;
   }
+}
+
+/* Day numbers, second pass (Aaron, Nov 22, 2026): still too small
+ * to read or tap on his phone, he said — so the numeral grows
+ * again, its weight and contrast rise, and the pill behind it
+ * becomes a real finger target. The collision pass still drops
+ * overlaps, so this costs density, not clutter. And a scheduled
+ * day now carries its mark UNDER its number: the day's own glyph
+ * from the record (a check for a task, a flag for a reminder, a
+ * sprout for planting — the planner summary's primary symbol),
+ * one mark per day, holographic cyan on dark. The full list for
+ * the day lives in Day Details; the big card appears only when
+ * the day itself is selected. This deliberately re-admits the
+ * one DOM glyph B7.48 retired in favour of the GPU symbol field:
+ * that field floats its glyphs in the symbol lane, and Aaron
+ * could not see that scheduling had marked the day at all. One
+ * small glyph per scheduled day, on the number itself, is the
+ * readable confirmation he asked for; the GPU field stands as
+ * the scene's own decoration, as before. */
+html.living-time-sphere-page .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] {
+  min-width: 1.65rem !important;
+  min-height: 1.65rem !important;
+  background: rgba(3, 10, 16, 0.92) !important;
+  border-color: rgba(140, 205, 220, 0.45) !important;
+}
+html.living-time-sphere-page .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] .sphere-semantic-label-title {
+  font-size: 0.8rem !important;
+  font-weight: 820 !important;
+  color: #f2f9ff !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95), 0 0 7px rgba(0, 0, 0, 0.65);
+}
+@media (max-width: 720px) {
+  html.living-time-sphere-page .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] {
+    min-width: 1.55rem !important;
+    min-height: 1.55rem !important;
+  }
+  html.living-time-sphere-page .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] .sphere-semantic-label-title {
+    font-size: 0.74rem !important;
+  }
+}
+html.living-time-sphere-page .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"][data-has-schedule="true"]::after {
+  content: attr(data-plan-symbol) !important;
+  display: grid !important;
+  place-items: center;
+  position: absolute;
+  left: 50%;
+  top: calc(100% - 0.22rem);
+  transform: translateX(-50%);
+  min-width: 0.95rem;
+  height: 0.95rem;
+  padding: 0 0.1rem;
+  border-radius: 999px;
+  background: rgba(5, 22, 28, 0.92);
+  border: 1px solid rgba(122, 243, 255, 0.6);
+  color: #c8fbff;
+  font-size: 0.58rem;
+  font-weight: 850;
+  line-height: 1;
+  text-shadow: 0 0 6px rgba(122, 243, 255, 0.85);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 9px rgba(122, 243, 255, 0.4);
+  pointer-events: none;
+  z-index: 2;
 }
 
 /* The season line: the current season and the next turn, in the
