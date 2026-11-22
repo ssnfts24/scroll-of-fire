@@ -68,6 +68,7 @@
   <link rel="stylesheet" href="assets/css/artifact-mobile.css?v=20260715-10">
   <link rel="stylesheet" href="assets/css/themes.moons.css?v=20260715-10">
   <link rel="stylesheet" href="assets/css/living-day.css?v=1">
+  <link rel="stylesheet" href="assets/css/presence.css?v=20261118-lw1">
   <link rel="stylesheet" href="assets/css/codex-memory.css?v=1">
   <link rel="stylesheet" href="assets/css/share-day.css?v=1">
   <link rel="stylesheet" href="assets/css/living-time-app-enhancements.css?v=20260730-1">
@@ -749,10 +750,10 @@
         <section aria-labelledby="front-door-recent">
           <h3 id="front-door-recent">Recent additions</h3>
           <ul class="front-door-list">
+            <li><time datetime="2026-11-22">2026-11-22</time> <a href="./index.html#today-panel">The front door learned to remember</a></li>
             <li><time datetime="2026-11-22">2026-11-22</time> <a href="./companions.html">One Spark, every door</a></li>
             <li><time datetime="2026-11-22">2026-11-22</time> <a href="./living-time-sphere.html">The days stood up to be read</a></li>
             <li><time datetime="2026-11-21">2026-11-21</time> <a href="./map.html">The films learned to walk one way</a></li>
-            <li><time datetime="2026-11-21">2026-11-21</time> <a href="./living-time-sphere.html">The Sphere settled into one shell</a></li>
           </ul>
         </section>
       </div>
@@ -815,10 +816,10 @@
         <div class="le-act-slot">
           <h3>Latest additions</h3>
           <ul class="le-act-growth" data-le-growth>
+            <li><time datetime="2026-11-22">2026-11-22</time> <a href="./index.html#today-panel">The front door learned to remember</a></li>
             <li><time datetime="2026-11-22">2026-11-22</time> <a href="./companions.html">One Spark, every door</a></li>
             <li><time datetime="2026-11-22">2026-11-22</time> <a href="./living-time-sphere.html">The days stood up to be read</a></li>
             <li><time datetime="2026-11-21">2026-11-21</time> <a href="./map.html">The films learned to walk one way</a></li>
-            <li><time datetime="2026-11-21">2026-11-21</time> <a href="./living-time-sphere.html">The Sphere settled into one shell</a></li>
           </ul>
         </div>
         <figure class="le-act-slot">
@@ -1124,10 +1125,16 @@
     </section>
 
 <section class="section-shell codex-live-grid" aria-label="Living Codex panels">
-      <article class="card today-codex-panel">
+      <article class="card today-codex-panel" id="today-panel">
         <p class="eyebrow">Today in the Codex</p>
         <h2 class="pulse-active" data-codex-today-title>Today in the Codex</h2>
         <p class="today-codex-meta" data-codex-today-layer>Open today's moon, breathe once, and record what changed.</p>
+
+        <!-- The site's memory, speaking at the front door (Q-03):
+             the same counted guidance lines as the 13 Moons Day
+             Notes panel, from the visitor's own on-device record.
+             The note offer names the Day Notes panel's home. -->
+        <div class="presence-guidance presence-guidance--card" data-presence-guidance data-guidance-note-href="moons.html#day-notes" hidden></div>
 
         <!-- Living Day calendar summary — shown when JS computes moon state -->
         <div class="codex-calendar-summary" data-codex-calendar-summary hidden>
@@ -2395,5 +2402,14 @@
   <script src="assets/js/living-trail.js?v=20261120-1"></script>
   <script src="assets/js/story-layer.js?v=20261120-1"></script>
   <script src="assets/js/year-thread.js?v=20261120-1"></script>
+  <!-- Guidance at the front door (Q-03): the Life Atlas record
+       layer and the shared guidance module, the same stack the
+       13 Moons page carries. Records stay on the visitor's device. -->
+  <script src="assets/js/life-atlas/life-atlas-schema.js?v=20260817-1"></script>
+  <script src="assets/js/life-atlas/life-atlas-repository.js?v=20260819-b750"></script>
+  <script src="assets/js/life-atlas/life-atlas-indexeddb.js?v=20260819-b750"></script>
+  <script src="assets/js/life-atlas/record-helpers.js?v=20261119-1"></script>
+  <script src="assets/js/day-notes.js?v=20261118-lw1"></script>
+  <script src="assets/js/presence-guidance.js?v=20261118-lw1"></script>
 </body>
               </html>
