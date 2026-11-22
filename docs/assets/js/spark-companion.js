@@ -2541,6 +2541,34 @@
     };
   }
 
+  /* ---- Look next, tier 2: the library's relations ---- */
+
+  /* The relations extract (docs/assets/js/spark-relations.js,
+   * built ahead of time from the record — Q-05, option (a)) rides
+   * inside the Spark's bundle, so this stays a pure read of data
+   * handed in: no fetch, no network, the fence untouched. The
+   * core only chooses: this page's relations, in the record's own
+   * order, skipping the page itself and anything the caller has
+   * already offered. Each pick is the record's, and the presence
+   * labels it so — "from the record" — never as the keeper's own
+   * thread and never as this page's door. */
+  function relationsFor({ page, relations, exclude, limit } = {}) {
+    const cap = limit == null ? 2 : limit;
+    if (!page || !relations || typeof relations !== "object") return [];
+    const list = Array.isArray(relations[page]) ? relations[page] : [];
+    const skip = new Set(exclude || []);
+    const out = [];
+    for (const rel of list) {
+      if (out.length >= cap) break;
+      if (!rel || typeof rel.href !== "string" || !rel.href) continue;
+      const key = rel.href.split("/").pop();
+      if (rel.href === page || key === page || skip.has(key) || skip.has(rel.href)) continue;
+      skip.add(key);
+      out.push({ href: rel.href, label: String(rel.label || "").trim() || key });
+    }
+    return out;
+  }
+
   /* ---- the real guide: doors from the page itself ---- */
 
   /* "Show me around": the doors offered are the doors this very
@@ -3206,6 +3234,7 @@
     questionFor,
     trailFor,
     recordTrailStep,
+    relationsFor,
     doorsFor,
     explainFor,
     explainChunksFor,
