@@ -62,22 +62,25 @@
     section.setAttribute("aria-label", "Play with the Sphere");
     section.innerHTML = `
       <h2 class="sphere-play-title">Play with the Sphere</h2>
-      <p class="sphere-play-line">Three small games, played on the real Sphere. Nothing here ever shows a false day.</p>
+      <p class="sphere-play-line">Three small games, played on the real Sphere. Nothing here ever shows a false day. Each one says plainly what it is, how you play, and what it teaches — and the Play button on the Sphere itself starts any of them.</p>
       <div class="sphere-play-games">
         <div class="sphere-play-game" data-play-hunt>
           <h3>Find the day</h3>
-          <p class="sphere-play-status" role="status">The Spark names a day. Spin or tap the Sphere until the day you are looking at is that day.</p>
+          <p class="sphere-play-status" role="status">How to play: the Spark names a day — say, Moon 5 · Day 16. Spin the Sphere, or tap a Moon and then a day number, until the day you are standing on is that day. The Sphere tells you where you are standing as you search.</p>
+          <p class="sphere-play-teach">What it teaches: the shape of the year — where every Moon and every day sits in the count of 364.</p>
           <button type="button" class="sphere-play-btn" data-play-hunt-start>Play</button>
         </div>
         <div class="sphere-play-game" data-play-echo>
           <h3>Echo</h3>
-          <p class="sphere-play-status" role="status">Listen to your Spark's notes, then tap them back in the same order.</p>
+          <p class="sphere-play-status" role="status">How to play: press Play and listen. Your Spark sounds a few notes of its own motif, and the numbered pads light as they sound. Tap the same pads back in the same order.</p>
+          <p class="sphere-play-teach">What it teaches: listening for pattern — the motif is your Spark's signature, the same notes its seed has always given it.</p>
           <div class="sphere-play-pads" role="group" aria-label="Echo pads"></div>
           <button type="button" class="sphere-play-btn" data-play-echo-start>Play</button>
         </div>
         <div class="sphere-play-game" data-play-turning>
           <h3>Catch the turning</h3>
-          <p class="sphere-play-status" role="status">The day's light turns four times — dawn, day, dusk, night. Arm this, and catch the next turning while it happens.</p>
+          <p class="sphere-play-status" role="status">How to play: press Arm now, and stay on this page. The day's light turns four times — at 5 and 10 in the morning, 5 in the evening, 9 at night. When the next turning comes, you have one minute to press “Caught it!”</p>
+          <p class="sphere-play-teach">What it teaches: attention — most turnings of the day pass unwitnessed; this one asks you to be there for one.</p>
           <button type="button" class="sphere-play-btn" data-play-turning-arm>Arm</button>
           <button type="button" class="sphere-play-btn sphere-play-catch" data-play-turning-catch hidden>Caught it!</button>
         </div>
@@ -98,9 +101,9 @@
     stageBar.innerHTML = `
       <button type="button" class="sphere-play-bar-toggle" aria-expanded="false" aria-controls="sphere-play-bar-choices">Play</button>
       <div class="sphere-play-bar-doors" id="sphere-play-bar-choices" hidden>
-        <button type="button" class="sphere-play-bar-btn" data-play-bar-hunt>Find the day</button>
-        <button type="button" class="sphere-play-bar-btn" data-play-bar-echo>Echo</button>
-        <button type="button" class="sphere-play-bar-btn" data-play-bar-arm>Catch the turning</button>
+        <button type="button" class="sphere-play-bar-btn" data-play-bar-hunt>Find the day<span class="sphere-play-bar-hint">I name a day — move the Sphere until you stand on it</span></button>
+        <button type="button" class="sphere-play-bar-btn" data-play-bar-echo>Echo<span class="sphere-play-bar-hint">Hear your Spark's notes — tap them back in order</span></button>
+        <button type="button" class="sphere-play-bar-btn" data-play-bar-arm>Catch the turning<span class="sphere-play-bar-hint">Arm it — catch the light as it turns</span></button>
         <button type="button" class="sphere-play-bar-btn" data-play-bar-catch hidden>Caught it!</button>
       </div>
       <p class="sphere-play-bar-status" role="status" hidden></p>
@@ -140,6 +143,7 @@
         const b = document.createElement("button");
         b.type = "button";
         b.className = "sphere-play-pad";
+        b.textContent = String(i + 1);
         b.style.setProperty("--pad-hue", String(Math.round(30 + i * 28)));
         b.setAttribute("aria-label", `Echo pad ${i + 1} on the Sphere`);
         b.addEventListener("click", () => pad.click());
@@ -210,15 +214,30 @@
       const moon = Math.floor((pd - 1) / 28) + 1;
       const day = ((pd - 1) % 28) + 1;
       huntTarget = { moon, day, patternDay: pd };
-      huntStatus.textContent = `Find this day: Moon ${moon} · Day ${day}. Spin the Sphere, tap a moon and a day, or use Choose a day — the Sphere will tell you when you are standing on it.`;
+      lastHuntStanding = null;
+      huntStatus.textContent = `Find this day: Moon ${moon} · Day ${day}. Spin the Sphere, tap a moon and a day, or use Choose a day — as you move, the Sphere tells you which day you are standing on.`;
       stageSay(`Find this day: Moon ${moon} · Day ${day}. Spin the Sphere until you are standing on it.`);
       $(".sphere-wrapper")?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
     });
 
+    let lastHuntStanding = null;
     const checkHunt = () => {
       if (!huntTarget) return;
       const shown = shownCoordinate();
-      if (shown && Number(shown.dayOfPatternYear) === huntTarget.patternDay) endHunt(true);
+      if (!shown) return;
+      const pd = Number(shown.dayOfPatternYear);
+      if (pd === huntTarget.patternDay) { endHunt(true); return; }
+      // Searching feedback: while the hunt runs, the Sphere says
+      // where the keeper is standing, so the search is a search —
+      // not a guess. One line per new standing, never a stream.
+      if (Number.isFinite(pd) && pd >= 1 && pd <= 364 && pd !== lastHuntStanding) {
+        lastHuntStanding = pd;
+        const m = Math.floor((pd - 1) / 28) + 1;
+        const d = ((pd - 1) % 28) + 1;
+        const line = `You are standing on Moon ${m} · Day ${d} — not the day yet. The day you want is Moon ${huntTarget.moon} · Day ${huntTarget.day}.`;
+        huntStatus.textContent = line;
+        stageSay(line);
+      }
     };
     for (const name of ["sof:selected-date-change", "sof:temporal-cursor-change"]) {
       window.addEventListener(name, checkHunt);
@@ -254,6 +273,7 @@
           const b = document.createElement("button");
           b.type = "button";
           b.className = "sphere-play-pad";
+          b.textContent = String(i + 1);
           b.style.setProperty("--pad-hue", String(Math.round(30 + i * 28)));
           b.setAttribute("aria-label", `Echo pad ${i + 1}`);
           b.addEventListener("click", () => {

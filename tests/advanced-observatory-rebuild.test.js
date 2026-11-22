@@ -126,3 +126,19 @@ test("site audit enforces every deployed HTML page and local reference", () => {
   assert.ok(audit.includes("canonical must use the production origin"));
   assert.ok(audit.includes("CSS url target is missing"));
 });
+
+test("the question dialog escapes the transformed sheet while it stands (Nov 22, 2026)", () => {
+  // Aaron's phone screenshots: the Gentle Guidance card rendered
+  // half off the left edge — the sidebar sheet's transform made
+  // it the containing block for the card's fixed positioning.
+  const workspace = read("docs/assets/js/sphere/living-time-observatory-workspace.js");
+  assert.ok(workspace.includes("portalQuestionShell"), "the shell is portaled while shown");
+  assert.ok(workspace.includes("document.body.appendChild(shell)"), "to <body>, where fixed means the viewport");
+  assert.ok(workspace.includes("unportalQuestionShell"), "and restored to its exact home when hidden");
+  assert.ok(workspace.includes('classList.remove("sphere-rebuild-obs-resting")'), "a rested shell stands as the modal again when truly shown");
+  const css = read("docs/assets/css/observatory-workspace.css");
+  assert.ok(css.includes("Sphere day legibility + day marks (Nov 22, 2026)"), "the day-number and day-mark pass is recorded in the override sheet");
+  const armillary = read("docs/assets/css/sphere-armillary.css");
+  assert.ok(armillary.includes("attr(data-plan-symbol)"), "a scheduled day's mark is its own glyph, under its number");
+  assert.ok(armillary.includes("Day numbers, second pass (Aaron, Nov 22, 2026)"), "the bigger, clearer numerals stand beside the rules they out-cascade");
+});

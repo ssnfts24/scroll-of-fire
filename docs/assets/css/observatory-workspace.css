@@ -702,3 +702,17 @@ body.obs-question-modal-open {
     word-break: normal;
   }
 }
+
+/* Sphere day legibility + day marks (Nov 22, 2026) — Aaron's word
+ * from his phone: the day numbers were too small to read or tap,
+ * and a scheduled day should carry its mark under the number.
+ * The number and mark rules stand in sphere-armillary.css, beside
+ * the calendar-face rules they must out-cascade; the hardening
+ * below stands here. */
+
+/* The question dialog, hardened: border-box everywhere inside it,
+   so no child can ever push past the card's own width again. */
+.obs-question-shell:not([hidden]),
+.obs-question-shell:not([hidden]) * {
+  box-sizing: border-box;
+}

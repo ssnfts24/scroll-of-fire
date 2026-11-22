@@ -1165,7 +1165,14 @@
         : [];
       if (!revealAll && patternDay !== selectedDay && disclosedMoons.length && !disclosedMoons.includes(Number(cell.moon))) continue;
       const summarySelected = patternDay === selectedDay;
-      if (!summarySelected && band !== "detail") continue;
+      // Nov 22, 2026 (Aaron's word): the big summary card and its
+      // leader line belong to the selected day only. At detail
+      // zoom they used to stand for every scheduled day in the
+      // disclosed moons, and on a phone the card + line covered
+      // the instrument while he browsed other days. Scheduled
+      // days still advertise themselves by the glyph under their
+      // number; tapping the day selects it and its card appears.
+      if (!summarySelected) continue;
       const angle = Number(displayCell?.angle ?? cell.angle) * Math.PI / 180;
       const cellRadius = patternRingRadius * Number(cell.radialFactor || 1);
       // B7.59.2D — inspection card shares the same derived schedule/day packet.

@@ -115,3 +115,62 @@ test("the quiet promise has its release in the Voice room, keeper-controlled and
   assert.ok(presence.includes("Keep a quiet promise"), "and it can be kept again — reversible");
   assert.ok(presence.includes("removeItem(SOUND_KEY)"), "the release lifts the old switches' stored word");
 });
+
+test("scheduling by word of mouth: the parser reads the keeper's phrasings (Nov 22, 2026)", () => {
+  // Today in the test is Pattern Day 220 of anchor year 2026
+  // (Moon 8 · Day 24, 2026-11-22) — the day Aaron gave the order.
+  const today = { patternDay: 220, anchorYear: 2026, civilDate: "2026-11-22" };
+  const a = Layer.parseScheduleCommand("schedule Tomatoes on Moon 5 Day 16", today);
+  assert.equal(a.action, "schedule");
+  assert.equal(a.title, "Tomatoes");
+  assert.equal(a.category, "task");
+  assert.equal(a.patternDay, 128);
+  assert.equal(a.moon, 5);
+  assert.equal(a.day, 16);
+  // Moon 5 Day 16 of anchor 2026 has passed by Nov 22, so the
+  // next standing of that day is anchor 2027's.
+  assert.equal(a.anchorYear, 2027);
+  assert.equal(a.civilDate, "2027-08-22");
+
+  const b = Layer.parseScheduleCommand("Schedule a reminder: Call the landlord on Pattern Day 221", today);
+  assert.equal(b.category, "reminder");
+  assert.equal(b.title, "Call the landlord");
+  assert.equal(b.patternDay, 221);
+  assert.equal(b.anchorYear, 2026);
+  assert.equal(b.civilDate, "2026-11-23");
+
+  const c = Layer.parseScheduleCommand("unschedule Tomatoes on Moon 5 Day 16", today);
+  assert.equal(c.action, "unschedule");
+  assert.equal(c.title, "Tomatoes");
+  assert.equal(c.patternDay, 128);
+
+  const d = Layer.parseScheduleCommand("schedule Water the beds tomorrow", today);
+  assert.equal(d.patternDay, 221);
+  assert.equal(d.title, "Water the beds");
+
+  const e = Layer.parseScheduleCommand("schedule Fix the gate", today);
+  assert.equal(e.needsDay, true, "no day named — the Spark asks which day");
+  assert.equal(e.title, "Fix the gate");
+
+  assert.equal(Layer.parseScheduleCommand("tell me a story about dragons", today), null, "ordinary talk is not a command");
+  assert.equal(Layer.parseScheduleCommand("what day is it today?", today), null, "questions stay questions");
+});
+
+test("the pattern-day to civil-date conversion matches the house fixtures", () => {
+  assert.equal(Layer.civilDateForPatternDay(2026, 92), "2026-07-17", "Pattern Day 92 = Moon 4 Day 8 = July 17, 2026");
+  assert.equal(Layer.civilDateForPatternDay(2026, 152), "2026-09-15", "Pattern Day 152 = Moon 6 Day 12 = September 15, 2026");
+  assert.equal(Layer.civilDateForPatternDay(2026, 1), "2026-04-17", "Moon 1 Day 1 is the anchor, April 17");
+  assert.equal(Layer.anchorYearForCivil("2026-11-22"), 2026);
+  assert.equal(Layer.anchorYearForCivil("2027-02-01"), 2026, "before April 17 the year still belongs to the 2026 anchor");
+  assert.equal(Layer.anchorYearForCivil("2027-04-17"), 2027);
+});
+
+test("scheduling is written to the one planner record, on-device, and the greeting stands in the panel", () => {
+  const src = read("docs/assets/js/sphere-spark.js");
+  assert.ok(src.includes("CodexLivingPlanner"), "the Spark writes through the planner — the same record the planner room reads");
+  assert.ok(src.includes("createPlan"), "scheduling creates the plan in that record");
+  assert.ok(src.includes("removePlan"), "unscheduling removes it from the same record — reversible");
+  assert.ok(src.includes("sof:life-atlas-records-changed"), "the Sphere hears the change and redraws the day's mark");
+  assert.ok(src.includes("You are standing in Moon"), "the greeting names where the keeper stands in the year");
+  assert.ok(src.includes("The next marked day in your record is"), "and notices the record's marked days");
+});

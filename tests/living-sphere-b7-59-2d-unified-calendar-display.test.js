@@ -69,7 +69,11 @@ test('B7.59.2D scheduled dates and symbols co-disclose at far zoom', () => {
 });
 
 test('B7.59.2D keeps automatic schedule cards quiet until selected or detail', () => {
-  assert.match(extension, /if \(!summarySelected && band !== "detail"\) continue;/);
+  // Nov 22, 2026 (Aaron's word): the summary card + leader line
+  // now belong to the selected day only — at detail zoom they
+  // stood over the instrument while he browsed other days. The
+  // glyph under the day's number carries the schedule mark.
+  assert.match(extension, /if \(!summarySelected\) continue;/);
   assert.match(extension, /dayScheduleCount: summary\.count/);
   assert.match(extension, /data\.type !== "living-plan-day-points"/);
 });

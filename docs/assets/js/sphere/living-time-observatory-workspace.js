@@ -498,9 +498,36 @@
     return pool[(day + records.length) % pool.length];
   }
 
+  // The question shell is styled as a viewport-fixed dialog, but
+  // it lives inside the Sphere's sidebar sheet, and that sheet is
+  // transformed — a transformed ancestor becomes the containing
+  // block for fixed descendants, so the "fixed" card was carried
+  // off with the sheet and rendered half off the phone's left
+  // edge (Aaron's screenshots, Nov 22, 2026). While the question
+  // stands, the shell is portaled to <body>, where fixed means
+  // the viewport again; hiding it puts it back in its exact home.
+  function portalQuestionShell(shell) {
+    if (!shell || shell.parentElement === document.body) return;
+    shell.__obsHome = { parent: shell.parentElement, next: shell.nextSibling };
+    document.body.appendChild(shell);
+  }
+
+  function unportalQuestionShell(shell) {
+    const home = shell?.__obsHome;
+    if (!home) return;
+    shell.__obsHome = null;
+    if (!home.parent || !document.contains(home.parent)) return;
+    if (home.next && home.next.parentElement === home.parent) home.parent.insertBefore(shell, home.next);
+    else home.parent.appendChild(shell);
+  }
+
   function showQuestion(question = chooseQuestion()) {
     const shell = byId("obs-question-shell");
     if (!shell || !question) return;
+    portalQuestionShell(shell);
+    // A shell that was rested in the flow by the rebuild's guard
+    // must stand as the modal again when it is truly shown.
+    shell.classList.remove("sphere-rebuild-obs-resting");
     currentQuestion = question;
     setText("obs-question-category", question.category);
     setText("obs-question-text", question.text);
@@ -536,6 +563,8 @@
       );
 
       shell.__returnFocus = null;
+
+      unportalQuestionShell(shell);
 
       if (
         returnFocus &&
