@@ -165,6 +165,105 @@
     }
   }
 
+  /* One soft tone, in the same spirit as the chirp: a sine at
+   * the pad's own frequency, played only in answer to a tap,
+   * and silent when the Spark's sounds are turned off. */
+  function playTone(freq, delay = 0, dur = 0.34) {
+    try {
+      if (window.localStorage.getItem("sof.spark.sound") === "off") return;
+    } catch {
+      /* keep going */
+    }
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      audioCtx = audioCtx || new AC();
+      if (audioCtx.state === "suspended") audioCtx.resume();
+      const start = audioCtx.currentTime + delay;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.exponentialRampToValueAtTime(0.14, start + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+      osc.connect(gain).connect(audioCtx.destination);
+      osc.start(start);
+      osc.stop(start + dur + 0.05);
+    } catch {
+      /* silent is fine */
+    }
+  }
+
+  /* A happy bounce on the art, in place — the same answer a tap
+   * gets everywhere a Spark stands. */
+  function bounce(el) {
+    if (!el) return;
+    el.classList.remove("spark-bounce");
+    void el.offsetWidth;
+    el.classList.add("spark-bounce");
+  }
+
+  function buildPads(host, pads, onTap) {
+    if (!host) return [];
+    host.innerHTML = "";
+    return pads.map((pad, i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "spark-echo-pad";
+      b.style.setProperty("--echo-pad", pad.color);
+      b.setAttribute("aria-label", `Tone ${i + 1}`);
+      b.addEventListener("click", () => {
+        lightPad(b);
+        onTap(i);
+      });
+      host.appendChild(b);
+      return b;
+    });
+  }
+
+  function lightPad(el, ms = 420) {
+    if (!el) return;
+    el.classList.add("is-lit");
+    window.setTimeout(() => el.classList.remove("is-lit"), ms);
+  }
+
+  /* Find-the-tone, at the meeting: the Spark sings one of its
+   * four tones; the keeper taps the pad that sang it. A small
+   * first game, played before any keeping — meeting by doing. */
+  let toneGame = null;
+  function wireToneGame(companion) {
+    const host = $("#spark-tone-pads");
+    const status = $("#spark-tone-status");
+    if (!host || !companion) return;
+    const { pads } = Core.echoFor({ companion, round: 1 });
+    const target = Core.hashString(`${companion.seed}:tone-meet`) % pads.length;
+    toneGame = { companion, pads, target, found: false };
+    const padEls = buildPads(host, pads, (i) => {
+      if (!toneGame) return;
+      playTone(toneGame.pads[i].note);
+      if (i === toneGame.target) {
+        if (!toneGame.found) {
+          toneGame.found = true;
+          if (status) status.textContent = Core.convoLineFor({ companion, beat: "caught" });
+          const speech = $("#spark-preview-speech");
+          if (speech) speech.textContent = Core.convoLineFor({ companion, beat: "play" });
+        }
+      } else if (status) {
+        status.textContent = "Not that one — play its tone again and listen once more.";
+      }
+    });
+    const play = $("#spark-tone-play");
+    if (play) {
+      play.onclick = () => {
+        if (!toneGame) return;
+        playTone(toneGame.pads[toneGame.target].note);
+        lightPad(padEls[toneGame.target]);
+      };
+    }
+    if (status) status.textContent = "";
+  }
+
   function previewSpark(today) {
     const kindIndex = Core.resolveKindIndex({
       moon: today ? today.moon : null,
@@ -188,6 +287,18 @@
     $("#spark-keep").textContent = `Keep ${keeper || companion.name}`;
     $("#spark-preview").hidden = false;
     chirp(companion);
+    /* The meeting is played, not just read: the preview answers
+     * a tap, and its tone can be found by ear before any keeping. */
+    wireToneGame(companion);
+    const speech = $("#spark-preview-speech");
+    if (speech) speech.textContent = "";
+    if (art) {
+      art.onclick = () => {
+        bounce(art);
+        chirp(companion);
+        if (speech) speech.textContent = Core.convoLineFor({ companion, beat: "pet" });
+      };
+    }
     return companion;
   }
 
@@ -214,6 +325,57 @@
       }
       showCompanion(today);
     });
+  }
+
+  /* The echo game, at home with its keeper: the Spark sings a
+   * short sequence on its four pads and the keeper sings it
+   * back. Rounds grow one note at a time; a finished round is
+   * counted in the record's play, the way the presence counts
+   * it, so the tricks play teaches can be learned here too. */
+  let echoGame = null;
+  function wireEchoGame(companion) {
+    const host = $("#spark-echo-pads");
+    const status = $("#spark-echo-status");
+    const start = $("#spark-echo-start");
+    if (!host || !start || !companion) return;
+    echoGame = { companion, round: 1, pads: [], steps: [], heard: [], playing: false };
+    const padEls = buildPads(host, Core.echoFor({ companion, round: 1 }).pads, (i) => {
+      if (!echoGame || echoGame.playing || !echoGame.steps.length) return;
+      playTone(echoGame.pads[i].note);
+      echoGame.heard.push(i);
+      const at = echoGame.heard.length - 1;
+      if (echoGame.heard[at] !== echoGame.steps[at]) {
+        if (status) status.textContent = Core.convoLineFor({ companion, beat: "echoMiss" });
+        echoGame.heard = [];
+        return;
+      }
+      if (echoGame.heard.length === echoGame.steps.length) {
+        const doneRound = echoGame.round;
+        const fresh = readRecord();
+        if (fresh) writeRecord(Core.recordPlay(fresh, { action: "echo", round: doneRound }).record);
+        if (status) status.textContent = Core.convoLineFor({ companion, beat: "echoWin" });
+        echoGame.round = doneRound + 1;
+        echoGame.steps = [];
+        echoGame.heard = [];
+        start.textContent = `Sing round ${echoGame.round}`;
+      }
+    });
+    start.onclick = () => {
+      if (!echoGame) return;
+      const round = Core.echoFor({ companion, round: echoGame.round });
+      echoGame.pads = round.pads;
+      echoGame.steps = round.steps;
+      echoGame.heard = [];
+      echoGame.playing = true;
+      if (status) status.textContent = Core.convoLineFor({ companion, beat: "echoStart" });
+      round.steps.forEach((padIndex, i) => {
+        playTone(round.pads[padIndex].note, 0.25 + i * 0.42, 0.3);
+        window.setTimeout(() => lightPad(padEls[padIndex], 300), 250 + i * 420);
+      });
+      window.setTimeout(() => {
+        if (echoGame) echoGame.playing = false;
+      }, 350 + round.steps.length * 420);
+    };
   }
 
   /* ---------- the companion view ---------- */
@@ -308,6 +470,28 @@
     } else {
       go.hidden = true;
     }
+
+    /* A tap on the big art is a pet — counted the way the core
+     * counts play, answered with a bounce, its chirp, and a
+     * line in its own voice. */
+    const bigArt = $("#spark-big-art");
+    if (bigArt) {
+      bigArt.onclick = () => {
+        const fresh = readRecord();
+        if (!fresh) return;
+        const result = Core.recordPlay(fresh, { action: "pet" });
+        writeRecord(result.record);
+        bounce(bigArt);
+        chirp(companion);
+        const speech = $("#spark-big-speech");
+        if (speech) {
+          speech.textContent = result.learned && result.learned.length
+            ? Core.convoLineFor({ companion, beat: "learned" })
+            : Core.convoLineFor({ companion, beat: "pet" });
+        }
+      };
+    }
+    wireEchoGame(companion);
 
     const rename = $("#spark-rename");
     rename.value = record.name || "";
