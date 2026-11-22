@@ -652,6 +652,13 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
       return el === sidebar || el === dock ||
         el.classList.contains("sphere-wrapper") ||
         el.classList.contains("sphere-rebuild-caption") ||
+        // The rooms backdrop stands beside the sheet, never in
+        // it: swept in, it rides the sheet's transform and then
+        // covers the sheet's own rooms, eating every click meant
+        // for them (real-pointer browser tests caught what
+        // synthetic clicks could not — PR #232 review,
+        // Nov 21, 2026).
+        el.classList.contains("sphere-rooms-backdrop") ||
         el.id === "living-planner-modal" ||
         el.id === "living-command-window" ||
         el.tagName === "SCRIPT" || el.tagName === "TEMPLATE";

@@ -75,6 +75,13 @@ test("rooms panel supports focus containment, restoration, Escape, backdrop and 
   assert.match(shellCss, /prefers-reduced-motion:\s*reduce/);
 });
 
+test("the rooms backdrop stands beside the sheet, never inside it", () => {
+  // The sweep keeps the backdrop out of the sheet: inside, it
+  // would cover the sheet's own rooms and eat their clicks.
+  assert.match(armillary, /el\.classList\.contains\("sphere-rooms-backdrop"\)/);
+  assert.match(armillary, /sidebar\.before\(backdrop\)/);
+});
+
 test("the same shell switches between Focus and full-page presentation", () => {
   assert.match(armillary, /modeToggle\.addEventListener\("click"/);
   assert.match(armillary, /classList\.toggle\("sphere-full-page"\)/);
