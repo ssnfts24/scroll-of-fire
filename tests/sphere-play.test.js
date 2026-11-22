@@ -50,6 +50,13 @@ test("the echo game plays the keeper's own motif through the living call", () =>
   assert.ok(play.includes("signatureSteps"), "the sequence is the Spark's signature, mapped onto the pads");
 });
 
+test("the three stage game doors start collapsed behind one accessible Play control", () => {
+  assert.ok(play.includes('class="sphere-play-bar-toggle" aria-expanded="false"'), "one Play button is shown first");
+  assert.ok(play.includes('class="sphere-play-bar-doors" id="sphere-play-bar-choices" hidden'), "game choices start collapsed");
+  assert.ok(play.includes('aria-controls="sphere-play-bar-choices"'), "the Play button names its controlled choices");
+  assert.ok(play.includes('playChoices.hidden = true'), "choosing a game collapses the choices again");
+});
+
 test("still mode turns play quiet, and play never covers the Sphere", () => {
   assert.ok(play.includes("Play rests while the Sphere is still."), "the still line is plain");
   assert.ok(play.includes("sphere-frozen"), "play rests when the shell has frozen the Sphere");
