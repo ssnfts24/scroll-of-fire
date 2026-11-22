@@ -278,3 +278,40 @@ test("the Spark is never 'she' in the world's words", () => {
   const section = html.slice(html.indexOf('id="spark-home"'), html.indexOf('id="spark-travel"'));
   assert.ok(!/\bshe\b|\bher\b/i.test(section), "the section's own copy keeps the rule too");
 });
+
+/* --------------------- the Spark speaks at home --------------------- */
+
+test("the Spark's speech at home is carried whole: the day's remark and its reactions", () => {
+  const record = sparkRecordWithDays([210, 212, 215]);
+  const companion = Core.generate(record.seed);
+  const remark = Core.livingDayRemarkFor({ record, companion, today: TODAY, hour: 15 });
+  assert.ok(remark.line.includes("Moon 8"), "the day remark speaks from the canonical cursor's own coordinate");
+  const m = model({
+    sparkRecord: record,
+    companion,
+    sparkSpeech: {
+      dayLine: remark.line,
+      reactions: [Core.convoLineFor({ companion, beat: "pet" }), Core.convoLineFor({ companion, beat: "poke" })]
+    }
+  });
+  assert.equal(m.sparkSpeech.dayLine, remark.line, "the day line stands in the model, untampered");
+  assert.equal(m.sparkSpeech.reactions.length, 2, "its reactions stand beside it");
+  assert.ok(m.sparkSpeech.reactions.every((line) => typeof line === "string" && line.length > 0));
+});
+
+test("speech is filtered to honest strings, and a Spark-less world is silent", () => {
+  const m = model({ sparkSpeech: { dayLine: 42, reactions: ["Here.", "", null, 7] } });
+  assert.equal(m.sparkSpeech.dayLine, null, "a day line that is not words does not stand");
+  assert.deepEqual(m.sparkSpeech.reactions, ["Here."], "only true lines are carried");
+  const empty = World.buildModel({ today: TODAY, hour: 10, sparkSpeech: { dayLine: "Hello.", reactions: ["Here."] } });
+  assert.equal(empty.sparkSpeech, null, "no Spark, no speech — the world does not invent a voice");
+});
+
+test("the home page offers the passport door inside Their Home", () => {
+  const html = read("companions.html");
+  const section = html.slice(html.indexOf('id="spark-home"'), html.indexOf('id="spark-travel"'));
+  assert.ok(section.includes('id="spark-home-passport-input"'), "the door's field stands in Their Home");
+  assert.ok(section.includes('id="spark-home-passport-go"'), "the door's button stands in Their Home");
+  assert.ok(section.includes("Tap your Spark itself and it answers"),
+    "the hint tells the keeper the Spark answers a tap, and what it says first");
+});

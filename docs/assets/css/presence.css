@@ -181,6 +181,27 @@
   color: var(--gold, #f3c97a);
 }
 
+/* A guidance surface that stands on a page whose own palette is
+ * light (the Scroll Library's opening) or already a card (the
+ * front door's Today panel) carries its own quiet ground, so the
+ * counted lines read the same in every room (Q-03). */
+.presence-guidance--card {
+  background: #121219;
+  color: #eae7df;
+}
+
+.presence-guidance--card .presence-guidance__label {
+  color: #b8b3a6;
+}
+
+.presence-guidance--card .presence-guidance__line--noticed {
+  color: #eae7df;
+}
+
+.presence-guidance--card .presence-guidance__line--offer a {
+  color: #f3c97a;
+}
+
 /* ----------------------------- Guide ------------------------------- */
 
 .codex-guide {

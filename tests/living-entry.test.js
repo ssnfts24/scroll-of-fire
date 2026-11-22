@@ -235,11 +235,11 @@ test("existing homepage hooks survive the restructure", () => {
     'id="front-door-recent"',
     'class="front-door-list"',
     /* The Front Door shows the four newest growth entries; the pin
-     * follows the newest date in the record (2026-11-21 — the PR #222
-     * catch-up, the sitewide Batch A, B and C entries, and the
-     * guide-page fix rotated the Nov 20 entries off the door,
-     * not out of the record). */
-    '<time datetime="2026-11-21">',
+     * follows the newest date in the record (2026-11-22 — the Sphere
+     * day-marks pass, the Spark passport, the Q-03 front-door memory
+     * and the Q-04 Garden of Paths entries rotated the Nov 21 entries
+     * off the door, not out of the record). */
+    '<time datetime="2026-11-22">',
     'id="home-sphere-observatory"',
     'id="home-title"',
     'id="participation"',

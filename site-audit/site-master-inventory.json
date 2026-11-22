@@ -3,19 +3,20 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 477,
+    "resources": 479,
     "publicHtmlPages": 181,
     "catalogEntries": 73,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 25,
+      "not-linked-directly-from-homepage": 26,
       "nav-label-differs-from-title": 24,
       "no-global-navigation": 1,
-      "deployed-but-unlinked": 56,
+      "deployed-but-unlinked": 58,
       "unreachable-from-homepage": 4,
       "compatibility-redirect-page": 1,
       "not-published-in-catalog": 30,
       "unnamed-image-needs-descriptive-title": 21,
-      "not-in-sitemap": 1
+      "not-in-sitemap": 1,
+      "reachable-only-through-atlas": 1
     }
   },
   "resources": [
@@ -674,7 +675,7 @@
     },
     {
       "id": "docs-assets:assets/css",
-      "title": "docs/assets/css (69 files)",
+      "title": "docs/assets/css (70 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -691,7 +692,7 @@
     },
     {
       "id": "docs-assets:assets/data",
-      "title": "docs/assets/data (8 files)",
+      "title": "docs/assets/data (9 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -759,7 +760,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (209 files)",
+      "title": "docs/assets/js (210 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -810,7 +811,7 @@
     },
     {
       "id": "docs-assets:assets/vendor",
-      "title": "docs/assets/vendor (3 files)",
+      "title": "docs/assets/vendor (4 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1823,6 +1824,44 @@
       ]
     },
     {
+      "id": "docs:development/LIVING-SPHERE-EVOLUTION-PHASE-A-ARCHITECTURE.md",
+      "title": "development/LIVING-SPHERE-EVOLUTION-PHASE-A-ARCHITECTURE.md",
+      "description": "Markdown document deployed inside docs/ and therefore publicly fetchable, but not linked from the site.",
+      "category": "Development document",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/development/LIVING-SPHERE-EVOLUTION-PHASE-A-ARCHITECTURE.md",
+      "publicUrl": "https://codexofreality.org/development/LIVING-SPHERE-EVOLUTION-PHASE-A-ARCHITECTURE.md",
+      "publicationStatus": "source-only",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "development-only-deployed-publicly",
+      "discoverability": null,
+      "issues": [
+        "deployed-but-unlinked"
+      ]
+    },
+    {
+      "id": "docs:development/LIVING-SPHERE-EVOLUTION-PHASE-A-VISUAL-SPEC.md",
+      "title": "development/LIVING-SPHERE-EVOLUTION-PHASE-A-VISUAL-SPEC.md",
+      "description": "Markdown document deployed inside docs/ and therefore publicly fetchable, but not linked from the site.",
+      "category": "Development document",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/development/LIVING-SPHERE-EVOLUTION-PHASE-A-VISUAL-SPEC.md",
+      "publicUrl": "https://codexofreality.org/development/LIVING-SPHERE-EVOLUTION-PHASE-A-VISUAL-SPEC.md",
+      "publicationStatus": "source-only",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "development-only-deployed-publicly",
+      "discoverability": null,
+      "issues": [
+        "deployed-but-unlinked"
+      ]
+    },
+    {
       "id": "docs:development/R1.7-PROTECTED-MANIFEST.md",
       "title": "development/R1.7-PROTECTED-MANIFEST.md",
       "description": "Markdown document deployed inside docs/ and therefore publicly fetchable, but not linked from the site.",
@@ -1889,7 +1928,6 @@
         "lab.html",
         "ledger.html",
         "living-time-sphere.html",
-        "map.html",
         "moons.html",
         "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
@@ -13814,7 +13852,7 @@
     },
     {
       "id": "repo-folder:scripts",
-      "title": "scripts/ (31 files)",
+      "title": "scripts/ (32 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -13882,7 +13920,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (177 files)",
+      "title": "tests/ (189 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -20187,14 +20225,16 @@
         "path": "map.html",
         "inSitemap": false,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 2,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": null,
+        "inboundPages": 1,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
-        "not-in-sitemap"
+        "not-in-sitemap",
+        "reachable-only-through-atlas",
+        "not-linked-directly-from-homepage"
       ]
     },
     {

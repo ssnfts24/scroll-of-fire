@@ -13,6 +13,8 @@
 | `scroll:search:check` | `node scripts/build-scroll-search.mjs --check` |
 | `scroll:editorial` | `node scripts/build-scroll-editorial.mjs` |
 | `scroll:editorial:check` | `node scripts/build-scroll-editorial.mjs --check` |
+| `paths:graph` | `node scripts/build-link-graph.mjs` |
+| `paths:graph:check` | `node scripts/build-link-graph.mjs --check` |
 | `site:catalog` | `node scripts/build-site-catalog.mjs` |
 | `site:catalog:check` | `node scripts/build-site-catalog.mjs --check` |
 | `search:index` | `node scripts/build-search-index.mjs` |
@@ -64,6 +66,7 @@
 | `scripts/apply-spark-presence.mjs` | `docs/living-time-sphere.html`, `docs/404.html`, `docs/offline.html`, `docs/caravan.html`, `docs/companions.html` |
 | `scripts/apply-theory-work.mjs` | `docs/theory.html` |
 | `scripts/audit-site.mjs` | — |
+| `scripts/build-link-graph.mjs` | `docs/assets/data/link-graph.json`, `site-audit/site-master-inventory.json` |
 | `scripts/build-r2-inventory.mjs` | `site-audit/r2/document-extracts.json`, `docs/scroll/archive/Full_Scroll_Unsealed.txt`, `docs/development/TEMPORAL-AUTHORITY-CONTRACT.md`, `site-audit/r2/CODEX_R2_RESOURCE_REGISTRY.json` |
 | `scripts/build-scroll-editorial.mjs` | `docs/scroll/data/editorial-edition.json`, `docs/scroll/evidence/claim-register.json`, `docs/scroll/evidence/register.md` |
 | `scripts/build-scroll-library.mjs` | `archive/Full_Scroll_Unsealed.txt`, `archive/edition.json` |
@@ -112,10 +115,10 @@
 | `docs/assets/js/heaven-sound.js` | 77 |
 | `docs/assets/js/spark-agent-seat.js` | 75 |
 | `docs/assets/js/spark-3d.js` | 73 |
-| `docs/assets/js/calendar/pattern-calendar-version.js` | 40 |
-| `docs/assets/js/calendar/pattern-calendar-data.js` | 40 |
-| `docs/assets/js/calendar/pattern-calendar-format.js` | 40 |
-| `docs/assets/js/calendar/pattern-calendar-boundary.js` | 40 |
+| `docs/assets/js/calendar/pattern-calendar-version.js` | 41 |
+| `docs/assets/js/calendar/pattern-calendar-data.js` | 41 |
+| `docs/assets/js/calendar/pattern-calendar-format.js` | 41 |
+| `docs/assets/js/calendar/pattern-calendar-boundary.js` | 41 |
 
 ## Protected systems (do not modify)
 

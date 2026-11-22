@@ -1,0 +1,77 @@
+/*
+ * Paths from Here — the Garden of Paths panel (Q-04).
+ * Quiet chrome in the page's own palette: a bordered block at the
+ * foot of the page, two short lists of trails, nothing animated,
+ * nothing that moves the page under the reader.
+ */
+
+.paths {
+  margin: 2.5rem auto;
+  max-width: 880px;
+  padding: 1.1rem 1.25rem 1.25rem;
+  border: 1px solid var(--line, #2a2a33);
+  border-radius: 14px;
+  color: var(--ink, #eae7df);
+}
+
+.paths__heading {
+  margin: 0 0 0.25rem;
+  font-size: 1.25rem;
+  color: var(--gold, #c2a15c);
+}
+
+.paths__note {
+  margin: 0 0 1rem;
+  font-size: 0.92rem;
+  color: var(--ink-soft, var(--muted, #b8b3a6));
+}
+
+.paths__block {
+  margin-top: 1rem;
+}
+
+.paths__group {
+  margin: 0.75rem 0 0.4rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft, var(--muted, #b8b3a6));
+}
+
+.paths__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.paths__list a {
+  color: var(--gold-bright, var(--gold, #dfc27e));
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.paths__list a:hover,
+.paths__list a:focus-visible {
+  border-bottom-color: currentColor;
+}
+
+.paths__more {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  color: var(--ink-soft, var(--muted, #b8b3a6));
+}
+
+@media (min-width: 720px) {
+  .paths {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 2rem;
+  }
+
+  .paths__heading,
+  .paths__note {
+    grid-column: 1 / -1;
+  }
+}

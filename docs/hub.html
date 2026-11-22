@@ -80,6 +80,7 @@
   <script defer src="assets/js/heaven-sound.js?v=20261119-1"></script>
   <link rel="stylesheet" href="assets/css/story-layer.css?v=20261120-1">
   <link rel="stylesheet" href="assets/css/spark-agent-seat.css?v=20261120-2">
+  <link rel="stylesheet" href="assets/css/paths.css?v=20261122-1">
   <script defer src="assets/js/spark-agent-seat.js?v=20261120-2"></script>
 </head>
 <body class="living-ui">
@@ -333,6 +334,11 @@
     </section>
     <!-- site-catalog:hub-strip:end -->
 
+    <!-- Garden of Paths, first slice (Q-04): this page's own
+         trails and who points here, counted at build time from
+         the pages' own words (assets/data/link-graph.json). -->
+    <section class="paths" data-paths-from-here data-paths-page="hub.html" data-paths-src="assets/data/link-graph.json" hidden aria-label="Paths from here"></section>
+
     </main>
 
   <footer class="site-footer hub-footer">
@@ -378,5 +384,6 @@
   <script defer src="assets/js/social-bridge.js?v=20261119-1"></script>
   <script src="assets/js/living-trail.js?v=20261120-1"></script>
   <script src="assets/js/story-layer.js?v=20261120-1"></script>
+  <script src="assets/js/paths-from-here.js?v=20261122-1"></script>
 </body>
 </html>
