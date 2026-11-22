@@ -13,6 +13,8 @@
 | `scroll:search:check` | `node scripts/build-scroll-search.mjs --check` |
 | `scroll:editorial` | `node scripts/build-scroll-editorial.mjs` |
 | `scroll:editorial:check` | `node scripts/build-scroll-editorial.mjs --check` |
+| `spark:relations` | `node scripts/build-spark-relations.mjs` |
+| `spark:relations:check` | `node scripts/build-spark-relations.mjs --check` |
 | `paths:graph` | `node scripts/build-link-graph.mjs` |
 | `paths:graph:check` | `node scripts/build-link-graph.mjs --check` |
 | `site:catalog` | `node scripts/build-site-catalog.mjs` |
@@ -73,6 +75,7 @@
 | `scripts/build-scroll-search.mjs` | — |
 | `scripts/build-search-index.mjs` | `docs/data/site-catalog.json`, `docs/scroll/data/library.json`, `docs/scroll/data/reader-segments.json`, `docs/scroll/search/lexicon/lexicon-index.json`, `docs/scroll/evidence/claim-register.json` |
 | `scripts/build-site-catalog.mjs` | `site-audit/pr5a-body.md`, `docs/downloads.html`, `docs/data/site-catalog.json` |
+| `scripts/build-spark-relations.mjs` | `docs/data/site-catalog.json` |
 | `scripts/build-world-lands.mjs` | `docs/data/site-catalog.json` |
 | `scripts/free_all_circuits.py` | — |
 | `scripts/generate-equinox-passage-data.mjs` | `docs/data/equinox-passage/equinox-source-metadata.json`, `docs/data/equinox-passage/equinox-reference-2014-2027.json`, `docs/data/equinox-passage/equinox-passage-2014-2027.json` |
@@ -112,13 +115,13 @@
 | `docs/assets/js/site.js` | 140 |
 | `docs/assets/js/living-ui.js` | 137 |
 | `docs/scripture/assets/scripture.js` | 93 |
+| `docs/assets/js/spark-relations.js` | 81 |
 | `docs/assets/js/heaven-sound.js` | 77 |
 | `docs/assets/js/spark-agent-seat.js` | 75 |
 | `docs/assets/js/spark-3d.js` | 73 |
 | `docs/assets/js/calendar/pattern-calendar-version.js` | 41 |
 | `docs/assets/js/calendar/pattern-calendar-data.js` | 41 |
 | `docs/assets/js/calendar/pattern-calendar-format.js` | 41 |
-| `docs/assets/js/calendar/pattern-calendar-boundary.js` | 41 |
 
 ## Protected systems (do not modify)
 
