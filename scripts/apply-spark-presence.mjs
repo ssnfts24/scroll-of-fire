@@ -64,8 +64,16 @@ const EXCLUDED_DIRS = new Set(["scroll", "scripture"]);
 const STAMP = "20261119-1";
 const CSS_TAG =
   `<link rel="stylesheet" href="assets/css/spark-companion.css?v=${STAMP}">`;
+/* The relations extract (Q-05) rides between the core and the
+ * presence: data shipped in the bundle, loaded by tag, never
+ * fetched. Its stamp is its own — the extract changes when the
+ * record does, not when the Spark's code does. */
+const RELATIONS_STAMP = "20261122-1";
+const RELATIONS_TAG =
+  `<script defer src="assets/js/spark-relations.js?v=${RELATIONS_STAMP}"></script>`;
 const SCRIPT_TAGS =
   `<script defer src="assets/js/spark-companion.js?v=${STAMP}"></script>\n` +
+  `  ${RELATIONS_TAG}\n` +
   `  <script defer src="assets/js/spark-presence.js?v=${STAMP}"></script>`;
 const SEAT_STAMP = "20261120-2";
 const SEAT_CSS_TAG =
@@ -105,6 +113,7 @@ for (const rel of walk(docsDir).sort()) {
   const prefix = depth > 0 ? "../".repeat(depth) : "";
   const cssTag = CSS_TAG.replace('href="assets/', `href="${prefix}assets/`);
   const scriptTags = SCRIPT_TAGS.replaceAll('src="assets/', `src="${prefix}assets/`);
+  const relationsTag = RELATIONS_TAG.replace('src="assets/', `src="${prefix}assets/`);
   const seatCssTag = SEAT_CSS_TAG.replace('href="assets/', `href="${prefix}assets/`);
   const seatScriptTag = SEAT_SCRIPT_TAG.replace('src="assets/', `src="${prefix}assets/`);
 
@@ -115,6 +124,7 @@ for (const rel of walk(docsDir).sort()) {
     .replace(/spark-companion\.css\?v=[0-9A-Za-z-]+/g, `spark-companion.css?v=${STAMP}`)
     .replace(/spark-companion\.js\?v=[0-9A-Za-z-]+/g, `spark-companion.js?v=${STAMP}`)
     .replace(/spark-presence\.js\?v=[0-9A-Za-z-]+/g, `spark-presence.js?v=${STAMP}`)
+    .replace(/spark-relations\.js\?v=[0-9A-Za-z-]+/g, `spark-relations.js?v=${RELATIONS_STAMP}`)
     .replace(/spark-agent-seat\.css\?v=[0-9A-Za-z-]+/g, `spark-agent-seat.css?v=${SEAT_STAMP}`)
     .replace(/spark-agent-seat\.js\?v=[0-9A-Za-z-]+/g, `spark-agent-seat.js?v=${SEAT_STAMP}`);
 
@@ -128,6 +138,13 @@ for (const rel of walk(docsDir).sort()) {
   }
   if (!html.includes("spark-presence.js")) {
     html = html.replace("</head>", `  ${scriptTags}\n</head>`);
+  } else if (!html.includes("spark-relations.js")) {
+    /* The presence already stands here: the extract takes its
+     * place in the same line, immediately before it. */
+    html = html.replace(
+      /([ \t]*)<script defer src="[^"]*spark-presence\.js\?v=[0-9A-Za-z-]+"><\/script>/,
+      (whole, indent) => `${indent}${relationsTag}\n${whole}`
+    );
   }
   if (!html.includes("spark-agent-seat.css")) {
     html = html.replace("</head>", `  ${seatCssTag}\n</head>`);

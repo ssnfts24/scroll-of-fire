@@ -220,6 +220,7 @@ const homepage = `<!doctype html>
   <script defer src="assets/library.js"></script>
   <link rel="stylesheet" href="../assets/css/spark-companion.css?v=20261119-1">
   <script defer src="../assets/js/spark-companion.js?v=20261119-1"></script>
+  <script defer src="../assets/js/spark-relations.js?v=20261122-1"></script>
   <script defer src="../assets/js/spark-presence.js?v=20261119-1"></script>
   <!-- Guidance at the library's opening (Q-03): the canonical
        calendar, the Life Atlas record layer, and the shared
@@ -341,6 +342,7 @@ const reader = `<!doctype html>
   <script defer src="assets/reader.js"></script>
   <link rel="stylesheet" href="../assets/css/spark-companion.css?v=20261119-1">
   <script defer src="../assets/js/spark-companion.js?v=20261119-1"></script>
+  <script defer src="../assets/js/spark-relations.js?v=20261122-1"></script>
   <script defer src="../assets/js/spark-presence.js?v=20261119-1"></script>
 </head>
 <body class="reader-page living-ui">
@@ -410,6 +412,7 @@ function toolPage({ file, title, description, bodyClass, current, intro, body, s
 ${scripts.map(script => `  <script defer src="assets/${script}"></script>`).join("\n")}
   <link rel="stylesheet" href="../assets/css/spark-companion.css?v=20261119-1">
   <script defer src="../assets/js/spark-companion.js?v=20261119-1"></script>
+  <script defer src="../assets/js/spark-relations.js?v=20261122-1"></script>
   <script defer src="../assets/js/spark-presence.js?v=20261119-1"></script>
 </head>
 <body class="tool-body ${bodyClass} living-ui">
