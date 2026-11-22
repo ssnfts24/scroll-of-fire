@@ -82,6 +82,13 @@ test("the rooms backdrop stands beside the sheet, never inside it", () => {
   assert.match(armillary, /sidebar\.before\(backdrop\)/);
 });
 
+test("stepping into the app view closes the rooms and lifts their inert", () => {
+  // The keeper enters the app view from inside the open sheet;
+  // its inert must not follow them onto the app view's chrome.
+  assert.match(armillary, /appWatcher/);
+  assert.match(armillary, /document\.body\.classList\.contains\("sphere-app"\)[\s\S]{0,120}closeRooms\(false\)/);
+});
+
 test("the same shell switches between Focus and full-page presentation", () => {
   assert.match(armillary, /modeToggle\.addEventListener\("click"/);
   assert.match(armillary, /classList\.toggle\("sphere-full-page"\)/);

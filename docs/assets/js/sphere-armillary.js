@@ -640,6 +640,26 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
     var modeWatcher = new MutationObserver(syncMode);
     modeWatcher.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
 
+    // Stepping into the app view closes the rooms. The keeper
+    // enters it from the controls room inside the open sheet,
+    // and the sheet's state must not follow them in — above all
+    // the inert standing on the stage wrapper, which carries
+    // the app view's own top bar, day bar and dock: left in
+    // place, the whole app view sits dead under a real pointer
+    // (PR #232 review, Nov 21, 2026; found by real-pointer
+    // mode-switch tests, invisible to synthetic clicks). The
+    // app shell owns the sidebar's aria state in its own view,
+    // so the rooms' aria-hidden is handed over, not kept.
+    var appWatcher = new MutationObserver(function () {
+      if (document.body.classList.contains("sphere-app")) {
+        closeRooms(false);
+        sidebar.removeAttribute("aria-hidden");
+      } else {
+        syncMode();
+      }
+    });
+    appWatcher.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+
     // Everything that is not the stage, the telling line, or the
     // dock moves into the one sheet, in the page's own order —
     // a sweep, not a list, so no leftover piece (the Ambient
