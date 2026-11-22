@@ -2,6 +2,14 @@
  {
   "date": "2026-11-21",
   "type": "system",
+  "title": "The doors learned to answer a touch",
+  "summary": "The shared navigation now answers a press with a quiet pressed-state cue, so a tap is felt as received without any new motion running on the page, and the Spark's first meeting on the Companions page was drawn more compact. The repository's own README also gained a map of the whole repo, so a reader arriving at the code can find every room from the door.",
+  "url": "./index.html",
+  "symbol": "✧"
+ },
+ {
+  "date": "2026-11-21",
+  "type": "system",
   "title": "The guide learned to carry its calendar once",
   "summary": "The field guide loaded the same Pattern Calendar stack three times over — once in the head, again in the footer, and a third time in an older dress — and a safeguard from the Spark seat's build fenced off every edit to the page. By Aaron's word the fence now names one exception, this page, and the guide carries its calendar once, in its current version; its day-telling answers exactly as before, proven against the calendar's own fixtures. The page also gained its closing step onward to the Teaching Lab, and share titles and a description in its own words, so it introduces itself properly wherever it is carried.",
   "url": "./guide.html",
