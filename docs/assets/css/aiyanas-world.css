@@ -354,6 +354,31 @@
   padding: 0.6rem 1.1rem;
 }
 
+/* ---------- Her first story, on the shelf she approved ---------- */
+
+.aiyana-story { padding: 0.4rem 0 0.8rem; }
+
+.aiyana-story-title { color: #5b2a86; font-size: 1.3rem; margin: 0.5rem 0 0.2rem; }
+
+.aiyana-story-by { font-weight: 700; color: #7a3b9e; margin: 0 0 0.8rem; }
+
+.aiyana-story p { line-height: 1.65; font-size: 1.08rem; }
+
+.aiyana-story-sign { font-weight: 800; color: #5b2a86; }
+
+.aiyana-story-art { margin: 1rem 0 0.4rem; }
+
+.aiyana-story-art img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: 3px solid #cdbcf0;
+  border-radius: 1rem;
+  background: #ffffff;
+}
+
+.aiyana-story-art figcaption { color: #6d5a80; font-style: italic; margin-top: 0.5rem; }
+
 /* ---------- Where to next ---------- */
 
 .aiyana-next-btn {
