@@ -1260,3 +1260,92 @@
     display: none;
   }
 }
+
+/* ---- the passport and the page's own play (Nov 22, 2026) ---- */
+
+/* A line the Spark speaks on this page — under its picture,
+ * never blocking anything. */
+.spark-speech {
+  min-height: 1.2em;
+  margin: 6px 0 0;
+  font-style: italic;
+  color: var(--spark-dim);
+}
+
+/* The pictures answer a tap; the cursor says so. */
+.spark-preview-art,
+.spark-big-art {
+  cursor: pointer;
+}
+
+/* The happy bounce a tap is answered with. */
+@keyframes spark-bounce-anim {
+  0% { transform: translateY(0) scale(1); }
+  35% { transform: translateY(-10px) scale(1.04); }
+  70% { transform: translateY(2px) scale(0.99); }
+  100% { transform: translateY(0) scale(1); }
+}
+.spark-bounce {
+  animation: spark-bounce-anim 0.45s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .spark-bounce { animation: none; }
+}
+
+/* The passport: the code stands large and plain, in a hand's
+ * width, so it can be read aloud or typed without squinting. */
+.spark-passport-code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 1.05rem;
+  letter-spacing: 0.06em;
+  word-break: break-all;
+  color: var(--spark-gold);
+  margin: 6px 0;
+}
+
+.spark-passport-qr {
+  width: 168px;
+  height: 168px;
+  margin: 8px 0;
+  background: #fff;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.spark-passport-qr svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.spark-passport-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 8px 0;
+}
+.spark-passport-row input {
+  flex: 1 1 240px;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  letter-spacing: 0.04em;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--spark-line);
+  background: rgba(5, 8, 16, 0.6);
+  color: var(--spark-ink);
+}
+
+.spark-passport-video {
+  width: min(320px, 100%);
+  border-radius: 12px;
+  margin: 8px 0;
+  background: #000;
+}
+
+.spark-passport-door {
+  margin-top: 18px;
+  border-top: 1px solid var(--spark-line);
+  padding-top: 10px;
+}

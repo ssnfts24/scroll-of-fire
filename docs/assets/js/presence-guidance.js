@@ -17,6 +17,14 @@
  * the guidance is computed here, once, from the record — the face
  * never gets a bigger voice than the evidence under it.
  *
+ * Surfaces: any page carrying a [data-presence-guidance] slot hears
+ * the same lines — the 13 Moons Day Notes panel first, and since
+ * Nov 22, 2026 the homepage's Today panel and the Scroll Library's
+ * opening (recommendation Q-03). A surface may name its own doors
+ * for the offers (data-guidance-practice-href / -note-href); the
+ * lines themselves never change per surface, and nothing is hidden
+ * anywhere — the slot only adds a voice, it removes nothing.
+ *
  * Footprints: the module stamps the civil days a visitor returns, in
  * its own small localStorage entry (civil dates only, capped). That
  * stamp is the "days returned" footprint the design names; it holds
@@ -220,6 +228,30 @@
     return lines.slice(0, MAX_LINES);
   }
 
+  /*
+   * Per-surface link targets. The guidance lines are computed once,
+   * in the core above, with the 13 Moons page's own doors as their
+   * hrefs ("teach.html", "#day-notes"). A surface that stands
+   * somewhere else — the front door, the Scroll Library's opening —
+   * names its own doors for those same offers through the slot's
+   * data attributes, and only the link target changes: the words,
+   * the counts, and which lines exist are the core's, untouched.
+   * A surface that names nothing keeps the core's hrefs as they are.
+   */
+  function hrefForLine(line, overrides = {}) {
+    if (!line || !line.href) return null;
+
+    if (line.href === "teach.html" && overrides.practiceHref) {
+      return overrides.practiceHref;
+    }
+
+    if (line.href === "#day-notes" && overrides.noteHref) {
+      return overrides.noteHref;
+    }
+
+    return line.href;
+  }
+
   /* --------------------------- footprints --------------------------- */
 
   function readFootprints(storage) {
@@ -307,6 +339,11 @@
 
       slot.hidden = false;
 
+      const overrides = {
+        practiceHref: slot.getAttribute("data-guidance-practice-href"),
+        noteHref: slot.getAttribute("data-guidance-note-href")
+      };
+
       const label = document.createElement("p");
       label.className = "presence-guidance__label";
       label.textContent = "Noticed from your records, on this device only:";
@@ -319,9 +356,11 @@
         const item = document.createElement("li");
         item.className = `presence-guidance__line presence-guidance__line--${line.tone}`;
 
-        if (line.href) {
+        const href = hrefForLine(line, overrides);
+
+        if (href) {
           const link = document.createElement("a");
-          link.href = line.href;
+          link.href = href;
           link.textContent = line.text;
           item.append(link);
         } else {
@@ -353,6 +392,7 @@
     FOOTPRINT_KEY,
     MAX_LINES,
     computeGuidance,
+    hrefForLine,
     practiceDaysByMoon,
     distinctDays,
     previousMoon,
