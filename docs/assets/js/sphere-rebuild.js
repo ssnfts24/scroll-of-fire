@@ -326,15 +326,29 @@
     dock.querySelector("[data-sphere-rebuild-farm]").addEventListener("click", openFarm);
     dock.querySelector("[data-sphere-rebuild-freeze]").addEventListener("click", () => { if (frozen) wake(); else freeze(); });
     dock.querySelector("[data-sphere-rebuild-spark]").addEventListener("click", () => {
+      const sparkButton = dock.querySelector("[data-sphere-rebuild-spark]");
       const talk = $("[data-sphere-spark-talk]");
-      if (talk) {
-        talk.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
-        const input = talk.querySelector("input, textarea");
-        if (input) window.setTimeout(() => { try { input.focus({ preventScroll: true }); } catch { /* scroll stands */ } }, reducedMotion ? 0 : 350);
-        return;
-      }
-      const host = $(".spark-encounter-host");
-      if (host) host.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "center" });
+      const input = talk?.querySelector("input, textarea");
+      document.dispatchEvent(new CustomEvent("sphere:open-rooms", {
+        detail: { trigger: sparkButton, target: input || null },
+      }));
+      let tries = 0;
+      const focusConversation = () => {
+        const talk = $("[data-sphere-spark-talk]", $(".sphere-sidebar") || document);
+        if (talk) {
+          talk.scrollIntoView({ behavior: "auto", block: "start" });
+          const input = talk.querySelector("input, textarea");
+          if (input) {
+            window.setTimeout(() => {
+              try { input.focus({ preventScroll: true }); } catch { /* the conversation remains visible */ }
+            }, reducedMotion ? 0 : 300);
+          }
+          return;
+        }
+        tries += 1;
+        if (tries < 40) window.setTimeout(focusConversation, 100);
+      };
+      window.setTimeout(focusConversation, 0);
     });
 
     // The pre-stage chrome becomes one room at the top of the
@@ -503,6 +517,14 @@
 
   function placeAppEnter() {
     // The app-shell's own enter button joins the controls door.
+    // The Rebuild shell is authoritative on arrival — it has
+    // already exited the app view — but the app view stays a
+    // keeper's choice: Aaron's correction (PR #232 review,
+    // Nov 21, 2026) removes the Focus mode's reactivation of
+    // the app shell, not the keeper's door into it. Every
+    // existing action stays reachable, and the app/full-page
+    // switch stays testable, so the button is relocated,
+    // never removed.
     let tries = 0;
     const timer = window.setInterval(() => {
       tries += 1;
