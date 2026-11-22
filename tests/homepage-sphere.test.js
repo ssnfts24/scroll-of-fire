@@ -440,6 +440,35 @@ test("no R1.7 protected file is touched by this branch", () => {
   const carriesArmillary = changed.has(
     "docs/assets/js/sphere-armillary.js"
   );
+  /*
+   * Sphere day-legibility declaration (Nov 22, 2026 — Aaron's
+   * phone report and work order: the question card half off his
+   * screen, day numbers too small to read or tap, a check under a
+   * scheduled day, games that explain themselves). This change
+   * set declares itself by carrying its signature file (the
+   * Sphere page's Spark layer, which lives outside the protected
+   * directories), and its declared set names exactly the three
+   * protected paths it touches, each presentation/binding only,
+   * each flagged in the PR with regression proof:
+   *   - the page (cache-version bumps on five asset tags only);
+   *   - the observatory workspace (the question shell is portaled
+   *     to <body> while shown and restored when hidden — the fix
+   *     for the card the transformed sheet carried off-screen);
+   *   - the Life Atlas record extension (the schedule summary
+   *     card + leader line now stand for the selected day only;
+   *     the day's glyph mark carries the rest).
+   * No geometry, camera, motion, selection model, or calendar
+   * math changes. Every other protected path still fails this
+   * test loudly.
+   */
+  const spherefixDeclaredProtected = new Set([
+    "docs/living-time-sphere.html",
+    "docs/assets/js/sphere/living-time-observatory-workspace.js",
+    "docs/assets/js/sphere/life-atlas-record-sphere-extension.js"
+  ]);
+  const carriesSpherefix = changed.has(
+    "docs/assets/js/sphere-spark.js"
+  );
   for (const file of changed) {
     if (!protectedPaths.has(file)) continue;
     assert.ok(
@@ -448,7 +477,8 @@ test("no R1.7 protected file is touched by this branch", () => {
         (carriesDeepTime && deepTimeDeclaredProtected.has(file)) ||
         (carriesAmbient && ambientDeclaredProtected.has(file)) ||
         (carriesRebuild && rebuildDeclaredProtected.has(file)) ||
-        (carriesArmillary && armillaryDeclaredProtected.has(file)),
+        (carriesArmillary && armillaryDeclaredProtected.has(file)) ||
+        (carriesSpherefix && spherefixDeclaredProtected.has(file)),
       `R1.7 protected file changed: ${file}`
     );
   }
