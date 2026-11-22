@@ -3,8 +3,8 @@
   "purpose": "Development-only registry of every tracked or intended repository file. Not a publication list.",
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
-    "files": 2317,
-    "bytes": 981829120,
+    "files": 2311,
+    "bytes": 978642534,
     "byGroup": {
       "tooling": 243,
       "manuscript": 17,
@@ -23,9 +23,9 @@
       "frozen-archive": 6,
       "legacy-site": 3,
       "legacy-asset": 1,
-      "site-page": 56,
+      "site-page": 54,
       "deployed-dev-doc": 56,
-      "site-asset": 651,
+      "site-asset": 647,
       "vendor": 3,
       "site-data": 5,
       "scroll-library": 826,
@@ -40,14 +40,14 @@
       "restricted-review": 172,
       "protected-immutable": 21,
       "public-unreviewed": 6,
-      "approved-public": 1788
+      "approved-public": 1782
     },
     "byExamination": {
-      "inventoried-only": 2186,
+      "inventoried-only": 2182,
       "text-extracted": 54,
       "no-text-layer-needs-visual-review": 1,
       "archive-listed": 2,
-      "structurally-audited": 74
+      "structurally-audited": 72
     }
   },
   "statusVocabulary": [
@@ -22241,104 +22241,6 @@
         "functionality": "not-started"
       },
       "examination": "inventoried-only",
-      "nextAction": "Functionality audit in R2-03/R2-06.",
-      "duplicates": []
-    },
-    {
-      "id": "r2:docs-assets-search-manifest-json-364d05",
-      "path": "docs/assets/search/manifest.json",
-      "title": "manifest.json",
-      "format": "json",
-      "bytes": 2631,
-      "sha256": "274d35c3229ef4d14d678c56a2990a362daad6011ffa68c09f3a372a93a7ded0",
-      "group": "site-asset",
-      "role": "Runtime stylesheet, script, data or image",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
-      "publicationEligibility": "approved-public",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Functionality audit in R2-03/R2-06."
-    },
-    {
-      "id": "r2:docs-assets-search-manifest-json-364d05",
-      "path": "docs/assets/search/manifest.json",
-      "title": "manifest.json",
-      "format": "json",
-      "bytes": 2631,
-      "sha256": "274d35c3229ef4d14d678c56a2990a362daad6011ffa68c09f3a372a93a7ded0",
-      "group": "site-asset",
-      "role": "Runtime stylesheet, script, data or image",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
-      "publicationEligibility": "approved-public",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Functionality audit in R2-03/R2-06."
-    },
-    {
-      "id": "r2:docs-assets-search-pages-json-947e48",
-      "path": "docs/assets/search/pages.json",
-      "title": "pages.json",
-      "format": "json",
-      "bytes": 1462973,
-      "sha256": "e9af1c1aebe621df143ebd648a4f3244929d26660d716e5f4597224fcd3d40d4",
-      "group": "site-asset",
-      "role": "Runtime stylesheet, script, data or image",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/assets/search/pages.json",
-      "publicationEligibility": "approved-public",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Functionality audit in R2-03/R2-06.",
-      "duplicates": []
-    },
-    {
-      "id": "r2:docs-assets-search-pages-json-947e48",
-      "path": "docs/assets/search/pages.json",
-      "title": "pages.json",
-      "format": "json",
-      "bytes": 1462973,
-      "sha256": "e9af1c1aebe621df143ebd648a4f3244929d26660d716e5f4597224fcd3d40d4",
-      "group": "site-asset",
-      "role": "Runtime stylesheet, script, data or image",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/assets/search/pages.json",
-      "publicationEligibility": "approved-public",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
       "nextAction": "Functionality audit in R2-03/R2-06."
     },
     {
@@ -23039,55 +22941,6 @@
       "publicationEligibility": "approved-public",
       "status": "operational",
       "catalogId": "hub",
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "structurally-audited"
-      },
-      "examination": "structurally-audited",
-      "nextAction": "Functionality review."
-    },
-    {
-      "id": "r2:docs-index-html-b04b38",
-      "path": "docs/index.html",
-      "title": "Homepage",
-      "format": "html",
-      "bytes": 127689,
-      "sha256": "eb5d245bafc25541c0843e6655ca148a6d7e3362476a98e13b14581948ce16d6",
-      "group": "site-page",
-      "role": "Site page or support file",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/",
-      "publicationEligibility": "approved-public",
-      "status": "operational",
-      "catalogId": "utility:index.html",
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "structurally-audited"
-      },
-      "examination": "structurally-audited",
-      "nextAction": "Functionality review.",
-      "duplicates": []
-    },
-    {
-      "id": "r2:docs-index-html-b04b38",
-      "path": "docs/index.html",
-      "title": "Homepage",
-      "format": "html",
-      "bytes": 127689,
-      "sha256": "eb5d245bafc25541c0843e6655ca148a6d7e3362476a98e13b14581948ce16d6",
-      "group": "site-page",
-      "role": "Site page or support file",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/",
-      "publicationEligibility": "approved-public",
-      "status": "operational",
-      "catalogId": "utility:index.html",
       "author": "not-recorded-in-file",
       "reviews": {
         "editorial": "not-started",
