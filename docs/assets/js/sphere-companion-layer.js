@@ -644,6 +644,27 @@
     }
   })();
 
+  // ── The Day World (Phase B, Living Sphere Evolution) ─────────
+  // Aaron (Nov 22, 2026): "Start phase B." The selected day's world
+  // lives in its own presentation-adapter module, registered with
+  // the Sphere's extension host; this loader is the only hook — it
+  // sets the module's stylesheet and script on the page, in order,
+  // and nothing else in this layer changes. No protected file is
+  // touched: the adapter presents, the kernel stays the kernel.
+  (() => {
+    if (document.querySelector("script[data-sphere-day-world]")) return;
+    const css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = "assets/css/sphere-day-world-adapter.css?v=20261122-1";
+    css.setAttribute("data-sphere-day-world", "");
+    document.head.appendChild(css);
+    const s = document.createElement("script");
+    s.src = "assets/js/sphere-day-world-adapter.js?v=20261122-1";
+    s.async = false;
+    s.setAttribute("data-sphere-day-world", "");
+    document.head.appendChild(s);
+  })();
+
   // ── The Spark's presence on this page was RESET (Nov 20, 2026) ──
   // Aaron's order: a full reset of the Spark layer, built fresh —
   // not patched. The orbit and bubble guide that stood here are
