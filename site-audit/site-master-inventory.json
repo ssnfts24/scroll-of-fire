@@ -3,14 +3,14 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 477,
+    "resources": 479,
     "publicHtmlPages": 181,
     "catalogEntries": 73,
     "issueCounts": {
       "not-linked-directly-from-homepage": 25,
       "nav-label-differs-from-title": 24,
       "no-global-navigation": 1,
-      "deployed-but-unlinked": 56,
+      "deployed-but-unlinked": 58,
       "unreachable-from-homepage": 4,
       "compatibility-redirect-page": 1,
       "not-published-in-catalog": 30,
@@ -1812,6 +1812,44 @@
       "relatedProjects": [],
       "sourcePath": "docs/development/LIVING-INTERFACE-ARCHITECTURE-V4-PLAN.md",
       "publicUrl": "https://codexofreality.org/development/LIVING-INTERFACE-ARCHITECTURE-V4-PLAN.md",
+      "publicationStatus": "source-only",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "development-only-deployed-publicly",
+      "discoverability": null,
+      "issues": [
+        "deployed-but-unlinked"
+      ]
+    },
+    {
+      "id": "docs:development/LIVING-SPHERE-EVOLUTION-PHASE-A-ARCHITECTURE.md",
+      "title": "development/LIVING-SPHERE-EVOLUTION-PHASE-A-ARCHITECTURE.md",
+      "description": "Markdown document deployed inside docs/ and therefore publicly fetchable, but not linked from the site.",
+      "category": "Development document",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/development/LIVING-SPHERE-EVOLUTION-PHASE-A-ARCHITECTURE.md",
+      "publicUrl": "https://codexofreality.org/development/LIVING-SPHERE-EVOLUTION-PHASE-A-ARCHITECTURE.md",
+      "publicationStatus": "source-only",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "development-only-deployed-publicly",
+      "discoverability": null,
+      "issues": [
+        "deployed-but-unlinked"
+      ]
+    },
+    {
+      "id": "docs:development/LIVING-SPHERE-EVOLUTION-PHASE-A-VISUAL-SPEC.md",
+      "title": "development/LIVING-SPHERE-EVOLUTION-PHASE-A-VISUAL-SPEC.md",
+      "description": "Markdown document deployed inside docs/ and therefore publicly fetchable, but not linked from the site.",
+      "category": "Development document",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/development/LIVING-SPHERE-EVOLUTION-PHASE-A-VISUAL-SPEC.md",
+      "publicUrl": "https://codexofreality.org/development/LIVING-SPHERE-EVOLUTION-PHASE-A-VISUAL-SPEC.md",
       "publicationStatus": "source-only",
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [],
