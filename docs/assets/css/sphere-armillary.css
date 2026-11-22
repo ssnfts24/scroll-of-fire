@@ -263,7 +263,7 @@ html.living-time-sphere-page body:not(.sphere-app) .sphere-rebuild-dock {
   max-width: none;
   margin: 0;
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 0.35rem;
   padding: 0.45rem 0.45rem calc(0.45rem + env(safe-area-inset-bottom));
   background: rgba(12, 8, 5, 0.94);
@@ -313,7 +313,7 @@ html.living-time-sphere-page .sphere-rebuild-dock-btn {
  * content scrolls inside it — never the page. */
 html.living-time-sphere-page body:not(.sphere-app) .sphere-sidebar {
   position: fixed;
-  inset: 0;
+  inset: auto 0 0;
   z-index: 6000;
   width: auto;
   max-width: none;
@@ -326,20 +326,48 @@ html.living-time-sphere-page body:not(.sphere-app) .sphere-sidebar {
    * as missing and the strip scrolled like the page itself. The
    * sheet is full-height at every width, so the closed sheet
    * clears the stage entirely, as it already did on the phone. */
-  height: 100dvh;
-  max-height: none;
+  height: auto;
+  max-height: min(84dvh, 60rem);
   margin: 0;
-  padding: 0 0 3rem;
+  padding: 0 0 calc(1rem + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid rgba(218, 164, 91, 0.38);
+  border-radius: 1.1rem 1.1rem 0 0;
   background: #17100a;
   color: #f3e7d3;
   overflow-y: auto;
   overscroll-behavior: contain;
-  transform: translateY(103%);
+  transform: translateY(calc(103% + env(safe-area-inset-bottom, 0px)));
   transition: transform 380ms ease;
 }
 
 html.living-time-sphere-page.armillary-rooms-open .sphere-sidebar {
   transform: none;
+}
+
+.sphere-rooms-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 5999;
+  background: rgba(5, 3, 2, 0.62);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 240ms ease, visibility 0s linear 240ms;
+}
+
+html.living-time-sphere-page.armillary-rooms-open .sphere-rooms-backdrop {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 240ms ease;
+}
+
+.sphere-sheet-handle {
+  display: block;
+  width: 2.8rem;
+  height: 0.28rem;
+  margin: 0.65rem auto 0.35rem;
+  border-radius: 999px;
+  background: rgba(243, 231, 211, 0.48);
+  touch-action: none;
 }
 
 .sphere-sheet-bar {
@@ -351,6 +379,8 @@ html.living-time-sphere-page.armillary-rooms-open .sphere-sidebar {
   gap: 1rem;
   flex-wrap: wrap;
   padding: 0.65rem 1rem;
+  padding-left: max(1rem, env(safe-area-inset-left, 0px));
+  padding-right: max(1rem, env(safe-area-inset-right, 0px));
   background: rgba(23, 16, 10, 0.97);
   border-bottom: 1px solid rgba(218, 164, 91, 0.38);
 }
@@ -384,6 +414,101 @@ html.living-time-sphere-page.armillary-rooms-open .sphere-sidebar {
 
 .sphere-sheet-room {
   margin: 1rem;
+}
+
+.sphere-more-tools {
+  scroll-margin-top: 4.5rem;
+}
+
+.sphere-more-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+  gap: 0.55rem;
+}
+
+.sphere-more-actions > button,
+.sphere-more-actions .living-command-trigger {
+  position: static;
+  min-width: 0;
+  min-height: 44px;
+  width: 100%;
+  margin: 0;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid rgba(218, 164, 91, 0.38);
+  border-radius: 0.75rem;
+  background: rgba(218, 164, 91, 0.1);
+  color: #f3e7d3;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sphere-more-actions > button:focus-visible,
+.sphere-rebuild-dock-btn:focus-visible,
+.sphere-sheet-close:focus-visible,
+.sphere-day-readout-actions button:focus-visible {
+  outline: 2px solid #ffd98f;
+  outline-offset: 2px;
+}
+
+.sphere-mode-toggle {
+  grid-column: 1 / -1;
+}
+
+.sphere-day-details {
+  scroll-margin-top: 4.5rem;
+}
+
+.sphere-day-details > .sphere-day-readout {
+  position: relative;
+  inset: auto;
+  width: auto;
+  max-width: none;
+  margin: 0;
+  padding: 0.85rem;
+  transform: none;
+  text-align: left;
+  box-shadow: none;
+}
+
+.sphere-day-details .sphere-day-readout-where,
+.sphere-day-details .sphere-day-readout-telling,
+.sphere-day-details .sphere-day-readout-kept,
+.sphere-day-details .sphere-day-readout-sky,
+.sphere-day-details .sphere-day-readout-farm,
+.sphere-day-details .sphere-day-readout-story {
+  max-width: none;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 900px) {
+  html.living-time-sphere-page body:not(.sphere-app) .sphere-sidebar {
+    inset: 0 0 0 auto;
+    width: min(34rem, 44vw);
+    height: 100dvh;
+    max-height: none;
+    padding: calc(0.65rem + env(safe-area-inset-top, 0px)) 0.75rem 1rem;
+    border-top: 0;
+    border-left: 1px solid rgba(218, 164, 91, 0.38);
+    border-radius: 0;
+    transform: translateX(103%);
+  }
+
+  html.living-time-sphere-page.armillary-rooms-open .sphere-sidebar {
+    transform: none;
+  }
+}
+
+@media (max-width: 899px) and (orientation: landscape) {
+  html.living-time-sphere-page body:not(.sphere-app) .sphere-sidebar {
+    max-height: 88dvh;
+  }
+
+  html.living-time-sphere-page body:not(.sphere-app) .sphere-rebuild-dock {
+    padding-top: 0.2rem;
+    padding-bottom: max(0.2rem, env(safe-area-inset-bottom, 0px));
+  }
 }
 
 /* Technical material: one door, closed by default. */
@@ -691,6 +816,9 @@ html.living-time-sphere-page.armillary-rooms-open .sphere-sidebar {
   html.living-time-sphere-page .sphere-sidebar {
     transition: none;
   }
+  .sphere-rooms-backdrop {
+    transition: none;
+  }
 }
 
 /* Days more visible (Aaron, Nov 20): the calendar-face day
@@ -792,4 +920,97 @@ html.living-time-sphere-page .sphere-semantic-label[data-calendar-face="true"] .
   font-size: 0.86rem;
   line-height: 1.45;
   color: #a68d64;
+}
+
+/* Full-page mode is a presentation of this shell, not a second shell.
+ * The same dock and rooms stay in place while the document regains flow. */
+html.living-time-sphere-page.sphere-full-page,
+html.living-time-sphere-page.sphere-full-page body {
+  height: auto;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: auto;
+}
+
+html.living-time-sphere-page.sphere-full-page body:not(.sphere-app) .site-header {
+  display: flex;
+}
+
+html.living-time-sphere-page.sphere-full-page body:not(.sphere-app) main.sphere-page {
+  height: auto;
+  min-height: 0;
+  display: block;
+  overflow: visible;
+  margin: 0 auto;
+  padding: 0;
+}
+
+html.living-time-sphere-page.sphere-full-page body:not(.sphere-app) .sphere-wrapper {
+  display: flex;
+  height: min(78svh, 62rem);
+  min-height: 340px;
+  flex: none;
+  overflow: visible;
+  margin: 0;
+}
+
+html.living-time-sphere-page.sphere-full-page .sphere-canvas-wrap {
+  flex: 1 1 auto;
+  height: 100%;
+  min-height: 0;
+}
+
+html.living-time-sphere-page.sphere-full-page .sphere-instrument-shell {
+  position: relative;
+  inset: auto;
+  height: 100%;
+}
+
+html.living-time-sphere-page.sphere-full-page #sphere-container {
+  position: relative !important;
+  inset: auto !important;
+  width: 100% !important;
+  height: min(92vw, 62rem) !important;
+  min-height: 300px !important;
+  max-height: 100% !important;
+}
+
+html.living-time-sphere-page.sphere-full-page body:not(.sphere-app) .sphere-rebuild-dock {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
+  max-width: 62rem;
+  margin: 0.5rem auto;
+  padding: 0.5rem max(0.75rem, env(safe-area-inset-left, 0px)) 0.5rem max(0.75rem, env(safe-area-inset-right, 0px));
+  border: 0;
+  background: transparent;
+}
+
+html.living-time-sphere-page.sphere-full-page body:not(.sphere-app) .sphere-sidebar {
+  position: static;
+  inset: auto;
+  width: min(100% - 2rem, 68rem);
+  height: auto;
+  max-height: none;
+  margin: 1rem auto;
+  padding: 0 0 max(1rem, env(safe-area-inset-bottom, 0px));
+  overflow: visible;
+  transform: none;
+  border: 1px solid rgba(218, 164, 91, 0.38);
+  border-radius: 1rem;
+}
+
+html.living-time-sphere-page.sphere-full-page .sphere-rooms-backdrop {
+  display: none;
+}
+
+html.living-time-sphere-page.sphere-full-page .sphere-sheet-bar {
+  position: relative;
+}
+
+@media (max-width: 720px) {
+  html.living-time-sphere-page.sphere-full-page body:not(.sphere-app) .sphere-wrapper {
+    height: min(74svh, 48rem);
+    min-height: 320px;
+  }
 }

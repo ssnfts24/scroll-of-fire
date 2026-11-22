@@ -326,15 +326,24 @@
     dock.querySelector("[data-sphere-rebuild-farm]").addEventListener("click", openFarm);
     dock.querySelector("[data-sphere-rebuild-freeze]").addEventListener("click", () => { if (frozen) wake(); else freeze(); });
     dock.querySelector("[data-sphere-rebuild-spark]").addEventListener("click", () => {
-      const talk = $("[data-sphere-spark-talk]");
-      if (talk) {
-        talk.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
-        const input = talk.querySelector("input, textarea");
-        if (input) window.setTimeout(() => { try { input.focus({ preventScroll: true }); } catch { /* scroll stands */ } }, reducedMotion ? 0 : 350);
-        return;
-      }
-      const host = $(".spark-encounter-host");
-      if (host) host.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "center" });
+      rootEl.classList.add("armillary-rooms-open");
+      let tries = 0;
+      const focusConversation = () => {
+        const talk = $("[data-sphere-spark-talk]", $(".sphere-sidebar") || document);
+        if (talk) {
+          talk.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+          const input = talk.querySelector("input, textarea");
+          if (input) {
+            window.setTimeout(() => {
+              try { input.focus({ preventScroll: true }); } catch { /* the conversation remains visible */ }
+            }, reducedMotion ? 0 : 300);
+          }
+          return;
+        }
+        tries += 1;
+        if (tries < 40) window.setTimeout(focusConversation, 100);
+      };
+      window.setTimeout(focusConversation, 0);
     });
 
     // The pre-stage chrome becomes one room at the top of the
@@ -502,13 +511,17 @@
   }
 
   function placeAppEnter() {
-    // The app-shell's own enter button joins the controls door.
+    // The B7.61 shell owns a separate viewport and sidebar system.
+    // The Sphere Rebuild shell is authoritative, so remove its legacy
+    // entry point rather than allowing it to reclaim the page later.
     let tries = 0;
     const timer = window.setInterval(() => {
       tries += 1;
       const btn = $(".sphere-app-enter");
-      const details = $("[data-sphere-rebuild-controls]");
-      if (btn && details && btn.parentElement !== details) details.appendChild(btn);
+      if (btn) {
+        btn.remove();
+        window.clearInterval(timer);
+      }
       if (btn || tries > 40) window.clearInterval(timer);
     }, 250);
   }

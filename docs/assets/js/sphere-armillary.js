@@ -455,10 +455,187 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
       "</nav>" +
       '<button type="button" class="sphere-sheet-close">Back to the Sphere</button>';
     sidebar.insertBefore(bar, sidebar.firstChild);
-    bar.querySelector(".sphere-sheet-close").addEventListener("click", function () {
+    var closeButton = bar.querySelector(".sphere-sheet-close");
+    var modeToggle = null;
+    var backdrop = document.createElement("div");
+    backdrop.className = "sphere-rooms-backdrop";
+    backdrop.setAttribute("aria-hidden", "true");
+    sidebar.before(backdrop);
+    var dayDetails = document.createElement("section");
+    dayDetails.className = "sphere-sidebar-section sphere-day-details";
+    dayDetails.id = "sphere-day-details";
+    dayDetails.tabIndex = -1;
+    dayDetails.innerHTML = '<h2 class="sphere-sidebar-heading">Day Details</h2>';
+    bar.after(dayDetails);
+
+    var returnFocus = null;
+    var behindSheet = [
+      document.querySelector(".sphere-wrapper"),
+      document.querySelector(".sphere-rebuild-caption"),
+      dock,
+      document.getElementById("living-command-trigger"),
+    ].filter(Boolean);
+
+    function syncMode() {
+      var fullPage = document.documentElement.classList.contains("sphere-full-page");
+      if (modeToggle) modeToggle.textContent = fullPage ? "Open Sphere Focus" : "Full page";
+      if (fullPage) {
+        sidebar.removeAttribute("aria-hidden");
+        sidebar.removeAttribute("aria-modal");
+        sidebar.removeAttribute("role");
+      } else if (!document.documentElement.classList.contains("armillary-rooms-open")) {
+        sidebar.setAttribute("aria-hidden", "true");
+      }
+    }
+
+    function closeRooms(restoreFocus) {
+      var wasOpen = document.documentElement.classList.contains("armillary-rooms-open");
       document.documentElement.classList.remove("armillary-rooms-open");
+      behindSheet.forEach(function (el) { el.removeAttribute("inert"); });
+      if (!document.documentElement.classList.contains("sphere-full-page")) {
+        sidebar.setAttribute("aria-hidden", "true");
+        sidebar.removeAttribute("aria-modal");
+        sidebar.removeAttribute("role");
+      }
+      if (restoreFocus && wasOpen && returnFocus && returnFocus.isConnected) {
+        returnFocus.focus({ preventScroll: true });
+      }
+      returnFocus = null;
+    }
+
+    function focusSheet(target) {
+      var focusTarget = target || closeButton;
+      window.requestAnimationFrame(function () {
+        if (focusTarget && focusTarget.isConnected) focusTarget.focus({ preventScroll: true });
+      });
+    }
+
+    function openRooms(trigger, target) {
+      if (document.documentElement.classList.contains("sphere-full-page")) {
+        var fullPageTarget = target || moreTools;
+        if (fullPageTarget) {
+          fullPageTarget.scrollIntoView({ behavior: "auto", block: "start" });
+          if (fullPageTarget.focus) fullPageTarget.focus({ preventScroll: true });
+        }
+        return;
+      }
+      if (!document.documentElement.classList.contains("armillary-rooms-open")) {
+        returnFocus = trigger || document.activeElement;
+      }
+      document.documentElement.classList.add("armillary-rooms-open");
+      sidebar.removeAttribute("aria-hidden");
+      sidebar.setAttribute("role", "dialog");
+      sidebar.setAttribute("aria-modal", "true");
+      sidebar.setAttribute("aria-label", "Sphere details and tools");
+      behindSheet.forEach(function (el) { el.setAttribute("inert", ""); });
+      focusSheet(target);
+    }
+
+    closeButton.addEventListener("click", function () { closeRooms(true); });
+    backdrop.addEventListener("click", function () { closeRooms(true); });
+    document.addEventListener("keydown", function (event) {
+      if (!document.documentElement.classList.contains("armillary-rooms-open")) return;
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeRooms(true);
+        return;
+      }
+      if (event.key !== "Tab") return;
+      var focusable = Array.prototype.slice.call(sidebar.querySelectorAll(
+        'a[href], button:not([disabled]):not([hidden]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), summary, [tabindex]:not([tabindex="-1"])'
+      )).filter(function (el) { return el.getClientRects().length; });
+      if (!focusable.length) {
+        event.preventDefault();
+        sidebar.focus();
+        return;
+      }
+      var first = focusable[0];
+      var last = focusable[focusable.length - 1];
+      if (event.shiftKey && (document.activeElement === first || !sidebar.contains(document.activeElement))) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (document.activeElement === last || !sidebar.contains(document.activeElement))) {
+        event.preventDefault();
+        first.focus();
+      }
     });
+
+    var sheetHandle = document.createElement("span");
+    sheetHandle.className = "sphere-sheet-handle";
+    sheetHandle.setAttribute("aria-hidden", "true");
+    closeButton.before(sheetHandle);
+    var startY = null;
+    sheetHandle.addEventListener("pointerdown", function (event) {
+      if (event.pointerType === "mouse") return;
+      startY = event.clientY;
+      sheetHandle.setPointerCapture?.(event.pointerId);
+    });
+    sheetHandle.addEventListener("pointerup", function (event) {
+      if (startY !== null && event.clientY - startY > 60) closeRooms(true);
+      startY = null;
+    });
+    sheetHandle.addEventListener("pointercancel", function () { startY = null; });
+
     buildRingPanel(sidebar);
+    var dockActions = {};
+    ["today", "schedule", "dayworld", "deeptime", "farm", "freeze", "spark"].forEach(function (name) {
+      dockActions[name] = dock.querySelector("[data-sphere-rebuild-" + name + "]");
+    });
+
+    var moreTools = document.createElement("section");
+    moreTools.className = "sphere-sidebar-section sphere-more-tools";
+    moreTools.id = "sphere-more-tools";
+    moreTools.tabIndex = -1;
+    moreTools.innerHTML =
+      '<h2 class="sphere-sidebar-heading">More Sphere tools</h2>' +
+      '<div class="sphere-more-actions" role="group" aria-label="More Sphere actions"></div>';
+    dayDetails.after(moreTools);
+    var moreActions = moreTools.querySelector(".sphere-more-actions");
+    ["dayworld", "deeptime", "farm", "freeze"].forEach(function (name) {
+      if (dockActions[name]) moreActions.appendChild(dockActions[name]);
+    });
+    modeToggle = document.createElement("button");
+    modeToggle.type = "button";
+    modeToggle.className = "sphere-rebuild-dock-btn sphere-mode-toggle";
+    modeToggle.addEventListener("click", function () {
+      closeRooms(false);
+      document.documentElement.classList.toggle("sphere-full-page");
+      syncMode();
+      if (!document.documentElement.classList.contains("sphere-full-page")) {
+        window.scrollTo({ top: 0, behavior: "auto" });
+      }
+    });
+    moreActions.appendChild(modeToggle);
+
+    var dayDetailsButton = document.createElement("button");
+    dayDetailsButton.type = "button";
+    dayDetailsButton.className = "sphere-rebuild-dock-btn";
+    dayDetailsButton.dataset.sphereRebuildDaydetails = "";
+    dayDetailsButton.setAttribute("aria-label", "Open Day Details");
+    dayDetailsButton.textContent = "Day Details";
+    dayDetailsButton.addEventListener("click", function () {
+      openRooms(dayDetailsButton, dayDetails);
+    });
+
+    var moreButton = document.createElement("button");
+    moreButton.type = "button";
+    moreButton.className = "sphere-rebuild-dock-btn";
+    moreButton.setAttribute("aria-haspopup", "dialog");
+    moreButton.textContent = "More";
+    moreButton.addEventListener("click", function () {
+      openRooms(moreButton, moreTools);
+    });
+
+    dock.replaceChildren(
+      dockActions.today,
+      dockActions.schedule,
+      dayDetailsButton,
+      dockActions.spark,
+      moreButton
+    );
+    syncMode();
+    var modeWatcher = new MutationObserver(syncMode);
+    modeWatcher.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
 
     // Everything that is not the stage, the telling line, or the
     // dock moves into the one sheet, in the page's own order —
@@ -561,13 +738,12 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
       techBits.forEach(function (el) { door.appendChild(el); });
     }
 
-    // The doors open the sheet (capture: before the rebuild's own
-    // handlers scroll the room into view inside it).
-    function openSheet() { document.documentElement.classList.add("armillary-rooms-open"); }
+    // Secondary doors share the same room sheet as Day Details and More.
     ["dayworld", "deeptime", "farm", "spark"].forEach(function (doorName) {
-      var btn = dock.querySelector("[data-sphere-rebuild-" + doorName + "]");
-      if (btn) btn.addEventListener("click", openSheet, true);
+      var btn = dockActions[doorName];
+      if (btn) btn.addEventListener("click", function () { openRooms(btn); }, true);
     });
+    if (dockActions.freeze) dockActions.freeze.addEventListener("click", function () { openRooms(dockActions.freeze); }, true);
 
     // One quiet way to everything else, at the end of the
     // telling line.
@@ -576,12 +752,16 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
       var tools = document.createElement("button");
       tools.type = "button";
       tools.className = "sphere-all-tools";
-      tools.textContent = "All tools";
+      tools.textContent = "More";
       tools.addEventListener("click", function () {
-        openSheet();
-        sidebar.scrollTop = 0;
+        openRooms(tools, moreTools);
       });
       caption.appendChild(tools);
+    }
+
+    sidebar.setAttribute("aria-hidden", "true");
+    if (document.documentElement.classList.contains("armillary-rooms-open")) {
+      openRooms(document.activeElement);
     }
     return true;
   }
@@ -1301,14 +1481,11 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
       '<button type="button" class="sphere-day-readout-enter">Enter this day</button>' +
       '<button type="button" class="sphere-day-readout-schedule">Schedule something for this day</button>' +
       "</div>";
-    var daySheet = document.body.classList.contains("sphere-app") ? document.querySelector(".sphere-sidebar") : null;
-    if (daySheet) {
+    var daySheet = document.querySelector(".sphere-sidebar");
+    var dayDetails = document.getElementById("sphere-day-details");
+    if (daySheet && dayDetails) {
       card.classList.add("sphere-day-readout-details");
-      var closeButton = daySheet.querySelector(".sphere-sheet-close");
-      var sheetBar = closeButton && closeButton.closest(".sphere-sheet-bar");
-      if (sheetBar) sheetBar.after(card);
-      else if (closeButton) closeButton.after(card);
-      else daySheet.insertBefore(card, daySheet.firstChild);
+      dayDetails.appendChild(card);
     } else {
       wrap.appendChild(card);
     }
@@ -1417,210 +1594,6 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
     }
     if (strip) new MutationObserver(renderSoon).observe(strip, { childList: true, subtree: true, characterData: true });
     window.setInterval(render, 4000);
-  }
-
-  /* ── 3a-ii. Sphere Focus shell ───────────────────────────────── */
-
-  var focusDockBuilt = false;
-  function buildFocusDock() {
-    if (!document.body.classList.contains("sphere-app") || focusDockBuilt) return false;
-    var dock = document.querySelector(".sphere-app-dock");
-    var topActions = document.querySelector(".sphere-app-top-actions");
-    if (!dock || !topActions) return;
-
-    var getDockAction = function (action) {
-      return dock.querySelector('[data-app-action="' + action + '"]');
-    };
-    var today = topActions.querySelector('[data-app-action="today"]');
-    var fullPage = topActions.querySelector('[data-app-action="fullpage"]');
-    var day = getDockAction("open-day");
-    if (!today || !day) return;
-
-    today.className = "sphere-dock-btn";
-    today.innerHTML = '<span aria-hidden="true">◷</span>Today';
-    day.setAttribute("aria-label", "Open Day Details");
-    day.innerHTML = '<span aria-hidden="true">▤</span>Day';
-
-    var more = document.createElement("button");
-    more.type = "button";
-    more.className = "sphere-dock-btn";
-    more.setAttribute("aria-haspopup", "dialog");
-    more.setAttribute("aria-label", "More Sphere controls");
-    more.innerHTML = '<span aria-hidden="true">•••</span>More';
-
-    var schedule = document.createElement("button");
-    schedule.type = "button";
-    schedule.className = "sphere-dock-btn";
-    schedule.innerHTML = '<span aria-hidden="true">＋</span>Schedule';
-    schedule.addEventListener("click", function () {
-      if (!(window.SphereRebuild && window.SphereRebuild.openSchedule && window.SphereRebuild.openSchedule())) {
-        document.querySelector("[data-sphere-rebuild-schedule]")?.click();
-      }
-    });
-
-    var spark = document.createElement("button");
-    spark.type = "button";
-    spark.className = "sphere-dock-btn";
-    spark.innerHTML = '<span aria-hidden="true">✧</span>Spark';
-    spark.addEventListener("click", function () {
-      var talk = document.querySelector("[data-sphere-spark-talk]");
-      var sparkDoor = document.querySelector("[data-sphere-rebuild-spark]");
-      var dayOpener = dock.querySelector('[data-app-action="open-day"]');
-      if (dayOpener) dayOpener.click();
-      window.setTimeout(function () {
-        if (sparkDoor) sparkDoor.click();
-        else if (talk) {
-          talk.scrollIntoView({ behavior: "smooth", block: "start" });
-          talk.querySelector("input, textarea")?.focus({ preventScroll: true });
-        } else {
-          document.getElementById("living-command-trigger")?.click();
-        }
-      }, dayOpener ? 280 : 0);
-    });
-
-    var menu = document.createElement("dialog");
-    menu.className = "sphere-focus-more";
-    menu.setAttribute("aria-labelledby", "sphere-focus-more-title");
-    menu.innerHTML =
-      '<div class="sphere-focus-more-head">' +
-      '<h2 id="sphere-focus-more-title">More Sphere tools</h2>' +
-      '<button type="button" class="sphere-focus-more-close" aria-label="Close More tools">Close</button>' +
-      "</div>" +
-      '<div class="sphere-focus-more-actions" role="group" aria-label="Secondary Sphere controls"></div>';
-    var actions = menu.querySelector(".sphere-focus-more-actions");
-    [
-      "cam-top", "cam-tilt", "cam-edge", "rotate",
-      "open-atlas", "open-planner", "open-settings", "fullscreen",
-    ].forEach(function (action) {
-      var button = getDockAction(action);
-      if (button) actions.appendChild(button);
-    });
-    if (fullPage) actions.appendChild(fullPage);
-    document.body.appendChild(menu);
-    menu.querySelector(".sphere-focus-more-close").addEventListener("click", function () { menu.close(); });
-    more.addEventListener("click", function () {
-      if (typeof menu.showModal === "function") menu.showModal();
-      else menu.setAttribute("open", "");
-    });
-    menu.addEventListener("click", function (event) {
-      if (event.target === menu) menu.close();
-      else if (event.target.closest(".sphere-dock-btn, .sphere-app-top-btn")) menu.close();
-    });
-    dock.replaceChildren(today, schedule, day, spark, more);
-    focusDockBuilt = true;
-
-    var dayMain = document.querySelector(".sphere-app-day-main");
-    if (dayMain) {
-      dayMain.setAttribute("aria-label", "Open Day Details");
-      var subtitle = dayMain.querySelector(".sphere-app-day-sub");
-      if (subtitle) subtitle.textContent = "Day Details";
-    }
-
-    var sidebar = document.querySelector(".sphere-sidebar");
-    var wrapper = document.querySelector(".sphere-wrapper");
-    if (!sidebar || !wrapper) return;
-    var behindSheet = [wrapper.querySelector(".sphere-canvas-wrap"), document.querySelector(".sphere-app-topbar"), document.querySelector(".sphere-app-daybar"), dock];
-    var closeButton = sidebar.querySelector(".sphere-sheet-close");
-    if (!closeButton) return;
-
-    var handle = document.createElement("span");
-    handle.className = "sphere-sheet-handle";
-    handle.setAttribute("aria-hidden", "true");
-    closeButton.before(handle);
-    if ("ontouchstart" in window || navigator.maxTouchPoints) {
-      var startY = null;
-      handle.addEventListener("pointerdown", function (event) {
-        if (event.pointerType === "mouse") return;
-        startY = event.clientY;
-        handle.setPointerCapture?.(event.pointerId);
-      });
-      handle.addEventListener("pointerup", function (event) {
-        if (startY !== null && event.clientY - startY > 60 && sidebar.classList.contains("is-open")) closeButton.click();
-        startY = null;
-      });
-      handle.addEventListener("pointercancel", function () { startY = null; });
-    }
-
-    var sheetWasOpen = false;
-    var returnFocus = null;
-    function syncDaySheet() {
-      var isOpen = sidebar.classList.contains("is-open");
-      if (isOpen === sheetWasOpen) return;
-      sheetWasOpen = isOpen;
-      if (isOpen) {
-        returnFocus = document.activeElement;
-        sidebar.setAttribute("role", "dialog");
-        sidebar.setAttribute("aria-modal", "true");
-        sidebar.setAttribute("aria-label", "Day details and Sphere tools");
-        sidebar.removeAttribute("aria-hidden");
-        behindSheet.forEach(function (el) { el?.setAttribute("inert", ""); });
-        requestAnimationFrame(function () { closeButton.focus({ preventScroll: true }); });
-      } else {
-        behindSheet.forEach(function (el) { el?.removeAttribute("inert"); });
-        sidebar.removeAttribute("aria-modal");
-        sidebar.removeAttribute("role");
-        sidebar.removeAttribute("aria-label");
-        sidebar.setAttribute("aria-hidden", "true");
-        if (returnFocus?.isConnected) returnFocus.focus({ preventScroll: true });
-        returnFocus = null;
-      }
-    }
-    new MutationObserver(syncDaySheet).observe(sidebar, { attributes: true, attributeFilter: ["class"] });
-    document.addEventListener("keydown", function (event) {
-      if (!sidebar.classList.contains("is-open") || event.key !== "Tab") return;
-      var focusable = Array.prototype.slice.call(sidebar.querySelectorAll('a[href], button:not([disabled]):not([hidden]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'))
-        .filter(function (el) { return el.getClientRects().length; });
-      if (!focusable.length) {
-        event.preventDefault();
-        sidebar.focus();
-        return;
-      }
-      var first = focusable[0];
-      var last = focusable[focusable.length - 1];
-      if (event.shiftKey && (document.activeElement === first || !sidebar.contains(document.activeElement))) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && (document.activeElement === last || !sidebar.contains(document.activeElement))) {
-        event.preventDefault();
-        first.focus();
-      }
-    });
-
-    var readout = document.querySelector(".sphere-day-readout");
-    var canvasWrap = wrapper.querySelector(".sphere-canvas-wrap");
-    if (readout && canvasWrap) {
-      var syncReadoutParent = function () {
-        var currentSidebar = document.querySelector(".sphere-sidebar");
-        var currentClose = currentSidebar && currentSidebar.querySelector(".sphere-sheet-close");
-        var currentBar = currentClose && currentClose.closest(".sphere-sheet-bar");
-        if (document.body.classList.contains("sphere-app")) {
-          if (currentSidebar && readout.parentElement !== currentSidebar) {
-            if (currentBar) currentBar.after(readout);
-            else if (currentClose) currentClose.after(readout);
-            else currentSidebar.prepend(readout);
-          }
-          readout.classList.add("sphere-day-readout-details");
-        } else if (readout.parentElement !== canvasWrap) {
-          canvasWrap.appendChild(readout);
-          readout.classList.remove("sphere-day-readout-details");
-        }
-      };
-      new MutationObserver(syncReadoutParent).observe(document.body, { attributes: true, attributeFilter: ["class"] });
-      syncReadoutParent();
-    }
-    return true;
-  }
-
-  function initializeFocusMode() {
-    var sync = function () {
-      if (document.body.classList.contains("sphere-app")) buildFocusDock();
-    };
-    new MutationObserver(sync).observe(document.body, { attributes: true, attributeFilter: ["class"] });
-    sync();
-    if (!document.body.classList.contains("sphere-app")) {
-      document.querySelector(".sphere-app-enter")?.click();
-    }
-    sync();
   }
 
   /* ── 3b. The Day World's doorway scene (cartoon exploration
@@ -2145,13 +2118,10 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
     var wait = window.setInterval(function () {
       tries += 1;
       var trigger = document.querySelector(".living-command-trigger");
-      var dock = document.querySelector(".sphere-rebuild-dock");
-      if (trigger && dock) {
+      var actions = document.querySelector(".sphere-more-actions");
+      if (trigger && actions) {
         window.clearInterval(wait);
-        if (trigger.parentElement !== dock) {
-          dock.appendChild(trigger);
-          dock.classList.add("has-command-trigger");
-        }
+        if (trigger.parentElement !== actions) actions.appendChild(trigger);
       } else if (tries > 90) {
         window.clearInterval(wait);
       }
@@ -2190,7 +2160,6 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
       }, 400);
     }
     buildReadout();
-    initializeFocusMode();
     startRingData();
     watchDayWorld();
     adoptSkyline();
