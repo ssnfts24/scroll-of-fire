@@ -1,0 +1,355 @@
+/* Aiyana's World — designed by Aiyana herself (Nov 22, 2026).
+   Her sign, her moving butterflies, a thinking wall and drawing pad
+   that live only on the visitor's device, and a story corner where
+   additions wait for her yes. Bright, round, kid-readable, phone-first. */
+
+.aiyana-main {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 1rem 1rem 3rem;
+  font-size: 1.075rem;
+  line-height: 1.55;
+}
+
+/* ---------- Her sign ---------- */
+
+.aiyana-sign {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.6rem;
+  padding: 3.2rem 1.4rem 2.4rem;
+  text-align: center;
+  color: #fff7e6;
+  background:
+    radial-gradient(120% 90% at 15% 0%, #6d3bbd 0%, transparent 55%),
+    radial-gradient(120% 90% at 85% 10%, #2f6fb2 0%, transparent 55%),
+    linear-gradient(160deg, #2b1a4d 0%, #472a6e 55%, #173a5e 100%);
+  box-shadow: 0 18px 44px rgba(10, 4, 30, 0.45);
+}
+
+.aiyana-eyebrow {
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #ffd9ec;
+  margin: 0 0 0.8rem;
+}
+
+.aiyana-sign-words {
+  font-size: clamp(2.1rem, 8.5vw, 3.4rem);
+  line-height: 1.15;
+  margin: 0 0 0.9rem;
+  color: #fff7e6;
+  text-shadow: 0 3px 22px rgba(255, 183, 213, 0.45);
+}
+
+.aiyana-credit {
+  font-weight: 700;
+  color: #ffe9a8;
+  margin: 0 0 0.6rem;
+}
+
+.aiyana-intro {
+  max-width: 34rem;
+  margin: 0 auto;
+  color: #f3eaff;
+}
+
+/* ---------- Butterflies (drawn, animated; rest still on reduced motion) ---------- */
+
+.aiyana-sky {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.bfly {
+  position: absolute;
+  width: 54px;
+  height: 44px;
+  will-change: transform;
+}
+
+.bfly svg { width: 100%; height: 100%; overflow: visible; }
+
+.bfly .wing { transform-box: fill-box; }
+.bfly .wing-l, .bfly .wing-l2 { transform-origin: 100% 50%; animation: aiyana-flap 0.55s ease-in-out infinite alternate; }
+.bfly .wing-r, .bfly .wing-r2 { transform-origin: 0% 50%; animation: aiyana-flap 0.55s ease-in-out infinite alternate; }
+.bfly .bfly-body { fill: #33233d; }
+
+.bfly-1 { left: 6%;  top: 8%;  --bf: #ff8fb2; animation: aiyana-fly-1 11s ease-in-out infinite alternate; }
+.bfly-2 { left: 78%; top: 6%;  --bf: #ffb340; animation: aiyana-fly-2 13s ease-in-out infinite alternate; width: 44px; height: 36px; }
+.bfly-3 { left: 84%; top: 52%; --bf: #7cc7ff; animation: aiyana-fly-3 12s ease-in-out infinite alternate; width: 62px; height: 50px; }
+.bfly-4 { left: 10%; top: 58%; --bf: #b18cff; animation: aiyana-fly-4 14s ease-in-out infinite alternate; width: 46px; height: 38px; }
+.bfly-5 { left: 46%; top: 3%;  --bf: #8fe388; animation: aiyana-fly-5 10s ease-in-out infinite alternate; width: 38px; height: 31px; }
+
+.bfly .wing, .bfly .wing-l2, .bfly .wing-r2 { fill: var(--bf); }
+.bfly .wing-l2, .bfly .wing-r2 { opacity: 0.75; }
+
+@keyframes aiyana-flap {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0.45); }
+}
+
+@keyframes aiyana-fly-1 {
+  from { transform: translate(0, 0) rotate(-6deg); }
+  to   { transform: translate(52px, 30px) rotate(7deg); }
+}
+@keyframes aiyana-fly-2 {
+  from { transform: translate(0, 0) rotate(5deg); }
+  to   { transform: translate(-58px, 38px) rotate(-8deg); }
+}
+@keyframes aiyana-fly-3 {
+  from { transform: translate(0, 0) rotate(-4deg); }
+  to   { transform: translate(-40px, -34px) rotate(6deg); }
+}
+@keyframes aiyana-fly-4 {
+  from { transform: translate(0, 0) rotate(6deg); }
+  to   { transform: translate(46px, -28px) rotate(-6deg); }
+}
+@keyframes aiyana-fly-5 {
+  from { transform: translate(0, 0) rotate(-5deg); }
+  to   { transform: translate(-30px, 26px) rotate(8deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bfly, .bfly .wing { animation: none !important; }
+}
+
+/* ---------- Cards ---------- */
+
+.aiyana-card {
+  margin-top: 1.6rem;
+  border-radius: 1.6rem;
+  padding: 1.6rem 1.3rem 1.8rem;
+  background: #fff8ec;
+  color: #33233d;
+  box-shadow: 0 14px 36px rgba(10, 4, 30, 0.35);
+}
+
+.aiyana-card h2 { color: #5b2a86; margin-top: 0; font-size: 1.7rem; }
+.aiyana-card h3 { color: #7a3b9e; margin: 1.4rem 0 0.6rem; font-size: 1.2rem; }
+
+.aiyana-stories { background: #f1eaff; }
+
+.aiyana-label {
+  display: block;
+  font-weight: 700;
+  margin: 0.9rem 0 0.35rem;
+}
+
+.aiyana-input, .aiyana-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 3px solid #cdbcf0;
+  border-radius: 1rem;
+  padding: 0.8rem 1rem;
+  font: inherit;
+  color: #33233d;
+  background: #ffffff;
+}
+
+.aiyana-input:focus, .aiyana-textarea:focus {
+  outline: 3px solid #ffb340;
+  border-color: #8e4ec6;
+}
+
+.aiyana-btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.85rem 1.7rem;
+  font: inherit;
+  font-weight: 800;
+  color: #33233d;
+  background: linear-gradient(180deg, #ffd60a, #ffb340);
+  box-shadow: 0 6px 0 #d98a06;
+  cursor: pointer;
+  min-height: 48px;
+}
+
+.aiyana-btn:active { transform: translateY(3px); box-shadow: 0 3px 0 #d98a06; }
+
+.aiyana-mini-btn {
+  border: 2px solid #8e4ec6;
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  font: inherit;
+  font-weight: 700;
+  color: #5b2a86;
+  background: #ffffff;
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.aiyana-mini-btn.is-chosen { background: #8e4ec6; color: #ffffff; }
+
+.aiyana-device-note {
+  margin-top: 1.3rem;
+  padding: 0.8rem 1rem;
+  border-radius: 1rem;
+  background: #e7f6e3;
+  color: #274d1d;
+  font-weight: 600;
+}
+
+.aiyana-empty { color: #6d5a80; font-style: italic; }
+
+/* ---------- Feelings ---------- */
+
+.aiyana-feelings { display: flex; flex-wrap: wrap; gap: 0.55rem; }
+
+.feel-chip {
+  border: 3px solid #ffb3cd;
+  background: #fff0f6;
+  color: #7a2149;
+  border-radius: 999px;
+  padding: 0.55rem 1.15rem;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  min-height: 48px;
+}
+
+.feel-chip.is-chosen {
+  background: #e93d82;
+  border-color: #e93d82;
+  color: #ffffff;
+}
+
+.aiyana-feeling-line { font-weight: 700; color: #5b2a86; min-height: 1.6em; }
+
+/* ---------- Thinking wall ---------- */
+
+.aiyana-wall {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.aiyana-note-card {
+  position: relative;
+  border-radius: 0.4rem 1.1rem 1.1rem 1.1rem;
+  padding: 0.9rem 0.9rem 0.7rem;
+  background: #fff3b8;
+  color: #4a3a12;
+  box-shadow: 0 6px 14px rgba(90, 70, 10, 0.22);
+  word-wrap: break-word;
+}
+
+.aiyana-note-card:nth-child(3n+2) { background: #ffd9ec; color: #5c2140; }
+.aiyana-note-card:nth-child(3n)   { background: #d3f2d8; color: #1e4630; }
+
+.aiyana-note-feeling {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+}
+
+.aiyana-note-text { margin: 0; white-space: pre-wrap; }
+
+.aiyana-note-remove {
+  position: absolute;
+  top: 0.3rem;
+  right: 0.3rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+/* ---------- Drawing pad ---------- */
+
+.aiyana-draw-tools { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-bottom: 0.7rem; align-items: center; }
+
+.swatch {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 3px solid #ffffff;
+  background: var(--sw);
+  box-shadow: 0 0 0 2px #cdbcf0;
+  cursor: pointer;
+  padding: 0;
+}
+
+.swatch.is-chosen { box-shadow: 0 0 0 4px #33233d; }
+
+.aiyana-draw-pad {
+  width: 100%;
+  height: auto;
+  border-radius: 1.1rem;
+  border: 3px solid #cdbcf0;
+  background: #ffffff;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+/* ---------- Stories: held for Aiyana's yes ---------- */
+
+.aiyana-rule {
+  border: 3px dashed #8e4ec6;
+  border-radius: 1.1rem;
+  padding: 0.4rem 1.1rem;
+  background: #ffffff;
+  margin: 1rem 0;
+}
+
+.aiyana-waiting-story {
+  border-radius: 1rem;
+  background: #ffffff;
+  padding: 0.9rem 1.1rem;
+  margin-bottom: 0.8rem;
+  box-shadow: 0 4px 12px rgba(60, 30, 100, 0.15);
+}
+
+.aiyana-waiting-story .aiyana-note-text { color: #33233d; }
+
+.aiyana-waiting-tag {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #7a3b9e;
+  margin-bottom: 0.3rem;
+}
+
+.aiyana-waiting-note { font-weight: 700; color: #5b2a86; min-height: 1.6em; }
+
+.aiyana-approved {
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.55);
+  padding: 0.6rem 1.1rem;
+}
+
+/* ---------- Where to next ---------- */
+
+.aiyana-next-btn {
+  display: inline-block;
+  margin: 0.3rem 0.4rem 0.3rem 0;
+  border-radius: 999px;
+  padding: 0.8rem 1.5rem;
+  font-weight: 800;
+  text-decoration: none;
+  color: #33233d;
+  background: linear-gradient(180deg, #ffd60a, #ffb340);
+  box-shadow: 0 5px 0 #d98a06;
+  min-height: 48px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 480px) {
+  .aiyana-sign { padding: 2.6rem 1rem 2rem; }
+  .bfly { width: 42px; height: 34px; }
+  .aiyana-card { padding: 1.3rem 1rem 1.5rem; }
+}

@@ -34,6 +34,11 @@
           "id": "companions",
           "title": "Companions",
           "path": "companions.html"
+        },
+        {
+          "id": "aiyanas-world",
+          "title": "Aiyana's World",
+          "path": "aiyanas-world.html"
         }
       ]
     },
