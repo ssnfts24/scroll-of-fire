@@ -223,6 +223,20 @@
   }
 }
 
+/* On stages up to 900px the page's centred Play pill reaches into
+ * the chip's left margin at the stage's top edge and paints over
+ * the chip's title — measured on a 390px stage: the pill (top
+ * 0.5rem, 40px tall, centred) covered the middle of the title
+ * line. In that band the chip drops beneath the pill — the bar's
+ * offset, the pill's height, and a breathing gap — so the header
+ * always stands fully readable. Wider stages keep the top
+ * margin: there the pill's centre sits clear of the chip's reach. */
+@media (max-width: 900px) {
+  .dw-chip {
+    top: calc(0.5rem + 40px + 0.75rem);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .dw-chip,
   .dw-inspector {

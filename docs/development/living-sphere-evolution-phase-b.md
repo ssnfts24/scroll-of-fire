@@ -135,3 +135,80 @@ two test files, this note, and one growth-record entry. No data
 migration exists to unwind — the adapter writes only through the
 planner's existing paths, and records written by its inspector are
 ordinary planner records.
+
+## Addendum — the day box follows the keeper's selection (Nov 22, 2026)
+
+Aaron tested the preview on his Galaxy A16 and reported: "when I
+select a new day that box doesn't change" — the chip still named
+Moon 8 · Day 21 while the face and the page's own readout stood on
+Pattern Day 262 — and the stage's centred Play pill painted over
+the chip's title. Both defects were reproduced and measured in the
+lab at phone width before any change.
+
+**Root cause of the stale box.** The sphere UI honours selections
+that never move the canonical cursor: a tap on a day numeral of the
+3D face calls the UI's public `selectDay`, marker picks and the
+calendar workbench do the same, and all of them settle in the UI
+module's own `_state.selectedDayOfYear` through its selection
+flush, which emits no cursor event. The cursor — the one authority
+the chip, the day world, and the Day Details panel read — never
+hears about those selections. The paths that DO move the cursor
+(sidebar arrows, moon/day selects, the scrubber, the step buttons,
+quick jump) all go through the UI's own cursor bridge. Repairing
+the tap paths at their source means editing
+`living-time-sphere-ui.js`, which is R1.7-protected; that decision
+is Aaron's, and this addendum is the record of what is needed
+there: route the flush-only selection paths (face taps, marker
+picks, public `selectDay`, playback steps, the Today return)
+through the module's existing `_setCursorFromPatternDay`, the way
+its other controls already are.
+
+**The fix, in the adapter (no protected file touched).** A
+selection bridge in `sphere-day-world-adapter.js`:
+
+- Every honoured selection change ends in the UI's selection
+  flush, which announces the settled day through
+  `livingtime:selectionchange`. The bridge routes each
+  announcement into the cursor through its public API — the
+  cursor's own `setPatternDay` within the same pattern year, and
+  a verified civil date (the calendar's `epochForYear` + day − 1,
+  checked against the coordinate engine's own decomposition
+  before the move) across years. Announcements that merely echo
+  the cursor decide to "none" in the router, so the bridge cannot
+  loop, and the chip keeps reading the cursor alone — it never
+  reads the UI's selection.
+- Temporal playback's steps are not routed one by one (the lens
+  playing over the face is not a settled selection). A backstop in
+  the adapter's render heal watches the UI's public state: when
+  its honoured day has changed and then held still — playback
+  stopped, a keeper signal seen, the cursor inside the count —
+  it routes that resting day too. This also covers the one
+  honoured path that announces nothing at all: returning to Today
+  through a view-mode switch (the flush variant of Today is
+  covered by the announcement route). The heal never moves a
+  cursor that stands outside the count.
+- A selection announced before the cursor exists is held and
+  handed to the cursor at its ready event — the same
+  latest-intent-wins rule the UI's own bridge keeps.
+
+**The Play pill.** The pill (`.sphere-play-bar`, top-centre of the
+canvas wrap) and the chip (top-left of the instrument shell) share
+the stage's top edge; at 390px the pill's box (x 166–224) sat
+inside the title's (x 21–253) and `elementsFromPoint` showed the
+pill topmost over the title's middle. In the adapter's own sheet,
+stages up to 900px now drop the chip beneath the pill (the bar's
+0.5rem offset + the pill's 40px + a gap); wider stages keep the
+top margin, where the pill's centre clears the chip's reach.
+
+**Proof.** Unit tests pin the route decision and the verified
+civil-date conversion (including a UTC+13 correction and
+fail-closed cases). A new browser harness test drives the keeper's
+own paths at phone width — the renderer's exact `selectDay` call
+and the `sphere:marker-select` event — and asserts the cursor,
+the chip's title and contents line, and the day world all stand
+on the selected day (262 with its seeded record, then the empty
+271), that the chip's own travel still moves the one cursor, and
+that the pill neither intersects nor covers the title. Full
+`npm run validate` green; the browser tests pass with a Chromium
+supplied (they skip in this machine's standard gate, as before).
+Branch seals remain main's landing seal, per SEALS-AT-LANDING.

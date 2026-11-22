@@ -353,3 +353,179 @@ test("Day World slice: zoom in, objects from the record, planner writes, empty d
     fs.rmSync(profile, { recursive: true, force: true });
   }
 });
+
+test("Keeper selection: a face tap moves the cursor, the chip follows, the Play pill never covers the title", async (t) => {
+  if (!chromium || typeof WebSocket !== "function") {
+    t.skip("A local Chromium binary and Node WebSocket support are required");
+    return;
+  }
+
+  const server = createServer();
+  await new Promise((resolve, reject) => {
+    server.once("error", reject);
+    server.listen(0, "127.0.0.1", resolve);
+  });
+  const { port: sitePort } = server.address();
+  const profile = fs.mkdtempSync(path.join(os.tmpdir(), "sof-day-world-chip-"));
+  const browser = childProcess.spawn(chromium, [
+    "--headless=new",
+    "--no-sandbox",
+    "--disable-dev-shm-usage",
+    "--disable-gpu",
+    "--remote-allow-origins=*",
+    "--remote-debugging-port=0",
+    `--user-data-dir=${profile}`,
+    "about:blank",
+  ], { stdio: "ignore" });
+  let socket;
+
+  try {
+    const activePortPath = path.join(profile, "DevToolsActivePort");
+    await waitFor(() => fs.existsSync(activePortPath), 15000, "DevTools port");
+    const [debugPort] = fs.readFileSync(activePortPath, "utf8").trim().split(/\r?\n/);
+    const targets = await (await fetch(`http://127.0.0.1:${debugPort}/json/list`)).json();
+    const page = targets.find((target) => target.type === "page");
+    assert.ok(page, "Chromium exposes a page target");
+
+    socket = new WebSocket(page.webSocketDebuggerUrl);
+    await new Promise((resolve, reject) => {
+      socket.addEventListener("open", resolve, { once: true });
+      socket.addEventListener("error", reject, { once: true });
+    });
+    let nextId = 0;
+    const pending = new Map();
+    socket.addEventListener("message", (event) => {
+      const message = JSON.parse(event.data);
+      if (!message.id || !pending.has(message.id)) return;
+      const { resolve, reject } = pending.get(message.id);
+      pending.delete(message.id);
+      if (message.error) reject(new Error(message.error.message));
+      else resolve(message.result);
+    });
+    const call = (method, params = {}) => new Promise((resolve, reject) => {
+      const id = ++nextId;
+      pending.set(id, { resolve, reject });
+      socket.send(JSON.stringify({ id, method, params }));
+      setTimeout(() => {
+        if (pending.has(id)) {
+          pending.delete(id);
+          reject(new Error(`Chromium command timed out: ${method}`));
+        }
+      }, 90000).unref();
+    });
+    const evaluate = async (expression) => {
+      const result = await call("Runtime.evaluate", {
+        expression,
+        awaitPromise: true,
+        returnByValue: true,
+        userGesture: true,
+      });
+      if (result.exceptionDetails) {
+        throw new Error(result.exceptionDetails.exception?.description || result.exceptionDetails.text || "Browser evaluation failed");
+      }
+      return result.result.value;
+    };
+
+    await call("Page.enable");
+    await call("Runtime.enable");
+    await call("Emulation.setDeviceMetricsOverride", {
+      width: 390, height: 844, deviceScaleFactor: 1, mobile: true,
+    });
+    await call("Emulation.setTouchEmulationEnabled", { enabled: true, maxTouchPoints: 1 });
+    await call("Page.navigate", {
+      url: `http://127.0.0.1:${sitePort}/docs/living-time-sphere.html`,
+    });
+
+    await waitFor(async () => evaluate(
+      `document.querySelectorAll(".sphere-rebuild-dock button").length === 5`
+    ), 90000, "the Sphere dock");
+    await waitFor(async () => evaluate(
+      `!!window.LivingTimeSphereDayWorldAdapter
+        && window.LivingTimeSphereExtensionHost?.isMounted?.("living-time-sphere-day-world") === true`
+    ), 90000, "the day world adapter to mount");
+    await waitFor(async () => evaluate(
+      `!!window.SOFTemporalCursor && !!window.LivingTimeSphereDayZoom && !!window.LivingTimeSphereUi`
+    ), 180000, "the temporal cursor and the sphere UI");
+
+    const cursorDay = () => evaluate(
+      `window.SOFTemporalCursor.getCoordinate()?.remnant13Moons?.patternDay ?? null`
+    );
+    const chipTitle = () => evaluate(`document.querySelector(".dw-chip-title")?.textContent ?? null`);
+    const chipLine = () => evaluate(`document.querySelector(".dw-chip-line")?.textContent ?? null`);
+    const adapterState = (expr) => evaluate(
+      `(() => { const s = window.LivingTimeSphereDayWorldAdapter._state; return ${expr}; })()`
+    );
+
+    // Seed one plan on Pattern Day 262 (Moon 10 · Day 10) through
+    // the planner's own create path.
+    const seeded = await evaluate(`(async () => {
+      const planner = window.CodexLivingPlanner;
+      const pc = window.PatternCalendar;
+      const year = window.SOFTemporalCursor.getCoordinate().remnant13Moons.patternYear;
+      const civil = new Date(pc.epochForYear(year).getTime() + (262 - 1) * 86400000).toISOString().slice(0, 10);
+      const made = await planner.createPlan({ title: "Chip harness plan", category: "task", date: civil });
+      window.dispatchEvent(new CustomEvent("sof:life-atlas-records-changed", { detail: { source: "test-seed" } }));
+      return { patternDay: made.temporal.patternDay, patternYear: made.temporal.patternYear };
+    })()`);
+    assert.equal(seeded.patternDay, 262, "the seeded plan stands on Pattern Day 262");
+
+    // Stand at Day Approach on today: the chip stands up.
+    const todayPd = await cursorDay();
+    await evaluate(`window.LivingTimeSphereRenderer3d.focusPatternDay(${todayPd}, { distance: 2.0, animated: true })`);
+    await waitFor(async () => adapterState(`s.stage === "approach"`), 60000, "Day Approach");
+    assert.equal(await evaluate(`document.querySelector(".dw-chip").hidden`), false, "orientation chip shows at Day Approach");
+
+    // The overlap, measured: the page's centred Play pill must not
+    // intersect the chip's title, nor sit on top of it.
+    const overlap = await evaluate(`(() => {
+      const title = document.querySelector(".dw-chip-title");
+      const toggle = document.querySelector(".sphere-play-bar-toggle");
+      if (!title || !toggle) return { missing: true };
+      const tr = title.getBoundingClientRect();
+      const pr = toggle.getBoundingClientRect();
+      const intersects = !(pr.right <= tr.left || pr.left >= tr.right || pr.bottom <= tr.top || pr.top >= tr.bottom);
+      const stack = document.elementsFromPoint(tr.left + tr.width / 2, tr.top + tr.height / 2)
+        .map((n) => (typeof n.className === "string" ? n.className : ""));
+      return { intersects, toggleOnTitle: stack.some((c) => c.includes("sphere-play-bar")) };
+    })()`);
+    assert.deepEqual(overlap, { intersects: false, toggleOnTitle: false },
+      "the Play pill never covers the chip's header");
+
+    // Aaron's path, exactly as the 3D renderer invokes it on a
+    // day-numeral tap: the public selectDay. Before the bridge,
+    // this moved only the UI's own state — the cursor, and with it
+    // the chip, stayed on the old day.
+    await evaluate(`window.LivingTimeSphereUi.selectDay(262, { source: "sphere-calendar-matrix", marker: "day-262" })`);
+    await waitFor(async () => (await cursorDay()) === 262, 90000,
+      "the canonical cursor to follow the keeper's tap");
+    await waitFor(async () => adapterState(`s.selection && s.selection.patternDay === 262 && s.items.length === 1`),
+      90000, "the day world to stand on 262 with its one record");
+    assert.equal(await chipTitle(), "Moon 10 · Day 10 · Pattern Day 262",
+      "the chip names the day the keeper selected");
+    assert.equal(await chipLine(), "1 thing stands on this day.",
+      "the chip shows the selected day's contents");
+
+    // The other face path: the marker-select event (label picks).
+    await evaluate(`document.getElementById("sphere-container").dispatchEvent(
+      new CustomEvent("sphere:marker-select", { detail: { type: "day", moon: 10, day: 19, dayOfPatternYear: 271 } }))`);
+    await waitFor(async () => (await cursorDay()) === 271, 90000,
+      "the cursor to follow the marker pick");
+    await waitFor(async () => adapterState(`s.selection && s.selection.patternDay === 271 && s.items.length === 0`),
+      90000, "the day world to stand on the empty 271");
+    assert.equal(await chipTitle(), "Moon 10 · Day 19 · Pattern Day 271");
+    assert.equal(await chipLine(), "Nothing stands on this day yet.",
+      "an empty day stays honestly empty in the chip");
+
+    // The chip's own travel still works, and the bridge does not
+    // fight it: next day from the chip moves the one cursor.
+    await evaluate(`document.querySelector("[data-dw-next]").click()`);
+    await waitFor(async () => (await cursorDay()) === 272, 90000, "chip travel to move the cursor");
+    await waitFor(async () => (await chipTitle()) === "Moon 10 · Day 20 · Pattern Day 272",
+      90000, "the chip to follow its own travel");
+  } finally {
+    try { socket?.close(); } catch { /* already closed */ }
+    browser.kill("SIGKILL");
+    server.close();
+    fs.rmSync(profile, { recursive: true, force: true });
+  }
+});

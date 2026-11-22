@@ -243,7 +243,105 @@ test("gold is today's colour only in the adapter's palette use", () => {
 
 test("the companion layer loads the adapter in the farm loader's pattern", () => {
   const companion = fs.readFileSync(path.join(root, "docs/assets/js/sphere-companion-layer.js"), "utf8");
-  assert.match(companion, /sphere-day-world-adapter\.js\?v=20261122-1/);
-  assert.match(companion, /sphere-day-world-adapter\.css\?v=20261122-1/);
+  assert.match(companion, /sphere-day-world-adapter\.js\?v=20261122-2/);
+  assert.match(companion, /sphere-day-world-adapter\.css\?v=20261122-2/);
   assert.match(companion, /data-sphere-day-world/);
+});
+
+test("route decision: the cursor already there is a no-op", () => {
+  const current = { patternYear: 2026, patternDay: 220, isOutsideCount: false };
+  assert.deepEqual(adapter.routeDecision({ patternYear: 2026, patternDay: 220 }, current), { action: "none" });
+  assert.deepEqual(adapter.routeDecision({ patternYear: null, patternDay: 220 }, current), { action: "none" });
+});
+
+test("route decision: a new day in the same year rides setPatternDay", () => {
+  const current = { patternYear: 2026, patternDay: 220, isOutsideCount: false };
+  assert.deepEqual(adapter.routeDecision({ patternYear: 2026, patternDay: 262 }, current),
+    { action: "pattern-day", day: 262 });
+  assert.deepEqual(adapter.routeDecision({ patternYear: null, patternDay: 262 }, current),
+    { action: "pattern-day", day: 262 });
+});
+
+test("route decision: another year — or a cursor outside the count — goes by civil date", () => {
+  const current = { patternYear: 2026, patternDay: 220, isOutsideCount: false };
+  assert.deepEqual(adapter.routeDecision({ patternYear: 2027, patternDay: 40 }, current),
+    { action: "civil-date", year: 2027, day: 40 });
+  const outside = { patternYear: 2026, patternDay: null, isOutsideCount: true };
+  assert.deepEqual(adapter.routeDecision({ patternYear: 2026, patternDay: 15 }, outside),
+    { action: "civil-date", year: 2026, day: 15 });
+  assert.deepEqual(adapter.routeDecision({ patternYear: 2026, patternDay: 15 }, null),
+    { action: "civil-date", year: 2026, day: 15 });
+});
+
+test("route decision: invalid targets never move the cursor", () => {
+  const current = { patternYear: 2026, patternDay: 220, isOutsideCount: false };
+  for (const bad of [0, 365, -1, 2.5, NaN, "x", null, undefined]) {
+    assert.deepEqual(adapter.routeDecision({ patternYear: 2026, patternDay: bad }, current), { action: "none" });
+  }
+  assert.deepEqual(adapter.routeDecision(null, current), { action: "none" });
+  // No year and no readable cursor: nothing safe to do.
+  assert.deepEqual(adapter.routeDecision({ patternYear: null, patternDay: 100 }, null), { action: "none" });
+});
+
+test("civil date for a Pattern day: epoch plus day minus one, verified", () => {
+  const epochForYear = (year) => new Date(Date.UTC(year, 3, 17, 12, 0, 0));
+  // A decomposition in the calendar's own UTC terms.
+  const remnantUtc = (date) => {
+    const year = date.getUTCFullYear();
+    const start = Date.UTC(year, 3, 17);
+    const diff = Math.round((Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()) - start) / 86400000);
+    if (diff >= 0 && diff < 364) return { patternYear: year, patternDay: diff + 1 };
+    if (diff < 0) {
+      const prevStart = Date.UTC(year - 1, 3, 17);
+      const prevDiff = Math.round((Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()) - prevStart) / 86400000);
+      if (prevDiff >= 0 && prevDiff < 364) return { patternYear: year - 1, patternDay: prevDiff + 1 };
+    }
+    return { patternYear: year, patternDay: null };
+  };
+  const dayOne = adapter.civilDateForPatternDay(2026, 1, { epochForYear, remnantFromDate: remnantUtc });
+  assert.equal(dayOne.toISOString(), "2026-04-17T12:00:00.000Z");
+  const day262 = adapter.civilDateForPatternDay(2026, 262, { epochForYear, remnantFromDate: remnantUtc });
+  assert.equal(day262.toISOString(), "2027-01-03T12:00:00.000Z");
+});
+
+test("civil date verification corrects a timezone-shifted landing, then verifies", () => {
+  const epochForYear = (year) => new Date(Date.UTC(year, 3, 17, 12, 0, 0));
+  // A decomposition reading the LOCAL civil date at UTC+13: the
+  // UTC-noon epoch lands on the next local day, one Pattern day
+  // late — the bridge must step back one day and verify again.
+  const remnantPlus13 = (date) => {
+    const local = new Date(date.getTime() + 13 * 3600000);
+    const y = local.getUTCFullYear();
+    const m = local.getUTCMonth();
+    const d = local.getUTCDate();
+    const start = Date.UTC(y, 3, 17);
+    const diff = Math.round((Date.UTC(y, m, d) - start) / 86400000);
+    if (diff >= 0 && diff < 364) return { patternYear: y, patternDay: diff + 1 };
+    const prevStart = Date.UTC(y - 1, 3, 17);
+    const prevDiff = Math.round((Date.UTC(y, m, d) - prevStart) / 86400000);
+    if (prevDiff >= 0 && prevDiff < 364) return { patternYear: y - 1, patternDay: prevDiff + 1 };
+    return { patternYear: y, patternDay: null };
+  };
+  const corrected = adapter.civilDateForPatternDay(2026, 1, { epochForYear, remnantFromDate: remnantPlus13 });
+  assert.equal(corrected.toISOString(), "2026-04-16T12:00:00.000Z");
+  assert.equal(remnantPlus13(corrected).patternDay, 1);
+});
+
+test("civil date verification fails closed outside the target window", () => {
+  const epochForYear = (year) => new Date(Date.UTC(year, 3, 17, 12, 0, 0));
+  const foreign = () => ({ patternYear: 1999, patternDay: 100 });
+  assert.equal(adapter.civilDateForPatternDay(2026, 100, { epochForYear, remnantFromDate: foreign }), null);
+  const outside = () => ({ patternYear: 2026, patternDay: null });
+  assert.equal(adapter.civilDateForPatternDay(2026, 100, { epochForYear, remnantFromDate: outside }), null);
+  assert.equal(adapter.civilDateForPatternDay(2026, 100, {}), null);
+});
+
+test("the selection bridge routes announcements into the cursor — and only the cursor", () => {
+  assert.match(source, /livingtime:selectionchange/);
+  assert.match(source, /routeAnnouncedSelection/);
+  assert.match(source, /cursor\.setPatternDay/);
+  assert.match(source, /cursor\.setDate/);
+  assert.match(source, /temporal-playback/);
+  // The chip's words still come from the cursor-fed state alone.
+  assert.match(source, /dom\.chipTitle\.textContent = dayTitle\(state\.view, state\.selection\)/);
 });

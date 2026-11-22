@@ -17,6 +17,12 @@
  *     can never disagree about what a day holds.
  *   - Writes go through CodexLivingPlanner only (completePlan /
  *     updatePlan / removePlan) — the existing planner write path.
+ *   - The sphere UI honours selections that never move the cursor
+ *     (a tap on the face lands in the UI's own state only). The
+ *     selection bridge below routes those announced selections
+ *     into the cursor through its public API, so the one authority
+ *     stands and every reader agrees with the face. The adapter
+ *     displays the cursor's selection only — never the UI's.
  *   - Gold is today's colour only. Important records (planner
  *     priority high / critical) take the ivory edge.
  *
@@ -265,6 +271,89 @@
     };
   }
 
+  /*
+   * The selection bridge's decision, kept pure so it is
+   * unit-tested. The sphere UI honours selections that never move
+   * the canonical cursor (a tap on the face is the common one);
+   * the bridge routes the ANNOUNCED selection into the cursor so
+   * every reader — this chip, the day world, Day Details — keeps
+   * reading the one authority. The chip itself never reads the
+   * UI's selection; this decision only ever moves the cursor.
+   *
+   *   announced: { patternYear, patternDay } — the day the UI
+   *     has just honoured (its selectionchange announcement, or
+   *     its public state read by the render heal).
+   *   current: the cursor's selection (selectionFromCursor), or
+   *     null when the cursor cannot be read.
+   *
+   * Returns one of:
+   *   { action: "none" }        — invalid target, or the cursor
+   *                               already stands there.
+   *   { action: "pattern-day", day } — same pattern year: the
+   *                               cursor's own setPatternDay is
+   *                               exact civil-day arithmetic.
+   *   { action: "civil-date", year, day } — another pattern
+   *                               year, or the cursor stands
+   *                               outside the count: move by
+   *                               civil date, verified first.
+   */
+  function routeDecision(announced, current) {
+    const day = Number(announced?.patternDay);
+    if (!Number.isInteger(day) || day < 1 || day > 364) return { action: "none" };
+    // A missing year is not year 0: Number(null) would say it is.
+    const year = announced?.patternYear == null ? NaN : Number(announced.patternYear);
+    const hasYear = Number.isInteger(year);
+    if (current && !current.isOutsideCount && Number.isInteger(current.patternDay)) {
+      if (current.patternDay === day && (!hasYear || current.patternYear === year)) {
+        return { action: "none" };
+      }
+      if (!hasYear || current.patternYear === year) {
+        return { action: "pattern-day", day };
+      }
+    }
+    if (hasYear) return { action: "civil-date", year, day };
+    return { action: "none" };
+  }
+
+  /*
+   * The civil date of a Pattern day — the same date the sphere
+   * UI's own cursor bridge computes: the pattern year's epoch
+   * (PatternCalendar.epochForYear, April 17) plus day − 1 days.
+   * The candidate is verified against the coordinate engine's own
+   * decomposition before the cursor is ever asked to move: in a
+   * timezone far ahead of UTC the UTC-noon epoch lands on the next
+   * local day, so one bounded correction by the reported day
+   * difference is allowed; anything else fails closed (null) and
+   * the cursor keeps its truth.
+   */
+  function civilDateForPatternDay(patternYear, patternDay, deps = {}) {
+    const epochForYear = deps.epochForYear;
+    const remnantFromDate = deps.remnantFromDate;
+    if (typeof epochForYear !== "function") return null;
+    const epoch = epochForYear(patternYear);
+    if (!(epoch instanceof Date) || Number.isNaN(epoch.getTime())) return null;
+    let candidate = new Date(epoch.getTime() + (patternDay - 1) * 86400000);
+    if (typeof remnantFromDate !== "function") return candidate;
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      let remnant = null;
+      try {
+        remnant = remnantFromDate(candidate);
+      } catch {
+        return null;
+      }
+      if (!remnant) return null;
+      if (remnant.patternYear === patternYear && remnant.patternDay === patternDay) {
+        return candidate;
+      }
+      if (remnant.patternYear === patternYear && Number.isInteger(remnant.patternDay)) {
+        candidate = new Date(candidate.getTime() + (patternDay - remnant.patternDay) * 86400000);
+        continue;
+      }
+      return null;
+    }
+    return null;
+  }
+
   function standingLineFor(stage, view, itemCount) {
     if (!view) return "";
     if (view.isOutsideCount) return "This day stands outside the count.";
@@ -296,6 +385,8 @@
     buildWorldItems,
     groupItems,
     standingLineFor,
+    routeDecision,
+    civilDateForPatternDay,
   };
 
   global.LivingTimeSphereDayWorldAdapter = api;
@@ -338,6 +429,13 @@
     restoreCentrePending: false,
     anchorPosition: null,
     recordsVersion: 0,
+    bridge: {
+      pending: null,       // a selection announced before the cursor existed
+      signalAt: 0,         // last keeper-selection signal (performance clock)
+      cursorReadyAt: 0,    // when the cursor first stood up for us
+      lastUiSelection: null, // last UI selection the render heal observed
+      uiStableHeals: 0,    // consecutive heals that saw it unchanged
+    },
     yearCache: { year: null, records: null },
     bloom: 0,
     stage: "year",
@@ -486,6 +584,52 @@
     } catch {
       return null;
     }
+  }
+
+  /*
+   * Route an announced selection into the canonical cursor through
+   * its own public API — never around it. The sphere UI honours
+   * selections that do not move the cursor (face taps land in the
+   * UI's own state only); left unrouted, the cursor's readers —
+   * this adapter, the Day Details panel — keep showing the old
+   * day while the face shows the new one. Routing the selection
+   * through the cursor keeps ONE temporal authority: after the
+   * move, the cursor-change the cursor itself emits rebuilds this
+   * world and every other reader from the same coordinate.
+   */
+  function routeAnnouncedSelection(announced) {
+    const cursor = global.SOFTemporalCursor;
+    if (!cursor) {
+      // The cursor is established in the page's first deferred
+      // phase and can land after a keeper's first selection (the
+      // same race the UI bridge's pending handoff guards). Keep
+      // the latest intent; the cursor-ready listener routes it.
+      state.bridge.pending = announced;
+      return false;
+    }
+    const decision = routeDecision(announced, currentSelection());
+    if (decision.action === "none") return true;
+    const options = {
+      source: "day-world-selection-bridge",
+      reason: "keeper-selection",
+    };
+    try {
+      if (decision.action === "pattern-day" && typeof cursor.setPatternDay === "function") {
+        cursor.setPatternDay(decision.day, options);
+      } else if (decision.action === "civil-date" && typeof cursor.setDate === "function") {
+        const date = civilDateForPatternDay(decision.year, decision.day, {
+          epochForYear: global.PatternCalendar?.epochForYear,
+          remnantFromDate: global.SOFTemporalCoordinate?.remnant13MoonsFromDate,
+        });
+        if (!date) return false;
+        cursor.setDate(date, options);
+      } else {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+    return true;
   }
 
   /*
@@ -1327,6 +1471,48 @@
             void rebuild(context).finally(() => { state.rebuildInFlight = false; });
           }
         }
+        // Selection bridge backstop. The selectionchange listener
+        // routes announced selections at once, but a few honoured
+        // paths announce nothing (returning to Today through a
+        // view-mode switch changes the UI's day silently), and
+        // temporal playback's steps are deliberately not routed
+        // one by one. The heal watches the UI's PUBLIC state: when
+        // its honoured day has changed since the last look and
+        // then held still — playback stopped, cursor standing
+        // inside the count, and a keeper signal seen since the
+        // cursor stood up — route that day into the cursor too.
+        // The heal displays nothing; the chip keeps reading the
+        // cursor alone.
+        const bridge = state.bridge;
+        if (live && bridge.cursorReadyAt === 0) {
+          bridge.cursorReadyAt = now;
+        }
+        const uiState = global.LivingTimeSphereUi?.getState?.();
+        if (uiState) {
+          const uiDay = Number(uiState.selectedDayOfYear);
+          const uiYear = Number(uiState.year);
+          if (Number.isInteger(uiDay) && uiDay >= 1 && uiDay <= 364 && Number.isInteger(uiYear)) {
+            if (!bridge.lastUiSelection
+              || bridge.lastUiSelection.day !== uiDay
+              || bridge.lastUiSelection.year !== uiYear) {
+              if (bridge.lastUiSelection) bridge.signalAt = now;
+              bridge.lastUiSelection = { day: uiDay, year: uiYear };
+              bridge.uiStableHeals = 0;
+            } else {
+              bridge.uiStableHeals += 1;
+              if (bridge.uiStableHeals >= 1
+                && bridge.signalAt > 0
+                && bridge.cursorReadyAt > 0
+                && !uiState.temporalPlaybackActive
+                && live
+                && !live.isOutsideCount
+                && Number.isInteger(live.patternDay)
+                && (live.patternDay !== uiDay || live.patternYear !== uiYear)) {
+                routeAnnouncedSelection({ patternDay: uiDay, patternYear: uiYear });
+              }
+            }
+          }
+        }
       }
     },
 
@@ -1424,7 +1610,40 @@
   // which can land after this adapter mounts. Its ready event is
   // the signal to build the first world.
   global.addEventListener("sof:temporal-cursor-ready", () => {
+    state.bridge.cursorReadyAt = performance.now();
+    // A selection announced before the cursor existed is handed
+    // to it now — the keeper's latest intent wins, the same rule
+    // the sphere UI's own cursor bridge keeps.
+    if (state.bridge.pending) {
+      const pending = state.bridge.pending;
+      state.bridge.pending = null;
+      routeAnnouncedSelection(pending);
+    }
     if (state.lastContext) void rebuild(state.lastContext, true);
+  });
+  // The selection bridge. Every honoured selection change in the
+  // sphere UI ends in its selection flush, which announces the day
+  // it settled on through livingtime:selectionchange — face taps,
+  // marker picks, the public selectDay the workbench and renderer
+  // call, history restores. Route each announcement into the
+  // canonical cursor so the cursor's readers agree with the face.
+  // Announcements that merely echo the cursor (its own bridge
+  // applying a cursor move to the UI) decide to "none" inside the
+  // router, so this cannot loop. Temporal playback is the one
+  // skip: its steps are the lens playing over the face, not a
+  // settled selection — the render heal routes the day playback
+  // comes to rest on.
+  global.addEventListener("livingtime:selectionchange", (event) => {
+    const detail = event?.detail || {};
+    if (detail.source === "temporal-playback") return;
+    const day = Number(detail.selectedDayOfYear);
+    if (!Number.isInteger(day) || day < 1 || day > 364) return;
+    const year = Number(detail.year);
+    state.bridge.signalAt = performance.now();
+    routeAnnouncedSelection({
+      patternDay: day,
+      patternYear: Number.isInteger(year) ? year : null,
+    });
   });
   document.addEventListener("sof:sphere-deferred-tools-ready", () => {
     if (state.lastContext) void rebuild(state.lastContext, true);
