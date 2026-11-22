@@ -96,6 +96,18 @@
   (() => {
     "use strict";
     const phaseOne = [
+      // Protected repair (Aaron's word, Nov 22, 2026): the canonical cursor
+      // and the everyday toolbar bindings are established in the FIRST
+      // deferred phase, not the last. They sat in phase three, so the
+      // toolbar's Today/prev/next buttons were inert and the Day World's
+      // door stood disabled until the whole idle queue drained — dead
+      // controls on the page's own first screen. The cursor is the head of
+      // the canonical pipeline and the toolbar is static first-screen HTML;
+      // neither has a late dependency (the cursor degrades gracefully
+      // without its engine and re-emits when the engine lands).
+      "assets/js/calendar/temporal-coordinate-engine.js?v=20260816-2",
+      "assets/js/calendar/temporal-cursor-controller.js?v=20261117-1",
+      "assets/js/sphere/living-time-sphere-everyday.js?v=20260819-b731",
       "assets/js/life-atlas/life-atlas-planner-ui.js?v=20260819-b750",
       "assets/js/life-atlas/living-command-window.js?v=20260819-b750"
     ];
@@ -120,10 +132,7 @@
       "assets/js/environment/environment-authority.js?v=20260820-b757",
       "assets/js/environment/location-command.js",
       "assets/js/environment/unit-preferences.js?v=20260816-1",
-      "assets/js/sphere/living-time-sphere-everyday.js?v=20260819-b731",
       "assets/js/calendar/calendar-data-safety.js?v=20260819-b731",
-      "assets/js/calendar/temporal-coordinate-engine.js?v=20260816-2",
-      "assets/js/calendar/temporal-cursor-controller.js?v=20261117-1",
       "assets/js/calendar/temporal-coordinate-ui.js?v=20260816-2",
       "assets/js/sphere/living-time-calendar-workbench.js?v=20260819-b750"
     ];

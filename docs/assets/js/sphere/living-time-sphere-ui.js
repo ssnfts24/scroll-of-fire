@@ -5270,6 +5270,11 @@
     return _state.year;
   }
 
+  // Protected repair (Nov 22, 2026): a day the keeper chose before
+  // the canonical cursor existed, awaiting hand-off. See
+  // _setCursorFromPatternDay and _applyTemporalCursorToSphere.
+  let _pendingCursorSelection = null;
+
   function _setCursorFromPatternDay(
     container,
     day,
@@ -5308,10 +5313,28 @@
         }
       );
 
+      // A direct cursor move supersedes any remembered
+      // pre-cursor selection (protected repair, Nov 22, 2026).
+      _pendingCursorSelection = null;
+
       return true;
     }
 
     // Safe fallback if the temporal cursor is unavailable.
+    // Protected repair (Aaron's word, Nov 22, 2026): remember the
+    // keeper's chosen day so the cursor bridge can hand it to the
+    // cursor when the cursor arrives, instead of the cursor's
+    // initial position silently overriding the selection (which
+    // also left the Day World's view — and its door — without the
+    // chosen day). Latest intent wins.
+    _pendingCursorSelection = {
+      day: targetDay,
+      year: targetYear,
+      source:
+        options.source ||
+        "sphere-pattern-navigation"
+    };
+
     _requestSelectedDayUpdate(
       container,
       targetDay,
@@ -5329,6 +5352,34 @@
     container,
     event
   ) {
+    // Protected repair (Nov 22, 2026): if the keeper chose a day
+    // before the cursor existed, hand that day to the cursor now
+    // and let the resulting cursor-change apply it — this event
+    // carries the cursor's initial position, which must not
+    // override the keeper's selection.
+    if (_pendingCursorSelection) {
+      const pending =
+        _pendingCursorSelection;
+
+      _pendingCursorSelection = null;
+
+      const handedOff =
+        _setCursorFromPatternDay(
+          container,
+          pending.day,
+          {
+            year: pending.year,
+            source:
+              pending.source ||
+              "pending-cursor-handoff"
+          }
+        );
+
+      if (handedOff) {
+        return;
+      }
+    }
+
     const detail =
       event?.detail || {};
 

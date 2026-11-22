@@ -114,16 +114,30 @@ test('B7.52 coarse-pointer CSS removes expensive blur and defers below-fold pane
 });
 
 
-test('B7.52 keeps environment, workbench and temporal tools off the first interactive paint', () => {
+test('B7.52 keeps environment, workbench and atlas tooling off the first interactive paint; cursor and everyday bindings land in phase one', () => {
   const sphere = read('docs/living-time-sphere.html');
   const phaseThreeStart = sphere.indexOf('const phaseThree = [');
   const phaseThreeEnd = sphere.indexOf('];', phaseThreeStart);
   const phaseThree = sphere.slice(phaseThreeStart, phaseThreeEnd);
   for (const token of [
     'environment-state.js', 'open-meteo-adapter.js', 'location-command.js',
-    'living-time-sphere-everyday.js', 'calendar-data-safety.js',
-    'temporal-coordinate-engine.js', 'living-time-calendar-workbench.js'
+    'calendar-data-safety.js',
+    'living-time-calendar-workbench.js'
   ]) assert.match(phaseThree, new RegExp(token.replaceAll('.', '\\.')));
+  // Protected repair (Aaron's word, Nov 22, 2026): the canonical cursor
+  // (engine + controller) and the everyday toolbar bindings are the
+  // sphere's own first-screen controls, not below-the-instrument tools.
+  // In phase three they stayed dead until the whole idle queue drained —
+  // the Today button inert, the Day World door disabled. They now land
+  // in phase one, still after first frame + idle, so first paint is
+  // untouched; this pins them there so they cannot drift back.
+  const phaseOneStart = sphere.indexOf('const phaseOne = [');
+  const phaseOneEnd = sphere.indexOf('];', phaseOneStart);
+  const phaseOne = sphere.slice(phaseOneStart, phaseOneEnd);
+  for (const token of [
+    'temporal-coordinate-engine.js', 'temporal-cursor-controller.js',
+    'living-time-sphere-everyday.js'
+  ]) assert.match(phaseOne, new RegExp(token.replaceAll('.', '\\.')));
   const fixedScripts = sphere.slice(phaseThreeEnd, sphere.indexOf('</head>'));
   assert.doesNotMatch(fixedScripts, /<script defer src="assets\/js\/environment\/environment-state\.js/);
   assert.doesNotMatch(fixedScripts, /<script defer src="assets\/js\/sphere\/living-time-calendar-workbench\.js/);
