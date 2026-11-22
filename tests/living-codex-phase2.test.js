@@ -176,6 +176,55 @@ test("index.html codex-memory.js loads before living-codex.js", () => {
   assert.ok(memIdx < liveIdx, "codex-memory.js must appear before living-codex.js");
 });
 
+test("homepage offers the Scroll Reader's saved passage without taking storage ownership", () => {
+  const source = read("docs/assets/js/living-codex.js");
+  const helper = source.match(/function readScrollResume\(\) \{[\s\S]*?\n  \}/);
+  assert.ok(helper, "homepage reads the existing Scroll Reader resume record");
+  assert.ok(helper[0].includes('safeReadJSON("sof-scroll-last-passage", null)'), "homepage consumes the reader's existing key");
+  assert.equal(helper[0].includes("setItem"), false, "homepage never writes the reader's key");
+
+  const evaluate = saved => new Function(
+    "safeReadJSON",
+    helper[0] + "; return readScrollResume;"
+  )(key => {
+    assert.equal(key, "sof-scroll-last-passage");
+    return saved;
+  })();
+
+  const resume = evaluate({ id: "section one/2", title: "Opening words" });
+  assert.deepEqual(resume, {
+    href: "./scroll/reader.html?section=section%20one%2F2#reading",
+    title: "Opening words"
+  });
+  assert.equal(
+    new URL(resume.href, "https://ssnfts24.github.io/scroll-of-fire/").pathname,
+    "/scroll-of-fire/scroll/reader.html",
+    "relative resume path preserves the GitHub Pages project base"
+  );
+  assert.equal(evaluate({ id: "", title: "Opening words" }), null);
+  assert.equal(evaluate({ id: "section-one", title: "" }), null);
+  assert.equal(evaluate(null), null);
+
+  const safeHrefSource = source.match(/function safeLocalHref\(url\) \{[\s\S]*?\n  \}/);
+  assert.ok(safeHrefSource, "existing Codex resumes have a same-site URL guard");
+  const safeHref = new Function(
+    "document",
+    safeHrefSource[0] + "; return safeLocalHref;"
+  )({ baseURI: "https://ssnfts24.github.io/scroll-of-fire/" });
+  assert.equal(safeHref("/moons.html"), "./moons.html", "root paths retain the GitHub Pages base");
+  assert.equal(safeHref("javascript:alert(1)"), null, "unsafe schemes are rejected");
+
+  const html = read("docs/index.html");
+  assert.ok(html.includes('data-codex-scroll-resume hidden'), "alternate reading link is hidden until a saved passage exists");
+  assert.ok(read("docs/assets/css/home.css").includes("[data-codex-scroll-resume][hidden]"), "the hidden state survives homepage button styles");
+  assert.ok(source.includes('heroAction.textContent = "Continue Your Journey";'), "the hero offers the saved reader path as its primary action");
+  assert.ok(source.includes("if (!resumeDismissed && resumeHref)"), "an existing CodexMemory resume remains the higher-priority journey");
+  assert.ok(source.includes("const resumeDismissed = window.CodexMemory?.isResumeDismissed?.() === true;"), "dismissal preserves the existing homepage action");
+  assert.ok(source.includes("if (currentHomeState) renderHomeAction(currentHomeState);"), "memory changes refresh the primary action");
+  assert.ok(source.includes("const hasAnyMemory = resume || scrollResume ||"), "a reader-only return can reveal the continuation panel");
+  assert.ok(source.includes('"Continue reading: " + scrollResume.title'), "the existing primary resume action can continue the saved passage");
+});
+
 /* ------------------------------------------------------------------ */
 /* 3. Storage key and version                                           */
 /* ------------------------------------------------------------------ */

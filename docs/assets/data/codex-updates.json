@@ -2,6 +2,14 @@
  {
   "date": "2026-11-21",
   "type": "system",
+  "title": "The front door learned where you left the book",
+  "summary": "The homepage's Continue Your Journey now remembers the Scroll Reader too: when no Codex Memory resume stands first, the door offers the passage you last left in the reader, and your reading progress shows in the continuation panel beside it. The reader's saved place stays the reader's own — the homepage only reads it, never writes it — and nothing about the manuscript or the record changed.",
+  "url": "./index.html",
+  "symbol": "✧"
+ },
+ {
+  "date": "2026-11-21",
+  "type": "system",
   "title": "The doors learned to answer a touch",
   "summary": "The shared navigation now answers a press with a quiet pressed-state cue, so a tap is felt as received without any new motion running on the page, and the Spark's first meeting on the Companions page was drawn more compact. The repository's own README also gained a map of the whole repo, so a reader arriving at the code can find every room from the door.",
   "url": "./index.html",

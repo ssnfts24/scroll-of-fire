@@ -64,6 +64,7 @@
   let recentUpdates = [];
   let moonRenderDetail = null;
   let refreshTimer = null;
+  let currentHomeState = null;
 
   function normalizePath(path) {
     if (typeof siteApi.normalizePath === "function") {
@@ -89,6 +90,45 @@
       return value ? JSON.parse(value) : fallback;
     } catch (_) {
       return fallback;
+    }
+  }
+
+  function readScrollResume() {
+    const passage = safeReadJSON("sof-scroll-last-passage", null);
+    if (
+      !passage ||
+      typeof passage !== "object" ||
+      typeof passage.id !== "string" ||
+      !passage.id.trim() ||
+      passage.id.length > 200 ||
+      typeof passage.title !== "string" ||
+      !passage.title.trim()
+    ) return null;
+
+    const id = passage.id.trim();
+    const title = passage.title.trim().slice(0, 120);
+    return {
+      href: `./scroll/reader.html?section=${encodeURIComponent(id)}#reading`,
+      title
+    };
+  }
+
+  function safeLocalHref(url) {
+    try {
+      const base = new URL(document.baseURI);
+      const target = new URL(String(url || ""), base);
+      if (target.origin !== base.origin && target.origin !== "https://codexofreality.org") return null;
+
+      const basePath = base.pathname.endsWith("/")
+        ? base.pathname
+        : base.pathname.slice(0, base.pathname.lastIndexOf("/") + 1);
+      const targetPath = target.pathname.startsWith(basePath)
+        ? target.pathname
+        : basePath + target.pathname.replace(/^\/+/, "");
+      const path = targetPath.slice(basePath.length);
+      return `./${path}${target.search}${target.hash}`;
+    } catch (_) {
+      return null;
     }
   }
 
@@ -463,9 +503,30 @@
     });
   }
 
+  function renderHomeAction(state, daypartCopy = getHomeAction(state.daypart)) {
+    const heroAction = document.querySelector("[data-home-action]");
+    if (!heroAction) return;
+
+    const scrollResume = readScrollResume();
+    const resume = window.CodexMemory?.getResumePath?.();
+    const resumeDismissed = window.CodexMemory?.isResumeDismissed?.() === true;
+    const resumeHref = resume?.href ? safeLocalHref(resume.href) : null;
+    if (!resumeDismissed && resumeHref) {
+      heroAction.textContent = "Continue Your Journey";
+      heroAction.setAttribute("href", resumeHref);
+    } else if (scrollResume && !resumeDismissed) {
+      heroAction.textContent = "Continue Your Journey";
+      heroAction.setAttribute("href", scrollResume.href);
+    } else {
+      heroAction.textContent = daypartCopy.actionLabel;
+      heroAction.setAttribute("href", daypartCopy.actionHref);
+    }
+  }
+
   function renderHomeState(state) {
     const root = document.documentElement;
     if (!root || !root.classList.contains("home-page")) return;
+    currentHomeState = state;
 
     root.setAttribute("data-codex-daypart", state.daypart.toLowerCase());
     root.setAttribute("data-codex-motion", state.motionAllowed ? "on" : "off");
@@ -479,11 +540,7 @@
     setText("[data-home-signal]", state.signalLabel + " · " + state.systemConnection);
     setText("[data-home-notice]", state.lastVisit ? "Last visit: " + formatRelativeDate(state.lastVisit) + "." : "First return in this browser. Begin with Start Here or open Today.");
 
-    const heroAction = document.querySelector("[data-home-action]");
-    if (heroAction) {
-      heroAction.textContent = daypartCopy.actionLabel;
-      heroAction.setAttribute("href", daypartCopy.actionHref);
-    }
+    renderHomeAction(state, daypartCopy);
 
     const moonName = (state.moon && state.moon.moonName) || "";
     setText("[data-codex-today-title]", state.moon && state.moon.moon
@@ -806,8 +863,9 @@
     }
 
     const resume = window.CodexMemory.getResumePath();
+    const scrollResume = readScrollResume();
     const hasLastGate = readGateRecord();
-    const hasAnyMemory = resume || (mem.lastVisitAt && (
+    const hasAnyMemory = resume || scrollResume || (mem.lastVisitAt && (
       mem.dailyIntention || mem.unfinishedPractice || mem.recentWitness || mem.recentFrequency
     ));
 
@@ -825,6 +883,8 @@
       const lastPage = mem.lastPage;
       if (resume && resume.type === "practice") {
         titleEl.textContent = "Your practice is unfinished.";
+      } else if (scrollResume && !resume) {
+        titleEl.textContent = "Your Scroll of Fire reading is ready.";
       } else if (lastPage && lastPage.title) {
         titleEl.textContent = "Welcome back. You were last in " + lastPage.title + ".";
       } else if (hasLastGate) {
@@ -840,7 +900,11 @@
     const timeEl = continuePanel.querySelector("[data-codex-last-gate-time]");
     if (timeEl) {
       const lastVisit = mem.lastVisitAt ? new Date(mem.lastVisitAt) : (hasLastGate && hasLastGate.timestamp ? new Date(hasLastGate.timestamp) : null);
-      timeEl.textContent = lastVisit ? "Last visit: " + formatRelativeDate(lastVisit) + "." : "Stored locally in this browser.";
+      timeEl.textContent = scrollResume && !resume
+        ? "Your place is remembered in this browser."
+        : lastVisit
+          ? "Last visit: " + formatRelativeDate(lastVisit) + "."
+          : "Stored locally in this browser.";
     }
 
     /* Unfinished practice row */
@@ -869,11 +933,20 @@
     /* Return link */
     const returnLink = continuePanel.querySelector("[data-codex-return-link]");
     if (returnLink) {
-      const href = (resume && resume.href) || (hasLastGate && hasLastGate.href) || "./hub.html";
+      const href = (resume && resume.href) || (scrollResume && scrollResume.href) || (hasLastGate && hasLastGate.href) || "./hub.html";
       const label = (resume && ("Return to " + resume.label)) ||
+        (scrollResume && ("Continue reading: " + scrollResume.title)) ||
         (hasLastGate && hasLastGate.title ? "Return to " + hasLastGate.title : "Return");
-      returnLink.setAttribute("href", safeHref(href));
+      returnLink.setAttribute("href", !resume && scrollResume ? scrollResume.href : safeHref(href));
       returnLink.textContent = label;
+    }
+    const scrollLink = continuePanel.querySelector("[data-codex-scroll-resume]");
+    if (scrollLink) {
+      scrollLink.hidden = !scrollResume || !resume;
+      if (scrollResume) {
+        scrollLink.href = scrollResume.href;
+        scrollLink.textContent = "Continue reading: " + scrollResume.title;
+      }
     }
 
     /* What changed since last visit */
@@ -1377,6 +1450,7 @@
     document.addEventListener("codexmemorychange", function () {
       renderPhase2ContinuePanel();
       renderPhase2IntentionSelector();
+      if (currentHomeState) renderHomeAction(currentHomeState);
     });
   }
 
