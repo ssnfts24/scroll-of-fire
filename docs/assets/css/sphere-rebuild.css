@@ -134,9 +134,15 @@ body.sphere-app .sphere-rebuild-caption {
   background: rgba(218, 164, 91, 0.22);
   border-color: var(--rebuild-brass);
 }
+/* Gold discipline (Aaron's ruling, Nov 23, 2026): gold means
+ * today and the keeper's record — never chrome. The Spark door
+ * used to wear a brass border and a gold glow at rest, spending
+ * the signal on navigation; it now stands in the same neutral
+ * line as its sibling doors (hover and pressed states keep the
+ * house treatment every door shares). */
 .sphere-rebuild-dock-spark {
-  border-color: var(--rebuild-brass);
-  box-shadow: 0 0 0 1px rgba(218, 164, 91, 0.25), 0 0 18px rgba(218, 164, 91, 0.12);
+  border-color: var(--rebuild-line);
+  box-shadow: none;
 }
 
 /* ── Freeze shield + held light ──────────────────────────────── */
