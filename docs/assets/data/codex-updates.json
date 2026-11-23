@@ -1,5 +1,53 @@
 [
  {
+  "date": "2026-11-23",
+  "type": "page",
+  "title": "Witness tended its page on the day of designs",
+  "summary": "The Witness page carries November 23: a charter drawn for the Sphere, a real sky computed on the device standing in review, a Front Door designed for new arrivals, the Sparks' page designed as a walkable 3D world, play redesigned simpler \u2014 and a new standard in Aaron's words, that the whole site should feel a little alive. The same change writes the growth record's missing entry for yesterday's tending and records Aaron's standing rule: every landing updates this log in the same change.",
+  "url": "./witness.html",
+  "symbol": "\u25c9"
+ },
+ {
+  "date": "2026-11-22",
+  "type": "page",
+  "title": "Witness caught its page up",
+  "summary": "The Witness page was brought current through November 22 \u2014 the merge-everything landing, the site learning to travel light, and the Sphere's order-of-arrival fault \u2014 with three new lines in its long poem, and its tending made a standing daily item in the stewardship rounds. The landing shipped without its growth entry; this entry restores the record.",
+  "url": "./witness.html",
+  "symbol": "\u25c9"
+ },
+ {
+  "date": "2026-11-22",
+  "type": "sphere",
+  "title": "The day grows as you approach it",
+  "summary": "Aaron found two faults on his phone: the chosen day shrank as he moved toward it, and some things stuck while the Sphere turned. The shrink is fixed at its root — the growth designed for the chosen day was written where it could never reach the day numbers, while the size limit was quietly dividing by it anyway, so approaching a day capped it smaller than its neighbours. The growth now lives with the numbers themselves: the chosen day grows steadily as you close in and ends clearly the largest on the face, its neighbours making the room. For the sticking: the Moon names are now guarded every frame, not just when the layout refreshes — a name a day number drifts across steps aside, or the number fades for just those frames — and a number that swings behind the Sphere no longer freezes mid-face; it waits out of sight until its turn comes round.",
+  "url": "./living-time-sphere.html",
+  "symbol": "✦"
+ },
+ {
+  "date": "2026-11-22",
+  "type": "feature",
+  "title": "The faced Moon shows its days",
+  "summary": "Turn to any Moon on the Sphere and all 28 of its day numbers stand with it now. The Sphere had been mis-measuring which Moon you were facing — it read the edge of a Moon's sector instead of its centre, so a Moon centred on your screen could be treated as its neighbour and left bare, while the neighbour's numbers showed in its place — and the window that quiets the Moons you are not looking at was dimming the one you were facing, too. Both are corrected. The Sphere also learned to move like a held instrument: a spin keeps your hand's own momentum for a moment instead of stopping dead, and the scroll wheel eases the zoom instead of stepping it. And zooming in on a day now opens it in stages, the way the Living Sphere Evolution lays out — first the day's number grows, then its world card rises naming the day and everything scheduled on it, and closest in, the Day Details door opens on its own; zoom back out and it folds away.",
+  "url": "./living-time-sphere.html",
+  "symbol": "✦"
+ },
+ {
+  "date": "2026-11-22",
+  "type": "feature",
+  "title": "The Sphere learned its years, and what repeats",
+  "summary": "Zoom all the way into a day now and you pass through its bubble's skin into the day itself; zoom all the way out and the years stand in a line — the year you keep standing lit, the road ahead dim and labelled as the road ahead, each year a small shell carrying its days as marks. Pick a day and its counterpart is ringed in every year, wearing its symbol where that day holds something and standing bare where it doesn't. A new Patterns door beside the Sphere's doors lights every day that holds a kind you pick — planting, watering, harvest, and every other kind your planner record carries — on the year you face and down the years line, with the count shown and labelled as a count. Only your own record is tracked; nothing is invented for the empty years, and a kind with no days lights nothing and says so.",
+  "url": "./living-time-sphere.html",
+  "symbol": "✧"
+ },
+ {
+  "date": "2026-11-22",
+  "type": "feature",
+  "title": "The selected day grew a world",
+  "summary": "Zoom into a day on the Living Sphere now, and the day itself opens where it stands on the ring: a bronze plinth, a brass arc for its hours, and the things the planner holds for that day standing as small made objects — a bench for work, a bed for planting, a gathering ring for family. Tap one and it names itself and offers what can be done with it, complete, postpone, or remove, through the same one planner record as everything else. An empty day shows a bare foundation and says so plainly. The Sphere's protected heart was not touched to do this: the world is a guest layer that only presents, reading the one record and writing only through the one planner.",
+  "url": "./living-time-sphere.html",
+  "symbol": "✧"
+ },
+ {
   "date": "2026-11-22",
   "type": "feature",
   "title": "The Sphere stepped out of its frame",
@@ -35,9 +83,9 @@
   "date": "2026-11-22",
   "type": "feature",
   "title": "One Spark, every door",
-  "summary": "A Spark is now one and the same on the website and in the Living Day app. A short passport code \u2014 shown in the app's Their Home and on the Companions page here, as letters to type and a square to scan \u2014 carries a Spark's seed and the name it answers to, and the same seed grows the same Spark on either side, pinned by shared test vectors kept in both repos. Their Home came alive with it: the Spark there speaks the keeper's actual day \u2014 today's Moon and Pattern Day, practice sealed or not, the days kept together \u2014 and answers a tap with a hop and a line in its own voice. The Companions page became a place to play, too: find-the-tone at the meeting, and the echo game beside its record. Identity travels by passport today; the whole record still travels as one file, and day-to-day memory flowing on its own still waits on the accounts step.",
+  "summary": "A Spark is now one and the same on the website and in the Living Day app. A short passport code — shown in the app's Their Home and on the Companions page here, as letters to type and a square to scan — carries a Spark's seed and the name it answers to, and the same seed grows the same Spark on either side, pinned by shared test vectors kept in both repos. Their Home came alive with it: the Spark there speaks the keeper's actual day — today's Moon and Pattern Day, practice sealed or not, the days kept together — and answers a tap with a hop and a line in its own voice. The Companions page became a place to play, too: find-the-tone at the meeting, and the echo game beside its record. Identity travels by passport today; the whole record still travels as one file, and day-to-day memory flowing on its own still waits on the accounts step.",
   "url": "./companions.html",
-  "symbol": "\u2727"
+  "symbol": "✧"
  },
  {
   "date": "2026-11-22",

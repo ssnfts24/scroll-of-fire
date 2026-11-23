@@ -4527,6 +4527,48 @@
               "Tap a visible year membrane to move this same Pattern coordinate through time."
             );
     }
+
+    /*
+     * Fit rule (Aaron, Nov 23, 2026 — the held §10 proposal,
+     * approved at landing). Measured on the unmodified tree, this
+     * inspector stood 413px wide starting 24px into a 412px stage:
+     * its right edge ran off the stage. The inspector must never
+     * stand wider than the room the stage leaves it, so when its
+     * rendered width would cross the stage's right edge its inline
+     * max-width is clamped to that room; when it fits again the
+     * clamp is released and the stylesheet governs as before. The
+     * clamp only ever shrinks an overflowing inspector — it never
+     * moves, grows, or restyles anything else.
+     */
+    const inspector =
+      document.getElementById(
+        "sphere-strata-year-inspector"
+      );
+
+    if (inspector) {
+      const stage =
+        document.getElementById(
+          "sphere-container"
+        );
+
+      const stageRect =
+        stage?.getBoundingClientRect?.();
+
+      if (stageRect && stageRect.width > 0) {
+        const rect =
+          inspector.getBoundingClientRect();
+
+        const room =
+          stageRect.right - rect.left;
+
+        if (room > 0 && rect.width > room) {
+          inspector.style.maxWidth =
+            `${Math.floor(room)}px`;
+        } else if (inspector.style.maxWidth) {
+          inspector.style.maxWidth = "";
+        }
+      }
+    }
   }
 
 
