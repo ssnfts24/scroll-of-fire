@@ -23,7 +23,7 @@ Read the Scroll, search its text, study Hebrew roots and follow Genesis 1–50.
 - **Genesis Restored** — Source only; Root-level restored Genesis text, published through the Downloads catalog.
 - **Exodus Restored** — Source only; Root-level restored Exodus text, published through the Downloads catalog.
 
-### Living Time and Observatory (9 catalog entries)
+### Living Time and Observatory (10 catalog entries)
 
 The Pattern Calendar, 13 Moons, Living Time Sphere and witnessed days.
 
@@ -35,6 +35,7 @@ The Pattern Calendar, 13 Moons, Living Time Sphere and witnessed days.
 - **13 Moons Rollout Whitepaper** — Live; Phased rollout plan for the 13 Moons Living Time Observatory.
 - **Witness Ledger** — Live; Browser-local record of witnessed days and SHA-256 hashes. Entries stay on this device and do not sync.
 - **Companions** — Live; Meet a Spark: a small companion made for you on the day you adopt it, named by you, kept on your own device. It grows as you return, visit, and practice, and roams the site with you.
+- **The Episode Library** — Live; Every film of the Traveller's Road gathered in one room and playable where it stands: the vision trailer as its opening feature, the episodes in walking order or by land and series, a keeper's place kept on their own device by the same watch record the story's pages keep, and the planned and scripted episodes shown honestly apart.
 - **Aiyana's World** — Live; Aiyana's own page in the Codex, designed by Aiyana herself: her sign and moving butterflies, a wall where visitors show their thinking and how they feel, a drawing pad — all kept only on the visitor's own device — and a story corner where additions wait for her yes before they can appear.
 
 ### Systems and Living Technology (17 catalog entries)
@@ -114,9 +115,9 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 
 ## Repository and deployed-content coverage
 
-- Public HTML pages inspected: **193**.
-- Total master-inventory records: **496**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
-- Public-facing catalog entries: **78**; only explicitly curated entries appear on the Atlas.
+- Public HTML pages inspected: **194**.
+- Total master-inventory records: **497**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
+- Public-facing catalog entries: **79**; only explicitly curated entries appear on the Atlas.
 - Numbered archive folders are inventoried file-by-file, while downloads snapshot differences are kept separate from historical integrity data.
 - Root files not already published through the archive or explicitly approved remain classified as development-only; no such file is automatically linked from the public catalog.
 
@@ -132,7 +133,7 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 ## Current resource-type counts
 
 - Deployed Markdown documents: 64
-- HTML pages: 193
+- HTML pages: 194
 - Numbered archive file: 141
 - Numbered archive folder: 7
 - Repository folder: 10

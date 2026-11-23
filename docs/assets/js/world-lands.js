@@ -532,6 +532,11 @@
           "id": "travellers-map",
           "title": "The Traveller's Map",
           "path": "map.html"
+        },
+        {
+          "id": "episodes",
+          "title": "The Episode Library",
+          "path": "episodes.html"
         }
       ]
     }

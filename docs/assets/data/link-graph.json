@@ -728,7 +728,7 @@
      "area": "evidence"
     }
    ],
-   "outTotal": 69,
+   "outTotal": 70,
    "inTotal": 13
   },
   "codex-guide.html": {
@@ -1009,6 +1009,25 @@
    ],
    "outTotal": 3,
    "inTotal": 12
+  },
+  "episodes.html": {
+   "title": "The Episode Library",
+   "area": "living-time",
+   "out": [],
+   "in": [
+    {
+     "path": "codex-atlas.html",
+     "title": "Codex Atlas",
+     "area": "archive"
+    },
+    {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 2
   },
   "equinox-passage.html": {
    "title": "Equinox Passage — The 13 Moons Remnant Living Time Observatory",
@@ -1825,9 +1844,9 @@
      "area": "systems"
     },
     {
-     "path": "witness.html",
-     "title": "Witness",
-     "area": "artifacts"
+     "path": "episodes.html",
+     "title": "The Episode Library",
+     "area": "living-time"
     }
    ],
    "in": [
@@ -1842,7 +1861,7 @@
      "area": "artifacts"
     }
    ],
-   "outTotal": 24,
+   "outTotal": 25,
    "inTotal": 2
   },
   "invoke.html": {
