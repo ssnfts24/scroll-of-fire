@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 2412,
-    "bytes": 1080942045,
+    "bytes": 1080941950,
     "byGroup": {
       "tooling": 293,
       "manuscript": 17,
@@ -7772,8 +7772,8 @@
       "path": "docs/assets/data/link-graph.json",
       "title": "link-graph.json",
       "format": "json",
-      "bytes": 460816,
-      "sha256": "bd3d8633fe2d0a3362b9ce2adfdf6a8438153e6ed26b55d0bfc64823d3902894",
+      "bytes": 460721,
+      "sha256": "b7bcd8651d52e885b6021e912df1478e7e28298edabf627799601194444800c1",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -58357,7 +58357,7 @@
       "title": "story-map-sphere-link.test.js",
       "format": "js",
       "bytes": 18688,
-      "sha256": "b2dab74b4a0b5bd991df0e00851faaf69c4de760a0ee07bbf4e695bcd57a0960",
+      "sha256": "bb31e13d503fed24ec974464b9ea096bc239d1dc2d252f8b3202066bbe941ed6",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
