@@ -644,6 +644,46 @@
     }
   })();
 
+  // ── The Evolution Opening (Nov 23, 2026) ─────────────────────
+  // Aaron's design: the first time a visitor looks at the Sphere
+  // page, it shows the calendars — the 13 Moons — then the Sphere
+  // as it looked when it first started, then it evolves into the
+  // Sphere it is now; then the Spark appears and gives the tour.
+  // Amended the same day, on Aaron's word over the preview: the
+  // opening plays itself as a short film — a "Welcome to the
+  // Sphere" title beat, the stages on their own timing, a score
+  // synthesised in the module (sound only from a first touch) —
+  // automatically for a first-time visitor only.
+  // The opening lives in its own module; this loader is the only
+  // hook — it sets the module's stylesheet and script on the page,
+  // and nothing else in this layer changes. No protected file is
+  // touched: the opening presents, the kernel stays the kernel.
+  (() => {
+    if (document.querySelector("script[data-sphere-evolution-opening]")) return;
+    // Catch the URL the visitor ARRIVED with, now, while this
+    // layer first runs. The Sphere keeps its own state in the
+    // address bar as it works (its UI writes the year and the
+    // selected marker there), so a module that reads the address
+    // later cannot tell a shared view from the instrument's own
+    // bookkeeping. This layer runs before that first writing;
+    // the opening judges the visit by this caught URL alone.
+    try {
+      if (typeof window.__sofEvolutionOpeningArrival !== "string") {
+        window.__sofEvolutionOpeningArrival = window.location.search || "";
+      }
+    } catch { /* the catch stands unset; the module falls back */ }
+    const css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = "assets/css/sphere-evolution-opening.css?v=20261123-2";
+    css.setAttribute("data-sphere-evolution-opening", "");
+    document.head.appendChild(css);
+    const s = document.createElement("script");
+    s.src = "assets/js/sphere-evolution-opening.js?v=20261123-2";
+    s.async = false;
+    s.setAttribute("data-sphere-evolution-opening", "");
+    document.head.appendChild(s);
+  })();
+
   // ── Front Door §d (Nov 23, 2026): the keeper's one-tap share ──
   // The Observatory page itself is R1.7-protected, so the share
   // surface rides this layer's loader, the same way the farm

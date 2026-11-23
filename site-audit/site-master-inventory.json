@@ -3,14 +3,14 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 481,
+    "resources": 482,
     "publicHtmlPages": 181,
     "catalogEntries": 73,
     "issueCounts": {
       "not-linked-directly-from-homepage": 25,
       "nav-label-differs-from-title": 24,
       "no-global-navigation": 1,
-      "deployed-but-unlinked": 60,
+      "deployed-but-unlinked": 61,
       "unreachable-from-homepage": 4,
       "compatibility-redirect-page": 1,
       "not-published-in-catalog": 30,
@@ -675,7 +675,7 @@
     },
     {
       "id": "docs-assets:assets/css",
-      "title": "docs/assets/css (71 files)",
+      "title": "docs/assets/css (72 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -760,7 +760,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (214 files)",
+      "title": "docs/assets/js (215 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1813,6 +1813,25 @@
       "relatedProjects": [],
       "sourcePath": "docs/development/LIVING-INTERFACE-ARCHITECTURE-V4-PLAN.md",
       "publicUrl": "https://codexofreality.org/development/LIVING-INTERFACE-ARCHITECTURE-V4-PLAN.md",
+      "publicationStatus": "source-only",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "development-only-deployed-publicly",
+      "discoverability": null,
+      "issues": [
+        "deployed-but-unlinked"
+      ]
+    },
+    {
+      "id": "docs:development/living-sphere-evolution-opening.md",
+      "title": "development/living-sphere-evolution-opening.md",
+      "description": "Markdown document deployed inside docs/ and therefore publicly fetchable, but not linked from the site.",
+      "category": "Development document",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/development/living-sphere-evolution-opening.md",
+      "publicUrl": "https://codexofreality.org/development/living-sphere-evolution-opening.md",
       "publicationStatus": "source-only",
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [],
@@ -13957,7 +13976,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (201 files)",
+      "title": "tests/ (203 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
