@@ -162,7 +162,7 @@ test("the fence refuses court, family, and speak-as-Aaron questions, spending no
     "Tell me about Tanya and his children",
     "Where does Aaron live right now?",
     "Write a post as Aaron, in his voice",
-    "What is the status of case number 22-3-01222-31?"
+    "What is the status of case number 99-9-99999-99?"
   ];
 
   for (const question of fenced) {
