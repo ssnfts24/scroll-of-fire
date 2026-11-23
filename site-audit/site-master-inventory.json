@@ -3,9 +3,9 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 496,
-    "publicHtmlPages": 193,
-    "catalogEntries": 78,
+    "resources": 497,
+    "publicHtmlPages": 194,
+    "catalogEntries": 79,
     "issueCounts": {
       "not-linked-directly-from-homepage": 29,
       "nav-label-differs-from-title": 24,
@@ -146,8 +146,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 75,
-        "pagesWithNavLinkToIt": 76
+        "inboundPages": 76,
+        "pagesWithNavLinkToIt": 77
       },
       "issues": [
         "nav-label-differs-from-title: \"About Aaron\" vs \"Aaron Paul Laird\""
@@ -331,8 +331,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 75,
-        "pagesWithNavLinkToIt": 76
+        "inboundPages": 76,
+        "pagesWithNavLinkToIt": 77
       },
       "issues": [
         "nav-label-differs-from-title: \"Covenant Circle\" vs \"Circle Sync\""
@@ -376,8 +376,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 189,
-        "pagesWithNavLinkToIt": 184
+        "inboundPages": 190,
+        "pagesWithNavLinkToIt": 185
       },
       "issues": [
         "nav-label-differs-from-title: \"Evidence Edition\" vs \"Editorial reading and evidence\""
@@ -481,6 +481,7 @@
         "companions.html",
         "covenant-caravan.html",
         "downloads.html",
+        "episodes.html",
         "equinox-passage.html",
         "ethics.html",
         "garden.html",
@@ -550,8 +551,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 189,
-        "pagesWithNavLinkToIt": 184
+        "inboundPages": 190,
+        "pagesWithNavLinkToIt": 185
       },
       "issues": [
         "nav-label-differs-from-title: \"Atlas\" vs \"Codex Atlas\""
@@ -711,7 +712,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 188,
+        "inboundPages": 189,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
@@ -777,8 +778,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 77,
-        "pagesWithNavLinkToIt": 77
+        "inboundPages": 78,
+        "pagesWithNavLinkToIt": 78
       },
       "issues": [
         "nav-label-differs-from-title: \"Covenant Caravan\" vs \"The Covenant Caravan\""
@@ -803,7 +804,7 @@
     },
     {
       "id": "docs-assets:assets/css",
-      "title": "docs/assets/css (75 files)",
+      "title": "docs/assets/css (76 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -888,7 +889,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (222 files)",
+      "title": "docs/assets/js (223 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -905,7 +906,7 @@
     },
     {
       "id": "docs-assets:assets/media",
-      "title": "docs/assets/media (180 files)",
+      "title": "docs/assets/media (182 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -2142,6 +2143,7 @@
         "companions.html",
         "covenant-caravan.html",
         "downloads.html",
+        "episodes.html",
         "ethics.html",
         "garden.html",
         "genesis-oracle.html",
@@ -2183,7 +2185,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 0,
         "hopsFromHomeWithoutAtlas": 0,
-        "inboundPages": 190,
+        "inboundPages": 191,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -13020,12 +13022,79 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 190,
-        "pagesWithNavLinkToIt": 82
+        "inboundPages": 191,
+        "pagesWithNavLinkToIt": 83
       },
       "issues": [
         "nav-label-differs-from-title: \"Downloads\" vs \"Downloads & Integrity\""
       ]
+    },
+    {
+      "id": "episodes",
+      "title": "The Episode Library — Codex of Reality",
+      "description": "The Episode Library: every film of the Traveller&rsquo;s Road gathered in one room and playable where it stands — told apart by name, land, Moon and token, with the planned and scripted episodes shown honestly apart.",
+      "category": "Story",
+      "area": "living-time",
+      "relatedProjects": [
+        "travellers-map",
+        "companions",
+        "living-time-sphere"
+      ],
+      "sourcePath": "docs/episodes.html",
+      "publicUrl": "https://codexofreality.org/episodes.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "13-moon-whitepaper.html",
+        "about-aaron.html",
+        "circle.html",
+        "codex-atlas.html",
+        "companions.html",
+        "covenant-caravan.html",
+        "downloads.html",
+        "ethics.html",
+        "genesis-oracle.html",
+        "glossary.html",
+        "hub.html",
+        "index.html",
+        "invoke.html",
+        "lab.html",
+        "ledger.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
+        "scroll/atlas.html",
+        "scroll/editorial.html",
+        "scroll/index.html",
+        "scroll/lexicon.html",
+        "scroll/search.html",
+        "shop.html",
+        "start.html",
+        "systems/archive.html",
+        "systems/frequencies.html",
+        "systems/mind-renewal.html",
+        "systems/recoder.html",
+        "systems/t-7.html",
+        "systems/witness.html",
+        "teach.html",
+        "theory.html",
+        "theory/canon.html",
+        "witness-world.html",
+        "witness.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/episodes.html",
+      "privacyEligibility": "approved-public",
+      "discoverability": {
+        "path": "episodes.html",
+        "inSitemap": true,
+        "inGlobalNav": false,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 2,
+        "pagesWithNavLinkToIt": 0
+      },
+      "issues": []
     },
     {
       "id": "equinox-passage",
@@ -13134,8 +13203,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 76,
-        "pagesWithNavLinkToIt": 76
+        "inboundPages": 77,
+        "pagesWithNavLinkToIt": 77
       },
       "issues": [
         "nav-label-differs-from-title: \"Ethics\" vs \"Ethics & Coherence Law\""
@@ -13201,8 +13270,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 76,
-        "pagesWithNavLinkToIt": 77
+        "inboundPages": 77,
+        "pagesWithNavLinkToIt": 78
       },
       "issues": []
     },
@@ -13248,8 +13317,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 77,
-        "pagesWithNavLinkToIt": 77
+        "inboundPages": 78,
+        "pagesWithNavLinkToIt": 78
       },
       "issues": [
         "nav-label-differs-from-title: \"Genesis Oracle\" vs \"The Genesis Oracle\""
@@ -13317,8 +13386,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 80,
-        "pagesWithNavLinkToIt": 76
+        "inboundPages": 81,
+        "pagesWithNavLinkToIt": 77
       },
       "issues": [
         "nav-label-differs-from-title: \"Glossary\" vs \"Glossary of the Codex\""
@@ -13572,8 +13641,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 76,
-        "pagesWithNavLinkToIt": 77
+        "inboundPages": 77,
+        "pagesWithNavLinkToIt": 78
       },
       "issues": [
         "nav-label-differs-from-title: \"Year Map\" vs \"Systems Hub\""
@@ -13638,8 +13707,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 75,
-        "pagesWithNavLinkToIt": 76
+        "inboundPages": 76,
+        "pagesWithNavLinkToIt": 77
       },
       "issues": [
         "nav-label-differs-from-title: \"Invoke\" vs \"Invocation Lab\""
@@ -13714,8 +13783,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 75,
-        "pagesWithNavLinkToIt": 76
+        "inboundPages": 76,
+        "pagesWithNavLinkToIt": 77
       },
       "issues": []
     },
@@ -13779,8 +13848,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 80,
-        "pagesWithNavLinkToIt": 80
+        "inboundPages": 81,
+        "pagesWithNavLinkToIt": 81
       },
       "issues": []
     },
@@ -13825,7 +13894,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 190,
+        "inboundPages": 191,
         "pagesWithNavLinkToIt": 4
       },
       "issues": []
@@ -13889,8 +13958,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 77,
-        "pagesWithNavLinkToIt": 77
+        "inboundPages": 78,
+        "pagesWithNavLinkToIt": 78
       },
       "issues": []
     },
@@ -14091,8 +14160,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 75,
-        "pagesWithNavLinkToIt": 76
+        "inboundPages": 76,
+        "pagesWithNavLinkToIt": 77
       },
       "issues": [
         "nav-label-differs-from-title: \"Mind Renewal\" vs \"Mind-Renewal Protocol\""
@@ -14164,8 +14233,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 191,
-        "pagesWithNavLinkToIt": 184
+        "inboundPages": 192,
+        "pagesWithNavLinkToIt": 185
       },
       "issues": [
         "nav-label-differs-from-title: \"13 Moons\" vs \"Remnant 13 Moons\""
@@ -14509,8 +14578,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 75,
-        "pagesWithNavLinkToIt": 76
+        "inboundPages": 76,
+        "pagesWithNavLinkToIt": 77
       },
       "issues": [
         "nav-label-differs-from-title: \"Reality Recoder\" vs \"Living Dictionary of Reality\""
@@ -14804,7 +14873,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (215 files)",
+      "title": "tests/ (216 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -19044,8 +19113,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 188,
-        "pagesWithNavLinkToIt": 184
+        "inboundPages": 189,
+        "pagesWithNavLinkToIt": 185
       },
       "issues": []
     },
@@ -19088,8 +19157,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 188,
-        "pagesWithNavLinkToIt": 184
+        "inboundPages": 189,
+        "pagesWithNavLinkToIt": 185
       },
       "issues": []
     },
@@ -19137,8 +19206,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 189,
-        "pagesWithNavLinkToIt": 184
+        "inboundPages": 190,
+        "pagesWithNavLinkToIt": 185
       },
       "issues": [
         "nav-label-differs-from-title: \"Scroll Library\" vs \"Scroll of Fire\""
@@ -19224,8 +19293,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 189,
-        "pagesWithNavLinkToIt": 184
+        "inboundPages": 190,
+        "pagesWithNavLinkToIt": 185
       },
       "issues": [
         "nav-label-differs-from-title: \"Search the Scroll Library\" vs \"Search the Scroll\""
@@ -19358,8 +19427,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 189,
-        "pagesWithNavLinkToIt": 77
+        "inboundPages": 190,
+        "pagesWithNavLinkToIt": 78
       },
       "issues": [
         "nav-label-differs-from-title: \"Artifact Registry\" vs \"Artifact Registry & Shop\""
@@ -19493,8 +19562,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 79,
-        "pagesWithNavLinkToIt": 79
+        "inboundPages": 80,
+        "pagesWithNavLinkToIt": 80
       },
       "issues": []
     },
@@ -19557,8 +19626,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 75,
-        "pagesWithNavLinkToIt": 76
+        "inboundPages": 76,
+        "pagesWithNavLinkToIt": 77
       },
       "issues": [
         "nav-label-differs-from-title: \"Systems Archive\" vs \"Interactive Archive\""
@@ -19623,8 +19692,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 75,
-        "pagesWithNavLinkToIt": 76
+        "inboundPages": 76,
+        "pagesWithNavLinkToIt": 77
       },
       "issues": [
         "nav-label-differs-from-title: \"T-7 Conduit\" vs \"T-7 Resonant Engine\""
@@ -19889,8 +19958,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 75,
-        "pagesWithNavLinkToIt": 76
+        "inboundPages": 76,
+        "pagesWithNavLinkToIt": 77
       },
       "issues": [
         "nav-label-differs-from-title: \"Canon\" vs \"Canon 0–17\""
@@ -20403,8 +20472,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 82,
-        "pagesWithNavLinkToIt": 82
+        "inboundPages": 83,
+        "pagesWithNavLinkToIt": 83
       },
       "issues": [
         "nav-label-differs-from-title: \"Theory\" vs \"Theory Hub\""
@@ -21165,8 +21234,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 81,
-        "pagesWithNavLinkToIt": 79
+        "inboundPages": 82,
+        "pagesWithNavLinkToIt": 80
       },
       "issues": [
         "nav-label-differs-from-title: \"13 Moons Whitepaper\" vs \"Remnant Rollout Whitepaper\""
@@ -21218,8 +21287,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 77,
-        "pagesWithNavLinkToIt": 76
+        "inboundPages": 78,
+        "pagesWithNavLinkToIt": 77
       },
       "issues": [
         "nav-label-differs-from-title: \"Remnant Whitepaper\" vs \"Scroll of Fire · Codex of Reality · Remnant Whitepaper\""
@@ -21286,7 +21355,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 188,
+        "inboundPages": 189,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -21350,8 +21419,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 75,
-        "pagesWithNavLinkToIt": 76
+        "inboundPages": 76,
+        "pagesWithNavLinkToIt": 77
       },
       "issues": [
         "nav-label-differs-from-title: \"Witness System\" vs \"Remnant Witness Ledger\""
@@ -21417,7 +21486,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 188,
+        "inboundPages": 189,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []

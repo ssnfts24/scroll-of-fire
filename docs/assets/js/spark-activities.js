@@ -111,7 +111,9 @@
    * finished films. The skill is the Waymaker skill the episode
    * teaches (bible §11), with its kit mark; episodes the
    * curriculum does not name carry no skill, and their watch
-   * marks none.
+   * marks none. The story spine carries these same marks now
+   * (see deriveEpisodes below): this frozen copy is the fallback
+   * the spine-derived table is pinned against by contract test.
    */
   const EPISODES = Object.freeze([
     {
@@ -235,8 +237,61 @@
     }
   ]);
 
+  let activeEpisodes = EPISODES;
+
   function episodeByChapterId(chapterId) {
-    return EPISODES.find(e => e.chapterId === chapterId) || null;
+    return activeEpisodes.find(e => e.chapterId === chapterId) || null;
+  }
+
+  /*
+   * The spine is the single source (audit F5/C13, November 23,
+   * 2026): docs/assets/data/codex-story.json now carries every
+   * field the frozen table above was kept from — each chapter's
+   * mark (land, Set A Moon name, token), its hum and its skill.
+   * deriveEpisodes folds a loaded spine into this module's
+   * episode shape, purely — no network machinery of any kind is
+   * added here; the story layer, which already loads the spine,
+   * hands it over. useStoryData adopts the folded table when it
+   * covers exactly the chapters this module knows, so a spine
+   * correction reaches the watch machinery with no second
+   * hand-kept copy. Until a spine is handed over — and if one
+   * ever fails to fold — the frozen table stands as the fallback,
+   * and a contract test pins the two identical so they cannot
+   * drift apart unnoticed.
+   */
+  function deriveEpisodes(story) {
+    if (!story || !Array.isArray(story.chapters)) return null;
+    const derived = [];
+    for (const ch of story.chapters) {
+      if (!ch || !ch.id || !ch.mark || !ch.hum) return null;
+      derived.push({
+        chapterId: ch.id,
+        n: ch.n,
+        title: ch.title,
+        land: ch.mark.land,
+        moonName: ch.mark.moonName,
+        token: ch.mark.token,
+        skill: ch.skill
+          ? { n: ch.skill.n, name: ch.skill.name, kitMark: ch.skill.kitMark }
+          : null,
+        hum: {
+          rootHz: ch.hum.rootHz,
+          scale: ch.hum.scale,
+          motifHz: Array.isArray(ch.hum.motifHz) ? [...ch.hum.motifHz] : [],
+          note: ch.hum.note || ""
+        }
+      });
+    }
+    return derived;
+  }
+
+  function useStoryData(story) {
+    const derived = deriveEpisodes(story);
+    if (!derived || derived.length !== EPISODES.length) return false;
+    const known = new Set(EPISODES.map(e => e.chapterId));
+    if (!derived.every(e => known.has(e.chapterId))) return false;
+    activeEpisodes = derived;
+    return true;
   }
 
   /* The spoken form of the distinguisher (bible §12):
@@ -632,6 +687,8 @@
     MAX_RATE,
     COVERAGE_REQUIRED,
     episodeByChapterId,
+    deriveEpisodes,
+    useStoryData,
     distinguisherLine,
     createWatchTracker,
     coordinateForInstant,

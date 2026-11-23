@@ -98,33 +98,33 @@
 
 | Stylesheet | Pages |
 | --- | --- |
-| `docs/assets/css/spark-companion.css` | 189 |
-| `docs/assets/css/living-ui.css` | 149 |
+| `docs/assets/css/spark-companion.css` | 190 |
+| `docs/assets/css/living-ui.css` | 150 |
 | `docs/scripture/assets/scripture.css` | 101 |
-| `docs/assets/css/spark-agent-seat.css` | 78 |
-| `docs/assets/css/codex.css` | 57 |
-| `docs/assets/css/navigation.css` | 45 |
-| `docs/assets/css/social-bridge.css` | 42 |
+| `docs/assets/css/spark-agent-seat.css` | 79 |
+| `docs/assets/css/codex.css` | 59 |
+| `docs/assets/css/navigation.css` | 46 |
+| `docs/assets/css/social-bridge.css` | 43 |
 | `docs/assets/css/living-moon-theme.css` | 36 |
-| `docs/assets/css/animations.css` | 24 |
-| `docs/assets/css/story-layer.css` | 19 |
+| `docs/assets/css/animations.css` | 25 |
+| `docs/assets/css/story-layer.css` | 21 |
 | `docs/theory/equations/assets/css/codex.css` | 19 |
 | `docs/theory/equations/assets/css/navigation.css` | 19 |
 
 | Script | Pages |
 | --- | --- |
-| `docs/assets/js/spark-companion.js` | 189 |
-| `docs/assets/js/spark-presence.js` | 188 |
-| `docs/assets/js/site.js` | 152 |
-| `docs/assets/js/living-ui.js` | 149 |
+| `docs/assets/js/spark-companion.js` | 190 |
+| `docs/assets/js/spark-presence.js` | 189 |
+| `docs/assets/js/site.js` | 153 |
+| `docs/assets/js/living-ui.js` | 150 |
 | `docs/scripture/assets/scripture.js` | 101 |
-| `docs/assets/js/spark-relations.js` | 84 |
-| `docs/assets/js/heaven-sound.js` | 80 |
-| `docs/assets/js/spark-agent-seat.js` | 78 |
+| `docs/assets/js/spark-relations.js` | 85 |
+| `docs/assets/js/heaven-sound.js` | 81 |
+| `docs/assets/js/spark-agent-seat.js` | 79 |
 | `docs/assets/js/spark-3d.js` | 76 |
-| `docs/assets/js/calendar/pattern-calendar-version.js` | 45 |
-| `docs/assets/js/calendar/pattern-calendar-data.js` | 45 |
-| `docs/assets/js/calendar/pattern-calendar-format.js` | 45 |
+| `docs/assets/js/calendar/pattern-calendar-version.js` | 46 |
+| `docs/assets/js/calendar/pattern-calendar-data.js` | 46 |
+| `docs/assets/js/calendar/pattern-calendar-format.js` | 46 |
 
 ## Protected systems (do not modify)
 
