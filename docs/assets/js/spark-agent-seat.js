@@ -340,12 +340,30 @@
         document.head.appendChild(script);
       }
 
+      /* The tips layer (spark-tips.js) lazy-loads the same way,
+       * on its own: the Spark's small earned noticings, composed
+       * from the keeper's record on this device. It attaches
+       * through SparkAgentSeat.attach like the mind does, and
+       * if it cannot load, the seat is exactly as it was. */
+      let tipsRequested = false;
+      function ensureTips() {
+        if (tipsRequested || typeof SparkTips !== "undefined") return;
+        tipsRequested = true;
+        const tag = document.querySelector('script[src*="spark-agent-seat.js"]');
+        if (!tag) return;
+        const script = document.createElement("script");
+        script.src = tag.getAttribute("src").replace(/spark-agent-seat\.js/, "spark-tips.js");
+        script.defer = true;
+        document.head.appendChild(script);
+      }
+
       button.addEventListener("click", () => {
         const opening = panel.hidden;
         panel.hidden = !opening;
         button.setAttribute("aria-expanded", String(opening));
         if (opening) {
           ensureMind();
+          ensureTips();
           if (!log.childElementCount) {
             say("spark", `Here I am — ${name}, on this page with you. Ask me about today, about where you are standing, or anything deeper if the door is open.`);
           }

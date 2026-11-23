@@ -19,30 +19,19 @@ The compilation, commentary, arrangement, and original material produced by Aaro
 
 ---
 
-1 ) License for Creative Works (CC BY-NC 4.0)
+1 ) License for Creative Works (All Rights Reserved)
 
-All non-code content (text, images, diagrams, artwork, PDFs, designs, audio, video, and similar materials) created or compiled by Aaron Paul Laird within this project are licensed under
+All non-code content (text, images, diagrams, artwork, PDFs, designs, audio, video, and similar materials) created or compiled by Aaron Paul Laird within this project are
 
-Creative Commons Attribution–NonCommercial 4.0 International (CC BY-NC 4.0).
+© Aaron Paul Laird. All rights reserved.
 
-1.1 You Are Free To
+No permission is granted to copy, redistribute, adapt, remix, translate, or otherwise reuse this material, in whole or in part, except:
 
-Share — copy and redistribute in any medium or format.
+(a) as Aaron Paul Laird grants in a separate written license (see §7), or
 
-Adapt — remix, transform, and build upon the material.
+(b) under statutory exceptions such as fair use, which this notice does not affect.
 
-
-1.2 You Must
-
-Attribute properly. Recommended form:
-
-> “Scroll of Fire — Codex of Reality © 2025 Aaron Paul Laird — Scribe of Circuits (CC BY-NC 4.0). Changes made.”
-
-
-
-Use Non-Commercially Only. No sale, resale, paywalled, or monetized use.
-
-Add No Additional Restrictions. No DRM or legal terms limiting others’ rights under this license.
+Effective date and earlier copies: this all-rights-reserved notice applies from November 23, 2026 forward. Copies of this material obtained before that date were licensed under Creative Commons Attribution–NonCommercial 4.0 International (CC BY-NC 4.0); that grant is permanent for those copies and is not revoked by this change. This notice governs the work from now on.
 
 
 
@@ -68,29 +57,27 @@ Such content is used or cited here for documentation, study, and commentary purp
 
 3 ) Permitted and Prohibited Uses
 
-✅ Permitted: educational, artistic, research, and spiritual uses; non-commercial redistribution with full credit.
-🚫 Prohibited: commercial sale, resale, tokenization, NFT minting, advertising use, or other monetized redistribution without written permission from Aaron Paul Laird.
+✅ Permitted: reading and studying the work as published here; uses allowed by law, including fair use and other statutory exceptions; any further use Aaron Paul Laird grants in writing.
+🚫 Prohibited: copying, redistribution, adaptation, commercial sale, resale, tokenization, NFT minting, advertising use, or any other reuse without written permission from Aaron Paul Laird.
 
 
 ---
 
-4 ) Attribution Format & Placement
+4 ) Attribution & Credit
 
-Include these elements when crediting:
+When Aaron Paul Laird grants permission for a use, and when crediting the work in commentary, citation, or study, include these elements:
 
 Title/Project — Scroll of Fire — Codex of Reality
 
 Author — © 2025 Aaron Paul Laird — Scribe of Circuits
 
-License — CC BY-NC 4.0
-
-Change Notice (if modified)
+A note that the work is used with permission, where that applies
 
 Optional link back to this repository.
 
 
 Short form:
-© 2025 Aaron Paul Laird — Scribe of Circuits | CC BY-NC 4.0 | Non-Commercial Use Only
+© 2025 Aaron Paul Laird — Scribe of Circuits | All Rights Reserved
 
 
 ---
@@ -123,7 +110,7 @@ No response = no permission.
 
 8 ) Contribution Agreement
 
-By submitting Pull Requests or contributed works to this repository, you affirm that you own the rights or have permission to contribute and you license your contribution under the same terms (CC BY-NC 4.0 for creative works, and MIT for any code if present).
+By submitting Pull Requests or contributed works to this repository, you affirm that you own the rights or have permission to contribute. Contributions remain the contributor’s own property (see §2); by contributing, you grant Aaron Paul Laird permission to include and publish the contribution as part of this project. Contributions do not change the all-rights-reserved status of Aaron Paul Laird’s own works.
 
 
 ---
@@ -136,16 +123,14 @@ This license does not affect moral rights, fair-use rights, or other legal excep
 
 ---
 
-10 ) Plain-Language Reference of CC BY-NC 4.0
+10 ) Plain-Language Reference
 
-You are free to share and adapt this material as long as you give appropriate credit and do not use it for commercial purposes.
-You may not apply additional legal restrictions or technological measures to the work.
-No warranties are given. For public-domain elements or uses under statutory exceptions, this license does not apply.
+The work in this repository belongs to its authors. Aaron Paul Laird’s material is all rights reserved: ask before copying, adapting, or reusing it. Copies obtained before November 23, 2026 keep the CC BY-NC 4.0 license they came with — that grant stands for those copies. Third-party works remain their owners’. No warranties are given. Statutory exceptions (such as fair use) are not affected.
 
 
 ---
 
-License Identifier: CC-BY-NC-4.0
+License Identifier: All Rights Reserved (works of Aaron Paul Laird, from November 23, 2026; CC BY-NC 4.0 continues to govern copies obtained before that date)
 Author: Aaron Paul Laird — Scribe of Circuits
 Acknowledged Contributor: Christopher W. Copeland (C077UPTF1L3) and all other named authors retain ownership of their own works.
 Compilation and Original Material © 2025 Aaron Paul Laird.

@@ -1,0 +1,157 @@
+/* Test Layers on the Sphere — Salmon + Kyoto (Phase C).
+ * Seated in the Sphere's caption deck under the sky dome.
+ * Colours follow the caption's own furniture: ivory words on
+ * the instrument's deep blue. The layer colours are the
+ * programme's own families — salmon in the Water family's deep
+ * blue, Kyoto in the Living family's green — and neither is
+ * gold: gold is his record alone. */
+
+.sphere-test-layers {
+  margin: 0.65rem auto 0;
+  max-width: 340px;
+  text-align: center;
+}
+
+.sphere-test-layers-head {
+  margin-bottom: 0.35rem;
+}
+
+.sphere-test-layers-title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #e8e2d0;
+  text-align: left;
+}
+
+.sphere-test-layers-note {
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: rgba(232, 226, 208, 0.72);
+  text-align: left;
+}
+
+.sphere-test-layers-switches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0.4rem 0 0.2rem;
+}
+
+.sphere-test-layer-btn {
+  appearance: none;
+  border: 1px solid rgba(232, 226, 208, 0.35);
+  background: rgba(16, 26, 51, 0.6);
+  color: #e8e2d0;
+  border-radius: 999px;
+  padding: 0.18rem 0.65rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.sphere-test-layer-btn[data-test-layer-btn="salmon"][aria-pressed="true"] {
+  background: #2e6fb7;
+  border-color: #6ea8dc;
+  color: #f4f8ff;
+  font-weight: 600;
+}
+
+.sphere-test-layer-btn[data-test-layer-btn="kyoto"][aria-pressed="true"] {
+  background: #5da24a;
+  border-color: #8fce6e;
+  color: #f6fff2;
+  font-weight: 600;
+}
+
+.sphere-test-layers-budget {
+  margin: 0.25rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: #ffd98f;
+  text-align: left;
+}
+
+.sphere-test-layer {
+  margin-top: 0.55rem;
+  text-align: left;
+}
+
+.sphere-test-layer-tag {
+  margin: 0 0 0.35rem;
+  padding-left: 0.5rem;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: rgba(232, 226, 208, 0.78);
+}
+
+.sphere-test-layer-salmon .sphere-test-layer-tag {
+  border-left: 3px solid #2e6fb7;
+}
+
+.sphere-test-layer-kyoto .sphere-test-layer-tag {
+  border-left: 3px solid #5da24a;
+}
+
+.sphere-test-species {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-bottom: 0.3rem;
+}
+
+.sphere-test-species-btn {
+  appearance: none;
+  border: 1px solid rgba(110, 168, 220, 0.45);
+  background: rgba(16, 26, 51, 0.6);
+  color: #cfe2f6;
+  border-radius: 999px;
+  padding: 0.14rem 0.55rem;
+  font-size: 0.76rem;
+  cursor: pointer;
+}
+
+.sphere-test-species-btn[aria-pressed="true"] {
+  background: #6ea8dc;
+  border-color: #6ea8dc;
+  color: #101a33;
+  font-weight: 600;
+}
+
+.sphere-test-layer-line {
+  margin: 0.25rem 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: #e8e2d0;
+}
+
+.sphere-test-layer-strong {
+  font-weight: 600;
+}
+
+.sphere-test-salmon-svg,
+.sphere-test-kyoto-svg,
+.sphere-test-dayline-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.sphere-test-axis {
+  font-size: 8px;
+  fill: rgba(232, 226, 208, 0.6);
+}
+
+.sphere-test-dayline-year {
+  font-size: 8.5px;
+  fill: rgba(232, 226, 208, 0.75);
+  text-anchor: middle;
+}
+
+.sphere-test-dayline-list {
+  margin: 0.1rem 0 0;
+  padding-left: 1.05rem;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: rgba(232, 226, 208, 0.85);
+}

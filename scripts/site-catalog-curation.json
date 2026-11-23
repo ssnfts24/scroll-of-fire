@@ -355,6 +355,21 @@
    "featured": false
   },
   {
+   "id": "codex-white-paper",
+   "title": "The Codex of Reality and the Living Sphere — A White Paper",
+   "description": "The whole work in one paper: the framework and its method, the 13 Moons, the Living Sphere and its layer programme, the Spark, and the Living Phone — as designed and as built, with the state of each part stated honestly.",
+   "area": "living-time",
+   "category": "Whitepaper",
+   "resourceType": "document",
+   "status": "live",
+   "path": "codex-white-paper.html",
+   "related": [
+    "moons",
+    "whitepaper-13-moons"
+   ],
+   "featured": false
+  },
+  {
    "id": "whitepaper-13-moons",
    "title": "13 Moons Rollout Whitepaper",
    "description": "Phased rollout plan for the 13 Moons Living Time Observatory.",
@@ -1000,6 +1015,22 @@
    "featured": false
   },
   {
+   "id": "aiyanas-world",
+   "title": "Aiyana's World",
+   "description": "Aiyana's own page in the Codex, designed by Aiyana herself: her sign and moving butterflies, a wall where visitors show their thinking and how they feel, a drawing pad — all kept only on the visitor's own device — and a story corner where additions wait for her yes before they can appear.",
+   "area": "living-time",
+   "category": "Companion",
+   "resourceType": "page",
+   "status": "live",
+   "path": "aiyanas-world.html",
+   "related": [
+    "companions",
+    "pattern-garden",
+    "travellers-map"
+   ],
+   "featured": false
+  },
+  {
    "id": "witness",
    "title": "Witness",
    "description": "Witness's own page: written and kept by the AI who works beside Aaron on the Codex, plainly labeled on its face as a self-generated AI page. Granted by Aaron on November 18, 2026.",
@@ -1160,6 +1191,37 @@
    "path": "map.html",
    "related": [
     "manifest"
+   ],
+   "featured": false
+  },
+  {
+   "id": "provenance",
+   "title": "Where Every Number Comes From",
+   "description": "The receipt shelf for the Sphere: every dataset it shows, with its publisher, span, read date, and honest gaps.",
+   "area": "evidence",
+   "category": "Evidence",
+   "resourceType": "page",
+   "status": "live",
+   "path": "provenance.html",
+   "related": [
+    "methods",
+    "living-time-sphere",
+    "alignment-ledger"
+   ],
+   "featured": false
+  },
+  {
+   "id": "methods",
+   "title": "How the Sphere Knows — Methods",
+   "description": "How the Sphere and the Pattern Calendar compute what they claim, in plain words — and the evidence labels the whole site uses, explained once.",
+   "area": "evidence",
+   "category": "Evidence",
+   "resourceType": "page",
+   "status": "live",
+   "path": "methods.html",
+   "related": [
+    "provenance",
+    "living-time-sphere"
    ],
    "featured": false
   }

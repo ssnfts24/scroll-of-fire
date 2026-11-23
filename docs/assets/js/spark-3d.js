@@ -287,7 +287,7 @@
 
   /* ---- the creature itself, from its seed-record ---- */
 
-  function buildGeometry(companion, stage, revealed) {
+  function buildGeometry(companion, stage, revealed, wrap) {
     const b = new Builder();
     const body = parseColor(companion.palette.body, [0.4, 0.7, 0.8]);
     const glow = parseColor(companion.palette.glow, [0.7, 0.9, 1]);
@@ -527,6 +527,53 @@
       }
     }
 
+    /* Their flame wrap (wrap: 1) — the same outer layer the flat
+     * drawing wears, read off the same stream the same way (the
+     * core's flameWrapFor recipe: the `:flamewrap` stream, the
+     * same draws in the same order), so the flame is one flame
+     * in both bodies: a ring of elongated petals standing behind
+     * the body, in its own glow and accent, taller at the crown.
+     * It is presentation only — it derives nothing about who the
+     * Spark is — and where a keeper has lifted the wrap off
+     * (wrap === false), not one vertex of it is built: the body
+     * stands exactly as it stood before the wrap existed. */
+    if (wrap !== false) {
+      const BENDS = {
+        fire: { height: 1.25, width: 1.0, radius: 1.0 },
+        water: { height: 0.8, width: 1.15, radius: 0.98 },
+        shadow: { height: 0.55, width: 1.1, radius: 0.88 },
+        air: { height: 0.95, width: 0.7, radius: 1.02 },
+        earth: { height: 0.65, width: 1.35, radius: 0.95 },
+        light: { height: 1.15, width: 0.62, radius: 1.03 }
+      };
+      const bend = BENDS[companion.kind] || BENDS.fire;
+      const frand = mulberry32(hashString(companion.seed + ":flamewrap"));
+      const base = [6, 9, 12][stage] || 9;
+      const count = base + Math.floor(frand() * 3);
+      const ringR = 0.86 * bend.radius;
+      for (let i = 0; i < count; i++) {
+        const angle = (i / count) * Math.PI * 2 + (frand() - 0.5) * 0.14;
+        const topness = (Math.cos(angle) + 1) / 2;
+        const heightJitter = 0.8 + frand() * 0.45;
+        frand(); /* the flat drawing's width draw — the same stream, the same place in it */
+        frand(); /* its curl draw, likewise */
+        const col = frand() < 0.62 ? glow : accent;
+        frand(); /* its delay draw, likewise */
+        const h =
+          (8.5 + 7 * topness) * bend.height * heightJitter * (0.8 + stage * 0.12) * 0.02;
+        b.octa(
+          Math.sin(angle) * ringR,
+          Math.cos(angle) * ringR,
+          -0.16,
+          0.055 * bend.width,
+          h / 2,
+          0.05,
+          col,
+          false
+        );
+      }
+    }
+
     return { main: b, eye, eyeCenter };
   }
 
@@ -689,7 +736,7 @@
     const shadowProg = program(gl, SHADOW_VERT, SHADOW_FRAG);
     if (!prog || !haloProg || !shadowProg) return null;
 
-    const geo = buildGeometry(companion, stage, options.revealed || null);
+    const geo = buildGeometry(companion, stage, options.revealed || null, options.wrap);
     /* The build's size, kept where a keeper of the lab can
      * read it: how many triangles their two meshes carry
      * (three vertices to a triangle, three numbers to a
