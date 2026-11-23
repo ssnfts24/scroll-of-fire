@@ -539,6 +539,6 @@ test("Temporal Worlds: entry, the years line, and pattern lighting on the real p
   } finally {
     proc.kill("SIGKILL");
     server.close();
-    fs.rmSync(profile, { recursive: true, force: true });
+    fs.rmSync(profile, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
   }
 });
