@@ -1671,9 +1671,9 @@
      "area": "systems"
     },
     {
-     "path": "scripture/index.html",
-     "title": "Genesis & Exodus Scripture",
-     "area": "scroll-scripture"
+     "path": "witness.html",
+     "title": "Witness",
+     "area": "artifacts"
     }
    ],
    "in": [
@@ -1688,7 +1688,7 @@
      "area": "artifacts"
     }
    ],
-   "outTotal": 23,
+   "outTotal": 24,
    "inTotal": 2
   },
   "invoke.html": {
@@ -18055,13 +18055,18 @@
      "area": "archive"
     },
     {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    },
+    {
      "path": "witness-world.html",
      "title": "The Witness World",
      "area": "artifacts"
     }
    ],
    "outTotal": 2,
-   "inTotal": 2
+   "inTotal": 3
   }
  }
 }
