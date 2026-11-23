@@ -244,7 +244,12 @@ test("polish: the days stand stronger — ticks, nodes, markers, numerals", () =
   assert.ok(renderer.includes("size:        _isMobileWidth() ? 0.032 : 0.026,"), "the day nodes stand larger");
   assert.ok(renderer.includes("new THREE.SphereGeometry(0.03, 8, 8)"), "today's marker stands larger");
   assert.ok(renderer.includes("new THREE.SphereGeometry(0.034, 8, 8)"), "the shown day's marker stands larger");
-  assert.ok(shellCss.includes('font-size: 0.66rem !important;'), "phone day numerals are no longer 8px");
+  // Visibility pass (Nov 22, 2026): the day numerals moved to the
+  // band-sized holographic plates — 0.68rem at Moon View, 0.52rem
+  // in the far band, 0.74rem near/detail. Every band stays above
+  // the old 8px engraving this line first pinned against.
+  assert.ok(shellCss.includes('font-size: 0.68rem !important;'), "phone day numerals are no longer 8px");
+  assert.ok(shellCss.includes('font-size: 0.52rem !important;'), "the far band keeps its numerals above 8px too");
 });
 
 test("polish: the environment is asked for once, on open, through the browser's own flow", () => {
@@ -255,6 +260,92 @@ test("polish: the environment is asked for once, on open, through the browser's 
   assert.ok(handoff.includes("SofEnvironmentAuthority"), "the authority fetches the real providers");
   assert.ok(handoff.includes("__sofSkyLocationRefused"), "a refusal is remembered for the honest line");
   assert.ok(handoff.includes("Location is off, so the live sky line can't fill in."), "the refused line is one plain sentence");
+});
+
+/* ── Day Details sheet-scroll fix (Aaron, Nov 22, 2026, 22:43
+ * PST — his word on PR #243) ──────────────────────────────────
+ * His phone: after using the sheet, Day Details "not showing".
+ * The sheet's scroll survives close/reopen and the old
+ * focusSheet focused the asked-for room with preventScroll, so
+ * the room opened thousands of pixels above the screen. These
+ * tests extract the real focusSheet + bringRoomToSheetTop with
+ * stubbed sheet elements (the B7.60.1 harness technique) and
+ * prove the open-after-deep-scroll behaviour the earlier
+ * fresh-sheet-only check missed. */
+
+function loadSheetFocus() {
+  const start = handoff.indexOf("function bringRoomToSheetTop");
+  assert.ok(start > -1, "bringRoomToSheetTop present");
+  const end = handoff.indexOf("function openRooms", start);
+  assert.ok(end > start, "openRooms follows focusSheet");
+  const chunk = handoff.slice(start, end);
+  const factory = new Function(
+    "sidebar", "closeButton", "window",
+    `${chunk}\nreturn { bringRoomToSheetTop, focusSheet };`
+  );
+  // A sheet standing at viewport top 100, its pinned bar 48 tall.
+  const bar = { getBoundingClientRect: () => ({ top: 100, height: 48 }) };
+  const sidebar = {
+    scrollTop: 0,
+    parentElement: null,
+    getBoundingClientRect: () => ({ top: 100, height: 815 }),
+    querySelector: (sel) => (sel === ".sphere-sheet-bar" ? bar : null),
+    contains(node) {
+      for (let n = node; n; n = n.parentElement) if (n === sidebar) return true;
+      return false;
+    },
+  };
+  const el = (parent, rectTop) => ({
+    parentElement: parent,
+    isConnected: true,
+    focusedWith: null,
+    getBoundingClientRect: () => ({ top: rectTop, height: 40 }),
+    focus(opts) { this.focusedWith = opts; },
+  });
+  const closeButton = el(sidebar, 110);
+  const dayDetails = el(sidebar, 0); // its rect is set per case
+  const talkRoom = el(sidebar, 0);
+  const talkInput = el(talkRoom, 0);
+  const api = factory(sidebar, closeButton, {
+    requestAnimationFrame: (fn) => fn(),
+  });
+  return { api, sidebar, closeButton, dayDetails, talkRoom, talkInput };
+}
+
+test("sheet-scroll fix: openRooms routes every targeted open through focusSheet", () => {
+  assert.ok(handoff.includes("bringRoomToSheetTop(target);"), "focusSheet stands the room at the top in the same frame");
+  assert.ok(handoff.includes("focus({ preventScroll: true })"), "the focus itself still never scrolls");
+});
+
+test("sheet-scroll fix: reopening Day Details after a deep scroll lands on the readout", () => {
+  const s = loadSheetFocus();
+  // Sheet scrolled 6000 deep; Day Details (content offset 230)
+  // stands 5770px above the sheet's top edge.
+  s.sidebar.scrollTop = 6000;
+  s.dayDetails.getBoundingClientRect = () => ({ top: 100 - 5770, height: 900 });
+  s.api.focusSheet(s.dayDetails);
+  assert.equal(s.sidebar.scrollTop, 230 - 48, "the room stands at the sheet's top, under the pinned bar");
+  assert.deepEqual(s.dayDetails.focusedWith, { preventScroll: true }, "focus still goes to the room, without scrolling");
+});
+
+test("sheet-scroll fix: a target inside a room stands its room at the top, focus unchanged", () => {
+  const s = loadSheetFocus();
+  // The Spark talk room (content offset 10000), with the sheet
+  // scrolled 300px into it: the room's top stands 300px above
+  // the sheet's top edge.
+  s.sidebar.scrollTop = 10300;
+  s.talkRoom.getBoundingClientRect = () => ({ top: 100 - 300, height: 700 });
+  s.api.focusSheet(s.talkInput);
+  assert.equal(s.sidebar.scrollTop, 10000 - 48, "the room, not the input, is what stands at the top");
+  assert.deepEqual(s.talkInput.focusedWith, { preventScroll: true }, "focus still goes to the input itself");
+});
+
+test("sheet-scroll fix: an untargeted open never moves the sheet's scroll", () => {
+  const s = loadSheetFocus();
+  s.sidebar.scrollTop = 6000;
+  s.api.focusSheet(null);
+  assert.equal(s.sidebar.scrollTop, 6000, "no asked-for room, no scroll change");
+  assert.deepEqual(s.closeButton.focusedWith, { preventScroll: true }, "focus still falls back to the close button");
 });
 
 test("polish: the seasons show — turns named on the face, the current season in a line", () => {

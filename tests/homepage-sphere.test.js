@@ -469,6 +469,78 @@ test("no R1.7 protected file is touched by this branch", () => {
   const carriesSpherefix = changed.has(
     "docs/assets/js/sphere-spark.js"
   );
+  /*
+   * Pattern Quests declaration (Nov 23, 2026 — Aaron's go-ahead
+   * on the play redesign's build order: the garden completed and
+   * the quest frame's rung 1 built over the Sphere's three
+   * games). This change set declares itself by carrying its
+   * signature file (the quest-frame module, which lives outside
+   * the protected directories), and its declared set names
+   * exactly one protected path: the Sphere page, changed by
+   * links and tags only — one script tag for the quest frame,
+   * set between the record helpers and the play room in the
+   * neighbourhood PR #159 opened, and cache-version bumps on
+   * the play room's script tag and the play stylesheet link.
+   * The quest module, the play room, and both garden files live
+   * outside the protected directories; no geometry, rendering,
+   * camera, motion, selection, label, or calendar file is
+   * touched. Every other protected path still fails this test
+   * loudly.
+   */
+  const questsDeclaredProtected = new Set([
+    "docs/living-time-sphere.html"
+  ]);
+  const carriesQuests = changed.has(
+    "docs/assets/js/pattern-quests.js"
+  );
+  /*
+   * Sphere deep-fix declaration (Nov 22, 2026 — Aaron's direct
+   * order from his phone: facing Moon 13 dead centre, none of its
+   * day numbers appeared; "it needs to move and work perfect and
+   * professionally"; zooming into a day should open that day's
+   * world). This change set declares itself by carrying its
+   * signature file (the armillary stylesheet, outside the protected
+   * directories, which carries the zoom-stage styling), and its
+   * declared set names exactly the protected paths it touches,
+   * each flagged in the PR with regression proof:
+   *   - the label manager (the faced Moon is exempt from the
+   *     context-quieting screen-X aperture, reads at full strength
+   *     in the Moon View band, and discloses its whole 4×7 face at
+   *     Year View; one per-candidate allocation hoisted out of the
+   *     per-pass loop — no label text, no calendar reading, and no
+   *     disclosure-window changes);
+   *   - the camera (a release glide from the drag's own velocity
+   *     and eased wheel zoom — motion feel only; drag, pinch, pan,
+   *     transitions, and drift semantics otherwise unchanged);
+   *   - the day-zoom module (the staged zoom reveal named for the
+   *     Living Sphere Evolution directive — Day Approach, Living
+   *     Day, Immersive Day — reading the same one planner record;
+   *     the module is extended, not replaced);
+   *   - the renderer (ONE measurement corrected: the calendar
+   *     disclosure sampled each Moon's "midpoint" from a
+   *     column-1 day, which returns the sector's start angle —
+   *     half a sector from the centre of the grid the keeper
+   *     sees — so a centred Moon could be disclosed as its
+   *     neighbour; it now measures the sector-centre angle from
+   *     the sector's first and last days. No geometry, picking,
+   *     or calendar data changes; the disclosure's window,
+   *     half-window, and key are otherwise untouched);
+   *   - the page (cache-version bumps on the changed assets only).
+   * The calendar truth core (SOFTemporalCursor → PatternCalendar →
+   * Canonical Living State) is byte-untouched, proven by the
+   * canonical fixtures. Every other protected path still fails
+   * this test loudly.
+   */
+  const deepfixDeclaredProtected = new Set([
+    "docs/living-time-sphere.html",
+    "docs/assets/js/sphere/living-time-sphere-label-manager.js",
+    "docs/assets/js/sphere/living-time-sphere-camera.js",
+    "docs/assets/js/sphere/living-time-sphere-day-zoom.js",
+    "docs/assets/js/sphere/living-time-sphere-renderer-3d.js"
+  ]);
+  const carriesDeepfix = changed.has(
+    "docs/assets/css/sphere-armillary.css"
+  );
   for (const file of changed) {
     if (!protectedPaths.has(file)) continue;
     assert.ok(
@@ -478,7 +550,9 @@ test("no R1.7 protected file is touched by this branch", () => {
         (carriesAmbient && ambientDeclaredProtected.has(file)) ||
         (carriesRebuild && rebuildDeclaredProtected.has(file)) ||
         (carriesArmillary && armillaryDeclaredProtected.has(file)) ||
-        (carriesSpherefix && spherefixDeclaredProtected.has(file)),
+        (carriesSpherefix && spherefixDeclaredProtected.has(file)) ||
+        (carriesQuests && questsDeclaredProtected.has(file)) ||
+        (carriesDeepfix && deepfixDeclaredProtected.has(file)),
       `R1.7 protected file changed: ${file}`
     );
   }

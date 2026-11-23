@@ -648,7 +648,7 @@
      "area": "systems"
     }
    ],
-   "outTotal": 65,
+   "outTotal": 64,
    "inTotal": 11
   },
   "codex-guide.html": {
@@ -690,25 +690,6 @@
    ],
    "outTotal": 3,
    "inTotal": 3
-  },
-  "codex-white-paper.html": {
-   "title": "The Codex of Reality and the Living Sphere — A White Paper",
-   "area": "living-time",
-   "out": [],
-   "in": [
-    {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
-    },
-    {
-     "path": "index.html",
-     "title": "Codex of Reality",
-     "area": "codex"
-    }
-   ],
-   "outTotal": 0,
-   "inTotal": 2
   },
   "companions.html": {
    "title": "Companions",
@@ -1127,6 +1108,11 @@
      "area": "archive"
     },
     {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    },
+    {
      "path": "practices.html",
      "title": "Practices — the Exercises Wing · Remnant Lab",
      "area": "systems"
@@ -1143,7 +1129,7 @@
     }
    ],
    "outTotal": 4,
-   "inTotal": 4
+   "inTotal": 5
   },
   "genesis-oracle.html": {
    "title": "The Genesis Oracle — Seal of Becoming",
@@ -1680,14 +1666,14 @@
      "area": "archive"
     },
     {
+     "path": "garden.html",
+     "title": "The Pattern Garden — the Garden · Remnant Lab",
+     "area": "systems"
+    },
+    {
      "path": "witness.html",
      "title": "Witness",
      "area": "artifacts"
-    },
-    {
-     "path": "codex-white-paper.html",
-     "title": "The Codex of Reality and the Living Sphere — A White Paper",
-     "area": "living-time"
     }
    ],
    "in": [
