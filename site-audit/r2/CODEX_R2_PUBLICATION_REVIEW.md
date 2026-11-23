@@ -2,7 +2,7 @@
 
 "Unlinked does not mean private." Everything under `docs/` is deployed (Netlify `publish = "docs"`, no build command).
 
-## Deployed files that need an explicit decision (70)
+## Deployed files that need an explicit decision (71)
 
 | Path | Eligibility | What it is |
 | --- | --- | --- |
@@ -48,6 +48,7 @@
 | `docs/development/LIVING-INTERFACE-ARCHITECTURE-V4-PLAN.md` | restricted-review | Engineering report or specification under the publish tree |
 | `docs/development/LIVING-SPHERE-EVOLUTION-PHASE-A-ARCHITECTURE.md` | restricted-review | Engineering report or specification under the publish tree |
 | `docs/development/LIVING-SPHERE-EVOLUTION-PHASE-A-VISUAL-SPEC.md` | restricted-review | Engineering report or specification under the publish tree |
+| `docs/development/LIVING-SPHERE-EVOLUTION-PHASE-C-SKY-ENGINE.md` | restricted-review | Engineering report or specification under the publish tree |
 | `docs/development/R1.7-PROTECTED-MANIFEST.md` | restricted-review | Engineering report or specification under the publish tree |
 | `docs/development/TEMPORAL-AUTHORITY-CONTRACT.md` | restricted-review | Engineering report or specification under the publish tree |
 | `docs/development/living-sphere-evolution-opening.md` | restricted-review | Engineering report or specification under the publish tree |
@@ -86,6 +87,7 @@ Automated scan of deployed Markdown, TXT, HTML, JSON and JS (excluding Scroll Li
 | Path | E-mail addresses | Phone-pattern hits |
 | --- | --- | --- |
 | `docs/about-aaron.html` | codexofrealityshop@gmail.com | — |
+| `docs/assets/js/astronomy/sky-engine.js` | — | 4 |
 | `docs/assets/search/pages.json` | codexofrealityshop@gmail.com | 1 |
 | `docs/index.html` | codexofrealityshop@gmail.com | — |
 | `docs/invoke.html` | friend@node.org, team@example.com | — |

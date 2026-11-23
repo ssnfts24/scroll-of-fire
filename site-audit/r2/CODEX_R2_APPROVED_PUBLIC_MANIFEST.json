@@ -400,6 +400,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/css/sphere-sky-dome.css",
+      "sha256": "ede221623737dd45181e6e094a90844cbe09cebed6d72028b1fe428285eb17f0",
+      "publicUrl": "https://codexofreality.org/assets/css/sphere-sky-dome.css",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/css/sphere-spark.css",
       "sha256": "f61a492639043fe188bcfe7e07601aef16a759f367acc03d94a0cea950979633",
       "publicUrl": "https://codexofreality.org/assets/css/sphere-spark.css",
@@ -485,7 +491,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "f7070b719dcab139ff94ff0664dbe2b7eb7508dfb8f4b67b1651ce5ae9ccf382",
+      "sha256": "4f215801cf026a5f46a51068c8ad1cb461f334c8279a3515421083b8dbc6aaf3",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -1684,6 +1690,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/js/astronomy/bright-stars.js",
+      "sha256": "52cfb4862ceafb52036a89c5008b1387d2dd624403b95e23508b9540e94b11ba",
+      "publicUrl": "https://codexofreality.org/assets/js/astronomy/bright-stars.js",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/js/astronomy/equinox-engine.js",
       "sha256": "06c2df08bdc1ef390532bbf409516e73aed1a50f4982690ef3d2df878bd580aa",
       "publicUrl": "https://codexofreality.org/assets/js/astronomy/equinox-engine.js",
@@ -1699,6 +1711,12 @@
       "path": "docs/assets/js/astronomy/lunar-at-equinox.js",
       "sha256": "193d4c94a84015b4cafab6b0c9fc6852802f7084c9625ea67c16ee2f6c4e7069",
       "publicUrl": "https://codexofreality.org/assets/js/astronomy/lunar-at-equinox.js",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/js/astronomy/sky-engine.js",
+      "sha256": "9303878a3a51293bcd7e3d35ea049914ce4d5b7a4beb7acc01e4337d583e9678",
+      "publicUrl": "https://codexofreality.org/assets/js/astronomy/sky-engine.js",
       "status": "operational"
     },
     {
@@ -2507,13 +2525,13 @@
     },
     {
       "path": "docs/assets/js/sphere-armillary.js",
-      "sha256": "3dbe6cc151a3cf144d65528ec894143826d65a2aa266c0c8b9c319cbfcc4a010",
+      "sha256": "130366a5171c8c9e10511460c3152da3861f94d885c202d868440554c2b69718",
       "publicUrl": "https://codexofreality.org/assets/js/sphere-armillary.js",
       "status": "operational"
     },
     {
       "path": "docs/assets/js/sphere-companion-layer.js",
-      "sha256": "3b5525186e113de4a37e6793010affc4deb9b3807f4328f53e2e780872e991fd",
+      "sha256": "86de514fcd77410fd952fd13f8fc0ccb5d8aa7be9b9b8af84529e4239c570ae9",
       "publicUrl": "https://codexofreality.org/assets/js/sphere-companion-layer.js",
       "status": "operational"
     },
@@ -2569,6 +2587,12 @@
       "path": "docs/assets/js/sphere-rebuild.js",
       "sha256": "47ec6fa9735ca989c9a314d7128f18407f53e33ed32b8915ba27eb899da23bec",
       "publicUrl": "https://codexofreality.org/assets/js/sphere-rebuild.js",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/js/sphere-sky-layer.js",
+      "sha256": "618aaa2206b375f5a64619edfca420b2965fac22f301f05a575de81f4d7dd3ec",
+      "publicUrl": "https://codexofreality.org/assets/js/sphere-sky-layer.js",
       "status": "operational"
     },
     {
@@ -11054,6 +11078,12 @@
     {
       "path": "docs/development/LIVING-SPHERE-EVOLUTION-PHASE-A-VISUAL-SPEC.md",
       "publicUrl": "https://codexofreality.org/development/LIVING-SPHERE-EVOLUTION-PHASE-A-VISUAL-SPEC.md",
+      "eligibility": "restricted-review",
+      "reason": "Engineering report or specification under the publish tree"
+    },
+    {
+      "path": "docs/development/LIVING-SPHERE-EVOLUTION-PHASE-C-SKY-ENGINE.md",
+      "publicUrl": "https://codexofreality.org/development/LIVING-SPHERE-EVOLUTION-PHASE-C-SKY-ENGINE.md",
       "eligibility": "restricted-review",
       "reason": "Engineering report or specification under the publish tree"
     },
