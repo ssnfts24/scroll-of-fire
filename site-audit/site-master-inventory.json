@@ -3,14 +3,14 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 481,
+    "resources": 482,
     "publicHtmlPages": 181,
     "catalogEntries": 73,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 26,
+      "not-linked-directly-from-homepage": 25,
       "nav-label-differs-from-title": 24,
       "no-global-navigation": 1,
-      "deployed-but-unlinked": 60,
+      "deployed-but-unlinked": 61,
       "unreachable-from-homepage": 4,
       "compatibility-redirect-page": 1,
       "not-published-in-catalog": 30,
@@ -760,7 +760,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (213 files)",
+      "title": "docs/assets/js (215 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1900,6 +1900,25 @@
       ]
     },
     {
+      "id": "docs:development/living-sphere-temporal-worlds-slice.md",
+      "title": "development/living-sphere-temporal-worlds-slice.md",
+      "description": "Markdown document deployed inside docs/ and therefore publicly fetchable, but not linked from the site.",
+      "category": "Development document",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/development/living-sphere-temporal-worlds-slice.md",
+      "publicUrl": "https://codexofreality.org/development/living-sphere-temporal-worlds-slice.md",
+      "publicationStatus": "source-only",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "development-only-deployed-publicly",
+      "discoverability": null,
+      "issues": [
+        "deployed-but-unlinked"
+      ]
+    },
+    {
       "id": "docs:development/R1.7-PROTECTED-MANIFEST.md",
       "title": "development/R1.7-PROTECTED-MANIFEST.md",
       "description": "Markdown document deployed inside docs/ and therefore publicly fetchable, but not linked from the site.",
@@ -1958,6 +1977,7 @@
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
+        "garden.html",
         "genesis-oracle.html",
         "glossary.html",
         "guide.html",
@@ -13452,15 +13472,13 @@
         "path": "garden.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 4,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 5,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "planned-timeline",
@@ -13958,7 +13976,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (198 files)",
+      "title": "tests/ (203 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
