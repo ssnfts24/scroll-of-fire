@@ -36,6 +36,39 @@
     immersive: 1.55
   });
   const SELECTED_PITCH_BOUND = 1;
+  // Faced-Moon day swell (Aaron, Nov 23, 2026 — his calibration,
+  // plainly: "they fade as normal but as you approach each day the
+  // number expands until you enter that day"). The selected day's
+  // growth above is stage-stepped and belongs to one plate; the
+  // swell is its continuous companion for the whole faced Moon: a
+  // bloom-shaped ramp on the camera's distance to the Sphere (the
+  // same distance that drives the zoom stages and the day world's
+  // bloomForDistance). At range it is exactly 1 — the ordinary
+  // fade, aperture, and pitch-cap laws govern untouched — and it
+  // rises steadily as the keeper closes in, full at Living Day
+  // entry. It composes UNDER the pitch cap the same way the
+  // selected day's growth does (the cap pass divides the faced
+  // plates' bound by the eased swell in force), so the no-touching
+  // law still governs every pair, and pulling away reverses it
+  // automatically because the distance drives it.
+  const SWELL_FULL_DISTANCE = 1.05;
+  const SWELL_KNEE_DISTANCE = 1.62;
+  const SWELL_START_DISTANCE = 2.35;
+  const SWELL_KNEE_FACTOR = 1.15;
+  const SWELL_FULL_FACTOR = 1.35;
+  function swellForDistance(distance) {
+    const d = Number(distance);
+    if (!Number.isFinite(d) || d >= SWELL_START_DISTANCE) return 1;
+    if (d <= SWELL_FULL_DISTANCE) return SWELL_FULL_FACTOR;
+    if (d >= SWELL_KNEE_DISTANCE) {
+      const t = (SWELL_START_DISTANCE - d)
+        / (SWELL_START_DISTANCE - SWELL_KNEE_DISTANCE);
+      return 1 + t * (SWELL_KNEE_FACTOR - 1);
+    }
+    const t = (SWELL_KNEE_DISTANCE - d)
+      / (SWELL_KNEE_DISTANCE - SWELL_FULL_DISTANCE);
+    return SWELL_KNEE_FACTOR + t * (SWELL_FULL_FACTOR - SWELL_KNEE_FACTOR);
+  }
   // Repair pass (Aaron, Nov 22, 2026, 18:12 — "a multitude of
   // things wrong here on mobile now"): a CONTEXT Moon whose whole
   // projected grid pitch falls below this floor is not readable
@@ -863,9 +896,12 @@
     const _proximityState = createProximityState();
     /*
      * Anchor tracking (repair pass, Nov 22, 2026). The renderer
-     * re-runs this manager's full layout at most twice a second
-     * outside a gesture (its 500 ms label cadence) and ~10× a
-     * second inside one, while the 3D scene moves every frame —
+     * re-runs this manager's full layout at the gesture cadence
+     * while the camera moves and twice a second while it stands
+     * still (the cadence was keyed to camera movement Nov 23,
+     * 2026 — before that, non-gesture motion refreshed at most
+     * twice a second and the wording trailed the Sphere), while
+     * the 3D scene moves every frame —
      * so between layouts the plates stood where a stale camera
      * had put them: grids detached from their Moons, heaped over
      * neighbours, then popped into place ("the days are sticky;
@@ -885,10 +921,40 @@
     let _growthEased = 1;
     let _growthLastMs = 0;
     let _trackLastStage = "";
+    // Faced-Moon swell state (Nov 23, 2026 — see swellForDistance):
+    // eased in the same track loop as the selected day's growth,
+    // with the same time constant, so the whole faced Moon swells
+    // smoothly as the keeper closes in and settles back on the
+    // way out. The camera distance is remembered from the last
+    // tracked frame so a layout pass between frames reads the
+    // same distance the loop is easing toward.
+    let _swellEased = 1;
+    let _swellLastMs = 0;
+    let _lastCameraDistance = 0;
 
     function _growthTarget() {
       const stage = String(_stageEl?.dataset?.zoomStage || "").toLowerCase();
       return SELECTED_GROWTH_BY_STAGE[stage] || 1;
+    }
+
+    // The camera's distance to the Sphere — the semantic zoom
+    // distance from the camera module when it is reachable (the
+    // same number the zoom stages and the day world's bloom read),
+    // falling back to the last tracked frame's camera position
+    // length, then to "far" (swell 1: no change).
+    function _cameraDistance() {
+      try {
+        const state = globalThis.LivingTimeSphereCamera?.getState?.();
+        const dist = Number(state?.dist);
+        if (Number.isFinite(dist) && dist > 0) return dist;
+      } catch {
+        /* fall through to the tracked frame's memory */
+      }
+      return _lastCameraDistance > 0 ? _lastCameraDistance : Infinity;
+    }
+
+    function _swellTarget() {
+      return swellForDistance(_cameraDistance());
     }
 
     function _growthReducedMotion() {
@@ -919,6 +985,33 @@
       _growthEased += (target - _growthEased) * (1 - Math.exp(-dt / 110));
       if (Math.abs(target - _growthEased) < 0.002) _growthEased = target;
       return _growthEased;
+    }
+
+    // The swell eases with the growth's own character (same tau,
+    // same reduced-motion calm path), so a faced plate and the
+    // selected day inside it breathe together. It keeps its OWN
+    // clock: _easeGrowth stamps _growthLastMs earlier in the same
+    // frame, so a swell eased against that stamp would measure
+    // a zero step every frame and never move (caught in the lab,
+    // Nov 23, 2026 — swellTarget read 1.21 while swellEased
+    // stood at 1.0008).
+    function _easeSwell(nowMs) {
+      const target = _swellTarget();
+      if (_growthReducedMotion()) {
+        _swellEased = target;
+        _swellLastMs = nowMs;
+        return _swellEased;
+      }
+      const last = _swellLastMs || nowMs;
+      const dt = Math.max(0, Math.min(100, nowMs - last));
+      _swellLastMs = nowMs;
+      if (Math.abs(target - _swellEased) < 0.002) {
+        _swellEased = target;
+        return _swellEased;
+      }
+      _swellEased += (target - _swellEased) * (1 - Math.exp(-dt / 110));
+      if (Math.abs(target - _swellEased) < 0.002) _swellEased = target;
+      return _swellEased;
     }
     let _trackCtx = null;
     let _trackRaf = 0;
@@ -990,9 +1083,22 @@
       // still, so the loop may only sleep when the camera, the
       // stage, AND the growth are all settled.
       const growth = _easeGrowth(performance.now());
+      // The faced Moon's swell eases in the same loop (Nov 23,
+      // 2026): a zoom can arrive while the camera's orientation
+      // stands still, so the loop may only sleep when the swell
+      // has settled too. The frame's own camera distance is
+      // remembered for layout passes between frames.
+      if (camera?.position) {
+        const frameDistance = camera.position.length();
+        if (Number.isFinite(frameDistance) && frameDistance > 0) {
+          _lastCameraDistance = frameDistance;
+        }
+      }
+      const swell = _easeSwell(performance.now());
       const stageNow = String(_stageEl?.dataset?.zoomStage || "");
       const growthSettled = Math.abs(_growthTarget() - growth) <= 0.002;
-      if (sig && sig === _trackLastSig && stageNow === _trackLastStage && growthSettled) {
+      const swellSettled = Math.abs(_swellTarget() - swell) <= 0.002;
+      if (sig && sig === _trackLastSig && stageNow === _trackLastStage && growthSettled && swellSettled) {
         _trackIdleFrames += 1;
         if (_trackIdleFrames < 120) {
           _trackRaf = requestAnimationFrame(_trackFrame);
@@ -1083,6 +1189,18 @@
             const unit = entry.discPx * (entry.baseScale || 1) * Math.max(growth, 0.01);
             if (unit > 0) entry.shrink = Math.min(entry.shrink, renderedBound / unit);
           }
+          if (!entry.selected && entry.swell && entry.discPx > 0 && Number.isFinite(nn)) {
+            // The faced Moon's swell obeys the same rendered-
+            // bound law at the ordinary fraction (Nov 23, 2026):
+            // box × baseScale × shrink × eased swell may not
+            // exceed 0.8 of its live pitch, so a swelling plate
+            // can never touch a neighbour mid-flight either —
+            // the swell spends the clearance the ordinary law
+            // already leaves, never the neighbour's room.
+            const renderedBound = PLATE_PITCH_CAP_FRACTION * nn;
+            const unit = entry.discPx * (entry.baseScale || 1) * Math.max(swell, 0.01);
+            if (unit > 0) entry.shrink = Math.min(entry.shrink, renderedBound / unit);
+          }
         }
         /*
          * In-motion pill guard (overnight pass, Nov 22, 2026):
@@ -1109,7 +1227,7 @@
         if (pillEntries.length && plateEntries.length) {
           const plateGeom = plateEntries.map(entry => {
             if (entry.natW == null) entry.natW = entry.el?.offsetWidth || 0;
-            const scale = (entry.baseScale || 1) * (entry.shrink ?? 1) * (entry.selected ? growth : 1);
+            const scale = (entry.baseScale || 1) * (entry.shrink ?? 1) * (entry.selected ? growth : entry.swell ? swell : 1);
             const dia = entry.discPx > 0 ? entry.discPx * scale : entry.natW * scale;
             const idm = /pattern-day-number-(\d+)/.exec(entry.el?.dataset?.semanticId || "");
             return {
@@ -1347,7 +1465,7 @@
           const dx = entry.dx || 0;
           const dy = entry.dy || 0;
           const shrink = entry.kind === "plate" ? (entry.shrink ?? 1) : 1;
-          const growthF = entry.selected ? growth : 1;
+          const growthF = entry.selected ? growth : entry.swell ? swell : 1;
           const composite = shrink * growthF;
           const fade = entry.kind === "plate" ? (entry.guardFade ?? 1) : 1;
           if (
@@ -2786,6 +2904,22 @@
             // in _trackFrame enforces the same bound at live
             // geometry while the growth eases.
             cap = (nearest * SELECTED_PITCH_BOUND) / Math.max(_growthEased, 1);
+          } else if (
+            frontMoon
+            && Number(candidate.target.moon || 0) === frontMoon
+          ) {
+            // Faced-Moon swell (Nov 23, 2026): the swell composes
+            // UNDER this cap exactly as the selected day's growth
+            // does — the faced plate's box is bounded by its
+            // ordinary 0.8 pitch divided by the swell in force
+            // right now (eased), so its rendered diameter
+            // (box × aperture × swell) may use the whole ordinary
+            // bound and no more. As the keeper zooms in and the
+            // pitch itself grows, the cap releases and the swell
+            // shows as real size; the per-frame guard in
+            // _trackFrame enforces the same bound at live
+            // geometry while the swell eases.
+            cap = (nearest * PLATE_PITCH_CAP_FRACTION) / Math.max(_swellEased, 1);
           }
           candidate._plateCapPx = cap;
         }
@@ -3384,11 +3518,17 @@
           // The selected day's approach growth rides the same
           // transform (overnight pass): a pass must compose the
           // growth in force right now, or it would snap the day
-          // back to ungrown size between tracking frames.
+          // back to ungrown size between tracking frames. The
+          // faced Moon's swell rides it the same way (Nov 23,
+          // 2026) for every unselected plate of the faced Moon.
           const plateScale =
             target.selected
               ? apertureScale * _growthEased
-              : apertureScale;
+              : (
+                frontMoon && Number(target.moon || 0) === frontMoon
+                  ? apertureScale * _swellEased
+                  : apertureScale
+              );
 
           el.style.transform =
             `translate(-50%, -50%) scale(${plateScale.toFixed(3)})`;
@@ -3404,6 +3544,11 @@
             baseY: railY,
             baseScale: apertureScale,
             selected: !!target.selected,
+            swell: !!(
+              !target.selected
+              && frontMoon
+              && Number(target.moon || 0) === frontMoon
+            ),
             discPx: candidate._plateDiscPx || null,
             passNN: candidate._platePitchPx
               || (
@@ -3504,7 +3649,18 @@
               // chip and badge are children of the plate, so their
               // rendered reach scales with the grown disc and is
               // measured at the stage's full growth.
-              const geomGrowth = target.selected ? _growthTarget() : 1;
+              // The faced Moon's marks ride its swell the same
+              // way (Nov 23, 2026): the chip and badge are
+              // children of the plate, so their rendered reach
+              // scales with the swollen disc and is measured at
+              // the swell in force.
+              const geomGrowth = target.selected
+                ? _growthTarget()
+                : (
+                  frontMoon && Number(target.moon || 0) === frontMoon
+                    ? _swellTarget()
+                    : 1
+                );
               if (target.dayScheduleCount > 0) {
                 const chipH = (farBand ? 0.78 : 0.95) * remPx * markScale;
                 const chipOverhang =
@@ -3904,7 +4060,7 @@
       _lastSignature = "";
     }
 
-    return Object.freeze({ init, update, markDirty, dispose, dismissSemantic: _proximityState.dismiss, semanticDismissals: _proximityState.snapshot, growthState: () => Object.freeze({ eased: _growthEased, target: _growthTarget(), tracked: _tracked.length, raf: _trackRaf, idle: _trackIdleFrames }) });
+    return Object.freeze({ init, update, markDirty, dispose, dismissSemantic: _proximityState.dismiss, semanticDismissals: _proximityState.snapshot, growthState: () => Object.freeze({ eased: _growthEased, target: _growthTarget(), swellEased: _swellEased, swellTarget: _swellTarget(), swellDistance: _cameraDistance(), tracked: _tracked.length, raf: _trackRaf, idle: _trackIdleFrames }) });
   }
 
   globalThis.LivingTimeSphereLabelManager = Object.freeze({

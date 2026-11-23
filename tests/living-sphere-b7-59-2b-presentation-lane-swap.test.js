@@ -38,8 +38,15 @@ test("B7.59.2B leaves canonical 13x28 calendarCell geometry untouched", () => {
 });
 
 test("B7.59.2B/B7.59.2C day numerals use a presentation lane independent of canonical geometry", () => {
-  assert.match(renderer, /dayNumberPresentationWeek1: 1\.320/);
-  assert.match(renderer, /dayNumberPresentationWeekStep: 0\.092/);
+  // Presentation lanes widened Nov 23, 2026 under Aaron's explicit
+  // opening ("Open the protected Sphere files for these three
+  // fixes") — his live report: the days stuck together in a
+  // 79×41px patch at the opening distance. The canonical lane pins
+  // in B7.59.2C (calendarCell) do not move; only these two
+  // presentation constants and the matching calendarDisplayCell
+  // defaults changed. See tests/sphere-protected-three-fixes.test.js.
+  assert.match(renderer, /dayNumberPresentationWeek1: 1\.380/);
+  assert.match(renderer, /dayNumberPresentationWeekStep: 0\.150/);
   assert.match(renderer, /scheduleSymbolPresentationOffset: 0\.000/);
   assert.match(
     renderer,
