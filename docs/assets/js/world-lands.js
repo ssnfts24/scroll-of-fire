@@ -34,6 +34,11 @@
           "id": "companions",
           "title": "Companions",
           "path": "companions.html"
+        },
+        {
+          "id": "aiyanas-world",
+          "title": "Aiyana's World",
+          "path": "aiyanas-world.html"
         }
       ]
     },
@@ -77,6 +82,11 @@
           "id": "whitepaper-13-moons",
           "title": "13 Moons Rollout Whitepaper",
           "path": "13-moon-whitepaper.html"
+        },
+        {
+          "id": "codex-white-paper",
+          "title": "The Codex of Reality and the Living Sphere — A White Paper",
+          "path": "codex-white-paper.html"
         },
         {
           "id": "alignment-ledger",

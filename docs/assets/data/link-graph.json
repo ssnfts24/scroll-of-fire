@@ -65,11 +65,6 @@
      "area": "evidence"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -88,15 +83,10 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 4,
-   "inTotal": 13
+   "inTotal": 11
   },
   "404.html": {
    "title": "404 — Broken Gate",
@@ -309,11 +299,6 @@
      "area": "evidence"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -322,15 +307,50 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 12,
-   "inTotal": 9
+   "inTotal": 7
+  },
+  "aiyanas-world.html": {
+   "title": "Aiyana's World",
+   "area": "living-time",
+   "out": [
+    {
+     "path": "garden.html",
+     "title": "The Pattern Garden — the Garden · Remnant Lab",
+     "area": "systems"
+    },
+    {
+     "path": "companions.html",
+     "title": "Companions",
+     "area": "living-time"
+    },
+    {
+     "path": "map.html",
+     "title": "The Traveller's Map",
+     "area": "systems"
+    }
+   ],
+   "in": [
+    {
+     "path": "codex-atlas.html",
+     "title": "Codex Atlas",
+     "area": "archive"
+    },
+    {
+     "path": "companions.html",
+     "title": "Companions",
+     "area": "living-time"
+    },
+    {
+     "path": "map.html",
+     "title": "The Traveller's Map",
+     "area": "systems"
+    }
+   ],
+   "outTotal": 3,
+   "inTotal": 3
   },
   "alignment-ledger.html": {
    "title": "Alignment Ledger — The 13 Moons Remnant Living Time Observatory",
@@ -483,11 +503,6 @@
      "area": "scroll-scripture"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -501,15 +516,10 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 30,
-   "inTotal": 10
+   "inTotal": 8
   },
   "claims-atlas.html": {
    "title": "Documentation Hub",
@@ -653,11 +663,6 @@
      "area": "evidence"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -681,15 +686,10 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 66,
-   "inTotal": 13
+   "inTotal": 11
   },
   "codex-guide.html": {
    "title": "The Guide — Ask the Record",
@@ -731,6 +731,20 @@
    "outTotal": 3,
    "inTotal": 3
   },
+  "codex-white-paper.html": {
+   "title": "The Codex of Reality and the Living Sphere — A White Paper",
+   "area": "living-time",
+   "out": [],
+   "in": [
+    {
+     "path": "codex-atlas.html",
+     "title": "Codex Atlas",
+     "area": "archive"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 1
+  },
   "companions.html": {
    "title": "Companions",
    "area": "living-time",
@@ -739,9 +753,19 @@
      "path": "moons.html",
      "title": "Remnant 13 Moons — Living Calendar",
      "area": "living-time"
+    },
+    {
+     "path": "aiyanas-world.html",
+     "title": "Aiyana's World",
+     "area": "living-time"
     }
    ],
    "in": [
+    {
+     "path": "aiyanas-world.html",
+     "title": "Aiyana's World",
+     "area": "living-time"
+    },
     {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
@@ -758,8 +782,8 @@
      "area": "systems"
     }
    ],
-   "outTotal": 1,
-   "inTotal": 3
+   "outTotal": 2,
+   "inTotal": 4
   },
   "covenant-caravan.html": {
    "title": "The Covenant Caravan",
@@ -828,11 +852,6 @@
      "area": "evidence"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -851,15 +870,10 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 4,
-   "inTotal": 14
+   "inTotal": 12
   },
   "downloads.html": {
    "title": "Downloads & Integrity",
@@ -918,11 +932,6 @@
      "area": "evidence"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -936,15 +945,10 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 3,
-   "inTotal": 12
+   "inTotal": 10
   },
   "equinox-passage.html": {
    "title": "Equinox Passage — The 13 Moons Remnant Living Time Observatory",
@@ -1098,11 +1102,6 @@
      "area": "scroll-scripture"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -1139,7 +1138,7 @@
     }
    ],
    "outTotal": 29,
-   "inTotal": 15
+   "inTotal": 13
   },
   "garden.html": {
    "title": "The Pattern Garden — the Garden · Remnant Lab",
@@ -1168,9 +1167,19 @@
    ],
    "in": [
     {
+     "path": "aiyanas-world.html",
+     "title": "Aiyana's World",
+     "area": "living-time"
+    },
+    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
+    },
+    {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
     },
     {
      "path": "practices.html",
@@ -1189,7 +1198,7 @@
     }
    ],
    "outTotal": 4,
-   "inTotal": 4
+   "inTotal": 6
   },
   "genesis-oracle.html": {
    "title": "The Genesis Oracle — Seal of Becoming",
@@ -1248,11 +1257,6 @@
      "area": "scroll-scripture"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "living-time-sphere.html",
      "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
      "area": "living-time"
@@ -1279,7 +1283,7 @@
     }
    ],
    "outTotal": 2,
-   "inTotal": 15
+   "inTotal": 13
   },
   "glossary.html": {
    "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
@@ -1388,11 +1392,6 @@
      "area": "scroll-scripture"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -1411,15 +1410,10 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 14,
-   "inTotal": 12
+   "inTotal": 10
   },
   "glyphs.html": {
    "title": "Voice-Glyph Synth",
@@ -1648,11 +1642,6 @@
      "area": "evidence"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -1679,7 +1668,7 @@
     }
    ],
    "outTotal": 11,
-   "inTotal": 15
+   "inTotal": 13
   },
   "index.html": {
    "title": "Codex of Reality",
@@ -1746,9 +1735,9 @@
      "area": "archive"
     },
     {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
+     "path": "garden.html",
+     "title": "The Pattern Garden — the Garden · Remnant Lab",
+     "area": "systems"
     },
     {
      "path": "witness.html",
@@ -1813,11 +1802,6 @@
      "area": "scroll-scripture"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -1831,15 +1815,10 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 1,
-   "inTotal": 11
+   "inTotal": 9
   },
   "lab.html": {
    "title": "Remnant Lab",
@@ -1933,11 +1912,6 @@
      "area": "scroll-scripture"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -1958,18 +1932,13 @@
      "area": "systems"
     },
     {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
-    },
-    {
      "path": "ledger.html",
      "title": "Witness Ledger",
      "area": "living-time"
     }
    ],
    "outTotal": 11,
-   "inTotal": 13
+   "inTotal": 11
   },
   "ledger.html": {
    "title": "Witness Ledger",
@@ -2028,11 +1997,6 @@
      "area": "scroll-scripture"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "invoke.html",
      "title": "Invocation Lab",
      "area": "systems"
@@ -2051,10 +2015,15 @@
      "path": "practices.html",
      "title": "Practices — the Exercises Wing · Remnant Lab",
      "area": "systems"
+    },
+    {
+     "path": "moons.html",
+     "title": "Remnant 13 Moons — Living Calendar",
+     "area": "living-time"
     }
    ],
    "outTotal": 1,
-   "inTotal": 25
+   "inTotal": 23
   },
   "living-time-sphere.html": {
    "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
@@ -2113,11 +2082,6 @@
      "area": "living-time"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "moons.html",
      "title": "Remnant 13 Moons — Living Calendar",
      "area": "living-time"
@@ -2143,18 +2107,13 @@
      "area": "artifacts"
     },
     {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
-    },
-    {
      "path": "witness.html",
      "title": "Witness",
      "area": "artifacts"
     }
    ],
    "outTotal": 5,
-   "inTotal": 13
+   "inTotal": 11
   },
   "map.html": {
    "title": "The Traveller's Map",
@@ -2169,106 +2128,26 @@
      "path": "companions.html",
      "title": "Companions",
      "area": "living-time"
+    },
+    {
+     "path": "aiyanas-world.html",
+     "title": "Aiyana's World",
+     "area": "living-time"
     }
    ],
    "in": [
     {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
-    }
-   ],
-   "outTotal": 2,
-   "inTotal": 1
-  },
-  "methods.html": {
-   "title": "How the Sphere Knows — Methods",
-   "area": "evidence",
-   "out": [
-    {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
-    },
-    {
-     "path": "moons.html",
-     "title": "Remnant 13 Moons — Living Calendar",
+     "path": "aiyanas-world.html",
+     "title": "Aiyana's World",
      "area": "living-time"
     },
     {
-     "path": "ledger.html",
-     "title": "Witness Ledger",
-     "area": "living-time"
-    },
-    {
-     "path": "hub.html",
-     "title": "Systems Hub",
-     "area": "systems"
-    },
-    {
-     "path": "scroll/search.html",
-     "title": "Search the Scroll",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/lexicon.html",
-     "title": "Hebrew lexicon",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/atlas.html",
-     "title": "Reference atlas",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/editorial.html",
-     "title": "Editorial reading and evidence",
-     "area": "evidence"
-    },
-    {
-     "path": "theory.html",
-     "title": "Theory Hub",
-     "area": "evidence"
-    },
-    {
-     "path": "theory/canon.html",
-     "title": "Canon 0–17",
-     "area": "evidence"
-    },
-    {
-     "path": "genesis-oracle.html",
-     "title": "The Genesis Oracle — Seal of Becoming",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "glossary.html",
-     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "systems/archive.html",
-     "title": "Interactive Archive",
-     "area": "archive"
-    },
-    {
-     "path": "systems/frequencies.html",
-     "title": "Frequency Governance",
-     "area": "systems"
-    }
-   ],
-   "in": [
-    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
-   "outTotal": 32,
+   "outTotal": 3,
    "inTotal": 2
   },
   "micro.html": {
@@ -2473,18 +2352,18 @@
      "area": "scroll-scripture"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "living-time-sphere.html",
      "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
      "area": "living-time"
+    },
+    {
+     "path": "teach.html",
+     "title": "Manifest — Remnant Visual Exercise",
+     "area": "systems"
     }
    ],
    "outTotal": 8,
-   "inTotal": 22
+   "inTotal": 20
   },
   "offline.html": {
    "title": "13 Moons — Offline",
@@ -2567,101 +2446,6 @@
    "in": [],
    "outTotal": 0,
    "inTotal": 0
-  },
-  "provenance.html": {
-   "title": "Where Every Number Comes From",
-   "area": "evidence",
-   "out": [
-    {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
-    },
-    {
-     "path": "moons.html",
-     "title": "Remnant 13 Moons — Living Calendar",
-     "area": "living-time"
-    },
-    {
-     "path": "ledger.html",
-     "title": "Witness Ledger",
-     "area": "living-time"
-    },
-    {
-     "path": "hub.html",
-     "title": "Systems Hub",
-     "area": "systems"
-    },
-    {
-     "path": "scroll/search.html",
-     "title": "Search the Scroll",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/lexicon.html",
-     "title": "Hebrew lexicon",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/atlas.html",
-     "title": "Reference atlas",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/editorial.html",
-     "title": "Editorial reading and evidence",
-     "area": "evidence"
-    },
-    {
-     "path": "theory.html",
-     "title": "Theory Hub",
-     "area": "evidence"
-    },
-    {
-     "path": "theory/canon.html",
-     "title": "Canon 0–17",
-     "area": "evidence"
-    },
-    {
-     "path": "genesis-oracle.html",
-     "title": "The Genesis Oracle — Seal of Becoming",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "glossary.html",
-     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "systems/archive.html",
-     "title": "Interactive Archive",
-     "area": "archive"
-    },
-    {
-     "path": "systems/frequencies.html",
-     "title": "Frequency Governance",
-     "area": "systems"
-    }
-   ],
-   "in": [
-    {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
-    },
-    {
-     "path": "index.html",
-     "title": "Codex of Reality",
-     "area": "codex"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    }
-   ],
-   "outTotal": 32,
-   "inTotal": 3
   },
   "scripture/about.html": {
    "title": "Sources, licences and limits — Scripture",
@@ -16360,11 +16144,6 @@
      "area": "evidence"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -16383,15 +16162,10 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 2,
-   "inTotal": 14
+   "inTotal": 12
   },
   "scroll/atlas.html": {
    "title": "Reference atlas",
@@ -16435,11 +16209,6 @@
      "area": "evidence"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -16453,15 +16222,10 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 2,
-   "inTotal": 10
+   "inTotal": 8
   },
   "scroll/editorial.html": {
    "title": "Editorial reading and evidence",
@@ -16515,11 +16279,6 @@
      "area": "evidence"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -16533,15 +16292,10 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 1,
-   "inTotal": 13
+   "inTotal": 11
   },
   "scroll/index.html": {
    "title": "Scroll of Fire — Unsealed Library",
@@ -16650,11 +16404,6 @@
      "area": "scroll-scripture"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -16673,15 +16422,10 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 1,
-   "inTotal": 13
+   "inTotal": 11
   },
   "scroll/reader.html": {
    "title": "Reading the Scroll — Unsealed Library",
@@ -16750,11 +16494,6 @@
      "area": "evidence"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -16773,15 +16512,10 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 1,
-   "inTotal": 12
+   "inTotal": 10
   },
   "search.html": {
    "title": "Search",
@@ -16915,11 +16649,6 @@
      "area": "scroll-scripture"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -16943,10 +16672,15 @@
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
+    },
+    {
+     "path": "glyphs.html",
+     "title": "Voice-Glyph Synth",
+     "area": "systems"
     }
    ],
    "outTotal": 2,
-   "inTotal": 16
+   "inTotal": 14
   },
   "start.html": {
    "title": "Start Here",
@@ -17050,11 +16784,6 @@
      "area": "scroll-scripture"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -17068,15 +16797,10 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 11,
-   "inTotal": 13
+   "inTotal": 11
   },
   "systems/archive.html": {
    "title": "Interactive Archive",
@@ -17114,11 +16838,6 @@
      "area": "evidence"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -17132,15 +16851,10 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 11
+   "inTotal": 9
   },
   "systems/frequencies.html": {
    "title": "Frequency Governance",
@@ -17188,11 +16902,6 @@
      "area": "scroll-scripture"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -17216,10 +16925,15 @@
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
+    },
+    {
+     "path": "glyphs.html",
+     "title": "Voice-Glyph Synth",
+     "area": "systems"
     }
    ],
    "outTotal": 0,
-   "inTotal": 16
+   "inTotal": 14
   },
   "systems/mind-renewal.html": {
    "title": "Mind-Renewal Protocol",
@@ -17252,11 +16966,6 @@
      "area": "evidence"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -17270,15 +16979,10 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 10
+   "inTotal": 8
   },
   "systems/recoder.html": {
    "title": "Living Dictionary of Reality",
@@ -17311,11 +17015,6 @@
      "area": "evidence"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -17329,15 +17028,10 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 10
+   "inTotal": 8
   },
   "systems/t-7.html": {
    "title": "T-7 Resonant Engine",
@@ -17370,11 +17064,6 @@
      "area": "evidence"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -17388,15 +17077,10 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 10
+   "inTotal": 8
   },
   "systems/witness.html": {
    "title": "Remnant Witness Ledger",
@@ -17429,11 +17113,6 @@
      "area": "evidence"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -17447,15 +17126,10 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 10
+   "inTotal": 8
   },
   "teach.html": {
    "title": "Manifest — Remnant Visual Exercise",
@@ -17569,11 +17243,6 @@
      "area": "systems"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "practices.html",
      "title": "Practices — the Exercises Wing · Remnant Lab",
      "area": "systems"
@@ -17602,10 +17271,15 @@
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
+    },
+    {
+     "path": "glyphs.html",
+     "title": "Voice-Glyph Synth",
+     "area": "systems"
     }
    ],
    "outTotal": 29,
-   "inTotal": 16
+   "inTotal": 14
   },
   "theory.html": {
    "title": "Theory Hub",
@@ -17724,11 +17398,6 @@
      "area": "scroll-scripture"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "theory/operators.html",
      "title": "Living Operators",
      "area": "evidence"
@@ -17752,10 +17421,15 @@
      "path": "start.html",
      "title": "Start Here",
      "area": "scroll-scripture"
+    },
+    {
+     "path": "hub.html",
+     "title": "Systems Hub",
+     "area": "systems"
     }
    ],
    "outTotal": 46,
-   "inTotal": 18
+   "inTotal": 16
   },
   "theory/artifact-theory.html": {
    "title": "Artifact Theory",
@@ -17831,11 +17505,6 @@
      "area": "evidence"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -17849,15 +17518,10 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 11
+   "inTotal": 9
   },
   "theory/delta-framework.html": {
    "title": "Δ0–Δ7 Framework",
