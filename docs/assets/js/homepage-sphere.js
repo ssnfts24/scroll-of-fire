@@ -227,6 +227,10 @@
   const toggleBtn = root.querySelector("[data-hs-toggle]");
   const todayBtn = root.querySelector("[data-hs-today]");
   const hintEl = root.querySelector("[data-hs-hint]");
+  const activateBtn = root.querySelector("[data-hs-activate]");
+  const releaseBtn = root.querySelector("[data-hs-release]");
+  const contextEl = root.querySelector("[data-hs-context]");
+  const doorLink = root.querySelector("[data-hs-door]");
 
   const summary = resolveToday(globalThis.PatternCalendar);
   const text = coordinateText(summary);
@@ -459,20 +463,123 @@
 
   function stayFallback() {
     root.dataset.state = "fallback";
+    delete root.dataset.hsMode;
     if (stage) stage.hidden = true;
     if (fallbackArt) fallbackArt.hidden = false;
     if (hintEl) hintEl.hidden = true;
     if (toggleBtn) toggleBtn.hidden = true;
     if (todayBtn) todayBtn.hidden = true;
+    if (activateBtn) activateBtn.hidden = true;
+    if (releaseBtn) releaseBtn.hidden = true;
+    if (contextEl) contextEl.hidden = true;
   }
 
   function showLive() {
     root.dataset.state = "live";
     if (fallbackArt) fallbackArt.hidden = true;
     if (stage) stage.hidden = false;
-    if (hintEl) hintEl.hidden = false;
     if (toggleBtn) toggleBtn.hidden = false;
     if (todayBtn) todayBtn.hidden = false;
+    setSphereMode("ambient");
+  }
+
+  // ── Ambient / interactive modes (Directive 02) ──────────────
+  //
+  // Ambient is the environment: the Sphere turns quietly behind
+  // the words and the stage takes no pointers, so reading and
+  // scrolling pass over it untouched. Interactive is the visitor's
+  // own act — the Explore button, or the keyboard reaching the
+  // stage — and hands the stage its pointers, its hint, and the
+  // selected-day context. Done, Escape, or scrolling away returns
+  // the Sphere to the room.
+  let sphereMode = "ambient";
+  let contextTimer = null;
+
+  function setSphereMode(mode) {
+    sphereMode = mode;
+    root.dataset.hsMode = mode;
+    const interactive = mode === "interactive";
+    if (activateBtn) activateBtn.hidden = interactive;
+    if (releaseBtn) releaseBtn.hidden = !interactive;
+    if (hintEl) {
+      hintEl.hidden = !interactive;
+      if (interactive) hintEl.textContent = "Drag to turn · arrow keys choose a day";
+    }
+    if (contextEl) contextEl.hidden = !interactive;
+    if (interactive) {
+      refreshSphereContext();
+      if (!contextTimer) {
+        contextTimer = window.setInterval(refreshSphereContext, 700);
+      }
+    } else if (contextTimer) {
+      window.clearInterval(contextTimer);
+      contextTimer = null;
+    }
+  }
+
+  function selectedDayFromMount() {
+    try {
+      const s =
+        mountHandle && typeof mountHandle.getState === "function"
+          ? mountHandle.getState()
+          : null;
+      const day = s && (s.selectedDay || s.selectedDayOfYear);
+      const n = Number(day);
+      return Number.isFinite(n) && n >= 1 && n <= 364 ? n : null;
+    } catch {
+      return null;
+    }
+  }
+
+  // The Observatory's own deep-link contract (its URL state
+  // module): marker=day-<N> selects the day, marker=today returns
+  // to today, cam_t / cam_d carry the camera. The door is re-aimed
+  // from the hero mount's live selection, so the day and the view
+  // the visitor found here are the day and view that open there.
+  function refreshSphereContext() {
+    // The mount opens facing today and reports a selectedDay once
+    // the visitor chooses one; until then the day being faced is
+    // today itself, which is also what the caption already states.
+    const day =
+      selectedDayFromMount() ||
+      (summary && summary.insideCountedYear ? summary.dayOfPatternYear : null);
+    if (contextEl && day) {
+      const geometry = globalThis.LivingTimeSphereCalendarGeometry;
+      const cell =
+        geometry && typeof geometry.calendarCell === "function"
+          ? geometry.calendarCell(day)
+          : null;
+      if (cell) {
+        const isToday =
+          summary && summary.insideCountedYear && day === summary.dayOfPatternYear;
+        contextEl.textContent =
+          `You are looking at Moon ${cell.moon} · Day ${cell.moonDay} · ` +
+          `Pattern Day ${day}${isToday ? " — today" : ""}`;
+      }
+    }
+    if (doorLink) {
+      if (!day) {
+        doorLink.href = "./living-time-sphere.html";
+      } else {
+        const params = new URLSearchParams();
+        const isToday =
+          summary && summary.insideCountedYear && day === summary.dayOfPatternYear;
+        params.set("marker", isToday ? "today" : `day-${day}`);
+        try {
+          const cam = globalThis.LivingTimeSphereCamera;
+          const cs = cam && typeof cam.getState === "function" ? cam.getState() : null;
+          if (cs && Number.isFinite(Number(cs.theta))) {
+            params.set("cam_t", Number(cs.theta).toFixed(4));
+          }
+          if (cs && Number.isFinite(Number(cs.dist))) {
+            params.set("cam_d", Number(cs.dist).toFixed(4));
+          }
+        } catch {
+          /* the day alone still carries */
+        }
+        doorLink.href = `./living-time-sphere.html?${params.toString()}`;
+      }
+    }
   }
 
   async function boot() {
@@ -544,6 +651,70 @@
         }
       }, 700);
     });
+  }
+
+  // ── Taking and returning the instrument ─────────────────────
+
+  if (activateBtn) {
+    activateBtn.addEventListener("click", () => {
+      setSphereMode("interactive");
+      if (stage) {
+        try {
+          stage.focus({ preventScroll: true });
+        } catch {
+          stage.focus();
+        }
+      }
+    });
+  }
+
+  if (releaseBtn) {
+    releaseBtn.addEventListener("click", () => {
+      setSphereMode("ambient");
+      if (activateBtn) activateBtn.focus();
+    });
+  }
+
+  if (stage) {
+    // The keyboard reaching the stage is an intentional act too.
+    stage.addEventListener("focusin", () => {
+      if (root.dataset.state === "live" && sphereMode !== "interactive") {
+        setSphereMode("interactive");
+      }
+    });
+    stage.addEventListener("pointerup", refreshSphereContext);
+    stage.addEventListener("keyup", refreshSphereContext);
+  }
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && sphereMode === "interactive") {
+      setSphereMode("ambient");
+      if (activateBtn) activateBtn.focus();
+    }
+  });
+
+  if (doorLink) {
+    // Re-aim the door at the moment it is used, so the freshest
+    // selection is the one that travels.
+    doorLink.addEventListener("click", refreshSphereContext);
+    doorLink.addEventListener("focus", refreshSphereContext);
+  }
+
+  // Scrolling away hands the Sphere back to the room: no visitor
+  // returns to a hero that still holds their scroll.
+  if (typeof IntersectionObserver === "function") {
+    const modeIo = new IntersectionObserver(
+      (entries) => {
+        if (
+          sphereMode === "interactive" &&
+          entries.some((entry) => !entry.isIntersecting)
+        ) {
+          setSphereMode("ambient");
+        }
+      },
+      { threshold: 0 }
+    );
+    modeIo.observe(root);
   }
 
   // If the tab sits open across midnight, the caption and the sphere

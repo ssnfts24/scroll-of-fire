@@ -33,19 +33,47 @@
  *      own Witness act is one of those kept days. Growth follows
  *      the Moon's real 28 days; there are no timers divorced from
  *      the calendar and nothing grows while nothing is kept.
- *   4. Harvest at the Moon's turn. When the Moon turns, a planting
- *      witnessed on at least seven of its days is harvested into a
- *      keepsake in the Life Atlas. A planting witnessed less goes
- *      honestly to seed — the season ended; nothing is faked.
- *   5. A planting returns. When the same Moon comes round the next
- *      year, a keepsake from that Moon's bed returns to its keeper:
- *      a return record joins the keepsake in the Atlas.
- *   6. The keeper's Spark helps: it can find a seed of the season —
+ *   4. Harvest at the Moon's turn — graded, kindly. When the Moon
+ *      turns, the planting's witnessed days name what happened:
+ *      0 — it slept; 1–6 — it was tended, and goes to seed with
+ *      its seed gathered back (next year that crop heads the same
+ *      bed's table, from the keeper's own seed); 7–13 — kept,
+ *      harvested into a keepsake in the Life Atlas; 14 or more —
+ *      flourished, and its keepsake carries the grade. The harvest
+ *      line itself never moved: seven, Aaron's ruling. And the
+ *      harvest WAITS: a Ready planting from a past year stands at
+ *      the garden's head as a waiting harvest until the keeper's
+ *      hand gathers it — nothing earned quietly evaporates, and
+ *      nothing is ever gathered in the keeper's absence.
+ *   5. A planting returns — and the return waits too. When the
+ *      same Moon comes round the next year, a keepsake from that
+ *      Moon's bed returns to its keeper: a return record joins
+ *      the keepsake in the Atlas. An unwelcomed return stays
+ *      offered at the garden's head until it is welcomed, this
+ *      Moon, next Moon, next year.
+ *   6. The Still Bed (Nov 23, 2026 — the play redesign's Ask 3,
+ *      approved by Aaron with its fence). At the garden's foot
+ *      stands a fourteenth place, not numbered among the
+ *      thirteen, open only on the still days — the Day Out of
+ *      Time, and the Deep Time Day beside it in a long year —
+ *      and on no other day. There the keeper may lay one
+ *      keepsake of the year now ending down in the still ground
+ *      (a garden-still record naming the keepsake; the
+ *      keepsake's own record is never edited). It does not grow,
+ *      is not witnessed, cannot be harvested, and is never lost;
+ *      at the next still day, a full year on, it is found and
+ *      its return is written beside it, and the garden's head
+ *      carries the year's reading — thirteen beds, one line
+ *      each: kept, flourished, tended, slept, rested. The fence:
+ *      the still record can hold only the keeper's own earned
+ *      keepsake. Nothing else in the garden — no planting, no
+ *      quest, no find — ever points at this bed.
+ *   7. The keeper's Spark helps: it can find a seed of the season —
  *      a crop the farm data plants in the open Moon — as part of
  *      the hidden-finds layer. Early finds come readily; later
  *      ones are rarer, by a rule computed from the keeper's own
  *      record and the day, on this device only.
- *   7. The garden teaches (Aaron, Nov 20, 2026: "if the garden's
+ *   8. The garden teaches (Aaron, Nov 20, 2026: "if the garden's
  *      advantage is to teach people how and what to plant then it
  *      needs a ton more information"). Every crop carries a full
  *      growing guide (farm-garden-teaching.json): depth, spacing,
@@ -89,13 +117,14 @@
   function () {
     "use strict";
 
-    const VERSION = "pattern-garden/1.0.0";
+    const VERSION = "pattern-garden/1.2.0";
 
     const RECORD_TAG = "pattern-garden";
     const PLANT_SUBTYPE = "garden-planting";
     const WITNESS_SUBTYPE = "garden-witness";
     const SEED_SUBTYPE = "garden-seed";
     const RETURN_SUBTYPE = "garden-return";
+    const STILL_SUBTYPE = "garden-still";
     const KEEPSAKE_SUBTYPE = "garden-keepsake";
     const KEEPSAKE_TYPE = "artifact";
     const EVENT_TYPE = "event";
@@ -109,6 +138,23 @@
       Object.freeze({ name: "Ready", glyph: "❦", at: 7 })
     ]);
     const HARVEST_WITNESS_MIN = 7;
+
+    /* The turn's grades (Nov 23, 2026 — the play redesign's
+     * grading, Aaron's go-ahead): the harvest line stays 7, and
+     * what happened below and above it is named honestly, in kind
+     * words, with nothing counted against the keeper. A tended planting's
+     * seed is gathered back; a flourished keepsake carries its
+     * count with honour. */
+    const GRADE_FLOURISH_MIN = 14;
+    const GRADES = Object.freeze(["slept", "tended", "kept", "flourished"]);
+
+    function gradeFor(witnessedDays) {
+      const value = Math.max(0, Math.floor(Number(witnessedDays) || 0));
+      if (value <= 0) return "slept";
+      if (value < HARVEST_WITNESS_MIN) return "tended";
+      if (value < GRADE_FLOURISH_MIN) return "kept";
+      return "flourished";
+    }
 
     /* The one record layer: record cleaning, the temporal shape,
      * repository resolution, and change notices live in
@@ -177,6 +223,19 @@
 
     function bedIdFor(moon) {
       return `moon-${moon}`;
+    }
+
+    /* Days of the Moon that remain, counted inclusively from a
+     * civil date inside the span to the span's end — the number
+     * the plant button speaks, so a late planting is never a
+     * trap: the arithmetic stands on the button before the tap.
+     * Outside the span there is nothing to count: null. */
+    function daysRemainingInMoon(span, civilDate) {
+      if (!span || !civilDate) return null;
+      if (civilDate < span.start || civilDate > span.end) return null;
+      const ms = Date.parse(`${span.end}T12:00:00Z`) - Date.parse(`${civilDate}T12:00:00Z`);
+      if (!Number.isFinite(ms)) return null;
+      return Math.round(ms / DAY_MS) + 1;
     }
 
     /* Is `today` (a temporal summary: { patternYear (anchor civil
@@ -402,6 +461,70 @@
       return stage;
     }
 
+    /* How a planting began, in one word the record keeps: a
+     * seed the Spark found, a seed gathered back from the
+     * keeper's own tended planting, or a plain choice from the
+     * bed's table. Payload v2 names it directly; v1 records read
+     * it back from the fields they already carry. */
+    function provenanceOf(p) {
+      if (!p) return "chosen";
+      if (p.provenance) return p.provenance;
+      if (p.seedBackPlantingId) return "gathered";
+      if (p.foundSeed) return "found";
+      return "chosen";
+    }
+
+    /* A keepsake's grade: payload v2 carries it; a v1 keepsake
+     * reads it from the witnessed count it already holds. */
+    function keepsakeGradeOf(p) {
+      if (!p) return null;
+      if (p.grade) return p.grade;
+      const days = finiteOrNull(p.witnessedDays);
+      if (days == null) return null;
+      return days >= GRADE_FLOURISH_MIN ? "flourished" : "kept";
+    }
+
+    /* A still day: a day outside the 364-day count — the Day
+     * Out of Time, and in a long year the Deep Time Day beside
+     * it. No bed is open on a still day; the garden rests with
+     * the calendar, and the Still Bed — alone — opens. */
+    function isStillDay(today) {
+      return Boolean(today && today.outsideDay);
+    }
+
+    /* Has a laid keepsake's still return come due? What was
+     * laid down in the stillness is met again in the stillness:
+     * due from the still days of the year after the laying, and
+     * — like everything earned in this garden — still due on
+     * every day after them until its return is written.
+     * laidYear is the year that was ending when the keepsake
+     * was laid (the still record's anchor year). */
+    function stillReturnIsDue(laidYear, today) {
+      const laid = finiteOrNull(laidYear);
+      const year = today ? finiteOrNull(today.patternYear) : null;
+      if (laid == null || year == null) return false;
+      if (year > laid + 1) return true;
+      if (year === laid + 1) return isStillDay(today);
+      return false;
+    }
+
+    /* Has a keepsake's return come due — its Moon come round a
+     * full year on — whether or not its Moon is the open one
+     * today? A return is due from the first day of its Moon in
+     * the return year, and stays due: it waits to be welcomed. */
+    function returnIsDue(keepsake, today) {
+      if (!keepsake || !today) return false;
+      const year = finiteOrNull(keepsake.anchorYear);
+      const moon = finiteOrNull(keepsake.moon);
+      const thisYear = finiteOrNull(today.patternYear);
+      if (year == null || moon == null || thisYear == null) return false;
+      const returnYear = year + 1;
+      if (thisYear > returnYear) return true;
+      if (thisYear < returnYear) return false;
+      if (today.outsideDay) return true;
+      return (finiteOrNull(today.moon) || 0) >= moon;
+    }
+
     /**
      * Fold the garden from records alone.
      *
@@ -421,6 +544,11 @@
      * The garden shown is the current Pattern year's thirteen
      * beds. A planting's witnessed days are the distinct kept
      * dates inside its Moon's span, on or after its planting day.
+     * Past years fold too, because the garden's waiting lives
+     * there: a past year's Ready planting is a waiting harvest,
+     * a past year's tended planting holds a gathered seed for
+     * its bed, and a keepsake whose return has come due and
+     * stands unwelcomed is a waiting return.
      */
     function foldGarden(input = {}) {
       const records = Array.isArray(input.records) ? input.records : [];
@@ -439,12 +567,16 @@
           const p = gardenPayload(record) || {};
           return {
             recordId: record.id || null,
+            plantingId: p.plantingId || null,
             cropId: p.cropId || null,
             cropName: p.cropName || p.cropId || "A planting",
             moon: finiteOrNull(p.moon),
             anchorYear: finiteOrNull(p.anchorYear),
             witnessedDays: finiteOrNull(p.witnessedDays),
             foundSeed: Boolean(p.foundSeed),
+            seedBackPlantingId: p.seedBackPlantingId || null,
+            provenance: provenanceOf(p),
+            grade: keepsakeGradeOf(p),
             civilDate: record.temporal?.civilDate || null
           };
         });
@@ -477,59 +609,149 @@
         if (day) kept.add(day);
       }
 
+      /* Every planting, of every year, read once against its own
+       * Moon's span: the beds below show this year's; the waiting
+       * shelves read the rest. A planting's grade at its turn is
+       * a fact of its witnessed count — computed here, spoken by
+       * the page only where the turn has actually come. */
+      const plantingViews = plantings.map(record => {
+        const p = gardenPayload(record) || {};
+        const viewYear = finiteOrNull(p.anchorYear);
+        const viewMoon = finiteOrNull(p.moon);
+        const span = viewYear && viewMoon ? moonSpan(viewYear, viewMoon) : null;
+        const plantedDate = p.plantedCivilDate || record.temporal?.civilDate || null;
+        const witnessed = new Set();
+        if (span) {
+          for (const day of kept) {
+            if (day >= span.start && day <= span.end && (!plantedDate || day >= plantedDate)) {
+              witnessed.add(day);
+            }
+          }
+        }
+        const witnessedDays = witnessed.size;
+        const stage = stageFor(witnessedDays);
+        return {
+          recordId: record.id || null,
+          cropId: p.cropId || null,
+          cropName: p.cropName || p.cropId || "A planting",
+          method: p.method || null,
+          moon: viewMoon,
+          anchorYear: viewYear,
+          plantedDate,
+          witnessedDays,
+          stageName: stage.name,
+          stageGlyph: stage.glyph,
+          foundSeed: Boolean(p.foundSeed),
+          seedBackPlantingId: p.seedBackPlantingId || null,
+          provenance: provenanceOf(p),
+          countyId: p.countyId || null,
+          countyName: p.countyName || null,
+          harvested: mine.some(
+            r =>
+              r.subtype === KEEPSAKE_SUBTYPE &&
+              (gardenPayload(r) || {}).plantingId === record.id
+          ),
+          turnGrade: gradeFor(witnessedDays)
+        };
+      });
+
+      /* Waiting harvests: past years' Ready plantings, earned at
+       * their turn and never gathered. They stand at the garden's
+       * head until the keeper's hand collects them — this year,
+       * next year, whenever the hand comes. (This year's past
+       * Moons keep their harvest on their own bed cards, as
+       * before.) Oldest first: the longest-waiting at the head. */
+      const waitingHarvests = plantingViews
+        .filter(v =>
+          v.anchorYear != null &&
+          anchorYear != null &&
+          v.anchorYear < anchorYear &&
+          !v.harvested &&
+          v.witnessedDays >= HARVEST_WITNESS_MIN
+        )
+        .map(v => ({ ...v, grade: v.turnGrade }));
+
+      /* Returns that have come due, welcomed or waiting. A due
+       * return rides its own bed while that bed is open; every
+       * other due return waits at the garden's head. A welcomed
+       * return — one a garden-return record names — offers
+       * itself to no one again. */
+      const returnedIds = new Set(
+        returns.map(r => (gardenPayload(r) || {}).keepsakeId).filter(Boolean)
+      );
+
+      /* The Still Bed's ground: what has been laid down and not
+       * yet met again. A keepsake lying in the still ground is
+       * out of the Moon returns' way — its return is the still
+       * one, found at the next still day and written beside it —
+       * and a still return that has come due and stands
+       * unwritten waits at the garden's head like every other
+       * earned thing in this garden. */
+      const stillLaid = mine
+        .filter(r => r.subtype === STILL_SUBTYPE)
+        .sort(byInstant)
+        .map(record => {
+          const p = gardenPayload(record) || {};
+          const keepsake = keepsakes.find(k => k.recordId === p.keepsakeId) || null;
+          if (!keepsake) return null;
+          return {
+            recordId: record.id || null,
+            keepsake,
+            laidYear: finiteOrNull(p.anchorYear),
+            laidCivilDate: p.laidCivilDate || record.temporal?.civilDate || null
+          };
+        })
+        .filter(Boolean);
+      const inGround = stillLaid.filter(l => !returnedIds.has(l.keepsake.recordId));
+      const inGroundIds = new Set(inGround.map(l => l.keepsake.recordId));
+
+      const dueReturns = keepsakes.filter(
+        k => returnIsDue(k, today) && !returnedIds.has(k.recordId) && !inGroundIds.has(k.recordId)
+      );
+
       const beds = [];
       for (let moon = 1; moon <= 13; moon += 1) {
         const span = anchorYear ? moonSpan(anchorYear, moon) : null;
-        const bedPlantings = plantings
-          .filter(r => {
-            const p = gardenPayload(r) || {};
-            return finiteOrNull(p.anchorYear) === anchorYear && finiteOrNull(p.moon) === moon;
-          })
-          .map(record => {
-            const p = gardenPayload(record) || {};
-            const plantedDate = p.plantedCivilDate || record.temporal?.civilDate || null;
-            const witnessed = new Set();
-            if (span) {
-              for (const day of kept) {
-                if (day >= span.start && day <= span.end && (!plantedDate || day >= plantedDate)) {
-                  witnessed.add(day);
-                }
-              }
-            }
-            const witnessedDays = witnessed.size;
-            const harvested = mine.some(
-              r =>
-                r.subtype === KEEPSAKE_SUBTYPE &&
-                (gardenPayload(r) || {}).plantingId === record.id
-            );
-            const past = isPastMoon(today, anchorYear, moon);
-            const stage = stageFor(witnessedDays);
-            return {
-              recordId: record.id || null,
-              cropId: p.cropId || null,
-              cropName: p.cropName || p.cropId || "A planting",
-              method: p.method || null,
-              plantedDate,
-              witnessedDays,
-              stageName: stage.name,
-              stageGlyph: stage.glyph,
-              foundSeed: Boolean(p.foundSeed),
-              countyId: p.countyId || null,
-              countyName: p.countyName || null,
-              harvested,
-              canHarvest: Boolean(past && !harvested && witnessedDays >= HARVEST_WITNESS_MIN),
-              goneToSeed: Boolean(past && !harvested && witnessedDays < HARVEST_WITNESS_MIN)
-            };
-          });
+        const past = isPastMoon(today, anchorYear, moon);
+        const bedPlantings = plantingViews
+          .filter(v => v.anchorYear === anchorYear && v.moon === moon)
+          .map(v => ({
+            ...v,
+            past,
+            /* The grade is spoken only once the turn has come;
+             * a planting still inside its Moon is growing, and
+             * the fold does not grade a growing thing. */
+            grade: past ? v.turnGrade : null,
+            canHarvest: Boolean(past && !v.harvested && v.witnessedDays >= HARVEST_WITNESS_MIN),
+            goneToSeed: Boolean(past && !v.harvested && v.witnessedDays < HARVEST_WITNESS_MIN)
+          }));
 
-        /* A keepsake from last year's same Moon returns while
-         * this Moon is the open one and no return record names
-         * it yet. */
-        const returnable = keepsakes.filter(k => {
-          if (k.anchorYear !== (anchorYear || 0) - 1 || k.moon !== moon) return false;
-          if (!isCurrentMoon(today, anchorYear, moon)) return false;
-          return !returns.some(r => (gardenPayload(r) || {}).keepsakeId === k.recordId);
-        });
+        /* Gathered seed: a tended planting of an earlier year,
+         * in this same bed, whose seed no planting has taken up
+         * yet. It heads this bed's table whenever the bed stands
+         * open and unplanted — a gathered seed keeps for its
+         * Moon, the way a found seed does, until it is planted
+         * or the keeper chooses otherwise from the table. Like
+         * the used-seed reading, this is derived, never written:
+         * no record is made in the keeper's absence. */
+        const seedBacks = plantingViews
+          .filter(v =>
+            v.moon === moon &&
+            v.anchorYear != null &&
+            anchorYear != null &&
+            v.anchorYear < anchorYear &&
+            !v.harvested &&
+            v.turnGrade === "tended" &&
+            !plantingViews.some(w => w.seedBackPlantingId === v.recordId)
+          )
+          .map(v => ({
+            plantingId: v.recordId,
+            cropId: v.cropId,
+            cropName: v.cropName,
+            method: v.method,
+            anchorYear: v.anchorYear,
+            witnessedDays: v.witnessedDays
+          }));
 
         beds.push({
           moon,
@@ -544,16 +766,98 @@
                 ? "past"
                 : "coming",
           plantings: bedPlantings,
-          returnable
+          seedBacks,
+          returnable: dueReturns.filter(
+            k => k.moon === moon && isCurrentMoon(today, anchorYear, moon)
+          )
         });
       }
+
+      const openBed = beds.find(b => b.state === "open") || null;
+      const moonWaiting = dueReturns.filter(
+        k => !(openBed && k.moon === openBed.moon)
+      );
+
+      /* The Still Bed, folded: whether today is a still day,
+       * what may be laid down (one keepsake of the year now
+       * ending, and only if none has been laid in this still
+       * cycle), what lies in the ground, and what is found
+       * there. On a still day the found keepsakes stand at the
+       * bed itself; on every later day, until their return is
+       * written, they wait at the garden's head. */
+      const stillDay = isStillDay(today);
+      const dueStill = inGround.filter(l => stillReturnIsDue(l.laidYear, today));
+      const still = {
+        isStillDay: stillDay,
+        laidThisCycle: stillDay && stillLaid.some(l => l.laidYear === anchorYear),
+        eligible: stillDay
+          ? keepsakes.filter(k =>
+              k.anchorYear === anchorYear &&
+              !returnedIds.has(k.recordId) &&
+              !stillLaid.some(l => l.keepsake.recordId === k.recordId)
+            )
+          : [],
+        inGround: inGround.map(l => ({
+          keepsakeId: l.keepsake.recordId,
+          cropId: l.keepsake.cropId,
+          cropName: l.keepsake.cropName,
+          moon: l.keepsake.moon,
+          anchorYear: l.keepsake.anchorYear,
+          laidYear: l.laidYear,
+          laidCivilDate: l.laidCivilDate,
+          due: dueStill.includes(l)
+        })),
+        dueFinds: stillDay
+          ? dueStill.map(l => ({
+              ...l.keepsake,
+              laidYear: l.laidYear,
+              laidCivilDate: l.laidCivilDate
+            }))
+          : []
+      };
+      const waitingReturns = stillDay
+        ? moonWaiting
+        : [
+            ...moonWaiting,
+            ...dueStill.map(l => ({
+              ...l.keepsake,
+              stillReturn: true,
+              laidYear: l.laidYear,
+              laidCivilDate: l.laidCivilDate
+            }))
+          ];
+
+      /* The year's reading: thirteen lines, one per bed of the
+       * year now ending — kept, flourished, tended, slept,
+       * rested — read at the gate on the still days, when the
+       * beds behind the keeper are that year's, complete. A bed
+       * never planted rested. */
+      const yearReading = stillDay
+        ? beds.map(bed => {
+            const planting = bed.plantings[0] || null;
+            if (!planting) return { moon: bed.moon, outcome: "rested", cropName: null };
+            if (planting.harvested) {
+              const keep = keepsakes.find(k => k.plantingId === planting.recordId) || null;
+              return {
+                moon: bed.moon,
+                outcome: keep && keep.grade === "flourished" ? "flourished" : "kept",
+                cropName: planting.cropName
+              };
+            }
+            return { moon: bed.moon, outcome: planting.turnGrade, cropName: planting.cropName };
+          })
+        : null;
 
       return {
         anchorYear,
         beds,
         keepsakes,
         seeds,
-        openBed: beds.find(b => b.state === "open") || null
+        waitingHarvests,
+        waitingReturns,
+        still,
+        yearReading,
+        openBed
       };
     }
 
@@ -621,7 +925,7 @@
         temporal,
         extraTags: ["garden-planting"],
         payload: {
-          version: 1,
+          version: 2,
           action: "plant",
           moon,
           anchorYear: Math.floor(Number(input.anchorYear) || 0) || null,
@@ -632,7 +936,17 @@
           foundSeed: Boolean(input.foundSeed),
           countyId: cleanText(input.countyId, 40) || null,
           countyName: cleanText(input.countyName, 60) || null,
-          seedId: cleanText(input.seedId, 80) || null
+          seedId: cleanText(input.seedId, 80) || null,
+          /* Where this planting began, named in the record: a
+           * gathered seed names the tended planting it was
+           * gathered from, so its keepsake can one day say
+           * "grown from your own gathered seed." */
+          seedBackPlantingId: cleanText(input.seedBackPlantingId, 80) || null,
+          provenance: input.seedBackPlantingId
+            ? "gathered"
+            : input.foundSeed
+              ? "found"
+              : "chosen"
         }
       });
     }
@@ -668,7 +982,7 @@
         temporal,
         extraTags: ["garden-keepsake"],
         payload: {
-          version: 1,
+          version: 2,
           action: "harvest",
           moon,
           anchorYear: Math.floor(Number(input.anchorYear) || 0) || null,
@@ -677,6 +991,21 @@
           plantingId: cleanText(input.plantingId, 80) || null,
           witnessedDays: Math.max(0, Math.floor(Number(input.witnessedDays) || 0)),
           foundSeed: Boolean(input.foundSeed),
+          /* The turn's grade, written with the keepsake
+           * (payload v2; v1 keepsakes read their grade back
+           * from their witnessed count in the fold). A harvest
+           * is kept or flourished — the line is 7, the honour
+           * at 14. The planting's provenance rides along, so
+           * the keepsake remembers how its planting began. */
+          grade:
+            cleanText(input.grade, 20) ||
+            (Math.floor(Number(input.witnessedDays) || 0) >= GRADE_FLOURISH_MIN
+              ? "flourished"
+              : "kept"),
+          provenance:
+            cleanText(input.provenance, 20) ||
+            (input.seedBackPlantingId ? "gathered" : input.foundSeed ? "found" : "chosen"),
+          seedBackPlantingId: cleanText(input.seedBackPlantingId, 80) || null,
           status: "kept"
         }
       });
@@ -722,6 +1051,45 @@
           keepsakeId: cleanText(input.keepsakeId, 80) || null,
           cropId: cleanText(input.cropId, 60) || null,
           cropName: cleanText(input.cropName, 60) || null
+        }
+      });
+    }
+
+    /**
+     * The Still Bed's record (Nov 23, 2026 — the play redesign's
+     * Ask 3, approved by Aaron with its fence): on a still day
+     * the keeper lays one keepsake of the year now ending down
+     * in the still ground. A planting of record, not of crop:
+     * this record names the keepsake; the keepsake's own record
+     * is never edited, moved, or deleted. What is laid down does
+     * not grow, is not witnessed, cannot be harvested, and is
+     * never lost — at the next still day, a full year on, it is
+     * found, and its return is written beside it with the same
+     * garden-return record the Moon returns use.
+     *
+     * The fence stands in the shape of the thing itself: this
+     * record can only name a keepsake from the keeper's own
+     * Atlas. There is no other kind of thing it can hold.
+     */
+    function buildStillRecord(input = {}, temporal = null) {
+      const moon = Math.floor(Number(input.moon) || 0);
+      return baseRecord({
+        type: EVENT_TYPE,
+        subtype: STILL_SUBTYPE,
+        title: `Laid in the Still Bed — ${cleanText(input.cropName, 60) || "a keepsake"}`,
+        summary:
+          "On a still day, the keeper laid one keepsake of the year now ending down in the Still Bed — the garden's fourteenth place, unnumbered, open only on the Day Out of Time and the Deep Time Day. It does not grow and is never lost; at the next still day it will be found, and its return written beside it. The keepsake itself is untouched; this record marks the laying down.",
+        temporal,
+        extraTags: ["garden-still"],
+        payload: {
+          version: 1,
+          action: "lay-down",
+          moon,
+          anchorYear: Math.floor(Number(input.anchorYear) || 0) || null,
+          keepsakeId: cleanText(input.keepsakeId, 80) || null,
+          cropId: cleanText(input.cropId, 60) || null,
+          cropName: cleanText(input.cropName, 60) || null,
+          laidCivilDate: cleanText(input.laidCivilDate, 20) || null
         }
       });
     }
@@ -1091,6 +1459,91 @@
       return btn;
     }
 
+    /* One harvest act, spoken from the bed card and from the
+     * waiting shelf alike: the keepsake is stamped with the
+     * planting's own Moon and year — a waiting harvest gathered
+     * a year late still belongs to the year that grew it. */
+    async function harvestPlanting(item, moon, anchorYear) {
+      const ok = await put(
+        buildKeepsakeRecord(
+          {
+            moon,
+            anchorYear,
+            cropId: item.cropId,
+            cropName: item.cropName,
+            plantingId: item.recordId,
+            witnessedDays: item.witnessedDays,
+            foundSeed: item.foundSeed,
+            grade: item.grade || null,
+            provenance: item.provenance || null,
+            seedBackPlantingId: item.seedBackPlantingId || null
+          },
+          coordinateForInstant(new Date())
+        )
+      );
+      if (ok) {
+        notifyRecordsChanged({ source: "pattern-garden", kind: "keepsake" });
+        await loadRecords();
+        render();
+        setStatus(`The ${item.cropName} keepsake is in your Life Atlas. It returns when Moon ${moon} comes round next year.`);
+      } else setStatus("The harvest could not be written — the record is unavailable.");
+    }
+
+    /* The laying down: one still record naming the keepsake.
+     * The keepsake's own record is never edited, moved, or
+     * deleted — what lies in the Still Bed lies there by this
+     * record alone, and leaves it the same way, by a return
+     * record written when it is found. */
+    async function layDownKeepsake(k) {
+      const ok = await put(
+        buildStillRecord(
+          {
+            moon: k.moon,
+            anchorYear: state.anchorYear,
+            keepsakeId: k.recordId,
+            cropId: k.cropId,
+            cropName: k.cropName,
+            laidCivilDate: todayTemporal?.civilDate || null
+          },
+          coordinateForInstant(new Date())
+        )
+      );
+      if (ok) {
+        notifyRecordsChanged({ source: "pattern-garden", kind: "still" });
+        await loadRecords();
+        render();
+        setStatus(`The ${k.cropName} keepsake lies in the Still Bed. At the next still day, a full year on, you will find it there.`);
+      } else setStatus("The laying down could not be written — the record is unavailable.");
+    }
+
+    /* The still day's own name, from the calendar itself: the
+     * Day Out of Time, or the Deep Time Day in a long year. */
+    function stillDayName() {
+      try {
+        const conv = globalThis.PatternCalendar?.fromCivilDate?.({ date: new Date() });
+        if (conv && !conv.insideCountedYear && conv.moonName) return conv.moonName;
+      } catch { /* the plain name stands */ }
+      return "Day Out of Time";
+    }
+
+    /* One return act, from the bed card and the waiting shelf
+     * alike: the return record names the keepsake; the keepsake
+     * itself is never edited. */
+    async function welcomeReturn(k) {
+      const ok = await put(
+        buildReturnRecord(
+          { moon: k.moon, anchorYear: state.anchorYear, keepsakeId: k.recordId, cropId: k.cropId, cropName: k.cropName },
+          coordinateForInstant(new Date())
+        )
+      );
+      if (ok) {
+        notifyRecordsChanged({ source: "pattern-garden", kind: "return" });
+        await loadRecords();
+        render();
+        setStatus(`The ${k.cropName} keepsake's return is written beside it in your Atlas.`);
+      } else setStatus("The return could not be written — the record is unavailable.");
+    }
+
     function render() {
       if (typeof document === "undefined" || !state) return;
       const coords = document.getElementById("garden-today-coords");
@@ -1148,6 +1601,71 @@
         }
       }
 
+      /* The garden's head: what waits for the keeper's hand —
+       * harvests earned in past years and returns that came due
+       * while their Moon was not the open one. Nothing here is
+       * gathered or welcomed by the page itself; the keeper's
+       * hand does it, whenever it comes. */
+      const waitHost = document.getElementById("garden-waiting");
+      if (waitHost) {
+        waitHost.replaceChildren();
+        for (const item of state.waitingHarvests || []) {
+          const row = document.createElement("p");
+          row.className = "garden-waiting-row";
+          const line = document.createElement("span");
+          line.textContent =
+            `A harvest is waiting: ${item.cropName}, from Moon ${item.moon}'s bed in ${item.anchorYear} — witnessed ${item.witnessedDays} days` +
+            (item.grade === "flourished" ? ", and it flourished" : "") +
+            ". It was earned at its Moon's turn and waits for your hand, however long the wait.";
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "garden-btn garden-btn-harvest";
+          btn.textContent = `Gather the ${item.cropName} keepsake`;
+          btn.addEventListener("click", () => { void harvestPlanting(item, item.moon, item.anchorYear); });
+          row.append(line, btn);
+          waitHost.appendChild(row);
+        }
+        for (const k of state.waitingReturns || []) {
+          const row = document.createElement("p");
+          row.className = "garden-waiting-row";
+          const line = document.createElement("span");
+          line.textContent = k.stillReturn
+            ? `Your ${k.cropName} keepsake, laid in the Still Bed in ${k.laidYear}, was found at the still day, and its return still waits to be written. What was laid down in the stillness is met again in the stillness — or here, whenever your hand comes.`
+            : `Your ${k.cropName} keepsake from ${k.anchorYear} came back with Moon ${k.moon} and is still waiting to be welcomed. A return is a meeting, and meetings here are not missed forever because a month was busy.`;
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "garden-btn";
+          btn.textContent = "Welcome it back";
+          btn.addEventListener("click", () => { void welcomeReturn(k); });
+          row.append(line, btn);
+          waitHost.appendChild(row);
+        }
+      }
+
+      /* The year's reading stands at the garden's head on the
+       * still days only: the year now ending, read whole, bed
+       * by bed — kept, flourished, tended, slept, rested. */
+      const readingHost = document.getElementById("garden-year-reading");
+      if (readingHost) {
+        readingHost.replaceChildren();
+        if (state.yearReading) {
+          const head = document.createElement("p");
+          head.className = "garden-reading-head";
+          head.textContent = "The year's reading — the year now ending, bed by bed:";
+          readingHost.appendChild(head);
+          const list = document.createElement("ul");
+          list.className = "garden-reading-list";
+          for (const line of state.yearReading) {
+            const li = document.createElement("li");
+            li.textContent = line.cropName
+              ? `Moon ${line.moon} — ${line.cropName}: ${line.outcome}.`
+              : `Moon ${line.moon} — rested.`;
+            list.appendChild(li);
+          }
+          readingHost.appendChild(list);
+        }
+      }
+
       /* The beds. */
       const host = document.getElementById("garden-beds");
       if (host) {
@@ -1174,12 +1692,18 @@
             line.className = "garden-bed-growth";
             line.textContent =
               `${planting.stageGlyph} ${planting.cropName} — ${planting.stageName} · witnessed ${planting.witnessedDays} day${planting.witnessedDays === 1 ? "" : "s"}` +
-              (planting.foundSeed ? " · from a found seed" : "") +
+              (planting.provenance === "gathered"
+                ? " · grown from your own gathered seed"
+                : planting.foundSeed
+                  ? " · from a found seed"
+                  : "") +
               (planting.countyName ? ` · ground: ${planting.countyName}` : "") +
               (planting.harvested
                 ? " · harvested — its keepsake is in your Atlas"
                 : planting.goneToSeed
-                  ? " · went to seed at the Moon's turn"
+                  ? planting.grade === "slept"
+                    ? " · slept — never witnessed; it went to seed in silence"
+                    : " · went to seed at the Moon's turn — its seed is gathered back for this bed"
                   : "");
             card.appendChild(line);
             if (guideFor(planting.cropId)) card.appendChild(guideButton(planting.cropId));
@@ -1188,30 +1712,7 @@
               btn.type = "button";
               btn.className = "garden-btn garden-btn-harvest";
               btn.textContent = `Harvest the ${planting.cropName} — keep its keepsake`;
-              btn.addEventListener("click", () => {
-                void (async () => {
-                  const ok = await put(
-                    buildKeepsakeRecord(
-                      {
-                        moon: bed.moon,
-                        anchorYear: state.anchorYear,
-                        cropId: planting.cropId,
-                        cropName: planting.cropName,
-                        plantingId: planting.recordId,
-                        witnessedDays: planting.witnessedDays,
-                        foundSeed: planting.foundSeed
-                      },
-                      coordinateForInstant(new Date())
-                    )
-                  );
-                  if (ok) {
-                    notifyRecordsChanged({ source: "pattern-garden", kind: "keepsake" });
-                    await loadRecords();
-                    render();
-                    setStatus(`The ${planting.cropName} keepsake is in your Life Atlas. It returns when Moon ${bed.moon} comes round next year.`);
-                  } else setStatus("The harvest could not be written — the record is unavailable.");
-                })();
-              });
+              btn.addEventListener("click", () => { void harvestPlanting(planting, bed.moon, state.anchorYear); });
               card.appendChild(btn);
             }
           }
@@ -1224,22 +1725,7 @@
             btn.type = "button";
             btn.className = "garden-btn";
             btn.textContent = "Welcome it back";
-            btn.addEventListener("click", () => {
-              void (async () => {
-                const ok = await put(
-                  buildReturnRecord(
-                    { moon: bed.moon, anchorYear: state.anchorYear, keepsakeId: k.recordId, cropId: k.cropId, cropName: k.cropName },
-                    coordinateForInstant(new Date())
-                  )
-                );
-                if (ok) {
-                  notifyRecordsChanged({ source: "pattern-garden", kind: "return" });
-                  await loadRecords();
-                  render();
-                  setStatus(`The ${k.cropName} keepsake's return is written beside it in your Atlas.`);
-                } else setStatus("The return could not be written — the record is unavailable.");
-              })();
-            });
+            btn.addEventListener("click", () => { void welcomeReturn(k); });
             card.append(note, btn);
           }
 
@@ -1276,7 +1762,8 @@
 
             const choices = plantableNow();
             const unusedSeeds = state.seeds.filter(s => !s.used && s.moon === bed.moon);
-            if (bed.plantings.length === 0 && choices.length) {
+            const seedBacks = bed.seedBacks || [];
+            if (bed.plantings.length === 0 && (choices.length || seedBacks.length)) {
               const list = document.createElement("div");
               list.className = "garden-plant-choices";
               const head = document.createElement("p");
@@ -1284,14 +1771,25 @@
                 ? `What belongs in this bed, from the farm record for ${loc.county} (${loc.anchor}):`
                 : "What belongs in this bed, from the farm record:";
               list.appendChild(head);
-              for (const choice of choices.slice(0, 12)) {
+              /* The button speaks the true remaining days, so a
+               * late planting is a known choice, never a trap. */
+              const daysLeft = daysRemainingInMoon(bed.span, todayTemporal?.civilDate || null);
+              const remainText = daysLeft
+                ? ` — ${daysLeft} day${daysLeft === 1 ? "" : "s"} of this Moon remain`
+                : "";
+
+              /* Gathered seed heads the table: a crop the keeper
+               * tended in an earlier year, its seed gathered
+               * back. It is planted by the same act as any table
+               * choice, and its record names where it came from. */
+              for (const back of seedBacks) {
+                const match = choices.find(c => c.cropId === back.cropId);
                 const row = document.createElement("p");
-                row.className = "garden-plant-choice";
-                const seed = unusedSeeds.find(s => s.cropId === choice.cropId);
+                row.className = "garden-plant-choice garden-plant-seedback";
                 const btn = document.createElement("button");
                 btn.type = "button";
                 btn.className = "garden-btn";
-                btn.textContent = `Plant ${choice.name} — ${choice.methodLabel.toLowerCase()}`;
+                btn.textContent = `Plant ${back.cropName} — from your own seed, gathered in ${back.anchorYear}${remainText}`;
                 btn.addEventListener("click", () => {
                   void (async () => {
                     const ok = await put(
@@ -1299,14 +1797,15 @@
                         {
                           moon: bed.moon,
                           anchorYear: state.anchorYear,
-                          cropId: choice.cropId,
-                          cropName: choice.name,
-                          method: choice.method,
+                          cropId: back.cropId,
+                          cropName: back.cropName,
+                          method: match ? match.method : back.method,
                           plantedCivilDate: todayTemporal?.civilDate || null,
                           countyId: loc?.id || countyId,
                           countyName: loc?.county || null,
-                          foundSeed: Boolean(seed),
-                          seedId: seed ? seed.recordId : null
+                          foundSeed: false,
+                          seedId: null,
+                          seedBackPlantingId: back.plantingId
                         },
                         coordinateForInstant(new Date())
                       )
@@ -1315,17 +1814,75 @@
                       notifyRecordsChanged({ source: "pattern-garden", kind: "plant" });
                       await loadRecords();
                       render();
-                      setStatus(`${choice.name} is planted in Moon ${bed.moon}'s bed. Witness the bed on the days you keep, and it grows.`);
+                      setStatus(`${back.cropName} is planted in Moon ${bed.moon}'s bed, from your own gathered seed. Witness the bed on the days you keep, and it grows.`);
                     } else setStatus("The planting could not be written — the record is unavailable.");
                   })();
                 });
                 const why = document.createElement("span");
                 why.textContent =
-                  ` ${choice.methodLabel} window ${choice.windowStart} → ${choice.windowEnd}. ${sourceLabel(choice.sources)}` +
-                  (seed ? " Your Spark's found seed is of this crop." : "");
+                  ` Gathered back from a planting you tended in ${back.anchorYear} — tending is never wasted.` +
+                  (match
+                    ? ` ${match.methodLabel} window ${match.windowStart} → ${match.windowEnd}. ${sourceLabel(match.sources)}`
+                    : "");
                 row.append(btn, why);
-                if (guideFor(choice.cropId)) row.appendChild(guideButton(choice.cropId));
+                if (guideFor(back.cropId)) row.appendChild(guideButton(back.cropId));
                 list.appendChild(row);
+              }
+
+              /* The whole table, grouped by method — nothing
+               * silently withheld behind a cap, so a rich Moon
+               * (the flood bed deals twenty-eight) reads at a
+               * glance instead of hiding half its offers. */
+              for (const method of ["indoor", "transplant", "sow", "fall"]) {
+                const group = choices.filter(c => c.method === method);
+                if (!group.length) continue;
+                const groupHead = document.createElement("p");
+                groupHead.className = "garden-plant-group";
+                groupHead.textContent = METHOD_LABELS[method] || method;
+                list.appendChild(groupHead);
+                for (const choice of group) {
+                  const row = document.createElement("p");
+                  row.className = "garden-plant-choice";
+                  const seed = unusedSeeds.find(s => s.cropId === choice.cropId);
+                  const btn = document.createElement("button");
+                  btn.type = "button";
+                  btn.className = "garden-btn";
+                  btn.textContent = `Plant ${choice.name} — ${choice.methodLabel.toLowerCase()}${remainText}`;
+                  btn.addEventListener("click", () => {
+                    void (async () => {
+                      const ok = await put(
+                        buildPlantRecord(
+                          {
+                            moon: bed.moon,
+                            anchorYear: state.anchorYear,
+                            cropId: choice.cropId,
+                            cropName: choice.name,
+                            method: choice.method,
+                            plantedCivilDate: todayTemporal?.civilDate || null,
+                            countyId: loc?.id || countyId,
+                            countyName: loc?.county || null,
+                            foundSeed: Boolean(seed),
+                            seedId: seed ? seed.recordId : null
+                          },
+                          coordinateForInstant(new Date())
+                        )
+                      );
+                      if (ok) {
+                        notifyRecordsChanged({ source: "pattern-garden", kind: "plant" });
+                        await loadRecords();
+                        render();
+                        setStatus(`${choice.name} is planted in Moon ${bed.moon}'s bed. Witness the bed on the days you keep, and it grows.`);
+                      } else setStatus("The planting could not be written — the record is unavailable.");
+                    })();
+                  });
+                  const why = document.createElement("span");
+                  why.textContent =
+                    ` ${choice.methodLabel} window ${choice.windowStart} → ${choice.windowEnd}. ${sourceLabel(choice.sources)}` +
+                    (seed ? " Your Spark's found seed is of this crop." : "");
+                  row.append(btn, why);
+                  if (guideFor(choice.cropId)) row.appendChild(guideButton(choice.cropId));
+                  list.appendChild(row);
+                }
               }
               card.appendChild(list);
             } else if (bed.plantings.length === 0) {
@@ -1337,6 +1894,70 @@
           }
 
           host.appendChild(card);
+        }
+      }
+
+      /* The Still Bed, at the garden's foot: a fourteenth
+       * place, not numbered among the thirteen. It stands here
+       * on every day — what lies in it is never hidden — and it
+       * opens only on the still days. Nothing grows here, no
+       * crop is planted, and nothing about it is ever offered
+       * anywhere else on the page. */
+      const stillHost = document.getElementById("garden-still-body");
+      if (stillHost && state.still) {
+        stillHost.replaceChildren();
+        const still = state.still;
+        const stillLine = (text) => {
+          const p = document.createElement("p");
+          p.className = "garden-bed-note";
+          p.textContent = text;
+          stillHost.appendChild(p);
+        };
+        if (!still.isStillDay) {
+          stillLine("The Still Bed opens only on the still days — the Day Out of Time, and the Deep Time Day beside it in a long year — and on no other day. Nothing grows here and no crop is ever asked of this ground; it is where one keepsake of a year may be laid down in the stillness, and found again a year on.");
+          for (const l of still.inGround) {
+            stillLine(`In the still ground: your ${l.cropName} keepsake, laid down on ${l.laidCivilDate || "a still day"}. It is not lost. You will find it at the next still day.`);
+          }
+        } else {
+          stillLine(`Today is the ${stillDayName()} — a still day, outside the count. The thirteen beds rest, the year is read at the garden's head, and the Still Bed is open.`);
+          for (const find of still.dueFinds) {
+            const row = document.createElement("p");
+            row.className = "garden-waiting-row";
+            const line = document.createElement("span");
+            line.textContent = `You find what you laid down in the stillness: your ${find.cropName} keepsake, laid on ${find.laidCivilDate || "last year's still day"}. Its return is written beside it, the way keepsakes return.`;
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "garden-btn";
+            btn.textContent = "Write its return";
+            btn.addEventListener("click", () => { void welcomeReturn(find); });
+            row.append(line, btn);
+            stillHost.appendChild(row);
+          }
+          if (!still.laidThisCycle) {
+            if (still.eligible.length) {
+              stillLine("Lay one keepsake of the year now ending in the still ground. It will not grow, will not be witnessed, cannot be harvested, and will not be lost. At the next still day, a full year on, you will find it here.");
+              for (const k of still.eligible) {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = "garden-btn";
+                btn.textContent = `Lay the ${k.cropName} keepsake down`;
+                btn.addEventListener("click", () => { void layDownKeepsake(k); });
+                stillHost.appendChild(btn);
+              }
+            } else if (!still.dueFinds.length) {
+              stillLine("No keepsake of the year now ending stands ready to be laid down, and the bed rests empty — which is also an honest stillness.");
+            }
+          } else {
+            const laid = still.inGround.find(l => l.laidYear === state.anchorYear);
+            stillLine(laid
+              ? `Your ${laid.cropName} keepsake lies in the still ground. It will be found at the next still day.`
+              : "A keepsake of this year lies in the still ground. It will be found at the next still day.");
+          }
+          for (const l of still.inGround) {
+            if (!l.due && l.laidYear !== state.anchorYear) {
+              stillLine(`In the still ground: your ${l.cropName} keepsake, laid down on ${l.laidCivilDate || "a still day"}. You will find it at the next still day.`);
+            }
+          }
         }
       }
 
@@ -1352,7 +1973,12 @@
           main.className = "garden-pass-main";
           main.textContent =
             `Keepsake — ${k.cropName}, from Moon ${k.moon}'s bed · harvested ${k.civilDate || "on an unstamped day"} · witnessed ${k.witnessedDays ?? "—"} days` +
-            (k.foundSeed ? " · grown from a found seed" : "");
+            (k.grade === "flourished" ? " · flourished" : "") +
+            (k.provenance === "gathered"
+              ? " · grown from your own gathered seed"
+              : k.foundSeed
+                ? " · grown from a found seed"
+                : "");
           const held = document.createElement("span");
           held.className = "garden-pass-held";
           held.textContent = "Kept on this device";
@@ -1433,11 +2059,19 @@
       VERSION,
       STAGES,
       HARVEST_WITNESS_MIN,
+      GRADE_FLOURISH_MIN,
+      GRADES,
+      gradeFor,
+      daysRemainingInMoon,
+      returnIsDue,
+      isStillDay,
+      stillReturnIsDue,
       SUBTYPES: Object.freeze({
         PLANT: PLANT_SUBTYPE,
         WITNESS: WITNESS_SUBTYPE,
         SEED: SEED_SUBTYPE,
         RETURN: RETURN_SUBTYPE,
+        STILL: STILL_SUBTYPE,
         KEEPSAKE: KEEPSAKE_SUBTYPE
       }),
       moonSpan,
@@ -1461,6 +2095,7 @@
       buildKeepsakeRecord,
       buildSeedRecord,
       buildReturnRecord,
+      buildStillRecord,
       coordinateForInstant,
       coordinateLabel,
       isPatternRecord,

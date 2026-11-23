@@ -242,7 +242,17 @@ test("B7.60.1 overhead window wraps around the Moon circle", () => {
   assert.equal(visible(dayCandidate(12, 1)), false); // distance 2 stays hidden
 });
 
-test("B7.60.1 tilted far skeleton still answers to window and aperture", () => {
+test("B7.60.1 tilted far: faced Moon discloses fully (Nov 22, 2026); skeleton, window and aperture still govern the rest", () => {
+  // Aaron's deep-fix order (Nov 22, 2026, from his phone: Moon 13
+  // faced dead centre with none of its days showing) supersedes the
+  // B7.59.2A far skeleton FOR THE FACED MOON ONLY: the disclosure-
+  // centre Moon now discloses its whole 4×7 face at Year View.
+  // Neighbours keep the sparse skeleton, the shared window still
+  // bounds every Moon, and the gate still requires aperture passage
+  // (the faced Moon's exemption lives inside the real
+  // railApertureOpacity, which returns 1 for the centre Moon — this
+  // harness injects the aperture, so gate-level discipline is what
+  // is proven here).
   const base = {
     cameraOverhead: false,
     semanticBand: "far",
@@ -251,8 +261,10 @@ test("B7.60.1 tilted far skeleton still answers to window and aperture", () => {
   };
   const open = loadRailLabelVisible({ ...base, railApertureOpacity: () => 1 });
   assert.equal(open(dayCandidate(8, 1)), true);
-  assert.equal(open(dayCandidate(7, 14)), true);
-  assert.equal(open(dayCandidate(8, 2)), false);
+  assert.equal(open(dayCandidate(8, 2)), true); // faced Moon: every day discloses
+  assert.equal(open(dayCandidate(8, 27)), true);
+  assert.equal(open(dayCandidate(7, 14)), true); // neighbour anchor
+  assert.equal(open(dayCandidate(7, 7)), false); // neighbour non-anchor stays skeleton-quiet
   assert.equal(open(dayCandidate(11, 1)), false); // outside the window
   const shut = loadRailLabelVisible({ ...base, railApertureOpacity: () => 0 });
   assert.equal(shut(dayCandidate(8, 1)), false); // aperture still governs tilted
@@ -262,6 +274,7 @@ test("B7.60.1 tilted far skeleton still answers to window and aperture", () => {
     sharedMoonWindow: new Set([8])
   });
   assert.equal(narrow(dayCandidate(7, 14)), false); // window still governs tilted
+  assert.equal(narrow(dayCandidate(8, 2)), true); // faced Moon inside a narrow window
 });
 
 test("B7.60.1 tilted full rail still answers to window and aperture", () => {
