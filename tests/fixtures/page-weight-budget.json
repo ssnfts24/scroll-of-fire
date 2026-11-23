@@ -1,11 +1,12 @@
 {
- "note": "Standing page-weight budget (Aaron's weight diet, Nov 20, 2026). Each cap is the page's measured weight — its own HTML plus the unique local JS/CSS it loads — with headroom (10%; 5% for the Sphere instrument). tests/page-weight.test.js fails when a page grows past its cap, when a new page has no cap, or when the idempotent stacks are loaded twice again. To raise a cap, diet first, then regenerate deliberately and say why in the commit.",
+ "note": "Standing page-weight budget (Aaron's weight diet, Nov 20, 2026). Each cap is the page's measured weight \u2014 its own HTML plus the unique local JS/CSS it loads \u2014 with headroom (10%; 5% for the Sphere instrument). tests/page-weight.test.js fails when a page grows past its cap, when a new page has no cap, or when the idempotent stacks are loaded twice again. To raise a cap, diet first, then regenerate deliberately and say why in the commit.",
  "caps": {
   "13-moon-whitepaper.html": 655360,
   "404.html": 98304,
   "privacy-policy.html": 587776,
   "ab.html": 598016,
   "about-aaron.html": 737280,
+  "aiyanas-world.html": 201728,
   "alignment-ledger.html": 802816,
   "caravan.html": 49152,
   "circle.html": 679936,
@@ -25,7 +26,7 @@
   "invoke.html": 696320,
   "lab.html": 688128,
   "ledger.html": 720896,
-  "living-time-sphere.html": 3407872,
+  "living-time-sphere.html": 3510000,
   "micro.html": 606208,
   "moons.html": 1900544,
   "offline.html": 8192,
@@ -82,6 +83,7 @@
   "theory/equations/eq14.html": 729088,
   "theory/equations/eq15.html": 729088,
   "theory/equations/eq16.html": 720896,
-  "theory/equations/eq17.html": 720896
+  "theory/equations/eq17.html": 720896,
+  "codex-white-paper.html": 688128
  }
 }

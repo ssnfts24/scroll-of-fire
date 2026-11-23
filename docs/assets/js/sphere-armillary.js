@@ -502,9 +502,41 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
       returnFocus = null;
     }
 
+    /* Day Details sheet-scroll fix (Aaron, Nov 22, 2026, 22:43
+     * PST — his word on PR #243, after his phone showed the Day
+     * Details "not showing"). The one sheet holds every room in a
+     * single scroll, and that scroll survives close and reopen:
+     * focusSheet focused the asked-for room with preventScroll
+     * and nothing ever brought the room itself into view, so
+     * after any deep visit — the planner rooms, the archive, the
+     * Spark talk some ten thousand pixels down — Day Details
+     * opened at the old depth, its readout far above the screen.
+     * The fix stands the asked-for room at the sheet's top, just
+     * under the sheet bar that stays pinned there, inside the
+     * same frame as the focus and before the sheet has risen —
+     * the keeper lands on the room they asked for, whichever
+     * room it is. A target inside a room (the Spark talk's
+     * input) stands its room at the top; the focus still goes
+     * to the target itself. Nothing else about the sheet — its
+     * state, its rooms, its focus order — is touched. */
+    function bringRoomToSheetTop(target) {
+      if (!target || !sidebar.contains(target)) return;
+      var room = target;
+      while (room.parentElement && room.parentElement !== sidebar) {
+        room = room.parentElement;
+      }
+      var bar = sidebar.querySelector(".sphere-sheet-bar");
+      var barHeight = bar ? bar.getBoundingClientRect().height : 0;
+      var delta = room.getBoundingClientRect().top -
+        sidebar.getBoundingClientRect().top;
+      sidebar.scrollTop = Math.max(0, Math.round(
+        sidebar.scrollTop + delta - barHeight));
+    }
+
     function focusSheet(target) {
       var focusTarget = target || closeButton;
       window.requestAnimationFrame(function () {
+        bringRoomToSheetTop(target);
         if (focusTarget && focusTarget.isConnected) focusTarget.focus({ preventScroll: true });
       });
     }
@@ -1587,7 +1619,7 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
       // only when its ring rides and its data exists. Absence
       // is honest — a line is never padded into being.
       if (skyRingSelected && selectedCivilISO) {
-        skyEl.textContent = buildSkyText(new Date(selectedCivilISO + "T12:00:00Z"));
+        skyEl.textContent = buildSkyText(new Date(selectedCivilISO + "T12:00:00"));
         skyEl.hidden = false;
       } else {
         skyEl.hidden = true;
@@ -1608,6 +1640,7 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
       soundForDay(pos);
     }
     renderReadoutRef = render;
+    window.addEventListener("sof:sky-engine-ready", render);
     render();
     var strip = document.getElementById("sphere-state-strip");
     /* Performance (sphere-performance pass): during a drag the
@@ -2052,6 +2085,28 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
       }
       return { season: current.season, next: next };
     }
+    // Beyond the table's years, the turns are computed on this
+    // device by the Phase C sky engine (root-found on the Sun's
+    // longitude; pinned against this table and the JPL equinox
+    // record in the engine's tests). The published table keeps
+    // precedence in its own years — it is the sourced record.
+    var skyEngine = window.CodexSkyEngine;
+    if (skyEngine && typeof skyEngine.seasonTurns === "function") {
+      try {
+        var computed = skyEngine.seasonTurns(year);
+        var curC = { season: "Winter" };
+        var nxtC = null;
+        for (var k = 0; k < computed.length; k += 1) {
+          if (now >= computed[k].at) curC = computed[k];
+          else { nxtC = computed[k]; break; }
+        }
+        if (!nxtC) {
+          var firstNext = skyEngine.seasonTurns(year + 1)[0];
+          if (firstNext) nxtC = firstNext;
+        }
+        return { season: curC.season, next: nxtC ? { name: nxtC.name, season: nxtC.season, at: nxtC.at } : null };
+      } catch (err) { /* the anchors below stand */ }
+    }
     var anchors = SEASON_ANCHORS.map(function (a) {
       return { name: a.name, season: a.season, at: new Date(year, a.month, a.day) };
     });
@@ -2087,6 +2142,32 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
     } else if (info.next) {
       text += " · the " + info.next.name + " is the next turn";
     }
+    // The computed sky (Phase C sky engine, Aaron's order of
+    // Nov 23, 2026): the Moon's phase stands on the line for
+    // every date, computed on this device; and when a place is
+    // kept, the day's sunrise and sunset are computed here for
+    // that place — no fetch. No place, no sun times: the line
+    // never prints a default sky.
+    var engine = window.CodexSkyEngine;
+    if (engine) {
+      try {
+        var phase = engine.moonPhase(date);
+        if (phase) text += " · the Moon is " + phase.name + ", " + Math.round(phase.illumination * 100) + "% lit";
+        var placeState = null;
+        try { placeState = window.SofEnvironmentState && window.SofEnvironmentState.getEnvironmentState ? window.SofEnvironmentState.getEnvironmentState() : null; } catch (err) { placeState = null; }
+        var pLat = Number(placeState && placeState.place && placeState.place.latitude);
+        var pLon = Number(placeState && placeState.place && placeState.place.longitude);
+        if (Number.isFinite(pLat) && Number.isFinite(pLon)) {
+          var civil = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
+          var tzOff = -new Date(civil.year, civil.month - 1, civil.day, 12).getTimezoneOffset();
+          var sun = engine.sunForCivilDate(civil, pLat, pLon, tzOff);
+          var fmtT = function (d) { return d ? d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }) : null; };
+          if (sun && sun.polar === "day") text += " · the Sun does not set on this day here";
+          else if (sun && sun.polar === "night") text += " · the Sun does not rise on this day here";
+          else if (sun && sun.sunrise && sun.sunset) text += " · sunrise " + fmtT(sun.sunrise) + " · sunset " + fmtT(sun.sunset) + " here, computed on this device";
+        }
+      } catch (err) { /* the season line stands as it was */ }
+    }
     return text;
   }
 
@@ -2108,6 +2189,10 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
     }
     render();
     window.setInterval(render, 60000);
+    // When the sky engine wakes (it loads with the companion
+    // layer, on its own schedule), the line gains its computed
+    // words at once rather than at the next minute's tick.
+    window.addEventListener("sof:sky-engine-ready", render);
   }
 
   /* ── 4c. The instrument is directly touchable ──────────────────
