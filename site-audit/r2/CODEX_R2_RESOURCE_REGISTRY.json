@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 2349,
-    "bytes": 983883158,
+    "bytes": 983883753,
     "byGroup": {
       "tooling": 269,
       "manuscript": 17,
@@ -56772,8 +56772,8 @@
       "path": "tests/sphere-temporal-worlds-browser.test.js",
       "title": "sphere-temporal-worlds-browser.test.js",
       "format": "js",
-      "bytes": 24802,
-      "sha256": "749ebc154ad1d1b9a162e5dd971611fd50a6a2612eebe448cde77f633abc85eb",
+      "bytes": 25397,
+      "sha256": "6d122b75176953e7d4587af3e3b0091fcb66a157ef0270a43fa2defd5fc11330",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
