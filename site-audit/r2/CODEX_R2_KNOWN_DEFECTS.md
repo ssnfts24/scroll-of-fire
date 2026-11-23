@@ -33,7 +33,7 @@ Full per-chapter data: `scripture-preliminary-scan.json`.
 
 ## Publication
 
-- 70 deployed files need a publish/withdraw decision (see Publication Review).
+- 71 deployed files need a publish/withdraw decision (see Publication Review).
 - Deployed bundle archives under `docs/codex_final_upload/` have not had their contents inspected.
 - Root images with upload-style names have not been visually reviewed.
 

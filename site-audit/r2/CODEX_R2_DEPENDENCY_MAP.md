@@ -68,6 +68,7 @@
 | `scripts/apply-spark-presence.mjs` | `docs/living-time-sphere.html`, `docs/404.html`, `docs/offline.html`, `docs/caravan.html`, `docs/companions.html` |
 | `scripts/apply-theory-work.mjs` | `docs/theory.html` |
 | `scripts/audit-site.mjs` | — |
+| `scripts/build-bright-stars.py` | — |
 | `scripts/build-link-graph.mjs` | `docs/assets/data/link-graph.json`, `site-audit/site-master-inventory.json` |
 | `scripts/build-r2-inventory.mjs` | `site-audit/r2/document-extracts.json`, `docs/scroll/archive/Full_Scroll_Unsealed.txt`, `docs/development/TEMPORAL-AUTHORITY-CONTRACT.md`, `site-audit/r2/CODEX_R2_RESOURCE_REGISTRY.json` |
 | `scripts/build-scroll-editorial.mjs` | `docs/scroll/data/editorial-edition.json`, `docs/scroll/evidence/claim-register.json`, `docs/scroll/evidence/register.md` |
