@@ -200,6 +200,45 @@
     };
   }
 
+  /* ------------------------- the story corner ------------------------- */
+
+  /* The story corner: the tokens of the episodes the keeper has
+   * watched through, folded from the watch records by the
+   * activities module (SparkActivities.foldWatches — the browser
+   * half passes its fold in; the token derives from the watch
+   * record and is stored nowhere else). Without the fold, the
+   * corner stands honestly empty. */
+  function storyCornerFromFold(fold) {
+    if (!fold || !Array.isArray(fold.tokens)) {
+      return { readable: false, tokens: [], tokenCount: 0 };
+    }
+    const tokens = fold.tokens.map(t => ({
+      episodeId: t.episodeId || null,
+      line: t.line || "",
+      token: t.token || "",
+      moonName: t.moonName || "",
+      skill: t.skill || null,
+      watchedOn: t.watchedOn || "",
+      metAgainYears: Array.isArray(t.metAgainYears) ? [...t.metAgainYears] : []
+    }));
+    return { readable: true, tokens, tokenCount: tokens.length };
+  }
+
+  /* The portrait of keeping (Spark Activities, slice 1): a fold
+   * over the keeper's whole record — the breadth of kinds of
+   * keeping that stand in it — passed in by the browser half
+   * (SparkActivities.portraitFromRecords). It is a portrait, not
+   * a rank: it never goes down and unlocks nothing. */
+  function portraitFromInput(portrait) {
+    if (!portrait || typeof portrait !== "object") return null;
+    return {
+      stageName: portrait.stageName || "Spark",
+      kindCount: portrait.kindCount || 0,
+      kinds: Array.isArray(portrait.kinds) ? portrait.kinds : [],
+      line: portrait.line || ""
+    };
+  }
+
   /* ------------------------------ home ----------------------------- */
 
   const HOME_FORMS = [
@@ -229,6 +268,12 @@
    *   displayName,   — the name the Spark answers to, or null
    *   atlasRecords,  — every Life Atlas record on the device
    *   gardenFold,    — CodexPatternGarden.foldGarden(...) or null
+   *   storyWatches,  — SparkActivities.foldWatches(records) or null:
+   *                    the story corner's tokens, derived from the
+   *                    keeper's episode-watched records
+   *   keepingPortrait — SparkActivities.portraitFromRecords(records)
+   *                    or null: the portrait of keeping (slice 1 —
+   *                    Spark / Kindled by breadth of keeping kinds)
    *   trailFinds,    — LivingTrail trail.finds, or null
    *   chapters,      — the story spine's chapters, or null
    *   today,         — today's canonical conversion, or null
@@ -268,6 +313,8 @@
     const keepsakes = keepsakesFromRecords(input.atlasRecords);
     const garden = gardenFromFold(input.gardenFold);
     const story = storyFromTrail(input.trailFinds, input.chapters);
+    const storyCorner = storyCornerFromFold(input.storyWatches);
+    const portrait = portraitFromInput(input.keepingPortrait);
     const keptDays = record && Array.isArray(record.daysSeen) ? record.daysSeen.length : 0;
     const home = homeForStage(spark ? spark.stageIndex : null);
 
@@ -315,7 +362,17 @@
       story: story.foundCount
         ? `The road marker: ${story.foundCount} chapter${story.foundCount === 1 ? "" : "s"} of the Traveller's Road walked` +
           (story.totalChapters ? `, of ${story.totalChapters} the spine now tells.` : ".")
-        : "The road marker: no chapters walked yet. The road is open."
+        : "The road marker: no chapters walked yet. The road is open.",
+      storyCorner: !storyCorner.readable
+        ? "The story corner: it could not be read here. The episodes' own pages keep their tokens."
+        : storyCorner.tokenCount
+          ? `The story corner: ${storyCorner.tokenCount} token${storyCorner.tokenCount === 1 ? "" : "s"} stand here, one for each episode watched through — ` +
+            storyCorner.tokens.map(t => t.token).join("; ") +
+            `. Touch one and the Spark names its episode and the day it came home.`
+          : "The story corner: no tokens yet. An episode watched through to its end brings its token home.",
+      portrait: portrait
+        ? portrait.line
+        : "The portrait of keeping: it is painted by keeping, and read from the record when the record can be read here."
     };
 
     return {
@@ -329,6 +386,8 @@
       keepsakeTotal: keepsakes.length,
       garden,
       story,
+      storyCorner,
+      portrait,
       path: { keptDays },
       lines
     };
@@ -345,6 +404,8 @@
     keepsakesFromRecords,
     gardenFromFold,
     storyFromTrail,
+    storyCornerFromFold,
+    portraitFromInput,
     homeForStage,
     buildModel
   };
@@ -457,6 +518,24 @@
       }
     }
 
+    /* The story corner and the portrait of keeping ride the
+     * activities module's folds over the same records — loaded
+     * lazily the same way, and read-only here as everywhere. */
+    let storyWatches = null;
+    let keepingPortrait = null;
+    try {
+      if (!window.SparkActivities) {
+        await loadScript("assets/js/spark-activities.js");
+      }
+      if (window.SparkActivities) {
+        storyWatches = window.SparkActivities.foldWatches(atlasRecords);
+        keepingPortrait = window.SparkActivities.portraitFromRecords(atlasRecords);
+      }
+    } catch {
+      storyWatches = null;
+      keepingPortrait = null;
+    }
+
     let trailFinds = null;
     try {
       if (window.LivingTrail) trailFinds = window.LivingTrail.load().finds || {};
@@ -515,6 +594,8 @@
       displayName,
       atlasRecords,
       gardenFold,
+      storyWatches,
+      keepingPortrait,
       trailFinds,
       chapters,
       today,
@@ -563,6 +644,17 @@
     }
     items.push({ key: "path", label: "The path", line: model.lines.path });
     items.push({ key: "story", label: "The road marker", line: model.lines.story });
+    items.push({ key: "story-corner", label: "The story corner", line: model.lines.storyCorner });
+    for (const t of model.storyCorner.tokens) {
+      items.push({
+        key: "story-token",
+        label: t.token || "A token",
+        line: `${t.line} — watched through on ${t.watchedOn}. Its token stands here.` +
+          (t.metAgainYears.length ? ` Met again in its own Moon in ${t.metAgainYears.join(", ")}.` : "") +
+          (t.skill ? ` The skill it teaches, ${t.skill.name}, is marked met.` : "")
+      });
+    }
+    items.push({ key: "portrait", label: "The portrait of keeping", line: model.lines.portrait });
     for (const item of items) {
       const li = document.createElement("li");
       const button = document.createElement("button");
