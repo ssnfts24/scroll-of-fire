@@ -38,6 +38,28 @@
   let _dragPhi0    = 0;
   let _dragTheta0  = 0;
 
+  /*
+   * MOVEMENT (Sphere deep-fix, Aaron, Nov 22, 2026: the Sphere "needs
+   * to move and work perfect and professionally"). Two gaps measured
+   * in the old camera: a drag stopped dead the instant the finger
+   * lifted (no glide — the instrument felt switched off, not spun),
+   * and each wheel notch teleported the distance (no easing — the
+   * zoom arrived in steps, not as a movement).
+   *
+   * _glide: release velocity from the drag itself, decayed with
+   * friction in tick(). It is the keeper's own momentum, never an
+   * added animation: a slow release glides a little, a flick glides
+   * further, and any new touch, transition, or programmatic move
+   * cancels it. Reduced-motion keepers get no glide.
+   * _distTarget: the wheel's destination; tick() eases _dist to it
+   * so a notch is a smooth approach. Pinch stays direct (a pinch is
+   * the hand itself; easing it would feel like lag).
+   */
+  let _dragSamples = [];   // recent { t, theta, phi } while dragging
+  let _glide       = null; // { vTheta, vPhi } in radians per millisecond
+  let _distTarget  = null;
+  let _distEaseLastMs = 0;
+
   // Two-pointer / right-drag pan state. Pan moves the look target while
   // preserving the camera orbit around that target.
   let _panning = false;
@@ -210,6 +232,42 @@
   function tick(nowMs) {
     let dirty = false;
 
+    // Release glide — the drag's own momentum, friction-decayed.
+    if (_glide && !_transition && !_dragging && !_panning) {
+      const dt = Math.min(Math.max(nowMs - (_glide.lastMs || nowMs), 0), 64);
+      if (dt > 0) {
+        const decay = Math.exp(-dt / 140);
+        _glide.vTheta *= decay;
+        _glide.vPhi *= decay;
+        _theta += _glide.vTheta * dt;
+        _phi = Math.max(-1.5, Math.min(1.5, _phi + _glide.vPhi * dt));
+        if (_phi <= -1.5 || _phi >= 1.5) _glide.vPhi = 0;
+        _glide.lastMs = nowMs;
+        _apply();
+        dirty = true;
+        if (Math.abs(_glide.vTheta) < 0.00005 && Math.abs(_glide.vPhi) < 0.00005) {
+          _glide = null;
+        }
+      }
+    }
+
+    // Wheel zoom easing — approach the notch's destination smoothly.
+    if (_distTarget != null && !_transition && !_dragging && _pinchStart == null) {
+      const dt = Math.min(Math.max(nowMs - (_distEaseLastMs || nowMs), 0), 64);
+      _distEaseLastMs = nowMs;
+      if (dt > 0) {
+        const step = 1 - Math.exp(-dt / 110);
+        _dist += (_distTarget - _dist) * step;
+        if (Math.abs(_distTarget - _dist) < 0.002) {
+          _dist = _distTarget;
+          _distTarget = null;
+        }
+        _dist = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, _dist));
+        _apply();
+        dirty = true;
+      }
+    }
+
     // Animate transition
     if (_transition) {
       const elapsed = nowMs - _transition.startMs;
@@ -274,6 +332,9 @@
     _dragPhi0    = _phi;
     _dragTheta0  = _theta;
     _transition  = null;  // cancel any in-flight transition
+    _glide       = null;  // a fresh touch owns the instrument again
+    _distTarget  = null;
+    _dragSamples = [{ t: performance.now(), theta: _theta, phi: _phi }];
     stopDrift();
   }
 
@@ -283,12 +344,40 @@
     const dy = y - _dragStartY;
     _theta = _dragTheta0 - dx * 0.007;
     _phi   = Math.max(-1.5, Math.min(1.5, _dragPhi0 + dy * 0.005));
+    const now = performance.now();
+    _dragSamples.push({ t: now, theta: _theta, phi: _phi });
+    // Keep only the release window: the last ~120 ms of the hand.
+    while (_dragSamples.length > 2 && now - _dragSamples[0].t > 120) {
+      _dragSamples.shift();
+    }
     _apply();
     return true;
   }
 
   function onPointerUp() {
     _dragging = false;
+    /*
+     * Hand the drag's own velocity to the glide. Velocity comes from
+     * the oldest sample still inside the release window, so a drag
+     * that slowed to a stop before lifting does not jump. Flicks are
+     * clamped; a deliberate slow release produces no glide at all.
+     */
+    const reduced = typeof globalThis.matchMedia === "function"
+      && globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reduced && _dragSamples.length > 1) {
+      const first = _dragSamples[0];
+      const last = _dragSamples[_dragSamples.length - 1];
+      const dt = last.t - first.t;
+      if (dt >= 24) {
+        const clampV = v => Math.max(-0.02, Math.min(0.02, v));
+        const vTheta = clampV((last.theta - first.theta) / dt);
+        const vPhi = clampV((last.phi - first.phi) / dt);
+        if (Math.abs(vTheta) > 0.0004 || Math.abs(vPhi) > 0.0004) {
+          _glide = { vTheta, vPhi, lastMs: performance.now() };
+        }
+      }
+    }
+    _dragSamples = [];
   }
 
   function isDragging() { return _dragging || _panning; }
@@ -299,6 +388,7 @@
     _panStartY = y;
     _panTarget0 = { ..._target };
     _transition = null;
+    _glide = null;
     stopDrift();
   }
 
@@ -331,12 +421,23 @@
   function zoom(delta) {
     _dist = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, _dist + delta));
     _transition = null;
+    _distTarget = null;
     _apply();
   }
 
   function onWheel(e) {
-    const delta = e.deltaY * 0.005;
-    zoom(delta);
+    /*
+     * A wheel notch names a destination, not a teleport: tick()
+     * eases _dist to _distTarget (110 ms time constant), so stacked
+     * notches accumulate into one smooth approach instead of a
+     * staircase. Same total travel as the old direct zoom.
+     */
+    const base = _distTarget != null ? _distTarget : _dist;
+    _distTarget = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, base + e.deltaY * 0.005));
+    _distEaseLastMs = performance.now();
+    _transition = null;
+    _glide = null;
+    if (_onChange) _onChange();
   }
 
   // Pinch-to-zoom: call onPinchStart with initial distance, then onPinchMove.
@@ -346,6 +447,8 @@
   function onPinchStart(pixelDist) {
     _pinchStart = _dist;
     _pinchDist0 = pixelDist;
+    _distTarget = null; // the hand owns the distance while pinching
+    _glide = null;
   }
 
   function onPinchMove(pixelDist) {
@@ -367,6 +470,8 @@
   }
 
   function moveTo({ dist, phi, theta, targetX, targetY, targetZ, nowMs, animated, durationMs } = {}) {
+    _glide = null;      // a named flight owns the camera
+    _distTarget = null;
     if (!animated) {
       _dist  = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, dist ?? _dist));
       _phi   = phi   ?? _phi;
@@ -412,6 +517,8 @@
   }
 
   function setState(s) {
+    _glide = null;
+    _distTarget = null;
     if (s.dist  != null) _dist  = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, s.dist));
     if (s.phi   != null) _phi   = s.phi;
     if (s.theta != null) _theta = s.theta;
@@ -422,7 +529,7 @@
   }
 
   function isAnimating() {
-    return !!_transition || _dragging;
+    return !!_transition || _dragging || !!_glide || _distTarget != null;
   }
 
   globalThis.LivingTimeSphereCamera = Object.freeze({

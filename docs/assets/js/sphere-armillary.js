@@ -502,9 +502,41 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
       returnFocus = null;
     }
 
+    /* Day Details sheet-scroll fix (Aaron, Nov 22, 2026, 22:43
+     * PST — his word on PR #243, after his phone showed the Day
+     * Details "not showing"). The one sheet holds every room in a
+     * single scroll, and that scroll survives close and reopen:
+     * focusSheet focused the asked-for room with preventScroll
+     * and nothing ever brought the room itself into view, so
+     * after any deep visit — the planner rooms, the archive, the
+     * Spark talk some ten thousand pixels down — Day Details
+     * opened at the old depth, its readout far above the screen.
+     * The fix stands the asked-for room at the sheet's top, just
+     * under the sheet bar that stays pinned there, inside the
+     * same frame as the focus and before the sheet has risen —
+     * the keeper lands on the room they asked for, whichever
+     * room it is. A target inside a room (the Spark talk's
+     * input) stands its room at the top; the focus still goes
+     * to the target itself. Nothing else about the sheet — its
+     * state, its rooms, its focus order — is touched. */
+    function bringRoomToSheetTop(target) {
+      if (!target || !sidebar.contains(target)) return;
+      var room = target;
+      while (room.parentElement && room.parentElement !== sidebar) {
+        room = room.parentElement;
+      }
+      var bar = sidebar.querySelector(".sphere-sheet-bar");
+      var barHeight = bar ? bar.getBoundingClientRect().height : 0;
+      var delta = room.getBoundingClientRect().top -
+        sidebar.getBoundingClientRect().top;
+      sidebar.scrollTop = Math.max(0, Math.round(
+        sidebar.scrollTop + delta - barHeight));
+    }
+
     function focusSheet(target) {
       var focusTarget = target || closeButton;
       window.requestAnimationFrame(function () {
+        bringRoomToSheetTop(target);
         if (focusTarget && focusTarget.isConnected) focusTarget.focus({ preventScroll: true });
       });
     }

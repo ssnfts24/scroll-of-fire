@@ -217,8 +217,8 @@
           "label": "13 Moons Rollout Whitepaper"
         },
         {
-          "href": "ledger.html",
-          "label": "Witness Ledger"
+          "href": "codex-white-paper.html",
+          "label": "The Codex of Reality and the Living Sphere — A White Paper"
         }
       ],
       "search.html": [

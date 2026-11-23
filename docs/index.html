@@ -1,15 +1,6 @@
 <!doctype html>
 <html lang="en" dir="ltr" class="sof home-page carrier-432" data-carriers="432,528,369,144,963">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-2TBMEK502C"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-2TBMEK502C');
-</script>
 
   <base href="./">
   <script>
@@ -78,7 +69,7 @@
   <link rel="stylesheet" href="assets/css/living-moon-theme.css?v=20261119-1">
   <link rel="stylesheet" href="assets/css/social-bridge.css">
   <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260819-b743&p=20260820-b7581-labelglass&u=20260820-b7582-railalign&b=20260820-b7592a-farskeleton&d=20260821-b7592d7-unified">
-  <link rel="stylesheet" href="assets/css/homepage-sphere.css?v=20261119-1">
+  <link rel="stylesheet" href="assets/css/homepage-sphere.css?v=20261122-proto1">
   <link rel="stylesheet" href="assets/css/ambient-door.css?v=20261119-1">
 
   <script type="application/ld+json">
@@ -171,7 +162,7 @@
   <script defer src="assets/js/ambient-door.js?v=20261119-1"></script>
   <script defer src="assets/js/living-witness.js?v=20261117-1"></script>
   <script defer src="assets/js/sphere/living-time-sphere-calendar-geometry.js?v=20260819-b727&r=20260820-b7584-rootrail&b=20260820-b7592a-farskeleton&d=20260821-b7592d7-unified"></script>
-  <script defer src="assets/js/homepage-sphere.js?v=20261118-2"></script>
+  <script defer src="assets/js/homepage-sphere.js?v=20261122-proto1"></script>
   <script defer src="assets/js/calendar-cor.js"></script>
   <script defer src="assets/js/codex-state.js"></script>
   <script defer src="assets/js/codex-memory.js"></script>
@@ -721,10 +712,13 @@
               The Sphere itself, turning quietly — the same calendar the
               Observatory keeps. Today rides in gold.
             </p>
+            <p class="homepage-sphere-context" data-hs-context hidden></p>
             <div class="homepage-sphere-controls">
+              <button class="hs-btn hs-btn--primary" type="button" data-hs-activate hidden>Explore the Sphere</button>
               <button class="hs-btn" type="button" data-hs-toggle aria-pressed="false" hidden>Pause rotation</button>
               <button class="hs-btn" type="button" data-hs-today hidden>Today</button>
-              <a class="hs-btn hs-btn--primary" href="./living-time-sphere.html">Enter the Observatory</a>
+              <button class="hs-btn" type="button" data-hs-release hidden>Done — back to the page</button>
+              <a data-hs-door class="hs-btn hs-btn--primary" href="./living-time-sphere.html">Enter the Observatory</a>
             </div>
           </div>
         </aside>
@@ -747,14 +741,23 @@
         <li><a class="front-door-card" href="teach.html"><strong>Practice</strong><span>Manifest — the Remnant Visual Exercise. Seal a session; it takes its place on the Sphere's day.</span></a></li>
         <li><a class="front-door-card" href="downloads.html"><strong>Archive</strong><span>Sealed downloads and preserved originals.</span></a></li>
       </ul>
+      <div class="front-door-sorting" aria-labelledby="front-door-sorting-title">
+        <h3 id="front-door-sorting-title">Three ways in, by what you came for</h3>
+        <ul class="front-door-paths">
+          <li><a class="front-door-card" href="living-time-sphere.html"><strong>Curious</strong><span>Start with the Sphere itself — the calendar turning, and the sky over your own place tonight.</span></a></li>
+          <li><a class="front-door-card" href="garden.html"><strong>Gardening</strong><span>The Pattern Garden: real planting dates for your county. The Moon opens the bed; the farm record sets the dates.</span></a></li>
+          <li><a class="front-door-card" href="companions.html"><strong>With children</strong><span>Meet the Spark first, on a grown-up's device — then keep one day together in the garden. Nothing a child types ever leaves the device.</span></a></li>
+        </ul>
+        <p class="front-door-note">The farm record covers Western Washington's 39 counties so far. If your ground is elsewhere, the door says so plainly — and <a href="living-time-sphere.html">your sky</a> still works tonight, wherever you are.</p>
+      </div>
       <div class="front-door-grid">
         <section aria-labelledby="front-door-recent">
           <h3 id="front-door-recent">Recent additions</h3>
           <ul class="front-door-list">
-            <li><time datetime="2026-11-23">2026-11-23</time> <a href="./living-time-sphere.html">The sky came onto the Sphere</a></li>
-            <li><time datetime="2026-11-22">2026-11-22</time> <a href="./hub.html">The Spark learned the library's roads</a></li>
-            <li><time datetime="2026-11-22">2026-11-22</time> <a href="./hub.html">The library grew paths</a></li>
-            <li><time datetime="2026-11-22">2026-11-22</time> <a href="./index.html#today-panel">The front door learned to remember</a></li>
+            <li><time datetime="2026-11-23">2026-11-23</time> <a href="./index.html">The front door gained its small surfaces</a></li>
+            <li><time datetime="2026-11-23">2026-11-23</time> <a href="./witness.html">Witness tended its page on the day of designs</a></li>
+            <li><time datetime="2026-11-23">2026-11-23</time> <a href="./garden.html">The garden learned to wait, and the games became quests</a></li>
+            <li><time datetime="2026-11-23">2026-11-23</time> <a href="./living-time-sphere.html">The Sphere shows how it grew</a></li>
           </ul>
         </section>
       </div>
@@ -779,8 +782,19 @@
           </ul>
         </section>
       </details>
+      <div class="front-door-promises" aria-labelledby="front-door-promises-title">
+        <h3 id="front-door-promises-title">What this door promises</h3>
+        <ul class="front-door-promise-list">
+          <li>Free.</li>
+          <li>No ads.</li>
+          <li>No account needed to begin.</li>
+          <li>Your record lives on your device, and it is yours.</li>
+        </ul>
+        <p class="front-door-note">Every line here is checkable against the site as it stands today. If a line ever stops being true, it comes off the door.</p>
+      </div>
       <p class="front-door-actions"><a class="btn primary" href="codex-atlas.html">Open the full Codex Atlas</a> <a class="btn" href="scroll/">Enter the Scroll Library</a></p>
       <p class="atlas-note">Saved witness records, readings and settings live only in this browser. They do not synchronize between devices.</p>
+      <p class="front-door-thread">Not ready to step in? <a href="https://www.facebook.com/aaron.laird.75" rel="noopener">Follow the daily shares</a> — a kept day in plain words, day by day. No account, no list, nothing asked of you; follow it or drop it in one tap.</p>
     </section>
     <!-- site-catalog:front-door:end -->
 
@@ -817,10 +831,10 @@
         <div class="le-act-slot">
           <h3>Latest additions</h3>
           <ul class="le-act-growth" data-le-growth>
-            <li><time datetime="2026-11-23">2026-11-23</time> <a href="./living-time-sphere.html">The sky came onto the Sphere</a></li>
-            <li><time datetime="2026-11-22">2026-11-22</time> <a href="./hub.html">The Spark learned the library's roads</a></li>
-            <li><time datetime="2026-11-22">2026-11-22</time> <a href="./hub.html">The library grew paths</a></li>
-            <li><time datetime="2026-11-22">2026-11-22</time> <a href="./index.html#today-panel">The front door learned to remember</a></li>
+            <li><time datetime="2026-11-23">2026-11-23</time> <a href="./index.html">The front door gained its small surfaces</a></li>
+            <li><time datetime="2026-11-23">2026-11-23</time> <a href="./witness.html">Witness tended its page on the day of designs</a></li>
+            <li><time datetime="2026-11-23">2026-11-23</time> <a href="./garden.html">The garden learned to wait, and the games became quests</a></li>
+            <li><time datetime="2026-11-23">2026-11-23</time> <a href="./living-time-sphere.html">The Sphere shows how it grew</a></li>
           </ul>
         </div>
         <figure class="le-act-slot">
