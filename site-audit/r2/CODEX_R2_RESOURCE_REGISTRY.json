@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 2368,
-    "bytes": 985301341,
+    "bytes": 985301067,
     "byGroup": {
       "tooling": 278,
       "manuscript": 17,
@@ -22762,8 +22762,8 @@
       "path": "docs/codex-white-paper.html",
       "title": "The Codex of Reality and the Living Sphere — A White Paper",
       "format": "html",
-      "bytes": 92341,
-      "sha256": "65083f3c6a1abcfb1a2e2efb878a700f0a1f2b4e407c0dba1c75f6459b686832",
+      "bytes": 92067,
+      "sha256": "e9f880b689ecf8b0cbe69d382485d7e2f129c73023029f73a7017b63cdc2d3e2",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
