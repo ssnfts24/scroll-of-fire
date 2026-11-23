@@ -94,7 +94,7 @@
     "Crown Balance",
     "Deep Mirror",
     "Return Path",
-    "Builder's Hand",
+    "Builder’s Hand",
     "Star Remembrance",
     "River of Signs",
     "Completion Seal"
@@ -217,7 +217,7 @@
     {
       chapterId: "the-high-library", n: 15,
       title: "The High Library", land: "the High Library",
-      moonName: "Builder's Hand", token: "the ribbon in the book",
+      moonName: "Builder’s Hand", token: "the ribbon in the book",
       skill: { n: 9, name: "Leave depth open", kitMark: "the ribbon in the book" },
       hum: { rootHz: 196, scale: "Dorian", motifHz: [196, 261.6, 293.7, 392], note: "" }
     },

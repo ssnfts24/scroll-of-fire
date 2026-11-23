@@ -7,7 +7,7 @@
     "publicHtmlPages": 194,
     "catalogEntries": 79,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 29,
+      "not-linked-directly-from-homepage": 28,
       "nav-label-differs-from-title": 24,
       "reachable-only-through-atlas": 3,
       "no-global-navigation": 1,
@@ -804,7 +804,7 @@
     },
     {
       "id": "docs-assets:assets/css",
-      "title": "docs/assets/css (76 files)",
+      "title": "docs/assets/css (77 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -889,7 +889,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (223 files)",
+      "title": "docs/assets/js (224 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -2154,6 +2154,7 @@
         "lab.html",
         "ledger.html",
         "living-time-sphere.html",
+        "map.html",
         "moons.html",
         "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
@@ -13091,7 +13092,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 2,
+        "inboundPages": 3,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -21144,6 +21145,7 @@
         "companions.html",
         "covenant-caravan.html",
         "downloads.html",
+        "episodes.html",
         "ethics.html",
         "genesis-oracle.html",
         "glossary.html",
@@ -21180,15 +21182,14 @@
         "path": "map.html",
         "inSitemap": false,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 3,
-        "inboundPages": 2,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 3,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
-        "not-in-sitemap",
-        "not-linked-directly-from-homepage"
+        "not-in-sitemap"
       ]
     },
     {
