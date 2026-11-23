@@ -2406,6 +2406,11 @@
     const place = (sprite, pos) => {
       if (!sprite || !pos) { if (sprite) sprite.visible = false; return; }
       sprite.position.set(pos.x, (pos.y || 0) + 0.065, pos.z);
+      // The anchor this tag stands on, recorded for the
+      // keep-whole pass below: at the rim the tag may be drawn a
+      // step inward so its word stays whole, but this point —
+      // the marker's own place — never moves.
+      sprite.userData.armillaryTagAnchor = { x: pos.x, y: (pos.y || 0) + 0.065, z: pos.z };
       // Near-side only: a marker farther than the orbit's heart
       // is on the far side of the instrument; its name rests.
       sprite.visible = !camPos || Math.hypot(pos.x - camPos.x, pos.z - camPos.z) < orbit + 0.25;
@@ -2431,6 +2436,61 @@
     place(tags.passage, passagePos);
     if (_objects.armillaryNameTagGroup) {
       _objects.armillaryNameTagGroup.visible = !!_visibleLayers?.pattern;
+    }
+  }
+
+  // The rim tags, kept whole (Nov 23, 2026 — Aaron opened the
+  // renderer for the Sphere details fixes: "might as well give me
+  // the Sphere details all together"). A name tag stands on its
+  // rim marker; when the marker neared the stage's edge, half the
+  // tag drew outside the frame and the word read sliced — the
+  // sweep's "…QUINOX PASSA…". The anchors do not move: each frame
+  // this pass projects every standing tag's anchor, and if the
+  // tag's screen box would cross the stage's edge, the tag is
+  // drawn the smallest step inward that keeps it whole, at its
+  // anchor's own depth. When the marker comes back from the rim,
+  // the tag stands on it again exactly. The stage's box is the
+  // canvas itself, so a whole tag also stands clear of the
+  // page's own furniture above and below the stage. Presentation
+  // only — no geometry, lane, calendar, or label behaviour moves.
+  function _armillaryTagClampCentre(value, halfExtent, margin) {
+    const limit = Math.max(0, 1 - halfExtent - margin);
+    return Math.min(limit, Math.max(-limit, value));
+  }
+
+  function _keepArmillaryNameTagsWhole() {
+    const tags = _objects.armillaryNameTags;
+    if (!tags || !_camera || !_THREE) return;
+    if (_objects.armillaryNameTagGroup && !_objects.armillaryNameTagGroup.visible) return;
+    const tanHalf = Math.tan((_camera.fov || 0) * Math.PI / 360);
+    const aspect = _camera.aspect || 0;
+    if (!(tanHalf > 0) || !(aspect > 0)) return;
+    _camera.updateMatrixWorld?.();
+    for (const key of Object.keys(tags)) {
+      const sprite = tags[key];
+      const anchor = sprite?.userData?.armillaryTagAnchor;
+      if (!sprite || !sprite.visible || !anchor) continue;
+      const projected = new _THREE.Vector3(anchor.x, anchor.y, anchor.z);
+      const depth = projected.distanceTo(_camera.position);
+      projected.project(_camera);
+      if (!Number.isFinite(projected.x) || !Number.isFinite(projected.y)
+        || projected.z > 1 || projected.z < -1 || !(depth > 0)) {
+        continue;
+      }
+      const viewHeight = 2 * depth * tanHalf;
+      const viewWidth = viewHeight * aspect;
+      const halfW = sprite.scale.x / viewWidth;
+      const halfH = sprite.scale.y / viewHeight;
+      const keptX = _armillaryTagClampCentre(projected.x, halfW, 0.012);
+      const keptY = _armillaryTagClampCentre(projected.y, halfH, 0.012);
+      if (keptX === projected.x && keptY === projected.y) {
+        if (sprite.position.x !== anchor.x || sprite.position.y !== anchor.y || sprite.position.z !== anchor.z) {
+          sprite.position.set(anchor.x, anchor.y, anchor.z);
+        }
+        continue;
+      }
+      const drawn = new _THREE.Vector3(keptX, keptY, projected.z).unproject(_camera);
+      sprite.position.copy(drawn);
     }
   }
 
@@ -2509,6 +2569,25 @@
     }
   }
 
+  // The hub plate's third line (Nov 23, 2026 — Aaron opened the
+  // renderer for the Sphere details fixes). The line used to read
+  // the faced day's archetype by its bare name — and Day 25's
+  // archetype is named "Name", so the plate read "Deep Mirror —
+  // Name": the one word on the instrument that looked like an
+  // unfilled placeholder. The line now carries the day's own
+  // archetype text — the telling the calendar keeps beside the
+  // name ("Recover identity and purpose." for Day 25) — read from
+  // the same frozen calendar data as everything else on the
+  // face, for every one of the 364 days. The trade, named
+  // plainly: the Moon's name leaves this line (it stands on the
+  // faced Moon's medallion and throughout the sheet); the day's
+  // own words take its place. The outside days never reach this
+  // line — the plate's own outside branch stands below,
+  // untouched.
+  function _armillaryHubThirdLine(day) {
+    return globalThis.PatternCalendarData?.dayArchetypes?.[(day - 1) % 28]?.[1] || "";
+  }
+
   // The hub plate: a parchment disc at the fixed Pattern centre,
   // inscribed with the shown day's coordinate and telling. It is
   // the instrument's own readout — what is written on the Sphere
@@ -2541,14 +2620,13 @@
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     if (moon >= 1 && day >= 1 && doy >= 1 && doy <= 364) {
-      const archetype = globalThis.PatternCalendarData?.dayArchetypes?.[(day - 1) % 28]?.[0] || "";
       ctx.font = "700 40px Georgia, 'Times New Roman', serif";
       ctx.fillText(`MOON ${moon} · DAY ${day}`, cx, S * 0.60);
       ctx.font = "700 31px Georgia, 'Times New Roman', serif";
       ctx.fillText(`PATTERN DAY ${doy} OF 364`, cx, S * 0.71);
       ctx.font = "italic 27px Georgia, 'Times New Roman', serif";
       ctx.fillStyle = "#54340f";
-      ctx.fillText(archetype ? `${moonName} — ${archetype}` : moonName, cx, S * 0.815);
+      ctx.fillText(_armillaryHubThirdLine(day) || moonName, cx, S * 0.815, S * 0.76);
       // Today's kept plans, counted on the hub (Aaron, Nov 20,
       // 2026: "today's plans count on the hub") — real only: the
       // page layer publishes the count from the keeper's own
@@ -6887,6 +6965,7 @@
       })
     );
 
+    _keepArmillaryNameTagsWhole();
     _renderer.render(_scene, _camera);
     _lastRenderTimestamp = Date.now();
   }
