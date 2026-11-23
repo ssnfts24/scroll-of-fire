@@ -355,6 +355,21 @@
    "featured": false
   },
   {
+   "id": "codex-white-paper",
+   "title": "The Codex of Reality and the Living Sphere — A White Paper",
+   "description": "The whole work in one paper: the framework and its method, the 13 Moons, the Living Sphere and its layer programme, the Spark, and the Living Phone — as designed and as built, with the state of each part stated honestly.",
+   "area": "living-time",
+   "category": "Whitepaper",
+   "resourceType": "document",
+   "status": "live",
+   "path": "codex-white-paper.html",
+   "related": [
+    "moons",
+    "whitepaper-13-moons"
+   ],
+   "featured": false
+  },
+  {
    "id": "whitepaper-13-moons",
    "title": "13 Moons Rollout Whitepaper",
    "description": "Phased rollout plan for the 13 Moons Living Time Observatory.",
@@ -996,6 +1011,22 @@
    "related": [
     "living-time-sphere",
     "witness"
+   ],
+   "featured": false
+  },
+  {
+   "id": "aiyanas-world",
+   "title": "Aiyana's World",
+   "description": "Aiyana's own page in the Codex, designed by Aiyana herself: her sign and moving butterflies, a wall where visitors show their thinking and how they feel, a drawing pad — all kept only on the visitor's own device — and a story corner where additions wait for her yes before they can appear.",
+   "area": "living-time",
+   "category": "Companion",
+   "resourceType": "page",
+   "status": "live",
+   "path": "aiyanas-world.html",
+   "related": [
+    "companions",
+    "pattern-garden",
+    "travellers-map"
    ],
    "featured": false
   },

@@ -144,3 +144,150 @@
     transition: none;
   }
 }
+
+/* =========================================================
+   IMMERSIVE HERO — Directive 02 Phase B prototype.
+   The Sphere leaves its framed card and becomes the hero's
+   environment: the same mount, the same engine, presented
+   full-bleed behind the words. The card's frame, border and
+   shadow go away; the caption becomes a floating glass panel.
+   Ambient mode keeps the stage pointer-transparent so page
+   scrolling passes over the Sphere untouched; interactive
+   mode (data-hs-mode="interactive", set by the module on the
+   visitor's own activation) hands the stage its pointers.
+   ========================================================= */
+
+.home-hero {
+  position: relative;
+}
+
+/* The grid stops being two columns: the copy stands in the
+   environment, the Sphere fills it. */
+.home-hero .home-hero-grid {
+  position: relative;
+  display: block;
+  min-height: min(92vh, 880px);
+}
+
+.home-hero .hero-copy-stack {
+  position: relative;
+  z-index: 3;
+  max-width: 660px;
+  padding: clamp(1.2rem, 3vw, 2.4rem);
+  padding-left: 0;
+  background: linear-gradient(
+    100deg,
+    rgba(3, 5, 10, 0.88) 0%,
+    rgba(3, 5, 10, 0.6) 55%,
+    rgba(3, 5, 10, 0) 82%
+  );
+  border-radius: 24px;
+}
+
+/* The Sphere, full-bleed: viewport-wide, the whole hero tall. */
+.home-hero [data-homepage-sphere].hero-image-card {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  max-width: none;
+  height: 100%;
+  justify-self: auto;
+  overflow: hidden;
+  border: none;
+  border-radius: 0;
+  background: #03050a;
+  box-shadow: none;
+  content-visibility: visible;
+}
+
+.home-hero .homepage-sphere-frame {
+  height: 100%;
+  aspect-ratio: auto;
+}
+
+/* The static poster is the ambient face for reduced motion,
+   slow devices and renderer failure. The poster art is a wide
+   system map: cover-cropping it into the tall hero showed only
+   its empty margins, so until the live Sphere takes the stage
+   the art stands contained and whole, right of centre, in the
+   frame's own dark. */
+.home-hero [data-homepage-sphere]:not([data-state="live"]) .homepage-sphere-frame [data-hs-fallback] {
+  object-fit: contain;
+  object-position: 82% 50%;
+}
+
+/* Ambient: the page scrolls and reads over the Sphere.
+   Interactive: the visitor has taken the instrument. */
+[data-homepage-sphere][data-hs-mode="ambient"] .homepage-sphere-stage {
+  pointer-events: none;
+}
+
+[data-homepage-sphere][data-hs-mode="interactive"] .homepage-sphere-stage {
+  pointer-events: auto;
+}
+
+[data-homepage-sphere][data-hs-mode="interactive"] .homepage-sphere-frame {
+  box-shadow: inset 0 0 0 2px rgba(243, 201, 122, 0.4);
+}
+
+/* The caption floats as a glass panel, bottom-right, clear of
+   the copy and readable over the turning year. */
+.home-hero .hero-image-caption {
+  position: absolute;
+  right: clamp(0.75rem, 3vw, 2.5rem);
+  bottom: clamp(0.75rem, 3vh, 2rem);
+  z-index: 3;
+  width: min(380px, calc(100vw - 1.5rem));
+  padding: 1rem 1.1rem 1.15rem;
+  border: 1px solid rgba(243, 201, 122, 0.22);
+  border-radius: 20px;
+  background: rgba(4, 8, 16, 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.homepage-sphere-context {
+  margin: 0.55rem 0 0;
+  color: var(--gold, #f3c97a);
+  font-weight: 650;
+}
+
+/* Phone: the Sphere stands in the screen below the headline —
+   copy first, then the instrument at most of the view's height,
+   its panel resting at its foot. */
+@media (max-width: 900px) {
+  .home-hero .home-hero-grid {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .home-hero .hero-copy-stack {
+    max-width: none;
+    padding-left: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(3, 5, 10, 0.85),
+      rgba(3, 5, 10, 0.35)
+    );
+  }
+
+  .home-hero [data-homepage-sphere].hero-image-card {
+    position: relative;
+    left: auto;
+    transform: none;
+    width: 100%;
+    height: min(76svh, 600px);
+    margin-top: 1rem;
+  }
+
+  .home-hero .hero-image-caption {
+    right: 0.6rem;
+    left: 0.6rem;
+    bottom: 0.6rem;
+    width: auto;
+  }
+}
