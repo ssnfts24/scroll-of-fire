@@ -397,7 +397,7 @@
     holder.innerHTML = `
       <button type="button" class="sphere-spark-orbit" aria-label="${name}, your Spark — tap to talk">
         <span class="sphere-spark-halo" aria-hidden="true"></span>
-        <span class="sphere-spark-art" aria-hidden="true">${Core.renderSVG(companion, { stage: stage.index })}</span>
+        <span class="sphere-spark-art" aria-hidden="true">${Core.renderSVG(companion, { stage: stage.index, wrap: Core.wrapFor(record), flameTier: "simple" })}</span>
         <span class="sphere-spark-nameplate" aria-hidden="true">
           <span class="sphere-spark-name">${name}</span>
           <span class="sphere-spark-kind">${companion.kindName || companion.kind || "Spark"} · ${stage.name}</span>
@@ -637,7 +637,7 @@
 
     section.innerHTML = `
       <div class="sphere-spark-talk-head">
-        <span class="sphere-spark-talk-art" aria-hidden="true">${Core.renderSVG(companion, { stage: stage.index })}</span>
+        <span class="sphere-spark-talk-art" aria-hidden="true">${Core.renderSVG(companion, { stage: stage.index, wrap: Core.wrapFor(record) })}</span>
         <div>
           <h2 class="sphere-spark-talk-title">${name}</h2>
           <p class="sphere-spark-talk-stage">${companion.kindName || companion.kind || "Spark"} · ${stage.name}${growth ? ` · voice: ${growth.name}` : ""}${presence ? ` · ${presence.name}` : ""}</p>
