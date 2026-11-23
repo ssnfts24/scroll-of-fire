@@ -59,12 +59,63 @@
   margin-top: 0.35rem;
 }
 
+/* The written chapter, folded under its film (Aaron, Nov 23,
+   2026): a native details element, closed by default. The
+   summary row is the one tappable line; the words beneath it
+   are the whole chapter, unchanged. */
+.story-chapter-text {
+  margin: 0.4rem 0 0.6rem;
+}
+
+.story-chapter-summary {
+  cursor: pointer;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  border-radius: 0.5rem;
+  background: rgba(212, 175, 55, 0.08);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.95rem;
+}
+
+.story-chapter-summary:hover,
+.story-chapter-summary:focus-visible {
+  background: rgba(212, 175, 55, 0.16);
+}
+
+.story-chapter-text[open] .story-chapter-summary {
+  margin-bottom: 0.5rem;
+}
+
 .story-foot {
   margin-top: 0.7rem;
   padding-top: 0.55rem;
   border-top: 1px dashed rgba(212, 175, 55, 0.4);
   font-size: 0.85rem;
   opacity: 0.8;
+}
+
+/* A planned episode's card: the same panel family as a chapter,
+   with a quieter edge — a promise, not a telling. Words only;
+   there is nothing to play yet. */
+.story-planned {
+  margin: 1.4rem 0;
+  padding: 1.1rem 1.2rem 0.9rem;
+  border: 1px dashed rgba(212, 175, 55, 0.5);
+  border-left: 4px solid rgba(212, 175, 55, 0.55);
+  border-radius: 0.6rem;
+  background: linear-gradient(160deg, rgba(212, 175, 55, 0.05), rgba(120, 72, 20, 0.03));
+}
+
+.story-planned-state {
+  font-weight: 600;
+  opacity: 0.95;
+}
+
+.story-planned-meta,
+.story-planned-note,
+.story-planned-source {
+  line-height: 1.6;
+  opacity: 0.92;
 }
 
 /* The Traveller's Map. */
@@ -109,6 +160,44 @@
 .map-episode {
   font-size: 0.85rem;
   opacity: 0.85;
+}
+
+.map-marks {
+  font-size: 0.85rem;
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.map-relations {
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+/* The map's planned shelf: episodes still being written, grouped
+   by their series. Dashed edges, like the planned cards on their
+   pages — nothing here has a player. */
+.map-planned-group {
+  margin: 0 0 1.2rem;
+}
+
+.map-planned-card {
+  margin: 0.6rem 0;
+  padding: 0.7rem 0.9rem 0.75rem;
+  border: 1px dashed rgba(212, 175, 55, 0.45);
+  border-radius: 0.6rem;
+  background: rgba(212, 175, 55, 0.04);
+}
+
+.map-planned-card h4 {
+  margin: 0 0 0.3rem;
+}
+
+.map-planned-meta,
+.map-planned-note {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  opacity: 0.9;
+  margin: 0.25rem 0;
 }
 
 /* The Year Thread strip. */

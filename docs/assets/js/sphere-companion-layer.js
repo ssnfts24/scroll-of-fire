@@ -765,6 +765,31 @@
     document.head.appendChild(s);
   })();
 
+  // ── The Story on the Sphere (Unified Story Expansion step d) ──
+  // Day→story doors ride this layer's loader, the same way the
+  // farm and the Day World do: a stylesheet and a script set on
+  // the page, and nothing else in this layer changes. The module
+  // reads the page's own state strip and the one story spine,
+  // and offers the episodes of the Moon on show, with doors to
+  // the Episode Library and to each episode's own page. It keeps
+  // no calendar, writes no state, and touches no protected file:
+  // the instrument stays the instrument, the story stands beside
+  // it. It also carries the planned episodes whose home is this
+  // page (the Ladder of Scales among them), as planned only.
+  (() => {
+    if (document.querySelector("script[data-sphere-story-doors]")) return;
+    const css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = "assets/css/sphere-story-doors.css?v=20261123-1";
+    css.setAttribute("data-sphere-story-doors", "");
+    document.head.appendChild(css);
+    const s = document.createElement("script");
+    s.src = "assets/js/sphere-story-doors.js?v=20261123-1";
+    s.async = false;
+    s.setAttribute("data-sphere-story-doors", "");
+    document.head.appendChild(s);
+  })();
+
   // ── The Spark's presence on this page was RESET (Nov 20, 2026) ──
   // Aaron's order: a full reset of the Spark layer, built fresh —
   // not patched. The orbit and bubble guide that stood here are

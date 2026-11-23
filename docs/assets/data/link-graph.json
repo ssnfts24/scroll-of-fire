@@ -1024,10 +1024,15 @@
      "path": "index.html",
      "title": "Codex of Reality",
      "area": "codex"
+    },
+    {
+     "path": "map.html",
+     "title": "The Traveller's Map",
+     "area": "systems"
     }
    ],
    "outTotal": 0,
-   "inTotal": 2
+   "inTotal": 3
   },
   "equinox-passage.html": {
    "title": "Equinox Passage — The 13 Moons Remnant Living Time Observatory",
@@ -1844,9 +1849,9 @@
      "area": "systems"
     },
     {
-     "path": "episodes.html",
-     "title": "The Episode Library",
-     "area": "living-time"
+     "path": "map.html",
+     "title": "The Traveller's Map",
+     "area": "systems"
     }
    ],
    "in": [
@@ -1861,7 +1866,7 @@
      "area": "artifacts"
     }
    ],
-   "outTotal": 24,
+   "outTotal": 25,
    "inTotal": 2
   },
   "invoke.html": {
@@ -2267,6 +2272,11 @@
      "path": "aiyanas-world.html",
      "title": "Aiyana's World",
      "area": "living-time"
+    },
+    {
+     "path": "episodes.html",
+     "title": "The Episode Library",
+     "area": "living-time"
     }
    ],
    "in": [
@@ -2279,10 +2289,15 @@
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
+    },
+    {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
     }
    ],
-   "outTotal": 3,
-   "inTotal": 2
+   "outTotal": 4,
+   "inTotal": 3
   },
   "methods.html": {
    "title": "How the Sphere Knows — Methods",

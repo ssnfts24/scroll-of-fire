@@ -1,0 +1,51 @@
+/* The Story on the Sphere — the day→story doors panel, carried
+   on the companion layer below the stage. Dressed in the guide
+   bar's own family: warm dark ground, a gold edge, cream words.
+   It presents only; the instrument above it is untouched. */
+
+.sphere-story-doors {
+  max-width: 860px;
+  margin: 1rem auto 0;
+  padding: 0.8rem 1rem 0.9rem;
+  border: 1px solid rgba(218, 164, 91, 0.40);
+  border-radius: 1rem;
+  background: rgba(26, 14, 7, 0.86);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 226, 170, 0.08);
+  color: #f3e7cd;
+  font-size: 0.9rem;
+}
+
+.sphere-story-doors .ssd-title {
+  margin: 0 0 0.4rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.05rem;
+  color: #ffd97a;
+}
+
+.sphere-story-doors .ssd-moon {
+  margin: 0.2rem 0 0.45rem;
+  color: rgba(233, 205, 158, 0.9);
+}
+
+.sphere-story-doors .ssd-line {
+  margin: 0.2rem 0;
+  line-height: 1.55;
+}
+
+.sphere-story-doors .ssd-list {
+  margin: 0.2rem 0 0.4rem;
+  padding-left: 1.15rem;
+  line-height: 1.6;
+}
+
+.sphere-story-doors a {
+  color: #ffd97a;
+}
+
+.sphere-story-doors .ssd-planned {
+  margin: 0.55rem 0 0.1rem;
+  padding-top: 0.55rem;
+  border-top: 1px dashed rgba(218, 164, 91, 0.4);
+  line-height: 1.55;
+  opacity: 0.92;
+}
