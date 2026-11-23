@@ -469,6 +469,24 @@ test("no R1.7 protected file is touched by this branch", () => {
   const carriesSpherefix = changed.has(
     "docs/assets/js/sphere-spark.js"
   );
+  /*
+   * Tracker-removal declaration (Nov 23, 2026 — Aaron opened the
+   * Sphere page for this one change in plain words: "Open the
+   * Sphere page for the tracker removal"). This change set declares
+   * itself by carrying its signature file (the no-trackers guard
+   * test, which lives outside the protected directories), and its
+   * declared set names exactly one protected path: the Sphere page,
+   * changed by the removal of its hand-rolled Google Analytics
+   * loader only — the 16-line <script> block that stood first in
+   * its <head>, nothing else on the page. Every other protected
+   * path still fails this test loudly.
+   */
+  const trackerRemovalDeclaredProtected = new Set([
+    "docs/living-time-sphere.html"
+  ]);
+  const carriesTrackerRemoval = changed.has(
+    "tests/no-google-analytics.test.js"
+  );
   for (const file of changed) {
     if (!protectedPaths.has(file)) continue;
     assert.ok(
@@ -478,7 +496,8 @@ test("no R1.7 protected file is touched by this branch", () => {
         (carriesAmbient && ambientDeclaredProtected.has(file)) ||
         (carriesRebuild && rebuildDeclaredProtected.has(file)) ||
         (carriesArmillary && armillaryDeclaredProtected.has(file)) ||
-        (carriesSpherefix && spherefixDeclaredProtected.has(file)),
+        (carriesSpherefix && spherefixDeclaredProtected.has(file)) ||
+        (carriesTrackerRemoval && trackerRemovalDeclaredProtected.has(file)),
       `R1.7 protected file changed: ${file}`
     );
   }

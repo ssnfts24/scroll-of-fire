@@ -2,9 +2,10 @@
  * No trackers: the site ships no Google Analytics.
  *
  * Aaron's ruling (Nov 23, 2026): the Google Analytics tag (G-2TBMEK502C)
- * comes out of every page and stays out — the Front Door promises panel
- * may print its no-trackers line once the last page (the R1.7-protected
- * Sphere page, named below) is cleaned too. The tag had
+ * comes out of every page and stays out — and with the Sphere page
+ * cleaned too (Aaron opened that protected page for this one change,
+ * Nov 23, 2026: "Open the Sphere page for the tracker removal"), the
+ * Front Door promises panel may print its no-trackers line. The tag had
  * been carried by 72 of 181 pages, in three snippet shapes plus one
  * hand-rolled dynamic loader on the Sphere page; netlify.toml's CSP
  * also allowed the Google analytics hosts, and share-day.js reported
@@ -36,32 +37,24 @@ function walk(dir, prefix = "") {
 }
 
 /*
- * The one named exception: docs/living-time-sphere.html is an R1.7
- * protected file, and its hand-rolled GA loader sits inside the
- * protected page itself. This PR removes the tracker everywhere the
- * protected set does not reach; the Sphere page's loader (16 lines in
- * its <head>, nothing else) comes out the moment Aaron opens the
- * protected set for it, as he has for named repairs before. Until
- * then this test pins the exception to exactly that one file, so it
- * can never silently grow.
+ * No exceptions. This guard originally pinned one named exception —
+ * docs/living-time-sphere.html, an R1.7 protected file whose
+ * hand-rolled GA loader sat inside the protected page itself — so
+ * the exception could never silently grow. Aaron then opened the
+ * Sphere page for the tracker removal (Nov 23, 2026), the loader
+ * (16 lines in its <head>, nothing else) came out under the R1.7
+ * declaration in tests/homepage-sphere.test.js, and the exception
+ * closed. The guard now pins zero exceptions anywhere.
  */
-const PROTECTED_EXCEPTION = "living-time-sphere.html";
-
-test("no Google Analytics ID or loader anywhere under docs/ outside the one protected page", () => {
+test("no Google Analytics ID or loader anywhere under docs/ — no exceptions", () => {
   const offenders = [];
-  const exceptionHits = [];
   for (const rel of walk(docsDir)) {
     const text = fs.readFileSync(path.join(docsDir, rel), "utf8");
     for (const needle of FORBIDDEN) {
-      if (!text.includes(needle)) continue;
-      if (rel === PROTECTED_EXCEPTION) exceptionHits.push(needle);
-      else offenders.push(`${rel} contains ${needle}`);
+      if (text.includes(needle)) offenders.push(`${rel} contains ${needle}`);
     }
   }
   assert.deepEqual(offenders, []);
-  // The exception is exactly the protected Sphere page, still carrying
-  // its loader until the protected set is opened for its removal.
-  assert.ok(exceptionHits.length > 0, "protected exception file changed — update this test with its removal PR");
 });
 
 test("netlify.toml CSP grants no Google Analytics hosts", () => {
