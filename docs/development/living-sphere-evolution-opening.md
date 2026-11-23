@@ -117,7 +117,10 @@ calendar grid and the portrait are DOM/SVG drawn at show time.
 
 ## Landing order
 
-This branch stands off main `90c0e9e6`. The open Sphere stack —
+This branch was built off main `90c0e9e6` and has since taken in
+main `0561a877` by merge (PRs #247 and #250 landed while it was
+being built; the growth record now carries both landings' entries,
+this one on top). The open Sphere stack —
 #243 → #244 → #245, then #246 — lands first, each on Aaron's word;
 this PR's loader stub sits in the same companion-layer file the
 stack's later pieces also touch, so it should land **after** the
