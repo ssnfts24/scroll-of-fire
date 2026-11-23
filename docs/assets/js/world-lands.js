@@ -79,6 +79,11 @@
           "path": "13-moon-whitepaper.html"
         },
         {
+          "id": "codex-white-paper",
+          "title": "The Codex of Reality and the Living Sphere — A White Paper",
+          "path": "codex-white-paper.html"
+        },
+        {
           "id": "alignment-ledger",
           "title": "Alignment Ledger",
           "path": "alignment-ledger.html"

@@ -648,7 +648,7 @@
      "area": "systems"
     }
    ],
-   "outTotal": 64,
+   "outTotal": 65,
    "inTotal": 11
   },
   "codex-guide.html": {
@@ -690,6 +690,25 @@
    ],
    "outTotal": 3,
    "inTotal": 3
+  },
+  "codex-white-paper.html": {
+   "title": "The Codex of Reality and the Living Sphere — A White Paper",
+   "area": "living-time",
+   "out": [],
+   "in": [
+    {
+     "path": "codex-atlas.html",
+     "title": "Codex Atlas",
+     "area": "archive"
+    },
+    {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 2
   },
   "companions.html": {
    "title": "Companions",
@@ -1666,9 +1685,9 @@
      "area": "artifacts"
     },
     {
-     "path": "scripture/index.html",
-     "title": "Genesis & Exodus Scripture",
-     "area": "scroll-scripture"
+     "path": "codex-white-paper.html",
+     "title": "The Codex of Reality and the Living Sphere — A White Paper",
+     "area": "living-time"
     }
    ],
    "in": [
@@ -1683,7 +1702,7 @@
      "area": "artifacts"
     }
    ],
-   "outTotal": 23,
+   "outTotal": 24,
    "inTotal": 2
   },
   "invoke.html": {
