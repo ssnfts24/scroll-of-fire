@@ -649,6 +649,11 @@
   // page, it shows the calendars — the 13 Moons — then the Sphere
   // as it looked when it first started, then it evolves into the
   // Sphere it is now; then the Spark appears and gives the tour.
+  // Amended the same day, on Aaron's word over the preview: the
+  // opening plays itself as a short film — a "Welcome to the
+  // Sphere" title beat, the stages on their own timing, a score
+  // synthesised in the module (sound only from a first touch) —
+  // automatically for a first-time visitor only.
   // The opening lives in its own module; this loader is the only
   // hook — it sets the module's stylesheet and script on the page,
   // and nothing else in this layer changes. No protected file is
@@ -669,11 +674,11 @@
     } catch { /* the catch stands unset; the module falls back */ }
     const css = document.createElement("link");
     css.rel = "stylesheet";
-    css.href = "assets/css/sphere-evolution-opening.css?v=20261123-1";
+    css.href = "assets/css/sphere-evolution-opening.css?v=20261123-2";
     css.setAttribute("data-sphere-evolution-opening", "");
     document.head.appendChild(css);
     const s = document.createElement("script");
-    s.src = "assets/js/sphere-evolution-opening.js?v=20261123-1";
+    s.src = "assets/js/sphere-evolution-opening.js?v=20261123-2";
     s.async = false;
     s.setAttribute("data-sphere-evolution-opening", "");
     document.head.appendChild(s);

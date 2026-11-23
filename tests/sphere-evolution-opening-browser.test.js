@@ -3,12 +3,17 @@
 /*
  * The Evolution Opening, in a real browser.
  *
- * A first visit at phone width: the opening stands over the
- * Sphere, walks Calendars → First Sphere → the live Sphere →
- * the Spark's tour, marks itself seen, and never traps the
- * visitor. A second visit does not auto-open; the guide bar's
- * "See how it grew" door replays it; Skip stands at the first
- * stage; reduced motion gets the still form.
+ * A first visit at phone width: the film stands over the
+ * Sphere — the "Welcome to the Sphere" title beat first, then
+ * the stages advancing on their own timing, silent until a
+ * first touch arms the score — until a keeper's step takes the
+ * walk over: Calendars → First Sphere → the live Sphere → the
+ * Spark's tour. It marks itself seen, and never traps the
+ * visitor: a second visit goes straight to the Sphere with no
+ * film at all. The guide bar's "See how it grew" door replays
+ * the film by choice, score armed by that very tap; Skip
+ * stands throughout; reduced motion gets the still form, and
+ * the still form never advances on its own.
  */
 
 const test = require("node:test");
@@ -169,10 +174,32 @@ test("Evolution Opening: first visit walks the four stages, then never traps", a
   await evaluate(`window.location.href = ${JSON.stringify(url)}`).catch(() => {});
   await new Promise((r) => setTimeout(r, 500));
 
-  // First visit: the opening stands over the Sphere, stage 1.
+  // First visit: the film stands over the Sphere, on its
+  // welcome beat — and silent: no touch yet, so no score.
   await waitFor(async () => evaluate(
     `!!document.querySelector("[data-evolution-opening]")`
   ), 120000, "the opening to stand on a first visit");
+  const welcome = await evaluate(`(() => {
+    const el = document.querySelector("[data-evolution-opening]");
+    return {
+      stage: el.dataset.stage,
+      title: el.querySelector('[data-evo="title"]').textContent,
+      film: window.SphereEvolutionOpening?.filmState(),
+      soundCue: !!el.querySelector('[data-evo="sound"]') && !el.querySelector('[data-evo="sound"]').hidden,
+    };
+  })()`);
+  assert.equal(welcome.stage, "welcome");
+  assert.match(welcome.title, /Welcome to the Sphere/);
+  assert.equal(welcome.film?.mode, "film", "a first visit meets the film, playing itself");
+  assert.equal(welcome.film?.soundArmed, false, "no touch yet — the score is not armed");
+  assert.equal(welcome.film?.audioStarted, false, "no AudioContext exists before a first touch");
+  assert.equal(welcome.soundCue, true, "the invitation to the sound stands in the scene");
+
+  // The film advances on its own timing — no click — into the
+  // calendars.
+  await waitFor(async () => evaluate(
+    `document.querySelector("[data-evolution-opening]")?.dataset.stage === "calendars"`
+  ), 20000, "the film to advance from the welcome into the calendars on its own");
   const stage1 = await evaluate(`(() => {
     const el = document.querySelector("[data-evolution-opening]");
     return {
@@ -193,8 +220,13 @@ test("Evolution Opening: first visit walks the four stages, then never traps", a
     `document.querySelector('[data-evo="next"]').click()`
   );
 
-  // Stage 2: the first Sphere's portrait, thirteen numbered moons.
+  // A keeper's step ends the film: the walk is theirs now.
   await clickNext();
+  const kept = await evaluate(`window.SphereEvolutionOpening?.filmState()`);
+  assert.equal(kept?.mode, "kept", "a step during the film hands the walk to the keeper");
+
+  // Stage 2: the first Sphere's portrait, thirteen numbered
+  // moons — the stage the keeper's takeover step landed on.
   const stage2 = await evaluate(`(() => {
     const el = document.querySelector("[data-evolution-opening]");
     const svg = el.querySelector(".evo-first-sphere-svg");
@@ -264,15 +296,23 @@ test("Evolution Opening: first visit walks the four stages, then never traps", a
   assert.equal(await evaluate(`!!document.querySelector("[data-evolution-opening]")`), false,
     "a returning visitor is never trapped by the opening");
 
-  // The door replays it; Skip stands at the first stage.
+  // The door replays the film by choice — and the tap that
+  // opens it is itself a touch, so the replay's score is armed
+  // from its first beat. Skip stands at the welcome, and
+  // skipping the replay leaves the seen flag standing.
   await evaluate(`document.querySelector("[data-evo-door]").click()`);
   await waitFor(async () => evaluate(
-    `document.querySelector("[data-evolution-opening]")?.dataset.stage === "calendars"`
-  ), 15000, "the replay to open at the calendars");
+    `document.querySelector("[data-evolution-opening]")?.dataset.stage === "welcome"`
+  ), 15000, "the replay to open on the welcome");
+  const replay = await evaluate(`window.SphereEvolutionOpening?.filmState()`);
+  assert.equal(replay?.mode, "film", "the replay plays the film");
+  assert.equal(replay?.soundArmed, true, "the door's own tap arms the replay's score");
   await evaluate(`document.querySelector('[data-evo="skip"]').click()`);
   await waitFor(async () => evaluate(
     `!document.querySelector("[data-evolution-opening]")`
   ), 15000, "skip to close the replay");
+  assert.equal(await evaluate(`localStorage.getItem("sof.sphere.evolutionOpening.v1")`), "1",
+    "the seen flag stands after a skipped replay");
 });
 
 test("Evolution Opening: reduced motion gets the still form, same words", async (t) => {
@@ -293,9 +333,20 @@ test("Evolution Opening: reduced motion gets the still form, same words", async 
     const el = document.querySelector("[data-evolution-opening]");
     return {
       still: el.classList.contains("is-still"),
+      stage: el.dataset.stage,
       title: el.querySelector('[data-evo="title"]').textContent,
+      film: window.SphereEvolutionOpening?.filmState(),
     };
   })()`);
   assert.equal(still.still, true);
+  assert.equal(still.stage, "calendars", "the still form opens on the calendars — no welcome, no film");
   assert.match(still.title, /year lay flat/);
+  assert.equal(still.film?.mode, "still");
+  assert.equal(still.film?.audioStarted, false, "the still form carries no score");
+  // And it never advances on its own: the staged walk waits
+  // for the keeper, however long they take.
+  await new Promise((r) => setTimeout(r, 4000));
+  assert.equal(await evaluate(
+    `document.querySelector("[data-evolution-opening]")?.dataset.stage`
+  ), "calendars", "the still form stands where it was left");
 });
