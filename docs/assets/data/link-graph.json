@@ -648,7 +648,7 @@
      "area": "systems"
     }
    ],
-   "outTotal": 64,
+   "outTotal": 65,
    "inTotal": 11
   },
   "codex-guide.html": {
@@ -690,6 +690,20 @@
    ],
    "outTotal": 3,
    "inTotal": 3
+  },
+  "codex-white-paper.html": {
+   "title": "The Codex of Reality and the Living Sphere — A White Paper",
+   "area": "living-time",
+   "out": [],
+   "in": [
+    {
+     "path": "codex-atlas.html",
+     "title": "Codex Atlas",
+     "area": "archive"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 1
   },
   "companions.html": {
    "title": "Companions",

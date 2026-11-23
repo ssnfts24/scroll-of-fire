@@ -22,7 +22,7 @@ Read the Scroll, search its text, study Hebrew roots and follow Genesis 1–50.
 - **Genesis Restored** — Source only; Root-level restored Genesis text, published through the Downloads catalog.
 - **Exodus Restored** — Source only; Root-level restored Exodus text, published through the Downloads catalog.
 
-### Living Time and Observatory (7 catalog entries)
+### Living Time and Observatory (8 catalog entries)
 
 The Pattern Calendar, 13 Moons, Living Time Sphere and witnessed days.
 
@@ -30,6 +30,7 @@ The Pattern Calendar, 13 Moons, Living Time Sphere and witnessed days.
 - **13 Moons** — Live; The Remnant 13×28 living calendar.
 - **Alignment Ledger** — Live; Year-by-year record of moving astronomical gates against the fixed Pattern Calendar.
 - **Equinox Passage** — Live; Measures the moving March equinox against the fixed Pattern Calendar.
+- **The Codex of Reality and the Living Sphere — A White Paper** — Live; The whole work in one paper: the framework and its method, the 13 Moons, the Living Sphere and its layer programme, the Spark, and the Living Phone — as designed and as built, with the state of each part stated honestly.
 - **13 Moons Rollout Whitepaper** — Live; Phased rollout plan for the 13 Moons Living Time Observatory.
 - **Witness Ledger** — Live; Browser-local record of witnessed days and SHA-256 hashes. Entries stay on this device and do not sync.
 - **Companions** — Live; Meet a Spark: a small companion made for you on the day you adopt it, named by you, kept on your own device. It grows as you return, visit, and practice, and roams the site with you.
@@ -109,9 +110,9 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 
 ## Repository and deployed-content coverage
 
-- Public HTML pages inspected: **181**.
-- Total master-inventory records: **482**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
-- Public-facing catalog entries: **73**; only explicitly curated entries appear on the Atlas.
+- Public HTML pages inspected: **182**.
+- Total master-inventory records: **483**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
+- Public-facing catalog entries: **74**; only explicitly curated entries appear on the Atlas.
 - Numbered archive folders are inventoried file-by-file, while downloads snapshot differences are kept separate from historical integrity data.
 - Root files not already published through the archive or explicitly approved remain classified as development-only; no such file is automatically linked from the public catalog.
 
@@ -127,7 +128,7 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 ## Current resource-type counts
 
 - Deployed Markdown documents: 62
-- HTML pages: 181
+- HTML pages: 182
 - Numbered archive file: 141
 - Numbered archive folder: 7
 - Repository folder: 10

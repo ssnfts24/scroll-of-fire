@@ -467,13 +467,13 @@
     },
     {
       "path": "docs/assets/data/codex-story.json",
-      "sha256": "5cc9dbfb12402c98e9a3403ee653d10c3dc4d0b7507f835da0d61dc8370d9933",
+      "sha256": "3b3a83a0cb3ab5084fb6f0469882ce2ee9a141f66d45f4c25a9cd3ed5041f7be",
       "publicUrl": "https://codexofreality.org/assets/data/codex-story.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "85fe7b3a50ae44eacdcab3e39627fc5632ae4858655b31271e60342f7fe244f0",
+      "sha256": "520f0e936203b0a83c2d766202bf4c9d7bd1efbed82dc05c8818a36dbca10ddb",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -503,7 +503,7 @@
     },
     {
       "path": "docs/assets/data/link-graph.json",
-      "sha256": "4d1d99e146cad204e74ab869b71f8649218e58b7f7cbbebf64b368b960a28f96",
+      "sha256": "6d38cbf575806a45e0a980696bf41bfb8e3185a359e279f45aa9866be3eecd83",
       "publicUrl": "https://codexofreality.org/assets/data/link-graph.json",
       "status": "operational"
     },
@@ -2465,7 +2465,7 @@
     },
     {
       "path": "docs/assets/js/spark-relations.js",
-      "sha256": "89706111adc1cb2f9bf8c17d8b5b0598b6b150e49efc676c2c8fa90379f2562b",
+      "sha256": "b607474dc0d194c64e5e104cf7b2b2a19e32bd06196bc7fcfee8447663c7f763",
       "publicUrl": "https://codexofreality.org/assets/js/spark-relations.js",
       "status": "operational"
     },
@@ -2855,7 +2855,7 @@
     },
     {
       "path": "docs/assets/js/world-lands.js",
-      "sha256": "e9638d599ef8a67a28a23450da42fc057716ff86f4ba587eee464dbe0e009d0d",
+      "sha256": "30096e229cfcc61c986161998ab8202e78caa599234901d3914b27df3377824f",
       "publicUrl": "https://codexofreality.org/assets/js/world-lands.js",
       "status": "operational"
     },
@@ -3947,7 +3947,7 @@
     },
     {
       "path": "docs/assets/search/atlas.json",
-      "sha256": "0000a8f02d4e1ff7d64aeb3419f8218ff86b9a557f09d3383d8c41232192a7de",
+      "sha256": "1642bd72fe9271f55cf7bc09d07ff4358055078431540ed40e4a5b7a00e50796",
       "publicUrl": "https://codexofreality.org/assets/search/atlas.json",
       "status": "operational"
     },
@@ -3965,13 +3965,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "e160f479d7c254891ae7ee8c8189d46c0730da27f4e4610fc4e9ad7055b42036",
+      "sha256": "a0f5f374abbecb8293a2982aa852d6073cf936c9d3a17697b626ebdcb229b601",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "6063c663889a228c5ff5fddbb50ed4392dd0fc20c89630f5dcf0f340dfdf92ac",
+      "sha256": "da562cf983b646c7ad629da832c1c045678c02db4ed1a5cff01ae5d8802ec178",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -4025,7 +4025,7 @@
     },
     {
       "path": "docs/codex-atlas.html",
-      "sha256": "0449ebf7aa9fcdb92d1edf475803938b51d0079110f0f142193058cb8ddc0cfa",
+      "sha256": "2567ae3ab585ff647366703c3bbaf6834aad093596a694e13c1b260d8cac5eda",
       "publicUrl": "https://codexofreality.org/codex-atlas.html",
       "status": "operational"
     },
@@ -4033,6 +4033,12 @@
       "path": "docs/codex-guide.html",
       "sha256": "506e8e9b38d3b183f8d85dc6e45eb2c676213652433d4d9e7d0cbfe9aa20dc38",
       "publicUrl": "https://codexofreality.org/codex-guide.html",
+      "status": "operational"
+    },
+    {
+      "path": "docs/codex-white-paper.html",
+      "sha256": "65083f3c6a1abcfb1a2e2efb878a700f0a1f2b4e407c0dba1c75f6459b686832",
+      "publicUrl": "https://codexofreality.org/codex-white-paper.html",
       "status": "operational"
     },
     {
@@ -4073,7 +4079,7 @@
     },
     {
       "path": "docs/data/site-catalog.json",
-      "sha256": "362ade89b6d98a7700109a3aae2078d52bc9865d85fac305c4f1cc95f5744373",
+      "sha256": "ad5d2e99489f341b0b7c863de839fae49be9e2ebc6fa970e98c557bf52328a73",
       "publicUrl": "https://codexofreality.org/data/site-catalog.json",
       "status": "operational"
     },
