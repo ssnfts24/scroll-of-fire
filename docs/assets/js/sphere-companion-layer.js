@@ -644,6 +644,21 @@
     }
   })();
 
+  // ── Front Door §d (Nov 23, 2026): the keeper's one-tap share ──
+  // The Observatory page itself is R1.7-protected, so the share
+  // surface rides this layer's loader, the same way the farm
+  // module does: one guarded script, nothing else changes. The
+  // module (front-door-share.js) reads only public globals and
+  // drives only its own buttons beside the sidebar's export.
+  (() => {
+    if (document.querySelector("script[data-front-door-share]")) return;
+    const s = document.createElement("script");
+    s.src = "assets/js/front-door-share.js?v=20261123-1";
+    s.async = false;
+    s.setAttribute("data-front-door-share", "");
+    document.head.appendChild(s);
+  })();
+
   // ── The Spark's presence on this page was RESET (Nov 20, 2026) ──
   // Aaron's order: a full reset of the Spark layer, built fresh —
   // not patched. The orbit and bubble guide that stood here are
