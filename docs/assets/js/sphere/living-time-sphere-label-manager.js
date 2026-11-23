@@ -9,6 +9,33 @@
   // nearest-neighbour pitch, measured across ALL composed plates
   // per layout pass (see the plate pitch cap pass in update()).
   const PLATE_PITCH_CAP_FRACTION = 0.8;
+  // Overnight pass (Nov 22, 2026, 23:19 PST — Aaron: "the day
+  // shrinks when I click on it. The day should grow as I approach
+  // it."). The selected day's approach growth (1.3 at Day Approach,
+  // 1.55 at Living / Immersive Day) is owned HERE, composed into
+  // the manager's own transform, eased per frame in _trackFrame.
+  // It used to ride the stylesheet's standalone `scale` property,
+  // keyed on #sphere-container[data-zoom-stage=...] — but the
+  // label layer lives under #sphere-moon-labels, outside
+  // #sphere-container, so those rules could never match any label:
+  // the growth never rendered (lab: computed scale "none" at every
+  // stage), while the cap pass still divided the selected day's
+  // cap by the phantom growth — so on approach the selected day
+  // was capped to 0.8×pitch/1.55 and shrank BELOW its neighbours
+  // (lab, 412×915: selected 17.8px against a 24.8px neighbour at
+  // Day Approach; 390×844: 18.6px against 24.8px). The law now:
+  // the selected day's RENDERED diameter may use its FULL nearest-
+  // neighbour pitch (neighbours keep the 0.8 law), so the worst
+  // pair — selected + its nearest neighbour — sums to 0.5 + 0.4 =
+  // 0.9 of the pair's distance: the no-touching law still holds,
+  // and the room for the grown day comes out of the clearance the
+  // ordinary law already leaves, never out of the selected day.
+  const SELECTED_GROWTH_BY_STAGE = Object.freeze({
+    approach: 1.3,
+    living: 1.55,
+    immersive: 1.55
+  });
+  const SELECTED_PITCH_BOUND = 1;
   // Repair pass (Aaron, Nov 22, 2026, 18:12 — "a multitude of
   // things wrong here on mobile now"): a CONTEXT Moon whose whole
   // projected grid pitch falls below this floor is not readable
@@ -852,6 +879,47 @@
      * the next layout pass wakes it.
      */
     let _tracked = [];
+    // Selected-day growth state (overnight pass, Nov 22, 2026):
+    // eased per frame toward the zoom stage's target, so the day
+    // grows smoothly as the keeper approaches and never snaps.
+    let _growthEased = 1;
+    let _growthLastMs = 0;
+    let _trackLastStage = "";
+
+    function _growthTarget() {
+      const stage = String(_stageEl?.dataset?.zoomStage || "").toLowerCase();
+      return SELECTED_GROWTH_BY_STAGE[stage] || 1;
+    }
+
+    function _growthReducedMotion() {
+      try {
+        return !!globalThis.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+      } catch {
+        return false;
+      }
+    }
+
+    function _easeGrowth(nowMs) {
+      const target = _growthTarget();
+      if (_growthReducedMotion()) {
+        // Calm path: the day still grows, without the sweep.
+        _growthEased = target;
+        _growthLastMs = nowMs;
+        return _growthEased;
+      }
+      const last = _growthLastMs || nowMs;
+      const dt = Math.max(0, Math.min(100, nowMs - last));
+      _growthLastMs = nowMs;
+      if (Math.abs(target - _growthEased) < 0.002) {
+        _growthEased = target;
+        return _growthEased;
+      }
+      // ~340ms character — the transition the growth was designed
+      // with in the stylesheet (tau 110ms reaches ~95% in 330ms).
+      _growthEased += (target - _growthEased) * (1 - Math.exp(-dt / 110));
+      if (Math.abs(target - _growthEased) < 0.002) _growthEased = target;
+      return _growthEased;
+    }
     let _trackCtx = null;
     let _trackRaf = 0;
     let _trackIdleFrames = 0;
@@ -917,7 +985,14 @@
       if (!ctx || !_tracked.length) return;
       const { camera, three, offsetX, offsetY, stageW, stageH } = ctx;
       const sig = _trackSignature(camera);
-      if (sig && sig === _trackLastSig) {
+      // The selected day's growth eases in this loop (overnight
+      // pass): a stage change can arrive while the camera stands
+      // still, so the loop may only sleep when the camera, the
+      // stage, AND the growth are all settled.
+      const growth = _easeGrowth(performance.now());
+      const stageNow = String(_stageEl?.dataset?.zoomStage || "");
+      const growthSettled = Math.abs(_growthTarget() - growth) <= 0.002;
+      if (sig && sig === _trackLastSig && stageNow === _trackLastStage && growthSettled) {
         _trackIdleFrames += 1;
         if (_trackIdleFrames < 120) {
           _trackRaf = requestAnimationFrame(_trackFrame);
@@ -925,6 +1000,7 @@
         return;
       }
       _trackLastSig = sig;
+      _trackLastStage = stageNow;
       _trackIdleFrames = 0;
       if (!_trackVec.current && three?.Vector3) {
         _trackVec.current = new three.Vector3();
@@ -937,7 +1013,23 @@
           if (vec.z < -1 || vec.z > 1) {
             entry.sx = null;
             entry.sy = null;
+            // Overnight pass: an anchor that has crossed behind
+            // the camera leaves its element frozen at its last
+            // written position — mid-face, solid, standing on
+            // whatever it stopped over (a named stickiness: the
+            // drag-flick probe counted up to 12 such plates over
+            // Moon pills in one frame). Hide it until its anchor
+            // returns; layout passes rebuild visibility
+            // wholesale, this governs only the in-between frames.
+            if (entry.el && entry.el.style.display !== "none") {
+              entry.trackHidden = true;
+              entry.el.style.display = "none";
+            }
             continue;
+          }
+          if (entry.trackHidden && entry.el) {
+            entry.trackHidden = false;
+            entry.el.style.display = "";
           }
           const sx = offsetX + (((vec.x + 1) / 2) * stageW);
           const sy = offsetY + (((-vec.y + 1) / 2) * stageH);
@@ -971,24 +1063,282 @@
             entry.passNN && Number.isFinite(nn)
               ? Math.min(1, nn / entry.passNN)
               : 1;
+          if (entry.selected) {
+            // The selected day's frame guard is the rendered-
+            // bound clamp below, measured at LIVE pitch — not
+            // the pass-pitch ratio. The ratio double-guards it
+            // and eats the growth by whatever jitter separates
+            // the pass geometry from the live geometry (lab:
+            // composite 1.49 against a fully eased 1.55).
+            entry.shrink = 1;
+          }
+          if (entry.selected && entry.discPx > 0 && Number.isFinite(nn)) {
+            // The selected day's law is on its RENDERED diameter
+            // (overnight pass): box × baseScale × shrink × eased
+            // growth may not exceed its full live pitch — the
+            // frame-level enforcement of SELECTED_PITCH_BOUND, so
+            // the grown day can never touch a neighbour mid-flight
+            // even while the growth is still easing in.
+            const renderedBound = SELECTED_PITCH_BOUND * nn;
+            const unit = entry.discPx * (entry.baseScale || 1) * Math.max(growth, 0.01);
+            if (unit > 0) entry.shrink = Math.min(entry.shrink, renderedBound / unit);
+          }
+        }
+        /*
+         * In-motion pill guard (overnight pass, Nov 22, 2026):
+         * the §8 geometric protection re-runs at layout-pass
+         * cadence, but plates and pills ride their anchors EVERY
+         * frame — between passes a plate can drift onto a pill
+         * and stand there for a whole glide (lab, drag flick:
+         * up to 12 other-Moon plates standing on pills in one
+         * frame, occlusions in 22 of 31 sampled frames). Each
+         * frame this guard re-checks the LIVE geometry: shift
+         * the pill within the pass's own 90px bound (never into
+         * blocked ground, never off the stage), else fade the
+         * intruding plates for exactly the frames they intrude.
+         * The pass's exemptions hold: the selected day and the
+         * pill's own Moon's plates are never faded; if only
+         * exempt plates intrude and no shift clears, the pill
+         * waits, exactly as it does at pass time. Pill against
+         * pill is answered by shifting only — names never fade.
+         */
+        const pillEntries = _tracked.filter(
+          entry => entry.kind === "pill" && entry.sx != null && entry.rectW > 0 && entry.el?.style.display !== "none"
+        );
+        for (const entry of plateEntries) entry.guardFade = 1;
+        if (pillEntries.length && plateEntries.length) {
+          const plateGeom = plateEntries.map(entry => {
+            if (entry.natW == null) entry.natW = entry.el?.offsetWidth || 0;
+            const scale = (entry.baseScale || 1) * (entry.shrink ?? 1) * (entry.selected ? growth : 1);
+            const dia = entry.discPx > 0 ? entry.discPx * scale : entry.natW * scale;
+            const idm = /pattern-day-number-(\d+)/.exec(entry.el?.dataset?.semanticId || "");
+            return {
+              entry,
+              cx: entry.sx,
+              cy: entry.sy,
+              r: dia / 2,
+              moon: idm ? Math.floor((Number(idm[1]) - 1) / 28) + 1 : 0
+            };
+          });
+          const pillRectOf = (entry, extraX = 0, extraY = 0) => {
+            const hw = (entry.rectW * entry.pillScale) / 2;
+            const hh = (entry.rectH * entry.pillScale) / 2;
+            const cx = entry.sx + entry.cox + extraX;
+            const cy = entry.sy + entry.coy + extraY;
+            return { x: cx - hw, y: cy - hh, w: hw * 2, h: hh * 2, cx, cy };
+          };
+          const hitsPlate = (rect, g) => {
+            if (!(g.r > 0)) return false;
+            const nx = Math.max(rect.x, Math.min(g.cx, rect.x + rect.w));
+            const ny = Math.max(rect.y, Math.min(g.cy, rect.y + rect.h));
+            return Math.hypot(g.cx - nx, g.cy - ny) < g.r - 0.5;
+          };
+          const blocked = ctx.blockedRects || [];
+          const rectClear = (rect, self) => {
+            for (const g of plateGeom) if (hitsPlate(rect, g)) return false;
+            for (const b of blocked) {
+              if (rect.x < b.x + b.w && rect.x + rect.w > b.x && rect.y < b.y + b.h && rect.y + rect.h > b.y) return false;
+            }
+            for (const other of pillEntries) {
+              if (other === self || other.sx == null) continue;
+              const o = pillRectOf(other, other.guardShiftX || 0, other.guardShiftY || 0);
+              if (rect.x < o.x + o.w && rect.x + rect.w > o.x && rect.y < o.y + o.h && rect.y + rect.h > o.y) return false;
+            }
+            return rect.x >= -6 && rect.y >= -6 && rect.x + rect.w <= stageW + 6 && rect.y + rect.h <= stageH + 6;
+          };
+          for (const pill of pillEntries) {
+            pill.guardShiftX = 0;
+            pill.guardShiftY = 0;
+            const base = pillRectOf(pill);
+            const intruders = plateGeom.filter(g => hitsPlate(base, g));
+            if (!intruders.length) continue;
+            const tries = [];
+            for (const g of intruders) {
+              let ux = base.cx - g.cx;
+              let uy = base.cy - g.cy;
+              const len = Math.hypot(ux, uy) || 1;
+              ux /= len;
+              uy /= len;
+              const nx = Math.max(base.x, Math.min(g.cx, base.x + base.w));
+              const ny = Math.max(base.y, Math.min(g.cy, base.y + base.h));
+              const pen = g.r - Math.hypot(g.cx - nx, g.cy - ny);
+              tries.push([ux * (pen + 2), uy * (pen + 2)]);
+            }
+            tries.push([0, -14], [0, 14], [-14, 0], [14, 0], [0, -30], [0, 30], [-30, 0], [30, 0]);
+            let placedShift = null;
+            for (const [tx, ty] of tries) {
+              if (Math.hypot(tx, ty) > 90) continue;
+              if (rectClear(pillRectOf(pill, tx, ty), pill)) { placedShift = [tx, ty]; break; }
+            }
+            if (!placedShift) {
+              // No fully-clear ground within the bound: take
+              // the shift that leaves the least of the pill
+              // covered (measured on the intruders' bounding
+              // squares), provided it beats standing still —
+              // a half-covered name reads better than a buried
+              // one, and the intruders still intrude on the
+              // remainder, so they fade below as before.
+              const overlapOf = (rect) => {
+                let area = 0;
+                for (const g of intruders) {
+                  const ox = Math.min(rect.x + rect.w, g.cx + g.r) - Math.max(rect.x, g.cx - g.r);
+                  const oy = Math.min(rect.y + rect.h, g.cy + g.r) - Math.max(rect.y, g.cy - g.r);
+                  if (ox > 0 && oy > 0) area += ox * oy;
+                }
+                return area;
+              };
+              let bestArea = overlapOf(base);
+              for (const [tx, ty] of tries) {
+                if (Math.hypot(tx, ty) > 90) continue;
+                const rect = pillRectOf(pill, tx, ty);
+                let inBlocked = false;
+                for (const b of blocked) {
+                  if (rect.x < b.x + b.w && rect.x + rect.w > b.x && rect.y < b.y + b.h && rect.y + rect.h > b.y) { inBlocked = true; break; }
+                }
+                if (inBlocked) continue;
+                if (rect.x < -6 || rect.y < -6 || rect.x + rect.w > stageW + 6 || rect.y + rect.h > stageH + 6) continue;
+                const area = overlapOf(rect);
+                if (area < bestArea) { bestArea = area; placedShift = [tx, ty]; }
+              }
+            }
+            if (placedShift) {
+              pill.guardShiftX = placedShift[0];
+              pill.guardShiftY = placedShift[1];
+              pill.dx = (pill.dx || 0) + placedShift[0];
+              pill.dy = (pill.dy || 0) + placedShift[1];
+            }
+            {
+              // Whatever still intrudes after the shift fades
+              // (exemptions as at pass time).
+              const settled = pillRectOf(pill, pill.guardShiftX || 0, pill.guardShiftY || 0);
+              const pillMoon = Number(pill.el?.dataset?.moon || 0);
+              for (const g of intruders) {
+                if (!hitsPlate(settled, g)) continue;
+                if (g.entry.selected) continue;
+                if (g.moon && pillMoon && g.moon === pillMoon) continue;
+                g.entry.guardFade = 0.1;
+              }
+            }
+          }
+          for (let i = 0; i < pillEntries.length; i++) {
+            for (let j = i + 1; j < pillEntries.length; j++) {
+              const a = pillEntries[i];
+              const b = pillEntries[j];
+              const ra = pillRectOf(a, a.guardShiftX || 0, a.guardShiftY || 0);
+              const rb = pillRectOf(b, b.guardShiftX || 0, b.guardShiftY || 0);
+              const ox = Math.min(ra.x + ra.w, rb.x + rb.w) - Math.max(ra.x, rb.x);
+              const oy = Math.min(ra.y + ra.h, rb.y + rb.h) - Math.max(ra.y, rb.y);
+              if (ox <= 1 || oy <= 1) continue;
+              const dirX = rb.cx >= ra.cx ? 1 : -1;
+              const dirY = rb.cy >= ra.cy ? 1 : -1;
+              const tries = [[dirX * (ox + 2), 0], [0, dirY * (oy + 2)], [-dirX * (ox + 2), 0], [0, -dirY * (oy + 2)]];
+              let done = false;
+              for (const [tx, ty] of tries) {
+                const totalX = (b.guardShiftX || 0) + tx;
+                const totalY = (b.guardShiftY || 0) + ty;
+                if (Math.hypot(totalX, totalY) > 90) continue;
+                if (rectClear(pillRectOf(b, totalX, totalY), b)) {
+                  b.guardShiftX = totalX;
+                  b.guardShiftY = totalY;
+                  b.dx = (b.dx || 0) + tx;
+                  b.dy = (b.dy || 0) + ty;
+                  done = true;
+                  break;
+                }
+              }
+              if (!done) {
+                for (const [tx, ty] of tries) {
+                  const totalX = (a.guardShiftX || 0) - tx;
+                  const totalY = (a.guardShiftY || 0) - ty;
+                  if (Math.hypot(totalX, totalY) > 90) continue;
+                  if (rectClear(pillRectOf(a, totalX, totalY), a)) {
+                    a.guardShiftX = totalX;
+                    a.guardShiftY = totalY;
+                    a.dx = (a.dx || 0) - tx;
+                    a.dy = (a.dy || 0) - ty;
+                    done = true;
+                    break;
+                  }
+                }
+              }
+              if (!done) {
+                // Least-cover fallback (overnight pass): where
+                // no shift fully separates the pair — the dense
+                // top-down face at 320px wide measured 3 such
+                // pairs standing — take the shift that leaves
+                // the least overlap, provided it puts the moved
+                // pill on no plate.
+                const pairArea = (ra2, rb2) => {
+                  const ox2 = Math.min(ra2.x + ra2.w, rb2.x + rb2.w) - Math.max(ra2.x, rb2.x);
+                  const oy2 = Math.min(ra2.y + ra2.h, rb2.y + rb2.h) - Math.max(ra2.y, rb2.y);
+                  return ox2 > 0 && oy2 > 0 ? ox2 * oy2 : 0;
+                };
+                let bestArea = ox * oy;
+                let bestMove = null;
+                for (const [tx, ty] of tries) {
+                  const totalX = (b.guardShiftX || 0) + tx;
+                  const totalY = (b.guardShiftY || 0) + ty;
+                  if (Math.hypot(totalX, totalY) > 90) continue;
+                  const cand = pillRectOf(b, totalX, totalY);
+                  if (plateGeom.some(g => hitsPlate(cand, g))) continue;
+                  const area = pairArea(ra, cand);
+                  if (area < bestArea) { bestArea = area; bestMove = [b, tx, ty, totalX, totalY]; }
+                }
+                if (!bestMove) {
+                  for (const [tx, ty] of tries) {
+                    const totalX = (a.guardShiftX || 0) - tx;
+                    const totalY = (a.guardShiftY || 0) - ty;
+                    if (Math.hypot(totalX, totalY) > 90) continue;
+                    const cand = pillRectOf(a, totalX, totalY);
+                    if (plateGeom.some(g => hitsPlate(cand, g))) continue;
+                    const area = pairArea(cand, rb);
+                    if (area < bestArea) { bestArea = area; bestMove = [a, -tx, -ty, totalX, totalY]; }
+                  }
+                }
+                if (bestMove) {
+                  const [target, mdx, mdy, totalX, totalY] = bestMove;
+                  target.guardShiftX = totalX;
+                  target.guardShiftY = totalY;
+                  target.dx = (target.dx || 0) + mdx;
+                  target.dy = (target.dy || 0) + mdy;
+                }
+              }
+            }
+          }
         }
         for (const entry of _tracked) {
           if (!entry.el || entry.el.style.display === "none" || entry.sx == null) continue;
           const dx = entry.dx || 0;
           const dy = entry.dy || 0;
           const shrink = entry.kind === "plate" ? (entry.shrink ?? 1) : 1;
+          const growthF = entry.selected ? growth : 1;
+          const composite = shrink * growthF;
+          const fade = entry.kind === "plate" ? (entry.guardFade ?? 1) : 1;
           if (
             Math.abs(dx - (entry.writtenDx || 0)) < 0.05
             && Math.abs(dy - (entry.writtenDy || 0)) < 0.05
-            && Math.abs(shrink - (entry.writtenShrink ?? 1)) < 0.01
+            && Math.abs(composite - (entry.writtenComposite ?? 1)) < 0.01
+            && Math.abs(fade - (entry.writtenFade ?? 1)) < 0.01
           ) continue;
           entry.writtenDx = dx;
           entry.writtenDy = dy;
-          entry.writtenShrink = shrink;
+          entry.writtenComposite = composite;
+          entry.writtenFade = fade;
+          if (entry.kind === "plate") {
+            // The pill guard's fade rides the pass's opacity:
+            // capture it once per entry (entries are rebuilt
+            // every pass) and restore it exactly when the
+            // intrusion clears.
+            if (entry.baseOpacityStr == null) entry.baseOpacityStr = entry.el.style.opacity || "";
+            const baseOp = parseFloat(entry.baseOpacityStr);
+            entry.el.style.opacity = fade < 1
+              ? String(((Number.isFinite(baseOp) ? baseOp : 1) * fade).toFixed(3))
+              : entry.baseOpacityStr;
+          }
           if (entry.kind === "connector") continue;
           if (entry.kind === "plate" && entry.baseScale != null) {
             entry.el.style.transform =
-              `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px) translate(-50%, -50%) scale(${(entry.baseScale * shrink).toFixed(3)})`;
+              `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px) translate(-50%, -50%) scale(${(entry.baseScale * composite).toFixed(3)})`;
           } else {
             entry.el.style.transform =
               `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px) ${entry.transformTail}`;
@@ -1000,6 +1350,13 @@
         for (const entry of _tracked) {
           if (entry.kind !== "connector" || !entry.el) continue;
           const pill = entry.pillEntry;
+          if (entry.sx == null || (pill && pill.sx == null)) {
+            // Either end's anchor is behind the camera: no line
+            // to draw (the projection loop has already hidden
+            // the pill itself where it applies).
+            entry.el.style.display = "none";
+            continue;
+          }
           const sx = entry.baseSx + (entry.dx || 0);
           const sy = entry.baseSy + (entry.dy || 0);
           const ex = entry.baseEx + (pill?.dx || 0);
@@ -1190,7 +1547,11 @@
         offsetX: stageRect.left - containerRect.left,
         offsetY: stageRect.top - containerRect.top,
         stageW: stageRect.width,
-        stageH: stageRect.height
+        stageH: stageRect.height,
+        // The in-motion pill guard (in _trackFrame) must keep
+        // its shifts out of the same blocked ground the pass
+        // respects.
+        blockedRects
       };
       _trackLastSig = "";
 
@@ -1521,7 +1882,18 @@
           baseY: placed.anchorY,
           transformTail: placed.transformTail,
           dx: 0,
-          dy: 0
+          dy: 0,
+          // Live-geometry facts for the in-motion pill guard:
+          // the placed rect's size, its centre's offset from
+          // the Moon anchor, and the placement scale.
+          rectW: placed.rect?.w || 0,
+          rectH: placed.rect?.h || 0,
+          cox: placed.rect ? (placed.rect.x + placed.rect.w / 2) - placed.anchorX : 0,
+          coy: placed.rect ? (placed.rect.y + placed.rect.h / 2) - placed.anchorY : 0,
+          pillScale: (() => {
+            const m = /scale\(([\d.]+)\)/.exec(placed.transformTail || "");
+            return m ? Number(m[1]) : 1;
+          })()
         };
         placed.trackEntry = entry;
         _tracked.push(entry);
@@ -2298,10 +2670,10 @@
       // clear between disc edges — per Moon, per pass, at any
       // aspect — because each disc's diameter is bounded by 0.8×
       // a distance no greater than the pair's own separation. The
-      // selected day's Day Approach growth (the standalone `scale`
-      // in sphere-armillary.css: 1.3 approach, 1.55 living /
-      // immersive) is divided out of its cap, so the growth cannot
-      // break the law at close zoom either.
+      // selected day is the one exception, by the law stated at
+      // SELECTED_PITCH_BOUND above: its rendered diameter (box ×
+      // the manager-owned approach growth) may use its full pitch,
+      // and the worst pair still sums to 0.9 of its distance.
       //
       // Repair pass (Nov 22, 2026, 18:12): the neighbour search is
       // no longer grouped by Moon. Aaron's top-down shot showed
@@ -2323,26 +2695,35 @@
         plateCapPlates.push(candidate);
       }
       if (plateCapPlates.length > 1) {
-        const zoomStage = String(_stageEl?.dataset?.zoomStage || "").toLowerCase();
-        const selectedGrowth =
-          zoomStage === "approach"
-            ? 1.3
-            : (zoomStage === "living" || zoomStage === "immersive")
-              ? 1.55
-              : 1;
         for (const candidate of plateCapPlates) {
           let nearest = Infinity;
+          let nearestOther = null;
           for (const other of plateCapPlates) {
             if (other === candidate) continue;
             const d = Math.hypot(
               candidate.anchorX - other.anchorX,
               candidate.anchorY - other.anchorY
             );
-            if (d < nearest) nearest = d;
+            if (d < nearest) {
+              nearest = d;
+              nearestOther = other;
+            }
           }
           if (!Number.isFinite(nearest) || nearest <= 0) continue;
+          candidate._platePitchPx = nearest;
+          candidate._plateNearestSelected = !!nearestOther?.target?.selected;
           let cap = nearest * PLATE_PITCH_CAP_FRACTION;
-          if (candidate.target.selected && selectedGrowth > 1) cap /= selectedGrowth;
+          if (candidate.target.selected) {
+            // Overnight pass: the selected day's BOX is bounded by
+            // its full pitch divided by the growth in force right
+            // now (eased, manager-owned — see the constants at the
+            // head of this file), so its rendered diameter
+            // (box × growth) may use the whole pitch while its
+            // neighbours keep 0.8 of theirs. The per-frame guard
+            // in _trackFrame enforces the same bound at live
+            // geometry while the growth eases.
+            cap = (nearest * SELECTED_PITCH_BOUND) / Math.max(_growthEased, 1);
+          }
           candidate._plateCapPx = cap;
         }
       }
@@ -2937,8 +3318,17 @@
                   * 0.07
                 );
 
+          // The selected day's approach growth rides the same
+          // transform (overnight pass): a pass must compose the
+          // growth in force right now, or it would snap the day
+          // back to ungrown size between tracking frames.
+          const plateScale =
+            target.selected
+              ? apertureScale * _growthEased
+              : apertureScale;
+
           el.style.transform =
-            `translate(-50%, -50%) scale(${apertureScale.toFixed(3)})`;
+            `translate(-50%, -50%) scale(${plateScale.toFixed(3)})`;
 
           // Anchor tracking (repair pass, Nov 22, 2026): this
           // plate rides its world anchor between layout passes,
@@ -2950,10 +3340,15 @@
             baseX: railX,
             baseY: railY,
             baseScale: apertureScale,
-            passNN: candidate._plateCapPx
-              ? candidate._plateCapPx / PLATE_PITCH_CAP_FRACTION
-              : null,
-            transformTail: `translate(-50%, -50%) scale(${apertureScale.toFixed(3)})`,
+            selected: !!target.selected,
+            discPx: candidate._plateDiscPx || null,
+            passNN: candidate._platePitchPx
+              || (
+                candidate._plateCapPx
+                  ? candidate._plateCapPx / PLATE_PITCH_CAP_FRACTION
+                  : null
+              ),
+            transformTail: `translate(-50%, -50%) scale(${plateScale.toFixed(3)})`,
             dx: 0,
             dy: 0
           });
@@ -3013,9 +3408,12 @@
           {
             const discPx = candidate._plateDiscPx || 0;
             const naturalPx = candidate._plateNaturalPx || 0;
-            const pitchPx = candidate._plateCapPx
-              ? candidate._plateCapPx / PLATE_PITCH_CAP_FRACTION
-              : 0;
+            const pitchPx = candidate._platePitchPx
+              || (
+                candidate._plateCapPx
+                  ? candidate._plateCapPx / PLATE_PITCH_CAP_FRACTION
+                  : 0
+              );
             if (discPx > 0 && naturalPx > 0 && pitchPx > 0) {
               const markScale = discPx / naturalPx;
               if (markScale < 1 && typeof el.style.setProperty === "function") {
@@ -3029,12 +3427,26 @@
               }
               const farBand =
                 String(semanticBand || "medium").toLowerCase() === "far";
-              const neighbourRadius = 0.4 * pitchPx;
+              // A plate whose nearest neighbour is the selected
+              // day must clear the GROWN disc: its radius runs to
+              // half the selected bound, not 0.4 of the pitch
+              // (overnight pass).
+              const neighbourRadius =
+                (
+                  candidate._plateNearestSelected
+                    ? SELECTED_PITCH_BOUND
+                    : PLATE_PITCH_CAP_FRACTION
+                ) / 2 * pitchPx;
+              // The selected day's own marks ride its growth: the
+              // chip and badge are children of the plate, so their
+              // rendered reach scales with the grown disc and is
+              // measured at the stage's full growth.
+              const geomGrowth = target.selected ? _growthTarget() : 1;
               if (target.dayScheduleCount > 0) {
                 const chipH = (farBand ? 0.78 : 0.95) * remPx * markScale;
                 const chipOverhang =
                   chipH - (farBand ? 0.16 : 0.22) * remPx * markScale;
-                const chipBottom = discPx / 2 + chipOverhang;
+                const chipBottom = (discPx / 2 + chipOverhang) * geomGrowth;
                 let hangs =
                   chipBottom + neighbourRadius <= pitchPx;
                 if (hangs) {
@@ -3043,7 +3455,7 @@
                   // pitchPx away at 45°, and the chip's box must
                   // clear its disc there too.
                   const diag = pitchPx / Math.SQRT2;
-                  const diagDx = Math.max(0, diag - chipH / 2);
+                  const diagDx = Math.max(0, diag - (chipH * geomGrowth) / 2);
                   const diagDy = Math.max(0, diag - chipBottom);
                   if (Math.hypot(diagDx, diagDy) < neighbourRadius) {
                     hangs = false;
@@ -3058,9 +3470,9 @@
                 }
               }
               if (target.dayScheduleCount > 1) {
-                const badgeH = (farBand ? 0.66 : 0.78) * remPx * markScale;
-                const badgeOut = (farBand ? 0.26 : 0.34) * remPx * markScale;
-                const topReach = discPx / 2 + badgeOut;
+                const badgeH = (farBand ? 0.66 : 0.78) * remPx * markScale * geomGrowth;
+                const badgeOut = (farBand ? 0.26 : 0.34) * remPx * markScale * geomGrowth;
+                const topReach = (discPx * geomGrowth) / 2 + badgeOut;
                 const vertGap = pitchPx - topReach;
                 const boxLeft = topReach - badgeH;
                 let distAbove;
@@ -3429,7 +3841,7 @@
       _lastSignature = "";
     }
 
-    return Object.freeze({ init, update, markDirty, dispose, dismissSemantic: _proximityState.dismiss, semanticDismissals: _proximityState.snapshot });
+    return Object.freeze({ init, update, markDirty, dispose, dismissSemantic: _proximityState.dismiss, semanticDismissals: _proximityState.snapshot, growthState: () => Object.freeze({ eased: _growthEased, target: _growthTarget(), tracked: _tracked.length, raf: _trackRaf, idle: _trackIdleFrames }) });
   }
 
   globalThis.LivingTimeSphereLabelManager = Object.freeze({

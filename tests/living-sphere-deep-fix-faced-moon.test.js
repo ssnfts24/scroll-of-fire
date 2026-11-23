@@ -320,9 +320,18 @@ test("plate-cap: a day plate may never overlap its neighbours (Aaron, Nov 22, 20
   assert.match(labels, /plateCapPlates[\s\S]*?plateTarget\.kind !== "pattern-day-number"[\s\S]*?!plateTarget\.calendarFace/);
   assert.match(labels, /for \(const other of plateCapPlates\)/);
   assert.match(labels, /candidate\._plateCapPx = cap;/);
-  // The selected day's Day Approach growth is divided out of its
-  // cap, so the growth cannot break the law at close zoom.
-  assert.match(labels, /if \(candidate\.target\.selected && selectedGrowth > 1\) cap \/= selectedGrowth;/);
+  // Overnight pass (Nov 22, 2026, 23:19 — "the day shrinks when I
+  // click on it. The day should grow as I approach it."): the
+  // selected day's growth is manager-owned (the stylesheet's
+  // standalone `scale` rules were keyed on #sphere-container,
+  // which never contains a label, so the growth never rendered
+  // while the old cap division shrank the selected day by the
+  // phantom factor). The selected day's box is now bounded by its
+  // FULL pitch divided by the eased growth in force, so its
+  // rendered diameter may use the whole pitch.
+  assert.match(labels, /const SELECTED_PITCH_BOUND = 1;/);
+  assert.match(labels, /cap = \(nearest \* SELECTED_PITCH_BOUND\) \/ Math\.max\(_growthEased, 1\);/);
+  assert.match(labels, /candidate\._platePitchPx = nearest;/);
   // Application: a stale cap is cleared and the natural size
   // re-measured before the capped box is written (no ratchet),
   // the four size properties are written inline !important (the
@@ -372,6 +381,28 @@ test("plate-cap: a day plate may never overlap its neighbours (Aaron, Nov 22, 20
         }
       }
       assert.ok(intersects > 0, `pitch ${hPitch}x${vPitch}: the uncapped band size heaped here`);
+    }
+    // The grown selected day (overnight pass): one disc rendered
+    // at the FULL pitch bound (1.0× its own nearest-neighbour
+    // distance — box × the 1.55 growth, bounded), the rest at the
+    // ordinary 0.8 law. The worst pair sums to 0.5 + 0.4 = 0.9 of
+    // its distance, so no two discs may intersect here either.
+    const grownCaps = capFor(pts);
+    const selIdx = 10;
+    let selNN = Infinity;
+    for (let j = 0; j < pts.length; j++) {
+      if (j === selIdx) continue;
+      selNN = Math.min(selNN, Math.hypot(pts[selIdx].x - pts[j].x, pts[selIdx].y - pts[j].y));
+    }
+    grownCaps[selIdx] = 1.0 * selNN;
+    for (let i = 0; i < pts.length; i++) {
+      for (let j = i + 1; j < pts.length; j++) {
+        const d = Math.hypot(pts[i].x - pts[j].x, pts[i].y - pts[j].y);
+        assert.ok(
+          (grownCaps[i] + grownCaps[j]) / 2 < d,
+          `pitch ${hPitch}x${vPitch}: grown selected disc ${selIdx} and ${j} keep clear (caps ${grownCaps[i].toFixed(1)}/${grownCaps[j].toFixed(1)}, distance ${d.toFixed(1)})`
+        );
+      }
     }
   }
 });
@@ -489,8 +520,16 @@ test("repair: labels track their anchors between layout passes", () => {
   assert.match(labels, /kind: "plate"[\s\S]*?world: \[target\.worldX, target\.worldY, target\.worldZ\]/);
   // Sizes track too: each plate remembers its pass-time pitch and
   // the loop shrinks (never grows) its scale by the live ratio.
-  assert.match(labels, /passNN: candidate\._plateCapPx/);
+  // (Overnight pass: the pitch is stored directly as
+  // _platePitchPx — the cap can no longer stand in for it now
+  // that the selected day's cap is measured against its full
+  // pitch and its growth.)
+  assert.match(labels, /passNN: candidate\._platePitchPx/);
   assert.match(labels, /Math\.min\(1, nn \/ entry\.passNN\)/);
+  // The selected day's growth eases in the same loop and its
+  // rendered diameter is bounded at live geometry.
+  assert.match(labels, /function _easeGrowth\(nowMs\)/);
+  assert.match(labels, /renderedBound \/ unit/);
   assert.match(labels, /kind: "pill"/);
   assert.match(labels, /kind: "connector"/);
   // The loop wakes on passes and on signature-unchanged updates,
@@ -503,6 +542,37 @@ test("repair: Moon pills are protected from plates geometrically", () => {
   assert.match(labels, /pr\.el\.dataset\.pillProtected = "true"/);
   assert.match(labels, /Number\(pr\.target\?\.moon \|\| 0\) === Number\(placed\.moon \|\| 0\)/);
   assert.match(labels, /pr\.target\?\.selected \|\| pr\.target\?\.pinned/);
+});
+
+test("overnight pass: the pill guard runs every frame, not at pass cadence", () => {
+  // The §8 protection re-ran only when a layout pass ran; between
+  // passes a tracked plate could drift onto a tracked pill and
+  // stand there for a whole glide (lab: occlusions in 22 of 31
+  // frames of a drag flick). The guard lives in the tracking
+  // loop and re-checks live geometry each frame.
+  assert.match(labels, /In-motion pill guard \(overnight pass/);
+  assert.match(labels, /const pillEntries = _tracked\.filter\(/);
+  assert.match(labels, /kind === "pill" && entry\.sx != null && entry\.rectW > 0/);
+  // Shifts stay inside the pass's own 90px bound and out of
+  // blocked ground; the tracking context carries the rects.
+  assert.match(labels, /Math\.hypot\(tx, ty\) > 90/);
+  assert.match(labels, /blockedRects\n      \};/);
+  assert.match(labels, /const blocked = ctx\.blockedRects \|\| \[\];/);
+  // Fades hit only non-exempt intruders: never the selected day,
+  // never the pill's own Moon's plates.
+  assert.match(labels, /if \(g\.entry\.selected\) continue;/);
+  assert.match(labels, /if \(g\.moon && pillMoon && g\.moon === pillMoon\) continue;/);
+  assert.match(labels, /g\.entry\.guardFade = 0\.1;/);
+  // The fade rides the pass opacity and restores it exactly.
+  assert.match(labels, /entry\.baseOpacityStr = entry\.el\.style\.opacity \|\| "";/);
+  assert.match(labels, /: entry\.baseOpacityStr;/);
+  // Pill registrations carry the live-geometry facts the guard
+  // measures with.
+  assert.match(labels, /rectW: placed\.rect\?\.w \|\| 0/);
+  assert.match(labels, /cox: placed\.rect \? \(placed\.rect\.x \+ placed\.rect\.w \/ 2\) - placed\.anchorX : 0/);
+  // The selected day is exempt from the pass-pitch shrink ratio:
+  // its frame guard is the rendered bound at live pitch.
+  assert.match(labels, /if \(entry\.selected\) \{[\s\S]*?entry\.shrink = 1;/);
 });
 
 test("repair: the Play pill is blocked ground; the sheet's guide bar stands in flow", () => {

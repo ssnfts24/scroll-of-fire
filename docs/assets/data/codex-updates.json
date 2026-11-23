@@ -1,6 +1,14 @@
 [
  {
   "date": "2026-11-22",
+  "type": "sphere",
+  "title": "The day grows as you approach it",
+  "summary": "Aaron found two faults on his phone: the chosen day shrank as he moved toward it, and some things stuck while the Sphere turned. The shrink is fixed at its root — the growth designed for the chosen day was written where it could never reach the day numbers, while the size limit was quietly dividing by it anyway, so approaching a day capped it smaller than its neighbours. The growth now lives with the numbers themselves: the chosen day grows steadily as you close in and ends clearly the largest on the face, its neighbours making the room. For the sticking: the Moon names are now guarded every frame, not just when the layout refreshes — a name a day number drifts across steps aside, or the number fades for just those frames — and a number that swings behind the Sphere no longer freezes mid-face; it waits out of sight until its turn comes round.",
+  "url": "./living-time-sphere.html",
+  "symbol": "✦"
+ },
+ {
+  "date": "2026-11-22",
   "type": "feature",
   "title": "The faced Moon shows its days",
   "summary": "Turn to any Moon on the Sphere and all 28 of its day numbers stand with it now. The Sphere had been mis-measuring which Moon you were facing — it read the edge of a Moon's sector instead of its centre, so a Moon centred on your screen could be treated as its neighbour and left bare, while the neighbour's numbers showed in its place — and the window that quiets the Moons you are not looking at was dimming the one you were facing, too. Both are corrected. The Sphere also learned to move like a held instrument: a spin keeps your hand's own momentum for a moment instead of stopping dead, and the scroll wheel eases the zoom instead of stepping it. And zooming in on a day now opens it in stages, the way the Living Sphere Evolution lays out — first the day's number grows, then its world card rises naming the day and everything scheduled on it, and closest in, the Day Details door opens on its own; zoom back out and it folds away.",

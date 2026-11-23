@@ -1340,29 +1340,22 @@ html.living-time-sphere-page.sphere-full-page .sphere-sheet-bar {
  * data-zoom-stage: year → moon → approach → living → immersive.
  *
  * Day Approach / Living Day: the selected day's number grows as the
- * keeper closes in. The growth rides the standalone `scale`
- * property, which composes with — never fights — the label
- * manager's per-frame transform, and the transition carries the
- * growth smoothly between stages.
+ * keeper closes in. The growth is composed by the label manager
+ * into its own per-frame transform and eased there (overnight
+ * pass, Nov 22, 2026): it used to ride this stylesheet's
+ * standalone `scale` property, keyed on
+ * #sphere-container[data-zoom-stage=...] — but the label layer
+ * lives under #sphere-moon-labels, outside #sphere-container, so
+ * those rules could never match a label and the growth never
+ * rendered, while the cap pass went on dividing the selected
+ * day's cap by the phantom growth and shrinking it on approach.
+ * The dead rules are removed; the manager owns the growth now.
  *
  * The day's world card stands inside the stage, docked at its
  * bottom edge above the doors: at Day Approach it rises naming the
  * day; at Living Day it stands open with the day's scheduled things;
  * at Immersive Day the Day Details sheet itself has opened over it.
  * ———————————————————————————————————————————————————————————————— */
-html.living-time-sphere-page .sphere-semantic-label {
-  transition: scale 340ms ease;
-}
-
-html.living-time-sphere-page #sphere-container[data-zoom-stage="approach"] .sphere-semantic-label.is-selected {
-  scale: 1.3;
-}
-
-html.living-time-sphere-page #sphere-container[data-zoom-stage="living"] .sphere-semantic-label.is-selected,
-html.living-time-sphere-page #sphere-container[data-zoom-stage="immersive"] .sphere-semantic-label.is-selected {
-  scale: 1.55;
-}
-
 html.living-time-sphere-page .sphere-day-world-card {
   position: absolute;
   left: 50%;
