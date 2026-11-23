@@ -303,6 +303,22 @@
      * Same physical rule the working schedule-symbol framework used:
      * project each Moon midpoint into camera space and choose the
      * strongest camera-facing Moon.
+     *
+     * DEEP-FIX (Aaron, Nov 22, 2026) — the midpoint must be the
+     * sector's CENTRE, and the old sampling did not measure it:
+     * calendarCell(day).angle is the reading grid's COLUMN angle
+     * (it steps by day-of-week), so the old sample — day 15, a
+     * column-1 day — returned the sector's START angle, half a
+     * sector (about 10.6°) away from the centre of the 4×7 grid
+     * the keeper actually sees. A keeper who centred a Moon's
+     * grid on screen could therefore be told the NEXT Moon was
+     * the faced one — measured in the lab facing Moon 13's grid
+     * centre: the disclosure named Moon 1, Moon 1's whole grid
+     * disclosed at the seam, and Moon 13 stood bare, which is
+     * exactly the phone report this fix answers. The centre is
+     * now the short-way average of the sector's first and last
+     * day angles, so the disclosure turns over at the true
+     * boundary between two grids.
      */
     for (
       let moon = 1;
@@ -326,8 +342,46 @@
 
       if (!cell) continue;
 
+      const firstCell =
+        calendar?.calendarCell?.(
+          ((moon - 1) * 28)
+          + 1
+        );
+
+      const lastCell =
+        calendar?.calendarCell?.(
+          moon * 28
+        );
+
+      let angleDeg =
+        Number(cell.angle);
+
+      if (
+        firstCell
+        && lastCell
+        && Number.isFinite(Number(firstCell.angle))
+        && Number.isFinite(Number(lastCell.angle))
+      ) {
+        const startAngle =
+          Number(firstCell.angle);
+
+        const span =
+          (
+            (
+              Number(lastCell.angle)
+              - startAngle
+              + 540
+            ) % 360
+          )
+          - 180;
+
+        angleDeg =
+          startAngle
+          + (span / 2);
+      }
+
       const angle =
-        Number(cell.angle)
+        angleDeg
         * Math.PI
         / 180;
 
@@ -2276,21 +2330,38 @@
   // semantic target reads; when the model carries no passage,
   // no tag is drawn — the face never invents a place.
   function _armillaryNameTag(text) {
-    const canvas = _armillaryCanvas(512, 112);
+    // Visibility pass (Nov 22, 2026) — the audit found these tags
+    // faint and clipped at the rim: 52px type with only a soft
+    // orange halo washed out against the bright face. The ink is
+    // now heavier (700 weight on a larger canvas), seated on a
+    // dark backing wash, and outlined dark so it holds against
+    // both the bright disc and the dark rim; the sprite stands
+    // about a third larger. Presentation only — the tags' places
+    // still come from the live marker positions at every sync.
+    const canvas = _armillaryCanvas(768, 168);
     const ctx = canvas?.getContext("2d");
     if (!ctx || !_THREE) return null;
-    ctx.clearRect(0, 0, 512, 112);
-    ctx.font = "600 52px Georgia, 'Times New Roman', serif";
+    ctx.clearRect(0, 0, 768, 168);
+    const backing = ctx.createLinearGradient(0, 24, 0, 144);
+    backing.addColorStop(0, "rgba(14,8,2,0)");
+    backing.addColorStop(0.5, "rgba(14,8,2,0.44)");
+    backing.addColorStop(1, "rgba(14,8,2,0)");
+    ctx.fillStyle = backing;
+    ctx.fillRect(24, 24, 720, 120);
+    ctx.font = "700 66px Georgia, 'Times New Roman', serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.shadowColor = "rgba(255,157,60,0.9)";
-    ctx.shadowBlur = 12;
-    ctx.fillStyle = "#ffd98f";
-    ctx.fillText(text, 256, 58, 480);
+    ctx.shadowColor = "rgba(255,157,60,0.95)";
+    ctx.shadowBlur = 18;
+    ctx.lineWidth = 10;
+    ctx.strokeStyle = "rgba(26,13,2,0.88)";
+    ctx.strokeText(text, 384, 86, 712);
+    ctx.fillStyle = "#ffe1a3";
+    ctx.fillText(text, 384, 86, 712);
     const texture = new _THREE.CanvasTexture(canvas);
     const material = new _THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false });
     const sprite = new _THREE.Sprite(material);
-    sprite.scale.set(0.34, 0.074, 1);
+    sprite.scale.set(0.47, 0.103, 1);
     sprite.name = "armillaryNameTag";
     return sprite;
   }
@@ -2321,7 +2392,7 @@
     const orbit = camPos ? camPos.length() : 0;
     const place = (sprite, pos) => {
       if (!sprite || !pos) { if (sprite) sprite.visible = false; return; }
-      sprite.position.set(pos.x, (pos.y || 0) + 0.045, pos.z);
+      sprite.position.set(pos.x, (pos.y || 0) + 0.065, pos.z);
       // Near-side only: a marker farther than the orbit's heart
       // is on the far side of the instrument; its name rests.
       sprite.visible = !camPos || Math.hypot(pos.x - camPos.x, pos.z - camPos.z) < orbit + 0.25;
@@ -2941,7 +3012,12 @@
           scheduledRecordIds: plannerSummary.recordIds || [],
           gateDay,
           pinned: isSelectedDay,
-          selected: isSelectedDay
+          selected: isSelectedDay,
+          // Visibility pass (Nov 22, 2026) — presentation identity
+          // only, like the priority beside it (98 for today): the
+          // label layer reads this to give today's plate its gold
+          // ring. It moves no geometry and owns no calendar math.
+          today: isTodayDay
         });
       }
     }

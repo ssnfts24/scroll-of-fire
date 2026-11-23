@@ -3,10 +3,10 @@
   "purpose": "Development-only registry of every tracked or intended repository file. Not a publication list.",
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
-    "files": 2338,
-    "bytes": 982498795,
+    "files": 2341,
+    "bytes": 983643254,
     "byGroup": {
-      "tooling": 262,
+      "tooling": 265,
       "manuscript": 17,
       "unlabelled-image": 21,
       "witness-record": 20,
@@ -35,7 +35,7 @@
       "scripture-source": 15
     },
     "byPublicationEligibility": {
-      "development-only": 306,
+      "development-only": 309,
       "pending-publication-review": 43,
       "restricted-review": 174,
       "protected-immutable": 21,
@@ -43,9 +43,9 @@
       "approved-public": 1788
     },
     "byExamination": {
-      "inventoried-only": 2209,
-      "text-extracted": 54,
-      "no-text-layer-needs-visual-review": 1,
+      "inventoried-only": 2212,
+      "parser-unavailable": 16,
+      "text-extracted": 39,
       "archive-listed": 2,
       "structurally-audited": 72
     }
@@ -356,18 +356,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 192,
-        "words": 33734,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {
-          "CreationDate": "D:20260307003018+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -426,18 +418,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 4,
-        "words": 524,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318162939+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "1_Codex_of_Reality/Codex_of_Life_Scroll_FULL.docx"
@@ -595,18 +579,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 55,
-        "words": 5079,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163211+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "1_Codex_of_Reality/Living Laws.docx"
@@ -681,15 +657,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 182,
-        "words": 55224,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {}
+        "status": "parser-unavailable"
       }
     },
     {
@@ -713,15 +684,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 187,
-        "words": 33540,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {}
+        "status": "parser-unavailable"
       }
     },
     {
@@ -1140,18 +1106,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 2,
-        "words": 602,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163230+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/Master_Proof_Scroll_Updated.docx"
@@ -1269,18 +1227,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 3,
-        "words": 331,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163347+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/Scroll_of_Convergence.docx"
@@ -1367,18 +1317,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 2,
-        "words": 443,
-        "hebrew": true,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163433+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/The_Journey_Scroll.docx",
@@ -1505,18 +1447,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 333,
-        "words": 82978,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {
-          "CreationDate": "D:20260318162655+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/🌌 Ahmein — The Final Seal, Becoming Will.docx"
@@ -1578,18 +1512,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 266,
-        "words": 56295,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {
-          "CreationDate": "D:20260318162820+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/🜂 888 — The Architect of Becoming.docx"
@@ -1651,18 +1577,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 256,
-        "words": 56914,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {
-          "CreationDate": "D:20260318162852+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/🜄 Ainos — The Witness of Echoes.docx"
@@ -1689,18 +1607,10 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "text-extracted",
-        "pages": 4,
-        "words": 533,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318162909+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -1772,18 +1682,10 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "text-extracted",
-        "pages": 5,
-        "words": 712,
-        "hebrew": false,
-        "greek": true,
-        "metadata": {
-          "CreationDate": "D:20260318163040+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -1959,18 +1861,10 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "text-extracted",
-        "pages": 29,
-        "words": 2732,
-        "hebrew": true,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163419+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -1994,18 +1888,10 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "text-extracted",
-        "pages": 1,
-        "words": 158,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163401+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -2811,18 +2697,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "no-text-layer-needs-visual-review",
+      "examination": "parser-unavailable",
       "nextAction": "Visual review for personal imagery.",
       "extract": {
-        "status": "no-text-layer",
-        "pages": 1,
-        "words": 0,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20250621000923",
-          "Producer": "PyFPDF 1.7.2 http://pyfpdf.googlecode.com/"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -7102,8 +6980,8 @@
       "path": "docs/assets/css/sphere-armillary.css",
       "title": "sphere-armillary.css",
       "format": "css",
-      "bytes": 29839,
-      "sha256": "fc274ab2da73c97e29d5c1e8e4a585070397891906d50f907843769dc73c1e18",
+      "bytes": 48458,
+      "sha256": "e0209d0d175b221e10d7713550439cf66f9b030417e530ec561b6b4065806fb2",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -7582,8 +7460,8 @@
       "path": "docs/assets/data/codex-updates.json",
       "title": "codex-updates.json",
       "format": "json",
-      "bytes": 124961,
-      "sha256": "b952d6a836f97d1944b260edba3479632172084f6f48092859a8bf5e800e810a",
+      "bytes": 128274,
+      "sha256": "aa54b9bd87a55363307cd111ce539ebc8823f1f58e7a13bf75f02cdba0da3bbd",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -7702,8 +7580,8 @@
       "path": "docs/assets/data/link-graph.json",
       "title": "link-graph.json",
       "format": "json",
-      "bytes": 434774,
-      "sha256": "5831e21e4450a0deb40cc85dfa49c55d0b48ac8aa758918abc9d17bcb7bea46c",
+      "bytes": 434846,
+      "sha256": "64ad2d7477592434eb78ffe7696ce12e8dedd950f5944f32ec783a9757826c2a",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -16440,8 +16318,8 @@
       "path": "docs/assets/js/sphere-armillary.js",
       "title": "sphere-armillary.js",
       "format": "js",
-      "bytes": 98363,
-      "sha256": "bce2349d15bfc4c79e7767818aedf4f83b62d768d71b402b38acfdcb907de3c3",
+      "bytes": 100061,
+      "sha256": "3dbe6cc151a3cf144d65528ec894143826d65a2aa266c0c8b9c319cbfcc4a010",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -16872,8 +16750,8 @@
       "path": "docs/assets/js/sphere/living-time-sphere-camera.js",
       "title": "living-time-sphere-camera.js",
       "format": "js",
-      "bytes": 16206,
-      "sha256": "8f0c85f575673b1ad3a5ffb566501139641a3a4e7bd90489aae8d49cf5b4fbb4",
+      "bytes": 20855,
+      "sha256": "3c46b9972a45c7a2ac1666ad09c2325e41f6899613f56c402b53c77f0d8a20e2",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -16920,8 +16798,8 @@
       "path": "docs/assets/js/sphere/living-time-sphere-day-zoom.js",
       "title": "living-time-sphere-day-zoom.js",
       "format": "js",
-      "bytes": 33468,
-      "sha256": "3e156f5d98e776d0f2cd56a60be29682ba00c4251755da07c69bed40c0244a0f",
+      "bytes": 47200,
+      "sha256": "6c491757e7f17836a0d567576f3cf7e9d1cb86e9a8133f034b824ca141e47883",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -17064,8 +16942,8 @@
       "path": "docs/assets/js/sphere/living-time-sphere-label-manager.js",
       "title": "living-time-sphere-label-manager.js",
       "format": "js",
-      "bytes": 80350,
-      "sha256": "119d39976654537375d617756320749f80333e190271bfa6083e08585f658e3c",
+      "bytes": 143402,
+      "sha256": "e80871e0ae8ab0e5f6e3406f1c725c741f8e0b96dd0d4ea1d2d6f90853ae1f53",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -17328,8 +17206,8 @@
       "path": "docs/assets/js/sphere/living-time-sphere-renderer-3d.js",
       "title": "living-time-sphere-renderer-3d.js",
       "format": "js",
-      "bytes": 368525,
-      "sha256": "4055b32d06acb88e41d9eebfd141e2cb0de131f82e96a9632f64e28c3dbd6238",
+      "bytes": 371397,
+      "sha256": "10aafc272c17a059c4b1fd9808097f4a027002b144ab2fd577c3ddda44870f0c",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -17568,8 +17446,8 @@
       "path": "docs/assets/js/sphere/living-time-sphere-ui.js",
       "title": "living-time-sphere-ui.js",
       "format": "js",
-      "bytes": 311127,
-      "sha256": "db827416df4929cd7635587a6c58e0f40496237507ad6eb6f1e2bd8a85406511",
+      "bytes": 312481,
+      "sha256": "7653070b02aebcecebd2a13f001a827a998ebb29a3b37e54ebfd11a8c8a4fcc6",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -22345,7 +22223,7 @@
       "title": "manifest.json",
       "format": "json",
       "bytes": 2631,
-      "sha256": "520485ec8f886dbbceafa51ba03bb3f6b2062fb8c6f4bb727dd612ba8725157e",
+      "sha256": "3e1958400cdb4f2e95d71ac5a357712b369aa75edf38de2b76c2763afa37a1f6",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -22368,8 +22246,8 @@
       "path": "docs/assets/search/pages.json",
       "title": "pages.json",
       "format": "json",
-      "bytes": 1471400,
-      "sha256": "bff974f6f3aba0bc5113cbd1609e157e9ed9c48b017de2a8b8cf0922dafa6e1e",
+      "bytes": 1474344,
+      "sha256": "7137e6ca05f7567b397402cf4c169aa31a0fca90db73b54211214789423b10bc",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -23148,8 +23026,8 @@
       "path": "docs/index.html",
       "title": "Homepage",
       "format": "html",
-      "bytes": 128873,
-      "sha256": "17cd3cba2cead1f6b09d82ece06f73aa87ca9bc6e224f9521dcf204c9a392496",
+      "bytes": 128943,
+      "sha256": "9c3abeca6b921894691a1640c22d75449dded2a6a76deec4a596aa0547fbb786",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -23244,8 +23122,8 @@
       "path": "docs/living-time-sphere.html",
       "title": "Living Time Sphere",
       "format": "html",
-      "bytes": 130167,
-      "sha256": "8bf6e882b29661737e4965a2f7695d0b09afca63681787002cce6508b42e2a6c",
+      "bytes": 130335,
+      "sha256": "2127ecebba06419d9dc965ff4eec85f33b5a4540d84c8fa6fed847fd74500e4d",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -50242,8 +50120,8 @@
       "path": "docs/witness.html",
       "title": "Witness",
       "format": "html",
-      "bytes": 36907,
-      "sha256": "fcd6b3b57763e594f838e0740632af9265f16fa37589504469918ea49f1d9bbc",
+      "bytes": 39670,
+      "sha256": "0c07be1188bb00d45e3dc23d7a4b2e5f7e4f22780bc15936deebb7331fe1e414",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -51999,7 +51877,7 @@
       "title": "site-master-inventory.json",
       "format": "json",
       "bytes": 742565,
-      "sha256": "8e59ec920bfe034eb2df296507ceb62e2031051f769ac9a48dd3e3fbc191bb36",
+      "sha256": "33f90a3ef876b3858e8635685678bad01953c1f2992fcd035b0218ace019c8d1",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -52454,8 +52332,8 @@
       "path": "tests/browser/screenshots/desktop-inspector.png",
       "title": "desktop-inspector.png",
       "format": "png",
-      "bytes": 457125,
-      "sha256": "b845f1e10d3773f73ac3c224e12266671236ad1debc93a485d9021e3e2a94e36",
+      "bytes": 481439,
+      "sha256": "c174f149f9dc089215d5591e276354463e99da58f4287c7929f2e49f9ca811a9",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -52478,8 +52356,8 @@
       "path": "tests/browser/screenshots/desktop-shell.png",
       "title": "desktop-shell.png",
       "format": "png",
-      "bytes": 823616,
-      "sha256": "ff3a04290bce923661b1875cfa2f96c1cfd16fce9de9dcc2dbbdf9c69943f5c9",
+      "bytes": 887352,
+      "sha256": "03f3d1be0bb7117bcc6d7ff76d09b6dd08cd0ca94a6e7b9410cd050accf7e4de",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -52502,8 +52380,8 @@
       "path": "tests/browser/screenshots/landscape-shell.png",
       "title": "landscape-shell.png",
       "format": "png",
-      "bytes": 226607,
-      "sha256": "e4f3d704e7765245938843d3449b384a214340433cc0fd24ca97bbce97b27f40",
+      "bytes": 228955,
+      "sha256": "a9414f32a33f9d082d7de9ca01bcc0dee99b0aa45c6c3eb05ef8f2bf9475db20",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -52526,8 +52404,56 @@
       "path": "tests/browser/screenshots/phone-day-sheet.png",
       "title": "phone-day-sheet.png",
       "format": "png",
-      "bytes": 308779,
-      "sha256": "10e17a93db847b68e9b14696ae55c7647d0599e5b5e115e4878109e09d3e5534",
+      "bytes": 302433,
+      "sha256": "169b040c501822088d5c8f25dddd1338c7bde791cd35105f3ad022b4c1a9d7da",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-browser-screenshots-phone-living-day-card-png-2b9511",
+      "path": "tests/browser/screenshots/phone-living-day-card.png",
+      "title": "phone-living-day-card.png",
+      "format": "png",
+      "bytes": 375374,
+      "sha256": "d96676210637bf303b32ddb1379829f05a03018e11b0cfd9d5ffa389dc06f89f",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-browser-screenshots-phone-moon13-faced-png-b3f5bf",
+      "path": "tests/browser/screenshots/phone-moon13-faced.png",
+      "title": "phone-moon13-faced.png",
+      "format": "png",
+      "bytes": 410622,
+      "sha256": "f5073acc117e33b02ef26487c3a53c6b5be7c73c8131bc187e404ab35f79d247",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -52550,8 +52476,8 @@
       "path": "tests/browser/screenshots/phone-shell.png",
       "title": "phone-shell.png",
       "format": "png",
-      "bytes": 911123,
-      "sha256": "fb557d3d0104a5a42bb0af4da9676f688c84e63f547e7c45cd25fa5a5a268134",
+      "bytes": 988798,
+      "sha256": "da8c1d3a312353900c44abd3f115dca3a4a81ec5d4a0035cf49267c14025c3c2",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -52574,8 +52500,8 @@
       "path": "tests/browser/screenshots/phone-spark-conversation.png",
       "title": "phone-spark-conversation.png",
       "format": "png",
-      "bytes": 292147,
-      "sha256": "b005126ba688b238bf197f339622fe3e54b0e0d0721c94aab90c79041d067ad3",
+      "bytes": 323398,
+      "sha256": "00cf139a17c799ab72468b3b2a25af8c2397be94ef946ae9f18e05f08a736978",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -52910,8 +52836,8 @@
       "path": "tests/browser/sphere-focus-interactions.mjs",
       "title": "sphere-focus-interactions.mjs",
       "format": "mjs",
-      "bytes": 35435,
-      "sha256": "d69accdfc7bfabaf684fa80e8ba606c58b5ecf5ca728cca35116c989a9f47445",
+      "bytes": 45570,
+      "sha256": "588ccf94a5a8a5387be34eb5e919b429daddba481586da17c7001ed19993615e",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -52983,7 +52909,7 @@
       "title": "codex-guide-talking.test.js",
       "format": "js",
       "bytes": 17542,
-      "sha256": "d50a13b650727d2d30bb9fb54a1665df3f00f14b8876920cebead08b3219a63a",
+      "sha256": "3ea80c5b3dbd2f142cdd2ae2e6a621206d5cb5bbd8cda5f98f1f5e3e832c8403",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -53103,7 +53029,7 @@
       "title": "page-weight-budget.json",
       "format": "json",
       "bytes": 3192,
-      "sha256": "e180c96085da902d671900a8ac2089269055e71364e5432ae2a5abf4d4fb4505",
+      "sha256": "13c9079d000232cf0173c60e438ba21d73efebad4bd66886c792d3ed6484b6a5",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -53438,8 +53364,8 @@
       "path": "tests/homepage-sphere.test.js",
       "title": "homepage-sphere.test.js",
       "format": "js",
-      "bytes": 22869,
-      "sha256": "b8a00c55e7e1737641405865bb5261b0151b8a58d144fb376cb0f00ce74a9331",
+      "bytes": 25609,
+      "sha256": "beccf3d24990d9e2e713aea60b34ad57b91ef93a079d05587e92c8d4c9e5534c",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -54398,8 +54324,8 @@
       "path": "tests/living-sphere-b7-60-top-view-label-gating.test.js",
       "title": "living-sphere-b7-60-top-view-label-gating.test.js",
       "format": "js",
-      "bytes": 17673,
-      "sha256": "3e82196e0ecb496c9c908a880147cbda408df34c1ee703e2645df19cb4eeca5d",
+      "bytes": 18627,
+      "sha256": "7dc83f99ee39d1d3fe8d6b02bded51f738ffd7b5a67865cf4e3b81c75fa97c0b",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -54496,6 +54422,30 @@
       "format": "js",
       "bytes": 3869,
       "sha256": "432ce243f7afea6540ee9f802a6fe8734adfd48fe160ef2e9ace3f70ba0d4776",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-living-sphere-deep-fix-faced-moon-test-js-086964",
+      "path": "tests/living-sphere-deep-fix-faced-moon.test.js",
+      "title": "living-sphere-deep-fix-faced-moon.test.js",
+      "format": "js",
+      "bytes": 31481,
+      "sha256": "db5caeefe83d369fe6849b5b9b225027b20358fa98131b2beab2a9960b4a9423",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -54638,8 +54588,8 @@
       "path": "tests/living-time-sphere-r2-rework.test.js",
       "title": "living-time-sphere-r2-rework.test.js",
       "format": "js",
-      "bytes": 11385,
-      "sha256": "b1d653a6a2996aadf526ebc44f6b71191339226650623e48a011a8064281b0b1",
+      "bytes": 11755,
+      "sha256": "5d5a253e4849fa5e52b0553ec1743591b8933d107394d4669f8b14bfc4aba170",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -56246,8 +56196,8 @@
       "path": "tests/sphere-armillary.test.js",
       "title": "sphere-armillary.test.js",
       "format": "js",
-      "bytes": 17692,
-      "sha256": "448e970a2e7cce9712e45852ef4a132eef0bfcdc80c8c681303877815958125f",
+      "bytes": 22191,
+      "sha256": "8ef24a6804a76e8ddbed4016ff059b82e8934c6aae38dac0c63f47dd58d0b96f",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
