@@ -353,7 +353,7 @@ test("the Sphere doors carry the Ladder of Scales as planned, and ride the compa
 
 test("the growth record carries this build at index 1, under the pinned head", () => {
   const updates = JSON.parse(read("docs/assets/data/codex-updates.json"));
-  assert.equal(updates.length, 236);
+  assert.equal(updates.length, 237);
   assert.equal(updates[0].title, "The front door gained its small surfaces", "the pinned head stands");
   assert.equal(updates[1].title, "The map, the pages and the Sphere now read one story");
   assert.equal(updates[1].url, "./map.html");

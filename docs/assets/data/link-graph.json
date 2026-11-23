@@ -1021,18 +1021,13 @@
      "area": "archive"
     },
     {
-     "path": "index.html",
-     "title": "Codex of Reality",
-     "area": "codex"
-    },
-    {
      "path": "map.html",
      "title": "The Traveller's Map",
      "area": "systems"
     }
    ],
    "outTotal": 0,
-   "inTotal": 3
+   "inTotal": 2
   },
   "equinox-passage.html": {
    "title": "Equinox Passage — The 13 Moons Remnant Living Time Observatory",
@@ -1866,7 +1861,7 @@
      "area": "artifacts"
     }
    ],
-   "outTotal": 25,
+   "outTotal": 24,
    "inTotal": 2
   },
   "invoke.html": {
