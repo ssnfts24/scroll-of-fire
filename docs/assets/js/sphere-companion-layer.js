@@ -644,6 +644,28 @@
     }
   })();
 
+  // ── Test Layers on the Sphere — Salmon + Kyoto (Phase C) ─────
+  // Aaron approved the proving trio on Nov 23, 2026 — sky,
+  // salmon, Kyoto blossoms. The sky rides its ring (Phase C sky
+  // engine); these two recorded series load the same way as the
+  // farm: a stylesheet and a script set on the page, and nothing
+  // else in this layer changes. The module fetches a series'
+  // packed day-index only when a keeper first switches that
+  // layer on; both layers are off by default.
+  (() => {
+    if (document.querySelector("script[data-sphere-test-layers]")) return;
+    const css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = "assets/css/sphere-test-layers.css?v=20261123-1";
+    css.setAttribute("data-sphere-test-layers", "");
+    document.head.appendChild(css);
+    const s = document.createElement("script");
+    s.src = "assets/js/sphere-test-layers.js?v=20261123-1";
+    s.async = false;
+    s.setAttribute("data-sphere-test-layers", "");
+    document.head.appendChild(s);
+  })();
+
   // ── The Sky on the Sphere (Phase C sky engine) ───────────────
   // Aaron (Nov 23, 2026): "Get the stars and astronomy on there."
   // The engine, the star catalog, and the dome load the same way
