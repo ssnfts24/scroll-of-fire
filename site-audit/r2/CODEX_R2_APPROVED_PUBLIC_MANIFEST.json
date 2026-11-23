@@ -497,7 +497,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "0df53cd0db23d84bf926af721afda6c614f4b5327fe665e36ad7e71b3f88a234",
+      "sha256": "99e38275d31b6ce1808ad44b44e756f4628ddd07772420b3afdecb6f18480796",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -2470,6 +2470,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/js/spark-activities.js",
+      "sha256": "dc42c596b09bfa7d10420e3fa5b309f53757d8b29b1b94a02577fec796eaa123",
+      "publicUrl": "https://codexofreality.org/assets/js/spark-activities.js",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/js/spark-agent-seat.js",
       "sha256": "0343cedf875807d845a05d29fe6071b4d785ee6d14c2d118fc00308d8c73597b",
       "publicUrl": "https://codexofreality.org/assets/js/spark-agent-seat.js",
@@ -2501,7 +2507,7 @@
     },
     {
       "path": "docs/assets/js/spark-home-world.js",
-      "sha256": "49082bd0dba36836720d910b36961bb9b8a3aee5bff89b1510f56659b88eaad1",
+      "sha256": "ff12bf49ec954393e1410ce432b13356b8aadcbbcfc341f840a999af40bb24f2",
       "publicUrl": "https://codexofreality.org/assets/js/spark-home-world.js",
       "status": "operational"
     },
@@ -2873,7 +2879,7 @@
     },
     {
       "path": "docs/assets/js/story-layer.js",
-      "sha256": "7af5e36b965298512f20a7aefe613cc33cd08de8eeb1f10a61ddb2e633ee6479",
+      "sha256": "3fc2a4489ba80f8d00fe4d8cccc5f521555babe345715b7e507537e126675673",
       "publicUrl": "https://codexofreality.org/assets/js/story-layer.js",
       "status": "operational"
     },
@@ -4121,7 +4127,7 @@
     },
     {
       "path": "docs/companions.html",
-      "sha256": "b4707f650277f64e3a0cea00e2249b6ea30d2b904950fee430257e371d9ce11b",
+      "sha256": "c1e6e6f00957fd0dce3e7d591bb573b6a7464dd0518ce4497c05facb6289711a",
       "publicUrl": "https://codexofreality.org/companions.html",
       "status": "operational"
     },
