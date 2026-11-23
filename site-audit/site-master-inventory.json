@@ -7,7 +7,7 @@
     "publicHtmlPages": 181,
     "catalogEntries": 73,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 26,
+      "not-linked-directly-from-homepage": 25,
       "nav-label-differs-from-title": 24,
       "no-global-navigation": 1,
       "deployed-but-unlinked": 60,
@@ -760,7 +760,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (212 files)",
+      "title": "docs/assets/js (213 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1958,6 +1958,7 @@
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
+        "garden.html",
         "genesis-oracle.html",
         "glossary.html",
         "guide.html",
@@ -13452,15 +13453,13 @@
         "path": "garden.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 4,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 5,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "planned-timeline",
@@ -13958,7 +13957,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (199 files)",
+      "title": "tests/ (200 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
