@@ -143,8 +143,8 @@ class Cdp {
 
 test("Temporal Worlds: entry, the years line, and pattern lighting on the real page", { timeout: 480000 }, async (t) => {
   const chromium = findChromium();
-  if (!chromium) {
-    t.skip("No Chromium available (set CHROMIUM_PATH)");
+  if (!chromium || typeof WebSocket !== "function") {
+    t.skip("A local Chromium binary and Node WebSocket support are required");
     return;
   }
   const { server, port } = await startServer();
