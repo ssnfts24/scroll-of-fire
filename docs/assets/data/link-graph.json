@@ -561,6 +561,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "scroll/reader.html",
      "title": "Reading the Scroll — Unsealed Library",
      "area": "scroll-scripture"
@@ -584,11 +589,6 @@
      "path": "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
      "title": "Scroll of Fire · Codex of Reality · Remnant Whitepaper",
      "area": "scroll-scripture"
-    },
-    {
-     "path": "theory.html",
-     "title": "Theory Hub",
-     "area": "evidence"
     }
    ],
    "in": [
@@ -648,7 +648,7 @@
      "area": "systems"
     }
    ],
-   "outTotal": 64,
+   "outTotal": 65,
    "inTotal": 11
   },
   "codex-guide.html": {
@@ -1661,14 +1661,14 @@
      "area": "archive"
     },
     {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "witness.html",
      "title": "Witness",
      "area": "artifacts"
-    },
-    {
-     "path": "scripture/index.html",
-     "title": "Genesis & Exodus Scripture",
-     "area": "scroll-scripture"
     }
    ],
    "in": [
@@ -1683,7 +1683,7 @@
      "area": "artifacts"
     }
    ],
-   "outTotal": 23,
+   "outTotal": 24,
    "inTotal": 2
   },
   "invoke.html": {
@@ -2378,10 +2378,15 @@
      "path": "scripture/index.html",
      "title": "Genesis & Exodus Scripture",
      "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
     }
    ],
    "outTotal": 1,
-   "inTotal": 1
+   "inTotal": 2
   },
   "scripture/exodus/01.html": {
    "title": "Exodus 1 — Scripture",
@@ -15970,6 +15975,11 @@
      "area": "codex"
     },
     {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "scripture/lemma.html",
      "title": "Lemma study — Scripture",
      "area": "scroll-scripture"
@@ -15980,8 +15990,8 @@
      "area": "scroll-scripture"
     }
    ],
-   "outTotal": 92,
-   "inTotal": 4
+   "outTotal": 93,
+   "inTotal": 5
   },
   "scripture/lemma.html": {
    "title": "Lemma study — Scripture",
@@ -16002,6 +16012,491 @@
    ],
    "outTotal": 1,
    "inTotal": 1
+  },
+  "scripture/word-studies/adam.html": {
+   "title": "Adam — אָדָם — Hebrew Word Studies",
+   "area": "scroll-scripture",
+   "out": [
+    {
+     "path": "scripture/word-studies/adamah.html",
+     "title": "Adamah — אֲדָמָה — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/enosh.html",
+     "title": "Enosh — אֱנוֹשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/nephesh.html",
+     "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/shem.html",
+     "title": "Shem — שֵׁם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    }
+   ],
+   "in": [
+    {
+     "path": "scripture/word-studies/adamah.html",
+     "title": "Adamah — אֲדָמָה — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/enosh.html",
+     "title": "Enosh — אֱנוֹשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/nephesh.html",
+     "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/or.html",
+     "title": "Or — אוֹר — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/ruach.html",
+     "title": "Ruach — רוּחַ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 5,
+   "inTotal": 6
+  },
+  "scripture/word-studies/adamah.html": {
+   "title": "Adamah — אֲדָמָה — Hebrew Word Studies",
+   "area": "scroll-scripture",
+   "out": [
+    {
+     "path": "scripture/word-studies/adam.html",
+     "title": "Adam — אָדָם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/enosh.html",
+     "title": "Enosh — אֱנוֹשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/shem.html",
+     "title": "Shem — שֵׁם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    }
+   ],
+   "in": [
+    {
+     "path": "scripture/word-studies/adam.html",
+     "title": "Adam — אָדָם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/enosh.html",
+     "title": "Enosh — אֱנוֹשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 4,
+   "inTotal": 3
+  },
+  "scripture/word-studies/enosh.html": {
+   "title": "Enosh — אֱנוֹשׁ — Hebrew Word Studies",
+   "area": "scroll-scripture",
+   "out": [
+    {
+     "path": "scripture/word-studies/adam.html",
+     "title": "Adam — אָדָם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/adamah.html",
+     "title": "Adamah — אֲדָמָה — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/shem.html",
+     "title": "Shem — שֵׁם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/ruach.html",
+     "title": "Ruach — רוּחַ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    }
+   ],
+   "in": [
+    {
+     "path": "scripture/word-studies/adam.html",
+     "title": "Adam — אָדָם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/adamah.html",
+     "title": "Adamah — אֲדָמָה — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/ruach.html",
+     "title": "Ruach — רוּחַ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 5,
+   "inTotal": 4
+  },
+  "scripture/word-studies/index.html": {
+   "title": "Hebrew Word Studies — Scripture",
+   "area": "scroll-scripture",
+   "out": [
+    {
+     "path": "scripture/word-studies/adam.html",
+     "title": "Adam — אָדָם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/adamah.html",
+     "title": "Adamah — אֲדָמָה — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/enosh.html",
+     "title": "Enosh — אֱנוֹשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/ruach.html",
+     "title": "Ruach — רוּחַ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/nephesh.html",
+     "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/or.html",
+     "title": "Or — אוֹר — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/shem.html",
+     "title": "Shem — שֵׁם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/index.html",
+     "title": "Genesis & Exodus Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/about.html",
+     "title": "Sources, licences and limits — Scripture",
+     "area": "scroll-scripture"
+    }
+   ],
+   "in": [
+    {
+     "path": "scripture/word-studies/adam.html",
+     "title": "Adam — אָדָם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/adamah.html",
+     "title": "Adamah — אֲדָמָה — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "codex-atlas.html",
+     "title": "Codex Atlas",
+     "area": "archive"
+    },
+    {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    },
+    {
+     "path": "scripture/word-studies/enosh.html",
+     "title": "Enosh — אֱנוֹשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/index.html",
+     "title": "Genesis & Exodus Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/nephesh.html",
+     "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/or.html",
+     "title": "Or — אוֹר — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/ruach.html",
+     "title": "Ruach — רוּחַ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/shem.html",
+     "title": "Shem — שֵׁם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 9,
+   "inTotal": 10
+  },
+  "scripture/word-studies/nephesh.html": {
+   "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
+   "area": "scroll-scripture",
+   "out": [
+    {
+     "path": "scripture/word-studies/ruach.html",
+     "title": "Ruach — רוּחַ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/adam.html",
+     "title": "Adam — אָדָם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/shem.html",
+     "title": "Shem — שֵׁם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/or.html",
+     "title": "Or — אוֹר — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    }
+   ],
+   "in": [
+    {
+     "path": "scripture/word-studies/adam.html",
+     "title": "Adam — אָדָם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/or.html",
+     "title": "Or — אוֹר — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/ruach.html",
+     "title": "Ruach — רוּחַ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 5,
+   "inTotal": 4
+  },
+  "scripture/word-studies/or.html": {
+   "title": "Or — אוֹר — Hebrew Word Studies",
+   "area": "scroll-scripture",
+   "out": [
+    {
+     "path": "scripture/word-studies/shem.html",
+     "title": "Shem — שֵׁם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/ruach.html",
+     "title": "Ruach — רוּחַ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/adam.html",
+     "title": "Adam — אָדָם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/nephesh.html",
+     "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    }
+   ],
+   "in": [
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/nephesh.html",
+     "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/ruach.html",
+     "title": "Ruach — רוּחַ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/shem.html",
+     "title": "Shem — שֵׁם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 5,
+   "inTotal": 4
+  },
+  "scripture/word-studies/ruach.html": {
+   "title": "Ruach — רוּחַ — Hebrew Word Studies",
+   "area": "scroll-scripture",
+   "out": [
+    {
+     "path": "scripture/word-studies/nephesh.html",
+     "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/adam.html",
+     "title": "Adam — אָדָם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/or.html",
+     "title": "Or — אוֹר — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/enosh.html",
+     "title": "Enosh — אֱנוֹשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    }
+   ],
+   "in": [
+    {
+     "path": "scripture/word-studies/enosh.html",
+     "title": "Enosh — אֱנוֹשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/nephesh.html",
+     "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/or.html",
+     "title": "Or — אוֹר — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 5,
+   "inTotal": 4
+  },
+  "scripture/word-studies/shem.html": {
+   "title": "Shem — שֵׁם — Hebrew Word Studies",
+   "area": "scroll-scripture",
+   "out": [
+    {
+     "path": "scripture/word-studies/or.html",
+     "title": "Or — אוֹר — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    }
+   ],
+   "in": [
+    {
+     "path": "scripture/word-studies/adam.html",
+     "title": "Adam — אָדָם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/adamah.html",
+     "title": "Adamah — אֲדָמָה — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/enosh.html",
+     "title": "Enosh — אֱנוֹשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/nephesh.html",
+     "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/or.html",
+     "title": "Or — אוֹר — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 2,
+   "inTotal": 6
   },
   "scroll-of-fire-codex-of-reality-remnant-whitepaper.html": {
    "title": "Scroll of Fire · Codex of Reality · Remnant Whitepaper",

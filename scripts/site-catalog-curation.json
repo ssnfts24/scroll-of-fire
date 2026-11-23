@@ -148,6 +148,21 @@
    "featured": true
   },
   {
+   "id": "hebrew-word-studies",
+   "title": "Hebrew Word Studies",
+   "description": "Seven Hebrew key words given the full treatment \u2014 spelling, root, morphology, semantic range, biblical examples, wordplay, cognates, traditions labelled as traditions, and uncertainties printed rather than smoothed over.",
+   "area": "scroll-scripture",
+   "category": "Scripture",
+   "resourceType": "collection",
+   "status": "live",
+   "path": "scripture/word-studies/index.html",
+   "related": [
+    "scripture-library",
+    "scroll-lexicon"
+   ],
+   "featured": false
+  },
+  {
    "id": "scroll-reader",
    "title": "Scroll Reader",
    "description": "The long-form reader with chapter navigation, source-line provenance and deep links.",
