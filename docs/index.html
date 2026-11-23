@@ -78,7 +78,7 @@
   <link rel="stylesheet" href="assets/css/living-moon-theme.css?v=20261119-1">
   <link rel="stylesheet" href="assets/css/social-bridge.css">
   <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260819-b743&p=20260820-b7581-labelglass&u=20260820-b7582-railalign&b=20260820-b7592a-farskeleton&d=20260821-b7592d7-unified">
-  <link rel="stylesheet" href="assets/css/homepage-sphere.css?v=20261119-1">
+  <link rel="stylesheet" href="assets/css/homepage-sphere.css?v=20261122-proto1">
   <link rel="stylesheet" href="assets/css/ambient-door.css?v=20261119-1">
 
   <script type="application/ld+json">
@@ -171,7 +171,7 @@
   <script defer src="assets/js/ambient-door.js?v=20261119-1"></script>
   <script defer src="assets/js/living-witness.js?v=20261117-1"></script>
   <script defer src="assets/js/sphere/living-time-sphere-calendar-geometry.js?v=20260819-b727&r=20260820-b7584-rootrail&b=20260820-b7592a-farskeleton&d=20260821-b7592d7-unified"></script>
-  <script defer src="assets/js/homepage-sphere.js?v=20261118-2"></script>
+  <script defer src="assets/js/homepage-sphere.js?v=20261122-proto1"></script>
   <script defer src="assets/js/calendar-cor.js"></script>
   <script defer src="assets/js/codex-state.js"></script>
   <script defer src="assets/js/codex-memory.js"></script>
@@ -721,10 +721,13 @@
               The Sphere itself, turning quietly — the same calendar the
               Observatory keeps. Today rides in gold.
             </p>
+            <p class="homepage-sphere-context" data-hs-context hidden></p>
             <div class="homepage-sphere-controls">
+              <button class="hs-btn hs-btn--primary" type="button" data-hs-activate hidden>Explore the Sphere</button>
               <button class="hs-btn" type="button" data-hs-toggle aria-pressed="false" hidden>Pause rotation</button>
               <button class="hs-btn" type="button" data-hs-today hidden>Today</button>
-              <a class="hs-btn hs-btn--primary" href="./living-time-sphere.html">Enter the Observatory</a>
+              <button class="hs-btn" type="button" data-hs-release hidden>Done — back to the page</button>
+              <a data-hs-door class="hs-btn hs-btn--primary" href="./living-time-sphere.html">Enter the Observatory</a>
             </div>
           </div>
         </aside>
@@ -837,10 +840,10 @@
         <div class="le-act-slot">
           <h3>Latest additions</h3>
           <ul class="le-act-growth" data-le-growth>
-            <li><time datetime="2026-11-23">2026-11-23</time> <a href="./garden.html">The garden learned to wait, and the games became quests</a></li>
+            <li><time datetime="2026-11-23">2026-11-23</time> <a href="./index.html">The front door gained its small surfaces</a></li>
             <li><time datetime="2026-11-23">2026-11-23</time> <a href="./witness.html">Witness tended its page on the day of designs</a></li>
+            <li><time datetime="2026-11-23">2026-11-23</time> <a href="./garden.html">The garden learned to wait, and the games became quests</a></li>
             <li><time datetime="2026-11-22">2026-11-22</time> <a href="./witness.html">Witness caught its page up</a></li>
-            <li><time datetime="2026-11-22">2026-11-22</time> <a href="./hub.html">The Spark learned the library's roads</a></li>
           </ul>
         </div>
         <figure class="le-act-slot">
