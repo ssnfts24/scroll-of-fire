@@ -642,7 +642,12 @@
       return {
         id: `strata-year-${year}`,
         label: selected ? `Selected year ${year}` : `Year ${year}`,
-        detail: `Pattern day ${selectedDay} · temporal membrane`,
+        // Plain words on a public face (Nov 23, 2026 — Aaron
+        // opened the Sphere files for the details fixes): this
+        // marker is the selected day carried into that year, so
+        // the detail says exactly that, not the instrument's
+        // internal name for the layer.
+        detail: `Pattern day ${selectedDay} · the same day in ${year}`,
         kind: "temporal-year",
         worldX: point.x,
         worldY: point.y,

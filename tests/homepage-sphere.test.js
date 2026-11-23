@@ -595,6 +595,39 @@ test("no R1.7 protected file is touched by this branch", () => {
   const carriesProtectedThree = changed.has(
     "tests/sphere-protected-three-fixes.test.js"
   );
+  /*
+   * Sphere details declaration (Nov 23, 2026 — Aaron, reviewing
+   * the visual sweep's held items: "might as well give me the
+   * Sphere details all together. To review all at once in one
+   * PR"). This change set declares itself by carrying its
+   * signature file (the details pin test, which lives outside
+   * the protected directories), and its declared set names
+   * exactly the protected paths it touches:
+   *   - the renderer (the rim name tags gain a per-frame
+   *     keep-whole clamp in screen space, so a tag whose marker
+   *     nears the stage's edge stays whole inside the stage —
+   *     the anchors, geometry, lanes, and the label cadence do
+   *     not move; and the hub plate's third line now carries
+   *     the faced day's own archetype text instead of its bare
+   *     name, whose Day 25 word "Name" read as template
+   *     residue);
+   *   - the temporal strata (the year targets' detail line
+   *     drops the instrument's internal name "temporal
+   *     membrane" for plain words: the same day in that year);
+   *   - the page (cache-version bumps on the two changed
+   *     assets only).
+   * The day spread, the swell ramp, the label cadence, the
+   * canonical calendar math, and picking do not move. Every
+   * other protected path still fails this test loudly.
+   */
+  const detailsDeclaredProtected = new Set([
+    "docs/living-time-sphere.html",
+    "docs/assets/js/sphere/living-time-sphere-renderer-3d.js",
+    "docs/assets/js/sphere/living-time-sphere-temporal-strata.js"
+  ]);
+  const carriesDetails = changed.has(
+    "tests/sphere-details-fixes.test.js"
+  );
   for (const file of changed) {
     if (!protectedPaths.has(file)) continue;
     assert.ok(
@@ -608,7 +641,8 @@ test("no R1.7 protected file is touched by this branch", () => {
         (carriesTrackerRemoval && trackerRemovalDeclaredProtected.has(file)) ||
         (carriesQuests && questsDeclaredProtected.has(file)) ||
         (carriesDeepfix && deepfixDeclaredProtected.has(file)) ||
-        (carriesProtectedThree && protectedThreeDeclaredProtected.has(file)),
+        (carriesProtectedThree && protectedThreeDeclaredProtected.has(file)) ||
+        (carriesDetails && detailsDeclaredProtected.has(file)),
       `R1.7 protected file changed: ${file}`
     );
   }
