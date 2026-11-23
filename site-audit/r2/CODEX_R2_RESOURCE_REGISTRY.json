@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 2408,
-    "bytes": 1080871611,
+    "bytes": 1080871516,
     "byGroup": {
       "tooling": 291,
       "manuscript": 17,
@@ -7748,8 +7748,8 @@
       "path": "docs/assets/data/link-graph.json",
       "title": "link-graph.json",
       "format": "json",
-      "bytes": 460620,
-      "sha256": "adf5f2a8d664e28130e287f9354e2fcbf70255d250259a5e9ccd41df8ed16660",
+      "bytes": 460525,
+      "sha256": "7e3d63a50cd085c5a39aee872db42d8389d40c185ef1123fe84b867fecb8adc0",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
