@@ -49,6 +49,80 @@
   color: #f1e9d6;
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
   text-align: center;
+  transition: opacity 0.55s ease;
+}
+
+/* ── The film: crossfades, the push-in, the held welcome ──── */
+
+/* Between beats the card breathes out and in — a crossfade,
+   not a cut. */
+.evo-opening.is-xfade .evo-card {
+  opacity: 0;
+}
+
+/* While the film plays, the staged walk's own buttons step
+   back (Skip stands, quiet, the whole time) and the reveal of
+   the real Sphere takes its time — the scrim's fade is the
+   longest breath in the film. */
+.evo-opening.is-film .evo-nav {
+  visibility: hidden;
+}
+
+.evo-opening.is-film .evo-scrim {
+  transition: opacity 2.4s ease;
+}
+
+/* The gentle push-in: each beat opens a breath closer than
+   the last frame of the one before. */
+.evo-opening.is-film .evo-card.is-pushing {
+  animation: evo-push 12s ease-out both;
+}
+
+@keyframes evo-push {
+  from { transform: scale(1); }
+  to { transform: scale(1.045); }
+}
+
+/* The welcome: the film's first frame. A held title over the
+   dim stage — no picture, no controls pressing, just the
+   greeting and the room to arrive in it. */
+.evo-opening[data-stage="welcome"] .evo-card {
+  padding: 30px 22px 20px;
+}
+
+.evo-opening[data-stage="welcome"] .evo-title {
+  font-size: 2.05rem;
+  letter-spacing: 0.01em;
+  margin: 6px 0 10px;
+}
+
+.evo-opening[data-stage="welcome"] .evo-visual,
+.evo-opening[data-stage="welcome"] .evo-dots {
+  display: none;
+}
+
+.evo-opening[data-stage="welcome"] .evo-line {
+  font-size: 1.02rem;
+}
+
+/* The sound invitation, carried inside the scene: it stands
+   from the welcome until the first touch lets the score in,
+   breathing slowly, never blinking. */
+.evo-opening .evo-sound {
+  margin: 4px auto 0;
+  font-size: 0.84rem;
+  letter-spacing: 0.05em;
+  color: rgba(255, 217, 122, 0.9);
+  animation: evo-breathe 3.4s ease-in-out infinite;
+}
+
+@keyframes evo-breathe {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+.evo-opening.is-still .evo-sound {
+  display: none;
 }
 
 .evo-opening .evo-demo {
@@ -316,10 +390,13 @@
 
 @media (prefers-reduced-motion: reduce) {
   .evo-opening .evo-visual > *,
-  .evo-spark-figure {
+  .evo-spark-figure,
+  .evo-opening .evo-sound,
+  .evo-opening .evo-card {
     animation: none;
   }
-  .evo-opening .evo-scrim {
+  .evo-opening .evo-scrim,
+  .evo-opening .evo-card {
     transition: none;
   }
 }

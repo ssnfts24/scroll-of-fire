@@ -48,9 +48,40 @@
    * like every companion-layer piece before it. No protected file
    * is touched; the loader in sphere-companion-layer.js is the
    * only hook.
+   *
+   * The cinematic amendment (Aaron, Nov 23, 2026, over the
+   * preview): "I think this should play automatically and
+   * cinematically. With music and everything." — and, a breath
+   * later: the film opens on a held title card, "Welcome to the
+   * Sphere", and it plays automatically ONLY for a first-time
+   * visitor; once it has played or been skipped it never
+   * autoplays again, and the door's replay stays a choice. So
+   * the staged walk above is now a film: the welcome beat, then
+   * the four stages advancing on their own timing — holds
+   * weighted by each stage's weight, slow crossfades, a gentle
+   * push-in, held quiet between the beats (the bible's §10: the
+   * road has quiet places; silence here is composed, not empty).
+   * The tour after the film keeps its keeper-paced form, and the
+   * film ends where the opening always ended — the Spark's first
+   * beat standing, "Take me to today" at the last.
+   *
+   * The score is "The Count and the Call" language — A=432, the
+   * showcase's small palette (plucked string, low cello, struck
+   * copper bowl, frame drum, breath flute) — synthesised on the
+   * device at play time; the opening carries no audio file. THE
+   * SOUND RULE, held exactly: no sound before a first touch.
+   * Browsers will not start audio before a gesture, and this
+   * site never autoplays sound — so the film starts moving
+   * silently, the welcome beat carries the invitation ("touch
+   * anywhere to let it in") as part of the scene, and the first
+   * touch brings the score in from that beat of the film. A
+   * keeper who never touches watches the whole film silent, and
+   * it is built to stand silent. A replay tapped at the door is
+   * itself a touch, so a replay plays with its score from the
+   * first beat.
    */
 
-  const VERSION = "sphere-evolution-opening/1.0.0";
+  const VERSION = "sphere-evolution-opening/1.1.0";
   const SEEN_KEY = "sof.sphere.evolutionOpening.v1";
   const SESSION_KEY = "sof.sphere.evolutionOpening.session";
 
@@ -275,18 +306,119 @@
     return !seen && !sessionShown && !sharedView;
   }
 
+  /* ── The film ─────────────────────────────────────────────── */
+
+  // The film's beats and their holds. The welcome is a held
+  // title card (Aaron's words for it: "Welcome to the Sphere");
+  // each stage then holds by its weight, not a metronome. The
+  // whole film runs just under forty seconds; the crossfades
+  // ride inside the holds.
+  const FILM_STAGES = Object.freeze([
+    { id: "welcome", holdMs: 2600 },
+    { id: "calendars", holdMs: 10400 },
+    { id: "first-sphere", holdMs: 9500 },
+    { id: "sphere-now", holdMs: 8500 },
+    { id: "spark", holdMs: 8500 },
+  ]);
+  const FILM_TOTAL_MS = FILM_STAGES.reduce((n, s) => n + s.holdMs, 0);
+
+  // The film plays wherever motion is welcome. Reduced motion
+  // keeps the staged form — the still version — exactly as it
+  // stands above; the film is never forced on it.
+  function shouldPlayFilm({ reducedMotion } = {}) {
+    return !reducedMotion;
+  }
+
+  /* ── The score ────────────────────────────────────────────── */
+
+  // "The Count and the Call" language, A=432 throughout: notes
+  // are MIDI numbers, tuned from A4 = 432 Hz. The root is D —
+  // the showcase's own root. The plan is data, so the tests can
+  // hold it to the film's shape:
+  //   welcome      — one struck bowl in the quiet, the cello
+  //                  pedal breathing under the whole film;
+  //   calendars    — the Count: four frame-drum counts, the
+  //                  NAME figure stated (root → third → fifth →
+  //                  third → root), then thirteen counted plucks
+  //                  climbing the scale — the moons, counted;
+  //   first-sphere — the figure trails and is left unfinished,
+  //                  as the re-score brief has it; one bowl, one
+  //                  drum, a shimmer;
+  //   sphere-now   — the figure completes as the scrim lifts,
+  //                  the cello's fifth joins underneath;
+  //   spark        — the Call: the Whistle's contour (D6 → G6 →
+  //                  E6 → D6) on the breath flute, one last
+  //                  pluck, then composed quiet under the tour.
+  const SCORE_ROOT_MIDI = 62; // D4
+
+  function freqFor(midi) {
+    return Number((432 * Math.pow(2, (midi - 69) / 12)).toFixed(2));
+  }
+
+  function buildScoreEvents() {
+    const ev = [];
+    const add = (at, voice, midi, dur, gain) => {
+      ev.push({ at, voice, midi, freq: midi == null ? null : freqFor(midi), dur, gain });
+    };
+    // The bed: one low cello pedal under the whole film (D2).
+    add(0, "cello", 38, 39.5, 0.16);
+    // Welcome: a single struck bowl in the quiet (D3).
+    add(0.35, "bowl", 50, 5.5, 0.2);
+    // Calendars — the Count.
+    for (const t of [3.1, 5.7, 8.3, 10.9]) add(t, "drum", null, 0.35, 0.5);
+    add(3.6, "pluck", 62, 1.8, 0.3);
+    add(4.6, "pluck", 66, 1.8, 0.28);
+    add(5.6, "pluck", 69, 2.0, 0.3);
+    add(6.6, "pluck", 66, 1.8, 0.26);
+    add(7.6, "pluck", 62, 2.4, 0.3);
+    // Thirteen counted plucks, climbing the scale — the moons.
+    const scale = [62, 64, 66, 67, 69, 71, 73, 74, 76, 78, 79, 81, 83];
+    scale.forEach((m, i) => add(8.2 + i * 0.36, "pluck", m, 1.1, 0.13));
+    // First Sphere — the figure trails, unfinished; one bowl.
+    add(13.3, "bowl", 50, 6.0, 0.16);
+    add(14.2, "pluck", 62, 1.8, 0.26);
+    add(15.2, "pluck", 66, 1.8, 0.24);
+    add(16.2, "pluck", 69, 2.2, 0.26);
+    add(18.0, "drum", null, 0.4, 0.4);
+    add(20.5, "bowl", 57, 4.5, 0.1);
+    // Sphere Now — the figure completes as the scrim lifts.
+    add(22.5, "cello", 45, 9.0, 0.1); // A2 joins under the bed
+    add(22.8, "bowl", 62, 6.0, 0.14);
+    add(23.5, "pluck", 62, 1.8, 0.3);
+    add(24.5, "pluck", 66, 1.8, 0.28);
+    add(25.5, "pluck", 69, 2.0, 0.3);
+    add(26.5, "pluck", 74, 2.0, 0.28);
+    add(27.5, "pluck", 69, 1.8, 0.26);
+    add(28.5, "pluck", 66, 1.8, 0.26);
+    add(29.5, "pluck", 62, 3.0, 0.3);
+    // The Spark — the Call, on the breath flute.
+    add(31.6, "flute", 86, 1.0, 0.3);
+    add(32.8, "flute", 91, 1.2, 0.32);
+    add(34.1, "flute", 88, 0.9, 0.3);
+    add(35.1, "flute", 86, 2.6, 0.3);
+    // One last pluck; then quiet under the tour.
+    add(37.8, "pluck", 62, 2.2, 0.22);
+    return ev.sort((a, b) => a.at - b.at);
+  }
+
   const api = Object.freeze({
     VERSION,
     SEEN_KEY,
     SESSION_KEY,
     STAGES,
     TOUR_STEPS,
+    FILM_STAGES,
+    FILM_TOTAL_MS,
+    SCORE_ROOT_MIDI,
     buildCalendarGrid,
     buildFirstSphereSVG,
     patternAngleForDayOfYear,
     spiralAngleForYear,
     spiralRadiusForYear,
     shouldAutoOpen,
+    shouldPlayFilm,
+    freqFor,
+    buildScoreEvents,
   });
 
   if (typeof module !== "undefined" && module.exports) {
@@ -300,6 +432,11 @@
   global.SphereEvolutionOpening = Object.freeze({
     VERSION,
     open: () => openOpening("door"),
+    // A read-only window onto the film, for the tests and for
+    // anyone checking the sound rule from the console: the mode
+    // (closed / still / film / kept), the stage standing, and
+    // whether a touch has armed the score yet.
+    filmState: () => currentFilmState(),
     reset: () => {
       try { localStorage.removeItem(SEEN_KEY); } catch { /* private mode */ }
     },
@@ -416,6 +553,346 @@
   let tourIndex = 0;
   let lastFocus = null;
 
+  /* ── The film's state ─────────────────────────────────────── */
+
+  let filmActive = false;
+  let filmTimers = [];
+  let filmStartedAt = 0;
+  let soundArmed = false;
+  let audioCtx = null;
+  let audioMaster = null;
+  let scoreTimer = null;
+  let noiseBuffer = null;
+
+  function currentFilmState() {
+    return {
+      mode: !overlay ? "closed" : reducedMotion ? "still" : filmActive ? "film" : "kept",
+      stage: overlay ? overlay.dataset.stage || "" : "",
+      soundArmed,
+      audioStarted: Boolean(audioCtx),
+    };
+  }
+
+  function filmElapsed() {
+    return filmStartedAt ? (performance.now() - filmStartedAt) / 1000 : 0;
+  }
+
+  function showSoundCue() {
+    const cue = overlay?.querySelector('[data-evo="sound"]');
+    if (cue && filmActive && !soundArmed) cue.hidden = false;
+  }
+
+  function hideSoundCue() {
+    const cue = overlay?.querySelector('[data-evo="sound"]');
+    if (cue) cue.hidden = true;
+  }
+
+  function restartPush() {
+    const card = overlay?.querySelector(".evo-card");
+    if (!card || !filmActive) return;
+    card.classList.remove("is-pushing");
+    void card.offsetWidth; // restart the push-in on the new beat
+    card.classList.add("is-pushing");
+  }
+
+  function crossfadeTo(fn) {
+    if (!overlay) return;
+    overlay.classList.add("is-xfade");
+    window.setTimeout(() => {
+      if (!overlay) return;
+      fn();
+      overlay.classList.remove("is-xfade");
+      restartPush();
+    }, 560);
+  }
+
+  function renderWelcome() {
+    if (!overlay) return;
+    overlay.dataset.stage = "welcome";
+    overlay.classList.remove("is-reveal");
+    overlay.querySelector('[data-evo="kicker"]').textContent = "How it grew";
+    overlay.querySelector('[data-evo="title"]').textContent = "Welcome to the Sphere";
+    overlay.querySelector('[data-evo="visual"]').innerHTML = "";
+    overlay.querySelector('[data-evo="line"]').textContent =
+      "A short film — how this instrument grew, told once, before the day begins.";
+    overlay.querySelector('[data-evo="today"]').textContent = "";
+    overlay.querySelector('[data-evo="dots"]').innerHTML = STAGES.map(() =>
+      `<span class="evo-dot"></span>`).join("");
+    showSoundCue();
+  }
+
+  function startFilm() {
+    if (!overlay || reducedMotion) return;
+    filmActive = true;
+    filmStartedAt = performance.now();
+    overlay.classList.add("is-film");
+    renderWelcome();
+    restartPush();
+    let at = FILM_STAGES[0].holdMs;
+    FILM_STAGES.slice(1).forEach((stage, i) => {
+      const filmIdx = i + 1;
+      filmTimers.push(window.setTimeout(() => advanceFilm(filmIdx), at));
+      at += stage.holdMs;
+    });
+    filmTimers.push(window.setTimeout(endFilm, FILM_TOTAL_MS));
+  }
+
+  function advanceFilm(filmIdx) {
+    if (!overlay || !filmActive) return;
+    const target = FILM_STAGES[filmIdx];
+    crossfadeTo(() => {
+      if (!overlay || !filmActive) return;
+      if (target.id === "spark") { stageIndex = STAGES.length - 1; tourIndex = 0; }
+      else stageIndex = filmIdx - 1;
+      renderStage();
+    });
+  }
+
+  // The film's last hold runs out: the Spark's first beat is
+  // standing, and the keeper takes the walk from here — the
+  // tour in its own form, ending at "Take me to today".
+  function endFilm() {
+    if (!overlay) return;
+    filmActive = false;
+    filmTimers.forEach((t) => window.clearTimeout(t));
+    filmTimers = [];
+    overlay.classList.remove("is-film");
+    overlay.classList.remove("is-xfade");
+    hideSoundCue();
+  }
+
+  // The keeper touches the walk — a button, an arrow key — and
+  // the film hands over: timers stop, the score fades, the
+  // staged controls stand again.
+  function stopFilm() {
+    if (!filmActive) return;
+    endFilm();
+    stopScore();
+  }
+
+  /* ── The score, synthesised ───────────────────────────────── */
+
+  // THE SOUND RULE: this is the only door to sound in the
+  // module, and it is opened only by a gesture — the door tap
+  // that replays the film, or the first touch or keypress while
+  // the film is playing. No AudioContext exists before it.
+  function armScore() {
+    if (soundArmed || reducedMotion || !overlay) return;
+    soundArmed = true;
+    hideSoundCue();
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    try {
+      audioCtx = new AC();
+      const comp = audioCtx.createDynamicsCompressor();
+      comp.threshold.value = -20;
+      comp.ratio.value = 6;
+      comp.connect(audioCtx.destination);
+      audioMaster = audioCtx.createGain();
+      audioMaster.gain.value = 0;
+      audioMaster.connect(comp);
+      audioMaster.gain.setTargetAtTime(0.55, audioCtx.currentTime, 0.4);
+      if (audioCtx.resume) audioCtx.resume();
+      startScoreScheduler();
+    } catch { audioCtx = null; }
+  }
+
+  function onFirstGesture() {
+    if (overlay && filmActive) armScore();
+  }
+
+  // The score's clock is the film's clock: events are placed
+  // from the film's first beat, so a touch at second twenty
+  // brings the score in AT second twenty — the calendars' count
+  // is not replayed under the first Sphere. Sustained voices
+  // (the cello bed, a struck bowl) are caught mid-ring; the
+  // momentary ones (plucks, drum, the Call) sound only at their
+  // own beats, never late.
+  function startScoreScheduler() {
+    const events = buildScoreEvents();
+    const startCtxTime = audioCtx.currentTime;
+    const offset = filmElapsed();
+    let scheduledUntil = offset - 0.001;
+    const tick = () => {
+      if (!audioCtx) { scoreTimer = null; return; }
+      const now = offset + (audioCtx.currentTime - startCtxTime);
+      const horizon = now + 0.6;
+      for (const ev of events) {
+        if (ev.at + ev.dur <= offset) continue;      // wholly past
+        if (ev.at < scheduledUntil) continue;        // already placed
+        if (ev.at > horizon) break;                  // not yet
+        let startAt = ev.at;
+        let dur = ev.dur;
+        if (ev.at < offset) {
+          if (ev.voice !== "cello" && ev.voice !== "bowl") continue;
+          dur = ev.dur - (offset - ev.at);
+          startAt = offset;
+          if (dur <= 0.05) continue;
+        }
+        const when = startCtxTime + (startAt - offset);
+        playVoice(ev.voice, ev.freq, when, dur, ev.gain);
+      }
+      scheduledUntil = Math.max(scheduledUntil, horizon);
+      if (now > FILM_TOTAL_MS / 1000 + 1) {
+        window.clearInterval(scoreTimer);
+        scoreTimer = null;
+      }
+    };
+    tick();
+    scoreTimer = window.setInterval(tick, 200);
+  }
+
+  function stopScore() {
+    if (scoreTimer) { window.clearInterval(scoreTimer); scoreTimer = null; }
+    if (!audioCtx) return;
+    const ctx = audioCtx;
+    const master = audioMaster;
+    audioCtx = null;
+    audioMaster = null;
+    // A short fade, then the context closes — no tail of
+    // sound follows the keeper out of the opening.
+    try {
+      if (master) master.gain.setTargetAtTime(0, ctx.currentTime, 0.12);
+    } catch { /* the close below still stands */ }
+    window.setTimeout(() => { try { ctx.close(); } catch { /* already closed */ } }, 450);
+  }
+
+  function noiseSource() {
+    if (!audioCtx) return null;
+    if (!noiseBuffer) {
+      const len = audioCtx.sampleRate;
+      noiseBuffer = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+      const data = noiseBuffer.getChannelData(0);
+      for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
+    }
+    const src = audioCtx.createBufferSource();
+    src.buffer = noiseBuffer;
+    src.loop = true;
+    return src;
+  }
+
+  // The palette, in miniature — the same five voices the
+  // re-score brief names, each a small recipe, nothing sampled.
+  function playVoice(voice, freq, when, dur, gain) {
+    if (!audioCtx || !audioMaster) return;
+    const ctx = audioCtx;
+    if (voice === "pluck") {
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0, when);
+      g.gain.linearRampToValueAtTime(gain, when + 0.005);
+      g.gain.exponentialRampToValueAtTime(0.0001, when + dur);
+      g.connect(audioMaster);
+      const body = ctx.createOscillator();
+      body.type = "triangle";
+      body.frequency.value = freq;
+      body.connect(g);
+      body.start(when); body.stop(when + dur + 0.05);
+      const g2 = ctx.createGain();
+      g2.gain.setValueAtTime(0, when);
+      g2.gain.linearRampToValueAtTime(gain * 0.35, when + 0.004);
+      g2.gain.exponentialRampToValueAtTime(0.0001, when + dur * 0.4);
+      g2.connect(audioMaster);
+      const octave = ctx.createOscillator();
+      octave.type = "sine";
+      octave.frequency.value = freq * 2;
+      octave.connect(g2);
+      octave.start(when); octave.stop(when + dur * 0.4 + 0.05);
+    } else if (voice === "cello") {
+      const g = ctx.createGain();
+      const attack = Math.min(0.9, dur * 0.25);
+      g.gain.setValueAtTime(0, when);
+      g.gain.linearRampToValueAtTime(gain, when + attack);
+      g.gain.setValueAtTime(gain, when + Math.max(attack, dur - 1.2));
+      g.gain.linearRampToValueAtTime(0, when + dur);
+      const lp = ctx.createBiquadFilter();
+      lp.type = "lowpass";
+      lp.frequency.value = 520;
+      lp.connect(g);
+      g.connect(audioMaster);
+      const saw = ctx.createOscillator();
+      saw.type = "sawtooth";
+      saw.frequency.value = freq;
+      saw.connect(lp);
+      saw.start(when); saw.stop(when + dur + 0.05);
+      const sine = ctx.createOscillator();
+      sine.type = "sine";
+      sine.frequency.value = freq;
+      const sg = ctx.createGain();
+      sg.gain.value = 0.55;
+      sine.connect(sg); sg.connect(g);
+      sine.start(when); sine.stop(when + dur + 0.05);
+    } else if (voice === "bowl") {
+      const partials = [[1, 1], [2.02, 0.55], [2.74, 0.32], [3.76, 0.18]];
+      for (const [ratio, amp] of partials) {
+        const g = ctx.createGain();
+        g.gain.setValueAtTime(0, when);
+        g.gain.linearRampToValueAtTime(gain * amp, when + 0.006);
+        g.gain.exponentialRampToValueAtTime(0.0001, when + dur);
+        g.connect(audioMaster);
+        const o = ctx.createOscillator();
+        o.type = "sine";
+        o.frequency.value = freq * ratio;
+        o.connect(g);
+        o.start(when); o.stop(when + dur + 0.05);
+      }
+    } else if (voice === "drum") {
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0, when);
+      g.gain.linearRampToValueAtTime(gain * 0.5, when + 0.006);
+      g.gain.exponentialRampToValueAtTime(0.0001, when + 0.3);
+      g.connect(audioMaster);
+      const o = ctx.createOscillator();
+      o.type = "sine";
+      o.frequency.setValueAtTime(112, when);
+      o.frequency.exponentialRampToValueAtTime(48, when + 0.12);
+      o.connect(g);
+      o.start(when); o.stop(when + 0.35);
+      const noise = noiseSource();
+      if (noise) {
+        const ng = ctx.createGain();
+        ng.gain.setValueAtTime(gain * 0.12, when);
+        ng.gain.exponentialRampToValueAtTime(0.0001, when + 0.07);
+        const lp = ctx.createBiquadFilter();
+        lp.type = "lowpass";
+        lp.frequency.value = 320;
+        noise.connect(lp); lp.connect(ng); ng.connect(audioMaster);
+        noise.start(when); noise.stop(when + 0.1);
+      }
+    } else if (voice === "flute") {
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0, when);
+      g.gain.linearRampToValueAtTime(gain, when + 0.13);
+      g.gain.setValueAtTime(gain, when + Math.max(0.13, dur - 0.25));
+      g.gain.linearRampToValueAtTime(0, when + dur);
+      g.connect(audioMaster);
+      const o = ctx.createOscillator();
+      o.type = "sine";
+      o.frequency.value = freq;
+      const lfo = ctx.createOscillator();
+      lfo.frequency.value = 5.2;
+      const lfoGain = ctx.createGain();
+      lfoGain.gain.setValueAtTime(0, when);
+      lfoGain.gain.linearRampToValueAtTime(freq * 0.004, when + 0.35);
+      lfo.connect(lfoGain); lfoGain.connect(o.frequency);
+      o.connect(g);
+      o.start(when); o.stop(when + dur + 0.05);
+      lfo.start(when); lfo.stop(when + dur + 0.05);
+      const noise = noiseSource();
+      if (noise) {
+        const bp = ctx.createBiquadFilter();
+        bp.type = "bandpass";
+        bp.frequency.value = freq;
+        bp.Q.value = 9;
+        const ng = ctx.createGain();
+        ng.gain.setValueAtTime(0, when);
+        ng.gain.linearRampToValueAtTime(gain * 0.1, when + 0.15);
+        ng.gain.linearRampToValueAtTime(0, when + dur);
+        noise.connect(bp); bp.connect(ng); ng.connect(audioMaster);
+        noise.start(when); noise.stop(when + dur + 0.05);
+      }
+    }
+  }
+
   function buildOverlay() {
     const wrap = $(".sphere-canvas-wrap");
     if (!wrap) return null;
@@ -434,6 +911,7 @@
         <div class="evo-visual" data-evo="visual"></div>
         <p class="evo-line" data-evo="line"></p>
         <p class="evo-today" data-evo="today"></p>
+        <p class="evo-sound" data-evo="sound" hidden>The opening carries a score — touch anywhere to let it in.</p>
         <div class="evo-controls">
           <button type="button" class="evo-btn evo-skip" data-evo="skip">Skip the story</button>
           <span class="evo-dots" data-evo="dots" aria-hidden="true"></span>
@@ -504,8 +982,13 @@
       renderTour(today);
       next.textContent = tourIndex === TOUR_STEPS.length - 1 ? "Done" : "Next";
     }
-    const focusTarget = overlay.querySelector('[data-evo="next"]');
-    if (focusTarget) { try { focusTarget.focus({ preventScroll: true }); } catch { /* focus stands */ } }
+    showSoundCue();
+    // During the film the walk drives itself; focus stays
+    // where the keeper left it, not on a hidden button.
+    if (!filmActive) {
+      const focusTarget = overlay.querySelector('[data-evo="next"]');
+      if (focusTarget) { try { focusTarget.focus({ preventScroll: true }); } catch { /* focus stands */ } }
+    }
   }
 
   function renderTour(today) {
@@ -548,6 +1031,9 @@
 
   function step(dir) {
     if (!overlay) return;
+    // A keeper's step during the film ends the film: the walk
+    // is theirs from this beat on.
+    stopFilm();
     const stage = STAGES[stageIndex];
     if (stage.id === "spark" && dir > 0 && tourIndex < TOUR_STEPS.length - 1) {
       tourIndex += 1;
@@ -578,7 +1064,18 @@
     if (!overlay) return;
     stageIndex = 0;
     tourIndex = 0;
-    renderStage();
+    if (shouldPlayFilm({ reducedMotion })) {
+      // The film: it starts moving silently, on its own
+      // timing. The first touch arms the score (see armScore);
+      // a door replay is opened BY a touch, so its score is
+      // armed here, inside that very tap, from the first beat.
+      document.addEventListener("pointerdown", onFirstGesture, true);
+      document.addEventListener("keydown", onFirstGesture, true);
+      startFilm();
+      if (source === "door") armScore();
+    } else {
+      renderStage();
+    }
     if (source === "auto") {
       try { wrap.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "center" }); } catch { /* scroll stands */ }
     }
@@ -594,6 +1091,15 @@
   function closeOpening(goToday) {
     if (!overlay) return;
     document.removeEventListener("keydown", onDocumentKeydown);
+    document.removeEventListener("pointerdown", onFirstGesture, true);
+    document.removeEventListener("keydown", onFirstGesture, true);
+    // However the opening closes — played through, skipped,
+    // or stepped out of — the film stops and the score fades
+    // with it. The seen flag below is what makes the autoplay
+    // a first-visit-only thing: played OR skipped, it never
+    // autoplays for this visitor again.
+    stopFilm();
+    stopScore();
     storeSet(SEEN_KEY, "1");
     const el = overlay;
     overlay = null;
