@@ -1460,9 +1460,16 @@
     }
     /* Look next: their suggestions, drawn only from real site
      * material, in order of trust — this page's own doors
-     * first (the Guide's own source), then the keeper's own
+     * first (the Guide's own source), then the library's
+     * relations from the extract shipped in the Spark's bundle
+     * (tier 2, Q-05: built ahead of time from the record, read
+     * here without any fetch — the no-network fence stands),
+     * labeled "from the record", then the keeper's own
      * left-off place from their on-device record, labeled
-     * theirs. Never more than three, never invented: a page
+     * theirs. The three share the three places — this page's
+     * doors take up to two, so the record's relations are
+     * genuinely met and not crowded out by a link-rich page.
+     * Never more than three, never invented: a page
      * that offers nothing real gets one honest line instead. */
     function doLookNext() {
       answerInBody();
@@ -1470,9 +1477,23 @@
       const picks = [];
       const used = new Set();
       for (const door of doors) {
-        if (picks.length >= 3) break;
+        if (picks.length >= 2) break;
         picks.push({ label: door.label, href: door.href, yours: false });
         used.add(door.href.split("/").pop());
+      }
+      if (picks.length < 3) {
+        const relations = Core.relationsFor({
+          page: pageKey(),
+          relations:
+            (typeof globalThis !== "undefined" ? globalThis.CodexSparkRelations : null)
+              ?.relations,
+          exclude: [...used]
+        });
+        for (const rel of relations) {
+          if (picks.length >= 3) break;
+          picks.push({ label: rel.label, href: siteRoot() + rel.href, yours: false, record: true });
+          used.add(rel.href.split("/").pop());
+        }
       }
       if (picks.length < 3) {
         const resume = Core.resumeFor({ record: getRecord() });
@@ -1502,7 +1523,7 @@
                 window.location.href = p.href;
               },
               "spark-looknext-door",
-              p.yours ? "yours" : null
+              p.record ? "from the record" : p.yours ? "yours" : null
             )
           ),
           another

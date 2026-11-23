@@ -1707,6 +1707,112 @@
     };
   }
 
+  /* ---- the Spark passport: identity that travels by hand ----
+   *
+   * Aaron's ruling (Nov 19, 2026): the Spark is one and the same
+   * across platforms — it travels between website and phone and
+   * is never lost, with the Living Phone as its memory. Accounts
+   * and sync are a later step, gated on his word; what stands
+   * here needs neither. A passport is a short code a keeper can
+   * read aloud, type, or scan, and it carries identity only: the
+   * seed — which itself holds the birth Moon, the Pattern Day,
+   * and the kind — and the name the Spark answers to. Nothing
+   * else crosses: no growth, no garden, no record of days. Their
+   * whole history still travels as the bundle file, carried by
+   * the keeper's hand, the way it always has.
+   *
+   * The code: SPK1-<moon>-<pattern day>-<kind>-<nonce>-<name>-
+   * <check>. The nonce rides uppercased for the eye and folds
+   * back to the seed's own lowercase on reading, so the seed a
+   * passport rebuilds is the seed that was born — and the same
+   * seed grows the same Spark anywhere, which is the whole
+   * promise. The name rides as plain letters: the seed's own
+   * name when the keeper gave none, else the keeper's name in
+   * simple capitals (its spaces and small letters do not survive
+   * the code; the bundle file carries a name whole). The
+   * two-letter check is the body's own hash, so a mistyped code
+   * is refused plainly instead of growing a wrong Spark. */
+  const PASSPORT_PREFIX = "SPK1";
+
+  function passportSlugFor(name) {
+    return String(name == null ? "" : name)
+      .toUpperCase()
+      .replace(/[^A-Z]/g, "")
+      .slice(0, 16);
+  }
+
+  function passportCheckFor(body) {
+    return (hashString(body) % 1296).toString(36).toUpperCase().padStart(2, "0");
+  }
+
+  /* A record's passport code, or null when the record's seed
+   * does not speak. Pure: the same record writes the same code
+   * on any device, forever. */
+  function passportCodeFor(record) {
+    if (!record) return null;
+    const parsed = parseSeed(record.seed);
+    if (!parsed) return null;
+    const companion = generate(record.seed);
+    if (!companion) return null;
+    const answerName = cleanName(record.name) || companion.name;
+    const slug = passportSlugFor(answerName) || "SPARK";
+    const body = [
+      PASSPORT_PREFIX,
+      parsed.moon == null ? 0 : parsed.moon,
+      parsed.patternDay,
+      parsed.kindIndex,
+      parsed.nonce.toUpperCase(),
+      slug
+    ].join("-");
+    return `${body}-${passportCheckFor(body)}`;
+  }
+
+  /* A passport read back: { seed, name, companion } — the name
+   * the Spark answers to, or "" when the code carries the seed's
+   * own name. Accepts the code as a keeper would type it (any
+   * case, spaces around its dashes) and, plainly, a bare seed on
+   * its own. Anything damaged, mistyped, or not a passport at
+   * all reads as null: no Spark is grown from a doubtful code. */
+  function parsePassportCode(text) {
+    const raw = String(text == null ? "" : text).trim();
+    if (!raw) return null;
+    const bare = parseSeed(raw.toLowerCase());
+    if (bare) {
+      const seed = raw.toLowerCase();
+      const companion = generate(seed);
+      return companion ? { seed, name: "", companion } : null;
+    }
+    const cleaned = raw.toUpperCase().replace(/[\s_]+/g, "");
+    const parts = cleaned.split("-").filter((p) => p !== "");
+    if (parts.length !== 7 || parts[0] !== PASSPORT_PREFIX) return null;
+    const body = parts.slice(0, 6).join("-");
+    if (passportCheckFor(body) !== parts[6]) return null;
+    const seed = [
+      SEED_PREFIX,
+      Number(parts[1]),
+      Number(parts[2]),
+      Number(parts[3]),
+      parts[4].toLowerCase()
+    ].join("-");
+    if (!parseSeed(seed)) return null;
+    const companion = generate(seed);
+    if (!companion) return null;
+    const slug = parts[5];
+    const name = slug && slug !== passportSlugFor(companion.name)
+      ? slug.charAt(0) + slug.slice(1).toLowerCase()
+      : "";
+    return { seed, name, companion };
+  }
+
+  /* The record a passport raises on a new device: a fresh
+   * record — born here, grown from nothing yet — carrying the
+   * travelled seed and the name it answers to. Their growth
+   * does not cross in a passport; it crosses in the bundle. */
+  function recordFromPassport(parsed, civilDate) {
+    if (!parsed || !parseSeed(parsed.seed)) return null;
+    return newRecord({ seed: parsed.seed, name: parsed.name || "", civilDate });
+  }
+
   /* ---- rendering (SVG string; the browser drops it into the page) ---- */
 
   function bodyShape(companion) {
@@ -2541,6 +2647,34 @@
     };
   }
 
+  /* ---- Look next, tier 2: the library's relations ---- */
+
+  /* The relations extract (docs/assets/js/spark-relations.js,
+   * built ahead of time from the record — Q-05, option (a)) rides
+   * inside the Spark's bundle, so this stays a pure read of data
+   * handed in: no fetch, no network, the fence untouched. The
+   * core only chooses: this page's relations, in the record's own
+   * order, skipping the page itself and anything the caller has
+   * already offered. Each pick is the record's, and the presence
+   * labels it so — "from the record" — never as the keeper's own
+   * thread and never as this page's door. */
+  function relationsFor({ page, relations, exclude, limit } = {}) {
+    const cap = limit == null ? 2 : limit;
+    if (!page || !relations || typeof relations !== "object") return [];
+    const list = Array.isArray(relations[page]) ? relations[page] : [];
+    const skip = new Set(exclude || []);
+    const out = [];
+    for (const rel of list) {
+      if (out.length >= cap) break;
+      if (!rel || typeof rel.href !== "string" || !rel.href) continue;
+      const key = rel.href.split("/").pop();
+      if (rel.href === page || key === page || skip.has(key) || skip.has(rel.href)) continue;
+      skip.add(key);
+      out.push({ href: rel.href, label: String(rel.label || "").trim() || key });
+    }
+    return out;
+  }
+
   /* ---- the real guide: doors from the page itself ---- */
 
   /* "Show me around": the doors offered are the doors this very
@@ -3125,6 +3259,10 @@
     mulberry32,
     makeSeed,
     parseSeed,
+    PASSPORT_PREFIX,
+    passportCodeFor,
+    parsePassportCode,
+    recordFromPassport,
     randomNonce,
     kindIndexById,
     coordinateKindIndex,
@@ -3206,6 +3344,7 @@
     questionFor,
     trailFor,
     recordTrailStep,
+    relationsFor,
     doorsFor,
     explainFor,
     explainChunksFor,

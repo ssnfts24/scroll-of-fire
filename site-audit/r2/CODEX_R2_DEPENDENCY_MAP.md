@@ -13,6 +13,10 @@
 | `scroll:search:check` | `node scripts/build-scroll-search.mjs --check` |
 | `scroll:editorial` | `node scripts/build-scroll-editorial.mjs` |
 | `scroll:editorial:check` | `node scripts/build-scroll-editorial.mjs --check` |
+| `spark:relations` | `node scripts/build-spark-relations.mjs` |
+| `spark:relations:check` | `node scripts/build-spark-relations.mjs --check` |
+| `paths:graph` | `node scripts/build-link-graph.mjs` |
+| `paths:graph:check` | `node scripts/build-link-graph.mjs --check` |
 | `site:catalog` | `node scripts/build-site-catalog.mjs` |
 | `site:catalog:check` | `node scripts/build-site-catalog.mjs --check` |
 | `search:index` | `node scripts/build-search-index.mjs` |
@@ -64,12 +68,14 @@
 | `scripts/apply-spark-presence.mjs` | `docs/living-time-sphere.html`, `docs/404.html`, `docs/offline.html`, `docs/caravan.html`, `docs/companions.html` |
 | `scripts/apply-theory-work.mjs` | `docs/theory.html` |
 | `scripts/audit-site.mjs` | — |
+| `scripts/build-link-graph.mjs` | `docs/assets/data/link-graph.json`, `site-audit/site-master-inventory.json` |
 | `scripts/build-r2-inventory.mjs` | `site-audit/r2/document-extracts.json`, `docs/scroll/archive/Full_Scroll_Unsealed.txt`, `docs/development/TEMPORAL-AUTHORITY-CONTRACT.md`, `site-audit/r2/CODEX_R2_RESOURCE_REGISTRY.json` |
 | `scripts/build-scroll-editorial.mjs` | `docs/scroll/data/editorial-edition.json`, `docs/scroll/evidence/claim-register.json`, `docs/scroll/evidence/register.md` |
 | `scripts/build-scroll-library.mjs` | `archive/Full_Scroll_Unsealed.txt`, `archive/edition.json` |
 | `scripts/build-scroll-search.mjs` | — |
 | `scripts/build-search-index.mjs` | `docs/data/site-catalog.json`, `docs/scroll/data/library.json`, `docs/scroll/data/reader-segments.json`, `docs/scroll/search/lexicon/lexicon-index.json`, `docs/scroll/evidence/claim-register.json` |
 | `scripts/build-site-catalog.mjs` | `site-audit/pr5a-body.md`, `docs/downloads.html`, `docs/data/site-catalog.json` |
+| `scripts/build-spark-relations.mjs` | `docs/data/site-catalog.json` |
 | `scripts/build-world-lands.mjs` | `docs/data/site-catalog.json` |
 | `scripts/free_all_circuits.py` | — |
 | `scripts/generate-equinox-passage-data.mjs` | `docs/data/equinox-passage/equinox-source-metadata.json`, `docs/data/equinox-passage/equinox-reference-2014-2027.json`, `docs/data/equinox-passage/equinox-passage-2014-2027.json` |
@@ -89,14 +95,14 @@
 
 | Stylesheet | Pages |
 | --- | --- |
-| `docs/assets/css/spark-companion.css` | 178 |
-| `docs/assets/css/living-ui.css` | 137 |
+| `docs/assets/css/spark-companion.css` | 179 |
+| `docs/assets/css/living-ui.css` | 138 |
 | `docs/scripture/assets/scripture.css` | 93 |
-| `docs/assets/css/spark-agent-seat.css` | 75 |
-| `docs/assets/css/codex.css` | 51 |
-| `docs/assets/css/navigation.css` | 41 |
-| `docs/assets/css/social-bridge.css` | 38 |
-| `docs/assets/css/living-moon-theme.css` | 32 |
+| `docs/assets/css/spark-agent-seat.css` | 76 |
+| `docs/assets/css/codex.css` | 52 |
+| `docs/assets/css/navigation.css` | 42 |
+| `docs/assets/css/social-bridge.css` | 39 |
+| `docs/assets/css/living-moon-theme.css` | 33 |
 | `docs/assets/css/animations.css` | 22 |
 | `docs/assets/css/story-layer.css` | 19 |
 | `docs/theory/equations/assets/css/codex.css` | 19 |
@@ -104,18 +110,18 @@
 
 | Script | Pages |
 | --- | --- |
-| `docs/assets/js/spark-companion.js` | 178 |
-| `docs/assets/js/spark-presence.js` | 177 |
-| `docs/assets/js/site.js` | 140 |
-| `docs/assets/js/living-ui.js` | 137 |
+| `docs/assets/js/spark-companion.js` | 179 |
+| `docs/assets/js/spark-presence.js` | 178 |
+| `docs/assets/js/site.js` | 141 |
+| `docs/assets/js/living-ui.js` | 138 |
 | `docs/scripture/assets/scripture.js` | 93 |
-| `docs/assets/js/heaven-sound.js` | 77 |
-| `docs/assets/js/spark-agent-seat.js` | 75 |
-| `docs/assets/js/spark-3d.js` | 73 |
-| `docs/assets/js/calendar/pattern-calendar-version.js` | 40 |
-| `docs/assets/js/calendar/pattern-calendar-data.js` | 40 |
-| `docs/assets/js/calendar/pattern-calendar-format.js` | 40 |
-| `docs/assets/js/calendar/pattern-calendar-boundary.js` | 40 |
+| `docs/assets/js/spark-relations.js` | 82 |
+| `docs/assets/js/heaven-sound.js` | 78 |
+| `docs/assets/js/spark-agent-seat.js` | 76 |
+| `docs/assets/js/spark-3d.js` | 74 |
+| `docs/assets/js/calendar/pattern-calendar-version.js` | 42 |
+| `docs/assets/js/calendar/pattern-calendar-data.js` | 42 |
+| `docs/assets/js/calendar/pattern-calendar-format.js` | 42 |
 
 ## Protected systems (do not modify)
 

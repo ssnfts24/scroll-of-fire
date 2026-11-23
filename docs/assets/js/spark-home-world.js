@@ -232,7 +232,12 @@
    *   trailFinds,    — LivingTrail trail.finds, or null
    *   chapters,      — the story spine's chapters, or null
    *   today,         — today's canonical conversion, or null
-   *   hour           — the visitor's hour (0–24, fractional)
+   *   hour,          — the visitor's hour (0–24, fractional)
+   *   sparkSpeech    — { dayLine, reactions } in the Spark's own
+   *                    voice, gathered by the browser half from
+   *                    the core (livingDayRemarkFor / convoLineFor),
+   *                    or null; tapping the Spark in its home
+   *                    speaks the day first, then its reactions
    * })
    */
   function buildModel(input = {}) {
@@ -265,6 +270,22 @@
     const story = storyFromTrail(input.trailFinds, input.chapters);
     const keptDays = record && Array.isArray(record.daysSeen) ? record.daysSeen.length : 0;
     const home = homeForStage(spark ? spark.stageIndex : null);
+
+    /* The Spark's speech at home, gathered by the browser half
+     * from the core's own voice: a remark on the keeper's actual
+     * day (today's coordinate, whether practice is sealed, the
+     * days kept together — livingDayRemarkFor), and a small set
+     * of honest reactions for when it is tapped. This module
+     * never invents the lines; it only carries them, the way it
+     * carries everything else the records say. Without a Spark
+     * there is no speech, and the world says so by silence. */
+    const speechIn = input.sparkSpeech && typeof input.sparkSpeech === "object" ? input.sparkSpeech : {};
+    const sparkSpeech = spark ? {
+      dayLine: typeof speechIn.dayLine === "string" && speechIn.dayLine ? speechIn.dayLine : null,
+      reactions: Array.isArray(speechIn.reactions)
+        ? speechIn.reactions.filter((line) => typeof line === "string" && line)
+        : []
+    } : null;
 
     /* The plain lines — the world in words. Every slot states
      * what truly stands there, or honestly says it is empty. */
@@ -302,6 +323,7 @@
       sky: { phase, season, phaseName: PHASE_NAMES[phase], seasonName: SEASON_NAMES[season] },
       todayLine: todayLineFor(today),
       spark,
+      sparkSpeech,
       home,
       keepsakes,
       keepsakeTotal: keepsakes.length,
@@ -453,6 +475,39 @@
     }
 
     const now = new Date();
+
+    /* What the Spark can honestly say at home today, from the
+     * core's own voice: the day remark (the coordinate, practice
+     * sealed or not, the days kept together, and the garden's
+     * readiness when the fold could be read), and its reactions.
+     * Read-only, like everything this module gathers. */
+    let sparkSpeech = null;
+    if (Core && record && companion) {
+      let ready = 0;
+      if (gardenFold && Array.isArray(gardenFold.beds)) {
+        for (const bed of gardenFold.beds) {
+          for (const p of bed.plantings || []) if (p.canHarvest) ready += 1;
+        }
+      }
+      const farmNote = ready > 0
+        ? `${ready} planting${ready === 1 ? "" : "s"} ready to harvest in the garden ring`
+        : "";
+      const remark = Core.livingDayRemarkFor({
+        record,
+        companion,
+        today,
+        hour: now.getHours(),
+        farmNote
+      });
+      const reactions = ["pet", "poke", "play", "greet"]
+        .map((beat) => Core.convoLineFor({ companion, beat }))
+        .filter(Boolean);
+      sparkSpeech = {
+        dayLine: remark && remark.line ? remark.line : null,
+        reactions
+      };
+    }
+
     const model = World.buildModel({
       sparkRecord: record,
       companion,
@@ -463,6 +518,7 @@
       trailFinds,
       chapters,
       today,
+      sparkSpeech,
       hour: now.getHours() + now.getMinutes() / 60
     });
     return { model, companion, stage };
@@ -479,6 +535,9 @@
     const items = [];
     items.push({ key: "home", label: "The home", line: model.lines.home });
     if (model.lines.spark) items.push({ key: "spark", label: model.spark.name, line: model.lines.spark });
+    if (model.spark && model.sparkSpeech && model.sparkSpeech.dayLine) {
+      items.push({ key: "day", label: `${model.spark.name} on today`, line: model.sparkSpeech.dayLine });
+    }
     items.push({ key: "shelf", label: "The keepsake shelf", line: model.lines.shelf });
     for (const k of model.keepsakes.slice(0, World.SHELF_CAP)) {
       items.push({ key: "keepsake", label: k.title, line: `${k.title} — ${k.summary}` });
@@ -942,6 +1001,7 @@
       sparkGroup.scale.setScalar(scale);
       sparkGroup.position.copy(sparkPos);
       pickable(sparkGroup, model.lines.spark);
+      sparkGroup.userData.isSpark = true;
       scene.add(sparkGroup);
     }
 
@@ -986,6 +1046,20 @@
     const ndc = new THREE.Vector2();
     let downAt = null;
     let pulse = null;
+    /* The Spark answers its own taps in person: the first tap
+     * speaks the day as it stands, later taps answer in its own
+     * voice — and it hops, the way a small living thing does. */
+    let sparkTaps = 0;
+    let sparkHop = null;
+    function nextSparkLine() {
+      const speech = model.sparkSpeech;
+      sparkTaps += 1;
+      if (sparkTaps === 1 && speech && speech.dayLine) return speech.dayLine;
+      if (speech && speech.reactions.length) {
+        return speech.reactions[(sparkTaps - 1) % speech.reactions.length];
+      }
+      return model.lines.spark;
+    }
     const el = renderer.domElement;
     el.style.touchAction = "none";
     el.addEventListener("pointerdown", e => {
@@ -1019,8 +1093,13 @@
         let node = hit.object;
         while (node && !node.userData.say) node = node.parent;
         if (node) {
-          say(node.userData.say);
-          pulse = { obj: node, t0: performance.now() };
+          if (node.userData.isSpark) {
+            say(nextSparkLine());
+            sparkHop = { t0: performance.now() };
+          } else {
+            say(node.userData.say);
+            pulse = { obj: node, t0: performance.now() };
+          }
           break;
         }
       }
@@ -1083,6 +1162,11 @@
             sparkGroup.rotation.y = Math.atan2(dx, dz);
           }
           sparkGroup.rotation.z = Math.sin(t * 2.2) * 0.04;
+          if (sparkHop) {
+            const k = (performance.now() - sparkHop.t0) / 550;
+            if (k >= 1) sparkHop = null;
+            else sparkGroup.position.y += Math.sin(k * Math.PI) * 0.45;
+          }
         }
         const posAttr = moteGeo.getAttribute("position");
         for (let i = 0; i < MOTES; i++) {

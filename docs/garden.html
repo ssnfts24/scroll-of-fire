@@ -51,11 +51,12 @@
   <link rel="stylesheet" href="assets/css/animations.css">
   <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
   <link rel="stylesheet" href="assets/css/social-bridge.css">
-  <link rel="stylesheet" href="assets/css/pattern-garden.css?v=20261120-2">
+  <link rel="stylesheet" href="assets/css/pattern-garden.css?v=20261123-1">
 <link rel="stylesheet" href="assets/css/cartoon-scenes.css?v=20261120-1">
 <link rel="stylesheet" href="assets/css/story-layer.css?v=20261120-1">
   <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261119-1">
   <script defer src="assets/js/spark-companion.js?v=20261119-1"></script>
+  <script defer src="assets/js/spark-relations.js?v=20261122-1"></script>
   <script defer src="assets/js/spark-presence.js?v=20261119-1"></script>
   <script defer src="assets/js/heaven-sound.js?v=20261119-1"></script>
   <link rel="stylesheet" href="assets/css/spark-agent-seat.css?v=20261120-2">
@@ -186,10 +187,18 @@
         <p>
           A planting grows on the days you <strong>keep</strong> — the days your own
           record holds — while its Moon runs. Witness the open bed and today is
-          kept. At the Moon's turn, a planting witnessed on seven of its days is
-          harvested into a <strong>keepsake</strong> in your Life Atlas; witnessed
-          less, it goes honestly to seed. And a keepsake returns: when its Moon
-          comes round next year, it comes back to you.
+          kept. At the Moon's turn, the planting is graded by the days it was
+          witnessed, kindly and plainly: never witnessed, it <strong>slept</strong>;
+          witnessed a little, it was <strong>tended</strong> — it goes honestly to seed, and
+          its seed is gathered back to head the same bed's table next year, so
+          tending is never wasted; witnessed on seven of its days, it is
+          <strong>kept</strong> — harvested into a <strong>keepsake</strong> in your
+          Life Atlas; witnessed on half the Moon or more, it
+          <strong>flourished</strong>, and its keepsake carries the honour. A
+          harvest waits for your hand — this year or next, nothing earned quietly
+          disappears. And a keepsake returns: when its Moon comes round next year,
+          it comes back to you, and it waits to be welcomed if its Moon finds you
+          busy.
         </p>
         <p>
           This garden replaces Shroom Search, the mushroom game that stood here
@@ -215,6 +224,10 @@
       </p>
 
       <div id="garden-seed-find" aria-live="polite"></div>
+
+      <div id="garden-waiting" aria-live="polite"></div>
+
+      <div id="garden-year-reading" aria-live="polite"></div>
 
       <figure class="cartoon-scene">
         <img src="assets/img/cartoon/cartoon-garden.webp" width="1200" height="675" loading="lazy" decoding="async"
@@ -274,6 +287,25 @@
       <ul id="garden-keepsakes" class="garden-passes"></ul>
     </section>
 
+    <section class="section-shell" aria-labelledby="garden-still-title">
+      <h2 id="garden-still-title">The Still Bed</h2>
+      <p>
+        At the garden's foot stands a fourteenth place that is not numbered among
+        the thirteen: the Still Bed. It opens only on the still days — the
+        <strong>Day Out of Time</strong>, and the <strong>Deep Time Day</strong>
+        beside it in a long year — and on no other day. On a still day you may lay
+        <strong>one keepsake of the year now ending</strong> down in the still
+        ground: one of your own earned keepsakes, chosen by your own hand, for your
+        own reasons. What is laid there does not grow, is not witnessed, cannot be
+        harvested, and is never lost. At the next still day, a full year on, you
+        find it there, and its return is written beside it — and on that day the
+        garden's head carries the year's reading, the thirteen beds with their
+        outcomes in one line each. The laying down is its own record; the keepsake
+        itself is never edited, moved, or taken away.
+      </p>
+      <div id="garden-still-body" aria-live="polite"></div>
+    </section>
+
     <section class="section-shell split" aria-label="How the garden works">
       <article class="card glow">
         <p class="eyebrow">The rules — all of them</p>
@@ -282,8 +314,11 @@
           <li><strong>The calendar keys the beds.</strong> Thirteen beds, one per Moon; each Moon, its bed is open for that Moon's 28 days. The Day Out of Time opens no bed — the garden rests with the calendar.</li>
           <li><strong>The farm record keys the planting.</strong> A crop is offered only when a real planting window in the Washington farm data for your county overlaps the open Moon's dates, and the offer names the window and its sources. Moon lines are never farm facts.</li>
           <li><strong>Tending is witnessing.</strong> A planting grows on the days you keep inside its Moon — days your Life Atlas record holds. The bed's Witness button keeps today. Nothing grows while nothing is kept, and nothing is counted from a clock.</li>
-          <li><strong>Harvest at the Moon's turn.</strong> Seven witnessed days or more, and the planting harvests into a keepsake. Fewer, and it goes to seed — the season ended, honestly.</li>
+          <li><strong>Harvest at the Moon's turn, graded kindly.</strong> Seven witnessed days or more, and the planting harvests into a keepsake — fourteen or more, and the keepsake is marked flourished. Fewer, and it goes to seed — the season ended, honestly — but a planting witnessed even once was tended, and its seed is gathered back: next year that crop heads the same bed's table, from your own seed. A planting never witnessed slept, and the record says so in silence. Nothing is ever taken away.</li>
+          <li><strong>What waits, waits.</strong> A harvest not yet gathered stands at the garden's head as a waiting harvest until your hand collects it, across the year's turn and beyond. A keepsake's return, once its Moon has come round, stays offered until you welcome it. Nothing is gathered or welcomed for you in your absence — records are your acts — and nothing earned evaporates while you are away.</li>
           <li><strong>A keepsake returns.</strong> When the same Moon comes round the next year, last year's keepsake from that bed returns to you, and its return is written beside it.</li>
+          <li><strong>One planting per bed, and it stands.</strong> Each bed holds one planting a year — that is what makes choosing a real choice — and a planting, once written, is a record: there is no uprooting it. Tend it, or let it go to seed; both are honest endings.</li>
+          <li><strong>The Still Bed opens only in the stillness.</strong> On the Day Out of Time — and on the Deep Time Day in a long year — and on no other day, one keepsake of the year now ending may be laid in the Still Bed at the garden's foot. It rests there a full year, neither growing nor lost, and is found at the next still day, when its return is written beside it. A keepsake lying in the still ground makes no Moon return that year; its meeting is the still one.</li>
           <li><strong>Your Spark helps.</strong> Now and then your Spark finds a seed of the season among the beds — readily at first, rarer later. Plant a found seed and its keepsake remembers where it came from.</li>
           <li><strong>Your record, your device.</strong> Plantings, witnesses, seeds, returns, and keepsakes are Life Atlas records. Nothing is uploaded anywhere.</li>
         </ol>
@@ -347,7 +382,7 @@
   <script src="assets/js/life-atlas/life-atlas-indexeddb.js?v=20260819-b750"></script>
   <script src="assets/js/life-atlas/life-atlas-runtime.js?v=20260819-b750"></script>
   <script src="assets/js/life-atlas/record-helpers.js?v=20261119-1"></script>
-  <script src="assets/js/pattern-garden.js?v=20261120-2"></script>
+  <script src="assets/js/pattern-garden.js?v=20261123-1"></script>
   <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
   <script defer src="assets/js/social-bridge.js?v=20261119-1"></script>
   <script defer src="assets/js/day-telling.js?v=20261119-1"></script>

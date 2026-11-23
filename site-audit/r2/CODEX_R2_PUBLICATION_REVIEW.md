@@ -2,7 +2,7 @@
 
 "Unlinked does not mean private." Everything under `docs/` is deployed (Netlify `publish = "docs"`, no build command).
 
-## Deployed files that need an explicit decision (65)
+## Deployed files that need an explicit decision (70)
 
 | Path | Eligibility | What it is |
 | --- | --- | --- |
@@ -46,8 +46,13 @@
 | `docs/assets/img/shared/placeholders/README.md` | restricted-review | Image pipeline note stored under the publish tree |
 | `docs/assets/img/shared/social/README.md` | restricted-review | Image pipeline note stored under the publish tree |
 | `docs/development/LIVING-INTERFACE-ARCHITECTURE-V4-PLAN.md` | restricted-review | Engineering report or specification under the publish tree |
+| `docs/development/LIVING-SPHERE-EVOLUTION-PHASE-A-ARCHITECTURE.md` | restricted-review | Engineering report or specification under the publish tree |
+| `docs/development/LIVING-SPHERE-EVOLUTION-PHASE-A-VISUAL-SPEC.md` | restricted-review | Engineering report or specification under the publish tree |
 | `docs/development/R1.7-PROTECTED-MANIFEST.md` | restricted-review | Engineering report or specification under the publish tree |
 | `docs/development/TEMPORAL-AUTHORITY-CONTRACT.md` | restricted-review | Engineering report or specification under the publish tree |
+| `docs/development/living-sphere-evolution-opening.md` | restricted-review | Engineering report or specification under the publish tree |
+| `docs/development/living-sphere-evolution-phase-b.md` | restricted-review | Engineering report or specification under the publish tree |
+| `docs/development/living-sphere-temporal-worlds-slice.md` | restricted-review | Engineering report or specification under the publish tree |
 | `docs/manifest-sphere.webmanifest` | public-unreviewed | Site page or support file |
 | `docs/manifest.webmanifest` | public-unreviewed | Site page or support file |
 | `docs/observatory-audit-pr1.md` | restricted-review | Markdown document stored under the publish tree |
@@ -95,4 +100,4 @@ Automated scan of deployed Markdown, TXT, HTML, JSON and JS (excluding Scroll Li
 
 ## Image-only or non-text documents
 
-- `6_Images_and_Symbols/The_Mirror_of_the_Tongues_YHWH.pdf` — no extractable text; visual review required.
+None.

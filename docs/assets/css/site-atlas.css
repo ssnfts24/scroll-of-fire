@@ -288,6 +288,40 @@
 .front-door-list time { color: var(--muted, #b8b3a6); font-size: .8rem; }
 .front-door-actions { display: flex; flex-wrap: wrap; gap: .65rem; margin-top: 1.5rem; }
 
+/* Front Door surfaces (Nov 23, 2026): the three-hungers sorting,
+   the promises panel, and the light thread out. Plain furniture in
+   the section's own language — no urgency, no capture. */
+.front-door-sorting { margin: 0 0 2rem; }
+.front-door-sorting h3,
+.front-door-promises h3 { color: var(--gold, #f3c97a); margin: 0 0 .4rem; }
+.front-door-sorting .front-door-paths { margin: .8rem 0 1rem; }
+.front-door-note {
+  color: var(--muted, #b8b3a6);
+  font-size: .9rem;
+  line-height: 1.5;
+  max-width: 62ch;
+}
+.front-door-note a { color: var(--gold, #f3c97a); }
+.front-door-promises { margin: 2rem 0 0; }
+.front-door-promise-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1.4rem;
+  margin: .6rem 0 .8rem;
+  padding: 0;
+  list-style: none;
+  color: var(--ink, #eae7df);
+  font-size: 1rem;
+}
+.front-door-thread {
+  margin-top: 1.2rem;
+  color: var(--muted, #b8b3a6);
+  font-size: .92rem;
+  line-height: 1.55;
+  max-width: 62ch;
+}
+.front-door-thread a { color: var(--gold, #f3c97a); }
+
 .hub-atlas-strip {
   margin: 2rem 0;
   padding: 1.3rem;

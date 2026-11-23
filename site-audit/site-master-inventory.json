@@ -3,14 +3,15 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 478,
+    "resources": 483,
     "publicHtmlPages": 182,
     "catalogEntries": 74,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 25,
+      "not-linked-directly-from-homepage": 26,
       "nav-label-differs-from-title": 24,
+      "reachable-only-through-atlas": 2,
       "no-global-navigation": 1,
-      "deployed-but-unlinked": 56,
+      "deployed-but-unlinked": 61,
       "unreachable-from-homepage": 4,
       "compatibility-redirect-page": 1,
       "not-published-in-catalog": 30,
@@ -145,81 +146,12 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 72,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": [
         "nav-label-differs-from-title: \"About Aaron\" vs \"Aaron Paul Laird\""
       ]
-    },
-    {
-      "id": "aiyanas-world",
-      "title": "Aiyana's World — Codex of Reality",
-      "description": "A page in the Codex of Reality designed by Aiyana herself, where people can show their thinking, share how they feel, draw, and tell their stories.",
-      "category": "Companion",
-      "area": "living-time",
-      "relatedProjects": [
-        "companions",
-        "pattern-garden",
-        "travellers-map"
-      ],
-      "sourcePath": "docs/aiyanas-world.html",
-      "publicUrl": "https://codexofreality.org/aiyanas-world.html",
-      "publicationStatus": "live",
-      "lastVerifiedSourceRevision": "548e858",
-      "relatedPages": [
-        "13-moon-whitepaper.html",
-        "about-aaron.html",
-        "circle.html",
-        "codex-atlas.html",
-        "companions.html",
-        "covenant-caravan.html",
-        "downloads.html",
-        "ethics.html",
-        "garden.html",
-        "genesis-oracle.html",
-        "glossary.html",
-        "hub.html",
-        "index.html",
-        "invoke.html",
-        "lab.html",
-        "ledger.html",
-        "living-time-sphere.html",
-        "map.html",
-        "moons.html",
-        "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
-        "scroll/atlas.html",
-        "scroll/editorial.html",
-        "scroll/index.html",
-        "scroll/lexicon.html",
-        "scroll/search.html",
-        "shop.html",
-        "start.html",
-        "systems/archive.html",
-        "systems/frequencies.html",
-        "systems/mind-renewal.html",
-        "systems/recoder.html",
-        "systems/t-7.html",
-        "systems/witness.html",
-        "teach.html",
-        "theory.html",
-        "theory/canon.html",
-        "witness-world.html",
-        "witness.html"
-      ],
-      "canonicalUrl": "https://codexofreality.org/aiyanas-world.html",
-      "privacyEligibility": "approved-public",
-      "discoverability": {
-        "path": "aiyanas-world.html",
-        "inSitemap": true,
-        "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 4,
-        "pagesWithNavLinkToIt": 0
-      },
-      "issues": []
     },
     {
       "id": "alignment-ledger",
@@ -328,8 +260,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 72,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": [
         "nav-label-differs-from-title: \"Covenant Circle\" vs \"Circle Sync\""
@@ -469,11 +401,11 @@
         "13-moon-whitepaper.html",
         "ab.html",
         "about-aaron.html",
-        "aiyanas-world.html",
         "alignment-ledger.html",
         "circle.html",
         "claims-atlas.html",
         "codex-guide.html",
+        "codex-white-paper.html",
         "companions.html",
         "covenant-caravan.html",
         "downloads.html",
@@ -620,6 +552,57 @@
       ]
     },
     {
+      "id": "codex-white-paper",
+      "title": "The Codex of Reality and the Living Sphere — A White Paper | Codex of Reality",
+      "description": "The Codex of Reality and the Living Sphere: a white paper describing the framework, the 13 Moons calendar, the Living Sphere and its layer programme, the Spark, and the Living Phone — with the state of each part stated honestly. By Aaron Paul Laird.",
+      "category": "Whitepaper",
+      "area": "living-time",
+      "relatedProjects": [
+        "moons",
+        "whitepaper-13-moons"
+      ],
+      "sourcePath": "docs/codex-white-paper.html",
+      "publicUrl": "https://codexofreality.org/codex-white-paper.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "13-moon-whitepaper.html",
+        "codex-atlas.html",
+        "companions.html",
+        "downloads.html",
+        "index.html",
+        "ledger.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "scroll/atlas.html",
+        "scroll/editorial.html",
+        "scroll/index.html",
+        "scroll/lexicon.html",
+        "scroll/search.html",
+        "shop.html",
+        "start.html",
+        "theory.html",
+        "witness-world.html",
+        "witness.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/codex-white-paper.html",
+      "privacyEligibility": "approved-public",
+      "discoverability": {
+        "path": "codex-white-paper.html",
+        "inSitemap": true,
+        "inGlobalNav": false,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": null,
+        "inboundPages": 1,
+        "pagesWithNavLinkToIt": 0
+      },
+      "issues": [
+        "reachable-only-through-atlas",
+        "not-linked-directly-from-homepage"
+      ]
+    },
+    {
       "id": "companions",
       "title": "Companions — Scroll of Fire | Codex of Reality",
       "description": "Meet a Spark: a small companion that is made for you on the day you adopt it. Its seed speaks its name. It is kept on your own device, and grows as you return, visit, and practice.",
@@ -634,7 +617,6 @@
       "publicationStatus": "live",
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
-        "aiyanas-world.html",
         "downloads.html",
         "index.html",
         "living-time-sphere.html",
@@ -719,8 +701,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 75,
-        "pagesWithNavLinkToIt": 75
+        "inboundPages": 74,
+        "pagesWithNavLinkToIt": 74
       },
       "issues": [
         "nav-label-differs-from-title: \"Covenant Caravan\" vs \"The Covenant Caravan\""
@@ -745,7 +727,7 @@
     },
     {
       "id": "docs-assets:assets/css",
-      "title": "docs/assets/css (70 files)",
+      "title": "docs/assets/css (72 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -762,7 +744,7 @@
     },
     {
       "id": "docs-assets:assets/data",
-      "title": "docs/assets/data (8 files)",
+      "title": "docs/assets/data (9 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -813,7 +795,7 @@
     },
     {
       "id": "docs-assets:assets/img",
-      "title": "docs/assets/img (163 files)",
+      "title": "docs/assets/img (162 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -830,7 +812,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (209 files)",
+      "title": "docs/assets/js (215 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -881,7 +863,7 @@
     },
     {
       "id": "docs-assets:assets/vendor",
-      "title": "docs/assets/vendor (3 files)",
+      "title": "docs/assets/vendor (4 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1894,6 +1876,101 @@
       ]
     },
     {
+      "id": "docs:development/living-sphere-evolution-opening.md",
+      "title": "development/living-sphere-evolution-opening.md",
+      "description": "Markdown document deployed inside docs/ and therefore publicly fetchable, but not linked from the site.",
+      "category": "Development document",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/development/living-sphere-evolution-opening.md",
+      "publicUrl": "https://codexofreality.org/development/living-sphere-evolution-opening.md",
+      "publicationStatus": "source-only",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "development-only-deployed-publicly",
+      "discoverability": null,
+      "issues": [
+        "deployed-but-unlinked"
+      ]
+    },
+    {
+      "id": "docs:development/LIVING-SPHERE-EVOLUTION-PHASE-A-ARCHITECTURE.md",
+      "title": "development/LIVING-SPHERE-EVOLUTION-PHASE-A-ARCHITECTURE.md",
+      "description": "Markdown document deployed inside docs/ and therefore publicly fetchable, but not linked from the site.",
+      "category": "Development document",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/development/LIVING-SPHERE-EVOLUTION-PHASE-A-ARCHITECTURE.md",
+      "publicUrl": "https://codexofreality.org/development/LIVING-SPHERE-EVOLUTION-PHASE-A-ARCHITECTURE.md",
+      "publicationStatus": "source-only",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "development-only-deployed-publicly",
+      "discoverability": null,
+      "issues": [
+        "deployed-but-unlinked"
+      ]
+    },
+    {
+      "id": "docs:development/LIVING-SPHERE-EVOLUTION-PHASE-A-VISUAL-SPEC.md",
+      "title": "development/LIVING-SPHERE-EVOLUTION-PHASE-A-VISUAL-SPEC.md",
+      "description": "Markdown document deployed inside docs/ and therefore publicly fetchable, but not linked from the site.",
+      "category": "Development document",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/development/LIVING-SPHERE-EVOLUTION-PHASE-A-VISUAL-SPEC.md",
+      "publicUrl": "https://codexofreality.org/development/LIVING-SPHERE-EVOLUTION-PHASE-A-VISUAL-SPEC.md",
+      "publicationStatus": "source-only",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "development-only-deployed-publicly",
+      "discoverability": null,
+      "issues": [
+        "deployed-but-unlinked"
+      ]
+    },
+    {
+      "id": "docs:development/living-sphere-evolution-phase-b.md",
+      "title": "development/living-sphere-evolution-phase-b.md",
+      "description": "Markdown document deployed inside docs/ and therefore publicly fetchable, but not linked from the site.",
+      "category": "Development document",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/development/living-sphere-evolution-phase-b.md",
+      "publicUrl": "https://codexofreality.org/development/living-sphere-evolution-phase-b.md",
+      "publicationStatus": "source-only",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "development-only-deployed-publicly",
+      "discoverability": null,
+      "issues": [
+        "deployed-but-unlinked"
+      ]
+    },
+    {
+      "id": "docs:development/living-sphere-temporal-worlds-slice.md",
+      "title": "development/living-sphere-temporal-worlds-slice.md",
+      "description": "Markdown document deployed inside docs/ and therefore publicly fetchable, but not linked from the site.",
+      "category": "Development document",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/development/living-sphere-temporal-worlds-slice.md",
+      "publicUrl": "https://codexofreality.org/development/living-sphere-temporal-worlds-slice.md",
+      "publicationStatus": "source-only",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "development-only-deployed-publicly",
+      "discoverability": null,
+      "issues": [
+        "deployed-but-unlinked"
+      ]
+    },
+    {
       "id": "docs:development/R1.7-PROTECTED-MANIFEST.md",
       "title": "development/R1.7-PROTECTED-MANIFEST.md",
       "description": "Markdown document deployed inside docs/ and therefore publicly fetchable, but not linked from the site.",
@@ -1945,7 +2022,6 @@
       "relatedPages": [
         "13-moon-whitepaper.html",
         "about-aaron.html",
-        "aiyanas-world.html",
         "circle.html",
         "claims-atlas.html",
         "codex-atlas.html",
@@ -1953,6 +2029,7 @@
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
+        "garden.html",
         "genesis-oracle.html",
         "glossary.html",
         "guide.html",
@@ -1961,7 +2038,6 @@
         "lab.html",
         "ledger.html",
         "living-time-sphere.html",
-        "map.html",
         "moons.html",
         "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
@@ -12478,8 +12554,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 74,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 73,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": [
         "nav-label-differs-from-title: \"Ethics\" vs \"Ethics & Coherence Law\""
@@ -12545,8 +12621,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 74,
-        "pagesWithNavLinkToIt": 75
+        "inboundPages": 73,
+        "pagesWithNavLinkToIt": 74
       },
       "issues": []
     },
@@ -12592,8 +12668,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 75,
-        "pagesWithNavLinkToIt": 75
+        "inboundPages": 74,
+        "pagesWithNavLinkToIt": 74
       },
       "issues": [
         "nav-label-differs-from-title: \"Genesis Oracle\" vs \"The Genesis Oracle\""
@@ -12661,8 +12737,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 78,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 77,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": [
         "nav-label-differs-from-title: \"Glossary\" vs \"Glossary of the Codex\""
@@ -12861,8 +12937,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 74,
-        "pagesWithNavLinkToIt": 75
+        "inboundPages": 73,
+        "pagesWithNavLinkToIt": 74
       },
       "issues": [
         "nav-label-differs-from-title: \"Year Map\" vs \"Systems Hub\""
@@ -12927,8 +13003,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 72,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": [
         "nav-label-differs-from-title: \"Invoke\" vs \"Invocation Lab\""
@@ -13003,8 +13079,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 72,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": []
     },
@@ -13115,7 +13191,7 @@
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
         "inboundPages": 179,
-        "pagesWithNavLinkToIt": 3
+        "pagesWithNavLinkToIt": 4
       },
       "issues": []
     },
@@ -13178,8 +13254,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 75,
-        "pagesWithNavLinkToIt": 75
+        "inboundPages": 74,
+        "pagesWithNavLinkToIt": 74
       },
       "issues": []
     },
@@ -13310,8 +13386,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 72,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": [
         "nav-label-differs-from-title: \"Mind Renewal\" vs \"Mind-Renewal Protocol\""
@@ -13448,15 +13524,13 @@
         "path": "garden.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
         "inboundPages": 5,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "planned-timeline",
@@ -13659,8 +13733,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 72,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": [
         "nav-label-differs-from-title: \"Reality Recoder\" vs \"Living Dictionary of Reality\""
@@ -13886,7 +13960,7 @@
     },
     {
       "id": "repo-folder:scripts",
-      "title": "scripts/ (31 files)",
+      "title": "scripts/ (33 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -13954,7 +14028,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (180 files)",
+      "title": "tests/ (203 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -18508,7 +18582,7 @@
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
         "inboundPages": 178,
-        "pagesWithNavLinkToIt": 75
+        "pagesWithNavLinkToIt": 74
       },
       "issues": [
         "nav-label-differs-from-title: \"Artifact Registry\" vs \"Artifact Registry & Shop\""
@@ -18706,8 +18780,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 72,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": [
         "nav-label-differs-from-title: \"Systems Archive\" vs \"Interactive Archive\""
@@ -18772,8 +18846,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 72,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": [
         "nav-label-differs-from-title: \"T-7 Conduit\" vs \"T-7 Resonant Engine\""
@@ -19038,8 +19112,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 72,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": [
         "nav-label-differs-from-title: \"Canon\" vs \"Canon 0–17\""
@@ -20218,7 +20292,6 @@
       "relatedPages": [
         "13-moon-whitepaper.html",
         "about-aaron.html",
-        "aiyanas-world.html",
         "circle.html",
         "codex-atlas.html",
         "companions.html",
@@ -20260,14 +20333,16 @@
         "path": "map.html",
         "inSitemap": false,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 3,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": null,
+        "inboundPages": 1,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
-        "not-in-sitemap"
+        "not-in-sitemap",
+        "reachable-only-through-atlas",
+        "not-linked-directly-from-homepage"
       ]
     },
     {
@@ -20314,7 +20389,7 @@
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
         "inboundPages": 78,
-        "pagesWithNavLinkToIt": 77
+        "pagesWithNavLinkToIt": 76
       },
       "issues": [
         "nav-label-differs-from-title: \"13 Moons Whitepaper\" vs \"Remnant Rollout Whitepaper\""
@@ -20366,8 +20441,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 75,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 74,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": [
         "nav-label-differs-from-title: \"Remnant Whitepaper\" vs \"Scroll of Fire · Codex of Reality · Remnant Whitepaper\""
@@ -20498,8 +20573,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 72,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": [
         "nav-label-differs-from-title: \"Witness System\" vs \"Remnant Witness Ledger\""

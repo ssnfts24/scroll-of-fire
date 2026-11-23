@@ -68,6 +68,7 @@
   <link rel="stylesheet" href="assets/css/artifact-mobile.css?v=20260715-10">
   <link rel="stylesheet" href="assets/css/themes.moons.css?v=20260715-10">
   <link rel="stylesheet" href="assets/css/living-day.css?v=1">
+  <link rel="stylesheet" href="assets/css/presence.css?v=20261118-lw1">
   <link rel="stylesheet" href="assets/css/codex-memory.css?v=1">
   <link rel="stylesheet" href="assets/css/share-day.css?v=1">
   <link rel="stylesheet" href="assets/css/living-time-app-enhancements.css?v=20260730-1">
@@ -77,7 +78,7 @@
   <link rel="stylesheet" href="assets/css/living-moon-theme.css?v=20261119-1">
   <link rel="stylesheet" href="assets/css/social-bridge.css">
   <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260819-b743&p=20260820-b7581-labelglass&u=20260820-b7582-railalign&b=20260820-b7592a-farskeleton&d=20260821-b7592d7-unified">
-  <link rel="stylesheet" href="assets/css/homepage-sphere.css?v=20261119-1">
+  <link rel="stylesheet" href="assets/css/homepage-sphere.css?v=20261122-proto1">
   <link rel="stylesheet" href="assets/css/ambient-door.css?v=20261119-1">
 
   <script type="application/ld+json">
@@ -170,7 +171,7 @@
   <script defer src="assets/js/ambient-door.js?v=20261119-1"></script>
   <script defer src="assets/js/living-witness.js?v=20261117-1"></script>
   <script defer src="assets/js/sphere/living-time-sphere-calendar-geometry.js?v=20260819-b727&r=20260820-b7584-rootrail&b=20260820-b7592a-farskeleton&d=20260821-b7592d7-unified"></script>
-  <script defer src="assets/js/homepage-sphere.js?v=20261118-2"></script>
+  <script defer src="assets/js/homepage-sphere.js?v=20261122-proto1"></script>
   <script defer src="assets/js/calendar-cor.js"></script>
   <script defer src="assets/js/codex-state.js"></script>
   <script defer src="assets/js/codex-memory.js"></script>
@@ -456,6 +457,7 @@
   <link rel="stylesheet" href="assets/css/home-ambient-life.css?v=20261120-1">
   <script defer src="assets/js/spark-companion.js?v=20261119-1"></script>
   <script defer src="assets/js/spark-3d.js?v=20261119-1"></script>
+  <script defer src="assets/js/spark-relations.js?v=20261122-1"></script>
   <script defer src="assets/js/spark-presence.js?v=20261119-1"></script>
   <script defer src="assets/js/home-ambient-life.js?v=20261120-1"></script>
   <script defer src="assets/js/heaven-sound.js?v=20261119-1"></script>
@@ -719,10 +721,13 @@
               The Sphere itself, turning quietly — the same calendar the
               Observatory keeps. Today rides in gold.
             </p>
+            <p class="homepage-sphere-context" data-hs-context hidden></p>
             <div class="homepage-sphere-controls">
+              <button class="hs-btn hs-btn--primary" type="button" data-hs-activate hidden>Explore the Sphere</button>
               <button class="hs-btn" type="button" data-hs-toggle aria-pressed="false" hidden>Pause rotation</button>
               <button class="hs-btn" type="button" data-hs-today hidden>Today</button>
-              <a class="hs-btn hs-btn--primary" href="./living-time-sphere.html">Enter the Observatory</a>
+              <button class="hs-btn" type="button" data-hs-release hidden>Done — back to the page</button>
+              <a data-hs-door class="hs-btn hs-btn--primary" href="./living-time-sphere.html">Enter the Observatory</a>
             </div>
           </div>
         </aside>
@@ -745,14 +750,23 @@
         <li><a class="front-door-card" href="teach.html"><strong>Practice</strong><span>Manifest — the Remnant Visual Exercise. Seal a session; it takes its place on the Sphere's day.</span></a></li>
         <li><a class="front-door-card" href="downloads.html"><strong>Archive</strong><span>Sealed downloads and preserved originals.</span></a></li>
       </ul>
+      <div class="front-door-sorting" aria-labelledby="front-door-sorting-title">
+        <h3 id="front-door-sorting-title">Three ways in, by what you came for</h3>
+        <ul class="front-door-paths">
+          <li><a class="front-door-card" href="living-time-sphere.html"><strong>Curious</strong><span>Start with the Sphere itself — the calendar turning, and the sky over your own place tonight.</span></a></li>
+          <li><a class="front-door-card" href="garden.html"><strong>Gardening</strong><span>The Pattern Garden: real planting dates for your county. The Moon opens the bed; the farm record sets the dates.</span></a></li>
+          <li><a class="front-door-card" href="companions.html"><strong>With children</strong><span>Meet the Spark first, on a grown-up's device — then keep one day together in the garden. Nothing a child types ever leaves the device.</span></a></li>
+        </ul>
+        <p class="front-door-note">The farm record covers Western Washington's 39 counties so far. If your ground is elsewhere, the door says so plainly — and <a href="living-time-sphere.html">your sky</a> still works tonight, wherever you are.</p>
+      </div>
       <div class="front-door-grid">
         <section aria-labelledby="front-door-recent">
           <h3 id="front-door-recent">Recent additions</h3>
           <ul class="front-door-list">
-            <li><time datetime="2026-11-22">2026-11-22</time> <a href="./aiyanas-world.html">Aiyana opened her own world</a></li>
-            <li><time datetime="2026-11-22">2026-11-22</time> <a href="./living-time-sphere.html">The days stood up to be read</a></li>
-            <li><time datetime="2026-11-21">2026-11-21</time> <a href="./map.html">The films learned to walk one way</a></li>
-            <li><time datetime="2026-11-21">2026-11-21</time> <a href="./living-time-sphere.html">The Sphere settled into one shell</a></li>
+            <li><time datetime="2026-11-23">2026-11-23</time> <a href="./index.html">The front door gained its small surfaces</a></li>
+            <li><time datetime="2026-11-23">2026-11-23</time> <a href="./witness.html">Witness tended its page on the day of designs</a></li>
+            <li><time datetime="2026-11-23">2026-11-23</time> <a href="./garden.html">The garden learned to wait, and the games became quests</a></li>
+            <li><time datetime="2026-11-23">2026-11-23</time> <a href="./living-time-sphere.html">The Sphere shows how it grew</a></li>
           </ul>
         </section>
       </div>
@@ -777,8 +791,19 @@
           </ul>
         </section>
       </details>
+      <div class="front-door-promises" aria-labelledby="front-door-promises-title">
+        <h3 id="front-door-promises-title">What this door promises</h3>
+        <ul class="front-door-promise-list">
+          <li>Free.</li>
+          <li>No ads.</li>
+          <li>No account needed to begin.</li>
+          <li>Your record lives on your device, and it is yours.</li>
+        </ul>
+        <p class="front-door-note">Every line here is checkable against the site as it stands today. If a line ever stops being true, it comes off the door.</p>
+      </div>
       <p class="front-door-actions"><a class="btn primary" href="codex-atlas.html">Open the full Codex Atlas</a> <a class="btn" href="scroll/">Enter the Scroll Library</a></p>
       <p class="atlas-note">Saved witness records, readings and settings live only in this browser. They do not synchronize between devices.</p>
+      <p class="front-door-thread">Not ready to step in? <a href="https://www.facebook.com/aaron.laird.75" rel="noopener">Follow the daily shares</a> — a kept day in plain words, day by day. No account, no list, nothing asked of you; follow it or drop it in one tap.</p>
     </section>
     <!-- site-catalog:front-door:end -->
 
@@ -815,10 +840,10 @@
         <div class="le-act-slot">
           <h3>Latest additions</h3>
           <ul class="le-act-growth" data-le-growth>
-            <li><time datetime="2026-11-22">2026-11-22</time> <a href="./aiyanas-world.html">Aiyana opened her own world</a></li>
-            <li><time datetime="2026-11-22">2026-11-22</time> <a href="./living-time-sphere.html">The days stood up to be read</a></li>
-            <li><time datetime="2026-11-21">2026-11-21</time> <a href="./map.html">The films learned to walk one way</a></li>
-            <li><time datetime="2026-11-21">2026-11-21</time> <a href="./living-time-sphere.html">The Sphere settled into one shell</a></li>
+            <li><time datetime="2026-11-23">2026-11-23</time> <a href="./index.html">The front door gained its small surfaces</a></li>
+            <li><time datetime="2026-11-23">2026-11-23</time> <a href="./witness.html">Witness tended its page on the day of designs</a></li>
+            <li><time datetime="2026-11-23">2026-11-23</time> <a href="./garden.html">The garden learned to wait, and the games became quests</a></li>
+            <li><time datetime="2026-11-23">2026-11-23</time> <a href="./living-time-sphere.html">The Sphere shows how it grew</a></li>
           </ul>
         </div>
         <figure class="le-act-slot">
@@ -1124,10 +1149,16 @@
     </section>
 
 <section class="section-shell codex-live-grid" aria-label="Living Codex panels">
-      <article class="card today-codex-panel">
+      <article class="card today-codex-panel" id="today-panel">
         <p class="eyebrow">Today in the Codex</p>
         <h2 class="pulse-active" data-codex-today-title>Today in the Codex</h2>
         <p class="today-codex-meta" data-codex-today-layer>Open today's moon, breathe once, and record what changed.</p>
+
+        <!-- The site's memory, speaking at the front door (Q-03):
+             the same counted guidance lines as the 13 Moons Day
+             Notes panel, from the visitor's own on-device record.
+             The note offer names the Day Notes panel's home. -->
+        <div class="presence-guidance presence-guidance--card" data-presence-guidance data-guidance-note-href="moons.html#day-notes" hidden></div>
 
         <!-- Living Day calendar summary — shown when JS computes moon state -->
         <div class="codex-calendar-summary" data-codex-calendar-summary hidden>
@@ -2395,5 +2426,14 @@
   <script src="assets/js/living-trail.js?v=20261120-1"></script>
   <script src="assets/js/story-layer.js?v=20261120-1"></script>
   <script src="assets/js/year-thread.js?v=20261120-1"></script>
+  <!-- Guidance at the front door (Q-03): the Life Atlas record
+       layer and the shared guidance module, the same stack the
+       13 Moons page carries. Records stay on the visitor's device. -->
+  <script src="assets/js/life-atlas/life-atlas-schema.js?v=20260817-1"></script>
+  <script src="assets/js/life-atlas/life-atlas-repository.js?v=20260819-b750"></script>
+  <script src="assets/js/life-atlas/life-atlas-indexeddb.js?v=20260819-b750"></script>
+  <script src="assets/js/life-atlas/record-helpers.js?v=20261119-1"></script>
+  <script src="assets/js/day-notes.js?v=20261118-lw1"></script>
+  <script src="assets/js/presence-guidance.js?v=20261118-lw1"></script>
 </body>
               </html>

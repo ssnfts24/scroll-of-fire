@@ -220,7 +220,27 @@ const homepage = `<!doctype html>
   <script defer src="assets/library.js"></script>
   <link rel="stylesheet" href="../assets/css/spark-companion.css?v=20261119-1">
   <script defer src="../assets/js/spark-companion.js?v=20261119-1"></script>
+  <script defer src="../assets/js/spark-relations.js?v=20261122-1"></script>
   <script defer src="../assets/js/spark-presence.js?v=20261119-1"></script>
+  <!-- Guidance at the library's opening (Q-03): the canonical
+       calendar, the Life Atlas record layer, and the shared
+       guidance module — the same stack the 13 Moons page carries.
+       Records stay on the visitor's device. -->
+  <link rel="stylesheet" href="../assets/css/presence.css?v=20261118-lw1">
+  <script defer src="../assets/js/calendar/pattern-calendar-version.js?v=20260722-4"></script>
+  <script defer src="../assets/js/calendar/pattern-calendar-data.js?v=20260722-4"></script>
+  <script defer src="../assets/js/calendar/pattern-calendar-format.js?v=20260722-4"></script>
+  <script defer src="../assets/js/calendar/pattern-calendar-boundary.js?v=20260722-4"></script>
+  <script defer src="../assets/js/calendar/pattern-calendar.js?v=20260722-4"></script>
+  <script defer src="../assets/js/life-atlas/life-atlas-schema.js?v=20260817-1"></script>
+  <script defer src="../assets/js/life-atlas/life-atlas-repository.js?v=20260819-b750"></script>
+  <script defer src="../assets/js/life-atlas/life-atlas-indexeddb.js?v=20260819-b750"></script>
+  <script defer src="../assets/js/life-atlas/record-helpers.js?v=20261119-1"></script>
+  <script defer src="../assets/js/day-notes.js?v=20261118-lw1"></script>
+  <script defer src="../assets/js/presence-guidance.js?v=20261118-lw1"></script>
+  <!-- Garden of Paths, first slice (Q-04): the trails panel. -->
+  <link rel="stylesheet" href="../assets/css/paths.css?v=20261122-1">
+  <script defer src="../assets/js/paths-from-here.js?v=20261122-1"></script>
 </head>
 <body class="library-home living-ui">
   <a class="skip-link" href="#main">Skip to library</a>
@@ -247,6 +267,11 @@ const homepage = `<!doctype html>
         <span class="art-caption">WORDS KEPT<br>IN THE FIRE</span>
       </div>
     </section>
+    <!-- The site's memory, speaking at the library's opening
+         (Q-03): the same counted guidance lines as the 13 Moons
+         Day Notes panel, from the visitor's own on-device record.
+         The offers name their doors from this side of the library. -->
+    <div class="presence-guidance presence-guidance--card" data-presence-guidance data-guidance-practice-href="../teach.html" data-guidance-note-href="../moons.html#day-notes" hidden style="max-width:880px;margin:1.5rem auto 0;"></div>
     <section class="preservation-note" aria-label="Preservation note">
       <span class="note-mark" aria-hidden="true">✧</span>
       <p><strong>A reading edition, not a replacement.</strong> The archival text is unchanged. Headings and shelves organize the source; repeated passages remain discoverable, and each reading passage links to its original manuscript line.</p>
@@ -285,6 +310,10 @@ const homepage = `<!doctype html>
       <div class="section-heading"><div><p class="eyebrow">Nothing left behind</p><h2>Browse every source section</h2></div><p>${sections.length} indexed section entries · repeated headings link to every occurrence</p></div>
       ${shelfIndex}
     </section>
+    <!-- Garden of Paths, first slice (Q-04): this page's own
+         trails and who points here, counted at build time from
+         the pages' own words (assets/data/link-graph.json). -->
+    <section class="paths" data-paths-from-here data-paths-page="scroll/index.html" data-paths-src="../assets/data/link-graph.json" hidden aria-label="Paths from here"></section>
   </main>
   <footer class="library-footer"><a class="wordmark" href="./"><span class="wordmark-mark" aria-hidden="true">✦</span><span><strong>SCROLL OF FIRE</strong><small>UNSEALED LIBRARY</small></span></a><p>Original words · Clear provenance · Whole archive</p><a href="archive/Full_Scroll_Unsealed.txt">Read the preserved source ↗</a></footer>
   <script defer src="../assets/js/living-ui.js?v=20261117-1"></script>
@@ -313,6 +342,7 @@ const reader = `<!doctype html>
   <script defer src="assets/reader.js"></script>
   <link rel="stylesheet" href="../assets/css/spark-companion.css?v=20261119-1">
   <script defer src="../assets/js/spark-companion.js?v=20261119-1"></script>
+  <script defer src="../assets/js/spark-relations.js?v=20261122-1"></script>
   <script defer src="../assets/js/spark-presence.js?v=20261119-1"></script>
 </head>
 <body class="reader-page living-ui">
@@ -382,6 +412,7 @@ function toolPage({ file, title, description, bodyClass, current, intro, body, s
 ${scripts.map(script => `  <script defer src="assets/${script}"></script>`).join("\n")}
   <link rel="stylesheet" href="../assets/css/spark-companion.css?v=20261119-1">
   <script defer src="../assets/js/spark-companion.js?v=20261119-1"></script>
+  <script defer src="../assets/js/spark-relations.js?v=20261122-1"></script>
   <script defer src="../assets/js/spark-presence.js?v=20261119-1"></script>
 </head>
 <body class="tool-body ${bodyClass} living-ui">
