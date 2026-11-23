@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 2359,
-    "bytes": 984092419,
+    "bytes": 984092410,
     "byGroup": {
       "tooling": 274,
       "manuscript": 17,
@@ -53820,8 +53820,8 @@
       "path": "tests/living-entry.test.js",
       "title": "living-entry.test.js",
       "format": "js",
-      "bytes": 12721,
-      "sha256": "09502275c0c7a64a4480ee219076475d35626a1143e239bf8dd7bbc274604181",
+      "bytes": 12712,
+      "sha256": "89f1f15dc43bbfcd1133d043ea5e02b9d521d63f04e4bdc2ed7bab91822201a6",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
