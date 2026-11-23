@@ -33,7 +33,7 @@ Full per-chapter data: `scripture-preliminary-scan.json`.
 
 ## Publication
 
-- 67 deployed files need a publish/withdraw decision (see Publication Review).
+- 70 deployed files need a publish/withdraw decision (see Publication Review).
 - Deployed bundle archives under `docs/codex_final_upload/` have not had their contents inspected.
 - Root images with upload-style names have not been visually reviewed.
 
@@ -44,7 +44,7 @@ Full per-chapter data: `scripture-preliminary-scan.json`.
 
 ## Documents
 
-- 1 document(s) have no text layer and need visual review.
+- 0 document(s) have no text layer and need visual review.
 - 2 ZIP archives were listed but not unpacked into review.
 - No manuscript outside the Scroll Library has had a completed editorial, scripture or evidence review.
 

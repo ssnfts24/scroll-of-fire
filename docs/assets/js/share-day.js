@@ -242,16 +242,6 @@
     return url.toString();
   }
 
-  function track(eventName, payload = {}) {
-    if (typeof window.gtag === "function") {
-      window.gtag("event", eventName, {
-        event_category: "share_day",
-        event_label: payload.format || "unknown",
-        method: payload.method || "",
-        non_interaction: false
-      });
-    }
-  }
 
   function recordShareAction(type, shareState, detail = {}) {
     if (!window.CodexMemory || typeof window.CodexMemory.recordAction !== "function") return;
@@ -1371,7 +1361,6 @@
     downloadBlob(blob, filename);
 
     const eventName = format === "square" ? "share_day_download_square" : "share_day_download_story";
-    track(eventName, { format, method: "download" });
     recordShareAction(eventName, state.currentShareState, {
       format,
       method: "download",
@@ -1470,7 +1459,6 @@
         return;
       }
 
-      track("share_day_native_open", { format: state.currentFormat, method: plan.method });
       recordShareAction("share_day_native_open", state.currentShareState, {
         format: state.currentFormat,
         method: plan.method,
@@ -1598,7 +1586,6 @@
     const firstBtn = state.modal.querySelector("[data-share-day-close], [data-share-day-native]");
     if (firstBtn) firstBtn.focus();
 
-    track("share_day_open", { format: state.currentFormat, method: "open" });
     recordShareAction("share_day_open", state.currentShareState, {
       format: state.currentFormat,
       method: "open",
