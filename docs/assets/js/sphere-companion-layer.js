@@ -655,11 +655,11 @@
     if (document.querySelector("script[data-sphere-day-world]")) return;
     const css = document.createElement("link");
     css.rel = "stylesheet";
-    css.href = "assets/css/sphere-day-world-adapter.css?v=20261122-2";
+    css.href = "assets/css/sphere-day-world-adapter.css?v=20261122-3";
     css.setAttribute("data-sphere-day-world", "");
     document.head.appendChild(css);
     const s = document.createElement("script");
-    s.src = "assets/js/sphere-day-world-adapter.js?v=20261122-2";
+    s.src = "assets/js/sphere-day-world-adapter.js?v=20261122-3";
     s.async = false;
     s.setAttribute("data-sphere-day-world", "");
     document.head.appendChild(s);

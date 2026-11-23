@@ -347,7 +347,7 @@
     },
     {
       "path": "docs/assets/css/sphere-day-world-adapter.css",
-      "sha256": "5698653aa5e6f601bbc3b584e7a63b06fc00f0e9000f90dc3efdf2042d4f7048",
+      "sha256": "25bbfee9cfb92f539010b2e11eaada21fa83dfabb98c8516c28b0ebd5817d329",
       "publicUrl": "https://codexofreality.org/assets/css/sphere-day-world-adapter.css",
       "status": "operational"
     },
@@ -467,7 +467,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "f05533c93aa38ea4113aad3d5e8b5937a45da1a550e54b45c280000ce97dc595",
+      "sha256": "6a99f06a7da4fccd9429745b2ecf08c3836f2d2badd02a84078af273ecc43349",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -2465,13 +2465,13 @@
     },
     {
       "path": "docs/assets/js/sphere-companion-layer.js",
-      "sha256": "5370e203e60f9bdd129ff8fd98256d2e18fd141344e21b8a028d281a9825d0b0",
+      "sha256": "8cb242b33253bbee8e967ac2258e3987ee5a72932ef951822cc3b84c3eb942b2",
       "publicUrl": "https://codexofreality.org/assets/js/sphere-companion-layer.js",
       "status": "operational"
     },
     {
       "path": "docs/assets/js/sphere-day-world-adapter.js",
-      "sha256": "8863184db7cf4f9ccdeb401fb40e16c340918d0709ac0e4f6a646e901f8ab8ba",
+      "sha256": "75b4d0aba442f3cc57a99e913fb0842febbfbbbb2bfb3cb07ea21c895c4859d3",
       "publicUrl": "https://codexofreality.org/assets/js/sphere-day-world-adapter.js",
       "status": "operational"
     },
@@ -11012,6 +11012,12 @@
     {
       "path": "docs/development/living-sphere-evolution-phase-b.md",
       "publicUrl": "https://codexofreality.org/development/living-sphere-evolution-phase-b.md",
+      "eligibility": "restricted-review",
+      "reason": "Engineering report or specification under the publish tree"
+    },
+    {
+      "path": "docs/development/living-sphere-temporal-worlds-slice.md",
+      "publicUrl": "https://codexofreality.org/development/living-sphere-temporal-worlds-slice.md",
       "eligibility": "restricted-review",
       "reason": "Engineering report or specification under the publish tree"
     },
