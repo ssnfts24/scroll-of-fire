@@ -442,6 +442,24 @@ html.living-time-sphere-page.armillary-rooms-open body:not(.sphere-app) .sphere-
   scroll-margin-top: 7.75rem;
 }
 
+/*
+ * Repair pass (Aaron, Nov 22, 2026, 18:12): the guide bar is
+ * folded into this sheet as the "Guide room" by design, but its
+ * stage-overlay styling (sphere-deepening.css: position absolute,
+ * pinned to the bottom of its offset parent) came with it — and
+ * inside the sheet the offset parent is the sheet itself, so the
+ * bar floated over the rooms' content: on Aaron's phone the Day
+ * Details readout slid underneath it. In the sheet the bar is a
+ * room, not an overlay: it stands in flow like every other room,
+ * and sheet content ends above it by construction.
+ */
+html.living-time-sphere-page .sphere-sidebar .sphere-guide-bar.sphere-sheet-room {
+  position: static;
+  transform: none;
+  width: auto;
+  max-width: none;
+}
+
 .sphere-more-tools {
   scroll-margin-top: 7.75rem;
 }
@@ -875,82 +893,302 @@ html.living-time-sphere-page.armillary-rooms-open body:not(.sphere-app) .sphere-
   }
 }
 
-/* Days more visible (Aaron, Nov 20): the calendar-face day
- * numerals were .50rem on phones — 8px, unreadable at a glance.
- * The label manager's collision pass drops overlaps, so a larger
- * numeral costs density, not clutter: the key days (1/7/14/21/28
- * and the Moon turns) keep their places and read instantly. */
-html.living-time-sphere-page .sphere-semantic-label[data-calendar-face="true"] .sphere-semantic-label-title {
-  font-size: 0.8rem !important;
-  min-width: 0.9rem;
-}
-@media (max-width: 720px) {
-  html.living-time-sphere-page .sphere-semantic-label[data-calendar-face="true"] .sphere-semantic-label-title {
-    font-size: 0.66rem !important;
-    min-width: 0.78rem;
-  }
-}
-
-/* Day numbers, second pass (Aaron, Nov 22, 2026): still too small
- * to read or tap on his phone, he said — so the numeral grows
- * again, its weight and contrast rise, and the pill behind it
- * becomes a real finger target. The collision pass still drops
- * overlaps, so this costs density, not clutter. And a scheduled
- * day now carries its mark UNDER its number: the day's own glyph
- * from the record (a check for a task, a flag for a reminder, a
- * sprout for planting — the planner summary's primary symbol),
- * one mark per day, holographic cyan on dark. The full list for
- * the day lives in Day Details; the big card appears only when
- * the day itself is selected. This deliberately re-admits the
- * one DOM glyph B7.48 retired in favour of the GPU symbol field:
- * that field floats its glyphs in the symbol lane, and Aaron
- * could not see that scheduling had marked the day at all. One
- * small glyph per scheduled day, on the number itself, is the
- * readable confirmation he asked for; the GPU field stands as
- * the scene's own decoration, as before. */
+/* Days as holographic markers — the visibility pass (Aaron,
+ * Nov 22, 2026): "make the days stand out like holographic
+ * markers. The calendar needs to be highly visible and easy to
+ * understand. There should be markers on the Sphere that's
+ * organized... everything else should be very visible."
+ *
+ * Why the two earlier passes (Nov 20, Nov 22) never landed: they
+ * are keyed on [data-calendar-face="true"], and no code set that
+ * attribute — the renderer carried calendarFace on the day
+ * targets all along, but the label manager's normalizer dropped
+ * the field (the same dropped-field bug B7.8 fixed for moonDay),
+ * so the numerals fell back to the quiet rail's 7px engraving
+ * and a scheduled day showed no symbol at all. The normalizer
+ * now preserves the field and this stack is live. This block
+ * replaces the "Day numbers, second pass (Aaron, Nov 22, 2026)"
+ * rules wholesale — same placement law, living cascade.
+ *
+ * The marker system, one law throughout:
+ *   - Every day numeral stands on ONE holographic plate: a
+ *     luminous cyan rim, light pooled at its top, depth at its
+ *     foot — the same plate on every day, so the eye learns it
+ *     once. Week-gate days (1/7/14/21/28) burn a touch greener,
+ *     marking the four-week skeleton.
+ *   - Today wears a gold ring around its plate — gold is
+ *     today's colour alone — so "where is today" answers at a
+ *     glance. The selected day instead fills gold (below).
+ *   - A scheduled day hangs its primary symbol in a small holo
+ *     chip CENTRED UNDER its numeral — the same anchor, offset
+ *     and size on every day (this is the one DOM glyph B7.48
+ *     retired and Aaron's Nov 22 word re-admitted: the GPU
+ *     symbol field floats its glyphs in the symbol lane, and he
+ *     could not see that scheduling had marked the day at all).
+ *   - A day holding more than one thing adds a small count
+ *     badge at the plate's top-right corner — again, the same
+ *     corner on every day. The full list lives in the Living
+ *     Day card and Day Details, as before.
+ *   - Touches pass THROUGH the plates to the canvas pick path,
+ *     as the label layer's base rule intends; B7.15's
+ *     pointer-events:auto for calendar faces is deliberately
+ *     overridden back to none here, or every plate would eat
+ *     the drag that starts on it. */
 html.living-time-sphere-page .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] {
-  min-width: 1.65rem !important;
-  min-height: 1.65rem !important;
-  background: rgba(3, 10, 16, 0.92) !important;
-  border-color: rgba(140, 205, 220, 0.45) !important;
+  pointer-events: none !important;
+  /* The base size is the Moon View (medium band) plate: measured
+   * on the phone stage, the faced Moon's grid pitch there is
+   * ~21px, so a 1.3rem plate tiles the grid rim-to-rim without
+   * stacking. The far and near/detail bands resize below — a
+   * plate that cannot fit its grid is a heap, not a marker. */
+  min-width: 1.3rem !important;
+  min-height: 1.3rem !important;
+  border: 1px solid rgba(155, 228, 255, 0.68) !important;
+  border-radius: 999px !important;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(170, 240, 255, 0.34), rgba(70, 170, 220, 0.10) 55%, rgba(6, 16, 26, 0) 78%),
+    linear-gradient(180deg, rgba(18, 48, 66, 0.94), rgba(4, 12, 20, 0.96)) !important;
+  box-shadow:
+    0 0 12px rgba(96, 205, 255, 0.40),
+    0 2px 7px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(215, 250, 255, 0.50),
+    inset 0 -7px 12px rgba(70, 180, 255, 0.14) !important;
 }
 html.living-time-sphere-page .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] .sphere-semantic-label-title {
-  font-size: 0.8rem !important;
-  font-weight: 820 !important;
-  color: #f2f9ff !important;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95), 0 0 7px rgba(0, 0, 0, 0.65);
+  font-family: inherit;
+  font-size: 0.68rem !important;
+  font-weight: 850 !important;
+  letter-spacing: 0 !important;
+  min-width: 0.9rem;
+  padding: 0;
+  color: #f6fdff !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  text-shadow: 0 0 8px rgba(150, 230, 255, 0.70), 0 1px 2px rgba(0, 0, 0, 0.92) !important;
 }
-@media (max-width: 720px) {
+/* Band sizing — the label layer carries the renderer's semantic
+ * band (far / medium / near / detail) as data-band, and the
+ * plates size to each band's measured grid pitch on the phone
+ * stage: far ~10px (Year View — a bright holo chip; the glow
+ * carries the visibility, the numeral stays honest), near and
+ * detail the full-size marker the keeper zooms into. */
+html.living-time-sphere-page .sphere-semantic-label-layer[data-band="far"] .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] {
+  /* width/height as well as min-*: the B7.2 halo-lane rule pins
+   * a fixed 1.16rem box, which would otherwise hold the far
+   * plate at Year-View size in every band. */
+  width: 0.68rem !important;
+  height: 0.68rem !important;
+  min-width: 0.68rem !important;
+  min-height: 0.68rem !important;
+}
+html.living-time-sphere-page .sphere-semantic-label-layer[data-band="far"] .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] .sphere-semantic-label-title {
+  font-size: 0.52rem !important;
+  min-width: 0;
+}
+html.living-time-sphere-page .sphere-semantic-label-layer[data-band="near"] .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"],
+html.living-time-sphere-page .sphere-semantic-label-layer[data-band="detail"] .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] {
+  min-width: 1.55rem !important;
+  min-height: 1.55rem !important;
+}
+html.living-time-sphere-page .sphere-semantic-label-layer[data-band="near"] .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] .sphere-semantic-label-title,
+html.living-time-sphere-page .sphere-semantic-label-layer[data-band="detail"] .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] .sphere-semantic-label-title {
+  font-size: 0.74rem !important;
+}
+/* Wider stages breathe wider: on desktop the same bands carry
+ * proportionally larger plates, since the grid pitch grows
+ * with the stage. */
+@media (min-width: 721px) {
+  html.living-time-sphere-page .sphere-semantic-label-layer[data-band="far"] .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] {
+    width: 1.05rem !important;
+    height: 1.05rem !important;
+    min-width: 1.05rem !important;
+    min-height: 1.05rem !important;
+  }
+  html.living-time-sphere-page .sphere-semantic-label-layer[data-band="far"] .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] .sphere-semantic-label-title {
+    font-size: 0.6rem !important;
+  }
   html.living-time-sphere-page .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] {
-    min-width: 1.55rem !important;
-    min-height: 1.55rem !important;
+    min-width: 1.65rem !important;
+    min-height: 1.65rem !important;
   }
   html.living-time-sphere-page .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] .sphere-semantic-label-title {
-    font-size: 0.74rem !important;
+    font-size: 0.8rem !important;
+  }
+  html.living-time-sphere-page .sphere-semantic-label-layer[data-band="near"] .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"],
+  html.living-time-sphere-page .sphere-semantic-label-layer[data-band="detail"] .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] {
+    min-width: 1.9rem !important;
+    min-height: 1.9rem !important;
+  }
+  html.living-time-sphere-page .sphere-semantic-label-layer[data-band="near"] .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] .sphere-semantic-label-title,
+  html.living-time-sphere-page .sphere-semantic-label-layer[data-band="detail"] .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"] .sphere-semantic-label-title {
+    font-size: 0.88rem !important;
   }
 }
+/* Week gates: the skeleton days burn greener. */
+html.living-time-sphere-page .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"][data-gate-day="true"] {
+  border-color: rgba(165, 255, 236, 0.85) !important;
+  box-shadow:
+    0 0 13px rgba(96, 230, 205, 0.45),
+    0 2px 7px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(220, 255, 248, 0.55),
+    inset 0 -7px 12px rgba(70, 220, 190, 0.16) !important;
+}
+/* The selected day fills gold — the strongest plate on the face. */
+html.living-time-sphere-page .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"].is-selected,
+html.living-time-sphere-page .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"].is-pinned {
+  border-color: rgba(255, 222, 116, 0.95) !important;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(255, 236, 170, 0.38), rgba(190, 140, 40, 0.12) 55%, rgba(20, 12, 2, 0) 78%),
+    linear-gradient(180deg, rgba(84, 62, 14, 0.96), rgba(30, 21, 4, 0.97)) !important;
+  box-shadow:
+    0 0 16px rgba(255, 205, 80, 0.50),
+    0 2px 7px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 244, 200, 0.60),
+    inset 0 -7px 12px rgba(255, 190, 60, 0.18) !important;
+}
+html.living-time-sphere-page .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"].is-selected .sphere-semantic-label-title,
+html.living-time-sphere-page .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"].is-pinned .sphere-semantic-label-title {
+  color: #fff3c4 !important;
+  text-shadow: 0 0 9px rgba(255, 214, 92, 0.80), 0 1px 2px rgba(0, 0, 0, 0.92) !important;
+}
+/* Today: a gold ring around the plate — never a fill, so today
+ * and the selection never read as the same state. */
+html.living-time-sphere-page .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"][data-today="true"] {
+  border-color: rgba(255, 216, 102, 0.95) !important;
+  box-shadow:
+    0 0 0 2px rgba(255, 214, 92, 0.95),
+    0 0 20px rgba(255, 205, 80, 0.60),
+    0 2px 7px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 244, 200, 0.60),
+    inset 0 -7px 12px rgba(70, 180, 255, 0.14) !important;
+}
+html.living-time-sphere-page .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"][data-today="true"] .sphere-semantic-label-title {
+  color: #fff3c4 !important;
+  text-shadow: 0 0 9px rgba(255, 214, 92, 0.85), 0 1px 2px rgba(0, 0, 0, 0.92) !important;
+}
+/* Today AND selected: the gold fill keeps the ring. */
+html.living-time-sphere-page .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"][data-today="true"].is-selected,
+html.living-time-sphere-page .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"][data-today="true"].is-pinned {
+  box-shadow:
+    0 0 0 2px rgba(255, 214, 92, 0.95),
+    0 0 22px rgba(255, 205, 80, 0.65),
+    0 2px 7px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 244, 200, 0.60),
+    inset 0 -7px 12px rgba(255, 190, 60, 0.18) !important;
+}
+/* The schedule chip: the day's primary symbol, centred under
+ * its numeral — one anchor, one offset, one size, every day.
+ * Repair pass (Nov 22, 2026): every mark size and offset scales
+ * by the plate's own --plate-mark-scale, which the label manager
+ * sets to the plate's pitch-cap ratio — the marks now live
+ * under the same local-pitch discipline as the disc itself
+ * (the §7 remainder: at ~10px pitches an unscaled chip reached
+ * the plate below and an unscaled badge reached the plate
+ * above). The manager also decides per plate whether the chip
+ * hangs (data-mark-tuck absent), tucks inside the disc's lower
+ * edge (data-mark-tuck="true"), or is suppressed for this pass
+ * (data-mark-chip="off"), and whether the badge may stand
+ * (data-mark-badge="off" suppresses it) — by the plate's own
+ * measured pitch, so the whole marker, not just the disc,
+ * keeps the no-touching law. */
 html.living-time-sphere-page .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"][data-has-schedule="true"]::after {
   content: attr(data-plan-symbol) !important;
   display: grid !important;
   place-items: center;
   position: absolute;
   left: 50%;
-  top: calc(100% - 0.22rem);
+  right: auto;
+  top: calc(100% - 0.22rem * var(--plate-mark-scale, 1));
+  bottom: auto;
   transform: translateX(-50%);
-  min-width: 0.95rem;
-  height: 0.95rem;
+  min-width: calc(0.95rem * var(--plate-mark-scale, 1));
+  height: calc(0.95rem * var(--plate-mark-scale, 1));
   padding: 0 0.1rem;
   border-radius: 999px;
-  background: rgba(5, 22, 28, 0.92);
-  border: 1px solid rgba(122, 243, 255, 0.6);
-  color: #c8fbff;
-  font-size: 0.58rem;
+  background: rgba(5, 24, 32, 0.95);
+  border: 1px solid rgba(140, 245, 255, 0.85);
+  color: #d9fcff;
+  font-size: calc(0.58rem * var(--plate-mark-scale, 1));
   font-weight: 850;
   line-height: 1;
-  text-shadow: 0 0 6px rgba(122, 243, 255, 0.85);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 9px rgba(122, 243, 255, 0.4);
+  text-shadow: 0 0 7px rgba(140, 245, 255, 0.90);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 11px rgba(122, 243, 255, 0.50);
   pointer-events: none;
   z-index: 2;
+}
+/* The count badge: top-right corner of the plate, only when
+ * the day holds more than one thing. */
+html.living-time-sphere-page .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"][data-schedule-multi="true"]::before {
+  content: attr(data-schedule-count);
+  position: absolute;
+  top: calc(-0.34rem * var(--plate-mark-scale, 1));
+  right: calc(-0.34rem * var(--plate-mark-scale, 1));
+  min-width: calc(0.78rem * var(--plate-mark-scale, 1));
+  height: calc(0.78rem * var(--plate-mark-scale, 1));
+  padding: 0 0.14rem;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(16, 20, 28, 0.97);
+  border: 1px solid rgba(247, 205, 91, 0.95);
+  color: #ffe08a;
+  font-size: calc(0.46rem * var(--plate-mark-scale, 1));
+  font-weight: 850;
+  line-height: 1;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.65), 0 0 8px rgba(247, 205, 91, 0.45);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* In the far band the marks shrink with their plates — the law
+ * (symbol centred under the numeral, count at the top-right)
+ * does not change, only the scale. */
+html.living-time-sphere-page .sphere-semantic-label-layer[data-band="far"] .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"][data-has-schedule="true"]::after {
+  min-width: calc(0.78rem * var(--plate-mark-scale, 1));
+  height: calc(0.78rem * var(--plate-mark-scale, 1));
+  font-size: calc(0.48rem * var(--plate-mark-scale, 1));
+  top: calc(100% - 0.16rem * var(--plate-mark-scale, 1));
+}
+html.living-time-sphere-page .sphere-semantic-label-layer[data-band="far"] .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"][data-schedule-multi="true"]::before {
+  min-width: calc(0.66rem * var(--plate-mark-scale, 1));
+  height: calc(0.66rem * var(--plate-mark-scale, 1));
+  font-size: calc(0.42rem * var(--plate-mark-scale, 1));
+  top: calc(-0.26rem * var(--plate-mark-scale, 1));
+  right: calc(-0.26rem * var(--plate-mark-scale, 1));
+}
+
+/* The tucked chip: the scaled chip no longer fits in the clear
+ * gap below the disc, but it fits inside the disc — it stands
+ * on the disc's lower edge instead of hanging below it, so the
+ * marker's footprint never grows past the disc. */
+html.living-time-sphere-page .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"][data-has-schedule="true"][data-mark-tuck="true"]::after {
+  top: auto !important;
+  bottom: 0;
+}
+/* Suppressed marks: at this pitch the mark cannot stand
+ * without touching a neighbour, so it waits for a closer view. */
+html.living-time-sphere-page .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"][data-has-schedule="true"][data-mark-chip="off"]::after {
+  display: none !important;
+}
+html.living-time-sphere-page .sphere-semantic-label[data-semantic-kind="pattern-day-number"][data-calendar-face="true"][data-schedule-multi="true"][data-mark-badge="off"]::before {
+  display: none !important;
+}
+
+/* Moon names (visibility pass): a name never wraps to a second
+ * line — a wrapped pill stands twice as tall in the crowd at
+ * the top of the disc — and on phone widths the pills sit a
+ * little tighter and cap narrower, so the fit pass (which now
+ * also asks a real 4px gap) has room to keep every name
+ * standing and separate. */
+html.living-time-sphere-page .sphere-moon-label {
+  white-space: nowrap;
+}
+@media (max-width: 720px) {
+  html.living-time-sphere-page .sphere-moon-label {
+    max-width: 8.4rem;
+    padding: 0.11rem 0.30rem;
+  }
 }
 
 /* The season line: the current season and the next turn, in the
@@ -1128,5 +1366,157 @@ html.living-time-sphere-page.sphere-full-page .sphere-sheet-bar {
   html.living-time-sphere-page.sphere-full-page body:not(.sphere-app) .sphere-wrapper {
     height: min(74svh, 48rem);
     min-height: 320px;
+  }
+}
+
+/* ————————————————————————————————————————————————————————————————
+ * ZOOM-DEPTH STAGES (Sphere deep-fix, Nov 22, 2026 — groundwork
+ * under the Living Sphere Evolution directive). The day-zoom module
+ * names the keeper's approach on #sphere-container as
+ * data-zoom-stage: year → moon → approach → living → immersive.
+ *
+ * Day Approach / Living Day: the selected day's number grows as the
+ * keeper closes in. The growth is composed by the label manager
+ * into its own per-frame transform and eased there (overnight
+ * pass, Nov 22, 2026): it used to ride this stylesheet's
+ * standalone `scale` property, keyed on
+ * #sphere-container[data-zoom-stage=...] — but the label layer
+ * lives under #sphere-moon-labels, outside #sphere-container, so
+ * those rules could never match a label and the growth never
+ * rendered, while the cap pass went on dividing the selected
+ * day's cap by the phantom growth and shrinking it on approach.
+ * The dead rules are removed; the manager owns the growth now.
+ *
+ * The day's world card stands inside the stage, docked at its
+ * bottom edge above the doors: at Day Approach it rises naming the
+ * day; at Living Day it stands open with the day's scheduled things;
+ * at Immersive Day the Day Details sheet itself has opened over it.
+ * ———————————————————————————————————————————————————————————————— */
+html.living-time-sphere-page .sphere-day-world-card {
+  position: absolute;
+  left: 50%;
+  bottom: 0.7rem;
+  /* Above the stage's own label layer and pills (which top out
+   * near z-index 20): at Living Day the card is the stage's
+   * focused content and must not be painted through. Still far
+   * below the rooms sheet and its backdrop (5999+). */
+  z-index: 900;
+  width: max-content;
+  max-width: min(92%, 21rem);
+  padding: 0.6rem 0.85rem 0.7rem;
+  border: 1px solid rgba(103, 232, 249, 0.45);
+  border-radius: 0.9rem;
+  background: rgba(8, 16, 24, 0.88);
+  color: #eef7ff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 12px);
+  transition:
+    opacity 380ms ease,
+    transform 380ms ease,
+    visibility 0s linear 380ms;
+}
+
+html.living-time-sphere-page .sphere-day-world-card[data-stage="approach"],
+html.living-time-sphere-page .sphere-day-world-card[data-stage="living"],
+html.living-time-sphere-page .sphere-day-world-card[data-stage="immersive"] {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+  transition:
+    opacity 380ms ease,
+    transform 380ms ease,
+    visibility 0s;
+}
+
+/* At Day Approach the card names the day; its contents unfold at
+ * Living Day. */
+html.living-time-sphere-page .sphere-day-world-card[data-stage="approach"] .sphere-day-world-list,
+html.living-time-sphere-page .sphere-day-world-card[data-stage="approach"] .sphere-day-world-empty {
+  display: none;
+}
+
+html.living-time-sphere-page .sphere-day-world-kicker {
+  margin: 0 0 0.15rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #67e8f9;
+}
+
+html.living-time-sphere-page .sphere-day-world-date {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+html.living-time-sphere-page .sphere-day-world-coords {
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: rgba(238, 247, 255, 0.82);
+}
+
+html.living-time-sphere-page .sphere-day-world-list {
+  margin: 0.45rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.28rem;
+}
+
+html.living-time-sphere-page .sphere-day-world-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  font-size: 0.86rem;
+  line-height: 1.3;
+}
+
+html.living-time-sphere-page .sphere-day-world-item.is-completed {
+  opacity: 0.62;
+}
+
+html.living-time-sphere-page .sphere-day-world-item.is-completed .sphere-day-world-name {
+  text-decoration: line-through;
+}
+
+html.living-time-sphere-page .sphere-day-world-glyph {
+  flex: 0 0 auto;
+  min-width: 1.1em;
+  text-align: center;
+  color: #67e8f9;
+}
+
+html.living-time-sphere-page .sphere-day-world-time {
+  margin-left: auto;
+  font-size: 0.74rem;
+  color: rgba(238, 247, 255, 0.7);
+}
+
+html.living-time-sphere-page .sphere-day-world-empty {
+  margin: 0.45rem 0 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: rgba(238, 247, 255, 0.78);
+}
+
+/* On phone widths the stage's own Today pill stands at the
+ * bottom-left; the card lifts clear of that row so neither covers
+ * the other's words (seen overlapping in the deep-fix lab pass). */
+@media (max-width: 720px) {
+  html.living-time-sphere-page .sphere-day-world-card {
+    bottom: 3.4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.living-time-sphere-page .sphere-semantic-label,
+  html.living-time-sphere-page .sphere-day-world-card {
+    transition: none;
   }
 }

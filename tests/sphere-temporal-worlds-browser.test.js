@@ -143,8 +143,8 @@ class Cdp {
 
 test("Temporal Worlds: entry, the years line, and pattern lighting on the real page", { timeout: 480000 }, async (t) => {
   const chromium = findChromium();
-  if (!chromium) {
-    t.skip("No Chromium available (set CHROMIUM_PATH)");
+  if (!chromium || typeof WebSocket !== "function") {
+    t.skip("A local Chromium binary and Node WebSocket support are required");
     return;
   }
   const { server, port } = await startServer();
@@ -539,6 +539,14 @@ test("Temporal Worlds: entry, the years line, and pattern lighting on the real p
   } finally {
     proc.kill("SIGKILL");
     server.close();
-    fs.rmSync(profile, { recursive: true, force: true });
+    // Chrome's child processes can keep writing into the profile for a few
+    // seconds after the browser process dies; poll-remove until they let go.
+    // Cleanup is best-effort: a leftover temp profile on an ephemeral runner
+    // must not fail a test whose assertions all passed.
+    await new Promise((resolve) => { proc.once("exit", resolve); setTimeout(resolve, 3000); });
+    for (let attempt = 0; attempt < 24; attempt += 1) {
+      try { fs.rmSync(profile, { recursive: true, force: true }); break; }
+      catch { await new Promise((resolve) => setTimeout(resolve, 500)); }
+    }
   }
 });

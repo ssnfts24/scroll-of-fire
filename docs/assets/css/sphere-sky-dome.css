@@ -1,0 +1,95 @@
+/* The Sky on the Sphere — the dome (Phase C sky layer).
+ * Seated in the Sphere's caption deck beside the sky line.
+ * Colours follow the caption's own furniture: ivory words,
+ * gold for the Sun's family, on the instrument's deep blue. */
+
+.sphere-sky-dome {
+  margin: 0.65rem auto 0;
+  max-width: 340px;
+  text-align: center;
+}
+
+.sphere-sky-dome[hidden] {
+  display: none;
+}
+
+.sphere-sky-dome-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.sphere-sky-dome-title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #ffd98f;
+  text-align: left;
+}
+
+.sphere-sky-dome-standings {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.sphere-sky-standing-btn {
+  appearance: none;
+  border: 1px solid rgba(255, 217, 143, 0.4);
+  background: rgba(16, 26, 51, 0.6);
+  color: #e8e2d0;
+  border-radius: 999px;
+  padding: 0.18rem 0.65rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.sphere-sky-standing-btn[aria-pressed="true"] {
+  background: #ffd98f;
+  color: #101a33;
+  border-color: #ffd98f;
+  font-weight: 600;
+}
+
+.sphere-sky-dome-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.sphere-sky-cardinal {
+  fill: #e8e2d0;
+  font-size: 11px;
+  font-weight: 600;
+  text-anchor: middle;
+}
+
+.sphere-sky-star-label {
+  fill: #cfd9ee;
+  font-size: 8.5px;
+  text-anchor: middle;
+}
+
+.sphere-sky-planet-label {
+  fill: #ffd98f;
+  font-size: 9px;
+  font-weight: 600;
+  text-anchor: middle;
+}
+
+.sphere-sky-dome-line {
+  margin: 0.3rem 0 0;
+  font-size: 0.84rem;
+  line-height: 1.4;
+  color: #e8e2d0;
+  text-align: left;
+}
+
+.sphere-sky-dome-note {
+  margin: 0.45rem 0 0;
+  font-size: 0.74rem;
+  line-height: 1.4;
+  color: rgba(232, 226, 208, 0.62);
+  text-align: left;
+}

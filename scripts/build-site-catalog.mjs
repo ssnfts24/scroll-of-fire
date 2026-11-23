@@ -272,6 +272,15 @@ function frontDoorBlock() {
       <ul class="front-door-paths">
 ${curation.frontDoor.map(f => `        <li><a class="front-door-card" href="${esc(hrefOf(f.target))}"><strong>${esc(f.label)}</strong><span>${esc(f.description)}</span></a></li>`).join("\n")}
       </ul>
+      <div class="front-door-sorting" aria-labelledby="front-door-sorting-title">
+        <h3 id="front-door-sorting-title">Three ways in, by what you came for</h3>
+        <ul class="front-door-paths">
+          <li><a class="front-door-card" href="living-time-sphere.html"><strong>Curious</strong><span>Start with the Sphere itself — the calendar turning, and the sky over your own place tonight.</span></a></li>
+          <li><a class="front-door-card" href="garden.html"><strong>Gardening</strong><span>The Pattern Garden: real planting dates for your county. The Moon opens the bed; the farm record sets the dates.</span></a></li>
+          <li><a class="front-door-card" href="companions.html"><strong>With children</strong><span>Meet the Spark first, on a grown-up's device — then keep one day together in the garden. Nothing a child types ever leaves the device.</span></a></li>
+        </ul>
+        <p class="front-door-note">The farm record covers Western Washington's 39 counties so far. If your ground is elsewhere, the door says so plainly — and <a href="living-time-sphere.html">your sky</a> still works tonight, wherever you are.</p>
+      </div>
       <div class="front-door-grid">
         <section aria-labelledby="front-door-recent">
           <h3 id="front-door-recent">Recent additions</h3>
@@ -289,8 +298,19 @@ ${featured.map(e => `            <li><a href="${esc(publicHref(e))}">${esc(e.tit
           </ul>
         </section>
       </details>
+      <div class="front-door-promises" aria-labelledby="front-door-promises-title">
+        <h3 id="front-door-promises-title">What this door promises</h3>
+        <ul class="front-door-promise-list">
+          <li>Free.</li>
+          <li>No ads.</li>
+          <li>No account needed to begin.</li>
+          <li>Your record lives on your device, and it is yours.</li>
+        </ul>
+        <p class="front-door-note">Every line here is checkable against the site as it stands today. If a line ever stops being true, it comes off the door.</p>
+      </div>
       <p class="front-door-actions"><a class="btn primary" href="codex-atlas.html">Open the full Codex Atlas</a> <a class="btn" href="scroll/">Enter the Scroll Library</a></p>
       <p class="atlas-note">Saved witness records, readings and settings live only in this browser. They do not synchronize between devices.</p>
+      <p class="front-door-thread">Not ready to step in? <a href="https://www.facebook.com/aaron.laird.75" rel="noopener">Follow the daily shares</a> — a kept day in plain words, day by day. No account, no list, nothing asked of you; follow it or drop it in one tap.</p>
     </section>`;
 }
 

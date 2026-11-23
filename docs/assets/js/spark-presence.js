@@ -259,7 +259,8 @@
     face.className = "spark-panel-face";
     face.innerHTML = Core.renderSVG(companion, {
       stage: data.stageIndex,
-      revealed: Core.revealsFor({ record, companion }).revealed
+      revealed: Core.revealsFor({ record, companion }).revealed,
+      wrap: Core.wrapFor(record)
     });
     container.appendChild(face);
     const row = (label, value) => {
@@ -420,7 +421,7 @@
       `<div class="spark-panel-grid" role="group" aria-label="Your Spark's options"></div>` +
       `</div></div>` +
       `<button type="button" class="spark-presence-button" aria-expanded="false">` +
-      `<span class="spark-presence-art">${Core.renderSVG(companion, { stage: stage.index, revealed: Core.revealsFor({ record, companion }).revealed })}</span>` +
+      `<span class="spark-presence-art">${Core.renderSVG(companion, { stage: stage.index, revealed: Core.revealsFor({ record, companion }).revealed, wrap: Core.wrapFor(record) })}</span>` +
       `<span class="spark-presence-name"></span></button>`;
     host.querySelector(".spark-presence-button").setAttribute(
       "aria-label",
@@ -1010,6 +1011,7 @@
           bubbleBtn("Resume", "↩", doResume),
           bubbleBtn("Record", "≡", () => doRecord()),
           bubbleBtn("Share", "↗", doShare),
+          bubbleBtn(Core.wrapFor(getRecord()) === 1 ? "Flame off" : "Flame on", "✧", doWrapToggle),
           bubbleBtn("Voice", "◉", doVoiceRoom, "spark-presence-voice"),
           bubbleBtn("Walk", "→", doBye),
           backBtn()
@@ -1166,7 +1168,7 @@
         art.classList.remove("has-3d");
         ctrl = null;
       }
-      art.innerHTML = Core.renderSVG(companion, { stage: stage.index, revealed: revealedNow() });
+      art.innerHTML = Core.renderSVG(companion, { stage: stage.index, revealed: revealedNow(), wrap: Core.wrapFor(getRecord()) });
       if (window.Spark3D) {
         const grownSize = companion.shape
           ? companion.shape.size * (1 + stage.index * 0.07)
@@ -1174,7 +1176,8 @@
         ctrl = window.Spark3D.mount(art, companion, {
           stage: stage.index,
           px: Math.round(48 * grownSize),
-          revealed: revealedNow()
+          revealed: revealedNow(),
+          wrap: Core.wrapFor(getRecord())
         });
         if (ctrl) art.classList.add("has-3d");
       }
@@ -1790,6 +1793,30 @@
      * born from, and today. The keeper downloads the picture
      * and posts it wherever they choose; nothing is uploaded,
      * nothing is posted for them. */
+    /* The flame wrap, by the keeper's hand: lift it off, and
+     * the Spark stands exactly as it was born — the wrap is an
+     * outer layer, and removing it changes nothing underneath.
+     * Wrap it on again, and the same flame returns, drawn from
+     * the same seed. The choice is kept in the record, and every
+     * drawing of the Spark on the page honours it at once. */
+    function doWrapToggle() {
+      const next = Core.wrapFor(getRecord()) === 1 ? 0 : 1;
+      setRecord(Core.withWrap(getRecord(), next));
+      const walkerArt = host.querySelector(".spark-presence-art");
+      if (walkerArt) {
+        walkerArt.innerHTML = Core.renderSVG(companion, {
+          stage: stage.index,
+          revealed: revealedNow(),
+          wrap: next
+        });
+      }
+      redrawArt();
+      showMore(
+        next === 1
+          ? `The flame is wrapped on again — the same flame, from the same seed.`
+          : `The flame is lifted off. ${displayName} stands as ${displayName} was born.`
+      );
+    }
     function doShare() {
       answerInBody();
       const card = Core.shareCardFor({ record: getRecord(), companion, today });
@@ -1838,7 +1865,7 @@
         a.href = canvas.toDataURL("image/png");
         a.click();
       };
-      const svg = Core.renderSVG(companion, { stage: stage.index, revealed: revealedNow() }).replace(
+      const svg = Core.renderSVG(companion, { stage: stage.index, revealed: revealedNow(), wrap: Core.wrapFor(getRecord()) }).replace(
         "<svg ",
         '<svg xmlns="http://www.w3.org/2000/svg" width="460" height="460" '
       );
@@ -1887,7 +1914,8 @@
       ctrl = window.Spark3D.mount(art, companion, {
         stage: stage.index,
         px: Math.round(48 * grownSize),
-        revealed: revealedNow()
+        revealed: revealedNow(),
+        wrap: Core.wrapFor(getRecord())
       });
       if (ctrl) art.classList.add("has-3d");
     }
@@ -3254,7 +3282,7 @@
     host.innerHTML =
       `<div class="spark-encounter" role="dialog" aria-label="Meet your Spark" data-gait="${gait}">` +
       `<button type="button" class="spark-encounter-artbtn" aria-label="Say hello to ${companion.name}">` +
-      `<span class="spark-encounter-art">${Core.renderSVG(companion, { stage: 0 })}</span></button>` +
+      `<span class="spark-encounter-art">${Core.renderSVG(companion, { stage: 0, flameTier: "simple" })}</span></button>` +
       `<div class="spark-encounter-words">` +
       `<p class="spark-encounter-greet"></p>` +
       `<p class="spark-encounter-intro"></p>` +
@@ -3362,7 +3390,7 @@
       "aria-label",
       `A Spark is waiting to meet you — ${companion.name}. Tap to say hello.`
     );
-    button.innerHTML = `<span class="spark-ember-art">${Core.renderSVG(companion, { stage: 0 })}</span>`;
+    button.innerHTML = `<span class="spark-ember-art">${Core.renderSVG(companion, { stage: 0, flameTier: "glyph" })}</span>`;
     button.addEventListener("click", () => {
       host.remove();
       renderEncounter(companion, seed, today);

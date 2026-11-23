@@ -258,6 +258,23 @@ html.sphere-frozen .sphere-instrument-shell * {
   padding: 0.9rem;
 }
 .sphere-play-game h3 { margin: 0 0 0.4rem; font-size: 1.05rem; }
+.sphere-play-quest {
+  border: 1px solid rgba(218, 164, 91, 0.45);
+  border-radius: 14px;
+  padding: 0.9rem;
+  margin-top: 0.8rem;
+  background: rgba(218, 164, 91, 0.06);
+}
+.sphere-play-quest-offer { margin: 0 0 0.3rem; font-weight: 600; }
+.sphere-play-quest-question { margin: 0 0 0.4rem; font-size: 1.02rem; }
+.sphere-play-quest-line { color: var(--rebuild-muted); line-height: 1.45; margin: 0.3rem 0 0.6rem; }
+.sphere-play-quest-predictions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.4rem 0; }
+.sphere-play-quest-predictions:empty { display: none; }
+.sphere-play-quest-guess-on { border-color: rgba(218, 164, 91, 0.9); background: rgba(218, 164, 91, 0.18); }
+.sphere-play-quest-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.sphere-play-quest-cards { margin-top: 0.9rem; }
+.sphere-play-quest-cards h3 { margin: 0 0 0.4rem; font-size: 1.02rem; }
+.sphere-play-quest-cards ul { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.35rem; color: var(--rebuild-muted); line-height: 1.45; }
 .sphere-play-status { min-height: 3.2em; color: var(--rebuild-muted); line-height: 1.45; }
 .sphere-play-teach { color: var(--rebuild-text); line-height: 1.45; margin: 0 0 0.6rem; font-size: 0.94rem; }
 .sphere-play-pad { color: #fff7e8; font-weight: 800; font-size: 1rem; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8); }
