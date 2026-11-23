@@ -566,6 +566,152 @@ await scenario("H (reduced motion)", async (track) => {
   check("reduced motion: the sheet opens with no transition", rm.open && (rm.dur === "0s" || rm.dur === "0s, 0s"), `duration=${rm.dur}`);
 });
 
+/* ── I. Faced moons (Sphere deep-fix, Nov 22, 2026) ──────────── */
+/* Aaron's report from his phone: facing Moon 13 dead centre, none
+ * of its day numbers appeared. The label layer's context window
+ * (the screen-X aperture, the far skeleton, the medium-band
+ * softening) was strangling the faced Moon itself. The fix exempts
+ * the disclosure-centre Moon from all three. This scenario faces
+ * every Moon in turn — using the product's own facing convention
+ * (renderer focusPatternDay, B7.28: theta = PI - A) — and asserts
+ * all 28 of its day numbers stand shown at Moon View distance.
+ * Waits are condition-based with generous timeouts: the lab's
+ * SwiftShader frame rate is slow, and a label pass needs frames. */
+await scenario("I (faced moons — deep-fix)", async (track) => {
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+  track(ctx);
+  const { page, errors } = await loadSphere(ctx);
+  const shownCount = (moon) => {
+    let shown = 0;
+    for (const el of document.querySelectorAll(".sphere-semantic-label")) {
+      const t = el._semanticTarget;
+      if (!t || t.kind !== "pattern-day-number" || Number(t.moon) !== moon) continue;
+      if (el.style.display !== "none" && Number(el.style.opacity || 0) > 0.3) shown++;
+    }
+    return shown;
+  };
+  // Poll for the count to reach 28 and HOLD across two reads 3s
+  // apart: on the lab's starved frame rate the label passes land
+  // seconds apart and a single transient read proves little. The
+  // keeper's standard is that the numbers stand.
+  const reachAndHold = async (moon) => {
+    const deadline = Date.now() + 150000;
+    let held = 0;
+    while (Date.now() < deadline) {
+      const n = await page.evaluate(shownCount, moon).catch(() => 0);
+      held = n === 28 ? held + 1 : 0;
+      if (held >= 2) return true;
+      await page.waitForTimeout(3000);
+    }
+    return false;
+  };
+  for (let m = 1; m <= 13; m++) {
+    await page.evaluate((moon) => {
+      const G = globalThis.LivingTimeSphereCalendarGeometry;
+      // Face the sector CENTRE — the middle of the 4×7 grid the
+      // keeper sees (the first/last day angles averaged the short
+      // way around). Facing a column angle instead measures the
+      // sector's edge, half a sector off centre.
+      const start = G.calendarCell((moon - 1) * 28 + 1).angle;
+      const end = G.calendarCell(moon * 28).angle;
+      const span = ((end - start + 540) % 360) - 180;
+      const midDeg = start + span / 2;
+      const cam = globalThis.LivingTimeSphereCamera;
+      cam.stopDrift?.();
+      cam.setState({ theta: Math.PI - (midDeg * Math.PI) / 180, phi: 0.78, dist: 2.55 });
+    }, m);
+    const ok = await reachAndHold(m);
+    const finalCount = await page.evaluate(shownCount, m).catch(() => -1);
+    check(`facing Moon ${m} at Moon View distance shows all 28 day numbers`, ok, `saw ${finalCount}`);
+    if (m === 13) await page.screenshot({ path: path.join(SHOTS, "phone-moon13-faced.png") });
+  }
+  check("no page errors during the faced-moon sweep", errors.length === 0, errors.slice(0, 2).join(" | "));
+});
+
+/* ── J. Zoom stages (Sphere deep-fix, Nov 22, 2026) ──────────── */
+/* Groundwork under the Living Sphere Evolution directive: as the
+ * keeper zooms toward the selected day, the approach is staged —
+ * Day Approach (the day's world card rises naming the day), Living
+ * Day (the card stands open with the day's scheduled things, from
+ * the same one planner record), Immersive Day (the Day Details
+ * door itself opens; zooming back out folds it away). Stage waits
+ * are condition-based: the day-zoom module polls the camera
+ * distance and names the stage on #sphere-container. */
+await scenario("J (zoom stages — deep-fix)", async (track) => {
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+  track(ctx);
+  const { page, errors } = await loadSphere(ctx, { seedSpark: true });
+  const stage = () => page.evaluate(() => document.getElementById("sphere-container")?.dataset.zoomStage || null);
+  const setDist = (dist) => page.evaluate((d) => globalThis.LivingTimeSphereCamera.setState({ dist: d }), dist);
+  const waitStage = (want) => page.waitForFunction((w) => document.getElementById("sphere-container")?.dataset.zoomStage === w, want, { timeout: 30000, polling: 500 }).then(() => true).catch(() => false);
+
+  // Schedule a real thing through the Spark — the same one
+  // planner record the face marks and the panel read. The day is
+  // Moon 10 Day 10 (Pattern Day 262): still ahead in the current
+  // pattern year, so the Spark's roll-to-next-standing rule keeps
+  // it in the same pattern year the cursor is showing (a passed
+  // day would roll a full year forward, correctly, and the view
+  // would not meet it there).
+  await page.click("[data-sphere-rebuild-spark]");
+  await page.waitForFunction(() => !!document.querySelector("#sphere-spark-talk-input"), null, { timeout: 20000 }).catch(() => {});
+  await page.fill("#sphere-spark-talk-input", "schedule Water the tomatoes on Moon 10 Day 10");
+  await page.click(".sphere-spark-talk-send");
+  await page.waitForFunction(() => (document.querySelector(".sphere-spark-talk-log")?.textContent || "").includes("Moon 10 · Day 10"), null, { timeout: 20000 }).catch(() => {});
+  await page.keyboard.press("Escape");
+  await page.waitForTimeout(500);
+  // The day-zoom view follows the canonical cursor (measured:
+  // cursor.setPatternDay moves the panel; the UI's own selectDay
+  // is a separate selection state and does not). Drive the
+  // cursor itself, once it exists — its loader phase lands when
+  // the main thread gives it a quiet window, seconds on a phone,
+  // potentially much longer in this lab.
+  const cursorCame = await page.waitForFunction(() => !!globalThis.SOFTemporalCursor, null, { timeout: 300000, polling: 2000 }).then(() => true).catch(() => false);
+  check("the canonical cursor stands on the page", cursorCame);
+  await page.evaluate(() => globalThis.SOFTemporalCursor.setPatternDay(262, { source: "interaction-test" }));
+  const viewReady = await page.waitForFunction(() => (document.getElementById("sphere-day-zoom-coords")?.textContent || "").includes("Pattern Day 262"), null, { timeout: 180000, polling: 2000 }).then(() => true).catch(() => false);
+  check("the day-zoom view takes up the selected day (Moon 10 · Day 10)", viewReady);
+
+  check("at rest the stage stands at Year View", (await stage()) === "year" || (await stage()) === "moon", `stage=${await stage()}`);
+  await setDist(1.9);
+  check("Day Approach: the world card rises as the keeper closes in", await waitStage("approach"));
+  // Card contents are read condition-first: on this lab's frame
+  // rate the card's element can be re-seated between reads, so
+  // wait for the words themselves rather than reading once.
+  const cardTextWhen = (pattern) => page.waitForFunction((re) => {
+    const card = document.getElementById("sphere-day-world-card");
+    return !!card && new RegExp(re, "i").test(card.innerText || "");
+  }, pattern, { timeout: 60000, polling: 1000 }).then(() => true).catch(() => false);
+  const approachOk = await cardTextWhen("Moon 10");
+  const approachText = await page.evaluate(() => document.getElementById("sphere-day-world-card")?.innerText || "");
+  check("Day Approach names the day (Moon 10 · Day 10)", approachOk && /Day 10/.test(approachText), approachText.replace(/\s+/g, " ").slice(0, 80));
+  await setDist(1.45);
+  // The stage may pass through Living Day inside one controller
+  // tick on a starved main thread; reaching Immersive also
+  // proves the deepening. Either landing counts.
+  const deepened = await page.waitForFunction(() => ["living", "immersive"].includes(document.getElementById("sphere-container")?.dataset.zoomStage || ""), null, { timeout: 30000, polling: 500 }).then(() => true).catch(() => false);
+  check("Living Day: the stage deepens at closest approach", deepened, `stage=${await stage()}`);
+  const livingOk = await cardTextWhen("tomatoes");
+  const livingText = await page.evaluate(() => document.getElementById("sphere-day-world-card")?.innerText || "");
+  check("Living Day lists the day's scheduled things from the one record", livingOk, livingText.replace(/\s+/g, " ").slice(0, 120));
+  await page.screenshot({ path: path.join(SHOTS, "phone-living-day-card.png") });
+  await setDist(1.15);
+  const immersive = await page.waitForFunction(() => document.documentElement.classList.contains("armillary-rooms-open"), null, { timeout: 30000, polling: 500 }).then(() => true).catch(() => false);
+  check("Immersive Day opens the Day Details door at closest zoom", immersive);
+  await setDist(2.6);
+  const folded = await page.waitForFunction(() => !document.documentElement.classList.contains("armillary-rooms-open"), null, { timeout: 30000, polling: 500 }).then(() => true).catch(() => false);
+  check("zooming back out folds the door away again", folded);
+  // An unscheduled day still shows its honest contents, never an
+  // empty box: select a bare day and deepen again.
+  await page.evaluate(() => globalThis.SOFTemporalCursor.setPatternDay(200, { source: "interaction-test" }));
+  await page.waitForFunction(() => (document.getElementById("sphere-day-zoom-coords")?.textContent || "").includes("Pattern Day 200"), null, { timeout: 120000, polling: 2000 }).catch(() => {});
+  await setDist(1.45);
+  await page.waitForFunction(() => ["living", "immersive"].includes(document.getElementById("sphere-container")?.dataset.zoomStage || ""), null, { timeout: 30000, polling: 500 }).catch(() => {});
+  const bareOk = await cardTextWhen("Pattern Day 200");
+  const bareText = await page.evaluate(() => document.getElementById("sphere-day-world-card")?.innerText || "");
+  check("an unscheduled day shows its coordinates and the honest empty line", bareOk && /No Life Atlas records/.test(bareText), bareText.replace(/\s+/g, " ").slice(0, 120));
+  check("no page errors during the zoom stages", errors.length === 0, errors.slice(0, 2).join(" | "));
+});
+
 await browser.close();
 server.close();
 const failed = results.filter((r) => !r.ok);
