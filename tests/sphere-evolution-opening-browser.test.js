@@ -195,6 +195,12 @@ test("Evolution Opening: first visit walks the four stages, then never traps", a
   assert.equal(welcome.film?.audioStarted, false, "no AudioContext exists before a first touch");
   assert.equal(welcome.soundCue, true, "the invitation to the sound stands in the scene");
 
+  // The seen flag is earned by this first painted beat —
+  // before any close, before any step. A load that never
+  // paints would leave the visitor unmarked.
+  assert.equal(await evaluate(`localStorage.getItem("sof.sphere.evolutionOpening.v2")`), "1",
+    "the seen flag stands from the first painted beat, not from the close");
+
   // The film advances on its own timing — no click — into the
   // calendars.
   await waitFor(async () => evaluate(
@@ -284,7 +290,7 @@ test("Evolution Opening: first visit walks the four stages, then never traps", a
   await waitFor(async () => evaluate(
     `!document.querySelector("[data-evolution-opening]")`
   ), 15000, "the opening to close");
-  const seen = await evaluate(`localStorage.getItem("sof.sphere.evolutionOpening.v1")`);
+  const seen = await evaluate(`localStorage.getItem("sof.sphere.evolutionOpening.v2")`);
   assert.equal(seen, "1");
 
   // Second visit: no auto-opening — and the replay door stands.
@@ -311,7 +317,7 @@ test("Evolution Opening: first visit walks the four stages, then never traps", a
   await waitFor(async () => evaluate(
     `!document.querySelector("[data-evolution-opening]")`
   ), 15000, "skip to close the replay");
-  assert.equal(await evaluate(`localStorage.getItem("sof.sphere.evolutionOpening.v1")`), "1",
+  assert.equal(await evaluate(`localStorage.getItem("sof.sphere.evolutionOpening.v2")`), "1",
     "the seen flag stands after a skipped replay");
 });
 

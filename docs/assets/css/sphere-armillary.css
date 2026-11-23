@@ -92,10 +92,15 @@ html.living-time-sphere-page .sphere-rebuild-caption {
 html.living-time-sphere-page .sphere-rebuild-caption .sphere-ambient-line {
   font-size: 0.95rem;
   line-height: 1.35;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  /* Caption clearance (visual sweep, Nov 23, 2026): this line
+   * used to be clamped to two lines, but inside the caption —
+   * whose right padding makes room for the More button — the
+   * sentence needs three lines at phone widths and four at
+   * 320px, so the clamp cut it mid-word in every frame
+   * ("Tap a…"). The clamp is gone: the line wraps whole, and
+   * the caption deck stands a little taller for it. */
+  display: block;
+  overflow: visible;
 }
 
 /* The adopted telemetry strip, restyled as a plain line of the

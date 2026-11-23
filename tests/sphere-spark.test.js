@@ -100,6 +100,21 @@ test("the reset is real: the companion layer no longer builds a Spark presence",
   assert.ok(presence.includes("sphere-spark-orbit"), "the fresh orbit stands in the new layer");
 });
 
+test("the Spark never rests in the corner: first frame at build, a chosen station when frozen", () => {
+  const src = read("docs/assets/js/sphere-spark.js");
+  // Aaron's report (Nov 23, 2026): the Spark sat still at the
+  // face's edge. The holder's stylesheet default is the stage's
+  // top-left corner, and the frozen gate only returned early —
+  // so a gated loop left the Spark in the corner, or frozen at
+  // an arbitrary orbit point. Now the first frame is written
+  // at build, and a frozen Sphere parks the Spark at the same
+  // resting station the reduced-motion Spark keeps.
+  assert.ok(src.includes("orbit(performance.now());"), "first frame written at build");
+  assert.ok(src.includes("const stationSpark = () => {"), "the orbit path carries the station");
+  assert.ok(src.includes('holder.dataset.parked = "frozen"'), "the frozen park is marked on the holder");
+  assert.ok(src.includes("delete holder.dataset.parked"), "the park clears when the Sphere wakes");
+});
+
 test("pronoun rule: no she/her for the Spark in the new files", () => {
   for (const rel of ["docs/assets/js/sphere-spark.js", "docs/assets/js/sphere-rebuild.js", "docs/assets/js/sphere-play.js"]) {
     const src = read(rel);

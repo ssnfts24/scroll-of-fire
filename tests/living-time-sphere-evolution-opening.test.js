@@ -118,7 +118,7 @@ test("source guards: the opening presents, and only presents", () => {
   // The demonstration is labelled on its face.
   assert.match(source, /A short demonstration/);
   // First-visit flag + the replay door's name.
-  assert.match(source, /sof\.sphere\.evolutionOpening\.v1/);
+  assert.match(source, /sof\.sphere\.evolutionOpening\.v2/);
   assert.match(source, /See how it grew/);
   // The one public control it may press, at the visitor's tap.
   assert.match(source, /data-sgb="today"/);
@@ -176,88 +176,91 @@ function filmWindows() {
   return windows;
 }
 
-test("the score is tuned at A=432, in D, and stands inside the film", () => {
+test("the sound is one cinematic swell at the root — the composed score is gone", () => {
   assert.equal(opening.freqFor(69), 432, "A4 is 432 Hz");
-  assert.equal(opening.freqFor(opening.SCORE_ROOT_MIDI), 288.33, "the root is D4 at A=432");
-  const events = opening.buildScoreEvents();
-  assert.ok(events.length > 30, "the score is a real plan, not a stub");
+  assert.equal(opening.freqFor(opening.SWELL_ROOT_MIDI), 72.08, "the root is D2 at A=432");
+  // Aaron's direction replaced the score outright: no event
+  // plan, no scheduler, no five-voice palette remains.
+  assert.equal(typeof opening.buildScoreEvents, "undefined");
+  assert.doesNotMatch(source, /buildScoreEvents|startScoreScheduler|playVoice/);
+  const swell = opening.buildCinematicSwell();
+  assert.equal(swell.voice, "swell", "there is exactly one sound, and it is the swell");
+  assert.equal(swell.midi, opening.SWELL_ROOT_MIDI);
+  assert.equal(swell.freq, opening.freqFor(opening.SWELL_ROOT_MIDI));
+  assert.equal(swell.at, 0, "the swell belongs to the film's first moment");
   const total = opening.FILM_TOTAL_MS / 1000;
-  for (let i = 0; i < events.length; i++) {
-    const ev = events[i];
-    assert.ok(ev.at >= 0 && ev.at < total, `event at ${ev.at}s starts inside the film`);
-    assert.ok(ev.at + ev.dur <= total + 1, `event at ${ev.at}s rings out within a breath of the film's end`);
-    if (i > 0) assert.ok(events[i - 1].at <= ev.at, "events stand in time order");
-    assert.ok(["cello", "bowl", "drum", "pluck", "flute"].includes(ev.voice),
-      "the palette is the re-score brief's five voices");
-    if (ev.midi != null) assert.equal(ev.freq, opening.freqFor(ev.midi));
-  }
+  assert.ok(swell.at + swell.dur < total,
+    "the swell settles inside the film — the Spark's beat stands in quiet");
 });
 
-test("the Count: drum counts, the NAME figure stated, thirteen counted plucks", () => {
-  const [start, end] = filmWindows().calendars;
-  const events = opening.buildScoreEvents();
-  const inWindow = (voice) => events.filter((e) => e.voice === voice && e.at >= start && e.at < end);
-  assert.equal(inWindow("drum").length, 4, "four frame-drum counts");
-  const figure = inWindow("pluck").filter((e) => e.at < start + 5.4).map((e) => e.midi);
-  assert.deepEqual(figure, [62, 66, 69, 66, 62],
-    "root → third → fifth → third → root, stated");
-  const counted = inWindow("pluck").filter((e) => e.at >= start + 5.4);
-  assert.equal(counted.length, 13, "thirteen counted plucks — the moons");
-  for (let i = 1; i < counted.length; i++) {
-    assert.ok(counted[i].midi > counted[i - 1].midi, "the count climbs the scale");
-  }
-});
-
-test("the figure trails unfinished over the first Sphere, and completes at the reveal", () => {
-  const events = opening.buildScoreEvents();
-  const plucksIn = (id) => {
-    const [start, end] = filmWindows()[id];
-    return events.filter((e) => e.voice === "pluck" && e.at >= start && e.at < end).map((e) => e.midi);
-  };
-  assert.deepEqual(plucksIn("first-sphere"), [62, 66, 69],
-    "root → third → fifth, and no way back — left unfinished");
-  assert.deepEqual(plucksIn("sphere-now"), [62, 66, 69, 74, 69, 66, 62],
-    "the figure completes as the scrim lifts");
-});
-
-test("the Call sounds as the Spark appears — the Whistle's contour at A=432", () => {
-  const [start, end] = filmWindows().spark;
-  const call = opening.buildScoreEvents()
-    .filter((e) => e.voice === "flute" && e.at >= start && e.at < end);
-  assert.deepEqual(call.map((e) => e.midi), [86, 91, 88, 86], "D6 → G6 → E6 → D6");
-  const expected = [1153.3, 1539.47, 1294.54, 1153.3];
-  call.forEach((e, i) => {
-    assert.ok(Math.abs(e.freq - expected[i]) < 0.5,
-      `the Call's ${i + 1}th note stands at ${expected[i]} Hz (got ${e.freq})`);
-  });
+test("the swell rises slowly, holds its depth, and settles as the scrim lifts", () => {
+  const swell = opening.buildCinematicSwell();
+  const env = swell.envelope;
+  assert.deepEqual(env[0], [0, 0], "it begins in silence");
+  assert.deepEqual(env[env.length - 1], [swell.dur, 0], "it ends in silence");
+  const peak = env.reduce((a, b) => (b[1] > a[1] ? b : a));
+  assert.equal(peak[1], 1, "the swell reaches full depth once");
+  assert.ok(peak[0] >= 5, `the rise is slow — full depth at ${peak[0]}s, not a stab`);
+  // The reveal (sphere-now) begins while the swell is in its
+  // falling segment: sounding as the scrim lifts, settling
+  // across it, gone before the Spark's beat.
+  const [revealStart] = filmWindows()["sphere-now"];
+  const falling = env.filter(([t], i) => i > 0 && env[i - 1][0] < revealStart && t > revealStart);
+  assert.ok(falling.length >= 1, "an envelope segment falls across the reveal");
+  assert.ok(swell.dur > revealStart && swell.dur < filmWindows().spark[0],
+    "the settle completes between the reveal and the Spark");
 });
 
 test("the sound rule is pinned in the source: one door to sound, opened only by a gesture", () => {
   // The AudioContext is constructed in exactly one place —
-  // inside armScore — and armScore is reached only from a
+  // inside armSound — and armSound is reached only from a
   // gesture: the door tap that opens a replay, or the first
   // touch/keypress listener armed while the film plays.
-  const armStart = source.indexOf("function armScore");
+  const armStart = source.indexOf("function armSound");
   const armEnd = source.indexOf("function onFirstGesture");
-  assert.ok(armStart > 0 && armEnd > armStart, "armScore stands in the source");
+  assert.ok(armStart > 0 && armEnd > armStart, "armSound stands in the source");
   const armBody = source.slice(armStart, armEnd);
-  assert.match(armBody, /new AC\(\)/, "the context is built inside armScore");
+  assert.match(armBody, /new AC\(\)/, "the context is built inside armSound");
   assert.equal((source.match(/new AC\(\)/g) || []).length, 1,
     "no other construction of an AudioContext anywhere in the module");
   assert.match(source, /addEventListener\("pointerdown", onFirstGesture, true\)/);
   assert.match(source, /addEventListener\("keydown", onFirstGesture, true\)/);
-  assert.match(source, /if \(source === "door"\) armScore\(\);/,
-    "a replay's own tap arms its score from the first beat");
+  assert.match(source, /if \(source === "door"\) armSound\(\);/,
+    "a replay's own tap arms its sound from the first beat");
+  // The swell starts only from the arm: startSwell is called
+  // in exactly one place, inside armSound.
+  assert.equal((source.match(/startSwell\(\)/g) || []).length, 2,
+    "the definition and its one call in armSound");
   // The film starts silent: nothing in the boot path arms the
-  // score, and the invitation stands in the scene until a touch.
+  // sound, and the invitation stands in the scene until a touch.
   assert.match(source, /touch anywhere to let it in/);
   const bootBody = source.slice(source.indexOf("function boot()"));
-  assert.doesNotMatch(bootBody, /armScore/);
+  assert.doesNotMatch(bootBody, /armSound/);
 });
 
-test("played or skipped, the seen flag is set on every close — the autoplay never returns", () => {
+test("the seen flag is earned by the first painted beat — never by a close alone", () => {
+  // The film keeps its own flag: v1 recorded the staged
+  // click-through that stood here before the film existed,
+  // and a visitor who closed that walk was robbed of the
+  // film. 
+  assert.equal(opening.SEEN_KEY, "sof.sphere.evolutionOpening.v2");
+  // The flag is written in exactly one place — inside
+  // markSeenOnceRendered, behind a requestAnimationFrame, so
+  // it stands only once a first beat has actually painted.
+  assert.equal((source.match(/storeSet\(SEEN_KEY, "1"\)/g) || []).length, 1,
+    "the flag is written in exactly one place");
+  const markStart = source.indexOf("function markSeenOnceRendered");
+  const markEnd = source.indexOf("function openOpening");
+  assert.ok(markStart > 0 && markEnd > markStart, "markSeenOnceRendered stands in the source");
+  const markBody = source.slice(markStart, markEnd);
+  assert.match(markBody, /requestAnimationFrame/);
+  assert.match(markBody, /storeSet\(SEEN_KEY, "1"\)/);
+  assert.match(markBody, /sessionSet\(SESSION_KEY, "1"\)/,
+    "the session flag is earned at the same painted moment");
+  // A close stops the film and fades the sound; it does not
+  // itself mark the visitor — a botched load stays unmarked.
   const closeBody = source.slice(source.indexOf("function closeOpening"));
-  assert.match(closeBody, /storeSet\(SEEN_KEY, "1"\)/);
+  assert.doesNotMatch(closeBody, /storeSet\(SEEN_KEY/);
   assert.match(closeBody, /stopFilm\(\)/);
-  assert.match(closeBody, /stopScore\(\)/);
+  assert.match(closeBody, /stopSound\(\)/);
 });
