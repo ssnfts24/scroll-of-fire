@@ -465,6 +465,15 @@
       // numeral. These are display/identity fields only; they never own math.
       moonDay: Number.isFinite(Number(target.moonDay)) ? Number(target.moonDay) : null,
       dayOfPatternYear: Number.isFinite(Number(target.dayOfPatternYear)) ? Number(target.dayOfPatternYear) : null,
+      // Visibility pass (Nov 22, 2026) — the same dropped-field bug
+      // B7.8 fixed for moonDay: the renderer has always carried
+      // calendarFace (and now today) on the day targets, but this
+      // normalizer dropped both, so the entire calendar-face style
+      // stack keyed on [data-calendar-face="true"] never matched and
+      // the day numerals fell back to the quiet-rail engraving.
+      // Display/identity fields only; they never own math.
+      calendarFace: target.calendarFace === true,
+      today: target.today === true,
       quietRail: target.quietRail === true,
       gateDay: target.gateDay === true,
       intercalary: target.intercalary === true,
@@ -919,6 +928,17 @@
       const placedRects = [];
       const candidates = [];
 
+      // Visibility pass (Nov 22, 2026) — mirror the semantic band
+      // onto the label layer itself, so the calendar-face plates
+      // can size to the band's grid pitch (the stylesheet keys
+      // plate size on this attribute). Written only on change.
+      if (_semanticContainer) {
+        const bandKey = String(semanticBand || "medium").toLowerCase();
+        if (_semanticContainer.dataset.band !== bandKey) {
+          _semanticContainer.dataset.band = bandKey;
+        }
+      }
+
       /*
        * Semantic cards should orbit the instrument rather than carpet its
        * central inspection zone. Selected/pinned targets can still fall back
@@ -1164,6 +1184,10 @@
               })),
               {
                 mode: "fit",
+                // Visibility pass: a real breathing gap (4px, not
+                // the engine's 2px floor) so resolved names read as
+                // separate pills instead of a touching crowd.
+                pad: 4,
                 blocked: blockedRects,
                 bounds: {
                   minX: offsetX + STAGE_PADDING,
@@ -2255,6 +2279,8 @@
         el.classList.toggle("is-selected", target.selected);
         el.classList.toggle("is-interactive", target.interactive);
         el.dataset.semanticKind = target.kind;
+        if (target.calendarFace) el.dataset.calendarFace = "true"; else delete el.dataset.calendarFace;
+        if (target.today) el.dataset.today = "true"; else delete el.dataset.today;
         if (target.quietRail) el.dataset.quietRail = "true"; else delete el.dataset.quietRail;
         if (target.gateDay) el.dataset.gateDay = "true"; else delete el.dataset.gateDay;
         if (target.intercalary) el.dataset.intercalary = "true"; else delete el.dataset.intercalary;
@@ -2268,6 +2294,10 @@
         if (target.workflow) el.dataset.planWorkflow = target.workflow; else delete el.dataset.planWorkflow;
         if (target.dayScheduleCount) el.dataset.scheduleCount = String(target.dayScheduleCount); else delete el.dataset.scheduleCount;
         if (target.dayScheduleCount) el.dataset.hasSchedule = "true"; else delete el.dataset.hasSchedule;
+        // Visibility pass: the count badge (the ::before cue in the
+        // calendar-face stack) rides only when a day holds more
+        // than one thing — one thing is the symbol's own statement.
+        if (target.dayScheduleCount > 1) el.dataset.scheduleMulti = "true"; else delete el.dataset.scheduleMulti;
         if (target.patternSignature) el.dataset.patternSignature = target.patternSignature;
         el.style.display = "";
         const w = el.offsetWidth || 132;

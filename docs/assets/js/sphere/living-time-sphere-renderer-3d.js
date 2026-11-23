@@ -2330,21 +2330,38 @@
   // semantic target reads; when the model carries no passage,
   // no tag is drawn — the face never invents a place.
   function _armillaryNameTag(text) {
-    const canvas = _armillaryCanvas(512, 112);
+    // Visibility pass (Nov 22, 2026) — the audit found these tags
+    // faint and clipped at the rim: 52px type with only a soft
+    // orange halo washed out against the bright face. The ink is
+    // now heavier (700 weight on a larger canvas), seated on a
+    // dark backing wash, and outlined dark so it holds against
+    // both the bright disc and the dark rim; the sprite stands
+    // about a third larger. Presentation only — the tags' places
+    // still come from the live marker positions at every sync.
+    const canvas = _armillaryCanvas(768, 168);
     const ctx = canvas?.getContext("2d");
     if (!ctx || !_THREE) return null;
-    ctx.clearRect(0, 0, 512, 112);
-    ctx.font = "600 52px Georgia, 'Times New Roman', serif";
+    ctx.clearRect(0, 0, 768, 168);
+    const backing = ctx.createLinearGradient(0, 24, 0, 144);
+    backing.addColorStop(0, "rgba(14,8,2,0)");
+    backing.addColorStop(0.5, "rgba(14,8,2,0.44)");
+    backing.addColorStop(1, "rgba(14,8,2,0)");
+    ctx.fillStyle = backing;
+    ctx.fillRect(24, 24, 720, 120);
+    ctx.font = "700 66px Georgia, 'Times New Roman', serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.shadowColor = "rgba(255,157,60,0.9)";
-    ctx.shadowBlur = 12;
-    ctx.fillStyle = "#ffd98f";
-    ctx.fillText(text, 256, 58, 480);
+    ctx.shadowColor = "rgba(255,157,60,0.95)";
+    ctx.shadowBlur = 18;
+    ctx.lineWidth = 10;
+    ctx.strokeStyle = "rgba(26,13,2,0.88)";
+    ctx.strokeText(text, 384, 86, 712);
+    ctx.fillStyle = "#ffe1a3";
+    ctx.fillText(text, 384, 86, 712);
     const texture = new _THREE.CanvasTexture(canvas);
     const material = new _THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false });
     const sprite = new _THREE.Sprite(material);
-    sprite.scale.set(0.34, 0.074, 1);
+    sprite.scale.set(0.47, 0.103, 1);
     sprite.name = "armillaryNameTag";
     return sprite;
   }
@@ -2375,7 +2392,7 @@
     const orbit = camPos ? camPos.length() : 0;
     const place = (sprite, pos) => {
       if (!sprite || !pos) { if (sprite) sprite.visible = false; return; }
-      sprite.position.set(pos.x, (pos.y || 0) + 0.045, pos.z);
+      sprite.position.set(pos.x, (pos.y || 0) + 0.065, pos.z);
       // Near-side only: a marker farther than the orbit's heart
       // is on the far side of the instrument; its name rests.
       sprite.visible = !camPos || Math.hypot(pos.x - camPos.x, pos.z - camPos.z) < orbit + 0.25;
@@ -2995,7 +3012,12 @@
           scheduledRecordIds: plannerSummary.recordIds || [],
           gateDay,
           pinned: isSelectedDay,
-          selected: isSelectedDay
+          selected: isSelectedDay,
+          // Visibility pass (Nov 22, 2026) — presentation identity
+          // only, like the priority beside it (98 for today): the
+          // label layer reads this to give today's plate its gold
+          // ring. It moves no geometry and owns no calendar math.
+          today: isTodayDay
         });
       }
     }

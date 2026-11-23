@@ -244,7 +244,12 @@ test("polish: the days stand stronger — ticks, nodes, markers, numerals", () =
   assert.ok(renderer.includes("size:        _isMobileWidth() ? 0.032 : 0.026,"), "the day nodes stand larger");
   assert.ok(renderer.includes("new THREE.SphereGeometry(0.03, 8, 8)"), "today's marker stands larger");
   assert.ok(renderer.includes("new THREE.SphereGeometry(0.034, 8, 8)"), "the shown day's marker stands larger");
-  assert.ok(shellCss.includes('font-size: 0.66rem !important;'), "phone day numerals are no longer 8px");
+  // Visibility pass (Nov 22, 2026): the day numerals moved to the
+  // band-sized holographic plates — 0.68rem at Moon View, 0.52rem
+  // in the far band, 0.74rem near/detail. Every band stays above
+  // the old 8px engraving this line first pinned against.
+  assert.ok(shellCss.includes('font-size: 0.68rem !important;'), "phone day numerals are no longer 8px");
+  assert.ok(shellCss.includes('font-size: 0.52rem !important;'), "the far band keeps its numerals above 8px too");
 });
 
 test("polish: the environment is asked for once, on open, through the browser's own flow", () => {
