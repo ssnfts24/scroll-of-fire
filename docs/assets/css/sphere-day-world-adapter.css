@@ -1,0 +1,245 @@
+/*
+ * Living Time Sphere — Day World Adapter (Phase B vertical slice).
+ *
+ * The adapter's own sheet: the orientation chip that rides the
+ * stage's top-left margin from Day Approach down, and the compact
+ * inspector (phone bottom sheet, desktop right rail). Loaded by the
+ * companion layer alongside the adapter module — the sphere page's
+ * protected stylesheet is not touched.
+ */
+
+.dw-chip {
+  position: absolute;
+  top: max(0.6rem, env(safe-area-inset-top));
+  left: 0.6rem;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  max-width: min(26rem, calc(100% - 1.2rem));
+  padding: 0.45rem 0.6rem;
+  border: 1px solid rgba(218, 164, 91, 0.38);
+  border-radius: 12px;
+  background: rgba(12, 8, 5, 0.82);
+  color: #f2ead8;
+  backdrop-filter: blur(6px);
+  pointer-events: none;
+}
+
+.dw-chip[hidden] {
+  display: none;
+}
+
+.dw-chip-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.dw-chip-title {
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.dw-chip-line {
+  font-size: 0.72rem;
+  color: rgba(242, 234, 216, 0.78);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dw-chip-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  pointer-events: auto;
+}
+
+.dw-chip-btn {
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid rgba(218, 164, 91, 0.45);
+  border-radius: 9px;
+  background: rgba(58, 44, 28, 0.9);
+  color: #f2ead8;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.dw-chip-btn:active {
+  background: rgba(176, 141, 79, 0.55);
+}
+
+.dw-chip-back {
+  font-size: 0.74rem;
+  white-space: nowrap;
+}
+
+/* ── Inspector ─────────────────────────────────────────────── */
+
+.dw-inspector {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5900;
+  box-sizing: border-box;
+  max-height: 38dvh;
+  overflow-y: auto;
+  padding: 0.7rem 0.9rem calc(0.8rem + env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(218, 164, 91, 0.45);
+  border-radius: 16px 16px 0 0;
+  background: rgba(16, 11, 6, 0.97);
+  color: #f2ead8;
+  box-shadow: 0 -12px 32px rgba(0, 0, 0, 0.45);
+}
+
+.dw-inspector[hidden] {
+  display: none;
+}
+
+.dw-ins-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.dw-ins-kind {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #d8a45b;
+}
+
+.dw-ins-close {
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+  border: 1px solid rgba(218, 164, 91, 0.4);
+  border-radius: 9px;
+  background: transparent;
+  color: #f2ead8;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.dw-ins-title {
+  margin: 0.25rem 0 0.3rem;
+  font-size: 1.02rem;
+  line-height: 1.3;
+}
+
+.dw-ins-line {
+  margin: 0 0 0.25rem;
+  font-size: 0.86rem;
+}
+
+.dw-ins-sub {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  color: rgba(242, 234, 216, 0.75);
+}
+
+.dw-ins-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.5rem;
+}
+
+.dw-ins-list:empty {
+  display: none;
+}
+
+.dw-ins-row {
+  padding: 0.55rem 0.7rem;
+  border: 1px solid rgba(218, 164, 91, 0.3);
+  border-radius: 10px;
+  background: rgba(58, 44, 28, 0.55);
+  color: #f2ead8;
+  font-size: 0.85rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.dw-ins-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.dw-ins-actions:empty {
+  display: none;
+}
+
+.dw-ins-btn {
+  min-height: 2.5rem;
+  padding: 0.5rem 0.85rem;
+  border: 1px solid rgba(218, 164, 91, 0.5);
+  border-radius: 10px;
+  background: rgba(58, 44, 28, 0.9);
+  color: #f2ead8;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.dw-ins-btn:active {
+  background: rgba(176, 141, 79, 0.55);
+}
+
+.dw-ins-btn-danger {
+  border-color: rgba(217, 111, 78, 0.65);
+  color: #f0b49f;
+}
+
+/* Desktop: the inspector becomes a right rail; the world stays
+ * visible to its left. */
+@media (min-width: 900px) {
+  .dw-inspector {
+    left: auto;
+    top: 50%;
+    bottom: auto;
+    transform: translateY(-50%);
+    width: min(24rem, 40vw);
+    max-height: 82dvh;
+    border: 1px solid rgba(218, 164, 91, 0.45);
+    border-radius: 16px;
+    margin-right: 0.8rem;
+  }
+}
+
+/* Narrow stages: the chip stays in its left margin and wraps,
+ * clear of the page's own centred Play pill. */
+@media (max-width: 560px) {
+  .dw-chip {
+    max-width: 19.5rem;
+  }
+}
+
+/* On stages up to 900px the page's centred Play pill reaches into
+ * the chip's left margin at the stage's top edge and paints over
+ * the chip's title — measured on a 390px stage: the pill (top
+ * 0.5rem, 40px tall, centred) covered the middle of the title
+ * line. In that band the chip drops beneath the pill — the bar's
+ * offset, the pill's height, and a breathing gap — so the header
+ * always stands fully readable. Wider stages keep the top
+ * margin: there the pill's centre sits clear of the chip's reach. */
+@media (max-width: 900px) {
+  .dw-chip {
+    top: calc(0.5rem + 40px + 0.75rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dw-chip,
+  .dw-inspector {
+    transition: none;
+  }
+}
