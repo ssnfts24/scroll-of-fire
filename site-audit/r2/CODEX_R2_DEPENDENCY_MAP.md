@@ -98,33 +98,33 @@
 
 | Stylesheet | Pages |
 | --- | --- |
-| `docs/assets/css/spark-companion.css` | 179 |
-| `docs/assets/css/living-ui.css` | 139 |
+| `docs/assets/css/spark-companion.css` | 181 |
+| `docs/assets/css/living-ui.css` | 141 |
 | `docs/scripture/assets/scripture.css` | 93 |
-| `docs/assets/css/spark-agent-seat.css` | 76 |
-| `docs/assets/css/codex.css` | 53 |
-| `docs/assets/css/navigation.css` | 43 |
-| `docs/assets/css/social-bridge.css` | 40 |
-| `docs/assets/css/living-moon-theme.css` | 34 |
-| `docs/assets/css/animations.css` | 22 |
+| `docs/assets/css/spark-agent-seat.css` | 78 |
+| `docs/assets/css/codex.css` | 57 |
+| `docs/assets/css/navigation.css` | 45 |
+| `docs/assets/css/social-bridge.css` | 42 |
+| `docs/assets/css/living-moon-theme.css` | 36 |
+| `docs/assets/css/animations.css` | 24 |
 | `docs/assets/css/story-layer.css` | 19 |
 | `docs/theory/equations/assets/css/codex.css` | 19 |
 | `docs/theory/equations/assets/css/navigation.css` | 19 |
 
 | Script | Pages |
 | --- | --- |
-| `docs/assets/js/spark-companion.js` | 179 |
-| `docs/assets/js/spark-presence.js` | 178 |
-| `docs/assets/js/site.js` | 142 |
-| `docs/assets/js/living-ui.js` | 139 |
+| `docs/assets/js/spark-companion.js` | 181 |
+| `docs/assets/js/spark-presence.js` | 180 |
+| `docs/assets/js/site.js` | 144 |
+| `docs/assets/js/living-ui.js` | 141 |
 | `docs/scripture/assets/scripture.js` | 93 |
-| `docs/assets/js/spark-relations.js` | 82 |
-| `docs/assets/js/heaven-sound.js` | 78 |
-| `docs/assets/js/spark-agent-seat.js` | 76 |
-| `docs/assets/js/spark-3d.js` | 74 |
-| `docs/assets/js/calendar/pattern-calendar-version.js` | 43 |
-| `docs/assets/js/calendar/pattern-calendar-data.js` | 43 |
-| `docs/assets/js/calendar/pattern-calendar-format.js` | 43 |
+| `docs/assets/js/spark-relations.js` | 84 |
+| `docs/assets/js/heaven-sound.js` | 80 |
+| `docs/assets/js/spark-agent-seat.js` | 78 |
+| `docs/assets/js/spark-3d.js` | 76 |
+| `docs/assets/js/calendar/pattern-calendar-version.js` | 45 |
+| `docs/assets/js/calendar/pattern-calendar-data.js` | 45 |
+| `docs/assets/js/calendar/pattern-calendar-format.js` | 45 |
 
 ## Protected systems (do not modify)
 
