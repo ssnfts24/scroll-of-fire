@@ -412,6 +412,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/css/sphere-test-layers.css",
+      "sha256": "caeea5c56d9268fe43ca6328b40e84fa556e9658e9d846d7c98604341647fc0e",
+      "publicUrl": "https://codexofreality.org/assets/css/sphere-test-layers.css",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/css/story-layer.css",
       "sha256": "bc270101bb1ed5b5217182c3ca49dc7d81304b38ca5638a869cbb636c008845d",
       "publicUrl": "https://codexofreality.org/assets/css/story-layer.css",
@@ -491,7 +497,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "4f215801cf026a5f46a51068c8ad1cb461f334c8279a3515421083b8dbc6aaf3",
+      "sha256": "32e50da422971ff456f12d5ccf2feee9e694bcd89c3319d97ff03345a336afad",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -535,6 +541,18 @@
       "path": "docs/assets/data/moons.json",
       "sha256": "de0b252842cb196b6bae13ca8221d430ceb6f94aa220af594f8d22574b2d44c3",
       "publicUrl": "https://codexofreality.org/assets/data/moons.json",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/data/sphere-test-kyoto-blossom.json",
+      "sha256": "2580f2105246964370f960391535ffeed0ed71fe1d09e0bd2b52572dc3c58594",
+      "publicUrl": "https://codexofreality.org/assets/data/sphere-test-kyoto-blossom.json",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/data/sphere-test-salmon-bonneville.json",
+      "sha256": "a7e39755965daf2e7ec7a5b148c24771ba3b1df356c6ea891878cc659ce3fcc9",
+      "publicUrl": "https://codexofreality.org/assets/data/sphere-test-salmon-bonneville.json",
       "status": "operational"
     },
     {
@@ -2531,7 +2549,7 @@
     },
     {
       "path": "docs/assets/js/sphere-companion-layer.js",
-      "sha256": "86de514fcd77410fd952fd13f8fc0ccb5d8aa7be9b9b8af84529e4239c570ae9",
+      "sha256": "d1283ecc6ffe17ec50a16b60a8af4d72d6e09df8ceb5b6c221b4095dbe415375",
       "publicUrl": "https://codexofreality.org/assets/js/sphere-companion-layer.js",
       "status": "operational"
     },
@@ -2599,6 +2617,12 @@
       "path": "docs/assets/js/sphere-spark.js",
       "sha256": "a4c24e8522b7b4c056200823641a08fb2c2b7ca4ff658b3e2370db7c92f9568c",
       "publicUrl": "https://codexofreality.org/assets/js/sphere-spark.js",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/js/sphere-test-layers.js",
+      "sha256": "cdda2974739dfd37f9f695289f77cab590642f2f9c7eec5aeb7b9697e3215c49",
+      "publicUrl": "https://codexofreality.org/assets/js/sphere-test-layers.js",
       "status": "operational"
     },
     {
@@ -11084,6 +11108,12 @@
     {
       "path": "docs/development/LIVING-SPHERE-EVOLUTION-PHASE-C-SKY-ENGINE.md",
       "publicUrl": "https://codexofreality.org/development/LIVING-SPHERE-EVOLUTION-PHASE-C-SKY-ENGINE.md",
+      "eligibility": "restricted-review",
+      "reason": "Engineering report or specification under the publish tree"
+    },
+    {
+      "path": "docs/development/LIVING-SPHERE-EVOLUTION-PHASE-C-TEST-LAYERS-SALMON-KYOTO.md",
+      "publicUrl": "https://codexofreality.org/development/LIVING-SPHERE-EVOLUTION-PHASE-C-TEST-LAYERS-SALMON-KYOTO.md",
       "eligibility": "restricted-review",
       "reason": "Engineering report or specification under the publish tree"
     },

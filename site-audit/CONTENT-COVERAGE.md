@@ -112,7 +112,7 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 ## Repository and deployed-content coverage
 
 - Public HTML pages inspected: **183**.
-- Total master-inventory records: **485**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
+- Total master-inventory records: **486**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
 - Public-facing catalog entries: **75**; only explicitly curated entries appear on the Atlas.
 - Numbered archive folders are inventoried file-by-file, while downloads snapshot differences are kept separate from historical integrity data.
 - Root files not already published through the archive or explicitly approved remain classified as development-only; no such file is automatically linked from the public catalog.
@@ -128,7 +128,7 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 
 ## Current resource-type counts
 
-- Deployed Markdown documents: 63
+- Deployed Markdown documents: 64
 - HTML pages: 183
 - Numbered archive file: 141
 - Numbered archive folder: 7

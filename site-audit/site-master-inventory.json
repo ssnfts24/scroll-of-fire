@@ -3,7 +3,7 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 485,
+    "resources": 486,
     "publicHtmlPages": 183,
     "catalogEntries": 75,
     "issueCounts": {
@@ -11,7 +11,7 @@
       "nav-label-differs-from-title": 24,
       "reachable-only-through-atlas": 1,
       "no-global-navigation": 1,
-      "deployed-but-unlinked": 62,
+      "deployed-but-unlinked": 63,
       "unreachable-from-homepage": 4,
       "compatibility-redirect-page": 1,
       "not-published-in-catalog": 30,
@@ -800,7 +800,7 @@
     },
     {
       "id": "docs-assets:assets/css",
-      "title": "docs/assets/css (74 files)",
+      "title": "docs/assets/css (75 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -817,7 +817,7 @@
     },
     {
       "id": "docs-assets:assets/data",
-      "title": "docs/assets/data (9 files)",
+      "title": "docs/assets/data (11 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -885,7 +885,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (220 files)",
+      "title": "docs/assets/js (221 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -2033,6 +2033,25 @@
       "relatedProjects": [],
       "sourcePath": "docs/development/LIVING-SPHERE-EVOLUTION-PHASE-C-SKY-ENGINE.md",
       "publicUrl": "https://codexofreality.org/development/LIVING-SPHERE-EVOLUTION-PHASE-C-SKY-ENGINE.md",
+      "publicationStatus": "source-only",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "development-only-deployed-publicly",
+      "discoverability": null,
+      "issues": [
+        "deployed-but-unlinked"
+      ]
+    },
+    {
+      "id": "docs:development/LIVING-SPHERE-EVOLUTION-PHASE-C-TEST-LAYERS-SALMON-KYOTO.md",
+      "title": "development/LIVING-SPHERE-EVOLUTION-PHASE-C-TEST-LAYERS-SALMON-KYOTO.md",
+      "description": "Markdown document deployed inside docs/ and therefore publicly fetchable, but not linked from the site.",
+      "category": "Development document",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/development/LIVING-SPHERE-EVOLUTION-PHASE-C-TEST-LAYERS-SALMON-KYOTO.md",
+      "publicUrl": "https://codexofreality.org/development/LIVING-SPHERE-EVOLUTION-PHASE-C-TEST-LAYERS-SALMON-KYOTO.md",
       "publicationStatus": "source-only",
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [],
@@ -14052,7 +14071,7 @@
     },
     {
       "id": "repo-folder:scripts",
-      "title": "scripts/ (34 files)",
+      "title": "scripts/ (36 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -14120,7 +14139,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (211 files)",
+      "title": "tests/ (212 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
