@@ -1954,25 +1954,40 @@
   }
 
   function makeTextSprite(THREE, lines) {
+    // The year's plaque (visual sweep, Nov 23, 2026): the numeral
+    // used to float bare on the wireframe — the shell's own lines
+    // showed through the glyphs and the word beneath was too small
+    // to read at phone size. The label now stands on a small dark
+    // plaque in the day world's own material language (the dw-chip's
+    // near-black ground, a thin brass edge), the year is larger,
+    // and the word beneath it is drawn at a size a phone can read.
     const canvas = document.createElement("canvas");
-    canvas.width = 320;
-    canvas.height = 112;
+    canvas.width = 384;
+    canvas.height = 152;
     const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, 320, 112);
+    ctx.clearRect(0, 0, 384, 152);
+    const plaque = { x: 10, y: 10, w: 364, h: 132, r: 26 };
+    ctx.beginPath();
+    ctx.roundRect(plaque.x, plaque.y, plaque.w, plaque.h, plaque.r);
+    ctx.fillStyle = "rgba(12, 8, 5, 0.85)";
+    ctx.fill();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "rgba(218, 164, 91, 0.55)";
+    ctx.stroke();
     ctx.textAlign = "center";
-    ctx.fillStyle = "rgba(242, 234, 216, 0.96)";
-    ctx.font = "600 52px Georgia, serif";
-    ctx.fillText(lines[0] || "", 160, 54);
+    ctx.fillStyle = "rgba(242, 234, 216, 0.98)";
+    ctx.font = "600 62px Georgia, serif";
+    ctx.fillText(lines[0] || "", 192, lines[1] ? 68 : 92);
     if (lines[1]) {
-      ctx.fillStyle = "rgba(216, 164, 91, 0.95)";
-      ctx.font = "26px Georgia, serif";
-      ctx.fillText(lines[1], 160, 94);
+      ctx.fillStyle = "rgba(230, 189, 123, 0.98)";
+      ctx.font = "32px Georgia, serif";
+      ctx.fillText(lines[1], 192, 116);
     }
     const texture = new THREE.CanvasTexture(canvas);
     const sprite = new THREE.Sprite(new THREE.SpriteMaterial({
       map: texture, transparent: true, depthWrite: false,
     }));
-    sprite.scale.set(0.62, 0.217, 1);
+    sprite.scale.set(0.74, 0.293, 1);
     return sprite;
   }
 

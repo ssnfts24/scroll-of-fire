@@ -92,10 +92,15 @@ html.living-time-sphere-page .sphere-rebuild-caption {
 html.living-time-sphere-page .sphere-rebuild-caption .sphere-ambient-line {
   font-size: 0.95rem;
   line-height: 1.35;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  /* Caption clearance (visual sweep, Nov 23, 2026): this line
+   * used to be clamped to two lines, but inside the caption —
+   * whose right padding makes room for the More button — the
+   * sentence needs three lines at phone widths and four at
+   * 320px, so the clamp cut it mid-word in every frame
+   * ("Tap a…"). The clamp is gone: the line wraps whole, and
+   * the caption deck stands a little taller for it. */
+  display: block;
+  overflow: visible;
 }
 
 /* The adopted telemetry strip, restyled as a plain line of the
@@ -421,8 +426,39 @@ html.living-time-sphere-page.armillary-rooms-open body:not(.sphere-app) .sphere-
   margin: 1rem;
 }
 
+/* Sheet clearance (visual sweep, Nov 23, 2026): the sheet's bar
+ * is two rows tall at phone widths — the title row and the
+ * back-to-the-Sphere row, 110px measured at 412px wide — and it
+ * is sticky. A room brought to the top of the sheet used to land
+ * with its heading UNDER the bar, the bar's second row striking
+ * through the room's first lines. Every room in the sheet now
+ * carries clearance for the whole bar plus a breathing gap, so
+ * however a room is brought into view — a dock door, a link, a
+ * focused control — it starts below its header, never through
+ * it. (The two older 4.5rem allowances below predate the bar's
+ * second row and are raised to match.) */
+.sphere-sidebar > *,
+.sphere-sidebar [data-sphere-spark-talk] {
+  scroll-margin-top: 7.75rem;
+}
+
 .sphere-more-tools {
-  scroll-margin-top: 4.5rem;
+  scroll-margin-top: 7.75rem;
+}
+
+/* At 320px the bar's links wrap and the bar stands 151px tall
+ * at rest — and taller for a moment while its fonts settle,
+ * which is when a room is usually scrolled into view (measured:
+ * a 10.5rem clearance still cost the Spark room's heading its
+ * top edge). The clearance grows past both heights, so the room
+ * starts below the whole bar either way. */
+@media (max-width: 480px) {
+  .sphere-sidebar > *,
+  .sphere-sidebar [data-sphere-spark-talk],
+  .sphere-more-tools,
+  .sphere-day-details {
+    scroll-margin-top: 12rem;
+  }
 }
 
 .sphere-more-actions {
@@ -461,7 +497,7 @@ html.living-time-sphere-page.armillary-rooms-open body:not(.sphere-app) .sphere-
 }
 
 .sphere-day-details {
-  scroll-margin-top: 4.5rem;
+  scroll-margin-top: 7.75rem;
 }
 
 .sphere-day-details > .sphere-day-readout {
