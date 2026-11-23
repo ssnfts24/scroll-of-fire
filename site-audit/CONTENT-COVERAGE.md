@@ -56,7 +56,7 @@ Practice tools, frequency systems and the Codex hub for building.
 - **Practices — the Exercises Wing** — Live; Short exercises for a human in the Training Grounds: breath, attention, seeing, memory, and intention. Each finished exercise seals a practice record in the visitor's own Life Atlas — the same record the garden reads as rain — on this device only.
 - **The Traveller's Map** — Live; The whole site drawn as the lands of one road: every place pictured by its cartoon scene, the Traveller's Road story in walking order with found chapters stamped by their Pattern day, the Year Thread showing today's place in the year and the keeper's trail, and the pages still waiting for their chapters named honestly.
 
-### Evidence and Research (23 catalog entries)
+### Evidence and Research (25 catalog entries)
 
 Theory chapters, the claim register and the editorial evidence edition.
 
@@ -83,6 +83,8 @@ Theory chapters, the claim register and the editorial evidence edition.
 - **Bibliography** — Live; Source architecture: project records, scientific and technical references.
 - **Ethics & Coherence Law** — Live; The living laws of the Codex: consent, non-harm, accountability and the stop rule.
 - **Historical timeline** — Live; Two dated records, kept separate: the publication dates of the sources cited in the claim register, each entry linking to its claim in the Evidence Edition, and the Codex's own growth record.
+- **Where Every Number Comes From** — Live; The receipt shelf for the Sphere: every dataset it shows, with its publisher, span, read date, and honest gaps.
+- **How the Sphere Knows — Methods** — Live; How the Sphere and the Pattern Calendar compute what they claim, in plain words — and the evidence labels the whole site uses, explained once.
 
 ### Artifacts and Creative Works (7 catalog entries)
 
@@ -109,9 +111,9 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 
 ## Repository and deployed-content coverage
 
-- Public HTML pages inspected: **181**.
-- Total master-inventory records: **480**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
-- Public-facing catalog entries: **73**; only explicitly curated entries appear on the Atlas.
+- Public HTML pages inspected: **183**.
+- Total master-inventory records: **482**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
+- Public-facing catalog entries: **75**; only explicitly curated entries appear on the Atlas.
 - Numbered archive folders are inventoried file-by-file, while downloads snapshot differences are kept separate from historical integrity data.
 - Root files not already published through the archive or explicitly approved remain classified as development-only; no such file is automatically linked from the public catalog.
 
@@ -127,7 +129,7 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 ## Current resource-type counts
 
 - Deployed Markdown documents: 60
-- HTML pages: 181
+- HTML pages: 183
 - Numbered archive file: 141
 - Numbered archive folder: 7
 - Repository folder: 10

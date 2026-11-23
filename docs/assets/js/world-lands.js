@@ -579,6 +579,18 @@
       "title": "Repository README",
       "path": "README.md",
       "reason": "The repository's own front door — a document about the work, not a room of the site."
+    },
+    {
+      "id": "provenance",
+      "title": "Where Every Number Comes From",
+      "path": "provenance.html",
+      "reason": "The Sphere's receipt shelf — a documentation page that names the sources behind the instrument's numbers. Record, not story country; flat by design."
+    },
+    {
+      "id": "methods",
+      "title": "How the Sphere Knows — Methods",
+      "path": "methods.html",
+      "reason": "The methods page — how the Sphere and the calendar compute, and the evidence labels explained once. Documentation; flat by design."
     }
   ]
 };

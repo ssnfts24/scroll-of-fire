@@ -1162,6 +1162,37 @@
     "manifest"
    ],
    "featured": false
+  },
+  {
+   "id": "provenance",
+   "title": "Where Every Number Comes From",
+   "description": "The receipt shelf for the Sphere: every dataset it shows, with its publisher, span, read date, and honest gaps.",
+   "area": "evidence",
+   "category": "Evidence",
+   "resourceType": "page",
+   "status": "live",
+   "path": "provenance.html",
+   "related": [
+    "methods",
+    "living-time-sphere",
+    "alignment-ledger"
+   ],
+   "featured": false
+  },
+  {
+   "id": "methods",
+   "title": "How the Sphere Knows — Methods",
+   "description": "How the Sphere and the Pattern Calendar compute what they claim, in plain words — and the evidence labels the whole site uses, explained once.",
+   "area": "evidence",
+   "category": "Evidence",
+   "resourceType": "page",
+   "status": "live",
+   "path": "methods.html",
+   "related": [
+    "provenance",
+    "living-time-sphere"
+   ],
+   "featured": false
   }
  ]
 }
