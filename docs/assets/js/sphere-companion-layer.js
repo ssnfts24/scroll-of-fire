@@ -644,6 +644,29 @@
     }
   })();
 
+  // ── The Sky on the Sphere (Phase C sky engine) ───────────────
+  // Aaron (Nov 23, 2026): "Get the stars and astronomy on there."
+  // The engine, the star catalog, and the dome load the same way
+  // as the farm: a stylesheet and scripts set on the page, in
+  // order, and nothing else in this layer changes. The dome reads
+  // the keeper's kept place and the cursor's selected day and
+  // computes everything on this device; it fetches nothing.
+  (() => {
+    if (document.querySelector("script[data-sphere-sky-layer]")) return;
+    const css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = "assets/css/sphere-sky-dome.css?v=20261123-1";
+    css.setAttribute("data-sphere-sky-layer", "");
+    document.head.appendChild(css);
+    for (const src of ["assets/js/astronomy/bright-stars.js?v=20261123-1", "assets/js/astronomy/sky-engine.js?v=20261123-1", "assets/js/sphere-sky-layer.js?v=20261123-1"]) {
+      const s = document.createElement("script");
+      s.src = src;
+      s.async = false;
+      s.setAttribute("data-sphere-sky-layer", "");
+      document.head.appendChild(s);
+    }
+  })();
+
   // ── The Spark's presence on this page was RESET (Nov 20, 2026) ──
   // Aaron's order: a full reset of the Spark layer, built fresh —
   // not patched. The orbit and bubble guide that stood here are
