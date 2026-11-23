@@ -34,6 +34,11 @@
           "id": "companions",
           "title": "Companions",
           "path": "companions.html"
+        },
+        {
+          "id": "aiyanas-world",
+          "title": "Aiyana's World",
+          "path": "aiyanas-world.html"
         }
       ]
     },
@@ -77,6 +82,11 @@
           "id": "whitepaper-13-moons",
           "title": "13 Moons Rollout Whitepaper",
           "path": "13-moon-whitepaper.html"
+        },
+        {
+          "id": "codex-white-paper",
+          "title": "The Codex of Reality and the Living Sphere — A White Paper",
+          "path": "codex-white-paper.html"
         },
         {
           "id": "alignment-ledger",
@@ -179,6 +189,11 @@
           "id": "scripture-library",
           "title": "Genesis & Exodus Scripture",
           "path": "scripture/index.html"
+        },
+        {
+          "id": "hebrew-word-studies",
+          "title": "Hebrew Word Studies",
+          "path": "scripture/word-studies/index.html"
         },
         {
           "id": "scroll-reader",
@@ -579,6 +594,18 @@
       "title": "Repository README",
       "path": "README.md",
       "reason": "The repository's own front door — a document about the work, not a room of the site."
+    },
+    {
+      "id": "provenance",
+      "title": "Where Every Number Comes From",
+      "path": "provenance.html",
+      "reason": "The Sphere's receipt shelf — a documentation page that names the sources behind the instrument's numbers. Record, not story country; flat by design."
+    },
+    {
+      "id": "methods",
+      "title": "How the Sphere Knows — Methods",
+      "path": "methods.html",
+      "reason": "The methods page — how the Sphere and the calendar compute, and the evidence labels explained once. Documentation; flat by design."
     }
   ]
 };

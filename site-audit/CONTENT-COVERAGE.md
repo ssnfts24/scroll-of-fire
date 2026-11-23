@@ -4,13 +4,14 @@ Generated from the shared catalog at base revision `548e858`. This report is dev
 
 ## Public discovery areas
 
-### Scroll and Scripture (13 catalog entries)
+### Scroll and Scripture (14 catalog entries)
 
 Read the Scroll, search its text, study Hebrew roots and follow Genesis 1–50.
 
 - **Start Here** — Live; A guided first doorway into the Codex, the 13 Moons calendar and the daily practice.
 - **Scroll Library** — Live; The Scroll of Fire Unsealed: reading edition, eight shelves, Genesis 1–50 and a link to every original line.
 - **Genesis & Exodus Scripture** — Live; A source-attributed Hebrew reader for Genesis 1–50 and Exodus 1–40, with word studies, morphology, lexical senses and separate interpretive layers.
+- **Hebrew Word Studies** — Live; Seven Hebrew key words given the full treatment — spelling, root, morphology, semantic range, biblical examples, wordplay, cognates, traditions labelled as traditions, and uncertainties printed rather than smoothed over.
 - **Scroll Reader** — Live; The long-form reader with chapter navigation, source-line provenance and deep links.
 - **Search the Scroll Library** — Live; Local full-text search across all 1,609 reader segments, with shelf filters and Hebrew normalisation.
 - **Hebrew Lexicon** — Live; 911 indexed Hebrew forms with occurrences, transliteration variants and clear separation of spelling, root and interpretation.
@@ -22,7 +23,7 @@ Read the Scroll, search its text, study Hebrew roots and follow Genesis 1–50.
 - **Genesis Restored** — Source only; Root-level restored Genesis text, published through the Downloads catalog.
 - **Exodus Restored** — Source only; Root-level restored Exodus text, published through the Downloads catalog.
 
-### Living Time and Observatory (7 catalog entries)
+### Living Time and Observatory (9 catalog entries)
 
 The Pattern Calendar, 13 Moons, Living Time Sphere and witnessed days.
 
@@ -30,9 +31,11 @@ The Pattern Calendar, 13 Moons, Living Time Sphere and witnessed days.
 - **13 Moons** — Live; The Remnant 13×28 living calendar.
 - **Alignment Ledger** — Live; Year-by-year record of moving astronomical gates against the fixed Pattern Calendar.
 - **Equinox Passage** — Live; Measures the moving March equinox against the fixed Pattern Calendar.
+- **The Codex of Reality and the Living Sphere — A White Paper** — Live; The whole work in one paper: the framework and its method, the 13 Moons, the Living Sphere and its layer programme, the Spark, and the Living Phone — as designed and as built, with the state of each part stated honestly.
 - **13 Moons Rollout Whitepaper** — Live; Phased rollout plan for the 13 Moons Living Time Observatory.
 - **Witness Ledger** — Live; Browser-local record of witnessed days and SHA-256 hashes. Entries stay on this device and do not sync.
 - **Companions** — Live; Meet a Spark: a small companion made for you on the day you adopt it, named by you, kept on your own device. It grows as you return, visit, and practice, and roams the site with you.
+- **Aiyana's World** — Live; Aiyana's own page in the Codex, designed by Aiyana herself: her sign and moving butterflies, a wall where visitors show their thinking and how they feel, a drawing pad — all kept only on the visitor's own device — and a story corner where additions wait for her yes before they can appear.
 
 ### Systems and Living Technology (17 catalog entries)
 
@@ -56,7 +59,7 @@ Practice tools, frequency systems and the Codex hub for building.
 - **Practices — the Exercises Wing** — Live; Short exercises for a human in the Training Grounds: breath, attention, seeing, memory, and intention. Each finished exercise seals a practice record in the visitor's own Life Atlas — the same record the garden reads as rain — on this device only.
 - **The Traveller's Map** — Live; The whole site drawn as the lands of one road: every place pictured by its cartoon scene, the Traveller's Road story in walking order with found chapters stamped by their Pattern day, the Year Thread showing today's place in the year and the keeper's trail, and the pages still waiting for their chapters named honestly.
 
-### Evidence and Research (23 catalog entries)
+### Evidence and Research (25 catalog entries)
 
 Theory chapters, the claim register and the editorial evidence edition.
 
@@ -83,6 +86,8 @@ Theory chapters, the claim register and the editorial evidence edition.
 - **Bibliography** — Live; Source architecture: project records, scientific and technical references.
 - **Ethics & Coherence Law** — Live; The living laws of the Codex: consent, non-harm, accountability and the stop rule.
 - **Historical timeline** — Live; Two dated records, kept separate: the publication dates of the sources cited in the claim register, each entry linking to its claim in the Evidence Edition, and the Codex's own growth record.
+- **Where Every Number Comes From** — Live; The receipt shelf for the Sphere: every dataset it shows, with its publisher, span, read date, and honest gaps.
+- **How the Sphere Knows — Methods** — Live; How the Sphere and the Pattern Calendar compute what they claim, in plain words — and the evidence labels the whole site uses, explained once.
 
 ### Artifacts and Creative Works (7 catalog entries)
 
@@ -109,9 +114,9 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 
 ## Repository and deployed-content coverage
 
-- Public HTML pages inspected: **181**.
-- Total master-inventory records: **482**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
-- Public-facing catalog entries: **73**; only explicitly curated entries appear on the Atlas.
+- Public HTML pages inspected: **193**.
+- Total master-inventory records: **496**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
+- Public-facing catalog entries: **78**; only explicitly curated entries appear on the Atlas.
 - Numbered archive folders are inventoried file-by-file, while downloads snapshot differences are kept separate from historical integrity data.
 - Root files not already published through the archive or explicitly approved remain classified as development-only; no such file is automatically linked from the public catalog.
 
@@ -126,8 +131,8 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 
 ## Current resource-type counts
 
-- Deployed Markdown documents: 62
-- HTML pages: 181
+- Deployed Markdown documents: 64
+- HTML pages: 193
 - Numbered archive file: 141
 - Numbered archive folder: 7
 - Repository folder: 10

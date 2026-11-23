@@ -65,6 +65,11 @@
      "area": "evidence"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -83,10 +88,15 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
    "outTotal": 4,
-   "inTotal": 11
+   "inTotal": 13
   },
   "404.html": {
    "title": "404 — Broken Gate",
@@ -299,6 +309,11 @@
      "area": "evidence"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -307,10 +322,55 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
    "outTotal": 12,
-   "inTotal": 7
+   "inTotal": 9
+  },
+  "aiyanas-world.html": {
+   "title": "Aiyana's World",
+   "area": "living-time",
+   "out": [
+    {
+     "path": "garden.html",
+     "title": "The Pattern Garden — the Garden · Remnant Lab",
+     "area": "systems"
+    },
+    {
+     "path": "companions.html",
+     "title": "Companions",
+     "area": "living-time"
+    },
+    {
+     "path": "map.html",
+     "title": "The Traveller's Map",
+     "area": "systems"
+    }
+   ],
+   "in": [
+    {
+     "path": "codex-atlas.html",
+     "title": "Codex Atlas",
+     "area": "archive"
+    },
+    {
+     "path": "companions.html",
+     "title": "Companions",
+     "area": "living-time"
+    },
+    {
+     "path": "map.html",
+     "title": "The Traveller's Map",
+     "area": "systems"
+    }
+   ],
+   "outTotal": 3,
+   "inTotal": 3
   },
   "alignment-ledger.html": {
    "title": "Alignment Ledger — The 13 Moons Remnant Living Time Observatory",
@@ -463,6 +523,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -476,10 +541,15 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
    "outTotal": 30,
-   "inTotal": 8
+   "inTotal": 10
   },
   "claims-atlas.html": {
    "title": "Documentation Hub",
@@ -561,6 +631,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "scroll/reader.html",
      "title": "Reading the Scroll — Unsealed Library",
      "area": "scroll-scripture"
@@ -584,11 +659,6 @@
      "path": "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
      "title": "Scroll of Fire · Codex of Reality · Remnant Whitepaper",
      "area": "scroll-scripture"
-    },
-    {
-     "path": "theory.html",
-     "title": "Theory Hub",
-     "area": "evidence"
     }
    ],
    "in": [
@@ -623,6 +693,11 @@
      "area": "evidence"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -646,10 +721,15 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
-   "outTotal": 64,
-   "inTotal": 11
+   "outTotal": 69,
+   "inTotal": 13
   },
   "codex-guide.html": {
    "title": "The Guide — Ask the Record",
@@ -691,6 +771,20 @@
    "outTotal": 3,
    "inTotal": 3
   },
+  "codex-white-paper.html": {
+   "title": "The Codex of Reality and the Living Sphere — A White Paper",
+   "area": "living-time",
+   "out": [],
+   "in": [
+    {
+     "path": "codex-atlas.html",
+     "title": "Codex Atlas",
+     "area": "archive"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 1
+  },
   "companions.html": {
    "title": "Companions",
    "area": "living-time",
@@ -699,9 +793,19 @@
      "path": "moons.html",
      "title": "Remnant 13 Moons — Living Calendar",
      "area": "living-time"
+    },
+    {
+     "path": "aiyanas-world.html",
+     "title": "Aiyana's World",
+     "area": "living-time"
     }
    ],
    "in": [
+    {
+     "path": "aiyanas-world.html",
+     "title": "Aiyana's World",
+     "area": "living-time"
+    },
     {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
@@ -718,8 +822,8 @@
      "area": "systems"
     }
    ],
-   "outTotal": 1,
-   "inTotal": 3
+   "outTotal": 2,
+   "inTotal": 4
   },
   "covenant-caravan.html": {
    "title": "The Covenant Caravan",
@@ -788,6 +892,11 @@
      "area": "evidence"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -806,10 +915,15 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
    "outTotal": 4,
-   "inTotal": 12
+   "inTotal": 14
   },
   "downloads.html": {
    "title": "Downloads & Integrity",
@@ -868,6 +982,11 @@
      "area": "evidence"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -881,10 +1000,15 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
    "outTotal": 3,
-   "inTotal": 10
+   "inTotal": 12
   },
   "equinox-passage.html": {
    "title": "Equinox Passage — The 13 Moons Remnant Living Time Observatory",
@@ -1038,6 +1162,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -1074,7 +1203,7 @@
     }
    ],
    "outTotal": 29,
-   "inTotal": 13
+   "inTotal": 15
   },
   "garden.html": {
    "title": "The Pattern Garden — the Garden · Remnant Lab",
@@ -1103,6 +1232,11 @@
    ],
    "in": [
     {
+     "path": "aiyanas-world.html",
+     "title": "Aiyana's World",
+     "area": "living-time"
+    },
+    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
@@ -1129,7 +1263,7 @@
     }
    ],
    "outTotal": 4,
-   "inTotal": 5
+   "inTotal": 6
   },
   "genesis-oracle.html": {
    "title": "The Genesis Oracle — Seal of Becoming",
@@ -1188,6 +1322,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "living-time-sphere.html",
      "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
      "area": "living-time"
@@ -1214,7 +1353,7 @@
     }
    ],
    "outTotal": 2,
-   "inTotal": 13
+   "inTotal": 15
   },
   "glossary.html": {
    "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
@@ -1323,6 +1462,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -1341,10 +1485,15 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
    "outTotal": 14,
-   "inTotal": 10
+   "inTotal": 12
   },
   "glyphs.html": {
    "title": "Voice-Glyph Synth",
@@ -1573,6 +1722,11 @@
      "area": "evidence"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -1599,7 +1753,7 @@
     }
    ],
    "outTotal": 11,
-   "inTotal": 13
+   "inTotal": 15
   },
   "index.html": {
    "title": "Codex of Reality",
@@ -1733,6 +1887,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -1746,10 +1905,15 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
    "outTotal": 1,
-   "inTotal": 9
+   "inTotal": 11
   },
   "lab.html": {
    "title": "Remnant Lab",
@@ -1843,6 +2007,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -1863,13 +2032,18 @@
      "area": "systems"
     },
     {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
+    },
+    {
      "path": "ledger.html",
      "title": "Witness Ledger",
      "area": "living-time"
     }
    ],
    "outTotal": 11,
-   "inTotal": 11
+   "inTotal": 13
   },
   "ledger.html": {
    "title": "Witness Ledger",
@@ -1928,6 +2102,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "invoke.html",
      "title": "Invocation Lab",
      "area": "systems"
@@ -1946,15 +2125,10 @@
      "path": "practices.html",
      "title": "Practices — the Exercises Wing · Remnant Lab",
      "area": "systems"
-    },
-    {
-     "path": "moons.html",
-     "title": "Remnant 13 Moons — Living Calendar",
-     "area": "living-time"
     }
    ],
    "outTotal": 1,
-   "inTotal": 23
+   "inTotal": 25
   },
   "living-time-sphere.html": {
    "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
@@ -2013,6 +2187,11 @@
      "area": "living-time"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "moons.html",
      "title": "Remnant 13 Moons — Living Calendar",
      "area": "living-time"
@@ -2038,13 +2217,18 @@
      "area": "artifacts"
     },
     {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
+    },
+    {
      "path": "witness.html",
      "title": "Witness",
      "area": "artifacts"
     }
    ],
    "outTotal": 5,
-   "inTotal": 11
+   "inTotal": 13
   },
   "map.html": {
    "title": "The Traveller's Map",
@@ -2059,6 +2243,101 @@
      "path": "companions.html",
      "title": "Companions",
      "area": "living-time"
+    },
+    {
+     "path": "aiyanas-world.html",
+     "title": "Aiyana's World",
+     "area": "living-time"
+    }
+   ],
+   "in": [
+    {
+     "path": "aiyanas-world.html",
+     "title": "Aiyana's World",
+     "area": "living-time"
+    },
+    {
+     "path": "codex-atlas.html",
+     "title": "Codex Atlas",
+     "area": "archive"
+    }
+   ],
+   "outTotal": 3,
+   "inTotal": 2
+  },
+  "methods.html": {
+   "title": "How the Sphere Knows — Methods",
+   "area": "evidence",
+   "out": [
+    {
+     "path": "codex-atlas.html",
+     "title": "Codex Atlas",
+     "area": "archive"
+    },
+    {
+     "path": "moons.html",
+     "title": "Remnant 13 Moons — Living Calendar",
+     "area": "living-time"
+    },
+    {
+     "path": "ledger.html",
+     "title": "Witness Ledger",
+     "area": "living-time"
+    },
+    {
+     "path": "hub.html",
+     "title": "Systems Hub",
+     "area": "systems"
+    },
+    {
+     "path": "scroll/search.html",
+     "title": "Search the Scroll",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scroll/lexicon.html",
+     "title": "Hebrew lexicon",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scroll/atlas.html",
+     "title": "Reference atlas",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scroll/editorial.html",
+     "title": "Editorial reading and evidence",
+     "area": "evidence"
+    },
+    {
+     "path": "theory.html",
+     "title": "Theory Hub",
+     "area": "evidence"
+    },
+    {
+     "path": "theory/canon.html",
+     "title": "Canon 0–17",
+     "area": "evidence"
+    },
+    {
+     "path": "genesis-oracle.html",
+     "title": "The Genesis Oracle — Seal of Becoming",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "systems/archive.html",
+     "title": "Interactive Archive",
+     "area": "archive"
+    },
+    {
+     "path": "systems/frequencies.html",
+     "title": "Frequency Governance",
+     "area": "systems"
     }
    ],
    "in": [
@@ -2066,10 +2345,15 @@
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
-   "outTotal": 2,
-   "inTotal": 1
+   "outTotal": 32,
+   "inTotal": 2
   },
   "micro.html": {
    "title": "⏳ 90-Second Micro-Run",
@@ -2273,18 +2557,18 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "living-time-sphere.html",
      "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
      "area": "living-time"
-    },
-    {
-     "path": "teach.html",
-     "title": "Manifest — Remnant Visual Exercise",
-     "area": "systems"
     }
    ],
    "outTotal": 8,
-   "inTotal": 20
+   "inTotal": 22
   },
   "offline.html": {
    "title": "13 Moons — Offline",
@@ -2368,6 +2652,96 @@
    "outTotal": 0,
    "inTotal": 0
   },
+  "provenance.html": {
+   "title": "Where Every Number Comes From",
+   "area": "evidence",
+   "out": [
+    {
+     "path": "codex-atlas.html",
+     "title": "Codex Atlas",
+     "area": "archive"
+    },
+    {
+     "path": "moons.html",
+     "title": "Remnant 13 Moons — Living Calendar",
+     "area": "living-time"
+    },
+    {
+     "path": "ledger.html",
+     "title": "Witness Ledger",
+     "area": "living-time"
+    },
+    {
+     "path": "hub.html",
+     "title": "Systems Hub",
+     "area": "systems"
+    },
+    {
+     "path": "scroll/search.html",
+     "title": "Search the Scroll",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scroll/lexicon.html",
+     "title": "Hebrew lexicon",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scroll/atlas.html",
+     "title": "Reference atlas",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scroll/editorial.html",
+     "title": "Editorial reading and evidence",
+     "area": "evidence"
+    },
+    {
+     "path": "theory.html",
+     "title": "Theory Hub",
+     "area": "evidence"
+    },
+    {
+     "path": "theory/canon.html",
+     "title": "Canon 0–17",
+     "area": "evidence"
+    },
+    {
+     "path": "genesis-oracle.html",
+     "title": "The Genesis Oracle — Seal of Becoming",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "systems/archive.html",
+     "title": "Interactive Archive",
+     "area": "archive"
+    },
+    {
+     "path": "systems/frequencies.html",
+     "title": "Frequency Governance",
+     "area": "systems"
+    }
+   ],
+   "in": [
+    {
+     "path": "codex-atlas.html",
+     "title": "Codex Atlas",
+     "area": "archive"
+    },
+    {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    }
+   ],
+   "outTotal": 32,
+   "inTotal": 2
+  },
   "scripture/about.html": {
    "title": "Sources, licences and limits — Scripture",
    "area": "scroll-scripture",
@@ -2383,10 +2757,15 @@
      "path": "scripture/index.html",
      "title": "Genesis & Exodus Scripture",
      "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
     }
    ],
    "outTotal": 1,
-   "inTotal": 1
+   "inTotal": 2
   },
   "scripture/exodus/01.html": {
    "title": "Exodus 1 — Scripture",
@@ -15975,6 +16354,11 @@
      "area": "codex"
     },
     {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "scripture/lemma.html",
      "title": "Lemma study — Scripture",
      "area": "scroll-scripture"
@@ -15985,8 +16369,8 @@
      "area": "scroll-scripture"
     }
    ],
-   "outTotal": 92,
-   "inTotal": 4
+   "outTotal": 93,
+   "inTotal": 5
   },
   "scripture/lemma.html": {
    "title": "Lemma study — Scripture",
@@ -16007,6 +16391,486 @@
    ],
    "outTotal": 1,
    "inTotal": 1
+  },
+  "scripture/word-studies/adam.html": {
+   "title": "Adam — אָדָם — Hebrew Word Studies",
+   "area": "scroll-scripture",
+   "out": [
+    {
+     "path": "scripture/word-studies/adamah.html",
+     "title": "Adamah — אֲדָמָה — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/enosh.html",
+     "title": "Enosh — אֱנוֹשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/nephesh.html",
+     "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/shem.html",
+     "title": "Shem — שֵׁם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    }
+   ],
+   "in": [
+    {
+     "path": "scripture/word-studies/adamah.html",
+     "title": "Adamah — אֲדָמָה — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/enosh.html",
+     "title": "Enosh — אֱנוֹשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/nephesh.html",
+     "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/or.html",
+     "title": "Or — אוֹר — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/ruach.html",
+     "title": "Ruach — רוּחַ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 5,
+   "inTotal": 6
+  },
+  "scripture/word-studies/adamah.html": {
+   "title": "Adamah — אֲדָמָה — Hebrew Word Studies",
+   "area": "scroll-scripture",
+   "out": [
+    {
+     "path": "scripture/word-studies/adam.html",
+     "title": "Adam — אָדָם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/enosh.html",
+     "title": "Enosh — אֱנוֹשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/shem.html",
+     "title": "Shem — שֵׁם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    }
+   ],
+   "in": [
+    {
+     "path": "scripture/word-studies/adam.html",
+     "title": "Adam — אָדָם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/enosh.html",
+     "title": "Enosh — אֱנוֹשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 4,
+   "inTotal": 3
+  },
+  "scripture/word-studies/enosh.html": {
+   "title": "Enosh — אֱנוֹשׁ — Hebrew Word Studies",
+   "area": "scroll-scripture",
+   "out": [
+    {
+     "path": "scripture/word-studies/adam.html",
+     "title": "Adam — אָדָם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/adamah.html",
+     "title": "Adamah — אֲדָמָה — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/shem.html",
+     "title": "Shem — שֵׁם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/ruach.html",
+     "title": "Ruach — רוּחַ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    }
+   ],
+   "in": [
+    {
+     "path": "scripture/word-studies/adam.html",
+     "title": "Adam — אָדָם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/adamah.html",
+     "title": "Adamah — אֲדָמָה — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/ruach.html",
+     "title": "Ruach — רוּחַ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 5,
+   "inTotal": 4
+  },
+  "scripture/word-studies/index.html": {
+   "title": "Hebrew Word Studies — Scripture",
+   "area": "scroll-scripture",
+   "out": [
+    {
+     "path": "scripture/word-studies/adam.html",
+     "title": "Adam — אָדָם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/adamah.html",
+     "title": "Adamah — אֲדָמָה — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/enosh.html",
+     "title": "Enosh — אֱנוֹשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/ruach.html",
+     "title": "Ruach — רוּחַ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/nephesh.html",
+     "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/or.html",
+     "title": "Or — אוֹר — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/shem.html",
+     "title": "Shem — שֵׁם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/index.html",
+     "title": "Genesis & Exodus Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/about.html",
+     "title": "Sources, licences and limits — Scripture",
+     "area": "scroll-scripture"
+    }
+   ],
+   "in": [
+    {
+     "path": "scripture/word-studies/adam.html",
+     "title": "Adam — אָדָם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/adamah.html",
+     "title": "Adamah — אֲדָמָה — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "codex-atlas.html",
+     "title": "Codex Atlas",
+     "area": "archive"
+    },
+    {
+     "path": "scripture/word-studies/enosh.html",
+     "title": "Enosh — אֱנוֹשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/index.html",
+     "title": "Genesis & Exodus Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/nephesh.html",
+     "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/or.html",
+     "title": "Or — אוֹר — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/ruach.html",
+     "title": "Ruach — רוּחַ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/shem.html",
+     "title": "Shem — שֵׁם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 9,
+   "inTotal": 9
+  },
+  "scripture/word-studies/nephesh.html": {
+   "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
+   "area": "scroll-scripture",
+   "out": [
+    {
+     "path": "scripture/word-studies/ruach.html",
+     "title": "Ruach — רוּחַ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/adam.html",
+     "title": "Adam — אָדָם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/shem.html",
+     "title": "Shem — שֵׁם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/or.html",
+     "title": "Or — אוֹר — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    }
+   ],
+   "in": [
+    {
+     "path": "scripture/word-studies/adam.html",
+     "title": "Adam — אָדָם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/or.html",
+     "title": "Or — אוֹר — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/ruach.html",
+     "title": "Ruach — רוּחַ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 5,
+   "inTotal": 4
+  },
+  "scripture/word-studies/or.html": {
+   "title": "Or — אוֹר — Hebrew Word Studies",
+   "area": "scroll-scripture",
+   "out": [
+    {
+     "path": "scripture/word-studies/shem.html",
+     "title": "Shem — שֵׁם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/ruach.html",
+     "title": "Ruach — רוּחַ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/adam.html",
+     "title": "Adam — אָדָם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/nephesh.html",
+     "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    }
+   ],
+   "in": [
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/nephesh.html",
+     "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/ruach.html",
+     "title": "Ruach — רוּחַ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/shem.html",
+     "title": "Shem — שֵׁם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 5,
+   "inTotal": 4
+  },
+  "scripture/word-studies/ruach.html": {
+   "title": "Ruach — רוּחַ — Hebrew Word Studies",
+   "area": "scroll-scripture",
+   "out": [
+    {
+     "path": "scripture/word-studies/nephesh.html",
+     "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/adam.html",
+     "title": "Adam — אָדָם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/or.html",
+     "title": "Or — אוֹר — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/enosh.html",
+     "title": "Enosh — אֱנוֹשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    }
+   ],
+   "in": [
+    {
+     "path": "scripture/word-studies/enosh.html",
+     "title": "Enosh — אֱנוֹשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/nephesh.html",
+     "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/or.html",
+     "title": "Or — אוֹר — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 5,
+   "inTotal": 4
+  },
+  "scripture/word-studies/shem.html": {
+   "title": "Shem — שֵׁם — Hebrew Word Studies",
+   "area": "scroll-scripture",
+   "out": [
+    {
+     "path": "scripture/word-studies/or.html",
+     "title": "Or — אוֹר — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    }
+   ],
+   "in": [
+    {
+     "path": "scripture/word-studies/adam.html",
+     "title": "Adam — אָדָם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/adamah.html",
+     "title": "Adamah — אֲדָמָה — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/enosh.html",
+     "title": "Enosh — אֱנוֹשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/nephesh.html",
+     "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/or.html",
+     "title": "Or — אוֹר — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 2,
+   "inTotal": 6
   },
   "scroll-of-fire-codex-of-reality-remnant-whitepaper.html": {
    "title": "Scroll of Fire · Codex of Reality · Remnant Whitepaper",
@@ -16065,6 +16929,11 @@
      "area": "evidence"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -16083,10 +16952,15 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
    "outTotal": 2,
-   "inTotal": 12
+   "inTotal": 14
   },
   "scroll/atlas.html": {
    "title": "Reference atlas",
@@ -16130,6 +17004,11 @@
      "area": "evidence"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -16143,10 +17022,15 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
    "outTotal": 2,
-   "inTotal": 8
+   "inTotal": 10
   },
   "scroll/editorial.html": {
    "title": "Editorial reading and evidence",
@@ -16200,6 +17084,11 @@
      "area": "evidence"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -16213,10 +17102,15 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
    "outTotal": 1,
-   "inTotal": 11
+   "inTotal": 13
   },
   "scroll/index.html": {
    "title": "Scroll of Fire — Unsealed Library",
@@ -16325,6 +17219,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -16343,10 +17242,15 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
    "outTotal": 1,
-   "inTotal": 11
+   "inTotal": 13
   },
   "scroll/reader.html": {
    "title": "Reading the Scroll — Unsealed Library",
@@ -16415,6 +17319,11 @@
      "area": "evidence"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -16433,10 +17342,15 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
    "outTotal": 1,
-   "inTotal": 10
+   "inTotal": 12
   },
   "search.html": {
    "title": "Search",
@@ -16570,6 +17484,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -16593,15 +17512,10 @@
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
-    },
-    {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
     }
    ],
    "outTotal": 2,
-   "inTotal": 14
+   "inTotal": 16
   },
   "start.html": {
    "title": "Start Here",
@@ -16705,6 +17619,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -16718,10 +17637,15 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
    "outTotal": 11,
-   "inTotal": 11
+   "inTotal": 13
   },
   "systems/archive.html": {
    "title": "Interactive Archive",
@@ -16759,6 +17683,11 @@
      "area": "evidence"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -16772,10 +17701,15 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 9
+   "inTotal": 11
   },
   "systems/frequencies.html": {
    "title": "Frequency Governance",
@@ -16823,6 +17757,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -16846,15 +17785,10 @@
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
-    },
-    {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
     }
    ],
    "outTotal": 0,
-   "inTotal": 14
+   "inTotal": 16
   },
   "systems/mind-renewal.html": {
    "title": "Mind-Renewal Protocol",
@@ -16887,6 +17821,11 @@
      "area": "evidence"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -16900,10 +17839,15 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 8
+   "inTotal": 10
   },
   "systems/recoder.html": {
    "title": "Living Dictionary of Reality",
@@ -16936,6 +17880,11 @@
      "area": "evidence"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -16949,10 +17898,15 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 8
+   "inTotal": 10
   },
   "systems/t-7.html": {
    "title": "T-7 Resonant Engine",
@@ -16985,6 +17939,11 @@
      "area": "evidence"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -16998,10 +17957,15 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 8
+   "inTotal": 10
   },
   "systems/witness.html": {
    "title": "Remnant Witness Ledger",
@@ -17034,6 +17998,11 @@
      "area": "evidence"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -17047,10 +18016,15 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 8
+   "inTotal": 10
   },
   "teach.html": {
    "title": "Manifest — Remnant Visual Exercise",
@@ -17164,6 +18138,11 @@
      "area": "systems"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "practices.html",
      "title": "Practices — the Exercises Wing · Remnant Lab",
      "area": "systems"
@@ -17192,15 +18171,10 @@
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
-    },
-    {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
     }
    ],
    "outTotal": 29,
-   "inTotal": 14
+   "inTotal": 16
   },
   "theory.html": {
    "title": "Theory Hub",
@@ -17319,6 +18293,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "theory/operators.html",
      "title": "Living Operators",
      "area": "evidence"
@@ -17342,15 +18321,10 @@
      "path": "start.html",
      "title": "Start Here",
      "area": "scroll-scripture"
-    },
-    {
-     "path": "hub.html",
-     "title": "Systems Hub",
-     "area": "systems"
     }
    ],
    "outTotal": 46,
-   "inTotal": 16
+   "inTotal": 18
   },
   "theory/artifact-theory.html": {
    "title": "Artifact Theory",
@@ -17426,6 +18400,11 @@
      "area": "evidence"
     },
     {
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
+    },
+    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -17439,10 +18418,15 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 9
+   "inTotal": 11
   },
   "theory/delta-framework.html": {
    "title": "Δ0–Δ7 Framework",
