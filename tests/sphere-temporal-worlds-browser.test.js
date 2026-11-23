@@ -539,6 +539,14 @@ test("Temporal Worlds: entry, the years line, and pattern lighting on the real p
   } finally {
     proc.kill("SIGKILL");
     server.close();
-    fs.rmSync(profile, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
+    // Chrome's child processes can keep writing into the profile for a few
+    // seconds after the browser process dies; poll-remove until they let go.
+    // Cleanup is best-effort: a leftover temp profile on an ephemeral runner
+    // must not fail a test whose assertions all passed.
+    await new Promise((resolve) => { proc.once("exit", resolve); setTimeout(resolve, 3000); });
+    for (let attempt = 0; attempt < 24; attempt += 1) {
+      try { fs.rmSync(profile, { recursive: true, force: true }); break; }
+      catch { await new Promise((resolve) => setTimeout(resolve, 500)); }
+    }
   }
 });
