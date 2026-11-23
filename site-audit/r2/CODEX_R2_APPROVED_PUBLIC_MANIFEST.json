@@ -28,9 +28,21 @@
       "status": "operational"
     },
     {
+      "path": "docs/aiyanas-world.html",
+      "sha256": "5fbeefefe8773e01e8828a9c8fb0548e1292f0c580f1c918ec2316d43856492c",
+      "publicUrl": "https://codexofreality.org/aiyanas-world.html",
+      "status": "operational"
+    },
+    {
       "path": "docs/alignment-ledger.html",
       "sha256": "9fa81cf5caf7aef69bf641c403b5041c0ca137fa016e2e016831c3f0a2433a0b",
       "publicUrl": "https://codexofreality.org/alignment-ledger.html",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/css/aiyanas-world.css",
+      "sha256": "84502c5a3590945e7af80bf704b21e11c81dcdf45a84ca60213f6fa6abdc241e",
+      "publicUrl": "https://codexofreality.org/assets/css/aiyanas-world.css",
       "status": "operational"
     },
     {
@@ -467,13 +479,13 @@
     },
     {
       "path": "docs/assets/data/codex-story.json",
-      "sha256": "3b3a83a0cb3ab5084fb6f0469882ce2ee9a141f66d45f4c25a9cd3ed5041f7be",
+      "sha256": "29b6c3087df6c53962ed7bafbf23cd6106483323207f1cccd48d24278c848ed9",
       "publicUrl": "https://codexofreality.org/assets/data/codex-story.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "520f0e936203b0a83c2d766202bf4c9d7bd1efbed82dc05c8818a36dbca10ddb",
+      "sha256": "751126dbff9f5386bef5add6e3d8213ca8b1da17b8239a7320acf5e5118a7384",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -503,7 +515,7 @@
     },
     {
       "path": "docs/assets/data/link-graph.json",
-      "sha256": "6d38cbf575806a45e0a980696bf41bfb8e3185a359e279f45aa9866be3eecd83",
+      "sha256": "63a15637d92007f11e41d62180a1f3328abfab1ba9c90e8fceb66c03a1e1a66a",
       "publicUrl": "https://codexofreality.org/assets/data/link-graph.json",
       "status": "operational"
     },
@@ -601,6 +613,12 @@
       "path": "docs/assets/icons/icon-512.png",
       "sha256": "2512dc4e69597007a244f82a4d37fc75c1d7d57986c23bdb5fa5cf84948c58b3",
       "publicUrl": "https://codexofreality.org/assets/icons/icon-512.png",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/img/aiyana/aiyana-first-story-drawing.webp",
+      "sha256": "a17f40f0b3d3946850aea4e9f786d5a26865fc1b147ca81dce6dcc844534800e",
+      "publicUrl": "https://codexofreality.org/assets/img/aiyana/aiyana-first-story-drawing.webp",
       "status": "operational"
     },
     {
@@ -1573,6 +1591,12 @@
       "path": "docs/assets/img/sphere/sphere-portrait.webp",
       "sha256": "9bce7a0401809959a7918494f474032e584eb07a299cab939b303d0b4c8a0979",
       "publicUrl": "https://codexofreality.org/assets/img/sphere/sphere-portrait.webp",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/js/aiyanas-world.js",
+      "sha256": "73129ae9b99d5a565a1a9f2c0b623bc470b7d65e51e45f143a3cebdc0cffcb9c",
+      "publicUrl": "https://codexofreality.org/assets/js/aiyanas-world.js",
       "status": "operational"
     },
     {
@@ -2855,7 +2879,7 @@
     },
     {
       "path": "docs/assets/js/world-lands.js",
-      "sha256": "30096e229cfcc61c986161998ab8202e78caa599234901d3914b27df3377824f",
+      "sha256": "3942caafe7f08ee1eaf3e721bec3ee097ebac5dbdc4d992bb220f5ab1bc0205f",
       "publicUrl": "https://codexofreality.org/assets/js/world-lands.js",
       "status": "operational"
     },
@@ -3947,7 +3971,7 @@
     },
     {
       "path": "docs/assets/search/atlas.json",
-      "sha256": "1642bd72fe9271f55cf7bc09d07ff4358055078431540ed40e4a5b7a00e50796",
+      "sha256": "5faed2f569617e0637924b4e65780a059ec808fd8a408f706719b0c3eb999bc5",
       "publicUrl": "https://codexofreality.org/assets/search/atlas.json",
       "status": "operational"
     },
@@ -3965,13 +3989,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "a0f5f374abbecb8293a2982aa852d6073cf936c9d3a17697b626ebdcb229b601",
+      "sha256": "f48f9f13c67c4050275a95d4558ceb793bea758da6df50d4925cdee00d2801a7",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "da562cf983b646c7ad629da832c1c045678c02db4ed1a5cff01ae5d8802ec178",
+      "sha256": "78d6685452093bebbb881869159851d1b20b4217a6dd6daecced531e7cc07d77",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -4025,7 +4049,7 @@
     },
     {
       "path": "docs/codex-atlas.html",
-      "sha256": "2567ae3ab585ff647366703c3bbaf6834aad093596a694e13c1b260d8cac5eda",
+      "sha256": "e8e3e0c4b3150ffecc5622a5a8ab6361f258df8a423f725576d900b99c9024e2",
       "publicUrl": "https://codexofreality.org/codex-atlas.html",
       "status": "operational"
     },
@@ -4043,7 +4067,7 @@
     },
     {
       "path": "docs/companions.html",
-      "sha256": "fcf1a51b65c61bbfd42ea85ea8e42249189b771133f306e18a7a755a3f6797a4",
+      "sha256": "b4707f650277f64e3a0cea00e2249b6ea30d2b904950fee430257e371d9ce11b",
       "publicUrl": "https://codexofreality.org/companions.html",
       "status": "operational"
     },
@@ -4079,7 +4103,7 @@
     },
     {
       "path": "docs/data/site-catalog.json",
-      "sha256": "ad5d2e99489f341b0b7c863de839fae49be9e2ebc6fa970e98c557bf52328a73",
+      "sha256": "9f8d989edaf6dbe3b71b77a6f245464d6b539fee2cbe70afbf4818d087375b1d",
       "publicUrl": "https://codexofreality.org/data/site-catalog.json",
       "status": "operational"
     },
@@ -4169,7 +4193,7 @@
     },
     {
       "path": "docs/map.html",
-      "sha256": "b2175bc232784f69e470994dd147a7a4d99383661f8089736cd18bd7b344b17a",
+      "sha256": "f5ff3f9ebbb00e7f834a248d9f7d238488e3f5feeb7cd31eba3d3e7447522d1a",
       "publicUrl": "https://codexofreality.org/map.html",
       "status": "operational"
     },

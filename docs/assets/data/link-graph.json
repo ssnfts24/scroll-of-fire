@@ -312,6 +312,46 @@
    "outTotal": 12,
    "inTotal": 7
   },
+  "aiyanas-world.html": {
+   "title": "Aiyana's World",
+   "area": "living-time",
+   "out": [
+    {
+     "path": "garden.html",
+     "title": "The Pattern Garden — the Garden · Remnant Lab",
+     "area": "systems"
+    },
+    {
+     "path": "companions.html",
+     "title": "Companions",
+     "area": "living-time"
+    },
+    {
+     "path": "map.html",
+     "title": "The Traveller's Map",
+     "area": "systems"
+    }
+   ],
+   "in": [
+    {
+     "path": "codex-atlas.html",
+     "title": "Codex Atlas",
+     "area": "archive"
+    },
+    {
+     "path": "companions.html",
+     "title": "Companions",
+     "area": "living-time"
+    },
+    {
+     "path": "map.html",
+     "title": "The Traveller's Map",
+     "area": "systems"
+    }
+   ],
+   "outTotal": 3,
+   "inTotal": 3
+  },
   "alignment-ledger.html": {
    "title": "Alignment Ledger — The 13 Moons Remnant Living Time Observatory",
    "area": "living-time",
@@ -648,7 +688,7 @@
      "area": "systems"
     }
    ],
-   "outTotal": 65,
+   "outTotal": 66,
    "inTotal": 11
   },
   "codex-guide.html": {
@@ -713,9 +753,19 @@
      "path": "moons.html",
      "title": "Remnant 13 Moons — Living Calendar",
      "area": "living-time"
+    },
+    {
+     "path": "aiyanas-world.html",
+     "title": "Aiyana's World",
+     "area": "living-time"
     }
    ],
    "in": [
+    {
+     "path": "aiyanas-world.html",
+     "title": "Aiyana's World",
+     "area": "living-time"
+    },
     {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
@@ -732,8 +782,8 @@
      "area": "systems"
     }
    ],
-   "outTotal": 1,
-   "inTotal": 3
+   "outTotal": 2,
+   "inTotal": 4
   },
   "covenant-caravan.html": {
    "title": "The Covenant Caravan",
@@ -1117,6 +1167,11 @@
    ],
    "in": [
     {
+     "path": "aiyanas-world.html",
+     "title": "Aiyana's World",
+     "area": "living-time"
+    },
+    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
@@ -1143,7 +1198,7 @@
     }
    ],
    "outTotal": 4,
-   "inTotal": 5
+   "inTotal": 6
   },
   "genesis-oracle.html": {
    "title": "The Genesis Oracle — Seal of Becoming",
@@ -2073,17 +2128,27 @@
      "path": "companions.html",
      "title": "Companions",
      "area": "living-time"
+    },
+    {
+     "path": "aiyanas-world.html",
+     "title": "Aiyana's World",
+     "area": "living-time"
     }
    ],
    "in": [
+    {
+     "path": "aiyanas-world.html",
+     "title": "Aiyana's World",
+     "area": "living-time"
+    },
     {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
     }
    ],
-   "outTotal": 2,
-   "inTotal": 1
+   "outTotal": 3,
+   "inTotal": 2
   },
   "micro.html": {
    "title": "⏳ 90-Second Micro-Run",
