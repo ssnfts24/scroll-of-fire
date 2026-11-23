@@ -4,6 +4,11 @@
   const MIN_OFFSET = 8;
   const MAX_OFFSET = 16;
   const STAGE_PADDING = 10;
+  // A calendar-face day plate may never overlap its neighbours:
+  // its diameter is capped at this fraction of the plate's own
+  // nearest-neighbour pitch, measured per Moon per layout pass
+  // (see the plate pitch cap pass in update()).
+  const PLATE_PITCH_CAP_FRACTION = 0.8;
   const SEMANTIC_TARGET_CAP = 96;
 
   /*
@@ -1914,6 +1919,69 @@
         )
       ];
 
+      // Plate pitch caps (Nov 22, 2026 — PR #243 follow-up, from
+      // Aaron's phone: "The days are clustering together and not
+      // rendering properly"). The band ladder in sphere-armillary.css
+      // sizes a day plate from the zoom band alone, but the grid's
+      // on-screen pitch is set by the stage's aspect and the grid
+      // plane's tilt, not by the band: measured in the lab, the
+      // A16's aspect (412×915) serves the medium band's 1.3rem
+      // plates onto a ~20px Moon View pitch (9 intersecting pairs),
+      // and at the 390×844 opening distance the faced Moon's labels
+      // stand ~10px apart under 0.68rem chips (7 intersecting
+      // pairs). The law this pass establishes: a plate may never
+      // overlap its neighbours. Group this pass's calendar-face
+      // day plates by Moon, measure each plate's nearest-neighbour
+      // anchor distance inside its own Moon's grid, and cap the
+      // plate at PLATE_PITCH_CAP_FRACTION of that distance. Two
+      // capped neighbours then always leave a fifth of their pitch
+      // clear between disc edges — per Moon, per pass, at any
+      // aspect — because each disc's diameter is bounded by 0.8×
+      // a distance no greater than the pair's own separation. The
+      // selected day's Day Approach growth (the standalone `scale`
+      // in sphere-armillary.css: 1.3 approach, 1.55 living /
+      // immersive) is divided out of its cap, so the growth cannot
+      // break the law at close zoom either.
+      const plateCapGroups = new Map();
+      for (const candidate of composedSemanticCandidates) {
+        const plateTarget = candidate?.target;
+        if (
+          !plateTarget
+          || plateTarget.kind !== "pattern-day-number"
+          || !plateTarget.calendarFace
+        ) continue;
+        const plateMoon = Number(plateTarget.moon || 0);
+        if (!plateCapGroups.has(plateMoon)) plateCapGroups.set(plateMoon, []);
+        plateCapGroups.get(plateMoon).push(candidate);
+      }
+      if (plateCapGroups.size) {
+        const zoomStage = String(_stageEl?.dataset?.zoomStage || "").toLowerCase();
+        const selectedGrowth =
+          zoomStage === "approach"
+            ? 1.3
+            : (zoomStage === "living" || zoomStage === "immersive")
+              ? 1.55
+              : 1;
+        for (const group of plateCapGroups.values()) {
+          if (group.length < 2) continue;
+          for (const candidate of group) {
+            let nearest = Infinity;
+            for (const other of group) {
+              if (other === candidate) continue;
+              const d = Math.hypot(
+                candidate.anchorX - other.anchorX,
+                candidate.anchorY - other.anchorY
+              );
+              if (d < nearest) nearest = d;
+            }
+            if (!Number.isFinite(nearest) || nearest <= 0) continue;
+            let cap = nearest * PLATE_PITCH_CAP_FRACTION;
+            if (candidate.target.selected && selectedGrowth > 1) cap /= selectedGrowth;
+            candidate._plateCapPx = cap;
+          }
+        }
+      }
+
       const activeSemanticIds =
         new Set();
 
@@ -2300,6 +2368,48 @@
         if (target.dayScheduleCount > 1) el.dataset.scheduleMulti = "true"; else delete el.dataset.scheduleMulti;
         if (target.patternSignature) el.dataset.patternSignature = target.patternSignature;
         el.style.display = "";
+        // Plate pitch cap application (the cap pass above, over
+        // composedSemanticCandidates): bound this day plate's box
+        // by its measured cap, the numeral scaling with the plate.
+        // A previous pass's cap is cleared first and the natural
+        // size re-measured under the stylesheet alone, so the cap
+        // releases as the keeper zooms in — it never ratchets.
+        // Inline !important is required: the band ladder's sizes
+        // are stylesheet !important. The reads below (w / h) then
+        // see the capped box, so placedRects respect it too.
+        if (target.kind === "pattern-day-number" && target.calendarFace) {
+          el.style.removeProperty("width");
+          el.style.removeProperty("height");
+          el.style.removeProperty("min-width");
+          el.style.removeProperty("min-height");
+          if (titleEl) titleEl.style.removeProperty("font-size");
+          delete el.dataset.plateCapped;
+          const plateCap = candidate._plateCapPx;
+          if (Number.isFinite(plateCap) && plateCap > 0) {
+            const naturalW = el.offsetWidth || 0;
+            const naturalH = el.offsetHeight || 0;
+            const natural = Math.max(naturalW, naturalH);
+            if (natural > plateCap) {
+              const cappedW = Math.min(naturalW, plateCap);
+              const cappedH = Math.min(naturalH, plateCap);
+              el.style.setProperty("width", `${cappedW.toFixed(1)}px`, "important");
+              el.style.setProperty("height", `${cappedH.toFixed(1)}px`, "important");
+              el.style.setProperty("min-width", `${cappedW.toFixed(1)}px`, "important");
+              el.style.setProperty("min-height", `${cappedH.toFixed(1)}px`, "important");
+              el.dataset.plateCapped = "true";
+              if (titleEl) {
+                const naturalFont = parseFloat(getComputedStyle(titleEl).fontSize) || 0;
+                if (naturalFont > 0) {
+                  titleEl.style.setProperty(
+                    "font-size",
+                    `${(naturalFont * (plateCap / natural)).toFixed(2)}px`,
+                    "important"
+                  );
+                }
+              }
+            }
+          }
+        }
         const w = el.offsetWidth || 132;
         const h = el.offsetHeight || 40;
         const radialX =

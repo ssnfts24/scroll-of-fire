@@ -297,3 +297,76 @@ test("deep-fix: the glide actually moves the Sphere — velocity in, friction ou
     delete globalThis.LivingTimeSphereCamera;
   }
 });
+
+test("plate-cap: a day plate may never overlap its neighbours (Aaron, Nov 22, 2026)", () => {
+  // Aaron's phone, the visibility pass's own preview: the faced
+  // Moon's plates heaped over each other at the opening view. The
+  // band ladder sizes plates from the zoom band alone, but the
+  // grid's on-screen pitch is set by the stage's aspect and the
+  // grid plane's tilt — measured in the lab: 412×915 Moon View
+  // served 20.8px plates onto a 20.0px minimum pitch (9
+  // intersecting pairs across three Moons); the 390×844 opening
+  // served 10.6px chips onto a 9.8px pitch (7 pairs). The law:
+  // each plate's diameter is capped at PLATE_PITCH_CAP_FRACTION
+  // of its own nearest-neighbour pitch, measured per Moon per
+  // layout pass from the label anchors themselves.
+  assert.match(labels, /const PLATE_PITCH_CAP_FRACTION = 0\.8;/);
+  // The cap pass groups the composed calendar-face day plates by
+  // Moon and measures nearest neighbours from the anchors.
+  assert.match(labels, /plateCapGroups[\s\S]*?plateTarget\.kind !== "pattern-day-number"[\s\S]*?!plateTarget\.calendarFace/);
+  assert.match(labels, /candidate\._plateCapPx = cap;/);
+  // The selected day's Day Approach growth is divided out of its
+  // cap, so the growth cannot break the law at close zoom.
+  assert.match(labels, /if \(candidate\.target\.selected && selectedGrowth > 1\) cap \/= selectedGrowth;/);
+  // Application: a stale cap is cleared and the natural size
+  // re-measured before the capped box is written (no ratchet),
+  // the four size properties are written inline !important (the
+  // band ladder's sizes are stylesheet !important), and the
+  // numeral scales with the plate.
+  assert.match(labels, /delete el\.dataset\.plateCapped;[\s\S]*?const plateCap = candidate\._plateCapPx;/);
+  assert.match(labels, /el\.style\.setProperty\("min-width", `\$\{cappedW\.toFixed\(1\)\}px`, "important"\)/);
+  assert.match(labels, /naturalFont \* \(plateCap \/ natural\)/);
+
+  // The guarantee, swept over synthetic tilted grids (7×4,
+  // foreshortened rows — the geometry that heaped): compute caps
+  // exactly as the pass does, then no two discs may intersect.
+  const fraction = 0.8;
+  const capFor = (pts) => pts.map((p, i) => {
+    let nn = Infinity;
+    for (let j = 0; j < pts.length; j++) {
+      if (j === i) continue;
+      nn = Math.min(nn, Math.hypot(p.x - pts[j].x, p.y - pts[j].y));
+    }
+    return fraction * nn;
+  });
+  for (const [hPitch, vPitch] of [[28, 14], [20, 20], [10, 10], [10.3, 9.8], [44, 19]]) {
+    const pts = [];
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col < 7; col++) {
+        pts.push({ x: col * hPitch + row * hPitch * 0.18, y: row * vPitch });
+      }
+    }
+    const caps = capFor(pts);
+    for (let i = 0; i < pts.length; i++) {
+      for (let j = i + 1; j < pts.length; j++) {
+        const d = Math.hypot(pts[i].x - pts[j].x, pts[i].y - pts[j].y);
+        assert.ok(
+          (caps[i] + caps[j]) / 2 < d,
+          `pitch ${hPitch}x${vPitch}: discs ${i} and ${j} keep clear (caps ${caps[i].toFixed(1)}/${caps[j].toFixed(1)}, distance ${d.toFixed(1)})`
+        );
+      }
+    }
+    // And the pre-fix band sizes DID intersect on the measured
+    // geometries — the law is what changed, not the grids.
+    const bandSize = hPitch === 10.3 ? 10.6 : hPitch === 20 ? 20.8 : 0;
+    if (bandSize) {
+      let intersects = 0;
+      for (let i = 0; i < pts.length; i++) {
+        for (let j = i + 1; j < pts.length; j++) {
+          if (Math.hypot(pts[i].x - pts[j].x, pts[i].y - pts[j].y) < bandSize - 0.5) intersects++;
+        }
+      }
+      assert.ok(intersects > 0, `pitch ${hPitch}x${vPitch}: the uncapped band size heaped here`);
+    }
+  }
+});
