@@ -29,12 +29,38 @@
  * Recurrence expansion and outside-day (Day Out of Time / Deep Time
  * Day) plan display are Phase C. An outside day is handled honestly:
  * the world does not bloom, and the orientation chip says why.
+ *
+ * Temporal Worlds slice (Aaron's commission, Nov 22, 2026: "Do
+ * whatever is best. Add in anything that can be tracked already
+ * including whatever for farming etc."), stacked on Phase B:
+ *   - DAY ENTRY. The day world stands inside a faint bubble.
+ *     Crossing from Living Day into Immersive Day passes the
+ *     bubble's membrane — a brief, legible threshold (a veil sweep,
+ *     a fade for reduced-motion keepers) — and the world opens in
+ *     front of the keeper, exactly as Phase B built it. The keeper
+ *     is never placed inside a sphere looking out at a shell.
+ *   - THE YEARS LINE. One stage beyond Year View: the multitude as
+ *     a line of schematic year-shells. The lived year stands lit;
+ *     the road ahead stands dim and labelled as the road ahead —
+ *     calendar-true shells holding no content they don't have.
+ *     A selected day's counterpart is picked out in every shell,
+ *     so the same Pattern Day reads down the line.
+ *   - PATTERN TRACKING. A Patterns door beside the dock lights
+ *     every day holding a chosen kind — on the faced year and down
+ *     the years line — from the same one planner record, with the
+ *     count shown and labelled as a count. Only documented ties
+ *     are surfaced: a record's own stored recurrence, named as
+ *     such. Same-kind days are lit and called "same kind", never
+ *     drawn as threads.
+ * The three binding constraints (data honesty, entry-not-inside,
+ * phone reality) are recorded in the slice's build note:
+ * docs/development/living-sphere-temporal-worlds-slice.md.
  */
 (function (global) {
   "use strict";
 
   const ID = "living-time-sphere-day-world";
-  const VERSION = "0.1.0-phase-b";
+  const VERSION = "0.2.0-temporal-worlds";
 
   /* ── Visual constants (Phase A visual style guide) ───────────── */
 
@@ -62,7 +88,29 @@
     water: 0x7fb2d9,
   });
 
-  const STAGES = Object.freeze(["year", "moon", "approach", "living", "immersive"]);
+  const STAGES = Object.freeze(["years", "year", "moon", "approach", "living", "immersive"]);
+
+  /* ── Temporal Worlds constants ───────────────────────────────── */
+
+  // The years line lives beyond Year View. Enter at 4.45, hold to
+  // 4.25 — a small hysteresis so the line never flickers at its edge.
+  const YEARS_STAGE_MIN = 4.45;
+  const YEARS_STAGE_HOLD = 4.25;
+  // The lived calendar's first alignment year: Pattern Year 2026,
+  // anchored April 17, 2026 (PatternCalendar's epoch year; the
+  // coordinate engine's "Anchor 2026 = Pattern Year 2026").
+  const EPOCH_ALIGNMENT_YEAR = 2026;
+  // The road ahead is bounded: the current year plus two.
+  const YEARS_AHEAD = 2;
+  // Year-shell layout: a line of beads across the front of the
+  // Sphere, in the years group's own frame — the group turns with
+  // the camera's azimuth (see render), so the line always stands
+  // across the view's front, clear of the instrument's silhouette
+  // (outer rings reach ~1.35; the line stands at ~2.0 out).
+  const SHELL_RADIUS = 0.29;
+  const SHELL_SPACING = 0.8;
+  const SHELL_LINE_Y = -0.35;
+  const SHELL_LINE_Z = 2.0;
 
   /* ── Pure helpers (unit-tested) ──────────────────────────────── */
 
@@ -82,6 +130,11 @@
   function stageForDistance(distance, previousStage) {
     const d = Number(distance);
     if (!Number.isFinite(d)) return previousStage || "year";
+    if (previousStage === "years") {
+      if (d >= YEARS_STAGE_HOLD) return "years";
+    } else if (d >= YEARS_STAGE_MIN) {
+      return "years";
+    }
     if (d >= 3.25) return "year";
     if (d >= 2.35) return "moon";
     if (d >= 1.62) return "approach";
@@ -366,6 +419,267 @@
     return "Inside this Moon — the year is around you.";
   }
 
+  /* ── Depth names (the chip's crumb) ──────────────────────────── */
+
+  const DEPTH_CRUMBS = Object.freeze(["Years", "Year", "Moon", "Day", "Inside the day"]);
+
+  function depthNameForStage(stage) {
+    if (stage === "years") return "Years";
+    if (stage === "year") return "Year";
+    if (stage === "moon") return "Moon";
+    if (stage === "immersive") return "Inside the day";
+    return "Day"; // Day Approach and Living Day are both "at the day"
+  }
+
+  /* ── The years line's range ──────────────────────────────────── */
+
+  /*
+   * Year 1 of the lived calendar (alignment year 2026) through the
+   * current year, plus the road ahead bounded at current + 2. When
+   * the keeper has travelled to a later year, their year is on the
+   * line too. Years are alignment years — the same year numbers
+   * the records and the cursor carry.
+   */
+  function yearsLineRange(todayYear, cursorYear) {
+    const first = EPOCH_ALIGNMENT_YEAR;
+    const base = Number.isInteger(todayYear) ? todayYear : first;
+    let last = Math.max(base + YEARS_AHEAD, first + YEARS_AHEAD);
+    if (Number.isInteger(cursorYear)) last = Math.max(last, cursorYear);
+    const years = [];
+    for (let year = first; year <= last; year += 1) years.push(year);
+    return years;
+  }
+
+  /* ── The trackable inventory ─────────────────────────────────── */
+
+  /*
+   * What the keeper's records already carry, evidenced from the
+   * record layer itself (life-atlas-record-sphere-extension.js —
+   * R1.7 protected, read here, never imported): a planner record's
+   * category (payload.planner.category, falling back to subtype),
+   * its symbol (an explicit payload.planner.symbol wins; a workflow
+   * stamp names its own; otherwise the category's symbol below),
+   * its workflow, and — through CodexLifeAtlasScheduling — its
+   * status, priority, times, completion, and stored recurrence.
+   * The tables below mirror the record layer's own so the Patterns
+   * view can never disagree with the face about what a day holds.
+   */
+  const SYMBOL_BY_CATEGORY = Object.freeze({
+    task: "✓", event: "●", reminder: "⚑", project: "◆", travel: "✈",
+    milestone: "★", practice: "✦", growing: "🌱", farming: "🌾", planting: "🌱",
+    harvest: "🌾", watering: "💧", livestock: "🐄", maintenance: "🔧", seasonal: "☀",
+    meeting: "👥", school: "🎓", health: "❤", finance: "💰", observation: "◉",
+    home: "⌂", family: "♡", pets: "🐾", food: "🍽", shopping: "🛒",
+    vehicle: "🚗", construction: "🏗", coding: "💻", writing: "✎", research: "🔬",
+    creative: "🎨", cleaning: "🧹", appointment: "✚", community: "◎",
+    camping: "⛺", fieldwork: "🥾",
+  });
+
+  /* The record layer's own colour per category (its colorFor
+   * palette), so a lit day glows in the colour the face already
+   * gives its kind. */
+  const COLOUR_BY_CATEGORY = Object.freeze({
+    task: 0x7fd7ff, event: 0xf6d56a, reminder: 0xff9f80, project: 0x65d7c5,
+    travel: 0x80b8ff, milestone: 0xffcf6e, practice: 0xc4a7ff, growing: 0x78e08f,
+    farming: 0x8ccf72, planting: 0x6edb8b, harvest: 0xe6bd63, watering: 0x70b7e8,
+    livestock: 0xc8a77c, maintenance: 0xb7c2cc, seasonal: 0xb9df72, meeting: 0xb6a5ff,
+    school: 0x86b7ff, health: 0xff8f9d, finance: 0xe4c46b, observation: 0xd6d6d6,
+    home: 0xf0c878, family: 0xffa9bb, pets: 0xcaa67f, food: 0xf0b76e,
+    shopping: 0xc9b4ff, vehicle: 0x8ebde8, construction: 0xe0b56d, coding: 0x79d7eb,
+    writing: 0xe7d293, research: 0xa9c6ff, creative: 0xd7a6ff, cleaning: 0x9fded8,
+    appointment: 0xff9ca8, community: 0x9ac8ff, camping: 0x93cf8d, fieldwork: 0x9fd4ad,
+  });
+
+  const KIND_NAMES = Object.freeze({
+    task: "Tasks", event: "Events", reminder: "Reminders", project: "Projects",
+    travel: "Travel", milestone: "Milestones", practice: "Practice",
+    growing: "Growing", farming: "Farming", planting: "Planting",
+    harvest: "Harvest", watering: "Watering", livestock: "Livestock",
+    maintenance: "Maintenance", seasonal: "Seasonal", meeting: "Meetings",
+    school: "School & learning", health: "Health", finance: "Finance",
+    observation: "Observations", home: "Home", family: "Family", pets: "Animal care",
+    food: "Food & meals", shopping: "Shopping & errands", vehicle: "Vehicle",
+    construction: "Building & construction", coding: "Coding", writing: "Writing",
+    research: "Research", creative: "Creative work", cleaning: "Cleaning",
+    appointment: "Appointments", community: "Community", camping: "Camping",
+    fieldwork: "Field work",
+  });
+
+  /*
+   * Kinds grouped for humans. Farm & Home stands first — Aaron
+   * named farming himself. Every category in SYMBOL_BY_CATEGORY
+   * appears in exactly one group; the unit tests hold that line.
+   */
+  const PATTERN_GROUPS = Object.freeze([
+    Object.freeze({
+      id: "farm-home", label: "Farm & home",
+      categories: Object.freeze(["planting", "growing", "farming", "watering", "harvest", "livestock", "seasonal", "maintenance"]),
+    }),
+    Object.freeze({
+      id: "home-family", label: "Home & family",
+      categories: Object.freeze(["home", "family", "pets", "food", "cleaning", "shopping", "vehicle"]),
+    }),
+    Object.freeze({
+      id: "work-craft", label: "Work & craft",
+      categories: Object.freeze(["task", "project", "coding", "construction", "creative", "finance"]),
+    }),
+    Object.freeze({
+      id: "study-witness", label: "Study & witness",
+      categories: Object.freeze(["school", "research", "writing", "observation", "fieldwork", "practice"]),
+    }),
+    Object.freeze({
+      id: "people-occasions", label: "People & occasions",
+      categories: Object.freeze(["meeting", "community", "appointment", "health", "reminder", "milestone", "travel", "camping", "event"]),
+    }),
+  ]);
+
+  function categoryForRecord(record) {
+    return String(
+      record?.payload?.planner?.category || record?.subtype || "event"
+    ).toLowerCase();
+  }
+
+  function workflowForRecord(record) {
+    return String(record?.payload?.planner?.workflow || "").toLowerCase();
+  }
+
+  /* The record layer's own symbol rule, mirrored exactly. */
+  function symbolForRecord(record) {
+    const explicit = String(record?.payload?.planner?.symbol || "").trim();
+    if (explicit && explicit !== "auto") return explicit.slice(0, 4);
+    const workflow = workflowForRecord(record);
+    if (workflow === "codex-of-reality") return "✎";
+    if (workflow === "living-phone") return "☎";
+    return SYMBOL_BY_CATEGORY[categoryForRecord(record)] || "●";
+  }
+
+  function isPlannerRecord(record) {
+    return Boolean(
+      record?.tags?.includes?.("living-planner")
+      || record?.provenance?.source === "living-planner"
+      || record?.payload?.planner
+    );
+  }
+
+  /*
+   * One pattern entry from one record. Completion and recurrence
+   * come from the scheduling surface; overdue follows the day
+   * world's own rule (a standing record on a past day, or past its
+   * end hour today). `today` is { patternYear, patternDay, nowHour }
+   * in ALIGNMENT years — the years the records carry.
+   */
+  function patternEntryForRecord(record, scheduling, today) {
+    if (!record || !isPlannerRecord(record)) return null;
+    const year = Number(record.temporal?.patternYear);
+    const day = Number(record.temporal?.patternDay);
+    if (!Number.isInteger(year) || !Number.isInteger(day) || day < 1 || day > 364) return null;
+    const schedule = scheduling?.getSchedule ? scheduling.getSchedule(record) : null;
+    const completed = scheduling?.isCompleted
+      ? Boolean(scheduling.isCompleted(record))
+      : Boolean(schedule?.status === "completed" || schedule?.completedAt);
+    let overdue = false;
+    if (!completed && today && Number.isInteger(today.patternDay)) {
+      if (year < today.patternYear || (year === today.patternYear && day < today.patternDay)) {
+        overdue = true;
+      } else if (year === today.patternYear && day === today.patternDay && schedule && !schedule.allDay) {
+        const endIso = schedule.end || schedule.start;
+        const due = endIso ? hourFromIso(endIso) : null;
+        if (due != null && Number.isFinite(Number(today.nowHour)) && due < Number(today.nowHour)) {
+          overdue = true;
+        }
+      }
+    }
+    const priority = String(schedule?.priority || "normal").toLowerCase();
+    const frequency = String(schedule?.recurrence?.frequency || "none").toLowerCase();
+    return {
+      id: record.id || null,
+      title: String(record.title || "Living Plan"),
+      year,
+      day,
+      category: categoryForRecord(record),
+      symbol: symbolForRecord(record),
+      completed,
+      overdue,
+      important: priority === "high" || priority === "critical",
+      status: schedule?.status || null,
+      recurrence: frequency !== "none"
+        ? { frequency, interval: Math.max(1, Number(schedule.recurrence.interval) || 1) }
+        : null,
+    };
+  }
+
+  /*
+   * The pattern index over a set of years: byDay maps "year:day"
+   * to the entries standing there. Built from the ONE planner
+   * record (plansForYear per year) — nothing else is tracked.
+   */
+  function buildPatternIndex(records, scheduling, today) {
+    const byDay = new Map();
+    for (const record of Array.isArray(records) ? records : []) {
+      const entry = patternEntryForRecord(record, scheduling, today);
+      if (!entry) continue;
+      const key = `${entry.year}:${entry.day}`;
+      const bucket = byDay.get(key) || [];
+      bucket.push(entry);
+      byDay.set(key, bucket);
+    }
+    return { byDay };
+  }
+
+  function entryMatchesFilter(entry, filter) {
+    if (!entry) return false;
+    if (filter?.categories && !filter.categories.has(entry.category)) return false;
+    if (filter?.recurringOnly && !entry.recurrence) return false;
+    const standing = filter?.standing || "any";
+    if (standing === "open" && entry.completed) return false;
+    if (standing === "completed" && !entry.completed) return false;
+    if (standing === "overdue" && !entry.overdue) return false;
+    return true;
+  }
+
+  /*
+   * The lit days for a filter: every day holding at least one
+   * matching entry, with the matching count (a count of records,
+   * labelled as a count wherever it is shown), the primary symbol,
+   * and the kind colour of the first matching entry.
+   */
+  function litDaysFor(index, filter) {
+    const lit = [];
+    if (!index?.byDay) return lit;
+    for (const entries of index.byDay.values()) {
+      const matching = entries.filter((entry) => entryMatchesFilter(entry, filter));
+      if (!matching.length) continue;
+      const first = matching[0];
+      lit.push({
+        year: first.year,
+        day: first.day,
+        count: matching.length,
+        primarySymbol: first.symbol,
+        symbols: [...new Set(matching.map((entry) => entry.symbol))],
+        colour: COLOUR_BY_CATEGORY[first.category] ?? 0xf6d56a,
+        entries: matching,
+      });
+    }
+    lit.sort((a, b) => (a.year - b.year) || (a.day - b.day));
+    return lit;
+  }
+
+  /* Days holding a kind, counted per category across the index —
+   * the panel's per-kind day counts. */
+  function dayCountsByCategory(index) {
+    const counts = new Map();
+    if (!index?.byDay) return counts;
+    for (const entries of index.byDay.values()) {
+      const seen = new Set();
+      for (const entry of entries) {
+        if (seen.has(entry.category)) continue;
+        seen.add(entry.category);
+        counts.set(entry.category, (counts.get(entry.category) || 0) + 1);
+      }
+    }
+    return counts;
+  }
+
   const api = {
     ID,
     VERSION,
@@ -387,6 +701,24 @@
     standingLineFor,
     routeDecision,
     civilDateForPatternDay,
+    depthNameForStage,
+    DEPTH_CRUMBS,
+    yearsLineRange,
+    EPOCH_ALIGNMENT_YEAR,
+    YEARS_AHEAD,
+    SYMBOL_BY_CATEGORY,
+    COLOUR_BY_CATEGORY,
+    KIND_NAMES,
+    PATTERN_GROUPS,
+    categoryForRecord,
+    workflowForRecord,
+    symbolForRecord,
+    isPlannerRecord,
+    patternEntryForRecord,
+    buildPatternIndex,
+    entryMatchesFilter,
+    litDaysFor,
+    dayCountsByCategory,
   };
 
   global.LivingTimeSphereDayWorldAdapter = api;
@@ -443,6 +775,21 @@
     lastFrameMs: 0,
     inspector: { mode: "closed", itemId: null, cluster: null, confirmRemoveUntil: 0 },
     dom: null,
+    /* Temporal Worlds slice state. */
+    bubble: null,
+    membrane: { lastCrossAt: 0, direction: null },
+    notice: null,
+    years: { group: null, shells: [], proxies: [], builtKey: "", fade: 0 },
+    patterns: {
+      open: false,
+      filter: { categories: null, standing: "any", recurringOnly: false, label: null },
+      index: null,
+      indexKey: "",
+      lit: [],
+      overlayGroup: null,
+      overlayKey: "",
+      loading: false,
+    },
   };
 
   /* ── Small DOM helpers ── */
@@ -465,9 +812,17 @@
     chip.setAttribute("role", "group");
     chip.setAttribute("aria-label", "Day world orientation");
     const chipMain = el("div", "dw-chip-main");
+    const crumb = el("div", "dw-chip-crumb");
+    crumb.setAttribute("aria-label", "Depth");
+    const crumbSteps = DEPTH_CRUMBS.map((name) => {
+      const step = el("span", "dw-chip-crumb-step", name);
+      step.dataset.dwDepth = name;
+      crumb.appendChild(step);
+      return step;
+    });
     const chipTitle = el("strong", "dw-chip-title");
     const chipLine = el("span", "dw-chip-line");
-    chipMain.append(chipTitle, chipLine);
+    chipMain.append(crumb, chipTitle, chipLine);
     const chipNav = el("div", "dw-chip-nav");
     const prev = el("button", "dw-chip-btn", "‹");
     prev.type = "button";
@@ -483,6 +838,56 @@
     chipNav.append(prev, next, back);
     chip.append(chipMain, chipNav);
     shell.appendChild(chip);
+
+    // The membrane veil: the day bubble's skin passing the keeper
+    // on the way in or out of a day. A sibling of the canvas, under
+    // the chip; pointer-transparent, brief, and a plain fade when
+    // the keeper prefers reduced motion.
+    const membrane = el("div", "dw-membrane");
+    membrane.setAttribute("aria-hidden", "true");
+    shell.appendChild(membrane);
+
+    // The Patterns door: beside the rebuild dock, in its visual
+    // language, never inside it (the dock's five doors are the
+    // page's own count). The panel it opens is the adapter's.
+    const doorRow = el("div", "dw-door-row");
+    const patternsDoor = el("button", "dw-door-btn", "Patterns");
+    patternsDoor.type = "button";
+    patternsDoor.setAttribute("aria-expanded", "false");
+    patternsDoor.setAttribute("aria-label", "Patterns — light the days that hold a kind");
+    doorRow.appendChild(patternsDoor);
+    const dock = document.querySelector(".sphere-rebuild-dock");
+    if (dock?.parentElement) {
+      dock.parentElement.insertBefore(doorRow, dock.nextSibling);
+    } else {
+      shell.appendChild(doorRow);
+    }
+    patternsDoor.addEventListener("click", () => {
+      if (state.patterns.open) closePatterns();
+      else void openPatterns();
+    });
+
+    const patternsPanel = el("section", "dw-patterns");
+    patternsPanel.hidden = true;
+    patternsPanel.setAttribute("role", "dialog");
+    patternsPanel.setAttribute("aria-label", "Patterns — what the record holds");
+    const pHead = el("header", "dw-ins-head");
+    const pKind = el("span", "dw-ins-kind", "Patterns");
+    const pClose = el("button", "dw-ins-close", "×");
+    pClose.type = "button";
+    pClose.setAttribute("aria-label", "Close patterns");
+    pHead.append(pKind, pClose);
+    const pIntro = el("p", "dw-ins-sub",
+      "Pick a kind and every day holding it lights — on the year you face and down the years line. "
+      + "Only your own planner record is tracked; the farm reference book is not.");
+    const pStanding = el("div", "dw-pattern-standing");
+    const pGroups = el("div", "dw-pattern-groups");
+    const pResult = el("p", "dw-pattern-result");
+    const pDays = el("div", "dw-ins-list");
+    const pActions = el("div", "dw-ins-actions");
+    patternsPanel.append(pHead, pIntro, pStanding, pGroups, pResult, pDays, pActions);
+    document.body.appendChild(patternsPanel);
+    pClose.addEventListener("click", () => closePatterns());
 
     const inspector = el("section", "dw-inspector");
     inspector.hidden = true;
@@ -507,16 +912,22 @@
     back.addEventListener("click", () => backToYear());
     close.addEventListener("click", () => closeInspector());
 
-    // The rooms sheet and the inspector never stand open together.
+    // The rooms sheet and the adapter's panels never stand open
+    // together.
     const roomsObserver = new MutationObserver(() => {
       if (document.documentElement.classList.contains("armillary-rooms-open")) {
         closeInspector();
+        closePatterns();
       }
     });
     roomsObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     state.roomsObserver = roomsObserver;
 
-    state.dom = { chip, chipTitle, chipLine, back, inspector, kind, title, line, sub, list, actions };
+    state.dom = {
+      chip, chipTitle, chipLine, back, crumbSteps, membrane,
+      patternsDoor, patternsPanel, pStanding, pGroups, pResult, pDays, pActions, doorRow,
+      inspector, kind, title, line, sub, list, actions,
+    };
     return state.dom;
   }
 
@@ -639,16 +1050,41 @@
    * dayRelation: -1 the selected day is past, 0 it is today,
    * 1 it is ahead; null when either side is outside the count.
    */
-  function todayRelation(selection) {
+  /*
+   * Today's place, in the years the records carry. PatternCalendar
+   * reports its own ordinal patternYear (1 for the 2026 cycle);
+   * the records and the cursor carry the ALIGNMENT year — the
+   * anchor date's civil year (2026). The planner derives it the
+   * same way (its patternContext reads the anchor date's year, and
+   * says why in its own comment). Reading the ordinal instead
+   * never matched the cursor's year, so "today" never lit — the
+   * state light, the now bead, and same-year overdue all silently
+   * missed. Fixed in the Temporal Worlds slice, with the
+   * planner's own derivation.
+   */
+  function todayAlignment(now = new Date()) {
     const pc = global.PatternCalendar;
-    const now = new Date();
-    const nowHour = now.getHours() + now.getMinutes() / 60;
     let today = null;
     try {
       today = pc?.fromCivilDate ? pc.fromCivilDate({ date: now }) : null;
     } catch { today = null; }
-    const todayDay = today?.dayOfPatternYear ?? null;
-    const todayYear = today?.patternYear ?? null;
+    if (!today) return null;
+    const alignmentYear = today.anchorDate instanceof Date
+      ? today.anchorDate.getUTCFullYear()
+      : today.patternYear;
+    return {
+      patternYear: Number.isInteger(alignmentYear) ? alignmentYear : null,
+      patternDay: today.dayOfPatternYear ?? null,
+      nowHour: now.getHours() + now.getMinutes() / 60,
+    };
+  }
+
+  function todayRelation(selection) {
+    const now = new Date();
+    const aligned = todayAlignment(now);
+    const nowHour = aligned?.nowHour ?? (now.getHours() + now.getMinutes() / 60);
+    const todayDay = aligned?.patternDay ?? null;
+    const todayYear = aligned?.patternYear ?? null;
     let dayRelation = null;
     if (selection && Number.isInteger(todayDay) && Number.isInteger(selection.patternDay)) {
       if (todayYear !== selection.patternYear) {
@@ -967,6 +1403,25 @@
       state.dome = dome;
     }
 
+    // The day bubble: the faint skin the keeper passes through on
+    // the way into the day. It stands around the world at every
+    // day stage; crossing its membrane (Living ↔ Immersive) plays
+    // the threshold — the veil sweep in the DOM and a pulse here.
+    const bubble = new THREE.Mesh(
+      new THREE.SphereGeometry(1.24, 24, 16),
+      new THREE.MeshBasicMaterial({
+        color: COLOURS.silverBlue,
+        transparent: true,
+        opacity: 0.055,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+      })
+    );
+    bubble.position.y = PLINTH_TOP + 0.12;
+    bubble.renderOrder = 30;
+    group.add(bubble);
+    state.bubble = bubble;
+
     // Records as objects.
     const grouped = groupItems(items);
     state.grouped = grouped;
@@ -1071,6 +1526,7 @@
     state.nowBead = null;
     state.emberLight = null;
     state.dome = null;
+    state.bubble = null;
   }
 
   async function rebuild(context, force = false) {
@@ -1151,13 +1607,48 @@
     return `Moon ${moon} · Day ${moonDay} · Pattern Day ${patternDay}`;
   }
 
+  function updateCrumb(dom, stage) {
+    const current = depthNameForStage(stage);
+    for (const step of dom.crumbSteps || []) {
+      step.classList.toggle("dw-chip-crumb-now", step.dataset.dwDepth === current);
+    }
+  }
+
   function updateChip() {
     const dom = ensureDom();
     const stage = state.stage;
+    // A landed notice (an entered year with an empty record) shows
+    // on the year stages until it expires — the chip is the
+    // adapter's one voice, and an honest empty year must say so.
+    const noticeLive = state.notice && performance.now() < state.notice.expiresAt
+      && (stage === "year" || stage === "moon" || stage === "years");
     const show = !state.unavailable
-      && (stage === "approach" || stage === "living" || stage === "immersive");
+      && (stage === "approach" || stage === "living" || stage === "immersive"
+        || stage === "years" || noticeLive);
     dom.chip.hidden = !show;
     if (!show) return;
+    dom.chip.dataset.dwStage = stage;
+    updateCrumb(dom, stage);
+    const prevBtn = dom.chip.querySelector("[data-dw-prev]");
+    const nextBtn = dom.chip.querySelector("[data-dw-next]");
+    if (stage === "years") {
+      if (prevBtn) prevBtn.hidden = true;
+      if (nextBtn) nextBtn.hidden = true;
+      dom.back.hidden = false;
+      dom.back.textContent = "Into the year";
+      dom.chipTitle.textContent = yearsChipTitle();
+      dom.chipLine.textContent = noticeLive ? state.notice.text : yearsChipLine();
+      return;
+    }
+    if (prevBtn) prevBtn.hidden = false;
+    if (nextBtn) nextBtn.hidden = false;
+    dom.back.textContent = "Back to the year";
+    if (noticeLive) {
+      dom.chipTitle.textContent = dayTitle(state.view, state.selection);
+      dom.chipLine.textContent = state.notice.text;
+      dom.back.hidden = false;
+      return;
+    }
     if (state.outside) {
       dom.chipTitle.textContent = "Outside the count";
       dom.chipLine.textContent = "This day stands outside the 364. Its world opens with a later phase.";
@@ -1167,6 +1658,41 @@
     dom.chipTitle.textContent = dayTitle(state.view, state.selection);
     dom.chipLine.textContent = standingLineFor(stage, state.view || state.selection, state.items.length);
     dom.back.hidden = !(stage === "living" || stage === "immersive");
+  }
+
+  function yearsChipTitle() {
+    const range = state.years.shells.length
+      ? state.years.shells.map((shell) => shell.year)
+      : yearsLineRange(todayAlignment()?.patternYear ?? null, state.selection?.patternYear ?? null);
+    return `The years — ${range.join(" · ")}`;
+  }
+
+  /*
+   * The same-day readout down the line: for the selected Pattern
+   * Day, which years hold something on it and which stand bare.
+   * Read from the pattern index (the one planner record) when it
+   * has been built; until then, a plain standing line.
+   */
+  function yearsChipLine() {
+    const selection = state.selection;
+    const index = state.patterns.index;
+    if (!selection || !Number.isInteger(selection.patternDay) || !index) {
+      return "The lived year stands lit. The road ahead is the calendar, unrecorded.";
+    }
+    const day = selection.patternDay;
+    const parts = [];
+    for (const shell of state.years.shells) {
+      const entries = index.byDay.get(`${shell.year}:${day}`) || [];
+      if (!entries.length) {
+        parts.push(`${shell.year}: bare`);
+      } else {
+        const symbols = [...new Set(entries.map((entry) => entry.symbol))].join(" ");
+        parts.push(`${shell.year}: ${symbols} (${entries.length})`);
+      }
+    }
+    return parts.length
+      ? `Pattern Day ${day} down the line — ${parts.join(" · ")}`
+      : "The lived year stands lit. The road ahead is the calendar, unrecorded.";
   }
 
   function closeInspector() {
@@ -1363,6 +1889,13 @@
 
   function backToYear() {
     closeInspector();
+    if (state.stage === "years") {
+      // From the years line, "back" means stepping into the year
+      // the keeper is standing in.
+      const year = state.selection?.patternYear ?? todayAlignment()?.patternYear;
+      if (Number.isInteger(year)) void enterYear(year);
+      return;
+    }
     const selection = state.selection || currentSelection();
     if (selection && Number.isInteger(selection.patternDay)) {
       focusSelectedDay(3.45);
@@ -1374,6 +1907,706 @@
       dist: 3.45,
       animated: !reducedMotionQuery.matches,
     });
+  }
+
+  /* ── The membrane (day entry) ── */
+
+  /*
+   * Crossing between Living Day and Immersive Day passes the day
+   * bubble's skin. The threshold is brief and legible: a veil
+   * sweep across the stage and a pulse on the bubble itself.
+   * Reduced-motion keepers get a plain fade. The world on the far
+   * side is Phase B's world, unchanged, standing in front of the
+   * keeper — never a shell the keeper is placed inside.
+   */
+  function playMembrane(direction) {
+    state.membrane.lastCrossAt = performance.now();
+    state.membrane.direction = direction;
+    const veil = state.dom?.membrane;
+    if (!veil) return;
+    veil.classList.remove("dw-membrane--in", "dw-membrane--out", "dw-membrane--fade");
+    void veil.offsetWidth;
+    veil.classList.add(reducedMotionQuery.matches
+      ? "dw-membrane--fade"
+      : (direction === "in" ? "dw-membrane--in" : "dw-membrane--out"));
+    setTimeout(() => {
+      veil.classList.remove("dw-membrane--in", "dw-membrane--out", "dw-membrane--fade");
+    }, 800);
+  }
+
+  /* ── The years line ── */
+
+  function clearYearsLine() {
+    const years = state.years;
+    if (years.group && state.scene) state.scene.remove(years.group);
+    if (years.group) disposeObject(years.group);
+    years.group = null;
+    years.shells = [];
+    years.proxies = [];
+    years.builtKey = "";
+  }
+
+  function shellWordFor(year, todayYear, cursorYear) {
+    if (year === todayYear) return "the year you keep";
+    if (year === cursorYear) return "you are standing here";
+    if (Number.isInteger(todayYear) && year > todayYear) return "the road ahead";
+    return "";
+  }
+
+  function makeTextSprite(THREE, lines) {
+    const canvas = document.createElement("canvas");
+    canvas.width = 320;
+    canvas.height = 112;
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, 320, 112);
+    ctx.textAlign = "center";
+    ctx.fillStyle = "rgba(242, 234, 216, 0.96)";
+    ctx.font = "600 52px Georgia, serif";
+    ctx.fillText(lines[0] || "", 160, 54);
+    if (lines[1]) {
+      ctx.fillStyle = "rgba(216, 164, 91, 0.95)";
+      ctx.font = "26px Georgia, serif";
+      ctx.fillText(lines[1], 160, 94);
+    }
+    const texture = new THREE.CanvasTexture(canvas);
+    const sprite = new THREE.Sprite(new THREE.SpriteMaterial({
+      map: texture, transparent: true, depthWrite: false,
+    }));
+    sprite.scale.set(0.62, 0.217, 1);
+    return sprite;
+  }
+
+  function makeSymbolSprite(THREE, symbol, count) {
+    const canvas = document.createElement("canvas");
+    canvas.width = 128;
+    canvas.height = 128;
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, 128, 128);
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = "76px serif";
+    ctx.fillText(symbol, 64, 66);
+    if (count > 1) {
+      ctx.font = "700 42px sans-serif";
+      ctx.fillStyle = "#d8a45b";
+      ctx.fillText(String(count), 102, 104);
+    }
+    const texture = new THREE.CanvasTexture(canvas);
+    const sprite = new THREE.Sprite(new THREE.SpriteMaterial({
+      map: texture, transparent: true, depthWrite: false,
+    }));
+    sprite.scale.set(0.13, 0.13, 1);
+    return sprite;
+  }
+
+  function yearsBuildKey(range) {
+    const litSig = state.patterns.lit.map((lit) => `${lit.year}:${lit.day}`).join(",");
+    return [
+      range.join(","),
+      state.selection?.patternYear ?? "",
+      state.selection?.patternDay ?? "",
+      state.recordsVersion,
+      state.patterns.indexKey,
+      litSig,
+    ].join("|");
+  }
+
+  /*
+   * The multitude, schematic: one shell per year — a wire bead
+   * carrying its 364 day marks as a ring of points and its 13 moon
+   * ticks — standing in a line under the Sphere. A shell is a
+   * glyph, not a scene: two point clouds and a wireframe per year,
+   * no per-shell world. The lived year stands lit; the road ahead
+   * stands dim. Only the entered year is ever fully built — by the
+   * Sphere itself, through the cursor.
+   */
+  function buildYearsLine(context) {
+    const THREE = context.THREE || global.THREE;
+    if (!THREE || !context.scene) return;
+    clearYearsLine();
+    state.scene = context.scene;
+    const todayYear = todayAlignment()?.patternYear ?? null;
+    const cursorYear = state.selection?.patternYear ?? null;
+    const range = yearsLineRange(todayYear, cursorYear);
+    const geometryApi = global.LivingTimeSphereCalendarGeometry;
+    const angleForDay = (day) => {
+      const cell = geometryApi?.calendarCell?.(day);
+      const degrees = Number(cell?.angle ?? ((day - 0.5) / 364) * 360);
+      return (Number.isFinite(degrees) ? degrees : 0) * Math.PI / 180;
+    };
+    const selectedDay = state.selection?.patternDay;
+    const index = state.patterns.index;
+    const litByYear = new Map();
+    for (const lit of state.patterns.lit) {
+      const bucket = litByYear.get(lit.year) || [];
+      bucket.push(lit);
+      litByYear.set(lit.year, bucket);
+    }
+    const group = new THREE.Group();
+    group.name = "living-time-sphere-years-line";
+    const mid = (range.length - 1) / 2;
+    const shells = [];
+    const proxies = [];
+    range.forEach((year, i) => {
+      const lived = year === todayYear;
+      const ahead = Number.isInteger(todayYear) && year > todayYear;
+      const shell = new THREE.Group();
+      shell.position.set(
+        (i - mid) * SHELL_SPACING,
+        SHELL_LINE_Y,
+        SHELL_LINE_Z - Math.abs(i - mid) * 0.06
+      );
+      const wire = new THREE.Mesh(
+        new THREE.IcosahedronGeometry(SHELL_RADIUS, 1),
+        new THREE.MeshBasicMaterial({
+          color: lived ? 0xf2ead8 : 0x8fb6d9,
+          wireframe: true,
+          transparent: true,
+          opacity: lived ? 0.55 : (ahead ? 0.2 : 0.34),
+          depthWrite: false,
+        })
+      );
+      shell.add(wire);
+      const dayPositions = new Float32Array(364 * 3);
+      const tickPositions = [];
+      for (let day = 1; day <= 364; day += 1) {
+        const angle = angleForDay(day);
+        const px = Math.sin(angle) * SHELL_RADIUS;
+        const pz = -Math.cos(angle) * SHELL_RADIUS;
+        dayPositions[(day - 1) * 3] = px;
+        dayPositions[(day - 1) * 3 + 1] = 0;
+        dayPositions[(day - 1) * 3 + 2] = pz;
+        if ((day - 1) % 28 === 0) tickPositions.push(px, 0.02, pz);
+      }
+      const dayGeometry = new THREE.BufferGeometry();
+      dayGeometry.setAttribute("position", new THREE.BufferAttribute(dayPositions, 3));
+      shell.add(new THREE.Points(dayGeometry, new THREE.PointsMaterial({
+        color: 0x8fb6d9, size: 0.014, transparent: true,
+        opacity: lived ? 0.85 : 0.5, depthWrite: false,
+      })));
+      const tickGeometry = new THREE.BufferGeometry();
+      tickGeometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(tickPositions), 3));
+      shell.add(new THREE.Points(tickGeometry, new THREE.PointsMaterial({
+        color: 0xf2ead8, size: 0.03, transparent: true, opacity: 0.8, depthWrite: false,
+      })));
+      // The selected day's counterpart in this year: ringed, and
+      // wearing its symbol when the day holds records here — the
+      // bare ring when it doesn't.
+      let counterpart = null;
+      if (Number.isInteger(selectedDay)) {
+        const angle = angleForDay(selectedDay);
+        const px = Math.sin(angle) * SHELL_RADIUS;
+        const pz = -Math.cos(angle) * SHELL_RADIUS;
+        const ring = new THREE.Mesh(
+          new THREE.RingGeometry(0.032, 0.048, 24),
+          new THREE.MeshBasicMaterial({
+            color: 0xf2ead8, transparent: true, opacity: 0.95,
+            side: THREE.DoubleSide, depthWrite: false,
+          })
+        );
+        ring.rotation.x = -Math.PI / 2;
+        ring.position.set(px, 0.012, pz);
+        shell.add(ring);
+        const entries = index?.byDay.get(`${year}:${selectedDay}`) || [];
+        if (entries.length) {
+          const symbolSprite = makeSymbolSprite(THREE, entries[0].symbol, entries.length);
+          symbolSprite.position.set(px, 0.1, pz);
+          shell.add(symbolSprite);
+        }
+        counterpart = {
+          day: selectedDay,
+          hasRecords: entries.length > 0,
+          symbol: entries[0]?.symbol || null,
+          count: entries.length,
+        };
+      }
+      // Pattern-lit days on this shell: brighter marks in the
+      // kind's own colour.
+      const litHere = litByYear.get(year) || [];
+      if (litHere.length) {
+        const positions = new Float32Array(litHere.length * 3);
+        const colours = new Float32Array(litHere.length * 3);
+        litHere.forEach((lit, j) => {
+          const angle = angleForDay(lit.day);
+          positions[j * 3] = Math.sin(angle) * SHELL_RADIUS;
+          positions[j * 3 + 1] = 0.016;
+          positions[j * 3 + 2] = -Math.cos(angle) * SHELL_RADIUS;
+          const colour = new THREE.Color(lit.colour);
+          colours[j * 3] = colour.r;
+          colours[j * 3 + 1] = colour.g;
+          colours[j * 3 + 2] = colour.b;
+        });
+        const litGeometry = new THREE.BufferGeometry();
+        litGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+        litGeometry.setAttribute("color", new THREE.BufferAttribute(colours, 3));
+        shell.add(new THREE.Points(litGeometry, new THREE.PointsMaterial({
+          size: 0.045, vertexColors: true, transparent: true, opacity: 0.95, depthWrite: false,
+        })));
+      }
+      const label = makeTextSprite(THREE, [String(year), shellWordFor(year, todayYear, cursorYear)]);
+      label.position.set(0, SHELL_RADIUS + 0.31, 0);
+      shell.add(label);
+      const proxy = new THREE.Mesh(
+        new THREE.SphereGeometry(SHELL_RADIUS + 0.09, 10, 8),
+        new THREE.MeshBasicMaterial({ visible: false })
+      );
+      proxy.userData.yearsLine = { kind: "year-shell", year };
+      shell.add(proxy);
+      proxies.push(proxy);
+      group.add(shell);
+      const supported = supportedYearRange();
+      shells.push({
+        year, lived, ahead,
+        standingHere: year === cursorYear,
+        enterable: !supported || (year >= supported.min && year <= supported.max),
+        counterpart,
+        litCount: litHere.length,
+        group: shell,
+      });
+    });
+    group.visible = false;
+    context.scene.add(group);
+    state.years.group = group;
+    state.years.shells = shells;
+    state.years.proxies = proxies;
+    state.years.builtKey = yearsBuildKey(range);
+  }
+
+  function ensureYearsLine(context) {
+    const range = yearsLineRange(
+      todayAlignment()?.patternYear ?? null,
+      state.selection?.patternYear ?? null
+    );
+    if (!state.years.group || state.years.builtKey !== yearsBuildKey(range)) {
+      buildYearsLine(context);
+    }
+  }
+
+  /*
+   * The years the Sphere's face can stand in: the alignment
+   * ledger's study range (AlignmentLedgerData — 2014–2027 in the
+   * current data), which the sphere UI clamps every cursor year
+   * to. The calendar's arithmetic runs further, and the record
+   * can hold those years — but the face cannot stand there yet,
+   * and this slice will not pretend otherwise. Read live, so when
+   * the ledger's range grows, entry grows with it.
+   */
+  function supportedYearRange() {
+    try {
+      const years = global.AlignmentLedgerData?.listSupportedYears?.();
+      if (!Array.isArray(years) || !years.length) return null;
+      const clean = years.map(Number).filter(Number.isFinite);
+      if (!clean.length) return null;
+      return { min: Math.min(...clean), max: Math.max(...clean) };
+    } catch {
+      return null;
+    }
+  }
+
+  function beyondRangeNotice(year, supported) {
+    return {
+      text: `${year} — its calendar is real, but the alignment ledger studies `
+        + `${supported.min}–${supported.max}, so the face cannot stand in ${year} yet. `
+        + "Its record still counts in Patterns.",
+      expiresAt: performance.now() + 15000,
+    };
+  }
+
+  /*
+   * Entering a year: the cursor moves (the one temporal
+   * authority — the selection bridge's own verified route), the
+   * camera flies back to Year View distance, and the Sphere shows
+   * that year in full. A year whose record is empty says so. A
+   * year beyond the ledger's study range is not entered — the
+   * face would clamp it to a different year, and landing
+   * somewhere other than where the keeper pointed is a lie.
+   */
+  async function enterYear(year) {
+    if (!Number.isInteger(year)) return;
+    const supported = supportedYearRange();
+    if (supported && (year < supported.min || year > supported.max)) {
+      state.notice = beyondRangeNotice(year, supported);
+      updateChip();
+      return;
+    }
+    const selection = state.selection || currentSelection();
+    const today = todayAlignment();
+    const day = selection && Number.isInteger(selection.patternDay)
+      ? selection.patternDay
+      : (today?.patternDay || 1);
+    const records = await recordsForYear(year);
+    routeAnnouncedSelection({ patternDay: day, patternYear: year });
+    global.LivingTimeSphereRenderer3d?.focusPatternDay?.(day, {
+      distance: 3.45,
+      animated: !reducedMotionQuery.matches,
+    });
+    state.notice = records.length
+      ? null
+      : {
+          text: `${year} — the calendar is real; nothing is recorded there yet.`,
+          expiresAt: performance.now() + 15000,
+        };
+    updateChip();
+  }
+
+  /* ── Pattern tracking ── */
+
+  function patternYears() {
+    const years = new Set(yearsLineRange(
+      todayAlignment()?.patternYear ?? null,
+      state.selection?.patternYear ?? null
+    ));
+    if (Number.isInteger(state.selection?.patternYear)) years.add(state.selection.patternYear);
+    return [...years].sort((a, b) => a - b);
+  }
+
+  /*
+   * The pattern index over the years on the line, from the ONE
+   * planner record (plansForYears). Cached against the records
+   * version, the year set, and today's place (overdue depends on
+   * it). Nothing else is read; nothing is manufactured.
+   */
+  async function ensurePatternIndex() {
+    const planner = global.CodexLivingPlanner;
+    if (!planner?.plansForYears || state.patterns.loading) return state.patterns.index;
+    const today = todayAlignment();
+    const years = patternYears();
+    const key = `${state.recordsVersion}|${years.join(",")}|${today?.patternYear}:${today?.patternDay}`;
+    if (state.patterns.index && state.patterns.indexKey === key) return state.patterns.index;
+    state.patterns.loading = true;
+    try {
+      const records = await planner.plansForYears(years);
+      state.patterns.index = buildPatternIndex(records, global.CodexLifeAtlasScheduling, today);
+      state.patterns.indexKey = key;
+      state.years.builtKey = "";
+      refreshPatternLighting();
+      if (state.patterns.open) renderPatternsPanel();
+      updateChip();
+    } catch {
+      // The index keeps its last honest state; the panel says the
+      // record could not be read when it has nothing.
+    } finally {
+      state.patterns.loading = false;
+    }
+    return state.patterns.index;
+  }
+
+  function refreshPatternLighting() {
+    const patterns = state.patterns;
+    patterns.lit = patterns.index ? litDaysFor(patterns.index, patterns.filter) : [];
+    patterns.overlayKey = ""; // force the overlay to re-read the lit set
+    if (state.lastContext) buildPatternOverlay(state.lastContext);
+    state.years.builtKey = "";
+    if (patterns.open) renderPatternResult();
+    updateChip();
+  }
+
+  function clearPatternOverlay() {
+    if (state.patterns.overlayGroup && state.scene) {
+      state.scene.remove(state.patterns.overlayGroup);
+    }
+    if (state.patterns.overlayGroup) disposeObject(state.patterns.overlayGroup);
+    state.patterns.overlayGroup = null;
+    state.patterns.overlayKey = "";
+  }
+
+  /*
+   * The lit days on the faced year: a symbol field over the disc
+   * at the record layer's own marker positions, each day ringed
+   * and wearing its kind's symbol in its kind's colour — the same
+   * atlas-points pattern the record extension renders with, one
+   * tile per symbol plus a ring tile.
+   */
+  function buildPatternOverlay(context) {
+    const THREE = context.THREE || global.THREE;
+    if (!THREE || !context.scene) return;
+    const cursorYear = state.selection?.patternYear;
+    const litHere = state.patterns.lit.filter((lit) => lit.year === cursorYear);
+    const key = `${cursorYear}|${litHere.map((lit) => `${lit.day}:${lit.primarySymbol}:${lit.count}`).join(",")}`;
+    if (state.patterns.overlayGroup && state.patterns.overlayKey === key) return;
+    clearPatternOverlay();
+    if (!litHere.length) return;
+    const geometryApi = global.LivingTimeSphereCalendarGeometry;
+    if (!geometryApi?.calendarCell) return;
+    const patternRing = Number(geometryApi.getPatternRingRadius?.()) || 0.70;
+    const symbols = [...new Set(litHere.map((lit) => lit.primarySymbol))];
+    const tile = 96;
+    const columns = symbols.length + 1; // the last tile is the ring
+    const canvas = document.createElement("canvas");
+    canvas.width = tile * columns;
+    canvas.height = tile;
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "62px serif";
+    symbols.forEach((symbol, i) => {
+      ctx.fillText(symbol, tile * i + tile / 2, tile / 2 + 4);
+    });
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 7;
+    ctx.beginPath();
+    ctx.arc(tile * symbols.length + tile / 2, tile / 2, 33, 0, Math.PI * 2);
+    ctx.stroke();
+    const texture = new THREE.CanvasTexture(canvas);
+    const pixelRatio = context.renderer?.getPixelRatio?.() || global.devicePixelRatio || 1;
+    const makePoints = (symbolIndexFor, size) => {
+      const count = litHere.length;
+      const positions = new Float32Array(count * 3);
+      const colours = new Float32Array(count * 3);
+      const indices = new Float32Array(count);
+      litHere.forEach((lit, i) => {
+        const cell = geometryApi.calendarDisplayCell?.(lit.day) || geometryApi.calendarCell(lit.day);
+        const angle = Number(cell?.angle ?? 0) * Math.PI / 180;
+        const radial = Number(cell?.scheduleRadialFactor ?? cell?.radialFactor ?? 1);
+        const radius = patternRing * radial;
+        positions[i * 3] = Math.sin(angle) * radius;
+        positions[i * 3 + 1] = 0.05;
+        positions[i * 3 + 2] = -Math.cos(angle) * radius;
+        const colour = new THREE.Color(symbolIndexFor.ring ? 0xf2ead8 : lit.colour);
+        colours[i * 3] = colour.r;
+        colours[i * 3 + 1] = colour.g;
+        colours[i * 3 + 2] = colour.b;
+        indices[i] = symbolIndexFor.ring ? symbols.length : symbols.indexOf(lit.primarySymbol);
+      });
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute("aColor", new THREE.BufferAttribute(colours, 3));
+      geometry.setAttribute("aSymbolIndex", new THREE.BufferAttribute(indices, 1));
+      const material = new THREE.ShaderMaterial({
+        uniforms: {
+          uAtlas: { value: texture },
+          uColumns: { value: columns },
+          uPixelRatio: { value: pixelRatio },
+          uPointSize: { value: size },
+          uOpacity: { value: 0.95 },
+        },
+        vertexShader: `
+          attribute vec3 aColor;
+          attribute float aSymbolIndex;
+          uniform float uPixelRatio;
+          uniform float uPointSize;
+          varying vec3 vColor;
+          varying float vSymbolIndex;
+          void main() {
+            vColor = aColor;
+            vSymbolIndex = aSymbolIndex;
+            vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+            gl_PointSize = uPointSize * uPixelRatio;
+            gl_Position = projectionMatrix * mvPosition;
+          }
+        `,
+        fragmentShader: `
+          uniform sampler2D uAtlas;
+          uniform float uColumns;
+          uniform float uOpacity;
+          varying vec3 vColor;
+          varying float vSymbolIndex;
+          void main() {
+            float column = mod(vSymbolIndex, uColumns);
+            vec2 uv = vec2((column + gl_PointCoord.x) / uColumns, gl_PointCoord.y);
+            vec4 texel = texture2D(uAtlas, uv);
+            float alpha = texel.a * uOpacity;
+            if (alpha < 0.03) discard;
+            gl_FragColor = vec4(vColor, alpha);
+          }
+        `,
+        transparent: true,
+        depthWrite: false,
+      });
+      const points = new THREE.Points(geometry, material);
+      points.renderOrder = 19;
+      points.frustumCulled = false;
+      return points;
+    };
+    const group = new THREE.Group();
+    group.name = "living-time-sphere-pattern-overlay";
+    group.add(makePoints({ ring: true }, 46));
+    group.add(makePoints({ ring: false }, 30));
+    context.scene.add(group);
+    state.scene = context.scene;
+    state.patterns.overlayGroup = group;
+    state.patterns.overlayKey = key;
+  }
+
+  function enterPatternDay(year, day) {
+    const supported = supportedYearRange();
+    if (supported && (year < supported.min || year > supported.max)) {
+      state.notice = beyondRangeNotice(year, supported);
+      closePatterns();
+      updateChip();
+      return;
+    }
+    routeAnnouncedSelection({ patternDay: day, patternYear: year });
+    global.LivingTimeSphereRenderer3d?.focusPatternDay?.(day, {
+      distance: 1.45,
+      animated: !reducedMotionQuery.matches,
+    });
+    closePatterns();
+  }
+
+  function setPatternFilter(patch) {
+    Object.assign(state.patterns.filter, patch);
+    refreshPatternLighting();
+    renderPatternsPanel();
+  }
+
+  function renderPatternResult() {
+    const dom = ensureDom();
+    const { filter, lit } = state.patterns;
+    dom.pDays.replaceChildren();
+    dom.pActions.replaceChildren();
+    const yearsButton = el("button", "dw-ins-btn", "Stand on the years line");
+    yearsButton.type = "button";
+    yearsButton.addEventListener("click", () => {
+      closePatterns();
+      global.LivingTimeSphereCamera?.moveTo?.({
+        dist: 5.2,
+        animated: !reducedMotionQuery.matches,
+        durationMs: 700,
+      });
+    });
+    const clearButton = el("button", "dw-ins-btn", "Clear the lighting");
+    clearButton.type = "button";
+    clearButton.addEventListener("click", () => {
+      setPatternFilter({ categories: null, recurringOnly: false, label: null });
+    });
+    dom.pActions.append(yearsButton, clearButton);
+    if (!filter.label) {
+      dom.pResult.textContent = "Nothing is lit yet. Pick a kind above and its days will light — here, on the Sphere, and down the years line.";
+      return;
+    }
+    if (!lit.length) {
+      dom.pResult.textContent = `No days hold ${filter.label} in the years on the line. Nothing is lit, because nothing is recorded.`;
+      return;
+    }
+    const totalRecords = lit.reduce((sum, litDay) => sum + litDay.count, 0);
+    dom.pResult.textContent = `${filter.label} — ${lit.length} ${lit.length === 1 ? "day holds" : "days hold"} it `
+      + `(${totalRecords} ${totalRecords === 1 ? "record" : "records"} — a count of days, nothing more claimed). `
+      + "Days holding the same kind are the same kind, not the same thing.";
+    for (const litDay of lit.slice(0, 24)) {
+      const moon = Math.floor((litDay.day - 1) / 28) + 1;
+      const moonDay = ((litDay.day - 1) % 28) + 1;
+      const row = el("button", "dw-ins-row",
+        `${litDay.primarySymbol} ${litDay.year} · Moon ${moon} · Day ${moonDay} — ${litDay.entries[0].title}`
+        + (litDay.count > 1 ? ` (+${litDay.count - 1} more)` : ""));
+      row.type = "button";
+      row.addEventListener("click", () => enterPatternDay(litDay.year, litDay.day));
+      dom.pDays.appendChild(row);
+    }
+    if (lit.length > 24) {
+      dom.pDays.appendChild(el("p", "dw-ins-sub", `…and ${lit.length - 24} more days.`));
+    }
+  }
+
+  function renderPatternsPanel() {
+    const dom = ensureDom();
+    const index = state.patterns.index;
+    dom.pStanding.replaceChildren();
+    for (const [value, label] of [
+      ["any", "Any standing"], ["open", "Open"], ["completed", "Completed"], ["overdue", "Overdue"],
+    ]) {
+      const button = el("button", "dw-pattern-standing-btn", label);
+      button.type = "button";
+      button.setAttribute("aria-pressed", String(state.patterns.filter.standing === value));
+      button.addEventListener("click", () => {
+        state.patterns.filter.standing = value;
+        refreshPatternLighting();
+        renderPatternsPanel();
+      });
+      dom.pStanding.appendChild(button);
+    }
+    dom.pGroups.replaceChildren();
+    if (!index) {
+      dom.pGroups.appendChild(el("p", "dw-ins-sub",
+        state.patterns.loading ? "Reading the record…" : "The record could not be read just now."));
+      renderPatternResult();
+      return;
+    }
+    const counts = dayCountsByCategory(index);
+    const activeCategories = state.patterns.filter.categories;
+    for (const group of PATTERN_GROUPS) {
+      const head = el("div", "dw-pattern-group-head");
+      const groupActive = activeCategories
+        && group.categories.every((category) => activeCategories.has(category))
+        && activeCategories.size === group.categories.length;
+      const allButton = el("button", "dw-pattern-kind dw-pattern-kind-all", `${group.label} — all`);
+      allButton.type = "button";
+      allButton.setAttribute("aria-pressed", String(Boolean(groupActive)));
+      allButton.addEventListener("click", () => {
+        setPatternFilter({
+          categories: new Set(group.categories),
+          recurringOnly: false,
+          label: `all of ${group.label.toLowerCase()}`,
+        });
+      });
+      head.appendChild(allButton);
+      dom.pGroups.appendChild(head);
+      for (const category of group.categories) {
+        const days = counts.get(category) || 0;
+        const row = el("button", "dw-pattern-kind",
+          `${SYMBOL_BY_CATEGORY[category]} ${KIND_NAMES[category]} — ${days} ${days === 1 ? "day" : "days"}`);
+        row.type = "button";
+        if (!days) row.classList.add("dw-pattern-kind-empty");
+        row.setAttribute("aria-pressed", String(Boolean(
+          activeCategories && activeCategories.size === 1 && activeCategories.has(category)
+        )));
+        row.addEventListener("click", () => {
+          setPatternFilter({
+            categories: new Set([category]),
+            recurringOnly: false,
+            label: KIND_NAMES[category].toLowerCase(),
+          });
+        });
+        dom.pGroups.appendChild(row);
+      }
+    }
+    // Documented ties: a record's own stored recurrence, named as
+    // what it is. Nothing else is drawn as a tie — no live
+    // relations source is wired into the Sphere session, and
+    // drawing one would manufacture it (see the build note).
+    const tiesHead = el("div", "dw-pattern-group-head");
+    tiesHead.appendChild(el("span", "dw-pattern-ties-note",
+      "Documented ties — a record that repeats carries its recurrence written on itself. "
+      + "Lighting those days shows where recorded recurrences stand; it draws no ties between separate records."));
+    dom.pGroups.appendChild(tiesHead);
+    let recurringDays = 0;
+    for (const entries of index.byDay.values()) {
+      if (entries.some((entry) => entry.recurrence)) recurringDays += 1;
+    }
+    const recurringRow = el("button", "dw-pattern-kind",
+      `↻ Repeating, as recorded — ${recurringDays} ${recurringDays === 1 ? "day" : "days"}`);
+    recurringRow.type = "button";
+    if (!recurringDays) recurringRow.classList.add("dw-pattern-kind-empty");
+    recurringRow.setAttribute("aria-pressed", String(state.patterns.filter.recurringOnly));
+    recurringRow.addEventListener("click", () => {
+      setPatternFilter({
+        categories: null,
+        recurringOnly: true,
+        label: "a recorded recurrence",
+      });
+    });
+    dom.pGroups.appendChild(recurringRow);
+    renderPatternResult();
+  }
+
+  async function openPatterns() {
+    const dom = ensureDom();
+    closeInspector();
+    state.patterns.open = true;
+    dom.patternsPanel.hidden = false;
+    dom.patternsDoor.setAttribute("aria-expanded", "true");
+    renderPatternsPanel();
+    await ensurePatternIndex();
+  }
+
+  function closePatterns() {
+    state.patterns.open = false;
+    if (state.dom) {
+      state.dom.patternsPanel.hidden = true;
+      state.dom.patternsDoor.setAttribute("aria-expanded", "false");
+    }
   }
 
   /* ── Extension ── */
@@ -1439,15 +2672,66 @@
         }
         const immersive = stage === "immersive";
         for (const post of state.hourPosts) post.visible = immersive;
+        // The bubble breathes with the crossing: a pulse of light
+        // on its skin for a breath after the membrane is passed.
+        if (state.bubble) {
+          const sinceCross = now - state.membrane.lastCrossAt;
+          const pulse = sinceCross >= 0 && sinceCross < 650 ? 1 - sinceCross / 650 : 0;
+          state.bubble.material.opacity = 0.055 + 0.17 * pulse;
+          if (pulse > 0) {
+            if (typeof context.requestRender === "function") context.requestRender();
+            else global.LivingTimeSphereAnimation?.markDirty?.();
+          }
+        }
       }
       if (stage !== state.stage) {
         const wasInDay = state.stage === "living" || state.stage === "immersive";
         const isInDay = stage === "living" || stage === "immersive";
+        // The membrane: Living ↔ Immersive is the day bubble's
+        // skin passing the keeper, in or out.
+        if (state.stage === "living" && stage === "immersive") playMembrane("in");
+        if (state.stage === "immersive" && stage === "living") playMembrane("out");
         state.stage = stage;
         if (isInDay) state.frameNudgePending = true;
         if (!isInDay && wasInDay) maybeRestoreCentre();
+        if (stage === "years") void ensurePatternIndex();
         updateChip();
       }
+      // The years line: built only while it can be seen, faded at
+      // its stage edge, a schematic — never a second scene.
+      {
+        const targetFade = stage === "years" ? 1 : 0;
+        const years = state.years;
+        if (reducedMotionQuery.matches || context.motionMode === "still") {
+          years.fade = targetFade;
+        } else if (years.fade !== targetFade) {
+          const step = 1 - Math.exp(-dt / 160);
+          years.fade += (targetFade - years.fade) * step;
+          if (Math.abs(targetFade - years.fade) < 0.01) years.fade = targetFade;
+          if (typeof context.requestRender === "function") context.requestRender();
+          else global.LivingTimeSphereAnimation?.markDirty?.();
+        }
+        if (stage === "years") ensureYearsLine(context);
+        if (years.group) {
+          // The line keeps the view's front: the group turns with
+          // the camera's azimuth, so the beads always stand across
+          // the front of the frame, never behind the instrument.
+          const theta = global.LivingTimeSphereCamera?.getState?.()?.theta;
+          if (Number.isFinite(theta)) years.group.rotation.y = theta;
+          years.group.visible = years.fade > 0.01;
+          if (years.group.visible) {
+            years.group.traverse((node) => {
+              if (!node.material || !("opacity" in node.material)) return;
+              if (node.userData.baseOpacity == null) {
+                node.userData.baseOpacity = node.material.opacity;
+              }
+              node.material.opacity = node.userData.baseOpacity * years.fade;
+            });
+          }
+        }
+      }
+      // The pattern overlay follows the lit set and the faced year.
+      if (state.patterns.index) buildPatternOverlay(context);
       if (state.frameNudgePending
         && (state.stage === "living" || state.stage === "immersive")) {
         maybeFrameWorld(context);
@@ -1517,6 +2801,34 @@
     },
 
     pick(context) {
+      // On the years line, a touched shell is entered: the cursor
+      // moves to that year and the Sphere builds it in full.
+      if (state.stage === "years" && state.years.proxies.length) {
+        const raycaster = context.raycaster;
+        if (raycaster?.intersectObjects) {
+          const shellHits = raycaster.intersectObjects(state.years.proxies, false);
+          if (shellHits.length) {
+            const year = shellHits[0].object.userData.yearsLine?.year;
+            if (Number.isInteger(year)) {
+              void enterYear(year);
+              const elements = shellHits[0].object.matrixWorld?.elements;
+              return {
+                handled: true,
+                type: "years-line-enter",
+                label: `Year ${year}`,
+                position: elements
+                  ? { x: elements[12], y: elements[13], z: elements[14] }
+                  : { x: 0, y: 0, z: 0 },
+                temporal: {
+                  patternYear: year,
+                  patternDay: state.selection?.patternDay,
+                },
+                payload: { year },
+              };
+            }
+          }
+        }
+      }
       if (!state.group || !state.group.visible) return null;
       if (!(state.stage === "living" || state.stage === "immersive" || state.bloom >= 0.6)) return null;
       const raycaster = context.raycaster;
@@ -1582,10 +2894,15 @@
 
     dispose() {
       clearWorld();
+      clearYearsLine();
+      clearPatternOverlay();
       state.roomsObserver?.disconnect?.();
       state.roomsObserver = null;
       state.dom?.chip?.remove?.();
       state.dom?.inspector?.remove?.();
+      state.dom?.membrane?.remove?.();
+      state.dom?.patternsPanel?.remove?.();
+      state.dom?.doorRow?.remove?.();
       state.dom = null;
     },
   };
@@ -1593,15 +2910,20 @@
   global.LivingTimeSphereExtensionHost.register(extension);
 
   global.addEventListener("sof:life-atlas-records-changed", (event) => {
-    if (event?.detail?.source === "day-world-adapter") {
-      // Our own write already bumped the version in
-      // dispatchRecordsChanged; rebuild against the fresh record.
-      if (state.lastContext) void rebuild(state.lastContext, true);
-      return;
+    const ownWrite = event?.detail?.source === "day-world-adapter";
+    if (!ownWrite) {
+      state.recordsVersion += 1;
+      state.yearCache = { year: null, records: null };
     }
-    state.recordsVersion += 1;
-    state.yearCache = { year: null, records: null };
-    if (state.lastContext) void rebuild(state.lastContext);
+    // The pattern index is keyed to the records version; a change
+    // anywhere retires it, and an open panel re-reads the record.
+    // (Our own write already bumped the version in
+    // dispatchRecordsChanged.)
+    state.patterns.index = null;
+    state.patterns.indexKey = "";
+    state.years.builtKey = "";
+    if (state.patterns.open) void ensurePatternIndex();
+    if (state.lastContext) void rebuild(state.lastContext, ownWrite);
   });
   global.addEventListener("sof:temporal-cursor-change", () => {
     if (state.lastContext) void rebuild(state.lastContext);
