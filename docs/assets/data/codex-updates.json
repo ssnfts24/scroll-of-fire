@@ -10,6 +10,14 @@
   {
     "date": "2026-11-23",
     "type": "feature",
+    "title": "The Sphere's days learned to breathe",
+    "summary": "Three repairs Aaron named from his phone, made inside the protected Sphere files he opened for exactly these fixes. The day numbers no longer stand stuck together: the faced Moon's twenty-eight plates spread wider at arm's length, back at their natural size, and none of them touches another in any pose. As you approach a day its number now swells steadily — small and quiet at range, growing with closeness, full as you enter the day — and settles back as you pull away, always under the law that no two plates may touch. And the wording no longer drifts behind the turning Sphere: the labels re-draw at the pace the camera actually moves, not twice a second. The calendar's own math did not move; what changed is how the face presents it.",
+    "url": "./living-time-sphere.html",
+    "symbol": "◎"
+  },
+  {
+    "date": "2026-11-23",
+    "type": "feature",
     "title": "The Episode Library opened its doors",
     "summary": "The story's films now stand together in one room. Every film of the Traveller's Road plays where it stands, told apart by name, land, Moon and token — never by number — with its written chapter as its reading companion, and the vision trailer, finished and approved, opens the room as its feature presentation. A keeper's place is kept on their own device by the same watch record the story's pages keep: only a true watch counts, and a finished watch brings the token home, here as anywhere. The episodes still being written stand on their own shelf, named plainly as planned or scripted, with nothing to play yet — among them the Night Road's six, scripted in full, and the five of the Living Circuit, the series of the author's own device works, now registered in the story bible.",
     "url": "./episodes.html",
@@ -54,6 +62,20 @@
     "summary": "The whole work set down in one paper: the framework and its method, the 13 Moons, the Living Sphere and its layers, the Spark, and the Living Phone — as designed and as built, with the state of each part stated honestly and the author's open questions printed unresolved.",
     "url": "./codex-white-paper.html",
     "symbol": "☾"
+  },
+  {
+    "date": "2026-11-23",
+    "type": "feature",
+    "title": "The Moons took their settled names",
+    "summary": "The thirteen Moons now answer to one settled set of names everywhere the site speaks them — the Pattern Calendar's own set, Deep Mirror and Return Path among them — the same names on the Sphere's face, in the calendar, and in this record, held there by a test that pins them so the two sets cannot drift apart again.",
+    "url": "./living-time-sphere.html"
+  },
+  {
+    "date": "2026-11-23",
+    "type": "feature",
+    "title": "The tracker left the site",
+    "summary": "The site no longer keeps any count of its visitors. Google Analytics was removed from every page — all seventy-two of them, the Sphere's own page among them, opened for this one change — and a guard in the test suite now holds the count at zero, so it cannot creep back unnoticed.",
+    "url": "./index.html"
   },
   {
     "date": "2026-11-23",

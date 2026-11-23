@@ -830,8 +830,21 @@
     // calendarCell() remains the compact canonical selectable authority.
     // Only the visible number face uses the older, spacious 4-week geometry
     // that was visually clearer on the phone.
-    dayNumberPresentationWeek1: 1.320,
-    dayNumberPresentationWeekStep: 0.092,
+    // Widened Nov 23, 2026 (Aaron's live report from his phone: "the days
+    // are stick" — the faced Moon's 28 plates stood in a 79×41px patch at
+    // the opening distance and the label manager's pitch cap shrank every
+    // plate to ~8px to keep them from touching, so the grid read as one
+    // stuck pile). Presentation lanes only: week 1 sits a little further
+    // out and the four week lanes stand further apart (1.380 + week ×
+    // 0.150), so the wedge spreads at arm's length — measured in the lab
+    // at 412×915: patch 93×64px, the median plate back at its natural
+    // band size with the pitch cap barely engaged, zero intersecting
+    // pairs in every pose. calendarCell(), the canonical angle, and the
+    // selection math do not move; picking reads these same lanes through
+    // nearestDisplayCell, so the day under the numeral is still the day
+    // that gets selected.
+    dayNumberPresentationWeek1: 1.380,
+    dayNumberPresentationWeekStep: 0.150,
     scheduleSymbolPresentationOffset: 0.000,
     scheduleSymbolInset: 0.046,
     scheduleStackStep: 0.018,
@@ -3124,9 +3137,28 @@
     // lightweight, throttled projection pass so the camera-facing Moon follows the
     // user's finger; full card/collision work resumes after the gesture settles.
     const stamp = Number(nowMs || globalThis.performance?.now?.() || Date.now());
-    const interactionLite = _cameraGestureActive && !force;
-    const minInterval = interactionLite ? 96 : 500;
     const key = _labelProjectionKey(viewMode);
+    // Label cadence (Nov 23, 2026 — Aaron, live on his phone: "the
+    // wording on the page drifts behind the Sphere"). The layout pass
+    // used to re-project at most every 500ms unless a finger gesture
+    // was active, so during any other continuous motion — a glide to a
+    // day, the idle drift, a cinematic zoom — the layout decisions
+    // (which Moon is disclosed, plate sizes, pill places) refreshed
+    // twice a second at best while the scene itself moved every frame,
+    // and the wording visibly trailed the turning Sphere (lab
+    // measurement on the unmodified tree: pass bursts 449–720ms apart
+    // during a steady programmatic turn). The cadence is now keyed to
+    // the camera: while the projection key is changing, passes run at
+    // the gesture cadence (96ms) in the same lightweight form gestures
+    // already use — day numbers only, no card composition, the form
+    // B7.37 proved cheap enough for live tracking. When the camera is
+    // still, the 500ms safety refresh stands as before, and a full
+    // pass still lands within half a second of any stop. The
+    // per-frame track loop in the label manager carries the plates
+    // between passes, unchanged.
+    const cameraMoving = key !== _lastLabelProjectionKey;
+    const interactionLite = (_cameraGestureActive || cameraMoving) && !force;
+    const minInterval = interactionLite ? 96 : 500;
     if (!force && stamp - _lastLabelProjectionAt < minInterval) return;
     if (!interactionLite && !force && key === _lastLabelProjectionKey && stamp - _lastLabelProjectionAt < 500) return;
     _lastLabelProjectionKey = key;

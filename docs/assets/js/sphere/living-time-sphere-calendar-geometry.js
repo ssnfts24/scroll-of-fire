@@ -159,12 +159,18 @@
    */
   function calendarDisplayCell(dayNumber, options = {}) {
     const cell = calendarCell(dayNumber);
+    // Presentation defaults mirror the renderer's CALENDAR_RAIL
+    // presentation lanes (widened Nov 23, 2026 — see the note there):
+    // callers that pass no options (the day-world adapter) and callers
+    // that pass the rail explicitly must land on the same lanes, so
+    // the numeral, the schedule glyph, and the pick search never
+    // drift into separate math.
     const dayNumberWeek1 = Number.isFinite(Number(options.dayNumberWeek1))
       ? Number(options.dayNumberWeek1)
-      : 1.320;
+      : 1.380;
     const dayNumberWeekStep = Number.isFinite(Number(options.dayNumberWeekStep))
       ? Number(options.dayNumberWeekStep)
-      : 0.092;
+      : 0.150;
     const scheduleInset = Number.isFinite(Number(options.scheduleInset))
       ? Math.max(0.018, Math.min(0.080, Number(options.scheduleInset)))
       : 0.046;

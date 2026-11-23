@@ -218,11 +218,11 @@ test("the white paper no longer describes the trailer as awaiting approval", () 
   assert.ok(paper.includes("Episode Library"), "the paper names the trailer's placed home");
 });
 
-test("the growth record carries the Library at index 1, under the pinned head", () => {
+test("the growth record carries the Library at index 2, under the pinned head", () => {
   const updates = JSON.parse(read("docs/assets/data/codex-updates.json"));
   assert.equal(updates[0].title, "The front door gained its small surfaces", "the pinned head stands");
-  assert.equal(updates[1].url, "./episodes.html", "the Library entry stands at index 1");
-  assert.equal(updates[1].date, "2026-11-23");
+  assert.equal(updates[2].url, "./episodes.html", "the Library entry stands at index 2 (the Sphere's breathing entry landed above it in PR #267)");
+  assert.equal(updates[2].date, "2026-11-23");
   const index = read("docs/index.html");
   const growth = index.slice(index.indexOf("data-le-growth"), index.indexOf("</ul>", index.indexOf("data-le-growth")));
   assert.ok(growth.includes("./episodes.html"), "the homepage panel mirrors the Library entry");

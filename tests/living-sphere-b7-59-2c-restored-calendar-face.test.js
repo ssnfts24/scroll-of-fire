@@ -25,7 +25,11 @@ const geometry = sandbox.LivingTimeSphereCalendarGeometry;
 
 test("B7.59.2C keeps compact canonical cells while restoring the broad visual 4x7 face", () => {
   const canonical = [1.298, 1.328, 1.358, 1.388];
-  const visual = [1.320, 1.412, 1.504, 1.596];
+  // Visual lanes widened Nov 23, 2026 under Aaron's explicit
+  // opening for the three protected fixes (the days stuck
+  // together on his phone) — presentation only; the canonical
+  // array above is the one that must never move.
+  const visual = [1.380, 1.530, 1.680, 1.830];
 
   for (let week = 1; week <= 4; week += 1) {
     const day = 1 + (week - 1) * 7;
@@ -34,8 +38,8 @@ test("B7.59.2C keeps compact canonical cells while restoring the broad visual 4x
     assert.ok(visual[week - 1] > canonical[week - 1]);
   }
 
-  assert.match(renderer, /dayNumberPresentationWeek1: 1\.320/);
-  assert.match(renderer, /dayNumberPresentationWeekStep: 0\.092/);
+  assert.match(renderer, /dayNumberPresentationWeek1: 1\.380/);
+  assert.match(renderer, /dayNumberPresentationWeekStep: 0\.150/);
 });
 
 test("B7.59.2C derives numeral position from canonical week but does not mutate calendarCell", () => {

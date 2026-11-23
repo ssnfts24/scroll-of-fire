@@ -559,6 +559,42 @@ test("no R1.7 protected file is touched by this branch", () => {
   const carriesDeepfix = changed.has(
     "docs/assets/css/sphere-armillary.css"
   );
+  /*
+   * Protected-three declaration (Nov 23, 2026 — Aaron opened the
+   * protected Sphere files in plain words for exactly three named
+   * fixes from his live phone report: "Open the protected Sphere
+   * files for these three fixes"). This change set declares itself
+   * by carrying its signature file (the protected-three pin test,
+   * which lives outside the protected directories), and its
+   * declared set names exactly the protected paths it touches:
+   *   - the calendar geometry (calendarDisplayCell's presentation
+   *     lane defaults only — week 1 a little further out, the week
+   *     step wider, so the faced Moon's wedge spreads at the
+   *     opening distance; calendarCell and every canonical reading
+   *     untouched);
+   *   - the renderer (the same two CALENDAR_RAIL presentation
+   *     constants, and the label projection cadence keyed to
+   *     camera movement instead of a flat 500 ms gate outside
+   *     gestures, so the wording stops trailing the Sphere);
+   *   - the label manager (the faced Moon's continuous swell with
+   *     camera distance — Aaron's calibration: the numbers expand
+   *     steadily as you approach, full at the day's entry —
+   *     composing under the existing pitch cap; the fit rules and
+   *     the selected Moon's name protection untouched);
+   *   - the page (cache-version bumps on the three changed assets
+   *     only).
+   * The canonical angle/selection math does not move. Every other
+   * protected path still fails this test loudly.
+   */
+  const protectedThreeDeclaredProtected = new Set([
+    "docs/living-time-sphere.html",
+    "docs/assets/js/sphere/living-time-sphere-calendar-geometry.js",
+    "docs/assets/js/sphere/living-time-sphere-renderer-3d.js",
+    "docs/assets/js/sphere/living-time-sphere-label-manager.js"
+  ]);
+  const carriesProtectedThree = changed.has(
+    "tests/sphere-protected-three-fixes.test.js"
+  );
   for (const file of changed) {
     if (!protectedPaths.has(file)) continue;
     assert.ok(
@@ -571,7 +607,8 @@ test("no R1.7 protected file is touched by this branch", () => {
         (carriesSpherefix && spherefixDeclaredProtected.has(file)) ||
         (carriesTrackerRemoval && trackerRemovalDeclaredProtected.has(file)) ||
         (carriesQuests && questsDeclaredProtected.has(file)) ||
-        (carriesDeepfix && deepfixDeclaredProtected.has(file)),
+        (carriesDeepfix && deepfixDeclaredProtected.has(file)) ||
+        (carriesProtectedThree && protectedThreeDeclaredProtected.has(file)),
       `R1.7 protected file changed: ${file}`
     );
   }
