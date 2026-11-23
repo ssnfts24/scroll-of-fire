@@ -6,9 +6,96 @@
   const STAGE_PADDING = 10;
   // A calendar-face day plate may never overlap its neighbours:
   // its diameter is capped at this fraction of the plate's own
-  // nearest-neighbour pitch, measured per Moon per layout pass
-  // (see the plate pitch cap pass in update()).
+  // nearest-neighbour pitch, measured across ALL composed plates
+  // per layout pass (see the plate pitch cap pass in update()).
   const PLATE_PITCH_CAP_FRACTION = 0.8;
+  // Repair pass (Aaron, Nov 22, 2026, 18:12 — "a multitude of
+  // things wrong here on mobile now"): a CONTEXT Moon whose whole
+  // projected grid pitch falls below this floor is not readable
+  // as plates at all — it collapses to its week anchors instead
+  // of rendering a solid micro-disc block (his top-down shot:
+  // Moon 1's 28 numerals fused into one blob). The faced and
+  // selected Moons are exempt — they are the subject being read.
+  const PLATE_PITCH_FLOOR_PX = 16;
+
+  function circularMoonDistance(a, b) {
+    const d = Math.abs(Number(a) - Number(b)) % 13;
+    return Math.min(d, 13 - d);
+  }
+
+  /*
+   * Median nearest-neighbour anchor distance per Moon, measured
+   * over the pass's projected candidates (the whole disclosed
+   * grid, before the gate thins it). Moons with too few anchors
+   * on stage to judge return no entry — the floor never fires on
+   * a guess.
+   */
+  function moonGridPitches(candidates) {
+    const byMoon = new Map();
+    for (const candidate of candidates || []) {
+      const target = candidate?.target;
+      if (!target || target.kind !== "pattern-day-number") continue;
+      const moon = Number(target.moon || 0);
+      if (!moon) continue;
+      if (!byMoon.has(moon)) byMoon.set(moon, []);
+      byMoon.get(moon).push(candidate);
+    }
+    const pitches = new Map();
+    for (const [moon, list] of byMoon) {
+      if (list.length < 5) continue;
+      const nearest = [];
+      for (let i = 0; i < list.length; i++) {
+        let nn = Infinity;
+        for (let j = 0; j < list.length; j++) {
+          if (i === j) continue;
+          const d = Math.hypot(
+            list[i].anchorX - list[j].anchorX,
+            list[i].anchorY - list[j].anchorY
+          );
+          if (d < nn) nn = d;
+        }
+        if (Number.isFinite(nn)) nearest.push(nn);
+      }
+      if (nearest.length < 5) continue;
+      nearest.sort((a, b) => a - b);
+      pitches.set(moon, nearest[Math.floor(nearest.length / 2)]);
+    }
+    return pitches;
+  }
+
+  /*
+   * The graded disclosure verdict for one context day. Pure: the
+   * caller supplies the regime facts. Returns false when the day
+   * must not disclose under the discipline — the faced centre
+   * Moon and the selected Moon always pass (they are the
+   * subject); scheduled days always pass (a plan is information,
+   * not texture); distance ≥ 2 keeps week anchors only; the
+   * immediate neighbours keep their sparse anchors; a Moon under
+   * the pitch floor keeps week anchors whatever its distance.
+   */
+  function contextDisciplineAllows({
+    moon,
+    moonDay,
+    scheduled = false,
+    centreMoon = null,
+    selectedMoon = null,
+    pitch = null,
+    active = false
+  } = {}) {
+    if (!active) return true;
+    const centre = Number(centreMoon || 0);
+    if (!centre) return true;
+    const m = Number(moon || 0);
+    if (!m || m === centre || m === Number(selectedMoon || 0)) return true;
+    if (scheduled) return true;
+    const day = Number(moonDay || 0);
+    const weekAnchor = day === 1 || day === 7 || day === 14 || day === 21 || day === 28;
+    if (pitch != null && pitch < PLATE_PITCH_FLOOR_PX) return weekAnchor;
+    const distance = circularMoonDistance(m, centre);
+    if (distance >= 2) return weekAnchor;
+    if (distance === 1) return day === 1 || day === 14 || day === 28;
+    return true;
+  }
   const SEMANTIC_TARGET_CAP = 96;
 
   /*
@@ -747,6 +834,29 @@
     const _semanticEls = new Map();
     const _semanticLeaderEls = new Map();
     const _proximityState = createProximityState();
+    /*
+     * Anchor tracking (repair pass, Nov 22, 2026). The renderer
+     * re-runs this manager's full layout at most twice a second
+     * outside a gesture (its 500 ms label cadence) and ~10× a
+     * second inside one, while the 3D scene moves every frame —
+     * so between layouts the plates stood where a stale camera
+     * had put them: grids detached from their Moons, heaped over
+     * neighbours, then popped into place ("the days are sticky;
+     * they are not coming in and going how they should"). The
+     * full pass remains the only authority on WHAT shows (gate,
+     * sizes, opacity); between passes, this loop re-projects the
+     * anchors the pass already chose and shifts each label by
+     * the anchor's own screen delta — transform only, no layout,
+     * no disclosure decisions. When the camera is still the loop
+     * writes nothing, and after ~2 s of stillness it sleeps until
+     * the next layout pass wakes it.
+     */
+    let _tracked = [];
+    let _trackCtx = null;
+    let _trackRaf = 0;
+    let _trackIdleFrames = 0;
+    let _trackLastSig = "";
+    const _trackVec = { current: null };
 
     function _hideLabel(el) {
       if (!el) return;
@@ -789,6 +899,134 @@
 
     function markDirty() {
       _dirty = true;
+    }
+
+    function _trackSignature(camera) {
+      const m = camera?.matrixWorld?.elements;
+      const p = camera?.position;
+      if (!m || !p) return "";
+      return [
+        p.x.toFixed(3), p.y.toFixed(3), p.z.toFixed(3),
+        m[0].toFixed(3), m[5].toFixed(3), m[10].toFixed(3)
+      ].join("|");
+    }
+
+    function _trackFrame() {
+      _trackRaf = 0;
+      const ctx = _trackCtx;
+      if (!ctx || !_tracked.length) return;
+      const { camera, three, offsetX, offsetY, stageW, stageH } = ctx;
+      const sig = _trackSignature(camera);
+      if (sig && sig === _trackLastSig) {
+        _trackIdleFrames += 1;
+        if (_trackIdleFrames < 120) {
+          _trackRaf = requestAnimationFrame(_trackFrame);
+        }
+        return;
+      }
+      _trackLastSig = sig;
+      _trackIdleFrames = 0;
+      if (!_trackVec.current && three?.Vector3) {
+        _trackVec.current = new three.Vector3();
+      }
+      const vec = _trackVec.current;
+      if (vec) {
+        for (const entry of _tracked) {
+          if (!entry.el || entry.el.style.display === "none") continue;
+          vec.set(entry.world[0], entry.world[1], entry.world[2]).project(camera);
+          if (vec.z < -1 || vec.z > 1) {
+            entry.sx = null;
+            entry.sy = null;
+            continue;
+          }
+          const sx = offsetX + (((vec.x + 1) / 2) * stageW);
+          const sy = offsetY + (((-vec.y + 1) / 2) * stageH);
+          entry.sx = sx;
+          entry.sy = sy;
+          entry.dx = sx - entry.baseX;
+          entry.dy = sy - entry.baseY;
+        }
+        /*
+         * Size tracking: positions ride the anchors every frame,
+         * but a plate's pitch cap is measured at layout time —
+         * during a fast swing a grid can compress well inside one
+         * pass cadence, and capped-at-the-old-pitch discs would
+         * overlap until the next pass. Each frame, re-measure
+         * every plate's nearest tracked neighbour at CURRENT
+         * positions and shrink (never grow) its scale by the
+         * pitch ratio, so the 0.8× law holds at current geometry,
+         * not just at pass geometry.
+         */
+        const plateEntries = _tracked.filter(
+          entry => entry.kind === "plate" && entry.sx != null && entry.el?.style.display !== "none"
+        );
+        for (const entry of plateEntries) {
+          let nn = Infinity;
+          for (const other of plateEntries) {
+            if (other === entry) continue;
+            const d = Math.hypot(entry.sx - other.sx, entry.sy - other.sy);
+            if (d < nn) nn = d;
+          }
+          entry.shrink =
+            entry.passNN && Number.isFinite(nn)
+              ? Math.min(1, nn / entry.passNN)
+              : 1;
+        }
+        for (const entry of _tracked) {
+          if (!entry.el || entry.el.style.display === "none" || entry.sx == null) continue;
+          const dx = entry.dx || 0;
+          const dy = entry.dy || 0;
+          const shrink = entry.kind === "plate" ? (entry.shrink ?? 1) : 1;
+          if (
+            Math.abs(dx - (entry.writtenDx || 0)) < 0.05
+            && Math.abs(dy - (entry.writtenDy || 0)) < 0.05
+            && Math.abs(shrink - (entry.writtenShrink ?? 1)) < 0.01
+          ) continue;
+          entry.writtenDx = dx;
+          entry.writtenDy = dy;
+          entry.writtenShrink = shrink;
+          if (entry.kind === "connector") continue;
+          if (entry.kind === "plate" && entry.baseScale != null) {
+            entry.el.style.transform =
+              `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px) translate(-50%, -50%) scale(${(entry.baseScale * shrink).toFixed(3)})`;
+          } else {
+            entry.el.style.transform =
+              `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px) ${entry.transformTail}`;
+          }
+        }
+        // The selected Moon's connector joins its pill to its
+        // anchor: its start rides the anchor, its end rides the
+        // pill, so the line stays joined while both are moving.
+        for (const entry of _tracked) {
+          if (entry.kind !== "connector" || !entry.el) continue;
+          const pill = entry.pillEntry;
+          const sx = entry.baseSx + (entry.dx || 0);
+          const sy = entry.baseSy + (entry.dy || 0);
+          const ex = entry.baseEx + (pill?.dx || 0);
+          const ey = entry.baseEy + (pill?.dy || 0);
+          const ddx = ex - sx;
+          const ddy = ey - sy;
+          const len = Math.hypot(ddx, ddy);
+          if (len <= 10) {
+            entry.el.style.display = "none";
+            continue;
+          }
+          entry.el.style.display = "";
+          entry.el.style.left = `${sx}px`;
+          entry.el.style.top = `${sy}px`;
+          entry.el.style.width = `${len}px`;
+          entry.el.style.transform = `rotate(${Math.atan2(ddy, ddx)}rad)`;
+        }
+      }
+      _trackRaf = requestAnimationFrame(_trackFrame);
+    }
+
+    function _ensureTrackLoop() {
+      if (_trackRaf) return;
+      if (typeof requestAnimationFrame !== "function") return;
+      if (!_tracked.length || !_trackCtx) return;
+      _trackIdleFrames = 0;
+      _trackRaf = requestAnimationFrame(_trackFrame);
     }
 
     function _hideSemanticLeader(id) {
@@ -867,6 +1105,24 @@
       const blockedRects = Array.isArray(protectedRects)
         ? protectedRects.map(entry => normalizeRect(entry, containerRect)).filter(Boolean)
         : [];
+      /*
+       * Repair pass (Nov 22, 2026): the Play pill is stage chrome
+       * the renderer's protected rects do not cover — on Aaron's
+       * phone the selected-year card slid under it and its text
+       * was clipped mid-sentence. Treat the pill's box as blocked
+       * ground for Moon pills and cards alike, looked up per
+       * stage so each mounted Sphere respects its own wrap.
+       */
+      try {
+        const playBar = stage?.closest?.(".sphere-canvas-wrap")?.querySelector?.(".sphere-play-bar");
+        const playRect = playBar?.getBoundingClientRect?.();
+        if (playRect && playRect.width > 0 && playRect.height > 0) {
+          const normalizedPlay = normalizeRect(playRect, containerRect);
+          if (normalizedPlay) blockedRects.push(normalizedPlay);
+        }
+      } catch {
+        /* chrome lookup is best-effort */
+      }
 
       const todayMoon = model?.todayPatternPosition?.moon || null;
       const selectedMoon = selectedPatternPosition?.moon || todayMoon || model?.sourceRecord?.equinox?.patternPosition?.moon || 1;
@@ -916,9 +1172,27 @@
         cameraSignature(camera)
       ].join("::");
 
-      if (!_dirty && signature === _lastSignature) return false;
+      if (!_dirty && signature === _lastSignature) {
+        // Even when the layout itself is unchanged, a camera that
+        // started moving again needs the tracking loop awake.
+        _ensureTrackLoop();
+        return false;
+      }
       _dirty = false;
       _lastSignature = signature;
+      // A fresh layout pass re-decides every position: the
+      // tracking registrations from the previous pass expire
+      // here and are rebuilt below from this pass's placements.
+      _tracked = [];
+      _trackCtx = {
+        camera,
+        three,
+        offsetX: stageRect.left - containerRect.left,
+        offsetY: stageRect.top - containerRect.top,
+        stageW: stageRect.width,
+        stageH: stageRect.height
+      };
+      _trackLastSig = "";
 
       const THREE = three;
       const centerVec = new THREE.Vector3(0, 0, 0).project(camera);
@@ -1035,6 +1309,9 @@
           quiet: moon !== selectedMoon && moon !== todayMoon,
           anchorX,
           anchorY,
+          worldX: anchor.worldX,
+          worldY: anchor.worldY,
+          worldZ: anchor.worldZ,
           targetX: anchorX + rx * outward,
           targetY: anchorY + ry * outward
         });
@@ -1135,7 +1412,11 @@
           priority: candidate.priority,
           selected,
           el,
-          rect: rectBox
+          rect: rectBox,
+          anchorX: candidate.anchorX,
+          anchorY: candidate.anchorY,
+          world: [candidate.worldX, candidate.worldY, candidate.worldZ],
+          transformTail: `translateZ(0) scale(${selected ? 1.03 : frontness > 0.7 ? 1 : 0.96})`
         });
         const clampDistance = Math.hypot((left + w / 2) - targetX, (top + h / 2) - targetY);
         const opacity = clamp((0.45 + frontness * 0.6) - clampDistance * 0.02, selected ? 0.9 : 0.2, 1);
@@ -1224,6 +1505,26 @@
             }
           }
         }
+      }
+
+      // Anchor tracking registrations for the Moon pills placed
+      // above (repair pass, Nov 22, 2026): each pill's entry rides
+      // its Moon anchor between layout passes — see _trackFrame.
+      for (const placed of moonPlacements) {
+        if (placed.el.style.display === "none") continue;
+        if (!Array.isArray(placed.world) || !placed.world.every(Number.isFinite)) continue;
+        const entry = {
+          el: placed.el,
+          kind: "pill",
+          world: placed.world,
+          baseX: placed.anchorX,
+          baseY: placed.anchorY,
+          transformTail: placed.transformTail,
+          dx: 0,
+          dy: 0
+        };
+        placed.trackEntry = entry;
+        _tracked.push(entry);
       }
 
       // Semantic proximity labels share the same projected overlay and collision
@@ -1904,6 +2205,65 @@
           }
         );
 
+      /*
+       * Repair pass (Nov 22, 2026) — graded disclosure discipline.
+       * Aaron's top-down shot: every Moon's full 28-grid disclosed
+       * at once, grids colliding across Moon borders and one Moon
+       * fused into a micro-disc block. The gate's skeleton covers
+       * the far band and the overhead view, but Reveal All's gate
+       * branch bypasses the skeleton entirely whenever the camera
+       * is not overhead — at year distance that is the whole year
+       * at once. In the far band and under Reveal All, context
+       * Moons now disclose by graded distance from the disclosure
+       * centre (full grid at the centre, sparse anchors next
+       * door, week anchors beyond), and any context Moon whose
+       * projected grid pitch falls under the readability floor
+       * collapses to its week anchors instead of micro-plates.
+       * The faced centre Moon
+       * and the selected Moon keep every exemption they already
+       * had; scheduled days always show. Denied candidates leave
+       * the rail here and their railGateVerdicts entry is set
+       * false, so the render pass honours the verdict exactly
+       * like a gate verdict (B7.60.2).
+       */
+      {
+        const disciplineCentreMoon =
+          Number(calendarDisclosure?.centerMoon || frontMoon || 0) || null;
+        // The regimes where the gate itself has no skeleton: the
+        // far band, and Reveal All — whose gate branch returns
+        // true for every day when not overhead, bypassing the far
+        // skeleton entirely (the full-year collapse in Aaron's
+        // shot). Camera elevation is deliberately NOT a trigger:
+        // B7.60.2 pins that a mid-transition composition must not
+        // be re-gated by a raw geometry reading — the gate's
+        // verdicts and the renderer's overhead flag are the
+        // authority, and in ordinary tilted Moon View the
+        // aperture governs density, as the deep-fix left it.
+        const disciplineActive =
+          semanticBand === "far"
+          || String(dayLabelMode || "").toLowerCase() === "all";
+        if (disciplineActive && disciplineCentreMoon) {
+          const disciplinePitches = moonGridPitches(semanticCandidates);
+          for (let i = dayRailCandidates.length - 1; i >= 0; i -= 1) {
+            const candidate = dayRailCandidates[i];
+            if (candidate.target.kind !== "pattern-day-number") continue;
+            const allows = contextDisciplineAllows({
+              moon: candidate.target.moon,
+              moonDay: candidate.target.moonDay,
+              scheduled: Boolean(candidate.target.dayScheduleCount > 0 || candidate.target.count > 0),
+              centreMoon: disciplineCentreMoon,
+              selectedMoon,
+              pitch: disciplinePitches.get(Number(candidate.target.moon || 0)) ?? null,
+              active: true
+            });
+            if (!allows) {
+              railGateVerdicts.set(candidate, false);
+              dayRailCandidates.splice(i, 1);
+            }
+          }
+        }
+      }
+
       const nonRailSemanticCandidates = semanticCandidates.filter(candidate =>
         !((candidate?.target?.kind === "pattern-day-number" || candidate?.target?.kind === "intercalary-day-number") && candidate?.target?.railLocked)
       );
@@ -1942,7 +2302,17 @@
       // in sphere-armillary.css: 1.3 approach, 1.55 living /
       // immersive) is divided out of its cap, so the growth cannot
       // break the law at close zoom either.
-      const plateCapGroups = new Map();
+      //
+      // Repair pass (Nov 22, 2026, 18:12): the neighbour search is
+      // no longer grouped by Moon. Aaron's top-down shot showed
+      // grids colliding ACROSS Moon borders — two adjacent Moons'
+      // edge days can stand closer than any pair inside one grid,
+      // and the per-Moon grouping never measured them against
+      // each other. The law is now global: every plate's nearest
+      // neighbour is searched across ALL composed calendar-face
+      // plates, so each disc is bounded by 0.8× a distance no
+      // greater than ANY pair's separation, same Moon or not.
+      const plateCapPlates = [];
       for (const candidate of composedSemanticCandidates) {
         const plateTarget = candidate?.target;
         if (
@@ -1950,11 +2320,9 @@
           || plateTarget.kind !== "pattern-day-number"
           || !plateTarget.calendarFace
         ) continue;
-        const plateMoon = Number(plateTarget.moon || 0);
-        if (!plateCapGroups.has(plateMoon)) plateCapGroups.set(plateMoon, []);
-        plateCapGroups.get(plateMoon).push(candidate);
+        plateCapPlates.push(candidate);
       }
-      if (plateCapGroups.size) {
+      if (plateCapPlates.length > 1) {
         const zoomStage = String(_stageEl?.dataset?.zoomStage || "").toLowerCase();
         const selectedGrowth =
           zoomStage === "approach"
@@ -1962,28 +2330,29 @@
             : (zoomStage === "living" || zoomStage === "immersive")
               ? 1.55
               : 1;
-        for (const group of plateCapGroups.values()) {
-          if (group.length < 2) continue;
-          for (const candidate of group) {
-            let nearest = Infinity;
-            for (const other of group) {
-              if (other === candidate) continue;
-              const d = Math.hypot(
-                candidate.anchorX - other.anchorX,
-                candidate.anchorY - other.anchorY
-              );
-              if (d < nearest) nearest = d;
-            }
-            if (!Number.isFinite(nearest) || nearest <= 0) continue;
-            let cap = nearest * PLATE_PITCH_CAP_FRACTION;
-            if (candidate.target.selected && selectedGrowth > 1) cap /= selectedGrowth;
-            candidate._plateCapPx = cap;
+        for (const candidate of plateCapPlates) {
+          let nearest = Infinity;
+          for (const other of plateCapPlates) {
+            if (other === candidate) continue;
+            const d = Math.hypot(
+              candidate.anchorX - other.anchorX,
+              candidate.anchorY - other.anchorY
+            );
+            if (d < nearest) nearest = d;
           }
+          if (!Number.isFinite(nearest) || nearest <= 0) continue;
+          let cap = nearest * PLATE_PITCH_CAP_FRACTION;
+          if (candidate.target.selected && selectedGrowth > 1) cap /= selectedGrowth;
+          candidate._plateCapPx = cap;
         }
       }
 
       const activeSemanticIds =
         new Set();
+
+      // This pass's composed day-plate boxes, kept for the
+      // Moon-pill protection post-pass below.
+      const plateRects = [];
 
       for (
         const candidate
@@ -2385,10 +2754,18 @@
           if (titleEl) titleEl.style.removeProperty("font-size");
           delete el.dataset.plateCapped;
           const plateCap = candidate._plateCapPx;
+          // The marks decision in the rail render below works
+          // from the plate's natural and (possibly capped) disc
+          // sizes (repair pass §7 remainder).
+          const naturalW = el.offsetWidth || 0;
+          const naturalH = el.offsetHeight || 0;
+          const natural = Math.max(naturalW, naturalH);
+          candidate._plateNaturalPx = natural;
+          candidate._plateDiscPx =
+            Number.isFinite(plateCap) && plateCap > 0
+              ? Math.min(natural, plateCap)
+              : natural;
           if (Number.isFinite(plateCap) && plateCap > 0) {
-            const naturalW = el.offsetWidth || 0;
-            const naturalH = el.offsetHeight || 0;
-            const natural = Math.max(naturalW, naturalH);
             if (natural > plateCap) {
               const cappedW = Math.min(naturalW, plateCap);
               const cappedH = Math.min(naturalH, plateCap);
@@ -2488,6 +2865,15 @@
             w,
             h
           });
+
+          plateRects.push({
+            x: railX - w / 2,
+            y: railY - h / 2,
+            w,
+            h,
+            el,
+            target
+          });
           /*
            * B7.60.2 — overhead, the X-only aperture passes ONLY for a
            * numeral the gate itself passed in this update (recorded in
@@ -2554,6 +2940,24 @@
           el.style.transform =
             `translate(-50%, -50%) scale(${apertureScale.toFixed(3)})`;
 
+          // Anchor tracking (repair pass, Nov 22, 2026): this
+          // plate rides its world anchor between layout passes,
+          // and its size tracks the live pitch (see _trackFrame).
+          _tracked.push({
+            el,
+            kind: "plate",
+            world: [target.worldX, target.worldY, target.worldZ],
+            baseX: railX,
+            baseY: railY,
+            baseScale: apertureScale,
+            passNN: candidate._plateCapPx
+              ? candidate._plateCapPx / PLATE_PITCH_CAP_FRACTION
+              : null,
+            transformTail: `translate(-50%, -50%) scale(${apertureScale.toFixed(3)})`,
+            dx: 0,
+            dy: 0
+          });
+
           el.style.opacity =
             String(
               visualOpacity
@@ -2574,6 +2978,124 @@
               "true";
           } else {
             delete el.dataset.farSkeleton;
+          }
+
+          /*
+           * §7 remainder (repair pass, Nov 22, 2026): the plate's
+           * marks — the schedule chip hanging below the disc and
+           * the count badge at its top-right — are pseudo-elements
+           * sized in rem; the pitch cap never reached them, so at
+           * the opening's ~10px pitches an unscaled chip still
+           * touched the plate below and an unscaled badge the
+           * plate above (lab, seeded: 3 chip + 2 badge
+           * intersections at the opening, 7 + 4 under Reveal
+           * All). The rule, decided per plate from its own
+           * measured geometry: both marks scale with the plate's
+           * cap ratio (--plate-mark-scale, set in
+           * sphere-armillary.css). The chip hangs only when its
+           * scaled overhang fits the clear gap to the nearest
+           * neighbour; when it fits inside the disc instead it
+           * tucks onto the disc's lower edge; when it fits
+           * nowhere it is suppressed for this pass. The badge
+           * stands only when its scaled box clears the nearest
+           * neighbour's disc on both axes. A suppressed mark
+           * returns on the next closer pass — it waits, it never
+           * touches. Distances here are layout px against the
+           * screen-space pitch, which is conservative: the
+           * aperture scale only ever shrinks the painted marker.
+           */
+          delete el.dataset.markTuck;
+          delete el.dataset.markChip;
+          delete el.dataset.markBadge;
+          if (typeof el.style.removeProperty === "function") {
+            el.style.removeProperty("--plate-mark-scale");
+          }
+          {
+            const discPx = candidate._plateDiscPx || 0;
+            const naturalPx = candidate._plateNaturalPx || 0;
+            const pitchPx = candidate._plateCapPx
+              ? candidate._plateCapPx / PLATE_PITCH_CAP_FRACTION
+              : 0;
+            if (discPx > 0 && naturalPx > 0 && pitchPx > 0) {
+              const markScale = discPx / naturalPx;
+              if (markScale < 1 && typeof el.style.setProperty === "function") {
+                el.style.setProperty("--plate-mark-scale", markScale.toFixed(3));
+              }
+              let remPx = 16;
+              try {
+                remPx = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+              } catch {
+                /* rem default above */
+              }
+              const farBand =
+                String(semanticBand || "medium").toLowerCase() === "far";
+              const neighbourRadius = 0.4 * pitchPx;
+              if (target.dayScheduleCount > 0) {
+                const chipH = (farBand ? 0.78 : 0.95) * remPx * markScale;
+                const chipOverhang =
+                  chipH - (farBand ? 0.16 : 0.22) * remPx * markScale;
+                const chipBottom = discPx / 2 + chipOverhang;
+                let hangs =
+                  chipBottom + neighbourRadius <= pitchPx;
+                if (hangs) {
+                  // The nearest neighbour may sit on a diagonal
+                  // below, not directly underneath: its centre is
+                  // pitchPx away at 45°, and the chip's box must
+                  // clear its disc there too.
+                  const diag = pitchPx / Math.SQRT2;
+                  const diagDx = Math.max(0, diag - chipH / 2);
+                  const diagDy = Math.max(0, diag - chipBottom);
+                  if (Math.hypot(diagDx, diagDy) < neighbourRadius) {
+                    hangs = false;
+                  }
+                }
+                if (!hangs) {
+                  if (chipH <= discPx) {
+                    el.dataset.markTuck = "true";
+                  } else {
+                    el.dataset.markChip = "off";
+                  }
+                }
+              }
+              if (target.dayScheduleCount > 1) {
+                const badgeH = (farBand ? 0.66 : 0.78) * remPx * markScale;
+                const badgeOut = (farBand ? 0.26 : 0.34) * remPx * markScale;
+                const topReach = discPx / 2 + badgeOut;
+                const vertGap = pitchPx - topReach;
+                const boxLeft = topReach - badgeH;
+                let distAbove;
+                if (vertGap >= 0) {
+                  distAbove = Math.hypot(Math.max(boxLeft, 0), vertGap);
+                } else if (pitchPx >= topReach - badgeH) {
+                  distAbove = Math.max(boxLeft, 0);
+                } else {
+                  distAbove = Math.hypot(Math.max(boxLeft, 0), -vertGap);
+                }
+                // The badge must clear the plate above (the
+                // hypot distance to its box) and the plate to
+                // the side. The side test uses the horizontal
+                // gap alone (vertGap): the composed grid shears,
+                // so the side neighbour's centre can sit inside
+                // the badge's vertical span — measured in the
+                // lab, Moon 8 Day 10's neighbour stands at
+                // (+20.6, −6.2) from it, inside the span, and
+                // grazed the un-margined test by ~0.5px. Both
+                // tests carry a half-pixel margin over the
+                // largest disc the cap law allows the neighbour.
+                // (A 45°-diagonal test was tried and removed: it
+                // double-counts — a lattice whose diagonal
+                // neighbour sits at the pitch has its axis
+                // neighbours closer still — and it suppressed
+                // the badge at every distance, erasing the count
+                // cue entirely.)
+                if (
+                  distAbove < neighbourRadius + 0.5
+                  || vertGap < neighbourRadius + 0.5
+                ) {
+                  el.dataset.markBadge = "off";
+                }
+              }
+            }
           }
 
           _hideSemanticLeader(target.id);
@@ -2745,6 +3267,93 @@
 
       const marker = todayMarkerPosition;
       const selectedMarker = selectedMarkerPosition || marker || null;
+      /*
+       * Repair pass (Nov 22, 2026) — Moon pills stand clear of the
+       * plates. The protected stylesheet stacks the semantic layer
+       * (z-index 11) over the Moon-pill layer (z-index 3), so
+       * wherever a plate lands on a pill the pill is buried —
+       * Aaron's shots show "Moon 4", "Moon 10" and "Moon 3"
+       * clipped by day plates. The label layer cannot restack
+       * those layers from here, so it protects the pills
+       * geometrically: first try to move the pill clear of every
+       * plate (bounded shifts, stage-clamped, respecting the same
+       * blocked ground as placement); if no clear ground exists,
+       * fade the plates standing on it for this pass — never the
+       * selected or pinned day, and never a plate of the pill's
+       * own Moon (the faced Moon's name stands among its own days
+       * by design). The selected Moon's pill is protected first.
+       */
+      if (plateRects.length && moonPlacements.length) {
+        const protectedPills = [...moonPlacements].sort(
+          (a, b) => (Number(b.selected) - Number(a.selected)) || (b.priority - a.priority)
+        );
+        for (const placed of protectedPills) {
+          if (placed.el.style.display === "none") continue;
+          const pw = placed.rect.w;
+          const ph = placed.rect.h;
+          let px = parseFloat(placed.el.style.left);
+          let py = parseFloat(placed.el.style.top);
+          if (!Number.isFinite(px) || !Number.isFinite(py)) {
+            px = placed.rect.x;
+            py = placed.rect.y;
+          }
+          const paddedBox = (x, y) => ({ x: x - 2, y: y - 2, w: pw + 4, h: ph + 4 });
+          const blockers = plateRects.filter(pr => rectsOverlap(paddedBox(px, py), pr));
+          if (!blockers.length) continue;
+          const pcx = px + pw / 2;
+          const pcy = py + ph / 2;
+          const radialLen = Math.hypot(pcx - centerX, pcy - centerY) || 1;
+          const ux = (pcx - centerX) / radialLen;
+          const uy = (pcy - centerY) / radialLen;
+          const shifts = [];
+          for (const step of [8, 16, 24, 32, 40, 48]) shifts.push([ux * step, uy * step]);
+          for (const step of [12, 24, 36]) {
+            shifts.push([-uy * step, ux * step]);
+            shifts.push([uy * step, -ux * step]);
+          }
+          for (const step of [12, 24]) shifts.push([-ux * step, -uy * step]);
+          let moved = false;
+          for (const [shiftX, shiftY] of shifts) {
+            const nx = clamp(
+              pcx + shiftX - pw / 2,
+              offsetX + STAGE_PADDING,
+              Math.max(offsetX + STAGE_PADDING, offsetX + stageRect.width - pw - STAGE_PADDING)
+            );
+            const ny = clamp(
+              pcy + shiftY - ph / 2,
+              offsetY + STAGE_PADDING,
+              Math.max(offsetY + STAGE_PADDING, offsetY + stageRect.height - ph - STAGE_PADDING)
+            );
+            const box = paddedBox(nx, ny);
+            if (plateRects.some(pr => rectsOverlap(box, pr))) continue;
+            if (blockedRects.some(br => rectsOverlap(box, br))) continue;
+            if (placedRects.some(pr => pr !== placed.rect && rectsOverlap(box, pr))) continue;
+            px = nx;
+            py = ny;
+            moved = true;
+            break;
+          }
+          if (moved) {
+            placed.el.style.left = `${px}px`;
+            placed.el.style.top = `${py}px`;
+            placed.rect.x = px;
+            placed.rect.y = py;
+            if (placed.selected && selectedTarget) {
+              selectedTarget.centerX = px + pw / 2;
+              selectedTarget.centerY = py + ph / 2;
+              selectedTarget.displaced = true;
+            }
+            continue;
+          }
+          for (const pr of blockers) {
+            if (pr.target?.selected || pr.target?.pinned) continue;
+            if (Number(pr.target?.moon || 0) === Number(placed.moon || 0)) continue;
+            pr.el.style.opacity = "0";
+            pr.el.dataset.pillProtected = "true";
+          }
+        }
+      }
+
       if (_connectorEl && selectedTarget?.displaced) {
         let sx = selectedTarget.anchorX;
         let sy = selectedTarget.anchorY;
@@ -2765,13 +3374,44 @@
           _connectorEl.style.width = `${len}px`;
           _connectorEl.style.transform = `rotate(${Math.atan2(dy, dx)}rad)`;
           _connectorEl.style.opacity = String(Math.min(0.78, selectedTarget.opacity * 0.8));
+          // The connector rides with its anchor and its pill
+          // between layout passes (repair pass, Nov 22, 2026).
+          const selectedPlacement = moonPlacements.find(p => p.selected) || null;
+          const connectorWorld =
+            selectedMarker && selectedMarker.x != null
+              ? [selectedMarker.x, selectedMarker.y, selectedMarker.z]
+              : selectedPlacement?.world;
+          if (Array.isArray(connectorWorld) && connectorWorld.every(Number.isFinite)) {
+            _tracked.push({
+              el: _connectorEl,
+              kind: "connector",
+              world: connectorWorld,
+              baseX: sx,
+              baseY: sy,
+              baseSx: sx,
+              baseSy: sy,
+              baseEx: ex,
+              baseEy: ey,
+              pillEntry: selectedPlacement?.trackEntry || null,
+              transformTail: "",
+              dx: 0,
+              dy: 0
+            });
+          }
         }
       }
 
+      _ensureTrackLoop();
       return true;
     }
 
     function dispose() {
+      if (_trackRaf && typeof cancelAnimationFrame === "function") {
+        cancelAnimationFrame(_trackRaf);
+      }
+      _trackRaf = 0;
+      _tracked = [];
+      _trackCtx = null;
       _proximityState.clear();
       for (const el of _semanticEls.values()) el?.remove?.();
       _semanticEls.clear();
@@ -2818,7 +3458,11 @@
       isCompactSurface,
       resolveSemanticBudget,
       semanticTargetGroup,
-      composeSemanticCandidates
+      composeSemanticCandidates,
+      circularMoonDistance,
+      moonGridPitches,
+      contextDisciplineAllows,
+      PLATE_PITCH_FLOOR_PX
     })
   });
 })();

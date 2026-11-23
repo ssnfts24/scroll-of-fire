@@ -311,9 +311,14 @@ test("plate-cap: a day plate may never overlap its neighbours (Aaron, Nov 22, 20
   // of its own nearest-neighbour pitch, measured per Moon per
   // layout pass from the label anchors themselves.
   assert.match(labels, /const PLATE_PITCH_CAP_FRACTION = 0\.8;/);
-  // The cap pass groups the composed calendar-face day plates by
-  // Moon and measures nearest neighbours from the anchors.
-  assert.match(labels, /plateCapGroups[\s\S]*?plateTarget\.kind !== "pattern-day-number"[\s\S]*?!plateTarget\.calendarFace/);
+  // The cap pass collects the composed calendar-face day plates
+  // and measures nearest neighbours from the anchors. (Repair
+  // pass, Nov 22, 2026: the search is global across Moons — the
+  // original per-Moon grouping never measured two adjacent
+  // Moons' edge days against each other, and Aaron's top-down
+  // shot showed grids colliding across Moon borders.)
+  assert.match(labels, /plateCapPlates[\s\S]*?plateTarget\.kind !== "pattern-day-number"[\s\S]*?!plateTarget\.calendarFace/);
+  assert.match(labels, /for \(const other of plateCapPlates\)/);
   assert.match(labels, /candidate\._plateCapPx = cap;/);
   // The selected day's Day Approach growth is divided out of its
   // cap, so the growth cannot break the law at close zoom.
@@ -369,4 +374,165 @@ test("plate-cap: a day plate may never overlap its neighbours (Aaron, Nov 22, 20
       assert.ok(intersects > 0, `pitch ${hPitch}x${vPitch}: the uncapped band size heaped here`);
     }
   }
+});
+
+/*
+ * Repair pass (Aaron, Nov 22, 2026, 18:12 — "a multitude of
+ * things wrong here on mobile now. The days are sticky. They are
+ * not coming in and going how they should. Some things cut off
+ * and don't display correctly."). The plate law above solved
+ * same-Moon stills; these pins cover what it never reached:
+ * cross-Moon spacing, graded disclosure at high elevation, the
+ * micro-plate pitch floor, per-frame anchor tracking, Moon-pill
+ * protection, the Play pill as blocked ground, and the guide
+ * bar's place inside the rooms sheet.
+ */
+
+require(
+  path.join(ROOT, "docs/assets/js/sphere/living-time-sphere-label-manager.js")
+);
+const repairInternals = globalThis.LivingTimeSphereLabelManager._internals;
+const armillaryCss = fs.readFileSync(
+  path.join(ROOT, "docs/assets/css/sphere-armillary.css"),
+  "utf8"
+);
+
+test("repair: cross-Moon neighbours are inside the plate law", () => {
+  // Two grids side by side, pitch 20 inside each Moon, but the
+  // border pair stands only 12px apart — the geometry of Aaron's
+  // top-down shot. Per-Moon caps (0.8 × 20 = 16px discs) collide
+  // across the border; the global search caps the border plates
+  // at 0.8 × 12 and nothing intersects anywhere.
+  const grid = (x0) => {
+    const pts = [];
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col < 7; col++) {
+        pts.push({ x: x0 + col * 20, y: row * 20 });
+      }
+    }
+    return pts;
+  };
+  const all = [...grid(0), ...grid(132)];
+  const capGlobal = (pts) => pts.map((p, i) => {
+    let nn = Infinity;
+    for (let j = 0; j < pts.length; j++) {
+      if (j === i) continue;
+      nn = Math.min(nn, Math.hypot(p.x - pts[j].x, p.y - pts[j].y));
+    }
+    return 0.8 * nn;
+  });
+  const caps = capGlobal(all);
+  for (let i = 0; i < all.length; i++) {
+    for (let j = i + 1; j < all.length; j++) {
+      const d = Math.hypot(all[i].x - all[j].x, all[i].y - all[j].y);
+      assert.ok((caps[i] + caps[j]) / 2 < d, `global caps keep discs ${i}/${j} clear`);
+    }
+  }
+  // And the border pair under the old per-Moon rule DID collide:
+  assert.ok(0.8 * 20 > 12, "per-Moon caps would have overlapped the 12px border pair");
+});
+
+test("repair: graded disclosure — distance grading and the pitch floor", () => {
+  const allows = repairInternals.contextDisciplineAllows;
+  const base = { centreMoon: 8, selectedMoon: 8, pitch: 30, active: true };
+  // Inactive regime: everything passes, exactly as before.
+  assert.equal(allows({ ...base, active: false, moon: 3, moonDay: 9 }), true);
+  // The faced centre and the selected Moon keep their full grids.
+  assert.equal(allows({ ...base, moon: 8, moonDay: 9 }), true);
+  assert.equal(allows({ ...base, moon: 5, moonDay: 9, selectedMoon: 5 }), true);
+  // Scheduled days always show, at any distance.
+  assert.equal(allows({ ...base, moon: 3, moonDay: 9, scheduled: true }), true);
+  // Distance ≥ 2: week anchors only.
+  assert.equal(allows({ ...base, moon: 3, moonDay: 9 }), false);
+  assert.equal(allows({ ...base, moon: 3, moonDay: 7 }), true);
+  assert.equal(allows({ ...base, moon: 11, moonDay: 28 }), true);
+  // Immediate neighbours: sparse anchors {1, 14, 28} only.
+  assert.equal(allows({ ...base, moon: 9, moonDay: 7 }), false);
+  assert.equal(allows({ ...base, moon: 9, moonDay: 14 }), true);
+  assert.equal(allows({ ...base, moon: 7, moonDay: 1 }), true);
+  // Circular distance wraps the year seam.
+  assert.equal(repairInternals.circularMoonDistance(13, 1), 1);
+  assert.equal(repairInternals.circularMoonDistance(1, 7), 6);
+  assert.equal(allows({ ...base, centreMoon: 13, selectedMoon: 2, moon: 1, moonDay: 21 }), false);
+  // Pitch floor: a compressed context Moon collapses to week
+  // anchors whatever its distance; a healthy pitch does not.
+  assert.equal(allows({ ...base, moon: 9, moonDay: 21, pitch: 10 }), true);
+  assert.equal(allows({ ...base, moon: 9, moonDay: 22, pitch: 10 }), false);
+  assert.equal(allows({ ...base, moon: 9, moonDay: 21, pitch: 30 }), false);
+  // The floor never fires on a guess (no pitch measured).
+  assert.equal(allows({ ...base, moon: 9, moonDay: 22, pitch: null }), false);
+  assert.equal(repairInternals.PLATE_PITCH_FLOOR_PX, 16);
+  // The discipline's regimes are the far band and Reveal All —
+  // never a raw camera-elevation reading (B7.60.2: a
+  // mid-transition composition must not be re-gated by geometry).
+  assert.match(labels, /const disciplineActive =\s*semanticBand === "far"\s*\|\| String\(dayLabelMode/);
+});
+
+test("repair: Moon grid pitches are measured per Moon from the anchors", () => {
+  const mk = (moon, x, y) => ({ target: { kind: "pattern-day-number", moon }, anchorX: x, anchorY: y });
+  const candidates = [];
+  for (let r = 0; r < 4; r++) for (let c = 0; c < 7; c++) candidates.push(mk(4, c * 10, r * 10));
+  for (let r = 0; r < 4; r++) for (let c = 0; c < 7; c++) candidates.push(mk(9, 300 + c * 30, r * 30));
+  candidates.push(mk(2, 0, 400), mk(2, 9, 400), mk(2, 18, 400));
+  const pitches = repairInternals.moonGridPitches(candidates);
+  assert.equal(pitches.get(4), 10);
+  assert.equal(pitches.get(9), 30);
+  assert.equal(pitches.has(2), false, "too few anchors to judge — no entry, no floor");
+});
+
+test("repair: labels track their anchors between layout passes", () => {
+  // The mechanism: a manager-owned rAF loop re-projects the world
+  // anchors the last full pass chose and shifts each label by the
+  // anchor's screen delta — transform only.
+  assert.match(labels, /function _trackFrame\(\)/);
+  assert.match(labels, /requestAnimationFrame\(_trackFrame\)/);
+  assert.match(labels, /kind: "plate"[\s\S]*?world: \[target\.worldX, target\.worldY, target\.worldZ\]/);
+  // Sizes track too: each plate remembers its pass-time pitch and
+  // the loop shrinks (never grows) its scale by the live ratio.
+  assert.match(labels, /passNN: candidate\._plateCapPx/);
+  assert.match(labels, /Math\.min\(1, nn \/ entry\.passNN\)/);
+  assert.match(labels, /kind: "pill"/);
+  assert.match(labels, /kind: "connector"/);
+  // The loop wakes on passes and on signature-unchanged updates,
+  // and dispose cancels it.
+  assert.match(labels, /_ensureTrackLoop\(\);\n      return true;/);
+  assert.match(labels, /cancelAnimationFrame\(_trackRaf\)/);
+});
+
+test("repair: Moon pills are protected from plates geometrically", () => {
+  assert.match(labels, /pr\.el\.dataset\.pillProtected = "true"/);
+  assert.match(labels, /Number\(pr\.target\?\.moon \|\| 0\) === Number\(placed\.moon \|\| 0\)/);
+  assert.match(labels, /pr\.target\?\.selected \|\| pr\.target\?\.pinned/);
+});
+
+test("repair: the Play pill is blocked ground; the sheet's guide bar stands in flow", () => {
+  assert.match(labels, /querySelector\?\.\("\.sphere-play-bar"\)/);
+  assert.match(
+    armillaryCss,
+    /\.sphere-sidebar \.sphere-guide-bar\.sphere-sheet-room \{\s*position: static;/
+  );
+});
+
+test("repair: denied discipline verdicts leave the rail with a false gate verdict", () => {
+  assert.match(labels, /railGateVerdicts\.set\(candidate, false\);\s*dayRailCandidates\.splice\(i, 1\);/);
+  assert.match(labels, /const disciplinePitches = moonGridPitches\(semanticCandidates\);/);
+});
+
+test("repair: the marks live under the pitch law too (§7 remainder)", () => {
+  // Both pseudo-element marks scale by the plate's cap ratio.
+  assert.match(armillaryCss, /height: calc\(0\.95rem \* var\(--plate-mark-scale, 1\)\)/);
+  assert.match(armillaryCss, /top: calc\(-0\.34rem \* var\(--plate-mark-scale, 1\)\)/);
+  // The tucked and suppressed states exist in the stylesheet.
+  assert.match(armillaryCss, /\[data-mark-tuck="true"\]::after \{\s*top: auto !important;/);
+  assert.match(armillaryCss, /\[data-mark-chip="off"\]::after \{\s*display: none !important;/);
+  assert.match(armillaryCss, /\[data-mark-badge="off"\]::before \{\s*display: none !important;/);
+  // The manager decides per plate from its own disc, natural
+  // size, and pitch, and writes the scale as the cap ratio.
+  assert.match(labels, /el\.style\.setProperty\("--plate-mark-scale", markScale\.toFixed\(3\)\)/);
+  assert.match(labels, /const markScale = discPx \/ naturalPx;/);
+  assert.match(labels, /el\.dataset\.markTuck = "true";/);
+  assert.match(labels, /el\.dataset\.markChip = "off";/);
+  assert.match(labels, /el\.dataset\.markBadge = "off";/);
+  // The scheduled exemption reads the normalized field.
+  assert.match(labels, /scheduled: Boolean\(candidate\.target\.dayScheduleCount > 0/);
 });
