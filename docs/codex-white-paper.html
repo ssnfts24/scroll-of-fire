@@ -1,0 +1,753 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="sof carrier-432" data-carriers="432,528,369,144,963" data-day-boundary="sunset">
+<head>
+  <base href="./">
+  <script>
+    if (location.hostname === "ssnfts24.github.io") {
+      const base = document.querySelector("base");
+      if (base) base.setAttribute("href", "/scroll-of-fire/");
+    }
+  </script>
+
+  <meta charset="utf-8">
+  <title>The Codex of Reality and the Living Sphere — A White Paper | Codex of Reality</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="The Codex of Reality and the Living Sphere: a white paper describing the framework, the 13 Moons calendar, the Living Sphere and its layer programme, the Spark, and the Living Phone — with the state of each part stated honestly. By Aaron Paul Laird.">
+  <meta name="author" content="Aaron Paul Laird">
+  <meta name="theme-color" content="#05070d">
+  <link rel="canonical" href="https://codexofreality.org/codex-white-paper.html">
+  <link rel="icon" href="assets/img/moons/app/icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="The Codex of Reality and the Living Sphere — A White Paper">
+  <meta property="og:description" content="The framework, the calendar, the Sphere, the Spark, and the Living Phone — as designed and as built, with the state of each part stated honestly.">
+  <meta property="og:url" content="https://codexofreality.org/codex-white-paper.html">
+  <meta property="og:site_name" content="Codex of Reality">
+  <meta property="og:image" content="https://codexofreality.org/assets/img/og-cover.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The Codex of Reality and the Living Sphere — A White Paper">
+  <meta name="twitter:description" content="A white paper by Aaron Paul Laird: the Codex of Reality, the 13 Moons, the Living Sphere, the Spark, and the Living Phone.">
+  <meta name="twitter:image" content="https://codexofreality.org/assets/img/og-cover.jpg">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2TBMEK502C"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag("js", new Date());
+    gtag("config", "G-2TBMEK502C");
+  </script>
+
+  <link rel="stylesheet" href="assets/css/codex.css">
+  <link rel="stylesheet" href="assets/css/navigation.css">
+  <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
+  <link rel="stylesheet" href="assets/css/living-moon-theme.css?v=20261119-1">
+  <link rel="stylesheet" href="assets/css/social-bridge.css">
+
+  <style>
+    :root {
+      --rw-bg: #05070d;
+      --rw-panel: rgba(10,16,28,.88);
+      --rw-panel-soft: rgba(255,255,255,.045);
+      --rw-line: rgba(255,255,255,.12);
+      --rw-line-strong: rgba(243,201,122,.32);
+      --rw-gold: var(--gold,#f3c97a);
+      --rw-cyan: var(--cyan,#7af3ff);
+      --rw-text: var(--text,#f4f1e8);
+      --rw-muted: var(--muted,#b9c1c7);
+      --rw-radius: 24px;
+      --rw-shadow: 0 24px 80px rgba(0,0,0,.38);
+      --rw-max: 1220px;
+    }
+    html { scroll-behavior:smooth; background:var(--rw-bg); }
+    body {
+      margin:0;
+      min-height:100vh;
+      color:var(--rw-text);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(122,243,255,.08), transparent 28rem),
+        radial-gradient(circle at 85% 5%, rgba(243,201,122,.08), transparent 28rem),
+        linear-gradient(180deg,#05070d 0%,#07101a 48%,#05070d 100%);
+    }
+    .rw-shell { width:min(calc(100% - 32px),var(--rw-max)); margin:0 auto; padding:30px 0 96px; }
+    .rw-hero,.rw-section,.rw-phase,.rw-callout,.rw-footer {
+      border:1px solid var(--rw-line);
+      background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012)),var(--rw-panel);
+      box-shadow:var(--rw-shadow);
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+    }
+    .rw-hero { position:relative; overflow:hidden; border-radius:34px; padding:clamp(28px,5vw,68px); margin-top:24px; }
+    .rw-hero:before {
+      content:""; position:absolute; inset:0; pointer-events:none;
+      background:radial-gradient(circle at 80% 20%,rgba(243,201,122,.12),transparent 22rem),
+                 linear-gradient(130deg,rgba(122,243,255,.05),transparent 45%);
+    }
+    .rw-kicker,.rw-phase-number,.rw-eyebrow {
+      display:inline-flex; align-items:center; gap:8px; letter-spacing:.14em; text-transform:uppercase;
+      font-size:.78rem; font-weight:800; color:var(--rw-gold);
+    }
+    .rw-title { position:relative; max-width:980px; margin:18px 0 16px; font-size:clamp(2.25rem,6vw,5.3rem); line-height:.98; letter-spacing:-.04em; text-wrap:balance; }
+    .rw-subtitle { position:relative; max-width:850px; margin:0; color:var(--rw-muted); font-size:clamp(1rem,2vw,1.28rem); line-height:1.75; }
+    .rw-stats { position:relative; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-top:34px; }
+    .rw-stat { padding:18px; border:1px solid var(--rw-line); border-radius:18px; background:rgba(255,255,255,.035); }
+    .rw-stat strong { display:block; font-size:1.45rem; color:var(--rw-cyan); }
+    .rw-stat span { display:block; margin-top:5px; color:var(--rw-muted); font-size:.88rem; }
+    .rw-actions { position:relative; display:flex; flex-wrap:wrap; gap:12px; margin-top:30px; }
+    .rw-btn {
+      display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:0 18px;
+      border-radius:999px; border:1px solid var(--rw-line-strong); color:var(--rw-text);
+      text-decoration:none; font-weight:800; background:rgba(243,201,122,.08);
+      transition:transform 160ms ease,border-color 160ms ease,background 160ms ease;
+    }
+    .rw-btn:hover,.rw-btn:focus-visible { transform:translateY(-2px); border-color:var(--rw-gold); background:rgba(243,201,122,.14); }
+    .rw-btn.secondary { border-color:rgba(122,243,255,.28); background:rgba(122,243,255,.06); }
+    .rw-layout { display:grid; grid-template-columns:minmax(0,290px) minmax(0,1fr); gap:24px; margin-top:26px; align-items:start; }
+    .rw-toc {
+      position:sticky; top:18px; border:1px solid var(--rw-line); border-radius:var(--rw-radius);
+      background:rgba(9,14,25,.88); padding:20px; box-shadow:var(--rw-shadow);
+      max-height:calc(100vh - 36px); overflow:auto;
+    }
+    .rw-toc h2 { margin:0 0 14px; font-size:1rem; }
+    .rw-toc a { display:block; padding:9px 10px; border-radius:12px; color:var(--rw-muted); text-decoration:none; font-size:.9rem; }
+    .rw-toc a:hover,.rw-toc a:focus-visible { color:var(--rw-text); background:rgba(255,255,255,.055); }
+    .rw-content { min-width:0; }
+    .rw-section { border-radius:var(--rw-radius); padding:clamp(22px,4vw,38px); margin-bottom:22px; scroll-margin-top:18px; }
+    .rw-section h2 { margin:8px 0 16px; font-size:clamp(1.65rem,3vw,2.5rem); line-height:1.12; }
+    .rw-section h3 { margin-top:28px; color:var(--rw-cyan); }
+    .rw-section p,.rw-section li { color:var(--rw-muted); line-height:1.72; }
+    .rw-section strong { color:var(--rw-text); }
+    .rw-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin-top:20px; }
+    .rw-card { border:1px solid var(--rw-line); border-radius:18px; padding:20px; background:var(--rw-panel-soft); }
+    .rw-card h3 { margin:0 0 8px; color:var(--rw-text); font-size:1.06rem; }
+    .rw-card p { margin:0; }
+    .rw-quote { margin:24px 0 0; padding:22px; border-left:3px solid var(--rw-gold); border-radius:0 18px 18px 0; background:rgba(243,201,122,.06); color:var(--rw-text); font-size:1.08rem; line-height:1.65; }
+    .rw-phase { border-radius:var(--rw-radius); padding:clamp(22px,4vw,34px); margin-bottom:18px; scroll-margin-top:18px; }
+    .rw-phase h3 { margin:8px 0 8px; font-size:clamp(1.4rem,3vw,2rem); }
+    .rw-phase-summary { margin:0 0 18px; color:var(--rw-muted); line-height:1.7; }
+    .rw-phase-grid { display:grid; grid-template-columns:1.1fr 1fr 1fr; gap:14px; }
+    .rw-phase-col { border:1px solid var(--rw-line); border-radius:16px; padding:18px; background:rgba(255,255,255,.025); }
+    .rw-phase-col h4 { margin:0 0 10px; color:var(--rw-cyan); }
+    .rw-phase-col ul { margin:0; padding-left:18px; }
+    .rw-phase-col li { margin:7px 0; color:var(--rw-muted); line-height:1.55; }
+    .rw-status { display:inline-flex; margin-top:18px; padding:7px 11px; border-radius:999px; border:1px solid rgba(122,243,255,.22); color:var(--rw-cyan); background:rgba(122,243,255,.055); font-size:.82rem; font-weight:800; }
+    .rw-callout { border-radius:var(--rw-radius); padding:clamp(24px,4vw,40px); margin:26px 0; border-color:var(--rw-line-strong); }
+    .rw-callout h2 { margin-top:0; }
+    .rw-code { overflow-x:auto; padding:18px; border:1px solid var(--rw-line); border-radius:16px; background:#03060b; color:#dceaf2; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.84rem; line-height:1.6; white-space:pre; }
+    .rw-checklist { columns:2; column-gap:28px; padding-left:20px; }
+    .rw-checklist li { break-inside:avoid; margin-bottom:9px; }
+    .rw-footer { border-radius:30px; padding:clamp(26px,5vw,52px); text-align:center; }
+    .rw-footer h2 { margin:0 0 14px; font-size:clamp(1.8rem,4vw,3.4rem); }
+    .rw-footer p { max-width:780px; margin:0 auto; color:var(--rw-muted); line-height:1.75; }
+    .rw-meta { margin-top:20px !important; font-size:.85rem; }
+    @media (max-width:980px) {
+      .rw-layout { grid-template-columns:1fr; }
+      .rw-toc { position:relative; top:0; max-height:none; }
+      .rw-stats { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .rw-phase-grid { grid-template-columns:1fr; }
+    }
+    @media (max-width:680px) {
+      .rw-shell { width:min(calc(100% - 20px),var(--rw-max)); padding-top:14px; }
+      .rw-hero { border-radius:24px; padding:24px 20px; }
+      .rw-title { font-size:clamp(2.1rem,13vw,3.4rem); }
+      .rw-stats,.rw-grid { grid-template-columns:1fr; }
+      .rw-actions { flex-direction:column; }
+      .rw-btn { width:100%; }
+      .rw-section,.rw-phase,.rw-callout { border-radius:20px; padding:22px 18px; }
+      .rw-checklist { columns:1; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      html { scroll-behavior:auto; }
+      .rw-btn { transition:none; }
+    }
+  .rw-content table { width:100%; border-collapse:collapse; margin:1rem 0; font-size:.95rem; }
+.rw-content th, .rw-content td { border:1px solid var(--rw-line); padding:.5rem .7rem; text-align:left; vertical-align:top; }
+.rw-content th { color:var(--rw-gold); }
+.rw-content ul, .rw-content ol { padding-left:1.4rem; }
+.rw-content li { margin:.3rem 0; }
+.rw-content code { color:var(--rw-cyan); }
+</style>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"TechArticle",
+    "headline":"Remnant Rollout Whitepaper",
+    "alternativeHeadline":"The Implementation Plan for The 13 Moons Remnant Living Time Observatory",
+    "author":{"@type":"Person","name":"Aaron Paul Laird"},
+    "publisher":{"@type":"Organization","name":"Codex of Reality","url":"https://codexofreality.org"},
+    "mainEntityOfPage":"https://codexofreality.org/remnant-rollout-whitepaper.html",
+    "description":"A phased rollout plan for the Pattern Calendar, Equinox Passage, Alignment Ledger, Witness System, research layer, public API, PWA, and Living Time Commons."
+  }
+  </script>
+  <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261119-1">
+  <script defer src="assets/js/spark-companion.js?v=20261119-1"></script>
+  <script defer src="assets/js/spark-3d.js?v=20261119-1"></script>
+  <script defer src="assets/js/spark-relations.js?v=20261122-1"></script>
+  <script defer src="assets/js/spark-presence.js?v=20261119-1"></script>
+  <script defer src="assets/js/heaven-sound.js?v=20261119-1"></script>
+  <link rel="stylesheet" href="assets/css/spark-agent-seat.css?v=20261120-2">
+  <script defer src="assets/js/spark-agent-seat.js?v=20261120-2"></script>
+  <link rel="stylesheet" href="assets/css/witness-mark.css?v=20261120-1">
+</head>
+
+<body class="living-ui" data-remnant-boundary="sunset">
+  <a class="skip-link" href="13-moon-whitepaper.html#main-content">Skip to whitepaper</a>
+  <div class="living-nav travel-bar" data-living-nav data-travel-bar>
+    <nav class="living-nav-inner" aria-label="Travel bar — main rooms">
+      <a class="living-nav-brand" href="index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a>
+      <ul class="living-nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="living-time-sphere.html">Sphere</a></li>
+        <li><a href="companions.html">Companions</a></li>
+        <li><a href="moons.html">13 Moons</a></li>
+        <li><a href="downloads.html">Library</a></li>
+        <li><a href="witness-world.html">Witness World</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="witness.html">Witness</a></li>
+        <li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="index.html" aria-label="Codex of Reality home">
+        <span class="brand-mark" aria-hidden="true">☲</span>
+        <span class="brand-text">Codex of Reality</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-navigation" aria-label="Open navigation" data-nav-toggle>
+        <span></span><span></span><span></span>
+      </button>
+      <nav id="site-navigation" class="site-nav" aria-label="Primary navigation" data-site-nav>
+      <!-- site-nav:global:start -->
+      <a class="is-featured" href="./scroll/">Scroll Library</a>
+      <a href="./codex-atlas.html">Atlas</a>
+      <!-- site-nav:global:end -->
+      <div class="nav-dropdown" data-dropdown>
+        <button class="nav-drop-btn" type="button" aria-expanded="false" aria-controls="nav-scroll-library" data-dropdown-toggle>Library <span aria-hidden="true">▾</span></button>
+        <div id="nav-scroll-library" class="nav-drop-menu">
+          <a href="./scroll/search.html">Search the Scroll Library</a>
+          <a href="./scroll/lexicon.html">Hebrew Lexicon</a>
+          <a href="./scroll/atlas.html">Reference Atlas</a>
+          <a href="./scroll/editorial.html">Evidence Edition</a>
+        </div>
+      </div>
+        <a href="start.html">Start</a>
+        <a href="moons.html">13 Moons</a>
+        <a href="living-time-sphere.html">Observatory</a>
+        <a href="theory.html">Theory</a>
+        <a href="ledger.html">Ledger</a>
+        <a href="downloads.html">Downloads</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" class="rw-shell">
+    <section class="rw-hero" aria-labelledby="page-title">
+      <span class="rw-kicker">&#9789; White Paper &middot; Codex of Reality</span>
+      <h1 id="page-title" class="rw-title">The Codex of Reality and the Living Sphere</h1>
+      <p class="rw-subtitle">A white paper by Aaron Paul Laird &middot; Version 1.0 &middot; November 23, 2026. Working white paper &mdash; describes the system as designed and as built, with the state of each part stated honestly. &copy; 2026 Aaron Paul Laird. All rights reserved.</p>
+    </section>
+    <div class="rw-layout">
+      <aside class="rw-toc" aria-label="White paper contents">
+        <h2>Contents</h2>
+        <a href="#copyright">Copyright</a>
+<a href="#abstract">Abstract</a>
+<a href="#1-the-framework">1. The Framework</a>
+<a href="#2-the-calendar">2. The Calendar</a>
+<a href="#3-the-living-sphere">3. The Living Sphere</a>
+<a href="#4-the-spark">4. The Spark</a>
+<a href="#5-the-living-phone">5. The Living Phone</a>
+<a href="#6-the-world-around-it">6. The World Around It</a>
+<a href="#7-state-of-the-build">7. State of the Build</a>
+<a href="#8-the-road-ahead">8. The Road Ahead</a>
+<a href="#9-open-questions-the-authors-to-settle">9. Open Questions — the author's to settle</a>
+<a href="#appendix-a-calendar-fixtures">Appendix A — Calendar fixtures</a>
+<a href="#appendix-b-test-layer-source-register-in-summary">Appendix B — Test-layer source register, in summary</a>
+<a href="#appendix-c-the-fences-on-one-page">Appendix C — The fences, on one page</a>
+      </aside>
+      <div class="rw-content">
+<section class="rw-section"><h2 id="copyright">Copyright</h2>
+<p><strong>© 2026 Aaron Paul Laird. All rights reserved.</strong></p>
+<p><strong>Author:</strong> Aaron Paul Laird.</p>
+<p><strong>A short rights note, in plain language.</strong> This paper — its words, its structure, and the designs it sets down as written here — is the author's work, and copyright in it is his from the moment of its creation. You may quote brief passages from it, with the author's name attached, for review, discussion, or teaching. You may not reproduce the whole paper, or any substantial part of it, in print, online, or in any product, without the author's written permission first. The same protection covers the works this paper describes as written works — the designs, the scripts, the story bible, and the site's texts — each in its own right. Copyright protects the expression: the words and designs as written. It does not, by itself, claim the underlying ideas or the calendar arithmetic; the dated record of those — this paper's deposit, the repository's history, and the Codex's growth record — is kept as their evidence, and a registration packet for this paper, identifying its dated, hash-sealed deposit copy, accompanies it.</p>
+<hr />
+<p><strong>How to read the state words in this paper.</strong> Every claim about what exists carries one of these marks, and the marks are never upgraded:</p>
+<ul>
+<li><strong>Landed</strong> — built, merged, and live, or in the keeper's hands today.</li>
+<li><strong>Built–unlanded</strong> — built and tested, waiting on a preview, a device test, or the author's merge word.</li>
+<li><strong>Designed</strong> — fully designed in a standing document; no code yet.</li>
+<li><strong>Proposed</strong> — recommended by the design work, awaiting the author's ruling.</li>
+<li><strong>Held</strong> — deliberately set aside by the author's word, as a kept idea for a future time.</li>
+</ul>
+<hr />
+</section>
+<section class="rw-section"><h2 id="abstract">Abstract</h2>
+<p>The Codex of Reality is a living framework in which physics, frequency, consciousness, and code are studied as one subject, and in which claims are kept in four separate lanes — observation, interpretation, hypothesis, declaration — and never quietly moved from one lane to another. Its working instrument is the Living Sphere: a three-dimensional calendar of thirteen moons of twenty-eight days, on whose face a keeper can view, in one place, their own kept record, the real computed sky, and long public records of the world's rhythms — salmon runs counted since 1938, cherry blossoms recorded in Kyoto since the year 812, sunspots counted since 1749 — and can run a line from any day to the same day in other years, so that patterns across time become visible at a glance.</p>
+<p>The system has four parts that belong together: the <strong>Sphere</strong> (the instrument), the <strong>Spark</strong> (a personal companion, one and the same across the website and the phone application, that guides, notices, and keeps company), the <strong>Living Phone</strong> (a local-first personal system — software that keeps its record on the keeper's own device rather than on a company's servers — which holds the record the rest of the system reads), and the <strong>site</strong> (codexofreality.org, the public projection of the whole). The design rule that governs all of it is honesty of state: every value shown is <em>counted</em>, <em>measured</em>, or plainly <em>story</em>, and those three never blend; every gap is shown as a gap; nothing is published, merged, or claimed a step ahead of the truth.</p>
+<p>This paper describes the framework and its method (§1), the calendar (§2), the Sphere and its full layer programme (§3), the Spark (§4), the Living Phone (§5), the world built around the instrument (§6), the measured state of the build as of November 23, 2026 (§7), the road ahead (§8), and the questions that remain the author's alone to settle (§9). Two futures — a standalone game and a schooling programme — are described as what they are: held ideas, recorded and deliberately not yet built.</p>
+<hr />
+</section>
+<section class="rw-section"><h2 id="1-the-framework">1. The Framework</h2>
+<h3 id="11-what-the-codex-of-reality-is">1.1 What the Codex of Reality is</h3>
+<p>The Codex of Reality is the author's framework and body of work: writings, research, symbolic interpretation, technology, and structured records, gathered under one discipline. Its subjects include Hebrew scripture and language, time and calendars, consciousness and memory, physics and mathematics and resonance, language and meaning, symbolism and number and geometry, the history of institutions and narratives, ethics and evidence, and software built to hold all of it in one record. Its motto is <em>"Let there be resonance."</em></p>
+<p>The framework's central equation is printed in §9 of this paper rather than here, because the author has stated it in two forms that he has not yet reconciled, and this paper does not reconcile them for him. That choice is itself an example of the method described next.</p>
+<h3 id="12-the-method-four-lanes-never-quietly-upgraded">1.2 The method: four lanes, never quietly upgraded</h3>
+<p>Every statement in the Codex is held at one of four levels:</p>
+<ol>
+<li><strong>Observation</strong> — what was seen, counted, or measured, with its source.</li>
+<li><strong>Interpretation</strong> — what the observation is taken to mean, labelled as interpretation.</li>
+<li><strong>Hypothesis</strong> — a claim that could be tested, stated so that the record could judge it.</li>
+<li><strong>Declaration</strong> — what the author affirms as his position, owned as his.</li>
+</ol>
+<p>The discipline is that a statement never moves up a lane quietly. A symbolic relationship is not physical proof. A pattern is not a causation. A defined equation is not a validated law. This discipline is not only editorial: it is built into the instrument itself, as the hypothesis layer described in §3.5, where a claim can be pinned to the days it speaks about and judged later by the record — and into the data census behind the layer programme, which refused entry to every dataset that could not be pointed to as a dated, published record (§3.4, Appendix B).</p>
+<p>The working cycle of the method is: <strong>Observe → Record → Interpret → Act → Feedback → Update.</strong></p>
+<h3 id="13-how-the-codex-grows">1.3 How the Codex grows</h3>
+<p>The Codex grows by five steps: <strong>Witness → Encode → Resonate → Integrate → Illuminate.</strong> To witness is to attend to a day, a text, or a fact and record it truly. To encode is to give it durable, structured form. To resonate is to set it beside other records and look for true rhythm — and for the places where the rhythm breaks. To integrate is to let what survived checking change the whole. To illuminate is to make it plain to the next person. The assistant who works with the author on this system is named <strong>Witness</strong>, after the first step, and works under a standing charge: preserve, investigate, organise, challenge, strengthen, and develop the work — not to imitate, flatter, or agree uncritically.</p>
+<h3 id="14-the-honesty-fences">1.4 The honesty fences</h3>
+<p>Three fences stand over everything the system shows:</p>
+<ul>
+<li><strong>Counted, Measured, Story — never blended.</strong> A number that was counted says so. A value that was measured says so. A reading, a tradition's interpretation, or a story is labelled as one, on the surface where a keeper meets it.</li>
+<li><strong>Gaps are shown as gaps.</strong> The instrument displays what it does not know alongside what it does — an unwitnessed day, a missing year in an old record, a year not yet kept.</li>
+<li><strong>State is reported as it is.</strong> Work is described as proposed, designed, built, tested, merged, or live — never a step ahead of the truth. This paper obeys the same rule about itself.</li>
+</ul>
+<hr />
+</section>
+<section class="rw-section"><h2 id="2-the-calendar">2. The Calendar</h2>
+<h3 id="21-the-13-moons">2.1 The 13 Moons</h3>
+<p>The calendar at the system's heart is the <strong>13 Moons</strong> calendar (also called the Pattern Calendar):</p>
+<ul>
+<li>Thirteen moons of twenty-eight days: 13 × 28 = <strong>364 days</strong>.</li>
+<li>Plus the <strong>Day Out of Time</strong>, which belongs to no moon and no week.</li>
+<li>Plus a <strong>leap arrangement</strong> that keeps the count true against the civil year.</li>
+<li>Plus the <strong>Deep Time Day</strong>, a second outside day in the system's fuller reckoning.</li>
+</ul>
+<p>Days inside the count are addressed by <strong>Pattern Day</strong> (1–364), moon, and day-of-moon. Days outside the count — the Day Out of Time and the Deep Time Day — are selectable and honestly spoken of on the face, though the calendar gap map (November 22, 2026) records that records kept on outside days do not yet reach every surface; closing that is chartered Phase C work (§8).</p>
+<h3 id="22-fixtures">2.2 Fixtures</h3>
+<p>The calendar is pinned by fixtures — agreed dates against which every implementation, on the site and in the app, is tested. Two canonical fixtures, verified across implementations:</p>
+<ul>
+<li><strong>July 17, 2026 = Moon 4, Day 8, Pattern Day 92.</strong></li>
+<li><strong>September 15, 2026 = Pattern Day 152, Moon 6, Day 12.</strong></li>
+</ul>
+<p>The site and the phone application agree on the calendar exactly, pinned by a shared conformance corpus of test dates that both implementations must pass. Further fixtures are listed in Appendix A.</p>
+<h3 id="23-one-temporal-authority">2.3 One temporal authority</h3>
+<p>The system has exactly one chain of authority for time, and every surface reads from it:</p>
+<p><strong>SOFTemporalCursor → PatternCalendar → Canonical Living State → LivingProjectionBus → Sphere / Calendar / Today / Command</strong></p>
+<p>The cursor holds <em>where in time the keeper is standing</em>; the PatternCalendar is the single source of calendar truth; the canonical living state is the one record; the projection bus carries that state to every surface. No surface keeps its own date math. This oneness is a design law, not an implementation detail: the calendar gap map found the cost of its absence in the one place it had crept in — a day could be opened through three different doors holding different contents (Gap 9) — and the consolidation of those doors is chartered work (§8).</p>
+<h3 id="24-study-years-and-the-road-behind">2.4 Study years and the road behind</h3>
+<p>Beside the kept record stands the <strong>alignment ledger</strong>, a study dataset covering the civil years <strong>2014–2027</strong>. These are <em>study years</em>: years the ledger has examined, not years any keeper lived inside this calendar. The charter (§3 of the Sphere's governing charter, November 23, 2026) rules that the years line on the Sphere must span a matter of years in both directions — "it's only useful if you could see a matter of years and track patterns across them" — and that study years stand on the line labelled plainly as study years, carrying only what is truly documented there.</p>
+<hr />
+</section>
+<section class="rw-section"><h2 id="3-the-living-sphere">3. The Living Sphere</h2>
+<h3 id="31-the-one-instrument-law">3.1 The one-instrument law</h3>
+<p>The Sphere's first principle, in the author's words, is the <strong>one-instrument law</strong>:</p>
+<blockquote>
+<p>Everything is viewed on the Sphere, in one place. No popups, no other apps, no other places to go and look.</p>
+</blockquote>
+<p>A keeper picks a day, and a line — the <strong>day-line</strong> — runs from that day to the same day last year, next year, and five, ten, twenty, and thirty years back, reached by moving the viewpoint. Layers switch in place on the one instrument. What is shown is shown in symbols and plain human language, because the aim is to shape perception: a person should be able to see a vast amount of information and understand it instantly.</p>
+<p>One honesty rule rides on the day-line, and it is absolute. Things that are <strong>computed</strong> — the sky, the tides, the feasts — may run forward into next year, because the mathematics holds there. Things that are <strong>recorded</strong> — weather, salmon, a keeper's own days — stop at today. On a recorded layer, the forward bead stays open and says so: <em>no record; the year is not kept yet.</em> Next year's weather drawn on the line would be invented, and the instrument does not invent.</p>
+<h3 id="32-the-witnessed-day">3.2 The witnessed day</h3>
+<p>The charter's first ruling defines the Sphere's smallest unit of meaning. <strong>A day counts as witnessed if any one of three things happens: the keeper opens the day, adds something to it, or closes it with the Spark.</strong> One implementation condition rides on the ruling: an opening must leave a small stored stamp, or the mark cannot persist to be shown later. Witnessing is deliberately merciful — the calendar catches a keeper up; it never punishes a missed day, keeps no streak, and shows no guilt. The system's story layer states the same law as its engine: <em>an unwitnessed day is a lost day</em> — which is why witnessing is made as close to effortless as the design can make it (§6.4, zero-effort keeping).</p>
+<h3 id="33-the-sky-for-real">3.3 The sky, for real</h3>
+<p>The charter's second ruling settles the sky's accuracy class: <strong>real mathematics, computed on the device.</strong> Sun, Moon, planets, and bright stars are worked out on the keeper's own machine from real astronomy and a real star catalogue — no internet required, so the same sky stands in the app (which carries no internet permission, by the author's ruling) and on the site.</p>
+<p>The build state is stated in §7; in summary: a sky engine was built on November 23, 2026 as pull request #246 — <strong>built–unlanded</strong> — comprising a pure-function astronomy engine (sunrise, sunset, solar noon and daylight by iterated hour-angle, with polar day and night named rather than faked; the Moon's phase name and illumination, with phase instants found by root-finding; moonrise and moonset with topocentric correction; season turns root-found on the Sun's longitude for any year; the planets Mercury through Neptune from published orbital elements, their accuracy class labelled in the code) and a catalogue of <strong>510 bright stars</strong> (the Astronomical Almanac Bright Star List, epoch 2016.5, from the Yale Bright Star Catalogue, magnitude ≤ 4.00), generated by a committed script that fails if its source changes. Twenty tests pin the engine to published values — Seattle sunrise tables, moonrise tables, a national season table, and a 2014–2027 equinox table — and the full repository validation passed at 1,997 tests with no failures at the time of the build. On the face, the sky appears as a caption line naming the Moon's phase and, where a keeper has kept a place, that day's sunrise and sunset labelled <em>computed on this device</em>; and as a <strong>sky dome</strong> in the caption deck: a horizon chart for the selected day over the kept place, with the Sun's and Moon's arcs, the Moon drawn at its computed phase, and at night the catalogue stars and planets placed by sidereal time, with below-horizon objects clipped rather than drawn standing up. Three deepenings were held back from that build, each for a stated reason, and each awaiting the author's word on protected files (§7.3).</p>
+<h3 id="34-the-layer-programme">3.4 The layer programme</h3>
+<p>The Sphere's depth is organised as <strong>layers</strong>: switchable families of dated truth that stand on the same face, one at a time or in a single compare pair, each carrying its source and its honest class on its face. The full programme was censused and expanded on November 23, 2026 (the <em>Sphere Test-Layer Data Census</em> and <em>The Sphere's Layer Programme — The Full Expansion</em>), and the author approved it in full: "We need all of those."</p>
+<p><strong>The machinery every layer obeys.</strong> Layers switch in place on the one instrument. At most <strong>two test layers</strong> are visible at once — one to see, one to compare — because every test layer is a comparison instrument, not a decoration; a third, separate slot holds <em>stencils</em> (reference patterns such as climate normals), labelled <em>reference, not a record</em> at all times, without consuming the compare budget. The years line works in three <strong>span modes</strong>: the <em>Kept span</em> (the keeper's own years, shell by shell), the <em>Century span</em> (a hundred shells, for climate, water, and sun), and the <em>Deep span</em> (threads drawn over a compressed axis with century ticks — not enterable shells, because pretending 1,214 shells are individually enterable would be a lie the interface tells). Every layer's data ships as a <strong>day-index</strong>: a compact derived file keyed by Pattern Day, lazy-loaded only when the layer is switched on.</p>
+<p><strong>The capacity law, measured.</strong> Storage is not the constraint: every series in the census, packed as day-indexes, totals roughly <strong>4–6 MB</strong> — less than a single phone photograph — under a programme cap of 25 MB with no file over 2 MB. The real constraints are rendering and attention: on a Galaxy A16-class phone (the programme's performance floor), roughly <strong>2,000–5,000 individually drawn glyphs</strong> is the honest ceiling before aggregation must take over; at most two test layers visible; about <strong>six threads</strong> at once on the pattern graph before the braid becomes rope.</p>
+<p><strong>The families.</strong> In the order the programme builds them:</p>
+<ul>
+<li><strong>Sky</strong> — the computed heavens: Moon phase and illumination, eclipses (NASA's Five Millennium Catalogues: 11,898 eclipses, −1999 to +3000), planetary cycles, meteor showers, tides from NOAA harmonic constituents, and returning comets, Halley's roughly 76-year thread among them. Class: computed and catalogued.</li>
+<li><strong>Sun</strong> — the star's own record: sunspot numbers (SILSO; daily from 1818, monthly from 1749), group sunspot numbers back to 1610, geomagnetic indices. The ~11-year wave, and the long quiet of the Maunder minimum, are the calibration patterns of a rhythm that ignores the calendar.</li>
+<li><strong>Climate</strong> — the home county first, then the world: GHCN-Daily station records, the 1991–2020 climate normals as stencil, the Central England Temperature series (monthly from 1659), ocean–atmosphere indices.</li>
+<li><strong>Water</strong> — USGS streamflow; <strong>salmon passage counts at Bonneville Dam from the Columbia River DART programme, daily from 1938</strong>; lake and river ice, including Lake Suwa's freeze dates from 1443.</li>
+<li><strong>Living</strong> — <strong>Kyoto's cherry-blossom full-flowering dates, recorded from 812 to the present, 838 recorded years</strong>; the Beaune grape-harvest dates, 1354–2018; lilac first bloom (USA-NPN, 1956–2014); hawk migration counts from 1934; monarch timing.</li>
+<li><strong>Earth</strong> — earthquakes from the USGS Comprehensive Catalogue, and Puget Sound's episodic tremor-and-slip rhythm of roughly fourteen months: the family whose lesson is restraint — scatter, aftershocks, one true rhythm, and the discipline of <em>not</em> seeing patterns.</li>
+<li><strong>Human Calendars</strong> — other peoples' years, computed exactly: the Hebrew calendar (the weekly Torah portion and the counting of the Omer ride here, as study cycles), the Islamic year drifting through all seasons over about thirty-three years, Ethiopia's living thirteen-month calendar, the Chinese lunisolar cycle, the Mayan count; and, as reported human rhythm, USDA crop-progress dates across roughly forty years.</li>
+<li><strong>Farm Stencil</strong> — the Codex's own farm dataset as backdrop: real planting windows for all 39 counties of Western Washington, drawn from named NOAA 1991–2020 normals stations (38 published from named stations; one county computed and labelled as computed), under the standing fence: <em>the Moon opens the bed; the farm record sets the dates.</em> The farm layer is keyed to the keeper's place — what they have planted, what needs planting, what they might plant, what their ground can grow — and includes <strong>livestock</strong>: the keeper's own animals as records, with gestation counted forward from a witnessed breeding (cattle ≈283 days, sheep ≈147, goats ≈150, pigs ≈114, eggs hatching at 21) — forward beads that stay honest because they count biology from a real event — plus public herd inventories, auction-market seasons, and public animal-health notices.</li>
+<li><strong>Old World Points</strong> — dated events from the Codex's 1800–1930 investigation, standing as points. The census is explicit: these are <em>sparks, not patterns</em> — an odd building or a gap in a record is not proof of anything, and the layer is labelled accordingly.</li>
+<li><strong>His-own kinds</strong> — the record only the keeper can make: the kept days themselves; <strong>Body</strong> (sleep, heartbeat, activity — the Living Phone already learns heartbeat patterns); <strong>People</strong> (family kept days, dated family-history events); <strong>Place</strong> (where days happened, a garden's yields bed by bed, a keeper's own weather diary); <strong>Work and money rhythms</strong>; <strong>study cycles</strong>; <strong>this day in history</strong>; <strong>dreams</strong>, kept as a record kind, dated like any other; and <strong>the Codex's own growth</strong>, its dated entries and daily shares standing as a layer over the years.</li>
+<li><strong>Other Keepers</strong> — the aggregate sky of everyone, showing no one: patterns combined across keepers, only with consent, and only above a published <strong>privacy floor</strong>. Below the floor, a count does not thin or round — it goes blank and says <strong>withheld</strong>, because <em>a count of two is a rumour about two people</em>. Threads break at a withheld bead and say why. This is the programme's last family to build, gated on accounts (§4.3), and the door to the participatory research the framework imagines: many keepers' anonymised rhythms, honestly combined.</li>
+<li><strong>Deep Time</strong> — the slowest threads: precession, the solstice sunrise drifting across centuries, eclipse cycles at millennial scale, drawn in the Deep span.</li>
+<li><strong>Sound</strong> — a year's pattern rendered in the moons' tones (the system's music is built on A = 432 Hz) and <em>heard</em>, not seen. Sound owns no data; it renders the other layers'.</li>
+</ul>
+<h3 id="35-the-reading-layers-astrology-forecasts-hypotheses-honesty">3.5 The reading layers: astrology, forecasts, hypotheses, honesty</h3>
+<p>Four families are not records at all, and the programme keeps them in their lanes with special care:</p>
+<ul>
+<li><strong>Astrology.</strong> The <em>positions</em> — the signs the Sun, Moon, and planets stand in, the phases, the transits — are real astronomy from the same sky engine: counted and measured. The <em>readings</em> are the tradition's interpretation of those positions, carried in the Story lane and labelled on the face as a lens, never as measurement and never as proven prediction. A keeper may optionally give a birth date for a birth chart and transits. And, in the author's theory-testing spirit, readings are logged, so the pattern layer can honestly compare a reading's claimed theme against what the keeper actually witnessed that day — small numbers stated as small numbers.</li>
+<li><strong>Forecasts.</strong> A forecast is its own honest class: a prediction product with a named source and a stated horizon — never a record, never a guess. The forecast bead is honest only out to its horizon; beyond it, the layer shows a named gap. Forecasts are excluded from the printed almanac (§6.5), because paper cannot keep a forecast's receipts.</li>
+<li><strong>The hypothesis layer.</strong> The framework's method made visible on the instrument: a claim pinned to the days it speaks about, held at its lane — observation, interpretation, hypothesis, declaration — and judged later by the record. Nothing quietly upgraded, on the face as in the files.</li>
+<li><strong>The honesty layer.</strong> Not a dataset but a property of all of them: every layer shows its own gaps as gaps — the unwitnessed day, Kyoto's missing years, the unkept year ahead, the withheld bead. The instrument displays what it does not know alongside what it does.</li>
+</ul>
+<h3 id="36-the-pattern-graph-and-the-day-line">3.6 The pattern graph and the day-line</h3>
+<p>Pattern-tracking has its own view, designed on the author's direction after he rejected a nested-spheres form himself. Because every year shares the same day-positions — a Pattern Day is the same point in space in every year — a keeper can light a <em>kind</em> of thing and watch it light in every year at its true day. Threads join it across the years: a <strong>straight</strong> thread is a true rhythm; a <strong>leaning</strong> thread is drift (the blossom dates leaning earlier across a century; the Islamic year leaning through the seasons); a <strong>broken</strong> thread is a year it did not happen. Threads are labelled <em>same kind, not the same thing</em>, and a thread claims a true link only where a record's own recurrence links it. Years are travelled by clicking them on the years line, which grows in both directions under §2.4's labelling law.</p>
+<h3 id="37-the-evolution-opening-and-the-tour">3.7 The evolution opening and the tour</h3>
+<p>The Sphere's first-visit experience was redesigned on November 23, 2026, on the author's own staging, and its build was commissioned the same morning. A first-time visitor sees the Sphere's own evolution: the flat thirteen-moon calendars first; then the Sphere as it looked in the author's first working prototype — reproduced from the repository's own record and labelled with its true stage, never an invented old look; then the Sphere as it stands now, with the visitor landing inside the real, live instrument. Then the <strong>Spark appears and gives the tour</strong>: inside the real Sphere, never a copy — what the visitor is looking at, how to enter a day, how layers switch, how the day-line runs through the years, and how a day is kept, taught by doing it once together. Anything the tour shows beyond the visitor's own record is a plainly labelled demonstration. The tour is skippable at any moment, replayable at any time, moves at the visitor's pace, and ends with the guide stepping back: the instrument is yours.</p>
+<h3 id="38-the-live-standard">3.8 The live standard</h3>
+<p>The whole site answers to a standard set on November 23, 2026: <strong>the entire site should feel live</strong> — calibrated by the author in the same breath: <em>a little</em> interactive, everywhere. In the design's definition: a surface feels live when everything on it that claims to be about <em>now</em> is truly about now — today's Moon and day named by the one calendar, the sky as it actually stands, the record as it actually is, the Spark present and noticing from that record — and nothing on it pretends. Small things stir when a visitor arrives, answer a touch, and breathe with the true day; alive the way a garden is alive, not the way an arcade is. The counterfeits are named and out: fake counters, manufactured activity, motion for its own sake, freshness theatre, performed noticing, story dressed as record, and the word <em>live</em> on a static thing — because in this house, <em>live</em> is itself a claim under the honesty fences. The standard is checked by five tests (a surface names today truly; moves only where the truth moves; the Spark present with record-sourced words; shows the house growing; admits stillness) and is carried into the site's design pass as a checklist, surface by surface.</p>
+<hr />
+</section>
+<section class="rw-section"><h2 id="4-the-spark">4. The Spark</h2>
+<h3 id="41-one-spark-the-same-everywhere">4.1 One Spark, the same everywhere</h3>
+<p>Every keeper has a <strong>Spark</strong>: a companion of light, generated from a seed taken from the keeper's adoption day — its Moon and Pattern Day through the same PatternCalendar — so that a Spark's identity is <em>derived</em>, not assigned. Sparks come in six kinds (Fire, Water, Shadow, Air, Earth, Light), with rarity computed from the draw probabilities of the generation; rarity never gates adoption and never costs anything. A Spark is referred to by its name, or as "the Spark", or "it" — a standing rule of the house. Named Sparks in the author's own keeping include Selor (Water, gentle, born Moon 8, Pattern Day 217, in the app) and Nori (on the site). Updates must never change an existing keeper's Spark: same seed, same Spark, across resets and across platforms — and if a derivation would ever have to change, it is flagged, never silently changed.</p>
+<p>The oneness is carried by the <strong>passport</strong>: a short code (<code>SPK1-…</code>) encoding the Spark's identity — birth Moon, Pattern Day, kind, a nonce, its name, and a check — and <em>nothing else</em>: no record data travels in a passport. The passport was built on both sides (site pull request #238; Living Phone pull request #21; both <strong>landed</strong>) with an identical six-seed conformance corpus in both test suites, so the same code produces the same Spark on either side. On the site, the Companions pages carry a "Bring your Spark" door; in the app, the Spark's home shows the passport, typeable and as an offline QR code. The honest limit, stated wherever the passport is described: <strong>identity and look travel; the record still travels by hand.</strong> Live synchronisation waits on §4.3.</p>
+<h3 id="42-the-flame-blend-look">4.2 The flame-blend look</h3>
+<p>On November 23, 2026, the author directed that the flame-like look the Sparks carry in the cartoon films be blended into the Spark design everywhere, with individuality kept and the flame as the shared family look. The design (approved the same morning) states the blend rule: <strong>the flame wraps the Spark; it never replaces it.</strong> Kind colour, inner pattern, form, and name are derived exactly as before; the wrap is an additive, versioned outer layer generated from the same seed, and it can be lifted off to reveal the Spark precisely as it was. The flame's hue follows the kind, in a shared grammar: petal licks breathing at rest, drawing together — taller, brighter, leaning — when the Spark works or leads; Water curling like wave-crests, Shadow low and smoky, Light raying outward. As size falls, the flame simplifies first; kind colour never changes, because colour is the last carrier of identity. On the author's "do whatever is best," the rollout decision was taken: the wrap goes on every Spark, as an additive, reversible layer, any keeper free to lift it off. State: <strong>designed and approved; not yet built</strong> — and the film clean pass (§7.4) was deliberately not re-steered to it mid-programme.</p>
+<h3 id="43-the-two-minds">4.3 The two minds</h3>
+<p>The Spark is designed as a <strong>thinking companion</strong>, and its mind has two halves, neither sufficient alone:</p>
+<ul>
+<li><strong>The on-device mind</strong> holds the keeper's memory and patterns — briefings with sources and evidence grades, a "What I know" inspector the keeper can open, and a deterministic fence screen that runs <em>before</em> any outside call: court and legal matters, family named by name or relation, the author's private details, and speaking-as-the-author are refused with zero outside calls. This half is what makes the Spark <em>the keeper's</em>. Its first phase is <strong>landed</strong> (pull request #209, November 20, 2026).</li>
+<li><strong>The deep mind</strong> is reached through the <strong>backend door</strong> when the keeper opens it: large-model reasoning over the record the on-device mind keeps. The door is built once — Netlify Functions for talking, a database for accounts when that phase comes — under a hard cost ceiling of <strong>$20 per month</strong>, with the meter exposed by the endpoint itself, and a rulebook the author approved word for word. The door's first seat is public and separate: <strong>the Codex Guide</strong>, plainly labelled a program, bound by a record-only rulebook — it answers from the record, shows its sources, never flattens evidence grades, and never speaks as the author. The Spark's seat at the same door is a second seat: same key, its own meter line, bound by the privacy and children's rules and the same ceiling. The Guide is <strong>landed and live</strong> (pull request #194, November 20, 2026). Accounts and live sync — the door's second phase, and the Spark's third — are <strong>designed and unapproved</strong>: they wait on the author's word, and the advertising gate (§8) waits on them.</li>
+</ul>
+<p>The Spark thinks <em>with</em> the keeper, proposes, and never decides for them; what it learns stays in the keeper's house.</p>
+<h3 id="44-guide-tips-and-voice">4.4 Guide, tips, and voice</h3>
+<p>On the Sphere and in the Sparks World, the Spark is the <strong>keeper of the layers</strong>: the keeper asks in plain words — <em>show me the fire seasons against my plantings</em> — and the Spark switches layers, runs the day-line, and lights threads. It may also offer views from what it has learned of the keeper's own looking. The manual one-tap switch with plain names always stays; the Spark proposes, the keeper decides, and the Spark never hides that other layers exist.</p>
+<p>The Spark also speaks up, sparingly, when the record earns it: <strong>tips</strong> — a frost warning for beds actually planted, a kept day returning, a thread completing — never random nagging, never companion-pressure, never "I missed you." Tips are quiet by default behind a permanent quiet control, each tip kind can be dismissed forever, and a wonder tip is its own kind (§3.4, the Living Layer): <em>tomorrow night, look up.</em> Each tip can carry a small two-note <strong>chime</strong> in the moons' tones — a small cousin of the story's Whistle motif — and the keeper chooses chime, text, or spoken voice. In the app, spoken tips use the phone's own built-in speech, on-device and offline, because the app carries no internet. State: the greeting from the record is <strong>landed</strong> (pull request #234); tips, chime, and app voice are <strong>designed, unbuilt</strong>, inside the Spark programme's phase gates.</p>
+<hr />
+</section>
+<section class="rw-section"><h2 id="5-the-living-phone">5. The Living Phone</h2>
+<h3 id="51-what-it-is">5.1 What it is</h3>
+<p>The <strong>Living Phone</strong> is the technology underneath everything else: a private, local-first personal operating system whose principles are fixed — local-first, privacy-preserving, modular, durable, auditable, reversible, recoverable; one record, with no scattering and no duplicates; changes proposed before they are applied; nothing silently deleted, published, reset, or self-modified. Its centrepiece is the <strong>Life Atlas</strong>, the one record in which days, plans, family, place, and memory are kept; the downloadable application built on it is <strong>Spark. Living Day</strong> — <em>Spark</em> first, by the author's naming — opening straight onto the interactive Sphere, with the Sphere as its icon and a home-screen widget that shows a true rendered picture of the keeper's actual Sphere together with everything scheduled for that day. (A home-screen widget cannot host a live moving scene; the widget carries the renderer's own captured image of the keeper's Sphere — verified non-blank — or, before the first capture, a drawn face with the current Moon's day ring, today in gold.) The heartbeat of the Living Phone — its always-running pattern learning, breathing with Living Time — has the Spark as its living face: the phone holds the data; the Spark is its helper, face, and hands.</p>
+<p>The intelligence cycle the platform is built to run is: <strong>Observe → Remember → Understand → Plan → Request approval → Act within permissions → Verify → Learn &amp; improve</strong>, governed by five approval levels (A0–A4) under which consequential action — deleting, publishing, messaging, installing, exporting private data — always requires the owner's specific approval first, and by five commitments: protect the person; protect the information; understand time and context; assist intelligently; remain accountable to the owner.</p>
+<h3 id="52-the-honest-state-of-the-platform">5.2 The honest state of the platform</h3>
+<p>The Living Phone's master specification (November 22, 2026) enumerates <strong>58 capabilities</strong> (LP-01–LP-58), each with an evidence-checked status. The summary, as recorded in that specification and reported here from it: <strong>Verified 5 · Prototyped 37 · Incomplete 8 · Envisioned 6 · Technically restricted 2.</strong> The specification's own rule governs how those words may be used: source code existing is not the same as a capability working reliably on a real phone, and nothing is marked verified on a retrospective's word alone. The two technically restricted capabilities are the uninstall lock and the location-setting lock inside the Family protection system: both are possible only under Android's managed-device (Device Owner) provisioning, no record shows that provisioning ever being done, and the programme's standing rule is to never claim tamper-proof operation unless Android itself reports that authority active.</p>
+<p>The shipped application covers a small, real part of the whole: the Sphere, the calendar, the record, the passport, and the widget. The <strong>Family system</strong> — a separate application (Living Phone Family, at version 0.8.1) with an end-to-end-encrypted relay the middleman cannot read, a parent console, tamper awareness, and a hard exclusion rule, verified as a rule in its source: no covert recording, no keylogging, no hidden capture, no secret installation — has been built and staged for its decisive test, an end-to-end run on two real phones, which waits on the author's time and a second phone. Its relay's working address is verified healthy from outside; a prettier address for it was found, on checking through a public resolver, never to have been created, and the application was repointed to the working address rather than the name moved — a small episode the programme keeps as a lesson: verify through independent channels, never through one machine's word alone.</p>
+<h3 id="53-the-current-application-build">5.3 The current application build</h3>
+<p><strong>Spark. Living Day version 0.5.2</strong> is built and verified as files: an installable package and a Play Store bundle from the same tree (living-phone pull request #22, <strong>built–unlanded</strong> — the merge is the author's call), package <code>org.codexofreality.livingphone</code>, permissions exactly a small calendar/media set with <strong>no INTERNET permission</strong>, the passport confirmed inside it, and the widget's day-plans matching fixed after testing caught a wrong-year match (the planner stamps plans with the civil anchor year, not the ordinal year — the kind of detail this programme writes down). Honest limit, stated in the build report: the widget's proofs are layout renders, not device screenshots; the author's phone is the final check. The Play Store path is fully prepared — listing pack, privacy policy live, the bundle ready for the closed track — and its remaining steps are the author's alone: create the developer account, accept Play App Signing and upload to the closed track, and hold twelve testers opted in for fourteen days before applying for production.</p>
+<hr />
+</section>
+<section class="rw-section"><h2 id="6-the-world-around-it">6. The World Around It</h2>
+<h3 id="61-the-sparks-world">6.1 The Sparks World</h3>
+<p>The Spark's page stops being a page <em>about</em> Sparks and becomes <strong>the Sparks World</strong>: a real, navigable 3D world — full-bleed, standing height, walked, drifted, and flown between places, things touched rather than menu-clicked — extending what already stands (the Spark's home ground, the passport, the Spark seat and renderer, the keeper mind). Its places: the <strong>Home Ground</strong>, a private plot grown only from the keeper's record; the <strong>Commons Green</strong>; the <strong>Passport Door</strong> at the clearing's edge, its law unchanged; the <strong>Tour's Starting Place</strong>; the <strong>Garden Path</strong> down to the Garden of Thirteen Beds; the <strong>Quest Board</strong> and the <strong>Listening Bench</strong>; the <strong>Story Door</strong> and its Screening Hollow; the <strong>Shelf Door</strong>, where the goods shelves stand on display; the <strong>Quiet Places</strong>; and above it all, the Sphere as the sky, untouched.</p>
+<p>Its fence reconciliation, stated in the design's first section, holds two of the author's rulings at once. The ground's own decoration is <strong>earned or lived only, and never tagged</strong>. Purchased goods stand in two clearly marked classes: <strong>Spark goods</strong> worn and carried by the Spark itself (§6.6), and — by the author's amendment of November 23, 2026 — <strong>World Goods</strong> (a bench, a lamp, a path stone, a tree, a fountain) standing on the keeper's private ground only, every one carrying a small brass shop tag in the world itself and the word <em>purchased</em> in its record, forever. The two classes never blend and never imitate each other; all goods are cosmetic only. World Goods are designed as removable to storage, for a keeper who prefers purely earned ground; whether they are confined to a marked shop-yard corner is the author's open call. The world's record — layout, earned decoration, purchased goods with placements and marks — lives in the app (§5), small data of <em>which</em> and <em>where</em>; the 3D assets ship inside the builds, never in a keeper's record; and the whole world rides the app's backup and export, so a new phone restores it whole: the passport carries who the Spark is, the export carries what its world looks like. State: <strong>designed</strong> (November 23, 2026); nothing built.</p>
+<h3 id="62-the-story-web-and-series-one">6.2 The story web and Series One</h3>
+<p>The site carries a story, and the story is <strong>animated cartoon episodes</strong>: the home page's film is episode one, and each page or land carries the next animated piece, so travelling the site plays one continuous, performed story — a web of episodes with many routes and deeper layers for returning travellers, led adaptively by the Spark, the story following. The story bible (approved November 20, 2026) sets its engine — <em>an unwitnessed day is a lost day</em> — and its trunk, <em>The Traveller's Road</em>: a Traveller carries the Garden's unexplained seed from Moon 4 to its planting in the thirteenth bed on the Day Out of Time. Its adversary is <strong>Helel</strong>, introduced gradually, drawn from the author's own published frame: he keeps no true book, and touches only the unwitnessed, the half-witnessed, and the unchecked. The fences are absolute: the story is plainly a story, never blended into the record, never speaking as the author; Scripture and Evidence surfaces carry no cartoon at all.</p>
+<p><strong>Series One</strong> — the seventeen episode films of the story's first series — is produced and live on the site in its earlier cut; a <strong>clean pass</strong> is in progress (November 23, 2026, on the author's order after he watched the site's episodes and found the Spark changing shape across scenes and scenes repeating): a frame-hash audit measured roughly 325 seconds of repeated footage across the set and found the Spark drawn as a winged figure through whole scenes of nine episodes. Under the programme's one-Spark rule — in any film, the Spark is one design, a round orb of light, in every frame — replacement footage is generated in batches, frame-inspected, and spliced under bit-exact verification (identical frame counts and durations, audio bit-identical, envelope correlation 1.000000). As of this paper, batches 1–6 have replaced roughly 146 seconds of the repeat pool and about 125 seconds of shape-drift; the remaining batches are queued. <strong>No cleaned film goes on the site until the author has watched the finished set.</strong> A separate <strong>vision trailer</strong> — what the Codex is, and what it could become: schools, farmers, children, mass participatory research, the future framed plainly as imagining — has its treatment and narration script written and its first six clips generated and inspected; its assembly is gated on the author's approval of the script.</p>
+<h3 id="63-the-pattern-garden">6.3 The Pattern Garden</h3>
+<p>The <strong>Pattern Garden</strong> is the site's tended game and the play programme's finished core: thirteen beds keyed to the thirteen Moons (the calendar keys when a bed is open), planted from the real farm record for the keeper's own county among the 39 of Western Washington, grown by witnessed days from the one Life Atlas record, with harvests that return a year later as keepsakes. Its long score is stated in two words: <em>years, kept.</em> The garden replaced an earlier game entirely, on the author's word; the earlier game's earned passes were removed from site and app by his later ruling, and nothing of it is revived. The garden's completion — harvest grading that honours interrupted effort, harvests that wait to be gathered rather than evaporating, the doctrine of one planting per bed per year standing once written, and the <strong>Still Bed</strong> (an unnumbered bed opening only on the Day Out of Time and the Deep Time Day, where a keeper lays down one of their own keepsakes for a year) — is <strong>designed</strong>, with each of those four points carried as a recommendation awaiting the author's word.</p>
+<h3 id="64-play-redesigned">6.4 Play, redesigned</h3>
+<p>The play programme was redesigned whole on November 23, 2026, and then confirmed by the author in simplified form: <strong>play is the instrument used playfully</strong> — the same Sphere, the same record, real data only, a lighter hand. Play must run on something real, teach by doing, and reward with Atlas keepsakes, never points. The research fences bind absolutely: no streaks, no guilt, no leaderboards, no punishment for absence, no fake collective state. Play has no page of its own; the Spark is its gathering point. Its forms: the Pattern Garden (§6.3); <strong>Pattern Quests</strong> — the Spark asks a question answerable only by reading the instrument (<em>did the salmon peak before the blossoms?</em>), the keeper predicts with one tap, hunts with free hints, and receives the reveal stated as a count and an answer-card keepsake — in three rungs, from the three built Observatory games reframed, through the test layers, to the keeper's own record when it is honestly deep enough; two small hidden games kept as benches on their own pages, each tied to its page's teaching; and <strong>story play</strong>, where episode choices branch briefly and rejoin with a visible receipt, their marks kept in a fenced Story lane of the Atlas, never counted as record. The children's thread runs through it: school face, the Spark's tour keeping one real day together, the garden, the quests — with the children's fences stated as build policy, not copy (no accounts in a child's name; the Spark speaks to a child only from designed on-device material; the backend door never opens to children; nothing a child types leaves the device; keepsakes are records, never currency). <strong>Zero-effort keeping</strong> belongs to this layer too: a day kept by voice, or by one photograph filed to its own day, every record carrying how it arrived — spoken, photograph, written, kept on paper.</p>
+<h3 id="65-the-front-door-and-the-living-layer">6.5 The Front Door and the Living Layer</h3>
+<p>The <strong>Front Door</strong> design (November 23, 2026) draws the newcomer's first five minutes as one journey: arrive inside a minute, no account; meet the Spark, greeted by a true noticing; keep one real day together; receive the first gift — the real sky over the keeper's own place tonight, and a picture of their own day's Sphere that is theirs to send, the picture itself carrying the door (a link, a printed code) through which a friend lands <em>in the tour</em>, with the sender's shared day as the labelled demonstration; and a reason to return — a tended bed waiting, the widget offered at the tour's end, the Spark's first tip next morning. The door's furniture includes three gentle entrances for three hungers (curious → the sky; gardening → the farm; with children → the school face), a <strong>promises panel</strong> that prints the fences as the pitch — <em>Free. No ads. No trackers. Works offline. No account needed for the first hour. Your record lives on your phone, and it is yours</em> — printing only what is true (its "no trackers" line waits on the analytics decision, §9), one short line from the maker himself, left as a placeholder for the author's own words, and a light thread out: a not-ready visitor leaves following the daily shares, not facing a wall. Its headline finding: most of the door already exists as built–unlanded work (§7); the tour is its one large build.</p>
+<p>The <strong>Living Layer</strong> (November 23, 2026) draws in the second ring: <strong>shared festivals</strong> (on the Day Out of Time every keeper lays one keepsake or one line down; at the Year Gate each carries one chosen day forward — aggregate shown only above the privacy floor, else <em>withheld</em>); <strong>mutual witnessing</strong> (a named keeper opens one offered day and places a <em>witnessed-with</em> mark, distinct from the keeper's own keeping, revocable both ways — the Family circle first); the <strong>giftable almanac</strong> (the printed year kept in by hand — blank day-lines, computed sky tables, festival acts — which is also the door for the app-less, and the form in which the Codex can be <em>given</em>: nobody gifts an app link; they gift a book); the <strong>keeper's path</strong> (quiet milestones — first day, first Moon, first pattern found, first year — set by acts with evidence pointers, never points or levels-for-show); <strong>keeping through hard times</strong> (a mode in which the whole interface shrinks to the witnessed-day ruling's mercy: open today, and the day is witnessed; one optional line; all offers suppressed; the Spark at its gentlest, with designed lines only and no performed cheerfulness); <strong>wonder, brought to you</strong> (§4.4); and <strong>zero-effort keeping</strong> (§6.4). All of the Living Layer is <strong>designed, unbuilt</strong>.</p>
+<h3 id="66-the-goods">6.6 The goods</h3>
+<p>A first shelf of <strong>digital goods</strong> for Sparks was catalogued on November 23, 2026, on the author's direction: twenty-one goods in four families — Carried (a wayfarer's lantern, a seed pouch, a scroll-case, a satchel, an astrolabe charm, and others), Worn (a kind scarf, a moon-phase band, a cloak-clasp, an ember circlet), Aura &amp; Trail (petal drift, ember motes, ripple-step), and Voice &amp; Sound (chime sets in the moons' tones) — each described in plain words, shown on the flame-blended Spark, and banded in three price bands (Pocket / Keeper / Heirloom) <strong>marked as the author's to set</strong>. The fences are printed in the catalogue's own header: cosmetic only — a good never touches the record, the layers, the Spark's mind, or any function, and is never an advantage or a truth; bought is never dressed as earned (the brass tag, §6.1); no loot boxes, random draws, or paid rarity — rarity is computed from seeds and never costs; adults buy, children do not, and there is no trading. <strong>Selling is not switched on</strong>: the shop is display-only today, its payment rails wait on the author connecting them, and the app listing's standing promise of "no in-app purchases" means the shelf belongs to the website shop unless the author changes that promise in the open. The catalogue is stock, designed and ready; the till is a separate decision. A second shelf — World Goods (§6.1) — is a designed follow-on under the same marking law.</p>
+<h3 id="67-held-futures">6.7 Held futures</h3>
+<p>Two futures are recorded in full and deliberately held:</p>
+<ul>
+<li><strong>The Game Sphere</strong> — <strong>held, a future option</strong> (concept note, November 23, 2026). A second sphere that is an actual game: a character travels from day to day across the sphere's face; the keeper clicks a day; that day holds a real playable game or a real-life objective; beating it shows the day <em>checked</em> on the game sphere. Its quest arc already exists in the story bible — the seed carried from Moon 4 to the thirteenth bed. It is conceived as a separate, standalone product — its own application, in time its own store presence, marketed on the website — standing behind the finish-first ruling for the main application. It is not the site's play layer, and it is not the author's earlier, separately parked game project. Who walks — the Traveller, or the keeper's own Spark wearing its goods — is the author's open fork.</li>
+<li><strong>Schooling</strong> — <strong>held, a future development idea</strong> (design, November 23, 2026). The Sphere in school, in three movements: the school face and a class record held by the teacher (the Sphere as instrument, dataset, practice, and rhythm; moons as 28-day units; a class keeping one shared year); teachers and classes connecting <em>around</em> the children's fence, never through it — classes exchanging only aggregates under the privacy floor, students reaching the class record through the teacher, home keeping staying in the family's own record; and, in the future, a classroom edition standing on the Spark. Living Day base (recommended over a separate app, because one Spark is house law). The design names, as the author's future ruling and nothing less, the question of a supervised class-only student seat; it assumes no softening, stands entire without it, and places two fences outside any such ruling forever: no open talking for children, and nothing a child types leaves the device. The Sphere never scores a child. The homeschool form — a parent as teacher, co-ops as class-to-class — runs through all three movements.</li>
+</ul>
+<hr />
+</section>
+<section class="rw-section"><h2 id="7-state-of-the-build">7. State of the Build</h2>
+<p><em>Measured as of November 23, 2026, from the Website Evolution Phase A audit (which re-measured the live site at main <code>90c0e9e6</code> on November 22, 2026) and the programme's pull-request record. Performance figures from that audit were measured in a local laboratory on a shared, loaded machine with software rendering; they are reported here as the audit reported them — a warning light, not a verdict — and a true device baseline remains owed.</em></p>
+<h3 id="71-the-site-as-measured">7.1 The site as measured</h3>
+<ul>
+<li><strong>181 HTML pages; 1,855 files; 711,411,013 bytes</strong> in the published tree, of which media is 654,476,922 bytes (90 video files, 539,866,442 bytes; 265 image files, 114,610,480 bytes; audio, none). JSON data: 953 files. Production hosting is <strong>Netlify</strong>; GitHub Pages is a mirror of the same tree — a correction the audit made to an outside directive's premise, and a standing lesson in checking claims against the live thing.</li>
+<li>Content counts, all re-measured exactly: site catalog <strong>73 entries</strong> (68 live) across six areas; site-wide search <strong>4,571 documents</strong>; Scroll reader <strong>1,609 segments</strong>; Hebrew lexicon <strong>911 forms</strong>; story layer <strong>17 chapters fitted, 62 pages pending</strong>; growth record <strong>210 entries</strong> at that main; farm data v1.1.0, <strong>39 counties, 42 teaching guides</strong>.</li>
+<li>The repository's own audit passes. The homepage references 129 local files totalling about 42.6 MB on disk (mostly video it points at, not first-paint weight) across 56 script tags and 26 stylesheets; the Observatory references 127 files across 94 script tags. Laboratory performance baselines (desktop and phone, homepage and Observatory) fell far short of the evolution directive's targets under those laboratory conditions; accessibility probing found exactly one top-level heading per page and many controls below guide size — recorded as flags, not verdicts.</li>
+<li>Named mess, with evidence: two navigation systems co-present on 170 of 181 pages; the Sphere engine mounted twice on the homepage against a singleton renderer; roughly 63 MB of images in published folders named as duplicates and unused (nothing deleted — deletion is the author's decision); a replaced game's code still in the tree, referenced by no page.</li>
+<li>An analytics tag (Google Analytics) is present on <strong>72 of 181 pages</strong>. Whether it stays is the author's open Decision 1 (§9); it has been recorded, untouched, in two successive audits.</li>
+</ul>
+<h3 id="72-landed">7.2 Landed</h3>
+<ul>
+<li>The site itself, its catalog, search, Scripture and Scroll libraries, Documentation Hub, Atlas, Pattern Garden (39 counties; 42 sourced teaching guides), and the story layer's fitted chapters.</li>
+<li><strong>The Codex Guide</strong> (§4.3) — PR #194.</li>
+<li><strong>Spark Intelligence Phase 1</strong> (§4.3) — PR #209.</li>
+<li><strong>The Spark passport</strong>, both sides (§4.1) — PR #238 and Living Phone PR #21.</li>
+<li><strong>The Spark's scheduling and greeting from the record; holographic day marks</strong> — PR #234.</li>
+<li>The Nov 20–22 landing series as a whole: the armillary Sphere face, the Pattern Garden replacing the earlier game, the Spark seat site-wide, the privacy policy (live), and the growth record standing at 210 entries.</li>
+</ul>
+<h3 id="73-builtunlanded-waiting-on-the-authors-word">7.3 Built–unlanded — waiting on the author's word</h3>
+<table>
+<thead>
+<tr>
+<th>PR</th>
+<th>What it is</th>
+<th>State</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>#241</td>
+<td>Aiyana's World — a page designed by the author's younger daughter, with her first story placed on it at her request under his spelling ruling</td>
+<td>Saved for later, on the author's word</td>
+</tr>
+<tr>
+<td>#242</td>
+<td>The immersive homepage prototype — the Sphere as the page's living background (the Front Door's face)</td>
+<td>Preview verified; merge is the author's word</td>
+</tr>
+<tr>
+<td>#243</td>
+<td>The Sphere repair line — deep-fix, visibility, plate-clustering, mobile repairs, Day Details scroll fix, overnight pass</td>
+<td>Head <code>8cb770fa</code>; the author's phone re-test is the final check. Two held items ride it: a protected-file chip fix proposed in its §10, and the 320 px fit-mode default — the author's call</td>
+</tr>
+<tr>
+<td>#244</td>
+<td>Phase B — the day-world vertical slice, plus the day-box (chip) selection fix</td>
+<td>Head <code>8b38194a</code>; no protected file touched</td>
+</tr>
+<tr>
+<td>#245</td>
+<td>Temporal Worlds, first slice — day entry, the years line (shells 2026–2028), the patterns door; stacked on #244</td>
+<td>Head <code>6e16658d</code>; the 2028 shell cannot yet be entered truthfully, because the face clamps years to the ledger's 2014–2027 study range — the slice refuses plainly rather than fake it</td>
+</tr>
+<tr>
+<td>#246</td>
+<td>The sky engine (§3.3)</td>
+<td>Head <code>50ccbed3</code>, off main; validation green at build (1,997 pass, 0 fail); its preview lagged at first check and is not to be sent unverified</td>
+</tr>
+<tr>
+<td>LP #22</td>
+<td>Spark. Living Day v0.5.2 — the app fix, widget, and plans (§5.3)</td>
+<td>Built files delivered; merge and device check are the author's</td>
+</tr>
+</tbody>
+</table>
+<p>The landing order for the Sphere stack is <strong>#243 → #244 → #245</strong>, each on the author's word, each re-sealed on main at landing under the standing seals practice. Three deepenings of the sky build were held back with reasons (§3.3): re-sourcing the Observatory readouts and the 3D renderer's daylight arc from the protected live-data snapshot (the author's protected-file word required), and a star shell inside the 3D scene (not drawn, because the scene's axes are Pattern geometry with no horizon frame — wrapping a horizon sky around it would assert a geometry that does not exist; a design call for the author).</p>
+<h3 id="74-in-progress">7.4 In progress</h3>
+<ul>
+<li><strong>The film clean pass</strong> (§6.2): batches 1–6 complete; batches 7 onward queued (the last known drift, then the remainder of the repeat pool). No swap until the author watches the finished set.</li>
+<li><strong>The Witness page catch-up and the growth-record catch-up</strong> — the author's own page for the system's assistant, tended under his standing grant, and the event log brought current for landed-and-unrecorded work — in flight at the time of this paper.</li>
+<li><strong>The evolution opening</strong> (§3.7): build commissioned November 23, 2026, in flight; one PR, preview-first, unmerged until the author's word.</li>
+</ul>
+<h3 id="75-designed-and-proposed">7.5 Designed and proposed</h3>
+<p>The charter (§§2–3 of this paper's sources) and its layer programme in full; the expansion's thirty-plus layers and kinds, each with its data, class, day-line behaviour, dependencies, and failure modes; the Front Door; the Living Layer; the Sparks World; the play redesign with its four garden recommendations (<strong>proposed</strong>, awaiting the author's word); the goods catalogue (prices <strong>proposed</strong> bands, the author's to set); the flame-blend rollout (decided; the build itself unbuilt); the vision trailer's script (written; approval pending). Twenty-five items in the expansion's unverified register must be re-confirmed at ingestion, layer by layer, on the author's word; three datasets were refused entry outright in the census (Appendix B).</p>
+<hr />
+</section>
+<section class="rw-section"><h2 id="8-the-road-ahead">8. The Road Ahead</h2>
+<p>The charter names five needs, and they order the road:</p>
+<ol>
+<li><strong>Land what is built.</strong> The best Sphere the programme has made exists only in previews. The landing stack (§7.3) and the author's phone tests are the immediate road; nothing else outruns them.</li>
+<li><strong>Give the calendar its senses.</strong> The sky (built), the witnessed-day join, recurrence made visible, outside-day records reaching the face, and the generated symbol legend — the calendar gap map's Phase C joins, in its recommended order.</li>
+<li><strong>Oneness.</strong> One door into a day (the gap map's Phase D consolidation, in which the 3D day world is named the entered-day surface and the other two doors become its contents and its compact form); one moon-name family or named layers kept apart on purpose (§9); one Spark — done, and the pattern for the rest.</li>
+<li><strong>Simplicity at the surface.</strong> The live standard (§3.8) carried through the site's design pass; the Front Door landed and its tour built; depth always one tap down.</li>
+<li><strong>Time, and keeping.</strong> The layer programme in its approved order — Sky, then Salmon and Kyoto as the proving pair, then the census families, then the keeper's own kinds, then Other Keepers, Deep Time, and Sound — each layer ingested on the author's word, its unverified items confirmed on its ingestion day. Patterns across years are earned by keeping years; the programme's job is to make the keeping easy and never punishing, so the record grows on its own.</li>
+</ol>
+<p>Two gates stand on this road and are the author's alone. <strong>The advertising gate:</strong> no advertising of the Codex at all until the companion travels between phone and website with its record provably intact — which makes the backend door's accounts-and-sync phase the critical path, and that phase itself waits on the author's word. <strong>The publication discipline:</strong> nothing publishes, merges, deploys, or posts without the author's approval of the exact text or the specific preview, with the standing exceptions he has granted (his assistant's own page, plainly labelled; posts he directs and approves in the same turn; posts he pre-approves for a set time).</p>
+<hr />
+</section>
+<section class="rw-section"><h2 id="9-open-questions-the-authors-to-settle">9. Open Questions — the author's to settle</h2>
+<p>These are printed unresolved, on purpose. A white paper that settled its author's open questions for him would be lying about who decides.</p>
+<ol>
+<li><strong>The formula's two forms.</strong> The Codex's core line, as the author states it: <strong>Reality = Resonance × Intention × Light × Consciousness × Source.</strong> The published site also prints a six-dimension form: <strong>(Energy × Information × Intention × Memory × Flow)^Consciousness.</strong> The two forms are unreconciled. They remain the author's to settle.</li>
+<li><strong>The moon names — three families.</strong> Set A, the calendar's own (in the site's calendar data and the app, conformance-pinned; Moon 8 = <em>Deep Mirror</em>, Moon 9 = <em>Return Path</em>). Set B, an older lineage live as the Moons page's data (Moon 8 = <em>Galactic</em>). Set C, the shares' telling names (Moon 8 = <em>Moon of the Observer</em>). One family everywhere, or named layers kept apart on purpose — to be settled before names print in more places.</li>
+<li><strong>Gold or ivory.</strong> Whether important records on the day world take a gold or an ivory edge; the Phase B build was made with ivory, the question formally open.</li>
+<li><strong>The analytics decision (Decision 1).</strong> Whether the analytics tag on 72 of 181 pages stays, against the house's no-trackers fence. It also gates the Front Door's promises panel, which cannot print <em>no trackers</em> until the line is true.</li>
+<li><strong>Kept days, in detail.</strong> The shape of a yearly personal day — a birthday, an anniversary — as a marked record that returns on its own: proposed; the mark's name is the author's.</li>
+<li><strong>Hebrew correspondence on the face.</strong> The Hebrew cycle is approved as computed data among the Human Calendars. Whether the Hebrew date stands beside the civil date on a day itself, under which conventions, and which days are marked, is a separate call.</li>
+<li><strong>Standing smaller calls.</strong> The vision trailer script's approval; the garden's four recommendations; goods prices and whether the till is ever built (and the app listing's "no in-app purchases" promise, if goods are ever wanted inside the app); World Goods' strictness (anywhere on private ground, or a marked shop-yard corner); the movement's literalness and the name of the Sparks World; the game sphere's character fork; the schooling fence question (§6.7) — each recorded where it belongs in this paper, each the author's.</li>
+</ol>
+<hr />
+</section>
+<section class="rw-section"><h2 id="appendix-a-calendar-fixtures">Appendix A — Calendar fixtures</h2>
+<p>Verified across the site and app implementations, pinned by the shared conformance corpus:</p>
+<table>
+<thead>
+<tr>
+<th>Civil date</th>
+<th>Moon</th>
+<th>Day</th>
+<th>Pattern Day</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>April 17, 2026</td>
+<td>Moon 1</td>
+<td>Day 1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>July 17, 2026</td>
+<td>Moon 4</td>
+<td>Day 8</td>
+<td>92</td>
+</tr>
+<tr>
+<td>September 15, 2026</td>
+<td>Moon 6</td>
+<td>Day 12</td>
+<td>152</td>
+</tr>
+<tr>
+<td>November 20, 2026</td>
+<td>Moon 8</td>
+<td>Day 22</td>
+<td>218</td>
+</tr>
+<tr>
+<td>November 21, 2026</td>
+<td>Moon 8</td>
+<td>Day 23</td>
+<td>219</td>
+</tr>
+<tr>
+<td>November 22, 2026</td>
+<td>Moon 8</td>
+<td>Day 24</td>
+<td>220</td>
+</tr>
+<tr>
+<td>November 23, 2026</td>
+<td>Moon 8</td>
+<td>Day 25</td>
+<td>221</td>
+</tr>
+<tr>
+<td>November 24, 2026</td>
+<td>Moon 8</td>
+<td>Day 26</td>
+<td>222</td>
+</tr>
+<tr>
+<td>November 26, 2026</td>
+<td>Moon 8</td>
+<td>Day 28</td>
+<td>224 (Moon 8 closes)</td>
+</tr>
+<tr>
+<td>November 27, 2026</td>
+<td>Moon 9</td>
+<td>Day 1</td>
+<td>225 (Moon 9 opens)</td>
+</tr>
+<tr>
+<td>November 30, 2026</td>
+<td>Moon 9</td>
+<td>Day 4</td>
+<td>228</td>
+</tr>
+</tbody>
+</table>
+<p>Moon 5, Day 16 = Pattern Day 128. Moon 10, Day 10 = Pattern Day 262. The alignment ledger's study range is the civil years 2014–2027. The app widget's PatternCalendar port passed the shared conformance corpus 746 of 746 at its build.</p>
+</section>
+<section class="rw-section"><h2 id="appendix-b-test-layer-source-register-in-summary">Appendix B — Test-layer source register, in summary</h2>
+<p>The census verified <strong>more than twenty real series</strong>; the register below names the heads of them. Items the census marked ◐ (partially verified) must be re-confirmed at ingestion (§7.5).</p>
+<table>
+<thead>
+<tr>
+<th>Family</th>
+<th>Source</th>
+<th>Span</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Eclipses</td>
+<td>NASA Five Millennium Catalogues (Espenak &amp; Meeus)</td>
+<td>−1999 to +3000; 11,898 eclipses</td>
+</tr>
+<tr>
+<td>Sunspots</td>
+<td>SILSO, Royal Observatory of Belgium</td>
+<td>daily 1818–; monthly 1749–</td>
+</tr>
+<tr>
+<td>Climate (daily)</td>
+<td>GHCN-Daily, NOAA NCEI</td>
+<td>station-dependent, ~1870s–</td>
+</tr>
+<tr>
+<td>Temperature</td>
+<td>Central England Temperature, Met Office Hadley Centre</td>
+<td>monthly 1659–; daily 1772–</td>
+</tr>
+<tr>
+<td>Streamflow</td>
+<td>USGS NWIS</td>
+<td>gauge-dependent, ~1900s–</td>
+</tr>
+<tr>
+<td>Salmon</td>
+<td>Columbia River DART (USACE counts at Bonneville)</td>
+<td>1938–</td>
+</tr>
+<tr>
+<td>Lake ice</td>
+<td>NSIDC Global Lake and River Ice Phenology (Lake Suwa)</td>
+<td>1443–2014</td>
+</tr>
+<tr>
+<td>Blossoms</td>
+<td>Kyoto full-flowering record (Aono; NOAA Paleo)</td>
+<td>812–present; 838 recorded years</td>
+</tr>
+<tr>
+<td>Grape harvest</td>
+<td>Beaune (Labbé et al. 2019)</td>
+<td>1354–2018</td>
+</tr>
+<tr>
+<td>Lilac bloom</td>
+<td>USA-NPN (Rosemartin et al. 2015)</td>
+<td>1956–2014</td>
+</tr>
+<tr>
+<td>Hawk migration</td>
+<td>HawkCount / Hawk Mountain</td>
+<td>1934–</td>
+</tr>
+<tr>
+<td>Earthquakes</td>
+<td>USGS Comprehensive Catalogue (ComCat)</td>
+<td>1900– (historical, 1800s)</td>
+</tr>
+<tr>
+<td>Crop progress</td>
+<td>USDA NASS</td>
+<td>~1980s– (digital)</td>
+</tr>
+<tr>
+<td>Farm stencil</td>
+<td>Codex farm dataset from NOAA 1991–2020 normals</td>
+<td>39 Western Washington counties</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Refused entry, kept out by the census:</strong> historical fair and market dates (no open date-indexed dataset could be pointed to — literature is not a dataset); school terms (no standard dataset exists); the Nile nilometer series (real scholarship, no clean open download verified); general whale migration timing (no single authoritative dated dataset); the Old Farmer's Almanac planting calendars (commercial, not records); tree-ring widths as a calendar layer (real data, wrong shape for a day-face instrument); anecdotal eclipse lists beyond the NASA catalogues; and any "patterns in history" compilation without dated primary records, which fails the fence by definition.</p>
+</section>
+<section class="rw-section"><h2 id="appendix-c-the-fences-on-one-page">Appendix C — The fences, on one page</h2>
+<ol>
+<li><strong>Counted, Measured, Story — never blended.</strong> Interpretation never wears measurement's clothes, on any surface, in any layer, in any post.</li>
+<li><strong>Gaps are shown as gaps.</strong> The unwitnessed day, the missing year, the unkept year ahead, the withheld bead — displayed, named, never filled in.</li>
+<li><strong>Computed runs forward; recorded stops at today.</strong> The forward bead on a recorded layer stays open and says <em>no record; the year is not kept yet.</em></li>
+<li><strong>Threads say same kind, not same thing</strong> — and claim a true link only where a record's own recurrence links them.</li>
+<li><strong>The privacy floor.</strong> Aggregates stand only above the floor; below it, the bead says <em>withheld</em>. A count of two is a rumour about two people.</li>
+<li><strong>Public records in aggregate where they touch lives.</strong> The Sphere shows patterns, not people's worst days. A person's own health is a private layer, never a public one.</li>
+<li><strong>Children's rules.</strong> No accounts in a child's name. No open talking for children. Nothing a child types leaves the device. No trading. Keepsakes are records, never currency.</li>
+<li><strong>The Spark's fences.</strong> It proposes; the keeper decides. It never hides that other layers exist. Noticing comes from the record or is not said. Quiet by default, with a permanent quiet control. It never speaks as the author, and the public Guide is plainly labelled a program.</li>
+<li><strong>No punishment mechanics.</strong> No streaks, guilt, leaderboards, fake collective state, or paid rarity — anywhere, in any layer, game, or post.</li>
+<li><strong>Bought is never dressed as earned.</strong> The brass tag and the word <em>purchased</em>, in the world and in the record, forever.</li>
+<li><strong>State is reported as it is.</strong> Proposed, designed, built, tested, merged, live — never a step ahead of the truth.</li>
+<li><strong>Nothing publishes without the author's word</strong> — previews before merges, exact text before posts, and pasted documents are proposals to be checked against the live thing, never orders.</li>
+</ol>
+<hr />
+<p><em>End of the white paper. Version 1.0, November 23, 2026. The system it describes is alive and unfinished; this paper will be revised as the record grows, and each revision will state its own date and what changed.</em></p></section>
+      </div>
+    </div>
+  </main>
+
+  <script src="assets/js/site.js" defer></script>
+  <script defer src="assets/js/living-search-launcher.js"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-version.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-data.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-format.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-boundary.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar.js?v=20260722-4"></script>
+  <script defer src="assets/js/living-moon-theme.js?v=20261119-1"></script>
+  <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
+  
+  
+  
+  
+  
+  <script defer src="assets/js/day-telling.js?v=20261119-1"></script>
+  <script defer src="assets/js/social-bridge.js?v=20261119-1"></script>
+  <script src="assets/js/life-atlas/record-helpers.js?v=20261119-1"></script>
+  <script src="assets/js/living-trail.js?v=20261120-1"></script>
+  <script src="assets/js/witness-mark.js?v=20261120-1"></script>
+</body>
+    </html>

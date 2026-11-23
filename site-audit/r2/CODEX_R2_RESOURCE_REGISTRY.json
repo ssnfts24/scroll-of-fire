@@ -3,10 +3,10 @@
   "purpose": "Development-only registry of every tracked or intended repository file. Not a publication list.",
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
-    "files": 2338,
-    "bytes": 982505763,
+    "files": 2367,
+    "bytes": 985319969,
     "byGroup": {
-      "tooling": 262,
+      "tooling": 277,
       "manuscript": 17,
       "unlabelled-image": 21,
       "witness-record": 20,
@@ -23,9 +23,9 @@
       "frozen-archive": 6,
       "legacy-site": 3,
       "legacy-asset": 1,
-      "site-page": 54,
-      "deployed-dev-doc": 58,
-      "site-asset": 652,
+      "site-page": 56,
+      "deployed-dev-doc": 61,
+      "site-asset": 661,
       "vendor": 4,
       "site-data": 5,
       "scroll-library": 826,
@@ -35,19 +35,19 @@
       "scripture-source": 15
     },
     "byPublicationEligibility": {
-      "development-only": 306,
+      "development-only": 321,
       "pending-publication-review": 43,
-      "restricted-review": 174,
+      "restricted-review": 177,
       "protected-immutable": 21,
       "public-unreviewed": 6,
-      "approved-public": 1788
+      "approved-public": 1799
     },
     "byExamination": {
-      "inventoried-only": 2209,
-      "text-extracted": 54,
-      "no-text-layer-needs-visual-review": 1,
+      "inventoried-only": 2236,
+      "parser-unavailable": 16,
+      "text-extracted": 39,
       "archive-listed": 2,
-      "structurally-audited": 72
+      "structurally-audited": 74
     }
   },
   "statusVocabulary": [
@@ -356,18 +356,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 192,
-        "words": 33734,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {
-          "CreationDate": "D:20260307003018+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -426,18 +418,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 4,
-        "words": 524,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318162939+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "1_Codex_of_Reality/Codex_of_Life_Scroll_FULL.docx"
@@ -595,18 +579,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 55,
-        "words": 5079,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163211+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "1_Codex_of_Reality/Living Laws.docx"
@@ -681,15 +657,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 182,
-        "words": 55224,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {}
+        "status": "parser-unavailable"
       }
     },
     {
@@ -713,15 +684,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 187,
-        "words": 33540,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {}
+        "status": "parser-unavailable"
       }
     },
     {
@@ -1140,18 +1106,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 2,
-        "words": 602,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163230+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/Master_Proof_Scroll_Updated.docx"
@@ -1269,18 +1227,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 3,
-        "words": 331,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163347+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/Scroll_of_Convergence.docx"
@@ -1367,18 +1317,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 2,
-        "words": 443,
-        "hebrew": true,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163433+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/The_Journey_Scroll.docx",
@@ -1505,18 +1447,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 333,
-        "words": 82978,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {
-          "CreationDate": "D:20260318162655+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/🌌 Ahmein — The Final Seal, Becoming Will.docx"
@@ -1578,18 +1512,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 266,
-        "words": 56295,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {
-          "CreationDate": "D:20260318162820+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/🜂 888 — The Architect of Becoming.docx"
@@ -1651,18 +1577,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 256,
-        "words": 56914,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {
-          "CreationDate": "D:20260318162852+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/🜄 Ainos — The Witness of Echoes.docx"
@@ -1689,18 +1607,10 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "text-extracted",
-        "pages": 4,
-        "words": 533,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318162909+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -1772,18 +1682,10 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "text-extracted",
-        "pages": 5,
-        "words": 712,
-        "hebrew": false,
-        "greek": true,
-        "metadata": {
-          "CreationDate": "D:20260318163040+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -1959,18 +1861,10 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "text-extracted",
-        "pages": 29,
-        "words": 2732,
-        "hebrew": true,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163419+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -1994,18 +1888,10 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "text-extracted",
-        "pages": 1,
-        "words": 158,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163401+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -2811,18 +2697,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "no-text-layer-needs-visual-review",
+      "examination": "parser-unavailable",
       "nextAction": "Visual review for personal imagery.",
       "extract": {
-        "status": "no-text-layer",
-        "pages": 1,
-        "words": 0,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20250621000923",
-          "Producer": "PyFPDF 1.7.2 http://pyfpdf.googlecode.com/"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -5850,6 +5728,30 @@
       "nextAction": "Functionality review."
     },
     {
+      "id": "r2:docs-aiyanas-world-html-3b89d5",
+      "path": "docs/aiyanas-world.html",
+      "title": "Aiyana's World",
+      "format": "html",
+      "bytes": 21011,
+      "sha256": "5fbeefefe8773e01e8828a9c8fb0548e1292f0c580f1c918ec2316d43856492c",
+      "group": "site-page",
+      "role": "Site page or support file",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/aiyanas-world.html",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": "aiyanas-world",
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "structurally-audited"
+      },
+      "examination": "structurally-audited",
+      "nextAction": "Functionality review."
+    },
+    {
       "id": "r2:docs-alignment-ledger-html-c53840",
       "path": "docs/alignment-ledger.html",
       "title": "Alignment Ledger",
@@ -5872,6 +5774,30 @@
       },
       "examination": "structurally-audited",
       "nextAction": "Functionality review."
+    },
+    {
+      "id": "r2:docs-assets-css-aiyanas-world-css-8c1805",
+      "path": "docs/assets/css/aiyanas-world.css",
+      "title": "aiyanas-world.css",
+      "format": "css",
+      "bytes": 10586,
+      "sha256": "84502c5a3590945e7af80bf704b21e11c81dcdf45a84ca60213f6fa6abdc241e",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/css/aiyanas-world.css",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
     },
     {
       "id": "r2:docs-assets-css-alignment-ledger-css-03d11f",
@@ -6310,8 +6236,8 @@
       "path": "docs/assets/css/homepage-sphere.css",
       "title": "homepage-sphere.css",
       "format": "css",
-      "bytes": 3819,
-      "sha256": "b208ee8c8b9f67a1a1015c0e4064b1cbbb79ed788033d0e4b184def37218b65a",
+      "bytes": 7868,
+      "sha256": "490fdc6f3aca2843a20558c386cb424b5bfa1c904e9e3cadd03ef6693a836913",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -6766,8 +6692,8 @@
       "path": "docs/assets/css/pattern-garden.css",
       "title": "pattern-garden.css",
       "format": "css",
-      "bytes": 5909,
-      "sha256": "4fce6d548c06bbf0c4c53f061358b98b59a0065eddc85a3d97570ace2f40a62c",
+      "bytes": 7113,
+      "sha256": "6d94bf702711f4d6ca4bd11957f0c88701dfb51c8fca1664f9758aa8ec360e54",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -6958,8 +6884,8 @@
       "path": "docs/assets/css/site-atlas.css",
       "title": "site-atlas.css",
       "format": "css",
-      "bytes": 6675,
-      "sha256": "2f9aa74c36018d4f5c44087ad2685570ee1c20e4e9a6263f8af6034848e659a1",
+      "bytes": 7670,
+      "sha256": "4ecbe6a48b1d0cd5e21ae4417795066a66a5f19c6b55a4a60288c9823b170279",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -7102,12 +7028,36 @@
       "path": "docs/assets/css/sphere-armillary.css",
       "title": "sphere-armillary.css",
       "format": "css",
-      "bytes": 29839,
-      "sha256": "fc274ab2da73c97e29d5c1e8e4a585070397891906d50f907843769dc73c1e18",
+      "bytes": 48458,
+      "sha256": "e0209d0d175b221e10d7713550439cf66f9b030417e530ec561b6b4065806fb2",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
       "publicUrl": "https://codexofreality.org/assets/css/sphere-armillary.css",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-css-sphere-day-world-adapter-css-d1b736",
+      "path": "docs/assets/css/sphere-day-world-adapter.css",
+      "title": "sphere-day-world-adapter.css",
+      "format": "css",
+      "bytes": 9894,
+      "sha256": "25bbfee9cfb92f539010b2e11eaada21fa83dfabb98c8516c28b0ebd5817d329",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/css/sphere-day-world-adapter.css",
       "publicationEligibility": "approved-public",
       "status": "operational",
       "catalogId": null,
@@ -7194,6 +7144,30 @@
       "nextAction": "Functionality audit in R2-03/R2-06."
     },
     {
+      "id": "r2:docs-assets-css-sphere-evolution-opening-css-6ca789",
+      "path": "docs/assets/css/sphere-evolution-opening.css",
+      "title": "sphere-evolution-opening.css",
+      "format": "css",
+      "bytes": 9478,
+      "sha256": "bf2308f6d2978c78b288db9590a7f0a25372a51ee364bd81e050e3834aa246c1",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/css/sphere-evolution-opening.css",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
       "id": "r2:docs-assets-css-sphere-farm-sphere-css-0c0056",
       "path": "docs/assets/css/sphere-farm-sphere.css",
       "title": "sphere-farm-sphere.css",
@@ -7222,8 +7196,8 @@
       "path": "docs/assets/css/sphere-rebuild.css",
       "title": "sphere-rebuild.css",
       "format": "css",
-      "bytes": 8752,
-      "sha256": "f03a58de8861336ccc2dfbd6961fa65505c2069c6174c4047f640acf7811882d",
+      "bytes": 9767,
+      "sha256": "b37e4826aa86261ffe7db685c6dabe97d7a2e52e6c8457596887d4e83e38a4d7",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -7558,8 +7532,8 @@
       "path": "docs/assets/data/codex-story.json",
       "title": "codex-story.json",
       "format": "json",
-      "bytes": 31878,
-      "sha256": "5cc9dbfb12402c98e9a3403ee653d10c3dc4d0b7507f835da0d61dc8370d9933",
+      "bytes": 31965,
+      "sha256": "29b6c3087df6c53962ed7bafbf23cd6106483323207f1cccd48d24278c848ed9",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -7582,8 +7556,8 @@
       "path": "docs/assets/data/codex-updates.json",
       "title": "codex-updates.json",
       "format": "json",
-      "bytes": 126148,
-      "sha256": "3892b063dc94f09287be74d1252ddc52c5e54a3e8ab8c2f58a5f9192a7899f47",
+      "bytes": 138907,
+      "sha256": "751126dbff9f5386bef5add6e3d8213ca8b1da17b8239a7320acf5e5118a7384",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -7702,8 +7676,8 @@
       "path": "docs/assets/data/link-graph.json",
       "title": "link-graph.json",
       "format": "json",
-      "bytes": 434846,
-      "sha256": "64ad2d7477592434eb78ffe7696ce12e8dedd950f5944f32ec783a9757826c2a",
+      "bytes": 436557,
+      "sha256": "63a15637d92007f11e41d62180a1f3328abfab1ba9c90e8fceb66c03a1e1a66a",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -8248,6 +8222,30 @@
       },
       "examination": "inventoried-only",
       "nextAction": "Decide: move out of docs/ or mark intentionally public."
+    },
+    {
+      "id": "r2:docs-assets-img-aiyana-aiyana-first-story-drawing-webp-d8e5d2",
+      "path": "docs/assets/img/aiyana/aiyana-first-story-drawing.webp",
+      "title": "aiyana-first-story-drawing.webp",
+      "format": "webp",
+      "bytes": 58766,
+      "sha256": "a17f40f0b3d3946850aea4e9f786d5a26865fc1b147ca81dce6dcc844534800e",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/img/aiyana/aiyana-first-story-drawing.webp",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
     },
     {
       "id": "r2:docs-assets-img-archive-duplicates-cb02greentide2-docs-root-png-9092b7",
@@ -12884,6 +12882,30 @@
       "nextAction": "Functionality audit in R2-03/R2-06."
     },
     {
+      "id": "r2:docs-assets-js-aiyanas-world-js-4dfe85",
+      "path": "docs/assets/js/aiyanas-world.js",
+      "title": "aiyanas-world.js",
+      "format": "js",
+      "bytes": 9771,
+      "sha256": "73129ae9b99d5a565a1a9f2c0b623bc470b7d65e51e45f143a3cebdc0cffcb9c",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/js/aiyanas-world.js",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
       "id": "r2:docs-assets-js-alignment-alignment-comparison-js-158699",
       "path": "docs/assets/js/alignment/alignment-comparison.js",
       "title": "alignment-comparison.js",
@@ -14228,6 +14250,30 @@
       "nextAction": "Functionality audit in R2-03/R2-06."
     },
     {
+      "id": "r2:docs-assets-js-front-door-share-js-02dc74",
+      "path": "docs/assets/js/front-door-share.js",
+      "title": "front-door-share.js",
+      "format": "js",
+      "bytes": 7776,
+      "sha256": "26507c75184d98065d886d254ac13c7d5bc697f3c748105c09fc80079d89afc0",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/js/front-door-share.js",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
       "id": "r2:docs-assets-js-genesis-oracle-js-580fd9",
       "path": "docs/assets/js/genesis-oracle.js",
       "title": "genesis-oracle.js",
@@ -14400,8 +14446,8 @@
       "path": "docs/assets/js/homepage-sphere.js",
       "title": "homepage-sphere.js",
       "format": "js",
-      "bytes": 25326,
-      "sha256": "6faf946f1d1a1bfb8e099b83e2a5437052e76aeaefeeea7af6fa47b800369a33",
+      "bytes": 31418,
+      "sha256": "568ea17b46e9f0df84d59a796db12197f7ed7f5d81fafc09859c4e16279e65b1",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -15768,12 +15814,36 @@
       "path": "docs/assets/js/pattern-garden.js",
       "title": "pattern-garden.js",
       "format": "js",
-      "bytes": 61318,
-      "sha256": "79b543b42b283906a84cf202dba980e9a3190f8ec7f40bc96aad643a9c868a33",
+      "bytes": 92133,
+      "sha256": "b44cd142f7c14a8f5547ba0d8a6aa2ee82edd875cf829b1a4c87c122b8bb1da5",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
       "publicUrl": "https://codexofreality.org/assets/js/pattern-garden.js",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-js-pattern-quests-js-6dd6a1",
+      "path": "docs/assets/js/pattern-quests.js",
+      "title": "pattern-quests.js",
+      "format": "js",
+      "bytes": 14699,
+      "sha256": "882a9414f5a93a832ed006c4a1286201040f5a35ee33071c0f55d66f3ac2d007",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/js/pattern-quests.js",
       "publicationEligibility": "approved-public",
       "status": "operational",
       "catalogId": null,
@@ -16392,8 +16462,8 @@
       "path": "docs/assets/js/spark-relations.js",
       "title": "spark-relations.js",
       "format": "js",
-      "bytes": 8935,
-      "sha256": "89706111adc1cb2f9bf8c17d8b5b0598b6b150e49efc676c2c8fa90379f2562b",
+      "bytes": 8992,
+      "sha256": "b607474dc0d194c64e5e104cf7b2b2a19e32bd06196bc7fcfee8447663c7f763",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -16440,8 +16510,8 @@
       "path": "docs/assets/js/sphere-armillary.js",
       "title": "sphere-armillary.js",
       "format": "js",
-      "bytes": 98363,
-      "sha256": "bce2349d15bfc4c79e7767818aedf4f83b62d768d71b402b38acfdcb907de3c3",
+      "bytes": 100061,
+      "sha256": "3dbe6cc151a3cf144d65528ec894143826d65a2aa266c0c8b9c319cbfcc4a010",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -16464,12 +16534,36 @@
       "path": "docs/assets/js/sphere-companion-layer.js",
       "title": "sphere-companion-layer.js",
       "format": "js",
-      "bytes": 29641,
-      "sha256": "c1d362300e6f4de73578760fa8630bb0106747d2d3e09cb5f1e4ebb6eb3f6d5f",
+      "bytes": 33582,
+      "sha256": "3b5525186e113de4a37e6793010affc4deb9b3807f4328f53e2e780872e991fd",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
       "publicUrl": "https://codexofreality.org/assets/js/sphere-companion-layer.js",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-js-sphere-day-world-adapter-js-037119",
+      "path": "docs/assets/js/sphere-day-world-adapter.js",
+      "title": "sphere-day-world-adapter.js",
+      "format": "js",
+      "bytes": 121584,
+      "sha256": "75b4d0aba442f3cc57a99e913fb0842febbfbbbb2bfb3cb07ea21c895c4859d3",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/js/sphere-day-world-adapter.js",
       "publicationEligibility": "approved-public",
       "status": "operational",
       "catalogId": null,
@@ -16518,6 +16612,30 @@
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
       "publicUrl": "https://codexofreality.org/assets/js/sphere-deep-time.js",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-js-sphere-evolution-opening-js-d243e3",
+      "path": "docs/assets/js/sphere-evolution-opening.js",
+      "title": "sphere-evolution-opening.js",
+      "format": "js",
+      "bytes": 51122,
+      "sha256": "95e51f7250ea2b2693fb73c76f677dab6c331deb727fe543e7c5761097f7d64a",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/js/sphere-evolution-opening.js",
       "publicationEligibility": "approved-public",
       "status": "operational",
       "catalogId": null,
@@ -16608,8 +16726,8 @@
       "path": "docs/assets/js/sphere-play.js",
       "title": "sphere-play.js",
       "format": "js",
-      "bytes": 22875,
-      "sha256": "341cfc0a6a03dc3900ed59aec5a81cbb6223bd3248c8ea2e81d750534b63a6dc",
+      "bytes": 35920,
+      "sha256": "2193bbb9d60c3b68688019b7899171c76608f3e0464dfd4de1dbfd3a3eec7857",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -16872,8 +16990,8 @@
       "path": "docs/assets/js/sphere/living-time-sphere-camera.js",
       "title": "living-time-sphere-camera.js",
       "format": "js",
-      "bytes": 16206,
-      "sha256": "8f0c85f575673b1ad3a5ffb566501139641a3a4e7bd90489aae8d49cf5b4fbb4",
+      "bytes": 20855,
+      "sha256": "3c46b9972a45c7a2ac1666ad09c2325e41f6899613f56c402b53c77f0d8a20e2",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -16920,8 +17038,8 @@
       "path": "docs/assets/js/sphere/living-time-sphere-day-zoom.js",
       "title": "living-time-sphere-day-zoom.js",
       "format": "js",
-      "bytes": 33468,
-      "sha256": "3e156f5d98e776d0f2cd56a60be29682ba00c4251755da07c69bed40c0244a0f",
+      "bytes": 47200,
+      "sha256": "6c491757e7f17836a0d567576f3cf7e9d1cb86e9a8133f034b824ca141e47883",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -17064,8 +17182,8 @@
       "path": "docs/assets/js/sphere/living-time-sphere-label-manager.js",
       "title": "living-time-sphere-label-manager.js",
       "format": "js",
-      "bytes": 80350,
-      "sha256": "119d39976654537375d617756320749f80333e190271bfa6083e08585f658e3c",
+      "bytes": 143402,
+      "sha256": "e80871e0ae8ab0e5f6e3406f1c725c741f8e0b96dd0d4ea1d2d6f90853ae1f53",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -17328,8 +17446,8 @@
       "path": "docs/assets/js/sphere/living-time-sphere-renderer-3d.js",
       "title": "living-time-sphere-renderer-3d.js",
       "format": "js",
-      "bytes": 368525,
-      "sha256": "4055b32d06acb88e41d9eebfd141e2cb0de131f82e96a9632f64e28c3dbd6238",
+      "bytes": 371397,
+      "sha256": "10aafc272c17a059c4b1fd9808097f4a027002b144ab2fd577c3ddda44870f0c",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -17568,8 +17686,8 @@
       "path": "docs/assets/js/sphere/living-time-sphere-ui.js",
       "title": "living-time-sphere-ui.js",
       "format": "js",
-      "bytes": 311127,
-      "sha256": "db827416df4929cd7635587a6c58e0f40496237507ad6eb6f1e2bd8a85406511",
+      "bytes": 312481,
+      "sha256": "7653070b02aebcecebd2a13f001a827a998ebb29a3b37e54ebfd11a8c8a4fcc6",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -17904,8 +18022,8 @@
       "path": "docs/assets/js/world-lands.js",
       "title": "world-lands.js",
       "format": "js",
-      "bytes": 16953,
-      "sha256": "e9638d599ef8a67a28a23450da42fc057716ff86f4ba587eee464dbe0e009d0d",
+      "bytes": 17267,
+      "sha256": "3942caafe7f08ee1eaf3e721bec3ee097ebac5dbdc4d992bb220f5ab1bc0205f",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -22272,8 +22390,8 @@
       "path": "docs/assets/search/atlas.json",
       "title": "atlas.json",
       "format": "json",
-      "bytes": 18749,
-      "sha256": "0000a8f02d4e1ff7d64aeb3419f8218ff86b9a557f09d3383d8c41232192a7de",
+      "bytes": 19629,
+      "sha256": "5faed2f569617e0637924b4e65780a059ec808fd8a408f706719b0c3eb999bc5",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -22345,7 +22463,7 @@
       "title": "manifest.json",
       "format": "json",
       "bytes": 2631,
-      "sha256": "7909750cf7a6c337b0d9abb71f781b5b296824d941f545f7d933571360b2c823",
+      "sha256": "f48f9f13c67c4050275a95d4558ceb793bea758da6df50d4925cdee00d2801a7",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -22368,8 +22486,8 @@
       "path": "docs/assets/search/pages.json",
       "title": "pages.json",
       "format": "json",
-      "bytes": 1474340,
-      "sha256": "882d2b883e1cccec5eb6022e1105af16b816d63276b27f0a1bf2a7f6d71ea9f5",
+      "bytes": 1569913,
+      "sha256": "78d6685452093bebbb881869159851d1b20b4217a6dd6daecced531e7cc07d77",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -22596,8 +22714,8 @@
       "path": "docs/codex-atlas.html",
       "title": "Codex Atlas",
       "format": "html",
-      "bytes": 66585,
-      "sha256": "0449ebf7aa9fcdb92d1edf475803938b51d0079110f0f142193058cb8ddc0cfa",
+      "bytes": 68385,
+      "sha256": "e8e3e0c4b3150ffecc5622a5a8ab6361f258df8a423f725576d900b99c9024e2",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -22640,12 +22758,36 @@
       "nextAction": "Functionality review."
     },
     {
+      "id": "r2:docs-codex-white-paper-html-989ca7",
+      "path": "docs/codex-white-paper.html",
+      "title": "The Codex of Reality and the Living Sphere — A White Paper",
+      "format": "html",
+      "bytes": 92341,
+      "sha256": "65083f3c6a1abcfb1a2e2efb878a700f0a1f2b4e407c0dba1c75f6459b686832",
+      "group": "site-page",
+      "role": "Site page or support file",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/codex-white-paper.html",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": "codex-white-paper",
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "structurally-audited"
+      },
+      "examination": "structurally-audited",
+      "nextAction": "Functionality review."
+    },
+    {
       "id": "r2:docs-companions-html-272629",
       "path": "docs/companions.html",
       "title": "Companions",
       "format": "html",
-      "bytes": 23774,
-      "sha256": "fcf1a51b65c61bbfd42ea85ea8e42249189b771133f306e18a7a755a3f6797a4",
+      "bytes": 24427,
+      "sha256": "b4707f650277f64e3a0cea00e2249b6ea30d2b904950fee430257e371d9ce11b",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -22788,8 +22930,8 @@
       "path": "docs/data/site-catalog.json",
       "title": "site-catalog.json",
       "format": "json",
-      "bytes": 43047,
-      "sha256": "362ade89b6d98a7700109a3aae2078d52bc9865d85fac305c4f1cc95f5744373",
+      "bytes": 44575,
+      "sha256": "9f8d989edaf6dbe3b71b77a6f245464d6b539fee2cbe70afbf4818d087375b1d",
       "group": "site-data",
       "role": "Public data consumed by pages",
       "deployed": true,
@@ -22928,6 +23070,78 @@
       "nextAction": "Decide public technical-record status; specs may belong in Build journey."
     },
     {
+      "id": "r2:docs-development-living-sphere-evolution-opening-md-f22e9b",
+      "path": "docs/development/living-sphere-evolution-opening.md",
+      "title": "living-sphere-evolution-opening.md",
+      "format": "md",
+      "bytes": 7140,
+      "sha256": "db821a751c53f249fc39afc8c78bcbe75b9c7f5b51e16c825e1613c124eaeb7c",
+      "group": "deployed-dev-doc",
+      "role": "Engineering report or specification under the publish tree",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/development/living-sphere-evolution-opening.md",
+      "publicationEligibility": "restricted-review",
+      "status": "partially-reviewed",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Decide public technical-record status; specs may belong in Build journey."
+    },
+    {
+      "id": "r2:docs-development-living-sphere-evolution-phase-b-md-39c41b",
+      "path": "docs/development/living-sphere-evolution-phase-b.md",
+      "title": "living-sphere-evolution-phase-b.md",
+      "format": "md",
+      "bytes": 11995,
+      "sha256": "431d5bc4dcd00a6bfd6f1d4a76045d38ce55680b537794b65402ab8085f8600a",
+      "group": "deployed-dev-doc",
+      "role": "Engineering report or specification under the publish tree",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/development/living-sphere-evolution-phase-b.md",
+      "publicationEligibility": "restricted-review",
+      "status": "partially-reviewed",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Decide public technical-record status; specs may belong in Build journey."
+    },
+    {
+      "id": "r2:docs-development-living-sphere-temporal-worlds-slice-md-4ca794",
+      "path": "docs/development/living-sphere-temporal-worlds-slice.md",
+      "title": "living-sphere-temporal-worlds-slice.md",
+      "format": "md",
+      "bytes": 13761,
+      "sha256": "7e654805349a095748a02ec603e1e26f6fd110aa8c597d5971fade0f5cac309d",
+      "group": "deployed-dev-doc",
+      "role": "Engineering report or specification under the publish tree",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/development/living-sphere-temporal-worlds-slice.md",
+      "publicationEligibility": "restricted-review",
+      "status": "partially-reviewed",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Decide public technical-record status; specs may belong in Build journey."
+    },
+    {
       "id": "r2:docs-downloads-html-99f526",
       "path": "docs/downloads.html",
       "title": "Downloads & Integrity",
@@ -23004,8 +23218,8 @@
       "path": "docs/garden.html",
       "title": "The Pattern Garden — the Garden",
       "format": "html",
-      "bytes": 19543,
-      "sha256": "4ffa476d1d89ba242075f56f790a4f65ea398f77dab7615f4c5cee9be77a5d68",
+      "bytes": 22947,
+      "sha256": "6c9129cd76bedf9a1545db2077b0aee5666b6113f54973166838f74653e9a43a",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -23148,8 +23362,8 @@
       "path": "docs/index.html",
       "title": "Homepage",
       "format": "html",
-      "bytes": 128879,
-      "sha256": "c977838143dfa495d9f9c3c5d3762cdf693c5de5cbdf807d714698ca9cbb6b38",
+      "bytes": 131313,
+      "sha256": "3a744e938d91b18863382192d2665be3ad124ddd06410b8fa3542e88d043e8df",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -23244,8 +23458,8 @@
       "path": "docs/living-time-sphere.html",
       "title": "Living Time Sphere",
       "format": "html",
-      "bytes": 130167,
-      "sha256": "8bf6e882b29661737e4965a2f7695d0b09afca63681787002cce6508b42e2a6c",
+      "bytes": 130408,
+      "sha256": "f63861335d445ce8f6db9da1096e0e69514e4df823fa0971a9f255a0a2b002f2",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -23316,8 +23530,8 @@
       "path": "docs/map.html",
       "title": "The Traveller's Map",
       "format": "html",
-      "bytes": 14744,
-      "sha256": "b2175bc232784f69e470994dd147a7a4d99383661f8089736cd18bd7b344b17a",
+      "bytes": 15396,
+      "sha256": "f5ff3f9ebbb00e7f834a248d9f7d238488e3f5feeb7cd31eba3d3e7447522d1a",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -48970,8 +49184,8 @@
       "path": "docs/sitemap.xml",
       "title": "sitemap.xml",
       "format": "xml",
-      "bytes": 20834,
-      "sha256": "32245264ca61bffb4612d565174eeb1fde378e45f2af4025ff9fb49680400e98",
+      "bytes": 21127,
+      "sha256": "0b6de86bc323e3adeb06f9922386169a8bb9453169c818907c0bab2c5ca53456",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -51086,8 +51300,8 @@
       "path": "scripts/build-site-catalog.mjs",
       "title": "build-site-catalog.mjs",
       "format": "mjs",
-      "bytes": 45203,
-      "sha256": "d156b8344000d4501bcb64e686fc9ef3856c5b970366bed749ce2edf44cde416",
+      "bytes": 47203,
+      "sha256": "7d7228a997caac25a98f1e6282a135b5805dda81684fdae05b1b5bb2f36eee82",
       "group": "tooling",
       "role": "Build or audit script",
       "deployed": false,
@@ -51542,8 +51756,8 @@
       "path": "scripts/site-catalog-curation.json",
       "title": "site-catalog-curation.json",
       "format": "json",
-      "bytes": 31663,
-      "sha256": "0ae66ce139f5daa991ff3b06f96551270d074656b4ac0a934e5f16c3167e2c2c",
+      "bytes": 32868,
+      "sha256": "64eef9d9e468b5fb9f00afc32d51ef1f23e077715ed1fce14105cf4d1f5b8de7",
       "group": "tooling",
       "role": "Build or audit script",
       "deployed": false,
@@ -51590,8 +51804,8 @@
       "path": "scripts/world-lands.json",
       "title": "world-lands.json",
       "format": "json",
-      "bytes": 7175,
-      "sha256": "5eacbe44c42b682b403449f88704243fbdab555c4234aabf2132f865ee847bfa",
+      "bytes": 7211,
+      "sha256": "5f54d3ce4c02db382946bb5f9e79456023528c75b3d247dc63040f74d51a8232",
       "group": "tooling",
       "role": "Build or audit script",
       "deployed": false,
@@ -51638,8 +51852,8 @@
       "path": "site-audit/CONTENT-COVERAGE.md",
       "title": "CONTENT-COVERAGE.md",
       "format": "md",
-      "bytes": 12708,
-      "sha256": "ceb7e2ba401f774fa0b600e10d04463ae9de70dfcf480984566c9063ca863bb8",
+      "bytes": 13333,
+      "sha256": "72fdd68685ae84ae5456bf530d3570c1cade9d5af7ded68363495a2325e41437",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -51662,8 +51876,8 @@
       "path": "site-audit/DISCOVERABILITY_REPORT.md",
       "title": "DISCOVERABILITY_REPORT.md",
       "format": "md",
-      "bytes": 20818,
-      "sha256": "f59e5bee40b458ae040bda187c999a9007222f4e288ba43ed1a01848b0bacafb",
+      "bytes": 21255,
+      "sha256": "9e2e47c005668ff358b84161376853328de373dba0eb7893bbdaca644bc49d95",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -51998,8 +52212,8 @@
       "path": "site-audit/site-master-inventory.json",
       "title": "site-master-inventory.json",
       "format": "json",
-      "bytes": 742565,
-      "sha256": "8e59ec920bfe034eb2df296507ceb62e2031051f769ac9a48dd3e3fbc191bb36",
+      "bytes": 749174,
+      "sha256": "e2a15862e5733410309b39df52f05c8820ebad2a5e20aac85192268c0d029854",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -52450,12 +52664,84 @@
       "nextAction": "Keep green."
     },
     {
+      "id": "r2:tests-browser-screenshots-aiyanas-world-sign-png-445f75",
+      "path": "tests/browser/screenshots/aiyanas-world-sign.png",
+      "title": "aiyanas-world-sign.png",
+      "format": "png",
+      "bytes": 558830,
+      "sha256": "197b0cf8e2244134630495f9e9f7a91af055846ce2732ff8db6878593b67f52f",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-browser-screenshots-aiyanas-world-stories-png-b8ec3c",
+      "path": "tests/browser/screenshots/aiyanas-world-stories.png",
+      "title": "aiyanas-world-stories.png",
+      "format": "png",
+      "bytes": 172265,
+      "sha256": "62bf8e278d7658d11b2552c3ec36c1fb57988fb0b4b5df7057040e43e1d43c25",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-browser-screenshots-aiyanas-world-thinking-png-3cb863",
+      "path": "tests/browser/screenshots/aiyanas-world-thinking.png",
+      "title": "aiyanas-world-thinking.png",
+      "format": "png",
+      "bytes": 165024,
+      "sha256": "56abe8f73ffb72b2bb8eaeb55facf432e33f845cc0524fe2af6b4cc163dbd616",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
       "id": "r2:tests-browser-screenshots-desktop-inspector-png-ab6629",
       "path": "tests/browser/screenshots/desktop-inspector.png",
       "title": "desktop-inspector.png",
       "format": "png",
-      "bytes": 457125,
-      "sha256": "b845f1e10d3773f73ac3c224e12266671236ad1debc93a485d9021e3e2a94e36",
+      "bytes": 481439,
+      "sha256": "c174f149f9dc089215d5591e276354463e99da58f4287c7929f2e49f9ca811a9",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -52478,8 +52764,8 @@
       "path": "tests/browser/screenshots/desktop-shell.png",
       "title": "desktop-shell.png",
       "format": "png",
-      "bytes": 823616,
-      "sha256": "ff3a04290bce923661b1875cfa2f96c1cfd16fce9de9dcc2dbbdf9c69943f5c9",
+      "bytes": 887352,
+      "sha256": "03f3d1be0bb7117bcc6d7ff76d09b6dd08cd0ca94a6e7b9410cd050accf7e4de",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -52502,8 +52788,8 @@
       "path": "tests/browser/screenshots/landscape-shell.png",
       "title": "landscape-shell.png",
       "format": "png",
-      "bytes": 226607,
-      "sha256": "e4f3d704e7765245938843d3449b384a214340433cc0fd24ca97bbce97b27f40",
+      "bytes": 228955,
+      "sha256": "a9414f32a33f9d082d7de9ca01bcc0dee99b0aa45c6c3eb05ef8f2bf9475db20",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -52526,8 +52812,56 @@
       "path": "tests/browser/screenshots/phone-day-sheet.png",
       "title": "phone-day-sheet.png",
       "format": "png",
-      "bytes": 308779,
-      "sha256": "10e17a93db847b68e9b14696ae55c7647d0599e5b5e115e4878109e09d3e5534",
+      "bytes": 302433,
+      "sha256": "169b040c501822088d5c8f25dddd1338c7bde791cd35105f3ad022b4c1a9d7da",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-browser-screenshots-phone-living-day-card-png-2b9511",
+      "path": "tests/browser/screenshots/phone-living-day-card.png",
+      "title": "phone-living-day-card.png",
+      "format": "png",
+      "bytes": 375374,
+      "sha256": "d96676210637bf303b32ddb1379829f05a03018e11b0cfd9d5ffa389dc06f89f",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-browser-screenshots-phone-moon13-faced-png-b3f5bf",
+      "path": "tests/browser/screenshots/phone-moon13-faced.png",
+      "title": "phone-moon13-faced.png",
+      "format": "png",
+      "bytes": 410622,
+      "sha256": "f5073acc117e33b02ef26487c3a53c6b5be7c73c8131bc187e404ab35f79d247",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -52550,8 +52884,8 @@
       "path": "tests/browser/screenshots/phone-shell.png",
       "title": "phone-shell.png",
       "format": "png",
-      "bytes": 911123,
-      "sha256": "fb557d3d0104a5a42bb0af4da9676f688c84e63f547e7c45cd25fa5a5a268134",
+      "bytes": 988798,
+      "sha256": "da8c1d3a312353900c44abd3f115dca3a4a81ec5d4a0035cf49267c14025c3c2",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -52574,8 +52908,8 @@
       "path": "tests/browser/screenshots/phone-spark-conversation.png",
       "title": "phone-spark-conversation.png",
       "format": "png",
-      "bytes": 292147,
-      "sha256": "b005126ba688b238bf197f339622fe3e54b0e0d0721c94aab90c79041d067ad3",
+      "bytes": 323398,
+      "sha256": "00cf139a17c799ab72468b3b2a25af8c2397be94ef946ae9f18e05f08a736978",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -52910,8 +53244,8 @@
       "path": "tests/browser/sphere-focus-interactions.mjs",
       "title": "sphere-focus-interactions.mjs",
       "format": "mjs",
-      "bytes": 35435,
-      "sha256": "d69accdfc7bfabaf684fa80e8ba606c58b5ecf5ca728cca35116c989a9f47445",
+      "bytes": 45570,
+      "sha256": "588ccf94a5a8a5387be34eb5e919b429daddba481586da17c7001ed19993615e",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -52983,7 +53317,7 @@
       "title": "codex-guide-talking.test.js",
       "format": "js",
       "bytes": 17542,
-      "sha256": "d50a13b650727d2d30bb9fb54a1665df3f00f14b8876920cebead08b3219a63a",
+      "sha256": "3ea80c5b3dbd2f142cdd2ae2e6a621206d5cb5bbd8cda5f98f1f5e3e832c8403",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -53102,8 +53436,8 @@
       "path": "tests/fixtures/page-weight-budget.json",
       "title": "page-weight-budget.json",
       "format": "json",
-      "bytes": 3192,
-      "sha256": "e180c96085da902d671900a8ac2089269055e71364e5432ae2a5abf4d4fb4505",
+      "bytes": 3266,
+      "sha256": "1185625cdbf697a398236afacff3732a872665de532f4cf38556563e666916e8",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -53152,6 +53486,30 @@
       "format": "json",
       "bytes": 5074,
       "sha256": "54c615ece25bb5de0a82be9cd2ed59048fa7938c5eb57312a37509a9c6655acc",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-front-door-surfaces-test-js-145df9",
+      "path": "tests/front-door-surfaces.test.js",
+      "title": "front-door-surfaces.test.js",
+      "format": "js",
+      "bytes": 5338,
+      "sha256": "324aa6f38a1264410c40eff8eb0f7b3375ddb41b9cac3e857854956f7237216a",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -53410,6 +53768,30 @@
       "nextAction": "Keep green."
     },
     {
+      "id": "r2:tests-homepage-immersive-prototype-test-js-4f1444",
+      "path": "tests/homepage-immersive-prototype.test.js",
+      "title": "homepage-immersive-prototype.test.js",
+      "format": "js",
+      "bytes": 3009,
+      "sha256": "7d2e200177e39b4bd5b3781a4b8728dc5fee151ba27fd2491e55fb590585dfd2",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
       "id": "r2:tests-homepage-sphere-performance-test-js-4e1628",
       "path": "tests/homepage-sphere-performance.test.js",
       "title": "homepage-sphere-performance.test.js",
@@ -53438,8 +53820,8 @@
       "path": "tests/homepage-sphere.test.js",
       "title": "homepage-sphere.test.js",
       "format": "js",
-      "bytes": 22869,
-      "sha256": "b8a00c55e7e1737641405865bb5261b0151b8a58d144fb376cb0f00ce74a9331",
+      "bytes": 26804,
+      "sha256": "9357840480d14bfdcf1069d0a6043a278295a404d9ad520066ef29a70084d1d2",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -53630,8 +54012,8 @@
       "path": "tests/living-entry.test.js",
       "title": "living-entry.test.js",
       "format": "js",
-      "bytes": 12721,
-      "sha256": "09502275c0c7a64a4480ee219076475d35626a1143e239bf8dd7bbc274604181",
+      "bytes": 12712,
+      "sha256": "89f1f15dc43bbfcd1133d043ea5e02b9d521d63f04e4bdc2ed7bab91822201a6",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -54398,8 +54780,8 @@
       "path": "tests/living-sphere-b7-60-top-view-label-gating.test.js",
       "title": "living-sphere-b7-60-top-view-label-gating.test.js",
       "format": "js",
-      "bytes": 17673,
-      "sha256": "3e82196e0ecb496c9c908a880147cbda408df34c1ee703e2645df19cb4eeca5d",
+      "bytes": 18627,
+      "sha256": "7dc83f99ee39d1d3fe8d6b02bded51f738ffd7b5a67865cf4e3b81c75fa97c0b",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -54514,6 +54896,30 @@
       "nextAction": "Keep green."
     },
     {
+      "id": "r2:tests-living-sphere-deep-fix-faced-moon-test-js-086964",
+      "path": "tests/living-sphere-deep-fix-faced-moon.test.js",
+      "title": "living-sphere-deep-fix-faced-moon.test.js",
+      "format": "js",
+      "bytes": 31481,
+      "sha256": "db5caeefe83d369fe6849b5b9b225027b20358fa98131b2beab2a9960b4a9423",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
       "id": "r2:tests-living-time-calendar-workbench-test-js-9aaf37",
       "path": "tests/living-time-calendar-workbench.test.js",
       "title": "living-time-calendar-workbench.test.js",
@@ -54562,12 +54968,60 @@
       "nextAction": "Keep green."
     },
     {
+      "id": "r2:tests-living-time-sphere-day-world-adapter-test-js-c2d90f",
+      "path": "tests/living-time-sphere-day-world-adapter.test.js",
+      "title": "living-time-sphere-day-world-adapter.test.js",
+      "format": "js",
+      "bytes": 16820,
+      "sha256": "633a4378c30be7da1df04e84d3ad4028eaf3c2c3e7b7169a2c1535e4ec854651",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
       "id": "r2:tests-living-time-sphere-day-zoom-test-js-1fa4f3",
       "path": "tests/living-time-sphere-day-zoom.test.js",
       "title": "living-time-sphere-day-zoom.test.js",
       "format": "js",
       "bytes": 15370,
       "sha256": "1322ddf2944211ca2c9a8a12a8ea4336cc3a193dd9ed532d5fd7bcad84197d70",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-living-time-sphere-evolution-opening-test-js-1f7870",
+      "path": "tests/living-time-sphere-evolution-opening.test.js",
+      "title": "living-time-sphere-evolution-opening.test.js",
+      "format": "js",
+      "bytes": 12807,
+      "sha256": "3f9ba49d3b16a22250662b979c67fe8e6b783f1e509307c8f29b041b716f4f48",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -54638,8 +55092,8 @@
       "path": "tests/living-time-sphere-r2-rework.test.js",
       "title": "living-time-sphere-r2-rework.test.js",
       "format": "js",
-      "bytes": 11385,
-      "sha256": "b1d653a6a2996aadf526ebc44f6b71191339226650623e48a011a8064281b0b1",
+      "bytes": 11755,
+      "sha256": "5d5a253e4849fa5e52b0553ec1743591b8933d107394d4669f8b14bfc4aba170",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -55334,8 +55788,32 @@
       "path": "tests/pattern-garden.test.js",
       "title": "pattern-garden.test.js",
       "format": "js",
-      "bytes": 22418,
-      "sha256": "4d21cbce4076dece06fdb69acb85d7ad894c788c14de38bc011527850a990bb8",
+      "bytes": 44279,
+      "sha256": "51194736d29afc69f6684a259c8bc896c261d1cdce2821fc561509709ca2bd32",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-pattern-quests-test-js-536b94",
+      "path": "tests/pattern-quests.test.js",
+      "title": "pattern-quests.test.js",
+      "format": "js",
+      "bytes": 11322,
+      "sha256": "b37653ac51c3c06ceff74ce0a0f461ab44178f5b278fb67fb4c5b8447fc13eef",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -56246,8 +56724,32 @@
       "path": "tests/sphere-armillary.test.js",
       "title": "sphere-armillary.test.js",
       "format": "js",
-      "bytes": 17692,
-      "sha256": "448e970a2e7cce9712e45852ef4a132eef0bfcdc80c8c681303877815958125f",
+      "bytes": 22191,
+      "sha256": "8ef24a6804a76e8ddbed4016ff059b82e8934c6aae38dac0c63f47dd58d0b96f",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-sphere-day-world-browser-test-js-fe0b3f",
+      "path": "tests/sphere-day-world-browser.test.js",
+      "title": "sphere-day-world-browser.test.js",
+      "format": "js",
+      "bytes": 26139,
+      "sha256": "2eb0fcefe840a4e1dd5ceb160b7e3565ab2b9c159204649235e3fe7679577848",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -56320,6 +56822,30 @@
       "format": "js",
       "bytes": 11819,
       "sha256": "60b6549b7fb212eddbeaaf08219509699cf774783a659cca71c4ca3a81cdfd3b",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-sphere-evolution-opening-browser-test-js-0e992e",
+      "path": "tests/sphere-evolution-opening-browser.test.js",
+      "title": "sphere-evolution-opening-browser.test.js",
+      "format": "js",
+      "bytes": 14467,
+      "sha256": "0a7951601851b3b34493a1aba0cc89f716c81f6b10ab3a9419b2b005cf52d9eb",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -56656,6 +57182,54 @@
       "format": "js",
       "bytes": 10054,
       "sha256": "41351946a97c898d1840728120ccf5cdead8347123b3a03f2b466f060d927e82",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-sphere-temporal-worlds-browser-test-js-e3eda4",
+      "path": "tests/sphere-temporal-worlds-browser.test.js",
+      "title": "sphere-temporal-worlds-browser.test.js",
+      "format": "js",
+      "bytes": 25397,
+      "sha256": "6d122b75176953e7d4587af3e3b0091fcb66a157ef0270a43fa2defd5fc11330",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-sphere-temporal-worlds-test-js-570e58",
+      "path": "tests/sphere-temporal-worlds.test.js",
+      "title": "sphere-temporal-worlds.test.js",
+      "format": "js",
+      "bytes": 10160,
+      "sha256": "cd4cd2d6cc610291ff399a10fe96b8da454c83972a74b65d1bd40e2f874365dd",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
