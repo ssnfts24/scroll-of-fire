@@ -118,10 +118,12 @@ calendar grid and the portrait are DOM/SVG drawn at show time.
 ## Landing order
 
 This branch was built off main `90c0e9e6` and has since taken in
-main `0561a877` by merge (PRs #247 and #250 landed while it was
-being built; the growth record now carries both landings' entries,
-this one on top). The open Sphere stack —
-#243 → #244 → #245, then #246 — lands first, each on Aaron's word;
+main by merge, twice (PRs #247 and #250 landed while it was being
+built, then PR #243 — the first piece of the Sphere stack — landed
+with its own reconciliation; the growth record carries every
+landing's entries as a union, this one on top, 215 entries in all).
+The rest of the Sphere stack —
+#244 → #245, then #246 — lands first, each on Aaron's word;
 this PR's loader stub sits in the same companion-layer file the
 stack's later pieces also touch, so it should land **after** the
 stack, rebased onto whatever the companion layer looks like then.
