@@ -1108,6 +1108,11 @@
      "area": "archive"
     },
     {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    },
+    {
      "path": "practices.html",
      "title": "Practices — the Exercises Wing · Remnant Lab",
      "area": "systems"
@@ -1124,7 +1129,7 @@
     }
    ],
    "outTotal": 4,
-   "inTotal": 4
+   "inTotal": 5
   },
   "genesis-oracle.html": {
    "title": "The Genesis Oracle — Seal of Becoming",
@@ -1661,14 +1666,14 @@
      "area": "archive"
     },
     {
+     "path": "garden.html",
+     "title": "The Pattern Garden — the Garden · Remnant Lab",
+     "area": "systems"
+    },
+    {
      "path": "witness.html",
      "title": "Witness",
      "area": "artifacts"
-    },
-    {
-     "path": "scripture/index.html",
-     "title": "Genesis & Exodus Scripture",
-     "area": "scroll-scripture"
     }
    ],
    "in": [
@@ -1683,7 +1688,7 @@
      "area": "artifacts"
     }
    ],
-   "outTotal": 23,
+   "outTotal": 24,
    "inTotal": 2
   },
   "invoke.html": {
