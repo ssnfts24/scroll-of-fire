@@ -259,6 +259,31 @@
   white-space: normal;
 }
 
+/* ── One owner for the top strip (visual sweep, Nov 23, 2026) ──
+ * The Play pill owns a reserved lane at the stage's top (the chip
+ * already drops beneath it at ≤900px). At the day stages the
+ * orientation chip stands under that lane and owns the day's
+ * name — but the label layer's two pinned cards used to stack
+ * into the same strip: the selected-year card slid under the
+ * Play pill ("Playected year 2026"), and the plans card's last
+ * line was sliced by the chip's top edge, while all three named
+ * the same day at once. Inside the day, the world itself carries
+ * the day's plans as standing objects and the chip carries its
+ * name, so both cards retire for as long as the keeper stands in
+ * the day (Living Day and Immersive Day; at Living Day the year
+ * card's edge was measured sliding under the pill as well).
+ * They return the moment the keeper backs out to the Moon or
+ * the years, where the strip is theirs again. The label layer clears
+ * its inline display when it shows a card, so a plain rule here
+ * holds; nothing is removed from the record or the face's other
+ * stages. */
+.sphere-instrument-shell:has(.dw-chip[data-dw-stage="living"]) .sphere-semantic-label[data-semantic-kind="living-plan-summary"],
+.sphere-instrument-shell:has(.dw-chip[data-dw-stage="immersive"]) .sphere-semantic-label[data-semantic-kind="living-plan-summary"],
+.sphere-instrument-shell:has(.dw-chip[data-dw-stage="living"]) .sphere-semantic-label[data-semantic-kind="temporal-year"],
+.sphere-instrument-shell:has(.dw-chip[data-dw-stage="immersive"]) .sphere-semantic-label[data-semantic-kind="temporal-year"] {
+  display: none;
+}
+
 /* ── The membrane veil ─────────────────────────────────────── */
 
 .dw-membrane {

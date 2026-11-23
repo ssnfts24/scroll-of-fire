@@ -1,0 +1,130 @@
+/* The Episode Library (docs/episodes.html).
+ * Cards, doors and shelves for the one room where the story's
+ * films stand together. Colours ride the site's own tokens
+ * (--gold, --line-gold from codex.css); the figure itself is
+ * styled by story-layer.css (.story-episode), the house pattern
+ * every fitted page uses. */
+
+.library-doors {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 0.8rem;
+  margin: 1.1rem 0 0.2rem;
+}
+
+.library-door {
+  display: block;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--line-gold, rgba(243, 201, 122, 0.28));
+  border-radius: 0.6rem;
+  background: rgba(243, 201, 122, 0.05);
+  text-decoration: none;
+}
+
+.library-door strong {
+  display: block;
+  color: var(--gold, #f3c97a);
+  font-size: 1.15rem;
+  margin-bottom: 0.3rem;
+}
+
+.library-door span {
+  display: block;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.library-feature-figure video {
+  border: 1px solid var(--line-gold, rgba(243, 201, 122, 0.28));
+}
+
+.episode-card {
+  border: 1px solid var(--line-gold, rgba(243, 201, 122, 0.28));
+  border-radius: 0.7rem;
+  padding: 1rem 1.1rem 0.6rem;
+  margin: 0 0 1.1rem;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.episode-card-title {
+  margin-top: 0;
+}
+
+.episode-marks {
+  color: var(--gold, #f3c97a);
+  font-size: 0.95rem;
+  margin: 0.1rem 0 0.4rem;
+}
+
+.episode-note,
+.episode-hum,
+.episode-skill {
+  font-size: 0.94rem;
+}
+
+.episode-relations,
+.episode-links {
+  font-size: 0.94rem;
+}
+
+.episode-next {
+  border-top: 1px dashed var(--line-gold, rgba(243, 201, 122, 0.28));
+  padding-top: 0.55rem;
+  font-size: 0.94rem;
+}
+
+.story-token-line {
+  border-left: 3px solid var(--gold, #f3c97a);
+  padding: 0.45rem 0.7rem;
+  background: rgba(243, 201, 122, 0.07);
+  font-size: 0.94rem;
+}
+
+.explore-land,
+.explore-series-entry {
+  margin: 0 0 0.9rem;
+}
+
+.explore-land h4,
+.explore-series-entry h4 {
+  margin-bottom: 0.25rem;
+}
+
+.explore-episodes {
+  margin: 0.2rem 0 0.6rem;
+}
+
+.series-status,
+.planned-meta {
+  color: var(--gold, #f3c97a);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0.1rem 0 0.35rem;
+}
+
+.planned-meta {
+  text-transform: none;
+  letter-spacing: normal;
+  color: inherit;
+}
+
+.planned-group {
+  margin: 0 0 1.4rem;
+}
+
+.planned-card {
+  border: 1px dashed var(--line-gold, rgba(243, 201, 122, 0.28));
+  border-radius: 0.7rem;
+  padding: 0.8rem 1rem 0.4rem;
+  margin: 0 0 0.8rem;
+}
+
+.planned-card h4 {
+  margin: 0 0 0.2rem;
+}
+
+.planned-source {
+  font-size: 0.9rem;
+  font-style: italic;
+}

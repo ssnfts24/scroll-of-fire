@@ -397,7 +397,7 @@
     holder.innerHTML = `
       <button type="button" class="sphere-spark-orbit" aria-label="${name}, your Spark — tap to talk">
         <span class="sphere-spark-halo" aria-hidden="true"></span>
-        <span class="sphere-spark-art" aria-hidden="true">${Core.renderSVG(companion, { stage: stage.index })}</span>
+        <span class="sphere-spark-art" aria-hidden="true">${Core.renderSVG(companion, { stage: stage.index, wrap: Core.wrapFor(record), flameTier: "simple" })}</span>
         <span class="sphere-spark-nameplate" aria-hidden="true">
           <span class="sphere-spark-name">${name}</span>
           <span class="sphere-spark-kind">${companion.kindName || companion.kind || "Spark"} · ${stage.name}</span>
@@ -476,12 +476,33 @@
       if ("ResizeObserver" in window) new ResizeObserver(measureWrap).observe(wrap);
       else window.addEventListener("resize", measureWrap);
       let lastFront = null;
+      // The resting station — the same spot the reduced-motion
+      // Spark keeps (lower right of the stage). The orbit's
+      // frozen gate below stations the Spark here deliberately:
+      // the code always SAID "the Spark stations itself and
+      // rests too", but it only returned early, leaving the
+      // Spark frozen at whatever orbit point it last crossed —
+      // at the left extreme, a small still blob at the face's
+      // edge (Aaron's report, Nov 23, 2026). A held Spark now
+      // rests somewhere chosen, and the corner default in the
+      // stylesheet (top: 0; left: 0) is never a resting place:
+      // the first orbit position is written at build, below,
+      // before the loop's first gated frame can leave it there.
+      let parked = false;
+      const stationSpark = () => {
+        const w = wrapW, h = wrapH;
+        if (w && h) holder.style.transform = `translate(${Math.max(0, w - 84)}px, ${Math.round(h * 0.58)}px)`;
+      };
       const orbit = (now) => {
         raf = requestAnimationFrame(orbit);
         if (document.hidden || !visible) return;
         // Frozen means frozen: while the keeper holds the Sphere
         // still, the Spark stations itself and rests too.
-        if (window.SphereRebuild?.isFrozen?.()) return;
+        if (window.SphereRebuild?.isFrozen?.()) {
+          if (!parked) { parked = true; holder.dataset.parked = "frozen"; stationSpark(); }
+          return;
+        }
+        if (parked) { parked = false; delete holder.dataset.parked; }
         const w = wrapW, h = wrapH;
         if (!w || !h) { measureWrap(); return; }
         const angle = (now / 26000) * Math.PI * 2 + 0.8;
@@ -494,7 +515,12 @@
         const front = depth > 0.5;
         if (front !== lastFront) { lastFront = front; holder.style.zIndex = front ? "7" : "3"; }
       };
-      raf = requestAnimationFrame(orbit);
+      // The first frame is written now, not whenever the loop
+      // first runs ungated — the Spark starts ON its circuit
+      // (or stationed, if the Sphere stands frozen), never in
+      // the stylesheet's top-left corner. orbit() re-arms the
+      // loop itself, exactly as the rAF callback does.
+      orbit(performance.now());
       holder.dataset.orbiting = "1";
       // Keep the loop honest when the holder leaves the page.
       new MutationObserver(() => { if (!document.contains(holder)) cancelAnimationFrame(raf); }).observe(wrap, { childList: true });
@@ -637,7 +663,7 @@
 
     section.innerHTML = `
       <div class="sphere-spark-talk-head">
-        <span class="sphere-spark-talk-art" aria-hidden="true">${Core.renderSVG(companion, { stage: stage.index })}</span>
+        <span class="sphere-spark-talk-art" aria-hidden="true">${Core.renderSVG(companion, { stage: stage.index, wrap: Core.wrapFor(record) })}</span>
         <div>
           <h2 class="sphere-spark-talk-title">${name}</h2>
           <p class="sphere-spark-talk-stage">${companion.kindName || companion.kind || "Spark"} · ${stage.name}${growth ? ` · voice: ${growth.name}` : ""}${presence ? ` · ${presence.name}` : ""}</p>

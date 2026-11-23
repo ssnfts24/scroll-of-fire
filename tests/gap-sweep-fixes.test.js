@@ -56,7 +56,7 @@ test("every mp4 video waits for a tap and shows a poster frame", () => {
       assert.ok(fs.existsSync(posterPath), `poster missing on disk: ${poster[1]}`);
     }
   }
-  assert.equal(seen, 74, "the 72 explainer and rap videos, the Spark demo film, and the Ambient Door cartoon film are all covered");
+  assert.equal(seen, 75, "the 72 explainer and rap videos, the Spark demo film, the Ambient Door cartoon film, and the vision trailer in the Episode Library are all covered");
 });
 
 test("the homepage links the sphere stylesheet exactly once", () => {

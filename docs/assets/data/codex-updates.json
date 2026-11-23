@@ -17,6 +17,22 @@
   },
   {
     "date": "2026-11-23",
+    "type": "feature",
+    "title": "The Episode Library opened its doors",
+    "summary": "The story's films now stand together in one room. Every film of the Traveller's Road plays where it stands, told apart by name, land, Moon and token — never by number — with its written chapter as its reading companion, and the vision trailer, finished and approved, opens the room as its feature presentation. A keeper's place is kept on their own device by the same watch record the story's pages keep: only a true watch counts, and a finished watch brings the token home, here as anywhere. The episodes still being written stand on their own shelf, named plainly as planned or scripted, with nothing to play yet — among them the Night Road's six, scripted in full, and the five of the Living Circuit, the series of the author's own device works, now registered in the story bible.",
+    "url": "./episodes.html",
+    "symbol": "◎"
+  },
+  {
+    "date": "2026-11-23",
+    "type": "sphere",
+    "title": "The Sphere took its keeper's corrections",
+    "summary": "From the keeper's own phone, four corrections. The Evolution Opening's first-visit flag now belongs to the film itself: a visitor who met only the earlier staged walk still meets the film, and the flag is earned by the first painted frame — a load that never paints leaves no mark. The film's composed score is gone; in its place one deep cinematic swell at the root, swelling as the film opens and settling as the scrim lifts, silent until the first touch, as the sound rule has always held. The caption above the Sphere wraps whole again — no sentence cut mid-word at the stage's edge. And the Spark starts on its circuit from the first frame, never resting in the corner; when the Sphere is held still, it stations itself at its resting place instead of stopping wherever it was.",
+    "url": "./living-time-sphere.html",
+    "symbol": "◉"
+  },
+  {
+    "date": "2026-11-23",
     "type": "page",
     "title": "Witness tended its page on the day of designs",
     "summary": "The Witness page carries November 23: a charter drawn for the Sphere, a real sky computed on the device standing in review, a Front Door designed for new arrivals, the Sparks' page designed as a walkable 3D world, play redesigned simpler — and a new standard in Aaron's words, that the whole site should feel a little alive. The same change writes the growth record's missing entry for yesterday's tending and records Aaron's standing rule: every landing updates this log in the same change.",
@@ -50,10 +66,80 @@
   {
     "date": "2026-11-23",
     "type": "feature",
+    "title": "The Moons took their settled names",
+    "summary": "The thirteen Moons now answer to one settled set of names everywhere the site speaks them — the Pattern Calendar's own set, Deep Mirror and Return Path among them — the same names on the Sphere's face, in the calendar, and in this record, held there by a test that pins them so the two sets cannot drift apart again.",
+    "url": "./living-time-sphere.html"
+  },
+  {
+    "date": "2026-11-23",
+    "type": "feature",
+    "title": "The tracker left the site",
+    "summary": "The site no longer keeps any count of its visitors. Google Analytics was removed from every page — all seventy-two of them, the Sphere's own page among them, opened for this one change — and a guard in the test suite now holds the count at zero, so it cannot creep back unnoticed.",
+    "url": "./index.html"
+  },
+  {
+    "date": "2026-11-23",
+    "type": "feature",
     "title": "The Spark learned to speak up, sparingly",
     "summary": "The Spark now offers small tips when the keeper's own record earns them — a harvest standing ready in the Pattern Garden, a keepsake that can return to its bed, a practice left unfinished — each one naming the record it came from, and none at all when the record is silent. A soft two-note chime, tuned to A=432, sounds first when the keeper allows sound; the keeper chooses chime, words only, spoken aloud, or quiet always, and any kind of tip can be dismissed forever. The fence screen runs before a tip is composed, so fenced ground never becomes a tip, and nothing is fetched from anywhere: every tip is composed on the keeper's own device, from their own record.",
     "url": "./companions.html",
     "symbol": "✦"
+  },
+  {
+    "date": "2026-11-23",
+    "type": "feature",
+    "title": "The sky came onto the Sphere",
+    "summary": "The Sphere now works out its own sky on your device, with nothing fetched: sunrise, sunset and solar noon for the place you keep, the Moon’s phase and its rising and setting, the planets, the season turns for any year, and — at the night standing of the new sky dome — 510 real stars from the Yale Bright Star Catalogue, each placed by the math for where you stand and when. No place kept means no sky drawn, only the one honest sentence, as ever.",
+    "url": "./living-time-sphere.html",
+    "symbol": "✦"
+  },
+  {
+    "date": "2026-11-23",
+    "type": "feature",
+    "title": "The river and the blossoms came onto the Sphere",
+    "summary": "The Sphere's first test layers after the sky, both off until a keeper turns them on: the salmon counted past Bonneville Dam on the Columbia River, day by day from 1939 to 2026, counted by the Army Corps of Engineers and carried by Columbia River DART; and Kyoto's cherry-blossom full flowering, recorded from the year 812 to today — 838 years that hold a record, with the 377 that do not drawn honestly as gaps. Each stands in its own colour with its source named on its face, each stops at today, and the year still to come stands open, labelled: no record; the year is not kept yet.",
+    "url": "./living-time-sphere.html",
+    "symbol": "✧"
+  },
+  {
+    "date": "2026-11-23",
+    "type": "system",
+    "title": "Every Spark took on its flame",
+    "summary": "The flame wrap (wrap: 1) landed as a preview: a ring of kind-coloured flame-licks drawn from each Spark's own seed, wrapped around the Spark that already stands — at rest it breathes, at work it gathers, and at small sizes it simplifies first while the kind colour never changes. It stands on the seat, Their Home, the Companions, and the Sphere's Spark, in both the flat drawing and the 3D body. It is a layer, not a change: any keeper can lift it off in the Spark's panel (More → Flame off), and with it off every Spark renders byte for byte as it was born — pinned by tests against golden renders of Nori's seed, Selor's passport vector, and three more kinds.",
+    "url": "./companions.html",
+    "symbol": "♨"
+  },
+  {
+    "date": "2026-11-23",
+    "type": "page",
+    "title": "The Sphere's receipts and workings stand in the open",
+    "summary": "Two pages joined the record: Where Every Number Comes From names the publisher, span, and honest gaps behind every dataset the Sphere shows — Bonneville's counted salmon, Kyoto's twelve centuries of blossoms, the sky computed on the device, the farm record of thirty-nine counties — and How the Sphere Knows sets down the workings in plain words, with the evidence labels the whole site uses explained once, in one place.",
+    "url": "./provenance.html",
+    "symbol": "☲"
+  },
+  {
+    "date": "2026-11-23",
+    "type": "feature",
+    "title": "Watching earns for the Spark — the activities layer, first slice",
+    "summary": "The first slice of the Spark activities layer Aaron approved whole: on the sixteen fitted Series One episode pages, an episode watched honestly through — at least ninety percent of it truly played, at a human pace, with the page present, to the player's own end — writes one record to the keeper's Life Atlas: the episode's token, keyed by its distinguisher of name, land, Moon and token, standing in Their Home's story corner; the episode's measured hum, learned into the Spark's repertoire; and its Waymaker skill marked met. A rewatch in the episode's own Moon in a later year adds a single met-again line. With it stands the portrait of keeping at its first step: breadth of kinds of keeping paints the Spark's portrait Spark or Kindled, a portrait and never a rank. Keepsakes only, on the keeper's own device, nothing counted, nothing lost, nothing traded.",
+    "url": "./companions.html",
+    "symbol": "◎"
+  },
+  {
+    "date": "2026-11-23",
+    "type": "page",
+    "title": "Seven Hebrew words given their full treatment",
+    "summary": "The Scripture shelf gains a word-studies room: shem, adam, adamah, enosh, ruach, nephesh and or, each with its spelling pointed and plain, its root, its range of senses, Genesis first among its examples, its wordplay and cognates, its traditions labelled as traditions — and its uncertainties printed rather than smoothed over, exactly as the studies were written.",
+    "url": "./scripture/word-studies/index.html",
+    "symbol": "א"
+  },
+  {
+    "date": "2026-11-23",
+    "type": "feature",
+    "title": "The Sphere learned to keep its face clear",
+    "summary": "A photograph-by-photograph sweep of the Sphere at phone widths found its cards stacked over each other at the top of the stage, the years’ numbers lost inside their own wireframe, a room’s heading struck through by the sheet’s bar, the page’s first sentence cut off mid-word, and gold spent on a navigation button. Now one panel owns the top of the stage at a time and the day is named once, the years stand on dark plaques that read at a glance, rooms land below their header, the first sentence stands whole, and gold is back to meaning today and the selected day alone — the rest is quiet chrome.",
+    "url": "./living-time-sphere.html",
+    "symbol": "✧"
   },
   {
     "date": "2026-11-22",

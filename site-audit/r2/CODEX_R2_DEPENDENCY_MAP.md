@@ -68,8 +68,11 @@
 | `scripts/apply-spark-presence.mjs` | `docs/living-time-sphere.html`, `docs/404.html`, `docs/offline.html`, `docs/caravan.html`, `docs/companions.html` |
 | `scripts/apply-theory-work.mjs` | `docs/theory.html` |
 | `scripts/audit-site.mjs` | — |
+| `scripts/build-bright-stars.py` | — |
+| `scripts/build-kyoto-blossom.py` | `docs/assets/data/sphere-test-kyoto-blossom.json` |
 | `scripts/build-link-graph.mjs` | `docs/assets/data/link-graph.json`, `site-audit/site-master-inventory.json` |
 | `scripts/build-r2-inventory.mjs` | `site-audit/r2/document-extracts.json`, `docs/scroll/archive/Full_Scroll_Unsealed.txt`, `docs/development/TEMPORAL-AUTHORITY-CONTRACT.md`, `site-audit/r2/CODEX_R2_RESOURCE_REGISTRY.json` |
+| `scripts/build-salmon-bonneville.py` | `docs/assets/data/sphere-test-salmon-bonneville.json` |
 | `scripts/build-scroll-editorial.mjs` | `docs/scroll/data/editorial-edition.json`, `docs/scroll/evidence/claim-register.json`, `docs/scroll/evidence/register.md` |
 | `scripts/build-scroll-library.mjs` | `archive/Full_Scroll_Unsealed.txt`, `archive/edition.json` |
 | `scripts/build-scroll-search.mjs` | — |
@@ -95,33 +98,33 @@
 
 | Stylesheet | Pages |
 | --- | --- |
-| `docs/assets/css/spark-companion.css` | 179 |
-| `docs/assets/css/living-ui.css` | 139 |
-| `docs/scripture/assets/scripture.css` | 93 |
-| `docs/assets/css/spark-agent-seat.css` | 76 |
-| `docs/assets/css/codex.css` | 53 |
-| `docs/assets/css/navigation.css` | 43 |
-| `docs/assets/css/social-bridge.css` | 40 |
-| `docs/assets/css/living-moon-theme.css` | 34 |
-| `docs/assets/css/animations.css` | 22 |
-| `docs/assets/css/story-layer.css` | 19 |
+| `docs/assets/css/spark-companion.css` | 190 |
+| `docs/assets/css/living-ui.css` | 150 |
+| `docs/scripture/assets/scripture.css` | 101 |
+| `docs/assets/css/spark-agent-seat.css` | 79 |
+| `docs/assets/css/codex.css` | 59 |
+| `docs/assets/css/navigation.css` | 46 |
+| `docs/assets/css/social-bridge.css` | 43 |
+| `docs/assets/css/living-moon-theme.css` | 36 |
+| `docs/assets/css/animations.css` | 25 |
+| `docs/assets/css/story-layer.css` | 21 |
 | `docs/theory/equations/assets/css/codex.css` | 19 |
 | `docs/theory/equations/assets/css/navigation.css` | 19 |
 
 | Script | Pages |
 | --- | --- |
-| `docs/assets/js/spark-companion.js` | 179 |
-| `docs/assets/js/spark-presence.js` | 178 |
-| `docs/assets/js/site.js` | 142 |
-| `docs/assets/js/living-ui.js` | 139 |
-| `docs/scripture/assets/scripture.js` | 93 |
-| `docs/assets/js/spark-relations.js` | 82 |
-| `docs/assets/js/heaven-sound.js` | 78 |
-| `docs/assets/js/spark-agent-seat.js` | 76 |
-| `docs/assets/js/spark-3d.js` | 74 |
-| `docs/assets/js/calendar/pattern-calendar-version.js` | 43 |
-| `docs/assets/js/calendar/pattern-calendar-data.js` | 43 |
-| `docs/assets/js/calendar/pattern-calendar-format.js` | 43 |
+| `docs/assets/js/spark-companion.js` | 190 |
+| `docs/assets/js/spark-presence.js` | 189 |
+| `docs/assets/js/site.js` | 153 |
+| `docs/assets/js/living-ui.js` | 150 |
+| `docs/scripture/assets/scripture.js` | 101 |
+| `docs/assets/js/spark-relations.js` | 85 |
+| `docs/assets/js/heaven-sound.js` | 81 |
+| `docs/assets/js/spark-agent-seat.js` | 79 |
+| `docs/assets/js/spark-3d.js` | 76 |
+| `docs/assets/js/calendar/pattern-calendar-version.js` | 46 |
+| `docs/assets/js/calendar/pattern-calendar-data.js` | 46 |
+| `docs/assets/js/calendar/pattern-calendar-format.js` | 46 |
 
 ## Protected systems (do not modify)
 

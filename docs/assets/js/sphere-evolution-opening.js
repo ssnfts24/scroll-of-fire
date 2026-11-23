@@ -65,24 +65,41 @@
    * film ends where the opening always ended — the Spark's first
    * beat standing, "Take me to today" at the last.
    *
-   * The score is "The Count and the Call" language — A=432, the
-   * showcase's small palette (plucked string, low cello, struck
-   * copper bowl, frame drum, breath flute) — synthesised on the
-   * device at play time; the opening carries no audio file. THE
-   * SOUND RULE, held exactly: no sound before a first touch.
-   * Browsers will not start audio before a gesture, and this
-   * site never autoplays sound — so the film starts moving
-   * silently, the welcome beat carries the invitation ("touch
-   * anywhere to let it in") as part of the scene, and the first
-   * touch brings the score in from that beat of the film. A
-   * keeper who never touches watches the whole film silent, and
-   * it is built to stand silent. A replay tapped at the door is
-   * itself a touch, so a replay plays with its score from the
-   * first beat.
+   * The sound is ONE opening cinematic sound — Aaron's word
+   * over the earlier composed score (Nov 23, 2026): "Rather
+   * then doing music and sound it can auto play with a opening
+   * cinematic type of sound that's fitting for the Codex of
+   * reality." So there is no score any more: a single deep
+   * swell at the root, D — a low struck bowl and a slow breath
+   * rising together, tuned at A=432 like everything on this
+   * instrument — swelling as the film opens, holding through
+   * the growth, and settling as the scrim lifts into the live
+   * Sphere. It is synthesised on the device at play time; the
+   * opening carries no audio file. THE SOUND RULE, held
+   * exactly: no sound before a first touch. Browsers will not
+   * start audio before a gesture, and this site never
+   * autoplays sound — so the film starts moving silently, the
+   * welcome beat carries the invitation ("touch anywhere to
+   * let it in") as part of the scene, and the first touch
+   * brings the swell in at the film's current point. A keeper
+   * who never touches watches the whole film silent, and it
+   * is built to stand silent. A replay tapped at the door is
+   * itself a touch, so a replay sounds from the first beat.
+   *
+   * The seen flag (v2): the v1 flag recorded the staged
+   * click-through that stood here before the film existed —
+   * a visitor who closed that walk had "seen" a thing that
+   * was not the film, and the film then never played for
+   * them (Aaron's own phone, Nov 23, 2026). The film keeps
+   * its own first-visit flag. And the flag is earned by a
+   * first beat actually painting — never by the overlay
+   * merely being built: a botched or blocked load, or an
+   * open in a background tab nobody looked at, does not rob
+   * a first-time visitor of the opening.
    */
 
-  const VERSION = "sphere-evolution-opening/1.1.0";
-  const SEEN_KEY = "sof.sphere.evolutionOpening.v1";
+  const VERSION = "sphere-evolution-opening/1.2.0";
+  const SEEN_KEY = "sof.sphere.evolutionOpening.v2";
   const SESSION_KEY = "sof.sphere.evolutionOpening.session";
 
   /* ── Pure core (also loaded by the tests) ───────────────────── */
@@ -329,76 +346,40 @@
     return !reducedMotion;
   }
 
-  /* ── The score ────────────────────────────────────────────── */
+  /* ── The one sound ────────────────────────────────────────── */
 
-  // "The Count and the Call" language, A=432 throughout: notes
-  // are MIDI numbers, tuned from A4 = 432 Hz. The root is D —
-  // the showcase's own root. The plan is data, so the tests can
-  // hold it to the film's shape:
-  //   welcome      — one struck bowl in the quiet, the cello
-  //                  pedal breathing under the whole film;
-  //   calendars    — the Count: four frame-drum counts, the
-  //                  NAME figure stated (root → third → fifth →
-  //                  third → root), then thirteen counted plucks
-  //                  climbing the scale — the moons, counted;
-  //   first-sphere — the figure trails and is left unfinished,
-  //                  as the re-score brief has it; one bowl, one
-  //                  drum, a shimmer;
-  //   sphere-now   — the figure completes as the scrim lifts,
-  //                  the cello's fifth joins underneath;
-  //   spark        — the Call: the Whistle's contour (D6 → G6 →
-  //                  E6 → D6) on the breath flute, one last
-  //                  pluck, then composed quiet under the tour.
-  const SCORE_ROOT_MIDI = 62; // D4
+  // A=432 throughout: notes are MIDI numbers, tuned from
+  // A4 = 432 Hz. The root is D — the showcase's own root —
+  // taken two octaves down, where a struck bowl lives. The
+  // plan is data, so the tests can hold it to the film's
+  // shape. There is exactly one event: the swell. Its
+  // envelope rises slowly over the welcome and the calendars,
+  // holds its depth over the first Sphere, and settles as
+  // the scrim lifts into the live Sphere — the sphere-now
+  // beat begins at 22.5s — falling quiet a breath after, so
+  // the Spark's beat stands in silence.
+  const SWELL_ROOT_MIDI = 38; // D2
 
   function freqFor(midi) {
     return Number((432 * Math.pow(2, (midi - 69) / 12)).toFixed(2));
   }
 
-  function buildScoreEvents() {
-    const ev = [];
-    const add = (at, voice, midi, dur, gain) => {
-      ev.push({ at, voice, midi, freq: midi == null ? null : freqFor(midi), dur, gain });
-    };
-    // The bed: one low cello pedal under the whole film (D2).
-    add(0, "cello", 38, 39.5, 0.16);
-    // Welcome: a single struck bowl in the quiet (D3).
-    add(0.35, "bowl", 50, 5.5, 0.2);
-    // Calendars — the Count.
-    for (const t of [3.1, 5.7, 8.3, 10.9]) add(t, "drum", null, 0.35, 0.5);
-    add(3.6, "pluck", 62, 1.8, 0.3);
-    add(4.6, "pluck", 66, 1.8, 0.28);
-    add(5.6, "pluck", 69, 2.0, 0.3);
-    add(6.6, "pluck", 66, 1.8, 0.26);
-    add(7.6, "pluck", 62, 2.4, 0.3);
-    // Thirteen counted plucks, climbing the scale — the moons.
-    const scale = [62, 64, 66, 67, 69, 71, 73, 74, 76, 78, 79, 81, 83];
-    scale.forEach((m, i) => add(8.2 + i * 0.36, "pluck", m, 1.1, 0.13));
-    // First Sphere — the figure trails, unfinished; one bowl.
-    add(13.3, "bowl", 50, 6.0, 0.16);
-    add(14.2, "pluck", 62, 1.8, 0.26);
-    add(15.2, "pluck", 66, 1.8, 0.24);
-    add(16.2, "pluck", 69, 2.2, 0.26);
-    add(18.0, "drum", null, 0.4, 0.4);
-    add(20.5, "bowl", 57, 4.5, 0.1);
-    // Sphere Now — the figure completes as the scrim lifts.
-    add(22.5, "cello", 45, 9.0, 0.1); // A2 joins under the bed
-    add(22.8, "bowl", 62, 6.0, 0.14);
-    add(23.5, "pluck", 62, 1.8, 0.3);
-    add(24.5, "pluck", 66, 1.8, 0.28);
-    add(25.5, "pluck", 69, 2.0, 0.3);
-    add(26.5, "pluck", 74, 2.0, 0.28);
-    add(27.5, "pluck", 69, 1.8, 0.26);
-    add(28.5, "pluck", 66, 1.8, 0.26);
-    add(29.5, "pluck", 62, 3.0, 0.3);
-    // The Spark — the Call, on the breath flute.
-    add(31.6, "flute", 86, 1.0, 0.3);
-    add(32.8, "flute", 91, 1.2, 0.32);
-    add(34.1, "flute", 88, 0.9, 0.3);
-    add(35.1, "flute", 86, 2.6, 0.3);
-    // One last pluck; then quiet under the tour.
-    add(37.8, "pluck", 62, 2.2, 0.22);
-    return ev.sort((a, b) => a.at - b.at);
+  function buildCinematicSwell() {
+    return Object.freeze({
+      voice: "swell",
+      midi: SWELL_ROOT_MIDI,
+      freq: freqFor(SWELL_ROOT_MIDI),
+      at: 0,
+      dur: 27,
+      // (seconds into the film, level) — a slow rise, a held
+      // depth, then the settle, done just after the reveal.
+      envelope: Object.freeze([
+        Object.freeze([0, 0]),
+        Object.freeze([7, 1]),
+        Object.freeze([20, 0.85]),
+        Object.freeze([27, 0]),
+      ]),
+    });
   }
 
   const api = Object.freeze({
@@ -409,7 +390,7 @@
     TOUR_STEPS,
     FILM_STAGES,
     FILM_TOTAL_MS,
-    SCORE_ROOT_MIDI,
+    SWELL_ROOT_MIDI,
     buildCalendarGrid,
     buildFirstSphereSVG,
     patternAngleForDayOfYear,
@@ -418,7 +399,7 @@
     shouldAutoOpen,
     shouldPlayFilm,
     freqFor,
-    buildScoreEvents,
+    buildCinematicSwell,
   });
 
   if (typeof module !== "undefined" && module.exports) {
@@ -435,7 +416,7 @@
     // A read-only window onto the film, for the tests and for
     // anyone checking the sound rule from the console: the mode
     // (closed / still / film / kept), the stage standing, and
-    // whether a touch has armed the score yet.
+    // whether a touch has armed the sound yet.
     filmState: () => currentFilmState(),
     reset: () => {
       try { localStorage.removeItem(SEEN_KEY); } catch { /* private mode */ }
@@ -561,7 +542,7 @@
   let soundArmed = false;
   let audioCtx = null;
   let audioMaster = null;
-  let scoreTimer = null;
+  let swellSources = [];
   let noiseBuffer = null;
 
   function currentFilmState() {
@@ -662,21 +643,21 @@
   }
 
   // The keeper touches the walk — a button, an arrow key — and
-  // the film hands over: timers stop, the score fades, the
+  // the film hands over: timers stop, the sound fades, the
   // staged controls stand again.
   function stopFilm() {
     if (!filmActive) return;
     endFilm();
-    stopScore();
+    stopSound();
   }
 
-  /* ── The score, synthesised ───────────────────────────────── */
+  /* ── The one sound, synthesised ───────────────────────────── */
 
   // THE SOUND RULE: this is the only door to sound in the
   // module, and it is opened only by a gesture — the door tap
   // that replays the film, or the first touch or keypress while
   // the film is playing. No AudioContext exists before it.
-  function armScore() {
+  function armSound() {
     if (soundArmed || reducedMotion || !overlay) return;
     soundArmed = true;
     hideSoundCue();
@@ -693,57 +674,92 @@
       audioMaster.connect(comp);
       audioMaster.gain.setTargetAtTime(0.55, audioCtx.currentTime, 0.4);
       if (audioCtx.resume) audioCtx.resume();
-      startScoreScheduler();
+      startSwell();
     } catch { audioCtx = null; }
   }
 
   function onFirstGesture() {
-    if (overlay && filmActive) armScore();
+    if (overlay && filmActive) armSound();
   }
 
-  // The score's clock is the film's clock: events are placed
-  // from the film's first beat, so a touch at second twenty
-  // brings the score in AT second twenty — the calendars' count
-  // is not replayed under the first Sphere. Sustained voices
-  // (the cello bed, a struck bowl) are caught mid-ring; the
-  // momentary ones (plucks, drum, the Call) sound only at their
-  // own beats, never late.
-  function startScoreScheduler() {
-    const events = buildScoreEvents();
-    const startCtxTime = audioCtx.currentTime;
+  // The swell's clock is the film's clock: a first touch at
+  // second twenty brings the sound in AT second twenty — the
+  // swell met at the depth it has already reached, its
+  // remaining shape played out from there. A touch after the
+  // swell has settled brings nothing: the moment has passed,
+  // and the film stands silent, as it was built to.
+  function startSwell() {
+    if (!audioCtx || !audioMaster) return;
+    const swell = buildCinematicSwell();
     const offset = filmElapsed();
-    let scheduledUntil = offset - 0.001;
-    const tick = () => {
-      if (!audioCtx) { scoreTimer = null; return; }
-      const now = offset + (audioCtx.currentTime - startCtxTime);
-      const horizon = now + 0.6;
-      for (const ev of events) {
-        if (ev.at + ev.dur <= offset) continue;      // wholly past
-        if (ev.at < scheduledUntil) continue;        // already placed
-        if (ev.at > horizon) break;                  // not yet
-        let startAt = ev.at;
-        let dur = ev.dur;
-        if (ev.at < offset) {
-          if (ev.voice !== "cello" && ev.voice !== "bowl") continue;
-          dur = ev.dur - (offset - ev.at);
-          startAt = offset;
-          if (dur <= 0.05) continue;
-        }
-        const when = startCtxTime + (startAt - offset);
-        playVoice(ev.voice, ev.freq, when, dur, ev.gain);
-      }
-      scheduledUntil = Math.max(scheduledUntil, horizon);
-      if (now > FILM_TOTAL_MS / 1000 + 1) {
-        window.clearInterval(scoreTimer);
-        scoreTimer = null;
-      }
-    };
-    tick();
-    scoreTimer = window.setInterval(tick, 200);
+    if (offset >= swell.dur) return;
+    playSwell(swell, offset);
   }
 
-  function stopScore() {
-    if (scoreTimer) { window.clearInterval(scoreTimer); scoreTimer = null; }
+  function swellLevelAt(swell, t) {
+    const pts = swell.envelope;
+    if (t <= pts[0][0]) return pts[0][1];
+    for (let i = 1; i < pts.length; i++) {
+      if (t <= pts[i][0]) {
+        const [t0, l0] = pts[i - 1];
+        const [t1, l1] = pts[i];
+        return l0 + (l1 - l0) * ((t - t0) / (t1 - t0));
+      }
+    }
+    return pts[pts.length - 1][1];
+  }
+
+  // One sound, two strands: a low struck bowl at the root —
+  // its partials hanging together — and a breath of filtered
+  // noise rising slowly beneath it, both breathing through
+  // the one envelope.
+  function playSwell(swell, offset) {
+    const ctx = audioCtx;
+    const now = ctx.currentTime + 0.05;
+    const remaining = swell.dur - offset;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(swellLevelAt(swell, offset) * 0.6, now);
+    for (const [t, level] of swell.envelope) {
+      if (t > offset) g.gain.linearRampToValueAtTime(level * 0.6, now + (t - offset));
+    }
+    g.connect(audioMaster);
+    const partials = [[1, 1], [1.5, 0.38], [2.02, 0.5], [2.74, 0.27], [3.76, 0.14]];
+    for (const [ratio, amp] of partials) {
+      const og = ctx.createGain();
+      og.gain.value = amp;
+      const o = ctx.createOscillator();
+      o.type = "sine";
+      o.frequency.value = swell.freq * ratio;
+      o.connect(og);
+      og.connect(g);
+      o.start(now);
+      o.stop(now + remaining + 0.1);
+      swellSources.push(o);
+    }
+    const noise = noiseSource();
+    if (noise) {
+      const bp = ctx.createBiquadFilter();
+      bp.type = "bandpass";
+      bp.Q.value = 1.1;
+      const riseEnd = Math.max(0.1, Math.min(7 - offset, remaining));
+      bp.frequency.setValueAtTime(offset < 7 ? 240 + 640 * (offset / 7) : 880, now);
+      bp.frequency.linearRampToValueAtTime(880, now + riseEnd);
+      if (remaining > riseEnd) {
+        bp.frequency.linearRampToValueAtTime(320, now + remaining);
+      }
+      const ng = ctx.createGain();
+      ng.gain.value = 0.14;
+      noise.connect(bp);
+      bp.connect(ng);
+      ng.connect(g);
+      noise.start(now);
+      noise.stop(now + remaining + 0.1);
+      swellSources.push(noise);
+    }
+  }
+
+  function stopSound() {
+    swellSources = [];
     if (!audioCtx) return;
     const ctx = audioCtx;
     const master = audioMaster;
@@ -771,128 +787,6 @@
     return src;
   }
 
-  // The palette, in miniature — the same five voices the
-  // re-score brief names, each a small recipe, nothing sampled.
-  function playVoice(voice, freq, when, dur, gain) {
-    if (!audioCtx || !audioMaster) return;
-    const ctx = audioCtx;
-    if (voice === "pluck") {
-      const g = ctx.createGain();
-      g.gain.setValueAtTime(0, when);
-      g.gain.linearRampToValueAtTime(gain, when + 0.005);
-      g.gain.exponentialRampToValueAtTime(0.0001, when + dur);
-      g.connect(audioMaster);
-      const body = ctx.createOscillator();
-      body.type = "triangle";
-      body.frequency.value = freq;
-      body.connect(g);
-      body.start(when); body.stop(when + dur + 0.05);
-      const g2 = ctx.createGain();
-      g2.gain.setValueAtTime(0, when);
-      g2.gain.linearRampToValueAtTime(gain * 0.35, when + 0.004);
-      g2.gain.exponentialRampToValueAtTime(0.0001, when + dur * 0.4);
-      g2.connect(audioMaster);
-      const octave = ctx.createOscillator();
-      octave.type = "sine";
-      octave.frequency.value = freq * 2;
-      octave.connect(g2);
-      octave.start(when); octave.stop(when + dur * 0.4 + 0.05);
-    } else if (voice === "cello") {
-      const g = ctx.createGain();
-      const attack = Math.min(0.9, dur * 0.25);
-      g.gain.setValueAtTime(0, when);
-      g.gain.linearRampToValueAtTime(gain, when + attack);
-      g.gain.setValueAtTime(gain, when + Math.max(attack, dur - 1.2));
-      g.gain.linearRampToValueAtTime(0, when + dur);
-      const lp = ctx.createBiquadFilter();
-      lp.type = "lowpass";
-      lp.frequency.value = 520;
-      lp.connect(g);
-      g.connect(audioMaster);
-      const saw = ctx.createOscillator();
-      saw.type = "sawtooth";
-      saw.frequency.value = freq;
-      saw.connect(lp);
-      saw.start(when); saw.stop(when + dur + 0.05);
-      const sine = ctx.createOscillator();
-      sine.type = "sine";
-      sine.frequency.value = freq;
-      const sg = ctx.createGain();
-      sg.gain.value = 0.55;
-      sine.connect(sg); sg.connect(g);
-      sine.start(when); sine.stop(when + dur + 0.05);
-    } else if (voice === "bowl") {
-      const partials = [[1, 1], [2.02, 0.55], [2.74, 0.32], [3.76, 0.18]];
-      for (const [ratio, amp] of partials) {
-        const g = ctx.createGain();
-        g.gain.setValueAtTime(0, when);
-        g.gain.linearRampToValueAtTime(gain * amp, when + 0.006);
-        g.gain.exponentialRampToValueAtTime(0.0001, when + dur);
-        g.connect(audioMaster);
-        const o = ctx.createOscillator();
-        o.type = "sine";
-        o.frequency.value = freq * ratio;
-        o.connect(g);
-        o.start(when); o.stop(when + dur + 0.05);
-      }
-    } else if (voice === "drum") {
-      const g = ctx.createGain();
-      g.gain.setValueAtTime(0, when);
-      g.gain.linearRampToValueAtTime(gain * 0.5, when + 0.006);
-      g.gain.exponentialRampToValueAtTime(0.0001, when + 0.3);
-      g.connect(audioMaster);
-      const o = ctx.createOscillator();
-      o.type = "sine";
-      o.frequency.setValueAtTime(112, when);
-      o.frequency.exponentialRampToValueAtTime(48, when + 0.12);
-      o.connect(g);
-      o.start(when); o.stop(when + 0.35);
-      const noise = noiseSource();
-      if (noise) {
-        const ng = ctx.createGain();
-        ng.gain.setValueAtTime(gain * 0.12, when);
-        ng.gain.exponentialRampToValueAtTime(0.0001, when + 0.07);
-        const lp = ctx.createBiquadFilter();
-        lp.type = "lowpass";
-        lp.frequency.value = 320;
-        noise.connect(lp); lp.connect(ng); ng.connect(audioMaster);
-        noise.start(when); noise.stop(when + 0.1);
-      }
-    } else if (voice === "flute") {
-      const g = ctx.createGain();
-      g.gain.setValueAtTime(0, when);
-      g.gain.linearRampToValueAtTime(gain, when + 0.13);
-      g.gain.setValueAtTime(gain, when + Math.max(0.13, dur - 0.25));
-      g.gain.linearRampToValueAtTime(0, when + dur);
-      g.connect(audioMaster);
-      const o = ctx.createOscillator();
-      o.type = "sine";
-      o.frequency.value = freq;
-      const lfo = ctx.createOscillator();
-      lfo.frequency.value = 5.2;
-      const lfoGain = ctx.createGain();
-      lfoGain.gain.setValueAtTime(0, when);
-      lfoGain.gain.linearRampToValueAtTime(freq * 0.004, when + 0.35);
-      lfo.connect(lfoGain); lfoGain.connect(o.frequency);
-      o.connect(g);
-      o.start(when); o.stop(when + dur + 0.05);
-      lfo.start(when); lfo.stop(when + dur + 0.05);
-      const noise = noiseSource();
-      if (noise) {
-        const bp = ctx.createBiquadFilter();
-        bp.type = "bandpass";
-        bp.frequency.value = freq;
-        bp.Q.value = 9;
-        const ng = ctx.createGain();
-        ng.gain.setValueAtTime(0, when);
-        ng.gain.linearRampToValueAtTime(gain * 0.1, when + 0.15);
-        ng.gain.linearRampToValueAtTime(0, when + dur);
-        noise.connect(bp); bp.connect(ng); ng.connect(audioMaster);
-        noise.start(when); noise.stop(when + dur + 0.05);
-      }
-    }
-  }
-
   function buildOverlay() {
     const wrap = $(".sphere-canvas-wrap");
     if (!wrap) return null;
@@ -911,7 +805,7 @@
         <div class="evo-visual" data-evo="visual"></div>
         <p class="evo-line" data-evo="line"></p>
         <p class="evo-today" data-evo="today"></p>
-        <p class="evo-sound" data-evo="sound" hidden>The opening carries a score — touch anywhere to let it in.</p>
+        <p class="evo-sound" data-evo="sound" hidden>The opening carries a sound — touch anywhere to let it in.</p>
         <div class="evo-controls">
           <button type="button" class="evo-btn evo-skip" data-evo="skip">Skip the story</button>
           <span class="evo-dots" data-evo="dots" aria-hidden="true"></span>
@@ -1053,29 +947,49 @@
     renderStage();
   }
 
+  // The seen flag is earned here — at the moment a first
+  // beat actually paints. requestAnimationFrame waits for
+  // the visitor's eyes: an overlay built in a background tab,
+  // or a load that never reaches a paint, leaves the flag
+  // unset, and the visitor's first real look still meets the
+  // opening. The session flag is set at the same moment, so
+  // a botched load retries on the next visit while a shown
+  // opening never repeats within the session.
+  let openingRendered = false;
+
+  function markSeenOnceRendered() {
+    requestAnimationFrame(() => {
+      if (!overlay || openingRendered) return;
+      openingRendered = true;
+      storeSet(SEEN_KEY, "1");
+      sessionSet(SESSION_KEY, "1");
+    });
+  }
+
   function openOpening(source) {
     if (overlay) return;
     const wrap = $(".sphere-canvas-wrap");
     if (!wrap) return;
     lastFocus = document.activeElement;
-    sessionSet(SESSION_KEY, "1");
     document.addEventListener("keydown", onDocumentKeydown);
     overlay = buildOverlay();
     if (!overlay) return;
+    openingRendered = false;
     stageIndex = 0;
     tourIndex = 0;
     if (shouldPlayFilm({ reducedMotion })) {
       // The film: it starts moving silently, on its own
-      // timing. The first touch arms the score (see armScore);
-      // a door replay is opened BY a touch, so its score is
+      // timing. The first touch arms the sound (see armSound);
+      // a door replay is opened BY a touch, so its sound is
       // armed here, inside that very tap, from the first beat.
       document.addEventListener("pointerdown", onFirstGesture, true);
       document.addEventListener("keydown", onFirstGesture, true);
       startFilm();
-      if (source === "door") armScore();
+      if (source === "door") armSound();
     } else {
       renderStage();
     }
+    markSeenOnceRendered();
     if (source === "auto") {
       try { wrap.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "center" }); } catch { /* scroll stands */ }
     }
@@ -1094,13 +1008,13 @@
     document.removeEventListener("pointerdown", onFirstGesture, true);
     document.removeEventListener("keydown", onFirstGesture, true);
     // However the opening closes — played through, skipped,
-    // or stepped out of — the film stops and the score fades
-    // with it. The seen flag below is what makes the autoplay
-    // a first-visit-only thing: played OR skipped, it never
-    // autoplays for this visitor again.
+    // or stepped out of — the film stops and the sound fades
+    // with it. The seen flag is NOT set here: it was earned
+    // at the first painted beat (markSeenOnceRendered), and
+    // a close before any paint leaves the visitor unmarked,
+    // so a botched load never costs them the opening.
     stopFilm();
-    stopScore();
-    storeSet(SEEN_KEY, "1");
+    stopSound();
     const el = overlay;
     overlay = null;
     el.classList.add("is-closing");

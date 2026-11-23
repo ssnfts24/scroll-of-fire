@@ -644,6 +644,51 @@
     }
   })();
 
+  // ── Test Layers on the Sphere — Salmon + Kyoto (Phase C) ─────
+  // Aaron approved the proving trio on Nov 23, 2026 — sky,
+  // salmon, Kyoto blossoms. The sky rides its ring (Phase C sky
+  // engine); these two recorded series load the same way as the
+  // farm: a stylesheet and a script set on the page, and nothing
+  // else in this layer changes. The module fetches a series'
+  // packed day-index only when a keeper first switches that
+  // layer on; both layers are off by default.
+  (() => {
+    if (document.querySelector("script[data-sphere-test-layers]")) return;
+    const css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = "assets/css/sphere-test-layers.css?v=20261123-1";
+    css.setAttribute("data-sphere-test-layers", "");
+    document.head.appendChild(css);
+    const s = document.createElement("script");
+    s.src = "assets/js/sphere-test-layers.js?v=20261123-1";
+    s.async = false;
+    s.setAttribute("data-sphere-test-layers", "");
+    document.head.appendChild(s);
+  })();
+
+  // ── The Sky on the Sphere (Phase C sky engine) ───────────────
+  // Aaron (Nov 23, 2026): "Get the stars and astronomy on there."
+  // The engine, the star catalog, and the dome load the same way
+  // as the farm: a stylesheet and scripts set on the page, in
+  // order, and nothing else in this layer changes. The dome reads
+  // the keeper's kept place and the cursor's selected day and
+  // computes everything on this device; it fetches nothing.
+  (() => {
+    if (document.querySelector("script[data-sphere-sky-layer]")) return;
+    const css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = "assets/css/sphere-sky-dome.css?v=20261123-1";
+    css.setAttribute("data-sphere-sky-layer", "");
+    document.head.appendChild(css);
+    for (const src of ["assets/js/astronomy/bright-stars.js?v=20261123-1", "assets/js/astronomy/sky-engine.js?v=20261123-1", "assets/js/sphere-sky-layer.js?v=20261123-1"]) {
+      const s = document.createElement("script");
+      s.src = src;
+      s.async = false;
+      s.setAttribute("data-sphere-sky-layer", "");
+      document.head.appendChild(s);
+    }
+  })();
+
   // ── The Evolution Opening (Nov 23, 2026) ─────────────────────
   // Aaron's design: the first time a visitor looks at the Sphere
   // page, it shows the calendars — the 13 Moons — then the Sphere

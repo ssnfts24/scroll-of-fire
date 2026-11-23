@@ -148,6 +148,21 @@
    "featured": true
   },
   {
+   "id": "hebrew-word-studies",
+   "title": "Hebrew Word Studies",
+   "description": "Seven Hebrew key words given the full treatment \u2014 spelling, root, morphology, semantic range, biblical examples, wordplay, cognates, traditions labelled as traditions, and uncertainties printed rather than smoothed over.",
+   "area": "scroll-scripture",
+   "category": "Scripture",
+   "resourceType": "collection",
+   "status": "live",
+   "path": "scripture/word-studies/index.html",
+   "related": [
+    "scripture-library",
+    "scroll-lexicon"
+   ],
+   "featured": false
+  },
+  {
    "id": "scroll-reader",
    "title": "Scroll Reader",
    "description": "The long-form reader with chapter navigation, source-line provenance and deep links.",
@@ -1015,6 +1030,22 @@
    "featured": false
   },
   {
+   "id": "episodes",
+   "title": "The Episode Library",
+   "description": "Every film of the Traveller's Road gathered in one room and playable where it stands: the vision trailer as its opening feature, the episodes in walking order or by land and series, a keeper's place kept on their own device by the same watch record the story's pages keep, and the planned and scripted episodes shown honestly apart.",
+   "area": "living-time",
+   "category": "Story",
+   "resourceType": "page",
+   "status": "live",
+   "path": "episodes.html",
+   "related": [
+    "travellers-map",
+    "companions",
+    "living-time-sphere"
+   ],
+   "featured": false
+  },
+  {
    "id": "aiyanas-world",
    "title": "Aiyana's World",
    "description": "Aiyana's own page in the Codex, designed by Aiyana herself: her sign and moving butterflies, a wall where visitors show their thinking and how they feel, a drawing pad — all kept only on the visitor's own device — and a story corner where additions wait for her yes before they can appear.",
@@ -1191,6 +1222,37 @@
    "path": "map.html",
    "related": [
     "manifest"
+   ],
+   "featured": false
+  },
+  {
+   "id": "provenance",
+   "title": "Where Every Number Comes From",
+   "description": "The receipt shelf for the Sphere: every dataset it shows, with its publisher, span, read date, and honest gaps.",
+   "area": "evidence",
+   "category": "Evidence",
+   "resourceType": "page",
+   "status": "live",
+   "path": "provenance.html",
+   "related": [
+    "methods",
+    "living-time-sphere",
+    "alignment-ledger"
+   ],
+   "featured": false
+  },
+  {
+   "id": "methods",
+   "title": "How the Sphere Knows — Methods",
+   "description": "How the Sphere and the Pattern Calendar compute what they claim, in plain words — and the evidence labels the whole site uses, explained once.",
+   "area": "evidence",
+   "category": "Evidence",
+   "resourceType": "page",
+   "status": "live",
+   "path": "methods.html",
+   "related": [
+    "provenance",
+    "living-time-sphere"
    ],
    "featured": false
   }
