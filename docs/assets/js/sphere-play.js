@@ -29,11 +29,21 @@
  * cursor — never a second clock — so patterns can be traced
  * across days, practices and play, and the Spark can surface
  * them truthfully. Still mode quiets the whole room.
+ *
+ * The games are also the first Pattern Quests (rung 1 — see
+ * pattern-quests.js): the Spark offers one quest a day — a
+ * question answerable only by reading this instrument, a
+ * one-tap prediction, the hunt itself, a reveal stated as a
+ * count, and an answer card kept in the Life Atlas. A quest
+ * never scores; a missed prediction is kept too, because the
+ * card records the learning. Catch the turning's minute
+ * survives only as an attention frame: a turning not caught
+ * is not recorded — only catches are written.
  */
 (function () {
   "use strict";
 
-  const VERSION = "sphere-play/1.0.0";
+  const VERSION = "sphere-play/1.2.0";
   const $ = (sel, base) => (base || document).querySelector(sel);
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -62,7 +72,19 @@
     section.setAttribute("aria-label", "Play with the Sphere");
     section.innerHTML = `
       <h2 class="sphere-play-title">Play with the Sphere</h2>
-      <p class="sphere-play-line">Three small games, played on the real Sphere. Nothing here ever shows a false day. Each one says plainly what it is, how you play, and what it teaches — and the Play button on the Sphere itself starts any of them.</p>
+      <p class="sphere-play-line">Three small games, played on the real Sphere. Nothing here ever shows a false day. Each one says plainly what it is, how you play, and what it teaches — and the Play button on the Sphere itself starts any of them. The three are also the first Pattern Quests: most days your Spark offers one — a question, a guess, a hunt, and an answer card for your Atlas.</p>
+      <div class="sphere-play-quest" data-quest-panel hidden>
+        <p class="sphere-play-quest-offer" data-quest-offer role="status"></p>
+        <p class="sphere-play-quest-question" data-quest-question></p>
+        <div class="sphere-play-quest-predictions" data-quest-predictions role="group" aria-label="Your prediction"></div>
+        <p class="sphere-play-quest-line" data-quest-line role="status"></p>
+        <div class="sphere-play-quest-actions">
+          <button type="button" class="sphere-play-btn" data-quest-take>Take the quest</button>
+          <button type="button" class="sphere-play-btn" data-quest-hint hidden>Hint — free</button>
+          <button type="button" class="sphere-play-btn" data-quest-defer>Not today</button>
+          <button type="button" class="sphere-play-btn" data-quest-dismiss>Don't offer this kind again</button>
+        </div>
+      </div>
       <div class="sphere-play-games">
         <div class="sphere-play-game" data-play-hunt>
           <h3>Find the day</h3>
@@ -80,10 +102,14 @@
         <div class="sphere-play-game" data-play-turning>
           <h3>Catch the turning</h3>
           <p class="sphere-play-status" role="status">How to play: press Arm now, and stay on this page. The day's light turns four times — at 5 and 10 in the morning, 5 in the evening, 9 at night. When the next turning comes, you have one minute to press “Caught it!”</p>
-          <p class="sphere-play-teach">What it teaches: attention — most turnings of the day pass unwitnessed; this one asks you to be there for one.</p>
+          <p class="sphere-play-teach">What it teaches: attention — most turnings of the day pass unwitnessed; this one asks you to be there for one. A turning not caught is not recorded — only catches are written.</p>
           <button type="button" class="sphere-play-btn" data-play-turning-arm>Arm</button>
           <button type="button" class="sphere-play-btn sphere-play-catch" data-play-turning-catch hidden>Caught it!</button>
         </div>
+      </div>
+      <div class="sphere-play-quest-cards" data-quest-cards hidden>
+        <h3>Answer cards — your Pattern Quest keepsakes</h3>
+        <ul data-quest-card-list></ul>
       </div>
       <p class="sphere-play-record" role="status"></p>`;
     if (talk) talk.after(section); else sidebar.after(section);
@@ -153,6 +179,17 @@
     };
 
     const recordLine = section.querySelector(".sphere-play-record");
+    const questPanel = section.querySelector("[data-quest-panel]");
+    const questOfferLine = section.querySelector("[data-quest-offer]");
+    const questQuestionEl = section.querySelector("[data-quest-question]");
+    const questPredictionsEl = section.querySelector("[data-quest-predictions]");
+    const questLine = section.querySelector("[data-quest-line]");
+    const questTakeBtn = section.querySelector("[data-quest-take]");
+    const questHintBtn = section.querySelector("[data-quest-hint]");
+    const questDeferBtn = section.querySelector("[data-quest-defer]");
+    const questDismissBtn = section.querySelector("[data-quest-dismiss]");
+    const questCardsEl = section.querySelector("[data-quest-cards]");
+    const questCardList = section.querySelector("[data-quest-card-list]");
     const noteRecord = () => {
       const Spark = window.SphereSpark;
       if (!Spark?.hasCompanion?.()) {
@@ -166,6 +203,211 @@
     };
     noteRecord();
     window.setTimeout(noteRecord, 1500);
+
+    /* ── The Pattern Quests, rung 1 ─────────────────────────────
+     * The frame around the three games: offer → question →
+     * one-tap prediction → the game itself as the hunt → reveal
+     * stated as a count → answer card in the Life Atlas →
+     * one-line close. The pure frame lives in pattern-quests.js;
+     * this is its wiring. One offer a day; a kind turned away
+     * for good is never offered again; hints are free and the
+     * Spark never just gives the answer. */
+    const PQ = window.CodexPatternQuests || null;
+    const QUEST_KINDS = PQ ? PQ.QUESTS.map(q => q.kind) : [];
+    let activeQuest = null;
+    let questTarget = null;
+
+    function questCivilDate() {
+      try {
+        const stamp = window.SphereSparkCore?.patternStamp?.(window, new Date());
+        if (stamp?.civilDate) return stamp.civilDate;
+      } catch { /* fall through to the calendar */ }
+      try {
+        const conv = window.PatternCalendar?.fromCivilDate?.({ date: new Date() });
+        if (conv?.civilDate) return conv.civilDate;
+      } catch { /* fall through */ }
+      return new Date().toISOString().slice(0, 10);
+    }
+
+    function questMemory() {
+      try { return PQ.parseMemory(window.localStorage.getItem(PQ.STORAGE_KEY)); }
+      catch { return PQ.emptyMemory(); }
+    }
+
+    function saveQuestMemory(memory) {
+      try { window.localStorage.setItem(PQ.STORAGE_KEY, PQ.serializeMemory(memory)); }
+      catch { /* storage closed: the offer simply returns another day */ }
+    }
+
+    function renderQuestPanel() {
+      if (!PQ || !questPanel || activeQuest) return;
+      const kind = PQ.chooseOfferKind(questMemory(), questCivilDate(), QUEST_KINDS);
+      const quest = kind ? PQ.questFor(kind) : null;
+      if (!quest) { questPanel.hidden = true; return; }
+      questPanel.hidden = false;
+      questPanel.dataset.questKind = quest.kind;
+      questOfferLine.textContent = `A Pattern Quest from your Spark — ${quest.title}. ${quest.offer}`;
+      questQuestionEl.textContent = "";
+      questPredictionsEl.replaceChildren();
+      questLine.textContent = "One a day, offered, never owed. Take it, leave it for today, or turn this kind away for good — all three are fine.";
+      questTakeBtn.hidden = false;
+      questDeferBtn.hidden = false;
+      questDismissBtn.hidden = false;
+      questHintBtn.hidden = true;
+    }
+
+    function renderPredictions(quest) {
+      questPredictionsEl.replaceChildren();
+      for (const opt of PQ.predictionOptionsFor(quest)) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "sphere-play-btn sphere-play-quest-guess";
+        b.textContent = opt.label;
+        b.addEventListener("click", () => {
+          if (!activeQuest) return;
+          activeQuest.predictionId = opt.id;
+          for (const sib of questPredictionsEl.querySelectorAll("button")) {
+            sib.classList.toggle("sphere-play-quest-guess-on", sib === b);
+          }
+          questLine.textContent = `Your guess: ${opt.label}. Now hunt it out of the Sphere — the answer is in the instrument, not in me.`;
+          if (activeQuest.kind === "hunt") huntBtn.click();
+          else if (activeQuest.kind === "echo") echoBtn.click();
+          else if (activeQuest.kind === "turning") armBtn.click();
+        });
+        questPredictionsEl.appendChild(b);
+      }
+    }
+
+    questTakeBtn?.addEventListener("click", () => {
+      if (!PQ) return;
+      const quest = PQ.questFor(questPanel.dataset.questKind || "");
+      if (!quest) return;
+      saveQuestMemory(PQ.noteOffer(questMemory(), questCivilDate()));
+      activeQuest = { quest, kind: quest.kind, question: null, predictionId: null, target: null };
+      questOfferLine.textContent = `${quest.title} — a Pattern Quest. ${quest.teach}`;
+      if (quest.kind === "hunt") {
+        questTarget = drawHuntTarget();
+        activeQuest.target = questTarget;
+        activeQuest.question = questTarget
+          ? PQ.questionFor(quest, { targetMoon: questTarget.moon, targetDay: questTarget.day })
+          : null;
+      } else {
+        activeQuest.question = PQ.questionFor(quest, {});
+      }
+      questQuestionEl.textContent = activeQuest.question ? `The question: ${activeQuest.question}` : "";
+      renderPredictions(quest);
+      questLine.textContent =
+        "Make your guess first — one tap. Then hunt: " +
+        (quest.kind === "hunt"
+          ? "the day is named on Find the day; move the Sphere until you stand on it."
+          : quest.kind === "echo"
+            ? "Echo plays your Spark's motif; hold it and tap it back."
+            : "Catch the turning arms; wait with the Sphere and catch the light as it turns.");
+      questTakeBtn.hidden = true;
+      questDeferBtn.hidden = true;
+      questDismissBtn.hidden = true;
+      questHintBtn.hidden = false;
+    });
+
+    questDeferBtn?.addEventListener("click", () => {
+      if (!PQ) return;
+      saveQuestMemory(PQ.deferOffer(questMemory(), questCivilDate()));
+      questPanel.hidden = true;
+    });
+
+    questDismissBtn?.addEventListener("click", () => {
+      if (!PQ) return;
+      const kind = questPanel.dataset.questKind;
+      if (kind) saveQuestMemory(PQ.dismissKind(questMemory(), kind));
+      renderQuestPanel();
+    });
+
+    questHintBtn?.addEventListener("click", () => {
+      if (!PQ || !activeQuest) return;
+      const hint = PQ.hintFor(activeQuest.quest);
+      if (hint) questLine.textContent = `A hint, free as hints are: ${hint}`;
+    });
+
+    async function loadQuestCards() {
+      if (!PQ || !questCardsEl || !window.CodexRecordHelpers?.createRepositoryResolver) return;
+      try {
+        const resolver = window.CodexRecordHelpers.createRepositoryResolver();
+        const repository = resolver ? await resolver() : null;
+        if (!repository) return;
+        const records = await repository.query({});
+        const cards = PQ.foldAnswerCards(records);
+        questCardList.replaceChildren();
+        if (!cards.length) { questCardsEl.hidden = true; return; }
+        questCardsEl.hidden = false;
+        for (const card of cards.slice(0, 12)) {
+          const li = document.createElement("li");
+          li.textContent =
+            `${card.title}${card.civilDate ? ` · ${card.civilDate}` : ""} — ${card.question || ""} ` +
+            `Your guess: ${card.prediction || "—"} (${card.predictionCorrect ? "it stood" : "it missed, and taught"}). ${card.reveal || ""}`;
+          questCardList.appendChild(li);
+        }
+      } catch { /* no shelf rather than a wrong one */ }
+    }
+
+    /* A finished game, when a quest is riding it, becomes the
+     * quest's reveal and its answer card. A game finished with
+     * no quest riding it is just a game — the play log already
+     * holds it, and no card is made. */
+    async function finishQuest(kind, facts) {
+      if (!PQ || !activeQuest || activeQuest.kind !== kind) return;
+      const current = activeQuest;
+      if (kind === "hunt" && current.target && facts.patternDay !== current.target.patternDay) {
+        /* A free round landed first: the quest follows the day
+         * actually hunted, and says so. */
+        current.target = { moon: facts.targetMoon, day: facts.targetDay, patternDay: facts.patternDay };
+        current.question = PQ.questionFor(current.quest, { targetMoon: facts.targetMoon, targetDay: facts.targetDay });
+        questQuestionEl.textContent = current.question ? `The question: ${current.question}` : "";
+        questLine.textContent = "That round was a free one — the quest's question now names the day you just found. Guess again if you like; the hunt stands.";
+        return;
+      }
+      const judged = PQ.judge(current.quest, current.predictionId, facts);
+      activeQuest = null;
+      if (!judged) { renderQuestPanel(); return; }
+      let cardLine = "";
+      try {
+        const helpers = window.CodexRecordHelpers;
+        const resolver = helpers?.createRepositoryResolver?.();
+        const repository = resolver ? await resolver() : null;
+        const conversion = window.PatternCalendar?.fromCivilDate
+          ? window.PatternCalendar.fromCivilDate({ date: new Date() })
+          : null;
+        const record = repository && conversion
+          ? PQ.buildAnswerCardRecord(
+              {
+                questId: current.quest.id,
+                question: current.question,
+                predictionId: current.predictionId,
+                predictionCorrect: judged.correct,
+                reveal: judged.revealText,
+                count: judged.count
+              },
+              helpers.temporalFromConversion(conversion, new Date())
+            )
+          : null;
+        if (repository && record) {
+          await repository.put(record);
+          helpers.notifyRecordsChanged({ source: "pattern-quest", kind: "answer-card" });
+          cardLine = " Your answer card is kept in your Life Atlas.";
+          void loadQuestCards();
+        }
+      } catch { /* the reveal still stands; no card is claimed that was not written */ }
+      if (!cardLine) cardLine = " The answer card could not be written just now — the reveal above still stands.";
+      questPanel.hidden = false;
+      questOfferLine.textContent = `${current.quest.title} — the reveal.`;
+      questQuestionEl.textContent = current.question ? `The question was: ${current.question}` : "";
+      questPredictionsEl.replaceChildren();
+      questLine.textContent =
+        `${judged.revealText} ${judged.correct ? "Your guess stood." : "Your guess missed — and now you know, which is the point."}${cardLine} ${current.quest.close}`;
+      questTakeBtn.hidden = true;
+      questHintBtn.hidden = true;
+      questDeferBtn.hidden = true;
+      questDismissBtn.hidden = true;
+    }
 
     const stillLine = () => {
       const still = isStill();
@@ -197,15 +439,18 @@
         stageSay(`You found it — Moon ${target.moon} · Day ${target.day}. The Sphere itself says so.`, 9000);
         window.SphereSpark?.soundMotif?.("day");
         window.SphereSpark?.logPlay?.("hunt", { target: { moon: target.moon, day: target.day, patternDay: target.patternDay } });
+        void finishQuest("hunt", { patternDay: target.patternDay, targetMoon: target.moon, targetDay: target.day });
         noteRecord();
       }
     }
 
-    huntBtn.addEventListener("click", () => {
+    // A true coordinate, a little way from today, drawn from the
+    // calendar itself. The game names it; the keeper finds it.
+    // A quest that is riding the hunt draws its target first and
+    // hands it here, so the question and the hunt name one day.
+    function drawHuntTarget() {
       const PC = window.PatternCalendar;
-      if (!PC?.fromCivilDate) { huntStatus.textContent = "The calendar is still waking up — try again in a moment."; return; }
-      // A true coordinate, a little way from today, drawn from the
-      // calendar itself. The game names it; the keeper finds it.
+      if (!PC?.fromCivilDate) return null;
       const today = PC.fromCivilDate({ date: new Date() });
       const todayPd = today?.dayOfPatternYear || 218;
       let pd = todayPd + 20 + Math.floor(Math.random() * 120);
@@ -213,10 +458,17 @@
       if (pd === todayPd) pd = (pd % 364) + 1;
       const moon = Math.floor((pd - 1) / 28) + 1;
       const day = ((pd - 1) % 28) + 1;
-      huntTarget = { moon, day, patternDay: pd };
+      return { moon, day, patternDay: pd };
+    }
+
+    huntBtn.addEventListener("click", () => {
+      const drawn = questTarget || drawHuntTarget();
+      questTarget = null;
+      if (!drawn) { huntStatus.textContent = "The calendar is still waking up — try again in a moment."; return; }
+      huntTarget = drawn;
       lastHuntStanding = null;
-      huntStatus.textContent = `Find this day: Moon ${moon} · Day ${day}. Spin the Sphere, tap a moon and a day, or use Choose a day — as you move, the Sphere tells you which day you are standing on.`;
-      stageSay(`Find this day: Moon ${moon} · Day ${day}. Spin the Sphere until you are standing on it.`);
+      huntStatus.textContent = `Find this day: Moon ${drawn.moon} · Day ${drawn.day}. Spin the Sphere, tap a moon and a day, or use Choose a day — as you move, the Sphere tells you which day you are standing on.`;
+      stageSay(`Find this day: Moon ${drawn.moon} · Day ${drawn.day}. Spin the Sphere until you are standing on it.`);
       $(".sphere-wrapper")?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
     });
 
@@ -289,6 +541,7 @@
                 stageEchoPads(false);
                 Spark.soundMotif("day");
                 Spark.logPlay("echo", { notes: echoSequence.length });
+                void finishQuest("echo", { notes: echoSequence.length });
                 echoSequence = [];
                 echoBtn.textContent = "Play again";
                 noteRecord();
@@ -394,6 +647,7 @@
       stageSay(`Caught — the light turned to ${band}, and you were here for it.`, 9000);
       window.SphereSpark?.soundMotif?.("day");
       window.SphereSpark?.logPlay?.("turning", { band });
+      void finishQuest("turning", { band });
       noteRecord();
     });
 
@@ -409,6 +663,8 @@
     motionSel?.addEventListener("change", stillLine);
     new MutationObserver(stillLine).observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     stillLine();
+    renderQuestPanel();
+    void loadQuestCards();
     return section;
   }
 
