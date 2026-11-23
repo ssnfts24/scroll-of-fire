@@ -1,0 +1,350 @@
+/*
+ * The Evolution Opening — how the Sphere grew, told on the Sphere.
+ *
+ * Styles for sphere-evolution-opening.js only: a first-visit
+ * opening that stands over the Sphere's stage and steps aside
+ * into the real, live Sphere. The palette is the Sphere's own —
+ * the dark disc (#0a0a14) and the gold the instrument itself
+ * marks today with. Loaded by the loader in
+ * sphere-companion-layer.js; nothing here touches the protected
+ * sphere stylesheet.
+ */
+
+.evo-opening {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+.evo-opening .evo-scrim {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 38%, rgba(16, 16, 30, 0.86), rgba(6, 6, 12, 0.96));
+  transition: opacity 0.45s ease;
+}
+
+.evo-opening.is-closing {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.evo-opening .evo-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(600px, 100%);
+  max-height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  background: rgba(12, 12, 22, 0.94);
+  border: 1px solid rgba(251, 191, 36, 0.28);
+  border-radius: 16px;
+  padding: 14px 20px 12px;
+  color: #f1e9d6;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+  text-align: center;
+}
+
+.evo-opening .evo-demo {
+  margin: 0 0 5px;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(251, 191, 36, 0.85);
+}
+
+.evo-opening .evo-kicker {
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(241, 233, 214, 0.62);
+}
+
+.evo-opening .evo-title {
+  margin: 3px 0 7px;
+  font-size: 1.45rem;
+  line-height: 1.2;
+  font-weight: 600;
+  color: #fdf6e0;
+}
+
+.evo-opening .evo-visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 7px;
+  /* The visual is the one part that may scroll: on a short
+     screen the words and the controls stay standing, and the
+     picture gives ground. */
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.evo-opening .evo-visual > * {
+  animation: evo-in 0.45s ease both;
+}
+
+@keyframes evo-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+
+.evo-opening .evo-line {
+  margin: 0 auto 6px;
+  max-width: 46ch;
+  font-size: 0.98rem;
+  line-height: 1.45;
+  color: rgba(241, 233, 214, 0.92);
+}
+
+.evo-opening .evo-today {
+  margin: 0 auto 4px;
+  font-size: 0.9rem;
+  color: #ffd97a;
+}
+
+.evo-opening .evo-today:empty { display: none; }
+
+.evo-opening .evo-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.evo-opening .evo-nav {
+  display: inline-flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.evo-opening .evo-btn {
+  appearance: none;
+  border: 1px solid rgba(241, 233, 214, 0.35);
+  background: rgba(255, 255, 255, 0.05);
+  color: #f1e9d6;
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.evo-opening .evo-btn:hover,
+.evo-opening .evo-btn:focus-visible {
+  border-color: rgba(251, 191, 36, 0.8);
+  color: #ffd97a;
+}
+
+.evo-opening .evo-next,
+.evo-opening .evo-cta {
+  background: rgba(251, 191, 36, 0.16);
+  border-color: rgba(251, 191, 36, 0.65);
+  color: #ffe9a8;
+  font-weight: 600;
+}
+
+.evo-opening .evo-skip {
+  border-color: transparent;
+  background: transparent;
+  color: rgba(241, 233, 214, 0.66);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.evo-opening .evo-dots {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.evo-opening .evo-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(241, 233, 214, 0.28);
+}
+
+.evo-opening .evo-dot.is-on {
+  background: #fbbf24;
+}
+
+/* ── Stage 1: the flat calendar ─────────────────────────────── */
+
+.evo-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+  gap: 8px;
+  width: 100%;
+  padding: 2px;
+  box-sizing: border-box;
+}
+
+.evo-cal-moon {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 5px 6px 6px;
+  background: rgba(255, 255, 255, 0.03);
+  text-align: left;
+}
+
+.evo-cal-moon.is-today-moon {
+  border-color: rgba(251, 191, 36, 0.75);
+  background: rgba(220, 160, 80, 0.12);
+}
+
+.evo-cal-moon-name {
+  margin: 0 0 3px;
+  font-size: 0.66rem;
+  letter-spacing: 0.02em;
+  color: rgba(241, 233, 214, 0.78);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.evo-cal-moon-name span {
+  color: #ffd97a;
+  font-weight: 700;
+}
+
+.evo-cal-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.evo-cal-day {
+  font-size: 0.58rem;
+  line-height: 1.3;
+  text-align: center;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(241, 233, 214, 0.66);
+}
+
+.evo-cal-day.is-today {
+  background: #fbbf24;
+  color: #20180a;
+  font-weight: 700;
+}
+
+/* ── Stage 2: the first Sphere ──────────────────────────────── */
+
+.evo-first-sphere-svg {
+  width: min(340px, 78vw);
+  height: auto;
+  display: block;
+}
+
+/* ── Stage 3: the reveal — the overlay steps aside ──────────── */
+
+.evo-opening.is-reveal {
+  pointer-events: none;
+  align-items: flex-end;
+}
+
+.evo-opening.is-reveal .evo-scrim {
+  opacity: 0;
+}
+
+.evo-opening.is-reveal .evo-card {
+  pointer-events: auto;
+  width: min(600px, 100%);
+  padding: 12px 16px 10px;
+}
+
+.evo-opening.is-reveal .evo-visual,
+.evo-opening.is-reveal .evo-demo {
+  display: none;
+}
+
+.evo-opening.is-reveal .evo-title {
+  font-size: 1.15rem;
+  margin-bottom: 4px;
+}
+
+/* ── Stage 4: the Spark ─────────────────────────────────────── */
+
+.evo-spark-figure {
+  width: 118px;
+  height: 118px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: evo-in 0.45s ease both, evo-drift 5.5s ease-in-out 0.5s infinite;
+}
+
+.evo-spark-figure svg {
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes evo-drift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+.evo-tour-count {
+  margin: 0;
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(241, 233, 214, 0.55);
+}
+
+/* ── Reduced motion: stills, same words ─────────────────────── */
+
+.evo-opening.is-still .evo-visual > *,
+.evo-opening.is-still .evo-spark-figure {
+  animation: none;
+}
+
+.evo-opening.is-still .evo-scrim {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .evo-opening .evo-visual > *,
+  .evo-spark-figure {
+    animation: none;
+  }
+  .evo-opening .evo-scrim {
+    transition: none;
+  }
+}
+
+/* ── Small screens ──────────────────────────────────────────── */
+
+@media (max-width: 480px) {
+  .evo-opening {
+    padding: 8px;
+  }
+  .evo-opening .evo-card {
+    padding: 14px 14px 10px;
+    border-radius: 14px;
+  }
+  .evo-opening .evo-title {
+    font-size: 1.25rem;
+  }
+  .evo-cal-grid {
+    grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  }
+  .evo-first-sphere-svg {
+    width: min(300px, 82vw);
+  }
+  .evo-spark-figure {
+    width: 96px;
+    height: 96px;
+  }
+}
