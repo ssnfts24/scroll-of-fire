@@ -98,9 +98,9 @@
 
 | Stylesheet | Pages |
 | --- | --- |
-| `docs/assets/css/spark-companion.css` | 181 |
-| `docs/assets/css/living-ui.css` | 141 |
-| `docs/scripture/assets/scripture.css` | 93 |
+| `docs/assets/css/spark-companion.css` | 189 |
+| `docs/assets/css/living-ui.css` | 149 |
+| `docs/scripture/assets/scripture.css` | 101 |
 | `docs/assets/css/spark-agent-seat.css` | 78 |
 | `docs/assets/css/codex.css` | 57 |
 | `docs/assets/css/navigation.css` | 45 |
@@ -113,11 +113,11 @@
 
 | Script | Pages |
 | --- | --- |
-| `docs/assets/js/spark-companion.js` | 181 |
-| `docs/assets/js/spark-presence.js` | 180 |
-| `docs/assets/js/site.js` | 144 |
-| `docs/assets/js/living-ui.js` | 141 |
-| `docs/scripture/assets/scripture.js` | 93 |
+| `docs/assets/js/spark-companion.js` | 189 |
+| `docs/assets/js/spark-presence.js` | 188 |
+| `docs/assets/js/site.js` | 152 |
+| `docs/assets/js/living-ui.js` | 149 |
+| `docs/scripture/assets/scripture.js` | 101 |
 | `docs/assets/js/spark-relations.js` | 84 |
 | `docs/assets/js/heaven-sound.js` | 80 |
 | `docs/assets/js/spark-agent-seat.js` | 78 |
