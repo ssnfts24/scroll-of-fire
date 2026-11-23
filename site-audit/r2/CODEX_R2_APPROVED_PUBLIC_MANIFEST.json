@@ -346,6 +346,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/css/sphere-day-world-adapter.css",
+      "sha256": "5698653aa5e6f601bbc3b584e7a63b06fc00f0e9000f90dc3efdf2042d4f7048",
+      "publicUrl": "https://codexofreality.org/assets/css/sphere-day-world-adapter.css",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/css/sphere-day-world.css",
       "sha256": "80d05d8535a21dcf693d2eb70708f8f757aed57fdd43bd3572bba8b4041f743f",
       "publicUrl": "https://codexofreality.org/assets/css/sphere-day-world.css",
@@ -461,7 +467,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "aa54b9bd87a55363307cd111ce539ebc8823f1f58e7a13bf75f02cdba0da3bbd",
+      "sha256": "f05533c93aa38ea4113aad3d5e8b5937a45da1a550e54b45c280000ce97dc595",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -2459,8 +2465,14 @@
     },
     {
       "path": "docs/assets/js/sphere-companion-layer.js",
-      "sha256": "c1d362300e6f4de73578760fa8630bb0106747d2d3e09cb5f1e4ebb6eb3f6d5f",
+      "sha256": "5370e203e60f9bdd129ff8fd98256d2e18fd141344e21b8a028d281a9825d0b0",
       "publicUrl": "https://codexofreality.org/assets/js/sphere-companion-layer.js",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/js/sphere-day-world-adapter.js",
+      "sha256": "8863184db7cf4f9ccdeb401fb40e16c340918d0709ac0e4f6a646e901f8ab8ba",
+      "publicUrl": "https://codexofreality.org/assets/js/sphere-day-world-adapter.js",
       "status": "operational"
     },
     {
@@ -10994,6 +11006,12 @@
     {
       "path": "docs/development/TEMPORAL-AUTHORITY-CONTRACT.md",
       "publicUrl": "https://codexofreality.org/development/TEMPORAL-AUTHORITY-CONTRACT.md",
+      "eligibility": "restricted-review",
+      "reason": "Engineering report or specification under the publish tree"
+    },
+    {
+      "path": "docs/development/living-sphere-evolution-phase-b.md",
+      "publicUrl": "https://codexofreality.org/development/living-sphere-evolution-phase-b.md",
       "eligibility": "restricted-review",
       "reason": "Engineering report or specification under the publish tree"
     },
