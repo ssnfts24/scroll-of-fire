@@ -644,6 +644,106 @@
     }
   })();
 
+  // ── Test Layers on the Sphere — Salmon + Kyoto (Phase C) ─────
+  // Aaron approved the proving trio on Nov 23, 2026 — sky,
+  // salmon, Kyoto blossoms. The sky rides its ring (Phase C sky
+  // engine); these two recorded series load the same way as the
+  // farm: a stylesheet and a script set on the page, and nothing
+  // else in this layer changes. The module fetches a series'
+  // packed day-index only when a keeper first switches that
+  // layer on; both layers are off by default.
+  (() => {
+    if (document.querySelector("script[data-sphere-test-layers]")) return;
+    const css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = "assets/css/sphere-test-layers.css?v=20261123-1";
+    css.setAttribute("data-sphere-test-layers", "");
+    document.head.appendChild(css);
+    const s = document.createElement("script");
+    s.src = "assets/js/sphere-test-layers.js?v=20261123-1";
+    s.async = false;
+    s.setAttribute("data-sphere-test-layers", "");
+    document.head.appendChild(s);
+  })();
+
+  // ── The Sky on the Sphere (Phase C sky engine) ───────────────
+  // Aaron (Nov 23, 2026): "Get the stars and astronomy on there."
+  // The engine, the star catalog, and the dome load the same way
+  // as the farm: a stylesheet and scripts set on the page, in
+  // order, and nothing else in this layer changes. The dome reads
+  // the keeper's kept place and the cursor's selected day and
+  // computes everything on this device; it fetches nothing.
+  (() => {
+    if (document.querySelector("script[data-sphere-sky-layer]")) return;
+    const css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = "assets/css/sphere-sky-dome.css?v=20261123-1";
+    css.setAttribute("data-sphere-sky-layer", "");
+    document.head.appendChild(css);
+    for (const src of ["assets/js/astronomy/bright-stars.js?v=20261123-1", "assets/js/astronomy/sky-engine.js?v=20261123-1", "assets/js/sphere-sky-layer.js?v=20261123-1"]) {
+      const s = document.createElement("script");
+      s.src = src;
+      s.async = false;
+      s.setAttribute("data-sphere-sky-layer", "");
+      document.head.appendChild(s);
+    }
+  })();
+
+  // ── The Evolution Opening (Nov 23, 2026) ─────────────────────
+  // Aaron's design: the first time a visitor looks at the Sphere
+  // page, it shows the calendars — the 13 Moons — then the Sphere
+  // as it looked when it first started, then it evolves into the
+  // Sphere it is now; then the Spark appears and gives the tour.
+  // Amended the same day, on Aaron's word over the preview: the
+  // opening plays itself as a short film — a "Welcome to the
+  // Sphere" title beat, the stages on their own timing, a score
+  // synthesised in the module (sound only from a first touch) —
+  // automatically for a first-time visitor only.
+  // The opening lives in its own module; this loader is the only
+  // hook — it sets the module's stylesheet and script on the page,
+  // and nothing else in this layer changes. No protected file is
+  // touched: the opening presents, the kernel stays the kernel.
+  (() => {
+    if (document.querySelector("script[data-sphere-evolution-opening]")) return;
+    // Catch the URL the visitor ARRIVED with, now, while this
+    // layer first runs. The Sphere keeps its own state in the
+    // address bar as it works (its UI writes the year and the
+    // selected marker there), so a module that reads the address
+    // later cannot tell a shared view from the instrument's own
+    // bookkeeping. This layer runs before that first writing;
+    // the opening judges the visit by this caught URL alone.
+    try {
+      if (typeof window.__sofEvolutionOpeningArrival !== "string") {
+        window.__sofEvolutionOpeningArrival = window.location.search || "";
+      }
+    } catch { /* the catch stands unset; the module falls back */ }
+    const css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = "assets/css/sphere-evolution-opening.css?v=20261123-2";
+    css.setAttribute("data-sphere-evolution-opening", "");
+    document.head.appendChild(css);
+    const s = document.createElement("script");
+    s.src = "assets/js/sphere-evolution-opening.js?v=20261123-2";
+    s.async = false;
+    s.setAttribute("data-sphere-evolution-opening", "");
+    document.head.appendChild(s);
+  })();
+
+  // ── Front Door §d (Nov 23, 2026): the keeper's one-tap share ──
+  // The Observatory page itself is R1.7-protected, so the share
+  // surface rides this layer's loader, the same way the farm
+  // module does: one guarded script, nothing else changes. The
+  // module (front-door-share.js) reads only public globals and
+  // drives only its own buttons beside the sidebar's export.
+  (() => {
+    if (document.querySelector("script[data-front-door-share]")) return;
+    const s = document.createElement("script");
+    s.src = "assets/js/front-door-share.js?v=20261123-1";
+    s.async = false;
+    s.setAttribute("data-front-door-share", "");
+    document.head.appendChild(s);
+  })();
+
   // ── The Day World (Phase B, Living Sphere Evolution) ─────────
   // Aaron (Nov 22, 2026): "Start phase B." The selected day's world
   // lives in its own presentation-adapter module, registered with
@@ -655,11 +755,11 @@
     if (document.querySelector("script[data-sphere-day-world]")) return;
     const css = document.createElement("link");
     css.rel = "stylesheet";
-    css.href = "assets/css/sphere-day-world-adapter.css?v=20261122-2";
+    css.href = "assets/css/sphere-day-world-adapter.css?v=20261122-3";
     css.setAttribute("data-sphere-day-world", "");
     document.head.appendChild(css);
     const s = document.createElement("script");
-    s.src = "assets/js/sphere-day-world-adapter.js?v=20261122-2";
+    s.src = "assets/js/sphere-day-world-adapter.js?v=20261122-3";
     s.async = false;
     s.setAttribute("data-sphere-day-world", "");
     document.head.appendChild(s);

@@ -155,11 +155,17 @@ test('B7.52 UI avoids hidden alternate-view DOM churn and first-paint planner I-
   assert.match(ui, /if \(Number\(initialRect\.width\) >= 180/);
 });
 
-test('B7.52 local development does not request Google Analytics during Sphere startup', () => {
+test('B7.52 Sphere startup requests no Google Analytics in any environment', () => {
+  // The B7.52 guard once kept local development from spending
+  // startup network work on analytics while production still
+  // loaded the tracker. Aaron's no-trackers ruling (Nov 23, 2026)
+  // removed the loader entirely — he opened this protected page
+  // for exactly that change — so the stronger truth is pinned
+  // here: no analytics request exists on this page for any host.
   const sphere = read('docs/living-time-sphere.html');
-  assert.match(sphere, /127\\\.0\\\.0\\\.1\|localhost/);
-  assert.doesNotMatch(sphere, /<script async src="https:\/\/www\.googletagmanager\.com/);
-  assert.match(sphere, /document\.head\.appendChild\(script\)/);
+  assert.doesNotMatch(sphere, /googletagmanager\.com/);
+  assert.doesNotMatch(sphere, /G-2TBMEK502C/);
+  assert.doesNotMatch(sphere, /gtag/);
 });
 
 test('B7.52 cache identity reaches CSS, renderer and service worker', () => {

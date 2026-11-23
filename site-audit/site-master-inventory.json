@@ -4,19 +4,19 @@
   "baseRevision": "548e858",
   "summary": {
     "resources": 488,
-    "publicHtmlPages": 189,
-    "catalogEntries": 74,
+    "publicHtmlPages": 185,
+    "catalogEntries": 77,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 26,
+      "not-linked-directly-from-homepage": 29,
       "nav-label-differs-from-title": 24,
+      "reachable-only-through-atlas": 3,
       "no-global-navigation": 1,
-      "deployed-but-unlinked": 59,
+      "deployed-but-unlinked": 63,
       "unreachable-from-homepage": 4,
       "compatibility-redirect-page": 1,
       "not-published-in-catalog": 30,
       "unnamed-image-needs-descriptive-title": 21,
-      "not-in-sitemap": 1,
-      "reachable-only-through-atlas": 1
+      "not-in-sitemap": 1
     }
   },
   "resources": [
@@ -146,11 +146,82 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 72,
-        "pagesWithNavLinkToIt": 73
+        "inboundPages": 75,
+        "pagesWithNavLinkToIt": 76
       },
       "issues": [
         "nav-label-differs-from-title: \"About Aaron\" vs \"Aaron Paul Laird\""
+      ]
+    },
+    {
+      "id": "aiyanas-world",
+      "title": "Aiyana's World — Codex of Reality",
+      "description": "A page in the Codex of Reality designed by Aiyana herself, where people can show their thinking, share how they feel, draw, and tell their stories.",
+      "category": "Companion",
+      "area": "living-time",
+      "relatedProjects": [
+        "companions",
+        "pattern-garden",
+        "travellers-map"
+      ],
+      "sourcePath": "docs/aiyanas-world.html",
+      "publicUrl": "https://codexofreality.org/aiyanas-world.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "13-moon-whitepaper.html",
+        "about-aaron.html",
+        "circle.html",
+        "codex-atlas.html",
+        "companions.html",
+        "covenant-caravan.html",
+        "downloads.html",
+        "ethics.html",
+        "garden.html",
+        "genesis-oracle.html",
+        "glossary.html",
+        "hub.html",
+        "index.html",
+        "invoke.html",
+        "lab.html",
+        "ledger.html",
+        "living-time-sphere.html",
+        "map.html",
+        "moons.html",
+        "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
+        "scroll/atlas.html",
+        "scroll/editorial.html",
+        "scroll/index.html",
+        "scroll/lexicon.html",
+        "scroll/search.html",
+        "shop.html",
+        "start.html",
+        "systems/archive.html",
+        "systems/frequencies.html",
+        "systems/mind-renewal.html",
+        "systems/recoder.html",
+        "systems/t-7.html",
+        "systems/witness.html",
+        "teach.html",
+        "theory.html",
+        "theory/canon.html",
+        "witness-world.html",
+        "witness.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/aiyanas-world.html",
+      "privacyEligibility": "approved-public",
+      "discoverability": {
+        "path": "aiyanas-world.html",
+        "inSitemap": true,
+        "inGlobalNav": false,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 3,
+        "pagesWithNavLinkToIt": 0
+      },
+      "issues": [
+        "not-linked-directly-from-homepage"
       ]
     },
     {
@@ -260,8 +331,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 72,
-        "pagesWithNavLinkToIt": 73
+        "inboundPages": 75,
+        "pagesWithNavLinkToIt": 76
       },
       "issues": [
         "nav-label-differs-from-title: \"Covenant Circle\" vs \"Circle Sync\""
@@ -305,8 +376,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 185,
-        "pagesWithNavLinkToIt": 180
+        "inboundPages": 181,
+        "pagesWithNavLinkToIt": 176
       },
       "issues": [
         "nav-label-differs-from-title: \"Evidence Edition\" vs \"Editorial reading and evidence\""
@@ -401,10 +472,12 @@
         "13-moon-whitepaper.html",
         "ab.html",
         "about-aaron.html",
+        "aiyanas-world.html",
         "alignment-ledger.html",
         "circle.html",
         "claims-atlas.html",
         "codex-guide.html",
+        "codex-white-paper.html",
         "companions.html",
         "covenant-caravan.html",
         "downloads.html",
@@ -422,11 +495,12 @@
         "ledger.html",
         "living-time-sphere.html",
         "map.html",
+        "methods.html",
         "micro.html",
         "moons.html",
         "practices.html",
+        "provenance.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -475,8 +549,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 185,
-        "pagesWithNavLinkToIt": 180
+        "inboundPages": 181,
+        "pagesWithNavLinkToIt": 176
       },
       "issues": [
         "nav-label-differs-from-title: \"Atlas\" vs \"Codex Atlas\""
@@ -552,6 +626,57 @@
       ]
     },
     {
+      "id": "codex-white-paper",
+      "title": "The Codex of Reality and the Living Sphere — A White Paper | Codex of Reality",
+      "description": "The Codex of Reality and the Living Sphere: a white paper describing the framework, the 13 Moons calendar, the Living Sphere and its layer programme, the Spark, and the Living Phone — with the state of each part stated honestly. By Aaron Paul Laird.",
+      "category": "Whitepaper",
+      "area": "living-time",
+      "relatedProjects": [
+        "moons",
+        "whitepaper-13-moons"
+      ],
+      "sourcePath": "docs/codex-white-paper.html",
+      "publicUrl": "https://codexofreality.org/codex-white-paper.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "13-moon-whitepaper.html",
+        "codex-atlas.html",
+        "companions.html",
+        "downloads.html",
+        "index.html",
+        "ledger.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "scroll/atlas.html",
+        "scroll/editorial.html",
+        "scroll/index.html",
+        "scroll/lexicon.html",
+        "scroll/search.html",
+        "shop.html",
+        "start.html",
+        "theory.html",
+        "witness-world.html",
+        "witness.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/codex-white-paper.html",
+      "privacyEligibility": "approved-public",
+      "discoverability": {
+        "path": "codex-white-paper.html",
+        "inSitemap": true,
+        "inGlobalNav": false,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": null,
+        "inboundPages": 1,
+        "pagesWithNavLinkToIt": 0
+      },
+      "issues": [
+        "reachable-only-through-atlas",
+        "not-linked-directly-from-homepage"
+      ]
+    },
+    {
       "id": "companions",
       "title": "Companions — Scroll of Fire | Codex of Reality",
       "description": "Meet a Spark: a small companion that is made for you on the day you adopt it. Its seed speaks its name. It is kept on your own device, and grows as you return, visit, and practice.",
@@ -566,6 +691,7 @@
       "publicationStatus": "live",
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
+        "aiyanas-world.html",
         "downloads.html",
         "index.html",
         "living-time-sphere.html",
@@ -584,7 +710,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 184,
+        "inboundPages": 180,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
@@ -650,8 +776,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 74,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 77,
+        "pagesWithNavLinkToIt": 77
       },
       "issues": [
         "nav-label-differs-from-title: \"Covenant Caravan\" vs \"The Covenant Caravan\""
@@ -676,7 +802,7 @@
     },
     {
       "id": "docs-assets:assets/css",
-      "title": "docs/assets/css (71 files)",
+      "title": "docs/assets/css (75 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -693,7 +819,7 @@
     },
     {
       "id": "docs-assets:assets/data",
-      "title": "docs/assets/data (9 files)",
+      "title": "docs/assets/data (11 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -744,7 +870,7 @@
     },
     {
       "id": "docs-assets:assets/img",
-      "title": "docs/assets/img (162 files)",
+      "title": "docs/assets/img (163 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -761,7 +887,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (212 files)",
+      "title": "docs/assets/js (222 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1825,6 +1951,25 @@
       ]
     },
     {
+      "id": "docs:development/living-sphere-evolution-opening.md",
+      "title": "development/living-sphere-evolution-opening.md",
+      "description": "Markdown document deployed inside docs/ and therefore publicly fetchable, but not linked from the site.",
+      "category": "Development document",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/development/living-sphere-evolution-opening.md",
+      "publicUrl": "https://codexofreality.org/development/living-sphere-evolution-opening.md",
+      "publicationStatus": "source-only",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "development-only-deployed-publicly",
+      "discoverability": null,
+      "issues": [
+        "deployed-but-unlinked"
+      ]
+    },
+    {
       "id": "docs:development/LIVING-SPHERE-EVOLUTION-PHASE-A-ARCHITECTURE.md",
       "title": "development/LIVING-SPHERE-EVOLUTION-PHASE-A-ARCHITECTURE.md",
       "description": "Markdown document deployed inside docs/ and therefore publicly fetchable, but not linked from the site.",
@@ -1871,6 +2016,63 @@
       "relatedProjects": [],
       "sourcePath": "docs/development/living-sphere-evolution-phase-b.md",
       "publicUrl": "https://codexofreality.org/development/living-sphere-evolution-phase-b.md",
+      "publicationStatus": "source-only",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "development-only-deployed-publicly",
+      "discoverability": null,
+      "issues": [
+        "deployed-but-unlinked"
+      ]
+    },
+    {
+      "id": "docs:development/LIVING-SPHERE-EVOLUTION-PHASE-C-SKY-ENGINE.md",
+      "title": "development/LIVING-SPHERE-EVOLUTION-PHASE-C-SKY-ENGINE.md",
+      "description": "Markdown document deployed inside docs/ and therefore publicly fetchable, but not linked from the site.",
+      "category": "Development document",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/development/LIVING-SPHERE-EVOLUTION-PHASE-C-SKY-ENGINE.md",
+      "publicUrl": "https://codexofreality.org/development/LIVING-SPHERE-EVOLUTION-PHASE-C-SKY-ENGINE.md",
+      "publicationStatus": "source-only",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "development-only-deployed-publicly",
+      "discoverability": null,
+      "issues": [
+        "deployed-but-unlinked"
+      ]
+    },
+    {
+      "id": "docs:development/LIVING-SPHERE-EVOLUTION-PHASE-C-TEST-LAYERS-SALMON-KYOTO.md",
+      "title": "development/LIVING-SPHERE-EVOLUTION-PHASE-C-TEST-LAYERS-SALMON-KYOTO.md",
+      "description": "Markdown document deployed inside docs/ and therefore publicly fetchable, but not linked from the site.",
+      "category": "Development document",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/development/LIVING-SPHERE-EVOLUTION-PHASE-C-TEST-LAYERS-SALMON-KYOTO.md",
+      "publicUrl": "https://codexofreality.org/development/LIVING-SPHERE-EVOLUTION-PHASE-C-TEST-LAYERS-SALMON-KYOTO.md",
+      "publicationStatus": "source-only",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "development-only-deployed-publicly",
+      "discoverability": null,
+      "issues": [
+        "deployed-but-unlinked"
+      ]
+    },
+    {
+      "id": "docs:development/living-sphere-temporal-worlds-slice.md",
+      "title": "development/living-sphere-temporal-worlds-slice.md",
+      "description": "Markdown document deployed inside docs/ and therefore publicly fetchable, but not linked from the site.",
+      "category": "Development document",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/development/living-sphere-temporal-worlds-slice.md",
+      "publicUrl": "https://codexofreality.org/development/living-sphere-temporal-worlds-slice.md",
       "publicationStatus": "source-only",
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [],
@@ -1940,6 +2142,7 @@
         "covenant-caravan.html",
         "downloads.html",
         "ethics.html",
+        "garden.html",
         "genesis-oracle.html",
         "glossary.html",
         "guide.html",
@@ -1950,7 +2153,6 @@
         "living-time-sphere.html",
         "moons.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -1980,7 +2182,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 0,
         "hopsFromHomeWithoutAtlas": 0,
-        "inboundPages": 186,
+        "inboundPages": 182,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -2390,7 +2592,6 @@
         "scripture/exodus/01.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -2409,8 +2610,8 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
         "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 100,
-        "pagesWithNavLinkToIt": 101
+        "inboundPages": 92,
+        "pagesWithNavLinkToIt": 93
       },
       "issues": []
     },
@@ -2479,7 +2680,6 @@
         "scripture/genesis/01.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -2498,8 +2698,8 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
         "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 100,
-        "pagesWithNavLinkToIt": 101
+        "inboundPages": 92,
+        "pagesWithNavLinkToIt": 93
       },
       "issues": []
     },
@@ -2567,7 +2767,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -2655,7 +2854,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -2743,7 +2941,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -2831,7 +3028,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -2919,7 +3115,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -3007,7 +3202,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -3095,7 +3289,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -3183,7 +3376,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -3271,7 +3463,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -3359,7 +3550,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -3447,7 +3637,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -3535,7 +3724,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -3623,7 +3811,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -3711,7 +3898,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -3799,7 +3985,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -3887,7 +4072,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -3975,7 +4159,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -4063,7 +4246,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -4151,7 +4333,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -4239,7 +4420,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -4327,7 +4507,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -4415,7 +4594,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -4503,7 +4681,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -4591,7 +4768,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -4679,7 +4855,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -4767,7 +4942,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -4855,7 +5029,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -4943,7 +5116,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -5031,7 +5203,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -5119,7 +5290,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -5207,7 +5377,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -5295,7 +5464,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -5383,7 +5551,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -5471,7 +5638,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -5559,7 +5725,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -5647,7 +5812,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -5735,7 +5899,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -5823,7 +5986,6 @@
         "scripture/exodus/40.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -5911,7 +6073,6 @@
         "scripture/exodus/39.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -6009,7 +6170,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -6028,8 +6188,8 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
         "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 100,
-        "pagesWithNavLinkToIt": 101
+        "inboundPages": 92,
+        "pagesWithNavLinkToIt": 93
       },
       "issues": []
     },
@@ -6107,7 +6267,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -6205,7 +6364,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -6303,7 +6461,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -6401,7 +6558,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -6499,7 +6655,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -6597,7 +6752,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -6695,7 +6849,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -6793,7 +6946,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -6891,7 +7043,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -6989,7 +7140,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -7087,7 +7237,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -7185,7 +7334,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -7283,7 +7431,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -7381,7 +7528,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -7479,7 +7625,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -7577,7 +7722,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -7675,7 +7819,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -7773,7 +7916,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -7871,7 +8013,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -7969,7 +8110,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -8067,7 +8207,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -8165,7 +8304,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -8263,7 +8401,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -8361,7 +8498,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -8459,7 +8595,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -8557,7 +8692,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -8655,7 +8789,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -8753,7 +8886,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -8851,7 +8983,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -8949,7 +9080,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -9047,7 +9177,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -9145,7 +9274,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -9243,7 +9371,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -9341,7 +9468,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -9439,7 +9565,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -9537,7 +9662,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -9635,7 +9759,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -9733,7 +9856,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -9831,7 +9953,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -9929,7 +10050,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -10027,7 +10147,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -10125,7 +10244,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -10223,7 +10341,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -10321,7 +10438,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -10419,7 +10535,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -10517,7 +10632,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -10615,7 +10729,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -10713,7 +10826,6 @@
         "scripture/genesis/48.html",
         "scripture/genesis/50.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -10811,7 +10923,6 @@
         "scripture/genesis/48.html",
         "scripture/genesis/49.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -10861,7 +10972,6 @@
         "scripture/exodus/01.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -10881,380 +10991,6 @@
         "hopsFromHome": 2,
         "hopsFromHomeWithoutAtlas": 2,
         "inboundPages": 1,
-        "pagesWithNavLinkToIt": 0
-      },
-      "issues": []
-    },
-    {
-      "id": "docs:scripture/word-studies/adam.html",
-      "title": "Adam — אָדָם — Hebrew Word Studies · Scroll of Fire",
-      "description": "אָדָם (adam, H120) — full Hebrew treatment: spelling, root, morphology, semantic range, Genesis examples, wordplay, cognates, translation alternatives, traditions and uncertainties.",
-      "category": "Scripture",
-      "area": "scroll-scripture",
-      "relatedProjects": [
-        "scroll-library",
-        "genesis-oracle",
-        "scroll-lexicon"
-      ],
-      "sourcePath": "docs/scripture/word-studies/adam.html",
-      "publicUrl": "https://codexofreality.org/scripture/word-studies/adam.html",
-      "publicationStatus": "live",
-      "lastVerifiedSourceRevision": "548e858",
-      "relatedPages": [
-        "codex-atlas.html",
-        "companions.html",
-        "downloads.html",
-        "index.html",
-        "living-time-sphere.html",
-        "moons.html",
-        "scripture/about.html",
-        "scripture/exodus/01.html",
-        "scripture/genesis/01.html",
-        "scripture/index.html",
-        "scripture/word-studies/adamah.html",
-        "scripture/word-studies/enosh.html",
-        "scripture/word-studies/index.html",
-        "scripture/word-studies/nephesh.html",
-        "scripture/word-studies/shem.html",
-        "scroll/atlas.html",
-        "scroll/editorial.html",
-        "scroll/index.html",
-        "scroll/lexicon.html",
-        "scroll/search.html",
-        "shop.html",
-        "witness-world.html",
-        "witness.html"
-      ],
-      "canonicalUrl": "https://codexofreality.org/scripture/word-studies/adam.html",
-      "privacyEligibility": "approved-public",
-      "discoverability": {
-        "path": "scripture/word-studies/adam.html",
-        "inSitemap": true,
-        "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 6,
-        "pagesWithNavLinkToIt": 0
-      },
-      "issues": []
-    },
-    {
-      "id": "docs:scripture/word-studies/adamah.html",
-      "title": "Adamah — אֲדָמָה — Hebrew Word Studies · Scroll of Fire",
-      "description": "אֲדָמָה (adamah, H127) — full Hebrew treatment: the ground-word of the adam cluster, its curse-and-lifting arc in Genesis, cognates, traditions and uncertainties.",
-      "category": "Scripture",
-      "area": "scroll-scripture",
-      "relatedProjects": [
-        "scroll-library",
-        "genesis-oracle",
-        "scroll-lexicon"
-      ],
-      "sourcePath": "docs/scripture/word-studies/adamah.html",
-      "publicUrl": "https://codexofreality.org/scripture/word-studies/adamah.html",
-      "publicationStatus": "live",
-      "lastVerifiedSourceRevision": "548e858",
-      "relatedPages": [
-        "codex-atlas.html",
-        "companions.html",
-        "downloads.html",
-        "index.html",
-        "living-time-sphere.html",
-        "moons.html",
-        "scripture/about.html",
-        "scripture/exodus/01.html",
-        "scripture/genesis/01.html",
-        "scripture/index.html",
-        "scripture/word-studies/adam.html",
-        "scripture/word-studies/enosh.html",
-        "scripture/word-studies/index.html",
-        "scripture/word-studies/shem.html",
-        "scroll/atlas.html",
-        "scroll/editorial.html",
-        "scroll/index.html",
-        "scroll/lexicon.html",
-        "scroll/search.html",
-        "shop.html",
-        "witness-world.html",
-        "witness.html"
-      ],
-      "canonicalUrl": "https://codexofreality.org/scripture/word-studies/adamah.html",
-      "privacyEligibility": "approved-public",
-      "discoverability": {
-        "path": "scripture/word-studies/adamah.html",
-        "inSitemap": true,
-        "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 3,
-        "pagesWithNavLinkToIt": 0
-      },
-      "issues": []
-    },
-    {
-      "id": "docs:scripture/word-studies/enosh.html",
-      "title": "Enosh — אֱנוֹשׁ — Hebrew Word Studies · Scroll of Fire",
-      "description": "אֱנוֹשׁ (enosh, H582) — full Hebrew treatment: man as mortal, the incurable root, Genesis and Psalm examples, both traditions on Genesis 4:26, and uncertainties.",
-      "category": "Scripture",
-      "area": "scroll-scripture",
-      "relatedProjects": [
-        "scroll-library",
-        "genesis-oracle",
-        "scroll-lexicon"
-      ],
-      "sourcePath": "docs/scripture/word-studies/enosh.html",
-      "publicUrl": "https://codexofreality.org/scripture/word-studies/enosh.html",
-      "publicationStatus": "live",
-      "lastVerifiedSourceRevision": "548e858",
-      "relatedPages": [
-        "codex-atlas.html",
-        "companions.html",
-        "downloads.html",
-        "index.html",
-        "living-time-sphere.html",
-        "moons.html",
-        "scripture/about.html",
-        "scripture/exodus/01.html",
-        "scripture/genesis/01.html",
-        "scripture/index.html",
-        "scripture/word-studies/adam.html",
-        "scripture/word-studies/adamah.html",
-        "scripture/word-studies/index.html",
-        "scripture/word-studies/ruach.html",
-        "scripture/word-studies/shem.html",
-        "scroll/atlas.html",
-        "scroll/editorial.html",
-        "scroll/index.html",
-        "scroll/lexicon.html",
-        "scroll/search.html",
-        "shop.html",
-        "witness-world.html",
-        "witness.html"
-      ],
-      "canonicalUrl": "https://codexofreality.org/scripture/word-studies/enosh.html",
-      "privacyEligibility": "approved-public",
-      "discoverability": {
-        "path": "scripture/word-studies/enosh.html",
-        "inSitemap": true,
-        "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 4,
-        "pagesWithNavLinkToIt": 0
-      },
-      "issues": []
-    },
-    {
-      "id": "docs:scripture/word-studies/nephesh.html",
-      "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies · Scroll of Fire",
-      "description": "נֶפֶשׁ (nephesh, H5315) — full Hebrew treatment: life and being, animals as nephesh chayyah, the 'soul' question handled plainly, cognates, traditions and uncertainties.",
-      "category": "Scripture",
-      "area": "scroll-scripture",
-      "relatedProjects": [
-        "scroll-library",
-        "genesis-oracle",
-        "scroll-lexicon"
-      ],
-      "sourcePath": "docs/scripture/word-studies/nephesh.html",
-      "publicUrl": "https://codexofreality.org/scripture/word-studies/nephesh.html",
-      "publicationStatus": "live",
-      "lastVerifiedSourceRevision": "548e858",
-      "relatedPages": [
-        "codex-atlas.html",
-        "companions.html",
-        "downloads.html",
-        "index.html",
-        "living-time-sphere.html",
-        "moons.html",
-        "scripture/about.html",
-        "scripture/exodus/01.html",
-        "scripture/genesis/01.html",
-        "scripture/index.html",
-        "scripture/word-studies/adam.html",
-        "scripture/word-studies/index.html",
-        "scripture/word-studies/or.html",
-        "scripture/word-studies/ruach.html",
-        "scripture/word-studies/shem.html",
-        "scroll/atlas.html",
-        "scroll/editorial.html",
-        "scroll/index.html",
-        "scroll/lexicon.html",
-        "scroll/search.html",
-        "shop.html",
-        "witness-world.html",
-        "witness.html"
-      ],
-      "canonicalUrl": "https://codexofreality.org/scripture/word-studies/nephesh.html",
-      "privacyEligibility": "approved-public",
-      "discoverability": {
-        "path": "scripture/word-studies/nephesh.html",
-        "inSitemap": true,
-        "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 4,
-        "pagesWithNavLinkToIt": 0
-      },
-      "issues": []
-    },
-    {
-      "id": "docs:scripture/word-studies/or.html",
-      "title": "Or — אוֹר — Hebrew Word Studies · Scroll of Fire",
-      "description": "אוֹר (or, H216) — full Hebrew treatment: light, the day-one light against the day-four luminaries, the hidden-light tradition labelled, cognates and uncertainties.",
-      "category": "Scripture",
-      "area": "scroll-scripture",
-      "relatedProjects": [
-        "scroll-library",
-        "genesis-oracle",
-        "scroll-lexicon"
-      ],
-      "sourcePath": "docs/scripture/word-studies/or.html",
-      "publicUrl": "https://codexofreality.org/scripture/word-studies/or.html",
-      "publicationStatus": "live",
-      "lastVerifiedSourceRevision": "548e858",
-      "relatedPages": [
-        "codex-atlas.html",
-        "companions.html",
-        "downloads.html",
-        "index.html",
-        "living-time-sphere.html",
-        "moons.html",
-        "scripture/about.html",
-        "scripture/exodus/01.html",
-        "scripture/genesis/01.html",
-        "scripture/index.html",
-        "scripture/word-studies/adam.html",
-        "scripture/word-studies/index.html",
-        "scripture/word-studies/nephesh.html",
-        "scripture/word-studies/ruach.html",
-        "scripture/word-studies/shem.html",
-        "scroll/atlas.html",
-        "scroll/editorial.html",
-        "scroll/index.html",
-        "scroll/lexicon.html",
-        "scroll/search.html",
-        "shop.html",
-        "witness-world.html",
-        "witness.html"
-      ],
-      "canonicalUrl": "https://codexofreality.org/scripture/word-studies/or.html",
-      "privacyEligibility": "approved-public",
-      "discoverability": {
-        "path": "scripture/word-studies/or.html",
-        "inSitemap": true,
-        "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 4,
-        "pagesWithNavLinkToIt": 0
-      },
-      "issues": []
-    },
-    {
-      "id": "docs:scripture/word-studies/ruach.html",
-      "title": "Ruach — רוּחַ — Hebrew Word Studies · Scroll of Fire",
-      "description": "רוּחַ (ruach, H7307) — full Hebrew treatment: wind, breath and spirit with BDB's own sense-counts, the Genesis 1:2 dispute, cognates, traditions and uncertainties.",
-      "category": "Scripture",
-      "area": "scroll-scripture",
-      "relatedProjects": [
-        "scroll-library",
-        "genesis-oracle",
-        "scroll-lexicon"
-      ],
-      "sourcePath": "docs/scripture/word-studies/ruach.html",
-      "publicUrl": "https://codexofreality.org/scripture/word-studies/ruach.html",
-      "publicationStatus": "live",
-      "lastVerifiedSourceRevision": "548e858",
-      "relatedPages": [
-        "codex-atlas.html",
-        "companions.html",
-        "downloads.html",
-        "index.html",
-        "living-time-sphere.html",
-        "moons.html",
-        "scripture/about.html",
-        "scripture/exodus/01.html",
-        "scripture/genesis/01.html",
-        "scripture/index.html",
-        "scripture/word-studies/adam.html",
-        "scripture/word-studies/enosh.html",
-        "scripture/word-studies/index.html",
-        "scripture/word-studies/nephesh.html",
-        "scripture/word-studies/or.html",
-        "scroll/atlas.html",
-        "scroll/editorial.html",
-        "scroll/index.html",
-        "scroll/lexicon.html",
-        "scroll/search.html",
-        "shop.html",
-        "witness-world.html",
-        "witness.html"
-      ],
-      "canonicalUrl": "https://codexofreality.org/scripture/word-studies/ruach.html",
-      "privacyEligibility": "approved-public",
-      "discoverability": {
-        "path": "scripture/word-studies/ruach.html",
-        "inSitemap": true,
-        "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 4,
-        "pagesWithNavLinkToIt": 0
-      },
-      "issues": []
-    },
-    {
-      "id": "docs:scripture/word-studies/shem.html",
-      "title": "Shem — שֵׁם — Hebrew Word Studies · Scroll of Fire",
-      "description": "שֵׁם (shem, H8034) — full Hebrew treatment: name, reputation and the Name; Babel against Abram; the Name that is not pronounced, documented and labelled.",
-      "category": "Scripture",
-      "area": "scroll-scripture",
-      "relatedProjects": [
-        "scroll-library",
-        "genesis-oracle",
-        "scroll-lexicon"
-      ],
-      "sourcePath": "docs/scripture/word-studies/shem.html",
-      "publicUrl": "https://codexofreality.org/scripture/word-studies/shem.html",
-      "publicationStatus": "live",
-      "lastVerifiedSourceRevision": "548e858",
-      "relatedPages": [
-        "codex-atlas.html",
-        "companions.html",
-        "downloads.html",
-        "index.html",
-        "living-time-sphere.html",
-        "moons.html",
-        "scripture/about.html",
-        "scripture/exodus/01.html",
-        "scripture/genesis/01.html",
-        "scripture/index.html",
-        "scripture/word-studies/index.html",
-        "scripture/word-studies/or.html",
-        "scroll/atlas.html",
-        "scroll/editorial.html",
-        "scroll/index.html",
-        "scroll/lexicon.html",
-        "scroll/search.html",
-        "shop.html",
-        "witness-world.html",
-        "witness.html"
-      ],
-      "canonicalUrl": "https://codexofreality.org/scripture/word-studies/shem.html",
-      "privacyEligibility": "approved-public",
-      "discoverability": {
-        "path": "scripture/word-studies/shem.html",
-        "inSitemap": true,
-        "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 6,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -12817,8 +12553,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 186,
-        "pagesWithNavLinkToIt": 78
+        "inboundPages": 182,
+        "pagesWithNavLinkToIt": 82
       },
       "issues": [
         "nav-label-differs-from-title: \"Downloads\" vs \"Downloads & Integrity\""
@@ -12931,8 +12667,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 73
+        "inboundPages": 76,
+        "pagesWithNavLinkToIt": 76
       },
       "issues": [
         "nav-label-differs-from-title: \"Ethics\" vs \"Ethics & Coherence Law\""
@@ -12998,8 +12734,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 76,
+        "pagesWithNavLinkToIt": 77
       },
       "issues": []
     },
@@ -13045,8 +12781,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 74,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 77,
+        "pagesWithNavLinkToIt": 77
       },
       "issues": [
         "nav-label-differs-from-title: \"Genesis Oracle\" vs \"The Genesis Oracle\""
@@ -13114,8 +12850,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 77,
-        "pagesWithNavLinkToIt": 73
+        "inboundPages": 80,
+        "pagesWithNavLinkToIt": 76
       },
       "issues": [
         "nav-label-differs-from-title: \"Glossary\" vs \"Glossary of the Codex\""
@@ -13255,61 +12991,6 @@
       "issues": []
     },
     {
-      "id": "hebrew-word-studies",
-      "title": "Hebrew Word Studies — Scripture · Scroll of Fire",
-      "description": "Seven Hebrew key words given the full treatment — spelling, root, semantic range, biblical examples, wordplay, cognates, traditions and printed uncertainties.",
-      "category": "Scripture",
-      "area": "scroll-scripture",
-      "relatedProjects": [
-        "scripture-library",
-        "scroll-lexicon"
-      ],
-      "sourcePath": "docs/scripture/word-studies/index.html",
-      "publicUrl": "https://codexofreality.org/scripture/word-studies/index.html",
-      "publicationStatus": "live",
-      "lastVerifiedSourceRevision": "548e858",
-      "relatedPages": [
-        "codex-atlas.html",
-        "companions.html",
-        "downloads.html",
-        "index.html",
-        "living-time-sphere.html",
-        "moons.html",
-        "scripture/about.html",
-        "scripture/exodus/01.html",
-        "scripture/genesis/01.html",
-        "scripture/index.html",
-        "scripture/word-studies/adam.html",
-        "scripture/word-studies/adamah.html",
-        "scripture/word-studies/enosh.html",
-        "scripture/word-studies/nephesh.html",
-        "scripture/word-studies/or.html",
-        "scripture/word-studies/ruach.html",
-        "scripture/word-studies/shem.html",
-        "scroll/atlas.html",
-        "scroll/editorial.html",
-        "scroll/index.html",
-        "scroll/lexicon.html",
-        "scroll/search.html",
-        "shop.html",
-        "witness-world.html",
-        "witness.html"
-      ],
-      "canonicalUrl": "https://codexofreality.org/scripture/word-studies/index.html",
-      "privacyEligibility": "approved-public",
-      "discoverability": {
-        "path": "scripture/word-studies/index.html",
-        "inSitemap": true,
-        "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 102,
-        "pagesWithNavLinkToIt": 101
-      },
-      "issues": []
-    },
-    {
       "id": "hub",
       "title": "Systems Hub — Scroll of Fire | Codex of Reality",
       "description": "Hub for Codex of Reality systems: Resonant Physics Engine (T-7), Frequency Governance, Mind-Renewal Protocol, Remnant Network, Linguistic Recoder, and Interactive Archive.",
@@ -13369,8 +13050,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 76,
+        "pagesWithNavLinkToIt": 77
       },
       "issues": [
         "nav-label-differs-from-title: \"Year Map\" vs \"Systems Hub\""
@@ -13435,8 +13116,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 72,
-        "pagesWithNavLinkToIt": 73
+        "inboundPages": 75,
+        "pagesWithNavLinkToIt": 76
       },
       "issues": [
         "nav-label-differs-from-title: \"Invoke\" vs \"Invocation Lab\""
@@ -13511,8 +13192,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 72,
-        "pagesWithNavLinkToIt": 73
+        "inboundPages": 75,
+        "pagesWithNavLinkToIt": 76
       },
       "issues": []
     },
@@ -13576,8 +13257,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 76,
-        "pagesWithNavLinkToIt": 76
+        "inboundPages": 80,
+        "pagesWithNavLinkToIt": 80
       },
       "issues": []
     },
@@ -13622,8 +13303,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 186,
-        "pagesWithNavLinkToIt": 3
+        "inboundPages": 182,
+        "pagesWithNavLinkToIt": 4
       },
       "issues": []
     },
@@ -13686,10 +13367,80 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 74,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 77,
+        "pagesWithNavLinkToIt": 77
       },
       "issues": []
+    },
+    {
+      "id": "methods",
+      "title": "How the Sphere Knows — Methods — Scroll of Fire | Codex of Reality",
+      "description": "How the Living Sphere and the Pattern Calendar compute what they claim, in plain words: the one chain of time, how a date becomes a Pattern Day, the on-device sky, the day-line, and the evidence labels the whole site uses, explained once.",
+      "category": "Evidence",
+      "area": "evidence",
+      "relatedProjects": [
+        "provenance",
+        "living-time-sphere"
+      ],
+      "sourcePath": "docs/methods.html",
+      "publicUrl": "https://codexofreality.org/methods.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "13-moon-whitepaper.html",
+        "about-aaron.html",
+        "circle.html",
+        "codex-atlas.html",
+        "companions.html",
+        "covenant-caravan.html",
+        "downloads.html",
+        "ethics.html",
+        "genesis-oracle.html",
+        "glossary.html",
+        "hub.html",
+        "index.html",
+        "invoke.html",
+        "lab.html",
+        "ledger.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "provenance.html",
+        "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
+        "scroll/atlas.html",
+        "scroll/editorial.html",
+        "scroll/index.html",
+        "scroll/lexicon.html",
+        "scroll/search.html",
+        "shop.html",
+        "start.html",
+        "systems/archive.html",
+        "systems/frequencies.html",
+        "systems/mind-renewal.html",
+        "systems/recoder.html",
+        "systems/t-7.html",
+        "systems/witness.html",
+        "teach.html",
+        "theory.html",
+        "theory/canon.html",
+        "witness-world.html",
+        "witness.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/methods.html",
+      "privacyEligibility": "approved-public",
+      "discoverability": {
+        "path": "methods.html",
+        "inSitemap": true,
+        "inGlobalNav": false,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": null,
+        "inboundPages": 2,
+        "pagesWithNavLinkToIt": 0
+      },
+      "issues": [
+        "reachable-only-through-atlas",
+        "not-linked-directly-from-homepage"
+      ]
     },
     {
       "id": "micro",
@@ -13818,8 +13569,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 72,
-        "pagesWithNavLinkToIt": 73
+        "inboundPages": 75,
+        "pagesWithNavLinkToIt": 76
       },
       "issues": [
         "nav-label-differs-from-title: \"Mind Renewal\" vs \"Mind-Renewal Protocol\""
@@ -13891,8 +13642,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 187,
-        "pagesWithNavLinkToIt": 180
+        "inboundPages": 183,
+        "pagesWithNavLinkToIt": 176
       },
       "issues": [
         "nav-label-differs-from-title: \"13 Moons\" vs \"Remnant 13 Moons\""
@@ -13956,15 +13707,13 @@
         "path": "garden.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 4,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 6,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "planned-timeline",
@@ -14109,6 +13858,77 @@
       ]
     },
     {
+      "id": "provenance",
+      "title": "Where Every Number Comes From — Scroll of Fire | Codex of Reality",
+      "description": "The receipt shelf for the Living Sphere: every dataset it shows — Bonneville salmon counts, the Kyoto blossom record, the computed sky, the 39-county farm record, the calendar fixtures — with its publisher, span, read date, and honest gaps.",
+      "category": "Evidence",
+      "area": "evidence",
+      "relatedProjects": [
+        "methods",
+        "living-time-sphere",
+        "alignment-ledger"
+      ],
+      "sourcePath": "docs/provenance.html",
+      "publicUrl": "https://codexofreality.org/provenance.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "13-moon-whitepaper.html",
+        "about-aaron.html",
+        "circle.html",
+        "codex-atlas.html",
+        "companions.html",
+        "covenant-caravan.html",
+        "downloads.html",
+        "ethics.html",
+        "genesis-oracle.html",
+        "glossary.html",
+        "hub.html",
+        "index.html",
+        "invoke.html",
+        "lab.html",
+        "ledger.html",
+        "living-time-sphere.html",
+        "methods.html",
+        "moons.html",
+        "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
+        "scroll/atlas.html",
+        "scroll/editorial.html",
+        "scroll/index.html",
+        "scroll/lexicon.html",
+        "scroll/search.html",
+        "shop.html",
+        "start.html",
+        "systems/archive.html",
+        "systems/frequencies.html",
+        "systems/mind-renewal.html",
+        "systems/recoder.html",
+        "systems/t-7.html",
+        "systems/witness.html",
+        "teach.html",
+        "theory.html",
+        "theory/canon.html",
+        "witness-world.html",
+        "witness.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/provenance.html",
+      "privacyEligibility": "approved-public",
+      "discoverability": {
+        "path": "provenance.html",
+        "inSitemap": true,
+        "inGlobalNav": false,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": null,
+        "inboundPages": 2,
+        "pagesWithNavLinkToIt": 0
+      },
+      "issues": [
+        "reachable-only-through-atlas",
+        "not-linked-directly-from-homepage"
+      ]
+    },
+    {
       "id": "recoder",
       "title": "Living Dictionary of Reality — Scroll of Fire",
       "description": "The Living Dictionary of Reality: a Scroll of Fire language engine for recoding old terms into covenant speech, coherence language, pattern maps, Codex notes, and reality relationships.",
@@ -14167,8 +13987,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 72,
-        "pagesWithNavLinkToIt": 73
+        "inboundPages": 75,
+        "pagesWithNavLinkToIt": 76
       },
       "issues": [
         "nav-label-differs-from-title: \"Reality Recoder\" vs \"Living Dictionary of Reality\""
@@ -14394,7 +14214,7 @@
     },
     {
       "id": "repo-folder:scripts",
-      "title": "scripts/ (33 files)",
+      "title": "scripts/ (36 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -14462,7 +14282,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (196 files)",
+      "title": "tests/ (214 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -18640,7 +18460,6 @@
         "scripture/genesis/49.html",
         "scripture/genesis/50.html",
         "scripture/lemma.html",
-        "scripture/word-studies/index.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -18659,8 +18478,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 102,
-        "pagesWithNavLinkToIt": 101
+        "inboundPages": 94,
+        "pagesWithNavLinkToIt": 93
       },
       "issues": []
     },
@@ -18702,8 +18521,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 184,
-        "pagesWithNavLinkToIt": 180
+        "inboundPages": 180,
+        "pagesWithNavLinkToIt": 176
       },
       "issues": []
     },
@@ -18746,8 +18565,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 184,
-        "pagesWithNavLinkToIt": 180
+        "inboundPages": 180,
+        "pagesWithNavLinkToIt": 176
       },
       "issues": []
     },
@@ -18795,8 +18614,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 185,
-        "pagesWithNavLinkToIt": 180
+        "inboundPages": 181,
+        "pagesWithNavLinkToIt": 176
       },
       "issues": [
         "nav-label-differs-from-title: \"Scroll Library\" vs \"Scroll of Fire\""
@@ -18882,8 +18701,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 185,
-        "pagesWithNavLinkToIt": 180
+        "inboundPages": 181,
+        "pagesWithNavLinkToIt": 176
       },
       "issues": [
         "nav-label-differs-from-title: \"Search the Scroll Library\" vs \"Search the Scroll\""
@@ -19016,8 +18835,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 185,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 181,
+        "pagesWithNavLinkToIt": 77
       },
       "issues": [
         "nav-label-differs-from-title: \"Artifact Registry\" vs \"Artifact Registry & Shop\""
@@ -19151,8 +18970,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 75,
-        "pagesWithNavLinkToIt": 75
+        "inboundPages": 79,
+        "pagesWithNavLinkToIt": 79
       },
       "issues": []
     },
@@ -19215,8 +19034,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 72,
-        "pagesWithNavLinkToIt": 73
+        "inboundPages": 75,
+        "pagesWithNavLinkToIt": 76
       },
       "issues": [
         "nav-label-differs-from-title: \"Systems Archive\" vs \"Interactive Archive\""
@@ -19281,8 +19100,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 72,
-        "pagesWithNavLinkToIt": 73
+        "inboundPages": 75,
+        "pagesWithNavLinkToIt": 76
       },
       "issues": [
         "nav-label-differs-from-title: \"T-7 Conduit\" vs \"T-7 Resonant Engine\""
@@ -19547,8 +19366,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 72,
-        "pagesWithNavLinkToIt": 73
+        "inboundPages": 75,
+        "pagesWithNavLinkToIt": 76
       },
       "issues": [
         "nav-label-differs-from-title: \"Canon\" vs \"Canon 0–17\""
@@ -20061,8 +19880,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 78,
-        "pagesWithNavLinkToIt": 78
+        "inboundPages": 82,
+        "pagesWithNavLinkToIt": 82
       },
       "issues": [
         "nav-label-differs-from-title: \"Theory\" vs \"Theory Hub\""
@@ -20727,6 +20546,7 @@
       "relatedPages": [
         "13-moon-whitepaper.html",
         "about-aaron.html",
+        "aiyanas-world.html",
         "circle.html",
         "codex-atlas.html",
         "companions.html",
@@ -20770,13 +20590,12 @@
         "inGlobalNav": false,
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": null,
-        "inboundPages": 1,
+        "hopsFromHomeWithoutAtlas": 3,
+        "inboundPages": 2,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
         "not-in-sitemap",
-        "reachable-only-through-atlas",
         "not-linked-directly-from-homepage"
       ]
     },
@@ -20823,8 +20642,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 77,
-        "pagesWithNavLinkToIt": 76
+        "inboundPages": 81,
+        "pagesWithNavLinkToIt": 79
       },
       "issues": [
         "nav-label-differs-from-title: \"13 Moons Whitepaper\" vs \"Remnant Rollout Whitepaper\""
@@ -20876,8 +20695,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 74,
-        "pagesWithNavLinkToIt": 73
+        "inboundPages": 77,
+        "pagesWithNavLinkToIt": 76
       },
       "issues": [
         "nav-label-differs-from-title: \"Remnant Whitepaper\" vs \"Scroll of Fire · Codex of Reality · Remnant Whitepaper\""
@@ -20944,7 +20763,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 184,
+        "inboundPages": 180,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -21008,8 +20827,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 72,
-        "pagesWithNavLinkToIt": 73
+        "inboundPages": 75,
+        "pagesWithNavLinkToIt": 76
       },
       "issues": [
         "nav-label-differs-from-title: \"Witness System\" vs \"Remnant Witness Ledger\""
@@ -21075,7 +20894,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 184,
+        "inboundPages": 180,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []

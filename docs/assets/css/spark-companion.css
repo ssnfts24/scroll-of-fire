@@ -131,6 +131,41 @@
   to { opacity: 1; transform: scale(1.15); }
 }
 
+/* Their flame wrap (wrap: 1): the licks breathe at rest — a
+ * gentle rise and settle, each on its own delay and its kind's
+ * period, both set where the flame is drawn. The breath is a
+ * sway from the lick's own root, never a jump. */
+.spark-flame-lick {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: spark-flame-breathe 3.6s ease-in-out infinite alternate;
+}
+
+@keyframes spark-flame-breathe {
+  from { transform: scaleY(0.93) rotate(-1.2deg); }
+  to { transform: scaleY(1.07) rotate(1.6deg); }
+}
+
+/* At work — leading, thinking, guiding — the flame gathers:
+ * brighter, and leaning a little toward where the Spark is
+ * leading. One honest signal, lit only by real work; at rest
+ * it is simply not there. */
+.spark-flame.is-working {
+  transform-box: fill-box;
+  transform-origin: 50% 90%;
+  transform: rotate(-2.5deg);
+  filter: brightness(1.18) saturate(1.1);
+}
+
+/* The size ladder, at the sizes that shed detail: the flame
+ * simplifies first — its detail licks step aside and the core
+ * flame (then the crown alone) carries the look — and the kind
+ * colour, the last carrier of identity, never changes. */
+.spark-ember-art .spark-flame-detail,
+.sphere-spark-art .spark-flame-detail {
+  display: none;
+}
+
 /* It turns to face the way it travels. */
 .spark-presence-art.is-flipped {
   transform: scaleX(-1);
@@ -261,6 +296,9 @@
   .spark-presence-button { animation: none; }
   /* Their motes rest where they were drawn: a still glow. */
   .spark-mote { animation: none; }
+  /* Their flame rests too: drawn, and still. */
+  .spark-flame-lick { animation: none; }
+  .spark-flame.is-working { transform: none; filter: none; }
   .spark-presence-art.is-walking svg { animation: none; }
   .spark-presence-art.is-delighted svg { animation: none; }
   .spark-presence-art.is-spinning svg { animation: none; }

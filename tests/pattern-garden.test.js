@@ -483,3 +483,453 @@ test("the garden page carries the Pattern Garden, not the mushrooms", () => {
   assert.ok(!page.includes('id="garden-old-passes"'), "the passes section is gone — Aaron removed the passes legacy (Nov 20, 2026)");
   assert.ok(!page.includes("Your Shroom Search passes"), "no pass display remains on the page");
 });
+
+/* ------------- the completion: grading, waiting, doctrine -------------
+ * (Nov 23, 2026 — the play redesign's garden answers, built: the
+ * harvest line stays 7; below it a planting is tended, not failed,
+ * and its seed is gathered back; harvests and returns wait for the
+ * keeper's hand; nothing earned evaporates.) */
+
+function temporalYear(civilDate, year, opts = {}) {
+  return { ...temporalOn(civilDate, opts), patternYear: year };
+}
+
+function todayYear(civilDate, moon, patternYear) {
+  return { civilDate, patternYear, moon, outsideDay: false };
+}
+
+function plantYear(civilDate, plantedDate, { moon = 4, anchorYear = 2026, cropId = "kale", cropName = "Kale", seedBackPlantingId = null, seedId = null, foundSeed = false } = {}) {
+  return Schema.createLifeRecord(
+    Garden.buildPlantRecord(
+      { moon, anchorYear, cropId, cropName, method: "sow", plantedCivilDate: plantedDate, seedBackPlantingId, seedId, foundSeed },
+      temporalYear(civilDate, anchorYear, { moon })
+    )
+  );
+}
+
+function daysFrom(start, count) {
+  const out = [];
+  const base = new Date(`${start}T12:00:00Z`).getTime();
+  for (let i = 0; i < count; i += 1) out.push(new Date(base + i * 86400000).toISOString().slice(0, 10));
+  return out;
+}
+
+test("the grade line: slept at none, tended below seven, kept at seven, flourished at half the Moon", () => {
+  assert.deepEqual([...Garden.GRADES], ["slept", "tended", "kept", "flourished"]);
+  assert.equal(Garden.gradeFor(0), "slept");
+  assert.equal(Garden.gradeFor(1), "tended");
+  assert.equal(Garden.gradeFor(6), "tended");
+  assert.equal(Garden.gradeFor(7), "kept");
+  assert.equal(Garden.gradeFor(13), "kept");
+  assert.equal(Garden.gradeFor(14), "flourished");
+  assert.equal(Garden.gradeFor(28), "flourished");
+});
+
+test("a turned planting is graded on its bed; a growing one is not graded yet", () => {
+  const slept = plantYear("2026-06-12", "2026-06-12", { moon: 3, cropId: "peas", cropName: "Peas" });
+  const tended = plantYear("2026-07-10", "2026-07-10", { moon: 4 });
+  const keptP = plantYear("2026-08-07", "2026-08-07", { moon: 5, cropId: "beans", cropName: "Beans" });
+  const flourished = plantYear("2026-05-15", "2026-05-15", { moon: 2, cropId: "corn", cropName: "Corn" });
+  const growing = plantYear("2026-09-04", "2026-09-04", { moon: 6, cropId: "squash", cropName: "Squash" });
+  const state = Garden.foldGarden({
+    records: [slept, tended, keptP, flourished, growing],
+    keptDates: [
+      ...daysFrom("2026-07-10", 3),
+      ...daysFrom("2026-08-07", 9),
+      ...daysFrom("2026-05-15", 15),
+      ...daysFrom("2026-09-04", 4)
+    ],
+    today: todayOn("2026-09-15", 6),
+    moonNames: []
+  });
+  const grade = m => state.beds[m - 1].plantings[0].grade;
+  assert.equal(grade(3), "slept");
+  assert.equal(state.beds[2].plantings[0].goneToSeed, true);
+  assert.equal(grade(4), "tended");
+  assert.equal(state.beds[3].plantings[0].goneToSeed, true);
+  assert.equal(grade(5), "kept");
+  assert.equal(state.beds[4].plantings[0].canHarvest, true);
+  assert.equal(grade(2), "flourished");
+  assert.equal(grade(6), null, "a planting still inside its Moon is growing, not graded");
+});
+
+test("a tended planting's seed is gathered back to head its bed next year — and keeps until planted", () => {
+  const tended2026 = plantYear("2026-07-10", "2026-07-10", { moon: 4 });
+  const keptDates = daysFrom("2026-07-10", 4);
+  const folded = Garden.foldGarden({
+    records: [tended2026],
+    keptDates,
+    today: todayYear("2027-07-20", 4, 2027),
+    moonNames: []
+  });
+  assert.equal(folded.beds[3].seedBacks.length, 1);
+  assert.equal(folded.beds[3].seedBacks[0].plantingId, tended2026.id);
+  assert.equal(folded.beds[3].seedBacks[0].cropId, "kale");
+  assert.equal(folded.beds[3].seedBacks[0].anchorYear, 2026);
+
+  /* Two years on, unplanted, it is still offered. */
+  const later = Garden.foldGarden({
+    records: [tended2026],
+    keptDates,
+    today: todayYear("2028-07-20", 4, 2028),
+    moonNames: []
+  });
+  assert.equal(later.beds[3].seedBacks.length, 1);
+
+  /* Once a planting names it, the offer is spent. */
+  const planted2027 = plantYear("2027-07-12", "2027-07-12", { moon: 4, anchorYear: 2027, seedBackPlantingId: tended2026.id });
+  const after = Garden.foldGarden({
+    records: [tended2026, planted2027],
+    keptDates,
+    today: todayYear("2027-07-20", 4, 2027),
+    moonNames: []
+  });
+  assert.equal(after.beds[3].seedBacks.length, 0);
+});
+
+test("no seed is gathered from a kept or a slept planting", () => {
+  const keptP = plantYear("2026-07-10", "2026-07-10", { moon: 4, cropId: "beans", cropName: "Beans" });
+  const sleptP = plantYear("2026-08-07", "2026-08-07", { moon: 5, cropId: "corn", cropName: "Corn" });
+  const folded = Garden.foldGarden({
+    records: [keptP, sleptP],
+    keptDates: daysFrom("2026-07-10", 9),
+    today: todayYear("2027-07-20", 4, 2027),
+    moonNames: []
+  });
+  assert.equal(folded.beds[3].seedBacks.length, 0);
+  assert.equal(folded.beds[4].seedBacks.length, 0);
+});
+
+test("a past year's Ready planting waits at the garden's head until gathered", () => {
+  const ready2025 = plantYear("2025-07-10", "2025-07-10", { moon: 4, anchorYear: 2025 });
+  const keptDates = daysFrom("2025-07-10", 10);
+  const folded = Garden.foldGarden({
+    records: [ready2025],
+    keptDates,
+    today: todayOn("2026-09-15", 6),
+    moonNames: []
+  });
+  assert.equal(folded.waitingHarvests.length, 1);
+  assert.equal(folded.waitingHarvests[0].recordId, ready2025.id);
+  assert.equal(folded.waitingHarvests[0].grade, "kept");
+  assert.equal(folded.waitingHarvests[0].witnessedDays, 10);
+  assert.equal(folded.beds[3].plantings.length, 0, "it waits at the head, not on this year's bed");
+
+  const gathered = Schema.createLifeRecord(
+    Garden.buildKeepsakeRecord(
+      { moon: 4, anchorYear: 2025, cropId: "kale", cropName: "Kale", plantingId: ready2025.id, witnessedDays: 10 },
+      temporalOn("2026-09-15", { moon: 6 })
+    )
+  );
+  const after = Garden.foldGarden({
+    records: [ready2025, gathered],
+    keptDates,
+    today: todayOn("2026-09-15", 6),
+    moonNames: []
+  });
+  assert.equal(after.waitingHarvests.length, 0, "gathered at last — a year late, and nothing was lost");
+});
+
+test("a waiting harvest can carry the flourished honour", () => {
+  const rich2025 = plantYear("2025-07-10", "2025-07-10", { moon: 4, anchorYear: 2025 });
+  const folded = Garden.foldGarden({
+    records: [rich2025],
+    keptDates: daysFrom("2025-07-10", 16),
+    today: todayOn("2026-09-15", 6),
+    moonNames: []
+  });
+  assert.equal(folded.waitingHarvests.length, 1);
+  assert.equal(folded.waitingHarvests[0].grade, "flourished");
+});
+
+test("a return comes due with its Moon a year on, and waits — on its bed while open, at the head otherwise", () => {
+  const keepsake = Schema.createLifeRecord(
+    Garden.buildKeepsakeRecord(
+      { moon: 4, anchorYear: 2026, cropId: "kale", cropName: "Kale", plantingId: "p1", witnessedDays: 9 },
+      temporalOn("2026-08-10", { moon: 5 })
+    )
+  );
+  const k = { anchorYear: 2026, moon: 4 };
+  assert.equal(Garden.returnIsDue(k, todayYear("2026-12-01", 9, 2026)), false);
+  assert.equal(Garden.returnIsDue(k, todayYear("2027-05-20", 2, 2027)), false);
+  assert.equal(Garden.returnIsDue(k, todayYear("2027-07-15", 4, 2027)), true);
+  assert.equal(Garden.returnIsDue(k, todayYear("2028-05-01", 1, 2028)), true);
+
+  const early = Garden.foldGarden({ records: [keepsake], keptDates: [], today: todayYear("2027-05-20", 2, 2027), moonNames: [] });
+  assert.equal(early.waitingReturns.length, 0);
+
+  const laterMoon = Garden.foldGarden({ records: [keepsake], keptDates: [], today: todayYear("2027-09-10", 6, 2027), moonNames: [] });
+  assert.equal(laterMoon.waitingReturns.length, 1);
+  assert.equal(laterMoon.beds[3].returnable.length, 0);
+
+  const itsMoon = Garden.foldGarden({ records: [keepsake], keptDates: [], today: todayYear("2027-07-15", 4, 2027), moonNames: [] });
+  assert.equal(itsMoon.beds[3].returnable.length, 1);
+  assert.equal(itsMoon.waitingReturns.length, 0);
+
+  const welcomed = Schema.createLifeRecord(
+    Garden.buildReturnRecord(
+      { moon: 4, anchorYear: 2027, keepsakeId: keepsake.id, cropId: "kale", cropName: "Kale" },
+      temporalYear("2027-09-10", 2027, { moon: 6 })
+    )
+  );
+  const after = Garden.foldGarden({ records: [keepsake, welcomed], keptDates: [], today: todayYear("2027-09-10", 6, 2027), moonNames: [] });
+  assert.equal(after.waitingReturns.length, 0, "welcomed, it waits nowhere");
+});
+
+test("payload v2: plantings name their provenance; keepsakes carry grade and provenance", () => {
+  const gathered = Garden.buildPlantRecord(
+    { moon: 4, anchorYear: 2027, cropId: "kale", cropName: "Kale", method: "sow", plantedCivilDate: "2027-07-12", seedBackPlantingId: "planting-x" },
+    temporalYear("2027-07-12", 2027, { moon: 4 })
+  );
+  assert.equal(gathered.payload.patternGarden.version, 2);
+  assert.equal(gathered.payload.patternGarden.provenance, "gathered");
+  assert.equal(gathered.payload.patternGarden.seedBackPlantingId, "planting-x");
+
+  const plain = Garden.buildPlantRecord(
+    { moon: 4, anchorYear: 2027, cropId: "kale", cropName: "Kale", method: "sow", plantedCivilDate: "2027-07-12" },
+    temporalYear("2027-07-12", 2027, { moon: 4 })
+  );
+  assert.equal(plain.payload.patternGarden.provenance, "chosen");
+
+  const keepRich = Garden.buildKeepsakeRecord(
+    { moon: 4, anchorYear: 2026, cropId: "kale", cropName: "Kale", plantingId: "p1", witnessedDays: 16, seedBackPlantingId: "planting-x" },
+    temporalOn("2026-08-10", { moon: 5 })
+  );
+  assert.equal(keepRich.payload.patternGarden.version, 2);
+  assert.equal(keepRich.payload.patternGarden.grade, "flourished");
+  assert.equal(keepRich.payload.patternGarden.provenance, "gathered");
+
+  const keepPlain = Garden.buildKeepsakeRecord(
+    { moon: 4, anchorYear: 2026, cropId: "kale", cropName: "Kale", plantingId: "p2", witnessedDays: 9 },
+    temporalOn("2026-08-10", { moon: 5 })
+  );
+  assert.equal(keepPlain.payload.patternGarden.grade, "kept");
+});
+
+test("a v1 keepsake folds with its grade read back from its witnessed count", () => {
+  const v1 = Schema.createLifeRecord({
+    type: "artifact",
+    subtype: "garden-keepsake",
+    title: "Garden keepsake — Kale",
+    summary: "A keepsake written before grades were named in the payload.",
+    temporal: temporalOn("2026-08-10", { moon: 5 }),
+    tags: ["pattern-garden", "garden-keepsake"],
+    provenance: { sourceType: "pattern-garden", sourceId: "garden.html", calculationAuthority: "PatternCalendar" },
+    privacy: { visibility: "private", containsPersonalData: true, shareAllowed: false },
+    payload: {
+      patternGarden: {
+        version: 1, action: "harvest", moon: 4, anchorYear: 2026,
+        cropId: "kale", cropName: "Kale", plantingId: "p-old",
+        witnessedDays: 16, foundSeed: false, status: "kept"
+      }
+    }
+  });
+  const folded = Garden.foldGarden({ records: [v1], keptDates: [], today: todayOn("2026-09-15", 6), moonNames: [] });
+  assert.equal(folded.keepsakes.length, 1);
+  assert.equal(folded.keepsakes[0].grade, "flourished");
+  assert.equal(folded.keepsakes[0].provenance, "chosen");
+});
+
+test("days remaining in a Moon counts down to its last day, and is null outside it", () => {
+  const span = Garden.moonSpan(2026, 4);
+  assert.equal(Garden.daysRemainingInMoon(span, "2026-07-10"), 28);
+  assert.equal(Garden.daysRemainingInMoon(span, "2026-08-06"), 1);
+  assert.equal(Garden.daysRemainingInMoon(span, "2026-07-09"), null);
+  assert.equal(Garden.daysRemainingInMoon(span, "2026-08-07"), null);
+  assert.equal(Garden.daysRemainingInMoon(null, "2026-07-10"), null);
+});
+
+test("a found seed keeps across years for its Moon until a planting names it", () => {
+  const seed = Schema.createLifeRecord(
+    Garden.buildSeedRecord(
+      { moon: 4, anchorYear: 2025, cropId: "kale", cropName: "Kale" },
+      temporalYear("2025-07-20", 2025, { moon: 4 })
+    )
+  );
+  const folded = Garden.foldGarden({ records: [seed], keptDates: [], today: todayYear("2027-07-20", 4, 2027), moonNames: [] });
+  assert.equal(folded.seeds.length, 1);
+  assert.equal(folded.seeds[0].used, false);
+  const planted = plantYear("2027-07-20", "2027-07-20", { moon: 4, anchorYear: 2027, seedId: seed.id, foundSeed: true });
+  const after = Garden.foldGarden({ records: [seed, planted], keptDates: [], today: todayYear("2027-07-20", 4, 2027), moonNames: [] });
+  assert.equal(after.seeds[0].used, true);
+});
+
+test("the completed garden: waiting shelf on the page, no 12-cap, no uproot anywhere", () => {
+  const garden = read("assets/js/pattern-garden.js");
+  const page = read("garden.html");
+  assert.ok(page.includes('id="garden-waiting"'), "the waiting shelf stands on the page");
+  assert.ok(!garden.includes("slice(0, 12)"), "the table is whole, grouped by method — nothing capped away");
+  assert.ok(!/uprootPlanting|removePlanting|deletePlanting/.test(garden), "no code path removes a planting — once written, it stands");
+  assert.ok(page.includes("no uprooting it"), "the page states the doctrine plainly");
+  assert.ok(garden.includes("waitingHarvests") && garden.includes("waitingReturns"));
+  assert.ok(garden.includes("garden-plant-group"), "the table groups by method");
+});
+
+/* ------------------------- the Still Bed -------------------------
+ * (Nov 23, 2026 — the play redesign's Ask 3, approved by Aaron
+ * with its fence: a fourteenth place, unnumbered, open only on
+ * the still days; one keepsake of the year now ending laid down
+ * by its own record; found at the next still day; the year's
+ * reading at the garden's head.) */
+
+const STILL_DAY_2026 = { civilDate: "2027-04-16", patternYear: 2026, moon: null, outsideDay: true };
+const STILL_DAY_2027 = { civilDate: "2028-04-16", patternYear: 2027, moon: null, outsideDay: true };
+
+function keepsakeOf2026(witnessedDays = 9) {
+  return Schema.createLifeRecord(
+    Garden.buildKeepsakeRecord(
+      { moon: 4, anchorYear: 2026, cropId: "kale", cropName: "Kale", plantingId: "p-still", witnessedDays },
+      temporalOn("2026-08-10", { moon: 5 })
+    )
+  );
+}
+
+function laidDown(keepsake, laidYear = 2026, laidCivilDate = "2027-04-16") {
+  return Schema.createLifeRecord(
+    Garden.buildStillRecord(
+      { moon: 4, anchorYear: laidYear, keepsakeId: keepsake.id, cropId: "kale", cropName: "Kale", laidCivilDate },
+      temporalYear(laidCivilDate, laidYear, { outsideDay: true })
+    )
+  );
+}
+
+test("the still record is its own kind: it names a keepsake and can hold nothing else", () => {
+  const keep = keepsakeOf2026();
+  const record = Garden.buildStillRecord(
+    { moon: 4, anchorYear: 2026, keepsakeId: keep.id, cropId: "kale", cropName: "Kale", laidCivilDate: "2027-04-16" },
+    temporalYear("2027-04-16", 2026, { outsideDay: true })
+  );
+  assert.equal(record.subtype, "garden-still");
+  assert.equal(record.type, "event");
+  assert.ok(record.tags.includes("pattern-garden") && record.tags.includes("garden-still"));
+  assert.doesNotThrow(() => Schema.createLifeRecord(record));
+  assert.deepEqual(
+    Object.keys(record.payload.patternGarden).sort(),
+    ["action", "anchorYear", "cropId", "cropName", "keepsakeId", "laidCivilDate", "moon", "version"],
+    "the still payload names a keepsake of the keeper's own Atlas — there is no field for anything else"
+  );
+  assert.equal(Garden.SUBTYPES.STILL, "garden-still");
+});
+
+test("still days are the days outside the count, and a still return comes due a full year on", () => {
+  assert.equal(Garden.isStillDay(STILL_DAY_2026), true);
+  assert.equal(Garden.isStillDay(todayYear("2027-07-15", 4, 2027)), false);
+  assert.equal(Garden.isStillDay(null), false);
+  assert.equal(Garden.stillReturnIsDue(2026, STILL_DAY_2026), false, "not on the day it is laid");
+  assert.equal(Garden.stillReturnIsDue(2026, todayYear("2027-07-15", 4, 2027)), false, "not during the counted days of the year between");
+  assert.equal(Garden.stillReturnIsDue(2026, STILL_DAY_2027), true, "at the next still day");
+  assert.equal(Garden.stillReturnIsDue(2026, todayYear("2028-06-01", 3, 2028)), true, "and every day after, until written");
+});
+
+test("on a still day the bed opens: a keepsake of the year now ending may be laid down, once", () => {
+  const keep = keepsakeOf2026();
+  const older = Schema.createLifeRecord(
+    Garden.buildKeepsakeRecord(
+      { moon: 4, anchorYear: 2025, cropId: "kale", cropName: "Kale", plantingId: "p-old", witnessedDays: 9 },
+      temporalYear("2025-08-10", 2025, { moon: 5 })
+    )
+  );
+  const folded = Garden.foldGarden({ records: [keep, older], keptDates: [], today: STILL_DAY_2026, moonNames: [] });
+  assert.equal(folded.still.isStillDay, true);
+  assert.equal(folded.still.laidThisCycle, false);
+  assert.deepEqual(folded.still.eligible.map(k => k.recordId), [keep.id], "only the year now ending's keepsakes may be laid");
+
+  const after = Garden.foldGarden({ records: [keep, older, laidDown(keep)], keptDates: [], today: STILL_DAY_2026, moonNames: [] });
+  assert.equal(after.still.laidThisCycle, true);
+  assert.equal(after.still.eligible.length, 0, "one keepsake per still cycle — the offer is spent");
+  assert.equal(after.still.inGround.length, 1);
+  assert.equal(after.still.inGround[0].cropName, "Kale");
+
+  /* On a counted day the bed does not open at all. */
+  const counted = Garden.foldGarden({ records: [keep], keptDates: [], today: todayYear("2026-09-15", 6, 2026), moonNames: [] });
+  assert.equal(counted.still.isStillDay, false);
+  assert.equal(counted.still.eligible.length, 0);
+  assert.equal(counted.yearReading, null, "the year's reading stands only on the still days");
+});
+
+test("a keepsake in the still ground makes no Moon return — its meeting is the still one", () => {
+  const keep = keepsakeOf2026();
+  const moonRound = Garden.foldGarden({ records: [keep, laidDown(keep)], keptDates: [], today: todayYear("2027-07-15", 4, 2027), moonNames: [] });
+  assert.equal(moonRound.beds[3].returnable.length, 0);
+  assert.equal(moonRound.waitingReturns.length, 0);
+  assert.equal(moonRound.still.inGround.length, 1);
+  assert.equal(moonRound.still.inGround[0].due, false, "its still day has not come yet");
+});
+
+test("at the next still day the laid keepsake is found, and its return is written beside it", () => {
+  const keep = keepsakeOf2026();
+  const laid = laidDown(keep);
+  const found = Garden.foldGarden({ records: [keep, laid], keptDates: [], today: STILL_DAY_2027, moonNames: [] });
+  assert.equal(found.still.dueFinds.length, 1);
+  assert.equal(found.still.dueFinds[0].cropName, "Kale");
+  assert.equal(found.still.dueFinds[0].laidYear, 2026);
+  assert.equal(found.waitingReturns.length, 0, "on the still day it stands at the bed, not at the head");
+
+  const returned = Schema.createLifeRecord(
+    Garden.buildReturnRecord(
+      { moon: 4, anchorYear: 2027, keepsakeId: keep.id, cropId: "kale", cropName: "Kale" },
+      temporalYear("2028-04-16", 2027, { outsideDay: true })
+    )
+  );
+  const after = Garden.foldGarden({ records: [keep, laid, returned], keptDates: [], today: STILL_DAY_2027, moonNames: [] });
+  assert.equal(after.still.dueFinds.length, 0);
+  assert.equal(after.still.inGround.length, 0, "met again, it leaves the ground");
+});
+
+test("a still return unwritten at the still day waits at the garden's head", () => {
+  const keep = keepsakeOf2026();
+  const later = Garden.foldGarden({
+    records: [keep, laidDown(keep)],
+    keptDates: [],
+    today: todayYear("2028-06-01", 3, 2028),
+    moonNames: []
+  });
+  assert.equal(later.waitingReturns.length, 1);
+  assert.equal(later.waitingReturns[0].stillReturn, true);
+  assert.equal(later.waitingReturns[0].laidYear, 2026);
+});
+
+test("the year's reading: thirteen lines — kept, flourished, tended, slept, rested", () => {
+  const flourishedP = plantYear("2026-05-15", "2026-05-15", { moon: 2, cropId: "corn", cropName: "Corn" });
+  const flourishedK = Schema.createLifeRecord(
+    Garden.buildKeepsakeRecord(
+      { moon: 2, anchorYear: 2026, cropId: "corn", cropName: "Corn", plantingId: flourishedP.id, witnessedDays: 16 },
+      temporalOn("2026-06-20", { moon: 3 })
+    )
+  );
+  const tendedP = plantYear("2026-06-12", "2026-06-12", { moon: 3, cropId: "peas", cropName: "Peas" });
+  const sleptP = plantYear("2026-07-10", "2026-07-10", { moon: 4 });
+  const keptP = plantYear("2026-08-07", "2026-08-07", { moon: 5, cropId: "beans", cropName: "Beans" });
+  const keptK = Schema.createLifeRecord(
+    Garden.buildKeepsakeRecord(
+      { moon: 5, anchorYear: 2026, cropId: "beans", cropName: "Beans", plantingId: keptP.id, witnessedDays: 9 },
+      temporalOn("2026-09-10", { moon: 6 })
+    )
+  );
+  const folded = Garden.foldGarden({
+    records: [flourishedP, flourishedK, tendedP, sleptP, keptP, keptK],
+    keptDates: [...daysFrom("2026-05-15", 15), ...daysFrom("2026-06-12", 3), ...daysFrom("2026-08-07", 9)],
+    today: STILL_DAY_2026,
+    moonNames: []
+  });
+  assert.equal(folded.yearReading.length, 13);
+  const outcome = m => folded.yearReading[m - 1].outcome;
+  assert.equal(outcome(1), "rested");
+  assert.equal(outcome(2), "flourished");
+  assert.equal(outcome(3), "tended");
+  assert.equal(outcome(4), "slept");
+  assert.equal(outcome(5), "kept");
+  assert.equal(outcome(13), "rested");
+});
+
+test("the Still Bed stands on the page, and nothing else in play ever points at it", () => {
+  const page = read("garden.html");
+  const play = read("assets/js/sphere-play.js");
+  const quests = read("assets/js/pattern-quests.js");
+  assert.ok(page.includes('id="garden-still-body"'), "the bed's place stands on the page");
+  assert.ok(page.includes('id="garden-year-reading"'), "the year's reading stands at the head");
+  assert.ok(page.includes("The Still Bed"), "the bed is named plainly");
+  for (const src of [play, quests]) {
+    assert.ok(!src.includes("Still Bed") && !src.includes("garden-still"), "no game, quest, or hint points at the Still Bed");
+  }
+});

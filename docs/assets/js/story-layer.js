@@ -68,6 +68,22 @@
     }
   }
 
+  /* Spark Activities (slice 1 — watching): the activities module
+   * is lazy-loaded the first time an episode renders on a page,
+   * the house pattern for heavy stacks (Their Home loads the
+   * garden the same way). It observes the rendered player itself;
+   * loading it here, once, keeps every fitted page's standing
+   * weight budget intact and touches no page's markup. */
+  let activitiesRequested = false;
+  function ensureActivities() {
+    if (activitiesRequested) return;
+    activitiesRequested = true;
+    const script = document.createElement("script");
+    script.src = assetUrl("assets/js/spark-activities.js");
+    script.onerror = () => { /* the story stands without the earning */ };
+    document.head.appendChild(script);
+  }
+
   function renderChapter(slot, story, chapter) {
     const plain = slot.hasAttribute("data-story-plain");
     slot.classList.add("story-chapter");
@@ -119,6 +135,7 @@
         `Episode ${chapter.n} — the animated telling of this chapter. The written chapter below is its guide card.`;
       figure.append(video, caption);
       slot.appendChild(figure);
+      ensureActivities();
     }
 
     if (chapter.beat) {

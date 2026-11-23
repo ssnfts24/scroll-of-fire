@@ -470,6 +470,48 @@ test("no R1.7 protected file is touched by this branch", () => {
     "docs/assets/js/sphere-spark.js"
   );
   /*
+   * Tracker-removal declaration (Nov 23, 2026 — Aaron opened the
+   * Sphere page for this one change in plain words: "Open the
+   * Sphere page for the tracker removal"). This change set declares
+   * itself by carrying its signature file (the no-trackers guard
+   * test, which lives outside the protected directories), and its
+   * declared set names exactly one protected path: the Sphere page,
+   * changed by the removal of its hand-rolled Google Analytics
+   * loader only — the 16-line <script> block that stood first in
+   * its <head>, nothing else on the page. Every other protected
+   * path still fails this test loudly.
+   */
+  const trackerRemovalDeclaredProtected = new Set([
+    "docs/living-time-sphere.html"
+  ]);
+  const carriesTrackerRemoval = changed.has(
+    "tests/no-google-analytics.test.js"
+  );
+  /*
+   * Pattern Quests declaration (Nov 23, 2026 — Aaron's go-ahead
+   * on the play redesign's build order: the garden completed and
+   * the quest frame's rung 1 built over the Sphere's three
+   * games). This change set declares itself by carrying its
+   * signature file (the quest-frame module, which lives outside
+   * the protected directories), and its declared set names
+   * exactly one protected path: the Sphere page, changed by
+   * links and tags only — one script tag for the quest frame,
+   * set between the record helpers and the play room in the
+   * neighbourhood PR #159 opened, and cache-version bumps on
+   * the play room's script tag and the play stylesheet link.
+   * The quest module, the play room, and both garden files live
+   * outside the protected directories; no geometry, rendering,
+   * camera, motion, selection, label, or calendar file is
+   * touched. Every other protected path still fails this test
+   * loudly.
+   */
+  const questsDeclaredProtected = new Set([
+    "docs/living-time-sphere.html"
+  ]);
+  const carriesQuests = changed.has(
+    "docs/assets/js/pattern-quests.js"
+  );
+  /*
    * Sphere deep-fix declaration (Nov 22, 2026 — Aaron's direct
    * order from his phone: facing Moon 13 dead centre, none of its
    * day numbers appeared; "it needs to move and work perfect and
@@ -527,6 +569,8 @@ test("no R1.7 protected file is touched by this branch", () => {
         (carriesRebuild && rebuildDeclaredProtected.has(file)) ||
         (carriesArmillary && armillaryDeclaredProtected.has(file)) ||
         (carriesSpherefix && spherefixDeclaredProtected.has(file)) ||
+        (carriesTrackerRemoval && trackerRemovalDeclaredProtected.has(file)) ||
+        (carriesQuests && questsDeclaredProtected.has(file)) ||
         (carriesDeepfix && deepfixDeclaredProtected.has(file)),
       `R1.7 protected file changed: ${file}`
     );

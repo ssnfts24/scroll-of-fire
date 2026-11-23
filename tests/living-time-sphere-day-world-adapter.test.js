@@ -243,8 +243,8 @@ test("gold is today's colour only in the adapter's palette use", () => {
 
 test("the companion layer loads the adapter in the farm loader's pattern", () => {
   const companion = fs.readFileSync(path.join(root, "docs/assets/js/sphere-companion-layer.js"), "utf8");
-  assert.match(companion, /sphere-day-world-adapter\.js\?v=20261122-2/);
-  assert.match(companion, /sphere-day-world-adapter\.css\?v=20261122-2/);
+  assert.match(companion, /sphere-day-world-adapter\.js\?v=20261122-3/);
+  assert.match(companion, /sphere-day-world-adapter\.css\?v=20261122-3/);
   assert.match(companion, /data-sphere-day-world/);
 });
 
