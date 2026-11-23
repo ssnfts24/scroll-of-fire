@@ -606,3 +606,44 @@ test("repair: the marks live under the pitch law too (§7 remainder)", () => {
   // The scheduled exemption reads the normalized field.
   assert.match(labels, /scheduled: Boolean\(candidate\.target\.dayScheduleCount > 0/);
 });
+
+test("landing: the membrane inspector is clamped to the stage's room (§10 fit rule)", () => {
+  const ui = fs.readFileSync(
+    path.join(ROOT, "docs/assets/js/sphere/living-time-sphere-ui.js"),
+    "utf8"
+  );
+  // The clamp lives in the inspector's own sync, reads the stage's
+  // rect, and caps the inspector's inline max-width at the room to
+  // the stage's right edge; it releases when the inspector fits.
+  assert.match(ui, /Fit rule \(Aaron, Nov 23, 2026/);
+  assert.match(ui, /"sphere-strata-year-inspector"/);
+  assert.match(ui, /"sphere-container"/);
+  assert.match(ui, /const room =\s*stageRect\.right - rect\.left;/);
+  assert.match(ui, /inspector\.style\.maxWidth =\s*`\$\{Math\.floor\(room\)\}px`;/);
+  assert.match(ui, /inspector\.style\.maxWidth = "";/);
+});
+
+test("landing: fit governs Moon names by default at stage widths of 320px or less", () => {
+  // The R2 post-pass condition is the fit-by-default rule: fit when
+  // the keeper chose it, or at ≤320px unless the keeper explicitly
+  // chose "always".
+  assert.match(
+    labels,
+    /const fitGoverns =\s*keeperLabelMode === "fit"\s*\|\| \(stageRect\.width <= 320 && keeperLabelMode !== "always"\);/
+  );
+  assert.match(labels, /fitGoverns\s*&& globalThis\.LivingTimeSphereLabelPlacement/);
+  // Crossing the 320px line re-places: the narrow flag rides the
+  // placement-identity signature.
+  assert.match(labels, /stageRect\.width <= 320 \? "fit-default-narrow" : "wide"/);
+  // The frame guard completes the rule between passes: a pair
+  // still standing after every shift hides its lower-standing
+  // name at ≤320px — never the selected Moon's, never under an
+  // explicit "always".
+  assert.match(labels, /Narrow fit default \(Aaron, Nov 23, 2026/);
+  assert.match(labels, /if \(stageW <= 320\) \{/);
+  assert.match(labels, /victim\.guardHidden = true;/);
+  assert.match(labels, /if \(a\.guardHidden \|\| b\.guardHidden\) continue;/);
+  // The guard knows the standing facts because the pill
+  // registration now carries them.
+  assert.match(labels, /moon: placed\.moon,\s*selected: Boolean\(placed\.selected\),\s*priority: placed\.priority \|\| 0,/);
+});

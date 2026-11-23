@@ -265,9 +265,14 @@ test("r2 options: set normalizes, notifies once, and syncs the governor", () => 
 
 /* ── Wiring (default behaviour untouched) ─────────────────────── */
 
-test("r2 wiring: label manager runs fit mode only behind the switch", () => {
+test("r2 wiring: label manager runs fit behind the switch — and by default at 320px or less", () => {
   const source = read("docs/assets/js/sphere/living-time-sphere-label-manager.js");
-  assert.match(source, /labelMode === "fit"/);
+  // The switch still governs (landing update, Aaron, Nov 23, 2026):
+  // fit runs when the keeper chose it — or, the held §10 call
+  // approved at landing, by default at stage widths of 320px or
+  // less unless the keeper explicitly chose "always".
+  assert.match(source, /keeperLabelMode === "fit"/);
+  assert.match(source, /stageRect\.width <= 320 && keeperLabelMode !== "always"/);
   assert.match(source, /resolveMoonLabelOverlaps/);
   // The doctrine branch itself is untouched.
   assert.match(source, /runtimeProfile === "observatory"/);

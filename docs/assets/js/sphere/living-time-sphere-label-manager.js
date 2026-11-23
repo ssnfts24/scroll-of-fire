@@ -1224,6 +1224,7 @@
             for (let j = i + 1; j < pillEntries.length; j++) {
               const a = pillEntries[i];
               const b = pillEntries[j];
+              if (a.guardHidden || b.guardHidden) continue;
               const ra = pillRectOf(a, a.guardShiftX || 0, a.guardShiftY || 0);
               const rb = pillRectOf(b, b.guardShiftX || 0, b.guardShiftY || 0);
               const ox = Math.min(ra.x + ra.w, rb.x + rb.w) - Math.max(ra.x, rb.x);
@@ -1301,6 +1302,41 @@
                   target.guardShiftY = totalY;
                   target.dx = (target.dx || 0) + mdx;
                   target.dy = (target.dy || 0) + mdy;
+                }
+              }
+              /*
+               * Narrow fit default (Aaron, Nov 23, 2026 — the
+               * held §10 call, approved at landing): at stage
+               * widths of 320px or less, where fit governs by
+               * default, a pair that still stands overlapped
+               * after every shift and the least-cover fallback
+               * is answered the fit way — the lower-standing
+               * name hides until the next layout pass rebuilds
+               * visibility, exactly as the placement engine
+               * hides what cannot shift. The selected Moon's
+               * name never hides; a keeper who explicitly chose
+               * "always" keeps every name at any width. Wider
+               * stages are untouched: there the shifts suffice,
+               * as §10 measured.
+               */
+              if (stageW <= 320) {
+                const keeperMode =
+                  globalThis.LivingTimeSphereOptions?.get?.()?.labelMode;
+                if (keeperMode !== "always") {
+                  const ra2 = pillRectOf(a, a.guardShiftX || 0, a.guardShiftY || 0);
+                  const rb2 = pillRectOf(b, b.guardShiftX || 0, b.guardShiftY || 0);
+                  const ox2 = Math.min(ra2.x + ra2.w, rb2.x + rb2.w) - Math.max(ra2.x, rb2.x);
+                  const oy2 = Math.min(ra2.y + ra2.h, rb2.y + rb2.h) - Math.max(ra2.y, rb2.y);
+                  if (ox2 > 1 && oy2 > 1) {
+                    let victim = null;
+                    if (a.selected && !b.selected) victim = b;
+                    else if (b.selected && !a.selected) victim = a;
+                    else victim = (a.priority || 0) < (b.priority || 0) ? a : b;
+                    if (victim && !victim.selected) {
+                      victim.guardHidden = true;
+                      victim.el.style.display = "none";
+                    }
+                  }
                 }
               }
             }
@@ -1525,6 +1561,11 @@
         // R2 — the preview options are part of placement identity: a
         // flipped switch must re-place, not wait for the camera to move.
         globalThis.LivingTimeSphereOptions?.get?.()?.labelMode || "always",
+        // Landing addition (Aaron, Nov 23, 2026): the ≤320px
+        // fit-by-default rule is part of placement identity too —
+        // crossing the 320px line must re-place, not wait for the
+        // camera to move.
+        stageRect.width <= 320 ? "fit-default-narrow" : "wide",
         `gov${globalThis.LivingTimeSphereQualityGovernor?.tier?.() ?? 0}`,
         cameraSignature(camera)
       ].join("::");
@@ -1804,19 +1845,33 @@
       }
 
       /*
-       * R2 — Moon-name placement governance (opt-in "fit" mode).
+       * R2 — Moon-name placement governance ("fit" mode).
        *
        * The placement loop above honours the B7.55/B7.57 persistent-
        * identity doctrine: in the observatory profile a colliding Moon
        * name is force-placed, so on a small screen names can stack.
        * When the visitor chooses "Show what fits", the pure placement
        * engine resolves those stacks here: shift what can shift, hide
-       * what cannot, never hide the selected Moon. In the default
-       * "always" mode this block does not run and placement is exactly
-       * the historic behaviour.
+       * what cannot, never hide the selected Moon. In "always" mode
+       * this block does not run and placement is exactly the historic
+       * behaviour.
+       *
+       * Landing addition (Aaron, Nov 23, 2026 — the held §10 call,
+       * approved): at stage widths of 320px or less, fit governs by
+       * DEFAULT. The §10 sweep measured 3 Moon-name pairs stacked
+       * top-down at 320px under the opt-in rule, because at that
+       * width the top-down face is a solid field of day numbers and
+       * every legal shift lands on one. A keeper who explicitly
+       * chose "always" keeps "always" at any width; everyone else
+       * gets the fit resolution at 320px and below.
        */
+      const keeperLabelMode =
+        globalThis.LivingTimeSphereOptions?.get?.()?.labelMode;
+      const fitGoverns =
+        keeperLabelMode === "fit"
+        || (stageRect.width <= 320 && keeperLabelMode !== "always");
       if (
-        globalThis.LivingTimeSphereOptions?.get?.()?.labelMode === "fit"
+        fitGoverns
         && globalThis.LivingTimeSphereLabelPlacement
           ?.resolveMoonLabelOverlaps
       ) {
@@ -1888,6 +1943,14 @@
           // the Moon anchor, and the placement scale.
           rectW: placed.rect?.w || 0,
           rectH: placed.rect?.h || 0,
+          // Landing addition (Aaron, Nov 23, 2026): the fit
+          // doctrine's standing facts ride the registration too —
+          // the frame guard's narrow-width hide (below) must know
+          // which pill is the selected Moon's and which stands
+          // lower, exactly as the placement pass knew.
+          moon: placed.moon,
+          selected: Boolean(placed.selected),
+          priority: placed.priority || 0,
           cox: placed.rect ? (placed.rect.x + placed.rect.w / 2) - placed.anchorX : 0,
           coy: placed.rect ? (placed.rect.y + placed.rect.h / 2) - placed.anchorY : 0,
           pillScale: (() => {
