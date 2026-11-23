@@ -191,6 +191,11 @@
           "path": "scripture/index.html"
         },
         {
+          "id": "hebrew-word-studies",
+          "title": "Hebrew Word Studies",
+          "path": "scripture/word-studies/index.html"
+        },
+        {
           "id": "scroll-reader",
           "title": "Scroll Reader",
           "path": "scroll/reader.html"
