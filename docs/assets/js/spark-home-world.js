@@ -521,7 +521,7 @@
       sparkSpeech,
       hour: now.getHours() + now.getMinutes() / 60
     });
-    return { model, companion, stage };
+    return { model, companion, stage, record };
   }
 
   /* ------------------------- the world in words ------------------------- */
@@ -579,7 +579,7 @@
     }
   }
 
-  function stillFallback(model, companion, stage, host) {
+  function stillFallback(model, companion, stage, host, record) {
     const stage3d = $("#spark-home-stage", host);
     if (!stage3d) return;
     stage3d.classList.add("is-still");
@@ -587,7 +587,7 @@
     if (model.spark && Core && companion) {
       const art = document.createElement("div");
       art.className = "spark-home-still-art";
-      art.innerHTML = Core.renderSVG(companion, { stage: stage ? stage.index : 0 });
+      art.innerHTML = Core.renderSVG(companion, { stage: stage ? stage.index : 0, wrap: Core.wrapFor(record) });
       stage3d.appendChild(art);
     }
     const note = document.createElement("p");
@@ -1231,16 +1231,16 @@
     try {
       collected = await collectModel();
     } catch {
-      collected = { model: World.buildModel({}), companion: null, stage: null };
+      collected = { model: World.buildModel({}), companion: null, stage: null, record: null };
     }
-    const { model, companion, stage } = collected;
+    const { model, companion, stage, record } = collected;
     renderWords(model, section, say);
     say(`${model.lines.sky}. ${model.lines.home}`);
     try {
       await startScene(model, section, say);
       section.classList.add("is-live");
     } catch {
-      stillFallback(model, companion, stage, section);
+      stillFallback(model, companion, stage, section, record);
     }
   }
 

@@ -2041,7 +2041,162 @@
     return { shape, motes: out.join("") };
   }
 
-  function renderSVG(companion, { stage = 0, revealed = null } = {}) {
+  /* ---- the flame wrap (wrap: 1) ----
+   *
+   * Aaron's direction (Nov 23, 2026): the Sparks of the animated
+   * series wear a living flame; the rendered Spark should wear
+   * the same family look — blended around the Spark that already
+   * stands, never in its place. So the wrap is one new outer
+   * layer, drawn from the keeper's existing seed by its own
+   * stream (`seed + ":flamewrap"`), the way every other growth
+   * of their seed is drawn: no existing draw moves, no new seed,
+   * no re-roll. The wrap's version rides the record (`wrap: 1`)
+   * beside the generator's, so a future revision is auditable.
+   *
+   * The flame's hue is the kind's own — the palette the seed
+   * already chose (glow and accent). The family resemblance is
+   * in the shape and behaviour: a ring of teardrop licks rising
+   * around the core, breathing slowly at rest. Each kind bends
+   * the grammar its own way, below. A keeper may lift the wrap
+   * off (the record carries `wrap: 0`); with it off, renderSVG
+   * returns exactly the string it returned before the wrap
+   * existed — the persistence fence, kept byte for byte. */
+
+  const WRAP_VERSION = 1;
+
+  /* How each kind's flame behaves: height and width of the
+   * licks, how far their tips curl, how close the ring hugs the
+   * core, how deep it reads, and the breath's period in seconds.
+   * Fire is the reference flame; Water's licks curl over like
+   * wave-crests; Shadow's hug low and smoky; Air's are thin and
+   * quick; Earth's short, broad and steady; Light's drawn as
+   * rays as much as petals. */
+  const FLAME_BENDS = {
+    fire: { height: 1.25, width: 1.0, curl: 0.25, radius: 1.0, opacity: 0.95, breath: 2.6 },
+    water: { height: 0.8, width: 1.15, curl: 1.0, radius: 0.98, opacity: 0.9, breath: 4.2 },
+    shadow: { height: 0.55, width: 1.1, curl: 0.4, radius: 0.88, opacity: 0.62, breath: 4.8 },
+    air: { height: 0.95, width: 0.7, curl: 0.6, radius: 1.02, opacity: 0.85, breath: 3.0 },
+    earth: { height: 0.65, width: 1.35, curl: 0.15, radius: 0.95, opacity: 0.92, breath: 5.2 },
+    light: { height: 1.15, width: 0.62, curl: 0.05, radius: 1.03, opacity: 0.95, breath: 3.4 }
+  };
+
+  const roundTo = (n, p) => Math.round(n * 10 ** p) / 10 ** p;
+
+  /* The wrap's particulars for one Spark at one stage, as pure
+   * data — the same seed and stage settle the same flame on any
+   * device, and the 3D renderer reads the same stream the same
+   * way, so the flame is one flame in both bodies. An Ember
+   * wears a few small licks; a Kindled a full ring; a Guardian
+   * the fullest the family has. The stage changes the flame's
+   * measure, never its grammar. */
+  function flameWrapFor(companion, stage = 0) {
+    if (!companion) return null;
+    const bend = FLAME_BENDS[companion.kind] || FLAME_BENDS.fire;
+    const rand = mulberry32(hashString(companion.seed + ":flamewrap"));
+    const base = [6, 9, 12][stage] || 9;
+    const count = base + Math.floor(rand() * 3);
+    const licks = [];
+    for (let i = 0; i < count; i++) {
+      const angle = (i / count) * Math.PI * 2 + (rand() - 0.5) * 0.14;
+      const topness = (Math.cos(angle) + 1) / 2;
+      const heightJitter = 0.8 + rand() * 0.45;
+      const widthJitter = 0.85 + rand() * 0.35;
+      const curl = (rand() - 0.5) * 2 * bend.curl * 3.2;
+      const color = rand() < 0.62 ? "glow" : "accent";
+      const delay = -rand() * 3;
+      licks.push({
+        angle: roundTo(angle, 4),
+        topness: roundTo(topness, 3),
+        height: roundTo((8.5 + 7 * topness) * bend.height * heightJitter * (0.8 + stage * 0.12), 2),
+        width: roundTo(4.4 * bend.width * widthJitter, 2),
+        curl: roundTo(curl, 2),
+        color,
+        delay: roundTo(delay, 2)
+      });
+    }
+    return {
+      version: WRAP_VERSION,
+      kind: companion.kind,
+      count,
+      radius: roundTo(32.5 * bend.radius, 1),
+      breath: bend.breath,
+      opacity: bend.opacity,
+      licks
+    };
+  }
+
+  /* The wrap, drawn: a ring of teardrop licks behind the core,
+   * in the core's own glow and accent. The first five licks are
+   * its core flame; the rest are detail the small sizes shed
+   * first (the size ladder: the flame simplifies first, and the
+   * kind colour — which is never spent — carries identity at
+   * every size). Tiers: "full" the whole ring; "simple" every
+   * other lick; "glyph" only the crown of the flame, the
+   * teardrop silhouette a tiny marker can hold. When the Spark
+   * works or leads, the host says so (`working`) and the flame
+   * gathers — brighter, leaning — one honest signal, lit only
+   * by real work. The trail, where it has arrived, is shaped as
+   * small flame-licks thinning out behind. */
+  function flameWrapShapes(companion, stage, { tier = "full", working = false, trail = false } = {}) {
+    const wrap = flameWrapFor(companion, stage);
+    if (!wrap) return "";
+    const { glow, accent } = companion.palette;
+    const parts = [];
+    let crown = 0;
+    wrap.licks.forEach((lick, i) => {
+      if (tier === "simple" && i % 2 === 1) return;
+      if (tier === "glyph" && (lick.topness < 0.62 || crown >= 5)) return;
+      if (tier === "glyph") crown += 1;
+      const x = (50 + Math.sin(lick.angle) * wrap.radius).toFixed(1);
+      const y = (52 - Math.cos(lick.angle) * wrap.radius * 0.97).toFixed(1);
+      const deg = ((lick.angle * 180) / Math.PI).toFixed(1);
+      const col = lick.color === "accent" ? accent : glow;
+      const h = lick.height;
+      const w = lick.width;
+      const c = lick.curl;
+      parts.push(
+        `<g transform="translate(${x} ${y}) rotate(${deg})">` +
+          `<path class="spark-flame-lick${i < 5 ? " spark-flame-core" : " spark-flame-detail"}" ` +
+          `style="animation-delay:${lick.delay}s;animation-duration:${wrap.breath}s" ` +
+          `d="M0 0 C ${(-w).toFixed(1)} ${(-h * 0.38).toFixed(1)} ${(-w * 0.55 + c).toFixed(1)} ${(-h * 0.78).toFixed(1)} ${c.toFixed(1)} ${(-h).toFixed(1)} ` +
+          `C ${(w * 0.55 + c).toFixed(1)} ${(-h * 0.78).toFixed(1)} ${w.toFixed(1)} ${(-h * 0.38).toFixed(1)} 0 0 Z" ` +
+          `fill="${col}" opacity="${wrap.opacity}"/></g>`
+      );
+    });
+    if (trail && tier === "full") {
+      const trailLicks = [
+        { x: 24, y: 68, h: 7, col: glow, op: 0.55 },
+        { x: 16, y: 76, h: 5.5, col: accent, op: 0.45 },
+        { x: 9, y: 84, h: 4, col: glow, op: 0.35 }
+      ];
+      for (const t of trailLicks) {
+        parts.push(
+          `<g transform="translate(${t.x} ${t.y}) rotate(-52)">` +
+            `<path class="spark-flame-lick spark-flame-detail" ` +
+            `d="M0 0 C -2 ${(-t.h * 0.38).toFixed(1)} -1.4 ${(-t.h * 0.78).toFixed(1)} 0 ${(-t.h).toFixed(1)} ` +
+            `C 1.4 ${(-t.h * 0.78).toFixed(1)} 2 ${(-t.h * 0.38).toFixed(1)} 0 0 Z" fill="${t.col}" opacity="${t.op}"/></g>`
+        );
+      }
+    }
+    return `<g class="spark-flame${working ? " is-working" : ""}" data-spark-flame="${WRAP_VERSION}" aria-hidden="true">${parts.join("")}</g>`;
+  }
+
+  /* Whether a keeper's record wears the wrap. The rollout is
+   * Aaron's word (Nov 23, 2026): the wrap goes on every Spark,
+   * and any keeper may lift it off — so a record that says
+   * nothing wears it, and only an explicit `wrap: 0` lifts it. */
+  function wrapFor(record) {
+    return record && record.wrap === 0 ? 0 : 1;
+  }
+
+  /* The keeper's hand on the wrap: a new record, the old one
+   * untouched, carrying the choice and nothing else changed. */
+  function withWrap(record, on) {
+    if (!record) return record;
+    return { ...record, wrap: on ? WRAP_VERSION : 0 };
+  }
+
+  function renderSVG(companion, { stage = 0, revealed = null, wrap = null, flameState = null, flameTier = null } = {}) {
     if (!companion) return "";
     const rand = mulberry32(hashString(companion.seed + ":marks"));
     /* Evolution, drawn: the same seed-body at every stage — the
@@ -2102,10 +2257,26 @@
       `<stop offset="100%" stop-color="${companion.palette.glow}" stop-opacity="0"/>` +
       `</radialGradient>`;
     const { shape: moteShape, motes } = moteShapes(companion, stage);
+    /* The flame wrap stands around the core, never in its
+     * place: drawn behind the body, in front of the glowfield.
+     * An explicit `wrap` from the host wins; a companion that
+     * carries the choice (from its record) speaks next; the
+     * rollout's default is on. With the wrap off, not one byte
+     * of what follows differs from the drawing as it stood
+     * before the wrap existed. */
+    const wrapOn = wrap == null ? companion.wrap !== 0 : !!wrap;
+    const flame = wrapOn
+      ? flameWrapShapes(companion, stage, {
+          tier: flameTier || "full",
+          working: flameState === "working",
+          trail: shown("trail")
+        })
+      : "";
     return (
-      `<svg viewBox="0 0 100 100" role="img" aria-label="A ${companion.kindName} Spark" data-spark-form="${companion.form}" data-spark-stage="${stage}" data-spark-size="${companion.shape ? companion.shape.size : 1}" data-spark-glow="${companion.shape ? companion.shape.glow : "soft"}" data-spark-gait="${companion.shape ? companion.shape.gait : "stroll"}" data-spark-shown="${(revealed || []).join(" ")}" data-spark-motes="${moteShape}">` +
+      `<svg viewBox="0 0 100 100" role="img" aria-label="A ${companion.kindName} Spark"${wrapOn ? ` data-spark-wrap="${WRAP_VERSION}"` : ""} data-spark-form="${companion.form}" data-spark-stage="${stage}" data-spark-size="${companion.shape ? companion.shape.size : 1}" data-spark-glow="${companion.shape ? companion.shape.glow : "soft"}" data-spark-gait="${companion.shape ? companion.shape.gait : "stroll"}" data-spark-shown="${(revealed || []).join(" ")}" data-spark-motes="${moteShape}">` +
       `<defs>${glowDef}${needsClip ? `<clipPath id="${clipId}">${bodyShape(companion)}</clipPath>` : ""}</defs>` +
       `<circle class="spark-glowfield" cx="50" cy="52" r="47" fill="url(#${glowId})"/>` +
+      flame +
       `<g class="spark-motes">${motes}</g>` +
       `<g transform="translate(50 54) scale(${bodyScale}) translate(-50 -54)">` +
       (shown("trail") ? trailShape(companion) : "") +
@@ -2154,6 +2325,11 @@
   function newRecord({ seed, name, civilDate }) {
     return {
       version: 1,
+      /* The flame wrap's version, worn from birth (Aaron's
+       * rollout, Nov 23, 2026): presentation only — it derives
+       * nothing, counts nothing, and a keeper may set it to 0
+       * to lift the wrap off and stand the Spark as it was. */
+      wrap: WRAP_VERSION,
       seed,
       name: cleanName(name),
       bornCivil: civilDate || null,
@@ -3269,6 +3445,10 @@
     resolveKindIndex,
     generate,
     renderSVG,
+    WRAP_VERSION,
+    flameWrapFor,
+    wrapFor,
+    withWrap,
     chirpFor,
     soundsFor,
     SOUND_FAMILIES,
