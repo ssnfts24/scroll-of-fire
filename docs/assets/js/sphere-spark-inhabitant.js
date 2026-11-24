@@ -135,19 +135,38 @@
  *  day together, and the care-act line stands in the record.
  *  The remaining care kinds are the care slice's work.
  *
- *  Still named, not faked: the carrying tricks (Fetch the
- *  Token, Carry the Lantern) and the Whole Road performance
- *  derive in the app; on the site their stages are Their Home
- *  and the year's reading, and they stand designed, not built.
- *  The older count-based trick list in the site-wide companion
- *  core is left exactly as it was — the Sphere's book follows
- *  the ruled design; unifying the two is a later slice's work.
+ *  SLICE 4 — THE HOME AND WORLD ANSWER THE HISTORY. The
+ *  carrying tricks now derive on the site exactly as Gate E
+ *  derives them in the app: Fetch the Token at the Bearer
+ *  stage itself; Carry the Lantern at Bearer when a Waymaker
+ *  skill stands met in an episode watched through (its token
+ *  home) and a practice stands sealed (a plan completed). Their
+ *  performances live on their true stages, not on this face:
+ *  the fetch in Their Home (spark-home-world.js, reading this
+ *  module's own derivations), the lantern at an opened day —
+ *  when the lantern stands learned, the Spark carries it lit
+ *  at its station in the Day World while the keeper reads.
+ *  The book names both, learned or not, with where each is
+ *  performed. And the hum repertoire joins the book: every
+ *  episode watched through teaches its hum (derived from the
+ *  watch records, stored nowhere else), and a hum is performed
+ *  here — the Spark travels to the day the token came home,
+ *  when that plate stands on the face, and sounds the motif
+ *  there in its own voice. Performances still write nothing.
+ *
+ *  Still named, not faked: the Whole Road performance stands
+ *  designed, not built — its stage is the year's reading, a
+ *  later slice. The older count-based trick list in the
+ *  site-wide companion core is left exactly as it was — the
+ *  Sphere's book follows the ruled design; unifying the two
+ *  is a later slice's work.
  *
  *  The pure half (readout parsing, ring math, the hop arc, the
  *  idle choice, slice 2's breadth, preference, and target
- *  derivations, and slice 3's writer, facts fold, trick
- *  derivation, route logic and performance choreography)
- *  carries no DOM dependency and is unit-tested.
+ *  derivations, slice 3's writer, facts fold, trick
+ *  derivation, route logic and performance choreography, and
+ *  slice 4's hum repertoire fold) carries no DOM dependency
+ *  and is unit-tested.
  */
 (function (root, factory) {
   const api = factory();
@@ -695,7 +714,22 @@
       if (subtype === "episode-watched") {
         const p = r.payload?.sparkActivities;
         if (p && p.action === "watch" && typeof p.episodeId === "string") {
-          episodes.push({ id: p.episodeId, patternDay: pd });
+          /* The watch record carries the episode's hum and its
+           * distinguisher — the repertoire and the story corner
+           * derive from this record and are stored nowhere else
+           * (design §3.4; SparkActivities.foldWatches reads the
+           * same fields). */
+          const d = p.distinguisher && typeof p.distinguisher === "object" ? p.distinguisher : {};
+          episodes.push({
+            id: p.episodeId, patternDay: pd,
+            hum: p.hum && typeof p.hum === "object" ? p.hum : null,
+            skill: p.skill && typeof p.skill === "object" ? p.skill : null,
+            title: typeof d.name === "string" ? d.name : "",
+            land: typeof d.land === "string" ? d.land : "",
+            moonName: typeof d.moonName === "string" ? d.moonName : "",
+            token: typeof d.token === "string" ? d.token : "",
+            line: typeof d.line === "string" ? d.line : "",
+          });
           if (temporal.moon != null) episodeKeys.add(moonKey(temporal));
         }
       }
@@ -754,6 +788,40 @@
     };
   }
 
+  /* The hum repertoire (design §3.4): one entry per episode
+   * watched through, folded from the watch records the facts
+   * already read — the hum itself rides the watch record, and
+   * the repertoire is stored nowhere else. The shape mirrors
+   * SparkActivities.humRepertoire (episodeId, line, rootHz,
+   * scale, motifHz) and adds the day the token came home and
+   * the episode's place, which the performance travels to.
+   * An episode watched on the Day Out of Time names no plate:
+   * its hum is still the Spark's, performed where it stands. */
+  function humRepertoireFromFacts(facts) {
+    const f = facts && typeof facts === "object" ? facts : lifeFactsFromRecords([], null);
+    const out = [];
+    for (const e of Array.isArray(f.episodes) ? f.episodes : []) {
+      if (!e || !e.hum) continue;
+      const motifHz = Array.isArray(e.hum.motifHz)
+        ? e.hum.motifHz.filter((hz) => Number.isFinite(hz) && hz > 0)
+        : [];
+      if (!motifHz.length) continue;
+      out.push({
+        episodeId: e.id,
+        title: e.title || "",
+        line: e.line || "",
+        land: e.land || "",
+        moonName: e.moonName || "",
+        token: e.token || "",
+        rootHz: Number.isFinite(e.hum.rootHz) ? e.hum.rootHz : null,
+        scale: typeof e.hum.scale === "string" ? e.hum.scale : "",
+        motifHz,
+        patternDay: Number.isInteger(e.patternDay) ? e.patternDay : null,
+      });
+    }
+    return out;
+  }
+
   const LIFE_STAGE_NAMES = { spark: "Spark", kindled: "Kindled", bearer: "Bearer", guardian: "Guardian" };
 
   function moonSpansDays(byMoon, days) {
@@ -797,6 +865,7 @@
     "ember-trail": "Ember Trail", "ripple-dance": "Ripple Dance",
     "between-worlds": "Between Worlds", windweaver: "Windweaver",
     "living-ground": "Living Ground", constellation: "Constellation",
+    "fetch-the-token": "Fetch the Token", "carry-the-lantern": "Carry the Lantern",
     route: "The Route You Taught",
   };
   const BASIC_TRICKS = ["hop", "drift", "glow-pulse", "first-note"];
@@ -823,19 +892,31 @@
   }
 
   /* The tricks the record now supports, in learning order,
-   * each with the act it was learned by — Gate E's derivation.
-   * Pure: writes nothing. (The carrying tricks and the Whole
-   * Road derive in the app at Gate E; on the site their
-   * performances belong to Their Home and the year's reading,
-   * and stand designed, not built — see the addendum.) */
+   * each with the act it was learned by — Gate E's derivation,
+   * mirrored whole in slice 4, the carrying tricks included:
+   * Fetch the Token learned with the Bearer stage itself (the
+   * stage's proof performed, design §3.3); Carry the Lantern
+   * at Bearer when an episode stands watched through — a
+   * Waymaker skill met, its token home — and a practice stands
+   * sealed, which Gate E reads on the site's records as a plan
+   * standing completed (a milestone). The Whole Road still
+   * derives only in the app; on the site its stage is the
+   * year's reading, a later slice. Pure: writes nothing. */
   function derivedTricks({ kind, stage, facts, lines } = {}) {
     const out = [];
     const held = Array.isArray(lines) ? lines : [];
+    const f = facts && typeof facts === "object" ? facts : lifeFactsFromRecords([], null);
     const closeDay = held.find((l) => l.line === "care-act" && l.kind === "close-day");
     if (closeDay) out.push({ trick: "bow", via: closeDay.id || "care:close-day" });
-    const paired = pairedActFor(kind, facts);
+    const paired = pairedActFor(kind, f);
     if (stage && stage !== "spark" && paired.stands && SIGNATURE_BY_KIND[kind]) {
       out.push({ trick: SIGNATURE_BY_KIND[kind], via: paired.ref });
+    }
+    if (stage === "bearer" || stage === "guardian") {
+      out.push({ trick: "fetch-the-token", via: "stage:bearer" });
+      if ((f.episodes || []).length >= 1 && (f.milestones || []).length >= 1) {
+        out.push({ trick: "carry-the-lantern", via: f.episodes[0].id });
+      }
     }
     if ((stage === "bearer" || stage === "guardian") && paired.moons >= 2 && SECOND_SIGNATURE_BY_KIND[kind]) {
       out.push({ trick: SECOND_SIGNATURE_BY_KIND[kind], via: paired.ref });
@@ -951,6 +1032,28 @@
         teachLine: `Learned at Bearer, when ${paired.plain} stands in a second Moon as well.`,
       });
     }
+    /* The carrying tricks (slice 4): learned exactly as Gate E
+     * derives them, performed on their own stages — the book
+     * names the stage so no keeper looks for them on this face. */
+    if (!learnedIds.has("fetch-the-token")) {
+      unlearned.push({
+        trick: "fetch-the-token", name: TRICK_NAMES["fetch-the-token"],
+        teachLine: "Learned with the Bearer stage itself — the stage where the Spark visibly carries. It is performed in Their Home, where the Spark brings you what you name.",
+      });
+    }
+    if (!learnedIds.has("carry-the-lantern")) {
+      unlearned.push({
+        trick: "carry-the-lantern", name: TRICK_NAMES["carry-the-lantern"],
+        teachLine: "Learned at Bearer, when a Waymaker skill stands met in an episode watched through and a practice stands sealed — a plan completed in your planner. It is carried at an opened day.",
+      });
+    }
+
+    /* Where a learned trick is performed, when its stage is
+     * not this face. Face tricks carry no `where`. */
+    const WHERE_BY_TRICK = {
+      "fetch-the-token": "performed in Their Home",
+      "carry-the-lantern": "carried at an opened day",
+    };
 
     return {
       stage,
@@ -960,10 +1063,14 @@
       learned: learnedLines.map((l) => ({
         trick: l.trick,
         name: TRICK_NAMES[l.trick] || l.trick,
-        viaPlain: viaPlainFor(l.via, lines),
+        viaPlain: l.trick === "carry-the-lantern"
+          ? "an episode watched through, its skill met, and a practice sealed"
+          : viaPlainFor(l.via, lines),
         patternDay: l.patternDay ?? null,
+        where: WHERE_BY_TRICK[l.trick] || null,
       })),
       unlearned,
+      hums: humRepertoireFromFacts(facts),
       route: demo ? { demo, learned: Boolean(routeLearned), learnedLine: routeLearned } : null,
       who,
     };
@@ -1033,6 +1140,23 @@
         travel(target(1), "drift", "stars"), travel(target(3), "drift", "stars"),
         travel(target(2), "drift", "stars"), pause(1300), travel(post, "drift"),
       ];
+      case "hum": {
+        /* A learned hum, performed at the day its token came
+         * home when that plate stands on the face — the Spark
+         * visits the episode's place on the instrument and
+         * regards it by sounding the motif there. A token day
+         * not on the face, or the Day Out of Time's no-plate,
+         * is never faked: the hum sounds where the Spark
+         * stands. ctx.humMs sizes the act to the motif. */
+        const humPd = Number.isInteger(ctx.humPd) && ctx.humPd >= 1 && ctx.humPd <= PATTERN_DAYS ? ctx.humPd : null;
+        const ms = Math.max(900, Math.min(4200, Number(ctx.humMs) || 1600));
+        const steps = [];
+        const away = humPd != null && humPd !== post && projected.has(humPd);
+        if (away) steps.push(travel(humPd, "drift"));
+        steps.push(act("hum", ms));
+        if (away) steps.push(travel(post, "drift"));
+        return steps;
+      }
       case "route": {
         const days = (Array.isArray(ctx.routeDays) ? ctx.routeDays : [])
           .filter((pd) => Number.isInteger(pd) && pd >= 1 && pd <= PATTERN_DAYS);
@@ -1103,6 +1227,10 @@
     let closingRow = null;      // the closing rite's row inside the Day World
     let closingTries = 0;
     let closingNote = null;
+
+    /* ── Slice 4 state ─────────────────────────────────────── */
+    let perfHum = null;         // the repertoire entry a hum performance sounds
+    let lanternEl = null;       // the lit lantern the holder carries in a day
 
     function readRecord() {
       try {
@@ -1331,7 +1459,10 @@
     /* The book stands in the same ambient panel as the favours
      * — the Spark's existing surface, not a new page. Learned
      * tricks are buttons; unlearned tricks are plain words
-     * saying what would teach them. */
+     * saying what would teach them. Slice 4: the carrying
+     * tricks stand as named lines (their stages are Their Home
+     * and the opened day, not this face), and the learned hums
+     * stand as buttons under their own heading. */
     function renderTrickBook() {
       if (!trickSection) return;
       const record = readRecord();
@@ -1384,7 +1515,49 @@
       };
       for (const item of book.basics) performRow(item, "from birth");
       for (const item of book.learned) {
-        performRow(item, `learned by ${item.viaPlain}${item.patternDay ? ` · Pattern Day ${item.patternDay}` : ""}`);
+        const viaLine = `learned by ${item.viaPlain}${item.patternDay ? ` · Pattern Day ${item.patternDay}` : ""}`;
+        if (item.where) {
+          /* A carrying trick's stage is not this face: the book
+           * names it and where it is performed — no button
+           * pretends otherwise. */
+          const p = document.createElement("p");
+          p.className = "sphere-spark-tricks-line sphere-spark-trick-carrying";
+          p.textContent = `${item.name} — ${viaLine}; ${item.where}.`;
+          trickSection.appendChild(p);
+          continue;
+        }
+        performRow(item, viaLine);
+      }
+
+      /* The hums (slice 4): one button per episode watched
+       * through — the Spark sounds its motif at the day the
+       * token came home. Nothing watched, no hums: the book
+       * says so in one honest line. */
+      const humsTitle = document.createElement("p");
+      humsTitle.className = "sphere-spark-tricks-line sphere-spark-tricks-hums-title";
+      humsTitle.textContent = book.hums.length
+        ? `The hums ${book.who} has learned — one for each episode watched through:`
+        : `No hums learned yet — an episode watched through to its end teaches ${book.who} its hum.`;
+      trickSection.appendChild(humsTitle);
+      for (const hum of book.hums) {
+        const row = document.createElement("div");
+        row.className = "sphere-spark-trick-row";
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "sphere-spark-trick-btn";
+        btn.textContent = hum.title ? `Sound the hum of ${hum.title}` : "Sound a learned hum";
+        btn.setAttribute("aria-label", `Ask ${book.who} to sound the hum of ${hum.title || "an episode watched through"}`);
+        btn.addEventListener("click", () => performHum(hum));
+        row.appendChild(btn);
+        const via = document.createElement("span");
+        via.className = "sphere-spark-trick-via";
+        via.textContent = [
+          hum.land ? `of ${hum.land}` : "",
+          hum.moonName ? `under ${hum.moonName}` : "",
+          hum.patternDay ? `its token came home on Pattern Day ${hum.patternDay}` : "its token came home on the Day Out of Time",
+        ].filter(Boolean).join(" · ");
+        row.appendChild(via);
+        trickSection.appendChild(row);
       }
 
       /* The taught route: teaching in progress, a route
@@ -1538,9 +1711,56 @@
       runPerformance(trickId, {});
     }
 
-    function runPerformance(trickId, { routeDays = null, onDone = null } = {}) {
+    /* The Spark's voice, sounding a learned hum's own motif —
+     * the episode's measured notes, in the house's sound
+     * discipline (a sine tone, a soft attack, a falling decay;
+     * the keeper's sound setting honoured, read the way the
+     * presence reads it). Sound is a grace: any failure is
+     * silence, never an error. Notes are bounded — a motif is
+     * a handful of tones, never a concert. */
+    let humAudioCtx = null;
+    function soundMotifHz(motifHz) {
+      try {
+        if (root.localStorage?.getItem("sof.spark.sound") === "off") return;
+        const notes = (Array.isArray(motifHz) ? motifHz : []).filter((hz) => Number.isFinite(hz) && hz > 0).slice(0, 12);
+        if (!notes.length) return;
+        const AC = root.AudioContext || root.webkitAudioContext;
+        if (!AC) return;
+        humAudioCtx = humAudioCtx || new AC();
+        if (humAudioCtx.state === "suspended") humAudioCtx.resume();
+        const ctx = humAudioCtx;
+        notes.forEach((hz, i) => {
+          const t = ctx.currentTime + 0.03 + i * 0.42;
+          const dur = 0.5;
+          const osc = ctx.createOscillator();
+          osc.type = "sine";
+          osc.frequency.value = hz;
+          const gain = ctx.createGain();
+          gain.gain.setValueAtTime(0, t);
+          gain.gain.linearRampToValueAtTime(0.12, t + 0.03);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(t); osc.stop(t + dur + 0.05);
+        });
+      } catch { /* the voice is a grace, not a gate */ }
+    }
+
+    /* A hum from the book: the Spark travels to the day the
+     * episode's token came home, when that plate stands on the
+     * face, and sounds the motif there — a performance like any
+     * other, writing nothing. */
+    function performHum(entry) {
+      if (!entry) return;
+      runPerformance("hum", { hum: entry });
+    }
+
+    function runPerformance(trickId, { routeDays = null, onDone = null, hum = null } = {}) {
       if (perf || !holder || mode === "in-day" || postPd == null) return false;
-      let steps = performanceSteps(trickId, { postPd, projected: projectedPds(), routeDays });
+      let steps = performanceSteps(trickId, {
+        postPd, projected: projectedPds(), routeDays,
+        humPd: hum ? hum.patternDay : null,
+        humMs: hum ? hum.motifHz.length * 420 + 500 : null,
+      });
       if (!steps.length) return false;
       if (reducedMotion) steps = steps.filter((s) => s.type !== "travel");
       if (!steps.length) return false;
@@ -1551,7 +1771,9 @@
         mode = "posted";
       }
       perf = { trick: trickId, steps, idx: 0, onDone };
+      perfHum = trickId === "hum" ? hum : null;
       holder.dataset.inhabitantTrick = trickId;
+      if (perfHum) holder.dataset.inhabitantHum = perfHum.episodeId;
       mode = "performing";
       setPosture("stand");
       advancePerf();
@@ -1598,11 +1820,15 @@
       perfActMs = step.ms;
       perfStepEndsAt = performance.now() + step.ms;
       if (step.act === "bow" || step.act === "ripple" || step.act === "ground") setPosture("bow");
-      if (step.act === "glow" || step.act === "note") holder.classList.add("inhabitant-do-glow");
+      if (step.act === "glow" || step.act === "note" || step.act === "hum") holder.classList.add("inhabitant-do-glow");
       if (step.act === "spin") holder.classList.add("inhabitant-do-spin");
       if (step.act === "halo") holder.classList.add("inhabitant-do-halo");
       if (step.act === "note") {
         try { root.SphereSpark?.soundMotif?.(); } catch { /* the voice is a grace, not a gate */ }
+      }
+      if (step.act === "hum") {
+        setPosture("observe");
+        if (perfHum) soundMotifHz(perfHum.motifHz);
       }
       if (step.act === "ripple") spawnFxAt("ripple", labelPoint(postPd), null);
       if (step.act === "ground") spawnFxAt("ground", labelPoint(postPd), null);
@@ -1619,11 +1845,12 @@
     function finishPerf() {
       const done = perf?.onDone || null;
       perf = null;
+      perfHum = null;
       perfStepEndsAt = 0;
       perfStepFx = null;
       clearPerfAct();
       clearStarFx();
-      if (holder) delete holder.dataset.inhabitantTrick;
+      if (holder) { delete holder.dataset.inhabitantTrick; delete holder.dataset.inhabitantHum; }
       mode = "posted";
       setPosture("settle");
       root.setTimeout(() => { if (mode === "posted") setPosture("stand"); }, 900);
@@ -1634,12 +1861,14 @@
     function cancelPerf() {
       if (!perf) return;
       perf = null;
+      perfHum = null;
       perfStepEndsAt = 0;
       perfStepFx = null;
       clearPerfAct();
       clearStarFx();
       if (holder) {
         delete holder.dataset.inhabitantTrick;
+        delete holder.dataset.inhabitantHum;
         holder.style.opacity = "";
       }
       travel = null;
@@ -1686,6 +1915,44 @@
       while (perfStars.length) perfStars.pop().remove();
     }
 
+    /* ── Slice 4: Carry the Lantern, at an opened day ──────── */
+    /* When the lantern stands learned — witnessed by its
+     * trick-learned line, or derivable from the facts already
+     * folded — the Spark takes it up at its station in the
+     * room: a small lit lamp riding the holder, present while
+     * the keeper reads the day. It performs nothing and solves
+     * nothing; it attends, lit (design §3.3). */
+    function lanternStands() {
+      const record = readRecord();
+      if (!record) return false;
+      if (lifeLinesOf(record).some((l) => l.line === "trick-learned" && l.trick === "carry-the-lantern")) return true;
+      if (!atlasFacts) return false;
+      const stage = lifeStageFromFacts(atlasFacts);
+      return derivedTricks({ kind: sparkKind(record), stage, facts: atlasFacts, lines: lifeLinesOf(record) })
+        .some((d) => d.trick === "carry-the-lantern");
+    }
+
+    function placeLantern() {
+      removeLantern();
+      if (!holder || !lanternStands()) return;
+      lanternEl = document.createElement("span");
+      lanternEl.className = "inhabitant-lantern";
+      lanternEl.setAttribute("aria-hidden", "true");
+      const frame = document.createElement("span");
+      frame.className = "inhabitant-lantern-frame";
+      const flame = document.createElement("span");
+      flame.className = "inhabitant-lantern-flame";
+      frame.appendChild(flame);
+      lanternEl.appendChild(frame);
+      holder.appendChild(lanternEl);
+      holder.dataset.inhabitantLantern = "lit";
+    }
+
+    function removeLantern() {
+      if (lanternEl) { lanternEl.remove(); lanternEl = null; }
+      if (holder) delete holder.dataset.inhabitantLantern;
+    }
+
     /* ── Slice 3: close the day, together ──────────────────── */
     /* The site's one care act in this slice, standing in the
      * day's own leave-taking section: the Spark reads the day
@@ -1730,9 +1997,10 @@
       }[kind] || kind));
       const read = document.createElement("p");
       read.className = "sphere-spark-closing-line";
-      read.textContent = marks.length
+      read.textContent = (marks.length
         ? `Pattern Day ${postPd} — ${marks.join(" · ")}. ${name} stands in it with you.`
-        : `Pattern Day ${postPd} — nothing stands on this day in the record yet. Standing in it together is its first mark.`;
+        : `Pattern Day ${postPd} — nothing stands on this day in the record yet. Standing in it together is its first mark.`)
+        + (holder?.dataset.inhabitantLantern ? " The lantern is lit beside you." : "");
       closingRow.appendChild(read);
       if (closingNote) {
         const note = document.createElement("p");
@@ -2217,6 +2485,9 @@
       holder.dataset.inhabitantInDay = "1";
       closingTries = 0;
       closingNote = null;
+      /* The lantern first: the closing row's reading names it,
+       * and the row may render on its first placement. */
+      placeLantern();
       placeClosingRow();
     }
 
@@ -2230,6 +2501,7 @@
       }
       dayRoom = null;
       delete holder.dataset.inhabitantInDay;
+      removeLantern();
       if (closingRow) { closingRow.remove(); closingRow = null; }
       closingNote = null;
       pos = null;
@@ -2321,6 +2593,7 @@
     LIFE_LINE_FORBIDDEN_KEYS,
     KEEPING_KINDS_TABLE,
     lifeFactsFromRecords,
+    humRepertoireFromFacts,
     lifeStageFromFacts,
     LIFE_STAGE_NAMES,
     pairedActFor,

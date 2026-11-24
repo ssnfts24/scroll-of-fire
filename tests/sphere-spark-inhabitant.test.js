@@ -532,10 +532,11 @@ test("the Bearer signature needs the paired act in a second Moon", () => {
   const facts = layer.lifeFactsFromRecords(records, { seed: "s" });
   assert.equal(layer.lifeStageFromFacts(facts), "bearer");
   const tricks = layer.derivedTricks({ kind: "water", stage: "bearer", facts, lines: [] }).map((d) => d.trick);
-  assert.deepEqual(plain(tricks), ["ripple-bow", "ripple-dance"], "witnessed days stand in Moons 2 and 8");
+  assert.deepEqual(plain(tricks), ["ripple-bow", "fetch-the-token", "ripple-dance"],
+    "witnessed days stand in Moons 2 and 8; Bearer itself teaches the fetch (slice 4), and no episode or sealed practice stands, so no lantern");
   const oneMoon = layer.lifeFactsFromRecords(records.filter((r) => r.id !== "n8"), { seed: "s" });
   const oneMoonTricks = layer.derivedTricks({ kind: "water", stage: "bearer", facts: oneMoon, lines: [] }).map((d) => d.trick);
-  assert.deepEqual(plain(oneMoonTricks), ["ripple-bow"], "one Moon teaches the signature only");
+  assert.deepEqual(plain(oneMoonTricks), ["ripple-bow", "fetch-the-token"], "one Moon teaches the signature only");
 });
 
 test("a route is its days in order; its learning is a line that names the demonstration", () => {
@@ -566,8 +567,9 @@ test("the trick book: basics from birth, the unlearned named with their teaching
   assert.equal(thin.stage, "spark");
   assert.deepEqual(plain(thin.basics.map((b) => b.trick)), ["hop", "drift", "glow-pulse", "first-note"]);
   assert.deepEqual(plain(thin.learned), []);
-  assert.deepEqual(plain(thin.unlearned.map((u) => u.trick)), ["bow", "ripple-bow", "ripple-dance"]);
+  assert.deepEqual(plain(thin.unlearned.map((u) => u.trick)), ["bow", "ripple-bow", "ripple-dance", "fetch-the-token", "carry-the-lantern"]);
   assert.match(thin.unlearned[0].teachLine, /close a day together/);
+  assert.deepEqual(plain(thin.hums), [], "no episode watched, no hums — the repertoire is the watch records and nothing else");
   assert.equal(thin.route, null);
 
   const records = [atlasNote("n1", 220, 8), atlasGarden("g1", 198, 8), atlasWatch("w1", "ep-a", 224, 8)];
@@ -619,4 +621,165 @@ test("a performance is spelled in the ruled vocabulary, on the geometry, and spe
   assert.deepEqual(plain(layer.performanceSteps("cartwheel", ctx)), []);
   assert.deepEqual(plain(layer.performanceSteps("route", { ...ctx, routeDays: [] })), []);
   assert.deepEqual(plain(layer.performanceSteps("hop", { postPd: null })), []);
+});
+
+/* ── Slice 4: the carrying tricks and the hum repertoire ───────
+ * The carrying tricks derive exactly as Gate E derives them in
+ * the app: Fetch the Token with the Bearer stage itself; Carry
+ * the Lantern at Bearer when an episode stands watched through
+ * (a skill met, its token home) and a practice stands sealed
+ * (a plan completed). The hum repertoire derives from the
+ * watch records and is stored nowhere else. */
+
+const atlasWatchFull = (id, episodeId, pd, moon, patternYear = 1) => ({
+  id, type: "event", subtype: "episode-watched",
+  temporal: { patternDay: pd, moon, patternYear, civilDate: "2026-11-20" },
+  payload: {
+    sparkActivities: {
+      version: 1, action: "watch", episodeId, chapterN: 4,
+      distinguisher: {
+        name: "Through the Day Door", land: "the Observatory", moonName: "Breath Gate",
+        token: "the Day Door",
+        line: "Through the Day Door — of the Observatory, under Breath Gate, the Day Door"
+      },
+      hum: { rootHz: 174, scale: "Freygish", motifHz: [261, 348, 522], note: "" },
+      skill: { n: 1, name: "Read the day", kitMark: "the lantern, opened", state: "met" }
+    }
+  },
+});
+
+function bearerRecords() {
+  const records = [];
+  for (let d = 1; d <= 14; d += 1) records.push(atlasGarden(`g${d}`, d, 1));
+  for (let d = 29; d <= 42; d += 1) records.push(atlasNote(`n${d}`, d, 2));
+  return records;
+}
+
+test("the facts fold carries the watch record's hum and distinguisher — the repertoire's only source", () => {
+  const layer = loadInhabitant();
+  const facts = layer.lifeFactsFromRecords([atlasWatchFull("w1", "through-the-day-door", 224, 8)], { seed: "s" });
+  assert.equal(facts.episodes.length, 1);
+  assert.equal(facts.episodes[0].token, "the Day Door");
+  assert.equal(facts.episodes[0].land, "the Observatory");
+  const repertoire = layer.humRepertoireFromFacts(facts);
+  assert.equal(repertoire.length, 1);
+  assert.equal(repertoire[0].episodeId, "through-the-day-door");
+  assert.deepEqual(plain(repertoire[0].motifHz), [261, 348, 522]);
+  assert.equal(repertoire[0].patternDay, 224, "the day the token came home is the performance's place");
+  // A watch whose record carries no hum teaches none; a bare
+  // episode fact (slice 3's shape) teaches none either.
+  const bare = layer.lifeFactsFromRecords([atlasWatch("w2", "ep-bare", 100, 4)], { seed: "s" });
+  assert.deepEqual(plain(layer.humRepertoireFromFacts(bare)), []);
+  assert.deepEqual(plain(layer.humRepertoireFromFacts(null)), []);
+});
+
+test("the site repertoire and the activities module's own fold agree, record for record", () => {
+  const activitiesSrc = fs.readFileSync("docs/assets/js/spark-activities.js", "utf8");
+  const sandbox = { module: { exports: {} }, console };
+  sandbox.globalThis = sandbox;
+  vm.createContext(sandbox);
+  vm.runInContext(activitiesSrc, sandbox, { filename: "spark-activities.js" });
+  const Activities = sandbox.module.exports;
+  const layer = loadInhabitant();
+  const records = [atlasWatchFull("w1", "through-the-day-door", 224, 8), atlasWatch("w2", "ep-bare", 100, 4)];
+  const theirs = Activities.humRepertoire(records);
+  const ours = layer.humRepertoireFromFacts(layer.lifeFactsFromRecords(records, { seed: "s" }));
+  assert.equal(ours.length, theirs.length);
+  assert.equal(ours[0].episodeId, theirs[0].episodeId);
+  assert.deepEqual(plain(ours[0].motifHz), plain(theirs[0].motifHz));
+  assert.equal(ours[0].rootHz, theirs[0].rootHz);
+});
+
+test("the carrying tricks derive at Bearer, on Gate E's exact conditions", () => {
+  const layer = loadInhabitant();
+  const factsOf = (records) => layer.lifeFactsFromRecords(records, { seed: "s" });
+  const ids = (records, stage) => plain(layer.derivedTricks({ kind: "water", stage, facts: factsOf(records), lines: [] }).map((d) => d.trick));
+  // Bearer alone: the fetch, and only the fetch.
+  assert.ok(ids(bearerRecords(), "bearer").includes("fetch-the-token"));
+  assert.ok(!ids(bearerRecords(), "bearer").includes("carry-the-lantern"));
+  // Bearer + an episode watched: still no lantern without a sealed practice.
+  const withWatch = [...bearerRecords(), atlasWatchFull("w1", "through-the-day-door", 224, 8)];
+  assert.ok(!ids(withWatch, "bearer").includes("carry-the-lantern"));
+  // Bearer + a sealed practice: still no lantern without the episode.
+  const withPlan = [...bearerRecords(), atlasPlan("p1", 210, 8, "completed")];
+  assert.ok(!ids(withPlan, "bearer").includes("carry-the-lantern"));
+  // Both standing: the lantern derives, learned by the episode.
+  const both = [...withWatch, atlasPlan("p1", 210, 8, "completed")];
+  const derived = layer.derivedTricks({ kind: "water", stage: "bearer", facts: factsOf(both), lines: [] });
+  const lantern = derived.find((d) => d.trick === "carry-the-lantern");
+  assert.ok(lantern, "the lantern derives when both acts stand");
+  assert.equal(lantern.via, "through-the-day-door");
+  assert.equal(derived.find((d) => d.trick === "fetch-the-token").via, "stage:bearer");
+  // Below Bearer the same facts teach neither carrying trick.
+  assert.ok(!ids(both, "kindled").includes("fetch-the-token"));
+  assert.ok(!ids(both, "kindled").includes("carry-the-lantern"));
+  // Guardian keeps both.
+  assert.ok(ids(both, "guardian").includes("fetch-the-token"));
+  assert.ok(ids(both, "guardian").includes("carry-the-lantern"));
+});
+
+test("a carrying learning is witnessed once, like every learning", () => {
+  const layer = loadInhabitant();
+  const records = [...bearerRecords(), atlasWatchFull("w1", "through-the-day-door", 224, 8), atlasPlan("p1", 210, 8, "completed")];
+  const facts = layer.lifeFactsFromRecords(records, { seed: "s" });
+  assert.equal(layer.lifeStageFromFacts(facts), "bearer");
+  const record = { seed: "s", lifeLines: [] };
+  const fresh = layer.newTrickLines({ record, kind: "water", facts, stamp: STAMP, at: "2026-11-24T00:00:00.000Z" });
+  const tricks = plain(fresh.map((l) => l.trick));
+  assert.ok(tricks.includes("fetch-the-token"), "the fetch is witnessed");
+  assert.ok(tricks.includes("carry-the-lantern"), "the lantern is witnessed");
+  let grown = record;
+  for (const line of fresh) grown = layer.appendLifeLine(grown, line).record;
+  assert.deepEqual(plain(layer.newTrickLines({ record: grown, kind: "water", facts, stamp: STAMP })), [],
+    "a second fold over the same record witnesses nothing twice");
+});
+
+test("the book names the carrying tricks' stages, learned or not, and lists the hums", () => {
+  const layer = loadInhabitant();
+  const records = [...bearerRecords(), atlasWatchFull("w1", "through-the-day-door", 224, 8), atlasPlan("p1", 210, 8, "completed")];
+  const facts = layer.lifeFactsFromRecords(records, { seed: "s" });
+  const record = {
+    seed: "s",
+    lifeLines: [
+      { line: "trick-learned", trick: "fetch-the-token", id: "line-0001", via: "stage:bearer", patternDay: 222, civilDate: "2026-11-24" },
+      { line: "trick-learned", trick: "carry-the-lantern", id: "line-0002", via: "through-the-day-door", patternDay: 222, civilDate: "2026-11-24" },
+    ],
+  };
+  const book = layer.trickBookFrom({ name: "Selor", kind: "water", record, facts });
+  const fetch = book.learned.find((l) => l.trick === "fetch-the-token");
+  const lantern = book.learned.find((l) => l.trick === "carry-the-lantern");
+  assert.equal(fetch.where, "performed in Their Home");
+  assert.equal(fetch.viaPlain, "the Bearer stage");
+  assert.equal(lantern.where, "carried at an opened day");
+  assert.match(lantern.viaPlain, /skill met/);
+  assert.equal(book.hums.length, 1);
+  assert.equal(book.hums[0].episodeId, "through-the-day-door");
+  // Face tricks carry no `where` — their stage is this face.
+  const kindledFacts = layer.lifeFactsFromRecords(
+    [atlasNote("n1", 220, 8), atlasGarden("g1", 198, 8), atlasWatch("w1", "ep-a", 224, 8)], { seed: "s" });
+  const kindledBook = layer.trickBookFrom({ name: "Selor", kind: "water", record: THIN_RECORD, facts: kindledFacts });
+  const fetchU = kindledBook.unlearned.find((u) => u.trick === "fetch-the-token");
+  const lanternU = kindledBook.unlearned.find((u) => u.trick === "carry-the-lantern");
+  assert.match(fetchU.teachLine, /Their Home/);
+  assert.match(lanternU.teachLine, /opened day/);
+});
+
+test("a hum performance travels to the token's day when it stands on the face — and never fakes the trip", () => {
+  const layer = loadInhabitant();
+  const ctx = { postPd: 222, projected: [220, 222, 224], humPd: 224, humMs: 1760 };
+  const steps = layer.performanceSteps("hum", ctx);
+  assert.deepEqual(plain(steps.map((s) => s.type)), ["travel", "act", "travel"]);
+  assert.equal(steps[0].pd, 224);
+  assert.equal(steps[1].act, "hum");
+  assert.equal(steps[1].ms, 1760);
+  assert.equal(steps[2].pd, 222, "the Spark comes home to its post");
+  // The token day not on the face: the hum sounds where the Spark stands.
+  const offFace = layer.performanceSteps("hum", { ...ctx, humPd: 100 });
+  assert.deepEqual(plain(offFace.map((s) => s.type)), ["act"]);
+  // The Day Out of Time names no plate: same honesty.
+  const noPlate = layer.performanceSteps("hum", { ...ctx, humPd: null });
+  assert.deepEqual(plain(noPlate.map((s) => s.type)), ["act"]);
+  // Already standing on the token day: no travel at all.
+  const atHome = layer.performanceSteps("hum", { ...ctx, humPd: 222 });
+  assert.deepEqual(plain(atHome.map((s) => s.type)), ["act"]);
 });
