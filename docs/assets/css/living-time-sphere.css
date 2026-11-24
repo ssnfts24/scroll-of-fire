@@ -4588,6 +4588,42 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
   opacity: 0.75;
 }
 
+/* ── The stage on a phone browser ────────────────────────────────
+ * (Nov 24, 2026 — Aaron's named release of this one piece,
+ * Dashboard #57, in his own words: "Release the Sphere stage
+ * piece" — the same family as the Gate D app-mode release,
+ * PR #277.)
+ *
+ * On a phone browser the app-mode module acquires the app mode
+ * itself and marks the document with the mobile mark — a mark
+ * the true app context never carries, because the app set its
+ * mode before the module ran. The chrome budget already steps aside
+ * under that mode; what the mode could not give the stage was
+ * size. The frame sizes the stage from the canvas wrap (the
+ * instrument shell and the container are its absolute fills),
+ * and at phone widths the wrap stood only as tall as its
+ * stacked in-flow leavings: the stage measured 388×241 in a
+ * 390×844 screen, a 0.286 share of the usable height.
+ *
+ * This block is the shell's own answer, and the only rule the
+ * release adds: at phone widths, under the mobile mark alone,
+ * the canvas wrap is floored at 80dvh, so shell and container
+ * stand at the app framing's standard — the great majority of
+ * the usable screen. The renderer sizes its canvas from the
+ * container as it always has; no geometry, rendering, camera,
+ * motion, selection, or label rule moves. The desktop framing
+ * is untouched: the mark exists only at phone widths and is
+ * released if the viewport grows past the line. The guide
+ * already stands in this frame as the rooms sheet — fixed to
+ * the foot of the screen, lowered out of sight until a dock
+ * door raises it — and this release does not move it.
+ */
+@media (max-width: 700px) {
+  html.living-time-sphere-page.sof-mobile-mode .sphere-canvas-wrap {
+    min-height: 80dvh;
+  }
+}
+
 /* R2 rework preview options */
 .sphere-r2-options {
   margin-top: 0.75rem;
