@@ -93,3 +93,84 @@
   color: rgba(232, 226, 208, 0.62);
   text-align: left;
 }
+
+/* The place control seated in the panel (Nov 24, 2026): the
+ * one location command, in the dome's own furniture. Its
+ * show/hide behaviour with a place standing (the form folds
+ * until Change is tapped) is the location command's standing
+ * rule and applies here by the same classes; what stands
+ * below is only the dome's sizing and the quiet state. */
+.sphere-sky-place {
+  margin: 0.5rem 0 0;
+  text-align: left;
+}
+
+.sphere-sky-place-state {
+  margin: 0 0 0.35rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #ffd98f;
+}
+
+.sphere-sky-place .sphere-location-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.sphere-sky-place-btn {
+  appearance: none;
+  border: 1px solid rgba(255, 217, 143, 0.4);
+  background: rgba(16, 26, 51, 0.6);
+  color: #e8e2d0;
+  border-radius: 999px;
+  padding: 0.32rem 0.7rem;
+  font-size: 0.8rem;
+  min-height: 36px;
+  cursor: pointer;
+}
+
+.sphere-sky-place .sphere-location-inputs {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.4rem;
+}
+
+.sphere-sky-place .sphere-location-coords {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.sphere-sky-place-input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 217, 143, 0.35);
+  border-radius: 0.5rem;
+  background: rgba(10, 15, 30, 0.75);
+  color: #e8e2d0;
+  padding: 0.45rem 0.6rem;
+  font-size: 0.9rem;
+}
+
+.sphere-sky-place .sphere-location-result {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin-top: 0.35rem;
+}
+
+.sphere-sky-place-quiet {
+  margin-top: 0.4rem;
+  display: flex;
+  gap: 0.35rem;
+}
+
+/* The quieted state: the keeper said Not now. The form folds
+ * away for the session; the state line and one plain Set
+ * location button stay, so the door is never lost. */
+.sphere-sky-place.sky-place-quiet .sphere-location-actions,
+.sphere-sky-place.sky-place-quiet .sphere-location-inputs,
+.sphere-sky-place.sky-place-quiet .sphere-location-results,
+.sphere-sky-place.sky-place-quiet [data-location-status] {
+  display: none;
+}

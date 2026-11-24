@@ -218,15 +218,15 @@ test("the white paper no longer describes the trailer as awaiting approval", () 
   assert.ok(paper.includes("Episode Library"), "the paper names the trailer's placed home");
 });
 
-test("the growth record carries the Library at index 21, under the pinned head", () => {
+test("the growth record carries the Library at index 22, under the pinned head", () => {
   const updates = JSON.parse(read("docs/assets/data/codex-updates.json"));
-  assert.equal(updates[0].title, "The front door gained its small surfaces", "the pinned head stands");
-  assert.equal(updates[21].url, "./episodes.html", "the Library entry stands at index 21 (the Sphere's breathing entry landed above it in PR #267, the one-story entry above that in PR #270, the Sphere details entry above that in PR #272, the Free the Spark rename entry above that, the site-wide metadata entry above that, the Genesis profile entry above that, the Spark fence entry above that, the Spark inhabitant entry above that, the Spark keeper's-ways entry above that, the Spark tricks entry above that, the Spark home entry above that, the Spark seasons entry above that, the Spark road entry above that, the Sphere app-mode entry above that, the Witness tending entry above that, the sky rule entry above that, the stale-lines entry above that, the mobile-shape entry above that, the accounts entry above that, and the stage entry above that)");
-  assert.equal(updates[21].date, "2026-11-23");
+  assert.equal(updates[0].title, "The Sphere stands clear on arrival, and the sky panel holds its own key", "the pinned head stands");
+  assert.equal(updates[22].url, "./episodes.html", "the Library entry stands at index 22 (the Sphere's breathing entry landed above it in PR #267, the one-story entry above that in PR #270, the Sphere details entry above that in PR #272, the Free the Spark rename entry above that, the site-wide metadata entry above that, the Genesis profile entry above that, the Spark fence entry above that, the Spark inhabitant entry above that, the Spark keeper's-ways entry above that, the Spark tricks entry above that, the Spark home entry above that, the Spark seasons entry above that, the Spark road entry above that, the Sphere app-mode entry above that, the Witness tending entry above that, the sky rule entry above that, the stale-lines entry above that, the mobile-shape entry above that, the accounts entry above that, the stage entry above that, and the arrival entry above that)");
+  assert.equal(updates[22].date, "2026-11-23");
   const index = read("docs/index.html");
   const growth = index.slice(index.indexOf("data-le-growth"), index.indexOf("</ul>", index.indexOf("data-le-growth")));
   assert.ok(growth.includes("The Sphere stands tall on a phone now"), "the homepage panel mirrors the newest entries");
-  assert.ok(growth.includes("Two stale lines set right"), "the homepage panel mirrors the newest entries (the sky rule entry aged off the door's newest four at the mobile-stage landing, as the turning-of-the-year entry did before it)");
+  assert.ok(growth.includes("The site learned its mobile shape"), "the homepage panel mirrors the newest entries (the stale-lines entry aged off the door's newest four at the arrival-and-sky-key landing, as the sky rule entry did before it)");
   assert.equal((growth.match(/<li>/g) || []).length, 4, "the panel mirrors the newest four");
 });
 

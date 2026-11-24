@@ -33,6 +33,17 @@
  * The 3D scene itself keeps its own horizon-free geometry; a
  * star shell inside the scene is a separate, held proposal (see
  * the Phase C sky build note).
+ *
+ * The place control stands in this panel (Nov 24, 2026): the
+ * honest sentence names Set location, so the control it names
+ * stands where the sentence is read — the page's one location
+ * command (SofLocationCommand over OpenMeteoAdapter's kept
+ * place: the same state the sidebar's panel writes, no second
+ * store), seated in the dome for setting, changing, and
+ * clearing the place. A keeper who does not want the sentence
+ * every visit can quiet it with Not now; the quiet lasts the
+ * session, and a plain Set location button stays in the panel
+ * to bring the control back.
  */
 (function (root, factory) {
   const api = factory();
@@ -151,6 +162,7 @@
       </div>
       <div class="sphere-sky-dome-stage" data-sky-stage></div>
       <p class="sphere-sky-dome-line" data-sky-standing-line></p>
+      <div data-sky-place-host></div>
       <p class="sphere-sky-dome-line" data-sky-sun-line></p>
       <p class="sphere-sky-dome-line" data-sky-moon-line></p>
       <p class="sphere-sky-dome-note">Computed on this device for the place kept on it — nothing is fetched. Stars: the Yale Bright Star Catalogue (Astronomical Almanac list, epoch 2016.5), magnitude 4 and brighter, placed by sidereal time.</p>`;
@@ -166,11 +178,116 @@
     const moonLineEl = section.querySelector("[data-sky-moon-line]");
     const dayBtn = section.querySelector('[data-sky-standing="day"]');
     const nightBtn = section.querySelector('[data-sky-standing="night"]');
+    const placeHost = section.querySelector("[data-sky-place-host]");
 
     let currentISO = null;
     let standingChoice = null; // keeper's hand; null = the layer chooses
     let place = null;
     let renderMemo = { key: null, sky: null };
+
+    /* ── The place control, seated in the panel ───────────────
+     * The one location command, attached to a root of its own
+     * inside the dome. The block is rebuilt whenever the
+     * place's presence flips, so the command's own state line
+     * and Change button always speak for the place that stands
+     * (or its absence); between flips the command manages
+     * itself, exactly as it does in the sidebar. */
+    const DISMISS_KEY = "sof.skyPlaceNotice.dismissed";
+    let noticeDismissed = false;
+    try { noticeDismissed = window.sessionStorage?.getItem(DISMISS_KEY) === "1"; } catch { /* in-memory only */ }
+    let placeBlock = null;
+    let placeBlockAttached = false;
+    let placePresence = null;
+
+    function setNoticeDismissed(next) {
+      noticeDismissed = next;
+      try {
+        if (next) window.sessionStorage?.setItem(DISMISS_KEY, "1");
+        else window.sessionStorage?.removeItem(DISMISS_KEY);
+      } catch { /* the flag above still holds for this page */ }
+    }
+
+    function buildPlaceBlock() {
+      const block = document.createElement("div");
+      block.className = "sphere-sky-place sphere-location-command";
+      block.setAttribute("data-sky-place", "");
+      block.innerHTML = `
+      <p class="sphere-sky-place-state" data-location-state>${place ? escapeText(place.label || "Place set") : "LOCATION NOT SET"}</p>
+      <div class="sphere-location-actions">
+        <button type="button" class="sphere-sky-place-btn" data-location-use-device>Use My Location</button>
+        <button type="button" class="sphere-sky-place-btn" data-location-search-submit>Search Place</button>
+        <button type="button" class="sphere-sky-place-btn" data-location-coords-submit>Enter Coordinates</button>
+        <button type="button" class="sphere-sky-place-btn" data-location-continue-without>Continue Without Weather</button>
+      </div>
+      <div class="sphere-location-inputs">
+        <label class="visually-hidden">Search place</label>
+        <input data-location-search-input class="sphere-sky-place-input" type="text" placeholder="Search place">
+        <div class="sphere-location-coords">
+          <label class="visually-hidden">Latitude</label>
+          <input data-location-lat class="sphere-sky-place-input" type="number" step="0.0001" min="-90" max="90" placeholder="Latitude -90 to 90">
+          <label class="visually-hidden">Longitude</label>
+          <input data-location-lon class="sphere-sky-place-input" type="number" step="0.0001" min="-180" max="180" placeholder="Longitude -180 to 180">
+          <label class="visually-hidden">Place name</label>
+          <input data-location-name class="sphere-sky-place-input" type="text" placeholder="Optional place name">
+        </div>
+      </div>
+      <div class="sphere-location-results" data-location-results aria-live="polite"></div>
+      <p class="sphere-field-note" data-location-status></p>
+      <div class="sphere-sky-place-quiet">
+        <button type="button" class="sphere-sky-place-btn sphere-sky-place-notnow" data-sky-not-now>Not now</button>
+        <button type="button" class="sphere-sky-place-btn sphere-sky-place-open" data-sky-set-open hidden>Set location</button>
+      </div>`;
+      block.querySelector("[data-sky-not-now]")?.addEventListener("click", () => {
+        setNoticeDismissed(true);
+        render();
+      });
+      block.querySelector("[data-sky-set-open]")?.addEventListener("click", () => {
+        setNoticeDismissed(false);
+        render();
+      });
+      placeBlockAttached = tryAttachPlaceBlock(block);
+      return block;
+    }
+
+    /* The location command rides the page's third load phase,
+     * on idle slices — it can land after this layer has already
+     * seated its block. A failed attempt does not burn the root
+     * (the command marks a root only once it truly attaches),
+     * so the seat is retried on later renders until it holds. */
+    function tryAttachPlaceBlock(block) {
+      if (!window.SofLocationCommand?.attach || !window.OpenMeteoAdapter) return false;
+      try {
+        window.SofLocationCommand.attach(block);
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
+    function applyPlaceQuiet() {
+      if (!placeBlock) return;
+      const quiet = noticeDismissed && !place;
+      placeBlock.classList.toggle("sky-place-quiet", quiet);
+      const notNow = placeBlock.querySelector("[data-sky-not-now]");
+      const open = placeBlock.querySelector("[data-sky-set-open]");
+      if (notNow) notNow.hidden = !!place || quiet;
+      if (open) open.hidden = !quiet;
+    }
+
+    function syncPlaceBlock() {
+      const have = !!place;
+      if (have && noticeDismissed) setNoticeDismissed(false);
+      if (placePresence === have && placeBlock) {
+        if (!placeBlockAttached) placeBlockAttached = tryAttachPlaceBlock(placeBlock);
+        applyPlaceQuiet();
+        return;
+      }
+      placePresence = have;
+      if (placeBlock) placeBlock.remove();
+      placeBlock = buildPlaceBlock();
+      placeHost.appendChild(placeBlock);
+      applyPlaceQuiet();
+    }
 
     function readPlace() {
       try {
@@ -230,11 +347,15 @@
       titleEl.textContent = place?.label ? `The sky over ${place.label}` : "The sky over your place";
       if (!place) {
         stageEl.innerHTML = "";
-        standingLineEl.textContent = "No place is kept on this device, so the sky can't be drawn for where you stand. The season and Moon line above needs no place, and stands as computed. Set a place with Set location on this page and the sky will draw.";
+        standingLineEl.textContent = noticeDismissed
+          ? "No place is kept on this device — set one and the sky will draw for where you stand."
+          : "No place is kept on this device, so the sky can't be drawn for where you stand. The season and Moon line above needs no place, and stands as computed. Set a place with Set location on this page and the sky will draw.";
         sunLineEl.textContent = "";
         moonLineEl.textContent = "";
+        syncPlaceBlock();
         return;
       }
+      syncPlaceBlock();
       const civil = parseISODate(currentISO) || parseISODate(todayISO());
       if (!civil) return;
       const tz = tzOffsetForCivil(civil);

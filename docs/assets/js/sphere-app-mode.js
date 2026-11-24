@@ -44,6 +44,20 @@
  *     until this lands and the bundle re-syncs): the bar rests
  *     collapsed to its handle and readout, and a tap on either
  *     raises it over the stage's lower third.
+ *   - at phone width (the same max-width 700px line), it moves
+ *     the caption deck's two standing panels — the sky dome and
+ *     the test layers — out of the caption and into the guide
+ *     sheet as rooms. The caption's frame slot is flex 0 0 auto
+ *     in a fixed-height frame, so everything seated in it
+ *     stands over the stage on arrival: measured Nov 24, 2026,
+ *     the two panels had grown the caption to ~670px of a
+ *     844px phone screen and the Sphere stood below the fold
+ *     on Aaron's A16, in the app and the browser alike. In the
+ *     sheet the panels ride lowered like every other room,
+ *     one tap away (More, the dock doors), and the stage
+ *     stands first. When the viewport grows past the line —
+ *     or the mode itself is released — the panels go back to
+ *     the caption, in their order. Desktop never moves them.
  *
  * What it never does: touch the renderer, the calendar, the
  * temporal cursor, selection, labels, or any protected module.
@@ -95,6 +109,117 @@
 
   window.SOFAppMode = { name: "living-day", version: "1" };
 
+  /* ── The standing panels ride in the sheet at phone width ──
+   * See the header: the sky dome and the test layers are the
+   * caption's two standing panels, and the caption's slot in
+   * the frame takes whatever height they give it. A third
+   * panel, the story doors, seats itself in the stage column
+   * in the flow below the canvas — inside the fixed frame
+   * that flow is the stage's own room, and the doors filled
+   * it, so the Sphere still did not stand on arrival. While
+   * the app mode stands at phone width all three belong in
+   * the guide sheet with the other rooms — lowered on
+   * arrival, raised only by the keeper's tap. The panels' own
+   * modules keep their references across the move; nothing
+   * about their insides changes, only where the section
+   * stands, and each goes home to its own seat. */
+  var PANEL_SELECTORS = ["[data-sphere-sky-dome]", "[data-sphere-test-layers]", ".sphere-story-doors"];
+  var panelMq = window.matchMedia ? window.matchMedia(SMALL_SCREEN) : null;
+  var movedPanels = [];
+
+  function panelsShouldRide() {
+    return root.classList.contains("sof-app-mode") && !!panelMq && panelMq.matches;
+  }
+
+  function movePanels() {
+    var caption = document.querySelector(".sphere-rebuild-caption");
+    var wrapper = document.querySelector(".sphere-wrapper");
+    var sidebar = document.querySelector(".sphere-sidebar");
+    if (!sidebar || (!caption && !wrapper)) return;
+    PANEL_SELECTORS.forEach(function (sel) {
+      var el = document.querySelector(sel);
+      if (el && (el.parentElement === caption || el.parentElement === wrapper)) {
+        movedPanels.push({ el: el, home: el.parentElement, next: el.nextSibling });
+        el.classList.add("sphere-sheet-room");
+        sidebar.appendChild(el);
+      }
+    });
+  }
+
+  function restorePanels() {
+    var caption = document.querySelector(".sphere-rebuild-caption");
+    if (!caption) return;
+    movedPanels.forEach(function (rec) {
+      rec.el.classList.remove("sphere-sheet-room");
+      var home = rec.home && rec.home.isConnected ? rec.home : caption;
+      if (rec.next && rec.next.parentElement === home) {
+        home.insertBefore(rec.el, rec.next);
+      } else {
+        home.appendChild(rec.el);
+      }
+    });
+    movedPanels = [];
+    // A panel can also have arrived in the sheet without
+    // passing through its seat (the test layers seat
+    // themselves after the dome, wherever the dome stands).
+    // Bring any straggler home too, in panel order — the
+    // story doors to their seat below the canvas, the
+    // caption's panels to the caption.
+    PANEL_SELECTORS.forEach(function (sel) {
+      var el = document.querySelector(sel);
+      if (!el || el.parentElement === caption) return;
+      if (el.classList.contains("sphere-story-doors")) {
+        var wrap = document.querySelector(".sphere-canvas-wrap");
+        if (wrap && wrap.parentElement) {
+          el.classList.remove("sphere-sheet-room");
+          wrap.after(el);
+        }
+        return;
+      }
+      if (el.closest(".sphere-sidebar")) {
+        el.classList.remove("sphere-sheet-room");
+        caption.appendChild(el);
+      }
+    });
+  }
+
+  function syncPanels() {
+    if (panelsShouldRide()) movePanels();
+    else restorePanels();
+  }
+
+  if (panelMq && panelMq.addEventListener) {
+    panelMq.addEventListener("change", syncPanels);
+  }
+
+  // The panels are loaded late, by the companion layer, into a
+  // caption the rebuild itself creates later still. Watch for
+  // the caption, then watch the caption's children, and move
+  // whatever lands while the panels should ride.
+  function watchCaption() {
+    var caption = document.querySelector(".sphere-rebuild-caption");
+    if (!caption) return false;
+    var observer = new MutationObserver(syncPanels);
+    observer.observe(caption, { childList: true });
+    // The story doors land in the stage column, not the
+    // caption — watch their seat too.
+    var wrapper = document.querySelector(".sphere-wrapper");
+    if (wrapper) observer.observe(wrapper, { childList: true });
+    syncPanels();
+    return true;
+  }
+  if (!watchCaption()) {
+    var captionWaiter = new MutationObserver(function () {
+      if (watchCaption()) captionWaiter.disconnect();
+    });
+    if (document.body) {
+      captionWaiter.observe(document.body, { childList: true, subtree: true });
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+      if (watchCaption()) captionWaiter.disconnect();
+    });
+  }
+
   function ready() {
     var bar = document.querySelector(".sphere-guide-bar");
     if (!bar) return false;
@@ -127,6 +252,7 @@
       }
     }
 
+    syncPanels();
     document.dispatchEvent(new CustomEvent("sof:app-mode-ready"));
     return true;
   }
