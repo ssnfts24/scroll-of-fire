@@ -5,6 +5,10 @@
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
   let lastResult = null;
+  // The saved profile whose reading is on screen (set when a reading
+  // opens from a profile, and when a form reading runs with a Mirror
+  // selection). renderDayMarks speaks about this profile.
+  let lastOpenedProfile = null;
 
   function setText(id, value) {
     const el = document.getElementById(id);
@@ -93,6 +97,178 @@
     const svgMarkup = buildSealSvg(result);
     host.insertAdjacentHTML("beforeend", svgMarkup);
     setText("sealAlt", `Seal of Becoming: Moon ${result.patternPosition.moonNumber || "Outside"}, Day ${result.patternPosition.dayInMoon || "Outside"}, Tone ${result.coreSignature.tone}.`);
+  }
+
+  // ── Living Genesis Profile: opening a reading from a saved record ──
+  // The birth reading renders from the STORED record — the inputs and
+  // the calculated results the keeper saved, under the Oracle version
+  // that produced them. Nothing here recalculates the birth signature:
+  // a saved reading stands exactly as saved. Only the day-dependent
+  // layers (the Daily Mirror and the current-day transit) are computed
+  // fresh, because they belong to today by definition.
+
+  const CIVIL_MONTHS = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+
+  function civilDateLong(iso) {
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || "");
+    if (!match) return iso || "";
+    return `${Number(match[3])} ${CIVIL_MONTHS[Number(match[2]) - 1] || ""} ${match[1]}`;
+  }
+
+  function resultFromProfile(profile) {
+    if (!profile?.calculated?.patternPosition || !profile?.calculated?.coreSignature) return null;
+    const reading = profile.interpretation?.reading || {};
+    return {
+      calendarVersion: profile.calendarVersion,
+      oracleVersion: profile.oracleVersion,
+      input: profile.input || {},
+      patternPosition: profile.calculated.patternPosition,
+      coreSignature: profile.calculated.coreSignature,
+      nameSignature: profile.calculated.nameSignature,
+      birthTimeLayer: profile.calculated.birthTimeLayer,
+      relationships: profile.calculated.relationships || {},
+      reading,
+      quickSeal: reading.quickSeal || "",
+      methods: profile.interpretation?.methods || {}
+    };
+  }
+
+  function attachFreshMirror(result, profile) {
+    try {
+      const fresh = globalThis.GenesisOracleEngine.run({
+        name: profile.input?.name || "",
+        birthDate: profile.input?.birthDate || "",
+        birthTime: profile.input?.birthTime || "",
+        timeZone: profile.input?.timeZone || "UTC",
+        boundaryMode: profile.input?.boundaryMode || "midnight",
+        sunsetTime: profile.input?.sunsetTime || "18:00",
+        selectedProfile: {
+          patternPosition: profile.calculated.patternPosition,
+          coreSignature: profile.calculated.coreSignature
+        }
+      });
+      result.dailyMirror = fresh.dailyMirror;
+      result.mirrorReading = fresh.mirrorReading;
+      result.currentDayTransit = fresh.currentDayTransit;
+    } catch {
+      /* The saved reading stands on its own; today's mirror can be
+       * run from the form whenever the engine is available. */
+    }
+    return result;
+  }
+
+  function fillFormFromProfile(profile) {
+    const input = profile.input || {};
+    if ($("#inName")) $("#inName").value = input.name || "";
+    if ($("#inDate")) $("#inDate").value = input.birthDate || "";
+    if ($("#inTime")) $("#inTime").value = input.birthTime || "";
+    if ($("#inTZ")) $("#inTZ").value = input.timeZone || "America/Los_Angeles";
+    if ($("#inBoundary")) $("#inBoundary").value = input.boundaryMode || "midnight";
+    if ($("#inSunset")) $("#inSunset").value = input.sunsetTime || "18:00";
+  }
+
+  function openProfileReading(profile, { fromLoad = false } = {}) {
+    const result = resultFromProfile(profile);
+    if (!result) {
+      setStatus("That profile has no Oracle 2.0 reading to open yet — recalculate it first.");
+      return false;
+    }
+    fillFormFromProfile(profile);
+    attachFreshMirror(result, profile);
+    lastResult = result;
+    lastOpenedProfile = profile;
+    render(result);
+    const name = profile.input?.name || "Unnamed";
+    setStatus(fromLoad
+      ? `Welcome back. Your Genesis profile (${name}) was saved once and is simply here — this reading opened from the saved record, under ${profile.oracleVersion || "Oracle 2.0"}.`
+      : `Reading opened from the saved profile of ${name} — as saved, under ${profile.oracleVersion || "Oracle 2.0"}.`);
+    return true;
+  }
+
+  function renderMyGenesisPanel() {
+    const empty = document.getElementById("myGenesisEmpty");
+    const emptyMsg = document.getElementById("myGenesisEmptyMsg");
+    const content = document.getElementById("myGenesisContent");
+    if (!empty || !content) return;
+
+    const repo = globalThis.OracleProfileRepository;
+    const state = repo?.getStatus();
+    const mine = repo?.getMyGenesis() || null;
+
+    if (!mine) {
+      content.hidden = true;
+      empty.hidden = false;
+      if (emptyMsg) {
+        if (!state || state.status === "loading") {
+          emptyMsg.textContent = "Loading your saved profile…";
+        } else if (state.status === "error") {
+          emptyMsg.textContent = "Saved profiles could not be read on this address. Your profiles are stored per site address and have not been deleted — import a backup below, or retry from the Daily Mirror panel.";
+        } else if ((state.profiles?.length || 0) + (state.legacyProfiles?.length || 0) > 0) {
+          emptyMsg.textContent = "You have saved profiles below, but none is marked as your Genesis profile yet. Mark yours in Saved Profiles — it will greet you here, and the Daily Mirror will read through it.";
+        } else {
+          emptyMsg.textContent = "No Genesis profile yet. Read your birth below and choose Save Profile — the first profile you save becomes your Genesis profile, and it will be here when you return.";
+        }
+      }
+      return;
+    }
+
+    empty.hidden = true;
+    content.hidden = false;
+
+    const result = resultFromProfile(mine);
+    const sealHost = document.getElementById("myGenesisSeal");
+    if (sealHost && result) {
+      sealHost.innerHTML = buildSealSvg(result, 264);
+      sealHost.setAttribute("aria-label",
+        `Seal of Becoming: Moon ${result.patternPosition.moonNumber || "Outside"}, Day ${result.patternPosition.dayInMoon || "Outside"}, Tone ${result.coreSignature.tone}`);
+    }
+
+    const pos = mine.calculated.patternPosition;
+    const core = mine.calculated.coreSignature;
+    setText("myGenesisName", mine.input?.name || "Unnamed");
+    setText("myGenesisLine",
+      `Birth Moon ${pos.moonNumber || "Outside"} · ${pos.moonName || "Outside the counted year"} · Birth Day ${pos.dayInMoon || "Outside"} · Tone ${core.tone ?? "—"}${core.toneProfile?.name ? ` (${core.toneProfile.name})` : ""}`);
+    setText("myGenesisCivil",
+      `Civil birthday: ${civilDateLong(mine.input?.birthDate)} — the calendar date of birth, kept as its own day beside the Pattern birth position.`);
+    const savedOn = (mine.createdAt || "").slice(0, 10);
+    const currentVersion = globalThis.GenesisOracleVersion?.oracleVersion || "genesis-oracle/2.0.0";
+    setText("myGenesisVersion",
+      `Saved ${savedOn ? civilDateLong(savedOn) : "—"} · under ${mine.oracleVersion || "Oracle 2.0"} · ${mine.calendarVersion || ""}` +
+      (mine.oracleVersion && mine.oracleVersion !== currentVersion
+        ? ` A newer Oracle is current now (${currentVersion}); your saved reading stands exactly as saved — recalculate only if you choose, from Saved Profiles.`
+        : ""));
+  }
+
+  // The two birthdays, kept distinct: the Pattern recurrence (birth
+  // Moon and Day returning in the current Pattern year) and the civil
+  // birthday (the calendar month/day of birth). Each is marked only
+  // when today actually is that day.
+  function renderDayMarks() {
+    const el = document.getElementById("mirrorDayMarks");
+    if (!el) return;
+    const repo = globalThis.OracleProfileRepository;
+    const profile = lastOpenedProfile || repo?.getSelectedProfile();
+    const gate = (lastResult?.mirrorReading || lastResult?.dailyMirror)?.dailyGate;
+    const birthPos = profile?.calculated?.patternPosition;
+    if (!profile || !gate || !birthPos) {
+      el.hidden = true;
+      el.textContent = "";
+      return;
+    }
+    const marks = [];
+    if (gate.moon && birthPos.moonNumber && gate.moon === birthPos.moonNumber && gate.moonDay === birthPos.dayInMoon) {
+      marks.push(`Today is your Pattern recurrence — your birth Moon and Day (Moon ${birthPos.moonNumber} · Day ${birthPos.dayInMoon}) return in the current Pattern year.`);
+    }
+    const birth = /^(\d{4})-(\d{2})-(\d{2})$/.exec(profile.input?.birthDate || "");
+    const civil = /^(\d{4})-(\d{2})-(\d{2})/.exec(gate.civilDate || "");
+    if (birth && civil && birth[2] === civil[2] && birth[3] === civil[3]) {
+      marks.push("Today is your civil birthday — the calendar date of your birth, its own day beside the Pattern recurrence.");
+    }
+    el.hidden = marks.length === 0;
+    el.textContent = marks.join(" ");
   }
 
   function download(filename, content, type) {
@@ -194,7 +370,7 @@
 
     if (!profiles.length) {
       const row = document.createElement("tr");
-      row.innerHTML = `<td colspan="7">No saved profiles yet.</td>`;
+      row.innerHTML = `<td colspan="9">No saved profiles yet.</td>`;
       body.appendChild(row);
       return;
     }
@@ -216,6 +392,55 @@
         cell.textContent = String(value);
         row.appendChild(cell);
       });
+
+      // My Genesis cell: the standing designation, or the door to it.
+      const mineCell = document.createElement("td");
+      if (profile.legacyRecord) {
+        mineCell.textContent = "—";
+      } else if (profile.myGenesis === true) {
+        const badge = document.createElement("span");
+        badge.className = "my-genesis-badge";
+        badge.textContent = "★ My Genesis";
+        mineCell.appendChild(badge);
+      } else {
+        const makeMine = document.createElement("button");
+        makeMine.type = "button";
+        makeMine.className = "btn compact";
+        makeMine.dataset.profileAction = "mine";
+        makeMine.dataset.profileId = profile.id || "";
+        makeMine.textContent = "Make mine";
+        mineCell.appendChild(makeMine);
+      }
+      row.appendChild(mineCell);
+
+      // Actions cell: open the saved reading as saved; recalculate
+      // only as a new entry beside the original.
+      const actionsCell = document.createElement("td");
+      const actionsWrap = document.createElement("div");
+      actionsWrap.className = "row-actions";
+      if (!profile.legacyRecord) {
+        const open = document.createElement("button");
+        open.type = "button";
+        open.className = "btn compact";
+        open.dataset.profileAction = "open";
+        open.dataset.profileId = profile.id || "";
+        open.textContent = "Open";
+        const recalc = document.createElement("button");
+        recalc.type = "button";
+        recalc.className = "btn compact";
+        recalc.dataset.profileAction = "recalc";
+        recalc.dataset.profileId = profile.id || "";
+        recalc.textContent = "Recalculate";
+        actionsWrap.append(open, recalc);
+      } else {
+        const note = document.createElement("span");
+        note.className = "muted";
+        note.textContent = "Recalculate below";
+        actionsWrap.appendChild(note);
+      }
+      actionsCell.appendChild(actionsWrap);
+      row.appendChild(actionsCell);
+
       body.appendChild(row);
 
       // Use stable profile ID as the option value (not array index)
@@ -419,6 +644,7 @@
       nameToBirthResonanceScore: result.relationships.nameToBirthResonance
     }));
     renderSeal(result);
+    renderDayMarks();
   }
 
   function runReadingFromForm() {
@@ -440,6 +666,7 @@
 
     const result = globalThis.GenesisOracleEngine.run(input);
     lastResult = result;
+    lastOpenedProfile = globalThis.OracleProfileRepository?.getSelectedProfile() || null;
     render(result);
     setStatus("Reading complete.");
     return result;
@@ -525,14 +752,62 @@
           setStatus("Profile repository not available.");
           return;
         }
-        repo.saveProfile(result);
+        const saved = repo.saveProfile(result);
         renderProfiles();
         refreshLegacySelector();
         updateMirrorSealState(repo.getStatus());
-        setStatus("Profile saved locally.");
+        renderMyGenesisPanel();
+        setStatus(saved?.myGenesis === true
+          ? "Profile saved locally — and set as your Genesis profile. It will be here when you return."
+          : "Profile saved locally.");
       } catch (error) {
         setStatus(error.message || "Could not save profile.");
       }
+    });
+
+    // Saved-profile row actions (delegated): open a reading as saved,
+    // designate My Genesis, or recalculate as a new entry.
+    document.getElementById("savedRows")?.addEventListener("click", event => {
+      const btn = event.target.closest?.("[data-profile-action]");
+      if (!btn) return;
+      const repo = globalThis.OracleProfileRepository;
+      if (!repo) { setStatus("Profile repository not available."); return; }
+      const profile = repo.getProfile(btn.dataset.profileId || "");
+      if (!profile) { setStatus("That profile could not be found."); return; }
+      try {
+        if (btn.dataset.profileAction === "open") {
+          openProfileReading(profile);
+        } else if (btn.dataset.profileAction === "mine") {
+          repo.setMyGenesis(profile.id);
+          renderProfiles();
+          updateMirrorSealState(repo.getStatus());
+          renderMyGenesisPanel();
+          setStatus(`${profile.input?.name || "That profile"} is now your Genesis profile — this page opens on it, and the Daily Mirror reads through it.`);
+        } else if (btn.dataset.profileAction === "recalc") {
+          const fresh = repo.recalculateProfile(profile.id);
+          renderProfiles();
+          refreshLegacySelector();
+          updateMirrorSealState(repo.getStatus());
+          renderMyGenesisPanel();
+          setStatus(`Recalculated under ${fresh.oracleVersion || "the current Oracle"} and saved as a new entry — the original reading of ${profile.input?.name || "that profile"} stands exactly as saved.`);
+        }
+      } catch (error) {
+        setStatus(error.message || "That action could not be completed.");
+      }
+    });
+
+    // Your Genesis Profile panel actions
+    document.getElementById("openMyGenesis")?.addEventListener("click", () => {
+      const repo = globalThis.OracleProfileRepository;
+      const mine = repo?.getMyGenesis();
+      if (mine) openProfileReading(mine);
+    });
+    document.getElementById("myGenesisMirrorBtn")?.addEventListener("click", () => {
+      document.querySelector('[data-mode="daily"]')?.click();
+      document.querySelector('[data-reading-mode="daily"]')?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    document.getElementById("myGenesisManageBtn")?.addEventListener("click", () => {
+      document.getElementById("savedRows")?.closest(".panel")?.scrollIntoView({ behavior: "smooth" });
     });
 
     $("#copyReading")?.addEventListener("click", copyReading);
@@ -915,14 +1190,22 @@
     if (repo) {
       // Show loading state immediately before async init
       updateMirrorSealState({ status: "loading", profiles: [], legacyProfiles: [], selectedProfileId: null });
+      renderMyGenesisPanel();
 
       repo.subscribe(state => {
         updateMirrorSealState(state);
         renderProfiles();
         refreshLegacySelector();
+        renderMyGenesisPanel();
       });
 
-      repo.initialize().catch(() => {
+      repo.initialize().then(() => {
+        // The permanent profile, simply here: if the keeper has a
+        // Genesis profile, its reading opens from the saved record —
+        // no form to fill, no Oracle to re-run.
+        const mine = repo.getMyGenesis();
+        if (mine && !lastResult) openProfileReading(mine, { fromLoad: true });
+      }).catch(() => {
         updateMirrorSealState(repo.getStatus());
       });
     } else {
@@ -930,6 +1213,7 @@
       renderProfiles();
       refreshLegacySelector();
       updateMirrorSealState({ status: "ready", profiles: [], legacyProfiles: [], selectedProfileId: null });
+      renderMyGenesisPanel();
     }
 
     initFromQuery();

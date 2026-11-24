@@ -790,6 +790,32 @@
     document.head.appendChild(s);
   })();
 
+  // ── Your Genesis on the Sphere (Nov 23, 2026) ────────────────
+  // Aaron's direction: the online Genesis Oracle works the same
+  // way as the app's Living Genesis Profile — and the Sphere
+  // recognizes the keeper's saved birth position. The Genesis
+  // layer rides this loader the same way the story doors do: a
+  // stylesheet and a script set on the page, and nothing else in
+  // this layer changes. The module reads only the keeper's own
+  // saved Oracle profiles (this device, this browser) and the
+  // page's public state strip, shows the birth Moon and Day with
+  // the keeper's Seal of Becoming, and offers a one-tap trip
+  // there through the page's own jump control. It keeps no
+  // calendar, writes no state, and touches no protected file.
+  (() => {
+    if (document.querySelector("script[data-sphere-genesis-layer]")) return;
+    const css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = "assets/css/sphere-genesis-layer.css?v=20261123-1";
+    css.setAttribute("data-sphere-genesis-layer", "");
+    document.head.appendChild(css);
+    const s = document.createElement("script");
+    s.src = "assets/js/sphere-genesis-layer.js?v=20261123-1";
+    s.async = false;
+    s.setAttribute("data-sphere-genesis-layer", "");
+    document.head.appendChild(s);
+  })();
+
   // ── The Spark's presence on this page was RESET (Nov 20, 2026) ──
   // Aaron's order: a full reset of the Spark layer, built fresh —
   // not patched. The orbit and bubble guide that stood here are

@@ -37,7 +37,7 @@
   <script defer src="assets/js/oracle/oracle-reading.js?v=20260722-3"></script>
   <script defer src="assets/js/oracle/oracle-compatibility.js?v=20260722-3"></script>
   <script defer src="assets/js/oracle/oracle-storage.js?v=20260722-3"></script>
-  <script defer src="assets/js/oracle/oracle-profile-repository.js?v=20260722-3"></script>
+  <script defer src="assets/js/oracle/oracle-profile-repository.js?v=20261123-1"></script>
   <script defer src="assets/js/oracle/oracle-engine.js?v=20260722-3"></script>
 
   <script defer src="assets/js/living-codex.js"></script>
@@ -46,7 +46,7 @@
   <script defer src="assets/js/share/remnant-share-image.js?v=20260722-3"></script>
   <script defer src="assets/js/share/remnant-share.js?v=20260722-3"></script>
   <script defer src="assets/js/share-day.js?v=2"></script>
-  <script defer src="assets/js/genesis-oracle.js?v=20260722-3"></script>
+  <script defer src="assets/js/genesis-oracle.js?v=20261123-1"></script>
   <link rel="stylesheet" href="assets/css/navigation.css">
   <link rel="stylesheet" href="assets/css/animations.css">
   <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
@@ -113,6 +113,7 @@
       <p class="eyebrow">Seal of Becoming · Oracle 2.0</p>
       <h1>The Genesis Oracle</h1>
       <p>One authoritative shared Pattern Calendar maps civil date to Pattern position. Oracle layers then derive deterministic symbolic reflections from declared inputs and versioned data.</p>
+      <p>Create your Genesis profile once and save it: your Seal of Becoming, your birth position, and your original reading stay saved in this browser and are here when you return — the Daily Mirror meets today from that standing signature, no re-running required.</p>
       <p class="muted">Anchor reference: April 17, 2026 = Moon 1 · Day 1 · Day 1/364.</p>
     </section>
 
@@ -137,6 +138,31 @@
         <button class="btn" type="button" data-mode="daily" aria-pressed="false">Daily Mirror</button>
         <button class="btn" type="button" data-mode="development" aria-pressed="false">Development Path</button>
         <button class="btn" type="button" data-mode="technical" aria-pressed="false">Technical View</button>
+      </div>
+    </section>
+
+    <section class="panel my-genesis-panel" id="myGenesisPanel" aria-label="Your Genesis profile">
+      <p class="eyebrow">Living Genesis Profile</p>
+      <h2>Your Genesis Profile</h2>
+      <p class="muted">Created once, saved in this browser only, and simply here on return. Your original inputs and your calculated reading are kept as separate things, stamped with the Oracle version that produced them — a later recalculation arrives as a new entry and never overwrites the reading you saved.</p>
+      <div id="myGenesisEmpty">
+        <p id="myGenesisEmptyMsg" class="muted">Loading your saved profile…</p>
+      </div>
+      <div id="myGenesisContent" hidden>
+        <div class="my-genesis-flex">
+          <div id="myGenesisSeal" class="my-genesis-seal" role="img" aria-label="Your Seal of Becoming"></div>
+          <div class="my-genesis-facts">
+            <h3 id="myGenesisName">—</h3>
+            <p id="myGenesisLine" class="my-genesis-line">—</p>
+            <p id="myGenesisCivil" class="muted">—</p>
+            <p id="myGenesisVersion" class="muted">—</p>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" type="button" id="openMyGenesis">Open my reading</button>
+          <button class="btn" type="button" id="myGenesisMirrorBtn">Today's Daily Mirror</button>
+          <button class="btn" type="button" id="myGenesisManageBtn">Manage profiles</button>
+        </div>
       </div>
     </section>
 
@@ -245,6 +271,7 @@
         <!-- Personalized Mirror — hidden until a profile is selected -->
         <div id="mirrorSealContent" class="mirror-seal-content" hidden>
           <div id="mirrorSealGrid" class="kv-grid"></div>
+          <p class="mirror-day-marks" id="mirrorDayMarks" hidden></p>
           <p class="mirror-symbolic-notice muted" id="mirrorSymbolicNotice"></p>
           <div class="actions compact-actions">
             <button class="btn primary" type="button" id="shareSealMirror" data-share-day-open data-share-source-id="oracle-daily-mirror-seal">Share Birth Signature × Today</button>
@@ -307,7 +334,7 @@
 
     <section class="panel">
       <h2>Saved Profiles</h2>
-      <p class="muted">New profiles are saved as Oracle 2.0 records. Legacy profiles are kept and can be recalculated on demand.</p>
+      <p class="muted">New profiles are saved as Oracle 2.0 records. Legacy profiles are kept and can be recalculated on demand. One Oracle 2.0 profile can be marked <strong>My Genesis</strong> — your own standing profile, the one this page opens on and the Daily Mirror reads through. Recalculating any profile saves the recalculation as a new entry; the original stands exactly as saved.</p>
       <div class="actions">
         <button class="btn" type="button" id="exportJson">Export Reading JSON</button>
         <button class="btn" type="button" id="exportText">Export Reading Text</button>
@@ -317,8 +344,8 @@
       </div>
       <div class="table-wrap" tabindex="0">
         <table>
-          <thead><tr><th>Name</th><th>Date</th><th>Moon</th><th>Day</th><th>Tone</th><th>Calendar</th><th>Type</th></tr></thead>
-          <tbody id="savedRows"><tr><td colspan="7">No saved profiles yet.</td></tr></tbody>
+          <thead><tr><th>Name</th><th>Date</th><th>Moon</th><th>Day</th><th>Tone</th><th>Calendar</th><th>Type</th><th>My Genesis</th><th>Actions</th></tr></thead>
+          <tbody id="savedRows"><tr><td colspan="9">No saved profiles yet.</td></tr></tbody>
         </table>
       </div>
       <div class="field-row">
