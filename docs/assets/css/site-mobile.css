@@ -18,6 +18,20 @@
  *   - a dialog or sheet never taller than the visible screen,
  *     scrolling inside itself instead of covering the page.
  *
+ * The one-PR redesign (Nov 24, 2026) added two more floor
+ * lines, from the redesign research (what best-in-class
+ * mobile shells do):
+ *
+ *   - one sticky bar, not three: the travel bar stays pinned
+ *     and the legacy site header and theory subnav scroll
+ *     away with the page, returning their height to the
+ *     reading (both remain fully present at the top);
+ *   - moving between rooms fades like an app instead of
+ *     flashing like a reload (cross-document view
+ *     transitions, only where the visitor has not asked
+ *     for reduced motion), and every tappable thing answers
+ *     a press at once.
+ *
  * Page-specific mobile work stays in the pages' own sheets (the
  * artifact-mobile.css precedent); this file carries only what is
  * true for every page at once.
@@ -66,5 +80,28 @@
     max-height: 94vh;
     max-height: 94dvh;
     overflow-y: auto;
+  }
+
+  /* One sticky bar, not three (redesign, Nov 24, 2026). */
+  .site-header,
+  .theory-subnav-shell {
+    position: relative;
+    top: auto;
+  }
+
+  /* A press answers at once. */
+  .living-nav a:active,
+  .btn:active,
+  button:active,
+  summary:active {
+    opacity: 0.72;
+  }
+
+  /* Rooms fade into each other like an app, never for a
+     visitor who asked for reduced motion. */
+  @media (prefers-reduced-motion: no-preference) {
+    @view-transition {
+      navigation: auto;
+    }
   }
 }

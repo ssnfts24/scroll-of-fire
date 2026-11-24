@@ -55,7 +55,12 @@ const EXCLUDED = new Set([
   "living-time-sphere.html",
   "404.html",
   "offline.html",
-  "caravan.html"
+  "caravan.html",
+  // Gate G (G2): account.html is a self-contained utility
+  // page — tests/living-nav.test.js has always expected it
+  // excluded; the stamper now agrees (one-PR redesign,
+  // Nov 24, 2026; apply-site-mobile.mjs carries the twin fix).
+  "account.html"
 ]);
 
 /* The main rooms, in travel order (Aaron's one-travel-bar direction,
