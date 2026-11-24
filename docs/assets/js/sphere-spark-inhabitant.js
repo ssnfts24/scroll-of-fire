@@ -1488,6 +1488,32 @@
     return steps;
   }
 
+  /* Can the road be stood on from here? The label layer does
+   * not always project the year's pattern days: in the year's
+   * overview (the face the Day Out of Time opens on) its plates
+   * are keyed by Moon day — 1 to 28, over and over — and the
+   * only pattern-day plate standing is the selected day's own
+   * marker. A road walked from there would hop in place and
+   * call it travelling, which the road will not do. The road
+   * can stand when every station it must travel to is already
+   * projected, or when the year itself is on the face — more
+   * than a Moon's worth of pattern days projected at once, in
+   * which case the instrument's own turning brings the rest
+   * around as the road walks. (A road that never leaves Moon 1
+   * reads the overview's plates as its own; the two namings
+   * share days 1–28, the label layer's standing ambiguity,
+   * not the road's invention.) */
+  function roadCanStand(beats, postPd, projected) {
+    const set = new Set((Array.isArray(projected) ? projected : [])
+      .filter((pd) => Number.isInteger(pd) && pd >= 1 && pd <= PATTERN_DAYS));
+    const needed = [...new Set((Array.isArray(beats) ? beats : [])
+      .map((b) => (b && Number.isInteger(b.pd) ? b.pd : null))
+      .filter((pd) => pd != null && pd !== postPd))];
+    if (!needed.length) return true;
+    if (needed.every((pd) => set.has(pd))) return true;
+    return [...set].filter((pd) => pd > 28).length > 28;
+  }
+
 
   /* ── Slice 5: the season, read from the pipeline ───────── */
   /* The year's turning, in the calendar's own facts. The
@@ -2443,10 +2469,13 @@
             btn.textContent = label;
             btn.setAttribute("aria-label", `Ask ${name} to walk ${form === "short" ? "the short road" : "the Whole Road"}`);
             btn.addEventListener("click", () => {
-              if (startWholeRoad(form)) { seasonRoadNote = null; return; }
-              seasonRoadNote = postPd == null
-                ? `${name} stands at the threshold today, with no plate underfoot. Step onto any day of the year, and the road can be walked from there.`
-                : "The road could not start just now — nothing was walked.";
+              const started = startWholeRoad(form);
+              if (started === true) { seasonRoadNote = null; return; }
+              seasonRoadNote = started === "unprojected"
+                ? ROAD_UNPROJECTED_LINE
+                : postPd == null
+                  ? `${name} stands at the threshold today, with no plate underfoot. Step onto any day of the year, and the road can be walked from there.`
+                  : "The road could not start just now — nothing was walked.";
               seasonText = null;
               renderSeason();
             });
@@ -2902,8 +2931,12 @@
      * fresh at the asking, from the record as it stands; the
      * performance writes nothing, like every performance.
      * Returns false when the road cannot start (no Spark, no
-     * Guardian programme, no post to stand on), so the asking
-     * surface can say so honestly. */
+     * Guardian programme, no post to stand on), and the word
+     * "unprojected" when the year's days are not standing on
+     * the face in this view — so the asking surface can say
+     * so honestly, in plain words, with the step that lets
+     * the road be walked in full. */
+    const ROAD_UNPROJECTED_LINE = "The road cannot be walked from this view — the year's days are not standing on the face. Turn the Sphere to the Year view and ask again, and the road will be walked in full.";
     function startWholeRoad(form) {
       const record = readRecord();
       if (!record || perf) return false;
@@ -2915,6 +2948,16 @@
       if (!programme) return false;
       const chosen = form === "short" ? wholeRoadShortFrom(programme, kind) : programme;
       if (!chosen || !chosen.beats.length) return false;
+      /* The start gate: from a view where the year's pattern
+       * days are not projected (the overview the Day Out of
+       * Time opens on), the road would hop in place and call
+       * it travelling. It declines instead, in plain words,
+       * and names the step that lets it be walked in full. */
+      if (!roadCanStand(chosen.beats, postPd, projectedPds())) {
+        roadNowText = ROAD_UNPROJECTED_LINE;
+        if (roadNowEl) roadNowEl.textContent = roadNowText;
+        return "unprojected";
+      }
       roadNowText = "";
       const started = runPerformance(form === "short" ? "whole-road-short" : "whole-road", {
         road: chosen,
@@ -2967,8 +3010,30 @@
         return;
       }
       /* A travel leg. A plate not projected, or the post
-       * itself, reads as a hop in place — never a faked path. */
+       * itself, reads as a hop in place — never a faked path.
+       * The Whole Road is the one exception: travelling IS
+       * its substance, so a road leg whose plate has not come
+       * around yet WAITS at the current station — the step is
+       * not consumed — until the instrument's turning projects
+       * the plate, the way a keeper-sent travel waits at the
+       * threshold. The road's start gate has already refused
+       * the views where the year's plates never project at
+       * all, so the wait is for the turning, not for ever;
+       * and any keeper action still sets the road down. */
       const target = labelPoint(step.pd);
+      if (perf.road && target == null && step.pd !== postPd) {
+        perf.idx -= 1;
+        perfStepEndsAt = now + 350;
+        return;
+      }
+      if (perf.road && target && !pos && step.pd !== postPd) {
+        /* No position yet to glide from: the Spark simply
+         * takes the station, as a keeper-sent travel does
+         * when there is no honest path to draw. */
+        postPd = step.pd;
+        perfStepEndsAt = now + 500;
+        return;
+      }
       if (!target || !pos || step.pd === postPd) {
         perfAct = "hop";
         perfActMs = 500;
@@ -3877,6 +3942,7 @@
     trickBookFrom,
     wholeRoadProgrammeFrom,
     wholeRoadShortFrom,
+    roadCanStand,
     performanceSteps,
     wholeRoadSteps,
     quarterForPatternDay,

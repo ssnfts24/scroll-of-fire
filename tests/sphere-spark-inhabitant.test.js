@@ -1189,6 +1189,34 @@ test("slice 6 — a learned route rides its beat on the road, walking its own da
   assert.deepEqual(plain(routeTravels.slice(1, 4)), [222, 224, 219], "the route is walked in the order it was taught");
 });
 
+test("slice 6 — the road declines a view where the year's days are not standing on the face", () => {
+  const layer = loadInhabitant();
+  const beats = [
+    { beat: "birth", pd: 217 }, { beat: "hum", pd: 198 }, { beat: "closing", pd: 218 },
+  ];
+  /* The year's overview (the face the Day Out of Time opens
+   * on): plates keyed by Moon day, 1–28 over and over, plus
+   * the selected day's own marker. The road will not hop in
+   * place and call it travelling. */
+  const overview = [];
+  for (let d = 1; d <= 28; d += 1) overview.push(d);
+  overview.push(222);
+  assert.equal(layer.roadCanStand(beats, 222, overview), false,
+    "the selected day's lone marker does not make a road");
+  /* Every station already projected: the road stands. */
+  assert.equal(layer.roadCanStand(beats, 222, [198, 205, 212, 217, 218, 219, 220, 221, 222]), true);
+  /* The year itself on the face — more than a Moon's worth
+   * of pattern days at once: a station around the back is
+   * waited for as the instrument turns, not declined. */
+  const yearFace = [];
+  for (let pd = 1; pd <= 200; pd += 1) yearFace.push(pd);
+  assert.equal(layer.roadCanStand(beats, 222, yearFace), true);
+  /* A road that never has to travel can always start. */
+  assert.equal(layer.roadCanStand([{ beat: "birth", pd: 222 }], 222, overview), true);
+  assert.equal(layer.roadCanStand([{ beat: "birth", pd: null }], 222, overview), true);
+  assert.equal(layer.roadCanStand([], 222, []), true);
+});
+
 test("slice 6 — the book carries the road at Guardian, and the short road beside it", () => {
   const layer = loadInhabitant();
   const facts = roadFacts(layer, [atlasWatchFull("w1", "ep-first", 219, 8)]);
