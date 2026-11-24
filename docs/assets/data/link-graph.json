@@ -1866,7 +1866,7 @@
      "area": "artifacts"
     }
    ],
-   "outTotal": 25,
+   "outTotal": 24,
    "inTotal": 2
   },
   "invoke.html": {
@@ -2289,15 +2289,10 @@
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
-    },
-    {
-     "path": "index.html",
-     "title": "Codex of Reality",
-     "area": "codex"
     }
    ],
    "outTotal": 4,
-   "inTotal": 3
+   "inTotal": 2
   },
   "methods.html": {
    "title": "How the Sphere Knows — Methods",
