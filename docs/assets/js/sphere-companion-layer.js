@@ -833,11 +833,11 @@
     if (document.querySelector("script[data-sphere-spark-inhabitant]")) return;
     const css = document.createElement("link");
     css.rel = "stylesheet";
-    css.href = "assets/css/sphere-spark-inhabitant.css?v=20261124-3";
+    css.href = "assets/css/sphere-spark-inhabitant.css?v=20261124-4";
     css.setAttribute("data-sphere-spark-inhabitant", "");
     document.head.appendChild(css);
     const s = document.createElement("script");
-    s.src = "assets/js/sphere-spark-inhabitant.js?v=20261124-3";
+    s.src = "assets/js/sphere-spark-inhabitant.js?v=20261124-4";
     s.async = false;
     s.setAttribute("data-sphere-spark-inhabitant", "");
     document.head.appendChild(s);

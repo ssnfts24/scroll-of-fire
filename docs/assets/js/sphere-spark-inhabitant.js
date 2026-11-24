@@ -228,12 +228,39 @@
  *  readout names it. The grammar lives here
  *  (carriedLineForRecord); Their Home performs the write.
  *
+ *  ── Slice 6 (Nov 24, 2026): the Whole Road ───────────────
+ *
+ *  THE WHOLE ROAD. The Guardian set piece stands built, in
+ *  the addendum's elevated form: the Sphere itself is the
+ *  stage. Its programme derives here exactly as Gate E
+ *  derives it in the app — the birth coordinate, the hums in
+ *  the order they came home, the tricks in the order they
+ *  were learned, the first closing — composed only from
+ *  record facts, null until a full Pattern year stands kept.
+ *  Asked in the book, or at the year's reading on the Day
+ *  Out of Time where its offer stands in the season's
+ *  section, the Spark walks the programme's stations in
+ *  order on the real plates: the seed-motif at the birth
+ *  day, each hum sounded at the day its token came home,
+ *  each learned feat performed at the day it was learned
+ *  (a feat whose stage is another face is regarded there,
+ *  and named — never faked onto this one), the lantern
+ *  carried lit through the road's middle where it stands
+ *  learned, the Bow at the first closing's day, and at the
+ *  end, rest. The short road walks the year's turning
+ *  points only, from the same programme. The book reads the
+ *  road as it walks, naming each beat as the Spark reaches
+ *  it. A performance writes nothing; any keeper action sets
+ *  the road down. With this slice the inhabitant
+ *  programme's designed work stands complete.
+ *
  *  The pure half (readout parsing, ring math, the hop arc, the
  *  idle choice, slice 2's breadth, preference, and target
  *  derivations, slice 3's writer, facts fold, trick
- *  derivation, route logic and performance choreography, and
- *  slice 4's hum repertoire fold) carries no DOM dependency
- *  and is unit-tested.
+ *  derivation, route logic and performance choreography,
+ *  slice 4's hum repertoire fold, and slice 6's Whole Road
+ *  programme, short form, and choreography) carries no DOM
+ *  dependency and is unit-tested.
  */
 (function (root, factory) {
   const api = factory();
@@ -933,7 +960,7 @@
     "between-worlds": "Between Worlds", windweaver: "Windweaver",
     "living-ground": "Living Ground", constellation: "Constellation",
     "fetch-the-token": "Fetch the Token", "carry-the-lantern": "Carry the Lantern",
-    route: "The Route You Taught",
+    route: "The Route You Taught", "whole-road": "The Whole Road",
   };
   const BASIC_TRICKS = ["hop", "drift", "glow-pulse", "first-note"];
 
@@ -966,9 +993,7 @@
    * at Bearer when an episode stands watched through — a
    * Waymaker skill met, its token home — and a practice stands
    * sealed, which Gate E reads on the site's records as a plan
-   * standing completed (a milestone). The Whole Road still
-   * derives only in the app; on the site its stage is the
-   * year's reading, a later slice. Pure: writes nothing. */
+   * standing completed (a milestone). Pure: writes nothing. */
   function derivedTricks({ kind, stage, facts, lines, record } = {}) {
     const out = [];
     const held = Array.isArray(lines) ? lines : [];
@@ -1081,10 +1106,14 @@
    * Basics from birth; learned tricks with their days and
    * acts; the unlearned with what would teach them, in plain
    * words; the taught route and where its learning stands. */
-  function trickBookFrom({ name, kind, record, facts } = {}) {
+  function trickBookFrom({ name, kind, record, facts, companion } = {}) {
     const who = typeof name === "string" && name.trim() ? name.trim() : "The Spark";
     const lines = lifeLinesOf(record);
     const stage = lifeStageFromFacts(facts);
+    /* Slice 6 — the Whole Road stands in the book: its
+     * programme at Guardian, its asking below it. */
+    const road = wholeRoadProgrammeFrom({ name, kind, record, facts, companion });
+    const roadShort = road ? wholeRoadShortFrom(road, kind) : null;
     const paired = pairedActFor(kind, facts);
     const learnedLines = lines.filter((l) => l.line === "trick-learned" && l.trick !== "route");
     const learnedIds = new Set(learnedLines.map((l) => l.trick));
@@ -1136,6 +1165,12 @@
         teachLine: "Learned at Bearer, when a Waymaker skill stands met in an episode watched through and a practice stands sealed — a plan completed in your planner. It is carried at an opened day.",
       });
     }
+    if (!road) {
+      unlearned.push({
+        trick: "whole-road", name: TRICK_NAMES["whole-road"],
+        teachLine: "Learned with the Guardian stage itself — a full Pattern year kept, every counted day of it. Then the Spark performs the keeping on the Sphere itself: the birth day, the hums in the order they came home, the feats in the order they were learned, the first day closed together, and rest. It stands offered at the year's reading on the Day Out of Time, and in this book at any time — always at your asking, never by itself.",
+      });
+    }
 
     /* Where a learned trick is performed, when its stage is
      * not this face. Face tricks carry no `where`. */
@@ -1169,8 +1204,115 @@
       unlearned,
       hums: humRepertoireFromFacts(facts),
       route: demo ? { demo, learned: Boolean(routeLearned), learnedLine: routeLearned } : null,
+      road,
+      roadShort,
       who,
     };
+  }
+
+  /* ── Slice 6: the Whole Road ───────────────────────────── */
+  /* The Guardian set piece (design §3.5), in the addendum's
+   * elevated form (§4): the Sphere itself is the stage, and
+   * the programme is composed ONLY from what the record
+   * holds — no fabricated memories, no artificial milestones,
+   * no invented experiences. The derivation mirrors Gate E's
+   * wholeRoadProgramme in the app, beat for beat, so both
+   * faces tell the same road: the birth coordinate first
+   * (Gate E's own text for it), then the hums in the order
+   * they came home, then the tricks in the order they were
+   * learned, then the first closing — the beat Gate E's
+   * programme names in its own account. Null until the
+   * Guardian stage: a full Pattern year kept. A thin history
+   * composes a short road; nothing is padded to length.
+   * The programme is a reading: it writes nothing, and the
+   * performance it spells (wholeRoadSteps) writes nothing. */
+  function wholeRoadProgrammeFrom({ name, kind, record, facts, companion } = {}) {
+    const f = facts && typeof facts === "object" ? facts : lifeFactsFromRecords([], null);
+    if (lifeStageFromFacts(f) !== "guardian") return null;
+    const lines = lifeLinesOf(record);
+    const beats = [];
+    const birthMoon = Number.isInteger(companion?.birthMoon) ? companion.birthMoon : null;
+    const birthPdRaw = Number.isInteger(companion?.birthPatternDay) ? companion.birthPatternDay : null;
+    const birthPd = birthPdRaw != null && birthPdRaw >= 1 && birthPdRaw <= PATTERN_DAYS ? birthPdRaw : null;
+    beats.push({
+      beat: "birth",
+      ref: typeof record?.seed === "string" ? record.seed : "",
+      pd: birthPd,
+      moon: birthMoon,
+      patternDay: birthPdRaw,
+      text: birthMoon != null && birthPdRaw != null
+        ? `Born Moon ${birthMoon} · Pattern Day ${birthPdRaw}`
+        : "Born of the seed",
+    });
+    /* The hums walk in the order they came home. Gate E's
+     * programme reads the app store in completion order; the
+     * site's repository presents the record newest-first, so
+     * the repertoire — which keeps that presentation — is
+     * walked back into the order the watches were made. */
+    for (const entry of [...humRepertoireFromFacts(f)].reverse()) {
+      beats.push({
+        beat: "hum", ref: entry.episodeId, pd: entry.patternDay ?? null,
+        text: `The hum of ${entry.title || entry.episodeId}, carried home`,
+        hum: entry,
+      });
+    }
+    const demos = routeDemosFromLines(lines);
+    for (const l of lines) {
+      if (l.line !== "trick-learned") continue;
+      const beat = {
+        beat: "trick", ref: l.trick,
+        pd: Number.isInteger(l.patternDay) ? l.patternDay : null,
+        text: `${TRICK_NAMES[l.trick] || l.trick}, learned by ${viaPlainFor(l.via, lines)}`,
+      };
+      if (l.trick === "route") {
+        /* The route's own walk rides its beat: the days the
+         * keeper showed, read from the demonstration the
+         * learning line names. */
+        const demo = demos.find((d) => d.id && d.id === l.via);
+        if (demo) beat.days = demo.days;
+      }
+      beats.push(beat);
+    }
+    const firstClose = lines.find((l) => l.line === "care-act" && l.kind === "close-day");
+    if (firstClose) {
+      beats.push({
+        beat: "closing", ref: firstClose.id || "",
+        pd: Number.isInteger(firstClose.patternDay) ? firstClose.patternDay : null,
+        text: "The first day closed together",
+      });
+    }
+    return {
+      beats,
+      bowStands: lines.some((l) => l.line === "trick-learned" && l.trick === "bow"),
+      lanternStands: lines.some((l) => l.line === "trick-learned" && l.trick === "carry-the-lantern"),
+    };
+  }
+
+  /* The shorter presentation (design §3.5; addendum §4):
+   * the same facts, the year's turning points only — the
+   * birth day, the first hum home and the latest, the two
+   * signatures of the Spark's own kind, and the first day
+   * closed together. A selection of the programme's own
+   * beats, in the programme's own order; nothing is added
+   * that the full road does not hold. */
+  function wholeRoadShortFrom(programme, kind) {
+    if (!programme || !Array.isArray(programme.beats)) return null;
+    const beats = programme.beats;
+    const out = [];
+    const birth = beats.find((b) => b.beat === "birth");
+    if (birth) out.push(birth);
+    const hums = beats.filter((b) => b.beat === "hum");
+    if (hums.length) {
+      out.push(hums[0]);
+      if (hums[hums.length - 1] !== hums[0]) out.push(hums[hums.length - 1]);
+    }
+    const sigIds = [SIGNATURE_BY_KIND[kind], SECOND_SIGNATURE_BY_KIND[kind]].filter(Boolean);
+    for (const b of beats) {
+      if (b.beat === "trick" && sigIds.includes(b.ref) && !out.includes(b)) out.push(b);
+    }
+    const closing = beats.find((b) => b.beat === "closing");
+    if (closing) out.push(closing);
+    return { beats: out, bowStands: programme.bowStands, lanternStands: programme.lanternStands };
   }
 
   /* ── Performances ──────────────────────────────────────── */
@@ -1269,6 +1411,81 @@
     if (dest > PATTERN_DAYS) dest -= PATTERN_DAYS;
     if (dest < 1) dest += PATTERN_DAYS;
     return dest;
+  }
+
+  /* The Whole Road, spelled as a performance: the Spark
+   * travels the programme's stations in the programme's own
+   * order, on the Sphere's real plates, and at each station
+   * does what the beat is — the seed-motif at the birth day,
+   * the hum sounded at the day its token came home, a learned
+   * feat performed at the day it was learned (a feat whose
+   * stage is another face — the fetch, the lantern — is
+   * regarded there with a glow, and named by the road's
+   * reading; it is not faked onto this face), the Bow at the
+   * first closing's day, and at the end, rest. Every step
+   * carries its beat's index, so the road's reading can name
+   * the beat as it is reached. A station whose plate is not
+   * on the face degrades the way every performance degrades:
+   * the travel leg reads as a hop in place, never a faked
+   * path — the beat still stands, and is still named.
+   * Pure: this function only spells; a performance writes
+   * nothing. */
+  function wholeRoadSteps(beats, ctx = {}) {
+    const list = Array.isArray(beats) ? beats : [];
+    const start = Number(ctx.postPd);
+    if (!Number.isInteger(start) || start < 1 || start > PATTERN_DAYS || !list.length) return [];
+    const projected = Array.isArray(ctx.projected) ? ctx.projected : [];
+    const steps = [];
+    let cur = start;
+    list.forEach((b, i) => {
+      if (!b || typeof b !== "object") return;
+      if (i > 0) steps.push({ type: "pause", ms: 260, beat: i });
+      if (Number.isInteger(b.pd) && b.pd >= 1 && b.pd <= PATTERN_DAYS && b.pd !== cur) {
+        steps.push({ type: "travel", pd: b.pd, style: "drift", beat: i });
+        cur = b.pd;
+      }
+      if (b.beat === "birth") {
+        steps.push({ type: "act", act: "note", ms: 1100, beat: i });
+        steps.push({ type: "act", act: "glow", ms: 900, beat: i });
+      } else if (b.beat === "hum") {
+        const entry = b.hum && typeof b.hum === "object" ? b.hum : null;
+        const ms = entry && Array.isArray(entry.motifHz)
+          ? Math.max(900, Math.min(4200, entry.motifHz.length * 420 + 500))
+          : 1400;
+        steps.push({ type: "act", act: "hum", ms, beat: i, ...(entry ? { hum: entry } : {}) });
+      } else if (b.beat === "trick") {
+        const station = cur;
+        const sub = performanceSteps(b.ref, {
+          postPd: station, projected,
+          routeDays: Array.isArray(b.days) ? b.days : null,
+        });
+        if (sub.length) {
+          for (const s of sub) {
+            steps.push({ ...s, beat: i });
+            if (s.type === "travel") cur = s.pd;
+          }
+          /* The road resumes from the station the beat
+           * stands on, whatever the feat's own walk did. */
+          if (cur !== station) {
+            steps.push({ type: "travel", pd: station, style: "drift", beat: i });
+            cur = station;
+          }
+        } else {
+          steps.push({ type: "act", act: "glow", ms: 1000, beat: i });
+        }
+      } else if (b.beat === "closing") {
+        steps.push(ctx.bowStands
+          ? { type: "act", act: "bow", ms: 1600, beat: i }
+          : { type: "act", act: "glow", ms: 1000, beat: i });
+      } else {
+        steps.push({ type: "act", act: "glow", ms: 900, beat: i });
+      }
+    });
+    /* The design's ending: at the end, rest — at the final
+     * station, in the posture itself. Its beat index stands
+     * one past the programme's last beat. */
+    steps.push({ type: "act", act: "rest", ms: 2000, beat: list.length });
+    return steps;
   }
 
 
@@ -1641,6 +1858,11 @@
     let sittingNote = null;
     let carryTitles = {};       // carry ref → the keepsake's name, from the Atlas fold
 
+    /* ── Slice 6 state ─────────────────────────────────────── */
+    let roadNowEl = null;       // the road's reading line in the book, while it walks
+    let roadNowText = "";       // the beat the reading last named
+    let seasonRoadNote = null;  // a one-line note the season's offer shows
+
     function readRecord() {
       try {
         const raw = root.localStorage?.getItem("sof.spark.v1");
@@ -1749,6 +1971,7 @@
         learnNewTricksNow();
         renderTrickBook();
         renderCare();
+        renderSeason();
         refreshCarriedMark();
       } catch { /* the fold is a reading; a failed reading changes nothing */ }
       finally {
@@ -1814,6 +2037,13 @@
 
     function sparkKind(record) {
       try { return root.SparkCompanion?.generate?.(record?.seed)?.kind || null; } catch { return null; }
+    }
+
+    /* The Spark's generated self — its birth coordinate rides
+     * it (the seed's Moon and Pattern Day), the Whole Road's
+     * first beat. Read the way sparkKind reads the kind. */
+    function sparkCompanionOf(record) {
+      try { return root.SparkCompanion?.generate?.(record?.seed) || null; } catch { return null; }
     }
 
     function persistRecord(record) {
@@ -1890,7 +2120,7 @@
         return;
       }
       const facts = atlasFacts || lifeFactsFromRecords([], record);
-      const book = trickBookFrom({ name: sparkName(record), kind: sparkKind(record), record, facts });
+      const book = trickBookFrom({ name: sparkName(record), kind: sparkKind(record), record, facts, companion: sparkCompanionOf(record) });
       heading.textContent = `What ${book.who} can do`;
       trickSection.appendChild(heading);
 
@@ -2028,12 +2258,69 @@
         trickSection.appendChild(line);
       }
 
+      /* The Whole Road (slice 6): at Guardian the book offers
+       * the performance itself — the full road and the short
+       * road — and while it walks, the book reads it: the beat
+       * the Spark stands in is named here, as it is reached.
+       * Below Guardian the road stands in the unlearned lines
+       * below, with what it asks. */
+      if (book.road) {
+        const summary = document.createElement("p");
+        summary.className = "sphere-spark-tricks-line sphere-spark-road-summary";
+        summary.textContent = roadSummaryLine(book);
+        trickSection.appendChild(summary);
+        const row = document.createElement("div");
+        row.className = "sphere-spark-trick-row";
+        const walkBtn = document.createElement("button");
+        walkBtn.type = "button";
+        walkBtn.className = "sphere-spark-trick-btn";
+        walkBtn.textContent = "Walk the Whole Road";
+        walkBtn.setAttribute("aria-label", `Ask ${book.who} to walk the Whole Road`);
+        walkBtn.addEventListener("click", () => startWholeRoad("full"));
+        const shortBtn = document.createElement("button");
+        shortBtn.type = "button";
+        shortBtn.className = "sphere-spark-trick-btn sphere-spark-trick-btn-quiet";
+        shortBtn.textContent = "The short road";
+        shortBtn.setAttribute("aria-label", `Ask ${book.who} to walk the short road`);
+        shortBtn.addEventListener("click", () => startWholeRoad("short"));
+        row.append(walkBtn, shortBtn);
+        trickSection.appendChild(row);
+        const offerLine = document.createElement("p");
+        offerLine.className = "sphere-spark-tricks-line";
+        offerLine.textContent = `The short road walks the year's turning points only. The road stands offered at the year's reading on the Day Out of Time, and here whenever you ask — it is never walked unasked.`;
+        trickSection.appendChild(offerLine);
+        roadNowEl = document.createElement("p");
+        roadNowEl.className = "sphere-spark-tricks-line sphere-spark-road-now";
+        roadNowEl.textContent = roadNowText;
+        trickSection.appendChild(roadNowEl);
+      } else {
+        roadNowEl = null;
+      }
+
       for (const item of book.unlearned) {
         const p = document.createElement("p");
         p.className = "sphere-spark-tricks-line sphere-spark-trick-unlearned";
         p.textContent = `${item.name} — not yet learned. ${item.teachLine}`;
         trickSection.appendChild(p);
       }
+    }
+
+    /* The road, in one plain line for the book: what the
+     * performance holds, counted from the programme's own
+     * beats — the record's numbers, nothing else's. */
+    function roadSummaryLine(book) {
+      const beats = book.road.beats;
+      const hums = beats.filter((b) => b.beat === "hum").length;
+      const feats = beats.filter((b) => b.beat === "trick").length;
+      const birth = beats.find((b) => b.beat === "birth");
+      const parts = [
+        birth ? birth.text.toLowerCase() : "born of the seed",
+        hums ? `${hums} ${hums === 1 ? "hum" : "hums"} home` : "no hums home yet",
+        feats ? `${feats} ${feats === 1 ? "feat" : "feats"} learned` : "no feats learned yet",
+        beats.some((b) => b.beat === "closing") ? "the first day closed together" : null,
+        "and rest",
+      ].filter(Boolean);
+      return `The Whole Road — ${book.who}'s keeping, performed on the Sphere: ${parts.join(" · ")}.`;
     }
 
     function placeTrickPanel() {
@@ -2103,11 +2390,31 @@
 
     function renderSeason() {
       if (!seasonSection) return;
-      const name = sparkName(readRecord());
+      const record = readRecord();
+      const name = sparkName(record);
       const nextChar = seasonCtx && seasonCtx.kind === "moon-turn" && seasonCtx.moon != null
         ? moonCharFor((seasonCtx.moon % 13) + 1) : null;
       const line = seasonCtx ? seasonLineFor(seasonCtx, { name, nextMoonChar: nextChar }) : null;
-      const text = line || "";
+      /* Slice 6 — on the Day Out of Time, the year's reading
+       * stands in this section, and the Whole Road's offer
+       * stands in it (Aaron's ruling: offered at the year's
+       * reading, entirely optional, and accessible outside it
+       * in the book). The offer's state rides the render key
+       * so the section re-renders when the record's breadth
+       * lands or the note below changes. */
+      let roadProgramme = null;
+      let roadStage = null;
+      if (seasonCtx && seasonCtx.kind === "day-out-of-time" && record) {
+        const facts = atlasFacts || lifeFactsFromRecords([], record);
+        roadStage = lifeStageFromFacts(facts);
+        roadProgramme = wholeRoadProgrammeFrom({
+          name, kind: sparkKind(record), record, facts, companion: sparkCompanionOf(record),
+        });
+      }
+      const offerKey = seasonCtx && seasonCtx.kind === "day-out-of-time"
+        ? `|road:${roadProgramme ? "stands" : roadStage || "none"}|note:${seasonRoadNote || ""}`
+        : "";
+      const text = (line || "") + offerKey;
       if (text === seasonText) return;
       seasonText = text;
       seasonSection.replaceChildren();
@@ -2119,6 +2426,46 @@
       p.className = "sphere-spark-season-line";
       p.textContent = line || "The year's turning cannot be read just now — nothing is claimed for it.";
       seasonSection.appendChild(p);
+      if (seasonCtx && seasonCtx.kind === "day-out-of-time" && record) {
+        const offer = document.createElement("div");
+        offer.className = "sphere-spark-season-road";
+        const offerLine = document.createElement("p");
+        offerLine.className = "sphere-spark-season-line sphere-spark-road-offer-line";
+        if (roadProgramme) {
+          offerLine.textContent = `The year's reading stands here, on the day outside the count. The Whole Road — ${name}'s keeping, performed on the Sphere itself — stands offered here, at your choice, as it does in the book at any time. It is never walked unasked.`;
+          offer.appendChild(offerLine);
+          const row = document.createElement("div");
+          row.className = "sphere-spark-trick-row";
+          const ask = (form, label) => {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "sphere-spark-trick-btn";
+            btn.textContent = label;
+            btn.setAttribute("aria-label", `Ask ${name} to walk ${form === "short" ? "the short road" : "the Whole Road"}`);
+            btn.addEventListener("click", () => {
+              if (startWholeRoad(form)) { seasonRoadNote = null; return; }
+              seasonRoadNote = postPd == null
+                ? `${name} stands at the threshold today, with no plate underfoot. Step onto any day of the year, and the road can be walked from there.`
+                : "The road could not start just now — nothing was walked.";
+              seasonText = null;
+              renderSeason();
+            });
+            return btn;
+          };
+          row.append(ask("full", "Walk the Whole Road"), ask("short", "The short road"));
+          offer.appendChild(row);
+        } else {
+          offerLine.textContent = `The year's reading stands here, on the day outside the count. The Whole Road will stand offered here when a full Pattern year stands kept — ${name} stands ${LIFE_STAGE_NAMES[roadStage] || "Spark"}. The road asks the Guardian stage: every counted day of one Pattern year, kept.`;
+          offer.appendChild(offerLine);
+        }
+        if (seasonRoadNote) {
+          const note = document.createElement("p");
+          note.className = "sphere-spark-season-line sphere-spark-road-note";
+          note.textContent = seasonRoadNote;
+          offer.appendChild(note);
+        }
+        seasonSection.appendChild(offer);
+      }
     }
 
     function placeSeasonPanel() {
@@ -2519,13 +2866,15 @@
       runPerformance("hum", { hum: entry });
     }
 
-    function runPerformance(trickId, { routeDays = null, onDone = null, hum = null } = {}) {
+    function runPerformance(trickId, { routeDays = null, onDone = null, hum = null, road = null } = {}) {
       if (perf || !holder || mode === "in-day" || postPd == null) return false;
-      let steps = performanceSteps(trickId, {
-        postPd, projected: projectedPds(), routeDays,
-        humPd: hum ? hum.patternDay : null,
-        humMs: hum ? hum.motifHz.length * 420 + 500 : null,
-      });
+      let steps = road
+        ? wholeRoadSteps(road.beats, { postPd, projected: projectedPds(), bowStands: road.bowStands })
+        : performanceSteps(trickId, {
+          postPd, projected: projectedPds(), routeDays,
+          humPd: hum ? hum.patternDay : null,
+          humMs: hum ? hum.motifHz.length * 420 + 500 : null,
+        });
       if (!steps.length) return false;
       if (reducedMotion) steps = steps.filter((s) => s.type !== "travel");
       if (!steps.length) return false;
@@ -2535,14 +2884,68 @@
         travel = null;
         mode = "posted";
       }
-      perf = { trick: trickId, steps, idx: 0, onDone };
+      perf = { trick: trickId, steps, idx: 0, onDone, road: road || null, beatSeen: -1 };
       perfHum = trickId === "hum" ? hum : null;
       holder.dataset.inhabitantTrick = trickId;
       if (perfHum) holder.dataset.inhabitantHum = perfHum.episodeId;
+      if (road) holder.dataset.inhabitantRoad = trickId === "whole-road-short" ? "short" : "full";
       mode = "performing";
       setPosture("stand");
       advancePerf();
       return true;
+    }
+
+    /* ── Slice 6: the Whole Road, walked ───────────────────── */
+    /* The keeper asks — in the book, or at the year's reading
+     * on the Day Out of Time — and the Spark performs its
+     * keeping on the Sphere itself. The programme is derived
+     * fresh at the asking, from the record as it stands; the
+     * performance writes nothing, like every performance.
+     * Returns false when the road cannot start (no Spark, no
+     * Guardian programme, no post to stand on), so the asking
+     * surface can say so honestly. */
+    function startWholeRoad(form) {
+      const record = readRecord();
+      if (!record || perf) return false;
+      const facts = atlasFacts || lifeFactsFromRecords([], record);
+      const kind = sparkKind(record);
+      const programme = wholeRoadProgrammeFrom({
+        name: sparkName(record), kind, record, facts, companion: sparkCompanionOf(record),
+      });
+      if (!programme) return false;
+      const chosen = form === "short" ? wholeRoadShortFrom(programme, kind) : programme;
+      if (!chosen || !chosen.beats.length) return false;
+      roadNowText = "";
+      const started = runPerformance(form === "short" ? "whole-road-short" : "whole-road", {
+        road: chosen,
+        onDone: () => {
+          roadNowText = "The road stands walked — every station a day the record truly holds.";
+          if (roadNowEl) roadNowEl.textContent = roadNowText;
+        },
+      });
+      if (!started) return false;
+      return true;
+    }
+
+    /* The road's reading: as each beat's first act begins —
+     * the Spark standing on the beat's own station — the beat
+     * is named in the book and mirrored on the holder. The
+     * lantern, where it stands learned, is carried through
+     * the road's middle (design §3.5), the way it attends an
+     * opened day: lit, and set down again after. */
+    function onRoadBeat(idx) {
+      if (!perf?.road || !holder) return;
+      const beats = perf.road.beats;
+      const b = beats[idx] || null;
+      roadNowText = b ? b.text : "And at the end, rest.";
+      if (roadNowEl) roadNowEl.textContent = roadNowText;
+      holder.dataset.inhabitantRoadBeat = String(idx);
+      if (b && Number.isInteger(b.pd)) holder.dataset.inhabitantRoadPd = String(b.pd);
+      else delete holder.dataset.inhabitantRoadPd;
+      const n = beats.length;
+      const inMiddle = perf.road.lanternStands && n >= 3 && idx >= Math.floor(n / 3) && idx < n - Math.floor(n / 3);
+      if (inMiddle) placeLantern();
+      else if (holder.dataset.inhabitantLantern) removeLantern();
     }
 
     function advancePerf() {
@@ -2553,7 +2956,16 @@
       if (!step) { finishPerf(); return; }
       const now = performance.now();
       if (step.type === "pause") { perfStepEndsAt = now + step.ms; return; }
-      if (step.type === "act") { applyPerfAct(step); return; }
+      if (step.type === "act") {
+        /* The Whole Road's reading names a beat as its first
+         * act begins — the Spark standing on its station. */
+        if (perf.road && step.beat != null && step.beat !== perf.beatSeen) {
+          perf.beatSeen = step.beat;
+          onRoadBeat(step.beat);
+        }
+        applyPerfAct(step);
+        return;
+      }
       /* A travel leg. A plate not projected, or the post
        * itself, reads as a hop in place — never a faked path. */
       const target = labelPoint(step.pd);
@@ -2593,8 +3005,15 @@
       }
       if (step.act === "hum") {
         setPosture("observe");
-        if (perfHum) soundMotifHz(perfHum.motifHz);
+        /* A road beat carries its own hum; a lone hum
+         * performance carries the performance's. */
+        const entry = step.hum || perfHum;
+        if (entry) {
+          soundMotifHz(entry.motifHz);
+          holder.dataset.inhabitantHum = entry.episodeId;
+        }
       }
+      if (step.act === "rest") setPosture("rest");
       if (step.act === "ripple") spawnFxAt("ripple", labelPoint(postPd), null);
       if (step.act === "ground") spawnFxAt("ground", labelPoint(postPd), null);
     }
@@ -2609,13 +3028,19 @@
 
     function finishPerf() {
       const done = perf?.onDone || null;
+      const wasRoad = Boolean(perf?.road);
       perf = null;
       perfHum = null;
       perfStepEndsAt = 0;
       perfStepFx = null;
       clearPerfAct();
       clearStarFx();
-      if (holder) { delete holder.dataset.inhabitantTrick; delete holder.dataset.inhabitantHum; }
+      if (wasRoad && holder?.dataset.inhabitantLantern) removeLantern();
+      if (holder) {
+        delete holder.dataset.inhabitantTrick; delete holder.dataset.inhabitantHum;
+        delete holder.dataset.inhabitantRoad; delete holder.dataset.inhabitantRoadBeat;
+        delete holder.dataset.inhabitantRoadPd;
+      }
       mode = "posted";
       setPosture("settle");
       root.setTimeout(() => { if (mode === "posted") setPosture("stand"); }, 900);
@@ -2625,15 +3050,26 @@
 
     function cancelPerf() {
       if (!perf) return;
+      const wasRoad = Boolean(perf.road);
       perf = null;
       perfHum = null;
       perfStepEndsAt = 0;
       perfStepFx = null;
       clearPerfAct();
       clearStarFx();
+      if (wasRoad) {
+        /* The keeper's word set the road down: the reading
+         * says so, and the road stands in the book to be
+         * asked again. The lantern is set down with it. */
+        roadNowText = "The road was set down — it stands in the book whenever you ask again.";
+        if (roadNowEl) roadNowEl.textContent = roadNowText;
+        if (holder?.dataset.inhabitantLantern) removeLantern();
+      }
       if (holder) {
         delete holder.dataset.inhabitantTrick;
         delete holder.dataset.inhabitantHum;
+        delete holder.dataset.inhabitantRoad; delete holder.dataset.inhabitantRoadBeat;
+        delete holder.dataset.inhabitantRoadPd;
         holder.style.opacity = "";
       }
       travel = null;
@@ -3439,7 +3875,10 @@
     routeLearningFor,
     viaPlainFor,
     trickBookFrom,
+    wholeRoadProgrammeFrom,
+    wholeRoadShortFrom,
     performanceSteps,
+    wholeRoadSteps,
     quarterForPatternDay,
     seasonContextFor,
     seasonLineFor,

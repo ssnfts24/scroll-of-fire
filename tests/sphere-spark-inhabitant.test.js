@@ -567,7 +567,10 @@ test("the trick book: basics from birth, the unlearned named with their teaching
   assert.equal(thin.stage, "spark");
   assert.deepEqual(plain(thin.basics.map((b) => b.trick)), ["hop", "drift", "glow-pulse", "first-note"]);
   assert.deepEqual(plain(thin.learned), []);
-  assert.deepEqual(plain(thin.unlearned.map((u) => u.trick)), ["bow", "ripple-bow", "ripple-dance", "fetch-the-token", "carry-the-lantern"]);
+  assert.deepEqual(plain(thin.unlearned.map((u) => u.trick)), ["bow", "ripple-bow", "ripple-dance", "fetch-the-token", "carry-the-lantern", "whole-road"],
+    "the Whole Road stands last among the unlearned, with what it asks (slice 6)");
+  assert.equal(thin.road, null, "no road below Guardian");
+  assert.equal(thin.roadShort, null);
   assert.match(thin.unlearned[0].teachLine, /close a day together/);
   assert.deepEqual(plain(thin.hums), [], "no episode watched, no hums — the repertoire is the watch records and nothing else");
   assert.equal(thin.route, null);
@@ -1002,4 +1005,198 @@ test("slice 5 — the carried line lands on a keepsake's own record once, in the
   assert.equal(layer.carriedLineForRecord(record, { civilDate: "Nov 24" }), null, "no honest day, no line");
   assert.equal(layer.carriedLineForRecord(null, { civilDate: "2026-11-24" }), null);
   assert.deepEqual(plain(layer.carriedLinesOfRecord(first.record)).map((l) => l.text), ["carried to you, 2026-11-24"]);
+});
+
+/* ── Slice 6: the Whole Road ─────────────────────────────────
+ * The Guardian set piece, in the addendum's elevated form:
+ * the Sphere itself is the stage, and the programme is
+ * composed only from record facts — Gate E's derivation
+ * mirrored beat for beat (the birth coordinate, the hums in
+ * the order they came home, the tricks in the order they
+ * were learned, the first closing), null below Guardian. */
+
+function guardianYearRecords() {
+  const records = [];
+  for (let pd = 1; pd <= 364; pd += 1) {
+    records.push(atlasNote(`y${pd}`, pd, Math.floor((pd - 1) / 28) + 1, 1));
+  }
+  return records;
+}
+
+const ROAD_COMPANION = { kind: "water", birthMoon: 8, birthPatternDay: 217 };
+const ROAD_RECORD = {
+  seed: "spark1-8-217-1-ab12cd34", name: "Selor",
+  lifeLines: [
+    { line: "care-act", kind: "close-day", id: "line-0001", ref: "pattern-day:218", patternDay: 218, patternYear: 1, moon: 8, civilDate: "2026-11-18" },
+    { line: "trick-learned", trick: "bow", id: "line-0002", via: "line-0001", patternDay: 218, patternYear: 1, moon: 8, civilDate: "2026-11-18" },
+    { line: "trick-learned", trick: "ripple-bow", id: "line-0003", via: "pattern-day:219", patternDay: 219, patternYear: 1, moon: 8, civilDate: "2026-11-19" },
+    { line: "trick-learned", trick: "carry-the-lantern", id: "line-0004", via: "ep-first", patternDay: 220, patternYear: 1, moon: 8, civilDate: "2026-11-20" },
+    { line: "trick-learned", trick: "ripple-dance", id: "line-0005", via: "pattern-day:221", patternDay: 221, patternYear: 1, moon: 8, civilDate: "2026-11-21" },
+    { line: "care-act", kind: "close-day", id: "line-0006", ref: "pattern-day:230", patternDay: 230, patternYear: 1, moon: 8, civilDate: "2026-11-23" },
+  ],
+};
+
+function roadFacts(layer, extra = []) {
+  return layer.lifeFactsFromRecords([...guardianYearRecords(), ...extra], ROAD_RECORD);
+}
+
+test("slice 6 — the Whole Road programme is null below Guardian, and stands at Guardian in Gate E's order", () => {
+  const layer = loadInhabitant();
+  const bearerFacts = layer.lifeFactsFromRecords(bearerRecords(), ROAD_RECORD);
+  assert.equal(layer.lifeStageFromFacts(bearerFacts), "bearer");
+  assert.equal(layer.wholeRoadProgrammeFrom({ name: "Selor", kind: "water", record: ROAD_RECORD, facts: bearerFacts, companion: ROAD_COMPANION }), null,
+    "no road before the full year stands kept");
+  assert.equal(layer.wholeRoadProgrammeFrom({ name: "Selor", kind: "water", record: THIN_RECORD, facts: layer.lifeFactsFromRecords([], THIN_RECORD), companion: ROAD_COMPANION }), null);
+
+  /* The watches stand in the repository's own presentation
+   * — newest first, as the record reaches the fold. The
+   * programme walks them back into the order they came
+   * home, Gate E's completion order, never the presentation's. */
+  const facts = roadFacts(layer, [
+    atlasWatchFull("w1", "ep-first", 219, 8),
+    atlasWatchFull("w2", "ep-second", 205, 8),
+  ]);
+  const programme = layer.wholeRoadProgrammeFrom({ name: "Selor", kind: "water", record: ROAD_RECORD, facts, companion: ROAD_COMPANION });
+  assert.deepEqual(plain(programme.beats.map((b) => [b.beat, b.ref, b.pd])), [
+    ["birth", "spark1-8-217-1-ab12cd34", 217],
+    ["hum", "ep-second", 205],
+    ["hum", "ep-first", 219],
+    ["trick", "bow", 218],
+    ["trick", "ripple-bow", 219],
+    ["trick", "carry-the-lantern", 220],
+    ["trick", "ripple-dance", 221],
+    ["closing", "line-0001", 218],
+  ]);
+  assert.equal(programme.beats[0].text, "Born Moon 8 · Pattern Day 217", "Gate E's own words for the birth beat");
+  assert.equal(programme.beats[2].text, "The hum of Through the Day Door, carried home");
+  assert.equal(programme.beats[3].text, "Bow, learned by closing a day together");
+  assert.equal(programme.beats[7].text, "The first day closed together");
+  assert.equal(programme.bowStands, true);
+  assert.equal(programme.lanternStands, true);
+});
+
+test("slice 6 — the programme holds only what the record holds, and pads nothing", () => {
+  const layer = loadInhabitant();
+  /* A full year kept, but no hums and no learnings: the road
+   * is the birth day alone, honestly short. */
+  const bare = layer.wholeRoadProgrammeFrom({
+    name: "Selor", kind: "water",
+    record: { seed: "spark1-8-217-1-ab12cd34", name: "Selor", lifeLines: [] },
+    facts: roadFacts(layer), companion: ROAD_COMPANION,
+  });
+  assert.deepEqual(plain(bare.beats.map((b) => b.beat)), ["birth"]);
+  assert.equal(bare.bowStands, false);
+  assert.equal(bare.lanternStands, false);
+  /* An episode watched whose record carries no hum teaches
+   * no hum beat — the repertoire's rule, the road's too. */
+  const noHum = layer.wholeRoadProgrammeFrom({
+    name: "Selor", kind: "water", record: ROAD_RECORD,
+    facts: roadFacts(layer, [atlasWatch("w9", "ep-silent", 222, 8)]), companion: ROAD_COMPANION,
+  });
+  assert.equal(noHum.beats.filter((b) => b.beat === "hum").length, 0);
+  /* A birth on the Day Out of Time (365 in the seed grammar)
+   * names no plate: the beat stands, its station is null,
+   * and no day is invented for it. */
+  const doot = layer.wholeRoadProgrammeFrom({
+    name: "Selor", kind: "water", record: ROAD_RECORD, facts: roadFacts(layer),
+    companion: { kind: "water", birthMoon: null, birthPatternDay: 365 },
+  });
+  assert.equal(doot.beats[0].pd, null);
+  assert.equal(doot.beats[0].text, "Born of the seed");
+});
+
+test("slice 6 — the short road walks the year's turning points only, from the same programme", () => {
+  const layer = loadInhabitant();
+  /* Presentation order again (newest first): the hums came
+   * home ep-second, ep-third, ep-first. */
+  const facts = roadFacts(layer, [
+    atlasWatchFull("w1", "ep-first", 219, 8),
+    atlasWatchFull("w3", "ep-third", 212, 8),
+    atlasWatchFull("w2", "ep-second", 205, 8),
+  ]);
+  const programme = layer.wholeRoadProgrammeFrom({ name: "Selor", kind: "water", record: ROAD_RECORD, facts, companion: ROAD_COMPANION });
+  const short = layer.wholeRoadShortFrom(programme, "water");
+  assert.deepEqual(plain(short.beats.map((b) => [b.beat, b.ref])), [
+    ["birth", "spark1-8-217-1-ab12cd34"],
+    ["hum", "ep-second"], ["hum", "ep-first"],
+    ["trick", "ripple-bow"], ["trick", "ripple-dance"],
+    ["closing", "line-0001"],
+  ], "the middle hum and the carrying feat are the full road's; the signatures are the kind's own");
+  /* One hum home: it stands once, never twice. */
+  const oneHum = layer.wholeRoadProgrammeFrom({
+    name: "Selor", kind: "water", record: ROAD_RECORD,
+    facts: roadFacts(layer, [atlasWatchFull("w1", "ep-first", 219, 8)]), companion: ROAD_COMPANION,
+  });
+  assert.equal(layer.wholeRoadShortFrom(oneHum, "water").beats.filter((b) => b.beat === "hum").length, 1);
+  assert.equal(layer.wholeRoadShortFrom(null, "water"), null);
+});
+
+test("slice 6 — the road is spelled on the geometry in programme order, and ends in rest", () => {
+  const layer = loadInhabitant();
+  const facts = roadFacts(layer, [
+    atlasWatchFull("w1", "ep-first", 219, 8),
+    atlasWatchFull("w2", "ep-second", 205, 8),
+  ]);
+  const programme = layer.wholeRoadProgrammeFrom({ name: "Selor", kind: "water", record: ROAD_RECORD, facts, companion: ROAD_COMPANION });
+  const projected = [];
+  for (let pd = 197; pd <= 224; pd += 1) projected.push(pd);
+  const steps = layer.wholeRoadSteps(programme.beats, { postPd: 222, projected, bowStands: programme.bowStands });
+  /* The road departs for the birth day first. */
+  assert.deepEqual(plain(steps[0]), { type: "travel", pd: 217, style: "drift", beat: 0 });
+  /* Every beat is acted, in order; the last act is rest,
+   * one beat past the programme's end. */
+  const actBeats = steps.filter((s) => s.type === "act").map((s) => s.beat);
+  assert.deepEqual(plain([...new Set(actBeats)]), [0, 1, 2, 3, 4, 5, 6, 7, 8]);
+  assert.deepEqual(plain(steps[steps.length - 1]), { type: "act", act: "rest", ms: 2000, beat: 8 });
+  /* The hums sound their own motifs at their own stations. */
+  const humActs = steps.filter((s) => s.type === "act" && s.act === "hum");
+  assert.deepEqual(plain(humActs.map((s) => [s.beat, s.hum.episodeId])), [[1, "ep-second"], [2, "ep-first"]],
+    "the hums sound in the order they came home, not the presentation's");
+  /* The lantern's beat is regarded with a glow — its stage
+   * is an opened day, and the road does not fake it here. */
+  const lanternActs = steps.filter((s) => s.beat === 5);
+  assert.deepEqual(plain(lanternActs.filter((s) => s.type === "act").map((s) => s.act)), ["glow"]);
+  /* The closing bows, the Bow standing learned. */
+  assert.ok(steps.some((s) => s.beat === 7 && s.type === "act" && s.act === "bow"));
+  /* Reduced motion drops the travel and keeps every station:
+   * each beat still acts, in the same order. */
+  const still = steps.filter((s) => s.type !== "travel");
+  assert.deepEqual(plain([...new Set(still.filter((s) => s.type === "act").map((s) => s.beat))]), [0, 1, 2, 3, 4, 5, 6, 7, 8]);
+  /* No post, no road; no beats, no road. */
+  assert.deepEqual(plain(layer.wholeRoadSteps(programme.beats, { postPd: null, projected })), []);
+  assert.deepEqual(plain(layer.wholeRoadSteps([], { postPd: 222, projected })), []);
+});
+
+test("slice 6 — a learned route rides its beat on the road, walking its own days", () => {
+  const layer = loadInhabitant();
+  const record = {
+    ...ROAD_RECORD,
+    lifeLines: [
+      ...ROAD_RECORD.lifeLines,
+      { line: "play-session", kind: "route-demo", id: "line-0007", ref: "route:222,224,219", patternDay: 222, patternYear: 1, moon: 8, civilDate: "2026-11-22" },
+      { line: "trick-learned", trick: "route", id: "line-0008", via: "line-0007", patternDay: 223, patternYear: 1, moon: 8, civilDate: "2026-11-23" },
+    ],
+  };
+  const programme = layer.wholeRoadProgrammeFrom({ name: "Selor", kind: "water", record, facts: roadFacts(layer), companion: ROAD_COMPANION });
+  const routeBeat = programme.beats.find((b) => b.beat === "trick" && b.ref === "route");
+  assert.deepEqual(plain(routeBeat.days), [222, 224, 219], "the demonstration's days ride the beat");
+  const projected = [];
+  for (let pd = 197; pd <= 224; pd += 1) projected.push(pd);
+  const steps = layer.wholeRoadSteps(programme.beats, { postPd: 217, projected, bowStands: true });
+  const routeTravels = steps.filter((s) => s.type === "travel" && s.beat === routeBeatIndex(programme)).map((s) => s.pd);
+  function routeBeatIndex(p) { return p.beats.indexOf(routeBeat); }
+  assert.equal(routeTravels[0], 223, "the road first stands on the day the route was learned");
+  assert.deepEqual(plain(routeTravels.slice(1, 4)), [222, 224, 219], "the route is walked in the order it was taught");
+});
+
+test("slice 6 — the book carries the road at Guardian, and the short road beside it", () => {
+  const layer = loadInhabitant();
+  const facts = roadFacts(layer, [atlasWatchFull("w1", "ep-first", 219, 8)]);
+  const book = layer.trickBookFrom({ name: "Selor", kind: "water", record: ROAD_RECORD, facts, companion: ROAD_COMPANION });
+  assert.equal(book.stage, "guardian");
+  assert.ok(book.road, "the programme stands in the book");
+  assert.equal(book.road.beats[0].text, "Born Moon 8 · Pattern Day 217");
+  assert.ok(book.roadShort && book.roadShort.beats.length < book.road.beats.length, "the short road is shorter");
+  assert.ok(!book.unlearned.some((u) => u.trick === "whole-road"), "a learned road is not listed among the unlearned");
+  assert.equal(layer.TRICK_NAMES["whole-road"], "The Whole Road");
 });
