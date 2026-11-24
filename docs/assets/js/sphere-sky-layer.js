@@ -176,8 +176,15 @@
       try {
         const state = window.SofEnvironmentState?.getEnvironmentState?.();
         const p = state?.place;
-        const lat = Number(p?.latitude);
-        const lon = Number(p?.longitude);
+        // Strict reading (Gate G sky rule, Nov 24, 2026): a
+        // coordinate counts only when it is present — Number(null)
+        // is 0, and a place object with absent coordinates must
+        // never become 0°, 0° by arithmetic. A place the keeper
+        // truly set at 0°, 0° still counts; its values are present.
+        const rawLat = p?.latitude;
+        const rawLon = p?.longitude;
+        const lat = rawLat === null || rawLat === undefined || rawLat === "" ? NaN : Number(rawLat);
+        const lon = rawLon === null || rawLon === undefined || rawLon === "" ? NaN : Number(rawLon);
         place = Number.isFinite(lat) && Number.isFinite(lon)
           ? { lat, lon, label: p?.name || p?.label || null }
           : null;
@@ -223,7 +230,7 @@
       titleEl.textContent = place?.label ? `The sky over ${place.label}` : "The sky over your place";
       if (!place) {
         stageEl.innerHTML = "";
-        standingLineEl.textContent = "No place is kept on this device, so the sky can't be drawn for where you stand. The season and Moon line above needs no place, and stands as computed.";
+        standingLineEl.textContent = "No place is kept on this device, so the sky can't be drawn for where you stand. The season and Moon line above needs no place, and stands as computed. Set a place with Set location on this page and the sky will draw.";
         sunLineEl.textContent = "";
         moonLineEl.textContent = "";
         return;
