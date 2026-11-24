@@ -99,7 +99,7 @@
               "@type": "Product",
               "name": "Tensor Band",
               "sku": "TB",
-              "description": "Made-to-order open-end wrist band hand-forged from reclaimed QRI-16 V.A.R.S.E. copper wire. Each band varies slightly because it is shaped by hand.",
+              "description": "Made-to-order open-end wrist band hand-forged from reclaimed QRI-16 V.A.R.C.E. copper wire. Each band varies slightly because it is shaped by hand.",
               "offers": {
                 "@type": "Offer",
                 "priceCurrency": "USD",
@@ -513,14 +513,14 @@
           <p class="artifact-lead">
             Hand-forged open-end copper wrist band formed from
             reclaimed
-            <strong>QRI-16 V.A.R.S.E. copper wire</strong>.
+            <strong>QRI-16 V.A.R.C.E. copper wire</strong>.
           </p>
 
           <ul class="artifact-list">
             <li>Series designation: TB</li>
             <li>No individual item numbers</li>
             <li>
-              Material: reclaimed QRI-16 V.A.R.S.E. copper wire
+              Material: reclaimed QRI-16 V.A.R.C.E. copper wire
             </li>
             <li>Style: open-end spiral form</li>
             <li>Orientation: left wrist or right wrist</li>
@@ -559,7 +559,29 @@
             character rather than being an exact machine duplicate.
           </p>
 
+          <p class="till-standing" id="shop-till-standing" role="status">
+            Checkout by card and Cash App Pay opens here the moment
+            Stripe is connected. Until then, ordering by email
+            stands, exactly as below.
+          </p>
+
           <div class="artifact-actions">
+            <button
+              type="button"
+              class="btn primary"
+              data-shop-item="tensor-band"
+              hidden>
+              Buy a Band — Card or Cash App Pay
+            </button>
+
+            <button
+              type="button"
+              class="btn ember"
+              data-shop-item="tensor-band-pair"
+              hidden>
+              Buy the Pair — Card or Cash App Pay
+            </button>
+
             <a
               class="btn primary"
               href="mailto:codexofrealityshop@gmail.com?subject=TB%20Tensor%20Band%20Order&amp;body=I%20am%20interested%20in%20a%20Tensor%20Band.%0A%0AOrder:%20Single%20or%20Pair%0AWrist:%20Left,%20Right,%20or%20Both%0AWrist%20measurement:%0AFinish:%20Natural%20or%20Sealed%0ACustom%20notes:">
@@ -786,7 +808,7 @@
         asymmetry are part of the artifact’s identity.
 
         Repeatable series such as TB remain recognizable, but no two
-        hand-forged pieces are exact machine copies. While supplies last copper comes from the QRI 16 V.A.R.S.E Reality Engine.
+        hand-forged pieces are exact machine copies. While supplies last copper comes from the QRI-16 V.A.R.C.E Reality Engine.
         If you are new here. Welcome to Living Technology. 
       </div>
     </section>
@@ -1075,5 +1097,6 @@
   <script defer src="assets/js/day-telling.js?v=20261119-1"></script>
   <script src="assets/js/living-trail.js?v=20261120-1"></script>
   <script src="assets/js/story-layer.js?v=20261120-1"></script>
+  <script defer src="assets/js/shop-checkout.js?v=20261124-1"></script>
 </body>
 </html>
