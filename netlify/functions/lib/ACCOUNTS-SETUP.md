@@ -48,6 +48,20 @@ for Aaron's own disposable test deployments only), and
 (the double is the in-process test store; it holds nothing
 durably and exists for proofs).
 
+## The agent door rides this same store (Gate G, Phase 4)
+
+The agent seat (`/.netlify/functions/agent`) reads the SAME
+environment and the SAME store as the accounts seat — no new
+account, no new credential, nothing further for Aaron's hands.
+Its collections (`agent_grants`, `agent_trail`) are created by
+the door itself on first use. Until the environment above
+stands, the agent seat also answers "unconfigured" and does
+nothing, and the live leg of the Phase 4 proofs stays OWED with
+the accounts leg. Grants hold token HASHES only: a token's
+secret is shown once, in the app, at granting, and is carried
+by the keeper to the agent — it is never set here, never
+stored here, and never passes through chat or any file.
+
 ## What unlocks when it is done
 
 - The accounts function (`/.netlify/functions/accounts`) stops
