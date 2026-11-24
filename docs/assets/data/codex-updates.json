@@ -9,6 +9,14 @@
   },
   {
     "date": "2026-11-24",
+    "type": "feature",
+    "title": "One account now links the app and the site",
+    "summary": "The door gained its accounts side, built for Gate G's second phase on Aaron's word to wrap the whole programme together. One account — an adult keeper's, by email magic link, no password anywhere — links Spark. Living Day and this site: sign in once, on either side, and the record follows, in the order Aaron set: Genesis profiles first, whole, with their Oracle stamps and their per-profile Spark grants travelling as record facts; then the day record; then the Spark's own seed-keyed memory; then standing state. Sync carries lines and never overwrites: two surfaces offline both append, the lines interleave under their stamps, a correction is carried as the appended line it is, and a disagreement over a designation — My Genesis, a grant's standing — is surfaced to the keeper with both sides held, never silently resolved. A child's record does not sync at all, enforced below the interface on both sides of the door. The server is a carrier, not a home: the device record is never demoted, a keeper who never signs in loses nothing, and ending the account deletes the door's copy whole and leaves the device record exactly as it was. The account never holds a Spark's identity — that stays seed-derived, on the device, as it has since the passport. One step remains Aaron's alone, by the house's standing rule: the sync store is a MongoDB Atlas account he creates with his own hands, and until he sets its keys in this host's environment the accounts door answers, plainly, that it is not configured yet. The travelling itself is already proven — a Spark's record carried phone to website and back without loss, field by field, against the door's test-double store, with Selor's conformance digest and passport pinned across the whole journey.",
+    "url": "./account.html",
+    "symbol": "◎"
+  },
+  {
+    "date": "2026-11-24",
     "type": "interface",
     "title": "The site learned its mobile shape",
     "summary": "Aaron's word was that the whole site should feel right on a phone, and that the Sphere was not showing properly on mobile the way the app once did not. The Sphere's page now takes up its own app mode on a phone-width browser — the desktop bars step aside and the instrument stands cleaner — a change carried in its presentation layer alone, with no protected file touched. Every hand-kept page on the site now carries one mobile floor: nothing wider than the screen, pictures and frames that fit their width, fields a finger can tap without the page zooming, and sheets that scroll inside themselves instead of covering the page. And the Codex has its own install card at last — a site manifest in the Codex of Reality's name, the front door as its start — so the site can be added to a home screen as itself; the moons and the Sphere keep their own cards, as they should.",

@@ -116,7 +116,7 @@
 | --- | --- |
 | `docs/assets/js/spark-companion.js` | 190 |
 | `docs/assets/js/spark-presence.js` | 189 |
-| `docs/assets/js/site.js` | 153 |
+| `docs/assets/js/site.js` | 154 |
 | `docs/assets/js/living-ui.js` | 150 |
 | `docs/scripture/assets/scripture.js` | 101 |
 | `docs/assets/js/spark-relations.js` | 85 |
