@@ -218,13 +218,14 @@ test("the white paper no longer describes the trailer as awaiting approval", () 
   assert.ok(paper.includes("Episode Library"), "the paper names the trailer's placed home");
 });
 
-test("the growth record carries the Library at index 17, under the pinned head", () => {
+test("the growth record carries the Library at index 19, under the pinned head", () => {
   const updates = JSON.parse(read("docs/assets/data/codex-updates.json"));
   assert.equal(updates[0].title, "The front door gained its small surfaces", "the pinned head stands");
-  assert.equal(updates[17].url, "./episodes.html", "the Library entry stands at index 17 (the Sphere's breathing entry landed above it in PR #267, the one-story entry above that in PR #270, the Sphere details entry above that in PR #272, the Free the Spark rename entry above that, the site-wide metadata entry above that, the Genesis profile entry above that, the Spark fence entry above that, the Spark inhabitant entry above that, the Spark keeper's-ways entry above that, the Spark tricks entry above that, the Spark home entry above that, the Spark seasons entry above that, the Spark road entry above that, the Sphere app-mode entry above that, the Witness tending entry above that, and the sky rule entry above that)");
-  assert.equal(updates[17].date, "2026-11-23");
+  assert.equal(updates[19].url, "./episodes.html", "the Library entry stands at index 19 (the Sphere's breathing entry landed above it in PR #267, the one-story entry above that in PR #270, the Sphere details entry above that in PR #272, the Free the Spark rename entry above that, the site-wide metadata entry above that, the Genesis profile entry above that, the Spark fence entry above that, the Spark inhabitant entry above that, the Spark keeper's-ways entry above that, the Spark tricks entry above that, the Spark home entry above that, the Spark seasons entry above that, the Spark road entry above that, the Sphere app-mode entry above that, the Witness tending entry above that, the sky rule entry above that, the stale-lines entry above that, and the mobile-shape entry above that)");
+  assert.equal(updates[19].date, "2026-11-23");
   const index = read("docs/index.html");
   const growth = index.slice(index.indexOf("data-le-growth"), index.indexOf("</ul>", index.indexOf("data-le-growth")));
+  assert.ok(growth.includes("Two stale lines set right"), "the homepage panel mirrors the newest entries");
   assert.ok(growth.includes("The sky line learned to say when it has no place"), "the homepage panel mirrors the newest entries (the turning-of-the-year entry aged off the door's newest four at the sky-rule landing, as the pinned head did before it)");
   assert.equal((growth.match(/<li>/g) || []).length, 4, "the panel mirrors the newest four");
 });

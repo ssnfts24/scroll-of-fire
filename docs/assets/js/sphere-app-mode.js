@@ -17,6 +17,25 @@
  * no flag, no class — this file defines its marker and does
  * nothing else: no DOM writes, no listeners, no behaviour.
  *
+ * One second door, added Nov 24, 2026 (mobile + manifest
+ * workstream, Aaron's word: "The sphere is not showing properly
+ * on mobile like how the app was"): on a small screen — a phone
+ * browser, max-width 700px, the same line the site-wide mobile
+ * floor uses — the module acquires the app-mode class itself,
+ * adding a `sof-mobile-mode` class that records how the mode
+ * was acquired. A phone browser therefore gets the app mode's
+ * chrome budget — the state strip, the environment bridge,
+ * and the interact bar step aside — instead of the desktop
+ * framing it cannot use. The stage's size and the guide's
+ * sheet belong to the page's own shell system and are not
+ * this module's to move (see the note in the stylesheet);
+ * in mobile-acquired mode the module likewise does not plant
+ * its pull-up handle, whose sheet is the app shell's context,
+ * not the web page's. If the viewport grows past the line
+ * again (rotation, a desktop window), a mode the module
+ * acquired this way is released; a mode the app context set
+ * is never the module's to remove.
+ *
  * What it does in app mode:
  *   - announces itself on window.SOFAppMode and dispatches
  *     `sof:app-mode-ready` once the guide bar exists;
@@ -34,8 +53,44 @@
   "use strict";
 
   var root = document.documentElement;
-  if (!root || !root.classList.contains("sof-app-mode")) {
+  if (!root) {
     return;
+  }
+
+  var SMALL_SCREEN = "(max-width: 700px)";
+  var mobileAcquired = false;
+
+  function acquireMobileMode() {
+    if (root.classList.contains("sof-app-mode")) return;
+    root.classList.add("sof-app-mode");
+    root.classList.add("sof-mobile-mode");
+    mobileAcquired = true;
+  }
+
+  function releaseMobileMode() {
+    if (!mobileAcquired) return;
+    root.classList.remove("sof-app-mode");
+    root.classList.remove("sof-mobile-mode");
+    mobileAcquired = false;
+    if (document.body) document.body.classList.remove("lp-guide-open");
+  }
+
+  if (!root.classList.contains("sof-app-mode")) {
+    var mq = window.matchMedia ? window.matchMedia(SMALL_SCREEN) : null;
+    if (!mq || !mq.matches) {
+      return;
+    }
+    acquireMobileMode();
+    if (mq.addEventListener) {
+      mq.addEventListener("change", function (event) {
+        if (event.matches) {
+          acquireMobileMode();
+          ready();
+        } else {
+          releaseMobileMode();
+        }
+      });
+    }
   }
 
   window.SOFAppMode = { name: "living-day", version: "1" };
@@ -44,7 +99,7 @@
     var bar = document.querySelector(".sphere-guide-bar");
     if (!bar) return false;
 
-    if (!bar.querySelector(".lp-guide-handle")) {
+    if (!mobileAcquired && !bar.querySelector(".lp-guide-handle")) {
       var handle = document.createElement("button");
       handle.type = "button";
       handle.className = "lp-guide-handle";

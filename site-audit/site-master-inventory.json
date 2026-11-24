@@ -3,7 +3,7 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 499,
+    "resources": 501,
     "publicHtmlPages": 195,
     "catalogEntries": 79,
     "issueCounts": {
@@ -14,7 +14,7 @@
       "deployed-but-unlinked": 64,
       "unreachable-from-homepage": 5,
       "compatibility-redirect-page": 1,
-      "not-published-in-catalog": 30,
+      "not-published-in-catalog": 31,
       "unnamed-image-needs-descriptive-title": 21,
       "not-in-sitemap": 1
     }
@@ -804,7 +804,7 @@
     },
     {
       "id": "docs-assets:assets/css",
-      "title": "docs/assets/css (80 files)",
+      "title": "docs/assets/css (81 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -964,6 +964,23 @@
       "relatedProjects": [],
       "sourcePath": "docs/data",
       "publicUrl": "https://codexofreality.org/data",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "supporting-asset",
+      "discoverability": null,
+      "issues": []
+    },
+    {
+      "id": "docs-assets:manifest-site.webmanifest",
+      "title": "docs/manifest-site.webmanifest (1 files)",
+      "description": "Static assets, data and generated artifacts served from docs/.",
+      "category": "Static assets",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/manifest-site.webmanifest",
+      "publicUrl": "https://codexofreality.org/manifest-site.webmanifest",
       "publicationStatus": "live",
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [],
@@ -14821,7 +14838,7 @@
     },
     {
       "id": "repo-folder:netlify",
-      "title": "netlify/ (9 files)",
+      "title": "netlify/ (14 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -14855,7 +14872,7 @@
     },
     {
       "id": "repo-folder:scripts",
-      "title": "scripts/ (36 files)",
+      "title": "scripts/ (37 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -14923,7 +14940,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (223 files)",
+      "title": "tests/ (225 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -18695,6 +18712,25 @@
       "area": null,
       "relatedProjects": [],
       "sourcePath": "netlify.toml",
+      "publicUrl": null,
+      "publicationStatus": "source-only",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": null,
+      "privacyEligibility": "development-only",
+      "discoverability": null,
+      "issues": [
+        "not-published-in-catalog"
+      ]
+    },
+    {
+      "id": "repo:package-lock.json",
+      "title": "package-lock.json",
+      "description": "Root-level repository file (.json). Not approved for the public catalog; review before adding a site entry.",
+      "category": "Repository root file",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "package-lock.json",
       "publicUrl": null,
       "publicationStatus": "source-only",
       "lastVerifiedSourceRevision": "548e858",

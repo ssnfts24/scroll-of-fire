@@ -63,3 +63,17 @@ html.sof-app-mode .lp-guide-handle {
     transition: none;
   }
 }
+
+/*
+ * A note on what is NOT here (Nov 24, 2026, mobile + manifest
+ * workstream): no sof-mobile-mode rules stand in this sheet.
+ * The stage's size and the guide's sheet belong to the page's
+ * own shell system in the protected sphere stylesheet — the
+ * instrument sizes its canvas from that shell, and overrides
+ * measured on Nov 24 showed presentation rules from outside
+ * it cannot lift either honestly. What the mobile mark buys
+ * on the web is the app-mode budget above (the three chrome
+ * bars absent), which the cascade does honour. The stage-
+ * dominant framing for phone browsers waits on a named line
+ * inside the protected sheet, Aaron's word, as its own item.
+ */

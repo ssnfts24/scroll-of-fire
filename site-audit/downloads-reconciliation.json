@@ -7,11 +7,11 @@
     "parsedRows": 168
   },
   "current": {
-    "files": 196,
-    "sizeMB": 232.14
+    "files": 197,
+    "sizeMB": 232.17
   },
   "counts": {
-    "added": 28,
+    "added": 29,
     "removed": 0,
     "changed": 0,
     "unchanged": 168
@@ -44,9 +44,10 @@
     "TEMPORAL-LENS-PATCH-MANIFEST.txt",
     "TEMPORAL-LENS-PHASE-HANDOFF.md",
     "TEMPORAL-STRATA-PATCH.txt",
-    "index.md"
+    "index.md",
+    "package-lock.json"
   ],
   "removed": [],
   "changed": [],
-  "outsideSnapshotScope": 29
+  "outsideSnapshotScope": 34
 }
