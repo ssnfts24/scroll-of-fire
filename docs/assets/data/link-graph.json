@@ -342,15 +342,9 @@
      "area": "codex"
     }
    ],
-   "in": [
-    {
-     "path": "index.html",
-     "title": "Codex of Reality",
-     "area": "codex"
-    }
-   ],
+   "in": [],
    "outTotal": 1,
-   "inTotal": 1
+   "inTotal": 0
   },
   "aiyanas-world.html": {
    "title": "Aiyana's World",
@@ -1896,7 +1890,7 @@
      "area": "codex"
     }
    ],
-   "outTotal": 25,
+   "outTotal": 24,
    "inTotal": 3
   },
   "install.html": {
