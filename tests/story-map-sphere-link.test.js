@@ -351,14 +351,15 @@ test("the Sphere doors carry the Ladder of Scales as planned, and ride the compa
 
 /* ------------------------- fences ------------------------- */
 
-test("the growth record carries this build at index 2, under the pinned head and the rename entry", () => {
+test("the growth record carries this build at index 3, under the pinned head, the metadata entry, and the rename entry", () => {
   const updates = JSON.parse(read("docs/assets/data/codex-updates.json"));
-  assert.equal(updates.length, 238);
+  assert.equal(updates.length, 239);
   assert.equal(updates[0].title, "The front door gained its small surfaces", "the pinned head stands");
-  assert.equal(updates[1].title, "The series took its new name: Free the Spark", "the rename entry landed above this build in the Free the Spark landing");
-  assert.equal(updates[2].title, "The map, the pages and the Sphere now read one story");
-  assert.equal(updates[2].url, "./map.html");
-  assert.equal(updates[2].date, "2026-11-23");
+  assert.equal(updates[1].title, "Every page learned to say what it is", "the site-wide metadata entry landed above the rename entry in the metadata landing");
+  assert.equal(updates[2].title, "The series took its new name: Free the Spark", "the rename entry landed above this build in the Free the Spark landing");
+  assert.equal(updates[3].title, "The map, the pages and the Sphere now read one story");
+  assert.equal(updates[3].url, "./map.html");
+  assert.equal(updates[3].date, "2026-11-23");
 });
 
 test("the parked game is never named in anything this build touched", () => {
