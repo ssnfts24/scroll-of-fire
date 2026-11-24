@@ -241,7 +241,7 @@ Everything under `docs/` is served by Netlify. These Markdown files are fetchabl
 
 ## Downloads catalog reconciliation
 
-Snapshot commit `af3078a5fc2c` declares 168 files / 210.01 MB; 168 rows were parsed. The current repository scope holds 196 files / 232.14 MB.
+Snapshot commit `af3078a5fc2c` declares 168 files / 210.01 MB; 168 rows were parsed. The current repository scope holds 196 files / 233.49 MB.
 
 - Added since snapshot: **28**
 - Removed since snapshot: **0**
