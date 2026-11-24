@@ -84,12 +84,70 @@
  *  witnessing touches, so a closed day is discovered as what it
  *  is in the record: a witnessed day. Discoveries are composed
  *  only from record facts, and they write nothing: no
- *  play-session writer stands on the site yet, and a reading
+ *  play-session writer stood on the site yet, and a reading
  *  writes nothing — the design's own rule for readings.
  *
+ *  ── Slice 3 (Nov 23, 2026): teaching and performed tricks ──
+ *
+ *  THE WRITER. The keeper's seed-keyed Spark record now carries
+ *  its life lines — play-session, care-act, trick-learned —
+ *  appended only, under the design's never-carries discipline
+ *  (Gate E's writer, mirrored): a line carrying a score, a
+ *  streak, a duration, a refusal, a meter, a level, hunger,
+ *  health, a performance count, a rank or a reward is refused
+ *  outright, and a line stands on a day or not at all. Only
+ *  three acts write: a demonstrated route (a play-session),
+ *  closing a day together (a care-act), and a learning landing
+ *  (a trick-learned). Readings, idling and PERFORMANCES write
+ *  nothing — a performance is a showing.
+ *
+ *  THE TRICK BOOK. The Spark's panel carries what the Spark can
+ *  do, derived from the record the way the app derives it: the
+ *  Basics from birth (Hop, Drift, Glow Pulse, First Note); the
+ *  Bow from the first day closed together; the kind's signature
+ *  at Kindled, when its paired act stands; the Bearer signature
+ *  in Aaron's ruled names, when the paired act stands in a
+ *  second Moon. A trick not yet learned is not offered as
+ *  performable — the book says in plain words what would teach
+ *  it. The stage portrait is breadth, never rank; nothing here
+ *  is scored or losable.
+ *
+ *  PERFORMANCES. A learned trick is performed on the Sphere's
+ *  real geometry — at the standing day and across nearby plates,
+ *  in the ruled hop-and-drift vocabulary: hops, drifts, dimmed
+ *  crossings, loops, bows, glow, the voice's note, and small
+ *  lights laid on the plates themselves (ripples, ember motes,
+ *  ground-glow, stars). It happens in the instrument's space;
+ *  it is not a dialogue line and not a panel animation.
+ *
+ *  TEACHING BY DEMONSTRATION. The keeper travels a route across
+ *  days with the Spark following — the slice-1 following, on
+ *  the real geometry — and the route is recorded as one
+ *  play-session naming its days. When the Spark walks the route
+ *  back in a second Moon, the learning lands as a trick-learned
+ *  line: breadth is what makes it the Spark's own, the design's
+ *  rule that a trick's paired act is done in more than one
+ *  Moon. A same-Moon walk-back is a performance and writes
+ *  nothing.
+ *
+ *  CLOSE THE DAY, TOGETHER. The site's one care act in this
+ *  slice: inside the day's own room, keeper and Spark close the
+ *  day together, and the care-act line stands in the record.
+ *  The remaining care kinds are the care slice's work.
+ *
+ *  Still named, not faked: the carrying tricks (Fetch the
+ *  Token, Carry the Lantern) and the Whole Road performance
+ *  derive in the app; on the site their stages are Their Home
+ *  and the year's reading, and they stand designed, not built.
+ *  The older count-based trick list in the site-wide companion
+ *  core is left exactly as it was — the Sphere's book follows
+ *  the ruled design; unifying the two is a later slice's work.
+ *
  *  The pure half (readout parsing, ring math, the hop arc, the
- *  idle choice, and slice 2's breadth, preference, and target
- *  derivations) carries no DOM dependency and is unit-tested.
+ *  idle choice, slice 2's breadth, preference, and target
+ *  derivations, and slice 3's writer, facts fold, trick
+ *  derivation, route logic and performance choreography)
+ *  carries no DOM dependency and is unit-tested.
  */
 (function (root, factory) {
   const api = factory();
@@ -478,6 +536,520 @@
     return nearest[idx];
   }
 
+  /* ── Slice 3: the writer, the trick book, teaching ─────── */
+
+  /* The record's life lines — the play/care/tricks design's
+   * §4 shapes, with Gate E's writer discipline mirrored key
+   * for key: a line may carry only the allowed keys, and the
+   * never-carries columns (scores, streaks, durations as
+   * judgement, refusals, meters, levels, hunger, health,
+   * performance counts, rank, rewards) refuse the line
+   * outright. A line stands on a day: no civil date, no line.
+   * Tricks, repertoire and stages DERIVE from these lines and
+   * the record, and are stored nowhere separately. */
+  const LIFE_LINE_SHAPES = ["play-session", "care-act", "trick-learned"];
+  const LIFE_LINE_ALLOWED_KEYS = [
+    "line", "kind", "trick", "patternDay", "patternYear", "moon",
+    "civilDate", "ref", "via", "at", "id",
+  ];
+  const LIFE_LINE_FORBIDDEN_KEYS = [
+    "score", "scores", "points", "point", "streak", "streaks",
+    "duration", "durations", "accuracy", "refusals", "refused",
+    "givenUp", "meter", "meters", "level", "levels", "hunger",
+    "health", "count", "counts", "performances", "rank", "xp",
+    "reward", "rewards", "penalty", "penalties",
+  ];
+
+  function makeLifeLine(shape, fields) {
+    if (!LIFE_LINE_SHAPES.includes(shape)) return null;
+    if (!fields || typeof fields !== "object" || Array.isArray(fields)) return null;
+    for (const key of Object.keys(fields)) {
+      if (LIFE_LINE_FORBIDDEN_KEYS.includes(key)) return null;
+      if (!LIFE_LINE_ALLOWED_KEYS.includes(key)) return null;
+    }
+    if (shape === "trick-learned") {
+      if (typeof fields.trick !== "string" || !fields.trick.trim()) return null;
+    } else if (typeof fields.kind !== "string" || !fields.kind.trim()) {
+      return null;
+    }
+    if (typeof fields.civilDate !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(fields.civilDate)) return null;
+    const line = { line: shape };
+    if (fields.kind != null) line.kind = String(fields.kind);
+    if (fields.trick != null) line.trick = String(fields.trick);
+    for (const key of ["patternDay", "patternYear", "moon"]) {
+      if (fields[key] != null) {
+        const n = Number(fields[key]);
+        if (!Number.isFinite(n)) return null;
+        line[key] = n;
+      }
+    }
+    line.civilDate = fields.civilDate;
+    if (fields.ref != null) line.ref = String(fields.ref);
+    if (fields.via != null) line.via = String(fields.via);
+    if (fields.at != null) line.at = String(fields.at);
+    if (fields.id != null) line.id = String(fields.id);
+    return line;
+  }
+
+  /* The coordinate a line is stamped with, from the canonical
+   * stamp's shape (SphereSpark.stamp / patternStamp: the one
+   * clock). Null when the stamp carries no civil date — the
+   * write then refuses, honestly. */
+  function lineCoordinateFromStamp(stamp) {
+    if (!stamp || typeof stamp.civilDate !== "string" || !stamp.civilDate) return null;
+    return {
+      patternDay: stamp.patternDay ?? null,
+      patternYear: stamp.patternYear ?? null,
+      moon: stamp.moon ?? null,
+      civilDate: stamp.civilDate,
+    };
+  }
+
+  function lifeLinesOf(record) {
+    const lines = Array.isArray(record?.lifeLines) ? record.lifeLines : [];
+    return lines.filter((l) => l && typeof l === "object" && LIFE_LINE_SHAPES.includes(l.line));
+  }
+
+  /* Append one line to the record — purely: the input record
+   * is not mutated; the stored line takes the next id in Gate
+   * E's form (line-0001, …) unless it carries one. Returns
+   * null when the line refuses (see makeLifeLine). */
+  function appendLifeLine(record, line) {
+    if (!record || typeof record !== "object" || !line) return null;
+    const existing = lifeLinesOf(record);
+    const stored = line.id ? line : { ...line, id: `line-${String(existing.length + 1).padStart(4, "0")}` };
+    return { record: { ...record, lifeLines: [...existing, stored] }, line: stored };
+  }
+
+  /* The kinds of keeping — the same table SparkActivities
+   * keeps (its KEEPING_KINDS), mirrored so the fold below can
+   * run before that module stands on the page; a test pins
+   * the two tables equal. */
+  const KEEPING_KINDS_TABLE = [
+    { id: "day", label: "a day witnessed", subtypes: ["day-note", "witness-mark"] },
+    { id: "garden", label: "a bed planted", subtypes: ["garden-planting"] },
+    { id: "episode", label: "an episode watched", subtypes: ["episode-watched"] },
+    { id: "quest", label: "a quest answered", subtypes: ["quest-answer"] },
+    { id: "word", label: "a word kept", subtypes: ["word-keepsake", "word-card"] },
+  ];
+
+  /* The facts of a shared life, folded from the Atlas's own
+   * records plus the Spark record's play life — Gate E's
+   * gatherFacts, read against the site's stores. Every fact
+   * is a record standing in the Atlas or the Spark's own
+   * record; nothing is estimated. A record's day is its
+   * temporal stamp, the way every site fold reads it. */
+  function lifeFactsFromRecords(records, sparkRecord) {
+    const witnessedDays = [];
+    const witnessedByMoon = {};
+    const gardenDays = [];
+    const gardenByMoon = {};
+    const episodes = [];
+    const episodeKeys = new Set();
+    const wordDays = [];
+    const wordKeys = new Set();
+    const milestones = [];
+    const keptByYear = {};
+    let questAnswered = false;
+    let madeThing = false;
+    let stillBed = false;
+
+    const moonKey = (t) => (t.patternYear == null ? `m${t.moon}` : `${t.patternYear}:${t.moon}`);
+    const noteKept = (t) => {
+      if (t.patternYear == null || !Number.isInteger(t.patternDay)) return;
+      if (!keptByYear[t.patternYear]) keptByYear[t.patternYear] = new Set();
+      keptByYear[t.patternYear].add(t.patternDay);
+    };
+    const noteMoonDay = (byMoon, t) => {
+      if (t.moon == null || !Number.isInteger(t.patternDay)) return;
+      const key = moonKey(t);
+      if (!byMoon[key]) byMoon[key] = new Set();
+      byMoon[key].add(t.patternDay);
+    };
+
+    const keepingSubtype = new Set(KEEPING_KINDS_TABLE.flatMap((k) => k.subtypes));
+    for (const r of Array.isArray(records) ? records : []) {
+      if (!r || typeof r !== "object") continue;
+      const subtype = typeof r.subtype === "string" ? r.subtype : "";
+      const t = r.temporal && typeof r.temporal === "object" ? r.temporal : {};
+      const pd = Number.isInteger(t.patternDay) && t.patternDay >= 1 && t.patternDay <= PATTERN_DAYS ? t.patternDay : null;
+      const temporal = { patternDay: pd, patternYear: t.patternYear ?? null, moon: t.moon ?? null };
+
+      if (subtype.startsWith("garden-")) {
+        if (pd && !gardenDays.includes(pd)) gardenDays.push(pd);
+        noteMoonDay(gardenByMoon, temporal);
+        if (subtype === "garden-still-bed") stillBed = true;
+        noteKept(temporal);
+        continue;
+      }
+      if (subtype === "made") madeThing = true;
+      if (subtype === "quest-answer") questAnswered = true;
+      if (subtype === "day-note" || subtype === "witness-mark") {
+        if (pd && !witnessedDays.includes(pd)) witnessedDays.push(pd);
+        noteMoonDay(witnessedByMoon, temporal);
+      }
+      if (subtype === "word-keepsake" || subtype === "word-card") {
+        if (pd && !wordDays.includes(pd)) wordDays.push(pd);
+        if (temporal.moon != null) wordKeys.add(moonKey(temporal));
+      }
+      if (subtype === "episode-watched") {
+        const p = r.payload?.sparkActivities;
+        if (p && p.action === "watch" && typeof p.episodeId === "string") {
+          episodes.push({ id: p.episodeId, patternDay: pd });
+          if (temporal.moon != null) episodeKeys.add(moonKey(temporal));
+        }
+      }
+      if (r.payload?.schedule?.status === "completed") {
+        milestones.push({ id: typeof r.id === "string" ? r.id : "plan", key: temporal.moon != null ? moonKey(temporal) : null });
+      }
+      if (keepingSubtype.has(subtype)) noteKept(temporal);
+    }
+
+    /* The Spark's own life lines are keeping days too (Gate E
+     * counts them the same way). */
+    for (const l of lifeLinesOf(sparkRecord)) {
+      if (l.patternYear != null && Number.isInteger(l.patternDay)) {
+        if (!keptByYear[l.patternYear]) keptByYear[l.patternYear] = new Set();
+        keptByYear[l.patternYear].add(l.patternDay);
+      }
+    }
+
+    const kinds = KEEPING_KINDS_TABLE.map((k) => ({
+      id: k.id,
+      label: k.label,
+      present: (Array.isArray(records) ? records : []).some((r) => r && k.subtypes.includes(r.subtype)),
+    }));
+
+    /* Play's ground, from the Spark's own record: the chase's
+     * catches stand in the core's play counts; the chase's
+     * Moons stand in the play log's stamps. */
+    const catches = Math.max(0, Math.floor(Number(sparkRecord?.play?.catches) || 0));
+    const chaseKeys = new Set();
+    for (const e of Array.isArray(sparkRecord?.playLog) ? sparkRecord.playLog : []) {
+      if (e?.kind === "chase" && e.stamp?.moon != null) {
+        chaseKeys.add(e.stamp.patternYear == null ? `m${e.stamp.moon}` : `${e.stamp.patternYear}:${e.stamp.moon}`);
+      }
+    }
+
+    return {
+      kinds,
+      witnessedDays: witnessedDays.sort((a, b) => a - b),
+      witnessedByMoon,
+      witnessedKeys: Object.keys(witnessedByMoon),
+      gardenDays: gardenDays.sort((a, b) => a - b),
+      gardenByMoon,
+      gardenKeys: Object.keys(gardenByMoon),
+      episodes,
+      episodeKeys: [...episodeKeys],
+      wordDays: wordDays.sort((a, b) => a - b),
+      wordKeys: [...wordKeys],
+      milestones,
+      milestoneKeys: [...new Set(milestones.map((m) => m.key).filter(Boolean))],
+      questAnswered,
+      madeThing,
+      stillBed,
+      keptByYear,
+      catches,
+      chaseKeys: [...chaseKeys],
+    };
+  }
+
+  const LIFE_STAGE_NAMES = { spark: "Spark", kindled: "Kindled", bearer: "Bearer", guardian: "Guardian" };
+
+  function moonSpansDays(byMoon, days) {
+    return Object.values(byMoon || {}).some((set) => (set instanceof Set ? set.size : (set || []).length) >= days);
+  }
+
+  /* The stage portrait, Gate E's rule read against the site's
+   * facts: Kindled at three kinds of keeping; Bearer when a
+   * carrying breadth stands (a Moon of garden across its
+   * days, five episodes home, a still bed, a thing made) and
+   * a Moon stands witnessed across its days; Guardian when
+   * every counted day of one Pattern Year stands kept.
+   * Facts only accumulate, so the portrait never goes down. */
+  function lifeStageFromFacts(facts) {
+    const f = facts && typeof facts === "object" ? facts : lifeFactsFromRecords([], null);
+    for (const days of Object.values(f.keptByYear || {})) {
+      if ((days instanceof Set ? days.size : (days || []).length) >= PATTERN_DAYS) return "guardian";
+    }
+    const carries = moonSpansDays(f.gardenByMoon, 14)
+      || (f.episodes || []).length >= 5
+      || Boolean(f.stillBed) || Boolean(f.madeThing);
+    if (carries && moonSpansDays(f.witnessedByMoon, 14)) return "bearer";
+    const kindCount = (f.kinds || []).filter((k) => k.present).length;
+    if (kindCount >= 3) return "kindled";
+    return "spark";
+  }
+
+  const SIGNATURE_BY_KIND = {
+    fire: "flare-spin", water: "ripple-bow", shadow: "peek-back",
+    air: "feather-loop", earth: "root-bow", light: "halo-bow",
+  };
+  const SECOND_SIGNATURE_BY_KIND = {
+    fire: "ember-trail", water: "ripple-dance", shadow: "between-worlds",
+    air: "windweaver", earth: "living-ground", light: "constellation",
+  };
+  const TRICK_NAMES = {
+    hop: "Hop", drift: "Drift", "glow-pulse": "Glow Pulse", "first-note": "First Note",
+    bow: "Bow",
+    "flare-spin": "Flare-Spin", "ripple-bow": "Ripple-Bow", "peek-back": "Peek-Back",
+    "feather-loop": "Feather Loop", "root-bow": "Root Bow", "halo-bow": "Halo Bow",
+    "ember-trail": "Ember Trail", "ripple-dance": "Ripple Dance",
+    "between-worlds": "Between Worlds", windweaver: "Windweaver",
+    "living-ground": "Living Ground", constellation: "Constellation",
+    route: "The Route You Taught",
+  };
+  const BASIC_TRICKS = ["hop", "drift", "glow-pulse", "first-note"];
+
+  /* Each kind's paired act — the design's §3.2 table, in the
+   * site readings Gate E named: Fire's practice sealed at the
+   * Bench is a plan standing completed; Water's day beside
+   * water is a day witnessed; Shadow's is the chase played to
+   * a catch; Air's turning caught is an episode watched
+   * through; Earth's is the garden kept on two days; Light's
+   * is a word kept in the Word-Hoard. `plain` says the act in
+   * plain words for the book's teaching lines. */
+  function pairedActFor(kind, facts) {
+    const f = facts && typeof facts === "object" ? facts : lifeFactsFromRecords([], null);
+    switch (kind) {
+      case "fire": return { stands: (f.milestones || []).length >= 1, moons: (f.milestoneKeys || []).length, ref: f.milestones?.[0]?.id || "", plain: "a plan standing completed in your planner" };
+      case "water": return { stands: (f.witnessedDays || []).length >= 1, moons: (f.witnessedKeys || []).length, ref: f.witnessedDays?.length ? `pattern-day:${f.witnessedDays[0]}` : "", plain: "a day witnessed" };
+      case "shadow": return { stands: (f.catches || 0) >= 1, moons: (f.chaseKeys || []).length, ref: "play:chase", plain: "a chase played to a catch" };
+      case "air": return { stands: (f.episodes || []).length >= 1, moons: (f.episodeKeys || []).length, ref: f.episodes?.[0]?.id || "", plain: "an episode watched through" };
+      case "earth": return { stands: (f.gardenDays || []).length >= 2, moons: (f.gardenKeys || []).length, ref: "garden", plain: "the garden kept on two different days" };
+      case "light": return { stands: (f.wordDays || []).length >= 1, moons: (f.wordKeys || []).length, ref: f.wordDays?.length ? `pattern-day:${f.wordDays[0]}` : "", plain: "a word kept" };
+      default: return { stands: false, moons: 0, ref: "", plain: "" };
+    }
+  }
+
+  /* The tricks the record now supports, in learning order,
+   * each with the act it was learned by — Gate E's derivation.
+   * Pure: writes nothing. (The carrying tricks and the Whole
+   * Road derive in the app at Gate E; on the site their
+   * performances belong to Their Home and the year's reading,
+   * and stand designed, not built — see the addendum.) */
+  function derivedTricks({ kind, stage, facts, lines } = {}) {
+    const out = [];
+    const held = Array.isArray(lines) ? lines : [];
+    const closeDay = held.find((l) => l.line === "care-act" && l.kind === "close-day");
+    if (closeDay) out.push({ trick: "bow", via: closeDay.id || "care:close-day" });
+    const paired = pairedActFor(kind, facts);
+    if (stage && stage !== "spark" && paired.stands && SIGNATURE_BY_KIND[kind]) {
+      out.push({ trick: SIGNATURE_BY_KIND[kind], via: paired.ref });
+    }
+    if ((stage === "bearer" || stage === "guardian") && paired.moons >= 2 && SECOND_SIGNATURE_BY_KIND[kind]) {
+      out.push({ trick: SECOND_SIGNATURE_BY_KIND[kind], via: paired.ref });
+    }
+    return out;
+  }
+
+  /* The trick-learned lines a fresh derivation would add —
+   * idempotent: a trick already witnessed by a line is never
+   * witnessed twice. The coordinate is the day the learning
+   * is witnessed on, from the canonical stamp. */
+  function newTrickLines({ record, kind, facts, stamp, at } = {}) {
+    const coord = lineCoordinateFromStamp(stamp);
+    if (!coord) return [];
+    const lines = lifeLinesOf(record);
+    const stage = lifeStageFromFacts(facts);
+    const held = new Set(lines.filter((l) => l.line === "trick-learned").map((l) => l.trick));
+    const out = [];
+    for (const d of derivedTricks({ kind, stage, facts, lines })) {
+      if (held.has(d.trick)) continue;
+      const line = makeLifeLine("trick-learned", { trick: d.trick, via: d.via || undefined, ...coord, at: at || null });
+      if (line) { out.push(line); held.add(d.trick); }
+    }
+    return out;
+  }
+
+  /* ── The taught route ──────────────────────────────────── */
+  /* A route is a play-session's reference: its days, in the
+   * order the keeper showed them. The line carries the days
+   * as its reference and nothing else — no score of the walk,
+   * no judgement of it. */
+  const ROUTE_MAX_DAYS = 12;
+  function routeRefFor(days) {
+    const list = Array.isArray(days) ? days.map(Number) : [];
+    if (list.length < 2 || list.length > ROUTE_MAX_DAYS) return null;
+    if (!list.every((pd) => Number.isInteger(pd) && pd >= 1 && pd <= PATTERN_DAYS)) return null;
+    return `route:${list.join(",")}`;
+  }
+
+  function routeDaysFromRef(ref) {
+    const m = typeof ref === "string" ? /^route:(\d{1,3}(?:,\d{1,3})*)$/.exec(ref) : null;
+    if (!m) return null;
+    const days = m[1].split(",").map(Number);
+    return routeRefFor(days) ? days : null;
+  }
+
+  function routeDemosFromLines(lines) {
+    const out = [];
+    for (const l of Array.isArray(lines) ? lines : []) {
+      if (!l || l.line !== "play-session" || l.kind !== "route-demo") continue;
+      const days = routeDaysFromRef(l.ref);
+      if (days) out.push({ id: l.id || "", days, moon: l.moon ?? null, patternYear: l.patternYear ?? null, patternDay: l.patternDay ?? null, civilDate: l.civilDate || null });
+    }
+    return out;
+  }
+
+  function routeLearningFor(lines, demo) {
+    if (!demo) return null;
+    return (Array.isArray(lines) ? lines : []).find(
+      (l) => l && l.line === "trick-learned" && l.trick === "route" && l.via === demo.id
+    ) || null;
+  }
+
+  /* A via reference, in plain words for the book: what act
+   * taught this trick, said the way a keeper would say it. */
+  function viaPlainFor(via, lines) {
+    if (!via) return "from the record";
+    const held = Array.isArray(lines) ? lines : [];
+    if (held.some((l) => l && l.id === via && l.line === "care-act" && l.kind === "close-day")) {
+      return "closing a day together";
+    }
+    if (via === "play:chase") return "the chase, played to a catch";
+    if (via === "garden") return "the garden, kept";
+    if (via === "stage:bearer") return "the Bearer stage";
+    if (/^pattern-day:\d+$/.test(via)) return "a day in the record";
+    if (/^(ch|ep)-/.test(via) || via.includes("episode")) return "an episode watched through";
+    return "an act in the record";
+  }
+
+  /* The trick book, whole — the model the panel renders.
+   * Basics from birth; learned tricks with their days and
+   * acts; the unlearned with what would teach them, in plain
+   * words; the taught route and where its learning stands. */
+  function trickBookFrom({ name, kind, record, facts } = {}) {
+    const who = typeof name === "string" && name.trim() ? name.trim() : "The Spark";
+    const lines = lifeLinesOf(record);
+    const stage = lifeStageFromFacts(facts);
+    const paired = pairedActFor(kind, facts);
+    const learnedLines = lines.filter((l) => l.line === "trick-learned" && l.trick !== "route");
+    const learnedIds = new Set(learnedLines.map((l) => l.trick));
+    const demos = routeDemosFromLines(lines);
+    const demo = demos.length ? demos[demos.length - 1] : null;
+    const routeLearned = demo ? routeLearningFor(lines, demo) : null;
+
+    const unlearned = [];
+    if (!learnedIds.has("bow")) {
+      unlearned.push({
+        trick: "bow", name: TRICK_NAMES.bow,
+        teachLine: "Learned the first time the two of you close a day together — that rite stands in the day itself, before you leave it.",
+      });
+    }
+    const signature = SIGNATURE_BY_KIND[kind];
+    if (signature && !learnedIds.has(signature)) {
+      unlearned.push({
+        trick: signature, name: TRICK_NAMES[signature],
+        teachLine: `Learned when your keeping spans three kinds and ${paired.plain} stands in the record.`,
+      });
+    }
+    const second = SECOND_SIGNATURE_BY_KIND[kind];
+    if (second && !learnedIds.has(second)) {
+      unlearned.push({
+        trick: second, name: TRICK_NAMES[second],
+        teachLine: `Learned at Bearer, when ${paired.plain} stands in a second Moon as well.`,
+      });
+    }
+
+    return {
+      stage,
+      stageName: LIFE_STAGE_NAMES[stage] || "Spark",
+      kindsPresent: (facts?.kinds || []).filter((k) => k.present).map((k) => k.label),
+      basics: BASIC_TRICKS.map((trick) => ({ trick, name: TRICK_NAMES[trick] })),
+      learned: learnedLines.map((l) => ({
+        trick: l.trick,
+        name: TRICK_NAMES[l.trick] || l.trick,
+        viaPlain: viaPlainFor(l.via, lines),
+        patternDay: l.patternDay ?? null,
+      })),
+      unlearned,
+      route: demo ? { demo, learned: Boolean(routeLearned), learnedLine: routeLearned } : null,
+      who,
+    };
+  }
+
+  /* ── Performances ──────────────────────────────────────── */
+  /* A performance is a small choreography spelled in the
+   * ruled vocabulary — hop, drift, glow, voice — over the
+   * calendar's real plates. Steps:
+   *   {type:"travel", pd, style:"hop"|"drift"|"dim"|"loop", fx?}
+   *   {type:"act", act, ms}   — an in-place feat at the post
+   *   {type:"pause", ms}
+   * A travel leg aims at the nearest projected plate to its
+   * ring target; a plate not on the face is never faked — the
+   * leg lands on the post itself and reads as a hop in place.
+   * Performances write nothing; this function only spells. */
+  function performanceSteps(trickId, ctx = {}) {
+    const post = Number(ctx.postPd);
+    if (!Number.isInteger(post) || post < 1 || post > PATTERN_DAYS) return [];
+    const projected = new Set(Array.isArray(ctx.projected) ? ctx.projected : []);
+    const target = (step) => {
+      const want = ringStepSafe(post, step);
+      if (projected.has(want)) return want;
+      let best = null;
+      let bestDist = Infinity;
+      for (const pd of projected) {
+        const d = Math.abs(ringDistance(want, pd) ?? PATTERN_DAYS);
+        if (d < bestDist) { bestDist = d; best = pd; }
+      }
+      return best != null && bestDist <= 6 ? best : post;
+    };
+    const farTarget = () => {
+      let best = post;
+      let bestDist = -1;
+      for (const pd of projected) {
+        const d = Math.abs(ringDistance(post, pd) ?? 0);
+        if (d > bestDist) { bestDist = d; best = pd; }
+      }
+      return best;
+    };
+    const travel = (pd, style, fx) => ({ type: "travel", pd, style: style || "hop", ...(fx ? { fx } : {}) });
+    const act = (name, ms) => ({ type: "act", act: name, ms });
+    const pause = (ms) => ({ type: "pause", ms });
+
+    switch (trickId) {
+      case "hop": return [act("hop", 750)];
+      case "drift": return [travel(target(1), "drift"), pause(350), travel(post, "drift")];
+      case "glow-pulse": return [act("glow", 1300)];
+      case "first-note": return [act("note", 1000)];
+      case "bow": return [act("bow", 1600)];
+      case "flare-spin": return [act("spin", 950)];
+      case "ripple-bow": return [act("ripple", 1100), act("bow", 1400)];
+      case "peek-back": return [travel(target(3), "dim"), pause(600), travel(post, "hop")];
+      case "feather-loop": return [travel(target(2), "loop"), travel(post, "loop")];
+      case "root-bow": return [act("ground", 1200), act("bow", 1700)];
+      case "halo-bow": return [act("halo", 1300), act("bow", 1400)];
+      case "ember-trail": return [travel(target(1), "drift", "motes"), travel(target(2), "drift", "motes"), travel(post, "drift")];
+      case "ripple-dance": return [
+        travel(target(1), "drift"), act("ripple", 900), act("bow", 900),
+        travel(target(2), "drift"), act("ripple", 900), act("bow", 900),
+        travel(post, "drift"),
+      ];
+      case "between-worlds": return [travel(farTarget(), "dim"), pause(700), travel(post, "drift")];
+      case "windweaver": return [travel(target(2), "loop"), travel(target(1), "drift"), travel(target(3), "loop"), travel(post, "drift")];
+      case "living-ground": return [travel(target(1), "hop", "ground"), travel(target(2), "hop", "ground"), travel(post, "hop")];
+      case "constellation": return [
+        travel(target(1), "drift", "stars"), travel(target(3), "drift", "stars"),
+        travel(target(2), "drift", "stars"), pause(1300), travel(post, "drift"),
+      ];
+      case "route": {
+        const days = (Array.isArray(ctx.routeDays) ? ctx.routeDays : [])
+          .filter((pd) => Number.isInteger(pd) && pd >= 1 && pd <= PATTERN_DAYS);
+        if (!days.length) return [];
+        return [...days.map((pd) => travel(pd, "hop")), act("bow", 1400)];
+      }
+      default: return [];
+    }
+  }
+
+  function ringStepSafe(from, step) {
+    let dest = from + step;
+    if (dest > PATTERN_DAYS) dest -= PATTERN_DAYS;
+    if (dest < 1) dest += PATTERN_DAYS;
+    return dest;
+  }
+
   function mount(root) {
     const document = root.document;
     if (!document) return;
@@ -515,6 +1087,22 @@
     let pendingDiscovery = null; // {pd, kind} a travelling approach/keep will regard
     let favoursSection = null;  // the panel section, once placed
     let favoursText = null;     // the lines last written to it
+
+    /* ── Slice 3 state ─────────────────────────────────────── */
+    let atlasFacts = null;      // the life facts folded from the Atlas (async)
+    let trickSection = null;    // the trick book's panel section, once placed
+    let bookNote = null;        // a one-line note the book shows until it changes
+    let teaching = null;        // {days:[pd…]} while the keeper shows a route
+    let perf = null;            // {trick, steps, idx, onDone} while performing
+    let perfStepEndsAt = 0;     // rAF-clock deadline for the current act/pause
+    let perfAct = null;         // the in-place act in progress (hop, spin…)
+    let perfActMs = 0;
+    let perfStepFx = null;      // the light the current travel leg lays on arrival
+    let perfTravelFrom = null;  // the current leg's origin point (for motes)
+    const perfStars = [];       // constellation stars, held until the performance ends
+    let closingRow = null;      // the closing rite's row inside the Day World
+    let closingTries = 0;
+    let closingNote = null;
 
     function readRecord() {
       try {
@@ -598,7 +1186,14 @@
         if (!repository?.query) return;
         const records = await repository.query({});
         tokenInfo = tokenDaysFromRecords(records);
+        /* Slice 3: the same fold carries the life facts the
+         * trick book derives from — one query, read once. A
+         * learning the record now supports is witnessed here,
+         * on the day it is derived (Gate E's semantics). */
+        atlasFacts = lifeFactsFromRecords(records, readRecord());
         refreshBreadth();
+        learnNewTricksNow();
+        renderTrickBook();
       } catch { /* the fold is a reading; a failed reading changes nothing */ }
       finally {
         tokensInFlight = false;
@@ -648,6 +1243,537 @@
         }
         if (tries > 60) root.clearInterval(timer);
       }, 250);
+    }
+
+    /* ── Slice 3: the writer ───────────────────────────────── */
+    /* Today's coordinate from the canonical pipeline — the
+     * Spark's own stamp where it stands (SphereSpark.stamp is
+     * the cursor, else the calendar), else the same pipeline
+     * read directly. A line is stamped with the day the act
+     * happens on; if no stamp can be read, the write refuses —
+     * a line without its day is not written at all. */
+    function currentStamp() {
+      try {
+        const s = root.SphereSpark?.stamp?.();
+        if (s?.civilDate) return s;
+      } catch { /* fall through to the pipeline itself */ }
+      const date = new Date();
+      let pos = null;
+      try { pos = root.SOFTemporalCursor?.resolvePosition ? root.SOFTemporalCursor.resolvePosition(date) : null; } catch { pos = null; }
+      if (!pos) {
+        try { pos = root.PatternCalendar?.fromCivilDate ? root.PatternCalendar.fromCivilDate({ date }) : null; } catch { pos = null; }
+      }
+      if (!pos) return null;
+      return {
+        moon: pos.moon ?? null,
+        day: pos.day ?? null,
+        patternDay: pos.dayOfPatternYear ?? null,
+        patternYear: pos.patternYear ?? null,
+        civilDate: pos.civilDate || date.toISOString().slice(0, 10),
+      };
+    }
+
+    function sparkKind(record) {
+      try { return root.SparkCompanion?.generate?.(record?.seed)?.kind || null; } catch { return null; }
+    }
+
+    function persistRecord(record) {
+      try {
+        root.localStorage?.setItem("sof.spark.v1", JSON.stringify(record));
+        return true;
+      } catch { return false; }
+    }
+
+    /* Append one life line to the keeper's record — the only
+     * door the writer has. Returns the stored line, or null
+     * when the line refuses (a forbidden key, no coordinate,
+     * no record): nothing is written then, and the act that
+     * asked says so. */
+    function appendLifeLineNow(shape, fields) {
+      const record = readRecord();
+      if (!record) return null;
+      const coord = lineCoordinateFromStamp(currentStamp());
+      if (!coord) return null;
+      const line = makeLifeLine(shape, { ...fields, ...coord, at: new Date().toISOString() });
+      if (!line) return null;
+      const appended = appendLifeLine(record, line);
+      if (!appended || !persistRecord(appended.record)) return null;
+      return appended.line;
+    }
+
+    /* Witness the learnings the record now supports: tricks
+     * whose derivation stands and that no line has witnessed
+     * yet are appended as trick-learned lines, stamped today.
+     * Idempotent — a second fold over the same record adds
+     * nothing. Runs when the Atlas fold lands and after the
+     * acts that can teach (closing a day together). */
+    function learnNewTricksNow() {
+      const record = readRecord();
+      if (!record) return [];
+      const facts = atlasFacts || lifeFactsFromRecords([], record);
+      const fresh = newTrickLines({
+        record, kind: sparkKind(record), facts,
+        stamp: currentStamp(), at: new Date().toISOString(),
+      });
+      if (!fresh.length) return [];
+      let current = record;
+      const stored = [];
+      for (const line of fresh) {
+        const appended = appendLifeLine(current, line);
+        if (appended) { current = appended.record; stored.push(appended.line); }
+      }
+      if (!stored.length || !persistRecord(current)) return [];
+      bookNote = `${sparkName(record)} has learned ${stored.map((l) => TRICK_NAMES[l.trick] || l.trick).join(" and ")}.`;
+      return stored;
+    }
+
+    /* ── Slice 3: the trick book ───────────────────────────── */
+    /* The book stands in the same ambient panel as the favours
+     * — the Spark's existing surface, not a new page. Learned
+     * tricks are buttons; unlearned tricks are plain words
+     * saying what would teach them. */
+    function renderTrickBook() {
+      if (!trickSection) return;
+      const record = readRecord();
+      trickSection.replaceChildren();
+      const heading = document.createElement("h3");
+      heading.className = "sphere-spark-tricks-title";
+      if (!record) {
+        heading.textContent = "What the Spark can do";
+        trickSection.appendChild(heading);
+        const p = document.createElement("p");
+        p.className = "sphere-spark-tricks-line";
+        p.textContent = "No Spark stands here yet.";
+        trickSection.appendChild(p);
+        return;
+      }
+      const facts = atlasFacts || lifeFactsFromRecords([], record);
+      const book = trickBookFrom({ name: sparkName(record), kind: sparkKind(record), record, facts });
+      heading.textContent = `What ${book.who} can do`;
+      trickSection.appendChild(heading);
+
+      const stageLine = document.createElement("p");
+      stageLine.className = "sphere-spark-tricks-line";
+      stageLine.textContent = `${book.who} stands ${book.stageName} — painted by breadth: ${book.kindsPresent.length ? book.kindsPresent.join(", ") : "the keeping is just beginning"}.`;
+      trickSection.appendChild(stageLine);
+
+      if (bookNote) {
+        const note = document.createElement("p");
+        note.className = "sphere-spark-tricks-line sphere-spark-tricks-note";
+        note.textContent = bookNote;
+        trickSection.appendChild(note);
+      }
+
+      const performRow = (item, viaLine) => {
+        const row = document.createElement("div");
+        row.className = "sphere-spark-trick-row";
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "sphere-spark-trick-btn";
+        btn.textContent = item.name;
+        btn.setAttribute("aria-label", `Ask ${book.who} to perform ${item.name}`);
+        btn.addEventListener("click", () => performTrick(item.trick));
+        row.appendChild(btn);
+        if (viaLine) {
+          const via = document.createElement("span");
+          via.className = "sphere-spark-trick-via";
+          via.textContent = viaLine;
+          row.appendChild(via);
+        }
+        trickSection.appendChild(row);
+      };
+      for (const item of book.basics) performRow(item, "from birth");
+      for (const item of book.learned) {
+        performRow(item, `learned by ${item.viaPlain}${item.patternDay ? ` · Pattern Day ${item.patternDay}` : ""}`);
+      }
+
+      /* The taught route: teaching in progress, a route
+       * standing unlearned, a route learned, or the offer. */
+      if (teaching) {
+        const line = document.createElement("p");
+        line.className = "sphere-spark-tricks-line";
+        line.textContent = teaching.days.length > 1
+          ? `The way so far: Pattern Days ${teaching.days.join(", ")}. Open the next day of the route — ${book.who} follows you.`
+          : `Teaching a route. Open the days of the way, one after another — ${book.who} follows you.`;
+        trickSection.appendChild(line);
+        const row = document.createElement("div");
+        row.className = "sphere-spark-trick-row";
+        const done = document.createElement("button");
+        done.type = "button";
+        done.className = "sphere-spark-trick-btn";
+        done.textContent = "That's the route";
+        done.disabled = teaching.days.length < 2;
+        done.addEventListener("click", finishTeaching);
+        const letGo = document.createElement("button");
+        letGo.type = "button";
+        letGo.className = "sphere-spark-trick-btn sphere-spark-trick-btn-quiet";
+        letGo.textContent = "Let it go";
+        letGo.addEventListener("click", cancelTeaching);
+        row.append(done, letGo);
+        trickSection.appendChild(row);
+      } else if (book.route) {
+        const { demo, learned } = book.route;
+        const line = document.createElement("p");
+        line.className = "sphere-spark-tricks-line";
+        line.textContent = learned
+          ? `The route you taught — Pattern Days ${demo.days.join(", ")} — is ${book.who}'s own now.`
+          : `The route you taught: Pattern Days ${demo.days.join(", ")}, shown in Moon ${demo.moon ?? "?"}. Walk it back in another Moon and it becomes ${book.who}'s own.`;
+        trickSection.appendChild(line);
+        const row = document.createElement("div");
+        row.className = "sphere-spark-trick-row";
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "sphere-spark-trick-btn";
+        btn.textContent = learned ? "Walk the route" : "Walk it back";
+        btn.addEventListener("click", () => performRoute(demo, !learned));
+        row.appendChild(btn);
+        trickSection.appendChild(row);
+      } else {
+        const row = document.createElement("div");
+        row.className = "sphere-spark-trick-row";
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "sphere-spark-trick-btn";
+        btn.textContent = `Teach ${book.who} a route`;
+        btn.addEventListener("click", startTeaching);
+        row.appendChild(btn);
+        trickSection.appendChild(row);
+        const line = document.createElement("p");
+        line.className = "sphere-spark-tricks-line";
+        line.textContent = `Travel a way across days with ${book.who} following, and the way is remembered.`;
+        trickSection.appendChild(line);
+      }
+
+      for (const item of book.unlearned) {
+        const p = document.createElement("p");
+        p.className = "sphere-spark-tricks-line sphere-spark-trick-unlearned";
+        p.textContent = `${item.name} — not yet learned. ${item.teachLine}`;
+        trickSection.appendChild(p);
+      }
+    }
+
+    function placeTrickPanel() {
+      let tries = 0;
+      const timer = root.setInterval(() => {
+        tries += 1;
+        const panel = document.querySelector(".sphere-ambient-panel");
+        if (panel) {
+          root.clearInterval(timer);
+          if (!panel.querySelector(".sphere-spark-tricks")) {
+            trickSection = document.createElement("section");
+            trickSection.className = "sphere-spark-tricks";
+            trickSection.setAttribute("aria-label", "What your Spark can do");
+            panel.appendChild(trickSection);
+            renderTrickBook();
+          }
+          return;
+        }
+        if (tries > 60) root.clearInterval(timer);
+      }, 250);
+    }
+
+    /* ── Slice 3: teaching by demonstration ────────────────── */
+    function startTeaching() {
+      if (teaching || perf || mode === "in-day" || postPd == null) return;
+      teaching = { days: [postPd] };
+      bookNote = null;
+      renderTrickBook();
+    }
+
+    function finishTeaching() {
+      if (!teaching) return;
+      const days = teaching.days.slice();
+      teaching = null;
+      const name = sparkName(readRecord());
+      const ref = routeRefFor(days);
+      const line = ref ? appendLifeLineNow("play-session", { kind: "route-demo", ref }) : null;
+      bookNote = line
+        ? `The route stands in the record — ${days.length} days, in order. Walk it back with ${name} in another Moon and it becomes ${name}'s own.`
+        : "The record would not take the route just now — nothing was written.";
+      renderTrickBook();
+    }
+
+    function cancelTeaching() {
+      teaching = null;
+      bookNote = null;
+      renderTrickBook();
+    }
+
+    /* Walking a route back: a performance like any other —
+     * it writes nothing itself. The learning lands only when
+     * the walk-back completes in a different Moon from the
+     * demonstration's (the design's breadth rule), and then
+     * it is the trick-learned line that lands, not the walk. */
+    function performRoute(demo, isWalkBack) {
+      runPerformance("route", {
+        routeDays: demo.days,
+        onDone: () => {
+          if (!isWalkBack) return;
+          const record = readRecord();
+          if (!record) return;
+          const name = sparkName(record);
+          if (routeLearningFor(lifeLinesOf(record), demo)) return;
+          const stamp = currentStamp();
+          const pair = (y, m) => `${y ?? "?"}:${m ?? "?"}`;
+          if (stamp && pair(stamp.patternYear, stamp.moon) !== pair(demo.patternYear, demo.moon)) {
+            const line = appendLifeLineNow("trick-learned", { trick: "route", via: demo.id });
+            bookNote = line
+              ? `Walked back in a new Moon — the route is ${name}'s own now.`
+              : "The record would not take the learning just now — nothing was written.";
+          } else {
+            bookNote = `Walked back. It becomes ${name}'s own when the two of you walk it in another Moon.`;
+          }
+          renderTrickBook();
+        },
+      });
+    }
+
+    /* ── Slice 3: performances ─────────────────────────────── */
+    /* A performance runs its steps on the face: travel legs
+     * ride the frame loop's own travel machinery (mode
+     * "performing"), in-place acts run against a deadline the
+     * frame loop watches. Any keeper action cancels it — the
+     * keeper's word always outranks a showing. */
+    function performTrick(trickId) {
+      runPerformance(trickId, {});
+    }
+
+    function runPerformance(trickId, { routeDays = null, onDone = null } = {}) {
+      if (perf || !holder || mode === "in-day" || postPd == null) return false;
+      let steps = performanceSteps(trickId, { postPd, projected: projectedPds(), routeDays });
+      if (!steps.length) return false;
+      if (reducedMotion) steps = steps.filter((s) => s.type !== "travel");
+      if (!steps.length) return false;
+      if (mode === "idle" || mode === "travelling-visit") {
+        clearIdleMarks();
+        idleReturnPd = null;
+        travel = null;
+        mode = "posted";
+      }
+      perf = { trick: trickId, steps, idx: 0, onDone };
+      holder.dataset.inhabitantTrick = trickId;
+      mode = "performing";
+      setPosture("stand");
+      advancePerf();
+      return true;
+    }
+
+    function advancePerf() {
+      if (!perf) return;
+      clearPerfAct();
+      const step = perf.steps[perf.idx];
+      perf.idx += 1;
+      if (!step) { finishPerf(); return; }
+      const now = performance.now();
+      if (step.type === "pause") { perfStepEndsAt = now + step.ms; return; }
+      if (step.type === "act") { applyPerfAct(step); return; }
+      /* A travel leg. A plate not projected, or the post
+       * itself, reads as a hop in place — never a faked path. */
+      const target = labelPoint(step.pd);
+      if (!target || !pos || step.pd === postPd) {
+        perfAct = "hop";
+        perfActMs = 500;
+        perfStepEndsAt = now + 500;
+        return;
+      }
+      const dist = Math.hypot(target.x - pos.x, target.y - pos.y);
+      const scaleMs = step.style === "drift" ? 1.35 : step.style === "dim" ? 1.15 : 1.1;
+      travel = {
+        from: { x: pos.x, y: pos.y },
+        startedAt: now,
+        durationMs: Math.max(500, travelDurationMs(dist) * scaleMs),
+        dist,
+        targetPd: step.pd,
+        lift: step.style === "loop" ? 2.1 : 1,
+      };
+      perfStepFx = step.fx || null;
+      perfTravelFrom = { x: pos.x, y: pos.y };
+      postPd = step.pd;
+      if (step.style === "dim") holder.style.opacity = "0.22";
+      setPosture("stand");
+    }
+
+    function applyPerfAct(step) {
+      perfAct = step.act;
+      perfActMs = step.ms;
+      perfStepEndsAt = performance.now() + step.ms;
+      if (step.act === "bow" || step.act === "ripple" || step.act === "ground") setPosture("bow");
+      if (step.act === "glow" || step.act === "note") holder.classList.add("inhabitant-do-glow");
+      if (step.act === "spin") holder.classList.add("inhabitant-do-spin");
+      if (step.act === "halo") holder.classList.add("inhabitant-do-halo");
+      if (step.act === "note") {
+        try { root.SphereSpark?.soundMotif?.(); } catch { /* the voice is a grace, not a gate */ }
+      }
+      if (step.act === "ripple") spawnFxAt("ripple", labelPoint(postPd), null);
+      if (step.act === "ground") spawnFxAt("ground", labelPoint(postPd), null);
+    }
+
+    function clearPerfAct() {
+      perfAct = null;
+      perfActMs = 0;
+      if (!holder) return;
+      holder.classList.remove("inhabitant-do-glow", "inhabitant-do-spin", "inhabitant-do-halo");
+      if (posture === "bow") setPosture("stand");
+    }
+
+    function finishPerf() {
+      const done = perf?.onDone || null;
+      perf = null;
+      perfStepEndsAt = 0;
+      perfStepFx = null;
+      clearPerfAct();
+      clearStarFx();
+      if (holder) delete holder.dataset.inhabitantTrick;
+      mode = "posted";
+      setPosture("settle");
+      root.setTimeout(() => { if (mode === "posted") setPosture("stand"); }, 900);
+      renderTrickBook();
+      if (done) done();
+    }
+
+    function cancelPerf() {
+      if (!perf) return;
+      perf = null;
+      perfStepEndsAt = 0;
+      perfStepFx = null;
+      clearPerfAct();
+      clearStarFx();
+      if (holder) {
+        delete holder.dataset.inhabitantTrick;
+        holder.style.opacity = "";
+      }
+      travel = null;
+      mode = "posted";
+      setPosture("stand");
+    }
+
+    /* Small lights laid on the plates themselves — a ripple
+     * ring, ember motes along a drift, a ground-glow at a
+     * landing, a star that holds while the figure joins.
+     * Pure showing: appended to the wrap, animated by the
+     * stylesheet, removed when spent. */
+    function spawnFxAt(kind, point, fromPoint) {
+      if (!point) return;
+      const make = (cls, x, y) => {
+        const el = document.createElement("div");
+        el.className = `inhabitant-fx inhabitant-fx-${cls}`;
+        el.style.left = `${Math.round(x)}px`;
+        el.style.top = `${Math.round(y)}px`;
+        wrap.appendChild(el);
+        return el;
+      };
+      if (kind === "motes") {
+        const spots = [];
+        if (fromPoint) spots.push({ x: (fromPoint.x + point.x) / 2, y: (fromPoint.y + point.y) / 2 });
+        spots.push(point);
+        for (const spot of spots) {
+          for (let i = 0; i < 3; i += 1) {
+            const el = make("mote", spot.x + (i - 1) * 9, spot.y + ((i + 1) % 2) * 7);
+            root.setTimeout(() => el.remove(), 1300);
+          }
+        }
+        return;
+      }
+      if (kind === "stars") {
+        perfStars.push(make("star", point.x, point.y));
+        return;
+      }
+      const el = make(kind, point.x, point.y);
+      root.setTimeout(() => el.remove(), 1500);
+    }
+
+    function clearStarFx() {
+      while (perfStars.length) perfStars.pop().remove();
+    }
+
+    /* ── Slice 3: close the day, together ──────────────────── */
+    /* The site's one care act in this slice, standing in the
+     * day's own leave-taking section: the Spark reads the day
+     * from the record's marks, and the keeper closes it with
+     * the Spark. The care-act line it writes is the Bow's
+     * teacher — the first closing teaches the Bow, witnessed
+     * by the learning pass that follows it. */
+    function placeClosingRow() {
+      if (mode !== "in-day" || !dayRoom || !holder) return;
+      const sheet = dayRoom.querySelector(".day-world-sheet");
+      if (!sheet) {
+        if (closingTries < 24) {
+          closingTries += 1;
+          root.setTimeout(placeClosingRow, 250);
+        }
+        return;
+      }
+      if (closingRow && dayRoom.contains(closingRow)) { renderClosingRow(); return; }
+      closingRow = document.createElement("div");
+      closingRow.className = "sphere-spark-closing";
+      const questions = sheet.querySelector(".day-world-questions");
+      const host = questions ? (questions.closest("section") || questions.parentElement || sheet) : sheet;
+      host.appendChild(closingRow);
+      renderClosingRow();
+    }
+
+    function renderClosingRow() {
+      if (!closingRow) return;
+      const record = readRecord();
+      const name = sparkName(record);
+      const ref = `pattern-day:${postPd}`;
+      const closed = lifeLinesOf(record).some(
+        (l) => l.line === "care-act" && l.kind === "close-day" && l.ref === ref
+      );
+      closingRow.replaceChildren();
+      const marks = (breadth?.marks?.[postPd] || []).map((kind) => ({
+        genesis: "your birth day",
+        token: "a token came home to this day",
+        witnessed: "a day you have witnessed",
+        practice: "a practice day",
+        kept: "a day kept together",
+      }[kind] || kind));
+      const read = document.createElement("p");
+      read.className = "sphere-spark-closing-line";
+      read.textContent = marks.length
+        ? `Pattern Day ${postPd} — ${marks.join(" · ")}. ${name} stands in it with you.`
+        : `Pattern Day ${postPd} — nothing stands on this day in the record yet. Standing in it together is its first mark.`;
+      closingRow.appendChild(read);
+      if (closingNote) {
+        const note = document.createElement("p");
+        note.className = "sphere-spark-closing-line sphere-spark-closing-note";
+        note.textContent = closingNote;
+        closingRow.appendChild(note);
+      }
+      if (closed) {
+        const done = document.createElement("p");
+        done.className = "sphere-spark-closing-line";
+        done.textContent = "This day stands closed together.";
+        closingRow.appendChild(done);
+        return;
+      }
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "sphere-spark-closing-btn";
+      btn.textContent = "Close the day, together";
+      btn.addEventListener("click", closeDayTogether);
+      closingRow.appendChild(btn);
+    }
+
+    function closeDayTogether() {
+      const name = sparkName(readRecord());
+      const line = appendLifeLineNow("care-act", { kind: "close-day", ref: `pattern-day:${postPd}` });
+      if (!line) {
+        closingNote = "The record would not take the line just now — nothing was written.";
+        renderClosingRow();
+        return;
+      }
+      const learned = learnNewTricksNow();
+      const bowed = learned.some((l) => l.trick === "bow");
+      closingNote = bowed
+        ? `Closed together — and ${name} has learned to bow.`
+        : "Closed together.";
+      /* The first showing of the Bow, at the Spark's station
+       * in the room: a posture, a showing — it writes nothing. */
+      setPosture("bow");
+      root.setTimeout(() => { if (mode === "in-day") setPosture("observe"); }, 1700);
+      renderClosingRow();
+      renderTrickBook();
     }
 
     /* Every Pattern Day whose plate the instrument is currently
@@ -771,7 +1897,7 @@
        * runs on the wall clock; travel progress below runs on
        * the rAF clock — the two are never mixed.) */
       const wallNow = Date.now();
-      if (mode === "posted" && wallNow - lastActionAt > IDLE_AFTER_MS && wallNow > idleUntil) {
+      if (mode === "posted" && !teaching && wallNow - lastActionAt > IDLE_AFTER_MS && wallNow > idleUntil) {
         beginIdle();
       }
 
@@ -799,7 +1925,7 @@
         }
       }
 
-      if ((mode === "travelling" || mode === "travelling-visit") && travel) {
+      if ((mode === "travelling" || mode === "travelling-visit" || mode === "performing") && travel) {
         const target = labelPoint(travel.targetPd);
         if (!target) {
           // The plate has not come around yet: wait at the
@@ -810,10 +1936,23 @@
         const t = Math.min(1, (now - travel.startedAt) / travel.durationMs);
         const ease = t * (2 - t);
         const x = travel.from.x + (target.x - travel.from.x) * ease;
-        const y = travel.from.y + (target.y - travel.from.y) * ease - hopArc(t, travel.dist);
+        const y = travel.from.y + (target.y - travel.from.y) * ease - hopArc(t, travel.dist) * (travel.lift || 1);
         pos = { x, y };
         writeTransform(x, y, scaleFor(target.plate) * (1 + 0.06 * Math.sin(Math.PI * t)));
         if (t >= 1) {
+          if (mode === "performing") {
+            // A performance leg has landed: lay its light on
+            // the plate it arrived on, then take the next step.
+            const fx = perfStepFx;
+            const fromPoint = perfTravelFrom;
+            perfStepFx = null;
+            perfTravelFrom = null;
+            travel = null;
+            holder.style.opacity = "";
+            if (fx) spawnFxAt(fx, { x: target.x, y: target.y }, fromPoint);
+            advancePerf();
+            return;
+          }
           const wasVisit = mode === "travelling-visit";
           travel = null;
           if (wasVisit) {
@@ -837,15 +1976,30 @@
         return;
       }
 
+      /* A performance's in-place act runs against its deadline
+       * here — the frame loop is the only clock a showing has. */
+      if (mode === "performing" && !travel && perfStepEndsAt && now >= perfStepEndsAt) {
+        perfStepEndsAt = 0;
+        advancePerf();
+      }
+
       /* Posted: stand on the post's plate, tracking it as the
-       * instrument turns under it. */
+       * instrument turns under it. (A performing Spark stands
+       * here too, between its steps; a hop or spin act lifts it
+       * off the plate on the same arc a travel hop rides.) */
       if (postPd) {
         const p = labelPoint(postPd);
         if (p) {
           missingSince = null;
           pos = { x: p.x, y: p.y };
-          writeTransform(p.x, p.y, scaleFor(p.plate));
-          holder.style.opacity = "";
+          let liftY = 0;
+          if ((perfAct === "hop" || perfAct === "spin") && perfStepEndsAt) {
+            const total = perfActMs || 750;
+            const progress = Math.min(1, Math.max(0, 1 - (perfStepEndsAt - now) / total));
+            liftY = Math.sin(Math.PI * progress) * (perfAct === "hop" ? 26 : 12);
+          }
+          writeTransform(p.x, p.y - liftY, scaleFor(p.plate));
+          if (mode !== "performing") holder.style.opacity = "";
         } else {
           if (missingSince == null) missingSince = now;
           if (now - missingSince > 2500) waitAtThreshold();
@@ -994,6 +2148,7 @@
      * selection arriving mid-visit can still take over. */
     function noteAction() {
       lastActionAt = Date.now();
+      if (mode === "performing") cancelPerf();
       if (mode === "idle" || mode === "travelling-visit") {
         clearIdleMarks();
         if (idleReturnPd != null && postPd !== idleReturnPd) {
@@ -1021,6 +2176,15 @@
       refreshBreadth();
       if (mode !== "in-day" && coord.patternDay !== postPd) travelTo(coord.patternDay);
       else if (mode !== "in-day" && postPd == null) { postPd = coord.patternDay; }
+      /* Teaching: the keeper's road is the days they open, in
+       * order, with the Spark following — the following is the
+       * travel above; the route only remembers the days. */
+      if (teaching && coord.patternDay
+        && teaching.days[teaching.days.length - 1] !== coord.patternDay
+        && teaching.days.length < ROUTE_MAX_DAYS) {
+        teaching.days.push(coord.patternDay);
+        renderTrickBook();
+      }
     }
 
     /* ── Entering the day ──────────────────────────────────── */
@@ -1051,6 +2215,9 @@
       travel = null;
       setPosture("observe");
       holder.dataset.inhabitantInDay = "1";
+      closingTries = 0;
+      closingNote = null;
+      placeClosingRow();
     }
 
     function exitDay() {
@@ -1063,6 +2230,8 @@
       }
       dayRoom = null;
       delete holder.dataset.inhabitantInDay;
+      if (closingRow) { closingRow.remove(); closingRow = null; }
+      closingNote = null;
       pos = null;
       mode = "posted";
       setPosture("stand");
@@ -1093,6 +2262,7 @@
       refreshBreadth();
       refreshTokens();
       placeFavoursPanel();
+      placeTrickPanel();
       onStrip();
       if (postPd) {
         const p = labelPoint(postPd);
@@ -1143,6 +2313,30 @@
     favoursLines,
     pickIdle2,
     pickDiscoveryTarget,
+    makeLifeLine,
+    lineCoordinateFromStamp,
+    lifeLinesOf,
+    appendLifeLine,
+    LIFE_LINE_ALLOWED_KEYS,
+    LIFE_LINE_FORBIDDEN_KEYS,
+    KEEPING_KINDS_TABLE,
+    lifeFactsFromRecords,
+    lifeStageFromFacts,
+    LIFE_STAGE_NAMES,
+    pairedActFor,
+    SIGNATURE_BY_KIND,
+    SECOND_SIGNATURE_BY_KIND,
+    TRICK_NAMES,
+    BASIC_TRICKS,
+    derivedTricks,
+    newTrickLines,
+    routeRefFor,
+    routeDaysFromRef,
+    routeDemosFromLines,
+    routeLearningFor,
+    viaPlainFor,
+    trickBookFrom,
+    performanceSteps,
     mount,
   };
 });
