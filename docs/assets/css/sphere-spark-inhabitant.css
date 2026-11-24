@@ -76,6 +76,45 @@
   opacity: 0.92;
 }
 
+/* ── A discovery, regarded ────────────────────────────────── */
+/* While the Spark stands on a marked day it found in the
+ * keeper's own record, its light is up — the same brightness
+ * it wears inside an opened day. The mark itself is named on
+ * the holder (data-inhabitant-discovery), not painted here. */
+
+.sphere-spark-presence[data-inhabitant-discovery] .sphere-spark-halo {
+  opacity: 1;
+  filter: brightness(1.35);
+}
+.sphere-spark-presence[data-inhabitant-discovery] .sphere-spark-art {
+  transform: translateY(-3px);
+}
+
+/* ── The favours, in the Spark's panel (slice 2) ──────────── */
+/* The derivation, in plain words, inside the ambient panel
+ * where the keeper line already stands — the panel's own warm
+ * ink, a brass heading, and one line per favour with the facts
+ * it stands on. */
+
+.sphere-spark-favours {
+  margin-top: 0.9rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(218, 164, 91, 0.35);
+}
+.sphere-spark-favours-title {
+  margin: 0 0 0.4rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ambient-brass, #d8a45b);
+}
+.sphere-spark-favours-line {
+  margin: 0.25rem 0;
+  color: #ffe9bd;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
 /* ── Inside the day ───────────────────────────────────────── */
 /* While the keeper is inside an opened day, the Spark stands at
  * the day's own panel with its light up — present, attending. */
