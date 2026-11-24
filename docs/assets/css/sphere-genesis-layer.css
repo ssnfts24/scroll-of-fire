@@ -1,0 +1,93 @@
+/* Your Genesis on the Sphere — the keeper's birth-position panel,
+   carried on the companion layer below the stage. Dressed in the
+   guide bar's own family: warm dark ground, a gold edge, cream
+   words. When the birth day itself is on show, the panel's edge
+   lights gold — the companion layer's highlight. It presents
+   only; the instrument above it is untouched. */
+
+.sphere-genesis-layer {
+  max-width: 860px;
+  margin: 1rem auto 0;
+  padding: 0.8rem 1rem 0.9rem;
+  border: 1px solid rgba(218, 164, 91, 0.40);
+  border-radius: 1rem;
+  background: rgba(26, 14, 7, 0.86);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 226, 170, 0.08);
+  color: #f3e7cd;
+  font-size: 0.9rem;
+}
+
+.sphere-genesis-layer.sgl-on-show {
+  border-color: rgba(255, 217, 122, 0.95);
+  box-shadow: 0 0 0 1px rgba(255, 217, 122, 0.55), 0 10px 34px rgba(0, 0, 0, 0.5),
+    0 0 34px rgba(255, 197, 90, 0.22), inset 0 1px 0 rgba(255, 226, 170, 0.14);
+}
+
+.sphere-genesis-layer .sgl-title {
+  margin: 0 0 0.4rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.05rem;
+  color: #ffd97a;
+}
+
+.sphere-genesis-layer .sgl-flex {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.sphere-genesis-layer .sgl-seal {
+  flex: 0 0 auto;
+  line-height: 0;
+}
+
+.sphere-genesis-layer .sgl-seal svg {
+  width: 96px;
+  height: 96px;
+  border-radius: 0.7rem;
+  border: 1px solid rgba(218, 164, 91, 0.35);
+}
+
+.sphere-genesis-layer .sgl-facts {
+  min-width: min(320px, 100%);
+}
+
+.sphere-genesis-layer .sgl-born {
+  margin: 0.15rem 0 0.35rem;
+  font-size: 0.98rem;
+  color: rgba(255, 226, 170, 0.96);
+}
+
+.sphere-genesis-layer .sgl-line {
+  margin: 0.2rem 0;
+  line-height: 1.55;
+}
+
+.sphere-genesis-layer .sgl-state {
+  color: rgba(233, 205, 158, 0.92);
+}
+
+.sphere-genesis-layer .sgl-actions {
+  margin: 0.5rem 0 0.1rem;
+}
+
+.sphere-genesis-layer .sgl-btn {
+  min-height: 2.2rem;
+  padding: 0.4rem 0.85rem;
+  border: 1px solid rgba(218, 164, 91, 0.55);
+  border-radius: 999px;
+  background: rgba(255, 217, 122, 0.12);
+  color: #ffd97a;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.sphere-genesis-layer .sgl-btn:hover {
+  background: rgba(255, 217, 122, 0.22);
+}
+
+.sphere-genesis-layer a {
+  color: #ffd97a;
+}

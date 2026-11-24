@@ -91,6 +91,20 @@ th{color:var(--gold)}
 .profile-picker-footer{padding:.75rem 1.25rem 1rem;border-top:1px solid rgba(243,201,122,.16);display:flex;gap:.6rem;flex-wrap:wrap;flex-shrink:0}
 /* Focus visible for accessibility */
 .profile-picker-item:focus{outline:2px solid rgba(122,243,255,.5);outline-offset:2px}
+
+/* ── Living Genesis Profile panel (Nov 23, 2026) ───────────────────── */
+.my-genesis-panel{border-color:rgba(243,201,122,.4)}
+.my-genesis-flex{display:flex;gap:1.1rem;align-items:center;flex-wrap:wrap;margin-top:.9rem}
+.my-genesis-seal{flex:0 0 auto;line-height:0}
+.my-genesis-seal svg{width:132px;height:132px;border-radius:.8rem;border:1px solid rgba(243,201,122,.25)}
+.my-genesis-facts{display:grid;gap:.3rem;min-width:min(320px,100%)}
+.my-genesis-facts h3{font-size:1.3rem}
+.my-genesis-line{margin:0;font-size:1.02rem}
+.my-genesis-facts .muted{margin:0;font-size:.88rem}
+.mirror-day-marks{margin:.85rem 0 0;padding:.7rem .9rem;border-left:3px solid var(--gold);border-radius:.4rem;background:rgba(243,201,122,.08);font-size:.92rem}
+.row-actions{display:flex;gap:.4rem;flex-wrap:wrap}
+.btn.compact{min-height:2rem;padding:.35rem .7rem;font-size:.82rem}
+.my-genesis-badge{color:var(--gold);font-weight:800;white-space:nowrap}
 @media (max-width:360px){
   .profile-picker-footer{flex-direction:column}
 }
