@@ -218,11 +218,11 @@ test("the white paper no longer describes the trailer as awaiting approval", () 
   assert.ok(paper.includes("Episode Library"), "the paper names the trailer's placed home");
 });
 
-test("the growth record carries the Library at index 7, under the pinned head", () => {
+test("the growth record carries the Library at index 8, under the pinned head", () => {
   const updates = JSON.parse(read("docs/assets/data/codex-updates.json"));
   assert.equal(updates[0].title, "The front door gained its small surfaces", "the pinned head stands");
-  assert.equal(updates[7].url, "./episodes.html", "the Library entry stands at index 7 (the Sphere's breathing entry landed above it in PR #267, the one-story entry above that in PR #270, the Sphere details entry above that in PR #272, the Free the Spark rename entry above that, the site-wide metadata entry above that, and the Genesis profile entry above that)");
-  assert.equal(updates[7].date, "2026-11-23");
+  assert.equal(updates[8].url, "./episodes.html", "the Library entry stands at index 8 (the Sphere's breathing entry landed above it in PR #267, the one-story entry above that in PR #270, the Sphere details entry above that in PR #272, the Free the Spark rename entry above that, the site-wide metadata entry above that, the Genesis profile entry above that, and the Spark fence entry above that)");
+  assert.equal(updates[8].date, "2026-11-23");
   const index = read("docs/index.html");
   const growth = index.slice(index.indexOf("data-le-growth"), index.indexOf("</ul>", index.indexOf("data-le-growth")));
   assert.ok(growth.includes("Every page learned to say what it is"), "the homepage panel mirrors the newest entries");

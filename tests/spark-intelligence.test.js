@@ -263,6 +263,46 @@ test("the keeper memory round-trips through storage, and beliefs are corrected b
   assert.equal(reloaded.beliefs.length, 1, "but the line stays in the keeper's list, struck — nothing is silently erased");
 });
 
+test("memory stores are keyed by seed: two Sparks in one browser never share beliefs", () => {
+  const mind = loadMind();
+  const box = new Map();
+  const storage = { getItem: (k) => box.get(k) ?? null, setItem: (k, v) => box.set(k, v), removeItem: (k) => box.delete(k) };
+  assert.equal(mind.memoryKeyFor("seed-a"), "sof.spark.memory.v1:seed-a", "the keyed store names its Spark");
+  assert.equal(mind.memoryKeyFor(null), mind.MEMORY_KEY, "no seed — no Spark adopted yet — falls back to the legacy key");
+  assert.equal(mind.memoryKeyFor(""), mind.MEMORY_KEY, "an empty seed falls back too");
+  const memA = mind.blankMemory();
+  mind.addBelief(memA, { text: "The keeper waters on day 2", label: "observed", source: "record", at: "2026-11-18" });
+  mind.saveMemory(storage, memA, "seed-a");
+  assert.equal(box.has(mind.memoryKeyFor("seed-a")), true, "Spark A's memory lives under Spark A's key");
+  const memB = mind.loadMemory(storage, "seed-b");
+  assert.equal(memB.beliefs.length, 0, "Spark B does not inherit Spark A's beliefs");
+  assert.equal(memB.childMode, false, "nor Spark A's child-mode flag");
+  const reloadedA = mind.loadMemory(storage, "seed-a");
+  assert.equal(reloadedA.beliefs.length, 1, "Spark A's own store still holds its beliefs");
+});
+
+test("migration: the legacy store is carried into the current Spark's keyed store — moved, never lost, never claimed twice", () => {
+  const mind = loadMind();
+  const box = new Map();
+  const storage = { getItem: (k) => box.get(k) ?? null, setItem: (k, v) => box.set(k, v), removeItem: (k) => box.delete(k) };
+  /* A store written the old way, under the bare legacy key. */
+  const legacy = mind.blankMemory();
+  legacy.childMode = true;
+  mind.addBelief(legacy, { text: "The keeper keeps the west bed", label: "observed", source: "record", at: "2026-11-18" });
+  mind.saveMemory(storage, legacy);
+  assert.equal(box.has(mind.MEMORY_KEY), true, "the legacy store stands before migration");
+  const migrated = mind.loadMemory(storage, "seed-a");
+  assert.equal(migrated.beliefs.length, 1, "the legacy beliefs load for the current Spark — nothing orphaned");
+  assert.equal(migrated.childMode, true, "the child-mode flag carries across with them");
+  assert.equal(box.has(mind.memoryKeyFor("seed-a")), true, "the contents now live under the keyed store");
+  assert.equal(box.has(mind.MEMORY_KEY), false, "the legacy key is moved, not left behind for another Spark to claim");
+  const other = mind.loadMemory(storage, "seed-b");
+  assert.equal(other.beliefs.length, 0, "a second Spark starts from its own blank store");
+  assert.equal(other.childMode, false, "and does not inherit the first Spark's child mode");
+  const again = mind.loadMemory(storage, "seed-a");
+  assert.equal(again.beliefs.length, 1, "the migrated store round-trips under its key");
+});
+
 test("the outcomes loop: three Passes quiet a kind for a moon, a Stop sleeps it, an Approve stands", () => {
   const mind = loadMind();
   const memory = mind.blankMemory();

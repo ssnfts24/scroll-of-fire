@@ -8,7 +8,8 @@
  * its weight until the keeper actually talks. It carries:
  *
  *   - THE MEMORY the Spark keeps on this device
- *     (sof.spark.memory.v1): beliefs about the keeper, each
+ *     (sof.spark.memory.v1, keyed per Spark by seed — see
+ *     memoryKeyFor): beliefs about the keeper, each
  *     labelled observed or inferred, with corrections appended
  *     beside the original — never overwritten (the Witness
  *     Protocol's law, design §3); proposal outcomes (Approve /
@@ -85,25 +86,63 @@
       };
     }
 
-    function loadMemory(storage) {
+    /* Each Spark carries its OWN memory store, keyed by its seed:
+     * MEMORY_KEY + ":" + seed. Before this keying, every Spark in a
+     * browser shared the one bare MEMORY_KEY store, so two Sparks
+     * briefed the door with each other's beliefs (audit, Nov 23,
+     * 2026, claim 3). The bare key is now the legacy store: on a
+     * Spark's first load, whatever the legacy store holds is
+     * carried into that Spark's keyed store — moved, not copied,
+     * so no other Spark can claim it again and nothing a keeper's
+     * Spark already holds is ever orphaned or dropped (character
+     * persistence). With no seed — no Spark adopted yet — the
+     * legacy key is used exactly as before. The Sphere client
+     * (sphere-spark.js) mirrors memoryKeyFor to read the child-mode
+     * flag from the same store; the two copies are pinned to each
+     * other by test. */
+    function memoryKeyFor(seed) {
+      const clean = typeof seed === "string" ? seed.trim() : "";
+      return clean ? `${MEMORY_KEY}:${clean}` : MEMORY_KEY;
+    }
+
+    function parseMemory(raw) {
+      const parsed = raw ? JSON.parse(raw) : null;
+      if (!parsed || typeof parsed !== "object") return blankMemory();
+      const memory = blankMemory();
+      memory.childMode = parsed.childMode === true;
+      if (Array.isArray(parsed.beliefs)) memory.beliefs = parsed.beliefs;
+      if (Array.isArray(parsed.outcomes)) memory.outcomes = parsed.outcomes;
+      if (Array.isArray(parsed.mindLog)) memory.mindLog = parsed.mindLog.slice(-40);
+      return memory;
+    }
+
+    function loadMemory(storage, seed) {
       try {
-        const raw = storage && storage.getItem(MEMORY_KEY);
-        const parsed = raw ? JSON.parse(raw) : null;
-        if (!parsed || typeof parsed !== "object") return blankMemory();
-        const memory = blankMemory();
-        memory.childMode = parsed.childMode === true;
-        if (Array.isArray(parsed.beliefs)) memory.beliefs = parsed.beliefs;
-        if (Array.isArray(parsed.outcomes)) memory.outcomes = parsed.outcomes;
-        if (Array.isArray(parsed.mindLog)) memory.mindLog = parsed.mindLog.slice(-40);
-        return memory;
+        const key = memoryKeyFor(seed);
+        let raw = storage && storage.getItem(key);
+        if (!raw && key !== MEMORY_KEY && storage) {
+          /* Migration: the legacy store moves into this Spark's
+           * keyed store on first load. If the move itself fails
+           * (storage full, removeItem missing), the legacy contents
+           * still load — they are never lost to a failed move. */
+          const legacy = storage.getItem(MEMORY_KEY);
+          if (legacy) {
+            raw = legacy;
+            try {
+              storage.setItem(key, legacy);
+              if (typeof storage.removeItem === "function") storage.removeItem(MEMORY_KEY);
+            } catch { /* the legacy copy stands; the load above already holds it */ }
+          }
+        }
+        return parseMemory(raw);
       } catch {
         return blankMemory();
       }
     }
 
-    function saveMemory(storage, memory) {
+    function saveMemory(storage, memory, seed) {
       try {
-        storage && storage.setItem(MEMORY_KEY, JSON.stringify(memory));
+        storage && storage.setItem(memoryKeyFor(seed), JSON.stringify(memory));
         return true;
       } catch {
         return false;
@@ -565,8 +604,13 @@
       injectStyles();
 
       const storage = window.localStorage;
-      let memory = loadMemory(storage);
-      const persist = () => saveMemory(storage, memory);
+      /* The store belongs to THIS Spark: keyed by the seed in the
+       * seat's record, so a different Spark in the same browser
+       * never reads or briefs from this one's memory. No record
+       * (no Spark adopted) falls back to the legacy key. */
+      const memorySeed = api && api.record && typeof api.record.seed === "string" ? api.record.seed : null;
+      let memory = loadMemory(storage, memorySeed);
+      const persist = () => saveMemory(storage, memory, memorySeed);
       let sourcesCache = null;
       let shardDocs = null;
       let storyChapters = null;
@@ -977,6 +1021,7 @@
     return {
       VERSION,
       MEMORY_KEY,
+      memoryKeyFor,
       FENCE_NOTICE,
       CEILING_NOTICE,
       CHILD_NOTICE,
