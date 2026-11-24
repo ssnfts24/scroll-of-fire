@@ -34,7 +34,10 @@ const EXCLUDED = new Set([
   "living-time-sphere.html",
   "404.html",
   "offline.html",
-  "caravan.html"
+  "caravan.html",
+  // Gate G (G2): the account page is a utility page (noindex,
+  // catalog-classified Utility), excluded as offline.html is.
+  "account.html"
 ]);
 
 const AREAS = [

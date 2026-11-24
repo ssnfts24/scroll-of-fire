@@ -332,6 +332,20 @@
    "outTotal": 12,
    "inTotal": 9
   },
+  "account.html": {
+   "title": "Your Account — One Sign-In for the App and the Site",
+   "area": "codex",
+   "out": [
+    {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    }
+   ],
+   "in": [],
+   "outTotal": 1,
+   "inTotal": 0
+  },
   "aiyanas-world.html": {
    "title": "Aiyana's World",
    "area": "living-time",
@@ -1859,10 +1873,15 @@
      "path": "circle.html",
      "title": "Circle Sync",
      "area": "artifacts"
+    },
+    {
+     "path": "account.html",
+     "title": "Your Account — One Sign-In for the App and the Site",
+     "area": "codex"
     }
    ],
    "outTotal": 24,
-   "inTotal": 2
+   "inTotal": 3
   },
   "invoke.html": {
    "title": "Invocation Lab",
