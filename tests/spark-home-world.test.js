@@ -38,6 +38,7 @@ const Schema = require(path.join(JS, "life-atlas/life-atlas-schema.js"));
 const World = require(path.join(JS, "spark-home-world.js"));
 
 const read = rel => fs.readFileSync(path.join(DOCS, rel), "utf8");
+const plain = (v) => JSON.parse(JSON.stringify(v));
 
 const SEED = Core.makeSeed({ moon: 8, patternDay: 217, kindIndex: 1, nonce: "ab12cd34" });
 
@@ -314,4 +315,95 @@ test("the home page offers the passport door inside Their Home", () => {
   assert.ok(section.includes('id="spark-home-passport-go"'), "the door's button stands in Their Home");
   assert.ok(section.includes("Tap your Spark itself and it answers"),
     "the hint tells the keeper the Spark answers a tap, and what it says first");
+});
+
+/* ── Slice 4: the home answers the journey ───────────────────
+ * The road so far, the gilded stones, the fetch's standing —
+ * all read from the inhabitant's derivations, passed in as the
+ * journey; the model names only what the record holds. */
+
+const RICH_JOURNEY = {
+  stageName: "Bearer",
+  moonsKept: 8,
+  landsWalked: 6,
+  routes: [{ days: [222, 223, 225], learned: true }, { days: [10, 38], learned: false }],
+  tricksLearned: ["Bow", "Ripple-Bow", "Fetch the Token"],
+  daysClosedTogether: 4,
+  hums: [{
+    episodeId: "through-the-day-door", title: "Through the Day Door", token: "the Day Door",
+    land: "the Observatory", moonName: "Breath Gate",
+    rootHz: 174, scale: "Freygish", motifHz: [261, 348, 522], patternDay: 224
+  }],
+  fetchStands: true,
+  lanternStands: true,
+  markedDays: [
+    { pd: 210, kinds: ["kept"] },
+    { pd: 215, kinds: ["token", "kept"] },
+    { pd: 66, kinds: ["genesis", "practice"] }
+  ]
+};
+
+test("a journey the record cannot name degrades to absence, never invention", () => {
+  assert.equal(World.journeyFromInput(null), null);
+  assert.equal(World.journeyFromInput("a road"), null);
+  const partial = World.journeyFromInput({
+    moonsKept: "three",
+    hums: [{ episodeId: "ep-x" }, { episodeId: "ep-y", motifHz: [440] }],
+    markedDays: [{ pd: 400, kinds: ["kept"] }, { pd: 10, kinds: ["witnessed"] }]
+  });
+  assert.equal(partial.moonsKept, 0, "a Moon count that is not a number is no Moon at all");
+  assert.equal(partial.hums.length, 1, "a hum without its motif is no hum");
+  assert.deepEqual(plain(partial.markedDays), [{ pd: 10, kinds: ["witnessed"] }], "a day outside the year marks nothing");
+});
+
+test("a rich journey fills the road line with the record's own numbers — and only them", () => {
+  const m = model({ journey: RICH_JOURNEY });
+  assert.match(m.lines.road, /stands Bearer/);
+  assert.match(m.lines.road, /8 Moons kept/);
+  assert.match(m.lines.road, /6 lands walked/);
+  assert.match(m.lines.road, /2 routes shown, 1 of them .*'s own/);
+  assert.match(m.lines.road, /3 tricks learned/);
+  assert.match(m.lines.road, /4 days closed together/);
+  assert.match(m.lines.road, /1 hum learned/);
+  assert.equal(m.lines.fetch, null, "when the fetch stands learned, the book carries it — no teaching line");
+  assert.deepEqual(plain(m.path.stoneDays), [210, 212, 215], "each stone keeps its day, in the record's own order");
+  assert.match(m.lines.path, /1 of them is gilded/,
+    "only Pattern Day 215 carries a strong mark (a token's homecoming) among the kept days — a merely kept day's stone stays plain");
+  assert.match(m.lines.path, /beyond the keeping itself/);
+  assert.equal(m.journey.hums.length, 1);
+  assert.equal(m.journey.hums[0].token, "the Day Door");
+});
+
+test("a thin journey is honestly spare: the road says so, and the fetch is named but not offered", () => {
+  const m = model({ journey: { stageName: "Spark", moonsKept: 0, landsWalked: 0, routes: [], tricksLearned: [], daysClosedTogether: 0, hums: [], fetchStands: false, lanternStands: false, markedDays: [] } });
+  assert.match(m.lines.road, /just setting out/);
+  assert.match(m.lines.fetch, /not yet learned\. At Bearer/);
+  assert.doesNotMatch(m.lines.path, /gilded/, "no marked days, no gilding");
+});
+
+test("no journey folds, the road says so — the home does not guess", () => {
+  const m = model({});
+  assert.equal(m.journey, null);
+  assert.match(m.lines.road, /could not be read here/);
+  assert.equal(m.lines.fetch, null);
+});
+
+test("the story corner's tokens carry their hums, from the watch records", () => {
+  const m = model({
+    storyWatches: {
+      tokens: [
+        {
+          episodeId: "through-the-day-door",
+          line: "Through the Day Door — of the Observatory, under Breath Gate, the Day Door",
+          token: "the Day Door", moonName: "Breath Gate",
+          hum: { rootHz: 174, scale: "Freygish", motifHz: [261, 348, 522] },
+          skill: { n: 1, name: "Read the day", state: "met" },
+          watchedOn: "Pattern Day 224", metAgainYears: []
+        },
+        { episodeId: "ep-bare", line: "A bare watch", token: "a stone", moonName: "", hum: null, skill: null, watchedOn: "Pattern Day 100", metAgainYears: [] }
+      ]
+    }
+  });
+  assert.equal(m.storyCorner.tokens[0].hum.motifHz.length, 3);
+  assert.equal(m.storyCorner.tokens[1].hum, null, "a token without a hum carries none");
 });

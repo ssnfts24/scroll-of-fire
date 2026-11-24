@@ -44,6 +44,31 @@
  *     read live through the canonical calendar. Nothing about
  *     the sky is decorative fiction: it is the day, drawn.
  *
+ * Slice 4 (the Spark Inhabitant expansion): the home now also
+ * answers the journey itself, read from the same record facts
+ * the Sphere's inhabitant reads (SphereSparkInhabitant —
+ * loaded lazily, its derivations used, never re-derived here):
+ *
+ *   - the road so far: the life stage the record paints, the
+ *     Moons kept, the lands walked, the routes taught and
+ *     learned, the tricks learned, the days closed together —
+ *     each a fact standing in the record, named in plain words.
+ *   - marked days gild their path stones: a day the record
+ *     marks (witnessed, a token's home, a practice day, the
+ *     birth day) lays its stone in gold; an unmarked day's
+ *     stone stays plain stone.
+ *   - the story corner stands in the world, not only in words:
+ *     one standing token for each episode watched through, on
+ *     a low stone ring by the road — and a token's hum can be
+ *     sounded here, in the Spark's own voice.
+ *   - Fetch the Token, when it stands learned (the Bearer
+ *     stage, the inhabitant's own derivation): the keeper names
+ *     a keepsake on the shelf or a token in the corner, and the
+ *     Spark travels the home ground, takes it up, carries it
+ *     to the gate and presents it — naming it with its day and
+ *     its story — then returns it to its place. A showing: the
+ *     fetch writes nothing.
+ *
  * Where a record is empty, the slot stands honestly empty with
  * one plain line. Nothing here is pre-decorated, nothing is
  * bought, nothing leaves the device: every record read is one
@@ -218,6 +243,9 @@
       token: t.token || "",
       moonName: t.moonName || "",
       skill: t.skill || null,
+      hum: t.hum && Array.isArray(t.hum.motifHz) && t.hum.motifHz.length
+        ? { rootHz: t.hum.rootHz != null ? t.hum.rootHz : null, scale: t.hum.scale || "", motifHz: [...t.hum.motifHz] }
+        : null,
       watchedOn: t.watchedOn || "",
       metAgainYears: Array.isArray(t.metAgainYears) ? [...t.metAgainYears] : []
     }));
@@ -237,6 +265,56 @@
       kinds: Array.isArray(portrait.kinds) ? portrait.kinds : [],
       line: portrait.line || ""
     };
+  }
+
+  /* ------------------------- the journey ------------------------- */
+
+  /* The journey, as the inhabitant's derivations read it from
+   * the same record facts (slice 4): the browser half folds the
+   * record through SphereSparkInhabitant and passes the result
+   * in — this module never re-derives a stage, a trick, or a
+   * hum. The fold here only normalizes what it is given, so a
+   * partial or unreadable journey degrades to honest absence,
+   * never to invention. */
+  function journeyFromInput(journey) {
+    if (!journey || typeof journey !== "object") return null;
+    const list = (v) => (Array.isArray(v) ? v : []);
+    return {
+      stageName: typeof journey.stageName === "string" && journey.stageName ? journey.stageName : null,
+      moonsKept: Math.max(0, Math.floor(Number(journey.moonsKept) || 0)),
+      landsWalked: Math.max(0, Math.floor(Number(journey.landsWalked) || 0)),
+      routes: list(journey.routes)
+        .filter(r => r && Array.isArray(r.days) && r.days.length >= 2)
+        .map(r => ({ days: r.days.filter(d => Number.isInteger(d) && d >= 1 && d <= 364), learned: Boolean(r.learned) })),
+      tricksLearned: list(journey.tricksLearned).filter(t => typeof t === "string" && t),
+      daysClosedTogether: Math.max(0, Math.floor(Number(journey.daysClosedTogether) || 0)),
+      hums: list(journey.hums)
+        .filter(h => h && Array.isArray(h.motifHz) && h.motifHz.length)
+        .map(h => ({
+          episodeId: h.episodeId || null,
+          title: h.title || "",
+          token: h.token || "",
+          land: h.land || "",
+          moonName: h.moonName || "",
+          rootHz: h.rootHz != null ? h.rootHz : null,
+          scale: h.scale || "",
+          motifHz: h.motifHz.filter(hz => Number.isFinite(hz) && hz > 0),
+          patternDay: Number.isInteger(h.patternDay) ? h.patternDay : null
+        })),
+      fetchStands: Boolean(journey.fetchStands),
+      lanternStands: Boolean(journey.lanternStands),
+      markedDays: list(journey.markedDays)
+        .filter(m => m && Number.isInteger(m.pd) && m.pd >= 1 && m.pd <= 364)
+        .map(m => ({ pd: m.pd, kinds: list(m.kinds).filter(k => typeof k === "string" && k) }))
+    };
+  }
+
+  /* The record's own kept days, in the order they stand there —
+   * the identity of each path stone, so a marked day's stone
+   * can be gilded and the rest stay plain stone. */
+  function stoneDaysFromRecord(record) {
+    if (!record || !Array.isArray(record.daysSeen)) return [];
+    return record.daysSeen.filter(d => Number.isInteger(d) && d >= 1 && d <= 364);
   }
 
   /* ------------------------------ home ----------------------------- */
@@ -274,6 +352,11 @@
    *   keepingPortrait — SparkActivities.portraitFromRecords(records)
    *                    or null: the portrait of keeping (slice 1 —
    *                    Spark / Kindled by breadth of keeping kinds)
+   *   journey,       — slice 4: the journey as SphereSparkInhabitant's
+   *                    derivations read it (stage, Moons kept, lands
+   *                    walked, routes, tricks learned, days closed
+   *                    together, hums, the carrying tricks' standing,
+   *                    marked days), or null when unreadable here
    *   trailFinds,    — LivingTrail trail.finds, or null
    *   chapters,      — the story spine's chapters, or null
    *   today,         — today's canonical conversion, or null
@@ -315,6 +398,14 @@
     const story = storyFromTrail(input.trailFinds, input.chapters);
     const storyCorner = storyCornerFromFold(input.storyWatches);
     const portrait = portraitFromInput(input.keepingPortrait);
+    const journey = journeyFromInput(input.journey);
+    const stoneDays = stoneDaysFromRecord(record);
+    /* Gilding follows slice 2's rule: a STRONG mark — a day the
+     * record marks beyond the keeping itself. A merely kept
+     * day's stone stays plain stone. */
+    const gildedCount = journey
+      ? journey.markedDays.filter(m => stoneDays.includes(m.pd) && m.kinds.some(k => k !== "kept")).length
+      : 0;
     const keptDays = record && Array.isArray(record.daysSeen) ? record.daysSeen.length : 0;
     const home = homeForStage(spark ? spark.stageIndex : null);
 
@@ -357,8 +448,35 @@
             (garden.keepsakeCount ? `, and ${garden.keepsakeCount} harvest${garden.keepsakeCount === 1 ? "" : "s"} kept by the door.` : ".")
           : "The garden ring: thirteen bare beds. Nothing planted yet — each bed opens in its Moon.",
       path: keptDays
-        ? `The path: ${keptDays} stone${keptDays === 1 ? "" : "s"} — one for every day you and your Spark have kept together.`
+        ? `The path: ${keptDays} stone${keptDays === 1 ? "" : "s"} — one for every day you and your Spark have kept together.` +
+          (journey && gildedCount
+            ? ` ${gildedCount} of them ${gildedCount === 1 ? "is" : "are"} gilded — the days the record marks beyond the keeping itself: witnessed, a token's homecoming, a practice, a birth.`
+            : "")
         : "The path: no stones yet. It begins with the first day you keep together.",
+      road: !spark
+        ? null
+        : !journey
+          ? "The road so far: it could not be read here. The Sphere keeps the journey."
+          : (() => {
+              const facts = [];
+              if (journey.moonsKept) facts.push(`${journey.moonsKept} Moon${journey.moonsKept === 1 ? "" : "s"} kept`);
+              if (journey.landsWalked) facts.push(`${journey.landsWalked} land${journey.landsWalked === 1 ? "" : "s"} walked`);
+              if (journey.routes.length) {
+                const learned = journey.routes.filter(r => r.learned).length;
+                facts.push(`${journey.routes.length} route${journey.routes.length === 1 ? "" : "s"} shown` + (learned ? `, ${learned} of them ${spark.name}'s own` : ""));
+              }
+              if (journey.tricksLearned.length) facts.push(`${journey.tricksLearned.length} trick${journey.tricksLearned.length === 1 ? "" : "s"} learned`);
+              if (journey.daysClosedTogether) facts.push(`${journey.daysClosedTogether} day${journey.daysClosedTogether === 1 ? "" : "s"} closed together`);
+              if (journey.hums.length) facts.push(`${journey.hums.length} hum${journey.hums.length === 1 ? "" : "s"} learned`);
+              return facts.length
+                ? `The road so far: ${spark.name} stands ${journey.stageName || spark.stageName} — ${facts.join(" · ")}. Every piece of it stands in the record; nothing here was placed by hand.`
+                : `The road so far: ${spark.name} is just setting out. The home fills as the record grows — the first day kept, the first token home, the first route walked.`;
+            })(),
+      fetch: !spark || !journey
+        ? null
+        : journey.fetchStands
+          ? null
+          : `Fetch the Token — not yet learned. At Bearer, ${spark.name} will bring you what you name from the shelf and the story corner.`,
       story: story.foundCount
         ? `The road marker: ${story.foundCount} chapter${story.foundCount === 1 ? "" : "s"} of the Traveller's Road walked` +
           (story.totalChapters ? `, of ${story.totalChapters} the spine now tells.` : ".")
@@ -388,7 +506,12 @@
       story,
       storyCorner,
       portrait,
-      path: { keptDays },
+      journey,
+      path: {
+        keptDays,
+        stoneDays,
+        markedDays: journey ? journey.markedDays : []
+      },
       lines
     };
   }
@@ -406,6 +529,8 @@
     storyFromTrail,
     storyCornerFromFold,
     portraitFromInput,
+    journeyFromInput,
+    stoneDaysFromRecord,
     homeForStage,
     buildModel
   };
@@ -536,6 +661,62 @@
       keepingPortrait = null;
     }
 
+    /* Slice 4: the journey, folded by the inhabitant module's
+     * own derivations over the same records — the life stage,
+     * the breadth (Moons kept, lands walked, marked days), the
+     * routes, the tricks learned, the days closed together,
+     * the hums, and whether the carrying tricks stand. The
+     * module is lazy-loaded the same way as the others; its
+     * mount looks for the Sphere's stage, finds none here, and
+     * stands down. Read-only, like everything gathered here. */
+    let journey = null;
+    try {
+      if (!window.SphereSparkInhabitant) {
+        await loadScript("assets/js/sphere-spark-inhabitant.js");
+      }
+      const Inh = window.SphereSparkInhabitant;
+      if (Inh && record) {
+        const facts = Inh.lifeFactsFromRecords(atlasRecords, record);
+        const lines = Inh.lifeLinesOf(record);
+        const stageId = Inh.lifeStageFromFacts(facts);
+        const derived = Inh.derivedTricks({
+          kind: companion ? companion.kind : null, stage: stageId, facts, lines
+        });
+        const derivedIds = new Set(derived.map(d => d.trick));
+        const learnedIds = new Set(lines.filter(l => l.line === "trick-learned").map(l => l.trick));
+        let genesisPd = null;
+        try { genesisPd = Inh.genesisPatternDayFromRaw(window.localStorage.getItem("sofGenesisProfilesV2")); }
+        catch { genesisPd = null; }
+        const breadth = Inh.breadthFromSources({
+          record,
+          witnessedPds: facts.witnessedDays,
+          genesisPd,
+          tokenInfo: Inh.tokenDaysFromRecords(atlasRecords)
+        });
+        journey = {
+          stageName: Inh.LIFE_STAGE_NAMES[stageId] || "Spark",
+          moonsKept: breadth.moonsKept,
+          landsWalked: breadth.lands,
+          routes: Inh.routeDemosFromLines(lines).map(d => ({
+            days: d.days,
+            learned: Boolean(Inh.routeLearningFor(lines, d))
+          })),
+          tricksLearned: lines
+            .filter(l => l.line === "trick-learned")
+            .map(l => Inh.TRICK_NAMES[l.trick] || l.trick),
+          daysClosedTogether: lines.filter(l => l.line === "care-act" && l.kind === "close-day").length,
+          hums: Inh.humRepertoireFromFacts(facts),
+          fetchStands: derivedIds.has("fetch-the-token") || learnedIds.has("fetch-the-token"),
+          lanternStands: derivedIds.has("carry-the-lantern") || learnedIds.has("carry-the-lantern"),
+          /* Strong marks only — the days the record marks
+           * beyond the keeping itself (slice 2's own rule). */
+          markedDays: (breadth.strongMarkedDays || []).map(pd => ({ pd, kinds: (breadth.marks || {})[pd] || [] }))
+        };
+      }
+    } catch {
+      journey = null;
+    }
+
     let trailFinds = null;
     try {
       if (window.LivingTrail) trailFinds = window.LivingTrail.load().finds || {};
@@ -596,6 +777,7 @@
       gardenFold,
       storyWatches,
       keepingPortrait,
+      journey,
       trailFinds,
       chapters,
       today,
@@ -605,9 +787,42 @@
     return { model, companion, stage, record };
   }
 
+  /* The Spark's voice, sounding a learned hum's own motif —
+   * the episode's measured notes, in the house's sound
+   * discipline (a sine tone, a soft attack, a falling decay;
+   * the keeper's sound setting honoured, the way the Sphere's
+   * presence reads it). Sound is a grace: any failure is
+   * silence, never an error. */
+  let humAudioCtx = null;
+  function soundMotifHz(motifHz) {
+    try {
+      if (window.localStorage.getItem("sof.spark.sound") === "off") return;
+      const notes = (Array.isArray(motifHz) ? motifHz : []).filter(hz => Number.isFinite(hz) && hz > 0).slice(0, 12);
+      if (!notes.length) return;
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      humAudioCtx = humAudioCtx || new AC();
+      if (humAudioCtx.state === "suspended") humAudioCtx.resume();
+      const ctx = humAudioCtx;
+      notes.forEach((hz, i) => {
+        const t = ctx.currentTime + 0.03 + i * 0.42;
+        const dur = 0.5;
+        const osc = ctx.createOscillator();
+        osc.type = "sine";
+        osc.frequency.value = hz;
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(0, t);
+        gain.gain.linearRampToValueAtTime(0.12, t + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.start(t); osc.stop(t + dur + 0.05);
+      });
+    } catch { /* the voice is a grace, not a gate */ }
+  }
+
   /* ------------------------- the world in words ------------------------- */
 
-  function renderWords(model, host, say) {
+  function renderWords(model, host, say, actions) {
     const caption = $("#spark-home-caption", host);
     if (caption) caption.textContent = model.lines.sky;
     const list = $("#spark-home-list", host);
@@ -619,9 +834,18 @@
     if (model.spark && model.sparkSpeech && model.sparkSpeech.dayLine) {
       items.push({ key: "day", label: `${model.spark.name} on today`, line: model.sparkSpeech.dayLine });
     }
+    const sparkName = model.spark ? model.spark.name : "The Spark";
+    const fetchOk = Boolean(model.journey && model.journey.fetchStands && model.spark);
     items.push({ key: "shelf", label: "The keepsake shelf", line: model.lines.shelf });
     for (const k of model.keepsakes.slice(0, World.SHELF_CAP)) {
-      items.push({ key: "keepsake", label: k.title, line: `${k.title} — ${k.summary}` });
+      items.push({
+        key: "keepsake", label: k.title, line: `${k.title} — ${k.summary}`,
+        fetch: fetchOk ? {
+          kind: "keepsake", id: k.id,
+          presentLine: `${sparkName} brings you ${k.title} — ${k.summary}` +
+            (k.civilDate ? ` It came to the shelf on ${k.civilDate}.` : "")
+        } : null
+      });
     }
     if (model.keepsakeTotal > World.SHELF_CAP) {
       items.push({
@@ -643,6 +867,7 @@
       });
     }
     items.push({ key: "path", label: "The path", line: model.lines.path });
+    if (model.lines.road) items.push({ key: "road", label: "The road so far", line: model.lines.road });
     items.push({ key: "story", label: "The road marker", line: model.lines.story });
     items.push({ key: "story-corner", label: "The story corner", line: model.lines.storyCorner });
     for (const t of model.storyCorner.tokens) {
@@ -651,10 +876,29 @@
         label: t.token || "A token",
         line: `${t.line} — watched through on ${t.watchedOn}. Its token stands here.` +
           (t.metAgainYears.length ? ` Met again in its own Moon in ${t.metAgainYears.join(", ")}.` : "") +
-          (t.skill ? ` The skill it teaches, ${t.skill.name}, is marked met.` : "")
+          (t.skill ? ` The skill it teaches, ${t.skill.name}, is marked met.` : ""),
+        fetch: fetchOk ? {
+          kind: "token", id: t.episodeId,
+          presentLine: `${sparkName} brings you ${t.token || "a token"} — ${t.line}, watched through on ${t.watchedOn}.`
+        } : null
       });
     }
+    if (model.journey) {
+      for (const h of model.journey.hums) {
+        items.push({
+          key: "hum",
+          label: `The hum of ${h.title || "an episode"}`,
+          hum: h,
+          line: `The hum of ${h.title || "an episode watched through"}` +
+            (h.land ? ` — of ${h.land}` : "") + (h.moonName ? `, under ${h.moonName}` : "") +
+            `. ${sparkName} learned it watching the episode through` +
+            (h.patternDay ? `; its token came home on Pattern Day ${h.patternDay}` : "") +
+            `. Touch again to hear it sounded.`
+        });
+      }
+    }
     items.push({ key: "portrait", label: "The portrait of keeping", line: model.lines.portrait });
+    if (model.lines.fetch) items.push({ key: "fetch", label: "Fetch the Token", line: model.lines.fetch });
     for (const item of items) {
       const li = document.createElement("li");
       const button = document.createElement("button");
@@ -665,8 +909,32 @@
       const span = document.createElement("span");
       span.textContent = item.line;
       button.append(strong, span);
-      button.addEventListener("click", () => say(item.line));
+      button.addEventListener("click", () => {
+        say(item.line);
+        if (item.hum) soundMotifHz(item.hum.motifHz);
+      });
       li.appendChild(button);
+      if (item.fetch) {
+        /* Fetch the Token, on its true stage: the keeper names
+         * the keepsake, the Spark carries it. When the 3D world
+         * stands, the scene performs the fetch; where it cannot
+         * (the still form, or a keepsake beyond the shelf), the
+         * Spark names it with its day and its story from where
+         * it stands — the naming is never faked as a journey. */
+        const fetchBtn = document.createElement("button");
+        fetchBtn.type = "button";
+        fetchBtn.className = "spark-home-item spark-home-fetch-btn";
+        const fStrong = document.createElement("strong");
+        fStrong.textContent = `Ask ${sparkName} to fetch it`;
+        const fSpan = document.createElement("span");
+        fSpan.textContent = "Fetch the Token — the Spark brings it to you and names it with its day and its story.";
+        fetchBtn.append(fStrong, fSpan);
+        fetchBtn.addEventListener("click", () => {
+          if (actions && typeof actions.fetch === "function" && actions.fetch(item.fetch)) return;
+          say(item.fetch.presentLine);
+        });
+        li.appendChild(fetchBtn);
+      }
       list.appendChild(li);
     }
   }
@@ -735,6 +1003,9 @@
       pickables.push(obj);
       return obj;
     }
+    /* Slice 4: the fetchable things, by the key the words list
+     * names them with — shelf keepsakes and story-corner tokens. */
+    const fetchTargets = new Map();
     const lam = (color, opts) => new THREE.MeshLambertMaterial({ color, ...(opts || {}) });
 
     /* ---- ground, gate, and the turning sky ---- */
@@ -800,6 +1071,24 @@
         pos.set(x, 0.035, z);
         q.setFromAxisAngle(new THREE.Vector3(0, 1, 0), hash01(`stone-r-${i}`) * Math.PI);
         stones.setMatrixAt(i, m4.compose(pos, q, scl));
+      }
+      /* Slice 4: a strongly marked day's stone is gilded — the
+       * marks are the record's own, from the inhabitant's
+       * breadth fold, and slice 2's rule holds: the mark must
+       * stand beyond the keeping itself (witnessed, a token's
+       * homecoming, a practice day, the birth day). A merely
+       * kept day keeps plain stone; a stone whose day the fold
+       * does not name is never gilded. */
+      const markedSet = new Set((model.path.markedDays || [])
+        .filter(m => (m.kinds || []).some(k => k !== "kept"))
+        .map(m => m.pd));
+      if (markedSet.size) {
+        const gold = new THREE.Color(0xd8a03c);
+        const days = model.path.stoneDays || [];
+        for (let i = 0; i < kept; i++) {
+          if (markedSet.has(days[i])) stones.setColorAt(i, gold);
+        }
+        if (stones.instanceColor) stones.instanceColor.needsUpdate = true;
       }
       pickable(stones, model.lines.path);
       scene.add(stones);
@@ -905,6 +1194,7 @@
       const row = i < 6 ? 0 : 1;
       obj.position.set(-0.8 + (i % 6) * 0.32, (row === 0 ? 0.55 : 1.05) + 0.2, 0);
       pickable(obj, `${k.title} — ${k.summary}`);
+      if (k.id) fetchTargets.set(`keepsake:${k.id}`, obj);
       shelf.add(obj);
     });
     pickable(shelf, model.lines.shelf);
@@ -999,6 +1289,39 @@
     }
     pickable(marker, model.lines.story);
     scene.add(marker);
+
+    /* ---- the story corner, standing in the world (slice 4) ----
+     * One standing token for each episode watched through, on a
+     * low ring of stones on the home ground's east side. The
+     * tokens are the watch records' own, folded by the
+     * activities module — a token stands here only because an
+     * episode was watched through, and each names its episode,
+     * its land and the day it came home when touched. */
+    const cornerTokens = model.storyCorner.tokens.slice(0, 17);
+    if (cornerTokens.length) {
+      const corner = new THREE.Group();
+      corner.position.set(3.6, 0, 0.4);
+      cornerTokens.forEach((t, i) => {
+        const a = cornerTokens.length > 1 ? (i / cornerTokens.length) * Math.PI * 2 : 0;
+        const r = cornerTokens.length > 1 ? 0.85 : 0;
+        const bx = Math.cos(a) * r;
+        const bz = Math.sin(a) * r;
+        const base = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.21, 0.07, 8), stoneMat);
+        base.position.set(bx, 0.035, bz);
+        corner.add(base);
+        const disc = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.11, 0.11, 0.3, 10),
+          new THREE.MeshBasicMaterial({ color: new THREE.Color().setHSL(hash01(`token-${t.episodeId || i}`), 0.55, 0.55) })
+        );
+        disc.position.set(bx, 0.24, bz);
+        pickable(disc, `${t.line} — watched through on ${t.watchedOn}. Its token stands here.` +
+          (t.skill ? ` The skill it teaches, ${t.skill.name}, is marked met.` : ""));
+        if (t.episodeId) fetchTargets.set(`token:${t.episodeId}`, disc);
+        corner.add(disc);
+      });
+      pickable(corner, model.lines.storyCorner);
+      scene.add(corner);
+    }
 
     /* ---- a few trees and rocks, for the world's own sake ---- */
     const leafMat = lam(0x3f6d33);
@@ -1221,6 +1544,79 @@
       if (reducedMotion) renderer.render(scene, camera);
     }).observe(stageEl);
 
+    /* ---- Fetch the Token (slice 4) ----
+     * The keeper names a keepsake or a token; the Spark travels
+     * the home ground to it, takes it up (a small carried light
+     * in its place above the Spark), carries it to the path by
+     * the gate, and presents it — the readout names it with its
+     * day and its story — then returns it to its place and
+     * wanders on. A showing: the fetch writes nothing, moves
+     * nothing permanently, and a second naming while one runs
+     * is refused. Under reduced motion there is no travel: the
+     * Spark names the keepsake from where it stands. */
+    let fetchAnim = null;
+    const PRESENT_AT = new THREE.Vector3(0.6, 0, 6.4);
+    function fetchKeepsake(target) {
+      if (!sparkGroup || !target) return false;
+      if (fetchAnim) return false;
+      const obj = fetchTargets.get(`${target.kind}:${target.id}`);
+      if (!obj) return false;
+      if (reducedMotion) {
+        say(target.presentLine);
+        return true;
+      }
+      const dest = new THREE.Vector3();
+      obj.updateWorldMatrix(true, false);
+      obj.getWorldPosition(dest);
+      const carried = new THREE.Mesh(
+        new THREE.SphereGeometry(0.13, 8, 8),
+        new THREE.MeshBasicMaterial({ color: 0xffd98f })
+      );
+      carried.position.set(0, 1.35, 0);
+      carried.visible = false;
+      sparkGroup.add(carried);
+      fetchAnim = {
+        steps: [
+          { to: dest.clone(), ms: 1500 },
+          { pause: 450 },
+          { to: PRESENT_AT.clone(), ms: 1600, carry: true },
+          { sayLine: target.presentLine, pause: 2800 },
+          { to: dest.clone(), ms: 1500, carry: true },
+          { pause: 350 }
+        ],
+        idx: 0, from: null, endsAt: 0, stepMs: 0, carried
+      };
+      return true;
+    }
+
+    function driveFetch(now) {
+      const step = fetchAnim.steps[fetchAnim.idx];
+      if (!step) {
+        fetchAnim.carried.removeFromParent();
+        fetchAnim = null;
+        return;
+      }
+      if (!fetchAnim.from) {
+        fetchAnim.from = sparkGroup.position.clone();
+        fetchAnim.stepMs = step.ms || step.pause || 1;
+        fetchAnim.endsAt = now + fetchAnim.stepMs;
+        fetchAnim.carried.visible = Boolean(step.carry);
+        if (step.sayLine) say(step.sayLine);
+      }
+      const k = Math.min(1, Math.max(0, (now - (fetchAnim.endsAt - fetchAnim.stepMs)) / fetchAnim.stepMs));
+      if (step.to) {
+        sparkGroup.position.lerpVectors(fetchAnim.from, step.to, k);
+        sparkGroup.position.y = Math.sin(k * Math.PI) * 0.5;
+        const dx = step.to.x - fetchAnim.from.x;
+        const dz = step.to.z - fetchAnim.from.z;
+        if (Math.abs(dx) + Math.abs(dz) > 0.01) sparkGroup.rotation.y = Math.atan2(dx, dz);
+      }
+      if (k >= 1) {
+        fetchAnim.idx += 1;
+        fetchAnim.from = null;
+      }
+    }
+
     const clock = new THREE.Clock();
     let frames = 0;
     let slowTime = 0;
@@ -1242,16 +1638,25 @@
           fireLight.intensity = 1.0 + Math.sin(t * 13.7) * 0.18;
         }
         if (sparkGroup) {
-          const a = t * 0.11;
-          const wx = -1.2 + Math.cos(a) * 4.6;
-          const wz = -0.6 + Math.sin(a) * 4.2;
-          const dx = wx - sparkGroup.position.x;
-          const dz = wz - sparkGroup.position.z;
-          sparkGroup.position.x = wx;
-          sparkGroup.position.z = wz;
-          sparkGroup.position.y = Math.sin(t * 1.7) * 0.09;
-          if (Math.abs(dx) + Math.abs(dz) > 0.0005) {
-            sparkGroup.rotation.y = Math.atan2(dx, dz);
+          if (fetchAnim) {
+            driveFetch(performance.now());
+          } else {
+            /* The wander: the Spark drifts toward its ellipse
+             * point rather than being placed on it, so a fetch
+             * hands back into the wander smoothly, from wherever
+             * the Spark stands. */
+            const a = t * 0.11;
+            const wx = -1.2 + Math.cos(a) * 4.6;
+            const wz = -0.6 + Math.sin(a) * 4.2;
+            const dx = wx - sparkGroup.position.x;
+            const dz = wz - sparkGroup.position.z;
+            const ease = Math.min(1, dt * 1.6);
+            sparkGroup.position.x += dx * ease;
+            sparkGroup.position.z += dz * ease;
+            sparkGroup.position.y = Math.sin(t * 1.7) * 0.09;
+            if (Math.abs(dx) + Math.abs(dz) > 0.0005) {
+              sparkGroup.rotation.y = Math.atan2(dx, dz);
+            }
           }
           sparkGroup.rotation.z = Math.sin(t * 2.2) * 0.04;
           if (sparkHop) {
@@ -1305,6 +1710,22 @@
         io.disconnect();
         renderer.dispose();
         el.remove();
+      },
+      /* Slice 4: the fetch, and two small measuring hooks the
+       * capture harness reads (where the Spark stands; where a
+       * fetchable thing stands). Keepers never see them. */
+      fetch: fetchKeepsake,
+      fetching() { return Boolean(fetchAnim); },
+      sparkPosition() {
+        return sparkGroup ? { x: sparkGroup.position.x, z: sparkGroup.position.z } : null;
+      },
+      pointFor(kind, id) {
+        const obj = fetchTargets.get(`${kind}:${id}`);
+        if (!obj) return null;
+        const v = new THREE.Vector3();
+        obj.updateWorldMatrix(true, false);
+        obj.getWorldPosition(v);
+        return { x: v.x, z: v.z };
       }
     };
   }
@@ -1326,10 +1747,13 @@
       collected = { model: World.buildModel({}), companion: null, stage: null, record: null };
     }
     const { model, companion, stage, record } = collected;
-    renderWords(model, section, say);
+    const actions = { fetch: null };
+    renderWords(model, section, say, actions);
     say(`${model.lines.sky}. ${model.lines.home}`);
     try {
-      await startScene(model, section, say);
+      const sceneApi = await startScene(model, section, say);
+      section.__sparkHomeScene = sceneApi;
+      actions.fetch = (target) => sceneApi.fetch(target);
       section.classList.add("is-live");
     } catch {
       stillFallback(model, companion, stage, section, record);

@@ -333,13 +333,73 @@
   background: rgba(218, 164, 91, 0.32);
 }
 
+/* Slice 4 — Carry the Lantern: a small lit lamp riding the
+ * holder at its station in an opened day, when the lantern
+ * stands learned. It hangs at the Spark's side and sways
+ * gently; its flame is warm light, nothing more. */
+.inhabitant-lantern {
+  position: absolute;
+  right: -14px;
+  top: 46%;
+  width: 18px;
+  height: 26px;
+  pointer-events: none;
+  transform-origin: 50% -6px;
+  animation: inhabitant-lantern-sway 3.6s ease-in-out infinite;
+  z-index: 3;
+}
+.inhabitant-lantern::before {
+  /* the bail — the little handle the Spark carries it by */
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -5px;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  border: 1.5px solid rgba(146, 106, 48, 0.9);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+}
+.inhabitant-lantern-frame {
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid rgba(146, 106, 48, 0.9);
+  border-radius: 5px 5px 7px 7px;
+  background: radial-gradient(circle at 50% 62%, rgba(255, 205, 110, 0.95) 0%, rgba(255, 166, 62, 0.55) 45%, rgba(120, 70, 20, 0.25) 100%);
+  box-shadow: 0 0 14px 4px rgba(255, 178, 84, 0.45), 0 0 34px 10px rgba(255, 158, 64, 0.18);
+}
+.inhabitant-lantern-flame {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 6px;
+  height: 9px;
+  margin-left: -3px;
+  border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+  background: #ffe9b0;
+  box-shadow: 0 0 6px 2px rgba(255, 214, 120, 0.8);
+  animation: inhabitant-lantern-flicker 1.7s ease-in-out infinite;
+}
+@keyframes inhabitant-lantern-sway {
+  0%, 100% { transform: rotate(2.5deg); }
+  50% { transform: rotate(-2.5deg); }
+}
+@keyframes inhabitant-lantern-flicker {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  40% { transform: scale(0.88, 1.08); opacity: 0.92; }
+  70% { transform: scale(1.06, 0.94); opacity: 1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .sphere-spark-presence[data-inhabitant-posture="settle"] .sphere-spark-art,
   .sphere-spark-presence[data-inhabitant-posture="rest"] .sphere-spark-halo,
   .sphere-spark-presence.inhabitant-do-glow .sphere-spark-halo,
   .sphere-spark-presence.inhabitant-do-spin .sphere-spark-art,
   .sphere-spark-presence.inhabitant-do-halo .sphere-spark-halo,
-  .inhabitant-fx {
+  .inhabitant-fx,
+  .inhabitant-lantern,
+  .inhabitant-lantern-flame {
     animation: none;
   }
 }
