@@ -48,7 +48,12 @@ const EXCLUDED_FILES = new Set([
   "living-time-sphere.html",
   "404.html",
   "offline.html",
-  "caravan.html"
+  "caravan.html",
+  // Gate G (G2): account.html is a utility page, as
+  // offline.html — tests/site-mobile.test.js has
+  // always expected it excluded; the stamper now
+  // agrees (one-PR redesign, Nov 24, 2026).
+  "account.html"
 ]);
 const EXCLUDED_DIRS = new Set(["scroll", "scripture"]);
 

@@ -34,7 +34,7 @@ def head(title, desc, base, canonical_path, extra=""):
 <meta name="twitter:title" content="{E(title)}">
 <meta name="twitter:description" content="{E(desc)}">
 <meta name="twitter:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
-<meta name="theme-color" content="#0b0b0f">
+<meta name="theme-color" content="#05070d">
 <link rel="icon" type="image/png" href="{base}../assets/img/shared/branding/favicon.png">
 <link rel="apple-touch-icon" href="{base}../assets/img/shared/branding/favicon.png">
 <link rel="manifest" href="{base}../manifest-site.webmanifest">
