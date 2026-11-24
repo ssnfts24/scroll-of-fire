@@ -3,7 +3,7 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 498,
+    "resources": 499,
     "publicHtmlPages": 194,
     "catalogEntries": 79,
     "issueCounts": {
@@ -804,7 +804,7 @@
     },
     {
       "id": "docs-assets:assets/css",
-      "title": "docs/assets/css (80 files)",
+      "title": "docs/assets/css (81 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -964,6 +964,23 @@
       "relatedProjects": [],
       "sourcePath": "docs/data",
       "publicUrl": "https://codexofreality.org/data",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "supporting-asset",
+      "discoverability": null,
+      "issues": []
+    },
+    {
+      "id": "docs-assets:manifest-site.webmanifest",
+      "title": "docs/manifest-site.webmanifest (1 files)",
+      "description": "Static assets, data and generated artifacts served from docs/.",
+      "category": "Static assets",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/manifest-site.webmanifest",
+      "publicUrl": "https://codexofreality.org/manifest-site.webmanifest",
       "publicationStatus": "live",
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [],

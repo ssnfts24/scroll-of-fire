@@ -9,6 +9,14 @@
   },
   {
     "date": "2026-11-24",
+    "type": "interface",
+    "title": "The site learned its mobile shape",
+    "summary": "Aaron's word was that the whole site should feel right on a phone, and that the Sphere was not showing properly on mobile the way the app once did not. The Sphere's page now takes up its own app mode on a phone-width browser — the desktop bars step aside and the instrument stands cleaner — a change carried in its presentation layer alone, with no protected file touched. Every hand-kept page on the site now carries one mobile floor: nothing wider than the screen, pictures and frames that fit their width, fields a finger can tap without the page zooming, and sheets that scroll inside themselves instead of covering the page. And the Codex has its own install card at last — a site manifest in the Codex of Reality's name, the front door as its start — so the site can be added to a home screen as itself; the moons and the Sphere keep their own cards, as they should.",
+    "url": "./living-time-sphere.html",
+    "symbol": "📱"
+  },
+  {
+    "date": "2026-11-24",
     "type": "page",
     "title": "Two stale lines set right",
     "summary": "The day's gap pass over the site's own records found two lines that events had overtaken, and both are corrected. The Codex Atlas page no longer calls the site-wide search planned: the search stands live, and the page now says so, beside its Scroll Library search and its catalog filter. And the Witness page's account of the work right now names the app's standing build — Spark. Living Day version 0.6.1, the morning's rebuild carrying the current Sphere aboard — where it had kept the small hours' version 0.6.0.",

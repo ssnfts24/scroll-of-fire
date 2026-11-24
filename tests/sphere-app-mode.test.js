@@ -21,6 +21,17 @@
  *      html.sof-app-mode and carries the standing budget: the
  *      three chrome bars absent, the stage filling the given
  *      viewport, the guide bar as a pull-up sheet.
+ *
+ * Nov 24, 2026 (mobile + manifest workstream): the module
+ * gained a second, web-only door — on a phone-width viewport
+ * it acquires the app-mode class itself and marks the
+ * acquisition sof-mobile-mode, so a phone browser gets the
+ * app-mode chrome budget (the three bars absent). The stage's
+ * size and the guide's sheet belong to the page's own shell
+ * in the protected stylesheet and are not this sheet's to
+ * move; they wait on Aaron's word as their own item. The app
+ * never carries the mobile mark; its framing is the class
+ * gate alone, unchanged.
  */
 
 const test = require("node:test");
@@ -90,17 +101,50 @@ test("the module touches no instrument surface", () => {
   }
 });
 
-test("the stylesheet gates every rule on the app-mode class", () => {
-  const rules = CSS.split("}")
-    .map((chunk) => chunk.trim())
-    .filter((chunk) => chunk.includes("{"));
-  assert.ok(rules.length >= 5, "the sheet carries its budget of rules");
-  for (const rule of rules) {
-    const selector = rule.slice(0, rule.indexOf("{"));
-    if (selector.includes("@media")) continue;
-    assert.ok(selector.includes("sof-app-mode"),
-      `every rule is app-mode gated: ${selector.trim()}`);
+test("the stylesheet gates every rule — app-mode class, or the mobile mark inside its media query", () => {
+  // The sanctioned gates (Nov 24, 2026): the app-mode class,
+  // exactly as before, and — should a small-screen web rule
+  // ever stand here — the sof-mobile-mode mark inside the
+  // max-width media query, the only other gate this sheet
+  // allows. No rule may stand ungated: nothing in this sheet
+  // may restyle the open-web desktop page.
+  const clean = CSS.replace(/\/\*[\s\S]*?\*\//g, "");
+  function blocks(css) {
+    const out = [];
+    let i = 0;
+    while (i < css.length) {
+      const open = css.indexOf("{", i);
+      if (open === -1) break;
+      const prelude = css.slice(i, open).trim();
+      let depth = 1, j = open + 1;
+      while (j < css.length && depth > 0) {
+        if (css[j] === "{") depth++;
+        else if (css[j] === "}") depth--;
+        j++;
+      }
+      out.push({ prelude, body: css.slice(open + 1, j - 1) });
+      i = j;
+    }
+    return out;
   }
+  let gated = 0;
+  for (const block of blocks(clean)) {
+    if (block.prelude.startsWith("@media")) {
+      const mobileBlock = block.prelude.includes("max-width: 700px");
+      for (const inner of blocks(block.body)) {
+        assert.ok(
+          inner.prelude.includes(mobileBlock ? "sof-mobile-mode" : "sof-app-mode") ||
+            inner.prelude.includes("sof-mobile-mode"),
+          `every rule inside a media block is gated: ${inner.prelude}`);
+        gated++;
+      }
+    } else {
+      assert.ok(block.prelude.includes("sof-app-mode"),
+        `every rule is app-mode gated: ${block.prelude}`);
+      gated++;
+    }
+  }
+  assert.ok(gated >= 5, "the sheet carries its budget of rules");
 });
 
 test("the stylesheet carries the standing chrome budget", () => {
