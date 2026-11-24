@@ -2120,19 +2120,43 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
     return { season: cur.season, next: nxt };
   }
 
+  /* The kept place, read strictly (Gate G sky rule, Nov 24,
+   * 2026). A coordinate counts only when a place object stands
+   * in the environment state AND its raw latitude/longitude are
+   * present — never merely when Number() can be taken of them:
+   * Number(null) is 0, and the first reading of this line took
+   * exactly that road, computing a sunrise and sunset for
+   * 0°, 0° on a device that kept no place at all and printing
+   * them as fact (Aaron's screenshot, Nov 24, 2026: "sunrise
+   * 9:44 PM · sunset 9:49 AM" with no place kept). A place the
+   * keeper truly set at 0°, 0° still counts — its coordinates
+   * are present, not absent. Returns { lat, lon } or null. */
+  function keptPlace() {
+    try {
+      var state = window.SofEnvironmentState && window.SofEnvironmentState.getEnvironmentState ? window.SofEnvironmentState.getEnvironmentState() : null;
+      var place = state && state.place ? state.place : null;
+      if (!place) return null;
+      var rawLat = place.latitude;
+      var rawLon = place.longitude;
+      if (rawLat === null || rawLat === undefined || rawLat === "" ||
+          rawLon === null || rawLon === undefined || rawLon === "") return null;
+      var lat = Number(rawLat);
+      var lon = Number(rawLon);
+      if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+      return { lat: lat, lon: lon };
+    } catch (err) { return null; }
+  }
+
   /* The Sky line's words, for any date: today's for the
    * caption, the selected day's for the packed readout. One
    * builder, so the two tellings can never drift apart. */
   function buildSkyText(date) {
     var info = seasonNow(date);
     var season = info.season;
+    var place = keptPlace();
     // The face's own season ring turns its names by latitude
     // when a place is known; the line follows the same rule.
-    try {
-      var state = window.SofEnvironmentState && window.SofEnvironmentState.getEnvironmentState ? window.SofEnvironmentState.getEnvironmentState() : null;
-      var lat = Number(state && state.place && state.place.latitude);
-      if (Number.isFinite(lat) && lat < -10) season = SEASON_FLIP[season] || season;
-    } catch (err) { /* northern names stand */ }
+    if (place && place.lat < -10) season = SEASON_FLIP[season] || season;
     // Label law (Sphere design §1.3): a sky fact is read
     // out as a sky fact — the line begins "Sky:" so it can
     // never be mistaken for the Pattern count beside it.
@@ -2147,26 +2171,26 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
     // every date, computed on this device; and when a place is
     // kept, the day's sunrise and sunset are computed here for
     // that place — no fetch. No place, no sun times: the line
-    // never prints a default sky.
+    // never prints a default sky, and says so in plain words
+    // (Gate G sky rule, Nov 24, 2026).
     var engine = window.CodexSkyEngine;
     if (engine) {
       try {
         var phase = engine.moonPhase(date);
         if (phase) text += " · the Moon is " + phase.name + ", " + Math.round(phase.illumination * 100) + "% lit";
-        var placeState = null;
-        try { placeState = window.SofEnvironmentState && window.SofEnvironmentState.getEnvironmentState ? window.SofEnvironmentState.getEnvironmentState() : null; } catch (err) { placeState = null; }
-        var pLat = Number(placeState && placeState.place && placeState.place.latitude);
-        var pLon = Number(placeState && placeState.place && placeState.place.longitude);
-        if (Number.isFinite(pLat) && Number.isFinite(pLon)) {
+        if (place) {
           var civil = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
           var tzOff = -new Date(civil.year, civil.month - 1, civil.day, 12).getTimezoneOffset();
-          var sun = engine.sunForCivilDate(civil, pLat, pLon, tzOff);
+          var sun = engine.sunForCivilDate(civil, place.lat, place.lon, tzOff);
           var fmtT = function (d) { return d ? d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }) : null; };
           if (sun && sun.polar === "day") text += " · the Sun does not set on this day here";
           else if (sun && sun.polar === "night") text += " · the Sun does not rise on this day here";
           else if (sun && sun.sunrise && sun.sunset) text += " · sunrise " + fmtT(sun.sunrise) + " · sunset " + fmtT(sun.sunset) + " here, computed on this device";
         }
       } catch (err) { /* the season line stands as it was */ }
+    }
+    if (!place) {
+      text += " · sunrise, sunset and the drawn sky need a place — set one with Set location on this page";
     }
     return text;
   }
