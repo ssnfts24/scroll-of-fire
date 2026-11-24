@@ -611,6 +611,12 @@
       "title": "How the Sphere Knows — Methods",
       "path": "methods.html",
       "reason": "The methods page — how the Sphere and the calendar compute, and the evidence labels explained once. Documentation; flat by design."
+    },
+    {
+      "id": "get-the-app",
+      "title": "Get the App",
+      "path": "install.html",
+      "reason": "The install door — a plain how-to page that puts the Codex on a phone's home screen. A doorway, not a room of the world; flat by design."
     }
   ]
 };

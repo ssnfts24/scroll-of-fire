@@ -106,7 +106,7 @@
 | `docs/assets/css/spark-agent-seat.css` | 79 |
 | `docs/assets/css/codex.css` | 60 |
 | `docs/assets/css/navigation.css` | 47 |
-| `docs/assets/css/social-bridge.css` | 44 |
+| `docs/assets/css/social-bridge.css` | 45 |
 | `docs/assets/css/living-moon-theme.css` | 37 |
 | `docs/assets/css/animations.css` | 25 |
 | `docs/assets/css/story-layer.css` | 21 |
@@ -123,9 +123,9 @@
 | `docs/assets/js/heaven-sound.js` | 81 |
 | `docs/assets/js/spark-agent-seat.js` | 79 |
 | `docs/assets/js/spark-3d.js` | 76 |
-| `docs/assets/js/calendar/pattern-calendar-version.js` | 46 |
-| `docs/assets/js/calendar/pattern-calendar-data.js` | 46 |
-| `docs/assets/js/calendar/pattern-calendar-format.js` | 46 |
+| `docs/assets/js/calendar/pattern-calendar-version.js` | 47 |
+| `docs/assets/js/calendar/pattern-calendar-data.js` | 47 |
+| `docs/assets/js/calendar/pattern-calendar-format.js` | 47 |
 
 ## Protected systems (do not modify)
 
