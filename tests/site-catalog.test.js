@@ -168,7 +168,7 @@ test("Downloads reconciliation preserves snapshot accounting and reports rather 
   assert.equal(reconciliation.snapshot.commit, "af3078a5fc2cc7969733ad9df1fcffd6754d974c");
   assert.equal(reconciliation.snapshot.declaredFiles, 168);
   assert.equal(reconciliation.snapshot.parsedRows, 168);
-  assert.equal(reconciliation.counts.added, 29); // +1: SEALS-AT-LANDING-PLAN.md (root file added by the F6 seals-at-landing PR); +1: account.html (Gate G Phase 3 / G2)
+  assert.equal(reconciliation.counts.added, 28); // +1: SEALS-AT-LANDING-PLAN.md (root file added by the F6 seals-at-landing PR). (Gate G Phase 3 note: a staged package-lock briefly read 29 mid-phase; it is not carried, and the generator's count on the landed tree is 28.)
   assert.equal(reconciliation.counts.removed, 0);
   assert.equal(reconciliation.counts.changed, 0);
   assert.equal(reconciliation.counts.unchanged, 168);
