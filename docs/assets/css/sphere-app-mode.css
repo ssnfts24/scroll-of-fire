@@ -1,0 +1,65 @@
+/*
+ * Sphere app mode — Gate D (design v3 §3.2), prepared Nov 23, 2026.
+ *
+ * Every rule is gated on html.sof-app-mode, a class the page's
+ * own boot script sets before first paint only in app context
+ * (?sofapp=1 or the app shell's latch). Without the class this
+ * stylesheet changes nothing on the open web.
+ *
+ * The budget it carries is the app's standing one, the same the
+ * injection frame carries until this lands: the state strip,
+ * the environment bridge, and the interact bar are ABSENT (not
+ * slimmed), the stage fills the viewport the shell gives the
+ * page, and the guide bar is a pull-up sheet at the stage's
+ * lower edge — collapsed to its handle and readout, raised over
+ * the lower third. Nothing here touches geometry, rendering,
+ * camera, motion, selection, or labels.
+ */
+
+html.sof-app-mode #sphere-state-strip,
+html.sof-app-mode #sphere-environment-bridge,
+html.sof-app-mode .sphere-interact-bar {
+  display: none;
+}
+
+html.sof-app-mode #sphere-container {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+html.sof-app-mode .sphere-guide-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: auto;
+  z-index: 70;
+  max-height: 38%;
+  overflow-y: auto;
+  transform: translateY(calc(100% - 54px));
+  transition: transform 0.25s ease;
+}
+
+html.sof-app-mode body.lp-guide-open .sphere-guide-bar {
+  transform: translateY(0);
+}
+
+html.sof-app-mode .lp-guide-handle {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.sof-app-mode .sphere-guide-bar {
+    transition: none;
+  }
+}
