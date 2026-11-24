@@ -751,8 +751,15 @@
        * line itself when one already stands on it. */
       if (storyWatches && Array.isArray(storyWatches.tokens)) {
         for (const t of storyWatches.tokens) {
-          const rec = atlasRecords.find(r => r && r.type === "action" && r.subtype === "episode-watched"
-            && r.payload && r.payload.episodeId === t.episodeId);
+          /* The watch record's own shape (SparkActivities'):
+           * an event, subtype episode-watched, its facts under
+           * payload.sparkActivities; the token's home record is
+           * the one whose action is the watch itself. */
+          const isFor = (r) => r && r.type === "event" && r.subtype === "episode-watched"
+            && r.payload && r.payload.sparkActivities
+            && r.payload.sparkActivities.episodeId === t.episodeId;
+          const rec = atlasRecords.find(r => isFor(r) && r.payload.sparkActivities.action === "watch")
+            || atlasRecords.find(isFor);
           if (rec) {
             t.recordId = rec.id || null;
             const cl = rec.payload && Array.isArray(rec.payload.carriedLines) ? rec.payload.carriedLines : [];

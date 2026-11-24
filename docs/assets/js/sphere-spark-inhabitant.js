@@ -1738,8 +1738,11 @@
           if (r.type === "artifact" && r.subtype === "hidden-keepsake" && r.id) {
             carryTitles[`keepsake:${r.id}`] = payload.name || payload.title || r.title || "";
           }
-          if (r.type === "action" && r.subtype === "episode-watched" && payload.episodeId) {
-            carryTitles[`token:${payload.episodeId}`] = payload.episodeTitle || "";
+          const acts = payload.sparkActivities && typeof payload.sparkActivities === "object" ? payload.sparkActivities : null;
+          const epId = payload.episodeId || (acts && acts.episodeId);
+          if (r.type === "event" && r.subtype === "episode-watched" && epId) {
+            carryTitles[`token:${epId}`] = payload.episodeTitle
+              || (acts && acts.distinguisher && acts.distinguisher.token) || "";
           }
         }
         refreshBreadth();
