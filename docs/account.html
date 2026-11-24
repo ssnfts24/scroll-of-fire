@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#05070d">
+  <title>Your Account — One Sign-In for the App and the Site | Codex of Reality</title>
+  <meta name="description" content="One account links Spark. Living Day and this site: sign in once, on either side, and your record follows you. The account never holds your Spark's identity — that stays with your Spark, on your device.">
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="https://codexofreality.org/account.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Codex of Reality">
+  <meta property="og:title" content="Your Account — One Sign-In">
+  <meta property="og:description" content="Sign in once, on the website or in the app, and your record follows you. Your Spark's identity is never held by the account.">
+  <meta property="og:url" content="https://codexofreality.org/account.html">
+  <meta property="og:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
+  <style>
+    *{box-sizing:border-box}html{color-scheme:dark}body{margin:0;min-height:100dvh;display:grid;place-items:center;padding:max(1rem,env(safe-area-inset-top)) max(1rem,env(safe-area-inset-right)) max(1rem,env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left));background:radial-gradient(circle at top,rgba(122,243,255,.14),transparent 44%),#05070d;color:#f4f1e8;font:16px/1.6 system-ui,sans-serif}main{width:min(100%,38rem);padding:clamp(1rem,5vw,2rem);border:1px solid rgba(243,201,122,.28);border-radius:24px;background:rgba(14,18,28,.94)}h1{color:#f3c97a}p{color:#bdc6d6}label{display:block;margin:.9rem 0 .3rem}input[type=email]{width:100%;min-height:44px;padding:.6rem .8rem;border-radius:12px;border:1px solid rgba(122,243,255,.35);background:#0a0e18;color:#f4f1e8}button,a.btn{display:inline-flex;min-height:44px;align-items:center;padding:.7rem 1rem;margin-top:1rem;border:1px solid rgba(122,243,255,.35);border-radius:12px;background:transparent;color:#f4f1e8;text-decoration:none;cursor:pointer;font:inherit}.row{display:flex;gap:.6rem;flex-wrap:wrap}.fine{font-size:.85rem}
+  </style>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Your Account — One Sign-In">
+<meta name="twitter:description" content="Sign in once, on the website or in the app, and your record follows you.">
+<meta name="twitter:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
+<link rel="icon" type="image/png" href="assets/img/shared/branding/favicon.png">
+<link rel="apple-touch-icon" href="assets/img/shared/branding/favicon.png">
+  <script defer src="assets/js/spark-account.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <main id="main">
+    <p aria-hidden="true">☾ ✦ ☽</p>
+    <h1>Your account</h1>
+    <p>One account links this site and Spark. Living Day. Sign in once, on
+      either side, and your record follows you — Genesis first, then your
+      days, then your Spark's memory. The account never holds your Spark's
+      identity: that is your Spark's own, derived from its seed and kept
+      on your device. Signing out, or ending the account, never touches
+      it — or the record on your device.</p>
+
+    <div id="signed-out">
+      <label for="acct-email">Email</label>
+      <input type="email" id="acct-email" autocomplete="email">
+      <label><input type="checkbox" id="acct-adult"> I am an adult keeper
+        signing in under my own name. (Accounts are adults' only — a
+        child's record never syncs and is never signed in.)</label>
+      <div class="row">
+        <button type="button" id="acct-request">Email me a sign-in link</button>
+      </div>
+      <p class="fine" id="acct-request-note" role="status"></p>
+    </div>
+
+    <div id="signed-in" hidden>
+      <p role="status">Signed in as <strong id="acct-who"></strong>.</p>
+      <p class="fine" id="acct-sync-note">Your record's carried lines are
+        held by the door for carrying — copies, never the record itself,
+        which stays home on your devices.</p>
+      <div class="row">
+        <button type="button" id="acct-signout">Sign out</button>
+        <button type="button" id="acct-end">End the account</button>
+      </div>
+      <p class="fine">Ending the account deletes the door's copy whole —
+        the account and every line it carries. The record on your
+        devices is left exactly as it was.</p>
+      <p class="fine" id="acct-end-note" role="status"></p>
+    </div>
+
+    <p><a class="btn" href="./index.html">Back to the front door</a></p>
+  </main>
+  <script>
+    (function () {
+      var api = window.SparkAccount;
+      var out = document.getElementById("signed-out");
+      var inn = document.getElementById("signed-in");
+      function render() {
+        var email = api && api.email();
+        if (email) {
+          out.hidden = true;
+          inn.hidden = false;
+          document.getElementById("acct-who").textContent = email;
+          api.pull().then(function (r) {
+            if (r.data && r.data.ok) {
+              document.getElementById("acct-sync-note").textContent =
+                "The door currently carries " + (r.data.lines || []).length +
+                " of your record's lines for this account.";
+            }
+          }).catch(function () {});
+        } else {
+          out.hidden = false;
+          inn.hidden = true;
+        }
+      }
+      document.getElementById("acct-request").addEventListener("click", function () {
+        var note = document.getElementById("acct-request-note");
+        api.requestLink(
+          document.getElementById("acct-email").value,
+          document.getElementById("acct-adult").checked
+        ).then(function (r) {
+          note.textContent = r.data && r.data.ok
+            ? "Your sign-in link is on its way to that email. It works once, for fifteen minutes."
+            : "The door could not send a link just now (" +
+              ((r.data && r.data.reason) || "unreachable") + ").";
+        }).catch(function () {
+          note.textContent = "The door did not answer just now.";
+        });
+      });
+      document.getElementById("acct-signout").addEventListener("click", function () {
+        api.signOut();
+        render();
+      });
+      document.getElementById("acct-end").addEventListener("click", function () {
+        api.endAccount().then(function (r) {
+          document.getElementById("acct-end-note").textContent =
+            r.data && r.data.ok
+              ? "The account is ended and the door's copy is deleted."
+              : "The door could not end the account just now.";
+          render();
+        }).catch(function () {});
+      });
+      var token = new URLSearchParams(location.search).get("signin");
+      if (token && api) {
+        api.verify(token).then(function () {
+          history.replaceState(null, "", location.pathname);
+          render();
+        }).catch(render);
+      } else if (api) {
+        render();
+      }
+    })();
+  </script>
+</body>
+</html>

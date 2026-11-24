@@ -3,8 +3,8 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 498,
-    "publicHtmlPages": 194,
+    "resources": 499,
+    "publicHtmlPages": 195,
     "catalogEntries": 79,
     "issueCounts": {
       "not-linked-directly-from-homepage": 30,
@@ -12,7 +12,7 @@
       "reachable-only-through-atlas": 3,
       "no-global-navigation": 1,
       "deployed-but-unlinked": 64,
-      "unreachable-from-homepage": 4,
+      "unreachable-from-homepage": 5,
       "compatibility-redirect-page": 1,
       "not-published-in-catalog": 30,
       "unnamed-image-needs-descriptive-title": 21,
@@ -889,7 +889,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (227 files)",
+      "title": "docs/assets/js (228 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1339,6 +1339,36 @@
       "privacyEligibility": "utility",
       "discoverability": {
         "path": "404.html",
+        "inSitemap": false,
+        "inGlobalNav": false,
+        "linkedFromHomepage": false,
+        "hopsFromHome": null,
+        "hopsFromHomeWithoutAtlas": null,
+        "inboundPages": 0,
+        "pagesWithNavLinkToIt": 0
+      },
+      "issues": [
+        "unreachable-from-homepage"
+      ]
+    },
+    {
+      "id": "docs:account.html",
+      "title": "Your Account — One Sign-In for the App and the Site | Codex of Reality",
+      "description": "One account links Spark. Living Day and this site: sign in once, on either side, and your record follows you. The account never holds your Spark's identity — that stays with your Spark, on your device.",
+      "category": "Utility",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/account.html",
+      "publicUrl": "https://codexofreality.org/account.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "index.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/account.html",
+      "privacyEligibility": "utility",
+      "discoverability": {
+        "path": "account.html",
         "inSitemap": false,
         "inGlobalNav": false,
         "linkedFromHomepage": false,
@@ -2203,7 +2233,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 0,
         "hopsFromHomeWithoutAtlas": 0,
-        "inboundPages": 191,
+        "inboundPages": 192,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
