@@ -628,6 +628,34 @@ test("no R1.7 protected file is touched by this branch", () => {
   const carriesDetails = changed.has(
     "tests/sphere-details-fixes.test.js"
   );
+  /*
+   * Gate D app-mode declaration (Nov 23, 2026 — PREPARED at
+   * Gate D of the Spark. Living Day app rework and held for
+   * Aaron's own word before it merges; design v3 §3.2 move 8 /
+   * §14 call 4: the Sphere page renders its own true app mode,
+   * retiring the framing stylesheet the app shell injects).
+   * This change set declares itself by carrying its signature
+   * file (the app-mode module, which lives outside the
+   * protected directories and is inert without the app-mode
+   * flag), and its declared set names exactly one protected
+   * path: the Sphere page, changed by exactly three insertions
+   * — a small boot script early in the head that sets the
+   * sof-app-mode class before first paint in app context only,
+   * one stylesheet link after the app stylesheet, and one
+   * defer script tag beside the app-shell tag. The app-mode
+   * stylesheet and module live outside the protected
+   * directories; no geometry, rendering, camera, motion,
+   * selection, label, or calendar file is touched, and the
+   * page's behaviour on the open web is unchanged (the boot
+   * script sets nothing without the app flag). Every other
+   * protected path still fails this test loudly.
+   */
+  const appModeDeclaredProtected = new Set([
+    "docs/living-time-sphere.html"
+  ]);
+  const carriesAppMode = changed.has(
+    "docs/assets/js/sphere-app-mode.js"
+  );
   for (const file of changed) {
     if (!protectedPaths.has(file)) continue;
     assert.ok(
@@ -642,7 +670,8 @@ test("no R1.7 protected file is touched by this branch", () => {
         (carriesQuests && questsDeclaredProtected.has(file)) ||
         (carriesDeepfix && deepfixDeclaredProtected.has(file)) ||
         (carriesProtectedThree && protectedThreeDeclaredProtected.has(file)) ||
-        (carriesDetails && detailsDeclaredProtected.has(file)),
+        (carriesDetails && detailsDeclaredProtected.has(file)) ||
+        (carriesAppMode && appModeDeclaredProtected.has(file)),
       `R1.7 protected file changed: ${file}`
     );
   }
