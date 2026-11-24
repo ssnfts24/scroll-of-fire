@@ -238,7 +238,38 @@
 
   const ACTION_NAMES = ["goToday", "showDay", "openDayWorld", "openDeepTime", "openFarm", "freeze", "wake", "speakDay"];
 
-  const api = { VERSION, AGENT_URL, planNotesFor, classifyLocal, ACTION_NAMES, daypartForHour, patternStamp, playSummary, parseScheduleCommand, civilDateForPatternDay, anchorYearForCivil, SCHEDULE_SYMBOLS };
+  /* ── Router rule 2 on the Sphere route (audit, Nov 23, 2026,
+   * claim 6) ──────────────────────────────────────────────────
+   * The keeper mind's promise — "A child's talk never leaves this
+   * device" (spark-keeper-mind.js, router rule 2) — held only on
+   * the site-wide seat: this client POSTed straight to the door
+   * with no child-mode gate. The flag is the SAME signal the seat
+   * uses: childMode in the Spark's own memory store, whose key
+   * mirrors spark-keeper-mind.js (MEMORY_KEY / memoryKeyFor —
+   * pinned to each other by test): the seed-keyed store first,
+   * the legacy bare key as fallback for a store not yet carried
+   * over. Flag set → ask() answers locally; the POST never runs. */
+  const MEMORY_KEY = "sof.spark.memory.v1";
+  const CHILD_NOTICE =
+    "For a young keeper, my talking stays right here on this device — nothing typed here travels anywhere. I can still answer from your record: your days, your Spark, and the story so far.";
+
+  function memoryKeyFor(seed) {
+    const clean = typeof seed === "string" ? seed.trim() : "";
+    return clean ? `${MEMORY_KEY}:${clean}` : MEMORY_KEY;
+  }
+
+  function childModeFor(storage, seed) {
+    try {
+      if (!storage || typeof storage.getItem !== "function") return false;
+      let raw = storage.getItem(memoryKeyFor(seed));
+      if (!raw && typeof seed === "string" && seed.trim()) raw = storage.getItem(MEMORY_KEY);
+      if (!raw) return false;
+      const parsed = JSON.parse(raw);
+      return Boolean(parsed && parsed.childMode === true);
+    } catch { return false; }
+  }
+
+  const api = { VERSION, AGENT_URL, planNotesFor, classifyLocal, ACTION_NAMES, daypartForHour, patternStamp, playSummary, parseScheduleCommand, civilDateForPatternDay, anchorYearForCivil, SCHEDULE_SYMBOLS, MEMORY_KEY, CHILD_NOTICE, memoryKeyFor, childModeFor };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   global.SphereSparkCore = api;
 
@@ -877,6 +908,17 @@
           viaMic = false;
           return;
         }
+      }
+
+      // Router rule 2 — the same child-mode gate the site-wide
+      // seat lives by, read from the Spark's own memory store:
+      // a child's talk never leaves this device, so the talking
+      // door POST below is never reached in child mode.
+      if (childModeFor(window.localStorage, record && record.seed)) {
+        addLine("spark", CHILD_NOTICE, "From your record, on this device");
+        if (voiceToggle.checked || viaMic) speak(CHILD_NOTICE);
+        viaMic = false;
+        return;
       }
 
       if (seatState === "unavailable") {

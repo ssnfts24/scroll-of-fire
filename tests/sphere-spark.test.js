@@ -48,6 +48,37 @@ test("the stage rename changed names only: thresholds and indices stand", () => 
   assert.deepEqual(Core.LIVING_VOICE_STAGES.map((s) => s.id), ["spark", "kindled", "bearer", "guardian"], "the voice ladder keeps all four of Aaron's names");
 });
 
+test("router rule 2 reaches the Sphere route: the child-mode gate reads the Spark's own memory store", () => {
+  const box = new Map();
+  const storage = { getItem: (k) => box.get(k) ?? null, setItem: (k, v) => box.set(k, v), removeItem: (k) => box.delete(k) };
+  assert.equal(Layer.childModeFor(storage, SEED_A), false, "no store on the device, no gate");
+  box.set(Layer.memoryKeyFor(SEED_A), JSON.stringify({ childMode: true, beliefs: [], outcomes: [], mindLog: [] }));
+  assert.equal(Layer.childModeFor(storage, SEED_A), true, "the keyed store's child flag gates the Sphere route");
+  box.set(Layer.memoryKeyFor(SEED_A), JSON.stringify({ childMode: false, beliefs: [], outcomes: [], mindLog: [] }));
+  assert.equal(Layer.childModeFor(storage, SEED_A), false, "the flag off is the gate off");
+  const legacyBox = new Map();
+  const legacyStorage = { getItem: (k) => legacyBox.get(k) ?? null, setItem: (k, v) => legacyBox.set(k, v), removeItem: (k) => legacyBox.delete(k) };
+  legacyBox.set(Layer.MEMORY_KEY, JSON.stringify({ childMode: true, beliefs: [], outcomes: [], mindLog: [] }));
+  assert.equal(Layer.childModeFor(legacyStorage, SEED_A), true, "a legacy store not yet carried over still gates — the promise holds before migration too");
+  assert.equal(Layer.childModeFor(null, SEED_A), false, "no storage at all: no gate, and no throw");
+});
+
+test("the Sphere's memory key and child notice are pinned to the keeper mind's copies", () => {
+  const Mind = require("../docs/assets/js/spark-keeper-mind.js");
+  assert.equal(Layer.MEMORY_KEY, Mind.MEMORY_KEY, "one legacy key, named in both clients");
+  assert.equal(Layer.memoryKeyFor(SEED_A), Mind.memoryKeyFor(SEED_A), "one keyed-store formula, in both clients");
+  assert.equal(Layer.memoryKeyFor(null), Mind.memoryKeyFor(null), "the no-seed fallback agrees too");
+  assert.equal(Layer.CHILD_NOTICE, Mind.CHILD_NOTICE, "a child hears the same words on the Sphere as at the seat");
+});
+
+test("the child gate stands in ask() before the talking-door POST", () => {
+  const src = read("docs/assets/js/sphere-spark.js");
+  const gate = src.indexOf("childModeFor(window.localStorage");
+  const post = src.indexOf('method: "POST"');
+  assert.ok(gate > -1, "ask() checks the child-mode gate");
+  assert.ok(post > -1 && gate < post, "the gate is checked before any POST to the talking door can happen");
+});
+
 test("the local router answers record questions on-device and nothing else", () => {
   assert.equal(Layer.classifyLocal("what day is it today?"), "today");
   assert.equal(Layer.classifyLocal("who are you?"), "who");
