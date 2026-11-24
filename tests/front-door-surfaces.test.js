@@ -105,6 +105,6 @@ test("the growth record carries the surfaces, and the homepage mirrors it", () =
   const updates = JSON.parse(read("docs/assets/data/codex-updates.json"));
   assert.equal(updates[0].date, "2026-11-23");
   assert.equal(updates[0].title, "The front door gained its small surfaces");
-  const mirror = HTML.match(/data-le-growth[\s\S]*?<li><time datetime="2026-11-23">2026-11-23<\/time> <a href="\.\/index\.html">The front door gained its small surfaces<\/a><\/li>/);
+  const mirror = HTML.match(/data-le-growth[\s\S]*?<li><time datetime="2026-11-24">2026-11-24<\/time> <a href="\.\/living-time-sphere\.html">The Sphere page took up its own app mode<\/a><\/li>/);
   assert.ok(mirror, "the homepage activity panel mirrors the newest entry");
 });
