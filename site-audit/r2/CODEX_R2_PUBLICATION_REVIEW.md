@@ -2,7 +2,7 @@
 
 "Unlinked does not mean private." Everything under `docs/` is deployed (Netlify `publish = "docs"`, no build command).
 
-## Deployed files that need an explicit decision (72)
+## Deployed files that need an explicit decision (73)
 
 | Path | Eligibility | What it is |
 | --- | --- | --- |
@@ -45,6 +45,7 @@
 | `docs/assets/img/shared/branding/README.md` | restricted-review | Image pipeline note stored under the publish tree |
 | `docs/assets/img/shared/placeholders/README.md` | restricted-review | Image pipeline note stored under the publish tree |
 | `docs/assets/img/shared/social/README.md` | restricted-review | Image pipeline note stored under the publish tree |
+| `docs/development/GENESIS-PROFILE-FORMAT.md` | restricted-review | Engineering report or specification under the publish tree |
 | `docs/development/LIVING-INTERFACE-ARCHITECTURE-V4-PLAN.md` | restricted-review | Engineering report or specification under the publish tree |
 | `docs/development/LIVING-SPHERE-EVOLUTION-PHASE-A-ARCHITECTURE.md` | restricted-review | Engineering report or specification under the publish tree |
 | `docs/development/LIVING-SPHERE-EVOLUTION-PHASE-A-VISUAL-SPEC.md` | restricted-review | Engineering report or specification under the publish tree |

@@ -131,7 +131,7 @@
     },
     {
       "path": "docs/assets/css/genesis-oracle.css",
-      "sha256": "adc5a5147db3e0fd51f206cd01307d6399580541bb8e2ecd91f079fa086ca164",
+      "sha256": "473c2ffa503c0bb908d3096450b9a20a036a2e7bc7d5dbcf5acaa5c80a340784",
       "publicUrl": "https://codexofreality.org/assets/css/genesis-oracle.css",
       "status": "operational"
     },
@@ -400,6 +400,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/css/sphere-genesis-layer.css",
+      "sha256": "debc584b07f37ef415506b7d3e581346e47c5a06d91203dc8c79a3b22610a5e2",
+      "publicUrl": "https://codexofreality.org/assets/css/sphere-genesis-layer.css",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/css/sphere-rebuild.css",
       "sha256": "21e5247977cd3dd705f6620f7175cece4cc39f61081b0212f6dc461a7274eecf",
       "publicUrl": "https://codexofreality.org/assets/css/sphere-rebuild.css",
@@ -509,7 +515,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "a83c578a491422c9934fadf45736ebfe33b303038119da6d701a521ec91a39e5",
+      "sha256": "b060072246c8028521759aa5622f6ec12ec2be246a33c28d56525990aec16719",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -539,7 +545,7 @@
     },
     {
       "path": "docs/assets/data/link-graph.json",
-      "sha256": "570baf058f4df5744535064c8883a9877eb297d7e119dd269bb52a63a869d2a8",
+      "sha256": "5723eda1ebb56c90039c48bf75749a55e6e7352609af0a1b6764b8cebca0df28",
       "publicUrl": "https://codexofreality.org/assets/data/link-graph.json",
       "status": "operational"
     },
@@ -1997,7 +2003,7 @@
     },
     {
       "path": "docs/assets/js/genesis-oracle.js",
-      "sha256": "598d22acf119ba9ae07c4fc4bd8c3a5a4a3fd7bf19a48f0be1babdc2c1de1111",
+      "sha256": "3ab1a31092f6ff0bdc0eaed52bc906afaebfab9aade6883a8c3f3702ee001f57",
       "publicUrl": "https://codexofreality.org/assets/js/genesis-oracle.js",
       "status": "operational"
     },
@@ -2345,7 +2351,7 @@
     },
     {
       "path": "docs/assets/js/oracle/oracle-profile-repository.js",
-      "sha256": "d1bc9b86e729246faa5393f2b5b2f25369dd2f90f6525c827d15e8a9c5244d35",
+      "sha256": "2ce91b75ba292cdd67ce2f7aff82b75bab1f6589ef6d7391b809eec19f948ae5",
       "publicUrl": "https://codexofreality.org/assets/js/oracle/oracle-profile-repository.js",
       "status": "operational"
     },
@@ -2573,7 +2579,7 @@
     },
     {
       "path": "docs/assets/js/sphere-companion-layer.js",
-      "sha256": "329c36bf5e1c98ad830e5c8b78900ef69d738c63ecccb351035014bd05f20426",
+      "sha256": "cbf7684dbd516e1328c2d740a39df57b555ab39900df5a31fdce029fa8000a33",
       "publicUrl": "https://codexofreality.org/assets/js/sphere-companion-layer.js",
       "status": "operational"
     },
@@ -2611,6 +2617,12 @@
       "path": "docs/assets/js/sphere-farm-sphere.js",
       "sha256": "b7eb644812aaff2b38909f57cc85761b8e8674c309ed91b5d8930cd3bae279a3",
       "publicUrl": "https://codexofreality.org/assets/js/sphere-farm-sphere.js",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/js/sphere-genesis-layer.js",
+      "sha256": "97d2662a0b58cd5009031729edd9e9ce1263f747f925466236f05dffdd960a26",
+      "publicUrl": "https://codexofreality.org/assets/js/sphere-genesis-layer.js",
       "status": "operational"
     },
     {
@@ -4085,13 +4097,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "db0cc8ee1bbeb3f3e23089e74a9fd0d1cbafdde9db471048525d3fe899e09c14",
+      "sha256": "fc737799b8338620cfae125497170975f11d6eaba7bf2f96b45b59dc79d084eb",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "4263985e2d5f80be0b6c2eab7864ed584ab79d984c3ef012bc31cbcfee91f6b9",
+      "sha256": "6bb93c690442d6f4d69627a4eb851f7813a46291175f4e157fdaf567ec7ac44f",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -4235,7 +4247,7 @@
     },
     {
       "path": "docs/genesis-oracle.html",
-      "sha256": "90921c4f0fb22ad2ee6f3b121fd15e88440b4dfdfaebe5b6d1a5ef6ec0625373",
+      "sha256": "55ec7a1e251ebf11b237a61ea384de3b7cb47cb03ee92826633cea8dd182b05f",
       "publicUrl": "https://codexofreality.org/genesis-oracle.html",
       "status": "operational"
     },
@@ -4265,7 +4277,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "6274b0933f74ae1d0ab6a42a965296996270b22a2d201cf4715e0ce3439cda2d",
+      "sha256": "08fd787c725ba0a31b56ba190ab495894566dfa0e3a7fcba93853bb3f81afc3f",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
@@ -10955,7 +10967,7 @@
     },
     {
       "path": "docs/witness.html",
-      "sha256": "81240049d33efa4aee65c0f16248f78f215fc95d213ab829b013bbf489f5ccef",
+      "sha256": "3667980d946f96c2427747a3d59cb5d8ecb1247fadc901c1a513e4d314ca51f5",
       "publicUrl": "https://codexofreality.org/witness.html",
       "status": "operational"
     }
@@ -11194,6 +11206,12 @@
       "publicUrl": "https://codexofreality.org/assets/img/shared/social/README.md",
       "eligibility": "restricted-review",
       "reason": "Image pipeline note stored under the publish tree"
+    },
+    {
+      "path": "docs/development/GENESIS-PROFILE-FORMAT.md",
+      "publicUrl": "https://codexofreality.org/development/GENESIS-PROFILE-FORMAT.md",
+      "eligibility": "restricted-review",
+      "reason": "Engineering report or specification under the publish tree"
     },
     {
       "path": "docs/development/LIVING-INTERFACE-ARCHITECTURE-V4-PLAN.md",

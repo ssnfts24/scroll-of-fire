@@ -304,11 +304,6 @@
      "area": "archive"
     },
     {
-     "path": "index.html",
-     "title": "Codex of Reality",
-     "area": "codex"
-    },
-    {
      "path": "ethics.html",
      "title": "Ethics & Coherence Law",
      "area": "evidence"
@@ -335,7 +330,7 @@
     }
    ],
    "outTotal": 12,
-   "inTotal": 10
+   "inTotal": 9
   },
   "aiyanas-world.html": {
    "title": "Aiyana's World",
@@ -1866,7 +1861,7 @@
      "area": "artifacts"
     }
    ],
-   "outTotal": 24,
+   "outTotal": 23,
    "inTotal": 2
   },
   "invoke.html": {
