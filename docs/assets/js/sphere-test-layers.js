@@ -237,7 +237,11 @@
     function mount() {
       const caption = document.querySelector(".sphere-rebuild-caption");
       if (!caption) return false;
-      if (caption.querySelector("[data-sphere-test-layers]")) return true;
+      // The panel may stand outside the caption — at phone
+      // width the app-mode module seats it in the guide sheet
+      // as a room (Nov 24, 2026). Wherever it stands, it
+      // stands: never build a second one in the caption.
+      if (document.querySelector("[data-sphere-test-layers]")) return true;
       buildPanel(caption);
       return true;
     }
