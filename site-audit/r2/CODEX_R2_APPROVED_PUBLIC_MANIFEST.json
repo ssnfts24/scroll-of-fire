@@ -527,7 +527,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "fdbbee73f0304bd305bdfd337375ddd65971505e88d1e936d2e11a6348297d4b",
+      "sha256": "29c5006b61283641317cb9e704e29c8331592fa0f6da24baa7aee16838b2c848",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -557,7 +557,7 @@
     },
     {
       "path": "docs/assets/data/link-graph.json",
-      "sha256": "2d80a60b0ff661d4d48cfba95c8c25f00fa09dca14766d5063a51d8a4550965a",
+      "sha256": "5063aabd0871ea25737ab3666e6ac8331a6b992915019ecbdd81959427d68677",
       "publicUrl": "https://codexofreality.org/assets/data/link-graph.json",
       "status": "operational"
     },
@@ -4121,13 +4121,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "658ebb3f5580cc8dff5a70f7f859a9b89d08491d8df66a761593ec2e58dc4270",
+      "sha256": "0d00aad7ed8c8caf06c9fcfe773fbbad6fc6aa485da15abbe365776701ea3e28",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "e88e6c64ad88a3d823f946d9572276d47de65ad7814cb569f3eae3ad2f9495ab",
+      "sha256": "9c4430c8f4b6ccb1fd25eec29b8009f57076b3be5ff53b59069c5410b8f10b75",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -4301,7 +4301,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "59e3567f691b11754e473833db09c12957384e1a401eb4c7b97974176f9c4ca6",
+      "sha256": "9fa44602e04a71e55af7b345463a02c60a76985d3b09129dc6d00575a47de4cd",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
@@ -10991,7 +10991,7 @@
     },
     {
       "path": "docs/witness.html",
-      "sha256": "d529044a21237c8e62d2b86ea6a63c25891ee6eaead47b35a6207bcf5e502062",
+      "sha256": "547d4943dedeb1bd59802611de6527b4f815aeb98d7445132c2248f35aa5f28f",
       "publicUrl": "https://codexofreality.org/witness.html",
       "status": "operational"
     }
