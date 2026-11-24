@@ -351,25 +351,26 @@ test("the Sphere doors carry the Ladder of Scales as planned, and ride the compa
 
 /* ------------------------- fences ------------------------- */
 
-test("the growth record carries this build at index 13, under the pinned head, the Witness tending entry, the Sphere app-mode entry, the Spark road entry, the Spark seasons entry, the Spark home entry, the Spark tricks entry, the Spark keeper's-ways entry, the Spark inhabitant entry, the Spark fence entry, the Genesis entry, the metadata entry, and the rename entry", () => {
+test("the growth record carries this build at index 14, under the pinned head, the sky rule entry, the Witness tending entry, the Sphere app-mode entry, the Spark road entry, the Spark seasons entry, the Spark home entry, the Spark tricks entry, the Spark keeper's-ways entry, the Spark inhabitant entry, the Spark fence entry, the Genesis entry, the metadata entry, and the rename entry", () => {
   const updates = JSON.parse(read("docs/assets/data/codex-updates.json"));
-  assert.equal(updates.length, 249);
+  assert.equal(updates.length, 250);
   assert.equal(updates[0].title, "The front door gained its small surfaces", "the pinned head stands");
-  assert.equal(updates[1].title, "Witness tended its page on the day of the Whole Road", "the Witness tending entry landed above the app-mode entry in the Nov 24 daily tending");
-  assert.equal(updates[2].title, "The Sphere page took up its own app mode", "the Sphere app-mode entry landed above the road entry in the Gate D app-mode landing");
-  assert.equal(updates[3].title, "The Spark walked the Whole Road", "the Spark road entry landed above the seasons entry in the inhabitant slice 6 landing");
-  assert.equal(updates[4].title, "The Spark learned the turning of the year", "the Spark seasons entry landed above the home entry in the inhabitant slice 5 landing");
-  assert.equal(updates[5].title, "The Spark's home filled with the journey", "the Spark home entry landed above the tricks entry in the inhabitant slice 4 landing");
-  assert.equal(updates[6].title, "The Spark learned tricks, and can be taught", "the Spark tricks entry landed above the keeper's-ways entry in the inhabitant slice 3 landing");
-  assert.equal(updates[7].title, "The Spark learned its keeper's ways", "the Spark keeper's-ways entry landed above the inhabitant entry in the inhabitant slice 2 landing");
-  assert.equal(updates[8].title, "The Spark took up residence in the Sphere", "the Spark inhabitant entry landed above the fence entry in the inhabitant landing");
-  assert.equal(updates[9].title, "The Spark's fence was made whole", "the Spark fence entry landed above the Genesis entry in the fence landing");
-  assert.equal(updates[10].title, "The Genesis Oracle became a standing profile", "the Genesis profile entry landed above the metadata entry in the Living Genesis Profile landing");
-  assert.equal(updates[11].title, "Every page learned to say what it is", "the site-wide metadata entry landed above the rename entry in the metadata landing");
-  assert.equal(updates[12].title, "The series took its new name: Free the Spark", "the rename entry landed above this build in the Free the Spark landing");
-  assert.equal(updates[13].title, "The map, the pages and the Sphere now read one story");
-  assert.equal(updates[13].url, "./map.html");
-  assert.equal(updates[13].date, "2026-11-23");
+  assert.equal(updates[1].title, "The sky line learned to say when it has no place", "the sky rule entry landed above the Witness tending entry in the Gate G sky-rule landing");
+  assert.equal(updates[2].title, "Witness tended its page on the day of the Whole Road", "the Witness tending entry landed above the app-mode entry in the Nov 24 daily tending");
+  assert.equal(updates[3].title, "The Sphere page took up its own app mode", "the Sphere app-mode entry landed above the road entry in the Gate D app-mode landing");
+  assert.equal(updates[4].title, "The Spark walked the Whole Road", "the Spark road entry landed above the seasons entry in the inhabitant slice 6 landing");
+  assert.equal(updates[5].title, "The Spark learned the turning of the year", "the Spark seasons entry landed above the home entry in the inhabitant slice 5 landing");
+  assert.equal(updates[6].title, "The Spark's home filled with the journey", "the Spark home entry landed above the tricks entry in the inhabitant slice 4 landing");
+  assert.equal(updates[7].title, "The Spark learned tricks, and can be taught", "the Spark tricks entry landed above the keeper's-ways entry in the inhabitant slice 3 landing");
+  assert.equal(updates[8].title, "The Spark learned its keeper's ways", "the Spark keeper's-ways entry landed above the inhabitant entry in the inhabitant slice 2 landing");
+  assert.equal(updates[9].title, "The Spark took up residence in the Sphere", "the Spark inhabitant entry landed above the fence entry in the inhabitant landing");
+  assert.equal(updates[10].title, "The Spark's fence was made whole", "the Spark fence entry landed above the Genesis entry in the fence landing");
+  assert.equal(updates[11].title, "The Genesis Oracle became a standing profile", "the Genesis profile entry landed above the metadata entry in the Living Genesis Profile landing");
+  assert.equal(updates[12].title, "Every page learned to say what it is", "the site-wide metadata entry landed above the rename entry in the metadata landing");
+  assert.equal(updates[13].title, "The series took its new name: Free the Spark", "the rename entry landed above this build in the Free the Spark landing");
+  assert.equal(updates[14].title, "The map, the pages and the Sphere now read one story");
+  assert.equal(updates[14].url, "./map.html");
+  assert.equal(updates[14].date, "2026-11-23");
 });
 
 test("the parked game is never named in anything this build touched", () => {

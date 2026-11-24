@@ -9,6 +9,14 @@
   },
   {
     "date": "2026-11-24",
+    "type": "feature",
+    "title": "The sky line learned to say when it has no place",
+    "summary": "Aaron's screenshot caught the Sphere's sky line printing a sunrise and a sunset — 9:44 PM and 9:49 AM — on a device that kept no place at all: arithmetic with no location in it, printed as fact. The cause was small and exact: the line read the kept place through a conversion that turns an absent coordinate into zero, so the sky was quietly computed for 0°, 0° and the times came out wrong by half the world. The rule now stands at the source: a coordinate counts only when it is present, and when no place is kept the line prints only what needs no place — the season, the solstice turn, the Moon's phase and light, which are true everywhere — and says plainly that sunrise, sunset and the drawn sky need a place, and where to set one. No time is printed that was not computed from a real location. With a place kept, nothing changes: the times print for that place, computed on the device, as they always have.",
+    "url": "./living-time-sphere.html",
+    "symbol": "◎"
+  },
+  {
+    "date": "2026-11-24",
     "type": "page",
     "title": "Witness tended its page on the day of the Whole Road",
     "summary": "The Witness page carries November 24: the Spark's inhabitant programme completed before dawn with the Whole Road, the Spark walking its own recorded history on the Sphere itself; the app build finished at Spark. Living Day version 0.6.0, Gates A through F complete, the candidate in Aaron's hands; and the Sphere page's own app mode landed on Aaron's word naming the merge, the last piece of Gate D. The same note records the honest remainder: the app still carries an older copy of the Sphere until its next bundle sync — the fancy new one stands on the site — and a small rebuild carrying the fresh copy is prepared and waiting on his tap.",
