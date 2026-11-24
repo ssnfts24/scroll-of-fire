@@ -233,7 +233,7 @@
     },
     {
       "path": "docs/assets/css/living-time-sphere.css",
-      "sha256": "7e193e9c3ede9e3ec728b8ca3c41a7ee60b6d02ab8fe7de6584d280f4da94cfc",
+      "sha256": "83e4c6171a59ae61e57af7a009ee63b0576fb7baffcb1613e48b1c40f7183a4a",
       "publicUrl": "https://codexofreality.org/assets/css/living-time-sphere.css",
       "status": "operational"
     },
@@ -371,7 +371,7 @@
     },
     {
       "path": "docs/assets/css/sphere-app-mode.css",
-      "sha256": "79e01257d8e42ceccd7b1f1673ec81ccba4989297550051d786eee9d4d7850a0",
+      "sha256": "6068c8be3dd4e3fc983aea5bb6d4a4cf6a12de18ae1d27d351f4126864388192",
       "publicUrl": "https://codexofreality.org/assets/css/sphere-app-mode.css",
       "status": "operational"
     },
@@ -539,7 +539,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "0460b59823c21b8cb5f0b816d0f428133902b6bdae5a5c07aad89b6c3f2a8453",
+      "sha256": "a9c9940a82e878d758076e33202c2b0d36ba766c4ec5f95c89feeaaed909f7ba",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -2530,6 +2530,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/js/spark-agent-door.js",
+      "sha256": "a27afce39883e44fef65353d7d54e2fa88bb639473ad6a4f800266be763a25d2",
+      "publicUrl": "https://codexofreality.org/assets/js/spark-agent-door.js",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/js/spark-agent-seat.js",
       "sha256": "0343cedf875807d845a05d29fe6071b4d785ee6d14c2d118fc00308d8c73597b",
       "publicUrl": "https://codexofreality.org/assets/js/spark-agent-seat.js",
@@ -4139,13 +4145,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "702117e17b4cd6f219a1358bae174647b262984cbcc1117780cbc6d073967df4",
+      "sha256": "6e47245be11835da25d1a527e5b2ee48ab6d0ab67b189385e40b44536922bd40",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "4d282602f034620f969196486b7e98a4bceac32dc731b2ec42e6b79829b3810f",
+      "sha256": "27dcb9fe1bbdefd6f1dcf1b48ed811fc48cf610c289daeb5af004822f1063544",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -4319,7 +4325,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "efef20547bb1d71382d35475e462d093dfee11cf487d250620834e38268b6010",
+      "sha256": "3621df2b745e8157fc9ddde6c49f8a6d171c05fe215ee05b5230049d3d9aa75d",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
@@ -4343,7 +4349,7 @@
     },
     {
       "path": "docs/living-time-sphere.html",
-      "sha256": "a38bdbb696b8ecf5da5f6e5787b5b8d9c6c993488bb59db5f61913bc75f6b141",
+      "sha256": "d73d26cafaaf9e69a34d7eb87bb4fcc6b3ada800179e60d900d051f6e9bea57e",
       "publicUrl": "https://codexofreality.org/living-time-sphere.html",
       "status": "operational"
     },
