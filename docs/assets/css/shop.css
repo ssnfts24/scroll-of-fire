@@ -652,3 +652,55 @@
     padding:.85rem .75rem;
   }
 }
+
+/* Spark goods shelf + paying-today note — selling-point pass,
+   Nov 24, 2026. Display only; no buy controls exist here. */
+.goods-family{
+  margin:2rem 0 .9rem;
+  font-size:1.05rem;
+  letter-spacing:.02em;
+}
+
+.goods-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+  gap:1rem;
+}
+
+.good-card{
+  display:grid;
+  gap:.5rem;
+  align-content:start;
+  padding:1rem;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  background:rgba(255,255,255,.02);
+}
+
+.good-card h4{
+  margin:0;
+  font-size:1rem;
+}
+
+.good-card p{
+  margin:0;
+  color:var(--muted);
+  font-size:.92rem;
+}
+
+.good-band{
+  justify-self:start;
+  padding:.22rem .6rem;
+  border:1px solid rgba(243,201,122,.4);
+  border-radius:999px;
+  color:var(--text);
+  font-size:.82rem;
+  font-weight:700;
+}
+
+.paying-today{
+  padding:.9rem 1rem;
+  border:1px solid rgba(243,201,122,.28);
+  border-radius:12px;
+  background:rgba(243,201,122,.05);
+}
