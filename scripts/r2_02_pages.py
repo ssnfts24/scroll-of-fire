@@ -29,7 +29,14 @@ def head(title, desc, base, canonical_path, extra=""):
 <meta property="og:title" content="{E(title)}">
 <meta property="og:description" content="{E(desc)}">
 <meta property="og:url" content="https://codexofreality.org/{E(canonical_path)}">
+<meta property="og:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{E(title)}">
+<meta name="twitter:description" content="{E(desc)}">
+<meta name="twitter:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
 <meta name="theme-color" content="#0b0b0f">
+<link rel="icon" type="image/png" href="{base}../assets/img/shared/branding/favicon.png">
+<link rel="apple-touch-icon" href="{base}../assets/img/shared/branding/favicon.png">
 <title>{E(title)}</title>
 <link rel="stylesheet" href="{base}assets/scripture.css">
 <link rel="stylesheet" href="{base}../assets/css/living-ui.css?v=20261117-1">

@@ -304,6 +304,11 @@
      "area": "archive"
     },
     {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    },
+    {
      "path": "ethics.html",
      "title": "Ethics & Coherence Law",
      "area": "evidence"
@@ -330,7 +335,7 @@
     }
    ],
    "outTotal": 12,
-   "inTotal": 9
+   "inTotal": 10
   },
   "aiyanas-world.html": {
    "title": "Aiyana's World",
@@ -1844,9 +1849,9 @@
      "area": "systems"
     },
     {
-     "path": "map.html",
-     "title": "The Traveller's Map",
-     "area": "systems"
+     "path": "about-aaron.html",
+     "title": "Aaron Paul Laird | Author, Craftsman and Systems Builder",
+     "area": "artifacts"
     }
    ],
    "in": [
@@ -1861,7 +1866,7 @@
      "area": "artifacts"
     }
    ],
-   "outTotal": 24,
+   "outTotal": 25,
    "inTotal": 2
   },
   "invoke.html": {

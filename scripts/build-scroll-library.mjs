@@ -214,6 +214,13 @@ const homepage = `<!doctype html>
   <meta property="og:title" content="Scroll of Fire — Unsealed Library">
   <meta property="og:description" content="Read the preserved Scroll of Fire manuscript in an organized, source-linked library.">
   <meta property="og:url" content="https://codexofreality.org/scroll/index.html">
+<meta property="og:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Scroll of Fire — Unsealed Library">
+  <meta name="twitter:description" content="Read the preserved Scroll of Fire manuscript in an organized, source-linked library.">
+  <meta name="twitter:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
+  <link rel="icon" type="image/png" href="../assets/img/shared/branding/favicon.png">
+  <link rel="apple-touch-icon" href="../assets/img/shared/branding/favicon.png">
   <link rel="stylesheet" href="assets/library.css">
   <link rel="stylesheet" href="../assets/css/living-ui.css?v=20261117-1">
   <script defer src="../assets/js/site.js"></script>
@@ -335,6 +342,13 @@ const reader = `<!doctype html>
   <meta property="og:title" content="Reading the Scroll — Unsealed Library">
   <meta property="og:description" content="Read a source-linked passage from the preserved Scroll of Fire manuscript.">
   <meta property="og:url" content="https://codexofreality.org/scroll/reader.html">
+<meta property="og:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Reading the Scroll — Unsealed Library">
+  <meta name="twitter:description" content="Read a source-linked passage from the preserved Scroll of Fire manuscript.">
+  <meta name="twitter:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
+  <link rel="icon" type="image/png" href="../assets/img/shared/branding/favicon.png">
+  <link rel="apple-touch-icon" href="../assets/img/shared/branding/favicon.png">
   <link rel="stylesheet" href="assets/library.css">
   <link rel="stylesheet" href="../assets/css/living-ui.css?v=20261117-1">
   <script defer src="../assets/js/site.js"></script>
@@ -404,6 +418,13 @@ function toolPage({ file, title, description, bodyClass, current, intro, body, s
   <meta property="og:title" content="${escapeHtml(title)} — Scroll of Fire Library">
   <meta property="og:description" content="${escapeHtml(description)}">
   <meta property="og:url" content="https://codexofreality.org/scroll/${file}">
+<meta property="og:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${escapeHtml(title)} — Scroll of Fire Library">
+  <meta name="twitter:description" content="${escapeHtml(description)}">
+  <meta name="twitter:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
+  <link rel="icon" type="image/png" href="../assets/img/shared/branding/favicon.png">
+  <link rel="apple-touch-icon" href="../assets/img/shared/branding/favicon.png">
   <link rel="stylesheet" href="assets/library.css">
   <link rel="stylesheet" href="../assets/css/living-ui.css?v=20261117-1">
   <script defer src="../assets/js/site.js"></script>
