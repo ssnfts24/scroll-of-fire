@@ -24,6 +24,12 @@
  *                 line} — append-only: inserts only, never
  *                 an update; account end deletes the
  *                 account's rows whole.
+ *   agent_grants {_id: tokenId, accountId, grant} — the
+ *                 agent door's grants (Gate G, Phase 4):
+ *                 the token's HASH only, never its secret.
+ *   agent_trail  {_id: lineId, accountId, line} — one line
+ *                 per agent act or refusal (§4.3), append-
+ *                 only like the sync lines.
  */
 
 let clientPromise = null;
@@ -53,6 +59,8 @@ export async function createAtlasStore() {
   const accounts = db.collection("accounts");
   const magic = db.collection("magic_tokens");
   const lines = db.collection("sync_lines");
+  const agentGrants = db.collection("agent_grants");
+  const agentTrail = db.collection("agent_trail");
 
   return {
     kind: "atlas",
@@ -111,10 +119,44 @@ export async function createAtlasStore() {
       const docs = await lines.find({ accountId }).toArray();
       return docs.map((d) => d.line);
     },
+    /* ---- the agent door (Gate G, Phase 4) ---- */
+    async putAgentGrant(grant) {
+      await agentGrants.updateOne(
+        { _id: grant.tokenId },
+        { $setOnInsert: { accountId: grant.accountId, grant } },
+        { upsert: true });
+    },
+    async getAgentGrant(tokenId) {
+      const doc = await agentGrants.findOne({ _id: tokenId });
+      return doc ? doc.grant : null;
+    },
+    async listAgentGrants(accountId) {
+      const docs = await agentGrants.find({ accountId }).toArray();
+      return docs.map((d) => d.grant);
+    },
+    async revokeAgentGrant(tokenId, atMs) {
+      await agentGrants.updateOne(
+        { _id: tokenId }, { $set: { "grant.revokedAt": atMs } });
+    },
+    async appendAgentLine(accountId, line) {
+      try {
+        await agentTrail.insertOne({
+          _id: line.lineId, accountId, line });
+      } catch (err) {
+        if (err && err.code === 11000) return;
+        throw err;
+      }
+    },
+    async getAgentLines(accountId) {
+      const docs = await agentTrail.find({ accountId }).toArray();
+      return docs.map((d) => d.line);
+    },
     async deleteAccountData(accountId, email) {
       const a = await accounts.deleteOne({ _id: accountId });
       const m = await magic.deleteMany({ email });
       const l = await lines.deleteMany({ accountId });
+      await agentGrants.deleteMany({ accountId });
+      await agentTrail.deleteMany({ accountId });
       return {
         accounts: a.deletedCount,
         magicTokens: m.deletedCount,

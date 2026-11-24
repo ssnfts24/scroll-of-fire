@@ -23,6 +23,8 @@ export function createDoubleStore() {
   const byEmail = new Map(); // email -> account
   const magic = new Map(); // hash -> token record
   const lines = new Map(); // accountId -> Map(lineId -> line)
+  const agentGrants = new Map(); // tokenId -> grant
+  const agentTrail = new Map(); // accountId -> [line]
 
   return {
     kind: "double",
@@ -70,11 +72,39 @@ export function createDoubleStore() {
       }
       const lineCount = lines.get(accountId)?.size || 0;
       lines.delete(accountId);
+      for (const [tokenId, grant] of agentGrants) {
+        if (grant.accountId === accountId) agentGrants.delete(tokenId);
+      }
+      agentTrail.delete(accountId);
       if (account) {
         accounts.delete(accountId);
         byEmail.delete(account.email);
       }
       return { accounts: account ? 1 : 0, magicTokens: magicCount, lines: lineCount };
+    },
+    /* ---- the agent door (Gate G, Phase 4) ---- */
+    async putAgentGrant(grant) {
+      agentGrants.set(grant.tokenId, { ...grant });
+    },
+    async getAgentGrant(tokenId) {
+      const grant = agentGrants.get(tokenId);
+      return grant ? { ...grant } : null;
+    },
+    async listAgentGrants(accountId) {
+      return [...agentGrants.values()]
+        .filter((g) => g.accountId === accountId)
+        .map((g) => ({ ...g }));
+    },
+    async revokeAgentGrant(tokenId, atMs) {
+      const grant = agentGrants.get(tokenId);
+      if (grant) grant.revokedAt = atMs;
+    },
+    async appendAgentLine(accountId, line) {
+      if (!agentTrail.has(accountId)) agentTrail.set(accountId, []);
+      agentTrail.get(accountId).push({ ...line });
+    },
+    async getAgentLines(accountId) {
+      return (agentTrail.get(accountId) || []).map((l) => ({ ...l }));
     },
     /* Test-only introspection: total rows held, so a
      * deletion proof can count what remains (zero). */
