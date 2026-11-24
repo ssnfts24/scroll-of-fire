@@ -300,6 +300,29 @@
   color: rgba(255, 233, 189, 0.85);
 }
 
+/* ── Slice 6: the Whole Road ──────────────────────────────── */
+/* The road's summary and its reading stand in the book in the
+ * book's own ink; the reading — the beat the Spark stands in,
+ * named as it is reached — is set apart in the note's gold,
+ * and stands in the season's section at the year's reading
+ * in the same dress. */
+
+.sphere-spark-road-summary {
+  margin-top: 0.7rem;
+  color: #ffd98a;
+}
+.sphere-spark-road-now {
+  font-style: italic;
+  color: #ffd98a;
+  min-height: 1.45em;
+}
+.sphere-spark-road-now:empty {
+  min-height: 0;
+}
+.sphere-spark-season-road {
+  margin-top: 0.5rem;
+}
+
 /* ── Slice 3: closing a day, together ─────────────────────── */
 /* The rite's row stands in the day sheet's leave-taking
  * section, in the sheet's own ink: the Spark's reading of the
