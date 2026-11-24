@@ -1184,6 +1184,29 @@
     light: { id: "beam", name: "Beam", via: "echoBest", need: 3, teacher: "the echo game" }
   };
 
+  /* One derivation, two faces (Inhabitant slice 5): each kind
+   * trick above is the same feat as the Sphere trick book's
+   * ruled kind signature, under the book's name. A trick-
+   * learned line in the record naming the signature therefore
+   * teaches the kind trick here, exactly as the stored id or
+   * the counter does — and the book, for its part, reads this
+   * face's stored ids and counters (its CORE_KIND_TRICK_RULES
+   * mirror of the table above). Neither face can lose a trick
+   * the other taught. The three shared tricks (Spin, Leap,
+   * Glow pulse) have no counterpart in the book, and the
+   * book's Basics none here; each keeps its one derivation. */
+  const RULED_SIGNATURE_FOR_KIND = {
+    fire: "flare-spin", water: "ripple-bow", shadow: "peek-back",
+    air: "feather-loop", earth: "root-bow", light: "halo-bow"
+  };
+
+  function signatureLineStands(record, companion) {
+    const signature = companion ? RULED_SIGNATURE_FOR_KIND[companion.kind] : null;
+    if (!signature) return false;
+    const lines = record && Array.isArray(record.lifeLines) ? record.lifeLines : [];
+    return lines.some((l) => l && l.line === "trick-learned" && l.trick === signature);
+  }
+
   function trickListFor(companion) {
     const out = TRICKS.map((t) => ({ ...t, kindTrick: false }));
     const own = companion ? KIND_TRICKS[companion.kind] : null;
@@ -1213,10 +1236,12 @@
   function tricksFor({ record, companion }) {
     const counts = trickCounts(record);
     const known = new Set(playOf(record).tricks);
+    const bySignature = signatureLineStands(record, companion);
     return trickListFor(companion).map((t) => ({
       ...t,
       count: counts[t.via] || 0,
       learned: known.has(t.id) || (counts[t.via] || 0) >= t.need
+        || (t.kindTrick && bySignature)
     }));
   }
 
@@ -3511,6 +3536,8 @@
     playOf,
     TRICKS,
     KIND_TRICKS,
+    RULED_SIGNATURE_FOR_KIND,
+    signatureLineStands,
     trickListFor,
     trickCounts,
     tricksFor,

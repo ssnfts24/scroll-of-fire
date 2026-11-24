@@ -2230,3 +2230,24 @@ test("v10 rarity rides the record, the panel, and the share card — clean, unpr
     }
   }
 });
+
+test("slice 5 unification: a trick-learned line naming the ruled signature teaches the kind trick here", () => {
+  const Core = require("../docs/assets/js/spark-companion.js");
+  const seed = Core.makeSeed({ moon: 8, patternDay: 217, kindIndex: 1, nonce: "ab12cd34" });
+  const companion = Core.generate(seed);
+  assert.equal(companion.kind, "water");
+  assert.equal(Core.RULED_SIGNATURE_FOR_KIND.water, "ripple-bow");
+  const bare = { seed };
+  assert.equal(Core.signatureLineStands(bare, companion), false);
+  assert.equal(Core.tricksFor({ record: bare, companion }).find((t) => t.kindTrick).learned, false,
+    "honestly unlearned before any play, any store, or any line");
+  const withLine = { seed, lifeLines: [{ line: "trick-learned", trick: "ripple-bow", id: "line-0001" }] };
+  assert.equal(Core.signatureLineStands(withLine, companion), true);
+  assert.equal(Core.tricksFor({ record: withLine, companion }).find((t) => t.kindTrick).learned, true,
+    "the Sphere book's line teaches Ripple on this face");
+  // A line naming another kind's signature teaches nothing here.
+  const other = { seed, lifeLines: [{ line: "trick-learned", trick: "flare-spin", id: "line-0002" }] };
+  assert.equal(Core.tricksFor({ record: other, companion }).find((t) => t.kindTrick).learned, false);
+  // The shared tricks are untouched by the unification: Glow still needs its pets.
+  assert.equal(Core.tricksFor({ record: withLine, companion }).find((t) => t.id === "glow").learned, false);
+});

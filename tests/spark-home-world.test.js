@@ -264,9 +264,18 @@ test("the companions page carries Their Home: the stage, the readout, the words"
   assert.ok(html.includes('id="spark-travel"'), "their record still travels");
 });
 
-test("the world module writes nothing: no record is created, edited, or sent", () => {
+test("the world module's one sanctioned write: the carried line, and nothing else", () => {
   const src = read("assets/js/spark-home-world.js");
-  assert.ok(!/\.put\(/.test(src), "the world never writes a Life Atlas record");
+  /* Slice 5 amends slice 4's no-write fence by the design's own
+   * word (§1.4): the first fetch of a keepsake writes ONE line
+   * on the keepsake's own Atlas record, through the repository's
+   * put. That is the module's only repository write — pinned by
+   * count, so no second write can slip in unnamed. The carry's
+   * life lines go through the inhabitant's writer door, never
+   * through this module's own hand. */
+  const puts = src.match(/\.put\(/g) || [];
+  assert.equal(puts.length, 1, "exactly one repository write stands in the module: the carried line's");
+  assert.ok(src.includes("carriedLineForRecord"), "the one write is the carried line's grammar");
   assert.ok(!/localStorage\.setItem/.test(src), "the world never writes the Spark's record or any other");
   assert.ok(!/localStorage\.removeItem/.test(src), "the world removes nothing");
   assert.ok(!/XMLHttpRequest|sendBeacon/.test(src), "nothing leaves the device through the world");
@@ -406,4 +415,63 @@ test("the story corner's tokens carry their hums, from the watch records", () =>
   });
   assert.equal(m.storyCorner.tokens[0].hum.motifHz.length, 3);
   assert.equal(m.storyCorner.tokens[1].hum, null, "a token without a hum carries none");
+});
+
+/* --------------------- slice 5: the home's temper --------------------- */
+
+test("slice 5 — the home's temper counts what stands in it: spare, settled, full", () => {
+  assert.deepEqual(plain(World.homeFullnessFor({})), { score: 0, tier: "spare" });
+  assert.deepEqual(plain(World.homeFullnessFor({ keepsakes: 2, tokens: 1, plantedBeds: 1 })), { score: 4, tier: "settled" });
+  assert.deepEqual(plain(World.homeFullnessFor({ keepsakes: 3, tokens: 2, plantedBeds: 1 })), { score: 6, tier: "full" });
+  const spare = model();
+  assert.equal(spare.fullness.tier, "spare");
+  assert.match(spare.lines.temper, /spare/);
+  assert.match(spare.lines.temper, /small round near the hearth/);
+  const full = model({
+    atlasRecords: [keepsakeRecord("pressed-leaf", "A", "a"), keepsakeRecord("smooth-stone", "B", "b"), keepsakeRecord("word", "C", "c")],
+    storyWatches: { tokens: [
+      { episodeId: "ep-1", line: "One", token: "Token One", watchedOn: "2026-11-20" },
+      { episodeId: "ep-2", line: "Two", token: "Token Two", watchedOn: "2026-11-21" },
+      { episodeId: "ep-3", line: "Three", token: "Token Three", watchedOn: "2026-11-22" }
+    ] }
+  });
+  assert.equal(full.fullness.tier, "full");
+  assert.match(full.lines.temper, /full/);
+  assert.match(full.lines.temper, /ranges the whole ground/);
+});
+
+/* --------------------- slice 5: the carried line --------------------- */
+
+test("slice 5 — a keepsake's carried line passes through to the readout's naming", () => {
+  const kept = keepsakeRecord("pressed-leaf", "Leaf", "kept flat");
+  const carried = { ...kept, payload: { ...kept.payload, carriedLines: [{ text: "carried to you, 2026-11-24", civilDate: "2026-11-24", patternDay: 222 }] } };
+  const plain1 = World.keepsakesFromRecords([kept]);
+  assert.equal(plain1[0].carried, null, "no line on the record, no naming");
+  const withLine = World.keepsakesFromRecords([carried]);
+  assert.equal(withLine[0].carried, "carried to you, 2026-11-24");
+  const m = model({ atlasRecords: [carried] });
+  assert.equal(m.keepsakes[0].carried, "carried to you, 2026-11-24");
+  const corner = World.storyCornerFromFold({ tokens: [
+    { episodeId: "ep-1", line: "One", token: "Token One", watchedOn: "2026-11-20", recordId: "watch-1", carried: "carried to you, 2026-11-24" }
+  ] });
+  assert.equal(corner.tokens[0].recordId, "watch-1", "a token carries its watch record's id for the write path");
+  assert.equal(corner.tokens[0].carried, "carried to you, 2026-11-24");
+});
+
+/* --------------------- slice 5: the carrying --------------------- */
+
+test("slice 5 — a standing carry is normalized into the journey and named in the words", () => {
+  const journey = World.journeyFromInput({
+    stageName: "Bearer",
+    fetchStands: true,
+    carrying: { ref: "keepsake:atlas-9", title: "The Smooth Stone", civilDate: "2026-11-24" }
+  });
+  assert.deepEqual(plain(journey.carrying), { ref: "keepsake:atlas-9", title: "The Smooth Stone", civilDate: "2026-11-24" });
+  assert.equal(World.journeyFromInput({ fetchStands: true }).carrying, null);
+  assert.equal(World.journeyFromInput({ carrying: { title: "No ref" } }).carrying, null, "a carry without its ref is no carry");
+  const m = model({ journey: { stageName: "Bearer", fetchStands: true, carrying: { ref: "keepsake:atlas-9", title: "The Smooth Stone", civilDate: "2026-11-24" } } });
+  assert.match(m.lines.carry, /carrying The Smooth Stone/);
+  assert.match(m.lines.carry, /Take it back/);
+  const none = model({ journey: { stageName: "Bearer", fetchStands: true } });
+  assert.equal(none.lines.carry, null, "no carry standing, no carrying line");
 });

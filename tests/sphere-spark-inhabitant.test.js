@@ -783,3 +783,223 @@ test("a hum performance travels to the token's day when it stands on the face �
   const atHome = layer.performanceSteps("hum", { ...ctx, humPd: 222 });
   assert.deepEqual(plain(atHome.map((s) => s.type)), ["act"]);
 });
+
+/* --------------------- slice 5: the season --------------------- */
+
+const MOON8_CHAR = { idx: 8, name: "Deep Mirror", element: "Water", essence: "Reflection, hidden pattern, inner waters", practice: "Still water work" };
+const MOON9_CHAR = { idx: 9, name: "Return Path", element: "Earth", essence: "The way back, walked in the body", practice: "Walking work" };
+
+test("slice 5 — the season context reads the year's turning from the pipeline's own facts", () => {
+  const layer = loadInhabitant();
+  // An ordinary Moon day: the Moon and its quarter, nothing more claimed.
+  const moon = layer.seasonContextFor({ patternDay: 222, moon: 8, moonDay: 26, patternYear: 1 }, MOON8_CHAR);
+  assert.equal(moon.kind, "moon");
+  assert.equal(moon.quarter, "autumn");
+  assert.equal(moon.moonName, "Deep Mirror");
+  assert.equal(moon.seasonDay, null);
+  // The Moon's last day is its turn; the season's day is the next Moon's first.
+  const turn = layer.seasonContextFor({ patternDay: 224, moon: 8, moonDay: 28, patternYear: 1 }, MOON8_CHAR);
+  assert.equal(turn.kind, "moon-turn");
+  assert.equal(turn.seasonDay, 225);
+  // The year's own turn wraps: Moon 13's last day is PD 364, and its season day is the Gate.
+  const yearTurn = layer.seasonContextFor({ patternDay: 364, moon: 13, moonDay: 28, patternYear: 1 }, { idx: 13, name: "The Thirteenth Moon" });
+  assert.equal(yearTurn.kind, "moon-turn");
+  assert.equal(yearTurn.seasonDay, 1);
+  // A Moon opening: behind it stands the day just closed.
+  const opening = layer.seasonContextFor({ patternDay: 225, moon: 9, moonDay: 1, patternYear: 1 }, MOON9_CHAR);
+  assert.equal(opening.kind, "moon-opening");
+  assert.equal(opening.seasonDay, 224);
+  // Moon 1 Day 1 is the Year Gate, not a plain opening.
+  const gate = layer.seasonContextFor({ patternDay: 1, moon: 1, moonDay: 1, patternYear: 2 }, { idx: 1, name: "First Moon" });
+  assert.equal(gate.kind, "year-gate");
+  assert.equal(gate.seasonDay, 364);
+  // The days outside the count: no plate, no pretence.
+  const doot = layer.seasonContextFor({ patternDay: null, moon: null, moonDay: null, isDayOutOfTime: true }, null);
+  assert.equal(doot.kind, "day-out-of-time");
+  const deep = layer.seasonContextFor({ patternDay: null, moon: null, moonDay: null, isDeepTimeDay: true }, null);
+  assert.equal(deep.kind, "deep-time-day");
+  // No position at all reads as no season.
+  assert.equal(layer.seasonContextFor(null, null), null);
+  assert.equal(layer.seasonContextFor({ patternDay: null }, null), null);
+  // The quarter rule is the home world's: four quarters from the Gate.
+  assert.equal(layer.quarterForPatternDay(1), "spring");
+  assert.equal(layer.quarterForPatternDay(92), "summer");
+  assert.equal(layer.quarterForPatternDay(200), "autumn");
+  assert.equal(layer.quarterForPatternDay(300), "winter");
+  assert.equal(layer.quarterForPatternDay(null), null);
+});
+
+test("slice 5 — the season's words name the Moon, the turn, and the threshold, and invent nothing", () => {
+  const layer = loadInhabitant();
+  const turn = layer.seasonContextFor({ patternDay: 224, moon: 8, moonDay: 28, patternYear: 1 }, MOON8_CHAR);
+  const turnLine = layer.seasonLineFor(turn, { name: "Selor", nextMoonChar: MOON9_CHAR });
+  assert.match(turnLine, /Moon turns/);
+  assert.match(turnLine, /Deep Mirror/);
+  assert.match(turnLine, /Return Path/, "the next Moon is named at the turn, from the calendar's own data");
+  const doot = layer.seasonContextFor({ patternDay: null, isDayOutOfTime: true }, null);
+  const dootLine = layer.seasonLineFor(doot, { name: "Selor" });
+  assert.match(dootLine, /outside the count/);
+  assert.match(dootLine, /no plate/i);
+  assert.match(dootLine, /keeps the threshold/);
+  const gate = layer.seasonContextFor({ patternDay: 1, moon: 1, moonDay: 1, patternYear: 2 }, { idx: 1, name: "First Moon", essence: "Beginnings" });
+  assert.match(layer.seasonLineFor(gate, { name: "Selor" }), /Year Gate/);
+  const moon = layer.seasonContextFor({ patternDay: 222, moon: 8, moonDay: 26, patternYear: 1 }, MOON8_CHAR);
+  const moonLine = layer.seasonLineFor(moon, { name: "Selor" });
+  assert.match(moonLine, /Deep Mirror/);
+  assert.match(moonLine, /Autumn of the Pattern year/);
+  assert.ok(!/rain|snow|storm|sunny|cloud/i.test(moonLine + turnLine + dootLine), "no weather is ever claimed");
+  assert.equal(layer.seasonLineFor(null, { name: "Selor" }), null);
+});
+
+/* ------------------ slice 5: surroundings ------------------ */
+
+test("slice 5 — surroundings answer the opened day's strongest mark, and a garden day outranks plain marks", () => {
+  const layer = loadInhabitant();
+  const marks = { 218: ["kept", "genesis"], 220: ["kept", "witnessed"], 221: ["kept"] };
+  assert.deepEqual(plain(layer.surroundingsForDay({ patternDay: 218, marks, gardenDays: [] })),
+    { kind: "genesis", posture: "observe", glow: true }, "the birth day glows");
+  assert.deepEqual(plain(layer.surroundingsForDay({ patternDay: 219, marks, gardenDays: [219] })),
+    { kind: "garden", posture: "observe", glow: false }, "a garden day is its own surrounding");
+  assert.equal(layer.surroundingsForDay({ patternDay: 218, marks, gardenDays: [218] }).kind, "genesis",
+    "the birth day still outranks the garden");
+  assert.equal(layer.surroundingsForDay({ patternDay: 220, marks, gardenDays: [] }).kind, "witnessed");
+  assert.equal(layer.surroundingsForDay({ patternDay: 221, marks, gardenDays: [] }).posture, "sit");
+  assert.equal(layer.surroundingsForDay({ patternDay: 300, marks, gardenDays: [] }).kind, null,
+    "an unmarked day claims no surrounding");
+  assert.equal(layer.surroundingsForDay({ patternDay: null, marks, gardenDays: [] }).kind, null);
+});
+
+/* ---------------------- slice 5: care ---------------------- */
+
+test("slice 5 — the care kinds are Gate E's names, and the open carry reads Gate E's semantics", () => {
+  const layer = loadInhabitant();
+  assert.deepEqual(plain(layer.CARE_KINDS), ["kindle", "tend", "rest", "close-day", "carry", "carry-end", "sat-with"]);
+  const coord = layer.lineCoordinateFromStamp(STAMP);
+  const carry = layer.makeLifeLine("care-act", { kind: "carry", ref: "keepsake:k1", ...coord });
+  const withId = { ...carry, id: "line-0007" };
+  assert.equal(layer.openCarryFromLines([withId]).ref, "keepsake:k1");
+  const end = layer.makeLifeLine("care-act", { kind: "carry-end", ref: "line-0007", ...coord });
+  assert.equal(layer.openCarryFromLines([withId, end]), null, "an end naming the carry's id closes it");
+  const wrongEnd = layer.makeLifeLine("care-act", { kind: "carry-end", ref: "line-9999", ...coord });
+  assert.equal(layer.openCarryFromLines([withId, wrongEnd]).ref, "keepsake:k1",
+    "an end naming another line closes nothing");
+  assert.equal(layer.openCarryFromLines([]), null);
+});
+
+test("slice 5 — the day's care state dedupes by the civil day, per kind and per ref", () => {
+  const layer = loadInhabitant();
+  const coord = layer.lineCoordinateFromStamp(STAMP); // civilDate 2026-11-24
+  const lines = [
+    layer.makeLifeLine("care-act", { kind: "kindle", ref: "pattern-day:222", ...coord }),
+    layer.makeLifeLine("care-act", { kind: "tend", ref: "wear:kind-glow", ...coord }),
+    layer.makeLifeLine("care-act", { kind: "sat-with", ref: "pattern-day:218", ...coord }),
+    layer.makeLifeLine("care-act", { kind: "rest", ...layer.lineCoordinateFromStamp({ ...STAMP, civilDate: "2026-11-20" }) }),
+  ];
+  const state = layer.careStateFromLines(lines, "2026-11-24");
+  assert.equal(state.kindledToday, true);
+  assert.equal(state.restedToday, false, "a rest on another day is not today's rest");
+  assert.deepEqual(plain(state.tendRefsToday), ["wear:kind-glow"], "a dress chosen today stands; another dress may still be chosen");
+  assert.deepEqual(plain(state.satWithRefsToday), ["pattern-day:218"], "sat-with dedupes per day sat with");
+  const other = layer.careStateFromLines(lines, "2026-11-25");
+  assert.equal(other.kindledToday, false);
+});
+
+/* ---------------- slice 5: one trick derivation ---------------- */
+
+test("slice 5 — the core-rule mirror is pinned against the companion core's own table", () => {
+  const coreSrc = fs.readFileSync("docs/assets/js/spark-companion.js", "utf8");
+  const sandbox = { module: { exports: {} }, console };
+  sandbox.globalThis = sandbox;
+  vm.createContext(sandbox);
+  vm.runInContext(coreSrc, sandbox, { filename: "spark-companion.js" });
+  const Core = sandbox.module.exports;
+  const layer = loadInhabitant();
+  for (const kind of Object.keys(Core.KIND_TRICKS)) {
+    const core = Core.KIND_TRICKS[kind];
+    const mirror = layer.CORE_KIND_TRICK_RULES[kind];
+    assert.deepEqual(plain(mirror), plain({ id: core.id, via: core.via, need: core.need, teacher: core.teacher }),
+      `${kind}: the mirror matches the core's rule`);
+    assert.equal(Core.RULED_SIGNATURE_FOR_KIND[kind], layer.SIGNATURE_BY_KIND[kind],
+      `${kind}: the core names the same signature the book does`);
+  }
+});
+
+test("slice 5 — a signature learned on the core's face stands in the book, and nobody loses it", () => {
+  const layer = loadInhabitant();
+  const facts = layer.lifeFactsFromRecords([], { seed: "s" });
+  // By count: eight pets teach Ripple on the core's face.
+  const byCount = { seed: "s", play: { pets: 8 } };
+  assert.equal(layer.legacySignatureStands(byCount, "water").stands, true);
+  assert.equal(layer.legacySignatureStands(byCount, "water").via, "play:ripple");
+  const derived = layer.derivedTricks({ kind: "water", stage: "spark", facts, lines: [], record: byCount });
+  assert.ok(derived.some((d) => d.trick === "ripple-bow" && d.via === "play:ripple"),
+    "the signature derives at any stage when the core's learning stands");
+  // By stored id: an earlier learning's store teaches it with no counts at all.
+  const byStore = { seed: "s", play: { tricks: ["ripple"] } };
+  assert.equal(layer.legacySignatureStands(byStore, "water").stands, true);
+  // Below the need, nothing stands — the unification invents nothing.
+  const below = { seed: "s", play: { pets: 7 } };
+  assert.equal(layer.legacySignatureStands(below, "water").stands, false);
+  assert.ok(!layer.derivedTricks({ kind: "water", stage: "spark", facts, lines: [], record: below })
+    .some((d) => d.trick === "ripple-bow"));
+  // The book shows it learned, with the play that taught it, and not as unlearned.
+  const book = layer.trickBookFrom({ name: "Selor", kind: "water", record: byCount, facts });
+  const entry = book.learned.find((l) => l.trick === "ripple-bow");
+  assert.ok(entry, "the book lists the signature as learned");
+  assert.match(entry.viaPlain, /petting, patiently/);
+  assert.ok(!book.unlearned.some((u) => u.trick === "ripple-bow"));
+  // The learning pass witnesses it into a line, once.
+  const fresh = layer.newTrickLines({ record: byCount, kind: "water", facts, stamp: STAMP, at: "2026-11-24T00:00:00Z" });
+  const sigLine = fresh.find((l) => l.trick === "ripple-bow");
+  assert.ok(sigLine && sigLine.via === "play:ripple", "witnessed under the play's own via");
+  const after = { ...byCount, lifeLines: fresh };
+  assert.equal(layer.newTrickLines({ record: after, kind: "water", facts, stamp: STAMP }).length, 0,
+    "a witnessed learning is never witnessed twice");
+});
+
+test("slice 5 — both faces agree on one record: the core's tricksFor and the book's derivation", () => {
+  const coreSrc = fs.readFileSync("docs/assets/js/spark-companion.js", "utf8");
+  const sandbox = { module: { exports: {} }, console };
+  sandbox.globalThis = sandbox;
+  vm.createContext(sandbox);
+  vm.runInContext(coreSrc, sandbox, { filename: "spark-companion.js" });
+  const Core = sandbox.module.exports;
+  const layer = loadInhabitant();
+  const fixtures = [
+    { seed: "spark1-8-217-1-ab12cd34" },                                            // nothing learned anywhere
+    { seed: "spark1-8-217-1-ab12cd34", play: { pets: 8 } },                         // the count teaches it
+    { seed: "spark1-8-217-1-ab12cd34", play: { tricks: ["ripple"] } },              // the store teaches it
+    { seed: "spark1-8-217-1-ab12cd34", care: { kindles: 2 } },                      // a count for another kind's trick: teaches nothing here
+    { seed: "spark1-8-217-1-ab12cd34", lifeLines: [{ line: "trick-learned", trick: "ripple-bow", id: "line-0001" }] }, // the book's line teaches it
+  ];
+  for (const record of fixtures) {
+    const companion = Core.generate(record.seed);
+    const kindTrick = Core.tricksFor({ record, companion }).find((t) => t.kindTrick);
+    const facts = layer.lifeFactsFromRecords([], record);
+    const book = layer.trickBookFrom({ name: "Selor", kind: companion.kind, record, facts });
+    const signature = layer.SIGNATURE_BY_KIND[companion.kind];
+    const inBook = book.learned.some((l) => l.trick === signature);
+    assert.equal(kindTrick.learned, inBook,
+      `faces agree for ${JSON.stringify(record.play || record.care || record.lifeLines || {})}: core=${kindTrick.learned}, book=${inBook}`);
+  }
+  // The pinned honesty holds: a fresh record knows no tricks on either face.
+  const fresh = { seed: "spark1-8-217-1-ab12cd34" };
+  const companion = Core.generate(fresh.seed);
+  assert.ok(Core.tricksFor({ record: fresh, companion }).every((t) => !t.learned));
+});
+
+/* ------------------ slice 5: the carried line ------------------ */
+
+test("slice 5 — the carried line lands on a keepsake's own record once, in the design's words", () => {
+  const layer = loadInhabitant();
+  const record = { id: "atlas-1", type: "artifact", subtype: "hidden-keepsake", payload: { hiddenLayer: { kind: "pressed-leaf" } } };
+  const first = layer.carriedLineForRecord(record, { civilDate: "2026-11-24", patternDay: 222 });
+  assert.equal(first.line.text, "carried to you, 2026-11-24");
+  assert.equal(first.record.payload.carriedLines.length, 1);
+  assert.equal(record.payload.carriedLines, undefined, "the input record is untouched");
+  assert.equal(layer.carriedLineForRecord(first.record, { civilDate: "2026-11-25", patternDay: 223 }), null,
+    "a record already carrying a line is never written twice");
+  assert.equal(layer.carriedLineForRecord(record, { civilDate: "Nov 24" }), null, "no honest day, no line");
+  assert.equal(layer.carriedLineForRecord(null, { civilDate: "2026-11-24" }), null);
+  assert.deepEqual(plain(layer.carriedLinesOfRecord(first.record)).map((l) => l.text), ["carried to you, 2026-11-24"]);
+});

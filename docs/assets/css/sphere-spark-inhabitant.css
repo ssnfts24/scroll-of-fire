@@ -391,6 +391,128 @@
   70% { transform: scale(1.06, 0.94); opacity: 1; }
 }
 
+/* ── Slice 5: the season's light ──────────────────────────── */
+/* The year answers in the Spark's light: at a Moon's turn the
+ * light lifts; at the days outside the count it dims and
+ * stills — the threshold kept, no plate pretended. */
+
+.sphere-spark-presence[data-inhabitant-season="moon-turn"] .sphere-spark-halo,
+.sphere-spark-presence[data-inhabitant-season="moon-opening"] .sphere-spark-halo,
+.sphere-spark-presence[data-inhabitant-season="year-gate"] .sphere-spark-halo {
+  filter: brightness(1.3);
+}
+.sphere-spark-presence[data-inhabitant-season="day-out-of-time"],
+.sphere-spark-presence[data-inhabitant-season="deep-time-day"] {
+  opacity: 0.88;
+}
+.sphere-spark-presence[data-inhabitant-season="day-out-of-time"] .sphere-spark-halo,
+.sphere-spark-presence[data-inhabitant-season="deep-time-day"] .sphere-spark-halo {
+  opacity: 0.5;
+  filter: brightness(0.85) saturate(1.1);
+}
+
+/* ── Slice 5: the day's dress (Tend) ──────────────────────── */
+/* The keeper's chosen dress for the Spark's light, worn over
+ * the daypart light — these rules stand after the daypart
+ * rules so the dress is what shows. */
+
+.sphere-spark-presence[data-inhabitant-wear="kind-glow"] .sphere-spark-halo {
+  filter: brightness(1.4) saturate(1.2);
+}
+.sphere-spark-presence[data-inhabitant-wear="hour-halo"] .sphere-spark-halo {
+  filter: brightness(1.1);
+  box-shadow: 0 0 22px 6px rgba(255, 233, 189, 0.35);
+}
+.sphere-spark-presence[data-inhabitant-wear="flame-wrap"] .sphere-spark-halo {
+  filter: sepia(0.5) brightness(1.25) saturate(1.3);
+}
+
+/* ── Slice 5: Quiet Company ───────────────────────────────── */
+/* While the Spark sits with the keeper in an opened day, its
+ * light lowers and stills — present, making no offers. */
+
+.sphere-spark-presence[data-inhabitant-quiet="1"] .sphere-spark-halo {
+  opacity: 0.5;
+  filter: brightness(0.9);
+}
+
+/* ── Slice 5: the carried keepsake's light ────────────────── */
+/* While a carry stands open, the keepsake's light rides the
+ * holder — a small steady light at the Spark's side, the
+ * same place the lantern hangs, plainer and stiller. */
+
+.inhabitant-carried {
+  position: absolute;
+  right: -10px;
+  top: 30%;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #ffd98f;
+  box-shadow: 0 0 10px 3px rgba(255, 214, 130, 0.75), 0 0 26px 9px rgba(255, 200, 110, 0.25);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* ── Slice 5: the season and the care, in the Spark's panel ── */
+/* Two more sections in the panel's own warm ink: the year
+ * around the Spark, and the care the keeper can give — plain
+ * acts, each standing once a day, nothing running down. */
+
+.sphere-spark-season,
+.sphere-spark-care {
+  margin-top: 0.9rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(218, 164, 91, 0.35);
+}
+.sphere-spark-season-title,
+.sphere-spark-care-title {
+  margin: 0 0 0.4rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ambient-brass, #d8a45b);
+}
+.sphere-spark-season-line,
+.sphere-spark-care-line {
+  margin: 0.25rem 0;
+  color: #ffe9bd;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+.sphere-spark-care-note {
+  color: #ffd98a;
+}
+.sphere-spark-care-carrying {
+  color: #ffd98a;
+}
+.sphere-spark-care-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  margin: 0.3rem 0;
+  flex-wrap: wrap;
+}
+.sphere-spark-care-btn {
+  appearance: none;
+  border: 1px solid rgba(218, 164, 91, 0.55);
+  background: rgba(218, 164, 91, 0.12);
+  color: #ffe9bd;
+  border-radius: 999px;
+  padding: 0.28rem 0.8rem;
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+.sphere-spark-care-btn:hover:not(:disabled),
+.sphere-spark-care-btn:focus-visible {
+  background: rgba(218, 164, 91, 0.28);
+}
+.sphere-spark-care-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .sphere-spark-presence[data-inhabitant-posture="settle"] .sphere-spark-art,
   .sphere-spark-presence[data-inhabitant-posture="rest"] .sphere-spark-halo,

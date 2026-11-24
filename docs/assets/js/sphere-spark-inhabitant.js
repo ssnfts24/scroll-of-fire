@@ -161,6 +161,73 @@
  *  Sphere's book follows the ruled design; unifying the two
  *  is a later slice's work.
  *
+ *  ── Slice 5 (Nov 24, 2026): the world answers; the care ────
+ *  ── kinds land; the two trick books become one ───────────
+ *
+ *  SEASONS AND SURROUNDINGS. The Spark now answers the year
+ *  it stands in, read from the canonical pipeline and nothing
+ *  else: the Moon's own character (its name and essence, from
+ *  the calendar's data), the year's quarter, a Moon's turn
+ *  (its last day, and the opening of the next), the Year Gate
+ *  (Pattern Day 1), and the days outside the count (the Day
+ *  Out of Time, the Deep Time Day), where there is no plate
+ *  and the Spark keeps the threshold — no position is faked
+ *  for them. The season stands named on the holder and in a
+ *  line of the Spark's own panel. At a turn or the Gate, the
+ *  first ranging idle of the day crosses to the season's day
+ *  — the new Moon's first day, or the old year's last day
+ *  across the Gate — and regards it there. Inside an opened
+ *  day, the Spark answers the day's own character: the
+ *  strongest mark the record lays on it (the birth day, a
+ *  garden day, a token's home, a practice, a witnessing, a
+ *  keeping), in posture and light. And a keepsake-rest idle
+ *  may now rest beside a garden day, where the record holds
+ *  one. No weather, no event, nothing the record and the
+ *  calendar do not themselves say.
+ *
+ *  THE CARE KINDS. The remaining care kinds of the design
+ *  land where their honest occasions stand on this face,
+ *  through the slice-3 writer only, in Gate E's exact kinds:
+ *  kindle (one real act done with the Spark present, on the
+ *  day it stands on), tend (the keeper chooses the day's
+ *  dress for the Spark's light, from the dresses it has —
+ *  its own glow, the hour's halo, and the flame wrap's
+ *  firelight where the wrap stands), rest (the keeper sends
+ *  the Spark to rest at its post) — each once a day, in the
+ *  Spark's panel; sat-with (Quiet Company, inside an opened
+ *  day: the Spark settles at its station, makes no offers,
+ *  and the sitting is the care) — once per day per day sat
+ *  with; and carry / carry-end, whose home is Their Home
+ *  (spark-home-world.js writes them through this module's
+ *  writer door): one keepsake at a time, its end recorded
+ *  against its beginning, and while a carry stands open the
+ *  keepsake's light rides the holder here too. Care is a
+ *  record of what was done together; nothing runs down.
+ *
+ *  ONE TRICK DERIVATION. The site-wide companion core's
+ *  count-based kind trick and the Sphere book's ruled kind
+ *  signature are one feat under two names (Flare /
+ *  Flare-Spin, Ripple / Ripple-Bow, Vanish / Peek-Back,
+ *  Loop / Feather Loop, Root / Root Bow, Beam / Halo Bow).
+ *  They now derive once, from a union neither face can lose
+ *  by: a trick-learned line naming the signature, the core's
+ *  stored list, or the core's own count standing — the core
+ *  reads the lines (its tricksFor honours them), and this
+ *  module reads the core's counts and store (its derivation
+ *  honours them, and the learning pass witnesses the
+ *  signature into a line, via the play that taught it). The
+ *  core's three shared play feats (Spin, Leap, Glow pulse)
+ *  and the book's Basics have no counterpart on the other
+ *  face; each keeps its one standing derivation, and no feat
+ *  anywhere is derived two different ways.
+ *
+ *  THE CARRIED LINE. When Fetch the Token first carries a
+ *  keepsake, one line lands on the keepsake's own Atlas
+ *  record — "carried to you, [day]" (design §1.4) — through
+ *  the repository's own write path, once, and the home's
+ *  readout names it. The grammar lives here
+ *  (carriedLineForRecord); Their Home performs the write.
+ *
  *  The pure half (readout parsing, ring math, the hop arc, the
  *  idle choice, slice 2's breadth, preference, and target
  *  derivations, slice 3's writer, facts fold, trick
@@ -902,7 +969,7 @@
    * standing completed (a milestone). The Whole Road still
    * derives only in the app; on the site its stage is the
    * year's reading, a later slice. Pure: writes nothing. */
-  function derivedTricks({ kind, stage, facts, lines } = {}) {
+  function derivedTricks({ kind, stage, facts, lines, record } = {}) {
     const out = [];
     const held = Array.isArray(lines) ? lines : [];
     const f = facts && typeof facts === "object" ? facts : lifeFactsFromRecords([], null);
@@ -911,6 +978,18 @@
     const paired = pairedActFor(kind, f);
     if (stage && stage !== "spark" && paired.stands && SIGNATURE_BY_KIND[kind]) {
       out.push({ trick: SIGNATURE_BY_KIND[kind], via: paired.ref });
+    }
+    /* Slice 5 — the unified path: the site-wide core's kind
+     * trick is this same feat under its own name. When the
+     * core's learning stands on the record — its id stored in
+     * play.tricks, or its counter at its need — the signature
+     * derives too, at any stage: the keeper taught it on the
+     * other face, and nobody loses a learned trick to the
+     * unification. The learning pass witnesses it into a line
+     * under the play's own via (play:<core id>). */
+    if (SIGNATURE_BY_KIND[kind] && !out.some((d) => d.trick === SIGNATURE_BY_KIND[kind])) {
+      const legacy = legacySignatureStands(record, kind);
+      if (legacy.stands) out.push({ trick: SIGNATURE_BY_KIND[kind], via: legacy.via });
     }
     if (stage === "bearer" || stage === "guardian") {
       out.push({ trick: "fetch-the-token", via: "stage:bearer" });
@@ -935,7 +1014,7 @@
     const stage = lifeStageFromFacts(facts);
     const held = new Set(lines.filter((l) => l.line === "trick-learned").map((l) => l.trick));
     const out = [];
-    for (const d of derivedTricks({ kind, stage, facts, lines })) {
+    for (const d of derivedTricks({ kind, stage, facts, lines, record })) {
       if (held.has(d.trick)) continue;
       const line = makeLifeLine("trick-learned", { trick: d.trick, via: d.via || undefined, ...coord, at: at || null });
       if (line) { out.push(line); held.add(d.trick); }
@@ -989,6 +1068,8 @@
       return "closing a day together";
     }
     if (via === "play:chase") return "the chase, played to a catch";
+    const playRule = Object.values(CORE_KIND_TRICK_RULES).find((r) => `play:${r.id}` === via);
+    if (playRule) return `learned by ${playRule.teacher}`;
     if (via === "garden") return "the garden, kept";
     if (via === "stage:bearer") return "the Bearer stage";
     if (/^pattern-day:\d+$/.test(via)) return "a day in the record";
@@ -1007,6 +1088,14 @@
     const paired = pairedActFor(kind, facts);
     const learnedLines = lines.filter((l) => l.line === "trick-learned" && l.trick !== "route");
     const learnedIds = new Set(learnedLines.map((l) => l.trick));
+    /* Slice 5 — the unified derivation: a signature the
+     * site-wide core's learning already stands for (its id
+     * stored, or its counter at its need) is this book's
+     * learned trick too, even before the learning pass has
+     * witnessed it into a line. Both faces derive one feat. */
+    const signatureId = SIGNATURE_BY_KIND[kind];
+    const legacySig = legacySignatureStands(record, kind);
+    const signatureStands = Boolean(signatureId) && (learnedIds.has(signatureId) || legacySig.stands);
     const demos = routeDemosFromLines(lines);
     const demo = demos.length ? demos[demos.length - 1] : null;
     const routeLearned = demo ? routeLearningFor(lines, demo) : null;
@@ -1019,7 +1108,7 @@
       });
     }
     const signature = SIGNATURE_BY_KIND[kind];
-    if (signature && !learnedIds.has(signature)) {
+    if (signature && !signatureStands) {
       unlearned.push({
         trick: signature, name: TRICK_NAMES[signature],
         teachLine: `Learned when your keeping spans three kinds and ${paired.plain} stands in the record.`,
@@ -1055,12 +1144,20 @@
       "carry-the-lantern": "carried at an opened day",
     };
 
+    const legacyEntry = signatureStands && !learnedIds.has(signatureId) ? [{
+      trick: signatureId,
+      name: TRICK_NAMES[signatureId] || signatureId,
+      viaPlain: viaPlainFor(legacySig.via, lines),
+      patternDay: null,
+      where: null,
+    }] : [];
+
     return {
       stage,
       stageName: LIFE_STAGE_NAMES[stage] || "Spark",
       kindsPresent: (facts?.kinds || []).filter((k) => k.present).map((k) => k.label),
       basics: BASIC_TRICKS.map((trick) => ({ trick, name: TRICK_NAMES[trick] })),
-      learned: learnedLines.map((l) => ({
+      learned: [...learnedLines.map((l) => ({
         trick: l.trick,
         name: TRICK_NAMES[l.trick] || l.trick,
         viaPlain: l.trick === "carry-the-lantern"
@@ -1068,7 +1165,7 @@
           : viaPlainFor(l.via, lines),
         patternDay: l.patternDay ?? null,
         where: WHERE_BY_TRICK[l.trick] || null,
-      })),
+      })), ...legacyEntry],
       unlearned,
       hums: humRepertoireFromFacts(facts),
       route: demo ? { demo, learned: Boolean(routeLearned), learnedLine: routeLearned } : null,
@@ -1174,6 +1271,305 @@
     return dest;
   }
 
+
+  /* ── Slice 5: the season, read from the pipeline ───────── */
+  /* The year's turning, in the calendar's own facts. The
+   * position arrives normalized by the DOM half from the one
+   * pipeline (the temporal cursor, else the calendar): a
+   * counted day with its Moon and Moon day, or a day outside
+   * the count with its flag. The Moon's character (name,
+   * element, essence) is the calendar data's own, passed in.
+   * The quarter rule is the home world's (seasonForPatternDay
+   * in spark-home-world.js): four quarters from the Year
+   * Gate, so both faces name the same season. */
+  const SEASON_QUARTER_NAMES = { spring: "Spring", summer: "Summer", autumn: "Autumn", winter: "Winter" };
+
+  function quarterForPatternDay(pd) {
+    const n = Number(pd);
+    if (!Number.isInteger(n) || n < 1 || n > PATTERN_DAYS) return null;
+    if (n <= 91) return "spring";
+    if (n <= 182) return "summer";
+    if (n <= 273) return "autumn";
+    return "winter";
+  }
+
+  function seasonContextFor(pos, moonChar) {
+    if (!pos || typeof pos !== "object") return null;
+    const char = moonChar && typeof moonChar === "object" ? moonChar : null;
+    const base = {
+      moon: Number.isInteger(pos.moon) ? pos.moon : null,
+      moonDay: Number.isInteger(pos.moonDay) ? pos.moonDay : null,
+      patternDay: Number.isInteger(pos.patternDay) ? pos.patternDay : null,
+      patternYear: pos.patternYear ?? null,
+      moonName: (char && char.name) || pos.moonName || null,
+      essence: (char && char.essence) || null,
+      element: (char && char.element) || null,
+      quarter: null,
+      seasonDay: null,
+    };
+    if (pos.isDeepTimeDay) return { ...base, kind: "deep-time-day" };
+    if (pos.isDayOutOfTime) return { ...base, kind: "day-out-of-time" };
+    if (base.patternDay == null) return null;
+    base.quarter = quarterForPatternDay(base.patternDay);
+    if (base.patternDay === 1) {
+      /* The Year Gate: the new year's first day. Across the
+       * gate stands the old year's last day — the season's
+       * day an idle ranging may cross to and regard. */
+      return { ...base, kind: "year-gate", seasonDay: PATTERN_DAYS };
+    }
+    if (base.moonDay === 28) {
+      /* The Moon's last day: the turn. The season's day is
+       * the next Moon's first day (ringStepSafe wraps the
+       * year's own end back to the Gate). */
+      return { ...base, kind: "moon-turn", seasonDay: ringStepSafe(base.patternDay, 1) };
+    }
+    if (base.moonDay === 1 && base.moon != null && base.moon > 1) {
+      /* A Moon opens today; behind it stands the day just
+       * closed, the season's day to regard. */
+      return { ...base, kind: "moon-opening", seasonDay: ringStepSafe(base.patternDay, -1) };
+    }
+    return { ...base, kind: "moon" };
+  }
+
+  /* The season, in plain words for the Spark's panel — every
+   * fact in it is the pipeline's or the calendar data's own:
+   * the Moon's name and essence, the quarter, the next Moon
+   * at a turn. Nothing is forecast and no weather is claimed. */
+  function seasonLineFor(ctx, opts) {
+    if (!ctx) return null;
+    const name = opts && typeof opts.name === "string" && opts.name.trim() ? opts.name.trim() : "The Spark";
+    const nextMoonChar = opts && opts.nextMoonChar && typeof opts.nextMoonChar === "object" ? opts.nextMoonChar : null;
+    const moonBit = ctx.moon != null
+      ? `Moon ${ctx.moon}${ctx.moonName ? `, ${ctx.moonName}` : ""}`
+      : null;
+    const quarterBit = ctx.quarter ? `${SEASON_QUARTER_NAMES[ctx.quarter]} of the Pattern year` : null;
+    const essenceBit = ctx.essence ? ` — ${ctx.essence.charAt(0).toLowerCase()}${ctx.essence.slice(1)}` : "";
+    switch (ctx.kind) {
+      case "day-out-of-time":
+        return `Today stands outside the count — the Day Out of Time, belonging to no Moon. There is no plate for ${name} to stand on today, and none is pretended: ${name} keeps the threshold with you.`;
+      case "deep-time-day":
+        return `Today is the Deep Time Day — the leap day of the Pattern year, standing outside the count of Moons. ${name} keeps the threshold with you; there is no plate today, and none is pretended.`;
+      case "year-gate":
+        return `The Year Gate — Pattern Day 1 of a new Pattern year${moonBit ? `, opening on ${moonBit}` : ""}. Behind the gate stands the year that was; when ${name} ranges, it may cross to the old year's last day and look back.`;
+      case "moon-turn": {
+        const nextBit = nextMoonChar
+          ? `Moon ${nextMoonChar.idx != null ? nextMoonChar.idx : ""}${nextMoonChar.name ? `, ${nextMoonChar.name}` : ""}`
+          : null;
+        return `The Moon turns: ${moonBit || "this Moon"} closes with this day${nextBit ? `, and ${nextBit} opens next` : ""}. When ${name} ranges, it goes to the new Moon's first day and regards it.`;
+      }
+      case "moon-opening":
+        return `A Moon opens today: ${moonBit || "a new Moon"}${essenceBit}. The day just closed stands behind the gate of it, and ${name} may go and regard it.`;
+      case "moon":
+        return `The year around ${name}: ${moonBit || "a Moon of the year"}${essenceBit}${quarterBit ? `. ${quarterBit}` : ""}.`;
+      default:
+        return null;
+    }
+  }
+
+  /* ── Slice 5: surroundings — the opened day's character ── */
+  /* What the Spark answers inside an opened day: the
+   * strongest character the record lays on that day, in the
+   * order a discovery names marks — the birth day first, then
+   * a garden day (the garden's own records, folded with the
+   * facts), a token's home, a practice, a witnessing, and a
+   * day merely kept. The answer is a posture, and a glow for
+   * the birth day; nothing is claimed beyond the record. */
+  const SURROUND_POSTURES = {
+    genesis: "observe", garden: "observe", token: "observe",
+    practice: "stand", witnessed: "settle", kept: "sit",
+  };
+
+  function surroundingsForDay(input) {
+    const args = input || {};
+    const pd = Number(args.patternDay);
+    if (!Number.isInteger(pd)) return { kind: null, posture: "observe", glow: false };
+    const marks = args.marks && typeof args.marks === "object" ? args.marks : {};
+    const held = Array.isArray(marks[pd]) ? marks[pd] : [];
+    if (held.includes("genesis")) return { kind: "genesis", posture: "observe", glow: true };
+    if (Array.isArray(args.gardenDays) && args.gardenDays.includes(pd)) {
+      return { kind: "garden", posture: "observe", glow: false };
+    }
+    const kind = markKindFor(held);
+    if (!kind) return { kind: null, posture: "observe", glow: false };
+    return { kind, posture: SURROUND_POSTURES[kind] || "observe", glow: false };
+  }
+
+  /* ── Slice 5: care, in Gate E's kinds ──────────────────── */
+  /* The care kinds are Gate E's names, exactly (SparkLife's
+   * CARE_* constants): the standing acts, Carry For Me with
+   * its end recorded against it, and Quiet Company. The
+   * derivations here are readings over the life lines — the
+   * panel's states and the open carry — and write nothing. */
+  const CARE_KINDS = ["kindle", "tend", "rest", "close-day", "carry", "carry-end", "sat-with"];
+
+  /* The open carry, Gate E's semantics exactly: a carry line
+   * whose id no carry-end line names as its ref. The last
+   * such line stands (a second carry is refused at the
+   * writing, so at most one can honestly stand open). */
+  function openCarryFromLines(lines) {
+    const held = Array.isArray(lines) ? lines : [];
+    const ended = new Set();
+    for (const l of held) {
+      if (l && l.line === "care-act" && l.kind === "carry-end" && l.ref != null) ended.add(String(l.ref));
+    }
+    let open = null;
+    for (const l of held) {
+      if (l && l.line === "care-act" && l.kind === "carry" && l.id != null && !ended.has(String(l.id))) open = l;
+    }
+    return open;
+  }
+
+  /* The day's care, read for the panel: which of today's
+   * acts already stand, and the carry that stands open.
+   * "Today" is the civil date the acts are stamped with —
+   * the dedupe the panel's buttons honour is by that date,
+   * per kind (and per ref where the ref is the act's own
+   * object: the day sat with, the dress chosen). */
+  function careStateFromLines(lines, civilDate) {
+    const held = (Array.isArray(lines) ? lines : []).filter((l) => l && l.line === "care-act");
+    const today = typeof civilDate === "string" ? civilDate : null;
+    const todays = today ? held.filter((l) => l.civilDate === today) : [];
+    return {
+      kindledToday: todays.some((l) => l.kind === "kindle"),
+      restedToday: todays.some((l) => l.kind === "rest"),
+      tendRefsToday: todays.filter((l) => l.kind === "tend").map((l) => l.ref || ""),
+      satWithRefsToday: todays.filter((l) => l.kind === "sat-with").map((l) => l.ref || ""),
+      openCarry: openCarryFromLines(held),
+    };
+  }
+
+  /* ── Slice 5: one trick derivation, two faces ──────────── */
+  /* The companion core's kind trick and this book's kind
+   * signature are one feat under two names. The core's rule
+   * table (its KIND_TRICKS) is mirrored here so this face can
+   * read the core's learning from the record alone — the
+   * counts live in the record's play and care blocks, the
+   * learned ids in its play.tricks. A test pins this mirror
+   * against the core's own table, the way the keeping table
+   * is pinned against SparkActivities'. */
+  const CORE_KIND_TRICK_RULES = {
+    fire: { id: "flare", via: "kindles", need: 2, teacher: "kindling" },
+    water: { id: "ripple", via: "pets", need: 8, teacher: "petting, patiently" },
+    shadow: { id: "vanish", via: "rests", need: 2, teacher: "resting together" },
+    air: { id: "loop", via: "plays", need: 2, teacher: "chases walked to their end" },
+    earth: { id: "root", via: "bond", need: 4, teacher: "the bond itself" },
+    light: { id: "beam", via: "echoBest", need: 3, teacher: "the echo game" },
+  };
+
+  /* The counters a trick can learn from, read from the Spark
+   * record the way the core reads them (its playOf / careOf
+   * sanitisers, mirrored): play's own counts, and care's. */
+  function coreCountsFromRecord(record) {
+    const num = (v) => (Number.isFinite(v) && v > 0 ? Math.floor(v) : 0);
+    const p = (record && record.play) || {};
+    const c = (record && record.care) || {};
+    return {
+      pets: num(p.pets), pokes: num(p.pokes), drags: num(p.drags),
+      catches: num(p.catches), echoBest: num(p.echoBest),
+      kindles: num(c.kindles), plays: num(c.plays), rests: num(c.rests),
+      bond: num(c.bond),
+    };
+  }
+
+  /* Whether the core's kind trick stands learned by the
+   * core's own rule — its id stored by an earlier learning,
+   * or its counter at its need. The via names the play line
+   * the learning is witnessed under (play:<core id>). */
+  function legacySignatureStands(record, kind) {
+    const rule = CORE_KIND_TRICK_RULES[kind];
+    if (!rule) return { stands: false, via: null, teacher: "" };
+    const stored = record && record.play && Array.isArray(record.play.tricks) ? record.play.tricks : [];
+    if (stored.includes(rule.id)) return { stands: true, via: `play:${rule.id}`, teacher: rule.teacher };
+    const counts = coreCountsFromRecord(record);
+    if ((counts[rule.via] || 0) >= rule.need) return { stands: true, via: `play:${rule.id}`, teacher: rule.teacher };
+    return { stands: false, via: null, teacher: rule.teacher };
+  }
+
+  /* ── Slice 5: the carried line (design §1.4) ───────────── */
+  /* A fetch of a keepsake never yet fetched writes one line
+   * on the keepsake's own Atlas record: "carried to you,
+   * [day]". The line rides the record's payload as
+   * carriedLines — append-only, like everything in this
+   * house — and the record itself is the proof it happened:
+   * a record already carrying a line is never written twice.
+   * Pure: the updated record, or null when the line already
+   * stands or no day is given. Their Home performs the write
+   * through the repository's own put. */
+  function carriedLineFor(coord) {
+    const args = coord || {};
+    if (typeof args.civilDate !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(args.civilDate)) return null;
+    return {
+      text: `carried to you, ${args.civilDate}`,
+      civilDate: args.civilDate,
+      patternDay: Number.isInteger(args.patternDay) ? args.patternDay : null,
+    };
+  }
+
+  function carriedLinesOfRecord(record) {
+    const lines = record && record.payload ? record.payload.carriedLines : null;
+    return Array.isArray(lines) ? lines.filter((l) => l && typeof l.text === "string") : [];
+  }
+
+  function carriedLineForRecord(record, coord) {
+    if (!record || typeof record !== "object") return null;
+    if (carriedLinesOfRecord(record).length) return null;
+    const line = carriedLineFor(coord);
+    if (!line) return null;
+    const payload = { ...(record.payload && typeof record.payload === "object" ? record.payload : {}) };
+    payload.carriedLines = [...carriedLinesOfRecord(record), line];
+    return { record: { ...record, payload }, line };
+  }
+
+
+  /* Today's stamp from the canonical pipeline, read from any
+   * root: the Spark's own stamp where it stands (SphereSpark
+   * .stamp is the cursor, else the calendar), else the same
+   * pipeline read directly. One implementation, shared by the
+   * mount's writer and the writer door below. */
+  function stampFromRoot(rootLike) {
+    try {
+      const s = rootLike.SphereSpark && rootLike.SphereSpark.stamp ? rootLike.SphereSpark.stamp() : null;
+      if (s && s.civilDate) return s;
+    } catch { /* fall through to the pipeline itself */ }
+    const date = new Date();
+    let pos = null;
+    try { pos = rootLike.SOFTemporalCursor && rootLike.SOFTemporalCursor.resolvePosition ? rootLike.SOFTemporalCursor.resolvePosition(date) : null; } catch { pos = null; }
+    if (!pos) {
+      try { pos = rootLike.PatternCalendar && rootLike.PatternCalendar.fromCivilDate ? rootLike.PatternCalendar.fromCivilDate({ date }) : null; } catch { pos = null; }
+    }
+    if (!pos) return null;
+    return {
+      moon: pos.moon ?? null,
+      day: pos.day ?? null,
+      patternDay: pos.dayOfPatternYear ?? null,
+      patternYear: pos.patternYear ?? null,
+      civilDate: pos.civilDate || date.toISOString().slice(0, 10),
+    };
+  }
+
+  /* The writer door, for the companion layer's other faces:
+   * Their Home's carry writes its care-act lines through this
+   * door — the same writer (makeLifeLine + appendLifeLine),
+   * the same seed-keyed store, the same refusal rules (no
+   * coordinate, no line). Returns the stored line, or null
+   * when the line refuses: nothing is written then. */
+  function appendLifeLineViaRoot(rootLike, shape, fields) {
+    let record = null;
+    try {
+      const raw = rootLike.localStorage ? rootLike.localStorage.getItem("sof.spark.v1") : null;
+      record = raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+    if (!record) return null;
+    const coord = lineCoordinateFromStamp(stampFromRoot(rootLike));
+    if (!coord) return null;
+    const line = makeLifeLine(shape, { ...(fields || {}), ...coord, at: new Date().toISOString() });
+    if (!line) return null;
+    const appended = appendLifeLine(record, line);
+    if (!appended) return null;
+    try { rootLike.localStorage.setItem("sof.spark.v1", JSON.stringify(appended.record)); } catch { return null; }
+    return appended.line;
+  }
+
   function mount(root) {
     const document = root.document;
     if (!document) return;
@@ -1231,6 +1627,19 @@
     /* ── Slice 4 state ─────────────────────────────────────── */
     let perfHum = null;         // the repertoire entry a hum performance sounds
     let lanternEl = null;       // the lit lantern the holder carries in a day
+
+    /* ── Slice 5 state ─────────────────────────────────────── */
+    let seasonCtx = null;       // the season context, from the pipeline
+    let seasonSection = null;   // the season's panel section, once placed
+    let seasonText = null;      // the season line last written to it
+    let careSection = null;     // the care panel's section, once placed
+    let careNote = null;        // a one-line note the care panel shows
+    let seasonVisitDone = false; // the season's first ranging, once per page visit
+    let restUntil = 0;          // a keeper-sent rest: idle life waits until then
+    let quietSitting = false;   // Quiet Company in progress inside a day
+    let sittingRow = null;      // Quiet Company's row inside the Day World
+    let sittingNote = null;
+    let carryTitles = {};       // carry ref → the keepsake's name, from the Atlas fold
 
     function readRecord() {
       try {
@@ -1319,9 +1728,28 @@
          * learning the record now supports is witnessed here,
          * on the day it is derived (Gate E's semantics). */
         atlasFacts = lifeFactsFromRecords(records, readRecord());
+        /* Slice 5: the carry's names, for the care panel's
+         * carrying line — the keepsakes and tokens a carry ref
+         * can name, read from this same fold. */
+        carryTitles = {};
+        for (const r of Array.isArray(records) ? records : []) {
+          if (!r || typeof r !== "object") continue;
+          const payload = r.payload && typeof r.payload === "object" ? r.payload : {};
+          if (r.type === "artifact" && r.subtype === "hidden-keepsake" && r.id) {
+            carryTitles[`keepsake:${r.id}`] = payload.name || payload.title || r.title || "";
+          }
+          const acts = payload.sparkActivities && typeof payload.sparkActivities === "object" ? payload.sparkActivities : null;
+          const epId = payload.episodeId || (acts && acts.episodeId);
+          if (r.type === "event" && r.subtype === "episode-watched" && epId) {
+            carryTitles[`token:${epId}`] = payload.episodeTitle
+              || (acts && acts.distinguisher && acts.distinguisher.token) || "";
+          }
+        }
         refreshBreadth();
         learnNewTricksNow();
         renderTrickBook();
+        renderCare();
+        refreshCarriedMark();
       } catch { /* the fold is a reading; a failed reading changes nothing */ }
       finally {
         tokensInFlight = false;
@@ -1381,24 +1809,7 @@
      * happens on; if no stamp can be read, the write refuses —
      * a line without its day is not written at all. */
     function currentStamp() {
-      try {
-        const s = root.SphereSpark?.stamp?.();
-        if (s?.civilDate) return s;
-      } catch { /* fall through to the pipeline itself */ }
-      const date = new Date();
-      let pos = null;
-      try { pos = root.SOFTemporalCursor?.resolvePosition ? root.SOFTemporalCursor.resolvePosition(date) : null; } catch { pos = null; }
-      if (!pos) {
-        try { pos = root.PatternCalendar?.fromCivilDate ? root.PatternCalendar.fromCivilDate({ date }) : null; } catch { pos = null; }
-      }
-      if (!pos) return null;
-      return {
-        moon: pos.moon ?? null,
-        day: pos.day ?? null,
-        patternDay: pos.dayOfPatternYear ?? null,
-        patternYear: pos.patternYear ?? null,
-        civilDate: pos.civilDate || date.toISOString().slice(0, 10),
-      };
+      return stampFromRoot(root);
     }
 
     function sparkKind(record) {
@@ -1643,6 +2054,360 @@
         }
         if (tries > 60) root.clearInterval(timer);
       }, 250);
+    }
+
+
+    /* ── Slice 5: the season, on the holder and in the panel ── */
+    /* The season is read from the one pipeline — the temporal
+     * cursor, else the calendar — and the Moon's character
+     * from the calendar's own data. At a day outside the count
+     * there is no plate: the Spark keeps the threshold, rests
+     * at its post, and no position is pretended for it. */
+    function moonCharFor(idx) {
+      const moons = root.PatternCalendarData?.moons;
+      if (!Array.isArray(moons) || idx == null) return null;
+      return moons.find((m) => m && m.idx === idx) || null;
+    }
+
+    function currentPosition() {
+      const date = new Date();
+      let pos = null;
+      try { pos = root.SOFTemporalCursor?.resolvePosition ? root.SOFTemporalCursor.resolvePosition(date) : null; } catch { pos = null; }
+      if (!pos) {
+        try { pos = root.PatternCalendar?.fromCivilDate ? root.PatternCalendar.fromCivilDate({ date }) : null; } catch { pos = null; }
+      }
+      return pos;
+    }
+
+    function refreshSeason() {
+      const pos = currentPosition();
+      const norm = pos ? {
+        patternDay: pos.dayOfPatternYear ?? pos.patternDay ?? null,
+        moon: pos.moon ?? null,
+        moonDay: pos.moonDay ?? pos.day ?? null,
+        moonName: pos.moonName || null,
+        patternYear: pos.patternYear ?? null,
+        isDayOutOfTime: Boolean(pos.isDayOutOfTime),
+        isDeepTimeDay: Boolean(pos.isDeepTimeDay),
+      } : null;
+      seasonCtx = seasonContextFor(norm, norm ? moonCharFor(norm.moon) : null);
+      if (holder && seasonCtx) {
+        holder.dataset.inhabitantSeason = seasonCtx.kind;
+        if (seasonCtx.moon != null) holder.dataset.inhabitantMoon = String(seasonCtx.moon);
+        if ((seasonCtx.kind === "day-out-of-time" || seasonCtx.kind === "deep-time-day") && mode === "posted") {
+          setPosture("rest");
+        }
+      }
+      renderSeason();
+    }
+
+    function renderSeason() {
+      if (!seasonSection) return;
+      const name = sparkName(readRecord());
+      const nextChar = seasonCtx && seasonCtx.kind === "moon-turn" && seasonCtx.moon != null
+        ? moonCharFor((seasonCtx.moon % 13) + 1) : null;
+      const line = seasonCtx ? seasonLineFor(seasonCtx, { name, nextMoonChar: nextChar }) : null;
+      const text = line || "";
+      if (text === seasonText) return;
+      seasonText = text;
+      seasonSection.replaceChildren();
+      const heading = document.createElement("h3");
+      heading.className = "sphere-spark-season-title";
+      heading.textContent = "The year around the Spark";
+      seasonSection.appendChild(heading);
+      const p = document.createElement("p");
+      p.className = "sphere-spark-season-line";
+      p.textContent = line || "The year's turning cannot be read just now — nothing is claimed for it.";
+      seasonSection.appendChild(p);
+    }
+
+    function placeSeasonPanel() {
+      let tries = 0;
+      const timer = root.setInterval(() => {
+        tries += 1;
+        const panel = document.querySelector(".sphere-ambient-panel");
+        if (panel) {
+          root.clearInterval(timer);
+          if (!panel.querySelector(".sphere-spark-season")) {
+            seasonSection = document.createElement("section");
+            seasonSection.className = "sphere-spark-season";
+            seasonSection.setAttribute("aria-label", "The year around the Spark");
+            panel.appendChild(seasonSection);
+            seasonText = null;
+            renderSeason();
+          }
+          return;
+        }
+        if (tries > 60) root.clearInterval(timer);
+      }, 250);
+    }
+
+    /* ── Slice 5: the care panel ───────────────────────────── */
+    /* The remaining care kinds, where their honest occasions
+     * stand on this face — each a plain act in the Spark's own
+     * panel, each writing through the slice-3 writer only,
+     * each standing once a day the way close-day stands once
+     * a day: the guard is read fresh from the record at the
+     * moment of the act, not from a stale render. Carry and
+     * its end live in Their Home; here the panel only names a
+     * carry that stands open, and the keepsake's light rides
+     * the holder (refreshCarriedMark). */
+    function wearsForRecord(record) {
+      const wears = [
+        { id: "kind-glow", label: "its own glow" },
+        { id: "hour-halo", label: "the hour's halo" },
+      ];
+      try {
+        if (root.SparkCompanion?.wrapFor && root.SparkCompanion.wrapFor(record) === 1) {
+          wears.push({ id: "flame-wrap", label: "the flame wrap's firelight" });
+        }
+      } catch { /* the wrap is read from the record, never assumed */ }
+      return wears;
+    }
+
+    function careStateNow() {
+      const record = readRecord();
+      const stamp = currentStamp();
+      return { record, stamp, state: careStateFromLines(lifeLinesOf(record), stamp?.civilDate || null) };
+    }
+
+    function careKindle() {
+      const { stamp, state } = careStateNow();
+      if (state.kindledToday) { careNote = "Kindled together already today — the act stands in the record."; renderCare(); return; }
+      const ref = stamp && stamp.patternDay != null ? `pattern-day:${stamp.patternDay}` : "outside-the-count";
+      const line = appendLifeLineNow("care-act", { kind: "kindle", ref });
+      careNote = line
+        ? "Kindled together — one real act, done with the Spark present, stands in the record."
+        : "The record would not take the line just now — nothing was written.";
+      if (line && holder) {
+        holder.classList.add("inhabitant-do-glow");
+        root.setTimeout(() => holder && holder.classList.remove("inhabitant-do-glow"), 1300);
+      }
+      renderCare();
+    }
+
+    function careTend(wearId) {
+      const { state } = careStateNow();
+      if (state.tendRefsToday.includes(`wear:${wearId}`)) {
+        careNote = "That dress already stands chosen today — the record holds it.";
+        renderCare();
+        return;
+      }
+      const line = appendLifeLineNow("care-act", { kind: "tend", ref: `wear:${wearId}` });
+      if (line) {
+        if (holder) holder.dataset.inhabitantWear = wearId;
+        const wear = wearsForRecord(readRecord()).find((w) => w.id === wearId);
+        careNote = `Dressed in ${wear ? wear.label : "the chosen dress"} for the day — the choice stands in the record.`;
+      } else {
+        careNote = "The record would not take the line just now — nothing was written.";
+      }
+      renderCare();
+    }
+
+    function careRest() {
+      const { state } = careStateNow();
+      if (state.restedToday) { careNote = "Rest already stands in today's record."; renderCare(); return; }
+      const line = appendLifeLineNow("care-act", { kind: "rest" });
+      if (line) {
+        restUntil = Date.now() + 20000;
+        if (mode === "idle" || mode === "travelling-visit") noteAction();
+        setPosture("rest");
+        careNote = "Sent to rest — the Spark rests at its post a while, and the rest stands in the record.";
+      } else {
+        careNote = "The record would not take the line just now — nothing was written.";
+      }
+      renderCare();
+    }
+
+    function renderCare() {
+      if (!careSection) return;
+      const { record, state } = careStateNow();
+      const name = sparkName(record);
+      careSection.replaceChildren();
+      const heading = document.createElement("h3");
+      heading.className = "sphere-spark-care-title";
+      heading.textContent = `Care for ${name}`;
+      careSection.appendChild(heading);
+      if (!record) {
+        const p = document.createElement("p");
+        p.className = "sphere-spark-care-line";
+        p.textContent = "No Spark stands here yet.";
+        careSection.appendChild(p);
+        return;
+      }
+      const intro = document.createElement("p");
+      intro.className = "sphere-spark-care-line";
+      intro.textContent = "Care is a record of what was done together — nothing here runs down, and nothing is owed.";
+      careSection.appendChild(intro);
+      if (careNote) {
+        const note = document.createElement("p");
+        note.className = "sphere-spark-care-line sphere-spark-care-note";
+        note.textContent = careNote;
+        careSection.appendChild(note);
+      }
+      const row = (label, onClick, disabled, aria) => {
+        const div = document.createElement("div");
+        div.className = "sphere-spark-care-row";
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "sphere-spark-care-btn";
+        btn.textContent = label;
+        btn.disabled = Boolean(disabled);
+        btn.setAttribute("aria-label", aria || label);
+        btn.addEventListener("click", onClick);
+        div.appendChild(btn);
+        careSection.appendChild(div);
+      };
+      row(
+        state.kindledToday ? `Kindled with ${name} today` : `Kindle with ${name}`,
+        careKindle, state.kindledToday,
+        `Kindle with ${name} — mark one real act done together today`
+      );
+      for (const wear of wearsForRecord(record)) {
+        const chosen = state.tendRefsToday.includes(`wear:${wear.id}`);
+        row(
+          chosen ? `Wearing ${wear.label} today` : `Dress ${name} in ${wear.label}`,
+          () => careTend(wear.id), chosen,
+          `Choose ${wear.label} as ${name}'s dress for the day`
+        );
+      }
+      row(
+        state.restedToday ? `${name} has rested today` : `Send ${name} to rest`,
+        careRest, state.restedToday,
+        `Send ${name} to rest at its post`
+      );
+      if (state.openCarry) {
+        const p = document.createElement("p");
+        p.className = "sphere-spark-care-line sphere-spark-care-carrying";
+        const title = carryTitles[state.openCarry.ref] || "a keepsake";
+        p.textContent = `${name} is carrying ${title} for you today — its light rides with ${name} here too. Take it back in Their Home, and the carrying is complete.`;
+        careSection.appendChild(p);
+      }
+    }
+
+    function placeCarePanel() {
+      let tries = 0;
+      const timer = root.setInterval(() => {
+        tries += 1;
+        const panel = document.querySelector(".sphere-ambient-panel");
+        if (panel) {
+          root.clearInterval(timer);
+          if (!panel.querySelector(".sphere-spark-care")) {
+            careSection = document.createElement("section");
+            careSection.className = "sphere-spark-care";
+            careSection.setAttribute("aria-label", "Care for your Spark");
+            panel.appendChild(careSection);
+            renderCare();
+          }
+          return;
+        }
+        if (tries > 60) root.clearInterval(timer);
+      }, 250);
+    }
+
+    /* The carried keepsake's light, riding the holder wherever
+     * the Spark stands on this face — a small steady light at
+     * the holder's side while a carry stands open in the
+     * record, gone when the carry ends. */
+    function refreshCarriedMark() {
+      if (!holder) return;
+      const record = readRecord();
+      const open = record ? openCarryFromLines(lifeLinesOf(record)) : null;
+      if (open) {
+        holder.dataset.inhabitantCarrying = open.ref || "1";
+        if (!holder.querySelector(".inhabitant-carried")) {
+          const el = document.createElement("span");
+          el.className = "inhabitant-carried";
+          el.setAttribute("aria-hidden", "true");
+          holder.appendChild(el);
+        }
+      } else {
+        delete holder.dataset.inhabitantCarrying;
+        const el = holder.querySelector(".inhabitant-carried");
+        if (el) el.remove();
+      }
+    }
+
+    /* ── Slice 5: Quiet Company, inside an opened day ──────── */
+    /* Sat-with, in its true place: the day's own room, beside
+     * the closing rite. The keeper asks the Spark to sit with
+     * them in this day; the Spark settles at its station,
+     * makes no offers, and the sitting itself is the care.
+     * The line stands once per day per day sat with; a second
+     * sitting the same day is the keeper's again, unwritten. */
+    function placeSittingRow() {
+      if (mode !== "in-day" || !dayRoom || !holder) return;
+      const sheet = dayRoom.querySelector(".day-world-sheet");
+      if (!sheet) {
+        root.setTimeout(placeSittingRow, 250);
+        return;
+      }
+      if (sittingRow && dayRoom.contains(sittingRow)) { renderSittingRow(); return; }
+      sittingRow = document.createElement("div");
+      sittingRow.className = "sphere-spark-closing sphere-spark-sitting";
+      const questions = sheet.querySelector(".day-world-questions");
+      const host = questions ? (questions.closest("section") || questions.parentElement || sheet) : sheet;
+      host.appendChild(sittingRow);
+      renderSittingRow();
+    }
+
+    function renderSittingRow() {
+      if (!sittingRow) return;
+      const record = readRecord();
+      const name = sparkName(record);
+      const ref = `pattern-day:${postPd}`;
+      const stamp = currentStamp();
+      const state = careStateFromLines(lifeLinesOf(record), stamp?.civilDate || null);
+      const satAlready = state.satWithRefsToday.includes(ref);
+      sittingRow.replaceChildren();
+      const line = document.createElement("p");
+      line.className = "sphere-spark-closing-line";
+      line.textContent = quietSitting
+        ? `Quiet Company. ${name} sits with you in this day — no task, no game. The sitting itself is the care.`
+        : satAlready
+          ? `Quiet Company has been kept in this day already — the sitting stands in the record. You may sit again; it will not be written twice.`
+          : `Quiet Company: sit with ${name} in this day a while. No task, no game — the sitting itself is the care.`;
+      sittingRow.appendChild(line);
+      if (sittingNote) {
+        const note = document.createElement("p");
+        note.className = "sphere-spark-closing-line sphere-spark-closing-note";
+        note.textContent = sittingNote;
+        sittingRow.appendChild(note);
+      }
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "sphere-spark-closing-btn";
+      btn.textContent = quietSitting ? "That's enough" : "Sit with me";
+      btn.addEventListener("click", quietSitting ? endSitting : beginSitting);
+      sittingRow.appendChild(btn);
+    }
+
+    function beginSitting() {
+      const record = readRecord();
+      const name = sparkName(record);
+      const ref = `pattern-day:${postPd}`;
+      const stamp = currentStamp();
+      const state = careStateFromLines(lifeLinesOf(record), stamp?.civilDate || null);
+      if (!state.satWithRefsToday.includes(ref)) {
+        const line = appendLifeLineNow("care-act", { kind: "sat-with", ref });
+        sittingNote = line
+          ? `Sat together — the sitting stands in the record.`
+          : "The record would not take the line just now — the sitting is yours anyway, unwritten.";
+      } else {
+        sittingNote = `${name} sits with you again — unwritten, as it should be: the record already holds today's sitting.`;
+      }
+      quietSitting = true;
+      if (holder) holder.dataset.inhabitantQuiet = "1";
+      setPosture("rest");
+      renderSittingRow();
+    }
+
+    function endSitting() {
+      quietSitting = false;
+      sittingNote = null;
+      if (holder) delete holder.dataset.inhabitantQuiet;
+      if (mode === "in-day") setPosture("observe");
+      renderSittingRow();
     }
 
     /* ── Slice 3: teaching by demonstration ────────────────── */
@@ -1995,6 +2760,11 @@
         practice: "a practice day",
         kept: "a day kept together",
       }[kind] || kind));
+      /* Slice 5: a garden day is named in the day's reading
+       * too, from the garden's own folded records. */
+      if ((atlasFacts?.gardenDays || []).includes(postPd) && !marks.includes("a garden day")) {
+        marks.push("a garden day");
+      }
       const read = document.createElement("p");
       read.className = "sphere-spark-closing-line";
       read.textContent = (marks.length
@@ -2165,7 +2935,14 @@
        * runs on the wall clock; travel progress below runs on
        * the rAF clock — the two are never mixed.) */
       const wallNow = Date.now();
-      if (mode === "posted" && !teaching && wallNow - lastActionAt > IDLE_AFTER_MS && wallNow > idleUntil) {
+      /* A keeper-sent rest (slice 5) holds the post: idle life
+       * waits until the rest runs out, then the Spark stands
+       * again of its own accord. */
+      if (restUntil && wallNow > restUntil) {
+        restUntil = 0;
+        if (mode === "posted") setPosture("stand");
+      }
+      if (mode === "posted" && !teaching && wallNow - lastActionAt > IDLE_AFTER_MS && wallNow > idleUntil && wallNow > restUntil) {
         beginIdle();
       }
 
@@ -2354,6 +3131,21 @@
       if (holder) holder.dataset.inhabitantAct = pick;
 
       const canTravel = !reducedMotion && postPd && pos;
+      /* Slice 5 — the season's first ranging: at a Moon's turn,
+       * its opening, or the Year Gate, the first ranging idle
+       * of this page visit crosses to the season's own day —
+       * the new Moon's first day, the day just closed, or the
+       * old year's last day across the Gate — and regards it
+       * there. Once per page visit; the ordinary idle life
+       * resumes after, and the visit is named on the holder. */
+      if (canTravel && !seasonVisitDone && seasonCtx && seasonCtx.seasonDay != null
+        && (pick === "visit" || pick === "roam")
+        && projectedPds().includes(seasonCtx.seasonDay)
+        && travelIdleTo(seasonCtx.seasonDay, { stayMs: 8000, posture: "observe" })) {
+        seasonVisitDone = true;
+        if (holder) holder.dataset.inhabitantSeasonVisit = String(seasonCtx.seasonDay);
+        return;
+      }
       if (canTravel && pick === "visit") {
         const step = [1, 2, 3, -1, -2, -3][Math.floor(Math.random() * 6)];
         if (travelIdleTo(ringStep(postPd, step), { stayMs: 6000, posture: "observe" })) return;
@@ -2372,7 +3164,18 @@
         // rest aims at a token's day and rests there; an approach
         // takes the nearest marked days the face is showing.
         let target = null;
-        if (pick === "keep" && breadth?.tokenDays?.length) {
+        /* Slice 5 — a keepsake rest may rest beside a garden
+         * day, where the garden's own records hold one on the
+         * face: the garden is a surrounding the Spark answers,
+         * and resting beside it is the keep. */
+        if (pick === "keep") {
+          const gardenOnFace = (atlasFacts?.gardenDays || []).filter((pd) => projectedPds().includes(pd));
+          if (gardenOnFace.length) {
+            const pd = gardenOnFace[Math.floor(Math.random() * gardenOnFace.length)];
+            target = { pd, kind: "garden", posture: "rest", stayMs: 9000 };
+          }
+        }
+        if (!target && pick === "keep" && breadth?.tokenDays?.length) {
           const projected = projectedPds();
           const kept = pickDiscoveryTarget(
             Object.fromEntries(breadth.tokenDays.map((pd) => [pd, ["token"]])),
@@ -2485,10 +3288,26 @@
       holder.dataset.inhabitantInDay = "1";
       closingTries = 0;
       closingNote = null;
+      sittingNote = null;
+      /* Slice 5 — the day's own character answers: the
+       * strongest mark the record lays on this day sets the
+       * Spark's posture here, and a glow for the birth day.
+       * The answer is named on the holder, never invented. */
+      const surround = surroundingsForDay({
+        patternDay: postPd,
+        marks: breadth?.marks || {},
+        gardenDays: atlasFacts?.gardenDays || [],
+      });
+      if (surround.kind) {
+        holder.dataset.inhabitantSurround = surround.kind;
+        setPosture(surround.posture);
+        if (surround.glow) holder.classList.add("inhabitant-do-glow");
+      }
       /* The lantern first: the closing row's reading names it,
        * and the row may render on its first placement. */
       placeLantern();
       placeClosingRow();
+      placeSittingRow();
     }
 
     function exitDay() {
@@ -2501,9 +3320,15 @@
       }
       dayRoom = null;
       delete holder.dataset.inhabitantInDay;
+      delete holder.dataset.inhabitantSurround;
+      delete holder.dataset.inhabitantQuiet;
+      holder.classList.remove("inhabitant-do-glow");
+      quietSitting = false;
       removeLantern();
       if (closingRow) { closingRow.remove(); closingRow = null; }
+      if (sittingRow) { sittingRow.remove(); sittingRow = null; }
       closingNote = null;
+      sittingNote = null;
       pos = null;
       mode = "posted";
       setPosture("stand");
@@ -2535,6 +3360,11 @@
       refreshTokens();
       placeFavoursPanel();
       placeTrickPanel();
+      placeSeasonPanel();
+      placeCarePanel();
+      refreshSeason();
+      refreshCarriedMark();
+      root.setInterval(refreshSeason, 60000);
       onStrip();
       if (postPd) {
         const p = labelPoint(postPd);
@@ -2610,6 +3440,22 @@
     viaPlainFor,
     trickBookFrom,
     performanceSteps,
+    quarterForPatternDay,
+    seasonContextFor,
+    seasonLineFor,
+    SURROUND_POSTURES,
+    surroundingsForDay,
+    CARE_KINDS,
+    openCarryFromLines,
+    careStateFromLines,
+    CORE_KIND_TRICK_RULES,
+    coreCountsFromRecord,
+    legacySignatureStands,
+    carriedLineFor,
+    carriedLinesOfRecord,
+    carriedLineForRecord,
+    stampFromRoot,
+    appendLifeLineViaRoot,
     mount,
   };
 });
