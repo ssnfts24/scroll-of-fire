@@ -6,6 +6,14 @@
   // Mirror Through My Seal, profile comparison, import/export, and sharing.
   // All other modules must use this interface — do not read localStorage directly.
   // GenesisOracleStorage may only be used internally here as a migration adapter.
+  //
+  // Living Genesis Profile (Nov 23, 2026): exactly one saved Oracle 2.0
+  // profile may carry `myGenesis: true` — the keeper's own Genesis profile,
+  // designated explicitly (or by the first-save rule in saveProfile). The
+  // flag lives on the record itself so it travels with export/import, and
+  // initialize() defaults the session selection to it, so the Daily
+  // Mirror and the Oracle page open on the keeper's own signature.
+  // Format: docs/development/GENESIS-PROFILE-FORMAT.md.
 
   const STORAGE_KEY_V2 = "sofGenesisProfilesV2";
   const STORAGE_KEY_LEGACY = "sofGenesisProfiles";
@@ -192,11 +200,16 @@
     });
 
     const hasAny = profiles.length > 0 || dedupedLegacy.length > 0;
+    // The keeper's own Genesis profile is the standing selection: on a
+    // fresh page load the Mirror and the reading open on it without the
+    // keeper having to choose again. An explicit session choice stands.
+    const myGenesis = profiles.find(p => p.myGenesis === true) || null;
     _setState({
       status: hasAny ? "ready" : "empty",
       profiles: profiles.slice(0, 80),
       legacyProfiles: dedupedLegacy.slice(0, 80),
       rejectedRecords,
+      selectedProfileId: _state.selectedProfileId || (myGenesis ? myGenesis.id : null),
       error: null
     });
   }
@@ -235,6 +248,15 @@
         methods: result.methods
       }
     };
+
+    // First-save rule: when the very first Oracle 2.0 profile is saved
+    // and no Genesis profile is designated yet, this one becomes the
+    // keeper's Genesis profile — creating your profile once is the act
+    // the designation names. Later saves never take the designation
+    // silently; it moves only through setMyGenesis.
+    if (_state.profiles.length === 0) {
+      profile.myGenesis = true;
+    }
 
     const updated = [profile, ..._state.profiles].slice(0, 80);
     const writeResult = _writeRaw(STORAGE_KEY_V2, updated);
@@ -293,6 +315,19 @@
     if (!valid.length && !legacy.length) {
       throw new Error("No valid Oracle profiles found in import.");
     }
+
+    // One Genesis profile only, and the keeper's standing designation
+    // outranks an imported one: if a kept profile already carries
+    // myGenesis, imported flags are stripped; otherwise the first
+    // imported flag is kept and any others stripped.
+    const standingMine = merge ? _state.profiles.find(p => p.myGenesis === true) : null;
+    let flagKept = Boolean(standingMine);
+    valid.forEach(record => {
+      if (record.myGenesis === true) {
+        if (flagKept) record.myGenesis = false;
+        else flagKept = true;
+      }
+    });
 
     const base = merge ? _state.profiles : [];
     const merged = [...valid, ...base].slice(0, 80);
@@ -370,6 +405,70 @@
     return migrated;
   }
 
+  function getMyGenesis() {
+    return _state.profiles.find(p => p.myGenesis === true) || null;
+  }
+
+  // Designate one saved Oracle 2.0 profile as the keeper's Genesis
+  // profile. The flag is written onto the record itself (and cleared
+  // from every other), so the designation persists across visits and
+  // travels with export/import. Designating also points the session
+  // selection at it. Legacy records cannot hold the designation —
+  // recalculate one first, as with Mirror Through My Seal.
+  function setMyGenesis(id) {
+    const target = _state.profiles.find(p => p.id === id);
+    if (!target) throw new Error(`Profile ${id} not found among Oracle 2.0 profiles.`);
+    const updated = _state.profiles.map(p => {
+      if (p.id === id) return { ...p, myGenesis: true };
+      if (p.myGenesis === true) return { ...p, myGenesis: false };
+      return p;
+    });
+    const writeResult = _writeRaw(STORAGE_KEY_V2, updated);
+    if (!writeResult.ok) {
+      _setState({ status: "error", error: writeResult.error });
+      throw new Error(writeResult.error.message);
+    }
+    _setState({ profiles: updated, selectedProfileId: id });
+    return updated.find(p => p.id === id);
+  }
+
+  // Recalculate a saved Oracle 2.0 profile with the current engine.
+  // The recalculation is a NEW entry, marked as one, carrying the
+  // original record inside it; the original stands exactly as saved —
+  // a recalculation never silently overwrites the reading it came
+  // from. The Genesis designation does not transfer on its own.
+  function recalculateProfile(id) {
+    const source = _state.profiles.find(p => p.id === id);
+    if (!source) throw new Error(`Profile ${id} not found among Oracle 2.0 profiles.`);
+    if (!globalThis.GenesisOracleEngine) throw new Error("Oracle engine not available.");
+
+    const result = globalThis.GenesisOracleEngine.run({
+      name: source.input?.name || "",
+      birthDate: source.input?.birthDate || "",
+      birthTime: source.input?.birthTime || "",
+      timeZone: source.input?.timeZone || "UTC",
+      boundaryMode: source.input?.boundaryMode || "midnight",
+      sunsetTime: source.input?.sunsetTime || "18:00"
+    });
+
+    const recalculated = saveProfile(result);
+    recalculated.recalculatedFromId = id;
+    recalculated.originalProfileRecord = {
+      id: source.id,
+      input: source.input,
+      calculated: source.calculated,
+      calendarVersion: source.calendarVersion,
+      oracleVersion: source.oracleVersion,
+      createdAt: source.createdAt
+    };
+    recalculated.recalculationTimestamp = new Date().toISOString();
+
+    // Update persisted entry to include recalculation metadata
+    updateProfile(recalculated);
+
+    return recalculated;
+  }
+
   function selectProfile(id) {
     _setState({ selectedProfileId: id });
   }
@@ -405,6 +504,9 @@
     exportProfiles,
     findLegacyProfiles,
     migrateLegacyProfile,
+    getMyGenesis,
+    setMyGenesis,
+    recalculateProfile,
     selectProfile,
     getSelectedProfile,
     subscribe,
