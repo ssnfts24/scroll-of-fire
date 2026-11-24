@@ -1,0 +1,550 @@
+/* The Spark, inhabiting the Sphere — slice 1 (Nov 23, 2026).
+ *
+ * The inhabitant layer (sphere-spark-inhabitant.js) drives the
+ * Spark's presence holder onto the calendar's projected day
+ * plates. These styles are its postures and its light: they act
+ * on the presence's inner art and halo, never on the holder's
+ * transform (the module owns that) and never on the instrument.
+ * Postures are read from data-inhabitant-posture, the daypart
+ * light from data-inhabitant-daypart, both set by the module.
+ */
+
+/* ── Postures ─────────────────────────────────────────────── */
+
+.sphere-spark-presence[data-inhabitant-posture="settle"] .sphere-spark-art {
+  animation: inhabitant-settle 0.9s ease-out;
+}
+
+.sphere-spark-presence[data-inhabitant-posture="sit"] .sphere-spark-art {
+  transform: translateY(7px) scale(1.04, 0.9);
+  transition: transform 1.2s ease;
+}
+
+.sphere-spark-presence[data-inhabitant-posture="observe"] .sphere-spark-art {
+  transform: translateY(-5px);
+  transition: transform 1.2s ease;
+}
+.sphere-spark-presence[data-inhabitant-posture="observe"] .sphere-spark-halo {
+  opacity: 1;
+  filter: brightness(1.25);
+}
+
+.sphere-spark-presence[data-inhabitant-posture="rest"] .sphere-spark-art {
+  transform: translateY(4px) scale(0.94);
+  opacity: 0.78;
+  transition: transform 1.6s ease, opacity 1.6s ease;
+}
+.sphere-spark-presence[data-inhabitant-posture="rest"] .sphere-spark-halo {
+  opacity: 0.45;
+  animation: inhabitant-breathe 4.5s ease-in-out infinite;
+}
+
+.sphere-spark-presence .sphere-spark-art {
+  transition: transform 0.8s ease, opacity 0.8s ease;
+}
+
+@keyframes inhabitant-settle {
+  0% { transform: translateY(-6px) scale(1.05, 0.92); }
+  55% { transform: translateY(2px) scale(0.98, 1.03); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes inhabitant-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+}
+
+/* ── The daypart light ────────────────────────────────────── */
+/* The Spark's glow answers the keeper's own hour: warm at
+ * morning, clear at day, amber at evening, deep and quiet at
+ * night. The hue stays the Spark's own (its halo carries its
+ * kind colour); only the light around it changes. */
+
+.sphere-spark-presence[data-inhabitant-daypart="morning"] .sphere-spark-halo {
+  filter: sepia(0.35) brightness(1.12);
+}
+.sphere-spark-presence[data-inhabitant-daypart="day"] .sphere-spark-halo {
+  filter: brightness(1.05);
+}
+.sphere-spark-presence[data-inhabitant-daypart="evening"] .sphere-spark-halo {
+  filter: sepia(0.55) brightness(1.02);
+}
+.sphere-spark-presence[data-inhabitant-daypart="night"] .sphere-spark-halo {
+  filter: brightness(0.82) saturate(1.15);
+}
+.sphere-spark-presence[data-inhabitant-daypart="night"] {
+  opacity: 0.92;
+}
+
+/* ── A discovery, regarded ────────────────────────────────── */
+/* While the Spark stands on a marked day it found in the
+ * keeper's own record, its light is up — the same brightness
+ * it wears inside an opened day. The mark itself is named on
+ * the holder (data-inhabitant-discovery), not painted here. */
+
+.sphere-spark-presence[data-inhabitant-discovery] .sphere-spark-halo {
+  opacity: 1;
+  filter: brightness(1.35);
+}
+.sphere-spark-presence[data-inhabitant-discovery] .sphere-spark-art {
+  transform: translateY(-3px);
+}
+
+/* ── The favours, in the Spark's panel (slice 2) ──────────── */
+/* The derivation, in plain words, inside the ambient panel
+ * where the keeper line already stands — the panel's own warm
+ * ink, a brass heading, and one line per favour with the facts
+ * it stands on. */
+
+.sphere-spark-favours {
+  margin-top: 0.9rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(218, 164, 91, 0.35);
+}
+.sphere-spark-favours-title {
+  margin: 0 0 0.4rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ambient-brass, #d8a45b);
+}
+.sphere-spark-favours-line {
+  margin: 0.25rem 0;
+  color: #ffe9bd;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+/* ── Inside the day ───────────────────────────────────────── */
+/* While the keeper is inside an opened day, the Spark stands at
+ * the day's own panel with its light up — present, attending. */
+
+.sphere-spark-presence[data-inhabitant-in-day="1"] .sphere-spark-halo {
+  opacity: 1;
+  filter: brightness(1.3);
+}
+.sphere-spark-presence[data-inhabitant-in-day="1"] .sphere-spark-art {
+  transform: translateY(-2px);
+}
+
+/* ── Slice 3: the bow, performed ──────────────────────────── */
+/* The Bow is a posture like the others — the art dips, slow
+ * and low, and comes back. It is worn for the closing rite
+ * inside a day and for the bow acts of a performance. */
+
+.sphere-spark-presence[data-inhabitant-posture="bow"] .sphere-spark-art {
+  transform: translateY(9px) scale(1.07, 0.84);
+  transition: transform 1.05s ease-in-out;
+}
+.sphere-spark-presence[data-inhabitant-posture="bow"] .sphere-spark-halo {
+  opacity: 0.95;
+}
+
+/* ── Slice 3: performance light on the Spark itself ───────── */
+/* While a trick is performed, the module marks the holder with
+ * the act in progress; these are the act's own light — a glow
+ * swelling, a spin, a halo rising. The travel itself is the
+ * module's transform, as always. */
+
+.sphere-spark-presence.inhabitant-do-glow .sphere-spark-halo {
+  animation: inhabitant-pulse 1.25s ease-in-out;
+}
+.sphere-spark-presence.inhabitant-do-spin .sphere-spark-art {
+  animation: inhabitant-spin 0.95s ease;
+}
+.sphere-spark-presence.inhabitant-do-halo .sphere-spark-halo {
+  animation: inhabitant-halo-rise 1.4s ease-out;
+}
+
+@keyframes inhabitant-pulse {
+  0% { transform: scale(1); filter: brightness(1); }
+  45% { transform: scale(1.45); filter: brightness(1.5); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+@keyframes inhabitant-spin {
+  0% { transform: rotate(0deg) scale(1); }
+  55% { transform: rotate(300deg) scale(1.12, 0.9); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+@keyframes inhabitant-halo-rise {
+  0% { transform: translateY(0) scale(1); opacity: 0.9; }
+  60% { transform: translateY(-16px) scale(1.25); opacity: 1; filter: brightness(1.5); }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* ── Slice 3: lights laid on the plates ───────────────────── */
+/* A performance leaves small lights on the geometry itself —
+ * a ripple ring where the Spark bows beside a day, ember motes
+ * along a drift, a ground-glow at a landing, a star that holds
+ * while a constellation joins. They are positioned by the
+ * module at a plate's projected centre, in the wrap's own
+ * space, and removed when spent. */
+
+.inhabitant-fx {
+  position: absolute;
+  pointer-events: none;
+  z-index: 11;
+  transform: translate(-50%, -50%);
+}
+.inhabitant-fx-ripple {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 2px solid rgba(140, 200, 235, 0.85);
+  animation: inhabitant-ripple 1.4s ease-out forwards;
+}
+.inhabitant-fx-mote {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ffb36b;
+  box-shadow: 0 0 8px 2px rgba(255, 160, 80, 0.75);
+  animation: inhabitant-mote 1.25s ease-out forwards;
+}
+.inhabitant-fx-ground {
+  width: 84px;
+  height: 30px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(150, 220, 140, 0.55), rgba(150, 220, 140, 0) 70%);
+  animation: inhabitant-ground 1.5s ease-out forwards;
+}
+.inhabitant-fx-star {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #fff6d8;
+  box-shadow: 0 0 12px 4px rgba(255, 240, 190, 0.8);
+  animation: inhabitant-star 2.6s ease-in-out forwards;
+}
+
+@keyframes inhabitant-ripple {
+  0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0.95; }
+  100% { transform: translate(-50%, -50%) scale(1.7); opacity: 0; }
+}
+@keyframes inhabitant-mote {
+  0% { transform: translate(-50%, -50%); opacity: 1; }
+  100% { transform: translate(-50%, -30%) translateY(12px); opacity: 0; }
+}
+@keyframes inhabitant-ground {
+  0% { transform: translate(-50%, -50%) scale(0.6); opacity: 0.9; }
+  100% { transform: translate(-50%, -50%) scale(1.25); opacity: 0; }
+}
+@keyframes inhabitant-star {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+  25% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  75% { opacity: 1; }
+  100% { opacity: 0.25; transform: translate(-50%, -50%) scale(0.9); }
+}
+
+/* ── Slice 3: the trick book, in the Spark's panel ────────── */
+/* The book stands under the favours in the same panel, in the
+ * panel's own warm ink: what the Spark can do, what taught it,
+ * and what would teach the rest — plain words, no scores. */
+
+.sphere-spark-tricks {
+  margin-top: 0.9rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(218, 164, 91, 0.35);
+}
+.sphere-spark-tricks-title {
+  margin: 0 0 0.4rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ambient-brass, #d8a45b);
+}
+.sphere-spark-tricks-line {
+  margin: 0.25rem 0;
+  color: #ffe9bd;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+.sphere-spark-tricks-note {
+  color: #ffd98a;
+}
+.sphere-spark-trick-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  margin: 0.3rem 0;
+  flex-wrap: wrap;
+}
+.sphere-spark-trick-btn {
+  appearance: none;
+  border: 1px solid rgba(218, 164, 91, 0.55);
+  background: rgba(218, 164, 91, 0.12);
+  color: #ffe9bd;
+  border-radius: 999px;
+  padding: 0.28rem 0.8rem;
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+.sphere-spark-trick-btn:hover:not(:disabled),
+.sphere-spark-trick-btn:focus-visible {
+  background: rgba(218, 164, 91, 0.28);
+}
+.sphere-spark-trick-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.sphere-spark-trick-btn-quiet {
+  border-color: rgba(218, 164, 91, 0.3);
+  background: transparent;
+}
+.sphere-spark-trick-via {
+  color: rgba(255, 233, 189, 0.75);
+  font-size: 0.82rem;
+}
+.sphere-spark-trick-unlearned {
+  color: rgba(255, 233, 189, 0.85);
+}
+
+/* ── Slice 6: the Whole Road ──────────────────────────────── */
+/* The road's summary and its reading stand in the book in the
+ * book's own ink; the reading — the beat the Spark stands in,
+ * named as it is reached — is set apart in the note's gold,
+ * and stands in the season's section at the year's reading
+ * in the same dress. */
+
+.sphere-spark-road-summary {
+  margin-top: 0.7rem;
+  color: #ffd98a;
+}
+.sphere-spark-road-now {
+  font-style: italic;
+  color: #ffd98a;
+  min-height: 1.45em;
+}
+.sphere-spark-road-now:empty {
+  min-height: 0;
+}
+.sphere-spark-season-road {
+  margin-top: 0.5rem;
+}
+
+/* ── Slice 3: closing a day, together ─────────────────────── */
+/* The rite's row stands in the day sheet's leave-taking
+ * section, in the sheet's own ink: the Spark's reading of the
+ * day, and the one button that closes it together. */
+
+.sphere-spark-closing {
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(160, 110, 50, 0.4);
+}
+.sphere-spark-closing-line {
+  margin: 0.3rem 0;
+  line-height: 1.5;
+}
+.sphere-spark-closing-note {
+  font-style: italic;
+}
+.sphere-spark-closing-btn {
+  appearance: none;
+  margin-top: 0.45rem;
+  border: 1px solid rgba(160, 110, 50, 0.65);
+  background: rgba(218, 164, 91, 0.16);
+  color: inherit;
+  border-radius: 999px;
+  padding: 0.4rem 1rem;
+  font: inherit;
+  cursor: pointer;
+}
+.sphere-spark-closing-btn:hover,
+.sphere-spark-closing-btn:focus-visible {
+  background: rgba(218, 164, 91, 0.32);
+}
+
+/* Slice 4 — Carry the Lantern: a small lit lamp riding the
+ * holder at its station in an opened day, when the lantern
+ * stands learned. It hangs at the Spark's side and sways
+ * gently; its flame is warm light, nothing more. */
+.inhabitant-lantern {
+  position: absolute;
+  right: -14px;
+  top: 46%;
+  width: 18px;
+  height: 26px;
+  pointer-events: none;
+  transform-origin: 50% -6px;
+  animation: inhabitant-lantern-sway 3.6s ease-in-out infinite;
+  z-index: 3;
+}
+.inhabitant-lantern::before {
+  /* the bail — the little handle the Spark carries it by */
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -5px;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  border: 1.5px solid rgba(146, 106, 48, 0.9);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+}
+.inhabitant-lantern-frame {
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid rgba(146, 106, 48, 0.9);
+  border-radius: 5px 5px 7px 7px;
+  background: radial-gradient(circle at 50% 62%, rgba(255, 205, 110, 0.95) 0%, rgba(255, 166, 62, 0.55) 45%, rgba(120, 70, 20, 0.25) 100%);
+  box-shadow: 0 0 14px 4px rgba(255, 178, 84, 0.45), 0 0 34px 10px rgba(255, 158, 64, 0.18);
+}
+.inhabitant-lantern-flame {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 6px;
+  height: 9px;
+  margin-left: -3px;
+  border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+  background: #ffe9b0;
+  box-shadow: 0 0 6px 2px rgba(255, 214, 120, 0.8);
+  animation: inhabitant-lantern-flicker 1.7s ease-in-out infinite;
+}
+@keyframes inhabitant-lantern-sway {
+  0%, 100% { transform: rotate(2.5deg); }
+  50% { transform: rotate(-2.5deg); }
+}
+@keyframes inhabitant-lantern-flicker {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  40% { transform: scale(0.88, 1.08); opacity: 0.92; }
+  70% { transform: scale(1.06, 0.94); opacity: 1; }
+}
+
+/* ── Slice 5: the season's light ──────────────────────────── */
+/* The year answers in the Spark's light: at a Moon's turn the
+ * light lifts; at the days outside the count it dims and
+ * stills — the threshold kept, no plate pretended. */
+
+.sphere-spark-presence[data-inhabitant-season="moon-turn"] .sphere-spark-halo,
+.sphere-spark-presence[data-inhabitant-season="moon-opening"] .sphere-spark-halo,
+.sphere-spark-presence[data-inhabitant-season="year-gate"] .sphere-spark-halo {
+  filter: brightness(1.3);
+}
+.sphere-spark-presence[data-inhabitant-season="day-out-of-time"],
+.sphere-spark-presence[data-inhabitant-season="deep-time-day"] {
+  opacity: 0.88;
+}
+.sphere-spark-presence[data-inhabitant-season="day-out-of-time"] .sphere-spark-halo,
+.sphere-spark-presence[data-inhabitant-season="deep-time-day"] .sphere-spark-halo {
+  opacity: 0.5;
+  filter: brightness(0.85) saturate(1.1);
+}
+
+/* ── Slice 5: the day's dress (Tend) ──────────────────────── */
+/* The keeper's chosen dress for the Spark's light, worn over
+ * the daypart light — these rules stand after the daypart
+ * rules so the dress is what shows. */
+
+.sphere-spark-presence[data-inhabitant-wear="kind-glow"] .sphere-spark-halo {
+  filter: brightness(1.4) saturate(1.2);
+}
+.sphere-spark-presence[data-inhabitant-wear="hour-halo"] .sphere-spark-halo {
+  filter: brightness(1.1);
+  box-shadow: 0 0 22px 6px rgba(255, 233, 189, 0.35);
+}
+.sphere-spark-presence[data-inhabitant-wear="flame-wrap"] .sphere-spark-halo {
+  filter: sepia(0.5) brightness(1.25) saturate(1.3);
+}
+
+/* ── Slice 5: Quiet Company ───────────────────────────────── */
+/* While the Spark sits with the keeper in an opened day, its
+ * light lowers and stills — present, making no offers. */
+
+.sphere-spark-presence[data-inhabitant-quiet="1"] .sphere-spark-halo {
+  opacity: 0.5;
+  filter: brightness(0.9);
+}
+
+/* ── Slice 5: the carried keepsake's light ────────────────── */
+/* While a carry stands open, the keepsake's light rides the
+ * holder — a small steady light at the Spark's side, the
+ * same place the lantern hangs, plainer and stiller. */
+
+.inhabitant-carried {
+  position: absolute;
+  right: -10px;
+  top: 30%;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #ffd98f;
+  box-shadow: 0 0 10px 3px rgba(255, 214, 130, 0.75), 0 0 26px 9px rgba(255, 200, 110, 0.25);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* ── Slice 5: the season and the care, in the Spark's panel ── */
+/* Two more sections in the panel's own warm ink: the year
+ * around the Spark, and the care the keeper can give — plain
+ * acts, each standing once a day, nothing running down. */
+
+.sphere-spark-season,
+.sphere-spark-care {
+  margin-top: 0.9rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(218, 164, 91, 0.35);
+}
+.sphere-spark-season-title,
+.sphere-spark-care-title {
+  margin: 0 0 0.4rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ambient-brass, #d8a45b);
+}
+.sphere-spark-season-line,
+.sphere-spark-care-line {
+  margin: 0.25rem 0;
+  color: #ffe9bd;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+.sphere-spark-care-note {
+  color: #ffd98a;
+}
+.sphere-spark-care-carrying {
+  color: #ffd98a;
+}
+.sphere-spark-care-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  margin: 0.3rem 0;
+  flex-wrap: wrap;
+}
+.sphere-spark-care-btn {
+  appearance: none;
+  border: 1px solid rgba(218, 164, 91, 0.55);
+  background: rgba(218, 164, 91, 0.12);
+  color: #ffe9bd;
+  border-radius: 999px;
+  padding: 0.28rem 0.8rem;
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+.sphere-spark-care-btn:hover:not(:disabled),
+.sphere-spark-care-btn:focus-visible {
+  background: rgba(218, 164, 91, 0.28);
+}
+.sphere-spark-care-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sphere-spark-presence[data-inhabitant-posture="settle"] .sphere-spark-art,
+  .sphere-spark-presence[data-inhabitant-posture="rest"] .sphere-spark-halo,
+  .sphere-spark-presence.inhabitant-do-glow .sphere-spark-halo,
+  .sphere-spark-presence.inhabitant-do-spin .sphere-spark-art,
+  .sphere-spark-presence.inhabitant-do-halo .sphere-spark-halo,
+  .inhabitant-fx,
+  .inhabitant-lantern,
+  .inhabitant-lantern-flame {
+    animation: none;
+  }
+}

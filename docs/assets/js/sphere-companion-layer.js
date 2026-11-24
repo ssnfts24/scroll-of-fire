@@ -816,6 +816,33 @@
     document.head.appendChild(s);
   })();
 
+  // ── The Spark, inhabiting the Sphere (Nov 23, 2026) ──
+  // Slice 1 of Aaron's Living Play and Companion Expansion: the
+  // Spark stops orbiting over the face and takes its post on the
+  // calendar's own projected geometry — today's plate, the
+  // keeper's selected day, inside the opened day's panel, living
+  // idly while the keeper is still, its light answering the
+  // keeper's hour. The layer rides this loader the same way the
+  // Genesis layer does: a stylesheet and a script set on the
+  // page, and nothing else in this layer changes. The module
+  // reads only the page's public state strip, the label layer's
+  // projected day labels, and the keeper's own record (to lean
+  // its idle choices); it writes no state, keeps no calendar of
+  // its own, and touches no protected file.
+  (() => {
+    if (document.querySelector("script[data-sphere-spark-inhabitant]")) return;
+    const css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = "assets/css/sphere-spark-inhabitant.css?v=20261124-4";
+    css.setAttribute("data-sphere-spark-inhabitant", "");
+    document.head.appendChild(css);
+    const s = document.createElement("script");
+    s.src = "assets/js/sphere-spark-inhabitant.js?v=20261124-4";
+    s.async = false;
+    s.setAttribute("data-sphere-spark-inhabitant", "");
+    document.head.appendChild(s);
+  })();
+
   // ── The Spark's presence on this page was RESET (Nov 20, 2026) ──
   // Aaron's order: a full reset of the Spark layer, built fresh —
   // not patched. The orbit and bubble guide that stood here are
