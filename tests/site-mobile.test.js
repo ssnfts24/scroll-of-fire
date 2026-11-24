@@ -42,7 +42,9 @@ const EXCLUDED_FILES = new Set([
   "living-time-sphere.html",
   "404.html",
   "offline.html",
-  "caravan.html"
+  "caravan.html",
+  // Gate G (G2): account.html is a utility page, as offline.html.
+  "account.html"
 ]);
 const EXCLUDED_DIRS = new Set(["scroll", "scripture"]);
 

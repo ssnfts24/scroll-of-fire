@@ -20,12 +20,15 @@ function read(rel) {
  * - 404.html: error page, served from the domain root with its own base.
  * - offline.html: offline fallback utility page (no stylesheet stack).
  * - caravan.html: meta-refresh redirect stub to covenant-caravan.html.
+ * - account.html: Gate G (G2) sign-in utility page (noindex,
+ *   catalog-classified Utility), standalone like offline.html.
  */
 const EXCLUDED = [
   "living-time-sphere.html",
   "404.html",
   "offline.html",
-  "caravan.html"
+  "caravan.html",
+  "account.html"
 ];
 
 const topLevelPages = fs
@@ -40,7 +43,8 @@ test("the exclusion list is exactly the protected + utility pages", () => {
     "living-time-sphere.html",
     "404.html",
     "offline.html",
-    "caravan.html"
+    "caravan.html",
+    "account.html"
   ]);
   for (const name of EXCLUDED) {
     assert.ok(topLevelPages.includes(name), `excluded page should exist: ${name}`);
