@@ -14,9 +14,9 @@
       "deployed-but-unlinked": 64,
       "unreachable-from-homepage": 4,
       "compatibility-redirect-page": 1,
-      "not-in-sitemap": 2,
       "not-published-in-catalog": 30,
-      "unnamed-image-needs-descriptive-title": 21
+      "unnamed-image-needs-descriptive-title": 21,
+      "not-in-sitemap": 1
     }
   },
   "resources": [
@@ -13449,7 +13449,7 @@
       "privacyEligibility": "approved-public",
       "discoverability": {
         "path": "install.html",
-        "inSitemap": false,
+        "inSitemap": true,
         "inGlobalNav": false,
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
@@ -13457,9 +13457,7 @@
         "inboundPages": 3,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "not-in-sitemap"
-      ]
+      "issues": []
     },
     {
       "id": "glossary",
@@ -15010,7 +15008,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (229 files)",
+      "title": "tests/ (230 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
