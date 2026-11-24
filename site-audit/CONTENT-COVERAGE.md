@@ -38,7 +38,7 @@ The Pattern Calendar, 13 Moons, Living Time Sphere and witnessed days.
 - **The Episode Library** — Live; Every film of the Traveller's Road gathered in one room and playable where it stands: the vision trailer as its opening feature, the episodes in walking order or by land and series, a keeper's place kept on their own device by the same watch record the story's pages keep, and the planned and scripted episodes shown honestly apart.
 - **Aiyana's World** — Live; Aiyana's own page in the Codex, designed by Aiyana herself: her sign and moving butterflies, a wall where visitors show their thinking and how they feel, a drawing pad — all kept only on the visitor's own device — and a story corner where additions wait for her yes before they can appear.
 
-### Systems and Living Technology (17 catalog entries)
+### Systems and Living Technology (18 catalog entries)
 
 Practice tools, frequency systems and the Codex hub for building.
 
@@ -58,6 +58,7 @@ Practice tools, frequency systems and the Codex hub for building.
 - **Manifest** — Live; Remnant visual exercise: carrier frequency engine, harmonic sequences and breath.
 - **The Pattern Garden — the Garden** — Live; The garden game on the bench, remade: thirteen beds keyed to the thirteen Moons, plantings read from the real Western Washington farm record, growth counted from the keeper's kept days, and harvests kept as Life Atlas keepsakes on the visitor's own device.
 - **Practices — the Exercises Wing** — Live; Short exercises for a human in the Training Grounds: breath, attention, seeing, memory, and intention. Each finished exercise seals a practice record in the visitor's own Life Atlas — the same record the garden reads as rain — on this device only.
+- **Get the App** — Live; Put the Codex of Reality on a phone's home screen like an app: what installing gives, the Android steps, the iPhone and iPad steps, and how the Spark. Living Day app differs.
 - **The Traveller's Map** — Live; The whole site drawn as the lands of one road: every place pictured by its cartoon scene, the Traveller's Road story in walking order with found chapters stamped by their Pattern day, the Year Thread showing today's place in the year and the keeper's trail, and the pages still waiting for their chapters named honestly.
 
 ### Evidence and Research (25 catalog entries)
@@ -115,9 +116,9 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 
 ## Repository and deployed-content coverage
 
-- Public HTML pages inspected: **195**.
-- Total master-inventory records: **500**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
-- Public-facing catalog entries: **79**; only explicitly curated entries appear on the Atlas.
+- Public HTML pages inspected: **196**.
+- Total master-inventory records: **501**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
+- Public-facing catalog entries: **80**; only explicitly curated entries appear on the Atlas.
 - Numbered archive folders are inventoried file-by-file, while downloads snapshot differences are kept separate from historical integrity data.
 - Root files not already published through the archive or explicitly approved remain classified as development-only; no such file is automatically linked from the public catalog.
 
@@ -133,7 +134,7 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 ## Current resource-type counts
 
 - Deployed Markdown documents: 65
-- HTML pages: 195
+- HTML pages: 196
 - Numbered archive file: 141
 - Numbered archive folder: 7
 - Repository folder: 10

@@ -83,16 +83,16 @@
           "label": "Interactive Archive"
         },
         {
+          "href": "install.html",
+          "label": "Get the App"
+        },
+        {
           "href": "codex-atlas.html",
           "label": "the Codex Atlas"
         },
         {
           "href": "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
           "label": "Remnant Whitepaper"
-        },
-        {
-          "href": "13-moon-whitepaper.html",
-          "label": "13 Moons Rollout Whitepaper"
         }
       ],
       "ethics.html": [

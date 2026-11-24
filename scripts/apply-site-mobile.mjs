@@ -27,9 +27,10 @@
  *   - docs/caravan.html — meta-refresh redirect stub.
  *   - docs/scroll/ and docs/scripture/ — generator-owned pages.
  *     Their generators (scripts/build-scroll-library.mjs and
- *     scripts/r2_02_pages.py) own their heads; the same two
- *     lines are theirs to emit, as they already emit the Spark
- *     presence. Until they do, those trees stand as they are.
+ *     scripts/r2_02_pages.py) own their heads; since the
+ *     one-PR redesign (Nov 24, 2026) both generators emit the
+ *     same two lines themselves, as they already emit the
+ *     Spark presence.
  *
  * Idempotent: anything already present is left exactly as it is.
  *
@@ -47,7 +48,12 @@ const EXCLUDED_FILES = new Set([
   "living-time-sphere.html",
   "404.html",
   "offline.html",
-  "caravan.html"
+  "caravan.html",
+  // Gate G (G2): account.html is a utility page, as
+  // offline.html — tests/site-mobile.test.js has
+  // always expected it excluded; the stamper now
+  // agrees (one-PR redesign, Nov 24, 2026).
+  "account.html"
 ]);
 const EXCLUDED_DIRS = new Set(["scroll", "scripture"]);
 

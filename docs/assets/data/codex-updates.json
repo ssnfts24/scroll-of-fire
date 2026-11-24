@@ -2,6 +2,14 @@
  {
   "date": "2026-11-24",
   "type": "interface",
+  "title": "The whole Codex becomes an app: one redesign, every room",
+  "summary": "One redesign carried across the whole site at Aaron’s word. The Scroll library and the Scripture reader — 107 pages, more than half the site — now receive the phone floor and the site’s install identity from their own generators, closing the remainder those trees had carried: every page of the Codex now stands on the same mobile floor. On phones the stacked bars give way to one: the travel bar stays pinned while the older header scrolls away, returning its height to the reading, and moving between rooms fades the way an app moves instead of flashing the way a reload does. A new page, Get the App, teaches the home-screen install plainly for Android, iPhone, and iPad; the site’s manifest gained room shortcuts, and the front door carries iPhone launch images so an installed Codex never opens on a white screen. One colour now stands at launch in every tree. The shop’s till is built and dark: the Stripe socket was carried from the door to the site with a shop sibling beside it, the two standard Tensor Band pieces carry buy buttons that wake only when Aaron’s own Stripe connection lights them, and ordering by email stands untouched until then. No protected instrument moved; the Sphere’s arrival is this morning’s own work, and this redesign built around it.",
+  "url": "./install.html",
+  "symbol": "✦"
+ },
+ {
+  "date": "2026-11-24",
+  "type": "interface",
   "title": "The Sphere stands clear on arrival, and the sky panel holds its own key",
   "summary": "On a phone, the Observatory's guide furniture stood over the Sphere on arrival: the sky dome and the test layers had taken seats in the caption deck and grown it to most of the screen, and the story doors filled the stage column itself, so the keeper met panels, not the instrument. The three panels now ride in the guide sheet as rooms at phone width — lowered on arrival, raised only by the keeper's tap — and the stage stands clear, the Sphere live and dominant from the first moment. The sky panel also gained the control its own sentence names: inside 'The sky over your place' stands the page's one Set location, the same coarse place kept only on this device, to set, change, or clear, with a Not now that quiets the no-place notice for the visit and a plain Set location button that brings the form back. Set a place and the sky draws over it; clear it and the notice returns with its control beside it. The desktop page is unchanged, and no part of the instrument moved — no geometry, rendering, camera, motion, selection, or label rule.",
   "url": "./living-time-sphere.html",

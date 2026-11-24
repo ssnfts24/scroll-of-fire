@@ -92,7 +92,7 @@ test("the sky is not a land, the road is not a land, and the flat rooms carry th
   assert.deepEqual(LandsData.sky.map(s => s.id), ["living-time-sphere"], "the Sphere is the sky — never shelved in a land");
   assert.deepEqual(LandsData.road.map(s => s.id), ["covenant-caravan"], "the Caravan is the road itself");
   const flatIds = LandsData.flat.map(f => f.id).sort();
-  assert.deepEqual(flatIds, ["about-aaron", "circle", "codex-guide", "ethics", "guide", "methods", "provenance", "repo-readme", "sending-test"]);
+  assert.deepEqual(flatIds, ["about-aaron", "circle", "codex-guide", "ethics", "get-the-app", "guide", "methods", "provenance", "repo-readme", "sending-test"]);
   for (const f of LandsData.flat) assert.ok(f.reason && f.reason.length > 10, `${f.id}: flat by design, with its reason stated`);
   const landPages = LandsData.lands.flatMap(l => l.pages.map(p => p.id));
   for (const id of [...flatIds, "living-time-sphere", "covenant-caravan"]) {

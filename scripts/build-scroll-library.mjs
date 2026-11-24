@@ -206,7 +206,7 @@ const homepage = `<!doctype html>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Read the preserved Scroll of Fire manuscript in an organized, source-linked library.">
-  <meta name="theme-color" content="#101a2b">
+  <meta name="theme-color" content="#05070d">
   <title>Scroll of Fire — Unsealed Library</title>
   <link rel="canonical" href="https://codexofreality.org/scroll/index.html">
   <meta property="og:type" content="website">
@@ -221,6 +221,7 @@ const homepage = `<!doctype html>
   <meta name="twitter:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
   <link rel="icon" type="image/png" href="../assets/img/shared/branding/favicon.png">
   <link rel="apple-touch-icon" href="../assets/img/shared/branding/favicon.png">
+  <link rel="manifest" href="../manifest-site.webmanifest">
   <link rel="stylesheet" href="assets/library.css">
   <link rel="stylesheet" href="../assets/css/living-ui.css?v=20261117-1">
   <script defer src="../assets/js/site.js"></script>
@@ -248,6 +249,7 @@ const homepage = `<!doctype html>
   <!-- Garden of Paths, first slice (Q-04): the trails panel. -->
   <link rel="stylesheet" href="../assets/css/paths.css?v=20261122-1">
   <script defer src="../assets/js/paths-from-here.js?v=20261122-1"></script>
+  <link rel="stylesheet" href="../assets/css/site-mobile.css?v=20261124-1">
 </head>
 <body class="library-home living-ui">
   <a class="skip-link" href="#main">Skip to library</a>
@@ -334,7 +336,7 @@ const reader = `<!doctype html>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Read a source-linked passage from the preserved Scroll of Fire manuscript.">
-  <meta name="theme-color" content="#101a2b">
+  <meta name="theme-color" content="#05070d">
   <title>Reading the Scroll — Unsealed Library</title>
   <link rel="canonical" href="https://codexofreality.org/scroll/reader.html">
   <meta property="og:type" content="website">
@@ -349,6 +351,7 @@ const reader = `<!doctype html>
   <meta name="twitter:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
   <link rel="icon" type="image/png" href="../assets/img/shared/branding/favicon.png">
   <link rel="apple-touch-icon" href="../assets/img/shared/branding/favicon.png">
+  <link rel="manifest" href="../manifest-site.webmanifest">
   <link rel="stylesheet" href="assets/library.css">
   <link rel="stylesheet" href="../assets/css/living-ui.css?v=20261117-1">
   <script defer src="../assets/js/site.js"></script>
@@ -358,6 +361,7 @@ const reader = `<!doctype html>
   <script defer src="../assets/js/spark-companion.js?v=20261119-1"></script>
   <script defer src="../assets/js/spark-relations.js?v=20261122-1"></script>
   <script defer src="../assets/js/spark-presence.js?v=20261119-1"></script>
+  <link rel="stylesheet" href="../assets/css/site-mobile.css?v=20261124-1">
 </head>
 <body class="reader-page living-ui">
   <a class="skip-link" href="#reading">Skip to passage</a>
@@ -410,7 +414,7 @@ function toolPage({ file, title, description, bodyClass, current, intro, body, s
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="${escapeHtml(description)}">
-  <meta name="theme-color" content="#101a2b">
+  <meta name="theme-color" content="#05070d">
   <title>${escapeHtml(title)} — Scroll of Fire Library</title>
   <link rel="canonical" href="https://codexofreality.org/scroll/${file}">
   <meta property="og:type" content="website">
@@ -425,6 +429,7 @@ function toolPage({ file, title, description, bodyClass, current, intro, body, s
   <meta name="twitter:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
   <link rel="icon" type="image/png" href="../assets/img/shared/branding/favicon.png">
   <link rel="apple-touch-icon" href="../assets/img/shared/branding/favicon.png">
+  <link rel="manifest" href="../manifest-site.webmanifest">
   <link rel="stylesheet" href="assets/library.css">
   <link rel="stylesheet" href="../assets/css/living-ui.css?v=20261117-1">
   <script defer src="../assets/js/site.js"></script>
@@ -435,6 +440,7 @@ ${scripts.map(script => `  <script defer src="assets/${script}"></script>`).join
   <script defer src="../assets/js/spark-companion.js?v=20261119-1"></script>
   <script defer src="../assets/js/spark-relations.js?v=20261122-1"></script>
   <script defer src="../assets/js/spark-presence.js?v=20261119-1"></script>
+  <link rel="stylesheet" href="../assets/css/site-mobile.css?v=20261124-1">
 </head>
 <body class="tool-body ${bodyClass} living-ui">
   <a class="skip-link" href="#main">Skip to content</a>

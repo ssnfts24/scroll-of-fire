@@ -748,7 +748,7 @@
      "area": "evidence"
     }
    ],
-   "outTotal": 70,
+   "outTotal": 71,
    "inTotal": 13
   },
   "codex-guide.html": {
@@ -950,6 +950,11 @@
    "area": "archive",
    "out": [
     {
+     "path": "install.html",
+     "title": "Get the App — Put the Codex on Your Home Screen · Codex of Reality",
+     "area": "systems"
+    },
+    {
      "path": "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
      "title": "Scroll of Fire · Codex of Reality · Remnant Whitepaper",
      "area": "scroll-scripture"
@@ -1002,6 +1007,11 @@
      "area": "evidence"
     },
     {
+     "path": "install.html",
+     "title": "Get the App — Put the Codex on Your Home Screen · Codex of Reality",
+     "area": "systems"
+    },
+    {
      "path": "methods.html",
      "title": "How the Sphere Knows — Methods",
      "area": "evidence"
@@ -1027,8 +1037,8 @@
      "area": "evidence"
     }
    ],
-   "outTotal": 3,
-   "inTotal": 12
+   "outTotal": 4,
+   "inTotal": 13
   },
   "episodes.html": {
    "title": "The Episode Library",
@@ -1864,9 +1874,9 @@
      "area": "systems"
     },
     {
-     "path": "account.html",
-     "title": "Your Account — One Sign-In for the App and the Site",
-     "area": "codex"
+     "path": "install.html",
+     "title": "Get the App — Put the Codex on Your Home Screen · Codex of Reality",
+     "area": "systems"
     }
    ],
    "in": [
@@ -1886,7 +1896,37 @@
      "area": "codex"
     }
    ],
-   "outTotal": 24,
+   "outTotal": 25,
+   "inTotal": 3
+  },
+  "install.html": {
+   "title": "Get the App — Put the Codex on Your Home Screen · Codex of Reality",
+   "area": "systems",
+   "out": [
+    {
+     "path": "downloads.html",
+     "title": "Downloads & Integrity",
+     "area": "archive"
+    }
+   ],
+   "in": [
+    {
+     "path": "codex-atlas.html",
+     "title": "Codex Atlas",
+     "area": "archive"
+    },
+    {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    },
+    {
+     "path": "downloads.html",
+     "title": "Downloads & Integrity",
+     "area": "archive"
+    }
+   ],
+   "outTotal": 1,
    "inTotal": 3
   },
   "invoke.html": {
