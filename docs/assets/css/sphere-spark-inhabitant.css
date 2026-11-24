@@ -127,9 +127,219 @@
   transform: translateY(-2px);
 }
 
+/* ── Slice 3: the bow, performed ──────────────────────────── */
+/* The Bow is a posture like the others — the art dips, slow
+ * and low, and comes back. It is worn for the closing rite
+ * inside a day and for the bow acts of a performance. */
+
+.sphere-spark-presence[data-inhabitant-posture="bow"] .sphere-spark-art {
+  transform: translateY(9px) scale(1.07, 0.84);
+  transition: transform 1.05s ease-in-out;
+}
+.sphere-spark-presence[data-inhabitant-posture="bow"] .sphere-spark-halo {
+  opacity: 0.95;
+}
+
+/* ── Slice 3: performance light on the Spark itself ───────── */
+/* While a trick is performed, the module marks the holder with
+ * the act in progress; these are the act's own light — a glow
+ * swelling, a spin, a halo rising. The travel itself is the
+ * module's transform, as always. */
+
+.sphere-spark-presence.inhabitant-do-glow .sphere-spark-halo {
+  animation: inhabitant-pulse 1.25s ease-in-out;
+}
+.sphere-spark-presence.inhabitant-do-spin .sphere-spark-art {
+  animation: inhabitant-spin 0.95s ease;
+}
+.sphere-spark-presence.inhabitant-do-halo .sphere-spark-halo {
+  animation: inhabitant-halo-rise 1.4s ease-out;
+}
+
+@keyframes inhabitant-pulse {
+  0% { transform: scale(1); filter: brightness(1); }
+  45% { transform: scale(1.45); filter: brightness(1.5); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+@keyframes inhabitant-spin {
+  0% { transform: rotate(0deg) scale(1); }
+  55% { transform: rotate(300deg) scale(1.12, 0.9); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+@keyframes inhabitant-halo-rise {
+  0% { transform: translateY(0) scale(1); opacity: 0.9; }
+  60% { transform: translateY(-16px) scale(1.25); opacity: 1; filter: brightness(1.5); }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* ── Slice 3: lights laid on the plates ───────────────────── */
+/* A performance leaves small lights on the geometry itself —
+ * a ripple ring where the Spark bows beside a day, ember motes
+ * along a drift, a ground-glow at a landing, a star that holds
+ * while a constellation joins. They are positioned by the
+ * module at a plate's projected centre, in the wrap's own
+ * space, and removed when spent. */
+
+.inhabitant-fx {
+  position: absolute;
+  pointer-events: none;
+  z-index: 11;
+  transform: translate(-50%, -50%);
+}
+.inhabitant-fx-ripple {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 2px solid rgba(140, 200, 235, 0.85);
+  animation: inhabitant-ripple 1.4s ease-out forwards;
+}
+.inhabitant-fx-mote {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ffb36b;
+  box-shadow: 0 0 8px 2px rgba(255, 160, 80, 0.75);
+  animation: inhabitant-mote 1.25s ease-out forwards;
+}
+.inhabitant-fx-ground {
+  width: 84px;
+  height: 30px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(150, 220, 140, 0.55), rgba(150, 220, 140, 0) 70%);
+  animation: inhabitant-ground 1.5s ease-out forwards;
+}
+.inhabitant-fx-star {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #fff6d8;
+  box-shadow: 0 0 12px 4px rgba(255, 240, 190, 0.8);
+  animation: inhabitant-star 2.6s ease-in-out forwards;
+}
+
+@keyframes inhabitant-ripple {
+  0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0.95; }
+  100% { transform: translate(-50%, -50%) scale(1.7); opacity: 0; }
+}
+@keyframes inhabitant-mote {
+  0% { transform: translate(-50%, -50%); opacity: 1; }
+  100% { transform: translate(-50%, -30%) translateY(12px); opacity: 0; }
+}
+@keyframes inhabitant-ground {
+  0% { transform: translate(-50%, -50%) scale(0.6); opacity: 0.9; }
+  100% { transform: translate(-50%, -50%) scale(1.25); opacity: 0; }
+}
+@keyframes inhabitant-star {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+  25% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  75% { opacity: 1; }
+  100% { opacity: 0.25; transform: translate(-50%, -50%) scale(0.9); }
+}
+
+/* ── Slice 3: the trick book, in the Spark's panel ────────── */
+/* The book stands under the favours in the same panel, in the
+ * panel's own warm ink: what the Spark can do, what taught it,
+ * and what would teach the rest — plain words, no scores. */
+
+.sphere-spark-tricks {
+  margin-top: 0.9rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(218, 164, 91, 0.35);
+}
+.sphere-spark-tricks-title {
+  margin: 0 0 0.4rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ambient-brass, #d8a45b);
+}
+.sphere-spark-tricks-line {
+  margin: 0.25rem 0;
+  color: #ffe9bd;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+.sphere-spark-tricks-note {
+  color: #ffd98a;
+}
+.sphere-spark-trick-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  margin: 0.3rem 0;
+  flex-wrap: wrap;
+}
+.sphere-spark-trick-btn {
+  appearance: none;
+  border: 1px solid rgba(218, 164, 91, 0.55);
+  background: rgba(218, 164, 91, 0.12);
+  color: #ffe9bd;
+  border-radius: 999px;
+  padding: 0.28rem 0.8rem;
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+.sphere-spark-trick-btn:hover:not(:disabled),
+.sphere-spark-trick-btn:focus-visible {
+  background: rgba(218, 164, 91, 0.28);
+}
+.sphere-spark-trick-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.sphere-spark-trick-btn-quiet {
+  border-color: rgba(218, 164, 91, 0.3);
+  background: transparent;
+}
+.sphere-spark-trick-via {
+  color: rgba(255, 233, 189, 0.75);
+  font-size: 0.82rem;
+}
+.sphere-spark-trick-unlearned {
+  color: rgba(255, 233, 189, 0.85);
+}
+
+/* ── Slice 3: closing a day, together ─────────────────────── */
+/* The rite's row stands in the day sheet's leave-taking
+ * section, in the sheet's own ink: the Spark's reading of the
+ * day, and the one button that closes it together. */
+
+.sphere-spark-closing {
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(160, 110, 50, 0.4);
+}
+.sphere-spark-closing-line {
+  margin: 0.3rem 0;
+  line-height: 1.5;
+}
+.sphere-spark-closing-note {
+  font-style: italic;
+}
+.sphere-spark-closing-btn {
+  appearance: none;
+  margin-top: 0.45rem;
+  border: 1px solid rgba(160, 110, 50, 0.65);
+  background: rgba(218, 164, 91, 0.16);
+  color: inherit;
+  border-radius: 999px;
+  padding: 0.4rem 1rem;
+  font: inherit;
+  cursor: pointer;
+}
+.sphere-spark-closing-btn:hover,
+.sphere-spark-closing-btn:focus-visible {
+  background: rgba(218, 164, 91, 0.32);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .sphere-spark-presence[data-inhabitant-posture="settle"] .sphere-spark-art,
-  .sphere-spark-presence[data-inhabitant-posture="rest"] .sphere-spark-halo {
+  .sphere-spark-presence[data-inhabitant-posture="rest"] .sphere-spark-halo,
+  .sphere-spark-presence.inhabitant-do-glow .sphere-spark-halo,
+  .sphere-spark-presence.inhabitant-do-spin .sphere-spark-art,
+  .sphere-spark-presence.inhabitant-do-halo .sphere-spark-halo,
+  .inhabitant-fx {
     animation: none;
   }
 }

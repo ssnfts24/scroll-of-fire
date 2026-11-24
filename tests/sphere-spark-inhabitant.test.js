@@ -356,3 +356,267 @@ test("a discovery target is a marked, projected day — never the post, never un
   assert.equal(layer.pickDiscoveryTarget({}, [220], 222, 0.5), null);
   assert.equal(layer.pickDiscoveryTarget(null, [220], 222, 0.5), null);
 });
+
+/* ── Slice 3: the writer, the trick book, teaching ─────────────
+ * The writer's discipline is the design's: append-only life
+ * lines under the never-carries columns; tricks derived from
+ * the record's facts by breadth, never counted performances;
+ * a taught route learned only when walked back in a second
+ * Moon. Performances spell choreography and write nothing —
+ * the pure half only spells, and these tests pin the spelling. */
+
+const STAMP = { moon: 8, day: 26, patternDay: 222, patternYear: 1, civilDate: "2026-11-24" };
+
+const atlasNote = (id, pd, moon, patternYear = 1) => ({
+  id, type: "note", subtype: "day-note",
+  temporal: { patternDay: pd, moon, patternYear, civilDate: "2026-11-20" }, payload: {},
+});
+const atlasGarden = (id, pd, moon, patternYear = 1) => ({
+  id, type: "event", subtype: "garden-planting",
+  temporal: { patternDay: pd, moon, patternYear, civilDate: "2026-11-20" }, payload: {},
+});
+const atlasWatch = (id, episodeId, pd, moon, patternYear = 1) => ({
+  id, type: "event", subtype: "episode-watched",
+  temporal: { patternDay: pd, moon, patternYear, civilDate: "2026-11-20" },
+  payload: { sparkActivities: { version: 1, action: "watch", episodeId } },
+});
+const atlasPlan = (id, pd, moon, status) => ({
+  id, type: "note", subtype: "plan",
+  temporal: { patternDay: pd, moon, patternYear: 1, civilDate: "2026-11-20" },
+  payload: { schedule: { status } },
+});
+const atlasWord = (id, pd, moon) => ({
+  id, type: "note", subtype: "word-keepsake",
+  temporal: { patternDay: pd, moon, patternYear: 1, civilDate: "2026-11-20" }, payload: {},
+});
+
+test("the writer takes the design's shapes and refuses the never-carries columns by name", () => {
+  const layer = loadInhabitant();
+  const ok = layer.makeLifeLine("play-session", { kind: "route-demo", ref: "route:222,224", ...layer.lineCoordinateFromStamp(STAMP) });
+  assert.equal(ok.line, "play-session");
+  assert.equal(ok.kind, "route-demo");
+  assert.equal(ok.patternDay, 222);
+  for (const bad of ["score", "scores", "points", "streak", "duration", "accuracy", "refusals", "givenUp", "meter", "level", "hunger", "health", "count", "performances", "rank", "xp", "reward", "penalty"]) {
+    assert.equal(
+      layer.makeLifeLine("play-session", { kind: "chase", civilDate: "2026-11-24", [bad]: 1 }),
+      null, `a line carrying ${bad} is refused`);
+  }
+  // An unknown key is refused too: the shape is a closed set.
+  assert.equal(layer.makeLifeLine("play-session", { kind: "chase", civilDate: "2026-11-24", mood: "glad" }), null);
+  // Shapes and their required names.
+  assert.equal(layer.makeLifeLine("trick-learned", { civilDate: "2026-11-24" }), null);
+  assert.equal(layer.makeLifeLine("play-session", { civilDate: "2026-11-24" }), null);
+  assert.equal(layer.makeLifeLine("care-act", { kind: "close-day", civilDate: "2026-11-24" }).kind, "close-day");
+  assert.equal(layer.makeLifeLine("diary", { kind: "x", civilDate: "2026-11-24" }), null);
+  // A line stands on a day: no civil date, no line.
+  assert.equal(layer.makeLifeLine("play-session", { kind: "chase" }), null);
+  assert.equal(layer.makeLifeLine("play-session", { kind: "chase", civilDate: "Nov 24" }), null);
+  assert.equal(layer.lineCoordinateFromStamp(null), null);
+  assert.equal(layer.lineCoordinateFromStamp({ patternDay: 222 }), null);
+});
+
+test("appending is append-only, id-sequential, and never mutates the record it was given", () => {
+  const layer = loadInhabitant();
+  const record = { seed: "s", lifeLines: [] };
+  const line = layer.makeLifeLine("care-act", { kind: "close-day", ref: "pattern-day:222", ...layer.lineCoordinateFromStamp(STAMP) });
+  const first = layer.appendLifeLine(record, line);
+  assert.equal(first.line.id, "line-0001");
+  assert.equal(record.lifeLines.length, 0, "the input record is untouched");
+  const second = layer.appendLifeLine(first.record,
+    layer.makeLifeLine("trick-learned", { trick: "bow", via: "line-0001", ...layer.lineCoordinateFromStamp(STAMP) }));
+  assert.equal(second.line.id, "line-0002");
+  assert.deepEqual(plain(layer.lifeLinesOf(second.record)).map((l) => l.id), ["line-0001", "line-0002"]);
+  assert.equal(layer.appendLifeLine(null, line), null);
+  assert.equal(layer.appendLifeLine(record, null), null);
+});
+
+test("the keeping table mirrors SparkActivities' own, so the two folds never drift", () => {
+  const activitiesSrc = fs.readFileSync("docs/assets/js/spark-activities.js", "utf8");
+  const sandbox = { module: { exports: {} }, console };
+  sandbox.globalThis = sandbox;
+  vm.createContext(sandbox);
+  vm.runInContext(activitiesSrc, sandbox, { filename: "spark-activities.js" });
+  const layer = loadInhabitant();
+  assert.deepEqual(plain(layer.KEEPING_KINDS_TABLE), plain(sandbox.module.exports.KEEPING_KINDS));
+});
+
+test("the facts fold reads the Atlas's own records and the Spark's own play", () => {
+  const layer = loadInhabitant();
+  const records = [
+    atlasNote("n1", 220, 8), atlasNote("n2", 100, 4),
+    atlasGarden("g1", 198, 8),
+    atlasWatch("w1", "ep-the-first-light", 224, 8),
+    atlasPlan("p1", 210, 8, "completed"),
+    atlasPlan("p2", 211, 8, "open"),
+    atlasWord("k1", 150, 6),
+  ];
+  const sparkRecord = { seed: "s", play: { catches: 2 }, playLog: [{ kind: "chase", stamp: { moon: 8, patternYear: 1 } }] };
+  const facts = layer.lifeFactsFromRecords(records, sparkRecord);
+  assert.deepEqual(plain(facts.kinds.filter((k) => k.present).map((k) => k.id)), ["day", "garden", "episode", "word"]);
+  assert.deepEqual(plain(facts.witnessedDays), [100, 220]);
+  assert.deepEqual(plain(facts.gardenDays), [198]);
+  assert.deepEqual(plain(facts.episodes.map((e) => e.id)), ["ep-the-first-light"]);
+  assert.deepEqual(plain(facts.milestones.map((m) => m.id)), ["p1"], "only a completed plan is a milestone");
+  assert.deepEqual(plain(facts.wordDays), [150]);
+  assert.equal(facts.catches, 2);
+  assert.equal(facts.keptByYear[1].size, 5, "the keeping kinds' days stand kept (plans are not a keeping kind)");
+});
+
+test("the stage portrait is breadth: three kinds kindle, carrying plus witness bears, a full year guards", () => {
+  const layer = loadInhabitant();
+  const factsOf = (records, sparkRecord = { seed: "s" }) => layer.lifeFactsFromRecords(records, sparkRecord);
+  assert.equal(layer.lifeStageFromFacts(factsOf([])), "spark");
+  assert.equal(layer.lifeStageFromFacts(factsOf([atlasNote("n", 10, 1), atlasGarden("g", 11, 1)])), "spark");
+  assert.equal(layer.lifeStageFromFacts(factsOf([
+    atlasNote("n", 10, 1), atlasGarden("g", 11, 1), atlasWatch("w", "ep-x", 12, 1),
+  ])), "kindled");
+  const bearerRecords = [];
+  for (let d = 1; d <= 14; d += 1) bearerRecords.push(atlasGarden(`g${d}`, d, 1));
+  for (let d = 29; d <= 42; d += 1) bearerRecords.push(atlasNote(`n${d}`, d, 2));
+  assert.equal(layer.lifeStageFromFacts(factsOf(bearerRecords)), "bearer");
+  const yearRecords = [];
+  for (let pd = 1; pd <= 364; pd += 1) {
+    yearRecords.push(atlasNote(`y${pd}`, pd, Math.floor((pd - 1) / 28) + 1, 3));
+  }
+  assert.equal(layer.lifeStageFromFacts(factsOf(yearRecords)), "guardian");
+});
+
+test("each kind's paired act stands on its own record fact", () => {
+  const layer = loadInhabitant();
+  const factsOf = (records, sparkRecord = { seed: "s" }) => layer.lifeFactsFromRecords(records, sparkRecord);
+  assert.equal(layer.pairedActFor("fire", factsOf([atlasPlan("p", 5, 1, "completed")])).stands, true);
+  assert.equal(layer.pairedActFor("fire", factsOf([atlasPlan("p", 5, 1, "open")])).stands, false);
+  assert.equal(layer.pairedActFor("water", factsOf([atlasNote("n", 5, 1)])).stands, true);
+  assert.equal(layer.pairedActFor("shadow", factsOf([], { seed: "s", play: { catches: 1 } })).stands, true);
+  assert.equal(layer.pairedActFor("shadow", factsOf([], { seed: "s", play: { catches: 0 } })).stands, false);
+  assert.equal(layer.pairedActFor("air", factsOf([atlasWatch("w", "ep-x", 5, 1)])).stands, true);
+  assert.equal(layer.pairedActFor("earth", factsOf([atlasGarden("g", 5, 1)])).stands, false);
+  assert.equal(layer.pairedActFor("earth", factsOf([atlasGarden("g", 5, 1), atlasGarden("h", 6, 1)])).stands, true);
+  assert.equal(layer.pairedActFor("light", factsOf([atlasWord("k", 5, 1)])).stands, true);
+});
+
+test("tricks derive by stage and breadth — and a learning is witnessed once, never twice", () => {
+  const layer = loadInhabitant();
+  const kindledWater = [
+    atlasNote("n1", 220, 8), atlasGarden("g1", 198, 8), atlasWatch("w1", "ep-a", 224, 8),
+  ];
+  const facts = layer.lifeFactsFromRecords(kindledWater, { seed: "s" });
+  assert.equal(layer.lifeStageFromFacts(facts), "kindled");
+  // The signature derives at Kindled because Water's paired act stands.
+  const derived = layer.derivedTricks({ kind: "water", stage: "kindled", facts, lines: [] });
+  assert.deepEqual(plain(derived), [{ trick: "ripple-bow", via: "pattern-day:220" }]);
+  // At Spark stage the same facts teach nothing beyond the Basics.
+  assert.deepEqual(plain(layer.derivedTricks({ kind: "water", stage: "spark", facts, lines: [] })), []);
+  // The Bow derives from the closing line alone, at any stage.
+  const closed = [{ line: "care-act", kind: "close-day", id: "line-0003", civilDate: "2026-11-24" }];
+  assert.deepEqual(plain(layer.derivedTricks({ kind: "fire", stage: "spark", facts: layer.lifeFactsFromRecords([], { seed: "s" }), lines: closed })),
+    [{ trick: "bow", via: "line-0003" }]);
+  // Witnessing: the first pass writes the line; the second writes nothing.
+  const record = { seed: "s", lifeLines: [] };
+  const fresh = layer.newTrickLines({ record, kind: "water", facts, stamp: STAMP, at: "2026-11-24T00:00:00.000Z" });
+  assert.equal(fresh.length, 1);
+  assert.equal(fresh[0].trick, "ripple-bow");
+  assert.equal(fresh[0].civilDate, "2026-11-24");
+  const after = layer.appendLifeLine(record, fresh[0]).record;
+  assert.deepEqual(plain(layer.newTrickLines({ record: after, kind: "water", facts, stamp: STAMP })), []);
+  // No stamp, no witnessing — the write refuses honestly.
+  assert.deepEqual(plain(layer.newTrickLines({ record, kind: "water", facts, stamp: null })), []);
+});
+
+test("the Bearer signature needs the paired act in a second Moon", () => {
+  const layer = loadInhabitant();
+  const records = [];
+  for (let d = 1; d <= 14; d += 1) records.push(atlasGarden(`g${d}`, d, 1));
+  for (let d = 29; d <= 42; d += 1) records.push(atlasNote(`n${d}`, d, 2));
+  records.push(atlasNote("n8", 220, 8));
+  const facts = layer.lifeFactsFromRecords(records, { seed: "s" });
+  assert.equal(layer.lifeStageFromFacts(facts), "bearer");
+  const tricks = layer.derivedTricks({ kind: "water", stage: "bearer", facts, lines: [] }).map((d) => d.trick);
+  assert.deepEqual(plain(tricks), ["ripple-bow", "ripple-dance"], "witnessed days stand in Moons 2 and 8");
+  const oneMoon = layer.lifeFactsFromRecords(records.filter((r) => r.id !== "n8"), { seed: "s" });
+  const oneMoonTricks = layer.derivedTricks({ kind: "water", stage: "bearer", facts: oneMoon, lines: [] }).map((d) => d.trick);
+  assert.deepEqual(plain(oneMoonTricks), ["ripple-bow"], "one Moon teaches the signature only");
+});
+
+test("a route is its days in order; its learning is a line that names the demonstration", () => {
+  const layer = loadInhabitant();
+  assert.equal(layer.routeRefFor([222, 224, 226]), "route:222,224,226");
+  assert.deepEqual(plain(layer.routeDaysFromRef("route:222,224,226")), [222, 224, 226]);
+  assert.equal(layer.routeRefFor([222]), null, "a route is more than one day");
+  assert.equal(layer.routeRefFor([222, 365]), null, "days stop at the year's edge");
+  assert.equal(layer.routeRefFor(Array.from({ length: 13 }, (_, i) => i + 1)), null, "a teaching walk is bounded");
+  assert.equal(layer.routeDaysFromRef("route:abc"), null);
+  assert.equal(layer.routeDaysFromRef("222,224"), null);
+  const lines = [
+    { line: "play-session", kind: "route-demo", id: "line-0005", ref: "route:222,224,226", moon: 7, patternYear: 1, civilDate: "2026-11-10" },
+    { line: "play-session", kind: "chase", id: "line-0006", civilDate: "2026-11-10" },
+  ];
+  const demos = layer.routeDemosFromLines(lines);
+  assert.equal(demos.length, 1);
+  assert.deepEqual(plain(demos[0].days), [222, 224, 226]);
+  assert.equal(layer.routeLearningFor(lines, demos[0]), null);
+  const learned = [...lines, { line: "trick-learned", trick: "route", via: "line-0005", civilDate: "2026-11-24" }];
+  assert.equal(layer.routeLearningFor(learned, demos[0]).via, "line-0005");
+});
+
+test("the trick book: basics from birth, the unlearned named with their teaching, the route in its states", () => {
+  const layer = loadInhabitant();
+  const thinFacts = layer.lifeFactsFromRecords([], THIN_RECORD);
+  const thin = layer.trickBookFrom({ name: "Selor", kind: "water", record: THIN_RECORD, facts: thinFacts });
+  assert.equal(thin.stage, "spark");
+  assert.deepEqual(plain(thin.basics.map((b) => b.trick)), ["hop", "drift", "glow-pulse", "first-note"]);
+  assert.deepEqual(plain(thin.learned), []);
+  assert.deepEqual(plain(thin.unlearned.map((u) => u.trick)), ["bow", "ripple-bow", "ripple-dance"]);
+  assert.match(thin.unlearned[0].teachLine, /close a day together/);
+  assert.equal(thin.route, null);
+
+  const records = [atlasNote("n1", 220, 8), atlasGarden("g1", 198, 8), atlasWatch("w1", "ep-a", 224, 8)];
+  const facts = layer.lifeFactsFromRecords(records, THIN_RECORD);
+  const record = {
+    ...THIN_RECORD,
+    lifeLines: [
+      { line: "care-act", kind: "close-day", id: "line-0001", ref: "pattern-day:222", civilDate: "2026-11-24" },
+      { line: "trick-learned", trick: "bow", id: "line-0002", via: "line-0001", patternDay: 222, civilDate: "2026-11-24" },
+      { line: "play-session", kind: "route-demo", id: "line-0003", ref: "route:222,224", moon: 7, patternYear: 1, civilDate: "2026-11-10" },
+    ],
+  };
+  const book = layer.trickBookFrom({ name: "Selor", kind: "water", record, facts });
+  assert.equal(book.stage, "kindled");
+  assert.deepEqual(plain(book.learned.map((l) => l.trick)), ["bow"]);
+  assert.equal(book.learned[0].viaPlain, "closing a day together");
+  assert.equal(book.route.learned, false);
+  const learnedRecord = {
+    ...record,
+    lifeLines: [...record.lifeLines, { line: "trick-learned", trick: "route", id: "line-0004", via: "line-0003", civilDate: "2026-11-24" }],
+  };
+  assert.equal(layer.trickBookFrom({ name: "Selor", kind: "water", record: learnedRecord, facts }).route.learned, true);
+});
+
+test("a performance is spelled in the ruled vocabulary, on the geometry, and spells nothing else", () => {
+  const layer = loadInhabitant();
+  const ctx = { postPd: 222, projected: [219, 220, 221, 222, 223, 224, 225, 300] };
+  for (const trick of ["hop", "drift", "glow-pulse", "first-note", "bow",
+    "flare-spin", "ripple-bow", "peek-back", "feather-loop", "root-bow", "halo-bow",
+    "ember-trail", "ripple-dance", "between-worlds", "windweaver", "living-ground", "constellation"]) {
+    const steps = layer.performanceSteps(trick, ctx);
+    assert.ok(steps.length >= 1, `${trick} has a performance`);
+    for (const step of steps) {
+      assert.ok(["travel", "act", "pause"].includes(step.type), `${trick} step is a showing`);
+      if (step.type === "travel") assert.ok(step.pd >= 1 && step.pd <= 364, `${trick} travels to a real day`);
+    }
+  }
+  // The route is walked in the order it was taught, and bows at its end.
+  const route = layer.performanceSteps("route", { ...ctx, routeDays: [224, 219, 226] });
+  assert.deepEqual(plain(route.filter((s) => s.type === "travel").map((s) => s.pd)), [224, 219, 226]);
+  assert.equal(route[route.length - 1].act, "bow");
+  // Constellation lays its stars; Between Worlds crosses dimmed; Peek-Back peeks dimmed.
+  assert.ok(layer.performanceSteps("constellation", ctx).some((s) => s.fx === "stars"));
+  assert.ok(layer.performanceSteps("between-worlds", ctx).some((s) => s.style === "dim"));
+  assert.ok(layer.performanceSteps("peek-back", ctx).some((s) => s.style === "dim"));
+  assert.ok(layer.performanceSteps("living-ground", ctx).every((s) => s.type !== "travel" || s.style === "hop"),
+    "Living Ground travels by hops only");
+  // An unknown trick has no performance; a route with no days has none.
+  assert.deepEqual(plain(layer.performanceSteps("cartwheel", ctx)), []);
+  assert.deepEqual(plain(layer.performanceSteps("route", { ...ctx, routeDays: [] })), []);
+  assert.deepEqual(plain(layer.performanceSteps("hop", { postPd: null })), []);
+});
