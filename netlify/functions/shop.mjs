@@ -1,5 +1,6 @@
 /* The shop till's function face — the sibling of
- * stripe.mjs for the shop shelf (lib/shop-core.mjs).
+ * stripe.mjs for the shop shelf (lib/shop-core.mjs),
+ * in the same modern shape as the door's other seats.
  *
  * GET answers the till's standing: is charging
  * connected, and is each standard piece's price set —
@@ -31,66 +32,59 @@ import {
   orderFromCheckoutCompleted, shopConfig, verifyWebhook,
 } from "./lib/shop-core.mjs";
 
-const env = () => process.env;
-
-async function stripeTransport(url, options) {
-  const res = await fetch(url, options);
-  let json = null;
-  try { json = await res.json(); } catch { /* answered below */ }
-  return { status: res.status, json };
+function json(body, status = 200) {
+  return new Response(JSON.stringify(body), {
+    status, headers: { "content-type": "application/json" },
+  });
 }
 
-const json = (status, body) => ({
-  statusCode: status,
-  headers: { "content-type": "application/json" },
-  body: JSON.stringify(body),
-});
+async function fetchTransport(url, init) {
+  const res = await fetch(url, init);
+  let body = null;
+  try { body = await res.json(); } catch { body = null; }
+  return { status: res.status, json: body };
+}
 
-export const handler = async (event) => {
-  const e = env();
-  const config = shopConfig(e);
-  const signature = event.headers["stripe-signature"] ||
-    event.headers["Stripe-Signature"];
+export default async function handler(req) {
+  const env = process.env;
+  const config = shopConfig(env);
 
-  if (event.httpMethod === "GET") {
-    return json(200, {
+  if (req.method === "GET") {
+    return json({
       ok: true, charging: config.connected,
       stripe: { connected: config.connected, webhook: config.webhook },
       items: config.items,
-      ...(config.connected ? {}
-        : { words: NOT_CONNECTED_WORDS }),
+      ...(config.connected ? {} : { words: NOT_CONNECTED_WORDS }),
     });
   }
-  if (event.httpMethod !== "POST") {
-    return json(405, { ok: false, reason: "method-not-allowed" });
-  }
+  if (req.method !== "POST") return json({ ok: false }, 405);
 
+  const raw = await req.text();
+  const signature = req.headers.get("stripe-signature");
   if (signature) {
-    const verified = verifyWebhook({
-      env: e, rawBody: event.body || "", signatureHeader: signature,
+    /* The webhook road: verify first, read second. */
+    const verdict = verifyWebhook({
+      env, rawBody: raw, signatureHeader: signature,
       nowSeconds: Math.floor(Date.now() / 1000),
     });
-    if (!verified.ok) return json(400, verified);
+    if (!verdict.ok) return json(verdict, 400);
     let stripeEvent = null;
-    try { stripeEvent = JSON.parse(event.body || "null"); } catch {
-      return json(400, { ok: false, reason: "body-not-json" });
-    }
+    try { stripeEvent = JSON.parse(raw); } catch { stripeEvent = null; }
+    if (!stripeEvent) return json({ ok: false, reason: "body-not-json" }, 400);
     const resolved = orderFromCheckoutCompleted(
       stripeEvent, new Date().toISOString());
-    return json(200, resolved);
+    return json(resolved);
   }
 
-  let body = {};
-  try { body = JSON.parse(event.body || "{}"); } catch {
-    return json(400, { ok: false, reason: "body-not-json" });
+  let body = null;
+  try { body = JSON.parse(raw); } catch { body = null; }
+  if (!body || body.action !== "checkout") {
+    return json({ ok: false, reason: "action-unknown" }, 400);
   }
-  if (body.action === "checkout") {
-    const session = await createShopCheckout({
-      env: e, transport: stripeTransport, item: body.item,
-      successUrl: body.successUrl, cancelUrl: body.cancelUrl,
-      siteOrigin: e.SITE_URL || "https://codexofreality.org",
-    });
-    return json(session.ok ? 200 : 400, session);
-  }
-  return json(400, { ok: false, reason: "unknown-action" });
-};
+  const session = await createShopCheckout({
+    env, transport: fetchTransport, item: body.item,
+    successUrl: body.successUrl, cancelUrl: body.cancelUrl,
+    siteOrigin: env.SITE_URL || "https://codexofreality.org",
+  });
+  return json(session, session.ok ? 200 : 400);
+}

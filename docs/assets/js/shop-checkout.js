@@ -44,6 +44,20 @@
     return;
   }
 
+  var tiersStanding = document.getElementById("tiers-standing");
+  if (tiersStanding) {
+    fetch("/.netlify/functions/stripe", { headers: { accept: "application/json" } })
+      .then(function (res) { return res.ok ? res.json() : null; })
+      .then(function (status) {
+        if (status && status.ok && status.charging) {
+          tiersStanding.textContent = "Stripe is connected. " +
+            "Joining opens at the door — sign in on the account " +
+            "page, and the tiers stand there.";
+        }
+      })
+      .catch(function () { /* the printed standing stands */ });
+  }
+
   fetch("/.netlify/functions/shop", { headers: { accept: "application/json" } })
     .then(function (res) { return res.ok ? res.json() : null; })
     .then(function (status) {

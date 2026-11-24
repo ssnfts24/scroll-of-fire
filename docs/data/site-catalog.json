@@ -1230,6 +1230,23 @@
       "publicationEligibility": "approved-public"
     },
     {
+      "id": "get-the-app",
+      "title": "Get the App",
+      "description": "Put the Codex of Reality on a phone's home screen like an app: what installing gives, the Android steps, the iPhone and iPad steps, and how the Spark. Living Day app differs.",
+      "area": "systems",
+      "category": "App",
+      "resourceType": "tool",
+      "status": "live",
+      "path": "install.html",
+      "url": "https://codexofreality.org/install.html",
+      "related": [
+        "downloads",
+        "living-time-sphere"
+      ],
+      "featured": false,
+      "publicationEligibility": "approved-public"
+    },
+    {
       "id": "downloads",
       "title": "Downloads & Integrity",
       "description": "Integrity-sealed downloads of the root archive and numbered folders 1–7, with SHA-256 seals.",
