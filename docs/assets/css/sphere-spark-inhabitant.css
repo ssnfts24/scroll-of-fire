@@ -1,0 +1,96 @@
+/* The Spark, inhabiting the Sphere — slice 1 (Nov 23, 2026).
+ *
+ * The inhabitant layer (sphere-spark-inhabitant.js) drives the
+ * Spark's presence holder onto the calendar's projected day
+ * plates. These styles are its postures and its light: they act
+ * on the presence's inner art and halo, never on the holder's
+ * transform (the module owns that) and never on the instrument.
+ * Postures are read from data-inhabitant-posture, the daypart
+ * light from data-inhabitant-daypart, both set by the module.
+ */
+
+/* ── Postures ─────────────────────────────────────────────── */
+
+.sphere-spark-presence[data-inhabitant-posture="settle"] .sphere-spark-art {
+  animation: inhabitant-settle 0.9s ease-out;
+}
+
+.sphere-spark-presence[data-inhabitant-posture="sit"] .sphere-spark-art {
+  transform: translateY(7px) scale(1.04, 0.9);
+  transition: transform 1.2s ease;
+}
+
+.sphere-spark-presence[data-inhabitant-posture="observe"] .sphere-spark-art {
+  transform: translateY(-5px);
+  transition: transform 1.2s ease;
+}
+.sphere-spark-presence[data-inhabitant-posture="observe"] .sphere-spark-halo {
+  opacity: 1;
+  filter: brightness(1.25);
+}
+
+.sphere-spark-presence[data-inhabitant-posture="rest"] .sphere-spark-art {
+  transform: translateY(4px) scale(0.94);
+  opacity: 0.78;
+  transition: transform 1.6s ease, opacity 1.6s ease;
+}
+.sphere-spark-presence[data-inhabitant-posture="rest"] .sphere-spark-halo {
+  opacity: 0.45;
+  animation: inhabitant-breathe 4.5s ease-in-out infinite;
+}
+
+.sphere-spark-presence .sphere-spark-art {
+  transition: transform 0.8s ease, opacity 0.8s ease;
+}
+
+@keyframes inhabitant-settle {
+  0% { transform: translateY(-6px) scale(1.05, 0.92); }
+  55% { transform: translateY(2px) scale(0.98, 1.03); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes inhabitant-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+}
+
+/* ── The daypart light ────────────────────────────────────── */
+/* The Spark's glow answers the keeper's own hour: warm at
+ * morning, clear at day, amber at evening, deep and quiet at
+ * night. The hue stays the Spark's own (its halo carries its
+ * kind colour); only the light around it changes. */
+
+.sphere-spark-presence[data-inhabitant-daypart="morning"] .sphere-spark-halo {
+  filter: sepia(0.35) brightness(1.12);
+}
+.sphere-spark-presence[data-inhabitant-daypart="day"] .sphere-spark-halo {
+  filter: brightness(1.05);
+}
+.sphere-spark-presence[data-inhabitant-daypart="evening"] .sphere-spark-halo {
+  filter: sepia(0.55) brightness(1.02);
+}
+.sphere-spark-presence[data-inhabitant-daypart="night"] .sphere-spark-halo {
+  filter: brightness(0.82) saturate(1.15);
+}
+.sphere-spark-presence[data-inhabitant-daypart="night"] {
+  opacity: 0.92;
+}
+
+/* ── Inside the day ───────────────────────────────────────── */
+/* While the keeper is inside an opened day, the Spark stands at
+ * the day's own panel with its light up — present, attending. */
+
+.sphere-spark-presence[data-inhabitant-in-day="1"] .sphere-spark-halo {
+  opacity: 1;
+  filter: brightness(1.3);
+}
+.sphere-spark-presence[data-inhabitant-in-day="1"] .sphere-spark-art {
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sphere-spark-presence[data-inhabitant-posture="settle"] .sphere-spark-art,
+  .sphere-spark-presence[data-inhabitant-posture="rest"] .sphere-spark-halo {
+    animation: none;
+  }
+}

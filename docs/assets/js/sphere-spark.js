@@ -527,6 +527,13 @@
       const orbit = (now) => {
         raf = requestAnimationFrame(orbit);
         if (document.hidden || !visible) return;
+        // The inhabitant (sphere-spark-inhabitant.js, slice 1 of
+        // the Living Play expansion, Nov 23, 2026) drives this
+        // holder while it stands: the Spark lives on the
+        // calendar's geometry now, not on this circuit. The loop
+        // keeps its arm and takes the holder back the moment the
+        // inhabitant's hand is lifted.
+        if (holder.dataset.inhabitantDriven === "1") return;
         // Frozen means frozen: while the keeper holds the Sphere
         // still, the Spark stations itself and rests too.
         if (window.SphereRebuild?.isFrozen?.()) {
