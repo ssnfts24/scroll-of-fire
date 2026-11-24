@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 2457,
-    "bytes": 1084492561,
+    "bytes": 1084492700,
     "byGroup": {
       "tooling": 316,
       "manuscript": 17,
@@ -50408,8 +50408,8 @@
       "path": "docs/sitemap.xml",
       "title": "sitemap.xml",
       "format": "xml",
-      "bytes": 22289,
-      "sha256": "12d651071dd1c47445325a8f9ae0ea63b731aad03f32266626b4806cf34ce64b",
+      "bytes": 22428,
+      "sha256": "b62c25626b89726f3b6d413318acc9f6aa23f9ebd5772fa778e7abe3b6dc433e",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -55069,7 +55069,7 @@
       "title": "page-weight-budget.json",
       "format": "json",
       "bytes": 3580,
-      "sha256": "0831cba790d1fcdf5bf3c91bfaceedbdbdb60e774ca73dc6182261727c1a640b",
+      "sha256": "9ac74d5c19db5c98768d1ecb1961eff1cce4fc224ff26088a524d2f5addfad60",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
