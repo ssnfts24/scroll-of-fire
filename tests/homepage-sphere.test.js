@@ -656,6 +656,37 @@ test("no R1.7 protected file is touched by this branch", () => {
   const carriesAppMode = changed.has(
     "docs/assets/js/sphere-app-mode.js"
   );
+  /*
+   * Mobile stage declaration (Nov 24, 2026 — Aaron's named
+   * release of this one piece, Dashboard #57, in his own
+   * words: "Release the Sphere stage piece"; the same family
+   * as the Gate D app-mode release above, PR #277). This
+   * change set declares itself by carrying its signature file
+   * (the mobile stage pin test, which lives outside the
+   * protected directories), and its declared set names exactly
+   * the protected paths it touches:
+   *   - the sphere stylesheet (one phone-width block at its
+   *     end: under html.sof-mobile-mode — the mark the app-mode
+   *     module sets only when it acquired the mode itself on a
+   *     phone browser, never in the app — the canvas wrap is
+   *     floored at 80dvh, so the instrument shell and the
+   *     container, its absolute fills, stand at the app
+   *     framing's standard instead of the measured 0.286
+   *     share of the usable height);
+   *   - the page (the cache-version bump on that one
+   *     stylesheet's link, nothing else).
+   * No geometry, rendering, camera, motion, selection, label,
+   * or calendar file is touched, and the desktop framing and
+   * the app framing are unchanged. Every other protected path
+   * still fails this test loudly.
+   */
+  const mobileStageDeclaredProtected = new Set([
+    "docs/assets/css/living-time-sphere.css",
+    "docs/living-time-sphere.html"
+  ]);
+  const carriesMobileStage = changed.has(
+    "tests/sphere-mobile-stage.test.js"
+  );
   for (const file of changed) {
     if (!protectedPaths.has(file)) continue;
     assert.ok(
@@ -671,7 +702,8 @@ test("no R1.7 protected file is touched by this branch", () => {
         (carriesDeepfix && deepfixDeclaredProtected.has(file)) ||
         (carriesProtectedThree && protectedThreeDeclaredProtected.has(file)) ||
         (carriesDetails && detailsDeclaredProtected.has(file)) ||
-        (carriesAppMode && appModeDeclaredProtected.has(file)),
+        (carriesAppMode && appModeDeclaredProtected.has(file)) ||
+        (carriesMobileStage && mobileStageDeclaredProtected.has(file)),
       `R1.7 protected file changed: ${file}`
     );
   }

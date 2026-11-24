@@ -73,7 +73,13 @@ html.sof-app-mode .lp-guide-handle {
  * measured on Nov 24 showed presentation rules from outside
  * it cannot lift either honestly. What the mobile mark buys
  * on the web is the app-mode budget above (the three chrome
- * bars absent), which the cascade does honour. The stage-
- * dominant framing for phone browsers waits on a named line
- * inside the protected sheet, Aaron's word, as its own item.
+ * bars absent), which the cascade does honour.
+ *
+ * The stage's own line landed the same day, under Aaron's
+ * named release of that one piece (Dashboard #57: "Release
+ * the Sphere stage piece"): the protected sheet now floors
+ * the canvas wrap at 80dvh under the mobile mark alone, so
+ * the stage stands at this sheet's standard on a phone
+ * browser too. It stands there, not here — this sheet still
+ * carries no stage sizing of its own.
  */
