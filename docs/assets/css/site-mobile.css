@@ -1,0 +1,70 @@
+/*
+ * Site mobile floor — Nov 24, 2026 (mobile + manifest workstream).
+ *
+ * One stylesheet every hand-maintained page carries (stamped by
+ * scripts/apply-site-mobile.mjs), setting the floor Aaron named:
+ * the whole site should feel right on a phone. It is a floor, not
+ * a redesign — every rule lives inside the small-screen media
+ * query below, so the desktop site is byte-for-byte the site it
+ * was, and no page's own design is overridden beyond these lines:
+ *
+ *   - text the phone does not rescale on its own authority;
+ *   - nothing wider than the screen (no sideways scroll);
+ *   - pictures, video, and frames that fit the width they are in;
+ *   - long code and data lines that scroll inside their own box;
+ *   - form fields at 16px, so iOS does not zoom the page when a
+ *     visitor taps one, and tall enough to tap;
+ *   - buttons and summaries at least 44px tall, the tap floor;
+ *   - a dialog or sheet never taller than the visible screen,
+ *     scrolling inside itself instead of covering the page.
+ *
+ * Page-specific mobile work stays in the pages' own sheets (the
+ * artifact-mobile.css precedent); this file carries only what is
+ * true for every page at once.
+ */
+
+@media (max-width: 700px) {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  html,
+  body {
+    overflow-x: hidden;
+    overflow-x: clip;
+  }
+
+  img,
+  video,
+  iframe,
+  canvas,
+  svg,
+  table,
+  pre {
+    max-width: 100%;
+  }
+
+  pre {
+    overflow-x: auto;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+    min-height: 44px;
+  }
+
+  button,
+  summary,
+  [role="button"] {
+    min-height: 44px;
+  }
+
+  [role="dialog"] {
+    max-height: 94vh;
+    max-height: 94dvh;
+    overflow-y: auto;
+  }
+}
