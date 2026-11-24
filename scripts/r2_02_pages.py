@@ -37,6 +37,7 @@ def head(title, desc, base, canonical_path, extra=""):
 <meta name="theme-color" content="#0b0b0f">
 <link rel="icon" type="image/png" href="{base}../assets/img/shared/branding/favicon.png">
 <link rel="apple-touch-icon" href="{base}../assets/img/shared/branding/favicon.png">
+<link rel="manifest" href="{base}../manifest-site.webmanifest">
 <title>{E(title)}</title>
 <link rel="stylesheet" href="{base}assets/scripture.css">
 <link rel="stylesheet" href="{base}../assets/css/living-ui.css?v=20261117-1">
@@ -45,7 +46,8 @@ def head(title, desc, base, canonical_path, extra=""):
 <link rel="stylesheet" href="{base}../assets/css/spark-companion.css?v=20261119-1">
 <script defer src="{base}../assets/js/spark-companion.js?v=20261119-1"></script>
 <script defer src="{base}../assets/js/spark-presence.js?v=20261119-1"></script>
-{extra}</head>
+{extra}<link rel="stylesheet" href="{base}../assets/css/site-mobile.css?v=20261124-1">
+</head>
 """
 
 
