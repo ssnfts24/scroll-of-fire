@@ -730,10 +730,10 @@ test("no R1.7 protected file is touched by this branch", () => {
    *     reads — extension targets still appended fresh, record
    *     changes still drop the memo);
    *   - the Sphere UI (element inspections cached per node in
-   *     a WeakMap, dropped when the node itself changes and
-   *     reset wholesale on scroll/resize; values computed by
-   *     the original inspection body; still-loading media
-   *     never cached);
+   *     a WeakMap for a short 200 ms window and reset wholesale
+   *     on scroll/resize; values computed by the original
+   *     inspection body; still-loading media never cached; no
+   *     mutation observer — the PR3 guard stands);
    *   - the temporal cursor controller (only the Intl timezone
    *     fallback memoized; the observatory value still read
    *     live on every call; the memo drops when the keeper

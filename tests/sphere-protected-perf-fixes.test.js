@@ -14,9 +14,10 @@
  *      on the model object plus a fingerprint of every input it
  *      reads. Extension targets are still appended fresh.
  *   2. The Sphere UI: element inspections are cached per node
- *      (WeakMap), dropped when the node itself changes, and reset
- *      wholesale on scroll/resize; still-loading media is never
- *      cached. Values come from the original inspection body.
+ *      (WeakMap) for a short 200 ms window and reset wholesale
+ *      on scroll/resize; still-loading media is never cached.
+ *      Values come from the original inspection body. No
+ *      mutation observer — the PR3 guard stands.
  *   3. The temporal cursor: only the Intl timezone fallback is
  *      memoized; the observatory value is still read live on
  *      every call, and the memo drops when the keeper returns
@@ -108,12 +109,13 @@ test("protected-perf 1: the renderer caches the semantic width and memoizes its 
   assert.match(renderer, /semanticTargetsAll/, "extension targets are still gathered on every call");
 });
 
-test("protected-perf 2: the sphere UI caches inspections per node, with live invalidation", () => {
+test("protected-perf 2: the sphere UI caches inspections per node, briefly, with no observer", () => {
   assert.match(sphereUi, /let _inspectCache = new WeakMap\(\)/, "inspections are cached per node");
   assert.match(sphereUi, /function _inspectElementNodeUncached/, "the original inspection body computes the values");
-  assert.match(sphereUi, /attributeFilter: \["class", "style", "id", "src", "href", "data", "poster", "hidden"\]/, "the node's own changes drop its entry");
+  assert.match(sphereUi, /const INSPECT_CACHE_TTL_MS = 200;/, "the cache window is short and explicit");
   assert.match(sphereUi, /document\.addEventListener\("scroll", reset, true\)/, "scroll resets the cache (rects are viewport-relative)");
   assert.match(sphereUi, /result\.complete === false/, "still-loading media is never cached");
+  assert.equal(sphereUi.includes("new MutationObserver"), false, "the PR3 guard stands: no whole-document mutation observer in this UI");
 });
 
 test("protected-perf 3: only the Intl timezone fallback is memoized; the observatory stays live", () => {
