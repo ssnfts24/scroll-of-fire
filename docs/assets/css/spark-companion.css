@@ -916,6 +916,58 @@
   color: var(--spark-dim);
 }
 
+.spark-button.danger {
+  border-color: rgba(216, 120, 100, 0.75);
+  color: #e8a08c;
+}
+
+.spark-button.danger:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* The Mint Rule's letting-go road (Nov 25, 2026): a panel
+   that states the cost plainly and a name the keeper must
+   type before the final button wakes. */
+.spark-leave-panel {
+  margin: 14px 0;
+  padding: 14px 16px;
+  border: 1px solid rgba(216, 120, 100, 0.45);
+  border-radius: 14px;
+  max-width: 520px;
+}
+
+.spark-leave-panel p {
+  margin: 0 0 12px;
+  line-height: 1.55;
+}
+
+.spark-leave-label {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--spark-dim);
+}
+
+.spark-leave-label input {
+  display: block;
+  margin-top: 6px;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(167, 176, 198, 0.4);
+  background: transparent;
+  color: inherit;
+  font-size: 1rem;
+}
+
+.spark-leave-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .spark-actions {
   display: flex;
   flex-wrap: wrap;

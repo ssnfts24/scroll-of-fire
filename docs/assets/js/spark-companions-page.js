@@ -75,6 +75,38 @@
     }
   }
 
+  /* An adoption made inside the app is handed home in the
+   * same breath, through the door the rooms use. */
+  function handRecordUp(record) {
+    try {
+      const b = window.LivingPhoneNative;
+      if (!b || typeof b.sparkRecordFromWeb !== "function") return;
+      b.sparkRecordFromWeb(JSON.stringify(record));
+    } catch {
+      /* the room's settle hands it up at the next opening */
+    }
+  }
+
+  /* The Mint Rule (Aaron, Nov 25, 2026): a Spark is minted
+   * once — when one stands, no new one is introduced. Inside
+   * the Spark. Living Day app the record's home is the app's
+   * native store and this page's local storage is its mirror,
+   * so before the meeting is offered, ask the app's bridge
+   * what stands at home. On the open web there is no bridge,
+   * and this reads nothing and changes nothing. */
+  function readBridgedRecord() {
+    try {
+      const b = window.LivingPhoneNative;
+      if (!b || typeof b.sparkRecordJson !== "function") return null;
+      const raw = b.sparkRecordJson();
+      if (!raw) return null;
+      const record = JSON.parse(raw);
+      return record && Core.parseSeed(record.seed) ? record : null;
+    } catch {
+      return null;
+    }
+  }
+
   async function sensePractice(record) {
     const repo = window.CodexLifeAtlasRepository;
     if (!repo || typeof repo.query !== "function") return record;
@@ -315,6 +347,7 @@
         civilDate: civilToday()
       });
       writeRecord(record);
+      handRecordUp(record);
       /* A Spark kept here ends any wait elsewhere: the ember the
        * pop-up meeting left at the page's edge is for a Spark not
        * yet adopted, and this one just was. */
@@ -502,26 +535,95 @@
       showCompanion(today);
     };
 
+    wireLeave(record, name);
+  }
+
+  /* The Mint Rule's other half: a Spark is never let go by
+   * accident. The old road was two taps on one button — a
+   * double-tap could end a Spark. The road now is a panel
+   * that says plainly what letting go means, and a final
+   * button that wakes only when the keeper types the Spark's
+   * own name. Keeping the Spark is one tap, always offered. */
+  function wireLeave(record, name) {
     const leave = $("#spark-leave");
     leave.textContent = `Let ${name} go`;
+    let panel = null;
     leave.onclick = () => {
-      if (leave.dataset.armed) {
+      if (panel) {
+        panel.remove();
+        panel = null;
+        return;
+      }
+      panel = document.createElement("div");
+      panel.className = "spark-leave-panel";
+      const days = Array.isArray(record.daysSeen) ? record.daysSeen.length : 0;
+      const words = document.createElement("p");
+      words.textContent =
+        `Letting go is for good. ${name} will be gone — its name, ` +
+        `its kind, the ${days} day${days === 1 ? "" : "s"} you have ` +
+        `seen together, everything it has learned. A Spark is ` +
+        `minted once: this cannot be undone, and ${name} cannot ` +
+        `be brought back.`;
+      panel.appendChild(words);
+      const label = document.createElement("label");
+      label.className = "spark-leave-label";
+      label.textContent = `Type ${name} to let it go`;
+      const input = document.createElement("input");
+      input.type = "text";
+      input.autocomplete = "off";
+      input.maxLength = 24;
+      label.appendChild(input);
+      panel.appendChild(label);
+      const actions = document.createElement("div");
+      actions.className = "spark-leave-actions";
+      const confirm = document.createElement("button");
+      confirm.type = "button";
+      confirm.className = "spark-button danger";
+      confirm.textContent = `Let ${name} go for good`;
+      confirm.disabled = true;
+      input.addEventListener("input", () => {
+        confirm.disabled =
+          input.value.trim().toLowerCase() !== name.toLowerCase();
+      });
+      confirm.addEventListener("click", () => {
         try {
           window.localStorage.removeItem(Core.STORAGE_KEY);
         } catch {
           /* nothing to clear */
         }
+        try {
+          window.localStorage.removeItem(Core.PENDING_KEY);
+        } catch {
+          /* nothing to clear */
+        }
         window.location.reload();
-      } else {
-        leave.dataset.armed = "1";
-        leave.textContent = `Tap again to let ${name} go — this cannot be undone`;
-      }
+      });
+      const keep = document.createElement("button");
+      keep.type = "button";
+      keep.className = "spark-button";
+      keep.textContent = `Keep ${name}`;
+      keep.addEventListener("click", () => {
+        panel.remove();
+        panel = null;
+      });
+      actions.appendChild(confirm);
+      actions.appendChild(keep);
+      panel.appendChild(actions);
+      leave.after(panel);
+      input.focus();
     };
   }
 
   function start() {
     const today = todayCoordinate();
-    if (readRecord()) {
+    let record = readRecord();
+    if (!record) {
+      /* The Mint Rule: inside the app, prove nothing stands
+       * at home before the meeting is offered. */
+      record = readBridgedRecord();
+      if (record) writeRecord(record);
+    }
+    if (record) {
       showCompanion(today);
     } else {
       $("#spark-meet").hidden = false;
