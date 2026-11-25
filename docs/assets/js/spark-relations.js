@@ -97,10 +97,6 @@
       ],
       "ethics.html": [
         {
-          "href": "theory/ethics.html",
-          "label": "Ethical Law (theory)"
-        },
-        {
           "href": "codex-atlas.html",
           "label": "the Codex Atlas"
         },
@@ -111,6 +107,10 @@
         {
           "href": "ledger.html",
           "label": "Witness Ledger"
+        },
+        {
+          "href": "hub.html",
+          "label": "the Documentation Hub"
         }
       ],
       "genesis-oracle.html": [
@@ -137,16 +137,16 @@
           "label": "Hebrew Lexicon"
         },
         {
-          "href": "theory/glossary.html",
-          "label": "Theory Glossary"
-        },
-        {
           "href": "systems/recoder.html",
           "label": "Reality Recoder"
         },
         {
           "href": "theory.html",
           "label": "the Theory"
+        },
+        {
+          "href": "guide.html",
+          "label": "the Field Guide"
         }
       ],
       "hub.html": [

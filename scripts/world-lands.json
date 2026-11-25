@@ -1,1 +1,305 @@
-{"flat":[{"entry":"codex-guide","reason":"The Codex Guide is record-only by its approved rulebook and carries no story (bible §8 rule 12). A quiet room off the Gate, plainly the Guide's."},{"entry":"guide","reason":"The Guide's own page — record-only by the same rulebook. Flat by design."},{"entry":"sending-test","reason":"A blind measurement instrument; a scene beside it would contaminate the blindness it exists to protect. Flat, always."},{"entry":"circle","reason":"A held session space; nothing is scattered or staged into a session. Flat."},{"entry":"about-aaron","reason":"A life story. No play in it — it stands as a written page, reached with respect from the Gate."},{"entry":"ethics","reason":"Self-examination; staging it risks exactly the guilt framing the house forbids. A quiet flat room."},{"entry":"repo-readme","reason":"The repository's own front door — a document about the work, not a room of the site."},{"entry":"provenance","reason":"The Sphere's receipt shelf — a documentation page that names the sources behind the instrument's numbers. Record, not story country; flat by design."},{"entry":"methods","reason":"The methods page — how the Sphere and the calendar compute, and the evidence labels explained once. Documentation; flat by design."},{"entry":"get-the-app","reason":"The install door — a plain how-to page that puts the Codex on a phone's home screen. A doorway, not a room of the world; flat by design."}],"lands":[{"character":"A wooded clearing at the road's beginning, where the Sparks live — and where your own Spark's home stands.","color":"#7fae5c","door":"companions.html","doorLabel":"Companions — Their Home","entries":["companions","aiyanas-world"],"id":"clearing","name":"The Clearing","nextStep":{"href":"moons.html","label":"Read the year on the Wheel"}},{"character":"Thirteen raised beds in a walled garden, one waking per moon, planted from the real farm record.","color":"#a8b45a","door":"garden.html","doorLabel":"The Pattern Garden","entries":["pattern-garden"],"id":"garden","name":"The Garden of Thirteen Beds","nextStep":{"href":"practices.html","label":"Do a small practice in the Yard"}},{"character":"A hill crowned with thirteen standing stones — the year seen whole. From the Wheel, look up: the Sphere turns above it.","color":"#b8c4ce","door":"moons.html","doorLabel":"13 Moons","entries":["moons","whitepaper-13-moons","codex-white-paper","alignment-ledger","equinox-passage"],"id":"wheel","name":"The Wheel","nextStep":{"href":"garden.html","label":"Plant by the moons in the Garden"}},{"character":"A crossroads where five roads meet: one desk, one lantern, two books — the tale and the account.","color":"#c9a35f","door":"witness.html","doorLabel":"Witness","entries":["witness","ledger","witness-world"],"id":"desk","name":"The Desk at the Crossroads","nextStep":{"href":"glossary.html","label":"Weigh a word in the Word-Hoard"}},{"character":"A hoard-room of drawers and labelled shelves, where words are kept like seeds.","color":"#9a86c8","door":"glossary.html","doorLabel":"Glossary","entries":["glossary","scroll-lexicon","recoder","theory-glossary","theory-notation"],"id":"word-hoard","name":"The Word-Hoard","nextStep":{"href":"hub.html","label":"Try a system in the Roundhouse"}},{"character":"Shelved halls that go deep — lamplight, bound pages, and the oldest rooms of the house. The halls are the doorway; the text inside stays a reading room.","color":"#8a6f4d","door":"scroll/index.html","doorLabel":"Scroll Library","entries":["scroll-library","scripture-library","hebrew-word-studies","scroll-reader","scroll-search","scroll-atlas","scroll-original","genesis-oracle","whitepaper-remnant","genesis-restored","exodus-restored","journey-scroll"],"id":"lore-halls","name":"The Lore Halls","nextStep":{"href":"theory.html","label":"Climb to the High Library"}},{"character":"A high library on the far hill: the pattern under the road, kept on boards and in tall shelves.","color":"#7d94b8","door":"theory.html","doorLabel":"Theory Hub","entries":["theory-hub","theory-canon","theory-equations","theory-master-equation","theory-unified-field","theory-operators","theory-delta","theory-witness","theory-memory","theory-thirteen-moons","theory-living-technology","theory-artifact","theory-ethics","theory-bibliography"],"id":"high-library","name":"The High Library","nextStep":{"href":"claims-atlas.html","label":"Weigh a claim on the Proving Grounds"}},{"character":"An open ground where claims are brought and weighed, their grades hung where all can see.","color":"#b87d5a","door":"claims-atlas.html","doorLabel":"Documentation Hub","entries":["claims-atlas","scroll-editorial","claim-register","evidence-register","planned-timeline"],"id":"proving-grounds","name":"The Proving Grounds","nextStep":{"href":"shop.html","label":"See what is made at the Registry"}},{"character":"A working roundhouse and workshop yard — nothing believed until it has been tried.","color":"#a85f5f","door":"hub.html","doorLabel":"Year Map — the Hub","entries":["hub","t7","lab","glyphs","invoke","ab","witness-system"],"id":"roundhouse","name":"The Roundhouse","nextStep":{"href":"systems/frequencies.html","label":"Listen at the Sound Observatory"}},{"character":"A small round listening room on its own rise — the world's smallest land.","color":"#5f9ea8","door":"systems/frequencies.html","doorLabel":"Frequency Governance","entries":["frequencies","theory-frequency-governance"],"id":"sound-observatory","name":"The Sound Observatory","nextStep":{"href":"scroll/index.html","label":"Read deep in the Lore Halls"}},{"character":"An open yard for small things done daily, by hand — try first, then the reveal.","color":"#c8b45f","door":"practices.html","doorLabel":"Practices","entries":["practice-wing","manifest","micro","mind-renewal"],"id":"practice-yard","name":"The Practice Yard","nextStep":{"href":"witness.html","label":"Hear your story so far at the Desk"}},{"character":"A registry stall and a storehouse: made things entered in the book before they are offered, sealed packages on shelves.","color":"#8f8578","door":"shop.html","doorLabel":"Artifact Registry","entries":["shop","downloads","systems-archive"],"id":"registry","name":"The Registry & Storehouse","nextStep":{"href":"index.html","label":"Return to the Gate, the Front Door"}},{"character":"The gate where the road appears — the whole world as a raised relief on the Atlas Room's long table, under today's sky.","color":"#d8cfc0","door":"index.html","doorLabel":"Home — the Front Door","entries":["start","codex-atlas","site-search","travellers-map","episodes"],"id":"gate","name":"The World Gate","nextStep":{"href":"companions.html","label":"Begin: meet your Spark in the Clearing"}}],"note":"The Codex World's lands, defined over the site catalog (docs/data/site-catalog.json) per the approved world design (Nov 20, 2026). Every catalog entry is accounted for exactly once: shelved in one of the thirteen lands, named as the road (the Caravan), named as the sky (the Sphere), or named flat by design with its reason. scripts/build-world-lands.mjs validates this accounting against the catalog and generates docs/assets/js/world-lands.js — the data the World Gate is drawn from, so the map can never drift from the site. Land order is the design's table order; the moon-to-land count for 'today's land' follows this order (Moon N opens land N).","road":[{"entry":"covenant-caravan","note":"The Caravan is not a land. It is the road itself — the travelling way between lands, told in five stages."}],"sky":[{"entry":"living-time-sphere","note":"The Sphere is not a land. It is the sky over the whole world — the calendar's face — reached by looking up. Its works are untouched."}]}
+{
+  "flat": [
+    {
+      "entry": "codex-guide",
+      "reason": "The Codex Guide is record-only by its approved rulebook and carries no story (bible §8 rule 12). A quiet room off the Gate, plainly the Guide's."
+    },
+    {
+      "entry": "guide",
+      "reason": "The Guide's own page — record-only by the same rulebook. Flat by design."
+    },
+    {
+      "entry": "sending-test",
+      "reason": "A blind measurement instrument; a scene beside it would contaminate the blindness it exists to protect. Flat, always."
+    },
+    {
+      "entry": "circle",
+      "reason": "A held session space; nothing is scattered or staged into a session. Flat."
+    },
+    {
+      "entry": "about-aaron",
+      "reason": "A life story. No play in it — it stands as a written page, reached with respect from the Gate."
+    },
+    {
+      "entry": "ethics",
+      "reason": "Self-examination; staging it risks exactly the guilt framing the house forbids. A quiet flat room."
+    },
+    {
+      "entry": "repo-readme",
+      "reason": "The repository's own front door — a document about the work, not a room of the site."
+    },
+    {
+      "entry": "provenance",
+      "reason": "The Sphere's receipt shelf — a documentation page that names the sources behind the instrument's numbers. Record, not story country; flat by design."
+    },
+    {
+      "entry": "methods",
+      "reason": "The methods page — how the Sphere and the calendar compute, and the evidence labels explained once. Documentation; flat by design."
+    },
+    {
+      "entry": "get-the-app",
+      "reason": "The install door — a plain how-to page that puts the Codex on a phone's home screen. A doorway, not a room of the world; flat by design."
+    }
+  ],
+  "lands": [
+    {
+      "character": "A wooded clearing at the road's beginning, where the Sparks live — and where your own Spark's home stands.",
+      "color": "#7fae5c",
+      "door": "companions.html",
+      "doorLabel": "Companions — Their Home",
+      "entries": [
+        "companions",
+        "aiyanas-world"
+      ],
+      "id": "clearing",
+      "name": "The Clearing",
+      "nextStep": {
+        "href": "moons.html",
+        "label": "Read the year on the Wheel"
+      }
+    },
+    {
+      "character": "Thirteen raised beds in a walled garden, one waking per moon, planted from the real farm record.",
+      "color": "#a8b45a",
+      "door": "garden.html",
+      "doorLabel": "The Pattern Garden",
+      "entries": [
+        "pattern-garden"
+      ],
+      "id": "garden",
+      "name": "The Garden of Thirteen Beds",
+      "nextStep": {
+        "href": "practices.html",
+        "label": "Do a small practice in the Yard"
+      }
+    },
+    {
+      "character": "A hill crowned with thirteen standing stones — the year seen whole. From the Wheel, look up: the Sphere turns above it.",
+      "color": "#b8c4ce",
+      "door": "moons.html",
+      "doorLabel": "13 Moons",
+      "entries": [
+        "moons",
+        "whitepaper-13-moons",
+        "codex-white-paper",
+        "alignment-ledger",
+        "equinox-passage"
+      ],
+      "id": "wheel",
+      "name": "The Wheel",
+      "nextStep": {
+        "href": "garden.html",
+        "label": "Plant by the moons in the Garden"
+      }
+    },
+    {
+      "character": "A crossroads where five roads meet: one desk, one lantern, two books — the tale and the account.",
+      "color": "#c9a35f",
+      "door": "witness.html",
+      "doorLabel": "Witness",
+      "entries": [
+        "witness",
+        "ledger",
+        "witness-world"
+      ],
+      "id": "desk",
+      "name": "The Desk at the Crossroads",
+      "nextStep": {
+        "href": "glossary.html",
+        "label": "Weigh a word in the Word-Hoard"
+      }
+    },
+    {
+      "character": "A hoard-room of drawers and labelled shelves, where words are kept like seeds.",
+      "color": "#9a86c8",
+      "door": "glossary.html",
+      "doorLabel": "Glossary",
+      "entries": [
+        "glossary",
+        "scroll-lexicon",
+        "recoder",
+        "theory-notation"
+      ],
+      "id": "word-hoard",
+      "name": "The Word-Hoard",
+      "nextStep": {
+        "href": "hub.html",
+        "label": "Try a system in the Roundhouse"
+      }
+    },
+    {
+      "character": "Shelved halls that go deep — lamplight, bound pages, and the oldest rooms of the house. The halls are the doorway; the text inside stays a reading room.",
+      "color": "#8a6f4d",
+      "door": "scroll/index.html",
+      "doorLabel": "Scroll Library",
+      "entries": [
+        "scroll-library",
+        "scripture-library",
+        "hebrew-word-studies",
+        "scroll-reader",
+        "scroll-search",
+        "scroll-atlas",
+        "scroll-original",
+        "genesis-oracle",
+        "whitepaper-remnant",
+        "genesis-restored",
+        "exodus-restored",
+        "journey-scroll"
+      ],
+      "id": "lore-halls",
+      "name": "The Lore Halls",
+      "nextStep": {
+        "href": "theory.html",
+        "label": "Climb to the High Library"
+      }
+    },
+    {
+      "character": "A high library on the far hill: the pattern under the road, kept on boards and in tall shelves.",
+      "color": "#7d94b8",
+      "door": "theory.html",
+      "doorLabel": "Theory Hub",
+      "entries": [
+        "theory-hub",
+        "theory-canon",
+        "theory-equations",
+        "theory-master-equation",
+        "theory-unified-field",
+        "theory-operators",
+        "theory-delta",
+        "theory-memory",
+        "theory-thirteen-moons",
+        "theory-living-technology",
+        "theory-artifact",
+        "theory-bibliography"
+      ],
+      "id": "high-library",
+      "name": "The High Library",
+      "nextStep": {
+        "href": "claims-atlas.html",
+        "label": "Weigh a claim on the Proving Grounds"
+      }
+    },
+    {
+      "character": "An open ground where claims are brought and weighed, their grades hung where all can see.",
+      "color": "#b87d5a",
+      "door": "claims-atlas.html",
+      "doorLabel": "Documentation Hub",
+      "entries": [
+        "claims-atlas",
+        "scroll-editorial",
+        "claim-register",
+        "evidence-register",
+        "planned-timeline"
+      ],
+      "id": "proving-grounds",
+      "name": "The Proving Grounds",
+      "nextStep": {
+        "href": "shop.html",
+        "label": "See what is made at the Registry"
+      }
+    },
+    {
+      "character": "A working roundhouse and workshop yard — nothing believed until it has been tried.",
+      "color": "#a85f5f",
+      "door": "hub.html",
+      "doorLabel": "Year Map — the Hub",
+      "entries": [
+        "hub",
+        "t7",
+        "lab",
+        "glyphs",
+        "invoke",
+        "ab",
+        "witness-system"
+      ],
+      "id": "roundhouse",
+      "name": "The Roundhouse",
+      "nextStep": {
+        "href": "systems/frequencies.html",
+        "label": "Listen at the Sound Observatory"
+      }
+    },
+    {
+      "character": "A small round listening room on its own rise — the world's smallest land.",
+      "color": "#5f9ea8",
+      "door": "systems/frequencies.html",
+      "doorLabel": "Frequency Governance",
+      "entries": [
+        "frequencies"
+      ],
+      "id": "sound-observatory",
+      "name": "The Sound Observatory",
+      "nextStep": {
+        "href": "scroll/index.html",
+        "label": "Read deep in the Lore Halls"
+      }
+    },
+    {
+      "character": "An open yard for small things done daily, by hand — try first, then the reveal.",
+      "color": "#c8b45f",
+      "door": "practices.html",
+      "doorLabel": "Practices",
+      "entries": [
+        "practice-wing",
+        "manifest",
+        "micro",
+        "mind-renewal"
+      ],
+      "id": "practice-yard",
+      "name": "The Practice Yard",
+      "nextStep": {
+        "href": "witness.html",
+        "label": "Hear your story so far at the Desk"
+      }
+    },
+    {
+      "character": "A registry stall and a storehouse: made things entered in the book before they are offered, sealed packages on shelves.",
+      "color": "#8f8578",
+      "door": "shop.html",
+      "doorLabel": "Artifact Registry",
+      "entries": [
+        "shop",
+        "downloads",
+        "systems-archive"
+      ],
+      "id": "registry",
+      "name": "The Registry & Storehouse",
+      "nextStep": {
+        "href": "index.html",
+        "label": "Return to the Gate, the Front Door"
+      }
+    },
+    {
+      "character": "The gate where the road appears — the whole world as a raised relief on the Atlas Room's long table, under today's sky.",
+      "color": "#d8cfc0",
+      "door": "index.html",
+      "doorLabel": "Home — the Front Door",
+      "entries": [
+        "start",
+        "codex-atlas",
+        "site-search",
+        "travellers-map",
+        "episodes"
+      ],
+      "id": "gate",
+      "name": "The World Gate",
+      "nextStep": {
+        "href": "companions.html",
+        "label": "Begin: meet your Spark in the Clearing"
+      }
+    }
+  ],
+  "note": "The Codex World's lands, defined over the site catalog (docs/data/site-catalog.json) per the approved world design (Nov 20, 2026). Every catalog entry is accounted for exactly once: shelved in one of the thirteen lands, named as the road (the Caravan), named as the sky (the Sphere), or named flat by design with its reason. scripts/build-world-lands.mjs validates this accounting against the catalog and generates docs/assets/js/world-lands.js — the data the World Gate is drawn from, so the map can never drift from the site. Land order is the design's table order; the moon-to-land count for 'today's land' follows this order (Moon N opens land N).",
+  "road": [
+    {
+      "entry": "covenant-caravan",
+      "note": "The Caravan is not a land. It is the road itself — the travelling way between lands, told in five stages."
+    }
+  ],
+  "sky": [
+    {
+      "entry": "living-time-sphere",
+      "note": "The Sphere is not a land. It is the sky over the whole world — the calendar's face — reached by looking up. Its works are untouched."
+    }
+  ]
+}
