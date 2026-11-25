@@ -3,7 +3,7 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 501,
+    "resources": 499,
     "publicHtmlPages": 196,
     "catalogEntries": 73,
     "issueCounts": {
@@ -885,7 +885,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (233 files)",
+      "title": "docs/assets/js (234 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -969,40 +969,6 @@
       "issues": []
     },
     {
-      "id": "docs-assets:manifest-site.webmanifest",
-      "title": "docs/manifest-site.webmanifest (1 files)",
-      "description": "Static assets, data and generated artifacts served from docs/.",
-      "category": "Static assets",
-      "area": null,
-      "relatedProjects": [],
-      "sourcePath": "docs/manifest-site.webmanifest",
-      "publicUrl": "https://codexofreality.org/manifest-site.webmanifest",
-      "publicationStatus": "live",
-      "lastVerifiedSourceRevision": "548e858",
-      "relatedPages": [],
-      "canonicalUrl": "",
-      "privacyEligibility": "supporting-asset",
-      "discoverability": null,
-      "issues": []
-    },
-    {
-      "id": "docs-assets:manifest-sphere.webmanifest",
-      "title": "docs/manifest-sphere.webmanifest (1 files)",
-      "description": "Static assets, data and generated artifacts served from docs/.",
-      "category": "Static assets",
-      "area": null,
-      "relatedProjects": [],
-      "sourcePath": "docs/manifest-sphere.webmanifest",
-      "publicUrl": "https://codexofreality.org/manifest-sphere.webmanifest",
-      "publicationStatus": "live",
-      "lastVerifiedSourceRevision": "548e858",
-      "relatedPages": [],
-      "canonicalUrl": "",
-      "privacyEligibility": "supporting-asset",
-      "discoverability": null,
-      "issues": []
-    },
-    {
       "id": "docs-assets:manifest.webmanifest",
       "title": "docs/manifest.webmanifest (1 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
@@ -1038,7 +1004,7 @@
     },
     {
       "id": "docs-assets:scripture",
-      "title": "docs/scripture (126 files)",
+      "title": "docs/scripture (127 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -15160,7 +15126,7 @@
     },
     {
       "id": "repo-folder:netlify",
-      "title": "netlify/ (20 files)",
+      "title": "netlify/ (24 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -15262,7 +15228,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (239 files)",
+      "title": "tests/ (242 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,

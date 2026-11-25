@@ -235,10 +235,10 @@ test("existing homepage hooks survive the restructure", () => {
     'id="front-door-recent"',
     'class="front-door-list"',
     /* The Front Door shows the four newest growth entries; the pin
-     * follows the newest date in the record (2026-11-24 — the
-     * inhabitant slices and the Sphere app-mode entry rotated the
-     * Nov 23 entries off the door, not out of the record). */
-    '<time datetime="2026-11-24">',
+     * follows the newest date in the record (2026-11-25 — the
+     * scripture Listen entry rotated the Nov 24 root-refashions
+     * entry off the door, not out of the record). */
+    '<time datetime="2026-11-25">',
     'id="home-sphere-observatory"',
     'id="home-title"',
     'id="participation"',

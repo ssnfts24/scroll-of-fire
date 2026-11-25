@@ -9,12 +9,19 @@ const shellJs = fs.readFileSync(path.join(ROOT, "docs/assets/js/sphere/living-ti
 const shellCss = fs.readFileSync(path.join(ROOT, "docs/assets/css/living-time-sphere-app.css"), "utf8");
 
 test("B7.61 the sphere page carries an installed-app identity", () => {
-  assert.match(page, /<link rel="manifest" href="manifest-sphere\.webmanifest">/);
+  // ULS P2 (Nov 25, 2026): one installation identity for the whole
+  // site — the Sphere page links the same manifest.webmanifest as
+  // every other page; the Sphere surface lives on as a shortcut in
+  // the one card. (Was: the sphere's own manifest-sphere card.)
+  assert.match(page, /<link rel="manifest" href="manifest\.webmanifest">/);
   assert.match(page, /name="theme-color" content="#05070d"/);
   assert.match(page, /apple-mobile-web-app-capable/);
-  const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, "docs/manifest-sphere.webmanifest"), "utf8"));
+  const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, "docs/manifest.webmanifest"), "utf8"));
   assert.equal(manifest.display, "standalone");
-  assert.match(manifest.start_url, /living-time-sphere\.html/);
+  assert.match(manifest.start_url, /index\.html/);
+  assert.ok(
+    manifest.shortcuts.some((s) => /living-time-sphere\.html/.test(s.url)),
+    "the one card carries a Living Time Sphere shortcut");
 });
 
 test("B7.61 the app shell assets load with the page", () => {

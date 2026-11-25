@@ -73,10 +73,16 @@ async function deliverMagicLink(email, token) {
   const base = process.env.SITE_URL || "https://codexofreality.org";
   const link = `${base}/account.html?signin=${encodeURIComponent(token)}`;
   if (!webhook) return "no-mailer";
+  const headers = { "Content-Type": "application/json" };
+  // When the shared webhook secret is set, the door
+  // proves itself to its mailer with it (the mailer's
+  // real transport refuses to stand without one).
+  const webhookSecret = process.env.ACCOUNTS_EMAIL_WEBHOOK_SECRET;
+  if (webhookSecret) headers["x-codex-mailer-secret"] = webhookSecret;
   try {
     const res = await fetch(webhook, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify({ email, link, purpose: "spark-living-day-signin" }),
     });
     return res.ok ? "sent" : "mailer-refused";
