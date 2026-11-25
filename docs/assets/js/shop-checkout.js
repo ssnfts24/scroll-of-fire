@@ -7,7 +7,8 @@
  * reveals that piece's buy button. While the till is
  * dark — Stripe not yet connected — the buttons stay
  * hidden, the standing line says so in plain words,
- * and ordering by email stands untouched below.
+ * and the standing road — email to confirm,
+ * Cash App to pay — stands untouched below.
  *
  * A buy click creates a Checkout session through the
  * function and sends the keeper to Stripe's hosted
@@ -26,8 +27,9 @@
   if (!standing && !buttons.length) return;
 
   var DARK_WORDS = "Checkout by card and Cash App Pay opens here " +
-    "the moment Stripe is connected. Until then, ordering by " +
-    "email stands, exactly as below.";
+    "the moment Stripe is connected. Until then, ordering runs " +
+    "the shop's standing road — email to confirm, Cash App to " +
+    "pay — exactly as below.";
 
   function say(words) { if (standing) standing.textContent = words; }
 
@@ -40,7 +42,7 @@
   }
   if (params.get("order") === "cancelled") {
     say("Checkout was left unfinished — nothing was charged. " +
-      "Order by email below whenever you are ready.");
+      "Order by the standing road below whenever you are ready.");
     return;
   }
 
@@ -89,13 +91,13 @@
                   button.disabled = false;
                   say((session && session.words) ||
                     "Checkout could not open. Nothing was charged — " +
-                    "ordering by email stands below.");
+                    "the standing road below stands.");
                 }
               })
               .catch(function () {
                 button.disabled = false;
                 say("Checkout could not be reached. Nothing was " +
-                  "charged — ordering by email stands below.");
+                  "charged — the standing road below stands.");
               });
           });
         }
