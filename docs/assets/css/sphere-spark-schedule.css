@@ -1,0 +1,188 @@
+/* sphere-spark-schedule.css — holographic schedule beacons and
+ * the timeline rail (Nov 24, 2026).
+ *
+ * The beacon language, from the research: a diamond of light on a
+ * thin beam, additive gold on the dark field, the category glyph
+ * inside, state carried by light alone — upcoming breathes, today
+ * pulses (the one live point), overdue waits in ember, done folds
+ * to a dim check at the plate. Motion is transform/opacity only,
+ * and dies under reduced motion. The layer is a projection: it
+ * adds at most 24 small buttons to the face (the density cap),
+ * and nothing here touches the protected renderer's styles. */
+
+.sphere-spark-beacons {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+  overflow: visible;
+}
+
+.spark-beacon {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 30px;
+  height: 46px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  pointer-events: auto;
+  cursor: pointer;
+  transform-origin: 50% 100%;
+  will-change: transform;
+}
+
+.spark-beacon-beam {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 2px;
+  height: 15px;
+  transform: translateX(-50%);
+  background: linear-gradient(to top, rgba(255, 222, 150, 0.85), rgba(255, 222, 150, 0));
+}
+
+.spark-beacon-diamond {
+  position: absolute;
+  left: 50%;
+  top: 2px;
+  width: 17px;
+  height: 17px;
+  transform: translateX(-50%) rotate(45deg);
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 232, 170, 0.95);
+  background: radial-gradient(circle at 35% 35%, rgba(255, 246, 214, 0.98), rgba(216, 178, 90, 0.82));
+  box-shadow: 0 0 13px rgba(255, 213, 120, 0.75), 0 0 3px rgba(255, 240, 200, 0.9);
+  color: #2a1e05;
+}
+/* The glyph rides upright inside the rotated diamond. */
+.spark-beacon-glyph {
+  display: block;
+  transform: rotate(-45deg);
+  font-size: 10px;
+  line-height: 1;
+}
+
+.spark-beacon-count {
+  position: absolute;
+  top: -4px;
+  right: 0;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 3px;
+  border-radius: 999px;
+  background: rgba(20, 14, 4, 0.92);
+  border: 1px solid rgba(255, 232, 170, 0.9);
+  color: #ffe9a8;
+  font-size: 9.5px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+
+.spark-beacon-ring {
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  width: 20px;
+  height: 20px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 2px solid rgba(255, 220, 140, 0.85);
+  animation: spark-beacon-ping 2.4s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes spark-beacon-ping {
+  0% { transform: translate(-50%, -50%) scale(0.7); opacity: 0.9; }
+  70% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+  100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+}
+
+/* States, in light. */
+.spark-beacon.is-upcoming .spark-beacon-diamond { animation: spark-beacon-breathe 4s ease-in-out infinite; }
+.spark-beacon.is-upcoming .spark-beacon-beam { opacity: 0.55; }
+.spark-beacon.is-today .spark-beacon-diamond {
+  background: radial-gradient(circle at 35% 35%, #fff8e2, #eec96e);
+  box-shadow: 0 0 18px rgba(255, 220, 130, 0.95), 0 0 5px rgba(255, 244, 205, 1);
+}
+.spark-beacon.is-overdue .spark-beacon-diamond {
+  border-color: rgba(255, 176, 130, 0.95);
+  background: radial-gradient(circle at 35% 35%, rgba(255, 214, 180, 0.98), rgba(214, 92, 44, 0.88));
+  box-shadow: 0 0 14px rgba(255, 120, 60, 0.8);
+  color: #2a0f02;
+}
+.spark-beacon.is-overdue .spark-beacon-beam {
+  background: linear-gradient(to top, rgba(255, 150, 90, 0.9), rgba(255, 150, 90, 0));
+}
+.spark-beacon.is-done { opacity: 0.55; }
+.spark-beacon.is-done .spark-beacon-beam { display: none; }
+.spark-beacon.is-done .spark-beacon-diamond {
+  background: radial-gradient(circle at 35% 35%, rgba(244, 238, 220, 0.95), rgba(178, 172, 150, 0.8));
+  border-color: rgba(240, 234, 214, 0.8);
+  box-shadow: 0 0 6px rgba(230, 224, 200, 0.45);
+}
+
+@keyframes spark-beacon-breathe {
+  0%, 100% { transform: translateX(-50%) rotate(45deg) scale(1); }
+  50% { transform: translateX(-50%) rotate(45deg) scale(1.1); }
+}
+
+/* ── The timeline rail ─────────────────────────────────────── */
+
+.sphere-spark-beacons-note {
+  display: block;
+  padding: 0.15rem 0.4rem 0.35rem;
+  color: #c9b18c;
+  font-size: 0.78rem;
+}
+
+.sphere-spark-timeline {
+  display: flex;
+  gap: 0.35rem;
+  overflow-x: auto;
+  padding: 0.45rem 0.25rem 0.55rem;
+  scrollbar-width: thin;
+}
+.sphere-spark-timeline[hidden] { display: none; }
+
+.sphere-spark-tick {
+  flex: 0 0 auto;
+  min-width: 54px;
+  min-height: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.18rem;
+  padding: 0.3rem 0.35rem;
+  border-radius: 0.55rem;
+  border: 1px solid rgba(216, 178, 90, 0.28);
+  background: rgba(255, 255, 255, 0.03);
+  color: #e9e2cf;
+  cursor: pointer;
+  font-size: 0.72rem;
+}
+.sphere-spark-tick small { color: #c9b18c; font-size: 0.66rem; }
+.sphere-spark-tick strong { color: #ffe9a8; font-size: 0.8rem; }
+.sphere-spark-tick.is-today { border-color: rgba(255, 220, 140, 0.85); background: rgba(216, 178, 90, 0.1); }
+.sphere-spark-tick.is-overdue-chip { border-color: rgba(255, 140, 90, 0.7); color: #ffc9a8; }
+
+.sphere-spark-tick-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+}
+.sphere-spark-tick-dot.is-upcoming { background: #d8b25a; box-shadow: 0 0 7px rgba(255, 213, 120, 0.8); }
+.sphere-spark-tick-dot.is-today { background: #ffe9a8; box-shadow: 0 0 9px rgba(255, 230, 160, 1); }
+.sphere-spark-tick-dot.is-overdue { background: #ff8a50; box-shadow: 0 0 7px rgba(255, 120, 60, 0.85); }
+.sphere-spark-tick-dot.is-done { background: #b8b49e; }
+
+@media (prefers-reduced-motion: reduce) {
+  .spark-beacon-ring { animation: none; opacity: 0.6; }
+  .spark-beacon.is-upcoming .spark-beacon-diamond { animation: none; }
+}
