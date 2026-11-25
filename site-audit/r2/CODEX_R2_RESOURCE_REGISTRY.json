@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 2468,
-    "bytes": 1084703935,
+    "bytes": 1084709858,
     "byGroup": {
       "tooling": 322,
       "manuscript": 17,
@@ -44,8 +44,8 @@
     },
     "byExamination": {
       "inventoried-only": 2331,
-      "parser-unavailable": 16,
-      "text-extracted": 39,
+      "text-extracted": 54,
+      "no-text-layer-needs-visual-review": 1,
       "archive-listed": 2,
       "structurally-audited": 80
     }
@@ -356,10 +356,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 192,
+        "words": 33734,
+        "hebrew": true,
+        "greek": true,
+        "metadata": {
+          "CreationDate": "D:20260307003018+00'00'",
+          "Creator": "Microsoft Word"
+        }
       }
     },
     {
@@ -418,10 +426,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 4,
+        "words": 524,
+        "hebrew": false,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20260318162939+00'00'",
+          "Creator": "Microsoft Word"
+        }
       },
       "variants": [
         "1_Codex_of_Reality/Codex_of_Life_Scroll_FULL.docx"
@@ -579,10 +595,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 55,
+        "words": 5079,
+        "hebrew": false,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20260318163211+00'00'",
+          "Creator": "Microsoft Word"
+        }
       },
       "variants": [
         "1_Codex_of_Reality/Living Laws.docx"
@@ -657,10 +681,15 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 182,
+        "words": 55224,
+        "hebrew": true,
+        "greek": true,
+        "metadata": {}
       }
     },
     {
@@ -684,10 +713,15 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 187,
+        "words": 33540,
+        "hebrew": true,
+        "greek": true,
+        "metadata": {}
       }
     },
     {
@@ -1106,10 +1140,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 2,
+        "words": 602,
+        "hebrew": false,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20260318163230+00'00'",
+          "Creator": "Microsoft Word"
+        }
       },
       "variants": [
         "2_Witness_Scrolls/Master_Proof_Scroll_Updated.docx"
@@ -1227,10 +1269,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 3,
+        "words": 331,
+        "hebrew": false,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20260318163347+00'00'",
+          "Creator": "Microsoft Word"
+        }
       },
       "variants": [
         "2_Witness_Scrolls/Scroll_of_Convergence.docx"
@@ -1317,10 +1367,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 2,
+        "words": 443,
+        "hebrew": true,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20260318163433+00'00'",
+          "Creator": "Microsoft Word"
+        }
       },
       "variants": [
         "2_Witness_Scrolls/The_Journey_Scroll.docx",
@@ -1447,10 +1505,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 333,
+        "words": 82978,
+        "hebrew": true,
+        "greek": true,
+        "metadata": {
+          "CreationDate": "D:20260318162655+00'00'",
+          "Creator": "Microsoft Word"
+        }
       },
       "variants": [
         "2_Witness_Scrolls/🌌 Ahmein — The Final Seal, Becoming Will.docx"
@@ -1512,10 +1578,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 266,
+        "words": 56295,
+        "hebrew": true,
+        "greek": true,
+        "metadata": {
+          "CreationDate": "D:20260318162820+00'00'",
+          "Creator": "Microsoft Word"
+        }
       },
       "variants": [
         "2_Witness_Scrolls/🜂 888 — The Architect of Becoming.docx"
@@ -1577,10 +1651,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 256,
+        "words": 56914,
+        "hebrew": true,
+        "greek": true,
+        "metadata": {
+          "CreationDate": "D:20260318162852+00'00'",
+          "Creator": "Microsoft Word"
+        }
       },
       "variants": [
         "2_Witness_Scrolls/🜄 Ainos — The Witness of Echoes.docx"
@@ -1607,10 +1689,18 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 4,
+        "words": 533,
+        "hebrew": false,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20260318162909+00'00'",
+          "Creator": "Microsoft Word"
+        }
       }
     },
     {
@@ -1682,10 +1772,18 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 5,
+        "words": 712,
+        "hebrew": false,
+        "greek": true,
+        "metadata": {
+          "CreationDate": "D:20260318163040+00'00'",
+          "Creator": "Microsoft Word"
+        }
       }
     },
     {
@@ -1861,10 +1959,18 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 29,
+        "words": 2732,
+        "hebrew": true,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20260318163419+00'00'",
+          "Creator": "Microsoft Word"
+        }
       }
     },
     {
@@ -1888,10 +1994,18 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "parser-unavailable",
+      "examination": "text-extracted",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "text-extracted",
+        "pages": 1,
+        "words": 158,
+        "hebrew": false,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20260318163401+00'00'",
+          "Creator": "Microsoft Word"
+        }
       }
     },
     {
@@ -2697,10 +2811,18 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "parser-unavailable",
+      "examination": "no-text-layer-needs-visual-review",
       "nextAction": "Visual review for personal imagery.",
       "extract": {
-        "status": "parser-unavailable"
+        "status": "no-text-layer",
+        "pages": 1,
+        "words": 0,
+        "hebrew": false,
+        "greek": false,
+        "metadata": {
+          "CreationDate": "D:20250621000923",
+          "Producer": "PyFPDF 1.7.2 http://pyfpdf.googlecode.com/"
+        }
       }
     },
     {
@@ -7820,8 +7942,8 @@
       "path": "docs/assets/data/codex-updates.json",
       "title": "codex-updates.json",
       "format": "json",
-      "bytes": 188824,
-      "sha256": "0e3d69901e71d46576775e41da7fdcad05a6871a9177ce85fbca07ecfa4df271",
+      "bytes": 189601,
+      "sha256": "5320ac415d612d1892add2633b667a70a58407949983d4862df0ae33c8c8ed17",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -7940,8 +8062,8 @@
       "path": "docs/assets/data/link-graph.json",
       "title": "link-graph.json",
       "format": "json",
-      "bytes": 474473,
-      "sha256": "ade96f21ac1a615ca54edd685ea6ad02d0bc02e3ec01a1ff21af90ce1027fc0e",
+      "bytes": 474442,
+      "sha256": "8d6a1864e41e7ba55325266e37c359979534cd4c7bc52a567875f4b7601baa7d",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -23423,7 +23545,7 @@
       "title": "manifest.json",
       "format": "json",
       "bytes": 2873,
-      "sha256": "3c8370987d1cd69b32015a5d295df0c600d8a3af00dd96882bc43a21d3071d2b",
+      "sha256": "c3d703672128c328d2acb151ca6f0e6c817cb3b6fd0262adc73c36a29dc95430",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -23446,8 +23568,8 @@
       "path": "docs/assets/search/pages.json",
       "title": "pages.json",
       "format": "json",
-      "bytes": 1674530,
-      "sha256": "d3dc865da7ce36c2eec889075d53e736e965d0ff82687e84398e7be32434384b",
+      "bytes": 1677088,
+      "sha256": "daf875fc798b5072a6bd734cec1f8aba9cd8ab745de66f43ebb0014794e08f69",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -24418,8 +24540,8 @@
       "path": "docs/index.html",
       "title": "Homepage",
       "format": "html",
-      "bytes": 146301,
-      "sha256": "2a9033c7031267fb52c193d695d5dda492f73501b8db89dfc8f068f11738f20c",
+      "bytes": 146191,
+      "sha256": "7745fc86a622a63fccc87856d4cbb1e384f4f62f84a87fd901334f977cf57a21",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -51800,8 +51922,8 @@
       "path": "docs/witness.html",
       "title": "Witness",
       "format": "html",
-      "bytes": 70568,
-      "sha256": "ba252490bc19753435a594135c2c762558578e866cd965e00792f8f2daff22f5",
+      "bytes": 72796,
+      "sha256": "b0680b96b85ca42aa0fc0e6561021c84e834ac0779063bdf0f950261c4726eff",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -53580,8 +53702,8 @@
       "path": "site-audit/DISCOVERABILITY_REPORT.md",
       "title": "DISCOVERABILITY_REPORT.md",
       "format": "md",
-      "bytes": 22195,
-      "sha256": "b8175dc80fffb8d6461b698d734b89956aacea21eda87e8c3ef72270a8d7abc8",
+      "bytes": 22222,
+      "sha256": "2c7de832fd2b4d51798a3b392ea8499b5ce29035ec4d0a931fab8018deb35e8e",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -53916,8 +54038,8 @@
       "path": "site-audit/site-master-inventory.json",
       "title": "site-master-inventory.json",
       "format": "json",
-      "bytes": 774874,
-      "sha256": "14d558cc03251dc2715b9624e3b35291e7f8db5d0715896273ab82b017b5ac6f",
+      "bytes": 774892,
+      "sha256": "a9ff5d1aabf0289df8b49821bf1de6fea922222121ad3b3181b3f6eb39a9cf96",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -55164,8 +55286,8 @@
       "path": "tests/episode-library.test.js",
       "title": "episode-library.test.js",
       "format": "js",
-      "bytes": 16021,
-      "sha256": "0cb8ab9d9615c071d2d2153f1603e901cc56cfde1c5d181b4e396baabde3c099",
+      "bytes": 16255,
+      "sha256": "d589de3d4f4e94c50aad52bc61528a087733ea668d5b27cd24fac659d88375a9",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -59700,8 +59822,8 @@
       "path": "tests/story-map-sphere-link.test.js",
       "title": "story-map-sphere-link.test.js",
       "format": "js",
-      "bytes": 24701,
-      "sha256": "824506e301124330423bbc23faeb3587981a0d14bb41edbc3ed3ecf487204267",
+      "bytes": 24923,
+      "sha256": "c38e071400fa4e9061cfb68826fe51583fc406b80406a642337e68cfa2e224a1",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
