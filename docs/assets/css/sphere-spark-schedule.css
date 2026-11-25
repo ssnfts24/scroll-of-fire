@@ -22,7 +22,13 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 30px;
+  /* The tap target is wider than the diamond: the visuals are
+   * centred in the box, so a 40px width costs nothing on the
+   * face and gives a finger a fair target. And no permanent
+   * compositor layer per beacon — up to 24 stand at once, and
+   * that is memory a phone GPU should not spend on still
+   * light. */
+  width: 40px;
   height: 46px;
   margin: 0;
   padding: 0;
@@ -31,7 +37,6 @@
   pointer-events: auto;
   cursor: pointer;
   transform-origin: 50% 100%;
-  will-change: transform;
 }
 
 .spark-beacon-beam {
