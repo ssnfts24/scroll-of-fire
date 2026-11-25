@@ -19,7 +19,25 @@
  *    stand down once their work is done instead of observing the
  *    whole page for its whole life;
  *  - the companion layer skips readout/hue work when the strip
- *    text has not changed. */
+ *    text has not changed.
+ *
+ * Pass 2 (Nov 24, 2026, Aaron: "the lag and stickiness when
+ * everything is turned on needs to be fixed") adds, in the same
+ * spirit and the same unprotected layer:
+ *  - the breathing light builds its radial gradient once per
+ *    size and hue and carries the breathe in globalAlpha (the
+ *    stops' colours and their 1 / 0.45 ratio are unchanged);
+ *  - the Spark inhabitant finds its day plate once per posted
+ *    day, caches the wrap's rect, re-reads the plate's rect only
+ *    when the plate's own inline style is rewritten or the
+ *    keeper is actively turning the instrument, caches the
+ *    in-day station, and writes its transform only on change;
+ *  - the sky dome defers renders while its panel is off screen
+ *    (drawn on becoming visible) and skips renders whose inputs
+ *    are unchanged;
+ *  - the armillary's sun segment is memoized per civil day,
+ *    place and timezone offset, and its readout lines are
+ *    written only when the words change. */
 
 const test = require("node:test");
 const assert = require("node:assert/strict");
@@ -40,8 +58,13 @@ test("held light: hue and shell size are cached, not read per frame", () => {
   assert.ok(!frameBody.includes("clientWidth") && !frameBody.includes("clientHeight"), "frame loop must not read layout size");
   assert.ok(rebuild.includes("hueReadAt") && rebuild.includes(">= 500"), "hue cache refresh window stands");
   assert.ok(rebuild.includes('new ResizeObserver(measureShell)'), "shell size is kept by a ResizeObserver");
-  // The drawn light itself is unchanged: same gradient stops.
-  assert.ok(rebuild.includes("72%, 62%, ${alpha}") && rebuild.includes("68%, 48%, ${alpha * 0.45}"));
+  // The drawn light itself is unchanged: same gradient stops,
+  // same colours, same 1 / 0.45 ratio — the breathe is carried
+  // by globalAlpha over a cached gradient (pass 2).
+  assert.ok(rebuild.includes("72%, 62%, 1)") && rebuild.includes("68%, 48%, 0.45)"));
+  assert.ok(rebuild.includes("ctx.globalAlpha = alpha;"), "the breathe rides on globalAlpha");
+  assert.ok(rebuild.includes("function lightGradient(w, h, hueValue)"), "the gradient is built once per size and hue");
+  assert.ok(!frameBody.includes("createRadialGradient"), "frame loop must not rebuild the gradient");
 });
 
 test("spark orbit: size cached, z-index written on side change only, guard narrowed", () => {
@@ -69,4 +92,31 @@ test("armillary: page-wide guards stand down when their work is done", () => {
 test("companion layer: unchanged strip text skips mirror and hue work", () => {
   assert.ok(companionLayer.includes("if (text === lastMirroredText) return;"));
   assert.ok(companionLayer.includes("if (hueText === lastHueText) return;"));
+});
+
+const inhabitant = read("docs/assets/js/sphere-spark-inhabitant.js");
+const skyLayer = read("docs/assets/js/sphere-sky-layer.js");
+
+test("inhabitant: plate found once per day, rects cached, transform written on change", () => {
+  assert.ok(inhabitant.includes("plateCache.el && plateCache.pd === pd && plateCache.el.isConnected"), "the plate element is kept per posted day");
+  assert.ok(inhabitant.includes('attributeFilter: ["style"]'), "plate movement is signalled by the plate's own style writes");
+  assert.ok(inhabitant.includes("function wrapRect()"), "the wrap's rect is cached");
+  assert.ok(inhabitant.includes("if (holder.style.transform !== next) holder.style.transform = next;"), "the transform is written only when it changes");
+  assert.ok(inhabitant.includes("if (stationCache) return stationCache;"), "the in-day station is cached");
+  const frameStart = inhabitant.indexOf("function frame(now)");
+  const frameBody = inhabitant.slice(frameStart, inhabitant.indexOf("\n    function ", frameStart + 10));
+  assert.ok(!frameBody.includes("document.querySelector"), "the frame loop never hunts the document");
+  assert.ok(!frameBody.includes("getBoundingClientRect"), "the frame loop reads no layout directly — positions come from the caches");
+});
+
+test("sky dome: hidden renders deferred, unchanged renders skipped", () => {
+  assert.ok(skyLayer.includes("if (!domeVisible) { renderPending = true; return; }"), "an off-screen dome defers its render");
+  assert.ok(skyLayer.includes("if (domeVisible && renderPending) render();"), "the deferred render is drawn when the panel comes into view");
+  assert.ok(skyLayer.includes("if (renderKey === lastRenderKey) return;"), "a render with unchanged inputs is skipped");
+});
+
+test("armillary: sun segment memoized, readout lines written on change", () => {
+  assert.ok(armillary.includes("function sunSegment(civil, place, engine)"), "the sun segment is computed once per day and place");
+  assert.ok(armillary.includes("if (sunMemo.has(key)) return sunMemo.get(key);"), "the memo answers repeat days");
+  assert.ok(armillary.includes("function setText(el, text) { if (el.textContent !== text) el.textContent = text; }"), "readout lines are written only when the words change");
 });

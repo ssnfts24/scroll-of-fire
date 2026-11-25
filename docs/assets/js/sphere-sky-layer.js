@@ -339,13 +339,32 @@
       return pts.join(" ");
     }
 
+    /* Performance (pass 2): a render rebuilds the dome's whole
+     * SVG (~500 star circles at night) and is asked for on every
+     * selected-day change — every frame of a drag — although at
+     * phone width the dome sits in the lowered guide sheet,
+     * unseen. Off screen, a render defers until the panel comes
+     * into view; unchanged inputs skip. Nothing drawn changes. */
+    let domeVisible = true; // until an observer says otherwise
+    let renderPending = false;
+    let lastRenderKey = null;
+    if (typeof IntersectionObserver === "function") {
+      new IntersectionObserver((entries) => {
+        domeVisible = entries[0]?.isIntersecting !== false;
+        if (domeVisible && renderPending) render();
+      }, { threshold: 0.01 }).observe(section);
+    }
+
     function render() {
       const engine = window.CodexSkyEngine;
       section.hidden = !skyRingOn() || !engine;
-      if (section.hidden) return;
+      if (section.hidden) { renderPending = false; lastRenderKey = null; return; }
+      if (!domeVisible) { renderPending = true; return; }
+      renderPending = false;
       readPlace();
       titleEl.textContent = place?.label ? `The sky over ${place.label}` : "The sky over your place";
       if (!place) {
+        lastRenderKey = null; // the stage is cleared below; a returning place must redraw
         stageEl.innerHTML = "";
         standingLineEl.textContent = noticeDismissed
           ? "No place is kept on this device — set one and the sky will draw for where you stand."
@@ -383,6 +402,12 @@
       }
       dayBtn.setAttribute("aria-pressed", String(standing === "day"));
       nightBtn.setAttribute("aria-pressed", String(standing === "night"));
+
+      /* The dedupe (pass 2, above): unchanged inputs — the dome
+       * already shows exactly this. */
+      const renderKey = `${currentISO}|${todayISO()}|${standing}|${place.lat}|${place.lon}|${place.label || ""}|${tz}|${noticeDismissed ? 1 : 0}`;
+      if (renderKey === lastRenderKey) return;
+      lastRenderKey = renderKey;
 
       const localNoonUTC = Date.UTC(civil.year, civil.month - 1, civil.day, 12, 0, 0) - tz * 60000;
       let moment;

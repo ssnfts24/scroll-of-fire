@@ -3330,27 +3330,63 @@
       return out;
     }
 
+    /* Performance (pass 2): the plate is found once per day and
+     * kept, the wrap's rect is cached, and the plate's rect is
+     * re-read only when it may have moved — the label layer
+     * writes a plate's position into its own inline style, so a
+     * MutationObserver on it is an exact signal — or while the
+     * keeper is turning the instrument. */
+    let plateCache = { pd: null, el: null };
+    let plateMoved = true;
+    let plateObserver = null;
     function labelFor(pd) {
       if (!pd) return null;
-      return document.querySelector(`[data-semantic-id="pattern-day-number-${pd}"]`);
+      if (plateCache.el && plateCache.pd === pd && plateCache.el.isConnected) return plateCache.el;
+      const el = document.querySelector(`[data-semantic-id="pattern-day-number-${pd}"]`);
+      plateCache = { pd, el };
+      plateMoved = true;
+      if (plateObserver) { plateObserver.disconnect(); plateObserver = null; }
+      if (el && typeof MutationObserver === "function") {
+        plateObserver = new MutationObserver(() => { plateMoved = true; });
+        plateObserver.observe(el, { attributes: true, attributeFilter: ["style"] });
+      }
+      return el;
     }
 
+    let wrapRectCache = null;
+    function wrapRect() {
+      if (!wrapRectCache) wrapRectCache = wrap.getBoundingClientRect();
+      return wrapRectCache;
+    }
+    function forgetWrapRect() { wrapRectCache = null; plateMoved = true; stationCache = null; }
+    if (typeof ResizeObserver === "function") new ResizeObserver(forgetWrapRect).observe(wrap);
+    root.addEventListener("resize", forgetWrapRect);
+    document.addEventListener("scroll", forgetWrapRect, { capture: true, passive: true });
+    document.addEventListener("pointerdown", forgetWrapRect, { capture: true, passive: true });
+
+    let lastPlatePoint = null; // { pd, point }
     function labelPoint(pd) {
       const el = labelFor(pd);
-      if (!el) return null;
+      if (!el) { lastPlatePoint = null; return null; }
+      const interacting = Date.now() - lastActionAt < 2500;
+      if (!plateMoved && !interacting && lastPlatePoint && lastPlatePoint.pd === pd) return lastPlatePoint.point;
       const r = el.getBoundingClientRect();
-      if (!r.width || !r.height) return null;
-      const wr = wrap.getBoundingClientRect();
-      return {
+      if (!r.width || !r.height) { lastPlatePoint = null; return null; }
+      const wr = wrapRect();
+      const point = {
         x: r.x - wr.x + r.width / 2,
         y: r.y - wr.y + r.height / 2,
         plate: Math.max(r.width, r.height),
       };
+      lastPlatePoint = { pd, point };
+      plateMoved = false;
+      return point;
     }
 
     function writeTransform(x, y, scale) {
-      holder.style.transform =
+      const next =
         `translate(${Math.round(x - 34)}px, ${Math.round(y - 34)}px) scale(${scale.toFixed(3)})`;
+      if (holder.style.transform !== next) holder.style.transform = next;
     }
 
     function scaleFor(plate) {
@@ -3554,7 +3590,7 @@
     }
 
     function waitAtThreshold() {
-      const wr = wrap.getBoundingClientRect();
+      const wr = wrapRect();
       if (!wr.width || !wr.height) return;
       const x = wr.width / 2, y = wr.height - 30;
       pos = pos
@@ -3569,20 +3605,33 @@
      * coordinate space (the holder is a guest in the room then —
      * see enterDay). The sheet is re-read every frame, so the
      * Spark rides the room's own scroll. */
+    /* The in-day station, cached (pass 2): recomputed only when
+     * the room scrolls or resizes — it cannot move otherwise. */
+    let stationCache = null;
+    let stationRoom = null;
     function dayStation() {
       if (!dayRoom) return null;
+      if (stationRoom !== dayRoom) {
+        stationRoom = dayRoom;
+        stationCache = null;
+        dayRoom.addEventListener("scroll", () => { stationCache = null; }, { passive: true });
+        if (typeof ResizeObserver === "function") new ResizeObserver(() => { stationCache = null; }).observe(dayRoom);
+      }
+      if (stationCache) return stationCache;
       const rr = dayRoom.getBoundingClientRect();
       const sheet = dayRoom.querySelector(".day-world-sheet");
       if (sheet) {
         const r = sheet.getBoundingClientRect();
         if (r.width) {
-          return {
+          stationCache = {
             x: (r.x - rr.x) + dayRoom.scrollLeft + r.width - 48,
             y: (r.y - rr.y) + dayRoom.scrollTop + 38,
           };
+          return stationCache;
         }
       }
-      return { x: dayRoom.scrollLeft + Math.max(60, rr.width - 60), y: dayRoom.scrollTop + 48 };
+      stationCache = { x: dayRoom.scrollLeft + Math.max(60, rr.width - 60), y: dayRoom.scrollTop + 48 };
+      return stationCache;
     }
 
     /* ── Idle life ─────────────────────────────────────────── */
