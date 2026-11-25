@@ -843,6 +843,28 @@
     document.head.appendChild(s);
   })();
 
+  // The schedule layer (Nov 24, 2026, Aaron's ruling): holographic
+  // beacons stand on the days that hold scheduled things, the
+  // timeline rail rides in the schedule strip, and SphereSpark-
+  // Control gives the Spark its hands on the Sphere's public
+  // surface. Loaded the same way as the inhabitant — a stylesheet
+  // and a script, nothing else in this layer changes. The module
+  // reads the one planner record and the label layer's published
+  // projection; it keeps no store and touches no protected file.
+  (() => {
+    if (document.querySelector("script[data-sphere-spark-schedule]")) return;
+    const css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = "assets/css/sphere-spark-schedule.css?v=20261124-1";
+    css.setAttribute("data-sphere-spark-schedule", "");
+    document.head.appendChild(css);
+    const s = document.createElement("script");
+    s.src = "assets/js/sphere-spark-schedule.js?v=20261124-1";
+    s.async = false;
+    s.setAttribute("data-sphere-spark-schedule", "");
+    document.head.appendChild(s);
+  })();
+
   // ── The Spark's presence on this page was RESET (Nov 20, 2026) ──
   // Aaron's order: a full reset of the Spark layer, built fresh —
   // not patched. The orbit and bubble guide that stood here are
