@@ -218,10 +218,10 @@ test("the white paper no longer describes the trailer as awaiting approval", () 
   assert.ok(paper.includes("Episode Library"), "the paper names the trailer's placed home");
 });
 
-test("the growth record carries the Library at index 34, under the app-bridge entry and the pinned head", () => {
+test("the growth record carries the Library at index 35, under the root-refashions entry, the app-bridge entry and the pinned head", () => {
   const updates = JSON.parse(read("docs/assets/data/codex-updates.json"));
-  assert.equal(updates[0].title, "The site learned to ask before it reaches for the app", "the app-bridge entry stands at the head");
-  assert.equal(updates[1].title, "Small doors, plainly labelled: the playbook renamed, the maps put in order, every study given a next step", "the pinned head stands under it");
+  assert.equal(updates[0].title, "The front rooms refashioned: two install doors, a buy-today shop, a top-shelf library, and one flow for the day", "the root-refashions entry stands at the head");
+  assert.equal(updates[1].title, "The site learned to ask before it reaches for the app", "the app-bridge entry stands under it");
   assert.equal(updates[35].url, "./episodes.html", "the Library entry stands at index 35 (the root-refashions entry above that, the app-bridge entry above that, the Sphere's breathing entry landed above it in PR #267, the one-story entry above that in PR #270, the Sphere details entry above that in PR #272, the Free the Spark rename entry above that, the site-wide metadata entry above that, the Genesis profile entry above that, the Spark fence entry above that, the Spark inhabitant entry above that, the Spark keeper's-ways entry above that, the Spark tricks entry above that, the Spark home entry above that, the Spark seasons entry above that, the Spark road entry above that, the Sphere app-mode entry above that, the Witness tending entry above that, the sky rule entry above that, the stale-lines entry above that, the mobile-shape entry above that, the accounts entry above that, the stage entry above that, the arrival entry above that, and the one-redesign entry above that, and the shop-shelf entry above that, and the Spark scheduling entry above that, and the sphere-performance entry above that, and the honesty entry above that, and the theory-doorway-merges entry above that, and the ease entry above that, and the home-merges entry above that, and the sphere-upgrade entry above that)");
   assert.equal(updates[35].date, "2026-11-23");
   const index = read("docs/index.html");
