@@ -681,14 +681,14 @@
      "area": "archive"
     },
     {
-     "path": "theory/glossary.html",
-     "title": "Theory Glossary",
-     "area": "evidence"
-    },
-    {
      "path": "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
      "title": "Scroll of Fire · Codex of Reality · Remnant Whitepaper",
      "area": "scroll-scripture"
+    },
+    {
+     "path": "theory.html",
+     "title": "Theory Hub",
+     "area": "evidence"
     }
    ],
    "in": [
@@ -758,7 +758,7 @@
      "area": "evidence"
     }
    ],
-   "outTotal": 71,
+   "outTotal": 67,
    "inTotal": 13
   },
   "codex-guide.html": {
@@ -1232,8 +1232,8 @@
     },
     {
      "path": "theory/ethics.html",
-     "title": "Ethical Law",
-     "area": "evidence"
+     "title": "Ethical Law (Theory) — Redirect",
+     "area": "codex"
     },
     {
      "path": "glossary.html",
@@ -1531,6 +1531,11 @@
      "area": "archive"
     },
     {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    },
+    {
      "path": "ethics.html",
      "title": "Ethics & Coherence Law",
      "area": "evidence"
@@ -1562,8 +1567,8 @@
     },
     {
      "path": "theory/glossary.html",
-     "title": "Theory Glossary",
-     "area": "evidence"
+     "title": "Theory Glossary — Redirect",
+     "area": "codex"
     },
     {
      "path": "glyphs.html",
@@ -1577,7 +1582,7 @@
     }
    ],
    "outTotal": 33,
-   "inTotal": 13
+   "inTotal": 14
   },
   "glyphs.html": {
    "title": "Voice-Glyph Synth",
@@ -1909,9 +1914,9 @@
      "area": "systems"
     },
     {
-     "path": "account.html",
-     "title": "Your Account — Not Yet Open",
-     "area": "codex"
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
     }
    ],
    "in": [
@@ -1931,7 +1936,7 @@
      "area": "codex"
     }
    ],
-   "outTotal": 25,
+   "outTotal": 26,
    "inTotal": 3
   },
   "install.html": {
@@ -17877,8 +17882,8 @@
     },
     {
      "path": "theory/frequency-governance.html",
-     "title": "Frequency Governance",
-     "area": "evidence"
+     "title": "Frequency Governance — Redirect",
+     "area": "codex"
     },
     {
      "path": "glossary.html",
@@ -18331,8 +18336,8 @@
     },
     {
      "path": "theory/glossary.html",
-     "title": "Theory Glossary",
-     "area": "evidence"
+     "title": "Theory Glossary — Redirect",
+     "area": "codex"
     },
     {
      "path": "theory/bibliography.html",
@@ -18898,8 +18903,8 @@
    "inTotal": 2
   },
   "theory/ethics.html": {
-   "title": "Ethical Law",
-   "area": "evidence",
+   "title": "Ethical Law (Theory) — Redirect",
+   "area": "codex",
    "out": [
     {
      "path": "ethics.html",
@@ -18909,69 +18914,9 @@
    ],
    "in": [
     {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
-    },
-    {
      "path": "glossary.html",
      "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
      "area": "scroll-scripture"
-    },
-    {
-     "path": "theory.html",
-     "title": "Theory Hub",
-     "area": "evidence"
-    }
-   ],
-   "outTotal": 1,
-   "inTotal": 3
-  },
-  "theory/frequency-governance.html": {
-   "title": "Frequency Governance",
-   "area": "evidence",
-   "out": [
-    {
-     "path": "systems/frequencies.html",
-     "title": "Frequency Governance",
-     "area": "systems"
-    }
-   ],
-   "in": [
-    {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
-    },
-    {
-     "path": "glossary.html",
-     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "theory.html",
-     "title": "Theory Hub",
-     "area": "evidence"
-    }
-   ],
-   "outTotal": 1,
-   "inTotal": 3
-  },
-  "theory/glossary.html": {
-   "title": "Theory Glossary",
-   "area": "evidence",
-   "out": [
-    {
-     "path": "glossary.html",
-     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
-     "area": "scroll-scripture"
-    }
-   ],
-   "in": [
-    {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
     },
     {
      "path": "theory.html",
@@ -18981,6 +18926,51 @@
    ],
    "outTotal": 1,
    "inTotal": 2
+  },
+  "theory/frequency-governance.html": {
+   "title": "Frequency Governance — Redirect",
+   "area": "codex",
+   "out": [
+    {
+     "path": "systems/frequencies.html",
+     "title": "Frequency Governance",
+     "area": "systems"
+    }
+   ],
+   "in": [
+    {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "theory.html",
+     "title": "Theory Hub",
+     "area": "evidence"
+    }
+   ],
+   "outTotal": 1,
+   "inTotal": 2
+  },
+  "theory/glossary.html": {
+   "title": "Theory Glossary — Redirect",
+   "area": "codex",
+   "out": [
+    {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    }
+   ],
+   "in": [
+    {
+     "path": "theory.html",
+     "title": "Theory Hub",
+     "area": "evidence"
+    }
+   ],
+   "outTotal": 1,
+   "inTotal": 1
   },
   "theory/living-technology.html": {
    "title": "Living Technology",
@@ -19173,8 +19163,8 @@
    "inTotal": 3
   },
   "theory/witness.html": {
-   "title": "Witness",
-   "area": "evidence",
+   "title": "Witness (Theory) — Redirect",
+   "area": "codex",
    "out": [
     {
      "path": "witness.html",
@@ -19183,11 +19173,6 @@
     }
    ],
    "in": [
-    {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
-    },
     {
      "path": "glossary.html",
      "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
@@ -19200,7 +19185,7 @@
     }
    ],
    "outTotal": 1,
-   "inTotal": 3
+   "inTotal": 2
   },
   "timeline.html": {
    "title": "Historical Timeline",
@@ -19310,8 +19295,8 @@
     },
     {
      "path": "theory/witness.html",
-     "title": "Witness",
-     "area": "evidence"
+     "title": "Witness (Theory) — Redirect",
+     "area": "codex"
     }
    ],
    "outTotal": 6,

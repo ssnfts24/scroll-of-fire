@@ -16,6 +16,17 @@ const work = require("../docs/assets/js/theory-work.js");
 
 const DOCS = path.join(__dirname, "..", "docs");
 
+/* The four merged theory doorways (theory/ethics, theory/glossary,
+ * theory/witness, theory/frequency-governance) are redirect stubs since
+ * the page programme's doorway merges (Nov 24, 2026) — utility pages,
+ * not theory pages, and no longer counted or hooked. */
+const THEORY_REDIRECT_STUBS = new Set([
+  "theory/ethics.html",
+  "theory/glossary.html",
+  "theory/witness.html",
+  "theory/frequency-governance.html"
+]);
+
 function theoryPageFiles() {
   const files = ["theory.html"];
   for (const name of fs.readdirSync(path.join(DOCS, "theory"))) {
@@ -24,7 +35,7 @@ function theoryPageFiles() {
   for (const name of fs.readdirSync(path.join(DOCS, "theory", "equations"))) {
     if (name.endsWith(".html")) files.push(`theory/equations/${name}`);
   }
-  return files.sort();
+  return files.filter((rel) => !THEORY_REDIRECT_STUBS.has(rel)).sort();
 }
 
 /* --------------------------- playgrounds --------------------------- */
@@ -203,9 +214,9 @@ test("temporal mapping follows the Life Atlas anchor-year convention", () => {
 
 /* ------------------------------ pages ------------------------------ */
 
-test("all 35 Theory pages carry the module hook", () => {
+test("all 31 Theory pages carry the module hook", () => {
   const files = theoryPageFiles();
-  assert.equal(files.length, 35);
+  assert.equal(files.length, 31);
 
   for (const rel of files) {
     const html = fs.readFileSync(path.join(DOCS, rel), "utf8");
