@@ -260,6 +260,20 @@ Your browser does not support the video element. The same tour is written out ac
 <h1>Lemma study</h1>
 <div id="lemma-root"><p>Choose a lemma from the word finder on the Scripture home page.</p></div>
 <noscript><p class="nojs">This page needs JavaScript to show the detailed lexical records. The chapter pages contain complete Hebrew and English text plus a static word-by-word table with lemma ids and morphology for every verse.</p></noscript>
+<section aria-labelledby="lemma-standing">
+<h2 id="lemma-standing">The standing word studies</h2>
+<p>A lemma is a word's dictionary form — the headword every occurrence of it gathers under. The detailed lemma records on this page are drawn live from the lexicon data when JavaScript runs. The Codex's fullest lemma studies stand here permanently, with or without JavaScript:</p>
+<ul>
+<li><a href="word-studies/adam.html">אָדָם — Adam</a>: man, humankind. Genesis 1–5 worked sense by sense.</li>
+<li><a href="word-studies/adamah.html">אֲדָמָה — Adamah</a>: ground, land. The curse-and-lifting arc, Genesis 3 to 8.</li>
+<li><a href="word-studies/enosh.html">אֱנוֹשׁ — Enosh</a>: man as mortal.</li>
+<li><a href="word-studies/ruach.html">רוּחַ — Ruach</a>: wind, breath, spirit; the Genesis 1:2 dispute laid out.</li>
+<li><a href="word-studies/nephesh.html">נֶפֶשׁ — Nephesh</a>: life, being, self.</li>
+<li><a href="word-studies/or.html">אוֹר — Or</a>: light; day-one light against day-four luminaries.</li>
+<li><a href="word-studies/shem.html">שֵׁם — Shem</a>: name, reputation, the Name.</li>
+</ul>
+<p>For any other word: the <a href="../scroll/lexicon.html">Lexicon</a> searches 911 Hebrew forms, and every chapter page carries a static word-by-word table with the lemma id and morphology of every verse — open a chapter from the <a href="index.html">Scripture home page</a> and scroll to its table.</p>
+</section>
 <h2>Where to Next</h2>
 <p><a href="index.html">Scripture home page →</a></p>
 </main>
