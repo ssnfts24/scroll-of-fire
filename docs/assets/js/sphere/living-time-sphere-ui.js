@@ -479,7 +479,69 @@
     }, true);
   }
 
+  /*
+   * Inspection cache (Nov 24, 2026 — protected performance fix 2).
+   * getSphereDiagnostics() collects whole-document inspections, and
+   * callers like the armillary readout ask for diagnostics at frame
+   * rate during drags: ~708 ms of the Nov 24 drag profile was this
+   * inspection re-reading getBoundingClientRect + getComputedStyle
+   * for thousands of unchanged nodes. Results are cached per node
+   * and dropped when the node itself changes (attribute mutations:
+   * class, style, and the resource attributes the inspection
+   * reads), when nodes are added or removed, and wholesale on
+   * scroll or resize (rects are viewport-relative). Selection
+   * changes reach the cache through the class mutations they cause
+   * on the plates. A media node that is still loading is never
+   * cached, so its post-load inspection (complete / natural size)
+   * is always fresh. The values themselves are computed by the
+   * same code as before (_inspectElementNodeUncached).
+   */
+  let _inspectCache = new WeakMap();
+  let _inspectCacheLive = false;
+
+  function _installInspectCache() {
+    if (_inspectCacheLive) return;
+    if (typeof MutationObserver === "undefined" || typeof document === "undefined" || !document.documentElement) return;
+    try {
+      const observer = new MutationObserver(records => {
+        for (const record of records) {
+          if (record.type === "attributes") {
+            _inspectCache.delete(record.target);
+          } else if (record.type === "childList") {
+            _inspectCache.delete(record.target);
+            record.addedNodes?.forEach(node => _inspectCache.delete(node));
+            record.removedNodes?.forEach(node => _inspectCache.delete(node));
+          }
+        }
+      });
+      observer.observe(document.documentElement, {
+        subtree: true,
+        childList: true,
+        attributes: true,
+        attributeFilter: ["class", "style", "id", "src", "href", "data", "poster", "hidden"],
+      });
+      const reset = () => { _inspectCache = new WeakMap(); };
+      window.addEventListener("resize", reset);
+      document.addEventListener("scroll", reset, true);
+      _inspectCacheLive = true;
+    } catch { /* cache stays off; inspections run uncached */ }
+  }
+
   function _inspectElementNode(node) {
+    if (!node || node.nodeType !== 1) return null;
+    _installInspectCache();
+    if (!_inspectCacheLive) return _inspectElementNodeUncached(node);
+    const cached = _inspectCache.get(node);
+    if (cached) return cached;
+    const result = _inspectElementNodeUncached(node);
+    if (result) {
+      const stillLoading = (result.tagName === "img" || result.tagName === "image") && result.complete === false;
+      if (!stillLoading) _inspectCache.set(node, result);
+    }
+    return result;
+  }
+
+  function _inspectElementNodeUncached(node) {
     if (!node || node.nodeType !== 1) return null;
     const rect = node.getBoundingClientRect?.() || null;
     const style = window.getComputedStyle?.(node) || null;
