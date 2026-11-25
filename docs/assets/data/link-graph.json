@@ -341,6 +341,20 @@
    "outTotal": 1,
    "inTotal": 4
   },
+  "assets/data/downloads-archive.html": {
+   "title": "The full integrity archive — every file, every SHA-256 seal",
+   "area": "codex",
+   "out": [],
+   "in": [
+    {
+     "path": "downloads.html",
+     "title": "Downloads & Integrity",
+     "area": "archive"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 1
+  },
   "caravan.html": {
    "title": "Covenant Caravan — Redirect",
    "area": "codex",
@@ -845,6 +859,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "assets/data/downloads-archive.html",
+     "title": "The full integrity archive — every file, every SHA-256 seal",
+     "area": "codex"
+    },
+    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
@@ -872,7 +891,7 @@
      "area": "systems"
     }
    ],
-   "outTotal": 9,
+   "outTotal": 10,
    "inTotal": 4
   },
   "episodes.html": {
@@ -16621,6 +16640,118 @@
    "outTotal": 2,
    "inTotal": 2
   },
+  "scroll/data/shelf-evidence.html": {
+   "title": "Evidence — shelf list",
+   "area": "codex",
+   "out": [],
+   "in": [
+    {
+     "path": "scroll/index.html",
+     "title": "Scroll of Fire — Unsealed Library",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 1
+  },
+  "scroll/data/shelf-foundations.html": {
+   "title": "Foundations — shelf list",
+   "area": "codex",
+   "out": [],
+   "in": [
+    {
+     "path": "scroll/index.html",
+     "title": "Scroll of Fire — Unsealed Library",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 1
+  },
+  "scroll/data/shelf-history.html": {
+   "title": "History — shelf list",
+   "area": "codex",
+   "out": [],
+   "in": [
+    {
+     "path": "scroll/index.html",
+     "title": "Scroll of Fire — Unsealed Library",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 1
+  },
+  "scroll/data/shelf-prophecy.html": {
+   "title": "Prophecy — shelf list",
+   "area": "codex",
+   "out": [],
+   "in": [
+    {
+     "path": "scroll/index.html",
+     "title": "Scroll of Fire — Unsealed Library",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 1
+  },
+  "scroll/data/shelf-reference.html": {
+   "title": "Reference — shelf list",
+   "area": "codex",
+   "out": [],
+   "in": [
+    {
+     "path": "scroll/index.html",
+     "title": "Scroll of Fire — Unsealed Library",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 1
+  },
+  "scroll/data/shelf-scripture.html": {
+   "title": "Scripture — shelf list",
+   "area": "codex",
+   "out": [],
+   "in": [
+    {
+     "path": "scroll/index.html",
+     "title": "Scroll of Fire — Unsealed Library",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 1
+  },
+  "scroll/data/shelf-technology.html": {
+   "title": "Technology — shelf list",
+   "area": "codex",
+   "out": [],
+   "in": [
+    {
+     "path": "scroll/index.html",
+     "title": "Scroll of Fire — Unsealed Library",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 1
+  },
+  "scroll/data/shelf-witness.html": {
+   "title": "Witness — shelf list",
+   "area": "codex",
+   "out": [],
+   "in": [
+    {
+     "path": "scroll/index.html",
+     "title": "Scroll of Fire — Unsealed Library",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 1
+  },
   "scroll/editorial.html": {
    "title": "Editorial reading and evidence",
    "area": "evidence",
@@ -16694,6 +16825,46 @@
      "path": "glossary.html",
      "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
      "area": "scroll-scripture"
+    },
+    {
+     "path": "scroll/data/shelf-foundations.html",
+     "title": "Foundations — shelf list",
+     "area": "codex"
+    },
+    {
+     "path": "scroll/data/shelf-scripture.html",
+     "title": "Scripture — shelf list",
+     "area": "codex"
+    },
+    {
+     "path": "scroll/data/shelf-history.html",
+     "title": "History — shelf list",
+     "area": "codex"
+    },
+    {
+     "path": "scroll/data/shelf-evidence.html",
+     "title": "Evidence — shelf list",
+     "area": "codex"
+    },
+    {
+     "path": "scroll/data/shelf-technology.html",
+     "title": "Technology — shelf list",
+     "area": "codex"
+    },
+    {
+     "path": "scroll/data/shelf-prophecy.html",
+     "title": "Prophecy — shelf list",
+     "area": "codex"
+    },
+    {
+     "path": "scroll/data/shelf-witness.html",
+     "title": "Witness — shelf list",
+     "area": "codex"
+    },
+    {
+     "path": "scroll/data/shelf-reference.html",
+     "title": "Reference — shelf list",
+     "area": "codex"
     }
    ],
    "in": [
@@ -16723,7 +16894,7 @@
      "area": "scroll-scripture"
     }
    ],
-   "outTotal": 6,
+   "outTotal": 14,
    "inTotal": 5
   },
   "scroll/lexicon.html": {

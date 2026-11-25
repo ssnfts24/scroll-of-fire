@@ -551,7 +551,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "7de2f64f9807a725faf9c603d526fd9295e6d4ca836e29482886e9366e82c99c",
+      "sha256": "b3e1eeacffd1a542cd29948842a445f8c916b0334c04b9ffdb2ab01850c335ba",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -559,6 +559,12 @@
       "path": "docs/assets/data/documentation-hub.json",
       "sha256": "2c56922ddf5e56b2515b78a3446a160057697a5ce0991516614cd8a42aaab083",
       "publicUrl": "https://codexofreality.org/assets/data/documentation-hub.json",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/data/downloads-archive.html",
+      "sha256": "865350c38d95de71c9e6e8ba3482d05d17f23a6fdb00642c504c7d2c4fe8e897",
+      "publicUrl": "https://codexofreality.org/assets/data/downloads-archive.html",
       "status": "operational"
     },
     {
@@ -581,7 +587,7 @@
     },
     {
       "path": "docs/assets/data/link-graph.json",
-      "sha256": "0631742e199591a81c773dc16b9e0826b2f34743b2f2b8c38922aa52b0001d47",
+      "sha256": "435a2cdd1635e21b4ccf329f4fc3dcdd3f1b53a463afb1717c968aaf9fae259e",
       "publicUrl": "https://codexofreality.org/assets/data/link-graph.json",
       "status": "operational"
     },
@@ -1972,6 +1978,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/js/downloads-archive.js",
+      "sha256": "7cf651d0c0be1199edd212d298344e676776d11ff10f32f27ae5bc2816714f43",
+      "publicUrl": "https://codexofreality.org/assets/js/downloads-archive.js",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/js/environment/environment-authority.js",
       "sha256": "a4283364f24c40260029bbc31c260a9e7dce018f4350735ac59109448cddbb5b",
       "publicUrl": "https://codexofreality.org/assets/js/environment/environment-authority.js",
@@ -2393,7 +2405,7 @@
     },
     {
       "path": "docs/assets/js/moons.js",
-      "sha256": "4dc5471ee3d197b2e7c71589928b8e0df1ecc2e70c31278be146476f4dc10207",
+      "sha256": "08579eb26cb992f68d5638f09973067b67f1f5f3de9e7a7769fd93fe6efcafd3",
       "publicUrl": "https://codexofreality.org/assets/js/moons.js",
       "status": "operational"
     },
@@ -2515,6 +2527,12 @@
       "path": "docs/assets/js/read-aloud.js",
       "sha256": "1f0bb7bd72ee05c69609aba5a4162494c281aa93b806c6aff681182db684461a",
       "publicUrl": "https://codexofreality.org/assets/js/read-aloud.js",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/js/recoder-dictionary.js",
+      "sha256": "2b94f36569c814a8f853a5a78642f0190c72e3bd633b2c24b15d32813e7c356c",
+      "publicUrl": "https://codexofreality.org/assets/js/recoder-dictionary.js",
       "status": "operational"
     },
     {
@@ -4235,13 +4253,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "5cfb59f3b6ce19f50e23527119d589072f29a7d91f8e967ce4ee8463f3fe34a8",
+      "sha256": "18504bda7e3f6f5a9fe03b0e5d0e0480a07262191786973f8f34e07e1a293b26",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "ed31a3a9581a71cf28a0732fbf70178e0379e6d82ac2015cd9abb8d9f8553603",
+      "sha256": "9f3d5ee49ed8ab5dd0872df39d642c31e9b08fd8be7d6e4103d4d6158cae2ce8",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -4355,7 +4373,7 @@
     },
     {
       "path": "docs/downloads.html",
-      "sha256": "1c69b98adf0338c1375c413ce20f27de9039404e6a41afce2ee92fab2125d782",
+      "sha256": "3cdf51c36b199c001a396b53b6700debf9795f4d90e75ca1b08a2c94f1dc61cc",
       "publicUrl": "https://codexofreality.org/downloads.html",
       "status": "operational"
     },
@@ -4415,7 +4433,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "cea14ee714e040e69012a8e7f5060e56cf519b2209bdcafaa1f32e0a57fbbe7d",
+      "sha256": "25e0f8c65da5cc74a0bd5f8bba59d44f2f7445b3324b43445ecdcf18da5246e8",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
@@ -4469,7 +4487,7 @@
     },
     {
       "path": "docs/moons.html",
-      "sha256": "60ec5f7b07c6fb28b54c15d76d552d670451bf42d56ddf80b1efd1e90b023ec7",
+      "sha256": "80a4f57fb77e03e9af5eaef22c008ca1dc2b7eeb4a87d4b8257d4cde069ae915",
       "publicUrl": "https://codexofreality.org/moons.html",
       "status": "operational"
     },
@@ -5950,6 +5968,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/scroll/assets/shelf-loader.js",
+      "sha256": "f59154f6100b597c205dac6665174827bd4170d958e9b6153806af0c8f3afce3",
+      "publicUrl": "https://codexofreality.org/scroll/assets/shelf-loader.js",
+      "status": "operational"
+    },
+    {
       "path": "docs/scroll/atlas.html",
       "sha256": "2bed389cfcd26568d2850245892c1b546d5c443435f442d059b4aa8325160f8f",
       "publicUrl": "https://codexofreality.org/scroll/atlas.html",
@@ -5974,6 +5998,54 @@
       "status": "operational"
     },
     {
+      "path": "docs/scroll/data/shelf-evidence.html",
+      "sha256": "beb9cc38ad554c77783a8240f5af2383a8eb3d42440fe6f231ed697ce86325c2",
+      "publicUrl": "https://codexofreality.org/scroll/data/shelf-evidence.html",
+      "status": "operational"
+    },
+    {
+      "path": "docs/scroll/data/shelf-foundations.html",
+      "sha256": "c497943dc36c14ade5a27148a334b61342ba5668f38b16cf8773deb9c79b5219",
+      "publicUrl": "https://codexofreality.org/scroll/data/shelf-foundations.html",
+      "status": "operational"
+    },
+    {
+      "path": "docs/scroll/data/shelf-history.html",
+      "sha256": "10563a1837e45341bf20e8782ccf61acc9217ae059f5b9505ea43dfb48a43ba4",
+      "publicUrl": "https://codexofreality.org/scroll/data/shelf-history.html",
+      "status": "operational"
+    },
+    {
+      "path": "docs/scroll/data/shelf-prophecy.html",
+      "sha256": "2e6a056e6475c4936654de9a4bccb41dad2b13e2988a8aa8779a08cd6e05661a",
+      "publicUrl": "https://codexofreality.org/scroll/data/shelf-prophecy.html",
+      "status": "operational"
+    },
+    {
+      "path": "docs/scroll/data/shelf-reference.html",
+      "sha256": "3ada63d07f74bb20d49a054453c356092e58bbdfc9d444c32ffa54263ef387f8",
+      "publicUrl": "https://codexofreality.org/scroll/data/shelf-reference.html",
+      "status": "operational"
+    },
+    {
+      "path": "docs/scroll/data/shelf-scripture.html",
+      "sha256": "1bcadabb35a076f835e14262bcb3de8121a1d32974ffba4313ea20354121a2fe",
+      "publicUrl": "https://codexofreality.org/scroll/data/shelf-scripture.html",
+      "status": "operational"
+    },
+    {
+      "path": "docs/scroll/data/shelf-technology.html",
+      "sha256": "4bf1937d9d1b4b8222b9f73c393f20b93b7da33e1afc19eb3ac4cbac40cd8950",
+      "publicUrl": "https://codexofreality.org/scroll/data/shelf-technology.html",
+      "status": "operational"
+    },
+    {
+      "path": "docs/scroll/data/shelf-witness.html",
+      "sha256": "73b8ed3a9cd13bbbe816ab5f0329993682568ea0a4bff4656fd433fa4f0cd992",
+      "publicUrl": "https://codexofreality.org/scroll/data/shelf-witness.html",
+      "status": "operational"
+    },
+    {
       "path": "docs/scroll/editorial.html",
       "sha256": "0e73c329aa8a3cc342a5c801545cd4c9c684eaba4f54722d268eedf2761c9274",
       "publicUrl": "https://codexofreality.org/scroll/editorial.html",
@@ -5993,7 +6065,7 @@
     },
     {
       "path": "docs/scroll/index.html",
-      "sha256": "75926081650580e0bdecad22fa244008debbbd896483e2614539b897f9a9c60f",
+      "sha256": "4daea830652b9aed2d297f965c39c59e24e49a930045395448db4acb1e334304",
       "publicUrl": "https://codexofreality.org/scroll/",
       "status": "operational"
     },
@@ -10871,7 +10943,7 @@
     },
     {
       "path": "docs/systems/recoder.html",
-      "sha256": "c80715eebee246da4b36a1f2bf3131ca8d684b220de85ad9db73378b4ec54147",
+      "sha256": "74131a153abcab6287b0ffbb82cc188ee5a03588671b86418d08aee534ad4a0e",
       "publicUrl": "https://codexofreality.org/systems/recoder.html",
       "status": "operational"
     },
