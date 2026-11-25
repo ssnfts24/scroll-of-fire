@@ -99,8 +99,8 @@
 
 | Stylesheet | Pages |
 | --- | --- |
+| `docs/assets/css/site-mobile.css` | 193 |
 | `docs/assets/css/spark-companion.css` | 191 |
-| `docs/assets/css/site-mobile.css` | 191 |
 | `docs/assets/css/living-ui.css` | 151 |
 | `docs/scripture/assets/scripture.css` | 101 |
 | `docs/assets/css/spark-agent-seat.css` | 79 |
