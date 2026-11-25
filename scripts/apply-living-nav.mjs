@@ -62,6 +62,7 @@ const EXCLUDED = new Set([
   "theory/frequency-governance.html",
   "start.html",
   "witness-world.html",
+  "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
   // Gate G (G2): account.html is a self-contained utility
   // page — tests/living-nav.test.js has always expected it
   // excluded; the stamper now agrees (one-PR redesign,

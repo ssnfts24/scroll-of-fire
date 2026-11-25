@@ -5,14 +5,14 @@
   "summary": {
     "resources": 501,
     "publicHtmlPages": 196,
-    "catalogEntries": 74,
+    "catalogEntries": 73,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 26,
-      "nav-label-differs-from-title": 24,
+      "not-linked-directly-from-homepage": 25,
+      "nav-label-differs-from-title": 23,
       "no-global-navigation": 1,
       "deployed-but-unlinked": 64,
       "unreachable-from-homepage": 5,
-      "compatibility-redirect-page": 7,
+      "compatibility-redirect-page": 8,
       "reachable-only-through-atlas": 2,
       "not-published-in-catalog": 30,
       "unnamed-image-needs-descriptive-title": 21
@@ -374,8 +374,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 185,
-        "pagesWithNavLinkToIt": 180
+        "inboundPages": 184,
+        "pagesWithNavLinkToIt": 179
       },
       "issues": [
         "nav-label-differs-from-title: \"Evidence Edition\" vs \"Editorial reading and evidence\""
@@ -546,8 +546,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 185,
-        "pagesWithNavLinkToIt": 180
+        "inboundPages": 184,
+        "pagesWithNavLinkToIt": 179
       },
       "issues": [
         "nav-label-differs-from-title: \"Atlas\" vs \"Codex Atlas\""
@@ -662,15 +662,13 @@
         "path": "codex-white-paper.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 3,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 5,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "companions",
@@ -706,7 +704,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 185,
+        "inboundPages": 184,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
@@ -772,8 +770,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 73
+        "inboundPages": 72,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"Covenant Caravan\" vs \"The Covenant Caravan\""
@@ -2206,6 +2204,7 @@
         "circle.html",
         "claims-atlas.html",
         "codex-atlas.html",
+        "codex-white-paper.html",
         "companions.html",
         "covenant-caravan.html",
         "downloads.html",
@@ -2251,7 +2250,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 0,
         "hopsFromHomeWithoutAtlas": 0,
-        "inboundPages": 188,
+        "inboundPages": 187,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -11531,6 +11530,36 @@
       "issues": []
     },
     {
+      "id": "docs:scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
+      "title": "Remnant Whitepaper — Redirect",
+      "description": "Compatibility route forwarding visitors to the Codex White Paper, where the Remnant Whitepaper now stands whole as Part II, the founding document.",
+      "category": "Utility",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
+      "publicUrl": "https://codexofreality.org/scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "codex-white-paper.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/codex-white-paper.html",
+      "privacyEligibility": "utility",
+      "discoverability": {
+        "path": "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
+        "inSitemap": false,
+        "inGlobalNav": true,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 73,
+        "pagesWithNavLinkToIt": 72
+      },
+      "issues": [
+        "compatibility-redirect-page"
+      ]
+    },
+    {
       "id": "docs:specifications/alignment-ledger-v1.md",
       "title": "specifications/alignment-ledger-v1.md",
       "description": "Markdown document deployed inside docs/ and therefore publicly fetchable, but not linked from the site.",
@@ -11629,8 +11658,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 76,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 75,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": [
         "compatibility-redirect-page"
@@ -13201,7 +13230,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 185,
+        "inboundPages": 184,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
@@ -13269,7 +13298,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 187,
+        "inboundPages": 186,
         "pagesWithNavLinkToIt": 78
       },
       "issues": [
@@ -13529,8 +13558,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 73
+        "inboundPages": 72,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": []
     },
@@ -13982,8 +14011,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 72,
-        "pagesWithNavLinkToIt": 73
+        "inboundPages": 71,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"Year Map\" vs \"Systems Hub\""
@@ -14189,8 +14218,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 76,
-        "pagesWithNavLinkToIt": 76
+        "inboundPages": 75,
+        "pagesWithNavLinkToIt": 75
       },
       "issues": []
     },
@@ -14235,7 +14264,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 187,
+        "inboundPages": 186,
         "pagesWithNavLinkToIt": 4
       },
       "issues": []
@@ -14299,8 +14328,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 73
+        "inboundPages": 72,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": []
     },
@@ -14574,8 +14603,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 188,
-        "pagesWithNavLinkToIt": 180
+        "inboundPages": 187,
+        "pagesWithNavLinkToIt": 179
       },
       "issues": [
         "nav-label-differs-from-title: \"13 Moons\" vs \"Remnant 13 Moons\""
@@ -19454,8 +19483,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 184,
-        "pagesWithNavLinkToIt": 180
+        "inboundPages": 183,
+        "pagesWithNavLinkToIt": 179
       },
       "issues": []
     },
@@ -19498,8 +19527,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 184,
-        "pagesWithNavLinkToIt": 180
+        "inboundPages": 183,
+        "pagesWithNavLinkToIt": 179
       },
       "issues": []
     },
@@ -19547,8 +19576,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 185,
-        "pagesWithNavLinkToIt": 180
+        "inboundPages": 184,
+        "pagesWithNavLinkToIt": 179
       },
       "issues": [
         "nav-label-differs-from-title: \"Scroll Library\" vs \"Scroll of Fire\""
@@ -19634,8 +19663,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 185,
-        "pagesWithNavLinkToIt": 180
+        "inboundPages": 184,
+        "pagesWithNavLinkToIt": 179
       },
       "issues": [
         "nav-label-differs-from-title: \"Search the Scroll Library\" vs \"Search the Scroll\""
@@ -19768,8 +19797,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 186,
-        "pagesWithNavLinkToIt": 73
+        "inboundPages": 185,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"Artifact Registry\" vs \"Artifact Registry & Shop\""
@@ -20504,7 +20533,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 78,
+        "inboundPages": 77,
         "pagesWithNavLinkToIt": 78
       },
       "issues": [
@@ -21189,64 +21218,11 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 77,
+        "inboundPages": 76,
         "pagesWithNavLinkToIt": 75
       },
       "issues": [
         "nav-label-differs-from-title: \"13 Moons Whitepaper\" vs \"Remnant Rollout Whitepaper\""
-      ]
-    },
-    {
-      "id": "whitepaper-remnant",
-      "title": "Scroll of Fire · Codex of Reality · Remnant Whitepaper",
-      "description": "The official foundational whitepaper for Scroll of Fire and the Codex of Reality: identity, living theory, witness method, systems architecture, research integrity, ethics, artifacts, Covenant Caravan, and its relationship to The 13 Moons Remnant Living Time Observatory.",
-      "category": "Whitepaper",
-      "area": "scroll-scripture",
-      "relatedProjects": [
-        "theory-hub"
-      ],
-      "sourcePath": "docs/scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
-      "publicUrl": "https://codexofreality.org/scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
-      "publicationStatus": "live",
-      "lastVerifiedSourceRevision": "548e858",
-      "relatedPages": [
-        "13-moon-whitepaper.html",
-        "codex-atlas.html",
-        "companions.html",
-        "covenant-caravan.html",
-        "downloads.html",
-        "hub.html",
-        "index.html",
-        "ledger.html",
-        "living-time-sphere.html",
-        "moons.html",
-        "scroll/atlas.html",
-        "scroll/editorial.html",
-        "scroll/index.html",
-        "scroll/lexicon.html",
-        "scroll/search.html",
-        "shop.html",
-        "start.html",
-        "systems/frequencies.html",
-        "teach.html",
-        "theory.html",
-        "witness-world.html",
-        "witness.html"
-      ],
-      "canonicalUrl": "https://codexofreality.org/scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
-      "privacyEligibility": "approved-public",
-      "discoverability": {
-        "path": "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
-        "inSitemap": true,
-        "inGlobalNav": true,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 72
-      },
-      "issues": [
-        "nav-label-differs-from-title: \"Remnant Whitepaper\" vs \"Scroll of Fire · Codex of Reality · Remnant Whitepaper\""
       ]
     },
     {
@@ -21312,7 +21288,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 187,
+        "inboundPages": 186,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []

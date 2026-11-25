@@ -32,7 +32,10 @@ const EXCLUDED = [
   // Page programme (Nov 24, 2026): start.html and witness-world.html
   // folded into the front door and the Witness page; redirect stubs.
   "start.html",
-  "witness-world.html"
+  "witness-world.html",
+  // Page programme (Nov 24, 2026): the Remnant Whitepaper folded into
+  // the Codex White Paper as Part II; a redirect stub now.
+  "scroll-of-fire-codex-of-reality-remnant-whitepaper.html"
 ];
 
 const topLevelPages = fs
@@ -50,7 +53,8 @@ test("the exclusion list is exactly the protected + utility pages", () => {
     "caravan.html",
     "account.html",
     "start.html",
-    "witness-world.html"
+    "witness-world.html",
+    "scroll-of-fire-codex-of-reality-remnant-whitepaper.html"
   ]);
   for (const name of EXCLUDED) {
     assert.ok(topLevelPages.includes(name), `excluded page should exist: ${name}`);

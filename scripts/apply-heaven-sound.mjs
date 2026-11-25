@@ -41,6 +41,7 @@ const EXCLUDED_FILES = new Set([
   "theory/frequency-governance.html",
   "start.html",
   "witness-world.html",
+  "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
 ]);
 const EXCLUDED_DIRS = new Set(["scroll", "scripture"]);
 
