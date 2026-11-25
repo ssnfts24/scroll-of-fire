@@ -104,7 +104,7 @@ test("the share never reaches the network — nothing uploads", () => {
 test("the growth record carries the surfaces, and the homepage mirrors it", () => {
   const updates = JSON.parse(read("docs/assets/data/codex-updates.json"));
   assert.equal(updates[0].date, "2026-11-24");
-  assert.equal(updates[0].title, "Four theory doorways folded into the pages they govern");
-  const mirror = HTML.match(/data-le-growth[\s\S]*?<li><time datetime="2026-11-24">2026-11-24<\/time> <a href="\.\/glossary\.html">Four theory doorways folded into the pages they govern<\/a><\/li>/);
-  assert.ok(mirror, "the homepage activity panel mirrors the newest entry (the honesty entry stands second in the mirror, as entries before it aged in their turn)");
+  assert.equal(updates[0].title, "Talking with the Spark grew easier: fewer sentences, more taps");
+  const mirror = HTML.match(/data-le-growth[\s\S]*?<li><time datetime="2026-11-24">2026-11-24<\/time> <a href="\.\/living-time-sphere\.html">Talking with the Spark grew easier: fewer sentences, more taps<\/a><\/li>/);
+  assert.ok(mirror, "the homepage activity panel mirrors the newest entry (the theory-merges entry stands second in the mirror, as entries before it aged in their turn)");
 });
