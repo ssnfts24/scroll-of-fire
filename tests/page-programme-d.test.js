@@ -17,6 +17,7 @@ test("the practice playbook carries its new name, and the Lab doors to it", () =
   const guide = read("guide.html");
   assert.ok(guide.includes("Practice Playbook — Practice That Sticks"), "guide retitled");
   assert.ok(!guide.includes("Field Guide — Practice That Sticks"), "the colliding name is gone");
+  assert.ok(!guide.includes("Field Guide"), "no Field Guide naming remains on the page's face");
   assert.ok(read("lab.html").includes('href="./guide.html"'), "the Lab links the playbook");
 });
 
