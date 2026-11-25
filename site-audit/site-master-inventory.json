@@ -7,7 +7,7 @@
     "publicHtmlPages": 196,
     "catalogEntries": 73,
     "issueCounts": {
-      "not-linked-directly-from-homepage": 25,
+      "not-linked-directly-from-homepage": 26,
       "nav-label-differs-from-title": 23,
       "no-global-navigation": 1,
       "deployed-but-unlinked": 64,
@@ -664,13 +664,15 @@
         "path": "codex-white-paper.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 6,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 5,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": []
+      "issues": [
+        "not-linked-directly-from-homepage"
+      ]
     },
     {
       "id": "companions",
@@ -2206,7 +2208,6 @@
         "circle.html",
         "claims-atlas.html",
         "codex-atlas.html",
-        "codex-white-paper.html",
         "companions.html",
         "covenant-caravan.html",
         "downloads.html",
@@ -14413,7 +14414,7 @@
         "inGlobalNav": false,
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
+        "hopsFromHomeWithoutAtlas": 3,
         "inboundPages": 3,
         "pagesWithNavLinkToIt": 0
       },
