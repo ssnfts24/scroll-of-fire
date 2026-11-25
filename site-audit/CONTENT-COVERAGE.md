@@ -52,7 +52,7 @@ Practice tools, frequency systems and the Codex hub for building.
 - **A/B Carrier Protocol** — Live; Blind carrier test with a stop rule.
 - **Voice-Glyph Synth** — Live; Turn a tuned phrase into a resonance glyph.
 - **Invocation Lab** — Live; Guided run space for the Codex equations with carriers, ethics and witnesses.
-- **Field Guide** — Live; Daily and weekly practice, troubleshooting and ethics.
+- **Practice Playbook** — Live; Daily and weekly practice, troubleshooting and ethics.
 - **Manifest** — Live; Remnant visual exercise: carrier frequency engine, harmonic sequences and breath.
 - **The Pattern Garden — the Garden** — Live; The garden game on the bench, remade: thirteen beds keyed to the thirteen Moons, plantings read from the real Western Washington farm record, growth counted from the keeper's kept days, and harvests kept as Life Atlas keepsakes on the visitor's own device.
 - **Practices — the Exercises Wing** — Live; Short exercises for a human in the Training Grounds: breath, attention, seeing, memory, and intention. Each finished exercise seals a practice record in the visitor's own Life Atlas — the same record the garden reads as rain — on this device only.
