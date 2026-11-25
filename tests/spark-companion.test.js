@@ -299,7 +299,11 @@ test("the Spark travels into the Scripture reader and the Scroll Library, and th
     return out.sort();
   };
   for (const dir of ["docs/scripture", "docs/scroll"]) {
-    const pages = htmlUnder(dir);
+    /* Batch E4 (Nov 25, 2026): the Scroll shelf lists are data
+     * fragments now (scroll/data/shelf-*.html) — a list, not a
+     * page; the Spark travels to pages, and the shelf fragment's
+     * page is the library index that fetches it. */
+    const pages = htmlUnder(dir).filter((rel) => !rel.includes("/data/shelf-"));
     assert.ok(pages.length > 0, `${dir} has pages to check`);
     for (const page of pages) {
       assert.ok(read(page).includes("spark-presence.js"), `${page} carries the presence`);
