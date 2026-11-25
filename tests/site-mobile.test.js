@@ -8,11 +8,14 @@
  * included in the app."
  *
  * This file pins the build's shape:
- *   1. The site has its own manifest now — the Codex of
- *      Reality's card, the front door as its start, standalone,
- *      the site palette, icons that exist on disk. Pages that
- *      already carried a manifest (moons, the Sphere, the
- *      white papers) keep theirs.
+ *   1. The site has one manifest — the Codex of Reality's
+ *      card (docs/manifest.webmanifest), the front door as its
+ *      start, standalone, the site palette, icons that exist on
+ *      disk. Every page links that one card. (Nov 24–25, 2026
+ *      the moons and Sphere surfaces briefly carried cards of
+ *      their own; the ULS P2 consolidation retired them — one
+ *      installation identity, with the Sphere and the moons
+ *      panels carried as shortcuts inside the one card.)
  *   2. Every hand-maintained page carries the one mobile floor
  *      stylesheet, stamped by scripts/apply-site-mobile.mjs,
  *      and the manifest link where it had none. Generator-owned
@@ -79,7 +82,7 @@ function walk(dir, prefix = "") {
 const handPages = walk(docsDir).filter((rel) => !EXCLUDED_FILES.has(rel)).sort();
 
 test("the site manifest carries the Codex's own identity", () => {
-  const manifest = JSON.parse(read("docs/manifest-site.webmanifest"));
+  const manifest = JSON.parse(read("docs/manifest.webmanifest"));
   assert.equal(manifest.name, "Codex of Reality");
   assert.equal(manifest.short_name, "Codex");
   assert.equal(manifest.start_url, "./index.html?source=installed");
@@ -123,9 +126,11 @@ test("pages without a manifest gained the site's; pages with one kept theirs", (
   }
   const moons = read("docs/moons.html");
   assert.ok(moons.includes('href="manifest.webmanifest"'),
-    "moons keeps the 13 Moons card");
-  assert.ok(!moons.includes("manifest-site.webmanifest"),
-    "moons does not take the site card over its own");
+    "moons carries the one Codex card");
+  assert.ok(!fs.existsSync(path.join(docsDir, "manifest-site.webmanifest")),
+    "the old site card is gone — one installation identity (ULS P2)");
+  assert.ok(!fs.existsSync(path.join(docsDir, "manifest-sphere.webmanifest")),
+    "the old sphere card is gone — one installation identity (ULS P2)");
 });
 
 test("the floor sheet keeps every rule inside the small-screen query", () => {
@@ -159,10 +164,12 @@ test("the Sphere module acquires the app framing on small screens", () => {
 
 test("the protected Sphere page stands as it was", () => {
   const page = read("docs/living-time-sphere.html");
-  assert.ok(page.includes('href="manifest-sphere.webmanifest"'),
-    "the Sphere keeps its own manifest");
+  assert.ok(page.includes('href="manifest.webmanifest"'),
+    "the Sphere links the one Codex card (ULS P2)");
   assert.ok(!page.includes("site-mobile.css"),
     "the mobile floor is not stamped into the protected page");
   assert.ok(!page.includes("manifest-site.webmanifest"),
-    "the site card is not stamped into the protected page");
+    "the retired site card is not stamped into the protected page");
+  assert.ok(!page.includes("manifest-sphere.webmanifest"),
+    "the retired sphere card is gone from the protected page");
 });
