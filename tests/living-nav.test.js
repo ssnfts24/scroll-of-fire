@@ -35,9 +35,9 @@ const EXCLUDED = new Set([
   "404.html",
   "offline.html",
   "caravan.html",
-  // Gate G (G2): the account page is a utility page (noindex,
-  // catalog-classified Utility), excluded as offline.html is.
-  "account.html",
+  // Page Evolution Batch E3 (Nov 25, 2026): the account page
+  // joined the one-nav system — the plan's named step, reversing
+  // the Gate G utility exclusion. It is a content page here now.
   // Page programme (Nov 24, 2026): the theory doorway merges folded
   // these four pages into their practical homes; they are now
   // meta-refresh redirect stubs, as caravan.html is.
