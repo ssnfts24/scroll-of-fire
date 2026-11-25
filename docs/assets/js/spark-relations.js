@@ -105,20 +105,16 @@
       ],
       "ethics.html": [
         {
-          "href": "codex-atlas.html",
-          "label": "the Codex Atlas"
+          "href": "theory/memory.html",
+          "label": "Memory (theory)"
         },
         {
-          "href": "moons.html",
-          "label": "the 13 Moons page"
+          "href": "theory/equations/eq09.html",
+          "label": "Equation 9 — Ethical Law"
         },
         {
-          "href": "ledger.html",
-          "label": "Witness Ledger"
-        },
-        {
-          "href": "hub.html",
-          "label": "the Documentation Hub"
+          "href": "teach.html",
+          "label": "the practice page"
         }
       ],
       "genesis-oracle.html": [
