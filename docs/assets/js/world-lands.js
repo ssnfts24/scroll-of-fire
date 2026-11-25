@@ -531,7 +531,7 @@
     },
     {
       "id": "guide",
-      "title": "Field Guide",
+      "title": "Practice Playbook",
       "path": "guide.html",
       "reason": "The Guide's own page — record-only by the same rulebook. Flat by design."
     },

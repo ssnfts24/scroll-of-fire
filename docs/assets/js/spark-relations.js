@@ -57,6 +57,14 @@
         {
           "href": "timeline.html",
           "label": "the history timeline"
+        },
+        {
+          "href": "hub.html",
+          "label": "the Documentation Hub"
+        },
+        {
+          "href": "codex-atlas.html",
+          "label": "the Codex Atlas"
         }
       ],
       "codex-atlas.html": [
@@ -163,8 +171,8 @@
           "label": "the Codex Atlas"
         },
         {
-          "href": "teach.html",
-          "label": "the practice page"
+          "href": "claims-atlas.html",
+          "label": "the Claims Atlas"
         }
       ],
       "index.html": [
@@ -231,8 +239,12 @@
           "label": "The Codex Guide"
         },
         {
-          "href": "codex-atlas.html",
-          "label": "the Codex Atlas"
+          "href": "hub.html",
+          "label": "the Documentation Hub"
+        },
+        {
+          "href": "claims-atlas.html",
+          "label": "the Claims Atlas"
         }
       ],
       "sending-test.html": [

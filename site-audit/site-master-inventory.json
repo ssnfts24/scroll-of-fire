@@ -13,7 +13,6 @@
       "deployed-but-unlinked": 64,
       "unreachable-from-homepage": 5,
       "compatibility-redirect-page": 8,
-      "reachable-only-through-atlas": 2,
       "not-published-in-catalog": 30,
       "unnamed-image-needs-descriptive-title": 21
     }
@@ -419,6 +418,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -443,7 +443,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 3,
+        "inboundPages": 6,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -644,7 +644,9 @@
         "index.html",
         "ledger.html",
         "living-time-sphere.html",
+        "methods.html",
         "moons.html",
+        "provenance.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -6396,7 +6398,7 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
         "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 50,
+        "inboundPages": 52,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -6592,7 +6594,7 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
         "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 50,
+        "inboundPages": 51,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -11131,7 +11133,14 @@
         "scripture/exodus/01.html",
         "scripture/genesis/01.html",
         "scripture/index.html",
+        "scripture/word-studies/adam.html",
+        "scripture/word-studies/adamah.html",
+        "scripture/word-studies/enosh.html",
         "scripture/word-studies/index.html",
+        "scripture/word-studies/nephesh.html",
+        "scripture/word-studies/or.html",
+        "scripture/word-studies/ruach.html",
+        "scripture/word-studies/shem.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -11204,7 +11213,7 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 3,
         "hopsFromHomeWithoutAtlas": 3,
-        "inboundPages": 6,
+        "inboundPages": 7,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -11234,6 +11243,7 @@
         "scripture/about.html",
         "scripture/exodus/01.html",
         "scripture/genesis/01.html",
+        "scripture/genesis/02.html",
         "scripture/index.html",
         "scripture/word-studies/adam.html",
         "scripture/word-studies/enosh.html",
@@ -11257,7 +11267,7 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 3,
         "hopsFromHomeWithoutAtlas": 3,
-        "inboundPages": 3,
+        "inboundPages": 4,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -11287,6 +11297,7 @@
         "scripture/about.html",
         "scripture/exodus/01.html",
         "scripture/genesis/01.html",
+        "scripture/genesis/04.html",
         "scripture/index.html",
         "scripture/word-studies/adam.html",
         "scripture/word-studies/adamah.html",
@@ -11311,7 +11322,7 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 3,
         "hopsFromHomeWithoutAtlas": 3,
-        "inboundPages": 4,
+        "inboundPages": 5,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -11365,7 +11376,7 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 3,
         "hopsFromHomeWithoutAtlas": 3,
-        "inboundPages": 4,
+        "inboundPages": 5,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -11419,7 +11430,7 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 3,
         "hopsFromHomeWithoutAtlas": 3,
-        "inboundPages": 4,
+        "inboundPages": 5,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -11473,7 +11484,7 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 3,
         "hopsFromHomeWithoutAtlas": 3,
-        "inboundPages": 4,
+        "inboundPages": 5,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -11503,6 +11514,7 @@
         "scripture/about.html",
         "scripture/exodus/01.html",
         "scripture/genesis/01.html",
+        "scripture/genesis/02.html",
         "scripture/index.html",
         "scripture/word-studies/index.html",
         "scripture/word-studies/or.html",
@@ -11524,7 +11536,7 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 3,
         "hopsFromHomeWithoutAtlas": 3,
-        "inboundPages": 6,
+        "inboundPages": 7,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -13833,7 +13845,7 @@
     },
     {
       "id": "guide",
-      "title": "Field Guide — Practice That Sticks | Scroll of Fire",
+      "title": "Practice Playbook — Practice That Sticks | Scroll of Fire",
       "description": "A practical Scroll of Fire field guide for daily coherence practice, weekly rhythm, troubleshooting, ethics, and equations.",
       "category": "Practice",
       "area": "systems",
@@ -13891,7 +13903,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 4,
+        "inboundPages": 5,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -13969,6 +13981,7 @@
         "13-moon-whitepaper.html",
         "about-aaron.html",
         "circle.html",
+        "claims-atlas.html",
         "codex-atlas.html",
         "companions.html",
         "covenant-caravan.html",
@@ -13988,6 +14001,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/archive.html",
@@ -14115,6 +14129,7 @@
         "genesis-oracle.html",
         "glossary.html",
         "glyphs.html",
+        "guide.html",
         "hub.html",
         "index.html",
         "invoke.html",
@@ -14394,12 +14409,11 @@
         "inGlobalNav": false,
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": null,
-        "inboundPages": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 3,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
-        "reachable-only-through-atlas",
         "not-linked-directly-from-homepage"
       ]
     },
@@ -14574,6 +14588,7 @@
         "lab.html",
         "ledger.html",
         "living-time-sphere.html",
+        "provenance.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -14880,12 +14895,11 @@
         "inGlobalNav": false,
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": null,
-        "inboundPages": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 4,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
-        "reachable-only-through-atlas",
         "not-linked-directly-from-homepage"
       ]
     },
@@ -15243,7 +15257,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (235 files)",
+      "title": "tests/ (236 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -19821,6 +19835,7 @@
         "13-moon-whitepaper.html",
         "about-aaron.html",
         "circle.html",
+        "claims-atlas.html",
         "codex-atlas.html",
         "codex-guide.html",
         "companions.html",
@@ -19864,8 +19879,8 @@
         "inGlobalNav": false,
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 3,
-        "inboundPages": 3,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 6,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
@@ -19889,6 +19904,7 @@
         "13-moon-whitepaper.html",
         "about-aaron.html",
         "circle.html",
+        "claims-atlas.html",
         "codex-atlas.html",
         "companions.html",
         "covenant-caravan.html",
@@ -19909,6 +19925,7 @@
         "scroll/index.html",
         "scroll/lexicon.html",
         "scroll/search.html",
+        "search.html",
         "shop.html",
         "start.html",
         "systems/frequencies.html",
@@ -21295,7 +21312,7 @@
     },
     {
       "id": "witness-system",
-      "title": "Remnant Witness Ledger — Scroll of Fire",
+      "title": "Remnant Witness Hash — Scroll of Fire",
       "description": "A local SHA-256 witness utility for turning chosen testimony into a reproducible integrity hash without uploading the testimony.",
       "category": "Systems",
       "area": "systems",
@@ -21356,7 +21373,7 @@
         "pagesWithNavLinkToIt": 72
       },
       "issues": [
-        "nav-label-differs-from-title: \"Witness System\" vs \"Remnant Witness Ledger\""
+        "nav-label-differs-from-title: \"Witness System\" vs \"Remnant Witness Hash\""
       ]
     }
   ]

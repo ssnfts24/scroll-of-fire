@@ -174,15 +174,49 @@
       </video>
     </section>
 
-    <ol>
-      <li>Day 1 — Stillness: breathe 4-7-8, recall intention.</li>
-      <li>Day 2 — Alignment: read Romans 12 : 2.</li>
-      <li>Day 3 — Gratitude log (3 entries).</li>
-      <li>Day 4 — Speak life aloud.</li>
-      <li>Day 5 — Forgive + release.</li>
-      <li>Day 6 — Serve one quietly.</li>
-      <li>Day 7 — Rest, reflect, record witness.</li>
+    <p id="mr-progress" role="status">0 of 7 days checked. Tick each day as you complete it — your ticks are saved on this device only, and you can pause or stop whenever the practice is not supportive.</p>
+    <ol class="mr-days">
+      <li><label class="mr-day"><input type="checkbox" data-mr-day="1"> <span>Day 1 — Stillness: breathe 4-7-8, recall intention.</span></label></li>
+      <li><label class="mr-day"><input type="checkbox" data-mr-day="2"> <span>Day 2 — Alignment: read Romans 12 : 2.</span></label></li>
+      <li><label class="mr-day"><input type="checkbox" data-mr-day="3"> <span>Day 3 — Gratitude log (3 entries).</span></label></li>
+      <li><label class="mr-day"><input type="checkbox" data-mr-day="4"> <span>Day 4 — Speak life aloud.</span></label></li>
+      <li><label class="mr-day"><input type="checkbox" data-mr-day="5"> <span>Day 5 — Forgive + release.</span></label></li>
+      <li><label class="mr-day"><input type="checkbox" data-mr-day="6"> <span>Day 6 — Serve one quietly.</span></label></li>
+      <li><label class="mr-day"><input type="checkbox" data-mr-day="7"> <span>Day 7 — Rest, reflect, record witness.</span></label></li>
     </ol>
+    <p><button type="button" id="mr-reset">Start the seven days again</button></p>
+    <script>
+    (function () {
+      var KEY = "codex.mindRenewal.v1";
+      var boxes = Array.prototype.slice.call(document.querySelectorAll("[data-mr-day]"));
+      var line = document.getElementById("mr-progress");
+      var saved = {};
+      try { saved = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { saved = {}; }
+      function render() {
+        var done = 0;
+        boxes.forEach(function (b) {
+          b.checked = !!saved[b.getAttribute("data-mr-day")];
+          if (b.checked) done += 1;
+        });
+        line.textContent = done === 7
+          ? "All 7 days checked — the round is complete. Rest, reflect, and record your witness below; start again whenever you are ready."
+          : done + " of 7 days checked. Tick each day as you complete it — your ticks are saved on this device only, and you can pause or stop whenever the practice is not supportive.";
+      }
+      boxes.forEach(function (b) {
+        b.addEventListener("change", function () {
+          saved[b.getAttribute("data-mr-day")] = b.checked;
+          try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {}
+          render();
+        });
+      });
+      document.getElementById("mr-reset").addEventListener("click", function () {
+        saved = {};
+        try { localStorage.removeItem(KEY); } catch (e) {}
+        render();
+      });
+      render();
+    })();
+    </script>
   
     <div class="section-shell">
       <div class="record-witness-band" data-witness-context>
@@ -197,7 +231,7 @@
       <section class="section-shell" aria-label="Where to next">
       <p class="eyebrow">Where to Next</p>
       <h2>Keep Exploring</h2>
-      <p><a class="text-link" href="systems/witness.html">Witness System →</a></p>
+      <p><a class="text-link" href="witness.html">Witness System →</a></p>
     </section>
   </main>
   <footer class="site-footer">
