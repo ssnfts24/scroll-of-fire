@@ -11,7 +11,7 @@
       "nav-label-differs-from-title": 23,
       "no-global-navigation": 1,
       "deployed-but-unlinked": 64,
-      "unreachable-from-homepage": 4,
+      "unreachable-from-homepage": 5,
       "compatibility-redirect-page": 8,
       "reachable-only-through-atlas": 2,
       "not-published-in-catalog": 30,
@@ -1386,13 +1386,15 @@
         "path": "account.html",
         "inSitemap": false,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 1,
+        "linkedFromHomepage": false,
+        "hopsFromHome": null,
+        "hopsFromHomeWithoutAtlas": null,
+        "inboundPages": 0,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": []
+      "issues": [
+        "unreachable-from-homepage"
+      ]
     },
     {
       "id": "docs:assets/glyphs/README.md",
@@ -2199,7 +2201,6 @@
       "relatedPages": [
         "13-moon-whitepaper.html",
         "about-aaron.html",
-        "account.html",
         "circle.html",
         "claims-atlas.html",
         "codex-atlas.html",
