@@ -127,11 +127,13 @@
    * The graded disclosure verdict for one context day. Pure: the
    * caller supplies the regime facts. Returns false when the day
    * must not disclose under the discipline — the faced centre
-   * Moon and the selected Moon always pass (they are the
-   * subject); scheduled days always pass (a plan is information,
-   * not texture); distance ≥ 2 keeps week anchors only; the
-   * immediate neighbours keep their sparse anchors; a Moon under
-   * the pitch floor keeps week anchors whatever its distance.
+   * Moon and the selected Moon pass at any healthy pitch (they
+   * are the subject); scheduled days always pass (a plan is
+   * information, not texture); distance ≥ 2 keeps week anchors
+   * only; the immediate neighbours keep their sparse anchors; a
+   * Moon under the pitch floor keeps week anchors whatever its
+   * distance — since Nov 25, 2026 including the faced and
+   * selected Moons themselves, whose selected day still passes.
    */
   function contextDisciplineAllows({
     moon,
@@ -139,6 +141,7 @@
     scheduled = false,
     centreMoon = null,
     selectedMoon = null,
+    selectedDay = null,
     pitch = null,
     active = false
   } = {}) {
@@ -146,10 +149,32 @@
     const centre = Number(centreMoon || 0);
     if (!centre) return true;
     const m = Number(moon || 0);
-    if (!m || m === centre || m === Number(selectedMoon || 0)) return true;
+    if (!m) return true;
     if (scheduled) return true;
     const day = Number(moonDay || 0);
     const weekAnchor = day === 1 || day === 7 || day === 14 || day === 21 || day === 28;
+    /*
+     * The faced Moon's own floor (Nov 25, 2026 — Aaron, from his
+     * phone: the labeling needs fixing, the face is crowded).
+     * The centre/selected exemption above all pitch used to stand
+     * at any compression: at the phone's opening distance the
+     * faced Moon's 28 discs stand ~10px apart, pitch-capped into
+     * a legible-size pile that still reads as clutter. Under the
+     * same readability floor the context Moons already obey, the
+     * faced and selected Moons now also collapse to their week
+     * anchors — the selected day itself and scheduled days keep
+     * their full disclosure, and the whole grid returns as the
+     * keeper approaches and the pitch opens past the floor.
+     */
+    if (
+      (m === centre || m === Number(selectedMoon || 0))
+      && pitch != null
+      && pitch < PLATE_PITCH_FLOOR_PX
+    ) {
+      if (m === Number(selectedMoon || 0) && selectedDay != null && day === Number(selectedDay)) return true;
+      return weekAnchor;
+    }
+    if (m === centre || m === Number(selectedMoon || 0)) return true;
     if (pitch != null && pitch < PLATE_PITCH_FLOOR_PX) return weekAnchor;
     const distance = circularMoonDistance(m, centre);
     if (distance >= 2) return weekAnchor;
@@ -2884,9 +2909,11 @@
        * door, week anchors beyond), and any context Moon whose
        * projected grid pitch falls under the readability floor
        * collapses to its week anchors instead of micro-plates.
-       * The faced centre Moon
-       * and the selected Moon keep every exemption they already
-       * had; scheduled days always show. Denied candidates leave
+       * The faced centre Moon and the selected Moon keep their
+       * exemption at any healthy pitch; under the floor they now
+       * collapse to week anchors too (Nov 25, 2026 — see
+       * contextDisciplineAllows), the selected day and scheduled
+       * days always show. Denied candidates leave
        * the rail here and their railGateVerdicts entry is set
        * false, so the render pass honours the verdict exactly
        * like a gate verdict (B7.60.2).
@@ -2918,6 +2945,7 @@
               scheduled: Boolean(candidate.target.dayScheduleCount > 0 || candidate.target.count > 0),
               centreMoon: disciplineCentreMoon,
               selectedMoon,
+              selectedDay: Number(selectedPatternPosition?.day || 0) || null,
               pitch: disciplinePitches.get(Number(candidate.target.moon || 0)) ?? null,
               active: true
             });
