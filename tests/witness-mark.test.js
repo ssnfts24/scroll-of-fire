@@ -48,7 +48,10 @@ test("one mark per page per day: the fold recognises today's mark and no other",
 });
 
 test("the named wave-3 pages carry the mark: both whitepapers and Mind-Renewal", () => {
-  for (const page of ["13-moon-whitepaper.html", "scroll-of-fire-codex-of-reality-remnant-whitepaper.html", "systems/mind-renewal.html"]) {
+  // The Remnant Whitepaper folded into the Codex White Paper as Part II
+  // (page programme, Nov 24, 2026), so both whitepapers are now carried
+  // by codex-white-paper.html, which bears the mark for both.
+  for (const page of ["13-moon-whitepaper.html", "codex-white-paper.html", "systems/mind-renewal.html"]) {
     const html = fs.readFileSync(path.join(docsRoot, page), "utf8");
     assert.ok(html.includes("data-witness-mark"), `${page} carries the witness-mark strip`);
     assert.ok(html.includes("witness-mark.js"), `${page} loads the module`);
