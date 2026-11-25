@@ -16,16 +16,19 @@
  * proposal-before-write, the generative clause, the density cap,
  * the timeline's states.
  *
- * Dates ride the calendar's epoch rule, the same one sphere-spark's
- * first-generation parser verified against the house fixtures:
- * Pattern Day N of anchor year Y is the civil date April 17 of Y
- * plus (N − 1) days (Pattern Day 92 of 2026 = July 17, 2026).
+ * Dates are PatternCalendar's, asked at call time: the epoch rule
+ * lives in the temporal authority alone (docs/assets/js/calendar/),
+ * and this core only maps its answers into the scheduling stamp.
+ * Until Nov 25, 2026 the core carried a private copy of the rule;
+ * the copy was removed (ULS register D-01) once pins proved the two
+ * agreed on every day — the proof stands in
+ * tests/spark-schedule-authority-equivalence.test.js.
  */
 (function (root, factory) {
-  const api = factory();
+  const api = factory(root);
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   if (root) root.SparkScheduleCore = api;
-})(typeof globalThis !== "undefined" ? globalThis : this, function () {
+})(typeof globalThis !== "undefined" ? globalThis : this, function (root) {
   "use strict";
 
   const VERSION = "spark-schedule-core/1.0.0";
@@ -62,34 +65,68 @@
     return `${WEEKDAY_NAMES[d.getUTCDay()]}, ${MONTH_NAMES[d.getUTCMonth()]} ${d.getUTCDate()}`;
   }
 
-  /* ── The epoch rule: civil ⇄ Pattern ───────────────────────── */
+  /* ── Civil ⇄ Pattern, by the authority ─────────────────────── */
+
+  // The one calendar authority, resolved at call time. On the
+  // Sphere page the calendar stack loads before this core and the
+  // global is simply there. Under Node the core loads the stack
+  // itself, in the page's script order — the files only ever set
+  // their globals, exactly as they do in the browser.
+  let resolvedAuthority = null;
+  function authority() {
+    if (resolvedAuthority) return resolvedAuthority;
+    const pc = (root && root.PatternCalendar) || globalThis.PatternCalendar;
+    if (pc) { resolvedAuthority = pc; return pc; }
+    if (typeof require === "function") {
+      try {
+        require("./calendar/pattern-calendar-version.js");
+        require("./calendar/pattern-calendar-data.js");
+        require("./calendar/pattern-calendar-format.js");
+        require("./calendar/pattern-calendar-boundary.js");
+        require("./calendar/pattern-calendar.js");
+      } catch (_) { /* the authority stays absent; conversions answer null */ }
+      resolvedAuthority = globalThis.PatternCalendar || null;
+      return resolvedAuthority;
+    }
+    return null;
+  }
 
   function civilDateForPatternDay(anchorYear, patternDay) {
     const y = Number(anchorYear), pd = Number(patternDay);
     if (!Number.isFinite(y) || !Number.isFinite(pd) || pd < 1 || pd > 366) return null;
-    return toIso(Date.UTC(y, 3, 17) + (pd - 1) * DAY_MS);
+    const pc = authority();
+    if (!pc) return null;
+    return toIso(pc.epochForYear(y).getTime() + (pd - 1) * DAY_MS);
   }
-  function anchorYearForCivil(civilDate) {
-    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(civilDate || ""));
-    if (!m) return null;
-    return `${m[2]}-${m[3]}` >= "04-17" ? Number(m[1]) : Number(m[1]) - 1;
-  }
-  // The full stamp for a civil date, from the epoch rule alone.
+  // The full stamp for a civil date, from the authority's own
+  // conversion (midnight boundary, UTC — the core's dates are pure
+  // calendar days), mapped into the scheduling stamp shape. The
+  // stamp's patternYear is the anchor's civil year, as the panels
+  // and the record have always carried it.
   function stampForCivil(iso) {
-    const anchorYear = anchorYearForCivil(iso);
-    if (anchorYear == null) return null;
-    const pd = diffDays(civilDateForPatternDay(anchorYear, 1), iso) + 1;
+    const ms = parseIso(iso);
+    if (ms == null) return null;
+    const pc = authority();
+    if (!pc) return null;
+    const s = pc.fromCivilDate({ date: new Date(ms), timeZone: "UTC", boundaryMode: "midnight" });
+    if (!s || !s.anchorDate) return null;
+    const anchorYear = s.anchorDate.getUTCFullYear();
+    const outside = !s.insideCountedYear;
+    const pd = outside ? pc.constants.countedDaysPerYear + s.intercalaryIndex : s.dayOfPatternYear;
     if (pd < 1 || pd > 366) return null;
-    const outside = pd > 364;
     return {
       civilDate: iso,
       anchorYear,
       patternYear: anchorYear,
       patternDay: pd,
-      moon: outside ? null : Math.floor((pd - 1) / 28) + 1,
-      day: outside ? null : ((pd - 1) % 28) + 1,
+      moon: outside ? null : s.moon,
+      day: outside ? null : s.day,
       outsideDay: outside,
     };
+  }
+  function anchorYearForCivil(civilDate) {
+    const stamp = stampForCivil(civilDate);
+    return stamp ? stamp.anchorYear : null;
   }
   function dayWords(stamp) {
     if (!stamp) return "that day";
