@@ -3,10 +3,10 @@
   "purpose": "Development-only registry of every tracked or intended repository file. Not a publication list.",
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
-    "files": 2468,
-    "bytes": 1084709858,
+    "files": 2469,
+    "bytes": 1084712638,
     "byGroup": {
-      "tooling": 322,
+      "tooling": 323,
       "manuscript": 17,
       "unlabelled-image": 21,
       "witness-record": 20,
@@ -35,7 +35,7 @@
       "scripture-source": 15
     },
     "byPublicationEligibility": {
-      "development-only": 366,
+      "development-only": 367,
       "pending-publication-review": 43,
       "restricted-review": 180,
       "protected-immutable": 21,
@@ -43,7 +43,7 @@
       "approved-public": 1851
     },
     "byExamination": {
-      "inventoried-only": 2331,
+      "inventoried-only": 2332,
       "text-extracted": 54,
       "no-text-layer-needs-visual-review": 1,
       "archive-listed": 2,
@@ -15504,8 +15504,8 @@
       "path": "docs/assets/js/life-atlas/life-atlas-runtime.js",
       "title": "life-atlas-runtime.js",
       "format": "js",
-      "bytes": 1564,
-      "sha256": "361f61dc984f8c491101279056111c53e52d90a69d26b361d1e3fcc91c66fb90",
+      "bytes": 1648,
+      "sha256": "7e6c7a51129d1bbcffe3dcb5b5bbb53a9b2e6a850cda4a163ce6ac55f0b431ae",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -54039,7 +54039,7 @@
       "title": "site-master-inventory.json",
       "format": "json",
       "bytes": 774892,
-      "sha256": "a9ff5d1aabf0289df8b49821bf1de6fea922222121ad3b3181b3f6eb39a9cf96",
+      "sha256": "ce0ae37a8bd9c7c98045fe9023cc74708db2b7fb52650fc0efa094f0ff1fef4b",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -55864,6 +55864,30 @@
       "format": "js",
       "bytes": 4085,
       "sha256": "abd330b5e9e5999965f3992746cd7068e2d59e33ff04a90fd447cf66724d4f53",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-life-atlas-runtime-persistence-test-js-825407",
+      "path": "tests/life-atlas-runtime-persistence.test.js",
+      "title": "life-atlas-runtime-persistence.test.js",
+      "format": "js",
+      "bytes": 2696,
+      "sha256": "319a9405d58267c45e3ed1d9258935efccb956f808c50de81075fa3da03d68ba",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
