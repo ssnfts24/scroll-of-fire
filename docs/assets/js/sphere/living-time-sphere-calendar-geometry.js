@@ -17,6 +17,23 @@
   const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, Number(n) || lo));
   const normalizeAngle = (deg) => ((Number(deg) % 360) + 360) % 360;
 
+  /*
+   * Geometry-build caches (Nov 24, 2026 — protected performance
+   * fix 4a). Every function in this module is a pure function of
+   * its arguments over frozen constants, and every result is a
+   * frozen object, so a result computed once can be returned
+   * forever: the renderer's semantic-target build asks for all
+   * 364 day addresses/cells on every label pass (~190 ms of the
+   * Nov 24 drag profile was this rebuilding). Same inputs, same
+   * frozen object — no value any caller can observe changes.
+   */
+  const _dayAddressCache = new Map();
+  const _moonAddressCache = new Map();
+  const _yearGateCache = new Map();
+  const _calendarCellCache = new Map();
+  const _displayCellCache = new Map();
+  const _dayBoundaryCache = new Map();
+
   function dayOfPatternYear(moonNumber, moonDay) {
     const moon = Math.round(clamp(moonNumber, 1, MOONS));
     const day = Math.round(clamp(moonDay, 1, DAYS_PER_MOON));
@@ -24,6 +41,15 @@
   }
 
   function dayAddress(dayNumber) {
+    const cacheKey = Math.round(clamp(dayNumber, 1, PATTERN_DAYS));
+    const cached = _dayAddressCache.get(cacheKey);
+    if (cached) return cached;
+    const result = _dayAddressCompute(dayNumber);
+    _dayAddressCache.set(cacheKey, result);
+    return result;
+  }
+
+  function _dayAddressCompute(dayNumber) {
     const dayOfYear = Math.round(clamp(dayNumber, 1, PATTERN_DAYS));
     const moon = Math.floor((dayOfYear - 1) / DAYS_PER_MOON) + 1;
     const moonDay = ((dayOfYear - 1) % DAYS_PER_MOON) + 1;
@@ -45,6 +71,15 @@
   }
 
   function moonAddress(moonNumber) {
+    const cacheKey = Math.round(clamp(moonNumber, 1, MOONS));
+    const cached = _moonAddressCache.get(cacheKey);
+    if (cached) return cached;
+    const result = _moonAddressCompute(moonNumber);
+    _moonAddressCache.set(cacheKey, result);
+    return result;
+  }
+
+  function _moonAddressCompute(moonNumber) {
     const moon = Math.round(clamp(moonNumber, 1, MOONS));
     const sectorStart = (moon - 1) * SECTOR_SWEEP;
     const sectorEnd = moon * SECTOR_SWEEP;
@@ -86,6 +121,15 @@
   }
 
   function yearGate(selectedYear) {
+    const cacheKey = Number(selectedYear);
+    const cached = _yearGateCache.get(cacheKey);
+    if (cached) return cached;
+    const result = _yearGateCompute(selectedYear);
+    _yearGateCache.set(cacheKey, result);
+    return result;
+  }
+
+  function _yearGateCompute(selectedYear) {
     const leap = isLeapPatternWindow(selectedYear);
     const intercalary = [
       Object.freeze({
@@ -124,6 +168,15 @@
   // astronomical 364-day chronology so a phone can display a real 28-day Moon
   // without compressing 28 glyphs into ~27.7 degrees of a single circumference.
   function calendarCell(dayNumber) {
+    const cacheKey = Math.round(clamp(dayNumber, 1, PATTERN_DAYS));
+    const cached = _calendarCellCache.get(cacheKey);
+    if (cached) return cached;
+    const result = _calendarCellCompute(dayNumber);
+    _calendarCellCache.set(cacheKey, result);
+    return result;
+  }
+
+  function _calendarCellCompute(dayNumber) {
     const address = dayAddress(dayNumber);
     const moonMeta = moonAddress(address.moon);
     const margin = SECTOR_SWEEP * 0.055;
@@ -158,7 +211,6 @@
    * schedule glyph, semantic card and tether cannot drift into separate math.
    */
   function calendarDisplayCell(dayNumber, options = {}) {
-    const cell = calendarCell(dayNumber);
     // Presentation defaults mirror the renderer's CALENDAR_RAIL
     // presentation lanes (widened Nov 23, 2026 — see the note there):
     // callers that pass no options (the day-world adapter) and callers
@@ -174,6 +226,18 @@
     const scheduleInset = Number.isFinite(Number(options.scheduleInset))
       ? Math.max(0.018, Math.min(0.080, Number(options.scheduleInset)))
       : 0.046;
+    // The cache key is the clamped day plus the three resolved
+    // option numbers above — the function's complete input set.
+    const cacheKey = `${Math.round(clamp(dayNumber, 1, PATTERN_DAYS))}|${dayNumberWeek1}|${dayNumberWeekStep}|${scheduleInset}`;
+    const cached = _displayCellCache.get(cacheKey);
+    if (cached) return cached;
+    const result = _calendarDisplayCellCompute(dayNumber, dayNumberWeek1, dayNumberWeekStep, scheduleInset);
+    _displayCellCache.set(cacheKey, result);
+    return result;
+  }
+
+  function _calendarDisplayCellCompute(dayNumber, dayNumberWeek1, dayNumberWeekStep, scheduleInset) {
+    const cell = calendarCell(dayNumber);
     const dayNumberRadialFactor =
       dayNumberWeek1 + (cell.week - 1) * dayNumberWeekStep;
     const scheduleRadialFactor = Math.max(
@@ -329,6 +393,15 @@
   }
 
   function dayBoundary(dayNumber) {
+    const cacheKey = Math.round(clamp(dayNumber, 1, PATTERN_DAYS));
+    const cached = _dayBoundaryCache.get(cacheKey);
+    if (cached) return cached;
+    const result = _dayBoundaryCompute(dayNumber);
+    _dayBoundaryCache.set(cacheKey, result);
+    return result;
+  }
+
+  function _dayBoundaryCompute(dayNumber) {
     const address = dayAddress(dayNumber);
     return Object.freeze({
       ...address,
