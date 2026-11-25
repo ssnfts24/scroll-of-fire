@@ -54,6 +54,20 @@ test("the Recoder dictionary is data now, whole and in its own file", () => {
   delete global.window;
 });
 
+test("the fragments are marked as data, based at their host page, and deep links still land", () => {
+  for (const shelf of ["foundations", "scripture", "history", "evidence", "technology", "prophecy", "witness", "reference"]) {
+    const fragment = read(`scroll/data/shelf-${shelf}.html`);
+    assert.ok(fragment.includes("data-data-fragment"), `${shelf} fragment carries the data marker`);
+    assert.ok(fragment.includes('<base href="../">'), `${shelf} fragment resolves its links at the library`);
+  }
+  const archive = read("assets/data/downloads-archive.html");
+  assert.ok(archive.includes("data-data-fragment"), "the archive fragment carries the data marker");
+  assert.ok(archive.includes('<base href="../../">'), "the archive fragment resolves its links at the site root");
+  const loader = read("assets/js/downloads-archive.js");
+  assert.ok(loader.includes("[1-7]_"), "legacy folder deep links open the door and land on their folder");
+  assert.ok(!read("index.html").includes("downloads.html#"), "no page deep-links into the moved archive anymore");
+});
+
 test("the homepage's script stack is deferred, in its own order", () => {
   const index = read("index.html");
   const tags = [...index.matchAll(/<script[^>]*src="[^"]+"[^>]*>/g)].map((m) => m[0]);

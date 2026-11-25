@@ -21,8 +21,13 @@
     const mount = door.querySelector("[data-archive-mount]");
     if (!mount) return;
     let state = "idle";
-    door.addEventListener("toggle", () => {
-      if (!door.open || state !== "idle") return;
+
+    function load(after) {
+      if (state === "done") {
+        if (after) after();
+        return;
+      }
+      if (state !== "idle") return;
       state = "pending";
       fetch("assets/data/downloads-archive.html")
         .then((res) => (res.ok ? res.text() : Promise.reject(new Error("archive"))))
@@ -32,11 +37,32 @@
           const fallback = door.querySelector(".archive-fallback");
           if (fallback) fallback.remove();
           state = "done";
+          if (after) after();
         })
         .catch(() => {
           state = "idle"; // the plain link inside the door stays the road
         });
+    }
+
+    door.addEventListener("toggle", () => {
+      if (door.open) load();
     });
+
+    /* Deep links struck before the archive moved behind its
+     * door (downloads.html#3_Living_Technology and its kin)
+     * still land where they meant: the door opens, the archive
+     * loads, and the named folder opens and scrolls into view. */
+    const hash = decodeURIComponent(location.hash.slice(1));
+    if (/^(root-|[1-7]_)/.test(hash)) {
+      door.open = true;
+      load(() => {
+        const target = document.getElementById(hash);
+        if (target) {
+          target.open = true;
+          target.scrollIntoView();
+        }
+      });
+    }
   }
 
   if (document.readyState === "loading") {
