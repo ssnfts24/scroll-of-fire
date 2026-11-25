@@ -269,8 +269,7 @@
       "path": "glossary.html",
       "url": "https://codexofreality.org/glossary.html",
       "related": [
-        "scroll-lexicon",
-        "theory-glossary"
+        "scroll-lexicon"
       ],
       "featured": false,
       "publicationEligibility": "approved-public"
@@ -486,8 +485,7 @@
       "path": "systems/frequencies.html",
       "url": "https://codexofreality.org/systems/frequencies.html",
       "related": [
-        "t7",
-        "theory-frequency-governance"
+        "t7"
       ],
       "featured": true,
       "publicationEligibility": "approved-public"
@@ -888,22 +886,6 @@
       "publicationEligibility": "approved-public"
     },
     {
-      "id": "theory-witness",
-      "title": "Witness (theory)",
-      "description": "How awareness, intention and memory become record.",
-      "area": "evidence",
-      "category": "Theory",
-      "resourceType": "page",
-      "status": "live",
-      "path": "theory/witness.html",
-      "url": "https://codexofreality.org/theory/witness.html",
-      "related": [
-        "theory-hub"
-      ],
-      "featured": false,
-      "publicationEligibility": "approved-public"
-    },
-    {
       "id": "theory-memory",
       "title": "Memory (theory)",
       "description": "Equation 16 and the Memory Window.",
@@ -931,22 +913,6 @@
       "url": "https://codexofreality.org/theory/thirteen-moons.html",
       "related": [
         "moons"
-      ],
-      "featured": false,
-      "publicationEligibility": "approved-public"
-    },
-    {
-      "id": "theory-frequency-governance",
-      "title": "Frequency Governance (theory)",
-      "description": "Carriers, amplitude, phase and harmonic gates.",
-      "area": "evidence",
-      "category": "Theory",
-      "resourceType": "page",
-      "status": "live",
-      "path": "theory/frequency-governance.html",
-      "url": "https://codexofreality.org/theory/frequency-governance.html",
-      "related": [
-        "frequencies"
       ],
       "featured": false,
       "publicationEligibility": "approved-public"
@@ -984,22 +950,6 @@
       "publicationEligibility": "approved-public"
     },
     {
-      "id": "theory-ethics",
-      "title": "Ethical Law (theory)",
-      "description": "Equation 9, the stop rule, consent and dignity.",
-      "area": "evidence",
-      "category": "Theory",
-      "resourceType": "page",
-      "status": "live",
-      "path": "theory/ethics.html",
-      "url": "https://codexofreality.org/theory/ethics.html",
-      "related": [
-        "ethics"
-      ],
-      "featured": false,
-      "publicationEligibility": "approved-public"
-    },
-    {
       "id": "theory-notation",
       "title": "Notation Guide",
       "description": "Symbol families, equation numbering and operators.",
@@ -1009,25 +959,7 @@
       "status": "live",
       "path": "theory/notation.html",
       "url": "https://codexofreality.org/theory/notation.html",
-      "related": [
-        "theory-glossary"
-      ],
-      "featured": false,
-      "publicationEligibility": "approved-public"
-    },
-    {
-      "id": "theory-glossary",
-      "title": "Theory Glossary",
-      "description": "Symbols, operators and witness terms of the theory system.",
-      "area": "evidence",
-      "category": "Theory",
-      "resourceType": "page",
-      "status": "live",
-      "path": "theory/glossary.html",
-      "url": "https://codexofreality.org/theory/glossary.html",
-      "related": [
-        "glossary"
-      ],
+      "related": [],
       "featured": false,
       "publicationEligibility": "approved-public"
     },
@@ -1057,9 +989,7 @@
       "status": "live",
       "path": "ethics.html",
       "url": "https://codexofreality.org/ethics.html",
-      "related": [
-        "theory-ethics"
-      ],
+      "related": [],
       "featured": false,
       "publicationEligibility": "approved-public"
     },

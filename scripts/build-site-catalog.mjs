@@ -446,7 +446,7 @@ function buildMaster(pages, disc, files, reconcile) {
     if (d.hopsFromHome === null) issues.push("unreachable-from-homepage");
     else if (d.hopsFromHomeWithoutAtlas === null) issues.push("reachable-only-through-atlas");
     if (!utility && !homepageLinks.has(page.path) && !page.path.startsWith("theory/equations/") && !page.path.startsWith("scroll/") && !page.path.startsWith("scripture/")) issues.push("not-linked-directly-from-homepage");
-    if (page.path === "caravan.html") issues.push("compatibility-redirect-page");
+    if (utility && /^Redirect to /.test(utility)) issues.push("compatibility-redirect-page");
     const label = navLabels.get(page.path);
     const shortTitle = page.title.split(/ [—|] /)[0].replace(/&amp;/g, "&").trim();
     if (label && label.toLowerCase() !== shortTitle.toLowerCase()) issues.push(`nav-label-differs-from-title: "${label}" vs "${shortTitle}"`);

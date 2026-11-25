@@ -96,3 +96,28 @@ test("the account page keeps its promise honest", () => {
   assert.ok(!account.includes("and your record follows you"),
     "the present-tense sign-in promise stays off the page until it can be kept");
 });
+
+test("the theory doorway merges hold: stubs redirect and the folds stand whole", () => {
+  const readDoc = (rel) =>
+    readFileSync(new URL(`../docs/${rel}`, import.meta.url), "utf8");
+  const stubs = [
+    ["theory/ethics.html", "ethics.html"],
+    ["theory/glossary.html", "glossary.html"],
+    ["theory/witness.html", "witness.html"],
+    ["theory/frequency-governance.html", "systems/frequencies.html"]
+  ];
+  for (const [stub, target] of stubs) {
+    const html = readDoc(stub);
+    assert.match(html, /http-equiv="refresh"/, `${stub} must stay a redirect stub`);
+    assert.ok(html.includes(target), `${stub} must point at ${target}`);
+    assert.ok(!html.includes("data-living-nav"), `${stub} carries no living nav`);
+  }
+  assert.ok(readDoc("ethics.html").includes("Ethical Law is a gate, not a decorative score."),
+    "the Ethical Law theory must stand on the Ethics page");
+  assert.ok(readDoc("glossary.html").includes('id="symbol-index"'),
+    "the Symbol Index must stand in the Glossary");
+  assert.ok(readDoc("witness.html").includes("The Witness Protocol"),
+    "the discipline of witness must stand on the Witness page");
+  assert.ok(readDoc("systems/frequencies.html").includes("The Harmonic Gate decides what enters."),
+    "Frequency Governance must stand in the Sound Observatory");
+});

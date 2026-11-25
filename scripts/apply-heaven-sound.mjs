@@ -35,6 +35,10 @@ const EXCLUDED_FILES = new Set([
   "404.html",
   "offline.html",
   "caravan.html"
+  "theory/ethics.html",
+  "theory/glossary.html",
+  "theory/witness.html",
+  "theory/frequency-governance.html",
 ]);
 const EXCLUDED_DIRS = new Set(["scroll", "scripture"]);
 

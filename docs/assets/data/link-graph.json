@@ -1111,6 +1111,11 @@
      "area": "archive"
     },
     {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "living-time-sphere.html",
      "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
      "area": "living-time"
@@ -1127,7 +1132,7 @@
     }
    ],
    "outTotal": 3,
-   "inTotal": 4
+   "inTotal": 5
   },
   "ethics.html": {
    "title": "Ethics & Coherence Law",
@@ -1276,7 +1281,7 @@
      "area": "systems"
     }
    ],
-   "outTotal": 29,
+   "outTotal": 31,
    "inTotal": 15
   },
   "garden.html": {
@@ -1556,6 +1561,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "theory/glossary.html",
+     "title": "Theory Glossary",
+     "area": "evidence"
+    },
+    {
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
@@ -1566,8 +1576,8 @@
      "area": "evidence"
     }
    ],
-   "outTotal": 14,
-   "inTotal": 12
+   "outTotal": 33,
+   "inTotal": 13
   },
   "glyphs.html": {
    "title": "Voice-Glyph Synth",
@@ -17618,18 +17628,18 @@
      "area": "artifacts"
     },
     {
-     "path": "theory/glossary.html",
-     "title": "Theory Glossary",
-     "area": "evidence"
-    },
-    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
+    },
+    {
+     "path": "glyphs.html",
+     "title": "Voice-Glyph Synth",
+     "area": "systems"
     }
    ],
    "outTotal": 2,
-   "inTotal": 16
+   "inTotal": 15
   },
   "start.html": {
    "title": "Start Here",
@@ -17866,6 +17876,11 @@
      "area": "evidence"
     },
     {
+     "path": "theory/frequency-governance.html",
+     "title": "Frequency Governance",
+     "area": "evidence"
+    },
+    {
      "path": "glossary.html",
      "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
      "area": "scroll-scripture"
@@ -17894,15 +17909,10 @@
      "path": "hub.html",
      "title": "Systems Hub",
      "area": "systems"
-    },
-    {
-     "path": "theory.html",
-     "title": "Theory Hub",
-     "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 16
+   "inTotal": 17
   },
   "systems/mind-renewal.html": {
    "title": "Mind-Renewal Protocol",
@@ -18451,13 +18461,18 @@
      "area": "archive"
     },
     {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 2
+   "inTotal": 3
   },
   "theory/bibliography.html": {
    "title": "Bibliography",
@@ -18514,6 +18529,11 @@
      "area": "evidence"
     },
     {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "methods.html",
      "title": "How the Sphere Knows — Methods",
      "area": "evidence"
@@ -18540,7 +18560,7 @@
     }
    ],
    "outTotal": 0,
-   "inTotal": 11
+   "inTotal": 12
   },
   "theory/delta-framework.html": {
    "title": "Δ0–Δ7 Framework",
@@ -18553,13 +18573,18 @@
      "area": "archive"
     },
     {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 2
+   "inTotal": 3
   },
   "theory/equations/eq00.html": {
    "title": "Equation 0 — Foundational Field",
@@ -18586,13 +18611,18 @@
    "out": [],
    "in": [
     {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 1
+   "inTotal": 2
   },
   "theory/equations/eq02.html": {
    "title": "Equation 2 — Witness",
@@ -18603,10 +18633,15 @@
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
+    },
+    {
+     "path": "witness.html",
+     "title": "Witness",
+     "area": "artifacts"
     }
    ],
    "outTotal": 0,
-   "inTotal": 1
+   "inTotal": 2
   },
   "theory/equations/eq03.html": {
    "title": "Equation 3 — Harmonic Gate",
@@ -18614,19 +18649,10 @@
    "out": [],
    "in": [
     {
-     "path": "theory.html",
-     "title": "Theory Hub",
-     "area": "evidence"
-    }
-   ],
-   "outTotal": 0,
-   "inTotal": 1
-  },
-  "theory/equations/eq04.html": {
-   "title": "Equation 4 — Language & Voice Carrier",
-   "area": "evidence",
-   "out": [],
-   "in": [
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
     {
      "path": "theory.html",
      "title": "Theory Hub",
@@ -18634,7 +18660,26 @@
     }
    ],
    "outTotal": 0,
-   "inTotal": 1
+   "inTotal": 2
+  },
+  "theory/equations/eq04.html": {
+   "title": "Equation 4 — Language & Voice Carrier",
+   "area": "evidence",
+   "out": [],
+   "in": [
+    {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "theory.html",
+     "title": "Theory Hub",
+     "area": "evidence"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 2
   },
   "theory/equations/eq04b.html": {
    "title": "Equation 4b — Semantic Gradient",
@@ -18656,19 +18701,10 @@
    "out": [],
    "in": [
     {
-     "path": "theory.html",
-     "title": "Theory Hub",
-     "area": "evidence"
-    }
-   ],
-   "outTotal": 0,
-   "inTotal": 1
-  },
-  "theory/equations/eq06.html": {
-   "title": "Equation 6 — Type-7 Field",
-   "area": "evidence",
-   "out": [],
-   "in": [
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
     {
      "path": "theory.html",
      "title": "Theory Hub",
@@ -18676,7 +18712,26 @@
     }
    ],
    "outTotal": 0,
-   "inTotal": 1
+   "inTotal": 2
+  },
+  "theory/equations/eq06.html": {
+   "title": "Equation 6 — Type-7 Field",
+   "area": "evidence",
+   "out": [],
+   "in": [
+    {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "theory.html",
+     "title": "Theory Hub",
+     "area": "evidence"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 2
   },
   "theory/equations/eq07.html": {
    "title": "Equation 7 — Copeland Comparator",
@@ -18712,13 +18767,18 @@
    "out": [],
    "in": [
     {
+     "path": "ethics.html",
+     "title": "Ethics & Coherence Law",
+     "area": "evidence"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 1
+   "inTotal": 2
   },
   "theory/equations/eq10.html": {
    "title": "Equation 10 — Inverse Resonance Ladder",
@@ -18824,13 +18884,18 @@
    "out": [],
    "in": [
     {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 1
+   "inTotal": 2
   },
   "theory/ethics.html": {
    "title": "Ethical Law",
@@ -18849,23 +18914,9 @@
      "area": "archive"
     },
     {
-     "path": "theory.html",
-     "title": "Theory Hub",
-     "area": "evidence"
-    }
-   ],
-   "outTotal": 1,
-   "inTotal": 2
-  },
-  "theory/frequency-governance.html": {
-   "title": "Frequency Governance",
-   "area": "evidence",
-   "out": [],
-   "in": [
-    {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
     },
     {
      "path": "theory.html",
@@ -18873,17 +18924,47 @@
      "area": "evidence"
     }
    ],
-   "outTotal": 0,
-   "inTotal": 2
+   "outTotal": 1,
+   "inTotal": 3
+  },
+  "theory/frequency-governance.html": {
+   "title": "Frequency Governance",
+   "area": "evidence",
+   "out": [
+    {
+     "path": "systems/frequencies.html",
+     "title": "Frequency Governance",
+     "area": "systems"
+    }
+   ],
+   "in": [
+    {
+     "path": "codex-atlas.html",
+     "title": "Codex Atlas",
+     "area": "archive"
+    },
+    {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "theory.html",
+     "title": "Theory Hub",
+     "area": "evidence"
+    }
+   ],
+   "outTotal": 1,
+   "inTotal": 3
   },
   "theory/glossary.html": {
    "title": "Theory Glossary",
    "area": "evidence",
    "out": [
     {
-     "path": "shop.html",
-     "title": "Artifact Registry & Shop",
-     "area": "artifacts"
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
     }
    ],
    "in": [
@@ -18912,13 +18993,18 @@
      "area": "archive"
     },
     {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 2
+   "inTotal": 3
   },
   "theory/master-equation.html": {
    "title": "The Master Equation",
@@ -18956,13 +19042,28 @@
      "area": "archive"
     },
     {
+     "path": "ethics.html",
+     "title": "Ethics & Coherence Law",
+     "area": "evidence"
+    },
+    {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
+    },
+    {
+     "path": "witness.html",
+     "title": "Witness",
+     "area": "artifacts"
     }
    ],
    "outTotal": 1,
-   "inTotal": 2
+   "inTotal": 5
   },
   "theory/notation.html": {
    "title": "Notation Guide",
@@ -18975,13 +19076,18 @@
      "area": "archive"
     },
     {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 2
+   "inTotal": 3
   },
   "theory/operators.html": {
    "title": "Living Operators",
@@ -19000,13 +19106,23 @@
      "area": "archive"
     },
     {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
+    },
+    {
+     "path": "witness.html",
+     "title": "Witness",
+     "area": "artifacts"
     }
    ],
    "outTotal": 1,
-   "inTotal": 2
+   "inTotal": 4
   },
   "theory/thirteen-moons.html": {
    "title": "13 Moons Theory",
@@ -19019,13 +19135,18 @@
      "area": "archive"
     },
     {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 2
+   "inTotal": 3
   },
   "theory/unified-field.html": {
    "title": "Unified Field",
@@ -19038,22 +19159,27 @@
      "area": "archive"
     },
     {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 2
+   "inTotal": 3
   },
   "theory/witness.html": {
    "title": "Witness",
    "area": "evidence",
    "out": [
     {
-     "path": "theory.html",
-     "title": "Theory Hub",
-     "area": "evidence"
+     "path": "witness.html",
+     "title": "Witness",
+     "area": "artifacts"
     }
    ],
    "in": [
@@ -19063,13 +19189,18 @@
      "area": "archive"
     },
     {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
     }
    ],
    "outTotal": 1,
-   "inTotal": 2
+   "inTotal": 3
   },
   "timeline.html": {
    "title": "Historical Timeline",
@@ -19144,6 +19275,26 @@
      "path": "living-time-sphere.html",
      "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
      "area": "living-time"
+    },
+    {
+     "path": "theory/equations/eq02.html",
+     "title": "Equation 2 — Witness",
+     "area": "evidence"
+    },
+    {
+     "path": "theory/operators.html",
+     "title": "Living Operators",
+     "area": "evidence"
+    },
+    {
+     "path": "theory/memory.html",
+     "title": "Memory",
+     "area": "evidence"
+    },
+    {
+     "path": "theory.html",
+     "title": "Theory Hub",
+     "area": "evidence"
     }
    ],
    "in": [
@@ -19156,10 +19307,15 @@
      "path": "witness-world.html",
      "title": "The Witness World",
      "area": "artifacts"
+    },
+    {
+     "path": "theory/witness.html",
+     "title": "Witness",
+     "area": "evidence"
     }
    ],
-   "outTotal": 2,
-   "inTotal": 2
+   "outTotal": 6,
+   "inTotal": 3
   }
  }
 }

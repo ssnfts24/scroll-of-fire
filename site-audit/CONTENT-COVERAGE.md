@@ -61,7 +61,7 @@ Practice tools, frequency systems and the Codex hub for building.
 - **Get the App** — Live; Put the Codex of Reality on a phone's home screen like an app: what installing gives, the Android steps, the iPhone and iPad steps, and how the Spark. Living Day app differs.
 - **The Traveller's Map** — Live; The whole site drawn as the lands of one road: every place pictured by its cartoon scene, the Traveller's Road story in walking order with found chapters stamped by their Pattern day, the Year Thread showing today's place in the year and the keeper's trail, and the pages still waiting for their chapters named honestly.
 
-### Evidence and Research (25 catalog entries)
+### Evidence and Research (21 catalog entries)
 
 Theory chapters, the claim register and the editorial evidence edition.
 
@@ -76,15 +76,11 @@ Theory chapters, the claim register and the editorial evidence edition.
 - **Unified Field** — Live; Expanded symbolic architecture connecting the foundations.
 - **Living Operators** — Live; Intention, Language, Coherence and Source (ILCS).
 - **Δ0–Δ7 Framework** — Live; Eight stages from frame and source through witness and gate.
-- **Witness (theory)** — Live; How awareness, intention and memory become record.
 - **Memory (theory)** — Live; Equation 16 and the Memory Window.
 - **13 Moons Theory** — Live; The 13×28 symbolic calendar as a theory chapter.
-- **Frequency Governance (theory)** — Live; Carriers, amplitude, phase and harmonic gates.
 - **Living Technology (theory)** — Live; Craft, material, operator, environment and witness.
 - **Artifact Theory** — Live; Naming, classification, provenance and materials.
-- **Ethical Law (theory)** — Live; Equation 9, the stop rule, consent and dignity.
 - **Notation Guide** — Live; Symbol families, equation numbering and operators.
-- **Theory Glossary** — Live; Symbols, operators and witness terms of the theory system.
 - **Bibliography** — Live; Source architecture: project records, scientific and technical references.
 - **Ethics & Coherence Law** — Live; The living laws of the Codex: consent, non-harm, accountability and the stop rule.
 - **Historical timeline** — Live; Two dated records, kept separate: the publication dates of the sources cited in the claim register, each entry linking to its claim in the Evidence Edition, and the Codex's own growth record.
@@ -118,7 +114,7 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 
 - Public HTML pages inspected: **196**.
 - Total master-inventory records: **501**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
-- Public-facing catalog entries: **80**; only explicitly curated entries appear on the Atlas.
+- Public-facing catalog entries: **76**; only explicitly curated entries appear on the Atlas.
 - Numbered archive folders are inventoried file-by-file, while downloads snapshot differences are kept separate from historical integrity data.
 - Root files not already published through the archive or explicitly approved remain classified as development-only; no such file is automatically linked from the public catalog.
 
