@@ -877,6 +877,11 @@
      "area": "codex"
     },
     {
+     "path": "downloads.html",
+     "title": "Downloads & Integrity",
+     "area": "archive"
+    },
+    {
      "path": "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
      "title": "Remnant Whitepaper — Redirect",
      "area": "codex"
@@ -888,7 +893,7 @@
     }
    ],
    "outTotal": 4,
-   "inTotal": 5
+   "inTotal": 6
   },
   "companions.html": {
    "title": "Companions",
@@ -1040,14 +1045,39 @@
      "area": "systems"
     },
     {
-     "path": "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
-     "title": "Remnant Whitepaper — Redirect",
-     "area": "codex"
+     "path": "codex-white-paper.html",
+     "title": "The Codex of Reality and the Living Sphere — A White Paper",
+     "area": "living-time"
     },
     {
      "path": "13-moon-whitepaper.html",
      "title": "Remnant Rollout Whitepaper | The 13 Moons Remnant Living Time Observatory",
      "area": "living-time"
+    },
+    {
+     "path": "scroll/index.html",
+     "title": "Scroll of Fire — Unsealed Library",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scroll/search.html",
+     "title": "Search the Scroll",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/index.html",
+     "title": "Genesis & Exodus Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/about.html",
+     "title": "Sources, licences and limits — Scripture",
+     "area": "scroll-scripture"
     },
     {
      "path": "codex-atlas.html",
@@ -1117,7 +1147,7 @@
      "area": "evidence"
     }
    ],
-   "outTotal": 4,
+   "outTotal": 9,
    "inTotal": 12
   },
   "episodes.html": {
@@ -1974,14 +2004,14 @@
      "area": "systems"
     },
     {
-     "path": "guide.html",
-     "title": "Practice Playbook — Practice That Sticks",
+     "path": "install.html",
+     "title": "Get the App — Put the Codex on Your Home Screen · Codex of Reality",
      "area": "systems"
     },
     {
-     "path": "codex-white-paper.html",
-     "title": "The Codex of Reality and the Living Sphere — A White Paper",
-     "area": "living-time"
+     "path": "guide.html",
+     "title": "Practice Playbook — Practice That Sticks",
+     "area": "systems"
     }
    ],
    "in": [
@@ -2973,6 +3003,11 @@
    ],
    "in": [
     {
+     "path": "downloads.html",
+     "title": "Downloads & Integrity",
+     "area": "archive"
+    },
+    {
      "path": "scripture/index.html",
      "title": "Genesis & Exodus Scripture",
      "area": "scroll-scripture"
@@ -2984,7 +3019,7 @@
     }
    ],
    "outTotal": 1,
-   "inTotal": 2
+   "inTotal": 3
   },
   "scripture/exodus/01.html": {
    "title": "Exodus 1 — Scripture",
@@ -16583,6 +16618,11 @@
      "area": "codex"
     },
     {
+     "path": "downloads.html",
+     "title": "Downloads & Integrity",
+     "area": "archive"
+    },
+    {
      "path": "scripture/word-studies/enosh.html",
      "title": "Enosh — אֱנוֹשׁ — Hebrew Word Studies",
      "area": "scroll-scripture"
@@ -16624,7 +16664,7 @@
     }
    ],
    "outTotal": 93,
-   "inTotal": 12
+   "inTotal": 13
   },
   "scripture/lemma.html": {
    "title": "Lemma study — Scripture",
@@ -16963,6 +17003,11 @@
      "area": "archive"
     },
     {
+     "path": "downloads.html",
+     "title": "Downloads & Integrity",
+     "area": "archive"
+    },
+    {
      "path": "scripture/word-studies/enosh.html",
      "title": "Enosh — אֱנוֹשׁ — Hebrew Word Studies",
      "area": "scroll-scripture"
@@ -16994,7 +17039,7 @@
     }
    ],
    "outTotal": 9,
-   "inTotal": 9
+   "inTotal": 10
   },
   "scripture/word-studies/nephesh.html": {
    "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
@@ -17308,11 +17353,6 @@
      "area": "codex"
     },
     {
-     "path": "downloads.html",
-     "title": "Downloads & Integrity",
-     "area": "archive"
-    },
-    {
      "path": "ethics.html",
      "title": "Ethics & Coherence Law",
      "area": "evidence"
@@ -17349,7 +17389,7 @@
     }
    ],
    "outTotal": 1,
-   "inTotal": 13
+   "inTotal": 12
   },
   "scroll/atlas.html": {
    "title": "Reference atlas",
@@ -17538,6 +17578,11 @@
    ],
    "in": [
     {
+     "path": "downloads.html",
+     "title": "Downloads & Integrity",
+     "area": "archive"
+    },
+    {
      "path": "scroll/editorial.html",
      "title": "Editorial reading and evidence",
      "area": "evidence"
@@ -17559,7 +17604,7 @@
     }
    ],
    "outTotal": 6,
-   "inTotal": 4
+   "inTotal": 5
   },
   "scroll/lexicon.html": {
    "title": "Hebrew lexicon",
@@ -17708,6 +17753,11 @@
      "area": "codex"
     },
     {
+     "path": "downloads.html",
+     "title": "Downloads & Integrity",
+     "area": "archive"
+    },
+    {
      "path": "ethics.html",
      "title": "Ethics & Coherence Law",
      "area": "evidence"
@@ -17744,7 +17794,7 @@
     }
    ],
    "outTotal": 1,
-   "inTotal": 12
+   "inTotal": 13
   },
   "search.html": {
    "title": "Search",

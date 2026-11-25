@@ -54,6 +54,50 @@ test("mind-renewal is a check-off now, saved on the device", () => {
   assert.ok(html.includes('href="witness.html"'), "the witness door points at the real page");
 });
 
+test("install.html keeps its two doors clearly separate", () => {
+  const html = read("install.html");
+  assert.ok(html.includes('id="app-door-h"'), "door one stands: the Android app");
+  assert.ok(html.includes("Living-Phone-App.apk?raw=1"), "door one carries the real download");
+  assert.ok(html.includes("Show the Android steps") && html.includes("Show the iPhone and iPad steps"), "the per-platform steps are folded");
+  assert.ok(!html.includes("The fuller instrument:"), "the app is no longer a footnote");
+});
+
+test("the garden leads with the game, and its rules stand under their heading", () => {
+  const html = read("garden.html");
+  const lead = html.slice(html.indexOf('id="garden-title"'), html.indexOf('id="garden-county"'));
+  assert.ok(lead.includes("that is the whole game"), "the lead is the short form");
+  assert.ok(!lead.includes("witnessed on seven of its days"), "the grading detail left the lead");
+  const rules = html.slice(html.indexOf('id="garden-grows"'));
+  assert.ok(rules.includes("witnessed on seven of its days"), "the grading stands under How the garden grows");
+});
+
+test("the shop puts Buy today first and labels every other state", () => {
+  const html = read("shop.html");
+  assert.ok(html.indexOf('id="buy-today-title"') < html.indexOf('id="gathered-title"'), "buy today precedes the gathered shelf");
+  assert.ok(html.indexOf('id="tensor-title"') < html.indexOf('id="gathered-title"'), "the Tensor Bands stand in the buy-today ground");
+  assert.ok(html.includes("Read the states plainly"), "the gathered shelf states its states");
+  assert.ok(!html.includes("Everything That Can Be Bought or Given, in One Place"), "the overclaiming title is gone");
+});
+
+test("the atlas opens with the path in", () => {
+  const html = read("codex-atlas.html");
+  assert.ok(html.indexOf('id="atlas-start-here-h"') < html.indexOf('data-atlas-filters'), "start here precedes the filters");
+});
+
+test("downloads opens with a top shelf and folds the archive behind one door", () => {
+  const html = read("downloads.html");
+  assert.ok(html.includes('id="top-shelf-h"'), "the top shelf stands");
+  assert.ok(html.includes('class="archive-door"'), "the archive stands behind one door");
+  assert.ok(html.indexOf('id="top-shelf-h"') < html.indexOf('class="archive-door"'), "the shelf precedes the archive");
+  assert.ok(html.includes("63fffe8f8889194504794789c8d55e73c9c843734d321ba4bd9dce4f79191dcd"), "the app's true seal is on the shelf");
+});
+
+test("moons names its one flow: read, write, seal", () => {
+  const html = read("moons.html");
+  assert.ok(html.includes('id="moons-flow-title"'), "the flow strip stands");
+  assert.ok(html.includes('href="#flowPanel"'), "the strip doors to the seal");
+});
+
 test("the white paper names its sources and method", () => {
   const html = read("codex-white-paper.html");
   assert.ok(html.includes('id="paper-sources-h"'), "the sources section stands");

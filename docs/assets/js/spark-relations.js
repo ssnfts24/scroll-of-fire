@@ -99,8 +99,8 @@
           "label": "the Codex Atlas"
         },
         {
-          "href": "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
-          "label": "Remnant Whitepaper — Redirect"
+          "href": "codex-white-paper.html",
+          "label": "The Codex of Reality and the Living Sphere — A White Paper"
         }
       ],
       "ethics.html": [
