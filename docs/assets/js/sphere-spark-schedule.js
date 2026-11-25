@@ -310,10 +310,12 @@
   /* ── The model: rebuilt from the record, never kept ───────── */
 
   let refreshing = false;
+  let refreshAgain = false;
   async function refresh() {
     const c = core();
     const p = planner();
-    if (!c || !p || refreshing) return;
+    if (!c || !p) return;
+    if (refreshing) { refreshAgain = true; return; }
     refreshing = true;
     try {
       const year = facePatternYear();
@@ -327,6 +329,9 @@
       if (railOpen) renderTimeline();
     } catch { /* the last honest model stands */ }
     refreshing = false;
+    // A change that landed mid-refresh is not dropped: the model
+    // is rebuilt once more from the record as it now stands.
+    if (refreshAgain) { refreshAgain = false; refresh(); }
   }
 
   /* ── SphereSparkControl: the public surface, driven ───────── */
