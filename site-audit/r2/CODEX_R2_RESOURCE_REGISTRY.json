@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 2493,
-    "bytes": 1084426420,
+    "bytes": 1084426562,
     "byGroup": {
       "tooling": 335,
       "manuscript": 17,
@@ -53340,8 +53340,8 @@
       "path": "scripts/build-scroll-library.mjs",
       "title": "build-scroll-library.mjs",
       "format": "mjs",
-      "bytes": 49791,
-      "sha256": "4fe9cf537eb5cc9f66601ad09aee8ab369297b3d53a5d96d46b4614b2a3b5b5c",
+      "bytes": 49933,
+      "sha256": "ca29122748949ce1c134bdd3cb5375e4abb577a6d4829efc40cbb0c2e123afbd",
       "group": "tooling",
       "role": "Build or audit script",
       "deployed": false,

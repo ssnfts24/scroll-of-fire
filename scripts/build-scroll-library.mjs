@@ -193,7 +193,7 @@ const shelfIndex = shelves.map(shelf => {
     const structuralNote = section.contentBearing ? "" : `<small>Structural heading · opens in its reading context</small>`;
     return `<li><a href="${sectionReaderHref(section)}"><span>${escapeHtml(section.title)}</span><small>Original line ${section.line}</small>${structuralNote}</a>${duplicateLinks}</li>`;
   }).join("\n");
-  const fragment = `<!doctype html>\n<html lang="en" data-data-fragment>\n<head>\n<meta charset="utf-8">\n<base href="../">\n<title>${escapeHtml(shelf.title)} — shelf list | Scroll of Fire Library</title>\n</head>\n<body>\n<ol class="shelf-list" data-shelf-list="${shelf.id}">\n${links}\n</ol>\n</body>\n</html>\n`;
+  const fragment = `<!doctype html>\n<html lang="en" data-data-fragment>\n<head>\n<meta charset="utf-8">\n<base href="../">\n<title>${escapeHtml(shelf.title)} — shelf list | Scroll of Fire Library</title>\n<meta name="description" content="The ${escapeHtml(shelf.title)} shelf list of the Scroll of Fire Library, fetched by the Library on open.">\n</head>\n<body>\n<ol class="shelf-list" data-shelf-list="${shelf.id}">\n${links}\n</ol>\n</body>\n</html>\n`;
   fs.writeFileSync(path.join(outputRoot, "data", `shelf-${shelf.id}.html`), fragment);
   return `<details class="index-shelf" id="shelf-${shelf.id}" data-shelf-src="data/shelf-${shelf.id}.html"><summary><span class="shelf-number">${shelf.icon}</span><span><strong>${escapeHtml(shelf.title)}</strong><small>${shelfSections[shelf.id].length} original sections</small></span></summary><p class="shelf-fallback"><a href="data/shelf-${shelf.id}.html">Open the full ${escapeHtml(shelf.title)} shelf list</a> (${shelfSections[shelf.id].length} sections).</p><ol data-shelf-mount></ol></details>`;
 }).join("\n");
