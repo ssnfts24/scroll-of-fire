@@ -44,6 +44,39 @@
   white-space: nowrap;
 }
 
+.dw-chip-title[hidden] {
+  display: none;
+}
+
+/* The folded year line (Nov 25, 2026): the strata card's one
+   fact, stated inside the chip while the card folds away. */
+.dw-chip-year {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  color: rgba(159, 231, 245, 0.92);
+  white-space: nowrap;
+}
+
+.dw-chip-year[hidden] {
+  display: none;
+}
+
+.dw-chip-year-close {
+  pointer-events: auto;
+  min-width: 1.6rem;
+  min-height: 1.6rem;
+  padding: 0;
+  border: 1px solid rgba(159, 231, 245, 0.4);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
 .dw-chip-line {
   font-size: 0.72rem;
   color: rgba(242, 234, 216, 0.78);

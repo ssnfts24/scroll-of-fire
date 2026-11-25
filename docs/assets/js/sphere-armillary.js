@@ -2210,7 +2210,12 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
       } catch (err) { /* the season line stands as it was */ }
     }
     if (!place) {
-      text += " · sunrise, sunset and the drawn sky need a place — set one with Set location on this page";
+      // The sentence is completed by the line's own Set location
+      // button (see seasonLine below) — the panel carries its
+      // control inside it, never a pointer to a control elsewhere
+      // on the page (Aaron, Nov 24 + Nov 25, 2026: the sky panel
+      // asked for Set location without the control in the panel).
+      text += " · sunrise, sunset and the drawn sky need a place —";
     }
     return text;
   }
@@ -2226,9 +2231,30 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
     var telling = caption.querySelector(".sphere-rebuild-telling");
     if (telling) telling.after(line);
     else caption.appendChild(line);
+    var lastText = "";
     function render() {
       var text = buildSkyText(new Date());
-      if (line.textContent !== text) line.textContent = text;
+      if (lastText !== text) {
+        lastText = text;
+        line.textContent = text;
+        // No place kept: the line itself carries the Set location
+        // control, wired to the page's one location action (the
+        // strip button) — one road, reached from inside the panel
+        // that asks. When a place is kept the button is gone and
+        // the sentence stands complete without it.
+        if (!keptPlace()) {
+          var btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "sphere-season-line-action";
+          btn.textContent = "Set location";
+          btn.addEventListener("click", function () {
+            var strip = document.getElementById("sphere-location-season-action");
+            if (strip) strip.click();
+          });
+          line.appendChild(document.createTextNode(" "));
+          line.appendChild(btn);
+        }
+      }
       line.hidden = !skyRingSelected;
     }
     render();

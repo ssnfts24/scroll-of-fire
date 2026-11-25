@@ -752,6 +752,8 @@
     grouped: { singles: [], timedCluster: [], untimedCluster: [] },
     outside: false,
     unavailable: false,
+    foldedStrata: null,        // { year, patternDay, card } while the year card is folded into the chip
+    strataFoldDismissedFor: null, // "year:patternDay" the keeper dismissed — not re-folded for that selection
     worldKey: "",
     buildGeneration: 0,
     rebuildInFlight: false,
@@ -822,7 +824,36 @@
     });
     const chipTitle = el("strong", "dw-chip-title");
     const chipLine = el("span", "dw-chip-line");
-    chipMain.append(crumb, chipTitle, chipLine);
+    // The folded year line (Nov 25, 2026): when the temporal
+    // strata's selected-year card stands over the face, its one
+    // fact — the selected day carried into the selected year —
+    // is stated here, inside the day presentation, and the
+    // floating card folds away (see foldDayPresentation). Its
+    // close button rides along: dismissing here dismisses the
+    // card through the card's own close control.
+    const chipYear = el("span", "dw-chip-year");
+    chipYear.hidden = true;
+    const chipYearText = el("span", "dw-chip-year-text");
+    const chipYearClose = el("button", "dw-chip-year-close", "×");
+    chipYearClose.type = "button";
+    chipYearClose.setAttribute("aria-label", "Hide the year line");
+    chipYearClose.addEventListener("click", () => {
+      const folded = state.foldedStrata;
+      if (folded) {
+        state.strataFoldDismissedFor = `${folded.year}:${folded.patternDay}`;
+        folded.card?.querySelector?.(".sphere-semantic-label-close")?.click?.();
+      }
+      clearStrataFold(ensureDom());
+    });
+    chipYear.append(chipYearText, chipYearClose);
+    chipMain.append(crumb, chipTitle, chipLine, chipYear);
+    // The fold rule lives in a style element the adapter owns,
+    // so the label manager's own rendering is never edited —
+    // the rule names the one card being folded, and only while
+    // it is folded.
+    const foldStyle = document.createElement("style");
+    foldStyle.id = "dw-strata-fold-style";
+    document.head?.appendChild(foldStyle);
     const chipNav = el("div", "dw-chip-nav");
     const prev = el("button", "dw-chip-btn", "‹");
     prev.type = "button";
@@ -924,7 +955,7 @@
     state.roomsObserver = roomsObserver;
 
     state.dom = {
-      chip, chipTitle, chipLine, back, crumbSteps, membrane,
+      chip, chipTitle, chipLine, chipYear, chipYearText, foldStyle, back, crumbSteps, membrane,
       patternsDoor, patternsPanel, pStanding, pGroups, pResult, pDays, pActions, doorRow,
       inspector, kind, title, line, sub, list, actions,
     };
@@ -1614,6 +1645,69 @@
     }
   }
 
+  /*
+   * The fold (Nov 25, 2026 — Aaron, from his phone: the same
+   * day stated three times over the Sphere, the Sphere itself
+   * behind the furniture). At the day stages the chip and the
+   * day-zoom panel both present the selected day, and the
+   * temporal strata's selected-year card repeats its Pattern
+   * Day a third time. Each fact stands once:
+   *
+   * - While the day-zoom panel is visible in the same view, it
+   *   is the day's statement (civil date, full coordinates, the
+   *   day's records), and the chip's title folds away — the
+   *   chip keeps its depth crumb, its standing line, and its
+   *   step controls. When the panel is not in view, the chip's
+   *   title stands as the day's statement, exactly as before.
+   * - While the strata's selected-year card stands, its one
+   *   fact moves into the chip as the year line, and the card
+   *   folds away under a rule in the adapter's own style
+   *   element (the label manager's rendering is never edited).
+   *   Dismissing the year line dismisses the card through the
+   *   card's own close control, and it is not re-folded for
+   *   that selection.
+   */
+  function clearStrataFold(dom) {
+    if (dom.foldStyle) dom.foldStyle.textContent = "";
+    if (dom.chipYear) dom.chipYear.hidden = true;
+    state.foldedStrata = null;
+  }
+
+  function foldDayPresentation(dom) {
+    const panel = document.getElementById("sphere-day-zoom-panel");
+    let panelVisible = false;
+    if (panel) {
+      const style = getComputedStyle(panel);
+      const rect = panel.getBoundingClientRect();
+      panelVisible = style.display !== "none" && style.visibility !== "hidden"
+        && rect.width > 0 && rect.height > 0
+        && rect.bottom > 0 && rect.top < (window.innerHeight || 0);
+    }
+    dom.chipTitle.hidden = panelVisible;
+
+    const year = state.selection?.patternYear;
+    const patternDay = state.selection?.patternDay;
+    if (!Number.isInteger(year) || !Number.isInteger(patternDay)
+      || state.strataFoldDismissedFor === `${year}:${patternDay}`) {
+      clearStrataFold(dom);
+      return;
+    }
+    const card = document.querySelector(
+      `.sphere-semantic-label[data-semantic-id="strata-year-${year}"]`
+    );
+    if (!card) {
+      clearStrataFold(dom);
+      return;
+    }
+    state.foldedStrata = { year, patternDay, card };
+    dom.chipYearText.textContent = `Pattern Day ${patternDay} · the same day in ${year}`;
+    dom.chipYear.hidden = false;
+    if (dom.foldStyle) {
+      dom.foldStyle.textContent =
+        `.sphere-semantic-label[data-semantic-id="strata-year-${year}"]{display:none!important}`;
+    }
+  }
+
   function updateChip() {
     const dom = ensureDom();
     const stage = state.stage;
@@ -1626,7 +1720,11 @@
       && (stage === "approach" || stage === "living" || stage === "immersive"
         || stage === "years" || noticeLive);
     dom.chip.hidden = !show;
-    if (!show) return;
+    if (!show) {
+      dom.chipTitle.hidden = false;
+      clearStrataFold(dom);
+      return;
+    }
     dom.chip.dataset.dwStage = stage;
     updateCrumb(dom, stage);
     const prevBtn = dom.chip.querySelector("[data-dw-prev]");
@@ -1638,6 +1736,8 @@
       dom.back.textContent = "Into the year";
       dom.chipTitle.textContent = yearsChipTitle();
       dom.chipLine.textContent = noticeLive ? state.notice.text : yearsChipLine();
+      dom.chipTitle.hidden = false;
+      clearStrataFold(dom);
       return;
     }
     if (prevBtn) prevBtn.hidden = false;
@@ -1647,17 +1747,20 @@
       dom.chipTitle.textContent = dayTitle(state.view, state.selection);
       dom.chipLine.textContent = state.notice.text;
       dom.back.hidden = false;
+      foldDayPresentation(dom);
       return;
     }
     if (state.outside) {
       dom.chipTitle.textContent = "Outside the count";
       dom.chipLine.textContent = "This day stands outside the 364. Its world opens with a later phase.";
       dom.back.hidden = false;
+      foldDayPresentation(dom);
       return;
     }
     dom.chipTitle.textContent = dayTitle(state.view, state.selection);
     dom.chipLine.textContent = standingLineFor(stage, state.view || state.selection, state.items.length);
     dom.back.hidden = !(stage === "living" || stage === "immersive");
+    foldDayPresentation(dom);
   }
 
   function yearsChipTitle() {
