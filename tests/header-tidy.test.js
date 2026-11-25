@@ -22,6 +22,15 @@
  *   - navigation.css sizes the mobile menu panel to the visible
  *     viewport (subtracting --living-nav-h) and pads its bottom on
  *     the homepage so the last item scrolls clear of the step rail.
+ *
+ * Batch E3 (Nov 25, 2026) finished the fold this file's problem
+ * began: the legacy header itself is gone from every page that
+ * carries the unified nav (scripts/apply-one-nav.mjs), its deep
+ * links homed on the Library shelf, the Theory and Systems hubs,
+ * and the Codex Atlas Start Here path first. The tests below now
+ * pin the folded law — one navigation — alongside the surviving
+ * CSS and emission guarantees. The full E3 census lives in
+ * tests/one-navigation.test.js.
  */
 const test = require("node:test");
 const assert = require("node:assert/strict");
@@ -54,31 +63,26 @@ const dualHeaderPages = allPages.filter((rel) => {
   return html.includes("data-sof-header") && html.includes("data-living-nav");
 });
 
-test("the dual-header census is the whole overlap, not a sample", () => {
-  assert.ok(
-    dualHeaderPages.length >= 60,
-    `expected >=60 pages carrying both headers, got ${dualHeaderPages.length}`
+test("the fold is complete: the legacy header survives only outside the nav's reach", () => {
+  const survivors = allPages.filter((rel) => read(`docs/${rel}`).includes("data-sof-header"));
+  assert.deepEqual(
+    survivors,
+    ["404.html", "aiyanas-world.html", "living-time-sphere.html"],
+    "the legacy header stands only on the utility 404, Aiyana's World (hers to rule), and the protected Sphere page"
   );
 });
 
-test("exactly one brand/home element reads at the top of dual-header pages", () => {
-  for (const rel of dualHeaderPages) {
+test("exactly one brand/home element reads at the top of folded pages", () => {
+  for (const rel of allPages) {
+    if (["404.html", "aiyanas-world.html", "living-time-sphere.html", "offline.html", "caravan.html"].includes(rel)) continue;
     const html = read(`docs/${rel}`);
+    if (!html.includes("data-living-nav")) continue;
     assert.equal(
       (html.match(/class="living-nav-brand"/g) || []).length,
       1,
       `${rel}: one unified brand`
     );
-    const header = headerBlock(html);
-    assert.ok(header, `${rel}: site header still present`);
-    assert.ok(
-      !/<a\b[^>]*\bclass="brand"/.test(header),
-      `${rel}: legacy brand anchor removed from the site header`
-    );
-    assert.ok(
-      !/aria-label="(Scroll of Fire|Codex of Reality) home"/.test(header),
-      `${rel}: no second home-labelled brand in the header`
-    );
+    assert.ok(!html.includes("data-sof-header"), `${rel}: no legacy header under the one nav`);
   }
 });
 
@@ -93,36 +97,9 @@ test("pages outside the nav's reach keep their only brand", () => {
     );
     assert.ok(!html.includes("data-living-nav"), `${rel}: still excluded from the unified nav`);
   }
-});
-
-test("the deep menu survives intact on every dual-header page", () => {
-  for (const rel of dualHeaderPages) {
-    const html = read(`docs/${rel}`);
-    assert.ok(html.includes("data-site-nav"), `${rel}: deep nav present`);
-    assert.ok(html.includes("data-nav-toggle"), `${rel}: menu toggle present`);
-    const about = html.match(/id="nav-about"[\s\S]*?<\/div>/);
-    if (about) {
-      for (const label of [
-        "Start Here",
-        "Covenant Caravan",
-        "Manifest",
-        "Ethics",
-        "Downloads",
-        "Remnant Whitepaper",
-        "13 Moons Whitepaper"
-      ]) {
-        assert.ok(about[0].includes(`>${label}<`), `${rel}: About menu still links ${label}`);
-      }
-    }
-  }
-  const home = read("docs/index.html");
-  for (const section of ["Today", "Explore", "Build", "Artifacts", "About"]) {
-    assert.ok(
-      home.includes(`data-dropdown-toggle>\n          ${section} `) ||
-        new RegExp(`aria-controls="nav-[a-z]+" data-dropdown-toggle>\\s*${section}\\s`).test(home),
-      `homepage: ${section} dropdown still present`
-    );
-  }
+  /* Aiyana's World keeps its legacy header by her design
+   * authority — E3 does not rule on the menu over her world. */
+  assert.ok(headerBlock(read("docs/aiyanas-world.html")), "aiyanas-world: legacy header untouched");
 });
 
 test("the mobile menu panel is contracted to scroll fully", () => {

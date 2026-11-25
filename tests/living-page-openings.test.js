@@ -53,8 +53,9 @@ const EXCLUDED = [
   "theory/glossary.html",
   "theory/witness.html",
   "theory/frequency-governance.html",
-  // Gate G (G2): account.html is a utility page, as offline.html.
-  "account.html"
+  // Page Evolution Batch E3 (Nov 25, 2026): account.html joined
+  // the one-nav system by the plan's named step, reversing the
+  // Gate G utility exclusion; it carries the opening vehicle now.
 ];
 
 const FAMILIES = {
