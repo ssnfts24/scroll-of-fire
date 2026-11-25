@@ -120,3 +120,51 @@ test("armillary: sun segment memoized, readout lines written on change", () => {
   assert.ok(armillary.includes("if (sunMemo.has(key)) return sunMemo.get(key);"), "the memo answers repeat days");
   assert.ok(armillary.includes("function setText(el, text) { if (el.textContent !== text) el.textContent = text; }"), "readout lines are written only when the words change");
 });
+
+/* Pass 3 (Nov 24, 2026, Aaron: "Upgrade the sphere for performance
+ * and details and everything to work nicely") — the scheduling
+ * beacons, the newest companion layer, take the same law:
+ *  - a beacon's place is parsed from its label's published
+ *    geometry (inline left/top centre + inline transform scale),
+ *    with the label's size cached per (element, font size, text);
+ *    the per-frame loop's only layout read is the fallback for a
+ *    label that publishes nothing;
+ *  - a beacon whose day has no label standing in the view is
+ *    hidden — never left at a stale place or the layer origin;
+ *  - re-rendering the model builds no throwaway beacon elements:
+ *    the record carries what was rendered and is compared
+ *    field by field;
+ *  - the beacon stylesheet promotes no permanent layers and
+ *    gives the tap a 40px target. */
+
+const scheduleLayer = read("docs/assets/js/sphere-spark-schedule.js");
+const scheduleCss = read("docs/assets/css/sphere-spark-schedule.css");
+
+test("beacons: place parsed from the label's published geometry, size cached", () => {
+  assert.ok(scheduleLayer.includes("function labelPoint(label, pd)"), "the beacon's place comes from the label's published geometry");
+  assert.ok(scheduleLayer.includes("parseFloat(label.style.left)"), "the centre is read from the label's inline style, not its rect");
+  assert.ok(scheduleLayer.includes("size.fontSize !== fontSize || size.text !== text"), "the size cache is keyed by element, font size and text");
+  const loopStart = scheduleLayer.indexOf("function positionBeacons()");
+  const loopBody = scheduleLayer.slice(loopStart, scheduleLayer.indexOf("\n  let raf", loopStart));
+  assert.ok(loopBody.includes("labelPoint(label, pd)"), "the frame loop places beacons from the parsed geometry");
+  assert.ok(!loopBody.includes("labelEls.get(pd).getBoundingClientRect"), "the frame loop never reads a label rect on the main road");
+});
+
+test("beacons: a day with no label standing hides its beacon", () => {
+  assert.ok(scheduleLayer.includes("rec.shown = false"), "an unplaced beacon is folded away");
+  assert.ok(scheduleLayer.includes('el.style.display = "none";'), "a fresh beacon starts hidden until the loop places it");
+  assert.ok(scheduleLayer.includes("return { hidden: true }"), "a label laid out hidden in this view folds its beacon with it");
+});
+
+test("beacons: re-render builds no throwaway elements", () => {
+  const renderStart = scheduleLayer.indexOf("function renderBeacons()");
+  const renderBody = scheduleLayer.slice(renderStart, scheduleLayer.indexOf("\n  let foldNote", renderStart));
+  assert.ok(renderBody.includes("existing.state !== beacon.state"), "the rendered state is compared from the record");
+  assert.ok(renderBody.includes("existing.labelText !== labelText"), "the rendered words are compared from the record");
+  assert.ok(!renderBody.includes("fresh.className"), "no element is built just to compare its class");
+});
+
+test("beacons stylesheet: no permanent layers, a fair tap target", () => {
+  assert.ok(!scheduleCss.includes("will-change:"), "24 standing beacons hold no permanent compositor layers");
+  assert.ok(scheduleCss.includes("width: 40px"), "the beacon's tap target is 40px wide");
+});

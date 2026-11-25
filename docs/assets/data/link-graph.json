@@ -352,15 +352,9 @@
      "area": "living-time"
     }
    ],
-   "in": [
-    {
-     "path": "index.html",
-     "title": "Codex of Reality",
-     "area": "codex"
-    }
-   ],
+   "in": [],
    "outTotal": 2,
-   "inTotal": 1
+   "inTotal": 0
   },
   "aiyanas-world.html": {
    "title": "Aiyana's World",
@@ -1899,9 +1893,9 @@
      "area": "scroll-scripture"
     },
     {
-     "path": "account.html",
-     "title": "Your Account — Not Yet Open",
-     "area": "codex"
+     "path": "scripture/index.html",
+     "title": "Genesis & Exodus Scripture",
+     "area": "scroll-scripture"
     }
    ],
    "in": [
@@ -1926,7 +1920,7 @@
      "area": "codex"
     }
    ],
-   "outTotal": 27,
+   "outTotal": 26,
    "inTotal": 4
   },
   "install.html": {

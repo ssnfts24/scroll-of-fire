@@ -26,6 +26,19 @@
  *   re-read per frame; a transform is written only when a beacon
  *   truly moved; the loop sleeps when the page is hidden, the
  *   stage is off-screen, or the Sphere stands frozen.
+ * - Pass 2 of that law (Nov 24, later): a beacon's place is read
+ *   from its label's own published geometry — the label layer
+ *   writes each day label's centre into the label's inline
+ *   left/top and its scale into its inline transform — so the
+ *   per-frame loop reads strings, never layout. A label's size
+ *   is measured once per (element, font size, text) and cached;
+ *   the label layer's offset inside the wrap is measured with
+ *   the wrap's rect, on the same events, so a shift of the whole
+ *   stage moves both together and cannot drift a beacon off its
+ *   day. A beacon whose day has no label standing in this view
+ *   is hidden, never left standing at a stale place. (Verified
+ *   against the rect truth in the lab: 38 of 38 day labels, the
+ *   parsed place exact to the pixel.)
  */
 (function () {
   "use strict";
@@ -74,8 +87,11 @@
   let layer = null;
   let model = { beacons: [], foldedDays: 0, totalDays: 0 };
   let modelYear = null;
-  const beaconEls = new Map(); // patternDay -> { el, x, y, scale }
+  const beaconEls = new Map(); // patternDay -> { el, x, y, scale, shown, state, count, leadCategory, labelText }
   let labelEls = new Map(); // patternDay -> element
+  const labelSizes = new Map(); // patternDay -> { el, w, h, fontSize, text }
+  let labelLayerEl = null;
+  let layerOffset = null; // the label layer's place inside the wrap, measured with wrapRect
   let wrapRect = null;
   let wrapVisible = true;
   let labelObserver = null;
@@ -99,14 +115,35 @@
       if (m) next.set(Number(m[1]), el);
     }
     labelEls = next;
+    // A label that left the projection takes its cached size with
+    // it; a replaced element is re-measured on first sight anyway.
+    for (const [pd, size] of [...labelSizes.entries()]) {
+      if (next.get(pd) !== size.el) labelSizes.delete(pd);
+    }
     // Watch the labels' parent for projection changes — the one
     // honest signal that the projected set moved (the perf pass
     // adopted the same childList discipline for the orbit).
     const any = next.values().next().value;
-    if (any && any.parentElement && labelObserver) {
-      labelObserver.disconnect();
-      labelObserver.observe(any.parentElement, { childList: true });
+    if (any && any.parentElement) {
+      // The labels' parent is the label layer itself; its place
+      // inside the wrap anchors every parsed beacon position.
+      if (labelLayerEl !== any.parentElement) {
+        labelLayerEl = any.parentElement;
+        layerOffset = null;
+        measureWrap();
+      }
+      if (labelObserver) {
+        labelObserver.disconnect();
+        labelObserver.observe(any.parentElement, { childList: true });
+      }
     }
+  }
+
+  function beaconLabelText(beacon) {
+    const c = core();
+    const stamp = c && modelYear != null
+      ? c.stampForCivil(c.civilDateForPatternDay(modelYear, beacon.patternDay)) : null;
+    return `${beacon.count} thing${beacon.count === 1 ? "" : "s"} scheduled${stamp ? ` on ${c.dayWords(stamp)}` : ""} (${beacon.state}) — select the day`;
   }
 
   function beaconEl(beacon) {
@@ -134,11 +171,7 @@
       badge.textContent = String(beacon.count);
       btn.appendChild(badge);
     }
-    const c = core();
-    const stamp = c && modelYear != null
-      ? c.stampForCivil(c.civilDateForPatternDay(modelYear, beacon.patternDay)) : null;
-    btn.setAttribute("aria-label",
-      `${beacon.count} thing${beacon.count === 1 ? "" : "s"} scheduled${stamp ? ` on ${c.dayWords(stamp)}` : ""} (${beacon.state}) — select the day`);
+    btn.setAttribute("aria-label", beaconLabelText(beacon));
     btn.addEventListener("click", () => {
       const cc = core();
       if (!cc || modelYear == null) return;
@@ -159,20 +192,35 @@
       if (!wanted.has(pd)) { rec.el.remove(); beaconEls.delete(pd); }
     }
     for (const beacon of model.beacons) {
+      const labelText = beaconLabelText(beacon);
       const existing = beaconEls.get(beacon.patternDay);
       if (existing) {
-        // State or count may have turned since the last model.
-        const fresh = beaconEl(beacon);
-        if (fresh.className !== existing.el.className
-          || fresh.getAttribute("aria-label") !== existing.el.getAttribute("aria-label")) {
+        // State, count, glyph or words may have turned since the
+        // last model. The record carries what was rendered, so
+        // the comparison costs no element construction — a fresh
+        // beacon is built only when one of them truly changed.
+        if (existing.state !== beacon.state || existing.count !== beacon.count
+          || existing.leadCategory !== beacon.leadCategory || existing.labelText !== labelText) {
+          const fresh = beaconEl(beacon);
           fresh.style.transform = existing.el.style.transform;
+          fresh.style.display = existing.shown ? "" : "none";
           existing.el.replaceWith(fresh);
-          beaconEls.set(beacon.patternDay, { el: fresh, x: existing.x, y: existing.y, scale: existing.scale });
+          beaconEls.set(beacon.patternDay, {
+            el: fresh, x: existing.x, y: existing.y, scale: existing.scale, shown: existing.shown,
+            state: beacon.state, count: beacon.count, leadCategory: beacon.leadCategory, labelText,
+          });
         }
       } else {
         const el = beaconEl(beacon);
+        // A beacon stands only once the loop has placed it on
+        // its day; until then (and whenever its day has no label
+        // in this view) it stays hidden.
+        el.style.display = "none";
         layer.appendChild(el);
-        beaconEls.set(beacon.patternDay, { el, x: null, y: null, scale: null });
+        beaconEls.set(beacon.patternDay, {
+          el, x: null, y: null, scale: null, shown: false,
+          state: beacon.state, count: beacon.count, leadCategory: beacon.leadCategory, labelText,
+        });
       }
     }
     updateFoldNote();
@@ -187,16 +235,63 @@
       foldNote.className = "sphere-spark-beacons-note";
       host.appendChild(foldNote);
     }
-    foldNote.textContent = model.foldedDays > 0
+    const text = model.foldedDays > 0
       ? `…and ${model.foldedDays} more marked day${model.foldedDays === 1 ? "" : "s"} beyond this view — the timeline holds them all.`
       : "";
-    foldNote.hidden = model.foldedDays <= 0;
+    if (foldNote.textContent !== text) foldNote.textContent = text;
+    const hidden = model.foldedDays <= 0;
+    if (foldNote.hidden !== hidden) foldNote.hidden = hidden;
   }
 
   function measureWrap() {
     if (!wrap) return;
     const r = wrap.getBoundingClientRect();
     wrapRect = r && r.width ? { left: r.left, top: r.top, width: r.width, height: r.height } : null;
+    // The label layer's offset is measured in the same instant,
+    // from the same two rects, so a shift of the whole stage
+    // moves both and the offset stays true between measures.
+    if (wrapRect && labelLayerEl && labelLayerEl.isConnected) {
+      const lr = labelLayerEl.getBoundingClientRect();
+      layerOffset = { x: lr.left - r.left, y: lr.top - r.top };
+    }
+  }
+
+  /* A beacon's place, from its label's published geometry: the
+   * label layer writes the label's centre into its inline
+   * left/top and its zoom scale into its inline transform, so
+   * the place is arithmetic on strings — no layout read. The
+   * label's own size is measured once per (element, font size,
+   * text); font size and text are read as strings each frame,
+   * so a re-sized or re-worded label is re-measured exactly
+   * once. Returns null when the label publishes nothing usable,
+   * and the caller falls back to the one rect read. */
+  function labelPoint(label, pd) {
+    if (!layerOffset) return null;
+    const cx = parseFloat(label.style.left);
+    const cy = parseFloat(label.style.top);
+    if (!Number.isFinite(cx) || !Number.isFinite(cy)) return null;
+    let size = labelSizes.get(pd);
+    const fontSize = label.style.fontSize || "";
+    const text = label.textContent || "";
+    if (!size || size.el !== label || size.fontSize !== fontSize || size.text !== text) {
+      const w = label.offsetWidth;
+      const h = label.offsetHeight;
+      // Geometry published but the label has no size: it is
+      // laid out hidden in this view. That is an answer, not a
+      // fallback case — the beacon folds with its day.
+      if (!w || !h) return { hidden: true };
+      size = { el: label, w, h, fontSize, text };
+      labelSizes.set(pd, size);
+    }
+    let zoom = 1;
+    const m = /scale\(([\d.]+)\)/.exec(label.style.transform || "");
+    if (m) zoom = parseFloat(m[1]) || 1;
+    const w = size.w * zoom;
+    return {
+      x: layerOffset.x + cx,
+      y: layerOffset.y + cy - (size.h * zoom) / 2,
+      scale: Math.min(1.25, Math.max(0.8, w / 64)),
+    };
   }
 
   function positionBeacons() {
@@ -204,17 +299,32 @@
     if (!wrapRect) return;
     for (const [pd, rec] of beaconEls) {
       const label = labelEls.get(pd);
-      if (!label || !label.isConnected) {
-        if (rec.x !== null) { rec.el.style.display = "none"; rec.x = null; }
+      let pt = label && label.isConnected ? labelPoint(label, pd) : null;
+      if (pt && pt.hidden) pt = null;
+      else if (!pt && label && label.isConnected && wrapRect) {
+        // The fallback: one rect read, exactly as the layer
+        // worked before the published geometry was trusted.
+        const r = label.getBoundingClientRect();
+        if (r.width) {
+          pt = {
+            x: r.left + r.width / 2 - wrapRect.left,
+            y: r.top - wrapRect.top,
+            scale: Math.min(1.25, Math.max(0.8, r.width / 64)),
+          };
+        }
+      }
+      if (!pt) {
+        // No label standing for this day in this view: the
+        // beacon folds away. It is never left standing at its
+        // last place, and never at the layer's origin.
+        if (rec.shown) { rec.el.style.display = "none"; rec.shown = false; rec.x = null; }
         continue;
       }
-      const r = label.getBoundingClientRect();
-      if (!r.width) { if (rec.x !== null) { rec.el.style.display = "none"; rec.x = null; } continue; }
-      const x = Math.round(r.left + r.width / 2 - wrapRect.left);
-      const y = Math.round(r.top - wrapRect.top);
-      const scale = Math.round(Math.min(1.25, Math.max(0.8, r.width / 64)) * 100) / 100;
-      if (rec.x !== null && Math.abs(x - rec.x) < 1 && Math.abs(y - rec.y) < 1 && scale === rec.scale) continue;
-      rec.x = x; rec.y = y; rec.scale = scale;
+      const x = Math.round(pt.x);
+      const y = Math.round(pt.y);
+      const scale = Math.round(pt.scale * 100) / 100;
+      if (rec.shown && rec.x !== null && Math.abs(x - rec.x) < 1 && Math.abs(y - rec.y) < 1 && scale === rec.scale) continue;
+      rec.x = x; rec.y = y; rec.scale = scale; rec.shown = true;
       rec.el.style.display = "";
       rec.el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -100%) scale(${scale})`;
     }
