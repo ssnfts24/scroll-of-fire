@@ -221,7 +221,7 @@ const homepage = `<!doctype html>
   <meta name="twitter:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
   <link rel="icon" type="image/png" href="../assets/img/shared/branding/favicon.png">
   <link rel="apple-touch-icon" href="../assets/img/shared/branding/favicon.png">
-  <link rel="manifest" href="../manifest-site.webmanifest">
+  <link rel="manifest" href="../manifest.webmanifest">
   <link rel="stylesheet" href="assets/library.css">
   <link rel="stylesheet" href="../assets/css/living-ui.css?v=20261117-1">
   <script defer src="../assets/js/site.js"></script>
@@ -351,7 +351,7 @@ const reader = `<!doctype html>
   <meta name="twitter:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
   <link rel="icon" type="image/png" href="../assets/img/shared/branding/favicon.png">
   <link rel="apple-touch-icon" href="../assets/img/shared/branding/favicon.png">
-  <link rel="manifest" href="../manifest-site.webmanifest">
+  <link rel="manifest" href="../manifest.webmanifest">
   <link rel="stylesheet" href="assets/library.css">
   <link rel="stylesheet" href="../assets/css/living-ui.css?v=20261117-1">
   <script defer src="../assets/js/site.js"></script>
@@ -429,7 +429,7 @@ function toolPage({ file, title, description, bodyClass, current, intro, body, s
   <meta name="twitter:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
   <link rel="icon" type="image/png" href="../assets/img/shared/branding/favicon.png">
   <link rel="apple-touch-icon" href="../assets/img/shared/branding/favicon.png">
-  <link rel="manifest" href="../manifest-site.webmanifest">
+  <link rel="manifest" href="../manifest.webmanifest">
   <link rel="stylesheet" href="assets/library.css">
   <link rel="stylesheet" href="../assets/css/living-ui.css?v=20261117-1">
   <script defer src="../assets/js/site.js"></script>
