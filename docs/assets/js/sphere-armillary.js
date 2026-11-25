@@ -1578,12 +1578,15 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
     var wheelWrap = card.querySelector(".sphere-day-readout-wheel");
     var wheelHost = card.querySelector(".sphere-day-wheel-host");
     var wheelCaptionEl = card.querySelector(".sphere-day-wheel-caption");
+    /* Pass 2: a write that changes nothing still costs a
+     * mutation; every readout line is written through this. */
+    function setText(el, text) { if (el.textContent !== text) el.textContent = text; }
     function renderKept() {
       var pos = selectedPosition();
       var entry = pos ? keptByDay[pos.dayOfPatternYear] : null;
       if (!entry || (!entry.plans.length && !entry.played)) {
         kept.hidden = true;
-        kept.textContent = "";
+        setText(kept, "");
         return;
       }
       var bits = [];
@@ -1591,15 +1594,15 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
       if (entry.played) bits.push("a game is stamped here");
       // Label law: the keeper's line names its ring, like
       // every other line in the packed telling.
-      kept.textContent = "Kept Days · " + bits.join(" — ");
+      setText(kept, "Kept Days · " + bits.join(" — "));
       kept.hidden = false;
     }
     renderKeptRef = renderKept;
     function render() {
       var pos = selectedPosition();
       if (!pos) {
-        where.textContent = stripText() || "The Sphere is waking up.";
-        telling.textContent = "";
+        setText(where, stripText() || "The Sphere is waking up.");
+        setText(telling, "");
         skyEl.hidden = true;
         farmEl.hidden = true;
         storyEl.hidden = true;
@@ -1611,15 +1614,15 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
       var moonName = (data.moons && data.moons[pos.moon - 1] && data.moons[pos.moon - 1].name) || "";
       var archetype = (data.dayArchetypes && data.dayArchetypes[(pos.day - 1) % 28] && data.dayArchetypes[(pos.day - 1) % 28][0]) || "";
       var conv = conversionForSelection(pos);
-      where.textContent = "Moon " + pos.moon + " · Day " + pos.day + " · Pattern Day " + pos.dayOfPatternYear + " of 364" +
-        (conv ? " · Pattern Year " + conv.patternYear : "");
-      telling.textContent = archetype ? moonName + " — " + archetype : moonName;
+      setText(where, "Moon " + pos.moon + " · Day " + pos.day + " · Pattern Day " + pos.dayOfPatternYear + " of 364" +
+        (conv ? " · Pattern Year " + conv.patternYear : ""));
+      setText(telling, archetype ? moonName + " — " + archetype : moonName);
       // The packed telling (Sphere design Phase 3): one line
       // per riding ring, each named for its ring, each present
       // only when its ring rides and its data exists. Absence
       // is honest — a line is never padded into being.
       if (skyRingSelected && selectedCivilISO) {
-        skyEl.textContent = buildSkyText(new Date(selectedCivilISO + "T12:00:00"));
+        setText(skyEl, buildSkyText(new Date(selectedCivilISO + "T12:00:00")));
         skyEl.hidden = false;
       } else {
         skyEl.hidden = true;
@@ -1629,10 +1632,10 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
         var events = farmEventsForSelection();
         if (events) fLine = readoutCore.farmLineText(events, farmCountyName || "");
       }
-      if (fLine) { farmEl.textContent = fLine; farmEl.hidden = false; }
+      if (fLine) { setText(farmEl, fLine); farmEl.hidden = false; }
       else farmEl.hidden = true;
       var sLine = storyRingSelected ? readoutCore.storyLineFor(storyMarksAll, pos) : null;
-      if (sLine) { storyEl.textContent = sLine; storyEl.hidden = false; }
+      if (sLine) { setText(storyEl, sLine); storyEl.hidden = false; }
       else storyEl.hidden = true;
       renderKept();
       renderWheel(wheelWrap, wheelHost, wheelCaptionEl, pos, conv);
@@ -2150,6 +2153,27 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
   /* The Sky line's words, for any date: today's for the
    * caption, the selected day's for the packed readout. One
    * builder, so the two tellings can never drift apart. */
+  /* Performance (pass 2): the sun segment (a full sun
+   * computation plus two toLocaleTimeString calls) is a pure
+   * function of the civil day, place and timezone offset, so
+   * it is memoized — last eight days — while the readout
+   * re-renders at frame rate during drags. */
+  var sunMemo = new Map();
+  function sunSegment(civil, place, engine) {
+    var tzOff = -new Date(civil.year, civil.month - 1, civil.day, 12).getTimezoneOffset();
+    var key = civil.year + "-" + civil.month + "-" + civil.day + "|" + place.lat + "|" + place.lon + "|" + tzOff;
+    if (sunMemo.has(key)) return sunMemo.get(key);
+    var seg = null;
+    var sun = engine.sunForCivilDate(civil, place.lat, place.lon, tzOff);
+    var fmtT = function (d) { return d ? d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }) : null; };
+    if (sun && sun.polar === "day") seg = " · the Sun does not set on this day here";
+    else if (sun && sun.polar === "night") seg = " · the Sun does not rise on this day here";
+    else if (sun && sun.sunrise && sun.sunset) seg = " · sunrise " + fmtT(sun.sunrise) + " · sunset " + fmtT(sun.sunset) + " here, computed on this device";
+    if (sunMemo.size >= 8) sunMemo.delete(sunMemo.keys().next().value);
+    sunMemo.set(key, seg);
+    return seg;
+  }
+
   function buildSkyText(date) {
     var info = seasonNow(date);
     var season = info.season;
@@ -2180,12 +2204,8 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
         if (phase) text += " · the Moon is " + phase.name + ", " + Math.round(phase.illumination * 100) + "% lit";
         if (place) {
           var civil = { year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate() };
-          var tzOff = -new Date(civil.year, civil.month - 1, civil.day, 12).getTimezoneOffset();
-          var sun = engine.sunForCivilDate(civil, place.lat, place.lon, tzOff);
-          var fmtT = function (d) { return d ? d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }) : null; };
-          if (sun && sun.polar === "day") text += " · the Sun does not set on this day here";
-          else if (sun && sun.polar === "night") text += " · the Sun does not rise on this day here";
-          else if (sun && sun.sunrise && sun.sunset) text += " · sunrise " + fmtT(sun.sunrise) + " · sunset " + fmtT(sun.sunset) + " here, computed on this device";
+          var seg = sunSegment(civil, place, engine);
+          if (seg) text += seg;
         }
       } catch (err) { /* the season line stands as it was */ }
     }

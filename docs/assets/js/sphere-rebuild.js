@@ -630,6 +630,22 @@
     if ("ResizeObserver" in window) new ResizeObserver(measureShell).observe(shell);
     else window.addEventListener("resize", measureShell);
 
+    /* Performance (pass 2): the gradient is built once per size
+     * and hue (stop ratios 1 and 0.45 fixed) and the breathe
+     * rides on globalAlpha — the same colour, pixel for pixel. */
+    let gradCache = { key: "", grad: null };
+    function lightGradient(w, h, hueValue) {
+      const key = w + "x" + h + "|" + hueValue;
+      if (gradCache.key === key) return gradCache.grad;
+      const cx = w / 2, cy = h * 0.44, r = Math.max(w, h) * 0.62;
+      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+      grad.addColorStop(0, `hsla(${hueValue}, 72%, 62%, 1)`);
+      grad.addColorStop(0.55, `hsla(${hueValue}, 68%, 48%, 0.45)`);
+      grad.addColorStop(1, "hsla(36, 60%, 40%, 0)");
+      gradCache = { key, grad };
+      return grad;
+    }
+
     function frame(now) {
       if (!reducedMotion) requestAnimationFrame(frame);
       if (frozen || document.hidden || !visible) return;
@@ -641,13 +657,11 @@
       const breathe = reducedMotion ? 0.5 : 0.5 + 0.5 * Math.sin((now / 4600) * Math.PI * 2);
       const alpha = 0.07 + breathe * 0.07;
       const cx = w / 2, cy = h * 0.44, r = Math.max(w, h) * 0.62;
-      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
-      grad.addColorStop(0, `hsla(${hue(now)}, 72%, 62%, ${alpha})`);
-      grad.addColorStop(0.55, `hsla(${hue(now)}, 68%, 48%, ${alpha * 0.45})`);
-      grad.addColorStop(1, "hsla(36, 60%, 40%, 0)");
       ctx.globalCompositeOperation = "screen";
-      ctx.fillStyle = grad;
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = lightGradient(w, h, hue(now));
       ctx.fillRect(0, 0, w, h);
+      ctx.globalAlpha = 1;
       // The selection sweep: a soft wedge that answers a day change.
       const sweepAge = now - sweepStart;
       if (!reducedMotion && sweepStart && sweepAge < 900) {
