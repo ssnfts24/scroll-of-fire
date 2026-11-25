@@ -545,13 +545,13 @@
     },
     {
       "path": "docs/assets/data/codex-story.json",
-      "sha256": "98c5efb8a4e0935416050d21e79990cb539397025b6aa999dd1fae111585d755",
+      "sha256": "0c167c7eb5d2503348d95e6209171f269f5cbcd65bdae2d18bc7943fb5ec98e8",
       "publicUrl": "https://codexofreality.org/assets/data/codex-story.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "8a096da8cb8779ef7248c2c6d699cbf1a4219378329707a9993a9c4141519d51",
+      "sha256": "52c1e2bdbb59bc2e1f1681c4f37cf596b7d2376cdcf0e8fedb18f2f8740f6eeb",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -581,7 +581,7 @@
     },
     {
       "path": "docs/assets/data/link-graph.json",
-      "sha256": "158ee4b0b0ae2dd00bf77715e8eb33aafc9d6f73a1178e391ad0467cb9a67e53",
+      "sha256": "b04ff599b23e51c795e4cf987de486262645775258ed2f472df0137e452a4e9b",
       "publicUrl": "https://codexofreality.org/assets/data/link-graph.json",
       "status": "operational"
     },
@@ -2663,7 +2663,7 @@
     },
     {
       "path": "docs/assets/js/spark-relations.js",
-      "sha256": "d69eab0b4a5ff0a0d28b4132d13df98d38edf095a50a5edab35137fb4d9b4d38",
+      "sha256": "aa04a1e447ce3b86d1ad22415ac4778430d2c04d09b4bb5f83cc142b3ba26cd6",
       "publicUrl": "https://codexofreality.org/assets/js/spark-relations.js",
       "status": "operational"
     },
@@ -3107,7 +3107,7 @@
     },
     {
       "path": "docs/assets/js/world-lands.js",
-      "sha256": "7b6e3575ee5917d4130c6062028e2f0b649e05381cb5b627f397836a605f9ddc",
+      "sha256": "08d010f687dbed4d5b9f03bed40e2c6ca2a8ad44c18b85afc50fd6a49d1f133e",
       "publicUrl": "https://codexofreality.org/assets/js/world-lands.js",
       "status": "operational"
     },
@@ -4211,7 +4211,7 @@
     },
     {
       "path": "docs/assets/search/atlas.json",
-      "sha256": "a911f280b25ab3b344f4e0231e5216472185b7b0ade1b5a0d6d1d181de013c41",
+      "sha256": "5058430887ef3d5cc6ffa6547ec64ff1c9fd6c45397fc773a124e81e0a13c3a1",
       "publicUrl": "https://codexofreality.org/assets/search/atlas.json",
       "status": "operational"
     },
@@ -4229,13 +4229,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "d694736f85e0aa6220ddf379aedf554c990ef0f2070bba5fbe5149d5bd698a39",
+      "sha256": "8fad07960ad9a2cf37475a5a64a96c6bd8e255be0ef374bfb980f459a1187ac4",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "905a60cae6e8a4bc41d169aeb8cf6371388ecc3567b0cb622db5122b2ff5dde7",
+      "sha256": "85531f13f087f84fba5916bb871bb7d0dc94eacc4e13ca419922a0b679933c9c",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -4289,7 +4289,7 @@
     },
     {
       "path": "docs/codex-atlas.html",
-      "sha256": "33c69a18c8796ef4668d200446ff2876c10e76fa928928ba1c172cd21ebe0022",
+      "sha256": "2592ed7bb830b411e5c5c0810e02a94e7f61372fad1c80304ede4b3956bd8d8c",
       "publicUrl": "https://codexofreality.org/codex-atlas.html",
       "status": "operational"
     },
@@ -4301,7 +4301,7 @@
     },
     {
       "path": "docs/codex-white-paper.html",
-      "sha256": "8abb5ca3dbb6a4aedebe0516612b57e77a836767d67908c38cea855943b88a72",
+      "sha256": "3d0d4334b1865015e783f3c37a40e6c308557ea350156cad52a048def1a27676",
       "publicUrl": "https://codexofreality.org/codex-white-paper.html",
       "status": "operational"
     },
@@ -4343,7 +4343,7 @@
     },
     {
       "path": "docs/data/site-catalog.json",
-      "sha256": "f5bfcf312fa1f65c6df8c6c61c3b74f16d8333e5721a6d5fa20724ed6052db0d",
+      "sha256": "9a4dd4dd4d3c4d6dad95c28f7ebb668c7a0eae1997ffddc66946b83e2c570b47",
       "publicUrl": "https://codexofreality.org/data/site-catalog.json",
       "status": "operational"
     },
@@ -4409,7 +4409,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "f439051c8e5fd7bce822ce63fd9608c21686227a82537074910941441801a6d2",
+      "sha256": "67642b71311bc526e43520f2b541fa835adbc55c1248da20a91217efd30100cd",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
@@ -5855,7 +5855,7 @@
     },
     {
       "path": "docs/scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
-      "sha256": "01314746bc4b64a86d8306124ba50bfe8227700a64642167a7a2549216c05c2c",
+      "sha256": "2db96e54fb30fd5153949a101bfffe2c406f7c8e803ef89da55c7bf86678ef98",
       "publicUrl": "https://codexofreality.org/scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
       "status": "operational"
     },
