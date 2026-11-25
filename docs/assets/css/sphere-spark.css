@@ -196,6 +196,48 @@ html.sphere-frozen .sphere-spark-halo { animation-play-state: paused; }
 
 /* ── Reduced motion: the presence rests, beautiful and still ── */
 
+/* ── Proposal cards (Nov 24, 2026): a schedule is proposed in
+ * the conversation and written only on the keeper's yes. The
+ * card is a held breath in the log — gold-edged, quiet — and it
+ * settles visibly when answered, so the record of the exchange
+ * reads true after the fact. */
+.sphere-spark-proposal {
+  margin: 0.45rem 0;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid rgba(216, 178, 90, 0.55);
+  border-radius: 0.6rem;
+  background: rgba(216, 178, 90, 0.07);
+}
+.sphere-spark-proposal-head { margin: 0 0 0.25rem; font-weight: 600; color: #e8cf9a; }
+.sphere-spark-proposal-body { margin: 0 0 0.4rem; }
+.sphere-spark-proposal-items { list-style: none; margin: 0 0 0.45rem; padding: 0; display: grid; gap: 0.3rem; }
+.sphere-spark-proposal-items li {
+  display: flex; align-items: baseline; gap: 0.45rem;
+  padding: 0.3rem 0.45rem; border-radius: 0.4rem;
+  background: rgba(255, 255, 255, 0.04);
+}
+.sphere-spark-proposal-items li small { display: block; color: #c9b18c; }
+.sphere-spark-proposal-items li.is-struck { opacity: 0.45; }
+.sphere-spark-proposal-items li.is-struck span { text-decoration: line-through; }
+.sphere-spark-proposal-drop {
+  margin-left: auto; min-width: 32px; min-height: 32px;
+  border: 1px solid rgba(216, 178, 90, 0.4); border-radius: 999px;
+  background: transparent; color: #e8cf9a; cursor: pointer;
+}
+.sphere-spark-proposal-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.sphere-spark-proposal-yes, .sphere-spark-proposal-no, .sphere-spark-undo {
+  min-height: 40px; padding: 0.4rem 0.9rem; border-radius: 999px; cursor: pointer;
+  border: 1px solid rgba(216, 178, 90, 0.65);
+}
+.sphere-spark-proposal-yes { background: rgba(216, 178, 90, 0.9); color: #1a1408; font-weight: 600; }
+.sphere-spark-proposal-no { background: transparent; color: #e8cf9a; }
+.sphere-spark-proposal.is-settled { opacity: 0.75; }
+.sphere-spark-proposal.is-settled button { cursor: default; }
+.sphere-spark-undo {
+  margin-left: 0.6rem; background: transparent; color: #e8cf9a;
+  min-height: 36px; padding: 0.25rem 0.7rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .sphere-spark-halo { animation: none; }
   .sphere-spark-presence { position: absolute; }

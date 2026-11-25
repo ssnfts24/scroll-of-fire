@@ -707,7 +707,7 @@
           <p class="sphere-spark-talk-stage">${companion.kindName || companion.kind || "Spark"} · ${stage.name}${growth ? ` · voice: ${growth.name}` : ""}${presence ? ` · ${presence.name}` : ""}</p>
         </div>
       </div>
-      <p class="sphere-spark-talk-privacy">Two ways of answering, named on every reply: from your record on this device, or through the talking door. Your record's summary — ${name}'s name, your days and practices, today's coordinate — travels with your words only while you are in this conversation. Your notes are never sent, and nothing of this conversation is kept when the page closes. Scheduling you ask for here — try “schedule Tomatoes on Moon 5 Day 16” — is written to your planner on this device only, and the day takes its mark on the Sphere.</p>
+      <p class="sphere-spark-talk-privacy">Two ways of answering, named on every reply: from your record on this device, or through the talking door. Your record's summary — ${name}'s name, your days and practices, today's coordinate — travels with your words only while you are in this conversation. Your notes are never sent, and nothing of this conversation is kept when the page closes. Scheduling you ask for here — try “schedule Tomatoes on Moon 5 Day 16” — is proposed first and written to your planner on this device only when you say yes, and the day takes its mark on the Sphere. You can also ask what stands on a day, ask for a composed schedule, or tell me “show me…” and I will drive the Sphere by your word.</p>
       <div class="sphere-spark-talk-log" role="log" aria-live="polite" aria-label="Conversation with ${name}"></div>
       <p class="sphere-spark-talk-seat" role="status"></p>
       <form class="sphere-spark-talk-form">
@@ -750,7 +750,19 @@
       return p;
     }
 
-    /* ── Scheduling, handled on this device ─────────────────── */
+    /* ── Scheduling, handled on this device ───────────────────
+     * Upgraded Nov 24, 2026, under Aaron's rulings of the day:
+     * the Spark parses with the pure core (spark-schedule-core),
+     * shows the keeper a PROPOSAL, and writes only on the
+     * keeper's yes — through the one planner path, verified
+     * before it says done. Voice and typing are one road: a
+     * proposal made to a keeper who came by voice is read aloud,
+     * and a spoken "yes — set it" settles it like the card's
+     * button. Pure view commands ("show me…") execute at once:
+     * they change nothing stored, and the keeper can grab the
+     * Sphere back at any moment. In child mode none of the
+     * scheduling family runs at all. Design:
+     * spark-scheduling-design-2026-11-24.md. */
 
     function scheduleToday() {
       const summary = todaySummary();
@@ -762,67 +774,556 @@
       };
     }
 
-    function dayWords(cmd) {
-      return cmd.moon != null
-        ? `Moon ${cmd.moon} · Day ${cmd.day}`
-        : "the Day Out of Time";
-    }
-
     function announceRecordsChanged(action, id) {
       const detail = { source: "sphere-spark-schedule", action, id: id || null };
       try { window.dispatchEvent(new CustomEvent("sof:life-atlas-records-changed", { detail })); } catch { /* one door is enough */ }
       try { document.dispatchEvent(new CustomEvent("sof:life-atlas-records-changed", { detail })); } catch { /* the record stands either way */ }
     }
 
-    async function handleSchedule(cmd) {
+    const Sched = () => window.SparkScheduleCore || null;
+    const SCHED_SOURCE = "From your record, on this device";
+    const CHILD_SCHEDULE_LINE =
+      "For a young keeper, schedules stay with the grown keepers — I do not set, move, or read out the planner here. Ask me about your days, your Spark, and the story so far.";
+
+    function schedCtx() {
+      const t = scheduleToday();
+      if (!t || !t.civilDate) return null;
+      return { todayCivil: t.civilDate, todayPatternDay: t.patternDay, todayAnchorYear: t.anchorYear };
+    }
+    function stampOf(cmd) {
+      return {
+        civilDate: cmd.civilDate, patternDay: cmd.patternDay, anchorYear: cmd.anchorYear,
+        patternYear: cmd.anchorYear, moon: cmd.moon, day: cmd.day,
+        outsideDay: cmd.patternDay > 364,
+      };
+    }
+    // The legacy parser's answer, in the core's shape — used only
+    // if the core failed to load, so the road never dead-ends.
+    function legacyIntent(cmd) {
+      if (!cmd) return null;
+      if (cmd.invalid) return { kind: "invalid", message: cmd.invalid };
+      if (cmd.needsDay) return { kind: "schedule", needsDay: true, title: cmd.title, category: cmd.category };
+      if (cmd.action === "schedule") return { kind: "schedule", title: cmd.title, category: cmd.category, stamp: stampOf(cmd), time: null, partOfDay: null };
+      if (cmd.action === "unschedule") return { kind: "unschedule", title: cmd.title, stamp: stampOf(cmd) };
+      return null;
+    }
+    function parseIntent(text) {
+      const ctx = schedCtx();
+      if (!ctx) return null;
+      const core = Sched();
+      if (core) return core.parseScheduleRequest(text, ctx) || core.parseShowCommand(text, ctx);
+      return legacyIntent(parseScheduleCommand(text, scheduleToday()));
+    }
+
+    function reply(text) {
+      const line = addLine("spark", text, SCHED_SOURCE);
+      if (voiceToggle.checked || viaMic) speak(text);
+      return line;
+    }
+    function plannerReady() {
       const planner = window.CodexLivingPlanner;
-      const source = "From your record, on this device";
-      if (cmd.needsDay) {
-        addLine("spark", `I can set “${cmd.title}” for you — on which day? Name it as a Moon and day (“Moon 5 Day 16”) or a Pattern Day (“Pattern Day 220”).`, source);
-        return;
+      return planner && planner.createPlan && planner.allPlans ? planner : null;
+    }
+    async function readTimeline() {
+      const core = Sched();
+      const planner = plannerReady();
+      if (!core || !planner) return null;
+      const plans = await planner.allPlans();
+      return core.buildTimeline(plans || [], schedCtx().todayCivil);
+    }
+    function matchTitle(entries, wanted) {
+      const w = String(wanted || "").trim().toLowerCase();
+      if (!w) return [];
+      return entries.filter((e) => {
+        const t = String(e.title || "").trim().toLowerCase();
+        return t === w || t.includes(w) || w.includes(t);
+      });
+    }
+
+    /* ── Proposals: nothing is written before the keeper's yes ── */
+
+    let pendingProposal = null;
+    function settleProposal(yes) {
+      const pending = pendingProposal;
+      if (!pending) return false;
+      pendingProposal = null;
+      pending.settle(yes);
+      return true;
+    }
+    // opts: { heading, body, confirmLabel, items?: [{label, sub}],
+    //         onConfirm(keptItems|null), onCancel? }
+    function propose(opts) {
+      if (pendingProposal) settleProposal(false);
+      const card = document.createElement("div");
+      card.className = "sphere-spark-proposal";
+      const head = document.createElement("p");
+      head.className = "sphere-spark-proposal-head";
+      head.textContent = opts.heading;
+      card.appendChild(head);
+      if (opts.body) {
+        const body = document.createElement("p");
+        body.className = "sphere-spark-proposal-body";
+        body.textContent = opts.body;
+        card.appendChild(body);
       }
-      if (cmd.invalid) { addLine("spark", cmd.invalid, source); return; }
-      if (!planner?.createPlan || !planner?.plansForYear) {
-        addLine("spark", "Your planner is still waking up on this page — give it a moment and tell me again, and I will set it.", source);
-        return;
-      }
-      const symbol = SCHEDULE_SYMBOLS[cmd.category] || "●";
-      try {
-        const plans = await planner.plansForYear(cmd.anchorYear);
-        const sameDay = (plans || []).filter((p) => Number(p?.temporal?.patternDay) === cmd.patternDay);
-        const wanted = cmd.title.toLowerCase();
-        if (cmd.action === "schedule") {
-          const existing = sameDay.find((p) => String(p?.title || "").trim().toLowerCase() === wanted);
-          if (existing) {
-            addLine("spark", `“${cmd.title}” already stands on ${dayWords(cmd)} — I have not set it twice. Its ${symbol} mark is under that day on the Sphere.`, source);
-            return;
+      const kept = (opts.items || []).map(() => true);
+      if (opts.items && opts.items.length) {
+        const list = document.createElement("ul");
+        list.className = "sphere-spark-proposal-items";
+        opts.items.forEach((item, i) => {
+          const li = document.createElement("li");
+          const label = document.createElement("span");
+          label.textContent = item.label;
+          li.appendChild(label);
+          if (item.sub) {
+            const sub = document.createElement("small");
+            sub.textContent = item.sub;
+            li.appendChild(sub);
           }
-          const saved = await planner.createPlan({
-            title: cmd.title,
-            category: cmd.category,
-            date: cmd.civilDate,
-            allDay: true,
-            notes: "Set by telling your Spark on the Sphere page.",
+          const drop = document.createElement("button");
+          drop.type = "button";
+          drop.className = "sphere-spark-proposal-drop";
+          drop.textContent = "✕";
+          drop.setAttribute("aria-label", `Strike “${item.label}” from the proposal`);
+          drop.addEventListener("click", () => {
+            kept[i] = !kept[i];
+            li.classList.toggle("is-struck", !kept[i]);
+            drop.setAttribute("aria-pressed", String(!kept[i]));
           });
-          announceRecordsChanged("create", saved?.id);
-          soundContext("line", companion, record, cmd.title);
-          addLine("spark", `Done — “${cmd.title}” stands on ${dayWords(cmd)} (${cmd.civilDate}). A ${symbol} now marks that day on the Sphere; tap the day to see it in Day Details. Say “unschedule ${cmd.title} on ${dayWords(cmd).replace(" · ", " ")}” to take it off.`, source);
-          try { window.SphereRebuild?.showDay?.({ moon: cmd.moon, day: cmd.day, patternDay: cmd.patternDay, civilDate: cmd.civilDate }); } catch { /* the mark stands without the jump */ }
+          li.appendChild(drop);
+          list.appendChild(li);
+        });
+        card.appendChild(list);
+      }
+      const row = document.createElement("div");
+      row.className = "sphere-spark-proposal-row";
+      const yesBtn = document.createElement("button");
+      yesBtn.type = "button";
+      yesBtn.className = "sphere-spark-proposal-yes";
+      yesBtn.textContent = opts.confirmLabel || "Set it";
+      const noBtn = document.createElement("button");
+      noBtn.type = "button";
+      noBtn.className = "sphere-spark-proposal-no";
+      noBtn.textContent = "Not now";
+      row.append(yesBtn, noBtn);
+      card.appendChild(row);
+      log.appendChild(card);
+      log.scrollTop = log.scrollHeight;
+
+      let settled = false;
+      const settle = (yes) => {
+        if (settled) return;
+        settled = true;
+        if (pendingProposal && pendingProposal.settle === settle) pendingProposal = null;
+        yesBtn.disabled = true;
+        noBtn.disabled = true;
+        card.classList.add("is-settled");
+        card.classList.add(yes ? "is-kept" : "is-passed");
+        if (yes) {
+          const keptItems = opts.items ? opts.items.filter((_, i) => kept[i]) : null;
+          Promise.resolve(opts.onConfirm(keptItems)).catch(() => {
+            reply("Your planner would not take that just now — nothing was written. Tell me again in a moment.");
+          });
+        } else if (opts.onCancel) opts.onCancel();
+        else reply("Left unset, then — nothing was written. It stands ready whenever you name it again.");
+      };
+      pendingProposal = { settle };
+      yesBtn.addEventListener("click", () => settle(true));
+      noBtn.addEventListener("click", () => settle(false));
+      if (voiceToggle.checked || viaMic) {
+        speak(`${opts.heading} ${opts.body || ""}`.trim());
+      }
+      return card;
+    }
+    function addActionLine(text, buttonLabel, fn) {
+      const line = addLine("spark", text, SCHED_SOURCE);
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "sphere-spark-undo";
+      btn.textContent = buttonLabel;
+      btn.addEventListener("click", async () => {
+        btn.disabled = true;
+        try { await fn(); } catch { reply("That would not go back just now — the record stands as it is."); }
+      });
+      line.appendChild(btn);
+      log.scrollTop = log.scrollHeight;
+      return line;
+    }
+
+    /* ── The writes, each behind a proposal, each verified ───── */
+
+    async function writeSchedule(intent) {
+      const planner = plannerReady();
+      const symbol = SCHEDULE_SYMBOLS[intent.category] || "●";
+      const saved = await planner.createPlan({
+        title: intent.title,
+        category: intent.category,
+        date: intent.stamp.civilDate,
+        time: intent.time || undefined,
+        allDay: !intent.time,
+        notes: intent.partOfDay
+          ? `Set by telling your Spark on the Sphere page — in the ${intent.partOfDay}, no clock time set.`
+          : "Set by telling your Spark on the Sphere page.",
+      });
+      const standing = saved && planner.getPlan ? await planner.getPlan(saved.id) : null;
+      if (!standing) throw new Error("the write did not stand");
+      announceRecordsChanged("create", saved.id);
+      soundContext("line", companion, record, intent.title);
+      reply(`Done — “${intent.title}” stands on ${Sched().restateDay(intent.stamp)}${intent.time ? ` at ${Sched().timeWords(intent.time)}` : ""}. Its ${symbol} beacon now stands on that day on the Sphere; tap the day to see it in Day Details.`);
+      try { window.SphereRebuild?.showDay?.({ moon: intent.stamp.moon, day: intent.stamp.day, patternDay: intent.stamp.patternDay, civilDate: intent.stamp.civilDate }); } catch { /* the mark stands without the jump */ }
+    }
+
+    async function proposeSchedule(intent) {
+      const core = Sched();
+      if (intent.needsDay) {
+        reply(`I can set “${intent.title}” for you — on which day? Name it as a Moon and day (“Moon 5 Day 16”), a weekday (“Thursday”), or a date.`);
+        return;
+      }
+      const planner = plannerReady();
+      if (!planner) { reply("Your planner is still waking up on this page — give it a moment and tell me again, and I will set it."); return; }
+      const timeline = await readTimeline();
+      const dupe = timeline && timeline.find((e) => e.civilDate === intent.stamp.civilDate
+        && e.state !== "done"
+        && String(e.title).trim().toLowerCase() === intent.title.toLowerCase());
+      if (dupe) {
+        reply(`“${intent.title}” already stands on ${core.dayWords(intent.stamp)} — I have not set it twice. Its beacon is on that day on the Sphere.`);
+        return;
+      }
+      propose({
+        heading: "Shall I set this?",
+        body: `“${intent.title}” — ${core.restateDay(intent.stamp)}${intent.time ? ` at ${core.timeWords(intent.time)}` : ""}${intent.partOfDay ? `, in the ${intent.partOfDay} (no clock time)` : ""}. Nothing is written until you say yes.`,
+        confirmLabel: "Set it",
+        onConfirm: () => writeSchedule(intent),
+      });
+    }
+
+    async function proposeUnschedule(intent) {
+      const core = Sched();
+      const timeline = await readTimeline();
+      if (!timeline) { reply("Your planner is still waking up on this page — give it a moment and tell me again."); return; }
+      let matches = matchTitle(timeline, intent.title);
+      if (intent.stamp) matches = matches.filter((e) => e.civilDate === intent.stamp.civilDate);
+      matches = matches.filter((e) => e.state !== "done");
+      if (!matches.length) {
+        const standing = intent.stamp
+          ? timeline.filter((e) => e.civilDate === intent.stamp.civilDate).map((e) => e.title)
+          : [];
+        reply(standing.length
+          ? `Nothing named “${intent.title}” stands on ${core.dayWords(intent.stamp)}. That day holds: ${standing.join("; ")}. Name one of those and I will propose taking it off.`
+          : `Nothing named “${intent.title}” stands in your record, so there is nothing to take off.`);
+        return;
+      }
+      const planner = plannerReady();
+      propose({
+        heading: "Take this off?",
+        body: matches.map((e) => `“${e.title}” — ${core.restateDay(e.stamp)}`).join("; ") + ". Nothing is removed until you say yes, and it can be put back.",
+        confirmLabel: "Take it off",
+        onConfirm: async () => {
+          const removedShapes = [];
+          for (const match of matches) {
+            const full = planner.getPlan ? await planner.getPlan(match.id) : null;
+            const line = core.planLine(full) || match;
+            removedShapes.push({
+              title: line.title, category: line.category, date: line.civilDate,
+              time: line.time, allDay: line.allDay,
+            });
+            await planner.removePlan(match.id);
+            announceRecordsChanged("delete", match.id);
+          }
+          addActionLine(
+            `Taken off — ${matches.map((e) => `“${e.title}”`).join(", ")} no longer stands, and its beacon is gone from the Sphere. `,
+            "Undo — put it back",
+            async () => {
+              for (const shape of removedShapes) {
+                const back = await planner.createPlan({
+                  title: shape.title, category: shape.category, date: shape.date,
+                  time: shape.time || undefined, allDay: shape.allDay,
+                  notes: "Put back by your Spark, at your word.",
+                });
+                announceRecordsChanged("create", back && back.id);
+              }
+              reply("Put back — it stands in your record again, beacon and all.");
+            });
+        },
+      });
+    }
+
+    async function proposeComplete(intent) {
+      const core = Sched();
+      const timeline = await readTimeline();
+      if (!timeline) { reply("Your planner is still waking up on this page — give it a moment and tell me again."); return; }
+      const matches = matchTitle(timeline, intent.title).filter((e) => e.state !== "done");
+      if (!matches.length) { reply(`Nothing named “${intent.title}” stands unfinished in your record.`); return; }
+      const match = matches[0];
+      const planner = plannerReady();
+      propose({
+        heading: "Mark it done?",
+        body: `“${match.title}” — ${core.restateDay(match.stamp)}. Done counts as a witnessed touch of its day.`,
+        confirmLabel: "Mark done",
+        onConfirm: async () => {
+          await planner.completePlan(match.id);
+          const after = planner.getPlan ? await planner.getPlan(match.id) : null;
+          const done = after && window.CodexLifeAtlasScheduling?.isCompleted
+            ? window.CodexLifeAtlasScheduling.isCompleted(after) : Boolean(after);
+          if (!done) throw new Error("completion did not stand");
+          announceRecordsChanged("update", match.id);
+          try {
+            const parts = match.civilDate.split("-").map(Number);
+            window.CodexMemory?.recordWitness?.({
+              date: new Date(parts[0], parts[1] - 1, parts[2]),
+              label: `Completed: ${match.title}`,
+            });
+          } catch { /* the completion stands without the witness write */ }
+          soundContext("day", companion, record, match.title);
+          reply(`Done — “${match.title}” is complete, its beacon folds to a check on ${core.dayWords(match.stamp)}, and the day stands witnessed.`);
+        },
+      });
+    }
+
+    async function proposeMove(intent) {
+      const core = Sched();
+      const timeline = await readTimeline();
+      if (!timeline) { reply("Your planner is still waking up on this page — give it a moment and tell me again."); return; }
+      const matches = matchTitle(timeline, intent.title).filter((e) => e.state !== "done");
+      if (!matches.length) { reply(`Nothing named “${intent.title}” stands in your record to move.`); return; }
+      const match = matches[0];
+      const planner = plannerReady();
+      propose({
+        heading: "Move it?",
+        body: `“${match.title}” — from ${core.restateDay(match.stamp)} to ${core.restateDay(intent.stamp)}.`,
+        confirmLabel: "Move it",
+        onConfirm: async () => {
+          await planner.updatePlan(match.id, { date: intent.stamp.civilDate });
+          const after = planner.getPlan ? await planner.getPlan(match.id) : null;
+          const line = after ? core.planLine(after) : null;
+          if (!line || line.civilDate !== intent.stamp.civilDate) throw new Error("the move did not stand");
+          announceRecordsChanged("update", match.id);
+          reply(`Moved — “${match.title}” now stands on ${core.restateDay(intent.stamp)}, and its beacon moved with it.`);
+          try { window.SphereRebuild?.showDay?.({ moon: intent.stamp.moon, day: intent.stamp.day, patternDay: intent.stamp.patternDay, civilDate: intent.stamp.civilDate }); } catch { /* the move stands without the jump */ }
+        },
+      });
+    }
+
+    /* ── Asking: answers computed from the timeline ──────────── */
+
+    const KEYWORD_SIGNALS = {
+      garden: /garden|water|plant|harvest|bed|soil|seed|sow/i,
+      family: /family|meal|together|dinner|supper/i,
+      quiet: /quiet|read|still|witness|prayer/i,
+      "deep work": /work|write|build|study|make|forge/i,
+      rest: /rest|sleep|fallow/i,
+    };
+
+    async function answerAsk(intent) {
+      const core = Sched();
+      const timeline = await readTimeline();
+      if (!timeline) { reply("Your planner is still waking up on this page — give it a moment and ask me again."); return; }
+      const entryLine = (e) => `“${e.title}”${e.time ? ` at ${core.timeWords(e.time)}` : ""}${e.state === "overdue" ? " (overdue)" : e.state === "done" ? " (done)" : ""}`;
+      if (intent.ask === "day") {
+        const entries = timeline.filter((e) => e.civilDate === intent.stamp.civilDate);
+        if (!entries.length) {
+          let line = `Nothing stands on ${core.restateDay(intent.stamp)} — the day is open.`;
+          const weekdayCounts = {};
+          for (const e of timeline) {
+            const wd = core.weekdayOf(e.civilDate);
+            if (wd != null) weekdayCounts[wd] = (weekdayCounts[wd] || 0) + 1;
+          }
+          const askedWd = core.weekdayOf(intent.stamp.civilDate);
+          if (askedWd != null && (weekdayCounts[askedWd] || 0) >= 2) {
+            line += ` You often set things on ${core.civilWords(intent.stamp.civilDate).split(",")[0]}s — tell me what belongs here and I will propose it.`;
+          }
+          reply(line);
           return;
         }
-        // Unschedule: remove exactly the named thing on that day.
-        const matches = sameDay.filter((p) => String(p?.title || "").trim().toLowerCase().includes(wanted) || wanted.includes(String(p?.title || "").trim().toLowerCase()));
-        if (!matches.length) {
-          const standing = sameDay.map((p) => p?.title).filter(Boolean);
-          addLine("spark", standing.length
-            ? `Nothing named “${cmd.title}” stands on ${dayWords(cmd)}. That day holds: ${standing.join("; ")}. Name one of those and I will take it off.`
-            : `Nothing stands on ${dayWords(cmd)}, so there is nothing to take off.`, source);
+        reply(`On ${core.restateDay(intent.stamp)}: ${entries.map(entryLine).join("; ")}.`);
+        return;
+      }
+      if (intent.ask === "next") {
+        const next = timeline.find((e) => e.state === "today" || e.state === "upcoming");
+        reply(next
+          ? `Next standing in your record: ${entryLine(next)} — ${core.restateDay(next.stamp)}.`
+          : "Nothing stands ahead in your record — the days in front of you are unwritten.");
+        return;
+      }
+      if (intent.ask === "overdue") {
+        const overdue = timeline.filter((e) => e.state === "overdue");
+        reply(overdue.length
+          ? `Overdue, waiting on you: ${overdue.slice(0, 4).map((e) => `${entryLine(e)} — ${core.restateDay(e.stamp)}`).join("; ")}${overdue.length > 4 ? `; and ${overdue.length - 4} more` : ""}. Say “mark … done” or “move … to Friday” and I will propose it.`
+          : "Nothing is overdue — every standing thing is today or ahead of you.");
+        return;
+      }
+      // The week ahead.
+      const ctx = schedCtx();
+      const week = timeline.filter((e) => e.civilDate >= ctx.todayCivil && e.civilDate <= core.addDays(ctx.todayCivil, 6));
+      if (!week.length) { reply("The week ahead is open — nothing stands in it yet. Say “make me a schedule” and I will compose one from your record."); return; }
+      const byDay = new Map();
+      for (const e of week) {
+        if (!byDay.has(e.civilDate)) byDay.set(e.civilDate, []);
+        byDay.get(e.civilDate).push(e);
+      }
+      const parts = [...byDay.entries()].map(([date, entries]) =>
+        `${core.restateDay(entries[0].stamp)}: ${entries.map(entryLine).join("; ")}`);
+      reply(`Your week: ${parts.join(" · ")}`);
+    }
+
+    /* ── Generative scheduling: proposals in full ────────────── */
+
+    async function proposeGenerated(intent) {
+      const core = Sched();
+      const planner = plannerReady();
+      if (!planner) { reply("Your planner is still waking up on this page — give it a moment and ask me again."); return; }
+      const plans = await planner.allPlans();
+      const timeline = core.buildTimeline(plans || [], schedCtx().todayCivil);
+      const titles = [...new Set(timeline.filter((e) => e.state !== "done").map((e) => e.title))].slice(-10);
+      const play = playSummary(record, stamp());
+      const keywordKnown = intent.keyword
+        ? timeline.some((e) => KEYWORD_SIGNALS[intent.keyword] && KEYWORD_SIGNALS[intent.keyword].test(`${e.title} ${e.category}`))
+        : undefined;
+      const gen = core.generateSchedule({
+        titles,
+        planCount: timeline.length,
+        practiceDays: Array.isArray(record.practiceDays) ? record.practiceDays.length : 0,
+        usualDaypart: play.usualDaypart || null,
+        keywordKnown,
+      }, {
+        mode: intent.mode, keyword: intent.keyword, stamp: intent.stamp,
+        rng: core.rngFrom(`${intent.stamp.civilDate}:${titles.length}:${timeline.length}`),
+      });
+      if (!gen.items.length) { reply("I could not compose a plan from what stands — tell me one thing the day should hold and I will build around it."); return; }
+      propose({
+        heading: gen.starter
+          ? `A starter plan for ${core.restateDay(intent.stamp)} — your record is still young here, so take it as a beginning; every piece says where it came from and why:`
+          : `A plan composed for ${core.restateDay(intent.stamp)} — every piece says where it came from:`,
+        items: gen.items.map((item) => ({
+          label: `${core.timeWords(item.time)} — ${item.title}`,
+          sub: `${item.sourceLine}${item.why ? ` · ${item.why}` : ""}`,
+          item,
+        })),
+        confirmLabel: "Set the whole plan",
+        onConfirm: async (keptItems) => {
+          const kept = (keptItems || []).map((row) => row.item).filter(Boolean);
+          if (!kept.length) { reply("Every piece was struck — nothing was written. Tell me what the day should hold instead."); return; }
+          let landed = 0;
+          for (const item of kept) {
+            const saved = await planner.createPlan({
+              title: item.title,
+              category: item.source === "record" ? "task" : "practice",
+              date: intent.stamp.civilDate,
+              time: item.time,
+              allDay: false,
+              notes: `Proposed by your Spark and set on your yes (${item.sourceLine}). ${item.why || ""}`.trim(),
+            });
+            if (saved && saved.id) { landed += 1; announceRecordsChanged("create", saved.id); }
+          }
+          soundContext("line", companion, record, intent.stamp.civilDate);
+          reply(landed === kept.length
+            ? `Set — ${landed} piece${landed === 1 ? "" : "s"} stand on ${core.restateDay(intent.stamp)}, each with its beacon. Strike any of them by name whenever you like.`
+            : `Partly set — ${landed} of ${kept.length} pieces stand on ${core.restateDay(intent.stamp)}. The rest would not write just now; ask me again for those.`);
+          try { window.SphereRebuild?.showDay?.({ moon: intent.stamp.moon, day: intent.stamp.day, patternDay: intent.stamp.patternDay, civilDate: intent.stamp.civilDate }); } catch { /* the plan stands without the jump */ }
+        },
+      });
+    }
+
+    /* ── View commands: the Spark's hands on the Sphere ────────
+     * Pure view commands execute at once — they change nothing
+     * stored — through the Sphere's public projection surface
+     * only (SphereSparkControl, the companion layer's control;
+     * the SphereRebuild action set behind it). Every trip is
+     * announced, and the keeper can grab the Sphere back at any
+     * moment with their own hand. */
+
+    async function runShowCommand(cmd) {
+      const core = Sched();
+      const C = window.SphereSparkControl || null;
+      const R = window.SphereRebuild || null;
+      const goDay = (stamp) => {
+        if (C && C.goCivil) C.goCivil(stamp.civilDate);
+        else if (R && R.showDay) R.showDay({ moon: stamp.moon, day: stamp.day, patternDay: stamp.patternDay, civilDate: stamp.civilDate });
+      };
+      switch (cmd.action) {
+        case "invalid": reply(cmd.message); return;
+        case "today": {
+          if (C && C.goToday) C.goToday(); else if (R && R.goToday) R.goToday();
+          const t = stamp();
+          reply(`Taking you to today — Moon ${t.moon} · Day ${t.day}, Pattern Day ${t.patternDay}.`);
           return;
         }
-        for (const match of matches) { await planner.removePlan(match.id); announceRecordsChanged("delete", match.id); }
-        addLine("spark", `Taken off — ${matches.map((p) => `“${p.title}”`).join(", ")} no longer stands on ${dayWords(cmd)}, and its mark is gone from the Sphere.`, source);
-      } catch {
-        addLine("spark", "Your planner would not take that just now — nothing was written. Tell me again in a moment.", source);
+        case "day": {
+          goDay(cmd.stamp);
+          reply(`Taking you to ${core.restateDay(cmd.stamp)}.`);
+          if (cmd.open && R && R.openDayWorld) window.setTimeout(() => { try { R.openDayWorld(); } catch { /* the day stands selected */ } }, 450);
+          return;
+        }
+        case "moon": {
+          if (C && C.goMoon) C.goMoon(cmd.moon);
+          else goDay(core.stampForCivil(core.civilDateForPatternDay(schedCtx().todayAnchorYear, (cmd.moon - 1) * 28 + 1)));
+          reply(`Taking you to Moon ${cmd.moon} of this year.`);
+          return;
+        }
+        case "year": {
+          if (C && C.goYear) C.goYear();
+          reply("The whole year, then — every Moon in one view.");
+          return;
+        }
+        case "openDay": if (R && R.openDayWorld) R.openDayWorld(); reply("Opening the day that stands selected."); return;
+        case "openFarm": if (R && R.openFarm) R.openFarm(); reply("Opening the farm."); return;
+        case "openDeepTime": if (R && R.openDeepTime) R.openDeepTime(); reply("Opening deep time."); return;
+        case "freeze": if (R && R.freeze) R.freeze(); reply("Holding the Sphere still. Say “wake” when you want it moving again."); return;
+        case "wake": if (R && R.wake) R.wake(); reply("The Sphere moves again."); return;
+        case "nextScheduled": {
+          const timeline = await readTimeline();
+          const next = timeline && timeline.find((e) => e.state === "today" || e.state === "upcoming");
+          if (!next) { reply("Nothing stands ahead in your record to take you to."); return; }
+          goDay(next.stamp);
+          reply(`Taking you to your next marked day — “${next.title}”, ${core.restateDay(next.stamp)}.`);
+          return;
+        }
+        case "overdueFirst": {
+          const timeline = await readTimeline();
+          const first = timeline && timeline.find((e) => e.state === "overdue");
+          if (!first) { reply("Nothing is overdue — there is no waiting day to take you to."); return; }
+          goDay(first.stamp);
+          reply(`Taking you to the day that has waited longest — “${first.title}”, ${core.restateDay(first.stamp)}.`);
+          return;
+        }
+        case "dayLine": {
+          const coord = window.SOFCurrentTemporalCoordinate || null;
+          const ctx = schedCtx();
+          const basePd = coord && coord.dayOfPatternYear != null ? Number(coord.dayOfPatternYear) : ctx.todayPatternDay;
+          const baseAnchor = coord && coord.patternYear != null ? Number(coord.patternYear)
+            : coord && coord.civilDate ? anchorYearForCivil(coord.civilDate) : ctx.todayAnchorYear;
+          const targetAnchor = baseAnchor + cmd.years;
+          const civil = core.civilDateForPatternDay(targetAnchor, basePd);
+          const target = civil ? core.stampForCivil(civil) : null;
+          if (!target) { reply("The day-line would not resolve that year from here."); return; }
+          goDay(target);
+          reply(`Following the day-line ${cmd.years > 0 ? "forward" : "back"} ${Math.abs(cmd.years)} year${Math.abs(cmd.years) === 1 ? "" : "s"} — the same Pattern day, ${core.restateDay(target)}. Your own hand can take you back whenever you like.`);
+          return;
+        }
+        case "layer": {
+          if (C && C.setLayer && C.setLayer(cmd.slot, cmd.on)) {
+            reply(`The ${cmd.slot} layer is ${cmd.on ? "on" : "off"} — turned by your word, and the switch itself stands where it always did if you want it by hand.`);
+          } else {
+            reply("That layer answers to the instrument's own switches on this page — I drive the view, the days, and the Moons by word, and I will not reach past the switches.");
+          }
+          return;
+        }
+        default: return;
+      }
+    }
+
+    async function handleIntent(intent) {
+      if (!intent) return false;
+      if (intent.action && !intent.kind) { await runShowCommand(intent); return true; }
+      switch (intent.kind) {
+        case "invalid": reply(intent.message); return true;
+        case "schedule": await proposeSchedule(intent); return true;
+        case "unschedule": await proposeUnschedule(intent); return true;
+        case "complete": await proposeComplete(intent); return true;
+        case "move": await proposeMove(intent); return true;
+        case "ask": await answerAsk(intent); return true;
+        case "generate": await proposeGenerated(intent); return true;
+        default: return false;
       }
     }
 
@@ -856,7 +1357,7 @@
           }
         }
       } catch { /* the coordinate alone is a whole greeting */ }
-      line += " Tell me to schedule something — “schedule Tomatoes on Moon 5 Day 16” — and I will set it and mark the day.";
+      line += " Tell me to schedule something — “schedule Tomatoes on Moon 5 Day 16” — and I will propose it, set it on your yes, and raise its mark on the Sphere. Or say “make me a schedule” and I will compose one from your record, or “show me Moon 9” and I will take you there.";
       addLine("spark", line, "From your record, on this device");
     })();
 
@@ -895,10 +1396,29 @@
       addLine("keeper", clean);
       input.value = "";
 
+      // A pending proposal settles by word as by button — a
+      // spoken "yes, set it" is the keeper's yes (Nov 24, 2026).
+      if (pendingProposal) {
+        if (/^(yes|yeah|yep|set it|do it|ok|okay|sure|go ahead)\b/i.test(clean)) { settleProposal(true); viaMic = false; return; }
+        if (/^(no|not now|never mind|cancel|discard|leave it)\b/i.test(clean)) { settleProposal(false); viaMic = false; return; }
+      }
+
       // Scheduling is the record's own work: parsed and kept on
-      // this device, never sent through the talking door.
-      const sched = parseScheduleCommand(clean, scheduleToday());
-      if (sched) { await handleSchedule(sched); viaMic = false; return; }
+      // this device, never sent through the talking door. In
+      // child mode the scheduling family does not run at all —
+      // nothing is scheduled, moved, or read out (the gate stands
+      // before the branch, Nov 24, 2026). Pure view commands
+      // still run: they are the Sphere's own face, and they
+      // change nothing stored.
+      const intent = parseIntent(clean);
+      if (intent) {
+        if (intent.kind && childModeFor(window.localStorage, record && record.seed)) {
+          reply(CHILD_SCHEDULE_LINE);
+          viaMic = false;
+          return;
+        }
+        if (await handleIntent(intent)) { viaMic = false; return; }
+      }
 
       const kind = classifyLocal(clean);
       if (kind === "motif") {

@@ -938,6 +938,86 @@
         rulesView.hidden = !rulesView.hidden;
       });
 
+      /* ------------- scheduling: the mind reads the timeline -------------
+       * Nov 24, 2026 (Aaron's ruling): the Spark schedules on the
+       * Sphere, where the day takes its mark. The mind everywhere
+       * else reads the same timeline the Sphere's beacons project —
+       * one computation (spark-schedule-core, lazy-loaded from this
+       * script's own base) — and answers what stands, what is next,
+       * and what is overdue wherever the planner stands on the page.
+       * A scheduling REQUEST away from the Sphere is answered with
+       * the road to the Sphere, never with a pretend write. In child
+       * mode the whole scheduling family is refused in one plain
+       * local line: nothing scheduled, moved, or read out. */
+      const CHILD_SCHEDULE_LINE =
+        "For a young keeper, schedules stay with the grown keepers — I do not set, move, or read out the planner in a child's conversation.";
+      let schedCorePromise = null;
+      function loadSchedCore() {
+        if (typeof window !== "undefined" && window.SparkScheduleCore) return Promise.resolve(window.SparkScheduleCore);
+        if (schedCorePromise) return schedCorePromise;
+        schedCorePromise = new Promise((resolve) => {
+          try {
+            const script = document.createElement("script");
+            script.src = `${scriptBase}spark-schedule-core.js`;
+            script.onload = () => resolve(window.SparkScheduleCore || null);
+            script.onerror = () => resolve(null);
+            document.head.appendChild(script);
+          } catch { resolve(null); }
+        });
+        return schedCorePromise;
+      }
+      async function scheduleAnswer(question) {
+        const core = await loadSchedCore();
+        if (!core) return null;
+        const today = api.todayStamp();
+        if (!today || !today.civilDate) return null;
+        const ctx = {
+          todayCivil: today.civilDate,
+          todayPatternDay: today.patternDay != null ? today.patternDay : null,
+          todayAnchorYear: core.anchorYearForCivil(today.civilDate)
+        };
+        const intent = core.parseScheduleRequest(question, ctx);
+        if (!intent) return null;
+        if (memory.childMode === true) return CHILD_SCHEDULE_LINE;
+        if (intent.kind === "invalid") return intent.message;
+        if (intent.kind === "ask") {
+          const planner = typeof window !== "undefined" ? window.CodexLivingPlanner : null;
+          if (!planner || !planner.allPlans) return null;
+          let timeline = null;
+          try { timeline = core.buildTimeline(await planner.allPlans(), ctx.todayCivil); } catch { return null; }
+          const line = (e) => `“${e.title}”${e.time ? ` at ${core.timeWords(e.time)}` : ""}`;
+          if (intent.ask === "day") {
+            const entries = timeline.filter((e) => e.civilDate === intent.stamp.civilDate);
+            return entries.length
+              ? `On ${core.restateDay(intent.stamp)}: ${entries.map(line).join("; ")} — read from your planner record on this device.`
+              : `Nothing stands on ${core.restateDay(intent.stamp)} — the day is open, by your planner record on this device.`;
+          }
+          if (intent.ask === "next") {
+            const next = timeline.find((e) => e.state === "today" || e.state === "upcoming");
+            return next
+              ? `Next standing in your record: ${line(next)} — ${core.restateDay(next.stamp)}.`
+              : "Nothing stands ahead in your record — the days in front of you are unwritten.";
+          }
+          if (intent.ask === "overdue") {
+            const overdue = timeline.filter((e) => e.state === "overdue");
+            return overdue.length
+              ? `Overdue, waiting on you: ${overdue.slice(0, 4).map((e) => `${line(e)} — ${core.restateDay(e.stamp)}`).join("; ")}${overdue.length > 4 ? `; and ${overdue.length - 4} more` : ""}.`
+              : "Nothing is overdue — every standing thing is today or ahead of you.";
+          }
+          const week = timeline.filter((e) => e.civilDate >= ctx.todayCivil && e.civilDate <= core.addDays(ctx.todayCivil, 6));
+          if (!week.length) return "The week ahead is open — nothing stands in it yet, by your planner record on this device.";
+          const parts = week.map((e) => `${core.restateDay(e.stamp)}: ${line(e)}`);
+          return `Your week: ${parts.join(" · ")}`;
+        }
+        if (["schedule", "unschedule", "complete", "move", "generate"].includes(intent.kind)) {
+          // A bare "schedule X" with no day could be many things;
+          // only an unmistakable scheduling intent names the road.
+          if (intent.kind === "schedule" && intent.needsDay) return null;
+          return "Scheduling itself lives on the Sphere, where the day can take its mark: tell me there — on the Living Sphere page — and I will propose it, set it on your yes, and raise its beacon on the day. Here I can tell you what already stands: ask me what is on a day, what is next, or what is overdue.";
+        }
+        return null;
+      }
+
       /* ------------------------- the flow ------------------------- */
 
       const flow = createAskFlow({
@@ -946,6 +1026,8 @@
         localAnswer: async (question) => {
           const seatAnswer = api.seatAnswerLocally(question);
           if (seatAnswer != null) return seatAnswer;
+          const schedAnswer = await scheduleAnswer(question);
+          if (schedAnswer != null) return schedAnswer;
           if (!sourcesCache) await gatherSources();
           return mindLocalAnswer(question);
         },
