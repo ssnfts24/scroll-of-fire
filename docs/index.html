@@ -634,8 +634,12 @@
 
     <!-- The app bridge mount: spark-app-bridge.js asks, once and
          quietly, whether a keeper with the app wants their Spark
-         and calendar brought here. Empty unless it asks. -->
-    <div id="spark-app-bridge" class="spark-bridge-mount"></div>
+         and calendar brought here. Empty unless it asks. The
+         #bring-your-spark wrapper is the account page's door back
+         to this ask (the hash is the bridge's on-purpose signal). -->
+    <div id="bring-your-spark">
+      <div id="spark-app-bridge" class="spark-bridge-mount"></div>
+    </div>
 
     <section class="section-shell le-path-head" id="step-witness" aria-labelledby="step-witness-title">
       <div class="le-path-head-inner">
