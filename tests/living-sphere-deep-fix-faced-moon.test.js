@@ -499,6 +499,27 @@ test("repair: graded disclosure — distance grading and the pitch floor", () =>
   assert.match(labels, /const disciplineActive =\s*semanticBand === "far"\s*\|\| String\(dayLabelMode/);
 });
 
+test("repair: graded disclosure — the faced Moon's own pitch floor (Nov 25, 2026)", () => {
+  const allows = repairInternals.contextDisciplineAllows;
+  const base = { centreMoon: 8, selectedMoon: 8, selectedDay: 27, pitch: 10, active: true };
+  // Under the readability floor the faced Moon collapses to its
+  // week anchors like any other Moon — the opening-distance pile
+  // Aaron photographed on his phone (Nov 22 + Nov 25, 2026).
+  assert.equal(allows({ ...base, moon: 8, moonDay: 9 }), false);
+  assert.equal(allows({ ...base, moon: 8, moonDay: 7 }), true);
+  assert.equal(allows({ ...base, moon: 8, moonDay: 28 }), true);
+  // The selected day itself never collapses.
+  assert.equal(allows({ ...base, moon: 8, moonDay: 27 }), true);
+  // Scheduled days always show, even on the faced Moon under
+  // the floor.
+  assert.equal(allows({ ...base, moon: 8, moonDay: 9, scheduled: true }), true);
+  // At a healthy pitch the faced Moon keeps its full grid,
+  // exactly as the discipline always held.
+  assert.equal(allows({ ...base, pitch: 30, moon: 8, moonDay: 9 }), true);
+  // No pitch measured — the floor never fires on a guess.
+  assert.equal(allows({ ...base, pitch: null, moon: 8, moonDay: 9 }), true);
+});
+
 test("repair: Moon grid pitches are measured per Moon from the anchors", () => {
   const mk = (moon, x, y) => ({ target: { kind: "pattern-day-number", moon }, anchorX: x, anchorY: y });
   const candidates = [];
