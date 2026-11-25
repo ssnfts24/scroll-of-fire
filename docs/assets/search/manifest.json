@@ -39,21 +39,21 @@
   ],
   "counts": {
     "pages": 179,
-    "pagePassages": 1287,
+    "pagePassages": 1259,
     "scrollSections": 817,
     "scrollSegments": 1609,
     "scrolls": 2426,
     "atlas": 73,
     "lexicon": 911,
     "claims": 21,
-    "total": 4718
+    "total": 4690
   },
   "shards": {
     "pages": {
       "file": "pages.json",
-      "count": 1287,
-      "bytes": 1676878,
-      "sha256": "5c2dea88e3dd912af9d9ace8620726399c866a76098b900be145ea06e4a4e5e6"
+      "count": 1259,
+      "bytes": 1640238,
+      "sha256": "c182464103c1488dfcf8a38022f12099ccdf43ef57a7fbbe2576abe891ef38a9"
     },
     "scrolls": {
       "file": "scrolls.json",
@@ -95,7 +95,8 @@
       "theory/frequency-governance.html",
       "start.html",
       "witness-world.html",
-      "scroll-of-fire-codex-of-reality-remnant-whitepaper.html"
+      "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
+      "assets/data/downloads-archive.html"
     ]
   }
 }

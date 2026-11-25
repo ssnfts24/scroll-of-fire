@@ -1106,6 +1106,11 @@
           : "Today's coordinate is unavailable";
       }
 
+      /* The day's door needs only the coordinate and the moon's
+       * own words — never the record — so it renders before the
+       * repository work below, whatever that work finds. */
+      renderDaysDoor(temporal);
+
       let count = null;
 
       const repository = await resolveRepository();
@@ -1126,6 +1131,96 @@
             : count === 0
               ? "No practice sessions sealed today yet — the day is open"
               : `${count} practice session${count === 1 ? "" : "s"} sealed today across the bench`;
+      }
+    }
+
+    /* --------------------- the day's door (Q-06) ---------------------
+     * Exercises slice 2, approved Nov 25, 2026 under Aaron's
+     * approvals delegation (queue card Q-06), hung on the school
+     * root by Page Evolution Batch E5. The telling's moon-practice
+     * line names the day: each moon's practice words, verbatim
+     * from PatternCalendarData, are matched to one of the wing's
+     * five exercises, and the Practices room opens with that
+     * exercise lit. The match is a table, in the open — one moon,
+     * one exercise, one plain reason — so the suggestion can be
+     * read, argued with, and changed in one place. */
+
+    const DAYS_DOOR = {
+      1: { exercise: "the-sealed-intention", why: "Speak the first word, mark the seed: an intention is a first word, marked." },
+      2: { exercise: "the-keeping", why: "The moon's work is memory, cleansed; the Keeping is the wing's memory exercise." },
+      3: { exercise: "fourfold-breath", why: "Breathe before response: the breath exercise is this moon's own shape." },
+      4: { exercise: "sixty-seconds-of-seeing", why: "Record what happened begins with seeing it; observation first, then the record." },
+      5: { exercise: "the-sealed-intention", why: "Speak with care, through ordered language: one line, written with care, and sealed." },
+      6: { exercise: "count-the-returns", why: "Courage without rushing is attention held; the return is how it is held." },
+      7: { exercise: "count-the-returns", why: "Weighing the pattern begins with noticing where the mind is." },
+      8: { exercise: "sixty-seconds-of-seeing", why: "Look beneath the surface: notice the thing you would have missed." },
+      9: { exercise: "count-the-returns", why: "Correct course, repair one broken loop: the return is the rep." },
+      10: { exercise: "the-keeping", why: "Build, fix, organize: keep the day's made and mended things, one line each." },
+      11: { exercise: "the-keeping", why: "Remember names, lineage, and the long story: memory is this moon's practice." },
+      12: { exercise: "sixty-seconds-of-seeing", why: "Track timing, do not force the river: watch the signs as they pass." },
+      13: { exercise: "the-sealed-intention", why: "Close the loop, harvest the lesson: sealing is this exercise's own act." }
+    };
+
+    const EXERCISE_NAMES = {
+      "fourfold-breath": "The Fourfold Breath",
+      "count-the-returns": "Count the Returns",
+      "sixty-seconds-of-seeing": "Sixty Seconds of Seeing",
+      "the-keeping": "The Keeping",
+      "the-sealed-intention": "The Sealed Intention"
+    };
+
+    function renderDaysDoor(temporal) {
+      const mount = document.getElementById("pw-days-door");
+      if (!mount || mount.dataset.rendered) return;
+
+      let moonName = null;
+      let practiceLine = null;
+      let pick = null;
+
+      if (!temporal || temporal.outsideDay || temporal.patternDay === null || temporal.patternDay === undefined) {
+        moonName = "The Day Out of Time";
+        practiceLine = "No moon practice today; witness the pause itself.";
+        pick = { exercise: "sixty-seconds-of-seeing", why: "Witness the pause itself: sixty seconds of seeing, and one line." };
+      } else {
+        const data = globalThis.PatternCalendarData;
+        const record = data && Array.isArray(data.moons)
+          ? data.moons.find(moon => moon.idx === temporal.moon)
+          : null;
+        if (!record || !DAYS_DOOR[record.idx]) return;
+        moonName = `Moon ${record.idx} · ${record.name}`;
+        practiceLine = record.practice;
+        pick = DAYS_DOOR[record.idx];
+      }
+
+      mount.dataset.rendered = "1";
+      mount.replaceChildren();
+
+      const line = document.createElement("p");
+      line.textContent = `${moonName}. The practice for this moon: ${practiceLine}`;
+      mount.appendChild(line);
+
+      const suggestion = document.createElement("p");
+      suggestion.textContent = `Today's exercise: ${EXERCISE_NAMES[pick.exercise]}. ${pick.why}`;
+      mount.appendChild(suggestion);
+
+      const begin = document.createElement("button");
+      begin.type = "button";
+      begin.className = "pw-btn";
+      begin.textContent = `Begin ${EXERCISE_NAMES[pick.exercise]}`;
+      begin.addEventListener("click", () => {
+        const cardButton = document.querySelector(`[data-pw-begin="${pick.exercise}"]`);
+        if (cardButton) cardButton.click();
+      });
+      mount.appendChild(begin);
+
+      const cardButton = document.querySelector(`[data-pw-begin="${pick.exercise}"]`);
+      const card = cardButton ? cardButton.closest(".pw-card") : null;
+      if (card && !card.classList.contains("pw-card--today")) {
+        card.classList.add("pw-card--today");
+        const badge = document.createElement("p");
+        badge.className = "pw-card-meta pw-today-badge";
+        badge.textContent = "The day's door · suggested today";
+        card.insertBefore(badge, card.firstChild);
       }
     }
 

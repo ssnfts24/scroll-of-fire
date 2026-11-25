@@ -11,6 +11,14 @@ const scrollRoot = path.join(root, "docs", "scroll");
 const data = JSON.parse(fs.readFileSync(path.join(scrollRoot, "data", "library.json"), "utf8"));
 const segmentData = JSON.parse(fs.readFileSync(path.join(scrollRoot, "data", "reader-segments.json"), "utf8"));
 const home = fs.readFileSync(path.join(scrollRoot, "index.html"), "utf8");
+/* Batch E4 (Nov 25, 2026): the shelf lists ride behind their
+ * shelves as data fragments, fetched on open. The reader-route
+ * assertions below read the index and its shelf fragments as
+ * one corpus — every route the index ever carried is still
+ * reachable from it, one open away. */
+const shelfCorpus = home + ["foundations", "scripture", "history", "evidence", "technology", "prophecy", "witness", "reference"]
+  .map((id) => fs.readFileSync(path.join(scrollRoot, "data", `shelf-${id}.html`), "utf8"))
+  .join("\n");
 const reader = fs.readFileSync(path.join(scrollRoot, "reader.html"), "utf8");
 const readerScript = fs.readFileSync(path.join(scrollRoot, "assets", "reader.js"), "utf8");
 const css = fs.readFileSync(path.join(scrollRoot, "assets", "library.css"), "utf8");
@@ -42,7 +50,7 @@ test("all eight shelves and all mapped sections have a reader route", () => {
     assert.ok(home.includes(shelf), `missing shelf ${shelf}`);
   }
   for (const section of data.sections) {
-    assert.ok(home.includes(encodeURIComponent(section.id)), `missing index route for ${section.id}`);
+    assert.ok(shelfCorpus.includes(encodeURIComponent(section.id)), `missing index route for ${section.id}`);
     assert.ok(section.sourceUrl.startsWith(`https://github.com/ssnfts24/scroll-of-fire/blob/${data.edition.sourceCommit}/Full_Scroll_Unsealed#L`));
     assert.ok(section.readerTargetId && data.sections.some(item => item.id === section.readerTargetId));
     assert.ok(section.segmentIds.length > 0, `section ${section.id} has no source segment`);
@@ -64,7 +72,7 @@ test("all 50 Genesis chapter entries link to an accessible source section", () =
       const section = data.sections.find(item => item.id === id);
       assert.ok(section, `Genesis ${chapter.chapter} section ${id} is not in the reader`);
       assert.equal(section.shelf, "scripture");
-      assert.ok(home.includes(`reader.html?section=${encodeURIComponent(id)}#`));
+      assert.ok(shelfCorpus.includes(`reader.html?section=${encodeURIComponent(id)}#`));
     }
   }
 });
@@ -191,10 +199,10 @@ test("duplicate source headings link to every retained occurrence", () => {
   for (const duplicate of data.duplicateGroups) {
     assert.ok(duplicate.sectionIds.length > 1);
     for (const id of duplicate.sectionIds) {
-      assert.ok(home.includes(`reader.html?section=${encodeURIComponent(id)}#`), `duplicate occurrence ${id} is not accessible`);
+      assert.ok(shelfCorpus.includes(`reader.html?section=${encodeURIComponent(id)}#`), `duplicate occurrence ${id} is not accessible`);
     }
   }
-  assert.match(home, /All \d+ occurrences:/);
+  assert.match(shelfCorpus, /All \d+ occurrences:/);
   assert.match(readerScript, /This heading appears/);
 });
 

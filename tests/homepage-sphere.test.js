@@ -762,6 +762,26 @@ test("no R1.7 protected file is touched by this branch", () => {
   const carriesProtectedPerf = changed.has(
     "tests/sphere-protected-perf-fixes.test.js"
   );
+  /*
+   * PWA identity declaration (Nov 25, 2026 — ULS-001-R1 P2,
+   * under Aaron's "Start all" order). The consolidation retires
+   * the three installation cards for one (DUPLICATION_REGISTER
+   * D-02); its only protected touch is one <head> line in the
+   * Sphere page — the manifest link now names the one card,
+   * docs/manifest.webmanifest. The change set declares itself
+   * by carrying its signature file (tests/pwa-identity-release
+   * .test.js, which lives outside the protected directories and
+   * pins the consolidation's shape). No geometry, rendering,
+   * camera, motion, selection, label, or calendar file is
+   * touched. Every other protected path still fails this test
+   * loudly.
+   */
+  const pwaIdentityDeclaredProtected = new Set([
+    "docs/living-time-sphere.html"
+  ]);
+  const carriesPwaIdentity = changed.has(
+    "tests/pwa-identity-release.test.js"
+  );
   for (const file of changed) {
     if (!protectedPaths.has(file)) continue;
     assert.ok(
@@ -780,7 +800,8 @@ test("no R1.7 protected file is touched by this branch", () => {
         (carriesAppMode && appModeDeclaredProtected.has(file)) ||
         (carriesMobileStage && mobileStageDeclaredProtected.has(file)) ||
         (carriesAppBridge && appBridgeDeclaredProtected.has(file)) ||
-        (carriesProtectedPerf && protectedPerfDeclaredProtected.has(file)),
+        (carriesProtectedPerf && protectedPerfDeclaredProtected.has(file)) ||
+        (carriesPwaIdentity && pwaIdentityDeclaredProtected.has(file)),
       `R1.7 protected file changed: ${file}`
     );
   }
