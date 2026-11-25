@@ -918,6 +918,45 @@
     let _semanticLeaderSvg = null;
     const _semanticEls = new Map();
     const _semanticLeaderEls = new Map();
+    /*
+     * Label size cache (Nov 25, 2026 — Aaron: "Its really
+     * lagging"). A label's size is a fact of its text and its
+     * band/stage dressing — never of the camera. The layout pass
+     * runs at the 96ms gesture cadence while the camera moves,
+     * and it used to re-measure every Moon pill and semantic
+     * label with offsetWidth/offsetHeight on every pass (lab
+     * stack sample: ~700 layout reads per drag from this one
+     * path). Sizes are now measured once per (element, text,
+     * band, stage) and reused while those stand; positions —
+     * the thing the camera actually changes — still update on
+     * every pass. A capped plate's box is never served from
+     * here: the cap pass reads its live box on purpose.
+     */
+    const _labelSizeCache = new WeakMap();
+    function _labelSizeKey(el) {
+      // Everything a label's size is a fact of: its class
+      // dressing (disc vs card, pinned, selected), its content
+      // and child inline styles (innerHTML carries the words
+      // and the detail line's shown/hidden state), the zoom
+      // band and stage, and the width bucket the stylesheet
+      // breakpoints answer to. Camera position is not in the
+      // key — that is the point.
+      const widthBucket = typeof window !== "undefined" ? Math.round((window.innerWidth || 0) / 80) : 0;
+      return `${el.className || ""}|${el.innerHTML || ""}|${_stageEl?.dataset?.zoomStage || ""}|${_semanticContainer?.dataset?.band || ""}|${widthBucket}`;
+    }
+    function _measuredLabelSize(el, fallbackW, fallbackH) {
+      const key = _labelSizeKey(el);
+      const hit = _labelSizeCache.get(el);
+      if (hit && hit.key === key) return hit;
+      const ow = el.offsetWidth || 0;
+      // A hidden label measures 0 — serve the fallback for this
+      // pass but never store it: when the label stands again its
+      // real size must be measured, not the fallback remembered.
+      if (!ow) return { key, w: fallbackW, h: fallbackH };
+      const size = { key, w: ow, h: el.offsetHeight || fallbackH };
+      _labelSizeCache.set(el, size);
+      return size;
+    }
     const _proximityState = createProximityState();
     /*
      * Anchor tracking (repair pass, Nov 22, 2026). The renderer
@@ -1983,8 +2022,7 @@
       for (const candidate of candidates) {
         const { el, targetX, targetY, selected, quiet, frontness } = candidate;
         el.style.display = "";
-        const w = el.offsetWidth || 62;
-        const h = el.offsetHeight || 22;
+        const { w, h } = _measuredLabelSize(el, 62, 22);
         const attempts = [
           { x: targetX, y: targetY },
           { x: targetX + (selected ? 26 : 18), y: targetY },
@@ -3505,8 +3543,12 @@
             }
           }
         }
-        const w = el.offsetWidth || 132;
-        const h = el.offsetHeight || 40;
+        // A capped plate's box is read live (the cap pass above
+        // set it on purpose); every other label's size comes
+        // from the size cache — see _measuredLabelSize.
+        const { w, h } = el.dataset.plateCapped
+          ? { w: el.offsetWidth || 132, h: el.offsetHeight || 40 }
+          : _measuredLabelSize(el, 132, 40);
         const radialX =
           candidate.anchorX
           - centerX;
