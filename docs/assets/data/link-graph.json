@@ -232,6 +232,11 @@
      "area": "evidence"
     },
     {
+     "path": "codex-white-paper.html",
+     "title": "The Codex of Reality and the Living Sphere — A White Paper",
+     "area": "living-time"
+    },
+    {
      "path": "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
      "title": "Scroll of Fire · Codex of Reality · Remnant Whitepaper",
      "area": "scroll-scripture"
@@ -329,11 +334,11 @@
      "area": "evidence"
     }
    ],
-   "outTotal": 12,
+   "outTotal": 13,
    "inTotal": 9
   },
   "account.html": {
-   "title": "Your Account — One Sign-In for the App and the Site",
+   "title": "Your Account — Not Yet Open",
    "area": "codex",
    "out": [
     {
@@ -342,9 +347,15 @@
      "area": "codex"
     }
    ],
-   "in": [],
+   "in": [
+    {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    }
+   ],
    "outTotal": 1,
-   "inTotal": 0
+   "inTotal": 1
   },
   "aiyanas-world.html": {
    "title": "Aiyana's World",
@@ -791,13 +802,23 @@
    "out": [],
    "in": [
     {
+     "path": "about-aaron.html",
+     "title": "Aaron Paul Laird | Author, Craftsman and Systems Builder",
+     "area": "artifacts"
+    },
+    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
+    },
+    {
+     "path": "theory.html",
+     "title": "Theory Hub",
+     "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 1
+   "inTotal": 3
   },
   "companions.html": {
    "title": "Companions",
@@ -1868,9 +1889,9 @@
      "area": "systems"
     },
     {
-     "path": "install.html",
-     "title": "Get the App — Put the Codex on Your Home Screen · Codex of Reality",
-     "area": "systems"
+     "path": "account.html",
+     "title": "Your Account — Not Yet Open",
+     "area": "codex"
     }
    ],
    "in": [
@@ -1886,11 +1907,11 @@
     },
     {
      "path": "account.html",
-     "title": "Your Account — One Sign-In for the App and the Site",
+     "title": "Your Account — Not Yet Open",
      "area": "codex"
     }
    ],
-   "outTotal": 24,
+   "outTotal": 25,
    "inTotal": 3
   },
   "install.html": {
@@ -18406,7 +18427,7 @@
      "area": "scroll-scripture"
     }
    ],
-   "outTotal": 46,
+   "outTotal": 47,
    "inTotal": 18
   },
   "theory/artifact-theory.html": {

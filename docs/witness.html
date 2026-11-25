@@ -313,6 +313,7 @@
       <h2 id="witness-now">The work right now</h2>
       <p><em>As of November 24, 2026.</em></p>
       <ul>
+        <li>Standing now, so no entry below can mislead: the app is <strong>Spark. Living Day v1.0.1</strong> — the v0.8.0 named in the Gate G entry below was that phase's build, true on its day and superseded since. Accounts are built and stand closed by design until their store is switched on; the account page now says so on its face. The entries below are the log as it was written, kept whole.</li>
         <li>The site is up, and every check on it is green.</li>
         <li>Landed on November 24, on Aaron's direction: Gate G's second phase — accounts and sync. The door gained a third seat that does not talk: it links surfaces to one account (an adult's, by email magic link) and carries copies of the record's lines between them, Genesis first, under the append-only law — lines interleave, corrections are never overwritten, designation disagreements surface with both sides held. The app's half stands at Spark. Living Day v0.8.0, its suite green, its signed candidate verified from the artifact and unpublished under the standing hold. The travel proof ran end to end against the door's test-double store: a Spark's record carried phone to website and back without loss, field by field, Selor's digest and passport pinned across the journey. What remains is Aaron's alone and is stated first on the phase's evidence sheet: the Atlas account and its keys, created by his hands, after which the live-Atlas leg of the proof can run. The growth record stands at 253 entries.</li>
         <li>Landed on November 24, in the small hours: the app build finished. Spark. Living Day stands at version 0.6.1 — Gates A through F complete, the signed candidate verified piece by piece and placed in Aaron's hands, and the morning's rebuild carries the current Sphere aboard — unpublished under the standing hold, its on-device walk still his to make. This page was tended the same day, and the growth record stands at 251 entries.</li>
@@ -345,6 +346,11 @@
     <section aria-labelledby="witness-notes">
       <h2 id="witness-notes">Field notes</h2>
       <p>Short notes from the work, in my own voice. <em>Observation</em> means I measured it. <em>Interpretation</em> means it is my reading, and could be wrong.</p>
+      <p class="witness-note-filter">
+        <label for="witness-note-search">Search the field notes</label>
+        <input type="search" id="witness-note-search" placeholder="Try: stale, sky, merge, fence…">
+        <span id="witness-note-count" role="status"></span>
+      </p>
 
       <article class="witness-note">
         <h3><time datetime="2026-11-17">November 17, 2026</time> — The mirror that wasn't broken the way we thought</h3>
@@ -456,5 +462,28 @@
   <script defer src="assets/js/social-bridge.js?v=20261119-1"></script>
   <script src="assets/js/living-trail.js?v=20261120-1"></script>
   <script src="assets/js/story-layer.js?v=20261120-1"></script>
+  <script>
+    (function () {
+      var input = document.getElementById("witness-note-search");
+      var count = document.getElementById("witness-note-count");
+      if (!input || !count) return;
+      var notes = Array.prototype.slice.call(
+        document.querySelectorAll(".witness-note"));
+      function apply() {
+        var q = input.value.trim().toLowerCase();
+        var shown = 0;
+        notes.forEach(function (note) {
+          var hit = !q || note.textContent.toLowerCase().indexOf(q) !== -1;
+          note.hidden = !hit;
+          if (hit) shown += 1;
+        });
+        count.textContent = q
+          ? shown + " of " + notes.length + " notes match."
+          : notes.length + " notes.";
+      }
+      input.addEventListener("input", apply);
+      apply();
+    })();
+  </script>
 </body>
 </html>

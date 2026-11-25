@@ -62,3 +62,37 @@ test("the dead claims stay dead", () => {
       `the app section must not say "${stale}" — Gate G changed it`);
   }
 });
+
+/*
+ * The capability-claim guard, extended (full-page audit,
+ * Nov 24, 2026, cross-cutting resolution 2: "the staleness
+ * class, killed as a class"). The audit found the same fault
+ * four times — a page promising what the system no longer
+ * (or does not yet) do. Each dead claim below was live once
+ * and was removed by hand; this test refuses to let any of
+ * them back in. Dated log entries are history and are NOT
+ * policed — the guard binds present-tense promises only.
+ */
+const garden = readFileSync(
+  new URL("../docs/garden.html", import.meta.url), "utf8");
+const account = readFileSync(
+  new URL("../docs/account.html", import.meta.url), "utf8");
+
+test("the garden does not promise the removed Shroom Search passes", () => {
+  assert.ok(!garden.includes("see your passes below"),
+    "Aaron removed the passes on Nov 20 — the garden must not point at them");
+});
+
+test("no surface calls the app wholly offline or account-free", () => {
+  assert.ok(!index.includes("works wholly offline"),
+    "the app carries INTERNET since Gate G — the homepage must not overstate");
+  assert.ok(!downloads.includes("wholly offline, no account"),
+    "downloads must not call the app wholly offline or account-free");
+});
+
+test("the account page keeps its promise honest", () => {
+  assert.ok(account.includes("Accounts are not yet open"),
+    "until the store is configured, the account page must say so on its face");
+  assert.ok(!account.includes("and your record follows you"),
+    "the present-tense sign-in promise stays off the page until it can be kept");
+});
