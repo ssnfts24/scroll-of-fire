@@ -479,7 +479,58 @@
     }, true);
   }
 
+  /*
+   * Inspection cache (Nov 24, 2026 — protected performance fix 2,
+   * revised form). getSphereDiagnostics() collects whole-document
+   * inspections, and callers like the armillary readout ask for
+   * diagnostics at frame rate during drags: ~708 ms of the Nov 24
+   * drag profile was this inspection re-reading
+   * getBoundingClientRect + getComputedStyle for thousands of
+   * unchanged nodes. Results are cached per node for a short
+   * window (200 ms) — long enough to collapse a burst of
+   * frame-rate diagnostics calls into one inspection per node,
+   * short enough that a changed node is re-read almost at once —
+   * and the cache resets wholesale on scroll and resize (rects
+   * are viewport-relative). A media node that is still loading
+   * is never cached, so its post-load inspection (complete /
+   * natural size) is always fresh. The values themselves are
+   * computed by the same code as before
+   * (_inspectElementNodeUncached). Deliberately NO mutation
+   * observer: the PR3 repair centralized broken-resource
+   * handling away from a whole-document observer in this UI,
+   * and that guard stands (tests/pr3-final-repair.test.js).
+   */
+  const INSPECT_CACHE_TTL_MS = 200;
+  let _inspectCache = new WeakMap();
+  let _inspectCacheLive = false;
+
+  function _installInspectCache() {
+    if (_inspectCacheLive) return;
+    if (typeof window === "undefined" || typeof document === "undefined") return;
+    try {
+      const reset = () => { _inspectCache = new WeakMap(); };
+      window.addEventListener("resize", reset);
+      document.addEventListener("scroll", reset, true);
+      _inspectCacheLive = true;
+    } catch { /* cache stays off; inspections run uncached */ }
+  }
+
   function _inspectElementNode(node) {
+    if (!node || node.nodeType !== 1) return null;
+    _installInspectCache();
+    if (!_inspectCacheLive) return _inspectElementNodeUncached(node);
+    const now = typeof performance !== "undefined" ? performance.now() : Date.now();
+    const cached = _inspectCache.get(node);
+    if (cached && now - cached.at < INSPECT_CACHE_TTL_MS) return cached.result;
+    const result = _inspectElementNodeUncached(node);
+    if (result) {
+      const stillLoading = (result.tagName === "img" || result.tagName === "image") && result.complete === false;
+      if (!stillLoading) _inspectCache.set(node, { result, at: now });
+    }
+    return result;
+  }
+
+  function _inspectElementNodeUncached(node) {
     if (!node || node.nodeType !== 1) return null;
     const rect = node.getBoundingClientRect?.() || null;
     const style = window.getComputedStyle?.(node) || null;

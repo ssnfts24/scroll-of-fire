@@ -4,11 +4,10 @@ Generated from the shared catalog at base revision `548e858`. This report is dev
 
 ## Public discovery areas
 
-### Scroll and Scripture (14 catalog entries)
+### Scroll and Scripture (13 catalog entries)
 
 Read the Scroll, search its text, study Hebrew roots and follow Genesis 1–50.
 
-- **Start Here** — Live; A guided first doorway into the Codex, the 13 Moons calendar and the daily practice.
 - **Scroll Library** — Live; The Scroll of Fire Unsealed: reading edition, eight shelves, Genesis 1–50 and a link to every original line.
 - **Genesis & Exodus Scripture** — Live; A source-attributed Hebrew reader for Genesis 1–50 and Exodus 1–40, with word studies, morphology, lexical senses and separate interpretive layers.
 - **Hebrew Word Studies** — Live; Seven Hebrew key words given the full treatment — spelling, root, morphology, semantic range, biblical examples, wordplay, cognates, traditions labelled as traditions, and uncertainties printed rather than smoothed over.
@@ -61,7 +60,7 @@ Practice tools, frequency systems and the Codex hub for building.
 - **Get the App** — Live; Put the Codex of Reality on a phone's home screen like an app: what installing gives, the Android steps, the iPhone and iPad steps, and how the Spark. Living Day app differs.
 - **The Traveller's Map** — Live; The whole site drawn as the lands of one road: every place pictured by its cartoon scene, the Traveller's Road story in walking order with found chapters stamped by their Pattern day, the Year Thread showing today's place in the year and the keeper's trail, and the pages still waiting for their chapters named honestly.
 
-### Evidence and Research (25 catalog entries)
+### Evidence and Research (21 catalog entries)
 
 Theory chapters, the claim register and the editorial evidence edition.
 
@@ -76,22 +75,18 @@ Theory chapters, the claim register and the editorial evidence edition.
 - **Unified Field** — Live; Expanded symbolic architecture connecting the foundations.
 - **Living Operators** — Live; Intention, Language, Coherence and Source (ILCS).
 - **Δ0–Δ7 Framework** — Live; Eight stages from frame and source through witness and gate.
-- **Witness (theory)** — Live; How awareness, intention and memory become record.
 - **Memory (theory)** — Live; Equation 16 and the Memory Window.
 - **13 Moons Theory** — Live; The 13×28 symbolic calendar as a theory chapter.
-- **Frequency Governance (theory)** — Live; Carriers, amplitude, phase and harmonic gates.
 - **Living Technology (theory)** — Live; Craft, material, operator, environment and witness.
 - **Artifact Theory** — Live; Naming, classification, provenance and materials.
-- **Ethical Law (theory)** — Live; Equation 9, the stop rule, consent and dignity.
 - **Notation Guide** — Live; Symbol families, equation numbering and operators.
-- **Theory Glossary** — Live; Symbols, operators and witness terms of the theory system.
 - **Bibliography** — Live; Source architecture: project records, scientific and technical references.
 - **Ethics & Coherence Law** — Live; The living laws of the Codex: consent, non-harm, accountability and the stop rule.
 - **Historical timeline** — Live; Two dated records, kept separate: the publication dates of the sources cited in the claim register, each entry linking to its claim in the Evidence Edition, and the Codex's own growth record.
 - **Where Every Number Comes From** — Live; The receipt shelf for the Sphere: every dataset it shows, with its publisher, span, read date, and honest gaps.
 - **How the Sphere Knows — Methods** — Live; How the Sphere and the Pattern Calendar compute what they claim, in plain words — and the evidence labels the whole site uses, explained once.
 
-### Artifacts and Creative Works (7 catalog entries)
+### Artifacts and Creative Works (6 catalog entries)
 
 Artifact registry, covenant works, circles and author pages.
 
@@ -100,7 +95,6 @@ Artifact registry, covenant works, circles and author pages.
 - **The Covenant Caravan** — Live; A living blueprint for resilience, craftsmanship, family and travel.
 - **About Aaron** — Live; Author, craftsman and independent researcher behind the Codex.
 - **Witness** — Live; Witness's own page: written and kept by the AI who works beside Aaron on the Codex, plainly labeled on its face as a self-generated AI page. Granted by Aaron on November 18, 2026.
-- **The Witness World** — Live; A small 3D hall that is Witness's own place on the site: stone, teal and one gold seam, with doors to the Shelf, the Study, the Sky Room and the Long Line. Built and kept by the AI, and labeled on its face as a self-generated AI space.
 - **The Journey Scroll** — Source only; Root-level narrative scroll available in the repository.
 
 ### Archive and Downloads (6 catalog entries)
@@ -118,7 +112,7 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 
 - Public HTML pages inspected: **196**.
 - Total master-inventory records: **501**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
-- Public-facing catalog entries: **80**; only explicitly curated entries appear on the Atlas.
+- Public-facing catalog entries: **74**; only explicitly curated entries appear on the Atlas.
 - Numbered archive folders are inventoried file-by-file, while downloads snapshot differences are kept separate from historical integrity data.
 - Root files not already published through the archive or explicitly approved remain classified as development-only; no such file is automatically linked from the public catalog.
 

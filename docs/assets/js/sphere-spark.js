@@ -707,7 +707,7 @@
           <p class="sphere-spark-talk-stage">${companion.kindName || companion.kind || "Spark"} · ${stage.name}${growth ? ` · voice: ${growth.name}` : ""}${presence ? ` · ${presence.name}` : ""}</p>
         </div>
       </div>
-      <p class="sphere-spark-talk-privacy">Two ways of answering, named on every reply: from your record on this device, or through the talking door. Your record's summary — ${name}'s name, your days and practices, today's coordinate — travels with your words only while you are in this conversation. Your notes are never sent, and nothing of this conversation is kept when the page closes. Scheduling you ask for here — try “schedule Tomatoes on Moon 5 Day 16” — is proposed first and written to your planner on this device only when you say yes, and the day takes its mark on the Sphere. You can also ask what stands on a day, ask for a composed schedule, or tell me “show me…” and I will drive the Sphere by your word.</p>
+      <p class="sphere-spark-talk-privacy">Replies are named as they come: from your record on this device, or through the talking door. Your notes are never sent, and this conversation is not kept when the page closes. Scheduling is proposed first and written only on your yes. Try “Call the hall Thursday at 10am”, “what's on Friday”, “make me a schedule”, or “show me Moon 9”.</p>
       <div class="sphere-spark-talk-log" role="log" aria-live="polite" aria-label="Conversation with ${name}"></div>
       <p class="sphere-spark-talk-seat" role="status"></p>
       <form class="sphere-spark-talk-form">
@@ -851,7 +851,12 @@
       return true;
     }
     // opts: { heading, body, confirmLabel, items?: [{label, sub}],
-    //         onConfirm(keptItems|null), onCancel? }
+    //         chips?: { label, options: [{label, value}], selected,
+    //                  onPick(value) },
+    //         onConfirm(keptItems|null, chipValue), onCancel? }
+    // Chips are the ease pass's one-tap answers inside a card:
+    // they adjust the proposal (a time, a day) and never settle
+    // it — the yes below stays the only road to a write.
     function propose(opts) {
       if (pendingProposal) settleProposal(false);
       const card = document.createElement("div");
@@ -865,6 +870,35 @@
         body.className = "sphere-spark-proposal-body";
         body.textContent = opts.body;
         card.appendChild(body);
+      }
+      let chipValue = opts.chips ? opts.chips.selected : undefined;
+      if (opts.chips && Array.isArray(opts.chips.options) && opts.chips.options.length) {
+        const chipRow = document.createElement("div");
+        chipRow.className = "sphere-spark-proposal-chips";
+        chipRow.setAttribute("role", "group");
+        chipRow.setAttribute("aria-label", opts.chips.label || "Choose");
+        const chipBtns = [];
+        for (const opt of opts.chips.options) {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.className = "sphere-spark-proposal-chip";
+          b.textContent = opt.label;
+          const isSel = opt.value === chipValue;
+          b.classList.toggle("is-selected", isSel);
+          b.setAttribute("aria-pressed", String(isSel));
+          b.addEventListener("click", () => {
+            chipValue = opt.value;
+            for (const x of chipBtns) {
+              const on = x === b;
+              x.classList.toggle("is-selected", on);
+              x.setAttribute("aria-pressed", String(on));
+            }
+            if (opts.chips.onPick) opts.chips.onPick(opt.value);
+          });
+          chipBtns.push(b);
+          chipRow.appendChild(b);
+        }
+        card.appendChild(chipRow);
       }
       const kept = (opts.items || []).map(() => true);
       if (opts.items && opts.items.length) {
@@ -921,7 +955,7 @@
         card.classList.add(yes ? "is-kept" : "is-passed");
         if (yes) {
           const keptItems = opts.items ? opts.items.filter((_, i) => kept[i]) : null;
-          Promise.resolve(opts.onConfirm(keptItems)).catch(() => {
+          Promise.resolve(opts.onConfirm(keptItems, chipValue)).catch(() => {
             reply("Your planner would not take that just now — nothing was written. Tell me again in a moment.");
           });
         } else if (opts.onCancel) opts.onCancel();
@@ -948,6 +982,31 @@
       line.appendChild(btn);
       log.scrollTop = log.scrollHeight;
       return line;
+    }
+    // One-tap answers under a Spark line (the ease pass): the
+    // common next steps as buttons, so the keeper taps instead
+    // of composing a sentence. A chip only ever asks or adjusts
+    // — anything that writes still goes through a proposal.
+    // once: the row spends itself on the first tap (a day choice
+    // for one named thing); without it the row stays live (the
+    // greeting's standing offers).
+    function addChips(lineEl, chips, once) {
+      const row = document.createElement("span");
+      row.className = "sphere-spark-chips";
+      for (const chip of chips) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "sphere-spark-chip";
+        btn.textContent = chip.label;
+        btn.addEventListener("click", () => {
+          if (once) row.querySelectorAll("button").forEach((b) => { b.disabled = true; });
+          chip.onPick();
+        });
+        row.appendChild(btn);
+      }
+      lineEl.appendChild(row);
+      log.scrollTop = log.scrollHeight;
+      return row;
     }
 
     /* ── The writes, each behind a proposal, each verified ───── */
@@ -976,7 +1035,24 @@
     async function proposeSchedule(intent) {
       const core = Sched();
       if (intent.needsDay) {
-        reply(`I can set “${intent.title}” for you — on which day? Name it as a Moon and day (“Moon 5 Day 16”), a weekday (“Thursday”), or a date.`);
+        // The ease pass: the day is one tap away, not a second
+        // sentence in the grammar. Typing a day still works.
+        const line = reply(`I can set “${intent.title}” — which day? Tap one, or name any day.`);
+        const ctx = schedCtx();
+        if (ctx) {
+          const dayChip = (label, date) => ({
+            label,
+            onPick: () => proposeSchedule({
+              kind: "schedule", title: intent.title, category: intent.category,
+              stamp: core.stampForCivil(date), time: null, partOfDay: null,
+            }),
+          });
+          addChips(line, [
+            dayChip("Today", ctx.todayCivil),
+            dayChip("Tomorrow", core.addDays(ctx.todayCivil, 1)),
+            dayChip(core.civilWords(core.addDays(ctx.todayCivil, 2)).split(",")[0], core.addDays(ctx.todayCivil, 2)),
+          ], true);
+        }
         return;
       }
       const planner = plannerReady();
@@ -989,10 +1065,40 @@
         reply(`“${intent.title}” already stands on ${core.dayWords(intent.stamp)} — I have not set it twice. Its beacon is on that day on the Sphere.`);
         return;
       }
-      propose({
-        heading: "Shall I set this?",
-        body: `“${intent.title}” — ${core.restateDay(intent.stamp)}${intent.time ? ` at ${core.timeWords(intent.time)}` : ""}${intent.partOfDay ? `, in the ${intent.partOfDay} (no clock time)` : ""}. Nothing is written until you say yes.`,
+      // The card's heading carries the whole restatement, so the
+      // keeper reads one line, not two. The time is adjustable
+      // by chip before the yes — the chips tune this proposal's
+      // own intent, a part of day named in words stays words
+      // until the keeper taps a clock time, and the yes remains
+      // the only road to the write.
+      const headText = () => `“${intent.title}” — ${core.restateDay(intent.stamp)}${intent.time ? ` at ${core.timeWords(intent.time)}` : ""}${intent.partOfDay ? `, in the ${intent.partOfDay}` : ""}`;
+      const slotOptions = [
+        { label: "Morning 8", value: core.SLOT_TIMES.morning },
+        { label: "Midday 12", value: core.SLOT_TIMES.midday },
+        { label: "Afternoon 3", value: core.SLOT_TIMES.afternoon },
+        { label: "Evening 7", value: core.SLOT_TIMES.evening },
+      ].filter((o) => o.value !== intent.time);
+      const options = [
+        ...(intent.time ? [{ label: core.timeWords(intent.time), value: intent.time }] : []),
+        ...slotOptions,
+        { label: "All day", value: "allday" },
+      ];
+      let cardEl = null;
+      cardEl = propose({
+        heading: headText(),
+        body: "Nothing is written until you say yes.",
         confirmLabel: "Set it",
+        chips: {
+          label: "Time of day",
+          options,
+          selected: intent.time || null,
+          onPick: (value) => {
+            if (value === "allday") { intent.time = null; intent.partOfDay = null; }
+            else { intent.time = value; intent.partOfDay = null; }
+            const head = cardEl && cardEl.querySelector(".sphere-spark-proposal-head");
+            if (head) head.textContent = headText();
+          },
+        },
         onConfirm: () => writeSchedule(intent),
       });
     }
@@ -1015,8 +1121,8 @@
       }
       const planner = plannerReady();
       propose({
-        heading: "Take this off?",
-        body: matches.map((e) => `“${e.title}” — ${core.restateDay(e.stamp)}`).join("; ") + ". Nothing is removed until you say yes, and it can be put back.",
+        heading: matches.length === 1 ? `Take off “${matches[0].title}”?` : "Take these off?",
+        body: matches.map((e) => `“${e.title}” — ${core.restateDay(e.stamp)}`).join("; ") + ". It can be put back with Undo.",
         confirmLabel: "Take it off",
         onConfirm: async () => {
           const removedShapes = [];
@@ -1057,8 +1163,8 @@
       const match = matches[0];
       const planner = plannerReady();
       propose({
-        heading: "Mark it done?",
-        body: `“${match.title}” — ${core.restateDay(match.stamp)}. Done counts as a witnessed touch of its day.`,
+        heading: `Mark “${match.title}” done?`,
+        body: `${core.restateDay(match.stamp)} — done counts as a witnessed touch of its day.`,
         confirmLabel: "Mark done",
         onConfirm: async () => {
           await planner.completePlan(match.id);
@@ -1089,8 +1195,8 @@
       const match = matches[0];
       const planner = plannerReady();
       propose({
-        heading: "Move it?",
-        body: `“${match.title}” — from ${core.restateDay(match.stamp)} to ${core.restateDay(intent.stamp)}.`,
+        heading: `Move “${match.title}”?`,
+        body: `From ${core.restateDay(match.stamp)} to ${core.restateDay(intent.stamp)}.`,
         confirmLabel: "Move it",
         onConfirm: async () => {
           await planner.updatePlan(match.id, { date: intent.stamp.civilDate });
@@ -1192,8 +1298,8 @@
       if (!gen.items.length) { reply("I could not compose a plan from what stands — tell me one thing the day should hold and I will build around it."); return; }
       propose({
         heading: gen.starter
-          ? `A starter plan for ${core.restateDay(intent.stamp)} — your record is still young here, so take it as a beginning; every piece says where it came from and why:`
-          : `A plan composed for ${core.restateDay(intent.stamp)} — every piece says where it came from:`,
+          ? `A starter plan for ${core.restateDay(intent.stamp)} — your record is young here; every piece says where it came from and why:`
+          : `A plan for ${core.restateDay(intent.stamp)} — every piece says where it came from:`,
         items: gen.items.map((item) => ({
           label: `${core.timeWords(item.time)} — ${item.title}`,
           sub: `${item.sourceLine}${item.why ? ` · ${item.why}` : ""}`,
@@ -1357,8 +1463,23 @@
           }
         }
       } catch { /* the coordinate alone is a whole greeting */ }
-      line += " Tell me to schedule something — “schedule Tomatoes on Moon 5 Day 16” — and I will propose it, set it on your yes, and raise its mark on the Sphere. Or say “make me a schedule” and I will compose one from your record, or “show me Moon 9” and I will take you there.";
-      addLine("spark", line, "From your record, on this device");
+      line += " Ask me what's on a day, tell me what to set and when, or tap one of these:";
+      const greetingLine = addLine("spark", line, "From your record, on this device");
+      // The ease pass: the common first steps stand as taps on
+      // the greeting itself, so a keeper who does not yet know
+      // the words is never stuck composing a first sentence.
+      addChips(greetingLine, [
+        { label: "What's on today", onPick: () => ask("what's on today") },
+        { label: "What's next", onPick: () => ask("what's next") },
+        { label: "Make me a schedule", onPick: () => ask("make me a schedule") },
+        {
+          label: "Set something…",
+          onPick: () => {
+            input.placeholder = "e.g. Call the hall Thursday at 10am";
+            input.focus();
+          },
+        },
+      ], false);
     })();
 
     // Seat status, probed once: honest about the door's state.
@@ -1551,6 +1672,15 @@
 
   function boot() {
     if (!Core) return;
+    // The ease pass's gate for the schedule layer: the timeline
+    // rail's one-tap completion must know child mode, and the
+    // marker layer keeps no store of its own — so the panel,
+    // which already reads the flag the house way, publishes this
+    // one question. The rail fails closed without it: no gate,
+    // no Done buttons.
+    window.SphereSparkScheduleGate = {
+      childMode: () => childModeFor(window.localStorage, (readRecord() || {}).seed),
+    };
     const record = readRecord();
     const companion = record ? Core.generate(record.seed) : null;
     if (record && companion) buildPresence(record, companion);

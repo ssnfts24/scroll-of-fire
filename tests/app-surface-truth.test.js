@@ -62,3 +62,81 @@ test("the dead claims stay dead", () => {
       `the app section must not say "${stale}" — Gate G changed it`);
   }
 });
+
+/*
+ * The capability-claim guard, extended (full-page audit,
+ * Nov 24, 2026, cross-cutting resolution 2: "the staleness
+ * class, killed as a class"). The audit found the same fault
+ * four times — a page promising what the system no longer
+ * (or does not yet) do. Each dead claim below was live once
+ * and was removed by hand; this test refuses to let any of
+ * them back in. Dated log entries are history and are NOT
+ * policed — the guard binds present-tense promises only.
+ */
+const garden = readFileSync(
+  new URL("../docs/garden.html", import.meta.url), "utf8");
+const account = readFileSync(
+  new URL("../docs/account.html", import.meta.url), "utf8");
+
+test("the garden does not promise the removed Shroom Search passes", () => {
+  assert.ok(!garden.includes("see your passes below"),
+    "Aaron removed the passes on Nov 20 — the garden must not point at them");
+});
+
+test("no surface calls the app wholly offline or account-free", () => {
+  assert.ok(!index.includes("works wholly offline"),
+    "the app carries INTERNET since Gate G — the homepage must not overstate");
+  assert.ok(!downloads.includes("wholly offline, no account"),
+    "downloads must not call the app wholly offline or account-free");
+});
+
+test("the account page keeps its promise honest", () => {
+  assert.ok(account.includes("Accounts are not yet open"),
+    "until the store is configured, the account page must say so on its face");
+  assert.ok(!account.includes("and your record follows you"),
+    "the present-tense sign-in promise stays off the page until it can be kept");
+});
+
+test("the theory doorway merges hold: stubs redirect and the folds stand whole", () => {
+  const readDoc = (rel) =>
+    readFileSync(new URL(`../docs/${rel}`, import.meta.url), "utf8");
+  const stubs = [
+    ["theory/ethics.html", "ethics.html"],
+    ["theory/glossary.html", "glossary.html"],
+    ["theory/witness.html", "witness.html"],
+    ["theory/frequency-governance.html", "systems/frequencies.html"]
+  ];
+  for (const [stub, target] of stubs) {
+    const html = readDoc(stub);
+    assert.match(html, /http-equiv="refresh"/, `${stub} must stay a redirect stub`);
+    assert.ok(html.includes(target), `${stub} must point at ${target}`);
+    assert.ok(!html.includes("data-living-nav"), `${stub} carries no living nav`);
+  }
+  assert.ok(readDoc("ethics.html").includes("Ethical Law is a gate, not a decorative score."),
+    "the Ethical Law theory must stand on the Ethics page");
+  assert.ok(readDoc("glossary.html").includes('id="symbol-index"'),
+    "the Symbol Index must stand in the Glossary");
+  assert.ok(readDoc("witness.html").includes("The Witness Protocol"),
+    "the discipline of witness must stand on the Witness page");
+  assert.ok(readDoc("systems/frequencies.html").includes("The Harmonic Gate decides what enters."),
+    "Frequency Governance must stand in the Sound Observatory");
+});
+
+test("the home merges hold: start and witness-world redirect, their folds stand", () => {
+  const readDoc = (rel) =>
+    readFileSync(new URL(`../docs/${rel}`, import.meta.url), "utf8");
+  const start = readDoc("start.html");
+  assert.match(start, /http-equiv="refresh"/, "start.html must stay a redirect stub");
+  assert.ok(start.includes("index.html#first-visit"), "start.html must point at the first-visit fold");
+  const world = readDoc("witness-world.html");
+  assert.match(world, /http-equiv="refresh"/, "witness-world.html must stay a redirect stub");
+  assert.ok(world.includes("witness.html#witness-world"), "witness-world.html must point at the hall");
+  const index = readDoc("index.html");
+  assert.ok(index.includes('id="first-visit"'), "the first-visit flow must stand on the front door");
+  assert.ok(index.includes("The 60-Second Entry"), "the 60-Second Entry must stand in the fold");
+  assert.ok(index.includes('data-story-chapter="the-signpost-meadow"'),
+    "the Signpost Meadow's slot must stand in the fold");
+  const witness = readDoc("witness.html");
+  assert.ok(witness.includes('id="ww-canvas"'), "the hall's canvas must stand on the Witness page");
+  assert.ok(witness.includes("The Long Line"), "the hall's rooms must stand on the Witness page");
+});

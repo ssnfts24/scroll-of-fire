@@ -33,12 +33,39 @@
     );
   }
 
+  /*
+   * The Intl fallback below is one of the slowest cheap-looking calls
+   * in a browser, and the cursor resolves it on every step (it was
+   * ~180 ms of the Nov 24 drag profile). The observatory value is
+   * still read live on every call; only the Intl fallback is
+   * memoized. The memo is dropped when the keeper returns to the
+   * tab — the realistic moment a device timezone change (travel)
+   * can have happened — so the next resolution re-reads the
+   * environment. For an unchanged environment the resolved zone
+   * cannot differ, so every caller sees the same answer.
+   */
+  let _intlTimezoneMemo = null;
+
   function getTimezone() {
-    return (
-      window.SOFObservatoryState?.timezone ||
+    const observed = window.SOFObservatoryState?.timezone;
+    if (observed) {
+      return observed;
+    }
+    if (_intlTimezoneMemo) {
+      return _intlTimezoneMemo;
+    }
+    _intlTimezoneMemo =
       Intl.DateTimeFormat().resolvedOptions().timeZone ||
-      'UTC'
-    );
+      'UTC';
+    return _intlTimezoneMemo;
+  }
+
+  if (typeof document !== 'undefined' && document.addEventListener) {
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        _intlTimezoneMemo = null;
+      }
+    });
   }
 
   function getBoundary() {

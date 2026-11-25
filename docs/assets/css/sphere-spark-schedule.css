@@ -187,6 +187,39 @@
 .sphere-spark-tick-dot.is-overdue { background: #ff8a50; box-shadow: 0 0 7px rgba(255, 120, 60, 0.85); }
 .sphere-spark-tick-dot.is-done { background: #b8b49e; }
 
+/* ── Standing now: the rail's list, one tap to finish ────── */
+
+.sphere-spark-standing { padding: 0.1rem 0.25rem 0.5rem; }
+.sphere-spark-standing[hidden] { display: none; }
+.sphere-spark-standing-head {
+  margin: 0.25rem 0.1rem 0.35rem;
+  color: #c9b18c; font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+.sphere-spark-standing-row {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.35rem 0.45rem; margin-bottom: 0.3rem;
+  border: 1px solid rgba(216, 178, 90, 0.28); border-radius: 0.55rem;
+  background: rgba(255, 255, 255, 0.03);
+}
+.sphere-spark-standing-row.is-overdue { border-color: rgba(255, 140, 90, 0.6); }
+.sphere-spark-standing-row.is-today { border-color: rgba(255, 220, 140, 0.8); }
+.sphere-spark-standing-words { flex: 1 1 auto; min-width: 0; display: grid; gap: 0.1rem; }
+.sphere-spark-standing-words strong {
+  color: #f3e7d3; font-size: 0.85rem; font-weight: 600;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.sphere-spark-standing-words small { color: #c9b18c; font-size: 0.7rem; }
+.sphere-spark-standing-done {
+  flex: 0 0 auto;
+  min-height: 44px; min-width: 64px; padding: 0.35rem 0.9rem;
+  border-radius: 999px; cursor: pointer;
+  border: 1px solid rgba(216, 178, 90, 0.85);
+  background: rgba(216, 178, 90, 0.9); color: #1a1408;
+  font-weight: 700; font-size: 0.9rem;
+}
+.sphere-spark-standing-done:disabled { opacity: 0.5; cursor: default; }
+
 @media (prefers-reduced-motion: reduce) {
   .spark-beacon-ring { animation: none; opacity: 0.6; }
   .spark-beacon.is-upcoming .spark-beacon-diamond { animation: none; }

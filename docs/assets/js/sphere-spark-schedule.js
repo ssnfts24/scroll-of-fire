@@ -177,6 +177,10 @@
       if (!cc || modelYear == null) return;
       const civil = cc.civilDateForPatternDay(modelYear, beacon.patternDay);
       if (civil && window.SphereSparkControl) window.SphereSparkControl.goCivil(civil);
+      // The ease pass: the beacon is also the door to its day's
+      // things — selecting the day opens the timeline strip,
+      // where each standing thing carries its own Done.
+      openRail();
     });
     return btn;
   }
@@ -338,6 +342,17 @@
 
   let rail = null;
   let railOpen = false;
+  let railToggle = null;
+  let standingEl = null;
+  function openRail() {
+    if (!ensureRail() || !rail) return;
+    railOpen = true;
+    rail.hidden = false;
+    if (standingEl) standingEl.hidden = false;
+    if (railToggle) railToggle.setAttribute("aria-expanded", "true");
+    renderTimeline();
+    renderStanding();
+  }
   function ensureRail() {
     const host = document.querySelector(".sphere-schedule-navigator");
     if (!host) return false;
@@ -353,8 +368,10 @@
         railOpen = !railOpen;
         toggle.setAttribute("aria-expanded", String(railOpen));
         if (rail) rail.hidden = !railOpen;
-        if (railOpen) renderTimeline();
+        if (standingEl) standingEl.hidden = !railOpen;
+        if (railOpen) { renderTimeline(); renderStanding(); }
       });
+      railToggle = toggle;
       actions.appendChild(toggle);
     }
     rail = document.createElement("div");
@@ -362,6 +379,11 @@
     rail.hidden = true;
     rail.setAttribute("aria-label", "Your timeline — the next fourteen days");
     host.appendChild(rail);
+    standingEl = document.createElement("div");
+    standingEl.className = "sphere-spark-standing";
+    standingEl.hidden = true;
+    standingEl.setAttribute("aria-label", "Standing now — what waits on you, oldest first");
+    host.appendChild(standingEl);
     return true;
   }
 
@@ -417,6 +439,103 @@
     }
   }
 
+  /* ── Standing now: the rail's list, with one-tap completion ──
+   * The ease pass (Nov 24, 2026): finishing a thing used to take
+   * a composed sentence ("mark X done"), a proposal card, and a
+   * second tap. Here the record itself is the showing-back: each
+   * row names the exact thing, its day and its state, and its
+   * Done button is the keeper's yes for that one write — nothing
+   * is inferred, nothing else is written. The completion runs
+   * the panel's own discipline: write, verify it stands, announce
+   * the record change, and count the day witnessed (Nov 23
+   * ruling). In child mode the list does not render at all, and
+   * without the panel's published gate the Done buttons fail
+   * closed — no gate, no buttons. */
+
+  function completionAllowed() {
+    const gate = window.SphereSparkScheduleGate;
+    if (!gate || typeof gate.childMode !== "function") return false;
+    try { return gate.childMode() !== true; } catch { return false; }
+  }
+  function childModeOn() {
+    const gate = window.SphereSparkScheduleGate;
+    if (!gate || typeof gate.childMode !== "function") return false;
+    try { return gate.childMode() === true; } catch { return false; }
+  }
+  function announceRailChange(action, id) {
+    const detail = { source: "sphere-spark-schedule", action, id: id || null };
+    try { window.dispatchEvent(new CustomEvent("sof:life-atlas-records-changed", { detail })); } catch { /* one door is enough */ }
+    try { document.dispatchEvent(new CustomEvent("sof:life-atlas-records-changed", { detail })); } catch { /* the record stands either way */ }
+  }
+
+  async function completeFromRail(entry, btn) {
+    const p = planner();
+    if (!p || !p.completePlan || !completionAllowed()) return;
+    btn.disabled = true;
+    try {
+      await p.completePlan(entry.id);
+      const after = p.getPlan ? await p.getPlan(entry.id) : null;
+      const done = after && window.CodexLifeAtlasScheduling?.isCompleted
+        ? window.CodexLifeAtlasScheduling.isCompleted(after) : Boolean(after);
+      if (!done) throw new Error("completion did not stand");
+      announceRailChange("update", entry.id);
+      try {
+        const parts = entry.civilDate.split("-").map(Number);
+        window.CodexMemory?.recordWitness?.({
+          date: new Date(parts[0], parts[1] - 1, parts[2]),
+          label: `Completed: ${entry.title}`,
+        });
+      } catch { /* the completion stands without the witness write */ }
+      refresh();
+    } catch {
+      btn.disabled = false;
+      btn.textContent = "Try again";
+    }
+  }
+
+  function renderStanding() {
+    if (!ensureRail() || !standingEl) return;
+    const c = core();
+    if (!c) return;
+    standingEl.replaceChildren();
+    if (childModeOn()) { standingEl.hidden = true; return; }
+    standingEl.hidden = !railOpen;
+    if (!railOpen) return;
+    const open = railTimeline
+      .filter((e) => e.state !== "done")
+      .sort((a, b) => c.STATE_PRIORITY[a.state] - c.STATE_PRIORITY[b.state]
+        || (a.civilDate < b.civilDate ? -1 : a.civilDate > b.civilDate ? 1 : 0))
+      .slice(0, 5);
+    if (!open.length) return;
+    const head = document.createElement("p");
+    head.className = "sphere-spark-standing-head";
+    head.textContent = "Standing now";
+    standingEl.appendChild(head);
+    const canComplete = completionAllowed();
+    for (const entry of open) {
+      const row = document.createElement("div");
+      row.className = `sphere-spark-standing-row is-${entry.state}`;
+      const words = document.createElement("span");
+      words.className = "sphere-spark-standing-words";
+      const title = document.createElement("strong");
+      title.textContent = entry.title;
+      const sub = document.createElement("small");
+      sub.textContent = `${c.restateDay(entry.stamp)}${entry.time ? ` at ${c.timeWords(entry.time)}` : ""}${entry.state === "overdue" ? " · overdue" : entry.state === "today" ? " · today" : ""}`;
+      words.append(title, sub);
+      row.appendChild(words);
+      if (canComplete) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "sphere-spark-standing-done";
+        btn.textContent = "Done";
+        btn.setAttribute("aria-label", `Mark “${entry.title}” done`);
+        btn.addEventListener("click", () => completeFromRail(entry, btn));
+        row.appendChild(btn);
+      }
+      standingEl.appendChild(row);
+    }
+  }
+
   /* ── The model: rebuilt from the record, never kept ───────── */
 
   let refreshing = false;
@@ -436,7 +555,7 @@
         renderBeacons();
       }
       await refreshTimelineData();
-      if (railOpen) renderTimeline();
+      if (railOpen) { renderTimeline(); renderStanding(); }
     } catch { /* the last honest model stands */ }
     refreshing = false;
     // A change that landed mid-refresh is not dropped: the model

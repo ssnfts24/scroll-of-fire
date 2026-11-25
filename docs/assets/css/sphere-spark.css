@@ -226,11 +226,37 @@ html.sphere-frozen .sphere-spark-halo { animation-play-state: paused; }
 }
 .sphere-spark-proposal-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .sphere-spark-proposal-yes, .sphere-spark-proposal-no, .sphere-spark-undo {
-  min-height: 40px; padding: 0.4rem 0.9rem; border-radius: 999px; cursor: pointer;
+  min-height: 48px; padding: 0.4rem 0.9rem; border-radius: 999px; cursor: pointer;
   border: 1px solid rgba(216, 178, 90, 0.65);
 }
-.sphere-spark-proposal-yes { background: rgba(216, 178, 90, 0.9); color: #1a1408; font-weight: 600; }
+/* The yes is unmissable (the ease pass): the widest, tallest
+ * thing on the card, in filled gold. */
+.sphere-spark-proposal-yes {
+  flex: 1 1 10rem;
+  background: rgba(216, 178, 90, 0.95); color: #1a1408;
+  font-weight: 700; font-size: 1.05rem;
+}
 .sphere-spark-proposal-no { background: transparent; color: #e8cf9a; }
+/* One-tap adjustments inside a proposal (a time of day): pills
+ * that retime the card before the yes; the chosen one fills. */
+.sphere-spark-proposal-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0 0 0.5rem; }
+.sphere-spark-proposal-chip {
+  min-height: 44px; padding: 0.35rem 0.85rem; border-radius: 999px; cursor: pointer;
+  border: 1px solid rgba(216, 178, 90, 0.5); background: transparent; color: #e8cf9a;
+  font-size: 0.95rem;
+}
+.sphere-spark-proposal-chip.is-selected {
+  background: rgba(216, 178, 90, 0.9); color: #1a1408; font-weight: 600;
+}
+/* One-tap offers under a Spark line (the greeting's standing
+ * offers, the day choices when a schedule names no day). */
+.sphere-spark-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.45rem; }
+.sphere-spark-chip {
+  min-height: 44px; padding: 0.35rem 0.9rem; border-radius: 999px; cursor: pointer;
+  border: 1px solid rgba(216, 178, 90, 0.55); background: rgba(216, 178, 90, 0.12);
+  color: #ffe9bd; font-size: 0.95rem;
+}
+.sphere-spark-chip:disabled { opacity: 0.45; cursor: default; }
 .sphere-spark-proposal.is-settled { opacity: 0.75; }
 .sphere-spark-proposal.is-settled button { cursor: default; }
 .sphere-spark-undo {

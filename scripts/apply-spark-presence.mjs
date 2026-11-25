@@ -51,6 +51,12 @@ const EXCLUDED_FILES = new Set([
   "404.html",
   "offline.html",
   "caravan.html",
+  "theory/ethics.html",
+  "theory/glossary.html",
+  "theory/witness.html",
+  "theory/frequency-governance.html",
+  "start.html",
+  "witness-world.html",
   "companions.html",
   /* The Guide's own pages: they carry the Codex Guide's seat,
    * and the two seats stay separate — the Spark seat does not

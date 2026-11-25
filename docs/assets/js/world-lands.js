@@ -121,11 +121,6 @@
           "id": "ledger",
           "title": "Witness Ledger",
           "path": "ledger.html"
-        },
-        {
-          "id": "witness-world",
-          "title": "The Witness World",
-          "path": "witness-world.html"
         }
       ]
     },
@@ -155,11 +150,6 @@
           "id": "recoder",
           "title": "Reality Recoder",
           "path": "systems/recoder.html"
-        },
-        {
-          "id": "theory-glossary",
-          "title": "Theory Glossary",
-          "path": "theory/glossary.html"
         },
         {
           "id": "theory-notation",
@@ -290,11 +280,6 @@
           "path": "theory/delta-framework.html"
         },
         {
-          "id": "theory-witness",
-          "title": "Witness (theory)",
-          "path": "theory/witness.html"
-        },
-        {
           "id": "theory-memory",
           "title": "Memory (theory)",
           "path": "theory/memory.html"
@@ -313,11 +298,6 @@
           "id": "theory-artifact",
           "title": "Artifact Theory",
           "path": "theory/artifact-theory.html"
-        },
-        {
-          "id": "theory-ethics",
-          "title": "Ethical Law (theory)",
-          "path": "theory/ethics.html"
         },
         {
           "id": "theory-bibliography",
@@ -430,11 +410,6 @@
           "id": "frequencies",
           "title": "Frequency Governance",
           "path": "systems/frequencies.html"
-        },
-        {
-          "id": "theory-frequency-governance",
-          "title": "Frequency Governance (theory)",
-          "path": "theory/frequency-governance.html"
         }
       ]
     },
@@ -513,11 +488,6 @@
         "label": "Begin: meet your Spark in the Clearing"
       },
       "pages": [
-        {
-          "id": "start",
-          "title": "Start Here",
-          "path": "start.html"
-        },
         {
           "id": "codex-atlas",
           "title": "Codex Atlas",

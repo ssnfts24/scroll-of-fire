@@ -47,6 +47,7 @@
   <link rel="stylesheet" href="assets/css/living-time-sphere-app.css?v=20261118-b761-fixes">
   <link rel="stylesheet" href="assets/css/sphere-app-mode.css?v=20261123-gated">
   <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261118-3">
+  <link rel="stylesheet" href="assets/css/spark-app-bridge.css?v=20261124-1">
   <link rel="stylesheet" href="assets/css/sphere-deepening.css?v=20261118-1">
   <link rel="stylesheet" href="assets/css/sphere-day-world.css?v=20261119-1">
   <link rel="stylesheet" href="assets/css/sphere-deep-time.css?v=20261119-1">
@@ -69,7 +70,7 @@
   <!-- The Sphere's portrait is the first thing the stage shows;
        start its fetch before the parser reaches the stage. -->
   <link rel="preload" as="image" href="assets/img/sphere/sphere-portrait.webp" fetchpriority="high">
-  <link rel="stylesheet" href="assets/css/sphere-spark.css?v=20261124-1">
+  <link rel="stylesheet" href="assets/css/sphere-spark.css?v=20261124-2">
 
   <!-- Core engines -->
   <script defer src="assets/js/moons-version.js?v=20260819-b752&r=20260820-b757"></script>
@@ -312,8 +313,9 @@
         controls and reads only the canonical modules. -->
    <script defer src="assets/js/sphere-rebuild.js?v=20261120-1"></script>
    <script defer src="assets/js/sphere-armillary.js?v=20261120-2"></script>
-   <script defer src="assets/js/spark-schedule-core.js?v=20261124-1"></script>
-   <script defer src="assets/js/sphere-spark.js?v=20261124-1"></script>
+   <script defer src="assets/js/spark-schedule-core.js?v=20261124-2"></script>
+   <script defer src="assets/js/sphere-spark.js?v=20261124-2"></script>
+   <script defer src="assets/js/spark-app-bridge.js?v=20261124-1"></script>
    <script defer src="assets/js/pattern-quests.js?v=20261123-1"></script>
   <script defer src="assets/js/sphere-play.js?v=20261123-1"></script>
    <script defer>
@@ -387,6 +389,11 @@
           <span><b>Live</b> environmental layers</span>
         </div>
       </section>
+
+      <!-- The app bridge mount: spark-app-bridge.js asks, once and
+           quietly, whether a keeper with the app wants their Spark
+           and calendar brought here. Empty unless it asks. -->
+      <div id="spark-app-bridge" class="spark-bridge-mount"></div>
 
       <!-- 2. Renderer and quality controls -->
       <section aria-labelledby="sphereModeHeading" class="sphere-controls-bar">

@@ -1013,7 +1013,7 @@
           // A bare "schedule X" with no day could be many things;
           // only an unmistakable scheduling intent names the road.
           if (intent.kind === "schedule" && intent.needsDay) return null;
-          return "Scheduling itself lives on the Sphere, where the day can take its mark: tell me there — on the Living Sphere page — and I will propose it, set it on your yes, and raise its beacon on the day. Here I can tell you what already stands: ask me what is on a day, what is next, or what is overdue.";
+          return "Scheduling itself lives on the Sphere, where the day takes its mark — tell me there and I will propose it, set it on your yes, and raise its beacon. Here I can read what stands: ask what's on a day, what's next, or what's overdue.";
         }
         return null;
       }

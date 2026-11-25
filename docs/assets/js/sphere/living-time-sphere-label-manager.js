@@ -915,6 +915,25 @@
      * the next layout pass wakes it.
      */
     let _tracked = [];
+    // Per-frame guard budget (Nov 24, 2026 — protected performance
+    // fix 4b). The in-motion pill guard in _trackFrame is the track
+    // loop's superlinear work: per pill an intruder scan plus shift
+    // tries against every plate, and a pairwise pass over all
+    // pills. The guard now serves a bounded slice per frame — the
+    // selected pill first, then pills nearest the selection — and
+    // rotates through the rest over the following frames of the
+    // same gesture. Unserved pills hold their last computed shift
+    // (re-applied against the fresh projection), and plates faded
+    // by an unserved pill keep their fade until that pill is
+    // served again. When the camera settles with the cycle still
+    // open, one full unbudgeted pass runs before the loop may
+    // sleep, so the settled state is computed exactly as it was
+    // before the budget existed.
+    const GUARD_PILLS_PER_FRAME = 8;
+    const GUARD_PAIRS_PER_FRAME = 40;
+    let _guardPillCursor = 0;
+    let _guardPairCursor = 0;
+    let _guardCycleDone = true;
     // Selected-day growth state (overnight pass, Nov 22, 2026):
     // eased per frame toward the zoom stage's target, so the day
     // grows smoothly as the keeper approaches and never snaps.
@@ -1098,13 +1117,20 @@
       const stageNow = String(_stageEl?.dataset?.zoomStage || "");
       const growthSettled = Math.abs(_growthTarget() - growth) <= 0.002;
       const swellSettled = Math.abs(_swellTarget() - swell) <= 0.002;
-      if (sig && sig === _trackLastSig && stageNow === _trackLastStage && growthSettled && swellSettled) {
+      const cameraSettled = !!(sig && sig === _trackLastSig && stageNow === _trackLastStage && growthSettled && swellSettled);
+      if (cameraSettled && _guardCycleDone) {
         _trackIdleFrames += 1;
         if (_trackIdleFrames < 120) {
           _trackRaf = requestAnimationFrame(_trackFrame);
         }
         return;
       }
+      // A settled camera with the guard cycle still open runs one
+      // full unbudgeted guard pass below (fullGuard), so the state
+      // the loop sleeps on is the exact state the unbudgeted guard
+      // computes. Any motion reopens the cycle.
+      const fullGuard = cameraSettled;
+      if (!cameraSettled) _guardCycleDone = false;
       _trackLastSig = sig;
       _trackLastStage = stageNow;
       _trackIdleFrames = 0;
@@ -1112,6 +1138,7 @@
         _trackVec.current = new three.Vector3();
       }
       const vec = _trackVec.current;
+      if (!vec) _guardCycleDone = true;
       if (vec) {
         for (const entry of _tracked) {
           if (!entry.el || entry.el.style.display === "none") continue;
@@ -1223,21 +1250,69 @@
         const pillEntries = _tracked.filter(
           entry => entry.kind === "pill" && entry.sx != null && entry.rectW > 0 && entry.el?.style.display !== "none"
         );
-        for (const entry of plateEntries) entry.guardFade = 1;
         if (pillEntries.length && plateEntries.length) {
           const plateGeom = plateEntries.map(entry => {
             if (entry.natW == null) entry.natW = entry.el?.offsetWidth || 0;
             const scale = (entry.baseScale || 1) * (entry.shrink ?? 1) * (entry.selected ? growth : entry.swell ? swell : 1);
             const dia = entry.discPx > 0 ? entry.discPx * scale : entry.natW * scale;
-            const idm = /pattern-day-number-(\d+)/.exec(entry.el?.dataset?.semanticId || "");
+            if (entry._moonNum === undefined) {
+              const idm = /pattern-day-number-(\d+)/.exec(entry.el?.dataset?.semanticId || "");
+              entry._moonNum = idm ? Math.floor((Number(idm[1]) - 1) / 28) + 1 : 0;
+            }
             return {
               entry,
               cx: entry.sx,
               cy: entry.sy,
               r: dia / 2,
-              moon: idm ? Math.floor((Number(idm[1]) - 1) / 28) + 1 : 0
+              moon: entry._moonNum
             };
           });
+          // Guard budget (fix 4b): choose this frame's served
+          // pills — the selected pill first, then nearest the
+          // selection — rotating through the rest across frames.
+          // On a fullGuard frame every pill is served.
+          const focusEntry = _tracked.find(entry => entry.selected && entry.sx != null)
+            || { sx: stageW / 2, sy: stageH / 2 };
+          const byFocus = [...pillEntries].sort((a, b) => {
+            if (!!a.selected !== !!b.selected) return a.selected ? -1 : 1;
+            const da = Math.hypot(a.sx - focusEntry.sx, a.sy - focusEntry.sy);
+            const db = Math.hypot(b.sx - focusEntry.sx, b.sy - focusEntry.sy);
+            return da - db;
+          });
+          const served = new Set();
+          if (fullGuard) {
+            for (const pill of byFocus) served.add(pill);
+            _guardPillCursor = 0;
+          } else {
+            const n = byFocus.length;
+            const start = n ? (_guardPillCursor % n) : 0;
+            const take = Math.min(GUARD_PILLS_PER_FRAME, n);
+            for (let k = 0; k < take; k++) served.add(byFocus[(start + k) % n]);
+            const selectedPill = byFocus.find(pill => pill.selected);
+            if (selectedPill) served.add(selectedPill);
+            _guardPillCursor = n ? (start + take) % n : 0;
+          }
+          // Fades: a plate faded by a pill that is served this
+          // frame (or no longer standing) is restored before the
+          // guard recomputes; a plate faded by an unserved pill
+          // keeps its fade until that pill is served again. This
+          // replaces the old unconditional per-frame reset, which
+          // the budget makes incorrect.
+          for (const entry of plateEntries) {
+            if (entry.guardFade == null || entry.guardFade >= 1) continue;
+            const owner = entry._fadeOwner;
+            if (!owner || served.has(owner) || !pillEntries.includes(owner)) {
+              entry.guardFade = 1;
+              entry._fadeOwner = null;
+            }
+          }
+          // Unserved pills hold their last computed shift against
+          // this frame's fresh projection.
+          for (const pill of pillEntries) {
+            if (served.has(pill)) continue;
+            pill.dx = (pill.dx || 0) + (pill.guardShiftX || 0);
+            pill.dy = (pill.dy || 0) + (pill.guardShiftY || 0);
+          }
           const pillRectOf = (entry, extraX = 0, extraY = 0) => {
             const hw = (entry.rectW * entry.pillScale) / 2;
             const hh = (entry.rectH * entry.pillScale) / 2;
@@ -1264,7 +1339,8 @@
             }
             return rect.x >= -6 && rect.y >= -6 && rect.x + rect.w <= stageW + 6 && rect.y + rect.h <= stageH + 6;
           };
-          for (const pill of pillEntries) {
+          for (const pill of byFocus) {
+            if (!served.has(pill)) continue;
             pill.guardShiftX = 0;
             pill.guardShiftY = 0;
             const base = pillRectOf(pill);
@@ -1335,13 +1411,26 @@
                 if (g.entry.selected) continue;
                 if (g.moon && pillMoon && g.moon === pillMoon) continue;
                 g.entry.guardFade = 0.1;
+                g.entry._fadeOwner = pill;
               }
             }
           }
-          for (let i = 0; i < pillEntries.length; i++) {
-            for (let j = i + 1; j < pillEntries.length; j++) {
-              const a = pillEntries[i];
-              const b = pillEntries[j];
+          // Pair budget (fix 4b): pairs are visited in the
+          // selection-first byFocus order and served through a
+          // rotating window per frame (all of them on a
+          // fullGuard frame, or when the whole set fits).
+          const pairTotal = (byFocus.length * (byFocus.length - 1)) / 2;
+          const pairStart = pairTotal ? (_guardPairCursor % pairTotal) : 0;
+          let pairIndex = 0;
+          for (let i = 0; i < byFocus.length; i++) {
+            for (let j = i + 1; j < byFocus.length; j++) {
+              const a = byFocus[i];
+              const b = byFocus[j];
+              const myPairIndex = pairIndex++;
+              if (!fullGuard && pairTotal > GUARD_PAIRS_PER_FRAME) {
+                const rel = (myPairIndex - pairStart + pairTotal) % pairTotal;
+                if (rel >= GUARD_PAIRS_PER_FRAME) continue;
+              }
               if (a.guardHidden || b.guardHidden) continue;
               const ra = pillRectOf(a, a.guardShiftX || 0, a.guardShiftY || 0);
               const rb = pillRectOf(b, b.guardShiftX || 0, b.guardShiftY || 0);
@@ -1459,6 +1548,26 @@
               }
             }
           }
+          if (!fullGuard && pairTotal > GUARD_PAIRS_PER_FRAME) {
+            _guardPairCursor = (pairStart + GUARD_PAIRS_PER_FRAME) % pairTotal;
+          } else {
+            _guardPairCursor = 0;
+          }
+          if (served.size >= pillEntries.length
+            && (fullGuard || pairTotal <= GUARD_PAIRS_PER_FRAME)) {
+            _guardCycleDone = true;
+          }
+        } else {
+          // No guard can run (no pills or no plates standing):
+          // fades release exactly as the old unconditional reset
+          // released them, and the cycle is complete.
+          for (const entry of plateEntries) {
+            if (entry.guardFade != null && entry.guardFade < 1) {
+              entry.guardFade = 1;
+              entry._fadeOwner = null;
+            }
+          }
+          _guardCycleDone = true;
         }
         for (const entry of _tracked) {
           if (!entry.el || entry.el.style.display === "none" || entry.sx == null) continue;
@@ -1700,6 +1809,9 @@
       // tracking registrations from the previous pass expire
       // here and are rebuilt below from this pass's placements.
       _tracked = [];
+      _guardPillCursor = 0;
+      _guardPairCursor = 0;
+      _guardCycleDone = false;
       _trackCtx = {
         camera,
         three,

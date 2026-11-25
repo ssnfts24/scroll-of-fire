@@ -1001,8 +1001,49 @@
     return compact ? 1.04 : 1.055;
   }
 
+  /*
+   * Semantic screen width (Nov 24, 2026 — protected performance
+   * fix 1a). _resolveSemanticZoomFromCamera reads the container's
+   * clientWidth on every camera sync; during a drag the label
+   * layer's style writes keep layout dirty, so each read forced a
+   * synchronous layout flush (~1,280 ms of the Nov 24 drag
+   * profile, the largest single JavaScript item). The width is
+   * now read once and cached against the container element and
+   * the viewport width at read time; a ResizeObserver on the
+   * container drops the cache the moment its size changes. A
+   * drag changes neither, so the cached value is exactly what
+   * clientWidth would have returned.
+   */
+  let _semanticWidthCache = null;
+  let _semanticWidthObserver = null;
+  let _semanticWidthObservedEl = null;
+
+  function _watchSemanticWidth(el) {
+    if (typeof ResizeObserver === "undefined") return;
+    if (_semanticWidthObserver && _semanticWidthObservedEl === el) return;
+    try {
+      _semanticWidthObserver?.disconnect?.();
+      _semanticWidthObserver = new ResizeObserver(() => {
+        _semanticWidthCache = null;
+      });
+      _semanticWidthObserver.observe(el);
+      _semanticWidthObservedEl = el;
+    } catch { /* no observer: the viewport-width check still guards the cache */ }
+  }
+
   function _semanticScreenWidth() {
-    if (_container?.clientWidth) return _container.clientWidth;
+    const el = _container;
+    if (el) {
+      const inner = typeof window !== "undefined" ? (window.innerWidth || 0) : 0;
+      const cache = _semanticWidthCache;
+      if (cache && cache.el === el && cache.innerWidth === inner) return cache.width;
+      const width = el.clientWidth || 0;
+      if (width > 0) {
+        _semanticWidthCache = { el, width, innerWidth: inner };
+        _watchSemanticWidth(el);
+        return width;
+      }
+    }
     if (typeof window !== "undefined") return window.innerWidth || 1024;
     return 1024;
   }
@@ -2907,10 +2948,102 @@
     };
   }
 
+  /*
+   * Semantic-target build memo (Nov 24, 2026 — protected
+   * performance fix 1b). _updateMoonLabels re-ran this build on
+   * every label pass — at the 96 ms gesture cadence during drags
+   * (~259 ms of the Nov 24 drag profile, plus the calendar
+   * geometry it re-asked for, now cached in the geometry module).
+   * The renderer's own targets are a pure function of the inputs
+   * fingerprinted in _semanticTargetsKey plus the model object
+   * (replaced wholesale on every model update, never mutated in
+   * place), so a build whose fingerprint and model are unchanged
+   * is returned as-is. The label manager already treats targets
+   * as stable objects (its B7.38 normalizer caches by identity).
+   * Extension targets are NOT memoized: they are appended fresh
+   * on every call, exactly as before, and the record extension's
+   * planner summaries — which the day targets embed — invalidate
+   * the memo through the records-changed event the extension
+   * itself listens to.
+   */
+  let _semanticTargetsMemo = null;
+  let _semanticTargetsMemoWired = false;
+
+  function _semanticTargetsKey(options) {
+    const r4 = value => Math.round(Number(value || 0) * 10000) / 10000;
+    const calendarDisclosure = options?.calendarDisclosure || null;
+    const selected = _model?.selectedPatternPosition || _model?.todayPatternPosition || null;
+    const today = _model?.todayPatternPosition || null;
+    const markerPrint = obj => (obj
+      ? `${obj.visible === false ? 0 : 1}:${r4(obj.position?.x)},${r4(obj.position?.y)},${r4(obj.position?.z)}`
+      : "-");
+    const planetPrint = (_objects.planetMarkers || []).map(marker => {
+      const data = marker?.userData || {};
+      return `${marker?.visible === false ? 0 : 1}:${data.planetId || ""}:${data.glyph || ""}:${data.name || ""}:${r4(data.longitude)}:${r4(marker?.position?.x)},${r4(marker?.position?.y)},${r4(marker?.position?.z)}`;
+    }).join(";");
+    const anchorsPrint = _moonAnchors.map(a => `${a.moon}:${r4(a.worldX)},${r4(a.worldY)},${r4(a.worldZ)}`).join(";");
+    return [
+      (calendarDisclosure?.moons || []).join(","),
+      String(_dayLabelMode || "key"),
+      _cameraOverhead() ? 1 : 0,
+      selected ? `${selected.moon || 0}.${selected.day || 0}.${selected.dayOfPatternYear || 0}` : "-",
+      today ? `${today.moon || 0}.${today.day || 0}.${today.dayOfPatternYear || 0}` : "-",
+      Number(_model?.passageStartAngle ?? _model?.passage?.startAngle),
+      Number(_model?.passageEndAngle ?? _model?.passage?.endAngle),
+      Number(_selectedYear || _model?.sourceRecord?.year || _model?.year || 0),
+      Number(_selectedYear || _model?.sourceRecord?.year || new Date().getUTCFullYear()),
+      markerPrint(_objects.todayMarker),
+      markerPrint(_objects.yearGate),
+      markerPrint(_objects.equinoxGate),
+      _objects.seasonMarkers?.visible !== false ? 1 : 0,
+      planetPrint,
+      anchorsPrint,
+    ].join("|");
+  }
+
   function _buildSemanticTargets(options = {}) {
-    const targets = [];
+    if (!_semanticTargetsMemoWired) {
+      _semanticTargetsMemoWired = true;
+      try {
+        globalThis.addEventListener?.("sof:life-atlas-records-changed", () => {
+          _semanticTargetsMemo = null;
+        });
+      } catch { /* no event surface: the fingerprint still covers model/selection state */ }
+    }
+    const key = _semanticTargetsKey(options);
+    const memo = _semanticTargetsMemo;
+    let own;
+    if (memo && memo.model === _model && memo.key === key) {
+      own = memo.targets;
+    } else {
+      own = _buildOwnSemanticTargets(options);
+      _semanticTargetsMemo = { model: _model, key, targets: own };
+    }
     const calendarDisclosure = options?.calendarDisclosure || null;
     const interactionLite = !!options?.interactionLite;
+    const extensionTargets = globalThis.LivingTimeSphereExtensionHost?.semanticTargetsAll?.(
+      _extensionContext({
+        lifecycle: "semantic-labels",
+        calendarDisclosure,
+        interactionLite
+      })
+    ) || [];
+    const seen = new Set();
+    // B7.9 — never truncate the canonical 364-day rail here. The label
+    // manager owns the semantic-card budget and calendar LOD separately.
+    // A renderer-level slice cut the rail off around Moon 3/4 on phones,
+    // making the surviving 1/7/14/21/28 numerals look randomly clustered.
+    return [...own, ...extensionTargets].filter(target => {
+      const id = String(target?.id || "");
+      if (!id || seen.has(id)) return false;
+      seen.add(id);
+      return true;
+    });
+  }
+
+  function _buildOwnSemanticTargets(options = {}) {
+    const targets = [];
+    const calendarDisclosure = options?.calendarDisclosure || null;
     const dayAperture = String(_dayLabelMode || "key") !== "all"
       && Array.isArray(calendarDisclosure?.moons)
       && calendarDisclosure.moons.length
@@ -3169,25 +3302,8 @@
     // B7.30 — historical year geometry may remain visible for comparison, but
     // year identity/navigation belongs to the fixed year navigator above the
     // sphere. Do not create floating year bubbles for any spiral year.
-    const extensionTargets = globalThis.LivingTimeSphereExtensionHost?.semanticTargetsAll?.(
-      _extensionContext({
-        lifecycle: "semantic-labels",
-        calendarDisclosure,
-        interactionLite
-      })
-    ) || [];
-    targets.push(...extensionTargets);
-    const seen = new Set();
-    // B7.9 — never truncate the canonical 364-day rail here. The label
-    // manager owns the semantic-card budget and calendar LOD separately.
-    // A renderer-level slice cut the rail off around Moon 3/4 on phones,
-    // making the surviving 1/7/14/21/28 numerals look randomly clustered.
-    return targets.filter(target => {
-      const id = String(target?.id || "");
-      if (!id || seen.has(id)) return false;
-      seen.add(id);
-      return true;
-    });
+    // (Extension targets join in _buildSemanticTargets, after the memo.)
+    return targets;
   }
 
   function _labelProjectionKey(viewMode) {

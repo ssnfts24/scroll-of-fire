@@ -29,6 +29,17 @@ const EXCLUDED = new Set([
   "404.html",
   "offline.html",
   "caravan.html",
+  // Page programme (Nov 24, 2026): start.html and witness-world.html
+  // folded into the front door and the Witness page; redirect stubs now.
+  "start.html",
+  "witness-world.html",
+  // Page programme (Nov 24, 2026): the theory doorway merges folded
+  // these four pages into their practical homes; they are now
+  // meta-refresh redirect stubs, as caravan.html is.
+  "theory/ethics.html",
+  "theory/glossary.html",
+  "theory/witness.html",
+  "theory/frequency-governance.html",
   // Gate G (G2): account.html is a utility page, as offline.html.
   "account.html"
 ]);

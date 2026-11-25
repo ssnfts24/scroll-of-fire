@@ -76,8 +76,8 @@ test("hero carries the sphere stage, the static fallback art, and only the easy 
 
 test("the guided hero survives: witness line and hero links intact", () => {
   assert.match(HTML, /data-living-witness/);
-  assert.match(HTML, /<p class="living-witness-line is-active" data-source="docs\/start\.html">The Scroll does not begin with belief\.<\/p>/);
-  for (const href of ["./start.html", "./moons.html", "./ledger.html", "./covenant-caravan.html", "./shop.html"]) {
+  assert.match(HTML, /<p class="living-witness-line is-active" data-source="docs\/index\.html">The Scroll does not begin with belief\.<\/p>/);
+  for (const href of ["#first-visit", "./moons.html", "./ledger.html", "./covenant-caravan.html", "./shop.html"]) {
     assert.ok(HTML.includes(`href="${href}"`), `hero link ${href} must survive`);
   }
 });
@@ -687,6 +687,81 @@ test("no R1.7 protected file is touched by this branch", () => {
   const carriesMobileStage = changed.has(
     "tests/sphere-mobile-stage.test.js"
   );
+  /*
+   * App bridge declaration (Nov 24, 2026 — Aaron's sentence:
+   * "the site should also ask permission to direct if there is
+   * a app to bring your spark, calendar etc to the website").
+   * This change set declares itself by carrying its signature
+   * file (the bridge module, which lives outside the protected
+   * directories), and its declared set names exactly one
+   * protected path: the Sphere page, changed by tags and a
+   * mount only — one stylesheet link, one script tag, and the
+   * bridge's empty mount div in the neighbourhood PR #159
+   * opened. The bridge module and its stylesheet live outside
+   * the protected directories; no geometry, rendering, camera,
+   * motion, selection, label, or calendar file is touched, and
+   * the invitation the module renders is permission-first: it
+   * fetches nothing and moves nothing before the keeper's yes.
+   * Every other protected path still fails this test loudly.
+   */
+  const appBridgeDeclaredProtected = new Set([
+    "docs/living-time-sphere.html"
+  ]);
+  const carriesAppBridge = changed.has(
+    "docs/assets/js/spark-app-bridge.js"
+  );
+  /*
+   * Protected performance declaration (Nov 24, 2026 — Aaron's
+   * named release, in his own words: "Release the protected
+   * Sphere fixes"). The release opens the protected set for
+   * exactly the four fixes prepared in the performance audit
+   * (sphere-performance-audit-2026-11-24.md and its protected
+   * candidates paper) — caching and memoization only, behaviour
+   * identical — and nothing else. This change set declares
+   * itself by carrying its signature file (the protected-perf
+   * pin test, which lives outside the protected directories),
+   * and its declared set names exactly the protected paths the
+   * four fixes touch:
+   *   - the renderer (the semantic screen width cached against
+   *     the container + viewport, ResizeObserver-invalidated,
+   *     instead of a layout flush per camera sync; and the
+   *     renderer's own semantic-target build memoized on the
+   *     model object plus a fingerprint of every input it
+   *     reads — extension targets still appended fresh, record
+   *     changes still drop the memo);
+   *   - the Sphere UI (element inspections cached per node in
+   *     a WeakMap for a short 200 ms window and reset wholesale
+   *     on scroll/resize; values computed by the original
+   *     inspection body; still-loading media never cached; no
+   *     mutation observer — the PR3 guard stands);
+   *   - the temporal cursor controller (only the Intl timezone
+   *     fallback memoized; the observatory value still read
+   *     live on every call; the memo drops when the keeper
+   *     returns to the tab);
+   *   - the calendar geometry (builds memoized on their
+   *     complete input sets and returned frozen — values
+   *     verified identical to the original module over the
+   *     full input table);
+   *   - the label manager (the pill guard serves a bounded
+   *     slice per frame — selected pill first, then nearest
+   *     the selection — and one full unbudgeted pass runs
+   *     when the camera settles, so the settled state is
+   *     exactly the state the unbudgeted guard computes; a
+   *     plate's Moon number is parsed once per entry).
+   * No geometry values, rendering, camera, motion, selection,
+   * or label content changes. Every other protected path still
+   * fails this test loudly.
+   */
+  const protectedPerfDeclaredProtected = new Set([
+    "docs/assets/js/sphere/living-time-sphere-renderer-3d.js",
+    "docs/assets/js/sphere/living-time-sphere-ui.js",
+    "docs/assets/js/calendar/temporal-cursor-controller.js",
+    "docs/assets/js/sphere/living-time-sphere-calendar-geometry.js",
+    "docs/assets/js/sphere/living-time-sphere-label-manager.js"
+  ]);
+  const carriesProtectedPerf = changed.has(
+    "tests/sphere-protected-perf-fixes.test.js"
+  );
   for (const file of changed) {
     if (!protectedPaths.has(file)) continue;
     assert.ok(
@@ -703,7 +778,9 @@ test("no R1.7 protected file is touched by this branch", () => {
         (carriesProtectedThree && protectedThreeDeclaredProtected.has(file)) ||
         (carriesDetails && detailsDeclaredProtected.has(file)) ||
         (carriesAppMode && appModeDeclaredProtected.has(file)) ||
-        (carriesMobileStage && mobileStageDeclaredProtected.has(file)),
+        (carriesMobileStage && mobileStageDeclaredProtected.has(file)) ||
+        (carriesAppBridge && appBridgeDeclaredProtected.has(file)) ||
+        (carriesProtectedPerf && protectedPerfDeclaredProtected.has(file)),
       `R1.7 protected file changed: ${file}`
     );
   }

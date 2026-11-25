@@ -37,7 +37,18 @@ const EXCLUDED = new Set([
   "caravan.html",
   // Gate G (G2): the account page is a utility page (noindex,
   // catalog-classified Utility), excluded as offline.html is.
-  "account.html"
+  "account.html",
+  // Page programme (Nov 24, 2026): the theory doorway merges folded
+  // these four pages into their practical homes; they are now
+  // meta-refresh redirect stubs, as caravan.html is.
+  "theory/ethics.html",
+  "theory/glossary.html",
+  "theory/witness.html",
+  "theory/frequency-governance.html",
+  // Page programme (Nov 24, 2026): start.html and witness-world.html
+  // folded into the front door and the Witness page; redirect stubs now.
+  "start.html",
+  "witness-world.html"
 ]);
 
 const AREAS = [

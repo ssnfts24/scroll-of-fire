@@ -28,7 +28,11 @@ const EXCLUDED = [
   "404.html",
   "offline.html",
   "caravan.html",
-  "account.html"
+  "account.html",
+  // Page programme (Nov 24, 2026): start.html and witness-world.html
+  // folded into the front door and the Witness page; redirect stubs.
+  "start.html",
+  "witness-world.html"
 ];
 
 const topLevelPages = fs
@@ -44,7 +48,9 @@ test("the exclusion list is exactly the protected + utility pages", () => {
     "404.html",
     "offline.html",
     "caravan.html",
-    "account.html"
+    "account.html",
+    "start.html",
+    "witness-world.html"
   ]);
   for (const name of EXCLUDED) {
     assert.ok(topLevelPages.includes(name), `excluded page should exist: ${name}`);

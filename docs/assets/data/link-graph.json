@@ -232,6 +232,11 @@
      "area": "evidence"
     },
     {
+     "path": "codex-white-paper.html",
+     "title": "The Codex of Reality and the Living Sphere — A White Paper",
+     "area": "living-time"
+    },
+    {
      "path": "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
      "title": "Scroll of Fire · Codex of Reality · Remnant Whitepaper",
      "area": "scroll-scripture"
@@ -278,8 +283,8 @@
     },
     {
      "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
+     "title": "Start Here — Redirect",
+     "area": "codex"
     }
    ],
    "in": [
@@ -329,21 +334,26 @@
      "area": "evidence"
     }
    ],
-   "outTotal": 12,
+   "outTotal": 13,
    "inTotal": 9
   },
   "account.html": {
-   "title": "Your Account — One Sign-In for the App and the Site",
+   "title": "Your Account — Not Yet Open",
    "area": "codex",
    "out": [
     {
      "path": "index.html",
      "title": "Codex of Reality",
      "area": "codex"
+    },
+    {
+     "path": "companions.html",
+     "title": "Companions",
+     "area": "living-time"
     }
    ],
    "in": [],
-   "outTotal": 1,
+   "outTotal": 2,
    "inTotal": 0
   },
   "aiyanas-world.html": {
@@ -605,16 +615,6 @@
    "area": "archive",
    "out": [
     {
-     "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "guide.html",
-     "title": "Field Guide — Practice That Sticks",
-     "area": "systems"
-    },
-    {
      "path": "scroll/search.html",
      "title": "Search the Scroll",
      "area": "scroll-scripture"
@@ -665,14 +665,24 @@
      "area": "archive"
     },
     {
-     "path": "theory/glossary.html",
-     "title": "Theory Glossary",
-     "area": "evidence"
-    },
-    {
      "path": "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
      "title": "Scroll of Fire · Codex of Reality · Remnant Whitepaper",
      "area": "scroll-scripture"
+    },
+    {
+     "path": "theory.html",
+     "title": "Theory Hub",
+     "area": "evidence"
+    },
+    {
+     "path": "living-time-sphere.html",
+     "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
+     "area": "living-time"
+    },
+    {
+     "path": "moons.html",
+     "title": "Remnant 13 Moons — Living Calendar",
+     "area": "living-time"
     }
    ],
    "in": [
@@ -742,7 +752,7 @@
      "area": "evidence"
     }
    ],
-   "outTotal": 71,
+   "outTotal": 65,
    "inTotal": 13
   },
   "codex-guide.html": {
@@ -791,13 +801,23 @@
    "out": [],
    "in": [
     {
+     "path": "about-aaron.html",
+     "title": "Aaron Paul Laird | Author, Craftsman and Systems Builder",
+     "area": "artifacts"
+    },
+    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
+    },
+    {
+     "path": "theory.html",
+     "title": "Theory Hub",
+     "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 1
+   "inTotal": 3
   },
   "companions.html": {
    "title": "Companions",
@@ -834,10 +854,15 @@
      "path": "map.html",
      "title": "The Traveller's Map",
      "area": "systems"
+    },
+    {
+     "path": "account.html",
+     "title": "Your Account — Not Yet Open",
+     "area": "codex"
     }
    ],
    "outTotal": 2,
-   "inTotal": 4
+   "inTotal": 5
   },
   "covenant-caravan.html": {
    "title": "The Covenant Caravan",
@@ -916,11 +941,6 @@
      "area": "systems"
     },
     {
-     "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
-    },
-    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
@@ -937,7 +957,7 @@
     }
    ],
    "outTotal": 4,
-   "inTotal": 14
+   "inTotal": 13
   },
   "downloads.html": {
    "title": "Downloads & Integrity",
@@ -1016,11 +1036,6 @@
      "area": "systems"
     },
     {
-     "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
-    },
-    {
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
@@ -1032,7 +1047,7 @@
     }
    ],
    "outTotal": 4,
-   "inTotal": 13
+   "inTotal": 12
   },
   "episodes.html": {
    "title": "The Episode Library",
@@ -1080,6 +1095,11 @@
      "area": "archive"
     },
     {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "living-time-sphere.html",
      "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
      "area": "living-time"
@@ -1096,7 +1116,7 @@
     }
    ],
    "outTotal": 3,
-   "inTotal": 4
+   "inTotal": 5
   },
   "ethics.html": {
    "title": "Ethics & Coherence Law",
@@ -1195,9 +1215,14 @@
      "area": "archive"
     },
     {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    },
+    {
      "path": "theory/ethics.html",
-     "title": "Ethical Law",
-     "area": "evidence"
+     "title": "Ethical Law (Theory) — Redirect",
+     "area": "codex"
     },
     {
      "path": "glossary.html",
@@ -1220,11 +1245,6 @@
      "area": "systems"
     },
     {
-     "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
-    },
-    {
      "path": "hub.html",
      "title": "Systems Hub",
      "area": "systems"
@@ -1245,7 +1265,7 @@
      "area": "systems"
     }
    ],
-   "outTotal": 29,
+   "outTotal": 31,
    "inTotal": 15
   },
   "garden.html": {
@@ -1380,11 +1400,6 @@
      "area": "systems"
     },
     {
-     "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
-    },
-    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
@@ -1393,10 +1408,15 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
    "outTotal": 2,
-   "inTotal": 15
+   "inTotal": 14
   },
   "glossary.html": {
    "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
@@ -1444,8 +1464,8 @@
     },
     {
      "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
+     "title": "Start Here — Redirect",
+     "area": "codex"
     },
     {
      "path": "invoke.html",
@@ -1495,6 +1515,11 @@
      "area": "archive"
     },
     {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    },
+    {
      "path": "ethics.html",
      "title": "Ethics & Coherence Law",
      "area": "evidence"
@@ -1520,9 +1545,9 @@
      "area": "scroll-scripture"
     },
     {
-     "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
+     "path": "theory/glossary.html",
+     "title": "Theory Glossary — Redirect",
+     "area": "codex"
     },
     {
      "path": "glyphs.html",
@@ -1535,8 +1560,8 @@
      "area": "evidence"
     }
    ],
-   "outTotal": 14,
-   "inTotal": 12
+   "outTotal": 33,
+   "inTotal": 13
   },
   "glyphs.html": {
    "title": "Voice-Glyph Synth",
@@ -1775,11 +1800,6 @@
      "area": "systems"
     },
     {
-     "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
-    },
-    {
      "path": "covenant-caravan.html",
      "title": "The Covenant Caravan",
      "area": "artifacts"
@@ -1793,10 +1813,15 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
    "outTotal": 11,
-   "inTotal": 15
+   "inTotal": 14
   },
   "index.html": {
    "title": "Codex of Reality",
@@ -1811,11 +1836,6 @@
      "path": "companions.html",
      "title": "Companions",
      "area": "living-time"
-    },
-    {
-     "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
     },
     {
      "path": "moons.html",
@@ -1868,6 +1888,11 @@
      "area": "systems"
     },
     {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "scripture/index.html",
      "title": "Genesis & Exodus Scripture",
      "area": "scroll-scripture"
@@ -1885,13 +1910,18 @@
      "area": "artifacts"
     },
     {
+     "path": "start.html",
+     "title": "Start Here — Redirect",
+     "area": "codex"
+    },
+    {
      "path": "account.html",
-     "title": "Your Account — One Sign-In for the App and the Site",
+     "title": "Your Account — Not Yet Open",
      "area": "codex"
     }
    ],
-   "outTotal": 24,
-   "inTotal": 3
+   "outTotal": 26,
+   "inTotal": 4
   },
   "install.html": {
    "title": "Get the App — Put the Codex on Your Home Screen · Codex of Reality",
@@ -2206,7 +2236,7 @@
     }
    ],
    "outTotal": 1,
-   "inTotal": 25
+   "inTotal": 24
   },
   "living-time-sphere.html": {
    "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
@@ -2290,11 +2320,6 @@
      "area": "systems"
     },
     {
-     "path": "witness-world.html",
-     "title": "The Witness World",
-     "area": "artifacts"
-    },
-    {
      "path": "provenance.html",
      "title": "Where Every Number Comes From",
      "area": "evidence"
@@ -2306,7 +2331,7 @@
     }
    ],
    "outTotal": 5,
-   "inTotal": 13
+   "inTotal": 12
   },
   "map.html": {
    "title": "The Traveller's Map",
@@ -2651,7 +2676,7 @@
     }
    ],
    "outTotal": 8,
-   "inTotal": 22
+   "inTotal": 21
   },
   "offline.html": {
    "title": "13 Moons — Offline",
@@ -17577,87 +17602,37 @@
      "area": "systems"
     },
     {
-     "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
-    },
-    {
      "path": "covenant-caravan.html",
      "title": "The Covenant Caravan",
      "area": "artifacts"
     },
     {
-     "path": "theory/glossary.html",
-     "title": "Theory Glossary",
+     "path": "theory.html",
+     "title": "Theory Hub",
      "area": "evidence"
     },
     {
-     "path": "theory.html",
-     "title": "Theory Hub",
+     "path": "glyphs.html",
+     "title": "Voice-Glyph Synth",
+     "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
      "area": "evidence"
     }
    ],
    "outTotal": 2,
-   "inTotal": 16
+   "inTotal": 14
   },
   "start.html": {
-   "title": "Start Here",
-   "area": "scroll-scripture",
+   "title": "Start Here — Redirect",
+   "area": "codex",
    "out": [
     {
-     "path": "moons.html",
-     "title": "Remnant 13 Moons — Living Calendar",
-     "area": "living-time"
-    },
-    {
-     "path": "ledger.html",
-     "title": "Witness Ledger",
-     "area": "living-time"
-    },
-    {
-     "path": "hub.html",
-     "title": "Systems Hub",
-     "area": "systems"
-    },
-    {
-     "path": "theory.html",
-     "title": "Theory Hub",
-     "area": "evidence"
-    },
-    {
-     "path": "shop.html",
-     "title": "Artifact Registry & Shop",
-     "area": "artifacts"
-    },
-    {
-     "path": "systems/frequencies.html",
-     "title": "Frequency Governance",
-     "area": "systems"
-    },
-    {
-     "path": "covenant-caravan.html",
-     "title": "The Covenant Caravan",
-     "area": "artifacts"
-    },
-    {
-     "path": "genesis-oracle.html",
-     "title": "The Genesis Oracle — Seal of Becoming",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "downloads.html",
-     "title": "Downloads & Integrity",
-     "area": "archive"
-    },
-    {
-     "path": "glossary.html",
-     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
     }
    ],
    "in": [
@@ -17680,11 +17655,6 @@
      "path": "circle.html",
      "title": "Circle Sync",
      "area": "artifacts"
-    },
-    {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
     },
     {
      "path": "index.html",
@@ -17727,8 +17697,8 @@
      "area": "evidence"
     }
    ],
-   "outTotal": 11,
-   "inTotal": 13
+   "outTotal": 1,
+   "inTotal": 12
   },
   "systems/archive.html": {
    "title": "Interactive Archive",
@@ -17835,6 +17805,11 @@
      "area": "evidence"
     },
     {
+     "path": "theory/frequency-governance.html",
+     "title": "Frequency Governance — Redirect",
+     "area": "codex"
+    },
+    {
      "path": "glossary.html",
      "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
      "area": "scroll-scripture"
@@ -17853,11 +17828,6 @@
      "path": "moons.html",
      "title": "Remnant 13 Moons — Living Calendar",
      "area": "living-time"
-    },
-    {
-     "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
     },
     {
      "path": "hub.html",
@@ -18290,8 +18260,8 @@
     },
     {
      "path": "theory/glossary.html",
-     "title": "Theory Glossary",
-     "area": "evidence"
+     "title": "Theory Glossary — Redirect",
+     "area": "codex"
     },
     {
      "path": "theory/bibliography.html",
@@ -18300,8 +18270,8 @@
     },
     {
      "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
+     "title": "Start Here — Redirect",
+     "area": "codex"
     },
     {
      "path": "theory/equations/eq00.html",
@@ -18401,13 +18371,13 @@
      "area": "scroll-scripture"
     },
     {
-     "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
+     "path": "hub.html",
+     "title": "Systems Hub",
+     "area": "systems"
     }
    ],
-   "outTotal": 46,
-   "inTotal": 18
+   "outTotal": 47,
+   "inTotal": 17
   },
   "theory/artifact-theory.html": {
    "title": "Artifact Theory",
@@ -18420,13 +18390,18 @@
      "area": "archive"
     },
     {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 2
+   "inTotal": 3
   },
   "theory/bibliography.html": {
    "title": "Bibliography",
@@ -18483,6 +18458,11 @@
      "area": "evidence"
     },
     {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "methods.html",
      "title": "How the Sphere Knows — Methods",
      "area": "evidence"
@@ -18509,7 +18489,7 @@
     }
    ],
    "outTotal": 0,
-   "inTotal": 11
+   "inTotal": 12
   },
   "theory/delta-framework.html": {
    "title": "Δ0–Δ7 Framework",
@@ -18522,13 +18502,18 @@
      "area": "archive"
     },
     {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 2
+   "inTotal": 3
   },
   "theory/equations/eq00.html": {
    "title": "Equation 0 — Foundational Field",
@@ -18555,13 +18540,18 @@
    "out": [],
    "in": [
     {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 1
+   "inTotal": 2
   },
   "theory/equations/eq02.html": {
    "title": "Equation 2 — Witness",
@@ -18572,10 +18562,15 @@
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
+    },
+    {
+     "path": "witness.html",
+     "title": "Witness",
+     "area": "artifacts"
     }
    ],
    "outTotal": 0,
-   "inTotal": 1
+   "inTotal": 2
   },
   "theory/equations/eq03.html": {
    "title": "Equation 3 — Harmonic Gate",
@@ -18583,19 +18578,10 @@
    "out": [],
    "in": [
     {
-     "path": "theory.html",
-     "title": "Theory Hub",
-     "area": "evidence"
-    }
-   ],
-   "outTotal": 0,
-   "inTotal": 1
-  },
-  "theory/equations/eq04.html": {
-   "title": "Equation 4 — Language & Voice Carrier",
-   "area": "evidence",
-   "out": [],
-   "in": [
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
     {
      "path": "theory.html",
      "title": "Theory Hub",
@@ -18603,7 +18589,26 @@
     }
    ],
    "outTotal": 0,
-   "inTotal": 1
+   "inTotal": 2
+  },
+  "theory/equations/eq04.html": {
+   "title": "Equation 4 — Language & Voice Carrier",
+   "area": "evidence",
+   "out": [],
+   "in": [
+    {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "theory.html",
+     "title": "Theory Hub",
+     "area": "evidence"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 2
   },
   "theory/equations/eq04b.html": {
    "title": "Equation 4b — Semantic Gradient",
@@ -18625,19 +18630,10 @@
    "out": [],
    "in": [
     {
-     "path": "theory.html",
-     "title": "Theory Hub",
-     "area": "evidence"
-    }
-   ],
-   "outTotal": 0,
-   "inTotal": 1
-  },
-  "theory/equations/eq06.html": {
-   "title": "Equation 6 — Type-7 Field",
-   "area": "evidence",
-   "out": [],
-   "in": [
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
     {
      "path": "theory.html",
      "title": "Theory Hub",
@@ -18645,7 +18641,26 @@
     }
    ],
    "outTotal": 0,
-   "inTotal": 1
+   "inTotal": 2
+  },
+  "theory/equations/eq06.html": {
+   "title": "Equation 6 — Type-7 Field",
+   "area": "evidence",
+   "out": [],
+   "in": [
+    {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "theory.html",
+     "title": "Theory Hub",
+     "area": "evidence"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 2
   },
   "theory/equations/eq07.html": {
    "title": "Equation 7 — Copeland Comparator",
@@ -18681,13 +18696,18 @@
    "out": [],
    "in": [
     {
+     "path": "ethics.html",
+     "title": "Ethics & Coherence Law",
+     "area": "evidence"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 1
+   "inTotal": 2
   },
   "theory/equations/eq10.html": {
    "title": "Equation 10 — Inverse Resonance Ladder",
@@ -18793,17 +18813,22 @@
    "out": [],
    "in": [
     {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 1
+   "inTotal": 2
   },
   "theory/ethics.html": {
-   "title": "Ethical Law",
-   "area": "evidence",
+   "title": "Ethical Law (Theory) — Redirect",
+   "area": "codex",
    "out": [
     {
      "path": "ethics.html",
@@ -18813,9 +18838,9 @@
    ],
    "in": [
     {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
     },
     {
      "path": "theory.html",
@@ -18827,39 +18852,20 @@
    "inTotal": 2
   },
   "theory/frequency-governance.html": {
-   "title": "Frequency Governance",
-   "area": "evidence",
-   "out": [],
-   "in": [
-    {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
-    },
-    {
-     "path": "theory.html",
-     "title": "Theory Hub",
-     "area": "evidence"
-    }
-   ],
-   "outTotal": 0,
-   "inTotal": 2
-  },
-  "theory/glossary.html": {
-   "title": "Theory Glossary",
-   "area": "evidence",
+   "title": "Frequency Governance — Redirect",
+   "area": "codex",
    "out": [
     {
-     "path": "shop.html",
-     "title": "Artifact Registry & Shop",
-     "area": "artifacts"
+     "path": "systems/frequencies.html",
+     "title": "Frequency Governance",
+     "area": "systems"
     }
    ],
    "in": [
     {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
     },
     {
      "path": "theory.html",
@@ -18869,6 +18875,26 @@
    ],
    "outTotal": 1,
    "inTotal": 2
+  },
+  "theory/glossary.html": {
+   "title": "Theory Glossary — Redirect",
+   "area": "codex",
+   "out": [
+    {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    }
+   ],
+   "in": [
+    {
+     "path": "theory.html",
+     "title": "Theory Hub",
+     "area": "evidence"
+    }
+   ],
+   "outTotal": 1,
+   "inTotal": 1
   },
   "theory/living-technology.html": {
    "title": "Living Technology",
@@ -18881,13 +18907,18 @@
      "area": "archive"
     },
     {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 2
+   "inTotal": 3
   },
   "theory/master-equation.html": {
    "title": "The Master Equation",
@@ -18925,13 +18956,28 @@
      "area": "archive"
     },
     {
+     "path": "ethics.html",
+     "title": "Ethics & Coherence Law",
+     "area": "evidence"
+    },
+    {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
+    },
+    {
+     "path": "witness.html",
+     "title": "Witness",
+     "area": "artifacts"
     }
    ],
    "outTotal": 1,
-   "inTotal": 2
+   "inTotal": 5
   },
   "theory/notation.html": {
    "title": "Notation Guide",
@@ -18944,13 +18990,18 @@
      "area": "archive"
     },
     {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 2
+   "inTotal": 3
   },
   "theory/operators.html": {
    "title": "Living Operators",
@@ -18969,13 +19020,23 @@
      "area": "archive"
     },
     {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
+    },
+    {
+     "path": "witness.html",
+     "title": "Witness",
+     "area": "artifacts"
     }
    ],
    "outTotal": 1,
-   "inTotal": 2
+   "inTotal": 4
   },
   "theory/thirteen-moons.html": {
    "title": "13 Moons Theory",
@@ -18988,13 +19049,18 @@
      "area": "archive"
     },
     {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 2
+   "inTotal": 3
   },
   "theory/unified-field.html": {
    "title": "Unified Field",
@@ -19007,29 +19073,34 @@
      "area": "archive"
     },
     {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 2
+   "inTotal": 3
   },
   "theory/witness.html": {
-   "title": "Witness",
-   "area": "evidence",
+   "title": "Witness (Theory) — Redirect",
+   "area": "codex",
    "out": [
     {
-     "path": "theory.html",
-     "title": "Theory Hub",
-     "area": "evidence"
+     "path": "witness.html",
+     "title": "Witness",
+     "area": "artifacts"
     }
    ],
    "in": [
     {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
     },
     {
      "path": "theory.html",
@@ -19071,48 +19142,47 @@
    "inTotal": 2
   },
   "witness-world.html": {
-   "title": "The Witness World",
-   "area": "artifacts",
+   "title": "The Witness World — Redirect",
+   "area": "codex",
    "out": [
     {
      "path": "witness.html",
      "title": "Witness",
      "area": "artifacts"
-    },
-    {
-     "path": "living-time-sphere.html",
-     "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
-     "area": "living-time"
     }
    ],
-   "in": [
-    {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
-    },
-    {
-     "path": "witness.html",
-     "title": "Witness",
-     "area": "artifacts"
-    }
-   ],
-   "outTotal": 2,
-   "inTotal": 2
+   "in": [],
+   "outTotal": 1,
+   "inTotal": 0
   },
   "witness.html": {
    "title": "Witness",
    "area": "artifacts",
    "out": [
     {
-     "path": "witness-world.html",
-     "title": "The Witness World",
-     "area": "artifacts"
-    },
-    {
      "path": "living-time-sphere.html",
      "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
      "area": "living-time"
+    },
+    {
+     "path": "theory/equations/eq02.html",
+     "title": "Equation 2 — Witness",
+     "area": "evidence"
+    },
+    {
+     "path": "theory/operators.html",
+     "title": "Living Operators",
+     "area": "evidence"
+    },
+    {
+     "path": "theory/memory.html",
+     "title": "Memory",
+     "area": "evidence"
+    },
+    {
+     "path": "theory.html",
+     "title": "Theory Hub",
+     "area": "evidence"
     }
    ],
    "in": [
@@ -19123,12 +19193,17 @@
     },
     {
      "path": "witness-world.html",
-     "title": "The Witness World",
-     "area": "artifacts"
+     "title": "The Witness World — Redirect",
+     "area": "codex"
+    },
+    {
+     "path": "theory/witness.html",
+     "title": "Witness (Theory) — Redirect",
+     "area": "codex"
     }
    ],
-   "outTotal": 2,
-   "inTotal": 2
+   "outTotal": 5,
+   "inTotal": 3
   }
  }
 }
