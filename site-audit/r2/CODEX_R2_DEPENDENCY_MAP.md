@@ -99,13 +99,13 @@
 
 | Stylesheet | Pages |
 | --- | --- |
-| `docs/assets/css/site-mobile.css` | 193 |
-| `docs/assets/css/spark-companion.css` | 191 |
+| `docs/assets/css/site-mobile.css` | 189 |
+| `docs/assets/css/spark-companion.css` | 187 |
 | `docs/assets/css/living-ui.css` | 151 |
 | `docs/scripture/assets/scripture.css` | 101 |
-| `docs/assets/css/spark-agent-seat.css` | 79 |
+| `docs/assets/css/spark-agent-seat.css` | 75 |
 | `docs/assets/css/codex.css` | 60 |
-| `docs/assets/css/navigation.css` | 47 |
+| `docs/assets/css/navigation.css` | 51 |
 | `docs/assets/css/social-bridge.css` | 45 |
 | `docs/assets/css/living-moon-theme.css` | 37 |
 | `docs/assets/css/animations.css` | 25 |
@@ -114,15 +114,15 @@
 
 | Script | Pages |
 | --- | --- |
-| `docs/assets/js/spark-companion.js` | 191 |
-| `docs/assets/js/spark-presence.js` | 190 |
-| `docs/assets/js/site.js` | 155 |
+| `docs/assets/js/spark-companion.js` | 187 |
+| `docs/assets/js/spark-presence.js` | 186 |
+| `docs/assets/js/site.js` | 159 |
 | `docs/assets/js/living-ui.js` | 151 |
 | `docs/scripture/assets/scripture.js` | 101 |
-| `docs/assets/js/spark-relations.js` | 85 |
-| `docs/assets/js/heaven-sound.js` | 81 |
-| `docs/assets/js/spark-agent-seat.js` | 79 |
-| `docs/assets/js/spark-3d.js` | 76 |
+| `docs/assets/js/spark-relations.js` | 81 |
+| `docs/assets/js/heaven-sound.js` | 77 |
+| `docs/assets/js/spark-agent-seat.js` | 75 |
+| `docs/assets/js/spark-3d.js` | 72 |
 | `docs/assets/js/calendar/pattern-calendar-version.js` | 47 |
 | `docs/assets/js/calendar/pattern-calendar-data.js` | 47 |
 | `docs/assets/js/calendar/pattern-calendar-format.js` | 47 |
