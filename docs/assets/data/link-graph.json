@@ -345,6 +345,11 @@
      "path": "index.html",
      "title": "Codex of Reality",
      "area": "codex"
+    },
+    {
+     "path": "companions.html",
+     "title": "Companions",
+     "area": "living-time"
     }
    ],
    "in": [
@@ -354,7 +359,7 @@
      "area": "codex"
     }
    ],
-   "outTotal": 1,
+   "outTotal": 2,
    "inTotal": 1
   },
   "aiyanas-world.html": {
@@ -855,10 +860,15 @@
      "path": "map.html",
      "title": "The Traveller's Map",
      "area": "systems"
+    },
+    {
+     "path": "account.html",
+     "title": "Your Account — Not Yet Open",
+     "area": "codex"
     }
    ],
    "outTotal": 2,
-   "inTotal": 4
+   "inTotal": 5
   },
   "covenant-caravan.html": {
    "title": "The Covenant Caravan",
