@@ -8,7 +8,7 @@ const path = require("node:path");
 const root = path.resolve(__dirname, "..");
 const read = (rel) => fs.readFileSync(path.join(root, rel), "utf8");
 
-const PAGES = ("13-moon-whitepaper ab about-aaron alignment-ledger circle claims-atlas codex-atlas covenant-caravan downloads equinox-passage ethics genesis-oracle glossary glyphs guide hub index invoke lab ledger micro moons scroll-of-fire-codex-of-reality-remnant-whitepaper search sending-test shop start teach theory timeline witness").split(" ");
+const PAGES = ("13-moon-whitepaper ab about-aaron alignment-ledger circle claims-atlas codex-atlas covenant-caravan downloads equinox-passage ethics genesis-oracle glossary glyphs guide hub index invoke lab ledger micro moons scroll-of-fire-codex-of-reality-remnant-whitepaper search sending-test shop teach theory timeline witness").split(" ");
 
 test("moon theme module and stylesheet exist", () => {
   assert.ok(fs.existsSync(path.join(root, "docs/assets/js/living-moon-theme.js")));
