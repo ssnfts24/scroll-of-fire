@@ -188,6 +188,11 @@ def render_all(OUT, emit_text, books_meta, chapters, manifest, remnant, curated,
 Your browser does not support the video element. The same tour is written out across this page.
 </video>
 </section>
+<section id="genesis-path" aria-labelledby="gp-h" style="max-width:880px;margin:2rem auto;">
+<h2 id="gp-h">Genesis, a chapter a day</h2>
+<p>The school path through the first book, one chapter a day: read it, or hear it — every chapter carries a Listen control that reads the English aloud, verse by verse — and let its words open into the word studies as you go. Fifty chapters, fifty days, no catching up and no falling behind: the path is where you are standing on it.</p>
+<p><a href="genesis/01.html">Begin at Genesis 1 →</a> · <a href="../practices.html#pw-school-title">The school paths, from the root</a></p>
+</section>
 <div class="books">{cards}</div>
 <section aria-labelledby="ws-h"><h2 id="ws-h">Hebrew word studies</h2>
 <p>Seven key words given the full treatment — spelling, root, semantic range, biblical examples, wordplay, cognates, traditions labelled as traditions, and the uncertainties printed rather than smoothed over: <a href="word-studies/index.html">Adam, Adamah, Enosh, Ruach, Nephesh, Or, Shem</a>.</p></section>
