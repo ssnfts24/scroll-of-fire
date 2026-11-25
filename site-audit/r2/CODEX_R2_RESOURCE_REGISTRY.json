@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 2470,
-    "bytes": 1084725752,
+    "bytes": 1084725756,
     "byGroup": {
       "tooling": 324,
       "manuscript": 17,
@@ -52210,8 +52210,8 @@
       "path": "netlify.toml",
       "title": "netlify.toml",
       "format": "toml",
-      "bytes": 2553,
-      "sha256": "bb6fd8e343aa314fea73137dfe432b72933dcc73970fd038dd895e044388110d",
+      "bytes": 2557,
+      "sha256": "2297dcfea775641435f5e4c4df57e19775d2a791f8a13a861464a6f0ce3adcd7",
       "group": "tooling",
       "role": "Repository or deployment configuration",
       "deployed": false,
