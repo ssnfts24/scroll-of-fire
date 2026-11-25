@@ -872,11 +872,6 @@
      "area": "archive"
     },
     {
-     "path": "index.html",
-     "title": "Codex of Reality",
-     "area": "codex"
-    },
-    {
      "path": "downloads.html",
      "title": "Downloads & Integrity",
      "area": "archive"
@@ -893,7 +888,7 @@
     }
    ],
    "outTotal": 4,
-   "inTotal": 6
+   "inTotal": 5
   },
   "companions.html": {
    "title": "Companions",
@@ -2004,13 +1999,13 @@
      "area": "systems"
     },
     {
-     "path": "install.html",
-     "title": "Get the App — Put the Codex on Your Home Screen · Codex of Reality",
-     "area": "systems"
+     "path": "witness.html",
+     "title": "Witness",
+     "area": "artifacts"
     },
     {
-     "path": "guide.html",
-     "title": "Practice Playbook — Practice That Sticks",
+     "path": "install.html",
+     "title": "Get the App — Put the Codex on Your Home Screen · Codex of Reality",
      "area": "systems"
     }
    ],
@@ -19600,6 +19595,11 @@
      "area": "archive"
     },
     {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    },
+    {
      "path": "witness-world.html",
      "title": "The Witness World — Redirect",
      "area": "codex"
@@ -19611,7 +19611,7 @@
     }
    ],
    "outTotal": 5,
-   "inTotal": 3
+   "inTotal": 4
   }
  }
 }
