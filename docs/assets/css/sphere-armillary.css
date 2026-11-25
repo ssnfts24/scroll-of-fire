@@ -1200,6 +1200,28 @@ html.living-time-sphere-page .sphere-moon-label {
   color: #ffd98f;
 }
 
+/* The sky line's own Set location control (Nov 25, 2026): an
+   inline button in the line's voice — gold-edged, finger-sized. */
+.sphere-season-line-action {
+  display: inline-block;
+  margin-left: 0.35rem;
+  padding: 0.3rem 0.8rem;
+  min-height: 36px;
+  border: 1px solid rgba(216, 169, 78, 0.65);
+  border-radius: 999px;
+  background: rgba(216, 169, 78, 0.12);
+  color: inherit;
+  font: inherit;
+  font-size: 0.92em;
+  cursor: pointer;
+  vertical-align: baseline;
+}
+.sphere-season-line-action:hover,
+.sphere-season-line-action:focus-visible {
+  background: rgba(216, 169, 78, 0.25);
+  outline: none;
+}
+
 .sphere-season-line[hidden] {
   display: none;
 }
