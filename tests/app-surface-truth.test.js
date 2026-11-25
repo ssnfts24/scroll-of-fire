@@ -121,3 +121,22 @@ test("the theory doorway merges hold: stubs redirect and the folds stand whole",
   assert.ok(readDoc("systems/frequencies.html").includes("The Harmonic Gate decides what enters."),
     "Frequency Governance must stand in the Sound Observatory");
 });
+
+test("the home merges hold: start and witness-world redirect, their folds stand", () => {
+  const readDoc = (rel) =>
+    readFileSync(new URL(`../docs/${rel}`, import.meta.url), "utf8");
+  const start = readDoc("start.html");
+  assert.match(start, /http-equiv="refresh"/, "start.html must stay a redirect stub");
+  assert.ok(start.includes("index.html#first-visit"), "start.html must point at the first-visit fold");
+  const world = readDoc("witness-world.html");
+  assert.match(world, /http-equiv="refresh"/, "witness-world.html must stay a redirect stub");
+  assert.ok(world.includes("witness.html#witness-world"), "witness-world.html must point at the hall");
+  const index = readDoc("index.html");
+  assert.ok(index.includes('id="first-visit"'), "the first-visit flow must stand on the front door");
+  assert.ok(index.includes("The 60-Second Entry"), "the 60-Second Entry must stand in the fold");
+  assert.ok(index.includes('data-story-chapter="the-signpost-meadow"'),
+    "the Signpost Meadow's slot must stand in the fold");
+  const witness = readDoc("witness.html");
+  assert.ok(witness.includes('id="ww-canvas"'), "the hall's canvas must stand on the Witness page");
+  assert.ok(witness.includes("The Long Line"), "the hall's rooms must stand on the Witness page");
+});

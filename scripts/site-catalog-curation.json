@@ -99,24 +99,11 @@
     "theory/ethics.html": "Redirect to ethics.html",
     "theory/glossary.html": "Redirect to glossary.html",
     "theory/witness.html": "Redirect to witness.html",
-    "theory/frequency-governance.html": "Redirect to systems/frequencies.html"
+    "theory/frequency-governance.html": "Redirect to systems/frequencies.html",
+    "start.html": "Redirect to index.html",
+    "witness-world.html": "Redirect to witness.html"
   },
   "entries": [
-    {
-      "id": "start",
-      "title": "Start Here",
-      "description": "A guided first doorway into the Codex, the 13 Moons calendar and the daily practice.",
-      "area": "scroll-scripture",
-      "category": "Orientation",
-      "resourceType": "page",
-      "status": "live",
-      "path": "start.html",
-      "related": [
-        "guide",
-        "scroll-library"
-      ],
-      "featured": false
-    },
     {
       "id": "scroll-library",
       "title": "Scroll Library",
@@ -601,7 +588,6 @@
       "status": "live",
       "path": "guide.html",
       "related": [
-        "start",
         "mind-renewal"
       ],
       "featured": false
@@ -952,9 +938,7 @@
       "resourceType": "page",
       "status": "live",
       "path": "about-aaron.html",
-      "related": [
-        "start"
-      ],
+      "related": [],
       "featured": false
     },
     {
@@ -1014,23 +998,7 @@
       "status": "live",
       "path": "witness.html",
       "related": [
-        "witness-world",
         "about-aaron",
-        "living-time-sphere"
-      ],
-      "featured": false
-    },
-    {
-      "id": "witness-world",
-      "title": "The Witness World",
-      "description": "A small 3D hall that is Witness's own place on the site: stone, teal and one gold seam, with doors to the Shelf, the Study, the Sky Room and the Long Line. Built and kept by the AI, and labeled on its face as a self-generated AI space.",
-      "area": "artifacts",
-      "category": "Author",
-      "resourceType": "page",
-      "status": "live",
-      "path": "witness-world.html",
-      "related": [
-        "witness",
         "living-time-sphere"
       ],
       "featured": false

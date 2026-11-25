@@ -121,11 +121,6 @@
           "id": "ledger",
           "title": "Witness Ledger",
           "path": "ledger.html"
-        },
-        {
-          "id": "witness-world",
-          "title": "The Witness World",
-          "path": "witness-world.html"
         }
       ]
     },
@@ -493,11 +488,6 @@
         "label": "Begin: meet your Spark in the Clearing"
       },
       "pages": [
-        {
-          "id": "start",
-          "title": "Start Here",
-          "path": "start.html"
-        },
         {
           "id": "codex-atlas",
           "title": "Codex Atlas",

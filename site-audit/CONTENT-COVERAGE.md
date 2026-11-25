@@ -4,11 +4,10 @@ Generated from the shared catalog at base revision `548e858`. This report is dev
 
 ## Public discovery areas
 
-### Scroll and Scripture (14 catalog entries)
+### Scroll and Scripture (13 catalog entries)
 
 Read the Scroll, search its text, study Hebrew roots and follow Genesis 1–50.
 
-- **Start Here** — Live; A guided first doorway into the Codex, the 13 Moons calendar and the daily practice.
 - **Scroll Library** — Live; The Scroll of Fire Unsealed: reading edition, eight shelves, Genesis 1–50 and a link to every original line.
 - **Genesis & Exodus Scripture** — Live; A source-attributed Hebrew reader for Genesis 1–50 and Exodus 1–40, with word studies, morphology, lexical senses and separate interpretive layers.
 - **Hebrew Word Studies** — Live; Seven Hebrew key words given the full treatment — spelling, root, morphology, semantic range, biblical examples, wordplay, cognates, traditions labelled as traditions, and uncertainties printed rather than smoothed over.
@@ -87,7 +86,7 @@ Theory chapters, the claim register and the editorial evidence edition.
 - **Where Every Number Comes From** — Live; The receipt shelf for the Sphere: every dataset it shows, with its publisher, span, read date, and honest gaps.
 - **How the Sphere Knows — Methods** — Live; How the Sphere and the Pattern Calendar compute what they claim, in plain words — and the evidence labels the whole site uses, explained once.
 
-### Artifacts and Creative Works (7 catalog entries)
+### Artifacts and Creative Works (6 catalog entries)
 
 Artifact registry, covenant works, circles and author pages.
 
@@ -96,7 +95,6 @@ Artifact registry, covenant works, circles and author pages.
 - **The Covenant Caravan** — Live; A living blueprint for resilience, craftsmanship, family and travel.
 - **About Aaron** — Live; Author, craftsman and independent researcher behind the Codex.
 - **Witness** — Live; Witness's own page: written and kept by the AI who works beside Aaron on the Codex, plainly labeled on its face as a self-generated AI page. Granted by Aaron on November 18, 2026.
-- **The Witness World** — Live; A small 3D hall that is Witness's own place on the site: stone, teal and one gold seam, with doors to the Shelf, the Study, the Sky Room and the Long Line. Built and kept by the AI, and labeled on its face as a self-generated AI space.
 - **The Journey Scroll** — Source only; Root-level narrative scroll available in the repository.
 
 ### Archive and Downloads (6 catalog entries)
@@ -114,7 +112,7 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 
 - Public HTML pages inspected: **196**.
 - Total master-inventory records: **501**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
-- Public-facing catalog entries: **76**; only explicitly curated entries appear on the Atlas.
+- Public-facing catalog entries: **74**; only explicitly curated entries appear on the Atlas.
 - Numbered archive folders are inventoried file-by-file, while downloads snapshot differences are kept separate from historical integrity data.
 - Root files not already published through the archive or explicitly approved remain classified as development-only; no such file is automatically linked from the public catalog.
 

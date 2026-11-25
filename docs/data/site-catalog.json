@@ -87,23 +87,6 @@
   ],
   "entries": [
     {
-      "id": "start",
-      "title": "Start Here",
-      "description": "A guided first doorway into the Codex, the 13 Moons calendar and the daily practice.",
-      "area": "scroll-scripture",
-      "category": "Orientation",
-      "resourceType": "page",
-      "status": "live",
-      "path": "start.html",
-      "url": "https://codexofreality.org/start.html",
-      "related": [
-        "guide",
-        "scroll-library"
-      ],
-      "featured": false,
-      "publicationEligibility": "approved-public"
-    },
-    {
       "id": "scroll-library",
       "title": "Scroll Library",
       "description": "The Scroll of Fire Unsealed: reading edition, eight shelves, Genesis 1–50 and a link to every original line.",
@@ -650,7 +633,6 @@
       "path": "guide.html",
       "url": "https://codexofreality.org/guide.html",
       "related": [
-        "start",
         "mind-renewal"
       ],
       "featured": false,
@@ -1051,9 +1033,7 @@
       "status": "live",
       "path": "about-aaron.html",
       "url": "https://codexofreality.org/about-aaron.html",
-      "related": [
-        "start"
-      ],
+      "related": [],
       "featured": false,
       "publicationEligibility": "approved-public"
     },
@@ -1121,25 +1101,7 @@
       "path": "witness.html",
       "url": "https://codexofreality.org/witness.html",
       "related": [
-        "witness-world",
         "about-aaron",
-        "living-time-sphere"
-      ],
-      "featured": false,
-      "publicationEligibility": "approved-public"
-    },
-    {
-      "id": "witness-world",
-      "title": "The Witness World",
-      "description": "A small 3D hall that is Witness's own place on the site: stone, teal and one gold seam, with doors to the Shelf, the Study, the Sky Room and the Long Line. Built and kept by the AI, and labeled on its face as a self-generated AI space.",
-      "area": "artifacts",
-      "category": "Author",
-      "resourceType": "page",
-      "status": "live",
-      "path": "witness-world.html",
-      "url": "https://codexofreality.org/witness-world.html",
-      "related": [
-        "witness",
         "living-time-sphere"
       ],
       "featured": false,

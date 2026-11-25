@@ -76,8 +76,8 @@ test("hero carries the sphere stage, the static fallback art, and only the easy 
 
 test("the guided hero survives: witness line and hero links intact", () => {
   assert.match(HTML, /data-living-witness/);
-  assert.match(HTML, /<p class="living-witness-line is-active" data-source="docs\/start\.html">The Scroll does not begin with belief\.<\/p>/);
-  for (const href of ["./start.html", "./moons.html", "./ledger.html", "./covenant-caravan.html", "./shop.html"]) {
+  assert.match(HTML, /<p class="living-witness-line is-active" data-source="docs\/index\.html">The Scroll does not begin with belief\.<\/p>/);
+  for (const href of ["#first-visit", "./moons.html", "./ledger.html", "./covenant-caravan.html", "./shop.html"]) {
     assert.ok(HTML.includes(`href="${href}"`), `hero link ${href} must survive`);
   }
 });

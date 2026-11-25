@@ -53,6 +53,8 @@ const EXCLUDED_FILES = new Set([
   "theory/glossary.html",
   "theory/witness.html",
   "theory/frequency-governance.html",
+  "start.html",
+  "witness-world.html",
   // Gate G (G2): account.html is a utility page, as
   // offline.html — tests/site-mobile.test.js has
   // always expected it excluded; the stamper now
