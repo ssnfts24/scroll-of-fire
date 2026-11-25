@@ -39,21 +39,21 @@
   ],
   "counts": {
     "pages": 179,
-    "pagePassages": 1254,
+    "pagePassages": 1259,
     "scrollSections": 817,
     "scrollSegments": 1609,
     "scrolls": 2426,
     "atlas": 73,
     "lexicon": 911,
     "claims": 21,
-    "total": 4685
+    "total": 4690
   },
   "shards": {
     "pages": {
       "file": "pages.json",
-      "count": 1254,
-      "bytes": 1635259,
-      "sha256": "9f3d5ee49ed8ab5dd0872df39d642c31e9b08fd8be7d6e4103d4d6158cae2ce8"
+      "count": 1259,
+      "bytes": 1640238,
+      "sha256": "c182464103c1488dfcf8a38022f12099ccdf43ef57a7fbbe2576abe891ef38a9"
     },
     "scrolls": {
       "file": "scrolls.json",

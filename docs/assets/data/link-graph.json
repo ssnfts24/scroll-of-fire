@@ -1325,13 +1325,18 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "practices.html",
+     "title": "Practices — the Exercises Wing · Remnant Lab",
+     "area": "systems"
+    },
+    {
      "path": "lab.html",
      "title": "Remnant Lab",
      "area": "systems"
     }
    ],
    "outTotal": 1,
-   "inTotal": 4
+   "inTotal": 5
   },
   "hub.html": {
    "title": "Systems Hub",
@@ -1528,14 +1533,14 @@
      "area": "systems"
     },
     {
+     "path": "practices.html",
+     "title": "Practices — the Exercises Wing · Remnant Lab",
+     "area": "systems"
+    },
+    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
-    },
-    {
-     "path": "scripture/index.html",
-     "title": "Genesis & Exodus Scripture",
-     "area": "scroll-scripture"
     }
    ],
    "in": [
@@ -1560,7 +1565,7 @@
      "area": "codex"
     }
    ],
-   "outTotal": 26,
+   "outTotal": 27,
    "inTotal": 4
   },
   "install.html": {
@@ -1633,13 +1638,13 @@
      "area": "systems"
     },
     {
-     "path": "garden.html",
-     "title": "The Pattern Garden — the Garden · Remnant Lab",
+     "path": "practices.html",
+     "title": "Practices — the Exercises Wing · Remnant Lab",
      "area": "systems"
     },
     {
-     "path": "practices.html",
-     "title": "Practices — the Exercises Wing · Remnant Lab",
+     "path": "garden.html",
+     "title": "The Pattern Garden — the Garden · Remnant Lab",
      "area": "systems"
     },
     {
@@ -2157,13 +2162,33 @@
      "area": "systems"
     },
     {
-     "path": "sending-test.html",
-     "title": "The Sending Test — Remnant Lab",
+     "path": "micro.html",
+     "title": "⏳ 90-Second Micro-Run",
      "area": "systems"
     },
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
+     "path": "systems/mind-renewal.html",
+     "title": "Mind-Renewal Protocol",
+     "area": "systems"
+    },
+    {
+     "path": "guide.html",
+     "title": "Practice Playbook — Practice That Sticks",
+     "area": "systems"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/index.html",
+     "title": "Genesis & Exodus Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "sending-test.html",
+     "title": "The Sending Test — Remnant Lab",
      "area": "systems"
     },
     {
@@ -2189,6 +2214,16 @@
      "area": "archive"
     },
     {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    },
+    {
+     "path": "scripture/index.html",
+     "title": "Genesis & Exodus Scripture",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "lab.html",
      "title": "Remnant Lab",
      "area": "systems"
@@ -2199,8 +2234,8 @@
      "area": "systems"
     }
    ],
-   "outTotal": 6,
-   "inTotal": 4
+   "outTotal": 10,
+   "inTotal": 6
   },
   "privacy-policy.html": {
    "title": "Privacy Policy — Spark. Living Day",
@@ -15795,6 +15830,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "practices.html",
+     "title": "Practices — the Exercises Wing · Remnant Lab",
+     "area": "systems"
+    },
+    {
      "path": "scripture/genesis/02.html",
      "title": "Genesis 2 — Scripture",
      "area": "scroll-scripture"
@@ -15847,11 +15887,6 @@
     {
      "path": "scripture/genesis/12.html",
      "title": "Genesis 12 — Scripture",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scripture/genesis/13.html",
-     "title": "Genesis 13 — Scripture",
      "area": "scroll-scripture"
     }
    ],
@@ -15907,6 +15942,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "practices.html",
+     "title": "Practices — the Exercises Wing · Remnant Lab",
+     "area": "systems"
+    },
+    {
      "path": "scripture/word-studies/ruach.html",
      "title": "Ruach — רוּחַ — Hebrew Word Studies",
      "area": "scroll-scripture"
@@ -15922,8 +15962,8 @@
      "area": "scroll-scripture"
     }
    ],
-   "outTotal": 93,
-   "inTotal": 13
+   "outTotal": 94,
+   "inTotal": 14
   },
   "scripture/lemma.html": {
    "title": "Lemma study — Scripture",
@@ -16287,6 +16327,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "practices.html",
+     "title": "Practices — the Exercises Wing · Remnant Lab",
+     "area": "systems"
+    },
+    {
      "path": "scripture/word-studies/ruach.html",
      "title": "Ruach — רוּחַ — Hebrew Word Studies",
      "area": "scroll-scripture"
@@ -16298,7 +16343,7 @@
     }
    ],
    "outTotal": 9,
-   "inTotal": 10
+   "inTotal": 11
   },
   "scripture/word-studies/nephesh.html": {
    "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
@@ -17348,13 +17393,18 @@
      "area": "archive"
     },
     {
+     "path": "practices.html",
+     "title": "Practices — the Exercises Wing · Remnant Lab",
+     "area": "systems"
+    },
+    {
      "path": "hub.html",
      "title": "Systems Hub",
      "area": "systems"
     }
    ],
    "outTotal": 1,
-   "inTotal": 2
+   "inTotal": 3
   },
   "systems/recoder.html": {
    "title": "Living Dictionary of Reality",

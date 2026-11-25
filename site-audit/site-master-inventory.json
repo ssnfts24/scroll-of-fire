@@ -8,7 +8,7 @@
     "catalogEntries": 73,
     "issueCounts": {
       "no-global-navigation": 74,
-      "not-linked-directly-from-homepage": 26,
+      "not-linked-directly-from-homepage": 25,
       "deployed-but-unlinked": 64,
       "unreachable-from-homepage": 5,
       "compatibility-redirect-page": 8,
@@ -2089,6 +2089,7 @@
         "ledger.html",
         "living-time-sphere.html",
         "moons.html",
+        "practices.html",
         "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/editorial.html",
@@ -13332,7 +13333,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 5,
+        "inboundPages": 6,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
@@ -13389,7 +13390,7 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
         "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 102,
+        "inboundPages": 103,
         "pagesWithNavLinkToIt": 101
       },
       "issues": []
@@ -13841,7 +13842,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 6,
+        "inboundPages": 7,
         "pagesWithNavLinkToIt": 2
       },
       "issues": [
@@ -14023,6 +14024,7 @@
         "ethics.html",
         "garden.html",
         "genesis-oracle.html",
+        "guide.html",
         "hub.html",
         "index.html",
         "lab.html",
@@ -14030,10 +14032,13 @@
         "living-time-sphere.html",
         "micro.html",
         "moons.html",
+        "scripture/index.html",
+        "scripture/word-studies/index.html",
         "sending-test.html",
         "shop.html",
         "start.html",
         "systems/frequencies.html",
+        "systems/mind-renewal.html",
         "teach.html",
         "theory.html",
         "witness-world.html",
@@ -14045,15 +14050,14 @@
         "path": "practices.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 4,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 6,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
-        "no-global-navigation",
-        "not-linked-directly-from-homepage"
+        "no-global-navigation"
       ]
     },
     {
@@ -14442,7 +14446,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (244 files)",
+      "title": "tests/ (245 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -18528,6 +18532,7 @@
         "index.html",
         "living-time-sphere.html",
         "moons.html",
+        "practices.html",
         "scripture/about.html",
         "scripture/exodus/01.html",
         "scripture/exodus/02.html",
@@ -18639,7 +18644,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 103,
+        "inboundPages": 104,
         "pagesWithNavLinkToIt": 101
       },
       "issues": []
