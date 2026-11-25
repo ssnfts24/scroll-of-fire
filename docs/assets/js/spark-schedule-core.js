@@ -136,12 +136,24 @@
     }
     m = /\bday after tomorrow\b/i.exec(t);
     if (m) return hit(stampForCivil(addDays(today, 2)), m[0]);
+    // Quick phrases (the ease pass, Nov 24, 2026): a part of day
+    // riding on its day word resolves with the day, and its whole
+    // phrase lifts out of the title — "tomorrow morning",
+    // "this evening", "tonight", "next week".
+    m = /\btomorrow\s+(?:morning|afternoon|evening)\b/i.exec(t);
+    if (m) return hit(stampForCivil(addDays(today, 1)), m[0]);
+    m = /\bthis\s+(?:morning|afternoon|evening)\b/i.exec(t);
+    if (m) return hit(stampForCivil(today), m[0]);
+    m = /\btonight\b/i.exec(t);
+    if (m) return hit(stampForCivil(today), m[0]);
     m = /\btomorrow\b/i.exec(t);
     if (m) return hit(stampForCivil(addDays(today, 1)), m[0]);
     m = /\btoday\b/i.exec(t);
     if (m) return hit(stampForCivil(today), m[0]);
     m = /\bin\s+(\d{1,3})\s+days?\b/i.exec(t);
     if (m) return hit(stampForCivil(addDays(today, Number(m[1]))), m[0]);
+    m = /\bnext week\b/i.exec(t);
+    if (m) return hit(stampForCivil(addDays(today, 7)), m[0]);
     m = /\b(next\s+)?(sunday|monday|tuesday|wednesday|thursday|friday|saturday)\b/i.exec(t);
     if (m) {
       const target = WEEKDAY_NAMES.findIndex((w) => w.toLowerCase() === m[2].toLowerCase());
@@ -205,6 +217,13 @@
     if (m) return { time: "00:00", phrase: m[0] };
     m = /\bin\s+the\s+(morning|afternoon|evening)\b/i.exec(t);
     if (m) return { partOfDay: m[1].toLowerCase(), phrase: m[0] };
+    m = /\btonight\b/i.exec(t);
+    if (m) return { partOfDay: "evening", phrase: m[0] };
+    // A bare part of day counts only at the very end of the
+    // words — "…on Friday morning" — so a title that merely
+    // holds the word ("Morning pages") is never eaten.
+    m = /\b(morning|afternoon|evening)\s*$/i.exec(t);
+    if (m) return { partOfDay: m[1].toLowerCase(), phrase: m[1] };
     return null;
   }
   function timeWords(time) {
