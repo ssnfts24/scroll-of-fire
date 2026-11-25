@@ -2,6 +2,14 @@
  {
   "date": "2026-11-25",
   "type": "Site",
+  "title": "The word studies gain their Hebrew voice: the pronunciation layer",
+  "summary": "The seven Hebrew word studies can now be heard in Hebrew. A pronunciation engine reads the pointed text by rule — vowel points, dagesh, shewa sounded or silent — and speaks a careful transliteration in the device's own voice while the Hebrew word is highlighted; any pointed word on a study page can be tapped to hear it alone. The engine's readings are pinned by tests against the transliteration printed in each study itself, and where a study's printed form follows a tradition the rules do not produce, the difference is named in the open, never silently resolved. It is a transliteration in the device's voice, not a native Hebrew voice, and the pages say so plainly.",
+  "url": "./scripture/word-studies/index.html",
+  "symbol": "א"
+ },
+ {
+  "date": "2026-11-25",
+  "type": "Site",
   "title": "Scripture learns to be heard: a Listen control on all ninety chapters",
   "summary": "Every Genesis and Exodus chapter now carries a Listen control in its own controls bar: the chapter is read aloud verse by verse, in the World English Bible text, by your device's own voice, with the verse being read kept in sight. Listening never marks a chapter read; that stays a deliberate tap. The seven Hebrew word studies are no longer reading walls: their verse citations are tappable into the chapter reader with the word panel open, and each study ends with three recall questions drawn from its own text. The Scroll reader and the white paper can be heard the same way.",
   "url": "./scripture/index.html",
