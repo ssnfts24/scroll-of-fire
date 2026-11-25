@@ -121,6 +121,45 @@
     }
   }
 
+  /* The Mint Rule (Aaron, Nov 25, 2026): a Spark is minted
+   * once — when one stands, no new one is introduced, and an
+   * update never loses the one who stands. Inside the
+   * Spark. Living Day app the record's home is the app's
+   * native store and this page's local storage is only its
+   * mirror, which settles after the page's own scripts have
+   * started; a room that greeted on its mirror alone once
+   * introduced a second Spark over the one standing at home.
+   * So before any meeting is offered, ask the app's bridge
+   * what stands at home: a Spark standing there is this
+   * page's Spark. On the open web there is no bridge, and
+   * this reads nothing and changes nothing. */
+  function readBridgedRecord() {
+    try {
+      const b = window.LivingPhoneNative;
+      if (!b || typeof b.sparkRecordJson !== "function") return null;
+      const raw = b.sparkRecordJson();
+      if (!raw) return null;
+      const record = JSON.parse(raw);
+      return record && Core.parseSeed(record.seed) ? record : null;
+    } catch {
+      return null;
+    }
+  }
+
+  /* An adoption made in a room inside the app is handed home
+   * in the same breath, through the same door the rooms use —
+   * the bridge accepts it because no Spark stands at home
+   * (the meeting is only offered once that is proven). */
+  function handRecordUp(record) {
+    try {
+      const b = window.LivingPhoneNative;
+      if (!b || typeof b.sparkRecordFromWeb !== "function") return;
+      b.sparkRecordFromWeb(JSON.stringify(record));
+    } catch {
+      /* the room's settle hands it up at the next opening */
+    }
+  }
+
   function writeRecord(record) {
     try {
       window.localStorage.setItem(Core.STORAGE_KEY, JSON.stringify(record));
@@ -3353,6 +3392,7 @@
         const record = Core.newRecord({ seed, name: keeperName, civilDate: civilToday() });
         clearPending();
         writeRecord(record);
+        handRecordUp(record);
         if (encounterCtrl) encounterCtrl.dispose();
         host.remove();
         adoptedStart(record, companion, today, true);
@@ -3404,7 +3444,15 @@
     const hasCalendar = await ensureCalendar();
     const today = hasCalendar ? todayCoordinate() : null;
 
-    const record = readRecord();
+    let record = readRecord();
+    if (!record) {
+      /* The Mint Rule: inside the app, prove nothing stands
+       * at home before any meeting is offered (see
+       * readBridgedRecord). A Spark found at home is mirrored
+       * here and greeted as the standing Spark it is. */
+      record = readBridgedRecord();
+      if (record) writeRecord(record);
+    }
     if (record) {
       const companion = Core.generate(record.seed);
       if (!companion) return;
