@@ -378,7 +378,7 @@ const reader = `<!doctype html>
     </div>
   </header>
   <div class="reader-crumbs"><a href="./">Library</a><span aria-hidden="true">/</span><a data-shelf-link href="./#shelves">Shelf</a><span aria-hidden="true">/</span><span data-current-title>Loading passage</span></div>
-  <main class="reader-layout">
+  <main class="reader-layout" data-read-aloud>
     <details class="toc-panel" data-toc>
       <summary><span>Contents</span><span class="toc-count" data-toc-count></span></summary>
       <nav data-toc-nav aria-label="Reading table of contents"><p>Preparing table of contents…</p></nav>
@@ -400,6 +400,7 @@ const reader = `<!doctype html>
     <a data-next href="./">Next passage →</a>
   </div>
   <footer class="reader-footer"><p>Words are presented as preserved. Contextual grouping does not independently verify historical or scientific claims.</p><a href="archive/edition.json">Edition ${escapeHtml(edition.editionVersion)} provenance ↗</a></footer>
+  <script defer src="../assets/js/read-aloud.js"></script>
   <script defer src="../assets/js/living-ui.js?v=20261117-1"></script>
 </body>
 </html>
