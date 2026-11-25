@@ -667,7 +667,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 5,
+        "inboundPages": 6,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -2681,7 +2681,7 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
         "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 100,
+        "inboundPages": 101,
         "pagesWithNavLinkToIt": 101
       },
       "issues": []
@@ -13268,6 +13268,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "codex-white-paper.html",
         "companions.html",
         "covenant-caravan.html",
         "ethics.html",
@@ -13281,6 +13282,9 @@
         "ledger.html",
         "living-time-sphere.html",
         "moons.html",
+        "scripture/about.html",
+        "scripture/index.html",
+        "scripture/word-studies/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/atlas.html",
         "scroll/editorial.html",
@@ -13958,7 +13962,7 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
         "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 101,
+        "inboundPages": 102,
         "pagesWithNavLinkToIt": 101
       },
       "issues": []
@@ -19454,7 +19458,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 102,
+        "inboundPages": 103,
         "pagesWithNavLinkToIt": 101
       },
       "issues": []

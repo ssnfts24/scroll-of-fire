@@ -35,7 +35,10 @@ test("the book stands held, not for sale", () => {
 });
 
 test("the goods shelf shows all 21 goods at the set band prices, display only", () => {
-  const shelf = shop.slice(shop.indexOf('id="spark-goods-shelf"'), shop.indexOf('id="tensor-bands"'));
+  // The goods shelf stands inside the First Shelf section, which now
+  // follows the Buy today sections (page programme, Nov 24, 2026), so the
+  // slice runs to the archive heading that closes that section's ground.
+  const shelf = shop.slice(shop.indexOf('id="spark-goods-shelf"'), shop.indexOf('Living Technology Archive'));
   const cards = shelf.match(/class="good-card"/g) || [];
   assert.equal(cards.length, 21);
   for (const band of ["Pocket · $2", "Keeper · $7", "Heirloom · $19"]) {

@@ -263,7 +263,7 @@ The page itself was not changed. Full lists are in `downloads-reconciliation.jso
 | `claims-atlas.html` | 1 | 1 | no | yes | 6 |
 | `codex-atlas.html` | 1 | 1 | yes | yes | 184 |
 | `codex-guide.html` | 2 | 2 | no | yes | 3 |
-| `codex-white-paper.html` | 1 | 1 | no | yes | 5 |
+| `codex-white-paper.html` | 1 | 1 | no | yes | 6 |
 | `companions.html` | 1 | 1 | no | yes | 184 |
 | `covenant-caravan.html` | 1 | 1 | yes | yes | 72 |
 | `downloads.html` | 1 | 1 | yes | yes | 186 |
@@ -290,7 +290,7 @@ The page itself was not changed. Full lists are in `downloads-reconciliation.jso
 | `practices.html` | 2 | 2 | no | yes | 4 |
 | `privacy-policy.html` | — | — | no | yes | 0 |
 | `provenance.html` | 2 | 2 | no | yes | 4 |
-| `scripture/about.html` | 2 | 2 | yes | yes | 100 |
+| `scripture/about.html` | 2 | 2 | yes | yes | 101 |
 | `scripture/exodus/01.html` | 2 | 2 | yes | yes | 100 |
 | `scripture/exodus/02.html` | 2 | 2 | no | yes | 40 |
 | `scripture/exodus/03.html` | 2 | 2 | no | yes | 40 |
@@ -381,12 +381,12 @@ The page itself was not changed. Full lists are in `downloads-reconciliation.jso
 | `scripture/genesis/48.html` | 2 | 2 | no | yes | 50 |
 | `scripture/genesis/49.html` | 2 | 2 | no | yes | 50 |
 | `scripture/genesis/50.html` | 2 | 2 | no | yes | 51 |
-| `scripture/index.html` | 1 | 1 | yes | yes | 102 |
+| `scripture/index.html` | 1 | 1 | yes | yes | 103 |
 | `scripture/lemma.html` | 2 | 2 | no | yes | 1 |
 | `scripture/word-studies/adam.html` | 3 | 3 | no | yes | 7 |
 | `scripture/word-studies/adamah.html` | 3 | 3 | no | yes | 4 |
 | `scripture/word-studies/enosh.html` | 3 | 3 | no | yes | 5 |
-| `scripture/word-studies/index.html` | 2 | 2 | yes | yes | 101 |
+| `scripture/word-studies/index.html` | 2 | 2 | yes | yes | 102 |
 | `scripture/word-studies/nephesh.html` | 3 | 3 | no | yes | 5 |
 | `scripture/word-studies/or.html` | 3 | 3 | no | yes | 5 |
 | `scripture/word-studies/ruach.html` | 3 | 3 | no | yes | 5 |
