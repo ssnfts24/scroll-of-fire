@@ -40,6 +40,22 @@
   "symbol": "♪"
  },
  {
+  "date": "2026-11-25",
+  "type": "Site",
+  "title": "One install card for the whole site",
+  "summary": "The site carried three different installation cards, one per door, and they did not agree. Now there is one card — the manifest every door points to — so the Codex installs the same way from anywhere on the site, and the install page names the current build, Spark. Living Day v1.0.4, instead of a version long past. This entry and the Sphere label entry below it were landed on November 25 and written into the record late; they stand in their true landing order.",
+  "url": "./install.html",
+  "symbol": "⬢"
+ },
+ {
+  "date": "2026-11-25",
+  "type": "Site",
+  "title": "The Sphere's day labels stopped sticking",
+  "summary": "On the Observatory, day labels could hold a stale place for half a second as the Sphere turned — the guard that settles them served a rotating slice and left the rest holding old positions. The label manager now serves the neediest labels first within its frame budget, keeps a cache of label sizes instead of re-measuring, and holds the faced Moon's pitch to a floor, so the days Aaron saw sticking on his phone settle where they belong. A protected-file release, opened by Aaron's word and regression-verified like every one.",
+  "url": "./living-time-sphere.html",
+  "symbol": "◐"
+ },
+ {
   "date": "2026-11-24",
   "type": "Site",
   "title": "The front rooms refashioned: two install doors, a buy-today shop, a top-shelf library, and one flow for the day",
