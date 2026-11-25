@@ -687,6 +687,29 @@ test("no R1.7 protected file is touched by this branch", () => {
   const carriesMobileStage = changed.has(
     "tests/sphere-mobile-stage.test.js"
   );
+  /*
+   * App bridge declaration (Nov 24, 2026 — Aaron's sentence:
+   * "the site should also ask permission to direct if there is
+   * a app to bring your spark, calendar etc to the website").
+   * This change set declares itself by carrying its signature
+   * file (the bridge module, which lives outside the protected
+   * directories), and its declared set names exactly one
+   * protected path: the Sphere page, changed by tags and a
+   * mount only — one stylesheet link, one script tag, and the
+   * bridge's empty mount div in the neighbourhood PR #159
+   * opened. The bridge module and its stylesheet live outside
+   * the protected directories; no geometry, rendering, camera,
+   * motion, selection, label, or calendar file is touched, and
+   * the invitation the module renders is permission-first: it
+   * fetches nothing and moves nothing before the keeper's yes.
+   * Every other protected path still fails this test loudly.
+   */
+  const appBridgeDeclaredProtected = new Set([
+    "docs/living-time-sphere.html"
+  ]);
+  const carriesAppBridge = changed.has(
+    "docs/assets/js/spark-app-bridge.js"
+  );
   for (const file of changed) {
     if (!protectedPaths.has(file)) continue;
     assert.ok(
@@ -703,7 +726,8 @@ test("no R1.7 protected file is touched by this branch", () => {
         (carriesProtectedThree && protectedThreeDeclaredProtected.has(file)) ||
         (carriesDetails && detailsDeclaredProtected.has(file)) ||
         (carriesAppMode && appModeDeclaredProtected.has(file)) ||
-        (carriesMobileStage && mobileStageDeclaredProtected.has(file)),
+        (carriesMobileStage && mobileStageDeclaredProtected.has(file)) ||
+        (carriesAppBridge && appBridgeDeclaredProtected.has(file)),
       `R1.7 protected file changed: ${file}`
     );
   }

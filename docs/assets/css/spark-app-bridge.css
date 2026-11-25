@@ -1,0 +1,163 @@
+/* The app bridge — a quiet card that asks, once.
+   Scoped to .spark-bridge-mount so no other surface inherits
+   it. Palette is the site's own: deep ground, ivory text,
+   gold for the one warm action, cyan for the quiet ones. */
+
+.spark-bridge-mount {
+  max-width: 46rem;
+  margin: 1.25rem auto;
+  padding: 0 1rem;
+}
+
+.spark-bridge-card {
+  position: relative;
+  border: 1px solid rgba(243, 201, 122, 0.28);
+  border-radius: 20px;
+  background: rgba(14, 18, 28, 0.94);
+  color: #f4f1e8;
+  padding: 1.1rem 1.25rem 1.25rem;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.spark-bridge-close {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.6rem;
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  color: #bdc6d6;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.spark-bridge-eyebrow {
+  margin: 0 0 0.25rem;
+  color: #7af3ff;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.spark-bridge-title {
+  margin: 0 0 0.5rem;
+  color: #f3c97a;
+  font-size: 1.35rem;
+  line-height: 1.25;
+}
+
+.spark-bridge-subtitle {
+  margin: 0 0 0.5rem;
+  color: #f3c97a;
+  font-size: 1.15rem;
+}
+
+.spark-bridge-half {
+  margin: 1rem 0 0.35rem;
+  color: #f4f1e8;
+  font-size: 1rem;
+}
+
+.spark-bridge-body {
+  margin: 0 0 0.75rem;
+  color: #bdc6d6;
+  line-height: 1.55;
+}
+
+.spark-bridge-row {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.spark-bridge-btn {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  padding: 0.6rem 1rem;
+  border: 1px solid rgba(122, 243, 255, 0.35);
+  border-radius: 12px;
+  background: transparent;
+  color: #f4f1e8;
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.spark-bridge-btn.primary {
+  border-color: rgba(243, 201, 122, 0.65);
+  background: rgba(243, 201, 122, 0.14);
+  color: #f3c97a;
+  font-weight: 600;
+}
+
+.spark-bridge-btn.quiet {
+  border-color: transparent;
+  color: #bdc6d6;
+}
+
+.spark-bridge-fine {
+  margin: 0.7rem 0 0;
+  color: #bdc6d6;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.spark-bridge-fine a,
+.spark-bridge-door a {
+  color: #7af3ff;
+}
+
+.spark-bridge-input {
+  flex: 1 1 16rem;
+  min-height: 44px;
+  padding: 0.6rem 0.8rem;
+  border-radius: 12px;
+  border: 1px solid rgba(122, 243, 255, 0.35);
+  background: #0a0e18;
+  color: #f4f1e8;
+  font: inherit;
+  text-transform: uppercase;
+}
+
+.spark-bridge-preview {
+  margin-top: 0.9rem;
+  border-top: 1px solid rgba(243, 201, 122, 0.18);
+  padding-top: 0.9rem;
+}
+
+.spark-bridge-art {
+  width: 96px;
+  height: 96px;
+}
+
+.spark-bridge-art svg {
+  width: 100%;
+  height: 100%;
+}
+
+.spark-bridge-name {
+  margin: 0.4rem 0 0.2rem;
+  font-weight: 600;
+}
+
+.spark-bridge-kind {
+  margin: 0 0 0.4rem;
+  color: #bdc6d6;
+  line-height: 1.5;
+}
+
+.spark-bridge-note {
+  margin: 0.7rem 0 0;
+  color: #f4f1e8;
+  line-height: 1.5;
+}
+
+.spark-bridge-door p {
+  margin: 0 0 0.6rem;
+  color: #bdc6d6;
+  line-height: 1.55;
+}
