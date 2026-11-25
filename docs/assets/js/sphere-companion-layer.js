@@ -855,11 +855,11 @@
     if (document.querySelector("script[data-sphere-spark-schedule]")) return;
     const css = document.createElement("link");
     css.rel = "stylesheet";
-    css.href = "assets/css/sphere-spark-schedule.css?v=20261124-1";
+    css.href = "assets/css/sphere-spark-schedule.css?v=20261124-2";
     css.setAttribute("data-sphere-spark-schedule", "");
     document.head.appendChild(css);
     const s = document.createElement("script");
-    s.src = "assets/js/sphere-spark-schedule.js?v=20261124-1";
+    s.src = "assets/js/sphere-spark-schedule.js?v=20261124-2";
     s.async = false;
     s.setAttribute("data-sphere-spark-schedule", "");
     document.head.appendChild(s);
