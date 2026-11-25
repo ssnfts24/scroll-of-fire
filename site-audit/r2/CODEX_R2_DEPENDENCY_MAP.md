@@ -104,7 +104,7 @@
 | `docs/assets/css/spark-companion.css` | 184 |
 | `docs/assets/css/living-ui.css` | 149 |
 | `docs/scripture/assets/scripture.css` | 101 |
-| `docs/assets/css/spark-agent-seat.css` | 72 |
+| `docs/assets/css/spark-agent-seat.css` | 74 |
 | `docs/assets/css/codex.css` | 57 |
 | `docs/assets/css/navigation.css` | 51 |
 | `docs/assets/css/social-bridge.css` | 42 |
@@ -122,7 +122,7 @@
 | `docs/scripture/assets/scripture.js` | 101 |
 | `docs/assets/js/spark-relations.js` | 78 |
 | `docs/assets/js/heaven-sound.js` | 74 |
-| `docs/assets/js/spark-agent-seat.js` | 72 |
+| `docs/assets/js/spark-agent-seat.js` | 74 |
 | `docs/assets/js/spark-3d.js` | 70 |
 | `docs/assets/js/calendar/pattern-calendar-version.js` | 45 |
 | `docs/assets/js/calendar/pattern-calendar-data.js` | 45 |
