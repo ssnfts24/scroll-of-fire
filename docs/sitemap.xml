@@ -132,6 +132,18 @@
   </url>
 
   <url>
+    <loc>https://codexofreality.org/map.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/ledger.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
     <loc>https://codexofreality.org/equinox-passage.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

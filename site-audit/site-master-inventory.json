@@ -9,14 +9,13 @@
     "issueCounts": {
       "not-linked-directly-from-homepage": 30,
       "nav-label-differs-from-title": 24,
-      "reachable-only-through-atlas": 3,
       "no-global-navigation": 1,
       "deployed-but-unlinked": 64,
-      "unreachable-from-homepage": 5,
+      "unreachable-from-homepage": 4,
       "compatibility-redirect-page": 1,
+      "reachable-only-through-atlas": 2,
       "not-published-in-catalog": 30,
-      "unnamed-image-needs-descriptive-title": 21,
-      "not-in-sitemap": 1
+      "unnamed-image-needs-descriptive-title": 21
     }
   },
   "resources": [
@@ -104,6 +103,7 @@
         "13-moon-whitepaper.html",
         "circle.html",
         "codex-atlas.html",
+        "codex-white-paper.html",
         "companions.html",
         "covenant-caravan.html",
         "downloads.html",
@@ -670,12 +670,11 @@
         "inGlobalNav": false,
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": null,
-        "inboundPages": 1,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 3,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
-        "reachable-only-through-atlas",
         "not-linked-directly-from-homepage"
       ]
     },
@@ -713,7 +712,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 190,
+        "inboundPages": 191,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
@@ -1371,8 +1370,8 @@
     },
     {
       "id": "docs:account.html",
-      "title": "Your Account — One Sign-In for the App and the Site | Codex of Reality",
-      "description": "One account links Spark. Living Day and this site: sign in once, on either side, and your record follows you. The account never holds your Spark's identity — that stays with your Spark, on your device.",
+      "title": "Your Account — Not Yet Open | Codex of Reality",
+      "description": "Accounts for the Codex of Reality are built but not yet open. When they open, one account will link Spark. Living Day and this site — and the account will never hold your Spark's identity, which stays with your Spark, on your device.",
       "category": "Utility",
       "area": null,
       "relatedProjects": [],
@@ -1381,7 +1380,13 @@
       "publicationStatus": "live",
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
-        "index.html"
+        "companions.html",
+        "downloads.html",
+        "index.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "shop.html",
+        "witness.html"
       ],
       "canonicalUrl": "https://codexofreality.org/account.html",
       "privacyEligibility": "utility",
@@ -1389,15 +1394,13 @@
         "path": "account.html",
         "inSitemap": false,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": null,
-        "hopsFromHomeWithoutAtlas": null,
-        "inboundPages": 0,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 1,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "unreachable-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "docs:assets/glyphs/README.md",
@@ -2204,6 +2207,7 @@
       "relatedPages": [
         "13-moon-whitepaper.html",
         "about-aaron.html",
+        "account.html",
         "circle.html",
         "claims-atlas.html",
         "codex-atlas.html",
@@ -13090,7 +13094,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 192,
+        "inboundPages": 193,
         "pagesWithNavLinkToIt": 84
       },
       "issues": [
@@ -13979,7 +13983,7 @@
       "privacyEligibility": "approved-public",
       "discoverability": {
         "path": "ledger.html",
-        "inSitemap": false,
+        "inSitemap": true,
         "inGlobalNav": true,
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
@@ -14030,7 +14034,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 192,
+        "inboundPages": 193,
         "pagesWithNavLinkToIt": 4
       },
       "issues": []
@@ -14369,7 +14373,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 193,
+        "inboundPages": 194,
         "pagesWithNavLinkToIt": 186
       },
       "issues": [
@@ -19563,7 +19567,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 191,
+        "inboundPages": 192,
         "pagesWithNavLinkToIt": 79
       },
       "issues": [
@@ -20534,6 +20538,7 @@
         "about-aaron.html",
         "circle.html",
         "codex-atlas.html",
+        "codex-white-paper.html",
         "companions.html",
         "covenant-caravan.html",
         "downloads.html",
@@ -21311,11 +21316,11 @@
         "witness-world.html",
         "witness.html"
       ],
-      "canonicalUrl": "https://codexofreality.org/garden.html",
+      "canonicalUrl": "https://codexofreality.org/map.html",
       "privacyEligibility": "approved-public",
       "discoverability": {
         "path": "map.html",
-        "inSitemap": false,
+        "inSitemap": true,
         "inGlobalNav": false,
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
@@ -21324,7 +21329,6 @@
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
-        "not-in-sitemap",
         "not-linked-directly-from-homepage"
       ]
     },
@@ -21492,7 +21496,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 190,
+        "inboundPages": 191,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
