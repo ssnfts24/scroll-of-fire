@@ -37,7 +37,11 @@ Set in the Netlify site's environment settings, by Aaron:
 | `MONGODB_URI` | The step-5 connection string, with the step-3 user's password in it | Yes — the accounts side fails closed without it |
 | `MONGODB_DB` | The database name (the code's default is `codex-door` if unset) | No |
 | `ACCOUNTS_SESSION_SECRET` | A long random string Aaron generates (e.g. in his password manager); it signs sign-in sessions. Rotating it signs everyone out, nothing more | Yes |
-| `ACCOUNTS_EMAIL_WEBHOOK` | The HTTPS endpoint of Aaron's mailer, which receives `{email, link, purpose}` and sends the magic link | Yes, for real sign-in mail |
+| `ACCOUNTS_EMAIL_WEBHOOK` | The HTTPS endpoint of the mailer, which receives `{email, link, purpose}` and sends the magic link. The mailer is now BUILT — it is the door's own function: set this to `https://codexofreality.org/.netlify/functions/accounts-mailer` | Yes, for real sign-in mail |
+| `ACCOUNTS_EMAIL_WEBHOOK_SECRET` | A long random string Aaron generates (like the session secret). The accounts function proves itself to the mailer with it; the mailer's real transport refuses to stand without it. One name, read by both functions | Yes, for real sign-in mail |
+| `ACCOUNTS_MAILER_API_URL` | His email service's send endpoint (see "The mailer" below) | Yes, for real sign-in mail |
+| `ACCOUNTS_MAILER_API_KEY` | His email service's API key | Yes, for real sign-in mail |
+| `ACCOUNTS_MAILER_FROM` | The From address the sign-in mail carries, on a domain his email service has verified for him | Yes, for real sign-in mail |
 | `SITE_URL` | The site's own origin, for building the link (default `https://codexofreality.org`) | No |
 
 **Forbidden in production, in these words:**
@@ -46,7 +50,42 @@ site (it returns a magic token in the request-link response —
 for Aaron's own disposable test deployments only), and
 `ACCOUNTS_STORE` must never be set to `double` in production
 (the double is the in-process test store; it holds nothing
-durably and exists for proofs).
+durably and exists for proofs), and `ACCOUNTS_MAILER_TRANSPORT`
+must never be set to `double` in production (the mailer double
+"sends" into an in-process outbox nobody can read — sign-in
+mail would silently go nowhere).
+
+## The mailer (built Nov 25, 2026 — the door's missing half)
+
+The sign-in mailer now EXISTS: it is the Netlify function
+`accounts-mailer` in this repo, and `ACCOUNTS_EMAIL_WEBHOOK`
+points at it (table above). What remains is Aaron's, and it
+is the email service itself — no email credential exists in
+this house yet, and none is created by anyone else's hands:
+
+1. **An account with an email-sending service**, in Aaron's
+   own name (a transactional mail service — the transport
+   speaks the common shape: a JSON POST `{from, to, subject,
+   text}` under a Bearer API key, as Resend and its peers
+   accept; if his service speaks a different shape, the one
+   file that changes is `accounts-mailer-transport-https.mjs`).
+2. **His sending domain verified** with that service (the
+   service's own DNS steps), and a From address on it for
+   `ACCOUNTS_MAILER_FROM`.
+3. **The service's API key**, kept in his own password
+   keeping, set by his hands as `ACCOUNTS_MAILER_API_KEY`,
+   with its send endpoint as `ACCOUNTS_MAILER_API_URL`.
+4. **`ACCOUNTS_EMAIL_WEBHOOK_SECRET`** generated and set
+   (one value; both functions read the same name), and
+   **`ACCOUNTS_EMAIL_WEBHOOK`** set to the mailer's own URL
+   (table above).
+
+The mailer carries fences of its own: it sends sign-in mail
+only, it refuses any link that is not the site's own account
+page carrying a sign-in token, and with the real transport
+it will not stand at all until the webhook secret exists.
+Until these steps are done it answers "unconfigured" and
+sends nothing — fail-closed, like the rest of the door.
 
 ## The agent door rides this same store (Gate G, Phase 4)
 

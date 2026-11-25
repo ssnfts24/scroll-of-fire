@@ -50,6 +50,18 @@
   margin-top: 0;
 }
 
+/* The watch-and-do study strip (Batch E6): the school's second
+   way into every episode, standing under its film. */
+.episode-study {
+  border-top: 1px dashed var(--line-gold, rgba(243, 201, 122, 0.28));
+  margin-top: 0.7rem;
+  padding: 0.55rem 0 0.35rem;
+}
+
+.episode-study p {
+  margin: 0.15rem 0;
+}
+
 .episode-marks {
   color: var(--gold, #f3c97a);
   font-size: 0.95rem;
