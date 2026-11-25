@@ -35,9 +35,9 @@ const EXCLUDED = new Set([
   "404.html",
   "offline.html",
   "caravan.html",
-  // Gate G (G2): the account page is a utility page (noindex,
-  // catalog-classified Utility), excluded as offline.html is.
-  "account.html",
+  // Page Evolution Batch E3 (Nov 25, 2026): the account page
+  // joined the one-nav system — the plan's named step, reversing
+  // the Gate G utility exclusion. It is a content page here now.
   // Page programme (Nov 24, 2026): the theory doorway merges folded
   // these four pages into their practical homes; they are now
   // meta-refresh redirect stubs, as caravan.html is.
@@ -51,7 +51,19 @@ const EXCLUDED = new Set([
   "witness-world.html",
   // Page programme (Nov 24, 2026): the Remnant Whitepaper folded into
   // the Codex White Paper as Part II; a redirect stub now.
-  "scroll-of-fire-codex-of-reality-remnant-whitepaper.html"
+  "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
+  // Batch E4 (Nov 25, 2026): data fragments, not pages — the
+  // downloads seal archive and the Scroll shelf lists ride behind
+  // their doors and are fetched on open; they carry no nav.
+  "assets/data/downloads-archive.html",
+  "scroll/data/shelf-foundations.html",
+  "scroll/data/shelf-scripture.html",
+  "scroll/data/shelf-history.html",
+  "scroll/data/shelf-evidence.html",
+  "scroll/data/shelf-technology.html",
+  "scroll/data/shelf-prophecy.html",
+  "scroll/data/shelf-witness.html",
+  "scroll/data/shelf-reference.html"
 ]);
 
 const AREAS = [

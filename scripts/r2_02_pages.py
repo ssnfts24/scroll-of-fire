@@ -37,7 +37,7 @@ def head(title, desc, base, canonical_path, extra=""):
 <meta name="theme-color" content="#05070d">
 <link rel="icon" type="image/png" href="{base}../assets/img/shared/branding/favicon.png">
 <link rel="apple-touch-icon" href="{base}../assets/img/shared/branding/favicon.png">
-<link rel="manifest" href="{base}../manifest-site.webmanifest">
+<link rel="manifest" href="{base}../manifest.webmanifest">
 <title>{E(title)}</title>
 <link rel="stylesheet" href="{base}assets/scripture.css">
 <link rel="stylesheet" href="{base}../assets/css/living-ui.css?v=20261117-1">

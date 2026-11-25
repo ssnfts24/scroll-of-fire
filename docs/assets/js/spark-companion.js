@@ -2394,11 +2394,19 @@
 
   function recordVisit(record, { patternDay, page }) {
     const next = { ...record };
-    if (patternDay != null && !next.daysSeen.includes(patternDay)) {
-      next.daysSeen = [...next.daysSeen, patternDay].sort((a, b) => a - b);
+    /* A stored record is accepted on its seed alone (see the
+     * presence's readRecord), so a record written by an older
+     * shape — or seeded with only some of its fields — may reach
+     * here without its arrays. Read them the way the rest of this
+     * file reads record fields: an absent array is an empty one,
+     * never a thrown error that loses the visit. */
+    const daysSeen = Array.isArray(next.daysSeen) ? next.daysSeen : [];
+    const pagesSeen = Array.isArray(next.pagesSeen) ? next.pagesSeen : [];
+    if (patternDay != null && !daysSeen.includes(patternDay)) {
+      next.daysSeen = [...daysSeen, patternDay].sort((a, b) => a - b);
     }
-    if (page && !next.pagesSeen.includes(page)) {
-      next.pagesSeen = [...next.pagesSeen, page];
+    if (page && !pagesSeen.includes(page)) {
+      next.pagesSeen = [...pagesSeen, page];
     }
     if (page) {
       /* Leaving off is remembered honestly: the page before this
@@ -2417,8 +2425,11 @@
 
   function recordPractice(record, { patternDay }) {
     const next = { ...record };
-    if (patternDay != null && !next.practiceDays.includes(patternDay)) {
-      next.practiceDays = [...next.practiceDays, patternDay].sort((a, b) => a - b);
+    /* Same fence as recordVisit: an absent practiceDays array on
+     * a stored record is an empty one, not an error. */
+    const practiceDays = Array.isArray(next.practiceDays) ? next.practiceDays : [];
+    if (patternDay != null && !practiceDays.includes(patternDay)) {
+      next.practiceDays = [...practiceDays, patternDay].sort((a, b) => a - b);
     }
     return next;
   }

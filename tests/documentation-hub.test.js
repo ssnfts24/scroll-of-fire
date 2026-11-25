@@ -14,10 +14,14 @@ const script = read("docs/assets/js/documentation-hub.js");
 const patternScript = read("docs/assets/js/documentation-hub-patterns.js");
 
 test("documentation hub page carries the unified nav, the hub mounts, and a no-JS fallback", () => {
-  assert.match(page, /data-site-nav/);
-  assert.match(page, /site-nav:global:start[\s\S]*?Scroll Library[\s\S]*?codex-atlas\.html/);
-  for (const route of ["scroll/search.html", "scroll/lexicon.html", "scroll/atlas.html", "scroll/editorial.html"]) {
-    assert.ok(page.includes(route), `documentation hub misses ${route} in its navigation`);
+  assert.match(page, /data-living-nav/); // E3: the unified nav is the travel bar; the legacy data-site-nav menu folded away
+  // E3 (Nov 25, 2026): the legacy header's global menu folded
+  // away site-wide. The Scroll doors it carried are homed on the
+  // Library shelf, which this page reaches through the one nav's
+  // Library room — the census lives in one-navigation.test.js.
+  const shelf = read("docs/scroll/index.html");
+  for (const route of ["search.html", "lexicon.html", "atlas.html", "editorial.html"]) {
+    assert.ok(shelf.includes(route), `the Library shelf no longer homes ${route}`);
   }
   assert.ok(page.includes("assets/js/documentation-hub.js"), "page does not load the hub script");
   assert.ok(page.includes("scroll/evidence/claim-register.json"), "page does not point at the claim register");
