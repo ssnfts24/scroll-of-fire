@@ -99,6 +99,27 @@ function auditHtml(file) {
   if (!/^\s*<!doctype html>/i.test(source)) addError(file, "missing HTML5 doctype");
   if (!/<html\b[^>]*\blang\s*=\s*["'][^"']+["']/i.test(source)) addError(file, "missing html lang attribute");
   if (!/<title>\s*[^<]+\s*<\/title>/i.test(source)) addError(file, "missing non-empty title");
+  /* Batch E4 (Nov 25, 2026): data fragments (marked
+   * data-data-fragment on the html element) are not pages — the
+   * downloads seal archive and the Scroll shelf lists ride
+   * behind their doors and are fetched on open. Page furniture
+   * rules (viewport, canonical, h1, site.js) do not apply to
+   * them; the reference checks below still do, in full. */
+  const isFragment = /<html\b[^>]*\bdata-data-fragment\b/i.test(source);
+  if (isFragment) {
+    const baseTag = matches(source, /<base\b[^>]*>/gi)[0]?.[0] || "";
+    const baseHref = attribute(baseTag, "href");
+    const ids = new Set(matches(source, /\sid\s*=\s*(["'])(.*?)\1/gi).map(match => match[2]));
+    const tags = matches(source, /<(?:a|link|script|img|source|video|audio|iframe|object|embed|form)\b[^>]*>/gi).map(match => match[0]);
+    for (const tag of tags) {
+      const tagName = tag.match(/^<([a-z]+)/i)?.[1]?.toLowerCase() || "element";
+      for (const name of ["href", "src", "poster", "data", "action"]) {
+        const value = attribute(tag, name);
+        if (value != null) checkReference(file, value, baseHref, ids, `${tagName}[${name}]`);
+      }
+    }
+    return;
+  }
   if (!/<meta\b[^>]*\bname\s*=\s*["']viewport["'][^>]*>/i.test(source)) addError(file, "missing viewport metadata");
   if (!/<meta\b[^>]*\bname\s*=\s*["']description["'][^>]*\bcontent\s*=\s*["'][^"']{20,}["'][^>]*>/i.test(source) &&
       !/<meta\b[^>]*\bcontent\s*=\s*["'][^"']{20,}["'][^>]*\bname\s*=\s*["']description["'][^>]*>/i.test(source)) {

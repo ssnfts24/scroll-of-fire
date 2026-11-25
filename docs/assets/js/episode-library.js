@@ -88,6 +88,51 @@
     return (story.chapters || []).find(c => c.id === id) || null;
   }
 
+  /* The watch-and-do study strip (Page Evolution Batch E6,
+   * Nov 25, 2026): every episode is a school door as well as a
+   * film — watch it, then do the practice its skill names. The
+   * practices below are the story bible's own curriculum table
+   * (bible §11, "The keeper's practice"), keyed by the skill's
+   * number, in the bible's words lightly trimmed; this module
+   * keeps no episode table of its own, and invents none — a
+   * chapter the curriculum does not name carries no skill, and
+   * its strip offers its beat to sit with instead. The doing
+   * lives in the chapter's own room, which is its page. */
+  const KEEPER_PRACTICES = {
+    1: "Walk one day whole, slowly.",
+    2: "Keep your own notebook or Atlas entry alongside, as you go.",
+    3: "Make the Pattern Garden's real planting, in its Moon.",
+    4: "Choose what to carry into a new season, and what to leave.",
+    5: "The evening review: let your tale stand beside the day's account, and append the correction.",
+    6: "Pin a claim to its days; judge it later by the record.",
+    7: "Do the real practice along with the Traveller.",
+    8: "The visual exercise: look first, and notice a thought at its first approach.",
+    9: "Return to a place or a book a second time, on purpose.",
+    10: "Enter one made thing of your own in your record.",
+    11: "Run one day through its years on the Sphere: the same day, seen whole."
+  };
+
+  function studyStrip(chapter) {
+    const strip = el("div", "episode-study");
+    if (chapter.skill && KEEPER_PRACTICES[chapter.skill.n]) {
+      const doLine = el("p", "episode-study-do");
+      doLine.append(el("strong", null, "Watch — then do: "));
+      doLine.append(`${chapter.skill.name}. ${KEEPER_PRACTICES[chapter.skill.n]}`);
+      strip.appendChild(doLine);
+      const room = el("p", "episode-study-room");
+      const a = el("a", null, `Do it in its room — ${chapter.place}`);
+      a.href = assetUrl(chapter.page);
+      room.appendChild(a);
+      strip.appendChild(room);
+    } else if (chapter.beat) {
+      const sitLine = el("p", "episode-study-do");
+      sitLine.append(el("strong", null, "Watch — then sit with its beat: "));
+      sitLine.append(chapter.beat);
+      strip.appendChild(sitLine);
+    }
+    return strip;
+  }
+
   function renderCard(story, chapter, filmSource, nextChapter) {
     const card = el("article", "episode-card");
     card.setAttribute("data-story-slot", "");
@@ -116,6 +161,7 @@
         `It teaches the Waymaker skill ${chapter.skill.name}. ` +
         `Watching it through marks that skill met, and brings its token home.`));
     }
+    card.appendChild(studyStrip(chapter));
     const relations = (chapter.relations || []).filter(r => chapterById(story, r.id));
     if (relations.length) {
       const rel = el("p", "episode-relations", "Kin on the road: ");

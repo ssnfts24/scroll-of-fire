@@ -62,7 +62,7 @@ const CLAIM_BODY_CAP = 2000;
  * scroll/ pages are covered by the scrolls/lexicon/claims areas; the utility
  * pages carry no searchable content; search.html is the search page itself. */
 const PAGE_EXCLUDED_PREFIXES = ["scroll/"];
-const PAGE_EXCLUDED_FILES = ["404.html", "offline.html", "caravan.html", "search.html", "theory/ethics.html", "theory/glossary.html", "theory/witness.html", "theory/frequency-governance.html", "start.html", "witness-world.html", "scroll-of-fire-codex-of-reality-remnant-whitepaper.html"];
+const PAGE_EXCLUDED_FILES = ["404.html", "offline.html", "caravan.html", "search.html", "theory/ethics.html", "theory/glossary.html", "theory/witness.html", "theory/frequency-governance.html", "start.html", "witness-world.html", "scroll-of-fire-codex-of-reality-remnant-whitepaper.html", "assets/data/downloads-archive.html"];
 
 function walk(dir) {
   const out = [];

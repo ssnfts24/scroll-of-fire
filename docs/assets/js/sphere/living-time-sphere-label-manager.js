@@ -957,6 +957,139 @@
       _labelSizeCache.set(el, size);
       return size;
     }
+    /*
+     * Track-loop natural widths (sphere performance pass, Nov
+     * 25, 2026). The in-motion guard in _trackFrame measured
+     * every plate's natural width with offsetWidth the first
+     * time it saw each pass's fresh tracking entries — a dozen
+     * layout reads per layout pass, at the 96 ms gesture
+     * cadence, for a width that is a fact of the element's text
+     * and dressing, never of the camera. The width is now
+     * served under the size cache's own key discipline (see
+     * _labelSizeKey): measured once per (element, text, band,
+     * stage) and reused while those stand. The guard's geometry
+     * consumes the same value the live read returned.
+     */
+    const _trackNatWCache = new WeakMap();
+    function _trackNatWidth(el) {
+      if (!el) return 0;
+      // The cap state rides in the key: the plate-cap pass sets
+      // inline width/min-width on the elements it caps, and a
+      // capped box is a different width fact than the natural
+      // one — when the cap is applied or cleared the key moves
+      // and the width is re-measured live, exactly as the
+      // uncached read would see it.
+      const key = `${_labelSizeKey(el)}|cap:${el.dataset?.plateCapped || ""}:${el.style?.width || ""}:${el.style?.minWidth || ""}`;
+      const hit = _trackNatWCache.get(el);
+      if (hit && hit.key === key) return hit.w;
+      const w = el.offsetWidth || 0;
+      // A hidden plate measures 0 — serve it for this frame
+      // but never store it (same rule as the size cache).
+      if (w) _trackNatWCache.set(el, { key, w });
+      return w;
+    }
+    /*
+     * Stage geometry cache (sphere performance pass, Nov 25,
+     * 2026). update() read the stage's and the label container's
+     * bounding rects — and the Play pill's rect — on EVERY call,
+     * including the twice-a-second still-camera ticks that then
+     * early-out on the signature: three forced layout reads per
+     * tick before any placement ran. What update() consumes from
+     * those rects is only sizes and relative offsets (stage
+     * minus container; chrome normalized against the container),
+     * which a scroll cannot change — both elements ride the same
+     * document flow — and which a real layout change announces
+     * through ResizeObserver, the same invalidation pattern the
+     * renderer uses for its semantic width (fix 1a). A scroll
+     * still invalidates the whole cache: the renderer's
+     * protected rects arrive in viewport coordinates and are
+     * normalized against this container rect, so after a scroll
+     * every rect in the pass is re-read in the same pass and the
+     * pass stays in one coordinate world. Element identity is
+     * part of the key, so a remount re-reads. The values served
+     * are the values the live reads returned; only the reading
+     * is saved.
+     */
+    let _geomCache = null;
+    let _geomObserver = null;
+    function _invalidateGeom() {
+      if (_geomCache) _geomCache.stale = true;
+    }
+    if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
+      window.addEventListener("resize", _invalidateGeom, { passive: true });
+      window.addEventListener("scroll", _invalidateGeom, { capture: true, passive: true });
+    }
+    /*
+     * Observation is accumulate-only, and that is load-bearing:
+     * a ResizeObserver delivers an initial callback for every
+     * element it starts observing, so a disconnect/re-observe
+     * on every cache rebuild marks each fresh cache stale with
+     * that callback and the cache never survives a single pass
+     * (measured: the first build of this cache re-read every
+     * rect on every pass until observation stopped churning).
+     * An element is observed once; a genuinely new element
+     * costs exactly one initial-callback invalidation, then
+     * the cache stands.
+     */
+    const _geomWatched = new Set();
+    function _watchGeom(els) {
+      if (typeof ResizeObserver === "undefined") return;
+      try {
+        if (!_geomObserver) _geomObserver = new ResizeObserver(_invalidateGeom);
+        for (const el of els) {
+          if (el && !_geomWatched.has(el)) {
+            _geomWatched.add(el);
+            _geomObserver.observe(el);
+          }
+        }
+      } catch { /* no observer: element identity + window resize still guard the cache */ }
+    }
+    function _plainRect(rect) {
+      return { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
+    }
+    function _stageGeometry(stage) {
+      const container = _labelContainer || null;
+      const cache = _geomCache;
+      if (cache && !cache.stale && cache.stage === stage && cache.container === container) {
+        return cache;
+      }
+      const liveStage = stage?.getBoundingClientRect?.();
+      if (!liveStage?.width || !liveStage?.height) return null;
+      const stageRect = _plainRect(liveStage);
+      let containerRect = stageRect;
+      if (container) {
+        const liveContainer = container.getBoundingClientRect?.();
+        if (liveContainer) containerRect = _plainRect(liveContainer);
+      }
+      const geom = {
+        stage,
+        container,
+        stageRect,
+        containerRect,
+        offsetX: stageRect.left - containerRect.left,
+        offsetY: stageRect.top - containerRect.top,
+        playEl: undefined,
+        playRect: null,
+        stale: false
+      };
+      _geomCache = geom;
+      _watchGeom([stage, container]);
+      return geom;
+    }
+    function _playRect(geom, playEl) {
+      if (!playEl) return null;
+      if (geom.playEl === playEl && geom.playRect) return geom.playRect;
+      const live = playEl.getBoundingClientRect?.();
+      if (!live || !(live.width > 0) || !(live.height > 0)) {
+        geom.playEl = playEl;
+        geom.playRect = null;
+        return null;
+      }
+      geom.playEl = playEl;
+      geom.playRect = _plainRect(live);
+      _watchGeom([geom.stage, geom.container, playEl]);
+      return geom.playRect;
+    }
     const _proximityState = createProximityState();
     /*
      * Anchor tracking (repair pass, Nov 22, 2026). The renderer
@@ -1129,6 +1262,7 @@
       _labelContainer = labelContainer || null;
       _labelEls = Array.isArray(labelEls) ? labelEls : [];
       _connectorEl = connectorEl || null;
+      _geomCache = null;
       _dirty = true;
       _lastSignature = "";
       _hideConnector();
@@ -1326,7 +1460,7 @@
         );
         if (pillEntries.length && plateEntries.length) {
           const plateGeom = plateEntries.map(entry => {
-            if (entry.natW == null) entry.natW = entry.el?.offsetWidth || 0;
+            if (entry.natW == null) entry.natW = _trackNatWidth(entry.el);
             const scale = (entry.baseScale || 1) * (entry.shrink ?? 1) * (entry.selected ? growth : entry.swell ? swell : 1);
             const dia = entry.discPx > 0 ? entry.discPx * scale : entry.natW * scale;
             if (entry._moonNum === undefined) {
@@ -1825,11 +1959,15 @@
     }) {
       const stage = stageEl || _stageEl;
       if (!stage || !_labelEls?.length || !camera || !three || !Array.isArray(anchors)) return false;
-      const stageRect = stage.getBoundingClientRect();
-      if (!stageRect?.width || !stageRect?.height) return false;
-      const containerRect = _labelContainer?.getBoundingClientRect?.() || stageRect;
-      const offsetX = stageRect.left - containerRect.left;
-      const offsetY = stageRect.top - containerRect.top;
+      // Stage geometry cache (see _stageGeometry): the same
+      // sizes and relative offsets the live reads returned,
+      // re-read only when layout actually changes.
+      const geom = _stageGeometry(stage);
+      if (!geom) return false;
+      const stageRect = geom.stageRect;
+      const containerRect = geom.containerRect;
+      const offsetX = geom.offsetX;
+      const offsetY = geom.offsetY;
       camera.updateMatrixWorld?.(true);
       const blockedRects = Array.isArray(protectedRects)
         ? protectedRects.map(entry => normalizeRect(entry, containerRect)).filter(Boolean)
@@ -1844,8 +1982,8 @@
        */
       try {
         const playBar = stage?.closest?.(".sphere-canvas-wrap")?.querySelector?.(".sphere-play-bar");
-        const playRect = playBar?.getBoundingClientRect?.();
-        if (playRect && playRect.width > 0 && playRect.height > 0) {
+        const playRect = _playRect(geom, playBar);
+        if (playRect) {
           const normalizedPlay = normalizeRect(playRect, containerRect);
           if (normalizedPlay) blockedRects.push(normalizedPlay);
         }
@@ -1934,6 +2072,24 @@
         blockedRects
       };
       _trackLastSig = "";
+
+      // Root rem for this pass (sphere performance pass, Nov 25,
+      // 2026): the marks geometry below used to re-read the root
+      // font size through getComputedStyle for EVERY scheduled
+      // plate — the same value each time, one style
+      // recalculation per plate per pass. It is read at most
+      // once per pass now; the value used is the value the
+      // per-plate reads returned.
+      let _passRemPx = null;
+      const _remPx = () => {
+        if (_passRemPx == null) {
+          _passRemPx = 16;
+          try {
+            _passRemPx = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+          } catch { /* rem default stands */ }
+        }
+        return _passRemPx;
+      };
 
       const THREE = three;
       const centerVec = new THREE.Vector3(0, 0, 0).project(camera);
@@ -3854,12 +4010,7 @@
               if (markScale < 1 && typeof el.style.setProperty === "function") {
                 el.style.setProperty("--plate-mark-scale", markScale.toFixed(3));
               }
-              let remPx = 16;
-              try {
-                remPx = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-              } catch {
-                /* rem default above */
-              }
+              const remPx = _remPx();
               const farBand =
                 String(semanticBand || "medium").toLowerCase() === "far";
               // A plate whose nearest neighbour is the selected
@@ -4283,6 +4434,9 @@
       _labelContainer = null;
       _labelEls = [];
       _connectorEl = null;
+      _geomCache = null;
+      try { _geomObserver?.disconnect?.(); } catch { /* already gone */ }
+      _geomWatched.clear();
       _dirty = true;
       _lastSignature = "";
     }

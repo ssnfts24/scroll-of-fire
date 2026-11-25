@@ -1,7 +1,8 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
+  
+  <base href="./"><meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#05070d">
   <title>Your Account — Not Yet Open | Codex of Reality</title>
@@ -23,22 +24,36 @@
 <meta name="twitter:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
 <link rel="icon" type="image/png" href="assets/img/shared/branding/favicon.png">
 <link rel="apple-touch-icon" href="assets/img/shared/branding/favicon.png">
+  <link rel="stylesheet" href="assets/css/living-ui.css">
   <link rel="stylesheet" href="assets/css/site-mobile.css?v=20261124-1">
   <script defer src="assets/js/site.js"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-version.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-data.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-format.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-boundary.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar.js?v=20260722-4"></script>
+  <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
   <script defer src="assets/js/spark-account.js"></script>
 </head>
-<body>
+<body class="living-ui">
   <a class="skip-link" href="#main">Skip to content</a>
-  <nav class="rooms" aria-label="The main rooms">
-    <a href="./index.html">Home</a>
-    <a href="./living-time-sphere.html">Sphere</a>
-    <a href="./companions.html">Companions</a>
-    <a href="./moons.html">13 Moons</a>
-    <a href="./downloads.html">Library</a>
-    <a href="./shop.html">Shop</a>
-    <a href="./witness.html">Witness</a>
-  </nav>
-  <main id="main">
+  <div class="living-nav travel-bar" data-living-nav data-travel-bar>
+    <nav class="living-nav-inner" aria-label="Travel bar — main rooms">
+      <a class="living-nav-brand" href="index.html"><span class="living-nav-mark" aria-hidden="true">☲</span> Codex of Reality</a>
+      <ul class="living-nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="living-time-sphere.html">Sphere</a></li>
+        <li><a href="companions.html">Companions</a></li>
+        <li><a href="moons.html">13 Moons</a></li>
+        <li><a href="downloads.html">Library</a></li>
+        <li><a href="witness-world.html">Witness World</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="witness.html">Witness</a></li>
+        <li><a class="living-nav-support" href="https://cash.app/$AaronLaird7" target="_blank" rel="noopener">Support</a></li>
+      </ul>
+    </nav>
+  </div>
+<main id="main">
     <p aria-hidden="true">☾ ✦ ☽</p>
     <h1>Your account</h1>
     <div class="status" role="status">

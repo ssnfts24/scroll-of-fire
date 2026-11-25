@@ -53,8 +53,21 @@ const EXCLUDED = [
   "theory/glossary.html",
   "theory/witness.html",
   "theory/frequency-governance.html",
-  // Gate G (G2): account.html is a utility page, as offline.html.
-  "account.html"
+  // Page Evolution Batch E3 (Nov 25, 2026): account.html joined
+  // the one-nav system by the plan's named step, reversing the
+  // Gate G utility exclusion; it carries the opening vehicle now.
+  // Batch E4 (Nov 25, 2026): data fragments, not pages — the
+  // downloads seal archive and the Scroll shelf lists ride behind
+  // their doors and are fetched on open; no living layer rides them.
+  "assets/data/downloads-archive.html",
+  "scroll/data/shelf-foundations.html",
+  "scroll/data/shelf-scripture.html",
+  "scroll/data/shelf-history.html",
+  "scroll/data/shelf-evidence.html",
+  "scroll/data/shelf-technology.html",
+  "scroll/data/shelf-prophecy.html",
+  "scroll/data/shelf-witness.html",
+  "scroll/data/shelf-reference.html"
 ];
 
 const FAMILIES = {

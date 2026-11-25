@@ -37,7 +37,7 @@ def head(title, desc, base, canonical_path, extra=""):
 <meta name="theme-color" content="#05070d">
 <link rel="icon" type="image/png" href="{base}../assets/img/shared/branding/favicon.png">
 <link rel="apple-touch-icon" href="{base}../assets/img/shared/branding/favicon.png">
-<link rel="manifest" href="{base}../manifest-site.webmanifest">
+<link rel="manifest" href="{base}../manifest.webmanifest">
 <title>{E(title)}</title>
 <link rel="stylesheet" href="{base}assets/scripture.css">
 <link rel="stylesheet" href="{base}../assets/css/living-ui.css?v=20261117-1">
@@ -187,6 +187,11 @@ def render_all(OUT, emit_text, books_meta, chapters, manifest, remnant, curated,
 <video controls preload="none" width="1280" height="720" style="width:100%;height:auto;display:block" src="../assets/media/scripture-explainer.mp4" poster="../assets/media/scripture-explainer-poster.webp" aria-label="Video: the Scripture reader for Genesis and Exodus, explained in plain words">
 Your browser does not support the video element. The same tour is written out across this page.
 </video>
+</section>
+<section id="genesis-path" aria-labelledby="gp-h" style="max-width:880px;margin:2rem auto;">
+<h2 id="gp-h">Genesis, a chapter a day</h2>
+<p>The school path through the first book, one chapter a day: read it, or hear it — every chapter carries a Listen control that reads the English aloud, verse by verse — and let its words open into the word studies as you go. Fifty chapters, fifty days, no catching up and no falling behind: the path is where you are standing on it.</p>
+<p><a href="genesis/01.html">Begin at Genesis 1 →</a> · <a href="../practices.html#pw-school-title">The school paths, from the root</a></p>
 </section>
 <div class="books">{cards}</div>
 <section aria-labelledby="ws-h"><h2 id="ws-h">Hebrew word studies</h2>

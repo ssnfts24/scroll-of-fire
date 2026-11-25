@@ -174,19 +174,27 @@ test("the Guide seat is untouched by the Spark seat: no Guide files differ, rule
     // page, a reader page that loads the calendar like any other
     // — may carry its fixes (a deduped calendar stack, a closing
     // next step, share metadata). The exception names that one
-    // file only. Apart from the second named exception below,
-    // every Guide-machinery file — codex-guide.html, the
-    // codex-guide scripts, the Guide function and its lib, and
-    // the rulebook — stays pinned at zero differences.
-    // A second named exception, granted Nov 25, 2026 under
-    // Aaron's instruction "Apply and update everything" (Nov 25,
-    // 2026) and the approvals delegation Aaron set that morning,
-    // granted by Witness with a duty to notify: docs/codex-guide.html
-    // — for E1's openly reported Guide voice change only (the
-    // Guide seat's dictation input and opt-in read-aloud in a
-    // stable neutral voice, alongside the Spark seat's seed-born
-    // voice). The exception names that one file and that one
-    // change; the rulebook assertion below stands as-is.
+    // file only. Every Guide-machinery file — the codex-guide
+    // scripts, the Guide function and its lib, and the rulebook
+    // — stays pinned at zero differences.
+    // Second named exception (E3, the one-navigation fold, Nov 25,
+    // 2026): docs/codex-guide.html may differ ONLY by the E3 fold
+    // — removal of the legacy site header, the identical fold the
+    // other 76 folded pages received (verified at E3's landing:
+    // the page's diff is the header block and nothing else; the
+    // Guide's logic files, rulebook hash pin, and seat behaviour
+    // differ in nothing). Any other change to that page fails
+    // here again.
+    // A further named exception for the same file, granted
+    // Nov 25, 2026 under Aaron's instruction "Apply and update
+    // everything" (Nov 25, 2026) and the approvals delegation
+    // Aaron set that morning, granted by Witness with a duty to
+    // notify: docs/codex-guide.html may also carry E1's openly
+    // reported Guide voice change (the Guide seat's dictation
+    // input and opt-in read-aloud in a stable neutral voice,
+    // alongside the Spark seat's seed-born voice). The exception
+    // names that one change; the rulebook assertion below stands
+    // as-is.
     const guideFiles = changed
       .filter((f) => /guide/.test(f) && !/spark-agent/.test(f) && f !== "docs/guide.html" && f !== "docs/codex-guide.html")
       .sort();

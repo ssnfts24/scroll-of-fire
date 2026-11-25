@@ -173,6 +173,26 @@ test("growth counts return days, pages, and practice — each once", () => {
   assert.equal(Core.stageOf(record).name, "Spark");
 });
 
+test("a minimal seeded record survives a visit and a practice", () => {
+  /* The presence accepts a stored record on its seed alone, so a
+   * record seeded with nothing but its seed — or one missing a
+   * single array — must record its visit, not throw on it. */
+  const minimal = { seed: SEED_A };
+  let record = Core.recordVisit(minimal, { patternDay: 217, page: "moons.html" });
+  assert.deepEqual(record.daysSeen, [217]);
+  assert.deepEqual(record.pagesSeen, ["moons.html"]);
+  assert.equal(record.lastPage, "moons.html");
+  record = Core.recordPractice(record, { patternDay: 217 });
+  assert.deepEqual(record.practiceDays, [217]);
+
+  const partial = { seed: SEED_A, daysSeen: [216] };
+  record = Core.recordVisit(partial, { patternDay: 217, page: "moons.html" });
+  assert.deepEqual(record.daysSeen, [216, 217]);
+  assert.deepEqual(record.pagesSeen, ["moons.html"]);
+  record = Core.recordPractice({ seed: SEED_A }, { patternDay: 218 });
+  assert.deepEqual(record.practiceDays, [218]);
+});
+
 test("stages rise in order and never fall", () => {
   const names = Core.STAGES.map((s) => s.name);
   assert.deepEqual(names, ["Spark", "Kindled", "Guardian"]);
@@ -299,7 +319,11 @@ test("the Spark travels into the Scripture reader and the Scroll Library, and th
     return out.sort();
   };
   for (const dir of ["docs/scripture", "docs/scroll"]) {
-    const pages = htmlUnder(dir);
+    /* Batch E4 (Nov 25, 2026): the Scroll shelf lists are data
+     * fragments now (scroll/data/shelf-*.html) — a list, not a
+     * page; the Spark travels to pages, and the shelf fragment's
+     * page is the library index that fetches it. */
+    const pages = htmlUnder(dir).filter((rel) => !rel.includes("/data/shelf-"));
     assert.ok(pages.length > 0, `${dir} has pages to check`);
     for (const page of pages) {
       assert.ok(read(page).includes("spark-presence.js"), `${page} carries the presence`);

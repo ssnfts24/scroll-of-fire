@@ -362,7 +362,16 @@ function syncNav(html, file) {
 
 // ---------------------------------------------------------------- inventory
 function parseDownloads() {
-  const html = read(path.join(docs, "downloads.html"));
+  /* Batch E4 (Nov 25, 2026) moved the seal archive behind the
+   * Downloads door: the snapshot table now lives in the archive
+   * fragment (assets/data/downloads-archive.html), fetched on
+   * open. The snapshot is read from whichever page carries it —
+   * downloads.html first, the archive fragment behind it — so
+   * the reconciliation keeps preserving the same accounting. */
+  let html = read(path.join(docs, "downloads.html"));
+  if (!/commit\/[0-9a-f]{40}/.test(html)) {
+    html += read(path.join(docs, "assets/data/downloads-archive.html"));
+  }
   const rows = [...html.matchAll(/<tr>\s*<td><strong>([\s\S]*?)<\/strong><\/td>\s*<td><code>([\s\S]*?)<\/code><\/td>\s*<td>([\s\S]*?)<\/td>\s*<td>([\s\S]*?)<\/td>\s*<td><code>([0-9a-f]{64})<\/code>/g)]
     .map(m => ({ title: m[1].trim(), path: m[2].replace(/&amp;/g, "&").trim(), size: m[4].trim(), sha256: m[5] }));
   return {
