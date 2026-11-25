@@ -95,10 +95,13 @@
     });
     var readBtn = el('button', { type: 'button', id: 'sf-read', 'aria-pressed': 'false', text: 'Mark chapter read' });
     readBtn.addEventListener('click', function () { toggleRead(); });
+    var listenBtn = el('button', { type: 'button', id: 'sf-listen', 'aria-pressed': 'false', text: '▶ Listen' });
+    listenBtn.addEventListener('click', function () { toggleListen(listenBtn); });
     var bm = el('details', { class: 'bookmarks' }, [el('summary', { text: 'Bookmarks (this browser only)' }), el('ul', { id: 'sf-bm' })]);
-    host.appendChild(el('div', { class: 'row' }, [sel, el('label', {}, [eng, ' English']), minus, plus, simple, deep, readBtn]));
+    host.appendChild(el('div', { class: 'row' }, [sel, el('label', {}, [eng, ' English']), minus, plus, simple, deep, readBtn, listenBtn]));
     host.appendChild(lay);
     host.appendChild(bm);
+    host.appendChild(el('p', { class: 'listen-note', text: 'Listen reads the chapter\u2019s English (World English Bible) text aloud, verse by verse, in your device\u2019s own voice. The pointed Hebrew is a study text; device voices pronounce it unreliably, so it is not read. Listening does not mark the chapter read.' }));
     ctl = { sel: sel, eng: eng, read: readBtn };
   }
   function syncControls() {
@@ -127,6 +130,47 @@
       ctl.read.textContent = read ? 'Chapter read ✓ (tap to undo)' : 'Mark chapter read';
       ctl.read.setAttribute('aria-pressed', read ? 'true' : 'false');
     }
+  }
+  /* ---------------- listen (Batch E2) ----------------
+   * The shared read-aloud engine (assets/js/read-aloud.js),
+   * lazy-loaded on first tap so no chapter carries its weight
+   * for a reader who never listens. Chunks are the verses'
+   * English lines, in order; the engine highlights the verse
+   * being read. Listening writes no state. */
+  var listenSession = null;
+  function loadReadAloud() {
+    if (window.ReadAloud) return Promise.resolve(window.ReadAloud);
+    return new Promise(function (resolve) {
+      var script = doc.createElement('script');
+      script.src = base + '../assets/js/read-aloud.js';
+      script.addEventListener('load', function () { resolve(window.ReadAloud || null); });
+      script.addEventListener('error', function () { resolve(null); });
+      doc.head.appendChild(script);
+    });
+  }
+  function verseChunks() {
+    var chunks = [];
+    doc.querySelectorAll('.verse').forEach(function (verse) {
+      var eng = verse.querySelector('.eng');
+      var text = eng ? eng.textContent.replace(/\s+/g, ' ').trim() : '';
+      if (text) chunks.push({ el: verse, text: text });
+    });
+    return chunks;
+  }
+  function toggleListen(btn) {
+    if (listenSession && listenSession.playing) { listenSession.stop(); return; }
+    loadReadAloud().then(function (RA) {
+      if (!RA) { btn.textContent = 'Listen is not available on this device'; btn.disabled = true; return; }
+      listenSession = RA.createSession(verseChunks(), {
+        onState: function (state) {
+          var on = state === 'playing';
+          btn.textContent = on ? '⏸ Stop listening' : '▶ Listen';
+          btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+        }
+      });
+      if (listenSession) listenSession.play();
+      else { btn.textContent = 'Listen is not available on this device'; btn.disabled = true; }
+    });
   }
   function toggleRead() {
     if (!chapterKey) return;

@@ -90,3 +90,12 @@ table{border-collapse:collapse}.sf-about td,.sf-about th{border:1px solid var(--
 .sf-shelf-line a{margin-right:.15rem}
 #sf-read[aria-pressed="true"]{background:var(--sf-gold);color:#000;border-color:var(--sf-gold)}
 @media print{.sf-today,.sf-shelf{display:none!important}}
+
+/* Batch E2: Listen note, tappable citations, recall strips */
+.listen-note{font-size:.8rem;opacity:.75;margin:.35rem 0}
+.ws-cite{color:#8a6d2f;text-decoration:underline dotted;cursor:pointer}
+.ws-cite:hover{color:#c9a24b}
+.recall-strip{margin:1.2rem 0;padding:.8rem 1rem;border:1px solid rgba(140,160,200,.35);border-radius:8px}
+.recall-q{margin:.45rem 0}
+.recall-q summary{cursor:pointer;font-weight:600}
+.recall-q p{margin:.35rem 0 .2rem}
