@@ -177,6 +177,16 @@
      "area": "living-time"
     },
     {
+     "path": "episodes.html",
+     "title": "The Episode Library",
+     "area": "living-time"
+    },
+    {
+     "path": "map.html",
+     "title": "The Traveller's Map",
+     "area": "systems"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
@@ -230,11 +240,6 @@
      "path": "downloads.html",
      "title": "Downloads & Integrity",
      "area": "archive"
-    },
-    {
-     "path": "start.html",
-     "title": "Start Here — Redirect",
-     "area": "codex"
     }
    ],
    "in": [
@@ -244,7 +249,7 @@
      "area": "archive"
     }
    ],
-   "outTotal": 13,
+   "outTotal": 15,
    "inTotal": 1
   },
   "account.html": {
@@ -900,9 +905,19 @@
    "out": [],
    "in": [
     {
+     "path": "about-aaron.html",
+     "title": "Aaron Paul Laird | Author, Craftsman and Systems Builder",
+     "area": "artifacts"
+    },
+    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
+    },
+    {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
     },
     {
      "path": "map.html",
@@ -911,7 +926,7 @@
     }
    ],
    "outTotal": 0,
-   "inTotal": 2
+   "inTotal": 4
   },
   "equinox-passage.html": {
    "title": "Equinox Passage — The 13 Moons Remnant Living Time Observatory",
@@ -1533,14 +1548,14 @@
      "area": "systems"
     },
     {
+     "path": "episodes.html",
+     "title": "The Episode Library",
+     "area": "living-time"
+    },
+    {
      "path": "practices.html",
      "title": "Practices — the Exercises Wing · Remnant Lab",
      "area": "systems"
-    },
-    {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
     }
    ],
    "in": [
@@ -1565,7 +1580,7 @@
      "area": "codex"
     }
    ],
-   "outTotal": 27,
+   "outTotal": 28,
    "inTotal": 4
   },
   "install.html": {
@@ -1930,6 +1945,11 @@
    ],
    "in": [
     {
+     "path": "about-aaron.html",
+     "title": "Aaron Paul Laird | Author, Craftsman and Systems Builder",
+     "area": "artifacts"
+    },
+    {
      "path": "aiyanas-world.html",
      "title": "Aiyana's World",
      "area": "living-time"
@@ -1941,7 +1961,7 @@
     }
    ],
    "outTotal": 4,
-   "inTotal": 2
+   "inTotal": 3
   },
   "methods.html": {
    "title": "How the Sphere Knows — Methods",

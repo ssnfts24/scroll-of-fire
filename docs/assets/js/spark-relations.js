@@ -41,12 +41,12 @@
           "label": "the 13 Moons page"
         },
         {
-          "href": "theory.html",
-          "label": "the Theory"
+          "href": "episodes.html",
+          "label": "The Episode Library"
         },
         {
-          "href": "codex-white-paper.html",
-          "label": "The Codex of Reality and the Living Sphere — A White Paper"
+          "href": "map.html",
+          "label": "The Traveller's Map"
         }
       ],
       "claims-atlas.html": [
