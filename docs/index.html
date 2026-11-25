@@ -455,6 +455,7 @@
   </style>
 
   <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261119-1">
+  <link rel="stylesheet" href="assets/css/spark-app-bridge.css?v=20261124-1">
   <link rel="stylesheet" href="assets/css/home-ambient-life.css?v=20261120-1">
   <script defer src="assets/js/spark-companion.js?v=20261119-1"></script>
   <script defer src="assets/js/spark-3d.js?v=20261119-1"></script>
@@ -465,6 +466,7 @@
   <link rel="stylesheet" href="assets/css/story-layer.css?v=20261120-1">
   <link rel="stylesheet" href="assets/css/spark-agent-seat.css?v=20261120-2">
   <script defer src="assets/js/spark-agent-seat.js?v=20261120-2"></script>
+  <script defer src="assets/js/spark-app-bridge.js?v=20261124-1"></script>
   <link rel="manifest" href="manifest-site.webmanifest">
   <link rel="stylesheet" href="assets/css/site-mobile.css?v=20261124-1">
 </head>
@@ -629,6 +631,11 @@
         </div>
       </div>
     </section>
+
+    <!-- The app bridge mount: spark-app-bridge.js asks, once and
+         quietly, whether a keeper with the app wants their Spark
+         and calendar brought here. Empty unless it asks. -->
+    <div id="spark-app-bridge" class="spark-bridge-mount"></div>
 
     <section class="section-shell le-path-head" id="step-witness" aria-labelledby="step-witness-title">
       <div class="le-path-head-inner">
