@@ -5,7 +5,7 @@
  * For each hand-maintained content page under docs/, this script
  * ensures two things are present exactly once, in the <head>:
  *   1. the site manifest link (rel="manifest" ->
- *      manifest-site.webmanifest) — only on pages that do not
+ *      manifest.webmanifest) — only on pages that do not
  *      already link a manifest of their own;
  *   2. the site-wide mobile stylesheet (assets/css/site-mobile.css),
  *      stamped last in the head so its small-screen floor rules
@@ -14,9 +14,10 @@
  * The manifest is the Codex's own (Nov 24, 2026, mobile +
  * manifest workstream): name "Codex of Reality", short_name
  * "Codex", the front door as its start, standalone, the site
- * palette. Pages that already carry a manifest keep theirs —
- * moons keeps the 13 Moons card, the white papers keep the one
- * they carry, and the Sphere keeps its own.
+ * palette. Since the ULS P2 consolidation (Nov 25, 2026) there
+ * is exactly one installation identity: every page links the
+ * same manifest.webmanifest — moons and the Sphere included;
+ * their surfaces live on as shortcuts inside the one card.
  *
  * Exclusions, following the living-nav / spark-presence
  * discipline (one owner per page):
@@ -65,7 +66,7 @@ const EXCLUDED_FILES = new Set([
 const EXCLUDED_DIRS = new Set(["scroll", "scripture"]);
 
 const STAMP = "20261124-1";
-const MANIFEST_TAG = `<link rel="manifest" href="manifest-site.webmanifest">`;
+const MANIFEST_TAG = `<link rel="manifest" href="manifest.webmanifest">`;
 const CSS_TAG =
   `<link rel="stylesheet" href="assets/css/site-mobile.css?v=${STAMP}">`;
 
@@ -100,7 +101,7 @@ for (const rel of walk(docsDir).sort()) {
   const depth = rel.split("/").length - 1;
   const prefix = depth > 0 ? "../".repeat(depth) : "";
   const manifestTag = MANIFEST_TAG.replace(
-    'href="manifest-site', `href="${prefix}manifest-site`);
+    'href="manifest', `href="${prefix}manifest`);
   const cssTag = CSS_TAG.replace('href="assets/', `href="${prefix}assets/`);
 
   /* The cache stamp moves with the sheet: an older stamp on an
@@ -113,8 +114,8 @@ for (const rel of walk(docsDir).sort()) {
     skipped++;
     continue;
   }
-  /* A page that already links any manifest keeps its own; the
-   * site card is for the pages that had none. */
+  /* A page that already links the manifest is left alone; the
+   * stamp is for the pages that had none. */
   if (!html.includes('rel="manifest"')) {
     html = html.replace("</head>", `  ${manifestTag}\n</head>`);
   }

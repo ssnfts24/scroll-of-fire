@@ -147,7 +147,12 @@
         if (isFilmed(story, chapter)) {
           const filmed = document.createElement("p");
           filmed.className = "map-episode";
-          filmed.append(document.createTextNode("Episode filmed — "));
+          /* Batch E6 (Nov 25, 2026): the land names its episode —
+           * by name, Moon and token, the canon's own telling-apart
+           * (never by number alone). */
+          const mark = chapter.mark || {};
+          const told = [chapter.title, mark.moonName, mark.token].filter(Boolean).join(" · ");
+          filmed.append(document.createTextNode(`Its episode: ${told} — `));
           const watch = document.createElement("a");
           watch.href = libraryHref(chapter);
           watch.textContent = "watch it in the Episode Library";

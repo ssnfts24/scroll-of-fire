@@ -30,21 +30,6 @@
    ],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
-     "path": "ab.html",
-     "title": "A/B Carrier Protocol",
-     "area": "systems"
-    },
-    {
-     "path": "circle.html",
-     "title": "Circle Sync",
-     "area": "artifacts"
-    },
-    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
@@ -60,21 +45,6 @@
      "area": "archive"
     },
     {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
-     "path": "teach.html",
-     "title": "Manifest — Remnant Visual Exercise",
-     "area": "systems"
-    },
-    {
      "path": "codex-white-paper.html",
      "title": "The Codex of Reality and the Living Sphere — A White Paper",
      "area": "living-time"
@@ -83,20 +53,10 @@
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
-    },
-    {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 4,
-   "inTotal": 13
+   "inTotal": 5
   },
   "404.html": {
    "title": "404 — Broken Gate",
@@ -152,9 +112,9 @@
      "area": "living-time"
     },
     {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
+     "path": "start.html",
+     "title": "Start Here — Redirect",
+     "area": "codex"
     },
     {
      "path": "moons.html",
@@ -162,34 +122,24 @@
      "area": "living-time"
     },
     {
+     "path": "covenant-caravan.html",
+     "title": "The Covenant Caravan",
+     "area": "artifacts"
+    },
+    {
+     "path": "shop.html",
+     "title": "Artifact Registry & Shop",
+     "area": "artifacts"
+    },
+    {
      "path": "hub.html",
      "title": "Systems Hub",
      "area": "systems"
     },
     {
-     "path": "scroll/search.html",
-     "title": "Search the Scroll",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/lexicon.html",
-     "title": "Hebrew lexicon",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/atlas.html",
-     "title": "Reference atlas",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/editorial.html",
-     "title": "Editorial reading and evidence",
-     "area": "evidence"
-    },
-    {
-     "path": "theory/canon.html",
-     "title": "Canon 0–17",
-     "area": "evidence"
+     "path": "systems/frequencies.html",
+     "title": "Frequency Governance",
+     "area": "systems"
     },
     {
      "path": "genesis-oracle.html",
@@ -197,9 +147,9 @@
      "area": "scroll-scripture"
     },
     {
-     "path": "glossary.html",
-     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
-     "area": "scroll-scripture"
+     "path": "ethics.html",
+     "title": "Ethics & Coherence Law",
+     "area": "evidence"
     }
    ],
    "in": [
@@ -214,7 +164,7 @@
      "area": "systems"
     }
    ],
-   "outTotal": 31,
+   "outTotal": 12,
    "inTotal": 2
   },
   "about-aaron.html": {
@@ -225,6 +175,16 @@
      "path": "moons.html",
      "title": "Remnant 13 Moons — Living Calendar",
      "area": "living-time"
+    },
+    {
+     "path": "episodes.html",
+     "title": "The Episode Library",
+     "area": "living-time"
+    },
+    {
+     "path": "map.html",
+     "title": "The Traveller's Map",
+     "area": "systems"
     },
     {
      "path": "theory.html",
@@ -280,62 +240,17 @@
      "path": "downloads.html",
      "title": "Downloads & Integrity",
      "area": "archive"
-    },
-    {
-     "path": "start.html",
-     "title": "Start Here — Redirect",
-     "area": "codex"
     }
    ],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
-     "path": "ab.html",
-     "title": "A/B Carrier Protocol",
-     "area": "systems"
-    },
-    {
-     "path": "circle.html",
-     "title": "Circle Sync",
-     "area": "artifacts"
-    },
-    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
-    },
-    {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
-     "path": "teach.html",
-     "title": "Manifest — Remnant Visual Exercise",
-     "area": "systems"
-    },
-    {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
-   "outTotal": 13,
-   "inTotal": 9
+   "outTotal": 15,
+   "inTotal": 1
   },
   "account.html": {
    "title": "Your Account — Not Yet Open",
@@ -431,6 +346,20 @@
    "outTotal": 1,
    "inTotal": 4
   },
+  "assets/data/downloads-archive.html": {
+   "title": "The full integrity archive — every file, every SHA-256 seal",
+   "area": "codex",
+   "out": [],
+   "in": [
+    {
+     "path": "downloads.html",
+     "title": "Downloads & Integrity",
+     "area": "archive"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 1
+  },
   "caravan.html": {
    "title": "Covenant Caravan — Redirect",
    "area": "codex",
@@ -470,110 +399,30 @@
      "area": "living-time"
     },
     {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
-    },
-    {
-     "path": "moons.html",
-     "title": "Remnant 13 Moons — Living Calendar",
-     "area": "living-time"
-    },
-    {
-     "path": "hub.html",
-     "title": "Systems Hub",
-     "area": "systems"
-    },
-    {
-     "path": "scroll/search.html",
-     "title": "Search the Scroll",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/lexicon.html",
-     "title": "Hebrew lexicon",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/atlas.html",
-     "title": "Reference atlas",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/editorial.html",
-     "title": "Editorial reading and evidence",
-     "area": "evidence"
-    },
-    {
-     "path": "theory/canon.html",
-     "title": "Canon 0–17",
-     "area": "evidence"
-    },
-    {
-     "path": "genesis-oracle.html",
-     "title": "The Genesis Oracle — Seal of Becoming",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "glossary.html",
-     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
-     "area": "scroll-scripture"
+     "path": "covenant-caravan.html",
+     "title": "The Covenant Caravan",
+     "area": "artifacts"
     }
    ],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
-     "path": "ab.html",
-     "title": "A/B Carrier Protocol",
-     "area": "systems"
-    },
-    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
     },
     {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
      "path": "glossary.html",
      "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
      "area": "scroll-scripture"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
-     "path": "teach.html",
-     "title": "Manifest — Remnant Visual Exercise",
-     "area": "systems"
     },
     {
      "path": "lab.html",
      "title": "Remnant Lab",
      "area": "systems"
-    },
-    {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
-   "outTotal": 30,
-   "inTotal": 10
+   "outTotal": 5,
+   "inTotal": 3
   },
   "claims-atlas.html": {
    "title": "Documentation Hub",
@@ -722,21 +571,6 @@
    ],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
-     "path": "ab.html",
-     "title": "A/B Carrier Protocol",
-     "area": "systems"
-    },
-    {
-     "path": "circle.html",
-     "title": "Circle Sync",
-     "area": "artifacts"
-    },
-    {
      "path": "index.html",
      "title": "Codex of Reality",
      "area": "codex"
@@ -752,24 +586,9 @@
      "area": "archive"
     },
     {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "systems/archive.html",
      "title": "Interactive Archive",
      "area": "archive"
-    },
-    {
-     "path": "teach.html",
-     "title": "Manifest — Remnant Visual Exercise",
-     "area": "systems"
     },
     {
      "path": "search.html",
@@ -785,15 +604,10 @@
      "path": "codex-guide.html",
      "title": "The Guide — Ask the Record",
      "area": "archive"
-    },
-    {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
     }
    ],
    "outTotal": 64,
-   "inTotal": 15
+   "inTotal": 7
   },
   "codex-guide.html": {
    "title": "The Guide — Ask the Record",
@@ -962,11 +776,6 @@
    ],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
      "path": "ab.html",
      "title": "A/B Carrier Protocol",
      "area": "systems"
@@ -997,16 +806,6 @@
      "area": "codex"
     },
     {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -1015,20 +814,10 @@
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
-    },
-    {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 4,
-   "inTotal": 13
+   "inTotal": 8
   },
   "downloads.html": {
    "title": "Downloads & Integrity",
@@ -1075,6 +864,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "assets/data/downloads-archive.html",
+     "title": "The full integrity archive — every file, every SHA-256 seal",
+     "area": "codex"
+    },
+    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
@@ -1082,23 +876,8 @@
    ],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
-     "path": "ab.html",
-     "title": "A/B Carrier Protocol",
-     "area": "systems"
-    },
-    {
      "path": "about-aaron.html",
      "title": "Aaron Paul Laird | Author, Craftsman and Systems Builder",
-     "area": "artifacts"
-    },
-    {
-     "path": "circle.html",
-     "title": "Circle Sync",
      "area": "artifacts"
     },
     {
@@ -1112,38 +891,13 @@
      "area": "codex"
     },
     {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
      "path": "install.html",
      "title": "Get the App — Put the Codex on Your Home Screen · Codex of Reality",
      "area": "systems"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
-     "path": "teach.html",
-     "title": "Manifest — Remnant Visual Exercise",
-     "area": "systems"
-    },
-    {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
-   "outTotal": 9,
-   "inTotal": 12
+   "outTotal": 10,
+   "inTotal": 4
   },
   "episodes.html": {
    "title": "The Episode Library",
@@ -1151,9 +905,19 @@
    "out": [],
    "in": [
     {
+     "path": "about-aaron.html",
+     "title": "Aaron Paul Laird | Author, Craftsman and Systems Builder",
+     "area": "artifacts"
+    },
+    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
+    },
+    {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
     },
     {
      "path": "map.html",
@@ -1162,7 +926,7 @@
     }
    ],
    "outTotal": 0,
-   "inTotal": 2
+   "inTotal": 4
   },
   "equinox-passage.html": {
    "title": "Equinox Passage — The 13 Moons Remnant Living Time Observatory",
@@ -1219,91 +983,26 @@
    "area": "evidence",
    "out": [
     {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
-    },
-    {
-     "path": "moons.html",
-     "title": "Remnant 13 Moons — Living Calendar",
-     "area": "living-time"
-    },
-    {
-     "path": "ledger.html",
-     "title": "Witness Ledger",
-     "area": "living-time"
-    },
-    {
-     "path": "hub.html",
-     "title": "Systems Hub",
-     "area": "systems"
-    },
-    {
-     "path": "scroll/search.html",
-     "title": "Search the Scroll",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/lexicon.html",
-     "title": "Hebrew lexicon",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/atlas.html",
-     "title": "Reference atlas",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/editorial.html",
-     "title": "Editorial reading and evidence",
+     "path": "theory/memory.html",
+     "title": "Memory",
      "area": "evidence"
     },
     {
-     "path": "theory.html",
-     "title": "Theory Hub",
+     "path": "theory/equations/eq09.html",
+     "title": "Equation 9 — Ethical Law",
      "area": "evidence"
     },
     {
-     "path": "theory/canon.html",
-     "title": "Canon 0–17",
-     "area": "evidence"
-    },
-    {
-     "path": "genesis-oracle.html",
-     "title": "The Genesis Oracle — Seal of Becoming",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "glossary.html",
-     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "systems/archive.html",
-     "title": "Interactive Archive",
-     "area": "archive"
-    },
-    {
-     "path": "systems/frequencies.html",
-     "title": "Frequency Governance",
+     "path": "teach.html",
+     "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
     }
    ],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
      "path": "ab.html",
      "title": "A/B Carrier Protocol",
      "area": "systems"
-    },
-    {
-     "path": "circle.html",
-     "title": "Circle Sync",
-     "area": "artifacts"
     },
     {
      "path": "codex-atlas.html",
@@ -1324,11 +1023,6 @@
      "path": "glossary.html",
      "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
      "area": "scroll-scripture"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
     },
     {
      "path": "teach.html",
@@ -1354,15 +1048,10 @@
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
-    },
-    {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
     }
    ],
-   "outTotal": 31,
-   "inTotal": 15
+   "outTotal": 3,
+   "inTotal": 10
   },
   "garden.html": {
    "title": "The Pattern Garden — the Garden · Remnant Lab",
@@ -1441,11 +1130,6 @@
    ],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
      "path": "ab.html",
      "title": "A/B Carrier Protocol",
      "area": "systems"
@@ -1453,11 +1137,6 @@
     {
      "path": "about-aaron.html",
      "title": "Aaron Paul Laird | Author, Craftsman and Systems Builder",
-     "area": "artifacts"
-    },
-    {
-     "path": "circle.html",
-     "title": "Circle Sync",
      "area": "artifacts"
     },
     {
@@ -1471,19 +1150,9 @@
      "area": "codex"
     },
     {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
      "path": "glossary.html",
      "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
      "area": "scroll-scripture"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
     },
     {
      "path": "living-time-sphere.html",
@@ -1499,20 +1168,10 @@
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
-    },
-    {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 2,
-   "inTotal": 14
+   "inTotal": 8
   },
   "glossary.html": {
    "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
@@ -1591,21 +1250,6 @@
    ],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
-     "path": "ab.html",
-     "title": "A/B Carrier Protocol",
-     "area": "systems"
-    },
-    {
-     "path": "circle.html",
-     "title": "Circle Sync",
-     "area": "artifacts"
-    },
-    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
@@ -1616,24 +1260,9 @@
      "area": "codex"
     },
     {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
      "path": "scroll/lexicon.html",
      "title": "Hebrew lexicon",
      "area": "scroll-scripture"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
-     "path": "teach.html",
-     "title": "Manifest — Remnant Visual Exercise",
-     "area": "systems"
     },
     {
      "path": "scroll/index.html",
@@ -1649,89 +1278,19 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 33,
-   "inTotal": 13
+   "inTotal": 6
   },
   "glyphs.html": {
    "title": "Voice-Glyph Synth",
    "area": "systems",
    "out": [
     {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
-    },
-    {
-     "path": "moons.html",
-     "title": "Remnant 13 Moons — Living Calendar",
-     "area": "living-time"
-    },
-    {
-     "path": "ledger.html",
-     "title": "Witness Ledger",
-     "area": "living-time"
-    },
-    {
-     "path": "hub.html",
-     "title": "Systems Hub",
-     "area": "systems"
-    },
-    {
-     "path": "scroll/search.html",
-     "title": "Search the Scroll",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/lexicon.html",
-     "title": "Hebrew lexicon",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/atlas.html",
-     "title": "Reference atlas",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/editorial.html",
-     "title": "Editorial reading and evidence",
-     "area": "evidence"
-    },
-    {
-     "path": "theory.html",
-     "title": "Theory Hub",
-     "area": "evidence"
-    },
-    {
-     "path": "theory/canon.html",
-     "title": "Canon 0–17",
-     "area": "evidence"
-    },
-    {
-     "path": "genesis-oracle.html",
-     "title": "The Genesis Oracle — Seal of Becoming",
-     "area": "scroll-scripture"
-    },
-    {
      "path": "glossary.html",
      "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
      "area": "scroll-scripture"
-    },
-    {
-     "path": "systems/archive.html",
-     "title": "Interactive Archive",
-     "area": "archive"
-    },
-    {
-     "path": "systems/frequencies.html",
-     "title": "Frequency Governance",
-     "area": "systems"
     }
    ],
    "in": [
@@ -1751,7 +1310,7 @@
      "area": "systems"
     }
    ],
-   "outTotal": 30,
+   "outTotal": 1,
    "inTotal": 3
   },
   "guide.html": {
@@ -1781,13 +1340,18 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "practices.html",
+     "title": "Practices — the Exercises Wing · Remnant Lab",
+     "area": "systems"
+    },
+    {
      "path": "lab.html",
      "title": "Remnant Lab",
      "area": "systems"
     }
    ],
    "outTotal": 1,
-   "inTotal": 4
+   "inTotal": 5
   },
   "hub.html": {
    "title": "Systems Hub",
@@ -1861,11 +1425,6 @@
    ],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
      "path": "404.html",
      "title": "404 — Broken Gate",
      "area": "codex"
@@ -1881,11 +1440,6 @@
      "area": "artifacts"
     },
     {
-     "path": "circle.html",
-     "title": "Circle Sync",
-     "area": "artifacts"
-    },
-    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
@@ -1898,16 +1452,6 @@
     {
      "path": "claims-atlas.html",
      "title": "Documentation Hub",
-     "area": "evidence"
-    },
-    {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
      "area": "evidence"
     },
     {
@@ -1929,10 +1473,15 @@
      "path": "covenant-caravan.html",
      "title": "The Covenant Caravan",
      "area": "artifacts"
+    },
+    {
+     "path": "theory.html",
+     "title": "Theory Hub",
+     "area": "evidence"
     }
    ],
    "outTotal": 13,
-   "inTotal": 17
+   "inTotal": 11
   },
   "index.html": {
    "title": "Codex of Reality",
@@ -1999,13 +1548,13 @@
      "area": "systems"
     },
     {
-     "path": "witness.html",
-     "title": "Witness",
-     "area": "artifacts"
+     "path": "episodes.html",
+     "title": "The Episode Library",
+     "area": "living-time"
     },
     {
-     "path": "install.html",
-     "title": "Get the App — Put the Codex on Your Home Screen · Codex of Reality",
+     "path": "practices.html",
+     "title": "Practices — the Exercises Wing · Remnant Lab",
      "area": "systems"
     }
    ],
@@ -2031,7 +1580,7 @@
      "area": "codex"
     }
    ],
-   "outTotal": 27,
+   "outTotal": 28,
    "inTotal": 4
   },
   "install.html": {
@@ -2076,29 +1625,9 @@
    ],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
-     "path": "ab.html",
-     "title": "A/B Carrier Protocol",
-     "area": "systems"
-    },
-    {
-     "path": "circle.html",
-     "title": "Circle Sync",
-     "area": "artifacts"
-    },
-    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
-    },
-    {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
     },
     {
      "path": "glossary.html",
@@ -2106,33 +1635,13 @@
      "area": "scroll-scripture"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
-     "path": "teach.html",
-     "title": "Manifest — Remnant Visual Exercise",
-     "area": "systems"
-    },
-    {
      "path": "lab.html",
      "title": "Remnant Lab",
      "area": "systems"
-    },
-    {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 1,
-   "inTotal": 11
+   "inTotal": 3
   },
   "lab.html": {
    "title": "Remnant Lab",
@@ -2144,13 +1653,13 @@
      "area": "systems"
     },
     {
-     "path": "garden.html",
-     "title": "The Pattern Garden — the Garden · Remnant Lab",
+     "path": "practices.html",
+     "title": "Practices — the Exercises Wing · Remnant Lab",
      "area": "systems"
     },
     {
-     "path": "practices.html",
-     "title": "Practices — the Exercises Wing · Remnant Lab",
+     "path": "garden.html",
+     "title": "The Pattern Garden — the Garden · Remnant Lab",
      "area": "systems"
     },
     {
@@ -2201,44 +1710,14 @@
    ],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
-     "path": "ab.html",
-     "title": "A/B Carrier Protocol",
-     "area": "systems"
-    },
-    {
-     "path": "circle.html",
-     "title": "Circle Sync",
-     "area": "artifacts"
-    },
-    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
     },
     {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
      "path": "glossary.html",
      "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
      "area": "scroll-scripture"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
-     "path": "teach.html",
-     "title": "Manifest — Remnant Visual Exercise",
-     "area": "systems"
     },
     {
      "path": "practices.html",
@@ -2251,23 +1730,13 @@
      "area": "systems"
     },
     {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
-    },
-    {
      "path": "ledger.html",
      "title": "Witness Ledger",
      "area": "living-time"
     }
    ],
    "outTotal": 12,
-   "inTotal": 13
+   "inTotal": 5
   },
   "ledger.html": {
    "title": "Witness Ledger",
@@ -2280,11 +1749,6 @@
     }
    ],
    "in": [
-    {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
     {
      "path": "ab.html",
      "title": "A/B Carrier Protocol",
@@ -2316,19 +1780,9 @@
      "area": "codex"
     },
     {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
      "path": "glossary.html",
      "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
      "area": "scroll-scripture"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
     },
     {
      "path": "invoke.html",
@@ -2349,10 +1803,25 @@
      "path": "practices.html",
      "title": "Practices — the Exercises Wing · Remnant Lab",
      "area": "systems"
+    },
+    {
+     "path": "moons.html",
+     "title": "Remnant 13 Moons — Living Calendar",
+     "area": "living-time"
+    },
+    {
+     "path": "lab.html",
+     "title": "Remnant Lab",
+     "area": "systems"
+    },
+    {
+     "path": "hub.html",
+     "title": "Systems Hub",
+     "area": "systems"
     }
    ],
    "outTotal": 1,
-   "inTotal": 24
+   "inTotal": 19
   },
   "living-time-sphere.html": {
    "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
@@ -2476,6 +1945,11 @@
    ],
    "in": [
     {
+     "path": "about-aaron.html",
+     "title": "Aaron Paul Laird | Author, Craftsman and Systems Builder",
+     "area": "artifacts"
+    },
+    {
      "path": "aiyanas-world.html",
      "title": "Aiyana's World",
      "area": "living-time"
@@ -2487,81 +1961,21 @@
     }
    ],
    "outTotal": 4,
-   "inTotal": 2
+   "inTotal": 3
   },
   "methods.html": {
    "title": "How the Sphere Knows — Methods",
    "area": "evidence",
    "out": [
     {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     },
     {
-     "path": "moons.html",
-     "title": "Remnant 13 Moons — Living Calendar",
+     "path": "living-time-sphere.html",
+     "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
      "area": "living-time"
-    },
-    {
-     "path": "ledger.html",
-     "title": "Witness Ledger",
-     "area": "living-time"
-    },
-    {
-     "path": "hub.html",
-     "title": "Systems Hub",
-     "area": "systems"
-    },
-    {
-     "path": "scroll/search.html",
-     "title": "Search the Scroll",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/lexicon.html",
-     "title": "Hebrew lexicon",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/atlas.html",
-     "title": "Reference atlas",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/editorial.html",
-     "title": "Editorial reading and evidence",
-     "area": "evidence"
-    },
-    {
-     "path": "theory.html",
-     "title": "Theory Hub",
-     "area": "evidence"
-    },
-    {
-     "path": "theory/canon.html",
-     "title": "Canon 0–17",
-     "area": "evidence"
-    },
-    {
-     "path": "genesis-oracle.html",
-     "title": "The Genesis Oracle — Seal of Becoming",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "glossary.html",
-     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "systems/archive.html",
-     "title": "Interactive Archive",
-     "area": "archive"
-    },
-    {
-     "path": "systems/frequencies.html",
-     "title": "Frequency Governance",
-     "area": "systems"
     }
    ],
    "in": [
@@ -2581,7 +1995,7 @@
      "area": "evidence"
     }
    ],
-   "outTotal": 32,
+   "outTotal": 2,
    "inTotal": 3
   },
   "micro.html": {
@@ -2589,73 +2003,8 @@
    "area": "systems",
    "out": [
     {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
-    },
-    {
-     "path": "moons.html",
-     "title": "Remnant 13 Moons — Living Calendar",
-     "area": "living-time"
-    },
-    {
-     "path": "ledger.html",
-     "title": "Witness Ledger",
-     "area": "living-time"
-    },
-    {
-     "path": "hub.html",
-     "title": "Systems Hub",
-     "area": "systems"
-    },
-    {
-     "path": "scroll/search.html",
-     "title": "Search the Scroll",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/lexicon.html",
-     "title": "Hebrew lexicon",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/atlas.html",
-     "title": "Reference atlas",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/editorial.html",
-     "title": "Editorial reading and evidence",
-     "area": "evidence"
-    },
-    {
-     "path": "theory.html",
-     "title": "Theory Hub",
-     "area": "evidence"
-    },
-    {
-     "path": "theory/canon.html",
-     "title": "Canon 0–17",
-     "area": "evidence"
-    },
-    {
-     "path": "genesis-oracle.html",
-     "title": "The Genesis Oracle — Seal of Becoming",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "glossary.html",
-     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "systems/archive.html",
-     "title": "Interactive Archive",
-     "area": "archive"
-    },
-    {
-     "path": "systems/frequencies.html",
-     "title": "Frequency Governance",
+     "path": "practices.html",
+     "title": "Practices — the Exercises Wing · Remnant Lab",
      "area": "systems"
     }
    ],
@@ -2676,7 +2025,7 @@
      "area": "systems"
     }
    ],
-   "outTotal": 31,
+   "outTotal": 1,
    "inTotal": 3
   },
   "moons.html": {
@@ -2731,11 +2080,6 @@
    ],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
      "path": "offline.html",
      "title": "13 Moons — Offline",
      "area": "codex"
@@ -2753,11 +2097,6 @@
     {
      "path": "about-aaron.html",
      "title": "Aaron Paul Laird | Author, Craftsman and Systems Builder",
-     "area": "artifacts"
-    },
-    {
-     "path": "circle.html",
-     "title": "Circle Sync",
      "area": "artifacts"
     },
     {
@@ -2781,28 +2120,38 @@
      "area": "living-time"
     },
     {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
      "path": "glossary.html",
      "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
      "area": "scroll-scripture"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "living-time-sphere.html",
      "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
      "area": "living-time"
+    },
+    {
+     "path": "teach.html",
+     "title": "Manifest — Remnant Visual Exercise",
+     "area": "systems"
+    },
+    {
+     "path": "13-moon-whitepaper.html",
+     "title": "Remnant Rollout Whitepaper | The 13 Moons Remnant Living Time Observatory",
+     "area": "living-time"
+    },
+    {
+     "path": "covenant-caravan.html",
+     "title": "The Covenant Caravan",
+     "area": "artifacts"
+    },
+    {
+     "path": "codex-guide.html",
+     "title": "The Guide — Ask the Record",
+     "area": "archive"
     }
    ],
    "outTotal": 9,
-   "inTotal": 21
+   "inTotal": 15
   },
   "offline.html": {
    "title": "13 Moons — Offline",
@@ -2833,13 +2182,33 @@
      "area": "systems"
     },
     {
-     "path": "sending-test.html",
-     "title": "The Sending Test — Remnant Lab",
+     "path": "micro.html",
+     "title": "⏳ 90-Second Micro-Run",
      "area": "systems"
     },
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
+     "path": "systems/mind-renewal.html",
+     "title": "Mind-Renewal Protocol",
+     "area": "systems"
+    },
+    {
+     "path": "guide.html",
+     "title": "Practice Playbook — Practice That Sticks",
+     "area": "systems"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/index.html",
+     "title": "Genesis & Exodus Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "sending-test.html",
+     "title": "The Sending Test — Remnant Lab",
      "area": "systems"
     },
     {
@@ -2865,6 +2234,16 @@
      "area": "archive"
     },
     {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    },
+    {
+     "path": "scripture/index.html",
+     "title": "Genesis & Exodus Scripture",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "lab.html",
      "title": "Remnant Lab",
      "area": "systems"
@@ -2875,8 +2254,8 @@
      "area": "systems"
     }
    ],
-   "outTotal": 6,
-   "inTotal": 4
+   "outTotal": 10,
+   "inTotal": 6
   },
   "privacy-policy.html": {
    "title": "Privacy Policy — Spark. Living Day",
@@ -2891,74 +2270,14 @@
    "area": "evidence",
    "out": [
     {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
+     "path": "methods.html",
+     "title": "How the Sphere Knows — Methods",
+     "area": "evidence"
     },
     {
-     "path": "moons.html",
-     "title": "Remnant 13 Moons — Living Calendar",
+     "path": "living-time-sphere.html",
+     "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
      "area": "living-time"
-    },
-    {
-     "path": "ledger.html",
-     "title": "Witness Ledger",
-     "area": "living-time"
-    },
-    {
-     "path": "hub.html",
-     "title": "Systems Hub",
-     "area": "systems"
-    },
-    {
-     "path": "scroll/search.html",
-     "title": "Search the Scroll",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/lexicon.html",
-     "title": "Hebrew lexicon",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/atlas.html",
-     "title": "Reference atlas",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/editorial.html",
-     "title": "Editorial reading and evidence",
-     "area": "evidence"
-    },
-    {
-     "path": "theory.html",
-     "title": "Theory Hub",
-     "area": "evidence"
-    },
-    {
-     "path": "theory/canon.html",
-     "title": "Canon 0–17",
-     "area": "evidence"
-    },
-    {
-     "path": "genesis-oracle.html",
-     "title": "The Genesis Oracle — Seal of Becoming",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "glossary.html",
-     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "systems/archive.html",
-     "title": "Interactive Archive",
-     "area": "archive"
-    },
-    {
-     "path": "systems/frequencies.html",
-     "title": "Frequency Governance",
-     "area": "systems"
     }
    ],
    "in": [
@@ -2983,7 +2302,7 @@
      "area": "living-time"
     }
    ],
-   "outTotal": 32,
+   "outTotal": 2,
    "inTotal": 4
   },
   "scripture/about.html": {
@@ -16531,6 +15850,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "practices.html",
+     "title": "Practices — the Exercises Wing · Remnant Lab",
+     "area": "systems"
+    },
+    {
      "path": "scripture/genesis/02.html",
      "title": "Genesis 2 — Scripture",
      "area": "scroll-scripture"
@@ -16583,11 +15907,6 @@
     {
      "path": "scripture/genesis/12.html",
      "title": "Genesis 12 — Scripture",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scripture/genesis/13.html",
-     "title": "Genesis 13 — Scripture",
      "area": "scroll-scripture"
     }
    ],
@@ -16643,6 +15962,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "practices.html",
+     "title": "Practices — the Exercises Wing · Remnant Lab",
+     "area": "systems"
+    },
+    {
      "path": "scripture/word-studies/ruach.html",
      "title": "Ruach — רוּחַ — Hebrew Word Studies",
      "area": "scroll-scripture"
@@ -16658,8 +15982,8 @@
      "area": "scroll-scripture"
     }
    ],
-   "outTotal": 93,
-   "inTotal": 13
+   "outTotal": 94,
+   "inTotal": 14
   },
   "scripture/lemma.html": {
    "title": "Lemma study — Scripture",
@@ -17023,6 +16347,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "practices.html",
+     "title": "Practices — the Exercises Wing · Remnant Lab",
+     "area": "systems"
+    },
+    {
      "path": "scripture/word-studies/ruach.html",
      "title": "Ruach — רוּחַ — Hebrew Word Studies",
      "area": "scroll-scripture"
@@ -17034,7 +16363,7 @@
     }
    ],
    "outTotal": 9,
-   "inTotal": 10
+   "inTotal": 11
   },
   "scripture/word-studies/nephesh.html": {
    "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
@@ -17323,44 +16652,14 @@
    ],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
-     "path": "ab.html",
-     "title": "A/B Carrier Protocol",
-     "area": "systems"
-    },
-    {
      "path": "about-aaron.html",
      "title": "Aaron Paul Laird | Author, Craftsman and Systems Builder",
-     "area": "artifacts"
-    },
-    {
-     "path": "circle.html",
-     "title": "Circle Sync",
      "area": "artifacts"
     },
     {
      "path": "index.html",
      "title": "Codex of Reality",
      "area": "codex"
-    },
-    {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
-     "path": "teach.html",
-     "title": "Manifest — Remnant Visual Exercise",
-     "area": "systems"
     },
     {
      "path": "13-moon-whitepaper.html",
@@ -17371,20 +16670,10 @@
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
-    },
-    {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 1,
-   "inTotal": 12
+   "inTotal": 4
   },
   "scroll/atlas.html": {
    "title": "Reference atlas",
@@ -17403,58 +16692,130 @@
    ],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
-     "path": "ab.html",
-     "title": "A/B Carrier Protocol",
-     "area": "systems"
-    },
-    {
-     "path": "circle.html",
-     "title": "Circle Sync",
-     "area": "artifacts"
-    },
-    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
     },
     {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
-     "path": "teach.html",
-     "title": "Manifest — Remnant Visual Exercise",
-     "area": "systems"
-    },
+     "path": "scroll/index.html",
+     "title": "Scroll of Fire — Unsealed Library",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 2,
+   "inTotal": 2
+  },
+  "scroll/data/shelf-evidence.html": {
+   "title": "Evidence — shelf list",
+   "area": "codex",
+   "out": [],
+   "in": [
     {
      "path": "scroll/index.html",
      "title": "Scroll of Fire — Unsealed Library",
      "area": "scroll-scripture"
-    },
-    {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
-   "outTotal": 2,
-   "inTotal": 10
+   "outTotal": 0,
+   "inTotal": 1
+  },
+  "scroll/data/shelf-foundations.html": {
+   "title": "Foundations — shelf list",
+   "area": "codex",
+   "out": [],
+   "in": [
+    {
+     "path": "scroll/index.html",
+     "title": "Scroll of Fire — Unsealed Library",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 1
+  },
+  "scroll/data/shelf-history.html": {
+   "title": "History — shelf list",
+   "area": "codex",
+   "out": [],
+   "in": [
+    {
+     "path": "scroll/index.html",
+     "title": "Scroll of Fire — Unsealed Library",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 1
+  },
+  "scroll/data/shelf-prophecy.html": {
+   "title": "Prophecy — shelf list",
+   "area": "codex",
+   "out": [],
+   "in": [
+    {
+     "path": "scroll/index.html",
+     "title": "Scroll of Fire — Unsealed Library",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 1
+  },
+  "scroll/data/shelf-reference.html": {
+   "title": "Reference — shelf list",
+   "area": "codex",
+   "out": [],
+   "in": [
+    {
+     "path": "scroll/index.html",
+     "title": "Scroll of Fire — Unsealed Library",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 1
+  },
+  "scroll/data/shelf-scripture.html": {
+   "title": "Scripture — shelf list",
+   "area": "codex",
+   "out": [],
+   "in": [
+    {
+     "path": "scroll/index.html",
+     "title": "Scroll of Fire — Unsealed Library",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 1
+  },
+  "scroll/data/shelf-technology.html": {
+   "title": "Technology — shelf list",
+   "area": "codex",
+   "out": [],
+   "in": [
+    {
+     "path": "scroll/index.html",
+     "title": "Scroll of Fire — Unsealed Library",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 1
+  },
+  "scroll/data/shelf-witness.html": {
+   "title": "Witness — shelf list",
+   "area": "codex",
+   "out": [],
+   "in": [
+    {
+     "path": "scroll/index.html",
+     "title": "Scroll of Fire — Unsealed Library",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 1
   },
   "scroll/editorial.html": {
    "title": "Editorial reading and evidence",
@@ -17467,21 +16828,6 @@
     }
    ],
    "in": [
-    {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
-     "path": "ab.html",
-     "title": "A/B Carrier Protocol",
-     "area": "systems"
-    },
-    {
-     "path": "circle.html",
-     "title": "Circle Sync",
-     "area": "artifacts"
-    },
     {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
@@ -17498,43 +16844,18 @@
      "area": "evidence"
     },
     {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
      "path": "timeline.html",
      "title": "Historical Timeline",
      "area": "evidence"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
-     "path": "teach.html",
-     "title": "Manifest — Remnant Visual Exercise",
-     "area": "systems"
-    },
-    {
      "path": "scroll/index.html",
      "title": "Scroll of Fire — Unsealed Library",
      "area": "scroll-scripture"
-    },
-    {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 1,
-   "inTotal": 13
+   "inTotal": 5
   },
   "scroll/index.html": {
    "title": "Scroll of Fire — Unsealed Library",
@@ -17569,6 +16890,46 @@
      "path": "glossary.html",
      "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
      "area": "scroll-scripture"
+    },
+    {
+     "path": "scroll/data/shelf-foundations.html",
+     "title": "Foundations — shelf list",
+     "area": "codex"
+    },
+    {
+     "path": "scroll/data/shelf-scripture.html",
+     "title": "Scripture — shelf list",
+     "area": "codex"
+    },
+    {
+     "path": "scroll/data/shelf-history.html",
+     "title": "History — shelf list",
+     "area": "codex"
+    },
+    {
+     "path": "scroll/data/shelf-evidence.html",
+     "title": "Evidence — shelf list",
+     "area": "codex"
+    },
+    {
+     "path": "scroll/data/shelf-technology.html",
+     "title": "Technology — shelf list",
+     "area": "codex"
+    },
+    {
+     "path": "scroll/data/shelf-prophecy.html",
+     "title": "Prophecy — shelf list",
+     "area": "codex"
+    },
+    {
+     "path": "scroll/data/shelf-witness.html",
+     "title": "Witness — shelf list",
+     "area": "codex"
+    },
+    {
+     "path": "scroll/data/shelf-reference.html",
+     "title": "Reference — shelf list",
+     "area": "codex"
     }
    ],
    "in": [
@@ -17598,7 +16959,7 @@
      "area": "scroll-scripture"
     }
    ],
-   "outTotal": 6,
+   "outTotal": 14,
    "inTotal": 5
   },
   "scroll/lexicon.html": {
@@ -17613,21 +16974,6 @@
    ],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
-     "path": "ab.html",
-     "title": "A/B Carrier Protocol",
-     "area": "systems"
-    },
-    {
-     "path": "circle.html",
-     "title": "Circle Sync",
-     "area": "artifacts"
-    },
-    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
@@ -17638,29 +16984,14 @@
      "area": "codex"
     },
     {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
      "path": "glossary.html",
      "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
      "area": "scroll-scripture"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
      "path": "scripture/lemma.html",
      "title": "Lemma study — Scripture",
      "area": "scroll-scripture"
-    },
-    {
-     "path": "teach.html",
-     "title": "Manifest — Remnant Visual Exercise",
-     "area": "systems"
     },
     {
      "path": "scroll/atlas.html",
@@ -17671,20 +17002,10 @@
      "path": "scroll/index.html",
      "title": "Scroll of Fire — Unsealed Library",
      "area": "scroll-scripture"
-    },
-    {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 1,
-   "inTotal": 14
+   "inTotal": 6
   },
   "scroll/reader.html": {
    "title": "Reading the Scroll — Unsealed Library",
@@ -17723,21 +17044,6 @@
    ],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
-     "path": "ab.html",
-     "title": "A/B Carrier Protocol",
-     "area": "systems"
-    },
-    {
-     "path": "circle.html",
-     "title": "Circle Sync",
-     "area": "artifacts"
-    },
-    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
@@ -17753,21 +17059,6 @@
      "area": "archive"
     },
     {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
-     "path": "teach.html",
-     "title": "Manifest — Remnant Visual Exercise",
-     "area": "systems"
-    },
-    {
      "path": "scroll/index.html",
      "title": "Scroll of Fire — Unsealed Library",
      "area": "scroll-scripture"
@@ -17776,20 +17067,10 @@
      "path": "search.html",
      "title": "Search",
      "area": "archive"
-    },
-    {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 1,
-   "inTotal": 13
+   "inTotal": 5
   },
   "search.html": {
    "title": "Search",
@@ -17913,11 +17194,6 @@
    ],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
      "path": "ab.html",
      "title": "A/B Carrier Protocol",
      "area": "systems"
@@ -17925,11 +17201,6 @@
     {
      "path": "about-aaron.html",
      "title": "Aaron Paul Laird | Author, Craftsman and Systems Builder",
-     "area": "artifacts"
-    },
-    {
-     "path": "circle.html",
-     "title": "Circle Sync",
      "area": "artifacts"
     },
     {
@@ -17943,19 +17214,9 @@
      "area": "codex"
     },
     {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
      "path": "glossary.html",
      "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
      "area": "scroll-scripture"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
     },
     {
      "path": "teach.html",
@@ -17971,20 +17232,10 @@
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
-    },
-    {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 2,
-   "inTotal": 14
+   "inTotal": 8
   },
   "start.html": {
    "title": "Start Here — Redirect",
@@ -17998,11 +17249,6 @@
    ],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
      "path": "ab.html",
      "title": "A/B Carrier Protocol",
      "area": "systems"
@@ -18013,29 +17259,14 @@
      "area": "artifacts"
     },
     {
-     "path": "circle.html",
-     "title": "Circle Sync",
-     "area": "artifacts"
-    },
-    {
      "path": "index.html",
      "title": "Codex of Reality",
      "area": "codex"
     },
     {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
      "path": "glossary.html",
      "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
      "area": "scroll-scripture"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
     },
     {
      "path": "teach.html",
@@ -18046,20 +17277,10 @@
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
-    },
-    {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 1,
-   "inTotal": 12
+   "inTotal": 6
   },
   "systems/archive.html": {
    "title": "Interactive Archive",
@@ -18088,23 +17309,8 @@
    ],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
-     "path": "ab.html",
-     "title": "A/B Carrier Protocol",
-     "area": "systems"
-    },
-    {
      "path": "about-aaron.html",
      "title": "Aaron Paul Laird | Author, Craftsman and Systems Builder",
-     "area": "artifacts"
-    },
-    {
-     "path": "circle.html",
-     "title": "Circle Sync",
      "area": "artifacts"
     },
     {
@@ -18118,21 +17324,6 @@
      "area": "evidence"
     },
     {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
-     "path": "teach.html",
-     "title": "Manifest — Remnant Visual Exercise",
-     "area": "systems"
-    },
-    {
      "path": "search.html",
      "title": "Search",
      "area": "archive"
@@ -18141,31 +17332,16 @@
      "path": "hub.html",
      "title": "Systems Hub",
      "area": "systems"
-    },
-    {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 4,
-   "inTotal": 13
+   "inTotal": 5
   },
   "systems/frequencies.html": {
    "title": "Frequency Governance",
    "area": "systems",
    "out": [],
    "in": [
-    {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
     {
      "path": "ab.html",
      "title": "A/B Carrier Protocol",
@@ -18174,11 +17350,6 @@
     {
      "path": "about-aaron.html",
      "title": "Aaron Paul Laird | Author, Craftsman and Systems Builder",
-     "area": "artifacts"
-    },
-    {
-     "path": "circle.html",
-     "title": "Circle Sync",
      "area": "artifacts"
     },
     {
@@ -18192,11 +17363,6 @@
      "area": "codex"
     },
     {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
      "path": "theory/frequency-governance.html",
      "title": "Frequency Governance — Redirect",
      "area": "codex"
@@ -18205,11 +17371,6 @@
      "path": "glossary.html",
      "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
      "area": "scroll-scripture"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
     },
     {
      "path": "teach.html",
@@ -18233,7 +17394,7 @@
     }
    ],
    "outTotal": 0,
-   "inTotal": 16
+   "inTotal": 10
   },
   "systems/mind-renewal.html": {
    "title": "Mind-Renewal Protocol",
@@ -18247,58 +17408,23 @@
    ],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
-     "path": "ab.html",
-     "title": "A/B Carrier Protocol",
-     "area": "systems"
-    },
-    {
-     "path": "circle.html",
-     "title": "Circle Sync",
-     "area": "artifacts"
-    },
-    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
     },
     {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
-     "path": "teach.html",
-     "title": "Manifest — Remnant Visual Exercise",
+     "path": "practices.html",
+     "title": "Practices — the Exercises Wing · Remnant Lab",
      "area": "systems"
     },
     {
      "path": "hub.html",
      "title": "Systems Hub",
      "area": "systems"
-    },
-    {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 1,
-   "inTotal": 10
+   "inTotal": 3
   },
   "systems/recoder.html": {
    "title": "Living Dictionary of Reality",
@@ -18306,58 +17432,18 @@
    "out": [],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
-     "path": "ab.html",
-     "title": "A/B Carrier Protocol",
-     "area": "systems"
-    },
-    {
-     "path": "circle.html",
-     "title": "Circle Sync",
-     "area": "artifacts"
-    },
-    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
     },
     {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
-     "path": "teach.html",
-     "title": "Manifest — Remnant Visual Exercise",
-     "area": "systems"
-    },
-    {
      "path": "hub.html",
      "title": "Systems Hub",
      "area": "systems"
-    },
-    {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 10
+   "inTotal": 2
   },
   "systems/t-7.html": {
    "title": "T-7 Resonant Engine",
@@ -18365,58 +17451,18 @@
    "out": [],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
-     "path": "ab.html",
-     "title": "A/B Carrier Protocol",
-     "area": "systems"
-    },
-    {
-     "path": "circle.html",
-     "title": "Circle Sync",
-     "area": "artifacts"
-    },
-    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
     },
     {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
-     "path": "teach.html",
-     "title": "Manifest — Remnant Visual Exercise",
-     "area": "systems"
-    },
-    {
      "path": "hub.html",
      "title": "Systems Hub",
      "area": "systems"
-    },
-    {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 10
+   "inTotal": 2
   },
   "systems/witness.html": {
    "title": "Remnant Witness Hash",
@@ -18424,39 +17470,9 @@
    "out": [],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
-     "path": "ab.html",
-     "title": "A/B Carrier Protocol",
-     "area": "systems"
-    },
-    {
-     "path": "circle.html",
-     "title": "Circle Sync",
-     "area": "artifacts"
-    },
-    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
-    },
-    {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
-     "path": "teach.html",
-     "title": "Manifest — Remnant Visual Exercise",
-     "area": "systems"
     },
     {
      "path": "systems/mind-renewal.html",
@@ -18467,29 +17483,19 @@
      "path": "hub.html",
      "title": "Systems Hub",
      "area": "systems"
-    },
-    {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
-     "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 11
+   "inTotal": 3
   },
   "teach.html": {
    "title": "Manifest — Remnant Visual Exercise",
    "area": "systems",
    "out": [
     {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
+     "path": "start.html",
+     "title": "Start Here — Redirect",
+     "area": "codex"
     },
     {
      "path": "moons.html",
@@ -18497,9 +17503,14 @@
      "area": "living-time"
     },
     {
-     "path": "ledger.html",
-     "title": "Witness Ledger",
-     "area": "living-time"
+     "path": "covenant-caravan.html",
+     "title": "The Covenant Caravan",
+     "area": "artifacts"
+    },
+    {
+     "path": "shop.html",
+     "title": "Artifact Registry & Shop",
+     "area": "artifacts"
     },
     {
      "path": "hub.html",
@@ -18507,34 +17518,14 @@
      "area": "systems"
     },
     {
-     "path": "scroll/search.html",
-     "title": "Search the Scroll",
-     "area": "scroll-scripture"
+     "path": "ledger.html",
+     "title": "Witness Ledger",
+     "area": "living-time"
     },
     {
-     "path": "scroll/lexicon.html",
-     "title": "Hebrew lexicon",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/atlas.html",
-     "title": "Reference atlas",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "scroll/editorial.html",
-     "title": "Editorial reading and evidence",
-     "area": "evidence"
-    },
-    {
-     "path": "theory.html",
-     "title": "Theory Hub",
-     "area": "evidence"
-    },
-    {
-     "path": "theory/canon.html",
-     "title": "Canon 0–17",
-     "area": "evidence"
+     "path": "systems/frequencies.html",
+     "title": "Frequency Governance",
+     "area": "systems"
     },
     {
      "path": "genesis-oracle.html",
@@ -18542,27 +17533,17 @@
      "area": "scroll-scripture"
     },
     {
-     "path": "glossary.html",
-     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
-     "area": "scroll-scripture"
+     "path": "theory.html",
+     "title": "Theory Hub",
+     "area": "evidence"
     },
     {
-     "path": "systems/archive.html",
-     "title": "Interactive Archive",
-     "area": "archive"
-    },
-    {
-     "path": "systems/frequencies.html",
-     "title": "Frequency Governance",
-     "area": "systems"
+     "path": "ethics.html",
+     "title": "Ethics & Coherence Law",
+     "area": "evidence"
     }
    ],
    "in": [
-    {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
     {
      "path": "ab.html",
      "title": "A/B Carrier Protocol",
@@ -18586,11 +17567,6 @@
     {
      "path": "ethics.html",
      "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
      "area": "evidence"
     },
     {
@@ -18629,8 +17605,8 @@
      "area": "evidence"
     }
    ],
-   "outTotal": 29,
-   "inTotal": 16
+   "outTotal": 10,
+   "inTotal": 12
   },
   "theory.html": {
    "title": "Theory Hub",
@@ -18709,11 +17685,6 @@
    ],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
      "path": "ab.html",
      "title": "A/B Carrier Protocol",
      "area": "systems"
@@ -18739,19 +17710,9 @@
      "area": "codex"
     },
     {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
      "path": "glossary.html",
      "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
      "area": "scroll-scripture"
-    },
-    {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
     },
     {
      "path": "theory/operators.html",
@@ -18777,10 +17738,15 @@
      "path": "codex-white-paper.html",
      "title": "The Codex of Reality and the Living Sphere — A White Paper",
      "area": "living-time"
+    },
+    {
+     "path": "witness.html",
+     "title": "Witness",
+     "area": "artifacts"
     }
    ],
    "outTotal": 47,
-   "inTotal": 17
+   "inTotal": 12
   },
   "theory/artifact-theory.html": {
    "title": "Artifact Theory",
@@ -18831,23 +17797,8 @@
    "out": [],
    "in": [
     {
-     "path": "micro.html",
-     "title": "⏳ 90-Second Micro-Run",
-     "area": "systems"
-    },
-    {
-     "path": "ab.html",
-     "title": "A/B Carrier Protocol",
-     "area": "systems"
-    },
-    {
      "path": "about-aaron.html",
      "title": "Aaron Paul Laird | Author, Craftsman and Systems Builder",
-     "area": "artifacts"
-    },
-    {
-     "path": "circle.html",
-     "title": "Circle Sync",
      "area": "artifacts"
     },
     {
@@ -18856,43 +17807,18 @@
      "area": "archive"
     },
     {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
-    },
-    {
      "path": "glossary.html",
      "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
      "area": "scroll-scripture"
     },
     {
-     "path": "methods.html",
-     "title": "How the Sphere Knows — Methods",
-     "area": "evidence"
-    },
-    {
-     "path": "teach.html",
-     "title": "Manifest — Remnant Visual Exercise",
-     "area": "systems"
-    },
-    {
      "path": "theory.html",
      "title": "Theory Hub",
-     "area": "evidence"
-    },
-    {
-     "path": "glyphs.html",
-     "title": "Voice-Glyph Synth",
-     "area": "systems"
-    },
-    {
-     "path": "provenance.html",
-     "title": "Where Every Number Comes From",
      "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 12
+   "inTotal": 4
   },
   "theory/delta-framework.html": {
    "title": "Δ0–Δ7 Framework",
@@ -19595,11 +18521,6 @@
      "area": "archive"
     },
     {
-     "path": "index.html",
-     "title": "Codex of Reality",
-     "area": "codex"
-    },
-    {
      "path": "witness-world.html",
      "title": "The Witness World — Redirect",
      "area": "codex"
@@ -19611,7 +18532,7 @@
     }
    ],
    "outTotal": 5,
-   "inTotal": 4
+   "inTotal": 3
   }
  }
 }

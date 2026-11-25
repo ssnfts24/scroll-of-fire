@@ -172,6 +172,15 @@ const genesisLinks = data.coverage.genesisChapters.map(chapter => {
   const section = sectionById.get(chapter.sectionIds[0]);
   return `<a class="chapter-link" href="${sectionReaderHref(section)}"><span>Genesis</span><strong>${String(chapter.chapter).padStart(2, "0")}</strong><span aria-hidden="true">↗</span></a>`;
 }).join("\n");
+/* Batch E4 (Nov 25, 2026): the shelf lists no longer ride inside
+ * the index page — at 1,989 links they were most of its 303 KB,
+ * shipped to every visitor for shelves most never open. Each
+ * shelf's list is emitted as its own fragment under data/, and
+ * the index carries the shelves alone; assets/shelf-loader.js
+ * fetches a shelf's list the first time it opens. Without
+ * JavaScript the shelf's own link still opens the fragment, so
+ * nothing becomes unreachable — it is the plan's redirect-stub
+ * honesty applied to weight: one job per file. */
 const shelfIndex = shelves.map(shelf => {
   const links = shelfSections[shelf.id].map(section => {
     const duplicate = duplicateBySection.get(section.id);
@@ -184,7 +193,9 @@ const shelfIndex = shelves.map(shelf => {
     const structuralNote = section.contentBearing ? "" : `<small>Structural heading · opens in its reading context</small>`;
     return `<li><a href="${sectionReaderHref(section)}"><span>${escapeHtml(section.title)}</span><small>Original line ${section.line}</small>${structuralNote}</a>${duplicateLinks}</li>`;
   }).join("\n");
-  return `<details class="index-shelf" id="shelf-${shelf.id}"><summary><span class="shelf-number">${shelf.icon}</span><span><strong>${escapeHtml(shelf.title)}</strong><small>${shelfSections[shelf.id].length} original sections</small></span></summary><ol>${links}</ol></details>`;
+  const fragment = `<!doctype html>\n<html lang="en" data-data-fragment>\n<head>\n<meta charset="utf-8">\n<base href="../">\n<title>${escapeHtml(shelf.title)} — shelf list | Scroll of Fire Library</title>\n<meta name="description" content="The ${escapeHtml(shelf.title)} shelf list of the Scroll of Fire Library, fetched by the Library on open.">\n</head>\n<body>\n<ol class="shelf-list" data-shelf-list="${shelf.id}">\n${links}\n</ol>\n</body>\n</html>\n`;
+  fs.writeFileSync(path.join(outputRoot, "data", `shelf-${shelf.id}.html`), fragment);
+  return `<details class="index-shelf" id="shelf-${shelf.id}" data-shelf-src="data/shelf-${shelf.id}.html"><summary><span class="shelf-number">${shelf.icon}</span><span><strong>${escapeHtml(shelf.title)}</strong><small>${shelfSections[shelf.id].length} original sections</small></span></summary><p class="shelf-fallback"><a href="data/shelf-${shelf.id}.html">Open the full ${escapeHtml(shelf.title)} shelf list</a> (${shelfSections[shelf.id].length} sections).</p><ol data-shelf-mount></ol></details>`;
 }).join("\n");
 
 // The one travel bar — the same markup scripts/apply-living-nav.mjs
@@ -221,11 +232,12 @@ const homepage = `<!doctype html>
   <meta name="twitter:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
   <link rel="icon" type="image/png" href="../assets/img/shared/branding/favicon.png">
   <link rel="apple-touch-icon" href="../assets/img/shared/branding/favicon.png">
-  <link rel="manifest" href="../manifest-site.webmanifest">
+  <link rel="manifest" href="../manifest.webmanifest">
   <link rel="stylesheet" href="assets/library.css">
   <link rel="stylesheet" href="../assets/css/living-ui.css?v=20261117-1">
   <script defer src="../assets/js/site.js"></script>
   <script defer src="assets/library.js"></script>
+  <script defer src="assets/shelf-loader.js"></script>
   <link rel="stylesheet" href="../assets/css/spark-companion.css?v=20261119-1">
   <script defer src="../assets/js/spark-companion.js?v=20261119-1"></script>
   <script defer src="../assets/js/spark-relations.js?v=20261122-1"></script>
@@ -351,7 +363,7 @@ const reader = `<!doctype html>
   <meta name="twitter:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
   <link rel="icon" type="image/png" href="../assets/img/shared/branding/favicon.png">
   <link rel="apple-touch-icon" href="../assets/img/shared/branding/favicon.png">
-  <link rel="manifest" href="../manifest-site.webmanifest">
+  <link rel="manifest" href="../manifest.webmanifest">
   <link rel="stylesheet" href="assets/library.css">
   <link rel="stylesheet" href="../assets/css/living-ui.css?v=20261117-1">
   <script defer src="../assets/js/site.js"></script>
@@ -378,7 +390,7 @@ const reader = `<!doctype html>
     </div>
   </header>
   <div class="reader-crumbs"><a href="./">Library</a><span aria-hidden="true">/</span><a data-shelf-link href="./#shelves">Shelf</a><span aria-hidden="true">/</span><span data-current-title>Loading passage</span></div>
-  <main class="reader-layout">
+  <main class="reader-layout" data-read-aloud>
     <details class="toc-panel" data-toc>
       <summary><span>Contents</span><span class="toc-count" data-toc-count></span></summary>
       <nav data-toc-nav aria-label="Reading table of contents"><p>Preparing table of contents…</p></nav>
@@ -400,6 +412,7 @@ const reader = `<!doctype html>
     <a data-next href="./">Next passage →</a>
   </div>
   <footer class="reader-footer"><p>Words are presented as preserved. Contextual grouping does not independently verify historical or scientific claims.</p><a href="archive/edition.json">Edition ${escapeHtml(edition.editionVersion)} provenance ↗</a></footer>
+  <script defer src="../assets/js/read-aloud.js"></script>
   <script defer src="../assets/js/living-ui.js?v=20261117-1"></script>
 </body>
 </html>
@@ -429,7 +442,7 @@ function toolPage({ file, title, description, bodyClass, current, intro, body, s
   <meta name="twitter:image" content="https://codexofreality.org/assets/img/shared/social/codex-og-cover.jpg">
   <link rel="icon" type="image/png" href="../assets/img/shared/branding/favicon.png">
   <link rel="apple-touch-icon" href="../assets/img/shared/branding/favicon.png">
-  <link rel="manifest" href="../manifest-site.webmanifest">
+  <link rel="manifest" href="../manifest.webmanifest">
   <link rel="stylesheet" href="assets/library.css">
   <link rel="stylesheet" href="../assets/css/living-ui.css?v=20261117-1">
   <script defer src="../assets/js/site.js"></script>

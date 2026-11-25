@@ -762,6 +762,57 @@ test("no R1.7 protected file is touched by this branch", () => {
   const carriesProtectedPerf = changed.has(
     "tests/sphere-protected-perf-fixes.test.js"
   );
+  /*
+   * PWA identity declaration (Nov 25, 2026 — ULS-001-R1 P2,
+   * under Aaron's "Start all" order). The consolidation retires
+   * the three installation cards for one (DUPLICATION_REGISTER
+   * D-02); its only protected touch is one <head> line in the
+   * Sphere page — the manifest link now names the one card,
+   * docs/manifest.webmanifest. The change set declares itself
+   * by carrying its signature file (tests/pwa-identity-release
+   * .test.js, which lives outside the protected directories and
+   * pins the consolidation's shape). No geometry, rendering,
+   * camera, motion, selection, label, or calendar file is
+   * touched. Every other protected path still fails this test
+   * loudly.
+   */
+  const pwaIdentityDeclaredProtected = new Set([
+    "docs/living-time-sphere.html"
+  ]);
+  const carriesPwaIdentity = changed.has(
+    "tests/pwa-identity-release.test.js"
+  );
+  /*
+   * R1.7 improvement-release declaration (Nov 25, 2026 — Aaron
+   * widened the Sphere performance pass into a full R1.7
+   * improvement release in his own words: "Yes, widen the
+   * current pass into a full R1.7 improvement release"). The
+   * release opens the protected set for exactly the five
+   * behaviour-preserving performance changes of PR #344 —
+   * caching and memoization only — and nothing else. This
+   * change set declares itself by carrying its signature file
+   * (the improvement-release pin test, which lives outside
+   * the protected directories), and its declared set names
+   * exactly the two protected paths the five changes touch:
+   *   - the label manager (the stage geometry cached and
+   *     ResizeObserver-invalidated instead of re-read per
+   *     pass; the root rem read once per pass; the track
+   *     loop's natural widths served under the label size
+   *     cache's own key discipline);
+   *   - the renderer (the protected rects cached with their
+   *     invalidation, and the semantic resolve memoized on
+   *     its pure inputs).
+   * No geometry values, rendering, camera, motion, selection,
+   * or label content changes. Every other protected path
+   * still fails this test loudly.
+   */
+  const improvementReleaseDeclaredProtected = new Set([
+    "docs/assets/js/sphere/living-time-sphere-label-manager.js",
+    "docs/assets/js/sphere/living-time-sphere-renderer-3d.js"
+  ]);
+  const carriesImprovementRelease = changed.has(
+    "tests/sphere-improvement-release.test.js"
+  );
   for (const file of changed) {
     if (!protectedPaths.has(file)) continue;
     assert.ok(
@@ -780,7 +831,9 @@ test("no R1.7 protected file is touched by this branch", () => {
         (carriesAppMode && appModeDeclaredProtected.has(file)) ||
         (carriesMobileStage && mobileStageDeclaredProtected.has(file)) ||
         (carriesAppBridge && appBridgeDeclaredProtected.has(file)) ||
-        (carriesProtectedPerf && protectedPerfDeclaredProtected.has(file)),
+        (carriesProtectedPerf && protectedPerfDeclaredProtected.has(file)) ||
+        (carriesPwaIdentity && pwaIdentityDeclaredProtected.has(file)) ||
+        (carriesImprovementRelease && improvementReleaseDeclaredProtected.has(file)),
       `R1.7 protected file changed: ${file}`
     );
   }

@@ -1080,6 +1080,7 @@
     return _stabilizeBandWithMeta({ candidateBand, distance, screenWidth, previousBand }).band;
   }
 
+  let _semanticResolveMemo = null;
   function _resolveSemanticZoomFromCamera() {
     const zoom = globalThis.LivingTimeSphereSemanticZoom;
     if (!zoom?.resolveBand || !zoom?.resolveVisibility) return _semanticZoomState;
@@ -1088,6 +1089,34 @@
     const fallbackDist = globalThis.LivingTimeSphereCamera?.MODE_POSITIONS?.[_viewMode]?.distance || 2.35;
     const rawDistance = Number(cameraState.dist);
     const distance = Number.isFinite(rawDistance) ? rawDistance : fallbackDist;
+    /*
+     * Resolve memo (sphere performance pass, Nov 25, 2026).
+     * render() re-resolves the semantic state on every frame,
+     * and the resolve is a pure function of the inputs keyed
+     * below: resolveBand and resolveVisibility are pure, the
+     * band stabilization reads only the previous band (keyed),
+     * and _visibleLayers is replaced wholesale on every change
+     * — never mutated in place — so its identity is an exact
+     * key. When every input stands, the frozen object the
+     * resolve would build is the one already built; return it
+     * instead of rebuilding and re-freezing it per frame. A
+     * non-finite phi never memoizes (NaN !== NaN), exactly as
+     * an unmemoized resolve would recompute.
+     */
+    const memo = _semanticResolveMemo;
+    if (
+      memo
+      && memo.distance === distance
+      && memo.rawFinite === Number.isFinite(rawDistance)
+      && memo.phi === Number(cameraState.phi)
+      && memo.screenWidth === screenWidth
+      && memo.layers === (_visibleLayers || null)
+      && memo.connectionMode === (_semanticZoomState?.connectionMode || "contextual")
+      && memo.previousBand === (_activeSemanticBand || null)
+      && memo.viewMode === _viewMode
+    ) {
+      return memo.result;
+    }
     // B7.60 — elevation is part of the semantic state: the day rail is a
     // tilted-view composition, so overhead disclosure gates on phi even
     // though the distance band itself stays phi-free.
@@ -1105,7 +1134,7 @@
       band,
       connectionMode: _semanticZoomState?.connectionMode || "contextual",
     });
-    return Object.freeze({
+    const result = Object.freeze({
       ...resolved,
       sourceType: Number.isFinite(rawDistance) ? "camera-distance-live" : "camera-distance-fallback",
       distance,
@@ -1114,6 +1143,18 @@
       previousBand: _activeSemanticBand || null,
       transitionThreshold: stabilization.transitionThreshold,
     });
+    _semanticResolveMemo = {
+      distance,
+      rawFinite: Number.isFinite(rawDistance),
+      phi,
+      screenWidth,
+      layers: _visibleLayers || null,
+      connectionMode: _semanticZoomState?.connectionMode || "contextual",
+      previousBand: _activeSemanticBand || null,
+      viewMode: _viewMode,
+      result
+    };
+    return result;
   }
 
   // B7.51 — distinct numbered Pattern Moons. The Pattern-Moon identity lane is
@@ -2858,6 +2899,32 @@
     }
   }
 
+  /*
+   * Protected-rects cache (sphere performance pass, Nov 25,
+   * 2026). _updateMoonLabels asked for the instrument chrome's
+   * rects on every label pass — two getBoundingClientRect reads
+   * at the 96 ms gesture cadence and on every still-camera tick,
+   * for chrome whose geometry changes only when the shell's
+   * layout changes. The rects are now re-read only when a
+   * ResizeObserver on the shell or the chrome reports a size
+   * change, when the window resizes, or when the page scrolls
+   * (these are viewport coordinates; the label manager's own
+   * geometry cache invalidates on the same scroll, so a pass
+   * after a scroll re-reads every rect in one coordinate
+   * world). Element identity is re-validated on every call, so
+   * a remount re-reads. The values served are the values the
+   * live reads returned; only the reading is saved.
+   */
+  let _protectedRectsCache = null;
+  let _protectedRectsObserver = null;
+  let _protectedRectsWatched = null;
+  function _invalidateProtectedRects() {
+    if (_protectedRectsCache) _protectedRectsCache.stale = true;
+  }
+  if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
+    window.addEventListener("resize", _invalidateProtectedRects, { passive: true });
+    window.addEventListener("scroll", _invalidateProtectedRects, { capture: true, passive: true });
+  }
   function _moonLabelProtectedRects() {
     const shell = _container?.closest?.(".sphere-instrument-shell") || null;
     if (!shell) return [];
@@ -2865,12 +2932,40 @@
       shell.querySelector(".sphere-instrument-topline"),
       shell.querySelector(".sphere-instrument-footer")
     ].filter(Boolean);
+    const cache = _protectedRectsCache;
+    if (
+      cache
+      && !cache.stale
+      && cache.shell === shell
+      && cache.els.length === protectedEls.length
+      && cache.els.every((el, i) => el === protectedEls[i])
+    ) {
+      return cache.rects;
+    }
     const rects = [];
     for (const el of protectedEls) {
       const rect = el.getBoundingClientRect?.();
       if (rect && Number.isFinite(rect.width) && Number.isFinite(rect.height) && rect.width > 0 && rect.height > 0) {
         rects.push(rect);
       }
+    }
+    _protectedRectsCache = { shell, els: protectedEls, rects, stale: false };
+    if (typeof ResizeObserver !== "undefined") {
+      try {
+        // Accumulate-only observation, load-bearing: an
+        // observer's initial callback for a freshly observed
+        // element would mark each rebuilt cache stale and the
+        // cache would never survive a pass (the label
+        // manager's geometry cache carries the full note).
+        if (!_protectedRectsObserver) _protectedRectsObserver = new ResizeObserver(_invalidateProtectedRects);
+        if (!_protectedRectsWatched) _protectedRectsWatched = new Set();
+        for (const el of [shell, ...protectedEls]) {
+          if (el && !_protectedRectsWatched.has(el)) {
+            _protectedRectsWatched.add(el);
+            _protectedRectsObserver.observe(el);
+          }
+        }
+      } catch { /* no observer: identity + resize + scroll still guard the cache */ }
     }
     return rects;
   }

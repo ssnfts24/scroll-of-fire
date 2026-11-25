@@ -1441,8 +1441,23 @@ Record first. Interpret later. Compare across 3, 7, 14, and 28 days.`;
       return [queryTab, hashTab].find(id => panels.has(id)) || "todayPanel";
     }
 
+    /* Batch E4 (Nov 25, 2026): the astrology mirror's script
+       (18.9 KB) no longer rides every page load — it loads the
+       first time the astrology tab opens, deep link included,
+       and never twice. The panel's markup stays in the page;
+       only the mirror's engine waits behind its own door. */
+    let astrologyRequested = false;
+    function ensureAstrology() {
+      if (astrologyRequested) return;
+      astrologyRequested = true;
+      const script = document.createElement("script");
+      script.src = "assets/js/astrology.js?v=20260722-4";
+      document.body.appendChild(script);
+    }
+
     function activateTab(id, options = {}) {
       if (!panels.has(id)) id = "todayPanel";
+      if (id === "astrologyPanel") ensureAstrology();
       const { updateHistory = false, scroll = false } = options;
 
       $$(".tab").forEach(tab => {

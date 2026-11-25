@@ -65,6 +65,7 @@
 | --- | --- |
 | `scripts/apply-heaven-sound.mjs` | `docs/living-time-sphere.html`, `docs/404.html`, `docs/offline.html`, `docs/caravan.html` |
 | `scripts/apply-living-nav.mjs` | `docs/living-time-sphere.html`, `docs/404.html`, `docs/offline.html`, `docs/caravan.html` |
+| `scripts/apply-one-nav.mjs` | `docs/living-time-sphere.html`, `docs/404.html`, `docs/aiyanas-world.html` |
 | `scripts/apply-site-mobile.mjs` | `docs/living-time-sphere.html`, `docs/404.html`, `docs/offline.html`, `docs/caravan.html` |
 | `scripts/apply-spark-presence.mjs` | `docs/living-time-sphere.html`, `docs/404.html`, `docs/offline.html`, `docs/caravan.html`, `docs/companions.html` |
 | `scripts/apply-theory-work.mjs` | `docs/theory.html` |
@@ -101,9 +102,9 @@
 | --- | --- |
 | `docs/assets/css/site-mobile.css` | 186 |
 | `docs/assets/css/spark-companion.css` | 184 |
-| `docs/assets/css/living-ui.css` | 148 |
+| `docs/assets/css/living-ui.css` | 149 |
 | `docs/scripture/assets/scripture.css` | 101 |
-| `docs/assets/css/spark-agent-seat.css` | 72 |
+| `docs/assets/css/spark-agent-seat.css` | 74 |
 | `docs/assets/css/codex.css` | 57 |
 | `docs/assets/css/navigation.css` | 51 |
 | `docs/assets/css/social-bridge.css` | 42 |
@@ -117,15 +118,15 @@
 | `docs/assets/js/spark-companion.js` | 184 |
 | `docs/assets/js/spark-presence.js` | 183 |
 | `docs/assets/js/site.js` | 159 |
-| `docs/assets/js/living-ui.js` | 148 |
+| `docs/assets/js/living-ui.js` | 149 |
 | `docs/scripture/assets/scripture.js` | 101 |
 | `docs/assets/js/spark-relations.js` | 78 |
 | `docs/assets/js/heaven-sound.js` | 74 |
-| `docs/assets/js/spark-agent-seat.js` | 72 |
+| `docs/assets/js/spark-agent-seat.js` | 74 |
 | `docs/assets/js/spark-3d.js` | 70 |
-| `docs/assets/js/calendar/pattern-calendar-version.js` | 44 |
-| `docs/assets/js/calendar/pattern-calendar-data.js` | 44 |
-| `docs/assets/js/calendar/pattern-calendar-format.js` | 44 |
+| `docs/assets/js/calendar/pattern-calendar-version.js` | 45 |
+| `docs/assets/js/calendar/pattern-calendar-data.js` | 45 |
+| `docs/assets/js/calendar/pattern-calendar-format.js` | 45 |
 
 ## Protected systems (do not modify)
 

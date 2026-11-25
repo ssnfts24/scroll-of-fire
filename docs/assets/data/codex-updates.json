@@ -10,10 +10,66 @@
  {
   "date": "2026-11-25",
   "type": "Site",
+  "title": "The Spark speaks: spoken conversation where the companion and the Guide live",
+  "summary": "The Spark can be spoken to, and can speak back. On the Companions page and the Codex Guide, the talk seat now carries a microphone: speak, and your words land in the box for you to send, because nothing is written until you say yes. Turn on Hear replies and the Spark answers aloud in its own voice, one voice per Spark, chosen by its seed from the natural voices on your device, never a robotic one. The Guide's answers can be heard aloud too, in a steady neutral voice. Quiet stays the default, and in child mode there is no spoken conversation at all.",
+  "url": "./companions.html",
+  "symbol": "♪"
+ },
+ {
+  "date": "2026-11-25",
+  "type": "Site",
+  "title": "The story web is finished weaving",
+  "summary": "The story now enters everywhere it belongs. The biography page gains its story door: one episode matched to the man, The Gate at First Light, labelled on its face as story and kept apart from the record above it. On the Traveller's Map, every land now names its episode by name, Moon, and token, the way the story itself tells its episodes apart. And in the Episode Library, every film gains a watch-and-do strip: watch the episode, then do the practice its Waymaker skill names, drawn from the story's own curriculum, in the room where the doing lives. The films themselves are untouched: the new cuts land only when Aaron has watched them and gives the word.",
+  "url": "./episodes.html",
+  "symbol": "☲"
+ },
+ {
+  "date": "2026-11-25",
+  "type": "Site",
+  "title": "The school has paths: the Practices room is its root",
+  "summary": "The Practices room is now the school's root in fact, with every course named and standing on one shelf. The Day's Door is open: each moon's own practice line, read from the calendar itself, names the exercise of the room that answers it, and that exercise's card stands lit when the room opens, the Day Out of Time included. The Remaining Seven exercises are named family by family as the course that is arriving. The Micro-Run, the Mind-Renewal Protocol, the Practice Playbook, Teach the Manifest Console, the seven Word Studies, and Genesis a Chapter a Day all stand on the same shelf, and a new door at the head of the Scripture shelf begins the Genesis path at chapter 1. The Lab names its first step at last: start a practice, in Teach.",
+  "url": "./practices.html",
+  "symbol": "☲"
+ },
+ {
+  "date": "2026-11-25",
+  "type": "Site",
+  "title": "The hidden weight is shed: doors now carry what is behind them",
+  "summary": "The site's heaviest pages no longer ship their closed rooms to every visitor. The Scroll library index falls from 303 KB to 26 KB: each shelf's full list now rides behind its shelf and loads when the shelf opens, and the shelf's own link still opens the list plainly without scripts. The downloads page falls from 175 KB to 19 KB: the full integrity archive, every file and every SHA-256 seal unchanged, loads when its door opens. The Reality Recoder's dictionary, 194 entries, stands as its own data file instead of being baked into the page. The homepage's 52 scripts now load deferred in their own order, and the 13 Moons astrology mirror loads only when its tab opens.",
+  "url": "./downloads.html",
+  "symbol": "☲"
+ },
+ {
+  "date": "2026-11-25",
+  "type": "Site",
+  "title": "One navigation: the second menu is folded away",
+  "summary": "Every page of the Codex now opens with the same single travel bar. The legacy site header, which stacked a second menu over the first on 76 pages, is folded away; its 31 deep links were homed first, on the Library shelf, the Theory and Systems hubs, and the Codex Atlas path, so nothing the old menu reached is lost. The theory wing's four-deep stack of menus is down to the travel bar and each page's own next step. The account page joins the same one system. Three pages keep their older header by law: the 404 page, the protected Sphere, and Aiyana's World, where the menu is hers to rule.",
+  "url": "./codex-atlas.html",
+  "symbol": "☲"
+ },
+ {
+  "date": "2026-11-25",
+  "type": "Site",
   "title": "Scripture learns to be heard: a Listen control on all ninety chapters",
   "summary": "Every Genesis and Exodus chapter now carries a Listen control in its own controls bar: the chapter is read aloud verse by verse, in the World English Bible text, by your device's own voice, with the verse being read kept in sight. Listening never marks a chapter read; that stays a deliberate tap. The seven Hebrew word studies are no longer reading walls: their verse citations are tappable into the chapter reader with the word panel open, and each study ends with three recall questions drawn from its own text. The Scroll reader and the white paper can be heard the same way.",
   "url": "./scripture/index.html",
   "symbol": "♪"
+ },
+ {
+  "date": "2026-11-25",
+  "type": "Site",
+  "title": "One install card for the whole site",
+  "summary": "The site carried three different installation cards, one per door, and they did not agree. Now there is one card — the manifest every door points to — so the Codex installs the same way from anywhere on the site, and the install page names the current build, Spark. Living Day v1.0.4, instead of a version long past. This entry and the Sphere label entry below it were landed on November 25 and written into the record late; they stand in their true landing order.",
+  "url": "./install.html",
+  "symbol": "⬢"
+ },
+ {
+  "date": "2026-11-25",
+  "type": "Site",
+  "title": "The Sphere's day labels stopped sticking",
+  "summary": "On the Observatory, day labels could hold a stale place for half a second as the Sphere turned — the guard that settles them served a rotating slice and left the rest holding old positions. The label manager now serves the neediest labels first within its frame budget, keeps a cache of label sizes instead of re-measuring, and holds the faced Moon's pitch to a floor, so the days Aaron saw sticking on his phone settle where they belong. A protected-file release, opened by Aaron's word and regression-verified like every one.",
+  "url": "./living-time-sphere.html",
+  "symbol": "◐"
  },
  {
   "date": "2026-11-24",
