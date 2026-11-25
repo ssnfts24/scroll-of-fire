@@ -157,11 +157,6 @@
           "path": "systems/recoder.html"
         },
         {
-          "id": "theory-glossary",
-          "title": "Theory Glossary",
-          "path": "theory/glossary.html"
-        },
-        {
           "id": "theory-notation",
           "title": "Notation Guide",
           "path": "theory/notation.html"
@@ -290,11 +285,6 @@
           "path": "theory/delta-framework.html"
         },
         {
-          "id": "theory-witness",
-          "title": "Witness (theory)",
-          "path": "theory/witness.html"
-        },
-        {
           "id": "theory-memory",
           "title": "Memory (theory)",
           "path": "theory/memory.html"
@@ -313,11 +303,6 @@
           "id": "theory-artifact",
           "title": "Artifact Theory",
           "path": "theory/artifact-theory.html"
-        },
-        {
-          "id": "theory-ethics",
-          "title": "Ethical Law (theory)",
-          "path": "theory/ethics.html"
         },
         {
           "id": "theory-bibliography",
@@ -430,11 +415,6 @@
           "id": "frequencies",
           "title": "Frequency Governance",
           "path": "systems/frequencies.html"
-        },
-        {
-          "id": "theory-frequency-governance",
-          "title": "Frequency Governance (theory)",
-          "path": "theory/frequency-governance.html"
         }
       ]
     },
