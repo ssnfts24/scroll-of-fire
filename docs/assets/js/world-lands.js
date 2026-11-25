@@ -211,11 +211,6 @@
           "path": "genesis-oracle.html"
         },
         {
-          "id": "whitepaper-remnant",
-          "title": "Remnant Whitepaper",
-          "path": "scroll-of-fire-codex-of-reality-remnant-whitepaper.html"
-        },
-        {
           "id": "genesis-restored",
           "title": "Genesis Restored",
           "path": "Genesis-Restored.md"

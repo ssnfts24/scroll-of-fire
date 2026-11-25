@@ -43,6 +43,9 @@ const EXCLUDED_FILES = new Set([
   "404.html",
   "offline.html",
   "caravan.html",
+  // Page programme (Nov 24, 2026): the Remnant Whitepaper folded into
+  // the Codex White Paper as Part II; this page is a redirect stub now.
+  "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
   // Page programme (Nov 24, 2026): start.html and witness-world.html
   // folded into the front door and the Witness page; redirect stubs now.
   "start.html",
@@ -92,10 +95,10 @@ test("the site manifest carries the Codex's own identity", () => {
 });
 
 test("every hand-maintained page carries the mobile floor", () => {
-  // Census floor 78 since the page programme's home merges (Nov 24, 2026):
-  // start.html and witness-world.html are redirect stubs now, not
-  // hand-maintained pages.
-  assert.ok(handPages.length >= 78,
+  // Census floor 77 since the page programme's merges (Nov 24, 2026):
+  // start.html, witness-world.html and the Remnant Whitepaper are
+  // redirect stubs now, not hand-maintained pages.
+  assert.ok(handPages.length >= 77,
     `expected the hand-maintained census, got ${handPages.length}`);
   for (const rel of handPages) {
     const html = read(`docs/${rel}`);

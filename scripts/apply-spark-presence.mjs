@@ -57,6 +57,7 @@ const EXCLUDED_FILES = new Set([
   "theory/frequency-governance.html",
   "start.html",
   "witness-world.html",
+  "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
   "companions.html",
   /* The Guide's own pages: they carry the Codex Guide's seat,
    * and the two seats stay separate — the Spark seat does not

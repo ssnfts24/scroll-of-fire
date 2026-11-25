@@ -140,3 +140,17 @@ test("the home merges hold: start and witness-world redirect, their folds stand"
   assert.ok(witness.includes('id="ww-canvas"'), "the hall's canvas must stand on the Witness page");
   assert.ok(witness.includes("The Long Line"), "the hall's rooms must stand on the Witness page");
 });
+
+test("the Remnant fold holds: the founding paper stands whole in the white paper", () => {
+  const readDoc = (rel) =>
+    readFileSync(new URL(`../docs/${rel}`, import.meta.url), "utf8");
+  const stub = readDoc("scroll-of-fire-codex-of-reality-remnant-whitepaper.html");
+  assert.match(stub, /http-equiv="refresh"/, "the Remnant paper's page must stay a redirect stub");
+  assert.ok(stub.includes("codex-white-paper.html#part-ii-remnant-whitepaper"),
+    "the stub must point at Part II");
+  const paper = readDoc("codex-white-paper.html");
+  assert.ok(paper.includes('id="part-ii-remnant-whitepaper"'), "Part II must stand in the white paper");
+  assert.ok(paper.includes('id="executive-summary"'), "the founding paper's chapters must stand whole");
+  assert.ok(paper.includes("The Codex is not finished because reality is not finished"),
+    "the founding paper's final declaration must stand in the fold");
+});

@@ -4,7 +4,7 @@ Generated from the shared catalog at base revision `548e858`. This report is dev
 
 ## Public discovery areas
 
-### Scroll and Scripture (13 catalog entries)
+### Scroll and Scripture (12 catalog entries)
 
 Read the Scroll, search its text, study Hebrew roots and follow Genesis 1–50.
 
@@ -18,7 +18,6 @@ Read the Scroll, search its text, study Hebrew roots and follow Genesis 1–50.
 - **Original Scroll (archival edition)** — Archived; The unchanged Full_Scroll_Unsealed text, frozen with a published SHA-256.
 - **Genesis Oracle** — Live; Deterministic layered Genesis readings driven by the shared Pattern Calendar engine.
 - **Codex Glossary** — Live; Symbols, equations and living-technology terms of the Codex.
-- **Remnant Whitepaper** — Live; The foundational whitepaper for Scroll of Fire and the Codex of Reality.
 - **Genesis Restored** — Source only; Root-level restored Genesis text, published through the Downloads catalog.
 - **Exodus Restored** — Source only; Root-level restored Exodus text, published through the Downloads catalog.
 
@@ -112,7 +111,7 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 
 - Public HTML pages inspected: **196**.
 - Total master-inventory records: **501**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
-- Public-facing catalog entries: **74**; only explicitly curated entries appear on the Atlas.
+- Public-facing catalog entries: **73**; only explicitly curated entries appear on the Atlas.
 - Numbered archive folders are inventoried file-by-file, while downloads snapshot differences are kept separate from historical integrity data.
 - Root files not already published through the archive or explicitly approved remain classified as development-only; no such file is automatically linked from the public catalog.
 

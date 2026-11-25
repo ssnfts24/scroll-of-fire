@@ -14,8 +14,8 @@
     },
     {
      "path": "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
-     "title": "Scroll of Fire · Codex of Reality · Remnant Whitepaper",
-     "area": "scroll-scripture"
+     "title": "Remnant Whitepaper — Redirect",
+     "area": "codex"
     },
     {
      "path": "equinox-passage.html",
@@ -75,9 +75,9 @@
      "area": "systems"
     },
     {
-     "path": "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
-     "title": "Scroll of Fire · Codex of Reality · Remnant Whitepaper",
-     "area": "scroll-scripture"
+     "path": "codex-white-paper.html",
+     "title": "The Codex of Reality and the Living Sphere — A White Paper",
+     "area": "living-time"
     },
     {
      "path": "theory.html",
@@ -238,8 +238,8 @@
     },
     {
      "path": "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
-     "title": "Scroll of Fire · Codex of Reality · Remnant Whitepaper",
-     "area": "scroll-scripture"
+     "title": "Remnant Whitepaper — Redirect",
+     "area": "codex"
     },
     {
      "path": "ledger.html",
@@ -665,16 +665,6 @@
      "area": "archive"
     },
     {
-     "path": "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
-     "title": "Scroll of Fire · Codex of Reality · Remnant Whitepaper",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "theory.html",
-     "title": "Theory Hub",
-     "area": "evidence"
-    },
-    {
      "path": "living-time-sphere.html",
      "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
      "area": "living-time"
@@ -682,6 +672,16 @@
     {
      "path": "moons.html",
      "title": "Remnant 13 Moons — Living Calendar",
+     "area": "living-time"
+    },
+    {
+     "path": "alignment-ledger.html",
+     "title": "Alignment Ledger — The 13 Moons Remnant Living Time Observatory",
+     "area": "living-time"
+    },
+    {
+     "path": "equinox-passage.html",
+     "title": "Equinox Passage — The 13 Moons Remnant Living Time Observatory",
      "area": "living-time"
     }
    ],
@@ -752,7 +752,7 @@
      "area": "evidence"
     }
    ],
-   "outTotal": 65,
+   "outTotal": 64,
    "inTotal": 13
   },
   "codex-guide.html": {
@@ -798,7 +798,18 @@
   "codex-white-paper.html": {
    "title": "The Codex of Reality and the Living Sphere — A White Paper",
    "area": "living-time",
-   "out": [],
+   "out": [
+    {
+     "path": "13-moon-whitepaper.html",
+     "title": "Remnant Rollout Whitepaper | The 13 Moons Remnant Living Time Observatory",
+     "area": "living-time"
+    },
+    {
+     "path": "theory.html",
+     "title": "Theory Hub",
+     "area": "evidence"
+    }
+   ],
    "in": [
     {
      "path": "about-aaron.html",
@@ -811,13 +822,23 @@
      "area": "archive"
     },
     {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    },
+    {
+     "path": "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
+     "title": "Remnant Whitepaper — Redirect",
+     "area": "codex"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
     }
    ],
-   "outTotal": 0,
-   "inTotal": 3
+   "outTotal": 2,
+   "inTotal": 5
   },
   "companions.html": {
    "title": "Companions",
@@ -970,8 +991,8 @@
     },
     {
      "path": "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
-     "title": "Scroll of Fire · Codex of Reality · Remnant Whitepaper",
-     "area": "scroll-scripture"
+     "title": "Remnant Whitepaper — Redirect",
+     "area": "codex"
     },
     {
      "path": "13-moon-whitepaper.html",
@@ -1888,13 +1909,13 @@
      "area": "systems"
     },
     {
-     "path": "glossary.html",
-     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
-     "area": "scroll-scripture"
+     "path": "codex-white-paper.html",
+     "title": "The Codex of Reality and the Living Sphere — A White Paper",
+     "area": "living-time"
     },
     {
-     "path": "scripture/index.html",
-     "title": "Genesis & Exodus Scripture",
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
      "area": "scroll-scripture"
     }
    ],
@@ -1920,7 +1941,7 @@
      "area": "codex"
     }
    ],
-   "outTotal": 26,
+   "outTotal": 27,
    "inTotal": 4
   },
   "install.html": {
@@ -16981,18 +17002,13 @@
    "inTotal": 6
   },
   "scroll-of-fire-codex-of-reality-remnant-whitepaper.html": {
-   "title": "Scroll of Fire · Codex of Reality · Remnant Whitepaper",
-   "area": "scroll-scripture",
+   "title": "Remnant Whitepaper — Redirect",
+   "area": "codex",
    "out": [
     {
-     "path": "13-moon-whitepaper.html",
-     "title": "Remnant Rollout Whitepaper | The 13 Moons Remnant Living Time Observatory",
+     "path": "codex-white-paper.html",
+     "title": "The Codex of Reality and the Living Sphere — A White Paper",
      "area": "living-time"
-    },
-    {
-     "path": "theory.html",
-     "title": "Theory Hub",
-     "area": "evidence"
     }
    ],
    "in": [
@@ -17015,11 +17031,6 @@
      "path": "circle.html",
      "title": "Circle Sync",
      "area": "artifacts"
-    },
-    {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
     },
     {
      "path": "index.html",
@@ -17067,8 +17078,8 @@
      "area": "evidence"
     }
    ],
-   "outTotal": 2,
-   "inTotal": 14
+   "outTotal": 1,
+   "inTotal": 13
   },
   "scroll/atlas.html": {
    "title": "Reference atlas",
@@ -18366,14 +18377,14 @@
      "area": "evidence"
     },
     {
-     "path": "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
-     "title": "Scroll of Fire · Codex of Reality · Remnant Whitepaper",
-     "area": "scroll-scripture"
-    },
-    {
      "path": "hub.html",
      "title": "Systems Hub",
      "area": "systems"
+    },
+    {
+     "path": "codex-white-paper.html",
+     "title": "The Codex of Reality and the Living Sphere — A White Paper",
+     "area": "living-time"
     }
    ],
    "outTotal": 47,

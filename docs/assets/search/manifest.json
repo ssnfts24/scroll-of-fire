@@ -4,7 +4,7 @@
   "engine": "living-search-bm25-v1",
   "note": "Generated from the sealed catalog and Scroll data. The index Netlify and GitHub Pages serve is this committed artifact; regenerate with npm run search:index after site:catalog.",
   "sources": {
-    "docs/data/site-catalog.json": "f5bfcf312fa1f65c6df8c6c61c3b74f16d8333e5721a6d5fa20724ed6052db0d",
+    "docs/data/site-catalog.json": "9a4dd4dd4d3c4d6dad95c28f7ebb668c7a0eae1997ffddc66946b83e2c570b47",
     "docs/scroll/data/library.json": "86370223f9bffe5fc30afc4c13767cb283f2f0cd2499321d84d166279ef24588",
     "docs/scroll/data/reader-segments.json": "2624fe5640fd4abcf63499b32f28e36a532c8253f9a7cd2983833a1aa33297dc",
     "docs/scroll/search/lexicon/lexicon-index.json": "92e4169f9a75bfa5467ab5bb57d77cca990a11cd2ab8ba8248685561a571b879",
@@ -38,22 +38,22 @@
     }
   ],
   "counts": {
-    "pages": 180,
-    "pagePassages": 1277,
+    "pages": 179,
+    "pagePassages": 1276,
     "scrollSections": 817,
     "scrollSegments": 1609,
     "scrolls": 2426,
-    "atlas": 74,
+    "atlas": 73,
     "lexicon": 911,
     "claims": 21,
-    "total": 4709
+    "total": 4707
   },
   "shards": {
     "pages": {
       "file": "pages.json",
-      "count": 1277,
-      "bytes": 1672169,
-      "sha256": "905a60cae6e8a4bc41d169aeb8cf6371388ecc3567b0cb622db5122b2ff5dde7"
+      "count": 1276,
+      "bytes": 1666258,
+      "sha256": "953d903b5de7fb5520fa5c85d9a8a2e5b212f6ffc9f900bfba9e54fc19441476"
     },
     "scrolls": {
       "file": "scrolls.json",
@@ -63,9 +63,9 @@
     },
     "atlas": {
       "file": "atlas.json",
-      "count": 74,
-      "bytes": 19943,
-      "sha256": "a911f280b25ab3b344f4e0231e5216472185b7b0ade1b5a0d6d1d181de013c41"
+      "count": 73,
+      "bytes": 19674,
+      "sha256": "5058430887ef3d5cc6ffa6547ec64ff1c9fd6c45397fc773a124e81e0a13c3a1"
     },
     "lexicon": {
       "file": "lexicon.json",
@@ -94,7 +94,8 @@
       "theory/witness.html",
       "theory/frequency-governance.html",
       "start.html",
-      "witness-world.html"
+      "witness-world.html",
+      "scroll-of-fire-codex-of-reality-remnant-whitepaper.html"
     ]
   }
 }

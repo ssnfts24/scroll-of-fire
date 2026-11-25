@@ -101,7 +101,8 @@
     "theory/witness.html": "Redirect to witness.html",
     "theory/frequency-governance.html": "Redirect to systems/frequencies.html",
     "start.html": "Redirect to index.html",
-    "witness-world.html": "Redirect to witness.html"
+    "witness-world.html": "Redirect to witness.html",
+    "scroll-of-fire-codex-of-reality-remnant-whitepaper.html": "Redirect to codex-white-paper.html"
   },
   "entries": [
     {
@@ -252,20 +253,6 @@
       "path": "glossary.html",
       "related": [
         "scroll-lexicon"
-      ],
-      "featured": false
-    },
-    {
-      "id": "whitepaper-remnant",
-      "title": "Remnant Whitepaper",
-      "description": "The foundational whitepaper for Scroll of Fire and the Codex of Reality.",
-      "area": "scroll-scripture",
-      "category": "Whitepaper",
-      "resourceType": "document",
-      "status": "live",
-      "path": "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
-      "related": [
-        "theory-hub"
       ],
       "featured": false
     },

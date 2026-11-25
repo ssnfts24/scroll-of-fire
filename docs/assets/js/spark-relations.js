@@ -92,7 +92,7 @@
         },
         {
           "href": "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
-          "label": "Remnant Whitepaper"
+          "label": "Remnant Whitepaper — Redirect"
         }
       ],
       "ethics.html": [
@@ -305,12 +305,12 @@
           "label": "Equations 0–17"
         },
         {
-          "href": "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
-          "label": "Remnant Whitepaper"
-        },
-        {
           "href": "theory/unified-field.html",
           "label": "Unified Field"
+        },
+        {
+          "href": "theory/operators.html",
+          "label": "Living Operators"
         }
       ],
       "timeline.html": [
