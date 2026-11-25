@@ -3,10 +3,10 @@
   "purpose": "Development-only registry of every tracked or intended repository file. Not a publication list.",
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
-    "files": 2469,
-    "bytes": 1084712638,
+    "files": 2470,
+    "bytes": 1084725752,
     "byGroup": {
-      "tooling": 323,
+      "tooling": 324,
       "manuscript": 17,
       "unlabelled-image": 21,
       "witness-record": 20,
@@ -35,7 +35,7 @@
       "scripture-source": 15
     },
     "byPublicationEligibility": {
-      "development-only": 367,
+      "development-only": 368,
       "pending-publication-review": 43,
       "restricted-review": 180,
       "protected-immutable": 21,
@@ -43,7 +43,7 @@
       "approved-public": 1851
     },
     "byExamination": {
-      "inventoried-only": 2332,
+      "inventoried-only": 2333,
       "text-extracted": 54,
       "no-text-layer-needs-visual-review": 1,
       "archive-listed": 2,
@@ -17304,8 +17304,8 @@
       "path": "docs/assets/js/spark-schedule-core.js",
       "title": "spark-schedule-core.js",
       "format": "js",
-      "bytes": 32625,
-      "sha256": "68c1adcbaf747edc21e13f369f03196c852c7564ef6a372e6049810cf206e7d5",
+      "bytes": 34348,
+      "sha256": "9ac89532ac4f27e4da5bf22cb1b2d7130630c8511f2b24b1aafa56a49f676e78",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -54039,7 +54039,7 @@
       "title": "site-master-inventory.json",
       "format": "json",
       "bytes": 774892,
-      "sha256": "ce0ae37a8bd9c7c98045fe9023cc74708db2b7fb52650fc0efa094f0ff1fef4b",
+      "sha256": "1101adb2c64d41f764a4d1d1ee09ccb0fe2d7a99920feea45bd0a316c771407f",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -58936,6 +58936,30 @@
       "format": "js",
       "bytes": 6557,
       "sha256": "f05396ee350e250f50743336794daa870512631dd982f6e1f00614d4bf306bf1",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-spark-schedule-authority-equivalence-test-js-5b69f0",
+      "path": "tests/spark-schedule-authority-equivalence.test.js",
+      "title": "spark-schedule-authority-equivalence.test.js",
+      "format": "js",
+      "bytes": 11391,
+      "sha256": "f51c94da6c70145291833f94bcd00e19cd9ddc18755e8b9e717bd3f3f8b7702c",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
