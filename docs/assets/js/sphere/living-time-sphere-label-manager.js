@@ -993,6 +993,16 @@
     // open, one full unbudgeted pass runs before the loop may
     // sleep, so the settled state is computed exactly as it was
     // before the budget existed.
+    // Sticky-days repair (Nov 25, 2026, under Aaron's labeling
+    // release): within that budget, service is need-first — a
+    // pill a plate actually touches this frame, and a pair that
+    // actually overlaps this frame, are served this frame
+    // rather than waiting out the rotation, because a held
+    // shift computed against moved geometry is the visible
+    // stick Aaron reported ("the days get sticky along the
+    // sphere; they should nicely come in and out"). The
+    // rotation, the budgets, and the settled state's exactness
+    // are unchanged.
     const GUARD_PILLS_PER_FRAME = 8;
     const GUARD_PAIRS_PER_FRAME = 40;
     let _guardPillCursor = 0;
@@ -1343,6 +1353,19 @@
             const db = Math.hypot(b.sx - focusEntry.sx, b.sy - focusEntry.sy);
             return da - db;
           });
+          const pillRectOf = (entry, extraX = 0, extraY = 0) => {
+            const hw = (entry.rectW * entry.pillScale) / 2;
+            const hh = (entry.rectH * entry.pillScale) / 2;
+            const cx = entry.sx + entry.cox + extraX;
+            const cy = entry.sy + entry.coy + extraY;
+            return { x: cx - hw, y: cy - hh, w: hw * 2, h: hh * 2, cx, cy };
+          };
+          const hitsPlate = (rect, g) => {
+            if (!(g.r > 0)) return false;
+            const nx = Math.max(rect.x, Math.min(g.cx, rect.x + rect.w));
+            const ny = Math.max(rect.y, Math.min(g.cy, rect.y + rect.h));
+            return Math.hypot(g.cx - nx, g.cy - ny) < g.r - 0.5;
+          };
           const served = new Set();
           if (fullGuard) {
             for (const pill of byFocus) served.add(pill);
@@ -1355,6 +1378,34 @@
             const selectedPill = byFocus.find(pill => pill.selected);
             if (selectedPill) served.add(selectedPill);
             _guardPillCursor = n ? (start + take) % n : 0;
+            // Sticky-days repair (Nov 25, 2026 — Aaron, live on
+            // his phone: "the days get sticky along the sphere.
+            // They should nicely come in and out as we're
+            // scrolling about"). A pill a plate actually touches
+            // THIS frame is served THIS frame, ahead of the
+            // rotation: its held shift was computed against
+            // geometry that has already moved on, and waiting
+            // out the rotation — up to a full cycle — is the
+            // visible stick, then the jump when its slice comes
+            // round. The service stays bounded: intruded pills
+            // first, nearest the selection, at most three
+            // budgets' worth beyond the rotation.
+            const intruded = [];
+            for (const pill of byFocus) {
+              if (served.has(pill)) continue;
+              const rect = pillRectOf(pill,
+                pill.guardShiftX || 0, pill.guardShiftY || 0);
+              if (plateGeom.some(g => hitsPlate(rect, g))) {
+                intruded.push(pill);
+              }
+            }
+            intruded.sort((a, b) => {
+              const da = Math.hypot(a.sx - focusEntry.sx, a.sy - focusEntry.sy);
+              const db = Math.hypot(b.sx - focusEntry.sx, b.sy - focusEntry.sy);
+              return da - db;
+            });
+            const extra = Math.min(intruded.length, GUARD_PILLS_PER_FRAME * 3);
+            for (let k = 0; k < extra; k++) served.add(intruded[k]);
           }
           // Fades: a plate faded by a pill that is served this
           // frame (or no longer standing) is restored before the
@@ -1377,19 +1428,6 @@
             pill.dx = (pill.dx || 0) + (pill.guardShiftX || 0);
             pill.dy = (pill.dy || 0) + (pill.guardShiftY || 0);
           }
-          const pillRectOf = (entry, extraX = 0, extraY = 0) => {
-            const hw = (entry.rectW * entry.pillScale) / 2;
-            const hh = (entry.rectH * entry.pillScale) / 2;
-            const cx = entry.sx + entry.cox + extraX;
-            const cy = entry.sy + entry.coy + extraY;
-            return { x: cx - hw, y: cy - hh, w: hw * 2, h: hh * 2, cx, cy };
-          };
-          const hitsPlate = (rect, g) => {
-            if (!(g.r > 0)) return false;
-            const nx = Math.max(rect.x, Math.min(g.cx, rect.x + rect.w));
-            const ny = Math.max(rect.y, Math.min(g.cy, rect.y + rect.h));
-            return Math.hypot(g.cx - nx, g.cy - ny) < g.r - 0.5;
-          };
           const blocked = ctx.blockedRects || [];
           const rectClear = (rect, self) => {
             for (const g of plateGeom) if (hitsPlate(rect, g)) return false;
@@ -1491,15 +1529,22 @@
               const a = byFocus[i];
               const b = byFocus[j];
               const myPairIndex = pairIndex++;
-              if (!fullGuard && pairTotal > GUARD_PAIRS_PER_FRAME) {
-                const rel = (myPairIndex - pairStart + pairTotal) % pairTotal;
-                if (rel >= GUARD_PAIRS_PER_FRAME) continue;
-              }
               if (a.guardHidden || b.guardHidden) continue;
               const ra = pillRectOf(a, a.guardShiftX || 0, a.guardShiftY || 0);
               const rb = pillRectOf(b, b.guardShiftX || 0, b.guardShiftY || 0);
               const ox = Math.min(ra.x + ra.w, rb.x + rb.w) - Math.max(ra.x, rb.x);
               const oy = Math.min(ra.y + ra.h, rb.y + rb.h) - Math.max(ra.y, rb.y);
+              // Sticky-days repair (Nov 25, 2026): a pair that
+              // actually overlaps THIS frame is served this
+              // frame, window or not — an overlapped pair
+              // waiting out the rotation is two names standing
+              // on each other while the Sphere moves. Pairs
+              // that do not overlap keep the rotating window.
+              if (!fullGuard && pairTotal > GUARD_PAIRS_PER_FRAME
+                  && !(ox > 1 && oy > 1)) {
+                const rel = (myPairIndex - pairStart + pairTotal) % pairTotal;
+                if (rel >= GUARD_PAIRS_PER_FRAME) continue;
+              }
               if (ox <= 1 || oy <= 1) continue;
               const dirX = rb.cx >= ra.cx ? 1 : -1;
               const dirY = rb.cy >= ra.cy ? 1 : -1;
