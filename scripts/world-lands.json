@@ -99,8 +99,7 @@
       "doorLabel": "Witness",
       "entries": [
         "witness",
-        "ledger",
-        "witness-world"
+        "ledger"
       ],
       "id": "desk",
       "name": "The Desk at the Crossroads",
@@ -275,7 +274,6 @@
       "door": "index.html",
       "doorLabel": "Home — the Front Door",
       "entries": [
-        "start",
         "codex-atlas",
         "site-search",
         "travellers-map",

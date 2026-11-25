@@ -33,10 +33,6 @@
     "relations": {
       "about-aaron.html": [
         {
-          "href": "start.html",
-          "label": "the Start page"
-        },
-        {
           "href": "witness.html",
           "label": "Witness's page"
         },
@@ -47,6 +43,10 @@
         {
           "href": "theory.html",
           "label": "the Theory"
+        },
+        {
+          "href": "codex-white-paper.html",
+          "label": "The Codex of Reality and the Living Sphere — A White Paper"
         }
       ],
       "claims-atlas.html": [
@@ -177,12 +177,12 @@
           "label": "Companions"
         },
         {
-          "href": "start.html",
-          "label": "the Start page"
-        },
-        {
           "href": "moons.html",
           "label": "the 13 Moons page"
+        },
+        {
+          "href": "ledger.html",
+          "label": "Witness Ledger"
         }
       ],
       "lab.html": [
@@ -273,20 +273,8 @@
       ],
       "start.html": [
         {
-          "href": "guide.html",
-          "label": "the Field Guide"
-        },
-        {
-          "href": "scroll/index.html",
-          "label": "Scroll Library"
-        },
-        {
-          "href": "about-aaron.html",
-          "label": "Aaron's page"
-        },
-        {
-          "href": "moons.html",
-          "label": "the 13 Moons page"
+          "href": "index.html",
+          "label": "the Front Door"
         }
       ],
       "teach.html": [
@@ -341,10 +329,6 @@
       ],
       "witness.html": [
         {
-          "href": "witness-world.html",
-          "label": "The Witness World"
-        },
-        {
           "href": "about-aaron.html",
           "label": "Aaron's page"
         },
@@ -355,6 +339,10 @@
         {
           "href": "companions.html",
           "label": "Companions"
+        },
+        {
+          "href": "theory/equations/eq02.html",
+          "label": "Equation 2 — Witness"
         }
       ]
     }

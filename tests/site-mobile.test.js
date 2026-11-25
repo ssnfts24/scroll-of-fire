@@ -43,6 +43,10 @@ const EXCLUDED_FILES = new Set([
   "404.html",
   "offline.html",
   "caravan.html",
+  // Page programme (Nov 24, 2026): start.html and witness-world.html
+  // folded into the front door and the Witness page; redirect stubs now.
+  "start.html",
+  "witness-world.html",
   // Page programme (Nov 24, 2026): the theory doorway merges folded
   // these four pages into their practical homes; they are now
   // meta-refresh redirect stubs, as caravan.html is.
@@ -88,7 +92,10 @@ test("the site manifest carries the Codex's own identity", () => {
 });
 
 test("every hand-maintained page carries the mobile floor", () => {
-  assert.ok(handPages.length >= 80,
+  // Census floor 78 since the page programme's home merges (Nov 24, 2026):
+  // start.html and witness-world.html are redirect stubs now, not
+  // hand-maintained pages.
+  assert.ok(handPages.length >= 78,
     `expected the hand-maintained census, got ${handPages.length}`);
   for (const rel of handPages) {
     const html = read(`docs/${rel}`);

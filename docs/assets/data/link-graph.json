@@ -283,8 +283,8 @@
     },
     {
      "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
+     "title": "Start Here — Redirect",
+     "area": "codex"
     }
    ],
    "in": [
@@ -621,16 +621,6 @@
    "area": "archive",
    "out": [
     {
-     "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "guide.html",
-     "title": "Field Guide — Practice That Sticks",
-     "area": "systems"
-    },
-    {
      "path": "scroll/search.html",
      "title": "Search the Scroll",
      "area": "scroll-scripture"
@@ -689,6 +679,16 @@
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
+    },
+    {
+     "path": "living-time-sphere.html",
+     "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
+     "area": "living-time"
+    },
+    {
+     "path": "moons.html",
+     "title": "Remnant 13 Moons — Living Calendar",
+     "area": "living-time"
     }
    ],
    "in": [
@@ -758,7 +758,7 @@
      "area": "evidence"
     }
    ],
-   "outTotal": 67,
+   "outTotal": 65,
    "inTotal": 13
   },
   "codex-guide.html": {
@@ -947,11 +947,6 @@
      "area": "systems"
     },
     {
-     "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
-    },
-    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
@@ -968,7 +963,7 @@
     }
    ],
    "outTotal": 4,
-   "inTotal": 14
+   "inTotal": 13
   },
   "downloads.html": {
    "title": "Downloads & Integrity",
@@ -1047,11 +1042,6 @@
      "area": "systems"
     },
     {
-     "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
-    },
-    {
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
@@ -1063,7 +1053,7 @@
     }
    ],
    "outTotal": 4,
-   "inTotal": 13
+   "inTotal": 12
   },
   "episodes.html": {
    "title": "The Episode Library",
@@ -1231,6 +1221,11 @@
      "area": "archive"
     },
     {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    },
+    {
      "path": "theory/ethics.html",
      "title": "Ethical Law (Theory) — Redirect",
      "area": "codex"
@@ -1254,11 +1249,6 @@
      "path": "lab.html",
      "title": "Remnant Lab",
      "area": "systems"
-    },
-    {
-     "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
     },
     {
      "path": "hub.html",
@@ -1416,11 +1406,6 @@
      "area": "systems"
     },
     {
-     "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
-    },
-    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
@@ -1429,10 +1414,15 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
    "outTotal": 2,
-   "inTotal": 15
+   "inTotal": 14
   },
   "glossary.html": {
    "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
@@ -1480,8 +1470,8 @@
     },
     {
      "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
+     "title": "Start Here — Redirect",
+     "area": "codex"
     },
     {
      "path": "invoke.html",
@@ -1561,11 +1551,6 @@
      "area": "scroll-scripture"
     },
     {
-     "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
-    },
-    {
      "path": "theory/glossary.html",
      "title": "Theory Glossary — Redirect",
      "area": "codex"
@@ -1582,7 +1567,7 @@
     }
    ],
    "outTotal": 33,
-   "inTotal": 14
+   "inTotal": 13
   },
   "glyphs.html": {
    "title": "Voice-Glyph Synth",
@@ -1821,11 +1806,6 @@
      "area": "systems"
     },
     {
-     "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
-    },
-    {
      "path": "covenant-caravan.html",
      "title": "The Covenant Caravan",
      "area": "artifacts"
@@ -1839,10 +1819,15 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
    "outTotal": 11,
-   "inTotal": 15
+   "inTotal": 14
   },
   "index.html": {
    "title": "Codex of Reality",
@@ -1857,11 +1842,6 @@
      "path": "companions.html",
      "title": "Companions",
      "area": "living-time"
-    },
-    {
-     "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
     },
     {
      "path": "moons.html",
@@ -1917,6 +1897,11 @@
      "path": "glossary.html",
      "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
      "area": "scroll-scripture"
+    },
+    {
+     "path": "account.html",
+     "title": "Your Account — Not Yet Open",
+     "area": "codex"
     }
    ],
    "in": [
@@ -1931,13 +1916,18 @@
      "area": "artifacts"
     },
     {
+     "path": "start.html",
+     "title": "Start Here — Redirect",
+     "area": "codex"
+    },
+    {
      "path": "account.html",
      "title": "Your Account — Not Yet Open",
      "area": "codex"
     }
    ],
-   "outTotal": 26,
-   "inTotal": 3
+   "outTotal": 27,
+   "inTotal": 4
   },
   "install.html": {
    "title": "Get the App — Put the Codex on Your Home Screen · Codex of Reality",
@@ -2252,7 +2242,7 @@
     }
    ],
    "outTotal": 1,
-   "inTotal": 25
+   "inTotal": 24
   },
   "living-time-sphere.html": {
    "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
@@ -2336,11 +2326,6 @@
      "area": "systems"
     },
     {
-     "path": "witness-world.html",
-     "title": "The Witness World",
-     "area": "artifacts"
-    },
-    {
      "path": "provenance.html",
      "title": "Where Every Number Comes From",
      "area": "evidence"
@@ -2352,7 +2337,7 @@
     }
    ],
    "outTotal": 5,
-   "inTotal": 13
+   "inTotal": 12
   },
   "map.html": {
    "title": "The Traveller's Map",
@@ -2697,7 +2682,7 @@
     }
    ],
    "outTotal": 8,
-   "inTotal": 22
+   "inTotal": 21
   },
   "offline.html": {
    "title": "13 Moons — Offline",
@@ -17623,11 +17608,6 @@
      "area": "systems"
     },
     {
-     "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
-    },
-    {
      "path": "covenant-caravan.html",
      "title": "The Covenant Caravan",
      "area": "artifacts"
@@ -17641,69 +17621,24 @@
      "path": "glyphs.html",
      "title": "Voice-Glyph Synth",
      "area": "systems"
+    },
+    {
+     "path": "provenance.html",
+     "title": "Where Every Number Comes From",
+     "area": "evidence"
     }
    ],
    "outTotal": 2,
-   "inTotal": 15
+   "inTotal": 14
   },
   "start.html": {
-   "title": "Start Here",
-   "area": "scroll-scripture",
+   "title": "Start Here — Redirect",
+   "area": "codex",
    "out": [
     {
-     "path": "moons.html",
-     "title": "Remnant 13 Moons — Living Calendar",
-     "area": "living-time"
-    },
-    {
-     "path": "ledger.html",
-     "title": "Witness Ledger",
-     "area": "living-time"
-    },
-    {
-     "path": "hub.html",
-     "title": "Systems Hub",
-     "area": "systems"
-    },
-    {
-     "path": "theory.html",
-     "title": "Theory Hub",
-     "area": "evidence"
-    },
-    {
-     "path": "shop.html",
-     "title": "Artifact Registry & Shop",
-     "area": "artifacts"
-    },
-    {
-     "path": "systems/frequencies.html",
-     "title": "Frequency Governance",
-     "area": "systems"
-    },
-    {
-     "path": "covenant-caravan.html",
-     "title": "The Covenant Caravan",
-     "area": "artifacts"
-    },
-    {
-     "path": "genesis-oracle.html",
-     "title": "The Genesis Oracle — Seal of Becoming",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "downloads.html",
-     "title": "Downloads & Integrity",
-     "area": "archive"
-    },
-    {
-     "path": "glossary.html",
-     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
-     "area": "scroll-scripture"
-    },
-    {
-     "path": "ethics.html",
-     "title": "Ethics & Coherence Law",
-     "area": "evidence"
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
     }
    ],
    "in": [
@@ -17726,11 +17661,6 @@
      "path": "circle.html",
      "title": "Circle Sync",
      "area": "artifacts"
-    },
-    {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
     },
     {
      "path": "index.html",
@@ -17773,8 +17703,8 @@
      "area": "evidence"
     }
    ],
-   "outTotal": 11,
-   "inTotal": 13
+   "outTotal": 1,
+   "inTotal": 12
   },
   "systems/archive.html": {
    "title": "Interactive Archive",
@@ -17906,18 +17836,18 @@
      "area": "living-time"
     },
     {
-     "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
-    },
-    {
      "path": "hub.html",
      "title": "Systems Hub",
      "area": "systems"
+    },
+    {
+     "path": "theory.html",
+     "title": "Theory Hub",
+     "area": "evidence"
     }
    ],
    "outTotal": 0,
-   "inTotal": 17
+   "inTotal": 16
   },
   "systems/mind-renewal.html": {
    "title": "Mind-Renewal Protocol",
@@ -18346,8 +18276,8 @@
     },
     {
      "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
+     "title": "Start Here — Redirect",
+     "area": "codex"
     },
     {
      "path": "theory/equations/eq00.html",
@@ -18447,13 +18377,13 @@
      "area": "scroll-scripture"
     },
     {
-     "path": "start.html",
-     "title": "Start Here",
-     "area": "scroll-scripture"
+     "path": "hub.html",
+     "title": "Systems Hub",
+     "area": "systems"
     }
    ],
    "outTotal": 47,
-   "inTotal": 18
+   "inTotal": 17
   },
   "theory/artifact-theory.html": {
    "title": "Artifact Theory",
@@ -19218,44 +19148,23 @@
    "inTotal": 2
   },
   "witness-world.html": {
-   "title": "The Witness World",
-   "area": "artifacts",
+   "title": "The Witness World — Redirect",
+   "area": "codex",
    "out": [
     {
      "path": "witness.html",
      "title": "Witness",
      "area": "artifacts"
-    },
-    {
-     "path": "living-time-sphere.html",
-     "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
-     "area": "living-time"
     }
    ],
-   "in": [
-    {
-     "path": "codex-atlas.html",
-     "title": "Codex Atlas",
-     "area": "archive"
-    },
-    {
-     "path": "witness.html",
-     "title": "Witness",
-     "area": "artifacts"
-    }
-   ],
-   "outTotal": 2,
-   "inTotal": 2
+   "in": [],
+   "outTotal": 1,
+   "inTotal": 0
   },
   "witness.html": {
    "title": "Witness",
    "area": "artifacts",
    "out": [
-    {
-     "path": "witness-world.html",
-     "title": "The Witness World",
-     "area": "artifacts"
-    },
     {
      "path": "living-time-sphere.html",
      "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
@@ -19290,8 +19199,8 @@
     },
     {
      "path": "witness-world.html",
-     "title": "The Witness World",
-     "area": "artifacts"
+     "title": "The Witness World — Redirect",
+     "area": "codex"
     },
     {
      "path": "theory/witness.html",
@@ -19299,7 +19208,7 @@
      "area": "codex"
     }
    ],
-   "outTotal": 6,
+   "outTotal": 5,
    "inTotal": 3
   }
  }

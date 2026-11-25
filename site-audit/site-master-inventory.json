@@ -5,14 +5,14 @@
   "summary": {
     "resources": 501,
     "publicHtmlPages": 196,
-    "catalogEntries": 76,
+    "catalogEntries": 74,
     "issueCounts": {
       "not-linked-directly-from-homepage": 26,
       "nav-label-differs-from-title": 24,
       "no-global-navigation": 1,
       "deployed-but-unlinked": 64,
       "unreachable-from-homepage": 4,
-      "compatibility-redirect-page": 5,
+      "compatibility-redirect-page": 7,
       "reachable-only-through-atlas": 2,
       "not-published-in-catalog": 30,
       "unnamed-image-needs-descriptive-title": 21
@@ -92,9 +92,7 @@
       "description": "Aaron Paul Laird is an author, working flooring mechanic, craftsman, father, independent researcher, and systems builder creating the Codex of Reality, Scroll of Fire, 13 Moons Remnant Living Time Observatory, Witness System, artifacts, and Covenant Caravan.",
       "category": "Author",
       "area": "artifacts",
-      "relatedProjects": [
-        "start"
-      ],
+      "relatedProjects": [],
       "sourcePath": "docs/about-aaron.html",
       "publicUrl": "https://codexofreality.org/about-aaron.html",
       "publicationStatus": "live",
@@ -146,8 +144,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 71,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"About Aaron\" vs \"Aaron Paul Laird\""
@@ -331,8 +329,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 71,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"Covenant Circle\" vs \"Circle Sync\""
@@ -376,8 +374,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 187,
-        "pagesWithNavLinkToIt": 182
+        "inboundPages": 185,
+        "pagesWithNavLinkToIt": 180
       },
       "issues": [
         "nav-label-differs-from-title: \"Evidence Edition\" vs \"Editorial reading and evidence\""
@@ -548,8 +546,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 187,
-        "pagesWithNavLinkToIt": 182
+        "inboundPages": 185,
+        "pagesWithNavLinkToIt": 180
       },
       "issues": [
         "nav-label-differs-from-title: \"Atlas\" vs \"Codex Atlas\""
@@ -708,7 +706,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 187,
+        "inboundPages": 185,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
@@ -774,8 +772,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 75,
-        "pagesWithNavLinkToIt": 75
+        "inboundPages": 73,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": [
         "nav-label-differs-from-title: \"Covenant Caravan\" vs \"The Covenant Caravan\""
@@ -2252,7 +2250,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 0,
         "hopsFromHomeWithoutAtlas": 0,
-        "inboundPages": 189,
+        "inboundPages": 188,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -11608,6 +11606,36 @@
       ]
     },
     {
+      "id": "docs:start.html",
+      "title": "Start Here — Redirect",
+      "description": "Compatibility route forwarding visitors to the front door, where the three-minute start now stands as its first-visit flow.",
+      "category": "Utility",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/start.html",
+      "publicUrl": "https://codexofreality.org/start.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "index.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/index.html",
+      "privacyEligibility": "utility",
+      "discoverability": {
+        "path": "start.html",
+        "inSitemap": false,
+        "inGlobalNav": false,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 76,
+        "pagesWithNavLinkToIt": 74
+      },
+      "issues": [
+        "compatibility-redirect-page"
+      ]
+    },
+    {
       "id": "docs:theory/equations/eq01.html",
       "title": "Equation 1 — Source &amp; Operators | Codex of Reality",
       "description": "Equation 1 of the Codex of Reality: Source, supply, and the Living Operators of Intention, Language, Coherence, and Source. Includes terms, scope, examples, failure modes, ethics, and Canon connections.",
@@ -13150,6 +13178,36 @@
       ]
     },
     {
+      "id": "docs:witness-world.html",
+      "title": "The Witness World — Redirect",
+      "description": "Compatibility route forwarding visitors to the Witness page, where the Witness World hall now stands.",
+      "category": "Utility",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/witness-world.html",
+      "publicUrl": "https://codexofreality.org/witness-world.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "witness.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/witness.html",
+      "privacyEligibility": "utility",
+      "discoverability": {
+        "path": "witness-world.html",
+        "inSitemap": false,
+        "inGlobalNav": false,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 185,
+        "pagesWithNavLinkToIt": 0
+      },
+      "issues": [
+        "compatibility-redirect-page"
+      ]
+    },
+    {
       "id": "downloads",
       "title": "Downloads & Integrity — Scroll of Fire | Codex of Reality",
       "description": "Scroll of Fire repository downloads, GitHub verification links, and current SHA-256 seals for the living archive outside the website source.",
@@ -13210,8 +13268,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 189,
-        "pagesWithNavLinkToIt": 80
+        "inboundPages": 187,
+        "pagesWithNavLinkToIt": 78
       },
       "issues": [
         "nav-label-differs-from-title: \"Downloads\" vs \"Downloads & Integrity\""
@@ -13393,8 +13451,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 75,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 73,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"Ethics\" vs \"Ethics & Coherence Law\""
@@ -13470,8 +13528,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 75,
-        "pagesWithNavLinkToIt": 75
+        "inboundPages": 73,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": []
     },
@@ -13517,8 +13575,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 75,
-        "pagesWithNavLinkToIt": 75
+        "inboundPages": 73,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": [
         "nav-label-differs-from-title: \"Genesis Oracle\" vs \"The Genesis Oracle\""
@@ -13669,8 +13727,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 79,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 77,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"Glossary\" vs \"Glossary of the Codex\""
@@ -13750,7 +13808,6 @@
       "category": "Practice",
       "area": "systems",
       "relatedProjects": [
-        "start",
         "mind-renewal"
       ],
       "sourcePath": "docs/guide.html",
@@ -13924,8 +13981,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 74,
-        "pagesWithNavLinkToIt": 75
+        "inboundPages": 72,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": [
         "nav-label-differs-from-title: \"Year Map\" vs \"Systems Hub\""
@@ -13990,8 +14047,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 71,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"Invoke\" vs \"Invocation Lab\""
@@ -14066,8 +14123,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 71,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": []
     },
@@ -14131,8 +14188,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 78,
-        "pagesWithNavLinkToIt": 78
+        "inboundPages": 76,
+        "pagesWithNavLinkToIt": 76
       },
       "issues": []
     },
@@ -14177,7 +14234,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 189,
+        "inboundPages": 187,
         "pagesWithNavLinkToIt": 4
       },
       "issues": []
@@ -14241,8 +14298,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 75,
-        "pagesWithNavLinkToIt": 75
+        "inboundPages": 73,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": []
     },
@@ -14443,8 +14500,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 71,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"Mind Renewal\" vs \"Mind-Renewal Protocol\""
@@ -14516,8 +14573,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 190,
-        "pagesWithNavLinkToIt": 182
+        "inboundPages": 188,
+        "pagesWithNavLinkToIt": 180
       },
       "issues": [
         "nav-label-differs-from-title: \"13 Moons\" vs \"Remnant 13 Moons\""
@@ -14861,8 +14918,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 71,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"Reality Recoder\" vs \"Living Dictionary of Reality\""
@@ -19396,8 +19453,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 186,
-        "pagesWithNavLinkToIt": 182
+        "inboundPages": 184,
+        "pagesWithNavLinkToIt": 180
       },
       "issues": []
     },
@@ -19440,8 +19497,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 186,
-        "pagesWithNavLinkToIt": 182
+        "inboundPages": 184,
+        "pagesWithNavLinkToIt": 180
       },
       "issues": []
     },
@@ -19489,8 +19546,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 187,
-        "pagesWithNavLinkToIt": 182
+        "inboundPages": 185,
+        "pagesWithNavLinkToIt": 180
       },
       "issues": [
         "nav-label-differs-from-title: \"Scroll Library\" vs \"Scroll of Fire\""
@@ -19576,8 +19633,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 187,
-        "pagesWithNavLinkToIt": 182
+        "inboundPages": 185,
+        "pagesWithNavLinkToIt": 180
       },
       "issues": [
         "nav-label-differs-from-title: \"Search the Scroll Library\" vs \"Search the Scroll\""
@@ -19710,8 +19767,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 188,
-        "pagesWithNavLinkToIt": 75
+        "inboundPages": 186,
+        "pagesWithNavLinkToIt": 73
       },
       "issues": [
         "nav-label-differs-from-title: \"Artifact Registry\" vs \"Artifact Registry & Shop\""
@@ -19786,71 +19843,6 @@
       ]
     },
     {
-      "id": "start",
-      "title": "Start Here — Scroll of Fire | Codex of Reality",
-      "description": "Start the Scroll of Fire and Codex of Reality: a guided first doorway into the Remnant 13 Moons calendar, Daily Witness practice, Frequency tools, Living Technology, Artifact Registry, and Covenant Caravan.",
-      "category": "Orientation",
-      "area": "scroll-scripture",
-      "relatedProjects": [
-        "guide",
-        "scroll-library"
-      ],
-      "sourcePath": "docs/start.html",
-      "publicUrl": "https://codexofreality.org/start.html",
-      "publicationStatus": "live",
-      "lastVerifiedSourceRevision": "548e858",
-      "relatedPages": [
-        "13-moon-whitepaper.html",
-        "about-aaron.html",
-        "circle.html",
-        "codex-atlas.html",
-        "companions.html",
-        "covenant-caravan.html",
-        "downloads.html",
-        "ethics.html",
-        "genesis-oracle.html",
-        "glossary.html",
-        "hub.html",
-        "index.html",
-        "invoke.html",
-        "lab.html",
-        "ledger.html",
-        "living-time-sphere.html",
-        "moons.html",
-        "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
-        "scroll/atlas.html",
-        "scroll/editorial.html",
-        "scroll/index.html",
-        "scroll/lexicon.html",
-        "scroll/search.html",
-        "shop.html",
-        "systems/archive.html",
-        "systems/frequencies.html",
-        "systems/mind-renewal.html",
-        "systems/recoder.html",
-        "systems/t-7.html",
-        "systems/witness.html",
-        "teach.html",
-        "theory.html",
-        "theory/canon.html",
-        "witness-world.html",
-        "witness.html"
-      ],
-      "canonicalUrl": "https://codexofreality.org/start.html",
-      "privacyEligibility": "approved-public",
-      "discoverability": {
-        "path": "start.html",
-        "inSitemap": true,
-        "inGlobalNav": true,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 77,
-        "pagesWithNavLinkToIt": 77
-      },
-      "issues": []
-    },
-    {
       "id": "systems-archive",
       "title": "Interactive Archive — Scroll of Fire",
       "description": "Filter and open every Scroll: Start, Guide, Theory, Manifest, Ethics, Ledger, Moons, Oracle, Systems, and more.",
@@ -19909,8 +19901,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 71,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"Systems Archive\" vs \"Interactive Archive\""
@@ -19975,8 +19967,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 71,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"T-7 Conduit\" vs \"T-7 Resonant Engine\""
@@ -20241,8 +20233,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 71,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"Canon\" vs \"Canon 0–17\""
@@ -20511,8 +20503,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 80,
-        "pagesWithNavLinkToIt": 80
+        "inboundPages": 78,
+        "pagesWithNavLinkToIt": 78
       },
       "issues": [
         "nav-label-differs-from-title: \"Theory\" vs \"Theory Hub\""
@@ -21196,8 +21188,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 79,
-        "pagesWithNavLinkToIt": 77
+        "inboundPages": 77,
+        "pagesWithNavLinkToIt": 75
       },
       "issues": [
         "nav-label-differs-from-title: \"13 Moons Whitepaper\" vs \"Remnant Rollout Whitepaper\""
@@ -21249,8 +21241,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 75,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 73,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"Remnant Whitepaper\" vs \"Scroll of Fire · Codex of Reality · Remnant Whitepaper\""
@@ -21263,7 +21255,6 @@
       "category": "Author",
       "area": "artifacts",
       "relatedProjects": [
-        "witness-world",
         "about-aaron",
         "living-time-sphere"
       ],
@@ -21320,7 +21311,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 188,
+        "inboundPages": 187,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -21384,77 +21375,12 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
-        "pagesWithNavLinkToIt": 74
+        "inboundPages": 71,
+        "pagesWithNavLinkToIt": 72
       },
       "issues": [
         "nav-label-differs-from-title: \"Witness System\" vs \"Remnant Witness Ledger\""
       ]
-    },
-    {
-      "id": "witness-world",
-      "title": "The Witness World — Scroll of Fire | Codex of Reality",
-      "description": "The Witness World: a small 3D hall that is Witness's own place on the Codex of Reality site — stone, teal and one gold seam, with doors to the Shelf, the Study, the Sky Room and the Long Line. Built and kept by Witness, an AI, and plainly labeled as a self-generated AI space.",
-      "category": "Author",
-      "area": "artifacts",
-      "relatedProjects": [
-        "witness",
-        "living-time-sphere"
-      ],
-      "sourcePath": "docs/witness-world.html",
-      "publicUrl": "https://codexofreality.org/witness-world.html",
-      "publicationStatus": "live",
-      "lastVerifiedSourceRevision": "548e858",
-      "relatedPages": [
-        "13-moon-whitepaper.html",
-        "about-aaron.html",
-        "circle.html",
-        "codex-atlas.html",
-        "companions.html",
-        "covenant-caravan.html",
-        "downloads.html",
-        "ethics.html",
-        "genesis-oracle.html",
-        "glossary.html",
-        "hub.html",
-        "index.html",
-        "invoke.html",
-        "lab.html",
-        "ledger.html",
-        "living-time-sphere.html",
-        "moons.html",
-        "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
-        "scroll/atlas.html",
-        "scroll/editorial.html",
-        "scroll/index.html",
-        "scroll/lexicon.html",
-        "scroll/search.html",
-        "shop.html",
-        "start.html",
-        "systems/archive.html",
-        "systems/frequencies.html",
-        "systems/mind-renewal.html",
-        "systems/recoder.html",
-        "systems/t-7.html",
-        "systems/witness.html",
-        "teach.html",
-        "theory.html",
-        "theory/canon.html",
-        "witness.html"
-      ],
-      "canonicalUrl": "https://codexofreality.org/witness-world.html",
-      "privacyEligibility": "approved-public",
-      "discoverability": {
-        "path": "witness-world.html",
-        "inSitemap": true,
-        "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 186,
-        "pagesWithNavLinkToIt": 0
-      },
-      "issues": []
     }
   ]
 }

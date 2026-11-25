@@ -73,7 +73,7 @@ test("the story never speaks as Aaron and never borrows the record's language", 
 
 test("the pending list names every unfitted page, and only unfitted pages", () => {
   const fitted = new Set(story.chapters.map(c => c.page));
-  const excluded = new Set(["404.html", "offline.html", "caravan.html", "account.html", "theory/ethics.html", "theory/glossary.html", "theory/witness.html", "theory/frequency-governance.html"]); // + the four theory redirect stubs (page programme, Nov 24, 2026) // account.html: Gate G (G2) utility page, as offline.html
+  const excluded = new Set(["404.html", "offline.html", "caravan.html", "account.html", "theory/ethics.html", "theory/glossary.html", "theory/witness.html", "theory/frequency-governance.html", "start.html", "witness-world.html"]); // + the four theory redirect stubs (page programme, Nov 24, 2026) // account.html: Gate G (G2) utility page, as offline.html
   const all = [];
   (function walk(dir, prefix) {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {

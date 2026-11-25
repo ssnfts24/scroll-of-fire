@@ -44,7 +44,11 @@ const EXCLUDED = new Set([
   "theory/ethics.html",
   "theory/glossary.html",
   "theory/witness.html",
-  "theory/frequency-governance.html"
+  "theory/frequency-governance.html",
+  // Page programme (Nov 24, 2026): start.html and witness-world.html
+  // folded into the front door and the Witness page; redirect stubs now.
+  "start.html",
+  "witness-world.html"
 ]);
 
 const AREAS = [

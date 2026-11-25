@@ -4,7 +4,7 @@
   "engine": "living-search-bm25-v1",
   "note": "Generated from the sealed catalog and Scroll data. The index Netlify and GitHub Pages serve is this committed artifact; regenerate with npm run search:index after site:catalog.",
   "sources": {
-    "docs/data/site-catalog.json": "ff9bde83565b117e09ff004aaa8bd4b1d8f0ae8db9a9cbc01be98ba450814d28",
+    "docs/data/site-catalog.json": "f5bfcf312fa1f65c6df8c6c61c3b74f16d8333e5721a6d5fa20724ed6052db0d",
     "docs/scroll/data/library.json": "86370223f9bffe5fc30afc4c13767cb283f2f0cd2499321d84d166279ef24588",
     "docs/scroll/data/reader-segments.json": "2624fe5640fd4abcf63499b32f28e36a532c8253f9a7cd2983833a1aa33297dc",
     "docs/scroll/search/lexicon/lexicon-index.json": "92e4169f9a75bfa5467ab5bb57d77cca990a11cd2ab8ba8248685561a571b879",
@@ -38,22 +38,22 @@
     }
   ],
   "counts": {
-    "pages": 182,
-    "pagePassages": 1280,
+    "pages": 180,
+    "pagePassages": 1277,
     "scrollSections": 817,
     "scrollSegments": 1609,
     "scrolls": 2426,
-    "atlas": 76,
+    "atlas": 74,
     "lexicon": 911,
     "claims": 21,
-    "total": 4714
+    "total": 4709
   },
   "shards": {
     "pages": {
       "file": "pages.json",
-      "count": 1280,
-      "bytes": 1674282,
-      "sha256": "f9e4a42dbff10443adfd992dbc0e11b20c1ff2751bc1e69d665e17398bff3a8f"
+      "count": 1277,
+      "bytes": 1672169,
+      "sha256": "921fa6300aa4d12b946f2c3ad7b9499e4bb4535c7a8796b8823b01bd63b830d6"
     },
     "scrolls": {
       "file": "scrolls.json",
@@ -63,9 +63,9 @@
     },
     "atlas": {
       "file": "atlas.json",
-      "count": 76,
-      "bytes": 20544,
-      "sha256": "c9f11f7a7a07d1c7a0a8a9f96755291bc51f27b44beaa1388ca7194a4457675c"
+      "count": 74,
+      "bytes": 19943,
+      "sha256": "a911f280b25ab3b344f4e0231e5216472185b7b0ade1b5a0d6d1d181de013c41"
     },
     "lexicon": {
       "file": "lexicon.json",
@@ -92,7 +92,9 @@
       "theory/ethics.html",
       "theory/glossary.html",
       "theory/witness.html",
-      "theory/frequency-governance.html"
+      "theory/frequency-governance.html",
+      "start.html",
+      "witness-world.html"
     ]
   }
 }
