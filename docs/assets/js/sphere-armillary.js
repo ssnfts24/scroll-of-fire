@@ -2215,7 +2215,7 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
       // control inside it, never a pointer to a control elsewhere
       // on the page (Aaron, Nov 24 + Nov 25, 2026: the sky panel
       // asked for Set location without the control in the panel).
-      text += " · sunrise, sunset and the drawn sky need a place —";
+      text += " · sunrise, sunset and the drawn sky need a place — set one with Set location:";
     }
     return text;
   }
