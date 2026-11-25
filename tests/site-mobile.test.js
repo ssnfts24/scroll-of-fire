@@ -61,7 +61,10 @@ const EXCLUDED_FILES = new Set([
   "theory/witness.html",
   "theory/frequency-governance.html",
   // Gate G (G2): account.html is a utility page, as offline.html.
-  "account.html"
+  "account.html",
+  // Batch E4 (Nov 25, 2026): a data fragment, not a page — the
+  // downloads seal archive rides behind its door, fetched on open.
+  "assets/data/downloads-archive.html"
 ]);
 const EXCLUDED_DIRS = new Set(["scroll", "scripture"]);
 
