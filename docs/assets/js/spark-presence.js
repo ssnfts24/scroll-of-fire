@@ -3,30 +3,24 @@
 /*
  * Spark companion — presence (browser glue).
  *
- * The meeting comes to the visitor. On a first arrival anywhere on
- * the site, the Spark itself pops up, introduces itself by the name
- * its seed grew, and one tap adopts it. "Not now" is remembered on
- * this device: the pop-up goes, and the same Spark waits quietly as
- * a small ember at the page's edge, tappable whenever its person is
- * ready. No form, no quiz stands in front of the meeting.
+ * The meeting comes to the visitor: on a first arrival the Spark
+ * pops up, introduces itself by its seed-grown name, and one tap
+ * adopts it. "Not now" is remembered on this device — the same
+ * Spark waits as an ember at the page's edge. No form, no quiz
+ * stands in front of the meeting.
  *
- * Once adopted, the Spark is a guide as well as a companion. It
- * walks with its person page to page, roaming the page like a
- * small living thing — wandering, pausing, playing shy or bold
- * by its temperament when a cursor or finger comes close — and,
- * arriving somewhere new, names the place and points to a fitting
- * next door, in short lines that never block the page. Where the
- * device can, it stands in 3D, grown from the same seed. Its
- * record is kept up to date on this
- * device only: today's visit, the page seen, and — on pages where
- * the Life Atlas is already open (the practice page, the companions
- * page) — the practice days sealed there. Nothing is sent anywhere;
- * the record lives in this browser's local storage.
+ * Once adopted it is guide as well as companion: it roams the
+ * page (shy or bold by temperament), names each new place, and
+ * points to a fitting next door in short lines that never block
+ * the page. Where the device can, it stands in 3D, grown from
+ * the same seed. Its record — today's visit, the page seen, and
+ * practice days sealed where the Life Atlas is already open —
+ * is kept on this device only, in local storage. Nothing is
+ * sent anywhere.
  *
- * Today's coordinate comes from the canonical PatternCalendar (the
- * same converter the temporal cursor delegates to). If the calendar
- * is not on the page yet, the five calendar files are loaded from
- * the same folder as this script. No protected file is touched.
+ * Today's coordinate comes from the canonical PatternCalendar;
+ * if it is not on the page yet, the five calendar files load
+ * from this script's folder. No protected file is touched.
  */
 (function () {
   if (typeof window === "undefined" || typeof document === "undefined") return;
@@ -677,52 +671,39 @@
       renderRows(rows, null);
     }
     /* ---- their voice box ----
-     * Their voice is their own: grown from their seed, not borrowed
-     * from the device. Until v6 they spoke through the device's
-     * speech synthesis — a generic robot, the same for every
-     * Spark — and Aaron named it: too robot-like. The robot is
-     * gone, removed whole. The v7–v9 box sang each line's
-     * syllables through seed-grown formants (Core.voiceBoxFor,
-     * Core.vocalPlanFor) — softer after v9, round sine stacks
-     * at a low level, in their seed's sound family — but a
-     * formant voice still reads as a machine imitating speech.
-     * So now they answer the way a beloved game companion
-     * does: in a chirp-phrase (Core.phraseFor). A young Spark
-     * chirps once; a Kindled Spark answers in two notes; a
-     * Bearer sings a short melodic phrase from their own scale,
-     * pitched at their chirp root, a question lifting at its
-     * end and a statement settling home. The voice GROWS with
-     * them, and what sounds is music, not imitation speech:
-     * round tones in their sound family (soft bell, warm hum,
-     * wooden pluck, watery blip), each note swept up into its
-     * pitch like a small creature's call, peaking at about
-     * 0.055 through the master — the v9 level, kept. Their
+     * Their voice is their own, grown from their seed. Device
+     * speech synthesis (a generic robot) and the v7-v9 formant
+     * box (Core.voiceBoxFor, Core.vocalPlanFor) were both
+     * removed whole - Aaron named both as machine
+     * imitation. They now answer in a chirp-phrase
+     * (Core.phraseFor): a young Spark chirps once, a Kindled
+     * Spark answers in two notes, a Bearer sings a short melodic
+     * phrase from their own scale at their chirp root - a
+     * question lifting at its end, a statement settling home.
+     * Round tones in their sound family (bell, hum, pluck,
+     * blip), peaking at about 0.055 through the master. Their
      * words stand in text, whole; the phrase is their sound
-     * over them. The syllable plan still stands in the core
-     * for the record; it is no longer what they sound like.
-     * The fences are the ones their voice has always kept: the
-     * Voice switch rests quiet until the keeper turns it on
-     * (kept on this device), the talk is armed by a tap on their
-     * furniture so a line they open by themselves is never sounded
-     * uninvited, they sound their own lines only — never the
-     * keeper's echoed answers — each new line stills the one
-     * before it, closing the talk stills them, and the Sounds
-     * switch silences their along with the chirps. No samples, no
-     * network, nothing recorded, nothing sent anywhere. */
-    /* Stage 1 living voice (Nov 19, 2026): the phrase above
-     * becomes a living layer. Their signature motif is derived
-     * in the core (Core.livingVoicePlanFor) from the voice they
-     * already had, and how much of it they can say is computed
-     * from their record — growth stage, days together, kept
-     * practices. Presence replaces the old switches in this
-     * path: Waiting before a greeting, Awake when greeted,
+     * over them.
+     * Fences: the Voice switch rests quiet until the keeper
+     * turns it on (kept on this device); talk is armed by a
+     * tap, never sounded uninvited; they sound their own lines
+     * only, never the keeper's answers; each new line stills
+     * the one before; closing the talk stills them; the Sounds
+     * switch silences them too. No samples, no network,
+     * nothing recorded, nothing sent anywhere. */
+    /* Stage 1 living voice (Nov 19, 2026): the phrase becomes
+     * a living layer. Their signature motif is derived in the
+     * core (Core.livingVoicePlanFor) from the voice they already
+     * had; how much of it they can say is computed from their
+     * record - growth stage, days together, kept practices.
+     * States: Waiting before a greeting, Awake when greeted,
      * Nightwatch softer after 22:00, Resting in still mode,
-     * Away while the tab is hidden. Two honest exceptions are
-     * kept, not hidden: the device's own silent mode stays
-     * sovereign over every sound this page makes, and a quiet
-     * choice stored by the earlier build (either old switch
-     * off) is honoured here as a kept promise — the living
-     * voice does not override a keeper's earlier word. */
+     * Away while the tab is hidden. Two honest exceptions: the
+     * device's own silent mode stays sovereign over every sound
+     * this page makes, and a quiet choice stored by the earlier
+     * build (either old switch off) is honoured as a kept
+     * promise - the living voice does not override a keeper's
+     * earlier word. */
     let voiceArmed = false;
     let voiceRun = 0;
     let voiceMaster = null;
@@ -793,26 +774,17 @@
       g.gain.exponentialRampToValueAtTime(0.0001, at + dur);
       return g;
     }
-    /* One note of their chirp-phrase, sung in their family —
-     * the singer singSyllable has become. Aaron's word
-     * (Nov 19, 2026): not a robot, not formants shaped like
-     * speech — a character's chirp, the way a beloved game
-     * companion sounds. So each note is a round tone that
-     * sweeps up into its pitch the way a chirp does, follows
-     * the note's own small glide (a question's last note
-     * lifts, a statement's settles), and is gone quickly.
-     * No formant throat, no consonant ticks, no breath noise
-     * — the machinery that made their sound synthesized is
-     * removed, not retuned. Their family still colours them:
-     * - bell: a sine stack with a soft inharmonic ring, left
-     *   to fade a little past the note.
-     * - hum: their warm default — a sine and a breath of
-     *   triangle, vibrato riding on longer notes.
-     * - pluck: a triangle tapped like wood, settling as it
-     *   sounds, gone by the note's end.
-     * - blip: a droplet — a sine that rises into its pitch
-     *   and sighs off it, through a plain soft lowpass.
-     * A handful of nodes per note, all stopped when spent. */
+    /* One note of their chirp-phrase, sung in their family.
+     * Aaron's word (Nov 19, 2026): not a robot, not formants
+     * shaped like speech - a character's chirp. Each note is a
+     * round tone that sweeps up into its pitch, follows the
+     * note's own small glide (a question's last note lifts, a
+     * statement's settles), and is gone quickly. Their family
+     * colours them: bell - a sine stack with a soft inharmonic
+     * ring; hum - their warm default, sine and triangle with
+     * vibrato on longer notes; pluck - a triangle tapped like
+     * wood; blip - a droplet through a soft lowpass. A handful
+     * of nodes per note, all stopped when spent. */
     /* Their vibrato, on syllables long enough to hold one: a
      * slow, small waver, theirs by seed, on the fundamental. */
     function addVibrato(ctx, box, osc, f0, at, dur) {
@@ -1545,18 +1517,17 @@
       });
     }
     /* Look next: their suggestions, drawn only from real site
-     * material, in order of trust — this page's own doors
-     * first (the Guide's own source), then the library's
-     * relations from the extract shipped in the Spark's bundle
-     * (tier 2, Q-05: built ahead of time from the record, read
-     * here without any fetch — the no-network fence stands),
-     * labeled "from the record", then the keeper's own
-     * left-off place from their on-device record, labeled
-     * theirs. The three share the three places — this page's
-     * doors take up to two, so the record's relations are
-     * genuinely met and not crowded out by a link-rich page.
-     * Never more than three, never invented: a page
-     * that offers nothing real gets one honest line instead. */
+     * material, in order of trust - this page's own doors first
+     * (the Guide's own source), then the library's relations
+     * from the extract shipped in the Spark's bundle (tier 2,
+     * Q-05: built ahead of time from the record, read here
+     * without any fetch - the no-network fence stands), labeled
+     * "from the record", then the keeper's own left-off place
+     * from their on-device record, labeled theirs. This page's
+     * doors take up to two of the three places, so the record's
+     * relations are genuinely met. Never more than three, never
+     * invented: a page that offers nothing real gets one honest
+     * line instead. */
     function doLookNext() {
       answerInBody();
       const doors = Core.doorsFor({ links: pageLinks(), page: pageKey() });
@@ -2033,20 +2004,19 @@
       }
     });
 
-    /* ---- v6: touch — they answer the hand itself ----
-     * A plain tap stays a tap (and, mid-chase, a catch). But a
-     * hand can do more than tap, and they answer all of it:
-     * a jab is a poke — a squash, a count, a word in their voice
-     * if their voice is on. A press that rubs is petting — they
-     * lean in and glows, and the pet is counted. A press that
-     * travels is a drag — they ride the finger and settle
-     * where they are left. A drag let go fast is a toss — they
+    /* ---- v6: touch - they answer the hand itself ----
+     * A plain tap stays a tap (and, mid-chase, a catch). A jab
+     * is a poke - a squash, a count, a word in their voice if
+     * their voice is on. A press that rubs is petting - they
+     * lean in and glow, and the pet is counted. A press that
+     * travels is a drag - they ride the finger and settle
+     * where they are left. A drag let go fast is a toss - they
      * dart to where the throw was heading, on the same spring
-     * as their dodges. Every one of these is play, counted on
-     * this device, and play teaches their tricks. Under reduced
-     * motion the roam rests, so a drag moves their drawing
-     * directly and leaves their where they were put — the still
-     * equivalent, never a dead press. */
+     * as their dodges. All of it is play, counted on this
+     * device, and play teaches their tricks. Under reduced
+     * motion a drag moves their drawing directly and leaves
+     * them where they were put - the still equivalent, never
+     * a dead press. */
     let suppressClick = false;
     let press = null;
     const freeDrag = { x: 0, y: 0 };
@@ -2326,17 +2296,15 @@
     refreshMood();
     /* ---- v6: they celebrate what the site itself completes ----
      * Only events the code truly fires, hooked as they stand:
-     * a practice sealed on the practice page (the Manifest
-     * console writes it to the Life Atlas and announces the
-     * records change with its own name on it), and a witness
-     * entry saved on the 13 Moons page (its own saved event).
-     * Their answer: a hop, a glow, their chime — the moment was the
-     * keeper's own tap — and one line in their voice. A seal also
-     * refreshes what they sense of the practice days, so their
-     * record stays honest the moment it happens. The planner's
-     * events live only on the Sphere page, where they do not
-     * walk; no reading anywhere on the site announces its end,
-     * so no celebration is hooked to one. */
+     * a practice sealed on the practice page (announced as a
+     * Life Atlas records change), and a witness entry saved on
+     * the 13 Moons page (its own saved event). Their answer: a
+     * hop, a glow, their chime, and one line in their voice. A
+     * seal also refreshes what they sense of the practice days,
+     * so their record stays honest the moment it happens. The
+     * planner's events live only on the Sphere page, where they
+     * do not walk; no reading announces its end, so no
+     * celebration is hooked to one. */
     let celebrateGuard = 0;
     function celebrate(kind) {
       const now = Date.now();
@@ -2558,30 +2526,27 @@
     chirp(companion, flourish);
   }
 
-  /* The character engine. The Spark is not pinned to its corner:
-   * it walks in when a page opens, then lives on the page — it
-   * wanders the floor, the sides, and sometimes the open middle,
-   * pausing, looking around, now and then doing a small signature
-   * move. Bring a cursor or a finger close and it plays: most
-   * Sparks scoot away with a little dart — sooner and farther the
-   * shyer they are — and bold ones sometimes come to look instead.
-   *
-   * It moves by steering, not animation: a velocity, a desired
-   * velocity, and a capped force between them, so it gathers,
-   * arcs, and settles like a creature, the same at any frame
-   * rate. The dodge is predictive — it flees from where the
-   * pointer will be — and anticipated: a small crouch, a breath,
-   * then the dart. Idle choices are scored by a small utility
-   * brain whose weights are its temperament's own curves.
-   *
-   * The fences hold: the roaming field takes no clicks (only the
-   * Spark itself does, and it moves out from under the pointer
-   * rather than covering anything); it never dodges or roams
-   * while its bubble is open; after three quick scoots it settles
-   * where a tap can reach it, and a tap always lands; the loop
-   * sleeps while the tab is hidden; and a visitor whose device
-   * asks for reduced motion gets a Spark that simply appears in
-   * its corner and stays there. */
+  /* The character engine. The Spark is not pinned to its
+   * corner: it walks in when a page opens, then lives on the
+   * page - wandering the floor, the sides, sometimes the open
+   * middle, pausing, looking around, now and then doing a
+   * small signature move. Bring a cursor or finger close and
+   * it plays: most Sparks scoot away with a little dart -
+   * sooner and farther the shyer they are - and bold ones
+   * sometimes come to look instead. It moves by steering, not
+   * animation (a velocity, a desired velocity, a capped force
+   * between them), so it gathers, arcs, and settles like a
+   * creature at any frame rate. The dodge is predictive and
+   * anticipated: a small crouch, a breath, then the dart.
+   * Idle choices are scored by a small utility brain whose
+   * weights are its temperament's own curves. The fences
+   * hold: the roaming field takes no clicks (only the Spark
+   * itself does, and it moves out from under the pointer
+   * rather than covering anything); it never roams while its
+   * bubble is open; after three quick scoots it settles where
+   * a tap can reach it, and a tap always lands; the loop
+   * sleeps while the tab is hidden; reduced motion gets a
+   * Spark that simply appears in its corner and stays there. */
   function startRoam({ walker, button, bubble, art, companion, ctrl, grew, care }) {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return null;
     const play = PLAY[companion.temperament] || PLAY.curious;

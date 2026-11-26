@@ -1,40 +1,33 @@
 /**
- * The Spark agent seat, site-wide (Aaron's items, Nov 20, 2026).
- *
- * The Sphere has its own seat beside the instrument (sphere-
- * spark.js). This is the same seat for every other page the
- * Spark travels to: a keeper who has met their Spark can talk
- * with it anywhere on the site.
+ * The Spark agent seat, site-wide (Aaron's items, Nov 20,
+ * 2026). The same seat the Sphere carries beside the
+ * instrument, for every other page of the site.
  *
  * Two voices, honestly labelled:
  *   - On-device answers, instant and free: today's Pattern
  *     coordinate, the keeper's days with their Spark, who the
- *     Spark is, the story chapters found — and place-aware
- *     answers about the very page the keeper is standing on
- *     (its title, its subject, its story chapter when it has
- *     one). These come from the record on this device and the
- *     canonical calendar, never from a guess.
- *   - The talking door: the same Spark seat the Sphere uses
+ *     Spark is, the story chapters found - and place-aware
+ *     answers about the very page the keeper is standing on.
+ *     From the record on this device and the canonical
+ *     calendar, never from a guess.
+ *   - The talking door: the same seat the Sphere uses
  *     (/.netlify/functions/spark-agent), metered on its own
- *     line under the shared ceiling, fail-closed. When the door
- *     is shut — no key, ceiling reached, or this copy of the
- *     site cannot reach it — the seat says so plainly and the
- *     on-device answers keep working. The Codex Guide's seat is
- *     a different seat and is untouched by this module.
+ *     line under the shared ceiling, fail-closed. When the
+ *     door is shut the seat says so plainly and the on-device
+ *     answers keep working. The Codex Guide's seat is a
+ *     different seat, untouched by this module.
  *
- * The seat appears only when a Spark lives on this device; the
- * meeting itself belongs to the presence layer. The pure local
- * brain (answerLocally) is unit-tested in
- * tests/spark-agent-seat.test.js.
- *
- * Phase 1 of the Spark intelligence design (Nov 20, 2026) rides
- * on this seat without changing its shape: the first time a
- * keeper opens the panel, the seat lazy-loads the keeper mind
- * (spark-keeper-mind.js) — the router, the briefing, the memory
- * the Spark keeps on this device — which attaches through
- * SparkAgentSeat.attach and takes over the asking when it is
- * present. If the mind cannot load, the seat keeps answering
- * exactly as it did before: local brain first, then the door.
+ * The seat appears only when a Spark lives on this device;
+ * the meeting itself belongs to the presence layer. The pure
+ * local brain (answerLocally) is unit-tested in
+ * tests/spark-agent-seat.test.js. Phase 1 of the Spark
+ * intelligence design (Nov 20, 2026) rides on this seat
+ * without changing its shape: on first open the seat
+ * lazy-loads the keeper mind (spark-keeper-mind.js), which
+ * attaches through SparkAgentSeat.attach and takes over the
+ * asking when present. If the mind cannot load, the seat
+ * keeps answering exactly as it did before: local brain
+ * first, then the door.
  */
 (function (root, factory) {
   const api = factory();

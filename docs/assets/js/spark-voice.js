@@ -571,9 +571,9 @@
       let attached = false;
       const attachWhenReady = () => {
         if (attached) return;
-        if (root.SparkAgentSeat && typeof root.SparkAgentSeat.attach === "function") {
+        if (globalThis.SparkAgentSeat && typeof globalThis.SparkAgentSeat.attach === "function") {
           attached = true;
-          root.SparkAgentSeat.attach(enhanceSeat);
+          globalThis.SparkAgentSeat.attach(enhanceSeat);
         }
       };
       attachWhenReady();
