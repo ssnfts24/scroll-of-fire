@@ -185,6 +185,16 @@ test("the Guide seat is untouched by the Spark seat: no Guide files differ, rule
     // Guide's logic files, rulebook hash pin, and seat behaviour
     // differ in nothing). Any other change to that page fails
     // here again.
+    // A further named exception for the same file, granted
+    // Nov 25, 2026 under Aaron's instruction "Apply and update
+    // everything" (Nov 25, 2026) and the approvals delegation
+    // Aaron set that morning, granted by Witness with a duty to
+    // notify: docs/codex-guide.html may also carry E1's openly
+    // reported Guide voice change (the Guide seat's dictation
+    // input and opt-in read-aloud in a stable neutral voice,
+    // alongside the Spark seat's seed-born voice). The exception
+    // names that one change; the rulebook assertion below stands
+    // as-is.
     const guideFiles = changed
       .filter((f) => /guide/.test(f) && !/spark-agent/.test(f) && f !== "docs/guide.html" && f !== "docs/codex-guide.html")
       .sort();

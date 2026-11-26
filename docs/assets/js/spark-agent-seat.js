@@ -357,6 +357,24 @@
         document.head.appendChild(script);
       }
 
+      /* The voice layer (spark-voice.js) lazy-loads the same
+       * way: spoken conversation — dictation into the seat's
+       * input, and the Spark's replies spoken in its own
+       * seed-born voice when the keeper chooses. It attaches
+       * through SparkAgentSeat.attach like the tips do, and if
+       * it cannot load, the seat is exactly as it was. */
+      let voiceRequested = false;
+      function ensureVoice() {
+        if (voiceRequested || typeof SparkVoice !== "undefined") return;
+        voiceRequested = true;
+        const tag = document.querySelector('script[src*="spark-agent-seat.js"]');
+        if (!tag) return;
+        const script = document.createElement("script");
+        script.src = tag.getAttribute("src").replace(/spark-agent-seat\.js/, "spark-voice.js");
+        script.defer = true;
+        document.head.appendChild(script);
+      }
+
       button.addEventListener("click", () => {
         const opening = panel.hidden;
         panel.hidden = !opening;
@@ -364,6 +382,7 @@
         if (opening) {
           ensureMind();
           ensureTips();
+          ensureVoice();
           if (!log.childElementCount) {
             say("spark", `Here I am — ${name}, on this page with you. Ask me about today, about where you are standing, or anything deeper if the door is open.`);
           }

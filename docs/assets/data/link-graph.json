@@ -1548,14 +1548,14 @@
      "area": "systems"
     },
     {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "episodes.html",
      "title": "The Episode Library",
      "area": "living-time"
-    },
-    {
-     "path": "practices.html",
-     "title": "Practices — the Exercises Wing · Remnant Lab",
-     "area": "systems"
     }
    ],
    "in": [
@@ -2234,11 +2234,6 @@
      "area": "archive"
     },
     {
-     "path": "index.html",
-     "title": "Codex of Reality",
-     "area": "codex"
-    },
-    {
      "path": "scripture/index.html",
      "title": "Genesis & Exodus Scripture",
      "area": "scroll-scripture"
@@ -2255,7 +2250,7 @@
     }
    ],
    "outTotal": 10,
-   "inTotal": 6
+   "inTotal": 5
   },
   "privacy-policy.html": {
    "title": "Privacy Policy — Spark. Living Day",
@@ -16322,6 +16317,11 @@
      "area": "archive"
     },
     {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    },
+    {
      "path": "downloads.html",
      "title": "Downloads & Integrity",
      "area": "archive"
@@ -16363,7 +16363,7 @@
     }
    ],
    "outTotal": 9,
-   "inTotal": 11
+   "inTotal": 12
   },
   "scripture/word-studies/nephesh.html": {
    "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",

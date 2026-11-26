@@ -245,7 +245,7 @@
     },
     {
       "path": "docs/assets/css/manifest-practice.css",
-      "sha256": "bf8f0006642e2abde6433cf511ea8412bccfd3d9faf780fd70a90d66a6a4a0a3",
+      "sha256": "d73163c414c36d29f413539d0aab822a364f00769d48118e1b569d9d6d955aea",
       "publicUrl": "https://codexofreality.org/assets/css/manifest-practice.css",
       "status": "operational"
     },
@@ -551,7 +551,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "9317e83a541c4d3114356997e31ac7059d52a254cccfbcc8ed4d3f8f4316da7c",
+      "sha256": "412681cdd9b2934f1f18232a4fe1c1d7527f991d887a5aca2bc129339585e5d0",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -587,7 +587,7 @@
     },
     {
       "path": "docs/assets/data/link-graph.json",
-      "sha256": "1a0bf323b3066d062846ad1622961a9660c2a2a578af7326307329cbae8b5ab2",
+      "sha256": "770ce924792aa02e1d8c9c9c097983b795d64305e2636960b7497cb3e90ae1c9",
       "publicUrl": "https://codexofreality.org/assets/data/link-graph.json",
       "status": "operational"
     },
@@ -2110,6 +2110,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/js/hebrew-pronunciation.js",
+      "sha256": "e9825a7bb947c6949daa4ae7b4fafcba3512a34c27f5c91ed4f8fca00359ecd4",
+      "publicUrl": "https://codexofreality.org/assets/js/hebrew-pronunciation.js",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/js/hidden-layer.js",
       "sha256": "92aa70383aa4b25500248f4cd190a962d9db1023aa1d43e6dce9c143c04fcd72",
       "publicUrl": "https://codexofreality.org/assets/js/hidden-layer.js",
@@ -2369,8 +2375,14 @@
     },
     {
       "path": "docs/assets/js/manifest-practice.js",
-      "sha256": "89ff49b0d24d3c2b363872f4feaae33f26b8c8b1a5de4f539a2ff06e040a25c7",
+      "sha256": "1f465cecb534d0260e668655fcdde66fafe547bcdd8bf2fce2533f1df08b9272",
       "publicUrl": "https://codexofreality.org/assets/js/manifest-practice.js",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/js/manifest-spark.js",
+      "sha256": "159a6be74997f6fc99bbac38fa83c14c25b024b672e17b4b53ebc7039d224abd",
+      "publicUrl": "https://codexofreality.org/assets/js/manifest-spark.js",
       "status": "operational"
     },
     {
@@ -2525,7 +2537,7 @@
     },
     {
       "path": "docs/assets/js/read-aloud.js",
-      "sha256": "1f0bb7bd72ee05c69609aba5a4162494c281aa93b806c6aff681182db684461a",
+      "sha256": "b5bb5da6633763e9e7934cc246965d8ea2092e367b354dd8095d97412f9041ba",
       "publicUrl": "https://codexofreality.org/assets/js/read-aloud.js",
       "status": "operational"
     },
@@ -2627,7 +2639,7 @@
     },
     {
       "path": "docs/assets/js/spark-agent-seat.js",
-      "sha256": "0343cedf875807d845a05d29fe6071b4d785ee6d14c2d118fc00308d8c73597b",
+      "sha256": "bf9b5346f25a72108be892ae11ddf4a5a73938fddd0da0459310f87b37f94964",
       "publicUrl": "https://codexofreality.org/assets/js/spark-agent-seat.js",
       "status": "operational"
     },
@@ -2701,6 +2713,12 @@
       "path": "docs/assets/js/spark-tips.js",
       "sha256": "44a9566b174c9b3ac92530918f8932baeed66eed834b7c0ad285d9697b109c4a",
       "publicUrl": "https://codexofreality.org/assets/js/spark-tips.js",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/js/spark-voice.js",
+      "sha256": "a61f972cac1a447957e5c2ebf98b4f5a94b9cd5f171cce9f7e287076e7940d30",
+      "publicUrl": "https://codexofreality.org/assets/js/spark-voice.js",
       "status": "operational"
     },
     {
@@ -4253,13 +4271,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "c336fe87fd52e6b4bce3d0507ccd97fdd7f4130a4b0c251f49fe569ab1413672",
+      "sha256": "55e3aba6e9083abdb8e862299eaee53b969357a32b49005ef8599a6e9158d7f1",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "099726f3a62943eda9844f7a7b3afa01dacd47a97c52aa0cda4ddb5f70ef3e42",
+      "sha256": "50e634c06896441efd89899c69580fdc81e60ab27f266e6094334b85bdcf9094",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -4319,7 +4337,7 @@
     },
     {
       "path": "docs/codex-guide.html",
-      "sha256": "a8a734a329140aecc9542278eca5964a794605b5bf1cdd897181c09834d9838d",
+      "sha256": "0193b239514ab8ae5e612f0fb7237a8652019eebd8d1687f65890375120cbb7c",
       "publicUrl": "https://codexofreality.org/codex-guide.html",
       "status": "operational"
     },
@@ -4331,7 +4349,7 @@
     },
     {
       "path": "docs/companions.html",
-      "sha256": "5e69557870a80cb671d81810ea60dbcd53460c5369a0d131fb1c2d18366c4e13",
+      "sha256": "eb79d0ffa918fc36d8795c3dd6cb0929b207a0b15209d701bf3c6b948f57a6cc",
       "publicUrl": "https://codexofreality.org/companions.html",
       "status": "operational"
     },
@@ -4433,13 +4451,13 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "1052d2157cacc7d478fac052eed21b76654ee6bf2d9765541175ef9b9fc784be",
+      "sha256": "6da6a882133e97a8d63303ccb4bf732d981dd7bbe5b980ce600b5ca1d340b3e1",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
     {
       "path": "docs/install.html",
-      "sha256": "1bde6a42adf609d1c55276816d14ae1ad83a70c908cae58853b2ee5596fddd4b",
+      "sha256": "201173958591703d54f540d2aac5d209ad60de887af6c43faed61b0682260f9c",
       "publicUrl": "https://codexofreality.org/install.html",
       "status": "operational"
     },
@@ -4531,6 +4549,12 @@
       "path": "docs/scripture/assets/scripture.js",
       "sha256": "86cef48e45ed956ec8e0aa3dc15ff7f34073263f8dac8657c4e3558d66730616",
       "publicUrl": "https://codexofreality.org/scripture/assets/scripture.js",
+      "status": "partially-reviewed"
+    },
+    {
+      "path": "docs/scripture/assets/word-study-hebrew.js",
+      "sha256": "e81bc1c8a8b2f956f66653f7b416be4aca20937c2e54972dfae289c7204164fd",
+      "publicUrl": "https://codexofreality.org/scripture/assets/word-study-hebrew.js",
       "status": "partially-reviewed"
     },
     {
@@ -5837,19 +5861,19 @@
     },
     {
       "path": "docs/scripture/word-studies/adam.html",
-      "sha256": "f42c4ef65fbbcb081b12dbcfcd4906fbe2c26510e28307abf0675f953fb13a50",
+      "sha256": "fa6ec064faafd0e517e51798c2db55d578f9bf15177b14a3ef7b4c9dacb906c6",
       "publicUrl": "https://codexofreality.org/scripture/word-studies/adam.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/word-studies/adamah.html",
-      "sha256": "47f9e8c254b68e1bad5d7b878eaf65073cd4c1d865ee0ade81a84c6c8b8887a7",
+      "sha256": "e6d8f0b8927d0fe8e7bda5569eaf30b193cca6fb6b721dcb4a152c220bf0c0f6",
       "publicUrl": "https://codexofreality.org/scripture/word-studies/adamah.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/word-studies/enosh.html",
-      "sha256": "4d2369112c19b939dd7dccdc23a480b276801328939c2268c0f1ee076b482de1",
+      "sha256": "f02fafaa4292985b521ff7d3ec180890e3f41a6cb17063e1edb357082ad01fd8",
       "publicUrl": "https://codexofreality.org/scripture/word-studies/enosh.html",
       "status": "partially-reviewed"
     },
@@ -5861,25 +5885,25 @@
     },
     {
       "path": "docs/scripture/word-studies/nephesh.html",
-      "sha256": "ab91bc9a77a40ffd168dff67386814aa11285dd8d7bdba510d0a0c7e8f60476f",
+      "sha256": "5da11d1071a39a42fa5f059ec17a4551e7578380c40bce3578fcaa7bd12e167b",
       "publicUrl": "https://codexofreality.org/scripture/word-studies/nephesh.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/word-studies/or.html",
-      "sha256": "62cadca6ca571b971ba485dbfbfb2169dacdd818fb701a200952ad5d9f3d2d6a",
+      "sha256": "854ea643c5137937cd20ae92e0a7a7aca79be60d6abea4aa5c34d325abfd983d",
       "publicUrl": "https://codexofreality.org/scripture/word-studies/or.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/word-studies/ruach.html",
-      "sha256": "0bb407395a0216255d956a2e269000d79d8a5af8222de760495c992ee1b750b5",
+      "sha256": "8b9b98cf67259aea968f199458c9335853ba7eefb2e55cd6169c69cfbfc51de0",
       "publicUrl": "https://codexofreality.org/scripture/word-studies/ruach.html",
       "status": "partially-reviewed"
     },
     {
       "path": "docs/scripture/word-studies/shem.html",
-      "sha256": "591e4eb35e7aa559cee764b5bdac0f2b64190a82c1418edb4c83efa08473c159",
+      "sha256": "75d52b15ae84b595340f695ea5d2ba8177627d0b3c03d87064a42576d9c77188",
       "publicUrl": "https://codexofreality.org/scripture/word-studies/shem.html",
       "status": "partially-reviewed"
     },
@@ -10961,7 +10985,7 @@
     },
     {
       "path": "docs/teach.html",
-      "sha256": "381316c41be066fedcc8fcccda77dc2211cecf4b3ce3e004c2a21247c6d14409",
+      "sha256": "1a1429186aeb3b24820ab43a984ec5adbe340a3d1dd61802328dcfe1dd99e5d1",
       "publicUrl": "https://codexofreality.org/teach.html",
       "status": "operational"
     },
