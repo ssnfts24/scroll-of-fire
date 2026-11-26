@@ -142,6 +142,92 @@
   font-style: italic;
 }
 
+/* ---------------- the pickers, woven into the stage -------------- */
+
+.gl-stage-tools {
+  margin-top: 1.1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line-gold);
+  display: grid;
+  gap: 0.55rem;
+}
+
+.gl-tools-head {
+  margin: 0;
+  font-family: Cinzel, serif;
+  letter-spacing: 0.04em;
+  color: var(--gold);
+}
+
+.gl-stage-tools .garden-county-row { margin: 0; }
+.gl-stage-tools .garden-county-note { margin: 0; }
+
+/* The stage's word after the one action lands. */
+.garden-tending-note {
+  margin: 0.7rem 0 0;
+  color: var(--green);
+  font-weight: 600;
+}
+
+.garden-tending-note:empty { display: none; }
+
+/* ---------------- tending: the bed answers ------------------------- */
+
+/* A bed tended today stands kept: a green-gold edge over the night. */
+.gl-bed-tended-today {
+  border-color: var(--green);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--green) 40%, transparent),
+              0 0 24px color-mix(in srgb, var(--green) 12%, transparent);
+}
+
+.garden-bed-open.gl-bed-tended-today {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--gold) 45%, transparent),
+              0 0 28px color-mix(in srgb, var(--green) 16%, transparent);
+}
+
+.gl-tending {
+  margin-top: 0.8rem;
+  padding-top: 0.7rem;
+  border-top: 1px dashed color-mix(in srgb, var(--green) 35%, transparent);
+}
+
+.gl-tending-acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.gl-tend-act {
+  min-height: 40px;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--green) 55%, transparent);
+  background: color-mix(in srgb, var(--green) 8%, transparent);
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.gl-tend-act:hover:not(:disabled) { border-color: var(--green); }
+
+.gl-tend-act:disabled {
+  cursor: default;
+  border-color: var(--gold);
+  background: color-mix(in srgb, var(--gold) 10%, transparent);
+  color: var(--gold);
+}
+
+/* The marks, accumulated honestly, in the bed's own record. */
+.gl-tending-marks {
+  margin: 0.55rem 0 0;
+  color: var(--muted);
+}
+
+.gl-tending-marks:empty { display: none; }
+
 /* ---------------- the breathing intro ------------------------------ */
 /* Its own solid ground, nothing showing through, slowed to breathe.
  * Injected by garden-living.js; never present for reduced motion. */
