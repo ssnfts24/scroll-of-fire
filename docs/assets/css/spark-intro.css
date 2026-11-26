@@ -1,0 +1,189 @@
+/* The Spark-led introduction (Aaron, Nov 26, 2026): one flow —
+ * the guide leads the visitor to the meeting, and the keeper's
+ * own Spark leads the tour. The figure travels the stage so the
+ * visitor sees how a Spark moves before they are told. */
+
+.spark-tour {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(4, 6, 12, 0.72);
+  padding: 14px;
+}
+
+.spark-tour-card {
+  width: min(560px, 100%);
+  max-height: calc(100vh - 28px);
+  overflow: auto;
+  border-radius: 18px;
+  border: 1px solid rgba(217, 149, 69, 0.5);
+  background: #0a0e1a;
+  color: #f4f1e8;
+  padding: 18px 18px 14px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+}
+
+.spark-tour-stage {
+  position: relative;
+  height: 210px;
+  border-radius: 12px;
+  background: radial-gradient(ellipse at 50% 120%, #16203c 0%, #0b1026 60%, #070b18 100%);
+  overflow: hidden;
+}
+
+.spark-tour-figure {
+  position: absolute;
+  bottom: 14px;
+  width: 92px;
+  transition: left 0.9s ease-in-out, right 0.9s ease-in-out, bottom 0.9s ease-in-out;
+  filter: drop-shadow(0 0 10px rgba(255, 226, 160, 0.5)) drop-shadow(0 0 22px rgba(240, 190, 90, 0.3));
+}
+.spark-tour-figure svg { width: 100%; height: auto; display: block; }
+.spark-tour-figure.pos-center { left: calc(50% - 46px); }
+.spark-tour-figure.pos-left { left: 8%; }
+.spark-tour-figure.pos-right { left: calc(92% - 92px); }
+
+.spark-tour-visual {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 150px;
+  color: #f4f1e8;
+}
+.spark-tour-visual.is-sphere { width: 168px; }
+.spark-tour-visual svg { width: 100%; height: auto; display: block; }
+.spark-tour-visual .tour-lit-day {
+  animation: spark-tour-light 1.6s ease-in-out infinite alternate;
+}
+@keyframes spark-tour-light {
+  from { opacity: 0.65; }
+  to { opacity: 1; }
+}
+
+.tour-day-disc {
+  border: 1px solid #2a3342;
+  border-radius: 12px;
+  padding: 10px;
+  background: rgba(11, 16, 38, 0.9);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.tour-day-disc strong { color: #f3c97a; font-size: 1.05rem; }
+.tour-day-disc em { color: #b9c2cf; font-style: normal; font-size: 0.82rem; }
+
+.tour-card {
+  border: 1px solid #d99545;
+  border-radius: 10px;
+  padding: 12px 10px;
+  background: linear-gradient(160deg, #141021, #0b1026);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: center;
+}
+.tour-card span { color: #f3c97a; font-size: 1.5rem; }
+.tour-card em { color: #b9c2cf; font-style: normal; font-size: 0.78rem; letter-spacing: 0.06em; }
+
+.tour-home, .tour-road {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.tour-home span, .tour-road span {
+  border: 1px solid #2a3342;
+  border-radius: 9px;
+  padding: 7px 9px;
+  background: rgba(11, 16, 38, 0.9);
+  font-size: 0.86rem;
+}
+.tour-road span { display: flex; flex-direction: column; }
+.tour-road em { color: #d99545; font-style: normal; font-size: 0.74rem; letter-spacing: 0.05em; }
+
+.spark-tour-who {
+  margin: 14px 0 2px;
+  color: #f3c97a;
+  font-weight: 600;
+}
+.spark-tour-text {
+  margin: 0 0 10px;
+  line-height: 1.5;
+  min-height: 3.2em;
+}
+
+.spark-tour-dots {
+  display: flex;
+  gap: 6px;
+  margin: 4px 0 12px;
+}
+.spark-tour-dots span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #39415e;
+}
+.spark-tour-dots span.is-on { background: #f3c97a; box-shadow: 0 0 7px rgba(243, 201, 122, 0.8); }
+
+.spark-tour-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.spark-tour-actions button {
+  font: inherit;
+  cursor: pointer;
+  border-radius: 9px;
+  padding: 8px 14px;
+  border: 1px solid #2a3342;
+  background: rgba(244, 241, 232, 0.05);
+  color: #f4f1e8;
+}
+.spark-tour-next {
+  border-color: rgba(217, 149, 69, 0.6) !important;
+  color: #f3c97a !important;
+}
+.spark-tour-nav { display: flex; gap: 8px; }
+.spark-tour-back:disabled { opacity: 0.4; cursor: default; }
+
+/* The invitation card: the guide, waiting at the door. */
+.spark-tour-invite {
+  position: fixed;
+  left: 12px;
+  bottom: 64px;
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: min(440px, calc(100vw - 24px));
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(217, 149, 69, 0.45);
+  background: rgba(8, 11, 22, 0.95);
+  color: #f4f1e8;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  font-size: 0.92rem;
+}
+.spark-tour-invite-art svg { width: 34px; height: auto; display: block; }
+.spark-tour-invite button {
+  font: inherit;
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 6px 10px;
+  border: 1px solid rgba(217, 149, 69, 0.6);
+  background: none;
+  color: #f3c97a;
+  white-space: nowrap;
+}
+.spark-tour-invite-no { border-color: #2a3342 !important; color: #b9c2cf !important; }
+
+.spark-intro-show {
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spark-tour-figure { transition: none; }
+  .spark-tour-visual .tour-lit-day { animation: none; }
+}
