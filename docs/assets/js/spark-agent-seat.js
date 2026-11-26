@@ -117,13 +117,52 @@
 
     /* ------------------- browser seat ------------------------- */
 
+    /* The home-first settle, mirrored from
+     * spark-presence.js (the Mint Rule, aboard the app):
+     * the record is settled against home before the seat is
+     * built — a different seed at home settles the mirror
+     * down from home and home's Spark is the one the seat
+     * speaks for; the seed home names as let go clears the
+     * mirror; same seed, or no bridge (the open web),
+     * leaves the mirror's grown record standing. */
+    function readBridgedRecord(Core) {
+      try {
+        const b = window.LivingPhoneNative;
+        if (!b || typeof b.sparkRecordJson !== "function") return null;
+        const raw = b.sparkRecordJson();
+        if (!raw) return null;
+        const record = JSON.parse(raw);
+        return record && Core.parseSeed(record.seed) ? record : null;
+      } catch { return null; }
+    }
+
+    function settleFromHome(Core, record) {
+      if (!record) return record;
+      const home = readBridgedRecord(Core);
+      if (home) {
+        if (home.seed === record.seed) return record;
+        try { window.localStorage.setItem(Core.STORAGE_KEY, JSON.stringify(home)); } catch { /* the read still stands */ }
+        return home;
+      }
+      try {
+        const b = window.LivingPhoneNative;
+        const gone = b && typeof b.sparkLetGoSeed === "function"
+          ? b.sparkLetGoSeed() : "";
+        if (gone && gone === record.seed) {
+          try { window.localStorage.removeItem(Core.STORAGE_KEY); } catch { /* the read still stands */ }
+          return null;
+        }
+      } catch { /* the mirror read stands */ }
+      return record;
+    }
+
     function readRecord(Core) {
       if (!Core?.STORAGE_KEY) return null;
       try {
         const raw = window.localStorage.getItem(Core.STORAGE_KEY);
         const record = raw ? JSON.parse(raw) : null;
         if (!record || !Core.parseSeed(record.seed)) return null;
-        return record;
+        return settleFromHome(Core, record);
       } catch { return null; }
     }
 
@@ -201,6 +240,11 @@
 
       host.append(button, panel);
       document.body.appendChild(host);
+      /* The corner-clearance rule: standing this pill marks
+       * the body, and the seat's stylesheet grows the page
+       * bottom clearance so the pill can never cover the
+       * page's own controls (see spark-agent-seat.css). */
+      document.body.classList.add("spark-seat-on");
 
       const history = [];
       let doorState = "unknown"; // unknown | open | unavailable | ceiling

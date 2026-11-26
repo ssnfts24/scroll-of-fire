@@ -279,7 +279,15 @@
         "color:var(--sof-ink,#e8e2d4);background:var(--sof-panel,rgba(16,20,32,.82));border:1px solid var(--sof-line,rgba(201,168,106,.45));" +
         "backdrop-filter:blur(6px);}" +
         ".heaven-toggle[aria-pressed=\"true\"]{border-color:var(--sof-gold,#c9a86a);color:var(--sof-gold,#c9a86a);}" +
-        "@media (prefers-reduced-motion: reduce){.heaven-toggle{transition:none;}}";
+        "@media (prefers-reduced-motion: reduce){.heaven-toggle{transition:none;}}" +
+        /* The corner-clearance rule (companion layer): this
+         * fixed pill shares the bottom-left corner with the
+         * Spark seat and must never cover the page's own
+         * controls — the body mark grows the page's bottom
+         * clearance by the pill's height (spark-agent-seat.css
+         * carries the shared rule). */
+        "body.heaven-toggle-on{padding-bottom:4.25rem;}" +
+        "body.heaven-toggle-on.spark-seat-on{padding-bottom:7.75rem;}";
       document.head.appendChild(st);
     }
     const btn = document.createElement("button");
@@ -290,6 +298,7 @@
     btn.setAttribute("aria-pressed", "false");
     btn.title = "The Sound of the Day — a quiet soundscape grown from today's date";
     document.body.appendChild(btn);
+    try { document.body.classList.add("heaven-toggle-on"); } catch { /* the pill still stands */ }
   }
 
   // Boot (but don’t start sound until user clicks)
