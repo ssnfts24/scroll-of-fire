@@ -542,21 +542,100 @@
     return hash36("collection:" + [...cardIds].sort().join(","));
   }
 
+  /* ----- the match, revised (design §5, the do-better pass) -----
+   * Each keeper builds their OWN field toward full resonance; every
+   * card played sounds into a SHARED SKY whose root Moon shifts with
+   * what has been played, so a play changes the music the other side
+   * must answer. Nothing is ever played into another's field. A
+   * dissonant card hangs in the sky, and either keeper may GATHER it
+   * by playing its re-tune — banked gathered dissonance is the only
+   * currency that pays for a triad completed across two Moons. Every
+   * fourth round the Moon turns: affinities rotate, announced ahead.
+   * The First Card is each deck's heart: a wild harmony in its
+   * Spark's kind, once per match, never dimmed or gathered. A match
+   * NEVER moves an instance: win or lose, collections leave unchanged. */
+
+  const DECK_MAX = 20;             // a match deck is at most 20 instances
+  const GATHER_CAP = 3;            // the bank holds at most 3 gathered dissonance
+  const SKY_SLOTS = 3;             // at most 3 dissonant cards hang in the sky
+  const CROSS_TRIAD_COST = 2;      // gathered dissonance a cross-Moon triad costs
+  const PLAYS_PER_MOON_TURN = 8;   // every fourth round (2 plays = a round)
+
+  // Consonance class of a hum against any root (the registry's
+  // resonance rule, generalized from the 432 Hz root).
+  function consonanceClass(hz, rootHz) {
+    if (!hz || !rootHz) return 0;
+    let f = hz;
+    while (f > rootHz * 1.5) f /= 2;
+    while (f < rootHz * 0.75) f *= 2;
+    const ratio = f / rootHz;
+    const near = (target) => Math.abs(ratio - target) / target <= 0.015;
+    if (near(1) || near(2)) return 3;
+    if (near(1.5) || near(4 / 3)) return 2;
+    if (near(1.25) || near(5 / 3)) return 1;
+    return 0;
+  }
+
+  function intervalClass(card, moonIndex) {
+    const root = MOONS[moonIndex - 1];
+    if (!root) return 0;
+    if (card.hum && card.hum.type === "frequency") return consonanceClass(card.hum.hz, root.freq);
+    return card.resonance; // word motifs contribute their letter class
+  }
+
+  // The Moon the table currently answers to: the sky's root Moon,
+  // rotated by the Moon turns the match has lived through.
+  function moonTurnOffset(state) { return Math.floor(state.plays / PLAYS_PER_MOON_TURN); }
+  function effectiveMoon(state) {
+    return ((state.sky.rootMoon - 1 + moonTurnOffset(state)) % 13) + 1;
+  }
+  function moonTurnInfo(state) {
+    const into = state.plays % PLAYS_PER_MOON_TURN;
+    return {
+      offset: moonTurnOffset(state),
+      effectiveMoon: effectiveMoon(state),
+      playsUntilTurn: PLAYS_PER_MOON_TURN - into,
+      // The Spark announces the turn one round (2 plays) ahead.
+      announced: PLAYS_PER_MOON_TURN - into <= 2
+    };
+  }
+
+  function harmonizesWith(card, moonIndex) {
+    const moon = MOONS[moonIndex - 1];
+    if (!moon) return false;
+    if (card.set === "moons") return card.moonAffinity[0] === moonIndex || card.element === moon.element;
+    if (card.set === "kinds") return (KINDRED[moon.element] || []).includes(card.kind.id);
+    if (card.set === "words") return card.moonAffinity[0] === moonIndex;
+    return false;
+  }
+
+  // The solo daily table: the same 12 cards for everyone on a Pattern
+  // Day, drawn deterministically from the whole registry by the day.
+  function dailyTable(patternDay) {
+    const rand = mulberry32(hashString("daily-table:" + patternDay));
+    const ids = REGISTRY.map((c) => c.id);
+    for (let i = ids.length - 1; i > 0; i--) {
+      const j = Math.floor(rand() * (i + 1));
+      [ids[i], ids[j]] = [ids[j], ids[i]];
+    }
+    return ids.slice(0, 12);
+  }
+
   // The deterministic initial state (design §7.1): same code + same
-  // collections in → the identical match out, on any two devices.
-  // affinity: { a: kindId, b: kindId } — each keeper's Spark kind,
-  // lending their hand one affinity (design §5.1, symmetric).
+  // decks in → the identical match out, on any two devices. A deck is
+  // the keeper's own instances by design id (deck rules, design §5.7):
+  // at most DECK_MAX, one entry per instance held. affinity:
+  // { a: kindId, b: kindId } — each keeper's Spark kind.
   function deriveMatch(code, collA, collB, affinity) {
     const parsed = parseMatchCode(code);
     if (!parsed) return null;
+    if (collA.length > DECK_MAX || collB.length > DECK_MAX) return null;
     const rand = mulberry32(hashString("match-state:" + code.toUpperCase()));
     const fieldMoon = 1 + Math.floor(rand() * 13);
     const targetResonance = 6 + Math.floor(rand() * 6);
     function deal(ids) {
-      // A collection is a set: the deck derives from the sorted set,
-      // so the order a keeper's album happens to list copies in can
-      // never change the match (the collection hash is over the same
-      // sorted set).
+      // A deck derives from the sorted set, so the order a keeper's
+      // album happens to list copies in can never change the match.
       const deck = [...ids].sort();
       for (let i = deck.length - 1; i > 0; i--) {
         const j = Math.floor(rand() * (i + 1));
@@ -566,20 +645,28 @@
     }
     const a = deal(collA);
     const b = deal(collB);
+    // The sky's refill stream: notes the sky sounds as dissonance is
+    // gathered out of it, drawn from the match seed (§5.3).
+    const skyStream = [];
+    for (let i = 0; i < 32; i++) skyStream.push(1 + Math.floor(rand() * 13));
     return {
-      v: 1,
+      v: 2,
       code: code.toUpperCase(),
       fieldMoon,
       rootHz: MOONS[fieldMoon - 1].freq,
       targetResonance,
       collections: { a: collectionHash(collA), b: collectionHash(collB) },
       affinity: { a: affinity && affinity.a || null, b: affinity && affinity.b || null },
+      hearts: { a: { used: false }, b: { used: false } },
       hands: { a: a.hand, b: b.hand },
       decks: { a: a.deck, b: b.deck },
-      field: [],
-      dimmed: [],
-      locked: [],
-      resonance: 0,
+      fields: { a: [], b: [] },
+      locked: { a: [], b: [] },
+      lockedTriads: { a: [], b: [] },
+      sky: { rootMoon: fieldMoon, shift: 0, dissonance: [], sounded: 0 },
+      skyStream,
+      skyStreamIndex: 0,
+      gathered: { a: 0, b: 0 },
       resonanceBy: { a: 0, b: 0 },
       light: { a: 7, b: 7 },
       turn: "a",
@@ -587,6 +674,17 @@
       complete: false,
       winner: null
     };
+  }
+
+  // Sound a card into the sky: its interval steps advance the sky's
+  // shift; a full scale of steps (7) turns the sky's root Moon.
+  function soundIntoSky(next, card) {
+    next.sky.sounded += 1;
+    next.sky.shift += 1 + intervalClass(card, next.sky.rootMoon);
+    while (next.sky.shift >= 7) {
+      next.sky.shift -= 7;
+      next.sky.rootMoon = (next.sky.rootMoon % 13) + 1;
+    }
   }
 
   // Apply one play, §7.2 style: the acting side presents the hash of
@@ -599,103 +697,174 @@
     if (by !== "a" && by !== "b") return { ok: false, reason: "unknown-side" };
     if (state.turn !== by) return { ok: false, reason: "not-your-turn" };
     if (state.light[by] <= 0) return { ok: false, reason: "no-light" };
-    const card = cardById(play.cardId);
-    if (!card) return { ok: false, reason: "unknown-card" };
-    const handIndex = state.hands[by].indexOf(play.cardId);
-    if (handIndex < 0) return { ok: false, reason: "card-not-in-hand" };
 
     const next = JSON.parse(JSON.stringify(state));
+    let gained = 0;
+    let event = "played";
+    let triadMoon = null;
+
+    function finish() {
+      next.resonanceBy[by] += gained;
+      if (next.resonanceBy[by] >= next.targetResonance) {
+        next.complete = true;
+        next.winner = by;
+      }
+      next.turn = by === "a" ? "b" : "a";
+      // The incoming side draws back up to a hand of 3 from their deck.
+      while (next.hands[next.turn].length < 3 && next.decks[next.turn].length) {
+        next.hands[next.turn].push(next.decks[next.turn].shift());
+      }
+      if (!next.complete
+        && ((next.light.a <= 0 && next.light.b <= 0)
+          || (next.hands.a.length === 0 && next.hands.b.length === 0
+            && next.decks.a.length === 0 && next.decks.b.length === 0))) {
+        next.complete = true;
+        next.winner = next.resonanceBy.a === next.resonanceBy.b ? "draw"
+          : (next.resonanceBy.a > next.resonanceBy.b ? "a" : "b");
+      }
+      return { ok: true, state: next, event, gained, triadMoon };
+    }
+
+    // --- the heart: the First Card, played from beside the deck ---
+    if (play.cardId === "first-card") {
+      const kindId = next.affinity[by];
+      if (!kindId) return { ok: false, reason: "no-heart" };
+      if (next.hearts[by].used) return { ok: false, reason: "heart-spent" };
+      const kind = KINDS.find((k) => k.id === kindId);
+      next.hearts[by].used = true;
+      next.light[by] -= 1;
+      next.plays += 1;
+      next.fields[by].push("first-card");
+      // A wild harmony in its Spark's kind: resonance 2, +1 affinity.
+      gained += 3;
+      event = "heart";
+      soundIntoSky(next, cardById("kind-" + kindId) || { resonance: 2, hum: null });
+      checkTriad(next, by, kind);
+      if (event === "heart" && triadMoon) event = "triad";
+      return finish();
+    }
+
+    const card = cardById(play.cardId);
+    if (!card) return { ok: false, reason: "unknown-card" };
+    const handIndex = next.hands[by].indexOf(play.cardId);
+    if (handIndex < 0) return { ok: false, reason: "card-not-in-hand" };
+
+    // --- the gather: play a dimmed card's re-tune, bank its dissonance ---
+    if (play.gather) {
+      const target = cardById(play.gather);
+      if (!target || !next.sky.dissonance.includes(play.gather)) return { ok: false, reason: "not-in-sky" };
+      const shares = target.element === card.element
+        || target.moonAffinity.some((m) => card.moonAffinity.includes(m));
+      if (!shares) return { ok: false, reason: "not-its-retune" };
+      if (next.gathered[by] >= GATHER_CAP) return { ok: false, reason: "bank-full" };
+      next.hands[by].splice(handIndex, 1);
+      next.light[by] -= 1;
+      next.plays += 1;
+      next.sky.dissonance = next.sky.dissonance.filter((id) => id !== play.gather);
+      next.gathered[by] += 1;
+      // The sky refills from the match seed: the next stream note sounds.
+      if (next.skyStreamIndex < next.skyStream.length) {
+        next.skyStreamIndex += 1;
+        next.sky.shift += 1;
+        while (next.sky.shift >= 7) {
+          next.sky.shift -= 7;
+          next.sky.rootMoon = (next.sky.rootMoon % 13) + 1;
+        }
+      }
+      event = "gathered";
+      return finish();
+    }
+
+    // --- an ordinary play, into the keeper's OWN field ---
     next.hands[by].splice(handIndex, 1);
     next.light[by] -= 1;
     next.plays += 1;
-    next.field.push(play.cardId);
+    const moonNow = effectiveMoon(next);
+    const fieldBefore = [...next.fields[by]];
 
-    const fieldMoon = MOONS[next.fieldMoon - 1];
-    const soundedBefore = next.field.filter((id) => !next.dimmed.includes(id));
-    let gained = 0;
-    let event = "played";
-
-    // Re-tune: a card sharing a dimmed card's element or home Moon
-    // re-tunes it in place; the dimmed card sounds again (design §5.1).
-    const retuned = [];
-    for (const dimId of [...next.dimmed]) {
-      const dim = cardById(dimId);
-      if (!dim) continue;
-      const sharesElement = dim.element === card.element;
-      const sharesMoon = dim.moonAffinity.some((m) => card.moonAffinity.includes(m));
-      if (sharesElement || sharesMoon) {
-        next.dimmed = next.dimmed.filter((id) => id !== dimId);
-        gained += dim.resonance;
-        retuned.push(dimId);
-      }
-    }
-
-    // Harmony: Moon anchors its own field; a Kind harmonizes when
-    // kindred to the field Moon; a Word harmonizes on its home Moon's
-    // field. The Spark affinity: a card of the keeper's Spark's kind
-    // sounds +1 (symmetric — identity, not advantage, design §5.1).
-    let harmonizes = false;
-    if (card.set === "moons") harmonizes = card.moonAffinity[0] === next.fieldMoon || card.element === fieldMoon.element;
-    else if (card.set === "kinds") harmonizes = (KINDRED[fieldMoon.element] || []).includes(card.kind.id);
-    else if (card.set === "words") harmonizes = card.moonAffinity[0] === next.fieldMoon;
-
-    if (harmonizes) {
+    if (harmonizesWith(card, moonNow)) {
       gained += card.resonance;
       if (card.set === "kinds" && next.affinity[by] && card.kind.id === next.affinity[by]) gained += 1;
-      event = retuned.length ? "retuned-and-sounded" : "sounded";
-    } else if (!retuned.length) {
-      next.dimmed.push(play.cardId);
-      event = "dimmed";
-    }
-
-    // Triad: the field now holds the field Moon's card, a kindred Kind,
-    // and the home Word, none dimmed → a chord; the three lock as
-    // attuned and the completing side is returned 2 light (design §5.1).
-    const sounded = next.field.filter((id) => !next.dimmed.includes(id));
-    const moonCardId = "moon-" + String(next.fieldMoon).padStart(2, "0");
-    const homeWord = WORDS.find((w) => w.homeMoon === next.fieldMoon);
-    if (homeWord && sounded.includes(moonCardId) && sounded.includes("word-" + homeWord.slug)) {
-      const kindInField = sounded.find((id) => {
-        const c = cardById(id);
-        return c && c.set === "kinds" && (KINDRED[fieldMoon.element] || []).includes(c.kind.id)
-          && !next.locked.includes(id);
-      });
-      const triadIds = [moonCardId, "word-" + homeWord.slug, kindInField];
-      if (kindInField && triadIds.every((id) => !next.locked.includes(id))) {
-        let chord = 0;
-        for (const id of triadIds) { chord += cardById(id).resonance; next.locked.push(id); }
-        gained += chord + 2;
-        next.light[by] += 2;
-        event = "triad";
-      } else if (harmonizes) {
-        // A duet completed by this play returns 1 light.
-        const partnerPresent = soundedBefore.some((id) => {
-          const c = cardById(id);
-          return c && card.harmonyKeys.includes(id);
-        });
-        if (partnerPresent) { next.light[by] += 1; event = "duet"; }
-      }
-    } else if (harmonizes) {
-      const partnerPresent = soundedBefore.some((id) => {
-        const c = cardById(id);
+      // The Call: name the Moon whose note the field needs; play that
+      // note and its resonance doubles. A missed call costs nothing.
+      let called = false;
+      if (play.callMoon && card.moonAffinity[0] === play.callMoon) { gained *= 2; called = true; }
+      next.fields[by].push(play.cardId);
+      event = called ? "called-and-sounded" : "sounded";
+      soundIntoSky(next, card);
+      // A duet with a partner already sounding in your own field
+      // returns 1 light.
+      const partnerPresent = fieldBefore.some((id) => {
+        const c = id === "first-card" ? null : cardById(id);
         return c && card.harmonyKeys.includes(id);
       });
       if (partnerPresent) { next.light[by] += 1; event = "duet"; }
+      checkTriad(next, by, null);
+      if (triadMoon) event = "triad";
+    } else {
+      // Dissonance is material: the card hangs in the shared sky,
+      // gatherable by either keeper. If the sky is full, its note
+      // falls for this match — the instance itself is untouched.
+      if (next.sky.dissonance.length < SKY_SLOTS) {
+        next.sky.dissonance.push(play.cardId);
+        event = "dimmed";
+      } else {
+        event = "fell-sky-full";
+      }
     }
+    return finish();
 
-    next.resonance += gained;
-    next.resonanceBy[by] += gained;
-
-    if (next.resonance >= next.targetResonance) {
-      next.complete = true;
-      next.winner = by;
-    } else if (next.light.a <= 0 && next.light.b <= 0) {
-      next.complete = true;
-      next.winner = next.resonanceBy.a === next.resonanceBy.b ? "draw"
-        : (next.resonanceBy.a > next.resonanceBy.b ? "a" : "b");
+    // A triad standing in the keeper's own field locks as attuned.
+    // On the Moon the table answers to, it is free; across two Moons
+    // it costs gathered dissonance — the only thing that currency buys.
+    function checkTriad(st, side, heartKind) {
+      const field = st.fields[side];
+      for (let m = 1; m <= 13; m++) {
+        if (st.lockedTriads[side].includes(m)) continue;
+        const moonId = "moon-" + String(m).padStart(2, "0");
+        const word = WORDS.find((w) => w.homeMoon === m);
+        if (!word || !field.includes(moonId) || !field.includes("word-" + word.slug)) continue;
+        const moonElement = MOONS[m - 1].element;
+        let kindId = field.find((id) => {
+          const c = cardById(id);
+          return c && c.set === "kinds" && (KINDRED[moonElement] || []).includes(c.kind.id)
+            && !st.locked[side].includes(id);
+        });
+        if (!kindId && heartKind && field.includes("first-card")
+          && (KINDRED[moonElement] || []).includes(heartKind.id)) {
+          kindId = "first-card";
+        }
+        if (!kindId) continue;
+        const cost = m === effectiveMoon(st) ? 0 : CROSS_TRIAD_COST;
+        if (st.gathered[side] < cost) { event = "triad-waits"; continue; }
+        st.gathered[side] -= cost;
+        st.lockedTriads[side].push(m);
+        let chord = 0;
+        for (const id of [moonId, "word-" + word.slug, kindId]) {
+          chord += id === "first-card" ? 2 : cardById(id).resonance;
+          st.locked[side].push(id);
+        }
+        gained += chord + 2;
+        st.light[side] += 2;
+        triadMoon = m;
+        return;
+      }
     }
-    next.turn = by === "a" ? "b" : "a";
-    return { ok: true, state: next, event, gained, retuned };
+  }
+
+  // Solo: the field answers. Side b is the day itself; its play is a
+  // pure function of the state (the Spark referees and voices it —
+  // the field's manner is visible: it sounds a harmonizing card when
+  // it holds one, choosing by the day-seeded rotation).
+  function fieldAnswer(state) {
+    if (!state || state.complete || state.turn !== "b") return null;
+    const hand = state.hands.b;
+    if (!hand.length) return null;
+    const moonNow = effectiveMoon(state);
+    const sounding = hand.filter((id) => harmonizesWith(cardById(id), moonNow));
+    const pool = sounding.length ? sounding : hand;
+    const pick = pool[hashString("field-answer:" + state.code + ":" + state.plays) % pool.length];
+    return { by: "b", cardId: pick, expectedHash: stateHash(state) };
   }
 
   /* ------------------------- windows ------------------------- */
@@ -718,6 +887,9 @@
     parseSparkSeed, firstCardFor,
     STORE_PREFIX, keeperKeyForSeed, createStore,
     makeMatchCode, parseMatchCode, collectionHash, deriveMatch, applyPlay,
+    consonanceClass, intervalClass, harmonizesWith,
+    effectiveMoon, moonTurnOffset, moonTurnInfo, dailyTable, fieldAnswer,
+    DECK_MAX, GATHER_CAP, SKY_SLOTS, CROSS_TRIAD_COST, PLAYS_PER_MOON_TURN,
     isInWindow
   };
 });

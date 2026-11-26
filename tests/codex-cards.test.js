@@ -377,6 +377,254 @@ test("match: a scripted move sequence lands on the same hash on both sides; a mi
   assert.ok(steps >= 4, "the scripted sequence actually played (" + steps + " plays)");
 });
 
+/* ------------- the do-better match model (design §5, revised) ------------- */
+
+test("match v2: deck rules — at most 20 instances, short decks legal, inputs never mutated", () => {
+  const code = Cards.makeMatchCode(99);
+  const big = Cards.REGISTRY.slice(0, 21).map((c) => c.id);
+  assert.equal(Cards.deriveMatch(code, big, ["moon-01"]), null, "a 21-card deck is refused");
+  const twenty = Cards.REGISTRY.slice(0, 20).map((c) => c.id);
+  assert.ok(Cards.deriveMatch(code, twenty, ["moon-01"]), "20 is a legal deck");
+  const collA = ["moon-08", "kind-water", "word-enosh"];
+  const snapshot = JSON.stringify(collA);
+  let s = Cards.deriveMatch(code, collA, ["moon-01", "kind-fire", "word-or"], { a: "water", b: "fire" });
+  let guard = 0;
+  while (!s.complete && guard++ < 12) {
+    const side = s.turn;
+    const cardId = s.hands[side][0];
+    if (!cardId) break;
+    const r = Cards.applyPlay(s, { by: side, cardId, expectedHash: Cards.stateHash(s) });
+    assert.equal(r.ok, true);
+    s = r.state;
+  }
+  assert.equal(JSON.stringify(collA), snapshot, "a match never mutates the keeper's collection");
+});
+
+test("match v2: the Moon turns every fourth round — rotation and announcement derive from plays alone", () => {
+  const fresh = { plays: 0, sky: { rootMoon: 5 } };
+  assert.equal(Cards.effectiveMoon(fresh), 5);
+  const info = Cards.moonTurnInfo(fresh);
+  assert.equal(info.offset, 0);
+  assert.equal(info.effectiveMoon, 5);
+  assert.equal(info.playsUntilTurn, 8);
+  assert.equal(info.announced, false);
+  const soon = { plays: 6, sky: { rootMoon: 5 } };
+  assert.equal(Cards.moonTurnInfo(soon).announced, true, "the turn is announced one round ahead");
+  assert.equal(Cards.moonTurnInfo(soon).playsUntilTurn, 2);
+  const turned = { plays: 8, sky: { rootMoon: 5 } };
+  assert.equal(Cards.effectiveMoon(turned), 6, "after the turn, affinities answer to the next Moon");
+  assert.equal(Cards.effectiveMoon({ plays: 8 * 12, sky: { rootMoon: 5 } }), 4, "rotation wraps the thirteen");
+});
+
+test("match v2: the shared sky shifts identically on both sides as cards sound into it", () => {
+  const code = Cards.makeMatchCode(31337);
+  const collA = Cards.REGISTRY.slice(0, 14).map((c) => c.id);
+  const collB = Cards.REGISTRY.slice(13).map((c) => c.id);
+  let a = Cards.deriveMatch(code, collA, collB, { a: "water", b: "light" });
+  let b = Cards.deriveMatch(code, collA, collB, { a: "water", b: "light" });
+  assert.deepEqual(a.skyStream, b.skyStream, "the sky's refill stream derives from the match seed");
+  assert.equal(a.sky.rootMoon, a.fieldMoon, "the sky opens on the match's Moon");
+  let steps = 0;
+  while (!a.complete && steps < 10) {
+    const side = a.turn;
+    const cardId = a.hands[side][0];
+    if (!cardId) break;
+    const play = { by: side, cardId, expectedHash: Cards.stateHash(a) };
+    const ra = Cards.applyPlay(a, play);
+    const rb = Cards.applyPlay(b, play);
+    assert.equal(ra.ok && rb.ok, true);
+    a = ra.state; b = rb.state;
+    assert.deepEqual(a.sky, b.sky, "sky state identical after play " + steps);
+    assert.equal(Cards.stateHash(a), Cards.stateHash(b));
+    steps += 1;
+  }
+  assert.ok(a.sky.sounded > 0, "cards sounded into the sky (" + a.sky.sounded + ")");
+});
+
+test("match v2: dissonance hangs in the sky and is gathered by its re-tune — banked, capped, sky refilled", () => {
+  const code = Cards.makeMatchCode(777);
+  const collA = Cards.REGISTRY.slice(0, 14).map((c) => c.id);
+  const collB = Cards.REGISTRY.slice(13).map((c) => c.id);
+  let s = Cards.deriveMatch(code, collA, collB, { a: "water", b: "light" });
+  // Play honestly until some card dims into the sky (deterministic).
+  let guard = 0;
+  while (s.sky.dissonance.length === 0 && !s.complete && guard++ < 14) {
+    const side = s.turn;
+    const cardId = s.hands[side][0];
+    if (!cardId) break;
+    s = Cards.applyPlay(s, { by: side, cardId, expectedHash: Cards.stateHash(s) }).state;
+  }
+  assert.ok(s.sky.dissonance.length > 0, "a dissonant card hangs in the sky");
+  const dimmedId = s.sky.dissonance[0];
+  const dimmed = Cards.cardById(dimmedId);
+  // Either keeper may gather: pass honestly until the side to act
+  // holds the dimmed card's re-tune.
+  let side = null;
+  let retune = null;
+  for (let attempt = 0; attempt < 8 && !retune; attempt++) {
+    const t = s.turn;
+    const found = s.hands[t].find((id) => {
+      const c = Cards.cardById(id);
+      return c.element === dimmed.element || c.moonAffinity.some((m) => dimmed.moonAffinity.includes(m));
+    });
+    if (found) { side = t; retune = found; break; }
+    const filler = s.hands[t][0];
+    if (!filler || s.complete) break;
+    s = Cards.applyPlay(s, { by: t, cardId: filler, expectedHash: Cards.stateHash(s) }).state;
+  }
+  assert.ok(retune, "a re-tune for the sky's dissonance reaches a hand");
+  const streamBefore = s.skyStreamIndex;
+  const r = Cards.applyPlay(s, { by: side, cardId: retune, gather: dimmedId, expectedHash: Cards.stateHash(s) });
+  assert.equal(r.ok, true, "the gather applies");
+  assert.equal(r.event, "gathered");
+  assert.equal(r.state.gathered[side], 1, "the dissonance is banked");
+  assert.ok(!r.state.sky.dissonance.includes(dimmedId), "the gathered card leaves the sky");
+  assert.equal(r.state.skyStreamIndex, streamBefore + 1, "the sky refills from the match seed");
+
+  // A gather that is not the card's re-tune is refused; a full bank refuses too.
+  const crafted = JSON.parse(JSON.stringify(r.state));
+  crafted.sky.dissonance = [dimmedId];
+  crafted.gathered[crafted.turn] = Cards.GATHER_CAP;
+  crafted.light[crafted.turn] = 5;
+  crafted.hands[crafted.turn] = ["moon-" + String(dimmed.moonAffinity[0]).padStart(2, "0")];
+  const full = Cards.applyPlay(crafted, {
+    by: crafted.turn, cardId: crafted.hands[crafted.turn][0], gather: dimmedId,
+    expectedHash: Cards.stateHash(crafted)
+  });
+  assert.equal(full.ok, false);
+  assert.equal(full.reason, "bank-full", "hoarding cannot stall the match — the bank is capped");
+});
+
+test("match v2: the Call doubles a sounded note's resonance; a missed call costs nothing", () => {
+  const code = Cards.makeMatchCode(4242);
+  const collA = ["moon-08", "kind-water", "word-enosh", "moon-02", "word-nephesh", "kind-fire"];
+  const collB = ["moon-01", "kind-fire", "word-or", "moon-05", "word-davar", "kind-light"];
+  // Craft the table: a's hand holds Moon 8's card and the sky answers
+  // to Moon 8, so the card sounds by its home Moon.
+  const s0 = JSON.parse(JSON.stringify(Cards.deriveMatch(code, collA, collB, { a: "water", b: "fire" })));
+  s0.turn = "a";
+  s0.sky.rootMoon = 8;
+  s0.plays = 0;
+  s0.hands.a = ["moon-08"];
+  const moonNow = 8;
+  const side = "a";
+  const moonCardId = "moon-08";
+  const plain = Cards.applyPlay(s0, { by: side, cardId: moonCardId, expectedHash: Cards.stateHash(s0) });
+  const called = Cards.applyPlay(s0, { by: side, cardId: moonCardId, callMoon: moonNow, expectedHash: Cards.stateHash(s0) });
+  assert.equal(plain.event, "sounded");
+  assert.equal(called.event, "called-and-sounded");
+  assert.equal(called.gained, plain.gained * 2, "the called note's resonance doubles");
+  const missed = Cards.applyPlay(s0, { by: side, cardId: moonCardId, callMoon: (moonNow % 13) + 1, expectedHash: Cards.stateHash(s0) });
+  assert.equal(missed.gained, plain.gained, "a missed call loses only the bonus");
+  assert.equal(missed.state.light[side], plain.state.light[side], "a missed call costs no light");
+});
+
+test("match v2: the First Card is the deck's heart — wild harmony once, never twice, only with a Spark", () => {
+  const code = Cards.makeMatchCode(555);
+  const s0 = Cards.deriveMatch(code, ["moon-08", "kind-water"], ["moon-01", "kind-fire"], { a: "water", b: "fire" });
+  const side = s0.turn;
+  const r = Cards.applyPlay(s0, { by: side, cardId: "first-card", expectedHash: Cards.stateHash(s0) });
+  assert.equal(r.ok, true);
+  assert.equal(r.event, "heart");
+  assert.ok(r.state.fields[side].includes("first-card"), "the heart sounds in its keeper's own field");
+  assert.equal(r.state.hearts[side].used, true);
+  // The other keeper's heart is their own (it answers for fire)…
+  const other = Cards.applyPlay(r.state, { by: "b", cardId: "first-card", expectedHash: Cards.stateHash(r.state) });
+  assert.equal(other.ok, true, "each keeper's heart is their own");
+  // …but a heart once played cannot be played again.
+  const again = Cards.applyPlay(other.state, { by: side, cardId: "first-card", expectedHash: Cards.stateHash(other.state) });
+  assert.equal(again.ok, false);
+  assert.equal(again.reason, "heart-spent");
+  const noSpark = Cards.deriveMatch(code, ["moon-08"], ["moon-01"], {});
+  const refused = Cards.applyPlay(noSpark, { by: noSpark.turn, cardId: "first-card", expectedHash: Cards.stateHash(noSpark) });
+  assert.equal(refused.ok, false);
+  assert.equal(refused.reason, "no-heart", "no Spark at the table, no heart to play");
+});
+
+test("match v2: a triad across two Moons waits for gathered dissonance, then locks and pays", () => {
+  const code = Cards.makeMatchCode(2024);
+  let s = Cards.deriveMatch(code, ["moon-05"], ["moon-02"], { a: null, b: null });
+  // Craft the table: Moon 5's Moon card and Word already sound in a's
+  // field; the sky answers to Moon 7 — the other Aether Moon, so Moon
+  // 5's kindred Kind (Light) still sounds, but Moon 5's triad completes
+  // across two Moons. a holds Light in hand.
+  s = JSON.parse(JSON.stringify(s));
+  s.turn = "a";
+  s.sky.rootMoon = 7;
+  s.plays = 0;
+  s.fields.a = ["moon-05", "word-davar"];
+  s.hands.a = ["kind-light"];
+  s.light.a = 7;
+  const hash = Cards.stateHash(s);
+  const waiting = Cards.applyPlay(s, { by: "a", cardId: "kind-light", expectedHash: hash });
+  assert.equal(waiting.ok, true);
+  assert.equal(waiting.event, "triad-waits", "without gathered dissonance the cross-Moon triad cannot lock");
+  assert.equal(waiting.state.lockedTriads.a.length, 0);
+
+  const funded = JSON.parse(JSON.stringify(s));
+  funded.gathered.a = Cards.CROSS_TRIAD_COST;
+  const locked = Cards.applyPlay(funded, { by: "a", cardId: "kind-light", expectedHash: Cards.stateHash(funded) });
+  assert.equal(locked.event, "triad");
+  assert.equal(locked.triadMoon, 5);
+  assert.equal(locked.state.gathered.a, 0, "the gathered dissonance is spent, not kept");
+  assert.equal(locked.state.lockedTriads.a.length, 1);
+  assert.equal(locked.state.lockedTriads.a[0], 5);
+  assert.ok(locked.state.locked.a.includes("moon-05") && locked.state.locked.a.includes("word-davar")
+    && locked.state.locked.a.includes("kind-light"), "the three lock as attuned in the keeper's own field");
+});
+
+test("match v2: solo — the daily table is the same for everyone, and the field's answer is deterministic", () => {
+  const t1 = Cards.dailyTable(224);
+  const t2 = Cards.dailyTable(224);
+  assert.deepEqual(t1, t2, "same Pattern Day, same table");
+  assert.equal(t1.length, 12);
+  assert.notDeepEqual(Cards.dailyTable(225), t1, "a new day deals a new table");
+  const code = Cards.makeMatchCode(224);
+  const keeperDeck = ["moon-08", "kind-water", "word-enosh", "moon-02", "word-nephesh", "kind-fire", "moon-05"];
+  let s = Cards.deriveMatch(code, keeperDeck, t1, { a: "water", b: null });
+  let twin = Cards.deriveMatch(code, keeperDeck, t1, { a: "water", b: null });
+  // The keeper plays; the field answers; both replicas agree throughout.
+  let rounds = 0;
+  while (!s.complete && rounds < 6) {
+    const mine = { by: "a", cardId: s.hands.a[0], expectedHash: Cards.stateHash(s) };
+    if (!mine.cardId) break;
+    const r1 = Cards.applyPlay(s, mine);
+    const r2 = Cards.applyPlay(twin, mine);
+    assert.equal(r1.ok && r2.ok, true);
+    s = r1.state; twin = r2.state;
+    if (s.complete) break;
+    const answer = Cards.fieldAnswer(s);
+    assert.deepEqual(answer, Cards.fieldAnswer(twin), "the field's answer derives from the state alone");
+    if (!answer) break;
+    const a1 = Cards.applyPlay(s, answer);
+    const a2 = Cards.applyPlay(twin, answer);
+    assert.equal(a1.ok && a2.ok, true, "the field's answer applies");
+    s = a1.state; twin = a2.state;
+    assert.equal(Cards.stateHash(s), Cards.stateHash(twin), "solo replicas never drift");
+    rounds += 1;
+  }
+  assert.ok(rounds >= 2, "the solo exchange actually ran (" + rounds + " rounds)");
+});
+
+test("album interactivity (design §13): tap sounds and turns, hold shows lineage, held cards brighten — silhouettes never glow", () => {
+  const album = read("docs/assets/js/codex-card-album.js");
+  const css = read("docs/assets/css/codex-cards.css");
+  assert.match(album, /function soundCard\(card\)/, "a tap sounds the card's own hum");
+  assert.match(album, /card\.hum\.hz/, "frequency cards sound their Hz from the record");
+  assert.match(album, /speakWord/, "a Word card speaks its word");
+  assert.match(album, /function wireHold\(tile, panel\)/, "hold-for-lineage is wired");
+  assert.match(album, /600/, "the hold is a deliberate press");
+  assert.match(album, /function lineagePanel\(card, copy\)/, "the lineage panel reads the copy's real chain");
+  assert.match(album, /fromCivilDate/, "faces are computed from the real day (PatternCalendar)");
+  assert.match(album, /codex-card--set-complete/, "a completed set brightens its held cards");
+  assert.match(album, /namedTriads\(\)/, "a completed triad brightens its held cards");
+  assert.match(album, /heldIds\[t\.moon\] && heldIds\[t\.word\] && heldIds\[t\.kind\]/,
+    "brightening is gated on the cards being HELD — a missing silhouette can never glow");
+  assert.match(css, /\.codex-card--set-complete/, "the brightening is styled");
+  assert.match(css, /prefers-reduced-motion: reduce[\s\S]*codex-card__face--kindred-motion \{ animation: none/,
+    "reduced motion stills the kind's motion; states still change");
+});
+
 /* ------------------------- page wiring ------------------------- */
 
 test("wiring: the find flow rides the three real surfaces; the album stands", () => {

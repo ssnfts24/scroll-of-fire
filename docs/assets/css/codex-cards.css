@@ -120,6 +120,37 @@
 .card-tombstones { margin-top: 36px; }
 .card-tombstones li { color: var(--ink-soft, #cfc7ae); line-height: 1.55; }
 
+/* The interactivity standard (design §13): day-true faces, lineage,
+   completion brightening on HELD cards only — a missing card's
+   silhouette never glows. */
+.codex-card__today {
+  margin-top: 8px;
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  color: #f3c97a;
+}
+.codex-card__affordance { color: #b7ad8f; font-size: 0.8rem; }
+.codex-card__lineage {
+  padding: 0 12px 12px;
+  border-top: 1px solid #2a2f45;
+}
+.codex-card--set-complete {
+  border-color: #f3c97a;
+  box-shadow: 0 0 0 1px #f3c97a, 0 6px 22px rgba(217, 149, 69, 0.35);
+}
+.codex-card--triad-held {
+  border-color: #d99545;
+  box-shadow: 0 0 0 1px rgba(217, 149, 69, 0.7), 0 4px 16px rgba(217, 149, 69, 0.25);
+}
+.codex-card__face--kindred-motion {
+  animation: codex-kind-drift 9s ease-in-out infinite alternate;
+}
+@keyframes codex-kind-drift {
+  from { filter: brightness(1); }
+  to { filter: brightness(1.22) saturate(1.15); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .codex-card-glint { transition: none; animation: none; }
+  .codex-card__face--kindred-motion { animation: none; }
 }
