@@ -1,0 +1,382 @@
+/*
+ * Spark Echo — the Spark's memory game (Play).
+ *
+ * The Play family's face, shared with SPARK! — Wake the World:
+ * a deep indigo night, saturated jewel colours, a gold Spark that
+ * glows and reacts, celebrations when a long echo lands. Text,
+ * radii, and the display face stay Living Look tokens from
+ * codex.css; the jewel hues are the game's own stones, carried
+ * per-pad in --pad-h. Motion answers the visitor; under Calm
+ * lights (and prefers-reduced-motion) the pads lift instead of
+ * flash and the still design stands whole.
+ */
+
+.se-wrap {
+  max-width: var(--content-reading);
+  margin: 0 auto;
+  padding: clamp(1.2rem, 4vw, 2.6rem) var(--shell-pad) var(--section-gap);
+}
+
+.se-stage {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding: clamp(1.4rem, 4vw, 2.4rem) clamp(1rem, 3vw, 2rem);
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(88, 60, 180, 0.4), rgba(88, 60, 180, 0) 55%),
+    radial-gradient(90% 70% at 85% 100%, rgba(20, 120, 140, 0.3), rgba(20, 120, 140, 0) 60%),
+    linear-gradient(180deg, #131040 0%, #0a1030 55%, #071026 100%);
+  border: 1px solid var(--line-gold);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+}
+
+.se-name {
+  font-family: var(--display);
+  font-size: clamp(2rem, 6vw, 3rem);
+  letter-spacing: 0.04em;
+  color: var(--text);
+  margin: 0.2rem 0 0.4rem;
+  text-shadow: 0 0 24px rgba(243, 201, 122, 0.35);
+}
+
+.se-dayline {
+  color: var(--gold);
+  font-size: 1.02rem;
+  margin: 0.2rem 0 0.1rem;
+}
+
+.se-civil {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1rem;
+}
+
+/* The Spark's station: a glowing orb, no bubble, with its lines. */
+
+.se-spark-station {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0.4rem auto 1.2rem;
+  max-width: 34rem;
+}
+
+.se-orb {
+  --orb-body: hsl(43, 90%, 58%);
+  --orb-glow: hsl(43, 95%, 72%);
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 34%, var(--orb-glow), var(--orb-body) 58%, rgba(0, 0, 0, 0.25) 130%);
+  box-shadow:
+    0 0 26px 6px var(--orb-glow),
+    0 0 70px 18px rgba(243, 201, 122, 0.25);
+  animation: se-breathe 3.6s ease-in-out infinite;
+}
+
+.se-orb.is-delighted {
+  animation: se-delight 0.9s ease-in-out 2;
+}
+
+@keyframes se-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+@keyframes se-delight {
+  0%, 100% { transform: scale(1) translateY(0); }
+  30% { transform: scale(1.16) translateY(-9px); }
+  60% { transform: scale(1.05) translateY(2px); }
+}
+
+.se-host-line {
+  color: var(--text);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.se-spark-line {
+  color: var(--gold);
+  font-size: 0.98rem;
+  min-height: 1.4em;
+  margin: 0;
+}
+
+/* Controls */
+
+.se-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 1.2rem;
+}
+
+.se-control-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+.se-chip {
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--muted);
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.42rem 0.95rem;
+  cursor: pointer;
+}
+
+.se-chip[aria-pressed="true"] {
+  color: #1a1206;
+  background: linear-gradient(180deg, var(--gold), var(--gold-deep));
+  border-color: var(--gold);
+  font-weight: 600;
+}
+
+.se-settings {
+  color: var(--muted);
+  font-size: 0.95rem;
+  gap: 1rem;
+}
+
+.se-setting select {
+  font: inherit;
+  color: var(--text);
+  background: var(--panel-strong);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.2rem 0.4rem;
+  margin-left: 0.35rem;
+}
+
+/* The board */
+
+.se-board {
+  display: grid;
+  gap: 0.7rem;
+  margin: 0 auto 1rem;
+  max-width: 30rem;
+}
+
+.se-board[data-mode="light"] { grid-template-columns: repeat(3, 1fr); }
+.se-board[data-mode="tones"] { grid-template-columns: repeat(3, 1fr); }
+.se-board[data-mode="words"] { grid-template-columns: repeat(2, 1fr); }
+
+.se-tile {
+  font: inherit;
+  cursor: pointer;
+  border-radius: 20px;
+  border: 1px solid hsla(var(--pad-h), 85%, 70%, 0.5);
+  color: #fff;
+  background:
+    radial-gradient(120% 120% at 30% 20%, hsla(var(--pad-h), 95%, 68%, 0.95), hsla(var(--pad-h), 80%, 42%, 0.95) 62%, hsla(var(--pad-h), 75%, 30%, 0.98));
+  box-shadow:
+    inset 0 2px 10px rgba(255, 255, 255, 0.35),
+    0 4px 18px hsla(var(--pad-h), 90%, 55%, 0.35);
+  padding: 0.9rem 0.4rem 0.8rem;
+  min-height: 5.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  transition: transform 0.12s ease, filter 0.12s ease, box-shadow 0.12s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.se-tile:active { transform: translateY(2px) scale(0.98); }
+
+.se-tile.is-lit {
+  filter: brightness(1.65) saturate(1.25);
+  transform: scale(1.07);
+  box-shadow:
+    inset 0 2px 14px rgba(255, 255, 255, 0.6),
+    0 0 34px 8px hsla(var(--pad-h), 95%, 65%, 0.75);
+}
+
+/* Calm lights: the pad lifts and rings instead of flashing. */
+body.se-calm .se-tile.is-lit {
+  filter: none;
+  transform: translateY(-7px) scale(1.03);
+  box-shadow:
+    inset 0 0 0 3px hsla(var(--pad-h), 95%, 78%, 0.95),
+    0 10px 22px rgba(0, 0, 0, 0.4);
+}
+
+.se-stone-hz {
+  font-family: var(--display);
+  font-size: 1.5rem;
+  line-height: 1;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
+}
+
+.se-stone-unit { font-size: 0.8rem; opacity: 0.85; }
+.se-stone-name { font-size: 0.82rem; opacity: 0.95; }
+
+.se-word-hebrew {
+  font-size: 1.65rem;
+  line-height: 1.25;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.45);
+}
+
+.se-word-spoken { font-size: 0.95rem; font-style: italic; }
+.se-word-gloss { font-size: 0.8rem; opacity: 0.9; }
+
+.se-word-strip {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+}
+
+.se-word-chip {
+  min-height: 3.6rem;
+  padding: 0.45rem 0.2rem;
+  border-radius: 14px;
+}
+
+.se-word-chip .se-word-hebrew { font-size: 1.15rem; }
+.se-word-chip .se-word-spoken { font-size: 0.75rem; }
+
+/* Caption, actions, miss, treatment, keepsake */
+
+.se-caption {
+  color: var(--text);
+  font-size: 1.05rem;
+  min-height: 1.5em;
+  margin: 0.2rem 0 0.9rem;
+}
+
+.se-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-bottom: 0.8rem;
+}
+
+.se-play {
+  font: inherit;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #1a1206;
+  background: linear-gradient(180deg, var(--gold), var(--gold-deep));
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  padding: 0.65rem 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 0 22px rgba(243, 201, 122, 0.4);
+}
+
+.se-again-btn,
+.se-fresh-btn {
+  font: inherit;
+  color: var(--text);
+  background: var(--panel-soft);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+}
+
+.se-play:disabled,
+.se-again-btn:disabled,
+.se-chip:disabled { opacity: 0.5; cursor: default; }
+
+.se-miss { margin-bottom: 0.8rem; }
+
+.se-treatment {
+  text-align: left;
+  max-width: 30rem;
+  margin: 0 auto 1rem;
+  background: var(--panel);
+  border: 1px solid var(--line-gold);
+  border-radius: var(--radius-md, 16px);
+  padding: 1rem 1.2rem;
+}
+
+.se-treatment-word { font-size: 1.5rem; color: var(--gold); margin: 0 0 0.3rem; }
+.se-treatment-spoken { font-size: 1rem; font-style: italic; color: var(--muted); }
+.se-treatment-gloss { color: var(--text); margin: 0 0 0.3rem; }
+.se-treatment-line { color: var(--muted); margin: 0 0 0.5rem; }
+.se-treatment-door { margin: 0; }
+.se-treatment-door a { color: var(--gold); }
+
+.se-keepsake {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0.4rem 0 0.8rem;
+}
+
+.se-how {
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  max-width: 32rem;
+  margin: 0 auto;
+  text-align: left;
+}
+
+/* Celebration: a soft burst of light over the stage. */
+.se-stage.is-celebrating::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(60% 45% at 50% 30%, rgba(243, 201, 122, 0.35), rgba(243, 201, 122, 0) 70%);
+  animation: se-burst 1.5s ease-out 1;
+}
+
+@keyframes se-burst {
+  0% { opacity: 0; }
+  25% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Doors */
+
+.se-doors {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 1.4rem;
+}
+
+.se-doors a {
+  color: var(--gold);
+  border: 1px solid var(--line-gold);
+  border-radius: 999px;
+  padding: 0.5rem 1.1rem;
+  text-decoration: none;
+  background: var(--panel);
+}
+
+/* Small screens: the board stays one-hand friendly. */
+@media (max-width: 480px) {
+  .se-tile { min-height: 4.6rem; border-radius: 16px; }
+  .se-stone-hz { font-size: 1.25rem; }
+  .se-word-hebrew { font-size: 1.4rem; }
+  .se-word-strip { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Reduced motion: no breathing, no burst, no flash — lifts only. */
+@media (prefers-reduced-motion: reduce) {
+  .se-orb, .se-orb.is-delighted { animation: none; }
+  .se-stage.is-celebrating::after { animation: none; opacity: 0; }
+  .se-tile { transition: none; }
+  .se-tile.is-lit {
+    filter: none;
+    transform: translateY(-7px) scale(1.03);
+    box-shadow:
+      inset 0 0 0 3px hsla(var(--pad-h), 95%, 78%, 0.95),
+      0 10px 22px rgba(0, 0, 0, 0.4);
+  }
+}

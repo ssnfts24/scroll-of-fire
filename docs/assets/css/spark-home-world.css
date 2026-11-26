@@ -1,7 +1,8 @@
-/* Their Home — the Spark's 3D world on the companions page.
-   The stage keeps a steady shape while the world loads, so the
-   page never jumps; the list below it is the world in plain
-   words, and stands whether or not the 3D can. */
+/* The Hearth — the Spark's 3D home on the companions page
+   (the name is a proposal Aaron settles; the room is Their Home).
+   The stage keeps a steady shape while the home loads, so the
+   page never jumps; the doors and the list below it are the home
+   in plain words, and stand whether or not the 3D can. */
 
 #spark-home {
   margin-top: 2.2rem;
@@ -76,6 +77,40 @@
   margin: 0.45rem 0 0;
   font-size: 0.88rem;
   opacity: 0.75;
+}
+
+.spark-home-doors {
+  margin: 0.9rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.45rem;
+}
+
+.spark-home-door {
+  display: block;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid rgba(255, 202, 122, 0.35);
+  border-radius: 10px;
+  background: rgba(255, 202, 122, 0.06);
+  color: inherit;
+  text-decoration: none;
+}
+
+.spark-home-door:hover,
+.spark-home-door:focus-visible {
+  background: rgba(255, 202, 122, 0.13);
+}
+
+.spark-home-door strong {
+  display: block;
+  font-size: 0.98rem;
+}
+
+.spark-home-door span {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.85rem;
+  opacity: 0.85;
 }
 
 .spark-home-list {
