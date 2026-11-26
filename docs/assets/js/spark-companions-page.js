@@ -494,6 +494,14 @@
         : `Its name comes from its seed: the same seed speaks the same name anywhere.`;
     $("#spark-stage").textContent =
       `Stage ${stage.index + 1} of ${Core.STAGES.length}: ${stage.name} — ${stage.points} growth points`;
+    /* The long path (Aaron, Nov 26, 2026): the smaller stages
+     * between the great arcs, generated from this Spark's own
+     * seed — growth felt often, not four times in a life. */
+    if (Core.pathOf) {
+      const path = Core.pathOf(record, companion);
+      $("#spark-stage").textContent +=
+        ` On its long path: stage ${path.index + 1} of ${path.count} — ${path.name}, within the ${path.arc} arc` +
+        (path.next ? `; next is ${path.next}, ${path.toGo} point${path.toGo === 1 ? "" : "s"} on.` : `. The path's summit — it stands there now.`);
     const progress = Core.progressOf(record, companion);
     $("#spark-next").textContent = progress.next
       ? `Next: ${progress.next}, at ${progress.nextAt} points — ${progress.toGo} to go. ` +
