@@ -41,12 +41,16 @@ test("plays once, skippable, and lives on as a Show me", () => {
   assert.match(intro, /markSeen\(\)/);
   assert.match(intro, /spark-tour-skip/);
   assert.match(intro, /Skip/);
-  for (const page of ["docs/index.html", "docs/companions.html"]) {
-    const html = read(page);
-    assert.ok(html.includes('id="spark-intro-show"'), page + " carries the Show me");
-    assert.ok(html.includes("spark-intro.js?v=20261126-1"), page + " loads the tour");
-    assert.ok(html.includes("spark-intro.css?v=20261126-1"), page + " loads the tour styles");
-  }
+  const index = read("docs/index.html");
+  assert.ok(index.includes('id="spark-intro-show"'), "the homepage carries the Show me");
+  assert.ok(index.includes("spark-intro.js?v=20261126-1"), "the homepage loads the tour");
+  assert.ok(index.includes("spark-intro.css?v=20261126-1"), "the homepage loads the tour styles");
+  const companions = read("docs/companions.html");
+  assert.ok(companions.includes('id="spark-intro-show"'), "the companions page carries the Show me");
+  const pageJs = read("docs/assets/js/spark-companions-page.js");
+  assert.ok(pageJs.includes("spark-intro.js?v=20261126-1"), "the tour rides in lazily behind the meeting (the diet)");
+  assert.ok(pageJs.includes("spark-intro.css?v=20261126-1"), "the tour styles ride with it");
+  assert.ok(!companions.includes("spark-intro.js"), "the companions page's first load stays lean");
 });
 
 test("the tour demonstrates by doing: voice, day, Sphere, card, home", () => {

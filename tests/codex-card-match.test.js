@@ -97,7 +97,8 @@ test("game law held in the module: harmony, the Call, the First Card once, nothi
 
 test("the album page mounts the table and reads the trail back in lineage", () => {
   assert.ok(ALBUM_PAGE.includes("data-card-match"), "the table mounts on the album page");
-  assert.ok(ALBUM_PAGE.includes("codex-card-match.js"), "the module is loaded");
+  assert.ok(ALBUM_JS.includes("codex-card-match.js"), "the module loads — lazily, behind the album");
+  assert.ok(!ALBUM_PAGE.includes("codex-card-match"), "the game does not ride in the page's first load (the diet)");
   assert.ok(ALBUM_JS.includes("sof.cards.matchtrail.v1."), "the lineage panel reads the trail the table writes");
   assert.ok(ALBUM_JS.includes("Matches: sounded in"), "the trail is spoken in the lineage panel");
 });

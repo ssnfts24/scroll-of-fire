@@ -670,4 +670,20 @@
   } else {
     start();
   }
+
+  /* The introductory tour loads lazily on this page (the
+   * living layer's way): the meeting stands first, and the
+   * tour rides in behind it — its own invite, autostart, and
+   * "show me" wiring come with it. */
+  (function loadIntro() {
+    if (!document.getElementById("spark-intro-show")) return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "assets/css/spark-intro.css?v=20261126-1";
+    document.head.appendChild(link);
+    const script = document.createElement("script");
+    script.src = "assets/js/spark-intro.js?v=20261126-1";
+    script.defer = true;
+    document.head.appendChild(script);
+  })();
 })();

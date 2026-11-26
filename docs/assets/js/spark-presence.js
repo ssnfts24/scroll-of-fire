@@ -3499,7 +3499,15 @@
   function loadLiving() {
     if (window.SparkLiving) return;
     const base = scriptBase();
-    loadScript(base + "spark-lean.js?v=20261126-1")
+    /* The living layer's styles ride with it (the animation
+     * pass lives here too), and the long path attaches before
+     * the living layer reads where the Spark stands. */
+    const css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = base.replace(/js\/$/, "css/") + "spark-living.css?v=20261126-1";
+    document.head.appendChild(css);
+    loadScript(base + "spark-evolution-path.js?v=20261126-1")
+      .then(() => loadScript(base + "spark-lean.js?v=20261126-1"))
       .then(() => loadScript(base + "spark-living.js?v=20261126-1"))
       .catch(() => { /* the living layer rests */ });
   }

@@ -492,4 +492,20 @@
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", render);
   else render();
+
+  /* The Table (stage 2 of the card order) loads lazily, the
+   * living layer's own way: the album stands first, and the
+   * match module and its styles ride in behind it, so the
+   * page's first load does not carry the game. */
+  (function loadTable() {
+    if (!document.querySelector("[data-card-match]")) return;
+    var link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "assets/css/codex-card-match.css?v=20261126-1";
+    document.head.appendChild(link);
+    var script = document.createElement("script");
+    script.src = "assets/js/codex-card-match.js?v=20261126-1";
+    script.defer = true;
+    document.head.appendChild(script);
+  })();
 })();

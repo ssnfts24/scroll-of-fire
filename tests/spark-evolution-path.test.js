@@ -12,6 +12,12 @@ const path = require("node:path");
 
 const root = path.join(__dirname, "..");
 const Core = require(path.join(root, "docs/assets/js/spark-companion.js"));
+/* The long path lives in its own module now (the diet: the
+ * core rides in every room; the path loads where it is used)
+ * and attaches itself to the core, exactly as the browser
+ * load order does on the companions page. */
+const PathModule = require(path.join(root, "docs/assets/js/spark-evolution-path.js"));
+PathModule.attach(Core);
 
 function companionFor(nonce) {
   const seed = Core.makeSeed({ moon: 8, patternDay: 216, kindIndex: 1, nonce });

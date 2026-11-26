@@ -13,7 +13,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const LIVING = fs.readFileSync(path.join(__dirname, "..", "docs/assets/js/spark-living.js"), "utf8");
-const CSS = fs.readFileSync(path.join(__dirname, "..", "docs/assets/css/spark-companion.css"), "utf8");
+const CSS = fs.readFileSync(path.join(__dirname, "..", "docs/assets/css/spark-living.css"), "utf8");
 const GARDEN = fs.readFileSync(path.join(__dirname, "..", "docs/garden.html"), "utf8");
 
 test("the garden of finds keeps what keeper and Spark found together", () => {
