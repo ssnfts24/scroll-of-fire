@@ -1637,13 +1637,13 @@
      "area": "systems"
     },
     {
-     "path": "episodes.html",
-     "title": "The Episode Library",
-     "area": "living-time"
+     "path": "one-word.html",
+     "title": "One Word a Day — a Hebrew word for your Pattern Day",
+     "area": "scroll-scripture"
     },
     {
-     "path": "scripture/word-studies/index.html",
-     "title": "Hebrew Word Studies — Scripture",
+     "path": "scripture/index.html",
+     "title": "Genesis & Exodus Scripture",
      "area": "scroll-scripture"
     }
    ],
@@ -1684,7 +1684,7 @@
      "area": "codex"
     }
    ],
-   "outTotal": 29,
+   "outTotal": 30,
    "inTotal": 7
   },
   "install.html": {
@@ -2313,13 +2313,18 @@
      "area": "archive"
     },
     {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    },
+    {
      "path": "glossary.html",
      "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
      "area": "scroll-scripture"
     }
    ],
    "outTotal": 3,
-   "inTotal": 2
+   "inTotal": 3
   },
   "practices.html": {
    "title": "Practices — the Exercises Wing · Remnant Lab",
