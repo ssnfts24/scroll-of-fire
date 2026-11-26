@@ -43,6 +43,8 @@
 <link rel="stylesheet" href="assets/css/cartoon-scenes.css?v=20261120-1">
 <link rel="stylesheet" href="assets/css/story-layer.css?v=20261120-1">
 <link rel="stylesheet" href="assets/css/episode-library.css?v=20261123-1">
+<link rel="stylesheet" href="assets/css/living-moon-theme.css?v=20261119-1">
+<link rel="stylesheet" href="assets/css/episodes-living.css?v=20261125-1">
   <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261119-1">
   <script defer src="assets/js/spark-companion.js?v=20261119-1"></script>
   <script defer src="assets/js/spark-relations.js?v=20261122-1"></script>
@@ -92,6 +94,26 @@
         <a class="library-door" href="#explore"><strong>Explore</strong><span>The episodes by land and by series — wander the web of the story.</span></a>
         <a class="library-door" href="#continue"><strong>Continue</strong><span id="continue-door-line">Pick the road up where you left it, on this device.</span></a>
       </nav>
+    </section>
+
+    <!-- THE STAGE — the Watch shelf as a place (the Living Look).
+         The day's line and the keeper's kept place stand here, the
+         Spark at its station, and one clear action: resume the film
+         you left, or take up the road. Filled by the living layer
+         from the canonical calendar and this layer's own resume
+         record; the shelf itself renders below as it always has. -->
+    <section class="episodes-stage" aria-labelledby="episodes-stage-title">
+      <p class="garden-eyebrow">The Watch Shelf — a place, not a list</p>
+      <h2 class="episodes-stage-name" id="episodes-stage-title">The Traveller&rsquo;s Road</h2>
+      <p class="episodes-stage-line" id="episodes-stage-line">The day&rsquo;s line loads with the calendar.</p>
+      <p class="episodes-stage-essence" id="episodes-stage-essence"></p>
+      <p class="episodes-welcome" id="episodes-welcome" aria-live="polite"></p>
+      <div class="episodes-spark-station">
+        <span class="el-spark-orb" id="episodes-spark-orb" aria-hidden="true"></span>
+        <p class="episodes-spark-line">Your Spark stands at the shelf with you. Each film below is a door, its name, its land and its Moon on its face — and the one step is to take up the road.</p>
+        <button type="button" class="episodes-action-btn" id="episodes-stage-action">Take up the road</button>
+      </div>
+      <p class="episodes-resume-line" id="episodes-resume-line"></p>
     </section>
 
     <!-- HEADLINE FEATURE — the vision trailer. Placed here by
@@ -181,5 +203,7 @@
   <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
   <script defer src="assets/js/social-bridge.js?v=20261119-1"></script>
   <script defer src="assets/js/day-telling.js?v=20261119-1"></script>
+  <script defer src="assets/js/living-moon-theme.js?v=20261119-1"></script>
+  <script defer src="assets/js/episodes-living.js?v=20261125-1"></script>
 </body>
 </html>

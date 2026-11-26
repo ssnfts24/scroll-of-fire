@@ -4,7 +4,7 @@ Generated from the shared catalog at base revision `548e858`. This report is dev
 
 ## Public discovery areas
 
-### Scroll and Scripture (12 catalog entries)
+### Scroll and Scripture (13 catalog entries)
 
 Read the Scroll, search its text, study Hebrew roots and follow Genesis 1–50.
 
@@ -20,8 +20,9 @@ Read the Scroll, search its text, study Hebrew roots and follow Genesis 1–50.
 - **Codex Glossary** — Live; Symbols, equations and living-technology terms of the Codex.
 - **Genesis Restored** — Source only; Root-level restored Genesis text, published through the Downloads catalog.
 - **Exodus Restored** — Source only; Root-level restored Exodus text, published through the Downloads catalog.
+- **Walking the Long Line — Genesis 5** — Live; Genesis 5 drawn to scale: walk the line from Adam to Noah, feel how long these lives were, run the count of years yourself, and stop at Enoch — whose 365 years match the year itself. Three readings of that match, side by side; the page takes no side.
 
-### Living Time and Observatory (10 catalog entries)
+### Living Time and Observatory (13 catalog entries)
 
 The Pattern Calendar, 13 Moons, Living Time Sphere and witnessed days.
 
@@ -33,6 +34,9 @@ The Pattern Calendar, 13 Moons, Living Time Sphere and witnessed days.
 - **13 Moons Rollout Whitepaper** — Live; Phased rollout plan for the 13 Moons Living Time Observatory.
 - **Witness Ledger** — Live; Browser-local record of witnessed days and SHA-256 hashes. Entries stay on this device and do not sync.
 - **Companions** — Live; Meet a Spark: a small companion made for you on the day you adopt it, named by you, kept on your own device. It grows as you return, visit, and practice, and roams the site with you.
+- **The Card Album** — Live; The Codex card album: cards found around the site through real acts — witnessing a day, hearing a word, meeting a Spark — kept on this device, each with its collection face and its game face.
+- **Spark Echo — the Memory Game** — Live; Spark Echo: the Spark plays a sequence of lights, tones and words, and you play it back. It grows by one step every round. Three modes — Light & Tone, Words from the Hebrew studies, and the frequency page's own tones, played exactly. Kept on your device only.
+- **Read Your Own Day** — Live; Read Your Own Day: a short guided practice where the Spark teaches you to find your Moon and Pattern Day, see your day on the Sphere, and witness it — with your own hands, in a few minutes.
 - **The Episode Library** — Live; Every film of the Traveller's Road gathered in one room and playable where it stands: the vision trailer as its opening feature, the episodes in walking order or by land and series, a keeper's place kept on their own device by the same watch record the story's pages keep, and the planned and scripted episodes shown honestly apart.
 - **Aiyana's World** — Live; Aiyana's own page in the Codex, designed by Aiyana herself: her sign and moving butterflies, a wall where visitors show their thinking and how they feel, a drawing pad — all kept only on the visitor's own device — and a story corner where additions wait for her yes before they can appear.
 
@@ -59,7 +63,7 @@ Practice tools, frequency systems and the Codex hub for building.
 - **Get the App** — Live; Put the Codex of Reality on a phone's home screen like an app: what installing gives, the Android steps, the iPhone and iPad steps, and how the Spark. Living Day app differs.
 - **The Traveller's Map** — Live; The whole site drawn as the lands of one road: every place pictured by its cartoon scene, the Traveller's Road story in walking order with found chapters stamped by their Pattern day, the Year Thread showing today's place in the year and the keeper's trail, and the pages still waiting for their chapters named honestly.
 
-### Evidence and Research (21 catalog entries)
+### Evidence and Research (22 catalog entries)
 
 Theory chapters, the claim register and the editorial evidence edition.
 
@@ -81,6 +85,7 @@ Theory chapters, the claim register and the editorial evidence edition.
 - **Notation Guide** — Live; Symbol families, equation numbering and operators.
 - **Bibliography** — Live; Source architecture: project records, scientific and technical references.
 - **Ethics & Coherence Law** — Live; The living laws of the Codex: consent, non-harm, accountability and the stop rule.
+- **The Witness Method — How to Check a Claim** — Live; A short lesson in checking a claim, the way the Codex itself works: five evidence labels, practised on real claims from the Old World investigation — including the ones that failed their check.
 - **Historical timeline** — Live; Two dated records, kept separate: the publication dates of the sources cited in the claim register, each entry linking to its claim in the Evidence Edition, and the Codex's own growth record.
 - **Where Every Number Comes From** — Live; The receipt shelf for the Sphere: every dataset it shows, with its publisher, span, read date, and honest gaps.
 - **How the Sphere Knows — Methods** — Live; How the Sphere and the Pattern Calendar compute what they claim, in plain words — and the evidence labels the whole site uses, explained once.
@@ -109,9 +114,9 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 
 ## Repository and deployed-content coverage
 
-- Public HTML pages inspected: **205**.
-- Total master-inventory records: **508**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
-- Public-facing catalog entries: **73**; only explicitly curated entries appear on the Atlas.
+- Public HTML pages inspected: **211**.
+- Total master-inventory records: **514**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
+- Public-facing catalog entries: **78**; only explicitly curated entries appear on the Atlas.
 - Numbered archive folders are inventoried file-by-file, while downloads snapshot differences are kept separate from historical integrity data.
 - Root files not already published through the archive or explicitly approved remain classified as development-only; no such file is automatically linked from the public catalog.
 
@@ -127,7 +132,7 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 ## Current resource-type counts
 
 - Deployed Markdown documents: 65
-- HTML pages: 205
+- HTML pages: 211
 - Numbered archive file: 141
 - Numbered archive folder: 7
 - Repository folder: 10

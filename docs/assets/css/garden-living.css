@@ -1,0 +1,278 @@
+/* The Pattern Garden — the Living Look layer. Tokens from codex.css;
+ * the Moon's tint is the room's light; motion only answers. */
+
+/* ---- the stage: the garden itself, first ---- */
+
+.garden-stage {
+  margin-top: 1.1rem;
+  padding: clamp(1rem, 3vw, 1.6rem);
+  border: 1px solid var(--line-gold);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(circle at 15% 0%, color-mix(in srgb, var(--moon-accent, var(--gold)) 13%, transparent), transparent 55%),
+    radial-gradient(circle at 90% 100%, color-mix(in srgb, var(--green) 7%, transparent), transparent 50%),
+    var(--panel);
+  box-shadow: var(--shadow-soft);
+}
+
+.garden-stage .garden-today {
+  margin-top: 0;
+  border-color: var(--line-gold);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--gold) 7%, transparent);
+}
+
+.garden-welcome {
+  margin: 0.85rem 0 0;
+  color: var(--muted);
+}
+
+.garden-welcome:empty { display: none; }
+
+/* The Spark's station: present with a job — it points at the one
+ * tending action. No bubble; it lights up, little sparks around it.
+ * The orb is its station marker; the keeper's own Spark roams. */
+.garden-spark-station {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9rem 1.1rem;
+  margin-top: 1rem;
+}
+
+.gl-spark-orb {
+  position: relative;
+  flex: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 38% 34%, var(--text), var(--gold) 42%, var(--gold-deep) 78%, transparent 79%);
+  box-shadow: 0 0 22px color-mix(in srgb, var(--gold) 55%, transparent);
+}
+
+.gl-spark-orb::before,
+.gl-spark-orb::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+.gl-spark-orb::before { width: 5px; height: 5px; top: -6px; right: 6px; }
+.gl-spark-orb::after { width: 4px; height: 4px; bottom: -4px; left: 8px; background: var(--green); }
+
+.garden-spark-line {
+  flex: 1 1 16rem;
+  margin: 0;
+}
+
+.garden-tend-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0.75rem 1.4rem;
+  border-radius: 999px;
+  border: 1px solid var(--gold);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--gold) 26%, transparent), color-mix(in srgb, var(--gold-deep) 12%, transparent));
+  color: var(--text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.garden-tend-btn:hover { border-color: var(--text); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .gl-spark-orb { animation: gl-orb-breathe 4.6s ease-in-out infinite alternate; }
+}
+
+@keyframes gl-orb-breathe {
+  from { box-shadow: 0 0 14px color-mix(in srgb, var(--gold) 40%, transparent); }
+  to   { box-shadow: 0 0 30px color-mix(in srgb, var(--gold) 70%, transparent); }
+}
+
+/* ---------------- the beds as the place's face --------------------- */
+
+.garden-bed-open {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--gold) 45%, transparent),
+              0 0 28px color-mix(in srgb, var(--gold) 14%, transparent);
+}
+
+.gl-bed-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.gl-spark-dot {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 34%, var(--text), var(--gold) 55%, var(--gold-deep));
+  box-shadow: 0 0 12px color-mix(in srgb, var(--gold) 65%, transparent);
+}
+
+.garden-bed-growth { color: var(--text); }
+
+.gl-bed-empty {
+  margin: 0;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* ---- the pickers, woven into the stage ---- */
+
+.gl-stage-tools {
+  margin-top: 1.1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line-gold);
+  display: grid;
+  gap: 0.55rem;
+}
+
+.gl-tools-head {
+  margin: 0;
+  font-family: Cinzel, serif;
+  letter-spacing: 0.04em;
+  color: var(--gold);
+}
+
+.gl-stage-tools .garden-county-row { margin: 0; }
+.gl-stage-tools .garden-county-note { margin: 0; }
+
+.garden-tending-note {
+  margin: 0.7rem 0 0;
+  color: var(--green);
+  font-weight: 600;
+}
+
+.garden-tending-note:empty { display: none; }
+
+/* ---------------- tending: the bed answers ------------------------- */
+
+.gl-bed-tended-today {
+  border-color: var(--green);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--green) 40%, transparent),
+              0 0 24px color-mix(in srgb, var(--green) 12%, transparent);
+}
+
+.garden-bed-open.gl-bed-tended-today {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--gold) 45%, transparent),
+              0 0 28px color-mix(in srgb, var(--green) 16%, transparent);
+}
+
+.gl-tending {
+  margin-top: 0.8rem;
+  padding-top: 0.7rem;
+  border-top: 1px dashed color-mix(in srgb, var(--green) 35%, transparent);
+}
+
+.gl-tending-acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.gl-tend-act {
+  min-height: 40px;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--green) 55%, transparent);
+  background: color-mix(in srgb, var(--green) 8%, transparent);
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.gl-tend-act:hover:not(:disabled) { border-color: var(--green); }
+
+.gl-tend-act:disabled {
+  cursor: default;
+  border-color: var(--gold);
+  background: color-mix(in srgb, var(--gold) 10%, transparent);
+  color: var(--gold);
+}
+
+.gl-tending-marks {
+  margin: 0.55rem 0 0;
+  color: var(--muted);
+}
+
+.gl-tending-marks:empty { display: none; }
+
+/* ---------------- the breathing intro ------------------------------ */
+/* Its own solid ground, slowed to breathe. Injected by
+ * garden-living.js; never present for reduced motion. */
+
+body.gl-intro-lock { overflow: hidden; }
+
+.gl-intro {
+  position: fixed;
+  inset: 0;
+    z-index: 10080;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background:
+    radial-gradient(circle at 50% 36%, color-mix(in srgb, var(--moon-accent, var(--gold)) 10%, transparent), transparent 55%),
+    linear-gradient(170deg, var(--bg-soft), var(--bg) 72%);
+  cursor: pointer;
+  transition: opacity 0.7s ease-in-out;
+}
+
+.gl-intro-leaving { opacity: 0; pointer-events: none; }
+
+.gl-intro-inner {
+  display: grid;
+  justify-items: center;
+  gap: 0.9rem;
+  text-align: center;
+  max-width: 34rem;
+}
+
+.gl-intro-mark {
+  font-size: 3rem;
+  line-height: 1;
+  color: var(--gold);
+}
+
+.gl-intro-name {
+  margin: 0;
+  font-family: Cinzel, serif;
+  font-size: clamp(1.9rem, 6vw, 3rem);
+  letter-spacing: 0.04em;
+  color: var(--text);
+}
+
+.gl-intro-line { margin: 0; color: var(--gold); font-weight: 600; }
+
+.gl-intro-hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .gl-intro-inner { animation: gl-intro-breathe 4.6s ease-in-out infinite alternate; }
+}
+
+@keyframes gl-intro-breathe {
+  from { opacity: 0.86; transform: scale(0.995); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gl-spark-orb, .gl-intro-inner { animation: none; }
+}

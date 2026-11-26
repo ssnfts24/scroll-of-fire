@@ -38,6 +38,7 @@
   <link rel="stylesheet" href="assets/css/codex.css">
     <link rel="stylesheet" href="assets/css/navigation.css">
 <link rel="stylesheet" href="assets/css/frequency-governance.css">
+  <link rel="stylesheet" href="assets/css/frequency-instrument.css">
   <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
 
   <script type="application/ld+json">
@@ -145,6 +146,58 @@
         Your browser does not support the video element. The same tour is
         written out across this page.
       </video>
+    </section>
+
+    <section id="instrument" class="fi-card" aria-labelledby="instrument-title">
+      <p class="eyebrow">The Instrument · One Tone, Measured True</p>
+      <h2 id="instrument-title">Hear One Tone. See It Measured.</h2>
+      <p class="fi-day" id="instDay">Today on the Pattern Calendar is being read…</p>
+
+      <div class="fi-readout">
+        <strong id="instHz">528</strong><span>Hz</span>
+        <em id="instState">ready</em>
+      </div>
+      <p class="fi-name" id="instName">Restoration · bright coherence</p>
+
+      <div class="fi-controls">
+        <label>Tone
+          <select id="instTone"></select>
+        </label>
+        <label>Or any frequency (Hz)
+          <input id="instCustom" type="number" min="20" max="2200" step="any" placeholder="type a Hz value">
+        </label>
+        <label>Beat pair (one tone in each ear)
+          <select id="instBeat"></select>
+        </label>
+        <label>Volume
+          <input id="instVolume" type="range" min="0" max="100" step="1" value="64">
+        </label>
+      </div>
+
+      <div class="button-row">
+        <button id="instPlay" class="fg-btn primary" type="button">Play Tone</button>
+        <button id="instStop" class="fg-btn danger" type="button">Stop</button>
+        <button id="instVerify" class="fg-btn gold" type="button">Verify Every Tone</button>
+      </div>
+
+      <dl class="fi-facts">
+        <div>
+          <dt>Measured fact</dt>
+          <dd id="instFact">This tone is generated at exactly the stated frequency. Press Verify Every Tone and this page renders each of its tones and measures them, here on your own device.</dd>
+        </div>
+        <div>
+          <dt>Sounding now</dt>
+          <dd id="instMeasured">Nothing is sounding. Press Play Tone.</dd>
+        </div>
+        <div>
+          <dt>Tradition</dt>
+          <dd id="instTradition">The tradition's names and claims stand in this row, labelled as the tradition's — never as measured effects.</dd>
+        </div>
+      </dl>
+
+      <div id="instVerifyTable" class="fi-verify" hidden></div>
+
+      <p class="fi-spark"><span class="fi-spark-dot" aria-hidden="true"></span><span>The Spark keeps this station. Next step: play one tone and watch it measure true.</span></p>
     </section>
 
     <section id="quickStart" class="launch-panel">
@@ -428,6 +481,7 @@
       <p class="eyebrow">Carrier Library</p>
       <h2>Frequency Ingredients</h2>
       <p class="meta">Tap a carrier to load it into the selected deck. The path remains the main experience.</p>
+      <p class="fine">Two kinds of truth live in this library, kept apart on purpose. <strong>Measured:</strong> each carrier's number is the exact frequency the oscillator sounds — the instrument above can render and measure every one of them on your device. <strong>Names:</strong> words like Restoration, Unburden, and Crown are this observatory's symbolic names and the traditions it draws on; they name an intended frame, not a measured effect.</p>
 
       <div class="button-row deck-targets">
         <button class="fg-btn active deck-target" data-target="0" type="button">Target A</button>

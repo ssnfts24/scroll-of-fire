@@ -192,10 +192,11 @@ Your browser does not support the video element. The same tour is written out ac
 <h2 id="gp-h">Genesis, a chapter a day</h2>
 <p>The school path through the first book, one chapter a day: read it, or hear it — every chapter carries a Listen control that reads the English aloud, verse by verse — and let its words open into the word studies as you go. Fifty chapters, fifty days, no catching up and no falling behind: the path is where you are standing on it.</p>
 <p><a href="genesis/01.html">Begin at Genesis 1 →</a> · <a href="../practices.html#pw-school-title">The school paths, from the root</a></p>
+<p>One chapter on the path is also a walk: <a href="../genesis-5-timeline.html">Walking the Long Line</a> draws Genesis 5 to scale — ten lives, 1,556 years — so you can feel how long they were, run the count yourself, and stop at Enoch, whose 365 years match the year itself.</p>
 </section>
 <div class="books">{cards}</div>
 <section aria-labelledby="ws-h"><h2 id="ws-h">Hebrew word studies</h2>
-<p>Seven key words given the full treatment — spelling, root, semantic range, biblical examples, wordplay, cognates, traditions labelled as traditions, and the uncertainties printed rather than smoothed over: <a href="word-studies/index.html">Adam, Adamah, Enosh, Ruach, Nephesh, Or, Shem</a>.</p></section>
+<p>Eight key words given the full treatment — spelling, root, semantic range, biblical examples, wordplay, cognates, traditions labelled as traditions, and the uncertainties printed rather than smoothed over: <a href="word-studies/index.html">Adam, Adamah, Enosh, Ruach, Nephesh, Or, Shem, Davar</a>.</p></section>
 <section id="lemma-finder" class="finder" aria-labelledby="lf-h"><h2 id="lf-h">Word finder</h2>
 <p>Search lemmas that occur in Genesis or Exodus by Hebrew (with or without vowels), transliteration, Strong’s number or English gloss. Needs JavaScript.</p>
 <label for="lf-q">Find a word</label> <input id="lf-q" type="search" autocomplete="off" placeholder="e.g. רוח, ruach, 7307, spirit"><ul id="lf-results" aria-live="polite"></ul>
@@ -276,6 +277,7 @@ Your browser does not support the video element. The same tour is written out ac
 <li><a href="word-studies/nephesh.html">נֶפֶשׁ — Nephesh</a>: life, being, self.</li>
 <li><a href="word-studies/or.html">אוֹר — Or</a>: light; day-one light against day-four luminaries.</li>
 <li><a href="word-studies/shem.html">שֵׁם — Shem</a>: name, reputation, the Name.</li>
+<li><a href="word-studies/davar.html">דָּבָר — Davar</a>: word, thing, matter; the Ten Words and the word that does not return empty.</li>
 </ul>
 <p>For any other word: the <a href="../scroll/lexicon.html">Lexicon</a> searches 911 Hebrew forms, and every chapter page carries a static word-by-word table with the lemma id and morphology of every verse — open a chapter from the <a href="index.html">Scripture home page</a> and scroll to its table.</p>
 </section>

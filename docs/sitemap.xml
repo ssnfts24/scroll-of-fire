@@ -51,6 +51,26 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://codexofreality.org/card-album.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://codexofreality.org/spark-echo.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://codexofreality.org/genesis-5-timeline.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://codexofreality.org/witness-method.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://codexofreality.org/episodes.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -175,6 +195,12 @@
 
   <url>
     <loc>https://codexofreality.org/practices.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://codexofreality.org/read-your-own-day.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -801,6 +827,9 @@
   </url>
   <url>
     <loc>https://codexofreality.org/scripture/word-studies/adamah.html</loc>
+  </url>
+  <url>
+    <loc>https://codexofreality.org/scripture/word-studies/davar.html</loc>
   </url>
   <url>
     <loc>https://codexofreality.org/scripture/word-studies/enosh.html</loc>

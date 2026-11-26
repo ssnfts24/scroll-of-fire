@@ -475,3 +475,127 @@ test("slice 5 — a standing carry is normalized into the journey and named in t
   const none = model({ journey: { stageName: "Bearer", fetchStands: true } });
   assert.equal(none.lines.carry, null, "no carry standing, no carrying line");
 });
+
+/* --------------------- the Hearth (Nov 25, 2026) ---------------------
+ * Aaron's word on the live call: the Spark's residency becomes an
+ * actual 3D home — goods from the shops appear there, everything
+ * the Spark has appears there, and the residency gets a proposed
+ * name. The name is a proposal (Aaron settles it); the goods seam
+ * is keyed by category so the catalogue plugs in without rework;
+ * a preview is shown, never bought; a bought good keeps its
+ * marks; the doors are the site's real pages. */
+
+test("the Hearth: the proposed name stands on the model and the page, as a proposal", () => {
+  assert.equal(World.HOME_NAME, "The Hearth");
+  const m = model();
+  assert.equal(m.homeName, "The Hearth");
+  assert.match(m.lines.home, /The Hearth/);
+  const html = read("companions.html");
+  const section = html.slice(html.indexOf('id="spark-home"'), html.indexOf('id="spark-travel"'));
+  assert.ok(section.includes("The Hearth — where your Spark lives"), "the surface wears the proposed name so Aaron can see it");
+  assert.ok(section.includes("Aaron&rsquo;s to settle"), "the proposal is named as Aaron's call on the page itself");
+  assert.ok(section.includes('id="spark-home-doors"'), "the doors stand in the section");
+});
+
+test("the Hearth: goods arrive by category, each with its slot — the catalogue's seam", () => {
+  assert.equal(World.goodsCategoryFor("worn"), "worn");
+  assert.equal(World.goodsCategoryFor("trail"), "aura-trail", "aliases fold into the family's own key");
+  assert.equal(World.goodsCategoryFor("theme"), "home-theme");
+  assert.equal(World.goodsCategoryFor("not-a-family"), null, "an unknown category is no slot");
+  const bench = World.goodFromInput({ name: "The Keeper's Bench", shelf: "world", band: "Keeper · $7" });
+  assert.equal(bench.category, "home-furnishing", "the stall list's world shelf stands in the room as furnishing");
+  const scarf = World.goodFromInput({ name: "The Kind Scarf", shelf: "spark" });
+  assert.equal(scarf.category, "worn", "the stall list's Spark shelf rides on the Spark");
+  assert.equal(World.goodFromInput({ name: "A mystery" }), null, "no category and no shelf: the home guesses nothing");
+  assert.equal(World.goodFromInput({ category: "worn" }), null, "no name: no good");
+});
+
+test("the Hearth: owned goods stand in the room with their marks; previews never pretend", () => {
+  const m = model({
+    goods: [
+      { id: "kind-scarf", name: "The Kind Scarf", category: "worn", status: "owned" },
+      { id: "sevenfold-trail", name: "The Sevenfold Trail", category: "aura-trail", status: "earned" },
+      { id: "clearing-lamp", name: "The Clearing Lamp", category: "home-furnishing", status: "preview", band: "Keeper · $7" }
+    ]
+  });
+  assert.equal(m.goods.owned.length, 2);
+  assert.equal(m.goods.owned[0].purchased, true, "an owned good is a purchased good unless its entry says otherwise");
+  assert.equal(m.goods.owned[1].purchased, false, "an earned good is never dressed as bought");
+  assert.equal(m.goods.catalogue.length, 1);
+  assert.equal(m.goods.catalogue[0].status, "preview");
+  assert.match(m.lines.goods, /The Kind Scarf/);
+  assert.match(m.lines.goods, /purchased/);
+  assert.match(m.lines.catalogue, /Try it in The Hearth/);
+  assert.match(m.lines.catalogue, /shown, not bought/);
+  assert.match(m.lines.catalogue, /till is dark/);
+});
+
+test("the Hearth: a home with no goods says so, and goods never inflate the temper", () => {
+  const bare = model();
+  assert.match(bare.lines.goods, /No shop goods stand in The Hearth yet/);
+  const withGoods = model({
+    goods: [
+      { name: "A", category: "worn", status: "owned" },
+      { name: "B", category: "carried", status: "owned" },
+      { name: "C", category: "home-furnishing", status: "owned" },
+      { name: "D", category: "home-theme", status: "owned" },
+      { name: "E", category: "keepsake-shelf", status: "owned" },
+      { name: "F", category: "voice-sound", status: "owned" }
+    ]
+  });
+  assert.equal(withGoods.fullness.tier, bare.fullness.tier,
+    "the temper counts the record's lived things — shelf, story corner, garden — never the shop");
+});
+
+test("the Hearth: guest hums are kept only with a motif, and named at their plate", () => {
+  const hums = World.guestHumsFromInput([
+    { from: "Nori", motifHz: [261, 348, 522] },
+    { from: "A hum with no motif" },
+    { motifHz: [440] },
+    "not a hum"
+  ]);
+  assert.equal(hums.length, 2);
+  assert.equal(hums[0].from, "Nori");
+  assert.equal(hums[1].from, "a visiting Spark", "an unnamed greeting is kept humbly, never invented a name");
+  const m = model({ guestHums: [{ from: "Nori", motifHz: [261, 348] }] });
+  assert.match(m.lines.guestHums, /Guest hums kept here/);
+  const none = model();
+  assert.match(none.lines.guestHums, /none kept yet/);
+});
+
+test("the Hearth: the doors are the site's real pages", () => {
+  const hrefs = World.DOORS.map(d => d.href);
+  for (const page of ["living-time-sphere.html", "index.html", "garden.html", "episodes.html", "shop.html", "downloads.html"]) {
+    assert.ok(hrefs.includes(page), `a door stands for ${page}`);
+    assert.ok(fs.existsSync(path.join(DOCS, page)), `${page} is a real page on the site`);
+  }
+  const m = model();
+  assert.match(m.lines.doors, /the site's real pages/);
+  assert.match(m.lines.doors, /walks you to the door/);
+});
+
+test("the Hearth: the flame wrap is carried as the core's data, never re-derived", () => {
+  const wrap = { count: 9, breath: 4.2, opacity: 0.9, licks: [{ angle: 0.5, height: 12, width: 4, color: "accent" }, { angle: 1.2, height: 9, width: 5, color: "sideways" }] };
+  const m = model({ flameWrap: wrap });
+  assert.equal(m.spark.wrap.count, 2, "the wrap stands as handed in — its licks, counted");
+  assert.equal(m.spark.wrap.licks[0].color, "accent");
+  assert.equal(m.spark.wrap.licks[1].color, "glow", "a lick colour that is not the family's falls back to glow");
+  const bare = model({ flameWrap: null });
+  assert.equal(bare.spark.wrap, null, "a keeper who lifted the wrap off hands in nothing, and the Spark stands as born");
+  const noSpark = World.buildModel({ today: TODAY, hour: 10, flameWrap: wrap });
+  assert.equal(noSpark.spark, null, "no Spark, no wrap — the ember wears nothing");
+});
+
+test("the Hearth: the scene is a room — hearth, window sky, doors, resident round, frame budget", () => {
+  const src = read("assets/js/spark-home-world.js");
+  assert.ok(src.includes("home-fire"), "the hearth's fire stands in the scene");
+  assert.ok(src.includes("windowGroup"), "the round window stands in the room");
+  assert.ok(src.includes("doorPositions"), "the doors stand in the room, at named places");
+  assert.ok(src.includes("residentModeAt"), "the Spark resides: rest, roam, play");
+  assert.ok(src.includes("REST_AT") && src.includes("PLAY_AT"), "a resting place and a play place stand in the room");
+  assert.ok(src.includes("previewGood"), "catalogue goods can be tried in the room");
+  assert.ok(src.includes("brassTag"), "a purchased good carries its brass tag in the scene");
+  assert.ok(src.includes("flame-wrap"), "the flame wrap stands in the 3D body");
+  assert.ok(src.includes("30 fps"), "the frame budget is stated in the scene's own words");
+  assert.ok(!src.includes("CircleGeometry(17, 40)"), "the old outdoor ground is gone — this is a room now");
+});

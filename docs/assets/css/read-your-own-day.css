@@ -1,0 +1,224 @@
+/* Read Your Own Day — the guided practice's own sheet.
+ * Tokens come from codex.css (the Living Look sheet): night
+ * --bg, gold --gold / --gold-deep, ivory --text, radii 16/24/34.
+ * Phone-first: the stage is one column, one clear action, big
+ * tap targets; the row only opens up on wide screens. */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.ryod-intro {
+  position: relative;
+}
+
+.ryod-today-line {
+  display: inline-block;
+  margin-top: 0.9rem;
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--line-gold);
+  border-radius: var(--radius-sm);
+  background: var(--panel-soft);
+  color: var(--gold);
+  font-weight: 600;
+  box-shadow: 0 0 24px rgba(243, 201, 122, 0.12);
+}
+
+/* ------------------------- the stage ------------------------- */
+
+.ryod-stage {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  box-shadow: var(--shadow-soft);
+  padding: clamp(1.1rem, 4vw, 2.2rem);
+}
+
+.ryod-spark {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+/* The Spark itself: one plain orb, lit like a spark, with little
+ * sparks around it — never a bubble (Aaron's ruling, Nov 19). */
+.ryod-orb {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  margin-top: 0.35rem;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 42% 38%, #fff8e7 0%, var(--gold) 42%, var(--gold-deep) 78%, rgba(217, 149, 69, 0) 100%);
+  box-shadow:
+    0 0 18px rgba(243, 201, 122, 0.75),
+    0 0 44px rgba(243, 201, 122, 0.35),
+    15px -12px 0 -14px rgba(243, 201, 122, 0.9),
+    -16px 8px 0 -15px rgba(243, 201, 122, 0.75),
+    7px 16px 0 -15px rgba(243, 201, 122, 0.6),
+    -9px -15px 0 -15px rgba(243, 201, 122, 0.6);
+  animation: ryod-breathe 4.2s ease-in-out infinite;
+}
+
+@keyframes ryod-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.07); }
+}
+
+.ryod-line {
+  margin: 0;
+  font-size: 1.08rem;
+  line-height: 1.65;
+  color: var(--text);
+}
+
+.ryod-speaker {
+  margin: 0 0 0.3rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  font-weight: 700;
+}
+
+/* The road's marks: where you are on the road, never a score. */
+.ryod-marks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 1.4rem 0 0;
+  padding: 1.1rem 0 0;
+  border-top: 1px solid var(--line);
+}
+
+.ryod-mark {
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: var(--dim);
+}
+
+.ryod-mark.is-walked {
+  color: var(--muted);
+  border-color: var(--line-strong);
+}
+
+.ryod-mark.is-here {
+  color: #131313;
+  background: var(--gold);
+  border-color: var(--gold);
+  font-weight: 700;
+}
+
+.ryod-body {
+  margin-top: 1.3rem;
+  animation: ryod-in 0.45s ease both;
+}
+
+@keyframes ryod-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.ryod-body p {
+  line-height: 1.7;
+  color: var(--text);
+  max-width: 62ch;
+}
+
+.ryod-note {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* The day's figures, read from the one calendar. */
+.ryod-figures {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.45rem 1.2rem;
+  margin: 0 0 1rem;
+  max-width: 560px;
+}
+
+.ryod-figures dt {
+  color: var(--gold-deep);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding-top: 0.2rem;
+}
+
+.ryod-figures dd {
+  margin: 0;
+  color: var(--text);
+  font-size: 1.05rem;
+}
+
+/* ------------------------- actions --------------------------- */
+
+.ryod-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+}
+
+.ryod-btn {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 52px;
+  padding: 0.8rem 1.4rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--gold-deep);
+  background: linear-gradient(180deg, var(--gold) 0%, var(--gold-deep) 100%);
+  color: #181206;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.ryod-btn:hover,
+.ryod-btn:focus-visible {
+  filter: brightness(1.07);
+}
+
+.ryod-btn--quiet {
+  background: transparent;
+  color: var(--muted);
+  border-color: var(--line-strong);
+  font-weight: 600;
+}
+
+.ryod-btn--door {
+  background: var(--panel-strong);
+  color: var(--gold);
+  border-color: var(--line-gold);
+}
+
+/* --------------------------- motion -------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .ryod-orb {
+    animation: none;
+  }
+
+  .ryod-body {
+    animation: none;
+  }
+}
+
+@media (min-width: 720px) {
+  .ryod-line {
+    font-size: 1.18rem;
+  }
+}

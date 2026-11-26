@@ -19,14 +19,16 @@
 | `paths:graph:check` | `node scripts/build-link-graph.mjs --check` |
 | `site:catalog` | `node scripts/build-site-catalog.mjs` |
 | `site:catalog:check` | `node scripts/build-site-catalog.mjs --check` |
+| `pages:registry` | `node scripts/build-page-registry.mjs` |
+| `pages:registry:check` | `node scripts/build-page-registry.mjs --check` |
 | `search:index` | `node scripts/build-search-index.mjs` |
 | `search:index:check` | `node scripts/build-search-index.mjs --check` |
 | `r2:inventory` | `node scripts/build-r2-inventory.mjs` |
 | `r2:inventory:check` | `node scripts/build-r2-inventory.mjs --check` |
 | `r2:inventory:check:branch` | `node scripts/build-r2-inventory.mjs --check=branch` |
 | `site:seal` | `npm run site:catalog && npm run search:index && python3 scripts/r2-extract-documents.py && npm run r2:inventory` |
-| `validate` | `npm run test && npm run site:catalog:check && npm run search:index:check && npm run r2:inventory:check:branch && npm run audit` |
-| `validate:landing` | `npm run test && npm run site:catalog:check && npm run search:index:check && npm run r2:inventory:check && npm run audit` |
+| `validate` | `npm run test && npm run site:catalog:check && npm run search:index:check && npm run pages:registry:check && npm run r2:inventory:check:branch && npm run audit` |
+| `validate:landing` | `npm run test && npm run site:catalog:check && npm run search:index:check && npm run pages:registry:check && npm run r2:inventory:check && npm run audit` |
 
 ## Workflows
 
@@ -73,6 +75,7 @@
 | `scripts/build-bright-stars.py` | — |
 | `scripts/build-kyoto-blossom.py` | `docs/assets/data/sphere-test-kyoto-blossom.json` |
 | `scripts/build-link-graph.mjs` | `docs/assets/data/link-graph.json`, `site-audit/site-master-inventory.json` |
+| `scripts/build-page-registry.mjs` | `docs/assets/data/page-registry.json`, `site-audit/site-master-inventory.json`, `docs/assets/data/link-graph.json` |
 | `scripts/build-r2-inventory.mjs` | `site-audit/r2/document-extracts.json`, `docs/scroll/archive/Full_Scroll_Unsealed.txt`, `docs/development/TEMPORAL-AUTHORITY-CONTRACT.md`, `site-audit/r2/CODEX_R2_RESOURCE_REGISTRY.json` |
 | `scripts/build-salmon-bonneville.py` | `docs/assets/data/sphere-test-salmon-bonneville.json` |
 | `scripts/build-scroll-editorial.mjs` | `docs/scroll/data/editorial-edition.json`, `docs/scroll/evidence/claim-register.json`, `docs/scroll/evidence/register.md` |
@@ -100,33 +103,33 @@
 
 | Stylesheet | Pages |
 | --- | --- |
-| `docs/assets/css/site-mobile.css` | 186 |
-| `docs/assets/css/spark-companion.css` | 184 |
-| `docs/assets/css/living-ui.css` | 149 |
-| `docs/scripture/assets/scripture.css` | 101 |
-| `docs/assets/css/spark-agent-seat.css` | 74 |
-| `docs/assets/css/codex.css` | 57 |
-| `docs/assets/css/navigation.css` | 51 |
-| `docs/assets/css/social-bridge.css` | 42 |
-| `docs/assets/css/living-moon-theme.css` | 35 |
-| `docs/assets/css/animations.css` | 24 |
-| `docs/assets/css/story-layer.css` | 20 |
+| `docs/assets/css/site-mobile.css` | 192 |
+| `docs/assets/css/spark-companion.css` | 189 |
+| `docs/assets/css/living-ui.css` | 155 |
+| `docs/scripture/assets/scripture.css` | 102 |
+| `docs/assets/css/spark-agent-seat.css` | 75 |
+| `docs/assets/css/codex.css` | 66 |
+| `docs/assets/css/navigation.css` | 56 |
+| `docs/assets/css/social-bridge.css` | 47 |
+| `docs/assets/css/living-moon-theme.css` | 40 |
+| `docs/assets/css/animations.css` | 28 |
+| `docs/assets/css/story-layer.css` | 21 |
 | `docs/theory/equations/assets/css/codex.css` | 19 |
 
 | Script | Pages |
 | --- | --- |
-| `docs/assets/js/spark-companion.js` | 184 |
-| `docs/assets/js/spark-presence.js` | 183 |
-| `docs/assets/js/site.js` | 159 |
-| `docs/assets/js/living-ui.js` | 149 |
-| `docs/scripture/assets/scripture.js` | 101 |
-| `docs/assets/js/spark-relations.js` | 78 |
-| `docs/assets/js/heaven-sound.js` | 74 |
-| `docs/assets/js/spark-agent-seat.js` | 74 |
+| `docs/assets/js/spark-companion.js` | 190 |
+| `docs/assets/js/spark-presence.js` | 188 |
+| `docs/assets/js/site.js` | 165 |
+| `docs/assets/js/living-ui.js` | 155 |
+| `docs/scripture/assets/scripture.js` | 102 |
+| `docs/assets/js/spark-relations.js` | 82 |
+| `docs/assets/js/heaven-sound.js` | 77 |
+| `docs/assets/js/spark-agent-seat.js` | 75 |
 | `docs/assets/js/spark-3d.js` | 70 |
-| `docs/assets/js/calendar/pattern-calendar-version.js` | 45 |
-| `docs/assets/js/calendar/pattern-calendar-data.js` | 45 |
-| `docs/assets/js/calendar/pattern-calendar-format.js` | 45 |
+| `docs/assets/js/calendar/pattern-calendar-version.js` | 50 |
+| `docs/assets/js/calendar/pattern-calendar-data.js` | 50 |
+| `docs/assets/js/calendar/pattern-calendar-format.js` | 50 |
 
 ## Protected systems (do not modify)
 

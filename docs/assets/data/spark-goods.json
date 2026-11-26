@@ -1,0 +1,1152 @@
+{
+ "catalogue": "Spark Goods — the full catalogue",
+ "standing": "Catalogue only. The till is not open: nothing here can be bought yet, and no price on this page charges anyone. When the till ever opens, it opens by Aaron's word, for adults, on this website only.",
+ "fences": [
+  "Cosmetic only — a look, and for the sound family a sound. No good gates the Spark, its growth, its voice, or any difficulty, ever.",
+  "The Spark itself is never for sale.",
+  "Adults buy; nothing is sold to children, and a child never meets a price.",
+  "No blind packs, no loot boxes, no random draws — you always see exactly what a thing is.",
+  "Earned goods are never sold and carry no price; their scarcity is real days lived.",
+  "Every bought good carries the brass tag and is written 'purchased' in the record, forever."
+ ],
+ "bands": {
+  "Pocket": {
+   "price": 2,
+   "embers": 20
+  },
+  "Keeper": {
+   "price": 7,
+   "embers": 75
+  },
+  "Heirloom": {
+   "price": 19,
+   "embers": null
+  },
+  "note": "Band prices are the set catalogue prices ($2 / $7 / $19). Embers costs are design defaults awaiting Aaron's word; Heirloom goods carry no Embers price."
+ },
+ "rarityForms": {
+  "edition": "A limited item carries its edition and the Moon and Pattern Day it was issued under, on the item and on its brass tag. A closed edition never quietly reopens; a later issue is a new edition, numbered so.",
+  "moon-window": "Some goods are issued for one Moon only and retire at its turn, announced plainly on the item in advance — no countdowns, no pressure.",
+  "seed-variant": "Where a good renders through a keeper's Spark seed, the item is a family and the keeper's own is one-of-one: its exact tint and pattern exist on no other Spark.",
+  "earned-only": "Earned goods are never sold and carry no price. Their scarcity is real days lived, and bought goods never imitate their mark."
+ },
+ "lineage": {
+  "about": "Every owned good carries a provenance record on the keeper's own device, in the same hash-chained style as the Spark's record — a certificate without a chain: proof that lives with the keeper and can be checked by code, the way the passport is checked.",
+  "fields": [
+   "itemId",
+   "edition",
+   "issuedMoon",
+   "issuedPatternDay",
+   "obtained",
+   "obtainedPatternDay",
+   "fromWhom",
+   "chainHash"
+  ],
+  "obtainedValues": [
+   "purchased",
+   "gifted",
+   "earned",
+   "bought with Embers"
+  ],
+  "note": "Trading and gifting move between keepers only in the accounts phase — adults only, separately gated. This catalogue carries the lineage fields; it builds no transfer."
+ },
+ "categories": [
+  {
+   "id": "carried",
+   "title": "Carried",
+   "line": "Things the Spark carries with it on the road."
+  },
+  {
+   "id": "worn",
+   "title": "Worn",
+   "line": "Things worn on the flame and the core."
+  },
+  {
+   "id": "trails",
+   "title": "Light Trails",
+   "line": "What the Spark leaves behind it as it moves."
+  },
+  {
+   "id": "wraps",
+   "title": "Flame Wraps",
+   "line": "Ways of wrapping the flame itself."
+  },
+  {
+   "id": "expressions",
+   "title": "Expressions & Manners",
+   "line": "How the Spark brightens, startles, celebrates, and waits."
+  },
+  {
+   "id": "stickers",
+   "title": "Stickers & Emoji",
+   "line": "For your messages — including a pack made from your own Spark."
+  },
+  {
+   "id": "themes",
+   "title": "World Themes",
+   "line": "Looks for the keeper's private ground."
+  },
+  {
+   "id": "home",
+   "title": "Home Goods & Keepsake Shelves",
+   "line": "Standing pieces for the ground, and frames for what was earned."
+  },
+  {
+   "id": "game",
+   "title": "SPARK! Game Cosmetics",
+   "line": "The same goods in the game's own bright look — the game reads this catalogue later."
+  },
+  {
+   "id": "sound",
+   "title": "Sound & Hums",
+   "line": "Chime sets you can choose, and hum repertoires that can only be earned."
+  }
+ ],
+ "items": [
+  {
+   "id": "the-wayfarers-lantern",
+   "name": "The Wayfarer's Lantern",
+   "category": "carried",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "A warm light to carry beside your Spark on the road",
+   "onSpark": "Carried at the Spark's side, its glow in the Spark's kind colour; the brass tag hangs from its handle.",
+   "source": "catalogue-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   },
+   "stage": "lantern"
+  },
+  {
+   "id": "the-seed-pouch",
+   "name": "The Seed Pouch",
+   "category": "carried",
+   "band": "Pocket",
+   "price": 2,
+   "embers": 20,
+   "sellingPoint": "A small pouch of seeds, kept close for the road ahead",
+   "onSpark": "Worn low at the Spark's side on a short cord, tag tied to the cord.",
+   "source": "catalogue-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   },
+   "stage": "pouch"
+  },
+  {
+   "id": "the-scroll-case",
+   "name": "The Scroll-Case",
+   "category": "carried",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "A place for the writings your Spark carries with it",
+   "onSpark": "Slung behind the flame, never over the core's face; tag sewn to its strap.",
+   "source": "catalogue-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   },
+   "stage": "scrollcase"
+  },
+  {
+   "id": "the-travellers-satchel",
+   "name": "The Traveller's Satchel",
+   "category": "carried",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "A soft bag sized for the road, riding at your Spark's side",
+   "onSpark": "Rides at the Spark's side, moving as it moves; tag on the flap clasp.",
+   "source": "catalogue-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   },
+   "stage": "satchel"
+  },
+  {
+   "id": "the-astrolabe-charm",
+   "name": "The Astrolabe Charm",
+   "category": "carried",
+   "band": "Heirloom",
+   "price": 19,
+   "embers": null,
+   "sellingPoint": "Rings within rings in brass, worn for the love of looking up",
+   "onSpark": "Hung before the flame on a fine chain, rings turning slowly; tag on the chain.",
+   "source": "catalogue-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "edition",
+    "edition": "First Edition",
+    "issuedMoon": 8,
+    "issuedPatternDay": 221,
+    "note": "First Edition — issued Moon 8, Pattern Day 221. When this edition closes it stays closed; any later issue is a new edition, numbered so."
+   },
+   "stage": "astrolabe"
+  },
+  {
+   "id": "the-north-bead",
+   "name": "The North Bead",
+   "category": "carried",
+   "band": "Pocket",
+   "price": 2,
+   "embers": 20,
+   "sellingPoint": "One smooth stone bead your Spark carries low and quiet",
+   "onSpark": "One bead on a cord, low and quiet; tag is the cord's brass knot.",
+   "source": "catalogue-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   },
+   "stage": "bead"
+  },
+  {
+   "id": "the-key-of-the-thirteenth-door",
+   "name": "The Key of the Thirteenth Door",
+   "category": "carried",
+   "band": "Heirloom",
+   "price": 19,
+   "embers": null,
+   "sellingPoint": "An old-fashioned key kept for the love of the road's last door",
+   "onSpark": "Hung at the Spark's side, catching light as it turns; tag hung from the key's bow.",
+   "source": "catalogue-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "edition",
+    "edition": "First Edition",
+    "issuedMoon": 8,
+    "issuedPatternDay": 221,
+    "note": "First Edition — issued Moon 8, Pattern Day 221. When this edition closes it stays closed; any later issue is a new edition, numbered so."
+   },
+   "stage": "key"
+  },
+  {
+   "id": "the-kind-scarf",
+   "name": "The Kind Scarf",
+   "category": "worn",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "A scarf in your Spark's own colours, looped soft around its core",
+   "onSpark": "Looped soft around the core in the kind's colours, wave- or smoke-edged by kind; tag sewn to its hem.",
+   "source": "catalogue-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   },
+   "stage": "scarf"
+  },
+  {
+   "id": "the-moon-phase-band",
+   "name": "The Moon-Phase Band",
+   "category": "worn",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "A row of small moons around your Spark, lit in its own colour",
+   "onSpark": "A band of thirteen small moons around the core, today's moon lit; tag on the band's clasp.",
+   "source": "catalogue-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   },
+   "stage": "moonband"
+  },
+  {
+   "id": "the-cloak-clasp-of-the-road",
+   "name": "The Cloak-Clasp of the Road",
+   "category": "worn",
+   "band": "Pocket",
+   "price": 2,
+   "embers": 20,
+   "sellingPoint": "A small round clasp with the road's spiral pressed into it",
+   "onSpark": "A small round clasp at the flame's shoulder, the road's spiral pressed in; the tag is the clasp's pin.",
+   "source": "catalogue-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   },
+   "stage": "clasp"
+  },
+  {
+   "id": "the-ember-circlet",
+   "name": "The Ember Circlet",
+   "category": "worn",
+   "band": "Heirloom",
+   "price": 19,
+   "embers": null,
+   "sellingPoint": "A thin circle resting in the flame above your Spark's core",
+   "onSpark": "A thin circle resting in the flame above the core; tag hung at its lowest point.",
+   "source": "catalogue-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "edition",
+    "edition": "First Edition",
+    "issuedMoon": 8,
+    "issuedPatternDay": 221,
+    "note": "First Edition — issued Moon 8, Pattern Day 221. When this edition closes it stays closed; any later issue is a new edition, numbered so."
+   },
+   "stage": "circlet"
+  },
+  {
+   "id": "the-ribbon-of-the-day-out-of-time",
+   "name": "The Ribbon of the Day Out of Time",
+   "category": "worn",
+   "band": "Pocket",
+   "price": 2,
+   "embers": 20,
+   "sellingPoint": "The same pale ribbon on every Spark, for the day outside the moons",
+   "onSpark": "The same pale ribbon on every Spark, worn for the day outside the moons; tag tied in its knot.",
+   "source": "catalogue-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   },
+   "stage": "ribbon"
+  },
+  {
+   "id": "the-veil-of-quiet-hours",
+   "name": "The Veil of Quiet Hours",
+   "category": "worn",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "A soft veil over the flame's edge, gentler to look at",
+   "onSpark": "A soft veil over the flame's edge, gentler to look at; tag sewn at its lower hem.",
+   "source": "catalogue-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   },
+   "stage": "veil"
+  },
+  {
+   "id": "petal-drift",
+   "name": "Petal Drift",
+   "category": "trails",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "Pale petals drifting in a slow circle around your Spark",
+   "onSpark": "Pale petals drifting in a slow circle; the tag rides the trail-head as a single brass mote.",
+   "source": "catalogue-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   },
+   "stage": "petals"
+  },
+  {
+   "id": "ember-motes",
+   "name": "Ember Motes",
+   "category": "trails",
+   "band": "Pocket",
+   "price": 2,
+   "embers": 20,
+   "sellingPoint": "Tiny warm sparks trailing gently behind your Spark as it moves",
+   "onSpark": "Tiny warm sparks shed gently behind as it moves; the first mote in the trail is brass.",
+   "source": "catalogue-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   },
+   "stage": "motes"
+  },
+  {
+   "id": "ripple-step",
+   "name": "Ripple-Step",
+   "category": "trails",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "A soft ring left by each step, like a stone's ring on water",
+   "onSpark": "A soft ring left by each step, widening and fading; the tag is the first ring's brass glint.",
+   "source": "catalogue-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   },
+   "stage": "ripple"
+  },
+  {
+   "id": "season-motes",
+   "name": "Season Motes",
+   "category": "trails",
+   "band": "Pocket",
+   "price": 2,
+   "embers": 20,
+   "sellingPoint": "Motes that change with the season you choose for your Spark",
+   "onSpark": "Motes that take the colour and fall of the season the keeper chooses; first mote brass.",
+   "source": "catalogue-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   },
+   "stage": "seasonmotes"
+  },
+  {
+   "id": "the-long-ribbon",
+   "name": "The Long Ribbon",
+   "category": "trails",
+   "band": "Heirloom",
+   "price": 19,
+   "embers": null,
+   "sellingPoint": "A long ribbon of light streaming behind your Spark as it goes",
+   "onSpark": "A lengthening of the flame-lick trail into a woven ribbon of light in a slow coil; tag at the ribbon's head.",
+   "source": "catalogue-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "edition",
+    "edition": "First Edition",
+    "issuedMoon": 8,
+    "issuedPatternDay": 221,
+    "note": "First Edition — issued Moon 8, Pattern Day 221. When this edition closes it stays closed; any later issue is a new edition, numbered so."
+   },
+   "stage": "longribbon"
+  },
+  {
+   "id": "comet-tail",
+   "name": "Comet Tail",
+   "category": "trails",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "A bright head and a long tapering tail when your Spark moves fast",
+   "onSpark": "A comet's tail of light that lengthens with speed and shortens at rest; tag at the tail's head.",
+   "source": "created-2026-11-25",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   },
+   "stage": "comet"
+  },
+  {
+   "id": "firefly-scatter",
+   "name": "Firefly Scatter",
+   "category": "trails",
+   "band": "Pocket",
+   "price": 2,
+   "embers": 20,
+   "sellingPoint": "Slow green-gold fireflies wandering around your Spark at rest",
+   "onSpark": "Slow fireflies that wander near the Spark and gather when it moves; first firefly carries the brass glint.",
+   "source": "created-2026-11-25",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   },
+   "stage": "fireflies"
+  },
+  {
+   "id": "moonlit-wake",
+   "name": "Moonlit Wake",
+   "category": "trails",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "A pale silver wake, like moonlight on water, behind your Spark",
+   "onSpark": "A pale wake that spreads behind the Spark and settles like light on water; tag at the wake's head.",
+   "source": "created-2026-11-25",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   },
+   "stage": "wake"
+  },
+  {
+   "id": "the-hearth-wrap",
+   "name": "The Hearth Wrap",
+   "category": "wraps",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "The flame wrapped warm and low, like a hearth kept through the night",
+   "onSpark": "The flame petals wrap close and warm, in the kind's colour deepened; tag woven at the wrap's seam.",
+   "source": "created-2026-11-25",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   },
+   "stage": "wrap-hearth"
+  },
+  {
+   "id": "the-storm-wrap",
+   "name": "The Storm Wrap",
+   "category": "wraps",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "The flame wrapped tall and restless, for Sparks who like weather",
+   "onSpark": "The flame stands tall and restless inside the wrap, never louder, only livelier; tag at the seam.",
+   "source": "created-2026-11-25",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   },
+   "stage": "wrap-storm"
+  },
+  {
+   "id": "the-petal-wrap",
+   "name": "The Petal Wrap",
+   "category": "wraps",
+   "band": "Pocket",
+   "price": 2,
+   "embers": 20,
+   "sellingPoint": "The flame wrapped in soft petal shapes, gentle at the edges",
+   "onSpark": "Petal-shaped flame edges, soft at rest; tag at the seam.",
+   "source": "created-2026-11-25",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   },
+   "stage": "wrap-petal"
+  },
+  {
+   "id": "the-return-path-wrap",
+   "name": "The Return-Path Wrap",
+   "category": "wraps",
+   "band": "Heirloom",
+   "price": 19,
+   "embers": null,
+   "sellingPoint": "A wrap woven with the road's spiral, issued for Moon 9 only",
+   "onSpark": "The flame wrapped in a spiral weave that follows the road's turn; tag at the seam, stamped with its Moon.",
+   "source": "created-2026-11-25",
+   "surface": "site",
+   "rarity": {
+    "type": "moon-window",
+    "issuedMoon": 9,
+    "note": "Issued for Moon 9 only — it retires at Moon 9's turn, and a retired wrap stays retired."
+   },
+   "stage": "wrap-spiral"
+  },
+  {
+   "id": "brightenings---the-first-set",
+   "name": "Brightenings — The First Set",
+   "category": "expressions",
+   "band": "Pocket",
+   "price": 2,
+   "embers": 20,
+   "sellingPoint": "Three ways your Spark brightens: greeting, delight, and a job well done",
+   "onSpark": "Nothing to wear — the Spark's light itself learns three new brightenings; the set is written 'purchased' in its record.",
+   "source": "created-2026-11-25",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "the-startle-set",
+   "name": "The Startle Set",
+   "category": "expressions",
+   "band": "Pocket",
+   "price": 2,
+   "embers": 20,
+   "sellingPoint": "A small honest startle, a peek-back, and the quick recover, for playful Sparks",
+   "onSpark": "The Spark's reactions gain a startle, a peek-back, and a quick recover; expression only, never a sound above its settings.",
+   "source": "created-2026-11-25",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "the-celebration-set",
+   "name": "The Celebration Set",
+   "category": "expressions",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "How your Spark celebrates a real completion: the rise, the ring, the settle",
+   "onSpark": "At real completions only, the Spark rises, rings its light once, and settles — celebration earned by the act, dressed by this set.",
+   "source": "created-2026-11-25",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "quiet-manners",
+   "name": "Quiet Manners",
+   "category": "expressions",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "The gentle set: a lowered glow, a slow approach, a patient wait",
+   "onSpark": "The Spark's quiet register deepens — lowered glow, slow approach, patient wait — for the hours that ask for less.",
+   "source": "created-2026-11-25",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "your-spark-in-stickers",
+   "name": "Your Spark, In Stickers",
+   "category": "stickers",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "Your own Spark's faces — its delight, its startle, its sleepy, its greeting — as a sticker pack for your messages",
+   "onSpark": "Made from your Spark's own seed: its expressions, in its colours, with its markings. The pack is a family; yours is the only one of yours — no other keeper's pack is the same.",
+   "source": "created-2026-11-25",
+   "surface": "site",
+   "rarity": {
+    "type": "seed-variant",
+    "note": "Seed variant — rendered through your Spark's own seed, so its exact tint and pattern are one-of-one for your Spark."
+   }
+  },
+  {
+   "id": "codex-glyph-stickers",
+   "name": "Codex Glyph Stickers",
+   "category": "stickers",
+   "band": "Pocket",
+   "price": 2,
+   "embers": 20,
+   "sellingPoint": "The Codex's own marks — the trigram, the spiral, the thirteen moons — as message stickers",
+   "onSpark": "A general set, the same for every keeper; the Spark wears nothing — these live in your messages.",
+   "source": "created-2026-11-25",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "moons-and-days-stickers",
+   "name": "Moons & Days Stickers",
+   "category": "stickers",
+   "band": "Pocket",
+   "price": 2,
+   "embers": 20,
+   "sellingPoint": "A sticker for each Moon and one for the Day Out of Time",
+   "onSpark": "A general set, the same for every keeper; made for marking days in messages.",
+   "source": "created-2026-11-25",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "the-road-stickers",
+   "name": "The Road Stickers",
+   "category": "stickers",
+   "band": "Pocket",
+   "price": 2,
+   "embers": 20,
+   "sellingPoint": "The road's small scenes — the gate, the lantern, the bridge — as stickers",
+   "onSpark": "A general set, the same for every keeper; scenes from the Traveller's road.",
+   "source": "created-2026-11-25",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "sparklight-emoji",
+   "name": "Sparklight Emoji",
+   "category": "stickers",
+   "band": "Pocket",
+   "price": 2,
+   "embers": 20,
+   "sellingPoint": "A small emoji set in the Spark's light — orb, flame, moon, star, seed",
+   "onSpark": "A general emoji set in gold on night; the same for every keeper.",
+   "source": "created-2026-11-25",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "observatory-night",
+   "name": "Observatory Night",
+   "category": "themes",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "Your private ground under the Observatory's sky — deep night, gold points of light",
+   "onSpark": "A theme for the keeper's private ground and home view: night ground, gold light, the sky kept real.",
+   "source": "created-2026-11-25",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "garden-morning",
+   "name": "Garden Morning",
+   "category": "themes",
+   "band": "Pocket",
+   "price": 2,
+   "embers": 20,
+   "sellingPoint": "The ground in early light — green, dew, and a low sun",
+   "onSpark": "A theme for the private ground: morning light over the beds and paths.",
+   "source": "created-2026-11-25",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "hearth-evening",
+   "name": "Hearth Evening",
+   "category": "themes",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "The ground at evening — warm windows, lamps lit, the day settling",
+   "onSpark": "A theme for the private ground at evening: warm light at the hearth and lamps.",
+   "source": "created-2026-11-25",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "moon-of-the-return-path",
+   "name": "Moon of the Return Path",
+   "category": "themes",
+   "band": "Heirloom",
+   "price": 19,
+   "embers": null,
+   "sellingPoint": "The ground under Moon 9's sky, issued for Moon 9 only",
+   "onSpark": "A theme for the private ground under the Return Path's sky; its tag is stamped with its Moon.",
+   "source": "created-2026-11-25",
+   "surface": "site",
+   "rarity": {
+    "type": "moon-window",
+    "issuedMoon": 9,
+    "note": "Issued for Moon 9 only — it retires at Moon 9's turn, and a retired theme stays retired."
+   }
+  },
+  {
+   "id": "the-keepers-bench",
+   "name": "The Keeper's Bench",
+   "category": "home",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "A bench on your own ground, where a walk can pause",
+   "onSpark": "Stands on the keeper's private ground; tag hung on a short cord from the bench's end.",
+   "source": "world-goods-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "the-reading-stone",
+   "name": "The Reading Stone",
+   "category": "home",
+   "band": "Pocket",
+   "price": 2,
+   "embers": 20,
+   "sellingPoint": "A low stone seat for the quiet edge of your ground",
+   "onSpark": "Stands at the ground's quiet edge; tag set flush into its front face.",
+   "source": "world-goods-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "the-resting-hammock",
+   "name": "The Resting Hammock",
+   "category": "home",
+   "band": "Heirloom",
+   "price": 19,
+   "embers": null,
+   "sellingPoint": "A hammock that sways gently on your ground, posts and all",
+   "onSpark": "Stands on its own posts on the private ground; tag tied to the near post.",
+   "source": "world-goods-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "edition",
+    "edition": "First Edition",
+    "issuedMoon": 8,
+    "issuedPatternDay": 221,
+    "note": "First Edition — issued Moon 8, Pattern Day 221. When this edition closes it stays closed; any later issue is a new edition, numbered so."
+   }
+  },
+  {
+   "id": "the-clearing-lamp",
+   "name": "The Clearing Lamp",
+   "category": "home",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "A warm lamp to look at when evening comes to your ground",
+   "onSpark": "The ground's standing evening piece; tag hung at the post's collar.",
+   "source": "world-goods-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "the-path-lanterns-set-of-three",
+   "name": "The Path Lanterns (set of three)",
+   "category": "home",
+   "band": "Pocket",
+   "price": 2,
+   "embers": 20,
+   "sellingPoint": "Three small lanterns to set along the path you walk most",
+   "onSpark": "Placed as a short run along a path; one tag on every lantern.",
+   "source": "world-goods-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "the-hearth-ring",
+   "name": "The Hearth Ring",
+   "category": "home",
+   "band": "Heirloom",
+   "price": 19,
+   "embers": null,
+   "sellingPoint": "A ring of stones with a small flame pictured at its centre",
+   "onSpark": "Stands on the private ground, its flame in the look of the thing only; tag set into the ring.",
+   "source": "world-goods-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "edition",
+    "edition": "First Edition",
+    "issuedMoon": 8,
+    "issuedPatternDay": 221,
+    "note": "First Edition — issued Moon 8, Pattern Day 221. When this edition closes it stays closed; any later issue is a new edition, numbered so."
+   }
+  },
+  {
+   "id": "path-stones-set-of-seven",
+   "name": "Path Stones (set of seven)",
+   "category": "home",
+   "band": "Pocket",
+   "price": 2,
+   "embers": 20,
+   "sellingPoint": "Seven cut stones laid as a path across your own ground",
+   "onSpark": "Laid as one run of path; tag set into the first stone.",
+   "source": "world-goods-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "the-garden-gate",
+   "name": "The Garden Gate",
+   "category": "home",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "A gate in its own arch frame to mark where a bed begins",
+   "onSpark": "Stands in its arch frame on the ground; tag hung from the latch.",
+   "source": "world-goods-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "the-stepping-bridge",
+   "name": "The Stepping Bridge",
+   "category": "home",
+   "band": "Heirloom",
+   "price": 19,
+   "embers": null,
+   "sellingPoint": "A small arched bridge, three paces long, for your ground",
+   "onSpark": "Stands over the ground's stream or hollow; tag on the near rail post.",
+   "source": "world-goods-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "edition",
+    "edition": "First Edition",
+    "issuedMoon": 8,
+    "issuedPatternDay": 221,
+    "note": "First Edition — issued Moon 8, Pattern Day 221. When this edition closes it stays closed; any later issue is a new edition, numbered so."
+   }
+  },
+  {
+   "id": "the-round-fountain",
+   "name": "The Round Fountain",
+   "category": "home",
+   "band": "Heirloom",
+   "price": 19,
+   "embers": null,
+   "sellingPoint": "A round stone fountain with water slowly circling to watch",
+   "onSpark": "The grandest standing piece on the shelf; tag hung on the rim.",
+   "source": "world-goods-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "edition",
+    "edition": "First Edition",
+    "issuedMoon": 8,
+    "issuedPatternDay": 221,
+    "note": "First Edition — issued Moon 8, Pattern Day 221. When this edition closes it stays closed; any later issue is a new edition, numbered so."
+   }
+  },
+  {
+   "id": "the-rain-barrel-and-dipper",
+   "name": "The Rain Barrel & Dipper",
+   "category": "home",
+   "band": "Pocket",
+   "price": 2,
+   "embers": 20,
+   "sellingPoint": "A barrel and dipper standing ready beside a bed or gate",
+   "onSpark": "Stands by a bed or gate; tag nailed to the top hoop.",
+   "source": "world-goods-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "the-young-orchard-tree",
+   "name": "The Young Orchard Tree",
+   "category": "home",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "A small green tree that stays the same through every season",
+   "onSpark": "Stands as an ornament tree on the ground; tag tied to the lowest branch.",
+   "source": "world-goods-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "the-vine-pergola",
+   "name": "The Vine Pergola",
+   "category": "home",
+   "band": "Heirloom",
+   "price": 19,
+   "embers": null,
+   "sellingPoint": "A shaded place to sit, with green woven over the top",
+   "onSpark": "A shaded seat-place on the ground; tag on the front post.",
+   "source": "world-goods-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "edition",
+    "edition": "First Edition",
+    "issuedMoon": 8,
+    "issuedPatternDay": 221,
+    "note": "First Edition — issued Moon 8, Pattern Day 221. When this edition closes it stays closed; any later issue is a new edition, numbered so."
+   }
+  },
+  {
+   "id": "the-threshold-stone",
+   "name": "The Threshold Stone",
+   "category": "home",
+   "band": "Pocket",
+   "price": 2,
+   "embers": 20,
+   "sellingPoint": "A smooth stone at your ground's entrance, marked with a small spiral",
+   "onSpark": "Stands at the ground's entrance; tag set into the stone's face.",
+   "source": "world-goods-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "the-token-shelf",
+   "name": "The Token Shelf",
+   "category": "home",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "A shelf in Their Home sized for the tokens your Spark has earned",
+   "onSpark": "Stands in Their Home as a frame only — what stands on it is earned, never bought; the shelf itself carries the tag.",
+   "source": "created-2026-11-25",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "the-hum-rail",
+   "name": "The Hum Rail",
+   "category": "home",
+   "band": "Pocket",
+   "price": 2,
+   "embers": 20,
+   "sellingPoint": "A slim rail where the hums your Spark has learned hang as small bells",
+   "onSpark": "A rail in Their Home; the bells on it are the learned hums themselves, earned and untagged.",
+   "source": "created-2026-11-25",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "the-chronicle-shelf",
+   "name": "The Chronicle Shelf",
+   "category": "home",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "A shelf for the year's chronicle — the days, kept in order",
+   "onSpark": "Stands in Their Home holding the chronicle the record itself writes; tag on the shelf's end.",
+   "source": "created-2026-11-25",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "comet-trail---spark!",
+   "name": "Comet Trail — SPARK!",
+   "category": "game",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "The game's comet trail: a bright head, a long tapering tail on the road",
+   "onSpark": "Worn by your Spark inside SPARK! only, in the game's own bright look; the game reads this catalogue later.",
+   "source": "created-2026-11-25",
+   "surface": "SPARK! game",
+   "rarity": {
+    "type": "open"
+   },
+   "stage": "comet"
+  },
+  {
+   "id": "the-wake-wrap---spark!",
+   "name": "The Wake Wrap — SPARK!",
+   "category": "game",
+   "band": "Pocket",
+   "price": 2,
+   "embers": 20,
+   "sellingPoint": "A wrap of woven light for the road, in the game's colours",
+   "onSpark": "Wraps your Spark inside SPARK!; cosmetic only — the road is exactly as hard, and exactly as fair.",
+   "source": "created-2026-11-25",
+   "surface": "SPARK! game",
+   "rarity": {
+    "type": "open"
+   },
+   "stage": "wrap-hearth"
+  },
+  {
+   "id": "game-expressions---spark!",
+   "name": "Game Expressions — SPARK!",
+   "category": "game",
+   "band": "Pocket",
+   "price": 2,
+   "embers": 20,
+   "sellingPoint": "The game's expression set: the woken grin, the chain delight, the near-miss wince",
+   "onSpark": "Your Spark's faces inside SPARK!, in the posters' bright family look.",
+   "source": "created-2026-11-25",
+   "surface": "SPARK! game",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "floating-isles-theme---spark!",
+   "name": "Floating Isles Theme — SPARK!",
+   "category": "game",
+   "band": "Heirloom",
+   "price": 19,
+   "embers": null,
+   "sellingPoint": "A world theme for the game's floating-island worlds: lush green, gold light",
+   "onSpark": "Themes the game's worlds for your Spark's runs; a look only — no level changes by a hair.",
+   "source": "created-2026-11-25",
+   "surface": "SPARK! game",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "victory-brightening---spark!",
+   "name": "Victory Brightening — SPARK!",
+   "category": "game",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "The brightening your Spark makes when the World Heart wakes",
+   "onSpark": "Plays at the Awakening inside SPARK!; the celebration is the game's, this is only its dress.",
+   "source": "created-2026-11-25",
+   "surface": "SPARK! game",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "chime-set---the-moon-tones",
+   "name": "Chime Set — The Moon Tones",
+   "category": "sound",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "Your Spark's small sounds tuned to the moons' own tones",
+   "onSpark": "Nothing to see; the chime takes the moons' tone family at chime size. Sound carries no tag — the settings line reads 'Moon Tones (purchased)'.",
+   "source": "catalogue-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "chime-set---hearth-and-copper",
+   "name": "Chime Set — Hearth & Copper",
+   "category": "sound",
+   "band": "Keeper",
+   "price": 7,
+   "embers": 75,
+   "sellingPoint": "Your Spark's chimes struck warm and low, like copper bowls by a hearth",
+   "onSpark": "A lower, rounder chime family; the one sound set that does not follow the kind — copper for everyone.",
+   "source": "catalogue-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "the-arrival-bell",
+   "name": "The Arrival Bell",
+   "category": "sound",
+   "band": "Pocket",
+   "price": 2,
+   "embers": 20,
+   "sellingPoint": "One clear small note when your Spark arrives beside you",
+   "onSpark": "One clear small note at arrival; written 'purchased' in the sound settings.",
+   "source": "catalogue-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "open"
+   }
+  },
+  {
+   "id": "episode-hums---the-first-shelf",
+   "name": "Episode Hums — The First Shelf",
+   "category": "sound",
+   "band": null,
+   "price": null,
+   "embers": null,
+   "sellingPoint": "The hums of the episodes your Spark has watched with you, performed at their tokens' home plates",
+   "onSpark": "Earned by watching, never sold: the hum is learned by the act, and no till carries it.",
+   "source": "activities-design-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "earned-only",
+    "note": "Earned, never sold — its scarcity is real days lived."
+   }
+  },
+  {
+   "id": "the-moon-hum-repertoire",
+   "name": "The Moon Hum Repertoire",
+   "category": "sound",
+   "band": null,
+   "price": null,
+   "embers": null,
+   "sellingPoint": "The hum of each Moon, learned as the Moons are kept with your Spark",
+   "onSpark": "Earned by keeping the Moons, never sold: a repertoire that exists only because the year was lived.",
+   "source": "activities-design-2026-11-23",
+   "surface": "site",
+   "rarity": {
+    "type": "earned-only",
+    "note": "Earned, never sold — its scarcity is real days lived."
+   }
+  }
+ ]
+}
