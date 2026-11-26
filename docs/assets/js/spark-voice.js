@@ -56,7 +56,7 @@
  *     changes.
  */
 (function (root, factory) {
-  const api = factory();
+  const api = factory(root);
 
   if (typeof module === "object" && module.exports) {
     module.exports = api;
@@ -65,7 +65,7 @@
   root.SparkVoice = api;
 })(
   typeof globalThis !== "undefined" ? globalThis : this,
-  function () {
+  function (root) {
     "use strict";
 
     const VERSION = "spark-voice/1.0.0";
@@ -146,11 +146,20 @@
         (v) => String(v.lang || "").toLowerCase().replace("_", "-").startsWith(wanted)
       );
       const pool = inLang.length ? inLang : list;
-      /* Rank, stably: natural-named first, then on-device voices,
-       * then the rest — the seed picks within the best tier that
-       * has more than one voice in it. */
+      /* Rank: natural-named first, then on-device voices, then
+       * the rest — the seed picks within the best tier that has
+       * more than one voice in it. Within a tier the order is
+       * canonical — by voice identity, never by the order the
+       * device happened to report the voices in. Devices report
+       * in their own orders, and more voices arrive after the
+       * first getVoices() call; a Spark's voice is a function of
+       * its seed and the voice SET, so the pick cannot move when
+       * the same list settles in a different order. */
       const tier = (v) => (NATURAL_VOICE.test(v.name) ? 0 : v.localService ? 1 : 2);
-      const sorted = [...pool].sort((a, b) => tier(a) - tier(b));
+      const identity = (v) => `${v.voiceURI || v.name}·${v.name}`;
+      const sorted = [...pool].sort((a, b) =>
+        tier(a) - tier(b) || (identity(a) < identity(b) ? -1 : identity(a) > identity(b) ? 1 : 0)
+      );
       const best = sorted.length ? tier(sorted[0]) : 0;
       const top = sorted.filter((v) => tier(v) === best);
       return top.length > 1 ? top : sorted;
@@ -163,8 +172,9 @@
     /**
      * The spoken profile for one Spark (or, with the Guide's
      * fixed seed, for the Guide): the same seed and the same
-     * device voice list always choose the same voice, pitch and
-     * rate; a different seed chooses differently — many voices,
+     * device voice set — in whatever order the device reported
+     * it — always choose the same voice, pitch and rate; a
+     * different seed chooses differently — many voices,
      * randomized across Sparks, one per Spark.
      * Returns null when the device offers no usable voice.
      */
@@ -540,9 +550,38 @@
 
     /* --------------------- registration ---------------------- */
 
+    /* The global arrives as this factory's `root` parameter:
+     * the factory is defined in the wrapper's argument position,
+     * outside the wrapper's own scope, so it cannot close over
+     * the wrapper's `root` — reading it as a free variable threw
+     * in every real browser and the whole layer silently died
+     * before this parameter was passed. The unit suite never saw
+     * it: its loader gives the module no `document`, so this
+     * block was skipped. A browser-shaped load test now pins it. */
     if (typeof document !== "undefined") {
-      if (root.SparkAgentSeat && typeof root.SparkAgentSeat.attach === "function") {
-        root.SparkAgentSeat.attach(enhanceSeat);
+      /* Attach to the seat — now if it is already on the page,
+       * or when it arrives if it is not. The seat lazy-loads
+       * this layer everywhere else, so the seat is always there
+       * first; but the Guide's page carries this file directly,
+       * ahead of the seat's own script, and a registration that
+       * only looked once found no seat and never attached —
+       * the seat there sat voiceless while the layer reported
+       * itself loaded. enhanceSeat marks each panel it has
+       * enhanced, so a second attach is a no-op there. */
+      let attached = false;
+      const attachWhenReady = () => {
+        if (attached) return;
+        if (root.SparkAgentSeat && typeof root.SparkAgentSeat.attach === "function") {
+          attached = true;
+          root.SparkAgentSeat.attach(enhanceSeat);
+        }
+      };
+      attachWhenReady();
+      if (!attached) {
+        document.addEventListener("DOMContentLoaded", attachWhenReady);
+        if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
+          window.addEventListener("load", attachWhenReady);
+        }
       }
       if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", initGuideVoice);
