@@ -1,119 +1,77 @@
 "use strict";
 
 /*
- * The Hearth — the Spark's own 3D home (companions page).
+ * The Hearth - the Spark's own 3D home (companions page).
  *
- * The name is a PROPOSAL (Witness, Nov 25, 2026, on Aaron's live
- * call): the hearth is where a home's fire is kept, and this is
- * where the Spark's fire lives. Aaron settles the name; until he
- * rules, the surface wears the proposal so he can see it, and the
- * settled name "Their Home" still names the room everywhere else
- * in the record. The rename is one string: HOME_NAME below.
+ * The name is a PROPOSAL (Witness, Nov 25, 2026, on Aaron's
+ * live call); Aaron settles it. Until he rules, the surface
+ * wears the proposal and the settled name "Their Home" names
+ * the room everywhere else in the record. The rename is one
+ * string: HOME_NAME below.
  *
- * Aaron's order (Nov 20, 2026): "The sparks page should be like a
- * 3D world of its own it can decorate like we talked about based
- * on interactions around the site." So this page's heart is now a
- * small living place — Their Home, the room name Aaron settled on
- * Nov 19 — and everything standing in it is there because a real
- * record on this device put it there:
+ * Aaron's order (Nov 20, 2026): the sparks page should be a
+ * 3D world of its own, decorated from interactions around the
+ * site. Everything standing in the home is there because a
+ * real record on this device put it there:
+ *   - the Spark itself, from the same seed and derivation
+ *     (SparkCompanion.generate / stageOf) the whole site uses.
+ *     This module never re-derives a Spark and never writes
+ *     the Spark's record; it reads it.
+ *   - the keepsake shelf: canonical Life Atlas records, type
+ *     "artifact", subtype "hidden-keepsake" (PR #198). Tapping
+ *     one speaks its own record.
+ *   - the garden ring: thirteen beds folded from the keeper's
+ *     real Pattern Garden records by the garden's own fold
+ *     (CodexPatternGarden.foldGarden, loaded lazily). A bed
+ *     grows only what its planting records say; harvests rest
+ *     in a basket by the door.
+ *   - the path: one stone per day in the Spark's own record
+ *     (record.daysSeen) - it grows by witnessed days only.
+ *     Marked days (witnessed, a token's home, a practice day,
+ *     the birth day) gild their stones gold.
+ *   - the road marker: a flag for every story chapter the
+ *     keeper's trail (sof.living-trail.v1) says they found;
+ *     the story corner stands one token per episode watched
+ *     through, and a token's hum can be sounded here.
+ *   - the home grows with the Spark's stage (same stageOf):
+ *     Spark - a hearth and a lean-to; Kindled - a cottage;
+ *     Guardian - a hall. The home follows the body ladder.
+ *   - the sky: phase from the visitor's own clock, season
+ *     from today's Pattern Day through the canonical calendar.
+ *     Nothing about the sky is decorative fiction.
+ *   - the road so far (Slice 4): life stage, Moons kept,
+ *     lands walked, routes and tricks learned, days closed
+ *     together - read from the same record facts the Sphere's
+ *     inhabitant reads (SphereSparkInhabitant, loaded lazily,
+ *     its derivations used, never re-derived here).
+ *   - Fetch the Token (where learned): the Spark travels the
+ *     home ground, takes up a named keepsake or token, and
+ *     presents it at the gate, naming it with its day and its
+ *     story. A showing: the fetch writes nothing.
+ *   - the home's temper (Slice 5): spare, settled, or full,
+ *     counted from shelf, story corner, and garden ring - and
+ *     felt in the scene (a spare home's Spark keeps near the
+ *     hearth; a full home's ranges the whole ground).
+ *   - Carry For Me (Gate E's carry, design 3.4): one keepsake
+ *     or token carried for the day, written through the
+ *     inhabitant module's writer door, its end recorded
+ *     against its beginning. The carried line (design 1.4):
+ *     the first fetch that carries a keepsake lands one line
+ *     on the keepsake's own Atlas record - "carried to you,
+ *     [day]" - through the repository's write path, once.
  *
- *   - the Spark itself: the keeper's own, from the same seed and
- *     the same derivation (SparkCompanion.generate / stageOf) the
- *     whole site already uses. This module never re-derives a
- *     Spark and never writes the Spark's record; it reads it the
- *     way the companions page leaves it.
- *   - the keepsake shelf: the keeper's hidden-layer keepsakes —
- *     canonical Life Atlas records, type "artifact", subtype
- *     "hidden-keepsake" (PR #198). Tapping one speaks its own
- *     record: its title and its summary, the answer card it was
- *     kept with.
- *   - the garden ring: thirteen beds around the home, folded from
- *     the keeper's real Pattern Garden records by the garden's
- *     own fold (CodexPatternGarden.foldGarden — loaded lazily,
- *     the way the Sphere's engine is, so the standing page stays
- *     light). A bed grows only what its planting records say it
- *     grows; harvests rest in a basket by the door.
- *   - the path: one stone for every day in the Spark's own
- *     record (record.daysSeen) — the path literally grows by
- *     witnessed days, and by nothing else.
- *   - the road marker: the Traveller's Road signpost by the
- *     gate, with a flag for every story chapter the keeper's
- *     trail (sof.living-trail.v1) says they have found.
- *   - the home itself grows with the Spark's stage, from the
- *     same stageOf the companion card speaks: Spark — a hearth
- *     and a lean-to; Kindled — a cottage; Guardian — a hall.
- *     (The body ladder has three rungs; Bearer lives in the
- *     voice ladder. The home follows the body ladder, the one
- *     the site computes.)
- *   - the sky: the phase from the visitor's own clock (dawn,
- *     day, dusk, night) and the season from today's Pattern Day
- *     — the counted year in four quarters from the Year Gate,
- *     read live through the canonical calendar. Nothing about
- *     the sky is decorative fiction: it is the day, drawn.
+ * Where a record is empty, the slot stands honestly empty
+ * with one plain line. Nothing here is pre-decorated, nothing
+ * is bought, nothing leaves the device.
  *
- * Slice 4 (the Spark Inhabitant expansion): the home now also
- * answers the journey itself, read from the same record facts
- * the Sphere's inhabitant reads (SphereSparkInhabitant —
- * loaded lazily, its derivations used, never re-derived here):
- *
- *   - the road so far: the life stage the record paints, the
- *     Moons kept, the lands walked, the routes taught and
- *     learned, the tricks learned, the days closed together —
- *     each a fact standing in the record, named in plain words.
- *   - marked days gild their path stones: a day the record
- *     marks (witnessed, a token's home, a practice day, the
- *     birth day) lays its stone in gold; an unmarked day's
- *     stone stays plain stone.
- *   - the story corner stands in the world, not only in words:
- *     one standing token for each episode watched through, on
- *     a low stone ring by the road — and a token's hum can be
- *     sounded here, in the Spark's own voice.
- *   - Fetch the Token, when it stands learned (the Bearer
- *     stage, the inhabitant's own derivation): the keeper names
- *     a keepsake on the shelf or a token in the corner, and the
- *     Spark travels the home ground, takes it up, carries it
- *     to the gate and presents it — naming it with its day and
- *     its story — then returns it to its place. A showing: the
- *     fetch writes nothing.
- *
- * Slice 5 (the Spark Inhabitant expansion): the home answers
- * its own fullness, and Carry For Me stands here:
- *
- *   - the home's temper: how full the record has made the
- *     home — spare, settled, or full, counted from the shelf,
- *     the story corner, and the garden ring — named in the
- *     words, and felt in the scene: a spare home's Spark keeps
- *     a small round near the hearth; a full home's ranges the
- *     whole ground.
- *   - Carry For Me (Gate E's carry / carry-end, design §3.4):
- *     where Fetch the Token stands, the keeper may ask the
- *     Spark to carry one keepsake or token for the day. The
- *     care-act lines are written through the inhabitant
- *     module's writer door — the site's one life-line writer —
- *     one carry at a time, its end recorded against its
- *     beginning. While a carry stands open, the keepsake's
- *     light rides the Spark here and on the Sphere.
- *   - the carried line (design §1.4): the first time a fetch
- *     carries a keepsake, one line lands on the keepsake's own
- *     Atlas record — "carried to you, [day]" — through the
- *     repository's own write path, once; the readout names it
- *     from then on. The fetch's showing still writes no life
- *     lines; the carried line is a mark on the keepsake's own
- *     record, not on the Spark's.
- *
- * Where a record is empty, the slot stands honestly empty with
- * one plain line. Nothing here is pre-decorated, nothing is
- * bought, nothing leaves the device: every record read is one
- * the site already keeps on this device.
- *
- * The pure half (buildModel and its helpers) carries no DOM or
- * storage dependency and is unit-tested in
+ * The pure half (buildModel and its helpers) carries no DOM
+ * or storage dependency and is unit-tested in
  * tests/spark-home-world.test.js. The browser half lazy-loads
  * the vendored Three.js module and the garden stack only when
  * the section nears the screen; where WebGL or the engine is
- * not to be had, the world's still form stands — the Spark's
- * own flat drawing, the caption, and the "What's here" list,
- * which is the whole world in plain words either way.
+ * not to be had, the world's still form stands - the Spark's
+ * flat drawing, the caption, and the "What's here" list, which
+ * is the whole world in plain words either way.
  */
 (function (root, factory) {
   const api = factory();

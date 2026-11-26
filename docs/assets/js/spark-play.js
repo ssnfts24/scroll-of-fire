@@ -1,109 +1,81 @@
 /**
- * Spark play — character and entertaining interactions
+ * Spark play - character and entertaining interactions
  * (Aaron's order, Nov 25, 2026, live call ~19:28 PST:
  * "Wear the Spark character a little bit. Maybe detail more."
  * and "Make their interactions and everything be more
- * entertaining." — "No, I mean on the site.")
+ * entertaining." - "No, I mean on the site.")
  *
- * The Spark already accompanies: it guides, offers, greets,
- * chases, and performs the tricks play teaches it (the ruled
- * play / care / tricks design, Nov 23, 2026). What it did not
- * yet do is read as a CHARACTER with a life of its own between
- * the keeper's touches, or answer those touches back with
- * anything of its own. This layer adds exactly that, on the
- * surfaces that are the Spark's home — the Companions page and
- * Their Home — and nowhere else:
- *
- *   - CHARACTER, A LITTLE MORE DETAILED. From the keeper's
- *     real seed, by the core's own hash and stream, the layer
- *     derives a mannerism (how this Spark idles and moves,
- *     weighted by its temperament), the form of the little
- *     sparks that gather around it when it lights up (Aaron's
- *     Nov 19 appearance ruling: no bubble, ever — it lights
- *     up like a spark, with little sparks forming around it),
- *     and the play it loves most. Every Spark differs; the
- *     derivation is a pure function of the seed, so the same
- *     Spark is the same character on every visit and device.
- *     Nothing here mints, renames, or alters the record: the
- *     identity is read, never written.
- *   - IDLE LIFE. Left alone, the Spark does small things on a
- *     sparse timer — its mannerism, a breath of glow, a peek —
- *     then settles. It never blocks, never opens anything,
- *     never speaks uninvited. The timer is a setTimeout chain
- *     measured in seconds, not a frame loop; an act is one
- *     class toggle, transform and opacity only. Reduced
- *     motion stills it entirely, a hidden tab sleeps it, and
- *     any touch from the keeper resets its clock.
+ * This layer gives the Spark a character with a life of its
+ * own between the keeper's touches, on the Spark's home
+ * surfaces - the Companions page and Their Home - and nowhere
+ * else:
+ *   - CHARACTER. From the keeper's real seed, by the core's
+ *     own hash and stream: a mannerism (weighted by its
+ *     temperament), the form of the little sparks that gather
+ *     around it when it lights up (Aaron's Nov 19 ruling: no
+ *     bubble, ever - it lights up like a spark, with little
+ *     sparks forming around it), and the play it loves most.
+ *     A pure function of the seed: the same Spark is the same
+ *     character on every visit and device. The identity is
+ *     read, never written; nothing here mints or renames.
+ *   - IDLE LIFE. On a sparse setTimeout chain (seconds, not a
+ *     frame loop) the Spark does small things - its mannerism,
+ *     a breath of glow, a peek - then settles. One class
+ *     toggle per act, transform and opacity only. It never
+ *     blocks, never opens anything, never speaks uninvited.
+ *     Reduced motion stills it entirely, a hidden tab sleeps
+ *     it, any touch from the keeper resets its clock.
  *   - ANSWERING BACK. A pet on the big stage is answered: the
  *     attendant little sparks burst in the Spark's own form,
- *     and its mannerism flashes with it. Things answer the
- *     Spark and the Spark answers back — both ways, in the
- *     body first.
- *   - TEACHABLE TRICKS, BY BREADTH. The ruled design teaches
- *     tricks by breadth of keeping, never by repetition in a
- *     day. The keeper can PRACTISE the kind signature together
- *     with the Spark here — the Spark shows it slowly, the
- *     keeper answers with a tap as it lands — and a practise
- *     counts once per Pattern Day. Practised on two different
- *     days, the trick is TAUGHT: remembered in this layer's
- *     own small local store, and performable from then on,
- *     beside the tricks the core already knows. Same-day
- *     repeats are honoured by the playing and write nothing.
- *   - THE ECHO DUET (the ruled design's §1.2, in miniature).
+ *     and its mannerism flashes with it.
+ *   - TEACHABLE TRICKS, BY BREADTH (the ruled play / care /
+ *     tricks design, Nov 23, 2026). The keeper can PRACTISE
+ *     the kind signature together with the Spark here; a
+ *     practise counts once per Pattern Day. Practised on two
+ *     different days, the trick is TAUGHT: remembered in this
+ *     layer's own small local store (sof.spark-play.v1), and
+ *     performable from then on. Same-day repeats write nothing.
+ *   - THE ECHO DUET (the ruled design's 1.2, in miniature).
  *     The Spark sounds a short phrase on four lit stones in
- *     its seed colours; the keeper echoes it. Each finished
- *     round grows the phrase by one. A miss is gentle: the
- *     Spark shows it again, slower — "watch me" — and nothing
- *     is lost. The first finished phrase of three teaches the
- *     duet itself, kept the same local way.
+ *     its seed colours; the keeper echoes it; each finished
+ *     round grows the phrase by one. A miss is gentle - shown
+ *     again, slower, "watch me" - and nothing is lost.
  *   - CELEBRATIONS AT REAL COMPLETIONS ONLY. This layer
  *     listens for the same real events the presence layer
- *     celebrates — a practice sealed on the practice page, a
- *     witness saved — and answers on the big stage: a burst
- *     of its little sparks, its delight, one line. There is
- *     no celebrate button anywhere in this layer, and nothing
- *     here fires for showing up.
+ *     celebrates (a practice sealed, a witness saved) and
+ *     answers on the big stage. No celebrate button exists
+ *     here, and nothing fires for showing up.
  *   - THE GREETING. Once per Pattern Day, Their Home answers
- *     the Spark's arrival with a shimmer across the stage —
- *     the house greeting its own. A reading, not a reward:
- *     it writes nothing but the day it last shimmered, so it
- *     can never become a streak.
+ *     the Spark's arrival with a shimmer across the stage. A
+ *     reading, not a reward: it writes only the day it last
+ *     shimmered, so it can never become a streak.
  *   - THE MOON-TURN HARVEST CARD (phase 2, adopted by Aaron
  *     the same evening). At each Moon's turn the Spark
  *     composes the keeper a card from the days actually
- *     witnessed together in that Moon — the kept days, the
- *     practices sealed, and the keeper's own words from their
- *     Atlas entries, arranged back to them. Record facts
- *     only: a thin Moon yields an honestly spare card, a Moon
- *     with nothing witnessed composes nothing, and nothing
- *     absent is ever named.
+ *     witnessed together in that Moon - kept days, practices
+ *     sealed, and the keeper's own words from their Atlas
+ *     entries. Record facts only: a thin Moon yields an
+ *     honestly spare card, an empty Moon composes nothing,
+ *     and nothing absent is ever named.
  *   - KIND-ELEMENT NOTICING (phase 2, the same adoption). A
- *     Spark's kind leans into its element from the kept
- *     record only: a Water Spark remembers the rain and
- *     watering days the keeper's own entries speak of, a
- *     Light Spark the sunrise ones. No new data is collected,
- *     nothing is fetched, and where the record holds nothing
- *     of its element, the Spark says nothing about it.
+ *     Spark's kind leans into its element from the kept record
+ *     only - a Water Spark remembers the rain in the keeper's
+ *     own entries, a Light Spark the sunrise ones. No new data
+ *     is collected; where the record holds nothing of its
+ *     element, the Spark says nothing about it.
  *
- * The fences, by construction:
- *   - Companion layer only. No protected file is touched; the
- *     Sphere itself is never asked to react — the Spark's own
- *     surfaces do the answering.
- *   - Performance is a fence: this module makes no
- *     layout-measuring call of any kind, does no per-frame
- *     work, and its bursts are a bounded handful of nodes
- *     removed within two seconds.
- *   - Sound only after the keeper's own tap (the duet's Start
- *     button), subtle, and never when the standing sound
- *     switch on this device is off. Speech is not depended
- *     on: every line here is text in a live region first, so
- *     the spoken layer — when the keeper has it on — can pick
- *     the words up, and everything works whole without it.
- *   - Children's rules unchanged: nothing here opens talking,
- *     nothing leaves the device, the store is this device's
- *     own local storage beside the Spark's record.
- *   - No negative absence framing anywhere. A return is met
- *     the standing way: the place was kept.
+ * The fences, by construction: companion layer only - no
+ * protected file is touched and the Sphere itself is never
+ * asked to react. Performance is a fence: no layout-measuring
+ * call of any kind, no per-frame work, bursts are a bounded
+ * handful of nodes removed within two seconds. Sound only
+ * after the keeper's own tap, subtle, and never when the
+ * standing sound switch on this device is off. Speech is not
+ * depended on: every line is text in a live region first.
+ * Children's rules unchanged: nothing here opens talking,
+ * nothing leaves the device. No negative absence framing
+ * anywhere: a return is met the standing way - the place
+ * was kept.
  */
 (function (root, factory) {
   "use strict";
