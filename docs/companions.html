@@ -29,7 +29,7 @@
   <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
   <link rel="stylesheet" href="assets/css/social-bridge.css">
   <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261122-1">
-  <link rel="stylesheet" href="assets/css/spark-home-world.css?v=20261120-1">
+  <link rel="stylesheet" href="assets/css/spark-home-world.css?v=20261125-1">
   <link rel="stylesheet" href="assets/css/spark-play.css?v=20261125-1">
   <link rel="stylesheet" href="assets/css/cartoon-scenes.css?v=20261120-1">
 <link rel="stylesheet" href="assets/css/story-layer.css?v=20261120-1">
@@ -50,7 +50,7 @@
   <script defer src="assets/js/spark-companions-page.js?v=20261122-1"></script>
   <script defer src="assets/js/spark-bundle.js?v=20261119-1"></script>
   <script defer src="assets/js/spark-companions-travel.js?v=20261119-1"></script>
-  <script defer src="assets/js/spark-home-world.js?v=20261124-3"></script>
+  <script defer src="assets/js/spark-home-world.js?v=20261125-1"></script>
   <script defer src="assets/js/spark-play.js?v=20261125-1"></script>
   <script defer src="assets/js/spark-passport.js?v=20261122-1"></script>
   <link rel="stylesheet" href="assets/css/spark-agent-seat.css?v=20261120-2">
@@ -261,27 +261,43 @@
       </div>
     </section>
 
-    <!-- Their Home: the Spark's own 3D world, decorated only by
+    <!-- The Hearth: the Spark's own 3D home, decorated only by
          what the keeper's real records on this device say. The
-         stage stands when the section nears the screen; the list
-         under it is the whole world in plain words, either way. -->
+         name is Witness's proposal (Nov 25, 2026) — the hearth is
+         where a home's fire is kept, and this is where the Spark's
+         fire lives; Aaron settles the name. The stage stands when
+         the section nears the screen; the list under it is the
+         whole home in plain words, either way. -->
     <section id="spark-home" aria-labelledby="spark-home-title">
-      <h2 id="spark-home-title">Their Home</h2>
+      <h2 id="spark-home-title">The Hearth — where your Spark lives</h2>
       <p class="spark-note">
-        This is where your Spark lives: a small world of its own, and
-        everything standing in it was put there by your real days on
-        this site. The path grows a stone for every day you have kept
-        together. The shelf holds the keepsakes your Spark has found.
-        The thirteen beds around the house grow what the Pattern
-        Garden says they grow. The house itself grows as your Spark
-        grows. Nothing here is decoration bought or faked — an empty
+        This is your Spark&rsquo;s home: a real room of its own, with a
+        hearth, a resting place, room to roam and play, and a round
+        window whose sky is today&rsquo;s. Everything standing in it was
+        put there by your real days on this site. The path across the
+        floor grows a stone for every day you have kept together. The
+        shelves hold the keepsakes your Spark has found and the
+        tokens of episodes watched through. The thirteen planters
+        grow what the Pattern Garden says they grow. The room
+        furnishes itself further as your Spark grows. Goods from the
+        shop can stand here too — the ones that are yours, worn and
+        placed — and catalogue goods can be tried in the room as a
+        preview: shown, not bought, while the till is dark. An empty
         place simply says so, and waits.
       </p>
+      <p class="spark-note">
+        <em>The name is a proposal, and it is Aaron&rsquo;s to settle:
+        the hearth is where a home&rsquo;s fire is kept, and this is
+        where the Spark&rsquo;s fire lives. Until he rules, the room
+        the record calls Their Home wears the proposed name here so
+        he can see it.</em>
+      </p>
       <div class="spark-home-stage" id="spark-home-stage" role="img"
-           aria-label="A small 3D world: your Spark's home, its garden ring, the path of kept days, and the sky of today. Everything in it is listed in plain words below."></div>
-      <p class="spark-home-caption" id="spark-home-caption">Their Home — the sky is read live from the calendar when the world stands.</p>
-      <p class="spark-home-readout" id="spark-home-readout" role="status" aria-live="polite">The world is waking…</p>
-      <p class="spark-home-hint">Drag to look around. Tap a thing in the world — or in the list below — to hear what it is. Tap your Spark itself and it answers: first with the day as it stands, then in its own voice.</p>
+           aria-label="A small 3D room: your Spark's home — a hearth, its shelves and planters, the path of kept days across the floor, and today's sky in the round window. Everything in it is listed in plain words below."></div>
+      <p class="spark-home-caption" id="spark-home-caption">The Hearth — the sky is read live from the calendar when the home stands.</p>
+      <p class="spark-home-readout" id="spark-home-readout" role="status" aria-live="polite">The home is waking…</p>
+      <p class="spark-home-hint">Drag to look around the room. Tap a thing in the room — or in the list below — to hear what it is. Tap your Spark itself and it answers: first with the day as it stands, then in its own voice.</p>
+      <div class="spark-home-doors" id="spark-home-doors" aria-label="The doors of the home — the site's real pages"></div>
       <ul class="spark-home-list" id="spark-home-list"></ul>
       <div class="spark-passport-door">
         <h3 style="margin:14px 0 4px">Is your Spark on your phone?</h3>
