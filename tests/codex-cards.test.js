@@ -625,6 +625,47 @@ test("album interactivity (design §13): tap sounds and turns, hold shows lineag
     "reduced motion stills the kind's motion; states still change");
 });
 
+test("artwork window: art is derived from each card's own record — deterministic, distinct, self-contained", () => {
+  const moon = Cards.cardById("moon-08");
+  const a = Cards.cardArtSVG(moon);
+  assert.equal(Cards.cardArtSVG(moon), a, "the same card draws the same sky on every device");
+  assert.ok(a.startsWith("<svg"), "the art is an inline drawing, not an external image");
+  assert.ok(!/https?:|<image|url\(http/.test(a), "no external reference is ever fetched");
+  assert.ok(a.includes(moon.art.palette[1]), "a Moon's art is drawn in its element palette");
+  assert.notEqual(Cards.cardArtSVG(Cards.cardById("moon-01")), a, "each Moon's phase in the thirteen differs");
+  const word = Cards.cardArtSVG(Cards.cardById("word-ruach"));
+  assert.ok(word.includes("רוּחַ"), "a Word's artwork window carries the word itself");
+  const kind = Cards.cardById("kind-water");
+  assert.notEqual(Cards.cardArtSVG(kind, { hue: 200 }), Cards.cardArtSVG(kind),
+    "a seed-variant Kind's orb answers its keeper's hue");
+  assert.notEqual(Cards.cardArtSVG(moon, { dim: true }), a, "the silhouette a missing card wears is its own dim drawing");
+  const fc = Cards.firstCardFor({ seed: "spark1-8-217-1-iuebk69z" }, "Selor");
+  const firstArt = Cards.firstCardArtSVG(fc);
+  assert.ok(firstArt.startsWith("<svg") && !/https?:|<image/.test(firstArt), "the First Card's art is derived the same way");
+  assert.equal(Cards.firstCardArtSVG(fc), firstArt, "the First Card's art is deterministic");
+});
+
+test("album faces (Aaron, Nov 25 2026): cards wear a trading card's anatomy — banner, art window, stamps, flip in frame", () => {
+  const album = read("docs/assets/js/codex-card-album.js");
+  const css = read("docs/assets/css/codex-cards.css");
+  assert.match(album, /tcard__banner/, "a name banner heads the card");
+  assert.match(album, /tcard__art/, "an artwork window sits under the banner");
+  assert.match(album, /Cards\.cardArtSVG\(card/, "the window is filled from the card's own record");
+  assert.match(album, /rarityMark\(card\)/, "kind and rarity marks ride the banner");
+  assert.match(album, /setNumber\(card\)/, "set name and card number are read from the registry");
+  assert.match(album, /foundStamp\(copy\)/, "the found stamp is read from the copy's real record");
+  assert.match(album, /"Moon " \+ f\.moon/, "the found stamp names the Moon it was found in, from the record");
+  assert.match(album, /" · PD " \+ \(f\.patternDay/, "the found stamp names the Pattern Day it was found, from the record");
+  assert.match(album, /silhouetteFace\(card/, "uncollected cards stand as silhouettes of the same frame");
+  assert.match(album, /\{ dim: true \}/, "a silhouette's art is the dim drawing, never a lit face");
+  assert.match(album, /Never tradable/, "the First Card is sealed never-tradable on its face");
+  assert.match(album, /Cards\.firstCardArtSVG\(fc\)/, "the First Card's window is its Spark's orb");
+  assert.match(css, /\.tcard__inner \{[^}]*aspect-ratio: 5 \/ 7/, "the frame is a portrait trading card");
+  assert.match(css, /\.codex-card\.is-game \.tcard__inner \{ transform: rotateY\(180deg\); \}/,
+    "the card turns over inside its own frame");
+  assert.match(css, /backface-visibility: hidden/, "each face is a real side of the card");
+});
+
 /* ------------------------- page wiring ------------------------- */
 
 test("wiring: the find flow rides the three real surfaces; the album stands", () => {
