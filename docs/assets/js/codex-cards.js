@@ -867,6 +867,119 @@
     return { by: "b", cardId: pick, expectedHash: stateHash(state) };
   }
 
+  /* ------------------------- the artwork window ------------------------- */
+
+  // Derived art for the card's artwork window (design §13: a card's
+  // face is computed from the record, not a fixed image). Every card's
+  // art is drawn from its own data — the element palette, the Moon and
+  // its phase in the thirteen, the kind's hue range, the word itself —
+  // by deterministic string building: the same card draws the same sky
+  // on every device, and no external image is ever fetched. `dim`
+  // draws the silhouette a missing card wears in the album.
+  function artColors(card, dim) {
+    if (dim) return { deep: "#0a0d18", accent: "#39415e", ivory: "#59617c", glow: "#232838" };
+    const pal = (card && card.art && card.art.palette) || ["#0b1026", "#d99545"];
+    return { deep: pal[0], accent: pal[1], ivory: "#f4f1e8", glow: pal[1] };
+  }
+
+  function starField(rand, n, color) {
+    let s = "";
+    for (let i = 0; i < n; i++) {
+      s += '<circle cx="' + (rand() * 200).toFixed(1) + '" cy="' + (rand() * 100).toFixed(1)
+        + '" r="' + (0.5 + rand() * 0.9).toFixed(2) + '" fill="' + color
+        + '" opacity="' + (0.25 + rand() * 0.6).toFixed(2) + '"/>';
+    }
+    return s;
+  }
+
+  function dotRing(cx, cy, r, count, color, opacity, dotR) {
+    let s = "";
+    for (let i = 0; i < count; i++) {
+      const a = (i / count) * Math.PI * 2 - Math.PI / 2;
+      s += '<circle cx="' + (cx + r * Math.cos(a)).toFixed(1) + '" cy="' + (cy + r * Math.sin(a)).toFixed(1)
+        + '" r="' + dotR + '" fill="' + color + '" opacity="' + opacity + '"/>';
+    }
+    return s;
+  }
+
+  function orbArt(cx, cy, hue, colors, rand) {
+    const gid = "orb" + Math.round(hue);
+    let s = '<defs><radialGradient id="' + gid + '">'
+      + '<stop offset="0%" stop-color="hsl(' + hue + ' 85% 74%)"/>'
+      + '<stop offset="55%" stop-color="hsl(' + hue + ' 72% 48%)"/>'
+      + '<stop offset="100%" stop-color="hsl(' + hue + ' 70% 40%)" stop-opacity="0"/></radialGradient></defs>';
+    s += '<circle cx="' + cx + '" cy="' + cy + '" r="42" fill="url(#' + gid + ')" opacity="0.5"/>';
+    s += '<circle cx="' + cx + '" cy="' + cy + '" r="23" fill="url(#' + gid + ')"/>';
+    s += '<ellipse cx="' + cx + '" cy="' + cy + '" rx="54" ry="17" fill="none" stroke="' + colors.accent
+      + '" stroke-width="1.2" opacity="0.65" transform="rotate(-18 ' + cx + ' ' + cy + ')"/>';
+    for (let i = 0; i < 3; i++) {
+      const a = rand() * Math.PI * 2;
+      const ex = cx + 54 * Math.cos(a), ey = cy + 17 * Math.sin(a);
+      const rx = ex - cx, ry = ey - cy;
+      const ca = Math.cos(-18 * Math.PI / 180), sa = Math.sin(-18 * Math.PI / 180);
+      s += '<circle cx="' + (cx + rx * ca - ry * sa).toFixed(1) + '" cy="' + (cy + rx * sa + ry * ca).toFixed(1)
+        + '" r="2" fill="' + colors.ivory + '"/>';
+    }
+    return s;
+  }
+
+  function cardArtSVG(card, opts) {
+    opts = opts || {};
+    const dim = !!opts.dim;
+    const colors = artColors(card, dim);
+    const gid = "sky-" + String(card.id || "card").replace(/[^a-z0-9-]/g, "") + (dim ? "-dim" : "");
+    const rand = mulberry32(hashString("art:" + card.id));
+    let s = '<svg viewBox="0 0 200 140" role="img" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid slice">';
+    s += '<defs><linearGradient id="' + gid + '" x1="0" y1="0" x2="0" y2="1">'
+      + '<stop offset="0%" stop-color="' + colors.deep + '"/>'
+      + '<stop offset="100%" stop-color="' + colors.glow + '"/></linearGradient></defs>';
+    s += '<rect width="200" height="140" fill="url(#' + gid + ')"/>';
+    s += starField(rand, dim ? 8 : 16, colors.ivory);
+    if (card.set === "moons") {
+      const idx = card.moonAffinity[0];
+      const lit = idx / 13; // the Moon's place in the thirteen reads as its phase
+      s += dotRing(100, 64, 46, 28, colors.accent, dim ? 0.35 : 0.55, 1.3);
+      s += '<circle cx="100" cy="64" r="27" fill="#10182e" stroke="' + colors.accent + '" stroke-width="1.2"/>';
+      s += '<defs><clipPath id="' + gid + '-clip"><circle cx="100" cy="64" r="27"/></clipPath></defs>';
+      s += '<g clip-path="url(#' + gid + '-clip)"><circle cx="100" cy="64" r="27" fill="' + colors.accent + '" opacity="' + (dim ? 0.25 : 0.9) + '"/>'
+        + '<circle cx="' + (100 + (1 - 2 * lit) * 30).toFixed(1) + '" cy="58" r="24" fill="' + colors.deep + '" opacity="0.88"/></g>';
+      s += '<path d="M0 128 Q100 112 200 128 L200 140 L0 140 Z" fill="' + colors.deep + '" opacity="0.75"/>';
+    } else if (card.set === "words" && card.word) {
+      s += dotRing(100, 62, 48, Math.max(card.hum.beats || 3, 3), colors.accent, dim ? 0.35 : 0.6, 1.8);
+      s += '<text x="100" y="80" text-anchor="middle" font-family="serif" font-size="46" fill="' + colors.ivory + '">' + card.word.hebrew + "</text>";
+      s += '<text x="100" y="112" text-anchor="middle" font-family="serif" font-size="11" letter-spacing="3" fill="' + colors.accent + '">' + card.word.translit.toUpperCase() + "</text>";
+    } else if (card.set === "kinds" && card.kind) {
+      const hue = opts.hue != null ? opts.hue : Math.round((card.art.hueRange[0] + card.art.hueRange[1]) / 2);
+      s += orbArt(100, 66, hue, colors, rand);
+    }
+    s += "</svg>";
+    return s;
+  }
+
+  // The First Card's art: its Spark's orb in the kind's hue, ringed by
+  // the thirteen Moons it was met among. fc is a firstCardFor() result.
+  function firstCardArtSVG(fc, opts) {
+    opts = opts || {};
+    const dim = !!opts.dim;
+    const moon = MOONS[fc.moon - 1];
+    const colors = dim
+      ? { deep: "#0a0d18", accent: "#39415e", ivory: "#59617c", glow: "#232838" }
+      : { deep: "#141021", accent: ELEMENT_PALETTES[moon.element][1], ivory: "#f4f1e8", glow: ELEMENT_PALETTES[moon.element][0] };
+    const gid = "sky-first" + (dim ? "-dim" : "");
+    const rand = mulberry32(hashString("art:" + fc.instanceId));
+    const hue = opts.hue != null ? opts.hue : Math.round((fc.hueRange[0] + fc.hueRange[1]) / 2);
+    let s = '<svg viewBox="0 0 200 140" role="img" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid slice">';
+    s += '<defs><linearGradient id="' + gid + '" x1="0" y1="0" x2="0" y2="1">'
+      + '<stop offset="0%" stop-color="' + colors.deep + '"/>'
+      + '<stop offset="100%" stop-color="' + colors.glow + '"/></linearGradient></defs>';
+    s += '<rect width="200" height="140" fill="url(#' + gid + ')"/>';
+    s += starField(rand, dim ? 8 : 16, colors.ivory);
+    s += dotRing(100, 66, 48, 13, colors.accent, dim ? 0.35 : 0.6, 1.6);
+    s += orbArt(100, 66, hue, colors, rand);
+    s += "</svg>";
+    return s;
+  }
+
   /* ------------------------- windows ------------------------- */
 
   // A Moon-window card is findable in its own Moon (design §3): the
@@ -890,6 +1003,6 @@
     consonanceClass, intervalClass, harmonizesWith,
     effectiveMoon, moonTurnOffset, moonTurnInfo, dailyTable, fieldAnswer,
     DECK_MAX, GATHER_CAP, SKY_SLOTS, CROSS_TRIAD_COST, PLAYS_PER_MOON_TURN,
-    isInWindow
+    isInWindow, cardArtSVG, firstCardArtSVG
   };
 });
