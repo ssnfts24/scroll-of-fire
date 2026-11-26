@@ -19,6 +19,29 @@ body.spark-menu-present .spark-seat {
   display: none;
 }
 
+/* The corner-clearance rule (companion layer, Nov 25, 2026):
+   the fixed corner pills — this seat and the Sound of the
+   Day toggle (heaven-sound.js) — share the bottom-left
+   corner and must never cover the page's own controls.
+   Aaron's screenshot showed both pills lying across an
+   album card's buttons in Their Home. Each layer that
+   stands a pill there marks the body, and the page grows
+   bottom clearance at least the stack's height, so the
+   last controls on the page can always scroll clear of
+   the stack. Where both stand, the seat stacks above the
+   toggle instead of lying across it. */
+body.spark-seat-on {
+  padding-bottom: 4.25rem;
+}
+
+body.heaven-toggle-on .spark-seat {
+  bottom: 4.1rem;
+}
+
+body.heaven-toggle-on.spark-seat-on {
+  padding-bottom: 7.75rem;
+}
+
 /* The conversation hosted inside the Spark's panel: flush,
    full width of the menu, no corner shadow of its own. */
 .spark-panel-talk .spark-seat-panel {
