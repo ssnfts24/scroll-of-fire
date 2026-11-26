@@ -316,6 +316,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/css/one-word.css",
+      "sha256": "d1bd80614689aa5b72987f3781ae8be044b8926820a364d813a507dd0dfb1b23",
+      "publicUrl": "https://codexofreality.org/assets/css/one-word.css",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/css/paths.css",
       "sha256": "f4f749ee5599bfebc29047e3402cc10258c9618ac5555d8f476c042710fa071f",
       "publicUrl": "https://codexofreality.org/assets/css/paths.css",
@@ -617,7 +623,7 @@
     },
     {
       "path": "docs/assets/data/codex-story.json",
-      "sha256": "bd5cdef8c849341987fa4e67d87be529375b2d83a6b2d976310a1c3c02b8a6b5",
+      "sha256": "4ed8430ac203672121ecf2f3a49c2e91f970171ba8c0c483a085b093f454e779",
       "publicUrl": "https://codexofreality.org/assets/data/codex-story.json",
       "status": "operational"
     },
@@ -659,7 +665,7 @@
     },
     {
       "path": "docs/assets/data/link-graph.json",
-      "sha256": "3c5647db0a97e7a6eecb93234455dc01c3c9db79a1a3c2c04b0c889536361442",
+      "sha256": "91a72e2a22eed4ef3e19404f864d2062396f56a24aee305b668764924a7d7f30",
       "publicUrl": "https://codexofreality.org/assets/data/link-graph.json",
       "status": "operational"
     },
@@ -676,8 +682,14 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/data/one-word-words.json",
+      "sha256": "000f2fe1f444d16b82d88453d8c38941b8d1f723bd6236737070a0c4c8fecd95",
+      "publicUrl": "https://codexofreality.org/assets/data/one-word-words.json",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/data/page-registry.json",
-      "sha256": "ce847e734ba844c09110a49446a3c484a5acbbf6cdb831f28e69952fca745376",
+      "sha256": "d8348648240f1a73903cda85ccf2b704aece6d3c7d48fd9b018a991a9ec4461b",
       "publicUrl": "https://codexofreality.org/assets/data/page-registry.json",
       "status": "operational"
     },
@@ -2560,6 +2572,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/js/one-word.js",
+      "sha256": "16fe67294a33d77ac8a554db98cedc6f8c56886b85ae4421fec3ddc49518ffd0",
+      "publicUrl": "https://codexofreality.org/assets/js/one-word.js",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/js/oracle/oracle-aspects.js",
       "sha256": "bc41cb21e0b2a7833adf7dcd03800ef91873b7cc0e12ff01fd9809003afe2ccf",
       "publicUrl": "https://codexofreality.org/assets/js/oracle/oracle-aspects.js",
@@ -2855,7 +2873,7 @@
     },
     {
       "path": "docs/assets/js/spark-relations.js",
-      "sha256": "26c9e8188c9c88d053138d10a3ac10633b95d753b4a515c2a6fee36e67f18db7",
+      "sha256": "16f25ffab0a7c876a5f17361c380d6acc71c385907e4db5eb450922174571070",
       "publicUrl": "https://codexofreality.org/assets/js/spark-relations.js",
       "status": "operational"
     },
@@ -3311,7 +3329,7 @@
     },
     {
       "path": "docs/assets/js/world-lands.js",
-      "sha256": "b918593dc38616510ce8c3bd07505a910a410b7221464df1c011ef5b88f8319c",
+      "sha256": "52a59022c93a77093fd22393e8ea4324a376c257a05062ddd6c71167596b2efe",
       "publicUrl": "https://codexofreality.org/assets/js/world-lands.js",
       "status": "operational"
     },
@@ -4415,7 +4433,7 @@
     },
     {
       "path": "docs/assets/search/atlas.json",
-      "sha256": "b2447b65a96f1c9326ae60c5f47aee77eb565d486319fef875330fb4d2a134b2",
+      "sha256": "0b1763f465ef2569090d853d7191cbc13a8278eb743737b02a916945f9c790b4",
       "publicUrl": "https://codexofreality.org/assets/search/atlas.json",
       "status": "operational"
     },
@@ -4433,13 +4451,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "f4f3edacd561becab559f7aea47b7de213ea776eea61458db008769753ad6707",
+      "sha256": "6e64050f5bfce6c45caa377eee3e218ee77f5edecf8403b3910d9e1cd8798c03",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "7d81f53384a994c12df266b3c1ce17c51a10923f995138d235a7b38e9a88f6d4",
+      "sha256": "039017a7b4641bdda05de1492d9351eb2691f9ea68aa28f1d874a2b3d4bce082",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -4499,7 +4517,7 @@
     },
     {
       "path": "docs/codex-atlas.html",
-      "sha256": "899ea394ed8496cd5cf8498654c7286ace8eadf039661b081798421fdca06fec",
+      "sha256": "9dcc0396cbc3a9495730c3c482458dc2ee8c19b2aee28708be3c2010611bcf1e",
       "publicUrl": "https://codexofreality.org/codex-atlas.html",
       "status": "operational"
     },
@@ -4553,7 +4571,7 @@
     },
     {
       "path": "docs/data/site-catalog.json",
-      "sha256": "c6f95c38b9bcb06c90568b7f07ab36d28b61983af5c111a72e00214e5650e5a6",
+      "sha256": "a32ddf9b11bf59233e00f685a05218769f3b24bcedb54153665d5804d4f2fab6",
       "publicUrl": "https://codexofreality.org/data/site-catalog.json",
       "status": "operational"
     },
@@ -4601,7 +4619,7 @@
     },
     {
       "path": "docs/glossary.html",
-      "sha256": "66c69ff1d216d718c87f9f8fd56d3238792da562ae639289fae8e428006b52b3",
+      "sha256": "d808a5aa9ab002a3279028f27f64406d9124a608fd550494b5cb50a3b0ba2da5",
       "publicUrl": "https://codexofreality.org/glossary.html",
       "status": "operational"
     },
@@ -4687,6 +4705,12 @@
       "path": "docs/offline.html",
       "sha256": "9fafbb91ad93a30698b994add122427edf9bdb06fa730d892944047572e7a4b4",
       "publicUrl": "https://codexofreality.org/offline.html",
+      "status": "operational"
+    },
+    {
+      "path": "docs/one-word.html",
+      "sha256": "910686e1628d9cc9c05353f0aa843c94190d68172f95956e7489b29897ec6777",
+      "publicUrl": "https://codexofreality.org/one-word.html",
       "status": "operational"
     },
     {
