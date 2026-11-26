@@ -1637,14 +1637,14 @@
      "area": "systems"
     },
     {
+     "path": "witness.html",
+     "title": "Witness",
+     "area": "artifacts"
+    },
+    {
      "path": "episodes.html",
      "title": "The Episode Library",
      "area": "living-time"
-    },
-    {
-     "path": "one-word.html",
-     "title": "One Word a Day — a Hebrew word for your Pattern Day",
-     "area": "scroll-scripture"
     }
    ],
    "in": [
@@ -2313,18 +2313,13 @@
      "area": "archive"
     },
     {
-     "path": "index.html",
-     "title": "Codex of Reality",
-     "area": "codex"
-    },
-    {
      "path": "glossary.html",
      "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
      "area": "scroll-scripture"
     }
    ],
    "outTotal": 3,
-   "inTotal": 3
+   "inTotal": 2
   },
   "practices.html": {
    "title": "Practices — the Exercises Wing · Remnant Lab",
@@ -18925,6 +18920,11 @@
      "area": "archive"
     },
     {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    },
+    {
      "path": "witness-world.html",
      "title": "The Witness World — Redirect",
      "area": "codex"
@@ -18936,7 +18936,7 @@
     }
    ],
    "outTotal": 5,
-   "inTotal": 3
+   "inTotal": 4
   }
  }
 }
