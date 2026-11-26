@@ -466,9 +466,22 @@
       soundContext("greeting", companion, record);
       const talk = $("[data-sphere-spark-talk]");
       if (talk) {
-        talk.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
         const input = talk.querySelector("input");
-        if (input) window.setTimeout(() => { try { input.focus({ preventScroll: true }); } catch { /* scroll stands */ } }, reducedMotion ? 0 : 350);
+        /* The panel is a room in the sheet: a tap on the Spark
+         * opens the rooms to it, through the same door the dock's
+         * "Your Spark" uses — the sheet rises, the room stands at
+         * its top, the input takes the focus. Where no rooms
+         * stand (a shell without the sheet), the older road
+         * stands: bring the panel into view where it rests. */
+        document.dispatchEvent(new CustomEvent("sphere:open-rooms", {
+          detail: { trigger: button, target: input || talk },
+        }));
+        const roomsOpen = document.documentElement.classList.contains("armillary-rooms-open");
+        const fullPage = document.documentElement.classList.contains("sphere-full-page");
+        if (!roomsOpen && !fullPage) {
+          talk.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+          if (input) window.setTimeout(() => { try { input.focus({ preventScroll: true }); } catch { /* scroll stands */ } }, reducedMotion ? 0 : 350);
+        }
       }
     }, true);
 
@@ -674,6 +687,25 @@
 
   /* ── The talk panel ─────────────────────────────────────────── */
 
+  /* Where the panel sits (Aaron, Nov 26, 2026 — his phone showed
+   * the panel standing over the Sphere, the instrument gone from
+   * view). The panel is a room in the one sheet, a child of the
+   * sidebar like every other room — never a block in the stage.
+   * It used to be seated AFTER the sidebar (`sidebar.after`), and
+   * that is what stranded it: this layer boots while the sidebar
+   * still stands in its source place inside the stage wrapper,
+   * and the rebuild later carries the sidebar out to the page —
+   * a sibling stayed behind in the wrapper, in flow and always
+   * expanded, pushing the canvas out of the locked stage. A
+   * child rides with the sidebar wherever the shell seats it:
+   * the sheet at phone size, the page's own flow in full-page
+   * mode — always clear of the instrument, opened by a tap on
+   * the Spark or the dock's "Your Spark", never on arrival. */
+  function seatPanel(section, sidebar, dock) {
+    if (sidebar) sidebar.appendChild(section);
+    else if (dock) dock.after(section);
+  }
+
   function buildTalkPanel(record, companion) {
     const sidebar = $(".sphere-sidebar");
     const dock = $(".sphere-rebuild-dock");
@@ -688,7 +720,7 @@
       section.innerHTML = `
         <h2 class="sphere-spark-talk-title">Talk with your Spark</h2>
         <p class="sphere-spark-talk-line">You have not met your Spark yet. The meeting stands just above, under the Sphere — once you have met, your Spark will be here, ready to talk, in its own voice.</p>`;
-      if (sidebar) sidebar.after(section); else dock.after(section);
+      seatPanel(section, sidebar, dock);
       return section;
     }
 
@@ -707,7 +739,6 @@
           <p class="sphere-spark-talk-stage">${companion.kindName || companion.kind || "Spark"} · ${stage.name}${growth ? ` · voice: ${growth.name}` : ""}${presence ? ` · ${presence.name}` : ""}</p>
         </div>
       </div>
-      <p class="sphere-spark-talk-privacy">Replies are named as they come: from your record on this device, or through the talking door. Your notes are never sent, and this conversation is not kept when the page closes. Scheduling is proposed first and written only on your yes. Try “Call the hall Thursday at 10am”, “what's on Friday”, “make me a schedule”, or “show me Moon 9”.</p>
       <div class="sphere-spark-talk-log" role="log" aria-live="polite" aria-label="Conversation with ${name}"></div>
       <p class="sphere-spark-talk-seat" role="status"></p>
       <form class="sphere-spark-talk-form">
@@ -716,8 +747,9 @@
         <button type="submit" class="sphere-spark-talk-send">Send</button>
         <button type="button" class="sphere-spark-talk-mic" hidden>Talk</button>
       </form>
-      <label class="sphere-spark-talk-voice"><input type="checkbox" class="sphere-spark-talk-voice-toggle"> Hear replies spoken</label>`;
-    if (sidebar) sidebar.after(section); else dock.after(section);
+      <label class="sphere-spark-talk-voice"><input type="checkbox" class="sphere-spark-talk-voice-toggle"> Hear replies spoken</label>
+      <p class="sphere-spark-talk-privacy">Replies are named as they come: from your record on this device, or through the talking door. Your notes are never sent, and this conversation is not kept when the page closes. Scheduling is proposed first and written only on your yes. Try “Call the hall Thursday at 10am”, “what's on Friday”, “make me a schedule”, or “show me Moon 9”.</p>`;
+    seatPanel(section, sidebar, dock);
 
     const log = section.querySelector(".sphere-spark-talk-log");
     const seat = section.querySelector(".sphere-spark-talk-seat");

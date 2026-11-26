@@ -211,6 +211,24 @@ test("the pattern-day to civil-date conversion matches the house fixtures", () =
   assert.equal(Layer.anchorYearForCivil("2027-04-17"), 2027);
 });
 
+test("the talk panel is a room in the sheet, never a block in the stage (Aaron, Nov 26, 2026)", () => {
+  const src = read("docs/assets/js/sphere-spark.js");
+  assert.ok(src.includes("sidebar.appendChild(section)"), "the panel seats as a child of the sidebar, so it rides with the sheet wherever the shell puts it");
+  assert.ok(!src.includes("sidebar.after(section)"), "the old sibling seat is gone — it stranded the panel inside the stage wrapper when the rebuild carried the sidebar out");
+  assert.ok(src.includes("sphere:open-rooms"), "a tap on the Spark opens the rooms to the panel, the same door the dock's Your Spark uses");
+  const css = read("docs/assets/css/sphere-spark.css");
+  assert.match(css, /\.sphere-sidebar \.sphere-spark-talk \{/, "in the sheet the panel takes the rooms' width and spacing");
+});
+
+test("the panel leads with the day and the conversation; the standing explanation stands last", () => {
+  const src = read("docs/assets/js/sphere-spark.js");
+  const logAt = src.indexOf("sphere-spark-talk-log");
+  const formAt = src.indexOf("sphere-spark-talk-form");
+  const privacyAt = src.indexOf("sphere-spark-talk-privacy");
+  assert.ok(logAt > -1 && formAt > logAt, "the conversation (which opens on the day's greeting) stands above the form");
+  assert.ok(privacyAt > formAt, "the explanation paragraph stands after the form, at the panel's foot — available, not first");
+});
+
 test("scheduling is written to the one planner record, on-device, and the greeting stands in the panel", () => {
   const src = read("docs/assets/js/sphere-spark.js");
   assert.ok(src.includes("CodexLivingPlanner"), "the Spark writes through the planner — the same record the planner room reads");

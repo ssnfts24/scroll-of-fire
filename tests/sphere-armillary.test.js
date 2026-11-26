@@ -288,6 +288,7 @@ function loadSheetFocus() {
   const sidebar = {
     scrollTop: 0,
     parentElement: null,
+    getAttribute: () => null,
     getBoundingClientRect: () => ({ top: 100, height: 815 }),
     querySelector: (sel) => (sel === ".sphere-sheet-bar" ? bar : null),
     contains(node) {
@@ -306,10 +307,15 @@ function loadSheetFocus() {
   const dayDetails = el(sidebar, 0); // its rect is set per case
   const talkRoom = el(sidebar, 0);
   const talkInput = el(talkRoom, 0);
-  const api = factory(sidebar, closeButton, {
+  const win = {
     requestAnimationFrame: (fn) => fn(),
-  });
-  return { api, sidebar, closeButton, dayDetails, talkRoom, talkInput };
+    __margin: "0px",
+    getComputedStyle: () => ({ scrollMarginTop: win.__margin }),
+    __reland: null,
+    setTimeout: (fn) => { win.__reland = fn; },
+  };
+  const api = factory(sidebar, closeButton, win);
+  return { api, sidebar, closeButton, dayDetails, talkRoom, talkInput, win };
 }
 
 test("sheet-scroll fix: openRooms routes every targeted open through focusSheet", () => {
@@ -326,6 +332,37 @@ test("sheet-scroll fix: reopening Day Details after a deep scroll lands on the r
   s.api.focusSheet(s.dayDetails);
   assert.equal(s.sidebar.scrollTop, 230 - 48, "the room stands at the sheet's top, under the pinned bar");
   assert.deepEqual(s.dayDetails.focusedWith, { preventScroll: true }, "focus still goes to the room, without scrolling");
+});
+
+test("sheet-scroll fix: the landing never starts a room under the bar — the room's declared clearance floors it (Nov 26, 2026)", () => {
+  const s = loadSheetFocus();
+  // The bar measures 48 in the rising frame, but the room's own
+  // declared clearance (its scroll-margin-top, set past the
+  // bar's settled height) is 192: the room lands on the greater.
+  s.win.__margin = "192px";
+  s.sidebar.scrollTop = 6000;
+  s.dayDetails.getBoundingClientRect = () => ({ top: 100 - 5770, height: 900 });
+  s.api.focusSheet(s.dayDetails);
+  assert.equal(s.sidebar.scrollTop, 230 - 192, "the room stands below the whole bar, at its declared clearance");
+});
+
+test("sheet-scroll fix: the landing is stood again once the sheet settles (Nov 26, 2026)", () => {
+  const s = loadSheetFocus();
+  // First landing, measured while the rooms above still stand
+  // capped: Day Details' neighbour room at content offset 230.
+  s.sidebar.scrollTop = 6000;
+  s.dayDetails.getBoundingClientRect = () => ({ top: 100 - 5770, height: 900 });
+  s.api.focusSheet(s.dayDetails);
+  assert.equal(s.sidebar.scrollTop, 230 - 48, "the first landing stands on the rising frame's measure");
+  assert.equal(typeof s.win.__reland, "function", "a settled re-landing is scheduled");
+  // The sheet settles: the rooms above grow, the room's content
+  // offset is now 2975, and the browser's walk after the focus
+  // has left the scroll at 2900. The re-landing stands the room
+  // at the top on the settled measure.
+  s.sidebar.scrollTop = 2900;
+  s.dayDetails.getBoundingClientRect = () => ({ top: 100 + (2975 - 2900), height: 900 });
+  s.win.__reland();
+  assert.equal(s.sidebar.scrollTop, 2975 - 48, "the re-landing stands the room at the top, under the bar");
 });
 
 test("sheet-scroll fix: a target inside a room stands its room at the top, focus unchanged", () => {
