@@ -40,6 +40,8 @@
   <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
   <link rel="stylesheet" href="assets/css/social-bridge.css">
   <link rel="stylesheet" href="assets/css/pattern-garden.css?v=20261123-1">
+  <link rel="stylesheet" href="assets/css/living-moon-theme.css?v=20261119-1">
+  <link rel="stylesheet" href="assets/css/garden-living.css?v=20261125-1">
 <link rel="stylesheet" href="assets/css/cartoon-scenes.css?v=20261120-1">
 <link rel="stylesheet" href="assets/css/story-layer.css?v=20261120-1">
   <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261119-1">
@@ -96,10 +98,18 @@
         </p>
       </div>
 
+      <div class="garden-stage">
       <div class="garden-today" data-garden-today>
         <span class="garden-today-glyph" aria-hidden="true">🌿</span>
         <p><span id="garden-today-coords">Today's coordinate loads with your local time.</span></p>
         <p><span id="garden-today-count">Reading your garden…</span></p>
+      </div>
+      <p class="garden-welcome" id="garden-welcome" aria-live="polite"></p>
+      <div class="garden-spark-station">
+        <span class="gl-spark-orb" aria-hidden="true"></span>
+        <p class="garden-spark-line">Your Spark keeps this garden with you. It stands in today's bed, and the one tending act is to witness that bed.</p>
+        <button type="button" class="garden-tend-btn" id="garden-tend-btn">Tend today's bed</button>
+      </div>
       </div>
 
       <p class="garden-county-row">
@@ -119,11 +129,6 @@
 
       <div id="garden-year-reading" aria-live="polite"></div>
 
-      <figure class="cartoon-scene">
-        <img src="assets/img/cartoon/cartoon-garden.webp" width="1200" height="675" loading="lazy" decoding="async"
-             alt="Cartoon scene: a storybook garden at golden hour — wooden beds with brass corners in rows, a gate with a gear latch, lanterns lit, and a small green Spark drifting over the beds.">
-        <figcaption>The beds below are this garden's real beds, keyed to the thirteen Moons and kept in Living Time. This is the garden they grow in.</figcaption>
-      </figure>
     <div data-story-slot data-story-chapter="the-garden-of-thirteen-beds"></div>
     </section>
 
@@ -140,6 +145,13 @@
       </div>
       <p id="garden-status" class="garden-status" aria-live="polite"></p>
     </section>
+
+      <figure class="cartoon-scene">
+        <img src="assets/img/cartoon/cartoon-garden.webp" width="1200" height="675" loading="lazy" decoding="async"
+             alt="Cartoon scene: a storybook garden at golden hour — wooden beds with brass corners in rows, a gate with a gear latch, lanterns lit, and a small green Spark drifting over the beds.">
+        <figcaption>The beds below are this garden's real beds, keyed to the thirteen Moons and kept in Living Time. This is the garden they grow in.</figcaption>
+      </figure>
+
 
     <section class="section-shell" aria-labelledby="garden-guide-title">
       <h2 id="garden-guide-title">Growing guides — how and what to plant</h2>
@@ -289,6 +301,8 @@
   <script src="assets/js/life-atlas/life-atlas-runtime.js?v=20260819-b750"></script>
   <script src="assets/js/life-atlas/record-helpers.js?v=20261119-1"></script>
   <script src="assets/js/pattern-garden.js?v=20261123-1"></script>
+  <script defer src="assets/js/living-moon-theme.js?v=20261119-1"></script>
+  <script defer src="assets/js/garden-living.js?v=20261125-1"></script>
   <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
   <script defer src="assets/js/social-bridge.js?v=20261119-1"></script>
   <script defer src="assets/js/day-telling.js?v=20261119-1"></script>

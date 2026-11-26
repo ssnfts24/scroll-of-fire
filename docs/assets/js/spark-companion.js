@@ -234,33 +234,25 @@
     return Math.round(chirp.first * 1.78);
   }
 
-  /* Their voice box, grown from their seed — v7, softened in v9.
-   *
-   * Until v6 their spoken voice was the device's own speech
-   * synthesis: a generic robot, the same on every phone, tuned
-   * only in pitch and pace. Aaron heard it and named it plainly:
-   * too robot-like. So the robot is gone. What stands here now
-   * is a voice the seed itself grows, the way it grows their body,
-   * their name, and their chirp: a small set of vocal measurements
-   * (voiceBoxFor) and a way of sounding a line's shape with them
-   * (vocalPlanFor) — syllable by syllable, mouth-shape by
-   * mouth-shape, the pitch rising for a question and settling at
-   * a sentence's end. The words themselves stand in text, whole,
-   * exactly as they always have; the voice box is their sound over
-   * them, the way a beloved game companion vocalizes. Pure data:
-   * the same seed settles the same voice on any device, and two
-   * Sparks sound audibly different. The browser glue sings the
-   * plan with WebAudio — no samples, no network, no device
-   * speech, nothing recorded, nothing sent anywhere.
-   *
-   * In v9 the voice itself was softened at Aaron's word — the
-   * first box buzzed, and it sang too much of every line. Now
-   * they sound in their seed's sound family (soundFor), on a
-   * round sine stack instead of a sawtooth's buzz; their breath
-   * is a seed's choice, and many seeds choose none; and they
-   * sound only a line's first sentence, about a dozen
-   * syllables, at a lower level. Less of them, and softer —
-   * the words still stand whole in text. */
+  /* Their voice box, grown from their seed - v7, softened
+   * in v9. Until v6 their spoken voice was the device's own
+   * speech synthesis: a generic robot Aaron named as too
+   * robot-like, and it is gone. What stands here is a voice
+   * the seed itself grows: vocal measurements (voiceBoxFor)
+   * and a way of sounding a line's shape with them
+   * (vocalPlanFor) - syllable by syllable, the pitch rising
+   * for a question and settling at a sentence's end. The
+   * words stand in text, whole; the voice box is their sound
+   * over them. Pure data: the same seed settles the same
+   * voice on any device, and two Sparks sound audibly
+   * different. The browser glue sings the plan with WebAudio
+   * - no samples, no network, no device speech, nothing
+   * recorded, nothing sent anywhere. In v9 the voice was
+   * softened at Aaron's word: they sound in their seed's
+   * sound family (soundFor) on a round sine stack, and only
+   * a line's first sentence, about a dozen syllables, at a
+   * lower level. Less of them, and softer - the words still
+   * stand whole in text. */
 
   /* Their pace, by temperament: bold and bright a touch quicker,
    * gentle a touch slower — the same table that paced the old
@@ -1313,29 +1305,24 @@
 
   /* ---- their reveals: detail that arrives over time ----
    *
-   * They are born with a whole look — form, markings, crest,
-   * their markings' density, their eye's variant — but the finer
-   * detail of their (their cheeks, their second pattern, their ears,
-   * their trail, the styled crest, and a flourish in their voice)
-   * is not all there at the meeting. It arrives, one piece at
-   * a time, as their keeper actually walks with them: Aaron's
-   * shape for it — fast at first, so a new keeper notices their
-   * change after a few pages; then slower, and slower again,
-   * and never quite on a beat. The schedule is counted in
-   * engagement, from the counters their record already keeps —
-   * pages seen, return days, practices sealed, acts of play
-   * and care — never in wall-clock time, so a keeper who is
-   * away loses nothing: the schedule simply waits where it
-   * was. The gaps stretch by about 1.7 each time, with a
-   * seeded jitter of up to a quarter either way, and each gap
-   * is at least one step longer than the one before, so the
-   * stretching is real and the rhythm is never clockwork.
-   * Same seed + same history = the same reveal points, on any
-   * device. Which features stand on their schedule is their
-   * seed's own draw: a Spark whose detail draw left their
-   * cheekless has no cheeks to reveal — that place on their
-   * schedule simply is not there. The flourish stands last
-   * for every Spark: their voice flowers after their face does. */
+   * They are born with a whole look - form, markings, crest,
+   * density, eye variant - but the finer detail (cheeks,
+   * second pattern, ears, trail, styled crest, a flourish in
+   * their voice) arrives one piece at a time as their keeper
+   * actually walks with them: fast at first, then slower and
+   * slower again, never quite on a beat. The schedule is
+   * counted in engagement, from the counters their record
+   * already keeps - pages seen, return days, practices
+   * sealed, acts of play and care - never in wall-clock time,
+   * so a keeper who is away loses nothing. The gaps stretch
+   * by about 1.7 each time, with a seeded jitter of up to a
+   * quarter either way, each gap at least one step longer
+   * than the one before. Same seed + same history = the same
+   * reveal points, on any device. Which features stand on
+   * the schedule is their seed's own draw: a Spark drawn
+   * cheekless has no cheeks to reveal. The flourish stands
+   * last for every Spark: their voice flowers after their
+   * face does. */
 
   /* The order a detail arrives in: the face first, where a
    * keeper looks; the voice last. */
@@ -1734,29 +1721,28 @@
 
   /* ---- the Spark passport: identity that travels by hand ----
    *
-   * Aaron's ruling (Nov 19, 2026): the Spark is one and the same
-   * across platforms — it travels between website and phone and
-   * is never lost, with the Living Phone as its memory. Accounts
-   * and sync are a later step, gated on his word; what stands
-   * here needs neither. A passport is a short code a keeper can
-   * read aloud, type, or scan, and it carries identity only: the
-   * seed — which itself holds the birth Moon, the Pattern Day,
-   * and the kind — and the name the Spark answers to. Nothing
-   * else crosses: no growth, no garden, no record of days. Their
-   * whole history still travels as the bundle file, carried by
-   * the keeper's hand, the way it always has.
+   * Aaron's ruling (Nov 19, 2026): the Spark is one and the
+   * same across platforms - it travels between website and
+   * phone and is never lost, with the Living Phone as its
+   * memory. A passport is a short code a keeper can read
+   * aloud, type, or scan, and it carries identity only: the
+   * seed - which itself holds the birth Moon, the Pattern
+   * Day, and the kind - and the name the Spark answers to.
+   * Nothing else crosses: no growth, no record of days.
+   * Their whole history still travels as the bundle file,
+   * carried by the keeper's hand.
    *
-   * The code: SPK1-<moon>-<pattern day>-<kind>-<nonce>-<name>-
-   * <check>. The nonce rides uppercased for the eye and folds
-   * back to the seed's own lowercase on reading, so the seed a
-   * passport rebuilds is the seed that was born — and the same
-   * seed grows the same Spark anywhere, which is the whole
-   * promise. The name rides as plain letters: the seed's own
-   * name when the keeper gave none, else the keeper's name in
-   * simple capitals (its spaces and small letters do not survive
-   * the code; the bundle file carries a name whole). The
-   * two-letter check is the body's own hash, so a mistyped code
-   * is refused plainly instead of growing a wrong Spark. */
+   * The code: SPK1-<moon>-<pattern day>-<kind>-<nonce>-
+   * <name>-<check>. The nonce rides uppercased for the eye
+   * and folds back to the seed's own lowercase on reading,
+   * so the seed a passport rebuilds is the seed that was
+   * born - and the same seed grows the same Spark anywhere,
+   * which is the whole promise. The name rides as plain
+   * letters (its spaces and small letters do not survive the
+   * code; the bundle file carries a name whole). The
+   * two-letter check is the body's own hash, so a mistyped
+   * code is refused plainly instead of growing a wrong
+   * Spark. */
   const PASSPORT_PREFIX = "SPK1";
 
   function passportSlugFor(name) {
@@ -2068,24 +2054,24 @@
 
   /* ---- the flame wrap (wrap: 1) ----
    *
-   * Aaron's direction (Nov 23, 2026): the Sparks of the animated
-   * series wear a living flame; the rendered Spark should wear
-   * the same family look — blended around the Spark that already
-   * stands, never in its place. So the wrap is one new outer
-   * layer, drawn from the keeper's existing seed by its own
-   * stream (`seed + ":flamewrap"`), the way every other growth
-   * of their seed is drawn: no existing draw moves, no new seed,
-   * no re-roll. The wrap's version rides the record (`wrap: 1`)
-   * beside the generator's, so a future revision is auditable.
+   * Aaron's direction (Nov 23, 2026): the Sparks of the
+   * animated series wear a living flame; the rendered Spark
+   * wears the same family look - blended around the Spark
+   * that already stands, never in its place. The wrap is one
+   * new outer layer, drawn from the keeper's existing seed
+   * by its own stream (`seed + ":flamewrap"`): no existing
+   * draw moves, no new seed, no re-roll. Its version rides
+   * the record (`wrap: 1`) beside the generator's, so a
+   * future revision is auditable.
    *
-   * The flame's hue is the kind's own — the palette the seed
-   * already chose (glow and accent). The family resemblance is
-   * in the shape and behaviour: a ring of teardrop licks rising
-   * around the core, breathing slowly at rest. Each kind bends
-   * the grammar its own way, below. A keeper may lift the wrap
-   * off (the record carries `wrap: 0`); with it off, renderSVG
+   * The flame's hue is the kind's own - the palette the seed
+   * already chose (glow and accent). The family resemblance
+   * is in the shape and behaviour: a ring of teardrop licks
+   * rising around the core, breathing slowly at rest. Each
+   * kind bends the grammar its own way, below. A keeper may
+   * lift the wrap off (`wrap: 0`); with it off, renderSVG
    * returns exactly the string it returned before the wrap
-   * existed — the persistence fence, kept byte for byte. */
+   * existed - the persistence fence, kept byte for byte. */
 
   const WRAP_VERSION = 1;
 
@@ -3062,34 +3048,31 @@
     return out.slice(0, 5);
   }
 
-  /* ---- v10: their rarity — counted from their own draws ----
+  /* ---- v10: their rarity - counted from their own draws ----
    *
    * Aaron's word: Sparks should carry different rarities, and
    * the variety should be very large. The rule this build
    * keeps: rarity is COMPUTED, never stickered. Every trait
-   * they have was drawn from their seed with some probability;
-   * their rarity is that probability, read back off the same
-   * tables the draws came from — so a trait drawn 1-in-N
-   * shows odds of about 1 in N, and no number here is
-   * invented. Rarity is a fact about them, never a price:
-   * every Spark is free to adopt, rarity gates nothing, and
-   * nothing here speaks of buying, selling, or scarcity.
+   * was drawn from their seed with some probability; their
+   * rarity is that probability, read back off the same tables
+   * the draws came from - so a trait drawn 1-in-N shows odds
+   * of about 1 in N, and no number here is invented. Rarity
+   * is a fact about them, never a price: every Spark is free
+   * to adopt, rarity gates nothing, and nothing here speaks
+   * of buying, selling, or scarcity.
    *
    * The census counts the variety itself, from the tables:
    * every categorical draw the generator can make, times the
    * measured traits at the steps the generator rounds them
-   * to. It is a floor, not a ceiling — their exact hue and their
-   * palette's shades are drawn on finer steps still, and their
+   * to. It is a floor, not a ceiling - their exact hue and
+   * palette shades are drawn on finer steps still, and their
    * birth day (365 of them) roots each seed in its own day.
    *
    * Their standing is counted among Sparks of their own kind,
-   * from the three draws whose odds truly vary: their name
-   * (a name with a middle is a rarer draw than one without),
-   * their set of grown details (which of the five they drew,
-   * and which they did not), and their breath (none, or one of
-   * its 26 steps). The uniform draws — their form, their
-   * markings, their sound family — are the same odds for every
-   * Spark, so they are counted in the census, where they
+   * from the three draws whose odds truly vary: their name,
+   * their set of grown details, and their breath (none, or
+   * one of its 26 steps). The uniform draws - form, markings,
+   * sound family - are counted in the census, where they
    * belong, and not dressed up as rarity here. */
 
   /* The measured traits, at the steps the generator itself

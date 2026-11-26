@@ -195,7 +195,7 @@ Your browser does not support the video element. The same tour is written out ac
 </section>
 <div class="books">{cards}</div>
 <section aria-labelledby="ws-h"><h2 id="ws-h">Hebrew word studies</h2>
-<p>Seven key words given the full treatment — spelling, root, semantic range, biblical examples, wordplay, cognates, traditions labelled as traditions, and the uncertainties printed rather than smoothed over: <a href="word-studies/index.html">Adam, Adamah, Enosh, Ruach, Nephesh, Or, Shem</a>.</p></section>
+<p>Eight key words given the full treatment — spelling, root, semantic range, biblical examples, wordplay, cognates, traditions labelled as traditions, and the uncertainties printed rather than smoothed over: <a href="word-studies/index.html">Adam, Adamah, Enosh, Ruach, Nephesh, Or, Shem, Davar</a>.</p></section>
 <section id="lemma-finder" class="finder" aria-labelledby="lf-h"><h2 id="lf-h">Word finder</h2>
 <p>Search lemmas that occur in Genesis or Exodus by Hebrew (with or without vowels), transliteration, Strong’s number or English gloss. Needs JavaScript.</p>
 <label for="lf-q">Find a word</label> <input id="lf-q" type="search" autocomplete="off" placeholder="e.g. רוח, ruach, 7307, spirit"><ul id="lf-results" aria-live="polite"></ul>
@@ -276,6 +276,7 @@ Your browser does not support the video element. The same tour is written out ac
 <li><a href="word-studies/nephesh.html">נֶפֶשׁ — Nephesh</a>: life, being, self.</li>
 <li><a href="word-studies/or.html">אוֹר — Or</a>: light; day-one light against day-four luminaries.</li>
 <li><a href="word-studies/shem.html">שֵׁם — Shem</a>: name, reputation, the Name.</li>
+<li><a href="word-studies/davar.html">דָּבָר — Davar</a>: word, thing, matter; the Ten Words and the word that does not return empty.</li>
 </ul>
 <p>For any other word: the <a href="../scroll/lexicon.html">Lexicon</a> searches 911 Hebrew forms, and every chapter page carries a static word-by-word table with the lemma id and morphology of every verse — open a chapter from the <a href="index.html">Scripture home page</a> and scroll to its table.</p>
 </section>

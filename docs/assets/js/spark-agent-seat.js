@@ -1,40 +1,33 @@
 /**
- * The Spark agent seat, site-wide (Aaron's items, Nov 20, 2026).
- *
- * The Sphere has its own seat beside the instrument (sphere-
- * spark.js). This is the same seat for every other page the
- * Spark travels to: a keeper who has met their Spark can talk
- * with it anywhere on the site.
+ * The Spark agent seat, site-wide (Aaron's items, Nov 20,
+ * 2026). The same seat the Sphere carries beside the
+ * instrument, for every other page of the site.
  *
  * Two voices, honestly labelled:
  *   - On-device answers, instant and free: today's Pattern
  *     coordinate, the keeper's days with their Spark, who the
- *     Spark is, the story chapters found — and place-aware
- *     answers about the very page the keeper is standing on
- *     (its title, its subject, its story chapter when it has
- *     one). These come from the record on this device and the
- *     canonical calendar, never from a guess.
- *   - The talking door: the same Spark seat the Sphere uses
+ *     Spark is, the story chapters found - and place-aware
+ *     answers about the very page the keeper is standing on.
+ *     From the record on this device and the canonical
+ *     calendar, never from a guess.
+ *   - The talking door: the same seat the Sphere uses
  *     (/.netlify/functions/spark-agent), metered on its own
- *     line under the shared ceiling, fail-closed. When the door
- *     is shut — no key, ceiling reached, or this copy of the
- *     site cannot reach it — the seat says so plainly and the
- *     on-device answers keep working. The Codex Guide's seat is
- *     a different seat and is untouched by this module.
+ *     line under the shared ceiling, fail-closed. When the
+ *     door is shut the seat says so plainly and the on-device
+ *     answers keep working. The Codex Guide's seat is a
+ *     different seat, untouched by this module.
  *
- * The seat appears only when a Spark lives on this device; the
- * meeting itself belongs to the presence layer. The pure local
- * brain (answerLocally) is unit-tested in
- * tests/spark-agent-seat.test.js.
- *
- * Phase 1 of the Spark intelligence design (Nov 20, 2026) rides
- * on this seat without changing its shape: the first time a
- * keeper opens the panel, the seat lazy-loads the keeper mind
- * (spark-keeper-mind.js) — the router, the briefing, the memory
- * the Spark keeps on this device — which attaches through
- * SparkAgentSeat.attach and takes over the asking when it is
- * present. If the mind cannot load, the seat keeps answering
- * exactly as it did before: local brain first, then the door.
+ * The seat appears only when a Spark lives on this device;
+ * the meeting itself belongs to the presence layer. The pure
+ * local brain (answerLocally) is unit-tested in
+ * tests/spark-agent-seat.test.js. Phase 1 of the Spark
+ * intelligence design (Nov 20, 2026) rides on this seat
+ * without changing its shape: on first open the seat
+ * lazy-loads the keeper mind (spark-keeper-mind.js), which
+ * attaches through SparkAgentSeat.attach and takes over the
+ * asking when present. If the mind cannot load, the seat
+ * keeps answering exactly as it did before: local brain
+ * first, then the door.
  */
 (function (root, factory) {
   const api = factory();
@@ -59,6 +52,10 @@
      * an ask handler that takes over the asking. */
     const enhancers = [];
     const builtApis = [];
+    /* The one seat this page built, kept so the Spark's menu
+     * can host the conversation inside itself (Aaron's menu
+     * rule, Nov 25, 2026: talk happens in the menu, in place). */
+    let builtSeat = null;
     function attach(fn) {
       if (typeof fn !== "function") return;
       enhancers.push(fn);
@@ -375,18 +372,28 @@
         document.head.appendChild(script);
       }
 
+      /* Opening the talk, whichever door it comes through —
+       * the seat's own button, or the Spark's menu hosting the
+       * panel: the same waking (mind, tips, voice, greeting,
+       * door check), so the conversation is one conversation. */
+      function openTalk() {
+        panel.hidden = false;
+        button.setAttribute("aria-expanded", "true");
+        ensureMind();
+        ensureTips();
+        ensureVoice();
+        if (!log.childElementCount) {
+          say("spark", `Here I am — ${name}, on this page with you. Ask me about today, about where you are standing, or anything deeper if the door is open.`);
+        }
+        if (doorState === "unknown") void checkDoor();
+      }
+
       button.addEventListener("click", () => {
         const opening = panel.hidden;
         panel.hidden = !opening;
         button.setAttribute("aria-expanded", String(opening));
         if (opening) {
-          ensureMind();
-          ensureTips();
-          ensureVoice();
-          if (!log.childElementCount) {
-            say("spark", `Here I am — ${name}, on this page with you. Ask me about today, about where you are standing, or anything deeper if the door is open.`);
-          }
-          if (doorState === "unknown") void checkDoor();
+          openTalk();
           input.focus();
         }
       });
@@ -421,9 +428,23 @@
         history
       };
       builtApis.push(seatApi);
+      builtSeat = { panel, host, openTalk, input };
       for (const fn of enhancers) {
         try { fn(seatApi); } catch { /* an enhancer never breaks the seat */ }
       }
+    }
+
+    /* Host this seat's conversation inside a caller-supplied
+     * container — the Spark's menu, in practice. The panel
+     * node itself moves (log, listeners, and the mind riding
+     * on it move with it). Returns false when no seat stands
+     * on this page yet, so the caller can say so honestly. */
+    function openTalkIn(container) {
+      if (!builtSeat || !container || typeof container.appendChild !== "function") return false;
+      container.appendChild(builtSeat.panel);
+      builtSeat.openTalk();
+      if (builtSeat.input) builtSeat.input.focus();
+      return true;
     }
 
     function init() {
@@ -445,6 +466,6 @@
       }
     }
 
-    return { VERSION, answerLocally, attach };
+    return { VERSION, answerLocally, attach, openTalkIn };
   }
 );

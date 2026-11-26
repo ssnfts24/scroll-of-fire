@@ -437,8 +437,8 @@
       void maybeOffer();
     }
 
-    if (typeof document !== "undefined" && root.SparkAgentSeat && typeof root.SparkAgentSeat.attach === "function") {
-      root.SparkAgentSeat.attach(enhanceSeat);
+    if (typeof document !== "undefined" && globalThis.SparkAgentSeat && typeof globalThis.SparkAgentSeat.attach === "function") {
+      globalThis.SparkAgentSeat.attach(enhanceSeat);
     }
 
     return {
