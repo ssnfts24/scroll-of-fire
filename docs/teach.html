@@ -744,6 +744,7 @@
 
           <div class="stage">
             <canvas id="trace" aria-label="Remnant trace"></canvas>
+            <canvas id="mpGuide" aria-hidden="true"></canvas>
             <div class="hud">
               <div class="lab-row">
                 <span class="chip" id="hudCarrier">Πν: —</span>
@@ -892,6 +893,32 @@
             </p>
           </div>
         </aside>
+      </article>
+
+      <article class="grid">
+        <div class="card col-12 mp-spark" id="mpSparkPanel">
+          <h3>✦ The Spark Leads This Sitting</h3>
+          <p class="meta">Your Spark opens the sitting and speaks your intention back, carries the moving light in the field for you to follow with touch and breath, plays the Echo Duet with you, and witnesses the seal into your record. Ξ is the console's coherence estimate — the console's own number, not a measurement of you.</p>
+          <p id="mpSparkLine" role="status">The Spark is here to lead the sitting.</p>
+          <div class="lab-row">
+            <button id="mpSparkBegin" class="lab-btn primary" type="button">Begin the sitting with the Spark</button>
+            <span id="mpSettleRead" class="meta">Settle: —</span>
+          </div>
+          <div id="mpProposal" class="mp-proposal" hidden>
+            <p id="mpProposalText"></p>
+            <div class="lab-row">
+              <button id="mpProposalUse" class="lab-btn" type="button">Use the Spark's suggestion</button>
+              <button id="mpProposalDismiss" class="lab-btn" type="button">Keep my own settings</button>
+            </div>
+          </div>
+          <div id="mpEcho" class="mp-echo" hidden>
+            <p class="meta">Echo Duet — the Spark sounds a pattern of lights; answer on the pads in the same order.</p>
+            <div id="mpEchoPads" class="mp-echo-pads"></div>
+            <p id="mpEchoStatus" class="meta" role="status"></p>
+            <button id="mpEchoPlay" class="lab-btn" type="button">Hear the pattern again</button>
+          </div>
+          <p id="mpWitnessLine" class="mp-witness" role="status"></p>
+        </div>
       </article>
 
       <article class="grid">
@@ -1921,8 +1948,8 @@
 
         const w = canvas.clientWidth || 600;
         const h = canvas.clientHeight || 420;
-        const cx = w / 2;
-        const cy = h / 2;
+        let cx = w / 2;
+        let cy = h / 2;
         const n = count();
         const s = speed();
         const mode = Number($("#visMode")?.value || 0);
@@ -1930,7 +1957,17 @@
         const pulseLock = Number($("#pulseLock")?.value || 72) / 100;
         const soundPush = playing ? Math.max(.16, activeVolume * visualPower) : 0.20 * visualPower;
         const breathPulse = 0.5 + 0.5 * Math.sin(phi * 0.025 * s + freqRatio * Math.PI * 2);
-        const baseR = Math.min(w, h) * (0.14 + 0.12 * pulseLock + 0.13 * breathPulse * soundPush);
+        /* The field answers the keeper (manifest-spark.js): settle —
+           read from the Spark-led sitting — swells and calms the
+           field, and the keeper's touch leans its centre. Both hooks
+           are inert when no sitting is open. */
+        const settleNow = (typeof window.__sofManifestSettle === "function" ? window.__sofManifestSettle() : 0) || 0;
+        const touchNow = (typeof window.__sofManifestTouch === "function" ? window.__sofManifestTouch() : null);
+        if (touchNow && touchNow.active) {
+          cx += (touchNow.x * w - cx) * 0.06;
+          cy += (touchNow.y * h - cy) * 0.06;
+        }
+        const baseR = Math.min(w, h) * (0.14 + 0.12 * pulseLock + 0.13 * breathPulse * soundPush) * (1 + 0.10 * settleNow);
 
         ctx.fillStyle = `rgba(6,8,13,${fade()})`;
         ctx.fillRect(0, 0, w, h);
@@ -1964,7 +2001,7 @@
           25
         );
 
-        phi += s;
+        phi += s * (1 - 0.30 * settleNow);
         if (!reduceMotion) requestAnimationFrame(draw);
       }
 
@@ -2891,7 +2928,8 @@
   <script src="assets/js/life-atlas/life-atlas-indexeddb.js?v=20260819-b750"></script>
   <script src="assets/js/life-atlas/life-atlas-runtime.js?v=20260819-b750"></script>
   <script src="assets/js/life-atlas/record-helpers.js?v=20261119-1"></script>
-  <script src="assets/js/manifest-practice.js?v=20261117-mp1"></script>
+  <script src="assets/js/manifest-practice.js?v=20261125-te1"></script>
+  <script src="assets/js/manifest-spark.js?v=20261125-te1"></script>
   <script defer src="assets/js/day-telling.js?v=20261119-1"></script>
   <script defer src="assets/js/social-bridge.js?v=20261119-1"></script>
   <script src="assets/js/living-trail.js?v=20261120-1"></script>
