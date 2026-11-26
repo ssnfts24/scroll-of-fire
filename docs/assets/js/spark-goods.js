@@ -1,11 +1,10 @@
-/* The Spark Stall — the full goods catalogue, rendered from
+/* The Spark Stall — the goods catalogue, rendered from
    assets/data/spark-goods.json. Catalogue only: the till is not
-   open, there is no cart and no way to pay anywhere in this file.
+   open, and there is no way to pay anywhere in this file.
    The stage draws a Spark as an SVG and dresses it with the goods
-   a keeper taps, so a good is seen ON the Spark before anything
-   else is said about it. Rarity is carried honestly: editions and
-   their issue day, one-Moon windows, seed variants, and the
-   earned-only tier marked "Earned, never sold". */
+   a keeper taps, so a good is seen ON the Spark first. Rarity is
+   carried honestly: editions, one-Moon windows, seed variants,
+   and the earned-only tier, "Earned, never sold". */
 (function () {
   "use strict";
   var section = document.getElementById("spark-stall");
