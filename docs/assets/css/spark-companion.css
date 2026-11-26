@@ -1618,3 +1618,23 @@
   .spark-film-watch,
   .spark-finds-bloom { animation: none !important; }
 }
+
+/* The garden, from the Spark's height (Nov 26, 2026): the
+ * thirteen beds in miniature — lit where a Moon's card is
+ * held, ringed for today — and the walker gardening. */
+.spark-beds { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; }
+.spark-beds-dot {
+  width: 14px; height: 14px; border-radius: 4px 4px 8px 8px;
+  border: 1px solid #2a3342; background: rgba(244, 241, 232, 0.05);
+}
+.spark-beds-dot.is-held { background: #7a9a52; border-color: #7a9a52; box-shadow: 0 0 7px rgba(122, 154, 82, 0.55); }
+.spark-beds-dot.is-today { outline: 2px solid #f3c97a; outline-offset: 1px; }
+.spark-beds-line { color: #b9c2cf; font-size: 0.9rem; margin-left: 6px; }
+.spark-walker.is-gardening .spark-walker-figure { animation: spark-garden-bob 3.4s ease-in-out infinite; }
+@keyframes spark-garden-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px) rotate(-1.5deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spark-walker.is-gardening .spark-walker-figure { animation: none !important; }
+}

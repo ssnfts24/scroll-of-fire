@@ -291,6 +291,7 @@
     const host = document.querySelector("#garden-living, .garden-living, main");
     if (!host) return;
     let cards = 0;
+    const heldMoons = {};
     if (record && record.seed) {
       try {
         const key = "sof.cards.v1.k" + hash36("keeper:" + record.seed);
@@ -298,7 +299,12 @@
         if (raw) {
           const data = JSON.parse(raw);
           if (data && data.copies) {
-            cards = Object.values(data.copies).filter((c) => c.state === "held").length;
+            Object.values(data.copies).forEach((c) => {
+              if (c.state !== "held") return;
+              cards++;
+              const m = /^moon-(\d{2})$/.exec(c.designId || "");
+              if (m) heldMoons[parseInt(m[1], 10)] = true;
+            });
           }
         }
       } catch { /* the garden rests */ }
@@ -319,7 +325,27 @@
         ? `A bloom for every finding: ${cards} card${cards === 1 ? "" : "s"} in the album, ${sealed} day${sealed === 1 ? "" : "s"} sealed. The garden keeps what the road gives.`
         : "Nothing found together yet — the first bloom comes with the first finding: a card on the road, a day sealed.") +
       "</p>";
+    /* The thirteen beds in miniature, day-true: one bed for
+     * each Moon, lit where the keeper holds that Moon's card,
+     * and today's bed ringed — the same thirteen beds the
+     * Atlas keeps below, seen from the Spark's height. */
+    const today = todayCoordinate();
+    let beds = "";
+    for (let m = 1; m <= 13; m++) {
+      beds += `<span class="spark-beds-dot${heldMoons[m] ? " is-held" : ""}${today && today.moon === m ? " is-today" : ""}" title="Moon ${m}${heldMoons[m] ? " — its card rests in your album" : ""}${today && today.moon === m ? " — today" : ""}"></span>`;
+    }
+    const bedsRow = document.createElement("div");
+    bedsRow.className = "spark-beds";
+    bedsRow.setAttribute("aria-label", "The thirteen beds, by Moon");
+    const todayPd = today ? (today.patternDay != null ? today.patternDay : today.dayOfPatternYear) : null;
+    bedsRow.innerHTML = beds +
+      `<span class="spark-beds-line">${today && today.moon
+        ? `Today the garden stands in Moon ${today.moon} · Pattern Day ${todayPd} — its bed is the open one, and the Spark tends it with you.`
+        : "The garden keeps Living Time; its beds turn with the Moons."}</span>`;
+    section.appendChild(bedsRow);
     host.appendChild(section);
+    const walker = document.querySelector(".spark-walker");
+    if (walker) walker.classList.add("is-gardening");
   }
 
   /* Other layers (the match table, the album) may tell the
