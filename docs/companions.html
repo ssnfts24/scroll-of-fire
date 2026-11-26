@@ -29,6 +29,8 @@
   <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
   <link rel="stylesheet" href="assets/css/social-bridge.css">
   <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261122-1">
+  <link rel="stylesheet" href="assets/css/spark-goods.css?v=20261125-1">
+  <script defer src="assets/js/spark-goods.js?v=20261125-1"></script>
   <link rel="stylesheet" href="assets/css/spark-home-world.css?v=20261125-1">
   <link rel="stylesheet" href="assets/css/spark-play.css?v=20261125-1">
   <link rel="stylesheet" href="assets/css/cartoon-scenes.css?v=20261120-1">
@@ -209,6 +211,48 @@
           <button type="button" class="spark-button quiet" id="spark-leave">Let go</button>
         </div>
       </div>
+    </section>
+
+    <!-- The Spark Stall: the full goods catalogue. Catalogue only —
+         the till is not open, there is no cart and no checkout.
+         Goods dress the Spark itself; every bought good carries
+         the brass tag and is written "purchased" in the record. -->
+    <section id="spark-stall" aria-labelledby="spark-stall-title">
+      <h2 id="spark-stall-title">The Spark Stall — goods for your Spark</h2>
+      <p class="spark-note">
+        Everything the stall holds, in one catalogue: things your Spark can
+        carry and wear, the trails it leaves, wraps for its flame, its
+        expressions, stickers made from its own faces, themes and standing
+        pieces for your ground, the game's own cosmetics, and the hums that
+        can only be earned. A good is a look, and for the sound family a
+        sound — cosmetic only. Nothing here gates the Spark, its growth,
+        its voice, or any difficulty, and the Spark itself is never for sale.
+      </p>
+      <p class="stall-till spark-note">
+        <strong>The till is not open.</strong> These are catalogue prices —
+        Pocket $2, Keeper $7, Heirloom $19, with Embers prices for standard
+        goods — shown so the shelf can be read whole. Nothing can be bought
+        yet, nothing charges, and there is no checkout. When the till ever
+        opens it opens by Aaron's word, for adults, on this website only;
+        nothing is ever sold to a child, and a child never meets a price.
+      </p>
+      <p class="spark-note">
+        Rarity here is honest. Some goods carry an <em>edition</em> and the
+        Moon and Pattern Day they were issued under, stamped on the item and
+        on its brass tag — a closed edition never quietly reopens. Some are
+        issued for <em>one Moon only</em> and retire at its turn, announced
+        plainly in advance, with no countdown and no pressure. Where a good
+        is made from your own Spark's seed — the sticker pack above all —
+        it is a family of which yours is the only one of yours. And the
+        earned tier stands apart: <em>earned, never sold</em>, no price,
+        because its scarcity is real days lived. There are no blind packs,
+        no loot boxes, and no random draws: you always see exactly what a
+        thing is.
+      </p>
+      <div class="stall-stage" id="stall-stage" aria-label="The stall stage: a Spark wearing the goods you choose"></div>
+      <p class="spark-note" id="stall-note" role="status" aria-live="polite">The stall is setting out its goods…</p>
+      <div id="stall-list"></div>
+      <p class="spark-note" id="stall-lineage"></p>
     </section>
 
     <!-- The passport: identity alone travels, in a short code a
