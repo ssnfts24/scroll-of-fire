@@ -10,4 +10,19 @@
 #spark-stall .stall-on { color: #b9c2cf; }
 #spark-stall .stall-show { margin-left: 8px; }
 #spark-stall .stall-till { border: 1px solid #d99545; border-radius: 12px; padding: 10px 12px; }
+/* The storefront: four shelves, one open at a time; each tile a
+   miniature of the Spark wearing the good. */
+#spark-stall .stall-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 10px; }
+#spark-stall .stall-tab { font: inherit; padding: 8px 14px; border: 1px solid #2a3342; border-radius: 999px; background: rgba(244, 241, 232, 0.03); color: inherit; cursor: pointer; }
+#spark-stall .stall-tab.on { border-color: #d99545; color: #f3c97a; }
+#spark-stall .stall-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+#spark-stall .stall-tile { font: inherit; display: flex; flex-direction: column; align-items: stretch; text-align: left; padding: 6px; border: 1px solid #2a3342; border-radius: 12px; background: rgba(244, 241, 232, 0.03); color: inherit; cursor: pointer; }
+#spark-stall .stall-tile.on { border-color: #d99545; box-shadow: 0 0 0 1px #d99545 inset; }
+#spark-stall .stall-tile-art svg { display: block; width: 100%; height: auto; border-radius: 8px; }
+#spark-stall .stall-tile-name { font-weight: 600; font-size: 0.85rem; line-height: 1.25; margin-top: 6px; }
+#spark-stall .stall-tile-price { color: #f3c97a; font-size: 0.8rem; margin-top: 2px; }
+#spark-stall .stall-tile-stamp { color: #e8c97a; font-style: italic; font-size: 0.75rem; margin-top: 2px; }
+#spark-stall .stall-tile-game { color: #b9c2cf; font-size: 0.7rem; letter-spacing: 0.08em; margin-top: 2px; }
+#spark-stall .stall-beyond { margin: 22px 0; border: 1px solid #2a3342; border-radius: 12px; padding: 10px 12px; }
+#spark-stall .stall-beyond summary { cursor: pointer; font-weight: 600; padding: 4px 0; }
 @media (prefers-reduced-motion: reduce) { #spark-stall * { animation: none !important; transition: none !important; } }
