@@ -292,6 +292,12 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/css/moons-living.css",
+      "sha256": "baab69536c7aa6ab95a86805a9495969ca1027c522f7f7e7b64898a32b287f5a",
+      "publicUrl": "https://codexofreality.org/assets/css/moons-living.css",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/css/moons.css",
       "sha256": "8d5263d1a48401c95a8169717a82038f349646f935c90e0e8b2b5878f44de1df",
       "publicUrl": "https://codexofreality.org/assets/css/moons.css",
@@ -671,7 +677,7 @@
     },
     {
       "path": "docs/assets/data/page-registry.json",
-      "sha256": "678521b6f35e464149cf28ba728693c9e8fc653a0c0c81fff91bd344c0792829",
+      "sha256": "ce847e734ba844c09110a49446a3c484a5acbbf6cdb831f28e69952fca745376",
       "publicUrl": "https://codexofreality.org/assets/data/page-registry.json",
       "status": "operational"
     },
@@ -2509,6 +2515,12 @@
       "path": "docs/assets/js/moons-images.js",
       "sha256": "c823ed1630d83d27ed25a1712b9813c2409a7dd03415fc77d15cabdd2e2cad17",
       "publicUrl": "https://codexofreality.org/assets/js/moons-images.js",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/js/moons-living.js",
+      "sha256": "08294217a03c5818f036955fe78cbdedb1505292b27a003080ca5ce4cde8f280",
+      "publicUrl": "https://codexofreality.org/assets/js/moons-living.js",
       "status": "operational"
     },
     {
@@ -4421,13 +4433,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "5de7e66fc9d6185df72a9079a3981073a224c3f656747435790c6da5c657b64a",
+      "sha256": "f4f3edacd561becab559f7aea47b7de213ea776eea61458db008769753ad6707",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "3a65f4028e44ec645e300ed54b97063367c9d74adbf9da825285f1f895961a0b",
+      "sha256": "7d81f53384a994c12df266b3c1ce17c51a10923f995138d235a7b38e9a88f6d4",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -4667,7 +4679,7 @@
     },
     {
       "path": "docs/moons.html",
-      "sha256": "eecc70079885bc43e567fef7ba2781ae99a06b7dc394e59644891a149de47983",
+      "sha256": "c12cb1fc0c4d666314d971f60dd205391577e273b4873efe30ee4d5ddd457d3c",
       "publicUrl": "https://codexofreality.org/moons.html",
       "status": "operational"
     },
