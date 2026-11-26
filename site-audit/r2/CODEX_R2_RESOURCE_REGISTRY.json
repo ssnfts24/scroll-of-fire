@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 2575,
-    "bytes": 1302270273,
+    "bytes": 1302270279,
     "byGroup": {
       "tooling": 366,
       "manuscript": 17,
@@ -8445,7 +8445,7 @@
       "title": "page-registry.json",
       "format": "json",
       "bytes": 468883,
-      "sha256": "c1eafd215544302d5792ff6cc23a5195344b2c36fda7548950269e6e31d2fff9",
+      "sha256": "1389c066da26a44a34b673f1c38e539b0129a5047ee04de99c8f7e636111ba3d",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -17878,8 +17878,8 @@
       "path": "docs/assets/js/spark-companions-page.js",
       "title": "spark-companions-page.js",
       "format": "js",
-      "bytes": 26326,
-      "sha256": "7fca720a63876bbddd6763a7d3c8aa04ad2b294fc11ead6a8e35582e50c2dcd4",
+      "bytes": 26332,
+      "sha256": "3df4ed052916852a8adeba7a5fe993c94bab268509810a0876ac6e2d091be0d0",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
