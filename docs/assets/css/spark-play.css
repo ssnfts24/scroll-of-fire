@@ -224,6 +224,25 @@
   to { background-position: -30% 0; }
 }
 
+/* ---- the Moon-turn harvest card ---- */
+
+.spark-play-harvest-card {
+  border: 1px solid rgba(243, 201, 122, 0.4);
+  border-radius: 14px;
+  padding: 4px 14px 10px;
+  margin: 12px 0 4px;
+  background: radial-gradient(120% 100% at 50% 0%, rgba(243, 201, 122, 0.08), transparent 70%);
+}
+
+.spark-play-harvest-words {
+  margin: 4px 0 8px;
+  padding-left: 18px;
+}
+
+.spark-play-harvest-words li {
+  margin: 2px 0;
+}
+
 /* ---- reduced motion: the layer is still ---- */
 
 @media (prefers-reduced-motion: reduce) {

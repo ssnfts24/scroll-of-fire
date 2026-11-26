@@ -223,6 +223,104 @@ test("every mannerism and trick the layer can show has its animation", () => {
   assert.ok(css.includes(".is-greeting"), "Their Home's greeting shimmer is styled");
 });
 
+test("the calendar's shape: pattern days fall in their Moons", () => {
+  const at = (pd) => JSON.parse(JSON.stringify(Play.moonOfPatternDay(pd)));
+  assert.deepEqual(at(221), { moon: 8, day: 25 });
+  assert.deepEqual(at(224), { moon: 8, day: 28 });
+  assert.deepEqual(at(225), { moon: 9, day: 1 });
+  assert.deepEqual(at(1), { moon: 1, day: 1 });
+  assert.deepEqual(at(364), { moon: 13, day: 28 });
+  assert.deepEqual(at(365), { moon: null, day: null });
+  assert.equal(Play.moonOfPatternDay(0), null);
+  assert.equal(Play.moonOfPatternDay(366), null);
+});
+
+test("the harvest card is composed of record facts only", () => {
+  const facts = {
+    daysSeen: [170, 182, 190, 200, 210],
+    practiceDays: [182, 205],
+    entries: [
+      { patternDay: 182, title: "Rain on the beds, watered everything" },
+      { patternDay: 190, title: "A quiet evening" },
+      { patternDay: 210, title: "Sunrise over the ridge" },
+      { patternDay: 999, title: "Not a real day" },
+      { patternDay: 175, title: "" }
+    ]
+  };
+  const card = Play.harvestFor(facts, 7);
+  assert.deepEqual([...card.witnessedDays], [170, 182, 190], "Moon 7's witnessed days, and only those");
+  assert.deepEqual([...card.sealedDays], [182], "Moon 7's sealed practice, and only it");
+  assert.deepEqual(card.words.map((w) => w.title),
+    ["Rain on the beds, watered everything", "A quiet evening"],
+    "the keeper's own words in that Moon, in day order");
+  const moon8 = Play.harvestFor(facts, 8);
+  assert.deepEqual([...moon8.witnessedDays], [200, 210]);
+  assert.deepEqual(moon8.words.map((w) => w.title), ["Sunrise over the ridge"]);
+});
+
+test("a Moon with nothing witnessed composes nothing; a thin Moon is honestly spare", () => {
+  assert.equal(Play.harvestFor({ daysSeen: [200], practiceDays: [], entries: [] }, 7), null);
+  const thin = Play.harvestFor({ daysSeen: [175], practiceDays: [], entries: [] }, 7);
+  assert.deepEqual([...thin.witnessedDays], [175]);
+  assert.deepEqual([...thin.sealedDays], []);
+  assert.deepEqual(thin.words, [], "no words are invented for a spare card");
+});
+
+test("the harvest Moon is the latest turned Moon with keeping in it", () => {
+  const facts = { daysSeen: [170, 182, 200, 210], practiceDays: [], entries: [] };
+  assert.equal(Play.harvestMoonFor(facts, 224), 7, "standing in Moon 8, Moon 7 is the card");
+  assert.equal(Play.harvestMoonFor(facts, 210), 7, "Moon 8 is today's own Moon — not yet turned");
+  assert.equal(Play.harvestMoonFor({ daysSeen: [200], practiceDays: [], entries: [] }, 224), null,
+    "a Moon whose days are all today's Moon's neighbours in the future composes nothing");
+  assert.equal(Play.harvestMoonFor(facts, null), null);
+  assert.equal(Play.harvestMoonFor({ daysSeen: [], practiceDays: [], entries: [] }, 224), null);
+});
+
+test("kind-element noticing speaks only from the kept record", () => {
+  const facts = {
+    daysSeen: [], practiceDays: [], rests: 0,
+    entries: [
+      { patternDay: 182, title: "Rain on the beds, watered everything" },
+      { patternDay: 190, title: "A quiet evening" },
+      { patternDay: 210, title: "Sunrise over the ridge" }
+    ]
+  };
+  const water = Play.noticingFor("water", facts);
+  assert.equal(water.via, "words");
+  assert.equal(water.count, 1);
+  assert.equal(water.latestDay, 182);
+  assert.equal(water.latestTitle, "Rain on the beds, watered everything");
+  const light = Play.noticingFor("light", facts);
+  assert.equal(light.count, 1);
+  assert.equal(light.latestDay, 210);
+  assert.equal(Play.noticingFor("air", facts), null, "no sky in the record — the Air Spark says nothing");
+  assert.equal(Play.noticingFor("earth", { ...facts, entries: [{ patternDay: 1, title: "A quiet evening" }] }), null);
+});
+
+test("fire and shadow hold one structural fact each — from the record's own counters", () => {
+  const fire = Play.noticingFor("fire", { entries: [], practiceDays: [10, 40, 90], rests: 0 });
+  assert.equal(fire.via, "sealed");
+  assert.equal(fire.count, 3);
+  const shadow = Play.noticingFor("shadow", { entries: [], practiceDays: [], rests: 2 });
+  assert.equal(shadow.via, "rests");
+  assert.equal(shadow.count, 2);
+  assert.equal(Play.noticingFor("fire", { entries: [], practiceDays: [], rests: 0 }), null);
+  assert.equal(Play.noticingFor("shadow", { entries: [], practiceDays: [], rests: 0 }), null);
+  const fireWords = Play.noticingFor("fire", {
+    entries: [{ patternDay: 5, title: "At the bench, the forge lit" }], practiceDays: [10], rests: 0
+  });
+  assert.equal(fireWords.via, "words", "the keeper's own words outrank the counter");
+});
+
+test("composed harvest cards are remembered in the store", () => {
+  const storage = fakeStorage();
+  const store = Play.blankStore();
+  store.harvestCards["moon-7"] = 224;
+  Play.saveStore(storage, store);
+  const back = Play.loadStore(storage);
+  assert.equal(back.harvestCards["moon-7"], 224);
+});
+
 test("the wiring: the Companions page carries the layer in the companion card", () => {
   const html = read("docs/companions.html");
   assert.ok(html.includes("assets/js/spark-play.js"), "the play layer is loaded");

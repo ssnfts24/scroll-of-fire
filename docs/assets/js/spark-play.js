@@ -68,6 +68,22 @@
  *     the house greeting its own. A reading, not a reward:
  *     it writes nothing but the day it last shimmered, so it
  *     can never become a streak.
+ *   - THE MOON-TURN HARVEST CARD (phase 2, adopted by Aaron
+ *     the same evening). At each Moon's turn the Spark
+ *     composes the keeper a card from the days actually
+ *     witnessed together in that Moon — the kept days, the
+ *     practices sealed, and the keeper's own words from their
+ *     Atlas entries, arranged back to them. Record facts
+ *     only: a thin Moon yields an honestly spare card, a Moon
+ *     with nothing witnessed composes nothing, and nothing
+ *     absent is ever named.
+ *   - KIND-ELEMENT NOTICING (phase 2, the same adoption). A
+ *     Spark's kind leans into its element from the kept
+ *     record only: a Water Spark remembers the rain and
+ *     watering days the keeper's own entries speak of, a
+ *     Light Spark the sunrise ones. No new data is collected,
+ *     nothing is fetched, and where the record holds nothing
+ *     of its element, the Spark says nothing about it.
  *
  * The fences, by construction:
  *   - Companion layer only. No protected file is touched; the
@@ -219,7 +235,7 @@
   /* ---------------- the small local store ---------------- */
 
   function blankStore() {
-    return { v: 1, practiseDays: {}, taught: {}, duet: { best: 0, learnedDay: null }, greetedDay: null };
+    return { v: 1, practiseDays: {}, taught: {}, duet: { best: 0, learnedDay: null }, greetedDay: null, harvestCards: {} };
   }
 
   function loadStore(storage) {
@@ -242,6 +258,11 @@
       if (parsed.duet && Number.isFinite(parsed.duet.best)) store.duet.best = parsed.duet.best;
       if (parsed.duet && Number.isFinite(parsed.duet.learnedDay)) store.duet.learnedDay = parsed.duet.learnedDay;
       if (Number.isFinite(parsed.greetedDay)) store.greetedDay = parsed.greetedDay;
+      if (parsed.harvestCards && typeof parsed.harvestCards === "object") {
+        for (const [k, v] of Object.entries(parsed.harvestCards)) {
+          if (Number.isFinite(v)) store.harvestCards[k] = v;
+        }
+      }
       return store;
     } catch {
       return blankStore();
@@ -290,6 +311,125 @@
     return Object.keys(store.taught || {});
   }
 
+  /* ---------------- phase 2: the harvest card ---------------- */
+
+  /* The calendar's own shape: thirteen Moons of twenty-eight
+   * days, and the Day Out of Time standing outside them. */
+  function moonOfPatternDay(patternDay) {
+    if (!Number.isFinite(patternDay) || patternDay < 1 || patternDay > 365) return null;
+    if (patternDay === 365) return { moon: null, day: null };
+    return { moon: Math.floor((patternDay - 1) / 28) + 1, day: ((patternDay - 1) % 28) + 1 };
+  }
+
+  function daysInMoon(days, moon) {
+    return (Array.isArray(days) ? days : [])
+      .filter((d) => {
+        const at = moonOfPatternDay(d);
+        return at && at.moon === moon;
+      })
+      .sort((a, b) => a - b);
+  }
+
+  /* The Moon-turn harvest card, composed whole from the kept
+   * record: the days witnessed together in that Moon, the
+   * practices sealed in it, and the keeper's own words — the
+   * titles of their Atlas entries — that stand in it. Facts
+   * only: a Moon with no witnessed day composes nothing, and
+   * a thin Moon composes an honestly spare card. Nothing is
+   * counted that was not kept, and nothing absent is named. */
+  function harvestFor(facts, moon) {
+    if (!facts || !Number.isFinite(moon)) return null;
+    const witnessedDays = daysInMoon(facts.daysSeen, moon);
+    if (!witnessedDays.length) return null;
+    const sealedDays = daysInMoon(facts.practiceDays, moon);
+    const words = (Array.isArray(facts.entries) ? facts.entries : [])
+      .filter((e) => e && Number.isFinite(e.patternDay) && e.title
+        && (moonOfPatternDay(e.patternDay) || {}).moon === moon)
+      .sort((a, b) => a.patternDay - b.patternDay)
+      .map((e) => ({ patternDay: e.patternDay, title: e.title }));
+    return { moon, witnessedDays, sealedDays, words };
+  }
+
+  /* The latest Moon that has turned (every day in it stands
+   * before today, and it is not the Moon today stands in)
+   * that holds a card's worth of keeping. */
+  function harvestMoonFor(facts, todayPatternDay) {
+    if (!Number.isFinite(todayPatternDay)) return null;
+    const todayMoon = (moonOfPatternDay(todayPatternDay) || {}).moon;
+    for (let moon = 13; moon >= 1; moon--) {
+      if (moon === todayMoon) continue;
+      const days = daysInMoon(facts && facts.daysSeen, moon);
+      if (!days.length) continue;
+      if (Math.max(...days) < todayPatternDay) return moon;
+    }
+    return null;
+  }
+
+  /* ---------------- phase 2: kind-element noticing ---------------- */
+
+  /* Each kind leans toward its element in the keeper's OWN
+   * words — the titles of their kept entries. The lists are
+   * small and plain on purpose: a noticing is the keeper's
+   * record read back, never a guess about their life, and
+   * never anything fetched from outside the record. */
+  const ELEMENT_WORDS = {
+    fire: ["fire", "flame", "forge", "bench", "ember", "burn", "candle"],
+    water: ["rain", "water", "watering", "river", "shore", "wash", "sea", "lake", "well", "creek"],
+    light: ["sunrise", "dawn", "first light", "early", "sun", "light", "morning"],
+    air: ["wind", "sky", "breath", "storm", "bird", "breeze", "cloud"],
+    earth: ["garden", "plant", "seed", "soil", "harvest", "bed", "grow", "tree"],
+    shadow: ["night", "dark", "quiet", "dream", "rest", "shadow", "moon"]
+  };
+
+  const ELEMENT_NAMES = {
+    fire: "the fire", water: "the water", light: "the early light",
+    air: "the open sky", earth: "the garden", shadow: "the quiet"
+  };
+
+  function wordsMatch(title, words) {
+    const text = ` ${String(title || "").toLowerCase()} `;
+    return words.some((w) => text.includes(` ${w} `) || text.includes(` ${w},`) || text.includes(` ${w}.`)
+      || text.includes(` ${w}'`) || text.includes(` ${w}s `) || text.includes(` ${w}ed `));
+  }
+
+  /* What this Spark's kind notices in the kept record, or
+   * null — and where the record holds nothing of its element,
+   * the Spark says nothing about it. Fire and Shadow also
+   * hold one structural fact each, from the record's own
+   * counters: the practices sealed at the Bench, and the
+   * rests kept together. */
+  function noticingFor(kind, facts) {
+    if (!kind || !facts) return null;
+    const words = ELEMENT_WORDS[kind];
+    if (words) {
+      const matches = (Array.isArray(facts.entries) ? facts.entries : [])
+        .filter((e) => e && Number.isFinite(e.patternDay) && e.title && wordsMatch(e.title, words))
+        .sort((a, b) => a.patternDay - b.patternDay);
+      if (matches.length) {
+        const latest = matches[matches.length - 1];
+        return {
+          kind, via: "words", count: matches.length,
+          latestDay: latest.patternDay, latestTitle: latest.title,
+          element: ELEMENT_NAMES[kind]
+        };
+      }
+    }
+    if (kind === "fire" && Array.isArray(facts.practiceDays) && facts.practiceDays.length) {
+      return {
+        kind, via: "sealed", count: facts.practiceDays.length,
+        latestDay: facts.practiceDays[facts.practiceDays.length - 1], latestTitle: null,
+        element: ELEMENT_NAMES.fire
+      };
+    }
+    if (kind === "shadow" && Number.isFinite(facts.rests) && facts.rests > 0) {
+      return {
+        kind, via: "rests", count: facts.rests,
+        latestDay: null, latestTitle: null, element: ELEMENT_NAMES.shadow
+      };
+    }
+    return null;
+  }
+
   /* ---------------- celebrations: real completions only ------- */
 
   /* The same two real moments the presence layer celebrates:
@@ -331,6 +471,13 @@
     recordPractise,
     recordDuet,
     taughtTrickIds,
+    moonOfPatternDay,
+    daysInMoon,
+    harvestFor,
+    harvestMoonFor,
+    ELEMENT_WORDS,
+    ELEMENT_NAMES,
+    noticingFor,
     isCelebrationEvent,
     reducedMotion
   };
@@ -432,8 +579,10 @@
 
     /* ----- build the section ----- */
     mount.innerHTML =
+      `<div id="spark-play-harvest"></div>` +
       `<h3 style="margin:14px 0 4px">Play together</h3>` +
       `<p class="spark-note" id="spark-play-character"></p>` +
+      `<p class="spark-note" id="spark-play-noticing" role="status" aria-live="polite"></p>` +
       `<div class="spark-play-tricks" id="spark-play-tricks" role="group" aria-label="Tricks to perform and practise"></div>` +
       `<p class="spark-note" id="spark-play-trick-note" role="status" aria-live="polite"></p>` +
       `<div class="spark-play-duet" id="spark-play-duet">` +
@@ -710,6 +859,124 @@
         saveStore(window.localStorage, store);
       }, 1200);
     }
+
+    /* ----- phase 2: the harvest card + kind-element noticing -----
+     * Both are readings of the kept record — the companion
+     * record the layer already holds, and the keeper's Atlas
+     * entries, read once, read-only, through the same resolver
+     * Their Home uses. Nothing is collected, fetched, or
+     * inferred: the card arranges the keeper's own kept days
+     * and words back to them, and the noticing speaks only
+     * when the record itself holds the Spark's element. */
+    function scriptBase() {
+      const el = document.querySelector('script[src*="spark-play.js"]');
+      if (el && el.src) return el.src.split("spark-play.js")[0];
+      return "assets/js/";
+    }
+
+    function loadScriptOnce(src) {
+      return new Promise((resolve, reject) => {
+        const s = document.createElement("script");
+        s.src = src;
+        s.onload = resolve;
+        s.onerror = reject;
+        document.head.appendChild(s);
+      });
+    }
+
+    async function phaseTwo() {
+      let entries = [];
+      try {
+        if (!window.CodexRecordHelpers) {
+          await loadScriptOnce(`${scriptBase()}life-atlas/record-helpers.js`);
+        }
+        let repository = null;
+        if (window.CodexRecordHelpers) {
+          repository = await window.CodexRecordHelpers.createRepositoryResolver()();
+        }
+        if (!repository && window.CodexLifeAtlasRuntime) {
+          repository = await window.CodexLifeAtlasRuntime.ready;
+        }
+        if (repository) {
+          const records = await repository.query({});
+          entries = (records || [])
+            .map((r) => ({
+              patternDay: r && r.temporal ? r.temporal.patternDay : null,
+              title: r && r.title ? String(r.title) : ""
+            }))
+            .filter((e) => Number.isFinite(e.patternDay));
+        }
+      } catch {
+        entries = [];
+      }
+      const fresh = readRecord() || record;
+      const facts = {
+        daysSeen: Array.isArray(fresh.daysSeen) ? fresh.daysSeen : [],
+        practiceDays: Array.isArray(fresh.practiceDays) ? fresh.practiceDays : [],
+        rests: fresh.care && Number.isFinite(fresh.care.rests) ? fresh.care.rests : 0,
+        entries
+      };
+
+      /* The noticing: one line, only when the record speaks. */
+      const noticing = noticingFor(companion.kind, facts);
+      const noticingEl = mount.querySelector("#spark-play-noticing");
+      if (noticing && noticingEl) {
+        if (noticing.via === "words") {
+          noticingEl.textContent =
+            `${name} notices ${noticing.element} in your keeping: ${noticing.count} kept ` +
+            `${noticing.count === 1 ? "entry speaks" : "entries speak"} of it — the latest, ` +
+            `Pattern Day ${noticing.latestDay}: “${noticing.latestTitle}”.`;
+        } else if (noticing.via === "sealed") {
+          noticingEl.textContent =
+            `${name} remembers the Bench: ${noticing.count} practice ${noticing.count === 1 ? "day" : "days"} sealed together.`;
+        } else if (noticing.via === "rests") {
+          noticingEl.textContent =
+            `${name} remembers the quiet: you have rested together ${noticing.count} ${noticing.count === 1 ? "time" : "times"}.`;
+        }
+      }
+
+      /* The harvest card: the latest turned Moon with keeping
+       * in it, composed from the facts and kept standing. */
+      const harvestHost = mount.querySelector("#spark-play-harvest");
+      if (!harvestHost || today == null) return;
+      const moon = harvestMoonFor(facts, today);
+      if (moon == null) return;
+      const card = harvestFor(facts, moon);
+      if (!card) return;
+      const moonName = (window.PatternCalendarData && window.PatternCalendarData.moons
+        && window.PatternCalendarData.moons[moon - 1]
+        && window.PatternCalendarData.moons[moon - 1].name) || null;
+      const key = `moon-${moon}`;
+      const isNew = !Number.isFinite(store.harvestCards[key]);
+      const dayList = card.witnessedDays
+        .map((d) => `Day ${(moonOfPatternDay(d) || {}).day}`).join(", ");
+      const sealedLine = card.sealedDays.length
+        ? `<p class="spark-note">Practices sealed: ${card.sealedDays
+            .map((d) => `Day ${(moonOfPatternDay(d) || {}).day}`).join(", ")}.</p>`
+        : "";
+      const wordsLine = card.words.length
+        ? `<p class="spark-note">In your own words, kept in it:</p>` +
+          `<ul class="spark-play-harvest-words">` +
+          card.words.slice(0, 4).map((w) =>
+            `<li>Pattern Day ${w.patternDay} — “${w.title.replace(/</g, "&lt;")}”</li>`).join("") +
+          `</ul>`
+        : "";
+      harvestHost.innerHTML =
+        `<div class="spark-play-harvest-card">` +
+          `<h3 style="margin:14px 0 4px">The Moon's turn — a card from ${name}</h3>` +
+          `<p class="spark-note">Moon ${moon}${moonName ? ` · ${moonName}` : ""}, kept together.</p>` +
+          `<p class="spark-note">Days witnessed together: ${dayList} — ${card.witnessedDays.length} ` +
+          `${card.witnessedDays.length === 1 ? "day" : "days"}.</p>` +
+          sealedLine + wordsLine +
+          (isNew ? `<p class="spark-note">${name} composed this at the Moon's turn, from the days as they stand in the record — nothing added, nothing dressed up.</p>` : "") +
+        `</div>`;
+      if (isNew) {
+        store.harvestCards[key] = today;
+        saveStore(window.localStorage, store);
+        burst(10);
+      }
+    }
+    phaseTwo();
 
     /* ----- idle life ----- */
     let idleTimer = null;
