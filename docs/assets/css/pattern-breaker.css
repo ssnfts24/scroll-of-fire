@@ -1,0 +1,320 @@
+/*
+ * Pattern Breaker — the daily pattern puzzle (Play).
+ * Living Look: every colour, radius, and shadow is a token from
+ * codex.css. This sheet declares none of its own palette; it only
+ * arranges the room. Motion answers the visitor; under
+ * prefers-reduced-motion the still design stands whole.
+ */
+
+.pb-wrap {
+  max-width: var(--content-reading);
+  margin: 0 auto;
+  padding: clamp(1.2rem, 4vw, 2.6rem) var(--shell-pad) var(--section-gap);
+}
+
+.pb-stage {
+  text-align: center;
+  padding: clamp(1.4rem, 4vw, 2.4rem) clamp(1rem, 3vw, 2rem);
+  background: var(--panel);
+  border: 1px solid var(--line-gold);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+}
+
+.pb-mark {
+  display: block;
+  margin: 0 auto 0.4rem;
+}
+
+.pb-name {
+  font-family: var(--display);
+  font-size: clamp(2rem, 6vw, 3rem);
+  letter-spacing: 0.04em;
+  color: var(--text);
+  margin: 0.2rem 0 0.4rem;
+}
+
+.pb-dayline {
+  color: var(--gold);
+  font-size: 1.02rem;
+  margin: 0.2rem 0 0.1rem;
+}
+
+.pb-civil {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 1.2rem;
+}
+
+/* The Spark's station: a lit orb, no bubble, with its line of speech. */
+.pb-spark-station {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0.4rem auto 1.4rem;
+  max-width: 34rem;
+}
+
+.pb-orb {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 36%, var(--text) 0%, var(--gold) 34%, var(--gold-deep) 72%, color-mix(in srgb, var(--gold-deep) 0%, transparent) 100%);
+  box-shadow: 0 0 26px 6px color-mix(in srgb, var(--gold) 35%, transparent);
+  animation: pb-breathe 4.2s ease-in-out infinite;
+}
+
+.pb-spark-station.pb-lit .pb-orb {
+  box-shadow: 0 0 44px 14px color-mix(in srgb, var(--gold) 55%, transparent);
+}
+
+@keyframes pb-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.07); }
+}
+
+.pb-spark-bit {
+  position: absolute;
+  left: 50%;
+  top: 22px;
+  width: 5px;
+  height: 5px;
+  margin: -2.5px;
+  border-radius: 50%;
+  background: var(--gold);
+  pointer-events: none;
+  animation: pb-bit 0.9s ease-out forwards;
+}
+
+@keyframes pb-bit {
+  from { transform: translate(0, 0) scale(1); opacity: 1; }
+  to { transform: translate(var(--pb-dx), var(--pb-dy)) scale(0.3); opacity: 0; }
+}
+
+.pb-keeper-line {
+  color: var(--muted);
+  font-style: italic;
+  margin: 0;
+}
+
+/* The board */
+.pb-lead {
+  font-size: 1.08rem;
+  color: var(--text);
+  margin: 0.4rem 0 1rem;
+}
+
+.pb-tiles {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 0 0 0.6rem;
+  padding: 0;
+}
+
+.pb-tile {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  min-width: 64px;
+  min-height: 64px;
+  padding: 0.5rem 0.55rem;
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+}
+
+button.pb-tile {
+  cursor: pointer;
+  font: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+button.pb-tile:hover,
+button.pb-tile:focus-visible {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px var(--line-gold);
+  outline: none;
+}
+
+.pb-glyph { width: 44px; height: 44px; display: block; }
+.pb-phase { width: 40px; height: 40px; }
+.pb-f-gold { color: var(--gold); }
+.pb-f-teal { color: var(--cyan); }
+.pb-f-ember { color: var(--ember); }
+.pb-f-green { color: var(--green); }
+
+.pb-num {
+  font-family: var(--display);
+  font-size: 1.45rem;
+  color: var(--text);
+}
+
+.pb-unit { font-size: 0.8rem; color: var(--muted); }
+
+.pb-letter {
+  font-size: 1.9rem;
+  line-height: 1.1;
+  color: var(--gold);
+}
+
+.pb-tile-name {
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.pb-lines {
+  list-style: none;
+  margin: 0 auto 0.6rem;
+  padding: 0;
+  max-width: 30rem;
+  text-align: left;
+}
+
+.pb-lines li {
+  padding: 0.45rem 0.8rem;
+  margin: 0.35rem 0;
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+}
+
+.pb-question {
+  font-family: var(--display);
+  font-size: 1.25rem;
+  color: var(--gold);
+  margin: 1rem 0 0.8rem;
+}
+
+.pb-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+  max-width: 30rem;
+  margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+  .pb-options { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+.pb-option {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  min-height: 64px;
+  padding: 0.55rem 0.4rem;
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.pb-option:hover,
+.pb-option:focus-visible {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px var(--line-gold);
+  outline: none;
+}
+
+.pb-wrong { opacity: 0.38; border-color: var(--line); box-shadow: none; }
+
+.pb-right,
+.pb-breaker {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px var(--gold), 0 0 22px color-mix(in srgb, var(--gold) 35%, transparent);
+}
+
+.pb-feedback {
+  min-height: 1.5em;
+  color: var(--cyan);
+  margin: 0.9rem 0 0;
+}
+
+/* After the solve: the rule, and the card of words. */
+.pb-after {
+  margin-top: 1.6rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--line);
+}
+
+.pb-rule {
+  color: var(--muted);
+  max-width: 32rem;
+  margin: 0 auto 1.2rem;
+}
+
+.pb-card {
+  max-width: 26rem;
+  margin: 0 auto;
+  padding: 1.1rem 1.2rem;
+  background: var(--panel-strong);
+  border: 1px solid var(--gold);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+}
+
+.pb-share-line {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  color: var(--text);
+  margin: 0 0 0.8rem;
+}
+
+.pb-copy {
+  background: var(--gold);
+  color: var(--bg);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 1.2rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pb-copy:hover, .pb-copy:focus-visible {
+  background: var(--gold-deep);
+  outline: none;
+}
+
+.pb-copy-note { color: var(--muted); font-size: 0.9rem; min-height: 1.3em; }
+
+.pb-count { color: var(--muted); margin-top: 1rem; }
+
+/* Quiet doors onward — never a dead end. */
+.pb-doors {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem 1.6rem;
+  margin-top: var(--section-gap);
+  text-align: center;
+}
+
+.pb-doors a {
+  color: var(--muted);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-gold);
+  padding-bottom: 0.1rem;
+}
+
+.pb-doors a:hover, .pb-doors a:focus-visible { color: var(--gold); }
+
+@media (prefers-reduced-motion: reduce) {
+  .pb-orb { animation: none; }
+  .pb-spark-bit { animation: none; display: none; }
+  button.pb-tile, .pb-option { transition: none; }
+}
