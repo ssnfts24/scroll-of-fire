@@ -108,10 +108,10 @@
 | `docs/assets/css/living-ui.css` | 155 |
 | `docs/scripture/assets/scripture.css` | 102 |
 | `docs/assets/css/spark-agent-seat.css` | 75 |
-| `docs/assets/css/codex.css` | 66 |
+| `docs/assets/css/codex.css` | 67 |
 | `docs/assets/css/navigation.css` | 56 |
 | `docs/assets/css/social-bridge.css` | 47 |
-| `docs/assets/css/living-moon-theme.css` | 40 |
+| `docs/assets/css/living-moon-theme.css` | 41 |
 | `docs/assets/css/animations.css` | 28 |
 | `docs/assets/css/story-layer.css` | 21 |
 | `docs/theory/equations/assets/css/codex.css` | 19 |
