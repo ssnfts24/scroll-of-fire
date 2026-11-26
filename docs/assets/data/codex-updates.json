@@ -10,6 +10,22 @@
  {
   "date": "2026-11-25",
   "type": "Site",
+  "title": "The word studies gain their Hebrew voice: the pronunciation layer",
+  "summary": "The seven Hebrew word studies can now be heard in Hebrew. A pronunciation engine reads the pointed text by rule — vowel points, dagesh, shewa sounded or silent — and speaks a careful transliteration in the device's own voice while the Hebrew word is highlighted; any pointed word on a study page can be tapped to hear it alone. The engine's readings are pinned by tests against the transliteration printed in each study itself, and where a study's printed form follows a tradition the rules do not produce, the difference is named in the open, never silently resolved. It is a transliteration in the device's voice, not a native Hebrew voice, and the pages say so plainly.",
+  "url": "./scripture/word-studies/index.html",
+  "symbol": "א"
+ },
+ {
+  "date": "2026-11-25",
+  "type": "Site",
+  "title": "The Spark speaks: spoken conversation where the companion and the Guide live",
+  "summary": "The Spark can be spoken to, and can speak back. On the Companions page and the Codex Guide, the talk seat now carries a microphone: speak, and your words land in the box for you to send, because nothing is written until you say yes. Turn on Hear replies and the Spark answers aloud in its own voice, one voice per Spark, chosen by its seed from the natural voices on your device, never a robotic one. The Guide's answers can be heard aloud too, in a steady neutral voice. Quiet stays the default, and in child mode there is no spoken conversation at all.",
+  "url": "./companions.html",
+  "symbol": "♪"
+ },
+ {
+  "date": "2026-11-25",
+  "type": "Site",
   "title": "The story web is finished weaving",
   "summary": "The story now enters everywhere it belongs. The biography page gains its story door: one episode matched to the man, The Gate at First Light, labelled on its face as story and kept apart from the record above it. On the Traveller's Map, every land now names its episode by name, Moon, and token, the way the story itself tells its episodes apart. And in the Episode Library, every film gains a watch-and-do strip: watch the episode, then do the practice its Waymaker skill names, drawn from the story's own curriculum, in the room where the doing lives. The films themselves are untouched: the new cuts land only when Aaron has watched them and gives the word.",
   "url": "./episodes.html",
