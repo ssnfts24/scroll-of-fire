@@ -629,7 +629,7 @@
     },
     {
       "path": "docs/assets/data/codex-updates.json",
-      "sha256": "a21d97c9890d9ea0d78a0a98d45ef3feadc54bcc5c49cb10f4bdb3183bdf74e7",
+      "sha256": "cb401e3e56fce0d8efaf49cf616b1b91ae7438a76dac13a9fa9a443914aa1459",
       "publicUrl": "https://codexofreality.org/assets/data/codex-updates.json",
       "status": "operational"
     },
@@ -665,7 +665,7 @@
     },
     {
       "path": "docs/assets/data/link-graph.json",
-      "sha256": "401d3e7b9acf56916ba59375153f1a3aaf0385287009fd40d2e8d871bb464676",
+      "sha256": "7e877b145a72df16a25cbd102e2a62b618c3a8fcd2ccfe5b4fccd568b16adb05",
       "publicUrl": "https://codexofreality.org/assets/data/link-graph.json",
       "status": "operational"
     },
@@ -689,7 +689,7 @@
     },
     {
       "path": "docs/assets/data/page-registry.json",
-      "sha256": "a1aee98fb0f6b29aa273f320820c91a290a49607a03dc4249082650c020c0edf",
+      "sha256": "12e00769dd83efe399473324dbc4633eb5df3b2fdcfd75d2fe3ba384ca2742c5",
       "publicUrl": "https://codexofreality.org/assets/data/page-registry.json",
       "status": "operational"
     },
@@ -4451,13 +4451,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "352d211ec14db1a520de2421ce7670ee58dc16ba80e108c2dc7179f3e49cf257",
+      "sha256": "a65706b76b28be3f8b0abd54f235e688074440a94b338fc1b73b929acb435615",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "40e4fe111ff4862c11dd32f834588d52be1dac2578332124c63d4d5a163179e2",
+      "sha256": "17d489b4cfd535183763562e90e5e1e0c0c1be2ddc106fa3e6db20153975a1eb",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -4643,7 +4643,7 @@
     },
     {
       "path": "docs/index.html",
-      "sha256": "3f19c4a3259e9cdf01a60150478a2220e6c8b9a492bedf2b3d86681960efd3a9",
+      "sha256": "55d756e52eac8c86889fe4e4154f27e0a49cd32812742953900014458e20cc0d",
       "publicUrl": "https://codexofreality.org/",
       "status": "operational"
     },
@@ -11447,7 +11447,7 @@
     },
     {
       "path": "docs/witness.html",
-      "sha256": "62f5e33762ec00b8256d23d6f788bd2d74c15feffcde39b65be15f1514d8c057",
+      "sha256": "0779db0a4cf7beea3f0068edd605173e748be5af3cb4e568d4e3f67bd5b0d755",
       "publicUrl": "https://codexofreality.org/witness.html",
       "status": "operational"
     }
