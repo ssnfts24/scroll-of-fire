@@ -1,0 +1,170 @@
+/*
+ * The front door — the Living Look layer (docs/index.html).
+ *
+ * One token sheet, consumed not re-declared: every colour, radius and
+ * shadow below comes from codex.css (--bg, --gold, --text, --panel,
+ * --radius-*, --shadow-*). The room's light is the Moon's tint:
+ * --moon-accent arrives from living-moon-theme.css, stamped from the
+ * canonical calendar by living-moon-theme.js.
+ *
+ * Shape: the Ambient Door becomes the stage — a framed place you
+ * enter, the real day on its face in one welcome line, the Spark at
+ * its station, and exactly one clear action (Enter the Sphere); the
+ * door's other doors stand by as quiet links, all still working.
+ *
+ * Motion only answers. The still design is the design: animations
+ * are added only under prefers-reduced-motion: no-preference, and
+ * under reduced motion the Spark's glow stands still and whole.
+ */
+
+/* ---------------- the stage: a place you enter -------------------- */
+
+.ambient-door::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 65% 45% at 50% 0%, color-mix(in srgb, var(--moon-accent, var(--gold)) 14%, transparent), transparent 60%);
+  pointer-events: none;
+}
+
+.ambient-door-inner {
+  padding: clamp(1.2rem, 3.5vw, 2.2rem);
+  border: 1px solid var(--line-gold);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--panel) 72%, transparent);
+  box-shadow: var(--shadow-soft);
+}
+
+/* ---------------- the welcome line: the real day, whole ----------- */
+/* Civil date, Moon and Pattern Day in one line on the door's face,
+ * filled by home-living-look.js from the canonical PatternCalendar.
+ * Static copy is date-neutral; the calendar speaks the real day. */
+
+.ll-day-line {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  max-width: 100%;
+  margin: 0 0 1rem;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid color-mix(in srgb, var(--moon-accent, var(--gold)) 45%, transparent);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+}
+
+.ll-day-line::before {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--moon-accent, var(--gold));
+}
+
+/* ---------------- the Spark's station ----------------------------- */
+/* Present with a job: it points at the one clear action. No bubble
+ * around the Spark; it lights up, with little sparks forming around
+ * it — and it lights up at once when the action is touched. */
+
+.ll-spark-station {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem 1rem;
+  margin: 1.6rem auto 0;
+  max-width: 38rem;
+}
+
+.ll-spark-orb {
+  position: relative;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 38% 34%, var(--text), var(--gold) 42%, var(--gold-deep) 78%, transparent 79%);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--gold) 45%, transparent);
+  transition: box-shadow 0.25s ease-in-out;
+}
+
+.ll-spark-orb i {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+.ll-spark-orb i:nth-child(1) { width: 5px; height: 5px; top: -6px; right: 5px; }
+.ll-spark-orb i:nth-child(2) { width: 4px; height: 4px; bottom: -4px; left: 7px; background: var(--green); }
+.ll-spark-orb i:nth-child(3) { width: 3px; height: 3px; top: 6px; left: -6px; background: var(--cyan); }
+
+.ll-spark-orb.is-lit {
+  box-shadow: 0 0 34px color-mix(in srgb, var(--gold) 80%, transparent);
+}
+
+.ll-spark-line {
+  flex: 1 1 15rem;
+  margin: 0;
+  text-align: left;
+}
+
+.ll-resume {
+  flex: 1 1 100%;
+  margin: 0.2rem 0 0;
+  color: var(--muted);
+  font-size: 0.94rem;
+}
+
+.ll-resume a {
+  color: var(--gold);
+  text-underline-offset: 0.25rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ll-spark-orb { animation: ll-orb-breathe 4.6s ease-in-out infinite alternate; }
+}
+
+@keyframes ll-orb-breathe {
+  from { box-shadow: 0 0 13px color-mix(in srgb, var(--gold) 35%, transparent); }
+  to   { box-shadow: 0 0 26px color-mix(in srgb, var(--gold) 60%, transparent); }
+}
+
+/* ---------------- one clear action -------------------------------- */
+/* Enter the Sphere stands first and uncluttered. The door's other
+ * doors (Meet the Spark, Sit with the Sphere here) stay working as
+ * quiet links below it — nothing is removed, one thing leads. */
+
+.ambient-door .ambient-actions {
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.ambient-door .ambient-actions .btn.primary {
+  min-height: 52px;
+  padding: 0.85rem 2rem;
+  font-size: 1.05rem;
+  border-radius: 999px;
+  box-shadow: 0 0 24px color-mix(in srgb, var(--gold) 30%, transparent);
+}
+
+.ambient-door .ambient-actions .btn:not(.primary) {
+  min-height: 44px;
+  padding: 0.4rem 0.6rem;
+  border-color: transparent;
+  background: transparent;
+  text-decoration: underline;
+  text-underline-offset: 0.3rem;
+  font-size: 0.95rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ll-spark-orb { animation: none; }
+  .ll-spark-orb { transition: none; }
+}
