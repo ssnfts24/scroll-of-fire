@@ -3490,8 +3490,23 @@
     document.body.appendChild(host);
   }
 
+  /* The living layer (Aaron, Nov 26, 2026): traces in walked
+   * rooms, a breath on returning, the doorstep invitation, the
+   * Spark watching the films alongside, the garden of finds.
+   * Loaded lazily from this script's own folder, so no page
+   * pays for it until the companion stands and no page's
+   * markup had to change to carry it. */
+  function loadLiving() {
+    if (window.SparkLiving) return;
+    const base = scriptBase();
+    loadScript(base + "spark-lean.js?v=20261126-1")
+      .then(() => loadScript(base + "spark-living.js?v=20261126-1"))
+      .catch(() => { /* the living layer rests */ });
+  }
+
   async function start() {
     const hasCalendar = await ensureCalendar();
+    loadLiving();
     const today = hasCalendar ? todayCoordinate() : null;
 
     let record = settleFromHome(readRecord());
