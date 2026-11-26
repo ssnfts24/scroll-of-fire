@@ -502,6 +502,7 @@
       $("#spark-stage").textContent +=
         ` On its long path: stage ${path.index + 1} of ${path.count} — ${path.name}, within the ${path.arc} arc` +
         (path.next ? `; next is ${path.next}, ${path.toGo} point${path.toGo === 1 ? "" : "s"} on.` : `. The path's summit — it stands there now.`);
+    }
     const progress = Core.progressOf(record, companion);
     $("#spark-next").textContent = progress.next
       ? `Next: ${progress.next}, at ${progress.nextAt} points — ${progress.toGo} to go. ` +
