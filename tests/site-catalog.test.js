@@ -122,7 +122,7 @@ test("global navigation, Scroll entry points, filters and local-data disclosure 
   }
   const sitemap = read("docs/sitemap.xml");
   const scriptureSitemap = [...sitemap.matchAll(/<loc>https:\/\/codexofreality\.org\/scripture\/[^<]+<\/loc>/g)];
-  assert.equal(scriptureSitemap.length, 101);
+  assert.equal(scriptureSitemap.length, 102);
 
   const homepage = read("docs/index.html");
   for (const label of ["Read", "Explore", "Build", "Living Time", "Archive"]) {

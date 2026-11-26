@@ -427,6 +427,11 @@
   font-size: 0.88rem !important;
 }
 
+/* The talk mount inside the panel (Aaron's menu rule). */
+.spark-panel-talk {
+  margin: 2px 0 8px;
+}
+
 .spark-panel-row strong {
   color: var(--spark-dim);
   font-weight: 600;
@@ -1112,6 +1117,12 @@
   color: var(--spark-dim);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+/* Talk carries the gold edge: the menu's headline action. */
+.spark-panel-talk-btn {
+  border-color: rgba(217, 164, 65, 0.65);
+  background: rgba(217, 164, 65, 0.12);
 }
 
 /* The day's one thing stands first, wide, in gold. */

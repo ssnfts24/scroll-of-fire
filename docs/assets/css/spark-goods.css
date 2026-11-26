@@ -1,0 +1,13 @@
+/* The Spark Stall — companions page section. Night/gold/ivory
+   tokens from the Living Look sheet; no new palette. */
+#spark-stall .stall-stage { max-width: 420px; margin: 12px auto; border: 1px solid var(--hatch-widget-border, #2a3342); border-radius: 16px; overflow: hidden; background: #05070d; }
+#spark-stall .stall-stage svg { display: block; width: 100%; height: auto; }
+#spark-stall .stall-cat { margin: 22px 0; }
+#spark-stall .stall-items { list-style: none; padding: 0; margin: 8px 0; }
+#spark-stall .stall-item { padding: 10px 12px; margin: 8px 0; border: 1px solid #2a3342; border-radius: 12px; background: rgba(244, 241, 232, 0.03); }
+#spark-stall .stall-price { color: #f3c97a; font-weight: 600; }
+#spark-stall .stall-rarity { color: #e8c97a; font-style: italic; }
+#spark-stall .stall-on { color: #b9c2cf; }
+#spark-stall .stall-show { margin-left: 8px; }
+#spark-stall .stall-till { border: 1px solid #d99545; border-radius: 12px; padding: 10px 12px; }
+@media (prefers-reduced-motion: reduce) { #spark-stall * { animation: none !important; transition: none !important; } }

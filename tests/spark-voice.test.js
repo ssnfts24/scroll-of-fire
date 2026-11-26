@@ -11,6 +11,10 @@
  *     the same device voice list always choose the same voice,
  *     pitch and rate; different seeds choose differently —
  *     many voices, randomized across Sparks (Aaron, Nov 25);
+ *   - the pick is a function of the voice SET, not the order
+ *     the device reported it in, proven across a 144-seed
+ *     sweep; a one-voice device degrades to seed-varied pitch
+ *     and rate, and no voices means no profile, never a crash;
  *   - never robotic: named novelty/robot device voices are
  *     excluded before the seed picks, whatever the seed;
  *   - the Guide does not borrow a Spark's voice: its profile
@@ -116,6 +120,93 @@ test("pitch and rate stay inside natural speaking ranges", () => {
   }
 });
 
+/* A device richer than any one family: eight natural-named
+ * English voices the seed can pick among, two plainer local
+ * voices beneath them, one novelty voice and one other-language
+ * voice that must never be picked for an English Spark. */
+const RICH_VOICES = [
+  { name: "Microsoft Aria", voiceURI: "Microsoft Aria", lang: "en-US", localService: true },
+  { name: "Microsoft Jenny", voiceURI: "Microsoft Jenny", lang: "en-US", localService: true },
+  { name: "Microsoft Guy", voiceURI: "Microsoft Guy", lang: "en-US", localService: false },
+  { name: "Google US English", voiceURI: "Google US English", lang: "en-US", localService: false },
+  { name: "Samantha", voiceURI: "Samantha", lang: "en-US", localService: true },
+  { name: "Alex", voiceURI: "Alex", lang: "en-US", localService: true },
+  { name: "Microsoft David", voiceURI: "Microsoft David", lang: "en-US", localService: true },
+  { name: "Microsoft Zira", voiceURI: "Microsoft Zira", lang: "en-US", localService: true },
+  { name: "Karen", voiceURI: "Karen", lang: "en-AU", localService: true },
+  { name: "Daniel", voiceURI: "Daniel", lang: "en-GB", localService: true },
+  { name: "Zarvox", voiceURI: "Zarvox", lang: "en-US", localService: true },
+  { name: "Google español", voiceURI: "Google español", lang: "es-ES", localService: false }
+];
+
+function sweepSeeds(count) {
+  const seeds = [];
+  for (let i = 0; i < count; i++) {
+    seeds.push(Core.makeSeed({
+      moon: (i % 13) + 1,
+      patternDay: (i * 37) % 364 + 1,
+      kindIndex: i % 6,
+      nonce: `sweep${String(i).padStart(3, "0")}`
+    }));
+  }
+  return seeds;
+}
+
+test("seed sweep: 144 Sparks spread across the device's voices, every one stable", () => {
+  const seeds = sweepSeeds(144);
+  const byVoice = new Map();
+  for (const seed of seeds) {
+    const p1 = Voice.profileFor({ seed, voices: RICH_VOICES, lang: "en" });
+    const p2 = Voice.profileFor({ seed, voices: RICH_VOICES, lang: "en" });
+    assert.equal(JSON.stringify(p1), JSON.stringify(p2), `unstable profile for ${seed}`);
+    byVoice.set(p1.voiceName, (byVoice.get(p1.voiceName) || 0) + 1);
+  }
+  /* Many voices, genuinely used — not one voice wearing 144
+   * slightly different pitches. */
+  assert.ok(byVoice.size >= 6, `sweep used only ${byVoice.size} distinct voices`);
+  const biggest = Math.max(...byVoice.values());
+  assert.ok(biggest <= seeds.length * 0.4, `one voice took ${biggest}/${seeds.length} Sparks`);
+});
+
+test("the pick is a function of the voice set, not the order the device reported it in", () => {
+  /* Devices report their voices in their own orders, and more
+   * voices arrive after the first getVoices() call. The same
+   * set, reversed and rotated, must give every Spark the same
+   * voice — before the canonical ordering, a reversed list
+   * changed every profile in this sweep. */
+  const reversed = [...RICH_VOICES].reverse();
+  const rotated = [...RICH_VOICES.slice(5), ...RICH_VOICES.slice(0, 5)];
+  for (const seed of sweepSeeds(36)) {
+    const base = JSON.stringify(Voice.profileFor({ seed, voices: RICH_VOICES, lang: "en" }));
+    assert.equal(JSON.stringify(Voice.profileFor({ seed, voices: reversed, lang: "en" })), base, seed);
+    assert.equal(JSON.stringify(Voice.profileFor({ seed, voices: rotated, lang: "en" })), base, seed);
+  }
+});
+
+test("one usable voice: every Spark takes it, and its character still varies by seed", () => {
+  const one = [{ name: "Samantha", voiceURI: "Samantha", lang: "en-US", localService: true }];
+  const profiles = [SEED_A, SEED_B, SEED_C, SEED_D].map((seed) =>
+    Voice.profileFor({ seed, voices: one, lang: "en" })
+  );
+  for (const p of profiles) assert.equal(p.voiceName, "Samantha");
+  /* The honest fallback on a one-voice device: pitch and rate
+   * carry the difference, inside natural bounds. */
+  const distinct = new Set(profiles.map((p) => `${p.pitch}|${p.rate}`));
+  assert.ok(distinct.size >= 2, "one-voice Sparks should still differ in character");
+  for (const p of profiles) {
+    assert.ok(p.pitch >= 0.8 && p.pitch <= 1.2, `pitch ${p.pitch}`);
+    assert.ok(p.rate >= 0.85 && p.rate <= 1.15, `rate ${p.rate}`);
+  }
+  const again = Voice.profileFor({ seed: SEED_A, voices: one, lang: "en" });
+  assert.equal(JSON.stringify(again), JSON.stringify(profiles[0]));
+});
+
+test("no voices at all: no profile, never a crash, never an invented voice", () => {
+  assert.equal(Voice.profileFor({ seed: SEED_A, voices: [], lang: "en" }), null);
+  assert.equal(Voice.profileFor({ seed: SEED_A, voices: undefined, lang: "en" }), null);
+  assert.equal(Voice.profileFor({ seed: SEED_A, voices: null, lang: "en" }), null);
+});
+
 test("the Guide's voice is its own — a fixed seed, not any Spark's", () => {
   const guide = Voice.profileFor({ seed: Voice.GUIDE_SEED, voices: DEVICE_VOICES, lang: "en" });
   const guideAgain = Voice.profileFor({ seed: Voice.GUIDE_SEED, voices: DEVICE_VOICES, lang: "en" });
@@ -168,6 +259,61 @@ test("seed derivation mirrors the companion core's hash", () => {
   assert.ok(first >= 0 && first < 1);
   const again = Voice.mulberry32(Voice.hashString(SEED_A + ":spoken-voice"));
   assert.equal(again(), first);
+});
+
+test("the layer loads in a browser-shaped global: no throw, and the seat enhancer attaches", () => {
+  /* The regression this pins: the factory is defined in the
+   * wrapper's argument position, outside the wrapper's scope,
+   * and its registration block read the wrapper's `root` as a
+   * free variable — a ReferenceError in every real browser,
+   * killing the whole spoken layer on the live site while the
+   * suite stayed green (its loader provides no `document`, so
+   * the block was skipped). Load the module the way a browser
+   * does and require it to survive and attach. */
+  const context = vm.createContext({
+    console,
+    module: { exports: {} },
+    exports: {},
+    document: {
+      readyState: "complete",
+      querySelector: () => null,
+      addEventListener: () => {}
+    }
+  });
+  context.globalThis = context;
+  let attached = null;
+  context.SparkAgentSeat = { attach: (fn) => { attached = fn; } };
+  vm.runInContext(read("docs/assets/js/spark-voice.js"), context, { filename: "spark-voice.js" });
+  assert.equal(typeof context.SparkVoice, "object");
+  assert.equal(typeof context.SparkVoice.profileFor, "function");
+  assert.equal(typeof attached, "function");
+});
+
+test("registration waits for a seat that loads after the layer (the Guide page's order)", () => {
+  /* codex-guide.html carries spark-voice.js ahead of
+   * spark-agent-seat.js: at registration there is no seat yet.
+   * The layer must attach when the seat arrives, not look once
+   * and give up — on the live page that failure left the seat
+   * voiceless while the Guide's own read-aloud (registered in
+   * the same breath) worked. */
+  const listeners = {};
+  const context = vm.createContext({
+    console,
+    module: { exports: {} },
+    exports: {},
+    document: {
+      readyState: "complete",
+      querySelector: () => null,
+      addEventListener: (type, fn) => { (listeners[type] ||= []).push(fn); }
+    }
+  });
+  context.globalThis = context;
+  vm.runInContext(read("docs/assets/js/spark-voice.js"), context, { filename: "spark-voice.js" });
+  assert.equal(typeof context.SparkVoice, "object");
+  let attached = null;
+  context.SparkAgentSeat = { attach: (fn) => { attached = fn; } };
+  for (const fn of listeners.DOMContentLoaded || []) fn();
+  assert.equal(typeof attached, "function");
 });
 
 test("wiring: the seat lazy-loads the voice layer beside the tips", () => {

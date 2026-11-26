@@ -62,6 +62,21 @@
     schumann: 7.83
   };
 
+  /* What the traditions claim for a tone — always labelled as the
+     tradition's claim on the page, never as a measured effect. */
+  const TRADITION = {
+    174: "174 Hz is the foundation of the solfeggio scale, a tone of safety and relief from pain.",
+    285: "285 Hz is the repair tone, said to restore tissue and return the body to its original form.",
+    396: "396 Hz liberates guilt and fear and turns grief into joy.",
+    417: "417 Hz undoes situations, clears negativity, and facilitates change.",
+    528: "528 Hz is the love frequency, the miracle tone of transformation and repair.",
+    639: "639 Hz reconnects and balances relationships.",
+    741: "741 Hz awakens intuition and expression.",
+    852: "852 Hz returns the listener to spiritual order.",
+    963: "963 Hz is the crown tone, the frequency of the gods, activating the pineal center.",
+    432: "432 Hz is the natural tuning, Verdi's A, said to sit in harmony with the body where the 440 concert standard does not."
+  };
+
   const TEXTURE_GAIN = {
     pure: 1.1,
     warm: 1,
@@ -254,6 +269,7 @@
 
   let audioCtx = null;
   let masterGain = null;
+  let analyser = null;
   let boostGain = null;
   let compressor = null;
   let limiter = null;
@@ -410,7 +426,12 @@
       limiter.attack.value = 0.003;
       limiter.release.value = 0.12;
 
-      masterGain.connect(boostGain);
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 32768;
+      analyser.smoothingTimeConstant = 0.4;
+
+      masterGain.connect(analyser);
+      analyser.connect(boostGain);
       boostGain.connect(compressor);
       compressor.connect(limiter);
       limiter.connect(audioCtx.destination);
@@ -580,6 +601,7 @@
   function stopAll(fade = fadeTime()) {
     deckNodes.forEach(group => stopNodeGroup(group, fade));
     deckNodes = [];
+    stopInstrument(0.2);
     isPlaying = false;
     stopSequence(false);
     stopLiftLoop(false);
@@ -1355,6 +1377,396 @@ ${$("#journalNote")?.value || ""}`;
     });
   }
 
+  /* =====================================================
+     THE INSTRUMENT — one tone, measured true.
+     Exactness is proven, not asserted: every stated tone is
+     rendered through an OfflineAudioContext using the same
+     oscillator recipe createOsc uses live (exact setValueAtTime
+     frequency, the same 20–2200 clamp), then FFT-measured.
+     A tone whose measured peak is not at its stated frequency
+     within tolerance does not pass.
+  ===================================================== */
+
+  const TOL_HZ = 0.5;
+  const MEASURE_SR = 48000;
+  const MEASURE_N = 131072;
+
+  function fftMagnitudes(samples) {
+    const n = samples.length;
+    const re = new Float64Array(n);
+    const im = new Float64Array(n);
+    re.set(samples);
+    for (let i = 1, j = 0; i < n; i++) {
+      let bit = n >> 1;
+      for (; j & bit; bit >>= 1) j ^= bit;
+      j ^= bit;
+      if (i < j) {
+        const tr = re[i]; re[i] = re[j]; re[j] = tr;
+        const ti = im[i]; im[i] = im[j]; im[j] = ti;
+      }
+    }
+    for (let len = 2; len <= n; len <<= 1) {
+      const ang = (-2 * Math.PI) / len;
+      const wre = Math.cos(ang);
+      const wim = Math.sin(ang);
+      const half = len >> 1;
+      for (let i = 0; i < n; i += len) {
+        let cRe = 1;
+        let cIm = 0;
+        for (let k = 0; k < half; k++) {
+          const uRe = re[i + k];
+          const uIm = im[i + k];
+          const oRe = re[i + k + half];
+          const oIm = im[i + k + half];
+          const vRe = oRe * cRe - oIm * cIm;
+          const vIm = oRe * cIm + oIm * cRe;
+          re[i + k] = uRe + vRe;
+          im[i + k] = uIm + vIm;
+          re[i + k + half] = uRe - vRe;
+          im[i + k + half] = uIm - vIm;
+          const nRe = cRe * wre - cIm * wim;
+          cIm = cRe * wim + cIm * wre;
+          cRe = nRe;
+        }
+      }
+    }
+    const mags = new Float64Array(n / 2);
+    for (let i = 0; i < n / 2; i++) mags[i] = Math.hypot(re[i], im[i]);
+    return mags;
+  }
+
+  function interpPeakHz(mags, bin, sampleRate, n) {
+    const a = Math.log(Math.max(mags[bin - 1] || 0, 1e-12));
+    const b = Math.log(Math.max(mags[bin] || 0, 1e-12));
+    const c = Math.log(Math.max(mags[bin + 1] || 0, 1e-12));
+    const denom = a - 2 * b + c;
+    const shift = denom === 0 ? 0 : (0.5 * (a - c)) / denom;
+    return ((bin + shift) * sampleRate) / n;
+  }
+
+  function topPeaksFromBuffer(buffer, count) {
+    const sr = buffer.sampleRate;
+    const len = Math.min(MEASURE_N, buffer.length);
+    const mono = new Float64Array(MEASURE_N);
+    const chans = [];
+    for (let c = 0; c < buffer.numberOfChannels; c++) chans.push(buffer.getChannelData(c));
+    for (let i = 0; i < len; i++) {
+      let sum = 0;
+      chans.forEach(ch => { sum += ch[i]; });
+      const t = i / MEASURE_N;
+      mono[i] = (sum / chans.length) * (0.5 - 0.5 * Math.cos(2 * Math.PI * t));
+    }
+    const mags = fftMagnitudes(mono);
+    const binHz = sr / MEASURE_N;
+    const loBin = Math.max(1, Math.floor(25 / binHz));
+    const hiBin = Math.min(mags.length - 2, Math.ceil(2450 / binHz));
+    const masked = new Uint8Array(mags.length);
+    const peaks = [];
+    for (let p = 0; p < count; p++) {
+      let best = -1;
+      let bestVal = 0;
+      for (let i = loBin; i <= hiBin; i++) {
+        if (!masked[i] && mags[i] > bestVal) { bestVal = mags[i]; best = i; }
+      }
+      if (best < 0) break;
+      peaks.push(interpPeakHz(mags, best, sr, MEASURE_N));
+      for (let i = Math.max(0, best - 8); i <= Math.min(mags.length - 1, best + 8); i++) masked[i] = 1;
+    }
+    return peaks.sort((x, y) => x - y);
+  }
+
+  async function renderOffline(specs, seconds = 4) {
+    const ctx = new OfflineAudioContext(2, Math.floor(MEASURE_SR * seconds), MEASURE_SR);
+    specs.forEach(spec => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = spec.type || "sine";
+      osc.frequency.setValueAtTime(clamp(spec.freq, 20, 2200), 0);
+      gain.gain.setValueAtTime(spec.gain ?? 0.4, 0);
+      if (spec.pan && ctx.createStereoPanner) {
+        const pan = ctx.createStereoPanner();
+        pan.pan.setValueAtTime(clamp(spec.pan, -1, 1), 0);
+        osc.connect(gain).connect(pan).connect(ctx.destination);
+      } else {
+        osc.connect(gain).connect(ctx.destination);
+      }
+      osc.start(0);
+      osc.stop(seconds);
+    });
+    return ctx.startRendering();
+  }
+
+  const round2 = v => Math.round(v * 100) / 100;
+
+  async function verifyTone(freq) {
+    const buffer = await renderOffline([{ freq, gain: 0.5 }]);
+    const peaks = topPeaksFromBuffer(buffer, 1);
+    const measured = peaks[0] || 0;
+    return {
+      stated: freq,
+      measured: round2(measured),
+      delta: round2(measured - freq),
+      ok: Math.abs(measured - freq) <= TOL_HZ
+    };
+  }
+
+  async function verifyPair(base, beat) {
+    const lo = base - beat / 2;
+    const hi = base + beat / 2;
+    const buffer = await renderOffline([
+      { freq: lo, gain: 0.35, pan: -0.22 },
+      { freq: hi, gain: 0.35, pan: 0.22 }
+    ]);
+    const peaks = topPeaksFromBuffer(buffer, 2);
+    const carriers = peaks.length === 2 ? peaks : [peaks[0] || 0, peaks[1] || 0];
+    const difference = carriers[1] - carriers[0];
+    return {
+      base,
+      beat,
+      statedCarriers: [round2(lo), round2(hi)],
+      measuredCarriers: carriers.map(round2),
+      difference: round2(difference),
+      ok: Math.abs(carriers[0] - lo) <= TOL_HZ &&
+          Math.abs(carriers[1] - hi) <= TOL_HZ &&
+          Math.abs(difference - beat) <= TOL_HZ
+    };
+  }
+
+  async function verifySet() {
+    const tones = [];
+    for (const [freq, name] of PRESETS) {
+      tones.push({ name, ...(await verifyTone(freq)) });
+    }
+    const pairs = [];
+    for (const base of [432, 528]) {
+      for (const [beatName, beat] of Object.entries(BEATS)) {
+        if (!beat) continue;
+        pairs.push({ beatName, ...(await verifyPair(base, beat)) });
+      }
+    }
+    return { tones, pairs, toleranceHz: TOL_HZ, sampleRate: MEASURE_SR };
+  }
+
+  let analyserData = null;
+
+  function measureLive() {
+    if (!analyser || !audioCtx) return null;
+    if (!analyserData) analyserData = new Float32Array(analyser.frequencyBinCount);
+    analyser.getFloatFrequencyData(analyserData);
+    const binHz = audioCtx.sampleRate / analyser.fftSize;
+    const loBin = Math.max(1, Math.floor(25 / binHz));
+    const hiBin = Math.min(analyserData.length - 2, Math.ceil(2450 / binHz));
+    let best = -1;
+    let bestVal = -Infinity;
+    for (let i = loBin; i <= hiBin; i++) {
+      if (analyserData[i] > bestVal) { bestVal = analyserData[i]; best = i; }
+    }
+    if (best < 0 || bestVal < -110) return null;
+    const a = analyserData[best - 1];
+    const b = analyserData[best];
+    const c = analyserData[best + 1];
+    const denom = a - 2 * b + c;
+    const shift = denom === 0 ? 0 : (0.5 * (a - c)) / denom;
+    return { hz: Math.round((best + shift) * binHz * 10) / 10, db: Math.round(bestVal * 10) / 10 };
+  }
+
+  /* ---------- the instrument's own voice ---------- */
+
+  let instGroup = [];
+  let instTimer = null;
+  let instCurrent = { freq: 528, beat: 0 };
+
+  function instFreq() {
+    const custom = Number($("#instCustom")?.value);
+    if (custom && custom >= 20 && custom <= 2200) return custom;
+    return Number($("#instTone")?.value || 528);
+  }
+
+  function instBeat() {
+    return BEATS[$("#instBeat")?.value] || 0;
+  }
+
+  function instPreset() {
+    return PRESETS.find(([f]) => f === instFreq()) || null;
+  }
+
+  function instGainValue() {
+    const v = clamp($("#instVolume")?.value ?? 64, 0, 100) / 100;
+    return Math.pow(v, 1.35) * 0.34;
+  }
+
+  function updateInstReadout() {
+    const freq = instFreq();
+    const beat = instBeat();
+    const preset = instPreset();
+
+    text($("#instHz"), String(freq));
+    text($("#instName"), preset ? `${preset[1]} · ${preset[2]}` : "A tone of your own choosing");
+
+    const fact = $("#instFact");
+    if (fact) {
+      fact.textContent = beat
+        ? `This pair is generated at exactly ${(freq - beat / 2).toFixed(2)} Hz and ${(freq + beat / 2).toFixed(2)} Hz, one in each ear. Their difference, ${beat} Hz, is the beat you perceive. Press Verify Every Tone and this page renders and measures them on your device.`
+        : `This tone is generated at exactly ${freq} Hz. Press Verify Every Tone and this page renders each of its tones and measures them, here on your own device.`;
+    }
+
+    const trad = $("#instTradition");
+    if (trad) {
+      trad.textContent = TRADITION[freq]
+        ? `The tradition holds: ${TRADITION[freq]} That is the tradition's claim, labelled as such. The measured rows are what this page can prove.`
+        : preset
+          ? `No older tradition rides on this one. "${preset[1]}" is this observatory's own symbolic name for ${freq} Hz — a name for an intended frame, not a measured effect.`
+          : "Your own frequency carries no tradition with it. What can be proven about it stands in the measured rows.";
+    }
+  }
+
+  function stopInstrument(fade = 0.25) {
+    if (instGroup.length) stopNodeGroup(instGroup, fade);
+    instGroup = [];
+    if (instTimer) {
+      clearInterval(instTimer);
+      instTimer = null;
+    }
+    const st = $("#instState");
+    if (st) {
+      st.textContent = instCurrent.freq ? "stopped" : "ready";
+      st.classList.remove("fi-live");
+    }
+    if ($("#instMeasured")) text($("#instMeasured"), "Nothing is sounding. Press Play Tone.");
+  }
+
+  function playInstrument() {
+    unlockAudio();
+    stopInstrument(0.06);
+
+    const freq = instFreq();
+    const beat = instBeat();
+    const gain = instGainValue();
+    const group = [];
+
+    if (beat) {
+      const per = gain / Math.SQRT2;
+      group.push(createOsc(freq - beat / 2, "sine", -0.22, per, 0.35));
+      group.push(createOsc(freq + beat / 2, "sine", 0.22, per, 0.35));
+    } else {
+      group.push(createOsc(freq, "sine", 0, gain, 0.35));
+    }
+
+    instGroup = group;
+    instCurrent = { freq, beat };
+
+    const st = $("#instState");
+    if (st) {
+      st.textContent = "sounding";
+      st.classList.add("fi-live");
+    }
+
+    updateInstReadout();
+
+    const tick = () => {
+      const m = measureLive();
+      if (!m) {
+        text($("#instMeasured"), "Sounding — the live measurement is still settling.");
+        return;
+      }
+      if (beat) {
+        text($("#instMeasured"), `Live peak ${m.hz.toFixed(1)} Hz — one carrier of the pair (${(freq - beat / 2).toFixed(2)} / ${(freq + beat / 2).toFixed(2)} Hz). The pair's difference is the beat: ${beat} Hz.`);
+      } else {
+        const d = Math.abs(m.hz - freq);
+        text($("#instMeasured"), `Live peak ${m.hz.toFixed(1)} Hz — ${d <= 1.5 ? "matches" : "close to"} the stated ${freq} Hz. Live readings wobble a little; the rendered verification is the tight measure.`);
+      }
+    };
+    tick();
+    instTimer = setInterval(tick, 300);
+    log(`Instrument: ${freq} Hz${beat ? ` with a ${beat} Hz beat pair` : ""} sounding.`);
+  }
+
+  async function runVerifyAll() {
+    const box = $("#instVerifyTable");
+    if (!box) return;
+    box.hidden = false;
+    box.innerHTML = `<p class="fine">Rendering and measuring every tone on this device…</p>`;
+    const res = await verifySet();
+    const rows = res.tones.map(t => `
+      <tr>
+        <td>${t.stated} Hz · ${safeText(t.name)}</td>
+        <td>${t.measured.toFixed(2)}</td>
+        <td>${t.delta >= 0 ? "+" : ""}${t.delta.toFixed(2)}</td>
+        <td class="${t.ok ? "fi-ok" : "fi-bad"}">${t.ok ? "true" : "OFF"}</td>
+      </tr>`).join("");
+    const pairRows = res.pairs.map(p => `
+      <tr>
+        <td>${p.base} Hz · ${safeText(p.beatName)} beat pair</td>
+        <td>${p.measuredCarriers.map(v => v.toFixed(2)).join(" / ")}</td>
+        <td>beat ${p.difference.toFixed(2)} of ${p.beat}</td>
+        <td class="${p.ok ? "fi-ok" : "fi-bad"}">${p.ok ? "true" : "OFF"}</td>
+      </tr>`).join("");
+    box.innerHTML = `
+      <table>
+        <caption>Every stated tone on this page, rendered and measured on this device just now. Tolerance ±${res.toleranceHz} Hz. The Sound Check's two tones stand in the list as Foundation (432) and Restoration (528).</caption>
+        <thead><tr><th>Stated</th><th>Measured (Hz)</th><th>Difference</th><th>Verdict</th></tr></thead>
+        <tbody>${rows}${pairRows}</tbody>
+      </table>`;
+    log("Verification complete: every stated tone rendered and measured.");
+  }
+
+  function setInstDayLine() {
+    const el = $("#instDay");
+    if (!el) return;
+    try {
+      const s = window.PatternCalendar?.fromCivilDate({ date: new Date() });
+      if (!s) return;
+      el.textContent = s.isDayOutOfTime
+        ? "Today is the Day Out of Time on the Pattern Calendar."
+        : `Today: Moon ${s.moon} · ${s.moonName} · Day ${s.day} of 28 · Pattern Day ${s.dayOfPatternYear}.`;
+    } catch {}
+  }
+
+  function initInstrument() {
+    const sel = $("#instTone");
+    if (sel) {
+      sel.innerHTML = PRESETS.map(([f, name, desc]) =>
+        `<option value="${f}">${f} Hz — ${name} · ${desc}</option>`).join("");
+      sel.value = "528";
+    }
+    const beatSel = $("#instBeat");
+    if (beatSel) {
+      beatSel.innerHTML = `<option value="none">No beat — one pure tone</option>` +
+        Object.entries(BEATS).filter(([, v]) => v).map(([k, v]) =>
+          `<option value="${k}">${k[0].toUpperCase() + k.slice(1)} · ${v} Hz beat</option>`).join("");
+    }
+
+    on(sel, "change", updateInstReadout);
+    on($("#instCustom"), "input", updateInstReadout);
+    on(beatSel, "change", updateInstReadout);
+    on($("#instPlay"), "click", playInstrument);
+    on($("#instStop"), "click", () => stopInstrument());
+    on($("#instVerify"), "click", runVerifyAll);
+    on($("#instVolume"), "input", () => {
+      if (!instGroup.length) return;
+      const per = instCurrent.beat ? instGainValue() / Math.SQRT2 : instGainValue();
+      instGroup.forEach(node => {
+        try { node.gain.gain.setTargetAtTime(Math.max(0.0002, per), audioCtx.currentTime, 0.05); } catch {}
+      });
+    });
+
+    updateInstReadout();
+    setInstDayLine();
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", setInstDayLine);
+    }
+  }
+
+  window.FrequencyGovernance = {
+    verifyTone,
+    verifyPair,
+    verifySet,
+    measureLive,
+    presets: PRESETS,
+    beats: BEATS,
+    toleranceHz: TOL_HZ
+  };
+
   function bind() {
     on($("#soundCheckBtn"), "click", soundCheck);
     on($("#playBtn"), "click", playMix);
@@ -1513,6 +1925,7 @@ ${$("#journalNote")?.value || ""}`;
     renderLibrary();
     renderJournal();
     bind();
+    initInstrument();
     updateDeckTargets();
     resetField();
     updateTrackUI();
