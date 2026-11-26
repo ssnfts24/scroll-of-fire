@@ -192,6 +192,7 @@ Your browser does not support the video element. The same tour is written out ac
 <h2 id="gp-h">Genesis, a chapter a day</h2>
 <p>The school path through the first book, one chapter a day: read it, or hear it — every chapter carries a Listen control that reads the English aloud, verse by verse — and let its words open into the word studies as you go. Fifty chapters, fifty days, no catching up and no falling behind: the path is where you are standing on it.</p>
 <p><a href="genesis/01.html">Begin at Genesis 1 →</a> · <a href="../practices.html#pw-school-title">The school paths, from the root</a></p>
+<p>One chapter on the path is also a walk: <a href="../genesis-5-timeline.html">Walking the Long Line</a> draws Genesis 5 to scale — ten lives, 1,556 years — so you can feel how long they were, run the count yourself, and stop at Enoch, whose 365 years match the year itself.</p>
 </section>
 <div class="books">{cards}</div>
 <section aria-labelledby="ws-h"><h2 id="ws-h">Hebrew word studies</h2>

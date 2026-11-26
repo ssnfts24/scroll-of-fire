@@ -72,12 +72,12 @@ const rel = file => path.relative(docs, file).split(path.sep).join("/");
 const DOMAIN_RULES = [
   [p => p.startsWith("scripture/"), "Knowledge"],
   [p => p.startsWith("scroll/"), "Knowledge"],
-  [p => p === "glossary.html" || p === "glyphs.html", "Knowledge"],
+  [p => p === "glossary.html" || p === "glyphs.html" || p === "genesis-5-timeline.html", "Knowledge"],
   [p => p === "theory.html" || p.startsWith("theory/"), "Research"],
   [p => [
     "13-moon-whitepaper.html", "codex-white-paper.html",
     "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
-    "claims-atlas.html", "hub.html", "ethics.html", "methods.html",
+    "claims-atlas.html", "hub.html", "ethics.html", "methods.html", "witness-method.html",
     "provenance.html", "lab.html",
     "systems/archive.html", "systems/frequencies.html",
     "systems/t-7.html", "systems/witness.html",
@@ -86,8 +86,8 @@ const DOMAIN_RULES = [
     "living-time-sphere.html", "moons.html", "equinox-passage.html",
     "alignment-ledger.html", "timeline.html", "index.html", "start.html",
   ].includes(p), "Observatory"],
-  [p => p === "companions.html" || p === "codex-guide.html", "Spark"],
-  [p => p === "witness-world.html", "Play"],
+  [p => p === "companions.html" || p === "codex-guide.html" || p === "card-album.html", "Spark"],
+  [p => p === "witness-world.html" || p === "spark-echo.html", "Play"],
   [p => [
     "about-aaron.html", "aiyanas-world.html", "caravan.html",
     "covenant-caravan.html", "episodes.html", "map.html",
@@ -99,7 +99,7 @@ const DOMAIN_RULES = [
   ].includes(p), "Products"],
   [p => [
     "account.html", "circle.html", "garden.html", "guide.html",
-    "ledger.html", "micro.html", "practices.html", "teach.html",
+    "ledger.html", "micro.html", "practices.html", "teach.html", "read-your-own-day.html",
     "systems/mind-renewal.html",
   ].includes(p), "Living"],
   [p => [

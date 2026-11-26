@@ -3,17 +3,19 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 508,
-    "publicHtmlPages": 205,
-    "catalogEntries": 73,
+    "resources": 514,
+    "publicHtmlPages": 211,
+    "catalogEntries": 78,
     "issueCounts": {
-      "no-global-navigation": 74,
-      "not-linked-directly-from-homepage": 25,
+      "no-global-navigation": 79,
+      "not-linked-directly-from-homepage": 29,
       "deployed-but-unlinked": 64,
       "unreachable-from-homepage": 5,
       "compatibility-redirect-page": 8,
+      "not-in-sitemap": 3,
       "not-published-in-catalog": 30,
-      "unnamed-image-needs-descriptive-title": 21
+      "unnamed-image-needs-descriptive-title": 21,
+      "reachable-only-through-atlas": 1
     }
   },
   "resources": [
@@ -230,6 +232,47 @@
       ]
     },
     {
+      "id": "card-album",
+      "title": "The Card Album — Codex of Reality",
+      "description": "The Codex card album: cards found around the site through real acts — witnessing a day, hearing a word, meeting a Spark — kept on this device, each with its collection face and its game face.",
+      "category": "Companion",
+      "area": "living-time",
+      "relatedProjects": [
+        "companions",
+        "pattern-garden"
+      ],
+      "sourcePath": "docs/card-album.html",
+      "publicUrl": "https://codexofreality.org/card-album.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "companions.html",
+        "downloads.html",
+        "index.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "shop.html",
+        "witness-world.html",
+        "witness.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/card-album.html",
+      "privacyEligibility": "approved-public",
+      "discoverability": {
+        "path": "card-album.html",
+        "inSitemap": true,
+        "inGlobalNav": false,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 2,
+        "pagesWithNavLinkToIt": 0
+      },
+      "issues": [
+        "no-global-navigation",
+        "not-linked-directly-from-homepage"
+      ]
+    },
+    {
       "id": "circle",
       "title": "Circle Sync — Scroll of Fire",
       "description": "Circle protocol: shared cadence, staggered entry, and a single closing seal. Tracks local Ξ impressions—ethics-first.",
@@ -315,8 +358,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 113,
-        "pagesWithNavLinkToIt": 104
+        "inboundPages": 114,
+        "pagesWithNavLinkToIt": 105
       },
       "issues": []
     },
@@ -350,6 +393,7 @@
         "systems/archive.html",
         "theory.html",
         "timeline.html",
+        "witness-method.html",
         "witness-world.html",
         "witness.html"
       ],
@@ -362,7 +406,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 6,
+        "inboundPages": 7,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
@@ -393,6 +437,7 @@
         "about-aaron.html",
         "aiyanas-world.html",
         "alignment-ledger.html",
+        "card-album.html",
         "circle.html",
         "claims-atlas.html",
         "codex-guide.html",
@@ -404,6 +449,7 @@
         "equinox-passage.html",
         "ethics.html",
         "garden.html",
+        "genesis-5-timeline.html",
         "genesis-oracle.html",
         "glossary.html",
         "glyphs.html",
@@ -421,6 +467,7 @@
         "moons.html",
         "practices.html",
         "provenance.html",
+        "read-your-own-day.html",
         "scripture/index.html",
         "scripture/word-studies/index.html",
         "scroll/atlas.html",
@@ -432,6 +479,7 @@
         "search.html",
         "sending-test.html",
         "shop.html",
+        "spark-echo.html",
         "start.html",
         "systems/archive.html",
         "systems/frequencies.html",
@@ -454,6 +502,7 @@
         "theory/thirteen-moons.html",
         "theory/unified-field.html",
         "timeline.html",
+        "witness-method.html",
         "witness-world.html",
         "witness.html"
       ],
@@ -466,8 +515,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 117,
-        "pagesWithNavLinkToIt": 104
+        "inboundPages": 118,
+        "pagesWithNavLinkToIt": 105
       },
       "issues": [
         "no-global-navigation"
@@ -581,6 +630,7 @@
       "lastVerifiedSourceRevision": "548e858",
       "relatedPages": [
         "aiyanas-world.html",
+        "card-album.html",
         "downloads.html",
         "index.html",
         "living-time-sphere.html",
@@ -599,7 +649,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 184,
+        "inboundPages": 190,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
@@ -646,7 +696,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 29,
+        "inboundPages": 30,
         "pagesWithNavLinkToIt": 2
       },
       "issues": [
@@ -672,7 +722,7 @@
     },
     {
       "id": "docs-assets:assets/css",
-      "title": "docs/assets/css (83 files)",
+      "title": "docs/assets/css (93 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -689,7 +739,7 @@
     },
     {
       "id": "docs-assets:assets/data",
-      "title": "docs/assets/data (11 files)",
+      "title": "docs/assets/data (13 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -757,7 +807,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (239 files)",
+      "title": "docs/assets/js (250 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -2092,6 +2142,7 @@
         "ledger.html",
         "living-time-sphere.html",
         "moons.html",
+        "read-your-own-day.html",
         "scripture/index.html",
         "scripture/word-studies/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
@@ -2122,7 +2173,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 0,
         "hopsFromHomeWithoutAtlas": 0,
-        "inboundPages": 187,
+        "inboundPages": 193,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -2527,8 +2578,8 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
         "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 101,
-        "pagesWithNavLinkToIt": 101
+        "inboundPages": 102,
+        "pagesWithNavLinkToIt": 102
       },
       "issues": []
     },
@@ -2616,8 +2667,8 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
         "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 100,
-        "pagesWithNavLinkToIt": 101
+        "inboundPages": 101,
+        "pagesWithNavLinkToIt": 102
       },
       "issues": []
     },
@@ -6146,8 +6197,8 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
         "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 100,
-        "pagesWithNavLinkToIt": 101
+        "inboundPages": 101,
+        "pagesWithNavLinkToIt": 102
       },
       "issues": []
     },
@@ -6538,7 +6589,7 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
         "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 50,
+        "inboundPages": 51,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -7518,7 +7569,7 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
         "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 50,
+        "inboundPages": 51,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -10981,6 +11032,7 @@
         "scripture/index.html",
         "scripture/word-studies/adam.html",
         "scripture/word-studies/adamah.html",
+        "scripture/word-studies/davar.html",
         "scripture/word-studies/enosh.html",
         "scripture/word-studies/index.html",
         "scripture/word-studies/nephesh.html",
@@ -11114,6 +11166,59 @@
         "hopsFromHome": 2,
         "hopsFromHomeWithoutAtlas": 2,
         "inboundPages": 4,
+        "pagesWithNavLinkToIt": 0
+      },
+      "issues": []
+    },
+    {
+      "id": "docs:scripture/word-studies/davar.html",
+      "title": "Davar — דָּבָר — Hebrew Word Studies · Scroll of Fire",
+      "description": "דָּבָר (davar, H1697) — full Hebrew treatment: word, thing and matter in one noun; the Ten Words, the word that does not return empty, wordplay, cognates, traditions and uncertainties.",
+      "category": "Scripture",
+      "area": "scroll-scripture",
+      "relatedProjects": [
+        "scroll-library",
+        "genesis-oracle",
+        "scroll-lexicon"
+      ],
+      "sourcePath": "docs/scripture/word-studies/davar.html",
+      "publicUrl": "https://codexofreality.org/scripture/word-studies/davar.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "codex-atlas.html",
+        "companions.html",
+        "downloads.html",
+        "index.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "scripture/about.html",
+        "scripture/exodus/01.html",
+        "scripture/genesis/01.html",
+        "scripture/genesis/15.html",
+        "scripture/index.html",
+        "scripture/word-studies/index.html",
+        "scripture/word-studies/or.html",
+        "scripture/word-studies/shem.html",
+        "scroll/atlas.html",
+        "scroll/editorial.html",
+        "scroll/index.html",
+        "scroll/lexicon.html",
+        "scroll/search.html",
+        "shop.html",
+        "witness-world.html",
+        "witness.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/scripture/word-studies/davar.html",
+      "privacyEligibility": "approved-public",
+      "discoverability": {
+        "path": "scripture/word-studies/davar.html",
+        "inSitemap": true,
+        "inGlobalNav": false,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 3,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -11276,7 +11381,7 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
         "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 5,
+        "inboundPages": 6,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -11362,6 +11467,7 @@
         "scripture/genesis/01.html",
         "scripture/genesis/02.html",
         "scripture/index.html",
+        "scripture/word-studies/davar.html",
         "scripture/word-studies/index.html",
         "scripture/word-studies/or.html",
         "scroll/atlas.html",
@@ -11382,7 +11488,7 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
         "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 7,
+        "inboundPages": 8,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -11740,7 +11846,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 42,
+        "inboundPages": 43,
         "pagesWithNavLinkToIt": 2
       },
       "issues": [
@@ -12830,7 +12936,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 185,
+        "inboundPages": 191,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
@@ -12885,7 +12991,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 186,
+        "inboundPages": 192,
         "pagesWithNavLinkToIt": 3
       },
       "issues": [
@@ -13023,7 +13129,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 36,
+        "inboundPages": 37,
         "pagesWithNavLinkToIt": 2
       },
       "issues": [
@@ -13081,11 +13187,56 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 37,
+        "inboundPages": 39,
         "pagesWithNavLinkToIt": 2
       },
       "issues": [
         "no-global-navigation"
+      ]
+    },
+    {
+      "id": "genesis-5-timeline",
+      "title": "Walking the Long Line — Genesis 5 · Scroll of Fire",
+      "description": "Genesis 5 drawn to scale: walk the line from Adam to Noah, feel how long these lives were, run the count of years yourself, and stop at Enoch — whose 365 years match the year itself. Three readings of that match, side by side; the page takes no side.",
+      "category": "Scripture",
+      "area": "scroll-scripture",
+      "relatedProjects": [
+        "scroll-library",
+        "genesis-restored"
+      ],
+      "sourcePath": "docs/genesis-5-timeline.html",
+      "publicUrl": "https://codexofreality.org/genesis-5-timeline.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "companions.html",
+        "downloads.html",
+        "index.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "scripture/genesis/05.html",
+        "scripture/index.html",
+        "scripture/word-studies/index.html",
+        "shop.html",
+        "witness-world.html",
+        "witness.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/genesis-5-timeline.html",
+      "privacyEligibility": "approved-public",
+      "discoverability": {
+        "path": "genesis-5-timeline.html",
+        "inSitemap": false,
+        "inGlobalNav": false,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 2,
+        "pagesWithNavLinkToIt": 0
+      },
+      "issues": [
+        "not-in-sitemap",
+        "no-global-navigation",
+        "not-linked-directly-from-homepage"
       ]
     },
     {
@@ -13124,7 +13275,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 32,
+        "inboundPages": 33,
         "pagesWithNavLinkToIt": 2
       },
       "issues": [
@@ -13345,7 +13496,7 @@
     {
       "id": "hebrew-word-studies",
       "title": "Hebrew Word Studies — Scripture · Scroll of Fire",
-      "description": "Seven Hebrew key words given the full treatment — spelling, root, semantic range, biblical examples, wordplay, cognates, traditions and printed uncertainties.",
+      "description": "Eight Hebrew key words given the full treatment — spelling, root, semantic range, biblical examples, wordplay, cognates, traditions and printed uncertainties.",
       "category": "Scripture",
       "area": "scroll-scripture",
       "relatedProjects": [
@@ -13369,6 +13520,7 @@
         "scripture/index.html",
         "scripture/word-studies/adam.html",
         "scripture/word-studies/adamah.html",
+        "scripture/word-studies/davar.html",
         "scripture/word-studies/enosh.html",
         "scripture/word-studies/nephesh.html",
         "scripture/word-studies/or.html",
@@ -13392,8 +13544,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 104,
-        "pagesWithNavLinkToIt": 101
+        "inboundPages": 107,
+        "pagesWithNavLinkToIt": 102
       },
       "issues": []
     },
@@ -13447,7 +13599,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 40,
+        "inboundPages": 42,
         "pagesWithNavLinkToIt": 2
       },
       "issues": [
@@ -13605,7 +13757,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 59,
+        "inboundPages": 60,
         "pagesWithNavLinkToIt": 2
       },
       "issues": [
@@ -13653,7 +13805,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 186,
+        "inboundPages": 192,
         "pagesWithNavLinkToIt": 1
       },
       "issues": []
@@ -13698,7 +13850,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 28,
+        "inboundPages": 29,
         "pagesWithNavLinkToIt": 2
       },
       "issues": [
@@ -13882,6 +14034,7 @@
         "ledger.html",
         "living-time-sphere.html",
         "provenance.html",
+        "read-your-own-day.html",
         "shop.html",
         "start.html",
         "systems/frequencies.html",
@@ -13899,8 +14052,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 187,
-        "pagesWithNavLinkToIt": 104
+        "inboundPages": 193,
+        "pagesWithNavLinkToIt": 105
       },
       "issues": [
         "no-global-navigation"
@@ -13996,7 +14149,7 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
         "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 2,
+        "inboundPages": 3,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
@@ -14055,7 +14208,7 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
         "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 5,
+        "inboundPages": 6,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
@@ -14113,6 +14266,56 @@
       "issues": [
         "no-global-navigation",
         "not-linked-directly-from-homepage"
+      ]
+    },
+    {
+      "id": "read-your-own-day",
+      "title": "Read Your Own Day — the Spark teaches you your day · Scroll of Fire",
+      "description": "Read Your Own Day: a short guided practice where the Spark teaches you to find your Moon and Pattern Day, see your day on the Sphere, and witness it — with your own hands, in a few minutes.",
+      "category": "Practice",
+      "area": "living-time",
+      "relatedProjects": [
+        "moons",
+        "living-time-sphere"
+      ],
+      "sourcePath": "docs/read-your-own-day.html",
+      "publicUrl": "https://codexofreality.org/read-your-own-day.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "companions.html",
+        "covenant-caravan.html",
+        "downloads.html",
+        "ethics.html",
+        "genesis-oracle.html",
+        "hub.html",
+        "index.html",
+        "ledger.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "practices.html",
+        "shop.html",
+        "start.html",
+        "systems/frequencies.html",
+        "teach.html",
+        "theory.html",
+        "witness-world.html",
+        "witness.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/read-your-own-day.html",
+      "privacyEligibility": "approved-public",
+      "discoverability": {
+        "path": "read-your-own-day.html",
+        "inSitemap": true,
+        "inGlobalNav": false,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 3,
+        "pagesWithNavLinkToIt": 0
+      },
+      "issues": [
+        "no-global-navigation"
       ]
     },
     {
@@ -14381,7 +14584,7 @@
     },
     {
       "id": "repo-folder:scripts",
-      "title": "scripts/ (38 files)",
+      "title": "scripts/ (39 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -14449,7 +14652,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (250 files)",
+      "title": "tests/ (262 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -18532,6 +18735,7 @@
         "codex-atlas.html",
         "companions.html",
         "downloads.html",
+        "genesis-5-timeline.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -18647,8 +18851,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 104,
-        "pagesWithNavLinkToIt": 101
+        "inboundPages": 106,
+        "pagesWithNavLinkToIt": 102
       },
       "issues": []
     },
@@ -18690,8 +18894,8 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
         "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 109,
-        "pagesWithNavLinkToIt": 104
+        "inboundPages": 110,
+        "pagesWithNavLinkToIt": 105
       },
       "issues": []
     },
@@ -18734,8 +18938,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 111,
-        "pagesWithNavLinkToIt": 104
+        "inboundPages": 112,
+        "pagesWithNavLinkToIt": 105
       },
       "issues": []
     },
@@ -18791,8 +18995,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 119,
-        "pagesWithNavLinkToIt": 104
+        "inboundPages": 120,
+        "pagesWithNavLinkToIt": 105
       },
       "issues": []
     },
@@ -18876,8 +19080,8 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 113,
-        "pagesWithNavLinkToIt": 104
+        "inboundPages": 114,
+        "pagesWithNavLinkToIt": 105
       },
       "issues": []
     },
@@ -18971,7 +19175,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 185,
+        "inboundPages": 191,
         "pagesWithNavLinkToIt": 2
       },
       "issues": [
@@ -19024,6 +19228,50 @@
       },
       "issues": [
         "no-global-navigation",
+        "not-linked-directly-from-homepage"
+      ]
+    },
+    {
+      "id": "spark-echo",
+      "title": "Spark Echo — the Memory Game · Scroll of Fire",
+      "description": "Spark Echo: the Spark plays a sequence of lights, tones and words, and you play it back. It grows by one step every round. Three modes — Light & Tone, Words from the Hebrew studies, and the frequency page's own tones, played exactly. Kept on your device only.",
+      "category": "Companion",
+      "area": "living-time",
+      "relatedProjects": [
+        "companions"
+      ],
+      "sourcePath": "docs/spark-echo.html",
+      "publicUrl": "https://codexofreality.org/spark-echo.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "companions.html",
+        "downloads.html",
+        "index.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "scripture/word-studies/index.html",
+        "shop.html",
+        "systems/frequencies.html",
+        "witness-world.html",
+        "witness.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/spark-echo.html",
+      "privacyEligibility": "approved-public",
+      "discoverability": {
+        "path": "spark-echo.html",
+        "inSitemap": false,
+        "inGlobalNav": false,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": null,
+        "inboundPages": 1,
+        "pagesWithNavLinkToIt": 0
+      },
+      "issues": [
+        "not-in-sitemap",
+        "no-global-navigation",
+        "reachable-only-through-atlas",
         "not-linked-directly-from-homepage"
       ]
     },
@@ -19504,7 +19752,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 73,
+        "inboundPages": 74,
         "pagesWithNavLinkToIt": 3
       },
       "issues": [
@@ -20009,11 +20257,56 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 186,
+        "inboundPages": 192,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
         "no-global-navigation"
+      ]
+    },
+    {
+      "id": "witness-method",
+      "title": "The Witness Method — How to Check a Claim · Scroll of Fire",
+      "description": "A short lesson in checking a claim, the way the Codex itself works: five evidence labels, practised on real claims from the Old World investigation — including the ones that failed their check.",
+      "category": "Evidence",
+      "area": "evidence",
+      "relatedProjects": [
+        "claim-register",
+        "claims-atlas"
+      ],
+      "sourcePath": "docs/witness-method.html",
+      "publicUrl": "https://codexofreality.org/witness-method.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "claims-atlas.html",
+        "companions.html",
+        "downloads.html",
+        "hub.html",
+        "index.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "shop.html",
+        "timeline.html",
+        "witness-world.html",
+        "witness.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/witness-method.html",
+      "privacyEligibility": "approved-public",
+      "discoverability": {
+        "path": "witness-method.html",
+        "inSitemap": false,
+        "inGlobalNav": false,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 2,
+        "pagesWithNavLinkToIt": 0
+      },
+      "issues": [
+        "not-in-sitemap",
+        "no-global-navigation",
+        "not-linked-directly-from-homepage"
       ]
     },
     {

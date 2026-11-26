@@ -55,16 +55,16 @@
           "label": "Claim Register"
         },
         {
+          "href": "witness-method.html",
+          "label": "The Witness Method — How to Check a Claim"
+        },
+        {
           "href": "timeline.html",
           "label": "the history timeline"
         },
         {
           "href": "hub.html",
           "label": "the Documentation Hub"
-        },
-        {
-          "href": "codex-atlas.html",
-          "label": "the Codex Atlas"
         }
       ],
       "codex-atlas.html": [

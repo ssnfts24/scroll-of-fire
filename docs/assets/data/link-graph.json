@@ -374,6 +374,20 @@
    "outTotal": 1,
    "inTotal": 0
   },
+  "card-album.html": {
+   "title": "The Card Album",
+   "area": "living-time",
+   "out": [],
+   "in": [
+    {
+     "path": "codex-atlas.html",
+     "title": "Codex Atlas",
+     "area": "archive"
+    }
+   ],
+   "outTotal": 0,
+   "inTotal": 1
+  },
   "circle.html": {
    "title": "Circle Sync",
    "area": "artifacts",
@@ -449,6 +463,11 @@
      "area": "archive"
     },
     {
+     "path": "witness-method.html",
+     "title": "The Witness Method — How to Check a Claim",
+     "area": "evidence"
+    },
+    {
      "path": "scroll/editorial.html",
      "title": "Editorial reading and evidence",
      "area": "evidence"
@@ -489,10 +508,15 @@
      "path": "hub.html",
      "title": "Systems Hub",
      "area": "systems"
+    },
+    {
+     "path": "witness-method.html",
+     "title": "The Witness Method — How to Check a Claim",
+     "area": "evidence"
     }
    ],
-   "outTotal": 6,
-   "inTotal": 6
+   "outTotal": 7,
+   "inTotal": 7
   },
   "codex-atlas.html": {
    "title": "Codex Atlas",
@@ -606,7 +630,7 @@
      "area": "archive"
     }
    ],
-   "outTotal": 64,
+   "outTotal": 69,
    "inTotal": 7
   },
   "codex-guide.html": {
@@ -736,6 +760,11 @@
      "area": "codex"
     },
     {
+     "path": "spark-echo.html",
+     "title": "Spark Echo — the Memory Game",
+     "area": "living-time"
+    },
+    {
      "path": "map.html",
      "title": "The Traveller's Map",
      "area": "systems"
@@ -747,7 +776,7 @@
     }
    ],
    "outTotal": 2,
-   "inTotal": 5
+   "inTotal": 6
   },
   "covenant-caravan.html": {
    "title": "The Covenant Caravan",
@@ -1113,6 +1142,56 @@
    "outTotal": 4,
    "inTotal": 6
   },
+  "genesis-5-timeline.html": {
+   "title": "Walking the Long Line — Genesis 5",
+   "area": "scroll-scripture",
+   "out": [
+    {
+     "path": "scripture/genesis/05.html",
+     "title": "Genesis 5 — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/index.html",
+     "title": "Genesis & Exodus Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "moons.html",
+     "title": "Remnant 13 Moons — Living Calendar",
+     "area": "living-time"
+    },
+    {
+     "path": "living-time-sphere.html",
+     "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
+     "area": "living-time"
+    },
+    {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    }
+   ],
+   "in": [
+    {
+     "path": "codex-atlas.html",
+     "title": "Codex Atlas",
+     "area": "archive"
+    },
+    {
+     "path": "scripture/index.html",
+     "title": "Genesis & Exodus Scripture",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 6,
+   "inTotal": 2
+  },
   "genesis-oracle.html": {
    "title": "The Genesis Oracle — Seal of Becoming",
    "area": "scroll-scripture",
@@ -1475,13 +1554,18 @@
      "area": "artifacts"
     },
     {
+     "path": "witness-method.html",
+     "title": "The Witness Method — How to Check a Claim",
+     "area": "evidence"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
     }
    ],
    "outTotal": 13,
-   "inTotal": 11
+   "inTotal": 12
   },
   "index.html": {
    "title": "Codex of Reality",
@@ -1570,9 +1654,24 @@
      "area": "artifacts"
     },
     {
+     "path": "spark-echo.html",
+     "title": "Spark Echo — the Memory Game",
+     "area": "living-time"
+    },
+    {
      "path": "start.html",
      "title": "Start Here — Redirect",
      "area": "codex"
+    },
+    {
+     "path": "witness-method.html",
+     "title": "The Witness Method — How to Check a Claim",
+     "area": "evidence"
+    },
+    {
+     "path": "genesis-5-timeline.html",
+     "title": "Walking the Long Line — Genesis 5",
+     "area": "scroll-scripture"
     },
     {
      "path": "account.html",
@@ -1580,8 +1679,8 @@
      "area": "codex"
     }
    ],
-   "outTotal": 28,
-   "inTotal": 4
+   "outTotal": 29,
+   "inTotal": 7
   },
   "install.html": {
    "title": "Get the App — Put the Codex on Your Home Screen · Codex of Reality",
@@ -1805,6 +1904,11 @@
      "area": "systems"
     },
     {
+     "path": "read-your-own-day.html",
+     "title": "Read Your Own Day — the Spark teaches you your day",
+     "area": "living-time"
+    },
+    {
      "path": "moons.html",
      "title": "Remnant 13 Moons — Living Calendar",
      "area": "living-time"
@@ -1813,15 +1917,10 @@
      "path": "lab.html",
      "title": "Remnant Lab",
      "area": "systems"
-    },
-    {
-     "path": "hub.html",
-     "title": "Systems Hub",
-     "area": "systems"
     }
    ],
    "outTotal": 1,
-   "inTotal": 19
+   "inTotal": 20
   },
   "living-time-sphere.html": {
    "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
@@ -1885,6 +1984,11 @@
      "area": "evidence"
     },
     {
+     "path": "read-your-own-day.html",
+     "title": "Read Your Own Day — the Spark teaches you your day",
+     "area": "living-time"
+    },
+    {
      "path": "moons.html",
      "title": "Remnant 13 Moons — Living Calendar",
      "area": "living-time"
@@ -1892,6 +1996,11 @@
     {
      "path": "13-moon-whitepaper.html",
      "title": "Remnant Rollout Whitepaper | The 13 Moons Remnant Living Time Observatory",
+     "area": "living-time"
+    },
+    {
+     "path": "spark-echo.html",
+     "title": "Spark Echo — the Memory Game",
      "area": "living-time"
     },
     {
@@ -1905,18 +2014,18 @@
      "area": "systems"
     },
     {
+     "path": "genesis-5-timeline.html",
+     "title": "Walking the Long Line — Genesis 5",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "provenance.html",
      "title": "Where Every Number Comes From",
      "area": "evidence"
-    },
-    {
-     "path": "witness.html",
-     "title": "Witness",
-     "area": "artifacts"
     }
    ],
    "outTotal": 5,
-   "inTotal": 12
+   "inTotal": 15
   },
   "map.html": {
    "title": "The Traveller's Map",
@@ -2038,6 +2147,11 @@
      "area": "systems"
     },
     {
+     "path": "read-your-own-day.html",
+     "title": "Read Your Own Day — the Spark teaches you your day",
+     "area": "living-time"
+    },
+    {
      "path": "living-time-sphere.html",
      "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
      "area": "living-time"
@@ -2135,6 +2249,11 @@
      "area": "systems"
     },
     {
+     "path": "read-your-own-day.html",
+     "title": "Read Your Own Day — the Spark teaches you your day",
+     "area": "living-time"
+    },
+    {
      "path": "13-moon-whitepaper.html",
      "title": "Remnant Rollout Whitepaper | The 13 Moons Remnant Living Time Observatory",
      "area": "living-time"
@@ -2143,15 +2262,10 @@
      "path": "covenant-caravan.html",
      "title": "The Covenant Caravan",
      "area": "artifacts"
-    },
-    {
-     "path": "codex-guide.html",
-     "title": "The Guide — Ask the Record",
-     "area": "archive"
     }
    ],
-   "outTotal": 9,
-   "inTotal": 15
+   "outTotal": 10,
+   "inTotal": 17
   },
   "offline.html": {
    "title": "13 Moons — Offline",
@@ -2239,6 +2353,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "read-your-own-day.html",
+     "title": "Read Your Own Day — the Spark teaches you your day",
+     "area": "living-time"
+    },
+    {
      "path": "lab.html",
      "title": "Remnant Lab",
      "area": "systems"
@@ -2250,7 +2369,7 @@
     }
    ],
    "outTotal": 10,
-   "inTotal": 5
+   "inTotal": 6
   },
   "privacy-policy.html": {
    "title": "Privacy Policy — Spark. Living Day",
@@ -2299,6 +2418,56 @@
    ],
    "outTotal": 2,
    "inTotal": 4
+  },
+  "read-your-own-day.html": {
+   "title": "Read Your Own Day — the Spark teaches you your day",
+   "area": "living-time",
+   "out": [
+    {
+     "path": "living-time-sphere.html",
+     "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
+     "area": "living-time"
+    },
+    {
+     "path": "moons.html",
+     "title": "Remnant 13 Moons — Living Calendar",
+     "area": "living-time"
+    },
+    {
+     "path": "practices.html",
+     "title": "Practices — the Exercises Wing · Remnant Lab",
+     "area": "systems"
+    },
+    {
+     "path": "teach.html",
+     "title": "Manifest — Remnant Visual Exercise",
+     "area": "systems"
+    },
+    {
+     "path": "ledger.html",
+     "title": "Witness Ledger",
+     "area": "living-time"
+    }
+   ],
+   "in": [
+    {
+     "path": "codex-atlas.html",
+     "title": "Codex Atlas",
+     "area": "archive"
+    },
+    {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    },
+    {
+     "path": "moons.html",
+     "title": "Remnant 13 Moons — Living Calendar",
+     "area": "living-time"
+    }
+   ],
+   "outTotal": 5,
+   "inTotal": 3
   },
   "scripture/about.html": {
    "title": "Sources, licences and limits — Scripture",
@@ -9078,7 +9247,7 @@
     }
    ],
    "outTotal": 49,
-   "inTotal": 50
+   "inTotal": 51
   },
   "scripture/genesis/06.html": {
    "title": "Genesis 6 — Scripture",
@@ -10507,6 +10676,11 @@
    ],
    "in": [
     {
+     "path": "scripture/word-studies/davar.html",
+     "title": "Davar — דָּבָר — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "scripture/index.html",
      "title": "Genesis & Exodus Scripture",
      "area": "scroll-scripture"
@@ -10570,15 +10744,10 @@
      "path": "scripture/genesis/20.html",
      "title": "Genesis 20 — Scripture",
      "area": "scroll-scripture"
-    },
-    {
-     "path": "scripture/genesis/21.html",
-     "title": "Genesis 21 — Scripture",
-     "area": "scroll-scripture"
     }
    ],
    "outTotal": 49,
-   "inTotal": 50
+   "inTotal": 51
   },
   "scripture/genesis/16.html": {
    "title": "Genesis 16 — Scripture",
@@ -15850,6 +16019,11 @@
      "area": "systems"
     },
     {
+     "path": "genesis-5-timeline.html",
+     "title": "Walking the Long Line — Genesis 5",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "scripture/genesis/02.html",
      "title": "Genesis 2 — Scripture",
      "area": "scroll-scripture"
@@ -15898,11 +16072,6 @@
      "path": "scripture/genesis/11.html",
      "title": "Genesis 11 — Scripture",
      "area": "scroll-scripture"
-    },
-    {
-     "path": "scripture/genesis/12.html",
-     "title": "Genesis 12 — Scripture",
-     "area": "scroll-scripture"
     }
    ],
    "in": [
@@ -15925,6 +16094,11 @@
      "path": "index.html",
      "title": "Codex of Reality",
      "area": "codex"
+    },
+    {
+     "path": "scripture/word-studies/davar.html",
+     "title": "Davar — דָּבָר — Hebrew Word Studies",
+     "area": "scroll-scripture"
     },
     {
      "path": "downloads.html",
@@ -15970,15 +16144,10 @@
      "path": "scripture/word-studies/shem.html",
      "title": "Shem — שֵׁם — Hebrew Word Studies",
      "area": "scroll-scripture"
-    },
-    {
-     "path": "scripture/about.html",
-     "title": "Sources, licences and limits — Scripture",
-     "area": "scroll-scripture"
     }
    ],
-   "outTotal": 94,
-   "inTotal": 14
+   "outTotal": 95,
+   "inTotal": 16
   },
   "scripture/lemma.html": {
    "title": "Lemma study — Scripture",
@@ -16020,6 +16189,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "scripture/word-studies/davar.html",
+     "title": "Davar — דָּבָר — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "scroll/lexicon.html",
      "title": "Hebrew lexicon",
      "area": "scroll-scripture"
@@ -16037,7 +16211,7 @@
      "area": "scroll-scripture"
     }
    ],
-   "outTotal": 9,
+   "outTotal": 10,
    "inTotal": 1
   },
   "scripture/word-studies/adam.html": {
@@ -16180,6 +16354,56 @@
    "outTotal": 6,
    "inTotal": 4
   },
+  "scripture/word-studies/davar.html": {
+   "title": "Davar — דָּבָר — Hebrew Word Studies",
+   "area": "scroll-scripture",
+   "out": [
+    {
+     "path": "scripture/word-studies/or.html",
+     "title": "Or — אוֹר — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/genesis/15.html",
+     "title": "Genesis 15 — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/index.html",
+     "title": "Genesis & Exodus Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/shem.html",
+     "title": "Shem — שֵׁם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    }
+   ],
+   "in": [
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/lemma.html",
+     "title": "Lemma study — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/shem.html",
+     "title": "Shem — שֵׁם — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 5,
+   "inTotal": 3
+  },
   "scripture/word-studies/enosh.html": {
    "title": "Enosh — אֱנוֹשׁ — Hebrew Word Studies",
    "area": "scroll-scripture",
@@ -16290,6 +16514,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "scripture/word-studies/davar.html",
+     "title": "Davar — דָּבָר — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "scripture/index.html",
      "title": "Genesis & Exodus Scripture",
      "area": "scroll-scripture"
@@ -16320,6 +16549,11 @@
      "path": "index.html",
      "title": "Codex of Reality",
      "area": "codex"
+    },
+    {
+     "path": "scripture/word-studies/davar.html",
+     "title": "Davar — דָּבָר — Hebrew Word Studies",
+     "area": "scroll-scripture"
     },
     {
      "path": "downloads.html",
@@ -16360,10 +16594,15 @@
      "path": "scripture/word-studies/shem.html",
      "title": "Shem — שֵׁם — Hebrew Word Studies",
      "area": "scroll-scripture"
+    },
+    {
+     "path": "spark-echo.html",
+     "title": "Spark Echo — the Memory Game",
+     "area": "living-time"
     }
    ],
-   "outTotal": 9,
-   "inTotal": 12
+   "outTotal": 10,
+   "inTotal": 15
   },
   "scripture/word-studies/nephesh.html": {
    "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
@@ -16477,6 +16716,11 @@
    ],
    "in": [
     {
+     "path": "scripture/word-studies/davar.html",
+     "title": "Davar — דָּבָר — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "scripture/word-studies/index.html",
      "title": "Hebrew Word Studies — Scripture",
      "area": "scroll-scripture"
@@ -16503,7 +16747,7 @@
     }
    ],
    "outTotal": 7,
-   "inTotal": 5
+   "inTotal": 6
   },
   "scripture/word-studies/ruach.html": {
    "title": "Ruach — רוּחַ — Hebrew Word Studies",
@@ -16598,6 +16842,11 @@
      "path": "scripture/word-studies/index.html",
      "title": "Hebrew Word Studies — Scripture",
      "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/davar.html",
+     "title": "Davar — דָּבָר — Hebrew Word Studies",
+     "area": "scroll-scripture"
     }
    ],
    "in": [
@@ -16609,6 +16858,11 @@
     {
      "path": "scripture/word-studies/adamah.html",
      "title": "Adamah — אֲדָמָה — Hebrew Word Studies",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/word-studies/davar.html",
+     "title": "Davar — דָּבָר — Hebrew Word Studies",
      "area": "scroll-scripture"
     },
     {
@@ -16637,8 +16891,8 @@
      "area": "scroll-scripture"
     }
    ],
-   "outTotal": 4,
-   "inTotal": 7
+   "outTotal": 5,
+   "inTotal": 8
   },
   "scroll-of-fire-codex-of-reality-remnant-whitepaper.html": {
    "title": "Remnant Whitepaper — Redirect",
@@ -17237,6 +17491,46 @@
    "outTotal": 2,
    "inTotal": 8
   },
+  "spark-echo.html": {
+   "title": "Spark Echo — the Memory Game",
+   "area": "living-time",
+   "out": [
+    {
+     "path": "companions.html",
+     "title": "Companions",
+     "area": "living-time"
+    },
+    {
+     "path": "scripture/word-studies/index.html",
+     "title": "Hebrew Word Studies — Scripture",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "systems/frequencies.html",
+     "title": "Frequency Governance",
+     "area": "systems"
+    },
+    {
+     "path": "living-time-sphere.html",
+     "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
+     "area": "living-time"
+    },
+    {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    }
+   ],
+   "in": [
+    {
+     "path": "codex-atlas.html",
+     "title": "Codex Atlas",
+     "area": "archive"
+    }
+   ],
+   "outTotal": 5,
+   "inTotal": 1
+  },
   "start.html": {
    "title": "Start Here — Redirect",
    "area": "codex",
@@ -17383,6 +17677,11 @@
      "area": "living-time"
     },
     {
+     "path": "spark-echo.html",
+     "title": "Spark Echo — the Memory Game",
+     "area": "living-time"
+    },
+    {
      "path": "hub.html",
      "title": "Systems Hub",
      "area": "systems"
@@ -17394,7 +17693,7 @@
     }
    ],
    "outTotal": 0,
-   "inTotal": 10
+   "inTotal": 11
   },
   "systems/mind-renewal.html": {
    "title": "Mind-Renewal Protocol",
@@ -17580,6 +17879,11 @@
      "area": "systems"
     },
     {
+     "path": "read-your-own-day.html",
+     "title": "Read Your Own Day — the Spark teaches you your day",
+     "area": "living-time"
+    },
+    {
      "path": "moons.html",
      "title": "Remnant 13 Moons — Living Calendar",
      "area": "living-time"
@@ -17606,7 +17910,7 @@
     }
    ],
    "outTotal": 10,
-   "inTotal": 12
+   "inTotal": 13
   },
   "theory.html": {
    "title": "Theory Hub",
@@ -18465,9 +18769,54 @@
      "path": "claims-atlas.html",
      "title": "Documentation Hub",
      "area": "evidence"
+    },
+    {
+     "path": "witness-method.html",
+     "title": "The Witness Method — How to Check a Claim",
+     "area": "evidence"
     }
    ],
    "outTotal": 2,
+   "inTotal": 3
+  },
+  "witness-method.html": {
+   "title": "The Witness Method — How to Check a Claim",
+   "area": "evidence",
+   "out": [
+    {
+     "path": "claims-atlas.html",
+     "title": "Documentation Hub",
+     "area": "evidence"
+    },
+    {
+     "path": "timeline.html",
+     "title": "Historical Timeline",
+     "area": "evidence"
+    },
+    {
+     "path": "hub.html",
+     "title": "Systems Hub",
+     "area": "systems"
+    },
+    {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    }
+   ],
+   "in": [
+    {
+     "path": "codex-atlas.html",
+     "title": "Codex Atlas",
+     "area": "archive"
+    },
+    {
+     "path": "claims-atlas.html",
+     "title": "Documentation Hub",
+     "area": "evidence"
+    }
+   ],
+   "outTotal": 4,
    "inTotal": 2
   },
   "witness-world.html": {

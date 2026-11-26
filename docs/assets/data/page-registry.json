@@ -28,14 +28,14 @@
   ],
   "unsourcedNote": "Fields named in unsourcedFields carry the marker \"unsourced\" in every entry: no truthful source exists for them yet, and no value was invented. Filling them is ULS-002 slice-2 work.",
   "summary": {
-    "pages": 205,
+    "pages": 211,
     "byDomain": {
       "Observatory": 7,
-      "Knowledge": 117,
-      "Research": 48,
-      "Living": 9,
-      "Spark": 2,
-      "Play": 1,
+      "Knowledge": 119,
+      "Research": 49,
+      "Living": 10,
+      "Spark": 3,
+      "Play": 2,
       "Stories": 6,
       "Community": 1,
       "Tools": 10,
@@ -392,6 +392,37 @@
       "maintenance_status": "active"
     },
     {
+      "id": "card-album",
+      "path": "card-album.html",
+      "title": "The Card Album — Codex of Reality",
+      "description": "The Codex card album: cards found around the site through real acts — witnessing a day, hearing a word, meeting a Spark — kept on this device, each with its collection face and its game face.",
+      "primary_domain": "Spark",
+      "page_type": "page",
+      "canonical_url": "https://codexofreality.org/card-album.html",
+      "parent": "index.html",
+      "related_pages": [
+        "companions.html",
+        "downloads.html",
+        "index.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "shop.html",
+        "witness-world.html",
+        "witness.html"
+      ],
+      "search_keywords": "unsourced",
+      "navigation_visibility": "sitemap",
+      "available_actions": "unsourced",
+      "spark_capabilities": "unsourced",
+      "temporal_context": "pattern-calendar",
+      "data_dependencies": [],
+      "permissions": "unsourced",
+      "offline_capabilities": "unsourced",
+      "mobile_behavior": "unsourced",
+      "content_version": "sha256:dded77d8f0c6",
+      "maintenance_status": "active"
+    },
+    {
       "id": "circle",
       "path": "circle.html",
       "title": "Circle Sync — Scroll of Fire",
@@ -456,6 +487,7 @@
         "systems/archive.html",
         "theory.html",
         "timeline.html",
+        "witness-method.html",
         "witness-world.html",
         "witness.html"
       ],
@@ -470,7 +502,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:becf77b515a3",
+      "content_version": "sha256:45eee78da674",
       "maintenance_status": "active"
     },
     {
@@ -488,6 +520,7 @@
         "about-aaron.html",
         "aiyanas-world.html",
         "alignment-ledger.html",
+        "card-album.html",
         "circle.html",
         "claims-atlas.html",
         "codex-guide.html",
@@ -499,6 +532,7 @@
         "equinox-passage.html",
         "ethics.html",
         "garden.html",
+        "genesis-5-timeline.html",
         "genesis-oracle.html",
         "glossary.html",
         "glyphs.html",
@@ -516,6 +550,7 @@
         "moons.html",
         "practices.html",
         "provenance.html",
+        "read-your-own-day.html",
         "scripture/index.html",
         "scripture/word-studies/index.html",
         "scroll/atlas.html",
@@ -527,6 +562,7 @@
         "search.html",
         "sending-test.html",
         "shop.html",
+        "spark-echo.html",
         "start.html",
         "systems/archive.html",
         "systems/frequencies.html",
@@ -549,6 +585,7 @@
         "theory/thirteen-moons.html",
         "theory/unified-field.html",
         "timeline.html",
+        "witness-method.html",
         "witness-world.html",
         "witness.html"
       ],
@@ -561,7 +598,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:d401a4854ea4",
+      "content_version": "sha256:899ea394ed84",
       "maintenance_status": "active"
     },
     {
@@ -647,6 +684,7 @@
       "parent": "index.html",
       "related_pages": [
         "aiyanas-world.html",
+        "card-album.html",
         "downloads.html",
         "index.html",
         "living-time-sphere.html",
@@ -665,7 +703,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:eb79d0ffa918",
+      "content_version": "sha256:82acbeb8e0c1",
       "maintenance_status": "active"
     },
     {
@@ -790,7 +828,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:9d3e36c4c264",
+      "content_version": "sha256:1ac16ace4496",
       "maintenance_status": "active"
     },
     {
@@ -908,7 +946,41 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:eee7e6c6d003",
+      "content_version": "sha256:a4b0fc8579d9",
+      "maintenance_status": "active"
+    },
+    {
+      "id": "genesis-5-timeline",
+      "path": "genesis-5-timeline.html",
+      "title": "Walking the Long Line — Genesis 5 · Scroll of Fire",
+      "description": "Genesis 5 drawn to scale: walk the line from Adam to Noah, feel how long these lives were, run the count of years yourself, and stop at Enoch — whose 365 years match the year itself. Three readings of that match, side by side; the page takes no side.",
+      "primary_domain": "Knowledge",
+      "page_type": "page",
+      "canonical_url": "https://codexofreality.org/genesis-5-timeline.html",
+      "parent": "index.html",
+      "related_pages": [
+        "companions.html",
+        "downloads.html",
+        "index.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "scripture/genesis/05.html",
+        "scripture/index.html",
+        "scripture/word-studies/index.html",
+        "shop.html",
+        "witness-world.html",
+        "witness.html"
+      ],
+      "search_keywords": "unsourced",
+      "navigation_visibility": "linked",
+      "available_actions": "unsourced",
+      "spark_capabilities": "unsourced",
+      "temporal_context": "pattern-calendar",
+      "data_dependencies": [],
+      "permissions": "unsourced",
+      "offline_capabilities": "unsourced",
+      "mobile_behavior": "unsourced",
+      "content_version": "sha256:f54ef86c0c47",
       "maintenance_status": "active"
     },
     {
@@ -1173,8 +1245,9 @@
         "ledger.html",
         "living-time-sphere.html",
         "moons.html",
-        "practices.html",
+        "read-your-own-day.html",
         "scripture/index.html",
+        "scripture/word-studies/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -1203,7 +1276,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:8a5180bff2bc",
+      "content_version": "sha256:0767cc3c8a61",
       "maintenance_status": "active"
     },
     {
@@ -1401,7 +1474,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:1c8a4ccd7753",
+      "content_version": "sha256:508d29d34c03",
       "maintenance_status": "r17-protected-terms"
     },
     {
@@ -1553,6 +1626,7 @@
         "ledger.html",
         "living-time-sphere.html",
         "provenance.html",
+        "read-your-own-day.html",
         "shop.html",
         "start.html",
         "systems/frequencies.html",
@@ -1570,7 +1644,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:80a4f57fb77e",
+      "content_version": "sha256:eecc70079885",
       "maintenance_status": "active"
     },
     {
@@ -1719,6 +1793,47 @@
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
       "content_version": "sha256:1a2c036c8655",
+      "maintenance_status": "active"
+    },
+    {
+      "id": "read-your-own-day",
+      "path": "read-your-own-day.html",
+      "title": "Read Your Own Day — the Spark teaches you your day · Scroll of Fire",
+      "description": "Read Your Own Day: a short guided practice where the Spark teaches you to find your Moon and Pattern Day, see your day on the Sphere, and witness it — with your own hands, in a few minutes.",
+      "primary_domain": "Living",
+      "page_type": "page",
+      "canonical_url": "https://codexofreality.org/read-your-own-day.html",
+      "parent": "index.html",
+      "related_pages": [
+        "companions.html",
+        "covenant-caravan.html",
+        "downloads.html",
+        "ethics.html",
+        "genesis-oracle.html",
+        "hub.html",
+        "index.html",
+        "ledger.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "practices.html",
+        "shop.html",
+        "start.html",
+        "systems/frequencies.html",
+        "teach.html",
+        "theory.html",
+        "witness-world.html",
+        "witness.html"
+      ],
+      "search_keywords": "unsourced",
+      "navigation_visibility": "sitemap",
+      "available_actions": "unsourced",
+      "spark_capabilities": "unsourced",
+      "temporal_context": "pattern-calendar",
+      "data_dependencies": [],
+      "permissions": "unsourced",
+      "offline_capabilities": "unsourced",
+      "mobile_behavior": "unsourced",
+      "content_version": "sha256:fe30a98dad81",
       "maintenance_status": "active"
     },
     {
@@ -9476,6 +9591,7 @@
         "codex-atlas.html",
         "companions.html",
         "downloads.html",
+        "genesis-5-timeline.html",
         "index.html",
         "living-time-sphere.html",
         "moons.html",
@@ -9591,7 +9707,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:248391e33b1b",
+      "content_version": "sha256:1a57d1afd940",
       "maintenance_status": "active"
     },
     {
@@ -9616,6 +9732,7 @@
         "scripture/index.html",
         "scripture/word-studies/adam.html",
         "scripture/word-studies/adamah.html",
+        "scripture/word-studies/davar.html",
         "scripture/word-studies/enosh.html",
         "scripture/word-studies/index.html",
         "scripture/word-studies/nephesh.html",
@@ -9640,7 +9757,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:b0587ca1e4c4",
+      "content_version": "sha256:0280de84ba0e",
       "maintenance_status": "active"
     },
     {
@@ -9686,7 +9803,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:f42c4ef65fbb",
+      "content_version": "sha256:5df90f9e2737",
       "maintenance_status": "active"
     },
     {
@@ -9732,7 +9849,52 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:47f9e8c254b6",
+      "content_version": "sha256:334ede93c40e",
+      "maintenance_status": "active"
+    },
+    {
+      "id": "scripture-word-studies-davar",
+      "path": "scripture/word-studies/davar.html",
+      "title": "Davar — דָּבָר — Hebrew Word Studies · Scroll of Fire",
+      "description": "דָּבָר (davar, H1697) — full Hebrew treatment: word, thing and matter in one noun; the Ten Words, the word that does not return empty, wordplay, cognates, traditions and uncertainties.",
+      "primary_domain": "Knowledge",
+      "page_type": "word-study",
+      "canonical_url": "https://codexofreality.org/scripture/word-studies/davar.html",
+      "parent": "scripture/word-studies/index.html",
+      "related_pages": [
+        "codex-atlas.html",
+        "companions.html",
+        "downloads.html",
+        "index.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "scripture/about.html",
+        "scripture/exodus/01.html",
+        "scripture/genesis/01.html",
+        "scripture/genesis/15.html",
+        "scripture/index.html",
+        "scripture/word-studies/index.html",
+        "scripture/word-studies/or.html",
+        "scripture/word-studies/shem.html",
+        "scroll/atlas.html",
+        "scroll/editorial.html",
+        "scroll/index.html",
+        "scroll/lexicon.html",
+        "scroll/search.html",
+        "shop.html",
+        "witness-world.html",
+        "witness.html"
+      ],
+      "search_keywords": "unsourced",
+      "navigation_visibility": "sitemap",
+      "available_actions": "unsourced",
+      "spark_capabilities": "unsourced",
+      "temporal_context": "none",
+      "data_dependencies": [],
+      "permissions": "unsourced",
+      "offline_capabilities": "unsourced",
+      "mobile_behavior": "unsourced",
+      "content_version": "sha256:331dbb99f67d",
       "maintenance_status": "active"
     },
     {
@@ -9779,14 +9941,14 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:4d2369112c19",
+      "content_version": "sha256:a01125528f6e",
       "maintenance_status": "active"
     },
     {
       "id": "hebrew-word-studies",
       "path": "scripture/word-studies/index.html",
       "title": "Hebrew Word Studies — Scripture · Scroll of Fire",
-      "description": "Seven Hebrew key words given the full treatment — spelling, root, semantic range, biblical examples, wordplay, cognates, traditions and printed uncertainties.",
+      "description": "Eight Hebrew key words given the full treatment — spelling, root, semantic range, biblical examples, wordplay, cognates, traditions and printed uncertainties.",
       "primary_domain": "Knowledge",
       "page_type": "index",
       "canonical_url": "https://codexofreality.org/scripture/word-studies/index.html",
@@ -9804,6 +9966,7 @@
         "scripture/index.html",
         "scripture/word-studies/adam.html",
         "scripture/word-studies/adamah.html",
+        "scripture/word-studies/davar.html",
         "scripture/word-studies/enosh.html",
         "scripture/word-studies/nephesh.html",
         "scripture/word-studies/or.html",
@@ -9827,7 +9990,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:166247b3da3b",
+      "content_version": "sha256:40efe57cbdca",
       "maintenance_status": "active"
     },
     {
@@ -9873,7 +10036,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:ab91bc9a77a4",
+      "content_version": "sha256:f1f1e053522c",
       "maintenance_status": "active"
     },
     {
@@ -9919,7 +10082,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:62cadca6ca57",
+      "content_version": "sha256:198710164e5b",
       "maintenance_status": "active"
     },
     {
@@ -9965,7 +10128,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:0bb407395a02",
+      "content_version": "sha256:2e9b9c87cbd9",
       "maintenance_status": "active"
     },
     {
@@ -9989,6 +10152,7 @@
         "scripture/genesis/01.html",
         "scripture/genesis/02.html",
         "scripture/index.html",
+        "scripture/word-studies/davar.html",
         "scripture/word-studies/index.html",
         "scripture/word-studies/or.html",
         "scroll/atlas.html",
@@ -10009,7 +10173,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:591e4eb35e7a",
+      "content_version": "sha256:3dfaf5c965f9",
       "maintenance_status": "active"
     },
     {
@@ -10579,6 +10743,39 @@
       "maintenance_status": "active"
     },
     {
+      "id": "spark-echo",
+      "path": "spark-echo.html",
+      "title": "Spark Echo — the Memory Game · Scroll of Fire",
+      "description": "Spark Echo: the Spark plays a sequence of lights, tones and words, and you play it back. It grows by one step every round. Three modes — Light & Tone, Words from the Hebrew studies, and the frequency page's own tones, played exactly. Kept on your device only.",
+      "primary_domain": "Play",
+      "page_type": "page",
+      "canonical_url": "https://codexofreality.org/spark-echo.html",
+      "parent": "index.html",
+      "related_pages": [
+        "companions.html",
+        "downloads.html",
+        "index.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "scripture/word-studies/index.html",
+        "shop.html",
+        "systems/frequencies.html",
+        "witness-world.html",
+        "witness.html"
+      ],
+      "search_keywords": "unsourced",
+      "navigation_visibility": "linked",
+      "available_actions": "unsourced",
+      "spark_capabilities": "unsourced",
+      "temporal_context": "pattern-calendar",
+      "data_dependencies": [],
+      "permissions": "unsourced",
+      "offline_capabilities": "unsourced",
+      "mobile_behavior": "unsourced",
+      "content_version": "sha256:bf8296d26bc1",
+      "maintenance_status": "active"
+    },
+    {
       "id": "start",
       "path": "start.html",
       "title": "Start Here — Redirect",
@@ -10689,7 +10886,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:ad7bdcf81c2e",
+      "content_version": "sha256:335ebc43a4e2",
       "maintenance_status": "active"
     },
     {
@@ -10880,7 +11077,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:381316c41be0",
+      "content_version": "sha256:1a1429186aeb",
       "maintenance_status": "active"
     },
     {
@@ -12454,6 +12651,40 @@
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
       "content_version": "sha256:fae72a8c9f19",
+      "maintenance_status": "active"
+    },
+    {
+      "id": "witness-method",
+      "path": "witness-method.html",
+      "title": "The Witness Method — How to Check a Claim · Scroll of Fire",
+      "description": "A short lesson in checking a claim, the way the Codex itself works: five evidence labels, practised on real claims from the Old World investigation — including the ones that failed their check.",
+      "primary_domain": "Research",
+      "page_type": "page",
+      "canonical_url": "https://codexofreality.org/witness-method.html",
+      "parent": "index.html",
+      "related_pages": [
+        "claims-atlas.html",
+        "companions.html",
+        "downloads.html",
+        "hub.html",
+        "index.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "shop.html",
+        "timeline.html",
+        "witness-world.html",
+        "witness.html"
+      ],
+      "search_keywords": "unsourced",
+      "navigation_visibility": "linked",
+      "available_actions": "unsourced",
+      "spark_capabilities": "unsourced",
+      "temporal_context": "pattern-calendar",
+      "data_dependencies": [],
+      "permissions": "unsourced",
+      "offline_capabilities": "unsourced",
+      "mobile_behavior": "unsourced",
+      "content_version": "sha256:b9d61c90484b",
       "maintenance_status": "active"
     },
     {
