@@ -527,10 +527,27 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
       }
       var bar = sidebar.querySelector(".sphere-sheet-bar");
       var barHeight = bar ? bar.getBoundingClientRect().height : 0;
+      /* The landing clearance (Nov 26, 2026): the measured bar
+       * can read short in the frame the sheet rises — its second
+       * row and its fonts are still settling, the very moment a
+       * room is usually brought up — and a room landed on that
+       * short measure starts with its heading under the bar (the
+       * Spark room's head measured 100–180px short on a phone).
+       * The sheet's own stylesheet already declares each room's
+       * clearance for exactly this (scroll-margin-top, set past
+       * the bar's settled height), and the scrollIntoView doors
+       * land on it; the landing here takes the greater of the
+       * two, so every door stands the room at the same depth and
+       * its first lines are never under the bar. */
+      var clearance = barHeight;
+      try {
+        var margin = parseFloat(window.getComputedStyle(room).scrollMarginTop);
+        if (isFinite(margin)) clearance = Math.max(clearance, margin);
+      } catch (e) { /* the measured bar stands */ }
       var delta = room.getBoundingClientRect().top -
         sidebar.getBoundingClientRect().top;
       sidebar.scrollTop = Math.max(0, Math.round(
-        sidebar.scrollTop + delta - barHeight));
+        sidebar.scrollTop + delta - clearance));
     }
 
     function focusSheet(target) {
@@ -539,6 +556,29 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
         bringRoomToSheetTop(target);
         if (focusTarget && focusTarget.isConnected) focusTarget.focus({ preventScroll: true });
       });
+      /* The landing, stood behind (Nov 26, 2026): the first
+       * landing is measured in the frame the sheet rises, but
+       * the rooms above the asked-for one are still taking their
+       * open heights in that frame — the closed sheet caps its
+       * sections short, and the tall rooms (the homestead, the
+       * rings) grow thousands of pixels as they open — so the
+       * browser walks the scroll after the focused control and
+       * the room's head ends under the bar (the Spark room's
+       * head measured 100px short, its title behind the bar).
+       * Once the sheet has settled, the same landing is stood
+       * again on the settled measure. It does not fire if the
+       * rooms have closed, or if another room has been asked
+       * for since — the keeper's own scroll is never fought. */
+      if (target && window.setTimeout) {
+        focusSheet.lastTarget = target;
+        window.setTimeout(function () {
+          if (focusSheet.lastTarget !== target) return;
+          try {
+            if (sidebar.getAttribute && sidebar.getAttribute("aria-hidden") === "true") return;
+            if (sidebar.contains(target)) bringRoomToSheetTop(target);
+          } catch (e) { /* the first landing stands */ }
+        }, 500);
+      }
     }
 
     function openRooms(trigger, target) {

@@ -113,6 +113,13 @@ html.sphere-rebuilt .spark-presence {
   background: rgba(23, 16, 10, 0.92);
   color: #f3e7d3;
 }
+/* In the sheet the panel is one room among the rooms (Nov 26,
+ * 2026): it takes the sheet's own width and the rooms' spacing,
+ * never the centred page column — and it is never in the stage. */
+.sphere-sidebar .sphere-spark-talk {
+  max-width: none;
+  margin: 1rem;
+}
 .sphere-spark-talk-head {
   display: flex;
   gap: 0.9rem;
@@ -122,7 +129,17 @@ html.sphere-rebuilt .spark-presence {
 .sphere-spark-talk-art svg { width: 100%; height: 100%; display: block; }
 .sphere-spark-talk-title { margin: 0; font-size: 1.35rem; }
 .sphere-spark-talk-stage { margin: 0.2rem 0 0; color: #c9b18c; }
-.sphere-spark-talk-privacy { color: #c9b18c; line-height: 1.5; font-size: 0.92rem; }
+/* The standing explanation stands last in the panel (Nov 26,
+ * 2026): the day and the conversation lead; how replies are
+ * named stays one glance away at the foot, in a quieter hand. */
+.sphere-spark-talk-privacy {
+  color: #c9b18c;
+  line-height: 1.5;
+  font-size: 0.85rem;
+  margin: 0.9rem 0 0;
+  padding-top: 0.7rem;
+  border-top: 1px solid rgba(218, 164, 91, 0.18);
+}
 .sphere-spark-talk-log {
   max-height: 22rem;
   overflow-y: auto;
