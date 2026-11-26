@@ -21,10 +21,12 @@
  *     speech synthesis gets no button, and the page is exactly
  *     as readable as it was before.
  *   - It reads what the page already shows. On the chapters that
- *     is the World English Bible text (the pointed Hebrew is a
- *     study text; device voices pronounce it unreliably, and a
- *     Hebrew pronunciation layer is a study project, not a
- *     batch step — the chapters' Listen note says so plainly).
+ *     is the World English Bible text, and — through the Hebrew
+ *     pronunciation layer's second slice — the chapters' pointed
+ *     Hebrew as a careful transliteration track built from the
+ *     verse's own pointed forms: never raw Hebrew handed to a
+ *     device voice, and never presented as a native Hebrew
+ *     voice. The chapters' Listen note says both roads plainly.
  *   - Listening never marks anything read, never writes state:
  *     hearing a chapter and reading it stay the keeper's own
  *     separate acts, as the chapters' "Mark chapter read" has
@@ -111,8 +113,10 @@
        * The word studies ride it: the page shows pointed Hebrew,
        * the voice speaks the pronunciation engine's careful
        * transliteration, and the Hebrew itself is highlighted.
-       * The chapters do not use it — their Listen stays English
-       * until the layer's second slice is built and proven. */
+       * The chapters' Hebrew choice (the layer's second slice)
+       * rides the same hook: scripture.js builds each verse's
+       * track from the verse's own pointed forms and the verse
+       * itself is highlighted while the track is spoken. */
       const spoken = typeof options.speakText === "function" ? options.speakText(chunk) : null;
       const utterance = new SpeechSynthesisUtterance(String(spoken || chunk.text).replace(/\s+/g, " ").trim());
       if (options.lang) utterance.lang = options.lang;

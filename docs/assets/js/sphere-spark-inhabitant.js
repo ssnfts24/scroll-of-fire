@@ -1889,10 +1889,51 @@
     let roadNowText = "";       // the beat the reading last named
     let seasonRoadNote = null;  // a one-line note the season's offer shows
 
+    /* The home-first settle, mirrored from
+     * spark-presence.js (the Mint Rule, aboard the app): the
+     * record is settled against home on every read — a
+     * different seed at home settles the mirror down from
+     * home and home's Spark is the one who inhabits the
+     * Sphere; the seed home names as let go clears the
+     * mirror; same seed, or no bridge (the open web),
+     * leaves the mirror's grown record standing. */
+    function readBridgedRecord() {
+      try {
+        const b = root.LivingPhoneNative;
+        if (!b || typeof b.sparkRecordJson !== "function") return null;
+        const raw = b.sparkRecordJson();
+        if (!raw) return null;
+        const record = JSON.parse(raw);
+        const Core = root.SparkCompanion;
+        return record && Core && Core.parseSeed(record.seed) ? record : null;
+      } catch { return null; }
+    }
+
+    function settleFromHome(record) {
+      if (!record) return record;
+      const home = readBridgedRecord();
+      if (home) {
+        if (home.seed === record.seed) return record;
+        try { root.localStorage?.setItem("sof.spark.v1", JSON.stringify(home)); } catch { /* the read still stands */ }
+        return home;
+      }
+      try {
+        const b = root.LivingPhoneNative;
+        const gone = b && typeof b.sparkLetGoSeed === "function"
+          ? b.sparkLetGoSeed() : "";
+        if (gone && gone === record.seed) {
+          try { root.localStorage?.removeItem("sof.spark.v1"); } catch { /* the read still stands */ }
+          return null;
+        }
+      } catch { /* the mirror read stands */ }
+      return record;
+    }
+
     function readRecord() {
       try {
         const raw = root.localStorage?.getItem("sof.spark.v1");
-        return raw ? JSON.parse(raw) : null;
+        const record = raw ? JSON.parse(raw) : null;
+        return record ? settleFromHome(record) : null;
       } catch { return null; }
     }
 

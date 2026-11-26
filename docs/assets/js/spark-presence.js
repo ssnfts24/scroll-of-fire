@@ -140,6 +140,40 @@
     }
   }
 
+  /* The home-first settle (the Mint Rule, aboard the app):
+   * a mirror that holds a Spark is not proof that Spark
+   * still stands — Aaron's phone showed his retired Spark
+   * still greeted by name in one room after its successor
+   * had come home. So a record read from the mirror is
+   * settled against home before it is presented: a
+   * different seed at home settles the mirror down from
+   * home (only the mirror's copy is replaced; the
+   * set-aside record at home is untouched) and home's
+   * Spark is presented; the seed home names as let go
+   * clears the mirror, never presented; same seed, or no
+   * bridge (the open web), leaves the grown record. The
+   * same settle, mirrored, guards the companions page,
+   * the agent seat, and the Sphere's two Spark faces. */
+  function settleFromHome(record) {
+    if (!record) return record;
+    const home = readBridgedRecord();
+    if (home) {
+      if (home.seed === record.seed) return record;
+      writeRecord(home);
+      return home;
+    }
+    try {
+      const b = window.LivingPhoneNative;
+      const gone = b && typeof b.sparkLetGoSeed === "function"
+        ? b.sparkLetGoSeed() : "";
+      if (gone && gone === record.seed) {
+        try { window.localStorage.removeItem(Core.STORAGE_KEY); } catch { /* the read still stands */ }
+        return null;
+      }
+    } catch { /* the mirror read stands */ }
+    return record;
+  }
+
   /* An adoption made in a room inside the app is handed home
    * in the same breath, through the same door the rooms use —
    * the bridge accepts it because no Spark stands at home
@@ -3460,7 +3494,7 @@
     const hasCalendar = await ensureCalendar();
     const today = hasCalendar ? todayCoordinate() : null;
 
-    let record = readRecord();
+    let record = settleFromHome(readRecord());
     if (!record) {
       /* The Mint Rule: inside the app, prove nothing stands
        * at home before any meeting is offered (see

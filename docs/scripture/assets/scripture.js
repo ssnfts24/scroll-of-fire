@@ -96,13 +96,15 @@
     var readBtn = el('button', { type: 'button', id: 'sf-read', 'aria-pressed': 'false', text: 'Mark chapter read' });
     readBtn.addEventListener('click', function () { toggleRead(); });
     var listenBtn = el('button', { type: 'button', id: 'sf-listen', 'aria-pressed': 'false', text: '▶ Listen' });
-    listenBtn.addEventListener('click', function () { toggleListen(listenBtn); });
+    listenBtn.addEventListener('click', function () { toggleListen(listenBtn, 'english'); });
+    var hebrewBtn = el('button', { type: 'button', id: 'sf-listen-hebrew', 'aria-pressed': 'false', text: '▶ Listen in Hebrew' });
+    hebrewBtn.addEventListener('click', function () { toggleListen(hebrewBtn, 'hebrew'); });
     var bm = el('details', { class: 'bookmarks' }, [el('summary', { text: 'Bookmarks (this browser only)' }), el('ul', { id: 'sf-bm' })]);
-    host.appendChild(el('div', { class: 'row' }, [sel, el('label', {}, [eng, ' English']), minus, plus, simple, deep, readBtn, listenBtn]));
+    host.appendChild(el('div', { class: 'row' }, [sel, el('label', {}, [eng, ' English']), minus, plus, simple, deep, readBtn, listenBtn, hebrewBtn]));
     host.appendChild(lay);
     host.appendChild(bm);
-    host.appendChild(el('p', { class: 'listen-note', text: 'Listen reads the chapter\u2019s English (World English Bible) text aloud, verse by verse, in your device\u2019s own voice. The pointed Hebrew is a study text; device voices pronounce it unreliably, so it is not read. Listening does not mark the chapter read.' }));
-    ctl = { sel: sel, eng: eng, read: readBtn };
+    host.appendChild(el('p', { class: 'listen-note', text: 'Two roads to hear this chapter, both in your device\u2019s own voice. Listen reads the chapter\u2019s English (World English Bible) text aloud, verse by verse. Listen in Hebrew reads the chapter\u2019s pointed Hebrew aloud, verse by verse, as a careful transliteration \u2014 the sounds spelled out letter by letter from the vowel points by the pronunciation layer. It is not a native Hebrew voice, and it does not claim to be. Listening does not mark the chapter read.' }));
+    ctl = { sel: sel, eng: eng, read: readBtn, listen: listenBtn, listenHebrew: hebrewBtn };
   }
   function syncControls() {
     if (!ctl.sel) return;
@@ -131,22 +133,48 @@
       ctl.read.setAttribute('aria-pressed', read ? 'true' : 'false');
     }
   }
-  /* ---------------- listen (Batch E2) ----------------
+  /* ---------------- listen (Batch E2; Hebrew road: the
+   * pronunciation layer, slice 2) ----------------
    * The shared read-aloud engine (assets/js/read-aloud.js),
    * lazy-loaded on first tap so no chapter carries its weight
-   * for a reader who never listens. Chunks are the verses'
-   * English lines, in order; the engine highlights the verse
-   * being read. Listening writes no state. */
+   * for a reader who never listens. Chunks are the verses, in
+   * order; the engine highlights the verse being read.
+   * Listening writes no state.
+   *
+   * Two roads, one engine:
+   *   - English: the verses' English (WEB) lines, as E2 built.
+   *   - Hebrew (slice 2 of the pronunciation layer): per verse,
+   *     the spoken track is built word by word from the verse's
+   *     own pointed forms — the .w spans of the verse's Hebrew
+   *     line, read in their pointed form (dataset.full, kept
+   *     before any display mode strips the points) — through
+   *     the slice-1 rule engine (hebrew-pronunciation.js). The
+   *     session's speakText hook hands the voice that
+   *     transliteration track while the verse itself is
+   *     highlighted, exactly as it is for English. A word whose
+   *     pointing the engine cannot read is left unspoken,
+   *     never guessed; a verse with no readable pointed word
+   *     is skipped on this road. The track is a careful
+   *     transliteration in the device's own voice — not a
+   *     native Hebrew voice — and the controls note says so. */
   var listenSession = null;
-  function loadReadAloud() {
-    if (window.ReadAloud) return Promise.resolve(window.ReadAloud);
+  function loadScriptOnce(src, ready) {
+    if (ready()) return Promise.resolve(true);
     return new Promise(function (resolve) {
       var script = doc.createElement('script');
-      script.src = base + '../assets/js/read-aloud.js';
-      script.addEventListener('load', function () { resolve(window.ReadAloud || null); });
-      script.addEventListener('error', function () { resolve(null); });
+      script.src = src;
+      script.addEventListener('load', function () { resolve(ready()); });
+      script.addEventListener('error', function () { resolve(false); });
       doc.head.appendChild(script);
     });
+  }
+  function loadReadAloud() {
+    return loadScriptOnce(base + '../assets/js/read-aloud.js', function () { return !!window.ReadAloud; })
+      .then(function () { return window.ReadAloud || null; });
+  }
+  function loadHebrewPronunciation() {
+    return loadScriptOnce(base + '../assets/js/hebrew-pronunciation.js', function () { return !!window.HebrewPronunciation; })
+      .then(function () { return window.HebrewPronunciation || null; });
   }
   function verseChunks() {
     var chunks = [];
@@ -157,17 +185,52 @@
     });
     return chunks;
   }
-  function toggleListen(btn) {
-    if (listenSession && listenSession.playing) { listenSession.stop(); return; }
-    loadReadAloud().then(function (RA) {
-      if (!RA) { btn.textContent = 'Listen is not available on this device'; btn.disabled = true; return; }
-      listenSession = RA.createSession(verseChunks(), {
-        onState: function (state) {
-          var on = state === 'playing';
-          btn.textContent = on ? '⏸ Stop listening' : '▶ Listen';
-          btn.setAttribute('aria-pressed', on ? 'true' : 'false');
-        }
+  function hebrewVerseChunks(HP) {
+    var chunks = [];
+    doc.querySelectorAll('.verse').forEach(function (verse) {
+      var line = verse.querySelector('.heb');
+      if (!line) return;
+      var spokenWords = [], hebrewWords = [];
+      line.querySelectorAll('.w').forEach(function (w) {
+        /* dataset.full is the pointed form as printed, kept by
+         * applyPrefs before a display mode can strip points. */
+        var form = (w.dataset.full || w.textContent || '').replace(/\s+/g, ' ').trim();
+        if (!form || !HP.hasPointing(form)) return;
+        var result = HP.transliterate(form);
+        if (result && result.spoken) { hebrewWords.push(form); spokenWords.push(result.spoken); }
       });
+      if (spokenWords.length) {
+        chunks.push({ el: verse, text: hebrewWords.join(' '), hebrewSpoken: spokenWords.join(' ') });
+      }
+    });
+    return chunks;
+  }
+  function syncListenButtons(mode, state) {
+    var on = state === 'playing';
+    [['listen', 'english', '▶ Listen'], ['listenHebrew', 'hebrew', '▶ Listen in Hebrew']].forEach(function (row) {
+      var b = ctl[row[0]];
+      if (!b) return;
+      var active = on && mode === row[1];
+      b.textContent = active ? '⏸ Stop listening' : row[2];
+      b.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+  }
+  function toggleListen(btn, mode) {
+    if (listenSession && listenSession.playing) { listenSession.stop(); return; }
+    var loads = mode === 'hebrew'
+      ? Promise.all([loadReadAloud(), loadHebrewPronunciation()])
+      : loadReadAloud().then(function (RA) { return [RA, null]; });
+    loads.then(function (loaded) {
+      var RA = loaded[0], HP = loaded[1];
+      if (!RA || (mode === 'hebrew' && !HP)) { btn.textContent = 'Listen is not available on this device'; btn.disabled = true; return; }
+      var chunks = mode === 'hebrew' ? hebrewVerseChunks(HP) : verseChunks();
+      var options = {
+        onState: function (state) { syncListenButtons(mode, state); }
+      };
+      if (mode === 'hebrew') {
+        options.speakText = function (chunk) { return chunk.hebrewSpoken || null; };
+      }
+      listenSession = RA.createSession(chunks, options);
       if (listenSession) listenSession.play();
       else { btn.textContent = 'Listen is not available on this device'; btn.disabled = true; }
     });

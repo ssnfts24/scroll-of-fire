@@ -1572,6 +1572,11 @@
    "area": "codex",
    "out": [
     {
+     "path": "hub.html",
+     "title": "Systems Hub",
+     "area": "systems"
+    },
+    {
      "path": "living-time-sphere.html",
      "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
      "area": "living-time"
@@ -1610,11 +1615,6 @@
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
-    },
-    {
-     "path": "hub.html",
-     "title": "Systems Hub",
-     "area": "systems"
     },
     {
      "path": "teach.html",
