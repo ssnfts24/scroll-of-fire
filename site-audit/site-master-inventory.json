@@ -12,7 +12,6 @@
       "deployed-but-unlinked": 64,
       "unreachable-from-homepage": 5,
       "compatibility-redirect-page": 8,
-      "not-in-sitemap": 1,
       "not-published-in-catalog": 30,
       "unnamed-image-needs-descriptive-title": 21,
       "reachable-only-through-atlas": 1
@@ -14100,7 +14099,7 @@
       "privacyEligibility": "approved-public",
       "discoverability": {
         "path": "one-word.html",
-        "inSitemap": false,
+        "inSitemap": true,
         "inGlobalNav": false,
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
@@ -14109,7 +14108,6 @@
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
-        "not-in-sitemap",
         "no-global-navigation",
         "not-linked-directly-from-homepage"
       ]
