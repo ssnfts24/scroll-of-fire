@@ -9,19 +9,21 @@
  * other motion, so a still Spark is never a dead one. The
  * state animations (walking, delight, looking) override the
  * breath while they play, as they always have. */
-/* Their rest is a breath: the drawn light swells and settles. */
+/* Their rest is a breath: the drawn light swells and settles.
+ * The swell is transform and opacity only — the two motions a
+ * phone's compositor carries for free. The aura itself (the
+ * companion stylesheet's standing drop-shadows) never animates:
+ * a filter in an endless keyframe loop repaints the drawing
+ * every frame, and on a low-end phone that is the Sphere's
+ * lesson — presence must never cost frames. */
 .spark-presence-art svg,
 .spark-encounter-art svg {
   animation: spark-halo-breathe 6.5s ease-in-out infinite alternate;
 }
 
 @keyframes spark-halo-breathe {
-  from { transform: scale(0.985); filter: brightness(0.97)
-    drop-shadow(0 0 5px rgba(255, 226, 160, 0.4))
-    drop-shadow(0 0 13px rgba(240, 190, 90, 0.24)); }
-  to { transform: scale(1.02); filter: brightness(1.05)
-    drop-shadow(0 0 8px rgba(255, 226, 160, 0.55))
-    drop-shadow(0 0 20px rgba(240, 190, 90, 0.34)); }
+  from { transform: scale(0.985); opacity: 0.93; }
+  to { transform: scale(1.02); opacity: 1; }
 }
 
 /* A breath on returning: one deep swell when the keeper comes
@@ -31,9 +33,9 @@
 }
 
 @keyframes spark-return-breath {
-  0% { transform: scale(0.96); filter: brightness(0.94); }
-  45% { transform: scale(1.09); filter: brightness(1.14); }
-  100% { transform: scale(1); filter: brightness(1); }
+  0% { transform: scale(0.96); opacity: 0.88; }
+  45% { transform: scale(1.09); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 /* Traces in walked rooms: three small motes resting where the
@@ -181,11 +183,11 @@
 .spark-beds-dot.is-held { background: #7a9a52; border-color: #7a9a52; box-shadow: 0 0 7px rgba(122, 154, 82, 0.55); }
 .spark-beds-dot.is-today { outline: 2px solid #f3c97a; outline-offset: 1px; }
 .spark-beds-line { color: #b9c2cf; font-size: 0.9rem; margin-left: 6px; }
-.spark-walker.is-gardening .spark-walker-figure { animation: spark-garden-bob 3.4s ease-in-out infinite; }
+.spark-walker.is-gardening .spark-presence-art { animation: spark-garden-bob 3.4s ease-in-out infinite; }
 @keyframes spark-garden-bob {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-3px) rotate(-1.5deg); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .spark-walker.is-gardening .spark-walker-figure { animation: none !important; }
+  .spark-walker.is-gardening .spark-presence-art { animation: none !important; }
 }

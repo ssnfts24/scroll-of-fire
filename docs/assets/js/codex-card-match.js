@@ -188,6 +188,9 @@
     var line = (card ? card.name : "The First Card") + " " + (EVENT_LINES[result.event] || "sounded") + ".";
     if (result.event === "triad") line += " The sky answers.";
     log(line);
+    if (result.event === "triad" && window.SparkLiving && window.SparkLiving.humNow) {
+      window.SparkLiving.humNow("A triad locks — I heard that.");
+    }
     render(result.event === "triad");
     if (state.complete) {
       finishMatch();
@@ -207,6 +210,9 @@
     var card = Cards.cardById(play.cardId);
     if (card) { pieceNotes.push(cardHz(card)); soundCard(card); }
     log("The day sounds " + (card ? card.name : play.cardId) + " — " + (EVENT_LINES[result.event] || "sounded") + ".");
+    if (result.event === "triad" && window.SparkLiving && window.SparkLiving.humNow) {
+      window.SparkLiving.humNow("The day locks a triad — I heard that.");
+    }
     render(result.event === "triad");
     if (state.complete) finishMatch();
     else settleIfSpent();
