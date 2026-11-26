@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 2545,
-    "bytes": 1419726419,
+    "bytes": 1419726422,
     "byGroup": {
       "tooling": 354,
       "manuscript": 17,
@@ -8276,8 +8276,8 @@
       "path": "docs/assets/data/page-registry.json",
       "title": "page-registry.json",
       "format": "json",
-      "bytes": 467296,
-      "sha256": "fff6fa0db79808dcd6e5bdaaa07277443a7471c1db2135fc0dbd0de41f35bfb8",
+      "bytes": 467299,
+      "sha256": "3f140fdad2f5d70ccf02ea0dd49312aa62b382cc82849a3fc86b198dd71c0e00",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
