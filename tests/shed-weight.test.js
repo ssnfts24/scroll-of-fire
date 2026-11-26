@@ -7,7 +7,8 @@
  * engines for panels never opened. These tests pin the diet:
  * the weight now rides behind the doors it belongs to, every
  * door still opens onto the whole of what it held, and the
- * homepage's 52-script stack runs deferred in its own order.
+ * homepage's script stack runs deferred in its own order (52 at
+ * the diet; 53 with the Living Look front-door layer riding last).
  */
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
@@ -71,7 +72,7 @@ test("the fragments are marked as data, based at their host page, and deep links
 test("the homepage's script stack is deferred, in its own order", () => {
   const index = read("index.html");
   const tags = [...index.matchAll(/<script[^>]*src="[^"]+"[^>]*>/g)].map((m) => m[0]);
-  assert.equal(tags.length, 52, "the stack is whole");
+  assert.equal(tags.length, 53, "the stack is whole");
   assert.ok(tags.every((t) => /\bdefer\b/.test(t)), "every script in the stack defers");
 });
 

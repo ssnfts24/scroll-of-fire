@@ -1,6 +1,9 @@
 /* The Codex Card System — the glint offer and the album.
    Design: codex-card-system-design-2026-11-25.md.
-   Night / gold / ivory, from the Living Look token family. */
+   Night / gold / ivory, from the Living Look token family.
+   The cards wear a real trading card's anatomy (Aaron, Nov 25, 2026):
+   a portrait frame, name banner, artwork window, type line, text
+   box, stat strip, and the edition + found stamps at the foot. */
 
 .codex-card-glint {
   position: fixed;
@@ -20,16 +23,29 @@
   font-family: inherit;
 }
 .codex-card-glint__face {
+  border: 1px solid rgba(243, 201, 122, 0.45);
   border-radius: 12px;
   min-height: 64px;
   display: flex;
-  align-items: flex-end;
-  padding: 10px 12px;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: linear-gradient(160deg, #0b1026, #131a36);
   color: #f4f1e8;
   font-family: "Cinzel", serif;
   letter-spacing: 0.04em;
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
 }
+.codex-card-glint__art {
+  width: 88px;
+  flex: none;
+  aspect-ratio: 10 / 7;
+  border: 1px solid rgba(243, 201, 122, 0.45);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #05070d;
+}
+.codex-card-glint__art svg { width: 100%; height: 100%; display: block; }
 .codex-card-glint__text { margin: 0; font-size: 0.95rem; line-height: 1.45; color: #e8e2d2; }
 .codex-card-glint__actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .codex-card-glint__take {
@@ -62,35 +78,146 @@
 .card-set__note { color: var(--ink-soft, #cfc7ae); margin-top: -6px; }
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+  gap: 16px;
   margin-top: 14px;
 }
+[data-card-album-first] { max-width: 300px; grid-template-columns: minmax(0, 300px); }
+@media (max-width: 520px) {
+  .card-album { padding: 20px 10px 48px; }
+  .card-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  [data-card-album-first] { max-width: 250px; grid-template-columns: minmax(0, 250px); }
+}
+
+/* A tile is the card itself, standing in the grid, with its controls
+   and lineage beneath it — the frame belongs to the card. */
 .codex-card {
-  border: 1px solid #3a3428;
-  border-radius: 16px;
-  overflow: hidden;
-  background: #0b1026;
   color: #f4f1e8;
   display: flex;
   flex-direction: column;
 }
-.codex-card__face {
-  min-height: 118px;
-  padding: 12px;
+.tcard { perspective: 900px; }
+.tcard__inner {
+  position: relative;
+  aspect-ratio: 5 / 7;
+  transform-style: preserve-3d;
+  transition: transform 0.55s ease;
+}
+.codex-card.is-game .tcard__inner { transform: rotateY(180deg); }
+.tcard__side {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border: 1px solid #6b5a33;
+  border-radius: 14px;
+  background: linear-gradient(165deg, #0d1122, #070a16);
+  box-shadow: inset 0 0 0 3px #05070d, inset 0 0 0 4px rgba(243, 201, 122, 0.22);
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  gap: 2px;
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.65);
+  padding: 8px;
+  gap: 4px;
+  overflow: hidden;
 }
-.codex-card__name { font-family: "Cinzel", serif; font-size: 1.05rem; letter-spacing: 0.03em; }
-.codex-card__sub { font-size: 0.82rem; color: #efe8d4; opacity: 0.9; }
-.codex-card__body { padding: 10px 12px 12px; display: grid; gap: 6px; font-size: 0.88rem; line-height: 1.45; }
-.codex-card__essence { color: #d9d2ba; margin: 0; }
-.codex-card__stamp { color: #b7ad8f; font-size: 0.8rem; margin: 0; }
+.tcard__back { transform: rotateY(180deg); }
+.tcard__banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  border-bottom: 1px solid rgba(243, 201, 122, 0.35);
+  padding-bottom: 5px;
+}
+.codex-card__name { font-family: "Cinzel", serif; font-size: 0.86rem; letter-spacing: 0.03em; line-height: 1.15; min-width: 0; }
+.tcard__chip {
+  font-size: 0.66rem;
+  line-height: 1;
+  border: 1px solid #6b5a33;
+  border-radius: 999px;
+  padding: 2px 6px;
+  color: #f3c97a;
+  white-space: nowrap;
+  flex: none;
+}
+.tcard__chip--seal { background: #d99545; border-color: #d99545; color: #14100a; font-weight: 700; font-size: 0.54rem; letter-spacing: 0.02em; text-transform: uppercase; }
+.tcard__chip--game { font-size: 0.56rem; letter-spacing: 0.04em; text-transform: uppercase; }
+.tcard__art {
+  position: relative;
+  flex: none;
+  aspect-ratio: 17 / 10;
+  border: 1px solid rgba(243, 201, 122, 0.45);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #05070d;
+}
+.tcard__art svg { width: 100%; height: 100%; display: block; }
+.tcard__type {
+  line-height: 1.25;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 0.66rem;
+  color: #cfc7ae;
+  letter-spacing: 0.02em;
+}
+.tcard__typeline { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tcard__setno { color: #f3c97a; white-space: nowrap; flex: none; }
+.tcard__text {
+  flex: 1;
+  background: rgba(244, 241, 232, 0.05);
+  border: 1px solid rgba(244, 241, 232, 0.12);
+  border-radius: 8px;
+  padding: 5px 7px;
+  overflow: hidden;
+}
+.tcard__essence { color: #e8e2d2; font-size: 0.68rem; line-height: 1.28; margin: 0; }
+.tcard__text--dense .tcard__essence { font-size: 0.62rem; line-height: 1.25; }
+.tcard__front--dim .codex-card__stamp { font-size: 0.7rem; line-height: 1.3; }
+.codex-card__today {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 10px 7px 4px;
+  background: linear-gradient(transparent, rgba(5, 7, 13, 0.88) 45%);
+  font-size: 0.66rem;
+  letter-spacing: 0.02em;
+  color: #f3c97a;
+}
+.tcard__stats {
+  line-height: 1.25;
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  font-size: 0.66rem;
+  color: #f3c97a;
+  letter-spacing: 0.02em;
+  border-top: 1px solid rgba(243, 201, 122, 0.25);
+  padding-top: 4px;
+}
+.tcard__stamps {
+  line-height: 1.25;
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  font-size: 0.52rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  overflow: hidden;
+  color: #b7ad8f;
+}
+.tcard__stamp { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* The game face lives on the card's back, in the same frame. */
+.tcard__back .codex-card__game { flex: 1; overflow: hidden; font-size: 0.66rem; line-height: 1.28; color: #e8e2d2; }
+.codex-card__game dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 8px; margin: 0; }
+.codex-card__game dt { color: #b7ad8f; white-space: nowrap; }
+.codex-card__game dd { margin: 0; }
+
+.codex-card__controls { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
 .codex-card__flip {
-  margin: 0 12px 12px;
   background: transparent;
   color: #f3c97a;
   border: 1px solid #6b5a33;
@@ -98,50 +225,47 @@
   padding: 6px 12px;
   cursor: pointer;
   font-size: 0.85rem;
-  align-self: flex-start;
 }
-.codex-card__game { display: none; padding: 0 12px 12px; font-size: 0.86rem; line-height: 1.5; color: #e8e2d2; }
-.codex-card.is-game .codex-card__game { display: block; }
-.codex-card.is-game .codex-card__body { display: none; }
-.codex-card__game dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; margin: 0; }
-.codex-card__game dt { color: #b7ad8f; }
-.codex-card__game dd { margin: 0; }
-.codex-card--missing {
+.codex-card__stamp { color: #b7ad8f; font-size: 0.8rem; margin: 6px 0 0; line-height: 1.45; }
+.codex-card__affordance { color: #b7ad8f; }
+
+/* Missing cards stand as dark silhouettes of the same frame — the
+   shape of the card, its season named, never lit, never guilt-framed. */
+.codex-card--missing .tcard__side {
   border-style: dashed;
-  background: #0a0d18;
-  color: #8f876f;
+  border-color: #333a52;
+  background: linear-gradient(165deg, #0a0d18, #070912);
+  box-shadow: inset 0 0 0 3px #05070d, inset 0 0 0 4px rgba(120, 130, 165, 0.14);
 }
-.codex-card--missing .codex-card__face {
-  background: linear-gradient(160deg, #0a0d18, #1a1d29);
-  text-shadow: none;
-  color: #8f876f;
+.codex-card--missing .codex-card__name { color: #8f876f; }
+.codex-card--missing .tcard__art { border-color: rgba(120, 130, 165, 0.3); }
+.codex-card--missing .tcard__chip { border-color: #333a52; color: #59617c; }
+.codex-card--missing .tcard__type { color: #6d7490; }
+.codex-card--missing .tcard__setno { color: #59617c; }
+.codex-card--missing .tcard__text { background: rgba(120, 130, 165, 0.05); border-color: rgba(120, 130, 165, 0.12); }
+.codex-card--missing .tcard__stamps { color: #59617c; }
+
+/* The First Card opens the album in a full gold frame. */
+.codex-card--first .tcard__side {
+  border-color: #d99545;
+  box-shadow: inset 0 0 0 3px #05070d, inset 0 0 0 4px rgba(217, 149, 69, 0.4), 0 8px 26px rgba(217, 149, 69, 0.22);
 }
-.codex-card--first { border-color: #d99545; }
+
 .card-tombstones { margin-top: 36px; }
 .card-tombstones li { color: var(--ink-soft, #cfc7ae); line-height: 1.55; }
 
-/* The interactivity standard (design §13): day-true faces, lineage,
+/* The interactivity standard (design §13): lineage under the card,
    completion brightening on HELD cards only — a missing card's
    silhouette never glows. */
-.codex-card__today {
-  margin-top: 8px;
-  font-size: 0.78rem;
-  letter-spacing: 0.02em;
-  color: #f3c97a;
-}
-.codex-card__affordance { color: #b7ad8f; font-size: 0.8rem; }
 .codex-card__lineage {
-  padding: 0 12px 12px;
+  margin-top: 8px;
+  padding-top: 8px;
   border-top: 1px solid #2a2f45;
 }
-.codex-card--set-complete {
-  border-color: #f3c97a;
-  box-shadow: 0 0 0 1px #f3c97a, 0 6px 22px rgba(217, 149, 69, 0.35);
-}
-.codex-card--triad-held {
-  border-color: #d99545;
-  box-shadow: 0 0 0 1px rgba(217, 149, 69, 0.7), 0 4px 16px rgba(217, 149, 69, 0.25);
-}
+.codex-card--set-complete .tcard { filter: drop-shadow(0 0 10px rgba(243, 201, 122, 0.45)); }
+.codex-card--set-complete .tcard__side { border-color: #f3c97a; }
+.codex-card--triad-held .tcard { filter: drop-shadow(0 0 7px rgba(217, 149, 69, 0.4)); }
+.codex-card--triad-held .tcard__side { border-color: #d99545; }
 .codex-card__face--kindred-motion {
   animation: codex-kind-drift 9s ease-in-out infinite alternate;
 }
@@ -152,5 +276,9 @@
 
 @media (prefers-reduced-motion: reduce) {
   .codex-card-glint { transition: none; animation: none; }
+  .tcard__inner { transition: none; }
   .codex-card__face--kindred-motion { animation: none; }
 }
+.tcard__front--word .codex-card__name { font-size: 0.78rem; }
+.tcard__stats span { white-space: nowrap; }
+.tcard__stats span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; }

@@ -173,6 +173,10 @@
       ],
       "index.html": [
         {
+          "href": "hub.html",
+          "label": "the Documentation Hub"
+        },
+        {
           "href": "living-time-sphere.html",
           "label": "Living Time Sphere"
         },
@@ -183,10 +187,6 @@
         {
           "href": "moons.html",
           "label": "the 13 Moons page"
-        },
-        {
-          "href": "ledger.html",
-          "label": "Witness Ledger"
         }
       ],
       "lab.html": [
