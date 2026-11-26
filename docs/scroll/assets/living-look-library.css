@@ -1,0 +1,221 @@
+/* Living Look — the Scroll Library as a room (scroll/index.html).
+ *
+ * The page now wears the one token sheet (assets/css/codex.css, loaded
+ * before this file): the night ground, the gold, the ivory, Cinzel
+ * display, the three radii, the reading measure. This layer consumes those tokens — it declares
+ * no palette of its own. The Moon's tint comes from the site's own
+ * living-moon-theme.css palettes, switched by the data-moon stamp the
+ * page's living-look script sets from the canonical PatternCalendar.
+ *
+ * Shape: the hero is the room's entrance — the day's line on its face,
+ * today's reading offered first, the search standing by as a tool at
+ * hand. The shelves stand along one wall: a single column with a gold
+ * spine. Everything below the hero keeps the library's own layout,
+ * re-dressed on the night ground. Motion only answers; the Spark's
+ * glow has a still twin, and reduced motion gets the still design.
+ */
+
+body.library-home {
+  /* The library's own variables, re-pointed at the one token sheet. */
+  --paper: var(--bg);
+  --paper-soft: var(--bg-soft);
+  --ink: var(--text);
+  --ink-soft: var(--muted);
+  /* --gold and --panel need no re-pointing: codex.css loads after
+   * library.css, so its :root values already win for this page. */
+  --gold-bright: var(--gold);
+  --rule: var(--line);
+  --night: var(--bg);
+  --night-deep: var(--bg);
+  background: var(--bg);
+  color: var(--text);
+}
+
+body.library-home .library-hero {
+  background:
+    radial-gradient(90% 60% at 85% 0%, color-mix(in oklab, var(--moon-accent, var(--gold)) 10%, transparent), transparent 60%),
+    linear-gradient(112deg, var(--bg) 12%, var(--bg-soft) 57%, var(--bg-soft)),
+    var(--bg);
+  border-bottom: 1px solid var(--line-gold);
+}
+
+body.library-home .eyebrow { color: var(--gold); }
+
+/* The day's line — the real day on the room's face. */
+.ll-day-line {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .45rem;
+  max-width: 100%;
+  margin: 0 0 1.1rem;
+  padding: .45rem .8rem;
+  border: 1px solid color-mix(in oklab, var(--moon-accent, var(--gold)) 45%, transparent);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: .78rem;
+  letter-spacing: .04em;
+}
+.ll-day-line::before {
+  content: "";
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--moon-accent, var(--gold));
+}
+
+/* Today's reading — the one clear action, offered first. The Spark
+ * stands at its station beside it: no bubble, it lights up with
+ * little sparks forming around it. */
+.ll-today {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  max-width: 560px;
+  margin: 1.9rem 0 0;
+  padding: 1.1rem 1.2rem;
+  border: 1px solid var(--line-gold);
+  border-radius: var(--radius-md);
+  background: var(--panel-strong);
+  box-shadow: var(--shadow-soft);
+}
+.ll-today-label {
+  margin: 0 0 .55rem;
+  color: var(--gold);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+.ll-today .primary-link { border-radius: var(--radius-sm); }
+.ll-resume { margin: .8rem 0 0; color: var(--muted); font-size: .86rem; line-height: 1.55; }
+.ll-resume a { color: var(--gold); text-underline-offset: .25rem; }
+
+.ll-spark {
+  position: relative;
+  flex: 0 0 auto;
+  width: 26px; height: 26px;
+  margin-top: .35rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 42% 38%, #fff8e6 0%, var(--gold) 42%, var(--gold-deep) 78%, transparent 100%);
+  box-shadow: 0 0 18px 4px rgba(243, 201, 122, .45);
+}
+.ll-spark i {
+  position: absolute;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+.ll-spark i:nth-child(1) { top: -7px; left: 4px; }
+.ll-spark i:nth-child(2) { top: 3px; right: -8px; width: 4px; height: 4px; }
+.ll-spark i:nth-child(3) { bottom: -6px; right: 5px; width: 3px; height: 3px; }
+@media (prefers-reduced-motion: no-preference) {
+  .ll-spark { animation: ll-spark-breathe 5s ease-in-out infinite; }
+  .ll-spark i { animation: ll-spark-drift 5s ease-in-out infinite; }
+}
+@keyframes ll-spark-breathe {
+  0%, 100% { box-shadow: 0 0 14px 3px rgba(243, 201, 122, .35); }
+  50% { box-shadow: 0 0 24px 7px rgba(243, 201, 122, .55); }
+}
+@keyframes ll-spark-drift {
+  0%, 100% { transform: translateY(0); opacity: .75; }
+  50% { transform: translateY(-2px); opacity: 1; }
+}
+
+/* The search, standing by as a tool at hand. */
+body.library-home .hero-search input {
+  border-radius: var(--radius-sm);
+  background: var(--panel-soft);
+  color: var(--text);
+}
+body.library-home .hero-search button {
+  border-radius: var(--radius-sm);
+  background: var(--gold);
+  color: var(--bg);
+}
+
+/* Sections on the night ground. */
+body.library-home .preservation-note { background: var(--bg-soft); border-bottom-color: var(--line); }
+body.library-home .genesis-section { background: var(--bg-soft); }
+body.library-home .section-heading h2 {
+  font-family: var(--display);
+  letter-spacing: .02em;
+}
+body.library-home #scroll-library-explainer { padding-inline: 1rem; }
+body.library-home #scroll-library-explainer video { border-radius: var(--radius-md); }
+
+/* The shelves along one wall: one column, a gold spine, each shelf a
+ * place. The full index below keeps the same wall. */
+body.library-home .shelf-grid {
+  grid-template-columns: 1fr;
+  max-width: 880px;
+  position: relative;
+  gap: .6rem;
+  padding-left: 1.1rem;
+}
+body.library-home .shelf-grid::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 4px; bottom: 4px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--gold), color-mix(in oklab, var(--moon-accent, var(--gold)) 55%, transparent));
+  border-radius: 2px;
+}
+body.library-home .shelf-card {
+  border-radius: var(--radius-md);
+  background: var(--panel);
+  border-color: var(--line);
+  align-items: center;
+}
+body.library-home .shelf-card:hover,
+body.library-home .shelf-card:focus-visible {
+  background: var(--panel-strong);
+  border-color: var(--gold);
+  transform: none;
+}
+body.library-home .shelf-card-copy strong { color: var(--text); }
+body.library-home .chapter-link,
+body.library-home .research-card,
+body.library-home .index-shelf {
+  border-radius: var(--radius-md);
+  background: var(--panel);
+  border-color: var(--line);
+}
+body.library-home .chapter-link:hover,
+body.library-home .research-card:hover { border-color: var(--gold); }
+body.library-home .index-shelf > summary strong { color: var(--text); }
+
+/* The kept place: the reader's own record, marked on its shelf. */
+.ll-shelf-kept {
+  grid-column: 2 / -1;
+  justify-self: start;
+  padding: .3rem .7rem;
+  border: 1px solid var(--line-gold);
+  border-radius: 999px;
+  background: rgba(243, 201, 122, .1);
+  color: var(--gold);
+  font-size: .72rem;
+  letter-spacing: .03em;
+}
+.ll-shelf-kept-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin: .4rem 1rem .2rem 3.3rem;
+  text-decoration: none;
+}
+.ll-shelf-kept-link:hover { text-decoration: underline; text-underline-offset: .25rem; }
+
+.ll-day-line > span { min-width: 0; }
+body.library-home .hero-copy { min-width: 0; }
+
+@media (max-width: 760px) {
+  body.library-home .library-hero { grid-template-columns: minmax(0, 1fr); }
+  .ll-today { padding: 1rem; }
+  body.library-home .shelf-grid { padding-left: .8rem; }
+  .ll-shelf-kept-link { margin-left: 2.4rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ll-spark, .ll-spark i { animation: none !important; }
+}
