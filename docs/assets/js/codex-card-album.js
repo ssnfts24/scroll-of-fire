@@ -121,6 +121,19 @@
     panel.appendChild(el("p", "codex-card__stamp",
       "Rings: " + L.keepers.length + " hand" + (L.keepers.length === 1 ? "" : "s") +
       " so far — matches sounded in will add their rings here."));
+    /* The match trail (Nov 26, 2026): matches this copy has
+     * sounded in, written by the Table and read back here —
+     * genealogy as rarity, growing ring by ring. */
+    try {
+      var trail = JSON.parse(storage.getItem("sof.cards.matchtrail.v1." + keeperKey) || "{}");
+      var entries = trail[copy.instanceId] || [];
+      if (entries.length) {
+        panel.appendChild(el("p", "codex-card__stamp",
+          "Matches: sounded in " + entries.length + " match" + (entries.length === 1 ? "" : "es") +
+          " at the Table · first on Pattern Day " + entries[0].day +
+          " · " + entries.reduce(function (n, t) { return n + (t.triads || 0); }, 0) + " triads locked with it standing in the field."));
+      }
+    } catch (e) { /* the trail rests */ }
     return panel;
   }
 

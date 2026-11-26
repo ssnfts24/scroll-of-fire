@@ -1,0 +1,169 @@
+/* The Table — the living card game, stage 2 (Aaron, Nov 26, 2026).
+ * The sky band carries the table's light: its gradient follows
+ * the element of the Moon the table answers to, and when a
+ * chord locks, the sky visibly answers. */
+
+.match-sky {
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin: 14px 0;
+  color: #f4f1e8;
+  border: 1px solid #2a3342;
+  background: linear-gradient(180deg, #10182e, #0b1026);
+  position: relative;
+  overflow: hidden;
+}
+.match-sky.is-fire { background: linear-gradient(180deg, #2b1608, #170d12); }
+.match-sky.is-water { background: linear-gradient(180deg, #0a2036, #0b1026); }
+.match-sky.is-earth { background: linear-gradient(180deg, #1a2410, #0d120b); }
+.match-sky.is-air { background: linear-gradient(180deg, #0e2a28, #0b1026); }
+.match-sky.is-aether { background: linear-gradient(180deg, #211736, #0d0a1c); }
+
+.match-sky.is-answering::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(255, 233, 176, 0.5), transparent 65%);
+  animation: match-sky-answer 1.6s ease-out 1;
+  pointer-events: none;
+}
+@keyframes match-sky-answer {
+  from { opacity: 0; transform: scaleY(0.4); }
+  40% { opacity: 1; }
+  to { opacity: 0; transform: scaleY(1.15); }
+}
+
+.match-sky__moon { margin: 0 0 2px; font-weight: 600; color: #f3c97a; }
+.match-sky__turn { margin: 0 0 8px; color: #b9c2cf; font-size: 0.9rem; }
+.match-sky__slots { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0; }
+.match-sky__clear { color: #8a93a8; font-size: 0.9rem; }
+.match-sky__chip {
+  font: inherit;
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 5px 12px;
+  border: 1px dashed #59617c;
+  background: rgba(10, 13, 24, 0.7);
+  color: #cfd6e4;
+}
+.match-sky__chip.is-target { border: 1px solid #f3c97a; color: #f3c97a; }
+.match-sky__bank { margin: 6px 0 0; font-size: 0.88rem; color: #cfd6e4; }
+
+.match-table { display: flex; flex-direction: column; gap: 10px; }
+.match-witness { display: flex; align-items: center; gap: 10px; }
+.match-witness__art svg { width: 52px; height: auto; display: block; }
+.match-witness__art.is-delighted svg { animation: match-delight 0.9s ease-in-out 1; }
+@keyframes match-delight {
+  0% { transform: translateY(0) scale(1); }
+  40% { transform: translateY(-6px) scale(1.08); }
+  100% { transform: translateY(0) scale(1); }
+}
+.match-witness__line { margin: 0; color: #b9c2cf; }
+
+.match-field h4 { margin: 6px 0 4px; }
+.match-field__cards { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
+.match-field__card {
+  border: 1px solid #2a3342;
+  border-radius: 8px;
+  padding: 4px 9px;
+  background: rgba(244, 241, 232, 0.04);
+  font-size: 0.88rem;
+}
+.match-field__card.is-locked { border-color: #d99545; color: #f3c97a; }
+.match-field__card.is-heart { border-color: #d99545; color: #ffe9b0; }
+.match-field__empty { color: #8a93a8; font-size: 0.9rem; }
+.match-field__triads { color: #f3c97a; font-size: 0.88rem; }
+
+.match-call {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin: 14px 0 8px;
+}
+.match-call__label { font-size: 0.92rem; color: #cfd6e4; margin-right: 4px; }
+.match-call__chip {
+  font: inherit;
+  cursor: pointer;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid #2a3342;
+  background: rgba(244, 241, 232, 0.04);
+  color: #cfd6e4;
+}
+.match-call__chip.is-on { border-color: #f3c97a; color: #f3c97a; box-shadow: 0 0 9px rgba(243, 201, 122, 0.5); }
+.match-call__hint { color: #f3c97a; font-size: 0.9rem; }
+
+.match-hand {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  gap: 10px;
+  margin: 10px 0;
+}
+.match-hand__card {
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+  border: 1px solid #2a3342;
+  border-radius: 12px;
+  background: #0d1322;
+  color: #f4f1e8;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.match-hand__card:disabled { opacity: 0.55; cursor: default; }
+.match-hand__card.is-attuned { border-color: rgba(127, 196, 181, 0.6); }
+.match-hand__card.is-own-day {
+  border-color: #d99545;
+  box-shadow: 0 0 14px rgba(217, 149, 69, 0.45);
+  filter: brightness(1.18);
+}
+.match-hand__card.is-retune { border-color: #f3c97a; box-shadow: 0 0 12px rgba(243, 201, 122, 0.6); }
+.match-hand__art svg { width: 100%; height: auto; display: block; border-radius: 7px; }
+.match-hand__name { font-weight: 600; font-size: 0.92rem; }
+.match-hand__meta { color: #b9c2cf; font-size: 0.8rem; }
+
+.match-heart, .match-begin, .match-again {
+  font: inherit;
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 9px 16px;
+  border: 1px solid rgba(217, 149, 69, 0.65);
+  background: rgba(217, 149, 69, 0.12);
+  color: #f3c97a;
+  margin: 8px 0;
+}
+.match-heart:disabled { opacity: 0.45; cursor: default; }
+.match-turn { color: #b9c2cf; }
+
+.match-log { margin: 12px 0; border-top: 1px solid #2a3342; padding-top: 8px; }
+.match-log p { margin: 3px 0; color: #cfd6e4; font-size: 0.92rem; }
+.match-log p:first-child { color: #f4f1e8; }
+
+.match-pieces { margin: 14px 0; }
+.match-pieces__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(42, 51, 66, 0.6);
+}
+.match-pieces__row button {
+  font: inherit;
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 5px 12px;
+  border: 1px solid #2a3342;
+  background: none;
+  color: #f3c97a;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .match-sky.is-answering::after,
+  .match-witness__art.is-delighted svg { animation: none !important; }
+}
