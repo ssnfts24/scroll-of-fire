@@ -71,6 +71,34 @@
        start its fetch before the parser reaches the stage. -->
   <link rel="preload" as="image" href="assets/img/sphere/sphere-portrait.webp" fetchpriority="high">
   <link rel="stylesheet" href="assets/css/sphere-spark.css?v=20261124-2">
+  <!-- Sphere Performance Pass 3 (Nov 25, 2026 — R1.7 improvement
+       release): boot choreography. Before this pass the raw page
+       painted first — site header, hero, controls — and the rebuilt
+       shell then rearranged the whole page around the mounted
+       Sphere, so the Sphere visibly "loaded in front of a page"
+       (Aaron, Nov 25, 2026: "a page loads up and then the Sphere
+       loads up in front of the page"). Until the rebuilt shell
+       lands (html.sphere-rebuilt, set by the shell's script), the
+       first paint IS the stage: the ground is the stage's own
+       night, and the chrome the rebuild relocates (header, hero,
+       bridge mount, controls bar, the explainer, the atlas
+       launcher, the sidebar rooms) stays unpainted, so the
+       instrument shell — portrait, loader, then the live Sphere —
+       holds the first screen from the first frame. Every rule is
+       scoped to the pre-rebuild state; the moment the shell is
+       built, these rules disengage and the rebuilt arrangement
+       owns the page exactly as before. -->
+  <style id="sphere-boot-choreography">
+    html:not(.sphere-rebuilt) body { background: #05070d; }
+    html:not(.sphere-rebuilt) .site-header,
+    html:not(.sphere-rebuilt) .sphere-hero,
+    html:not(.sphere-rebuilt) .spark-bridge-mount,
+    html:not(.sphere-rebuilt) .sphere-controls-bar,
+    html:not(.sphere-rebuilt) .sphere-what-am-i-seeing,
+    html:not(.sphere-rebuilt) .calendar-atlas-launcher,
+    html:not(.sphere-rebuilt) .sphere-sidebar { display: none; }
+    html:not(.sphere-rebuilt) .sphere-wrapper { margin-top: 0; }
+  </style>
 
   <!-- Core engines -->
   <script defer src="assets/js/moons-version.js?v=20260819-b752&r=20260820-b757"></script>
@@ -290,18 +318,26 @@
    <script defer src="assets/js/life-atlas/record-helpers.js?v=20261119-1"></script>
    <script defer src="assets/js/day-telling.js"></script>
    <script defer src="assets/js/day-notes.js"></script>
-   <script defer src="assets/js/sphere-day-world.js?v=20261119-1"></script>
+   <!-- Sphere Performance Pass 3: the rooms and overlays that are
+        only entered after arrival (Day World, Deep Time, the
+        Ambient face, the rebuilt shell, the armillary readout,
+        quests, play, the trail, the story layer) no longer hold
+        the Sphere's first frame hostage. Their tags carry
+        data-sphere-late + data-src and are loaded, in their
+        original order, by the late loader at the end of the body
+        once the first frame has landed. -->
+   <script data-sphere-late data-src="assets/js/sphere-day-world.js?v=20261119-1"></script>
    <!-- Sphere R3 Wave 2 — Deep Time: an overlay layer beside the
         instrument (links and tags only; no protected file is
         touched). day-telling is the canonical module the Alignment
         Plane reads its tellings through. -->
-   <script defer src="assets/js/sphere-deep-time.js?v=20261119-1"></script>
+   <script data-sphere-late data-src="assets/js/sphere-deep-time.js?v=20261119-1"></script>
    <!-- Sphere R3 Wave 3 — the Ambient face: a resting state and the
         room's environment, an overlay layer beside the instrument
         (links and tags only; no protected file is touched). It reads
         today through PatternCalendar and DayTelling, the canonical
         modules already loaded above. -->
-   <script defer src="assets/js/sphere-ambient.js?v=20261120-1"></script>
+   <script data-sphere-late data-src="assets/js/sphere-ambient.js?v=20261120-1"></script>
    <!-- Sphere page rebuild (Nov 20, 2026 — Aaron: "The sphere as a
         app needs to be redone... Make it way better"): the rebuilt
         page arrangement, as an overlay layer beside the instrument
@@ -311,13 +347,13 @@
         farm, and gives the Spark its conversation on this page.
         It drives the instrument only through the page's own public
         controls and reads only the canonical modules. -->
-   <script defer src="assets/js/sphere-rebuild.js?v=20261120-1"></script>
-   <script defer src="assets/js/sphere-armillary.js?v=20261120-2"></script>
+   <script data-sphere-late data-src="assets/js/sphere-rebuild.js?v=20261120-1"></script>
+   <script data-sphere-late data-src="assets/js/sphere-armillary.js?v=20261120-2"></script>
    <script defer src="assets/js/spark-schedule-core.js?v=20261124-2"></script>
    <script defer src="assets/js/sphere-spark.js?v=20261124-2"></script>
    <script defer src="assets/js/spark-app-bridge.js?v=20261124-1"></script>
-   <script defer src="assets/js/pattern-quests.js?v=20261123-1"></script>
-  <script defer src="assets/js/sphere-play.js?v=20261123-1"></script>
+   <script data-sphere-late data-src="assets/js/pattern-quests.js?v=20261123-1"></script>
+  <script data-sphere-late data-src="assets/js/sphere-play.js?v=20261123-1"></script>
    <script defer>
      document.addEventListener("DOMContentLoaded", () => {
        const container = document.getElementById("sphere-container");
@@ -2051,7 +2087,46 @@
 </script>
 <!-- B7.42 OPTIONAL LIFE ATLAS WORLD BOOT END -->
 
-  <script src="assets/js/living-trail.js?v=20261120-1"></script>
-  <script src="assets/js/story-layer.js?v=20261120-1"></script>
+  <script data-sphere-late data-src="assets/js/living-trail.js?v=20261120-1"></script>
+  <script data-sphere-late data-src="assets/js/story-layer.js?v=20261120-1"></script>
+  <!-- Sphere Performance Pass 3: the late loader. Once the
+       Sphere's first frame has landed (or, as a fallback, shortly
+       after the window load), it loads the data-sphere-late
+       scripts in their original document order — async=false
+       keeps dynamic scripts executing in insertion order — so
+       the rooms, readouts and overlays mount progressively
+       around a Sphere that is already standing. Nothing in the
+       late set is needed for the first frame; every feature in
+       it is entered by a door that arrives with its script. -->
+  <script>
+    (function () {
+      var started = false;
+      function loadLate() {
+        if (started) return;
+        started = true;
+        var tags = Array.prototype.slice.call(document.querySelectorAll("script[data-sphere-late][data-src]"));
+        tags.forEach(function (tag) {
+          var s = document.createElement("script");
+          s.src = tag.getAttribute("data-src");
+          s.async = false;
+          document.head.appendChild(s);
+        });
+        window.__sphereLateLoaded = true;
+      }
+      function firstFrameSeen() {
+        try {
+          var d = window.LivingTimeSphereRenderer3d && window.LivingTimeSphereRenderer3d.getDiagnostics && window.LivingTimeSphereRenderer3d.getDiagnostics();
+          return !!(d && Number(d.firstFrameTimestamp || 0) > 0);
+        } catch (e) { return false; }
+      }
+      var poll = window.setInterval(function () {
+        if (firstFrameSeen()) { window.clearInterval(poll); loadLate(); }
+      }, 200);
+      window.setTimeout(function () { window.clearInterval(poll); loadLate(); }, 6000);
+      window.addEventListener("load", function () {
+        window.setTimeout(function () { if (!started && firstFrameSeen()) { window.clearInterval(poll); loadLate(); } }, 1500);
+      });
+    })();
+  </script>
 </body>
                 </html>
