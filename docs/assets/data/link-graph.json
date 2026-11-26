@@ -944,13 +944,18 @@
      "area": "archive"
     },
     {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    },
+    {
      "path": "map.html",
      "title": "The Traveller's Map",
      "area": "systems"
     }
    ],
    "outTotal": 0,
-   "inTotal": 3
+   "inTotal": 4
   },
   "equinox-passage.html": {
    "title": "Equinox Passage — The 13 Moons Remnant Living Time Observatory",
@@ -1632,13 +1637,13 @@
      "area": "systems"
     },
     {
-     "path": "one-word.html",
-     "title": "One Word a Day — a Hebrew word for your Pattern Day",
-     "area": "scroll-scripture"
+     "path": "episodes.html",
+     "title": "The Episode Library",
+     "area": "living-time"
     },
     {
-     "path": "scripture/index.html",
-     "title": "Genesis & Exodus Scripture",
+     "path": "one-word.html",
+     "title": "One Word a Day — a Hebrew word for your Pattern Day",
      "area": "scroll-scripture"
     }
    ],
@@ -1679,7 +1684,7 @@
      "area": "codex"
     }
    ],
-   "outTotal": 28,
+   "outTotal": 29,
    "inTotal": 7
   },
   "install.html": {
