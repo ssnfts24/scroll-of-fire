@@ -43,8 +43,10 @@ test("plays once, skippable, and lives on as a Show me", () => {
   assert.match(intro, /Skip/);
   const index = read("docs/index.html");
   assert.ok(index.includes('id="spark-intro-show"'), "the homepage carries the Show me");
-  assert.ok(index.includes("spark-intro.js?v=20261126-1"), "the homepage loads the tour");
-  assert.ok(index.includes("spark-intro.css?v=20261126-1"), "the homepage loads the tour styles");
+  assert.ok(!index.includes("spark-intro.js"), "the homepage's pinned script stack stays whole — the tour rides in lazily");
+  const presence = read("docs/assets/js/spark-presence.js");
+  assert.ok(presence.includes("spark-intro.js?v=20261126-1"), "the presence loads the tour where its Show me stands");
+  assert.ok(presence.includes("spark-intro.css?v=20261126-1"), "the tour styles ride with it");
   const companions = read("docs/companions.html");
   assert.ok(companions.includes('id="spark-intro-show"'), "the companions page carries the Show me");
   const pageJs = read("docs/assets/js/spark-companions-page.js");

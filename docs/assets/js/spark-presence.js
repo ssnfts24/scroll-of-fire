@@ -3512,9 +3512,25 @@
       .catch(() => { /* the living layer rests */ });
   }
 
+  /* The introductory tour (Nov 26, 2026) loads lazily behind
+   * the presence, only on pages that carry its "show me" —
+   * the homepage's deferred stack stays exactly as pinned. */
+  function loadIntro() {
+    if (window.SparkIntro) return;
+    if (!document.getElementById("spark-intro-show")) return;
+    const base = scriptBase();
+    const css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = base.replace(/js\/$/, "css/") + "spark-intro.css?v=20261126-1";
+    document.head.appendChild(css);
+    loadScript(base + "spark-intro.js?v=20261126-1")
+      .catch(() => { /* the tour rests */ });
+  }
+
   async function start() {
     const hasCalendar = await ensureCalendar();
     loadLiving();
+    loadIntro();
     const today = hasCalendar ? todayCoordinate() : null;
 
     let record = settleFromHome(readRecord());
