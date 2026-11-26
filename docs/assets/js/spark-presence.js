@@ -419,6 +419,27 @@
     return { explainerText: "", introText: intro };
   }
 
+  /* Aaron's menu rule (Nov 25, 2026): the panel may open
+   * itself ONCE per visit — to say it is here — and never
+   * again from page to page. The once is kept in session
+   * storage: within a visit it never re-pops; a new visit may
+   * be greeted once more. Blocked storage reads as un-popped. */
+  const MENU_POP_KEY = "sof.spark.menuPopped";
+  function menuPopped() {
+    try {
+      return window.sessionStorage.getItem(MENU_POP_KEY) === "1";
+    } catch {
+      return false;
+    }
+  }
+  function markMenuPopped() {
+    try {
+      window.sessionStorage.setItem(MENU_POP_KEY, "1");
+    } catch {
+      /* storage blocked: nothing kept, nothing broken */
+    }
+  }
+
   function renderPresence(record, companion, today, arrival, growthLine, grew, store) {
     const stage = Core.stageOf(record, companion);
     /* Arriving somewhere new — or just adopted — the Spark speaks
@@ -464,7 +485,7 @@
       `<span class="spark-presence-name"></span></button>`;
     host.querySelector(".spark-presence-button").setAttribute(
       "aria-label",
-      `Your Spark, ${displayName} — tap for a suggestion`
+      `Your Spark, ${displayName} — tap to open my menu`
     );
     host.querySelector(".spark-presence-name").textContent = displayName;
     host.querySelector(".spark-panel-who").textContent = displayName;
@@ -1026,11 +1047,34 @@
         "spark-panel-onething"
       );
     }
+    /* Talk, in place (Aaron's menu rule): the seat's own
+     * surface — log, asking, keeper mind, every fence — is
+     * hosted into this panel; only where it stands changes.
+     * If the seat has not woken here yet, the menu says so
+     * plainly rather than faking a talk surface. */
+    function doTalk() {
+      setPanel("talk", {
+        line: "Talk with me here — about today, about this page, or anything deeper the door can reach.",
+        bubbles: [backBtn()],
+        buildRows: (rowsEl) => {
+          const mount = document.createElement("div");
+          mount.className = "spark-panel-talk";
+          rowsEl.appendChild(mount);
+          const seat = window.SparkAgentSeat;
+          if (seat && typeof seat.openTalkIn === "function" && seat.openTalkIn(mount)) return;
+          const p = document.createElement("p");
+          p.className = "spark-panel-row";
+          p.textContent = "My talk seat is still waking on this page — give it a breath, then tap Talk again.";
+          mount.appendChild(p);
+        }
+      });
+    }
     function showHome(line, opts = {}) {
       const bubbles = [];
       const oneThing = oneThingBubble();
       if (oneThing) bubbles.push(oneThing);
       bubbles.push(
+        bubbleBtn("Talk", "?", doTalk, "spark-panel-talk-btn"),
         bubbleBtn("Play", "▶", doPlay),
         bubbleBtn("Care", "✚", showCare),
         bubbleBtn("Tricks", "✦", doTricks),
@@ -2262,6 +2306,9 @@
       if (!host.contains(event.target)) closeBubble();
     });
     document.body.appendChild(host);
+    /* The menu is on this page: the seat's corner furniture
+     * steps aside (its CSS reads this mark). */
+    document.body.classList.add("spark-menu-present");
     roam = startRoam({
       walker,
       button,
@@ -2338,10 +2385,14 @@
      * is spoken the same way, once, when it is new. A tap on
      * the Spark, or anywhere else, folds it sooner. Pages open
      * with a living entry first, though — so while that door is
-     * up, the guide waits, and speaks the moment it lifts. */
-    if (arrival || growthLine) {
+     * up, the guide waits, and speaks the moment it lifts.
+     * Aaron's menu rule bounds it: at most once per visit.
+     * Later pages: the Spark waits, lit, menu one tap away —
+     * greeting and growth line unchanged behind that tap. */
+    if ((arrival || growthLine) && !menuPopped()) {
       const openBubble = () => {
         if (!bubble.hasAttribute("hidden")) return;
+        markMenuPopped();
         /* Arriving, they open the talk themselves: greeting, the
          * real day, their question — then they step back. */
         openConvo();

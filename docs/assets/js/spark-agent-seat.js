@@ -59,6 +59,10 @@
      * an ask handler that takes over the asking. */
     const enhancers = [];
     const builtApis = [];
+    /* The one seat this page built, kept so the Spark's menu
+     * can host the conversation inside itself (Aaron's menu
+     * rule, Nov 25, 2026: talk happens in the menu, in place). */
+    let builtSeat = null;
     function attach(fn) {
       if (typeof fn !== "function") return;
       enhancers.push(fn);
@@ -375,18 +379,28 @@
         document.head.appendChild(script);
       }
 
+      /* Opening the talk, whichever door it comes through —
+       * the seat's own button, or the Spark's menu hosting the
+       * panel: the same waking (mind, tips, voice, greeting,
+       * door check), so the conversation is one conversation. */
+      function openTalk() {
+        panel.hidden = false;
+        button.setAttribute("aria-expanded", "true");
+        ensureMind();
+        ensureTips();
+        ensureVoice();
+        if (!log.childElementCount) {
+          say("spark", `Here I am — ${name}, on this page with you. Ask me about today, about where you are standing, or anything deeper if the door is open.`);
+        }
+        if (doorState === "unknown") void checkDoor();
+      }
+
       button.addEventListener("click", () => {
         const opening = panel.hidden;
         panel.hidden = !opening;
         button.setAttribute("aria-expanded", String(opening));
         if (opening) {
-          ensureMind();
-          ensureTips();
-          ensureVoice();
-          if (!log.childElementCount) {
-            say("spark", `Here I am — ${name}, on this page with you. Ask me about today, about where you are standing, or anything deeper if the door is open.`);
-          }
-          if (doorState === "unknown") void checkDoor();
+          openTalk();
           input.focus();
         }
       });
@@ -421,9 +435,23 @@
         history
       };
       builtApis.push(seatApi);
+      builtSeat = { panel, host, openTalk, input };
       for (const fn of enhancers) {
         try { fn(seatApi); } catch { /* an enhancer never breaks the seat */ }
       }
+    }
+
+    /* Host this seat's conversation inside a caller-supplied
+     * container — the Spark's menu, in practice. The panel
+     * node itself moves (log, listeners, and the mind riding
+     * on it move with it). Returns false when no seat stands
+     * on this page yet, so the caller can say so honestly. */
+    function openTalkIn(container) {
+      if (!builtSeat || !container || typeof container.appendChild !== "function") return false;
+      container.appendChild(builtSeat.panel);
+      builtSeat.openTalk();
+      if (builtSeat.input) builtSeat.input.focus();
+      return true;
     }
 
     function init() {
@@ -445,6 +473,6 @@
       }
     }
 
-    return { VERSION, answerLocally, attach };
+    return { VERSION, answerLocally, attach, openTalkIn };
   }
 );

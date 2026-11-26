@@ -541,8 +541,8 @@
     /* --------------------- registration ---------------------- */
 
     if (typeof document !== "undefined") {
-      if (root.SparkAgentSeat && typeof root.SparkAgentSeat.attach === "function") {
-        root.SparkAgentSeat.attach(enhanceSeat);
+      if (globalThis.SparkAgentSeat && typeof globalThis.SparkAgentSeat.attach === "function") {
+        globalThis.SparkAgentSeat.attach(enhanceSeat);
       }
       if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", initGuideVoice);
