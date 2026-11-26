@@ -162,6 +162,11 @@
           "path": "scroll/lexicon.html"
         },
         {
+          "id": "one-word-a-day",
+          "title": "One Word a Day",
+          "path": "one-word.html"
+        },
+        {
           "id": "recoder",
           "title": "Reality Recoder",
           "path": "systems/recoder.html"
