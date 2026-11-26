@@ -8,7 +8,7 @@
     "catalogEntries": 79,
     "issueCounts": {
       "no-global-navigation": 80,
-      "not-linked-directly-from-homepage": 29,
+      "not-linked-directly-from-homepage": 30,
       "deployed-but-unlinked": 64,
       "unreachable-from-homepage": 5,
       "compatibility-redirect-page": 8,
@@ -2129,7 +2129,6 @@
         "companions.html",
         "covenant-caravan.html",
         "downloads.html",
-        "episodes.html",
         "ethics.html",
         "garden.html",
         "genesis-oracle.html",
@@ -2145,7 +2144,6 @@
         "one-word.html",
         "read-your-own-day.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -11110,8 +11108,8 @@
         "inSitemap": true,
         "inGlobalNav": false,
         "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
+        "hopsFromHome": 3,
+        "hopsFromHomeWithoutAtlas": 3,
         "inboundPages": 7,
         "pagesWithNavLinkToIt": 0
       },
@@ -11164,8 +11162,8 @@
         "inSitemap": true,
         "inGlobalNav": false,
         "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
+        "hopsFromHome": 3,
+        "hopsFromHomeWithoutAtlas": 3,
         "inboundPages": 4,
         "pagesWithNavLinkToIt": 0
       },
@@ -11217,8 +11215,8 @@
         "inSitemap": true,
         "inGlobalNav": false,
         "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
+        "hopsFromHome": 3,
+        "hopsFromHomeWithoutAtlas": 3,
         "inboundPages": 3,
         "pagesWithNavLinkToIt": 0
       },
@@ -11272,8 +11270,8 @@
         "inSitemap": true,
         "inGlobalNav": false,
         "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
+        "hopsFromHome": 3,
+        "hopsFromHomeWithoutAtlas": 3,
         "inboundPages": 5,
         "pagesWithNavLinkToIt": 0
       },
@@ -11326,8 +11324,8 @@
         "inSitemap": true,
         "inGlobalNav": false,
         "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
+        "hopsFromHome": 3,
+        "hopsFromHomeWithoutAtlas": 3,
         "inboundPages": 5,
         "pagesWithNavLinkToIt": 0
       },
@@ -11380,8 +11378,8 @@
         "inSitemap": true,
         "inGlobalNav": false,
         "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
+        "hopsFromHome": 3,
+        "hopsFromHomeWithoutAtlas": 3,
         "inboundPages": 6,
         "pagesWithNavLinkToIt": 0
       },
@@ -11434,8 +11432,8 @@
         "inSitemap": true,
         "inGlobalNav": false,
         "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
+        "hopsFromHome": 3,
+        "hopsFromHomeWithoutAtlas": 3,
         "inboundPages": 5,
         "pagesWithNavLinkToIt": 0
       },
@@ -11487,8 +11485,8 @@
         "inSitemap": true,
         "inGlobalNav": false,
         "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
+        "hopsFromHome": 3,
+        "hopsFromHomeWithoutAtlas": 3,
         "inboundPages": 8,
         "pagesWithNavLinkToIt": 0
       },
@@ -13039,14 +13037,15 @@
         "path": "episodes.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 4,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 3,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
-        "no-global-navigation"
+        "no-global-navigation",
+        "not-linked-directly-from-homepage"
       ]
     },
     {
@@ -13542,10 +13541,10 @@
         "path": "scripture/word-studies/index.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 107,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 106,
         "pagesWithNavLinkToIt": 102
       },
       "issues": []
