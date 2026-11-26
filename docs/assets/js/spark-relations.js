@@ -141,16 +141,16 @@
           "label": "Hebrew Lexicon"
         },
         {
+          "href": "one-word.html",
+          "label": "One Word a Day"
+        },
+        {
           "href": "systems/recoder.html",
           "label": "Reality Recoder"
         },
         {
           "href": "theory.html",
           "label": "the Theory"
-        },
-        {
-          "href": "guide.html",
-          "label": "the Field Guide"
         }
       ],
       "hub.html": [
