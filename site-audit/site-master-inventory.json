@@ -12,7 +12,6 @@
       "deployed-but-unlinked": 64,
       "unreachable-from-homepage": 5,
       "compatibility-redirect-page": 8,
-      "not-in-sitemap": 3,
       "not-published-in-catalog": 30,
       "unnamed-image-needs-descriptive-title": 21,
       "reachable-only-through-atlas": 1
@@ -13225,7 +13224,7 @@
       "privacyEligibility": "approved-public",
       "discoverability": {
         "path": "genesis-5-timeline.html",
-        "inSitemap": false,
+        "inSitemap": true,
         "inGlobalNav": false,
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
@@ -13234,7 +13233,6 @@
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
-        "not-in-sitemap",
         "no-global-navigation",
         "not-linked-directly-from-homepage"
       ]
@@ -19260,7 +19258,7 @@
       "privacyEligibility": "approved-public",
       "discoverability": {
         "path": "spark-echo.html",
-        "inSitemap": false,
+        "inSitemap": true,
         "inGlobalNav": false,
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
@@ -19269,7 +19267,6 @@
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
-        "not-in-sitemap",
         "no-global-navigation",
         "reachable-only-through-atlas",
         "not-linked-directly-from-homepage"
@@ -20295,7 +20292,7 @@
       "privacyEligibility": "approved-public",
       "discoverability": {
         "path": "witness-method.html",
-        "inSitemap": false,
+        "inSitemap": true,
         "inGlobalNav": false,
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
@@ -20304,7 +20301,6 @@
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
-        "not-in-sitemap",
         "no-global-navigation",
         "not-linked-directly-from-homepage"
       ]
