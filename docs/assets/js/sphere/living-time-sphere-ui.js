@@ -643,6 +643,58 @@
     };
   }
 
+  /*
+   * Runtime-debug cadence (Sphere Performance Pass 3, Nov 25, 2026 —
+   * R1.7 improvement release). getSphereDiagnostics() embeds a
+   * runtime-debug snapshot built from whole-document inspections:
+   * every element's rect + computed style for the fixed/sticky
+   * census, the media census, the sphere host's children. Callers
+   * like the armillary readout ask for diagnostics at frame rate
+   * during drags, so each call re-ran the whole inspection — the
+   * top remaining cost named by the first performance pass (PR
+   * #344). The snapshot is now computed at most once per
+   * RUNTIME_DEBUG_TTL_MS and shared between calls; the cache
+   * resets on scroll and resize (rects are viewport-relative) and
+   * when the Life Atlas records change. Every other field of
+   * getSphereDiagnostics() is still computed fresh on each call —
+   * the readout's own numbers do not change; only the embedded
+   * debug snapshot is cadence-limited, and the standalone
+   * getSphereRuntimeDebugSnapshot() still inspects fresh on
+   * demand (and refreshes this cache), so a deliberate debug ask
+   * always sees the document as it stands.
+   */
+  const RUNTIME_DEBUG_TTL_MS = 2000;
+  let _runtimeDebugCache = { at: 0, value: null };
+  let _runtimeDebugCacheLive = false;
+
+  function _installRuntimeDebugCache() {
+    if (_runtimeDebugCacheLive) return;
+    if (typeof window === "undefined" || typeof document === "undefined") return;
+    try {
+      const reset = () => { _runtimeDebugCache = { at: 0, value: null }; };
+      window.addEventListener("resize", reset);
+      document.addEventListener("scroll", reset, true);
+      document.addEventListener("sof:life-atlas-records-changed", reset);
+      _runtimeDebugCacheLive = true;
+    } catch { /* cache stays off; snapshots run uncached */ }
+  }
+
+  function _collectRuntimeDebugSnapshotMemoized() {
+    _installRuntimeDebugCache();
+    if (!_runtimeDebugCacheLive) return _collectRuntimeDebugSnapshot();
+    const now = Date.now();
+    if (_runtimeDebugCache.value && now - _runtimeDebugCache.at < RUNTIME_DEBUG_TTL_MS) return _runtimeDebugCache.value;
+    const value = _collectRuntimeDebugSnapshot();
+    _runtimeDebugCache = { at: now, value };
+    return value;
+  }
+
+  function _refreshRuntimeDebugCache() {
+    const value = _collectRuntimeDebugSnapshot();
+    _runtimeDebugCache = { at: Date.now(), value };
+    return value;
+  }
+
   function _collectMediaDiagnostics(root = document) {
     const selectors = "img,picture source,object,iframe,embed,video,svg image";
     const nodes = Array.from(root.querySelectorAll?.(selectors) || []);
@@ -6756,7 +6808,7 @@
     _installResourceFailureTracker();
     _bindRecoveryHooks(container);
     _probeColdBootDiagnostics();
-    globalThis.getSphereRuntimeDebugSnapshot = _collectRuntimeDebugSnapshot;
+    globalThis.getSphereRuntimeDebugSnapshot = _refreshRuntimeDebugCache;
     _installSelectedDayLongTaskObserver();
 
     // Auto-open Sphere Settings panel on non-mobile viewports.
@@ -6975,7 +7027,7 @@
       firstRenderSurfaceFailure: _state.firstRenderSurfaceFailure || null,
       renderSurfaceCanvasTrace: (_state.renderSurfaceCanvasTrace || []).slice(-40),
       initTimeline: (_state.initTimeline || []).slice(-80),
-      runtimeDebug: _collectRuntimeDebugSnapshot(),
+      runtimeDebug: _collectRuntimeDebugSnapshotMemoized(),
       actionTrace: (_state.actionTrace || []).slice(-60),
       environmentFocusDiagnostics: _state.lastEnvironmentFocusDiagnostics || null,
       layerStateSource: _state.layerStateSource || "default",
