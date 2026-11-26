@@ -10,6 +10,22 @@
   max-width: min(92vw, 24rem);
 }
 
+/* Aaron's menu rule (Nov 25, 2026): where the Spark's menu
+   stands (the presence layer marks the body), the seat's
+   corner furniture steps aside — talk lives in the menu.
+   The hosted panel is no longer inside .spark-seat, so this
+   never hides it. No menu (the companions page): as before. */
+body.spark-menu-present .spark-seat {
+  display: none;
+}
+
+/* The conversation hosted inside the Spark's panel: flush,
+   full width of the menu, no corner shadow of its own. */
+.spark-panel-talk .spark-seat-panel {
+  margin: 0;
+  box-shadow: none;
+}
+
 .spark-seat-button {
   border: 1px solid rgba(212, 175, 55, 0.6);
   background: rgba(20, 16, 8, 0.88);

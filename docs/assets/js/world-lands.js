@@ -39,6 +39,16 @@
           "id": "aiyanas-world",
           "title": "Aiyana's World",
           "path": "aiyanas-world.html"
+        },
+        {
+          "id": "card-album",
+          "title": "The Card Album",
+          "path": "card-album.html"
+        },
+        {
+          "id": "spark-echo",
+          "title": "Spark Echo — the Memory Game",
+          "path": "spark-echo.html"
         }
       ]
     },
@@ -97,6 +107,11 @@
           "id": "equinox-passage",
           "title": "Equinox Passage",
           "path": "equinox-passage.html"
+        },
+        {
+          "id": "read-your-own-day",
+          "title": "Read Your Own Day",
+          "path": "read-your-own-day.html"
         }
       ]
     },
@@ -224,6 +239,11 @@
           "id": "journey-scroll",
           "title": "The Journey Scroll",
           "path": "The-Journey-Scroll.md"
+        },
+        {
+          "id": "genesis-5-timeline",
+          "title": "Walking the Long Line — Genesis 5",
+          "path": "genesis-5-timeline.html"
         }
       ]
     },
@@ -337,6 +357,11 @@
           "id": "planned-timeline",
           "title": "Historical timeline",
           "path": "timeline.html"
+        },
+        {
+          "id": "witness-method",
+          "title": "The Witness Method — How to Check a Claim",
+          "path": "witness-method.html"
         }
       ]
     },

@@ -49,7 +49,9 @@
       "doorLabel": "Companions — Their Home",
       "entries": [
         "companions",
-        "aiyanas-world"
+        "aiyanas-world",
+        "card-album",
+        "spark-echo"
       ],
       "id": "clearing",
       "name": "The Clearing",
@@ -83,7 +85,8 @@
         "whitepaper-13-moons",
         "codex-white-paper",
         "alignment-ledger",
-        "equinox-passage"
+        "equinox-passage",
+        "read-your-own-day"
       ],
       "id": "wheel",
       "name": "The Wheel",
@@ -142,7 +145,8 @@
         "genesis-oracle",
         "genesis-restored",
         "exodus-restored",
-        "journey-scroll"
+        "journey-scroll",
+        "genesis-5-timeline"
       ],
       "id": "lore-halls",
       "name": "The Lore Halls",
@@ -187,7 +191,8 @@
         "scroll-editorial",
         "claim-register",
         "evidence-register",
-        "planned-timeline"
+        "planned-timeline",
+        "witness-method"
       ],
       "id": "proving-grounds",
       "name": "The Proving Grounds",

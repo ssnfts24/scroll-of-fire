@@ -1,0 +1,292 @@
+/* The Witness Method — the lesson's own sheet.
+ * Every colour comes from the one token sheet (codex.css); this
+ * sheet declares no palette of its own. */
+
+.wm-wrap {
+  max-width: var(--content-reading);
+  margin: 0 auto;
+  padding: var(--shell-pad);
+  padding-bottom: var(--section-gap);
+}
+
+.wm-stage { text-align: center; }
+
+.wm-mark { margin-top: 1rem; }
+
+.wm-name {
+  font-family: Cinzel, serif;
+  font-size: clamp(2rem, 7vw, 3.4rem);
+  margin: 0.4rem 0 0.2rem;
+  color: var(--text);
+}
+
+.wm-dayline {
+  color: var(--gold);
+  font-size: 1.05rem;
+  margin: 0.2rem 0 0;
+}
+
+.wm-civil { color: var(--dim); margin: 0.1rem 0 0; font-size: 0.95rem; }
+
+.wm-lead {
+  color: var(--muted);
+  max-width: 62ch;
+  margin: 1rem auto 0;
+  line-height: 1.7;
+  text-align: left;
+}
+
+.wm-spark-station {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  max-width: 62ch;
+  margin: 1.4rem auto 0;
+  padding: 0.9rem 1.1rem;
+  background: var(--panel-soft);
+  border: 1px solid var(--line-gold);
+  border-radius: var(--radius-md);
+  text-align: left;
+}
+
+.wm-orb {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 38%, var(--text), var(--gold) 55%, var(--gold-deep));
+  box-shadow: 0 0 18px var(--line-gold), 0 0 42px var(--line-gold);
+}
+
+.wm-keeper-line { margin: 0; color: var(--text); line-height: 1.55; }
+
+.wm-resume { margin-top: 0.8rem; }
+
+.wm-section { margin-top: 2.6rem; text-align: left; }
+
+.wm-section h2 {
+  font-family: Cinzel, serif;
+  color: var(--text);
+  font-size: 1.45rem;
+  margin: 0 0 0.4rem;
+}
+
+.wm-section-lede { color: var(--muted); line-height: 1.65; margin: 0 0 1rem; }
+
+.wm-labels {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.9rem;
+}
+
+@media (min-width: 760px) {
+  .wm-labels { grid-template-columns: 1fr 1fr; }
+}
+
+.wm-label-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.1rem;
+}
+
+.wm-label-name {
+  font-family: Cinzel, serif;
+  color: var(--gold);
+  margin: 0 0 0.4rem;
+  font-size: 1.12rem;
+}
+
+.wm-label-plain { color: var(--text); margin: 0 0 0.6rem; line-height: 1.6; }
+
+.wm-label-carry { color: var(--muted); margin: 0.25rem 0; line-height: 1.6; }
+.wm-label-carry strong { color: var(--text); }
+
+.wm-label-example {
+  margin: 0.7rem 0 0;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.wm-chip {
+  display: inline-block;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid var(--line-gold);
+  border-radius: var(--radius-sm);
+  padding: 0.08rem 0.5rem;
+  margin-right: 0.35rem;
+  white-space: nowrap;
+}
+
+.wm-progress { color: var(--dim); margin: 0 0 0.6rem; }
+
+.wm-claim-card {
+  background: var(--panel-strong);
+  border: 1px solid var(--line-gold);
+  border-radius: var(--radius-lg);
+  padding: 1.3rem 1.2rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.wm-claim {
+  font-size: 1.18rem;
+  line-height: 1.6;
+  color: var(--text);
+  margin: 0 0 1rem;
+}
+
+.wm-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.wm-choice {
+  font: inherit;
+  font-size: 0.98rem;
+  color: var(--text);
+  background: var(--panel-soft);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  padding: 0.55rem 0.9rem;
+  cursor: pointer;
+  min-height: 48px;
+}
+
+.wm-choice:hover, .wm-choice:focus-visible {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.wm-choice-placed {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.wm-choice:disabled { opacity: 0.55; cursor: default; }
+
+.wm-feedback { color: var(--gold); min-height: 1.6em; margin: 0.8rem 0 0; line-height: 1.55; }
+
+.wm-reasoning {
+  margin-top: 1rem;
+  padding: 1rem 1.1rem;
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.wm-reasoning-head { color: var(--text); margin: 0 0 0.5rem; }
+.wm-reasoning p { margin: 0 0 0.6rem; }
+.wm-reasoning-source { color: var(--dim); font-size: 0.92rem; margin-bottom: 0; }
+
+.wm-next, .wm-resume-btn {
+  font: inherit;
+  color: var(--bg);
+  background: var(--gold);
+  border: 1px solid var(--gold);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 1.1rem;
+  cursor: pointer;
+  min-height: 48px;
+  margin-top: 1rem;
+}
+
+.wm-next:hover, .wm-resume-btn:hover { background: var(--gold-deep); border-color: var(--gold-deep); }
+
+.wm-shelf { list-style: none; margin: 1.2rem 0 0; padding: 0; display: grid; gap: 0.5rem; }
+
+.wm-shelf-item {
+  font: inherit;
+  text-align: left;
+  width: 100%;
+  color: var(--muted);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.8rem;
+  cursor: pointer;
+  line-height: 1.5;
+}
+
+.wm-shelf-item:hover, .wm-shelf-item:focus-visible { border-color: var(--gold); }
+
+.wm-done {
+  margin-top: 1.2rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line-gold);
+  border-radius: var(--radius-md);
+  background: var(--panel-soft);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.wm-ladder { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.4rem; }
+
+.wm-rung {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.8rem;
+  align-items: baseline;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 0.7rem 0.9rem;
+}
+
+.wm-rung-step { font-family: Cinzel, serif; color: var(--gold); }
+.wm-rung-plain { color: var(--muted); }
+
+.wm-rung-arrow { color: var(--dim); font-size: 0.9rem; padding-left: 0.9rem; }
+
+.wm-rule {
+  margin-top: 1rem;
+  color: var(--text);
+  line-height: 1.65;
+  border-left: 3px solid var(--gold);
+  padding-left: 0.9rem;
+}
+
+.wm-close-card {
+  background: var(--panel);
+  border: 1px solid var(--line-gold);
+  border-radius: var(--radius-md);
+  padding: 1.1rem 1.2rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.wm-close-card p { margin: 0 0 0.8rem; }
+.wm-close-card p:last-child { margin-bottom: 0; }
+
+.wm-doors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+  margin-top: 2.6rem;
+}
+
+.wm-doors a {
+  color: var(--gold);
+  border: 1px solid var(--line-gold);
+  border-radius: var(--radius-sm);
+  padding: 0.55rem 1rem;
+  text-decoration: none;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.wm-doors a:hover, .wm-doors a:focus-visible { background: var(--panel-soft); }
+
+@media (prefers-reduced-motion: reduce) {
+  .wm-orb { box-shadow: none; }
+  html { scroll-behavior: auto; }
+}

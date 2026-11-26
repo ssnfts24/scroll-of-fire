@@ -1,0 +1,273 @@
+/* Spark play — character and entertaining interactions.
+   The Spark's own living layer on the Companions page: its
+   idle mannerisms, the little sparks that gather around it
+   when it lights up, its performed tricks, the echo duet's
+   stones, and Their Home's greeting shimmer. Everything here
+   is transform, opacity, filter, or shadow — no layout moves,
+   so the layer costs the page nothing per frame. */
+
+#spark-big-art {
+  position: relative;
+}
+
+.spark-play-burst {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.spark-play-mote {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  background: #f3c97a;
+  opacity: 0;
+  animation: spark-play-mote-flight 1.9s ease-out forwards;
+}
+
+.spark-play-mote.is-petals { border-radius: 70% 0 70% 0; }
+.spark-play-mote.is-rings {
+  background: transparent;
+  border: 2px solid #f3c97a;
+  border-radius: 50%;
+}
+.spark-play-mote.is-shards { transform: rotate(45deg); }
+.spark-play-mote.is-beads { border-radius: 50%; }
+
+@keyframes spark-play-mote-flight {
+  0% { opacity: 0; translate: 0 0; scale: 0.4; }
+  18% { opacity: 1; }
+  100% { opacity: 0; translate: var(--mx, 0) var(--my, -60px); scale: 1; }
+}
+
+/* ---- idle mannerisms: the character, in the body ---- */
+
+.spark-big-art.is-manner-flare-flick { animation: spark-play-flare-flick 1.6s ease-in-out; }
+@keyframes spark-play-flare-flick {
+  0%, 100% { filter: brightness(1); transform: scale(1); }
+  20% { filter: brightness(1.5); transform: scale(1.03); }
+  45% { filter: brightness(1.1); }
+  65% { filter: brightness(1.4); transform: scale(1.02); }
+}
+
+.spark-big-art.is-manner-dart-peek { animation: spark-play-dart-peek 2.2s ease-in-out; }
+@keyframes spark-play-dart-peek {
+  0%, 100% { transform: translateX(0); }
+  30% { transform: translateX(26px); }
+  55% { transform: translateX(26px) scale(0.96); }
+  80% { transform: translateX(6px); }
+}
+
+.spark-big-art.is-manner-ripple-sway { animation: spark-play-ripple-sway 2.6s ease-in-out; }
+@keyframes spark-play-ripple-sway {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  30% { transform: rotate(2.4deg) translateY(-3px); }
+  65% { transform: rotate(-2.4deg) translateY(-2px); }
+}
+
+.spark-big-art.is-manner-mote-drift { animation: spark-play-mote-drift 2.6s ease-in-out; }
+@keyframes spark-play-mote-drift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-9px); }
+}
+
+.spark-big-art.is-manner-peek { animation: spark-play-peek 2.4s ease-in-out; }
+@keyframes spark-play-peek {
+  0%, 100% { opacity: 1; }
+  35% { opacity: 0.25; }
+  60% { opacity: 0.25; transform: translateX(8px); }
+  85% { opacity: 1; }
+}
+
+.spark-big-art.is-manner-slow-breath { animation: spark-play-slow-breath 2.6s ease-in-out; }
+@keyframes spark-play-slow-breath {
+  0%, 100% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.045); filter: brightness(1.18); }
+}
+
+.spark-big-art.is-manner-look-about { animation: spark-play-look-about 2.4s ease-in-out; }
+@keyframes spark-play-look-about {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-3.5deg); }
+  70% { transform: rotate(3.5deg); }
+}
+
+.spark-big-art.is-manner-mote-juggle { animation: spark-play-mote-juggle 1.8s ease-in-out; }
+@keyframes spark-play-mote-juggle {
+  0%, 100% { transform: translateY(0); }
+  25% { transform: translateY(-12px); }
+  50% { transform: translateY(0); }
+  75% { transform: translateY(-8px); }
+}
+
+.spark-big-art.is-manner-root-settle { animation: spark-play-root-settle 2.6s ease-in-out; }
+@keyframes spark-play-root-settle {
+  0%, 100% { transform: translateY(0) scale(1); }
+  40% { transform: translateY(7px) scale(0.98); filter: brightness(1.12); }
+  75% { transform: translateY(7px) scale(0.98); }
+}
+
+.spark-big-art.is-manner-halo-rise { animation: spark-play-halo-rise 2.4s ease-out; }
+@keyframes spark-play-halo-rise {
+  0% { box-shadow: 0 0 0 0 rgba(243, 201, 122, 0); }
+  35% { box-shadow: 0 0 0 14px rgba(243, 201, 122, 0.28); filter: brightness(1.2); }
+  100% { box-shadow: 0 0 0 30px rgba(243, 201, 122, 0); }
+}
+
+/* ---- tricks, performed on the big stage ---- */
+
+.spark-big-art.is-trick-spin { animation: spark-play-trick-spin 1.1s ease-in-out; }
+@keyframes spark-play-trick-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spark-big-art.is-trick-leap { animation: spark-play-trick-leap 0.9s ease-out; }
+@keyframes spark-play-trick-leap {
+  0%, 100% { transform: translateY(0); }
+  45% { transform: translateY(-30px); }
+}
+
+.spark-big-art.is-trick-glow { animation: spark-play-slow-breath 1.6s ease-in-out; }
+
+.spark-big-art.is-trick-flare { animation: spark-play-trick-flare 1.2s ease-out; }
+@keyframes spark-play-trick-flare {
+  0% { filter: brightness(1); transform: scale(1); }
+  35% { filter: brightness(1.8); transform: scale(1.1); }
+  100% { filter: brightness(1); transform: scale(1); }
+}
+
+.spark-big-art.is-trick-ripple { animation: spark-play-halo-rise 1.5s ease-out; }
+
+.spark-big-art.is-trick-vanish { animation: spark-play-peek 1.5s ease-in-out; }
+
+.spark-big-art.is-trick-loop { animation: spark-play-trick-loop 1.5s ease-in-out; }
+@keyframes spark-play-trick-loop {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  30% { transform: translate(14px, -26px) rotate(120deg); }
+  65% { transform: translate(-10px, -30px) rotate(250deg); }
+}
+
+.spark-big-art.is-trick-root { animation: spark-play-root-settle 1.8s ease-in-out; }
+
+.spark-big-art.is-trick-beam { animation: spark-play-trick-beam 1.4s ease-out; }
+@keyframes spark-play-trick-beam {
+  0% { filter: brightness(1) saturate(1); }
+  40% { filter: brightness(2) saturate(1.4); }
+  100% { filter: brightness(1) saturate(1); }
+}
+
+.spark-big-art.is-celebrating { animation: spark-play-celebrating 1.6s ease-in-out; }
+@keyframes spark-play-celebrating {
+  0%, 100% { transform: translateY(0); filter: brightness(1); }
+  20% { transform: translateY(-18px); filter: brightness(1.35); }
+  45% { transform: translateY(0); }
+  65% { transform: translateY(-11px); filter: brightness(1.25); }
+  85% { transform: translateY(0); }
+}
+
+/* ---- the duet's stones ---- */
+
+.spark-play-pads {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 10px 0 4px;
+}
+
+.spark-play-pad {
+  width: 46px;
+  height: 46px;
+  border-radius: 50% 50% 46% 46%;
+  border: 1px solid rgba(243, 201, 122, 0.55);
+  background: radial-gradient(90% 90% at 50% 30%, rgba(243, 201, 122, 0.22), rgba(243, 201, 122, 0.05));
+  cursor: pointer;
+  transition: filter 120ms ease, box-shadow 120ms ease;
+}
+
+.spark-play-pad.is-lit {
+  filter: brightness(1.9);
+  box-shadow: 0 0 18px 4px rgba(243, 201, 122, 0.55);
+}
+
+.spark-play-tricks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin: 8px 0 2px;
+}
+
+/* ---- Their Home answers: the greeting shimmer ---- */
+
+.spark-home-stage.is-greeting {
+  box-shadow: 0 0 0 2px rgba(243, 201, 122, 0.65), 0 0 42px 6px rgba(243, 201, 122, 0.35);
+  transition: box-shadow 600ms ease;
+}
+
+.spark-home-stage.is-greeting::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 30%, rgba(244, 241, 232, 0.16) 50%, transparent 70%);
+  background-size: 250% 100%;
+  animation: spark-play-greeting-sweep 3.2s ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes spark-play-greeting-sweep {
+  from { background-position: 130% 0; }
+  to { background-position: -30% 0; }
+}
+
+/* ---- the Moon-turn harvest card ---- */
+
+.spark-play-harvest-card {
+  border: 1px solid rgba(243, 201, 122, 0.4);
+  border-radius: 14px;
+  padding: 4px 14px 10px;
+  margin: 12px 0 4px;
+  background: radial-gradient(120% 100% at 50% 0%, rgba(243, 201, 122, 0.08), transparent 70%);
+}
+
+.spark-play-harvest-words {
+  margin: 4px 0 8px;
+  padding-left: 18px;
+}
+
+.spark-play-harvest-words li {
+  margin: 2px 0;
+}
+
+/* ---- reduced motion: the layer is still ---- */
+
+@media (prefers-reduced-motion: reduce) {
+  .spark-big-art.is-manner-flare-flick,
+  .spark-big-art.is-manner-dart-peek,
+  .spark-big-art.is-manner-ripple-sway,
+  .spark-big-art.is-manner-mote-drift,
+  .spark-big-art.is-manner-peek,
+  .spark-big-art.is-manner-slow-breath,
+  .spark-big-art.is-manner-look-about,
+  .spark-big-art.is-manner-mote-juggle,
+  .spark-big-art.is-manner-root-settle,
+  .spark-big-art.is-manner-halo-rise,
+  .spark-big-art.is-trick-spin,
+  .spark-big-art.is-trick-leap,
+  .spark-big-art.is-trick-glow,
+  .spark-big-art.is-trick-flare,
+  .spark-big-art.is-trick-ripple,
+  .spark-big-art.is-trick-vanish,
+  .spark-big-art.is-trick-loop,
+  .spark-big-art.is-trick-root,
+  .spark-big-art.is-trick-beam,
+  .spark-big-art.is-celebrating,
+  .spark-play-mote,
+  .spark-home-stage.is-greeting::after {
+    animation: none !important;
+  }
+}

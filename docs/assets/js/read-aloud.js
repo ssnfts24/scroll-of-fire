@@ -36,7 +36,7 @@
 (function (root) {
   "use strict";
 
-  const VERSION = "read-aloud/1.0.0";
+  const VERSION = "read-aloud/1.1.0";
 
   function supported() {
     try {
@@ -105,7 +105,16 @@
         try { chunk.el.scrollIntoView({ block: "nearest", behavior: "smooth" }); } catch { /* position is a courtesy */ }
       }
       if (typeof options.onChunk === "function") options.onChunk(index, queue.length);
-      const utterance = new SpeechSynthesisUtterance(String(chunk.text).replace(/\s+/g, " ").trim());
+      /* Hebrew mode (the pronunciation layer, Aaron's commission,
+       * Nov 25, 2026): a session may carry speakText(chunk) — the
+       * words the voice says in place of the words on the page.
+       * The word studies ride it: the page shows pointed Hebrew,
+       * the voice speaks the pronunciation engine's careful
+       * transliteration, and the Hebrew itself is highlighted.
+       * The chapters do not use it — their Listen stays English
+       * until the layer's second slice is built and proven. */
+      const spoken = typeof options.speakText === "function" ? options.speakText(chunk) : null;
+      const utterance = new SpeechSynthesisUtterance(String(spoken || chunk.text).replace(/\s+/g, " ").trim());
       if (options.lang) utterance.lang = options.lang;
       if (options.rate) utterance.rate = options.rate;
       utterance.addEventListener("end", () => speakNext(gen));

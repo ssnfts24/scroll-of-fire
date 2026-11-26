@@ -196,14 +196,57 @@
     }
 
     /**
+     * Clean the Spark-led session block for the seal (Teach evolution,
+     * Nov 25, 2026): whether the Spark led the sitting, how the keeper
+     * settled, and how long settling took. Written by
+     * manifest-spark.js from the live sitting — observed values only;
+     * a field the sitting did not produce stays null, never invented.
+     * secondsToSettle is the learning signal: the Spark proposes the
+     * carrier + field that settled this keeper fastest, and the
+     * keeper decides (see manifest-spark.js suggestSettling).
+     */
+    function buildSparkBlock(input) {
+      if (!input || typeof input !== "object") return null;
+
+      /* finiteOrNull(Number(null)) would read an absent value as 0 —
+         an unsettled sitting must stay null, never "settled in 0s". */
+      const settlePeakRaw =
+        input.settlePeak == null ? null : finiteOrNull(input.settlePeak);
+      const settlePeak =
+        settlePeakRaw === null
+          ? null
+          : Math.max(0, Math.min(1, settlePeakRaw));
+
+      const secondsRaw =
+        input.secondsToSettle == null
+          ? null
+          : finiteOrNull(input.secondsToSettle);
+      const secondsToSettle =
+        secondsRaw === null || secondsRaw < 0 ? null : Math.round(secondsRaw);
+
+      const roundsRaw = finiteOrNull(input.echoRounds);
+      const echoRounds =
+        roundsRaw === null || roundsRaw < 0 ? 0 : Math.floor(roundsRaw);
+
+      return {
+        led: input.ledBySpark === true,
+        echoRounds,
+        settlePeak,
+        secondsToSettle
+      };
+    }
+
+    /**
      * Build the (pre-normalization) LifeRecord input for a sealed
      * session. The canonical schema normalizes and validates this when
      * the repository stores it; unknown types are impossible here by
      * construction (type is the frozen-list "event").
      *
-     * Fields the console cannot supply stay null — notably
-     * durationSeconds: the exercise console tracks no session timer,
-     * so no duration is recorded rather than an invented one.
+     * Fields the sitting cannot supply stay null. durationSeconds
+     * comes from the Spark-led sitting's own clock
+     * (window.__sofManifestSession, manifest-spark.js); a session
+     * sealed without a sitting records no duration rather than an
+     * invented one.
      */
     function buildSessionRecord(input = {}, temporal = null) {
       const kind = SESSION_KINDS.includes(input.sessionKind)
@@ -285,6 +328,8 @@
             breathPattern: cleanNullable(input.breathPattern, 80),
 
             durationSeconds: finiteOrNull(input.durationSeconds),
+
+            spark: buildSparkBlock(input.spark),
 
             xi: {
               value: xi,
@@ -447,6 +492,21 @@
         seed = null;
       }
 
+      /* The Spark-led sitting's own state (manifest-spark.js): the
+         real session clock and the settle/echo observations. Absent
+         when the sitting was never begun — duration and the spark
+         block then stay null rather than invented. */
+      let sitting = null;
+
+      try {
+        if (typeof window !== "undefined" &&
+            typeof window.__sofManifestSession === "function") {
+          sitting = window.__sofManifestSession();
+        }
+      } catch {
+        sitting = null;
+      }
+
       return {
         intention: cleanText(value("rmnLine"), 1000),
         carriers: activeHz !== null ? [activeHz] : [],
@@ -471,8 +531,17 @@
         materials: value("mpMaterials"),
         witnessNote: value("mpNote"),
 
-        /* The console tracks no session timer; duration stays null. */
-        durationSeconds: null
+        /* Duration and the spark block come from the sitting itself;
+           without a sitting, both stay null. */
+        durationSeconds: sitting ? finiteOrNull(sitting.durationSeconds) : null,
+        spark: sitting
+          ? {
+              ledBySpark: sitting.ledBySpark === true,
+              echoRounds: sitting.echoRounds,
+              settlePeak: sitting.settlePeak,
+              secondsToSettle: sitting.secondsToSettle
+            }
+          : null
       };
     }
 
@@ -849,6 +918,7 @@
       XI_LABEL,
 
       buildSessionRecord,
+      buildSparkBlock,
       isPracticeSession,
       sessionKindOf,
       markedPatternDays,
