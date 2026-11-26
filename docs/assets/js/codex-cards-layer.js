@@ -99,14 +99,27 @@
     render(entry, function () { showing = false; pump(); });
   }
 
+  // The glint shows the card's own face in miniature — the same
+  // artwork window the album frame carries, drawn from the record.
+  function glintFace(artSVG, name) {
+    var face = document.createElement("div");
+    face.className = "codex-card-glint__face";
+    var art = document.createElement("div");
+    art.className = "codex-card-glint__art";
+    art.innerHTML = artSVG;
+    var label = document.createElement("span");
+    label.textContent = name;
+    face.append(art, label);
+    return face;
+  }
+
   function render(entry, done) {
     var banner = document.createElement("div");
     banner.className = "codex-card-glint";
     banner.setAttribute("role", "dialog");
     banner.setAttribute("aria-label", "A card is glinting here");
 
-    var face = document.createElement("div");
-    face.className = "codex-card-glint__face";
+    var face = null;
     var actions = document.createElement("div");
     actions.className = "codex-card-glint__actions";
 
@@ -125,8 +138,7 @@
 
     if (entry.firstCard) {
       var fc = entry.firstCard;
-      face.style.background = "linear-gradient(160deg,#141021,hsl(" + Math.round((fc.hueRange[0] + fc.hueRange[1]) / 2) + " 60% 42%))";
-      face.innerHTML = "<span>The First Card</span>";
+      face = glintFace(Cards.firstCardArtSVG(fc), "The First Card");
       var text = document.createElement("p");
       text.className = "codex-card-glint__text";
       text.textContent = "Your Spark came with a card. The First Card — " + fc.kindName +
@@ -143,8 +155,7 @@
     }
 
     var card = entry.card;
-    face.style.background = "linear-gradient(160deg,#0b1026," + card.art.palette[1] + ")";
-    face.innerHTML = "<span>" + card.name + "</span>";
+    face = glintFace(Cards.cardArtSVG(card), card.name);
     var text2 = document.createElement("p");
     text2.className = "codex-card-glint__text";
     text2.textContent = entry.note || ("Something is glinting here — the Spark noticed a card: " + card.name + ".");
@@ -157,10 +168,7 @@
       var copy = store.collect(card.id, { patternDay: t.patternDay, moon: t.moon, via: card.home.act });
       if (entry.onCollect) entry.onCollect(copy);
       banner.innerHTML = "";
-      var keptFace = document.createElement("div");
-      keptFace.className = "codex-card-glint__face";
-      keptFace.style.background = face.style.background;
-      keptFace.innerHTML = "<span>" + card.name + "</span>";
+      var keptFace = glintFace(Cards.cardArtSVG(card), card.name);
       var kept = document.createElement("p");
       kept.className = "codex-card-glint__text";
       kept.textContent = "Kept in your album — " + card.sub + ". First Edition, stamped with the day it was found.";

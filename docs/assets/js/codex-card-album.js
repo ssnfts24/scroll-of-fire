@@ -58,7 +58,7 @@
       if (window.PatternCalendar && window.PatternCalendar.fromCivilDate) {
         var tz = (Intl.DateTimeFormat().resolvedOptions() || {}).timeZone || "UTC";
         var c = window.PatternCalendar.fromCivilDate({ date: new Date(), timeZone: tz });
-        if (c) return { moon: c.moon || null, dayOfMoon: c.dayOfMoon || null, patternDay: c.dayOfPatternYear || null };
+        if (c) return { moon: c.moon || null, dayOfMoon: c.day || null, patternDay: c.dayOfPatternYear || null };
       }
     } catch (e) { /* the calendar is the authority; without it, no day is claimed */ }
     return { moon: null, dayOfMoon: null, patternDay: null };
@@ -171,39 +171,134 @@
     return wrap;
   }
 
+  /* ----- the trading-card faces (Aaron, Nov 25, 2026: "The cards
+   * should look like actual trading cards"). A portrait frame with
+   * the anatomy of a real card: name banner with its rarity mark, an
+   * artwork window drawn from the card's own record, a type line with
+   * its set and number, a text box, a hum/stat strip, and the edition
+   * + found stamps along the foot. The game face turns over inside
+   * the same frame. Data, lineage and mechanics are untouched — this
+   * is the card's dress, not its record. --- */
+
+  var SET_LABELS = { moons: "The Thirteen Moons", words: "The Words", kinds: "The Spark Kinds" };
+
+  function rarityMark(card) {
+    if (card.rarity === "moon-window") return { glyph: "◐", label: "Moon Window" };
+    if (card.rarity === "earned-only") return { glyph: "✦", label: "Earned" };
+    return { glyph: "●", label: "Common" };
+  }
+
+  function setNumber(card) {
+    var set = Cards.REGISTRY.filter(function (c) { return c.set === card.set; });
+    var n = set.findIndex(function (c) { return c.id === card.id; }) + 1;
+    return {
+      label: SET_LABELS[card.set] || card.set,
+      text: String(n).padStart(2, "0") + "/" + set.length
+    };
+  }
+
+  function humShort(card) {
+    if (card.hum && card.hum.hz) return card.hum.hz + " Hz";
+    if (card.hum && card.hum.motif) return card.hum.motif + " · " + card.hum.beats + " beats";
+    return "—";
+  }
+
+  function pips(n) { return "●".repeat(n) + "○".repeat(3 - n); }
+
+  function bannerEl(name, chipText, chipLabel, chipCls) {
+    var banner = el("div", "tcard__banner");
+    banner.appendChild(el("span", "tcard__name codex-card__name", name));
+    var chip = el("span", "tcard__chip" + (chipCls ? " " + chipCls : ""), chipText);
+    if (chipLabel) { chip.title = chipLabel; chip.setAttribute("aria-label", chipLabel); }
+    banner.appendChild(chip);
+    return banner;
+  }
+
+  function typeEl(left, right) {
+    var type = el("div", "tcard__type");
+    type.append(el("span", "tcard__typeline", left), el("span", "tcard__setno", right));
+    return type;
+  }
+
+  function stampsEl(left, right) {
+    var stamps = el("div", "tcard__stamps");
+    stamps.append(el("span", "tcard__stamp", left), el("span", "tcard__stamp", right));
+    return stamps;
+  }
+
+  function foundStamp(copy) {
+    var f = copy.lineage.found;
+    return (f.moon ? "Moon " + f.moon : "Moon —") +
+      " · PD " + (f.patternDay != null ? f.patternDay : "—");
+  }
+
+  function frontFace(card, copy, tint) {
+    var front = el("div", "tcard__side tcard__front codex-card__face" + (card.set === "words" ? " tcard__front--word" : ""));
+    var mark = rarityMark(card);
+    var num = setNumber(card);
+    front.appendChild(bannerEl(card.name, mark.glyph, "Rarity: " + mark.label, "tcard__chip--rarity"));
+    var art = el("div", "tcard__art" + (card.set === "kinds" ? " codex-card__face--kindred-motion" : ""));
+    art.innerHTML = Cards.cardArtSVG(card, { hue: tint });
+    // Day-true face: a Moon card answers the real day, as a ribbon
+    // across its artwork window.
+    if (card.set === "moons" && TODAY.moon) {
+      art.appendChild(el("p", "codex-card__today",
+        TODAY.moon === card.moonAffinity[0]
+          ? "Its Moon is today — Day " + (TODAY.dayOfMoon || "—") + " of " + moonName(TODAY.moon)
+          : "Today stands in " + moonName(TODAY.moon)));
+    }
+    front.appendChild(art);
+    front.appendChild(typeEl(card.element + " · " + card.sub, num.text));
+    var text = el("div", "tcard__text" + (card.set === "words" ? " tcard__text--dense" : ""));
+    text.appendChild(el("p", "tcard__essence codex-card__essence", card.essence));
+    front.appendChild(text);
+    var stats = el("div", "tcard__stats");
+    stats.append(el("span", null, "Hum · " + humShort(card)), el("span", null, "Res " + pips(card.resonance)));
+    front.appendChild(stats);
+    front.appendChild(stampsEl(card.edition.name, foundStamp(copy)));
+    return front;
+  }
+
+  function backFace(card) {
+    var back = el("div", "tcard__side tcard__back");
+    var num = setNumber(card);
+    back.appendChild(bannerEl(card.name, "Game face", null, "tcard__chip--game"));
+    back.appendChild(gameFace(card));
+    back.appendChild(stampsEl(num.label, num.text));
+    return back;
+  }
+
+  function silhouetteFace(card, note) {
+    var front = el("div", "tcard__side tcard__front codex-card__face tcard__front--dim" + (card.set === "words" ? " tcard__front--word" : ""));
+    var mark = rarityMark(card);
+    var num = setNumber(card);
+    front.appendChild(bannerEl(card.name, mark.glyph, "Rarity: " + mark.label, "tcard__chip--rarity"));
+    var art = el("div", "tcard__art");
+    art.innerHTML = Cards.cardArtSVG(card, { dim: true });
+    front.appendChild(art);
+    front.appendChild(typeEl(card.element + " · " + card.sub, num.text));
+    var text = el("div", "tcard__text");
+    text.appendChild(el("p", "codex-card__stamp", note));
+    front.appendChild(text);
+    front.appendChild(stampsEl(num.label, num.text));
+    return front;
+  }
+
   var renderedTiles = [];
 
   function cardTile(card) {
     var copy = store ? store.copyFor(card.id) : null;
     var held = !!(copy && copy.state === "held");
     var tile = el("article", "codex-card" + (held ? "" : " codex-card--missing"));
-    var face = el("div", "codex-card__face");
+    var stage = el("div", "tcard");
+    var inner = el("div", "tcard__inner");
+    stage.appendChild(inner);
+    tile.appendChild(stage);
     if (held) {
       var tint = card.seedVariant && companion ? companion.hue : null;
-      face.style.background = tint != null
-        ? "linear-gradient(160deg,#0b1026,hsl(" + tint + " 62% 40%))"
-        : "linear-gradient(160deg,#0b1026," + card.art.palette[1] + ")";
-      if (card.set === "kinds") face.classList.add("codex-card__face--kindred-motion");
-    }
-    face.append(el("div", "codex-card__name", card.name), el("div", "codex-card__sub", card.sub));
-    // Day-true face: a Moon card answers the real day.
-    if (held && card.set === "moons" && TODAY.moon) {
-      face.appendChild(el("div", "codex-card__today",
-        TODAY.moon === card.moonAffinity[0]
-          ? "Its Moon is today — Day " + (TODAY.dayOfMoon || "—") + " of " + moonName(TODAY.moon)
-          : "Today stands in " + moonName(TODAY.moon)));
-    }
-    tile.appendChild(face);
-
-    var body = el("div", "codex-card__body");
-    body.appendChild(el("p", "codex-card__essence", card.essence));
-    if (held) {
-      var found = copy.lineage.found;
-      body.appendChild(el("p", "codex-card__stamp",
-        card.edition.name + " · found on Pattern Day " + (found.patternDay != null ? found.patternDay : "—") +
-        " · " + copy.instanceId));
-      body.appendChild(el("p", "codex-card__stamp codex-card__affordance",
-        "Tap the card to hear it and turn it · hold it for its lineage"));
+      var front = frontFace(card, copy, tint);
+      var back = backFace(card);
+      inner.append(front, back);
       var flip = el("button", "codex-card__flip", "See the game face");
       flip.type = "button";
       var doFlip = function () {
@@ -218,22 +313,28 @@
         panel.hidden = !panel.hidden;
         linBtn.textContent = panel.hidden ? "See its lineage" : "Hide its lineage";
       });
-      face.addEventListener("click", function () { soundCard(card); doFlip(); });
-      face.style.cursor = "pointer";
-      tile.append(body, gameFace(card), flip, linBtn, panel);
+      front.addEventListener("click", function () { soundCard(card); doFlip(); });
+      back.addEventListener("click", function () { soundCard(card); doFlip(); });
+      front.style.cursor = "pointer";
+      back.style.cursor = "pointer";
+      var controls = el("div", "codex-card__controls");
+      controls.append(flip, linBtn);
+      tile.append(controls,
+        el("p", "codex-card__stamp codex-card__affordance",
+          "Tap the card to hear it and turn it · hold it for its lineage"),
+        panel);
       wireHold(tile, panel);
       renderedTiles.push({ card: card, tile: tile });
     } else if (copy && copy.state === "traded-away") {
-      body.appendChild(el("p", "codex-card__stamp", "This copy moved on — its line is kept below, with the tombstones."));
-      tile.appendChild(body);
+      inner.appendChild(silhouetteFace(card,
+        "This copy moved on — its line is kept below, with the tombstones."));
     } else {
       var hint = card.set === "moons"
         ? "Of Moon " + card.moonAffinity[0] + " — witness a day in this Moon, on the Moons page."
         : card.set === "words"
           ? "Hear the word sounded on its own study page."
-          : "The kind of your own Spark, met at adoption. Other kinds are met through play and greetings — those roads are still being built.";
-      body.appendChild(el("p", "codex-card__stamp", hint));
-      tile.appendChild(body);
+          : "The kinds are met on their own roads — adoption, play, and greetings; those roads are still being built.";
+      inner.appendChild(silhouetteFace(card, hint));
     }
     return tile;
   }
@@ -245,22 +346,66 @@
     var fc = Cards.firstCardFor({ seed: pinned }, companion && companionRecord && companionRecord.seed === pinned ? companion.name : null);
     if (!fc) return null;
     var tile = el("article", "codex-card codex-card--first");
-    var face = el("div", "codex-card__face");
-    face.style.background = "linear-gradient(160deg,#141021,hsl(" + Math.round((fc.hueRange[0] + fc.hueRange[1]) / 2) + " 60% 42%))";
-    face.append(el("div", "codex-card__name", "The First Card"),
-      el("div", "codex-card__sub", (fc.sparkName ? fc.sparkName + " · " : "") + fc.kindName + " Spark"));
-    var body = el("div", "codex-card__body");
-    body.appendChild(el("p", "codex-card__essence",
+    var kindCard = Cards.cardById("kind-" + fc.kind);
+    var stage = el("div", "tcard");
+    var inner = el("div", "tcard__inner");
+    stage.appendChild(inner);
+    tile.appendChild(stage);
+
+    var front = el("div", "tcard__side tcard__front codex-card__face");
+    front.appendChild(bannerEl("The First Card", "✦ Never tradable", "Never tradable, never sold, never reissued", "tcard__chip--seal"));
+    var art = el("div", "tcard__art");
+    art.innerHTML = Cards.firstCardArtSVG(fc);
+    front.appendChild(art);
+    front.appendChild(typeEl(
+      (fc.sparkName ? fc.sparkName + " · " : "") + fc.kindName + " Spark · The Meeting", "1 of 1"));
+    var text = el("div", "tcard__text");
+    text.appendChild(el("p", "tcard__essence codex-card__essence",
       "The card of the meeting itself — met in " + fc.moonName + ", Pattern Day " + fc.patternDay + "."));
-    body.appendChild(el("p", "codex-card__stamp",
-      "A keepsake of the meeting. Never sold, never traded, never reissued · " + fc.instanceId));
-    body.appendChild(el("p", "codex-card__stamp codex-card__affordance", "Tap the card to hear its kind sound"));
-    var kindCard = Cards.cardById("kind-" + fc.kindId);
+    front.appendChild(text);
+    var stats = el("div", "tcard__stats");
+    stats.append(el("span", null, "Hum · " + (kindCard ? humShort(kindCard) : "—")),
+      el("span", null, "Heart · wild harmony"));
+    front.appendChild(stats);
+    front.appendChild(stampsEl(Cards.FIRST_CARD.edition.name,
+      "Met · " + fc.moonName + " · PD " + fc.patternDay));
+    inner.appendChild(front);
+
+    var back = el("div", "tcard__side tcard__back");
+    back.appendChild(bannerEl("The First Card", "Game face", null, "tcard__chip--game"));
+    var game = el("div", "codex-card__game");
+    var dl = document.createElement("dl");
+    [["Kind", fc.kindName],
+     ["Moon of the meeting", "Moon " + fc.moon + " · " + fc.moonName],
+     ["Hum", kindCard ? humText(kindCard) : "—"],
+     ["At the table", "the heart — a wild harmony in its Spark's kind, once per match"],
+     ["Tradable", "Never — struck at the meeting, kept for good"]].forEach(function (row) {
+      dl.append(el("dt", null, row[0]), el("dd", null, row[1]));
+    });
+    game.appendChild(dl);
+    back.appendChild(game);
+    back.appendChild(stampsEl("The Meeting", "1 of 1"));
+    inner.appendChild(back);
+
+    var flip = el("button", "codex-card__flip", "See the game face");
+    flip.type = "button";
+    var doFlip = function () {
+      tile.classList.toggle("is-game");
+      flip.textContent = tile.classList.contains("is-game") ? "See the collection face" : "See the game face";
+    };
+    flip.addEventListener("click", doFlip);
     if (kindCard) {
-      face.style.cursor = "pointer";
-      face.addEventListener("click", function () { soundCard(kindCard); });
+      front.style.cursor = "pointer";
+      back.style.cursor = "pointer";
+      front.addEventListener("click", function () { soundCard(kindCard); doFlip(); });
+      back.addEventListener("click", function () { soundCard(kindCard); doFlip(); });
     }
-    tile.append(face, body);
+    var controls = el("div", "codex-card__controls");
+    controls.appendChild(flip);
+    tile.append(controls,
+      el("p", "codex-card__stamp",
+        "A keepsake of the meeting. Never sold, never traded, never reissued · " + fc.instanceId),
+      el("p", "codex-card__stamp codex-card__affordance", "Tap the card to hear its kind sound and turn it"));
     renderedTiles.push({ card: kindCard, tile: tile, first: true });
     return tile;
   }
