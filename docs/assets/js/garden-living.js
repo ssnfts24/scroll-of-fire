@@ -1,46 +1,17 @@
 /*
  * The Pattern Garden — the Living Look layer (garden.html).
- *
- * The garden's own record, beds, and rules all live in
- * pattern-garden.js and the Life Atlas; this layer never writes that
- * record, never computes a date of its own, and rebuilds nothing.
- * What this layer DOES keep is its own small tending record — the
- * Episodes resume-record precedent: a layer-local record, separate
- * from the house records, holding only this layer's own acts.
- *
- *  sof.pattern-garden.tending.v1 — per-bed tending marks:
- *    { beds: { "moon-8": [ { kind, patternDay, moon, day }, … ] } }
- *  kinds: "tended" | "watered" | "witnessed". Each mark carries the
- *  Pattern Day it happened, read from the canonical PatternCalendar
- *  only. One mark per kind per bed per Pattern Day — a second tap the
- *  same day answers "kept", it never stacks a duplicate. "witnessed"
- *  is never minted by this layer's own buttons: it is read off the
- *  garden's own Witness act standing done on the bed's face, so the
- *  mark is the house act's shadow, dated the day it stands.
- *
- * The Living Look's four tests, at the deeper level:
- *  1. Responds — tending answers at touch speed: the bed's face
- *     changes the moment a mark is made.
- *  2. Remembers — the tending record is spoken back on return, in
- *     welcome language, read from the record, never invented:
- *     "You tended this bed on Pattern Day N." No absence framing,
- *     anywhere: a returning keeper is met with "I kept your place,"
- *     never a list of misses.
- *  3. One clear action — the Spark's station points at the one
- *     tending action, which now does real work: it tends today's bed
- *     (a mark is kept) and takes the keeper straight to it.
- *  4. The real day — the breathing intro and the stage carry today's
- *     coordinate from the canonical PatternCalendar, today's bed is
- *     marked in gold with the Spark standing in it, and every mark is
- *     stamped with the real Pattern Day it happened on.
- *
- * The county picker and the guide picker are woven into the stage —
- * the same elements, moved, never rebuilt, so every listener the
- * garden's own engine hung on them stands.
- *
- * A bed with nothing in it says so plainly and waits. Motion only
- * answers; under prefers-reduced-motion the intro is never injected
- * and every decoration stands still.
+ * The garden's record, beds and rules live in pattern-garden.js and
+ * the Life Atlas; this layer never writes them and computes no date
+ * of its own. It keeps only its own tending record (the Episodes
+ * resume-record precedent): sof.pattern-garden.tending.v1, per-bed
+ * marks { kind, patternDay, moon, day } — tended | watered |
+ * witnessed, Pattern-Day stamped from PatternCalendar only, one per
+ * kind per bed per day; "witnessed" is read off the house Witness
+ * act standing done, never minted here. Tending answers at touch
+ * speed and changes the bed's face; on return the record is spoken
+ * back in welcome language, never invented, no absence framing
+ * anywhere. The county and guide pickers are woven into the stage
+ * by moving the same elements, never rebuilding them.
  */
 (() => {
   "use strict";
@@ -56,7 +27,7 @@
   const KIND_LABEL = { tended: "Tended", watered: "Watered", witnessed: "Witnessed" };
   const KIND_VERB = { tended: "tended", watered: "watered", witnessed: "witnessed" };
 
-  /* ---------------- today, from the canonical calendar only -------- */
+  /* today, from the canonical calendar only */
 
   function todayCoord() {
     try {
@@ -90,7 +61,7 @@
     return coord.patternDay != null ? `Pattern Day ${coord.patternDay}` : coord.outside;
   }
 
-  /* ---------------- the layer's own tending record ----------------- */
+  /* the layer's own tending record */
 
   function readTending() {
     try {
@@ -108,8 +79,7 @@
     try { localStorage.setItem(TENDING_KEY, JSON.stringify(record)); } catch { /* the act still answers on the face */ }
   }
 
-  /* One mark per kind per bed per day. Returns true when a new mark
-   * was kept, false when that mark already stands for today. */
+  /* True when a new mark was kept. */
   function addMark(bedId, kind, coord) {
     if (!bedId || !KIND_LABEL[kind] || !coord) return false;
     const record = readTending();
@@ -143,10 +113,7 @@
     return mark.outside || "today";
   }
 
-  /* ---------------- the breathing intro ------------------------------ */
-  /* Solid ground of its own, slowed to breathe, one tap dismisses it.
-   * Injected from here, never hard-coded: no JS or reduced motion
-   * means the garden simply stands open. Once per session. */
+  /* the breathing intro */
 
   function showIntro() {
     if (reducedMotion) return;
@@ -189,7 +156,7 @@
     window.setTimeout(dismiss, 4600);
   }
 
-  /* ---------------- the kept place, spoken back ---------------------- */
+  /* the kept place, spoken back */
 
   function latestMark() {
     const record = readTending();
@@ -244,7 +211,7 @@
     }
   }
 
-  /* ---------------- tending: the beds answer ------------------------- */
+  /* tending: the beds answer */
 
   function renderTending(card, coord) {
     const bedId = card.dataset.bedId;
@@ -307,15 +274,14 @@
     card.classList.toggle("gl-bed-tended-today", tendedToday);
   }
 
-  /* ---------------- the beds: today's face, plainly resting beds ----- */
+  /* the beds: today's face */
 
   function decorateBeds() {
     const host = document.getElementById("garden-beds");
     if (!host) return;
     const coord = todayCoord();
     for (const card of host.querySelectorAll(".garden-bed")) {
-      /* The garden's own Witness act, standing done on the bed's face,
-       * casts this layer's witnessed mark — dated today, deduped. */
+      /* The house Witness act standing done casts the witnessed mark. */
       const witnessDone = [...card.querySelectorAll("button")]
         .some(b => /^Witnessed today/.test(b.textContent.trim()));
       if (witnessDone && card.dataset.bedId) addMark(card.dataset.bedId, "witnessed", coord);
@@ -345,7 +311,7 @@
       }
       renderTending(card, coord);
     }
-    /* The tending action learns today's bed's name once it stands. */
+    /* The action learns today's bed's name once it stands. */
     const tend = document.getElementById("garden-tend-btn");
     const open = host.querySelector(".garden-bed-open h3");
     if (tend && open) {
@@ -366,9 +332,7 @@
     observer.observe(host, { childList: true, subtree: true });
   }
 
-  /* ---------------- the pickers, woven into the stage ---------------- */
-  /* The same elements the page already carries, moved into the stage —
-   * never rebuilt, so the garden engine's listeners stand untouched. */
+  /* the pickers, woven into the stage */
 
   function weavePickers() {
     const stage = document.querySelector(".garden-stage");
@@ -389,7 +353,7 @@
     stage.appendChild(tools);
   }
 
-  /* ---------------- the one tending action --------------------------- */
+  /* the one tending action */
 
   function wireTend() {
     const btn = document.getElementById("garden-tend-btn");
@@ -398,8 +362,7 @@
       const open = document.querySelector(".garden-bed-open");
       const target = open || document.getElementById("garden-beds");
       if (!target) return;
-      /* The one action does real work now: it tends today's bed, and
-       * the mark is kept in this layer's own record. */
+      /* The one action does real work: it tends today's bed. */
       if (open && open.dataset.bedId) {
         const coord = todayCoord();
         addMark(open.dataset.bedId, "tended", coord);
