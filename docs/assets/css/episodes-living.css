@@ -1,0 +1,230 @@
+/*
+ * The Episode Library — the Living Look layer (episodes.html).
+ *
+ * One token sheet, consumed not re-declared: every colour, radius and
+ * shadow below comes from codex.css (--bg, --gold, --text, --radius-*,
+ * --shadow-*). The room's light is the Moon's tint: --moon-accent
+ * arrives from living-moon-theme.css, stamped from the canonical
+ * calendar by living-moon-theme.js.
+ *
+ * Motion only answers. The still design is the design: animations are
+ * added only under prefers-reduced-motion: no-preference, and the
+ * breathing intro is never injected at all for reduced motion.
+ */
+
+/* ---------------- the stage: the shelf as a place ------------------ */
+
+.episodes-stage {
+  margin-top: 1.1rem;
+  padding: clamp(1rem, 3vw, 1.6rem);
+  border: 1px solid var(--line-gold);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(circle at 15% 0%, color-mix(in srgb, var(--moon-accent, var(--gold)) 14%, transparent), transparent 55%),
+    radial-gradient(circle at 90% 100%, color-mix(in srgb, var(--moon-accent, var(--gold)) 7%, transparent), transparent 50%),
+    var(--panel);
+  box-shadow: var(--shadow-soft);
+}
+
+.episodes-stage-name {
+  margin: 0.2rem 0 0;
+  font-family: var(--display, Cinzel, serif);
+  font-size: clamp(1.9rem, 5.5vw, 3rem);
+  line-height: 1.05;
+  color: var(--text);
+}
+
+.episodes-stage-line {
+  margin: 0.55rem 0 0;
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.episodes-stage-essence { margin: 0.45rem 0 0; color: var(--muted); }
+
+.episodes-welcome { margin: 0.85rem 0 0; color: var(--muted); }
+.episodes-welcome:empty { display: none; }
+
+.episodes-resume-line { margin: 0.85rem 0 0; color: var(--muted); }
+.episodes-resume-line:empty { display: none; }
+.episodes-resume-line strong { color: var(--gold); }
+
+/* The Spark's station: present with a job — it points at the one
+ * action, taking up the road. No bubble around the Spark; it lights
+ * up, with little sparks forming around it. The orb below is its
+ * station marker on this page; the keeper's own Spark roams as
+ * always. A touch on the action lights the station at once. */
+.episodes-spark-station {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9rem 1.1rem;
+  margin-top: 1rem;
+}
+
+.el-spark-orb {
+  position: relative;
+  flex: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 38% 34%, var(--text), var(--gold) 42%, var(--gold-deep) 78%, transparent 79%);
+  box-shadow: 0 0 22px color-mix(in srgb, var(--gold) 55%, transparent);
+  transition: box-shadow 0.25s ease-in-out;
+}
+
+.el-spark-orb::before,
+.el-spark-orb::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+.el-spark-orb::before { width: 5px; height: 5px; top: -6px; right: 6px; }
+.el-spark-orb::after { width: 4px; height: 4px; bottom: -4px; left: 8px; background: var(--cyan); }
+
+.el-spark-orb.is-lit {
+  box-shadow: 0 0 44px color-mix(in srgb, var(--gold) 85%, transparent);
+}
+
+.episodes-spark-line { flex: 1 1 16rem; margin: 0; }
+
+.episodes-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0.75rem 1.4rem;
+  border-radius: 999px;
+  border: 1px solid var(--gold);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--gold) 26%, transparent), color-mix(in srgb, var(--gold-deep) 12%, transparent));
+  color: var(--text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.episodes-action-btn:hover { border-color: var(--text); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .el-spark-orb { animation: el-orb-breathe 4.6s ease-in-out infinite alternate; }
+}
+
+@keyframes el-orb-breathe {
+  from { box-shadow: 0 0 14px color-mix(in srgb, var(--gold) 40%, transparent); }
+  to   { box-shadow: 0 0 30px color-mix(in srgb, var(--gold) 70%, transparent); }
+}
+
+/* ---------------- each film a door --------------------------------- */
+/* The shelf's cards already carry each film's name, land, Moon and
+ * token on their faces (episode-library.js renders them from the
+ * story spine). This layer gives the card the door's shape: the
+ * shared depth, a lintel lit with the Moon's tint, and the name in
+ * the carved voice. Nothing about the films themselves changes. */
+
+#episode-shelf .episode-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line-gold);
+  border-radius: var(--radius-md);
+  background: var(--panel-soft);
+  box-shadow: var(--shadow-soft);
+  padding-top: 1.35rem;
+}
+
+#episode-shelf .episode-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--moon-accent, var(--gold)) 65%, var(--gold)), transparent);
+}
+
+#episode-shelf .episode-card-title {
+  font-family: var(--display, Cinzel, serif);
+  letter-spacing: 0.01em;
+}
+
+@media (prefers-reduced-motion: no-preference) and (hover: hover) {
+  #episode-shelf .episode-card { transition: transform 0.25s ease-in-out, border-color 0.25s ease-in-out; }
+  #episode-shelf .episode-card:hover { transform: translateY(-2px); border-color: var(--gold); }
+}
+
+/* The door remembers: a film left part-way through carries its
+ * place on its face, in the house's kept-place voice. */
+.episode-resume-tag {
+  border-left: 3px solid var(--gold);
+  padding: 0.45rem 0.7rem;
+  background: color-mix(in srgb, var(--gold) 7%, transparent);
+  font-size: 0.94rem;
+  margin: 0.5rem 0 0.2rem;
+}
+
+/* ---------------- the breathing intro ------------------------------ */
+/* Its own solid ground, nothing showing through, slowed to breathe.
+ * Injected by episodes-living.js; never present for reduced motion. */
+
+body.el-intro-lock { overflow: hidden; }
+
+.el-intro {
+  position: fixed;
+  inset: 0;
+  /* Above the roaming Spark (10040/10060) for its brief life, so a tap
+   * anywhere dismisses it; once it is gone the Spark is reachable. */
+  z-index: 10080;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background:
+    radial-gradient(circle at 50% 36%, color-mix(in srgb, var(--moon-accent, var(--gold)) 10%, transparent), transparent 55%),
+    linear-gradient(170deg, var(--bg-soft), var(--bg) 72%);
+  cursor: pointer;
+  transition: opacity 0.7s ease-in-out;
+}
+
+.el-intro-leaving { opacity: 0; pointer-events: none; }
+
+.el-intro-inner {
+  display: grid;
+  justify-items: center;
+  gap: 0.9rem;
+  text-align: center;
+  max-width: 34rem;
+}
+
+.el-intro-mark { font-size: 3rem; line-height: 1; color: var(--gold); }
+
+.el-intro-name {
+  margin: 0;
+  font-family: var(--display, Cinzel, serif);
+  font-size: clamp(1.9rem, 6vw, 3rem);
+  letter-spacing: 0.04em;
+  color: var(--text);
+}
+
+.el-intro-line { margin: 0; color: var(--gold); font-weight: 600; }
+
+.el-intro-hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .el-intro-inner { animation: el-intro-breathe 4.6s ease-in-out infinite alternate; }
+}
+
+@keyframes el-intro-breathe {
+  from { opacity: 0.86; transform: scale(0.995); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .el-spark-orb, .el-intro-inner { animation: none; }
+}
