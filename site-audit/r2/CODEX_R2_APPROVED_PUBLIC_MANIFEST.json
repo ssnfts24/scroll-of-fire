@@ -6130,6 +6130,18 @@
       "status": "operational"
     },
     {
+      "path": "docs/scroll/assets/living-look-library.css",
+      "sha256": "4b16eb484091f97a77c0080dbf23acad0e0ac4a0c0bf3de284f1abfdc6349162",
+      "publicUrl": "https://codexofreality.org/scroll/assets/living-look-library.css",
+      "status": "operational"
+    },
+    {
+      "path": "docs/scroll/assets/living-look-library.js",
+      "sha256": "501ce8b238ec31ae38fa226eb71cbe71dde3b0ef3ea16d5fb7583852cdd1c2ee",
+      "publicUrl": "https://codexofreality.org/scroll/assets/living-look-library.js",
+      "status": "operational"
+    },
+    {
       "path": "docs/scroll/assets/reader.js",
       "sha256": "df07040a67f41f77c9df650d63b266b280549c3f0ddf01e6a9cd2a6d7d0d1279",
       "publicUrl": "https://codexofreality.org/scroll/assets/reader.js",
@@ -6251,7 +6263,7 @@
     },
     {
       "path": "docs/scroll/index.html",
-      "sha256": "4daea830652b9aed2d297f965c39c59e24e49a930045395448db4acb1e334304",
+      "sha256": "93c66204400204581982f3eeafc5b3778fcf786b30511ff1789b69ceef2e8bae",
       "publicUrl": "https://codexofreality.org/scroll/",
       "status": "operational"
     },
