@@ -3,12 +3,12 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 514,
-    "publicHtmlPages": 211,
-    "catalogEntries": 78,
+    "resources": 515,
+    "publicHtmlPages": 212,
+    "catalogEntries": 79,
     "issueCounts": {
-      "no-global-navigation": 79,
-      "not-linked-directly-from-homepage": 29,
+      "no-global-navigation": 80,
+      "not-linked-directly-from-homepage": 30,
       "deployed-but-unlinked": 64,
       "unreachable-from-homepage": 5,
       "compatibility-redirect-page": 8,
@@ -464,6 +464,7 @@
         "methods.html",
         "micro.html",
         "moons.html",
+        "one-word.html",
         "practices.html",
         "provenance.html",
         "read-your-own-day.html",
@@ -648,7 +649,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 190,
+        "inboundPages": 191,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
@@ -695,7 +696,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 30,
+        "inboundPages": 31,
         "pagesWithNavLinkToIt": 2
       },
       "issues": [
@@ -721,7 +722,7 @@
     },
     {
       "id": "docs-assets:assets/css",
-      "title": "docs/assets/css (93 files)",
+      "title": "docs/assets/css (96 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -738,7 +739,7 @@
     },
     {
       "id": "docs-assets:assets/data",
-      "title": "docs/assets/data (13 files)",
+      "title": "docs/assets/data (14 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -806,7 +807,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (250 files)",
+      "title": "docs/assets/js (253 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -959,7 +960,7 @@
     },
     {
       "id": "docs-assets:scroll/assets",
-      "title": "docs/scroll/assets (11 files)",
+      "title": "docs/scroll/assets (13 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -2128,7 +2129,6 @@
         "companions.html",
         "covenant-caravan.html",
         "downloads.html",
-        "episodes.html",
         "ethics.html",
         "garden.html",
         "genesis-oracle.html",
@@ -2141,9 +2141,9 @@
         "ledger.html",
         "living-time-sphere.html",
         "moons.html",
+        "one-word.html",
         "read-your-own-day.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -2172,7 +2172,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 0,
         "hopsFromHomeWithoutAtlas": 0,
-        "inboundPages": 193,
+        "inboundPages": 194,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -11056,7 +11056,7 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
         "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 1,
+        "inboundPages": 2,
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
@@ -11108,8 +11108,8 @@
         "inSitemap": true,
         "inGlobalNav": false,
         "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
+        "hopsFromHome": 3,
+        "hopsFromHomeWithoutAtlas": 3,
         "inboundPages": 7,
         "pagesWithNavLinkToIt": 0
       },
@@ -11162,8 +11162,8 @@
         "inSitemap": true,
         "inGlobalNav": false,
         "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
+        "hopsFromHome": 3,
+        "hopsFromHomeWithoutAtlas": 3,
         "inboundPages": 4,
         "pagesWithNavLinkToIt": 0
       },
@@ -11215,8 +11215,8 @@
         "inSitemap": true,
         "inGlobalNav": false,
         "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
+        "hopsFromHome": 3,
+        "hopsFromHomeWithoutAtlas": 3,
         "inboundPages": 3,
         "pagesWithNavLinkToIt": 0
       },
@@ -11270,8 +11270,8 @@
         "inSitemap": true,
         "inGlobalNav": false,
         "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
+        "hopsFromHome": 3,
+        "hopsFromHomeWithoutAtlas": 3,
         "inboundPages": 5,
         "pagesWithNavLinkToIt": 0
       },
@@ -11324,8 +11324,8 @@
         "inSitemap": true,
         "inGlobalNav": false,
         "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
+        "hopsFromHome": 3,
+        "hopsFromHomeWithoutAtlas": 3,
         "inboundPages": 5,
         "pagesWithNavLinkToIt": 0
       },
@@ -11378,8 +11378,8 @@
         "inSitemap": true,
         "inGlobalNav": false,
         "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
+        "hopsFromHome": 3,
+        "hopsFromHomeWithoutAtlas": 3,
         "inboundPages": 6,
         "pagesWithNavLinkToIt": 0
       },
@@ -11432,8 +11432,8 @@
         "inSitemap": true,
         "inGlobalNav": false,
         "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
+        "hopsFromHome": 3,
+        "hopsFromHomeWithoutAtlas": 3,
         "inboundPages": 5,
         "pagesWithNavLinkToIt": 0
       },
@@ -11485,8 +11485,8 @@
         "inSitemap": true,
         "inGlobalNav": false,
         "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
+        "hopsFromHome": 3,
+        "hopsFromHomeWithoutAtlas": 3,
         "inboundPages": 8,
         "pagesWithNavLinkToIt": 0
       },
@@ -11845,7 +11845,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 43,
+        "inboundPages": 44,
         "pagesWithNavLinkToIt": 2
       },
       "issues": [
@@ -12935,7 +12935,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 191,
+        "inboundPages": 192,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
@@ -12990,7 +12990,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 192,
+        "inboundPages": 193,
         "pagesWithNavLinkToIt": 3
       },
       "issues": [
@@ -13037,14 +13037,15 @@
         "path": "episodes.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 4,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 3,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
-        "no-global-navigation"
+        "no-global-navigation",
+        "not-linked-directly-from-homepage"
       ]
     },
     {
@@ -13128,7 +13129,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 37,
+        "inboundPages": 38,
         "pagesWithNavLinkToIt": 2
       },
       "issues": [
@@ -13186,7 +13187,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 39,
+        "inboundPages": 40,
         "pagesWithNavLinkToIt": 2
       },
       "issues": [
@@ -13273,7 +13274,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 33,
+        "inboundPages": 34,
         "pagesWithNavLinkToIt": 2
       },
       "issues": [
@@ -13350,6 +13351,7 @@
         "ledger.html",
         "living-time-sphere.html",
         "moons.html",
+        "one-word.html",
         "scroll/lexicon.html",
         "shop.html",
         "start.html",
@@ -13386,7 +13388,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 11,
+        "inboundPages": 12,
         "pagesWithNavLinkToIt": 2
       },
       "issues": [
@@ -13539,10 +13541,10 @@
         "path": "scripture/word-studies/index.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 107,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 106,
         "pagesWithNavLinkToIt": 102
       },
       "issues": []
@@ -13597,7 +13599,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 42,
+        "inboundPages": 43,
         "pagesWithNavLinkToIt": 2
       },
       "issues": [
@@ -13755,7 +13757,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 60,
+        "inboundPages": 61,
         "pagesWithNavLinkToIt": 2
       },
       "issues": [
@@ -13803,7 +13805,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 192,
+        "inboundPages": 193,
         "pagesWithNavLinkToIt": 1
       },
       "issues": []
@@ -13848,7 +13850,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 29,
+        "inboundPages": 30,
         "pagesWithNavLinkToIt": 2
       },
       "issues": [
@@ -14050,8 +14052,60 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 193,
+        "inboundPages": 194,
         "pagesWithNavLinkToIt": 105
+      },
+      "issues": [
+        "no-global-navigation"
+      ]
+    },
+    {
+      "id": "one-word-a-day",
+      "title": "One Word a Day — a Hebrew word for your Pattern Day · Scroll of Fire",
+      "description": "One Word a Day: one Hebrew word in the full treatment — spelling, root, sound, and a real example — chosen by your Pattern Day and led by the Spark in about two minutes. Remembered on your device only.",
+      "category": "Reference",
+      "area": "scroll-scripture",
+      "relatedProjects": [
+        "glossary",
+        "scroll-lexicon"
+      ],
+      "sourcePath": "docs/one-word.html",
+      "publicUrl": "https://codexofreality.org/one-word.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "companions.html",
+        "covenant-caravan.html",
+        "downloads.html",
+        "ethics.html",
+        "genesis-oracle.html",
+        "glossary.html",
+        "hub.html",
+        "index.html",
+        "ledger.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "scripture/lemma.html",
+        "scroll/lexicon.html",
+        "shop.html",
+        "start.html",
+        "systems/frequencies.html",
+        "teach.html",
+        "theory.html",
+        "witness-world.html",
+        "witness.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/one-word.html",
+      "privacyEligibility": "approved-public",
+      "discoverability": {
+        "path": "one-word.html",
+        "inSitemap": true,
+        "inGlobalNav": false,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 3,
+        "pagesWithNavLinkToIt": 0
       },
       "issues": [
         "no-global-navigation"
@@ -14582,7 +14636,7 @@
     },
     {
       "id": "repo-folder:scripts",
-      "title": "scripts/ (39 files)",
+      "title": "scripts/ (40 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -14650,7 +14704,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (262 files)",
+      "title": "tests/ (268 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -18936,7 +18990,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 112,
+        "inboundPages": 113,
         "pagesWithNavLinkToIt": 105
       },
       "issues": []
@@ -19173,7 +19227,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 191,
+        "inboundPages": 192,
         "pagesWithNavLinkToIt": 2
       },
       "issues": [
@@ -19749,7 +19803,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 74,
+        "inboundPages": 75,
         "pagesWithNavLinkToIt": 3
       },
       "issues": [
@@ -20254,7 +20308,7 @@
         "linkedFromHomepage": true,
         "hopsFromHome": 1,
         "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 192,
+        "inboundPages": 193,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [

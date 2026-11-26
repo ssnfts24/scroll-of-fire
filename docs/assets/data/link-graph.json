@@ -630,7 +630,7 @@
      "area": "archive"
     }
    ],
-   "outTotal": 69,
+   "outTotal": 70,
    "inTotal": 7
   },
   "codex-guide.html": {
@@ -944,18 +944,13 @@
      "area": "archive"
     },
     {
-     "path": "index.html",
-     "title": "Codex of Reality",
-     "area": "codex"
-    },
-    {
      "path": "map.html",
      "title": "The Traveller's Map",
      "area": "systems"
     }
    ],
    "outTotal": 0,
-   "inTotal": 4
+   "inTotal": 3
   },
   "equinox-passage.html": {
    "title": "Equinox Passage — The 13 Moons Remnant Living Time Observatory",
@@ -1262,6 +1257,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "one-word.html",
+     "title": "One Word a Day — a Hebrew word for your Pattern Day",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "theory.html",
      "title": "Theory Hub",
      "area": "evidence"
@@ -1320,11 +1320,6 @@
      "path": "shop.html",
      "title": "Artifact Registry & Shop",
      "area": "artifacts"
-    },
-    {
-     "path": "systems/frequencies.html",
-     "title": "Frequency Governance",
-     "area": "systems"
     }
    ],
    "in": [
@@ -1344,6 +1339,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "one-word.html",
+     "title": "One Word a Day — a Hebrew word for your Pattern Day",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "scroll/index.html",
      "title": "Scroll of Fire — Unsealed Library",
      "area": "scroll-scripture"
@@ -1359,8 +1359,8 @@
      "area": "systems"
     }
    ],
-   "outTotal": 33,
-   "inTotal": 6
+   "outTotal": 34,
+   "inTotal": 7
   },
   "glyphs.html": {
    "title": "Voice-Glyph Synth",
@@ -1572,6 +1572,11 @@
    "area": "codex",
    "out": [
     {
+     "path": "hub.html",
+     "title": "Systems Hub",
+     "area": "systems"
+    },
+    {
      "path": "living-time-sphere.html",
      "title": "Living Time Sphere — The 13 Moons Remnant Living Time Observatory",
      "area": "living-time"
@@ -1612,11 +1617,6 @@
      "area": "evidence"
     },
     {
-     "path": "hub.html",
-     "title": "Systems Hub",
-     "area": "systems"
-    },
-    {
      "path": "teach.html",
      "title": "Manifest — Remnant Visual Exercise",
      "area": "systems"
@@ -1632,13 +1632,13 @@
      "area": "systems"
     },
     {
-     "path": "episodes.html",
-     "title": "The Episode Library",
-     "area": "living-time"
+     "path": "one-word.html",
+     "title": "One Word a Day — a Hebrew word for your Pattern Day",
+     "area": "scroll-scripture"
     },
     {
-     "path": "scripture/word-studies/index.html",
-     "title": "Hebrew Word Studies — Scripture",
+     "path": "scripture/index.html",
+     "title": "Genesis & Exodus Scripture",
      "area": "scroll-scripture"
     }
    ],
@@ -1679,7 +1679,7 @@
      "area": "codex"
     }
    ],
-   "outTotal": 29,
+   "outTotal": 28,
    "inTotal": 7
   },
   "install.html": {
@@ -2280,6 +2280,46 @@
    "in": [],
    "outTotal": 1,
    "inTotal": 0
+  },
+  "one-word.html": {
+   "title": "One Word a Day — a Hebrew word for your Pattern Day",
+   "area": "scroll-scripture",
+   "out": [
+    {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scroll/lexicon.html",
+     "title": "Hebrew lexicon",
+     "area": "scroll-scripture"
+    },
+    {
+     "path": "scripture/lemma.html",
+     "title": "Lemma study — Scripture",
+     "area": "scroll-scripture"
+    }
+   ],
+   "in": [
+    {
+     "path": "codex-atlas.html",
+     "title": "Codex Atlas",
+     "area": "archive"
+    },
+    {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    },
+    {
+     "path": "glossary.html",
+     "title": "Glossary of the Codex — Symbols, Equations & Living Technology",
+     "area": "scroll-scripture"
+    }
+   ],
+   "outTotal": 3,
+   "inTotal": 3
   },
   "practices.html": {
    "title": "Practices — the Exercises Wing · Remnant Lab",
@@ -16209,10 +16249,15 @@
      "path": "scripture/index.html",
      "title": "Genesis & Exodus Scripture",
      "area": "scroll-scripture"
+    },
+    {
+     "path": "one-word.html",
+     "title": "One Word a Day — a Hebrew word for your Pattern Day",
+     "area": "scroll-scripture"
     }
    ],
    "outTotal": 10,
-   "inTotal": 1
+   "inTotal": 2
   },
   "scripture/word-studies/adam.html": {
    "title": "Adam — אָדָם — Hebrew Word Studies",
@@ -16546,11 +16591,6 @@
      "area": "archive"
     },
     {
-     "path": "index.html",
-     "title": "Codex of Reality",
-     "area": "codex"
-    },
-    {
      "path": "scripture/word-studies/davar.html",
      "title": "Davar — דָּבָר — Hebrew Word Studies",
      "area": "scroll-scripture"
@@ -16599,10 +16639,15 @@
      "path": "spark-echo.html",
      "title": "Spark Echo — the Memory Game",
      "area": "living-time"
+    },
+    {
+     "path": "genesis-5-timeline.html",
+     "title": "Walking the Long Line — Genesis 5",
+     "area": "scroll-scripture"
     }
    ],
    "outTotal": 10,
-   "inTotal": 15
+   "inTotal": 14
   },
   "scripture/word-studies/nephesh.html": {
    "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
@@ -17248,6 +17293,11 @@
      "area": "scroll-scripture"
     },
     {
+     "path": "one-word.html",
+     "title": "One Word a Day — a Hebrew word for your Pattern Day",
+     "area": "scroll-scripture"
+    },
+    {
      "path": "scroll/atlas.html",
      "title": "Reference atlas",
      "area": "scroll-scripture"
@@ -17259,7 +17309,7 @@
     }
    ],
    "outTotal": 1,
-   "inTotal": 6
+   "inTotal": 7
   },
   "scroll/reader.html": {
    "title": "Reading the Scroll — Unsealed Library",

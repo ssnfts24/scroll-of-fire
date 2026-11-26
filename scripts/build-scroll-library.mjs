@@ -234,6 +234,7 @@ const homepage = `<!doctype html>
   <link rel="apple-touch-icon" href="../assets/img/shared/branding/favicon.png">
   <link rel="manifest" href="../manifest.webmanifest">
   <link rel="stylesheet" href="assets/library.css">
+  <link rel="stylesheet" href="../assets/css/codex.css">
   <link rel="stylesheet" href="../assets/css/living-ui.css?v=20261117-1">
   <script defer src="../assets/js/site.js"></script>
   <script defer src="assets/library.js"></script>
@@ -262,6 +263,10 @@ const homepage = `<!doctype html>
   <link rel="stylesheet" href="../assets/css/paths.css?v=20261122-1">
   <script defer src="../assets/js/paths-from-here.js?v=20261122-1"></script>
   <link rel="stylesheet" href="../assets/css/site-mobile.css?v=20261124-1">
+  <!-- Living Look (preview): the Moon's tint sheet and the Library
+       room's own layer, worn over the one token sheet (codex.css). -->
+  <link rel="stylesheet" href="../assets/css/living-moon-theme.css?v=20261119-1">
+  <link rel="stylesheet" href="assets/living-look-library.css">
 </head>
 <body class="library-home living-ui">
   <a class="skip-link" href="#main">Skip to library</a>
@@ -276,9 +281,17 @@ const homepage = `<!doctype html>
     <section class="library-hero">
       <div class="hero-copy">
         <p class="eyebrow"><span aria-hidden="true">✦</span> Preserved manuscript · Edition ${escapeHtml(edition.editionVersion)}</p>
+        <p class="ll-day-line" role="note"><span data-ll-day-text>Today in the Library</span></p>
         <h1>A scroll kept<br><em>whole.</em></h1>
         <p class="hero-description">Enter the author’s complete manuscript through a quieter reading room. Every passage remains in its original words, with a path back to the source.</p>
-        <a class="primary-link" href="${sectionReaderHref(sections[0])}">Begin reading <span aria-hidden="true">→</span></a>
+        <div class="ll-today">
+          <span class="ll-spark" aria-hidden="true"><i></i><i></i><i></i></span>
+          <div>
+            <p class="ll-today-label">Today’s reading</p>
+            <a class="primary-link" href="${sectionReaderHref(sections[0])}">Begin reading <span aria-hidden="true">→</span></a>
+            <p class="ll-resume" data-ll-resume hidden>I kept your place — <a data-ll-resume-link href="reader.html">continue: <span data-ll-resume-title></span></a></p>
+          </div>
+        </div>
         <form class="hero-search" role="search" action="search.html" method="get"><label for="hero-q">Search the whole manuscript</label><div><input id="hero-q" type="search" name="q" autocomplete="off" placeholder="A word, phrase, Hebrew term, or Genesis 24"><button type="submit">Search</button></div></form>
         <p class="hero-caption">Written by Aaron Paul Laird · A spiritual and prophetic work</p>
       </div>
@@ -338,6 +351,9 @@ const homepage = `<!doctype html>
   </main>
   <footer class="library-footer"><a class="wordmark" href="./"><span class="wordmark-mark" aria-hidden="true">✦</span><span><strong>SCROLL OF FIRE</strong><small>UNSEALED LIBRARY</small></span></a><p>Original words · Clear provenance · Whole archive</p><a href="archive/Full_Scroll_Unsealed.txt">Read the preserved source ↗</a></footer>
   <script defer src="../assets/js/living-ui.js?v=20261117-1"></script>
+  <!-- Living Look: runs last, after the canonical calendar and the
+       reader's own library.js have had their say. -->
+  <script defer src="assets/living-look-library.js"></script>
 </body>
 </html>
 `;

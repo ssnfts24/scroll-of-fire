@@ -72,7 +72,7 @@ const rel = file => path.relative(docs, file).split(path.sep).join("/");
 const DOMAIN_RULES = [
   [p => p.startsWith("scripture/"), "Knowledge"],
   [p => p.startsWith("scroll/"), "Knowledge"],
-  [p => p === "glossary.html" || p === "glyphs.html" || p === "genesis-5-timeline.html", "Knowledge"],
+  [p => p === "glossary.html" || p === "glyphs.html" || p === "genesis-5-timeline.html" || p === "one-word.html", "Knowledge"],
   [p => p === "theory.html" || p.startsWith("theory/"), "Research"],
   [p => [
     "13-moon-whitepaper.html", "codex-white-paper.html",

@@ -141,16 +141,16 @@
           "label": "Hebrew Lexicon"
         },
         {
+          "href": "one-word.html",
+          "label": "One Word a Day"
+        },
+        {
           "href": "systems/recoder.html",
           "label": "Reality Recoder"
         },
         {
           "href": "theory.html",
           "label": "the Theory"
-        },
-        {
-          "href": "guide.html",
-          "label": "the Field Guide"
         }
       ],
       "hub.html": [
@@ -173,6 +173,10 @@
       ],
       "index.html": [
         {
+          "href": "hub.html",
+          "label": "the Documentation Hub"
+        },
+        {
           "href": "living-time-sphere.html",
           "label": "Living Time Sphere"
         },
@@ -183,10 +187,6 @@
         {
           "href": "moons.html",
           "label": "the 13 Moons page"
-        },
-        {
-          "href": "ledger.html",
-          "label": "Witness Ledger"
         }
       ],
       "lab.html": [

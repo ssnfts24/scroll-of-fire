@@ -28,10 +28,10 @@
   ],
   "unsourcedNote": "Fields named in unsourcedFields carry the marker \"unsourced\" in every entry: no truthful source exists for them yet, and no value was invented. Filling them is ULS-002 slice-2 work.",
   "summary": {
-    "pages": 211,
+    "pages": 212,
     "byDomain": {
       "Observatory": 7,
-      "Knowledge": 119,
+      "Knowledge": 120,
       "Research": 49,
       "Living": 10,
       "Spark": 3,
@@ -548,6 +548,7 @@
         "methods.html",
         "micro.html",
         "moons.html",
+        "one-word.html",
         "practices.html",
         "provenance.html",
         "read-your-own-day.html",
@@ -598,7 +599,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:899ea394ed84",
+      "content_version": "sha256:9dcc0396cbc3",
       "maintenance_status": "active"
     },
     {
@@ -1044,6 +1045,7 @@
         "ledger.html",
         "living-time-sphere.html",
         "moons.html",
+        "one-word.html",
         "scroll/lexicon.html",
         "shop.html",
         "start.html",
@@ -1080,7 +1082,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:66c69ff1d216",
+      "content_version": "sha256:d808a5aa9ab0",
       "maintenance_status": "active"
     },
     {
@@ -1232,7 +1234,6 @@
         "companions.html",
         "covenant-caravan.html",
         "downloads.html",
-        "episodes.html",
         "ethics.html",
         "garden.html",
         "genesis-oracle.html",
@@ -1245,9 +1246,9 @@
         "ledger.html",
         "living-time-sphere.html",
         "moons.html",
+        "one-word.html",
         "read-your-own-day.html",
         "scripture/index.html",
-        "scripture/word-studies/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
         "scroll/editorial.html",
         "scroll/index.html",
@@ -1276,7 +1277,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:0767cc3c8a61",
+      "content_version": "sha256:3b56e7006a7d",
       "maintenance_status": "active"
     },
     {
@@ -1644,7 +1645,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:eecc70079885",
+      "content_version": "sha256:c12cb1fc0c4d",
       "maintenance_status": "active"
     },
     {
@@ -1669,6 +1670,49 @@
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
       "content_version": "sha256:9fafbb91ad93",
+      "maintenance_status": "active"
+    },
+    {
+      "id": "one-word-a-day",
+      "path": "one-word.html",
+      "title": "One Word a Day — a Hebrew word for your Pattern Day · Scroll of Fire",
+      "description": "One Word a Day: one Hebrew word in the full treatment — spelling, root, sound, and a real example — chosen by your Pattern Day and led by the Spark in about two minutes. Remembered on your device only.",
+      "primary_domain": "Knowledge",
+      "page_type": "page",
+      "canonical_url": "https://codexofreality.org/one-word.html",
+      "parent": "index.html",
+      "related_pages": [
+        "companions.html",
+        "covenant-caravan.html",
+        "downloads.html",
+        "ethics.html",
+        "genesis-oracle.html",
+        "glossary.html",
+        "hub.html",
+        "index.html",
+        "ledger.html",
+        "living-time-sphere.html",
+        "moons.html",
+        "scripture/lemma.html",
+        "scroll/lexicon.html",
+        "shop.html",
+        "start.html",
+        "systems/frequencies.html",
+        "teach.html",
+        "theory.html",
+        "witness-world.html",
+        "witness.html"
+      ],
+      "search_keywords": "unsourced",
+      "navigation_visibility": "sitemap",
+      "available_actions": "unsourced",
+      "spark_capabilities": "unsourced",
+      "temporal_context": "pattern-calendar",
+      "data_dependencies": [],
+      "permissions": "unsourced",
+      "offline_capabilities": "unsourced",
+      "mobile_behavior": "unsourced",
+      "content_version": "sha256:910686e1628d",
       "maintenance_status": "active"
     },
     {
@@ -10511,7 +10555,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:4daea830652b",
+      "content_version": "sha256:93c662044002",
       "maintenance_status": "active"
     },
     {

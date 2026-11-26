@@ -81,6 +81,7 @@
   <link rel="stylesheet" href="assets/css/living-time-sphere.css?v=20260819-b743&p=20260820-b7581-labelglass&u=20260820-b7582-railalign&b=20260820-b7592a-farskeleton&d=20260821-b7592d7-unified">
   <link rel="stylesheet" href="assets/css/homepage-sphere.css?v=20261122-proto1">
   <link rel="stylesheet" href="assets/css/ambient-door.css?v=20261119-1">
+  <link rel="stylesheet" href="assets/css/home-living-look.css?v=20261125-1">
 
   <script type="application/ld+json">
   {
@@ -528,6 +529,7 @@
     <section class="ambient-door" id="ambient-door" aria-labelledby="ambient-door-title" data-ambient-door>
       <div class="ambient-door-inner">
         <p class="ambient-eyebrow" data-ambient-civil>Today · on the Pattern calendar</p>
+        <p class="ll-day-line" role="note"><span data-ll-day-text>Today · the real day, read from the Pattern calendar</span></p>
         <h2 id="ambient-door-title" class="ambient-title" data-ambient-coordinate>Today in the Pattern calendar</h2>
         <p class="ambient-pattern" data-ambient-pattern>Pattern Day, read live from the calendar</p>
         <p class="ambient-telling" data-ambient-telling>The day's telling is read live by the calendar engine when it runs.</p>
@@ -539,8 +541,13 @@
                  aria-label="A short cartoon film: the Living Time Sphere turning in warm wood and brass, and a Spark of light coming to meet its keeper"></video>
           <figcaption>The Sphere and the Spark, as the Codex dreams them. Tap to play — the words are spoken only when you ask for them.</figcaption>
         </figure>
+        <div class="ll-spark-station">
+          <span class="ll-spark-orb" aria-hidden="true"><i></i><i></i><i></i></span>
+          <p class="ll-spark-line">The Spark keeps this door with you, and points to the one first step: step into the Sphere, and let today be seen whole.</p>
+          <p class="ll-resume" data-ll-resume hidden>I kept your place — <a data-ll-resume-link href="./hub.html">Return</a></p>
+        </div>
         <div class="ambient-actions">
-          <a class="btn primary" href="./living-time-sphere.html">Enter the Sphere</a>
+          <a class="btn primary" href="./living-time-sphere.html" data-ll-enter>Enter the Sphere</a>
           <a class="btn" href="./companions.html">Meet the Spark</a>
           <a class="btn" href="#home-sphere-observatory">Sit with the Sphere here</a>
         </div>
@@ -692,10 +699,10 @@
         <section aria-labelledby="front-door-recent">
           <h3 id="front-door-recent">Recent additions</h3>
           <ul class="front-door-list">
-            <li><time datetime="2026-11-25">2026-11-25</time> <a href="./episodes.html">The story films, made clean</a></li>
-            <li><time datetime="2026-11-25">2026-11-25</time> <a href="./companions.html">The Spark leads the way in</a></li>
-            <li><time datetime="2026-11-25">2026-11-25</time> <a href="./teach.html">The Spark leads the Manifest Practice</a></li>
-            <li><time datetime="2026-11-25">2026-11-25</time> <a href="./scripture/word-studies/index.html">The word studies gain their Hebrew voice: the pronunciation layer</a></li>
+            <li><time datetime="2026-11-26">2026-11-26</time> <a href="./one-word.html">One Word a Day: a Hebrew word for your Pattern Day</a></li>
+            <li><time datetime="2026-11-26">2026-11-26</time> <a href="./scripture/index.html">Listen in Hebrew reaches the chapters</a></li>
+            <li><time datetime="2026-11-26">2026-11-26</time> <a href="./moons.html">The Moons page keeps your place</a></li>
+            <li><time datetime="2026-11-26">2026-11-26</time> <a href="./index.html">The front door becomes a doorway</a></li>
           </ul>
         </section>
       </div>
@@ -1075,10 +1082,10 @@ Notes:
         <div class="le-act-slot">
           <h3>Latest additions</h3>
           <ul class="le-act-growth" data-le-growth>
-            <li><time datetime="2026-11-25">2026-11-25</time> <a href="./episodes.html">The story films, made clean</a></li>
-            <li><time datetime="2026-11-25">2026-11-25</time> <a href="./companions.html">The Spark leads the way in</a></li>
-            <li><time datetime="2026-11-25">2026-11-25</time> <a href="./teach.html">The Spark leads the Manifest Practice</a></li>
-            <li><time datetime="2026-11-25">2026-11-25</time> <a href="./scripture/word-studies/index.html">The word studies gain their Hebrew voice: the pronunciation layer</a></li>
+            <li><time datetime="2026-11-26">2026-11-26</time> <a href="./one-word.html">One Word a Day: a Hebrew word for your Pattern Day</a></li>
+            <li><time datetime="2026-11-26">2026-11-26</time> <a href="./scripture/index.html">Listen in Hebrew reaches the chapters</a></li>
+            <li><time datetime="2026-11-26">2026-11-26</time> <a href="./moons.html">The Moons page keeps your place</a></li>
+            <li><time datetime="2026-11-26">2026-11-26</time> <a href="./index.html">The front door becomes a doorway</a></li>
                                   </ul>
         </div>
         <figure class="le-act-slot">
@@ -2672,5 +2679,9 @@ Notes:
   <script defer src="assets/js/life-atlas/record-helpers.js?v=20261119-1"></script>
   <script defer src="assets/js/day-notes.js?v=20261118-lw1"></script>
   <script defer src="assets/js/presence-guidance.js?v=20261118-lw1"></script>
+  <!-- Living Look (preview): the front door's own layer — runs last,
+       after the canonical calendar, Codex Memory and the Moon's
+       tint have had their say. Presentation only; writes nothing. -->
+  <script defer src="assets/js/home-living-look.js?v=20261125-1"></script>
 </body>
               </html>

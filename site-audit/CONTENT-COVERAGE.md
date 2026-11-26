@@ -4,7 +4,7 @@ Generated from the shared catalog at base revision `548e858`. This report is dev
 
 ## Public discovery areas
 
-### Scroll and Scripture (13 catalog entries)
+### Scroll and Scripture (14 catalog entries)
 
 Read the Scroll, search its text, study Hebrew roots and follow Genesis 1–50.
 
@@ -18,6 +18,7 @@ Read the Scroll, search its text, study Hebrew roots and follow Genesis 1–50.
 - **Original Scroll (archival edition)** — Archived; The unchanged Full_Scroll_Unsealed text, frozen with a published SHA-256.
 - **Genesis Oracle** — Live; Deterministic layered Genesis readings driven by the shared Pattern Calendar engine.
 - **Codex Glossary** — Live; Symbols, equations and living-technology terms of the Codex.
+- **One Word a Day** — Live; One Word a Day: one Hebrew word in the full treatment — spelling, root, sound, and a real example — chosen by your Pattern Day and led by the Spark in about two minutes. Remembered on your device only.
 - **Genesis Restored** — Source only; Root-level restored Genesis text, published through the Downloads catalog.
 - **Exodus Restored** — Source only; Root-level restored Exodus text, published through the Downloads catalog.
 - **Walking the Long Line — Genesis 5** — Live; Genesis 5 drawn to scale: walk the line from Adam to Noah, feel how long these lives were, run the count of years yourself, and stop at Enoch — whose 365 years match the year itself. Three readings of that match, side by side; the page takes no side.
@@ -114,9 +115,9 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 
 ## Repository and deployed-content coverage
 
-- Public HTML pages inspected: **211**.
-- Total master-inventory records: **514**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
-- Public-facing catalog entries: **78**; only explicitly curated entries appear on the Atlas.
+- Public HTML pages inspected: **212**.
+- Total master-inventory records: **515**, including public pages, deployed files, repository-root items, numbered archive files, and planned discovery work.
+- Public-facing catalog entries: **79**; only explicitly curated entries appear on the Atlas.
 - Numbered archive folders are inventoried file-by-file, while downloads snapshot differences are kept separate from historical integrity data.
 - Root files not already published through the archive or explicitly approved remain classified as development-only; no such file is automatically linked from the public catalog.
 
@@ -132,7 +133,7 @@ Integrity-sealed downloads, preserved originals and the interactive archive.
 ## Current resource-type counts
 
 - Deployed Markdown documents: 65
-- HTML pages: 211
+- HTML pages: 212
 - Numbered archive file: 141
 - Numbered archive folder: 7
 - Repository folder: 10

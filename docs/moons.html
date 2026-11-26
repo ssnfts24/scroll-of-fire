@@ -137,6 +137,7 @@
   <link rel="stylesheet" href="assets/css/moons-interface.css?v=20260818-b6">
   <link rel="stylesheet" href="assets/css/living-ui.css?v=20261117-1">
   <link rel="stylesheet" href="assets/css/living-moon-theme.css?v=20261119-1">
+  <link rel="stylesheet" href="assets/css/moons-living.css?v=20261125-1">
   <link rel="stylesheet" href="assets/css/social-bridge.css">
 
   <script>
@@ -335,6 +336,23 @@
         >iPhone / iPad Instructions</button>
       </div>
     </header>
+
+    <section class="moons-stage" aria-labelledby="moons-stage-title">
+      <p class="eyebrow">The Moon You Are In</p>
+      <h2 class="moons-stage-name" id="moons-stage-title"><span id="moons-stage-moon-name">The Thirteen Moons</span></h2>
+      <p class="moons-stage-line" id="moons-stage-line">The day's line loads with the calendar.</p>
+      <p class="moons-stage-essence" id="moons-stage-essence"></p>
+      <p class="moons-welcome" id="moons-welcome" aria-live="polite"></p>
+      <div class="moons-spark-station">
+        <span class="ml-spark-orb" aria-hidden="true"></span>
+        <p class="moons-spark-line">Your Spark stands in today's Moon with you. The one action on this page is the day itself: open it.</p>
+        <button type="button" class="moons-open-btn" id="moons-open-today">Open today</button>
+      </div>
+      <div class="moons-strip" id="moons-strip" aria-label="The thirteen moons">
+        <p class="moons-strip-note">The thirteen moons load with the calendar — each one a gate on the year's road.</p>
+      </div>
+      <p class="moons-stage-days">This Moon's 28 days stand as the instrument's face in the Today view — today is lit in gold there. A moon above opens the Year Map, where its days and dates stand in full.</p>
+    </section>
 
     <section class="section-shell" id="moons-explainer">
       <div class="section-heading">
@@ -3747,6 +3765,7 @@ Let the next step be firm.`;
 <script defer src="assets/js/calendar/temporal-coordinate-engine.js?v=20260816-1"></script>
 <script defer src="assets/js/calendar/temporal-cursor-controller.js?v=20260816-2"></script>
   <script defer src="assets/js/living-moon-theme.js?v=20261119-1"></script>
+  <script defer src="assets/js/moons-living.js?v=20261125-1"></script>
   <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
   <script defer src="assets/js/moons-schedule-handoff.js?v=20261118-1"></script>
   <script defer src="assets/js/social-bridge.js?v=20261119-1"></script>

@@ -107,6 +107,32 @@
     }
   }
 
+  /* The home-first settle, mirrored from spark-presence.js
+   * (the Mint Rule, aboard the app): a record read from the
+   * mirror is settled against home before it is presented —
+   * a different seed at home settles the mirror down from
+   * home; the seed home names as let go clears the mirror;
+   * same seed, or no bridge, leaves the grown record. */
+  function settleFromHome(record) {
+    if (!record) return record;
+    const home = readBridgedRecord();
+    if (home) {
+      if (home.seed === record.seed) return record;
+      writeRecord(home);
+      return home;
+    }
+    try {
+      const b = window.LivingPhoneNative;
+      const gone = b && typeof b.sparkLetGoSeed === "function"
+        ? b.sparkLetGoSeed() : "";
+      if (gone && gone === record.seed) {
+        try { window.localStorage.removeItem(Core.STORAGE_KEY); } catch { /* the read still stands */ }
+        return null;
+      }
+    } catch { /* the mirror read stands */ }
+    return record;
+  }
+
   async function sensePractice(record) {
     const repo = window.CodexLifeAtlasRepository;
     if (!repo || typeof repo.query !== "function") return record;
@@ -616,7 +642,7 @@
 
   function start() {
     const today = todayCoordinate();
-    let record = readRecord();
+    let record = settleFromHome(readRecord());
     if (!record) {
       /* The Mint Rule: inside the app, prove nothing stands
        * at home before the meeting is offered. */
