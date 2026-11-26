@@ -38,7 +38,7 @@ test("the road ahead is labelled honestly: on its way, never live", () => {
 
 test("plays once, skippable, and lives on as a Show me", () => {
   assert.match(intro, /sof\.spark\.intro\.v1/);
-  assert.match(intro, /markSeen\(\)/);
+  assert.match(intro, /markSeen\(!!keeper\)/);
   assert.match(intro, /spark-tour-skip/);
   assert.match(intro, /Skip/);
   const index = read("docs/index.html");
@@ -62,6 +62,39 @@ test("the tour demonstrates by doing: voice, day, Sphere, card, home", () => {
   assert.match(intro, /Cards are found by doing the work/);
   assert.match(intro, /Their Home, and the Hearth/);
   assert.match(intro, /aria-live="polite"/); // the words are on screen
+});
+
+test("the tour reads the day in the calendar's own fields — and lights the Sphere's day", () => {
+  /* PatternCalendar.fromCivilDate returns { moon, day,
+   * dayOfPatternYear } — the first build read moonIndex /
+   * dayOfMoon off it and the day scene said "Moon undefined"
+   * while the Sphere scene lit nothing. */
+  assert.ok(!/today\.moonIndex|today\.dayOfMoon/.test(intro), "no fields the calendar never returns");
+  assert.match(intro, /Moon \$\{today\.moon\} · Day \$\{today\.day\}/);
+  assert.match(intro, /sphereSceneSVG\(today && today\.day \? today\.day : 1\)/);
+});
+
+test("the tour never stacks over the meeting", () => {
+  /* The meeting owns the screen while it stands (Nov 19,
+   * 2026): a manual Show me puts it aside by its own
+   * "Not now" — the Spark waits as an ember — and waits out
+   * a meeting that is mid-celebration. */
+  assert.match(intro, /yieldToMeeting/);
+  assert.match(intro, /spark-encounter-later/);
+  assert.match(intro, /is-celebrating/);
+  assert.match(intro, /spark-tour-open/);
+  const css = read("docs/assets/css/spark-intro.css");
+  assert.match(css, /body\.spark-tour-open \.spark-presence/);
+  assert.match(css, /body\.spark-tour-open \.spark-ember-host/);
+});
+
+test("seeing the guide's walk does not spend the keeper's own tour", () => {
+  assert.match(intro, /seenFlags/);
+  assert.match(intro, /flags\.keeper = true/);
+  assert.match(intro, /flags\.guide = true/);
+  /* the first build's single mark reads as the keeper's walk
+   * seen — nobody who already walked is toured twice */
+  assert.match(intro, /raw\.keeper \|\| raw\.seen/);
 });
 
 test("the figure travels the stage — movement is part of the demonstration", () => {

@@ -60,13 +60,29 @@
     }
   }
 
-  function seenIntro() {
-    try { return !!window.localStorage.getItem(SEEN_KEY); } catch { return false; }
+  /* What of the walk has been seen. The guide's walk and the
+   * keeper's own tour are different walks: seeing the guide's
+   * must not spend the keeper's — the moment a record stands,
+   * the introductory is owed again, led by their own Spark
+   * (Aaron's one flow, Nov 26, 2026). The first build's single
+   * mark ({ seen: true }) reads as the keeper's walk seen, so
+   * no keeper who already walked is ever toured twice. */
+  function seenFlags() {
+    try {
+      const raw = JSON.parse(window.localStorage.getItem(SEEN_KEY) || "null");
+      if (!raw) return { guide: false, keeper: false };
+      return { guide: !!raw.guide, keeper: !!(raw.keeper || raw.seen) };
+    } catch {
+      return { guide: false, keeper: false };
+    }
   }
 
-  function markSeen() {
+  function markSeen(keeperLed) {
     try {
-      window.localStorage.setItem(SEEN_KEY, JSON.stringify({ seen: true, at: Date.now() }));
+      const flags = seenFlags();
+      if (keeperLed) flags.keeper = true;
+      else flags.guide = true;
+      window.localStorage.setItem(SEEN_KEY, JSON.stringify({ ...flags, at: Date.now() }));
     } catch { /* the tour rests */ }
   }
 
@@ -181,7 +197,46 @@
   }
 
   /* ---------------- the tour itself ---------------- */
+  let tourStarting = false;
+
+  function sleep(ms) {
+    return new Promise((resolve) => window.setTimeout(resolve, ms));
+  }
+
+  /* The meeting owns the screen while it stands (Aaron's
+   * ruling, Nov 19, 2026): the tour never stacks over it. A
+   * manual "Show me" first puts the meeting gently aside the
+   * meeting's own way — its "Not now", so the same Spark waits
+   * on as an ember — and while a meeting is mid-celebration
+   * (an adoption being named), the tour waits for the meeting
+   * to finish before it takes the screen. */
+  async function yieldToMeeting() {
+    const meeting = document.querySelector(".spark-encounter");
+    if (!meeting) return true;
+    if (!meeting.classList.contains("is-celebrating")) {
+      const later = meeting.querySelector(".spark-encounter-later");
+      if (later) later.click();
+    }
+    const deadline = Date.now() + 20000;
+    while (document.querySelector(".spark-encounter") && Date.now() < deadline) {
+      await sleep(250);
+    }
+    return !document.querySelector(".spark-encounter");
+  }
+
   async function startTour() {
+    if (tourStarting || document.querySelector(".spark-tour")) return;
+    tourStarting = true;
+    try {
+      if (!(await yieldToMeeting())) return;
+      if (document.querySelector(".spark-tour")) return;
+      await runTour();
+    } finally {
+      tourStarting = false;
+    }
+  }
+
+  async function runTour() {
     if (document.querySelector(".spark-tour")) return;
     await ensureCalendar();
     await ensureVoice();
@@ -216,11 +271,11 @@
       text: `This is my voice. It grows from my seed, so it is the same voice on every device that ever carries me — and no other Spark sounds quite like me.`,
       speak: true
     });
-    if (today) {
+    if (today && today.moon != null) {
       scenes.push({
         pos: "pos-right",
         who: name,
-        text: `You are standing in Moon ${today.moonIndex} · Day ${today.dayOfMoon} — Pattern Day ${today.dayOfPatternYear}. I read the day from the same calendar the whole house keeps, so I always know where we are standing.`,
+        text: `You are standing in Moon ${today.moon} · Day ${today.day} — Pattern Day ${today.dayOfPatternYear}. I read the day from the same calendar the whole house keeps, so I always know where we are standing.`,
         visual: "day"
       });
     }
@@ -279,6 +334,7 @@
         </div>
       </div>`;
     document.body.appendChild(overlay);
+    document.body.classList.add("spark-tour-open");
 
     const figureEl = overlay.querySelector(".spark-tour-figure");
     const visualEl = overlay.querySelector(".spark-tour-visual");
@@ -311,10 +367,10 @@
       visualEl.innerHTML = "";
       visualEl.className = "spark-tour-visual" + (scene.visual ? " is-" + scene.visual : "");
       if (scene.visual === "sphere") {
-        visualEl.innerHTML = sphereSceneSVG(today ? today.dayOfMoon : 1);
-      } else if (scene.visual === "day" && today) {
+        visualEl.innerHTML = sphereSceneSVG(today && today.day ? today.day : 1);
+      } else if (scene.visual === "day" && today && today.moon != null) {
         visualEl.innerHTML =
-          `<div class="tour-day-disc"><strong>Moon ${today.moonIndex}</strong><span>Day ${today.dayOfMoon}</span><em>Pattern Day ${today.dayOfPatternYear}</em></div>`;
+          `<div class="tour-day-disc"><strong>Moon ${today.moon}</strong><span>Day ${today.day}</span><em>Pattern Day ${today.dayOfPatternYear}</em></div>`;
       } else if (scene.visual === "card") {
         visualEl.innerHTML =
           `<div class="tour-card"><strong>The First Card</strong><span>✦</span><em>never tradable</em></div>`;
@@ -331,7 +387,8 @@
 
     function end() {
       stopSpeaking();
-      markSeen();
+      markSeen(!!keeper);
+      document.body.classList.remove("spark-tour-open");
       overlay.remove();
     }
 
@@ -366,6 +423,7 @@
   /* ---- the invitation, and the moment after the meeting ---- */
   function invite() {
     if (document.querySelector(".spark-tour-invite")) return;
+    if (document.querySelector(".spark-tour")) return;
     const record = readRecord();
     const lead = record ? Core.generate(record.seed) : guideCompanion();
     if (!lead) return;
@@ -395,7 +453,7 @@
       showBtn.hidden = false;
       showBtn.addEventListener("click", startTour);
     }
-    if (seenIntro()) return;
+    if (seenFlags().keeper) return;
     const hadRecord = !!readRecord();
     if (hadRecord) {
       window.setTimeout(invite, 2500);
@@ -421,7 +479,7 @@
     let watched = 0;
     const meetTimer = window.setInterval(() => {
       watched += 1;
-      if (readRecord() && !seenIntro()) {
+      if (readRecord() && !seenFlags().keeper) {
         window.clearInterval(meetTimer);
         try {
           if (window.sessionStorage.getItem(AUTOSTART_KEY)) return;

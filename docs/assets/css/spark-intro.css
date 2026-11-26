@@ -3,6 +3,17 @@
  * own Spark leads the tour. The figure travels the stage so the
  * visitor sees how a Spark moves before they are told. */
 
+/* While the tour stands it owns the screen: the Spark's
+ * corner furniture — the walker and its panel, the waiting
+ * ember, a standing invitation — rests beneath it. The Spark
+ * is on the stage; nothing of its corner seat competes with
+ * the walk, and nothing there can be tapped over it. */
+body.spark-tour-open .spark-presence,
+body.spark-tour-open .spark-ember-host,
+body.spark-tour-open .spark-tour-invite {
+  visibility: hidden;
+}
+
 .spark-tour {
   position: fixed;
   inset: 0;
