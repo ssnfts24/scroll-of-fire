@@ -1,0 +1,260 @@
+/* One Word a Day — the word path's own sheet.
+ * Tokens come from codex.css (the Living Look sheet): night
+ * --bg, gold --gold / --gold-deep, ivory --text, radii 16/24/34.
+ * Nothing is re-declared here; this sheet only spends the tokens.
+ * Phone-first: one column, one clear action, big tap targets. */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.ow-today-line {
+  display: inline-block;
+  margin-top: 0.9rem;
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--line-gold);
+  border-radius: var(--radius-sm);
+  background: var(--panel-soft);
+  color: var(--gold);
+  font-weight: 600;
+  box-shadow: 0 0 24px rgba(243, 201, 122, 0.12);
+}
+
+.ow-stage {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  box-shadow: var(--shadow-soft);
+  padding: clamp(1.1rem, 4vw, 2.2rem);
+}
+
+.ow-spark {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+/* The Spark itself: one plain orb, lit like a spark, with little
+ * sparks around it — never a bubble (Aaron's ruling, Nov 19). */
+.ow-orb {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  margin-top: 0.35rem;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 42% 38%, #fff8e7 0%, var(--gold) 42%, var(--gold-deep) 78%, rgba(217, 149, 69, 0) 100%);
+  box-shadow:
+    0 0 18px rgba(243, 201, 122, 0.75),
+    0 0 44px rgba(243, 201, 122, 0.35);
+  animation: ow-breathe 5s ease-in-out infinite;
+  position: relative;
+}
+
+.ow-orb::before,
+.ow-orb::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+.ow-orb::before {
+  width: 5px;
+  height: 5px;
+  top: -9px;
+  right: 2px;
+  opacity: 0.8;
+}
+
+.ow-orb::after {
+  width: 4px;
+  height: 4px;
+  bottom: -7px;
+  left: 4px;
+  opacity: 0.6;
+}
+
+@keyframes ow-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.07); }
+}
+
+.ow-speaker {
+  font-family: "Cinzel", serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  color: var(--gold);
+  margin: 0 0 0.35rem;
+}
+
+.ow-line {
+  font-size: 1.08rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.ow-body {
+  margin-top: 1.4rem;
+  animation: ow-rise 0.6s ease both;
+}
+
+@keyframes ow-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+.ow-card {
+  border: 1px solid var(--line-gold);
+  border-radius: var(--radius-md);
+  background: var(--panel-soft);
+  padding: clamp(1rem, 3.5vw, 1.8rem);
+  text-align: center;
+}
+
+.ow-hebrew {
+  font-size: 1.6rem;
+  line-height: 1.4;
+}
+
+.ow-word {
+  font-size: clamp(2.6rem, 10vw, 4rem);
+  margin: 0.2rem 0 0.4rem;
+  color: var(--text);
+}
+
+.ow-gloss {
+  font-family: "Cinzel", serif;
+  font-size: 1.25rem;
+  color: var(--gold);
+  margin: 0.2rem 0;
+}
+
+.ow-root,
+.ow-example,
+.ow-verse {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.ow-verse {
+  font-style: italic;
+}
+
+.ow-note {
+  font-size: 0.88rem;
+  color: var(--dim);
+  line-height: 1.5;
+  max-width: 34rem;
+  margin: 0.8rem auto 0;
+}
+
+.ow-action,
+.ow-choice {
+  font: inherit;
+  cursor: pointer;
+  border: 1px solid var(--line-gold);
+  border-radius: var(--radius-sm);
+  background: var(--panel-strong);
+  color: var(--gold);
+  padding: 0.8rem 1.4rem;
+  min-height: 52px;
+  font-weight: 600;
+}
+
+.ow-action:hover,
+.ow-choice:hover {
+  border-color: var(--gold);
+}
+
+.ow-quiz {
+  margin-top: 1.4rem;
+  text-align: center;
+}
+
+.ow-quiz-title {
+  font-weight: 600;
+}
+
+.ow-choice {
+  font-size: 1.5rem;
+  margin: 0.3rem;
+  min-width: 7rem;
+}
+
+.ow-choice:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.ow-feedback {
+  color: var(--gold);
+  min-height: 1.5em;
+  line-height: 1.5;
+}
+
+.ow-done,
+.ow-shelf-line {
+  color: var(--gold);
+  text-align: center;
+  line-height: 1.6;
+}
+
+.ow-shelf {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.ow-shelf-word {
+  font: inherit;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--panel-soft);
+  color: var(--text);
+  padding: 0.7rem 1rem;
+  min-height: 52px;
+}
+
+.ow-doors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+
+.ow-door {
+  border: 1px solid var(--line-gold);
+  border-radius: var(--radius-sm);
+  background: var(--panel-strong);
+  color: var(--gold);
+  padding: 0.7rem 1.1rem;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ow-orb {
+    animation: none;
+  }
+
+  .ow-body {
+    animation: none;
+  }
+}
+
+@media (min-width: 720px) {
+  .ow-line {
+    font-size: 1.18rem;
+  }
+}
