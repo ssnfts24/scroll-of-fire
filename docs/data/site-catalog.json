@@ -258,6 +258,23 @@
       "publicationEligibility": "approved-public"
     },
     {
+      "id": "one-word-a-day",
+      "title": "One Word a Day",
+      "description": "One Word a Day: one Hebrew word in the full treatment — spelling, root, sound, and a real example — chosen by your Pattern Day and led by the Spark in about two minutes. Remembered on your device only.",
+      "area": "scroll-scripture",
+      "category": "Reference",
+      "resourceType": "page",
+      "status": "live",
+      "path": "one-word.html",
+      "url": "https://codexofreality.org/one-word.html",
+      "related": [
+        "glossary",
+        "scroll-lexicon"
+      ],
+      "featured": false,
+      "publicationEligibility": "approved-public"
+    },
+    {
       "id": "genesis-restored",
       "title": "Genesis Restored",
       "description": "Root-level restored Genesis text, published through the Downloads catalog.",
