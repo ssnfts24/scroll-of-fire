@@ -944,18 +944,13 @@
      "area": "archive"
     },
     {
-     "path": "index.html",
-     "title": "Codex of Reality",
-     "area": "codex"
-    },
-    {
      "path": "map.html",
      "title": "The Traveller's Map",
      "area": "systems"
     }
    ],
    "outTotal": 0,
-   "inTotal": 4
+   "inTotal": 3
   },
   "equinox-passage.html": {
    "title": "Equinox Passage — The 13 Moons Remnant Living Time Observatory",
@@ -1684,7 +1679,7 @@
      "area": "codex"
     }
    ],
-   "outTotal": 30,
+   "outTotal": 28,
    "inTotal": 7
   },
   "install.html": {
@@ -16596,11 +16591,6 @@
      "area": "archive"
     },
     {
-     "path": "index.html",
-     "title": "Codex of Reality",
-     "area": "codex"
-    },
-    {
      "path": "scripture/word-studies/davar.html",
      "title": "Davar — דָּבָר — Hebrew Word Studies",
      "area": "scroll-scripture"
@@ -16649,10 +16639,15 @@
      "path": "spark-echo.html",
      "title": "Spark Echo — the Memory Game",
      "area": "living-time"
+    },
+    {
+     "path": "genesis-5-timeline.html",
+     "title": "Walking the Long Line — Genesis 5",
+     "area": "scroll-scripture"
     }
    ],
    "outTotal": 10,
-   "inTotal": 15
+   "inTotal": 14
   },
   "scripture/word-studies/nephesh.html": {
    "title": "Nephesh — נֶפֶשׁ — Hebrew Word Studies",
