@@ -30,6 +30,7 @@
   <link rel="stylesheet" href="assets/css/social-bridge.css">
   <link rel="stylesheet" href="assets/css/spark-companion.css?v=20261122-1">
   <link rel="stylesheet" href="assets/css/spark-home-world.css?v=20261120-1">
+  <link rel="stylesheet" href="assets/css/spark-play.css?v=20261125-1">
   <link rel="stylesheet" href="assets/css/cartoon-scenes.css?v=20261120-1">
 <link rel="stylesheet" href="assets/css/story-layer.css?v=20261120-1">
   <script defer src="assets/js/site.js"></script>
@@ -50,6 +51,7 @@
   <script defer src="assets/js/spark-bundle.js?v=20261119-1"></script>
   <script defer src="assets/js/spark-companions-travel.js?v=20261119-1"></script>
   <script defer src="assets/js/spark-home-world.js?v=20261124-3"></script>
+  <script defer src="assets/js/spark-play.js?v=20261125-1"></script>
   <script defer src="assets/js/spark-passport.js?v=20261122-1"></script>
   <link rel="stylesheet" href="assets/css/spark-agent-seat.css?v=20261120-2">
   <script defer src="assets/js/spark-agent-seat.js?v=20261120-2"></script>
@@ -195,6 +197,10 @@
           <div class="spark-echo-pads" id="spark-echo-pads" role="group" aria-label="The four echo pads"></div>
           <p class="spark-note" id="spark-echo-status" role="status" aria-live="polite"></p>
         </div>
+        <!-- Play together: the Spark's character, its tricks
+             performed and practised, and the echo duet. Filled
+             by spark-play.js from the keeper's real record. -->
+        <div id="spark-play"></div>
         <div class="spark-rename-row">
           <input id="spark-rename" type="text" maxlength="24" autocomplete="off" aria-label="Rename your Spark">
           <button type="button" class="spark-button" id="spark-rename-button">Rename</button>
