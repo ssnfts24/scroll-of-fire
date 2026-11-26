@@ -1,0 +1,304 @@
+/*
+ * Walking the Long Line — Genesis 5 as a walkable timeline.
+ * Living Look: every colour, radius, and shadow is a token from
+ * codex.css; this sheet declares no palette of its own. Motion
+ * answers the visitor; under prefers-reduced-motion the still
+ * design stands whole. The drag is the interaction, so the track
+ * scrolls natively and the walker moves by transform only.
+ */
+
+.g5-wrap {
+  max-width: var(--content-main);
+  margin: 0 auto;
+  padding: clamp(1.2rem, 4vw, 2.6rem) var(--shell-pad) var(--section-gap);
+  display: grid;
+  gap: clamp(1.4rem, 4vw, 2.4rem);
+}
+
+.g5-stage,
+.g5-walk,
+.g5-count,
+.g5-compare,
+.g5-readings,
+.g5-list {
+  min-width: 0;
+  background: var(--panel);
+  border: 1px solid var(--line-gold);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: clamp(1.3rem, 4vw, 2.2rem) clamp(1rem, 3vw, 2rem);
+}
+
+.g5-stage { text-align: center; }
+.g5-mark { display: block; margin: 0 auto 0.4rem; }
+
+.g5-name {
+  font-family: var(--display);
+  font-size: clamp(1.9rem, 6vw, 2.9rem);
+  letter-spacing: 0.03em;
+  color: var(--text);
+  margin: 0.2rem 0 0.4rem;
+}
+
+.g5-sub {
+  color: var(--muted);
+  max-width: var(--content-narrow);
+  margin: 0.2rem auto 0.6rem;
+}
+
+.g5-dayline { color: var(--gold); font-size: 1.02rem; margin: 0.2rem 0 0.1rem; }
+.g5-civil { color: var(--dim); font-size: 0.9rem; margin: 0.1rem 0 0.4rem; }
+
+.g5-spark-station {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  justify-content: center;
+  margin: 0.9rem auto 0.4rem;
+  max-width: var(--content-narrow);
+  text-align: left;
+}
+
+.g5-orb {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 38%, var(--text) 0%, var(--gold) 42%, var(--gold-deep) 78%, transparent 100%);
+  box-shadow: 0 0 18px 4px rgba(243, 201, 122, 0.45);
+}
+
+.g5-spark-line { color: var(--text); margin: 0; }
+
+.g5-finds {
+  list-style: none;
+  margin: 0.7rem auto 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.1rem;
+  justify-content: center;
+  color: var(--dim);
+  font-size: 0.92rem;
+}
+.g5-finds .g5-find-done { color: var(--gold); }
+
+.g5-h {
+  font-family: var(--display);
+  color: var(--gold);
+  font-size: clamp(1.3rem, 3.4vw, 1.8rem);
+  margin: 0 0 0.6rem;
+}
+
+.g5-lead { color: var(--muted); margin: 0 0 0.9rem; max-width: var(--content-reading); }
+.g5-lead strong, .g5-reading strong { color: var(--text); }
+
+/* ---------- the track ---------- */
+
+.g5-walk-year { color: var(--gold); margin: 0 0 0.5rem; font-size: 0.98rem; }
+
+.g5-track-wrap {
+  overflow-x: auto;
+  overflow-y: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--bg-soft);
+  cursor: grab;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+.g5-track-wrap:active { cursor: grabbing; }
+.g5-track-wrap:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+
+.g5-track-inner { position: relative; padding-top: 26px; }
+
+.g5-guides { position: absolute; top: 0; bottom: 0; left: 0; right: 0; }
+.g5-guide {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-left: 1px solid var(--line);
+  padding-left: 4px;
+  font-size: 0.68rem;
+  color: var(--dim);
+  white-space: nowrap;
+  opacity: 0.75;
+}
+
+.g5-walker {
+  position: absolute;
+  top: 25px;
+  left: -7px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 38%, var(--text) 0%, var(--gold) 45%, var(--gold-deep) 85%);
+  box-shadow: 0 0 12px 3px rgba(243, 201, 122, 0.5);
+  pointer-events: none;
+  will-change: transform;
+  z-index: 3;
+}
+
+.g5-row { position: relative; height: 48px; }
+
+.g5-bar {
+  position: absolute;
+  top: 31px;
+  height: 12px;
+  border-radius: 6px;
+  background: var(--panel-soft);
+  border: 1px solid var(--line-strong);
+}
+.g5-bar-enoch { border-color: var(--cyan); background: rgba(122, 243, 255, 0.10); }
+.g5-bar-open { border-style: dashed; }
+.g5-bar-found { border-color: var(--gold); box-shadow: 0 0 10px rgba(243, 201, 122, 0.45); }
+
+.g5-bar-child {
+  position: absolute;
+  top: -4px;
+  width: 2px;
+  height: 20px;
+  background: var(--gold-deep);
+}
+
+.g5-station {
+  position: absolute;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: none;
+  border: 0;
+  padding: 2px 4px;
+  color: var(--muted);
+  font: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.g5-station:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; border-radius: var(--radius-sm); }
+.g5-station-dot {
+  width: 11px; height: 11px; border-radius: 50%;
+  border: 2px solid var(--line-strong);
+  background: var(--bg);
+  flex: 0 0 auto;
+}
+.g5-station-name { color: var(--text); font-weight: 600; }
+.g5-station-years { color: var(--dim); font-size: 0.85rem; }
+.g5-station.g5-visited .g5-station-dot { background: var(--gold-deep); border-color: var(--gold); }
+.g5-station.g5-found .g5-station-dot { background: var(--gold); border-color: var(--gold); box-shadow: 0 0 10px rgba(243, 201, 122, 0.7); }
+.g5-station.g5-found .g5-station-name { color: var(--gold); }
+.g5-station.g5-selected .g5-station-name { text-decoration: underline; text-underline-offset: 3px; }
+
+.g5-walk-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 0.8rem 1.2rem; margin-top: 0.9rem; }
+.g5-hint { color: var(--dim); font-size: 0.9rem; margin: 0; }
+
+.g5-btn {
+  font: inherit;
+  color: var(--bg);
+  background: var(--gold);
+  border: 1px solid var(--gold-deep);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 1.1rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+.g5-btn:disabled { opacity: 0.55; cursor: default; }
+.g5-btn-quiet { background: transparent; color: var(--muted); border-color: var(--line-strong); font-weight: 400; }
+.g5-btn:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+
+/* ---------- station card ---------- */
+
+.g5-card {
+  margin-top: 1.1rem;
+  border: 1px solid var(--line-gold);
+  border-radius: var(--radius-md);
+  background: var(--panel-strong);
+  padding: 1rem 1.2rem;
+}
+.g5-card-title { font-family: var(--display); color: var(--gold); margin: 0 0 0.4rem; font-size: 1.35rem; }
+.g5-card-body p { margin: 0.35rem 0; color: var(--muted); }
+.g5-card-body strong { color: var(--text); }
+.g5-card-words { color: var(--text); font-style: italic; }
+.g5-card-ref a, .g5-yearmatch a, .g5-traditions a { color: var(--cyan); }
+
+.g5-yearmatch { border-top: 1px solid var(--line); margin-top: 0.7rem; padding-top: 0.7rem; }
+.g5-match { display: grid; gap: 0.35rem; margin: 0.6rem 0; max-width: 460px; }
+.g5-match-row { display: flex; align-items: center; gap: 0.6rem; }
+.g5-match-label { flex: 0 0 92px; color: var(--muted); font-size: 0.88rem; }
+.g5-match-bar { height: 12px; border-radius: 6px; background: var(--cyan); opacity: 0.75; }
+.g5-match-bar-year { background: var(--gold); }
+.g5-match-num { color: var(--text); font-size: 0.9rem; }
+
+/* ---------- count + compare ---------- */
+
+.g5-count-num { font-family: var(--display); font-size: clamp(2rem, 6vw, 3rem); color: var(--text); margin: 0.2rem 0; }
+.g5-count-unit { font-size: 1rem; color: var(--muted); font-family: inherit; }
+.g5-count-label { color: var(--gold); margin: 0.2rem 0 0.8rem; }
+.g5-count-tools { display: flex; flex-wrap: wrap; gap: 0.7rem; }
+
+.g5-cmp-pickers { display: flex; flex-wrap: wrap; gap: 0.8rem 1.4rem; margin-bottom: 0.7rem; }
+.g5-cmp-pickers label { color: var(--muted); display: grid; gap: 0.3rem; font-size: 0.95rem; }
+.g5-cmp-pickers select {
+  font: inherit;
+  color: var(--text);
+  background: var(--bg-soft);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.7rem;
+}
+.g5-cmp-out { color: var(--text); margin: 0; max-width: var(--content-reading); }
+
+/* ---------- readings ---------- */
+
+.g5-reading-grid { display: grid; gap: 1rem; grid-template-columns: 1fr; margin-top: 0.6rem; }
+@media (min-width: 900px) { .g5-reading-grid { grid-template-columns: repeat(3, 1fr); } }
+.g5-reading {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--panel-soft);
+  padding: 1rem 1.1rem;
+}
+.g5-reading h3 { color: var(--text); margin: 0 0 0.5rem; font-size: 1.08rem; }
+.g5-reading-tag {
+  display: block;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.2rem;
+}
+.g5-reading p { color: var(--muted); margin: 0.4rem 0; }
+.g5-traditions { color: var(--muted); border-top: 1px solid var(--line); margin-top: 1.1rem; padding-top: 0.9rem; max-width: var(--content-reading); }
+.g5-traditions strong { color: var(--text); }
+
+/* ---------- the list ---------- */
+
+.g5-table-scroll { overflow-x: auto; }
+.g5-table { border-collapse: collapse; width: 100%; min-width: 560px; }
+.g5-table th, .g5-table td {
+  text-align: left;
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+}
+.g5-table thead th { color: var(--gold); font-size: 0.88rem; }
+.g5-table tbody th { color: var(--text); }
+.g5-source { color: var(--dim); font-size: 0.9rem; margin-top: 0.7rem; }
+
+/* ---------- doors ---------- */
+
+.g5-doors { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; }
+.g5-doors a {
+  color: var(--gold);
+  border: 1px solid var(--line-gold);
+  border-radius: var(--radius-sm);
+  padding: 0.55rem 1rem;
+  text-decoration: none;
+  background: var(--panel);
+}
+.g5-doors a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .g5-orb, .g5-walker { box-shadow: 0 0 6px rgba(243, 201, 122, 0.4); }
+  * { scroll-behavior: auto !important; }
+}
