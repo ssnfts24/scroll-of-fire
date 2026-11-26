@@ -1,0 +1,125 @@
+/* The Codex Card System — the glint offer and the album.
+   Design: codex-card-system-design-2026-11-25.md.
+   Night / gold / ivory, from the Living Look token family. */
+
+.codex-card-glint {
+  position: fixed;
+  left: 50%;
+  bottom: max(14px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 1200;
+  width: min(430px, calc(100vw - 24px));
+  background: #0b1026;
+  color: #f4f1e8;
+  border: 1px solid #d99545;
+  border-radius: 16px;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.55);
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+  font-family: inherit;
+}
+.codex-card-glint__face {
+  border-radius: 12px;
+  min-height: 64px;
+  display: flex;
+  align-items: flex-end;
+  padding: 10px 12px;
+  color: #f4f1e8;
+  font-family: "Cinzel", serif;
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+}
+.codex-card-glint__text { margin: 0; font-size: 0.95rem; line-height: 1.45; color: #e8e2d2; }
+.codex-card-glint__actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.codex-card-glint__take {
+  background: #d99545;
+  color: #14100a;
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.92rem;
+}
+.codex-card-glint__later {
+  background: transparent;
+  color: #cfc7ae;
+  border: 1px solid #4a4436;
+  border-radius: 999px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-size: 0.92rem;
+}
+
+/* ------------------------- the album ------------------------- */
+
+.card-album { max-width: 1060px; margin: 0 auto; padding: 24px 16px 64px; }
+.card-album__intro { color: var(--ink-soft, #cfc7ae); max-width: 62ch; line-height: 1.55; }
+.card-set { margin-top: 36px; }
+.card-set > h2 { font-family: "Cinzel", serif; letter-spacing: 0.05em; }
+.card-set__note { color: var(--ink-soft, #cfc7ae); margin-top: -6px; }
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+.codex-card {
+  border: 1px solid #3a3428;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #0b1026;
+  color: #f4f1e8;
+  display: flex;
+  flex-direction: column;
+}
+.codex-card__face {
+  min-height: 118px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 2px;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.65);
+}
+.codex-card__name { font-family: "Cinzel", serif; font-size: 1.05rem; letter-spacing: 0.03em; }
+.codex-card__sub { font-size: 0.82rem; color: #efe8d4; opacity: 0.9; }
+.codex-card__body { padding: 10px 12px 12px; display: grid; gap: 6px; font-size: 0.88rem; line-height: 1.45; }
+.codex-card__essence { color: #d9d2ba; margin: 0; }
+.codex-card__stamp { color: #b7ad8f; font-size: 0.8rem; margin: 0; }
+.codex-card__flip {
+  margin: 0 12px 12px;
+  background: transparent;
+  color: #f3c97a;
+  border: 1px solid #6b5a33;
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  align-self: flex-start;
+}
+.codex-card__game { display: none; padding: 0 12px 12px; font-size: 0.86rem; line-height: 1.5; color: #e8e2d2; }
+.codex-card.is-game .codex-card__game { display: block; }
+.codex-card.is-game .codex-card__body { display: none; }
+.codex-card__game dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; margin: 0; }
+.codex-card__game dt { color: #b7ad8f; }
+.codex-card__game dd { margin: 0; }
+.codex-card--missing {
+  border-style: dashed;
+  background: #0a0d18;
+  color: #8f876f;
+}
+.codex-card--missing .codex-card__face {
+  background: linear-gradient(160deg, #0a0d18, #1a1d29);
+  text-shadow: none;
+  color: #8f876f;
+}
+.codex-card--first { border-color: #d99545; }
+.card-tombstones { margin-top: 36px; }
+.card-tombstones li { color: var(--ink-soft, #cfc7ae); line-height: 1.55; }
+
+@media (prefers-reduced-motion: reduce) {
+  .codex-card-glint { transition: none; animation: none; }
+}
