@@ -8,7 +8,7 @@
     "catalogEntries": 73,
     "issueCounts": {
       "no-global-navigation": 74,
-      "not-linked-directly-from-homepage": 26,
+      "not-linked-directly-from-homepage": 25,
       "deployed-but-unlinked": 64,
       "unreachable-from-homepage": 5,
       "compatibility-redirect-page": 8,
@@ -2079,6 +2079,7 @@
         "companions.html",
         "covenant-caravan.html",
         "downloads.html",
+        "episodes.html",
         "ethics.html",
         "garden.html",
         "genesis-oracle.html",
@@ -12931,15 +12932,14 @@
         "path": "episodes.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 3,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 4,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
-        "no-global-navigation",
-        "not-linked-directly-from-homepage"
+        "no-global-navigation"
       ]
     },
     {
