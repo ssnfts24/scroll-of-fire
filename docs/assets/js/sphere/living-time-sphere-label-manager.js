@@ -933,16 +933,53 @@
      * here: the cap pass reads its live box on purpose.
      */
     const _labelSizeCache = new WeakMap();
+    /*
+     * The content fingerprint the size key is built from
+     * (sphere lag pass 2, Nov 26, 2026 — R1.7 improvement
+     * release). The key used to embed el.innerHTML, and
+     * building it meant serializing the label's whole subtree
+     * — tags, attributes, inline styles and all — on EVERY
+     * check: every label on every layout pass, and every plate
+     * on every pass's first guard frame. In the throttled drag
+     * profile that one string cost more than the rest of the
+     * pass's own work put together (14.8 s of self time in the
+     * attribution run), and each key was a fresh allocation
+     * for the garbage collector. What a label's rendered size
+     * is actually a fact of, below the root's own class (which
+     * the key carries separately), is its words and which of
+     * its children stand shown: the fingerprint walks the
+     * subtree once collecting exactly that — every descendant's
+     * text (via the root's textContent), tag, class dressing,
+     * hidden flag, and inline display — in document order.
+     * Anything that would change the serialized markup's
+     * effect on size changes this fingerprint; the values the
+     * fingerprint is built from are the values the live
+     * serialization carried. The fingerprint itself is a
+     * fraction of the serialization's cost and allocates one
+     * short string per distinct segment.
+     */
+    function _labelContentDigest(el) {
+      let out = el.textContent || "";
+      const nodes = el.querySelectorAll("*");
+      for (let i = 0; i < nodes.length; i += 1) {
+        const n = nodes[i];
+        const cls = n.className && n.className.baseVal !== undefined
+          ? n.className.baseVal
+          : n.className || "";
+        out += `\u0002${n.tagName}|${cls}|${n.hidden ? 1 : 0}|${n.style?.display || ""}`;
+      }
+      return out;
+    }
     function _labelSizeKey(el) {
       // Everything a label's size is a fact of: its class
       // dressing (disc vs card, pinned, selected), its content
-      // and child inline styles (innerHTML carries the words
-      // and the detail line's shown/hidden state), the zoom
-      // band and stage, and the width bucket the stylesheet
-      // breakpoints answer to. Camera position is not in the
-      // key — that is the point.
+      // and child shown/hidden state (the digest carries the
+      // words and the detail line's shown/hidden state), the
+      // zoom band and stage, and the width bucket the
+      // stylesheet breakpoints answer to. Camera position is
+      // not in the key — that is the point.
       const widthBucket = typeof window !== "undefined" ? Math.round((window.innerWidth || 0) / 80) : 0;
-      return `${el.className || ""}|${el.innerHTML || ""}|${_stageEl?.dataset?.zoomStage || ""}|${_semanticContainer?.dataset?.band || ""}|${widthBucket}`;
+      return `${el.className || ""}|${_labelContentDigest(el)}|${_stageEl?.dataset?.zoomStage || ""}|${_semanticContainer?.dataset?.band || ""}|${widthBucket}`;
     }
     function _measuredLabelSize(el, fallbackW, fallbackH) {
       const key = _labelSizeKey(el);
@@ -1244,6 +1281,26 @@
     let _trackIdleFrames = 0;
     let _trackLastSig = "";
     const _trackVec = { current: null };
+    /*
+     * Track-frame scratch (sphere lag pass 2, Nov 26, 2026).
+     * _trackFrame runs on every animation frame while the
+     * camera moves, and it used to build its working sets —
+     * the plate list, the pill list, the plate geometry table,
+     * the focus order — as fresh arrays and objects on every
+     * frame, feeding the garbage collector a steady diet at
+     * exactly the moments the keeper is dragging. The sets are
+     * consumed entirely within the frame that builds them, so
+     * they now live in these scratch buffers, refilled in
+     * place: same entries, same order, same geometry — only
+     * the storage is reused. The geometry slots are plain
+     * objects whose five fields are rewritten for each plate,
+     * each frame.
+     */
+    const _scratchPlates = [];
+    const _scratchPills = [];
+    const _scratchByFocus = [];
+    const _scratchPlateGeom = [];
+    const _scratchPlateGeomSlots = [];
 
     function _hideLabel(el) {
       if (!el) return;
@@ -1390,9 +1447,13 @@
          * pitch ratio, so the 0.8× law holds at current geometry,
          * not just at pass geometry.
          */
-        const plateEntries = _tracked.filter(
-          entry => entry.kind === "plate" && entry.sx != null && entry.el?.style.display !== "none"
-        );
+        const plateEntries = _scratchPlates;
+        plateEntries.length = 0;
+        for (const entry of _tracked) {
+          if (entry.kind === "plate" && entry.sx != null && entry.el?.style.display !== "none") {
+            plateEntries.push(entry);
+          }
+        }
         for (const entry of plateEntries) {
           let nn = Infinity;
           for (const other of plateEntries) {
@@ -1455,11 +1516,17 @@
          * waits, exactly as it does at pass time. Pill against
          * pill is answered by shifting only — names never fade.
          */
-        const pillEntries = _tracked.filter(
-          entry => entry.kind === "pill" && entry.sx != null && entry.rectW > 0 && entry.el?.style.display !== "none"
-        );
+        const pillEntries = _scratchPills;
+        pillEntries.length = 0;
+        for (const entry of _tracked) {
+          if (entry.kind === "pill" && entry.sx != null && entry.rectW > 0 && entry.el?.style.display !== "none") {
+            pillEntries.push(entry);
+          }
+        }
         if (pillEntries.length && plateEntries.length) {
-          const plateGeom = plateEntries.map(entry => {
+          const plateGeom = _scratchPlateGeom;
+          plateGeom.length = 0;
+          for (const entry of plateEntries) {
             if (entry.natW == null) entry.natW = _trackNatWidth(entry.el);
             const scale = (entry.baseScale || 1) * (entry.shrink ?? 1) * (entry.selected ? growth : entry.swell ? swell : 1);
             const dia = entry.discPx > 0 ? entry.discPx * scale : entry.natW * scale;
@@ -1467,21 +1534,26 @@
               const idm = /pattern-day-number-(\d+)/.exec(entry.el?.dataset?.semanticId || "");
               entry._moonNum = idm ? Math.floor((Number(idm[1]) - 1) / 28) + 1 : 0;
             }
-            return {
-              entry,
-              cx: entry.sx,
-              cy: entry.sy,
-              r: dia / 2,
-              moon: entry._moonNum
-            };
-          });
+            const slot = plateGeom.length < _scratchPlateGeomSlots.length
+              ? _scratchPlateGeomSlots[plateGeom.length]
+              : (_scratchPlateGeomSlots[plateGeom.length] = { entry: null, cx: 0, cy: 0, r: 0, moon: 0 });
+            slot.entry = entry;
+            slot.cx = entry.sx;
+            slot.cy = entry.sy;
+            slot.r = dia / 2;
+            slot.moon = entry._moonNum;
+            plateGeom.push(slot);
+          }
           // Guard budget (fix 4b): choose this frame's served
           // pills — the selected pill first, then nearest the
           // selection — rotating through the rest across frames.
           // On a fullGuard frame every pill is served.
           const focusEntry = _tracked.find(entry => entry.selected && entry.sx != null)
             || { sx: stageW / 2, sy: stageH / 2 };
-          const byFocus = [...pillEntries].sort((a, b) => {
+          const byFocus = _scratchByFocus;
+          byFocus.length = 0;
+          for (const entry of pillEntries) byFocus.push(entry);
+          byFocus.sort((a, b) => {
             if (!!a.selected !== !!b.selected) return a.selected ? -1 : 1;
             const da = Math.hypot(a.sx - focusEntry.sx, a.sy - focusEntry.sy);
             const db = Math.hypot(b.sx - focusEntry.sx, b.sy - focusEntry.sy);
@@ -3622,12 +3694,41 @@
           el.append(body, edit, scheduleDay, close);
           _semanticContainer.appendChild(el);
           _semanticEls.set(target.id, el);
+          /*
+           * The card's working parts, remembered on the element
+           * (sphere lag pass 2, Nov 26, 2026). The refresh below
+           * used to re-find these six children with querySelector
+           * on every pass for every card; the manager builds them
+           * once, here, and never replaces them, so the references
+           * are the same nodes the queries returned. The refresh
+           * falls back to the queries for any element that does
+           * not carry them.
+           */
+          el._semanticParts = {
+            statusEl: status,
+            titleEl: title,
+            detailEl: detail,
+            editEl: edit,
+            scheduleDayEl: scheduleDay,
+            closeEl: close
+          };
         }
         if (!el) continue;
         activeSemanticIds.add(target.id);
         el._semanticTarget = target;
-        const scheduleDayEl =
-          el.querySelector?.(
+        /*
+         * Refresh writes (sphere lag pass 2, Nov 26, 2026): a
+         * write whose value already stands is skipped — setting
+         * textContent to the same words still replaces the text
+         * node and dirties layout on every pass, and at the
+         * gesture cadence most refreshes repeat the standing
+         * values. Every value below lands exactly as before when
+         * it differs; only the redundant writes are gone.
+         */
+        const parts = el._semanticParts || null;
+        const scheduleDayEl = parts
+          ? parts.scheduleDayEl
+          : el.querySelector?.(
             ".sphere-semantic-label-schedule"
           );
 
@@ -3641,34 +3742,50 @@
               && target.selected
             );
 
-          scheduleDayEl.hidden =
-            !scheduleableSelectedDay;
+          const nextHidden = !scheduleableSelectedDay;
+          if (scheduleDayEl.hidden !== nextHidden) {
+            scheduleDayEl.hidden = nextHidden;
+          }
 
-          scheduleDayEl.setAttribute(
-            "aria-label",
-            target.moon
-              ? `Schedule something on Moon ${target.moon} selected day`
-              : "Schedule something on selected day"
-          );
+          const nextAria = target.moon
+            ? `Schedule something on Moon ${target.moon} selected day`
+            : "Schedule something on selected day";
+          if (scheduleDayEl.getAttribute("aria-label") !== nextAria) {
+            scheduleDayEl.setAttribute(
+              "aria-label",
+              nextAria
+            );
+          }
         }
 
-        const editEl = el.querySelector?.(".sphere-semantic-label-edit");
-        if (editEl) editEl.hidden = !(target.kind === "living-plan" && target.recordId);
-        const statusEl = el.querySelector?.(".sphere-semantic-label-status");
-        const titleEl = el.querySelector?.(".sphere-semantic-label-title");
-        const detailEl = el.querySelector?.(".sphere-semantic-label-detail");
+        const editEl = parts ? parts.editEl : el.querySelector?.(".sphere-semantic-label-edit");
+        if (editEl) {
+          const nextEditHidden = !(target.kind === "living-plan" && target.recordId);
+          if (editEl.hidden !== nextEditHidden) editEl.hidden = nextEditHidden;
+        }
+        const statusEl = parts ? parts.statusEl : el.querySelector?.(".sphere-semantic-label-status");
+        const titleEl = parts ? parts.titleEl : el.querySelector?.(".sphere-semantic-label-title");
+        const detailEl = parts ? parts.detailEl : el.querySelector?.(".sphere-semantic-label-detail");
         if (statusEl) {
           const statusText = target.statusLabel || "";
-          statusEl.textContent = `${target.symbol ? `${target.symbol} ` : ""}${statusText}`.trim();
-          statusEl.style.display = statusText || target.symbol ? "" : "none";
+          const nextStatus = `${target.symbol ? `${target.symbol} ` : ""}${statusText}`.trim();
+          if (statusEl.textContent !== nextStatus) statusEl.textContent = nextStatus;
+          const nextStatusDisplay = statusText || target.symbol ? "" : "none";
+          if (statusEl.style.display !== nextStatusDisplay) statusEl.style.display = nextStatusDisplay;
         }
-        if (titleEl) titleEl.textContent = target.label;
+        if (titleEl && titleEl.textContent !== target.label) titleEl.textContent = target.label;
         if (detailEl) {
-          detailEl.textContent = target.detail;
-          detailEl.style.display = target.detail && (target.pinned || candidate.distance <= target.detailDistance) ? "" : "none";
+          if (detailEl.textContent !== target.detail) detailEl.textContent = target.detail;
+          const nextDetailDisplay = target.detail && (target.pinned || candidate.distance <= target.detailDistance) ? "" : "none";
+          if (detailEl.style.display !== nextDetailDisplay) detailEl.style.display = nextDetailDisplay;
         }
-        const closeEl = el.querySelector?.(".sphere-semantic-label-close");
-        closeEl?.setAttribute?.("aria-label", `Hide ${target.label} label until you move away`);
+        const closeEl = parts ? parts.closeEl : el.querySelector?.(".sphere-semantic-label-close");
+        if (closeEl) {
+          const nextCloseAria = `Hide ${target.label} label until you move away`;
+          if (closeEl.getAttribute("aria-label") !== nextCloseAria) {
+            closeEl.setAttribute("aria-label", nextCloseAria);
+          }
+        }
         el.classList.toggle("is-pinned", target.pinned);
         el.classList.toggle("is-selected", target.selected);
         el.classList.toggle("is-interactive", target.interactive);

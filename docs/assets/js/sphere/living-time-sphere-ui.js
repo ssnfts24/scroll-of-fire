@@ -515,8 +515,51 @@
     } catch { /* cache stays off; inspections run uncached */ }
   }
 
+  /*
+   * Per-collection inspection memo (Sphere lag pass, Nov 26, 2026 —
+   * R1.7 improvement release). One runtime-debug snapshot runs
+   * several whole-document censuses back to back (fixed/sticky,
+   * bottom viewport, host children, media), and each census used
+   * to inspect the same nodes again: the 200 ms cache above
+   * expires mid-snapshot on a loaded phone, so one snapshot paid
+   * ~9,000 inspections (a getBoundingClientRect + a
+   * getComputedStyle each) over a ~3,700-node document — measured
+   * at 152.9 s of a throttled drag profile in
+   * _inspectElementNodeUncached alone. A collection is one
+   * synchronous run — the document cannot change underneath it —
+   * so within a collection each node's inspection is computed at
+   * most once and the censuses share the values, which are the
+   * same values the un-memoized path computes at that instant.
+   * The memo lives only for the collection's synchronous span
+   * (depth-counted, released in a finally), so no value can leak
+   * into a later, unrelated read; inspections outside a
+   * collection behave exactly as before.
+   */
+  let _inspectEpochDepth = 0;
+  let _inspectEpochMemo = null;
+
+  function _beginInspectEpoch() {
+    if (_inspectEpochDepth === 0) _inspectEpochMemo = new WeakMap();
+    _inspectEpochDepth += 1;
+  }
+
+  function _endInspectEpoch() {
+    _inspectEpochDepth -= 1;
+    if (_inspectEpochDepth <= 0) {
+      _inspectEpochDepth = 0;
+      _inspectEpochMemo = null;
+    }
+  }
+
   function _inspectElementNode(node) {
     if (!node || node.nodeType !== 1) return null;
+    if (_inspectEpochMemo && _inspectEpochMemo.has(node)) return _inspectEpochMemo.get(node);
+    const result = _inspectElementNodeCached(node);
+    if (result && _inspectEpochMemo) _inspectEpochMemo.set(node, result);
+    return result;
+  }
+
+  function _inspectElementNodeCached(node) {
     _installInspectCache();
     if (!_inspectCacheLive) return _inspectElementNodeUncached(node);
     const now = typeof performance !== "undefined" ? performance.now() : Date.now();
@@ -654,16 +697,35 @@
    * top remaining cost named by the first performance pass (PR
    * #344). The snapshot is now computed at most once per
    * RUNTIME_DEBUG_TTL_MS and shared between calls; the cache
-   * resets on scroll and resize (rects are viewport-relative) and
-   * when the Life Atlas records change. Every other field of
-   * getSphereDiagnostics() is still computed fresh on each call —
-   * the readout's own numbers do not change; only the embedded
-   * debug snapshot is cadence-limited, and the standalone
-   * getSphereRuntimeDebugSnapshot() still inspects fresh on
-   * demand (and refreshes this cache), so a deliberate debug ask
-   * always sees the document as it stands.
+   * resets when the Life Atlas records change. Every other field
+   * of getSphereDiagnostics() is still computed fresh on each
+   * call — the readout's own numbers do not change; only the
+   * embedded debug snapshot is cadence-limited, and the
+   * standalone getSphereRuntimeDebugSnapshot() still inspects
+   * fresh on demand (and refreshes this cache), so a deliberate
+   * debug ask always sees the document as it stands.
+   *
+   * Cadence repair (Sphere lag pass, Nov 26, 2026 — R1.7
+   * improvement release). The pass-3 cadence did not hold under
+   * load, for two measured reasons: the TTL was anchored at the
+   * moment a snapshot STARTED, and a snapshot on a loaded phone
+   * outlasts 2 s, so the stored copy was already stale the
+   * instant it landed and the next call recomputed the whole
+   * document; and scroll/resize flushed the cache, and
+   * interaction scrolls constantly — the cache was emptiest
+   * exactly while the keeper was dragging. Measured on the
+   * throttled A16-class profile: one snapshot cost 181.8 s of a
+   * drag profile and ~9.4 s of a 10 s idle window, ~29.6k
+   * getBoundingClientRect calls per 10 s at idle, driven by a
+   * 500 ms readiness poll in the armillary layer asking for
+   * diagnostics. The TTL is now anchored at COMPLETION, runs
+   * 30 s (the snapshot carries its own capturedAt, so the
+   * embed's age is printed on its face), and only a records
+   * change — real content the snapshot describes — flushes it.
+   * The values served are the same computation's values; the
+   * instrument's own behaviour does not change.
    */
-  const RUNTIME_DEBUG_TTL_MS = 2000;
+  const RUNTIME_DEBUG_TTL_MS = 30000;
   let _runtimeDebugCache = { at: 0, value: null };
   let _runtimeDebugCacheLive = false;
 
@@ -672,8 +734,6 @@
     if (typeof window === "undefined" || typeof document === "undefined") return;
     try {
       const reset = () => { _runtimeDebugCache = { at: 0, value: null }; };
-      window.addEventListener("resize", reset);
-      document.addEventListener("scroll", reset, true);
       document.addEventListener("sof:life-atlas-records-changed", reset);
       _runtimeDebugCacheLive = true;
     } catch { /* cache stays off; snapshots run uncached */ }
@@ -682,10 +742,9 @@
   function _collectRuntimeDebugSnapshotMemoized() {
     _installRuntimeDebugCache();
     if (!_runtimeDebugCacheLive) return _collectRuntimeDebugSnapshot();
-    const now = Date.now();
-    if (_runtimeDebugCache.value && now - _runtimeDebugCache.at < RUNTIME_DEBUG_TTL_MS) return _runtimeDebugCache.value;
+    if (_runtimeDebugCache.value && Date.now() - _runtimeDebugCache.at < RUNTIME_DEBUG_TTL_MS) return _runtimeDebugCache.value;
     const value = _collectRuntimeDebugSnapshot();
-    _runtimeDebugCache = { at: now, value };
+    _runtimeDebugCache = { at: Date.now(), value };
     return value;
   }
 
@@ -750,7 +809,16 @@
     }
   }
 
-  function _verifyRenderSurface(container, { requireVisibleCenter = true, expectedGeneration = null } = {}) {
+  function _verifyRenderSurface(container, options = {}) {
+    _beginInspectEpoch();
+    try {
+      return _verifyRenderSurfaceImpl(container, options);
+    } finally {
+      _endInspectEpoch();
+    }
+  }
+
+  function _verifyRenderSurfaceImpl(container, { requireVisibleCenter = true, expectedGeneration = null } = {}) {
     const renderer = globalThis.LivingTimeSphereRenderer3d;
     const rendererDiag = renderer?.getDiagnostics?.() || {};
     const host = container || document.getElementById("sphere-container");
@@ -954,6 +1022,15 @@
   }
 
   function _collectRuntimeDebugSnapshot() {
+    _beginInspectEpoch();
+    try {
+      return _collectRuntimeDebugSnapshotImpl();
+    } finally {
+      _endInspectEpoch();
+    }
+  }
+
+  function _collectRuntimeDebugSnapshotImpl() {
     return {
       capturedAt: Date.now(),
       bottomViewport: _collectBottomViewportDiagnostics(190),

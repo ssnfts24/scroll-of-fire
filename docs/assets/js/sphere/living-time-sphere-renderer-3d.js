@@ -1024,7 +1024,46 @@
     try {
       _semanticWidthObserver?.disconnect?.();
       _semanticWidthObserver = new ResizeObserver(() => {
-        _semanticWidthCache = null;
+        /* Only a width change can stale a width cache (Sphere
+         * lag pass, Nov 26, 2026 — R1.7 improvement release).
+         * The observer reports ANY size change, and the stage's
+         * height churns during interaction (the readout and the
+         * dock move as the keeper drags and selects), so the
+         * cache used to die mid-drag and _semanticScreenWidth
+         * paid a forced layout flush per pointer move — 1,279 ms
+         * of self time in the throttled drag profile. The
+         * callback now re-reads the one value the cache holds
+         * (a single read per resize report, not per frame) and
+         * drops the cache only when that value actually moved,
+         * so the width served is always exactly clientWidth.
+         *
+         * Pass 2 (same night): the callback no longer drops the
+         * cache on a width change — it writes the width it just
+         * read INTO the cache. Dropping it left the refill to
+         * _semanticScreenWidth, which render() calls every
+         * frame; a refill landing right after a label layout
+         * pass had dirtied the document paid that pass's whole
+         * pending layout in one synchronous flush (a single
+         * 6.2 s occurrence in the pass-2 attribution profile).
+         * ResizeObserver reports are delivered inside the same
+         * frame cycle as the resize itself, before the next
+         * frame is rendered, so the width the hot path serves
+         * is still exactly the container's clientWidth at every
+         * rendered frame — it is simply never the hot path that
+         * pays for reading it. */
+        const cache = _semanticWidthCache;
+        if (!cache) return;
+        const width = cache.el?.clientWidth || 0;
+        if (width === cache.width) return;
+        if (width > 0) {
+          _semanticWidthCache = {
+            el: cache.el,
+            width,
+            innerWidth: typeof window !== "undefined" ? (window.innerWidth || 0) : 0
+          };
+        } else {
+          _semanticWidthCache = null;
+        }
       });
       _semanticWidthObserver.observe(el);
       _semanticWidthObservedEl = el;
@@ -2540,6 +2579,17 @@
     return Math.min(limit, Math.max(-limit, value));
   }
 
+  /*
+   * Scratch vectors for the name-tag pass below (sphere lag
+   * pass 2, Nov 26, 2026): the pass runs on every rendered
+   * frame and used to allocate one or two Vector3 per tag per
+   * frame. Each tag's projection is finished before the next
+   * begins, so two shared scratches carry the whole pass —
+   * the arithmetic is identical, only the storage is reused.
+   */
+  const _tagScratchProjected = { current: null };
+  const _tagScratchDrawn = { current: null };
+
   function _keepArmillaryNameTagsWhole() {
     const tags = _objects.armillaryNameTags;
     if (!tags || !_camera || !_THREE) return;
@@ -2548,11 +2598,13 @@
     const aspect = _camera.aspect || 0;
     if (!(tanHalf > 0) || !(aspect > 0)) return;
     _camera.updateMatrixWorld?.();
+    if (!_tagScratchProjected.current) _tagScratchProjected.current = new _THREE.Vector3();
+    if (!_tagScratchDrawn.current) _tagScratchDrawn.current = new _THREE.Vector3();
     for (const key of Object.keys(tags)) {
       const sprite = tags[key];
       const anchor = sprite?.userData?.armillaryTagAnchor;
       if (!sprite || !sprite.visible || !anchor) continue;
-      const projected = new _THREE.Vector3(anchor.x, anchor.y, anchor.z);
+      const projected = _tagScratchProjected.current.set(anchor.x, anchor.y, anchor.z);
       const depth = projected.distanceTo(_camera.position);
       projected.project(_camera);
       if (!Number.isFinite(projected.x) || !Number.isFinite(projected.y)
@@ -2571,7 +2623,7 @@
         }
         continue;
       }
-      const drawn = new _THREE.Vector3(keptX, keptY, projected.z).unproject(_camera);
+      const drawn = _tagScratchDrawn.current.set(keptX, keptY, projected.z).unproject(_camera);
       sprite.position.copy(drawn);
     }
   }
