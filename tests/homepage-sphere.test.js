@@ -813,6 +813,47 @@ test("no R1.7 protected file is touched by this branch", () => {
   const carriesImprovementRelease = changed.has(
     "tests/sphere-improvement-release.test.js"
   );
+  /*
+   * Sphere lag pass declaration (Nov 26, 2026 — Aaron's phone
+   * reports, in his words: "On the web and the app. The sphere
+   * is still really laggy", and that night, on the pass-1
+   * preview: "The sphere is still lagging. I think it can
+   * perform way better. Go over it really good... optimize it
+   * entirely"). Under the Nov 25 R1.7 improvement release,
+   * this change set declares itself by carrying its signature
+   * file (the lag-pass pin test, which lives outside the
+   * protected directories), and its declared set names exactly
+   * the three protected paths the two passes touch:
+   *   - the UI module (pass 1: one diagnostics snapshot
+   *     inspects each node at most once per collection, and
+   *     the snapshot embedded in getSphereDiagnostics()
+   *     refreshes on a 30 s cadence anchored at completion —
+   *     the one named behaviour change, debug surface only);
+   *   - the renderer (pass 1: the semantic-width cache drops
+   *     only when the width moves; pass 2: the ResizeObserver
+   *     writes a moved width into the cache instead of leaving
+   *     the refill to the render path, and the armillary
+   *     name-tag pass reuses two scratch vectors);
+   *   - the label manager (pass 2: the label size cache key
+   *     is a content digest instead of a full innerHTML
+   *     serialization; the semantic card refresh remembers
+   *     its child elements and skips writes whose value
+   *     already stands; the per-frame tracking guard refills
+   *     scratch buffers instead of allocating its working
+   *     sets every frame).
+   * Every value served is the value the original code
+   * computed; no geometry, rendering, camera, motion,
+   * selection, or label content changes. Every other
+   * protected path still fails this test loudly.
+   */
+  const lagPassDeclaredProtected = new Set([
+    "docs/assets/js/sphere/living-time-sphere-ui.js",
+    "docs/assets/js/sphere/living-time-sphere-renderer-3d.js",
+    "docs/assets/js/sphere/living-time-sphere-label-manager.js"
+  ]);
+  const carriesLagPass = changed.has(
+    "tests/sphere-lag-pass.test.js"
+  );
   for (const file of changed) {
     if (!protectedPaths.has(file)) continue;
     assert.ok(
@@ -833,7 +874,8 @@ test("no R1.7 protected file is touched by this branch", () => {
         (carriesAppBridge && appBridgeDeclaredProtected.has(file)) ||
         (carriesProtectedPerf && protectedPerfDeclaredProtected.has(file)) ||
         (carriesPwaIdentity && pwaIdentityDeclaredProtected.has(file)) ||
-        (carriesImprovementRelease && improvementReleaseDeclaredProtected.has(file)),
+        (carriesImprovementRelease && improvementReleaseDeclaredProtected.has(file)) ||
+        (carriesLagPass && lagPassDeclaredProtected.has(file)),
       `R1.7 protected file changed: ${file}`
     );
   }
