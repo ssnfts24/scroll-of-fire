@@ -174,14 +174,23 @@ export async function createStallCheckout({
       return { ok: false, reason: "return-url-not-the-sites" };
     }
   }
-  const res = await transport("https://api.stripe.com/v1/checkout/sessions", {
-    method: "POST",
-    headers: {
-      authorization: `Bearer ${env[STRIPE_ENV.secretKey]}`,
-      "content-type": "application/x-www-form-urlencoded",
-    },
-    body: built.form.toString(),
-  });
+  let res = null;
+  try {
+    res = await transport("https://api.stripe.com/v1/checkout/sessions", {
+      method: "POST",
+      headers: {
+        authorization: `Bearer ${env[STRIPE_ENV.secretKey]}`,
+        "content-type": "application/x-www-form-urlencoded",
+      },
+      body: built.form.toString(),
+    });
+  } catch {
+    /* The road itself failed — a network error between here
+     * and Stripe. That is the same plain answer as an API
+     * error, never an exception thrown at the keeper. */
+    return { ok: false, reason: "stripe-session-failed",
+      words: "Stripe did not open a checkout. Nothing was charged." };
+  }
   if (!res || res.status !== 200 || !res.json || !res.json.url) {
     return { ok: false, reason: "stripe-session-failed",
       words: "Stripe did not open a checkout. Nothing was charged." };
@@ -275,7 +284,19 @@ export async function recordOrder(store, order) {
     return { ok: false, reason: "order-shape-incomplete" };
   }
   const existing = await store.get(orderKey(order.sessionId));
-  if (existing) return { ok: true, order: existing, already: true };
+  if (existing) {
+    /* Already recorded — but a first write may have died
+     * between the order and the index, leaving the order
+     * standing with no index naming it. A redelivery
+     * heals that half-state before it answers. */
+    const index = await store.get(INDEX_KEY);
+    const ids = Array.isArray(index) ? index : [];
+    if (!ids.includes(order.sessionId)) {
+      ids.push(order.sessionId);
+      await store.set(INDEX_KEY, ids);
+    }
+    return { ok: true, order: existing, already: true };
+  }
   await store.set(orderKey(order.sessionId), order);
   const index = await store.get(INDEX_KEY);
   const ids = Array.isArray(index) ? index : [];
@@ -313,11 +334,19 @@ export async function fulfilStallOrder({
   if (stored) return { ok: true, order: stored, source: "record" };
   const config = stallConfig(env, catalogue);
   if (!config.connected) return refuse("stripe-not-connected");
-  const res = await transport(
-    `https://api.stripe.com/v1/checkout/sessions/${sessionId}`, {
-      method: "GET",
-      headers: { authorization: `Bearer ${env[STRIPE_ENV.secretKey]}` },
-    });
+  let res = null;
+  try {
+    res = await transport(
+      `https://api.stripe.com/v1/checkout/sessions/${sessionId}`, {
+        method: "GET",
+        headers: { authorization: `Bearer ${env[STRIPE_ENV.secretKey]}` },
+      });
+  } catch {
+    /* The road itself failed: the order is simply not
+     * readable yet — the same plain answer as a session
+     * Stripe does not know, never an exception. */
+    return { ok: false, reason: "order-not-recorded-yet" };
+  }
   if (!res || res.status !== 200 || !res.json) {
     return { ok: false, reason: "order-not-recorded-yet" };
   }

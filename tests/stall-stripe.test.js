@@ -26,12 +26,30 @@
  * record back — or, when the webhook has not landed
  * yet, asks Stripe for the session and records it
  * through the same law.
+ *
+ * THE FAILURE SIDE (Nov 27, 2026, Aaron's word: "add
+ * in tests for failed purchases etc."): unpaid endings
+ * (expired, async-failed, completed-but-unpaid) record
+ * nothing and cannot be fulfilled; a failure followed
+ * by a success leaves exactly one order, from the
+ * success; replayed and redelivered webhooks still
+ * record exactly once; the cancel road writes nothing
+ * on the keeper's device; checkout-time failures (an
+ * API error, a session with no URL, a transport that
+ * throws) answer plainly and leave the till untouched;
+ * a valid signature does not let a passport carry a
+ * wrong amount past the catalogue check; broken shapes
+ * (missing item, unknown item, malformed session id)
+ * record nothing; and a store that fails mid-record
+ * heals its index on redelivery, so no order is ever
+ * left half-written.
  */
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createHmac } from "node:crypto";
 import fs from "node:fs";
+import vm from "node:vm";
 
 import {
   MemoryOrderStore, buildSessionForm, createStallCheckout,
@@ -305,4 +323,349 @@ test("fulfilment reads the record, and heals its own race from Stripe", async ()
   assert.equal(missing.ok, false);
   assert.equal(missing.reason, "order-not-recorded-yet");
   assert.equal(await readOrder(store, "cs_test_absent"), null);
+});
+
+/* ------------------------------------------------------------------ */
+/* The failure side — failed purchases and everything that can go      */
+/* wrong around them (Nov 27, 2026).                                   */
+/* ------------------------------------------------------------------ */
+
+/* The webhook road composed exactly as stall.mjs walks it: verify
+ * the signature over the raw body, resolve the event, record only
+ * a resolved order. Returns what the road did, so a proof can say
+ * plainly whether anything was written. */
+async function deliverWebhook(store, event, atSec = NOW) {
+  const raw = JSON.stringify(event);
+  const verdict = verifyWebhook({
+    env: { STRIPE_WEBHOOK_SECRET: WHSEC }, rawBody: raw,
+    signatureHeader: signedHeader(WHSEC, raw, atSec), nowSeconds: atSec,
+  });
+  assert.equal(verdict.ok, true, "the event is properly signed");
+  const resolved = orderFromStallCheckoutCompleted(
+    event, catalogue, "2026-11-27T22:00:00.000Z");
+  if (!resolved.ok) return { recorded: false, reason: resolved.reason };
+  const recorded = await recordOrder(store, resolved.order);
+  return {
+    recorded: recorded.ok, already: !!recorded.already,
+    reason: recorded.reason,
+  };
+}
+
+function unpaidSession(extra = {}) {
+  return {
+    id: "cs_test_fail",
+    payment_status: "unpaid",
+    status: "open",
+    amount_total: 700,
+    currency: "usd",
+    payment_method_types: ["card", "cashapp"],
+    metadata: { item: "the-wayfarers-lantern" },
+    ...extra,
+  };
+}
+
+const ofType = (type, object) => ({ type, data: { object } });
+
+test("unpaid endings record nothing: expired, async-failed, completed-but-unpaid", async () => {
+  const store = new MemoryOrderStore();
+  const expired = await deliverWebhook(store, ofType(
+    "checkout.session.expired",
+    unpaidSession({ status: "expired" })));
+  assert.equal(expired.recorded, false);
+  assert.equal(expired.reason, "event-not-a-completed-checkout");
+  const asyncFailed = await deliverWebhook(store, ofType(
+    "checkout.session.async_payment_failed",
+    unpaidSession({ status: "complete" })));
+  assert.equal(asyncFailed.recorded, false);
+  assert.equal(asyncFailed.reason, "event-not-a-completed-checkout");
+  const completedUnpaid = await deliverWebhook(store, ofType(
+    "checkout.session.completed", unpaidSession({ status: "complete" })));
+  assert.equal(completedUnpaid.recorded, false);
+  assert.equal(completedUnpaid.reason, "checkout-not-paid");
+  // nothing stands in the store: no order, no index entry
+  assert.equal(store.values.size, 0);
+  assert.equal(await readOrder(store, "cs_test_fail"), null);
+});
+
+test("fulfilment refuses sessions Stripe reports unpaid, open, or expired", async () => {
+  const env = { STRIPE_SECRET_KEY: SECRET };
+  const store = new MemoryOrderStore();
+  for (const session of [
+    unpaidSession({ status: "open" }),
+    unpaidSession({ status: "expired" }),
+    unpaidSession({ status: "complete" }), // async payment failed
+  ]) {
+    const out = await fulfilStallOrder({
+      env, store, catalogue, sessionId: session.id, atIso: "",
+      transport: async () => ({ status: 200, json: session }),
+    });
+    assert.equal(out.ok, false, session.status);
+    assert.equal(out.reason, "checkout-not-paid", session.status);
+  }
+  assert.equal(store.values.size, 0);
+});
+
+test("a failed attempt, then a success, leaves exactly one order — the success", async () => {
+  const env = { STRIPE_SECRET_KEY: SECRET };
+  const store = new MemoryOrderStore();
+  const failed = await deliverWebhook(store, ofType(
+    "checkout.session.expired",
+    unpaidSession({ id: "cs_test_fail", status: "expired" })));
+  assert.equal(failed.recorded, false);
+  // the keeper returns and tries again, and pays
+  const won = await deliverWebhook(store,
+    completedEvent("the-wayfarers-lantern", 700, { id: "cs_test_win" }));
+  assert.equal(won.recorded, true);
+  assert.deepEqual(await store.get("index"), ["cs_test_win"]);
+  const order = await readOrder(store, "cs_test_win");
+  assert.equal(order.item, "the-wayfarers-lantern");
+  // and the failed session can never be fulfilled after the fact
+  const zombie = await fulfilStallOrder({
+    env, store, catalogue, sessionId: "cs_test_fail", atIso: "",
+    transport: async () => ({
+      status: 200, json: unpaidSession({ status: "expired" }),
+    }),
+  });
+  assert.equal(zombie.ok, false);
+  assert.equal(zombie.reason, "checkout-not-paid");
+  assert.equal(await readOrder(store, "cs_test_fail"), null);
+});
+
+test("replayed and redelivered webhooks still record exactly once", async () => {
+  const store = new MemoryOrderStore();
+  const eventA = completedEvent("the-wayfarers-lantern", 700, { id: "cs_test_a" });
+  const first = await deliverWebhook(store, eventA);
+  assert.equal(first.recorded, true);
+  assert.equal(first.already, false);
+  // the same event delivered a second time (Stripe retries)
+  const replay = await deliverWebhook(store, eventA);
+  assert.equal(replay.recorded, true);
+  assert.equal(replay.already, true);
+  // a second, later purchase of another priced good
+  const other = catalogue.items.find((it) => it.id !== "the-wayfarers-lantern"
+    && !(it.rarity && it.rarity.type === "earned-only")
+    && typeof it.price === "number" && it.price > 0);
+  const eventB = completedEvent(other.id, Math.round(other.price * 100),
+    { id: "cs_test_b" });
+  const second = await deliverWebhook(store, eventB);
+  assert.equal(second.recorded, true);
+  // the OLDER event redelivered after the newer one landed
+  const lateReplay = await deliverWebhook(store, eventA);
+  assert.equal(lateReplay.already, true);
+  assert.deepEqual(await store.get("index"), ["cs_test_a", "cs_test_b"]);
+  assert.equal((await readOrder(store, "cs_test_a")).item,
+    "the-wayfarers-lantern");
+  assert.equal((await readOrder(store, "cs_test_b")).item, other.id);
+});
+
+test("the cancel road writes nothing on the device and says nothing was charged", () => {
+  const source = fs.readFileSync(new URL(
+    "../docs/assets/js/spark-stall-checkout.js", import.meta.url), "utf8");
+  const writes = [];
+  const fetches = [];
+  const created = [];
+  const fakeElement = () => ({
+    className: "", innerHTML: "", textContent: "", style: {},
+    children: [],
+    setAttribute() {},
+    appendChild(child) { this.children.push(child); return child; },
+    insertBefore(child) { this.children.push(child); return child; },
+    addEventListener() {},
+    querySelector() { return null; },
+  });
+  const section = fakeElement();
+  const sandbox = {
+    console,
+    URLSearchParams,
+    fetch: (...args) => {
+      fetches.push(args);
+      return Promise.reject(new Error("must not be called"));
+    },
+    document: {
+      getElementById: (id) => (id === "spark-stall" ? section : null),
+      createElement: () => {
+        const el = fakeElement();
+        created.push(el);
+        return el;
+      },
+    },
+    window: {
+      location: {
+        search: "?order=cancelled",
+        origin: "https://codexofreality.org",
+        assign() {},
+      },
+      localStorage: {
+        getItem: () => null,
+        setItem: (key, value) => writes.push([key, value]),
+      },
+    },
+  };
+  sandbox.window.document = sandbox.document;
+  vm.runInNewContext(source, sandbox);
+  // the cancelled standing is spoken, plainly
+  assert.match(created[0].innerHTML, /Checkout was left unfinished/);
+  assert.match(created[0].innerHTML, /nothing was charged/);
+  // nothing written to the goods shelf, no fulfilment asked for
+  assert.deepEqual(writes, []);
+  assert.deepEqual(fetches, []);
+});
+
+test("checkout-time failures answer plainly and leave the till untouched", async () => {
+  const env = { STRIPE_SECRET_KEY: SECRET };
+  // Stripe answers an error
+  const apiError = await createStallCheckout({
+    env, catalogue, item: "the-wayfarers-lantern", ...OK_URLS,
+    transport: async () => ({
+      status: 500, json: { error: { message: "boom" } },
+    }),
+  });
+  assert.equal(apiError.ok, false);
+  assert.equal(apiError.reason, "stripe-session-failed");
+  assert.match(apiError.words, /Nothing was charged/);
+  // Stripe answers 200 but no hosted URL — nothing to send the keeper to
+  const noUrl = await createStallCheckout({
+    env, catalogue, item: "the-wayfarers-lantern", ...OK_URLS,
+    transport: async () => ({ status: 200, json: { id: "cs_test_1" } }),
+  });
+  assert.equal(noUrl.ok, false);
+  assert.equal(noUrl.reason, "stripe-session-failed");
+  // the road itself fails: the transport throws (a network failure)
+  const thrown = await createStallCheckout({
+    env, catalogue, item: "the-wayfarers-lantern", ...OK_URLS,
+    transport: async () => { throw new Error("network down"); },
+  });
+  assert.equal(thrown.ok, false);
+  assert.equal(thrown.reason, "stripe-session-failed");
+  assert.match(thrown.words, /Nothing was charged/);
+  // a foreign CANCEL address is refused, as a foreign success one is
+  const foreignCancel = await createStallCheckout({
+    env, transport: noTransport, catalogue, item: "the-wayfarers-lantern",
+    successUrl: OK_URLS.successUrl,
+    cancelUrl: "https://elsewhere.example/no",
+    siteOrigin: OK_URLS.siteOrigin,
+  });
+  assert.equal(foreignCancel.ok, false);
+  assert.equal(foreignCancel.reason, "return-url-not-the-sites");
+  // re-pinned beside the failures: unknown and earned goods refuse
+  for (const [item, reason] of [
+    ["no-such-good", "item-unknown"],
+    ["the-moon-hum-repertoire", "item-earned-never-sold"],
+  ]) {
+    const out = await createStallCheckout({
+      env, transport: noTransport, catalogue, item, ...OK_URLS,
+    });
+    assert.equal(out.ok, false, item);
+    assert.equal(out.reason, reason, item);
+  }
+  // the till itself is untouched: the probe still reads connected,
+  // and the next honest checkout opens as it always did
+  assert.equal(stallConfig(env, catalogue).connected, true);
+  const capture = {};
+  const after = await createStallCheckout({
+    env, transport: recordingTransport(capture), catalogue,
+    item: "the-wayfarers-lantern", ...OK_URLS,
+  });
+  assert.equal(after.ok, true);
+  assert.equal(after.url, "https://checkout.stripe.com/c/cs_test_1");
+});
+
+test("fulfilment answers plainly when the road to Stripe fails", async () => {
+  const out = await fulfilStallOrder({
+    env: { STRIPE_SECRET_KEY: SECRET }, store: new MemoryOrderStore(),
+    catalogue, sessionId: "cs_test_9", atIso: "",
+    transport: async () => { throw new Error("network down"); },
+  });
+  assert.equal(out.ok, false);
+  assert.equal(out.reason, "order-not-recorded-yet");
+});
+
+test("a valid signature does not let a passport carry a wrong amount", async () => {
+  const store = new MemoryOrderStore();
+  const passport = "SPK1-8-217-1-IUEBK69Z-SELOR-8I";
+  const wrongAmount = await deliverWebhook(store, completedEvent(
+    "the-wayfarers-lantern", 701, { id: "cs_test_p1", passport }));
+  assert.equal(wrongAmount.recorded, false);
+  assert.equal(wrongAmount.reason, "order-amount-mismatch");
+  const wrongCurrency = completedEvent(
+    "the-wayfarers-lantern", 700, { id: "cs_test_p2", passport });
+  wrongCurrency.data.object.currency = "eur";
+  const eur = await deliverWebhook(store, wrongCurrency);
+  assert.equal(eur.recorded, false);
+  assert.equal(eur.reason, "order-amount-mismatch");
+  assert.equal(store.values.size, 0);
+  // the control: the same passport with the catalogue's own amount
+  // records, and the passport rides the order as it should
+  const right = await deliverWebhook(store, completedEvent(
+    "the-wayfarers-lantern", 700, { id: "cs_test_p3", passport }));
+  assert.equal(right.recorded, true);
+  assert.equal((await readOrder(store, "cs_test_p3")).passport, passport);
+});
+
+test("broken shapes record nothing: missing item, unknown item, malformed session", async () => {
+  const store = new MemoryOrderStore();
+  const noMetadata = completedEvent("the-wayfarers-lantern", 700,
+    { id: "cs_test_s1" });
+  delete noMetadata.data.object.metadata;
+  const unknownItem = completedEvent("no-such-good", 700, { id: "cs_test_s2" });
+  const emptyMetadata = completedEvent("the-wayfarers-lantern", 700,
+    { id: "cs_test_s3" });
+  emptyMetadata.data.object.metadata = {};
+  for (const event of [noMetadata, unknownItem, emptyMetadata]) {
+    const out = await deliverWebhook(store, event);
+    assert.equal(out.recorded, false);
+    assert.equal(out.reason, "order-shape-incomplete");
+  }
+  assert.equal(store.values.size, 0);
+  // an order with no lawful session id is refused at the store door
+  const shapeless = await recordOrder(store, {
+    item: "the-wayfarers-lantern", sessionId: "not-a-session",
+  });
+  assert.equal(shapeless.ok, false);
+  assert.equal(shapeless.reason, "order-shape-incomplete");
+  // and fulfilment through a Stripe session with no metadata
+  // records nothing either
+  const healed = await fulfilStallOrder({
+    env: { STRIPE_SECRET_KEY: SECRET }, store, catalogue,
+    sessionId: "cs_test_s4", atIso: "",
+    transport: async () => ({
+      status: 200,
+      json: { ...unpaidSession({ id: "cs_test_s4" }),
+        payment_status: "paid", status: "complete", metadata: {} },
+    }),
+  });
+  assert.equal(healed.ok, false);
+  assert.equal(healed.reason, "order-shape-incomplete");
+  assert.equal(await readOrder(store, "cs_test_s4"), null);
+});
+
+test("a store that fails mid-record heals its index on redelivery", async () => {
+  const inner = new MemoryOrderStore();
+  const flaky = {
+    failed: false,
+    async get(key) { return inner.get(key); },
+    async set(key, value) {
+      if (key === "index" && !this.failed) {
+        this.failed = true;
+        throw new Error("store write failed");
+      }
+      return inner.set(key, value);
+    },
+  };
+  const resolved = orderFromStallCheckoutCompleted(
+    completedEvent("the-wayfarers-lantern", 700, { id: "cs_test_heal" }),
+    catalogue, "2026-11-27T22:00:00.000Z");
+  assert.equal(resolved.ok, true);
+  // the first write dies between the order and the index: the order
+  // stands, the index does not — the half-state Stripe's retry must heal
+  await assert.rejects(recordOrder(flaky, resolved.order));
+  assert.equal((await readOrder(inner, "cs_test_heal")).item,
+    "the-wayfarers-lantern");
+  assert.equal(await inner.get("index"), null);
+  // Stripe redelivers; the record is already there, and the retry
+  // leaves the store whole: order present, index naming it once
+  const retry = await recordOrder(flaky, resolved.order);
+  assert.equal(retry.ok, true);
+  assert.equal(retry.already, true);
+  assert.deepEqual(await inner.get("index"), ["cs_test_heal"]);
 });
