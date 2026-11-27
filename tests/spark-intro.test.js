@@ -145,13 +145,13 @@ test("the Sphere's tour rides the overlay alone — no protected file carries or
   const loadIntroBody = presence.slice(presence.indexOf("function loadIntro"));
   assert.ok(!loadIntroBody.slice(0, 600).includes("spark-intro-show"),
     "the tour no longer waits for a Show me button to exist");
-  assert.ok(presence.includes("spark-intro.js?v=20261126-3"), "the presence loads the tour everywhere it walks");
-  assert.ok(presence.includes("spark-intro.css?v=20261126-3"), "the tour styles ride with it");
+  assert.ok(presence.includes("spark-intro.js?v=20261126-4"), "the presence loads the tour everywhere it walks");
+  assert.ok(presence.includes("spark-intro.css?v=20261126-4"), "the tour styles ride with it");
   /* the album page, which carries no presence, loads its
    * tour the same lazy way from its own module */
   const album = read("docs/assets/js/codex-card-album.js");
-  assert.ok(album.includes("spark-intro.js?v=20261126-3"), "the album loads its room's tour lazily");
-  assert.ok(album.includes("spark-intro.css?v=20261126-3"), "the tour styles ride with it");
+  assert.ok(album.includes("spark-intro.js?v=20261126-4"), "the album loads its room's tour lazily");
+  assert.ok(album.includes("spark-intro.css?v=20261126-4"), "the tour styles ride with it");
 });
 
 test("the homepage and companions keep their Show me — and their pinned stacks stay whole", () => {
@@ -162,8 +162,8 @@ test("the homepage and companions keep their Show me — and their pinned stacks
   assert.ok(companions.includes('id="spark-intro-show"'), "the companions page carries the Show me");
   assert.ok(!companions.includes("spark-intro.js"), "the companions page's first load stays lean");
   const pageJs = read("docs/assets/js/spark-companions-page.js");
-  assert.ok(pageJs.includes("spark-intro.js?v=20261126-3"), "the tour rides in lazily behind the meeting (the diet)");
-  assert.ok(pageJs.includes("spark-intro.css?v=20261126-3"), "the tour styles ride with it");
+  assert.ok(pageJs.includes("spark-intro.js?v=20261126-4"), "the tour rides in lazily behind the meeting (the diet)");
+  assert.ok(pageJs.includes("spark-intro.css?v=20261126-4"), "the tour styles ride with it");
 });
 
 test("the tour reads the day in the calendar's own fields — and lights the Sphere's day", () => {
@@ -252,4 +252,49 @@ test("the meeting stands unboxed too — and its moment still fits the screen", 
   assert.match(companionCss, /\.spark-encounter-words p,[^}]*text-shadow/, "its words carry their legibility with them");
   assert.match(companionCss, /\.spark-encounter-adopt \{[^}]*background: none/, "the adopt is a word, not a pill");
   assert.match(companionCss, /\.spark-encounter-adopt \{[^}]*text-decoration: underline/);
+});
+
+test("the Spark rises from its own seat, and its words stand in a pool of shadow", () => {
+  /* Aaron, Nov 26, 2026, 17:31, his phone in his hand: the
+   * meeting's words ran straight over the hero — the name
+   * over the TODAY panel, "Keep that name" over the Pattern
+   * Day line — acting better, reading badly. His words:
+   * "Need to make it more visible in some way in reading…
+   * he should come up from wherever the spark is on the
+   * page. Make the reading better somehow."
+   * So: the rise is measured from the Spark's real figure
+   * wherever it stands — the walker's button, the stage
+   * figure, the ember — never from the presence host,
+   * which is the whole screen and put the rise mid-air.
+   * The offer comes up out of that seat, not at a generic
+   * stage mark. At every stop the Spark weighs the page's
+   * own words and settles on the calmest ground nearby.
+   * And the words themselves stand in a pool of shadow —
+   * radial, borderless, hugging the words only — on the
+   * roam's speech and on the meeting's words alike. The
+   * window he twice refused did not come back. */
+  assert.match(intro, /\.spark-presence-art", "#spark-big-art", "\.spark-ember-art"/,
+    "the seat is the Spark's own figure, wherever it stands on the page");
+  assert.ok(!/querySelector\("\.spark-presence, \.spark-ember-host"\)/.test(intro),
+    "the full-screen host is no longer mistaken for the seat");
+  assert.ok(!intro.includes("stagePoint(0.3, 0.8)"),
+    "the offer no longer comes up at a generic stage mark");
+  assert.match(intro, /function busyRects/, "the page's own words are weighed");
+  assert.match(intro, /function calmPoint/, "the Spark settles on the calmest ground nearby");
+  assert.match(intro, /function calmScore/, "a stand is scored by the words it would cover");
+  assert.match(intro, /function figureOffset/, "the figure is landed by measurement, not by a reckoning that sinks as its words arrive");
+  assert.match(intro, /roam\.home = cornerPoint\(\)/, "the seat it left is remembered — home is where the keeper saw it leave from");
+  assert.match(introCss, /\.spark-roam-speech::before \{[^}]*radial-gradient/,
+    "the roam's words stand in a pool of shadow");
+  assert.match(introCss, /\.spark-roam-speech::before \{[^}]*border-radius: 50%/,
+    "the pool is soft-edged, with no border and no rectangle");
+  assert.match(introCss, /\.spark-roam-visual::before \{[^}]*radial-gradient/,
+    "what the Spark holds up stands in the same pool");
+  const companionCss = read("docs/assets/css/spark-companion.css");
+  assert.match(companionCss, /\.spark-encounter::before \{[^}]*radial-gradient/,
+    "the meeting's words — the naming moment included — stand in the pool too");
+  assert.match(companionCss, /\.spark-encounter::before \{[^}]*border-radius: 50%/,
+    "the meeting's pool is soft-edged too — its fade completes beyond the words, so no edge shows");
+  assert.match(companionCss, /@keyframes spark-pop \{\s*from \{[^}]*scale\(0\.55\)/,
+    "the meeting swells up out of its corner seat, small and low");
 });
