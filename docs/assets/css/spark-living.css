@@ -66,7 +66,7 @@
 .spark-doorstep {
   position: fixed;
   left: 12px;
-  bottom: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom));
   z-index: 60;
   display: flex;
   align-items: center;
@@ -94,9 +94,15 @@
   box-shadow: 0 0 10px rgba(243, 201, 122, 0.9);
   animation: spark-mote-twinkle 3s ease-in-out infinite alternate;
 }
+.spark-doorstep-text {
+  min-width: 0;
+}
 .spark-doorstep-go {
   color: #f3c97a;
   white-space: nowrap;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
 }
 .spark-doorstep-no {
   background: none;
@@ -106,6 +112,54 @@
   font: inherit;
   font-size: 0.85rem;
   white-space: nowrap;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* The fit on a phone (pass 8 — Aaron's screenshots, Nov 26,
+ * 2026): in one row the words were squeezed into a narrow
+ * column beside the go-word and the "Not now", the stack of
+ * them ran under the Ask and Tour buttons at the corner, and
+ * the last line slid beneath the first page's bottom rail,
+ * cut mid-sentence. On a narrow screen the invitation stands
+ * ABOVE the button stack instead: its words take the whole
+ * first row, its two choices rest on their own row beneath,
+ * and if the words are long they scroll inside their own
+ * measure rather than covering or clipping. The living
+ * layer adds the rail's own height to this measure when a
+ * rail stands (spark-living.js). */
+@media (max-width: 640px) {
+  .spark-doorstep {
+    bottom: calc(128px + env(safe-area-inset-bottom));
+    flex-wrap: wrap;
+    row-gap: 2px;
+  }
+  .spark-doorstep-text {
+    flex: 1 1 calc(100% - 19px);
+    max-height: 30dvh;
+    overflow-y: auto;
+  }
+  .spark-doorstep-go {
+    margin-left: auto;
+  }
+}
+
+/* While the Sphere's own demonstration owns the stage, the
+ * invitation waits — it returns when the demonstration
+ * closes, and its shown mark was already kept honestly. */
+body:has(.evo-opening) .spark-doorstep {
+  visibility: hidden;
+}
+
+/* And while the Spark itself is out on the page — walking a
+ * tour, listening at the ask, standing at its offer — the
+ * invitation rests beneath it (pass 8: on the Sphere page
+ * the two stood in the same ground, the tour's words over
+ * the invitation's choices). One Spark block at a time; the
+ * invitation returns when the walk comes home. */
+body.spark-roam-open .spark-doorstep {
+  visibility: hidden;
 }
 
 /* A glance without words: one small light on its way to a door. */

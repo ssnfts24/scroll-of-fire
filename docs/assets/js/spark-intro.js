@@ -141,15 +141,21 @@
     } catch { /* the marks rest */ }
   }
 
+  /* The Spark's day is the page's day (pass 8): the device's
+   * timezone at a midnight boundary, as the page's own panels
+   * resolve it — never the cursor's sunset default or the
+   * calendar's UTC default, which roll the day forward early. */
   function todayCoordinate() {
+    let timeZone = "UTC";
+    try { timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; } catch { /* UTC stands */ }
     if (window.SOFTemporalCursor && typeof window.SOFTemporalCursor.resolvePosition === "function") {
       try {
-        const pos = window.SOFTemporalCursor.resolvePosition(new Date());
+        const pos = window.SOFTemporalCursor.resolvePosition(new Date(), { timeZone, boundaryMode: "midnight" });
         if (pos) return pos;
       } catch { /* fall through */ }
     }
     if (window.PatternCalendar) {
-      try { return window.PatternCalendar.fromCivilDate({ date: new Date() }); } catch { return null; }
+      try { return window.PatternCalendar.fromCivilDate({ date: new Date(), timeZone, boundaryMode: "midnight" }); } catch { return null; }
     }
     return null;
   }
@@ -1088,7 +1094,7 @@
   async function ensureAnswers() {
     if (window.SparkAnswers) return true;
     try {
-      await loadScript(scriptBase() + "spark-answers.js?v=20261126-6");
+      await loadScript(scriptBase() + "spark-answers.js?v=20261126-7");
       return !!window.SparkAnswers;
     } catch {
       return false;
@@ -1348,6 +1354,31 @@
    * corner of every room the Spark walks, for keepers only.
    * On the first page it calls the quick tour; elsewhere it
    * calls that room's guided tour. */
+  /* The first page's path rail owns the bottom of the screen
+   * on small screens (pass 8 — Aaron's phone: the Tour button
+   * stood wholly underneath the rail, and the Ask button sat
+   * on the doorstep's own "Not now"). The buttons rise by the
+   * rail's own measure, the way the presence lifts its
+   * furniture; where no rail stands, the stylesheet's measure
+   * stands untouched. */
+  function railLift() {
+    try {
+      const rail = document.querySelector(".le-rail");
+      if (!rail) return 0;
+      const rect = rail.getBoundingClientRect();
+      const atBottom = Math.abs(rect.bottom - window.innerHeight) <= 2;
+      return atBottom && rect.height > 0 ? Math.ceil(rect.height) + 8 : 0;
+    } catch { return 0; }
+  }
+
+  function liftLaunchers() {
+    const lift = railLift();
+    const tour = document.querySelector(".spark-tour-launcher");
+    const ask = document.querySelector(".spark-ask-launcher");
+    if (tour) tour.style.bottom = lift > 0 ? `${12 + lift}px` : "";
+    if (ask) ask.style.bottom = lift > 0 ? `${68 + lift}px` : "";
+  }
+
   function renderLauncher() {
     if (document.querySelector(".spark-tour-launcher")) return;
     if (!readRecord()) return;
@@ -1372,6 +1403,8 @@
       startAsk();
     });
     document.body.appendChild(askBtn);
+    liftLaunchers();
+    window.addEventListener("resize", liftLaunchers);
   }
 
   /* No Spark yet: every road in this module leads back to

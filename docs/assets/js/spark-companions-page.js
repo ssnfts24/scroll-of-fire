@@ -31,16 +31,22 @@
    * context go before a new one stands. */
   let bigCtrl3d = null;
 
+  /* The Spark's day is the page's day (pass 8): the device's
+   * timezone at a midnight boundary, as the page's own panels
+   * resolve it — never the cursor's sunset default or the
+   * calendar's UTC default, which roll the day forward early. */
   function todayCoordinate() {
+    let timeZone = "UTC";
+    try { timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; } catch { /* UTC stands */ }
     if (window.SOFTemporalCursor && typeof window.SOFTemporalCursor.resolvePosition === "function") {
       try {
-        const pos = window.SOFTemporalCursor.resolvePosition(new Date());
+        const pos = window.SOFTemporalCursor.resolvePosition(new Date(), { timeZone, boundaryMode: "midnight" });
         if (pos) return pos;
       } catch {
         /* fall through */
       }
     }
-    if (window.PatternCalendar) return window.PatternCalendar.fromCivilDate({ date: new Date() });
+    if (window.PatternCalendar) return window.PatternCalendar.fromCivilDate({ date: new Date(), timeZone, boundaryMode: "midnight" });
     return null;
   }
 
@@ -680,10 +686,10 @@
     if (!document.getElementById("spark-intro-show")) return;
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "assets/css/spark-intro.css?v=20261126-6";
+    link.href = "assets/css/spark-intro.css?v=20261126-7";
     document.head.appendChild(link);
     const script = document.createElement("script");
-    script.src = "assets/js/spark-intro.js?v=20261126-6";
+    script.src = "assets/js/spark-intro.js?v=20261126-7";
     script.defer = true;
     document.head.appendChild(script);
   })();

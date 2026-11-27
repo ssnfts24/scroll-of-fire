@@ -88,17 +88,29 @@
     return !!window.PatternCalendar;
   }
 
+  /* The Spark's day is the page's day (pass 8 — Aaron's phone,
+   * Nov 26, 2026: at 20:20 in Los Angeles the TODAY panel read
+   * Pattern Day 224 while the Spark offered 225). The page's own
+   * panels resolve today through the canonical calendar in the
+   * device's timezone at a midnight boundary (home-telling.js).
+   * Unpinned, the cursor defaults to the Observatory's sunset
+   * boundary and the calendar's bare default zone is UTC —
+   * either road rolls the Spark's day forward hours before the
+   * page's day turns. Both roads are pinned here: the device's
+   * zone, at midnight, the way the page reads it. */
   function todayCoordinate() {
+    let timeZone = "UTC";
+    try { timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; } catch { /* UTC stands */ }
     if (window.SOFTemporalCursor && typeof window.SOFTemporalCursor.resolvePosition === "function") {
       try {
-        const pos = window.SOFTemporalCursor.resolvePosition(new Date());
+        const pos = window.SOFTemporalCursor.resolvePosition(new Date(), { timeZone, boundaryMode: "midnight" });
         if (pos) return pos;
       } catch {
         /* fall through to the calendar itself */
       }
     }
     if (window.PatternCalendar) {
-      return window.PatternCalendar.fromCivilDate({ date: new Date() });
+      return window.PatternCalendar.fromCivilDate({ date: new Date(), timeZone, boundaryMode: "midnight" });
     }
     return null;
   }
@@ -3642,11 +3654,11 @@
      * the living layer reads where the Spark stands. */
     const css = document.createElement("link");
     css.rel = "stylesheet";
-    css.href = base.replace(/js\/$/, "css/") + "spark-living.css?v=20261126-1";
+    css.href = base.replace(/js\/$/, "css/") + "spark-living.css?v=20261126-7";
     document.head.appendChild(css);
     loadScript(base + "spark-evolution-path.js?v=20261126-1")
       .then(() => loadScript(base + "spark-lean.js?v=20261126-1"))
-      .then(() => loadScript(base + "spark-living.js?v=20261126-6"))
+      .then(() => loadScript(base + "spark-living.js?v=20261126-7"))
       .catch(() => { /* the living layer rests */ });
   }
 
@@ -3661,9 +3673,9 @@
     const base = scriptBase();
     const css = document.createElement("link");
     css.rel = "stylesheet";
-    css.href = base.replace(/js\/$/, "css/") + "spark-intro.css?v=20261126-6";
+    css.href = base.replace(/js\/$/, "css/") + "spark-intro.css?v=20261126-7";
     document.head.appendChild(css);
-    loadScript(base + "spark-intro.js?v=20261126-6")
+    loadScript(base + "spark-intro.js?v=20261126-7")
       .catch(() => { /* the tour rests */ });
   }
 

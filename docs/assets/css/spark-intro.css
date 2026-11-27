@@ -33,6 +33,16 @@ body.spark-roam-open .spark-ask-launcher {
   visibility: hidden;
 }
 
+/* While the Sphere's own demonstration owns the stage, the
+ * Spark's buttons rest (pass 8 — Aaron's phone: the Ask
+ * button sat on the demonstration caption's last words).
+ * The demonstration is a dialog standing in the Sphere's
+ * frame; the buttons return the moment it closes. */
+body:has(.evo-opening) .spark-tour-launcher,
+body:has(.evo-opening) .spark-ask-launcher {
+  visibility: hidden;
+}
+
 /* The roaming Spark: a figure and its speech, nothing
  * more. The cluster itself catches no taps — the page
  * stays live underneath — only the Spark and its choice
@@ -347,6 +357,15 @@ body.spark-roam-open .spark-ask-launcher {
   gap: 0;
   max-height: 36dvh;
   overflow-y: auto;
+}
+/* The whole asking cluster — words, questions, the typing
+ * line — must stand inside the screen at phone height
+ * (pass 8): the answer's own measure gives some of its
+ * height to the questions, so together they never carry
+ * the Spark off the top or the bottom of the glass. Each
+ * part still scrolls within its own measure. */
+.spark-roam.is-ask .spark-roam-text {
+  max-height: 22dvh;
 }
 .spark-roam.is-ask .spark-roam-choice {
   font-size: 1.02rem;

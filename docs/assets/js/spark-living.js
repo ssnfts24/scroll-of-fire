@@ -56,15 +56,23 @@
     }
   }
 
+  /* The Spark's day is the page's day (pass 8): resolved in the
+   * device's timezone at a midnight boundary, the way the page's
+   * own panels read it (home-telling.js). Unpinned, the cursor's
+   * sunset default and the calendar's UTC default each roll the
+   * day forward hours early — at 20:20 in Los Angeles the panel
+   * read Pattern Day 224 while the doorstep offered 225. */
   function todayCoordinate() {
+    let timeZone = "UTC";
+    try { timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; } catch { /* UTC stands */ }
     if (window.SOFTemporalCursor && typeof window.SOFTemporalCursor.resolvePosition === "function") {
       try {
-        const pos = window.SOFTemporalCursor.resolvePosition(new Date());
+        const pos = window.SOFTemporalCursor.resolvePosition(new Date(), { timeZone, boundaryMode: "midnight" });
         if (pos) return pos;
       } catch { /* fall through */ }
     }
     if (window.PatternCalendar) {
-      try { return window.PatternCalendar.fromCivilDate({ date: new Date() }); } catch { return null; }
+      try { return window.PatternCalendar.fromCivilDate({ date: new Date(), timeZone, boundaryMode: "midnight" }); } catch { return null; }
     }
     return null;
   }
@@ -192,7 +200,7 @@
       const tag = document.querySelector('script[src*="spark-living.js"]');
       const base = tag && tag.src ? tag.src.split("spark-living.js")[0] : "assets/js/";
       const s = document.createElement("script");
-      s.src = base + "spark-answers.js?v=20261126-6";
+      s.src = base + "spark-answers.js?v=20261126-7";
       s.onload = () => resolve(!!window.SparkAnswers);
       s.onerror = () => resolve(false);
       document.head.appendChild(s);
@@ -285,7 +293,47 @@
       chip.remove();
     });
     chip.appendChild(no);
+    /* The first page's path rail owns the bottom of the screen
+     * on small screens (pass 8 — Aaron's phone: the invitation's
+     * last line ran underneath it, cut mid-sentence). The chip
+     * stands clear by the rail's own measure; the stylesheet
+     * already stands it above the Ask/Tour stack on a narrow
+     * screen, and this adds the rail's height where one stands. */
+    try {
+      const rail = document.querySelector(".le-rail");
+      if (rail) {
+        const r = rail.getBoundingClientRect();
+        if (r.height > 0 && Math.abs(r.bottom - window.innerHeight) <= 2) {
+          const base = window.innerWidth <= 640 ? 128 : 12;
+          chip.style.bottom = `${base + Math.ceil(r.height) + 8}px`;
+        }
+      }
+    } catch { /* the stylesheet's measure stands */ }
     document.body.appendChild(chip);
+    /* The Spark's own seat stands on the same shore (pass 8):
+     * the invitation never runs under the Spark itself. It
+     * narrows to the seat's clear side, measured from the
+     * seat that actually stands on this page — the open
+     * bubble when the keeper has it open, else the figure. */
+    try {
+      const bubble = document.querySelector(".spark-presence-bubble");
+      const seatBtn = document.querySelector(".spark-presence-button");
+      const seatEl = (bubble && !bubble.hidden && bubble.getBoundingClientRect().width > 0) ? bubble : seatBtn;
+      if (seatEl) {
+        const s = seatEl.getBoundingClientRect();
+        const c = chip.getBoundingClientRect();
+        const crosses = c.right > s.left && c.left < s.right && c.bottom > s.top && c.top < s.bottom;
+        if (s.width > 0 && crosses) {
+          if (s.left >= window.innerWidth / 2) {
+            chip.style.maxWidth = `${Math.max(180, Math.floor(s.left - 24))}px`;
+          } else if (s.right <= window.innerWidth / 2) {
+            const left = Math.ceil(s.right + 12);
+            chip.style.left = `${left}px`;
+            chip.style.maxWidth = `${Math.max(180, window.innerWidth - left - 12)}px`;
+          }
+        }
+      }
+    } catch { /* the invitation stands as styled */ }
   }
 
   /* ---- a glance without words ---- */
