@@ -93,6 +93,22 @@
     0 0 2px rgba(5, 8, 16, 0.9);
 }
 
+/* The name steps to the calm side of its figure when the
+ * ground beside it is busy (the presence's name-calm sets
+ * the class): below it, or above it — always touching its
+ * Spark, so no reader wonders whose name it is. */
+.spark-presence-button.name-below,
+.spark-presence-button.name-above {
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 10px;
+}
+
+.spark-presence-button.name-above {
+  flex-direction: column-reverse;
+}
+
 .spark-presence-art {
   display: block;
 }
@@ -253,9 +269,60 @@
   to { transform: translateY(-7px); }
 }
 
+/* Its name, made to be read (Aaron, Nov 26, 2026, 18:06:
+ * "Its name needs to be more visible also" — his phone
+ * screenshot had it small and grey, half-buried across
+ * the TODAY headline). The name stands larger, weightier,
+ * brighter, and a pool of shadow rides under it: the same
+ * soft, borderless radial pool its speech stands in,
+ * sized to the name, its fade finishing beyond the
+ * letters — no box, no border, nothing rectangular. The
+ * pool is kept once, here, and both name grounds use it. */
+:root {
+  --spark-name-pool: radial-gradient(ellipse 63% 60% at 50% 50%,
+    rgba(3, 5, 10, 0.9) 0%, rgba(3, 5, 10, 0.78) 46%,
+    rgba(3, 5, 10, 0.4) 70%, rgba(3, 5, 10, 0) 86%);
+}
+
 .spark-presence-name {
-  font-size: 0.85rem;
-  letter-spacing: 0.02em;
+  position: relative;
+  z-index: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #fdfaf0;
+}
+
+.spark-presence-name::before {
+  content: "";
+  position: absolute;
+  inset: -13px -20px;
+  z-index: -1;
+  border-radius: 50%;
+  background: var(--spark-name-pool);
+  pointer-events: none;
+}
+
+/* The stage name on the Spark's home page takes the same
+ * reading: the pool sized to the name under it. */
+#spark-big-name {
+  position: relative;
+  z-index: 0;
+  width: fit-content;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: 700;
+}
+
+#spark-big-name::before {
+  content: "";
+  position: absolute;
+  inset: -16px -36px;
+  z-index: -1;
+  border-radius: 50%;
+  background: var(--spark-name-pool);
+  pointer-events: none;
 }
 
 .spark-presence-bubble {

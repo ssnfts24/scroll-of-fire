@@ -2570,11 +2570,11 @@
    * sometimes come to look instead. It moves by steering, not
    * animation (a velocity, a desired velocity, a capped force
    * between them), so it gathers, arcs, and settles like a
-   * creature at any frame rate. The dodge is predictive and
-   * anticipated: a small crouch, a breath, then the dart.
-   * Idle choices are scored by a small utility brain whose
-   * weights are its temperament's own curves. The fences
-   * hold: the roaming field takes no clicks (only the Spark
+   * creature at any frame rate. The dodge is predictive: a
+   * small crouch, a breath, then the dart. Idle choices are
+   * scored by a small utility brain whose weights are its
+   * temperament's own curves. The fences hold: the roaming
+   * field takes no clicks (only the Spark
    * itself does, and it moves out from under the pointer
    * rather than covering anything); it never roams while its
    * bubble is open; after three quick scoots it settles where
@@ -2696,6 +2696,135 @@
       }
       return clampPos(t);
     }
+
+    /* ---- the name keeps calm ground ----
+     * Aaron, Nov 26, 2026, 18:06, over his phone screenshot:
+     * the name stood small and grey across the TODAY
+     * headline — "Its name needs to be more visible also."
+     * Its type is stronger now and its pool rides under it
+     * (the companion CSS); this is the placement, living in
+     * the roam because the roam owns the stand. The name
+     * rides beside the figure by habit; at every stand the
+     * page's text lines are weighed under each place it
+     * could sit — beside, below, above — and it steps to
+     * the quietest. If every side is busy the stand itself
+     * nudges: the Spark steps a little way and tries again,
+     * so the name lands on quiet ground inside its pool,
+     * never leaving its figure. Lines, not element boxes:
+     * a stand between a headline's two lines is calmer
+     * than one across its letters. */
+    const nameEl = button.querySelector(".spark-presence-name");
+    const nameSides = ["", "name-below", "name-above"];
+    let nameSide = "";
+    let nameNudges = 0;
+    function nameBusyLines() {
+      const out = [];
+      const els = document.querySelectorAll("h1, h2, h3, p, li, blockquote, figcaption");
+      const range = document.createRange();
+      for (const el of els) {
+        if (el.closest(".spark-presence, .spark-roam, .spark-encounter-host, .spark-ember-host")) continue;
+        range.selectNodeContents(el);
+        for (const r of range.getClientRects()) {
+          if (r.width < 4 || r.height < 4) continue;
+          if (r.bottom < 0 || r.top > window.innerHeight || r.right < 0 || r.left > window.innerWidth) continue;
+          out.push(r);
+          if (out.length >= 600) return out;
+        }
+      }
+      return out;
+    }
+    function nameCover(rect, lines) {
+      let score = 0;
+      for (const r of lines) {
+        const ox = Math.min(rect.right, r.right) - Math.max(rect.left, r.left);
+        const oy = Math.min(rect.bottom, r.bottom) - Math.max(rect.top, r.top);
+        if (ox > 0 && oy > 0) score += ox * oy;
+      }
+      /* Ground off the screen is no ground at all. */
+      const offX = Math.max(0, -rect.left) + Math.max(0, rect.right - window.innerWidth);
+      const offY = Math.max(0, -rect.top) + Math.max(0, rect.bottom - window.innerHeight);
+      if (offX > 0 || offY > 0) score += (offX * (rect.bottom - rect.top) + offY * (rect.right - rect.left)) * 4;
+      return score;
+    }
+    /* The three places the name can sit around a figure
+     * standing with its art at rect a, scored. */
+    function nameStands(a, nw, nh, lines) {
+      const cx = a.left + a.width / 2;
+      const cy = a.top + a.height / 2;
+      const rects = {
+        "": { left: a.right + 8, top: cy - nh / 2, right: a.right + 8 + nw, bottom: cy + nh / 2 },
+        "name-below": { left: cx - nw / 2, top: a.bottom + 3, right: cx + nw / 2, bottom: a.bottom + 3 + nh },
+        "name-above": { left: cx - nw / 2, top: a.top - 3 - nh, right: cx + nw / 2, bottom: a.top - 3 }
+      };
+      return nameSides.map((cls) => ({ cls, score: nameCover(rects[cls], lines) }));
+    }
+    /* Weigh the name at the stand the Spark has reached.
+     * Returns "nudged" when the Spark steps to a new stand
+     * for its name's sake — the caller lets the walk go on. */
+    function calmName(canNudge) {
+      if (!nameEl || !art || bubbleOpen()) return "";
+      const a = art.getBoundingClientRect();
+      const nw = nameEl.offsetWidth;
+      const nh = nameEl.offsetHeight;
+      if (!a.width || !nw || !nh) return "";
+      const lines = nameBusyLines();
+      const stands = nameStands(a, nw, nh, lines);
+      let best = stands[0];
+      let here = stands[0];
+      for (const s of stands) {
+        if (s.cls === nameSide) here = s;
+        if (s.score < best.score) best = s;
+      }
+      /* A buried name steps; a merely shaded one stays —
+       * the step is taken only when its own ground is truly
+       * busy and the calm side truly calmer, so the name
+       * never fidgets as the Spark travels. */
+      if (best.cls !== nameSide && here.score > nw * nh * 0.3 && best.score < here.score * 0.5) {
+        nameSide = best.cls;
+        button.classList.remove("name-below", "name-above");
+        if (nameSide) button.classList.add(nameSide);
+      }
+      if (best.score <= nw * nh * 0.3) {
+        nameNudges = 0;
+        return "";
+      }
+      /* Every side is busy: the stand itself nudges. Each
+       * short step is tried on paper — the figure's art
+       * carried with it — and the Spark walks to the first
+       * stand whose name-ground is quiet, or the quietest
+       * going. Two nudges per stand, no more: then the pool
+       * and the stronger type carry the reading. */
+      if (!canNudge || nameNudges >= 2) return "";
+      const shifts = [
+        { x: 0, y: 64 }, { x: 0, y: -64 }, { x: 0, y: 128 }, { x: 0, y: -128 },
+        { x: 84, y: 0 }, { x: -84, y: 0 },
+        { x: 84, y: 64 }, { x: -84, y: 64 }, { x: 84, y: -64 }, { x: -84, y: -64 },
+        { x: 0, y: 196 }, { x: 0, y: -196 }
+      ];
+      let chosen = null;
+      let chosenScore = best.score;
+      for (const d of shifts) {
+        const moved = { left: a.left + d.x, top: a.top + d.y, right: a.right + d.x, bottom: a.bottom + d.y, width: a.width, height: a.height };
+        let m = Infinity;
+        for (const s of nameStands(moved, nw, nh, lines)) if (s.score < m) m = s.score;
+        if (m <= nw * nh * 0.3) { chosen = d; chosenScore = m; break; }
+        if (m < chosenScore * 0.5) { chosen = d; chosenScore = m; }
+      }
+      if (!chosen) return "";
+      nameNudges += 1;
+      target = clampPos({ x: pos.x + chosen.x, y: pos.y + chosen.y });
+      state = "move";
+      wake();
+      return "nudged";
+    }
+    /* The ground can change under a resting Spark — the
+     * page scrolls, the window turns — so the weighing runs
+     * again while it rests, not only when it arrives. */
+    window.addEventListener("resize", () => { if (state === "idle") calmName(true); });
+    window.addEventListener("scroll", () => { if (state === "idle") calmName(true); }, { passive: true });
+    window.setInterval(() => {
+      if (!document.hidden && state === "idle") calmName(true);
+    }, 2500);
 
     function wake() {
       if (rafId == null) {
@@ -2874,6 +3003,14 @@
       if (ctrl) ctrl.setTravel(false, 0);
       vel.x = 0;
       vel.y = 0;
+      /* The name is weighed at every stand (see calmName):
+       * it steps to its calm side, and where every side is
+       * busy the stand itself nudges and the walk goes on —
+       * except mid-game, where the chase rules, and on the
+       * way in, where only the step is taken, not the nudge. */
+      if (state !== "play" && state !== "playwait" && state !== "held") {
+        if (calmName(state !== "enter") === "nudged") return;
+      }
       if (state === "play") {
         /* Arrived at a chase point: it waits there, bright and
          * catchable, until its person's tap lands. No timer
