@@ -4,7 +4,7 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 2575,
-    "bytes": 1302308831,
+    "bytes": 1302308337,
     "byGroup": {
       "tooling": 366,
       "manuscript": 17,
@@ -7414,8 +7414,8 @@
       "path": "docs/assets/css/spark-companion.css",
       "title": "spark-companion.css",
       "format": "css",
-      "bytes": 38208,
-      "sha256": "9f55449ffed2cefb96af8c2478273e6ee4d27e6d554f90527d07e62cf9f73ff4",
+      "bytes": 37714,
+      "sha256": "a42042effccd4606277faa79f1f849bf0b6631a2feea063e4da6aedd26d117e2",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -57063,7 +57063,7 @@
       "title": "page-weight-budget.json",
       "format": "json",
       "bytes": 3781,
-      "sha256": "cddcdf57681dea3cae829805aea00d966b0c583fd08267afd10799bff152a5fd",
+      "sha256": "6274772a610c85c7264b80fe6bb26d51d10aa00d98322f55a54b44f13be7cacd",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
