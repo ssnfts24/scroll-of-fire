@@ -840,7 +840,18 @@ test("no R1.7 protected file is touched by this branch", () => {
    *     its child elements and skips writes whose value
    *     already stands; the per-frame tracking guard refills
    *     scratch buffers instead of allocating its working
-   *     sets every frame).
+   *     sets every frame. Pass 3, Nov 27, 2026 — Aaron again:
+   *     "Go through it all and see what can be done to
+   *     improve the Sphere's performance": the built digest
+   *     is memoized per element and dropped when the
+   *     element's content actually changes — a
+   *     MutationObserver over the label container covering
+   *     the digest's exact inputs, plus the semantic
+   *     refresh invalidating its own card, the one writer
+   *     an observer cannot see in time — and the track
+   *     frame's plate nearest-neighbour search compares
+   *     squared distances, taking the one square root per
+   *     entry the ratio consumes).
    * Every value served is the value the original code
    * computed; no geometry, rendering, camera, motion,
    * selection, or label content changes. Every other

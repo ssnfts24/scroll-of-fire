@@ -179,3 +179,39 @@ test("lag-pass 8: the name-tag pass reuses its vectors", () => {
   assert.match(tags, /_tagScratchProjected\.current\.set\(anchor\.x, anchor\.y, anchor\.z\)/, "the projection rides the scratch");
   assert.match(tags, /_tagScratchDrawn\.current\.set\(keptX, keptY, projected\.z\)\.unproject\(_camera\)/, "the unprojection rides the scratch");
 });
+
+/*
+ * Pass 3 (Nov 27, 2026 — Aaron, voice call: "Work on the
+ * performance of the Sphere... Go through it all and see
+ * what can be done"). The bounded drag attribution indicted
+ * what was left of the label system: the size key's digest
+ * rebuilt on every check (2.1–3.6 s self across runs), and
+ * the track frame's per-pair Math.hypot. The width cache
+ * the same profile seemed to indict was exonerated by direct
+ * instrumentation (4 clientWidth reads, ~0 ms, across the
+ * whole drag — the cache holds; the profiler was piling
+ * blocked-render samples onto the deepest small frame).
+ * These pins hold pass 3's shape; the values served are
+ * the values the original code computed.
+ */
+
+test("lag-pass 10: the content digest is memoized and dropped only when content changes", () => {
+  assert.match(labelManager, /const _labelDigestCache = new WeakMap\(\);/, "the digest memo stands");
+  const digest = bodyOf(labelManager, /function _labelContentDigest\(el\) \{([\s\S]*?)\n    \}/);
+  assert.match(digest, /const memo = _labelDigestCache\.get\(el\);/, "a standing digest is served before any walk");
+  assert.match(digest, /if \(memo !== undefined\) return memo;/, "the memo short-circuits the subtree walk");
+  assert.match(digest, /_labelDigestCache\.set\(el, out\);/, "a built digest is kept for the next check");
+  const watch = bodyOf(labelManager, /function _watchLabelDigests\(\) \{([\s\S]*?)\n    \}/);
+  assert.match(watch, /attributeFilter: \["class", "hidden"\]/, "the observer covers the digest's attribute inputs — and not style, which the track loop writes every frame");
+  assert.match(watch, /characterData: true/, "word changes drop the digest");
+  assert.match(watch, /childList: true/, "child changes drop the digest");
+  assert.match(labelManager, /_invalidateLabelDigest\(el\);\n        el\.style\.display = "";/, "the semantic refresh — the one writer an observer cannot see in time — drops its own card's digest before the card's size is read");
+});
+
+test("lag-pass 11: the track frame's nearest neighbour compares squared distances", () => {
+  const frame = bodyOf(labelManager, /function _trackFrame\(\) \{([\s\S]*?)\n    \}/);
+  assert.match(frame, /const dSq = ddx \* ddx \+ ddy \* ddy;/, "pairs compare squared distances");
+  assert.match(frame, /const nn = Number\.isFinite\(nnSq\) \? Math\.sqrt\(nnSq\) : Infinity;/, "the one square root per entry restores the exact distance");
+  const nnBlock = frame.slice(frame.indexOf("let nnSq"), frame.indexOf("entry.shrink ="));
+  assert.equal(nnBlock.includes("Math.hypot"), false, "no per-pair Math.hypot remains in the nearest-neighbour search");
+});
