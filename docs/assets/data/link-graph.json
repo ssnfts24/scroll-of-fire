@@ -317,11 +317,6 @@
      "area": "archive"
     },
     {
-     "path": "index.html",
-     "title": "Codex of Reality",
-     "area": "codex"
-    },
-    {
      "path": "companions.html",
      "title": "Companions",
      "area": "living-time"
@@ -333,7 +328,7 @@
     }
    ],
    "outTotal": 3,
-   "inTotal": 5
+   "inTotal": 4
   },
   "alignment-ledger.html": {
    "title": "Alignment Ledger — The 13 Moons Remnant Living Time Observatory",
@@ -1661,9 +1656,9 @@
      "area": "artifacts"
     },
     {
-     "path": "aiyanas-world.html",
-     "title": "Aiyana's World",
-     "area": "living-time"
+     "path": "scripture/index.html",
+     "title": "Genesis & Exodus Scripture",
+     "area": "scroll-scripture"
     }
    ],
    "in": [
@@ -1703,7 +1698,7 @@
      "area": "codex"
     }
    ],
-   "outTotal": 29,
+   "outTotal": 28,
    "inTotal": 7
   },
   "install.html": {
