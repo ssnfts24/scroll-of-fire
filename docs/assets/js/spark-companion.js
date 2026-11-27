@@ -1838,7 +1838,18 @@
       case "wave":
         return `<path d="M22 62 Q30 34 50 34 Q70 34 78 58 Q84 76 68 84 Q50 92 34 84 Q16 76 22 62 Z" fill="${body}"/>`;
       case "moth":
-        return `<ellipse cx="28" cy="46" rx="17" ry="24" fill="${body}" opacity="0.85"/><ellipse cx="72" cy="46" rx="17" ry="24" fill="${body}" opacity="0.85"/><ellipse cx="50" cy="56" rx="11" ry="26" fill="${body}"/>`;
+        /* The wings sweep up from behind the shoulders, narrower
+         * than the body they carry, and sink deep into it — one
+         * figure, read whole. As first drawn (wings rx 17 at cx
+         * 28/72 against a body of rx 11) the wings were the widest
+         * masses on the page and the body the pinch between them,
+         * so every moth Spark read as two mirrored blobs with a
+         * drip between — Aaron's phone, Nov 26, 2026: the Spark
+         * Kan in the Sphere's demonstration panel. The body's own
+         * coordinates keep their places: the eye (cy 50) and the
+         * cheeks (cy 58, dx 7) still stand on the body, and the
+         * pattern clip, which is this same shape, follows. */
+        return `<ellipse cx="30.5" cy="42" rx="12.5" ry="20" transform="rotate(-20 30.5 42)" fill="${body}" opacity="0.85"/><ellipse cx="69.5" cy="42" rx="12.5" ry="20" transform="rotate(20 69.5 42)" fill="${body}" opacity="0.85"/><ellipse cx="50" cy="55" rx="14.5" ry="25" fill="${body}"/>`;
       case "orb":
       default:
         return `<circle cx="50" cy="54" r="28" fill="${body}"/>`;

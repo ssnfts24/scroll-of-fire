@@ -21,12 +21,10 @@
   right: 0;
   top: 0;
   bottom: 0;
-  /* Above the site's chrome (its sticky header rides at 900,
-   * its skip link at 1000): their panel must never sit under a
-   * floating menu button (Aaron's phone review, Nov 19,
-   * 2026). The layer itself takes no pointer events — only
-   * their own furniture does — so the nav beneath stays fully
-   * usable wherever they are not. */
+  /* Above the site's chrome (header at 900, skip link at
+   * 1000): their panel must never sit under a floating menu
+   * button (Aaron's phone review, Nov 19, 2026). The layer
+   * takes no pointer events — only their furniture does. */
   z-index: 10040;
   pointer-events: none;
   font-family: inherit;
@@ -78,12 +76,10 @@
   min-height: 44px;
   padding: 4px 12px 4px 4px;
   border-radius: 999px;
-  /* No pill around them anymore (Aaron's word, Nov 19, 2026:
-   * the bubble around the character goes). The button keeps
-   * its shape and its full tap target — the record of their
-   * growth record line still needs a legible name beside
-   * them, carried on a shadow now, not a box — but they stand
-   * on the page itself, lit, not in a container. */
+  /* No pill around them anymore (Aaron's word, Nov 19,
+   * 2026). The button keeps its shape and full tap target;
+   * their name rides on a shadow now, not a box — they
+   * stand on the page itself, lit, not in a container. */
   border: 1px solid transparent;
   background: transparent;
   color: var(--spark-ink);
@@ -95,6 +91,22 @@
   text-shadow:
     0 1px 6px rgba(5, 8, 16, 0.9),
     0 0 2px rgba(5, 8, 16, 0.9);
+}
+
+/* The name steps to the calm side of its figure when the
+ * ground beside it is busy (the presence's name-calm sets
+ * the class): below it, or above it — always touching its
+ * Spark, so no reader wonders whose name it is. */
+.spark-presence-button.name-below,
+.spark-presence-button.name-above {
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 10px;
+}
+
+.spark-presence-button.name-above {
+  flex-direction: column-reverse;
 }
 
 .spark-presence-art {
@@ -257,9 +269,60 @@
   to { transform: translateY(-7px); }
 }
 
+/* Its name, made to be read (Aaron, Nov 26, 2026, 18:06:
+ * "Its name needs to be more visible also" — his phone
+ * screenshot had it small and grey, half-buried across
+ * the TODAY headline). The name stands larger, weightier,
+ * brighter, and a pool of shadow rides under it: the same
+ * soft, borderless radial pool its speech stands in,
+ * sized to the name, its fade finishing beyond the
+ * letters — no box, no border, nothing rectangular. The
+ * pool is kept once, here, and both name grounds use it. */
+:root {
+  --spark-name-pool: radial-gradient(ellipse 63% 60% at 50% 50%,
+    rgba(3, 5, 10, 0.9) 0%, rgba(3, 5, 10, 0.78) 46%,
+    rgba(3, 5, 10, 0.4) 70%, rgba(3, 5, 10, 0) 86%);
+}
+
 .spark-presence-name {
-  font-size: 0.85rem;
-  letter-spacing: 0.02em;
+  position: relative;
+  z-index: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #fdfaf0;
+}
+
+.spark-presence-name::before {
+  content: "";
+  position: absolute;
+  inset: -13px -20px;
+  z-index: -1;
+  border-radius: 50%;
+  background: var(--spark-name-pool);
+  pointer-events: none;
+}
+
+/* The stage name on the Spark's home page takes the same
+ * reading: the pool sized to the name under it. */
+#spark-big-name {
+  position: relative;
+  z-index: 0;
+  width: fit-content;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: 700;
+}
+
+#spark-big-name::before {
+  content: "";
+  position: absolute;
+  inset: -16px -36px;
+  z-index: -1;
+  border-radius: 50%;
+  background: var(--spark-name-pool);
+  pointer-events: none;
 }
 
 .spark-presence-bubble {
@@ -546,53 +609,42 @@
   50% { transform: scale(0.97) translateY(1px); }
 }
 
-/* ---------- the meeting: pop-up encounter and waiting ember ---------- */
+/* ---------- the meeting: the Spark comes up, and the waiting ember ---------- */
 
-/* The Spark pops up where its person first arrives: a card at the
- * corner of the page, the creature itself and its own short words.
- * It takes the corner only — the page behind it stays readable,
- * and both of its buttons are full-size tap targets. */
+/* The Spark comes up where its person first arrives — no
+ * window, no card (Aaron, Nov 26, 2026, 17:04). It stands
+ * at the corner and speaks beside itself; the moment fits
+ * the screen — dvh cap, words scroll in their own measure,
+ * never below a fold (Aaron's A16, Nov 26, 2026). */
 .spark-encounter-host {
   position: fixed;
   right: max(12px, env(safe-area-inset-right));
   bottom: max(12px, env(safe-area-inset-bottom));
-  /* The meeting sits above everything of the site's chrome —
-   * the header, the nav, the floating menu button, even the
-   * living opening's overlay: nothing hovers over the card
-   * (Aaron's phone review, Nov 19, 2026). */
+  /* The meeting sits above everything of the site's chrome:
+   * nothing hovers over the Spark (Aaron, Nov 19, 2026). */
   z-index: 10060;
   font-family: inherit;
 }
 
 .spark-encounter {
+  position: relative;
   display: flex;
   gap: 14px;
-  align-items: flex-start;
+  align-items: stretch;
   max-width: min(400px, calc(100vw - 24px));
-  /* The whole moment stays on screen, even a small one: when
-   * the celebration makes the card taller than the view, the
-   * card scrolls within itself rather than leaving the screen.
-   * The cap is measured from the screen itself, so the card's
-   * top always clears the day line and the header. */
   max-height: min(calc(100dvh - 96px), 760px);
-  overflow-y: auto;
-  padding: 16px;
-  border-radius: 18px;
-  border: 1px solid var(--spark-line);
-  /* Near-solid, where the shared card tint is translucent:
-   * on the encounter nothing of the page behind may bleed
-   * through (Aaron's screenshot showed the page's own words
-   * inside the card). */
-  background: rgba(13, 18, 32, 0.96);
+  padding: 8px;
+  background: transparent;
   color: var(--spark-ink);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
   transform-origin: bottom right;
-  animation: spark-pop 0.45s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+  animation: spark-pop 0.6s cubic-bezier(0.2, 1.4, 0.4, 1) both;
 }
 
+/* It comes up from where it sits: small and low in its
+ * corner, swelling up into its standing place, never
+ * popping in mid-air (Aaron, Nov 26, 2026, 17:31). */
 @keyframes spark-pop {
-  from { opacity: 0; transform: translateY(14px) scale(0.85); }
+  from { opacity: 0; transform: translateY(38px) scale(0.55); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
@@ -642,19 +694,19 @@
 
 .spark-encounter-look {
   color: var(--spark-dim);
-  font-size: 0.86rem !important;
+  font-size: 0.9rem !important;
 }
 
-/* The adoption moment: a ring of light blooms outward, the Spark
- * swells once with delight, and its name stands large. */
+/* The adoption moment: light blooms around the Spark
+ * itself — no card to ring — it swells once, name large. */
 .spark-encounter.is-celebrating {
-  border-color: var(--spark-gold);
   animation: spark-bloom 1.1s ease-out;
 }
 
 @keyframes spark-bloom {
-  0% { box-shadow: 0 0 0 0 rgba(217, 164, 65, 0.55), 0 16px 40px rgba(0, 0, 0, 0.5); }
-  100% { box-shadow: 0 0 0 26px rgba(217, 164, 65, 0), 0 16px 40px rgba(0, 0, 0, 0.5); }
+  0% { filter: drop-shadow(0 0 0 rgba(217, 164, 65, 0)); }
+  35% { filter: drop-shadow(0 0 24px rgba(217, 164, 65, 0.8)); }
+  100% { filter: drop-shadow(0 0 0 rgba(217, 164, 65, 0)); }
 }
 
 .spark-encounter.is-celebrating .spark-encounter-art svg {
@@ -676,13 +728,13 @@
 
 .spark-encounter-seednote {
   color: var(--spark-dim);
-  font-size: 0.86rem !important;
+  font-size: 0.9rem !important;
 }
 
 .spark-encounter-namelabel {
   display: block;
   margin-top: 10px;
-  font-size: 0.88rem;
+  font-size: 0.92rem;
   font-weight: 600;
 }
 
@@ -690,33 +742,36 @@
   width: 100%;
   max-width: 300px;
   min-height: 44px;
-  padding: 8px 12px;
+  padding: 8px 4px;
   margin-top: 6px;
-  border-radius: 10px;
-  border: 1px solid rgba(167, 176, 198, 0.4);
-  background: rgba(5, 7, 13, 0.6);
+  border: 0;
+  border-bottom: 1px solid rgba(243, 201, 122, 0.65);
+  background: rgba(5, 7, 13, 0.55);
   color: var(--spark-ink);
   font-size: 1rem;
 }
 
+/* The naming choices are words too: keep gold and
+ * underlined, skip dim. The name field stays a field — a
+ * keeper has to type somewhere — one underlined line. */
 .spark-encounter-name-keep {
   min-height: 44px;
-  padding: 10px 18px;
-  border-radius: 999px;
-  border: 1px solid var(--spark-gold);
-  background: var(--spark-gold);
-  color: #14100a;
-  font-weight: 600;
+  padding: 10px 4px;
+  border: 0;
+  background: none;
+  color: var(--spark-gold);
+  font-weight: 700;
   font-size: 0.95rem;
+  text-decoration: underline;
+  text-underline-offset: 4px;
   cursor: pointer;
 }
 
 .spark-encounter-name-skip {
   min-height: 44px;
-  padding: 10px 14px;
-  border-radius: 999px;
-  border: 1px solid transparent;
-  background: transparent;
+  padding: 10px 4px;
+  border: 0;
+  background: none;
   color: var(--spark-dim);
   font-size: 0.9rem;
   cursor: pointer;
@@ -729,28 +784,72 @@
   animation: spark-bob 5s ease-in-out infinite;
 }
 
+.spark-encounter-words {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The pool of shadow (Aaron, Nov 26, 2026, 17:31): a
+ * soft radial darkening laid under the words, larger
+ * than the words themselves, so its fade completes out
+ * beyond them — no box, no border, only the page
+ * falling quiet exactly where the words stand, the
+ * naming moment included. */
+.spark-encounter::before {
+  content: "";
+  position: absolute;
+  left: 58px;
+  right: -18px;
+  top: -18px;
+  bottom: -18px;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(ellipse 88% 86% at 50% 50%,
+    rgba(3, 5, 10, 0.9) 0%, rgba(3, 5, 10, 0.8) 52%,
+    rgba(3, 5, 10, 0.42) 78%, rgba(3, 5, 10, 0) 100%);
+  pointer-events: none;
+}
+
 .spark-encounter-words p {
   margin: 0 0 6px;
-  font-size: 0.92rem;
-  line-height: 1.45;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+/* Unboxed, the words carry their legibility with them: the
+ * light-and-shadow the presence's name has always stood in,
+ * deep enough that no page text is mistaken for them. */
+.spark-encounter-words p,
+.spark-encounter-namelabel {
+  text-shadow:
+    0 1px 8px rgba(5, 8, 16, 0.95),
+    0 0 3px rgba(5, 8, 16, 0.95),
+    0 2px 22px rgba(5, 8, 16, 0.85);
 }
 
 .spark-encounter-greet {
   font-weight: 700;
-  font-size: 1rem !important;
+  font-size: 1.14rem !important;
 }
 
 .spark-encounter-born,
 .spark-encounter-invite {
   color: var(--spark-dim);
-  font-size: 0.86rem !important;
+  font-size: 0.9rem !important;
 }
 
 .spark-encounter-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 10px;
+  margin-top: auto;
+  padding-top: 10px;
+  position: sticky;
+  bottom: 0;
 }
 
 /* The flex above would otherwise outrank the hidden attribute:
@@ -760,24 +859,27 @@
   display: none;
 }
 
+/* The offer's choices: tappable words — adopt gold and
+ * underlined, not-now dim. A full thumb's height each: a
+ * word you cannot tap is not a choice. */
 .spark-encounter-adopt {
   min-height: 44px;
-  padding: 10px 18px;
-  border-radius: 999px;
-  border: 1px solid var(--spark-gold);
-  background: var(--spark-gold);
-  color: #14100a;
-  font-weight: 600;
+  padding: 10px 4px;
+  border: 0;
+  background: none;
+  color: var(--spark-gold);
+  font-weight: 700;
   font-size: 0.95rem;
+  text-decoration: underline;
+  text-underline-offset: 4px;
   cursor: pointer;
 }
 
 .spark-encounter-later {
   min-height: 44px;
-  padding: 10px 14px;
-  border-radius: 999px;
-  border: 1px solid transparent;
-  background: transparent;
+  padding: 10px 4px;
+  border: 0;
+  background: none;
   color: var(--spark-dim);
   font-size: 0.9rem;
   cursor: pointer;
@@ -1042,18 +1144,14 @@
 
 
 /* ---------- v8: the control panel, and bubbles a thumb can hit ----------
- * A tap on the Spark opens a panel, not a scrolling talk.
- * One short line of theirs at the top, the day's coordinate in
- * small type, any short rows the state carries, and a grid of
- * big bubbles that simply appear — every bubble at least
- * 48px tall, labelled in a word or two, answering the press
- * visibly the moment it lands. A state replaces the state
- * before it; nothing in the panel scrolls. Nothing waits on
- * a hover: there is no hover on a phone. Their light — the
- * halo the panel stands in — borrows the hue family of the
- * moon they are under (--spark-moon-hue, set from the
- * calendar's own element for that moon); their seed-grown
- * body colours never take it. */
+ * A tap on the Spark opens a panel, not a scrolling talk:
+ * one short line of theirs, the day's coordinate, any short
+ * rows the state carries, and a grid of big bubbles (at
+ * least 48px tall) that answer the press the moment it
+ * lands. Nothing in the panel scrolls; nothing waits on a
+ * hover. Their halo borrows the hue family of the moon
+ * they are under (--spark-moon-hue); their seed-grown body
+ * colours never take it. */
 
 /* The panel gets a definite width — wide enough at phone
  * size for three bubbles across — and the presence places
@@ -1168,13 +1266,11 @@
 }
 
 /* ---------- v6: touch, tricks, the echo game, moods ----------
- * They answer the hand itself now: the button takes the whole
- * press (no scroll fights it), a poke squashes, a petting leans
- * them in with a static warmth under the lean, and each trick has
- * its own small performance. Their mood shows in their light — a
- * filter, not a costume — so it reads at a glance and costs the
- * phone nothing. The echo pads are their own colours, thumb-sized,
- * and light where their pattern touches them. */
+ * They answer the hand itself: a poke squashes, a petting
+ * leans them in, each trick has its own small performance.
+ * Their mood shows in their light — a filter, not a
+ * costume. The echo pads are their own colours,
+ * thumb-sized, and light where their pattern touches. */
 
 .spark-presence-button {
   touch-action: none;

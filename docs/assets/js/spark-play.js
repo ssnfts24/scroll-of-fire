@@ -472,14 +472,21 @@
     }
   }
 
+  /* The day the match answers is the page's day (pass 8): the
+   * device's timezone at a midnight boundary, as the page's own
+   * panels resolve it — never the cursor's sunset default or
+   * the calendar's UTC default, which roll the day forward
+   * hours before the page's day turns. */
   function todayPatternDay() {
     try {
+      let timeZone = "UTC";
+      try { timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; } catch { /* UTC stands */ }
       if (window.SOFTemporalCursor && typeof window.SOFTemporalCursor.resolvePosition === "function") {
-        const pos = window.SOFTemporalCursor.resolvePosition(new Date());
+        const pos = window.SOFTemporalCursor.resolvePosition(new Date(), { timeZone, boundaryMode: "midnight" });
         if (pos && Number.isFinite(pos.dayOfPatternYear)) return pos.dayOfPatternYear;
       }
       if (window.PatternCalendar) {
-        const pos = window.PatternCalendar.fromCivilDate({ date: new Date() });
+        const pos = window.PatternCalendar.fromCivilDate({ date: new Date(), timeZone, boundaryMode: "midnight" });
         if (pos && Number.isFinite(pos.dayOfPatternYear)) return pos.dayOfPatternYear;
       }
     } catch {

@@ -205,12 +205,22 @@
     return h >= 5 && h < 10 ? "dawn" : h >= 10 && h < 17 ? "day" : h >= 17 && h < 21 ? "dusk" : "night";
   }
 
+  // One day, midnight, everywhere (Aaron, Nov 26, 2026): the
+  // Sphere's Spark reads the day the way the whole house now
+  // does — the device's own zone, the day turning at midnight —
+  // so every stamp it writes names the same day the keeper sees.
+  function todayOptions() {
+    let timeZone = "UTC";
+    try { timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; } catch { /* UTC stands */ }
+    return { timeZone, boundaryMode: "midnight" };
+  }
+
   function patternStamp(global, now) {
     const date = now instanceof Date ? now : new Date();
     let pos = null;
-    try { pos = global.SOFTemporalCursor?.resolvePosition ? global.SOFTemporalCursor.resolvePosition(date) : null; } catch { pos = null; }
+    try { pos = global.SOFTemporalCursor?.resolvePosition ? global.SOFTemporalCursor.resolvePosition(date, todayOptions()) : null; } catch { pos = null; }
     if (!pos) {
-      try { pos = global.PatternCalendar?.fromCivilDate ? global.PatternCalendar.fromCivilDate({ date }) : null; } catch { pos = null; }
+      try { pos = global.PatternCalendar?.fromCivilDate ? global.PatternCalendar.fromCivilDate({ date, ...todayOptions() }) : null; } catch { pos = null; }
     }
     if (!pos) return null;
     return {
@@ -621,7 +631,7 @@
 
   function todaySummary() {
     try {
-      if (window.PatternCalendar?.fromCivilDate) return window.PatternCalendar.fromCivilDate({ date: new Date() });
+      if (window.PatternCalendar?.fromCivilDate) return window.PatternCalendar.fromCivilDate({ date: new Date(), ...todayOptions() });
     } catch { /* fall through */ }
     return null;
   }

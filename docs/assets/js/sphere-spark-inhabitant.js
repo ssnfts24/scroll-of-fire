@@ -1775,10 +1775,15 @@
       if (s && s.civilDate) return s;
     } catch { /* fall through to the pipeline itself */ }
     const date = new Date();
+    // One day, midnight, everywhere (Aaron, Nov 26, 2026): the
+    // device's own zone, the day turning at midnight.
+    let timeZone = "UTC";
+    try { timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; } catch { /* UTC stands */ }
+    const options = { timeZone, boundaryMode: "midnight" };
     let pos = null;
-    try { pos = rootLike.SOFTemporalCursor && rootLike.SOFTemporalCursor.resolvePosition ? rootLike.SOFTemporalCursor.resolvePosition(date) : null; } catch { pos = null; }
+    try { pos = rootLike.SOFTemporalCursor && rootLike.SOFTemporalCursor.resolvePosition ? rootLike.SOFTemporalCursor.resolvePosition(date, options) : null; } catch { pos = null; }
     if (!pos) {
-      try { pos = rootLike.PatternCalendar && rootLike.PatternCalendar.fromCivilDate ? rootLike.PatternCalendar.fromCivilDate({ date }) : null; } catch { pos = null; }
+      try { pos = rootLike.PatternCalendar && rootLike.PatternCalendar.fromCivilDate ? rootLike.PatternCalendar.fromCivilDate({ date, ...options }) : null; } catch { pos = null; }
     }
     if (!pos) return null;
     return {
@@ -2425,10 +2430,14 @@
 
     function currentPosition() {
       const date = new Date();
+      // One day, midnight, everywhere (Aaron, Nov 26, 2026).
+      let timeZone = "UTC";
+      try { timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; } catch { /* UTC stands */ }
+      const options = { timeZone, boundaryMode: "midnight" };
       let pos = null;
-      try { pos = root.SOFTemporalCursor?.resolvePosition ? root.SOFTemporalCursor.resolvePosition(date) : null; } catch { pos = null; }
+      try { pos = root.SOFTemporalCursor?.resolvePosition ? root.SOFTemporalCursor.resolvePosition(date, options) : null; } catch { pos = null; }
       if (!pos) {
-        try { pos = root.PatternCalendar?.fromCivilDate ? root.PatternCalendar.fromCivilDate({ date }) : null; } catch { pos = null; }
+        try { pos = root.PatternCalendar?.fromCivilDate ? root.PatternCalendar.fromCivilDate({ date, ...options }) : null; } catch { pos = null; }
       }
       return pos;
     }

@@ -12,6 +12,15 @@
  * the pre-wrap renderer (main dd02f747) for five seeds — Nori's
  * pinned seed, Selor's passport vector, and a Fire, a Shadow,
  * and a Light seed — at every stage, born and grown.
+ *
+ * Amendment (pass 8b, Nov 26, 2026): the Shadow golden is a
+ * moth, and the moth form itself was repaired in that pass —
+ * its wings had stood wider than the body they carry, so every
+ * moth rendered as a doubled, mirrored pair instead of one
+ * figure (Aaron's screenshot of Kan). The Shadow entry's six
+ * hashes are re-pinned to the repaired rendering; the other
+ * four goldens stand exactly as captured, which is itself
+ * part of the proof: no non-moth figure moved.
  */
 const test = require("node:test");
 const assert = require("node:assert/strict");
@@ -52,12 +61,12 @@ const GOLDEN = {
     "2-grown": "a5c0f569fda41e63f65288899ac7587de3233b56902b789d1fb416c29a454fa5",
   } },
   shadow: { seed: "spark1-11-300-2-shad0w42", kind: "shadow", hashes: {
-    "0-born": "e9aad9fb8362b55f8d293353df186cbe6e4e063a29a025cf18591a8495674fee",
-    "0-grown": "0daf33c039caf7fcd45e146483b1b48e078c503ab23b088d9911ea97f25eb369",
-    "1-born": "1409bbdbf2b64e38e902bbf6da4aa88d820540ac6f92c538ead47039c987918e",
-    "1-grown": "89cde650a41080f2f5ea1335253c7e627a5bcb9449fa04eb6e9ac120be0f8403",
-    "2-born": "3baac0811fe04a3d0517c755bbb0c6b6ea7d1ad310655636721d0ab03f76154b",
-    "2-grown": "f4d7ab37beda2663f761c9ee66de459da7c56cc87abc7c6e6a8080cda3fc3ebb",
+    "0-born": "4dde24e1bcb231f7cfdcf18ac1d9b4722fe042ff1d21a377edc2c9bb7ebe72be",
+    "0-grown": "d30f71b6f9b908080e52e25fa17d7760f965ee2f7711962e74653b99075b6766",
+    "1-born": "2a279fb53522acf58782a32d9ef001530167cb7e46f73ee8de4980a7649ecec3",
+    "1-grown": "77d80f999117e6bda2e615dee944ab709f7f2a608a5ea95f53d92e8a70449abb",
+    "2-born": "389f389dff7cfbcd58b032db285477dbf910515c153871f01f02c01d18dba41b",
+    "2-grown": "9ae177fe4361e5c148c2c5de04dbaf96b4fb582bb55831a2a739a61fef30bbf3",
   } },
   light: { seed: "spark1-1-1-5-light777", kind: "light", hashes: {
     "0-born": "83e0a2cb3c6726011c693f201faea4b31056f0f1746a95634607509b0269bdda",

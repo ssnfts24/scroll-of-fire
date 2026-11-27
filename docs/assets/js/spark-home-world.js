@@ -773,14 +773,20 @@
     });
   }
 
+  /* The Spark's day is the page's day (pass 8): the device's
+   * timezone at a midnight boundary, as the page's own panels
+   * resolve it — never the cursor's sunset default or the
+   * calendar's UTC default, which roll the day forward early. */
   function todayCoordinate() {
+    let timeZone = "UTC";
+    try { timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; } catch { /* UTC stands */ }
     if (window.SOFTemporalCursor && typeof window.SOFTemporalCursor.resolvePosition === "function") {
       try {
-        const pos = window.SOFTemporalCursor.resolvePosition(new Date());
+        const pos = window.SOFTemporalCursor.resolvePosition(new Date(), { timeZone, boundaryMode: "midnight" });
         if (pos) return pos;
       } catch { /* fall through */ }
     }
-    if (window.PatternCalendar) return window.PatternCalendar.fromCivilDate({ date: new Date() });
+    if (window.PatternCalendar) return window.PatternCalendar.fromCivilDate({ date: new Date(), timeZone, boundaryMode: "midnight" });
     return null;
   }
 

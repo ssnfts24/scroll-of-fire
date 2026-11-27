@@ -121,6 +121,19 @@
     panel.appendChild(el("p", "codex-card__stamp",
       "Rings: " + L.keepers.length + " hand" + (L.keepers.length === 1 ? "" : "s") +
       " so far — matches sounded in will add their rings here."));
+    /* The match trail (Nov 26, 2026): matches this copy has
+     * sounded in, written by the Table and read back here —
+     * genealogy as rarity, growing ring by ring. */
+    try {
+      var trail = JSON.parse(storage.getItem("sof.cards.matchtrail.v1." + keeperKey) || "{}");
+      var entries = trail[copy.instanceId] || [];
+      if (entries.length) {
+        panel.appendChild(el("p", "codex-card__stamp",
+          "Matches: sounded in " + entries.length + " match" + (entries.length === 1 ? "" : "es") +
+          " at the Table · first on Pattern Day " + entries[0].day +
+          " · " + entries.reduce(function (n, t) { return n + (t.triads || 0); }, 0) + " triads locked with it standing in the field."));
+      }
+    } catch (e) { /* the trail rests */ }
     return panel;
   }
 
@@ -479,4 +492,37 @@
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", render);
   else render();
+
+  /* The Table (stage 2 of the card order) loads lazily, the
+   * living layer's own way: the album stands first, and the
+   * match module and its styles ride in behind it, so the
+   * page's first load does not carry the game. */
+  (function loadTable() {
+    if (!document.querySelector("[data-card-match]")) return;
+    var link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "assets/css/codex-card-match.css?v=20261126-1";
+    document.head.appendChild(link);
+    var script = document.createElement("script");
+    script.src = "assets/js/codex-card-match.js?v=20261126-1";
+    script.defer = true;
+    document.head.appendChild(script);
+  })();
+
+  /* The Spark's guided tour of this room rides in the same
+   * lazy way (Aaron, Nov 26, 2026): the album stands first,
+   * and the tour module — its offer, its Tour button, the
+   * walk itself — comes behind it. The album page carries no
+   * presence of its own, so the tour loads from here. */
+  (function loadTour() {
+    if (window.SparkIntro) return;
+    var link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "assets/css/spark-intro.css?v=20261126-7";
+    document.head.appendChild(link);
+    var script = document.createElement("script");
+    script.src = "assets/js/spark-intro.js?v=20261126-7";
+    script.defer = true;
+    document.head.appendChild(script);
+  })();
 })();

@@ -1,0 +1,440 @@
+/* The Spark's tours (Aaron, Nov 26, 2026 — corrected 16:13,
+ * then deeper at 17:04: "without all the pop up windows…
+ * the actual spark to just come up in a way and start with
+ * all that — or the spark moves around the screen in
+ * certain ways and brings you to things… even scroll
+ * through the pages and show you different things").
+ *
+ * There is no tour window. The Spark itself — the keeper's
+ * own figure — leaves its corner and stands loose on the
+ * page: its words beside it, carried in light and shadow
+ * rather than a box; its choices as tappable words in its
+ * own speech. It travels by gliding, wearing its seed's
+ * gait while it moves; the page scrolls with it to the
+ * thing it is showing; a tap on the Spark goes on; and
+ * when the walk is over — or the keeper wanders off — the
+ * Spark glides home to its corner.
+ *
+ * At 17:31 the reading itself was corrected: the words
+ * now stand in a soft pool of shadow that hugs them and
+ * travels with the Spark — no box, no border, only the
+ * page falling quiet where the words are — and the Spark
+ * rises from its measured seat and settles, at every
+ * stop, on the calmest ground nearby. */
+
+/* While the Spark is out on the page, its corner seat
+ * stands empty: the walker and its panel, the waiting
+ * ember, the Tour button rest hidden — there is only one
+ * Spark, and it is the one standing here. */
+body.spark-roam-open .spark-presence,
+body.spark-roam-open .spark-ember-host,
+body.spark-roam-open .spark-tour-launcher,
+body.spark-roam-open .spark-ask-launcher {
+  visibility: hidden;
+}
+
+/* While the Sphere's own demonstration owns the stage, the
+ * Spark's buttons rest (pass 8 — Aaron's phone: the Ask
+ * button sat on the demonstration caption's last words).
+ * The demonstration is a dialog standing in the Sphere's
+ * frame; the buttons return the moment it closes. */
+body:has(.evo-opening) .spark-tour-launcher,
+body:has(.evo-opening) .spark-ask-launcher {
+  visibility: hidden;
+}
+
+/* The roaming Spark: a figure and its speech, nothing
+ * more. The cluster itself catches no taps — the page
+ * stays live underneath — only the Spark and its choice
+ * words answer a touch. */
+.spark-roam {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 10050;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  padding: 6px;
+  pointer-events: none;
+  opacity: 0;
+  transition: transform 0.95s cubic-bezier(0.25, 0.8, 0.3, 1), opacity 0.45s ease;
+  will-change: transform;
+}
+.spark-roam.is-here { opacity: 1; }
+.spark-roam.is-leaving { opacity: 0; }
+.spark-roam.no-glide { transition: none; }
+.spark-roam.is-flipped { flex-direction: row-reverse; }
+
+.spark-roam-stand {
+  position: relative;
+  flex: none;
+}
+
+/* The Spark itself is the button: tap it to go on. It
+ * wears no button's clothing — just its own light. */
+.spark-roam-figure {
+  display: block;
+  background: none;
+  border: 0;
+  padding: 6px;
+  margin: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  border-radius: 50%;
+  filter: drop-shadow(0 0 10px rgba(255, 226, 160, 0.5)) drop-shadow(0 0 22px rgba(240, 190, 90, 0.3));
+}
+.spark-roam-art { display: block; }
+.spark-roam-art svg { width: 76px; height: auto; display: block; }
+
+/* While it travels it moves the way its seed taught it:
+ * a hopper bounces along, a drifter floats, a stroller
+ * sways as it walks. */
+.spark-roam.is-travelling .spark-roam-figure[data-gait="hop"] .spark-roam-art svg {
+  animation: spark-roam-hop 0.42s ease-in-out infinite alternate;
+}
+@keyframes spark-roam-hop {
+  from { transform: translateY(0); }
+  to { transform: translateY(-9px); }
+}
+.spark-roam.is-travelling .spark-roam-figure[data-gait="drift"] .spark-roam-art svg {
+  animation: spark-roam-drift 1.1s ease-in-out infinite alternate;
+}
+@keyframes spark-roam-drift {
+  from { transform: translateY(0) rotate(-2deg); }
+  to { transform: translateY(-5px) rotate(2deg); }
+}
+.spark-roam.is-travelling .spark-roam-figure[data-gait="stroll"] .spark-roam-art svg {
+  animation: spark-roam-stroll 0.6s ease-in-out infinite alternate;
+}
+@keyframes spark-roam-stroll {
+  from { transform: rotate(-3deg); }
+  to { transform: rotate(3deg); }
+}
+
+/* Its speech: the words stand beside the Spark in light
+ * and shadow — the house's own way of writing on a page
+ * (the presence's name has always stood so) — never in a
+ * box. And under the words, a pool of shadow: a soft,
+ * borderless darkening, the shadow of the Spark's own
+ * glow, hugging the words only and travelling with them,
+ * so the page beneath falls quiet exactly where the words
+ * stand and nowhere else (Aaron, Nov 26, 2026, 17:31:
+ * "Need to make it more visible in some way in reading…
+ * Make the reading better somehow" — without the window
+ * he twice refused). A very long speech scrolls within
+ * its own measure, so the Spark never has to shout over
+ * the whole screen. */
+.spark-roam-speech {
+  position: relative;
+  min-width: 0;
+  max-width: min(290px, calc(100vw - 128px));
+  color: #f4f1e8;
+  pointer-events: auto;
+  text-shadow:
+    0 1px 8px rgba(5, 8, 16, 0.95),
+    0 0 3px rgba(5, 8, 16, 0.95),
+    0 2px 22px rgba(5, 8, 16, 0.85);
+}
+.spark-roam-speech::before {
+  content: "";
+  position: absolute;
+  inset: -30px;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(ellipse 63% 60% at 50% 52%,
+    rgba(3, 5, 10, 0.9) 0%, rgba(3, 5, 10, 0.8) 44%,
+    rgba(3, 5, 10, 0.42) 68%, rgba(3, 5, 10, 0) 84%);
+  pointer-events: none;
+}
+.spark-roam-who {
+  margin: 0 0 2px;
+  color: #f3c97a;
+  font-weight: 700;
+  font-size: 1.07rem;
+}
+.spark-roam-text {
+  margin: 0;
+  font-size: 1.04rem;
+  font-weight: 500;
+  line-height: 1.58;
+  max-height: 44dvh;
+  overflow-y: auto;
+}
+.spark-roam-hint {
+  margin: 6px 0 0;
+  font-size: 0.86rem;
+  font-style: italic;
+  color: #e2e8f2;
+}
+
+/* Its choices, when it offers: words in its speech, not
+ * buttons in a row. The yes stands gold and underlined;
+ * the not-now rests dim beside it. Both keep a full
+ * thumb's height, because a word you cannot tap is not a
+ * choice. */
+.spark-roam-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  margin-top: 4px;
+}
+.spark-roam-choice {
+  font: inherit;
+  font-size: 0.95rem;
+  min-height: 44px;
+  padding: 8px 2px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: #b9c2cf;
+}
+.spark-roam-choice.is-go {
+  color: #f3c97a;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* The things the Spark holds up while it speaks — the lit
+ * Sphere, the day, a card — float above it, unboxed: they
+ * are objects it is showing, not windows. */
+.spark-roam-visual {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 148px;
+  color: #f4f1e8;
+  pointer-events: none;
+}
+/* What it holds up gets the same pool of shadow, so the
+ * day it reads aloud stands clear of the page beneath. */
+.spark-roam-visual::before {
+  content: "";
+  position: absolute;
+  inset: -16px -22px;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(ellipse 64% 62% at 50% 50%,
+    rgba(3, 5, 10, 0.86) 0%, rgba(3, 5, 10, 0.55) 55%,
+    rgba(3, 5, 10, 0) 84%);
+  pointer-events: none;
+}
+.spark-roam-visual.is-sphere { width: 164px; }
+.spark-roam-visual svg { width: 100%; height: auto; display: block; }
+.spark-roam-visual .tour-lit-day {
+  animation: spark-tour-light 1.6s ease-in-out infinite alternate;
+}
+@keyframes spark-tour-light {
+  from { opacity: 0.65; }
+  to { opacity: 1; }
+}
+
+.tour-day-disc {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  text-align: center;
+  text-shadow:
+    0 1px 8px rgba(5, 8, 16, 0.95),
+    0 0 3px rgba(5, 8, 16, 0.95);
+}
+.tour-day-disc strong { color: #f3c97a; font-size: 1.14rem; }
+.tour-day-disc em { color: #b9c2cf; font-style: normal; font-size: 0.82rem; }
+
+/* A card the Spark sounds: the card is the object — a
+ * small true card, held up, not a panel. */
+.tour-card {
+  border: 1px solid #d99545;
+  border-radius: 10px;
+  padding: 12px 10px;
+  background: linear-gradient(160deg, #141021, #0b1026);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: center;
+}
+.tour-card span { color: #f3c97a; font-size: 1.5rem; }
+.tour-card em { color: #b9c2cf; font-style: normal; font-size: 0.78rem; letter-spacing: 0.06em; }
+
+/* ---- the figure's ways of moving, one per kind of stop ----
+ * Transform and opacity only: the compositor carries them,
+ * and a low-end phone never pays for a repainted filter.
+ * Each animation is a thing the Spark does, shown. */
+.spark-roam-figure.anim-speak .spark-roam-art svg {
+  animation: spark-tour-speak 1.8s ease-in-out infinite;
+}
+@keyframes spark-tour-speak {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.055); }
+}
+.spark-roam-figure.anim-point .spark-roam-art svg {
+  animation: spark-tour-point 1.6s ease-in-out infinite;
+}
+@keyframes spark-tour-point {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-7px) rotate(3deg); }
+}
+.spark-roam-figure.anim-travel .spark-roam-art svg {
+  animation: spark-tour-travel 1.5s ease-in-out infinite;
+}
+@keyframes spark-tour-travel {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+.spark-roam-figure.anim-delight .spark-roam-art svg {
+  animation: spark-tour-delight 0.9s ease-in-out infinite;
+}
+@keyframes spark-tour-delight {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  30% { transform: rotate(-6deg) scale(1.04); }
+  65% { transform: rotate(6deg) scale(1.04); }
+}
+.spark-roam-figure.anim-breathe .spark-roam-art svg {
+  animation: spark-tour-breathe 3.4s ease-in-out infinite;
+}
+@keyframes spark-tour-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.94; }
+  50% { transform: scale(1.035); opacity: 1; }
+}
+.spark-roam-figure.anim-kindle .spark-roam-art svg {
+  animation: spark-tour-kindle 2.2s ease-in-out infinite;
+}
+@keyframes spark-tour-kindle {
+  0%, 100% { transform: scale(1); }
+  45% { transform: scale(1.09); }
+  60% { transform: scale(1.05); }
+}
+.spark-roam-figure.anim-hum .spark-roam-art svg {
+  animation: spark-tour-hum 1.1s ease-in-out infinite;
+}
+@keyframes spark-tour-hum {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.025); opacity: 0.88; }
+}
+
+/* The ring of light the walk lays on the thing it names. */
+.spark-tour-spot {
+  outline: 2px solid rgba(243, 201, 122, 0.95);
+  outline-offset: 4px;
+  border-radius: 6px;
+  box-shadow: 0 0 0 5px rgba(243, 201, 122, 0.18);
+}
+
+/* ---- the Tour button: the standing way back in ---- */
+.spark-tour-launcher {
+  position: fixed;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  min-height: 44px;
+  z-index: 110;
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 8px 14px;
+  border: 1px solid rgba(217, 149, 69, 0.55);
+  background: rgba(8, 11, 22, 0.92);
+  color: #f3c97a;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.spark-intro-show {
+  cursor: pointer;
+}
+
+/* ---- the asking (Nov 26, 2026, 19:42) ----
+ * The offered questions stand in the Spark's speech as
+ * big tappable words, one to a line — a thumb's height
+ * each, gold, the way its offers stand. Under them, the
+ * line to type on: a quiet field in the pool's shadow,
+ * and the Ask word beside it. Nothing here is a window;
+ * it is the Spark's own speech, widened to listen. */
+.spark-roam.is-ask .spark-roam-choices {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  max-height: 36dvh;
+  overflow-y: auto;
+}
+/* The whole asking cluster — words, questions, the typing
+ * line — must stand inside the screen at phone height
+ * (pass 8): the answer's own measure gives some of its
+ * height to the questions, so together they never carry
+ * the Spark off the top or the bottom of the glass. Each
+ * part still scrolls within its own measure. */
+.spark-roam.is-ask .spark-roam-text {
+  max-height: 22dvh;
+}
+.spark-roam.is-ask .spark-roam-choice {
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: #f3c97a;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-align: left;
+}
+.spark-roam.is-ask .spark-roam-choice.is-go {
+  font-weight: 700;
+}
+.spark-ask-bar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 10px;
+}
+.spark-ask-input {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  font: inherit;
+  font-size: 1rem;
+  color: #f4f1e8;
+  background: rgba(5, 8, 16, 0.55);
+  border: 1px solid rgba(243, 201, 122, 0.45);
+  border-radius: 999px;
+  padding: 9px 14px;
+}
+.spark-ask-input::placeholder { color: #b9c2cf; }
+.spark-ask-send {
+  flex: none;
+  min-height: 44px;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f3c97a;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  padding: 8px 4px;
+}
+
+/* ---- the Ask button: stacked over the Tour button ---- */
+.spark-ask-launcher {
+  position: fixed;
+  right: 12px;
+  bottom: calc(68px + env(safe-area-inset-bottom));
+  min-height: 44px;
+  z-index: 110;
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 8px 14px;
+  border: 1px solid rgba(217, 149, 69, 0.55);
+  background: rgba(8, 11, 22, 0.92);
+  color: #f3c97a;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* No gliding, no gesturing: the Spark simply stands at
+   * each stop, as it always has under reduced motion. */
+  .spark-roam { transition: none; }
+  .spark-roam-figure .spark-roam-art svg,
+  .spark-roam.is-travelling .spark-roam-art svg,
+  .spark-roam-visual .tour-lit-day { animation: none; }
+}

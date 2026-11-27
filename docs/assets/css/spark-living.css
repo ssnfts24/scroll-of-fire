@@ -1,0 +1,247 @@
+/* The living layer's styles (Aaron, Nov 26, 2026) — loaded
+ * lazily with spark-living.js by the presence layer, so the
+ * companion stylesheet every room carries stays at its
+ * guarded weight. */
+
+/* ---- the animation pass + the living layer (Aaron, Nov 26, 2026) ----
+ * The Spark more animated everywhere it stands: at rest its
+ * light now breathes — a slow swell and settle under every
+ * other motion, so a still Spark is never a dead one. The
+ * state animations (walking, delight, looking) override the
+ * breath while they play, as they always have. */
+/* Their rest is a breath: the drawn light swells and settles.
+ * The swell is transform and opacity only — the two motions a
+ * phone's compositor carries for free. The aura itself (the
+ * companion stylesheet's standing drop-shadows) never animates:
+ * a filter in an endless keyframe loop repaints the drawing
+ * every frame, and on a low-end phone that is the Sphere's
+ * lesson — presence must never cost frames. */
+.spark-presence-art svg,
+.spark-encounter-art svg {
+  animation: spark-halo-breathe 6.5s ease-in-out infinite alternate;
+}
+
+@keyframes spark-halo-breathe {
+  from { transform: scale(0.985); opacity: 0.93; }
+  to { transform: scale(1.02); opacity: 1; }
+}
+
+/* A breath on returning: one deep swell when the keeper comes
+ * back to a room, or when the light itself changes. */
+.spark-walker.is-breathing .spark-presence-art svg {
+  animation: spark-return-breath 2.6s ease-in-out 1;
+}
+
+@keyframes spark-return-breath {
+  0% { transform: scale(0.96); opacity: 0.88; }
+  45% { transform: scale(1.09); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Traces in walked rooms: three small motes resting where the
+ * page's edge meets the floor — they have been here together. */
+.spark-trace {
+  position: fixed;
+  right: 14px;
+  bottom: 12px;
+  display: flex;
+  gap: 5px;
+  pointer-events: none;
+  z-index: 30;
+  opacity: 0.55;
+}
+.spark-trace span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #f3c97a;
+  box-shadow: 0 0 6px rgba(243, 201, 122, 0.8);
+  animation: spark-mote-twinkle 3.8s ease-in-out infinite alternate;
+}
+.spark-trace span:nth-child(2) { animation-delay: 0.7s; }
+.spark-trace span:nth-child(3) { animation-delay: 1.3s; }
+
+/* The doorstep: one clear invitation, grown from the keeper's
+ * own lean. It waits at the door; it never blocks the page. */
+.spark-doorstep {
+  position: fixed;
+  left: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: min(430px, calc(100vw - 24px));
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(217, 149, 69, 0.45);
+  background: rgba(8, 11, 22, 0.94);
+  color: #f4f1e8;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  font-size: 0.92rem;
+  animation: spark-doorstep-in 0.6s ease-out 1;
+}
+@keyframes spark-doorstep-in {
+  from { transform: translateY(10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.spark-doorstep-dot {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #f3c97a;
+  box-shadow: 0 0 10px rgba(243, 201, 122, 0.9);
+  animation: spark-mote-twinkle 3s ease-in-out infinite alternate;
+}
+.spark-doorstep-text {
+  min-width: 0;
+}
+.spark-doorstep-go {
+  color: #f3c97a;
+  white-space: nowrap;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+}
+.spark-doorstep-no {
+  background: none;
+  border: none;
+  color: #b9c2cf;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* The fit on a phone (pass 8 — Aaron's screenshots, Nov 26,
+ * 2026): in one row the words were squeezed into a narrow
+ * column beside the go-word and the "Not now", the stack of
+ * them ran under the Ask and Tour buttons at the corner, and
+ * the last line slid beneath the first page's bottom rail,
+ * cut mid-sentence. On a narrow screen the invitation stands
+ * ABOVE the button stack instead: its words take the whole
+ * first row, its two choices rest on their own row beneath,
+ * and if the words are long they scroll inside their own
+ * measure rather than covering or clipping. The living
+ * layer adds the rail's own height to this measure when a
+ * rail stands (spark-living.js). */
+@media (max-width: 640px) {
+  .spark-doorstep {
+    bottom: calc(128px + env(safe-area-inset-bottom));
+    flex-wrap: wrap;
+    row-gap: 2px;
+  }
+  .spark-doorstep-text {
+    flex: 1 1 calc(100% - 19px);
+    max-height: 30dvh;
+    overflow-y: auto;
+  }
+  .spark-doorstep-go {
+    margin-left: auto;
+  }
+}
+
+/* While the Sphere's own demonstration owns the stage, the
+ * invitation waits — it returns when the demonstration
+ * closes, and its shown mark was already kept honestly. */
+body:has(.evo-opening) .spark-doorstep {
+  visibility: hidden;
+}
+
+/* And while the Spark itself is out on the page — walking a
+ * tour, listening at the ask, standing at its offer — the
+ * invitation rests beneath it (pass 8: on the Sphere page
+ * the two stood in the same ground, the tour's words over
+ * the invitation's choices). One Spark block at a time; the
+ * invitation returns when the walk comes home. */
+body.spark-roam-open .spark-doorstep {
+  visibility: hidden;
+}
+
+/* A glance without words: one small light on its way to a door. */
+.spark-glance {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ffe9b0;
+  box-shadow: 0 0 14px 6px rgba(243, 201, 122, 0.55);
+  pointer-events: none;
+  z-index: 70;
+}
+
+/* It watches the films with you: inside the full-screen frame,
+ * small and quiet at the corner, never over the story. */
+.spark-film-watch {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  width: 76px;
+  pointer-events: none;
+  opacity: 0.92;
+  z-index: 2147483000;
+  animation: spark-bob 5s ease-in-out infinite;
+}
+.spark-film-watch svg { width: 100%; height: auto; display: block; }
+
+/* The garden of finds: a bloom for every finding, kept together. */
+.spark-finds {
+  margin: 22px 0;
+  padding: 14px 16px;
+  border: 1px solid var(--spark-line, #2a3342);
+  border-radius: 14px;
+  background: rgba(244, 241, 232, 0.03);
+}
+.spark-finds-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 10px 0;
+}
+.spark-finds-bloom {
+  width: 12px;
+  height: 12px;
+  border-radius: 50% 50% 50% 4px;
+  background: radial-gradient(circle at 35% 35%, #ffe9b0, #d99545 70%);
+  box-shadow: 0 0 7px rgba(217, 149, 69, 0.55);
+  animation: spark-mote-twinkle 4.2s ease-in-out infinite alternate;
+}
+.spark-finds-bloom.is-seed {
+  background: radial-gradient(circle at 35% 35%, #8a93a8, #39415e 70%);
+  box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spark-presence-art svg,
+  .spark-encounter-art svg,
+  .spark-walker.is-breathing .spark-presence-art svg,
+  .spark-trace span,
+  .spark-doorstep,
+  .spark-doorstep-dot,
+  .spark-film-watch,
+  .spark-finds-bloom { animation: none !important; }
+}
+
+/* The garden, from the Spark's height (Nov 26, 2026): the
+ * thirteen beds in miniature — lit where a Moon's card is
+ * held, ringed for today — and the walker gardening. */
+.spark-beds { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; }
+.spark-beds-dot {
+  width: 14px; height: 14px; border-radius: 4px 4px 8px 8px;
+  border: 1px solid #2a3342; background: rgba(244, 241, 232, 0.05);
+}
+.spark-beds-dot.is-held { background: #7a9a52; border-color: #7a9a52; box-shadow: 0 0 7px rgba(122, 154, 82, 0.55); }
+.spark-beds-dot.is-today { outline: 2px solid #f3c97a; outline-offset: 1px; }
+.spark-beds-line { color: #b9c2cf; font-size: 0.9rem; margin-left: 6px; }
+.spark-walker.is-gardening .spark-presence-art { animation: spark-garden-bob 3.4s ease-in-out infinite; }
+@keyframes spark-garden-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px) rotate(-1.5deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spark-walker.is-gardening .spark-presence-art { animation: none !important; }
+}

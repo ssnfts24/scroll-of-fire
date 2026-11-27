@@ -31,16 +31,22 @@
    * context go before a new one stands. */
   let bigCtrl3d = null;
 
+  /* The Spark's day is the page's day (pass 8): the device's
+   * timezone at a midnight boundary, as the page's own panels
+   * resolve it — never the cursor's sunset default or the
+   * calendar's UTC default, which roll the day forward early. */
   function todayCoordinate() {
+    let timeZone = "UTC";
+    try { timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; } catch { /* UTC stands */ }
     if (window.SOFTemporalCursor && typeof window.SOFTemporalCursor.resolvePosition === "function") {
       try {
-        const pos = window.SOFTemporalCursor.resolvePosition(new Date());
+        const pos = window.SOFTemporalCursor.resolvePosition(new Date(), { timeZone, boundaryMode: "midnight" });
         if (pos) return pos;
       } catch {
         /* fall through */
       }
     }
-    if (window.PatternCalendar) return window.PatternCalendar.fromCivilDate({ date: new Date() });
+    if (window.PatternCalendar) return window.PatternCalendar.fromCivilDate({ date: new Date(), timeZone, boundaryMode: "midnight" });
     return null;
   }
 
@@ -494,6 +500,15 @@
         : `Its name comes from its seed: the same seed speaks the same name anywhere.`;
     $("#spark-stage").textContent =
       `Stage ${stage.index + 1} of ${Core.STAGES.length}: ${stage.name} — ${stage.points} growth points`;
+    /* The long path (Aaron, Nov 26, 2026): the smaller stages
+     * between the great arcs, generated from this Spark's own
+     * seed — growth felt often, not four times in a life. */
+    if (Core.pathOf) {
+      const path = Core.pathOf(record, companion);
+      $("#spark-stage").textContent +=
+        ` On its long path: stage ${path.index + 1} of ${path.count} — ${path.name}, within the ${path.arc} arc` +
+        (path.next ? `; next is ${path.next}, ${path.toGo} point${path.toGo === 1 ? "" : "s"} on.` : `. The path's summit — it stands there now.`);
+    }
     const progress = Core.progressOf(record, companion);
     $("#spark-next").textContent = progress.next
       ? `Next: ${progress.next}, at ${progress.nextAt} points — ${progress.toGo} to go. ` +
@@ -662,4 +677,20 @@
   } else {
     start();
   }
+
+  /* The Spark's tours load lazily on this page (the living
+   * layer's way): the meeting stands first — adoption before
+   * any tour — and the tour module rides in behind it, with
+   * its post-adoption offer and its "show me" wiring. */
+  (function loadIntro() {
+    if (!document.getElementById("spark-intro-show")) return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "assets/css/spark-intro.css?v=20261126-7";
+    document.head.appendChild(link);
+    const script = document.createElement("script");
+    script.src = "assets/js/spark-intro.js?v=20261126-7";
+    script.defer = true;
+    document.head.appendChild(script);
+  })();
 })();
