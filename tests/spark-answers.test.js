@@ -261,5 +261,5 @@ test("the loaders carry the pass, so no phone serves the cached one", () => {
   const presence = fs.readFileSync(path.join(root, "docs/assets/js/spark-presence.js"), "utf8");
   assert.ok(presence.includes("spark-intro.js?v=20261126-7"));
   assert.ok(presence.includes("spark-intro.css?v=20261126-7"));
-  assert.ok(presence.includes("spark-living.js?v=20261126-7"));
+  assert.ok(presence.includes("spark-living.js?v=20261126-8"));
 });

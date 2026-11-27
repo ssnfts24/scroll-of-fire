@@ -3658,7 +3658,7 @@
     document.head.appendChild(css);
     loadScript(base + "spark-evolution-path.js?v=20261126-1")
       .then(() => loadScript(base + "spark-lean.js?v=20261126-1"))
-      .then(() => loadScript(base + "spark-living.js?v=20261126-7"))
+      .then(() => loadScript(base + "spark-living.js?v=20261126-8"))
       .catch(() => { /* the living layer rests */ });
   }
 

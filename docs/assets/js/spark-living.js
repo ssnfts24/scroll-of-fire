@@ -299,13 +299,15 @@
      * stands clear by the rail's own measure; the stylesheet
      * already stands it above the Ask/Tour stack on a narrow
      * screen, and this adds the rail's height where one stands. */
+    let restBottom = "";
     try {
       const rail = document.querySelector(".le-rail");
       if (rail) {
         const r = rail.getBoundingClientRect();
         if (r.height > 0 && Math.abs(r.bottom - window.innerHeight) <= 2) {
           const base = window.innerWidth <= 640 ? 128 : 12;
-          chip.style.bottom = `${base + Math.ceil(r.height) + 8}px`;
+          restBottom = `${base + Math.ceil(r.height) + 8}px`;
+          chip.style.bottom = restBottom;
         }
       }
     } catch { /* the stylesheet's measure stands */ }
@@ -314,26 +316,65 @@
      * the invitation never runs under the Spark itself. It
      * narrows to the seat's clear side, measured from the
      * seat that actually stands on this page — the open
-     * bubble when the keeper has it open, else the figure. */
-    try {
+     * bubble when the keeper has it open, else the figure.
+     * Pass 8b: the measure is taken again once the Spark has
+     * settled — it is still gliding home when the invitation
+     * first stands, and where it finally parks varies (a
+     * corner of the shore, the centre, beside the invitation
+     * itself). A bounded watch re-clears the chip against the
+     * settled seat, so the last geometry is the true one at
+     * every width. */
+    const seatRect = () => {
       const bubble = document.querySelector(".spark-presence-bubble");
       const seatBtn = document.querySelector(".spark-presence-button");
       const seatEl = (bubble && !bubble.hidden && bubble.getBoundingClientRect().width > 0) ? bubble : seatBtn;
-      if (seatEl) {
-        const s = seatEl.getBoundingClientRect();
+      return seatEl ? seatEl.getBoundingClientRect() : null;
+    };
+    const clearOfSeat = () => {
+      try {
+        chip.style.maxWidth = "";
+        chip.style.left = "";
+        chip.style.bottom = restBottom;
+        const s = seatRect();
+        if (!s || s.width === 0) return;
         const c = chip.getBoundingClientRect();
         const crosses = c.right > s.left && c.left < s.right && c.bottom > s.top && c.top < s.bottom;
-        if (s.width > 0 && crosses) {
-          if (s.left >= window.innerWidth / 2) {
-            chip.style.maxWidth = `${Math.max(180, Math.floor(s.left - 24))}px`;
-          } else if (s.right <= window.innerWidth / 2) {
-            const left = Math.ceil(s.right + 12);
-            chip.style.left = `${left}px`;
-            chip.style.maxWidth = `${Math.max(180, window.innerWidth - left - 12)}px`;
-          }
+        if (!crosses) return;
+        if (s.left >= window.innerWidth / 2) {
+          chip.style.maxWidth = `${Math.max(180, Math.floor(s.left - 24))}px`;
+        } else if (s.right <= window.innerWidth / 2) {
+          const left = Math.ceil(s.right + 12);
+          chip.style.left = `${left}px`;
+          chip.style.maxWidth = `${Math.max(180, window.innerWidth - left - 12)}px`;
+        } else {
+          /* The seat astride the middle (pass 8b — the tablet
+           * widths: the Spark came home to the centre of the
+           * bottom shore, and neither side move clears it).
+           * The invitation stands above the seat instead, on
+           * the same shore, clear of the figure entirely. */
+          chip.style.bottom = `${Math.ceil(window.innerHeight - s.top + 8)}px`;
         }
-      }
-    } catch { /* the invitation stands as styled */ }
+      } catch { /* the invitation stands as styled */ }
+    };
+    clearOfSeat();
+    try {
+      let polls = 0;
+      let lastKey = "";
+      let stablePolls = 0;
+      let appliedKey = "";
+      const keyOf = (r) => r ? [Math.round(r.left), Math.round(r.top), Math.round(r.width), Math.round(r.height)].join(",") : "";
+      appliedKey = keyOf(seatRect());
+      const watch = window.setInterval(() => {
+        polls += 1;
+        if (!chip.isConnected || polls > 32) { window.clearInterval(watch); return; }
+        const key = keyOf(seatRect());
+        if (key === lastKey) stablePolls += 1; else { lastKey = key; stablePolls = 0; }
+        if (stablePolls >= 2 && key !== appliedKey) {
+          appliedKey = key;
+          clearOfSeat();
+        }
+      }, 250);
+    } catch { /* the first measure stands */ }
   }
 
   /* ---- a glance without words ---- */
