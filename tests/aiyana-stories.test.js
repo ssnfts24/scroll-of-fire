@@ -19,6 +19,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 
 import {
   MemoryStoryStore,
@@ -274,4 +275,228 @@ test("guard: her YES cannot wave a bad story onto the page", async () => {
   const r = await place.accept(token, "planted-2");
   assert.equal(r.ok, false);
   assert.deepEqual(await place.approvedList(), []);
+});
+
+/* ---------- Her own stories ---------- */
+
+test("her own story waits on her shelf, never in the queue", async () => {
+  const place = freshPlace();
+  const token = await gateIn(place);
+  const r = await place.writeMine(token, { title: "My Dragon", story: "My dragon likes toast." });
+  assert.equal(r.ok, true);
+  const dash = await place.dashboardList(token);
+  assert.equal(dash.pending.length, 0);
+  assert.equal(dash.mine.length, 1);
+  assert.equal(dash.mine[0].title, "My Dragon");
+  assert.deepEqual(await place.approvedList(), []);
+});
+
+test("her story cannot go public past the language guard", async () => {
+  const place = freshPlace();
+  const token = await gateIn(place);
+  const r = await place.writeMine(token, { title: "Oops", story: "This has a damn word in it." });
+  assert.equal(r.ok, true);
+  const pub = await place.publishMine(token, r.id);
+  assert.equal(pub.ok, false);
+  assert.equal(pub.reason, "words-to-fix");
+  assert.deepEqual(await place.approvedList(), []);
+  const dash = await place.dashboardList(token);
+  assert.equal(dash.mine.length, 0); /* it waits for a grown-up now */
+  const held = await place.heldList(PARENT);
+  assert.equal(held.held.length, 1);
+  /* A grown-up letting it through returns it to HER shelf —
+     it never goes public on the grown-up's word alone. */
+  const rel = await place.heldRelease(PARENT, r.id);
+  assert.equal(rel.ok, true);
+  const dash2 = await place.dashboardList(token);
+  assert.equal(dash2.mine.length, 1);
+  assert.deepEqual(await place.approvedList(), []);
+  /* She can fix the words herself, then publish. */
+  const fix = await place.editMine(token, r.id, { title: "Oops", story: "This has a darn word in it." });
+  assert.equal(fix.ok, true);
+  const pub2 = await place.publishMine(token, r.id);
+  assert.equal(pub2.ok, true);
+  const list = await place.approvedList();
+  assert.equal(list.length, 1);
+  assert.equal(list[0].penName, "Aiyana");
+});
+
+test("a clean story of hers publishes on her tap alone", async () => {
+  const place = freshPlace();
+  const token = await gateIn(place);
+  const r = await place.writeMine(token, { title: "Toast Dragon", story: "He shares his toast." });
+  const pub = await place.publishMine(token, r.id);
+  assert.equal(pub.ok, true);
+  const list = await place.approvedList();
+  assert.equal(list.length, 1);
+  assert.equal(list[0].title, "Toast Dragon");
+});
+
+/* ---------- Her page's blocks ---------- */
+
+test("her page defaults to today's page, word for word", async () => {
+  const place = freshPlace();
+  const page = await place.pagePublic();
+  assert.deepEqual(page, {
+    welcome: "Hi, this is Aiyana\u2019s world, have fun.",
+    headline: "A little world inside the Codex",
+    about: "This is a place where people can show their thinking and express themselves. Pick how you feel, pin a thought, draw a picture \u2014 and at the end, you can share a story.",
+    authorLine: "",
+    banner: null,
+    mood: null,
+    topPicture: null,
+    trim: null,
+    featuredId: null,
+    storyOrder: [],
+    feelLine: "",
+    favourites: [],
+    showStories: true,
+    showFavourites: true,
+    showFeel: true,
+    storySize: "big"
+  });
+  /* And those words are the words standing on her page today. */
+  const html = await readFile(new URL("../docs/aiyanas-world.html", import.meta.url), "utf8");
+  assert.ok(html.includes("A little world inside the Codex"));
+  assert.ok(html.includes("Hi, this is Aiyana&rsquo;s world, have fun."));
+  assert.ok(html.includes("This is a place where people can show their thinking and express themselves."));
+});
+
+test("a changed block renders only after her publish tap", async () => {
+  const place = freshPlace();
+  const token = await gateIn(place);
+  const before = await place.pagePublic();
+  assert.equal(before.mood, null);
+  const save = await place.pageSave(token, { mood: "ocean", trim: "stars", feelLine: "Today I feel: Proud" });
+  assert.equal(save.ok, true);
+  const after = await place.pagePublic();
+  assert.equal(after.mood, "ocean");
+  assert.equal(after.trim, "stars");
+  assert.equal(after.feelLine, "Today I feel: Proud");
+  /* Everything she did not touch is still today's page. */
+  assert.equal(after.welcome, before.welcome);
+  assert.equal(after.banner, null);
+});
+
+test("put it back restores the version before, and back again", async () => {
+  const place = freshPlace();
+  const token = await gateIn(place);
+  await place.pageSave(token, { banner: "pink" });
+  await place.pageSave(token, { banner: "sky" });
+  assert.equal((await place.pagePublic()).banner, "sky");
+  const back = await place.pageRestore(token);
+  assert.equal(back.ok, true);
+  assert.equal((await place.pagePublic()).banner, "pink");
+  const fwd = await place.pageRestore(token);
+  assert.equal(fwd.ok, true);
+  assert.equal((await place.pagePublic()).banner, "sky");
+});
+
+test("the guard screens every public word of her page", async () => {
+  const place = freshPlace();
+  const token = await gateIn(place);
+  for (const field of ["welcome", "headline", "about", "authorLine", "feelLine"]) {
+    const body = {};
+    body[field] = "a damn word hides here";
+    const save = await place.pageSave(token, body);
+    assert.equal(save.ok, false, field);
+    assert.equal(save.reason, "words-to-fix", field);
+  }
+  const fav = await place.pageSave(token, { favourites: ["rainbows", "a damn word"] });
+  assert.equal(fav.ok, false);
+  assert.equal(fav.reason, "words-to-fix");
+  /* The live page never moved. */
+  const page = await place.pagePublic();
+  assert.equal(page.welcome, "Hi, this is Aiyana\u2019s world, have fun.");
+  /* The held words wait for a grown-up, and a release moves
+     them onto her page — the grown-up's word is the gate. */
+  const held = await place.pageHeldList(PARENT);
+  assert.ok(held.held, "the tripped words wait on the grown-ups' shelf");
+  const rel = await place.pageHeldRelease(PARENT);
+  assert.equal(rel.ok, true);
+});
+
+test("a grown-up can put her page back to today's defaults", async () => {
+  const place = freshPlace();
+  const token = await gateIn(place);
+  await place.pageSave(token, { mood: "berry", banner: "ginger", welcome: "Hello hello!" });
+  assert.equal((await place.pagePublic()).mood, "berry");
+  const reset = await place.pageDefaults(PARENT);
+  assert.equal(reset.ok, true);
+  const page = await place.pagePublic();
+  assert.equal(page.mood, null);
+  assert.equal(page.welcome, "Hi, this is Aiyana\u2019s world, have fun.");
+  const wrong = await place.pageDefaults("not-the-code");
+  assert.equal(wrong.ok, false);
+});
+
+test("her featured story and order only name stories she approved", async () => {
+  const place = freshPlace();
+  const token = await gateIn(place);
+  const a = await place.submit({ penName: "Pip", title: "A", story: "one" }, "v");
+  const b = await place.submit({ penName: "Pip", title: "B", story: "two" }, "v");
+  await place.accept(token, a.id);
+  await place.accept(token, b.id);
+  const save = await place.pageSave(token, { featuredId: b.id, storyOrder: [b.id, a.id, "ghost-id"] });
+  assert.equal(save.ok, true);
+  const page = await place.pagePublic();
+  assert.equal(page.featuredId, b.id);
+  assert.deepEqual(page.storyOrder, [b.id, a.id]);
+});
+
+test("her drawing is kept only in picture shape", async () => {
+  const place = freshPlace();
+  const token = await gateIn(place);
+  const good = "data:image/jpeg;base64," + "A".repeat(400);
+  const save = await place.drawingSave(token, { dataUrl: good });
+  assert.equal(save.ok, true);
+  assert.equal(await place.drawingPublic(), good);
+  const bad = await place.drawingSave(token, { dataUrl: "https://example.com/pic.png" });
+  assert.equal(bad.ok, false);
+  const huge = await place.drawingSave(token, { dataUrl: "data:image/png;base64," + "A".repeat(300000) });
+  assert.equal(huge.ok, false);
+  assert.equal(await place.drawingPublic(), good);
+});
+
+/* ---------- Her Spark's record ---------- */
+
+test("her Spark is met exactly once, whatever seed knocks later", async () => {
+  const place = freshPlace();
+  const token = await gateIn(place);
+  const record = {
+    version: 1, wrap: 1, seed: "spark1-8-224-2-42", name: "Veor",
+    bornCivil: "2026-11-26", daysSeen: [224], pagesSeen: ["aiyana-dashboard.html"],
+    practiceDays: [], lastDay: 224, lastPage: "aiyana-dashboard.html",
+    prevPage: "", stageSeen: 0, care: {}, play: {}, revealsSeen: []
+  };
+  const first = await place.sparkMeet(token, { seed: record.seed, record });
+  assert.equal(first.ok, true);
+  assert.equal(first.created, true);
+  const other = { ...record, seed: "spark1-1-1-0-7", name: "Other" };
+  const second = await place.sparkMeet(token, { seed: other.seed, record: other });
+  assert.equal(second.ok, true);
+  assert.equal(second.created, false);
+  assert.equal(second.record.seed, "spark1-8-224-2-42");
+  const got = await place.sparkGet(token);
+  assert.equal(got.record.name, "Veor");
+});
+
+test("her Spark's growth saves only under her own seed", async () => {
+  const place = freshPlace();
+  const token = await gateIn(place);
+  const record = {
+    version: 1, wrap: 1, seed: "spark1-8-224-2-42", name: "Veor",
+    bornCivil: "2026-11-26", daysSeen: [224], pagesSeen: [],
+    practiceDays: [], lastDay: 224, lastPage: "", prevPage: "",
+    stageSeen: 0, care: {}, play: {}, revealsSeen: []
+  };
+  await place.sparkMeet(token, { seed: record.seed, record });
+  const grown = { ...record, daysSeen: [224, 225], practiceDays: [225] };
+  const save = await place.sparkSave(token, { seed: grown.seed, record: grown });
+  assert.equal(save.ok, true);
+  assert.deepEqual((await place.sparkGet(token)).record.daysSeen, [224, 225]);
+  const foreignRec = { ...record, seed: "spark1-3-100-1-9" };
+  const foreign = await place.sparkSave(token, { seed: foreignRec.seed, record: foreignRec });
+  assert.equal(foreign.ok, false);
+  assert.equal(foreign.reason, "not-her-spark");
 });

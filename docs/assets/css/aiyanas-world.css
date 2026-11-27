@@ -400,3 +400,111 @@
   .bfly { width: 42px; height: 34px; }
   .aiyana-card { padding: 1.3rem 1rem 1.5rem; }
 }
+
+/* ---------- Her own blocks: choices she makes on her dashboard ----------
+   Every rule here is inert until she picks something: the
+   attributes and elements they dress do not exist on the
+   untouched page, so today's page renders exactly as before. */
+
+/* Her sign's colour, from her palette. */
+.aiyana-sign[data-banner="purple"] { background: linear-gradient(180deg, #5b2a86, #472a6e); }
+.aiyana-sign[data-banner="sky"] { background: linear-gradient(180deg, #2f6fb2, #245a8f); }
+.aiyana-sign[data-banner="pink"] { background: linear-gradient(180deg, #e93d82, #c22a68); }
+.aiyana-sign[data-banner="sunny"] { background: linear-gradient(180deg, #f5a301, #d98e04); }
+.aiyana-sign[data-banner="leaf"] { background: linear-gradient(180deg, #46a758, #35834a); }
+.aiyana-sign[data-banner="ginger"] { background: linear-gradient(180deg, #e8762d, #c95e1c); }
+
+/* Her page's colour mood: a soft wash over the whole page. */
+body[data-mood="sunset"] { background: linear-gradient(180deg, #fff3e2, #ffe3d3 55%, #ffd9ec); }
+body[data-mood="ocean"] { background: linear-gradient(180deg, #e8f3ff, #d3e7ff 55%, #c9f0ff); }
+body[data-mood="forest"] { background: linear-gradient(180deg, #ecf7ec, #dcf2dc 55%, #fff6da); }
+body[data-mood="berry"] { background: linear-gradient(180deg, #f6e8ff, #ffe0f2 55%, #ffd9ec); }
+
+/* Her feel line, a pill under her words. */
+.aiyana-feel {
+  display: inline-block;
+  margin: 0.4rem 0 0;
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  background: #ffe9a8;
+  color: #5b2a86;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+/* Her author line, above the shelf. */
+.aiyana-author {
+  margin: 0 0 0.4rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #5b2a86;
+}
+
+/* Her trims: a gentle row of small shapes. */
+.aiyana-trim {
+  display: flex;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.5rem 0 0.1rem;
+}
+.aiyana-trim-item { display: inline-block; width: 26px; height: 26px; }
+.aiyana-trim-item svg { width: 100%; height: 100%; display: block; }
+.aiyana-trim-item.trim-butterflies svg { fill: #e93d82; }
+.aiyana-trim-item.trim-stars svg { fill: #f5a301; }
+.aiyana-trim-item.trim-moons svg { fill: #7a3b9e; }
+.aiyana-sign .aiyana-trim-item.trim-butterflies svg { fill: #ffd9ec; }
+.aiyana-sign .aiyana-trim-item.trim-stars svg { fill: #ffe9a8; }
+.aiyana-sign .aiyana-trim-item.trim-moons svg { fill: #e6d6f5; }
+
+/* Her top picture. */
+.aiyana-top-picture {
+  max-width: 880px;
+  margin: 1.2rem auto 0;
+  padding: 0.8rem;
+  background: #fffaf0;
+  border: 3px solid #b79ce0;
+  border-radius: 22px;
+  box-shadow: 0 10px 28px rgba(51, 35, 61, 0.14);
+}
+.aiyana-top-picture img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+}
+
+/* Her favourite things. */
+.aiyana-favourites-list {
+  margin: 0.4rem 0 0;
+  padding-left: 1.4rem;
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+.aiyana-favourites-list li::marker { color: #e93d82; }
+
+/* Her big story, and her reading size. */
+.aiyana-story-featured {
+  border: 3px solid #f5a301;
+  background: #fff6da;
+  box-shadow: 0 8px 22px rgba(245, 163, 1, 0.22);
+}
+.aiyana-featured-badge {
+  margin: 0 0 0.3rem;
+  font-weight: 800;
+  color: #b97e04;
+  letter-spacing: 0.02em;
+}
+.aiyana-stories.is-bigger .aiyana-story { font-size: 1.22rem; line-height: 1.75; }
+.aiyana-stories.is-bigger .aiyana-story-title { font-size: 1.6rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .aiyana-trim-item { animation: none; }
+}
+
+/* Her blocks stay hidden until she stands them up: an author
+   display rule must never outrank the hidden attribute. */
+.aiyana-feel[hidden],
+.aiyana-trim[hidden],
+.aiyana-top-picture[hidden],
+.aiyana-favourites[hidden],
+.aiyana-author[hidden] { display: none !important; }

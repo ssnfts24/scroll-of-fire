@@ -7,13 +7,13 @@
   <meta name="theme-color" content="#2b1a4d">
   <meta name="color-scheme" content="dark">
   <meta name="robots" content="noindex, nofollow">
-  <meta name="description" content="Aiyana&rsquo;s own door: the stories kids sent to Aiyana&rsquo;s World wait here for her yes.">
+  <meta name="description" content="Aiyana&rsquo;s own door: the stories kids sent to Aiyana&rsquo;s World wait here for her yes, and her Spark lives here with her.">
   <link rel="canonical" href="https://codexofreality.org/aiyana-dashboard.html">
   <link rel="icon" type="image/png" href="assets/img/aiyana/story-door-icon-192.png">
   <link rel="apple-touch-icon" href="assets/img/aiyana/story-door-icon-192.png">
   <link rel="manifest" href="aiyana-dashboard.webmanifest">
   <link rel="stylesheet" href="assets/css/aiyanas-world.css?v=20261122-1">
-  <link rel="stylesheet" href="assets/css/aiyana-dashboard.css?v=20261126-1">
+  <link rel="stylesheet" href="assets/css/aiyana-dashboard.css?v=20261126-2">
 </head>
 <body class="aiyana-dash-body">
   <a class="skip-link" href="#dash-main">Skip to the stories</a>
@@ -42,13 +42,42 @@
       </p>
     </section>
 
-    <!-- Her lists. -->
+    <!-- Her home: her Spark, her waiting stories, her shelves. -->
     <section id="dash-home" class="aiyana-dash-home" hidden>
-      <p class="dash-hello" id="dash-hello" aria-live="polite"></p>
+
+      <!-- Her Spark: a real Spark, generated the same way as
+           every Spark in the Codex, met once, hers forever.
+           Its record lives behind her gate, so it meets her
+           on any device. -->
+      <div class="dash-spark-card" id="dash-spark-card">
+        <div class="dash-spark-stage" id="dash-spark-stage" aria-hidden="true"></div>
+        <p class="dash-spark-name" id="dash-spark-name"></p>
+        <p class="dash-spark-line" id="dash-spark-line" aria-live="polite"></p>
+        <div class="dash-spark-actions" id="dash-spark-actions"></div>
+        <div class="dash-spark-ask" id="dash-spark-ask"></div>
+        <p class="dash-spark-growth" id="dash-spark-growth"></p>
+      </div>
+
+      <h2 class="dash-h">Fun with my Spark</h2>
+      <div class="dash-activities">
+        <button type="button" class="dash-activity" id="act-starter">Story starter<br><span>Begin a story together</span></button>
+        <button type="button" class="dash-activity" id="act-fixit">Fix it together<br><span>Polish a story of mine</span></button>
+        <button type="button" class="dash-activity" id="act-readback">Read it back<br><span>My Spark reads my story</span></button>
+        <button type="button" class="dash-activity" id="act-decorate">Decorate together<br><span>Dress my page, pick by pick</span></button>
+        <button type="button" class="dash-activity" id="act-garden">My word garden<br><span>Words I learned &amp; invented</span></button>
+      </div>
 
       <h2 class="dash-h">New stories for you</h2>
       <div id="dash-pending"></div>
       <p class="dash-empty" id="dash-pending-empty">No new stories right now. Your world is quiet — and that is okay.</p>
+
+      <h2 class="dash-h">Stories I wrote</h2>
+      <div id="dash-mine"></div>
+      <p class="dash-empty" id="dash-mine-empty">Stories you write will wait here, on your own shelf.</p>
+      <p>
+        <button type="button" class="dash-btn dash-btn-write" id="dash-write-new">Write a story</button>
+        <button type="button" class="dash-btn dash-btn-write dash-btn-page" id="dash-open-page">Change my page</button>
+      </p>
 
       <h2 class="dash-h">Stories you said yes to</h2>
       <div id="dash-shelf"></div>
@@ -60,21 +89,189 @@
       </p>
     </section>
 
-    <!-- Reading one story, big. -->
+    <!-- Reading one story, big. Words can be tapped: her Spark
+         teaches the ones it knows, and says so when it doesn't. -->
     <section id="dash-read" class="aiyana-dash-read" hidden aria-labelledby="dash-read-title">
       <button type="button" class="dash-btn dash-btn-small" id="dash-read-back">&larr; All stories</button>
       <h2 class="dash-read-title" id="dash-read-title"></h2>
       <p class="dash-read-by" id="dash-read-by"></p>
+      <p class="dash-read-hint" id="dash-read-hint">Tap a word and your Spark will tell you what it means.</p>
       <div class="dash-read-text" id="dash-read-text"></div>
-      <div class="dash-decide">
+      <div class="dash-spark-bubble" id="dash-read-bubble" hidden>
+        <p class="dash-bubble-line" id="dash-read-bubble-line" aria-live="polite"></p>
+        <div class="dash-bubble-actions" id="dash-read-bubble-actions"></div>
+      </div>
+      <p>
+        <button type="button" class="dash-btn dash-btn-listen" id="dash-listen">Read it to me</button>
+      </p>
+      <div class="dash-decide" id="dash-decide">
         <button type="button" class="dash-btn dash-btn-yes" id="dash-yes">YES!<br><span>Put it in my world</span></button>
         <button type="button" class="dash-btn dash-btn-notyet" id="dash-notyet">NOT YET</button>
+      </div>
+      <div class="dash-decide" id="dash-decide-mine" hidden>
+        <button type="button" class="dash-btn dash-btn-yes" id="dash-publish-mine">Put it in my world</button>
+        <button type="button" class="dash-btn dash-btn-notyet" id="dash-edit-mine">Keep writing it</button>
       </div>
       <p class="dash-gate-line" id="dash-read-line" aria-live="polite"></p>
     </section>
 
+    <!-- Writing her own story, with her Spark's helping hand. -->
+    <section id="dash-write" class="aiyana-dash-card" hidden aria-labelledby="dash-write-title">
+      <button type="button" class="dash-btn dash-btn-small" id="dash-write-back">&larr; All stories</button>
+      <h2 id="dash-write-title">Write a story</h2>
+      <label class="dash-label" for="dash-write-name">My story&rsquo;s title</label>
+      <input id="dash-write-name" class="dash-input" type="text" maxlength="80" autocomplete="off" placeholder="The Brave Little Boat">
+      <label class="dash-label" for="dash-write-text">My story</label>
+      <textarea id="dash-write-text" class="dash-textarea" rows="9" maxlength="2000" placeholder="Once upon a time…"></textarea>
+      <div class="dash-help-row">
+        <button type="button" class="dash-btn dash-btn-small" id="dash-write-starter">Give me a beginning</button>
+        <button type="button" class="dash-btn dash-btn-small" id="dash-write-fixit">Fix it together</button>
+      </div>
+      <div class="dash-helper-chips" id="dash-helper-chips" aria-label="Words to keep writing with"></div>
+      <div class="dash-spark-bubble" id="dash-write-bubble" hidden>
+        <p class="dash-bubble-line" id="dash-write-bubble-line" aria-live="polite"></p>
+        <div class="dash-bubble-actions" id="dash-write-bubble-actions"></div>
+      </div>
+      <div class="dash-decide">
+        <button type="button" class="dash-btn dash-btn-yes" id="dash-write-save">Keep it<br><span>on my shelf</span></button>
+        <button type="button" class="dash-btn dash-btn-notyet" id="dash-write-publish" hidden>Put it in<br><span>my world</span></button>
+      </div>
+      <p class="dash-gate-line" id="dash-write-line" aria-live="polite"></p>
+    </section>
+
+    <!-- Her word garden: words she learned and words she invented. -->
+    <section id="dash-garden" class="aiyana-dash-card" hidden aria-labelledby="dash-garden-title">
+      <button type="button" class="dash-btn dash-btn-small" id="dash-garden-back">&larr; All stories</button>
+      <h2 id="dash-garden-title">My word garden</h2>
+      <p class="aiyana-dash-big" id="dash-garden-line">Words grow here when you learn them — and when you invent them.</p>
+      <h3 class="dash-sub-h">Words I learned</h3>
+      <div class="dash-garden-words" id="dash-garden-learned"></div>
+      <p class="dash-card-empty" id="dash-garden-learned-empty">No learned words yet. Tap a word in a story and your Spark will teach you — it will grow here.</p>
+      <h3 class="dash-sub-h">Words I invented</h3>
+      <div class="dash-garden-words" id="dash-garden-invented"></div>
+      <p class="dash-card-empty" id="dash-garden-invented-empty">No invented words yet. Writers invent the best ones — yours will grow here.</p>
+    </section>
+
+    <!-- Change my page: a shelf of safe blocks, each hers to
+         pick, previewed before anything goes live, published
+         only on her YES, and the last version always kept. -->
+    <section id="dash-page" class="aiyana-dash-page" hidden aria-labelledby="dash-page-title">
+      <button type="button" class="dash-btn dash-btn-small" id="dash-page-back">&larr; All stories</button>
+      <h2 class="dash-h" id="dash-page-title">Change my page</h2>
+      <p class="dash-hello">Pick anything you like. Nothing changes on your page until you tap <strong>Put it on my page</strong> — and you can always put it back.</p>
+
+      <div class="dash-block" id="block-welcome">
+        <h3>My welcome words</h3>
+        <p>The big words at the top of my page.</p>
+        <textarea id="page-welcome" class="dash-textarea dash-textarea-small" rows="2" maxlength="120"></textarea>
+      </div>
+
+      <div class="dash-block" id="block-headline">
+        <h3>The line under my world&rsquo;s name</h3>
+        <input id="page-headline" class="dash-input" type="text" maxlength="80" autocomplete="off">
+      </div>
+
+      <div class="dash-block" id="block-about">
+        <h3>About me</h3>
+        <p>The words that tell everyone what my page is for.</p>
+        <textarea id="page-about" class="dash-textarea dash-textarea-small" rows="3" maxlength="400"></textarea>
+      </div>
+
+      <div class="dash-block" id="block-author">
+        <h3>My author line</h3>
+        <p>Stories by&hellip; (leave it empty for no line)</p>
+        <input id="page-author" class="dash-input" type="text" maxlength="40" autocomplete="off" placeholder="Your story name">
+      </div>
+
+      <div class="dash-block" id="block-banner">
+        <h3>My sign&rsquo;s colour</h3>
+        <div class="dash-swatches" id="page-banner-swatches"></div>
+      </div>
+
+      <div class="dash-block" id="block-mood">
+        <h3>My page&rsquo;s colour mood</h3>
+        <div class="dash-swatches" id="page-mood-swatches"></div>
+      </div>
+
+      <div class="dash-block" id="block-picture">
+        <h3>My top picture</h3>
+        <div class="dash-picks" id="page-picture-picks"></div>
+        <div class="dash-draw-wrap" id="dash-draw-wrap">
+          <p>Or draw one! Draw a picture, keep it, and it becomes one of your choices.</p>
+          <div class="dash-draw-tools" id="dash-draw-tools" role="group" aria-label="Drawing colours"></div>
+          <canvas id="dash-draw-pad" width="640" height="400" aria-label="Drawing pad. Draw with your finger or mouse."></canvas>
+          <p>
+            <button type="button" class="dash-btn dash-btn-small" id="dash-draw-save">Keep my picture</button>
+            <button type="button" class="dash-btn dash-btn-small" id="dash-draw-clear">Start over</button>
+          </p>
+          <p class="dash-gate-line" id="dash-draw-line" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div class="dash-block" id="block-trim">
+        <h3>Decorations</h3>
+        <p>A trim to put around my stories and my headline.</p>
+        <div class="dash-picks" id="page-trim-picks"></div>
+      </div>
+
+      <div class="dash-block" id="block-featured">
+        <h3>My big story</h3>
+        <p>One story stands big at the top of my shelf.</p>
+        <div class="dash-picks" id="page-featured-picks"></div>
+      </div>
+
+      <div class="dash-block" id="block-order">
+        <h3>The order of my stories</h3>
+        <p>Move a story up or down with the arrows.</p>
+        <div id="page-order-list"></div>
+      </div>
+
+      <div class="dash-block" id="block-feel">
+        <h3>Today I feel</h3>
+        <p>Pick a feeling, or write your own line.</p>
+        <div class="dash-picks" id="page-feel-chips"></div>
+        <input id="page-feel" class="dash-input" type="text" maxlength="80" autocomplete="off" placeholder="Today I feel…">
+      </div>
+
+      <div class="dash-block" id="block-favourites">
+        <h3>My favourite things</h3>
+        <p>Up to five things you love most.</p>
+        <div id="page-favourites-list"></div>
+      </div>
+
+      <div class="dash-block" id="block-switches">
+        <h3>Show or hide</h3>
+        <div class="dash-switches" id="page-switches"></div>
+      </div>
+
+      <div class="dash-block" id="block-size">
+        <h3>Story reading size</h3>
+        <div class="dash-picks" id="page-size-picks"></div>
+      </div>
+
+      <div class="dash-spark-bubble" id="dash-page-bubble" hidden>
+        <p class="dash-bubble-line" id="dash-page-bubble-line" aria-live="polite"></p>
+        <div class="dash-bubble-actions" id="dash-page-bubble-actions"></div>
+      </div>
+
+      <div class="dash-page-actions">
+        <button type="button" class="dash-btn dash-btn-preview" id="dash-page-preview">See how it will look</button>
+        <button type="button" class="dash-btn dash-btn-yes" id="dash-page-publish">Put it on my page</button>
+        <button type="button" class="dash-btn dash-btn-small" id="dash-page-restore" hidden>Put it back</button>
+      </div>
+      <p class="dash-gate-line dash-page-line" id="dash-page-line" aria-live="polite"></p>
+    </section>
+
   </main>
   <script defer src="assets/js/site.js"></script>
-  <script defer src="assets/js/aiyana-dashboard.js?v=20261126-1"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-version.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-data.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-format.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar-boundary.js?v=20260722-4"></script>
+  <script defer src="assets/js/calendar/pattern-calendar.js?v=20260722-4"></script>
+  <script defer src="assets/js/spark-companion.js?v=20261122-1"></script>
+  <script defer src="assets/js/spark-voice.js?v=20261125-1"></script>
+  <script defer src="assets/js/aiyana-guide.js?v=20261126-1"></script>
+  <script defer src="assets/js/aiyana-dashboard.js?v=20261126-2"></script>
 </body>
 </html>

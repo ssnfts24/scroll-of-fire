@@ -12,6 +12,12 @@
  *   GET ?list=approved
  *                  -> { ok, stories } — the ONLY public list:
  *                     stories Aiyana already said yes to.
+ *   GET ?list=page -> { ok, page } — the few blocks of her page
+ *                     that are hers to change (her welcome
+ *                     words, her about-me words, her banner
+ *                     colour, her featured story), screened on
+ *                     the way out; until she changes them, the
+ *                     defaults — her page as it stands today.
  *   POST {action:"submit", penName, title, story}
  *                  -> a new story, held as pending. Public: any
  *                     visitor may send ONE thing to the waiting
@@ -21,6 +27,13 @@
  *                  -> her picture-words, in order, for a session.
  *   POST {action:"list"|"accept"|"away"|"restore", token, id?}
  *                  -> the dashboard's moves, session-gated.
+ *   POST {action:"write"|"edit-mine"|"publish-mine", token, ...}
+ *                  -> her own stories: kept on her shelf, and
+ *                     published only by her tap, past the guard.
+ *   POST {action:"page-save", token, welcome, about, banner,
+ *         featuredId} -> her page blocks, screened before they
+ *                     are kept; a tripped save is held whole for
+ *                     a grown-up and her live page never moves.
  *
  * The gate words are read from the environment by name
  * (AIYANA_DASH_WORDS — set by Aaron in this host's settings,
@@ -89,6 +102,14 @@ export default async function handler(request) {
       const stories = await place.approvedList();
       return json({ ok: true, stories });
     }
+    if (url.searchParams.get("list") === "page") {
+      const page = await place.pagePublic();
+      return json({ ok: true, page });
+    }
+    if (url.searchParams.get("list") === "drawing") {
+      const dataUrl = await place.drawingPublic();
+      return json({ ok: true, dataUrl });
+    }
     return json({ ok: true, gateReady: place.gateReady });
   }
 
@@ -125,6 +146,62 @@ export default async function handler(request) {
     }
     case "restore": {
       const r = await place.restore(body.token, body.id);
+      return json(r, r.ok ? 200 : 401);
+    }
+    case "write": {
+      const r = await place.writeMine(body.token, body);
+      return json(r, r.ok ? 200 : 401);
+    }
+    case "edit-mine": {
+      const r = await place.editMine(body.token, body.id, body);
+      return json(r, r.ok ? 200 : 401);
+    }
+    case "publish-mine": {
+      const r = await place.publishMine(body.token, body.id);
+      return json(r, r.ok ? 200 : 401);
+    }
+    case "page-save": {
+      const r = await place.pageSave(body.token, body);
+      return json(r, r.ok ? 200 : 401);
+    }
+    case "page-restore": {
+      const r = await place.pageRestore(body.token);
+      return json(r, r.ok ? 200 : 401);
+    }
+    case "page-state": {
+      const r = await place.pageState(body.token);
+      return json(r, r.ok ? 200 : 401);
+    }
+    case "drawing-save": {
+      const r = await place.drawingSave(body.token, body);
+      return json(r, r.ok ? 200 : 401);
+    }
+    case "spark-get": {
+      const r = await place.sparkGet(body.token);
+      return json(r, r.ok ? 200 : 401);
+    }
+    case "spark-meet": {
+      const r = await place.sparkMeet(body.token, body);
+      return json(r, r.ok ? 200 : 401);
+    }
+    case "spark-save": {
+      const r = await place.sparkSave(body.token, body);
+      return json(r, r.ok ? 200 : 401);
+    }
+    case "page-defaults": {
+      const r = await place.pageDefaults(body.parentCode);
+      return json(r, r.ok ? 200 : 401);
+    }
+    case "page-held": {
+      const r = await place.pageHeldList(body.parentCode);
+      return json(r, r.ok ? 200 : 401);
+    }
+    case "page-held-release": {
+      const r = await place.pageHeldRelease(body.parentCode);
+      return json(r, r.ok ? 200 : 401);
+    }
+    case "page-held-away": {
+      const r = await place.pageHeldAway(body.parentCode);
       return json(r, r.ok ? 200 : 401);
     }
     case "held-list": {

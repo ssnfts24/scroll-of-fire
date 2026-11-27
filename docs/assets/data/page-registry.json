@@ -254,7 +254,7 @@
       "id": "aiyana-dashboard",
       "path": "aiyana-dashboard.html",
       "title": "Aiyana&rsquo;s Story Door",
-      "description": "Aiyana&rsquo;s own door: the stories kids sent to Aiyana&rsquo;s World wait here for her yes.",
+      "description": "Aiyana&rsquo;s own door: the stories kids sent to Aiyana&rsquo;s World wait here for her yes, and her Spark lives here with her.",
       "primary_domain": "Stories",
       "page_type": "page",
       "canonical_url": "https://codexofreality.org/aiyana-dashboard.html",
@@ -266,12 +266,12 @@
       "navigation_visibility": "unlisted",
       "available_actions": "unsourced",
       "spark_capabilities": "unsourced",
-      "temporal_context": "none",
+      "temporal_context": "pattern-calendar",
       "data_dependencies": [],
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:25bbea05b421",
+      "content_version": "sha256:bf4423401522",
       "maintenance_status": "active"
     },
     {
@@ -332,7 +332,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:858959b6f13f",
+      "content_version": "sha256:ec73d6638b98",
       "maintenance_status": "excluded-aiyanas-own-design"
     },
     {
