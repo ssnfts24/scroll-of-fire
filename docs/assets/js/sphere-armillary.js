@@ -1816,7 +1816,21 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
     var renderer = window.LivingTimeSphereRenderer3d;
     if (!planner || !renderer || !renderer.setRecordMarkers) return;
     try {
-      var year = Number(window.LivingTimeSphereUi?.getSphereDiagnostics?.().selectedYear) || new Date().getFullYear();
+      /* The year comes from the UI's own state through its
+       * cheap accessor (Sphere lag pass 5, Nov 27, 2026 —
+       * R1.7 improvement release; the drag-freeze fix). This
+       * refresh runs at boot, on record changes, and every
+       * 120 s, and it used to buy the whole diagnostics
+       * report — whose embedded snapshot is a
+       * whole-document census — for this one number; when
+       * the tick landed inside a drag, the census froze the
+       * drag's label motion (the experience pass's clean
+       * re-run: 30 stretches over 140 ms, worst ~5.2 s,
+       * unchanged by lag passes 1–4). The value read is the
+       * same _state.year the diagnostics embed as
+       * selectedYear; the refresh's marker work is otherwise
+       * exactly as it was. */
+      var year = Number(window.LivingTimeSphereUi?.getSelectedYear?.()) || new Date().getFullYear();
       var plans = await planner.plansForYear(year);
       var days = [];
       var trail = [];

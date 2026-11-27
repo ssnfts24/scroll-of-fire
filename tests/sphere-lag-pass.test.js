@@ -274,3 +274,49 @@ test("lag-pass 14: the label size key is memoized per element and rebuilt the mo
   assert.match(keyFn, /const key = `\$\{cls\}\|\$\{digest\}\|\$\{stage\}\|\$\{band\}\|\$\{widthBucket\}`;/, "a moved input rebuilds the key by the original construction");
   assert.match(keyFn, /_labelSizeKeyCache\.set\(el, \{ digest, cls, stage, band, widthBucket, key \}\);/, "a rebuilt key is kept for the next check");
 });
+
+/*
+ * Pass 5 (Nov 27, 2026 — the drag-freeze fix; PR #398's named
+ * follow-up, approved by Aaron after the experience pass
+ * reported it). The experience pass's clean re-run reproduced
+ * the freezes (30 stretches over 140 ms, worst ~5.2 s, one
+ * +11 pop-in) with passes 1–4 already in, and the attribution
+ * caught the remaining mechanism in the act: the armillary's
+ * record-marker refresh — boot, record changes, every 120 s —
+ * called getSphereDiagnostics() only to read selectedYear,
+ * and a lapsed 30 s cadence made that call pay a fresh
+ * whole-document census (4,555 ms inclusive) inside the drag
+ * window. Two halves: the refresh reads the year through a
+ * cheap accessor on the UI's own state, and the memoized
+ * collector serves its standing snapshot past the TTL while
+ * a drag is in progress, so no caller can land a cold census
+ * mid-drag. getSphereDiagnostics() itself is untouched: its
+ * fields still compute fresh, and the standalone fresh
+ * snapshot still inspects on demand, drag or no drag.
+ */
+
+test("lag-pass 15: the marker refresh reads the year cheaply and buys no census", () => {
+  assert.match(sphereUi, /getSelectedYear: \(\) => Number\(_state\.year \|\| 0\) \|\| null,/, "the UI exports the year straight from the state the diagnostics embed as selectedYear");
+  const start = armillary.indexOf("async function refreshRecordMarkers()");
+  const end = armillary.indexOf("function showSparkAlert", start);
+  assert.ok(start > -1 && end > start, "the record refresh is locatable");
+  const refresh = armillary.slice(start, end);
+  assert.match(refresh, /window\.LivingTimeSphereUi\?\.getSelectedYear\?\.\(\)/, "the refresh reads the year through the cheap accessor");
+  assert.equal(refresh.includes("getSphereDiagnostics?.()"), false, "the refresh performs no diagnostics call — no census on any refresh path");
+  assert.equal(refresh.includes("getSphereDiagnostics()"), false, "no direct diagnostics call either (the declaration comment above the year line names the old call in words only)");
+  assert.match(refresh, /planner\.plansForYear\(year\)/, "the refresh still asks the planner for the year it read");
+});
+
+test("lag-pass 16: a census asked for mid-drag is served the standing snapshot until the drag ends", () => {
+  const drag = bodyOf(sphereUi, /function _dragInProgress\(\) \{([\s\S]*?)\n  \}/);
+  assert.match(drag, /globalThis\.LivingTimeSphereCamera\?\.isDragging\?\.\(\)/, "the camera's drag is consulted");
+  assert.match(drag, /globalThis\.LivingTimeSphereInteraction\?\.getState\?\.\(\)\.isDragging/, "the interaction layer's drag is consulted");
+  const memo = bodyOf(sphereUi, /function _collectRuntimeDebugSnapshotMemoized\(\) \{([\s\S]*?)\n  \}/);
+  const ttlServe = memo.indexOf("Date.now() - _runtimeDebugCache.at < RUNTIME_DEBUG_TTL_MS");
+  const dragServe = memo.indexOf("if (_runtimeDebugCache.value && _dragInProgress()) return _runtimeDebugCache.value;");
+  const collect = memo.indexOf("const value = _collectRuntimeDebugSnapshot();");
+  assert.ok(ttlServe >= 0 && dragServe > ttlServe, "past the TTL, a standing snapshot is served while a drag is in progress");
+  assert.ok(collect > dragServe, "collection happens only when no drag holds it back — the first call after the drag ends collects fresh");
+  const refresh = bodyOf(sphereUi, /function _refreshRuntimeDebugCache\(\) \{([\s\S]*?)\n  \}/);
+  assert.equal(refresh.includes("_dragInProgress"), false, "the standalone fresh snapshot is never deferred — a deliberate debug ask still inspects on demand");
+});
