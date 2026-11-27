@@ -4,9 +4,9 @@
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
     "files": 2575,
-    "bytes": 1302308337,
+    "bytes": 1302365831,
     "byGroup": {
-      "tooling": 366,
+      "tooling": 367,
       "manuscript": 17,
       "unlabelled-image": 21,
       "witness-record": 20,
@@ -23,9 +23,9 @@
       "frozen-archive": 6,
       "legacy-site": 3,
       "legacy-asset": 1,
-      "site-page": 66,
+      "site-page": 68,
       "deployed-dev-doc": 64,
-      "site-asset": 745,
+      "site-asset": 742,
       "vendor": 4,
       "site-data": 5,
       "scroll-library": 837,
@@ -35,19 +35,19 @@
       "scripture-source": 15
     },
     "byPublicationEligibility": {
-      "development-only": 410,
+      "development-only": 411,
       "pending-publication-review": 43,
       "restricted-review": 180,
       "protected-immutable": 21,
-      "public-unreviewed": 5,
-      "approved-public": 1916
+      "public-unreviewed": 6,
+      "approved-public": 1914
     },
     "byExamination": {
-      "inventoried-only": 2423,
-      "text-extracted": 54,
-      "no-text-layer-needs-visual-review": 1,
+      "inventoried-only": 2422,
+      "parser-unavailable": 16,
+      "text-extracted": 39,
       "archive-listed": 2,
-      "structurally-audited": 95
+      "structurally-audited": 96
     }
   },
   "statusVocabulary": [
@@ -356,18 +356,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 192,
-        "words": 33734,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {
-          "CreationDate": "D:20260307003018+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -426,18 +418,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 4,
-        "words": 524,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318162939+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "1_Codex_of_Reality/Codex_of_Life_Scroll_FULL.docx"
@@ -595,18 +579,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 55,
-        "words": 5079,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163211+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "1_Codex_of_Reality/Living Laws.docx"
@@ -681,15 +657,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 182,
-        "words": 55224,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {}
+        "status": "parser-unavailable"
       }
     },
     {
@@ -713,15 +684,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 187,
-        "words": 33540,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {}
+        "status": "parser-unavailable"
       }
     },
     {
@@ -1140,18 +1106,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 2,
-        "words": 602,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163230+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/Master_Proof_Scroll_Updated.docx"
@@ -1269,18 +1227,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 3,
-        "words": 331,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163347+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/Scroll_of_Convergence.docx"
@@ -1367,18 +1317,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 2,
-        "words": 443,
-        "hebrew": true,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163433+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/The_Journey_Scroll.docx",
@@ -1505,18 +1447,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 333,
-        "words": 82978,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {
-          "CreationDate": "D:20260318162655+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/🌌 Ahmein — The Final Seal, Becoming Will.docx"
@@ -1578,18 +1512,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 266,
-        "words": 56295,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {
-          "CreationDate": "D:20260318162820+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/🜂 888 — The Architect of Becoming.docx"
@@ -1651,18 +1577,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 256,
-        "words": 56914,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {
-          "CreationDate": "D:20260318162852+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/🜄 Ainos — The Witness of Echoes.docx"
@@ -1689,18 +1607,10 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "text-extracted",
-        "pages": 4,
-        "words": 533,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318162909+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -1772,18 +1682,10 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "text-extracted",
-        "pages": 5,
-        "words": 712,
-        "hebrew": false,
-        "greek": true,
-        "metadata": {
-          "CreationDate": "D:20260318163040+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -1959,18 +1861,10 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "text-extracted",
-        "pages": 29,
-        "words": 2732,
-        "hebrew": true,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163419+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -1994,18 +1888,10 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "text-extracted",
-        "pages": 1,
-        "words": 158,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163401+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -2811,18 +2697,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "no-text-layer-needs-visual-review",
+      "examination": "parser-unavailable",
       "nextAction": "Visual review for personal imagery.",
       "extract": {
-        "status": "no-text-layer",
-        "pages": 1,
-        "words": 0,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20250621000923",
-          "Producer": "PyFPDF 1.7.2 http://pyfpdf.googlecode.com/"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -5874,12 +5752,60 @@
       "nextAction": "Functionality review."
     },
     {
+      "id": "r2:docs-aiyana-dashboard-html-bfcc3e",
+      "path": "docs/aiyana-dashboard.html",
+      "title": "Aiyana's Story Door — her private story-approval panel (Nov 26, 2026); gated server-side, noindex, not a public page",
+      "format": "html",
+      "bytes": 16327,
+      "sha256": "bf442340152243e1540cc7dce56b1c813ca4bc0d4d77568a3e5a63a0347a5462",
+      "group": "site-page",
+      "role": "Site page or support file",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/aiyana-dashboard.html",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": "utility:aiyana-dashboard.html",
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "structurally-audited"
+      },
+      "examination": "structurally-audited",
+      "nextAction": "Functionality review."
+    },
+    {
+      "id": "r2:docs-aiyana-dashboard-webmanifest-5017ad",
+      "path": "docs/aiyana-dashboard.webmanifest",
+      "title": "aiyana-dashboard.webmanifest",
+      "format": "webmanifest",
+      "bytes": 455,
+      "sha256": "cf647837fdf38ab72f7e9284aa4bc794217a68d9241e66ed67430cc487b34f7c",
+      "group": "site-page",
+      "role": "Site page or support file",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/aiyana-dashboard.webmanifest",
+      "publicationEligibility": "public-unreviewed",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality review."
+    },
+    {
       "id": "r2:docs-aiyanas-world-html-3b89d5",
       "path": "docs/aiyanas-world.html",
       "title": "Aiyana's World",
       "format": "html",
-      "bytes": 21534,
-      "sha256": "05685fa1d47ed3f9191b991f85874c759c77daeb9acd1388a245ee056904c9cb",
+      "bytes": 23108,
+      "sha256": "ec73d6638b9866e663a0c6a4e293e3a4b4d1ee7ec1249fe2b4f4f369f2e11c8b",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -5922,12 +5848,36 @@
       "nextAction": "Functionality review."
     },
     {
+      "id": "r2:docs-assets-css-aiyana-dashboard-css-cf7ff7",
+      "path": "docs/assets/css/aiyana-dashboard.css",
+      "title": "aiyana-dashboard.css",
+      "format": "css",
+      "bytes": 14189,
+      "sha256": "810b90c3cf67628de4fe9a20c080c6aadb650558fbf4f5f133189ec12bacb75f",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/css/aiyana-dashboard.css",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
       "id": "r2:docs-assets-css-aiyanas-world-css-8c1805",
       "path": "docs/assets/css/aiyanas-world.css",
       "title": "aiyanas-world.css",
       "format": "css",
-      "bytes": 10586,
-      "sha256": "84502c5a3590945e7af80bf704b21e11c81dcdf45a84ca60213f6fa6abdc241e",
+      "bytes": 14275,
+      "sha256": "1e47048783259d20bd9c73cc87e388d0887d71a9708b636bce55652701018cda",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -6100,30 +6050,6 @@
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
       "publicUrl": "https://codexofreality.org/assets/css/cartoon-scenes.css",
-      "publicationEligibility": "approved-public",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Functionality audit in R2-03/R2-06."
-    },
-    {
-      "id": "r2:docs-assets-css-codex-card-match-css-700909",
-      "path": "docs/assets/css/codex-card-match.css",
-      "title": "codex-card-match.css",
-      "format": "css",
-      "bytes": 5527,
-      "sha256": "c85f616c139f97cbf8825e0074d1519a06aab0604feed7bbcc24edd0d28a0d97",
-      "group": "site-asset",
-      "role": "Runtime stylesheet, script, data or image",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/assets/css/codex-card-match.css",
       "publicationEligibility": "approved-public",
       "status": "operational",
       "catalogId": null,
@@ -7414,8 +7340,8 @@
       "path": "docs/assets/css/spark-companion.css",
       "title": "spark-companion.css",
       "format": "css",
-      "bytes": 37714,
-      "sha256": "a42042effccd4606277faa79f1f849bf0b6631a2feea063e4da6aedd26d117e2",
+      "bytes": 37575,
+      "sha256": "1396f927d645d6c0a1c399e217f305ff319339b954fd75f2152e75f8ceb78f76",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -7492,54 +7418,6 @@
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
       "publicUrl": "https://codexofreality.org/assets/css/spark-home-world.css",
-      "publicationEligibility": "approved-public",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Functionality audit in R2-03/R2-06."
-    },
-    {
-      "id": "r2:docs-assets-css-spark-intro-css-a2641b",
-      "path": "docs/assets/css/spark-intro.css",
-      "title": "spark-intro.css",
-      "format": "css",
-      "bytes": 13199,
-      "sha256": "f3633c82376df0b517b133e0d51feefe96eb2f1dd5d07726fa04be386c180e1c",
-      "group": "site-asset",
-      "role": "Runtime stylesheet, script, data or image",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/assets/css/spark-intro.css",
-      "publicationEligibility": "approved-public",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Functionality audit in R2-03/R2-06."
-    },
-    {
-      "id": "r2:docs-assets-css-spark-living-css-31d396",
-      "path": "docs/assets/css/spark-living.css",
-      "title": "spark-living.css",
-      "format": "css",
-      "bytes": 6162,
-      "sha256": "150b40365578f0caad73784a38aa33f06c18b346a642f1d4d3c52b9148c51845",
-      "group": "site-asset",
-      "role": "Runtime stylesheet, script, data or image",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/assets/css/spark-living.css",
       "publicationEligibility": "approved-public",
       "status": "operational",
       "catalogId": null,
@@ -8326,8 +8204,8 @@
       "path": "docs/assets/data/codex-updates.json",
       "title": "codex-updates.json",
       "format": "json",
-      "bytes": 209145,
-      "sha256": "a21d97c9890d9ea0d78a0a98d45ef3feadc54bcc5c49cb10f4bdb3183bdf74e7",
+      "bytes": 210762,
+      "sha256": "4885f06fd1f917c72dd53d316b2ac923b7a02a32c0d72f3717bec402334c1554",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -8470,8 +8348,8 @@
       "path": "docs/assets/data/link-graph.json",
       "title": "link-graph.json",
       "format": "json",
-      "bytes": 461742,
-      "sha256": "401d3e7b9acf56916ba59375153f1a3aaf0385287009fd40d2e8d871bb464676",
+      "bytes": 462069,
+      "sha256": "344ef4e9a7a793b693724253af4d329d1e5818439ac5f50998565400e16d9922",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -8566,8 +8444,8 @@
       "path": "docs/assets/data/page-registry.json",
       "title": "page-registry.json",
       "format": "json",
-      "bytes": 468883,
-      "sha256": "1389c066da26a44a34b673f1c38e539b0129a5047ee04de99c8f7e636111ba3d",
+      "bytes": 469808,
+      "sha256": "19308395f4a17653499b039d26c18f360512a695efb95e809579dcef5a8d62ba",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -9148,6 +9026,54 @@
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
       "publicUrl": "https://codexofreality.org/assets/img/aiyana/aiyana-first-story-drawing.webp",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-img-aiyana-story-door-icon-192-png-f74196",
+      "path": "docs/assets/img/aiyana/story-door-icon-192.png",
+      "title": "story-door-icon-192.png",
+      "format": "png",
+      "bytes": 13685,
+      "sha256": "e7d76279e8c5b4a356ed840a90f075ba1169de8f42b62fd68face66110faae06",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/img/aiyana/story-door-icon-192.png",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-img-aiyana-story-door-icon-512-png-10d97b",
+      "path": "docs/assets/img/aiyana/story-door-icon-512.png",
+      "title": "story-door-icon-512.png",
+      "format": "png",
+      "bytes": 28854,
+      "sha256": "c4fd5a48ede56ba322c4551f4d06bc09feb377f8deac3b8a3c4e3e6beeab17f3",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/img/aiyana/story-door-icon-512.png",
       "publicationEligibility": "approved-public",
       "status": "operational",
       "catalogId": null,
@@ -13988,12 +13914,60 @@
       "nextAction": "Functionality audit in R2-03/R2-06."
     },
     {
+      "id": "r2:docs-assets-js-aiyana-dashboard-js-729e56",
+      "path": "docs/assets/js/aiyana-dashboard.js",
+      "title": "aiyana-dashboard.js",
+      "format": "js",
+      "bytes": 61014,
+      "sha256": "d51979d7785fa8ca930efce7444cbc948d8282a65d2b1af858e7765fed64bcf4",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/js/aiyana-dashboard.js",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-js-aiyana-guide-js-5573bb",
+      "path": "docs/assets/js/aiyana-guide.js",
+      "title": "aiyana-guide.js",
+      "format": "js",
+      "bytes": 34320,
+      "sha256": "105ceba1956f7ac4bc4fc37d6efb9d025a827223de7462277a469f52bd0650d5",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/js/aiyana-guide.js",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
       "id": "r2:docs-assets-js-aiyanas-world-js-4dfe85",
       "path": "docs/assets/js/aiyanas-world.js",
       "title": "aiyanas-world.js",
       "format": "js",
-      "bytes": 9771,
-      "sha256": "73129ae9b99d5a565a1a9f2c0b623bc470b7d65e51e45f143a3cebdc0cffcb9c",
+      "bytes": 20073,
+      "sha256": "dba0710b4e27438e9160aae76164546b0af6fadc185c1bbea9cf5db2fa974dce",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -14784,36 +14758,12 @@
       "path": "docs/assets/js/codex-card-album.js",
       "title": "codex-card-album.js",
       "format": "js",
-      "bytes": 23687,
-      "sha256": "39b1e2c8863c40e19d83d1b3c4447988d6a35f999131715de13560f9f65d6271",
+      "bytes": 21511,
+      "sha256": "e16f1053f1bc60b9a857d1b0b3db5662e8bf4dc2de5a5b160ddf5bdd571912df",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
       "publicUrl": "https://codexofreality.org/assets/js/codex-card-album.js",
-      "publicationEligibility": "approved-public",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Functionality audit in R2-03/R2-06."
-    },
-    {
-      "id": "r2:docs-assets-js-codex-card-match-js-46fa44",
-      "path": "docs/assets/js/codex-card-match.js",
-      "title": "codex-card-match.js",
-      "format": "js",
-      "bytes": 21153,
-      "sha256": "a480b1b2fff54d3453fbf59609fcca1ff6205a62fa7a14fcf5c3639036f7658f",
-      "group": "site-asset",
-      "role": "Runtime stylesheet, script, data or image",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/assets/js/codex-card-match.js",
       "publicationEligibility": "approved-public",
       "status": "operational",
       "catalogId": null,
@@ -18000,8 +17950,8 @@
       "path": "docs/assets/js/spark-companions-page.js",
       "title": "spark-companions-page.js",
       "format": "js",
-      "bytes": 26356,
-      "sha256": "98cd5d3c544d95187dffe83eb80bce785780b922e3cb04a697c507b2ff7e40eb",
+      "bytes": 25089,
+      "sha256": "e558e61d8d4b62543c1736ed9813b070b47e684d8182bea318cf3e5f77471989",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -18068,30 +18018,6 @@
       "nextAction": "Functionality audit in R2-03/R2-06."
     },
     {
-      "id": "r2:docs-assets-js-spark-evolution-path-js-c30e08",
-      "path": "docs/assets/js/spark-evolution-path.js",
-      "title": "spark-evolution-path.js",
-      "format": "js",
-      "bytes": 6844,
-      "sha256": "09b853329c6d81a406c9b9f07f21abda06de3fdf2f2c2846bb1b8e0c662bae28",
-      "group": "site-asset",
-      "role": "Runtime stylesheet, script, data or image",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/assets/js/spark-evolution-path.js",
-      "publicationEligibility": "approved-public",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Functionality audit in R2-03/R2-06."
-    },
-    {
       "id": "r2:docs-assets-js-spark-goods-js-581a6e",
       "path": "docs/assets/js/spark-goods.js",
       "title": "spark-goods.js",
@@ -18140,30 +18066,6 @@
       "nextAction": "Functionality audit in R2-03/R2-06."
     },
     {
-      "id": "r2:docs-assets-js-spark-intro-js-4671b4",
-      "path": "docs/assets/js/spark-intro.js",
-      "title": "spark-intro.js",
-      "format": "js",
-      "bytes": 37663,
-      "sha256": "8ab2dcecc62712b59e840285d4de267e5f35c0317f15498b98f10c97e84d0835",
-      "group": "site-asset",
-      "role": "Runtime stylesheet, script, data or image",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/assets/js/spark-intro.js",
-      "publicationEligibility": "approved-public",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Functionality audit in R2-03/R2-06."
-    },
-    {
       "id": "r2:docs-assets-js-spark-keeper-mind-js-b9fe80",
       "path": "docs/assets/js/spark-keeper-mind.js",
       "title": "spark-keeper-mind.js",
@@ -18174,54 +18076,6 @@
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
       "publicUrl": "https://codexofreality.org/assets/js/spark-keeper-mind.js",
-      "publicationEligibility": "approved-public",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Functionality audit in R2-03/R2-06."
-    },
-    {
-      "id": "r2:docs-assets-js-spark-lean-js-66c8bb",
-      "path": "docs/assets/js/spark-lean.js",
-      "title": "spark-lean.js",
-      "format": "js",
-      "bytes": 8922,
-      "sha256": "d365a42cab60b87504f5701e6e3eede9715f13144b9e599fab200d07f943f451",
-      "group": "site-asset",
-      "role": "Runtime stylesheet, script, data or image",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/assets/js/spark-lean.js",
-      "publicationEligibility": "approved-public",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Functionality audit in R2-03/R2-06."
-    },
-    {
-      "id": "r2:docs-assets-js-spark-living-js-a7ea7a",
-      "path": "docs/assets/js/spark-living.js",
-      "title": "spark-living.js",
-      "format": "js",
-      "bytes": 15581,
-      "sha256": "424957e3c659187033423f080c034fdc4a6484d4a894ea971280b5c299a622bd",
-      "group": "site-asset",
-      "role": "Runtime stylesheet, script, data or image",
-      "deployed": true,
-      "publicUrl": "https://codexofreality.org/assets/js/spark-living.js",
       "publicationEligibility": "approved-public",
       "status": "operational",
       "catalogId": null,
@@ -18288,8 +18142,8 @@
       "path": "docs/assets/js/spark-presence.js",
       "title": "spark-presence.js",
       "format": "js",
-      "bytes": 141829,
-      "sha256": "ee3057cd5d3f789fff349ca02aa35ba76bf748d8bebe90a0ac25f717fca8cdd8",
+      "bytes": 139889,
+      "sha256": "3351d7a1416235e14dff8a101f729598ea7d946b767c2e482083061e2429fe7e",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -18456,8 +18310,8 @@
       "path": "docs/assets/js/sphere-armillary.js",
       "title": "sphere-armillary.js",
       "format": "js",
-      "bytes": 108588,
-      "sha256": "f254d0ab77b04bd5f29975c5e4f72152796540eec87232e1d261536553ff3cbe",
+      "bytes": 109380,
+      "sha256": "c067acccbd71c98802a55bbf8c07fc1dd54315afc59a713dc20d409741bfad99",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -19272,8 +19126,8 @@
       "path": "docs/assets/js/sphere/living-time-sphere-label-manager.js",
       "title": "living-time-sphere-label-manager.js",
       "format": "js",
-      "bytes": 169656,
-      "sha256": "bba5db28b0b7a7b8a13cb57f7d11ea0029793d5f846de9bd1153653503b6768a",
+      "bytes": 175447,
+      "sha256": "ebd66f90bbb8bd719362292082dca2c7ddf961dcefdfbb7916454541489e0851",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -19536,8 +19390,8 @@
       "path": "docs/assets/js/sphere/living-time-sphere-renderer-3d.js",
       "title": "living-time-sphere-renderer-3d.js",
       "format": "js",
-      "bytes": 387357,
-      "sha256": "6fa3f74e77fa7a33409755510de4db6e21c05624c063e5e4609e39d03fbe108b",
+      "bytes": 390065,
+      "sha256": "cf5424eff45098e7aa52a6f6c672284a959f8e7d49547cca7f3ff984681054af",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -19776,8 +19630,8 @@
       "path": "docs/assets/js/sphere/living-time-sphere-ui.js",
       "title": "living-time-sphere-ui.js",
       "format": "js",
-      "bytes": 317298,
-      "sha256": "20d52601137dc84fdf09335583347972395ed09160ad9fc81d7e6a0e65ebc367",
+      "bytes": 320471,
+      "sha256": "89701b6313a5f86bb7e2125e219e0ad8728ef4e814cc28d79965c469078b32c3",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -20424,8 +20278,8 @@
       "path": "docs/assets/media/codex-cartoon-clip-poster.webp",
       "title": "codex-cartoon-clip-poster.webp",
       "format": "webp",
-      "bytes": 101972,
-      "sha256": "d62c711eda7e218882b5179d6c3f5df0885f47ff703201abf19117a55d200dc7",
+      "bytes": 36912,
+      "sha256": "abebaefc5957a4a5bd6448168e27c50567aec12955b7d13aec37ce2234916a98",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -22824,8 +22678,8 @@
       "path": "docs/assets/media/story-episode-02-a-friend-for-the-road-poster.webp",
       "title": "story-episode-02-a-friend-for-the-road-poster.webp",
       "format": "webp",
-      "bytes": 32832,
-      "sha256": "e7192abf0c2ce13616597335a0fc14a945c9fbad3ad3bb59b14f79587b10bee1",
+      "bytes": 34612,
+      "sha256": "bb6c8c02359304b3193c7a853bbee64527d2a78d90505545025883a5b480153a",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -22872,8 +22726,8 @@
       "path": "docs/assets/media/story-episode-03-the-road-of-thirteen-moons-poster.webp",
       "title": "story-episode-03-the-road-of-thirteen-moons-poster.webp",
       "format": "webp",
-      "bytes": 52760,
-      "sha256": "536b22a0ce453c4fa5d20e523d3692a06dfc3015edb33e16af248366209d8a92",
+      "bytes": 62504,
+      "sha256": "2b13663f546fdd75d4176eb586e9a0bb99278d4278f83e9cb5db397c36862d63",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -22920,8 +22774,8 @@
       "path": "docs/assets/media/story-episode-04-through-the-day-door-poster.webp",
       "title": "story-episode-04-through-the-day-door-poster.webp",
       "format": "webp",
-      "bytes": 51582,
-      "sha256": "c17bd609e06d4595238546bf2ddc3d1dcbd40620578636a092649c7d70460c0f",
+      "bytes": 58410,
+      "sha256": "8b9d2436844e057f35141e48d2a525920d5c56dff61682c0bfaae23ce723c816",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -22968,8 +22822,8 @@
       "path": "docs/assets/media/story-episode-05-the-garden-of-thirteen-beds-poster.webp",
       "title": "story-episode-05-the-garden-of-thirteen-beds-poster.webp",
       "format": "webp",
-      "bytes": 77132,
-      "sha256": "620f070edf6892c68656cf69b570292bd99e5fff3f49fd668897fe11f7908123",
+      "bytes": 61308,
+      "sha256": "9f84589cbbd972b3aea6e9c1c44c37710a73cf82f2889945a9f783b11bfedb35",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -23016,8 +22870,8 @@
       "path": "docs/assets/media/story-episode-06-packing-for-the-way-poster.webp",
       "title": "story-episode-06-packing-for-the-way-poster.webp",
       "format": "webp",
-      "bytes": 85772,
-      "sha256": "cc9ebc3252a89008bccd518c17b28c9b099ae7f9b0bf526816e50e8664c20176",
+      "bytes": 61478,
+      "sha256": "bd4f7bdf9a054f1bd90b510143a9d33df426e42cf0d75cc8168742e3ebcde8d6",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -23064,8 +22918,8 @@
       "path": "docs/assets/media/story-episode-07-the-desk-at-the-crossroads-poster.webp",
       "title": "story-episode-07-the-desk-at-the-crossroads-poster.webp",
       "format": "webp",
-      "bytes": 54572,
-      "sha256": "e698acdf7638f91bb896b2349e0400003c3aab3b195e2004888730423a5cff98",
+      "bytes": 64164,
+      "sha256": "03dad80e6c9dd50bbd9865cd39dc777a98299c6bedf37e954e307acd3f7aec6d",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -23112,8 +22966,8 @@
       "path": "docs/assets/media/story-episode-08-the-signpost-meadow-poster.webp",
       "title": "story-episode-08-the-signpost-meadow-poster.webp",
       "format": "webp",
-      "bytes": 99456,
-      "sha256": "84be45a2eae3b5f69e383d274a6e48b8f6749a96871e04d45d7fae385ed97bd2",
+      "bytes": 101928,
+      "sha256": "15b7516838df2c57b5ee8ab4f39c67d83045e8e7b975fec3b4baad236884c2f4",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -23160,8 +23014,8 @@
       "path": "docs/assets/media/story-episode-09-the-roundhouse-of-engines-poster.webp",
       "title": "story-episode-09-the-roundhouse-of-engines-poster.webp",
       "format": "webp",
-      "bytes": 111618,
-      "sha256": "94cabdf64f92dfdfd56d3c19e37160463328a30c74298f185b05fae07779165f",
+      "bytes": 41654,
+      "sha256": "f4c92119b7ab1efb5f33f61bd72a70928e4db8eade79f5e80ce0808988311966",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -23208,8 +23062,8 @@
       "path": "docs/assets/media/story-episode-10-the-remnant-lab-poster.webp",
       "title": "story-episode-10-the-remnant-lab-poster.webp",
       "format": "webp",
-      "bytes": 86142,
-      "sha256": "80f86e9d69c1b3333c825fdd188c1f42233d8ea1a5d129aef58f9c941c96d730",
+      "bytes": 87882,
+      "sha256": "90c2282e722bd11bbb3e637f61b8e147a3ce5381e53bb8d64cdcc2510cdfd0a7",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -23256,8 +23110,8 @@
       "path": "docs/assets/media/story-episode-11-the-practice-yard-poster.webp",
       "title": "story-episode-11-the-practice-yard-poster.webp",
       "format": "webp",
-      "bytes": 59036,
-      "sha256": "665c06ced5389e86748e6bd98fae78b4eb232d44fb50d9787136ae2d01a42600",
+      "bytes": 53684,
+      "sha256": "272cd7524be900b8c9639e25811dd9c274478cce9a7b256b79c8a8b1bff28d5d",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -23304,8 +23158,8 @@
       "path": "docs/assets/media/story-episode-12-the-picture-lesson-poster.webp",
       "title": "story-episode-12-the-picture-lesson-poster.webp",
       "format": "webp",
-      "bytes": 50296,
-      "sha256": "b9bd940fa52179a108aa6c43212e8d54b8da18a4628e8f537880a22595efd9c4",
+      "bytes": 55460,
+      "sha256": "279051ce5656cc7298b65f6dece2e211f7ffb081e83e2f802bfc99344501619a",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -23352,8 +23206,8 @@
       "path": "docs/assets/media/story-episode-13-the-second-book-poster.webp",
       "title": "story-episode-13-the-second-book-poster.webp",
       "format": "webp",
-      "bytes": 97008,
-      "sha256": "c5c79bd1d5d1070731b69eeee513d32eb56f04b4323c448ac64d8beb2da10701",
+      "bytes": 71616,
+      "sha256": "a659bb3186205b2708a9725ee5a953684f47c3edd068051ece59f80a0a6a857a",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -23400,8 +23254,8 @@
       "path": "docs/assets/media/story-episode-14-the-word-hoard-poster.webp",
       "title": "story-episode-14-the-word-hoard-poster.webp",
       "format": "webp",
-      "bytes": 32664,
-      "sha256": "059f7fe293f541368f6f29903323260715b5e2c17c0cbde0548b19f6f2735f2e",
+      "bytes": 59504,
+      "sha256": "b649842b1ecfe7d90a67a68b7d30506c1b49d880a4aca03107c19d8eca1566ac",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -23448,8 +23302,8 @@
       "path": "docs/assets/media/story-episode-15-the-high-library-poster.webp",
       "title": "story-episode-15-the-high-library-poster.webp",
       "format": "webp",
-      "bytes": 71448,
-      "sha256": "44cb8bcf5445fa7796a2c7984b9aeeaa3d3fd1cb35b121ff03f1070a1fca1234",
+      "bytes": 57932,
+      "sha256": "9ce9f86f4a1687be6aaad154833bdcaf29fced5b2b35377fa96597e97aa1c7ec",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -23496,8 +23350,8 @@
       "path": "docs/assets/media/story-episode-16-the-registry-stall-poster.webp",
       "title": "story-episode-16-the-registry-stall-poster.webp",
       "format": "webp",
-      "bytes": 56234,
-      "sha256": "6dfb76cb6901e858607ad3d80d3e7c73d6810d7e188fbe1e665919c623f164cf",
+      "bytes": 95176,
+      "sha256": "672243b03bdb6b61e06c8f616e7f5569d7d806c2f32643075381d55ccfec64e5",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -23544,8 +23398,8 @@
       "path": "docs/assets/media/story-episode-17-the-atlas-room-poster.webp",
       "title": "story-episode-17-the-atlas-room-poster.webp",
       "format": "webp",
-      "bytes": 106756,
-      "sha256": "7e844a0c9a75522f20193b5df3ee6ffb6a5765951c0a4596aae026dc899ef5c5",
+      "bytes": 125294,
+      "sha256": "6325dea8492dcc42444918dadc33da0e0c5cd6ffafc5f33863733051b684b911",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -24625,7 +24479,7 @@
       "title": "manifest.json",
       "format": "json",
       "bytes": 2917,
-      "sha256": "c3ecd25026373f1bf86a9e8f3bea3af9c48f67def614528fcc05e854026ceb8e",
+      "sha256": "678fd0125486ff303bff590d4773acd63fd46121d9f3d86bdc99c1c7ebc3e4eb",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -24648,8 +24502,8 @@
       "path": "docs/assets/search/pages.json",
       "title": "pages.json",
       "format": "json",
-      "bytes": 1674960,
-      "sha256": "d9e9aecf92092a8bbf28c8099f6bad60fcb95ceaaa65d278fda0bfe3eae49212",
+      "bytes": 1681159,
+      "sha256": "5f4120fc513185e7a997e7ee3738839a66c7ba14301badcb4c8e25d372360684",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -24828,8 +24682,8 @@
       "path": "docs/card-album.html",
       "title": "The Card Album",
       "format": "html",
-      "bytes": 5506,
-      "sha256": "bad10306e5caf581e515a37036207b15cdeb365b67fbae8615b29af6b9ffbfd3",
+      "bytes": 5031,
+      "sha256": "dded77d8f0c6a53c72433c95f6938cebccc1f6679197246bf0b790fdb64621e3",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -24972,8 +24826,8 @@
       "path": "docs/companions.html",
       "title": "Companions",
       "format": "html",
-      "bytes": 29855,
-      "sha256": "51e7e5475e8c50629c2ebd7a9c381a6bbfc05913aaa4df6f233bf1827f7faac1",
+      "bytes": 29618,
+      "sha256": "c5387ca4675a4d1e07d8bc66538955e367993aadb6e39a009aad8db99a38157f",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -25428,8 +25282,8 @@
       "path": "docs/episodes.html",
       "title": "The Episode Library",
       "format": "html",
-      "bytes": 14916,
-      "sha256": "1ac16ace44961edc48a83702b27a490f41c6741cd4195cadf6d6829e87da9454",
+      "bytes": 14869,
+      "sha256": "7c8810d5db5cf6b1c71c2062b850bb0e6728926a6465534fc5ca54bdb10b459c",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -25668,8 +25522,8 @@
       "path": "docs/index.html",
       "title": "Homepage",
       "format": "html",
-      "bytes": 143312,
-      "sha256": "5b21b9e1734a0bb2e149ff1de32905f99e45f233c9515dd012748fcb73b848f4",
+      "bytes": 143145,
+      "sha256": "35333497e94219dc52d8b7087865f3e88a5fc02fb3110ba3da8508da3c958b48",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -53434,8 +53288,8 @@
       "path": "docs/witness.html",
       "title": "Witness",
       "format": "html",
-      "bytes": 68874,
-      "sha256": "62f5e33762ec00b8256d23d6f788bd2d74c15feffcde39b65be15f1514d8c057",
+      "bytes": 72129,
+      "sha256": "0779db0a4cf7beea3f0068edd605173e748be5af3cb4e568d4e3f67bd5b0d755",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -53814,6 +53668,30 @@
       "nextAction": "Keep green. The provider key lives in the host's environment settings, never in the repo."
     },
     {
+      "id": "r2:netlify-functions-aiyana-stories-mjs-09ca06",
+      "path": "netlify/functions/aiyana-stories.mjs",
+      "title": "aiyana-stories.mjs",
+      "format": "mjs",
+      "bytes": 7487,
+      "sha256": "3c0bee4766763b9ebaca19a2026758134242c3d4039de714fd34414d28e60053",
+      "group": "tooling",
+      "role": "Netlify Function — server code for the Codex Guide's talking rung; deployed to the host's function runtime, never published as a page",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green. The provider key lives in the host's environment settings, never in the repo."
+    },
+    {
       "id": "r2:netlify-functions-codex-guide-mjs-66dee4",
       "path": "netlify/functions/codex-guide.mjs",
       "title": "codex-guide.mjs",
@@ -54012,6 +53890,54 @@
       "format": "mjs",
       "bytes": 14250,
       "sha256": "1760cc1b75ff34ffe66ed52fbd829fd0d1910d353cceea4ada5bdb7f0155f82c",
+      "group": "tooling",
+      "role": "Netlify Function — server code for the Codex Guide's talking rung; deployed to the host's function runtime, never published as a page",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green. The provider key lives in the host's environment settings, never in the repo."
+    },
+    {
+      "id": "r2:netlify-functions-lib-aiyana-language-guard-mjs-dab08d",
+      "path": "netlify/functions/lib/aiyana-language-guard.mjs",
+      "title": "aiyana-language-guard.mjs",
+      "format": "mjs",
+      "bytes": 7559,
+      "sha256": "ecf2e256e79aa21601abacc6d51767de8a86afc5c9cb8e8911396a36b04764be",
+      "group": "tooling",
+      "role": "Netlify Function — server code for the Codex Guide's talking rung; deployed to the host's function runtime, never published as a page",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green. The provider key lives in the host's environment settings, never in the repo."
+    },
+    {
+      "id": "r2:netlify-functions-lib-aiyana-stories-core-mjs-c4a465",
+      "path": "netlify/functions/lib/aiyana-stories-core.mjs",
+      "title": "aiyana-stories-core.mjs",
+      "format": "mjs",
+      "bytes": 31385,
+      "sha256": "bc43745c31d068bbd6ec519f17c2d2e8e696ddd80e9ce8da237a847b67095828",
       "group": "tooling",
       "role": "Netlify Function — server code for the Codex Guide's talking rung; deployed to the host's function runtime, never published as a page",
       "deployed": false,
@@ -54638,8 +54564,8 @@
       "path": "scripts/build-page-registry.mjs",
       "title": "build-page-registry.mjs",
       "format": "mjs",
-      "bytes": 12414,
-      "sha256": "be6c32d9c022163a72f805644984be1d6259737de573c15807f52a883cab8c84",
+      "bytes": 12439,
+      "sha256": "db6550215bccab3740d0e2e39d49f75ffaea76a76a4ea360ab4b57a19ebc00a1",
       "group": "tooling",
       "role": "Build or audit script",
       "deployed": false,
@@ -55262,8 +55188,8 @@
       "path": "scripts/site-catalog-curation.json",
       "title": "site-catalog-curation.json",
       "format": "json",
-      "bytes": 41317,
-      "sha256": "2efd238f1f6c8e387993556d8a2df43447d472cf1b1b74811662708cce64f298",
+      "bytes": 41468,
+      "sha256": "3fb82aa00e1f5021fc7b2e133272e99665386dd9f7c2d09aebd7b01bf6bcc0d8",
       "group": "tooling",
       "role": "Build or audit script",
       "deployed": false,
@@ -55359,7 +55285,7 @@
       "title": "CONTENT-COVERAGE.md",
       "format": "md",
       "bytes": 15240,
-      "sha256": "4d73530acfbb6426d94eb2385c02bba22a2cf6e6087cc0811b59ab8bf8e1bae9",
+      "sha256": "d00daab8e3643e6407f048d28dee099317819db2709d618889c55b24c5a2e430",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -55382,8 +55308,8 @@
       "path": "site-audit/DISCOVERABILITY_REPORT.md",
       "title": "DISCOVERABILITY_REPORT.md",
       "format": "md",
-      "bytes": 23604,
-      "sha256": "05218866bbf94e96c5311b164bc42658ab7f4f699e221a3e7a5286548b4acf46",
+      "bytes": 23702,
+      "sha256": "bafe4be0fb1a840d2f93ad1860fa7c16ef383ee128f97b2cde1cf0a24822b682",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -55431,7 +55357,7 @@
       "title": "downloads-reconciliation.json",
       "format": "json",
       "bytes": 1490,
-      "sha256": "ec79e8c5b95fdc229a42fa96063478d4a576b4bbb29a039ad762d1cdecd1d227",
+      "sha256": "44b30cdb19988b176880c28d0ea5f76048017f522e3516e8d43acf07dcc95396",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -55718,8 +55644,8 @@
       "path": "site-audit/site-master-inventory.json",
       "title": "site-master-inventory.json",
       "format": "json",
-      "bytes": 745775,
-      "sha256": "a5833831db7d418296102f8785cdecb9701c9ef071b8357f5b808ac253ac758b",
+      "bytes": 747540,
+      "sha256": "d246b01b91747cd5bf2ec8ef2048e93b3635f2883a19c8b7ef48cde4a0e51864",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -56104,6 +56030,54 @@
       "format": "js",
       "bytes": 7763,
       "sha256": "ded6da5cd5af481c90241fd4e97126e489a21a28f6ad8860db71adb062fd06bb",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-aiyana-spark-test-js-35cacd",
+      "path": "tests/aiyana-spark.test.js",
+      "title": "aiyana-spark.test.js",
+      "format": "js",
+      "bytes": 9724,
+      "sha256": "df4891e51c23313bc424394db0189ca25f62f77d91e113696df678978a9a3431",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-aiyana-stories-test-js-ad1f6b",
+      "path": "tests/aiyana-stories.test.js",
+      "title": "aiyana-stories.test.js",
+      "format": "js",
+      "bytes": 21748,
+      "sha256": "6cc0fcd59d851c1de1a349adab4de1586c32d72ce7083b538d6a6beec27eed5b",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -56842,30 +56816,6 @@
       "nextAction": "Keep green."
     },
     {
-      "id": "r2:tests-codex-card-match-test-js-6f51ac",
-      "path": "tests/codex-card-match.test.js",
-      "title": "codex-card-match.test.js",
-      "format": "js",
-      "bytes": 5623,
-      "sha256": "d90560e37c1dbf65855b5ad8d81549621f6c8cecfdec81d296b35035fdd75f4a",
-      "group": "tooling",
-      "role": "Automated test",
-      "deployed": false,
-      "publicUrl": null,
-      "publicationEligibility": "development-only",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Keep green."
-    },
-    {
       "id": "r2:tests-codex-cards-test-js-8d1993",
       "path": "tests/codex-cards.test.js",
       "title": "codex-cards.test.js",
@@ -57014,8 +56964,8 @@
       "path": "tests/episode-library.test.js",
       "title": "episode-library.test.js",
       "format": "js",
-      "bytes": 19363,
-      "sha256": "e737b2d57ab93589d0187e05ecdcabbd6c5ec102c9ffd657e83a6894d60bec6c",
+      "bytes": 19375,
+      "sha256": "0446709e893f9892ca08fe0f8ad3aebc8233fc409f59537dc8b5a55742e5b523",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -57062,8 +57012,8 @@
       "path": "tests/fixtures/page-weight-budget.json",
       "title": "page-weight-budget.json",
       "format": "json",
-      "bytes": 3781,
-      "sha256": "6274772a610c85c7264b80fe6bb26d51d10aa00d98322f55a54b44f13be7cacd",
+      "bytes": 3821,
+      "sha256": "0b06c4e678c82751735327100fd79241b257f304e0f30e6130745a7c9622148c",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -57158,8 +57108,8 @@
       "path": "tests/front-door-surfaces.test.js",
       "title": "front-door-surfaces.test.js",
       "format": "js",
-      "bytes": 5428,
-      "sha256": "d018e048f433350d1024cc9bc43c9c264ab6fd703c0899c1df7684062365b02c",
+      "bytes": 5430,
+      "sha256": "797d111875b4dd36ecf02efd0fb42acfa2cd6837d15b1f4a5ad7e21be17ed94f",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -57208,30 +57158,6 @@
       "format": "js",
       "bytes": 3992,
       "sha256": "c6b8f05fe4f434990e520fff093cb1714c377836f73f9853d6302a6f01dea687",
-      "group": "tooling",
-      "role": "Automated test",
-      "deployed": false,
-      "publicUrl": null,
-      "publicationEligibility": "development-only",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Keep green."
-    },
-    {
-      "id": "r2:tests-garden-spark-living-test-js-a169c0",
-      "path": "tests/garden-spark-living.test.js",
-      "title": "garden-spark-living.test.js",
-      "format": "js",
-      "bytes": 2275,
-      "sha256": "2930c3e55665b87db3ab5852b3ff62d4f599f8b2b687f4b56d8078892ff2fe6e",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -57686,8 +57612,8 @@
       "path": "tests/homepage-sphere.test.js",
       "title": "homepage-sphere.test.js",
       "format": "js",
-      "bytes": 41077,
-      "sha256": "dfc241d777e1cc270c1b1bd0c67c06c805dbe7ba2062bcd0bb2116df545b12a9",
+      "bytes": 43271,
+      "sha256": "deea92dd386de0884ed2550b11bec8bbfae8bb4e26747fbfbd301e7421949107",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -58070,8 +57996,8 @@
       "path": "tests/living-nav.test.js",
       "title": "living-nav.test.js",
       "format": "js",
-      "bytes": 17264,
-      "sha256": "55c2fa030f5f28d3121c015a52d448a1621849e16d8d678cd5e663ff16575013",
+      "bytes": 17470,
+      "sha256": "e9632bc214d5ae0512c1bbbdf9c35c0cc9ada447e2bf90e18f32dfa8a01d2e75",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -58094,8 +58020,8 @@
       "path": "tests/living-page-openings.test.js",
       "title": "living-page-openings.test.js",
       "format": "js",
-      "bytes": 15323,
-      "sha256": "2bbf0081a922cfd32f7bbcd4c0cd0a13ba90d233f26ec409e26d125361b57133",
+      "bytes": 15480,
+      "sha256": "b27cc4458e8c1cf0a64c648e4088501b5b5d62783e533f1030c67da593df7835",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -58886,8 +58812,8 @@
       "path": "tests/living-sphere-deep-fix-faced-moon.test.js",
       "title": "living-sphere-deep-fix-faced-moon.test.js",
       "format": "js",
-      "bytes": 32707,
-      "sha256": "0f322764b23576a9ed3fb2bc99fec15072d99658759a0ca51398d589255be751",
+      "bytes": 32949,
+      "sha256": "9dd375a041e4b2157abf6f94e06a7fb08e6e5f10349228088701d5fda8a85e85",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -59390,8 +59316,8 @@
       "path": "tests/living-ui.test.js",
       "title": "living-ui.test.js",
       "format": "js",
-      "bytes": 4567,
-      "sha256": "cc5aa0ae826a92be41156c6e4c2540995558af0178fc324e056637d01eaf58da",
+      "bytes": 4755,
+      "sha256": "31fe835b77bd47b71507b9e25e1a36ece4cef84697a8f51b636354965155c118",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -60782,8 +60708,8 @@
       "path": "tests/site-mobile.test.js",
       "title": "site-mobile.test.js",
       "format": "js",
-      "bytes": 7699,
-      "sha256": "e8da41b0b966d5c41678885e339c058c1c5efbecd6d21dac1271afa753eb7b82",
+      "bytes": 7921,
+      "sha256": "d9ff36e0c00b69a4ed02475eab0a613f2124b632688299bc9c118bcf437a8c6b",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -61042,30 +60968,6 @@
       "nextAction": "Keep green."
     },
     {
-      "id": "r2:tests-spark-evolution-path-test-js-f1794c",
-      "path": "tests/spark-evolution-path.test.js",
-      "title": "spark-evolution-path.test.js",
-      "format": "js",
-      "bytes": 5125,
-      "sha256": "45f436012ad82be22c6ce17cfa1c98b5741542d7cc748b7726a933d99eafa5cf",
-      "group": "tooling",
-      "role": "Automated test",
-      "deployed": false,
-      "publicUrl": null,
-      "publicationEligibility": "development-only",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Keep green."
-    },
-    {
       "id": "r2:tests-spark-flame-wrap-test-js-40cf89",
       "path": "tests/spark-flame-wrap.test.js",
       "title": "spark-flame-wrap.test.js",
@@ -61168,54 +61070,6 @@
       "format": "js",
       "bytes": 29522,
       "sha256": "5f31940e41862581d0a5a8da2fb03902285471bfa557cb0099cff19818354f19",
-      "group": "tooling",
-      "role": "Automated test",
-      "deployed": false,
-      "publicUrl": null,
-      "publicationEligibility": "development-only",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Keep green."
-    },
-    {
-      "id": "r2:tests-spark-intro-test-js-49056d",
-      "path": "tests/spark-intro.test.js",
-      "title": "spark-intro.test.js",
-      "format": "js",
-      "bytes": 11325,
-      "sha256": "b0b67885046f0235b455b8a47100a114a5418c7e13132f502d1b18dbf769964b",
-      "group": "tooling",
-      "role": "Automated test",
-      "deployed": false,
-      "publicUrl": null,
-      "publicationEligibility": "development-only",
-      "status": "operational",
-      "catalogId": null,
-      "author": "not-recorded-in-file",
-      "reviews": {
-        "editorial": "not-started",
-        "scripture": "not-applicable-or-not-started",
-        "evidence": "not-started",
-        "functionality": "not-started"
-      },
-      "examination": "inventoried-only",
-      "nextAction": "Keep green."
-    },
-    {
-      "id": "r2:tests-spark-lean-test-js-297f5a",
-      "path": "tests/spark-lean.test.js",
-      "title": "spark-lean.test.js",
-      "format": "js",
-      "bytes": 3878,
-      "sha256": "c209d2c5b3c2955d4a2640dbd6174bfc01d30acfdaa7d25d921996473e4a7422",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -61882,6 +61736,30 @@
       "nextAction": "Keep green."
     },
     {
+      "id": "r2:tests-sphere-lag-pass-test-js-3fad2c",
+      "path": "tests/sphere-lag-pass.test.js",
+      "title": "sphere-lag-pass.test.js",
+      "format": "js",
+      "bytes": 12457,
+      "sha256": "183afd5b19ffc889553d676ad18dc901eeb5a512268123a8c888befb7c39070e",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
       "id": "r2:tests-sphere-mobile-stage-test-js-90637e",
       "path": "tests/sphere-mobile-stage.test.js",
       "title": "sphere-mobile-stage.test.js",
@@ -62318,8 +62196,8 @@
       "path": "tests/story-layer.test.js",
       "title": "story-layer.test.js",
       "format": "js",
-      "bytes": 9814,
-      "sha256": "e64dc29c60b90a511b64a1f3d767fdbc68ce84c42270e6edd98bb705f7db227e",
+      "bytes": 9941,
+      "sha256": "c9679f572b426574ef9009c02ed5e4006b782009c1e4f13591430e9919360d1c",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -62342,8 +62220,8 @@
       "path": "tests/story-map-sphere-link.test.js",
       "title": "story-map-sphere-link.test.js",
       "format": "js",
-      "bytes": 27404,
-      "sha256": "09d2cb9e1f4d186c46f2274c6adcdc072b12584a284b1e4e25fb12b40737feda",
+      "bytes": 27400,
+      "sha256": "809ae8b6112b51f82c78a645b4cba51e8f51a5bdc42db308c3fd91c4bc14ac6b",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,

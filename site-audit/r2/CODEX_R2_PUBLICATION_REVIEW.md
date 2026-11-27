@@ -2,7 +2,7 @@
 
 "Unlinked does not mean private." Everything under `docs/` is deployed (Netlify `publish = "docs"`, no build command).
 
-## Deployed files that need an explicit decision (72)
+## Deployed files that need an explicit decision (73)
 
 | Path | Eligibility | What it is |
 | --- | --- | --- |
@@ -17,6 +17,7 @@
 | `docs/LIVING-CODEX-PHASE-2.md` | restricted-review | Markdown document stored under the publish tree |
 | `docs/LIVING-CODEX-SHARE-THE-DAY.md` | restricted-review | Markdown document stored under the publish tree |
 | `docs/LIVING_CODEX_STATUS.md` | restricted-review | Markdown document stored under the publish tree |
+| `docs/aiyana-dashboard.webmanifest` | public-unreviewed | Site page or support file |
 | `docs/assets/glyphs/README.md` | restricted-review | Asset folder README stored under the publish tree |
 | `docs/assets/img/IMAGE-INVENTORY.md` | restricted-review | Image pipeline note stored under the publish tree |
 | `docs/assets/img/IMAGE-MIGRATION-MAP.md` | restricted-review | Image pipeline note stored under the publish tree |
@@ -103,4 +104,4 @@ Automated scan of deployed Markdown, TXT, HTML, JSON and JS (excluding Scroll Li
 
 ## Image-only or non-text documents
 
-- `6_Images_and_Symbols/The_Mirror_of_the_Tongues_YHWH.pdf` — no extractable text; visual review required.
+None.

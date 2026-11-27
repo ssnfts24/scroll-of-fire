@@ -3,14 +3,14 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 515,
-    "publicHtmlPages": 212,
+    "resources": 517,
+    "publicHtmlPages": 213,
     "catalogEntries": 79,
     "issueCounts": {
       "no-global-navigation": 80,
-      "not-linked-directly-from-homepage": 29,
+      "not-linked-directly-from-homepage": 30,
       "deployed-but-unlinked": 64,
-      "unreachable-from-homepage": 5,
+      "unreachable-from-homepage": 6,
       "compatibility-redirect-page": 8,
       "not-published-in-catalog": 30,
       "unnamed-image-needs-descriptive-title": 21,
@@ -183,7 +183,7 @@
         "linkedFromHomepage": false,
         "hopsFromHome": 2,
         "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 3,
+        "inboundPages": 4,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
@@ -721,8 +721,25 @@
       "issues": []
     },
     {
+      "id": "docs-assets:aiyana-dashboard.webmanifest",
+      "title": "docs/aiyana-dashboard.webmanifest (1 files)",
+      "description": "Static assets, data and generated artifacts served from docs/.",
+      "category": "Static assets",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/aiyana-dashboard.webmanifest",
+      "publicUrl": "https://codexofreality.org/aiyana-dashboard.webmanifest",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "supporting-asset",
+      "discoverability": null,
+      "issues": []
+    },
+    {
       "id": "docs-assets:assets/css",
-      "title": "docs/assets/css (99 files)",
+      "title": "docs/assets/css (100 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -790,7 +807,7 @@
     },
     {
       "id": "docs-assets:assets/img",
-      "title": "docs/assets/img (171 files)",
+      "title": "docs/assets/img (173 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -807,7 +824,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (259 files)",
+      "title": "docs/assets/js (261 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -1277,6 +1294,36 @@
       "privacyEligibility": "utility",
       "discoverability": {
         "path": "account.html",
+        "inSitemap": false,
+        "inGlobalNav": false,
+        "linkedFromHomepage": false,
+        "hopsFromHome": null,
+        "hopsFromHomeWithoutAtlas": null,
+        "inboundPages": 0,
+        "pagesWithNavLinkToIt": 0
+      },
+      "issues": [
+        "unreachable-from-homepage"
+      ]
+    },
+    {
+      "id": "docs:aiyana-dashboard.html",
+      "title": "Aiyana&rsquo;s Story Door",
+      "description": "Aiyana&rsquo;s own door: the stories kids sent to Aiyana&rsquo;s World wait here for her yes, and her Spark lives here with her.",
+      "category": "Utility",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/aiyana-dashboard.html",
+      "publicUrl": "https://codexofreality.org/aiyana-dashboard.html",
+      "publicationStatus": "live",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [
+        "aiyanas-world.html"
+      ],
+      "canonicalUrl": "https://codexofreality.org/aiyana-dashboard.html",
+      "privacyEligibility": "utility",
+      "discoverability": {
+        "path": "aiyana-dashboard.html",
         "inSitemap": false,
         "inGlobalNav": false,
         "linkedFromHomepage": false,
@@ -2142,7 +2189,6 @@
         "ledger.html",
         "living-time-sphere.html",
         "moons.html",
-        "one-word.html",
         "read-your-own-day.html",
         "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
@@ -14101,14 +14147,15 @@
         "path": "one-word.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 3,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 2,
         "pagesWithNavLinkToIt": 0
       },
       "issues": [
-        "no-global-navigation"
+        "no-global-navigation",
+        "not-linked-directly-from-homepage"
       ]
     },
     {
@@ -14602,7 +14649,7 @@
     },
     {
       "id": "repo-folder:netlify",
-      "title": "netlify/ (24 files)",
+      "title": "netlify/ (27 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -14704,7 +14751,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (275 files)",
+      "title": "tests/ (281 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,

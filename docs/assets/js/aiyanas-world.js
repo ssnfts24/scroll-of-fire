@@ -1,8 +1,10 @@
 /* Aiyana's World — the page's small machinery.
-   Everything a visitor makes here stays on their own device
-   (browser local storage). Nothing is sent, published, or shared.
-   Stories added at the end wait, on-device, for Aiyana's yes —
-   they never appear on the page by themselves. */
+   Feelings, thoughts, and drawings stay on the visitor's own
+   device (browser local storage); nothing about them is sent.
+   Stories are the one thing that travels: a sent story goes to
+   Aiyana's private waiting place and waits for her yes. It
+   never appears on this page by itself — only the stories she
+   has approved are read back and shown on the shelf below. */
 (function () {
   "use strict";
 
@@ -205,14 +207,47 @@
 
   /* ---------- Stories: the waiting place (held for Aiyana's yes) ---------- */
 
+  var STORIES_API = "/.netlify/functions/aiyana-stories";
+
   var form = document.getElementById("aiyana-story-form");
   var nameInput = document.getElementById("aiyana-story-name");
+  var titleInput = document.getElementById("aiyana-story-title");
   var storyInput = document.getElementById("aiyana-story-text");
   var confirmLine = document.getElementById("aiyana-story-confirm");
   var waitingList = document.getElementById("aiyana-waiting-list");
   var waitingEmpty = document.getElementById("aiyana-waiting-empty");
+  var approvedList = document.getElementById("aiyana-approved-list");
   var waiting = load(WAITING_KEY, []);
   if (!Array.isArray(waiting)) waiting = [];
+
+  var WORDS_MESSAGE = "Some words in your story need changing before Aiyana can read it — try fixing the words and send it again.";
+
+  function sendStory(entry) {
+    if (!window.fetch) return Promise.resolve(null);
+    return fetch(STORIES_API, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        action: "submit",
+        penName: entry.name || "",
+        title: entry.title || "",
+        story: entry.story
+      })
+    })
+      .then(function (res) { return res.json().catch(function () { return null; }); })
+      .catch(function () { return null; });
+  }
+
+  function sentMessage(result) {
+    if (result && result.ok) {
+      return "Your story is in the waiting place. It will only appear on this page if Aiyana says yes.";
+    }
+    if (result && result.reason === "words-to-fix") return WORDS_MESSAGE;
+    if (result && result.reason === "slow-down") {
+      return "You have sent a lot of stories in a row. Rest a little, then send again.";
+    }
+    return "Your story could not travel right now, so it is kept safe on this device. You can try sending it again below.";
+  }
 
   function renderWaiting() {
     if (!waitingList) return;
@@ -223,8 +258,16 @@
       box.className = "aiyana-waiting-story";
       var tag = document.createElement("span");
       tag.className = "aiyana-waiting-tag";
-      tag.textContent = "Waiting for Aiyana's yes";
+      tag.textContent = s.sent ? "Waiting for Aiyana's yes" : "Kept on this device — not sent yet";
       box.appendChild(tag);
+      if (s.title) {
+        var title = document.createElement("p");
+        title.className = "aiyana-note-text";
+        var strong = document.createElement("strong");
+        strong.textContent = s.title;
+        title.appendChild(strong);
+        box.appendChild(title);
+      }
       var text = document.createElement("p");
       text.className = "aiyana-note-text";
       text.textContent = s.story;
@@ -235,6 +278,22 @@
       byText.textContent = s.name ? "— " + s.name : "— no name given";
       by.appendChild(byText);
       box.appendChild(by);
+      if (!s.sent) {
+        var retry = document.createElement("button");
+        retry.type = "button";
+        retry.className = "aiyana-mini-btn";
+        retry.textContent = "Try sending again";
+        retry.addEventListener("click", function () {
+          retry.disabled = true;
+          sendStory(s).then(function (result) {
+            s.sent = !!(result && result.ok);
+            save(WAITING_KEY, waiting);
+            if (confirmLine) confirmLine.textContent = sentMessage(result);
+            renderWaiting();
+          });
+        });
+        box.appendChild(retry);
+      }
       var back = document.createElement("button");
       back.type = "button";
       back.className = "aiyana-mini-btn";
@@ -257,20 +316,200 @@
         storyInput.focus();
         return;
       }
-      waiting.unshift({
+      var entry = {
         id: makeId(),
         name: nameInput ? nameInput.value.trim() : "",
+        title: titleInput ? titleInput.value.trim() : "",
         story: story,
-        ts: Date.now()
-      });
+        ts: Date.now(),
+        sent: false
+      };
+      waiting.unshift(entry);
       save(WAITING_KEY, waiting);
       storyInput.value = "";
       if (nameInput) nameInput.value = "";
-      if (confirmLine) {
-        confirmLine.textContent = "Your story is in the waiting place. It will only appear on this page if Aiyana says yes.";
-      }
+      if (titleInput) titleInput.value = "";
+      if (confirmLine) confirmLine.textContent = "Sending your story to Aiyana's waiting place…";
       renderWaiting();
+      sendStory(entry).then(function (result) {
+        entry.sent = !!(result && result.ok);
+        save(WAITING_KEY, waiting);
+        if (confirmLine) confirmLine.textContent = sentMessage(result);
+        renderWaiting();
+      });
     });
   }
   renderWaiting();
+
+  /* ---------- The shelf: stories Aiyana said yes to ---------- */
+
+  function renderApproved(stories, page) {
+    if (!approvedList || !Array.isArray(stories)) return;
+    var ordered = stories.slice();
+    if (page) {
+      var byId = {};
+      ordered.forEach(function (s) { byId[s.id] = s; });
+      var rest = [];
+      if (page.featuredId && byId[page.featuredId]) {
+        rest.push(byId[page.featuredId]);
+        delete byId[page.featuredId];
+      }
+      (page.storyOrder || []).forEach(function (id) {
+        if (byId[id]) { rest.push(byId[id]); delete byId[id]; }
+      });
+      ordered.forEach(function (s) { if (byId[s.id]) rest.push(s); });
+      ordered = rest;
+    }
+    ordered.forEach(function (s) {
+      var article = document.createElement("article");
+      article.className = "aiyana-story" + (page && page.featuredId === s.id ? " aiyana-story-featured" : "");
+      if (page && page.featuredId === s.id) {
+        var badge = document.createElement("p");
+        badge.className = "aiyana-featured-badge";
+        badge.textContent = "\u2605 Aiyana's big story";
+        article.appendChild(badge);
+      }
+      var h = document.createElement("h4");
+      h.className = "aiyana-story-title";
+      h.textContent = s.title || "A story";
+      article.appendChild(h);
+      var by = document.createElement("p");
+      by.className = "aiyana-story-by";
+      by.textContent = "by " + (s.penName || "a friend");
+      article.appendChild(by);
+      String(s.story || "").split(/\n+/).forEach(function (para) {
+        if (!para.trim()) return;
+        var p = document.createElement("p");
+        p.textContent = para;
+        article.appendChild(p);
+      });
+      approvedList.appendChild(article);
+    });
+  }
+
+  /* ---------- Her page's own blocks: the choices she made ----------
+   *
+   * Her dashboard keeps a shelf of safe blocks — her welcome
+   * words, her headline line, her about-me, her author line,
+   * her sign's colour, her page's mood, her top picture, her
+   * trim, her big story and story order, her feel line, her
+   * favourite things, what shows and hides, her reading size.
+   * Until she changes them, the store serves the defaults —
+   * this page exactly as it stands today — and applying them
+   * changes nothing anyone can see. In preview (her dashboard's
+   * "See how it will look"), the draft she is holding stands
+   * in for the store, through this same road. */
+
+  var TRIM_ART = {
+    butterflies: '<svg viewBox="0 0 100 80" focusable="false"><path d="M48 38 C20 2, 2 16, 8 36 C12 50, 30 50, 48 42 Z"/><path d="M52 38 C80 2, 98 16, 92 36 C88 50, 70 50, 52 42 Z"/><ellipse cx="50" cy="43" rx="3.4" ry="13"/></svg>',
+    stars: '<svg viewBox="0 0 100 100" focusable="false"><path d="M50 4 L62 36 L96 36 L68 57 L79 90 L50 69 L21 90 L32 57 L4 36 L38 36 Z"/></svg>',
+    moons: '<svg viewBox="0 0 100 100" focusable="false"><path d="M55 6 A44 44 0 1 0 55 94 A35 35 0 1 1 55 6 Z"/></svg>'
+  };
+
+  function applyPage(page) {
+    if (!page) return;
+    var sign = document.getElementById("aiyana-sign");
+    var title = document.getElementById("aiyana-sign-title");
+    var headline = document.getElementById("aiyana-headline");
+    var about = document.getElementById("aiyana-about");
+    if (title && page.welcome) title.textContent = page.welcome;
+    if (headline && page.headline) headline.textContent = page.headline;
+    if (about && page.about) about.textContent = page.about;
+    if (sign && page.banner) sign.setAttribute("data-banner", page.banner);
+    if (page.mood) document.body.setAttribute("data-mood", page.mood);
+
+    var feel = document.getElementById("aiyana-feel-line");
+    if (feel && page.showFeel !== false && page.feelLine) {
+      feel.textContent = page.feelLine;
+      feel.hidden = false;
+    }
+    var author = document.getElementById("aiyana-author-line");
+    if (author && page.authorLine) {
+      author.textContent = "Stories by " + page.authorLine;
+      author.hidden = false;
+    }
+    if (page.trim && TRIM_ART[page.trim]) {
+      ["aiyana-trim-sign", "aiyana-trim-stories"].forEach(function (id) {
+        var strip = document.getElementById(id);
+        if (!strip) return;
+        strip.innerHTML = "";
+        for (var i = 0; i < 9; i++) {
+          var span = document.createElement("span");
+          span.className = "aiyana-trim-item trim-" + page.trim;
+          span.innerHTML = TRIM_ART[page.trim];
+          strip.appendChild(span);
+        }
+        strip.hidden = false;
+      });
+    }
+    var figure = document.getElementById("aiyana-top-picture");
+    var img = document.getElementById("aiyana-top-picture-img");
+    function standPicture(src) {
+      /* The site's image-fallback watch may have shelved this
+         img while it stood src-less in its hidden figure; stand
+         it back up before it wears her picture. */
+      img.removeAttribute("hidden");
+      img.removeAttribute("aria-hidden");
+      img.classList.remove("image-fallback-failed", "sphere-broken-resource-hidden");
+      img.src = src;
+      figure.hidden = false;
+    }
+    if (figure && img && page.topPicture === "story-drawing") {
+      standPicture("assets/img/aiyana/aiyana-first-story-drawing.webp");
+    } else if (figure && img && page.topPicture === "my-drawing" && window.fetch) {
+      fetch(STORIES_API + "?list=drawing")
+        .then(function (res) { return res.ok ? res.json() : null; })
+        .then(function (data) {
+          if (data && data.dataUrl) standPicture(data.dataUrl);
+        })
+        .catch(function () { /* no picture stands until it can truly load */ });
+    }
+    var favSection = document.getElementById("aiyana-favourites");
+    var favList = document.getElementById("aiyana-favourites-list");
+    if (favSection && favList && page.showFavourites !== false && Array.isArray(page.favourites) && page.favourites.length) {
+      page.favourites.forEach(function (f) {
+        var li = document.createElement("li");
+        li.textContent = f;
+        favList.appendChild(li);
+      });
+      favSection.hidden = false;
+    }
+    if (page.showStories === false) {
+      var shelfTitle = document.getElementById("aiyana-shelf-title");
+      if (shelfTitle) shelfTitle.style.display = "none";
+      if (approvedList) approvedList.style.display = "none";
+    }
+    if (page.storySize === "bigger") {
+      var storiesCard = document.querySelector(".aiyana-stories");
+      if (storiesCard) storiesCard.classList.add("is-bigger");
+    }
+  }
+
+  function previewDraft() {
+    try {
+      if (new URLSearchParams(window.location.search).get("preview") !== "1") return null;
+      var raw = window.sessionStorage.getItem("aiyana.preview.v1");
+      return raw ? JSON.parse(raw) : null;
+    } catch (err) { return null; }
+  }
+
+  if (window.fetch) {
+    var draft = previewDraft();
+    var pagePromise = draft
+      ? Promise.resolve(draft)
+      : fetch(STORIES_API + "?list=page")
+          .then(function (res) { return res.ok ? res.json() : null; })
+          .then(function (data) { return data && data.ok ? data.page : null; })
+          .catch(function () { return null; });
+    var approvedPromise = approvedList
+      ? fetch(STORIES_API + "?list=approved")
+          .then(function (res) { return res.ok ? res.json() : null; })
+          .then(function (data) { return data && data.ok ? data.stories : []; })
+          .catch(function () { return []; })
+      : Promise.resolve([]);
+    Promise.all([pagePromise, approvedPromise]).then(function (both) {
+      applyPage(both[0]);
+      renderApproved(both[1], both[0]);
+    });
+  }
 })();

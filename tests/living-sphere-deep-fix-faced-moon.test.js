@@ -572,8 +572,12 @@ test("overnight pass: the pill guard runs every frame, not at pass cadence", () 
   // frames of a drag flick). The guard lives in the tracking
   // loop and re-checks live geometry each frame.
   assert.match(labels, /In-motion pill guard \(overnight pass/);
-  assert.match(labels, /const pillEntries = _tracked\.filter\(/);
-  assert.match(labels, /kind === "pill" && entry\.sx != null && entry\.rectW > 0/);
+  // Sphere lag pass 2 (Nov 26, 2026): the guard's working set
+  // is refilled into scratch storage each frame instead of a
+  // fresh filter allocation — same entries, same order, same
+  // per-frame cadence; only the storage changed.
+  assert.match(labels, /const pillEntries = _scratchPills;/);
+  assert.match(labels, /entry\.kind === "pill" && entry\.sx != null && entry\.rectW > 0/);
   // Shifts stay inside the pass's own 90px bound and out of
   // blocked ground; the tracking context carries the rects.
   assert.match(labels, /Math\.hypot\(tx, ty\) > 90/);

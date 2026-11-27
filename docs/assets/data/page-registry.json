@@ -28,7 +28,7 @@
   ],
   "unsourcedNote": "Fields named in unsourcedFields carry the marker \"unsourced\" in every entry: no truthful source exists for them yet, and no value was invented. Filling them is ULS-002 slice-2 work.",
   "summary": {
-    "pages": 212,
+    "pages": 213,
     "byDomain": {
       "Observatory": 7,
       "Knowledge": 120,
@@ -36,7 +36,7 @@
       "Living": 10,
       "Spark": 3,
       "Play": 2,
-      "Stories": 6,
+      "Stories": 7,
       "Community": 1,
       "Tools": 10,
       "Products": 4
@@ -251,6 +251,30 @@
       "maintenance_status": "active"
     },
     {
+      "id": "aiyana-dashboard",
+      "path": "aiyana-dashboard.html",
+      "title": "Aiyana&rsquo;s Story Door",
+      "description": "Aiyana&rsquo;s own door: the stories kids sent to Aiyana&rsquo;s World wait here for her yes, and her Spark lives here with her.",
+      "primary_domain": "Stories",
+      "page_type": "page",
+      "canonical_url": "https://codexofreality.org/aiyana-dashboard.html",
+      "parent": "index.html",
+      "related_pages": [
+        "aiyanas-world.html"
+      ],
+      "search_keywords": "unsourced",
+      "navigation_visibility": "unlisted",
+      "available_actions": "unsourced",
+      "spark_capabilities": "unsourced",
+      "temporal_context": "pattern-calendar",
+      "data_dependencies": [],
+      "permissions": "unsourced",
+      "offline_capabilities": "unsourced",
+      "mobile_behavior": "unsourced",
+      "content_version": "sha256:bf4423401522",
+      "maintenance_status": "active"
+    },
+    {
       "id": "aiyanas-world",
       "path": "aiyanas-world.html",
       "title": "Aiyana's World — Codex of Reality",
@@ -308,7 +332,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:05685fa1d47e",
+      "content_version": "sha256:ec73d6638b98",
       "maintenance_status": "excluded-aiyanas-own-design"
     },
     {
@@ -829,7 +853,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:70999d36ec11",
+      "content_version": "sha256:3ea2b3462775",
       "maintenance_status": "active"
     },
     {
@@ -1247,7 +1271,6 @@
         "ledger.html",
         "living-time-sphere.html",
         "moons.html",
-        "one-word.html",
         "read-your-own-day.html",
         "scripture/index.html",
         "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",
@@ -1278,7 +1301,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:8a3501859b6f",
+      "content_version": "sha256:24f656f7ee76",
       "maintenance_status": "active"
     },
     {
@@ -12790,7 +12813,7 @@
       "permissions": "unsourced",
       "offline_capabilities": "unsourced",
       "mobile_behavior": "unsourced",
-      "content_version": "sha256:2b14992c3c53",
+      "content_version": "sha256:24c3de246d99",
       "maintenance_status": "active"
     }
   ]
