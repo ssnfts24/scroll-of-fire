@@ -235,7 +235,7 @@ test("the module is pure: it never touches storage, the network, or the clock", 
 
 test("the ask layer assembles its snapshot from the real records — and writes none", () => {
   const intro = fs.readFileSync(path.join(root, "docs/assets/js/spark-intro.js"), "utf8");
-  assert.match(intro, /spark-answers\.js\?v=20261126-6/, "the answers core rides in lazily");
+  assert.match(intro, /spark-answers\.js\?v=20261126-7/, "the answers core rides in lazily");
   assert.match(intro, /function collectWorld/, "the snapshot is assembled in one place");
   assert.match(intro, /record\.practiceDays/, "the sealed days come from the Spark record itself");
   assert.match(intro, /CodexCards\.createStore/, "the cards come from the album's own store");
@@ -259,7 +259,7 @@ test("the doorstep prefers the state-named step, under the lean's own marks", ()
 
 test("the loaders carry the pass, so no phone serves the cached one", () => {
   const presence = fs.readFileSync(path.join(root, "docs/assets/js/spark-presence.js"), "utf8");
-  assert.ok(presence.includes("spark-intro.js?v=20261126-6"));
-  assert.ok(presence.includes("spark-intro.css?v=20261126-6"));
-  assert.ok(presence.includes("spark-living.js?v=20261126-6"));
+  assert.ok(presence.includes("spark-intro.js?v=20261126-7"));
+  assert.ok(presence.includes("spark-intro.css?v=20261126-7"));
+  assert.ok(presence.includes("spark-living.js?v=20261126-7"));
 });

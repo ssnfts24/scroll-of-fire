@@ -145,13 +145,13 @@ test("the Sphere's tour rides the overlay alone — no protected file carries or
   const loadIntroBody = presence.slice(presence.indexOf("function loadIntro"));
   assert.ok(!loadIntroBody.slice(0, 600).includes("spark-intro-show"),
     "the tour no longer waits for a Show me button to exist");
-  assert.ok(presence.includes("spark-intro.js?v=20261126-6"), "the presence loads the tour everywhere it walks");
-  assert.ok(presence.includes("spark-intro.css?v=20261126-6"), "the tour styles ride with it");
+  assert.ok(presence.includes("spark-intro.js?v=20261126-7"), "the presence loads the tour everywhere it walks");
+  assert.ok(presence.includes("spark-intro.css?v=20261126-7"), "the tour styles ride with it");
   /* the album page, which carries no presence, loads its
    * tour the same lazy way from its own module */
   const album = read("docs/assets/js/codex-card-album.js");
-  assert.ok(album.includes("spark-intro.js?v=20261126-6"), "the album loads its room's tour lazily");
-  assert.ok(album.includes("spark-intro.css?v=20261126-6"), "the tour styles ride with it");
+  assert.ok(album.includes("spark-intro.js?v=20261126-7"), "the album loads its room's tour lazily");
+  assert.ok(album.includes("spark-intro.css?v=20261126-7"), "the tour styles ride with it");
 });
 
 test("the homepage and companions keep their Show me — and their pinned stacks stay whole", () => {
@@ -162,8 +162,8 @@ test("the homepage and companions keep their Show me — and their pinned stacks
   assert.ok(companions.includes('id="spark-intro-show"'), "the companions page carries the Show me");
   assert.ok(!companions.includes("spark-intro.js"), "the companions page's first load stays lean");
   const pageJs = read("docs/assets/js/spark-companions-page.js");
-  assert.ok(pageJs.includes("spark-intro.js?v=20261126-6"), "the tour rides in lazily behind the meeting (the diet)");
-  assert.ok(pageJs.includes("spark-intro.css?v=20261126-6"), "the tour styles ride with it");
+  assert.ok(pageJs.includes("spark-intro.js?v=20261126-7"), "the tour rides in lazily behind the meeting (the diet)");
+  assert.ok(pageJs.includes("spark-intro.css?v=20261126-7"), "the tour styles ride with it");
 });
 
 test("the tour reads the day in the calendar's own fields — and lights the Sphere's day", () => {

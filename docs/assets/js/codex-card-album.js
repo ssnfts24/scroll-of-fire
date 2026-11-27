@@ -518,10 +518,10 @@
     if (window.SparkIntro) return;
     var link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "assets/css/spark-intro.css?v=20261126-6";
+    link.href = "assets/css/spark-intro.css?v=20261126-7";
     document.head.appendChild(link);
     var script = document.createElement("script");
-    script.src = "assets/js/spark-intro.js?v=20261126-6";
+    script.src = "assets/js/spark-intro.js?v=20261126-7";
     script.defer = true;
     document.head.appendChild(script);
   })();
