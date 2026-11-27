@@ -240,9 +240,9 @@ const homepage = `<!doctype html>
   <script defer src="assets/library.js"></script>
   <script defer src="assets/shelf-loader.js"></script>
   <link rel="stylesheet" href="../assets/css/spark-companion.css?v=20261126-5">
-  <script defer src="../assets/js/spark-companion.js?v=20261119-1"></script>
+  <script defer src="../assets/js/spark-companion.js?v=20261126-8"></script>
   <script defer src="../assets/js/spark-relations.js?v=20261122-1"></script>
-  <script defer src="../assets/js/spark-presence.js?v=20261126-7"></script>
+  <script defer src="../assets/js/spark-presence.js?v=20261126-8"></script>
   <!-- Guidance at the library's opening (Q-03): the canonical
        calendar, the Life Atlas record layer, and the shared
        guidance module — the same stack the 13 Moons page carries.
@@ -386,9 +386,9 @@ const reader = `<!doctype html>
   <script defer src="assets/search-normalize.js"></script>
   <script defer src="assets/reader.js"></script>
   <link rel="stylesheet" href="../assets/css/spark-companion.css?v=20261126-5">
-  <script defer src="../assets/js/spark-companion.js?v=20261119-1"></script>
+  <script defer src="../assets/js/spark-companion.js?v=20261126-8"></script>
   <script defer src="../assets/js/spark-relations.js?v=20261122-1"></script>
-  <script defer src="../assets/js/spark-presence.js?v=20261126-7"></script>
+  <script defer src="../assets/js/spark-presence.js?v=20261126-8"></script>
   <link rel="stylesheet" href="../assets/css/site-mobile.css?v=20261124-1">
 </head>
 <body class="reader-page living-ui">
@@ -466,9 +466,9 @@ function toolPage({ file, title, description, bodyClass, current, intro, body, s
   <script defer src="assets/scroll-common.js"></script>
 ${scripts.map(script => `  <script defer src="assets/${script}"></script>`).join("\n")}
   <link rel="stylesheet" href="../assets/css/spark-companion.css?v=20261126-5">
-  <script defer src="../assets/js/spark-companion.js?v=20261119-1"></script>
+  <script defer src="../assets/js/spark-companion.js?v=20261126-8"></script>
   <script defer src="../assets/js/spark-relations.js?v=20261122-1"></script>
-  <script defer src="../assets/js/spark-presence.js?v=20261126-7"></script>
+  <script defer src="../assets/js/spark-presence.js?v=20261126-8"></script>
   <link rel="stylesheet" href="../assets/css/site-mobile.css?v=20261124-1">
 </head>
 <body class="tool-body ${bodyClass} living-ui">

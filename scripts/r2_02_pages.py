@@ -44,8 +44,8 @@ def head(title, desc, base, canonical_path, extra=""):
 <script defer src="{base}../assets/js/site.js"></script>
 <script defer src="{base}assets/scripture.js"></script>
 <link rel="stylesheet" href="{base}../assets/css/spark-companion.css?v=20261126-5">
-<script defer src="{base}../assets/js/spark-companion.js?v=20261119-1"></script>
-<script defer src="{base}../assets/js/spark-presence.js?v=20261126-7"></script>
+<script defer src="{base}../assets/js/spark-companion.js?v=20261126-8"></script>
+<script defer src="{base}../assets/js/spark-presence.js?v=20261126-8"></script>
 {extra}<link rel="stylesheet" href="{base}../assets/css/site-mobile.css?v=20261124-1">
 </head>
 """
