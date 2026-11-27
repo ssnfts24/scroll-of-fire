@@ -63,7 +63,12 @@
 
   function todayCivil() {
     try {
-      const s = window.PatternCalendar?.fromCivilDate?.({ date: new Date() });
+      // One day, midnight, everywhere (Aaron, Nov 26, 2026):
+      // the device's own zone, the day turning at midnight —
+      // the same reading the page and the Spark now use.
+      let timeZone = "UTC";
+      try { timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; } catch { /* UTC stands */ }
+      const s = window.PatternCalendar?.fromCivilDate?.({ date: new Date(), timeZone, boundaryMode: "midnight" });
       if (s && s.civilDate) return s.civilDate;
     } catch { /* fall through */ }
     const d = new Date();

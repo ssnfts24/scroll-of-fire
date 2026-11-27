@@ -50,6 +50,24 @@
    *      whole instrument stays in view.
    */
 
+  /* ── One day, midnight, everywhere (Aaron, Nov 26, 2026) ─────
+   * The house reads the day at local midnight — the page, the
+   * Spark, and now the Sphere too. The instrument takes its day
+   * boundary from the arrival URL's own `boundary` reading, and
+   * this layer stands early enough (it evaluates before the
+   * instrument mounts on DOMContentLoaded) to set the page's
+   * standing reading where the URL names none: midnight, so the
+   * chip, the strip and the Spark all name the same day. A URL
+   * that names a boundary itself — a shared view — keeps its
+   * own word; nothing here overrides a named reading. */
+  try {
+    const arrival = new URL(location.href);
+    if (!arrival.searchParams.has("boundary")) {
+      arrival.searchParams.set("boundary", "midnight");
+      history.replaceState(history.state, "", arrival.href);
+    }
+  } catch { /* the instrument keeps its own reading */ }
+
   const container = document.getElementById("sphere-container");
   const wrap = document.querySelector(".sphere-canvas-wrap");
   if (!container || !wrap) return;
@@ -837,7 +855,7 @@
     css.setAttribute("data-sphere-spark-inhabitant", "");
     document.head.appendChild(css);
     const s = document.createElement("script");
-    s.src = "assets/js/sphere-spark-inhabitant.js?v=20261124-4";
+    s.src = "assets/js/sphere-spark-inhabitant.js?v=20261126-8";
     s.async = false;
     s.setAttribute("data-sphere-spark-inhabitant", "");
     document.head.appendChild(s);
@@ -859,7 +877,7 @@
     css.setAttribute("data-sphere-spark-schedule", "");
     document.head.appendChild(css);
     const s = document.createElement("script");
-    s.src = "assets/js/sphere-spark-schedule.js?v=20261124-3";
+    s.src = "assets/js/sphere-spark-schedule.js?v=20261126-8";
     s.async = false;
     s.setAttribute("data-sphere-spark-schedule", "");
     document.head.appendChild(s);

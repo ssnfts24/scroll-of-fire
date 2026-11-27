@@ -368,9 +368,13 @@
         window.SofEnvironmentState && typeof window.SofEnvironmentState.getEnvironmentState === "function"
           ? window.SofEnvironmentState.getEnvironmentState()
           : null;
+      // One day, midnight, everywhere (Aaron, Nov 26, 2026):
+      // the device's own zone, the day turning at midnight.
+      let deviceZone = "UTC";
+      try { deviceZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"; } catch { /* UTC stands */ }
       const todayCivilDate =
         window.PatternCalendar && typeof window.PatternCalendar.fromCivilDate === "function"
-          ? window.PatternCalendar.fromCivilDate({ date: new Date() }).civilDate
+          ? window.PatternCalendar.fromCivilDate({ date: new Date(), timeZone: deviceZone, boundaryMode: "midnight" }).civilDate
           : null;
       const spark = readSpark();
       const memory = await memoryFor(view);
