@@ -3524,9 +3524,9 @@
     const base = scriptBase();
     const css = document.createElement("link");
     css.rel = "stylesheet";
-    css.href = base.replace(/js\/$/, "css/") + "spark-intro.css?v=20261126-3";
+    css.href = base.replace(/js\/$/, "css/") + "spark-intro.css?v=20261126-4";
     document.head.appendChild(css);
-    loadScript(base + "spark-intro.js?v=20261126-3")
+    loadScript(base + "spark-intro.js?v=20261126-4")
       .catch(() => { /* the tour rests */ });
   }
 
