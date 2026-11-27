@@ -317,6 +317,11 @@
      "area": "archive"
     },
     {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    },
+    {
      "path": "companions.html",
      "title": "Companions",
      "area": "living-time"
@@ -328,7 +333,7 @@
     }
    ],
    "outTotal": 3,
-   "inTotal": 4
+   "inTotal": 5
   },
   "alignment-ledger.html": {
    "title": "Alignment Ledger — The 13 Moons Remnant Living Time Observatory",
@@ -1656,14 +1661,14 @@
      "area": "systems"
     },
     {
-     "path": "episodes.html",
-     "title": "The Episode Library",
+     "path": "aiyanas-world.html",
+     "title": "Aiyana's World",
      "area": "living-time"
     },
     {
-     "path": "witness.html",
-     "title": "Witness",
-     "area": "artifacts"
+     "path": "episodes.html",
+     "title": "The Episode Library",
+     "area": "living-time"
     }
    ],
    "in": [
@@ -18939,11 +18944,6 @@
      "area": "archive"
     },
     {
-     "path": "index.html",
-     "title": "Codex of Reality",
-     "area": "codex"
-    },
-    {
      "path": "witness-world.html",
      "title": "The Witness World — Redirect",
      "area": "codex"
@@ -18955,7 +18955,7 @@
     }
    ],
    "outTotal": 5,
-   "inTotal": 4
+   "inTotal": 3
   }
  }
 }

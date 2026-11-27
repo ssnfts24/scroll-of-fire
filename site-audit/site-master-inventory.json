@@ -8,7 +8,7 @@
     "catalogEntries": 79,
     "issueCounts": {
       "no-global-navigation": 80,
-      "not-linked-directly-from-homepage": 30,
+      "not-linked-directly-from-homepage": 29,
       "deployed-but-unlinked": 64,
       "unreachable-from-homepage": 6,
       "compatibility-redirect-page": 8,
@@ -180,15 +180,13 @@
         "path": "aiyanas-world.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": false,
-        "hopsFromHome": 2,
-        "hopsFromHomeWithoutAtlas": 2,
-        "inboundPages": 4,
+        "linkedFromHomepage": true,
+        "hopsFromHome": 1,
+        "hopsFromHomeWithoutAtlas": 1,
+        "inboundPages": 5,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": [
-        "not-linked-directly-from-homepage"
-      ]
+      "issues": []
     },
     {
       "id": "alignment-ledger",
@@ -2170,6 +2168,7 @@
       "relatedPages": [
         "13-moon-whitepaper.html",
         "about-aaron.html",
+        "aiyanas-world.html",
         "circle.html",
         "claims-atlas.html",
         "codex-atlas.html",
