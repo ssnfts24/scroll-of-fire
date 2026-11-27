@@ -20,6 +20,8 @@ function read(rel) {
  * - 404.html: error page, served from the domain root with its own base.
  * - offline.html: offline fallback utility page (no stylesheet stack).
  * - caravan.html: meta-refresh redirect stub to covenant-caravan.html.
+ * - aiyana-dashboard.html: Aiyana's private story panel (Nov 26,
+ *   2026) — a child's door, gated server-side; a utility page.
  * - account.html was excluded under Gate G (G2) as a sign-in
  *   utility page; Page Evolution Batch E3 (Nov 25, 2026) brought
  *   it into the one-nav system by the plan's named step, so it
@@ -30,6 +32,7 @@ const EXCLUDED = [
   "404.html",
   "offline.html",
   "caravan.html",
+  "aiyana-dashboard.html",
   // Page programme (Nov 24, 2026): start.html and witness-world.html
   // folded into the front door and the Witness page; redirect stubs.
   "start.html",
@@ -52,6 +55,7 @@ test("the exclusion list is exactly the protected + utility pages", () => {
     "404.html",
     "offline.html",
     "caravan.html",
+    "aiyana-dashboard.html",
     "start.html",
     "witness-world.html",
     "scroll-of-fire-codex-of-reality-remnant-whitepaper.html"

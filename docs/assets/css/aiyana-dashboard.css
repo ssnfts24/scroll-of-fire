@@ -1,0 +1,176 @@
+/* Aiyana's Story Door — her dashboard, built for an 8-year-old.
+   Her colours (from her own page), big words, big buttons,
+   pictures over paragraphs. No small print, no settings maze. */
+
+.aiyana-dash-body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(120% 60% at 15% 0%, #6d3bbd 0%, transparent 55%),
+    radial-gradient(120% 60% at 85% 8%, #2f6fb2 0%, transparent 55%),
+    linear-gradient(165deg, #2b1a4d 0%, #472a6e 60%, #173a5e 100%);
+  color: #fff7e6;
+  font-family: inherit;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -5rem;
+  z-index: 10;
+  background: #ffe9a8;
+  color: #33233d;
+  font-weight: 800;
+  padding: 0.8rem 1.2rem;
+  border-radius: 0 0 1rem 1rem;
+}
+.skip-link:focus { top: 0; }
+
+.aiyana-dash {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 1.2rem 1rem 3rem;
+  font-size: 1.15rem;
+  line-height: 1.5;
+}
+
+.aiyana-dash-sign { position: relative; text-align: center; padding: 1.6rem 0 0.6rem; }
+.aiyana-dash-title {
+  font-size: clamp(2.2rem, 9vw, 3.2rem);
+  margin: 0 0 0.4rem;
+  color: #fff7e6;
+  text-shadow: 0 3px 22px rgba(255, 183, 213, 0.45);
+}
+.aiyana-dash-sub { font-size: 1.25rem; color: #ffd9ec; margin: 0; }
+
+.aiyana-dash-card,
+.aiyana-dash-read {
+  background: #fffaf0;
+  color: #33233d;
+  border-radius: 1.6rem;
+  padding: 1.6rem 1.3rem 1.8rem;
+  margin-top: 1.4rem;
+  box-shadow: 0 18px 44px rgba(10, 4, 30, 0.45);
+}
+.aiyana-dash-card h2, .dash-h { color: #5b2a86; }
+.aiyana-dash-card h2 { font-size: 1.8rem; margin: 0 0 0.6rem; }
+.aiyana-dash-big { font-size: 1.3rem; }
+
+.dash-h { font-size: 1.9rem; margin: 1.8rem 0 0.8rem; text-shadow: 0 2px 14px rgba(10,4,30,.35); color: #ffe9a8; }
+.dash-hello { font-size: 1.35rem; font-weight: 700; color: #ffd9ec; min-height: 1.6em; }
+.dash-empty { font-size: 1.2rem; color: #fff7e6; opacity: 0.92; }
+
+/* ---------- The gate ---------- */
+
+.dash-dots { display: flex; gap: 0.9rem; justify-content: center; margin: 1rem 0 1.2rem; }
+.dash-dot {
+  width: 2rem; height: 2rem; border-radius: 50%;
+  border: 4px solid #7a3b9e; background: transparent;
+}
+.dash-dot.is-filled { background: #f5a301; border-color: #d98a06; }
+
+.dash-words {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.8rem;
+}
+.dash-word {
+  font-size: 1.25rem;
+  font-weight: 800;
+  padding: 1.1rem 0.3rem;
+  border-radius: 1.1rem;
+  border: none;
+  cursor: pointer;
+  color: #33233d;
+  background: #ffe9a8;
+  box-shadow: 0 5px 0 #d98a06;
+}
+.dash-word:active { transform: translateY(3px); box-shadow: 0 2px 0 #d98a06; }
+.dash-word.is-picked { background: #b7e3a8; box-shadow: 0 5px 0 #46a758; }
+
+.dash-gate-line { font-size: 1.2rem; font-weight: 700; color: #7a3b9e; min-height: 1.5em; text-align: center; }
+
+/* ---------- Buttons ---------- */
+
+.dash-btn {
+  display: inline-block;
+  font-weight: 800;
+  border: none;
+  border-radius: 1.2rem;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+}
+.dash-btn-small {
+  font-size: 1.15rem;
+  padding: 0.8rem 1.4rem;
+  background: #e9def7;
+  color: #5b2a86;
+  box-shadow: 0 4px 0 #b79ce0;
+}
+.dash-btn-small:active { transform: translateY(2px); box-shadow: 0 2px 0 #b79ce0; }
+.dash-link { line-height: 1.2; }
+.dash-foot { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 2rem; }
+
+/* ---------- Story cards ---------- */
+
+.dash-story-card {
+  background: #fffaf0;
+  color: #33233d;
+  border-radius: 1.4rem;
+  padding: 1.2rem 1.3rem 1.3rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 10px 26px rgba(10, 4, 30, 0.35);
+}
+.dash-story-card h3 { font-size: 1.55rem; color: #5b2a86; margin: 0 0 0.2rem; }
+.dash-story-card .dash-by { font-weight: 700; color: #7a3b9e; margin: 0 0 0.8rem; font-size: 1.1rem; }
+.dash-read-btn {
+  font-size: 1.3rem;
+  font-weight: 800;
+  padding: 0.9rem 1.8rem;
+  border: none;
+  border-radius: 1.1rem;
+  background: #f5a301;
+  color: #33233d;
+  box-shadow: 0 5px 0 #d98a06;
+  cursor: pointer;
+}
+.dash-read-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #d98a06; }
+.dash-shelf-card h3 { font-size: 1.3rem; }
+
+/* ---------- Reading ---------- */
+
+.dash-read-title { font-size: 2.1rem; color: #5b2a86; margin: 1rem 0 0.2rem; line-height: 1.2; }
+.dash-read-by { font-weight: 700; color: #7a3b9e; font-size: 1.25rem; margin: 0 0 1rem; }
+.dash-read-text { font-size: 1.45rem; line-height: 1.65; }
+.dash-read-text p { margin: 0 0 1em; }
+
+.dash-decide {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.6rem;
+}
+.dash-btn-yes {
+  font-size: 2rem;
+  line-height: 1.1;
+  padding: 1.4rem 0.6rem;
+  background: #46a758;
+  color: #ffffff;
+  box-shadow: 0 7px 0 #2f7a3e;
+}
+.dash-btn-yes span { font-size: 1.15rem; font-weight: 700; }
+.dash-btn-yes:active { transform: translateY(4px); box-shadow: 0 3px 0 #2f7a3e; }
+.dash-btn-notyet {
+  font-size: 1.7rem;
+  padding: 1.4rem 0.6rem;
+  background: #e9def7;
+  color: #5b2a86;
+  box-shadow: 0 7px 0 #b79ce0;
+}
+.dash-btn-notyet:active { transform: translateY(4px); box-shadow: 0 3px 0 #b79ce0; }
+
+@media (max-width: 30rem) {
+  .dash-words { grid-template-columns: repeat(2, 1fr); }
+  .dash-decide { grid-template-columns: 1fr; }
+}

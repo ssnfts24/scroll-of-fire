@@ -1,8 +1,10 @@
 /* Aiyana's World — the page's small machinery.
-   Everything a visitor makes here stays on their own device
-   (browser local storage). Nothing is sent, published, or shared.
-   Stories added at the end wait, on-device, for Aiyana's yes —
-   they never appear on the page by themselves. */
+   Feelings, thoughts, and drawings stay on the visitor's own
+   device (browser local storage); nothing about them is sent.
+   Stories are the one thing that travels: a sent story goes to
+   Aiyana's private waiting place and waits for her yes. It
+   never appears on this page by itself — only the stories she
+   has approved are read back and shown on the shelf below. */
 (function () {
   "use strict";
 
@@ -205,14 +207,47 @@
 
   /* ---------- Stories: the waiting place (held for Aiyana's yes) ---------- */
 
+  var STORIES_API = "/.netlify/functions/aiyana-stories";
+
   var form = document.getElementById("aiyana-story-form");
   var nameInput = document.getElementById("aiyana-story-name");
+  var titleInput = document.getElementById("aiyana-story-title");
   var storyInput = document.getElementById("aiyana-story-text");
   var confirmLine = document.getElementById("aiyana-story-confirm");
   var waitingList = document.getElementById("aiyana-waiting-list");
   var waitingEmpty = document.getElementById("aiyana-waiting-empty");
+  var approvedList = document.getElementById("aiyana-approved-list");
   var waiting = load(WAITING_KEY, []);
   if (!Array.isArray(waiting)) waiting = [];
+
+  var WORDS_MESSAGE = "Some words in your story need changing before Aiyana can read it — try fixing the words and send it again.";
+
+  function sendStory(entry) {
+    if (!window.fetch) return Promise.resolve(null);
+    return fetch(STORIES_API, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        action: "submit",
+        penName: entry.name || "",
+        title: entry.title || "",
+        story: entry.story
+      })
+    })
+      .then(function (res) { return res.json().catch(function () { return null; }); })
+      .catch(function () { return null; });
+  }
+
+  function sentMessage(result) {
+    if (result && result.ok) {
+      return "Your story is in the waiting place. It will only appear on this page if Aiyana says yes.";
+    }
+    if (result && result.reason === "words-to-fix") return WORDS_MESSAGE;
+    if (result && result.reason === "slow-down") {
+      return "You have sent a lot of stories in a row. Rest a little, then send again.";
+    }
+    return "Your story could not travel right now, so it is kept safe on this device. You can try sending it again below.";
+  }
 
   function renderWaiting() {
     if (!waitingList) return;
@@ -223,8 +258,16 @@
       box.className = "aiyana-waiting-story";
       var tag = document.createElement("span");
       tag.className = "aiyana-waiting-tag";
-      tag.textContent = "Waiting for Aiyana's yes";
+      tag.textContent = s.sent ? "Waiting for Aiyana's yes" : "Kept on this device — not sent yet";
       box.appendChild(tag);
+      if (s.title) {
+        var title = document.createElement("p");
+        title.className = "aiyana-note-text";
+        var strong = document.createElement("strong");
+        strong.textContent = s.title;
+        title.appendChild(strong);
+        box.appendChild(title);
+      }
       var text = document.createElement("p");
       text.className = "aiyana-note-text";
       text.textContent = s.story;
@@ -235,6 +278,22 @@
       byText.textContent = s.name ? "— " + s.name : "— no name given";
       by.appendChild(byText);
       box.appendChild(by);
+      if (!s.sent) {
+        var retry = document.createElement("button");
+        retry.type = "button";
+        retry.className = "aiyana-mini-btn";
+        retry.textContent = "Try sending again";
+        retry.addEventListener("click", function () {
+          retry.disabled = true;
+          sendStory(s).then(function (result) {
+            s.sent = !!(result && result.ok);
+            save(WAITING_KEY, waiting);
+            if (confirmLine) confirmLine.textContent = sentMessage(result);
+            renderWaiting();
+          });
+        });
+        box.appendChild(retry);
+      }
       var back = document.createElement("button");
       back.type = "button";
       back.className = "aiyana-mini-btn";
@@ -257,20 +316,60 @@
         storyInput.focus();
         return;
       }
-      waiting.unshift({
+      var entry = {
         id: makeId(),
         name: nameInput ? nameInput.value.trim() : "",
+        title: titleInput ? titleInput.value.trim() : "",
         story: story,
-        ts: Date.now()
-      });
+        ts: Date.now(),
+        sent: false
+      };
+      waiting.unshift(entry);
       save(WAITING_KEY, waiting);
       storyInput.value = "";
       if (nameInput) nameInput.value = "";
-      if (confirmLine) {
-        confirmLine.textContent = "Your story is in the waiting place. It will only appear on this page if Aiyana says yes.";
-      }
+      if (titleInput) titleInput.value = "";
+      if (confirmLine) confirmLine.textContent = "Sending your story to Aiyana's waiting place…";
       renderWaiting();
+      sendStory(entry).then(function (result) {
+        entry.sent = !!(result && result.ok);
+        save(WAITING_KEY, waiting);
+        if (confirmLine) confirmLine.textContent = sentMessage(result);
+        renderWaiting();
+      });
     });
   }
   renderWaiting();
+
+  /* ---------- The shelf: stories Aiyana said yes to ---------- */
+
+  function renderApproved(stories) {
+    if (!approvedList || !Array.isArray(stories)) return;
+    stories.forEach(function (s) {
+      var article = document.createElement("article");
+      article.className = "aiyana-story";
+      var h = document.createElement("h4");
+      h.className = "aiyana-story-title";
+      h.textContent = s.title || "A story";
+      article.appendChild(h);
+      var by = document.createElement("p");
+      by.className = "aiyana-story-by";
+      by.textContent = "by " + (s.penName || "a friend");
+      article.appendChild(by);
+      String(s.story || "").split(/\n+/).forEach(function (para) {
+        if (!para.trim()) return;
+        var p = document.createElement("p");
+        p.textContent = para;
+        article.appendChild(p);
+      });
+      approvedList.appendChild(article);
+    });
+  }
+
+  if (approvedList && window.fetch) {
+    fetch(STORIES_API + "?list=approved")
+      .then(function (res) { return res.ok ? res.json() : null; })
+      .then(function (data) { if (data && data.ok) renderApproved(data.stories); })
+      .catch(function () { /* The shelf keeps Aiyana's own story; the rest can wait. */ });
+  }
 })();

@@ -62,6 +62,10 @@ const EXCLUDED_FILES = new Set([
   "theory/frequency-governance.html",
   // Gate G (G2): account.html is a utility page, as offline.html.
   "account.html",
+  // Aiyana's Story Door (Nov 26, 2026): a child's private story
+  // panel — a utility page, as offline.html; it carries its own
+  // big-button floor for an 8-year-old instead of the site's.
+  "aiyana-dashboard.html",
   // Batch E4 (Nov 25, 2026): a data fragment, not a page — the
   // downloads seal archive rides behind its door, fetched on open.
   "assets/data/downloads-archive.html"

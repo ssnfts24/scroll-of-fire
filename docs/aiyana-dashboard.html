@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <title>Aiyana&rsquo;s Story Door</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#2b1a4d">
+  <meta name="color-scheme" content="dark">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="Aiyana&rsquo;s own door: the stories kids sent to Aiyana&rsquo;s World wait here for her yes.">
+  <link rel="canonical" href="https://codexofreality.org/aiyana-dashboard.html">
+  <link rel="icon" type="image/png" href="assets/img/aiyana/story-door-icon-192.png">
+  <link rel="apple-touch-icon" href="assets/img/aiyana/story-door-icon-192.png">
+  <link rel="manifest" href="aiyana-dashboard.webmanifest">
+  <link rel="stylesheet" href="assets/css/aiyanas-world.css?v=20261122-1">
+  <link rel="stylesheet" href="assets/css/aiyana-dashboard.css?v=20261126-1">
+</head>
+<body class="aiyana-dash-body">
+  <a class="skip-link" href="#dash-main">Skip to the stories</a>
+  <main class="aiyana-dash" id="dash-main">
+
+    <header class="aiyana-dash-sign">
+      <div class="aiyana-sky" aria-hidden="true">
+        <span class="bfly bfly-1"><svg viewBox="0 0 100 80" focusable="false"><path class="wing wing-l" d="M48 38 C20 2, 2 16, 8 36 C12 50, 30 50, 48 42 Z"/><path class="wing wing-r" d="M52 38 C80 2, 98 16, 92 36 C88 50, 70 50, 52 42 Z"/><path class="wing wing-l2" d="M48 45 C28 43, 15 55, 23 65 C31 74, 46 61, 49 49 Z"/><path class="wing wing-r2" d="M52 45 C72 43, 85 55, 77 65 C69 74, 54 61, 51 49 Z"/><ellipse class="bfly-body" cx="50" cy="43" rx="3.4" ry="13"/></svg></span>
+        <span class="bfly bfly-3"><svg viewBox="0 0 100 80" focusable="false"><path class="wing wing-l" d="M48 38 C20 2, 2 16, 8 36 C12 50, 30 50, 48 42 Z"/><path class="wing wing-r" d="M52 38 C80 2, 98 16, 92 36 C88 50, 70 50, 52 42 Z"/><path class="wing wing-l2" d="M48 45 C28 43, 15 55, 23 65 C31 74, 46 61, 49 49 Z"/><path class="wing wing-r2" d="M52 45 C72 43, 85 55, 77 65 C69 74, 54 61, 51 49 Z"/><ellipse class="bfly-body" cx="50" cy="43" rx="3.4" ry="13"/></svg></span>
+      </div>
+      <h1 class="aiyana-dash-title">Aiyana&rsquo;s Story Door</h1>
+      <p class="aiyana-dash-sub">The stories kids sent to your world wait here — for <strong>your</strong> yes.</p>
+    </header>
+
+    <!-- The gate: her three words, in her order. -->
+    <section id="dash-gate" class="aiyana-dash-card" aria-labelledby="dash-gate-title">
+      <h2 id="dash-gate-title">This door is yours, Aiyana</h2>
+      <p class="aiyana-dash-big">Tap your <strong>three secret words</strong>, in your order.</p>
+      <div class="dash-dots" id="dash-dots" aria-hidden="true">
+        <span class="dash-dot"></span><span class="dash-dot"></span><span class="dash-dot"></span>
+      </div>
+      <div class="dash-words" id="dash-words" role="group" aria-label="Secret words"></div>
+      <p class="dash-gate-line" id="dash-gate-line" aria-live="polite">Nobody else can open this door.</p>
+      <p>
+        <button type="button" class="dash-btn dash-btn-small" id="dash-gate-clear">Start over</button>
+      </p>
+    </section>
+
+    <!-- Her lists. -->
+    <section id="dash-home" class="aiyana-dash-home" hidden>
+      <p class="dash-hello" id="dash-hello" aria-live="polite"></p>
+
+      <h2 class="dash-h">New stories for you</h2>
+      <div id="dash-pending"></div>
+      <p class="dash-empty" id="dash-pending-empty">No new stories right now. Your world is quiet — and that is okay.</p>
+
+      <h2 class="dash-h">Stories you said yes to</h2>
+      <div id="dash-shelf"></div>
+      <p class="dash-empty" id="dash-shelf-empty">Stories you say yes to will live here — and on your page, for everyone to read.</p>
+
+      <p class="dash-foot">
+        <button type="button" class="dash-btn dash-btn-small" id="dash-refresh">Look again</button>
+        <a class="dash-btn dash-btn-small dash-link" href="aiyanas-world.html">See my world</a>
+      </p>
+    </section>
+
+    <!-- Reading one story, big. -->
+    <section id="dash-read" class="aiyana-dash-read" hidden aria-labelledby="dash-read-title">
+      <button type="button" class="dash-btn dash-btn-small" id="dash-read-back">&larr; All stories</button>
+      <h2 class="dash-read-title" id="dash-read-title"></h2>
+      <p class="dash-read-by" id="dash-read-by"></p>
+      <div class="dash-read-text" id="dash-read-text"></div>
+      <div class="dash-decide">
+        <button type="button" class="dash-btn dash-btn-yes" id="dash-yes">YES!<br><span>Put it in my world</span></button>
+        <button type="button" class="dash-btn dash-btn-notyet" id="dash-notyet">NOT YET</button>
+      </div>
+      <p class="dash-gate-line" id="dash-read-line" aria-live="polite"></p>
+    </section>
+
+  </main>
+  <script defer src="assets/js/site.js"></script>
+  <script defer src="assets/js/aiyana-dashboard.js?v=20261126-1"></script>
+</body>
+</html>

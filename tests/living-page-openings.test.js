@@ -39,6 +39,9 @@ const EXCLUDED = [
   "404.html",
   "offline.html",
   "caravan.html",
+  // Aiyana's Story Door (Nov 26, 2026): a child's private story
+  // panel — a utility page, as offline.html; no living layer.
+  "aiyana-dashboard.html",
   // Page programme (Nov 24, 2026): the Remnant Whitepaper folded into
   // the Codex White Paper as Part II; this page is a redirect stub now.
   "scroll-of-fire-codex-of-reality-remnant-whitepaper.html",

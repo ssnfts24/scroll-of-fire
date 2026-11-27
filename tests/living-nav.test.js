@@ -35,6 +35,10 @@ const EXCLUDED = new Set([
   "404.html",
   "offline.html",
   "caravan.html",
+  // Aiyana's Story Door (Nov 26, 2026): a child's private story
+  // panel — a utility page, as offline.html. It carries no nav
+  // on purpose; her door is gated server-side.
+  "aiyana-dashboard.html",
   // Page Evolution Batch E3 (Nov 25, 2026): the account page
   // joined the one-nav system — the plan's named step, reversing
   // the Gate G utility exclusion. It is a content page here now.
