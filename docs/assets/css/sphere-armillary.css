@@ -1530,9 +1530,30 @@ html.living-time-sphere-page .sphere-day-world-empty {
 /* On phone widths the stage's own Today pill stands at the
  * bottom-left; the card lifts clear of that row so neither covers
  * the other's words (seen overlapping in the deep-fix lab pass). */
+/* The lift's anchor (sphere experience pass, Nov 27, 2026 —
+ * R1.7 improvement release). The 3.4rem lift cleared the pill
+ * but not the fold: the card docks to #sphere-container's
+ * bottom, and the container's bottom runs past the viewport's
+ * bottom by whatever the chrome above the stage leaves of the
+ * 80dvh floor — measured 32px with the stage standing and
+ * 69px with the day panel open, varying with state — so the
+ * card's tail sat below the fold at phone heights (26px at
+ * 390x844, 47px at 390x740, 14px even at Immersive Day) and
+ * no fixed lift inside the container can be right for every
+ * state. Under phone widths the card now stands fixed
+ * against the viewport's own foot, lifted by the rebuild
+ * dock's own height — its 0.45rem pads, its 54px doors, its
+ * safe-area term and its top border — plus the card's
+ * standing 0.7rem gap, so it rests wholly on screen, above
+ * the doors, at every phone height and stage state. No
+ * ancestor of the card carries a transform or a filter
+ * (measured across the whole chain at the approach, living
+ * and immersive stages), so the fixed anchor is the viewport
+ * itself. Wider stages keep the container dock above. */
 @media (max-width: 720px) {
   html.living-time-sphere-page .sphere-day-world-card {
-    bottom: 3.4rem;
+    position: fixed;
+    bottom: calc(0.45rem + 54px + 0.45rem + env(safe-area-inset-bottom) + 1px + 0.7rem);
   }
 }
 

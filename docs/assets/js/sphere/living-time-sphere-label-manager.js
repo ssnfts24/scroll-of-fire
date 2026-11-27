@@ -1039,6 +1039,38 @@
       _labelDigestCache.set(el, out);
       return out;
     }
+    /*
+     * Size-key memo (sphere lag pass 4, Nov 27, 2026 — R1.7
+     * improvement release; the experience pass's clean drag
+     * re-run). The freezes the keeper feels reproduced on a
+     * quiet box (30 label-motion stretches over 140 ms in one
+     * slow revolution, worst 5,175 ms, a +11 pop-in where a
+     * long pass landed), and the drag attribution's shape
+     * agreed with passes 1–3: after the software rasterizer,
+     * the label system is the remaining JS cost, and its
+     * largest self time is this key (12.7 s self of a
+     * contention-inflated profile). The key is built for
+     * every label on every layout pass — and again for every
+     * plate through the track guard's natural-width key —
+     * and on a size-cache hit its only job is to be compared
+     * against the key the size was stored under; yet building
+     * it assembles a string embedding the label's whole
+     * content digest, so each pass paid that assembly, and
+     * the long comparison, hundreds of times for keys that
+     * had not moved. The built key is now kept per element
+     * beside its exact inputs — the digest memo's own string,
+     * the class dressing, the stage, the band, the width
+     * bucket — and served while every input stands. The
+     * digest memo returns the same string until the content
+     * changes (its observer, and the semantic refresh's
+     * explicit invalidation, govern that), and the rest are
+     * read live on every call and compared, so the moment
+     * any input moves the key is rebuilt by the original
+     * construction below. The key served is byte-for-byte
+     * the key the live build produces; only the rebuilding
+     * is saved.
+     */
+    const _labelSizeKeyCache = new WeakMap();
     function _labelSizeKey(el) {
       // Everything a label's size is a fact of: its class
       // dressing (disc vs card, pinned, selected), its content
@@ -1047,8 +1079,16 @@
       // zoom band and stage, and the width bucket the
       // stylesheet breakpoints answer to. Camera position is
       // not in the key — that is the point.
+      const digest = _labelContentDigest(el);
+      const cls = el.className || "";
+      const stage = _stageEl?.dataset?.zoomStage || "";
+      const band = _semanticContainer?.dataset?.band || "";
       const widthBucket = typeof window !== "undefined" ? Math.round((window.innerWidth || 0) / 80) : 0;
-      return `${el.className || ""}|${_labelContentDigest(el)}|${_stageEl?.dataset?.zoomStage || ""}|${_semanticContainer?.dataset?.band || ""}|${widthBucket}`;
+      const memo = _labelSizeKeyCache.get(el);
+      if (memo && memo.digest === digest && memo.cls === cls && memo.stage === stage && memo.band === band && memo.widthBucket === widthBucket) return memo.key;
+      const key = `${cls}|${digest}|${stage}|${band}|${widthBucket}`;
+      _labelSizeKeyCache.set(el, { digest, cls, stage, band, widthBucket, key });
+      return key;
     }
     function _measuredLabelSize(el, fallbackW, fallbackH) {
       const key = _labelSizeKey(el);

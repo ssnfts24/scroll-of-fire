@@ -751,6 +751,16 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
         // synthetic clicks could not — PR #232 review,
         // Nov 21, 2026).
         el.classList.contains("sphere-rooms-backdrop") ||
+        // The Patterns door row stands with the dock at the
+        // stage's foot (sphere experience pass, Nov 27, 2026 —
+        // R1.7 improvement release): the Day World adapter
+        // homes it directly before the dock, in the dock's own
+        // flex order. Swept into the sheet it is buried at the
+        // sheet's end; left in the adapter's shell fallback it
+        // stood at the stage's top band under the Play pill,
+        // its centre taking the pill's taps. It keeps the
+        // dock's company, like the dock itself above.
+        el.classList.contains("dw-door-row") ||
         el.id === "living-planner-modal" ||
         el.id === "living-command-window" ||
         el.tagName === "SCRIPT" || el.tagName === "TEMPLATE";

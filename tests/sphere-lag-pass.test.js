@@ -215,3 +215,62 @@ test("lag-pass 11: the track frame's nearest neighbour compares squared distance
   const nnBlock = frame.slice(frame.indexOf("let nnSq"), frame.indexOf("entry.shrink ="));
   assert.equal(nnBlock.includes("Math.hypot"), false, "no per-pair Math.hypot remains in the nearest-neighbour search");
 });
+
+/*
+ * The experience pass (Nov 27, 2026 — Aaron: "The entire
+ * sphere experience needs improvements"). The whole-experience
+ * audit measured two plain defects at phone widths and
+ * reproduced the drag freezes on a clean run:
+ *
+ *   - The Patterns door's row landed wherever the boot
+ *     left it: when the adapter ran before the rebuild
+ *     layer created the dock, the row fell back to the
+ *     instrument shell, whose block flow sets it at the
+ *     stage's top band, where the Play pill and the
+ *     selected-day card covered it — hit-tested at
+ *     360/390/430, its centre returned the Play pill; the
+ *     door was unclickable.
+ *   - The Day World card docks to #sphere-container's
+ *     bottom, and the container's bottom runs 32–69px past
+ *     the viewport's bottom depending on state, so the
+ *     card's tail sat below the fold (26px at 390x844,
+ *     47px at 390x740) under any fixed in-container lift.
+ *   - The drag's label-motion freezes reproduced on a
+ *     quiet box (30 stretches over 140 ms, worst 5,175 ms,
+ *     one +11 pop-in), and the label path's largest self
+ *     time was the size key rebuilt per label per pass.
+ *
+ * These pins hold the three fixes' shapes; the values
+ * served — the door's panel, the card's contents, every
+ * label size — are the values the original code served.
+ */
+
+const dayWorldAdapter = read("docs/assets/js/sphere-day-world-adapter.js");
+const dayWorldAdapterCss = read("docs/assets/css/sphere-day-world-adapter.css");
+const armillaryCss = read("docs/assets/css/sphere-armillary.css");
+
+test("lag-pass 12: the Patterns door is homed directly before the dock, in the dock's own flex order, and kept homed through the boot", () => {
+  assert.match(dayWorldAdapter, /const homeDoorRow = \(\) => \{/, "the door's homing stands");
+  assert.match(dayWorldAdapter, /insertBefore\(doorRow, dockNow\)/, "the row is inserted directly before the rebuild dock");
+  assert.equal(dayWorldAdapter.includes("insertBefore(doorRow, dock.nextSibling)"), false, "the row no longer lands after the dock and stays wherever the boot left it");
+  assert.match(dayWorldAdapter, /doorStands >= 3 \|\| doorTries > 60/, "the boot watcher stands down once the row has stood home across three checks");
+  assert.match(armillary, /el\.classList\.contains\("dw-door-row"\)/, "the app shell's sweep keeps the door row at the top level, in the dock's company — swept into the sheet it is buried at the sheet's end");
+  const row = bodyOf(dayWorldAdapterCss, /\.dw-door-row \{([\s\S]*?)\n\}/);
+  assert.match(row, /order: 1;/, "the row carries the dock's flex order, so it rests at the stage's foot beside the dock");
+});
+
+test("lag-pass 13: on phone widths the day card stands fixed against the viewport foot, lifted by the dock's own height", () => {
+  const phone = bodyOf(armillaryCss, /@media \(max-width: 720px\) \{\n  html\.living-time-sphere-page \.sphere-day-world-card \{([\s\S]*?)\n  \}\n\}/);
+  assert.match(phone, /position: fixed;/, "the card anchors to the viewport, not to the container whose bottom runs past the fold");
+  assert.match(phone, /bottom: calc\(0\.45rem \+ 54px \+ 0\.45rem \+ env\(safe-area-inset-bottom\) \+ 1px \+ 0\.7rem\);/, "the lift is the dock's own recipe — its pads, its 54px doors, its safe-area term, its border — plus the card's standing gap");
+  assert.equal(armillaryCss.includes("bottom: 3.4rem"), false, "the old fixed in-container lift, right for no state, is gone");
+});
+
+test("lag-pass 14: the label size key is memoized per element and rebuilt the moment an input moves", () => {
+  assert.match(labelManager, /const _labelSizeKeyCache = new WeakMap\(\);/, "the key memo stands");
+  const keyFn = bodyOf(labelManager, /function _labelSizeKey\(el\) \{([\s\S]*?)\n    \}/);
+  assert.match(keyFn, /const memo = _labelSizeKeyCache\.get\(el\);/, "a standing key is served before any rebuild");
+  assert.match(keyFn, /memo\.digest === digest && memo\.cls === cls && memo\.stage === stage && memo\.band === band && memo\.widthBucket === widthBucket/, "every input of the key is compared live on every call");
+  assert.match(keyFn, /const key = `\$\{cls\}\|\$\{digest\}\|\$\{stage\}\|\$\{band\}\|\$\{widthBucket\}`;/, "a moved input rebuilds the key by the original construction");
+  assert.match(keyFn, /_labelSizeKeyCache\.set\(el, \{ digest, cls, stage, band, widthBucket, key \}\);/, "a rebuilt key is kept for the next check");
+});
