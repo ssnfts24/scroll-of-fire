@@ -298,3 +298,49 @@ test("the Spark rises from its own seat, and its words stand in a pool of shadow
   assert.match(companionCss, /@keyframes spark-pop \{\s*from \{[^}]*scale\(0\.55\)/,
     "the meeting swells up out of its corner seat, small and low");
 });
+
+test("the Spark's name is made to be read, and keeps calm ground", () => {
+  /* Aaron, Nov 26, 2026, 18:06, a second screenshot from
+   * his phone: the pass-five reading was better, but the
+   * Spark's NAME — small, grey — sat half-buried across
+   * the TODAY panel's big headline, "MIRROR" showing
+   * through it. His ruling: "Its name needs to be more
+   * visible also." So the name takes the pool treatment
+   * too: stronger type, and a soft borderless pool of
+   * shadow sized to the name under it, wherever the name
+   * stands with its figure — the roaming presence on
+   * every page, and the stage name on the Spark's home
+   * page. And the name keeps calm ground of its own: the
+   * presence weighs the page's words under the name's
+   * stand and steps the name below or above its figure
+   * when the beside-ground is busy — the name never sits
+   * on page type, and never leaves its Spark. */
+  const companionCss = read("docs/assets/css/spark-companion.css");
+  assert.match(companionCss, /\.spark-presence-name \{[^}]*font-size: 1rem/,
+    "the presence name stands larger");
+  assert.match(companionCss, /\.spark-presence-name \{[^}]*font-weight: 700/,
+    "the presence name stands weightier");
+  assert.match(companionCss, /\.spark-presence-name \{[^}]*color: #fdfaf0/,
+    "the presence name stands brighter");
+  assert.match(companionCss, /--spark-name-pool: radial-gradient/,
+    "the name's pool is a soft radial gradient of shadow");
+  assert.match(companionCss, /\.spark-presence-name::before \{[^}]*background: var\(--spark-name-pool\)/,
+    "a pool of shadow rides under the presence name");
+  assert.match(companionCss, /\.spark-presence-name::before \{[^}]*border-radius: 50%/,
+    "the name's pool is soft-edged — no box, no border, nothing rectangular");
+  assert.match(companionCss, /#spark-big-name::before \{[^}]*background: var\(--spark-name-pool\)/,
+    "the stage name on the Spark's home page stands in the same pool");
+  assert.match(companionCss, /\.spark-presence-button\.name-below/,
+    "the name can step below its figure");
+  assert.match(companionCss, /\.spark-presence-button\.name-above \{[^}]*flex-direction: column-reverse/,
+    "the name can step above its figure");
+  const presence = read("docs/assets/js/spark-presence.js");
+  assert.match(presence, /function calmName/, "the name's ground is weighed where the roam owns the stand");
+  assert.match(presence, /function nameBusyLines/, "the page's own text lines are what the name avoids");
+  assert.match(presence, /range\.getClientRects\(\)/, "lines are weighed, not element boxes — a stand between a headline's lines is calmer than one across its letters");
+  assert.match(presence, /function nameCover/, "a stand for the name is scored by the words it would cover");
+  assert.match(presence, /"name-below": \{ left: cx - nw \/ 2/,
+    "the below-stand is centred on its figure — the name never leaves its Spark");
+  assert.match(presence, /if \(calmName\(state !== "enter"\) === "nudged"\) return;/,
+    "where every side is busy the stand itself nudges, and the walk goes on");
+});
