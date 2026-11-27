@@ -755,7 +755,15 @@
   z-index: 12950;
   display: grid;
   place-items: center;
-  padding: 0.8rem;
+  /* The fit law (pass 8, carried to this popup Nov 27, 2026):
+   * the overlay's breathing room never drops below the
+   * device's own safe-area insets, so the dialog stands wholly
+   * inside the glass on notched and gesture-bar phones too. */
+  padding:
+    max(0.8rem, env(safe-area-inset-top))
+    max(0.8rem, env(safe-area-inset-right))
+    max(0.8rem, env(safe-area-inset-bottom))
+    max(0.8rem, env(safe-area-inset-left));
   background: rgba(1, 5, 8, 0.78);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -821,6 +829,10 @@ body.calendar-atlas-modal-open { overflow: hidden; }
     max-height: 88dvh;
     border-radius: 1.3rem 1.3rem 0 0;
     border-bottom: 0;
+    /* The dialog is the scroll container: its last row keeps
+     * clear of the gesture bar while everything above scrolls
+     * inside the sheet. */
+    padding-bottom: env(safe-area-inset-bottom);
   }
   .calendar-atlas-tabs { position: sticky; top: 0; z-index: 4; background: rgba(7,15,19,0.96); }
 }

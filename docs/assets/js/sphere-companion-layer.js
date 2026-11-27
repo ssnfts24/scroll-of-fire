@@ -883,6 +883,30 @@
     document.head.appendChild(s);
   })();
 
+  // The grid markers (Nov 27, 2026, Aaron's ruling of Nov 26,
+  // 22:57 PST): small holographic emoji under the day numbers of
+  // the Calendar Atlas grid, one per thing the keeper has
+  // scheduled that day, read-only from the one planner record —
+  // and the freeing of the Atlas popup from the rebuilt page's
+  // translated day sheet, so the popup opens on the screen.
+  // Loaded the same way as the schedule layer — a stylesheet and
+  // a script, nothing else in this layer changes. The module
+  // writes no state, keeps no store, and touches no protected
+  // file.
+  (() => {
+    if (document.querySelector("script[data-sphere-schedule-markers]")) return;
+    const css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = "assets/css/sphere-schedule-markers.css?v=20261127-1";
+    css.setAttribute("data-sphere-schedule-markers", "");
+    document.head.appendChild(css);
+    const s = document.createElement("script");
+    s.src = "assets/js/sphere-schedule-markers.js?v=20261127-1";
+    s.async = false;
+    s.setAttribute("data-sphere-schedule-markers", "");
+    document.head.appendChild(s);
+  })();
+
   // ── The Spark's presence on this page was RESET (Nov 20, 2026) ──
   // Aaron's order: a full reset of the Spark layer, built fresh —
   // not patched. The orbit and bubble guide that stood here are
