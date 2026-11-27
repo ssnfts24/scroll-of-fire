@@ -724,6 +724,33 @@
    * change — real content the snapshot describes — flushes it.
    * The values served are the same computation's values; the
    * instrument's own behaviour does not change.
+   *
+   * Drag deferral (Sphere lag pass 5, Nov 27, 2026 — R1.7
+   * improvement release; the drag-freeze fix, PR #398's named
+   * follow-up, approved by Aaron). The experience pass's clean
+   * drag re-run reproduced the keeper's sticking on a quiet
+   * box — 30 label-motion stretches over 140 ms in one slow
+   * revolution, worst ~5.2 s, one +11 pop-in — unchanged by
+   * lag passes 1–4, and its attribution caught the mechanism
+   * in the act: the armillary's record-marker refresh, which
+   * runs at boot, on record changes, and every 120 s, asked
+   * getSphereDiagnostics() for the one number it needed (the
+   * selected year) and paid a fresh whole-document census
+   * whenever the 30 s cadence had lapsed — 4,555 ms inclusive
+   * inside the drag window. The refresh no longer asks (it
+   * reads the year through getSelectedYear below), and this
+   * memo is the belt to that brace: while a drag is in
+   * progress, a lapsed cadence does not collect — the standing
+   * snapshot is served past its TTL, and the first diagnostics
+   * call after the drag ends collects fresh as before. Only
+   * the census waits; every other field of
+   * getSphereDiagnostics() still computes fresh mid-drag, the
+   * standalone getSphereRuntimeDebugSnapshot() still inspects
+   * on demand (a deliberate debug ask is never deferred), and
+   * a drag that begins before any snapshot exists still
+   * collects the first one — there is no standing copy to
+   * serve. The snapshot served is the same computation's
+   * values, carrying its own capturedAt on its face.
    */
   const RUNTIME_DEBUG_TTL_MS = 30000;
   let _runtimeDebugCache = { at: 0, value: null };
@@ -739,10 +766,19 @@
     } catch { /* cache stays off; snapshots run uncached */ }
   }
 
+  function _dragInProgress() {
+    try {
+      if (globalThis.LivingTimeSphereCamera?.isDragging?.()) return true;
+      if (globalThis.LivingTimeSphereInteraction?.getState?.().isDragging) return true;
+    } catch { /* drag state unreadable — the census runs as before */ }
+    return false;
+  }
+
   function _collectRuntimeDebugSnapshotMemoized() {
     _installRuntimeDebugCache();
     if (!_runtimeDebugCacheLive) return _collectRuntimeDebugSnapshot();
     if (_runtimeDebugCache.value && Date.now() - _runtimeDebugCache.at < RUNTIME_DEBUG_TTL_MS) return _runtimeDebugCache.value;
+    if (_runtimeDebugCache.value && _dragInProgress()) return _runtimeDebugCache.value;
     const value = _collectRuntimeDebugSnapshot();
     _runtimeDebugCache = { at: Date.now(), value };
     return value;
@@ -7285,6 +7321,14 @@
     applyLayerPreset: presetName => _applyLayerPreset(document.getElementById("sphere-container"), presetName),
     pauseTemporalPlayback: () => _stopTemporalPlayback("public-api", { announce: true }),
     getSphereDiagnostics,
+    /* The selected year, read straight from the state that
+     * getSphereDiagnostics() embeds as selectedYear — no
+     * model build, no render-surface verification, no census
+     * (Sphere lag pass 5, Nov 27, 2026 — R1.7 improvement
+     * release; the drag-freeze fix). Callers that need only
+     * the year — the armillary's record-marker refresh is the
+     * one that froze drags — read it here. */
+    getSelectedYear: () => Number(_state.year || 0) || null,
     _internals: Object.freeze({
       resolveLiveTodayTarget: _resolveLiveTodayTarget,
       selectedDayFromMarker: _selectedDayFromMarker,

@@ -179,3 +179,144 @@ test("lag-pass 8: the name-tag pass reuses its vectors", () => {
   assert.match(tags, /_tagScratchProjected\.current\.set\(anchor\.x, anchor\.y, anchor\.z\)/, "the projection rides the scratch");
   assert.match(tags, /_tagScratchDrawn\.current\.set\(keptX, keptY, projected\.z\)\.unproject\(_camera\)/, "the unprojection rides the scratch");
 });
+
+/*
+ * Pass 3 (Nov 27, 2026 — Aaron, voice call: "Work on the
+ * performance of the Sphere... Go through it all and see
+ * what can be done"). The bounded drag attribution indicted
+ * what was left of the label system: the size key's digest
+ * rebuilt on every check (2.1–3.6 s self across runs), and
+ * the track frame's per-pair Math.hypot. The width cache
+ * the same profile seemed to indict was exonerated by direct
+ * instrumentation (4 clientWidth reads, ~0 ms, across the
+ * whole drag — the cache holds; the profiler was piling
+ * blocked-render samples onto the deepest small frame).
+ * These pins hold pass 3's shape; the values served are
+ * the values the original code computed.
+ */
+
+test("lag-pass 10: the content digest is memoized and dropped only when content changes", () => {
+  assert.match(labelManager, /const _labelDigestCache = new WeakMap\(\);/, "the digest memo stands");
+  const digest = bodyOf(labelManager, /function _labelContentDigest\(el\) \{([\s\S]*?)\n    \}/);
+  assert.match(digest, /const memo = _labelDigestCache\.get\(el\);/, "a standing digest is served before any walk");
+  assert.match(digest, /if \(memo !== undefined\) return memo;/, "the memo short-circuits the subtree walk");
+  assert.match(digest, /_labelDigestCache\.set\(el, out\);/, "a built digest is kept for the next check");
+  const watch = bodyOf(labelManager, /function _watchLabelDigests\(\) \{([\s\S]*?)\n    \}/);
+  assert.match(watch, /attributeFilter: \["class", "hidden"\]/, "the observer covers the digest's attribute inputs — and not style, which the track loop writes every frame");
+  assert.match(watch, /characterData: true/, "word changes drop the digest");
+  assert.match(watch, /childList: true/, "child changes drop the digest");
+  assert.match(labelManager, /_invalidateLabelDigest\(el\);\n        el\.style\.display = "";/, "the semantic refresh — the one writer an observer cannot see in time — drops its own card's digest before the card's size is read");
+});
+
+test("lag-pass 11: the track frame's nearest neighbour compares squared distances", () => {
+  const frame = bodyOf(labelManager, /function _trackFrame\(\) \{([\s\S]*?)\n    \}/);
+  assert.match(frame, /const dSq = ddx \* ddx \+ ddy \* ddy;/, "pairs compare squared distances");
+  assert.match(frame, /const nn = Number\.isFinite\(nnSq\) \? Math\.sqrt\(nnSq\) : Infinity;/, "the one square root per entry restores the exact distance");
+  const nnBlock = frame.slice(frame.indexOf("let nnSq"), frame.indexOf("entry.shrink ="));
+  assert.equal(nnBlock.includes("Math.hypot"), false, "no per-pair Math.hypot remains in the nearest-neighbour search");
+});
+
+/*
+ * The experience pass (Nov 27, 2026 — Aaron: "The entire
+ * sphere experience needs improvements"). The whole-experience
+ * audit measured two plain defects at phone widths and
+ * reproduced the drag freezes on a clean run:
+ *
+ *   - The Patterns door's row landed wherever the boot
+ *     left it: when the adapter ran before the rebuild
+ *     layer created the dock, the row fell back to the
+ *     instrument shell, whose block flow sets it at the
+ *     stage's top band, where the Play pill and the
+ *     selected-day card covered it — hit-tested at
+ *     360/390/430, its centre returned the Play pill; the
+ *     door was unclickable.
+ *   - The Day World card docks to #sphere-container's
+ *     bottom, and the container's bottom runs 32–69px past
+ *     the viewport's bottom depending on state, so the
+ *     card's tail sat below the fold (26px at 390x844,
+ *     47px at 390x740) under any fixed in-container lift.
+ *   - The drag's label-motion freezes reproduced on a
+ *     quiet box (30 stretches over 140 ms, worst 5,175 ms,
+ *     one +11 pop-in), and the label path's largest self
+ *     time was the size key rebuilt per label per pass.
+ *
+ * These pins hold the three fixes' shapes; the values
+ * served — the door's panel, the card's contents, every
+ * label size — are the values the original code served.
+ */
+
+const dayWorldAdapter = read("docs/assets/js/sphere-day-world-adapter.js");
+const dayWorldAdapterCss = read("docs/assets/css/sphere-day-world-adapter.css");
+const armillaryCss = read("docs/assets/css/sphere-armillary.css");
+
+test("lag-pass 12: the Patterns door is homed directly before the dock, in the dock's own flex order, and kept homed through the boot", () => {
+  assert.match(dayWorldAdapter, /const homeDoorRow = \(\) => \{/, "the door's homing stands");
+  assert.match(dayWorldAdapter, /insertBefore\(doorRow, dockNow\)/, "the row is inserted directly before the rebuild dock");
+  assert.equal(dayWorldAdapter.includes("insertBefore(doorRow, dock.nextSibling)"), false, "the row no longer lands after the dock and stays wherever the boot left it");
+  assert.match(dayWorldAdapter, /doorStands >= 3 \|\| doorTries > 60/, "the boot watcher stands down once the row has stood home across three checks");
+  assert.match(armillary, /el\.classList\.contains\("dw-door-row"\)/, "the app shell's sweep keeps the door row at the top level, in the dock's company — swept into the sheet it is buried at the sheet's end");
+  const row = bodyOf(dayWorldAdapterCss, /\.dw-door-row \{([\s\S]*?)\n\}/);
+  assert.match(row, /order: 1;/, "the row carries the dock's flex order, so it rests at the stage's foot beside the dock");
+});
+
+test("lag-pass 13: on phone widths the day card stands fixed against the viewport foot, lifted by the dock's own height", () => {
+  const phone = bodyOf(armillaryCss, /@media \(max-width: 720px\) \{\n  html\.living-time-sphere-page \.sphere-day-world-card \{([\s\S]*?)\n  \}\n\}/);
+  assert.match(phone, /position: fixed;/, "the card anchors to the viewport, not to the container whose bottom runs past the fold");
+  assert.match(phone, /bottom: calc\(0\.45rem \+ 54px \+ 0\.45rem \+ env\(safe-area-inset-bottom\) \+ 1px \+ 0\.7rem\);/, "the lift is the dock's own recipe — its pads, its 54px doors, its safe-area term, its border — plus the card's standing gap");
+  assert.equal(armillaryCss.includes("bottom: 3.4rem"), false, "the old fixed in-container lift, right for no state, is gone");
+});
+
+test("lag-pass 14: the label size key is memoized per element and rebuilt the moment an input moves", () => {
+  assert.match(labelManager, /const _labelSizeKeyCache = new WeakMap\(\);/, "the key memo stands");
+  const keyFn = bodyOf(labelManager, /function _labelSizeKey\(el\) \{([\s\S]*?)\n    \}/);
+  assert.match(keyFn, /const memo = _labelSizeKeyCache\.get\(el\);/, "a standing key is served before any rebuild");
+  assert.match(keyFn, /memo\.digest === digest && memo\.cls === cls && memo\.stage === stage && memo\.band === band && memo\.widthBucket === widthBucket/, "every input of the key is compared live on every call");
+  assert.match(keyFn, /const key = `\$\{cls\}\|\$\{digest\}\|\$\{stage\}\|\$\{band\}\|\$\{widthBucket\}`;/, "a moved input rebuilds the key by the original construction");
+  assert.match(keyFn, /_labelSizeKeyCache\.set\(el, \{ digest, cls, stage, band, widthBucket, key \}\);/, "a rebuilt key is kept for the next check");
+});
+
+/*
+ * Pass 5 (Nov 27, 2026 — the drag-freeze fix; PR #398's named
+ * follow-up, approved by Aaron after the experience pass
+ * reported it). The experience pass's clean re-run reproduced
+ * the freezes (30 stretches over 140 ms, worst ~5.2 s, one
+ * +11 pop-in) with passes 1–4 already in, and the attribution
+ * caught the remaining mechanism in the act: the armillary's
+ * record-marker refresh — boot, record changes, every 120 s —
+ * called getSphereDiagnostics() only to read selectedYear,
+ * and a lapsed 30 s cadence made that call pay a fresh
+ * whole-document census (4,555 ms inclusive) inside the drag
+ * window. Two halves: the refresh reads the year through a
+ * cheap accessor on the UI's own state, and the memoized
+ * collector serves its standing snapshot past the TTL while
+ * a drag is in progress, so no caller can land a cold census
+ * mid-drag. getSphereDiagnostics() itself is untouched: its
+ * fields still compute fresh, and the standalone fresh
+ * snapshot still inspects on demand, drag or no drag.
+ */
+
+test("lag-pass 15: the marker refresh reads the year cheaply and buys no census", () => {
+  assert.match(sphereUi, /getSelectedYear: \(\) => Number\(_state\.year \|\| 0\) \|\| null,/, "the UI exports the year straight from the state the diagnostics embed as selectedYear");
+  const start = armillary.indexOf("async function refreshRecordMarkers()");
+  const end = armillary.indexOf("function showSparkAlert", start);
+  assert.ok(start > -1 && end > start, "the record refresh is locatable");
+  const refresh = armillary.slice(start, end);
+  assert.match(refresh, /window\.LivingTimeSphereUi\?\.getSelectedYear\?\.\(\)/, "the refresh reads the year through the cheap accessor");
+  assert.equal(refresh.includes("getSphereDiagnostics?.()"), false, "the refresh performs no diagnostics call — no census on any refresh path");
+  assert.equal(refresh.includes("getSphereDiagnostics()"), false, "no direct diagnostics call either (the declaration comment above the year line names the old call in words only)");
+  assert.match(refresh, /planner\.plansForYear\(year\)/, "the refresh still asks the planner for the year it read");
+});
+
+test("lag-pass 16: a census asked for mid-drag is served the standing snapshot until the drag ends", () => {
+  const drag = bodyOf(sphereUi, /function _dragInProgress\(\) \{([\s\S]*?)\n  \}/);
+  assert.match(drag, /globalThis\.LivingTimeSphereCamera\?\.isDragging\?\.\(\)/, "the camera's drag is consulted");
+  assert.match(drag, /globalThis\.LivingTimeSphereInteraction\?\.getState\?\.\(\)\.isDragging/, "the interaction layer's drag is consulted");
+  const memo = bodyOf(sphereUi, /function _collectRuntimeDebugSnapshotMemoized\(\) \{([\s\S]*?)\n  \}/);
+  const ttlServe = memo.indexOf("Date.now() - _runtimeDebugCache.at < RUNTIME_DEBUG_TTL_MS");
+  const dragServe = memo.indexOf("if (_runtimeDebugCache.value && _dragInProgress()) return _runtimeDebugCache.value;");
+  const collect = memo.indexOf("const value = _collectRuntimeDebugSnapshot();");
+  assert.ok(ttlServe >= 0 && dragServe > ttlServe, "past the TTL, a standing snapshot is served while a drag is in progress");
+  assert.ok(collect > dragServe, "collection happens only when no drag holds it back — the first call after the drag ends collects fresh");
+  const refresh = bodyOf(sphereUi, /function _refreshRuntimeDebugCache\(\) \{([\s\S]*?)\n  \}/);
+  assert.equal(refresh.includes("_dragInProgress"), false, "the standalone fresh snapshot is never deferred — a deliberate debug ask still inspects on demand");
+});
