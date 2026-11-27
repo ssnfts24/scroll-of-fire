@@ -569,14 +569,10 @@
   gap: 14px;
   align-items: stretch;
   max-width: min(400px, calc(100vw - 24px));
-  /* The whole moment stays on screen, even a small one. The
-   * cap is measured from the screen itself (dynamic viewport
-   * units, so browser chrome is never counted as room), the
-   * words scroll inside the card, and the action row is
-   * pinned at the bottom of that scroll — Adopt and Not now
-   * are always on screen, never below a fold (Aaron's A16,
-   * Nov 26, 2026: tour and meeting buttons sat out of reach
-   * on a card taller than the view). */
+  /* The whole moment stays on screen, even a small one: the
+   * cap is in dvh, the words scroll inside the card, and the
+   * actions pin to the scroll's foot — never below a fold
+   * (Aaron's A16, Nov 26, 2026). */
   max-height: min(calc(100dvh - 96px), 760px);
   overflow: hidden;
   padding: 16px;
@@ -732,8 +728,6 @@
   animation: spark-bob 5s ease-in-out infinite;
 }
 
-/* The words are the card's scroll region; the figure stands
- * still beside them and the actions pin to the scroll's foot. */
 .spark-encounter-words {
   flex: 1;
   min-width: 0;
@@ -766,8 +760,6 @@
   gap: 8px;
   margin-top: auto;
   padding-top: 10px;
-  /* Pinned at the foot of the words' scroll: however long
-   * the greeting runs, the buttons never leave the screen. */
   position: sticky;
   bottom: 0;
   background: rgba(13, 18, 32, 0.96);
