@@ -42,6 +42,16 @@
  *      away, tapping a link, or letting the Spark rest ends
  *      the walk, and the Spark glides home to its corner.
  *
+ * And at 17:31, with his phone in his hand: "he should
+ * come up from wherever the spark is on the page. Make
+ * the reading better somehow." So the rise starts at the
+ * Spark's measured seat — the walker's own button, the
+ * stage figure, the ember — and its words carry a soft
+ * pool of shadow that hugs them (the styles), while the
+ * Spark itself settles, at every stop, on the calmest
+ * ground nearby: the page's own words weighed, the
+ * quietest stand taken.
+ *
  * This module never creates or alters a Spark record; the
  * meeting is not its business. Its marks are its own: the
  * introductory's seen/offered flags, and one seen/rest mark
@@ -267,16 +277,35 @@
    * corner seat it left — which stands empty (its furniture
    * hidden) the whole while the Spark is out. */
 
+  /* The Spark's seat: where its figure actually stands on
+   * this page, measured — the walker's own button wherever
+   * it has wandered to, the stage figure on its home page,
+   * the waiting ember, the meeting's figure. (Earlier passes
+   * read the presence host, but the host is the whole
+   * screen, so the Spark "rose" from mid-air. Aaron, Nov 26,
+   * 2026, 17:31: "he should come up from wherever the spark
+   * is on the page.") The rise starts here, and home is
+   * here: the keeper watches his own Spark leave its place. */
   function cornerPoint() {
-    const seat = document.querySelector(".spark-presence, .spark-ember-host");
-    if (seat) {
+    /* In the Spark's own order: its drawn figure first —
+     * in the walker's button, on its home stage, in the
+     * ember, in the meeting — then the furniture around
+     * the figure, then the corner it has always kept. */
+    const selectors = [
+      ".spark-presence-art", "#spark-big-art", ".spark-ember-art",
+      ".spark-encounter-art", ".spark-presence-button", ".spark-ember",
+      ".spark-encounter-artbtn", ".spark-walker"
+    ];
+    for (const sel of selectors) {
+      const seat = document.querySelector(sel);
+      if (!seat) continue;
       const r = seat.getBoundingClientRect();
       if (r.width) return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
     }
     return { x: window.innerWidth - 48, y: window.innerHeight - 54 };
   }
 
-  function createRoamer(record, companion, figureHTML) {
+  function createRoamer(record, companion, figureHTML, fill) {
     const gait = companion.shape ? companion.shape.gait : "stroll";
     const el = document.createElement("div");
     el.className = "spark-roam";
@@ -308,9 +337,19 @@
       flipped: false,
       gone: false
     };
-    /* It rises from the corner seat it left: placed there
-     * without a glide, then it comes up. */
-    placeRoam(roam, cornerPoint(), true);
+    /* The words are laid in before the first placement:
+     * the speech grows the cluster downward from a fixed
+     * top, so a Spark placed before its words arrive would
+     * sink as they land. Filled first, it stands on its
+     * seat from the first frame. */
+    if (fill) fill(roam);
+    /* It rises from the seat it left: placed there without
+     * a glide, then it comes up. The seat is remembered —
+     * the presence underneath may wander on while hidden,
+     * but home is the place the keeper saw it leave, and
+     * that is where it glides back to. */
+    roam.home = cornerPoint();
+    placeRoam(roam, roam.home, true);
     window.requestAnimationFrame(() => el.classList.add("is-here"));
     return roam;
   }
@@ -324,22 +363,120 @@
    * bars along the bottom (the homepage's rail, the Sphere's
    * tabs), and the Spark stands above them, never on them;
    * only the glide home may settle to the very corner. */
-  function placeRoam(roam, point, instant, opts) {
+  /* The figure's centre within the cluster, measured from
+   * the live layout — never reckoned from the cluster's
+   * size, because the speech grows after the Spark first
+   * stands, and a reckoned centre sinks as the words
+   * arrive. Measured, the figure lands on its point
+   * whatever the words are doing. */
+  function figureOffset(roam) {
+    const er = roam.el.getBoundingClientRect();
+    const fr = roam.figureBtn.getBoundingClientRect();
+    if (!er.width || !fr.width) return { dx: 50, dy: (roam.el.offsetHeight || 170) - 50 };
+    return {
+      dx: fr.left + fr.width / 2 - er.left,
+      dy: fr.top + fr.height / 2 - er.top
+    };
+  }
+
+  /* Where the cluster would stand if its figure-centre
+   * were put on the point: the box it would occupy, and
+   * which side its speech would take. placeRoam applies
+   * it; the calm sense below compares candidates with it. */
+  function roamBox(roam, point, opts) {
     const el = roam.el;
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-    const flip = point.x > vw * 0.58;
-    if (flip !== roam.flipped) {
-      roam.flipped = flip;
-      el.classList.toggle("is-flipped", flip);
-    }
     const w = el.offsetWidth || 340;
     const h = el.offsetHeight || 170;
-    const figCx = flip ? w - 50 : 50;
-    const figCy = h - 50;
+    const fig = figureOffset(roam);
     const floor = opts && opts.floor != null ? opts.floor : vh - 4;
-    const x = Math.max(4, Math.min(point.x - figCx, vw - w - 4));
-    const y = Math.max(4, Math.min(point.y - figCy, floor - h));
+    const y = Math.max(4, Math.min(point.y - fig.dy, floor - h));
+    /* The Spark can stand with its words on either side of
+     * it, and on a phone's width the two stands land its
+     * figure in different places. It takes the stand that
+     * lands its figure nearer the point it was given — so
+     * a rise begins as close to its seat as its words
+     * allow, and a stop stands as close to its subject as
+     * it can. (In the layout as it stands the figure may
+     * sit on the other side; mirrored, its distance from
+     * the cluster's far edge is the same measure.) */
+    const stands = roam.flipped
+      ? [{ flip: true, cx: fig.dx }, { flip: false, cx: w - fig.dx }]
+      : [{ flip: false, cx: fig.dx }, { flip: true, cx: w - fig.dx }];
+    let best = null;
+    for (const s of stands) {
+      const x = Math.max(4, Math.min(point.x - s.cx, vw - w - 4));
+      const miss = Math.abs(x + s.cx - point.x);
+      if (!best || miss < best.miss) best = { flip: s.flip, x, miss };
+    }
+    return { flip: best.flip, w, h, x: best.x, y };
+  }
+
+  /* ---- the calm sense ----
+   * The Spark settles where the ground is quietest: it
+   * weighs the page's own words (headings, paragraphs,
+   * lists) behind each nearby candidate stand and takes
+   * the one its speech covers least, so its words are
+   * never shouted over the room's. Aaron, Nov 26, 2026,
+   * 17:31: "Make the reading better somehow." */
+  function busyRects() {
+    const out = [];
+    const els = document.querySelectorAll("h1, h2, h3, p, li, blockquote, figcaption");
+    for (const el of els) {
+      if (el.closest(".spark-roam, .spark-presence, .spark-encounter-host, .spark-ember-host")) continue;
+      const r = el.getBoundingClientRect();
+      if (r.width < 8 || r.height < 8) continue;
+      if (r.bottom < 0 || r.top > window.innerHeight || r.right < 0 || r.left > window.innerWidth) continue;
+      out.push(r);
+      if (out.length >= 420) break;
+    }
+    return out;
+  }
+
+  function calmScore(box, rects) {
+    let score = 0;
+    for (const r of rects) {
+      const ox = Math.min(box.x + box.w, r.right) - Math.max(box.x, r.left);
+      const oy = Math.min(box.y + box.h, r.bottom) - Math.max(box.y, r.top);
+      if (ox > 0 && oy > 0) score += ox * oy;
+    }
+    return score;
+  }
+
+  /* The calmest stand near the point the Spark was headed
+   * for: the point itself, or a short step in any direction
+   * — whichever leaves its words over the quietest ground. */
+  function calmPoint(roam, point, opts) {
+    const rects = busyRects();
+    if (!rects.length) return point;
+    const tries = [
+      point,
+      { x: point.x, y: point.y - 84 },
+      { x: point.x, y: point.y + 84 },
+      { x: point.x - 96, y: point.y },
+      { x: point.x + 96, y: point.y },
+      { x: point.x - 96, y: point.y - 84 },
+      { x: point.x + 96, y: point.y - 84 }
+    ];
+    let best = point;
+    let bestScore = Infinity;
+    for (const t of tries) {
+      const s = calmScore(roamBox(roam, t, opts), rects);
+      if (s < bestScore) { bestScore = s; best = t; }
+    }
+    return best;
+  }
+
+  function placeRoam(roam, point, instant, opts) {
+    const el = roam.el;
+    const box = roamBox(roam, point, opts);
+    if (box.flip !== roam.flipped) {
+      roam.flipped = box.flip;
+      el.classList.toggle("is-flipped", box.flip);
+    }
+    const x = box.x;
+    const y = box.y;
     if (instant) el.classList.add("no-glide");
     el.style.transform = `translate(${Math.round(x)}px, ${Math.round(y)}px)`;
     if (instant) {
@@ -364,7 +501,7 @@
     if (roam.gone) return;
     roam.gone = true;
     stopSpeaking();
-    placeRoam(roam, cornerPoint());
+    placeRoam(roam, roam.home || cornerPoint());
     roam.el.classList.add("is-leaving");
     window.setTimeout(() => {
       roam.el.remove();
@@ -485,21 +622,32 @@
         const r = target.getBoundingClientRect();
         const vh = window.innerHeight;
         let cy;
+        const cx = Math.max(76, Math.min(r.left + Math.min(r.width / 2, 130), window.innerWidth - 76));
         if (r.height > vh * 0.9) {
           /* A thing taller than the screen: stand near the
            * foot of the part of it that is showing. */
           cy = Math.min(r.bottom, vh) - 150;
         } else {
+          /* Above the thing, or below it — the standing
+           * preference holds, unless the other side is
+           * plainly calmer ground for the words. */
           const above = r.top > 230;
-          cy = above ? r.top - 96 : r.bottom + 96;
+          const cyPref = above ? r.top - 96 : r.bottom + 96;
+          const cyAlt = above ? r.bottom + 96 : r.top - 96;
+          const rects = busyRects();
+          const sPref = calmScore(roamBox(roam, { x: cx, y: cyPref }, { floor: vh - 88 }), rects);
+          const sAlt = calmScore(roamBox(roam, { x: cx, y: cyAlt }, { floor: vh - 88 }), rects);
+          cy = sAlt < sPref * 0.7 ? cyAlt : cyPref;
         }
-        const cx = Math.max(76, Math.min(r.left + Math.min(r.width / 2, 130), window.innerWidth - 76));
         placeRoam(roam, { x: cx, y: cy }, false, { floor: vh - 88 });
         spotted = target;
         window.setTimeout(() => { if (spotted === target && !over) target.classList.add("spark-tour-spot"); }, 520);
         tourScrollUntil = Date.now() + 1200;
       } else {
-        placeRoam(roam, stop.place || stagePoint(0.5, 0.66), false, { floor: window.innerHeight - 88 });
+        /* A stage stop: the Spark stands for itself, and
+         * settles on the calmest ground near its mark. */
+        const stand = calmPoint(roam, stop.place || stagePoint(0.5, 0.66), { floor: window.innerHeight - 88 });
+        placeRoam(roam, stand, false, { floor: window.innerHeight - 88 });
       }
       await sleep(smooth ? 500 : 40);
       if (token !== walkToken || over) return;
@@ -832,17 +980,19 @@
     if (document.querySelector(".spark-roam.is-tour")) return;
     const name = Core.displayName(record, companion);
     const roam = createRoamer(record, companion,
-      Core.renderSVG(companion, { stage: 0, flameTier: "glyph" }));
+      Core.renderSVG(companion, { stage: 0, flameTier: "glyph" }),
+      (r) => {
+        r.whoEl.textContent = name;
+        r.textEl.textContent = text;
+        r.hintEl.textContent = "Tap me — or choose a word.";
+        r.choicesEl.hidden = false;
+        r.choicesEl.innerHTML =
+          `<button type="button" class="spark-roam-choice is-go"></button>
+           <button type="button" class="spark-roam-choice is-no">Not now</button>`;
+        r.choicesEl.querySelector(".is-go").textContent = goLabel;
+      });
     roam.el.classList.add("is-offer");
-    roam.whoEl.textContent = name;
-    roam.textEl.textContent = text;
-    roam.hintEl.textContent = "Tap me — or choose a word.";
-    roam.choicesEl.hidden = false;
-    roam.choicesEl.innerHTML =
-      `<button type="button" class="spark-roam-choice is-go"></button>
-       <button type="button" class="spark-roam-choice is-no">Not now</button>`;
     const goWord = roam.choicesEl.querySelector(".is-go");
-    goWord.textContent = goLabel;
     let settled = false;
     const restTimer = window.setTimeout(() => settle(null), OFFER_REST_MS);
     function settle(which) {
@@ -857,9 +1007,19 @@
     roam.choicesEl.querySelector(".is-no").addEventListener("click", () => settle("no"));
     roam.figureBtn.setAttribute("aria-label", `${name} is offering to show you around. Tap the Spark to say yes.`);
     roam.figureBtn.addEventListener("click", () => settle("go"));
-    /* It comes up to stand on the page, low and to the left,
-     * where a greeter stands — out of the reading line. */
-    window.setTimeout(() => placeRoam(roam, stagePoint(0.3, 0.8), false, { floor: window.innerHeight - 88 }), 60);
+    /* It comes up from where it lives: a short rise out of
+     * its own seat — up the page a little, toward the middle
+     * a little — and settles on the calmest ground nearby,
+     * never at a stranger's stage mark. */
+    window.setTimeout(() => {
+      const seat = roam.home || cornerPoint();
+      const desired = {
+        x: seat.x + (seat.x > window.innerWidth / 2 ? -40 : 40),
+        y: seat.y - 168
+      };
+      placeRoam(roam, calmPoint(roam, desired, { floor: window.innerHeight - 88 }),
+        false, { floor: window.innerHeight - 88 });
+    }, 60);
   }
 
   /* The offer that follows the meeting: the keeper's own

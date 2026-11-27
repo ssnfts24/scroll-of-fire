@@ -13,7 +13,14 @@
  * gait while it moves; the page scrolls with it to the
  * thing it is showing; a tap on the Spark goes on; and
  * when the walk is over — or the keeper wanders off — the
- * Spark glides home to its corner. */
+ * Spark glides home to its corner.
+ *
+ * At 17:31 the reading itself was corrected: the words
+ * now stand in a soft pool of shadow that hugs them and
+ * travels with the Spark — no box, no border, only the
+ * page falling quiet where the words are — and the Spark
+ * rises from its measured seat and settles, at every
+ * stop, on the calmest ground nearby. */
 
 /* While the Spark is out on the page, its corner seat
  * stands empty: the walker and its panel, the waiting
@@ -97,9 +104,18 @@ body.spark-roam-open .spark-tour-launcher {
 /* Its speech: the words stand beside the Spark in light
  * and shadow — the house's own way of writing on a page
  * (the presence's name has always stood so) — never in a
- * box. A very long speech scrolls within its own measure,
- * so the Spark never has to shout over the whole screen. */
+ * box. And under the words, a pool of shadow: a soft,
+ * borderless darkening, the shadow of the Spark's own
+ * glow, hugging the words only and travelling with them,
+ * so the page beneath falls quiet exactly where the words
+ * stand and nowhere else (Aaron, Nov 26, 2026, 17:31:
+ * "Need to make it more visible in some way in reading…
+ * Make the reading better somehow" — without the window
+ * he twice refused). A very long speech scrolls within
+ * its own measure, so the Spark never has to shout over
+ * the whole screen. */
 .spark-roam-speech {
+  position: relative;
   min-width: 0;
   max-width: min(290px, calc(100vw - 128px));
   color: #f4f1e8;
@@ -109,22 +125,36 @@ body.spark-roam-open .spark-tour-launcher {
     0 0 3px rgba(5, 8, 16, 0.95),
     0 2px 22px rgba(5, 8, 16, 0.85);
 }
+.spark-roam-speech::before {
+  content: "";
+  position: absolute;
+  inset: -30px;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(ellipse 63% 60% at 50% 52%,
+    rgba(3, 5, 10, 0.9) 0%, rgba(3, 5, 10, 0.8) 44%,
+    rgba(3, 5, 10, 0.42) 68%, rgba(3, 5, 10, 0) 84%);
+  pointer-events: none;
+}
 .spark-roam-who {
   margin: 0 0 2px;
   color: #f3c97a;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1.07rem;
 }
 .spark-roam-text {
   margin: 0;
-  line-height: 1.5;
+  font-size: 1.04rem;
+  font-weight: 500;
+  line-height: 1.58;
   max-height: 44dvh;
   overflow-y: auto;
 }
 .spark-roam-hint {
   margin: 6px 0 0;
-  font-size: 0.82rem;
+  font-size: 0.86rem;
   font-style: italic;
-  color: #cfd6e2;
+  color: #e2e8f2;
 }
 
 /* Its choices, when it offers: words in its speech, not
@@ -167,6 +197,19 @@ body.spark-roam-open .spark-tour-launcher {
   color: #f4f1e8;
   pointer-events: none;
 }
+/* What it holds up gets the same pool of shadow, so the
+ * day it reads aloud stands clear of the page beneath. */
+.spark-roam-visual::before {
+  content: "";
+  position: absolute;
+  inset: -16px -22px;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(ellipse 64% 62% at 50% 50%,
+    rgba(3, 5, 10, 0.86) 0%, rgba(3, 5, 10, 0.55) 55%,
+    rgba(3, 5, 10, 0) 84%);
+  pointer-events: none;
+}
 .spark-roam-visual.is-sphere { width: 164px; }
 .spark-roam-visual svg { width: 100%; height: auto; display: block; }
 .spark-roam-visual .tour-lit-day {
@@ -186,7 +229,7 @@ body.spark-roam-open .spark-tour-launcher {
     0 1px 8px rgba(5, 8, 16, 0.95),
     0 0 3px rgba(5, 8, 16, 0.95);
 }
-.tour-day-disc strong { color: #f3c97a; font-size: 1.05rem; }
+.tour-day-disc strong { color: #f3c97a; font-size: 1.14rem; }
 .tour-day-disc em { color: #b9c2cf; font-style: normal; font-size: 0.82rem; }
 
 /* A card the Spark sounds: the card is the object — a
