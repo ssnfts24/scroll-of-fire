@@ -3512,18 +3512,22 @@
       .catch(() => { /* the living layer rests */ });
   }
 
-  /* The introductory tour (Nov 26, 2026) loads lazily behind
-   * the presence, only on pages that carry its "show me" —
-   * the homepage's deferred stack stays exactly as pinned. */
+  /* The Spark's tours (Nov 26, 2026, corrected 16:13) load
+   * lazily behind the presence on every page the presence
+   * walks — each room has its guided tour, the Sphere stage
+   * included, and the tour rides this overlay alone, so no
+   * page's markup (and no protected Sphere file) had to
+   * change to carry it. Still lazy: no page pays for it in
+   * its first load, and the homepage's deferred stack stays
+   * exactly as pinned. */
   function loadIntro() {
     if (window.SparkIntro) return;
-    if (!document.getElementById("spark-intro-show")) return;
     const base = scriptBase();
     const css = document.createElement("link");
     css.rel = "stylesheet";
-    css.href = base.replace(/js\/$/, "css/") + "spark-intro.css?v=20261126-1";
+    css.href = base.replace(/js\/$/, "css/") + "spark-intro.css?v=20261126-2";
     document.head.appendChild(css);
-    loadScript(base + "spark-intro.js?v=20261126-1")
+    loadScript(base + "spark-intro.js?v=20261126-2")
       .catch(() => { /* the tour rests */ });
   }
 

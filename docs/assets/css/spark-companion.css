@@ -567,15 +567,18 @@
 .spark-encounter {
   display: flex;
   gap: 14px;
-  align-items: flex-start;
+  align-items: stretch;
   max-width: min(400px, calc(100vw - 24px));
-  /* The whole moment stays on screen, even a small one: when
-   * the celebration makes the card taller than the view, the
-   * card scrolls within itself rather than leaving the screen.
-   * The cap is measured from the screen itself, so the card's
-   * top always clears the day line and the header. */
+  /* The whole moment stays on screen, even a small one. The
+   * cap is measured from the screen itself (dynamic viewport
+   * units, so browser chrome is never counted as room), the
+   * words scroll inside the card, and the action row is
+   * pinned at the bottom of that scroll — Adopt and Not now
+   * are always on screen, never below a fold (Aaron's A16,
+   * Nov 26, 2026: tour and meeting buttons sat out of reach
+   * on a card taller than the view). */
   max-height: min(calc(100dvh - 96px), 760px);
-  overflow-y: auto;
+  overflow: hidden;
   padding: 16px;
   border-radius: 18px;
   border: 1px solid var(--spark-line);
@@ -729,6 +732,17 @@
   animation: spark-bob 5s ease-in-out infinite;
 }
 
+/* The words are the card's scroll region; the figure stands
+ * still beside them and the actions pin to the scroll's foot. */
+.spark-encounter-words {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
 .spark-encounter-words p {
   margin: 0 0 6px;
   font-size: 0.92rem;
@@ -750,7 +764,13 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 10px;
+  margin-top: auto;
+  padding-top: 10px;
+  /* Pinned at the foot of the words' scroll: however long
+   * the greeting runs, the buttons never leave the screen. */
+  position: sticky;
+  bottom: 0;
+  background: rgba(13, 18, 32, 0.96);
 }
 
 /* The flex above would otherwise outrank the hidden attribute:

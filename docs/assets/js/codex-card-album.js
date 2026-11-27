@@ -508,4 +508,21 @@
     script.defer = true;
     document.head.appendChild(script);
   })();
+
+  /* The Spark's guided tour of this room rides in the same
+   * lazy way (Aaron, Nov 26, 2026): the album stands first,
+   * and the tour module — its offer, its Tour button, the
+   * walk itself — comes behind it. The album page carries no
+   * presence of its own, so the tour loads from here. */
+  (function loadTour() {
+    if (window.SparkIntro) return;
+    var link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "assets/css/spark-intro.css?v=20261126-2";
+    document.head.appendChild(link);
+    var script = document.createElement("script");
+    script.src = "assets/js/spark-intro.js?v=20261126-2";
+    script.defer = true;
+    document.head.appendChild(script);
+  })();
 })();
