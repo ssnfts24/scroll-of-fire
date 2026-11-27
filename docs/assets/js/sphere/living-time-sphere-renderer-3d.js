@@ -1024,6 +1024,21 @@
     try {
       _semanticWidthObserver?.disconnect?.();
       _semanticWidthObserver = new ResizeObserver(() => {
+        /* Only a width change can stale a width cache (Sphere
+         * lag pass, Nov 26, 2026 — R1.7 improvement release).
+         * The observer reports ANY size change, and the stage's
+         * height churns during interaction (the readout and the
+         * dock move as the keeper drags and selects), so the
+         * cache used to die mid-drag and _semanticScreenWidth
+         * paid a forced layout flush per pointer move — 1,279 ms
+         * of self time in the throttled drag profile. The
+         * callback now re-reads the one value the cache holds
+         * (a single read per resize report, not per frame) and
+         * drops the cache only when that value actually moved,
+         * so the width served is always exactly clientWidth. */
+        const cache = _semanticWidthCache;
+        if (!cache) return;
+        if ((cache.el?.clientWidth || 0) === cache.width) return;
         _semanticWidthCache = null;
       });
       _semanticWidthObserver.observe(el);

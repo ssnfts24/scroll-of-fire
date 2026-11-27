@@ -2317,10 +2317,24 @@ if (typeof window !== "undefined") window.SphereReadout = SphereReadoutCore;
     var tries = 0;
     var wait = window.setInterval(function () {
       tries += 1;
-      var diag = null;
-      try { diag = window.LivingTimeSphereUi && window.LivingTimeSphereUi.getSphereDiagnostics ? window.LivingTimeSphereUi.getSphereDiagnostics() : null; } catch (err) { diag = null; }
       var btn = document.getElementById("sphere-interact-btn");
       var endBtn = document.getElementById("sphere-interact-end-btn");
+      /* Interact already on — the rebuild layer's arming watch
+       * pressed the button first (its posture is the UI's own:
+       * end button shown, start button hidden). The poll's one
+       * purpose is achieved, so it stands down here, on two DOM
+       * reads. It used to poll on regardless — its success
+       * condition can never fire once another hand has armed —
+       * and every tick paid a full getSphereDiagnostics(), whose
+       * embedded whole-document inspection was measured as the
+       * page's dominant main-thread cost (Sphere lag pass,
+       * Nov 26, 2026: ~96% of a throttled drag profile). */
+      if (btn && endBtn && endBtn.style.display !== "none" && btn.style.display === "none") {
+        window.clearInterval(wait);
+        return;
+      }
+      var diag = null;
+      try { diag = window.LivingTimeSphereUi && window.LivingTimeSphereUi.getSphereDiagnostics ? window.LivingTimeSphereUi.getSphereDiagnostics() : null; } catch (err) { diag = null; }
       if (diag && diag.threeDReady && btn && endBtn && endBtn.style.display === "none") {
         window.clearInterval(wait);
         btn.click();
