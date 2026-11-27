@@ -271,6 +271,20 @@
    "outTotal": 2,
    "inTotal": 0
   },
+  "aiyana-dashboard.html": {
+   "title": "Aiyana&rsquo;s Story Door",
+   "area": "codex",
+   "out": [
+    {
+     "path": "aiyanas-world.html",
+     "title": "Aiyana's World",
+     "area": "living-time"
+    }
+   ],
+   "in": [],
+   "outTotal": 1,
+   "inTotal": 0
+  },
   "aiyanas-world.html": {
    "title": "Aiyana's World",
    "area": "living-time",
@@ -293,6 +307,11 @@
    ],
    "in": [
     {
+     "path": "aiyana-dashboard.html",
+     "title": "Aiyana&rsquo;s Story Door",
+     "area": "codex"
+    },
+    {
      "path": "codex-atlas.html",
      "title": "Codex Atlas",
      "area": "archive"
@@ -309,7 +328,7 @@
     }
    ],
    "outTotal": 3,
-   "inTotal": 3
+   "inTotal": 4
   },
   "alignment-ledger.html": {
    "title": "Alignment Ledger — The 13 Moons Remnant Living Time Observatory",

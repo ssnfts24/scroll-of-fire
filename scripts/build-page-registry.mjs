@@ -89,7 +89,7 @@ const DOMAIN_RULES = [
   [p => p === "companions.html" || p === "codex-guide.html" || p === "card-album.html", "Spark"],
   [p => p === "witness-world.html" || p === "spark-echo.html", "Play"],
   [p => [
-    "about-aaron.html", "aiyanas-world.html", "caravan.html",
+    "about-aaron.html", "aiyanas-world.html", "aiyana-dashboard.html", "caravan.html",
     "covenant-caravan.html", "episodes.html", "map.html",
   ].includes(p), "Stories"],
   [p => p === "witness.html", "Community"],

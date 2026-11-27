@@ -147,7 +147,7 @@
   <main id="main" class="aiyana-main">
 
     <!-- Aiyana's sign — her words, her butterflies. -->
-    <section class="aiyana-sign" aria-labelledby="aiyana-sign-title">
+    <section class="aiyana-sign" id="aiyana-sign" aria-labelledby="aiyana-sign-title">
       <div class="aiyana-sky" aria-hidden="true">
         <span class="bfly bfly-1"><svg viewBox="0 0 100 80" focusable="false"><path class="wing wing-l" d="M48 38 C20 2, 2 16, 8 36 C12 50, 30 50, 48 42 Z"/><path class="wing wing-r" d="M52 38 C80 2, 98 16, 92 36 C88 50, 70 50, 52 42 Z"/><path class="wing wing-l2" d="M48 45 C28 43, 15 55, 23 65 C31 74, 46 61, 49 49 Z"/><path class="wing wing-r2" d="M52 45 C72 43, 85 55, 77 65 C69 74, 54 61, 51 49 Z"/><ellipse class="bfly-body" cx="50" cy="43" rx="3.4" ry="13"/></svg></span>
         <span class="bfly bfly-2"><svg viewBox="0 0 100 80" focusable="false"><path class="wing wing-l" d="M48 38 C20 2, 2 16, 8 36 C12 50, 30 50, 48 42 Z"/><path class="wing wing-r" d="M52 38 C80 2, 98 16, 92 36 C88 50, 70 50, 52 42 Z"/><path class="wing wing-l2" d="M48 45 C28 43, 15 55, 23 65 C31 74, 46 61, 49 49 Z"/><path class="wing wing-r2" d="M52 45 C72 43, 85 55, 77 65 C69 74, 54 61, 51 49 Z"/><ellipse class="bfly-body" cx="50" cy="43" rx="3.4" ry="13"/></svg></span>
@@ -155,11 +155,20 @@
         <span class="bfly bfly-4"><svg viewBox="0 0 100 80" focusable="false"><path class="wing wing-l" d="M48 38 C20 2, 2 16, 8 36 C12 50, 30 50, 48 42 Z"/><path class="wing wing-r" d="M52 38 C80 2, 98 16, 92 36 C88 50, 70 50, 52 42 Z"/><path class="wing wing-l2" d="M48 45 C28 43, 15 55, 23 65 C31 74, 46 61, 49 49 Z"/><path class="wing wing-r2" d="M52 45 C72 43, 85 55, 77 65 C69 74, 54 61, 51 49 Z"/><ellipse class="bfly-body" cx="50" cy="43" rx="3.4" ry="13"/></svg></span>
         <span class="bfly bfly-5"><svg viewBox="0 0 100 80" focusable="false"><path class="wing wing-l" d="M48 38 C20 2, 2 16, 8 36 C12 50, 30 50, 48 42 Z"/><path class="wing wing-r" d="M52 38 C80 2, 98 16, 92 36 C88 50, 70 50, 52 42 Z"/><path class="wing wing-l2" d="M48 45 C28 43, 15 55, 23 65 C31 74, 46 61, 49 49 Z"/><path class="wing wing-r2" d="M52 45 C72 43, 85 55, 77 65 C69 74, 54 61, 51 49 Z"/><ellipse class="bfly-body" cx="50" cy="43" rx="3.4" ry="13"/></svg></span>
       </div>
-      <p class="aiyana-eyebrow">A little world inside the Codex</p>
+      <p class="aiyana-eyebrow" id="aiyana-headline">A little world inside the Codex</p>
       <h1 id="aiyana-sign-title" class="aiyana-sign-words">Hi, this is Aiyana&rsquo;s world, have fun.</h1>
       <p class="aiyana-credit">Designed by Aiyana herself.</p>
-      <p class="aiyana-intro">This is a place where people can show their thinking and express themselves. Pick how you feel, pin a thought, draw a picture — and at the end, you can share a story.</p>
+      <p class="aiyana-intro" id="aiyana-about">This is a place where people can show their thinking and express themselves. Pick how you feel, pin a thought, draw a picture — and at the end, you can share a story.</p>
+      <p class="aiyana-feel" id="aiyana-feel-line" hidden></p>
+      <div class="aiyana-trim" id="aiyana-trim-sign" hidden aria-hidden="true"></div>
     </section>
+
+    <!-- Her top picture: a block she controls from her dashboard.
+         Hidden until she picks one — her page as it stands today
+         has no picture here. -->
+    <figure class="aiyana-top-picture" id="aiyana-top-picture" hidden>
+      <img id="aiyana-top-picture-img" src="assets/img/aiyana/aiyana-first-story-drawing.webp" width="960" height="612" alt="A picture Aiyana chose for the top of her page." loading="lazy">
+    </figure>
 
     <!-- The middle: feelings + thinking. Everything here lives only on the visitor's own device. -->
     <section class="aiyana-card aiyana-thinking" aria-labelledby="aiyana-thinking-title">
@@ -218,24 +227,28 @@
         <span class="bfly bfly-8"><svg viewBox="0 0 100 80" focusable="false"><path class="wing wing-l" d="M48 38 C20 2, 2 16, 8 36 C12 50, 30 50, 48 42 Z"/><path class="wing wing-r" d="M52 38 C80 2, 98 16, 92 36 C88 50, 70 50, 52 42 Z"/><path class="wing wing-l2" d="M48 45 C28 43, 15 55, 23 65 C31 74, 46 61, 49 49 Z"/><path class="wing wing-r2" d="M52 45 C72 43, 85 55, 77 65 C69 74, 54 61, 51 49 Z"/><ellipse class="bfly-body" cx="50" cy="43" rx="3.4" ry="13"/></svg></span>
         <span class="bfly bfly-9"><svg viewBox="0 0 100 80" focusable="false"><path class="wing wing-l" d="M48 38 C20 2, 2 16, 8 36 C12 50, 30 50, 48 42 Z"/><path class="wing wing-r" d="M52 38 C80 2, 98 16, 92 36 C88 50, 70 50, 52 42 Z"/><path class="wing wing-l2" d="M48 45 C28 43, 15 55, 23 65 C31 74, 46 61, 49 49 Z"/><path class="wing wing-r2" d="M52 45 C72 43, 85 55, 77 65 C69 74, 54 61, 51 49 Z"/><ellipse class="bfly-body" cx="50" cy="43" rx="3.4" ry="13"/></svg></span>
       </div>
+      <div class="aiyana-trim" id="aiyana-trim-stories" hidden aria-hidden="true"></div>
       <h2 id="aiyana-stories-title">Add one thing: share your story</h2>
       <p>Anyone can add <strong>one thing</strong> here: a story of your own.</p>
       <div class="aiyana-rule">
         <p><strong>Aiyana&rsquo;s rule:</strong> this is Aiyana&rsquo;s world, so Aiyana is the boss of what goes on this page. When you add a story, it does <strong>not</strong> appear right away. It goes to a private waiting place. Only stories Aiyana says <strong>yes</strong> to will ever show on this page — and if a story is not good, it doesn&rsquo;t get added.</p>
       </div>
       <form id="aiyana-story-form">
-        <label class="aiyana-label" for="aiyana-story-name">Your name</label>
-        <input id="aiyana-story-name" class="aiyana-input" type="text" maxlength="40" autocomplete="off" placeholder="Your name">
+        <label class="aiyana-label" for="aiyana-story-name">Your story name</label>
+        <input id="aiyana-story-name" class="aiyana-input" type="text" maxlength="40" autocomplete="off" placeholder="A made-up name is best — like StarFox or Pip">
+        <label class="aiyana-label" for="aiyana-story-title">Your story&rsquo;s title</label>
+        <input id="aiyana-story-title" class="aiyana-input" type="text" maxlength="80" autocomplete="off" placeholder="The Brave Little Boat">
         <label class="aiyana-label" for="aiyana-story-text">Your story</label>
         <textarea id="aiyana-story-text" class="aiyana-textarea" rows="5" maxlength="1200" placeholder="Once upon a time…"></textarea>
-        <p><button type="submit" class="aiyana-btn">Put my story in the waiting place</button></p>
+        <p><button type="submit" class="aiyana-btn">Send my story to the waiting place</button></p>
       </form>
       <p class="aiyana-waiting-note" id="aiyana-story-confirm" aria-live="polite"></p>
-      <h3>Stories you added, still waiting for Aiyana&rsquo;s yes</h3>
+      <h3>Stories you sent, still waiting for Aiyana&rsquo;s yes</h3>
       <div id="aiyana-waiting-list">
-        <p class="aiyana-empty" id="aiyana-waiting-empty">You have not added a story yet. When you do, it will wait here — on this device only — until Aiyana says yes.</p>
+        <p class="aiyana-empty" id="aiyana-waiting-empty">You have not sent a story yet. When you do, a copy will wait here on this device so you can see what you sent.</p>
       </div>
-      <h3>Stories Aiyana said yes to</h3>
+      <p class="aiyana-author" id="aiyana-author-line" hidden></p>
+      <h3 id="aiyana-shelf-title">Stories Aiyana said yes to</h3>
       <div class="aiyana-approved">
         <article class="aiyana-story">
           <h4 class="aiyana-story-title">Aiyana&rsquo;s first story</h4>
@@ -249,8 +262,16 @@
             <figcaption>The picture Aiyana drew at the end of her story: a heart, with butterflies.</figcaption>
           </figure>
         </article>
+        <div id="aiyana-approved-list"></div>
       </div>
-      <p class="aiyana-device-note">In this first version, the waiting place is on this device only. Stories are not sent anywhere yet.</p>
+      <p class="aiyana-device-note">Stories sent from this page travel to Aiyana&rsquo;s private waiting place. Only the stories she says yes to ever appear here.</p>
+    </section>
+
+    <!-- Her favourite things: a block she controls from her
+         dashboard. Hidden until she writes some. -->
+    <section class="aiyana-card aiyana-favourites" id="aiyana-favourites" hidden aria-labelledby="aiyana-favourites-title">
+      <h2 id="aiyana-favourites-title">My favourite things</h2>
+      <ul class="aiyana-favourites-list" id="aiyana-favourites-list"></ul>
     </section>
 
     <section class="section-shell" aria-label="Where to next">
@@ -287,6 +308,6 @@
   <script defer src="assets/js/living-ui.js?v=20261117-1"></script>
   <script defer src="assets/js/day-telling.js?v=20261119-1"></script>
   <script defer src="assets/js/social-bridge.js?v=20261119-1"></script>
-  <script defer src="assets/js/aiyanas-world.js?v=20261122-1"></script>
+  <script defer src="assets/js/aiyanas-world.js?v=20261126-2"></script>
 </body>
 </html>
