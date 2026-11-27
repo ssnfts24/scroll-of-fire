@@ -1070,6 +1070,88 @@
     });
   }
 
+  /* ============ THE ATTENDING ============
+   * The demonstration's last beat (Aaron, Nov 27, 2026:
+   * "Take out the 1 through 4 spark thing. Your actual spark
+   * like on the home page etc can help if needed."). The
+   * Sphere's opening film ends on "And then the Spark came" —
+   * and the Spark that comes is the keeper's own, through
+   * this layer, never a figure the demonstration invents for
+   * the beat. The opening calls attend() as its Spark beat
+   * stands: the keeper's Spark rises from its own seat in
+   * its seed's gait, names itself beside itself, and says
+   * its line in its seed voice. It rests home on its own
+   * after a while, at a tap, or at once when the opening
+   * calls dismissAttend(). No record stands → attend
+   * answers false and the beat stays narration, exactly as
+   * ruled: a demo must never present a stand-in as the
+   * keeper's Spark. Nothing here writes to any record. */
+  const ATTEND_REST_MS = 16000;
+  let attendRoam = null;
+  let attendTimer = null;
+
+  async function attend() {
+    const record = readRecord();
+    if (!record) return false;
+    const companion = Core.generate(record.seed);
+    if (!companion) return false;
+    if (attendRoam) return true;
+    /* The Spark is already out — a tour, an offer, the Ask —
+     * or the meeting owns the screen: it does not stack. */
+    if (document.querySelector(".spark-roam")) return false;
+    if (document.querySelector(".spark-encounter")) return false;
+    const name = Core.displayName(record, companion);
+    const kind = companion.kindName || companion.kind || "Spark";
+    const line = `I'm ${name}, your ${kind} Spark. I ride this Sphere with you, and I answer from your record, on this device.`;
+    const roam = createRoamer(record, companion, keeperFigure(record, companion), (r) => {
+      r.whoEl.textContent = name;
+      r.textEl.textContent = line;
+      r.hintEl.textContent = "Tap me to let me rest.";
+    });
+    attendRoam = roam;
+    roam.el.classList.add("is-attend");
+    roam.figureBtn.setAttribute("aria-label", `${name}, your Spark. Tap to let it rest.`);
+    roam.figureBtn.addEventListener("click", () => dismissAttend());
+    /* The same short rise the offers make: up out of its own
+     * seat a little, toward the middle a little, settling on
+     * the calmest ground nearby. When the demonstration
+     * stands, its card holds the stage's upper ground, so
+     * the rise is measured off the card itself: only as far
+     * as keeps the whole cluster below the card, clear of
+     * its controls, and placed exactly — no wandering back
+     * up over them. */
+    window.setTimeout(() => {
+      if (attendRoam !== roam) return;
+      const seat = roam.home || cornerPoint();
+      const floorOpts = { floor: window.innerHeight - 88 };
+      const desired = {
+        x: seat.x + (seat.x > window.innerWidth / 2 ? -40 : 40),
+        y: seat.y - 168
+      };
+      const card = document.querySelector("[data-evolution-opening] .evo-card");
+      if (card) {
+        const cardBottom = card.getBoundingClientRect().bottom;
+        const figDy = seat.y - roamBox(roam, seat, floorOpts).y;
+        desired.y = Math.min(seat.y, Math.max(desired.y, cardBottom + 10 + figDy));
+        placeRoam(roam, desired, false, floorOpts);
+        return;
+      }
+      placeRoam(roam, calmPoint(roam, desired, floorOpts), false, floorOpts);
+    }, 60);
+    await ensureVoice();
+    if (attendRoam === roam) speak(companion, line);
+    attendTimer = window.setTimeout(() => dismissAttend(), ATTEND_REST_MS);
+    return true;
+  }
+
+  function dismissAttend() {
+    if (!attendRoam) return;
+    const roam = attendRoam;
+    attendRoam = null;
+    window.clearTimeout(attendTimer);
+    sendHome(roam);
+  }
+
   /* ============ THE ASKING ============
    * The Spark, asked (Aaron, Nov 26, 2026, 19:42 PST:
    * "The spark needs to be way more intelligent"). The
@@ -1470,7 +1552,7 @@
     window.setTimeout(() => offerPageTour(record), 3500);
   }
 
-  window.SparkIntro = { start: startQuickTour, startPageTour, offerIntroTour, ask: startAsk };
+  window.SparkIntro = { start: startQuickTour, startPageTour, offerIntroTour, ask: startAsk, attend, dismissAttend };
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", boot);

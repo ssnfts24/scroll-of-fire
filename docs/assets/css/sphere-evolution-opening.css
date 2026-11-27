@@ -105,6 +105,15 @@
   font-size: 1.02rem;
 }
 
+/* The Spark's beat: the card stands high in the stage, so
+   the ground at the stage's foot stays free for the keeper's
+   own Spark to attend through the presence layer — it rises
+   from its seat down there, and its words never have to
+   cross the card's controls (Aaron, Nov 27, 2026). */
+.evo-opening[data-stage="spark"] {
+  align-items: flex-start;
+}
+
 /* The sound invitation, carried inside the scene: it stands
    from the welcome until the first touch lets the score in,
    breathing slowly, never blinking. */
@@ -349,38 +358,14 @@
 }
 
 /* ── Stage 4: the Spark ─────────────────────────────────────── */
-
-.evo-spark-figure {
-  width: 118px;
-  height: 118px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: evo-in 0.45s ease both, evo-drift 5.5s ease-in-out 0.5s infinite;
-}
-
-.evo-spark-figure svg {
-  width: 100%;
-  height: 100%;
-}
-
-@keyframes evo-drift {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-7px); }
-}
-
-.evo-tour-count {
-  margin: 0;
-  font-size: 0.74rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(241, 233, 214, 0.55);
-}
+/* Narration only — the demonstration casts no Spark, so this
+   stage carries no figure styles of its own (Aaron, Nov 27,
+   2026). The keeper's Spark attends through the presence
+   layer, in that layer's own dress. */
 
 /* ── Reduced motion: stills, same words ─────────────────────── */
 
-.evo-opening.is-still .evo-visual > *,
-.evo-opening.is-still .evo-spark-figure {
+.evo-opening.is-still .evo-visual > * {
   animation: none;
 }
 
@@ -390,7 +375,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .evo-opening .evo-visual > *,
-  .evo-spark-figure,
   .evo-opening .evo-sound,
   .evo-opening .evo-card {
     animation: none;
@@ -419,9 +403,5 @@
   }
   .evo-first-sphere-svg {
     width: min(300px, 82vw);
-  }
-  .evo-spark-figure {
-    width: 96px;
-    height: 96px;
   }
 }

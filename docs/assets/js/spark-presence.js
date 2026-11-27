@@ -3675,7 +3675,7 @@
     css.rel = "stylesheet";
     css.href = base.replace(/js\/$/, "css/") + "spark-intro.css?v=20261126-7";
     document.head.appendChild(css);
-    loadScript(base + "spark-intro.js?v=20261126-7")
+    loadScript(base + "spark-intro.js?v=20261127-1")
       .catch(() => { /* the tour rests */ });
   }
 

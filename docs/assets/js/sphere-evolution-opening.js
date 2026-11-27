@@ -29,12 +29,20 @@
    *   3. The Sphere Now — the overlay steps aside and the visitor
    *      is standing in front of the real Sphere, live. No second
    *      canvas, no picture of it: the instrument itself.
-   *   4. The Spark Appears — the Spark (the keeper's own, drawn by
-   *      the Spark core's own renderer when a companion record
-   *      stands on this device; otherwise the plain orb of light
-   *      the films use) gives the intro: what this is, how to turn
-   *      and dive, the rings in one breath, and the first beat of
-   *      keeping a day — ending by stepping back to quiet.
+   *   4. The Spark Appears — narration only. The demonstration
+   *      presents no Spark of its own: no figure, no name, no
+   *      tour (Aaron, Nov 27, 2026: "Take out the 1 through 4
+   *      spark thing. Your actual spark like on the home page
+   *      etc can help if needed."). A demo must never present a
+   *      generated stand-in as the keeper's Spark. Instead, as
+   *      this beat stands, the keeper's actual Spark — when a
+   *      companion record stands on this device — is invited
+   *      through the page's presence layer (SparkIntro.attend):
+   *      it rises from its own seat in its seed's gait and
+   *      speaks its line as itself, by its real name. When no
+   *      record stands, the beat is words alone, and the
+   *      meeting itself stands where it always stood — under
+   *      the Sphere, at the doorstep.
    *
    * The fences, held: this is a demonstration and says so on its
    * face, the whole time. It shows only on a first visit (a local
@@ -61,8 +69,8 @@
    * weighted by each stage's weight, slow crossfades, a gentle
    * push-in, held quiet between the beats (the bible's §10: the
    * road has quiet places; silence here is composed, not empty).
-   * The tour after the film keeps its keeper-paced form, and the
-   * film ends where the opening always ended — the Spark's first
+   * The walk after the film keeps its keeper-paced form, and
+   * the film ends where the opening always ended — the Spark's
    * beat standing, "Take me to today" at the last.
    *
    * The sound is ONE opening cinematic sound — Aaron's word
@@ -98,7 +106,7 @@
    * a first-time visitor of the opening.
    */
 
-  const VERSION = "sphere-evolution-opening/1.2.0";
+  const VERSION = "sphere-evolution-opening/1.3.0";
   const SEEN_KEY = "sof.sphere.evolutionOpening.v2";
   const SESSION_KEY = "sof.sphere.evolutionOpening.session";
 
@@ -300,24 +308,17 @@
     },
   ]);
 
-  // The Spark's intro, one breath at a time. The first step is
-  // filled with the visitor's own situation (their Spark's name,
-  // or the meeting that stands waiting) at show time.
-  const TOUR_STEPS = Object.freeze([
-    { id: "meet", text: "" },
-    {
-      id: "turn",
-      text: "Turn the Sphere with a drag. Dive toward a day to see it stand closer; pull back for the whole year.",
-    },
-    {
-      id: "rings",
-      text: "Rings lay over the year — the farm, the sky, the story. The guide bar under the Sphere lays one over, or a few, and the year reads differently.",
-    },
-    {
-      id: "keep",
-      text: "Keeping a day takes one true thing: tap a day, add a task, a planting, a note — and the day is kept. That is the whole practice.",
-    },
-  ]);
+  // The Spark's beat, as narration. The demonstration tells
+  // this beat; it does not cast it — no figure, no name, no
+  // tour stands in the demo (Aaron, Nov 27, 2026). Which line
+  // stands depends on whether the visitor's own Spark stands
+  // on this device, read at show time, never written in
+  // advance. The Spark itself, when one stands, attends
+  // through the presence layer — see inviteSpark below.
+  const SPARK_LINE_OWN =
+    "Your Spark rides this Sphere with you, and answers from your record, on this device. It stands by the Sphere — tap it there to talk.";
+  const SPARK_LINE_NONE =
+    "The Spark rides this Sphere with its keeper, and answers from their record, on their device. When you meet your own Spark — the meeting stands under the Sphere — it will ride here with you.";
 
   function shouldAutoOpen({ seen, sessionShown, sharedView } = {}) {
     return !seen && !sessionShown && !sharedView;
@@ -387,7 +388,8 @@
     SEEN_KEY,
     SESSION_KEY,
     STAGES,
-    TOUR_STEPS,
+    SPARK_LINE_OWN,
+    SPARK_LINE_NONE,
     FILM_STAGES,
     FILM_TOTAL_MS,
     SWELL_ROOT_MIDI,
@@ -497,41 +499,44 @@
     return data;
   }
 
-  // The visitor's own Spark, when a companion record stands on
-  // this device — read exactly as the Spark seat reads it, drawn
-  // by the core's own renderer. Otherwise the plain orb.
-  function sparkFigure() {
+  // Whether the visitor's own Spark stands on this device —
+  // the same read the Spark seat makes: the companion record,
+  // by its seed. Read-only; the demonstration writes nothing,
+  // and it draws nothing from the record either: the record
+  // only chooses which narration line stands.
+  function hasSparkRecord() {
     try {
       const Core = window.SparkCompanion;
-      if (Core?.generate && Core?.renderSVG && Core?.STORAGE_KEY) {
-        const raw = localStorage.getItem(Core.STORAGE_KEY);
-        const record = raw ? JSON.parse(raw) : null;
-        if (record?.seed) {
-          const companion = Core.generate(record.seed);
-          if (companion) {
-            const stage = Core.stageOf ? Core.stageOf(record, companion) : { index: 0, name: "" };
-            const name = Core.displayName ? Core.displayName(record, companion) : "";
-            return {
-              svg: Core.renderSVG(companion, { stage: stage.index }),
-              name,
-              kindLine: `${companion.kindName || companion.kind || "Spark"}${stage.name ? ` · ${stage.name}` : ""}`,
-              own: true,
-            };
-          }
-        }
-      }
-    } catch { /* fall through to the plain orb */ }
-    return {
-      svg: `<svg viewBox="0 0 100 100" class="evo-spark-orb" role="img" aria-label="The Spark, a round orb of light"><defs><radialGradient id="evo-spark-glow" cx="50%" cy="42%" r="65%"><stop offset="0%" stop-color="#fff7dd" /><stop offset="45%" stop-color="#ffd97a" /><stop offset="100%" stop-color="#f5a83c" /></radialGradient></defs><circle cx="50" cy="50" r="34" fill="url(#evo-spark-glow)" /><circle cx="50" cy="50" r="44" fill="none" stroke="rgba(255,217,122,0.45)" stroke-width="2" /></svg>`,
-      name: "",
-      kindLine: "",
-      own: false,
-    };
+      if (!Core?.STORAGE_KEY) return false;
+      const raw = localStorage.getItem(Core.STORAGE_KEY);
+      const record = raw ? JSON.parse(raw) : null;
+      return Boolean(record?.seed);
+    } catch { return false; }
+  }
+
+  // The Spark's beat invites the keeper's actual Spark
+  // through the page's presence layer — the same layer that
+  // walks the tours and answers the Ask. The Spark rises as
+  // itself, by its real name, in its seed's gait and voice.
+  // If the layer is not standing, or no Spark stands, the
+  // beat remains narration and nothing is invented to fill it.
+  function inviteSpark() {
+    try {
+      const intro = window.SparkIntro;
+      if (intro && typeof intro.attend === "function") intro.attend();
+    } catch { /* the narration stands */ }
+  }
+
+  // Leaving the beat rests the attending Spark back home.
+  function leaveSparkBeat() {
+    try {
+      const intro = window.SparkIntro;
+      if (intro && typeof intro.dismissAttend === "function") intro.dismissAttend();
+    } catch { /* nothing to rest */ }
   }
 
   let overlay = null;
   let stageIndex = 0;
-  let tourIndex = 0;
   let lastFocus = null;
 
   /* ── The film's state ─────────────────────────────────────── */
@@ -623,15 +628,15 @@
     const target = FILM_STAGES[filmIdx];
     crossfadeTo(() => {
       if (!overlay || !filmActive) return;
-      if (target.id === "spark") { stageIndex = STAGES.length - 1; tourIndex = 0; }
+      if (target.id === "spark") { stageIndex = STAGES.length - 1; }
       else stageIndex = filmIdx - 1;
       renderStage();
     });
   }
 
-  // The film's last hold runs out: the Spark's first beat is
-  // standing, and the keeper takes the walk from here — the
-  // tour in its own form, ending at "Take me to today".
+  // The film's last hold runs out: the Spark's beat is
+  // standing, and the keeper takes the walk from here,
+  // ending at "Take me to today".
   function endFilm() {
     if (!overlay) return;
     filmActive = false;
@@ -845,11 +850,13 @@
       `<span class="evo-dot${i === stageIndex ? " is-on" : ""}"></span>`).join("");
     back.hidden = stageIndex === 0;
     todayEl.textContent = "";
-    // The tour's today-door belongs to the tour's last beat only;
-    // renderTour re-creates it there. Never let it linger on
+    // The today-door belongs to the last beat only; the Spark
+    // branch stands it up there. Never let it linger on
     // another stage.
     const staleCta = overlay.querySelector('[data-evo="today-cta"]');
     if (staleCta) staleCta.remove();
+    // Leaving the Spark's beat rests the attending Spark.
+    if (stage.id !== "spark") leaveSparkBeat();
 
     if (stage.id === "calendars") {
       const names = global.PatternCalendarData?.moonNames;
@@ -873,8 +880,22 @@
       todayEl.textContent = todayLine(today);
       next.textContent = "Next";
     } else if (stage.id === "spark") {
-      renderTour(today);
-      next.textContent = tourIndex === TOUR_STEPS.length - 1 ? "Done" : "Next";
+      // Narration only: the demonstration casts no Spark.
+      // The keeper's own Spark, when one stands, attends
+      // through the presence layer beside the card.
+      visual.innerHTML = "";
+      line.textContent = hasSparkRecord() ? SPARK_LINE_OWN : SPARK_LINE_NONE;
+      todayEl.textContent = todayLine(today);
+      next.textContent = "Done";
+      // The last beat offers the visitor the door into today itself.
+      const cta = document.createElement("button");
+      cta.type = "button";
+      cta.className = "evo-btn evo-cta";
+      cta.setAttribute("data-evo", "today-cta");
+      cta.textContent = "Take me to today";
+      cta.addEventListener("click", () => closeOpening(true));
+      overlay.querySelector(".evo-controls").prepend(cta);
+      inviteSpark();
     }
     showSoundCue();
     // During the film the walk drives itself; focus stays
@@ -885,65 +906,15 @@
     }
   }
 
-  function renderTour(today) {
-    if (!overlay) return;
-    const visual = overlay.querySelector('[data-evo="visual"]');
-    const line = overlay.querySelector('[data-evo="line"]');
-    const todayEl = overlay.querySelector('[data-evo="today"]');
-    const fig = sparkFigure();
-    const stepDef = TOUR_STEPS[tourIndex];
-    let text = stepDef.text;
-    if (stepDef.id === "meet") {
-      text = fig.own
-        ? `This is ${fig.name || "your Spark"}${fig.kindLine ? ` — ${fig.kindLine}` : ""}. Your Spark rides this Sphere with you, and answers from your record, on this device. Tap it on the Sphere to talk.`
-        : "The Spark rides this Sphere with its keeper, and answers from their record, on their device. When you meet your own Spark — the meeting stands under the Sphere — it will ride here with you.";
-    }
-    visual.innerHTML = `
-      <div class="evo-spark-figure">${fig.svg}</div>
-      <p class="evo-tour-count">The Spark's tour · ${tourIndex + 1} of ${TOUR_STEPS.length}</p>`;
-    line.textContent = text;
-    todayEl.textContent = stepDef.id === "keep" ? todayLine(today) : "";
-    const next = overlay.querySelector('[data-evo="next"]');
-    next.textContent = tourIndex === TOUR_STEPS.length - 1 ? "Done — take me to the Sphere" : "Next";
-    // The last beat offers the visitor the door into today itself.
-    let cta = overlay.querySelector('[data-evo="today-cta"]');
-    if (stepDef.id === "keep") {
-      if (!cta) {
-        cta = document.createElement("button");
-        cta.type = "button";
-        cta.className = "evo-btn evo-cta";
-        cta.setAttribute("data-evo", "today-cta");
-        cta.textContent = "Take me to today";
-        cta.addEventListener("click", () => closeOpening(true));
-        overlay.querySelector(".evo-controls").prepend(cta);
-      }
-      cta.hidden = false;
-    } else if (cta) {
-      cta.hidden = true;
-    }
-  }
-
   function step(dir) {
     if (!overlay) return;
     // A keeper's step during the film ends the film: the walk
     // is theirs from this beat on.
     stopFilm();
-    const stage = STAGES[stageIndex];
-    if (stage.id === "spark" && dir > 0 && tourIndex < TOUR_STEPS.length - 1) {
-      tourIndex += 1;
-      renderStage();
-      return;
-    }
-    if (stage.id === "spark" && dir < 0 && tourIndex > 0) {
-      tourIndex -= 1;
-      renderStage();
-      return;
-    }
     const nextIndex = stageIndex + dir;
     if (nextIndex < 0) return;
     if (nextIndex >= STAGES.length) { closeOpening(false); return; }
     stageIndex = nextIndex;
-    if (STAGES[stageIndex].id === "spark") tourIndex = 0;
     renderStage();
   }
 
@@ -976,7 +947,6 @@
     if (!overlay) return;
     openingRendered = false;
     stageIndex = 0;
-    tourIndex = 0;
     if (shouldPlayFilm({ reducedMotion })) {
       // The film: it starts moving silently, on its own
       // timing. The first touch arms the sound (see armSound);
@@ -1015,6 +985,7 @@
     // so a botched load never costs them the opening.
     stopFilm();
     stopSound();
+    leaveSparkBeat();
     const el = overlay;
     overlay = null;
     el.classList.add("is-closing");

@@ -8,7 +8,9 @@
  * the stages advancing on their own timing, silent until a
  * first touch arms the score — until a keeper's step takes the
  * walk over: Calendars → First Sphere → the live Sphere → the
- * Spark's tour. It marks itself seen, and never traps the
+ * Spark's beat, which is narration only (Aaron, Nov 27, 2026:
+ * the demonstration casts no Spark of its own). It marks itself
+ * seen, and never traps the
  * visitor: a second visit goes straight to the Sphere with no
  * film at all. The guide bar's "See how it grew" door replays
  * the film by choice, score armed by that very tap; Skip
@@ -257,33 +259,32 @@ test("Evolution Opening: first visit walks the four stages, then never traps", a
   assert.equal(stage3.stage, "sphere-now");
   assert.equal(stage3.reveal, true);
 
-  // Stage 4: the Spark's tour, four beats to the keeping beat.
+  // Stage 4: the Spark's beat — narration only. No figure,
+  // no tour count, no name stands inside the demonstration:
+  // a demo must never present a stand-in as the keeper's
+  // Spark (Aaron, Nov 27, 2026). This visit holds no Spark
+  // record, so the beat is words alone, and the last beat
+  // still offers the door into today.
   await clickNext();
-  for (let i = 0; i < 3; i++) {
-    const tour = await evaluate(`(() => {
-      const el = document.querySelector("[data-evolution-opening]");
-      return {
-        stage: el.dataset.stage,
-        count: el.querySelector(".evo-tour-count")?.textContent || "",
-        hasFigure: !!el.querySelector(".evo-spark-figure svg"),
-      };
-    })()`);
-    assert.equal(tour.stage, "spark");
-    assert.match(tour.count, new RegExp(`tour · ${i + 1} of 4`, "i"));
-    assert.equal(tour.hasFigure, true);
-    await clickNext();
-  }
-  const lastBeat = await evaluate(`(() => {
+  const sparkBeat = await evaluate(`(() => {
     const el = document.querySelector("[data-evolution-opening]");
     return {
-      count: el.querySelector(".evo-tour-count")?.textContent || "",
+      stage: el.dataset.stage,
+      title: el.querySelector('[data-evo="title"]').textContent,
+      count: el.querySelector(".evo-tour-count"),
+      hasFigure: !!el.querySelector(".evo-spark-figure"),
       cta: !!el.querySelector('[data-evo="today-cta"]'),
       line: el.querySelector('[data-evo="line"]').textContent,
+      next: el.querySelector('[data-evo="next"]').textContent,
     };
   })()`);
-  assert.match(lastBeat.count, /tour · 4 of 4/i);
-  assert.equal(lastBeat.cta, true, "the keeping beat offers the door into today");
-  assert.match(lastBeat.line, /kept/);
+  assert.equal(sparkBeat.stage, "spark");
+  assert.match(sparkBeat.title, /Spark came/);
+  assert.equal(sparkBeat.count, null, "no tour count stands in the demo");
+  assert.equal(sparkBeat.hasFigure, false, "no figure stands in the demo");
+  assert.equal(sparkBeat.cta, true, "the last beat offers the door into today");
+  assert.match(sparkBeat.line, /rides this Sphere with its keeper/);
+  assert.equal(sparkBeat.next, "Done");
 
   // Done: the opening closes and marks itself seen.
   await evaluate(`document.querySelector('[data-evo="next"]').click()`);
@@ -319,6 +320,78 @@ test("Evolution Opening: first visit walks the four stages, then never traps", a
   ), 15000, "skip to close the replay");
   assert.equal(await evaluate(`localStorage.getItem("sof.sphere.evolutionOpening.v2")`), "1",
     "the seen flag stands after a skipped replay");
+});
+
+test("Evolution Opening: with a Spark record standing, the keeper's own Spark attends the beat", async (t) => {
+  if (!chromium || typeof WebSocket !== "function") {
+    t.skip("A local Chromium binary and Node WebSocket support are required");
+    return;
+  }
+  const { evaluate, sitePort } = await launch(t);
+  const origin = `http://127.0.0.1:${sitePort}`;
+  /* Seed the keeper's record on this origin before the visit:
+   * the canonical core's own seed for Solra, a Fire Spark
+   * (pinned byte-for-byte in spark-figure-form.test.js). The
+   * page's own tour offer is marked seen so the attending is
+   * the only roam that stands. */
+  await evaluate(`window.location.href = ${JSON.stringify(`${origin}/docs/index.html`)}`).catch(() => {});
+  await new Promise((r) => setTimeout(r, 500));
+  await evaluate(`(() => {
+    localStorage.setItem("sof.spark.v1", JSON.stringify({ seed: "spark1-8-8-0-hgfw3870" }));
+    localStorage.setItem("sof.spark.tours.v1", JSON.stringify({ pages: { "living-time-sphere.html": { seen: true } } }));
+    return true;
+  })()`);
+  await evaluate(`window.location.href = ${JSON.stringify(`${origin}/docs/living-time-sphere.html`)}`).catch(() => {});
+  await waitFor(async () => evaluate(
+    `!!document.querySelector("[data-evolution-opening]")`
+  ), 120000, "the opening to stand for a keeper");
+  await waitFor(async () => evaluate(
+    `document.querySelector("[data-evolution-opening]")?.dataset.stage === "calendars"`
+  ), 20000, "the film to reach the calendars");
+  const clickNext = () => evaluate(
+    `document.querySelector('[data-evo="next"]').click()`
+  );
+  await clickNext();
+  await clickNext();
+  await clickNext();
+  const beat = await evaluate(`(() => {
+    const el = document.querySelector("[data-evolution-opening]");
+    return {
+      stage: el.dataset.stage,
+      hasFigure: !!el.querySelector(".evo-spark-figure"),
+      count: el.querySelector(".evo-tour-count"),
+      line: el.querySelector('[data-evo="line"]').textContent,
+    };
+  })()`);
+  assert.equal(beat.stage, "spark");
+  assert.equal(beat.hasFigure, false, "the demo still casts no figure of its own");
+  assert.equal(beat.count, null, "and no tour count");
+  assert.match(beat.line, /Your Spark rides this Sphere with you/);
+  /* The Spark that stands is the keeper's own, through the
+   * presence layer: a roam in the attending form, naming
+   * itself by the record's real name. */
+  await waitFor(async () => evaluate(
+    `!!document.querySelector(".spark-roam.is-attend")`
+  ), 20000, "the keeper's Spark to attend through the presence layer");
+  const attend = await evaluate(`(() => {
+    const roam = document.querySelector(".spark-roam.is-attend");
+    return {
+      who: roam.querySelector(".spark-roam-who")?.textContent || "",
+      text: roam.querySelector(".spark-roam-text")?.textContent || "",
+      hasArt: !!roam.querySelector(".spark-roam-art svg"),
+    };
+  })()`);
+  assert.equal(attend.who, "Solra", "the attending Spark is the record's own, by its real name");
+  assert.match(attend.text, /I'm Solra, your Fire Spark\./);
+  assert.equal(attend.hasArt, true, "its figure is the core's own rendering of the keeper's seed");
+  /* Closing the opening rests the attending Spark home. */
+  await evaluate(`document.querySelector('[data-evo="skip"]').click()`);
+  await waitFor(async () => evaluate(
+    `!document.querySelector("[data-evolution-opening]")`
+  ), 15000, "the opening to close");
+  await waitFor(async () => evaluate(
+    `!document.querySelector(".spark-roam.is-attend")`
+  ), 15000, "the attending Spark to rest home");
 });
 
 test("Evolution Opening: reduced motion gets the still form, same words", async (t) => {

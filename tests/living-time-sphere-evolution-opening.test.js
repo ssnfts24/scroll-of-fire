@@ -23,11 +23,36 @@ const opening = require(path.join(root, "docs/assets/js/sphere-evolution-opening
 const source = fs.readFileSync(path.join(root, "docs/assets/js/sphere-evolution-opening.js"), "utf8");
 const companionLayer = fs.readFileSync(path.join(root, "docs/assets/js/sphere-companion-layer.js"), "utf8");
 
-test("the deck is four stages and four tour steps, in Aaron's order", () => {
+test("the deck is four stages, in Aaron's order — and the Spark's beat carries no tour", () => {
   assert.deepEqual(opening.STAGES.map((s) => s.id),
     ["calendars", "first-sphere", "sphere-now", "spark"]);
-  assert.deepEqual(opening.TOUR_STEPS.map((s) => s.id),
-    ["meet", "turn", "rings", "keep"]);
+  // Aaron, Nov 27, 2026: "Take out the 1 through 4 spark
+  // thing." The demonstration's own Spark tour is gone —
+  // no steps, no count, no figure of its own.
+  assert.equal(opening.TOUR_STEPS, undefined);
+  assert.doesNotMatch(source, /renderTour|evo-tour-count|evo-spark-figure|sparkFigure/);
+});
+
+test("the Spark's beat is narration, and the keeper's own Spark attends through the presence layer", () => {
+  // Both narration lines stand in the module, chosen at
+  // show time by whether a record stands on the device.
+  assert.match(opening.SPARK_LINE_OWN, /Your Spark rides this Sphere with you/);
+  assert.match(opening.SPARK_LINE_NONE, /rides this Sphere with its keeper/);
+  assert.match(source, /hasSparkRecord\(\) \? SPARK_LINE_OWN : SPARK_LINE_NONE/);
+  // The invitation goes to the presence layer's attending
+  // door — the layer that walks the tours and answers the
+  // Ask — and leaving the beat rests that Spark.
+  assert.match(source, /SparkIntro/);
+  assert.match(source, /intro\.attend\(\)/);
+  assert.match(source, /intro\.dismissAttend\(\)/);
+  // The demonstration generates nothing: no seed is made,
+  // no companion is generated or drawn inside the demo, and
+  // the companion record is never written (the module's own
+  // seen flag is its only store). The record is read only
+  // to choose the narration line.
+  assert.doesNotMatch(source, /Core\.generate|Core\.renderSVG|makeSeed/);
+  assert.doesNotMatch(source, /setItem\(Core\.STORAGE_KEY/);
+  assert.match(source, /hasSparkRecord/);
 });
 
 test("the calendar grid is 13 moons of 28 days from the real names", () => {

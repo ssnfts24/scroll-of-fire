@@ -145,7 +145,7 @@ test("the Sphere's tour rides the overlay alone — no protected file carries or
   const loadIntroBody = presence.slice(presence.indexOf("function loadIntro"));
   assert.ok(!loadIntroBody.slice(0, 600).includes("spark-intro-show"),
     "the tour no longer waits for a Show me button to exist");
-  assert.ok(presence.includes("spark-intro.js?v=20261126-7"), "the presence loads the tour everywhere it walks");
+  assert.ok(presence.includes("spark-intro.js?v=20261127-1"), "the presence loads the tour everywhere it walks");
   assert.ok(presence.includes("spark-intro.css?v=20261126-7"), "the tour styles ride with it");
   /* the album page, which carries no presence, loads its
    * tour the same lazy way from its own module */
@@ -188,6 +188,26 @@ test("no tour ever stacks over the meeting", () => {
   assert.match(introCss, /body\.spark-roam-open \.spark-presence/);
   assert.match(introCss, /body\.spark-roam-open \.spark-ember-host/);
   assert.match(introCss, /body\.spark-roam-open \.spark-tour-launcher/);
+});
+
+test("the attending: the demonstration's Spark beat is served by the keeper's own Spark, through this layer", () => {
+  /* Aaron, Nov 27, 2026: the Sphere demonstration casts no
+   * Spark of its own — when its last beat stands, the
+   * keeper's actual Spark attends through the presence
+   * layer. The door is this module's: attend reads the
+   * record the same way every walk does, and answers false
+   * when no Spark stands, so the beat stays narration. */
+  assert.match(intro, /async function attend\(\)/);
+  assert.match(intro, /function dismissAttend\(\)/);
+  assert.match(intro, /attend, dismissAttend/);
+  const attendBody = intro.slice(intro.indexOf("async function attend"), intro.indexOf("function dismissAttend"));
+  assert.match(attendBody, /readRecord\(\)/, "the attending Spark is the record's own");
+  assert.match(attendBody, /Core\.generate\(record\.seed\)/, "generated from the keeper's seed, never a demo seed");
+  assert.match(attendBody, /Core\.displayName\(record, companion\)/, "it names itself by its real name");
+  assert.match(attendBody, /speak\(companion, line\)/, "and speaks in its seed voice");
+  assert.match(attendBody, /if \(!record\) return false/, "no record — no Spark presented");
+  assert.doesNotMatch(attendBody, /localStorage\.setItem|writeRecord/,
+    "attending writes nothing to any record");
 });
 
 test("the marks stay honest: an old single mark still reads as the keeper's walk seen", () => {

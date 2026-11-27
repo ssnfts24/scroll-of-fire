@@ -711,7 +711,9 @@
   // Aaron's design: the first time a visitor looks at the Sphere
   // page, it shows the calendars — the 13 Moons — then the Sphere
   // as it looked when it first started, then it evolves into the
-  // Sphere it is now; then the Spark appears and gives the tour.
+  // Sphere it is now; then the Spark came — as narration, with
+  // the keeper's own Spark attending through the presence layer
+  // (Aaron, Nov 27, 2026: the demo casts no Spark of its own).
   // Amended the same day, on Aaron's word over the preview: the
   // opening plays itself as a short film — a "Welcome to the
   // Sphere" title beat, the stages on their own timing, a score
@@ -737,11 +739,11 @@
     } catch { /* the catch stands unset; the module falls back */ }
     const css = document.createElement("link");
     css.rel = "stylesheet";
-    css.href = "assets/css/sphere-evolution-opening.css?v=20261123-2";
+    css.href = "assets/css/sphere-evolution-opening.css?v=20261127-1";
     css.setAttribute("data-sphere-evolution-opening", "");
     document.head.appendChild(css);
     const s = document.createElement("script");
-    s.src = "assets/js/sphere-evolution-opening.js?v=20261123-2";
+    s.src = "assets/js/sphere-evolution-opening.js?v=20261127-1";
     s.async = false;
     s.setAttribute("data-sphere-evolution-opening", "");
     document.head.appendChild(s);
@@ -880,6 +882,30 @@
     s.src = "assets/js/sphere-spark-schedule.js?v=20261126-8";
     s.async = false;
     s.setAttribute("data-sphere-spark-schedule", "");
+    document.head.appendChild(s);
+  })();
+
+  // The grid markers (Nov 27, 2026, Aaron's ruling of Nov 26,
+  // 22:57 PST): small holographic emoji under the day numbers of
+  // the Calendar Atlas grid, one per thing the keeper has
+  // scheduled that day, read-only from the one planner record —
+  // and the freeing of the Atlas popup from the rebuilt page's
+  // translated day sheet, so the popup opens on the screen.
+  // Loaded the same way as the schedule layer — a stylesheet and
+  // a script, nothing else in this layer changes. The module
+  // writes no state, keeps no store, and touches no protected
+  // file.
+  (() => {
+    if (document.querySelector("script[data-sphere-schedule-markers]")) return;
+    const css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = "assets/css/sphere-schedule-markers.css?v=20261127-1";
+    css.setAttribute("data-sphere-schedule-markers", "");
+    document.head.appendChild(css);
+    const s = document.createElement("script");
+    s.src = "assets/js/sphere-schedule-markers.js?v=20261127-1";
+    s.async = false;
+    s.setAttribute("data-sphere-schedule-markers", "");
     document.head.appendChild(s);
   })();
 
