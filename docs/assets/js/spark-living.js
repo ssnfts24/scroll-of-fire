@@ -183,12 +183,78 @@
   }
 
   /* ---- the doorstep: one clear invitation ---- */
+
+  /* The answers core, lazy: the doorstep's step is named
+   * from the keeper's real state when the core is at hand. */
+  function answersReady() {
+    if (window.SparkAnswers) return Promise.resolve(true);
+    return new Promise((resolve) => {
+      const tag = document.querySelector('script[src*="spark-living.js"]');
+      const base = tag && tag.src ? tag.src.split("spark-living.js")[0] : "assets/js/";
+      const s = document.createElement("script");
+      s.src = base + "spark-answers.js?v=20261126-6";
+      s.onload = () => resolve(!!window.SparkAnswers);
+      s.onerror = () => resolve(false);
+      document.head.appendChild(s);
+    });
+  }
+
+  /* The state-named step (Aaron, Nov 26, 2026, 19:42):
+   * the invitation stops being generic — it names the
+   * keeper's actual things: the unwitnessed day by its
+   * number and Moon, the room never walked, the card
+   * found yesterday. It stands under the lean's own law —
+   * the core checks the same refusals and shown marks,
+   * with the lean's spans — and the chip's "Not now"
+   * refuses its id exactly as it refuses a leaning's. */
+  function stateNamedStep(lean, record, day) {
+    if (!window.SparkAnswers) return null;
+    try {
+      const state = lean.load();
+      const raw = todayCoordinate();
+      const today = raw ? {
+        moon: raw.moon,
+        day: raw.day,
+        dayOfPatternYear: raw.dayOfPatternYear,
+        moonName: raw.moonName || null,
+        dayName: null,
+        dayGloss: null,
+        outside: !!(raw.isDayOutOfTime || raw.isDeepTimeDay)
+      } : null;
+      const list = window.SparkAnswers.ROOM_LABELS.map(([page, label]) => ({
+        page, label, visits: state.counts["room:" + page] || 0
+      }));
+      const world = {
+        sparkName: null,
+        day,
+        today,
+        sealedDays: Array.isArray(record.practiceDays) ? record.practiceDays : [],
+        cards: null,
+        rooms: list.some((r) => r.visits > 0) ? list : null,
+        moved: state.moved || null,
+        room: null,
+        spans: { refusal: LeanApi.REFUSAL_SLEEP_DAYS, rest: LeanApi.OFFER_REST_DAYS }
+      };
+      return window.SparkAnswers.nextStep(world, state);
+    } catch {
+      return null;
+    }
+  }
+
   function doorstep(lean, record, day) {
     let shown = false;
     try { shown = window.sessionStorage.getItem(SESSION_CHIP) === "1"; } catch { /* rests */ }
     if (shown || day === null) return;
+    answersReady().then(() => showDoorstep(lean, record, day));
+  }
+
+  function showDoorstep(lean, record, day) {
+    let shownNow = false;
+    try { shownNow = window.sessionStorage.getItem(SESSION_CHIP) === "1"; } catch { /* rests */ }
+    if (shownNow) return;
     const sealedToday = Array.isArray(record.practiceDays) && record.practiceDays.includes(day);
-    const offer = LeanApi.chooseOffer(lean.load(), { day, sealedToday });
+    const offer = stateNamedStep(lean, record, day) ||
+      LeanApi.chooseOffer(lean.load(), { day, sealedToday });
     if (!offer) return;
     lean.markShown(offer.id, { day });
     try { window.sessionStorage.setItem(SESSION_CHIP, "1"); } catch { /* rests */ }

@@ -28,7 +28,8 @@
  * Spark, and it is the one standing here. */
 body.spark-roam-open .spark-presence,
 body.spark-roam-open .spark-ember-host,
-body.spark-roam-open .spark-tour-launcher {
+body.spark-roam-open .spark-tour-launcher,
+body.spark-roam-open .spark-ask-launcher {
   visibility: hidden;
 }
 
@@ -331,6 +332,83 @@ body.spark-roam-open .spark-tour-launcher {
 
 .spark-intro-show {
   cursor: pointer;
+}
+
+/* ---- the asking (Nov 26, 2026, 19:42) ----
+ * The offered questions stand in the Spark's speech as
+ * big tappable words, one to a line — a thumb's height
+ * each, gold, the way its offers stand. Under them, the
+ * line to type on: a quiet field in the pool's shadow,
+ * and the Ask word beside it. Nothing here is a window;
+ * it is the Spark's own speech, widened to listen. */
+.spark-roam.is-ask .spark-roam-choices {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  max-height: 36dvh;
+  overflow-y: auto;
+}
+.spark-roam.is-ask .spark-roam-choice {
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: #f3c97a;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-align: left;
+}
+.spark-roam.is-ask .spark-roam-choice.is-go {
+  font-weight: 700;
+}
+.spark-ask-bar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 10px;
+}
+.spark-ask-input {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  font: inherit;
+  font-size: 1rem;
+  color: #f4f1e8;
+  background: rgba(5, 8, 16, 0.55);
+  border: 1px solid rgba(243, 201, 122, 0.45);
+  border-radius: 999px;
+  padding: 9px 14px;
+}
+.spark-ask-input::placeholder { color: #b9c2cf; }
+.spark-ask-send {
+  flex: none;
+  min-height: 44px;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f3c97a;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  padding: 8px 4px;
+}
+
+/* ---- the Ask button: stacked over the Tour button ---- */
+.spark-ask-launcher {
+  position: fixed;
+  right: 12px;
+  bottom: calc(68px + env(safe-area-inset-bottom));
+  min-height: 44px;
+  z-index: 110;
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 8px 14px;
+  border: 1px solid rgba(217, 149, 69, 0.55);
+  background: rgba(8, 11, 22, 0.92);
+  color: #f3c97a;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
 @media (prefers-reduced-motion: reduce) {

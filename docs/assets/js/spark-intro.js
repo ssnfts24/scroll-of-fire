@@ -1064,6 +1064,285 @@
     });
   }
 
+  /* ============ THE ASKING ============
+   * The Spark, asked (Aaron, Nov 26, 2026, 19:42 PST:
+   * "The spark needs to be way more intelligent"). The
+   * keeper taps ✦ Ask, and their own Spark comes up the
+   * same way it tours — loose on the page, words beside
+   * itself in the pool — and can be asked about their own
+   * world in plain words: tapped from the offered
+   * questions, or typed on the line. It answers from the
+   * real records, read in that moment on this device:
+   * the calendar's day, the record's sealed days, the
+   * album's held cards, the lean's counted walks, this
+   * room's own tour knowledge. The answering itself lives
+   * in spark-answers.js, a pure core that can only say
+   * what the snapshot carries — an unread record is
+   * answered as unseen, never as empty, and a question it
+   * cannot ground is answered as not known. No network,
+   * no outside service, and no record is written: the
+   * Spark reads and speaks. This is the keeper's Spark,
+   * not the Codex Guide — that program is a separate,
+   * already-ruled piece, and nothing here builds to it. */
+
+  async function ensureAnswers() {
+    if (window.SparkAnswers) return true;
+    try {
+      await loadScript(scriptBase() + "spark-answers.js?v=20261126-6");
+      return !!window.SparkAnswers;
+    } catch {
+      return false;
+    }
+  }
+
+  async function ensureLean() {
+    if (window.SparkLean) return true;
+    try {
+      await loadScript(scriptBase() + "spark-lean.js?v=20261126-1");
+      return !!window.SparkLean;
+    } catch {
+      return false;
+    }
+  }
+
+  async function ensureCards() {
+    if (window.CodexCards) return true;
+    try {
+      await loadScript(scriptBase() + "codex-cards.js");
+      return !!window.CodexCards;
+    } catch {
+      return false;
+    }
+  }
+
+  /* The snapshot, assembled from the real records in this
+   * moment. Anything that cannot be read stays null, so
+   * the core answers it as unseen — never as empty. */
+  async function collectWorld(record, companion) {
+    await ensureCalendar();
+    const raw = todayCoordinate();
+    const today = raw ? {
+      moon: raw.moon,
+      day: raw.day,
+      dayOfPatternYear: raw.dayOfPatternYear,
+      moonName: raw.moonName || null,
+      dayName: raw.dayArchetype ? raw.dayArchetype[0] : null,
+      dayGloss: raw.dayArchetype ? raw.dayArchetype[1] : null,
+      outside: !!(raw.isDayOutOfTime || raw.isDeepTimeDay)
+    } : null;
+
+    let cards = null;
+    if (await ensureCards()) {
+      try {
+        const store = window.CodexCards.createStore(
+          window.localStorage, window.CodexCards.keeperKeyForSeed(record.seed));
+        cards = store.heldCopies().map((c) => {
+          const design = window.CodexCards.cardById(c.designId);
+          return {
+            name: (design && design.name) || c.designId,
+            foundDay: c.lineage && c.lineage.found ? c.lineage.found.patternDay : null
+          };
+        });
+      } catch { cards = null; }
+    }
+
+    let rooms = null;
+    let moved = null;
+    let leanState = { refusals: {}, shown: {} };
+    if (await ensureLean()) {
+      try {
+        const lean = window.SparkLean.createLean(window.localStorage);
+        const state = lean.load();
+        leanState = state;
+        moved = state.moved || null;
+        if (window.SparkAnswers) {
+          const list = window.SparkAnswers.ROOM_LABELS.map(([page, label]) => ({
+            page, label, visits: state.counts["room:" + page] || 0
+          }));
+          rooms = list.some((r) => r.visits > 0) ? list : null;
+        }
+      } catch { /* the walks rest uncounted */ }
+    }
+
+    let room = null;
+    const page = pageKey();
+    const stops = page === "index.html"
+      ? fallbackStops({ today: raw })
+      : stopsFor(page, { today: raw });
+    if (stops && stops.length) {
+      room = { name: page, about: stops.slice(0, 2).map((s) => s.text).join(" ") };
+    }
+
+    return {
+      world: {
+        sparkName: Core.displayName(record, companion),
+        day: today ? today.dayOfPatternYear : null,
+        today,
+        sealedDays: Array.isArray(record.practiceDays) ? record.practiceDays : [],
+        cards,
+        rooms,
+        moved,
+        room,
+        spans: window.SparkLean
+          ? { refusal: window.SparkLean.REFUSAL_SLEEP_DAYS, rest: window.SparkLean.OFFER_REST_DAYS }
+          : undefined
+      },
+      leanState
+    };
+  }
+
+  let askStarting = false;
+
+  async function startAsk() {
+    if (askStarting || document.querySelector(".spark-roam")) return;
+    askStarting = true;
+    try {
+      dismissOffer();
+      if (!(await yieldToMeeting())) return;
+      const record = readRecord();
+      if (!record) { bringMeeting(); return; }
+      if (document.querySelector(".spark-roam")) return;
+      await runAsk(record);
+    } finally {
+      askStarting = false;
+    }
+  }
+
+  async function runAsk(record) {
+    await ensureVoice();
+    if (!(await ensureAnswers())) return;
+    const companion = Core.generate(record.seed);
+    if (!companion) return;
+    const Answers = window.SparkAnswers;
+    const name = Core.displayName(record, companion);
+
+    const roam = createRoamer(record, companion, keeperFigure(record, companion), (r) => {
+      r.whoEl.textContent = name;
+      r.textEl.textContent =
+        "Ask me about your own world — the day, your cards, the days you've sealed. " +
+        "I answer from your records, here on this device. And when I don't know, I'll say so.";
+      r.hintEl.textContent = "Tap a question — or write your own on the line.";
+    });
+    roam.el.classList.add("is-ask");
+
+    /* The line to type on, under the offered questions —
+     * a keeper has to type somewhere, as with the naming. */
+    const speech = roam.el.querySelector(".spark-roam-speech");
+    const askBar = document.createElement("div");
+    askBar.className = "spark-ask-bar";
+    askBar.innerHTML =
+      `<input type="text" class="spark-ask-input" placeholder="Ask me anything…" ` +
+      `aria-label="Ask your Spark a question" autocomplete="off">` +
+      `<button type="button" class="spark-ask-send">Ask</button>`;
+    speech.appendChild(askBar);
+    const input = askBar.querySelector(".spark-ask-input");
+    const send = askBar.querySelector(".spark-ask-send");
+
+    let over = false;
+    let restTimer = null;
+    const startY = window.scrollY;
+
+    function armRest() {
+      window.clearTimeout(restTimer);
+      restTimer = window.setTimeout(end, ROAM_REST_MS + 15000);
+    }
+
+    function end() {
+      if (over) return;
+      over = true;
+      window.clearTimeout(restTimer);
+      document.removeEventListener("pointerdown", onOutside, true);
+      window.removeEventListener("scroll", onScroll, true);
+      document.removeEventListener("keydown", onKey, true);
+      sendHome(roam);
+    }
+
+    function onOutside(e) {
+      if (e.target.closest && e.target.closest(".spark-roam")) return;
+      end();
+    }
+
+    function onScroll() {
+      if (Math.abs(window.scrollY - startY) > 160) end();
+    }
+
+    function onKey(e) {
+      if (e.key === "Escape") end();
+    }
+
+    document.addEventListener("pointerdown", onOutside, true);
+    window.addEventListener("scroll", onScroll, true);
+    document.addEventListener("keydown", onKey, true);
+    roam.figureBtn.setAttribute("aria-label",
+      `You are asking ${name}. Tap the Spark, and it will go home.`);
+    roam.figureBtn.addEventListener("click", end);
+
+    /* The offered questions stand as big tappable words;
+     * an answer that names a road adds its word beside
+     * them, gold, the way the Spark offers on a tour. */
+    function showChoices(extra) {
+      roam.choicesEl.hidden = false;
+      roam.choicesEl.innerHTML = "";
+      const add = (label, fn, go) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "spark-roam-choice" + (go ? " is-go" : "");
+        b.textContent = label;
+        b.addEventListener("click", fn);
+        roam.choicesEl.appendChild(b);
+      };
+      for (const q of Answers.QUESTIONS.slice(0, 3)) {
+        add(q.label, () => ask(q.id));
+      }
+      add("What is this room?", () => ask("room"));
+      add("What should I do next?", () => ask("next"));
+      if (extra && extra.href) {
+        add(extra.label || "Go", () => { window.location.href = extra.href; }, true);
+      }
+    }
+
+    async function ask(question) {
+      if (over) return;
+      armRest();
+      const { world, leanState } = await collectWorld(record, companion);
+      if (over) return;
+      const a = Answers.answer(question, world, leanState);
+      roam.textEl.textContent = a.text;
+      roam.hintEl.textContent = "Ask me another — or tap me, and I'll go home.";
+      showChoices(a.href ? { href: a.href, label: a.label } : null);
+      speak(companion, a.text);
+    }
+
+    send.addEventListener("click", () => {
+      const text = input.value.trim();
+      if (text) { input.value = ""; ask(text); }
+    });
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const text = input.value.trim();
+        if (text) { input.value = ""; ask(text); }
+      }
+      e.stopPropagation();
+    });
+    input.addEventListener("pointerdown", (e) => e.stopPropagation());
+
+    showChoices(null);
+    armRest();
+    /* It comes up from its seat, as on a tour: a short
+     * rise, settled on the calmest ground nearby. */
+    window.setTimeout(() => {
+      if (over) return;
+      const seat = roam.home || cornerPoint();
+      const desired = {
+        x: seat.x + (seat.x > window.innerWidth / 2 ? -40 : 40),
+        y: seat.y - 168
+      };
+      placeRoam(roam, calmPoint(roam, desired, { floor: window.innerHeight - 88 }),
+        false, { floor: window.innerHeight - 88 });
+    }, 60);
+  }
+
   /* ============ THE TOUR BUTTON ============
    * The standing way back in: a small quiet button in the
    * corner of every room the Spark walks, for keepers only.
@@ -1083,6 +1362,16 @@
       else startPageTour();
     });
     document.body.appendChild(btn);
+    const askBtn = document.createElement("button");
+    askBtn.type = "button";
+    askBtn.className = "spark-ask-launcher";
+    askBtn.textContent = "✦ Ask";
+    askBtn.setAttribute("aria-label", "Ask your Spark about your own world");
+    askBtn.addEventListener("click", () => {
+      dismissOffer();
+      startAsk();
+    });
+    document.body.appendChild(askBtn);
   }
 
   /* No Spark yet: every road in this module leads back to
@@ -1148,7 +1437,7 @@
     window.setTimeout(() => offerPageTour(record), 3500);
   }
 
-  window.SparkIntro = { start: startQuickTour, startPageTour, offerIntroTour };
+  window.SparkIntro = { start: startQuickTour, startPageTour, offerIntroTour, ask: startAsk };
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", boot);
