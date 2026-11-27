@@ -117,7 +117,13 @@
    "rarity": {
     "type": "open"
    },
-   "stage": "lantern"
+   "stage": "lantern",
+   "detail": {
+    "what": "A small lantern in a brass frame, with a warm flame of its own — sized for a Spark's side, not for a room.",
+    "means": "It says this Spark travels. For the keeper it is a promise kept in sight: the light goes with you, on the road and in the dark hours alike.",
+    "kinds": "The glow leans to the Spark's own kind colour — amber for Fire, sea-blue for Water, violet for Shadow — and the frame hangs at the same height on every form, from orb to moth.",
+    "design": "A lantern is the oldest carried light there is. It hangs beside the Spark and never in front of its face: a companion's light should light the road, not blind the traveller."
+   }
   },
   {
    "id": "the-seed-pouch",
@@ -133,7 +139,13 @@
    "rarity": {
     "type": "open"
    },
-   "stage": "pouch"
+   "stage": "pouch",
+   "detail": {
+    "what": "A small cloth pouch on a short cord, holding seeds the Spark keeps for ground it has not reached yet.",
+    "means": "A pouch is potential you can carry. It suits a Spark whose keeper is planting things — gardens, plans, beginnings — and wants the future riding close.",
+    "kinds": "It rides low on every form; on a wave it bobs at the cord's end, on a sprout it rests against the stem, and the cord's brass knot is its tag on all of them.",
+    "design": "Seeds are the smallest way to carry a garden. The pouch is soft, not boxed — what is alive in it should be able to breathe."
+   }
   },
   {
    "id": "the-scroll-case",
@@ -149,7 +161,13 @@
    "rarity": {
     "type": "open"
    },
-   "stage": "scrollcase"
+   "stage": "scrollcase",
+   "detail": {
+    "what": "A stiff tube case on a strap, made to carry rolled writings without creasing them.",
+    "means": "For Sparks who travel with words — the writings, the record, the letter not yet sent. It marks the Spark as a carrier of the Codex, not just a light.",
+    "kinds": "It slings behind the flame on every kind, angled like a carried staff; on a comet it streams with the tail, on a moth it rests between the wings, never over the face.",
+    "design": "Scrolls crease if they are folded and fade if they are left open, so the case is a tube: the writings ride rolled, dark, and safe, the way they have always travelled."
+   }
   },
   {
    "id": "the-travellers-satchel",
@@ -165,7 +183,13 @@
    "rarity": {
     "type": "open"
    },
-   "stage": "satchel"
+   "stage": "satchel",
+   "detail": {
+    "what": "A soft bag with a flap and clasp, sized for a day on the road.",
+    "means": "The general carrier — where the day's small things go. Keepers who live out of a bag themselves tend to choose it for their Spark.",
+    "kinds": "It rides at the side and swings a little as the Spark moves; the clasp carries the tag, and the bag keeps its shape on round orbs and narrow shards alike.",
+    "design": "A satchel, not a backpack: a Spark has no shoulders to promise with. It hangs from the body's own balance, the way everything a Spark carries must."
+   }
   },
   {
    "id": "the-astrolabe-charm",
@@ -185,7 +209,13 @@
     "issuedPatternDay": 221,
     "note": "First Edition — issued Moon 8, Pattern Day 221. When this edition closes it stays closed; any later issue is a new edition, numbered so."
    },
-   "stage": "astrolabe"
+   "stage": "astrolabe",
+   "detail": {
+    "what": "Rings within rings in brass — a pocket astrolabe, the old instrument for reading the stars, hung on a fine chain.",
+    "means": "For the keeper who looks up. It ties the Spark to the Observatory and the calendar in the sky: this Spark navigates by the same lights its keeper studies.",
+    "kinds": "The rings turn slowly before the flame on every form; the chain shortens on small Sparks and lengthens on tall ones, so the rings always rest at the core's height.",
+    "design": "An astrolabe is a sky you can hold. It is the Heirloom of the carried shelf because it joins the two halves of the Codex — the instrument and the flame — in one small machine."
+   }
   },
   {
    "id": "the-north-bead",
@@ -201,7 +231,13 @@
    "rarity": {
     "type": "open"
    },
-   "stage": "bead"
+   "stage": "bead",
+   "detail": {
+    "what": "One smooth stone bead on a plain cord — the smallest good on the carried shelf.",
+    "means": "A bead is a kept direction. It suits a quiet Spark and a keeper who wants one true thing rather than many bright ones.",
+    "kinds": "Low and quiet on every kind; the stone takes a grey-blue cast that sits calmly against Fire's amber and Light's gold alike.",
+    "design": "Travellers once carried a single bead for the pole star. One bead, one direction — the design is the restraint."
+   }
   },
   {
    "id": "the-key-of-the-thirteenth-door",
@@ -221,7 +257,13 @@
     "issuedPatternDay": 221,
     "note": "First Edition — issued Moon 8, Pattern Day 221. When this edition closes it stays closed; any later issue is a new edition, numbered so."
    },
-   "stage": "key"
+   "stage": "key",
+   "detail": {
+    "what": "An old-fashioned brass key, bow and bit, hung at the Spark's side on its own ring.",
+    "means": "Twelve moons make the year; the thirteenth door is the one outside the count. The key is for keepers who love the Day Out of Time and everything that stands outside the pattern.",
+    "kinds": "It hangs and turns slowly, catching light on every form; on a wave it trails in the water-light, on a shard it rests flat against the facet.",
+    "design": "A key is a promise with a shape. It opens nothing in the catalogue — it is kept for the love of the door, and a good design does not pretend otherwise."
+   }
   },
   {
    "id": "the-kind-scarf",
@@ -237,7 +279,13 @@
    "rarity": {
     "type": "open"
    },
-   "stage": "scarf"
+   "stage": "scarf",
+   "detail": {
+    "what": "A soft scarf woven in the Spark's own kind colours, looped once around its core.",
+    "means": "Warmth, given. Keepers choose it to say the Spark is cared for, not just carried — the closest thing the stall has to a gift from the keeper's own hands.",
+    "kinds": "Each kind's scarf is woven from its own hues — Fire in embers, Water in sea tones, Shadow in violets — with a wave edge for Water and a smoke edge for Shadow.",
+    "design": "A scarf is what you wrap around someone you are sending into the cold. It loops soft and low so it warms the core without ever covering the face."
+   }
   },
   {
    "id": "the-moon-phase-band",
@@ -253,7 +301,13 @@
    "rarity": {
     "type": "open"
    },
-   "stage": "moonband"
+   "stage": "moonband",
+   "detail": {
+    "what": "A band of thirteen small moons circling the Spark's core, one for each Moon of the year.",
+    "means": "The calendar, worn. Today's moon stands lit, so the band tells the keeper where the year stands at a glance — the Spark carries the count of days on its body.",
+    "kinds": "The moons keep their order on every form; on a moth they arc across the wing-roots, on an orb they ring the equator of the light.",
+    "design": "Thirteen moons, because the year has thirteen. The band is a circle because the year is one — it comes back to its own beginning."
+   }
   },
   {
    "id": "the-cloak-clasp-of-the-road",
@@ -269,7 +323,13 @@
    "rarity": {
     "type": "open"
    },
-   "stage": "clasp"
+   "stage": "clasp",
+   "detail": {
+    "what": "A small round brass clasp with the road's spiral pressed into its face.",
+    "means": "A clasp holds a cloak closed against the weather. On a Spark it marks the road kept: this one goes out in all seasons and comes home.",
+    "kinds": "It pins at the flame's shoulder on every form; the spiral catches the light differently on each kind's colour, so no two clasps read quite alike.",
+    "design": "The spiral is the road's own mark — the path that turns back through the moons. Pressing it into the clasp makes the smallest good on the worn shelf carry the whole map."
+   }
   },
   {
    "id": "the-ember-circlet",
@@ -289,7 +349,13 @@
     "issuedPatternDay": 221,
     "note": "First Edition — issued Moon 8, Pattern Day 221. When this edition closes it stays closed; any later issue is a new edition, numbered so."
    },
-   "stage": "circlet"
+   "stage": "circlet",
+   "detail": {
+    "what": "A thin circle of pale gold that rests in the flame above the Spark's core, never touching it.",
+    "means": "The circlet is the stall's quiet crown — not rule, but regard. It suits a Spark that has been with its keeper a long while and is honoured for it.",
+    "kinds": "It floats at the flame's crown on every form; on a comet it rides at the head, on a sprout it rings the topmost leaf-light.",
+    "design": "A circlet, not a crown: a plain circle, unclosed by any jewel. What it honours is the flame itself, so the design adds nothing the flame does not already say."
+   }
   },
   {
    "id": "the-ribbon-of-the-day-out-of-time",
@@ -305,7 +371,13 @@
    "rarity": {
     "type": "open"
    },
-   "stage": "ribbon"
+   "stage": "ribbon",
+   "detail": {
+    "what": "One pale ribbon, the same on every Spark, tied at the flame's side.",
+    "means": "It is worn for the Day Out of Time — the day outside the moons that closes the year. Keepers tie it on when the year turns, and some never take it off.",
+    "kinds": "The same pale ribbon on Fire and Shadow, orb and moth alike — the one good in the stall that refuses to vary, because the day it marks belongs to everyone.",
+    "design": "Every other good takes the Spark's colours. This one doesn't. The sameness is the design: one ribbon, one day, every keeper."
+   }
   },
   {
    "id": "the-veil-of-quiet-hours",
@@ -321,7 +393,13 @@
    "rarity": {
     "type": "open"
    },
-   "stage": "veil"
+   "stage": "veil",
+   "detail": {
+    "what": "A soft, sheer veil that settles over the flame's edge and gentles its light.",
+    "means": "For the quiet hours — grief, rest, deep night, prayer. It lets a Spark be present without being bright, and tells the keeper it is all right to dim.",
+    "kinds": "It falls from the flame's crown on every form; on Air it drifts a little, on Earth it settles heavy and still, each kind veiled in its own manner.",
+    "design": "A veil does not hide the light; it softens the edge of it. The design keeps the Spark fully itself, only gentler to look at — the way dusk treats a lamp."
+   }
   },
   {
    "id": "petal-drift",
@@ -337,7 +415,13 @@
    "rarity": {
     "type": "open"
    },
-   "stage": "petals"
+   "stage": "petals",
+   "detail": {
+    "what": "A slow drift of pale petals circling the Spark, neither falling nor rising.",
+    "means": "Beauty that follows. Keepers choose it for Sparks who live in gardens and gentle rooms — the trail of a Spark that moves like something blossoming passed by.",
+    "kinds": "The petals keep their slow circle on every form; on Water they tint toward blue, on Fire toward rose-gold, borrowing the kind's light as they pass through it.",
+    "design": "Petals are what a garden sheds without loss. The drift is a circle, not a tail — this trail does not mark where the Spark has been, but what it is like to be near it."
+   }
   },
   {
    "id": "ember-motes",
@@ -353,7 +437,13 @@
    "rarity": {
     "type": "open"
    },
-   "stage": "motes"
+   "stage": "motes",
+   "detail": {
+    "what": "Tiny warm sparks that shed gently behind the Spark as it moves and settle when it rests.",
+    "means": "The first trail most keepers choose: it makes the Spark's path visible, a small history of where it has been in the room, written in warm dust.",
+    "kinds": "On Fire the motes are many and bright; on Shadow they are few and deep violet; each kind sheds its own count and colour of sparks.",
+    "design": "A real fire sheds sparks whether you watch or not. The motes are small and brief by design — a trail should charm, not litter."
+   }
   },
   {
    "id": "ripple-step",
@@ -369,7 +459,13 @@
    "rarity": {
     "type": "open"
    },
-   "stage": "ripple"
+   "stage": "ripple",
+   "detail": {
+    "what": "A soft ring that opens at each of the Spark's steps and widens until it fades, like a stone's ring on still water.",
+    "means": "For calm Sparks and calm keepers. It makes movement itself gentle — every step the Spark takes is answered by the ground, once, and let go.",
+    "kinds": "Water Sparks wear it most naturally, their rings wide and slow; on Earth the rings are small and sure, on Air they break early into sparkle.",
+    "design": "The ring is the shape of an effect that does not insist. It widens, thins, and is gone — the design is a lesson in leaving no mark heavier than a touch."
+   }
   },
   {
    "id": "season-motes",
@@ -385,7 +481,13 @@
    "rarity": {
     "type": "open"
    },
-   "stage": "seasonmotes"
+   "stage": "seasonmotes",
+   "detail": {
+    "what": "A small company of motes whose colour and fall follow the season the keeper chooses for the Spark.",
+    "means": "It ties the Spark to the turning year outside the window — spring green, harvest gold, first-snow pale — so the room and the Spark keep the same season.",
+    "kinds": "The keeper picks the season; the kind picks the tint. A Fire Spark in winter sheds amber through the pale, a Water Spark in spring runs green over blue.",
+    "design": "Motes are the smallest possible weather. Letting the keeper set the season — not the calendar — keeps the good personal: it is the season of your ground, not of the whole world."
+   }
   },
   {
    "id": "the-long-ribbon",
@@ -405,7 +507,13 @@
     "issuedPatternDay": 221,
     "note": "First Edition — issued Moon 8, Pattern Day 221. When this edition closes it stays closed; any later issue is a new edition, numbered so."
    },
-   "stage": "longribbon"
+   "stage": "longribbon",
+   "detail": {
+    "what": "A long ribbon of woven light that streams behind the Spark as it goes, coiling slowly at rest.",
+    "means": "The grand trail of the shelf. It suits a Spark that ranges far — across the Sphere, through the rooms — and a keeper who wants that ranging seen.",
+    "kinds": "It lengthens the flame-lick trail every Spark is born with; on a comet it braids into the tail, on a moth it streams from the wing-tips in two falls.",
+    "design": "A ribbon is a trail with a weaver. Where Ember Motes happen to a Spark, the Long Ribbon is chosen by one — that is why it stands in the Heirloom band."
+   }
   },
   {
    "id": "comet-tail",
@@ -421,7 +529,13 @@
    "rarity": {
     "type": "open"
    },
-   "stage": "comet"
+   "stage": "comet",
+   "detail": {
+    "what": "A bright head of light and a long tapering tail that grows when the Spark moves fast and shortens when it rests.",
+    "means": "Speed, made visible and honest: the tail tells the truth about how fast the Spark is actually going, and keepers who love the road choose it for travelling.",
+    "kinds": "On a comet-form Spark the tail doubles its own; on an orb it lends a borrowed swiftness; on every kind the head burns in the kind's colour.",
+    "design": "A comet is a promise that returns. The tail is tapered because attention is — bright at the head, gentle at the end, gone without a scar."
+   }
   },
   {
    "id": "firefly-scatter",
@@ -437,7 +551,13 @@
    "rarity": {
     "type": "open"
    },
-   "stage": "fireflies"
+   "stage": "fireflies",
+   "detail": {
+    "what": "A few slow green-gold fireflies that wander around the Spark at rest and gather in when it moves.",
+    "means": "Company. The fireflies make a resting Spark feel attended rather than idle — the good for a keeper who talks to their Spark in the evening.",
+    "kinds": "The fireflies keep their own green-gold on every kind — they are visitors, not part of the Spark — but they gather closer on Shadow Sparks, loving the dim.",
+    "design": "Fireflies are light that is alive and unowned. The design keeps them few and slow: a scatter, not a swarm — company, not a crowd."
+   }
   },
   {
    "id": "moonlit-wake",
@@ -453,7 +573,13 @@
    "rarity": {
     "type": "open"
    },
-   "stage": "wake"
+   "stage": "wake",
+   "detail": {
+    "what": "A pale silver wake that spreads behind the Spark and settles flat, like moonlight lying on water.",
+    "means": "For night travel and quiet rooms. Where the comet tail is speed, the wake is peace — the sign of a Spark that passed gently and left the water calm.",
+    "kinds": "Water Sparks spread it widest; Light Sparks silver it brighter; on land forms it lies like frost-light along the ground-line.",
+    "design": "A wake is the one trail that calms what it crosses. It is drawn flat and low by design — this is the trail of a Spark at peace with the room."
+   }
   },
   {
    "id": "the-hearth-wrap",
@@ -469,7 +595,13 @@
    "rarity": {
     "type": "open"
    },
-   "stage": "wrap-hearth"
+   "stage": "wrap-hearth",
+   "detail": {
+    "what": "A wrap that draws the flame's petals close and warm, low around the core, like a hearth kept through the night.",
+    "means": "Home, worn. Keepers choose it for the evening and for Sparks who keep the house — the flame turned inward, tending rather than travelling.",
+    "kinds": "The wrap deepens each kind's colour — Fire to ember-red, Water to deep sea, Earth to moss-dark — and closes lowest on Earth Sparks, highest on Air.",
+    "design": "A hearth is a fire that has agreed to stay. The wrap's petals close the way hands cup a flame against the wind: protection, not hiding."
+   }
   },
   {
    "id": "the-storm-wrap",
@@ -485,7 +617,13 @@
    "rarity": {
     "type": "open"
    },
-   "stage": "wrap-storm"
+   "stage": "wrap-storm",
+   "detail": {
+    "what": "A wrap that stands the flame tall and restless inside it, all lift and weather.",
+    "means": "For Sparks who like weather, and keepers who do too. It is the wrap of bold days — launches, journeys, arguments with the sky.",
+    "kinds": "Air Sparks wear it tallest; Fire Sparks flare at its edges; even a Water Spark stands up in it, its flame gone to spray and lift.",
+    "design": "The wrap does not make the Spark louder — the catalogue's fences forbid a good that changes the voice. It only lets the flame stand at its full height: liveliness, not volume."
+   }
   },
   {
    "id": "the-petal-wrap",
@@ -501,7 +639,13 @@
    "rarity": {
     "type": "open"
    },
-   "stage": "wrap-petal"
+   "stage": "wrap-petal",
+   "detail": {
+    "what": "A wrap of soft petal shapes around the flame, gentle at every edge.",
+    "means": "The kind wrap — chosen for young Sparks, resting Sparks, and keepers who simply like their light soft. It is the Pocket band's small tenderness.",
+    "kinds": "The petals take the kind's palest tint — rose for Fire, foam for Water, lilac for Shadow — and lie flattest on sprout forms, like a bud not yet open.",
+    "design": "Petals again, but as clothing this time: what the Petal Drift sheds, the Petal Wrap wears. The design says a Spark can be dressed by its own garden."
+   }
   },
   {
    "id": "the-return-path-wrap",
@@ -519,7 +663,13 @@
     "issuedMoon": 9,
     "note": "Issued for Moon 9 only — it retires at Moon 9's turn, and a retired wrap stays retired."
    },
-   "stage": "wrap-spiral"
+   "stage": "wrap-spiral",
+   "detail": {
+    "what": "A wrap woven with the road's spiral, following the turn the road takes home — issued for Moon 9 only.",
+    "means": "Moon 9 is the Return Path, the moon of coming back. The wrap marks a Spark that has made the turn with its keeper and is walking the road home.",
+    "kinds": "The spiral weave follows the flame's own turn on every form; on a wave it rolls with the water, on a shard it climbs the facets one by one.",
+    "design": "A spiral is a circle that has learned something. Weaving it into the wrap — rather than stamping it on — means the road is in the cloth itself, not printed on the surface."
+   }
   },
   {
    "id": "brightenings---the-first-set",
@@ -534,6 +684,14 @@
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "expr-brighten",
+   "form": "expression",
+   "detail": {
+    "what": "Three new ways for the Spark's light itself to brighten: a greeting brightening, a delight brightening, and the brightening of a job well done.",
+    "means": "Nothing is worn — the Spark is the good. These are its faces of light, the way a person's face changes when they greet you, delight in something, or finish well.",
+    "kinds": "Every kind brightens in its own colour and temper: Fire all at once, Water from the deep up, Shadow reluctantly and therefore beautifully, Light almost before you notice.",
+    "design": "A Spark's first language is its light, so the first expression set teaches the light three sentences. At the stall you see the greeting brightening — a halo with rays — standing around the Spark."
    }
   },
   {
@@ -549,6 +707,14 @@
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "expr-startle",
+   "form": "expression",
+   "detail": {
+    "what": "A small honest startle, a peek-back, and the quick recover — three reactions for a playful Spark.",
+    "means": "A Spark that can be startled is a Spark that feels alive in the room. The set keeps surprises kind: startle, look back, recover — never fear, and never a sound above its settings.",
+    "kinds": "Air Sparks startle highest, Earth Sparks barely and comically, and a moth flares its whole wing-span for a moment before it settles.",
+    "design": "The design is the recover. Anything can jump; this set is built around coming back — the peek-back and the settle are the point, and the startle is only the excuse."
    }
   },
   {
@@ -564,6 +730,14 @@
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "expr-celebrate",
+   "form": "expression",
+   "detail": {
+    "what": "The Spark's celebration for real completions only: the rise, the ring of light, and the settle.",
+    "means": "When something is truly finished — a day witnessed, an episode watched through — the Spark may rise, ring its light once, and settle. This set dresses that moment.",
+    "kinds": "Fire rings wide, Water rings deep and slow, and Light rings almost before the keeper has seen the finish — each kind celebrates in its own grammar.",
+    "design": "The fence is the design: celebration only at real completions, never at random. A ring of light that can happen any time would soon mean nothing."
    }
   },
   {
@@ -579,6 +753,14 @@
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "expr-quiet",
+   "form": "expression",
+   "detail": {
+    "what": "The gentle register: a lowered glow, a slow approach, a patient wait — the Spark's quiet manners, deepened.",
+    "means": "For the hours that ask for less — late nights, sick rooms, grief, study. It teaches the Spark to be company without demand.",
+    "kinds": "Shadow Sparks are born halfway here; Light Sparks learn the most from it, their glow lowered to a candle's patience. Every kind keeps its colour, only softened.",
+    "design": "Manners are a design discipline: nothing added, everything considered. The set changes no shape — it changes how the Spark enters a room, which is the whole of courtesy."
    }
   },
   {
@@ -595,6 +777,14 @@
    "rarity": {
     "type": "seed-variant",
     "note": "Seed variant — rendered through your Spark's own seed, so its exact tint and pattern are one-of-one for your Spark."
+   },
+   "stage": "sheet-faces",
+   "form": "carried-sheet",
+   "detail": {
+    "what": "A sticker pack made from your own Spark: its delight, its startle, its sleepy face, its greeting — drawn from its seed, in its colours, with its markings.",
+    "means": "It carries your Spark into your messages, so the face that lives in the Codex can answer in an ordinary chat. No other keeper's pack is the same, because no other Spark is.",
+    "kinds": "The pack is a family rendered through the seed: a Fire Spark's stickers flare warm, a moth's carry its wing pattern, a shard's are all angles. Yours is the only one of yours.",
+    "design": "At the stall the Spark carries the sticker sheet itself, three of its faces showing in miniature — because a pack made from a Spark should be presented by that Spark, not by a shelf."
    }
   },
   {
@@ -605,11 +795,19 @@
    "price": 2,
    "embers": 20,
    "sellingPoint": "The Codex's own marks — the trigram, the spiral, the thirteen moons — as message stickers",
-   "onSpark": "A general set, the same for every keeper; the Spark wears nothing — these live in your messages.",
+   "onSpark": "A general set, the same for every keeper; at the stall your Spark carries the sticker sheet at its side, the marks showing — the stickers themselves live in your messages.",
    "source": "created-2026-11-25",
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "sheet-glyphs",
+   "form": "carried-sheet",
+   "detail": {
+    "what": "Message stickers of the Codex's own marks — the trigram, the road's spiral, the thirteen moons — drawn small and clear.",
+    "means": "For keepers who write about the work: the marks let a message carry the Codex's grammar without a paragraph of explanation.",
+    "kinds": "The same set for every keeper — the glyphs belong to the Codex, not to any one Spark. At the stall, your Spark carries the sheet so the marks can be read at its side.",
+    "design": "A glyph is a word that survived being drawn. The sheet is laid out like a printer's proof, mark beside mark, so the set teaches while it decorates."
    }
   },
   {
@@ -620,11 +818,19 @@
    "price": 2,
    "embers": 20,
    "sellingPoint": "A sticker for each Moon and one for the Day Out of Time",
-   "onSpark": "A general set, the same for every keeper; made for marking days in messages.",
+   "onSpark": "A general set, the same for every keeper, made for marking days in messages; at the stall your Spark carries the sheet, the moons standing in their order.",
    "source": "created-2026-11-25",
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "sheet-moons",
+   "form": "carried-sheet",
+   "detail": {
+    "what": "A sticker for each of the thirteen Moons, and one more for the Day Out of Time.",
+    "means": "For marking days in messages — answering 'when?' with a moon instead of a date, the way the Codex counts.",
+    "kinds": "The same for every keeper; the moons keep their order on the sheet, and your Spark carries it the way a calendar is carried — by the year, not by the day.",
+    "design": "Thirteen moons and one day outside them: the sheet's last sticker is drawn as an open circle, empty on purpose — the day that is not counted gets a mark that is not a moon."
    }
   },
   {
@@ -635,11 +841,19 @@
    "price": 2,
    "embers": 20,
    "sellingPoint": "The road's small scenes — the gate, the lantern, the bridge — as stickers",
-   "onSpark": "A general set, the same for every keeper; scenes from the Traveller's road.",
+   "onSpark": "A general set, the same for every keeper — scenes from the Traveller's road; at the stall your Spark carries the sheet at its side, the little lantern on it drawn lit.",
    "source": "created-2026-11-25",
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "sheet-road",
+   "form": "carried-sheet",
+   "detail": {
+    "what": "Stickers of the road's small scenes — the gate, the lantern, the bridge — from the Traveller's road.",
+    "means": "For messages about journeys, arrivals, and setting out. Keepers who send people off, or welcome them home, keep this sheet close.",
+    "kinds": "The same scenes for every keeper; at the stall your Spark carries the sheet, and the lantern scene on it is drawn lit — the road is always depicted as travelled, never empty.",
+    "design": "Each scene is one beat of the road's story, small enough for a message. The design rule was the films' rule: show the place the way the traveller meets it, in its own light."
    }
   },
   {
@@ -650,11 +864,19 @@
    "price": 2,
    "embers": 20,
    "sellingPoint": "A small emoji set in the Spark's light — orb, flame, moon, star, seed",
-   "onSpark": "A general emoji set in gold on night; the same for every keeper.",
+   "onSpark": "A general emoji set in gold on night, the same for every keeper; at the stall your Spark carries the sheet, its five marks showing.",
    "source": "created-2026-11-25",
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "sheet-sparklight",
+   "form": "carried-sheet",
+   "detail": {
+    "what": "A small emoji set drawn in the Spark's light: orb, flame, moon, star, and seed, in gold on night.",
+    "means": "The lightest good on the shelf — small signs for quick messages, for keepers who want the Codex's light inside an ordinary conversation.",
+    "kinds": "The same five marks for every keeper; your Spark carries the sheet, and the orb on it is the first mark a keeper learns to read as 'a Spark was here'.",
+    "design": "Five marks, no more: an emoji set is a vocabulary, and a small vocabulary, well chosen, is the design. Gold on night, because that is the Spark's light against the dark."
    }
   },
   {
@@ -670,6 +892,14 @@
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "ground-observatory",
+   "form": "ground-theme",
+   "detail": {
+    "what": "A theme for the keeper's private ground: deep night, gold points of light, the Observatory's sky kept overhead.",
+    "means": "A theme is not worn — it is the light the Spark stands in. This one puts your Spark under the same sky the Sphere turns in, so its home ground feels like the Observatory floor.",
+    "kinds": "Every Spark stands in the same night; what changes is the Spark. Fire warms the gold points near it, Water deepens the blue, Shadow nearly vanishes into it and is found by its eyes.",
+    "design": "The design keeps the sky real — the stars are points, not pictures, and the ground stays dark enough for the Spark to be the brightest thing in it. A theme should frame, never compete."
    }
   },
   {
@@ -685,6 +915,14 @@
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "ground-garden",
+   "form": "ground-theme",
+   "detail": {
+    "what": "A theme for the private ground in early light: green beds, dew, and a low sun.",
+    "means": "Morning is the Codex's first hour — the gate at first light. This theme gives the Spark a ground that is always just beginning, for keepers who do their best work early.",
+    "kinds": "Earth Sparks stand in it like they grew there; Light Sparks double the sun; even a Shadow Spark keeps a cool corner of it, the design leaving shade at the edges.",
+    "design": "The sun is drawn low and the dew as points of light on the ground — morning is a direction of light, not a brightness. Everything in the scene leans slightly toward the east."
    }
   },
   {
@@ -700,6 +938,14 @@
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "ground-hearth",
+   "form": "ground-theme",
+   "detail": {
+    "what": "A theme for the private ground at evening: warm windows, lamps lit, the day settling.",
+    "means": "The counterpart to Garden Morning — the ground at the day's end, for keepers whose Codex hours come after dark and lamplight.",
+    "kinds": "Fire Sparks belong to it outright; Water Sparks reflect the lamps double; Air Sparks keep the upper dark moving, so the warmth below feels earned.",
+    "design": "Two lamps, no more, and the light pooled rather than spread: evening in the design is not dimness, it is nearness — light kept close to where people sit."
    }
   },
   {
@@ -717,6 +963,14 @@
     "type": "moon-window",
     "issuedMoon": 9,
     "note": "Issued for Moon 9 only — it retires at Moon 9's turn, and a retired theme stays retired."
+   },
+   "stage": "ground-returnpath",
+   "form": "ground-theme",
+   "detail": {
+    "what": "A theme for the private ground under Moon 9's sky — the Return Path's own light, issued for Moon 9 only.",
+    "means": "It grounds the Spark in the moon of coming home. Keepers set it for the moon of return and let it retire with the moon, the way the season itself retires.",
+    "kinds": "The moon is drawn large and pale for every kind; a Light Spark under it goes silver, a Fire Spark banks to embers — the theme is stronger than the Spark, on purpose.",
+    "design": "A moon-window theme must be willing to end. The design carries its Moon stamped on it and no promise of return — when it retires, the ground remembers it the way a year remembers a moon."
    }
   },
   {
@@ -732,6 +986,14 @@
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "piece-bench",
+   "form": "ground-piece",
+   "detail": {
+    "what": "A plain wooden bench, sized to the ground, where a walk can pause.",
+    "means": "Every ground needs a place to sit down in it. The bench is where the keeper's Spark rests at eye level — the seat from which the whole ground is surveyed.",
+    "kinds": "It stands at the Spark's right on every form; a moth settles above it, a sprout beside it — the bench is furniture for the ground, and company for the Spark.",
+    "design": "A bench is the smallest architecture of welcome: a seat offered to whoever comes. It is drawn plain — back, legs, seat — because a bench that shows off has missed its own point."
    }
   },
   {
@@ -747,6 +1009,14 @@
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "piece-stone",
+   "form": "ground-piece",
+   "detail": {
+    "what": "A low, smooth stone at the ground's quiet edge, flat enough to sit on and read.",
+    "means": "The Pocket band's seat — for the keeper whose Spark keeps them company over a text. It marks the corner of the ground where reading happens.",
+    "kinds": "It sits at the Spark's left, low on every form; Earth Sparks rest against it, Air Sparks hover at its edge and pretend they are sitting.",
+    "design": "A stone, not a chair: reading in the Codex is fieldwork. The top is drawn smooth because a reading stone is a thing used for years, and the design shows the use."
    }
   },
   {
@@ -766,6 +1036,14 @@
     "issuedMoon": 8,
     "issuedPatternDay": 221,
     "note": "First Edition — issued Moon 8, Pattern Day 221. When this edition closes it stays closed; any later issue is a new edition, numbered so."
+   },
+   "stage": "piece-hammock",
+   "form": "ground-piece",
+   "detail": {
+    "what": "A hammock on its own two posts, swaying gently, sized for rest.",
+    "means": "Rest, given a place. The hammock says this ground is not only for work — the Spark's home keeps a corner where nothing is achieved on purpose.",
+    "kinds": "It stands at the Spark's right, its sway slow for Water, lazy for Earth, teased by Air. The Spark itself never lies in it — it keeps watch beside it, which is the sweeter picture.",
+    "design": "A hammock must hang between two points and trust them. The posts are drawn sturdy and the cloth deep: rest, in the design, is engineered, not improvised."
    }
   },
   {
@@ -781,6 +1059,14 @@
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "piece-lamp",
+   "form": "ground-piece",
+   "detail": {
+    "what": "A standing lamp on a post, lit warm, for the clearing at the centre of the ground.",
+    "means": "The ground's evening piece — the lamp the Spark's home gathers around when the light goes. Keepers with the Hearth Evening theme choose it as that theme's furniture.",
+    "kinds": "It stands at the Spark's left with its glow at flame height; Fire Sparks answer it, Light Sparks outshine it politely, Shadow Sparks keep to its edge and are kinder for it.",
+    "design": "One lamp, at standing height, its light in a cage of simple lines: a clearing lamp is a promise that this part of the ground is kept. The tag hangs at the post's collar, where a keeper's hand would check it."
    }
   },
   {
@@ -796,6 +1082,14 @@
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "piece-lanterns3",
+   "form": "ground-piece",
+   "detail": {
+    "what": "Three small lanterns, made to be set in a run along the path the keeper walks most.",
+    "means": "They light the way between the ground's places — gate to bench, bench to hearth — so the Spark's home has a road of its own, lit like the great road.",
+    "kinds": "They stand in a line before the Spark on every form, small cousins of the Wayfarer's Lantern; their glow is a fixed warm, the colour of kept paths.",
+    "design": "Three, because a path is beginning, middle, and end. One tag on every lantern — a set is bought as one good, but each piece of it is real enough to be tagged."
    }
   },
   {
@@ -815,6 +1109,14 @@
     "issuedMoon": 8,
     "issuedPatternDay": 221,
     "note": "First Edition — issued Moon 8, Pattern Day 221. When this edition closes it stays closed; any later issue is a new edition, numbered so."
+   },
+   "stage": "piece-hearthring",
+   "form": "ground-piece",
+   "detail": {
+    "what": "A ring of stones with a small flame pictured at its centre — a hearth for the ground, in the look of the thing only.",
+    "means": "The hearth is the ground's heart: where the keeper's Spark warms itself and where the ground's evenings gather. It pictures a flame; the Spark brings the real one.",
+    "kinds": "It stands before the Spark's right on every form; the pictured flame is a plain gold, so the real flame beside it — in whatever kind colour — is always the brighter of the two.",
+    "design": "A ring of stones is the oldest room there is. The design keeps it low and open — no chimney, no walls — because a hearth's work is gathering, not enclosing."
    }
   },
   {
@@ -830,6 +1132,14 @@
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "piece-pathstones",
+   "form": "ground-piece",
+   "detail": {
+    "what": "Seven cut stones, laid as one run of path across the keeper's own ground.",
+    "means": "A path is a decision kept. The stones give the Spark's ground a walked way — the route between its places, made permanent one stone at a time.",
+    "kinds": "They run along the ground before the Spark on every form, near to far — one run, one direction, whatever the Spark's shape.",
+    "design": "Seven stones, because a path should be crossable in a breath and memorable as a count. The first stone carries the tag: every journey in the record starts on a tagged stone."
    }
   },
   {
@@ -845,6 +1155,14 @@
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "piece-gate",
+   "form": "ground-piece",
+   "detail": {
+    "what": "A wooden gate in its own arch frame, marking where a garden bed begins.",
+    "means": "A gate is a threshold with manners: it says this ground is tended, and entering is an act, not a drift. For keepers whose Spark keeps a garden, it is the garden's door.",
+    "kinds": "It stands behind the Spark's right shoulder on every form, tall enough to frame a moth's wings, low enough for an orb to feel grand passing it.",
+    "design": "The arch is the design: a gate under an arch is a doorway, and a doorway makes the ground a place with an inside. The tag hangs from the latch, where a hand falls."
    }
   },
   {
@@ -864,6 +1182,14 @@
     "issuedMoon": 8,
     "issuedPatternDay": 221,
     "note": "First Edition — issued Moon 8, Pattern Day 221. When this edition closes it stays closed; any later issue is a new edition, numbered so."
+   },
+   "stage": "piece-bridge",
+   "form": "ground-piece",
+   "detail": {
+    "what": "A small arched bridge, three paces long, for crossing the ground's stream or hollow.",
+    "means": "Every ground has one awkward crossing. The bridge dignifies it — the Spark's home keeps a proper way over, built once and used daily.",
+    "kinds": "It arcs at the Spark's right on every form; Water Sparks pass over their own element on it, Air Sparks cheat and hover beside it, and the design allows both.",
+    "design": "Three paces: up, across, down. A bridge drawn any longer would be a road; any shorter, a step. The arch carries the tag on its near post, the traveller's side."
    }
   },
   {
@@ -883,6 +1209,14 @@
     "issuedMoon": 8,
     "issuedPatternDay": 221,
     "note": "First Edition — issued Moon 8, Pattern Day 221. When this edition closes it stays closed; any later issue is a new edition, numbered so."
+   },
+   "stage": "piece-fountain",
+   "form": "ground-piece",
+   "detail": {
+    "what": "A round stone fountain with water slowly circling — the grandest standing piece on the home shelf.",
+    "means": "A fountain is water kept for looking at. It is the ground's ornament and its clock: the slow circling marks time the way the moons mark the year.",
+    "kinds": "It stands at the Spark's right, its rim at the core's height on an orb, at the waist of a moth; Water Sparks lean toward it, Fire Sparks keep a respectful distance.",
+    "design": "Round, because the moons are round and the year is round. The water is drawn circling, never spurting — a fountain in the Codex is for watching, and the design keeps it slow."
    }
   },
   {
@@ -898,6 +1232,14 @@
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "piece-barrel",
+   "form": "ground-piece",
+   "detail": {
+    "what": "A staved rain barrel with a dipper resting on its rim, standing ready beside a bed or gate.",
+    "means": "The homestead piece — kept water, honestly come by. For keepers whose ground is a working ground, it says this place provides.",
+    "kinds": "It stands at the Spark's left on every form, hoops and staves drawn plain; Earth Sparks suit it best, but a Fire Spark beside a water barrel is the design's favourite picture: readiness.",
+    "design": "A barrel and a dipper: storage and serving, the two halves of keeping water. The tag is nailed to the top hoop, the way a maker marks a barrel that will outlast him."
    }
   },
   {
@@ -913,6 +1255,14 @@
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "piece-tree",
+   "form": "ground-piece",
+   "detail": {
+    "what": "A small green orchard tree that stays the same through every season.",
+    "means": "A tree is a long promise. Planting one on the Spark's ground says the keeper means to stay — orchards are not planted by people who are leaving.",
+    "kinds": "It stands behind the Spark's left, its canopy over the ground's quiet corner; sprout Sparks stand beside it like family, and moths settle toward its branches.",
+    "design": "Young, deliberately: a full-grown tree would end the story. This one is all beginning — straight trunk, round green crown — and it never fruits, because its fruit is the years themselves."
    }
   },
   {
@@ -932,6 +1282,14 @@
     "issuedMoon": 8,
     "issuedPatternDay": 221,
     "note": "First Edition — issued Moon 8, Pattern Day 221. When this edition closes it stays closed; any later issue is a new edition, numbered so."
+   },
+   "stage": "piece-pergola",
+   "form": "ground-piece",
+   "detail": {
+    "what": "A pergola — posts and a woven top of vine — making a shaded seat-place on the ground.",
+    "means": "Shade with architecture. The pergola is where the ground's keeper sits in summer, and the Spark keeps the shade with them.",
+    "kinds": "It frames the Spark from behind on every form, its posts clear of wings and tails; the vine thickens over Light Sparks and thins, politely, over Shadow.",
+    "design": "A pergola is a room with a sky for a roof and a plant for a ceiling. The design draws the vine honestly — woven, gappy, alive — because shade you can see through is the kind worth sitting in."
    }
   },
   {
@@ -947,6 +1305,14 @@
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "piece-threshold",
+   "form": "ground-piece",
+   "detail": {
+    "what": "A smooth flat stone for the ground's entrance, marked with a small spiral.",
+    "means": "The first thing a visitor meets and the last thing the keeper crosses. It carries the road's spiral at the door of the home ground: the road ends here, and begins here.",
+    "kinds": "It lies before the Spark on every form, small and exact; every Spark, crossing its own ground's entrance, crosses the spiral.",
+    "design": "A threshold is a line that asks to be noticed. The spiral is cut small into the face — you find it by standing on it, which is the design's whole teaching."
    }
   },
   {
@@ -962,6 +1328,14 @@
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "piece-tokenshelf",
+   "form": "ground-piece",
+   "detail": {
+    "what": "A shelf in Their Home, sized for the tokens a Spark has earned — a frame only; what stands on it is earned, never bought.",
+    "means": "This is the shelf the stall is proudest to sell, because it sells nothing to put on it. It gives earned things a place of honour in the Spark's room.",
+    "kinds": "It hangs at the Spark's right in the stall's picture of Their Home; on the shelf, tokens from any kind of Spark stand in one row — earnings recognise no kind.",
+    "design": "An empty shelf, sold honestly as empty: the design refuses to picture tokens standing on it, because pictured tokens would be a promise the till cannot keep. The shelf carries the tag; its contents carry themselves."
    }
   },
   {
@@ -977,6 +1351,14 @@
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "piece-humrail",
+   "form": "ground-piece",
+   "detail": {
+    "what": "A slim rail in Their Home where the hums the Spark has learned hang as small bells.",
+    "means": "A place for the earned sounds. Each bell on the rail is a hum the Spark actually learned — from an episode watched together, a moon kept — hung where it can be seen.",
+    "kinds": "The rail hangs at the Spark's left; the bells are the learned hums themselves, untagged and unpriced, whatever kind of Spark learned them.",
+    "design": "Sound you can see, hung like tools in a workshop. The design borrows the hums' own dignity: bells, not trophies — a bell is a sound kept ready, not a sound stuffed."
    }
   },
   {
@@ -992,6 +1374,14 @@
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "piece-chronicle",
+   "form": "ground-piece",
+   "detail": {
+    "what": "A shelf for the year's chronicle — the days, kept in order, as the record itself writes them.",
+    "means": "The chronicle is the keeper's year with the Spark, day by day. Its shelf gives that book a home in the Spark's room, spine out, growing by one day at a time.",
+    "kinds": "It stands at the Spark's right; the books on it are drawn as bound spines in muted colours, the same for every kind — chronicles differ in contents, not in dignity.",
+    "design": "A shelf that fills from the left and leaves its right end open: the year is not finished, and the shelf admits it."
    }
   },
   {
@@ -1008,7 +1398,13 @@
    "rarity": {
     "type": "open"
    },
-   "stage": "comet"
+   "stage": "comet",
+   "detail": {
+    "what": "The game's comet trail: a bright head and a long tapering tail, drawn in SPARK!'s own bright look.",
+    "means": "Inside the game, this is how your Spark's speed shows on the road. It is the same good as the site's Comet Tail, dressed for the game's sky.",
+    "kinds": "It is worn by your Spark inside SPARK! only, whatever its kind or form; the tail lengthens with speed there exactly as it does here.",
+    "design": "One good, two skies: the catalogue refuses to sell the same trail twice under two names, so the game's version stands on the same shelf, stamped SPARK!."
+   }
   },
   {
    "id": "the-wake-wrap---spark!",
@@ -1024,7 +1420,13 @@
    "rarity": {
     "type": "open"
    },
-   "stage": "wrap-hearth"
+   "stage": "wrap-hearth",
+   "detail": {
+    "what": "A wrap of woven light for the road, in the game's colours — the game's own take on the flame wrap.",
+    "means": "Inside SPARK! it wraps your Spark for the run: cosmetic only, because the road is exactly as hard, and exactly as fair, wrapped or not.",
+    "kinds": "It wraps Sparks of every kind in the game; at the stall it stands as the Hearth Wrap's weave, in the game's brighter palette.",
+    "design": "A wrap is the game's travelling clothes. The design borrows the hearth weave — the road and the home are the same cloth, carried differently."
+   }
   },
   {
    "id": "game-expressions---spark!",
@@ -1039,6 +1441,14 @@
    "surface": "SPARK! game",
    "rarity": {
     "type": "open"
+   },
+   "stage": "expr-game",
+   "form": "game-expression",
+   "detail": {
+    "what": "The game's own expression set for your Spark: the woken grin, the chain delight, the near-miss wince — in the posters' bright family look.",
+    "means": "Inside SPARK!, your Spark's face is its commentary. This set dresses those moments; the celebration is the game's, and this is only its wardrobe.",
+    "kinds": "The expressions play on your Spark in the game whatever its kind; at the stall you see them as the game's bright burst around the Spark — the posters' look, all lift and colour.",
+    "design": "The game's look is bolder than the site's on purpose: thicker light, quicker joy. The burst at the stall is drawn in that grammar, so a keeper can tell at a glance which world a good belongs to."
    }
   },
   {
@@ -1054,6 +1464,14 @@
    "surface": "SPARK! game",
    "rarity": {
     "type": "open"
+   },
+   "stage": "ground-isles",
+   "form": "ground-theme",
+   "detail": {
+    "what": "A world theme for SPARK!'s floating-island worlds: lush green, gold light, isles adrift in a bright sky.",
+    "means": "It themes the game's worlds for your Spark's runs — a look only. No level changes by a hair; the road is exactly as hard, and exactly as fair.",
+    "kinds": "At the stall your Spark stands on one small isle of its own, grass-topped and gold-lit; every kind stands the same ground in the game, because fairness is the game's first fence.",
+    "design": "An island is a ground that admits it floats. The design draws the isle small under the Spark — a taste of the world's shape, the way a poster shows one isle for the whole sky."
    }
   },
   {
@@ -1069,6 +1487,14 @@
    "surface": "SPARK! game",
    "rarity": {
     "type": "open"
+   },
+   "stage": "expr-victory",
+   "form": "game-expression",
+   "detail": {
+    "what": "The brightening your Spark makes when the World Heart wakes — a rising burst of light, in the game's colours.",
+    "means": "The Awakening is the game's great moment. This good dresses it: when the Heart wakes, your Spark rises in light of its own.",
+    "kinds": "It plays the same for every Spark in the game; at the stall it stands as a column of rising light around the Spark, gold over its own kind colour.",
+    "design": "Victory, in the design, is vertical: light that goes up, not out. It celebrates the Heart, not the player — the burst rises past the Spark, toward the woken world."
    }
   },
   {
@@ -1079,11 +1505,19 @@
    "price": 7,
    "embers": 75,
    "sellingPoint": "Your Spark's small sounds tuned to the moons' own tones",
-   "onSpark": "Nothing to see; the chime takes the moons' tone family at chime size. Sound carries no tag — the settings line reads 'Moon Tones (purchased)'.",
+   "onSpark": "The chime takes the moons' tone family at chime size; at the stall its sound is drawn as a ring of tone-motes around the flame, so the set can be seen as well as heard. Sound carries no tag — the settings line reads 'Moon Tones (purchased)'.",
    "source": "catalogue-2026-11-23",
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "sound-moon",
+   "form": "sound",
+   "detail": {
+    "what": "A chime set tuned to the moons' own tone family — the small sounds your Spark makes, pitched to the calendar in the sky.",
+    "means": "Sound is the good you cannot see, so the stall draws it: a ring of tone-motes around the flame, one for each moon, so a keeper can look at what the set sounds like.",
+    "kinds": "The chime takes the moons' tones at chime size on every kind; the ring stands around the core on orb and moth alike — sound centres on the Spark, whatever its shape.",
+    "design": "Thirteen tones for thirteen moons, because the Spark's sounds should keep the same count as its days. Sound carries no brass tag — the settings line reads 'Moon Tones (purchased)', and the record remembers."
    }
   },
   {
@@ -1094,11 +1528,19 @@
    "price": 7,
    "embers": 75,
    "sellingPoint": "Your Spark's chimes struck warm and low, like copper bowls by a hearth",
-   "onSpark": "A lower, rounder chime family; the one sound set that does not follow the kind — copper for everyone.",
+   "onSpark": "A lower, rounder chime family; the one sound set that does not follow the kind — copper for everyone. At the stall it is drawn as warm arcs beneath the flame, a bowl's rim of sound.",
    "source": "catalogue-2026-11-23",
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "sound-copper",
+   "form": "sound",
+   "detail": {
+    "what": "A chime set struck warm and low, like copper bowls by a hearth — the one sound set that does not follow the kind.",
+    "means": "Copper for everyone: a keeper who wants their Spark to sound like the house at evening chooses it, whatever the Spark's kind.",
+    "kinds": "Fire and Water Sparks sound alike in copper — that is the set's whole point. At the stall it is drawn as two warm arcs under the flame, the shape of a bowl's rim heard from above.",
+    "design": "Every other sound in the catalogue follows the Spark. This one follows the room. The design is a small hospitality: the Spark, for once, dressed by the keeper's home instead of its own nature."
    }
   },
   {
@@ -1109,11 +1551,19 @@
    "price": 2,
    "embers": 20,
    "sellingPoint": "One clear small note when your Spark arrives beside you",
-   "onSpark": "One clear small note at arrival; written 'purchased' in the sound settings.",
+   "onSpark": "One clear small note at arrival; at the stall the little bell hangs at the Spark's side so the sound has a shape. Written 'purchased' in the sound settings — sound carries no tag.",
    "source": "catalogue-2026-11-23",
    "surface": "site",
    "rarity": {
     "type": "open"
+   },
+   "stage": "sound-bell",
+   "form": "sound",
+   "detail": {
+    "what": "One clear small bell-note that sounds when your Spark arrives beside you.",
+    "means": "The smallest sound good: a knock at the door of the room, in sound's language. Keepers who share a room with others choose it — the Spark announces itself, politely, once.",
+    "kinds": "One note, the same clarity on every kind, pitched from the Spark's own home pitch; at the stall the bell itself hangs at the Spark's side, drawn small in brass.",
+    "design": "An arrival should be an event of one note, not a fanfare. The bell is drawn carried, not worn — it belongs to the threshold, and the Spark brings it the way a guest brings a knock."
    }
   },
   {
@@ -1130,6 +1580,14 @@
    "rarity": {
     "type": "earned-only",
     "note": "Earned, never sold — its scarcity is real days lived."
+   },
+   "stage": "sound-episode",
+   "form": "sound",
+   "detail": {
+    "what": "The hums of the episodes your Spark has watched with you — learned by watching, performed at their tokens' home plates.",
+    "means": "Earned, never sold. This shelf exists only because keeper and Spark sat together through the episodes; the hums are the memory of that, kept as sound.",
+    "kinds": "Any kind of Spark can learn them; the hum is the episode's, not the kind's. At the stall the learned hums hang as small plates on an arc over the Spark — the tokens' home plates, drawn.",
+    "design": "The design is the earning: no picture of these hums can be bought, so the stall draws only the arc and the plates — the shape of a shelf that fills by living, not by buying."
    }
   },
   {
@@ -1146,6 +1604,14 @@
    "rarity": {
     "type": "earned-only",
     "note": "Earned, never sold — its scarcity is real days lived."
+   },
+   "stage": "sound-moonhum",
+   "form": "sound",
+   "detail": {
+    "what": "The hum of each Moon, learned as the Moons are kept with your Spark — a repertoire that exists only because the year was lived.",
+    "means": "Earned, never sold: thirteen hums for thirteen moons, gathered one per moon at the pace of real days. It is the sound of a whole year kept in company.",
+    "kinds": "Every kind learns the same thirteen hums in its own voice — the moon's hum at a Fire pitch, a Water pitch, a Shadow pitch. At the stall they spiral around the Spark as notes along a turning path.",
+    "design": "A repertoire, not a set: it cannot be completed faster than a year. The spiral drawing is the design's confession — the hums arrive along the road's own turn, one moon at a time."
    }
   }
  ]

@@ -129,3 +129,43 @@ test("the stage can dress the Spark: many goods are stageable", () => {
   for (const n of ["The Wayfarer's Lantern", "The Kind Scarf", "The Ember Circlet"])
     assert.ok(byName.get(n).stage, n + " is stageable");
 });
+
+/* Nov 27, 2026 — Aaron's word on the voice call: every item in
+   the shop is wearable by the keeper's Spark, or custom to it —
+   carried, held, or been — and every item carries detail worth
+   its price, with the design thought written down. */
+test("every good is Spark-bound: all 65 stand on the Spark", () => {
+  assert.strictEqual(items.length, 65, "the catalogue is 65 goods");
+  for (const it of items) assert.ok(it.stage, "no stage drawing: " + it.name);
+});
+
+test("every good carries its full detail, design thought included", () => {
+  for (const it of items) {
+    assert.ok(it.detail, "no detail: " + it.name);
+    for (const f of ["what", "means", "kinds", "design"])
+      assert.ok(it.detail[f] && it.detail[f].length > 25, "detail." + f + " too thin: " + it.name);
+  }
+});
+
+test("the converted families carry the form that binds them to the Spark", () => {
+  const form = Object.fromEntries(items.map((i) => [i.id, i.form]));
+  assert.strictEqual(form["brightenings---the-first-set"], "expression");
+  assert.strictEqual(form["quiet-manners"], "expression");
+  assert.strictEqual(form["your-spark-in-stickers"], "carried-sheet");
+  assert.strictEqual(form["codex-glyph-stickers"], "carried-sheet");
+  assert.strictEqual(form["observatory-night"], "ground-theme");
+  assert.strictEqual(form["floating-isles-theme---spark!"], "ground-theme");
+  assert.strictEqual(form["the-chronicle-shelf"], "ground-piece");
+  assert.strictEqual(form["the-token-shelf"], "ground-piece");
+  assert.strictEqual(form["chime-set---the-moon-tones"], "sound");
+  assert.strictEqual(form["the-moon-hum-repertoire"], "sound");
+  assert.strictEqual(form["game-expressions---spark!"], "game-expression");
+  assert.strictEqual(form["victory-brightening---spark!"], "game-expression");
+});
+
+test("no sticker or sound line still denies the Spark its form", () => {
+  for (const it of items) {
+    if (it.category === "stickers" || it.category === "sound")
+      assert.ok(!/wears nothing|Nothing to see/.test(it.onSpark), "stale onSpark: " + it.name);
+  }
+});
