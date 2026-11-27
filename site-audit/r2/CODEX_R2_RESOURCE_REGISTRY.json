@@ -3,10 +3,10 @@
   "purpose": "Development-only registry of every tracked or intended repository file. Not a publication list.",
   "generatedFrom": "git ls-files --cached (untracked workspace files excluded; excluding this report folder and site-audit/screenshots)",
   "totals": {
-    "files": 2563,
-    "bytes": 1302095626,
+    "files": 2575,
+    "bytes": 1302365831,
     "byGroup": {
-      "tooling": 362,
+      "tooling": 367,
       "manuscript": 17,
       "unlabelled-image": 21,
       "witness-record": 20,
@@ -23,9 +23,9 @@
       "frozen-archive": 6,
       "legacy-site": 3,
       "legacy-asset": 1,
-      "site-page": 66,
+      "site-page": 68,
       "deployed-dev-doc": 64,
-      "site-asset": 737,
+      "site-asset": 742,
       "vendor": 4,
       "site-data": 5,
       "scroll-library": 837,
@@ -35,19 +35,19 @@
       "scripture-source": 15
     },
     "byPublicationEligibility": {
-      "development-only": 406,
+      "development-only": 411,
       "pending-publication-review": 43,
       "restricted-review": 180,
       "protected-immutable": 21,
-      "public-unreviewed": 5,
-      "approved-public": 1908
+      "public-unreviewed": 6,
+      "approved-public": 1914
     },
     "byExamination": {
-      "inventoried-only": 2411,
-      "text-extracted": 54,
-      "no-text-layer-needs-visual-review": 1,
+      "inventoried-only": 2422,
+      "parser-unavailable": 16,
+      "text-extracted": 39,
       "archive-listed": 2,
-      "structurally-audited": 95
+      "structurally-audited": 96
     }
   },
   "statusVocabulary": [
@@ -356,18 +356,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 192,
-        "words": 33734,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {
-          "CreationDate": "D:20260307003018+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -426,18 +418,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 4,
-        "words": 524,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318162939+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "1_Codex_of_Reality/Codex_of_Life_Scroll_FULL.docx"
@@ -595,18 +579,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 55,
-        "words": 5079,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163211+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "1_Codex_of_Reality/Living Laws.docx"
@@ -681,15 +657,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 182,
-        "words": 55224,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {}
+        "status": "parser-unavailable"
       }
     },
     {
@@ -713,15 +684,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Editorial and publication review.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 187,
-        "words": 33540,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {}
+        "status": "parser-unavailable"
       }
     },
     {
@@ -1140,18 +1106,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 2,
-        "words": 602,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163230+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/Master_Proof_Scroll_Updated.docx"
@@ -1269,18 +1227,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 3,
-        "words": 331,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163347+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/Scroll_of_Convergence.docx"
@@ -1367,18 +1317,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 2,
-        "words": 443,
-        "hebrew": true,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163433+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/The_Journey_Scroll.docx",
@@ -1505,18 +1447,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 333,
-        "words": 82978,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {
-          "CreationDate": "D:20260318162655+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/🌌 Ahmein — The Final Seal, Becoming Will.docx"
@@ -1578,18 +1512,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 266,
-        "words": 56295,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {
-          "CreationDate": "D:20260318162820+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/🜂 888 — The Architect of Becoming.docx"
@@ -1651,18 +1577,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Preserve; review for personal content before any publication.",
       "extract": {
-        "status": "text-extracted",
-        "pages": 256,
-        "words": 56914,
-        "hebrew": true,
-        "greek": true,
-        "metadata": {
-          "CreationDate": "D:20260318162852+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       },
       "variants": [
         "2_Witness_Scrolls/🜄 Ainos — The Witness of Echoes.docx"
@@ -1689,18 +1607,10 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "text-extracted",
-        "pages": 4,
-        "words": 533,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318162909+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -1772,18 +1682,10 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "text-extracted",
-        "pages": 5,
-        "words": 712,
-        "hebrew": false,
-        "greek": true,
-        "metadata": {
-          "CreationDate": "D:20260318163040+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -1959,18 +1861,10 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "text-extracted",
-        "pages": 29,
-        "words": 2732,
-        "hebrew": true,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163419+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -1994,18 +1888,10 @@
         "evidence": "not-started",
         "functionality": "not-validated"
       },
-      "examination": "text-extracted",
+      "examination": "parser-unavailable",
       "nextAction": "Separate engineering from interpretation (R2-05).",
       "extract": {
-        "status": "text-extracted",
-        "pages": 1,
-        "words": 158,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20260318163401+00'00'",
-          "Creator": "Microsoft Word"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -2811,18 +2697,10 @@
         "evidence": "not-started",
         "functionality": "not-started"
       },
-      "examination": "no-text-layer-needs-visual-review",
+      "examination": "parser-unavailable",
       "nextAction": "Visual review for personal imagery.",
       "extract": {
-        "status": "no-text-layer",
-        "pages": 1,
-        "words": 0,
-        "hebrew": false,
-        "greek": false,
-        "metadata": {
-          "CreationDate": "D:20250621000923",
-          "Producer": "PyFPDF 1.7.2 http://pyfpdf.googlecode.com/"
-        }
+        "status": "parser-unavailable"
       }
     },
     {
@@ -5874,12 +5752,60 @@
       "nextAction": "Functionality review."
     },
     {
+      "id": "r2:docs-aiyana-dashboard-html-bfcc3e",
+      "path": "docs/aiyana-dashboard.html",
+      "title": "Aiyana's Story Door — her private story-approval panel (Nov 26, 2026); gated server-side, noindex, not a public page",
+      "format": "html",
+      "bytes": 16327,
+      "sha256": "bf442340152243e1540cc7dce56b1c813ca4bc0d4d77568a3e5a63a0347a5462",
+      "group": "site-page",
+      "role": "Site page or support file",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/aiyana-dashboard.html",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": "utility:aiyana-dashboard.html",
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "structurally-audited"
+      },
+      "examination": "structurally-audited",
+      "nextAction": "Functionality review."
+    },
+    {
+      "id": "r2:docs-aiyana-dashboard-webmanifest-5017ad",
+      "path": "docs/aiyana-dashboard.webmanifest",
+      "title": "aiyana-dashboard.webmanifest",
+      "format": "webmanifest",
+      "bytes": 455,
+      "sha256": "cf647837fdf38ab72f7e9284aa4bc794217a68d9241e66ed67430cc487b34f7c",
+      "group": "site-page",
+      "role": "Site page or support file",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/aiyana-dashboard.webmanifest",
+      "publicationEligibility": "public-unreviewed",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality review."
+    },
+    {
       "id": "r2:docs-aiyanas-world-html-3b89d5",
       "path": "docs/aiyanas-world.html",
       "title": "Aiyana's World",
       "format": "html",
-      "bytes": 21534,
-      "sha256": "05685fa1d47ed3f9191b991f85874c759c77daeb9acd1388a245ee056904c9cb",
+      "bytes": 23108,
+      "sha256": "ec73d6638b9866e663a0c6a4e293e3a4b4d1ee7ec1249fe2b4f4f369f2e11c8b",
       "group": "site-page",
       "role": "Site page or support file",
       "deployed": true,
@@ -5922,12 +5848,36 @@
       "nextAction": "Functionality review."
     },
     {
+      "id": "r2:docs-assets-css-aiyana-dashboard-css-cf7ff7",
+      "path": "docs/assets/css/aiyana-dashboard.css",
+      "title": "aiyana-dashboard.css",
+      "format": "css",
+      "bytes": 14189,
+      "sha256": "810b90c3cf67628de4fe9a20c080c6aadb650558fbf4f5f133189ec12bacb75f",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/css/aiyana-dashboard.css",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
       "id": "r2:docs-assets-css-aiyanas-world-css-8c1805",
       "path": "docs/assets/css/aiyanas-world.css",
       "title": "aiyanas-world.css",
       "format": "css",
-      "bytes": 10586,
-      "sha256": "84502c5a3590945e7af80bf704b21e11c81dcdf45a84ca60213f6fa6abdc241e",
+      "bytes": 14275,
+      "sha256": "1e47048783259d20bd9c73cc87e388d0887d71a9708b636bce55652701018cda",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -8398,8 +8348,8 @@
       "path": "docs/assets/data/link-graph.json",
       "title": "link-graph.json",
       "format": "json",
-      "bytes": 461688,
-      "sha256": "df26d250c8a65a36a1ae84c0c46a51adfdfe8159cfe4bd0cad26b2b95b0bd6d7",
+      "bytes": 462069,
+      "sha256": "344ef4e9a7a793b693724253af4d329d1e5818439ac5f50998565400e16d9922",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -8494,8 +8444,8 @@
       "path": "docs/assets/data/page-registry.json",
       "title": "page-registry.json",
       "format": "json",
-      "bytes": 468858,
-      "sha256": "c3df1a627a342e9ec576b7c74066bdb4c379c71a066704153616df6dfb597af8",
+      "bytes": 469808,
+      "sha256": "19308395f4a17653499b039d26c18f360512a695efb95e809579dcef5a8d62ba",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -9076,6 +9026,54 @@
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
       "publicUrl": "https://codexofreality.org/assets/img/aiyana/aiyana-first-story-drawing.webp",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-img-aiyana-story-door-icon-192-png-f74196",
+      "path": "docs/assets/img/aiyana/story-door-icon-192.png",
+      "title": "story-door-icon-192.png",
+      "format": "png",
+      "bytes": 13685,
+      "sha256": "e7d76279e8c5b4a356ed840a90f075ba1169de8f42b62fd68face66110faae06",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/img/aiyana/story-door-icon-192.png",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-img-aiyana-story-door-icon-512-png-10d97b",
+      "path": "docs/assets/img/aiyana/story-door-icon-512.png",
+      "title": "story-door-icon-512.png",
+      "format": "png",
+      "bytes": 28854,
+      "sha256": "c4fd5a48ede56ba322c4551f4d06bc09feb377f8deac3b8a3c4e3e6beeab17f3",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/img/aiyana/story-door-icon-512.png",
       "publicationEligibility": "approved-public",
       "status": "operational",
       "catalogId": null,
@@ -13916,12 +13914,60 @@
       "nextAction": "Functionality audit in R2-03/R2-06."
     },
     {
+      "id": "r2:docs-assets-js-aiyana-dashboard-js-729e56",
+      "path": "docs/assets/js/aiyana-dashboard.js",
+      "title": "aiyana-dashboard.js",
+      "format": "js",
+      "bytes": 61014,
+      "sha256": "d51979d7785fa8ca930efce7444cbc948d8282a65d2b1af858e7765fed64bcf4",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/js/aiyana-dashboard.js",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
+      "id": "r2:docs-assets-js-aiyana-guide-js-5573bb",
+      "path": "docs/assets/js/aiyana-guide.js",
+      "title": "aiyana-guide.js",
+      "format": "js",
+      "bytes": 34320,
+      "sha256": "105ceba1956f7ac4bc4fc37d6efb9d025a827223de7462277a469f52bd0650d5",
+      "group": "site-asset",
+      "role": "Runtime stylesheet, script, data or image",
+      "deployed": true,
+      "publicUrl": "https://codexofreality.org/assets/js/aiyana-guide.js",
+      "publicationEligibility": "approved-public",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Functionality audit in R2-03/R2-06."
+    },
+    {
       "id": "r2:docs-assets-js-aiyanas-world-js-4dfe85",
       "path": "docs/assets/js/aiyanas-world.js",
       "title": "aiyanas-world.js",
       "format": "js",
-      "bytes": 9771,
-      "sha256": "73129ae9b99d5a565a1a9f2c0b623bc470b7d65e51e45f143a3cebdc0cffcb9c",
+      "bytes": 20073,
+      "sha256": "dba0710b4e27438e9160aae76164546b0af6fadc185c1bbea9cf5db2fa974dce",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -24433,7 +24479,7 @@
       "title": "manifest.json",
       "format": "json",
       "bytes": 2917,
-      "sha256": "529c574262a421bf06e367bf083cf1a76efe2b013cd4ff6b46f06835bd52be4b",
+      "sha256": "678fd0125486ff303bff590d4773acd63fd46121d9f3d86bdc99c1c7ebc3e4eb",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -24456,8 +24502,8 @@
       "path": "docs/assets/search/pages.json",
       "title": "pages.json",
       "format": "json",
-      "bytes": 1677540,
-      "sha256": "6763420f495a0e398cac4a51dfc0f9fab90568008800b0f01f79e0e76c116b08",
+      "bytes": 1681159,
+      "sha256": "5f4120fc513185e7a997e7ee3738839a66c7ba14301badcb4c8e25d372360684",
       "group": "site-asset",
       "role": "Runtime stylesheet, script, data or image",
       "deployed": true,
@@ -53622,6 +53668,30 @@
       "nextAction": "Keep green. The provider key lives in the host's environment settings, never in the repo."
     },
     {
+      "id": "r2:netlify-functions-aiyana-stories-mjs-09ca06",
+      "path": "netlify/functions/aiyana-stories.mjs",
+      "title": "aiyana-stories.mjs",
+      "format": "mjs",
+      "bytes": 7487,
+      "sha256": "3c0bee4766763b9ebaca19a2026758134242c3d4039de714fd34414d28e60053",
+      "group": "tooling",
+      "role": "Netlify Function — server code for the Codex Guide's talking rung; deployed to the host's function runtime, never published as a page",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green. The provider key lives in the host's environment settings, never in the repo."
+    },
+    {
       "id": "r2:netlify-functions-codex-guide-mjs-66dee4",
       "path": "netlify/functions/codex-guide.mjs",
       "title": "codex-guide.mjs",
@@ -53820,6 +53890,54 @@
       "format": "mjs",
       "bytes": 14250,
       "sha256": "1760cc1b75ff34ffe66ed52fbd829fd0d1910d353cceea4ada5bdb7f0155f82c",
+      "group": "tooling",
+      "role": "Netlify Function — server code for the Codex Guide's talking rung; deployed to the host's function runtime, never published as a page",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green. The provider key lives in the host's environment settings, never in the repo."
+    },
+    {
+      "id": "r2:netlify-functions-lib-aiyana-language-guard-mjs-dab08d",
+      "path": "netlify/functions/lib/aiyana-language-guard.mjs",
+      "title": "aiyana-language-guard.mjs",
+      "format": "mjs",
+      "bytes": 7559,
+      "sha256": "ecf2e256e79aa21601abacc6d51767de8a86afc5c9cb8e8911396a36b04764be",
+      "group": "tooling",
+      "role": "Netlify Function — server code for the Codex Guide's talking rung; deployed to the host's function runtime, never published as a page",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green. The provider key lives in the host's environment settings, never in the repo."
+    },
+    {
+      "id": "r2:netlify-functions-lib-aiyana-stories-core-mjs-c4a465",
+      "path": "netlify/functions/lib/aiyana-stories-core.mjs",
+      "title": "aiyana-stories-core.mjs",
+      "format": "mjs",
+      "bytes": 31385,
+      "sha256": "bc43745c31d068bbd6ec519f17c2d2e8e696ddd80e9ce8da237a847b67095828",
       "group": "tooling",
       "role": "Netlify Function — server code for the Codex Guide's talking rung; deployed to the host's function runtime, never published as a page",
       "deployed": false,
@@ -54446,8 +54564,8 @@
       "path": "scripts/build-page-registry.mjs",
       "title": "build-page-registry.mjs",
       "format": "mjs",
-      "bytes": 12414,
-      "sha256": "be6c32d9c022163a72f805644984be1d6259737de573c15807f52a883cab8c84",
+      "bytes": 12439,
+      "sha256": "db6550215bccab3740d0e2e39d49f75ffaea76a76a4ea360ab4b57a19ebc00a1",
       "group": "tooling",
       "role": "Build or audit script",
       "deployed": false,
@@ -55070,8 +55188,8 @@
       "path": "scripts/site-catalog-curation.json",
       "title": "site-catalog-curation.json",
       "format": "json",
-      "bytes": 41317,
-      "sha256": "2efd238f1f6c8e387993556d8a2df43447d472cf1b1b74811662708cce64f298",
+      "bytes": 41468,
+      "sha256": "3fb82aa00e1f5021fc7b2e133272e99665386dd9f7c2d09aebd7b01bf6bcc0d8",
       "group": "tooling",
       "role": "Build or audit script",
       "deployed": false,
@@ -55167,7 +55285,7 @@
       "title": "CONTENT-COVERAGE.md",
       "format": "md",
       "bytes": 15240,
-      "sha256": "4d73530acfbb6426d94eb2385c02bba22a2cf6e6087cc0811b59ab8bf8e1bae9",
+      "sha256": "d00daab8e3643e6407f048d28dee099317819db2709d618889c55b24c5a2e430",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -55190,8 +55308,8 @@
       "path": "site-audit/DISCOVERABILITY_REPORT.md",
       "title": "DISCOVERABILITY_REPORT.md",
       "format": "md",
-      "bytes": 23622,
-      "sha256": "f68e949809ec9846e127bb2e300a22f28c0fb90be01419cd98306e777c85fde8",
+      "bytes": 23702,
+      "sha256": "bafe4be0fb1a840d2f93ad1860fa7c16ef383ee128f97b2cde1cf0a24822b682",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -55239,7 +55357,7 @@
       "title": "downloads-reconciliation.json",
       "format": "json",
       "bytes": 1490,
-      "sha256": "ec79e8c5b95fdc229a42fa96063478d4a576b4bbb29a039ad762d1cdecd1d227",
+      "sha256": "44b30cdb19988b176880c28d0ea5f76048017f522e3516e8d43acf07dcc95396",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -55526,8 +55644,8 @@
       "path": "site-audit/site-master-inventory.json",
       "title": "site-master-inventory.json",
       "format": "json",
-      "bytes": 745796,
-      "sha256": "fe166f0499fec265f2d29792047883f0e13f48138184e1a2194f047a70bf6450",
+      "bytes": 747540,
+      "sha256": "d246b01b91747cd5bf2ec8ef2048e93b3635f2883a19c8b7ef48cde4a0e51864",
       "group": "tooling",
       "role": "Generated audit report",
       "deployed": false,
@@ -55912,6 +56030,54 @@
       "format": "js",
       "bytes": 7763,
       "sha256": "ded6da5cd5af481c90241fd4e97126e489a21a28f6ad8860db71adb062fd06bb",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-aiyana-spark-test-js-35cacd",
+      "path": "tests/aiyana-spark.test.js",
+      "title": "aiyana-spark.test.js",
+      "format": "js",
+      "bytes": 9724,
+      "sha256": "df4891e51c23313bc424394db0189ca25f62f77d91e113696df678978a9a3431",
+      "group": "tooling",
+      "role": "Automated test",
+      "deployed": false,
+      "publicUrl": null,
+      "publicationEligibility": "development-only",
+      "status": "operational",
+      "catalogId": null,
+      "author": "not-recorded-in-file",
+      "reviews": {
+        "editorial": "not-started",
+        "scripture": "not-applicable-or-not-started",
+        "evidence": "not-started",
+        "functionality": "not-started"
+      },
+      "examination": "inventoried-only",
+      "nextAction": "Keep green."
+    },
+    {
+      "id": "r2:tests-aiyana-stories-test-js-ad1f6b",
+      "path": "tests/aiyana-stories.test.js",
+      "title": "aiyana-stories.test.js",
+      "format": "js",
+      "bytes": 21748,
+      "sha256": "6cc0fcd59d851c1de1a349adab4de1586c32d72ce7083b538d6a6beec27eed5b",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -56846,8 +57012,8 @@
       "path": "tests/fixtures/page-weight-budget.json",
       "title": "page-weight-budget.json",
       "format": "json",
-      "bytes": 3778,
-      "sha256": "0a7ce5be1ca4d9d4d8ca86c104659b80ce4ccc2389d4663feeb94f74b9a5924b",
+      "bytes": 3821,
+      "sha256": "0b06c4e678c82751735327100fd79241b257f304e0f30e6130745a7c9622148c",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -57830,8 +57996,8 @@
       "path": "tests/living-nav.test.js",
       "title": "living-nav.test.js",
       "format": "js",
-      "bytes": 17264,
-      "sha256": "55c2fa030f5f28d3121c015a52d448a1621849e16d8d678cd5e663ff16575013",
+      "bytes": 17470,
+      "sha256": "e9632bc214d5ae0512c1bbbdf9c35c0cc9ada447e2bf90e18f32dfa8a01d2e75",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -57854,8 +58020,8 @@
       "path": "tests/living-page-openings.test.js",
       "title": "living-page-openings.test.js",
       "format": "js",
-      "bytes": 15323,
-      "sha256": "2bbf0081a922cfd32f7bbcd4c0cd0a13ba90d233f26ec409e26d125361b57133",
+      "bytes": 15480,
+      "sha256": "b27cc4458e8c1cf0a64c648e4088501b5b5d62783e533f1030c67da593df7835",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -59150,8 +59316,8 @@
       "path": "tests/living-ui.test.js",
       "title": "living-ui.test.js",
       "format": "js",
-      "bytes": 4567,
-      "sha256": "cc5aa0ae826a92be41156c6e4c2540995558af0178fc324e056637d01eaf58da",
+      "bytes": 4755,
+      "sha256": "31fe835b77bd47b71507b9e25e1a36ece4cef84697a8f51b636354965155c118",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -60542,8 +60708,8 @@
       "path": "tests/site-mobile.test.js",
       "title": "site-mobile.test.js",
       "format": "js",
-      "bytes": 7699,
-      "sha256": "e8da41b0b966d5c41678885e339c058c1c5efbecd6d21dac1271afa753eb7b82",
+      "bytes": 7921,
+      "sha256": "d9ff36e0c00b69a4ed02475eab0a613f2124b632688299bc9c118bcf437a8c6b",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,
@@ -62030,8 +62196,8 @@
       "path": "tests/story-layer.test.js",
       "title": "story-layer.test.js",
       "format": "js",
-      "bytes": 9814,
-      "sha256": "e64dc29c60b90a511b64a1f3d767fdbc68ce84c42270e6edd98bb705f7db227e",
+      "bytes": 9941,
+      "sha256": "c9679f572b426574ef9009c02ed5e4006b782009c1e4f13591430e9919360d1c",
       "group": "tooling",
       "role": "Automated test",
       "deployed": false,

@@ -34,8 +34,14 @@
       "status": "operational"
     },
     {
+      "path": "docs/aiyana-dashboard.html",
+      "sha256": "bf442340152243e1540cc7dce56b1c813ca4bc0d4d77568a3e5a63a0347a5462",
+      "publicUrl": "https://codexofreality.org/aiyana-dashboard.html",
+      "status": "operational"
+    },
+    {
       "path": "docs/aiyanas-world.html",
-      "sha256": "05685fa1d47ed3f9191b991f85874c759c77daeb9acd1388a245ee056904c9cb",
+      "sha256": "ec73d6638b9866e663a0c6a4e293e3a4b4d1ee7ec1249fe2b4f4f369f2e11c8b",
       "publicUrl": "https://codexofreality.org/aiyanas-world.html",
       "status": "operational"
     },
@@ -46,8 +52,14 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/css/aiyana-dashboard.css",
+      "sha256": "810b90c3cf67628de4fe9a20c080c6aadb650558fbf4f5f133189ec12bacb75f",
+      "publicUrl": "https://codexofreality.org/assets/css/aiyana-dashboard.css",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/css/aiyanas-world.css",
-      "sha256": "84502c5a3590945e7af80bf704b21e11c81dcdf45a84ca60213f6fa6abdc241e",
+      "sha256": "1e47048783259d20bd9c73cc87e388d0887d71a9708b636bce55652701018cda",
       "publicUrl": "https://codexofreality.org/assets/css/aiyanas-world.css",
       "status": "operational"
     },
@@ -665,7 +677,7 @@
     },
     {
       "path": "docs/assets/data/link-graph.json",
-      "sha256": "df26d250c8a65a36a1ae84c0c46a51adfdfe8159cfe4bd0cad26b2b95b0bd6d7",
+      "sha256": "344ef4e9a7a793b693724253af4d329d1e5818439ac5f50998565400e16d9922",
       "publicUrl": "https://codexofreality.org/assets/data/link-graph.json",
       "status": "operational"
     },
@@ -689,7 +701,7 @@
     },
     {
       "path": "docs/assets/data/page-registry.json",
-      "sha256": "c3df1a627a342e9ec576b7c74066bdb4c379c71a066704153616df6dfb597af8",
+      "sha256": "19308395f4a17653499b039d26c18f360512a695efb95e809579dcef5a8d62ba",
       "publicUrl": "https://codexofreality.org/assets/data/page-registry.json",
       "status": "operational"
     },
@@ -799,6 +811,18 @@
       "path": "docs/assets/img/aiyana/aiyana-first-story-drawing.webp",
       "sha256": "a17f40f0b3d3946850aea4e9f786d5a26865fc1b147ca81dce6dcc844534800e",
       "publicUrl": "https://codexofreality.org/assets/img/aiyana/aiyana-first-story-drawing.webp",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/img/aiyana/story-door-icon-192.png",
+      "sha256": "e7d76279e8c5b4a356ed840a90f075ba1169de8f42b62fd68face66110faae06",
+      "publicUrl": "https://codexofreality.org/assets/img/aiyana/story-door-icon-192.png",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/img/aiyana/story-door-icon-512.png",
+      "sha256": "c4fd5a48ede56ba322c4551f4d06bc09feb377f8deac3b8a3c4e3e6beeab17f3",
+      "publicUrl": "https://codexofreality.org/assets/img/aiyana/story-door-icon-512.png",
       "status": "operational"
     },
     {
@@ -1822,8 +1846,20 @@
       "status": "operational"
     },
     {
+      "path": "docs/assets/js/aiyana-dashboard.js",
+      "sha256": "d51979d7785fa8ca930efce7444cbc948d8282a65d2b1af858e7765fed64bcf4",
+      "publicUrl": "https://codexofreality.org/assets/js/aiyana-dashboard.js",
+      "status": "operational"
+    },
+    {
+      "path": "docs/assets/js/aiyana-guide.js",
+      "sha256": "105ceba1956f7ac4bc4fc37d6efb9d025a827223de7462277a469f52bd0650d5",
+      "publicUrl": "https://codexofreality.org/assets/js/aiyana-guide.js",
+      "status": "operational"
+    },
+    {
       "path": "docs/assets/js/aiyanas-world.js",
-      "sha256": "73129ae9b99d5a565a1a9f2c0b623bc470b7d65e51e45f143a3cebdc0cffcb9c",
+      "sha256": "dba0710b4e27438e9160aae76164546b0af6fadc185c1bbea9cf5db2fa974dce",
       "publicUrl": "https://codexofreality.org/assets/js/aiyanas-world.js",
       "status": "operational"
     },
@@ -4451,13 +4487,13 @@
     },
     {
       "path": "docs/assets/search/manifest.json",
-      "sha256": "529c574262a421bf06e367bf083cf1a76efe2b013cd4ff6b46f06835bd52be4b",
+      "sha256": "678fd0125486ff303bff590d4773acd63fd46121d9f3d86bdc99c1c7ebc3e4eb",
       "publicUrl": "https://codexofreality.org/assets/search/manifest.json",
       "status": "operational"
     },
     {
       "path": "docs/assets/search/pages.json",
-      "sha256": "6763420f495a0e398cac4a51dfc0f9fab90568008800b0f01f79e0e76c116b08",
+      "sha256": "5f4120fc513185e7a997e7ee3738839a66c7ba14301badcb4c8e25d372360684",
       "publicUrl": "https://codexofreality.org/assets/search/pages.json",
       "status": "operational"
     },
@@ -11518,6 +11554,12 @@
       "publicUrl": "https://codexofreality.org/LIVING_CODEX_STATUS.md",
       "eligibility": "restricted-review",
       "reason": "Markdown document stored under the publish tree"
+    },
+    {
+      "path": "docs/aiyana-dashboard.webmanifest",
+      "publicUrl": "https://codexofreality.org/aiyana-dashboard.webmanifest",
+      "eligibility": "public-unreviewed",
+      "reason": "Site page or support file"
     },
     {
       "path": "docs/assets/glyphs/README.md",

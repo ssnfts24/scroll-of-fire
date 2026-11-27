@@ -119,18 +119,18 @@
 
 | Script | Pages |
 | --- | --- |
-| `docs/assets/js/spark-companion.js` | 191 |
+| `docs/assets/js/spark-companion.js` | 192 |
 | `docs/assets/js/spark-presence.js` | 189 |
-| `docs/assets/js/site.js` | 166 |
+| `docs/assets/js/site.js` | 167 |
 | `docs/assets/js/living-ui.js` | 156 |
 | `docs/scripture/assets/scripture.js` | 102 |
 | `docs/assets/js/spark-relations.js` | 83 |
 | `docs/assets/js/heaven-sound.js` | 77 |
 | `docs/assets/js/spark-agent-seat.js` | 76 |
 | `docs/assets/js/spark-3d.js` | 70 |
-| `docs/assets/js/calendar/pattern-calendar-version.js` | 51 |
-| `docs/assets/js/calendar/pattern-calendar-data.js` | 51 |
-| `docs/assets/js/calendar/pattern-calendar-format.js` | 51 |
+| `docs/assets/js/calendar/pattern-calendar-version.js` | 52 |
+| `docs/assets/js/calendar/pattern-calendar-data.js` | 52 |
+| `docs/assets/js/calendar/pattern-calendar-format.js` | 52 |
 
 ## Protected systems (do not modify)
 
