@@ -1656,14 +1656,14 @@
      "area": "systems"
     },
     {
+     "path": "witness.html",
+     "title": "Witness",
+     "area": "artifacts"
+    },
+    {
      "path": "aiyanas-world.html",
      "title": "Aiyana's World",
      "area": "living-time"
-    },
-    {
-     "path": "scripture/index.html",
-     "title": "Genesis & Exodus Scripture",
-     "area": "scroll-scripture"
     }
    ],
    "in": [
@@ -1703,7 +1703,7 @@
      "area": "codex"
     }
    ],
-   "outTotal": 28,
+   "outTotal": 29,
    "inTotal": 7
   },
   "install.html": {
@@ -18939,6 +18939,11 @@
      "area": "archive"
     },
     {
+     "path": "index.html",
+     "title": "Codex of Reality",
+     "area": "codex"
+    },
+    {
      "path": "witness-world.html",
      "title": "The Witness World — Redirect",
      "area": "codex"
@@ -18950,7 +18955,7 @@
     }
    ],
    "outTotal": 5,
-   "inTotal": 3
+   "inTotal": 4
   }
  }
 }

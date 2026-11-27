@@ -104,7 +104,7 @@ test("the share never reaches the network — nothing uploads", () => {
 test("the growth record carries the surfaces, and the homepage mirrors it", () => {
   const updates = JSON.parse(read("docs/assets/data/codex-updates.json"));
   assert.equal(updates[0].date, "2026-11-27");
-  assert.equal(updates[0].title, "Markers under the days, and no Spark but your own");
-  const mirror = HTML.match(/data-le-growth[\s\S]*?<li><time datetime="2026-11-27">2026-11-27<\/time> <a href="\.\/living-time-sphere\.html">Markers under the days, and no Spark but your own<\/a><\/li>/);
-  assert.ok(mirror, "the homepage activity panel mirrors the newest entry (the living-build entry stands second in the mirror, as entries before it aged in their turn)");
+  assert.equal(updates[0].title, "Witness tended its page on the day no Spark but your own would do");
+  const mirror = HTML.match(/data-le-growth[\s\S]*?<li><time datetime="2026-11-27">2026-11-27<\/time> <a href="\.\/witness\.html">Witness tended its page on the day no Spark but your own would do<\/a><\/li>/);
+  assert.ok(mirror, "the homepage activity panel mirrors the newest entry (the markers entry stands second in the mirror, as entries before it aged in their turn)");
 });
