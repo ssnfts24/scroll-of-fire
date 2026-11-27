@@ -680,10 +680,10 @@
     if (!document.getElementById("spark-intro-show")) return;
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "assets/css/spark-intro.css?v=20261126-4";
+    link.href = "assets/css/spark-intro.css?v=20261126-6";
     document.head.appendChild(link);
     const script = document.createElement("script");
-    script.src = "assets/js/spark-intro.js?v=20261126-4";
+    script.src = "assets/js/spark-intro.js?v=20261126-6";
     script.defer = true;
     document.head.appendChild(script);
   })();

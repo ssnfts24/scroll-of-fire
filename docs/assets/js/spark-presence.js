@@ -3646,7 +3646,7 @@
     document.head.appendChild(css);
     loadScript(base + "spark-evolution-path.js?v=20261126-1")
       .then(() => loadScript(base + "spark-lean.js?v=20261126-1"))
-      .then(() => loadScript(base + "spark-living.js?v=20261126-1"))
+      .then(() => loadScript(base + "spark-living.js?v=20261126-6"))
       .catch(() => { /* the living layer rests */ });
   }
 
@@ -3661,9 +3661,9 @@
     const base = scriptBase();
     const css = document.createElement("link");
     css.rel = "stylesheet";
-    css.href = base.replace(/js\/$/, "css/") + "spark-intro.css?v=20261126-4";
+    css.href = base.replace(/js\/$/, "css/") + "spark-intro.css?v=20261126-6";
     document.head.appendChild(css);
-    loadScript(base + "spark-intro.js?v=20261126-4")
+    loadScript(base + "spark-intro.js?v=20261126-6")
       .catch(() => { /* the tour rests */ });
   }
 
