@@ -3,36 +3,44 @@
 /*
  * The Spark's tours (Aaron, Nov 26, 2026 — corrected in his
  * own words at 16:13, after the first build put a guide's
- * walk before the meeting):
+ * walk before the meeting; and again at 17:04, deeper):
  *
- *   1. "After you enter the first page. First time. You
- *      should be offered to adopt one." Adoption comes
- *      FIRST. The meeting itself — the presence's pop-up,
- *      or the companions page — is the offer, and this
- *      module runs no tour at all for a visitor who has no
- *      Spark. There is no guide walk before the meeting.
- *   2. "After adopting the Spark, in an animated way [it]
- *      offers a tour and then gives a quick tour." The
- *      moment a record stands where none stood, the keeper's
- *      OWN Spark arrives animated — with the gait its seed
- *      grew — and offers the tour. One tap, and it gives a
- *      QUICK tour: six short stops, skippable throughout.
- *   3. "Then each page besides the sphere stage should have
- *      a guided tour by the Spark" — and the Sphere stage
- *      has one too, named separately because it is the
- *      centrepiece. Every page the Spark walks carries a
- *      short guided tour of that room: the Spark offers it,
- *      the keeper's tap starts it, and the Tour button calls
- *      it back at any time. The Sphere's tour rides this
- *      overlay alone — no protected Sphere file is touched.
- *   4. "The Spark should animate in different ways and give
- *      a tour [of] what the Spark does." The stops are the
- *      Spark's own abilities, demonstrated: it speaks in its
- *      seed voice (words always on screen), reads the day,
- *      travels, lights a day, sounds a card, tends, points
- *      without words, breathes, hums — a different animation
- *      at different stops, because the animation IS the
- *      demonstration.
+ *   "All that should be done without all the pop up windows
+ *    though. I wanted the actual spark to just come up in a
+ *    way and start with all that — or the spark moves around
+ *    the screen in certain ways and brings you to things in
+ *    a way where it can even scroll through the pages and
+ *    show you different things if you wanted."
+ *
+ * So the tour is not a window. There is no card, no modal,
+ * no button row. The tour is the keeper's own Spark, loose
+ * on the page:
+ *
+ *   1. First page, first time: the visitor is offered to
+ *      ADOPT a Spark — the meeting, which likewise stands
+ *      unboxed now (see the presence). No tour stands
+ *      before the meeting; this module runs nothing for a
+ *      visitor who has no Spark.
+ *   2. After adopting, the keeper's OWN Spark leaves its
+ *      corner, comes up onto the page in its seed's gait,
+ *      and OFFERS the tour — its words beside itself, its
+ *      choices as tappable words travelling with it. A tap
+ *      on the Spark, and it gives a QUICK tour: six short
+ *      stops, each a thing the Spark does, done.
+ *   3. Every room has the same free walk: the Spark travels
+ *      across the screen to the thing it is showing, the
+ *      page scrolls with it so the thing comes into view
+ *      with the Spark beside it, and the Spark gestures —
+ *      speaks, points, travels, delights, breathes, kindles,
+ *      hums — a different animation at different stops,
+ *      because the animation IS the demonstration. The
+ *      Sphere stage's tour rides this overlay alone; no
+ *      protected Sphere file is touched.
+ *   4. The pacing is the keeper's, without buttons: tap the
+ *      Spark to go on. The page stays live underneath the
+ *      whole walk — no overlay, no dim, no cage. Scrolling
+ *      away, tapping a link, or letting the Spark rest ends
+ *      the walk, and the Spark glides home to its corner.
  *
  * This module never creates or alters a Spark record; the
  * meeting is not its business. Its marks are its own: the
@@ -47,6 +55,8 @@
   const INTRO_KEY = "sof.spark.intro.v1";
   const TOURS_KEY = "sof.spark.tours.v1";
   const PAGE_REST_MS = 28 * 24 * 60 * 60 * 1000; // a "not now" rests a Moon
+  const ROAM_REST_MS = 30000; // let the Spark rest, and the walk is over
+  const OFFER_REST_MS = 20000; // an unanswered offer settles home on its own
 
   function pageKey() {
     const path = window.location.pathname.replace(/\/+$/, "");
@@ -210,13 +220,21 @@
     return new Promise((resolve) => window.setTimeout(resolve, ms));
   }
 
+  function reducedMotion() {
+    try {
+      return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    } catch {
+      return false;
+    }
+  }
+
   /* The meeting owns the screen while it stands (Aaron's
    * ruling, Nov 19, 2026): no tour ever stacks over it. A
    * manual start first puts the meeting gently aside the
    * meeting's own way — its "Not now", so the same Spark waits
    * on as an ember — and while a meeting is mid-celebration
    * (an adoption being named), the tour waits for the meeting
-   * to finish before it takes the screen. */
+   * to finish before the Spark comes up. */
   async function yieldToMeeting() {
     const meeting = document.querySelector(".spark-encounter");
     if (!meeting) return true;
@@ -238,6 +256,270 @@
       wrap: Core.wrapFor(record),
       ...(opts || {})
     });
+  }
+
+  /* ============ THE ROAMING SPARK ============
+   * One loose Spark, shared by the offer and both walks: the
+   * keeper's own figure, its words beside it, nothing boxed.
+   * It stands where it is put by the centre of its figure;
+   * it travels with a glide, wearing its seed's gait while
+   * it moves; and when it is done it glides home to the
+   * corner seat it left — which stands empty (its furniture
+   * hidden) the whole while the Spark is out. */
+
+  function cornerPoint() {
+    const seat = document.querySelector(".spark-presence, .spark-ember-host");
+    if (seat) {
+      const r = seat.getBoundingClientRect();
+      if (r.width) return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    }
+    return { x: window.innerWidth - 48, y: window.innerHeight - 54 };
+  }
+
+  function createRoamer(record, companion, figureHTML) {
+    const gait = companion.shape ? companion.shape.gait : "stroll";
+    const el = document.createElement("div");
+    el.className = "spark-roam";
+    el.setAttribute("role", "group");
+    el.setAttribute("aria-label", "Your Spark, out on the page");
+    el.innerHTML =
+      `<div class="spark-roam-stand">
+         <div class="spark-roam-visual" hidden></div>
+         <button type="button" class="spark-roam-figure" data-gait="${gait}">
+           <span class="spark-roam-art">${figureHTML}</span>
+         </button>
+       </div>
+       <div class="spark-roam-speech">
+         <p class="spark-roam-who"></p>
+         <p class="spark-roam-text" aria-live="polite"></p>
+         <div class="spark-roam-choices" hidden></div>
+         <p class="spark-roam-hint"></p>
+       </div>`;
+    document.body.appendChild(el);
+    document.body.classList.add("spark-roam-open");
+    const roam = {
+      el,
+      figureBtn: el.querySelector(".spark-roam-figure"),
+      visualEl: el.querySelector(".spark-roam-visual"),
+      whoEl: el.querySelector(".spark-roam-who"),
+      textEl: el.querySelector(".spark-roam-text"),
+      choicesEl: el.querySelector(".spark-roam-choices"),
+      hintEl: el.querySelector(".spark-roam-hint"),
+      flipped: false,
+      gone: false
+    };
+    /* It rises from the corner seat it left: placed there
+     * without a glide, then it comes up. */
+    placeRoam(roam, cornerPoint(), true);
+    window.requestAnimationFrame(() => el.classList.add("is-here"));
+    return roam;
+  }
+
+  /* Put the Spark's figure-centre on the point (cx, cy),
+   * clamped so the whole cluster — figure and speech —
+   * stays on the screen. The speech changes sides when the
+   * Spark stands in the right of the screen, so its words
+   * never run off the edge. A stop's placement keeps a
+   * floor reserve: the house's rooms carry their own fixed
+   * bars along the bottom (the homepage's rail, the Sphere's
+   * tabs), and the Spark stands above them, never on them;
+   * only the glide home may settle to the very corner. */
+  function placeRoam(roam, point, instant, opts) {
+    const el = roam.el;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const flip = point.x > vw * 0.58;
+    if (flip !== roam.flipped) {
+      roam.flipped = flip;
+      el.classList.toggle("is-flipped", flip);
+    }
+    const w = el.offsetWidth || 340;
+    const h = el.offsetHeight || 170;
+    const figCx = flip ? w - 50 : 50;
+    const figCy = h - 50;
+    const floor = opts && opts.floor != null ? opts.floor : vh - 4;
+    const x = Math.max(4, Math.min(point.x - figCx, vw - w - 4));
+    const y = Math.max(4, Math.min(point.y - figCy, floor - h));
+    if (instant) el.classList.add("no-glide");
+    el.style.transform = `translate(${Math.round(x)}px, ${Math.round(y)}px)`;
+    if (instant) {
+      void el.offsetWidth;
+      el.classList.remove("no-glide");
+    } else {
+      el.classList.add("is-travelling");
+      window.setTimeout(() => el.classList.remove("is-travelling"), 980);
+    }
+  }
+
+  /* A stage point, in fractions of the screen, for a stop
+   * that shows the Spark itself rather than a thing on the
+   * page. */
+  function stagePoint(fx, fy) {
+    return { x: Math.round(window.innerWidth * fx), y: Math.round(window.innerHeight * fy) };
+  }
+
+  /* The Spark goes home: it glides back to its corner, fades
+   * as it settles, and the corner seat is its own again. */
+  function sendHome(roam, done) {
+    if (roam.gone) return;
+    roam.gone = true;
+    stopSpeaking();
+    placeRoam(roam, cornerPoint());
+    roam.el.classList.add("is-leaving");
+    window.setTimeout(() => {
+      roam.el.remove();
+      if (!document.querySelector(".spark-roam")) {
+        document.body.classList.remove("spark-roam-open");
+      }
+      if (done) done();
+    }, 1000);
+  }
+
+  function removeRoam(roam) {
+    if (!roam || roam.gone) return;
+    roam.gone = true;
+    roam.el.remove();
+    if (!document.querySelector(".spark-roam")) {
+      document.body.classList.remove("spark-roam-open");
+    }
+  }
+
+  /* ============ THE WALK ============
+   * The engine of both tours. A walk is a list of stops; at
+   * each stop the Spark travels to its place — beside the
+   * thing it names, the page scrolling to bring that thing
+   * into view first — speaks its words beside itself, and
+   * waits. Tap the Spark to go on. Wander off — scroll away,
+   * tap a link, touch the page elsewhere — or let it rest,
+   * and the walk is over and the Spark goes home. */
+
+  function runWalk({ record, companion, stops, onEnd }) {
+    const name = Core.displayName(record, companion);
+    const roam = createRoamer(record, companion, keeperFigure(record, companion));
+    roam.el.classList.add("is-tour");
+    const smooth = !reducedMotion();
+    let at = -1;
+    let over = false;
+    let spotted = null;
+    let walkToken = 0;
+    let restTimer = null;
+    let stopY = window.scrollY;
+    let tourScrollUntil = 0;
+
+    function clearSpot() {
+      if (spotted) { spotted.classList.remove("spark-tour-spot"); spotted = null; }
+    }
+
+    function armRest() {
+      window.clearTimeout(restTimer);
+      restTimer = window.setTimeout(end, ROAM_REST_MS);
+    }
+
+    function end() {
+      if (over) return;
+      over = true;
+      walkToken += 1;
+      window.clearTimeout(restTimer);
+      document.removeEventListener("pointerdown", onOutside, true);
+      window.removeEventListener("scroll", onScroll, true);
+      document.removeEventListener("keydown", onKey, true);
+      clearSpot();
+      if (onEnd) onEnd();
+      sendHome(roam);
+    }
+
+    function onOutside(e) {
+      if (e.target.closest && e.target.closest(".spark-roam")) return;
+      end(); // the keeper has turned back to the page
+    }
+
+    function onScroll() {
+      if (Date.now() < tourScrollUntil) return; // the walk's own scrolling
+      if (Math.abs(window.scrollY - stopY) > 120) end(); // scrolled away
+    }
+
+    function onKey(e) {
+      if (e.key === "Escape") end();
+    }
+
+    document.addEventListener("pointerdown", onOutside, true);
+    window.addEventListener("scroll", onScroll, true);
+    document.addEventListener("keydown", onKey, true);
+
+    async function show(i) {
+      const token = ++walkToken;
+      at = i;
+      const stop = stops[i];
+      roam.figureBtn.className = "spark-roam-figure anim-" + stop.anim;
+      roam.figureBtn.setAttribute("data-gait", companion.shape ? companion.shape.gait : "stroll");
+      roam.figureBtn.setAttribute("aria-label",
+        stop.final ? `You are listening to ${name}. Tap the Spark to finish.` : `You are listening to ${name}. Tap the Spark to go on.`);
+      roam.whoEl.textContent = name;
+      roam.textEl.textContent = stop.text;
+      roam.hintEl.textContent = stop.final
+        ? "Tap me, and I'll go home."
+        : i === 0
+          ? "Tap me to go on — or wander off, and I'll go home on my own."
+          : `Tap me to go on · ${i + 1} of ${stops.length}`;
+      roam.visualEl.hidden = !stop.visual;
+      roam.visualEl.innerHTML = "";
+      roam.visualEl.className = "spark-roam-visual" + (stop.visual ? " is-" + stop.visual : "");
+      if (stop.visual === "sphere") {
+        const today = stop.today;
+        roam.visualEl.innerHTML = sphereSceneSVG(today && today.day ? today.day : 1);
+      } else if (stop.visual === "day" && stop.today && stop.today.moon != null) {
+        const today = stop.today;
+        roam.visualEl.innerHTML =
+          `<div class="tour-day-disc"><strong>Moon ${today.moon}</strong><span>Day ${today.day}</span><em>Pattern Day ${today.dayOfPatternYear}</em></div>`;
+      } else if (stop.visual === "card") {
+        roam.visualEl.innerHTML =
+          `<div class="tour-card"><strong>The First Card</strong><span>✦</span><em>never tradable</em></div>`;
+      }
+      clearSpot();
+      const target = stop.targetEl || (stop.target ? document.querySelector(stop.target) : null);
+      if (target) {
+        tourScrollUntil = Date.now() + 1500;
+        target.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "center" });
+        await sleep(smooth ? 560 : 60);
+        if (token !== walkToken || over) return;
+        const r = target.getBoundingClientRect();
+        const vh = window.innerHeight;
+        let cy;
+        if (r.height > vh * 0.9) {
+          /* A thing taller than the screen: stand near the
+           * foot of the part of it that is showing. */
+          cy = Math.min(r.bottom, vh) - 150;
+        } else {
+          const above = r.top > 230;
+          cy = above ? r.top - 96 : r.bottom + 96;
+        }
+        const cx = Math.max(76, Math.min(r.left + Math.min(r.width / 2, 130), window.innerWidth - 76));
+        placeRoam(roam, { x: cx, y: cy }, false, { floor: vh - 88 });
+        spotted = target;
+        window.setTimeout(() => { if (spotted === target && !over) target.classList.add("spark-tour-spot"); }, 520);
+        tourScrollUntil = Date.now() + 1200;
+      } else {
+        placeRoam(roam, stop.place || stagePoint(0.5, 0.66), false, { floor: window.innerHeight - 88 });
+      }
+      await sleep(smooth ? 500 : 40);
+      if (token !== walkToken || over) return;
+      stopY = window.scrollY;
+      armRest();
+      if (stop.anim === "hum" || stop.visual === "card") tone(432, 1.6);
+      if (stop.speak) speak(companion, stop.text);
+      else stopSpeaking();
+    }
+
+    function advance() {
+      if (over) return;
+      if (stops[at] && stops[at].final) { end(); return; }
+      if (at + 1 < stops.length) show(at + 1);
+      else end();
+    }
+
+    roam.figureBtn.addEventListener("click", advance);
+    show(0);
+    return { end };
   }
 
   /* ============ THE QUICK TOUR (the introductory) ============ */
@@ -263,37 +545,39 @@
   }
 
   /* Six stops. Quick means quick. Each stop is one of the
-   * Spark's abilities, done — and the figure animates a
+   * Spark's abilities, done — and the Spark animates a
    * different way at each, because the animation is the
    * demonstration: it speaks, it points, it travels, it
-   * delights, it breathes, it kindles. */
+   * delights, it breathes, it kindles. The stops carry stage
+   * points, not page targets, so the quick tour can be given
+   * on whatever page the adoption completed on. */
   function quickScenes(record, companion, today) {
     const name = Core.displayName(record, companion);
     const scenes = [
       {
-        pos: "pos-center", anim: "speak", who: name, speak: true,
+        anim: "speak", who: name, speak: true, place: stagePoint(0.5, 0.36),
         text: `I am ${name}, your Spark. This is my voice — it grows from my seed, so it is mine on every device that ever carries me, and no other Spark sounds quite like me.`
       },
       {
-        pos: "pos-left", anim: "point", who: name, visual: "day",
+        anim: "point", who: name, visual: "day", today, place: stagePoint(0.32, 0.44),
         text: today && today.moon != null
           ? `You are standing in Moon ${today.moon} · Day ${today.day} — Pattern Day ${today.dayOfPatternYear}. I read the day from the same calendar the whole house keeps, so I always know where we are standing.`
           : `I read the day from the same calendar the whole house keeps, so I always know where we are standing.`
       },
       {
-        pos: "pos-right", anim: "travel", who: name, visual: "sphere",
+        anim: "travel", who: name, visual: "sphere", today, place: stagePoint(0.68, 0.38),
         text: `And I travel — across this screen, across the site, and onto your phone when the door is open, and I am still me. This is the Sphere: every day of the year standing in its ring. Watch — I light the day we are standing in.`
       },
       {
-        pos: "pos-left", anim: "delight", who: name, visual: "card",
+        anim: "delight", who: name, visual: "card", place: stagePoint(0.32, 0.44),
         text: `Cards are found by doing the work, and each one sounds its own tone. Hear this one — that is the Moon it belongs to, sounding.`
       },
       {
-        pos: "pos-right", anim: "breathe", who: name, visual: "home",
+        anim: "breathe", who: name, place: stagePoint(0.68, 0.44),
         text: `I have a home — Their Home, and the Hearth — and shelves of things I can wear and carry. What I wear, you will see me wearing, here and everywhere.`
       },
       {
-        pos: "pos-center", anim: "kindle", who: name, visual: "road", final: true,
+        anim: "kindle", who: name, final: true, place: stagePoint(0.5, 0.4),
         text: `Down the road, honestly labelled: Spark. Living Day, my app, is on its way. SPARK! Wake the World, the game, is on its way. PayBack, the first Living Tool, is on its way. Nothing here pretends to be more than it is. That is the shape of it — I will be in the rooms you walk, quiet until something matters.`
       }
     ];
@@ -303,13 +587,14 @@
   let tourStarting = false;
 
   async function startQuickTour() {
-    if (tourStarting || document.querySelector(".spark-tour, .spark-page-tour")) return;
+    if (tourStarting || document.querySelector(".spark-roam.is-tour")) return;
     tourStarting = true;
     try {
+      dismissOffer();
       if (!(await yieldToMeeting())) return;
       const record = readRecord();
       if (!record) { bringMeeting(); return; }
-      if (document.querySelector(".spark-tour, .spark-page-tour")) return;
+      if (document.querySelector(".spark-roam.is-tour")) return;
       await runQuickTour(record);
     } finally {
       tourStarting = false;
@@ -322,104 +607,21 @@
     const companion = Core.generate(record.seed);
     if (!companion) return;
     const today = todayCoordinate();
-    const name = Core.displayName(record, companion);
     const scenes = quickScenes(record, companion, today);
-
-    const overlay = document.createElement("div");
-    overlay.className = "spark-tour";
-    overlay.setAttribute("role", "dialog");
-    overlay.setAttribute("aria-label", "Your Spark's quick tour");
-    overlay.innerHTML =
-      `<div class="spark-tour-card">
-        <div class="spark-tour-scroll">
-          <div class="spark-tour-stage">
-            <div class="spark-tour-visual" hidden></div>
-            <div class="spark-tour-figure pos-center"></div>
-          </div>
-          <p class="spark-tour-who"></p>
-          <p class="spark-tour-text" aria-live="polite"></p>
-          <div class="spark-tour-dots" aria-hidden="true"></div>
-        </div>
-        <div class="spark-tour-actions">
-          <button type="button" class="spark-tour-skip">Skip</button>
-          <span class="spark-tour-nav">
-            <button type="button" class="spark-tour-back">Back</button>
-            <button type="button" class="spark-tour-next">Next</button>
-          </span>
-        </div>
-      </div>`;
-    document.body.appendChild(overlay);
-    document.body.classList.add("spark-tour-open");
-
-    const figureEl = overlay.querySelector(".spark-tour-figure");
-    const visualEl = overlay.querySelector(".spark-tour-visual");
-    const whoEl = overlay.querySelector(".spark-tour-who");
-    const textEl = overlay.querySelector(".spark-tour-text");
-    const dotsEl = overlay.querySelector(".spark-tour-dots");
-    const nextBtn = overlay.querySelector(".spark-tour-next");
-    const backBtn = overlay.querySelector(".spark-tour-back");
-    dotsEl.innerHTML = scenes.map(() => "<span></span>").join("");
-    figureEl.innerHTML = keeperFigure(record, companion);
-
-    let at = 0;
-    function render() {
-      const scene = scenes[at];
-      figureEl.className = "spark-tour-figure " + scene.pos + " anim-" + scene.anim;
-      whoEl.textContent = scene.who;
-      textEl.textContent = scene.text;
-      dotsEl.querySelectorAll("span").forEach((d, i) => d.classList.toggle("is-on", i === at));
-      backBtn.disabled = at === 0;
-      nextBtn.textContent = scene.final ? "Begin the day" : "Next";
-      visualEl.hidden = !scene.visual;
-      visualEl.innerHTML = "";
-      visualEl.className = "spark-tour-visual" + (scene.visual ? " is-" + scene.visual : "");
-      if (scene.visual === "sphere") {
-        visualEl.innerHTML = sphereSceneSVG(today && today.day ? today.day : 1);
-      } else if (scene.visual === "day" && today && today.moon != null) {
-        visualEl.innerHTML =
-          `<div class="tour-day-disc"><strong>Moon ${today.moon}</strong><span>Day ${today.day}</span><em>Pattern Day ${today.dayOfPatternYear}</em></div>`;
-      } else if (scene.visual === "card") {
-        visualEl.innerHTML =
-          `<div class="tour-card"><strong>The First Card</strong><span>✦</span><em>never tradable</em></div>`;
-        tone(432, 1.6);
-      } else if (scene.visual === "home") {
-        visualEl.innerHTML =
-          `<div class="tour-home"><span>Their Home</span><span>The Hearth</span><span>The shelves</span></div>`;
-      } else if (scene.visual === "road") {
-        visualEl.innerHTML =
-          `<div class="tour-road"><span>Spark. Living Day<em>on its way</em></span><span>SPARK! Wake the World<em>on its way</em></span><span>PayBack<em>on its way</em></span></div>`;
-      }
-      if (scene.speak) speak(companion, scene.text);
-      else stopSpeaking();
-    }
-
-    function end() {
-      stopSpeaking();
-      writeIntroFlags({ keeper: true });
-      document.body.classList.remove("spark-tour-open");
-      overlay.remove();
-    }
-
-    nextBtn.addEventListener("click", () => {
-      if (scenes[at].final) { end(); return; }
-      at = Math.min(at + 1, scenes.length - 1);
-      render();
+    runWalk({
+      record, companion, stops: scenes,
+      onEnd: () => writeIntroFlags({ keeper: true })
     });
-    backBtn.addEventListener("click", () => {
-      at = Math.max(at - 1, 0);
-      render();
-    });
-    overlay.querySelector(".spark-tour-skip").addEventListener("click", end);
-    render();
   }
 
   /* ============ THE PAGE TOURS ============
    * One short tour per room, written for that room: what the
    * Spark does THERE. A stop may name a target on the page —
-   * the tour scrolls it into view and rings it with light,
-   * and the figure points. Pages without a written tour get
-   * one built from the page's own headings, so every room
-   * the Spark walks can be walked through with it. */
+   * the walk scrolls it into view, rings it with light, and
+   * the Spark stands beside it and points. Pages without a
+   * written tour get one built from the page's own headings,
+   * so every room the Spark walks can be walked through
+   * with it. */
 
   function dayLine(today) {
     return today && today.moon != null
@@ -582,13 +784,14 @@
   async function startPageTour() {
     const page = pageKey();
     if (page === "index.html") { startQuickTour(); return; }
-    if (pageTourStarting || document.querySelector(".spark-tour, .spark-page-tour")) return;
+    if (pageTourStarting || document.querySelector(".spark-roam.is-tour")) return;
     pageTourStarting = true;
     try {
+      dismissOffer();
       if (!(await yieldToMeeting())) return;
       const record = readRecord();
       if (!record) { bringMeeting(); return; }
-      if (document.querySelector(".spark-tour, .spark-page-tour")) return;
+      if (document.querySelector(".spark-roam.is-tour")) return;
       await runPageTour(record, page);
     } finally {
       pageTourStarting = false;
@@ -601,123 +804,62 @@
     const companion = Core.generate(record.seed);
     if (!companion) return;
     const today = todayCoordinate();
-    const name = Core.displayName(record, companion);
     const stops = stopsFor(page, { today });
     if (!stops.length) return;
-
-    const card = document.createElement("div");
-    card.className = "spark-page-tour";
-    card.setAttribute("role", "dialog");
-    card.setAttribute("aria-label", "A guided tour of this room, led by your Spark");
-    card.innerHTML =
-      `<div class="spark-page-tour-stage">
-         <div class="spark-page-tour-figure pos-center"></div>
-       </div>
-       <div class="spark-page-tour-body">
-         <div class="spark-page-tour-text-scroll">
-           <p class="spark-page-tour-who"></p>
-           <p class="spark-page-tour-text" aria-live="polite"></p>
-         </div>
-         <div class="spark-tour-dots" aria-hidden="true"></div>
-         <div class="spark-tour-actions">
-           <button type="button" class="spark-page-tour-end">End tour</button>
-           <span class="spark-tour-nav">
-             <button type="button" class="spark-page-tour-back">Back</button>
-             <button type="button" class="spark-page-tour-next">Next</button>
-           </span>
-         </div>
-       </div>`;
-    document.body.appendChild(card);
-    document.body.classList.add("spark-tour-open");
-
-    const figureEl = card.querySelector(".spark-page-tour-figure");
-    const whoEl = card.querySelector(".spark-page-tour-who");
-    const textEl = card.querySelector(".spark-page-tour-text");
-    const dotsEl = card.querySelector(".spark-tour-dots");
-    const nextBtn = card.querySelector(".spark-page-tour-next");
-    const backBtn = card.querySelector(".spark-page-tour-back");
-    dotsEl.innerHTML = stops.map(() => "<span></span>").join("");
-    figureEl.innerHTML = keeperFigure(record, companion);
-    const positions = ["pos-center", "pos-left", "pos-right"];
-
-    let at = 0;
-    let spotted = null;
-    function clearSpot() {
-      if (spotted) { spotted.classList.remove("spark-tour-spot"); spotted = null; }
-    }
-    function render() {
-      const stop = stops[at];
-      figureEl.className = "spark-page-tour-figure " + positions[at % positions.length] + " anim-" + stop.anim;
-      whoEl.textContent = name;
-      textEl.textContent = stop.text;
-      dotsEl.querySelectorAll("span").forEach((d, i) => d.classList.toggle("is-on", i === at));
-      backBtn.disabled = at === 0;
-      nextBtn.textContent = stop.final ? "Done" : "Next";
-      clearSpot();
-      const target = stop.targetEl || (stop.target ? document.querySelector(stop.target) : null);
-      if (target) {
-        spotted = target;
-        target.scrollIntoView({ behavior: "smooth", block: "center" });
-        window.setTimeout(() => { if (spotted === target) target.classList.add("spark-tour-spot"); }, 350);
-      }
-      if (stop.anim === "hum") tone(432, 1.6);
-      if (stop.speak) speak(companion, stop.text);
-      else stopSpeaking();
-    }
-
-    function end() {
-      stopSpeaking();
-      clearSpot();
-      writeTourMark(page, { seen: Date.now() });
-      document.body.classList.remove("spark-tour-open");
-      card.remove();
-    }
-
-    nextBtn.addEventListener("click", () => {
-      if (stops[at].final) { end(); return; }
-      at = Math.min(at + 1, stops.length - 1);
-      render();
+    runWalk({
+      record, companion, stops,
+      onEnd: () => writeTourMark(page, { seen: Date.now() })
     });
-    backBtn.addEventListener("click", () => {
-      at = Math.max(at - 1, 0);
-      render();
-    });
-    card.querySelector(".spark-page-tour-end").addEventListener("click", end);
-    render();
   }
 
   /* ============ THE OFFERS ============
-   * The Spark offers; the keeper chooses. Nothing tours on
-   * its own except by the keeper's tap. */
+   * The Spark offers by coming up: it leaves its corner,
+   * stands on the page, and speaks beside itself, its
+   * choices as tappable words in its own speech. Tapping
+   * the Spark itself is the yes. Nothing tours except by
+   * the keeper's choice. */
 
-  function removeInvite() {
-    const stale = document.querySelector(".spark-tour-invite");
-    if (stale) stale.remove();
+  function dismissOffer() {
+    const offer = document.querySelector(".spark-roam.is-offer");
+    if (offer) offer.remove();
+    if (!document.querySelector(".spark-roam")) {
+      document.body.classList.remove("spark-roam-open");
+    }
   }
 
   function showOffer({ record, companion, text, goLabel, onGo, onNo }) {
-    removeInvite();
-    if (document.querySelector(".spark-tour, .spark-page-tour")) return;
-    const card = document.createElement("div");
-    card.className = "spark-tour-invite";
-    card.setAttribute("role", "note");
-    const gait = companion.shape ? companion.shape.gait : "stroll";
-    card.innerHTML =
-      `<span class="spark-tour-invite-art" data-gait="${gait}"></span>
-       <span class="spark-tour-invite-text"></span>
-       <button type="button" class="spark-tour-invite-go"></button>
-       <button type="button" class="spark-tour-invite-no">Not now</button>`;
-    card.querySelector(".spark-tour-invite-art").innerHTML =
-      Core.renderSVG(companion, { stage: 0, flameTier: "glyph" });
-    card.querySelector(".spark-tour-invite-text").textContent = text;
-    const go = card.querySelector(".spark-tour-invite-go");
-    go.textContent = goLabel;
-    go.addEventListener("click", () => { card.remove(); onGo(); });
-    card.querySelector(".spark-tour-invite-no").addEventListener("click", () => {
-      card.remove();
-      if (onNo) onNo();
-    });
-    document.body.appendChild(card);
+    dismissOffer();
+    if (document.querySelector(".spark-roam.is-tour")) return;
+    const name = Core.displayName(record, companion);
+    const roam = createRoamer(record, companion,
+      Core.renderSVG(companion, { stage: 0, flameTier: "glyph" }));
+    roam.el.classList.add("is-offer");
+    roam.whoEl.textContent = name;
+    roam.textEl.textContent = text;
+    roam.hintEl.textContent = "Tap me — or choose a word.";
+    roam.choicesEl.hidden = false;
+    roam.choicesEl.innerHTML =
+      `<button type="button" class="spark-roam-choice is-go"></button>
+       <button type="button" class="spark-roam-choice is-no">Not now</button>`;
+    const goWord = roam.choicesEl.querySelector(".is-go");
+    goWord.textContent = goLabel;
+    let settled = false;
+    const restTimer = window.setTimeout(() => settle(null), OFFER_REST_MS);
+    function settle(which) {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(restTimer);
+      sendHome(roam);
+      if (which === "go" && onGo) onGo();
+      if (which === "no" && onNo) onNo();
+    }
+    goWord.addEventListener("click", () => settle("go"));
+    roam.choicesEl.querySelector(".is-no").addEventListener("click", () => settle("no"));
+    roam.figureBtn.setAttribute("aria-label", `${name} is offering to show you around. Tap the Spark to say yes.`);
+    roam.figureBtn.addEventListener("click", () => settle("go"));
+    /* It comes up to stand on the page, low and to the left,
+     * where a greeter stands — out of the reading line. */
+    window.setTimeout(() => placeRoam(roam, stagePoint(0.3, 0.8), false, { floor: window.innerHeight - 88 }), 60);
   }
 
   /* The offer that follows the meeting: the keeper's own
@@ -741,9 +883,9 @@
   }
 
   /* The per-room offer: on a room whose tour is unseen and
-   * unresting, the Spark offers the walk once. A "not now"
-   * rests that room's offer for a Moon; the Tour button
-   * never rests. */
+   * unresting, the Spark comes up and offers the walk once.
+   * A "not now" rests that room's offer for a Moon; the Tour
+   * button never rests. */
   function offerPageTour(record) {
     const page = pageKey();
     if (page === "index.html") return;
@@ -776,7 +918,7 @@
     btn.textContent = "✦ Tour";
     btn.setAttribute("aria-label", "A guided tour of this room, led by your Spark");
     btn.addEventListener("click", () => {
-      removeInvite();
+      dismissOffer();
       if (pageKey() === "index.html") startQuickTour();
       else startPageTour();
     });
@@ -808,7 +950,7 @@
       const record = readRecord();
       if (record) {
         window.clearInterval(timer);
-        removeInvite();
+        dismissOffer();
         renderLauncher();
         window.setTimeout(() => offerIntroTour(record), 1200);
         return;

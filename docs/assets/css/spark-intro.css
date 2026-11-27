@@ -1,102 +1,175 @@
-/* The Spark's tours (Aaron, Nov 26, 2026, corrected 16:13):
- * adoption first — the meeting is the first offer, and no
- * tour stands before it. After adopting, the keeper's own
- * Spark offers and gives a quick tour; then every room has
- * its own short guided tour, offered by the Spark and
- * started by the keeper's tap. The figure animates a
- * different way at different stops — speaking, pointing,
- * travelling, delighting, breathing, kindling, humming —
- * because the animation is the demonstration. */
+/* The Spark's tours (Aaron, Nov 26, 2026 — corrected 16:13,
+ * then deeper at 17:04: "without all the pop up windows…
+ * the actual spark to just come up in a way and start with
+ * all that — or the spark moves around the screen in
+ * certain ways and brings you to things… even scroll
+ * through the pages and show you different things").
+ *
+ * There is no tour window. The Spark itself — the keeper's
+ * own figure — leaves its corner and stands loose on the
+ * page: its words beside it, carried in light and shadow
+ * rather than a box; its choices as tappable words in its
+ * own speech. It travels by gliding, wearing its seed's
+ * gait while it moves; the page scrolls with it to the
+ * thing it is showing; a tap on the Spark goes on; and
+ * when the walk is over — or the keeper wanders off — the
+ * Spark glides home to its corner. */
 
-/* While a tour stands it owns the screen: the Spark's
- * corner furniture — the walker and its panel, the waiting
- * ember, a standing invitation, the Tour button — rests
- * beneath it. The Spark is on the stage; nothing of its
- * corner seat competes with the walk, and nothing there can
- * be tapped over it. */
-body.spark-tour-open .spark-presence,
-body.spark-tour-open .spark-ember-host,
-body.spark-tour-open .spark-tour-invite,
-body.spark-tour-open .spark-tour-launcher {
+/* While the Spark is out on the page, its corner seat
+ * stands empty: the walker and its panel, the waiting
+ * ember, the Tour button rest hidden — there is only one
+ * Spark, and it is the one standing here. */
+body.spark-roam-open .spark-presence,
+body.spark-roam-open .spark-ember-host,
+body.spark-roam-open .spark-tour-launcher {
   visibility: hidden;
 }
 
-.spark-tour {
+/* The roaming Spark: a figure and its speech, nothing
+ * more. The cluster itself catches no taps — the page
+ * stays live underneath — only the Spark and its choice
+ * words answer a touch. */
+.spark-roam {
   position: fixed;
-  inset: 0;
-  height: 100dvh;
-  z-index: 200;
+  left: 0;
+  top: 0;
+  z-index: 10050;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(4, 6, 12, 0.72);
-  padding: 14px;
-  padding-bottom: calc(14px + env(safe-area-inset-bottom));
+  align-items: flex-end;
+  gap: 10px;
+  padding: 6px;
+  pointer-events: none;
+  opacity: 0;
+  transition: transform 0.95s cubic-bezier(0.25, 0.8, 0.3, 1), opacity 0.45s ease;
+  will-change: transform;
 }
+.spark-roam.is-here { opacity: 1; }
+.spark-roam.is-leaving { opacity: 0; }
+.spark-roam.no-glide { transition: none; }
+.spark-roam.is-flipped { flex-direction: row-reverse; }
 
-/* The card never outgrows the visible screen (Aaron's A16,
- * Nov 26, 2026: the buttons sat below the fold, unreachable).
- * The cap is in dynamic viewport units, so browser chrome
- * and the Android nav are never counted as room; the middle
- * of the card scrolls inside itself, and the action row is
- * pinned at the card's own bottom — always on screen, always
- * in one thumb's reach. */
-.spark-tour-card {
-  width: min(560px, 100%);
-  max-height: calc(100dvh - 28px);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  border-radius: 18px;
-  border: 1px solid rgba(217, 149, 69, 0.5);
-  background: #0a0e1a;
-  color: #f4f1e8;
-  padding: 18px 18px 14px;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
-}
-
-.spark-tour-scroll {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
-}
-
-.spark-tour .spark-tour-actions {
-  flex: none;
-  padding-top: 10px;
-}
-.spark-tour .spark-tour-actions button { min-height: 44px; }
-
-.spark-tour-stage {
+.spark-roam-stand {
   position: relative;
-  height: 210px;
-  border-radius: 12px;
-  background: radial-gradient(ellipse at 50% 120%, #16203c 0%, #0b1026 60%, #070b18 100%);
-  overflow: hidden;
+  flex: none;
 }
 
-.spark-tour-figure {
-  position: absolute;
-  bottom: 14px;
-  width: 92px;
-  transition: left 0.9s ease-in-out, right 0.9s ease-in-out, bottom 0.9s ease-in-out;
+/* The Spark itself is the button: tap it to go on. It
+ * wears no button's clothing — just its own light. */
+.spark-roam-figure {
+  display: block;
+  background: none;
+  border: 0;
+  padding: 6px;
+  margin: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  border-radius: 50%;
   filter: drop-shadow(0 0 10px rgba(255, 226, 160, 0.5)) drop-shadow(0 0 22px rgba(240, 190, 90, 0.3));
 }
-.spark-tour-figure svg { width: 100%; height: auto; display: block; }
-.spark-tour-figure.pos-center { left: calc(50% - 46px); }
-.spark-tour-figure.pos-left { left: 8%; }
-.spark-tour-figure.pos-right { left: calc(92% - 92px); }
+.spark-roam-art { display: block; }
+.spark-roam-art svg { width: 76px; height: auto; display: block; }
 
-.spark-tour-visual {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 150px;
-  color: #f4f1e8;
+/* While it travels it moves the way its seed taught it:
+ * a hopper bounces along, a drifter floats, a stroller
+ * sways as it walks. */
+.spark-roam.is-travelling .spark-roam-figure[data-gait="hop"] .spark-roam-art svg {
+  animation: spark-roam-hop 0.42s ease-in-out infinite alternate;
 }
-.spark-tour-visual.is-sphere { width: 168px; }
-.spark-tour-visual svg { width: 100%; height: auto; display: block; }
-.spark-tour-visual .tour-lit-day {
+@keyframes spark-roam-hop {
+  from { transform: translateY(0); }
+  to { transform: translateY(-9px); }
+}
+.spark-roam.is-travelling .spark-roam-figure[data-gait="drift"] .spark-roam-art svg {
+  animation: spark-roam-drift 1.1s ease-in-out infinite alternate;
+}
+@keyframes spark-roam-drift {
+  from { transform: translateY(0) rotate(-2deg); }
+  to { transform: translateY(-5px) rotate(2deg); }
+}
+.spark-roam.is-travelling .spark-roam-figure[data-gait="stroll"] .spark-roam-art svg {
+  animation: spark-roam-stroll 0.6s ease-in-out infinite alternate;
+}
+@keyframes spark-roam-stroll {
+  from { transform: rotate(-3deg); }
+  to { transform: rotate(3deg); }
+}
+
+/* Its speech: the words stand beside the Spark in light
+ * and shadow — the house's own way of writing on a page
+ * (the presence's name has always stood so) — never in a
+ * box. A very long speech scrolls within its own measure,
+ * so the Spark never has to shout over the whole screen. */
+.spark-roam-speech {
+  min-width: 0;
+  max-width: min(290px, calc(100vw - 128px));
+  color: #f4f1e8;
+  pointer-events: auto;
+  text-shadow:
+    0 1px 8px rgba(5, 8, 16, 0.95),
+    0 0 3px rgba(5, 8, 16, 0.95),
+    0 2px 22px rgba(5, 8, 16, 0.85);
+}
+.spark-roam-who {
+  margin: 0 0 2px;
+  color: #f3c97a;
+  font-weight: 600;
+}
+.spark-roam-text {
+  margin: 0;
+  line-height: 1.5;
+  max-height: 44dvh;
+  overflow-y: auto;
+}
+.spark-roam-hint {
+  margin: 6px 0 0;
+  font-size: 0.82rem;
+  font-style: italic;
+  color: #cfd6e2;
+}
+
+/* Its choices, when it offers: words in its speech, not
+ * buttons in a row. The yes stands gold and underlined;
+ * the not-now rests dim beside it. Both keep a full
+ * thumb's height, because a word you cannot tap is not a
+ * choice. */
+.spark-roam-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  margin-top: 4px;
+}
+.spark-roam-choice {
+  font: inherit;
+  font-size: 0.95rem;
+  min-height: 44px;
+  padding: 8px 2px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: #b9c2cf;
+}
+.spark-roam-choice.is-go {
+  color: #f3c97a;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* The things the Spark holds up while it speaks — the lit
+ * Sphere, the day, a card — float above it, unboxed: they
+ * are objects it is showing, not windows. */
+.spark-roam-visual {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 148px;
+  color: #f4f1e8;
+  pointer-events: none;
+}
+.spark-roam-visual.is-sphere { width: 164px; }
+.spark-roam-visual svg { width: 100%; height: auto; display: block; }
+.spark-roam-visual .tour-lit-day {
   animation: spark-tour-light 1.6s ease-in-out infinite alternate;
 }
 @keyframes spark-tour-light {
@@ -105,17 +178,19 @@ body.spark-tour-open .spark-tour-launcher {
 }
 
 .tour-day-disc {
-  border: 1px solid #2a3342;
-  border-radius: 12px;
-  padding: 10px;
-  background: rgba(11, 16, 38, 0.9);
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
+  text-align: center;
+  text-shadow:
+    0 1px 8px rgba(5, 8, 16, 0.95),
+    0 0 3px rgba(5, 8, 16, 0.95);
 }
 .tour-day-disc strong { color: #f3c97a; font-size: 1.05rem; }
 .tour-day-disc em { color: #b9c2cf; font-style: normal; font-size: 0.82rem; }
 
+/* A card the Spark sounds: the card is the object — a
+ * small true card, held up, not a panel. */
 .tour-card {
   border: 1px solid #d99545;
   border-radius: 10px;
@@ -129,129 +204,32 @@ body.spark-tour-open .spark-tour-launcher {
 .tour-card span { color: #f3c97a; font-size: 1.5rem; }
 .tour-card em { color: #b9c2cf; font-style: normal; font-size: 0.78rem; letter-spacing: 0.06em; }
 
-.tour-home, .tour-road {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.tour-home span, .tour-road span {
-  border: 1px solid #2a3342;
-  border-radius: 9px;
-  padding: 7px 9px;
-  background: rgba(11, 16, 38, 0.9);
-  font-size: 0.86rem;
-}
-.tour-road span { display: flex; flex-direction: column; }
-.tour-road em { color: #d99545; font-style: normal; font-size: 0.74rem; letter-spacing: 0.05em; }
-
-.spark-tour-who {
-  margin: 14px 0 2px;
-  color: #f3c97a;
-  font-weight: 600;
-}
-.spark-tour-text {
-  margin: 0 0 10px;
-  line-height: 1.5;
-  min-height: 3.2em;
-}
-
-.spark-tour-dots {
-  display: flex;
-  gap: 6px;
-  margin: 4px 0 12px;
-}
-.spark-tour-dots span {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #39415e;
-}
-.spark-tour-dots span.is-on { background: #f3c97a; box-shadow: 0 0 7px rgba(243, 201, 122, 0.8); }
-
-.spark-tour-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.spark-tour-actions button {
-  font: inherit;
-  cursor: pointer;
-  border-radius: 9px;
-  padding: 8px 14px;
-  border: 1px solid #2a3342;
-  background: rgba(244, 241, 232, 0.05);
-  color: #f4f1e8;
-}
-.spark-tour-next {
-  border-color: rgba(217, 149, 69, 0.6) !important;
-  color: #f3c97a !important;
-}
-.spark-tour-nav { display: flex; gap: 8px; }
-.spark-tour-back:disabled { opacity: 0.4; cursor: default; }
-
-/* The invitation card: the keeper's own Spark, waiting at the door. */
-.spark-tour-invite {
-  position: fixed;
-  left: 12px;
-  bottom: calc(64px + env(safe-area-inset-bottom));
-  max-height: calc(100dvh - 140px);
-  overflow-y: auto;
-  z-index: 120;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  max-width: min(440px, calc(100vw - 24px));
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(217, 149, 69, 0.45);
-  background: rgba(8, 11, 22, 0.95);
-  color: #f4f1e8;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
-  font-size: 0.92rem;
-}
-.spark-tour-invite-art svg { width: 34px; height: auto; display: block; }
-.spark-tour-invite button {
-  font: inherit;
-  cursor: pointer;
-  border-radius: 8px;
-  padding: 6px 10px;
-  border: 1px solid rgba(217, 149, 69, 0.6);
-  background: none;
-  color: #f3c97a;
-  white-space: nowrap;
-}
-.spark-tour-invite-no { border-color: #2a3342 !important; color: #b9c2cf !important; }
-
-.spark-intro-show {
-  cursor: pointer;
-}
-
 /* ---- the figure's ways of moving, one per kind of stop ----
  * Transform and opacity only: the compositor carries them,
  * and a low-end phone never pays for a repainted filter.
  * Each animation is a thing the Spark does, shown. */
-.spark-tour-figure.anim-speak, .spark-page-tour-figure.anim-speak {
+.spark-roam-figure.anim-speak .spark-roam-art svg {
   animation: spark-tour-speak 1.8s ease-in-out infinite;
 }
 @keyframes spark-tour-speak {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.055); }
 }
-.spark-tour-figure.anim-point, .spark-page-tour-figure.anim-point {
+.spark-roam-figure.anim-point .spark-roam-art svg {
   animation: spark-tour-point 1.6s ease-in-out infinite;
 }
 @keyframes spark-tour-point {
   0%, 100% { transform: translateY(0) rotate(0deg); }
   50% { transform: translateY(-7px) rotate(3deg); }
 }
-.spark-tour-figure.anim-travel, .spark-page-tour-figure.anim-travel {
+.spark-roam-figure.anim-travel .spark-roam-art svg {
   animation: spark-tour-travel 1.5s ease-in-out infinite;
 }
 @keyframes spark-tour-travel {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-4px); }
 }
-.spark-tour-figure.anim-delight, .spark-page-tour-figure.anim-delight {
+.spark-roam-figure.anim-delight .spark-roam-art svg {
   animation: spark-tour-delight 0.9s ease-in-out infinite;
 }
 @keyframes spark-tour-delight {
@@ -259,14 +237,14 @@ body.spark-tour-open .spark-tour-launcher {
   30% { transform: rotate(-6deg) scale(1.04); }
   65% { transform: rotate(6deg) scale(1.04); }
 }
-.spark-tour-figure.anim-breathe, .spark-page-tour-figure.anim-breathe {
+.spark-roam-figure.anim-breathe .spark-roam-art svg {
   animation: spark-tour-breathe 3.4s ease-in-out infinite;
 }
 @keyframes spark-tour-breathe {
   0%, 100% { transform: scale(1); opacity: 0.94; }
   50% { transform: scale(1.035); opacity: 1; }
 }
-.spark-tour-figure.anim-kindle, .spark-page-tour-figure.anim-kindle {
+.spark-roam-figure.anim-kindle .spark-roam-art svg {
   animation: spark-tour-kindle 2.2s ease-in-out infinite;
 }
 @keyframes spark-tour-kindle {
@@ -274,7 +252,7 @@ body.spark-tour-open .spark-tour-launcher {
   45% { transform: scale(1.09); }
   60% { transform: scale(1.05); }
 }
-.spark-tour-figure.anim-hum, .spark-page-tour-figure.anim-hum {
+.spark-roam-figure.anim-hum .spark-roam-art svg {
   animation: spark-tour-hum 1.1s ease-in-out infinite;
 }
 @keyframes spark-tour-hum {
@@ -282,120 +260,7 @@ body.spark-tour-open .spark-tour-launcher {
   50% { transform: scale(1.025); opacity: 0.88; }
 }
 
-/* ---- the offer arrives the way its seed taught it ----
- * The invitation's Spark wears its gait while it asks:
- * a hopper bounces, a drifter floats, a stroller sways. */
-.spark-tour-invite-art { display: inline-flex; }
-.spark-tour-invite-art[data-gait="hop"] svg { animation: spark-offer-hop 1s ease-in-out infinite; }
-@keyframes spark-offer-hop {
-  0%, 100% { transform: translateY(0); }
-  45% { transform: translateY(-6px); }
-  70% { transform: translateY(1px); }
-}
-.spark-tour-invite-art[data-gait="drift"] svg { animation: spark-offer-drift 3.2s ease-in-out infinite; }
-@keyframes spark-offer-drift {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-3px) rotate(2deg); }
-}
-.spark-tour-invite-art[data-gait="stroll"] svg { animation: spark-offer-stroll 2.6s ease-in-out infinite; }
-@keyframes spark-offer-stroll {
-  0%, 100% { transform: rotate(-2deg); }
-  50% { transform: rotate(2deg); }
-}
-
-/* ---- the page tour: a docked card, the room still visible ---- */
-.spark-page-tour {
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: calc(12px + env(safe-area-inset-bottom));
-  z-index: 200;
-  width: min(600px, calc(100vw - 20px));
-  max-height: calc(100dvh - 24px);
-  display: flex;
-  gap: 12px;
-  align-items: stretch;
-  border-radius: 16px;
-  border: 1px solid rgba(217, 149, 69, 0.5);
-  background: rgba(8, 11, 22, 0.97);
-  color: #f4f1e8;
-  padding: 12px 14px;
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.55);
-}
-.spark-page-tour-stage {
-  position: relative;
-  flex: none;
-  width: 118px;
-  border-radius: 10px;
-  background: radial-gradient(ellipse at 50% 120%, #16203c 0%, #0b1026 65%, #070b18 100%);
-  overflow: hidden;
-}
-.spark-page-tour-figure {
-  position: absolute;
-  bottom: 8px;
-  width: 54px;
-  transition: left 0.8s ease-in-out;
-  filter: drop-shadow(0 0 7px rgba(255, 226, 160, 0.5));
-}
-.spark-page-tour-figure svg { width: 100%; height: auto; display: block; }
-.spark-page-tour-figure.pos-center { left: calc(50% - 27px); }
-.spark-page-tour-figure.pos-left { left: 8%; }
-.spark-page-tour-figure.pos-right { left: calc(92% - 54px); }
-.spark-page-tour-body {
-  flex: 1;
-  min-width: 0;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-}
-/* A long stop scrolls its words inside the card; the
- * actions stay pinned beneath them, always reachable. */
-.spark-page-tour-text-scroll {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
-}
-.spark-page-tour .spark-tour-actions { flex: none; }
-.spark-page-tour-who {
-  margin: 0 0 2px;
-  color: #f3c97a;
-  font-weight: 600;
-  font-size: 0.92rem;
-}
-.spark-page-tour-text {
-  margin: 0 0 8px;
-  line-height: 1.45;
-  font-size: 0.95rem;
-  min-height: 2.9em;
-}
-.spark-page-tour .spark-tour-dots { margin: 0 0 8px; }
-.spark-page-tour-end {
-  font: inherit;
-  cursor: pointer;
-  min-height: 44px;
-  border-radius: 9px;
-  padding: 7px 12px;
-  border: 1px solid #2a3342;
-  background: rgba(244, 241, 232, 0.05);
-  color: #b9c2cf;
-}
-.spark-page-tour .spark-tour-nav button {
-  font: inherit;
-  cursor: pointer;
-  min-height: 44px;
-  border-radius: 9px;
-  padding: 7px 12px;
-  border: 1px solid #2a3342;
-  background: rgba(244, 241, 232, 0.05);
-  color: #f4f1e8;
-}
-.spark-page-tour-next {
-  border-color: rgba(217, 149, 69, 0.6) !important;
-  color: #f3c97a !important;
-}
-.spark-page-tour-back:disabled { opacity: 0.4; cursor: default; }
-
-/* The ring of light the tour lays on the thing it names. */
+/* The ring of light the walk lays on the thing it names. */
 .spark-tour-spot {
   outline: 2px solid rgba(243, 201, 122, 0.95);
   outline-offset: 4px;
@@ -421,17 +286,15 @@ body.spark-tour-open .spark-tour-launcher {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
+.spark-intro-show {
+  cursor: pointer;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .spark-tour-figure { transition: none; }
-  .spark-page-tour-figure { transition: none; }
-  .spark-tour-visual .tour-lit-day { animation: none; }
-  .spark-tour-figure.anim-speak, .spark-tour-figure.anim-point,
-  .spark-tour-figure.anim-travel, .spark-tour-figure.anim-delight,
-  .spark-tour-figure.anim-breathe, .spark-tour-figure.anim-kindle,
-  .spark-tour-figure.anim-hum,
-  .spark-page-tour-figure.anim-speak, .spark-page-tour-figure.anim-point,
-  .spark-page-tour-figure.anim-travel, .spark-page-tour-figure.anim-delight,
-  .spark-page-tour-figure.anim-breathe, .spark-page-tour-figure.anim-kindle,
-  .spark-page-tour-figure.anim-hum,
-  .spark-tour-invite-art svg { animation: none; }
+  /* No gliding, no gesturing: the Spark simply stands at
+   * each stop, as it always has under reduced motion. */
+  .spark-roam { transition: none; }
+  .spark-roam-figure .spark-roam-art svg,
+  .spark-roam.is-travelling .spark-roam-art svg,
+  .spark-roam-visual .tour-lit-day { animation: none; }
 }

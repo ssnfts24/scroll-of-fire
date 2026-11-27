@@ -413,7 +413,7 @@ test("the pop-up meeting rides the presence: one tap, a remembered not-now, a wa
   const page = read("docs/assets/js/spark-companions-page.js");
   assert.ok(page.includes("PENDING_KEY"), "a Spark kept on its home page ends the ember's wait");
   const css = read("docs/assets/css/spark-companion.css");
-  assert.match(css, /\.spark-encounter\s*\{/, "the meeting has its card");
+  assert.match(css, /\.spark-encounter\s*\{/, "the meeting has its stance at the corner");
   assert.match(css, /\.spark-ember\s*\{/, "the ember has its place at the edge");
 });
 
@@ -1310,7 +1310,8 @@ test("the meeting stands above the chrome, and their light is styled to rest", (
   const css = read("docs/assets/css/spark-companion.css");
   assert.match(css, /\.spark-encounter-host \{[^}]*z-index: 10060/, "the encounter rides above the site chrome");
   assert.match(css, /\.spark-presence \{[^}]*z-index: 10040/, "their panel layer rides above the floating menu");
-  assert.ok(css.includes("rgba(13, 18, 32, 0.96)"), "the encounter card is near-solid: no page text bleeds through");
+  assert.match(css, /\.spark-encounter \{[^}]*background: transparent/, "the meeting stands unboxed: no card behind the Spark (Nov 26, 17:04)");
+  assert.match(css, /\.spark-encounter-words p,[^}]*text-shadow/, "its words carry their own legibility, so no page text is mistaken for the Spark's");
   assert.ok(css.includes("spark-mote-twinkle"), "their motes twinkle gently");
   assert.match(
     css,

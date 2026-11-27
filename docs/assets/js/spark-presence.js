@@ -3352,17 +3352,18 @@
     }
   }
 
-  /* The pop-up meeting. The Spark itself arrives — flying,
-   * hopping or drifting in with the gait its seed grew, drawn so
-   * its uniqueness reads at a glance — and speaks in its
-   * temperament's voice: its kind, its trait, its seed-born name,
-   * the day it was made from. It answers a tap before it is
-   * adopted: a chirp and a wiggle. One button adopts it; one
-   * quiet way says "Not now". Nothing is asked first: no form,
-   * no quiz. The adoption itself is a moment — a bloom of light,
-   * its song, its name large — and inside that same moment the
-   * keeper may give it a name of their own, or skip and let the
-   * seed name be the name it answers to. */
+  /* The meeting. The Spark itself arrives — flying,
+   * hopping or drifting in with the gait its seed grew — and
+   * stands unboxed at the corner (Aaron, Nov 26, 2026, 17:04:
+   * no pop-up windows), speaking beside itself in its
+   * temperament's voice: its kind, its trait, its seed-born
+   * name, the day it was made from. It answers a tap before
+   * it is adopted: a chirp and a wiggle. One word adopts it;
+   * one quiet word says "Not now". Nothing is asked first:
+   * no form, no quiz. The adoption itself is a moment — a
+   * bloom of light, its song, its name large — and inside
+   * that same moment the keeper may give it a name of their
+   * own, or skip and let the seed name be the name. */
   function renderEncounter(companion, seed, today) {
     const words = Core.encounterFor({ companion });
     const gait = companion.shape ? companion.shape.gait : "stroll";
@@ -3512,22 +3513,20 @@
       .catch(() => { /* the living layer rests */ });
   }
 
-  /* The Spark's tours (Nov 26, 2026, corrected 16:13) load
-   * lazily behind the presence on every page the presence
-   * walks — each room has its guided tour, the Sphere stage
-   * included, and the tour rides this overlay alone, so no
-   * page's markup (and no protected Sphere file) had to
-   * change to carry it. Still lazy: no page pays for it in
-   * its first load, and the homepage's deferred stack stays
-   * exactly as pinned. */
+  /* The Spark's tours (Nov 26, 2026, corrected 16:13, then
+   * unboxed 17:04 — the Spark itself comes up and walks)
+   * load lazily behind the presence on every page it walks,
+   * the Sphere stage included, riding this overlay alone:
+   * no page's markup (and no protected Sphere file) had to
+   * change. Still lazy: no page pays in its first load. */
   function loadIntro() {
     if (window.SparkIntro) return;
     const base = scriptBase();
     const css = document.createElement("link");
     css.rel = "stylesheet";
-    css.href = base.replace(/js\/$/, "css/") + "spark-intro.css?v=20261126-2";
+    css.href = base.replace(/js\/$/, "css/") + "spark-intro.css?v=20261126-3";
     document.head.appendChild(css);
-    loadScript(base + "spark-intro.js?v=20261126-2")
+    loadScript(base + "spark-intro.js?v=20261126-3")
       .catch(() => { /* the tour rests */ });
   }
 

@@ -18,11 +18,19 @@
  *   4. At different stops the Spark animates differently,
  *      demonstrating what it does: speaks, points, travels,
  *      delights, breathes, kindles, hums.
- * And the standing fences: the tour never creates or alters
- * a Spark record; what is coming is labelled as coming,
- * never as live; the words are on screen; and no card of
- * this system may outgrow the visible screen — its buttons
- * are pinned inside it (Aaron's A16, Nov 26, 2026).
+ * And then the deeper correction (17:04): "without all the
+ * pop up windows… the actual spark to just come up in a
+ * way and start with all that — or the spark moves around
+ * the screen in certain ways and brings you to things…"
+ * So there is no tour window at all, and the meeting
+ * stands unboxed too: the Spark itself leaves its corner,
+ * travels the page with its words beside it, the page
+ * scrolls with it, a tap on the Spark goes on, and
+ * wandering off ends the walk. The standing fences hold:
+ * the tour never creates or alters a Spark record; what
+ * is coming is labelled as coming, never as live; the
+ * words are on screen; and the meeting's moment still
+ * fits the visible screen (Aaron's A16, Nov 26, 2026).
  */
 const test = require("node:test");
 const assert = require("node:assert/strict");
@@ -59,10 +67,10 @@ test("the Show me without a Spark leads back to the meeting, never to a tour", (
 test("after adopting, the keeper's own Spark offers the tour before it gives it", () => {
   assert.match(intro, /function offerIntroTour/);
   assert.match(intro, /Shall I show you what I can do\?/);
-  /* the offer is animated: the invitation's art wears the
-   * Spark's own gait */
+  /* the offer is animated: the roaming Spark's figure
+   * wears the Spark's own gait */
   assert.match(intro, /data-gait="\$\{gait\}"/);
-  assert.match(introCss, /spark-tour-invite-art\[data-gait="hop"\]/);
+  assert.match(introCss, /spark-roam-figure\[data-gait="hop"\]/);
   /* the offer is shown once — offered is marked when shown */
   assert.match(intro, /writeIntroFlags\(\{ offered: true \}\)/);
   /* and it is the adoption watcher that owes it */
@@ -79,7 +87,9 @@ test("the quick tour is quick: six stops, each a thing the Spark does, each anim
     assert.ok(intro.includes(`anim: "${anim}"`), `the quick tour has an ${anim} stop`);
     assert.match(introCss, new RegExp(`anim-${anim}`), `the ${anim} animation exists`);
   }
-  assert.match(intro, /spark-tour-skip/);
+  /* no Skip button: the keeper wanders off, or lets the
+   * Spark rest, and the walk is over */
+  assert.match(intro, /wander off/);
   assert.match(intro, /aria-live="polite"/); // the words are on screen
 });
 
@@ -135,13 +145,13 @@ test("the Sphere's tour rides the overlay alone — no protected file carries or
   const loadIntroBody = presence.slice(presence.indexOf("function loadIntro"));
   assert.ok(!loadIntroBody.slice(0, 600).includes("spark-intro-show"),
     "the tour no longer waits for a Show me button to exist");
-  assert.ok(presence.includes("spark-intro.js?v=20261126-2"), "the presence loads the tour everywhere it walks");
-  assert.ok(presence.includes("spark-intro.css?v=20261126-2"), "the tour styles ride with it");
+  assert.ok(presence.includes("spark-intro.js?v=20261126-3"), "the presence loads the tour everywhere it walks");
+  assert.ok(presence.includes("spark-intro.css?v=20261126-3"), "the tour styles ride with it");
   /* the album page, which carries no presence, loads its
    * tour the same lazy way from its own module */
   const album = read("docs/assets/js/codex-card-album.js");
-  assert.ok(album.includes("spark-intro.js?v=20261126-2"), "the album loads its room's tour lazily");
-  assert.ok(album.includes("spark-intro.css?v=20261126-2"), "the tour styles ride with it");
+  assert.ok(album.includes("spark-intro.js?v=20261126-3"), "the album loads its room's tour lazily");
+  assert.ok(album.includes("spark-intro.css?v=20261126-3"), "the tour styles ride with it");
 });
 
 test("the homepage and companions keep their Show me — and their pinned stacks stay whole", () => {
@@ -152,8 +162,8 @@ test("the homepage and companions keep their Show me — and their pinned stacks
   assert.ok(companions.includes('id="spark-intro-show"'), "the companions page carries the Show me");
   assert.ok(!companions.includes("spark-intro.js"), "the companions page's first load stays lean");
   const pageJs = read("docs/assets/js/spark-companions-page.js");
-  assert.ok(pageJs.includes("spark-intro.js?v=20261126-2"), "the tour rides in lazily behind the meeting (the diet)");
-  assert.ok(pageJs.includes("spark-intro.css?v=20261126-2"), "the tour styles ride with it");
+  assert.ok(pageJs.includes("spark-intro.js?v=20261126-3"), "the tour rides in lazily behind the meeting (the diet)");
+  assert.ok(pageJs.includes("spark-intro.css?v=20261126-3"), "the tour styles ride with it");
 });
 
 test("the tour reads the day in the calendar's own fields — and lights the Sphere's day", () => {
@@ -174,10 +184,10 @@ test("no tour ever stacks over the meeting", () => {
   assert.match(intro, /yieldToMeeting/);
   assert.match(intro, /spark-encounter-later/);
   assert.match(intro, /is-celebrating/);
-  assert.match(intro, /spark-tour-open/);
-  assert.match(introCss, /body\.spark-tour-open \.spark-presence/);
-  assert.match(introCss, /body\.spark-tour-open \.spark-ember-host/);
-  assert.match(introCss, /body\.spark-tour-open \.spark-tour-launcher/);
+  assert.match(intro, /spark-roam-open/);
+  assert.match(introCss, /body\.spark-roam-open \.spark-presence/);
+  assert.match(introCss, /body\.spark-roam-open \.spark-ember-host/);
+  assert.match(introCss, /body\.spark-roam-open \.spark-tour-launcher/);
 });
 
 test("the marks stay honest: an old single mark still reads as the keeper's walk seen", () => {
@@ -186,28 +196,60 @@ test("the marks stay honest: an old single mark still reads as the keeper's walk
   assert.match(intro, /writeIntroFlags\(\{ keeper: true \}\)/);
 });
 
-test("the figure travels the stage — movement is part of the demonstration", () => {
-  assert.match(intro, /pos-left/);
-  assert.match(intro, /pos-right/);
-  assert.match(introCss, /transition: left 0\.9s/);
+test("the Spark travels the page — movement is part of the demonstration", () => {
+  assert.match(intro, /function placeRoam/);
+  assert.match(intro, /cornerPoint/, "it rises from, and glides home to, its corner");
+  assert.match(introCss, /transition: transform 0\.95s/);
   assert.match(introCss, /prefers-reduced-motion/);
 });
 
-test("no card of this system outgrows the screen: heights are capped in dvh and the buttons are pinned", () => {
-  /* Aaron's A16, Nov 26, 2026: the tour card ran past the
-   * bottom of the phone and Next / Exit sat out of reach.
-   * The cap is dynamic-viewport-relative, the middle of the
-   * card scrolls inside it, and the action row never moves. */
-  assert.match(intro, /spark-tour-scroll/, "the quick tour's middle is its own scroll region");
-  assert.match(introCss, /\.spark-tour-card \{[^}]*max-height: calc\(100dvh - 28px\)/);
-  assert.match(introCss, /\.spark-tour-scroll \{[^}]*overflow-y: auto/);
-  assert.match(introCss, /\.spark-tour \.spark-tour-actions \{[^}]*flex: none/);
-  assert.match(introCss, /\.spark-page-tour \{[^}]*max-height: calc\(100dvh - 24px\)/);
-  assert.match(introCss, /env\(safe-area-inset-bottom\)/);
-  /* the meeting card keeps the same discipline: its words
-   * scroll, its actions pin to the foot of the scroll */
+test("no pop-up windows: the tour is the Spark itself, loose on the page", () => {
+  /* Aaron, Nov 26, 2026, 17:04: "All that should be done
+   * without all the pop up windows though. I wanted the
+   * actual spark to just come up in a way and start with
+   * all that — or the spark moves around the screen in
+   * certain ways and brings you to things in a way where
+   * it can even scroll through the pages…" */
+  assert.ok(!intro.includes("spark-tour-card"), "no tour card stands");
+  assert.ok(!intro.includes("spark-page-tour"), "no docked page-tour card stands");
+  assert.ok(!intro.includes('role="dialog"'), "the walk is no modal dialog");
+  assert.ok(!introCss.includes(".spark-tour {"), "no overlay window styles remain");
+  assert.ok(!introCss.includes(".spark-page-tour"), "no docked card styles remain");
+  /* the Spark itself, loose: fixed to the screen, gliding,
+   * catching no taps but its own — the page stays live */
+  assert.match(intro, /spark-roam/, "the Spark roams");
+  assert.match(introCss, /\.spark-roam \{[^}]*position: fixed/);
+  assert.match(introCss, /\.spark-roam \{[^}]*pointer-events: none/);
+  /* its words travel beside it, in light and shadow */
+  assert.match(introCss, /\.spark-roam-speech \{[^}]*text-shadow/);
+  /* the pacing is the keeper's, without buttons: tap the
+   * Spark to go on; the instruction travels with it */
+  assert.match(intro, /figureBtn\.addEventListener\("click", advance\)/);
+  assert.match(intro, /Tap me to go on/);
+  assert.match(intro, /Tap me, and I'll go home\./);
+  /* and the walk never traps: scrolling away ends it, a
+   * touch elsewhere ends it, and letting it rest ends it */
+  assert.match(intro, /addEventListener\("scroll"/);
+  assert.match(intro, /scrolled away|turned back to the page/);
+  assert.match(intro, /ROAM_REST_MS/);
+  /* the page scrolls with the Spark to the thing it shows */
+  assert.match(intro, /scrollIntoView/);
+});
+
+test("the meeting stands unboxed too — and its moment still fits the screen", () => {
+  /* The first offer sheds the window with the rest (17:04):
+   * the Spark comes up at the corner and speaks beside
+   * itself, its choices as tappable words. The naming field
+   * stays a field — a keeper has to type somewhere. The
+   * screen-fit discipline of Aaron's A16 ruling holds: the
+   * moment is capped in dvh, its words scroll within their
+   * measure, and its choices stay pinned in reach. */
   const companionCss = read("docs/assets/css/spark-companion.css");
+  assert.match(companionCss, /\.spark-encounter \{[^}]*background: transparent/, "no card behind the Spark");
   assert.match(companionCss, /\.spark-encounter \{[^}]*max-height: min\(calc\(100dvh - 96px\), 760px\)/);
   assert.match(companionCss, /\.spark-encounter-words \{[^}]*overflow-y: auto/);
   assert.match(companionCss, /\.spark-encounter-actions \{[^}]*position: sticky/);
+  assert.match(companionCss, /\.spark-encounter-words p,[^}]*text-shadow/, "its words carry their legibility with them");
+  assert.match(companionCss, /\.spark-encounter-adopt \{[^}]*background: none/, "the adopt is a word, not a pill");
+  assert.match(companionCss, /\.spark-encounter-adopt \{[^}]*text-decoration: underline/);
 });
