@@ -138,6 +138,30 @@ test("the probe lights by names alone: key present, webhook present", () => {
     { STRIPE_SECRET_KEY: SECRET, STRIPE_WEBHOOK_SECRET: WHSEC }, catalogue);
   assert.equal(config.connected, true);
   assert.equal(config.webhook, true);
+  assert.equal(config.charging, true);
+});
+
+test("the till never lights on the key alone — the whole-road rule", async () => {
+  /* Payments sweep, Nov 27, 2026: the stall's first
+   * day live, the probe lit on the key alone, before
+   * the webhook half existed. `connected` still
+   * reports the key as a fact; `charging` — the only
+   * answer that may light a till — needs both. */
+  const keyOnly = stallConfig({ STRIPE_SECRET_KEY: SECRET }, catalogue);
+  assert.equal(keyOnly.connected, true);
+  assert.equal(keyOnly.webhook, false);
+  assert.equal(keyOnly.charging, false);
+  const hookOnly = stallConfig({ STRIPE_WEBHOOK_SECRET: WHSEC }, catalogue);
+  assert.equal(hookOnly.charging, false);
+  /* And the till itself refuses to open a session on
+   * half a road: a paid order could not be recorded. */
+  const out = await createStallCheckout({
+    env: { STRIPE_SECRET_KEY: SECRET }, transport: noTransport, catalogue,
+    item: "the-wayfarers-lantern", ...OK_URLS,
+  });
+  assert.equal(out.ok, false);
+  assert.equal(out.reason, "stripe-webhook-not-set");
+  assert.match(out.words, /could not be\s+recorded/);
 });
 
 test("a session payload is built for every priced good, amounts exact", () => {
@@ -197,7 +221,8 @@ test("a malformed passport is never carried; a sound one is", () => {
 test("checkout posts the catalogue's form to Stripe and answers its URL", async () => {
   const capture = {};
   const out = await createStallCheckout({
-    env: { STRIPE_SECRET_KEY: SECRET }, transport: recordingTransport(capture),
+    env: { STRIPE_SECRET_KEY: SECRET, STRIPE_WEBHOOK_SECRET: WHSEC },
+    transport: recordingTransport(capture),
     catalogue, item: "the-wayfarers-lantern",
     passport: "SPK1-8-217-1-IUEBK69Z-SELOR-8I", ...OK_URLS,
   });
@@ -512,7 +537,7 @@ test("the cancel road writes nothing on the device and says nothing was charged"
 });
 
 test("checkout-time failures answer plainly and leave the till untouched", async () => {
-  const env = { STRIPE_SECRET_KEY: SECRET };
+  const env = { STRIPE_SECRET_KEY: SECRET, STRIPE_WEBHOOK_SECRET: WHSEC };
   // Stripe answers an error
   const apiError = await createStallCheckout({
     env, catalogue, item: "the-wayfarers-lantern", ...OK_URLS,

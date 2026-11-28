@@ -57,14 +57,25 @@ const present = (env, name) =>
 
 /** The stall till's standing, read from names alone.
  *  `sellable` counts what the catalogue itself offers
- *  the road: priced, and not earned. */
+ *  the road: priced, and not earned.
+ *
+ *  `charging` is the WHOLE-ROAD rule (payments sweep,
+ *  Nov 27, 2026): key AND webhook secret together.
+ *  The stall's first day live, the probe lit on the
+ *  key alone — the till stood lit before its order
+ *  line existed. `connected` still reports the key's
+ *  presence as a fact; only `charging` may light a
+ *  till, and it never lights on half a road again. */
 export function stallConfig(env, catalogue) {
   const items = catalogueItems(catalogue);
   let sellable = 0;
   for (const item of items) if (refusalFor(item) === null) sellable++;
+  const connected = present(env, STRIPE_ENV.secretKey);
+  const webhook = present(env, STRIPE_ENV.webhookSecret);
   return {
-    connected: present(env, STRIPE_ENV.secretKey),
-    webhook: present(env, STRIPE_ENV.webhookSecret),
+    connected,
+    webhook,
+    charging: connected && webhook,
     sellable,
     catalogueSize: items.length,
   };
@@ -174,6 +185,15 @@ export async function createStallCheckout({
       return { ok: false, reason: "return-url-not-the-sites" };
     }
   }
+  if (!config.webhook) {
+    /* The whole-road rule at the till itself: a session
+     * is never opened while the order line is missing —
+     * the key alone does not sell (payments sweep). */
+    return { ok: false, reason: "stripe-webhook-not-set",
+      words: "Stripe is connected, but the stall's webhook " +
+        "secret is not set, so a paid order could not be " +
+        "recorded. The till stays dark until it is." };
+  }
   let res = null;
   try {
     res = await transport("https://api.stripe.com/v1/checkout/sessions", {
@@ -268,9 +288,11 @@ export class NetlifyBlobsOrderStore {
   async set(key, value) { await this.blobs.setJSON(key, value); }
 }
 
-export async function createProductionOrderStore() {
+export async function createProductionOrderStore(
+  storeName = "spark-stall-orders",
+) {
   const blobs = await import("@netlify/blobs");
-  const store = blobs.getStore({ name: "spark-stall-orders", consistency: "strong" });
+  const store = blobs.getStore({ name: storeName, consistency: "strong" });
   return new NetlifyBlobsOrderStore(store);
 }
 

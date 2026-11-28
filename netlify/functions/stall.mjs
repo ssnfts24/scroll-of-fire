@@ -97,12 +97,16 @@ export default async function handler(req) {
   const config = stallConfig(env, catalogue);
 
   if (req.method === "GET") {
+    /* charging is the whole-road answer (payments
+     * sweep, Nov 27, 2026): key AND webhook secret.
+     * It lit on the key alone on the stall's first
+     * day; the probe tells the whole truth now. */
     return json({
-      ok: true, charging: config.connected,
+      ok: true, charging: config.charging,
       stripe: { connected: config.connected, webhook: config.webhook },
       sellable: config.sellable,
       catalogueSize: config.catalogueSize,
-      ...(config.connected ? {} : { words: NOT_CONNECTED_WORDS }),
+      ...(config.charging ? {} : { words: NOT_CONNECTED_WORDS }),
     });
   }
   if (req.method !== "POST") return json({ ok: false }, 405);

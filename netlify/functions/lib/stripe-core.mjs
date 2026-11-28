@@ -59,6 +59,22 @@ export const STRIPE_ENV = {
   priceAgentHosted: "STRIPE_PRICE_AGENT_HOSTED",
 };
 
+/** EACH FUNCTION KEEPS ITS OWN WEBHOOK SECRET
+ *  (payments sweep, Nov 27, 2026): Stripe issues one
+ *  signing secret per webhook destination, and each
+ *  destination points at ONE function — so a secret
+ *  can only ever verify its own function's events.
+ *  STRIPE_WEBHOOK_SECRET above is the STALL's own
+ *  (the name production already holds for the stall's
+ *  destination, kept). The shop reads
+ *  STRIPE_SHOP_WEBHOOK_SECRET (lib/shop-core.mjs) and
+ *  this door socket reads the name below. No two
+ *  functions share a variable again: a secret standing
+ *  in the environment must never make a second
+ *  function's probe claim a webhook road that no
+ *  destination feeds. */
+export const DOOR_WEBHOOK_SECRET_ENV = "STRIPE_DOOR_WEBHOOK_SECRET";
+
 /** Said plainly wherever a charging path is asked for
  *  while the connection does not exist. */
 export const NOT_CONNECTED_WORDS =
@@ -84,18 +100,35 @@ export const CHARGEABLE_TIERS = {
 
 /** The connection's standing, read from names alone.
  *  Values are never returned, logged, or compared
- *  beyond presence. */
-export function stripeConfig(env) {
+ *  beyond presence. `webhookSecretName` names whose
+ *  webhook secret to read (each function its own —
+ *  see DOOR_WEBHOOK_SECRET_ENV); it defaults to the
+ *  stall's name for the shared verifier's sake.
+ *
+ *  `charging` is the WHOLE-ROAD rule (payments sweep,
+ *  Nov 27, 2026): this socket lights only when every
+ *  piece of its road stands — the key, BOTH tier
+ *  prices Aaron sets in his dashboard, and the door's
+ *  own webhook secret (a paid tier whose grant no
+ *  verified event can deliver is not a road). While
+ *  any piece is missing, `darkReason` names the first
+ *  one, in plain code words the probe can carry. */
+export function stripeConfig(env, webhookSecretName = STRIPE_ENV.webhookSecret) {
   const present = (name) =>
     typeof env[name] === "string" && env[name].length > 0;
-  return {
-    connected: present(STRIPE_ENV.secretKey),
-    webhook: present(STRIPE_ENV.webhookSecret),
-    prices: {
-      connected: present(STRIPE_ENV.priceConnected),
-      "agent-hosted": present(STRIPE_ENV.priceAgentHosted),
-    },
+  const connected = present(STRIPE_ENV.secretKey);
+  const webhook = present(webhookSecretName);
+  const prices = {
+    connected: present(STRIPE_ENV.priceConnected),
+    "agent-hosted": present(STRIPE_ENV.priceAgentHosted),
   };
+  const charging = connected && webhook
+    && prices.connected && prices["agent-hosted"];
+  const darkReason = charging ? null
+    : !connected ? "stripe-not-connected"
+    : !webhook ? "stripe-webhook-not-set"
+    : "stripe-price-not-set";
+  return { connected, webhook, prices, charging, darkReason };
 }
 
 function refuse(reason) {
@@ -126,6 +159,12 @@ export async function createCheckoutSession({
     return { ok: false, reason: "stripe-price-not-set",
       words: "No price is set for that tier. Prices are Aaron's " +
         "calls, set in his own Stripe when he connects it." };
+  }
+  if (!stripeConfig(env, DOOR_WEBHOOK_SECRET_ENV).webhook) {
+    return { ok: false, reason: "stripe-webhook-not-set",
+      words: "Stripe is connected, but the door's own webhook " +
+        "secret is not set, so a paid tier's grant could not " +
+        "arrive verified. The till stays dark until it is." };
   }
   if (!keeper || typeof keeper !== "string") {
     return { ok: false, reason: "keeper-required" };
@@ -164,8 +203,11 @@ export async function createCheckoutSession({
  * webhook is refused: an unverifiable event grants
  * nothing, ever.
  */
-export function verifyWebhook({ env, rawBody, signatureHeader, nowSeconds }) {
-  const config = stripeConfig(env);
+export function verifyWebhook({
+  env, rawBody, signatureHeader, nowSeconds, secretName,
+}) {
+  const name = secretName || STRIPE_ENV.webhookSecret;
+  const config = stripeConfig(env, name);
   if (!config.webhook) return refuse("stripe-not-connected");
   if (typeof signatureHeader !== "string") {
     return { ok: false, reason: "signature-missing" };
@@ -183,7 +225,7 @@ export function verifyWebhook({ env, rawBody, signatureHeader, nowSeconds }) {
   if (Math.abs(nowSeconds - t) > 300) {
     return { ok: false, reason: "signature-stale" };
   }
-  const expected = createHmac("sha256", env[STRIPE_ENV.webhookSecret])
+  const expected = createHmac("sha256", env[name])
     .update(`${t}.${rawBody}`).digest("hex");
   const a = Buffer.from(expected);
   const b = Buffer.from(v1);
