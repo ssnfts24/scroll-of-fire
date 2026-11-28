@@ -217,7 +217,7 @@ test("no Sphere-side copy resolves today unpinned any more", () => {
 
 test("the changed files ride fresh loaders — three stamp lines on the protected page, two in the companion layer", () => {
   const page = read("docs/living-time-sphere.html");
-  assert.ok(page.includes("sphere-companion-layer.js?v=20261126-8"), "the companion layer's stamp moved");
+  assert.ok(page.includes("sphere-companion-layer.js?v=20261127-2"), "the companion layer's stamp moved");
   assert.ok(page.includes("sphere-day-world.js?v=20261126-8"), "the day world's stamp moved");
   assert.ok(page.includes("sphere-spark.js?v=20261126-8"), "the Sphere Spark's stamp moved");
   const layer = read("docs/assets/js/sphere-companion-layer.js");
