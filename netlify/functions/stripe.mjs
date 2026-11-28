@@ -19,8 +19,8 @@
  */
 
 import {
-  NOT_CONNECTED_WORDS, createCheckoutSession, grantFromCheckoutCompleted,
-  stripeConfig, verifyWebhook,
+  DOOR_WEBHOOK_SECRET_ENV, NOT_CONNECTED_WORDS, createCheckoutSession,
+  grantFromCheckoutCompleted, stripeConfig, verifyWebhook,
 } from "./lib/stripe-core.mjs";
 
 function json(body, status = 200) {
@@ -39,12 +39,22 @@ async function fetchTransport(url, init) {
 export default async function handler(req) {
   const env = process.env;
   if (req.method === "GET") {
-    const config = stripeConfig(env);
+    /* The whole-road probe (payments sweep, Nov 27,
+     * 2026): charging answers true only when the key,
+     * both dashboard tier prices, AND the door's own
+     * webhook secret all stand — and while dark, the
+     * answer names the first missing piece. The key
+     * alone lit this probe once; never again. */
+    const config = stripeConfig(env, DOOR_WEBHOOK_SECRET_ENV);
     return json({
       ok: true,
-      charging: config.connected,
+      charging: config.charging,
       stripe: config.connected ? "connected" : "not-connected",
-      ...(config.connected ? {} : { words: NOT_CONNECTED_WORDS }),
+      webhook: config.webhook,
+      prices: config.prices,
+      ...(config.charging ? {} : {
+        reason: config.darkReason, words: NOT_CONNECTED_WORDS,
+      }),
     });
   }
   if (req.method !== "POST") return json({ ok: false }, 405);
@@ -56,6 +66,7 @@ export default async function handler(req) {
     const verdict = verifyWebhook({
       env, rawBody: raw, signatureHeader: signature,
       nowSeconds: Math.floor(Date.now() / 1000),
+      secretName: DOOR_WEBHOOK_SECRET_ENV,
     });
     if (!verdict.ok) return json(verdict, 400);
     let event = null;

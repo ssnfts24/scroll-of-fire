@@ -3,8 +3,10 @@
  *
  * Reads the shop function's standing (GET
  * /.netlify/functions/shop) and, ONLY when charging
- * is connected and a standard piece's price is set,
- * reveals that piece's buy button. While the till is
+ * stands — the whole road: the key and the shop's own
+ * webhook secret (payments sweep, Nov 27, 2026) — and
+ * a standard piece stands sellable in the shelf's own
+ * record, reveals that piece's buy button. While the till is
  * dark — Stripe not yet connected — the buttons stay
  * hidden, the standing line says so in plain words,
  * and the standing road — email to confirm,
@@ -68,7 +70,7 @@
       var anyLive = false;
       buttons.forEach(function (button) {
         var item = status.items[button.getAttribute("data-shop-item")];
-        if (item && item.priceSet) {
+        if (item && item.sellable) {
           button.hidden = false;
           anyLive = true;
           button.addEventListener("click", function () {
