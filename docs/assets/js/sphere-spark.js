@@ -677,7 +677,10 @@
       }
       case "telling": {
         try {
-          const telling = window.DayTelling?.tellForDate ? window.DayTelling.tellForDate(new Date()) : null;
+          // The house day rides along: todayOptions() carries the
+          // device's zone and the midnight boundary (Aaron's
+          // ruling, Nov 26, 2026); a bare call read the UTC day.
+          const telling = window.DayTelling?.tellForDate ? window.DayTelling.tellForDate(new Date(), todayOptions()) : null;
           if (telling?.headline) return `${telling.headline}${telling.body ? ` ${telling.body}` : ""}`;
         } catch { /* fall through */ }
         return "Today's telling stands in the welcome room under the Sphere.";
