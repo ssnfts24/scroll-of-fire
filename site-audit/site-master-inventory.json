@@ -3,13 +3,13 @@
   "purpose": "Development-only master inventory. Do not publish; the public catalog is docs/data/site-catalog.json.",
   "baseRevision": "548e858",
   "summary": {
-    "resources": 517,
+    "resources": 518,
     "publicHtmlPages": 213,
     "catalogEntries": 79,
     "issueCounts": {
       "no-global-navigation": 80,
       "not-linked-directly-from-homepage": 31,
-      "deployed-but-unlinked": 64,
+      "deployed-but-unlinked": 65,
       "unreachable-from-homepage": 6,
       "compatibility-redirect-page": 8,
       "not-published-in-catalog": 30,
@@ -11791,6 +11791,25 @@
         "pagesWithNavLinkToIt": 0
       },
       "issues": []
+    },
+    {
+      "id": "docs:SPARK-GOODS-UNIFIED-DESIGN-2026-11-27.md",
+      "title": "SPARK-GOODS-UNIFIED-DESIGN-2026-11-27.md",
+      "description": "Markdown document deployed inside docs/ and therefore publicly fetchable, but not linked from the site.",
+      "category": "Development document",
+      "area": null,
+      "relatedProjects": [],
+      "sourcePath": "docs/SPARK-GOODS-UNIFIED-DESIGN-2026-11-27.md",
+      "publicUrl": "https://codexofreality.org/SPARK-GOODS-UNIFIED-DESIGN-2026-11-27.md",
+      "publicationStatus": "source-only",
+      "lastVerifiedSourceRevision": "548e858",
+      "relatedPages": [],
+      "canonicalUrl": "",
+      "privacyEligibility": "documentation",
+      "discoverability": null,
+      "issues": [
+        "deployed-but-unlinked"
+      ]
     },
     {
       "id": "docs:specifications/alignment-ledger-v1.md",

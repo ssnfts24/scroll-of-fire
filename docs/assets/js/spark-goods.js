@@ -10,7 +10,12 @@
    on its ground beside it. Each tile is a miniature of the
    keeper's own Spark with that good, and every tile carries a
    "Look closer" detail — what the good is, what it means, how
-   it sits on other Sparks, and why it is shaped the way it is.
+   it sits on other Sparks, why it is shaped the way it is, how
+   the keeper will use it on each platform, what it does in the
+   game where it has a game form, and its story. One item, one
+   id, everywhere (the unified law, Nov 27, 2026): the same
+   good the stall writes into the keeper's goods record is the
+   good Living Day reads and the game's wardrobe answers to.
    The stage draws the keeper's own Spark — the same generate +
    renderSVG every other surface uses, from the record at
    sof.spark.v1 — and dresses it with the goods a keeper taps;
@@ -351,6 +356,8 @@
       '<h4>For you and your Spark</h4><p data-f="means"></p>' +
       '<h4>On other Sparks</h4><p data-f="kinds"></p>' +
       '<h4>Why it is shaped this way</h4><p data-f="design"></p>' +
+      '<h4>How you\'ll use it</h4><div data-use></div>' +
+      '<div data-game hidden><h4>In the game</h4><p data-f="game"></p></div>' +
       '<div data-story hidden><h4>Its story</h4><p data-f="story"></p></div>' +
       '<button type="button" class="stall-detail-toggle"></button>' +
       "</div>";
@@ -386,7 +393,26 @@
     detailEl.querySelector('[data-f="means"]').textContent = d.means || "";
     detailEl.querySelector('[data-f="kinds"]').textContent = d.kinds || "";
     detailEl.querySelector('[data-f="design"]').textContent = d.design || "";
-    var story = rarityLine(it);
+    var use = it.use || {};
+    var useWrap = detailEl.querySelector("[data-use]");
+    useWrap.innerHTML = "";
+    [["site", "On the site"], ["app", "In Living Day"], ["game", "In the game"]].forEach(function (pair) {
+      if (!use[pair[0]]) return;
+      var p = document.createElement("p");
+      var b = document.createElement("strong");
+      b.textContent = pair[1] + " — ";
+      p.appendChild(b);
+      p.appendChild(document.createTextNode(use[pair[0]]));
+      useWrap.appendChild(p);
+    });
+    var gameWrap = detailEl.querySelector("[data-game]");
+    if (use.game && it.gamePresence) {
+      gameWrap.hidden = false;
+      detailEl.querySelector('[data-f="game"]').textContent = it.gamePresence;
+    } else {
+      gameWrap.hidden = true;
+    }
+    var story = d.story || rarityLine(it);
     var storyWrap = detailEl.querySelector("[data-story]");
     if (story) {
       storyWrap.hidden = false;
