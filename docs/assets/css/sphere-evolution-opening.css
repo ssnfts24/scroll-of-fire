@@ -385,6 +385,27 @@
   }
 }
 
+/* ── Phone widths: the card scrolls as one piece ─────────────
+ * At a keeper's enlarged system font on a short stage, the
+ * card's standing parts (its head, today's line, its controls)
+ * can outgrow the stage itself; with the card's overflow hidden
+ * the controls were clipped at the card's edge, unreachable
+ * (Aaron's A16, Nov 27, 2026). On a phone the card is therefore
+ * the one scroll region: its picture unfurls into the card's
+ * own height and the whole card scrolls, so every word and
+ * every control stays reachable — nothing clipped, no word
+ * cut. Wider screens keep the standing shape: the picture
+ * alone scrolls inside a card that never moves. */
+@media (max-width: 700px) {
+  .evo-opening .evo-card {
+    overflow-y: auto;
+  }
+  .evo-opening .evo-visual {
+    flex: 0 1 auto;
+    overflow-y: visible;
+  }
+}
+
 /* ── Small screens ──────────────────────────────────────────── */
 
 @media (max-width: 480px) {

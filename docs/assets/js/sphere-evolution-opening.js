@@ -444,7 +444,15 @@
   function todayCoordinate() {
     try {
       if (window.PatternCalendar?.fromCivilDate) {
-        return window.PatternCalendar.fromCivilDate({ date: new Date() });
+        // The house day (Aaron's ruling, Nov 26, 2026 — the whole
+        // site reads the day from local midnight): the device's own
+        // zone and the midnight boundary, the same call the page's
+        // Today chip is fed by. A bare call read the UTC day and
+        // the card named tomorrow while the page named today
+        // (Aaron's screenshot, Nov 27, 2026, 21:07 PST: the card
+        // said Pattern Day 226 on Pattern Day 225).
+        const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        return window.PatternCalendar.fromCivilDate({ date: new Date(), timeZone, boundaryMode: "midnight" });
       }
     } catch { /* fall through */ }
     return null;

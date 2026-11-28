@@ -312,13 +312,28 @@
   // the Sphere and the whole instrument stays in view. The bar is
   // measured, never guessed — a trip's answer line and the share
   // row change its height, and the reserve follows.
+  //
+  // The reserve only stands while the bar itself stands in the
+  // stage column (Nov 27, 2026 — Aaron's A16: "the sphere and the
+  // boxes still didn't really fit right"). The shell sweep homes
+  // the bar in the rooms sheet, and a reserve measured on that
+  // sheet room was still being added under the stage: the canvas
+  // wrap's height became the room's height (653px measured at an
+  // enlarged font, where the frame allotted the stage 389px), the
+  // frame clipped the overflow, and the Sphere and the
+  // demonstration card were cut at the screen's edge — the taller
+  // the keeper's text, the taller the room, the worse the cut.
+  // When the bar does not stand in the wrap there is nothing
+  // resting under the instrument to reserve for, so the reserve
+  // clears; a hidden bar (measured height 0) clears it too,
+  // instead of leaving a stale one standing.
   function fitBarReserve() {
-    if (fsElement()) {
+    if (fsElement() || !wrap.contains(bar)) {
       wrap.style.paddingBottom = "";
       return;
     }
     const h = bar.offsetHeight;
-    if (h > 0) wrap.style.paddingBottom = `${h + 14}px`;
+    wrap.style.paddingBottom = h > 0 ? `${h + 14}px` : "";
   }
   if ("ResizeObserver" in window) new ResizeObserver(fitBarReserve).observe(bar);
   window.addEventListener("resize", fitBarReserve);
@@ -739,11 +754,11 @@
     } catch { /* the catch stands unset; the module falls back */ }
     const css = document.createElement("link");
     css.rel = "stylesheet";
-    css.href = "assets/css/sphere-evolution-opening.css?v=20261127-1";
+    css.href = "assets/css/sphere-evolution-opening.css?v=20261127-2";
     css.setAttribute("data-sphere-evolution-opening", "");
     document.head.appendChild(css);
     const s = document.createElement("script");
-    s.src = "assets/js/sphere-evolution-opening.js?v=20261127-1";
+    s.src = "assets/js/sphere-evolution-opening.js?v=20261127-2";
     s.async = false;
     s.setAttribute("data-sphere-evolution-opening", "");
     document.head.appendChild(s);

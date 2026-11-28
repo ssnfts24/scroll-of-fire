@@ -1246,6 +1246,20 @@ html.living-time-sphere-page .sphere-moon-label {
 @media (max-width: 700px) {
   html.living-time-sphere-page .sphere-rebuild-caption {
     padding: 0.35rem 5rem 0.2rem 0.75rem;
+    /* The caption yields before the stage does (Nov 27, 2026 —
+     * the fit at a keeper's enlarged font). At a large system
+     * font the caption's lines stand far taller than the lab's
+     * default (measured 331px at a 1.15 font on 412px, against
+     * 180px at the default), and standing rigid (flex: 0 0 auto
+     * in the base sheet) it evicted the stage and the dock from
+     * the frame on Aaron's A16. Now it may shrink, it never
+     * takes more than 44% of the screen's height, and what does
+     * not fit scrolls inside the caption itself — every word
+     * whole and reachable, nothing clamped, nothing hidden. */
+    flex: 0 1 auto;
+    min-height: 0;
+    max-height: 44dvh;
+    overflow-y: auto;
   }
 
   /* The More door stands a little smaller, so the caption's
