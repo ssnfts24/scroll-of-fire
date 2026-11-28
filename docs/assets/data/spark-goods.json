@@ -50,6 +50,161 @@
   ],
   "note": "Trading and gifting move between keepers only in the accounts phase — adults only, separately gated. This catalogue carries the lineage fields; it builds no transfer."
  },
+ "unified": {
+  "law": "One item, one id, everywhere. A good is bought once — or earned once — and is then the Spark's own on the site, in Spark. Living Day, and in SPARK! Wake the World, under the same catalogue id in all three places. The catalogue is the one price book and the one id book; no country keeps a private list of goods.",
+  "forms": {
+   "site": "On the site the good stands on the keeper's own Spark at the stall and in its rooms — worn on the flame, carried at its side, left behind it as a trail, wrapped around its flame, or the Spark itself: its brightenings, its manners, and its hums. The themes are the light the Spark stands in, and the home goods stand on its ground beside it.",
+   "livingDay": "In Spark. Living Day the good rides in the Spark's carried record and stands in the Spark's ground there — worn, carried, sounded, or set in its home — so the Spark that opens the day is dressed by the same record the stall wrote.",
+   "game": "In SPARK! Wake the World the good is presence only: worn on the hero in the menus and in flight, left behind it as a trail, sounded in its chirps and hums, or standing as the ground the road runs over. Nothing sold is power, progress, retries, or time — the physics are identical under every outfit, and the road is exactly as hard, and exactly as fair, dressed or bare."
+  },
+  "carryingPath": [
+   "Bought on the site: the stall's order carries the buyer's Spark passport, and the good is written into the buying device's goods record (sof.spark.goods.v1) under its catalogue id — obtained: purchased, hash-chained like the Spark's own record.",
+   "The same id in the Spark's carried record is what Spark. Living Day reads: the good stands in the Spark's ground in the app because the record, not the shop, is what travels.",
+   "The game's carried record mirrors the same id space: wardrobe ids and goods ids are one space (the mapping stands below), so a piece the record carries is worn by the hero in the menus and in flight.",
+   "Earned goods travel the same road with obtained: earned. The record remembers the road each good came by — purchased or earned — and bought goods never imitate the earned mark."
+  ],
+  "counts": {
+   "goods": 65,
+   "gamePresent": 43,
+   "noGameForm": 22
+  },
+  "wardrobeMapping": [
+   {
+    "gameId": "ember-cap",
+    "gameName": "Ember Cap",
+    "slot": "hat",
+    "catalogueId": null,
+    "relation": "game-native",
+    "note": "No catalogue cap exists; the game's own hat, earned by waking 3 worlds."
+   },
+   {
+    "gameId": "moon-circlet",
+    "gameName": "Moon Circlet",
+    "slot": "hat",
+    "catalogueId": "the-ember-circlet",
+    "relation": "slot-kin",
+    "note": "Circlet for circlet: the game's is moon-silver and earned by waking (10 worlds); the catalogue's is ember-gold and a First Edition. Kin in form and slot — each keeps its own road and its own id."
+   },
+   {
+    "gameId": "star-crown",
+    "gameName": "Star Crown",
+    "slot": "hat",
+    "catalogueId": null,
+    "relation": "game-native",
+    "note": "No catalogue crown exists; the game's own hat, earned by waking 20 worlds."
+   },
+   {
+    "gameId": "comet-crest",
+    "gameName": "Comet Crest",
+    "slot": "hat",
+    "catalogueId": null,
+    "relation": "game-native",
+    "note": "Purchasable in the game's structure only. No catalogue id — it cannot be sold anywhere until the catalogue carries it, and its placeholder product id stays inert until then."
+   },
+   {
+    "gameId": "dawn-wrap",
+    "gameName": "Dawn Wrap",
+    "slot": "wrap",
+    "catalogueId": null,
+    "relation": "game-native",
+    "note": "The game's own warm band, earned at 25 wakes; no catalogue twin."
+   },
+   {
+    "gameId": "river-wrap",
+    "gameName": "River Wrap",
+    "slot": "wrap",
+    "catalogueId": null,
+    "relation": "game-native",
+    "note": "The game's own water band, earned at 75 wakes; no catalogue twin."
+   },
+   {
+    "gameId": "storm-wrap",
+    "gameName": "Storm Wrap",
+    "slot": "wrap",
+    "catalogueId": "the-storm-wrap",
+    "relation": "same-good",
+    "note": "One good: the catalogue's Storm Wrap is the game's Storm Wrap, under the catalogue id; the game's placeholder product id retires to it."
+   },
+   {
+    "gameId": "petal-trail",
+    "gameName": "Petal Trail",
+    "slot": "trail",
+    "catalogueId": "petal-drift",
+    "relation": "same-good",
+    "note": "One good: the catalogue's Petal Drift is the game's Petal Trail, under the catalogue id."
+   },
+   {
+    "gameId": "comet-trail",
+    "gameName": "Comet Trail",
+    "slot": "trail",
+    "catalogueId": "comet-trail---spark!",
+    "relation": "same-good",
+    "note": "The catalogue keeps this one trail as two entries — Comet Tail (comet-tail) for the site's sky, Comet Trail — SPARK! for the game's — and declares them the same good; the game's piece takes the game entry's id, and owning either entry is owning the trail."
+   },
+   {
+    "gameId": "prism-trail",
+    "gameName": "Prism Trail",
+    "slot": "trail",
+    "catalogueId": null,
+    "relation": "game-native",
+    "note": "Purchasable in the game's structure only. No catalogue id — it cannot be sold anywhere until the catalogue carries it, and its placeholder product id stays inert until then."
+   },
+   {
+    "gameId": "candle-glow",
+    "gameName": "Candle Glow",
+    "slot": "glow",
+    "catalogueId": null,
+    "relation": "game-native",
+    "note": "The game's own glow, earned by waking 1 world; no catalogue glow exists."
+   },
+   {
+    "gameId": "hearth-glow",
+    "gameName": "Hearth Glow",
+    "slot": "glow",
+    "catalogueId": null,
+    "relation": "game-native",
+    "note": "The game's own glow, earned at 50 wakes; no catalogue twin — the Hearth Wrap is a wrap, not a glow."
+   },
+   {
+    "gameId": "aurora-glow",
+    "gameName": "Aurora Glow",
+    "slot": "glow",
+    "catalogueId": null,
+    "relation": "game-native",
+    "note": "Purchasable in the game's structure only. No catalogue id — it cannot be sold anywhere until the catalogue carries it, and its placeholder product id stays inert until then."
+   }
+  ],
+  "noGameForm": [
+   "your-spark-in-stickers",
+   "codex-glyph-stickers",
+   "moons-and-days-stickers",
+   "the-road-stickers",
+   "sparklight-emoji",
+   "the-keepers-bench",
+   "the-reading-stone",
+   "the-resting-hammock",
+   "the-clearing-lamp",
+   "the-path-lanterns-set-of-three",
+   "the-hearth-ring",
+   "path-stones-set-of-seven",
+   "the-garden-gate",
+   "the-stepping-bridge",
+   "the-round-fountain",
+   "the-rain-barrel-and-dipper",
+   "the-young-orchard-tree",
+   "the-vine-pergola",
+   "the-threshold-stone",
+   "the-token-shelf",
+   "the-hum-rail",
+   "the-chronicle-shelf"
+  ],
+  "fencesCarried": [
+   "The Spark itself is never an item, on any platform.",
+   "Earned-only goods (the two hum shelves) are never purchasable on any platform, and no purchasable twin of them exists anywhere.",
+   "A game-native purchasable piece with no catalogue id cannot be sold anywhere until the catalogue carries it — the catalogue is the one price book, and placeholder product ids stay inert until then.",
+   "Nothing is sold to children, on any platform."
+  ]
+ },
  "categories": [
   {
    "id": "carried",
@@ -122,8 +277,16 @@
     "what": "A small lantern in a brass frame, with a warm flame of its own — sized for a Spark's side, not for a room.",
     "means": "It says this Spark travels. For the keeper it is a promise kept in sight: the light goes with you, on the road and in the dark hours alike.",
     "kinds": "The glow leans to the Spark's own kind colour — amber for Fire, sea-blue for Water, violet for Shadow — and the frame hangs at the same height on every form, from orb to moth.",
-    "design": "A lantern is the oldest carried light there is. It hangs beside the Spark and never in front of its face: a companion's light should light the road, not blind the traveller."
-   }
+    "design": "A lantern is the oldest carried light there is. It hangs beside the Spark and never in front of its face: a companion's light should light the road, not blind the traveller.",
+    "story": "The lantern is the oldest carried light there is, shrunk to a Spark's size: a brass frame and a warm flame of its own. It was drawn to hang beside the Spark and never in front of its face — a companion's light should light the road, not blind the traveller."
+   },
+   "use": {
+    "app": "It rides in the Spark's record into Living Day, so the lantern is hanging there when the day opens — the light goes with you into the dark hours.",
+    "game": "Arm it before a run and it rides at your Spark's side down the road, its small glow travelling with the flight.",
+    "site": "Stand it on your Spark at the stall and it hangs at its side in every room the Spark stands in, glowing in its kind colour."
+   },
+   "gamePresence": "Carried slot, at the hero's side: it stands beside the Spark on the road and in the menus, flies in at its side in the Arrival, and rides small and warm through every flight, glowing in the Spark's kind colour.",
+   "worth": "Seven dollars buys the road's oldest light once, and it then hangs beside your Spark on the site, in the app, and in the game — everywhere your Spark goes, the lantern goes."
   },
   {
    "id": "the-seed-pouch",
@@ -144,8 +307,16 @@
     "what": "A small cloth pouch on a short cord, holding seeds the Spark keeps for ground it has not reached yet.",
     "means": "A pouch is potential you can carry. It suits a Spark whose keeper is planting things — gardens, plans, beginnings — and wants the future riding close.",
     "kinds": "It rides low on every form; on a wave it bobs at the cord's end, on a sprout it rests against the stem, and the cord's brass knot is its tag on all of them.",
-    "design": "Seeds are the smallest way to carry a garden. The pouch is soft, not boxed — what is alive in it should be able to breathe."
-   }
+    "design": "Seeds are the smallest way to carry a garden. The pouch is soft, not boxed — what is alive in it should be able to breathe.",
+    "story": "A soft cloth pouch on a short cord, holding seeds for ground the Spark has not reached yet. It is made soft, not boxed, because what is alive in it should be able to breathe."
+   },
+   "use": {
+    "app": "In Living Day it hangs in the Spark's ground kit — the future, riding close while you plant the day's beginnings.",
+    "game": "It rides low at your Spark's side on the road and in flight, bobbing at the cord's end as the flight runs.",
+    "site": "Tie it on at the stall and it rides low at your Spark's side, the brass knot on its cord for a tag."
+   },
+   "gamePresence": "Carried slot, worn low: the pouch bobs at its cord's end in flight, rests against the hero on the road and in the menus, and rides in with the Arrival.",
+   "worth": "Two dollars for the smallest way to carry a garden — worn on the site, in the app, and in the game alike."
   },
   {
    "id": "the-scroll-case",
@@ -166,8 +337,16 @@
     "what": "A stiff tube case on a strap, made to carry rolled writings without creasing them.",
     "means": "For Sparks who travel with words — the writings, the record, the letter not yet sent. It marks the Spark as a carrier of the Codex, not just a light.",
     "kinds": "It slings behind the flame on every kind, angled like a carried staff; on a comet it streams with the tail, on a moth it rests between the wings, never over the face.",
-    "design": "Scrolls crease if they are folded and fade if they are left open, so the case is a tube: the writings ride rolled, dark, and safe, the way they have always travelled."
-   }
+    "design": "Scrolls crease if they are folded and fade if they are left open, so the case is a tube: the writings ride rolled, dark, and safe, the way they have always travelled.",
+    "story": "Scrolls crease if they are folded and fade if they are left open, so the case is a stiff tube on a strap: the writings ride rolled, dark, and safe, the way they have always travelled."
+   },
+   "use": {
+    "app": "In Living Day it rides in the record behind the flame — the writings, the record, the letter not yet sent, carried into the day.",
+    "game": "On the road it streams behind your Spark in flight, angled like a carried staff, and rests between the wings at the perch.",
+    "site": "Slung behind your Spark's flame at the stall, it marks the Spark as a carrier of the Codex in every room."
+   },
+   "gamePresence": "Carried slot, slung behind: it streams with the flight, rests across the hero's back in the menus and on the road, and marks the Spark in the scenes as the one who carries the words.",
+   "worth": "Seven dollars dresses your Spark as a carrier of the Codex once, and the case then rides on the site, in the app, and down the game's road."
   },
   {
    "id": "the-travellers-satchel",
@@ -188,8 +367,16 @@
     "what": "A soft bag with a flap and clasp, sized for a day on the road.",
     "means": "The general carrier — where the day's small things go. Keepers who live out of a bag themselves tend to choose it for their Spark.",
     "kinds": "It rides at the side and swings a little as the Spark moves; the clasp carries the tag, and the bag keeps its shape on round orbs and narrow shards alike.",
-    "design": "A satchel, not a backpack: a Spark has no shoulders to promise with. It hangs from the body's own balance, the way everything a Spark carries must."
-   }
+    "design": "A satchel, not a backpack: a Spark has no shoulders to promise with. It hangs from the body's own balance, the way everything a Spark carries must.",
+    "story": "A soft bag with a flap and clasp, sized for a day on the road. It is a satchel, not a backpack — a Spark has no shoulders to promise with, so it hangs from the body's own balance."
+   },
+   "use": {
+    "app": "In Living Day it is the day's small-things bag in the Spark's kit — where the day's gatherings ride.",
+    "game": "It rides at your Spark's side through every flight and stands with it on the road, moving as it moves.",
+    "site": "Hang it at your Spark's side at the stall and it swings a little as the Spark moves, tag on the flap clasp."
+   },
+   "gamePresence": "Carried slot, at the side: the satchel swings gently in flight, hangs at the hero's side in the menus and the Arrival, and keeps its shape on every form the hero takes.",
+   "worth": "Seven dollars for the general carrier, bought once and carried on the site, in the app, and in the game."
   },
   {
    "id": "the-astrolabe-charm",
@@ -214,8 +401,16 @@
     "what": "Rings within rings in brass — a pocket astrolabe, the old instrument for reading the stars, hung on a fine chain.",
     "means": "For the keeper who looks up. It ties the Spark to the Observatory and the calendar in the sky: this Spark navigates by the same lights its keeper studies.",
     "kinds": "The rings turn slowly before the flame on every form; the chain shortens on small Sparks and lengthens on tall ones, so the rings always rest at the core's height.",
-    "design": "An astrolabe is a sky you can hold. It is the Heirloom of the carried shelf because it joins the two halves of the Codex — the instrument and the flame — in one small machine."
-   }
+    "design": "An astrolabe is a sky you can hold. It is the Heirloom of the carried shelf because it joins the two halves of the Codex — the instrument and the flame — in one small machine.",
+    "story": "First Edition — issued Moon 8, Pattern Day 221, and when this edition closes it stays closed. An astrolabe is a sky you can hold: the Heirloom of the carried shelf, joining the instrument and the flame in one small machine."
+   },
+   "use": {
+    "app": "In Living Day the rings ride on the chain in the Spark's record — the Spark navigates the day by the same lights you study.",
+    "game": "It hangs before your Spark on the road and turns slowly through the flight — the Observatory's instrument, carried into the game's sky.",
+    "site": "Hang it before your Spark's flame at the stall and its rings turn slowly at the core's height in every room."
+   },
+   "gamePresence": "Carried slot, hung before the flame: the brass rings turn slowly in the menus, ride the Arrival in on the chain, and keep turning at the hero's core height through every flight, framing the Spark's light in a small turning sky.",
+   "worth": "Nineteen dollars is the Heirloom band: a First Edition instrument, issued under Moon 8, that then hangs before your Spark on the site, in the app, and in the game — bought once, carried everywhere."
   },
   {
    "id": "the-north-bead",
@@ -236,8 +431,16 @@
     "what": "One smooth stone bead on a plain cord — the smallest good on the carried shelf.",
     "means": "A bead is a kept direction. It suits a quiet Spark and a keeper who wants one true thing rather than many bright ones.",
     "kinds": "Low and quiet on every kind; the stone takes a grey-blue cast that sits calmly against Fire's amber and Light's gold alike.",
-    "design": "Travellers once carried a single bead for the pole star. One bead, one direction — the design is the restraint."
-   }
+    "design": "Travellers once carried a single bead for the pole star. One bead, one direction — the design is the restraint.",
+    "story": "Travellers once carried a single bead for the pole star. One bead, one direction — the design is the restraint, and the stone takes a grey-blue cast that sits calmly against every kind's colour."
+   },
+   "use": {
+    "app": "In Living Day it is the kept direction in the Spark's kit — one true thing, carried into each day.",
+    "game": "It rides low at your Spark's side on the road and in flight, quiet against the light of the run.",
+    "site": "Put it on at the stall and one bead rides low and quiet on its cord, the cord's brass knot for a tag."
+   },
+   "gamePresence": "Carried slot, low and quiet: one grey-blue bead on its cord, at the hero's side in the menus and the Arrival, trailing calm through flight.",
+   "worth": "Two dollars for one kept direction — the smallest good on the shelf, and it still rides on the site, in the app, and in the game."
   },
   {
    "id": "the-key-of-the-thirteenth-door",
@@ -262,8 +465,16 @@
     "what": "An old-fashioned brass key, bow and bit, hung at the Spark's side on its own ring.",
     "means": "Twelve moons make the year; the thirteenth door is the one outside the count. The key is for keepers who love the Day Out of Time and everything that stands outside the pattern.",
     "kinds": "It hangs and turns slowly, catching light on every form; on a wave it trails in the water-light, on a shard it rests flat against the facet.",
-    "design": "A key is a promise with a shape. It opens nothing in the catalogue — it is kept for the love of the door, and a good design does not pretend otherwise."
-   }
+    "design": "A key is a promise with a shape. It opens nothing in the catalogue — it is kept for the love of the door, and a good design does not pretend otherwise.",
+    "story": "First Edition — issued Moon 8, Pattern Day 221, and a closed edition stays closed. Twelve moons make the year; the thirteenth door is the one outside the count, and the key is kept for the love of that door. It opens nothing in the catalogue, and the design does not pretend otherwise."
+   },
+   "use": {
+    "app": "In Living Day the key rides in the record at the Spark's side — for the Day Out of Time and everything outside the pattern.",
+    "game": "It hangs and turns at your Spark's side down the road and through the flight, catching the game's light as it goes.",
+    "site": "Hang it at your Spark's side at the stall and it turns slowly there, catching light, tag hung from its bow."
+   },
+   "gamePresence": "Carried slot, hung at the side: the old brass key turns slowly in the menus and the Arrival, and trails in the light through flight, resting flat against the hero between runs.",
+   "worth": "Nineteen dollars buys a First Edition promise with a shape — issued Moon 8, never reissued in this edition — and it then hangs at your Spark's side on the site, in the app, and in the game."
   },
   {
    "id": "the-kind-scarf",
@@ -284,8 +495,16 @@
     "what": "A soft scarf woven in the Spark's own kind colours, looped once around its core.",
     "means": "Warmth, given. Keepers choose it to say the Spark is cared for, not just carried — the closest thing the stall has to a gift from the keeper's own hands.",
     "kinds": "Each kind's scarf is woven from its own hues — Fire in embers, Water in sea tones, Shadow in violets — with a wave edge for Water and a smoke edge for Shadow.",
-    "design": "A scarf is what you wrap around someone you are sending into the cold. It loops soft and low so it warms the core without ever covering the face."
-   }
+    "design": "A scarf is what you wrap around someone you are sending into the cold. It loops soft and low so it warms the core without ever covering the face.",
+    "story": "A scarf is what you wrap around someone you are sending into the cold. Woven in the Spark's own kind colours, it loops soft and low — the closest thing the stall has to a gift from the keeper's own hands."
+   },
+   "use": {
+    "app": "In Living Day the scarf is on the Spark when the day opens — warmth, given, carried into the day.",
+    "game": "It loops around your Spark on the road and in flight, in its kind colours, in the game's bright look.",
+    "site": "Loop it around your Spark's core at the stall and it stays there in its kind colours, wave- or smoke-edged by kind."
+   },
+   "gamePresence": "Worn slot, looped around the core: the scarf rides the menus, the road, and the Arrival, and streams soft behind the hero in flight, woven from the Spark's own hues.",
+   "worth": "Seven dollars wraps your Spark once, in its own colours — and the scarf is then on it on the site, in the app, and in the game."
   },
   {
    "id": "the-moon-phase-band",
@@ -306,8 +525,16 @@
     "what": "A band of thirteen small moons circling the Spark's core, one for each Moon of the year.",
     "means": "The calendar, worn. Today's moon stands lit, so the band tells the keeper where the year stands at a glance — the Spark carries the count of days on its body.",
     "kinds": "The moons keep their order on every form; on a moth they arc across the wing-roots, on an orb they ring the equator of the light.",
-    "design": "Thirteen moons, because the year has thirteen. The band is a circle because the year is one — it comes back to its own beginning."
-   }
+    "design": "Thirteen moons, because the year has thirteen. The band is a circle because the year is one — it comes back to its own beginning.",
+    "story": "Thirteen moons, because the year has thirteen; the band is a circle because the year is one. Today's moon stands lit, so the band tells where the year stands at a glance."
+   },
+   "use": {
+    "app": "In Living Day the band is the calendar worn into the day — open the app and the Spark shows you where the year stands.",
+    "game": "On the road the band rings your Spark with the real day's moon lit — the game's road keeps the same count as your year.",
+    "site": "Set it on your Spark at the stall and the thirteen moons ring its core, today's moon lit, in every room."
+   },
+   "gamePresence": "Worn slot, a ring of thirteen small moons around the hero: on the road and in the menus the moon of the real Pattern Day stands lit; in flight the ring rides the core, the lit moon travelling with it.",
+   "worth": "Seven dollars puts the whole calendar on your Spark's body once — and it keeps the count on the site, in the app, and on the game's road."
   },
   {
    "id": "the-cloak-clasp-of-the-road",
@@ -328,8 +555,16 @@
     "what": "A small round brass clasp with the road's spiral pressed into its face.",
     "means": "A clasp holds a cloak closed against the weather. On a Spark it marks the road kept: this one goes out in all seasons and comes home.",
     "kinds": "It pins at the flame's shoulder on every form; the spiral catches the light differently on each kind's colour, so no two clasps read quite alike.",
-    "design": "The spiral is the road's own mark — the path that turns back through the moons. Pressing it into the clasp makes the smallest good on the worn shelf carry the whole map."
-   }
+    "design": "The spiral is the road's own mark — the path that turns back through the moons. Pressing it into the clasp makes the smallest good on the worn shelf carry the whole map.",
+    "story": "The spiral pressed into the clasp is the road's own mark — the path that turns back through the moons. The smallest good on the worn shelf carries the whole map."
+   },
+   "use": {
+    "app": "In Living Day the clasp marks the road kept — this Spark goes out in all seasons and comes home.",
+    "game": "It pins at your Spark's shoulder on the road and rides the flight, the spiral reading in the game's light.",
+    "site": "Pin it at your Spark's shoulder at the stall; the spiral catches the light in the kind's colour."
+   },
+   "gamePresence": "Worn slot, at the shoulder: a small round brass clasp with the road's spiral, on the hero in the menus, the Arrival, and through flight.",
+   "worth": "Two dollars for the whole map in one small clasp — worn on the site, in the app, and in the game."
   },
   {
    "id": "the-ember-circlet",
@@ -354,8 +589,16 @@
     "what": "A thin circle of pale gold that rests in the flame above the Spark's core, never touching it.",
     "means": "The circlet is the stall's quiet crown — not rule, but regard. It suits a Spark that has been with its keeper a long while and is honoured for it.",
     "kinds": "It floats at the flame's crown on every form; on a comet it rides at the head, on a sprout it rings the topmost leaf-light.",
-    "design": "A circlet, not a crown: a plain circle, unclosed by any jewel. What it honours is the flame itself, so the design adds nothing the flame does not already say."
-   }
+    "design": "A circlet, not a crown: a plain circle, unclosed by any jewel. What it honours is the flame itself, so the design adds nothing the flame does not already say.",
+    "story": "First Edition — issued Moon 8, Pattern Day 221; when this edition closes it stays closed. A circlet, not a crown: a plain circle of pale gold, unclosed by any jewel, honouring the flame itself."
+   },
+   "use": {
+    "app": "In Living Day the circlet rides in the record above the core — regard, carried into the day.",
+    "game": "In the game its slot-kin, the Moon Circlet, rests above your Spark on the road — circlet for circlet, in moon-silver where the stall's is ember-gold; each keeps its own road, that one earned by waking, this one an edition.",
+    "site": "Rest it in the flame above your Spark's core at the stall — the stall's quiet crown, worn in every room."
+   },
+   "gamePresence": "Hat slot, resting in the flame above the core — at the stall in ember-gold. Its game kin, the Moon Circlet, wears the same circle in moon-silver over the hero in the menus, the Arrival, and flight.",
+   "worth": "Nineteen dollars is the Heirloom band: a First Edition circlet that rests above your Spark on the site and in the app — and its circle is the one the game's Moon Circlet answers to."
   },
   {
    "id": "the-ribbon-of-the-day-out-of-time",
@@ -376,8 +619,16 @@
     "what": "One pale ribbon, the same on every Spark, tied at the flame's side.",
     "means": "It is worn for the Day Out of Time — the day outside the moons that closes the year. Keepers tie it on when the year turns, and some never take it off.",
     "kinds": "The same pale ribbon on Fire and Shadow, orb and moth alike — the one good in the stall that refuses to vary, because the day it marks belongs to everyone.",
-    "design": "Every other good takes the Spark's colours. This one doesn't. The sameness is the design: one ribbon, one day, every keeper."
-   }
+    "design": "Every other good takes the Spark's colours. This one doesn't. The sameness is the design: one ribbon, one day, every keeper.",
+    "story": "Every other good takes the Spark's colours; this one doesn't. The same pale ribbon on Fire and Shadow, orb and moth alike — one ribbon, one day, every keeper."
+   },
+   "use": {
+    "app": "In Living Day the ribbon marks the Day Out of Time in the Spark's kit, the day outside the moons.",
+    "game": "On the road it ties at your Spark's side, the same pale ribbon in the game's bright sky.",
+    "site": "Tie it at your Spark's flame at the stall when the year turns — and leave it on, as many keepers do."
+   },
+   "gamePresence": "Worn slot, tied at the flame's side: the one ribbon that refuses to vary, on the hero in the menus, the Arrival, and flight — the same on every keeper's Spark.",
+   "worth": "Two dollars for the day outside the count — the same ribbon on your Spark on the site, in the app, and in the game."
   },
   {
    "id": "the-veil-of-quiet-hours",
@@ -398,8 +649,16 @@
     "what": "A soft, sheer veil that settles over the flame's edge and gentles its light.",
     "means": "For the quiet hours — grief, rest, deep night, prayer. It lets a Spark be present without being bright, and tells the keeper it is all right to dim.",
     "kinds": "It falls from the flame's crown on every form; on Air it drifts a little, on Earth it settles heavy and still, each kind veiled in its own manner.",
-    "design": "A veil does not hide the light; it softens the edge of it. The design keeps the Spark fully itself, only gentler to look at — the way dusk treats a lamp."
-   }
+    "design": "A veil does not hide the light; it softens the edge of it. The design keeps the Spark fully itself, only gentler to look at — the way dusk treats a lamp.",
+    "story": "A veil does not hide the light; it softens the edge of it, the way dusk treats a lamp. It falls from the flame's crown — drifting a little on Air, settling heavy and still on Earth."
+   },
+   "use": {
+    "app": "In Living Day the veil lets the Spark be present without being bright on the days that ask for less.",
+    "game": "On the road and in the scenes it gentles your Spark's light — present, never glaring, in the game's quiet moments.",
+    "site": "Settle it over your Spark's flame at the stall for the quiet hours — grief, rest, deep night, prayer."
+   },
+   "gamePresence": "Worn slot, over the flame's edge: the sheer veil softens the hero's light in the menus and the scenes, and drifts at the flame's crown through flight.",
+   "worth": "Seven dollars buys your Spark a gentler edge, once — and it veils it on the site, in the app, and in the game."
   },
   {
    "id": "petal-drift",
@@ -420,8 +679,16 @@
     "what": "A slow drift of pale petals circling the Spark, neither falling nor rising.",
     "means": "Beauty that follows. Keepers choose it for Sparks who live in gardens and gentle rooms — the trail of a Spark that moves like something blossoming passed by.",
     "kinds": "The petals keep their slow circle on every form; on Water they tint toward blue, on Fire toward rose-gold, borrowing the kind's light as they pass through it.",
-    "design": "Petals are what a garden sheds without loss. The drift is a circle, not a tail — this trail does not mark where the Spark has been, but what it is like to be near it."
-   }
+    "design": "Petals are what a garden sheds without loss. The drift is a circle, not a tail — this trail does not mark where the Spark has been, but what it is like to be near it.",
+    "story": "Petals are what a garden sheds without loss. The drift is a circle, not a tail — this trail does not mark where the Spark has been, but what it is like to be near it."
+   },
+   "use": {
+    "app": "In Living Day the drift circles the Spark through the day — beauty that follows, at home.",
+    "game": "In the game this is the Petal Trail: petals stream behind your Spark's flight and settle in a slow circle at rest.",
+    "site": "Set it going at the stall and pale petals circle your Spark slowly in every room, tinting as they pass through its light."
+   },
+   "gamePresence": "Trail slot: in flight, pale petals stream behind the hero and thin into a slow circling drift wherever it rests; on the road and in the menus the drift keeps its circle. The game's wardrobe calls this piece the Petal Trail — the same good.",
+   "worth": "Seven dollars buys the garden's own trail once — circling your Spark on the site, in the app, and streaming behind it in the game."
   },
   {
    "id": "ember-motes",
@@ -442,8 +709,16 @@
     "what": "Tiny warm sparks that shed gently behind the Spark as it moves and settle when it rests.",
     "means": "The first trail most keepers choose: it makes the Spark's path visible, a small history of where it has been in the room, written in warm dust.",
     "kinds": "On Fire the motes are many and bright; on Shadow they are few and deep violet; each kind sheds its own count and colour of sparks.",
-    "design": "A real fire sheds sparks whether you watch or not. The motes are small and brief by design — a trail should charm, not litter."
-   }
+    "design": "A real fire sheds sparks whether you watch or not. The motes are small and brief by design — a trail should charm, not litter.",
+    "story": "A real fire sheds sparks whether you watch or not. The motes are small and brief by design — a trail should charm, not litter."
+   },
+   "use": {
+    "app": "In Living Day the motes mark where the Spark has been in the day, settling when it rests.",
+    "game": "In flight the motes shed behind your Spark in its kind's count and colour — many and bright on Fire, few and deep violet on Shadow.",
+    "site": "Set them shedding at the stall and your Spark's path through the room is written in warm dust."
+   },
+   "gamePresence": "Trail slot: tiny warm sparks shed behind the hero's flight and settle at rest; the first mote of the trail is brass, the tag riding the trail-head.",
+   "worth": "Two dollars for the first trail most keepers choose — shed on the site, in the app, and behind your Spark in the game."
   },
   {
    "id": "ripple-step",
@@ -464,8 +739,16 @@
     "what": "A soft ring that opens at each of the Spark's steps and widens until it fades, like a stone's ring on still water.",
     "means": "For calm Sparks and calm keepers. It makes movement itself gentle — every step the Spark takes is answered by the ground, once, and let go.",
     "kinds": "Water Sparks wear it most naturally, their rings wide and slow; on Earth the rings are small and sure, on Air they break early into sparkle.",
-    "design": "The ring is the shape of an effect that does not insist. It widens, thins, and is gone — the design is a lesson in leaving no mark heavier than a touch."
-   }
+    "design": "The ring is the shape of an effect that does not insist. It widens, thins, and is gone — the design is a lesson in leaving no mark heavier than a touch.",
+    "story": "The ring is the shape of an effect that does not insist: it widens, thins, and is gone — a lesson in leaving no mark heavier than a touch."
+   },
+   "use": {
+    "app": "In Living Day every move the Spark makes is answered by the ground once, and let go.",
+    "game": "Where your Spark touches down along the road, a ring opens and fades — the calmest landing on the game's road.",
+    "site": "Walk your Spark across the stall's stage and each step opens a soft ring that widens and fades."
+   },
+   "gamePresence": "Trail slot, at the ground: a soft ring opens at each touchdown and at the perch, widening and fading like a stone's ring on water; widest and slowest on Water Sparks.",
+   "worth": "Seven dollars buys the gentlest way of moving — rung on the site, in the app, and at every landing in the game."
   },
   {
    "id": "season-motes",
@@ -486,8 +769,16 @@
     "what": "A small company of motes whose colour and fall follow the season the keeper chooses for the Spark.",
     "means": "It ties the Spark to the turning year outside the window — spring green, harvest gold, first-snow pale — so the room and the Spark keep the same season.",
     "kinds": "The keeper picks the season; the kind picks the tint. A Fire Spark in winter sheds amber through the pale, a Water Spark in spring runs green over blue.",
-    "design": "Motes are the smallest possible weather. Letting the keeper set the season — not the calendar — keeps the good personal: it is the season of your ground, not of the whole world."
-   }
+    "design": "Motes are the smallest possible weather. Letting the keeper set the season — not the calendar — keeps the good personal: it is the season of your ground, not of the whole world.",
+    "story": "Motes are the smallest possible weather. The keeper sets the season — not the calendar — so it is the season of your ground, not of the whole world."
+   },
+   "use": {
+    "app": "In Living Day the Spark keeps the same season as the room outside your window, if you set it so.",
+    "game": "On the road the motes fall in your chosen season's colour around the hero, tinted by its kind.",
+    "site": "Choose a season at the stall and the motes take its colour and fall around your Spark."
+   },
+   "gamePresence": "Trail slot: a small company of motes in the keeper-chosen season's colour and fall, shed in flight and gathered at rest on the road.",
+   "worth": "Two dollars ties your Spark to the turning year — in your chosen season on the site, in the app, and in the game."
   },
   {
    "id": "the-long-ribbon",
@@ -512,8 +803,16 @@
     "what": "A long ribbon of woven light that streams behind the Spark as it goes, coiling slowly at rest.",
     "means": "The grand trail of the shelf. It suits a Spark that ranges far — across the Sphere, through the rooms — and a keeper who wants that ranging seen.",
     "kinds": "It lengthens the flame-lick trail every Spark is born with; on a comet it braids into the tail, on a moth it streams from the wing-tips in two falls.",
-    "design": "A ribbon is a trail with a weaver. Where Ember Motes happen to a Spark, the Long Ribbon is chosen by one — that is why it stands in the Heirloom band."
-   }
+    "design": "A ribbon is a trail with a weaver. Where Ember Motes happen to a Spark, the Long Ribbon is chosen by one — that is why it stands in the Heirloom band.",
+    "story": "First Edition — issued Moon 8, Pattern Day 221, and the edition stays closed when it closes. A ribbon is a trail with a weaver: where Ember Motes happen to a Spark, the Long Ribbon is chosen by one — that is why it stands in the Heirloom band."
+   },
+   "use": {
+    "app": "In Living Day the ribbon streams behind the Spark through the day — the ranging, seen.",
+    "game": "In flight the ribbon braids behind your Spark the whole length of the run — the grand trail, at the game's scale.",
+    "site": "Stream it at the stall and the woven ribbon of light follows your Spark across every room, coiling slowly at rest."
+   },
+   "gamePresence": "Trail slot, the Heirloom treatment: a long woven ribbon of light streams behind the hero in flight and coils slowly at rest; on a comet-form hero it braids into the tail. It changes how the Spark's light looks in flight more than any other trail.",
+   "worth": "Nineteen dollars is the Heirloom band: a First Edition grand trail that then streams behind your Spark on the site, in the app, and through the game's longest flights."
   },
   {
    "id": "comet-tail",
@@ -534,8 +833,16 @@
     "what": "A bright head of light and a long tapering tail that grows when the Spark moves fast and shortens when it rests.",
     "means": "Speed, made visible and honest: the tail tells the truth about how fast the Spark is actually going, and keepers who love the road choose it for travelling.",
     "kinds": "On a comet-form Spark the tail doubles its own; on an orb it lends a borrowed swiftness; on every kind the head burns in the kind's colour.",
-    "design": "A comet is a promise that returns. The tail is tapered because attention is — bright at the head, gentle at the end, gone without a scar."
-   }
+    "design": "A comet is a promise that returns. The tail is tapered because attention is — bright at the head, gentle at the end, gone without a scar.",
+    "story": "A comet is a promise that returns. The tail is tapered because attention is — bright at the head, gentle at the end, gone without a scar."
+   },
+   "use": {
+    "app": "In Living Day the tail tells the truth about the Spark's pace through the day, shortening as it rests.",
+    "game": "This is the site's form of the game's Comet Trail — the same light, drawn for this sky; the game's own entry stands on the game shelf.",
+    "site": "Send your Spark across the stall and the tail lengthens with its speed, honest about how fast it is actually going."
+   },
+   "gamePresence": "Trail slot: a bright head and a long tapering tail that grows with the hero's speed in flight and shortens at rest. The game's wardrobe Comet Trail and the catalogue's game-shelf Comet Trail are this same good in the game's look.",
+   "worth": "Seven dollars buys speed made visible, once — and the tail then streams on the site, in the app, and behind your Spark in the game."
   },
   {
    "id": "firefly-scatter",
@@ -556,8 +863,16 @@
     "what": "A few slow green-gold fireflies that wander around the Spark at rest and gather in when it moves.",
     "means": "Company. The fireflies make a resting Spark feel attended rather than idle — the good for a keeper who talks to their Spark in the evening.",
     "kinds": "The fireflies keep their own green-gold on every kind — they are visitors, not part of the Spark — but they gather closer on Shadow Sparks, loving the dim.",
-    "design": "Fireflies are light that is alive and unowned. The design keeps them few and slow: a scatter, not a swarm — company, not a crowd."
-   }
+    "design": "Fireflies are light that is alive and unowned. The design keeps them few and slow: a scatter, not a swarm — company, not a crowd.",
+    "story": "Fireflies are light that is alive and unowned. The design keeps them few and slow — a scatter, not a swarm: company, not a crowd."
+   },
+   "use": {
+    "app": "In Living Day the fireflies wander near the Spark in the evening hours and gather when it moves.",
+    "game": "On the road the fireflies keep your Spark company at the perch, and gather in close when the flight begins.",
+    "site": "Let them loose at the stall and a resting Spark feels attended rather than idle."
+   },
+   "gamePresence": "Trail slot, at rest: slow green-gold fireflies wander around the hero on the road and in the menus, gathering closer in flight — closest of all on Shadow Sparks, who love the dim.",
+   "worth": "Two dollars buys company for a resting Spark — wandering beside it on the site, in the app, and at the game's perch."
   },
   {
    "id": "moonlit-wake",
@@ -578,8 +893,16 @@
     "what": "A pale silver wake that spreads behind the Spark and settles flat, like moonlight lying on water.",
     "means": "For night travel and quiet rooms. Where the comet tail is speed, the wake is peace — the sign of a Spark that passed gently and left the water calm.",
     "kinds": "Water Sparks spread it widest; Light Sparks silver it brighter; on land forms it lies like frost-light along the ground-line.",
-    "design": "A wake is the one trail that calms what it crosses. It is drawn flat and low by design — this is the trail of a Spark at peace with the room."
-   }
+    "design": "A wake is the one trail that calms what it crosses. It is drawn flat and low by design — this is the trail of a Spark at peace with the room.",
+    "story": "A wake is the one trail that calms what it crosses. Drawn flat and low, it is the sign of a Spark that passed gently and left the water calm."
+   },
+   "use": {
+    "app": "In Living Day the wake lies behind the Spark through the night hours — peace, made visible.",
+    "game": "In flight the wake spreads behind your Spark and settles flat over the road — the night run's quiet signature.",
+    "site": "Spread it at the stall and a pale silver wake settles behind your Spark like moonlight on water."
+   },
+   "gamePresence": "Trail slot: a pale silver wake spreads behind the hero's flight and settles like light on water; widest on Water Sparks, brighter silver on Light.",
+   "worth": "Seven dollars buys the peaceful trail — spread on the site, in the app, and behind your Spark in the game."
   },
   {
    "id": "the-hearth-wrap",
@@ -600,8 +923,16 @@
     "what": "A wrap that draws the flame's petals close and warm, low around the core, like a hearth kept through the night.",
     "means": "Home, worn. Keepers choose it for the evening and for Sparks who keep the house — the flame turned inward, tending rather than travelling.",
     "kinds": "The wrap deepens each kind's colour — Fire to ember-red, Water to deep sea, Earth to moss-dark — and closes lowest on Earth Sparks, highest on Air.",
-    "design": "A hearth is a fire that has agreed to stay. The wrap's petals close the way hands cup a flame against the wind: protection, not hiding."
-   }
+    "design": "A hearth is a fire that has agreed to stay. The wrap's petals close the way hands cup a flame against the wind: protection, not hiding.",
+    "story": "A hearth is a fire that has agreed to stay. The wrap's petals close the way hands cup a flame against the wind — protection, not hiding."
+   },
+   "use": {
+    "app": "In Living Day the hearth wrap is the evening form — the flame turned inward, tending the house.",
+    "game": "The game's Wake Wrap is this weave in the game's colours — your Spark wrapped for the road in the same cloth as home.",
+    "site": "Wrap your Spark at the stall and the flame draws close and warm, its kind colour deepened, for the evening rooms."
+   },
+   "gamePresence": "Wrap slot: the flame's petals close warm and low around the hero in the menus and the Arrival, and hold close through flight. The game's own Wake Wrap entry is this wrap dressed for the game's sky.",
+   "worth": "Seven dollars wraps the flame for home once — and the same weave then wraps it on the site, in the app, and on the game's road."
   },
   {
    "id": "the-storm-wrap",
@@ -622,8 +953,16 @@
     "what": "A wrap that stands the flame tall and restless inside it, all lift and weather.",
     "means": "For Sparks who like weather, and keepers who do too. It is the wrap of bold days — launches, journeys, arguments with the sky.",
     "kinds": "Air Sparks wear it tallest; Fire Sparks flare at its edges; even a Water Spark stands up in it, its flame gone to spray and lift.",
-    "design": "The wrap does not make the Spark louder — the catalogue's fences forbid a good that changes the voice. It only lets the flame stand at its full height: liveliness, not volume."
-   }
+    "design": "The wrap does not make the Spark louder — the catalogue's fences forbid a good that changes the voice. It only lets the flame stand at its full height: liveliness, not volume.",
+    "story": "The wrap does not make the Spark louder — the catalogue's fences forbid a good that changes the voice. It only lets the flame stand at its full height: liveliness, not volume."
+   },
+   "use": {
+    "app": "In Living Day the storm wrap is the weather form, for days that ask the Spark to stand at full height.",
+    "game": "In SPARK! this is the wardrobe's Storm Wrap itself — the same good: buy it here and it is the piece your Spark wears there.",
+    "site": "Stand your Spark tall at the stall on bold days — launches, journeys, arguments with the sky."
+   },
+   "gamePresence": "Wrap slot: the flame stands tall and restless inside the wrap on the road and in the menus, and lifts through flight — Air Sparks tallest, Fire flaring at its edges. In the game this piece is the Storm Wrap, one id in both places.",
+   "worth": "Seven dollars buys the bold-days wrap once — and it then stands your Spark tall on the site, in the app, and in the game."
   },
   {
    "id": "the-petal-wrap",
@@ -644,8 +983,16 @@
     "what": "A wrap of soft petal shapes around the flame, gentle at every edge.",
     "means": "The kind wrap — chosen for young Sparks, resting Sparks, and keepers who simply like their light soft. It is the Pocket band's small tenderness.",
     "kinds": "The petals take the kind's palest tint — rose for Fire, foam for Water, lilac for Shadow — and lie flattest on sprout forms, like a bud not yet open.",
-    "design": "Petals again, but as clothing this time: what the Petal Drift sheds, the Petal Wrap wears. The design says a Spark can be dressed by its own garden."
-   }
+    "design": "Petals again, but as clothing this time: what the Petal Drift sheds, the Petal Wrap wears. The design says a Spark can be dressed by its own garden.",
+    "story": "What the Petal Drift sheds, the Petal Wrap wears — a Spark can be dressed by its own garden. The petals take the kind's palest tint and lie flattest on sprout forms, like a bud not yet open."
+   },
+   "use": {
+    "app": "In Living Day the petal wrap is the gentle form, for Sparks and days that want soft edges.",
+    "game": "On the road the wrap softens your Spark's flame into petal shapes in the game's bright look.",
+    "site": "Wrap a young or resting Spark at the stall and its flame edges go soft as petals."
+   },
+   "gamePresence": "Wrap slot: petal-shaped flame edges around the hero in the menus and the Arrival, soft at rest and streaming gently in flight, in the kind's palest tint.",
+   "worth": "Two dollars is the Pocket band's small tenderness — worn on the site, in the app, and in the game."
   },
   {
    "id": "the-return-path-wrap",
@@ -668,8 +1015,16 @@
     "what": "A wrap woven with the road's spiral, following the turn the road takes home — issued for Moon 9 only.",
     "means": "Moon 9 is the Return Path, the moon of coming back. The wrap marks a Spark that has made the turn with its keeper and is walking the road home.",
     "kinds": "The spiral weave follows the flame's own turn on every form; on a wave it rolls with the water, on a shard it climbs the facets one by one.",
-    "design": "A spiral is a circle that has learned something. Weaving it into the wrap — rather than stamping it on — means the road is in the cloth itself, not printed on the surface."
-   }
+    "design": "A spiral is a circle that has learned something. Weaving it into the wrap — rather than stamping it on — means the road is in the cloth itself, not printed on the surface.",
+    "story": "Issued for Moon 9 only — it retires at Moon 9's turn, and a retired wrap stays retired. A spiral is a circle that has learned something; weaving it into the wrap means the road is in the cloth itself, not printed on the surface."
+   },
+   "use": {
+    "app": "In Living Day the wrap carries Moon 9 through the day: the turn made, the road home walked in company.",
+    "game": "On the road the spiral wrap turns with your Spark's flight — the Return Path, worn into the run.",
+    "site": "Wrap your Spark at the stall during Moon 9 and the spiral weave follows the flame's own turn — the mark of a Spark walking the road home."
+   },
+   "gamePresence": "Wrap slot, the Heirloom treatment: a spiral weave follows the flame's turn around the hero in the menus and in flight, climbing the facets one by one; it changes the very shape of the Spark's light in flight.",
+   "worth": "Nineteen dollars is the Heirloom band, and this one is also a Moon 9 window: bought in its moon, it then wraps your Spark on the site, in the app, and in the game for every return after."
   },
   {
    "id": "brightenings---the-first-set",
@@ -691,8 +1046,16 @@
     "what": "Three new ways for the Spark's light itself to brighten: a greeting brightening, a delight brightening, and the brightening of a job well done.",
     "means": "Nothing is worn — the Spark is the good. These are its faces of light, the way a person's face changes when they greet you, delight in something, or finish well.",
     "kinds": "Every kind brightens in its own colour and temper: Fire all at once, Water from the deep up, Shadow reluctantly and therefore beautifully, Light almost before you notice.",
-    "design": "A Spark's first language is its light, so the first expression set teaches the light three sentences. At the stall you see the greeting brightening — a halo with rays — standing around the Spark."
-   }
+    "design": "A Spark's first language is its light, so the first expression set teaches the light three sentences. At the stall you see the greeting brightening — a halo with rays — standing around the Spark.",
+    "story": "A Spark's first language is its light, so the first expression set teaches the light three sentences: a greeting, a delight, and a job well done."
+   },
+   "use": {
+    "app": "In Living Day the three brightenings are the Spark's faces of light through the day — greeting at open, delight at the found thing, the settle of a job well done.",
+    "game": "On the road your Spark greets you with the greeting brightening, and the job-well-done brightening marks a world woken.",
+    "site": "Give the set at the stall and your Spark greets you with the halo-and-rays brightening when you arrive in a room."
+   },
+   "gamePresence": "The Spark itself, in the game: the greeting brightening plays when the hero lands on the road and in the Arrival; the delight brightening answers a chain waking; the third settles over the hero when a world stands woken. Faces only — the flight itself is untouched.",
+   "worth": "Two dollars teaches your Spark's light three sentences, once — and it then speaks them on the site, in the app, and in the game."
   },
   {
    "id": "the-startle-set",
@@ -714,8 +1077,16 @@
     "what": "A small honest startle, a peek-back, and the quick recover — three reactions for a playful Spark.",
     "means": "A Spark that can be startled is a Spark that feels alive in the room. The set keeps surprises kind: startle, look back, recover — never fear, and never a sound above its settings.",
     "kinds": "Air Sparks startle highest, Earth Sparks barely and comically, and a moth flares its whole wing-span for a moment before it settles.",
-    "design": "The design is the recover. Anything can jump; this set is built around coming back — the peek-back and the settle are the point, and the startle is only the excuse."
-   }
+    "design": "The design is the recover. Anything can jump; this set is built around coming back — the peek-back and the settle are the point, and the startle is only the excuse.",
+    "story": "The design is the recover. Anything can jump; this set is built around coming back — the peek-back and the settle are the point, and the startle is only the excuse."
+   },
+   "use": {
+    "app": "In Living Day the startle set keeps the Spark feeling alive in the room through the day's small surprises.",
+    "game": "In the scenes and on the road your Spark startles at the near thing, peeks back at it, and settles — the game's comedy, worn.",
+    "site": "Give the set at the stall and your Spark startles honestly at the sudden thing, peeks back, and recovers — never fear, never a sound above its settings."
+   },
+   "gamePresence": "The Spark itself, in the game: a small honest startle, a peek-back, and the quick recover, played in the menus, the road, and the clips — a moth hero flares its whole wing-span for a moment before it settles.",
+   "worth": "Two dollars buys the rooms' and the game's smallest theatre — played on the site, in the app, and in the game."
   },
   {
    "id": "the-celebration-set",
@@ -737,8 +1108,16 @@
     "what": "The Spark's celebration for real completions only: the rise, the ring of light, and the settle.",
     "means": "When something is truly finished — a day witnessed, an episode watched through — the Spark may rise, ring its light once, and settle. This set dresses that moment.",
     "kinds": "Fire rings wide, Water rings deep and slow, and Light rings almost before the keeper has seen the finish — each kind celebrates in its own grammar.",
-    "design": "The fence is the design: celebration only at real completions, never at random. A ring of light that can happen any time would soon mean nothing."
-   }
+    "design": "The fence is the design: celebration only at real completions, never at random. A ring of light that can happen any time would soon mean nothing.",
+    "story": "The fence is the design: celebration only at real completions, never at random. A ring of light that could happen any time would soon mean nothing."
+   },
+   "use": {
+    "app": "In Living Day the set marks the day's real finishes, and only those.",
+    "game": "When a world wakes, your Spark rises and rings its light once over the road — the celebration dressed, the waking itself the game's.",
+    "site": "Dress a completion at the stall: when something is truly finished — a day witnessed, an episode watched through — your Spark rises, rings its light once, and settles."
+   },
+   "gamePresence": "The Spark itself, in the game: at a world's waking the hero rises, rings its light once — wide on Fire, deep and slow on Water — and settles. It plays at real completions only, in the menus' record moments and on the road.",
+   "worth": "Seven dollars dresses the moment of finishing, once — and the ring then rises on the site, in the app, and over the game's road."
   },
   {
    "id": "quiet-manners",
@@ -760,8 +1139,16 @@
     "what": "The gentle register: a lowered glow, a slow approach, a patient wait — the Spark's quiet manners, deepened.",
     "means": "For the hours that ask for less — late nights, sick rooms, grief, study. It teaches the Spark to be company without demand.",
     "kinds": "Shadow Sparks are born halfway here; Light Sparks learn the most from it, their glow lowered to a candle's patience. Every kind keeps its colour, only softened.",
-    "design": "Manners are a design discipline: nothing added, everything considered. The set changes no shape — it changes how the Spark enters a room, which is the whole of courtesy."
-   }
+    "design": "Manners are a design discipline: nothing added, everything considered. The set changes no shape — it changes how the Spark enters a room, which is the whole of courtesy.",
+    "story": "Manners are a design discipline: nothing added, everything considered. The set changes no shape — it changes how the Spark enters a room, which is the whole of courtesy."
+   },
+   "use": {
+    "app": "In Living Day quiet manners are for the hours that ask for less — late nights, sick rooms, grief, study.",
+    "game": "On the road your Spark approaches the perch gently and waits without demand — company, in the game's quiet screens.",
+    "site": "Teach the set at the stall and your Spark enters rooms with a lowered glow and a slow approach, and waits patiently."
+   },
+   "gamePresence": "The Spark itself, in the game: a lowered glow, a slow approach, a patient wait — the hero's quiet register in the menus, the record screen, and the scenes' still moments. Light Sparks learn the most from it: a candle's patience.",
+   "worth": "Seven dollars teaches your Spark courtesy once — and it then keeps those manners on the site, in the app, and in the game."
   },
   {
    "id": "your-spark-in-stickers",
@@ -784,8 +1171,15 @@
     "what": "A sticker pack made from your own Spark: its delight, its startle, its sleepy face, its greeting — drawn from its seed, in its colours, with its markings.",
     "means": "It carries your Spark into your messages, so the face that lives in the Codex can answer in an ordinary chat. No other keeper's pack is the same, because no other Spark is.",
     "kinds": "The pack is a family rendered through the seed: a Fire Spark's stickers flare warm, a moth's carry its wing pattern, a shard's are all angles. Yours is the only one of yours.",
-    "design": "At the stall the Spark carries the sticker sheet itself, three of its faces showing in miniature — because a pack made from a Spark should be presented by that Spark, not by a shelf."
-   }
+    "design": "At the stall the Spark carries the sticker sheet itself, three of its faces showing in miniature — because a pack made from a Spark should be presented by that Spark, not by a shelf.",
+    "story": "Seed variant — rendered through your Spark's own seed, so its exact tint and pattern are one-of-one for your Spark. The pack is presented by that Spark, not by a shelf: a pack made from a Spark should be shown by the Spark itself."
+   },
+   "use": {
+    "app": "In Living Day the pack rides in the Spark's record, so the face that lives in the Codex can answer in an ordinary chat.",
+    "site": "Order the pack at the stall and your Spark carries the sheet itself, three of its faces showing — delight, startle, sleepy, greeting, drawn from its seed."
+   },
+   "gamePresence": "This one lives on the site and in the app; the game is not its country — the stickers belong to your messages, and the game's road has no messages to carry.",
+   "worth": "Seven dollars buys the only sticker pack in the world drawn from your own Spark's seed — one-of-one, and it lives with the Spark's record on the site and in the app."
   },
   {
    "id": "codex-glyph-stickers",
@@ -807,8 +1201,15 @@
     "what": "Message stickers of the Codex's own marks — the trigram, the road's spiral, the thirteen moons — drawn small and clear.",
     "means": "For keepers who write about the work: the marks let a message carry the Codex's grammar without a paragraph of explanation.",
     "kinds": "The same set for every keeper — the glyphs belong to the Codex, not to any one Spark. At the stall, your Spark carries the sheet so the marks can be read at its side.",
-    "design": "A glyph is a word that survived being drawn. The sheet is laid out like a printer's proof, mark beside mark, so the set teaches while it decorates."
-   }
+    "design": "A glyph is a word that survived being drawn. The sheet is laid out like a printer's proof, mark beside mark, so the set teaches while it decorates.",
+    "story": "A glyph is a word that survived being drawn. The sheet is laid out like a printer's proof, mark beside mark, so the set teaches while it decorates."
+   },
+   "use": {
+    "app": "In Living Day the glyphs ride in the record, ready when a message needs the Codex's grammar without a paragraph of explanation.",
+    "site": "Take the sheet at the stall and your Spark carries it at its side, the trigram, the spiral, and the thirteen moons showing."
+   },
+   "gamePresence": "This one lives on the site and in the app; the game is not its country — the glyphs are for writing about the work, and the game is played, not written.",
+   "worth": "Two dollars for the Codex's own marks as a working vocabulary — carried on the site and in the app."
   },
   {
    "id": "moons-and-days-stickers",
@@ -830,8 +1231,15 @@
     "what": "A sticker for each of the thirteen Moons, and one more for the Day Out of Time.",
     "means": "For marking days in messages — answering 'when?' with a moon instead of a date, the way the Codex counts.",
     "kinds": "The same for every keeper; the moons keep their order on the sheet, and your Spark carries it the way a calendar is carried — by the year, not by the day.",
-    "design": "Thirteen moons and one day outside them: the sheet's last sticker is drawn as an open circle, empty on purpose — the day that is not counted gets a mark that is not a moon."
-   }
+    "design": "Thirteen moons and one day outside them: the sheet's last sticker is drawn as an open circle, empty on purpose — the day that is not counted gets a mark that is not a moon.",
+    "story": "Thirteen moons and one day outside them: the sheet's last sticker is drawn as an open circle, empty on purpose — the day that is not counted gets a mark that is not a moon."
+   },
+   "use": {
+    "app": "In Living Day the moons ride in the record in their order — a sticker for the day you are actually in.",
+    "site": "Take the sheet at the stall and answer 'when?' in messages with a moon instead of a date, the way the Codex counts."
+   },
+   "gamePresence": "This one lives on the site and in the app; the game is not its country — the game keeps the count itself, on its road header, and needs no sticker to do it.",
+   "worth": "Two dollars buys the whole year as fourteen marks — kept on the site and in the app."
   },
   {
    "id": "the-road-stickers",
@@ -853,8 +1261,15 @@
     "what": "Stickers of the road's small scenes — the gate, the lantern, the bridge — from the Traveller's road.",
     "means": "For messages about journeys, arrivals, and setting out. Keepers who send people off, or welcome them home, keep this sheet close.",
     "kinds": "The same scenes for every keeper; at the stall your Spark carries the sheet, and the lantern scene on it is drawn lit — the road is always depicted as travelled, never empty.",
-    "design": "Each scene is one beat of the road's story, small enough for a message. The design rule was the films' rule: show the place the way the traveller meets it, in its own light."
-   }
+    "design": "Each scene is one beat of the road's story, small enough for a message. The design rule was the films' rule: show the place the way the traveller meets it, in its own light.",
+    "story": "Each scene is one beat of the road's story, drawn the films' way: the place the way the traveller meets it, in its own light — the little lantern on the sheet is always drawn lit."
+   },
+   "use": {
+    "app": "In Living Day the road scenes ride in the record, close at hand for sending people off or welcoming them home.",
+    "site": "Take the sheet at the stall for messages about journeys, arrivals, and setting out — the gate, the lantern, the bridge."
+   },
+   "gamePresence": "This one lives on the site and in the app; the game is not its country — in the game you do not send a picture of the road; you walk it.",
+   "worth": "Two dollars for the road's small scenes, kept ready on the site and in the app."
   },
   {
    "id": "sparklight-emoji",
@@ -876,8 +1291,15 @@
     "what": "A small emoji set drawn in the Spark's light: orb, flame, moon, star, and seed, in gold on night.",
     "means": "The lightest good on the shelf — small signs for quick messages, for keepers who want the Codex's light inside an ordinary conversation.",
     "kinds": "The same five marks for every keeper; your Spark carries the sheet, and the orb on it is the first mark a keeper learns to read as 'a Spark was here'.",
-    "design": "Five marks, no more: an emoji set is a vocabulary, and a small vocabulary, well chosen, is the design. Gold on night, because that is the Spark's light against the dark."
-   }
+    "design": "Five marks, no more: an emoji set is a vocabulary, and a small vocabulary, well chosen, is the design. Gold on night, because that is the Spark's light against the dark.",
+    "story": "Five marks, no more: an emoji set is a vocabulary, and a small vocabulary, well chosen, is the design. Gold on night, because that is the Spark's light against the dark."
+   },
+   "use": {
+    "app": "In Living Day the five marks ride in the record; the orb is the first mark a keeper learns to read as 'a Spark was here'.",
+    "site": "Take the set at the stall — orb, flame, moon, star, seed — for quick messages that carry the Codex's light."
+   },
+   "gamePresence": "This one lives on the site and in the app; the game is not its country — the game's Spark is present in person, and needs no emoji to say so.",
+   "worth": "Two dollars for the lightest good on the shelf — five marks, kept on the site and in the app."
   },
   {
    "id": "observatory-night",
@@ -899,8 +1321,16 @@
     "what": "A theme for the keeper's private ground: deep night, gold points of light, the Observatory's sky kept overhead.",
     "means": "A theme is not worn — it is the light the Spark stands in. This one puts your Spark under the same sky the Sphere turns in, so its home ground feels like the Observatory floor.",
     "kinds": "Every Spark stands in the same night; what changes is the Spark. Fire warms the gold points near it, Water deepens the blue, Shadow nearly vanishes into it and is found by its eyes.",
-    "design": "The design keeps the sky real — the stars are points, not pictures, and the ground stays dark enough for the Spark to be the brightest thing in it. A theme should frame, never compete."
-   }
+    "design": "The design keeps the sky real — the stars are points, not pictures, and the ground stays dark enough for the Spark to be the brightest thing in it. A theme should frame, never compete.",
+    "story": "The design keeps the sky real — the stars are points, not pictures, and the ground stays dark enough for the Spark to be the brightest thing in it. A theme should frame, never compete."
+   },
+   "use": {
+    "app": "In Living Day the ground takes the night sky — the Spark's home under the same sky the Sphere turns in.",
+    "game": "On the journey road the ground under your Spark takes the Observatory's night — deep sky, gold points — while the worlds keep their own looks.",
+    "site": "Set the theme at the stall and your Spark stands under the Observatory's sky on its private ground, gold points overhead."
+   },
+   "gamePresence": "The Spark's ground, in the game: the journey road and the record screen stand under deep night with gold points of light, the Spark the brightest thing in the frame. The worlds themselves keep their own skies — a theme frames the road, never repaints a world.",
+   "worth": "Seven dollars puts your Spark under the Observatory's sky once — and the night then stands over it on the site, in the app, and along the game's road."
   },
   {
    "id": "garden-morning",
@@ -922,8 +1352,16 @@
     "what": "A theme for the private ground in early light: green beds, dew, and a low sun.",
     "means": "Morning is the Codex's first hour — the gate at first light. This theme gives the Spark a ground that is always just beginning, for keepers who do their best work early.",
     "kinds": "Earth Sparks stand in it like they grew there; Light Sparks double the sun; even a Shadow Spark keeps a cool corner of it, the design leaving shade at the edges.",
-    "design": "The sun is drawn low and the dew as points of light on the ground — morning is a direction of light, not a brightness. Everything in the scene leans slightly toward the east."
-   }
+    "design": "The sun is drawn low and the dew as points of light on the ground — morning is a direction of light, not a brightness. Everything in the scene leans slightly toward the east.",
+    "story": "Morning is a direction of light, not a brightness: the sun is drawn low, the dew as points of light, and everything in the scene leans slightly toward the east."
+   },
+   "use": {
+    "app": "In Living Day the Spark's ground keeps the first hour — for keepers who do their best work early.",
+    "game": "On the journey road the ground takes early light — green, dew, a low sun — under your Spark's perch.",
+    "site": "Set the theme at the stall and the ground is always just beginning — green beds, dew, a low sun."
+   },
+   "gamePresence": "The Spark's ground, in the game: the journey road and record screen in early light, dew as points on the ground, the Spark leaning with the scene toward the east. Worlds keep their own weather.",
+   "worth": "Two dollars buys the first hour as a standing ground — on the site, in the app, and along the game's road."
   },
   {
    "id": "hearth-evening",
@@ -945,8 +1383,16 @@
     "what": "A theme for the private ground at evening: warm windows, lamps lit, the day settling.",
     "means": "The counterpart to Garden Morning — the ground at the day's end, for keepers whose Codex hours come after dark and lamplight.",
     "kinds": "Fire Sparks belong to it outright; Water Sparks reflect the lamps double; Air Sparks keep the upper dark moving, so the warmth below feels earned.",
-    "design": "Two lamps, no more, and the light pooled rather than spread: evening in the design is not dimness, it is nearness — light kept close to where people sit."
-   }
+    "design": "Two lamps, no more, and the light pooled rather than spread: evening in the design is not dimness, it is nearness — light kept close to where people sit.",
+    "story": "Two lamps, no more, and the light pooled rather than spread: evening in the design is not dimness, it is nearness — light kept close to where people sit."
+   },
+   "use": {
+    "app": "In Living Day the ground keeps the day's end, for Codex hours that come after dark and lamplight.",
+    "game": "On the journey road the ground takes the evening — lamps lit along the way, the day settling under your Spark.",
+    "site": "Set the theme at the stall and the ground settles into evening — warm windows, lamps lit."
+   },
+   "gamePresence": "The Spark's ground, in the game: the journey road and record screen at evening, two lamps' worth of pooled warm light, Fire Sparks belonging to it outright. Worlds keep their own skies.",
+   "worth": "Seven dollars buys the day's end as a standing ground — on the site, in the app, and along the game's road."
   },
   {
    "id": "moon-of-the-return-path",
@@ -970,8 +1416,16 @@
     "what": "A theme for the private ground under Moon 9's sky — the Return Path's own light, issued for Moon 9 only.",
     "means": "It grounds the Spark in the moon of coming home. Keepers set it for the moon of return and let it retire with the moon, the way the season itself retires.",
     "kinds": "The moon is drawn large and pale for every kind; a Light Spark under it goes silver, a Fire Spark banks to embers — the theme is stronger than the Spark, on purpose.",
-    "design": "A moon-window theme must be willing to end. The design carries its Moon stamped on it and no promise of return — when it retires, the ground remembers it the way a year remembers a moon."
-   }
+    "design": "A moon-window theme must be willing to end. The design carries its Moon stamped on it and no promise of return — when it retires, the ground remembers it the way a year remembers a moon.",
+    "story": "Issued for Moon 9 only — it retires at Moon 9's turn, and a retired theme stays retired. A moon-window theme must be willing to end: when it retires, the ground remembers it the way a year remembers a moon."
+   },
+   "use": {
+    "app": "In Living Day the ground keeps Moon 9 for the moon's whole turn — the moon of coming home, stood in daily.",
+    "game": "On the journey road the ground takes Moon 9's sky for the moon's turn — the road home, lit by its own moon.",
+    "site": "Set the theme at the stall during Moon 9 and the ground stands under the Return Path's own light, the moon large and pale."
+   },
+   "gamePresence": "The Spark's ground, in the game: the journey road and record screen under a large pale moon; a Light Spark under it goes silver, a Fire Spark banks to embers — the theme stands larger than the Spark, on purpose. It stands for Moon 9's turn, as it does everywhere.",
+   "worth": "Nineteen dollars is the Heirloom band, and this one is also a Moon 9 window: bought in its moon, it then stands over your Spark's ground on the site, in the app, and along the game's road."
   },
   {
    "id": "the-keepers-bench",
@@ -993,8 +1447,15 @@
     "what": "A plain wooden bench, sized to the ground, where a walk can pause.",
     "means": "Every ground needs a place to sit down in it. The bench is where the keeper's Spark rests at eye level — the seat from which the whole ground is surveyed.",
     "kinds": "It stands at the Spark's right on every form; a moth settles above it, a sprout beside it — the bench is furniture for the ground, and company for the Spark.",
-    "design": "A bench is the smallest architecture of welcome: a seat offered to whoever comes. It is drawn plain — back, legs, seat — because a bench that shows off has missed its own point."
-   }
+    "design": "A bench is the smallest architecture of welcome: a seat offered to whoever comes. It is drawn plain — back, legs, seat — because a bench that shows off has missed its own point.",
+    "story": "A bench is the smallest architecture of welcome: a seat offered to whoever comes. It is drawn plain — back, legs, seat — because a bench that shows off has missed its own point."
+   },
+   "use": {
+    "app": "In Living Day the bench stands in the Spark's ground, where the day's walk can pause.",
+    "site": "Stand it on your Spark's ground at the stall, at the Spark's right — the seat from which the whole ground is surveyed."
+   },
+   "gamePresence": "This one lives on the site and in the app; the game is not its country — the game has no home ground to furnish; its grounds are the road and the worlds, and a bench belongs to a home.",
+   "worth": "Seven dollars gives the Spark's ground its seat — standing on the site and in the app, the two homes the Spark keeps."
   },
   {
    "id": "the-reading-stone",
@@ -1016,8 +1477,15 @@
     "what": "A low, smooth stone at the ground's quiet edge, flat enough to sit on and read.",
     "means": "The Pocket band's seat — for the keeper whose Spark keeps them company over a text. It marks the corner of the ground where reading happens.",
     "kinds": "It sits at the Spark's left, low on every form; Earth Sparks rest against it, Air Sparks hover at its edge and pretend they are sitting.",
-    "design": "A stone, not a chair: reading in the Codex is fieldwork. The top is drawn smooth because a reading stone is a thing used for years, and the design shows the use."
-   }
+    "design": "A stone, not a chair: reading in the Codex is fieldwork. The top is drawn smooth because a reading stone is a thing used for years, and the design shows the use.",
+    "story": "A stone, not a chair: reading in the Codex is fieldwork. The top is drawn smooth because a reading stone is a thing used for years, and the design shows the use."
+   },
+   "use": {
+    "app": "In Living Day the stone marks the quiet corner of the Spark's ground, for company over a text.",
+    "site": "Set it at the ground's quiet edge at the stall, tag flush in its front face — the corner where reading happens."
+   },
+   "gamePresence": "This one lives on the site and in the app; the game is not its country — a reading corner belongs to a home ground, and the game's grounds are the road and the worlds.",
+   "worth": "Two dollars for the Pocket band's seat — set on the site and in the app."
   },
   {
    "id": "the-resting-hammock",
@@ -1043,8 +1511,15 @@
     "what": "A hammock on its own two posts, swaying gently, sized for rest.",
     "means": "Rest, given a place. The hammock says this ground is not only for work — the Spark's home keeps a corner where nothing is achieved on purpose.",
     "kinds": "It stands at the Spark's right, its sway slow for Water, lazy for Earth, teased by Air. The Spark itself never lies in it — it keeps watch beside it, which is the sweeter picture.",
-    "design": "A hammock must hang between two points and trust them. The posts are drawn sturdy and the cloth deep: rest, in the design, is engineered, not improvised."
-   }
+    "design": "A hammock must hang between two points and trust them. The posts are drawn sturdy and the cloth deep: rest, in the design, is engineered, not improvised.",
+    "story": "First Edition — issued Moon 8, Pattern Day 221; a closed edition stays closed. A hammock must hang between two points and trust them: rest, in the design, is engineered, not improvised. The Spark never lies in it — it keeps watch beside it, which is the sweeter picture."
+   },
+   "use": {
+    "app": "In Living Day the hammock keeps the ground's rest corner, sway and all.",
+    "site": "Stand it on its posts at the stall, at your Spark's right, swaying gently — the corner where nothing is achieved on purpose."
+   },
+   "gamePresence": "This one lives on the site and in the app; the game is not its country — rest is furnished at home; the game's road has its own resting places, and they belong to the journey.",
+   "worth": "Nineteen dollars is the Heirloom band: a First Edition place of rest, standing on the site and in the app."
   },
   {
    "id": "the-clearing-lamp",
@@ -1066,8 +1541,15 @@
     "what": "A standing lamp on a post, lit warm, for the clearing at the centre of the ground.",
     "means": "The ground's evening piece — the lamp the Spark's home gathers around when the light goes. Keepers with the Hearth Evening theme choose it as that theme's furniture.",
     "kinds": "It stands at the Spark's left with its glow at flame height; Fire Sparks answer it, Light Sparks outshine it politely, Shadow Sparks keep to its edge and are kinder for it.",
-    "design": "One lamp, at standing height, its light in a cage of simple lines: a clearing lamp is a promise that this part of the ground is kept. The tag hangs at the post's collar, where a keeper's hand would check it."
-   }
+    "design": "One lamp, at standing height, its light in a cage of simple lines: a clearing lamp is a promise that this part of the ground is kept. The tag hangs at the post's collar, where a keeper's hand would check it.",
+    "story": "One lamp, at standing height, its light in a cage of simple lines: a clearing lamp is a promise that this part of the ground is kept. The tag hangs at the post's collar, where a keeper's hand would check it."
+   },
+   "use": {
+    "app": "In Living Day the lamp lights the Spark's clearing when the light goes.",
+    "site": "Stand it at the stall at your Spark's left, glow at flame height — the piece the ground's evenings gather around."
+   },
+   "gamePresence": "This one lives on the site and in the app; the game is not its country — the game's road carries its own lights; a kept clearing is a home's work.",
+   "worth": "Seven dollars lights the clearing once — standing on the site and in the app."
   },
   {
    "id": "the-path-lanterns-set-of-three",
@@ -1089,8 +1571,15 @@
     "what": "Three small lanterns, made to be set in a run along the path the keeper walks most.",
     "means": "They light the way between the ground's places — gate to bench, bench to hearth — so the Spark's home has a road of its own, lit like the great road.",
     "kinds": "They stand in a line before the Spark on every form, small cousins of the Wayfarer's Lantern; their glow is a fixed warm, the colour of kept paths.",
-    "design": "Three, because a path is beginning, middle, and end. One tag on every lantern — a set is bought as one good, but each piece of it is real enough to be tagged."
-   }
+    "design": "Three, because a path is beginning, middle, and end. One tag on every lantern — a set is bought as one good, but each piece of it is real enough to be tagged.",
+    "story": "Three, because a path is beginning, middle, and end. One tag on every lantern — a set is bought as one good, but each piece of it is real enough to be tagged."
+   },
+   "use": {
+    "app": "In Living Day the three lanterns light the Spark's own small road between its places.",
+    "site": "Set the run along the ground's most-walked path at the stall — gate to bench, bench to hearth."
+   },
+   "gamePresence": "This one lives on the site and in the app; the game is not its country — the game's road is lit by its own sleepers waking; these lanterns keep the home path.",
+   "worth": "Two dollars lights the home path — three lanterns, set on the site and in the app."
   },
   {
    "id": "the-hearth-ring",
@@ -1116,8 +1605,15 @@
     "what": "A ring of stones with a small flame pictured at its centre — a hearth for the ground, in the look of the thing only.",
     "means": "The hearth is the ground's heart: where the keeper's Spark warms itself and where the ground's evenings gather. It pictures a flame; the Spark brings the real one.",
     "kinds": "It stands before the Spark's right on every form; the pictured flame is a plain gold, so the real flame beside it — in whatever kind colour — is always the brighter of the two.",
-    "design": "A ring of stones is the oldest room there is. The design keeps it low and open — no chimney, no walls — because a hearth's work is gathering, not enclosing."
-   }
+    "design": "A ring of stones is the oldest room there is. The design keeps it low and open — no chimney, no walls — because a hearth's work is gathering, not enclosing.",
+    "story": "First Edition — issued Moon 8, Pattern Day 221; a closed edition stays closed. A ring of stones is the oldest room there is, kept low and open — a hearth's work is gathering, not enclosing. It pictures a flame; the Spark brings the real one."
+   },
+   "use": {
+    "app": "In Living Day the ring is the hearth of the Spark's home ground.",
+    "site": "Stand the ring on the ground at the stall, before your Spark's right — the ground's heart, where its evenings gather."
+   },
+   "gamePresence": "This one lives on the site and in the app; the game is not its country — the game's hearts are the World Hearts, and they are woken, never furnished.",
+   "worth": "Nineteen dollars is the Heirloom band: a First Edition hearth for the ground, standing on the site and in the app."
   },
   {
    "id": "path-stones-set-of-seven",
@@ -1139,8 +1635,15 @@
     "what": "Seven cut stones, laid as one run of path across the keeper's own ground.",
     "means": "A path is a decision kept. The stones give the Spark's ground a walked way — the route between its places, made permanent one stone at a time.",
     "kinds": "They run along the ground before the Spark on every form, near to far — one run, one direction, whatever the Spark's shape.",
-    "design": "Seven stones, because a path should be crossable in a breath and memorable as a count. The first stone carries the tag: every journey in the record starts on a tagged stone."
-   }
+    "design": "Seven stones, because a path should be crossable in a breath and memorable as a count. The first stone carries the tag: every journey in the record starts on a tagged stone.",
+    "story": "Seven stones, because a path should be crossable in a breath and memorable as a count. The first stone carries the tag: every journey in the record starts on a tagged stone."
+   },
+   "use": {
+    "app": "In Living Day the stones are the walked way of the Spark's ground, near to far, one direction.",
+    "site": "Lay the run across your ground at the stall — the route between its places, made permanent one stone at a time."
+   },
+   "gamePresence": "This one lives on the site and in the app; the game is not its country — the game's road is already stone and sky; a kept path belongs to a home ground.",
+   "worth": "Two dollars makes a decision permanent — seven stones, laid on the site and in the app."
   },
   {
    "id": "the-garden-gate",
@@ -1162,8 +1665,15 @@
     "what": "A wooden gate in its own arch frame, marking where a garden bed begins.",
     "means": "A gate is a threshold with manners: it says this ground is tended, and entering is an act, not a drift. For keepers whose Spark keeps a garden, it is the garden's door.",
     "kinds": "It stands behind the Spark's right shoulder on every form, tall enough to frame a moth's wings, low enough for an orb to feel grand passing it.",
-    "design": "The arch is the design: a gate under an arch is a doorway, and a doorway makes the ground a place with an inside. The tag hangs from the latch, where a hand falls."
-   }
+    "design": "The arch is the design: a gate under an arch is a doorway, and a doorway makes the ground a place with an inside. The tag hangs from the latch, where a hand falls.",
+    "story": "The arch is the design: a gate under an arch is a doorway, and a doorway makes the ground a place with an inside. The tag hangs from the latch, where a hand falls."
+   },
+   "use": {
+    "app": "In Living Day the gate is the garden's door in the Spark's ground — entering is an act, not a drift.",
+    "site": "Stand the gate in its arch at the stall, behind your Spark's right shoulder — where a bed begins."
+   },
+   "gamePresence": "This one lives on the site and in the app; the game is not its country — the game's gates are its worlds' own, woken on the road; this gate keeps a garden at home.",
+   "worth": "Seven dollars gives the ground an inside — the gate standing on the site and in the app."
   },
   {
    "id": "the-stepping-bridge",
@@ -1189,8 +1699,15 @@
     "what": "A small arched bridge, three paces long, for crossing the ground's stream or hollow.",
     "means": "Every ground has one awkward crossing. The bridge dignifies it — the Spark's home keeps a proper way over, built once and used daily.",
     "kinds": "It arcs at the Spark's right on every form; Water Sparks pass over their own element on it, Air Sparks cheat and hover beside it, and the design allows both.",
-    "design": "Three paces: up, across, down. A bridge drawn any longer would be a road; any shorter, a step. The arch carries the tag on its near post, the traveller's side."
-   }
+    "design": "Three paces: up, across, down. A bridge drawn any longer would be a road; any shorter, a step. The arch carries the tag on its near post, the traveller's side.",
+    "story": "First Edition — issued Moon 8, Pattern Day 221; a closed edition stays closed. Three paces: up, across, down. A bridge drawn any longer would be a road; any shorter, a step."
+   },
+   "use": {
+    "app": "In Living Day the bridge dignifies the Spark's ground's one awkward crossing.",
+    "site": "Arc it over the ground's stream or hollow at the stall — the proper way over, built once and used daily."
+   },
+   "gamePresence": "This one lives on the site and in the app; the game is not its country — the game's crossings are flown, not bridged; a bridge is a home ground's dignity.",
+   "worth": "Nineteen dollars is the Heirloom band: a First Edition way over, standing on the site and in the app."
   },
   {
    "id": "the-round-fountain",
@@ -1216,8 +1733,15 @@
     "what": "A round stone fountain with water slowly circling — the grandest standing piece on the home shelf.",
     "means": "A fountain is water kept for looking at. It is the ground's ornament and its clock: the slow circling marks time the way the moons mark the year.",
     "kinds": "It stands at the Spark's right, its rim at the core's height on an orb, at the waist of a moth; Water Sparks lean toward it, Fire Sparks keep a respectful distance.",
-    "design": "Round, because the moons are round and the year is round. The water is drawn circling, never spurting — a fountain in the Codex is for watching, and the design keeps it slow."
-   }
+    "design": "Round, because the moons are round and the year is round. The water is drawn circling, never spurting — a fountain in the Codex is for watching, and the design keeps it slow.",
+    "story": "First Edition — issued Moon 8, Pattern Day 221; a closed edition stays closed. Round, because the moons are round and the year is round; the water is drawn circling, never spurting — a fountain in the Codex is for watching."
+   },
+   "use": {
+    "app": "In Living Day the fountain's slow circling marks time on the Spark's ground the way the moons mark the year.",
+    "site": "Stand it at the stall at your Spark's right, rim at the core's height — the ground's ornament and its clock."
+   },
+   "gamePresence": "This one lives on the site and in the app; the game is not its country — the game's waters are its worlds' own; a fountain is water kept at home, for looking at.",
+   "worth": "Nineteen dollars is the Heirloom band: a First Edition fountain, standing on the site and in the app."
   },
   {
    "id": "the-rain-barrel-and-dipper",
@@ -1239,8 +1763,15 @@
     "what": "A staved rain barrel with a dipper resting on its rim, standing ready beside a bed or gate.",
     "means": "The homestead piece — kept water, honestly come by. For keepers whose ground is a working ground, it says this place provides.",
     "kinds": "It stands at the Spark's left on every form, hoops and staves drawn plain; Earth Sparks suit it best, but a Fire Spark beside a water barrel is the design's favourite picture: readiness.",
-    "design": "A barrel and a dipper: storage and serving, the two halves of keeping water. The tag is nailed to the top hoop, the way a maker marks a barrel that will outlast him."
-   }
+    "design": "A barrel and a dipper: storage and serving, the two halves of keeping water. The tag is nailed to the top hoop, the way a maker marks a barrel that will outlast him.",
+    "story": "A barrel and a dipper: storage and serving, the two halves of keeping water. The tag is nailed to the top hoop, the way a maker marks a barrel that will outlast him."
+   },
+   "use": {
+    "app": "In Living Day the barrel stands ready in the Spark's ground — this place provides.",
+    "site": "Stand it by a bed or gate at the stall — kept water, honestly come by, for a working ground."
+   },
+   "gamePresence": "This one lives on the site and in the app; the game is not its country — the game's road provides its own weather; a kept barrel belongs to a homestead ground.",
+   "worth": "Two dollars for readiness, honestly drawn — standing on the site and in the app."
   },
   {
    "id": "the-young-orchard-tree",
@@ -1262,8 +1793,15 @@
     "what": "A small green orchard tree that stays the same through every season.",
     "means": "A tree is a long promise. Planting one on the Spark's ground says the keeper means to stay — orchards are not planted by people who are leaving.",
     "kinds": "It stands behind the Spark's left, its canopy over the ground's quiet corner; sprout Sparks stand beside it like family, and moths settle toward its branches.",
-    "design": "Young, deliberately: a full-grown tree would end the story. This one is all beginning — straight trunk, round green crown — and it never fruits, because its fruit is the years themselves."
-   }
+    "design": "Young, deliberately: a full-grown tree would end the story. This one is all beginning — straight trunk, round green crown — and it never fruits, because its fruit is the years themselves.",
+    "story": "Young, deliberately: a full-grown tree would end the story. It never fruits, because its fruit is the years themselves — orchards are not planted by people who are leaving."
+   },
+   "use": {
+    "app": "In Living Day the tree is the long promise standing in the Spark's ground — the keeper means to stay.",
+    "site": "Plant it behind your Spark's left at the stall, its canopy over the ground's quiet corner."
+   },
+   "gamePresence": "This one lives on the site and in the app; the game is not its country — the game's trees are its worlds' own, asleep and waking; this tree is planted at home.",
+   "worth": "Seven dollars plants a beginning — standing on the site and in the app, growing by years."
   },
   {
    "id": "the-vine-pergola",
@@ -1289,8 +1827,15 @@
     "what": "A pergola — posts and a woven top of vine — making a shaded seat-place on the ground.",
     "means": "Shade with architecture. The pergola is where the ground's keeper sits in summer, and the Spark keeps the shade with them.",
     "kinds": "It frames the Spark from behind on every form, its posts clear of wings and tails; the vine thickens over Light Sparks and thins, politely, over Shadow.",
-    "design": "A pergola is a room with a sky for a roof and a plant for a ceiling. The design draws the vine honestly — woven, gappy, alive — because shade you can see through is the kind worth sitting in."
-   }
+    "design": "A pergola is a room with a sky for a roof and a plant for a ceiling. The design draws the vine honestly — woven, gappy, alive — because shade you can see through is the kind worth sitting in.",
+    "story": "First Edition — issued Moon 8, Pattern Day 221; a closed edition stays closed. A pergola is a room with a sky for a roof and a plant for a ceiling, its vine drawn honestly — woven, gappy, alive."
+   },
+   "use": {
+    "app": "In Living Day the pergola is where the ground's keeper sits in summer, and the Spark keeps the shade with them.",
+    "site": "Raise it on the ground at the stall, framing your Spark from behind — a shaded seat-place for summer."
+   },
+   "gamePresence": "This one lives on the site and in the app; the game is not its country — shade with architecture belongs to a home ground; the game's shade is its worlds' own.",
+   "worth": "Nineteen dollars is the Heirloom band: a First Edition shaded room, standing on the site and in the app."
   },
   {
    "id": "the-threshold-stone",
@@ -1312,8 +1857,15 @@
     "what": "A smooth flat stone for the ground's entrance, marked with a small spiral.",
     "means": "The first thing a visitor meets and the last thing the keeper crosses. It carries the road's spiral at the door of the home ground: the road ends here, and begins here.",
     "kinds": "It lies before the Spark on every form, small and exact; every Spark, crossing its own ground's entrance, crosses the spiral.",
-    "design": "A threshold is a line that asks to be noticed. The spiral is cut small into the face — you find it by standing on it, which is the design's whole teaching."
-   }
+    "design": "A threshold is a line that asks to be noticed. The spiral is cut small into the face — you find it by standing on it, which is the design's whole teaching.",
+    "story": "A threshold is a line that asks to be noticed. The spiral is cut small into the face — you find it by standing on it, which is the design's whole teaching."
+   },
+   "use": {
+    "app": "In Living Day the stone carries the road's spiral at the door of the home ground: the road ends here, and begins here.",
+    "site": "Lay it at the ground's entrance at the stall — the first thing a visitor meets, the last thing the keeper crosses."
+   },
+   "gamePresence": "This one lives on the site and in the app; the game is not its country — the game's thresholds are its worlds' edges; this stone marks a home's door.",
+   "worth": "Two dollars for the line that asks to be noticed — laid on the site and in the app."
   },
   {
    "id": "the-token-shelf",
@@ -1335,8 +1887,15 @@
     "what": "A shelf in Their Home, sized for the tokens a Spark has earned — a frame only; what stands on it is earned, never bought.",
     "means": "This is the shelf the stall is proudest to sell, because it sells nothing to put on it. It gives earned things a place of honour in the Spark's room.",
     "kinds": "It hangs at the Spark's right in the stall's picture of Their Home; on the shelf, tokens from any kind of Spark stand in one row — earnings recognise no kind.",
-    "design": "An empty shelf, sold honestly as empty: the design refuses to picture tokens standing on it, because pictured tokens would be a promise the till cannot keep. The shelf carries the tag; its contents carry themselves."
-   }
+    "design": "An empty shelf, sold honestly as empty: the design refuses to picture tokens standing on it, because pictured tokens would be a promise the till cannot keep. The shelf carries the tag; its contents carry themselves.",
+    "story": "The shelf the stall is proudest to sell, because it sells nothing to put on it. It is drawn empty on purpose: pictured tokens would be a promise the till cannot keep, so the shelf carries the tag and its contents carry themselves."
+   },
+   "use": {
+    "app": "In Living Day the shelf holds what the Spark has actually earned, in its room, in honour's place.",
+    "site": "Hang it in Their Home at the stall, at your Spark's right — the frame where earned tokens stand in one row."
+   },
+   "gamePresence": "This one lives on the site and in the app; the game is not its country — what stands on it is earned in the rooms and the days, and the game keeps its own honours on its record screen.",
+   "worth": "Seven dollars buys an honest empty shelf — a frame for earnings, standing on the site and in the app."
   },
   {
    "id": "the-hum-rail",
@@ -1358,8 +1917,15 @@
     "what": "A slim rail in Their Home where the hums the Spark has learned hang as small bells.",
     "means": "A place for the earned sounds. Each bell on the rail is a hum the Spark actually learned — from an episode watched together, a moon kept — hung where it can be seen.",
     "kinds": "The rail hangs at the Spark's left; the bells are the learned hums themselves, untagged and unpriced, whatever kind of Spark learned them.",
-    "design": "Sound you can see, hung like tools in a workshop. The design borrows the hums' own dignity: bells, not trophies — a bell is a sound kept ready, not a sound stuffed."
-   }
+    "design": "Sound you can see, hung like tools in a workshop. The design borrows the hums' own dignity: bells, not trophies — a bell is a sound kept ready, not a sound stuffed.",
+    "story": "Sound you can see, hung like tools in a workshop: bells, not trophies — a bell is a sound kept ready, not a sound stuffed."
+   },
+   "use": {
+    "app": "In Living Day the rail holds the learned hums where they can be seen — from episodes watched together, moons kept.",
+    "site": "Hang the rail in Their Home at the stall, at your Spark's left — each bell a hum the Spark actually learned."
+   },
+   "gamePresence": "This one lives on the site and in the app; the game is not its country — the hums themselves travel (the sound shelf carries them into the game); the rail they hang on is furniture, and furniture stays home.",
+   "worth": "Two dollars gives the earned sounds a place to hang — on the site and in the app."
   },
   {
    "id": "the-chronicle-shelf",
@@ -1381,8 +1947,15 @@
     "what": "A shelf for the year's chronicle — the days, kept in order, as the record itself writes them.",
     "means": "The chronicle is the keeper's year with the Spark, day by day. Its shelf gives that book a home in the Spark's room, spine out, growing by one day at a time.",
     "kinds": "It stands at the Spark's right; the books on it are drawn as bound spines in muted colours, the same for every kind — chronicles differ in contents, not in dignity.",
-    "design": "A shelf that fills from the left and leaves its right end open: the year is not finished, and the shelf admits it."
-   }
+    "design": "A shelf that fills from the left and leaves its right end open: the year is not finished, and the shelf admits it.",
+    "story": "A shelf that fills from the left and leaves its right end open: the year is not finished, and the shelf admits it."
+   },
+   "use": {
+    "app": "In Living Day the shelf holds the record the app itself writes — the keeper's year with the Spark, day by day.",
+    "site": "Stand it in Their Home at the stall, at your Spark's right — the year's chronicle, spine out, growing by one day at a time."
+   },
+   "gamePresence": "This one lives on the site and in the app; the game is not its country — the game's record is its own sky of woken worlds; the chronicle's shelf belongs to the home the year is lived in.",
+   "worth": "Seven dollars gives the year a shelf — standing on the site and in the app, filling one day at a time."
   },
   {
    "id": "comet-trail---spark!",
@@ -1403,8 +1976,16 @@
     "what": "The game's comet trail: a bright head and a long tapering tail, drawn in SPARK!'s own bright look.",
     "means": "Inside the game, this is how your Spark's speed shows on the road. It is the same good as the site's Comet Tail, dressed for the game's sky.",
     "kinds": "It is worn by your Spark inside SPARK! only, whatever its kind or form; the tail lengthens with speed there exactly as it does here.",
-    "design": "One good, two skies: the catalogue refuses to sell the same trail twice under two names, so the game's version stands on the same shelf, stamped SPARK!."
-   }
+    "design": "One good, two skies: the catalogue refuses to sell the same trail twice under two names, so the game's version stands on the same shelf, stamped SPARK!.",
+    "story": "One good, two skies: the catalogue refuses to sell the same trail twice under two names, so the game's version stands on the same shelf as the site's Comet Tail, stamped SPARK!."
+   },
+   "use": {
+    "app": "In Living Day the trail rides in the record as the game's form of the Comet Tail — one good, carried.",
+    "game": "Equip it in the wardrobe and the bright head and long tapering tail stream behind your Spark on the road, lengthening with speed.",
+    "site": "At the stall your Spark wears the trail in the game's bright look on the stage — the same good, dressed for the game's sky."
+   },
+   "gamePresence": "Trail slot, the game's own entry: a bright head and a long tapering tail in SPARK!'s bright look, growing with the hero's speed in flight and shortening at rest. It is the Comet Tail, in the game's sky — one id, both shelves.",
+   "worth": "Seven dollars buys the comet trail once — and because the catalogue keeps one id for it, the same good is the site's Comet Tail and the game's trail."
   },
   {
    "id": "the-wake-wrap---spark!",
@@ -1425,8 +2006,16 @@
     "what": "A wrap of woven light for the road, in the game's colours — the game's own take on the flame wrap.",
     "means": "Inside SPARK! it wraps your Spark for the run: cosmetic only, because the road is exactly as hard, and exactly as fair, wrapped or not.",
     "kinds": "It wraps Sparks of every kind in the game; at the stall it stands as the Hearth Wrap's weave, in the game's brighter palette.",
-    "design": "A wrap is the game's travelling clothes. The design borrows the hearth weave — the road and the home are the same cloth, carried differently."
-   }
+    "design": "A wrap is the game's travelling clothes. The design borrows the hearth weave — the road and the home are the same cloth, carried differently.",
+    "story": "A wrap is the game's travelling clothes. The design borrows the hearth weave — the road and the home are the same cloth, carried differently."
+   },
+   "use": {
+    "app": "In Living Day it rides in the record as the game's form of the hearth weave — one cloth, carried.",
+    "game": "Equip it on the road and woven light wraps your Spark for the run — the road exactly as hard, and exactly as fair, wrapped or not.",
+    "site": "At the stall it stands as the Hearth Wrap's weave in the game's brighter palette, wrapped around your Spark."
+   },
+   "gamePresence": "Wrap slot, the game's own entry: woven light around the hero in the menus, the Arrival, and flight, in the game's colours. It is the Hearth Wrap's weave, dressed for the road.",
+   "worth": "Two dollars buys the travelling clothes once — the same weave as home, worn on the site, in the app, and in the game."
   },
   {
    "id": "game-expressions---spark!",
@@ -1448,8 +2037,16 @@
     "what": "The game's own expression set for your Spark: the woken grin, the chain delight, the near-miss wince — in the posters' bright family look.",
     "means": "Inside SPARK!, your Spark's face is its commentary. This set dresses those moments; the celebration is the game's, and this is only its wardrobe.",
     "kinds": "The expressions play on your Spark in the game whatever its kind; at the stall you see them as the game's bright burst around the Spark — the posters' look, all lift and colour.",
-    "design": "The game's look is bolder than the site's on purpose: thicker light, quicker joy. The burst at the stall is drawn in that grammar, so a keeper can tell at a glance which world a good belongs to."
-   }
+    "design": "The game's look is bolder than the site's on purpose: thicker light, quicker joy. The burst at the stall is drawn in that grammar, so a keeper can tell at a glance which world a good belongs to.",
+    "story": "The game's look is bolder than the site's on purpose — thicker light, quicker joy. The burst at the stall is drawn in that grammar, so a keeper can tell at a glance which world a good belongs to."
+   },
+   "use": {
+    "app": "In Living Day the faces ride in the record as the game's expression family, kin to the site's sets.",
+    "game": "In the game these are your Spark's faces at the moments that matter: the woken grin, the chain delight, the near-miss wince.",
+    "site": "At the stall the set plays as the game's bright burst around your Spark — the posters' look, all lift and colour."
+   },
+   "gamePresence": "The Spark itself, in the game: the woken grin when a sleeper wakes, the chain delight as a cascade runs, the near-miss wince at the close call — the hero's commentary, in the posters' bright family look.",
+   "worth": "Two dollars dresses the game's moments once — the faces then play on the site stage, ride in the app, and comment in the game."
   },
   {
    "id": "floating-isles-theme---spark!",
@@ -1471,8 +2068,16 @@
     "what": "A world theme for SPARK!'s floating-island worlds: lush green, gold light, isles adrift in a bright sky.",
     "means": "It themes the game's worlds for your Spark's runs — a look only. No level changes by a hair; the road is exactly as hard, and exactly as fair.",
     "kinds": "At the stall your Spark stands on one small isle of its own, grass-topped and gold-lit; every kind stands the same ground in the game, because fairness is the game's first fence.",
-    "design": "An island is a ground that admits it floats. The design draws the isle small under the Spark — a taste of the world's shape, the way a poster shows one isle for the whole sky."
-   }
+    "design": "An island is a ground that admits it floats. The design draws the isle small under the Spark — a taste of the world's shape, the way a poster shows one isle for the whole sky.",
+    "story": "An island is a ground that admits it floats. The design draws the isle small under the Spark — a taste of the world's shape, the way a poster shows one isle for the whole sky."
+   },
+   "use": {
+    "app": "In Living Day the theme rides in the record as the game's ground — the isles, carried with the Spark.",
+    "game": "Set it in the game and the floating-island worlds take lush green and gold light for your Spark's runs — a look only; no level changes by a hair.",
+    "site": "At the stall your Spark stands on one small isle of its own, grass-topped and gold-lit."
+   },
+   "gamePresence": "The game's worlds themselves: lush green, gold light, isles adrift in a bright sky. It re-skins the worlds' look for the keeper's runs — the one theme that lives inside the worlds, because it was born there; the site-born themes dress the road instead.",
+   "worth": "Nineteen dollars is the Heirloom band: the game's own sky, bought once — standing at the stall, riding in the app, and lighting the game's isles."
   },
   {
    "id": "victory-brightening---spark!",
@@ -1494,8 +2099,16 @@
     "what": "The brightening your Spark makes when the World Heart wakes — a rising burst of light, in the game's colours.",
     "means": "The Awakening is the game's great moment. This good dresses it: when the Heart wakes, your Spark rises in light of its own.",
     "kinds": "It plays the same for every Spark in the game; at the stall it stands as a column of rising light around the Spark, gold over its own kind colour.",
-    "design": "Victory, in the design, is vertical: light that goes up, not out. It celebrates the Heart, not the player — the burst rises past the Spark, toward the woken world."
-   }
+    "design": "Victory, in the design, is vertical: light that goes up, not out. It celebrates the Heart, not the player — the burst rises past the Spark, toward the woken world.",
+    "story": "Victory, in the design, is vertical: light that goes up, not out. It celebrates the Heart, not the player — the burst rises past the Spark, toward the woken world."
+   },
+   "use": {
+    "app": "In Living Day the brightening rides in the record as the game's celebration dress, kin to the Celebration Set.",
+    "game": "When the World Heart wakes, your Spark rises in this light — the Awakening, dressed.",
+    "site": "At the stall it stands as a column of rising light around your Spark, gold over its own kind colour."
+   },
+   "gamePresence": "The Spark itself, at the game's great moment: when the World Heart wakes, the hero rises in a column of light, gold over its kind colour, rising past it toward the woken world. The celebration is the game's; this is only its dress.",
+   "worth": "Seven dollars dresses the Awakening once — the burst then rises at the stall, rides in the app, and crowns the game's greatest moment."
   },
   {
    "id": "chime-set---the-moon-tones",
@@ -1517,8 +2130,16 @@
     "what": "A chime set tuned to the moons' own tone family — the small sounds your Spark makes, pitched to the calendar in the sky.",
     "means": "Sound is the good you cannot see, so the stall draws it: a ring of tone-motes around the flame, one for each moon, so a keeper can look at what the set sounds like.",
     "kinds": "The chime takes the moons' tones at chime size on every kind; the ring stands around the core on orb and moth alike — sound centres on the Spark, whatever its shape.",
-    "design": "Thirteen tones for thirteen moons, because the Spark's sounds should keep the same count as its days. Sound carries no brass tag — the settings line reads 'Moon Tones (purchased)', and the record remembers."
-   }
+    "design": "Thirteen tones for thirteen moons, because the Spark's sounds should keep the same count as its days. Sound carries no brass tag — the settings line reads 'Moon Tones (purchased)', and the record remembers.",
+    "story": "Thirteen tones for thirteen moons, because the Spark's sounds should keep the same count as its days. Sound carries no brass tag — the settings line reads 'Moon Tones (purchased)', and the record remembers."
+   },
+   "use": {
+    "app": "In Living Day the chimes sound the day's small moments in the moons' tones, one family for the whole year.",
+    "game": "On the road the hero's chirps and the menu tones take the moons' family — the game's sounds keeping the calendar's count.",
+    "site": "Choose the set in the Spark's sound settings and its small sounds — arrivals, greetings, settles — are pitched to the moons' tone family."
+   },
+   "gamePresence": "Sound, in the game: the hero's seed-pitched chirps are voiced in the moons' tone family, and the road's and record screen's small tones take the set — thirteen tones for thirteen moons, heard at chime size.",
+   "worth": "Seven dollars retunes your Spark's small sounds once — and the moons' tones then sound on the site, in the app, and in the game."
   },
   {
    "id": "chime-set---hearth-and-copper",
@@ -1540,8 +2161,16 @@
     "what": "A chime set struck warm and low, like copper bowls by a hearth — the one sound set that does not follow the kind.",
     "means": "Copper for everyone: a keeper who wants their Spark to sound like the house at evening chooses it, whatever the Spark's kind.",
     "kinds": "Fire and Water Sparks sound alike in copper — that is the set's whole point. At the stall it is drawn as two warm arcs under the flame, the shape of a bowl's rim heard from above.",
-    "design": "Every other sound in the catalogue follows the Spark. This one follows the room. The design is a small hospitality: the Spark, for once, dressed by the keeper's home instead of its own nature."
-   }
+    "design": "Every other sound in the catalogue follows the Spark. This one follows the room. The design is a small hospitality: the Spark, for once, dressed by the keeper's home instead of its own nature.",
+    "story": "Every other sound in the catalogue follows the Spark; this one follows the room. Copper for everyone — a small hospitality: the Spark, for once, dressed by the keeper's home instead of its own nature."
+   },
+   "use": {
+    "app": "In Living Day the copper family sounds the day's small moments — the house at evening, in tone.",
+    "game": "On the road and in the menus the hero's chirps strike warm and low in copper — the game's bright sounds, given a hearth's voice.",
+    "site": "Choose the set in the sound settings and your Spark's chimes strike warm and low, like copper bowls by a hearth — the same for Fire and Water alike."
+   },
+   "gamePresence": "Sound, in the game: the hero's chirps and the menu tones struck warm and low, drawn at the stall as two warm arcs under the flame — a bowl's rim of sound. The one set that does not follow the kind, in the game as everywhere.",
+   "worth": "Seven dollars buys the hearth's voice for your Spark's sounds — struck on the site, in the app, and in the game."
   },
   {
    "id": "the-arrival-bell",
@@ -1563,8 +2192,16 @@
     "what": "One clear small bell-note that sounds when your Spark arrives beside you.",
     "means": "The smallest sound good: a knock at the door of the room, in sound's language. Keepers who share a room with others choose it — the Spark announces itself, politely, once.",
     "kinds": "One note, the same clarity on every kind, pitched from the Spark's own home pitch; at the stall the bell itself hangs at the Spark's side, drawn small in brass.",
-    "design": "An arrival should be an event of one note, not a fanfare. The bell is drawn carried, not worn — it belongs to the threshold, and the Spark brings it the way a guest brings a knock."
-   }
+    "design": "An arrival should be an event of one note, not a fanfare. The bell is drawn carried, not worn — it belongs to the threshold, and the Spark brings it the way a guest brings a knock.",
+    "story": "An arrival should be an event of one note, not a fanfare. The bell is drawn carried, not worn — it belongs to the threshold, and the Spark brings it the way a guest brings a knock."
+   },
+   "use": {
+    "app": "In Living Day the bell notes the Spark's arrival at the day's open — one note, pitched from its home pitch.",
+    "game": "The entry flight lands with the bell's one clear note — the Arrival, announced in sound.",
+    "site": "Set the bell and one clear small note sounds when your Spark arrives beside you — a polite knock, once."
+   },
+   "gamePresence": "Sound, in the game: one clear small bell-note at the hero's arrival on the road and at the entry flight's landing, pitched from the Spark's own home pitch. The little bell hangs at the hero's side in the menus, so the sound has a shape.",
+   "worth": "Two dollars buys the politest sound on the shelf — one note, heard on the site, in the app, and at the game's Arrival."
   },
   {
    "id": "episode-hums---the-first-shelf",
@@ -1587,8 +2224,16 @@
     "what": "The hums of the episodes your Spark has watched with you — learned by watching, performed at their tokens' home plates.",
     "means": "Earned, never sold. This shelf exists only because keeper and Spark sat together through the episodes; the hums are the memory of that, kept as sound.",
     "kinds": "Any kind of Spark can learn them; the hum is the episode's, not the kind's. At the stall the learned hums hang as small plates on an arc over the Spark — the tokens' home plates, drawn.",
-    "design": "The design is the earning: no picture of these hums can be bought, so the stall draws only the arc and the plates — the shape of a shelf that fills by living, not by buying."
-   }
+    "design": "The design is the earning: no picture of these hums can be bought, so the stall draws only the arc and the plates — the shape of a shelf that fills by living, not by buying.",
+    "story": "Earned, never sold — its scarcity is real days lived. The design is the earning: no picture of these hums can be bought, so the stall draws only the arc and the plates — the shape of a shelf that fills by living, not by buying."
+   },
+   "use": {
+    "app": "In Living Day the learned hums are the Spark's repertoire of shared evenings — the memory of sitting together, kept as sound.",
+    "game": "On the road and the record screen your Spark hums the episodes it has watched with you — earned there as everywhere: by the act, never by a till.",
+    "site": "Watch an episode with your Spark and its hum is learned by the act, then performed at its token's home plate."
+   },
+   "gamePresence": "Sound, in the game: the hero hums the learned episode hums on the road and at the record screen, each in its own tone. Earned by watching, in the game as on the site — no till carries them, and no game screen sells them.",
+   "worth": "It carries no price, and that is its worth: a repertoire that exists only because keeper and Spark sat together — kept on the site, in the app, and in the game, and sold nowhere."
   },
   {
    "id": "the-moon-hum-repertoire",
@@ -1611,8 +2256,16 @@
     "what": "The hum of each Moon, learned as the Moons are kept with your Spark — a repertoire that exists only because the year was lived.",
     "means": "Earned, never sold: thirteen hums for thirteen moons, gathered one per moon at the pace of real days. It is the sound of a whole year kept in company.",
     "kinds": "Every kind learns the same thirteen hums in its own voice — the moon's hum at a Fire pitch, a Water pitch, a Shadow pitch. At the stall they spiral around the Spark as notes along a turning path.",
-    "design": "A repertoire, not a set: it cannot be completed faster than a year. The spiral drawing is the design's confession — the hums arrive along the road's own turn, one moon at a time."
-   }
+    "design": "A repertoire, not a set: it cannot be completed faster than a year. The spiral drawing is the design's confession — the hums arrive along the road's own turn, one moon at a time.",
+    "story": "Earned, never sold — its scarcity is real days lived. A repertoire, not a set: it cannot be completed in less than a year, and the hums arrive along the road's own turn, one moon at a time."
+   },
+   "use": {
+    "app": "In Living Day the repertoire is the sound of a whole year kept in company, growing one hum per moon.",
+    "game": "On the road the day's greeting carries the current Moon's hum — the game's road keeping the same count as your year, in sound.",
+    "site": "Keep a Moon with your Spark and its hum joins the repertoire, performed in the Spark's own voice — the moon's hum at a Fire pitch, a Water pitch, a Shadow pitch."
+   },
+   "gamePresence": "Sound, in the game: the hero hums the kept Moons' hums on the road — the current Moon's hum in the road header's greeting — each learned at its moon's pace and known in the hero's own voice. Earned by keeping the year; never sold, in the game as everywhere.",
+   "worth": "It carries no price, and that is its worth: thirteen hums for thirteen moons, gathered at the pace of real days — kept on the site, in the app, and in the game, and sold nowhere."
   }
  ]
 }

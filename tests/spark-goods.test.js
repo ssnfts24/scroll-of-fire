@@ -169,3 +169,96 @@ test("no sticker or sound line still denies the Spark its form", () => {
       assert.ok(!/wears nothing|Nothing to see/.test(it.onSpark), "stale onSpark: " + it.name);
   }
 });
+
+/* Nov 27, 2026 — the unified build (Aaron, main chat Nov 27,
+   16:26–16:27 PST): one item, one id, everywhere. Goods bought
+   on the site are carried to the app and the game; the detail
+   is built heavily; in the game a good is presence only —
+   nothing sold is power, progress, retries, or time. The law
+   and the wardrobe mapping live in the catalogue's `unified`
+   section; the keeper-readable record is
+   docs/SPARK-GOODS-UNIFIED-DESIGN-2026-11-27.md. */
+const NO_COUNTRY = "This one lives on the site and in the app; the game is not its country";
+// The game's wardrobe, exactly as SPARK! carries it (Wardrobe.java).
+const GAME_WARDROBE_13 = [
+  "ember-cap", "moon-circlet", "star-crown", "comet-crest",
+  "dawn-wrap", "river-wrap", "storm-wrap",
+  "petal-trail", "comet-trail", "prism-trail",
+  "candle-glow", "hearth-glow", "aurora-glow",
+];
+
+test("every good carries its story, its uses, its game presence, and its worth", () => {
+  for (const it of items) {
+    assert.ok(it.detail.story && it.detail.story.length > 25, "story: " + it.name);
+    assert.ok(it.use && it.use.site && it.use.site.length > 25, "use.site: " + it.name);
+    assert.ok(it.use.app && it.use.app.length > 25, "use.app: " + it.name);
+    assert.ok(it.gamePresence && it.gamePresence.length > 25, "gamePresence: " + it.name);
+    assert.ok(it.worth && it.worth.length > 25, "worth: " + it.name);
+  }
+});
+
+test("the game split is honest: 43 goods have a game form, 22 say plainly they have none", () => {
+  const withGame = items.filter((i) => i.use && i.use.game);
+  const without = items.filter((i) => !(i.use && i.use.game));
+  assert.strictEqual(withGame.length, 43, "goods with a game form");
+  assert.strictEqual(without.length, 22, "goods with no game form");
+  for (const it of withGame)
+    assert.ok(!it.gamePresence.startsWith(NO_COUNTRY), "game form but no-country text: " + it.name);
+  for (const it of without)
+    assert.ok(it.gamePresence.startsWith(NO_COUNTRY), "no game form, but the card must say so: " + it.name);
+  assert.deepStrictEqual(new Set(data.unified.noGameForm), new Set(without.map((i) => i.id)));
+  assert.strictEqual(data.unified.counts.gamePresent, 43);
+  assert.strictEqual(data.unified.counts.noGameForm, 22);
+  assert.strictEqual(data.unified.counts.goods, 65);
+});
+
+test("no power promises anywhere in the new fields", () => {
+  const banned = /stronger|faster|extra shots?|retr(y|ies)\b|unlock|easier|bonus power/i;
+  for (const it of items) {
+    const text = [it.detail.story, it.gamePresence, it.worth, ...Object.values(it.use || {})].join(" ");
+    assert.ok(!banned.test(text), "power promise in the new fields of: " + it.name);
+  }
+});
+
+test("the unified id space: the wardrobe mapping in the data matches the game and the catalogue", () => {
+  const u = data.unified;
+  assert.ok(u && u.law && u.forms && u.carryingPath.length >= 4, "the unified law stands in the data");
+  const rows = u.wardrobeMapping;
+  assert.strictEqual(rows.length, 13, "all thirteen wardrobe pieces are mapped");
+  assert.deepStrictEqual(new Set(rows.map((r) => r.gameId)), new Set(GAME_WARDROBE_13));
+  const catIds = new Set(items.map((i) => i.id));
+  const sameGood = [];
+  for (const r of rows) {
+    assert.ok(["same-good", "slot-kin", "game-native"].includes(r.relation), "relation: " + r.gameId);
+    if (r.relation === "game-native") assert.strictEqual(r.catalogueId, null, "game-native carries no catalogue id: " + r.gameId);
+    else assert.ok(catIds.has(r.catalogueId), "mapped id exists in the catalogue: " + r.gameId);
+    if (r.relation === "same-good") sameGood.push(r.catalogueId);
+  }
+  assert.deepStrictEqual(new Set(sameGood), new Set(["the-storm-wrap", "petal-drift", "comet-trail---spark!"]));
+  // The three purchasable game-native pieces have no catalogue id:
+  // under the law they cannot be sold anywhere until the catalogue
+  // carries them, and their placeholder product ids stay inert.
+  for (const gid of ["comet-crest", "prism-trail", "aurora-glow"]) {
+    const row = rows.find((r) => r.gameId === gid);
+    assert.ok(row && row.relation === "game-native" && row.catalogueId === null, "unsellable until catalogued: " + gid);
+  }
+  const fences = u.fencesCarried.join(" ");
+  assert.match(fences, /never an item/); // the Spark itself
+  assert.match(fences, /never purchasable/); // the earned-only tier
+  assert.match(fences, /Nothing is sold to children/);
+});
+
+test("prices stand exactly as set: $2 x24, $7 x27, $19 x12, two earned at no price", () => {
+  const counts = { "2": 0, "7": 0, "19": 0, "null": 0 };
+  for (const it of items) counts[String(it.price)] += 1;
+  assert.deepStrictEqual(counts, { "2": 24, "7": 27, "19": 12, "null": 2 });
+});
+
+test("the detail card renders the unified sections and reads the story from the record", () => {
+  const js = fs.readFileSync(path.join(root, "docs/assets/js/spark-goods.js"), "utf8");
+  assert.match(js, /How you\\'ll use it/);
+  assert.match(js, /In the game/);
+  assert.match(js, /data-use/);
+  assert.match(js, /data-game/);
+  assert.match(js, /d\.story \|\| rarityLine\(it\)/);
+});
