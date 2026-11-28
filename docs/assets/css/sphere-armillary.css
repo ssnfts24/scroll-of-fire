@@ -1226,6 +1226,65 @@ html.living-time-sphere-page .sphere-moon-label {
   display: none;
 }
 
+/* ── The caption folds slimmer on a phone (Nov 27, 2026) ─────
+ * Aaron's ruling, in his own words: "The bottom part of the
+ * sphere page is getting cut off… more of the sphere has to
+ * show on that page — there's too much boarding packed up
+ * above." Measured before this pass (settled boot, lab): the
+ * caption stood 278px at 360×740, 239px at 390×844, 222px at
+ * 412×892 and 203px at 430×932 — the season line 92–129px of
+ * it (five to seven wrapped lines inside the More button's
+ * 6.5rem reservation), the telling line 76–96px, the telemetry
+ * line 18–35px, the rest padding. Every word stays, whole —
+ * nothing is clamped or cut (the Nov 23 lesson stands) — the
+ * deck simply stands tighter: less padding, a slightly
+ * smaller voice, and the season line's own action pill a
+ * little lower. Together with the stage floor's cap in the
+ * protected sheet (min(80dvh, 100%)), the room this returns
+ * goes to the stage. Phone widths only; the desktop frame
+ * is untouched. */
+@media (max-width: 700px) {
+  html.living-time-sphere-page .sphere-rebuild-caption {
+    padding: 0.35rem 5rem 0.2rem 0.75rem;
+  }
+
+  /* The More door stands a little smaller, so the caption's
+   * reservation for it (the padding above) can narrow and
+   * every line of the telling gets the width back. */
+  html.living-time-sphere-page .sphere-all-tools {
+    min-height: 36px;
+    padding: 0.25rem 0.65rem;
+    font-size: 0.85rem;
+  }
+
+  html.living-time-sphere-page .sphere-rebuild-caption .sphere-ambient-line {
+    font-size: 0.88rem;
+    line-height: 1.3;
+  }
+
+  .sphere-season-line {
+    font-size: 0.8rem;
+    line-height: 1.3;
+    margin-top: 0.1rem;
+  }
+
+  .sphere-season-line-action {
+    min-height: 32px;
+    padding: 0.2rem 0.7rem;
+  }
+
+  .sphere-skyline .sphere-live-environment-primary {
+    font-size: 0.8rem;
+    line-height: 1.25;
+  }
+
+  .sphere-skyline .sphere-live-environment-secondary,
+  .sphere-skyline .sphere-live-environment-selected {
+    font-size: 0.76rem;
+    line-height: 1.25;
+  }
+}
+
 /* ── 5. The rings (Sphere design Phase 1) ────────────────────
  * The ring charters and their two toggles, in the rooms sheet
  * above the granular Layers list. Words only — the face itself

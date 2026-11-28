@@ -4620,7 +4620,8 @@ details[open] .sphere-what-summary::before { content: "▼ "; }
  */
 @media (max-width: 700px) {
   html.living-time-sphere-page.sof-mobile-mode .sphere-canvas-wrap {
-    min-height: 80dvh;
+    /* Nov 27, 2026: the floor is capped by the frame. */
+    min-height: min(80dvh, 100%);
   }
 }
 

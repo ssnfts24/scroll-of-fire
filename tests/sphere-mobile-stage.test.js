@@ -25,6 +25,21 @@
  * measured before the release. These pins hold the block to
  * exactly that shape: one media query, one selector, one
  * declaration, gated on the mobile mark alone.
+ *
+ * Amendment (Nov 27, 2026 — Aaron's ruling on the cut-off
+ * stage: "The bottom part of the sphere page is getting cut
+ * off… more of the sphere has to show on that page — there's
+ * too much boarding packed up above"). The wrap stands in a
+ * 100dvh, overflow-hidden flex frame, and floored at a bare
+ * 80dvh it outgrew the frame whenever the caption above it
+ * stood tall: the stage's bottom ran past the viewport at
+ * every phone width (measured +129px at 360×740, +42px at
+ * 412×892) and the page could not scroll to reach it. The
+ * one declaration now reads min(80dvh, 100%) — the floor,
+ * capped by the frame it stands in — and the stylesheet
+ * link's cache token is bumped for it (…&s=20261127-stagefit).
+ * Still one media query, one selector, one declaration,
+ * gated on the mobile mark alone; layout sizing only.
  */
 
 const test = require("node:test");
@@ -45,8 +60,8 @@ test("the protected sheet carries the stage floor, exactly one mobile-mark rule"
   assert.equal(occurrences.length, 1,
     "the mobile mark appears once in the protected sheet: the stage block");
   assert.match(CSS,
-    /@media \(max-width: 700px\) \{\s*html\.living-time-sphere-page\.sof-mobile-mode \.sphere-canvas-wrap \{\s*min-height: 80dvh;\s*\}\s*\}/,
-    "the block is one phone-width media query flooring the canvas wrap at 80dvh");
+    /@media \(max-width: 700px\) \{\s*html\.living-time-sphere-page\.sof-mobile-mode \.sphere-canvas-wrap \{\s*(?:\/\*[\s\S]*?\*\/\s*)?min-height: min\(80dvh, 100%\);\s*\}\s*\}/,
+    "the block is one phone-width media query flooring the canvas wrap at min(80dvh, 100%)");
 });
 
 test("the stage block moves nothing else in the protected sheet", () => {
@@ -71,6 +86,6 @@ test("the mobile mark still means a phone browser, never the app", () => {
 
 test("the page carries the stage cache bump on the protected stylesheet link", () => {
   assert.match(PAGE,
-    /assets\/css\/living-time-sphere\.css\?v=20260819-b752[^"]*&s=20261124-stage"/,
-    "the stylesheet link carries the stage release's cache token");
+    /assets\/css\/living-time-sphere\.css\?v=20260819-b752[^"]*&s=20261127-stagefit"/,
+    "the stylesheet link carries the stage-fit amendment's cache token");
 });
