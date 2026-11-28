@@ -2389,8 +2389,39 @@
     };
   }
 
-  function recordVisit(record, { patternDay, page }) {
+  /* A stored record, made whole: the lists and blocks its
+   * shape promises, filled from a fresh record's defaults
+   * where the stored one lacks them — everything else it
+   * carries, known or unknown, preserved verbatim. A record
+   * is accepted on its seed alone, so one written by an older
+   * shape can stand without its lists; before this healing,
+   * such a record could lose a visit entirely when a reader
+   * met a missing list and threw. Forward-only, lossless:
+   * it adds what was absent and never rewrites what stands. */
+  function normalizeRecord(record) {
+    if (!record || !parseSeed(record.seed)) return record;
+    const fresh = newRecord({ seed: record.seed, name: record.name || "", civilDate: record.bornCivil || null });
     const next = { ...record };
+    const block = (v) => v && typeof v === "object" && !Array.isArray(v);
+    for (const key of ["daysSeen", "pagesSeen", "practiceDays", "revealsSeen"]) {
+      if (!Array.isArray(next[key])) next[key] = fresh[key];
+    }
+    if (!block(next.care)) next.care = fresh.care;
+    if (!block(next.play)) next.play = fresh.play;
+    else if (!Array.isArray(next.play.tricks)) next.play = { ...next.play, tricks: [] };
+    if (!block(next.trail) || !Array.isArray(next.trail.done)) next.trail = fresh.trail;
+    for (const key of ["bornCivil", "lastDay", "lastPage", "prevPage"]) {
+      if (next[key] === undefined) next[key] = fresh[key];
+    }
+    for (const key of ["stageSeen", "version", "wrap"]) {
+      if (typeof next[key] !== "number") next[key] = fresh[key];
+    }
+    if (typeof next.name !== "string") next.name = fresh.name;
+    return next;
+  }
+
+  function recordVisit(record, { patternDay, page }) {
+    const next = { ...normalizeRecord(record) };
     /* A stored record is accepted on its seed alone (see the
      * presence's readRecord), so a record written by an older
      * shape — or seeded with only some of its fields — may reach
@@ -2421,7 +2452,7 @@
   }
 
   function recordPractice(record, { patternDay }) {
-    const next = { ...record };
+    const next = { ...normalizeRecord(record) };
     /* Same fence as recordVisit: an absent practiceDays array on
      * a stored record is an empty one, not an error. */
     const practiceDays = Array.isArray(next.practiceDays) ? next.practiceDays : [];
@@ -3523,6 +3554,7 @@
     displayName,
     normalizeName,
     newRecord,
+    normalizeRecord,
     recordVisit,
     recordPractice,
     growthPoints,

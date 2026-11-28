@@ -59,6 +59,8 @@
   <script defer src="assets/js/spark-home-world.js?v=20261126-7"></script>
   <script defer src="assets/js/spark-play.js?v=20261126-7"></script>
   <script defer src="assets/js/spark-passport.js?v=20261122-1"></script>
+  <script defer src="assets/js/spark-whole-record.js?v=20261127-1"></script>
+  <script defer src="assets/js/spark-whole-record-link.js?v=20261127-1"></script>
   <link rel="stylesheet" href="assets/css/spark-agent-seat.css?v=20261120-2">
   <script defer src="assets/js/spark-agent-seat.js?v=20261120-2"></script>
   <script defer src="assets/js/heaven-sound.js?v=20261119-1"></script>
@@ -311,6 +313,60 @@
           <button type="button" class="spark-button quiet" id="spark-passport-return-button">Return to the Spark raised here</button>
         </div>
       </div>
+    </section>
+
+    <!-- The Whole Record: the Spark, its voice, and everything
+         it carries, in one code the site, the app, and the game
+         all read identically — so a Spark never needs a reset
+         again (Aaron's adopted law, Nov 27, 2026). The passport
+         above carries identity alone; this carries the Spark
+         whole. The Link rides the code alone: no account, no
+         server, no door is needed. -->
+    <section id="spark-whole" aria-labelledby="spark-whole-title">
+      <h2 id="spark-whole-title">The Whole Record — everything your Spark carries</h2>
+      <p class="spark-note">
+        A passport carries who your Spark is. The Whole Record carries
+        your Spark <em>whole</em>: its passport, the voice born of its
+        seed, its cards — the First Card first — its goods with the
+        honest word for how each came to it (<em>earned</em>,
+        <em>purchased</em>, <em>gifted</em>), and its honours. It is
+        the same record the game reads, letter for letter, so what
+        your Spark earns in one place is carried in every place. A
+        reset can clear a page or an app; it can never clear a Spark
+        whose record you hold.
+      </p>
+      <div id="spark-whole-own" hidden>
+        <h3 style="margin:12px 0 4px">Your Spark's whole code</h3>
+        <p class="spark-passport-code" id="spark-whole-own-code"></p>
+        <div class="spark-passport-qr" id="spark-whole-own-qr" aria-label="The whole record as a scannable code"></div>
+        <div class="spark-actions">
+          <button type="button" class="spark-button" id="spark-whole-copy">Copy the whole code</button>
+        </div>
+        <h3 style="margin:16px 0 4px">What my Spark carries</h3>
+        <div id="spark-whole-carries" class="spark-whole-carries"></div>
+      </div>
+      <h3 id="spark-whole-bring-title" style="margin:12px 0 4px">Bring my Spark</h3>
+      <p class="spark-note">
+        Have a whole code from the game or the app? Bring it here.
+        First you will be told plainly what the code carries; nothing
+        joins until you tap &ldquo;Yes, bring everything&rdquo;, and
+        what joins is only ever added.
+      </p>
+      <div class="spark-passport-row">
+        <input id="spark-whole-input" type="text" autocomplete="off" spellcheck="false"
+               aria-label="A Spark Whole Record code" placeholder="SPK1-…">
+        <button type="button" class="spark-button" id="spark-whole-read">Read the code</button>
+        <button type="button" class="spark-button quiet" id="spark-whole-scan" hidden>Scan the code</button>
+      </div>
+      <video id="spark-whole-video" class="spark-passport-video" hidden playsinline muted></video>
+      <div class="spark-preview" id="spark-whole-permission" hidden>
+        <p id="spark-whole-permission-words"></p>
+        <div class="spark-actions" style="justify-content:center">
+          <button type="button" class="spark-button primary" id="spark-whole-yes">Yes, bring everything</button>
+          <button type="button" class="spark-button quiet" id="spark-whole-no">Not now</button>
+        </div>
+      </div>
+      <p class="spark-note" id="spark-whole-note" role="status" aria-live="polite"></p>
     </section>
 
     <!-- The Hearth: the Spark's own 3D home, decorated only by

@@ -1541,6 +1541,18 @@
   background: #000;
 }
 
+/* The Whole Record: the carried list stands in plain words,
+ * its section heads quiet and small above their lines. */
+.spark-whole-carries p {
+  margin: 2px 0;
+}
+.spark-whole-carries-head {
+  margin-top: 10px;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  color: var(--spark-gold);
+}
+
 .spark-passport-door {
   margin-top: 18px;
   border-top: 1px solid var(--spark-line);
