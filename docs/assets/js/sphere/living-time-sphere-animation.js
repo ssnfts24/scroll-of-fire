@@ -219,7 +219,24 @@
   function attachIntersection(canvas) {
     if (!canvas || typeof IntersectionObserver === "undefined") return;
     detachIntersection();
-    const io = new IntersectionObserver(([entry]) => {
+    const io = new IntersectionObserver((entries) => {
+      // Act on the LAST entry, never the first (defect fix,
+      // Nov 27, 2026 — R1.7 improvement release). While the
+      // page shell settles at boot, the canvas can cross the
+      // threshold out and back inside one delivery batch;
+      // the observer then queues both crossings, oldest
+      // first. Reading only the first entry paused the loop
+      // on the stale "left the screen" report and threw the
+      // "came back" report away — and since a settled canvas
+      // raises no further reports, the pause never lifted:
+      // the stage froze on its boot frame (and, once a resize
+      // cleared the buffer, on nothing at all) while the DOM
+      // labels kept tracking drags, so the instrument read
+      // "ready" over a dark stage. The last entry is the
+      // canvas's standing state; pause and resume follow it,
+      // exactly as the single-entry case always did.
+      const entry = entries[entries.length - 1];
+      if (!entry) return;
       if (entry.isIntersecting) { resume(); } else { pause(); }
     }, { threshold: 0.05 });
     io.observe(canvas);
