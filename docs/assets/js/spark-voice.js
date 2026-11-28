@@ -195,6 +195,59 @@
       };
     }
 
+    /* The Whole Record's voice (Nov 27, 2026): the seed-born
+     * profile carried in the record (#V:) — the same profile
+     * the game renders — drives the spoken voice here: the
+     * utterance's pitch IS its pitch family, and its pace
+     * scales the temperament's base rate. The device voice
+     * itself is still chosen by the seed from this device's
+     * voices (a record cannot carry a device voice's name),
+     * and the warmth and signature call shape the sung living
+     * voice, not speechSynthesis, which has no breath to warm.
+     * Pure, so the wiring is pinned by test. */
+    function spokenFromWhole(profile, wholeVoice, baseRate) {
+      if (!profile || !wholeVoice) return profile;
+      const ratePct = Number(wholeVoice.ratePct);
+      const pacePct = Number(wholeVoice.pacePct);
+      if (!Number.isFinite(ratePct) || !Number.isFinite(pacePct)) return profile;
+      const base = Number.isFinite(baseRate) && baseRate > 0 ? baseRate : 1;
+      return {
+        ...profile,
+        pitch: Math.round((ratePct / 100) * 100) / 100,
+        rate: Math.round(base * (pacePct / 100) * 100) / 100,
+        wholeVoice: {
+          ratePct,
+          pacePct,
+          warmth: Number(wholeVoice.warmth) || 0,
+          callSteps: Array.isArray(wholeVoice.callSteps) ? wholeVoice.callSteps.slice() : []
+        }
+      };
+    }
+
+    /* The keeper's Spark's Whole Record voice, where the
+     * module stands: the profile stored in the record, or —
+     * the same by construction — the seed's own. */
+    function wholeVoiceHere(storage, seed) {
+      try {
+        const Whole = root.SparkWholeRecord;
+        const Core = root.SparkCompanion;
+        if (!Whole || !Core || !seed) return null;
+        const text = typeof Whole.readStored === "function"
+          ? Whole.readStored(storage) : null;
+        if (text) {
+          const rec = Whole.parse(text, Core);
+          if (rec && rec.passportCode &&
+              Core.parsePassportCode(rec.passportCode) &&
+              Core.parsePassportCode(rec.passportCode).seed === seed &&
+              rec.voiceProfile) {
+            return rec.voiceProfile;
+          }
+        }
+        return typeof Whole.voiceForSeed === "function"
+          ? Whole.voiceForSeed(seed, Core) : null;
+      } catch { return null; }
+    }
+
     /* ------------------------ settings ----------------------- */
 
     function blankSettings() {
@@ -372,12 +425,18 @@
       let profile = null;
       const currentProfile = () => {
         if (!profile) {
-          profile = profileFor({
+          const base = profileFor({
             seed: seed || "",
             temperament: companion.temperament,
             voices: deviceVoices(),
             lang: "en"
           });
+          /* The Whole Record's voice drives the spoken pitch
+           * and pace when it stands (spokenFromWhole). */
+          const whole = wholeVoiceHere(storage, seed);
+          profile = whole && base
+            ? spokenFromWhole(base, whole, VOICE_RATES[companion.temperament] || 1)
+            : base;
         }
         return profile;
       };
@@ -598,6 +657,8 @@
       fenceCheck,
       usableVoices,
       profileFor,
+      spokenFromWhole,
+      wholeVoiceHere,
       blankSettings,
       loadSettings,
       saveSettings,
