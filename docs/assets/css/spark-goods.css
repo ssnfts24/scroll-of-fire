@@ -26,3 +26,23 @@
 #spark-stall .stall-beyond { margin: 22px 0; border: 1px solid #2a3342; border-radius: 12px; padding: 10px 12px; }
 #spark-stall .stall-beyond summary { cursor: pointer; font-weight: 600; padding: 4px 0; }
 @media (prefers-reduced-motion: reduce) { #spark-stall * { animation: none !important; transition: none !important; } }
+/* Every good on a shelf: the tile is a small stage of its own —
+   the wear button dresses the Spark, and "Look closer" opens the
+   good's detail. */
+#spark-stall .stall-shelf-line { margin: 4px 0 10px; }
+#spark-stall .stall-tile { padding: 6px; }
+#spark-stall .stall-tile-wear { font: inherit; display: flex; flex-direction: column; align-items: stretch; text-align: left; width: 100%; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; }
+#spark-stall .stall-tile-detail { font: inherit; font-size: 0.8rem; margin-top: 6px; padding: 6px 8px; border: 1px solid #2a3342; border-radius: 8px; background: rgba(201, 162, 75, 0.10); color: #f3c97a; cursor: pointer; width: 100%; }
+#spark-stall .stall-tile-detail:hover, #spark-stall .stall-tile-detail:focus-visible { border-color: #d99545; }
+/* The detail view: one good, looked at closely, in a card that
+   fits the phone screen whole and scrolls inside itself. */
+#spark-stall .stall-detail { position: fixed; inset: 0; z-index: 60; background: rgba(3, 5, 9, 0.74); display: flex; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 12px; }
+#spark-stall .stall-detail[hidden] { display: none; }
+#spark-stall .stall-detail-card { position: relative; width: 100%; max-width: 430px; margin: auto; background: #0a0f18; border: 1px solid #d99545; border-radius: 16px; padding: 16px; }
+#spark-stall .stall-detail-art svg { display: block; width: 100%; height: auto; border-radius: 10px; }
+#spark-stall .stall-detail-card h3 { margin: 12px 0 2px; font-size: 1.15rem; }
+#spark-stall .stall-detail-card h4 { margin: 14px 0 2px; font-size: 0.85rem; letter-spacing: 0.04em; color: #e8c97a; }
+#spark-stall .stall-detail-card p { margin: 2px 0; line-height: 1.45; }
+#spark-stall .stall-detail-price { color: #f3c97a; font-weight: 600; }
+#spark-stall .stall-detail-close { position: absolute; top: 10px; right: 10px; font: inherit; font-size: 0.85rem; padding: 8px 12px; min-height: 40px; border: 1px solid #2a3342; border-radius: 999px; background: rgba(5, 7, 13, 0.85); color: inherit; cursor: pointer; }
+#spark-stall .stall-detail-toggle { font: inherit; margin-top: 16px; padding: 10px 14px; min-height: 44px; width: 100%; border: 1px solid #d99545; border-radius: 10px; background: rgba(201, 162, 75, 0.12); color: #f3c97a; cursor: pointer; }
