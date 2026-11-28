@@ -632,6 +632,20 @@
         } catch {
           /* nothing to clear */
         }
+        /* The release is complete in one step (cross-surface
+         * correlation audit, Nov 27, 2026): the Whole Record
+         * this Spark carried on this surface goes with it —
+         * it does not linger in storage to be overwritten by
+         * the next refresh, and the linked flag clears too.
+         * The record itself is the keeper's: it stands whole
+         * wherever else their Spark lives (app, game, code). */
+        try {
+          const Whole = window.SparkWholeRecord;
+          if (Whole && Whole.RECORD_KEY) window.localStorage.removeItem(Whole.RECORD_KEY);
+          if (Whole && Whole.LINKED_KEY) window.localStorage.removeItem(Whole.LINKED_KEY);
+        } catch {
+          /* nothing to clear */
+        }
         try {
           window.localStorage.removeItem(Core.PENDING_KEY);
         } catch {

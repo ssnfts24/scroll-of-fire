@@ -307,6 +307,23 @@ test("the record's voice drives the spoken pitch and pace", () => {
     "no record voice, no change");
 });
 
+/* ------------- the release is complete in one step ---------- */
+
+test("letting a Spark go clears its Whole Record on this surface in the same step", () => {
+  /* Cross-surface correlation audit (Nov 27, 2026): the
+   * name-confirmed "let go" removed the identity record but
+   * left sof.spark.whole.v1 standing in storage until a later
+   * refresh overwrote it. The handler now removes the Whole
+   * Record key and the linked flag in the same action. */
+  const page = read("docs/assets/js/spark-companions-page.js");
+  const at = page.indexOf("go for good");
+  assert.ok(at > -1, "the let-go handler stands");
+  const handler = page.slice(page.lastIndexOf("confirm.addEventListener", at + 2000) > -1 ? page.indexOf("confirm.addEventListener") : 0,
+    page.indexOf("confirm.addEventListener") + 1600);
+  assert.match(handler, /removeItem\(Whole\.RECORD_KEY\)/, "the Whole Record key is removed");
+  assert.match(handler, /removeItem\(Whole\.LINKED_KEY\)/, "the linked flag is removed");
+});
+
 /* ------------------- the catalogue pin ----------------------- */
 
 test("the embedded catalogue is spark-goods.json's own list, in its own order", () => {
