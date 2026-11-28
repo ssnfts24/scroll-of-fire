@@ -881,18 +881,48 @@
     // The Patterns door: beside the rebuild dock, in its visual
     // language, never inside it (the dock's five doors are the
     // page's own count). The panel it opens is the adapter's.
+    //
+    // The row is homed directly before the dock — and kept
+    // homed through the boot (sphere experience pass, Nov 27,
+    // 2026). The rebuild layer creates the dock on its own
+    // clock: when this pass ran first, the row fell back to
+    // the instrument shell, whose block flow sets it at the
+    // stage's top band, where the Play pill and the
+    // selected-day card painted over it and its centre took
+    // the pill's taps (hit-tested at 360/390/430: the door's
+    // centre returned the Play pill, overlaps 0.73–1.00).
+    // The adapter's sheet also gives the row the dock's own
+    // flex order, so in the page's flex column it stands in
+    // the dock's group, directly before it at the stage's
+    // foot. The watcher below re-homes the row whenever the
+    // dock arrives or settles elsewhere, and stands down
+    // once the row has stood home across three checks.
     const doorRow = el("div", "dw-door-row");
     const patternsDoor = el("button", "dw-door-btn", "Patterns");
     patternsDoor.type = "button";
     patternsDoor.setAttribute("aria-expanded", "false");
     patternsDoor.setAttribute("aria-label", "Patterns — light the days that hold a kind");
     doorRow.appendChild(patternsDoor);
-    const dock = document.querySelector(".sphere-rebuild-dock");
-    if (dock?.parentElement) {
-      dock.parentElement.insertBefore(doorRow, dock.nextSibling);
-    } else {
-      shell.appendChild(doorRow);
-    }
+    const homeDoorRow = () => {
+      const dockNow = document.querySelector(".sphere-rebuild-dock");
+      if (dockNow?.parentElement) {
+        if (doorRow.parentElement !== dockNow.parentElement || doorRow.nextSibling !== dockNow) {
+          dockNow.parentElement.insertBefore(doorRow, dockNow);
+        }
+        return doorRow.nextSibling === dockNow;
+      }
+      if (doorRow.parentElement !== shell) shell.appendChild(doorRow);
+      return false;
+    };
+    homeDoorRow();
+    let doorTries = 0;
+    let doorStands = 0;
+    const doorWatch = window.setInterval(() => {
+      doorTries += 1;
+      if (homeDoorRow()) doorStands += 1;
+      else doorStands = 0;
+      if (doorStands >= 3 || doorTries > 60) window.clearInterval(doorWatch);
+    }, 500);
     patternsDoor.addEventListener("click", () => {
       if (state.patterns.open) closePatterns();
       else void openPatterns();

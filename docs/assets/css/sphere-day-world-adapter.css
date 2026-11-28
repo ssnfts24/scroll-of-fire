@@ -367,6 +367,16 @@
 /* ── The Patterns door ─────────────────────────────────────── */
 
 .dw-door-row {
+  /* The dock's own flex order (sphere experience pass,
+   * Nov 27, 2026): in the page's flex column the row stands
+   * in the dock's order group, directly before it at the
+   * stage's foot — the adapter homes it there and keeps it
+   * homed through the boot. Standing instead in the
+   * instrument shell's block flow, it sat at the stage's
+   * top band, under the Play pill and the selected-day
+   * card — covered, and its centre unclickable, at every
+   * phone width. */
+  order: 1;
   display: flex;
   justify-content: center;
   margin: 0.55rem auto 0;

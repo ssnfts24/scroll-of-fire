@@ -934,6 +934,72 @@
      */
     const _labelSizeCache = new WeakMap();
     /*
+     * Digest memo (sphere lag pass 3, Nov 27, 2026 — R1.7
+     * improvement release). Pass 2 made the fingerprint cheap
+     * to build; pass 3 stops rebuilding it. _labelSizeKey ran
+     * on every label on every layout pass — and again for
+     * every plate in the track guard — and each run re-walked
+     * the label's whole subtree to rebuild a string that, for
+     * the many labels whose words never change while the
+     * camera moves (Moon pills, day plates), is the same
+     * string every time (2.1–3.6 s of self time in the bounded
+     * drag attribution, plus the allocation churn behind the
+     * profile's garbage-collector time). The built digest is
+     * now kept per element and served until the element's
+     * content actually changes:
+     *
+     * - A MutationObserver over the label container (subtree:
+     *   childList, characterData, and the class/hidden
+     *   attributes — the digest's exact inputs) drops the
+     *   cached digest of every cached ancestor of a mutation's
+     *   target. Writers in other modules and other tasks are
+     *   covered the moment their task ends.
+     * - The one writer an observer cannot cover is this
+     *   module's own semantic refresh: it mutates a card's
+     *   children (words, hidden flags, and the two inline
+     *   display writes the attribute filter deliberately
+     *   excludes — the filter must exclude style, because the
+     *   track loop writes the root's transform every frame
+     *   and the root's own style is not a digest input) in the
+     *   same task that later asks for that card's size. The
+     *   refresh therefore invalidates its own element's digest
+     *   explicitly, on every refresh. A refreshed card's
+     *   digest is rebuilt on its next size check, exactly as
+     *   before this memo; every other label's stands.
+     *
+     * The digest served is byte-for-byte the digest the live
+     * walk builds; only the rebuilding is saved.
+     */
+    const _labelDigestCache = new WeakMap();
+    let _labelDigestObserver = null;
+    function _invalidateLabelDigest(el) {
+      if (el) _labelDigestCache.delete(el);
+    }
+    function _watchLabelDigests() {
+      if (_labelDigestObserver || !_labelContainer) return;
+      if (typeof MutationObserver === "undefined") return;
+      try {
+        _labelDigestObserver = new MutationObserver((records) => {
+          for (const record of records) {
+            let node = record.target;
+            if (node && node.nodeType === 3) node = node.parentElement;
+            while (node) {
+              if (_labelDigestCache.has(node)) _labelDigestCache.delete(node);
+              if (node === _labelContainer) break;
+              node = node.parentElement;
+            }
+          }
+        });
+        _labelDigestObserver.observe(_labelContainer, {
+          subtree: true,
+          childList: true,
+          characterData: true,
+          attributes: true,
+          attributeFilter: ["class", "hidden"]
+        });
+      } catch { /* no observer: digests rebuild on every check, as before */ }
+    }
+    /*
      * The content fingerprint the size key is built from
      * (sphere lag pass 2, Nov 26, 2026 — R1.7 improvement
      * release). The key used to embed el.innerHTML, and
@@ -959,6 +1025,8 @@
      * short string per distinct segment.
      */
     function _labelContentDigest(el) {
+      const memo = _labelDigestCache.get(el);
+      if (memo !== undefined) return memo;
       let out = el.textContent || "";
       const nodes = el.querySelectorAll("*");
       for (let i = 0; i < nodes.length; i += 1) {
@@ -968,8 +1036,41 @@
           : n.className || "";
         out += `\u0002${n.tagName}|${cls}|${n.hidden ? 1 : 0}|${n.style?.display || ""}`;
       }
+      _labelDigestCache.set(el, out);
       return out;
     }
+    /*
+     * Size-key memo (sphere lag pass 4, Nov 27, 2026 — R1.7
+     * improvement release; the experience pass's clean drag
+     * re-run). The freezes the keeper feels reproduced on a
+     * quiet box (30 label-motion stretches over 140 ms in one
+     * slow revolution, worst 5,175 ms, a +11 pop-in where a
+     * long pass landed), and the drag attribution's shape
+     * agreed with passes 1–3: after the software rasterizer,
+     * the label system is the remaining JS cost, and its
+     * largest self time is this key (12.7 s self of a
+     * contention-inflated profile). The key is built for
+     * every label on every layout pass — and again for every
+     * plate through the track guard's natural-width key —
+     * and on a size-cache hit its only job is to be compared
+     * against the key the size was stored under; yet building
+     * it assembles a string embedding the label's whole
+     * content digest, so each pass paid that assembly, and
+     * the long comparison, hundreds of times for keys that
+     * had not moved. The built key is now kept per element
+     * beside its exact inputs — the digest memo's own string,
+     * the class dressing, the stage, the band, the width
+     * bucket — and served while every input stands. The
+     * digest memo returns the same string until the content
+     * changes (its observer, and the semantic refresh's
+     * explicit invalidation, govern that), and the rest are
+     * read live on every call and compared, so the moment
+     * any input moves the key is rebuilt by the original
+     * construction below. The key served is byte-for-byte
+     * the key the live build produces; only the rebuilding
+     * is saved.
+     */
+    const _labelSizeKeyCache = new WeakMap();
     function _labelSizeKey(el) {
       // Everything a label's size is a fact of: its class
       // dressing (disc vs card, pinned, selected), its content
@@ -978,8 +1079,16 @@
       // zoom band and stage, and the width bucket the
       // stylesheet breakpoints answer to. Camera position is
       // not in the key — that is the point.
+      const digest = _labelContentDigest(el);
+      const cls = el.className || "";
+      const stage = _stageEl?.dataset?.zoomStage || "";
+      const band = _semanticContainer?.dataset?.band || "";
       const widthBucket = typeof window !== "undefined" ? Math.round((window.innerWidth || 0) / 80) : 0;
-      return `${el.className || ""}|${_labelContentDigest(el)}|${_stageEl?.dataset?.zoomStage || ""}|${_semanticContainer?.dataset?.band || ""}|${widthBucket}`;
+      const memo = _labelSizeKeyCache.get(el);
+      if (memo && memo.digest === digest && memo.cls === cls && memo.stage === stage && memo.band === band && memo.widthBucket === widthBucket) return memo.key;
+      const key = `${cls}|${digest}|${stage}|${band}|${widthBucket}`;
+      _labelSizeKeyCache.set(el, { digest, cls, stage, band, widthBucket, key });
+      return key;
     }
     function _measuredLabelSize(el, fallbackW, fallbackH) {
       const key = _labelSizeKey(el);
@@ -1322,6 +1431,7 @@
       _geomCache = null;
       _dirty = true;
       _lastSignature = "";
+      _watchLabelDigests();
       _hideConnector();
       _labelEls.forEach(_hideLabel);
       if (_labelContainer && typeof document !== "undefined") {
@@ -1455,12 +1565,23 @@
           }
         }
         for (const entry of plateEntries) {
-          let nn = Infinity;
+          // Nearest neighbour by squared distance (sphere lag
+          // pass 3, Nov 27, 2026): this double loop runs every
+          // track frame over every plate pair, and Math.hypot
+          // per pair was pure overhead — the comparison only
+          // needs the ordering, which squared distances keep,
+          // and the one square root per entry below restores
+          // the exact distance the ratio consumes. Same nn,
+          // same shrink, fewer cycles per frame.
+          let nnSq = Infinity;
           for (const other of plateEntries) {
             if (other === entry) continue;
-            const d = Math.hypot(entry.sx - other.sx, entry.sy - other.sy);
-            if (d < nn) nn = d;
+            const ddx = entry.sx - other.sx;
+            const ddy = entry.sy - other.sy;
+            const dSq = ddx * ddx + ddy * ddy;
+            if (dSq < nnSq) nnSq = dSq;
           }
+          const nn = Number.isFinite(nnSq) ? Math.sqrt(nnSq) : Infinity;
           entry.shrink =
             entry.passNN && Number.isFinite(nn)
               ? Math.min(1, nn / entry.passNN)
@@ -3810,6 +3931,15 @@
         // than one thing — one thing is the symbol's own statement.
         if (target.dayScheduleCount > 1) el.dataset.scheduleMulti = "true"; else delete el.dataset.scheduleMulti;
         if (target.patternSignature) el.dataset.patternSignature = target.patternSignature;
+        // Digest memo (pass 3): this refresh is the one writer
+        // the digest observer cannot cover — it changed this
+        // card's children (words, hidden flags, inline display)
+        // in the same task that reads this card's size below,
+        // before any observer callback could run. Drop the
+        // card's cached digest so the size key is built from
+        // the words as they now stand, exactly as it was
+        // before the memo existed.
+        _invalidateLabelDigest(el);
         el.style.display = "";
         // Plate pitch cap application (the cap pass above, over
         // composedSemanticCandidates): bound this day plate's box
@@ -4553,6 +4683,8 @@
       _connectorEl = null;
       _geomCache = null;
       try { _geomObserver?.disconnect?.(); } catch { /* already gone */ }
+      try { _labelDigestObserver?.disconnect?.(); } catch { /* already gone */ }
+      _labelDigestObserver = null;
       _geomWatched.clear();
       _dirty = true;
       _lastSignature = "";

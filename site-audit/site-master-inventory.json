@@ -8,7 +8,7 @@
     "catalogEntries": 79,
     "issueCounts": {
       "no-global-navigation": 80,
-      "not-linked-directly-from-homepage": 30,
+      "not-linked-directly-from-homepage": 31,
       "deployed-but-unlinked": 64,
       "unreachable-from-homepage": 6,
       "compatibility-redirect-page": 8,
@@ -180,13 +180,15 @@
         "path": "aiyanas-world.html",
         "inSitemap": true,
         "inGlobalNav": false,
-        "linkedFromHomepage": true,
-        "hopsFromHome": 1,
-        "hopsFromHomeWithoutAtlas": 1,
-        "inboundPages": 5,
+        "linkedFromHomepage": false,
+        "hopsFromHome": 2,
+        "hopsFromHomeWithoutAtlas": 2,
+        "inboundPages": 4,
         "pagesWithNavLinkToIt": 0
       },
-      "issues": []
+      "issues": [
+        "not-linked-directly-from-homepage"
+      ]
     },
     {
       "id": "alignment-ledger",
@@ -822,7 +824,7 @@
     },
     {
       "id": "docs-assets:assets/js",
-      "title": "docs/assets/js (262 files)",
+      "title": "docs/assets/js (263 files)",
       "description": "Static assets, data and generated artifacts served from docs/.",
       "category": "Static assets",
       "area": null,
@@ -2168,7 +2170,6 @@
       "relatedPages": [
         "13-moon-whitepaper.html",
         "about-aaron.html",
-        "aiyanas-world.html",
         "circle.html",
         "claims-atlas.html",
         "codex-atlas.html",
@@ -14648,7 +14649,7 @@
     },
     {
       "id": "repo-folder:netlify",
-      "title": "netlify/ (27 files)",
+      "title": "netlify/ (29 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
@@ -14750,7 +14751,7 @@
     },
     {
       "id": "repo-folder:tests",
-      "title": "tests/ (282 files)",
+      "title": "tests/ (283 files)",
       "description": "Repository folder in the source tree; inventoried but not linked publicly without explicit curation.",
       "category": "Repository folder",
       "area": null,
