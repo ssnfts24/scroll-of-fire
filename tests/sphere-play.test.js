@@ -30,7 +30,7 @@ test("the play room exists with three plainly named games", () => {
 });
 
 test("the hunt target is a true Pattern coordinate, inside the count", () => {
-  assert.ok(play.includes("PC.fromCivilDate({ date: new Date() })"), "today comes from the calendar itself");
+  assert.ok(play.includes('PC.fromCivilDate({ date: new Date(), timeZone, boundaryMode: "midnight" })'), "today comes from the calendar itself, read the house way (local midnight — Aaron's ruling, Nov 26, 2026)");
   assert.ok(play.includes("if (pd > 364) pd -= 364"), "the target wraps inside the 364-day count — never a false day");
   assert.ok(play.includes("SOFCurrentTemporalCoordinate"), "the win is read from the canonical cursor's state");
 });

@@ -223,7 +223,11 @@
         if (stamp?.civilDate) return stamp.civilDate;
       } catch { /* fall through to the calendar */ }
       try {
-        const conv = window.PatternCalendar?.fromCivilDate?.({ date: new Date() });
+        // The house day, as everywhere on this page: the device's
+        // zone, the midnight boundary — a bare call would stamp
+        // the quest with the UTC day (Aaron's ruling, Nov 26, 2026).
+        const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const conv = window.PatternCalendar?.fromCivilDate?.({ date: new Date(), timeZone, boundaryMode: "midnight" });
         if (conv?.civilDate) return conv.civilDate;
       } catch { /* fall through */ }
       return new Date().toISOString().slice(0, 10);
@@ -373,8 +377,9 @@
         const helpers = window.CodexRecordHelpers;
         const resolver = helpers?.createRepositoryResolver?.();
         const repository = resolver ? await resolver() : null;
+        const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         const conversion = window.PatternCalendar?.fromCivilDate
-          ? window.PatternCalendar.fromCivilDate({ date: new Date() })
+          ? window.PatternCalendar.fromCivilDate({ date: new Date(), timeZone, boundaryMode: "midnight" })
           : null;
         const record = repository && conversion
           ? PQ.buildAnswerCardRecord(
@@ -451,7 +456,8 @@
     function drawHuntTarget() {
       const PC = window.PatternCalendar;
       if (!PC?.fromCivilDate) return null;
-      const today = PC.fromCivilDate({ date: new Date() });
+      const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const today = PC.fromCivilDate({ date: new Date(), timeZone, boundaryMode: "midnight" });
       const todayPd = today?.dayOfPatternYear || 218;
       let pd = todayPd + 20 + Math.floor(Math.random() * 120);
       if (pd > 364) pd -= 364;

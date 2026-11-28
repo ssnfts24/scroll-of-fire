@@ -219,7 +219,7 @@ test("the changed files ride fresh loaders — three stamp lines on the protecte
   const page = read("docs/living-time-sphere.html");
   assert.ok(page.includes("sphere-companion-layer.js?v=20261127-2"), "the companion layer's stamp moved");
   assert.ok(page.includes("sphere-day-world.js?v=20261126-8"), "the day world's stamp moved");
-  assert.ok(page.includes("sphere-spark.js?v=20261126-8"), "the Sphere Spark's stamp moved");
+  assert.ok(page.includes("sphere-spark.js?v=20261127-1"), "the Sphere Spark's stamp moved");
   const layer = read("docs/assets/js/sphere-companion-layer.js");
   assert.ok(layer.includes("sphere-spark-inhabitant.js?v=20261126-8"), "the inhabitant's stamp moved");
   assert.ok(layer.includes("sphere-spark-schedule.js?v=20261126-8"), "the schedule's stamp moved");

@@ -97,15 +97,21 @@
     nameLine.textContent = "A living calendar: 13 moons of 28 days, turning around today. Tap a moon, then a day, to look at it.";
     wrap.insertBefore(nameLine, wrap.firstChild);
 
-    // Today's truth, from the one canonical line only.
+    // Today's truth, from the one canonical line only — read the
+    // house way (Aaron's ruling, Nov 26, 2026: the whole site
+    // reads the day from local midnight). The device's own zone
+    // and the midnight boundary ride both calls; bare calls read
+    // the UTC day, so this greeting named tomorrow in the evening
+    // while the page named today (Pattern Day 226 on 225).
     let summary = null;
     let telling = null;
     try {
+      const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       if (globalThis.PatternCalendar?.fromCivilDate) {
-        summary = globalThis.PatternCalendar.fromCivilDate({ date: new Date() });
+        summary = globalThis.PatternCalendar.fromCivilDate({ date: new Date(), timeZone, boundaryMode: "midnight" });
       }
       if (globalThis.DayTelling?.tellForDate) {
-        telling = globalThis.DayTelling.tellForDate(new Date());
+        telling = globalThis.DayTelling.tellForDate(new Date(), { timeZone, boundaryMode: "midnight" });
       }
     } catch {
       summary = null;
